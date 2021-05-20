@@ -40,6 +40,9 @@ use Tuleap\Tracker\Semantic\Progress\MethodBasedOnEffort;
 use Tuleap\Tracker\Semantic\Progress\SemanticProgress;
 use Tuleap\Tracker\Semantic\Progress\SemanticProgressBuilder;
 use Tuleap\Tracker\Semantic\Progress\SemanticProgressDao;
+use Tuleap\Tracker\Semantic\Timeframe\TimeframeNotConfigured;
+use Tuleap\Tracker\Semantic\Timeframe\TimeframeWithDuration;
+use Tuleap\Tracker\Semantic\Timeframe\TimeframeWithEndDate;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframe;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 use Tuleap\Tracker\Semantic\Timeframe\TimeframeBuilder;
@@ -506,7 +509,7 @@ class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             ->shouldReceive('getSemantic')
             ->with($tracker)
             ->once()
-            ->andReturn(new SemanticTimeframe($tracker, null, null, null));
+            ->andReturn(new SemanticTimeframe($tracker, new TimeframeNotConfigured()));
 
         $this->expectException(RestException::class);
         $this->expectExceptionCode(400);
@@ -564,9 +567,10 @@ class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             ->andReturn(
                 new SemanticTimeframe(
                     $tracker,
-                    Mockery::mock(\Tracker_FormElement_Field_Date::class, ['userCanRead' => false]),
-                    null,
-                    Mockery::mock(\Tracker_FormElement_Field_Date::class, ['userCanRead' => true]),
+                    new TimeframeWithEndDate(
+                        Mockery::mock(\Tracker_FormElement_Field_Date::class, ['userCanRead' => false]),
+                        Mockery::mock(\Tracker_FormElement_Field_Date::class, ['userCanRead' => true]),
+                    )
                 )
             );
 
@@ -626,9 +630,10 @@ class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             ->andReturn(
                 new SemanticTimeframe(
                     $tracker,
-                    Mockery::mock(\Tracker_FormElement_Field_Date::class, ['userCanRead' => true]),
-                    null,
-                    Mockery::mock(\Tracker_FormElement_Field_Date::class, ['userCanRead' => false]),
+                    new TimeframeWithEndDate(
+                        Mockery::mock(\Tracker_FormElement_Field_Date::class, ['userCanRead' => true]),
+                        Mockery::mock(\Tracker_FormElement_Field_Date::class, ['userCanRead' => false]),
+                    )
                 )
             );
 
@@ -688,9 +693,10 @@ class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             ->andReturn(
                 new SemanticTimeframe(
                     $tracker,
-                    Mockery::mock(\Tracker_FormElement_Field_Date::class, ['userCanRead' => true]),
-                    Mockery::mock(\Tracker_FormElement_Field_Numeric::class, ['userCanRead' => false]),
-                    null,
+                    new TimeframeWithDuration(
+                        Mockery::mock(\Tracker_FormElement_Field_Date::class, ['userCanRead' => true]),
+                        Mockery::mock(\Tracker_FormElement_Field_Numeric::class, ['userCanRead' => false])
+                    )
                 )
             );
 
@@ -758,7 +764,7 @@ class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->semantic_timeframe_builder
             ->shouldReceive('getSemantic')
             ->with($tracker)
-            ->andReturn(new SemanticTimeframe($tracker, $start_date_field, null, $end_date_field));
+            ->andReturn(new SemanticTimeframe($tracker, new TimeframeWithEndDate($start_date_field, $end_date_field)));
 
         $this->progress_builder
             ->shouldReceive('getSemantic')
@@ -958,7 +964,7 @@ class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->semantic_timeframe_builder
             ->shouldReceive('getSemantic')
             ->with($tracker)
-            ->andReturn(new SemanticTimeframe($tracker, $start_date_field, null, $end_date_field));
+            ->andReturn(new SemanticTimeframe($tracker, new TimeframeWithEndDate($start_date_field, $end_date_field)));
 
         $this->progress_builder
             ->shouldReceive('getSemantic')

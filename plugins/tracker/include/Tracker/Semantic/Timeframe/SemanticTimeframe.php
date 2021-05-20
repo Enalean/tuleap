@@ -33,8 +33,6 @@ use Tracker_Semantic;
 use Tracker_SemanticManager;
 use TrackerManager;
 use Tuleap\Layout\IncludeAssets;
-use Tuleap\Tracker\REST\SemanticTimeframeWithDurationRepresentation;
-use Tuleap\Tracker\REST\SemanticTimeframeWithEndDateRepresentation;
 use Tuleap\Tracker\Semantic\Timeframe\Administration\SemanticTimeframeAdministrationPresenterBuilder;
 
 class SemanticTimeframe extends Tracker_Semantic
@@ -42,36 +40,19 @@ class SemanticTimeframe extends Tracker_Semantic
     public const NAME = 'timeframe';
 
     /**
-     * @var Tracker_FormElement_Field_Date|null
+     * @var IComputeTimeframes
      */
-    private $start_date_field;
-    /**
-     * @var Tracker_FormElement_Field_Numeric|null
-     */
-    private $duration_field;
-
-    /**
-     * @var Tracker_FormElement_Field_Date|null
-     */
-    private $end_date_field;
+    private $timeframe;
 
     /**
      * @throws TimeframeBrokenConfigurationException
      */
     public function __construct(
         Tracker $tracker,
-        ?Tracker_FormElement_Field_Date $start_date_field,
-        ?Tracker_FormElement_Field_Numeric $duration_field,
-        ?Tracker_FormElement_Field_Date $end_date_field
+        IComputeTimeframes $timeframe
     ) {
-        if ($duration_field !== null && $end_date_field !== null) {
-            throw new TimeframeBrokenConfigurationException($tracker);
-        }
-
         parent::__construct($tracker);
-        $this->start_date_field = $start_date_field;
-        $this->duration_field   = $duration_field;
-        $this->end_date_field   = $end_date_field;
+        $this->timeframe = $timeframe;
     }
 
     public function getShortName(): string
@@ -91,24 +72,7 @@ class SemanticTimeframe extends Tracker_Semantic
 
     public function display(): void
     {
-        if (! $this->isDefined()) {
-            echo dgettext('tuleap-tracker', 'This semantic is not defined yet.');
-        } else {
-            $purifier = \Codendi_HTMLPurifier::instance();
-            if ($this->duration_field !== null) {
-                echo $purifier->purify(sprintf(
-                    dgettext('tuleap-tracker', 'Timeframe is based on start date field "%s" and duration field "%s".'),
-                    $this->start_date_field->getLabel(),
-                    $this->duration_field->getLabel()
-                ));
-            } elseif ($this->end_date_field !== null) {
-                echo $purifier->purify(sprintf(
-                    dgettext('tuleap-tracker', 'Timeframe is based on start date field "%s" and end date field "%s".'),
-                    $this->start_date_field->getLabel(),
-                    $this->end_date_field->getLabel()
-                ));
-            }
-        }
+        echo $this->timeframe->getConfigDescription();
     }
 
     public function displayAdmin(
@@ -130,9 +94,9 @@ class SemanticTimeframe extends Tracker_Semantic
             $this->getCSRFSynchronizerToken(),
             $this->tracker,
             $this->getUrl(),
-            $this->start_date_field,
-            $this->duration_field,
-            $this->end_date_field
+            $this->getStartDateField(),
+            $this->getDurationField(),
+            $this->getEndDateField()
         );
 
         $renderer->renderToPage('timeframe-semantic-admin', $presenter);
@@ -179,127 +143,42 @@ class SemanticTimeframe extends Tracker_Semantic
 
     public function exportToXml(SimpleXMLElement $root, $xml_mapping): void
     {
-        if (! $this->isDefined()) {
-            return;
-        }
-
-        $start_date_field_id = (int) $this->start_date_field->getId();
-        $start_date_ref      = array_search($start_date_field_id, $xml_mapping);
-
-        if (! $start_date_ref) {
-            return;
-        }
-
-        if ($this->duration_field !== null) {
-            $duration_field_id = (int) $this->duration_field->getId();
-            $duration_ref      = array_search($duration_field_id, $xml_mapping);
-
-            if (! $duration_ref) {
-                return;
-            }
-
-            $child = $this->buildXMLExport($root, $start_date_ref);
-            $child->addChild('duration_field')->addAttribute('REF', $duration_ref);
-        }
-
-        if ($this->end_date_field !== null) {
-            $end_date_field_id = (int) $this->end_date_field->getId();
-            $end_date_ref      = array_search($end_date_field_id, $xml_mapping);
-
-            if (! $end_date_ref) {
-                return;
-            }
-
-            $child = $this->buildXMLExport($root, $start_date_ref);
-            $child->addChild('end_date_field')->addAttribute('REF', $end_date_ref);
-        }
-    }
-
-    public function buildXMLExport(SimpleXMLElement $root, string $start_date_ref): SimpleXMLElement
-    {
-        $semantic_child = $root->addChild('semantic');
-        $semantic_child->addAttribute('type', $this->getShortName());
-        $semantic_child->addChild('start_date_field')->addAttribute('REF', $start_date_ref);
-
-        return $semantic_child;
+        $this->timeframe->exportToXML($root, $xml_mapping);
     }
 
     public function isUsedInSemantics(Tracker_FormElement_Field $field): bool
     {
-        return $this->isDurationField($field) || $this->isStartDateField($field) || $this->isEndDateField($field);
-    }
-
-    public function isEndDateField(Tracker_FormElement_Field $field): bool
-    {
-        return $this->end_date_field !== null &&
-            (int) $field->getId() === (int) $this->end_date_field->getId();
-    }
-
-    public function isDurationField(Tracker_FormElement_Field $field): bool
-    {
-        return $this->duration_field !== null &&
-            (int) $field->getId() === (int) $this->duration_field->getId();
-    }
-
-    public function isStartDateField(Tracker_FormElement_Field $field): bool
-    {
-        return $this->start_date_field !== null &&
-            (int) $field->getId() === (int) $this->start_date_field->getId();
+        return $this->timeframe->isFieldUsed($field);
     }
 
     public function save(): bool
     {
-        $dao   = new SemanticTimeframeDao();
-        $saver = new SemanticTimeframeSaver($dao);
-
-        return $saver->save($this);
+        return $this->timeframe->save($this->tracker, new SemanticTimeframeDao());
     }
 
     public function getStartDateField(): ?Tracker_FormElement_Field_Date
     {
-        return $this->start_date_field;
+        return $this->timeframe->getStartDateField();
     }
 
     public function getDurationField(): ?Tracker_FormElement_Field_Numeric
     {
-        return $this->duration_field;
+        return $this->timeframe->getDurationField();
     }
 
     public function getEndDateField(): ?Tracker_FormElement_Field_Date
     {
-        return $this->end_date_field;
+        return $this->timeframe->getEndDateField();
     }
 
-    /**
-     * @psalm-assert-if-true !null $this->start_date_field
-     */
     public function isDefined(): bool
     {
-        return $this->start_date_field !== null &&
-            ($this->duration_field !== null || $this->end_date_field !== null);
+        return $this->timeframe->isDefined();
     }
 
-    public function exportToREST(PFUser $user)
+    public function exportToREST(PFUser $user): ?IRepresentSemanticTimeframe
     {
-        if (! $this->isDefined()) {
-            return null;
-        }
-
-        $start_date_field_id = (int) $this->start_date_field->getId();
-
-        if ($this->duration_field !== null) {
-            $representation = new SemanticTimeframeWithDurationRepresentation();
-            $representation->build($start_date_field_id, (int) $this->duration_field->getId());
-            return $representation;
-        }
-
-        if ($this->end_date_field !== null) {
-            $representation = new SemanticTimeframeWithEndDateRepresentation();
-            $representation->build($start_date_field_id, (int) $this->end_date_field->getId());
-            return $representation;
-        }
-
-        return null;
+        return $this->timeframe->exportToREST($user);
     }
 
     private function getCSRFSynchronizerToken(): \CSRFSynchronizerToken

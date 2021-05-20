@@ -31,7 +31,7 @@ class SemanticTimeframeBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 
-    public function testNoFieldsIfNoEntriesInDb(): void
+    public function testItBuildsANotConfiguredSemantic(): void
     {
         $tracker = Mockery::mock(Tracker::class);
         $tracker->shouldReceive('getId')->andReturn(42);
@@ -46,12 +46,12 @@ class SemanticTimeframeBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $builder = new SemanticTimeframeBuilder($dao, $factory);
         $this->assertEquals(
-            new SemanticTimeframe($tracker, null, null, null),
+            new SemanticTimeframe($tracker, new TimeframeNotConfigured()),
             $builder->getSemantic($tracker)
         );
     }
 
-    public function testNoDurationFieldIfNullInDb(): void
+    public function testItBuildsASemanticWithEndDate(): void
     {
         $tracker = Mockery::mock(Tracker::class);
         $tracker->shouldReceive('getId')->andReturn(42);
@@ -82,12 +82,12 @@ class SemanticTimeframeBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $builder = new SemanticTimeframeBuilder($dao, $factory);
         $this->assertEquals(
-            new SemanticTimeframe($tracker, $start_date_field, null, $end_date_field),
+            new SemanticTimeframe($tracker, new TimeframeWithEndDate($start_date_field, $end_date_field)),
             $builder->getSemantic($tracker)
         );
     }
 
-    public function testNoEndDateFieldIfNullInDb(): void
+    public function testItBuildsASemanticWithDuration(): void
     {
         $tracker = Mockery::mock(Tracker::class);
         $tracker->shouldReceive('getId')->andReturn(42);
@@ -118,12 +118,12 @@ class SemanticTimeframeBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $builder = new SemanticTimeframeBuilder($dao, $factory);
         $this->assertEquals(
-            new SemanticTimeframe($tracker, $start_date_field, $duration_field, null),
+            new SemanticTimeframe($tracker, new TimeframeWithDuration($start_date_field, $duration_field)),
             $builder->getSemantic($tracker)
         );
     }
 
-    public function testAllFieldsConfiguredInDb(): void
+    public function testItReturnsANotConfiguredSemanticIfThereIsNoDurationNorEndDateField(): void
     {
         $tracker = Mockery::mock(Tracker::class);
         $tracker->shouldReceive('getId')->andReturn(42);
@@ -134,27 +134,19 @@ class SemanticTimeframeBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             ->once()
             ->andReturn([
                 'start_date_field_id' => 101,
-                'duration_field_id' => 102,
+                'duration_field_id' => null,
                 'end_date_field_id' => null
             ]);
 
         $start_date_field = Mockery::mock(\Tracker_FormElement_Field_Date::class);
-        $duration_field   = Mockery::mock(\Tracker_FormElement_Field_Integer::class);
+        $factory          = Mockery::mock(Tracker_FormElementFactory::class);
 
-        $factory = Mockery::mock(Tracker_FormElementFactory::class);
         $factory->shouldReceive('getUsedDateFieldById')
-                ->with($tracker, 101)
-                ->once()
-                ->andReturn($start_date_field);
-        $factory->shouldReceive('getUsedFieldByIdAndType')
-                ->with($tracker, 102, ['int', 'float', 'computed'])
-                ->once()
-                ->andReturn($duration_field);
+            ->with($tracker, 101)
+            ->once()
+            ->andReturn($start_date_field);
 
         $builder = new SemanticTimeframeBuilder($dao, $factory);
-        $this->assertEquals(
-            new SemanticTimeframe($tracker, $start_date_field, $duration_field, null),
-            $builder->getSemantic($tracker)
-        );
+        $this->assertFalse($builder->getSemantic($tracker)->isDefined());
     }
 }

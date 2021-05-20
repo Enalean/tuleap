@@ -92,7 +92,7 @@ final class TimeframeBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $duration_field->shouldReceive('userCanRead')->andReturn(true);
 
         $this->semantic_timeframe_builder->shouldReceive('getSemantic')->with($this->tracker)->andReturn(
-            new SemanticTimeframe($this->tracker, $start_date_field, $duration_field, null)
+            new SemanticTimeframe($this->tracker, new TimeframeWithDuration($start_date_field, $duration_field))
         );
 
         $this->mockStartDateFieldWithValue($start_date, $start_date_field);
@@ -105,45 +105,6 @@ final class TimeframeBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertSame(10, $time_period->getDuration());
     }
 
-    public function testItBuildsATimePeriodWithoutWeekObjectWithStartDateAsZeroForArtifactIfNoFieldStartDate(): void
-    {
-        $duration         = 10;
-        $start_date_field = null;
-        $duration_field   = Mockery::mock(Tracker_FormElement_Field_Numeric::class);
-        $duration_field->shouldReceive('userCanRead')->andReturn(true);
-
-        $this->semantic_timeframe_builder->shouldReceive('getSemantic')->with($this->tracker)->andReturn(
-            new SemanticTimeframe($this->tracker, $start_date_field, $duration_field, null)
-        );
-
-        $this->mockDurationFieldWithValue($duration, $duration_field);
-
-        $time_period = $this->builder->buildTimePeriodWithoutWeekendForArtifact($this->artifact, $this->user);
-
-        $this->assertSame(0, $time_period->getStartDate());
-        $this->assertSame(1209600, $time_period->getEndDate());
-        $this->assertSame(10, $time_period->getDuration());
-    }
-
-    public function testItBuildsATimePeriodWithoutWeekObjectWithDurationAsZeroForArtifactIfNoFieldDuration(): void
-    {
-        $start_date       = '07/01/2013';
-        $start_date_field = Mockery::mock(Tracker_FormElement_Field_Date::class);
-        $start_date_field->shouldReceive('userCanRead')->andReturn(true);
-
-        $this->semantic_timeframe_builder->shouldReceive('getSemantic')->with($this->tracker)->andReturn(
-            new SemanticTimeframe($this->tracker, $start_date_field, null, null)
-        );
-
-        $this->mockStartDateFieldWithValue($start_date, $start_date_field);
-
-        $time_period = $this->builder->buildTimePeriodWithoutWeekendForArtifact($this->artifact, $this->user);
-
-        $this->assertSame(strtotime($start_date), $time_period->getStartDate());
-        $this->assertSame(strtotime($start_date), $time_period->getEndDate());
-        $this->assertSame(0, $time_period->getDuration());
-    }
-
     public function testItBuildsATimePeriodWithoutWeekObjectWithStartDateAsZeroForArtifactIfNoLastChangesetValueForStartDate(): void
     {
         $duration         = 10;
@@ -153,7 +114,7 @@ final class TimeframeBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $duration_field->shouldReceive('userCanRead')->andReturn(true);
 
         $this->semantic_timeframe_builder->shouldReceive('getSemantic')->with($this->tracker)->andReturn(
-            new SemanticTimeframe($this->tracker, $start_date_field, $duration_field, null)
+            new SemanticTimeframe($this->tracker, new TimeframeWithDuration($start_date_field, $duration_field))
         );
 
         $start_date_field->shouldReceive('getLastChangesetValue')
@@ -178,7 +139,7 @@ final class TimeframeBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $duration_field->shouldReceive('userCanRead')->andReturn(true);
 
         $this->semantic_timeframe_builder->shouldReceive('getSemantic')->with($this->tracker)->andReturn(
-            new SemanticTimeframe($this->tracker, $start_date_field, $duration_field, null)
+            new SemanticTimeframe($this->tracker, new TimeframeWithDuration($start_date_field, $duration_field))
         );
 
         $this->mockStartDateFieldWithValue($start_date, $start_date_field);
@@ -206,7 +167,7 @@ final class TimeframeBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             ->shouldReceive('getSemantic')
             ->with($this->tracker)
             ->andReturn(
-                new SemanticTimeframe($this->tracker, $start_date_field, null, $end_date_field)
+                new SemanticTimeframe($this->tracker, new TimeframeWithEndDate($start_date_field, $end_date_field))
             );
 
         $this->mockStartDateFieldWithValue($start_date, $start_date_field);
@@ -231,7 +192,7 @@ final class TimeframeBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             ->shouldReceive('getSemantic')
             ->with($this->tracker)
             ->andReturn(
-                new SemanticTimeframe($this->tracker, $start_date_field, null, $end_date_field)
+                new SemanticTimeframe($this->tracker, new TimeframeWithEndDate($start_date_field, $end_date_field))
             );
 
         $this->mockStartDateFieldWithValue($start_date, $start_date_field);
@@ -262,7 +223,7 @@ final class TimeframeBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             ->shouldReceive('getSemantic')
             ->with($this->tracker)
             ->andReturn(
-                new SemanticTimeframe($this->tracker, $start_date_field, null, $end_date_field)
+                new SemanticTimeframe($this->tracker, new TimeframeWithEndDate($start_date_field, $end_date_field))
             );
 
         $this->mockStartDateFieldWithValue($start_date, $start_date_field);
@@ -292,7 +253,7 @@ final class TimeframeBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             ->shouldReceive('getSemantic')
             ->with($this->tracker)
             ->andReturn(
-                new SemanticTimeframe($this->tracker, $start_date_field, null, $end_date_field)
+                new SemanticTimeframe($this->tracker, new TimeframeWithEndDate($start_date_field, $end_date_field))
             );
 
         $this->mockStartDateFieldWithValue($start_date, $start_date_field);
@@ -321,7 +282,7 @@ final class TimeframeBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $duration_field->shouldReceive('userCanRead')->andReturn(true);
 
         $this->semantic_timeframe_builder->shouldReceive('getSemantic')->with($this->tracker)->andReturn(
-            new SemanticTimeframe($this->tracker, $start_date_field, $duration_field, null)
+            new SemanticTimeframe($this->tracker, new TimeframeWithDuration($start_date_field, $duration_field))
         );
 
         $this->mockStartDateFieldWithValue($start_date, $start_date_field);
@@ -339,11 +300,8 @@ final class TimeframeBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItThrowsAnExceptionWhenNoStartDateFieldInChartContext()
     {
-        $start_date_field = null;
-        $duration_field   = null;
-
         $this->semantic_timeframe_builder->shouldReceive('getSemantic')->with($this->tracker)->andReturn(
-            new SemanticTimeframe($this->tracker, $start_date_field, $duration_field, null)
+            new SemanticTimeframe($this->tracker, new TimeframeNotConfigured())
         );
 
         $this->expectException(Tracker_FormElement_Chart_Field_Exception::class);
@@ -362,7 +320,7 @@ final class TimeframeBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $duration_field->shouldReceive('userCanRead')->andReturn(true);
 
         $this->semantic_timeframe_builder->shouldReceive('getSemantic')->with($this->tracker)->andReturn(
-            new SemanticTimeframe($this->tracker, $start_date_field, $duration_field, null)
+            new SemanticTimeframe($this->tracker, new TimeframeWithDuration($start_date_field, $duration_field))
         );
 
         $start_date_changeset = Mockery::mock(Tracker_Artifact_ChangesetValue_Date::class);
@@ -371,27 +329,6 @@ final class TimeframeBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $start_date_field->shouldReceive('getLastChangesetValue')
             ->with($this->artifact)
             ->andReturn($start_date_changeset);
-
-        $this->expectException(Tracker_FormElement_Chart_Field_Exception::class);
-
-        $this->builder->buildTimePeriodWithoutWeekendForArtifactChartRendering(
-            $this->artifact,
-            $this->user
-        );
-    }
-
-    public function testItThrowsAnExceptionWhenNoDurationFieldInChartContext()
-    {
-        $start_date       = '07/01/2013';
-        $start_date_field = Mockery::mock(Tracker_FormElement_Field_Date::class);
-        $start_date_field->shouldReceive('userCanRead')->andReturn(true);
-        $duration_field = null;
-
-        $this->semantic_timeframe_builder->shouldReceive('getSemantic')->with($this->tracker)->andReturn(
-            new SemanticTimeframe($this->tracker, $start_date_field, $duration_field, null)
-        );
-
-        $this->mockStartDateFieldWithValue($start_date, $start_date_field);
 
         $this->expectException(Tracker_FormElement_Chart_Field_Exception::class);
 
@@ -411,7 +348,7 @@ final class TimeframeBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $duration_field->shouldReceive('userCanRead')->andReturn(true);
 
         $this->semantic_timeframe_builder->shouldReceive('getSemantic')->with($this->tracker)->andReturn(
-            new SemanticTimeframe($this->tracker, $start_date_field, $duration_field, null)
+            new SemanticTimeframe($this->tracker, new TimeframeWithDuration($start_date_field, $duration_field))
         );
 
         $this->mockStartDateFieldWithValue($start_date, $start_date_field);
@@ -435,7 +372,7 @@ final class TimeframeBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $duration_field->shouldReceive('userCanRead')->andReturn(true);
 
         $this->semantic_timeframe_builder->shouldReceive('getSemantic')->with($this->tracker)->andReturn(
-            new SemanticTimeframe($this->tracker, $start_date_field, $duration_field, null)
+            new SemanticTimeframe($this->tracker, new TimeframeWithDuration($start_date_field, $duration_field))
         );
 
         $this->mockStartDateFieldWithValue($start_date, $start_date_field);
@@ -459,7 +396,7 @@ final class TimeframeBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $duration_field->shouldReceive('userCanRead')->andReturn(true);
 
         $this->semantic_timeframe_builder->shouldReceive('getSemantic')->with($this->tracker)->andReturn(
-            new SemanticTimeframe($this->tracker, $start_date_field, $duration_field, null)
+            new SemanticTimeframe($this->tracker, new TimeframeWithDuration($start_date_field, $duration_field))
         );
 
         $this->mockStartDateFieldWithValue($start_date, $start_date_field);
@@ -483,7 +420,7 @@ final class TimeframeBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $duration_field->shouldReceive('userCanRead')->andReturn(true);
 
         $this->semantic_timeframe_builder->shouldReceive('getSemantic')->with($this->tracker)->andReturn(
-            new SemanticTimeframe($this->tracker, $start_date_field, $duration_field, null)
+            new SemanticTimeframe($this->tracker, new TimeframeWithDuration($start_date_field, $duration_field))
         );
 
         $this->mockStartDateFieldWithValue($start_date, $start_date_field);
@@ -506,7 +443,7 @@ final class TimeframeBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $duration_field->shouldReceive('userCanRead')->andReturn(true);
 
         $this->semantic_timeframe_builder->shouldReceive('getSemantic')->with($this->tracker)->andReturn(
-            new SemanticTimeframe($this->tracker, $start_date_field, $duration_field, null)
+            new SemanticTimeframe($this->tracker, new TimeframeWithDuration($start_date_field, $duration_field))
         );
 
         $this->mockStartDateFieldWithValue($start_date, $start_date_field);
@@ -531,7 +468,7 @@ final class TimeframeBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $end_date_field->shouldReceive('userCanRead')->andReturn(true);
 
         $this->semantic_timeframe_builder->shouldReceive('getSemantic')->with($this->tracker)->andReturn(
-            new SemanticTimeframe($this->tracker, $start_date_field, null, $end_date_field)
+            new SemanticTimeframe($this->tracker, new TimeframeWithEndDate($start_date_field, $end_date_field))
         );
 
         $this->mockStartDateFieldWithValue($start_date, $start_date_field);
@@ -556,7 +493,7 @@ final class TimeframeBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $end_date_field->shouldReceive('userCanRead')->andReturn(false);
 
         $this->semantic_timeframe_builder->shouldReceive('getSemantic')->with($this->tracker)->andReturn(
-            new SemanticTimeframe($this->tracker, $start_date_field, null, $end_date_field)
+            new SemanticTimeframe($this->tracker, new TimeframeWithEndDate($start_date_field, $end_date_field))
         );
 
         $this->mockStartDateFieldWithValue($start_date, $start_date_field);
@@ -578,7 +515,7 @@ final class TimeframeBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $end_date_field->shouldReceive('userCanRead')->andReturn(true);
 
         $this->semantic_timeframe_builder->shouldReceive('getSemantic')->with($this->tracker)->andReturn(
-            new SemanticTimeframe($this->tracker, $start_date_field, null, $end_date_field)
+            new SemanticTimeframe($this->tracker, new TimeframeWithEndDate($start_date_field, $end_date_field))
         );
 
         $this->mockStartDateFieldWithValue($start_date, $start_date_field);
@@ -608,7 +545,7 @@ final class TimeframeBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $end_date_field->shouldReceive('userCanRead')->andReturn(true);
 
         $this->semantic_timeframe_builder->shouldReceive('getSemantic')->with($this->tracker)->andReturn(
-            new SemanticTimeframe($this->tracker, $start_date_field, null, $end_date_field)
+            new SemanticTimeframe($this->tracker, new TimeframeWithEndDate($start_date_field, $end_date_field))
         );
 
         $this->mockStartDateFieldWithValue($start_date, $start_date_field);
@@ -636,7 +573,7 @@ final class TimeframeBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $duration_field->shouldReceive('userCanRead')->andReturn(true);
 
         $this->semantic_timeframe_builder->shouldReceive('getSemantic')->with($this->tracker)->andReturn(
-            new SemanticTimeframe($this->tracker, $start_date_field, $duration_field, null)
+            new SemanticTimeframe($this->tracker, new TimeframeWithDuration($start_date_field, $duration_field))
         );
 
         $this->mockStartDateFieldWithValue($start_date, $start_date_field);
@@ -649,46 +586,6 @@ final class TimeframeBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertSame(10, $time_period->getDuration());
     }
 
-    public function testItBuildsATimePeriodWithoutWeekObjectForRESTWithStartDateAsNullForArtifactIfNoFieldStartDate(): void
-    {
-        $duration         = 10;
-        $start_date_field = null;
-        $duration_field   = Mockery::mock(Tracker_FormElement_Field_Numeric::class);
-        $duration_field->shouldReceive('userCanRead')->andReturn(true);
-
-        $this->semantic_timeframe_builder->shouldReceive('getSemantic')->with($this->tracker)->andReturn(
-            new SemanticTimeframe($this->tracker, $start_date_field, $duration_field, null)
-        );
-
-        $this->mockDurationFieldWithValue($duration, $duration_field);
-
-        $time_period = $this->builder->buildTimePeriodWithoutWeekendForArtifactForREST($this->artifact, $this->user);
-
-        $this->assertNull($time_period->getStartDate());
-        $this->assertSame(1209600, $time_period->getEndDate());
-        $this->assertSame(10, $time_period->getDuration());
-    }
-
-    public function testItBuildsATimePeriodWithoutWeekObjectForRESTWithDurationAsNullForArtifactIfNoFieldDuration(): void
-    {
-        $start_date       = '07/01/2013';
-        $start_date_field = Mockery::mock(Tracker_FormElement_Field_Date::class);
-        $start_date_field->shouldReceive('userCanRead')->andReturn(true);
-        $duration_field = null;
-
-        $this->semantic_timeframe_builder->shouldReceive('getSemantic')->with($this->tracker)->andReturn(
-            new SemanticTimeframe($this->tracker, $start_date_field, $duration_field, null)
-        );
-
-        $this->mockStartDateFieldWithValue($start_date, $start_date_field);
-
-        $time_period = $this->builder->buildTimePeriodWithoutWeekendForArtifactForREST($this->artifact, $this->user);
-
-        self::assertSame(strtotime($start_date), $time_period->getStartDate());
-        self::assertNull($time_period->getEndDate());
-        self::assertNull($time_period->getDuration());
-    }
-
     public function testItBuildsATimePeriodWithoutWeekObjectForRESTWithStartDateAsNullForArtifactIfNoLastChangesetValueForStartDate(): void
     {
         $duration         = 10;
@@ -698,7 +595,7 @@ final class TimeframeBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $duration_field->shouldReceive('userCanRead')->andReturn(true);
 
         $this->semantic_timeframe_builder->shouldReceive('getSemantic')->with($this->tracker)->andReturn(
-            new SemanticTimeframe($this->tracker, $start_date_field, $duration_field, null)
+            new SemanticTimeframe($this->tracker, new TimeframeWithDuration($start_date_field, $duration_field))
         );
 
         $start_date_field->shouldReceive('getLastChangesetValue')
@@ -723,7 +620,7 @@ final class TimeframeBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $duration_field->shouldReceive('userCanRead')->andReturn(true);
 
         $this->semantic_timeframe_builder->shouldReceive('getSemantic')->with($this->tracker)->andReturn(
-            new SemanticTimeframe($this->tracker, $start_date_field, $duration_field, null)
+            new SemanticTimeframe($this->tracker, new TimeframeWithDuration($start_date_field, $duration_field))
         );
 
         $this->mockStartDateFieldWithValue($start_date, $start_date_field);
@@ -749,7 +646,7 @@ final class TimeframeBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $end_date_field->shouldReceive('userCanRead')->andReturn(true);
 
         $this->semantic_timeframe_builder->shouldReceive('getSemantic')->with($this->tracker)->andReturn(
-            new SemanticTimeframe($this->tracker, $start_date_field, null, $end_date_field)
+            new SemanticTimeframe($this->tracker, new TimeframeWithEndDate($start_date_field, $end_date_field))
         );
 
         $this->mockStartDateFieldWithValue($start_date, $start_date_field);
@@ -772,7 +669,7 @@ final class TimeframeBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $end_date_field->shouldReceive('userCanRead')->andReturn(false);
 
         $this->semantic_timeframe_builder->shouldReceive('getSemantic')->with($this->tracker)->andReturn(
-            new SemanticTimeframe($this->tracker, $start_date_field, null, $end_date_field)
+            new SemanticTimeframe($this->tracker, new TimeframeWithEndDate($start_date_field, $end_date_field))
         );
 
         $this->mockStartDateFieldWithValue($start_date, $start_date_field);
@@ -794,7 +691,7 @@ final class TimeframeBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $end_date_field->shouldReceive('userCanRead')->andReturn(true);
 
         $this->semantic_timeframe_builder->shouldReceive('getSemantic')->with($this->tracker)->andReturn(
-            new SemanticTimeframe($this->tracker, $start_date_field, null, $end_date_field)
+            new SemanticTimeframe($this->tracker, new TimeframeWithEndDate($start_date_field, $end_date_field))
         );
 
         $this->mockStartDateFieldWithValue($start_date, $start_date_field);
