@@ -28,7 +28,7 @@ use Tuleap\Gitlab\Reference\MergeRequest\GitlabMergeRequestReference;
 use Tuleap\Gitlab\Reference\TuleapReferencedArtifactNotFoundException;
 use Tuleap\Gitlab\Reference\TuleapReferenceNotFoundException;
 use Tuleap\Gitlab\Reference\TuleapReferenceRetriever;
-use Tuleap\Gitlab\Repository\GitlabRepository;
+use Tuleap\Gitlab\Repository\GitlabRepositoryIntegration;
 use Tuleap\Gitlab\Repository\Webhook\WebhookTuleapReference;
 
 class CrossReferenceFromMergeRequestCreator
@@ -67,7 +67,7 @@ class CrossReferenceFromMergeRequestCreator
      */
     public function createCrossReferencesFromMergeRequest(
         PostMergeRequestWebhookData $webhook_data,
-        GitlabRepository $gitlab_repository_integration
+        GitlabRepositoryIntegration $gitlab_repository_integration
     ): array {
         $references_collection = $this->references_from_merge_request_data_extractor->extract(
             $webhook_data->getTitle(),
@@ -115,7 +115,7 @@ class CrossReferenceFromMergeRequestCreator
     }
 
     private function saveReferenceInIntegratedProject(
-        GitlabRepository $gitlab_repository_integration,
+        GitlabRepositoryIntegration $gitlab_repository_integration,
         WebhookTuleapReference $tuleap_reference,
         PostMergeRequestWebhookData $merge_request_webhook_data,
         \Reference $external_reference
@@ -136,9 +136,9 @@ class CrossReferenceFromMergeRequestCreator
     }
 
     private function getGitlabMergeRequestReferenceId(
-        GitlabRepository $gitlab_repository,
+        GitlabRepositoryIntegration $gitlab_repository_integration,
         PostMergeRequestWebhookData $merge_request_webhook_data
     ): string {
-        return $gitlab_repository->getName() . '/' . $merge_request_webhook_data->getMergeRequestId();
+        return $gitlab_repository_integration->getName() . '/' . $merge_request_webhook_data->getMergeRequestId();
     }
 }

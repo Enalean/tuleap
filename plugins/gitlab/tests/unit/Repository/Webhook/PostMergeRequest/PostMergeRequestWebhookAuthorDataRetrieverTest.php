@@ -25,7 +25,7 @@ use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Project;
 use Tuleap\Gitlab\API\ClientWrapper;
-use Tuleap\Gitlab\Repository\GitlabRepository;
+use Tuleap\Gitlab\Repository\GitlabRepositoryIntegration;
 use Tuleap\Gitlab\Repository\Webhook\Bot\CredentialsRetriever;
 use Tuleap\Gitlab\Test\Builder\CredentialsTestBuilder;
 
@@ -59,7 +59,7 @@ class PostMergeRequestWebhookAuthorDataRetrieverTest extends \Tuleap\Test\PHPUni
 
     public function testItReturnsNullIfNoCredentials(): void
     {
-        $repository = new GitlabRepository(
+        $integration = new GitlabRepositoryIntegration(
             1,
             2,
             'winter-is-coming',
@@ -84,18 +84,18 @@ class PostMergeRequestWebhookAuthorDataRetrieverTest extends \Tuleap\Test\PHPUni
 
         $this->credentials_retriever
             ->shouldReceive('getCredentials')
-            ->with($repository)
+            ->with($integration)
             ->andReturn(null)
             ->once();
 
-        $author = $this->author_retriever->retrieveAuthorData($repository, $merge_request_webhook_data);
+        $author = $this->author_retriever->retrieveAuthorData($integration, $merge_request_webhook_data);
 
         $this->assertNull($author);
     }
 
     public function testGitlabApiClientIsCallToGetAuthor(): void
     {
-        $repository = new GitlabRepository(
+        $integration = new GitlabRepositoryIntegration(
             1,
             2,
             'winter-is-coming',
@@ -122,7 +122,7 @@ class PostMergeRequestWebhookAuthorDataRetrieverTest extends \Tuleap\Test\PHPUni
 
         $this->credentials_retriever
             ->shouldReceive('getCredentials')
-            ->with($repository)
+            ->with($integration)
             ->andReturn($credentials)
             ->once();
 
@@ -132,7 +132,7 @@ class PostMergeRequestWebhookAuthorDataRetrieverTest extends \Tuleap\Test\PHPUni
             ->andReturn(['name' => 'John', 'email' => 'john@thewall.fr'])
             ->once();
 
-        $author = $this->author_retriever->retrieveAuthorData($repository, $merge_request_webhook_data);
+        $author = $this->author_retriever->retrieveAuthorData($integration, $merge_request_webhook_data);
 
         $this->assertEquals(['name' => 'John', 'email' => 'john@thewall.fr'], $author);
     }

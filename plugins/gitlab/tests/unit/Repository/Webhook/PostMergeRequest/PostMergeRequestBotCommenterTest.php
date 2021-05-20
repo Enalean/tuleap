@@ -27,7 +27,7 @@ use TemplateRendererFactory;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\Gitlab\API\ClientWrapper;
 use Tuleap\Gitlab\API\GitlabRequestException;
-use Tuleap\Gitlab\Repository\GitlabRepository;
+use Tuleap\Gitlab\Repository\GitlabRepositoryIntegration;
 use Tuleap\Gitlab\Repository\Webhook\Bot\BotCommentReferencePresenter;
 use Tuleap\Gitlab\Repository\Webhook\Bot\BotCommentReferencePresenterBuilder;
 use Tuleap\Gitlab\Repository\Webhook\Bot\CommentSender;
@@ -64,7 +64,7 @@ class PostMergeRequestBotCommenterTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $webhook_data;
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|GitlabRepository
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|GitlabRepositoryIntegration
      */
     private $gitlab_repository;
     /**
@@ -84,7 +84,7 @@ class PostMergeRequestBotCommenterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->credentials_retriever = Mockery::mock(CredentialsRetriever::class);
         $this->logger                = Mockery::mock(LoggerInterface::class);
         $this->webhook_data          = Mockery::mock(PostMergeRequestWebhookData::class);
-        $this->gitlab_repository     = Mockery::mock(GitlabRepository::class);
+        $this->gitlab_repository     = Mockery::mock(GitlabRepositoryIntegration::class);
 
         $this->bot_comment_reference_presenter_builder = Mockery::mock(BotCommentReferencePresenterBuilder::class);
 

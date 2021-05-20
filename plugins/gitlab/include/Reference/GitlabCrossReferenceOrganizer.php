@@ -32,7 +32,7 @@ use Tuleap\Gitlab\Reference\MergeRequest\GitlabMergeRequestReference;
 use Tuleap\Gitlab\Reference\MergeRequest\GitlabMergeRequestReferenceRetriever;
 use Tuleap\Gitlab\Reference\Tag\GitlabTagFactory;
 use Tuleap\Gitlab\Reference\Tag\GitlabTagReference;
-use Tuleap\Gitlab\Repository\GitlabRepository;
+use Tuleap\Gitlab\Repository\GitlabRepositoryIntegration;
 use Tuleap\Gitlab\Repository\GitlabRepositoryFactory;
 use Tuleap\Reference\AdditionalBadgePresenter;
 use Tuleap\Reference\CreationMetadataPresenter;
@@ -172,13 +172,13 @@ class GitlabCrossReferenceOrganizer
         CrossReferenceByNatureOrganizer $by_nature_organizer,
         CrossReferencePresenter $cross_reference_presenter,
         Project $project,
-        GitlabRepository $repository,
+        GitlabRepositoryIntegration $repository_integration,
         string $sha1
     ): void {
         $user = $by_nature_organizer->getCurrentUser();
 
         $commit_info = $this->gitlab_commit_factory->getGitlabCommitInRepositoryWithSha1(
-            $repository,
+            $repository_integration,
             $sha1
         );
 
@@ -194,7 +194,7 @@ class GitlabCrossReferenceOrganizer
                 $commit_info,
                 $user
             ),
-            $project->getUnixNameLowerCase() . '/' . $repository->getName()
+            $project->getUnixNameLowerCase() . '/' . $repository_integration->getName()
         );
     }
 
@@ -202,11 +202,11 @@ class GitlabCrossReferenceOrganizer
         CrossReferenceByNatureOrganizer $by_nature_organizer,
         CrossReferencePresenter $cross_reference_presenter,
         Project $project,
-        GitlabRepository $repository,
+        GitlabRepositoryIntegration $repository_integration,
         int $id
     ): void {
         $gitlab_merge_request = $this->gitlab_merge_request_reference_retriever->getGitlabMergeRequestInRepositoryWithId(
-            $repository,
+            $repository_integration,
             $id
         );
 
@@ -227,7 +227,7 @@ class GitlabCrossReferenceOrganizer
                     $this->getCreatedOnPresenter($gitlab_merge_request, $user)
                 )
                 ->withAdditionalBadges($additional_badge_presenters),
-            $project->getUnixNameLowerCase() . '/' . $repository->getName()
+            $project->getUnixNameLowerCase() . '/' . $repository_integration->getName()
         );
     }
 
@@ -235,11 +235,11 @@ class GitlabCrossReferenceOrganizer
         CrossReferenceByNatureOrganizer $by_nature_organizer,
         CrossReferencePresenter $cross_reference_presenter,
         Project $project,
-        GitlabRepository $repository,
+        GitlabRepositoryIntegration $repository_integration,
         string $tag_name
     ): void {
         $tag_info = $this->gitlab_tag_factory->getGitlabTagInRepositoryWithTagName(
-            $repository,
+            $repository_integration,
             $tag_name
         );
 
@@ -257,7 +257,7 @@ class GitlabCrossReferenceOrganizer
                         AdditionalBadgePresenter::buildSecondary(substr($tag_info->getCommitSha1(), 0, 10))
                     ]
                 ),
-            $project->getUnixNameLowerCase() . '/' . $repository->getName()
+            $project->getUnixNameLowerCase() . '/' . $repository_integration->getName()
         );
     }
 

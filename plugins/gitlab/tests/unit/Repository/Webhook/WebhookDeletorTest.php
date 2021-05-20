@@ -29,7 +29,7 @@ use Psr\Log\LoggerInterface;
 use Tuleap\Gitlab\API\ClientWrapper;
 use Tuleap\Gitlab\API\Credentials;
 use Tuleap\Gitlab\API\GitlabRequestException;
-use Tuleap\Gitlab\Repository\GitlabRepository;
+use Tuleap\Gitlab\Repository\GitlabRepositoryIntegration;
 use Tuleap\Gitlab\Repository\Webhook\Bot\CredentialsRetriever;
 use Tuleap\Gitlab\Test\Builder\CredentialsTestBuilder;
 
@@ -76,7 +76,7 @@ class WebhookDeletorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItDoesNotDeleteIfNoOldWebhook(): void
     {
-        $repository = new GitlabRepository(
+        $integration = new GitlabRepositoryIntegration(
             1,
             2,
             'winter-is-coming',
@@ -101,12 +101,12 @@ class WebhookDeletorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->logger->shouldReceive('info')->never();
 
-        $this->deletor->deleteGitlabWebhookFromGitlabRepository($this->credentials, $repository);
+        $this->deletor->deleteGitlabWebhookFromGitlabRepository($this->credentials, $integration);
     }
 
     public function testItDoesNotDeleteIfNoOldWebhookId(): void
     {
-        $repository = new GitlabRepository(
+        $integration = new GitlabRepositoryIntegration(
             1,
             2,
             'winter-is-coming',
@@ -129,12 +129,12 @@ class WebhookDeletorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->logger->shouldReceive('info')->never();
 
-        $this->deletor->deleteGitlabWebhookFromGitlabRepository($this->credentials, $repository);
+        $this->deletor->deleteGitlabWebhookFromGitlabRepository($this->credentials, $integration);
     }
 
     public function testItOnlyDeleteDBIfNoCredentials(): void
     {
-        $repository = new GitlabRepository(
+        $integration = new GitlabRepositoryIntegration(
             1,
             2,
             'winter-is-coming',
@@ -159,12 +159,12 @@ class WebhookDeletorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->logger->shouldReceive('info')->never();
 
-        $this->deletor->deleteGitlabWebhookFromGitlabRepository(null, $repository);
+        $this->deletor->deleteGitlabWebhookFromGitlabRepository(null, $integration);
     }
 
     public function testItRemovesOldWebhookFromServerAndDb(): void
     {
-        $repository = new GitlabRepository(
+        $integration = new GitlabRepositoryIntegration(
             1,
             2,
             'winter-is-coming',
@@ -200,12 +200,12 @@ class WebhookDeletorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->logger->shouldReceive('info')->with("Deleting previous hook for the_full_url")->once();
 
-        $this->deletor->deleteGitlabWebhookFromGitlabRepository($this->credentials, $repository);
+        $this->deletor->deleteGitlabWebhookFromGitlabRepository($this->credentials, $integration);
     }
 
     public function testItRemovesOldWebhookFromServerAndDbAndInAnotherIntegrations(): void
     {
-        $repository = new GitlabRepository(
+        $integration = new GitlabRepositoryIntegration(
             1,
             2,
             'winter-is-coming',
@@ -253,12 +253,12 @@ class WebhookDeletorTest extends \Tuleap\Test\PHPUnit\TestCase
             )
             ->once();
 
-        $this->deletor->deleteGitlabWebhookFromGitlabRepository($this->credentials, $repository);
+        $this->deletor->deleteGitlabWebhookFromGitlabRepository($this->credentials, $integration);
     }
 
     public function testItThrowsExceptionIfWebhookCreationReturnsUnexpectedPayload(): void
     {
-        $repository = new GitlabRepository(
+        $integration = new GitlabRepositoryIntegration(
             1,
             2,
             'winter-is-coming',
@@ -303,6 +303,6 @@ class WebhookDeletorTest extends \Tuleap\Test\PHPUnit\TestCase
             ->with(1)
             ->andReturnFalse();
 
-        $this->deletor->deleteGitlabWebhookFromGitlabRepository($this->credentials, $repository);
+        $this->deletor->deleteGitlabWebhookFromGitlabRepository($this->credentials, $integration);
     }
 }

@@ -33,7 +33,7 @@ use Tuleap\Gitlab\API\Credentials;
 use Tuleap\Gitlab\API\GitlabProjectBuilder;
 use Tuleap\Gitlab\API\GitlabRequestException;
 use Tuleap\Gitlab\API\GitlabResponseAPIException;
-use Tuleap\Gitlab\Repository\GitlabRepository;
+use Tuleap\Gitlab\Repository\GitlabRepositoryIntegration;
 use Tuleap\Gitlab\Repository\GitlabRepositoryFactory;
 use Tuleap\Gitlab\Repository\Token\GitlabBotApiTokenInserter;
 use Tuleap\Gitlab\Repository\Webhook\WebhookCreator;
@@ -118,7 +118,7 @@ class BotApiTokenUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
             new ConcealedString('My New Token'),
         );
 
-        $repository = Mockery::mock(GitlabRepository::class);
+        $repository = Mockery::mock(GitlabRepositoryIntegration::class);
 
         $this->repository_factory
             ->shouldReceive('getGitlabRepositoryById')
@@ -150,7 +150,7 @@ class BotApiTokenUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $repository = Mockery::mock(
-            GitlabRepository::class,
+            GitlabRepositoryIntegration::class,
             [
                 'getGitlabRepositoryId' => 123,
                 'getGitlabServerUrl'    => 'https://gitlab.example.com',
@@ -202,7 +202,7 @@ class BotApiTokenUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $repository = Mockery::mock(
-            GitlabRepository::class,
+            GitlabRepositoryIntegration::class,
             [
                 'getGitlabRepositoryId' => 123,
                 'getGitlabServerUrl'    => 'https://gitlab.example.com',
@@ -254,7 +254,7 @@ class BotApiTokenUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $repository = Mockery::mock(
-            GitlabRepository::class,
+            GitlabRepositoryIntegration::class,
             [
                 'getGitlabRepositoryId' => 123,
                 'getGitlabServerUrl'    => 'https://gitlab.example.com',
@@ -315,7 +315,7 @@ class BotApiTokenUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $repository = Mockery::mock(
-            GitlabRepository::class,
+            GitlabRepositoryIntegration::class,
             [
                 'getGitlabRepositoryId' => 123,
                 'getGitlabServerUrl'    => 'https://gitlab.example.com',

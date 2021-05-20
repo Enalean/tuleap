@@ -21,7 +21,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Gitlab\Reference\Tag;
 
-use Tuleap\Gitlab\Repository\GitlabRepository;
+use Tuleap\Gitlab\Repository\GitlabRepositoryIntegration;
 use Tuleap\Gitlab\Repository\Webhook\TagPush\TagInfoDao;
 
 class GitlabTagFactory
@@ -36,10 +36,12 @@ class GitlabTagFactory
         $this->tag_info_dao = $tag_info_dao;
     }
 
-    public function getGitlabTagInRepositoryWithTagName(GitlabRepository $repository, string $tag_name): ?GitlabTag
-    {
+    public function getGitlabTagInRepositoryWithTagName(
+        GitlabRepositoryIntegration $repository_integration,
+        string $tag_name
+    ): ?GitlabTag {
         $row = $this->tag_info_dao->searchTagInRepositoryWithTagName(
-            $repository->getId(),
+            $repository_integration->getId(),
             $tag_name
         );
 

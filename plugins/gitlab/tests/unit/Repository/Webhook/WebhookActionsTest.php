@@ -27,7 +27,7 @@ use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Project;
 use Psr\Log\LoggerInterface;
-use Tuleap\Gitlab\Repository\GitlabRepository;
+use Tuleap\Gitlab\Repository\GitlabRepositoryIntegration;
 use Tuleap\Gitlab\Repository\GitlabRepositoryDao;
 use Tuleap\Gitlab\Repository\Webhook\PostPush\PostPushCommitWebhookData;
 use Tuleap\Gitlab\Repository\Webhook\PostPush\PostPushWebhookActionProcessor;
@@ -53,9 +53,9 @@ final class WebhookActionsTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $logger;
     /**
-     * @var GitlabRepository
+     * @var GitlabRepositoryIntegration
      */
-    private $gitlab_repository;
+    private $gitlab_repository_integration;
     /**
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|PostPushWebhookActionProcessor
      */
@@ -87,7 +87,7 @@ final class WebhookActionsTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->logger
         );
 
-        $this->gitlab_repository = new GitlabRepository(
+        $this->gitlab_repository_integration = new GitlabRepositoryIntegration(
             1,
             123654,
             'root/repo01',
@@ -132,11 +132,11 @@ final class WebhookActionsTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->post_push_webhook_action_processor
             ->shouldReceive('process')
-            ->with($this->gitlab_repository, $webhook_data)
+            ->with($this->gitlab_repository_integration, $webhook_data)
             ->once();
 
         $this->actions->performActions(
-            $this->gitlab_repository,
+            $this->gitlab_repository_integration,
             $webhook_data,
             $now
         );
@@ -173,11 +173,11 @@ final class WebhookActionsTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->post_merge_request_webhook_action_processor
             ->shouldReceive('process')
-            ->with($this->gitlab_repository, $merge_request_webhook_data)
+            ->with($this->gitlab_repository_integration, $merge_request_webhook_data)
             ->once();
 
         $this->actions->performActions(
-            $this->gitlab_repository,
+            $this->gitlab_repository_integration,
             $merge_request_webhook_data,
             $now
         );
@@ -218,7 +218,7 @@ final class WebhookActionsTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->expectException(LogicException::class);
 
         $this->actions->performActions(
-            $this->gitlab_repository,
+            $this->gitlab_repository_integration,
             $webhook_data,
             new DateTimeImmutable(),
         );

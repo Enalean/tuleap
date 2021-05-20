@@ -21,7 +21,7 @@
 namespace Tuleap\Gitlab\Repository\Token;
 
 use Tuleap\Cryptography\ConcealedString;
-use Tuleap\Gitlab\Repository\GitlabRepository;
+use Tuleap\Gitlab\Repository\GitlabRepositoryIntegration;
 use Tuleap\Cryptography\KeyFactory;
 use Tuleap\Cryptography\Symmetric\SymmetricCrypto;
 
@@ -42,7 +42,7 @@ class GitlabBotApiTokenInserter
         $this->key_factory = $key_factory;
     }
 
-    public function insertToken(GitlabRepository $gitlab_repository, ConcealedString $token): void
+    public function insertToken(GitlabRepositoryIntegration $repository_integration, ConcealedString $token): void
     {
         $encrypted_secret = SymmetricCrypto::encrypt(
             $token,
@@ -50,7 +50,7 @@ class GitlabBotApiTokenInserter
         );
 
         $this->dao->storeToken(
-            $gitlab_repository->getId(),
+            $repository_integration->getId(),
             $encrypted_secret
         );
     }

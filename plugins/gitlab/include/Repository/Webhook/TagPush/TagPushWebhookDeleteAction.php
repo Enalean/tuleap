@@ -24,7 +24,7 @@ namespace Tuleap\Gitlab\Repository\Webhook\TagPush;
 use CrossReferenceManager;
 use Psr\Log\LoggerInterface;
 use Tuleap\Gitlab\Reference\Tag\GitlabTagReference;
-use Tuleap\Gitlab\Repository\GitlabRepository;
+use Tuleap\Gitlab\Repository\GitlabRepositoryIntegration;
 
 class TagPushWebhookDeleteAction
 {
@@ -52,7 +52,7 @@ class TagPushWebhookDeleteAction
     }
 
     public function deleteTagReferences(
-        GitlabRepository $gitlab_repository_integration,
+        GitlabRepositoryIntegration $gitlab_repository_integration,
         TagPushWebhookData $tag_push_webhook_data
     ): void {
         $tag_name = $tag_push_webhook_data->getTagName();

@@ -21,7 +21,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Gitlab\Reference\Commit;
 
-use Tuleap\Gitlab\Repository\GitlabRepository;
+use Tuleap\Gitlab\Repository\GitlabRepositoryIntegration;
 use Tuleap\Gitlab\Repository\Webhook\PostPush\Commits\CommitTuleapReferenceDao;
 
 class GitlabCommitFactory
@@ -36,10 +36,12 @@ class GitlabCommitFactory
         $this->gitlab_commit_dao = $gitlab_commit_dao;
     }
 
-    public function getGitlabCommitInRepositoryWithSha1(GitlabRepository $repository, string $commit_sha1): ?GitlabCommit
-    {
+    public function getGitlabCommitInRepositoryWithSha1(
+        GitlabRepositoryIntegration $repository_integration,
+        string $commit_sha1
+    ): ?GitlabCommit {
         $row = $this->gitlab_commit_dao->searchCommitInRepositoryWithSha1(
-            $repository->getId(),
+            $repository_integration->getId(),
             $commit_sha1
         );
 

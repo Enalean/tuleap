@@ -24,7 +24,7 @@ use Psr\Log\LoggerInterface;
 use TemplateRendererFactory;
 use Tuleap\Gitlab\API\GitlabRequestException;
 use Tuleap\Gitlab\API\GitlabResponseAPIException;
-use Tuleap\Gitlab\Repository\GitlabRepository;
+use Tuleap\Gitlab\Repository\GitlabRepositoryIntegration;
 use Tuleap\Gitlab\Repository\Webhook\Bot\BotCommentPresenter;
 use Tuleap\Gitlab\Repository\Webhook\Bot\BotCommentReferencePresenterBuilder;
 use Tuleap\Gitlab\Repository\Webhook\Bot\CommentSender;
@@ -73,14 +73,14 @@ class PostMergeRequestBotCommenter
      */
     public function addCommentOnMergeRequest(
         PostMergeRequestWebhookData $merge_request,
-        GitlabRepository $gitlab_repository,
+        GitlabRepositoryIntegration $gitlab_repository_integration,
         array $references
     ): void {
         if (count($references) === 0) {
             return;
         }
 
-        $credentials = $this->credentials_retriever->getCredentials($gitlab_repository);
+        $credentials = $this->credentials_retriever->getCredentials($gitlab_repository_integration);
 
         $merge_request_id = $merge_request->getMergeRequestId();
         if (! $credentials) {
@@ -94,9 +94,9 @@ class PostMergeRequestBotCommenter
         $comment  = $renderer->renderToString("gitlab-bot-comment-merge-request", new BotCommentPresenter($reference_presenters));
 
         try {
-            $url = "/projects/{$gitlab_repository->getGitlabRepositoryId()}/merge_requests/$merge_request_id/notes";
+            $url = "/projects/{$gitlab_repository_integration->getGitlabRepositoryId()}/merge_requests/$merge_request_id/notes";
             $this->comment_sender->sendComment(
-                $gitlab_repository,
+                $gitlab_repository_integration,
                 $credentials,
                 $url,
                 ["body" => $comment]

@@ -23,7 +23,7 @@ namespace Tuleap\Gitlab\Repository\Webhook\Bot;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\Cryptography\ConcealedString;
-use Tuleap\Gitlab\Repository\GitlabRepository;
+use Tuleap\Gitlab\Repository\GitlabRepositoryIntegration;
 use Tuleap\Gitlab\Repository\Token\GitlabBotApiToken;
 use Tuleap\Gitlab\Repository\Token\GitlabBotApiTokenRetriever;
 
@@ -53,7 +53,7 @@ class CredentialsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testReturnsCredentialsWithTokenAndURL(): void
     {
-        $gitlab_repository = Mockery::mock(GitlabRepository::class);
+        $gitlab_repository = Mockery::mock(GitlabRepositoryIntegration::class);
         $gitlab_repository
             ->shouldReceive('getGitlabServerUrl')
             ->andReturn("https://www.example.com/")
@@ -71,7 +71,7 @@ class CredentialsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testReturnsNullIfNoSavedToken(): void
     {
-        $gitlab_repository = Mockery::mock(GitlabRepository::class);
+        $gitlab_repository = Mockery::mock(GitlabRepositoryIntegration::class);
         $gitlab_repository
             ->shouldReceive('getGitlabServerUrl')
             ->never();

@@ -67,9 +67,9 @@ class GitlabRepositoryDeletorTest extends \Tuleap\Test\PHPUnit\TestCase
     private $project;
 
     /**
-     * @var GitlabRepository
+     * @var GitlabRepositoryIntegration
      */
-    private $gitlab_repository;
+    private $gitlab_repository_integration;
 
     /**
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|PFUser
@@ -129,7 +129,7 @@ class GitlabRepositoryDeletorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->project = Project::buildForTest();
         $this->user    = Mockery::mock(PFUser::class);
 
-        $this->gitlab_repository = new GitlabRepository(
+        $this->gitlab_repository_integration = new GitlabRepositoryIntegration(
             1,
             156981,
             'root/repo01',
@@ -151,7 +151,7 @@ class GitlabRepositoryDeletorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->expectException(GitUserNotAdminException::class);
 
         $this->deletor->deleteRepositoryIntegration(
-            $this->gitlab_repository,
+            $this->gitlab_repository_integration,
             $this->user
         );
     }
@@ -173,7 +173,7 @@ class GitlabRepositoryDeletorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->webhook_deletor
             ->shouldReceive('deleteGitlabWebhookFromGitlabRepository')
             ->once()
-            ->with($credentials, $this->gitlab_repository);
+            ->with($credentials, $this->gitlab_repository_integration);
 
         $this->gitlab_repository_dao->shouldReceive('deleteGitlabRepository')->once();
         $this->gitlab_bot_api_token_dao->shouldReceive('deleteIntegrationToken')->once();
@@ -187,7 +187,7 @@ class GitlabRepositoryDeletorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->tag_info_dao->shouldReceive('deleteTagsInIntegration')->once();
 
         $this->deletor->deleteRepositoryIntegration(
-            $this->gitlab_repository,
+            $this->gitlab_repository_integration,
             $this->user
         );
     }

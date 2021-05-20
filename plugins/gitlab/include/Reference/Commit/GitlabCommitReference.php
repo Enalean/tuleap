@@ -22,7 +22,7 @@ declare(strict_types=1);
 namespace Tuleap\Gitlab\Reference\Commit;
 
 use Project;
-use Tuleap\Gitlab\Repository\GitlabRepository;
+use Tuleap\Gitlab\Repository\GitlabRepositoryIntegration;
 
 class GitlabCommitReference extends \Reference
 {
@@ -30,7 +30,7 @@ class GitlabCommitReference extends \Reference
     public const NATURE_NAME    = 'plugin_gitlab_commit';
 
     public function __construct(
-        GitlabRepository $gitlab_repository,
+        GitlabRepositoryIntegration $repository_integration,
         Project $project,
         string $sha1
     ) {
@@ -38,7 +38,7 @@ class GitlabCommitReference extends \Reference
             0,
             self::REFERENCE_NAME,
             dgettext('tuleap-gitlab', 'GitLab commit'),
-            $gitlab_repository->getGitlabRepositoryUrl() . '/-/commit/' . $sha1,
+            $repository_integration->getGitlabRepositoryUrl() . '/-/commit/' . $sha1,
             'S',
             'plugin_gitlab',
             'plugin_gitlab',

@@ -25,7 +25,7 @@ use DateTimeImmutable;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Project;
-use Tuleap\Gitlab\Repository\GitlabRepository;
+use Tuleap\Gitlab\Repository\GitlabRepositoryIntegration;
 use Tuleap\Gitlab\Repository\GitlabRepositoryFactory;
 
 class GitlabReferenceBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -145,7 +145,7 @@ class GitlabReferenceBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                 'root/project01'
             )
             ->andReturn(
-                new GitlabRepository(
+                new GitlabRepositoryIntegration(
                     1,
                     123456,
                     'root/project01',
@@ -185,7 +185,7 @@ class GitlabReferenceBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                 'root/project01'
             )
             ->andReturn(
-                new GitlabRepository(
+                new GitlabRepositoryIntegration(
                     1,
                     123456,
                     'root/project01',
@@ -225,7 +225,7 @@ class GitlabReferenceBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                 'root/project01'
             )
             ->andReturn(
-                new GitlabRepository(
+                new GitlabRepositoryIntegration(
                     1,
                     123456,
                     'root/project01',

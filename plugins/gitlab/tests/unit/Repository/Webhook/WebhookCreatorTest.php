@@ -30,7 +30,7 @@ use Tuleap\Cryptography\KeyFactory;
 use Tuleap\Cryptography\Symmetric\EncryptionKey;
 use Tuleap\Gitlab\API\ClientWrapper;
 use Tuleap\Gitlab\API\GitlabRequestException;
-use Tuleap\Gitlab\Repository\GitlabRepository;
+use Tuleap\Gitlab\Repository\GitlabRepositoryIntegration;
 use Tuleap\Gitlab\Test\Builder\CredentialsTestBuilder;
 use Tuleap\InstanceBaseURLBuilder;
 
@@ -91,7 +91,7 @@ class WebhookCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $credentials = CredentialsTestBuilder::get()->build();
 
-        $repository = new GitlabRepository(
+        $integration = new GitlabRepositoryIntegration(
             1,
             2,
             'winter-is-coming',
@@ -153,14 +153,14 @@ class WebhookCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             ->with('Creating new hook for the_full_url')
             ->once();
 
-        $this->creator->generateWebhookInGitlabProject($credentials, $repository);
+        $this->creator->generateWebhookInGitlabProject($credentials, $integration);
     }
 
     public function testItGeneratesAWebhookForRepositoryAndRemoveTheOldOne(): void
     {
         $credentials = CredentialsTestBuilder::get()->build();
 
-        $repository = new GitlabRepository(
+        $integration = new GitlabRepositoryIntegration(
             1,
             2,
             'winter-is-coming',
@@ -243,14 +243,14 @@ class WebhookCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             ->with('Creating new hook for the_full_url')
             ->once();
 
-        $this->creator->generateWebhookInGitlabProject($credentials, $repository);
+        $this->creator->generateWebhookInGitlabProject($credentials, $integration);
     }
 
     public function testItGeneratesAWebhookForRepositoryAndDoesNotRemoveTheOldOneIfWebhookUsedByAnotherIntegration(): void
     {
         $credentials = CredentialsTestBuilder::get()->build();
 
-        $repository = new GitlabRepository(
+        $integration = new GitlabRepositoryIntegration(
             1,
             2,
             'winter-is-coming',
@@ -345,14 +345,14 @@ class WebhookCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             ->with(6)
             ->andReturnTrue();
 
-        $this->creator->generateWebhookInGitlabProject($credentials, $repository);
+        $this->creator->generateWebhookInGitlabProject($credentials, $integration);
     }
 
     public function testItDoesNotSaveAnythingIfGitlabDidNotCreateTheWebhook(): void
     {
         $credentials = CredentialsTestBuilder::get()->build();
 
-        $repository = new GitlabRepository(
+        $integration = new GitlabRepositoryIntegration(
             1,
             2,
             'winter-is-coming',
@@ -400,14 +400,14 @@ class WebhookCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->expectException(GitlabRequestException::class);
 
-        $this->creator->generateWebhookInGitlabProject($credentials, $repository);
+        $this->creator->generateWebhookInGitlabProject($credentials, $integration);
     }
 
     public function testItThrowsExceptionIfWebhookCreationReturnsUnexpectedPayload(): void
     {
         $credentials = CredentialsTestBuilder::get()->build();
 
-        $repository = new GitlabRepository(
+        $integration = new GitlabRepositoryIntegration(
             1,
             2,
             'winter-is-coming',
@@ -460,6 +460,6 @@ class WebhookCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->expectException(WebhookCreationException::class);
 
-        $this->creator->generateWebhookInGitlabProject($credentials, $repository);
+        $this->creator->generateWebhookInGitlabProject($credentials, $integration);
     }
 }

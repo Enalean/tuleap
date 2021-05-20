@@ -22,7 +22,7 @@ declare(strict_types=1);
 namespace Tuleap\Gitlab\Reference\Tag;
 
 use Project;
-use Tuleap\Gitlab\Repository\GitlabRepository;
+use Tuleap\Gitlab\Repository\GitlabRepositoryIntegration;
 
 class GitlabTagReference extends \Reference
 {
@@ -30,7 +30,7 @@ class GitlabTagReference extends \Reference
     public const NATURE_NAME    = 'plugin_gitlab_tag';
 
     public function __construct(
-        GitlabRepository $gitlab_repository,
+        GitlabRepositoryIntegration $repository_integration,
         Project $project,
         string $tag_name
     ) {
@@ -38,7 +38,7 @@ class GitlabTagReference extends \Reference
             0,
             self::REFERENCE_NAME,
             dgettext('tuleap-gitlab', 'GitLab Tag'),
-            $gitlab_repository->getGitlabRepositoryUrl() . '/-/tree/' . urlencode($tag_name),
+            $repository_integration->getGitlabRepositoryUrl() . '/-/tree/' . urlencode($tag_name),
             'S',
             'plugin_gitlab',
             'plugin_gitlab',

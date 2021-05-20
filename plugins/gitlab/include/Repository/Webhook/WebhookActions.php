@@ -24,7 +24,7 @@ namespace Tuleap\Gitlab\Repository\Webhook;
 use DateTimeImmutable;
 use LogicException;
 use Psr\Log\LoggerInterface;
-use Tuleap\Gitlab\Repository\GitlabRepository;
+use Tuleap\Gitlab\Repository\GitlabRepositoryIntegration;
 use Tuleap\Gitlab\Repository\GitlabRepositoryDao;
 use Tuleap\Gitlab\Repository\Webhook\PostPush\PostPushWebhookActionProcessor;
 use Tuleap\Gitlab\Repository\Webhook\PostPush\PostPushWebhookData;
@@ -74,36 +74,36 @@ class WebhookActions
      * @throws LogicException
      */
     public function performActions(
-        GitlabRepository $gitlab_repository,
+        GitlabRepositoryIntegration $gitlab_repository_integration,
         WebhookData $webhook_data,
         DateTimeImmutable $webhook_reception_date
     ): void {
         $this->checkWebhookDataIsSupported($webhook_data);
-        $this->updateLastPushDateForRepository($gitlab_repository, $webhook_reception_date);
+        $this->updateLastPushDateForRepository($gitlab_repository_integration, $webhook_reception_date);
 
         if ($webhook_data instanceof PostPushWebhookData) {
-            $this->post_push_webhook_action_processor->process($gitlab_repository, $webhook_data);
+            $this->post_push_webhook_action_processor->process($gitlab_repository_integration, $webhook_data);
         }
 
         if ($webhook_data instanceof PostMergeRequestWebhookData) {
-            $this->post_merge_request_action_processor->process($gitlab_repository, $webhook_data);
+            $this->post_merge_request_action_processor->process($gitlab_repository_integration, $webhook_data);
         }
 
         if ($webhook_data instanceof TagPushWebhookData) {
-            $this->tag_push_webhook_action_processor->process($gitlab_repository, $webhook_data);
+            $this->tag_push_webhook_action_processor->process($gitlab_repository_integration, $webhook_data);
         }
     }
 
     private function updateLastPushDateForRepository(
-        GitlabRepository $gitlab_repository,
+        GitlabRepositoryIntegration $gitlab_repository_integration,
         DateTimeImmutable $webhook_reception_date
     ): void {
         $this->gitlab_repository_dao->updateLastPushDateForRepository(
-            $gitlab_repository->getId(),
+            $gitlab_repository_integration->getId(),
             $webhook_reception_date->getTimestamp()
         );
         $this->logger->info(
-            "Last update date successfully updated for GitLab repository #" . $gitlab_repository->getId()
+            "Last update date successfully updated for GitLab repository #" . $gitlab_repository_integration->getId()
         );
     }
 

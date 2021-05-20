@@ -30,7 +30,7 @@ class GitlabRepositoryTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testGetGitlabServerUrl(): void
     {
-        $repository = new GitlabRepository(
+        $integration = new GitlabRepositoryIntegration(
             1,
             2,
             'smartoid/browser',
@@ -41,6 +41,6 @@ class GitlabRepositoryTest extends \Tuleap\Test\PHPUnit\TestCase
             false
         );
 
-        self::assertEquals('https://gitlab.example.com/', $repository->getGitlabServerUrl());
+        self::assertEquals('https://gitlab.example.com/', $integration->getGitlabServerUrl());
     }
 }

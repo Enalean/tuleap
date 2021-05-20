@@ -30,7 +30,7 @@ use Reference;
 use Tuleap\Gitlab\Reference\TuleapReferencedArtifactNotFoundException;
 use Tuleap\Gitlab\Reference\TuleapReferenceNotFoundException;
 use Tuleap\Gitlab\Reference\TuleapReferenceRetriever;
-use Tuleap\Gitlab\Repository\GitlabRepository;
+use Tuleap\Gitlab\Repository\GitlabRepositoryIntegration;
 use Tuleap\Gitlab\Repository\Webhook\WebhookTuleapReferencesParser;
 
 class CrossReferenceFromMergeRequestCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -70,7 +70,7 @@ class CrossReferenceFromMergeRequestCreatorTest extends \Tuleap\Test\PHPUnit\Tes
 
     public function testItDoesNothingIfThereIsNoReferencesInMergeRequestData(): void
     {
-        $repository = new GitlabRepository(
+        $integration = new GitlabRepositoryIntegration(
             1,
             123654,
             'root/repo01',
@@ -102,12 +102,12 @@ class CrossReferenceFromMergeRequestCreatorTest extends \Tuleap\Test\PHPUnit\Tes
             ->with('0 Tuleap references found in merge request 2')
             ->once();
 
-        $this->creator->createCrossReferencesFromMergeRequest($webhook_data, $repository);
+        $this->creator->createCrossReferencesFromMergeRequest($webhook_data, $integration);
     }
 
     public function testItDoesNothingIfTheReferenceIsNotFound(): void
     {
-        $repository = new GitlabRepository(
+        $integration = new GitlabRepositoryIntegration(
             1,
             123654,
             'root/repo01',
@@ -156,12 +156,12 @@ class CrossReferenceFromMergeRequestCreatorTest extends \Tuleap\Test\PHPUnit\Tes
             )
             ->once();
 
-        $this->creator->createCrossReferencesFromMergeRequest($webhook_data, $repository);
+        $this->creator->createCrossReferencesFromMergeRequest($webhook_data, $integration);
     }
 
     public function testItDoesNothingIfTheReferencedArtifactIsNotFound(): void
     {
-        $repository = new GitlabRepository(
+        $integration = new GitlabRepositoryIntegration(
             1,
             123654,
             'root/repo01',
@@ -208,12 +208,12 @@ class CrossReferenceFromMergeRequestCreatorTest extends \Tuleap\Test\PHPUnit\Tes
             ->with('Tuleap artifact #42 not found, no cross-reference will be added.')
             ->once();
 
-        $this->creator->createCrossReferencesFromMergeRequest($webhook_data, $repository);
+        $this->creator->createCrossReferencesFromMergeRequest($webhook_data, $integration);
     }
 
     public function testItSavesReferenceInIntegratedProject(): void
     {
-        $repository = new GitlabRepository(
+        $integration = new GitlabRepositoryIntegration(
             1,
             123654,
             'root/repo01',
@@ -331,6 +331,6 @@ class CrossReferenceFromMergeRequestCreatorTest extends \Tuleap\Test\PHPUnit\Tes
             )
             ->once();
 
-        $this->creator->createCrossReferencesFromMergeRequest($webhook_data, $repository);
+        $this->creator->createCrossReferencesFromMergeRequest($webhook_data, $integration);
     }
 }

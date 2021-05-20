@@ -31,7 +31,7 @@ use Tuleap\Gitlab\Reference\Tag\GitlabTagReference;
 use Tuleap\Gitlab\Reference\TuleapReferencedArtifactNotFoundException;
 use Tuleap\Gitlab\Reference\TuleapReferenceNotFoundException;
 use Tuleap\Gitlab\Reference\TuleapReferenceRetriever;
-use Tuleap\Gitlab\Repository\GitlabRepository;
+use Tuleap\Gitlab\Repository\GitlabRepositoryIntegration;
 use Tuleap\Gitlab\Repository\Webhook\Bot\CredentialsRetriever;
 use Tuleap\Gitlab\Repository\Webhook\WebhookTuleapReference;
 use Tuleap\Gitlab\Repository\Webhook\WebhookTuleapReferencesParser;
@@ -86,7 +86,7 @@ class TagPushWebhookCreateAction
     }
 
     public function createTagReferences(
-        GitlabRepository $gitlab_repository_integration,
+        GitlabRepositoryIntegration $gitlab_repository_integration,
         TagPushWebhookData $tag_push_webhook_data
     ): void {
         $credentials = $this->credentials_retriever->getCredentials($gitlab_repository_integration);
@@ -146,7 +146,7 @@ class TagPushWebhookCreateAction
      * @param Project[] $projects
      */
     private function saveReferenceInIntegratedProject(
-        GitlabRepository $gitlab_repository_integration,
+        GitlabRepositoryIntegration $gitlab_repository_integration,
         WebhookTuleapReference $tuleap_reference,
         TagPushWebhookData $tag_push_webhook_data,
         \Reference $external_reference
@@ -166,7 +166,7 @@ class TagPushWebhookCreateAction
         $this->reference_manager->insertCrossReference($cross_reference);
     }
 
-    private function saveTagData(GitlabRepository $gitlab_repository_integration, GitlabTag $gitlab_tag_from_api): void
+    private function saveTagData(GitlabRepositoryIntegration $gitlab_repository_integration, GitlabTag $gitlab_tag_from_api): void
     {
         $tag_name = $gitlab_tag_from_api->getName();
 

@@ -26,7 +26,7 @@ use Psr\Log\LoggerInterface;
 use Tuleap\Gitlab\API\ClientWrapper;
 use Tuleap\Gitlab\API\Credentials;
 use Tuleap\Gitlab\API\GitlabRequestException;
-use Tuleap\Gitlab\Repository\GitlabRepository;
+use Tuleap\Gitlab\Repository\GitlabRepositoryIntegration;
 
 class WebhookDeletor
 {
@@ -55,9 +55,9 @@ class WebhookDeletor
 
     public function deleteGitlabWebhookFromGitlabRepository(
         ?Credentials $credentials,
-        GitlabRepository $gitlab_repository
+        GitlabRepositoryIntegration $gitlab_repository_integration
     ): void {
-        $integration_id = $gitlab_repository->getId();
+        $integration_id = $gitlab_repository_integration->getId();
 
         $row = $this->dao->getGitlabRepositoryWebhook($integration_id);
         if (! $row) {
@@ -74,9 +74,9 @@ class WebhookDeletor
             return;
         }
 
-        $this->logger->info("Deleting previous hook for " . $gitlab_repository->getGitlabRepositoryUrl());
+        $this->logger->info("Deleting previous hook for " . $gitlab_repository_integration->getGitlabRepositoryUrl());
 
-        $gitlab_repository_id = $gitlab_repository->getGitlabRepositoryId();
+        $gitlab_repository_id = $gitlab_repository_integration->getGitlabRepositoryId();
         try {
             $this->gitlab_api_client->deleteUrl(
                 $credentials,

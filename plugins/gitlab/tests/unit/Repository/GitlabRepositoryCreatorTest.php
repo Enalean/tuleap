@@ -163,19 +163,19 @@ class GitlabRepositoryCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             ->with(101, 12569, 'https://example.com/root/project01')
             ->andReturnFalse();
 
-        $gitlab_repository = $this->buildGitlabRepository();
+        $integration = $this->buildGitlabRepositoryIntegration();
         $this->gitlab_repository_factory->shouldReceive('createRepositoryIntegration')
             ->once()
             ->with($this->gitlab_project, $this->project, $configuration)
-            ->andReturn($gitlab_repository);
+            ->andReturn($integration);
 
         $this->webhook_creator->shouldReceive('generateWebhookInGitlabProject')
             ->once()
-            ->with($this->credentials, $gitlab_repository);
+            ->with($this->credentials, $integration);
 
         $this->token_inserter
             ->shouldReceive('insertToken')
-            ->with($gitlab_repository, $this->credentials->getBotApiToken()->getToken())
+            ->with($integration, $this->credentials->getBotApiToken()->getToken())
             ->once();
 
         $result = $this->creator->integrateGitlabRepositoryInProject(
@@ -185,12 +185,12 @@ class GitlabRepositoryCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             $configuration
         );
 
-        $this->assertSame($gitlab_repository, $result);
+        $this->assertSame($integration, $result);
     }
 
-    private function buildGitlabRepository(): GitlabRepository
+    private function buildGitlabRepositoryIntegration(): GitlabRepositoryIntegration
     {
-        return new GitlabRepository(
+        return new GitlabRepositoryIntegration(
             1,
             12569,
             'root/project01',

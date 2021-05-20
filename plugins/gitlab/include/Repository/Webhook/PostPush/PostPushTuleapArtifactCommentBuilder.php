@@ -23,7 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Gitlab\Repository\Webhook\PostPush;
 
 use Tuleap\Gitlab\Reference\Commit\GitlabCommitReference;
-use Tuleap\Gitlab\Repository\GitlabRepository;
+use Tuleap\Gitlab\Repository\GitlabRepositoryIntegration;
 use Tuleap\Gitlab\Repository\Webhook\WebhookTuleapReference;
 use Tuleap\Gitlab\Repository\Webhook\WebhookTuleapReferencesParser;
 use Tuleap\Tracker\Artifact\Artifact;
@@ -34,7 +34,7 @@ class PostPushTuleapArtifactCommentBuilder
         string $user_name,
         PostPushCommitWebhookData $commit,
         WebhookTuleapReference $tuleap_reference,
-        GitlabRepository $gitlab_repository,
+        GitlabRepositoryIntegration $gitlab_repository_integration,
         Artifact $artifact
     ): string {
         if (
@@ -52,6 +52,6 @@ class PostPushTuleapArtifactCommentBuilder
             $action_word = "{$artifact->getTracker()->getItemName()} fixed";
         }
 
-        return "$action_word by $user_name with " . GitlabCommitReference::REFERENCE_NAME . " #{$gitlab_repository->getName()}/{$commit->getSha1()}";
+        return "$action_word by $user_name with " . GitlabCommitReference::REFERENCE_NAME . " #{$gitlab_repository_integration->getName()}/{$commit->getSha1()}";
     }
 }

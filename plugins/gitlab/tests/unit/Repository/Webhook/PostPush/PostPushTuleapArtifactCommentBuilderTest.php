@@ -25,7 +25,7 @@ namespace Tuleap\Gitlab\Repository\Webhook\PostPush;
 use DateTimeImmutable;
 use Tracker;
 use Project;
-use Tuleap\Gitlab\Repository\GitlabRepository;
+use Tuleap\Gitlab\Repository\GitlabRepositoryIntegration;
 use Tuleap\Gitlab\Repository\Webhook\WebhookTuleapReference;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\Artifact;
@@ -34,7 +34,7 @@ final class PostPushTuleapArtifactCommentBuilderTest extends TestCase
 {
     public function testReturnEmptyStringWhenKeywordIsNull(): void
     {
-        $commit     = new PostPushCommitWebhookData(
+        $commit = new PostPushCommitWebhookData(
             "123aze",
             "commit",
             "",
@@ -43,8 +43,9 @@ final class PostPushTuleapArtifactCommentBuilderTest extends TestCase
             "user@example.fr",
             "user"
         );
-        $reference  = new WebhookTuleapReference(12, null);
-        $repository = new GitlabRepository(
+
+        $reference   = new WebhookTuleapReference(12, null);
+        $integration = new GitlabRepositoryIntegration(
             1,
             12,
             "MyRepo",
@@ -54,12 +55,13 @@ final class PostPushTuleapArtifactCommentBuilderTest extends TestCase
             Project::buildForTest(),
             false
         );
-        $artifact   = new Artifact(10, 1, 'submitter', 10050, false);
-        $comment    = PostPushTuleapArtifactCommentBuilder::buildComment(
+
+        $artifact = new Artifact(10, 1, 'submitter', 10050, false);
+        $comment  = PostPushTuleapArtifactCommentBuilder::buildComment(
             "user",
             $commit,
             $reference,
-            $repository,
+            $integration,
             $artifact
         );
 
@@ -68,7 +70,7 @@ final class PostPushTuleapArtifactCommentBuilderTest extends TestCase
 
     public function testReturnEmptyStringWhenKeywordIsNotHandled(): void
     {
-        $commit     = new PostPushCommitWebhookData(
+        $commit = new PostPushCommitWebhookData(
             "123aze",
             "commit",
             "",
@@ -77,8 +79,9 @@ final class PostPushTuleapArtifactCommentBuilderTest extends TestCase
             "user@example.fr",
             "user"
         );
-        $reference  = new WebhookTuleapReference(12, "solved");
-        $repository = new GitlabRepository(
+
+        $reference   = new WebhookTuleapReference(12, "solved");
+        $integration = new GitlabRepositoryIntegration(
             1,
             12,
             "MyRepo",
@@ -88,12 +91,13 @@ final class PostPushTuleapArtifactCommentBuilderTest extends TestCase
             Project::buildForTest(),
             false
         );
-        $artifact   = new Artifact(10, 1, 'submitter', 10050, false);
-        $comment    = PostPushTuleapArtifactCommentBuilder::buildComment(
+
+        $artifact = new Artifact(10, 1, 'submitter', 10050, false);
+        $comment  = PostPushTuleapArtifactCommentBuilder::buildComment(
             "user",
             $commit,
             $reference,
-            $repository,
+            $integration,
             $artifact
         );
         self::assertEquals("", $comment);
@@ -101,7 +105,7 @@ final class PostPushTuleapArtifactCommentBuilderTest extends TestCase
 
     public function testReturnCommentWhenKeywordIsResolves(): void
     {
-        $commit     = new PostPushCommitWebhookData(
+        $commit = new PostPushCommitWebhookData(
             "123aze",
             "commit",
             "",
@@ -110,8 +114,9 @@ final class PostPushTuleapArtifactCommentBuilderTest extends TestCase
             "user@example.fr",
             "user"
         );
-        $reference  = new WebhookTuleapReference(12, "resolves");
-        $repository = new GitlabRepository(
+
+        $reference   = new WebhookTuleapReference(12, "resolves");
+        $integration = new GitlabRepositoryIntegration(
             1,
             12,
             "MyRepo",
@@ -121,12 +126,13 @@ final class PostPushTuleapArtifactCommentBuilderTest extends TestCase
             Project::buildForTest(),
             false
         );
-        $artifact   = new Artifact(10, 1, 'submitter', 10050, false);
-        $comment    = PostPushTuleapArtifactCommentBuilder::buildComment(
+
+        $artifact = new Artifact(10, 1, 'submitter', 10050, false);
+        $comment  = PostPushTuleapArtifactCommentBuilder::buildComment(
             "user",
             $commit,
             $reference,
-            $repository,
+            $integration,
             $artifact
         );
         self::assertEquals("solved by user with gitlab_commit #MyRepo/123aze", $comment);
@@ -134,7 +140,7 @@ final class PostPushTuleapArtifactCommentBuilderTest extends TestCase
 
     public function testReturnCommentWhenKeywordIsCloses(): void
     {
-        $commit     = new PostPushCommitWebhookData(
+        $commit = new PostPushCommitWebhookData(
             "123aze",
             "commit",
             "",
@@ -143,8 +149,9 @@ final class PostPushTuleapArtifactCommentBuilderTest extends TestCase
             "user@example.fr",
             "user"
         );
-        $reference  = new WebhookTuleapReference(12, "closes");
-        $repository = new GitlabRepository(
+
+        $reference   = new WebhookTuleapReference(12, "closes");
+        $integration = new GitlabRepositoryIntegration(
             1,
             12,
             "MyRepo",
@@ -154,12 +161,13 @@ final class PostPushTuleapArtifactCommentBuilderTest extends TestCase
             Project::buildForTest(),
             false
         );
-        $artifact   = new Artifact(10, 1, 'submitter', 10050, false);
-        $comment    = PostPushTuleapArtifactCommentBuilder::buildComment(
+
+        $artifact = new Artifact(10, 1, 'submitter', 10050, false);
+        $comment  = PostPushTuleapArtifactCommentBuilder::buildComment(
             "user",
             $commit,
             $reference,
-            $repository,
+            $integration,
             $artifact
         );
         self::assertEquals("closed by user with gitlab_commit #MyRepo/123aze", $comment);
@@ -167,7 +175,7 @@ final class PostPushTuleapArtifactCommentBuilderTest extends TestCase
 
     public function testReturnCommentWhenKeywordIsFixes(): void
     {
-        $commit     = new PostPushCommitWebhookData(
+        $commit = new PostPushCommitWebhookData(
             "123aze",
             "commit",
             "",
@@ -176,8 +184,9 @@ final class PostPushTuleapArtifactCommentBuilderTest extends TestCase
             "user@example.fr",
             "user"
         );
-        $reference  = new WebhookTuleapReference(12, "fixes");
-        $repository = new GitlabRepository(
+
+        $reference   = new WebhookTuleapReference(12, "fixes");
+        $integration = new GitlabRepositoryIntegration(
             1,
             12,
             "MyRepo",
@@ -197,7 +206,7 @@ final class PostPushTuleapArtifactCommentBuilderTest extends TestCase
             "user",
             $commit,
             $reference,
-            $repository,
+            $integration,
             $artifact
         );
         self::assertEquals("tracker_isetta fixed by user with gitlab_commit #MyRepo/123aze", $comment);

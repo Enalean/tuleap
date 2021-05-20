@@ -26,7 +26,7 @@ use PFUser;
 use Psr\Log\LoggerInterface;
 use Tracker_Exception;
 use Tracker_NoChangeException;
-use Tuleap\Gitlab\Repository\GitlabRepository;
+use Tuleap\Gitlab\Repository\GitlabRepositoryIntegration;
 use Tuleap\Gitlab\Repository\Webhook\WebhookTuleapReference;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Semantic\Status\SemanticStatusClosedValueNotFoundException;
@@ -64,7 +64,7 @@ class PostPushCommitArtifactUpdater
         PostPushCommitWebhookData $commit,
         WebhookTuleapReference $tuleap_reference,
         \Tracker_FormElement_Field_List $status_field,
-        GitlabRepository $gitlab_repository_integration
+        GitlabRepositoryIntegration $gitlab_repository_integration
     ): void {
         try {
             if (! $artifact->isOpen()) {

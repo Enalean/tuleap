@@ -25,7 +25,7 @@ namespace Tuleap\Gitlab\Repository\Webhook\PostMergeRequest;
 use Tuleap\Gitlab\API\ClientWrapper;
 use Tuleap\Gitlab\API\GitlabRequestException;
 use Tuleap\Gitlab\API\GitlabResponseAPIException;
-use Tuleap\Gitlab\Repository\GitlabRepository;
+use Tuleap\Gitlab\Repository\GitlabRepositoryIntegration;
 use Tuleap\Gitlab\Repository\Webhook\Bot\CredentialsRetriever;
 
 class PostMergeRequestWebhookAuthorDataRetriever
@@ -52,10 +52,10 @@ class PostMergeRequestWebhookAuthorDataRetriever
      * @throws GitlabResponseAPIException
      */
     public function retrieveAuthorData(
-        GitlabRepository $gitlab_repository,
+        GitlabRepositoryIntegration $gitlab_repository_integration,
         PostMergeRequestWebhookData $webhook_data
     ): ?array {
-        $credentials = $this->credentials_retriever->getCredentials($gitlab_repository);
+        $credentials = $this->credentials_retriever->getCredentials($gitlab_repository_integration);
 
         if (! $credentials) {
             return null;

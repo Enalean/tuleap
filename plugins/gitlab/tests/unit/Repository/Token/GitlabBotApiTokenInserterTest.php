@@ -25,7 +25,7 @@ namespace Tuleap\Gitlab\Repository\Token;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\Cryptography\KeyFactory;
 use Mockery;
-use Tuleap\Gitlab\Repository\GitlabRepository;
+use Tuleap\Gitlab\Repository\GitlabRepositoryIntegration;
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\Cryptography\Symmetric\SymmetricCrypto;
 use Tuleap\Cryptography\Symmetric\EncryptionKey;
@@ -62,7 +62,7 @@ class GitlabBotApiTokenInserterTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItInsertEncryptedToken(): void
     {
-        $gitlab_repository = Mockery::mock(GitlabRepository::class, ['getId' => 123]);
+        $gitlab_repository = Mockery::mock(GitlabRepositoryIntegration::class, ['getId' => 123]);
 
         $token = new ConcealedString('myToken123');
 

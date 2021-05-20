@@ -27,7 +27,7 @@ use Tuleap\Gitlab\API\ClientWrapper;
 use Tuleap\Gitlab\API\Credentials;
 use Tuleap\Gitlab\API\GitlabRequestException;
 use Tuleap\Gitlab\API\GitlabResponseAPIException;
-use Tuleap\Gitlab\Repository\GitlabRepository;
+use Tuleap\Gitlab\Repository\GitlabRepositoryIntegration;
 
 class GitlabTagRetriever
 {
@@ -47,14 +47,14 @@ class GitlabTagRetriever
      */
     public function getTagFromGitlabAPI(
         Credentials $credentials,
-        GitlabRepository $gitlab_repository,
+        GitlabRepositoryIntegration $gitlab_repository_integration,
         string $tag_name
     ): GitlabTag {
-        $gitlab_repository_id = $gitlab_repository->getGitlabRepositoryId();
+        $gitlab_integration_id = $gitlab_repository_integration->getGitlabRepositoryId();
 
         $gitlab_tag_data = $this->gitlab_api_client->getUrl(
             $credentials,
-            "/projects/$gitlab_repository_id/repository/tags/" . urlencode($tag_name)
+            "/projects/$gitlab_integration_id/repository/tags/" . urlencode($tag_name)
         );
 
         if (! $gitlab_tag_data) {

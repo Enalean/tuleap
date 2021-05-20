@@ -98,18 +98,20 @@ class GitlabRepositoryDeletor
      * @throws GitlabRepositoryNotInProjectException
      * @throws GitlabRepositoryNotIntegratedInAnyProjectException
      */
-    public function deleteRepositoryIntegration(GitlabRepository $gitlab_repository, PFUser $user): void
-    {
-        $project = $gitlab_repository->getProject();
+    public function deleteRepositoryIntegration(
+        GitlabRepositoryIntegration $repository_integration,
+        PFUser $user
+    ): void {
+        $project = $repository_integration->getProject();
         if (! $this->git_permissions_manager->userIsGitAdmin($user, $project)) {
             throw new GitUserNotAdminException();
         }
 
-        $this->db_transaction_executor->execute(function () use ($gitlab_repository, $project) {
-            $repository_id = $gitlab_repository->getId();
+        $this->db_transaction_executor->execute(function () use ($repository_integration, $project) {
+            $repository_id = $repository_integration->getId();
 
-            $credentials = $this->credentials_retriever->getCredentials($gitlab_repository);
-            $this->webhook_deletor->deleteGitlabWebhookFromGitlabRepository($credentials, $gitlab_repository);
+            $credentials = $this->credentials_retriever->getCredentials($repository_integration);
+            $this->webhook_deletor->deleteGitlabWebhookFromGitlabRepository($credentials, $repository_integration);
             $this->gitlab_bot_api_token_dao->deleteIntegrationToken($repository_id);
             $this->commit_tuleap_reference_dao->deleteCommitsInIntegration($repository_id);
             $this->merge_request_dao->deleteAllMergeRequestInIntegration($repository_id);

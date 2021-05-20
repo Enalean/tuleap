@@ -26,7 +26,7 @@ use DateTimeImmutable;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Project;
-use Tuleap\Gitlab\Repository\GitlabRepository;
+use Tuleap\Gitlab\Repository\GitlabRepositoryIntegration;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 
 class TagPushWebhookActionProcessorTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -62,7 +62,7 @@ class TagPushWebhookActionProcessorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItAsksForDeletionIfTagIsDeleted(): void
     {
-        $gitlab_repository = new GitlabRepository(
+        $integration = new GitlabRepositoryIntegration(
             1,
             12587,
             "root/repo01",
@@ -87,19 +87,19 @@ class TagPushWebhookActionProcessorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->push_webhook_delete_action->shouldReceive('deleteTagReferences')
             ->once()
             ->with(
-                $gitlab_repository,
+                $integration,
                 $tag_webhook_data
             );
 
         $this->action_processor->process(
-            $gitlab_repository,
+            $integration,
             $tag_webhook_data
         );
     }
 
     public function testItAsksForCreationIfTagIsCreated(): void
     {
-        $gitlab_repository = new GitlabRepository(
+        $integration = new GitlabRepositoryIntegration(
             1,
             12587,
             "root/repo01",
@@ -122,21 +122,21 @@ class TagPushWebhookActionProcessorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->push_webhook_create_action->shouldReceive('createTagReferences')
             ->once()
             ->with(
-                $gitlab_repository,
+                $integration,
                 $tag_webhook_data
             );
 
         $this->push_webhook_delete_action->shouldNotReceive('deleteTagReferences');
 
         $this->action_processor->process(
-            $gitlab_repository,
+            $integration,
             $tag_webhook_data
         );
     }
 
     public function testItAsksForDeletionThenCreationIfTagIsMoved(): void
     {
-        $gitlab_repository = new GitlabRepository(
+        $integration = new GitlabRepositoryIntegration(
             1,
             12587,
             "root/repo01",
@@ -159,19 +159,19 @@ class TagPushWebhookActionProcessorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->push_webhook_delete_action->shouldReceive('deleteTagReferences')
             ->once()
             ->with(
-                $gitlab_repository,
+                $integration,
                 $tag_webhook_data
             );
 
         $this->push_webhook_create_action->shouldReceive('createTagReferences')
             ->once()
             ->with(
-                $gitlab_repository,
+                $integration,
                 $tag_webhook_data
             );
 
         $this->action_processor->process(
-            $gitlab_repository,
+            $integration,
             $tag_webhook_data
         );
     }

@@ -29,7 +29,7 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Project;
 use Psr\Log\NullLogger;
 use Tuleap\Gitlab\Reference\Tag\GitlabTagReference;
-use Tuleap\Gitlab\Repository\GitlabRepository;
+use Tuleap\Gitlab\Repository\GitlabRepositoryIntegration;
 
 class TagPushWebhookDeleteActionTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -64,7 +64,7 @@ class TagPushWebhookDeleteActionTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItDeletesTheTagReferencesAndInformation(): void
     {
-        $gitlab_repository = new GitlabRepository(
+        $integration = new GitlabRepositoryIntegration(
             1,
             12587,
             "root/repo01",
@@ -100,7 +100,7 @@ class TagPushWebhookDeleteActionTest extends \Tuleap\Test\PHPUnit\TestCase
             );
 
         $this->delete_action->deleteTagReferences(
-            $gitlab_repository,
+            $integration,
             $tag_webhook_data
         );
     }

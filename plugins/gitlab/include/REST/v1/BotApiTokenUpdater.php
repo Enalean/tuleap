@@ -29,7 +29,7 @@ use Tuleap\Gitlab\API\Credentials;
 use Tuleap\Gitlab\API\GitlabProjectBuilder;
 use Tuleap\Gitlab\API\GitlabRequestException;
 use Tuleap\Gitlab\API\GitlabResponseAPIException;
-use Tuleap\Gitlab\Repository\GitlabRepository;
+use Tuleap\Gitlab\Repository\GitlabRepositoryIntegration;
 use Tuleap\Gitlab\Repository\GitlabRepositoryFactory;
 use Tuleap\Gitlab\Repository\Token\GitlabBotApiToken;
 use Tuleap\Gitlab\Repository\Token\GitlabBotApiTokenInserter;
@@ -127,8 +127,8 @@ class BotApiTokenUpdater
         }
     }
 
-    private function isUserAllowedToUpdateBotApiToken(\PFUser $current_user, GitlabRepository $repository): bool
+    private function isUserAllowedToUpdateBotApiToken(\PFUser $current_user, GitlabRepositoryIntegration $integration): bool
     {
-        return $this->permissions_manager->userIsGitAdmin($current_user, $repository->getProject());
+        return $this->permissions_manager->userIsGitAdmin($current_user, $integration->getProject());
     }
 }

@@ -26,7 +26,7 @@ use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\Gitlab\API\ClientWrapper;
 use Tuleap\Gitlab\API\GitlabRequestException;
-use Tuleap\Gitlab\Repository\GitlabRepository;
+use Tuleap\Gitlab\Repository\GitlabRepositoryIntegration;
 use Tuleap\Gitlab\Test\Builder\CredentialsTestBuilder;
 
 class CommentSenderTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -38,9 +38,9 @@ class CommentSenderTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $credentials;
     /**
-     * @var GitlabRepository
+     * @var GitlabRepositoryIntegration
      */
-    private $repository;
+    private $integration;
     /**
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ClientWrapper
      */
@@ -58,7 +58,7 @@ class CommentSenderTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->credentials = CredentialsTestBuilder::get()->build();
 
-        $this->repository = new GitlabRepository(
+        $this->integration = new GitlabRepositoryIntegration(
             1,
             2,
             'winter-is-coming',
@@ -82,7 +82,7 @@ class CommentSenderTest extends \Tuleap\Test\PHPUnit\TestCase
             ->with($this->credentials, 'gitlab/api', [])
             ->once();
 
-        $this->sender->sendComment($this->repository, $this->credentials, 'gitlab/api', []);
+        $this->sender->sendComment($this->integration, $this->credentials, 'gitlab/api', []);
     }
 
     public function testNotifyAboutInvalidCredentials()
@@ -96,12 +96,12 @@ class CommentSenderTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->notifier
             ->shouldReceive('notifyGitAdministratorsThatCredentialsAreInvalid')
-            ->with($this->repository, $this->credentials)
+            ->with($this->integration, $this->credentials)
             ->once();
 
         $this->expectExceptionObject($exception);
 
-        $this->sender->sendComment($this->repository, $this->credentials, 'gitlab/api', []);
+        $this->sender->sendComment($this->integration, $this->credentials, 'gitlab/api', []);
     }
 
     public function testDoesNotNotifyForOtherExceptionThan401()
@@ -119,6 +119,6 @@ class CommentSenderTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->expectExceptionObject($exception);
 
-        $this->sender->sendComment($this->repository, $this->credentials, 'gitlab/api', []);
+        $this->sender->sendComment($this->integration, $this->credentials, 'gitlab/api', []);
     }
 }

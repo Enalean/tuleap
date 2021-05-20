@@ -29,7 +29,7 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Project;
 use Tuleap\Gitlab\API\GitlabRequestException;
 use Tuleap\Gitlab\API\GitlabResponseAPIException;
-use Tuleap\Gitlab\Repository\GitlabRepository;
+use Tuleap\Gitlab\Repository\GitlabRepositoryIntegration;
 use Tuleap\Gitlab\Repository\GitlabRepositoryFactory;
 use Tuleap\Gitlab\Repository\Webhook\Bot\CredentialsRetriever;
 use Tuleap\Gitlab\Repository\Webhook\WebhookCreator;
@@ -101,7 +101,7 @@ class WebhookSecretGeneratorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $patch->gitlab_integration_id = 123;
 
-        $repository = Mockery::mock(GitlabRepository::class);
+        $repository = Mockery::mock(GitlabRepositoryIntegration::class);
 
         $this->repository_factory
             ->shouldReceive('getGitlabRepositoryById')
@@ -131,7 +131,7 @@ class WebhookSecretGeneratorTest extends \Tuleap\Test\PHPUnit\TestCase
         $patch->gitlab_integration_id = 123;
 
         $repository = Mockery::mock(
-            GitlabRepository::class,
+            GitlabRepositoryIntegration::class,
             [
                 'getGitlabRepositoryId' => 123,
                 'getGitlabServerUrl'    => 'https://gitlab.example.com',
@@ -171,7 +171,7 @@ class WebhookSecretGeneratorTest extends \Tuleap\Test\PHPUnit\TestCase
         $patch->gitlab_integration_id = 123;
 
         $repository = Mockery::mock(
-            GitlabRepository::class,
+            GitlabRepositoryIntegration::class,
             [
                 'getGitlabRepositoryId' => 123,
                 'getGitlabServerUrl'    => 'https://gitlab.example.com',
@@ -218,7 +218,7 @@ class WebhookSecretGeneratorTest extends \Tuleap\Test\PHPUnit\TestCase
         $patch->gitlab_integration_id = 123;
 
         $repository = Mockery::mock(
-            GitlabRepository::class,
+            GitlabRepositoryIntegration::class,
             [
                 'getGitlabRepositoryId' => 123,
                 'getGitlabServerUrl'    => 'https://gitlab.example.com',
@@ -266,7 +266,7 @@ class WebhookSecretGeneratorTest extends \Tuleap\Test\PHPUnit\TestCase
         $patch->gitlab_integration_id = 123;
 
         $repository = Mockery::mock(
-            GitlabRepository::class,
+            GitlabRepositoryIntegration::class,
             [
                 'getGitlabRepositoryId' => 123,
                 'getGitlabServerUrl'    => 'https://gitlab.example.com',

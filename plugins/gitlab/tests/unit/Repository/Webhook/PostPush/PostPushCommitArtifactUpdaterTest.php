@@ -31,7 +31,7 @@ use Tracker_Artifact_Changeset;
 use Tracker_FormElement_Field_List_Bind_StaticValue;
 use Tracker_NoChangeException;
 use Tracker_Workflow_WorkflowUser;
-use Tuleap\Gitlab\Repository\GitlabRepository;
+use Tuleap\Gitlab\Repository\GitlabRepositoryIntegration;
 use Tuleap\Gitlab\Repository\Webhook\WebhookTuleapReference;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\Artifact;
@@ -209,8 +209,8 @@ class PostPushCommitArtifactUpdaterTest extends TestCase
             ]
         );
 
-        $reference  = new WebhookTuleapReference(12, "resolves");
-        $repository = new GitlabRepository(
+        $reference   = new WebhookTuleapReference(12, "resolves");
+        $integration = new GitlabRepositoryIntegration(
             1,
             12,
             "MyRepo",
@@ -251,7 +251,7 @@ class PostPushCommitArtifactUpdaterTest extends TestCase
             $this->webhook_data,
             $reference,
             $status_field,
-            $repository
+            $integration
         );
     }
 
@@ -275,8 +275,8 @@ class PostPushCommitArtifactUpdaterTest extends TestCase
             ]
         );
 
-        $reference  = new WebhookTuleapReference(12, "resolves");
-        $repository = new GitlabRepository(
+        $reference   = new WebhookTuleapReference(12, "resolves");
+        $integration = new GitlabRepositoryIntegration(
             1,
             12,
             "MyRepo",
@@ -317,7 +317,7 @@ class PostPushCommitArtifactUpdaterTest extends TestCase
             $this->webhook_data,
             $reference,
             $status_field,
-            $repository
+            $integration
         );
     }
 
@@ -336,8 +336,8 @@ class PostPushCommitArtifactUpdaterTest extends TestCase
             ]
         );
 
-        $reference  = new WebhookTuleapReference(12, "resolves");
-        $repository = new GitlabRepository(
+        $reference   = new WebhookTuleapReference(12, "resolves");
+        $integration = new GitlabRepositoryIntegration(
             1,
             12,
             "MyRepo",
@@ -376,7 +376,7 @@ class PostPushCommitArtifactUpdaterTest extends TestCase
             $this->webhook_data,
             $reference,
             $status_field,
-            $repository
+            $integration
         );
     }
 
@@ -398,8 +398,8 @@ class PostPushCommitArtifactUpdaterTest extends TestCase
             ]
         );
 
-        $reference  = new WebhookTuleapReference(12, "resolve");
-        $repository = new GitlabRepository(
+        $reference   = new WebhookTuleapReference(12, "resolve");
+        $integration = new GitlabRepositoryIntegration(
             1,
             12,
             "MyRepo",
@@ -420,7 +420,7 @@ class PostPushCommitArtifactUpdaterTest extends TestCase
             $this->webhook_data,
             $reference,
             $status_field,
-            $repository
+            $integration
         );
     }
 }

@@ -23,7 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Gitlab\Reference\MergeRequest;
 
 use Project;
-use Tuleap\Gitlab\Repository\GitlabRepository;
+use Tuleap\Gitlab\Repository\GitlabRepositoryIntegration;
 
 class GitlabMergeRequestReference extends \Reference
 {
@@ -31,7 +31,7 @@ class GitlabMergeRequestReference extends \Reference
     public const NATURE_NAME    = 'plugin_gitlab_mr';
 
     public function __construct(
-        GitlabRepository $gitlab_repository,
+        GitlabRepositoryIntegration $repository_integration,
         Project $project,
         int $id
     ) {
@@ -39,7 +39,7 @@ class GitlabMergeRequestReference extends \Reference
             0,
             self::REFERENCE_NAME,
             dgettext('tuleap-gitlab', 'GitLab merge request'),
-            $gitlab_repository->getGitlabRepositoryUrl() . '/-/merge_requests/' . $id,
+            $repository_integration->getGitlabRepositoryUrl() . '/-/merge_requests/' . $id,
             'S',
             'plugin_gitlab',
             'plugin_gitlab',
