@@ -33,7 +33,7 @@ final class GitlabRepositoryBotApiTokenPatchRepresentation
     public $gitlab_integration_id;
 
     /**
-     * @var string {@required true} {@pattern /^https:\/\//i}
+     * @var string {@required true}
      */
     public $gitlab_api_token;
 }
