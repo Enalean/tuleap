@@ -33,7 +33,6 @@ import {
 } from "../../helpers/html-to-item";
 import { getCardPosition } from "../../helpers/cards-reordering";
 import type { Card, ColumnDefinition, Swimlane } from "../../type";
-import { isSoloCard } from "./swimlane-helpers";
 
 export function handleDrop(
     context: ActionContext<SwimlaneState, RootState>,
@@ -52,9 +51,8 @@ export function handleDrop(
         return Promise.resolve();
     }
 
-    const card = isSoloCard(swimlane)
-        ? swimlane.card
-        : getCardFromSwimlane(swimlane, payload.dropped_card);
+    const is_solo_card = !context.getters.is_there_at_least_one_children_to_display(swimlane);
+    const card = is_solo_card ? swimlane.card : getCardFromSwimlane(swimlane, payload.dropped_card);
 
     if (!card) {
         return Promise.resolve();
@@ -64,7 +62,7 @@ export function handleDrop(
     const cards_in_cell = context.getters.cards_in_cell(swimlane, column);
 
     if (isDraggedOverTheSourceCell(payload.target_cell, payload.source_cell)) {
-        if (isSoloCard(swimlane) || cards_in_cell.length <= 1) {
+        if (is_solo_card || cards_in_cell.length <= 1) {
             return Promise.resolve();
         }
 

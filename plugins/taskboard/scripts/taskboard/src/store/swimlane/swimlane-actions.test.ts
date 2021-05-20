@@ -39,6 +39,8 @@ describe("Swimlane state actions", () => {
             dispatch: jest.fn(),
             getters: {
                 is_drop_accepted_in_target: (): boolean => true,
+                is_there_at_least_one_children_to_display: (swimlane: Swimlane): boolean =>
+                    swimlane.card.has_children,
             },
             rootState: {
                 milestone_id: 42,

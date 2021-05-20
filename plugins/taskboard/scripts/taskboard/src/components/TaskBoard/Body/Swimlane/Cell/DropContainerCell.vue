@@ -51,9 +51,9 @@ import ClassesForCollapsedColumnMixin from "./classes-for-collapsed-column-mixin
 import AddCard from "../Card/Add/AddCard.vue";
 import CellDisallowsDropOverlay from "./CellDisallowsDropOverlay.vue";
 import type { ColumnDefinition, Swimlane } from "../../../../../type";
-import { isSoloCard } from "../../../../../store/swimlane/swimlane-helpers";
 
 const column_store = namespace("column");
+const swimlane = namespace("swimlane");
 
 @Component({
     components: { AddCard, CellDisallowsDropOverlay },
@@ -75,12 +75,17 @@ export default class DropContainerCell extends Mixins(
     @Getter
     readonly can_add_in_place!: (swimlane: Swimlane) => boolean;
 
+    @swimlane.Getter
+    readonly is_there_at_least_one_children_to_display!: (current_swimlane: Swimlane) => boolean;
+
     get is_add_card_rendered(): boolean {
         return this.can_add_in_place(this.swimlane) && !this.column.is_collapsed;
     }
 
     get add_button_label(): string {
-        return isSoloCard(this.swimlane) ? this.$gettext("Add child") : "";
+        return !this.is_there_at_least_one_children_to_display(this.swimlane)
+            ? this.$gettext("Add child")
+            : "";
     }
 
     get drop_classes(): string[] {
