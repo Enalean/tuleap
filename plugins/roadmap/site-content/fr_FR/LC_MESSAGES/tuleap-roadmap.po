@@ -15,6 +15,11 @@ msgstr ""
 msgid "Displays project roadmap as a widget"
 msgstr "Affiche la feuille de route du projet en tant que widget"
 
+msgid "No iteration tracker configured, or you are not allowed to see it."
+msgstr ""
+"Il n'y a pas de tracker d'itération configuré, ou vous n'avez pas le doit de "
+"le voir."
+
 msgid "Please choose a tracker"
 msgstr "Veuillez choisir un outil de suivi"
 
@@ -43,6 +48,9 @@ msgstr ""
 
 msgid "Tracker"
 msgstr "Outil de suivi"
+
+msgid "Unknown level"
+msgstr "Niveau inconnu"
 
 msgid "the Roadmap widget"
 msgstr "le widget Feuille de route"

@@ -97,6 +97,14 @@ class JsonCast
     }
 
     /**
+     * Cast a date time to an ISO formatted date string
+     */
+    public static function fromNotNullDateTimeToDate(DateTimeInterface $value): string
+    {
+        return $value->format('c');
+    }
+
+    /**
      * Ensure an empty array is converted to an Object Literal
      * @return array | object | null
      */
