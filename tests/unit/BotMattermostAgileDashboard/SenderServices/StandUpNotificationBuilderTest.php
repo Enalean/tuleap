@@ -26,7 +26,6 @@ use AgileDashboard_Milestone_MilestoneStatusCounter;
 use HTTPRequest;
 use Mockery;
 use PFUser;
-use PHPUnit\Framework\TestCase;
 use Planning;
 use Planning_Milestone;
 use Planning_MilestoneFactory;
@@ -35,7 +34,7 @@ use Project;
 use Tuleap\BotMattermost\SenderServices\MarkdownEngine\MarkdownMustacheRenderer;
 use Tuleap\Tracker\Artifact\Artifact;
 
-final class StandUpNotificationBuilderTest extends TestCase
+final class StandUpNotificationBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
