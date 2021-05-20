@@ -60,12 +60,12 @@ final class UserStoryLinkedToFeatureChecker implements VerifyLinkedUserStoryIsNo
         foreach ($planned_user_stories as $user_story) {
             $planning = Planning::buildPlanning($this->planning_adapter, $user, $user_story['project_id']);
 
-            $is_linked_to_a_sprint_in_mirrored_milestones = $this->stories_linked_to_feature_dao->isLinkedToASprintInMirroredMilestones(
+            $is_linked_to_a_sprint_in_mirrored_program_increments = $this->stories_linked_to_feature_dao->isLinkedToASprintInMirroredProgramIncrement(
                 $user_story['user_story_id'],
                 $planning->getPlanningTracker()->getTrackerId(),
                 $user_story['project_id']
             );
-            if ($is_linked_to_a_sprint_in_mirrored_milestones) {
+            if ($is_linked_to_a_sprint_in_mirrored_program_increments) {
                 return true;
             }
         }

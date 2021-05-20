@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\Feature;
 
-interface PlanUserStoriesInMirroredMilestones
+interface PlanUserStoriesInMirroredProgramIncrements
 {
     /**
      * @throws \Tuleap\ProgramManagement\Domain\Program\Plan\PlannableTrackerCannotBeEmptyException

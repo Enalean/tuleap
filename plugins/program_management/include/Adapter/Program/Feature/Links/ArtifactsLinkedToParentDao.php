@@ -48,38 +48,7 @@ class ArtifactsLinkedToParentDao extends DataAccessObject implements ArtifactsLi
         return $this->getDB()->run($sql, $artifact_id, $program_increment_id);
     }
 
-    /**
-     * @psalm-return array{id:int, release_tracker_id:int, project_id:int}[]
-     */
-    public function getUserStoriesOfMirroredMilestone(int $artifact_id): array
-    {
-        $sql = "SELECT user_story.id AS id, planning.planning_tracker_id AS release_tracker_id, user_story_tracker.group_id AS project_id
-                FROM tracker_artifact AS mirrored_milestone
-                         -- retrieve the artifact_links of milestone
-                         INNER JOIN tracker_field                           AS milestone_field   ON (milestone_field.tracker_id = mirrored_milestone.tracker_id AND milestone_field.formElement_type = 'art_link' AND milestone_field.use_it = 1)
-                         INNER JOIN tracker_changeset_value                 AS milestone_cv      ON (milestone_cv.changeset_id = mirrored_milestone.last_changeset_id AND milestone_cv.field_id = milestone_field.id)
-                         INNER JOIN tracker_changeset_value_artifactlink    AS milestone_artlink ON (milestone_artlink.changeset_value_id = milestone_cv.id)
-                         INNER JOIN tracker_artifact                        AS user_story           ON (user_story.id = milestone_artlink.artifact_id)
-                         INNER JOIN tracker                                 AS user_story_tracker   ON (user_story_tracker.id = user_story.tracker_id)
-                    -- get planning of mirrored milestone
-                         INNER JOIN plugin_agiledashboard_planning                 AS planning          ON mirrored_milestone.tracker_id = planning.planning_tracker_id
-                    -- check that user_story has a link with feature
-                         LEFT JOIN (
-                            tracker_artifact AS feature
-                                INNER JOIN tracker_field                        AS feature_field    ON (feature_field.tracker_id = feature.tracker_id AND feature_field.formElement_type = 'art_link' AND feature_field.use_it = 1)
-                                INNER JOIN tracker_changeset_value              AS feature_cv       ON (feature_cv.changeset_id = feature.last_changeset_id AND feature_cv.field_id = feature_field.id)
-                                INNER JOIN tracker_changeset_value_artifactlink AS feature_artlink  ON (feature_artlink.changeset_value_id = feature_cv.id)
-                                INNER JOIN plugin_program_management_plan       AS plan             ON feature.tracker_id = plan.plannable_tracker_id
-                            ) ON (user_story.id = feature_artlink.artifact_id)
-                WHERE mirrored_milestone.id  = ?
-                  AND user_story_tracker.deletion_date IS NULL
-                  AND feature.id IS NOT NULL
-                ";
-
-        return $this->getDB()->run($sql, $artifact_id);
-    }
-
-    public function isLinkedToASprintInMirroredMilestones(int $artifact_id, int $release_tracker_id, int $project_id): bool
+    public function isLinkedToASprintInMirroredProgramIncrement(int $artifact_id, int $release_tracker_id, int $project_id): bool
     {
         $sql = "SELECT sprint.id
                 FROM tracker_changeset_value_artifactlink    AS art_link
@@ -100,18 +69,18 @@ class ArtifactsLinkedToParentDao extends DataAccessObject implements ArtifactsLi
     /**
      * @psalm-return array{id: int}[]
      */
-    public function getUserStoriesOfMirroredMilestoneThatAreNotLinkedToASprint(int $milestone_id): array
+    public function getUserStoriesOfMirroredProgramIncrementThatAreNotLinkedToASprint(int $milestone_id): array
     {
         $sql = "SELECT user_story.id, user_story_tracker.group_id AS project_id
-                FROM tracker_artifact AS mirrored_milestone
+                FROM tracker_artifact AS mirrored_program_increment
                 -- retrieve the artifact_links of milestone
-                    INNER JOIN tracker_field                        AS milestone_field    ON (milestone_field.tracker_id = mirrored_milestone.tracker_id AND milestone_field.formElement_type = 'art_link' AND milestone_field.use_it = 1)
-                    INNER JOIN tracker_changeset_value              AS milestone_cv       ON (milestone_cv.changeset_id = mirrored_milestone.last_changeset_id AND milestone_cv.field_id = milestone_field.id)
+                    INNER JOIN tracker_field                        AS milestone_field    ON (milestone_field.tracker_id = mirrored_program_increment.tracker_id AND milestone_field.formElement_type = 'art_link' AND milestone_field.use_it = 1)
+                    INNER JOIN tracker_changeset_value              AS milestone_cv       ON (milestone_cv.changeset_id = mirrored_program_increment.last_changeset_id AND milestone_cv.field_id = milestone_field.id)
                     INNER JOIN tracker_changeset_value_artifactlink AS milestone_artlink  ON (milestone_artlink.changeset_value_id = milestone_cv.id)
                     INNER JOIN tracker_artifact                     AS user_story         ON (user_story.id = milestone_artlink.artifact_id)
                     INNER JOIN tracker                              AS user_story_tracker ON (user_story_tracker.id = user_story.tracker_id)
                 -- get planning of mirrored milestone
-                    INNER JOIN plugin_agiledashboard_planning       AS planning           ON mirrored_milestone.tracker_id = planning.planning_tracker_id
+                    INNER JOIN plugin_agiledashboard_planning       AS planning           ON mirrored_program_increment.tracker_id = planning.planning_tracker_id
                 -- check that user_story has a link with feature
                     LEFT JOIN (
                         tracker_artifact AS feature
@@ -120,7 +89,7 @@ class ArtifactsLinkedToParentDao extends DataAccessObject implements ArtifactsLi
                             INNER JOIN tracker_changeset_value_artifactlink AS feature_artlink  ON (feature_artlink.changeset_value_id = feature_cv.id)
                             INNER JOIN plugin_program_management_plan       AS plan             ON feature.tracker_id = plan.plannable_tracker_id
                         ) ON (user_story.id = feature_artlink.artifact_id)
-                WHERE mirrored_milestone.id  = ?
+                WHERE mirrored_program_increment.id  = ?
                     AND user_story_tracker.deletion_date IS NULL
                     AND feature.id IS NOT NULL
                 -- check user_story is not planned in sprint
@@ -135,7 +104,7 @@ class ArtifactsLinkedToParentDao extends DataAccessObject implements ArtifactsLi
                             INNER JOIN plugin_agiledashboard_planning       AS user_story_in_sprint_planning             ON sprint.tracker_id = user_story_in_sprint_planning.planning_tracker_id
                         WHERE
                             user_story_in_sprint.id = user_story.id
-                            AND sprint.id != mirrored_milestone.id
+                            AND sprint.id != mirrored_program_increment.id
                             AND user_story_in_sprint_tracker.group_id = user_story_tracker.group_id
                             AND user_story_in_sprint_tracker.deletion_date IS NULL
                     )

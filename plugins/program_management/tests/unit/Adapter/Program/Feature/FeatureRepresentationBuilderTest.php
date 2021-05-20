@@ -147,7 +147,7 @@ final class FeatureRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCa
                 ['children_id' => 2], ['children_id' => 3]
             ]
         );
-        $this->parent_dao->shouldReceive('isLinkedToASprintInMirroredMilestones')->andReturnTrue();
+        $this->parent_dao->shouldReceive('isLinkedToASprintInMirroredProgramIncrement')->andReturnTrue();
 
         $planning = new \Planning(1, "Root planning", 1, '', '', [50, 60], 20);
         $planning->setPlanningTracker(TrackerTestBuilder::aTracker()->withId(20)->build());
