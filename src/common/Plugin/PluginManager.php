@@ -333,19 +333,12 @@ class PluginManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
         }
     }
 
+    /**
+     * @return Plugin[]
+     */
     public function getNotYetInstalledPlugins(): array
     {
-        $col = [];
-        foreach ($this->plugin_factory->getNotYetInstalledPlugins() as $plugin) {
-            $descriptor = $plugin->getPluginInfo()->getPluginDescriptor();
-            $col[]      = [
-                'name'        => $plugin->getName(),
-                'full_name'   => $descriptor->getFullName(),
-                'description' => $descriptor->getDescription(),
-                'version'     => $descriptor->getVersion()
-            ];
-        }
-        return $col;
+        return $this->plugin_factory->getNotYetInstalledPlugins();
     }
 
     public function isNameValid($name)
