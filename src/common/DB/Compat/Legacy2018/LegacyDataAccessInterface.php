@@ -97,10 +97,8 @@ interface LegacyDataAccessInterface
      * cast to int
      *
      * @deprecated
-     *
-     * @return int
      */
-    public function escapeInt($v, $null = CODENDI_DB_NOT_NULL);
+    public function escapeInt($v, $null = CODENDI_DB_NOT_NULL): string;
 
     /**
      * @deprecated

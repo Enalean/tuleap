@@ -203,19 +203,13 @@ final class CompatPDODataAccess implements LegacyDataAccessInterface
      * cast to int
      *
      * @deprecated
-     *
-     * @return int
      */
-    public function escapeInt($v, $null = CODENDI_DB_NOT_NULL)
+    public function escapeInt($v, $null = CODENDI_DB_NOT_NULL): string
     {
         if ($null === CODENDI_DB_NULL && $v === '') {
             return 'NULL';
         }
-        $m = [];
-        if (preg_match('/^([+-]?[1-9][0-9]*|[+-]?0)$/', $v, $m)) {
-            return $m[1];
-        }
-        return '0';
+        return (string) (int) $v;
     }
 
     /**

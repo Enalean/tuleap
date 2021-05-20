@@ -61,7 +61,7 @@ class Tracker_Report_RendererDao extends DataAccessObject
         $type        = $this->da->quoteSmart($type);
         $name        = $this->da->quoteSmart($name);
         $description = $this->da->quoteSmart($description);
-        $rank        = (int) $this->prepareRanking('tracker_report_renderer', 0, $report_id, $rank, 'id', 'report_id');
+        $rank        = (int) $this->prepareRanking('tracker_report_renderer', 0, (int) $report_id, $rank, 'id', 'report_id');
         $sql         = "INSERT INTO $this->table_name
                 (report_id, renderer_type, name, description, rank)
                 VALUES ($report_id, $type, $name, $description, $rank)";
@@ -72,7 +72,7 @@ class Tracker_Report_RendererDao extends DataAccessObject
     {
         $id        = $this->da->escapeInt($id);
         $report_id = $this->da->escapeInt($report_id);
-        $rank      = (int) $this->prepareRanking('tracker_report_renderer', $id, $report_id, $rank, 'id', 'report_id');
+        $rank      = (int) $this->prepareRanking('tracker_report_renderer', (int) $id, (int) $report_id, $rank, 'id', 'report_id');
         $sql       = "UPDATE $this->table_name SET rank = $rank WHERE id = $id";
         return $this->update($sql);
     }

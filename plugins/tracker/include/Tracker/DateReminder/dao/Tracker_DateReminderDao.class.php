@@ -164,7 +164,7 @@ class Tracker_DateReminderDao extends DataAccessObject
                 WHERE reminder_id = $reminderId";
             $result = $this->update($sql);
             if ($result && ! empty($roles)) {
-                return $this->insertDateReminderRoles($reminderId, $roles);
+                return $this->insertDateReminderRoles((int) $reminderId, $roles);
             }
         }
         return $result;

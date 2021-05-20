@@ -86,10 +86,9 @@ class DateValueDao extends FieldValueDao
     public function getArtifactsByFieldAndValue($fieldId, $date)
     {
         $fieldId = $this->da->escapeInt($fieldId);
-        $date    = $this->da->escapeInt($date);
         $halfDay = 60 * 60 * 12;
-        $minDate = $date - $halfDay;
-        $maxDate = $date + $halfDay;
+        $minDate = $this->da->escapeInt($date - $halfDay);
+        $maxDate = $this->da->escapeInt($date + $halfDay);
         $sql     = "SELECT t.id AS artifact_id FROM
                      tracker_changeset_value_date d
                      JOIN tracker_changeset_value v on v.id = d.changeset_value_id

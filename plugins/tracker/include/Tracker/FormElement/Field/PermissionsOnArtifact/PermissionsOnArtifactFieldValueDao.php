@@ -56,7 +56,7 @@ class PermissionsOnArtifactFieldValueDao extends FieldValueDao
     public function createNoneValue($tracker_id, $field_id)
     {
         $tracker_id          = $this->da->escapeInt($tracker_id);
-        $changeset_value_ids = $this->createNoneChangesetValue($tracker_id, $field_id);
+        $changeset_value_ids = $this->createNoneChangesetValue((int) $tracker_id, $field_id);
         if ($changeset_value_ids === false) {
             return false;
         }

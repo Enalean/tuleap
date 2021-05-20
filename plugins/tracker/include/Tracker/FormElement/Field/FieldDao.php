@@ -543,7 +543,7 @@ class FieldDao extends DataAccessObject
             $rank = (int) $this->prepareRanking(
                 'tracker_field',
                 0,
-                $parent_id,
+                (int) $parent_id,
                 $rank,
                 'id',
                 'parent_id',

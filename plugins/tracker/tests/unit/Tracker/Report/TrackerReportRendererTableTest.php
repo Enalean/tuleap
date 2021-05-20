@@ -68,7 +68,7 @@ class TrackerReportRendererTableTest extends \Tuleap\Test\PHPUnit\TestCase
 
 
         $this->matchings_ids = [
-            "last_changeset_id" => "98, 99, 100",
+            "last_changeset_id" => "98,99,100",
         ];
 
         $this->form_elements_1 = Mockery::mock(Tracker_FormElement_Field_ArtifactId::class);
@@ -128,7 +128,7 @@ class TrackerReportRendererTableTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $this->assertSame(
-            [' SELECT a.id AS id, c.id AS changeset_id , a.id AS `artifact_id`, a.id AS `artifact_id`, a.id AS `artifact_id` FROM tracker_artifact AS a INNER JOIN tracker_changeset AS c ON (c.artifact_id = a.id)    WHERE c.id IN (98,0,0)  GROUP BY id  ORDER BY artifact_id DESC'],
+            [' SELECT a.id AS id, c.id AS changeset_id , a.id AS `artifact_id`, a.id AS `artifact_id`, a.id AS `artifact_id` FROM tracker_artifact AS a INNER JOIN tracker_changeset AS c ON (c.artifact_id = a.id)    WHERE c.id IN (98,99,100)  GROUP BY id  ORDER BY artifact_id DESC'],
             $this->tracker_report_renderer_table->buildOrderedQuery($this->matchings_ids, $this->columns, false, false)
         );
     }
@@ -138,7 +138,7 @@ class TrackerReportRendererTableTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->tracker_report_renderer_table->shouldReceive('getSort')->andReturn([]);
 
         $this->assertSame(
-            [' SELECT a.id AS id, c.id AS changeset_id , a.id AS `artifact_id`, a.id AS `artifact_id`, a.id AS `artifact_id` FROM tracker_artifact AS a INNER JOIN tracker_changeset AS c ON (c.artifact_id = a.id)    WHERE c.id IN (98,0,0)  GROUP BY id '],
+            [' SELECT a.id AS id, c.id AS changeset_id , a.id AS `artifact_id`, a.id AS `artifact_id`, a.id AS `artifact_id` FROM tracker_artifact AS a INNER JOIN tracker_changeset AS c ON (c.artifact_id = a.id)    WHERE c.id IN (98,99,100)  GROUP BY id '],
             $this->tracker_report_renderer_table->buildOrderedQuery($this->matchings_ids, $this->columns, false, false)
         );
     }
