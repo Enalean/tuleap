@@ -90,12 +90,8 @@ export default {
             }
 
             try {
-                const {
-                    labeled_items,
-                    are_there_items_user_cannot_see,
-                    has_more,
-                    offset,
-                } = await getLabeledItems(this.projectId, this.labels_id, this.offset, this.limit);
+                const { labeled_items, are_there_items_user_cannot_see, has_more, offset } =
+                    await getLabeledItems(this.projectId, this.labels_id, this.offset, this.limit);
 
                 this.offset = offset;
                 this.has_more_items = has_more;

@@ -23,20 +23,20 @@ jest.useFakeTimers();
 
 describe("autoFocusAutoSelect", () => {
     it("Focus the element", () => {
-        const element = ({
+        const element = {
             focus: jest.fn(),
             select: jest.fn(),
-        } as unknown) as HTMLInputElement;
+        } as unknown as HTMLInputElement;
 
         autoFocusAutoSelect(element);
 
         expect(element.focus).toHaveBeenCalled();
     });
     it("Defers the selection of the content", () => {
-        const element = ({
+        const element = {
             focus: jest.fn(),
             select: jest.fn(),
-        } as unknown) as HTMLInputElement;
+        } as unknown as HTMLInputElement;
 
         autoFocusAutoSelect(element);
 

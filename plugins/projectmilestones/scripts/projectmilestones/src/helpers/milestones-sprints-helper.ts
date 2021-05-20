@@ -43,9 +43,10 @@ export function closedSprintsExists(release_data: MilestoneData): boolean {
     return release_data.total_closed_sprint > 0;
 }
 
-export function getSortedSprints(
-    sprints: MilestoneData[]
-): { open_sprints: MilestoneData[]; closed_sprints: MilestoneData[] } {
+export function getSortedSprints(sprints: MilestoneData[]): {
+    open_sprints: MilestoneData[];
+    closed_sprints: MilestoneData[];
+} {
     const open_sprints: MilestoneData[] = [];
     const closed_sprints: MilestoneData[] = [];
 

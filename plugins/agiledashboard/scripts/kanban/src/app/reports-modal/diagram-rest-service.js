@@ -30,7 +30,8 @@ function DiagramRestService($http, SharedPropertiesService, FilterTrackerReportS
     }
 
     function augmentQueryParamsWithFilterTrackerReport(query_params) {
-        const selected_filter_tracker_report_id = FilterTrackerReportService.getSelectedFilterTrackerReportId();
+        const selected_filter_tracker_report_id =
+            FilterTrackerReportService.getSelectedFilterTrackerReportId();
 
         if (selected_filter_tracker_report_id) {
             query_params.query = { tracker_report_id: selected_filter_tracker_report_id };

@@ -79,9 +79,7 @@ export default class TaskBoard extends Vue {
     ) => Card[];
 
     @Getter
-    readonly column_and_swimlane_of_cell!: (
-        cell: HTMLElement
-    ) => {
+    readonly column_and_swimlane_of_cell!: (cell: HTMLElement) => {
         swimlane?: Swimlane;
         column?: ColumnDefinition;
     };

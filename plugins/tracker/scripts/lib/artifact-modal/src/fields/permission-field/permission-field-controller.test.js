@@ -32,7 +32,8 @@ describe("TuleapArtifactModalPermissionFieldController", function () {
 
     describe("clearSelectBox()", function () {
         it("Given that the checkbox was checked, when it is unchecked, then the granted_groups will be emptied", function () {
-            TuleapArtifactModalPermissionFieldController.value_model.value.is_used_by_default = null;
+            TuleapArtifactModalPermissionFieldController.value_model.value.is_used_by_default =
+                null;
             TuleapArtifactModalPermissionFieldController.value_model.value.granted_groups = [
                 "2",
                 "102_3",
@@ -69,7 +70,8 @@ describe("TuleapArtifactModalPermissionFieldController", function () {
 
         it("Given that the field was disabled and the checkbox was not checked, then true will be returned", function () {
             TuleapArtifactModalPermissionFieldController.isDisabled.mockReturnValue(true);
-            TuleapArtifactModalPermissionFieldController.value_model.value.is_used_by_default = null;
+            TuleapArtifactModalPermissionFieldController.value_model.value.is_used_by_default =
+                null;
 
             var result = TuleapArtifactModalPermissionFieldController.isSelectBoxDisabled();
 
@@ -87,7 +89,8 @@ describe("TuleapArtifactModalPermissionFieldController", function () {
 
         it("Given that the field was not disabled and the checkbox was not checked, then true will be returned", function () {
             TuleapArtifactModalPermissionFieldController.isDisabled.mockReturnValue(false);
-            TuleapArtifactModalPermissionFieldController.value_model.value.is_used_by_default = null;
+            TuleapArtifactModalPermissionFieldController.value_model.value.is_used_by_default =
+                null;
 
             var result = TuleapArtifactModalPermissionFieldController.isSelectBoxDisabled();
 
@@ -114,7 +117,8 @@ describe("TuleapArtifactModalPermissionFieldController", function () {
         });
 
         it("Given that the checkbox wasn't checked and the field was required, then true will be returned", function () {
-            TuleapArtifactModalPermissionFieldController.value_model.value.is_used_by_default = null;
+            TuleapArtifactModalPermissionFieldController.value_model.value.is_used_by_default =
+                null;
             TuleapArtifactModalPermissionFieldController.field.required = true;
 
             var result = TuleapArtifactModalPermissionFieldController.isSelectBoxRequired();
@@ -123,7 +127,8 @@ describe("TuleapArtifactModalPermissionFieldController", function () {
         });
 
         it("Given that the checkbox wasn't checked and the field was not required, then false will be returned", function () {
-            TuleapArtifactModalPermissionFieldController.value_model.value.is_used_by_default = null;
+            TuleapArtifactModalPermissionFieldController.value_model.value.is_used_by_default =
+                null;
             TuleapArtifactModalPermissionFieldController.field.required = false;
 
             var result = TuleapArtifactModalPermissionFieldController.isSelectBoxRequired();

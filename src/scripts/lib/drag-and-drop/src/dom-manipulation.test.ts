@@ -55,11 +55,11 @@ describe(`dom-manipulation`, () => {
         it(`when element is an HTMLElement
             but is not a draggable and has no parent,
             it will return null`, () => {
-            const options = ({
+            const options = {
                 isDraggable() {
                     return false;
                 },
-            } as unknown) as DrekkenovInitOptions;
+            } as unknown as DrekkenovInitOptions;
             const element = doc.createElement("div");
 
             const closest_draggable = findClosestDraggable(options, element);
@@ -70,11 +70,11 @@ describe(`dom-manipulation`, () => {
         it(`when element is an HTMLElement
             and is a draggable,
             it will return element`, () => {
-            const options = ({
+            const options = {
                 isDraggable() {
                     return true;
                 },
-            } as unknown) as DrekkenovInitOptions;
+            } as unknown as DrekkenovInitOptions;
 
             const element = doc.createElement("div");
 
@@ -87,11 +87,11 @@ describe(`dom-manipulation`, () => {
             const parent = doc.createElement("div");
             const child = doc.createElement("div");
             parent.append(child);
-            const options = ({
+            const options = {
                 isDraggable(element: HTMLElement): boolean {
                     return element === parent;
                 },
-            } as unknown) as DrekkenovInitOptions;
+            } as unknown as DrekkenovInitOptions;
 
             const closest_draggable = findClosestDraggable(options, child);
 
@@ -104,11 +104,11 @@ describe(`dom-manipulation`, () => {
             const child = doc.createElement("div");
             parent.append(child);
             grandpa.append(parent);
-            const options = ({
+            const options = {
                 isDraggable(element: HTMLElement): boolean {
                     return element === grandpa;
                 },
-            } as unknown) as DrekkenovInitOptions;
+            } as unknown as DrekkenovInitOptions;
 
             const closest_draggable = findClosestDraggable(options, child);
 
@@ -118,11 +118,11 @@ describe(`dom-manipulation`, () => {
 
     describe(`findClosestDropzone()`, () => {
         it(`when element is not an HTMLElement and has no parent, it will return null`, () => {
-            const options = ({
+            const options = {
                 isDropZone() {
                     return false;
                 },
-            } as unknown) as DrekkenovInitOptions;
+            } as unknown as DrekkenovInitOptions;
             const element = doc.createTextNode("I am a text node");
 
             const closest_dropzone = findClosestDropzone(options, element);
@@ -132,11 +132,11 @@ describe(`dom-manipulation`, () => {
 
         it(`when element is an HTMLElement but not a dropzone and has no parent,
             it will return null`, () => {
-            const options = ({
+            const options = {
                 isDropZone() {
                     return false;
                 },
-            } as unknown) as DrekkenovInitOptions;
+            } as unknown as DrekkenovInitOptions;
             const element = doc.createElement("div");
 
             const closest_dropzone = findClosestDropzone(options, element);
@@ -145,11 +145,11 @@ describe(`dom-manipulation`, () => {
         });
 
         it(`when element is an HTMLElement and is a dropzone, it will return element`, () => {
-            const options = ({
+            const options = {
                 isDropZone() {
                     return true;
                 },
-            } as unknown) as DrekkenovInitOptions;
+            } as unknown as DrekkenovInitOptions;
             const element = doc.createElement("div");
 
             const closest_dropzone = findClosestDropzone(options, element);

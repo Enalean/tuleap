@@ -36,9 +36,8 @@ describe("Text follow up", () => {
     it("Icon is properly defined when diff is toggle", () => {
         const local_document_with_followup = getLocalDocumentWithToggleButton();
 
-        const toggle_diff_buttons = local_document_with_followup.getElementsByClassName(
-            "toggle-diff"
-        );
+        const toggle_diff_buttons =
+            local_document_with_followup.getElementsByClassName("toggle-diff");
 
         const toggle_button = toggle_diff_buttons[0];
         toggleIcon(toggle_button);

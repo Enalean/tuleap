@@ -175,15 +175,13 @@ export default class CardAssignees extends Vue {
     }
 
     get users(): UserForPeoplePicker[] {
-        return this.possible_users.map(
-            (user): UserForPeoplePicker => {
-                const selected = this.card.assignees.some(
-                    (selected_user) => selected_user.id === user.id
-                );
+        return this.possible_users.map((user): UserForPeoplePicker => {
+            const selected = this.card.assignees.some(
+                (selected_user) => selected_user.id === user.id
+            );
 
-                return { ...user, selected };
-            }
-        );
+            return { ...user, selected };
+        });
     }
 
     get new_assignees_ids(): number[] {

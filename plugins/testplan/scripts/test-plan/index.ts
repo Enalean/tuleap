@@ -70,7 +70,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const AppComponent = Vue.extend(App);
 
     // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
-    const initial_state = ({
+    const initial_state = {
         user_display_name,
         project_id,
         project_name,
@@ -81,7 +81,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         testdefinition_tracker_name,
         expand_backlog_item_id,
         highlight_test_definition_id,
-    } as unknown) as RootState;
+    } as unknown as RootState;
 
     new AppComponent({
         store: createStore(initial_state),

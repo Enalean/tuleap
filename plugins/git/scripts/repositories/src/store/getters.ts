@@ -65,10 +65,9 @@ export const getFilteredRepositoriesByLastUpdateDate = (
         return [];
     }
 
-    return sortByLastUpdateDate(
-        currentRepositoryList(state)
-    ).filter((repository: FormattedGitLabRepository | Repository | Folder) =>
-        checkRepositoryMatchQuery(repository, state.filter)
+    return sortByLastUpdateDate(currentRepositoryList(state)).filter(
+        (repository: FormattedGitLabRepository | Repository | Folder) =>
+            checkRepositoryMatchQuery(repository, state.filter)
     );
 };
 

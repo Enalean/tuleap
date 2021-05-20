@@ -57,9 +57,8 @@ describe("admin-header-background", () => {
     });
 
     it("shows a success message when it seems a background has been changed", () => {
-        const { mount_point, success_element } = createDocumentExpectedFormStructure(
-            "beach-daytime"
-        );
+        const { mount_point, success_element } =
+            createDocumentExpectedFormStructure("beach-daytime");
 
         const class_hide_feedback = "project-admin-background-feedback-hidden";
         success_element.classList.add(class_hide_feedback);
@@ -132,9 +131,7 @@ describe("admin-header-background", () => {
         expect(() => setupFormSubmission(mount_point, window.location)).toThrowError();
     });
 
-    function createDocumentExpectedFormStructure(
-        new_background_identifier: string
-    ): {
+    function createDocumentExpectedFormStructure(new_background_identifier: string): {
         mount_point: Document;
         form: HTMLFormElement;
         success_element: HTMLElement;

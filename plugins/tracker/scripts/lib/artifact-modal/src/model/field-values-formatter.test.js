@@ -121,8 +121,7 @@ describe("TuleapArtifactFieldValues", () => {
                         value: [
                             {
                                 ref: "story #973",
-                                url:
-                                    "https://onychotrophy.com/wealden/organing?a=pharmacometer&b=terribleness#viscid",
+                                url: "https://onychotrophy.com/wealden/organing?a=pharmacometer&b=terribleness#viscid",
                             },
                         ],
                     },

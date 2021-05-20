@@ -34,4 +34,5 @@ class UnderTheFoldNotificationEventDispatcher {
     }
 }
 
-export const under_the_fold_notification_event_source = new UnderTheFoldNotificationEventDispatcher();
+export const under_the_fold_notification_event_source =
+    new UnderTheFoldNotificationEventDispatcher();

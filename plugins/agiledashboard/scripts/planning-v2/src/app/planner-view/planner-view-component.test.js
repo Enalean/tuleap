@@ -100,10 +100,9 @@ describe("PlannerView", () => {
             BacklogService = _BacklogService_;
 
             BacklogItemCollectionService = _BacklogItemCollectionService_;
-            jest.spyOn(
-                BacklogItemCollectionService,
-                "refreshBacklogItem"
-            ).mockImplementation(() => {});
+            jest.spyOn(BacklogItemCollectionService, "refreshBacklogItem").mockImplementation(
+                () => {}
+            );
 
             $filter = jest.fn(function () {
                 return function () {};

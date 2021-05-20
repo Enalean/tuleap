@@ -45,9 +45,9 @@ describe(`RichTextEditorsCreator`, () => {
             createHelpBlock: jest.fn(),
             initiateImageUpload: jest.fn(),
         };
-        editor_factory = ({
+        editor_factory = {
             createRichTextEditor: jest.fn(),
-        } as unknown) as RichTextEditorFactory;
+        } as unknown as RichTextEditorFactory;
         creator = new RichTextEditorsCreator(doc, image_upload_factory, editor_factory);
     });
 

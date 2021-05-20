@@ -37,9 +37,8 @@ function init(): void {
                 return;
             }
 
-            const is_clicked_element_a_sidebar_collapser = isClickedElementASidebarCollapser(
-                clicked_element
-            );
+            const is_clicked_element_a_sidebar_collapser =
+                isClickedElementASidebarCollapser(clicked_element);
             const sidebar_collapsed_class = clicked_element.dataset.collapsedClass;
             const user_preference_name = clicked_element.dataset.userPreferenceName;
 

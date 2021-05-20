@@ -31,7 +31,7 @@ describe("BacklogItem state actions", () => {
     let tlpRecursiveGetMock: jest.SpyInstance;
 
     beforeEach(() => {
-        context = ({
+        context = {
             commit: jest.fn(),
             dispatch: jest.fn(),
             rootState: {
@@ -39,7 +39,7 @@ describe("BacklogItem state actions", () => {
                 expand_backlog_item_id: 1000,
                 highlight_test_definition_id: 1001,
             } as RootState,
-        } as unknown) as ActionContext<BacklogItemState, RootState>;
+        } as unknown as ActionContext<BacklogItemState, RootState>;
         tlpRecursiveGetMock = jest.spyOn(tlp, "recursiveGet");
     });
 

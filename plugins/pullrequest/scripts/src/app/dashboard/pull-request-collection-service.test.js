@@ -29,18 +29,15 @@ describe("PullRequestCollectionService -", function () {
             SharedPropertiesService = _SharedPropertiesService_;
         });
 
-        jest.spyOn(
-            PullRequestCollectionRestService,
-            "getAllPullRequests"
-        ).mockImplementation(() => {});
-        jest.spyOn(
-            PullRequestCollectionRestService,
-            "getAllOpenPullRequests"
-        ).mockImplementation(() => {});
-        jest.spyOn(
-            PullRequestCollectionRestService,
-            "getAllClosedPullRequests"
-        ).mockImplementation(() => {});
+        jest.spyOn(PullRequestCollectionRestService, "getAllPullRequests").mockImplementation(
+            () => {}
+        );
+        jest.spyOn(PullRequestCollectionRestService, "getAllOpenPullRequests").mockImplementation(
+            () => {}
+        );
+        jest.spyOn(PullRequestCollectionRestService, "getAllClosedPullRequests").mockImplementation(
+            () => {}
+        );
         jest.spyOn(SharedPropertiesService, "getRepositoryId").mockImplementation(() => {});
 
         wrapPromise = createAngularPromiseWrapper($rootScope);

@@ -56,18 +56,15 @@ export function allowToHideAndShowPlatformBanner(
             "Platform banner close button is supposed to have information about the current user"
         );
     }
-    platform_banner_message_close_button.addEventListener(
-        "click",
-        async (): Promise<void> => {
-            await hidePlatformBannerMessage(
-                tlpPatch,
-                mount_point.body,
-                platform_banner_navbar,
-                full_platform_banner,
-                Number.parseInt(user_id, 10)
-            );
-        }
-    );
+    platform_banner_message_close_button.addEventListener("click", async (): Promise<void> => {
+        await hidePlatformBannerMessage(
+            tlpPatch,
+            mount_point.body,
+            platform_banner_navbar,
+            full_platform_banner,
+            Number.parseInt(user_id, 10)
+        );
+    });
 }
 
 function togglePlatformBannerMessage(

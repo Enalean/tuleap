@@ -40,23 +40,20 @@ describe("SingleSelectionManager", () => {
         source_select_box = document.createElement("select");
         appendSimpleOptionsToSourceSelectBox(source_select_box);
 
-        const {
-            dropdown_element,
-            selection_element,
-            placeholder_element,
-        } = new BaseComponentRenderer(
-            document.implementation.createHTMLDocument(),
-            source_select_box,
-            {
-                placeholder: "Please select a value",
-            }
-        ).renderBaseComponent();
+        const { dropdown_element, selection_element, placeholder_element } =
+            new BaseComponentRenderer(
+                document.implementation.createHTMLDocument(),
+                source_select_box,
+                {
+                    placeholder: "Please select a value",
+                }
+            ).renderBaseComponent();
 
         selection_container = selection_element;
         placeholder = placeholder_element;
 
         items_map_manager = new ItemsMapManager(new ListItemMapBuilder(source_select_box));
-        dropdown_manager = ({ openListPicker: jest.fn() } as unknown) as DropdownManager;
+        dropdown_manager = { openListPicker: jest.fn() } as unknown as DropdownManager;
         manager = new SingleSelectionManager(
             source_select_box,
             dropdown_element,

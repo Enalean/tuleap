@@ -154,9 +154,9 @@ describe(`edit-follow-up-comment-helpers`, () => {
     describe(`createEditFollowupEditor()`, () => {
         let editor_factory: RichTextEditorFactory;
         beforeEach(() => {
-            editor_factory = ({
+            editor_factory = {
                 createRichTextEditor: jest.fn(),
-            } as unknown) as RichTextEditorFactory;
+            } as unknown as RichTextEditorFactory;
         });
 
         it(`when the given element is not a textarea, it does nothing`, () => {

@@ -120,15 +120,13 @@ export default class WritingMode extends Vue {
     updateSelectedTrackers(): void {
         const trackers = Array.from(this.writingCrossTrackerReport.getTrackers());
 
-        this.selected_trackers = trackers.map(
-            ({ tracker, project }): TrackerToUpdate => {
-                return {
-                    tracker_id: tracker.id,
-                    tracker_label: tracker.label,
-                    project_label: project.label,
-                };
-            }
-        );
+        this.selected_trackers = trackers.map(({ tracker, project }): TrackerToUpdate => {
+            return {
+                tracker_id: tracker.id,
+                tracker_label: tracker.label,
+                project_label: project.label,
+            };
+        });
     }
 }
 </script>

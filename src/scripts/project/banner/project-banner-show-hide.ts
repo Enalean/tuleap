@@ -57,19 +57,16 @@ export function allowToHideAndShowProjectBanner(
             "Project banner close button is supposed to have information about the current user and project"
         );
     }
-    project_banner_message_close_button.addEventListener(
-        "click",
-        async (): Promise<void> => {
-            await hideProjectBannerMessage(
-                tlpPatch,
-                mount_point.body,
-                project_banner_navbar,
-                full_project_banner,
-                Number.parseInt(project_id, 10),
-                Number.parseInt(user_id, 10)
-            );
-        }
-    );
+    project_banner_message_close_button.addEventListener("click", async (): Promise<void> => {
+        await hideProjectBannerMessage(
+            tlpPatch,
+            mount_point.body,
+            project_banner_navbar,
+            full_project_banner,
+            Number.parseInt(project_id, 10),
+            Number.parseInt(user_id, 10)
+        );
+    });
 }
 
 function toggleProjectBannerMessage(

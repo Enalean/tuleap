@@ -37,27 +37,25 @@ export async function retrieveAll(
     const tasks = await recursiveGet<Array<unknown>, Task>(url);
 
     return tasks
-        .map(
-            (task: Task): Task => {
-                const has_subtasks =
-                    task.dependencies &&
-                    "_is_child" in task.dependencies &&
-                    task.dependencies._is_child.length > 0 &&
-                    doesTaskHaveEndDateGreaterOrEqualToStartDate(task);
+        .map((task: Task): Task => {
+            const has_subtasks =
+                task.dependencies &&
+                "_is_child" in task.dependencies &&
+                task.dependencies._is_child.length > 0 &&
+                doesTaskHaveEndDateGreaterOrEqualToStartDate(task);
 
-                return {
-                    ...task,
-                    start: task.start ? new Date(task.start) : null,
-                    end: task.end ? new Date(task.end) : null,
-                    is_milestone: !task.start || !task.end || task.end === task.start,
-                    has_subtasks,
-                    subtasks_loading_status: SUBTASKS_WAITING_TO_BE_LOADED,
-                    subtasks: [],
-                    is_expanded: false,
-                    ...additional_defaults,
-                };
-            }
-        )
+            return {
+                ...task,
+                start: task.start ? new Date(task.start) : null,
+                end: task.end ? new Date(task.end) : null,
+                is_milestone: !task.start || !task.end || task.end === task.start,
+                has_subtasks,
+                subtasks_loading_status: SUBTASKS_WAITING_TO_BE_LOADED,
+                subtasks: [],
+                is_expanded: false,
+                ...additional_defaults,
+            };
+        })
         .filter((task: Task): boolean => {
             return Boolean(task.start || task.end);
         })

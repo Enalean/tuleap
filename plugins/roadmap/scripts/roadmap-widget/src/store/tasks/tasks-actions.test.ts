@@ -30,10 +30,10 @@ describe("tasks-actions", () => {
     let context: ActionContext<TasksState, RootState>;
 
     beforeEach(() => {
-        context = ({
+        context = {
             commit: jest.fn(),
             root_state: {} as RootState,
-        } as unknown) as ActionContext<TasksState, RootState>;
+        } as unknown as ActionContext<TasksState, RootState>;
         jest.clearAllMocks();
     });
 

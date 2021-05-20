@@ -20,29 +20,33 @@
 import type { RootState } from "./type";
 import type { ColumnDefinition, Swimlane, Card, Tracker } from "../type";
 
-export const column_of_cell = (root_state: RootState) => (
-    cell: HTMLElement
-): ColumnDefinition | undefined => {
-    return root_state.column.columns.find((column) => column.id === Number(cell.dataset.columnId));
-};
-
-export const column_and_swimlane_of_cell = (root_state: RootState) => (
-    cell: HTMLElement
-): {
-    swimlane?: Swimlane;
-    column?: ColumnDefinition;
-} => {
-    const swimlane = root_state.swimlane.swimlanes.find(
-        (swimlane) => swimlane.card.id === Number(cell.dataset.swimlaneId)
-    );
-
-    const column = column_of_cell(root_state)(cell);
-
-    return {
-        swimlane,
-        column,
+export const column_of_cell =
+    (root_state: RootState) =>
+    (cell: HTMLElement): ColumnDefinition | undefined => {
+        return root_state.column.columns.find(
+            (column) => column.id === Number(cell.dataset.columnId)
+        );
     };
-};
+
+export const column_and_swimlane_of_cell =
+    (root_state: RootState) =>
+    (
+        cell: HTMLElement
+    ): {
+        swimlane?: Swimlane;
+        column?: ColumnDefinition;
+    } => {
+        const swimlane = root_state.swimlane.swimlanes.find(
+            (swimlane) => swimlane.card.id === Number(cell.dataset.swimlaneId)
+        );
+
+        const column = column_of_cell(root_state)(cell);
+
+        return {
+            swimlane,
+            column,
+        };
+    };
 
 function findTracker(root_state: RootState, tracker_id: number): Tracker {
     const tracker = root_state.trackers.find((tracker) => tracker.id === tracker_id);
@@ -54,15 +58,19 @@ function findTracker(root_state: RootState, tracker_id: number): Tracker {
     return tracker;
 }
 
-export const tracker_of_card = (root_state: RootState) => (card: Card): Tracker => {
-    return findTracker(root_state, card.tracker_id);
-};
+export const tracker_of_card =
+    (root_state: RootState) =>
+    (card: Card): Tracker => {
+        return findTracker(root_state, card.tracker_id);
+    };
 
-export const can_add_in_place = (root_state: RootState) => (swimlane: Swimlane): boolean => {
-    const tracker = findTracker(root_state, swimlane.card.tracker_id);
+export const can_add_in_place =
+    (root_state: RootState) =>
+    (swimlane: Swimlane): boolean => {
+        const tracker = findTracker(root_state, swimlane.card.tracker_id);
 
-    return tracker.add_in_place !== null;
-};
+        return tracker.add_in_place !== null;
+    };
 
 export const has_at_least_one_cell_in_add_mode = (state: RootState): boolean => {
     return state.is_a_cell_adding_in_place;

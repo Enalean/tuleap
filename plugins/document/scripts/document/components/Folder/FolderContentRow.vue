@@ -28,7 +28,8 @@
             <div
                 v-bind:class="{
                     'document-folder-content-title': item_is_not_being_uploaded,
-                    'document-folder-content-quick-look-and-item-uploading': is_item_uploading_in_quicklook_mode,
+                    'document-folder-content-quick-look-and-item-uploading':
+                        is_item_uploading_in_quicklook_mode,
                 }"
                 v-bind:id="`document-folder-content-row-div-${item.id}`"
                 data-test="document-folder-content-row"

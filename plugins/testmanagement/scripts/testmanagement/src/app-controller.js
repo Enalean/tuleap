@@ -19,8 +19,9 @@ function TestManagementCtrl(
     UUIDGeneratorService
 ) {
     this.$onInit = function () {
-        const testmanagement_init_data = $element[0].querySelector(".testmanagement-init-data")
-            .dataset;
+        const testmanagement_init_data = $element[0].querySelector(
+            ".testmanagement-init-data"
+        ).dataset;
 
         const uuid = UUIDGeneratorService.generateUUID();
         SharedPropertiesService.setUUID(uuid);

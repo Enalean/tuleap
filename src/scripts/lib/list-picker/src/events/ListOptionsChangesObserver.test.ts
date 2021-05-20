@@ -37,19 +37,19 @@ describe("ListOptionsChangesObserver", () => {
 
     beforeEach(() => {
         source_select_box = document.createElement("select");
-        dropdown_content_renderer = ({
+        dropdown_content_renderer = {
             renderAfterDependenciesUpdate: jest.fn(),
-        } as unknown) as DropdownContentRenderer;
+        } as unknown as DropdownContentRenderer;
 
-        items_map_manager = ({
+        items_map_manager = {
             refreshItemsMap: jest.fn().mockReturnValue(Promise.resolve()),
-        } as unknown) as ItemsMapManager;
+        } as unknown as ItemsMapManager;
 
-        selection_manager = ({
+        selection_manager = {
             resetAfterDependenciesUpdate: jest.fn(),
-        } as unknown) as SelectionManager;
+        } as unknown as SelectionManager;
 
-        event_manager = ({ attachItemListEvent: jest.fn() } as unknown) as EventManager;
+        event_manager = { attachItemListEvent: jest.fn() } as unknown as EventManager;
 
         list_options_changes_observer = new ListOptionsChangesObserver(
             source_select_box,

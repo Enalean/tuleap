@@ -92,9 +92,10 @@ document.observe("dom:loaded", function () {
                                 CKEDITOR.instances &&
                                 CKEDITOR.instances["tracker_followup_comment_edit_" + id]
                             ) {
-                                content = CKEDITOR.instances[
-                                    "tracker_followup_comment_edit_" + id
-                                ].getData();
+                                content =
+                                    CKEDITOR.instances[
+                                        "tracker_followup_comment_edit_" + id
+                                    ].getData();
                             } else {
                                 content = $("tracker_followup_comment_edit_" + id).getValue();
                             }

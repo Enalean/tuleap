@@ -34,14 +34,12 @@ describe("LinkFieldController -", () => {
 
     describe("init() -", () => {
         beforeEach(() => {
-            jest.spyOn(
-                LinkFieldController,
-                "loadParentArtifactsTitle"
-            ).mockImplementation(() => {});
-            jest.spyOn(
-                LinkFieldController,
-                "hasArtifactAlreadyAParent"
-            ).mockImplementation(() => {});
+            jest.spyOn(LinkFieldController, "loadParentArtifactsTitle").mockImplementation(
+                () => {}
+            );
+            jest.spyOn(LinkFieldController, "hasArtifactAlreadyAParent").mockImplementation(
+                () => {}
+            );
         });
 
         it("Given the modal was in creation mode and given I can choose a parent, then the list of possible parents will be loaded", () => {

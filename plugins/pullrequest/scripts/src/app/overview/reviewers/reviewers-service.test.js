@@ -122,9 +122,8 @@ describe("ReviewersService", () => {
                 },
             ];
 
-            const small_representations = ReviewersService.buildUserRepresentationsForPut(
-                user_representations
-            );
+            const small_representations =
+                ReviewersService.buildUserRepresentationsForPut(user_representations);
             expect(small_representations).toEqual([{ id: 102 }, { id: 103 }]);
         });
     });

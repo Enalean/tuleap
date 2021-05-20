@@ -130,12 +130,14 @@ describe("TrackerFromJiraProject reload state", () => {
         });
     });
     it("does not load twice the data", () => {
-        const selected_project = (wrapper.find("[data-test=project-list]")
-            .element as HTMLSelectElement).value;
+        const selected_project = (
+            wrapper.find("[data-test=project-list]").element as HTMLSelectElement
+        ).value;
         expect(selected_project).toBe(JSON.stringify({ id: "TU", label: "tutu" }));
 
-        const selected_tracker = (wrapper.find("[data-test=tracker-name]")
-            .element as HTMLSelectElement).value;
+        const selected_tracker = (
+            wrapper.find("[data-test=tracker-name]").element as HTMLSelectElement
+        ).value;
         expect(selected_tracker).toBe(JSON.stringify({ id: "Tra", name: "Tracker 2" }));
 
         expect(wrapper.vm.$store.dispatch).not.toHaveBeenCalled();

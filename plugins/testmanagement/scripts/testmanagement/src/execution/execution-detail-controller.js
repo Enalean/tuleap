@@ -142,7 +142,8 @@ function ExecutionDetailCtrl(
                 })
                 .then(
                     (artifact) => {
-                        artifact.tracker.color_name = SharedPropertiesService.getIssueTrackerConfig().xref_color;
+                        artifact.tracker.color_name =
+                            SharedPropertiesService.getIssueTrackerConfig().xref_color;
                         return ExecutionService.addArtifactLink($scope.execution.id, artifact);
                     },
                     () => {

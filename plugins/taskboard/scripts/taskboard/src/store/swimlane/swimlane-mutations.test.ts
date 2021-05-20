@@ -63,14 +63,14 @@ describe(`Swimlane state mutations`, () => {
 
     describe(`addChildrenToSwimlane`, () => {
         let state: SwimlaneState;
-        const swimlane = ({
+        const swimlane = {
             card: { id: 86, rank: 1 },
             children_cards: [{ id: 188, rank: 20 }],
-        } as unknown) as Swimlane;
-        const unrelated_swimlane = ({
+        } as unknown as Swimlane;
+        const unrelated_swimlane = {
             card: { id: 19, rank: 2 },
             children_cards: [],
-        } as unknown) as Swimlane;
+        } as unknown as Swimlane;
         const children_cards: Card[] = [
             { id: 189, rank: 22 } as Card,
             { id: 190, rank: 21 } as Card,

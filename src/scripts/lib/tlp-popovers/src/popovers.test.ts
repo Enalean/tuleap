@@ -43,14 +43,14 @@ describe(`Popovers`, () => {
     describe(`constructor`, () => {
         let popperConstructor: jest.SpyInstance;
         beforeEach(() => {
-            popperConstructor = jest.spyOn(popper, "createPopper").mockImplementation(
-                (): Instance => {
-                    return ({
+            popperConstructor = jest
+                .spyOn(popper, "createPopper")
+                .mockImplementation((): Instance => {
+                    return {
                         destroy: jest.fn(),
                         update: jest.fn(),
-                    } as unknown) as Instance;
-                }
-            );
+                    } as unknown as Instance;
+                });
         });
 
         it(`when there is an options.anchor,
@@ -148,9 +148,8 @@ describe(`Popovers`, () => {
             });
 
             it(`will hide all shown popovers`, () => {
-                const { first_content, second_content, cleanup } = createOtherShownPopoverContents(
-                    doc
-                );
+                const { first_content, second_content, cleanup } =
+                    createOtherShownPopoverContents(doc);
 
                 trigger_element.dispatchEvent(new MouseEvent("mouseover"));
                 expectThePopoverToBeHidden(first_content);
@@ -171,9 +170,8 @@ describe(`Popovers`, () => {
             });
 
             it(`will hide all shown popovers`, () => {
-                const { first_content, second_content, cleanup } = createOtherShownPopoverContents(
-                    doc
-                );
+                const { first_content, second_content, cleanup } =
+                    createOtherShownPopoverContents(doc);
 
                 trigger_element.dispatchEvent(new MouseEvent("mouseout"));
                 expectThePopoverToBeHidden(first_content);
@@ -210,11 +208,8 @@ describe(`Popovers`, () => {
                 });
 
                 it(`will hide all shown popovers`, () => {
-                    const {
-                        first_content,
-                        second_content,
-                        cleanup,
-                    } = createOtherShownPopoverContents(doc);
+                    const { first_content, second_content, cleanup } =
+                        createOtherShownPopoverContents(doc);
 
                     trigger_element.dispatchEvent(new MouseEvent("click"));
                     expectThePopoverToBeHidden(first_content);
@@ -237,11 +232,8 @@ describe(`Popovers`, () => {
                 });
 
                 it(`and it is shown, it will hide all shown popovers`, () => {
-                    const {
-                        first_content,
-                        second_content,
-                        cleanup,
-                    } = createOtherShownPopoverContents(doc);
+                    const { first_content, second_content, cleanup } =
+                        createOtherShownPopoverContents(doc);
 
                     trigger_element.dispatchEvent(new MouseEvent("click"));
                     doc.body.dispatchEvent(new MouseEvent("click", { bubbles: true }));

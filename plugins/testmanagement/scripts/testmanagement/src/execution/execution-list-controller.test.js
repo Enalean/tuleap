@@ -74,16 +74,14 @@ describe("ExecutionListController -", () => {
         beforeEach(() => {
             $scope.campaign_id = campaign_id;
             jest.spyOn(ExecutionService, "removeAllViewTestExecution").mockImplementation(() => {});
-            jest.spyOn(
-                ExecutionService,
-                "displayPresencesForAllExecutions"
-            ).mockImplementation(() => {});
+            jest.spyOn(ExecutionService, "displayPresencesForAllExecutions").mockImplementation(
+                () => {}
+            );
             jest.spyOn(ExecutionService, "addPresenceCampaign").mockImplementation(() => {});
             jest.spyOn(ExecutionService, "loadExecutions").mockImplementation(() => {});
-            jest.spyOn(
-                ExecutionRestService,
-                "changePresenceOnTestExecution"
-            ).mockImplementation(() => {});
+            jest.spyOn(ExecutionRestService, "changePresenceOnTestExecution").mockImplementation(
+                () => {}
+            );
             jest.spyOn(SharedPropertiesService, "getCurrentUser").mockReturnValue(current_user);
         });
 

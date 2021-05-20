@@ -32,9 +32,8 @@ export function displayBrowserDeprecationModalIfNeeded(
         throw new Error("Browser deprecation modal #browser-deprecation-modal not found");
     }
 
-    const can_be_dismissed = !browser_deprecation_modal_element.hasAttribute(
-        "data-non-dismissible"
-    );
+    const can_be_dismissed =
+        !browser_deprecation_modal_element.hasAttribute("data-non-dismissible");
 
     if (can_be_dismissed && !markAndCheckBrowserDeprecationAcknowledgement(storage)) {
         showModal(browser_deprecation_modal_element);

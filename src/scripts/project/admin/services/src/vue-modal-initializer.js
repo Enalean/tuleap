@@ -23,13 +23,8 @@ export function buildCreateModalCallback(vue_mount_point_id, RootComponent) {
     if (!vue_mount_point) {
         throw new Error(`Could not find Vue mount point ${vue_mount_point_id}`);
     }
-    const {
-        projectId,
-        minimalRank,
-        csrfToken,
-        csrfTokenName,
-        allowedIcons,
-    } = vue_mount_point.dataset;
+    const { projectId, minimalRank, csrfToken, csrfTokenName, allowedIcons } =
+        vue_mount_point.dataset;
 
     return () => {
         return new RootComponent({

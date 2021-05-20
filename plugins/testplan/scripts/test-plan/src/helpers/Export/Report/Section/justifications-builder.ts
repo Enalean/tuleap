@@ -60,15 +60,13 @@ export async function buildJustificationsSection(
             value.test_exec_status !== "passed"
     );
 
-    const full_artifact_non_passed_test_execs: ReadonlyMap<
-        number,
-        Artifact
-    > = await retrieveArtifacts(
-        non_passed_test_cases.map(
-            (test_case: PlannedTestCaseAssociatedWithTestExecAndCampaign): number =>
-                test_case.test_exec_id
-        )
-    );
+    const full_artifact_non_passed_test_execs: ReadonlyMap<number, Artifact> =
+        await retrieveArtifacts(
+            non_passed_test_cases.map(
+                (test_case: PlannedTestCaseAssociatedWithTestExecAndCampaign): number =>
+                    test_case.test_exec_id
+            )
+        );
 
     const rows = non_passed_test_cases.map(
         (

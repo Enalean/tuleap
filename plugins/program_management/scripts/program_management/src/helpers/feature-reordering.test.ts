@@ -109,13 +109,13 @@ describe("Feature Reordering", () => {
     describe("reorderFeatureInProgramBacklog", () => {
         let context: ActionContext<State, State>;
         beforeEach(() => {
-            context = ({
+            context = {
                 commit: jest.fn(),
                 state: {
                     to_be_planned_elements: [{ id: 56 }, { id: 57 }, { id: 58 }] as Feature[],
                 } as State,
                 getters: {},
-            } as unknown) as ActionContext<State, State>;
+            } as unknown as ActionContext<State, State>;
             context.getters = {
                 getToBePlannedElementFromId: getToBePlannedElementFromId(context.state),
                 getSiblingFeatureFromProgramBacklog: getSiblingFeatureFromProgramBacklog(
@@ -479,7 +479,7 @@ describe("Feature Reordering", () => {
     describe("reorderFeatureInSameProgramIncrement", () => {
         let context: ActionContext<State, State>;
         beforeEach(() => {
-            context = ({
+            context = {
                 commit: jest.fn(),
                 state: {
                     program_increments: [
@@ -487,7 +487,7 @@ describe("Feature Reordering", () => {
                     ] as ProgramIncrement[],
                 } as State,
                 getters: {},
-            } as unknown) as ActionContext<State, State>;
+            } as unknown as ActionContext<State, State>;
             context.getters = {
                 getFeatureInProgramIncrement: getFeatureInProgramIncrement(context.state),
                 getFeaturesInProgramIncrement: getFeaturesInProgramIncrement(context.state),

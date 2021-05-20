@@ -70,11 +70,11 @@ describe("transformDocumentMetadataForUpdate", () => {
             } as Metadata,
         ];
 
-        const item: ItemFile = ({
+        const item: ItemFile = {
             id: 7,
             type: "file",
             metadata: metadata,
-        } as unknown) as ItemFile;
+        } as unknown as ItemFile;
 
         transformDocumentMetadataForUpdate(item, true);
 
@@ -95,11 +95,11 @@ describe("transformDocumentMetadataForUpdate", () => {
             } as Metadata,
         ];
 
-        const item: ItemFile = ({
+        const item: ItemFile = {
             id: 7,
             type: "file",
             metadata: metadata,
-        } as unknown) as ItemFile;
+        } as unknown as ItemFile;
 
         transformDocumentMetadataForUpdate(item, false);
 

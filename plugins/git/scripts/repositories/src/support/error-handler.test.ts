@@ -22,7 +22,7 @@ import { getErrorCode } from "./error-handler";
 
 describe("error-handler", () => {
     it("When the server responds with a 404, then the error for 'No git service' will be committed", async () => {
-        const error_json = ({
+        const error_json = {
             response: {
                 json(): Promise<{ error: { code: number; message: string } }> {
                     return Promise.resolve({
@@ -33,12 +33,12 @@ describe("error-handler", () => {
                     });
                 },
             },
-        } as unknown) as XMLHttpRequest;
+        } as unknown as XMLHttpRequest;
         expect(await getErrorCode(error_json)).toBe(ERROR_TYPE_NO_GIT);
     });
 
     it("When the server responds with another error code, then the unknown error will be committed", async () => {
-        const error_json = ({
+        const error_json = {
             response: {
                 json(): Promise<{ error: { code: number; message: string } }> {
                     return Promise.resolve({
@@ -49,12 +49,12 @@ describe("error-handler", () => {
                     });
                 },
             },
-        } as unknown) as XMLHttpRequest;
+        } as unknown as XMLHttpRequest;
         expect(await getErrorCode(error_json)).toBe(ERROR_TYPE_UNKNOWN_ERROR);
     });
 
     it("When something else happens (no response), then the unknown error will be committed", async () => {
-        const error_json = ({
+        const error_json = {
             response: {
                 json(): Promise<{ error: { message: string } }> {
                     return Promise.resolve({
@@ -64,7 +64,7 @@ describe("error-handler", () => {
                     });
                 },
             },
-        } as unknown) as XMLHttpRequest;
+        } as unknown as XMLHttpRequest;
         expect(await getErrorCode(error_json)).toBe(ERROR_TYPE_UNKNOWN_ERROR);
     });
 });

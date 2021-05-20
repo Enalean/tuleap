@@ -138,16 +138,17 @@ export async function moveFeatureFromProgramIncrementToAnotherProgramIncrement(
         });
     }
 
-    const feature_planning_change = getFeaturePlanningChangeFromProgramIncrementToAnotherProgramIncrement(
-        context.getters.getFeatureInProgramIncrement({
-            feature_id: element_id,
-            program_increment_id: remove_from_program_increment_id,
-        }),
-        sibling_feature,
-        context.getters.getFeaturesInProgramIncrement(plan_in_program_increment_id),
-        remove_from_program_increment_id,
-        plan_in_program_increment_id
-    );
+    const feature_planning_change =
+        getFeaturePlanningChangeFromProgramIncrementToAnotherProgramIncrement(
+            context.getters.getFeatureInProgramIncrement({
+                feature_id: element_id,
+                program_increment_id: remove_from_program_increment_id,
+            }),
+            sibling_feature,
+            context.getters.getFeaturesInProgramIncrement(plan_in_program_increment_id),
+            remove_from_program_increment_id,
+            plan_in_program_increment_id
+        );
 
     context.commit(
         "moveFeatureFromProgramIncrementToAnotherProgramIncrement",

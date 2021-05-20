@@ -33,12 +33,12 @@ describe("dependency-map-builder", () => {
 
     it("Returns a map of dependencies", () => {
         const task_1 = { id: 1, dependencies: {} } as Task;
-        const task_2 = ({ id: 2, dependencies: { depends_on: [3, 4] } } as unknown) as Task;
-        const task_3 = ({ id: 3, dependencies: { "": [1, 5] } } as unknown) as Task;
-        const task_4 = ({
+        const task_2 = { id: 2, dependencies: { depends_on: [3, 4] } } as unknown as Task;
+        const task_3 = { id: 3, dependencies: { "": [1, 5] } } as unknown as Task;
+        const task_4 = {
             id: 4,
             dependencies: { "": [1], depends_on: [2, 3] },
-        } as unknown) as Task;
+        } as unknown as Task;
 
         const map = getTasksDependencies([task_1, task_2, task_3, task_4]);
 
@@ -53,7 +53,7 @@ describe("dependency-map-builder", () => {
     });
 
     it("Removes dependencies with end date < start date", () => {
-        const task_1 = ({ id: 1, dependencies: { "": [2, 3] } } as unknown) as Task;
+        const task_1 = { id: 1, dependencies: { "": [2, 3] } } as unknown as Task;
         const task_2 = {
             id: 2,
             dependencies: {},
@@ -74,12 +74,12 @@ describe("dependency-map-builder", () => {
     });
 
     it("Does not compute dependencies for tasks with end date < start date", () => {
-        const task_1 = ({
+        const task_1 = {
             id: 1,
             dependencies: { "": [2, 3] },
             start: new Date("2020-04-14T22:00:00.000Z"),
             end: new Date("2020-04-10T22:00:00.000Z"),
-        } as unknown) as Task;
+        } as unknown as Task;
         const task_2 = {
             id: 2,
             dependencies: {},

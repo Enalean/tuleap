@@ -28,9 +28,8 @@ export function transform(tracker, creation_mode) {
         transformed_tracker.fields = excludeFieldsForCreationMode(tracker.fields);
     }
     if (hasFieldDependenciesRules(transformed_tracker)) {
-        transformed_tracker.workflow.rules.lists = transformFieldDependenciesRules(
-            transformed_tracker
-        );
+        transformed_tracker.workflow.rules.lists =
+            transformFieldDependenciesRules(transformed_tracker);
     }
     transformed_tracker.fields = transformFields(transformed_tracker.fields);
 

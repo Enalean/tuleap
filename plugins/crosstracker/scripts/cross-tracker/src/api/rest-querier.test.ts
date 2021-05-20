@@ -185,7 +185,7 @@ describe("rest-querier", () => {
                 const csv = `"id"\r\n65\r\n88\r\n`;
 
                 tlpGet.mockReturnValue(
-                    Promise.resolve(({
+                    Promise.resolve({
                         headers: {
                             /** 'X-PAGINATION-SIZE' */
                             get: (): string => "2",
@@ -193,7 +193,7 @@ describe("rest-querier", () => {
                         text() {
                             return Promise.resolve(csv);
                         },
-                    } as unknown) as Response)
+                    } as unknown as Response)
                 );
 
                 const results = await getCSVReport(72);
@@ -213,7 +213,7 @@ describe("rest-querier", () => {
                 const csv = `"id"\r\n61\r\n26\r\n`;
 
                 tlpGet.mockReturnValue(
-                    Promise.resolve(({
+                    Promise.resolve({
                         headers: {
                             /** 'X-PAGINATION-SIZE' */
                             get: (): string => "70",
@@ -221,7 +221,7 @@ describe("rest-querier", () => {
                         text() {
                             return Promise.resolve(csv);
                         },
-                    } as unknown) as Response)
+                    } as unknown as Response)
                 );
 
                 const results = await getCSVReport(81);

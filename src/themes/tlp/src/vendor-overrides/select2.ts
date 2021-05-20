@@ -42,9 +42,9 @@ export function select2(element: Element, options?: Options): Select2Plugin {
 
     // jQuery().select2 should yield a Select2Plugin but apparently it doesn't
     // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
-    return (jQuery(element).select2({
+    return jQuery(element).select2({
         language: default_locale,
         ...options,
         theme,
-    }) as unknown) as Select2Plugin;
+    }) as unknown as Select2Plugin;
 }

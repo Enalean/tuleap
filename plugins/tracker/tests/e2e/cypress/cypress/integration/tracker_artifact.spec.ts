@@ -282,8 +282,7 @@ describe("Tracker artifacts", function () {
                     cy.putFromTuleapApi(`https://tuleap/api/artifacts/${artifact_id}`, {
                         values: [],
                         comment: {
-                            body:
-                                "I have commented this artifact while you were editing it. You mad bro?",
+                            body: "I have commented this artifact while you were editing it. You mad bro?",
                             post_processed_body: "string",
                             format: "string",
                         },

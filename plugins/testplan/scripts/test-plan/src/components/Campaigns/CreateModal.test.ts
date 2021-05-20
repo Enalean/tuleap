@@ -46,9 +46,9 @@ describe("CreateModal", () => {
     it("Display the modal when mounted", async () => {
         const modal_show = jest.fn();
         jest.spyOn(tlp, "createModal").mockImplementation(() => {
-            return ({
+            return {
                 show: modal_show,
-            } as unknown) as Modal;
+            } as unknown as Modal;
         });
 
         const wrapper = shallowMount(CreateModal, {
@@ -72,10 +72,10 @@ describe("CreateModal", () => {
     it("creates the campaign, hides the modal and refresh the backlog items", async () => {
         const modal_hide = jest.fn();
         jest.spyOn(tlp, "createModal").mockImplementation(() => {
-            return ({
+            return {
                 show: jest.fn(),
                 hide: modal_hide,
-            } as unknown) as Modal;
+            } as unknown as Modal;
         });
 
         const $store = createStoreMock({
@@ -112,10 +112,10 @@ describe("CreateModal", () => {
     it("sets an error message when the reports of the test definition tracker cannot be retrieved", async () => {
         const modal_hide = jest.fn();
         jest.spyOn(tlp, "createModal").mockImplementation(() => {
-            return ({
+            return {
                 show: jest.fn(),
                 hide: modal_hide,
-            } as unknown) as Modal;
+            } as unknown as Modal;
         });
         jest.spyOn(tracker_report_retriever, "getTrackerReports").mockRejectedValueOnce(
             new Error("Something bad happened")

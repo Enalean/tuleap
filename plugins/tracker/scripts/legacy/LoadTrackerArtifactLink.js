@@ -44,9 +44,8 @@ document.observe("dom:loaded", function () {
     function initTabs() {
         $$(".tracker-form-element-artifactlink-list").each(function (artifact_link) {
             var id = artifact_link.identify();
-            codendi.tracker.artifact.artifactLink.tabs[
-                id
-            ] = new codendi.tracker.artifact.artifactLink.Tab(artifact_link);
+            codendi.tracker.artifact.artifactLink.tabs[id] =
+                new codendi.tracker.artifact.artifactLink.Tab(artifact_link);
         });
     }
 
@@ -556,9 +555,8 @@ document.observe("dom:loaded", function () {
             if (!link) {
                 return;
             }
-            codendi.tracker.artifact.artifactLinker_currentField = link.up(
-                ".tracker_artifact_field"
-            );
+            codendi.tracker.artifact.artifactLinker_currentField =
+                link.up(".tracker_artifact_field");
             codendi.tracker.artifact.artifactLinker_currentField_id = input.name.gsub(
                 /artifact\[(\d+)\]\[new_values\]/,
                 "#{1}"
@@ -584,7 +582,8 @@ document.observe("dom:loaded", function () {
             function openCreateArtifactModalOnClickOnCreateButton(evt) {
                 //create a new artifact via artifact links
                 //tracker='.$tracker_id.'&func=new-artifact-link&id='.$artifact->getId().
-                codendi.tracker.artifact.artifactLink.overlay_window.options.afterFinishWindow = function () {};
+                codendi.tracker.artifact.artifactLink.overlay_window.options.afterFinishWindow =
+                    function () {};
                 codendi.tracker.artifact.artifactLink.overlay_window.activateWindow({
                     href:
                         codendi.tracker.base_url +
@@ -592,10 +591,9 @@ document.observe("dom:loaded", function () {
                         $H({
                             tracker: codendi.tracker.artifact.artifactLink.selector_url.tracker,
                             func: "new-artifact-link",
-                            id:
-                                codendi.tracker.artifact.artifactLink.selector_url[
-                                    "link-artifact-id"
-                                ],
+                            id: codendi.tracker.artifact.artifactLink.selector_url[
+                                "link-artifact-id"
+                            ],
                             modal: 1,
                         }).toQueryString(),
                     title: link.title,
@@ -608,109 +606,111 @@ document.observe("dom:loaded", function () {
 
             function openSearchArtifactModalOnClickOnLinkButton(evt) {
                 $$("button.tracker-form-element-artifactlink-selector");
-                codendi.tracker.artifact.artifactLink.overlay_window.options.afterFinishWindow = function () {
-                    if ($("tracker-link-artifact-fast-ways")) {
-                        //Tooltips. load only in fast ways panels
-                        // since report table are loaded later in
-                        // the function load_behavior_...
-                        codendi.Tooltip.load("tracker-link-artifact-fast-ways");
+                codendi.tracker.artifact.artifactLink.overlay_window.options.afterFinishWindow =
+                    function () {
+                        if ($("tracker-link-artifact-fast-ways")) {
+                            //Tooltips. load only in fast ways panels
+                            // since report table are loaded later in
+                            // the function load_behavior_...
+                            codendi.Tooltip.load("tracker-link-artifact-fast-ways");
 
-                        load_behaviors_in_slow_ways_panel();
+                            load_behaviors_in_slow_ways_panel();
 
-                        //links to artifacts load in a new browser tab/window
-                        $$(
-                            "#tracker-link-artifact-fast-ways a.cross-reference",
-                            "#tracker-link-artifact-fast-ways a.direct-link-to-artifact",
-                            "#tracker-link-artifact-fast-ways a.link-to-user"
-                        ).each(function (a) {
-                            a.target = "_blank";
-                            a.rel = "noreferrer";
-                        });
-
-                        var input_to_link = $("lightwindow_contents").down(
-                            'input[name="link-artifact[manual]"]'
-                        );
-
-                        //Checked/unchecked values are added/removed in the manual panel
-                        $("lightwindow_contents")
-                            .select('input[name^="link-artifact[recent]"]')
-                            .each(function (elem) {
-                                add_remove_selected(elem, input_to_link);
+                            //links to artifacts load in a new browser tab/window
+                            $$(
+                                "#tracker-link-artifact-fast-ways a.cross-reference",
+                                "#tracker-link-artifact-fast-ways a.direct-link-to-artifact",
+                                "#tracker-link-artifact-fast-ways a.link-to-user"
+                            ).each(function (a) {
+                                a.target = "_blank";
+                                a.rel = "noreferrer";
                             });
 
-                        //Check/Uncheck values in recent and search panels linked to manual panel changes
-                        // eslint-disable-next-line no-inner-declarations
-                        function observe_input_field() {
-                            var manual_value = input_to_link.value;
-                            var links_array = manual_value.split(",");
+                            var input_to_link = $("lightwindow_contents").down(
+                                'input[name="link-artifact[manual]"]'
+                            );
 
-                            //unchecked values from recent panel
+                            //Checked/unchecked values are added/removed in the manual panel
                             $("lightwindow_contents")
                                 .select('input[name^="link-artifact[recent]"]')
                                 .each(function (elem) {
-                                    if (!elem.disabled) {
-                                        elem.checked = false;
-                                    }
+                                    add_remove_selected(elem, input_to_link);
                                 });
 
-                            //unchecked values from search panel
-                            $("lightwindow_contents")
-                                .select('input[name^="link-artifact[search]"]')
-                                .each(function (elem) {
-                                    if (!elem.disabled) {
-                                        elem.checked = false;
-                                    }
-                                });
+                            //Check/Uncheck values in recent and search panels linked to manual panel changes
+                            // eslint-disable-next-line no-inner-declarations
+                            function observe_input_field() {
+                                var manual_value = input_to_link.value;
+                                var links_array = manual_value.split(",");
 
-                            links_array.each(function (link) {
-                                checked_values_panels(link.strip());
+                                //unchecked values from recent panel
+                                $("lightwindow_contents")
+                                    .select('input[name^="link-artifact[recent]"]')
+                                    .each(function (elem) {
+                                        if (!elem.disabled) {
+                                            elem.checked = false;
+                                        }
+                                    });
+
+                                //unchecked values from search panel
+                                $("lightwindow_contents")
+                                    .select('input[name^="link-artifact[search]"]')
+                                    .each(function (elem) {
+                                        if (!elem.disabled) {
+                                            elem.checked = false;
+                                        }
+                                    });
+
+                                links_array.each(function (link) {
+                                    checked_values_panels(link.strip());
+                                });
+                            }
+
+                            input_to_link.observe("change", observe_input_field);
+                            input_to_link.observe("keyup", observe_input_field);
+
+                            //check already linked artifacts in recent panel
+                            $$(
+                                '#tracker-link-artifact-fast-ways input[type=checkbox][name^="link-artifact[recent][]"]'
+                            ).each(force_check);
+
+                            var button = $("lightwindow_contents").down(
+                                "button[name=link-artifact-submit]"
+                            );
+                            button.observe("click", function (evt) {
+                                var to_add = [];
+
+                                //manual ones
+                                var manual = $("lightwindow_contents").down(
+                                    'input[name="link-artifact[manual]"]'
+                                ).value;
+                                if (manual) {
+                                    to_add.push(manual);
+                                }
+
+                                //add to the existing ones
+                                if (to_add.size()) {
+                                    var input_field =
+                                        codendi.tracker.artifact.artifactLinker_currentField.down(
+                                            "input.tracker-form-element-artifactlink-new"
+                                        );
+                                    if (input_field.value) {
+                                        input_field.value += ",";
+                                    }
+                                    input_field.value += to_add.join(",");
+                                }
+                                codendi.tracker.artifact.artifactLink.addTemporaryArtifactLinks();
+
+                                //hide the modal window
+                                codendi.tracker.artifact.artifactLink.overlay_window.deactivate();
+
+                                //stop the propagation of the event (don't submit any forms)
+                                Event.stop(evt);
+
+                                return false;
                             });
                         }
-
-                        input_to_link.observe("change", observe_input_field);
-                        input_to_link.observe("keyup", observe_input_field);
-
-                        //check already linked artifacts in recent panel
-                        $$(
-                            '#tracker-link-artifact-fast-ways input[type=checkbox][name^="link-artifact[recent][]"]'
-                        ).each(force_check);
-
-                        var button = $("lightwindow_contents").down(
-                            "button[name=link-artifact-submit]"
-                        );
-                        button.observe("click", function (evt) {
-                            var to_add = [];
-
-                            //manual ones
-                            var manual = $("lightwindow_contents").down(
-                                'input[name="link-artifact[manual]"]'
-                            ).value;
-                            if (manual) {
-                                to_add.push(manual);
-                            }
-
-                            //add to the existing ones
-                            if (to_add.size()) {
-                                var input_field = codendi.tracker.artifact.artifactLinker_currentField.down(
-                                    "input.tracker-form-element-artifactlink-new"
-                                );
-                                if (input_field.value) {
-                                    input_field.value += ",";
-                                }
-                                input_field.value += to_add.join(",");
-                            }
-                            codendi.tracker.artifact.artifactLink.addTemporaryArtifactLinks();
-
-                            //hide the modal window
-                            codendi.tracker.artifact.artifactLink.overlay_window.deactivate();
-
-                            //stop the propagation of the event (don't submit any forms)
-                            Event.stop(evt);
-
-                            return false;
-                        });
-                    }
-                };
+                    };
 
                 codendi.tracker.artifact.artifactLink.overlay_window.activateWindow({
                     href:

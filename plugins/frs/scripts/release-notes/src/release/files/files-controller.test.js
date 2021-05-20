@@ -33,10 +33,9 @@ describe(`FilesController`, () => {
         });
 
         jest.spyOn(SharedPropertiesService, "getRelease").mockImplementation(() => {});
-        jest.spyOn(
-            SharedPropertiesService,
-            "getCustomLicenseAgreement"
-        ).mockImplementation(() => {});
+        jest.spyOn(SharedPropertiesService, "getCustomLicenseAgreement").mockImplementation(
+            () => {}
+        );
     });
 
     describe(`isEmpty()`, () => {

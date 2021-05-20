@@ -72,9 +72,8 @@ codendi.Tree.Node = Class.create({
             this.a_sibling_has_been_found = true;
             var div_at_the_same_level = tr.down("td").down("div", this.level);
             if (div_at_the_same_level) {
-                is_a_child_or_subchild = this.divAtSameLevelTellsThatNodeIsAChildOrSubchild(
-                    div_at_the_same_level
-                );
+                is_a_child_or_subchild =
+                    this.divAtSameLevelTellsThatNodeIsAChildOrSubchild(div_at_the_same_level);
                 if (is_a_child_or_subchild) {
                     this.a_sibling_has_been_found = false;
                 }

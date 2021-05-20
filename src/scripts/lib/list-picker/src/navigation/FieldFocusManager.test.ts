@@ -25,9 +25,9 @@ describe("FieldFocusManager", () => {
         search_field_element: HTMLInputElement;
 
     function getDocumentWithActiveElement(active_element: HTMLElement): HTMLDocument {
-        return ({
+        return {
             activeElement: active_element,
-        } as unknown) as HTMLDocument;
+        } as unknown as HTMLDocument;
     }
 
     beforeEach(() => {

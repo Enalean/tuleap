@@ -52,8 +52,7 @@ describe("column-getters", () => {
             } as ColumnDefinition;
 
             expect(getters.accepted_trackers_ids(column_state, [], root_state)(column)).toEqual([
-                11,
-                12,
+                11, 12,
             ]);
         });
 

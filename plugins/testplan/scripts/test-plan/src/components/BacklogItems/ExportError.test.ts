@@ -27,9 +27,9 @@ describe("ExportError", () => {
     it("shows the modal on mount", async () => {
         const modal_show_spy = jest.fn();
         jest.spyOn(tlp, "createModal").mockImplementation(() => {
-            return ({
+            return {
                 show: modal_show_spy,
-            } as unknown) as Modal;
+            } as unknown as Modal;
         });
 
         shallowMount(ExportError, {

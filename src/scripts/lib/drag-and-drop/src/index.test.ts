@@ -36,7 +36,7 @@ jest.mock("./DrekkenovState", () => {
 
 describe(`drekkenov`, () => {
     afterEach(() => {
-        const state_constructor = (DrekkenovState as unknown) as jest.SpyInstance;
+        const state_constructor = DrekkenovState as unknown as jest.SpyInstance;
         state_constructor.mockClear();
     });
 
@@ -48,7 +48,7 @@ describe(`drekkenov`, () => {
 
             init(options);
 
-            const state_constructor = (DrekkenovState as unknown) as jest.SpyInstance;
+            const state_constructor = DrekkenovState as unknown as jest.SpyInstance;
             const state = state_constructor.mock.results[0].value;
             expect(state_constructor).toHaveBeenCalled();
             expect(state.createDragStartHandler).toHaveBeenCalled();
@@ -67,7 +67,7 @@ describe(`drekkenov`, () => {
                 const drekkenov_instance = init(options);
                 drekkenov_instance.destroy();
 
-                const state_constructor = (DrekkenovState as unknown) as jest.SpyInstance;
+                const state_constructor = DrekkenovState as unknown as jest.SpyInstance;
                 const state = state_constructor.mock.results[0].value;
 
                 expect(state.cleanup).toHaveBeenCalled();

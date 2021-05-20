@@ -94,9 +94,9 @@ describe("rest-querier", () => {
     it("getTermOfService - retrieves the term of service", async () => {
         const response_text = jest.fn();
         jest.spyOn(tlp, "get").mockImplementation(() => {
-            return ({
+            return {
                 text: response_text,
-            } as unknown) as Promise<Response>;
+            } as unknown as Promise<Response>;
         });
 
         await getTermOfService();

@@ -31,12 +31,12 @@ describe("getJiraProjectList", () => {
 
     it("retrieve the list of jira projects", async () => {
         const credentials = {} as Credentials;
-        context = ({
+        context = {
             commit: jest.fn(),
             state: {
                 project_unix_name: "project",
             } as State,
-        } as unknown) as ActionContext<State, State>;
+        } as unknown as ActionContext<State, State>;
 
         const tlpPost = jest.spyOn(tlp, "post");
 

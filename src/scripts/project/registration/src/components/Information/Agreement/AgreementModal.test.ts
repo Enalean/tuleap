@@ -38,9 +38,9 @@ describe("AgreementModal -", () => {
         const modal_show = jest.fn();
 
         jest.spyOn(tlp, "createModal").mockImplementation(() => {
-            return ({
+            return {
                 show: modal_show,
-            } as unknown) as Modal;
+            } as unknown as Modal;
         });
 
         const get_term_of_service = jest

@@ -301,18 +301,16 @@ import { createListPicker } from "@tuleap/list-picker";
                 });
             }
 
-            var dropdown_trigger_split_example1_options = document.getElementById(
-                "dropdown-split-example"
-            );
+            var dropdown_trigger_split_example1_options =
+                document.getElementById("dropdown-split-example");
             if (dropdown_trigger_split_example1_options) {
                 createDropdown(dropdown_trigger_split_example1_options, {
                     dropdown_menu: document.getElementById("dropdown-split-example-menu"),
                 });
             }
 
-            var dropdown_trigger_split_example2_options = document.getElementById(
-                "dropdown-split-example2"
-            );
+            var dropdown_trigger_split_example2_options =
+                document.getElementById("dropdown-split-example2");
             if (dropdown_trigger_split_example2_options) {
                 createDropdown(dropdown_trigger_split_example2_options, {
                     dropdown_menu: document.getElementById("dropdown-split-example2-menu"),

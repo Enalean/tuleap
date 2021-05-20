@@ -91,9 +91,9 @@ describe("Error Handler", () => {
     describe(`handleModalError`, () => {
         let context: ActionContext<State, State>;
         beforeEach(() => {
-            context = ({
+            context = {
                 commit: jest.fn(),
-            } as unknown) as ActionContext<State, State>;
+            } as unknown as ActionContext<State, State>;
         });
         it(`When a message can be extracted from the FetchWrapperError,
             it will set an error message that will show up in a modal window`, async () => {

@@ -61,9 +61,9 @@ describe("ErrorModal", () => {
     it(`shows the modal when mounted`, () => {
         const modal_show = jest.fn();
         jest.spyOn(tlp, "createModal").mockImplementation(() => {
-            return ({
+            return {
                 show: modal_show,
-            } as unknown) as Modal;
+            } as unknown as Modal;
         });
         createWrapper("Full error message with details");
         expect(modal_show).toHaveBeenCalledTimes(1);

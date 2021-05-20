@@ -34,9 +34,9 @@ describe("action", () => {
     describe("getGitlabProjectList", () => {
         let context: ActionContext<GitlabState, GitlabState>;
         beforeEach(() => {
-            context = ({
+            context = {
                 commit: jest.fn(),
-            } as unknown) as ActionContext<GitlabState, GitlabState>;
+            } as unknown as ActionContext<GitlabState, GitlabState>;
         });
 
         it("When api is called, Then url is formatted", async () => {
@@ -47,13 +47,13 @@ describe("action", () => {
 
             getAsyncGitlabRepositoryList.mockReturnValue(
                 new Promise((resolve) => {
-                    resolve(({
+                    resolve({
                         headers: {
                             get: () => "1",
                         },
                         status: 200,
                         json: () => Promise.resolve([{ id: 10 }]),
-                    } as unknown) as Response);
+                    } as unknown as Response);
                 })
             );
             const credentials: GitLabCredentials = {
@@ -76,13 +76,13 @@ describe("action", () => {
             );
             getAsyncGitlabRepositoryList.mockReturnValue(
                 new Promise((resolve) => {
-                    resolve(({
+                    resolve({
                         headers: {
                             get: () => "2",
                         },
                         status: 200,
                         json: () => Promise.resolve([{ id: 10 }]),
-                    } as unknown) as Response);
+                    } as unknown as Response);
                 })
             );
             const credentials: GitLabCredentials = {
@@ -126,9 +126,9 @@ describe("action", () => {
     describe("getGitlabRepositoryFromId", () => {
         let context: ActionContext<GitlabState, GitlabState>;
         beforeEach(() => {
-            context = ({
+            context = {
                 commit: jest.fn(),
-            } as unknown) as ActionContext<GitlabState, GitlabState>;
+            } as unknown as ActionContext<GitlabState, GitlabState>;
         });
 
         it("When api is called, Then url is formatted", async () => {
@@ -138,11 +138,11 @@ describe("action", () => {
             );
             getAsyncGitlabRepositoryList.mockReturnValue(
                 new Promise((resolve) => {
-                    resolve(({
+                    resolve({
                         get: () => "1",
                         status: 200,
                         json: () => Promise.resolve([{ id: 10 }]),
-                    } as unknown) as Response);
+                    } as unknown as Response);
                 })
             );
             const credentials: GitLabCredentials = {
@@ -166,9 +166,9 @@ describe("action", () => {
             );
             getAsyncGitlabRepositoryList.mockReturnValue(
                 new Promise((resolve) => {
-                    resolve(({
+                    resolve({
                         status: 401,
-                    } as unknown) as Response);
+                    } as unknown as Response);
                 })
             );
             const credentials: GitLabCredentials = {
@@ -197,10 +197,10 @@ describe("action", () => {
 
             patchGitlabRepository.mockReturnValue(
                 new Promise((resolve) => {
-                    resolve(({
+                    resolve({
                         get: () => "1",
                         status: 200,
-                    } as unknown) as Response);
+                    } as unknown as Response);
                 })
             );
 
@@ -248,13 +248,13 @@ describe("action", () => {
             GitlabState
         >;
         beforeEach(() => {
-            const modal: Modal = ({ toggle: jest.fn() } as unknown) as Modal;
-            context = ({
+            const modal: Modal = { toggle: jest.fn() } as unknown as Modal;
+            context = {
                 commit: jest.fn(),
                 state: {
                     edit_access_token_gitlab_repository_modal: modal,
                 } as GitlabState,
-            } as unknown) as ActionContext<GitlabState, GitlabState>;
+            } as unknown as ActionContext<GitlabState, GitlabState>;
         });
 
         const repository = { id: 5 } as GitLabRepository;

@@ -349,7 +349,8 @@ describe("ExecutionService", () => {
             ExecutionService.campaign_id = 6;
             ExecutionService.campaign = campaign;
             ExecutionService.categories = categories;
-            ExecutionService.executions_by_categories_by_campaigns = executions_by_categories_by_campaigns;
+            ExecutionService.executions_by_categories_by_campaigns =
+                executions_by_categories_by_campaigns;
             ExecutionService.addTestExecution(execution);
             expect(ExecutionService.executions[4]).toEqual({
                 id: 4,
@@ -401,7 +402,8 @@ describe("ExecutionService", () => {
             ExecutionService.campaign_id = 6;
             ExecutionService.campaign = campaign;
             ExecutionService.categories = categories;
-            ExecutionService.executions_by_categories_by_campaigns = executions_by_categories_by_campaigns;
+            ExecutionService.executions_by_categories_by_campaigns =
+                executions_by_categories_by_campaigns;
             ExecutionService.addTestExecutionWithoutUpdateCampaignStatus(execution);
             expect(ExecutionService.executions[4]).toEqual({
                 id: 4,
@@ -605,7 +607,8 @@ describe("ExecutionService", () => {
             ExecutionService.campaign_id = 6;
             ExecutionService.campaign = campaign;
             ExecutionService.categories = categories;
-            ExecutionService.executions_by_categories_by_campaigns = executions_by_categories_by_campaigns;
+            ExecutionService.executions_by_categories_by_campaigns =
+                executions_by_categories_by_campaigns;
             ExecutionService.executions = { 4: execution };
 
             ExecutionService.removeTestExecution(execution);
@@ -654,7 +657,8 @@ describe("ExecutionService", () => {
             ExecutionService.campaign_id = 6;
             ExecutionService.campaign = campaign;
             ExecutionService.categories = categories;
-            ExecutionService.executions_by_categories_by_campaigns = executions_by_categories_by_campaigns;
+            ExecutionService.executions_by_categories_by_campaigns =
+                executions_by_categories_by_campaigns;
             ExecutionService.executions = { 4: execution };
 
             ExecutionService.removeTestExecutionWithoutUpdateCampaignStatus(execution);

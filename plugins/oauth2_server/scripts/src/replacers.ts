@@ -28,43 +28,43 @@ export const hiddenInputReplaceCallback = (clicked_button: HTMLElement): string 
     return clicked_button.dataset.appId;
 };
 
-export const buildDeletionReplaceCallback = (gettext_provider: GetText) => (
-    clicked_button: HTMLElement
-): string => {
-    if (!clicked_button.dataset.appName) {
-        throw new Error("Missing data-app-name attribute on button");
-    }
-    return sprintf(
-        gettext_provider.gettext("You are about to delete %s. Please, confirm your action."),
-        clicked_button.dataset.appName
-    );
-};
+export const buildDeletionReplaceCallback =
+    (gettext_provider: GetText) =>
+    (clicked_button: HTMLElement): string => {
+        if (!clicked_button.dataset.appName) {
+            throw new Error("Missing data-app-name attribute on button");
+        }
+        return sprintf(
+            gettext_provider.gettext("You are about to delete %s. Please, confirm your action."),
+            clicked_button.dataset.appName
+        );
+    };
 
-export const buildRegenerationReplaceBallback = (gettext_provider: GetText) => (
-    clicked_button: HTMLElement
-): string => {
-    if (!clicked_button.dataset.appName) {
-        throw new Error("Missing data-app-name attribute on button");
-    }
-    return sprintf(
-        gettext_provider.gettext(`You are about to generate a new Client Secret for %s.
+export const buildRegenerationReplaceBallback =
+    (gettext_provider: GetText) =>
+    (clicked_button: HTMLElement): string => {
+        if (!clicked_button.dataset.appName) {
+            throw new Error("Missing data-app-name attribute on button");
+        }
+        return sprintf(
+            gettext_provider.gettext(`You are about to generate a new Client Secret for %s.
         Make sure to replace it in %s's configuration, otherwise it will not be allowed to access Tuleap!
         Please, confirm your action.`),
-        clicked_button.dataset.appName,
-        clicked_button.dataset.appName
-    );
-};
+            clicked_button.dataset.appName,
+            clicked_button.dataset.appName
+        );
+    };
 
-export const buildRevocationReplaceCallback = (gettext_provider: GetText) => (
-    clicked_button: HTMLElement
-): string => {
-    if (!clicked_button.dataset.appName) {
-        throw new Error("Missing data-app-name attribute on button");
-    }
-    return sprintf(
-        gettext_provider.gettext(
-            "You are about to revoke access to %s. Please, confirm your action."
-        ),
-        clicked_button.dataset.appName
-    );
-};
+export const buildRevocationReplaceCallback =
+    (gettext_provider: GetText) =>
+    (clicked_button: HTMLElement): string => {
+        if (!clicked_button.dataset.appName) {
+            throw new Error("Missing data-app-name attribute on button");
+        }
+        return sprintf(
+            gettext_provider.gettext(
+                "You are about to revoke access to %s. Please, confirm your action."
+            ),
+            clicked_button.dataset.appName
+        );
+    };

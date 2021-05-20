@@ -390,8 +390,9 @@ tuleap.trackers.trigger.triggering_field = Class.create({
             "change",
             function (evt) {
                 var field_id = Event.element(evt).value,
-                    tracker_id = container.down(".trigger_triggering_field_child_tracker_name")
-                        .value;
+                    tracker_id = container.down(
+                        ".trigger_triggering_field_child_tracker_name"
+                    ).value;
 
                 self.removeExistingFieldValues();
                 self.addTrackerFieldValuesData(tracker_id, field_id);
