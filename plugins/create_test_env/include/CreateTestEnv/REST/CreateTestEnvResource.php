@@ -22,11 +22,9 @@
 namespace Tuleap\CreateTestEnv\REST;
 
 use Tuleap\CreateTestEnv\Exception\InvalidPasswordException;
-use Tuleap\CreateTestEnv\Notifier;
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\Password\PasswordSanityChecker;
 use Tuleap\REST\Header;
-use Tuleap\CreateTestEnv\NotificationBotDao;
 use Tuleap\CreateTestEnv\CreateTestEnvironment;
 use Tuleap\CreateTestEnv\Exception\CreateTestEnvException;
 use Tuleap\CreateTestEnv\Exception\InvalidInputException;
@@ -34,13 +32,6 @@ use Luracast\Restler\RestException;
 
 class CreateTestEnvResource
 {
-    private $notifier;
-
-    public function __construct()
-    {
-        $this->notifier = new Notifier(new NotificationBotDao());
-    }
-
     /**
      * @url OPTIONS
      */
@@ -78,7 +69,6 @@ class CreateTestEnvResource
 
             $tmp_name = $this->createTempDir();
             $test_env = new CreateTestEnvironment(
-                $this->notifier,
                 PasswordSanityChecker::build(),
                 $tmp_name
             );
@@ -90,13 +80,10 @@ class CreateTestEnvResource
                 \HTTPRequest::instance()->getServerUrl()
             );
         } catch (InvalidPasswordException $exception) {
-            $this->notifier->notify('Client error at environment creation: ' . $exception->getMessage());
             throw new RestException(400, $exception->getMessage(), ['exception' => get_class($exception), 'password_exceptions' => $exception->getPasswordErrors()]);
         } catch (InvalidInputException $exception) {
-            $this->notifier->notify('Client error at environment creation: ' . $exception->getMessage());
             throw new RestException(400, $exception->getMessage(), ['exception' => get_class($exception)]);
         } catch (CreateTestEnvException $exception) {
-            $this->notifier->notify('Server error at environment creation: ' . $exception->getMessage());
             throw new RestException(500, $exception->getMessage(), ['exception' => get_class($exception)]);
         } finally {
             $this->cleanUpTempDir($tmp_name . '/data');
