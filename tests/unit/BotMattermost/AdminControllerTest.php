@@ -27,11 +27,10 @@ use CSRFSynchronizerToken;
 use EventManager;
 use HTTPRequest;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\BotMattermost\Bot\Bot;
 use Tuleap\Layout\BaseLayout;
 
-class AdminControllerTest extends TestCase
+class AdminControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

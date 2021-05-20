@@ -21,11 +21,10 @@
 namespace Tuleap\BotMattermost\SenderServices\MarkdownEngine;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 
 require_once __DIR__ . '/../../../bootstrap.php';
 
-class MarkdownTemplateRendererFactoryTest extends TestCase
+class MarkdownTemplateRendererFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

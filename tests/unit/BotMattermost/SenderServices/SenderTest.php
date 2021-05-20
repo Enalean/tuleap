@@ -23,9 +23,8 @@ namespace Tuleap\BotMattermost\SenderServices;
 require_once __DIR__ . '/../../bootstrap.php';
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 
-class SenderTest extends TestCase
+class SenderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 
