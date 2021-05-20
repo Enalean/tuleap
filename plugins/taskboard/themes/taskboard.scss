@@ -1,0 +1,117 @@
+/**
+ * Copyright (c) Enalean, 2019 - Present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+@use '../../src/themes/BurningParrot/css/includes/global-variables';
+@use '../../agiledashboard/themes/BurningParrot/css/header';
+@use 'includes/header' as taskboard-header;
+@use 'includes/body';
+@use 'includes/card-read';
+@use 'includes/card-edit';
+@use 'includes/card-add';
+@use 'includes/error';
+@use 'includes/swimlane-sticky-header';
+@use 'includes/button-bar';
+@use 'includes/project-header-background';
+@use '~@tuleap/drag-and-drop';
+
+.header-taskboard-pinned {
+    width: calc(100% - #{global-variables.$sidebar-expanded-width});
+
+    > .header-container {
+        height: global-variables.$navbar-height;
+    }
+}
+
+.sidebar-collapsed .header-taskboard-pinned {
+    width: calc(100% - #{global-variables.$sidebar-collapsed-width});
+}
+
+.taskboard-under-construction {
+    color: var(--tlp-ui-dimmed);
+}
+
+.taskboard-root {
+    display: flex;
+    flex-direction: column;
+    height: calc(100vh - #{global-variables.$breadcrumb-height} - var(--tlp-medium-spacing));
+    margin: var(--tlp-medium-spacing) 0 0;
+}
+
+.sidebar-collapsed .taskboard-root {
+    height: calc(100vh - #{global-variables.$breadcrumb-height-with-collapsed-sidebar} - var(--tlp-medium-spacing));
+}
+
+.has-visible-project-banner .taskboard-root {
+    height: calc(100vh - #{global-variables.$breadcrumb-height} - #{global-variables.$project-banner-base-height} - var(--tlp-medium-spacing));
+}
+
+.has-visible-project-banner.sidebar-collapsed .taskboard-root {
+    height: calc(100vh - #{global-variables.$breadcrumb-height-with-collapsed-sidebar} - #{global-variables.$project-banner-base-height} - var(--tlp-medium-spacing));
+}
+
+.has-visible-platform-banner {
+    .taskboard-root {
+        height: calc(100vh - #{global-variables.$breadcrumb-height} - var(--tlp-medium-spacing) - #{global-variables.$platform-banner-base-height});
+    }
+
+    &.sidebar-collapsed .taskboard-root {
+        height: calc(100vh - #{global-variables.$breadcrumb-height-with-collapsed-sidebar} - var(--tlp-medium-spacing) - #{global-variables.$platform-banner-base-height});
+    }
+
+    &.has-visible-project-banner .taskboard-root {
+        height: calc(100vh - #{global-variables.$breadcrumb-height} - #{global-variables.$project-banner-base-height} - var(--tlp-medium-spacing) - #{global-variables.$platform-banner-base-height});
+    }
+
+    &.has-visible-project-banner.sidebar-collapsed .taskboard-root {
+        height: calc(100vh - #{global-variables.$breadcrumb-height-with-collapsed-sidebar} - #{global-variables.$project-banner-base-height} - var(--tlp-medium-spacing) - #{global-variables.$platform-banner-base-height});
+    }
+}
+
+.taskboard-root-title {
+    margin: 0;
+    padding: var(--tlp-medium-spacing) var(--tlp-medium-spacing) var(--tlp-title-spacing);
+}
+
+.taskboard-app {
+    flex-grow: 1;
+}
+
+.taskboard {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+}
+
+.taskboard:fullscreen {
+    overflow: auto;
+    background-color: var(--tlp-theme-background-color);
+
+    > .taskboard-head {
+        top: 0;
+    }
+
+    > .taskboard-button-bar {
+        margin: var(--tlp-medium-spacing) 0;
+    }
+}
+
+.taskboard-no-text-selection {
+    user-select: none;
+}

@@ -17,10 +17,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+@use '../../src/themes/BurningParrot/css/includes/global-variables';
+@use 'header';
+
 .taskboard-cell-swimlane-header {
     position: initial;
-    left: $sidebar-expanded-width;
-    max-width: calc(100vw - #{$sidebar-expanded-width});
+    left: global-variables.$sidebar-expanded-width;
+    max-width: calc(100vw - #{global-variables.$sidebar-expanded-width});
 
     &:not(.taskboard-cell-swimlane-header-edit-mode) {
         position: sticky;
@@ -31,7 +34,7 @@
         &:not(.taskboard-cell-parent-card-edit-mode):not(.taskboard-cell-parent-card-no-mapping) {
             position: sticky;
             z-index: 9;
-            top: calc(#{$navbar-height} + #{$taskboard-header-height} + 10px);
+            top: calc(#{global-variables.$navbar-height} + #{header.$taskboard-header-height} + 10px);
         }
     }
 
@@ -40,7 +43,7 @@
 
         > .taskboard-cell-parent-card {
             &:not(.taskboard-cell-parent-card-edit-mode) {
-                top: calc(#{$taskboard-header-height} + 10px);
+                top: calc(#{header.$taskboard-header-height} + 10px);
             }
         }
     }
@@ -48,8 +51,8 @@
 
 .sidebar-collapsed {
     .taskboard-cell-swimlane-header {
-        left: $sidebar-collapsed-width;
-        max-width: calc(100vw - #{$sidebar-collapsed-width});
+        left: global-variables.$sidebar-collapsed-width;
+        max-width: calc(100vw - #{global-variables.$sidebar-collapsed-width});
 
         &.taskboard-fullscreen {
             left: 0;

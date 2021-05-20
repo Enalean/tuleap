@@ -18,6 +18,7 @@
  */
 
 @use '../../src/themes/common/css/project-background/background';
+@use '../../src/themes/BurningParrot/css/includes/global-variables';
 
 .project-with-background {
     .taskboard-root-title,
@@ -33,7 +34,7 @@
 body {
     @include background.apply-background(
         '.taskboard-root-title',
-        $sidebar-expanded-width,
-        $sidebar-collapsed-width,
+        global-variables.$sidebar-expanded-width,
+        global-variables.$sidebar-collapsed-width,
     );
 }

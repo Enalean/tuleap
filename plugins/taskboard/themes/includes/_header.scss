@@ -17,17 +17,19 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+@use '../../src/themes/BurningParrot/css/includes/global-variables';
+
 $taskboard-header-height: 50px;
 
 .taskboard-head {
     display: flex;
     position: sticky;
     z-index: 10;
-    top: $navbar-height;
+    top: global-variables.$navbar-height;
 }
 
 .has-visible-platform-banner .taskboard-head {
-    top: calc(#{$navbar-height} + #{$platform-banner-base-height});
+    top: calc(#{global-variables.$navbar-height} + #{global-variables.$platform-banner-base-height});
 }
 
 .taskboard-header {
@@ -38,11 +40,11 @@ $taskboard-header-height: 50px;
     min-width: 200px;
     height: $taskboard-header-height;
     padding: var(--tlp-small-spacing);
-    border-right: 1px solid $tlp-ui-border-normal;
-    border-bottom: 1px solid $tlp-ui-border-normal;
-    background: $tlp-ui-white;
-    box-shadow: inset 0 2px 0 0 var(--primary-color, #{$tlp-ui-border-normal}), inset 0 -1px 0 $tlp-ui-border-normal;
-    color: var(--text-color, #{$tlp-ui-dimmed});
+    border-right: 1px solid var(--tlp-ui-border-normal);
+    border-bottom: 1px solid var(--tlp-ui-border-normal);
+    background: var(--tlp-ui-white);
+    box-shadow: inset 0 2px 0 0 var(--primary-color, var(--tlp-ui-border-normal)), inset 0 -1px 0 var(--tlp-ui-border-normal);
+    color: var(--text-color, var(--tlp-ui-dimmed));
     font-weight: 600;
     text-transform: uppercase;
 
@@ -133,7 +135,7 @@ $taskboard-header-height: 50px;
 }
 
 .taskboard-header-wrong-color {
-    color: $tlp-ui-warning;
+    color: var(--tlp-ui-warning);
     cursor: pointer;
 }
 
@@ -145,7 +147,7 @@ $taskboard-header-height: 50px;
     display: inline-block;
     width: 15px;
     height: 15px;
-    border: 1px solid $tlp-ui-border-light;
+    border: 1px solid var(--tlp-ui-border-light);
     vertical-align: middle;
 }
 
@@ -154,7 +156,7 @@ $taskboard-header-height: 50px;
 }
 
 .taskboard-header-wrong-color-body {
-    color: $tlp-typo-default-text-color;
+    color: var(--tlp-typo-default-text-color);
     text-transform: none;
 }
 

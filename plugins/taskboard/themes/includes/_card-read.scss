@@ -17,7 +17,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@each $color-name, $colors in $tlp-swatch-color-map {
+@use '../../src/themes/tlp/src/scss/variables/colors/swatch-colors';
+
+@each $color-name, $colors in swatch-colors.$tlp-swatch-color-map {
     .taskboard-card-#{$color-name} {
         --card-color: #{map-get($colors, 'primary')};
         --card-text-color: #{map-get($colors, 'text')};
@@ -37,7 +39,7 @@
     padding: var(--tlp-small-spacing) var(--tlp-small-spacing) var(--tlp-small-spacing) calc(var(--tlp-small-spacing) + 2px);
     border: 1px solid var(--border-color, transparent);
     border-radius: 3px;
-    background: var(--secondary-color, #{$tlp-ui-white});
+    background: var(--secondary-color, var(--tlp-ui-white));
     box-shadow:
         0 1px 4px rgba(0, 0, 0, .08),
         0 1px 2px rgba(0, 0, 0, .1),
@@ -133,13 +135,13 @@
 }
 
 .taskboard-cell-parent-card > .taskboard-card-parent {
-    border: 1px solid $tlp-ui-border-normal;
+    border: 1px solid var(--tlp-ui-border-normal);
     box-shadow: none;
 }
 
 .taskboard-cell:first-child > .taskboard-cell-parent-card > .taskboard-card {
-    border: 1px solid var(--border-color, $tlp-ui-border-normal);
-    background: var(--secondary-color, $tlp-theme-background-color);
+    border: 1px solid var(--border-color, var(--tlp-ui-border-normal));
+    background: var(--secondary-color, var(--tlp-theme-background-color));
 
     &.taskboard-card-collapsed {
         border: 0;
@@ -168,7 +170,7 @@
 /* stylelint-disable-next-line selector-no-qualifying-type */
 a.taskboard-card-xref {
     margin: 0 4px 0 0;
-    color: var(--text-color, #{$tlp-ui-dimmed});
+    color: var(--text-color, var(--tlp-ui-dimmed));
     font-size: .65rem;
 
     &:hover {
@@ -250,7 +252,7 @@ a.taskboard-card-xref {
 .taskboard-drop-not-accepted-overlay {
     display: none;
     flex-direction: column;
-    color: $tlp-ui-danger;
+    color: var(--tlp-ui-danger);
     text-align: center;
 
     > .taskboard-drop-not-accepted-overlay-content {
@@ -267,5 +269,5 @@ a.taskboard-card-xref {
 .taskboard-drop-not-accepted {
     display: flex;
     justify-content: center;
-    background-color: transparentize($tlp-ui-danger, .9);
+    background-color: var(--tlp-ui-danger-color-transparent-90);
 }

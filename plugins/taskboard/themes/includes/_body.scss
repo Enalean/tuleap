@@ -57,8 +57,8 @@
     min-width: 250px;
     min-height: 40px;
     padding: var(--tlp-small-spacing);
-    border-right: 1px solid $tlp-ui-border-normal;
-    border-bottom: 3px solid $tlp-ui-border-normal;
+    border-right: 1px solid var(--tlp-ui-border-normal);
+    border-bottom: 3px solid var(--tlp-ui-border-normal);
     vertical-align: top;
 
     &.taskboard-drop-not-accepted {
@@ -72,13 +72,13 @@
     }
 
     &:first-child {
-        background: mix($tlp-theme-background-color, $tlp-ui-white, 60%);
+        background: var(--tlp-theme-background-color-lighter-50);
 
         &:hover,
         &:focus-within {
             > .taskboard-swimlane-toggle {
                 opacity: 1;
-                background: mix($tlp-theme-background-color, $tlp-ui-white, 60%);
+                background: var(--tlp-theme-background-color-lighter-50);
             }
         }
     }
@@ -93,16 +93,16 @@
     width: 50px;
     min-width: unset;
     min-height: 100px;
-    background: $tlp-ui-white;
+    background: var(--tlp-ui-white);
     cursor: pointer;
 
     &.taskboard-cell-collapsed-hover,
     &:hover {
-        background: darken($tlp-ui-white, 2%);
+        background: var(--tlp-ui-white-darker-02);
     }
 
     &.taskboard-cell-collapsed-hover[data-drek-over] {
-        background: mix($tlp-theme-color, $tlp-ui-white, 7%);
+        background: var(--tlp-theme-color-lighter-10);
     }
 
     // This includes drek-ghost
