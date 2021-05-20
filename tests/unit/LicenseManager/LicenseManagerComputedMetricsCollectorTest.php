@@ -21,10 +21,9 @@
 namespace Tuleap\Enalean\LicenseManager;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\Instrument\Prometheus\Prometheus;
 
-class LicenseManagerComputedMetricsCollectorTest extends TestCase
+class LicenseManagerComputedMetricsCollectorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 

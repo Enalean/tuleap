@@ -23,11 +23,10 @@ namespace Tuleap\Enalean\LicenseManager;
 require_once __DIR__ . '/../bootstrap.php';
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Tuleap\Enalean\LicenseManager\Webhook\UserCounterPayload;
 use Tuleap\Webhook\Emitter;
 
-class StatusActivityEmitterTest extends TestCase
+class StatusActivityEmitterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 
