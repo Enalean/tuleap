@@ -29,12 +29,11 @@ use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Mockery\MockInterface;
 use PFUser;
-use PHPUnit\Framework\TestCase;
 use Tuleap\Baseline\Factory\BaselineArtifactFactory;
 use Tuleap\Baseline\Factory\BaselineFactory;
 use Tuleap\Baseline\Support\CurrentUserContext;
 
-class BaselineArtifactServiceTest extends TestCase
+class BaselineArtifactServiceTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
     use CurrentUserContext;

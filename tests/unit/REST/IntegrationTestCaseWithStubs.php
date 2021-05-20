@@ -28,7 +28,6 @@ require_once __DIR__ . '/../bootstrap.php';
 use DI\Container;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 use Tuleap\Baseline\Domain\Authorizations;
 use Tuleap\Baseline\Domain\BaselineArtifactRepository;
@@ -52,7 +51,7 @@ use Tuleap\Baseline\Support\CurrentUserContext;
  * where adapters are replaced by stubs, which ease manipulation
  * (compared to mocks).
  */
-abstract class IntegrationTestCaseWithStubs extends TestCase
+abstract class IntegrationTestCaseWithStubs extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
     use CurrentUserContext;

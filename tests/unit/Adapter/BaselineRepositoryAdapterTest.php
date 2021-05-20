@@ -31,7 +31,6 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Mockery\MockInterface;
 use ParagonIE\EasyDB\EasyDB;
 use PFUser;
-use PHPUnit\Framework\TestCase;
 use Tuleap\Baseline\Domain\Authorizations;
 use Tuleap\Baseline\Domain\AuthorizationsImpl;
 use Tuleap\Baseline\Domain\Baseline;
@@ -42,7 +41,7 @@ use Tuleap\Baseline\Support\CurrentUserContext;
 use Tuleap\Baseline\Support\DateTimeFactory;
 use UserManager;
 
-class BaselineRepositoryAdapterTest extends TestCase
+class BaselineRepositoryAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
     use CurrentUserContext;

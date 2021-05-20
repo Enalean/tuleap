@@ -29,7 +29,6 @@ use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Mockery\MockInterface;
 use PFUser;
-use PHPUnit\Framework\TestCase;
 use Project;
 use Tuleap\Baseline\Factory\BaselineArtifactFactory;
 use Tuleap\Baseline\Factory\BaselineFactory;
@@ -38,7 +37,7 @@ use Tuleap\Baseline\Factory\ProjectFactory;
 use Tuleap\Baseline\Factory\TransientComparisonFactory;
 use Tuleap\Baseline\Support\CurrentUserContext;
 
-class ComparisonServiceTest extends TestCase
+class ComparisonServiceTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
     use CurrentUserContext;

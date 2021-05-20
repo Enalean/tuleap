@@ -28,7 +28,6 @@ require_once __DIR__ . '/../bootstrap.php';
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Mockery\MockInterface;
-use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 use Tuleap\Baseline\Domain\BaselineArtifactNotFoundException;
 use Tuleap\Baseline\Domain\BaselineArtifactService;
@@ -40,7 +39,7 @@ use Tuleap\Baseline\Support\CurrentUserContext;
 use Tuleap\REST\JsonDecoder;
 use Tuleap\REST\QueryParameterParser;
 
-class BaselineArtifactControllerTest extends TestCase
+class BaselineArtifactControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
     use CurrentUserContext;

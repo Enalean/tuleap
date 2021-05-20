@@ -26,7 +26,6 @@ namespace Tuleap\Baseline\REST;
 use DateTimeImmutable;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
-use PHPUnit\Framework\TestCase;
 use Tuleap\Baseline\Domain\BaselinesPage;
 use Tuleap\Baseline\Factory\BaselineArtifactFactory;
 use Tuleap\Baseline\Factory\BaselineFactory;
@@ -34,7 +33,7 @@ use Tuleap\GlobalLanguageMock;
 
 require_once __DIR__ . "/../bootstrap.php";
 
-class BaselinesPageRepresentationTest extends TestCase
+class BaselinesPageRepresentationTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
     use GlobalLanguageMock;

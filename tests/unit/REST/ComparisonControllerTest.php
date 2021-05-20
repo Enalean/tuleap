@@ -28,7 +28,6 @@ require_once __DIR__ . '/../bootstrap.php';
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Mockery\MockInterface;
-use PHPUnit\Framework\TestCase;
 use Tuleap\Baseline\Domain\BaselineRepository;
 use Tuleap\Baseline\Domain\ComparisonRepository;
 use Tuleap\Baseline\Domain\ComparisonService;
@@ -39,7 +38,7 @@ use Tuleap\Baseline\REST\Exception\ForbiddenRestException;
 use Tuleap\Baseline\REST\Exception\NotFoundRestException;
 use Tuleap\Baseline\Support\CurrentUserContext;
 
-class ComparisonControllerTest extends TestCase
+class ComparisonControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
     use CurrentUserContext;

@@ -29,7 +29,6 @@ use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Mockery\MockInterface;
 use PFUser;
-use PHPUnit\Framework\TestCase;
 use Planning;
 use PlanningFactory;
 use Tracker;
@@ -37,7 +36,7 @@ use Tracker_Artifact_Changeset;
 use Tracker_FormElement_Field_ArtifactLink;
 use Tuleap\Baseline\Support\CurrentUserContext;
 
-class ArtifactLinkRepositoryTest extends TestCase
+class ArtifactLinkRepositoryTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
     use CurrentUserContext;

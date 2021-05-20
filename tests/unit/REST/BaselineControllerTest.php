@@ -30,7 +30,6 @@ use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Mockery\MockInterface;
 use PFUser;
-use PHPUnit\Framework\TestCase;
 use Tuleap\Baseline\Domain\BaselineArtifact;
 use Tuleap\Baseline\Domain\BaselineArtifactRepository;
 use Tuleap\Baseline\Domain\BaselineService;
@@ -43,7 +42,7 @@ use Tuleap\Baseline\REST\Exception\NotFoundRestException;
 use Tuleap\Baseline\Support\CurrentUserContext;
 use Tuleap\REST\I18NRestException;
 
-class BaselineControllerTest extends TestCase
+class BaselineControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
     use CurrentUserContext;
