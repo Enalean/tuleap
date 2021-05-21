@@ -32,7 +32,6 @@ declare -r include="${tools_dir}/setup/el7/include"
 . ${include}/options.sh
 . ${include}/helper.sh
 . ${include}/logger.sh
-. ${include}/php.sh
 . ${include}/core.sh
 . ${include}/plugins.sh
 
@@ -114,8 +113,9 @@ if [ ${tuleap_installed:-false} = "false" ] || \
     chmod 00640 "${tuleap_conf}/${local_inc}"
 
     _setupForgeupgrade
-    _phpActivePlugin "tracker" "${tuleap_unix_user}"
-    _phpForgeupgrade "record-only"
+    sudo -u "${tuleap_unix_user}" /usr/bin/tuleap plugin:install tracker 2> >(_logCatcher)
+    _infoMessage "Register buckets in forgeupgrade"
+    "${php}" "${forgeupgrade_dir}/forgeupgrade.php" --config="${forgeupgrade_conf}" "record-only" 2> >(_logCatcher)
 
     ${tuleapcfg} systemctl enable "${timers[@]}"
     ${tuleapcfg} systemctl start "${timers[@]}"
