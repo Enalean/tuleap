@@ -30,10 +30,10 @@ use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\ArtifactsLinkedToPare
 use Tuleap\ProgramManagement\Adapter\Team\MirroredMilestones\MirroredMilestoneRetriever;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Content\FeaturePlanChange;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FieldData;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\PlanUserStoriesInMirroredMilestones;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\PlanUserStoriesInMirroredProgramIncrements;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\ProgramIncrementChanged;
 
-class UserStoriesInMirroredMilestonesPlanner implements PlanUserStoriesInMirroredMilestones
+class UserStoriesInMirroredProgramIncrementsPlanner implements PlanUserStoriesInMirroredProgramIncrements
 {
     /**
      * @var DBTransactionExecutor
@@ -98,37 +98,37 @@ class UserStoriesInMirroredMilestonesPlanner implements PlanUserStoriesInMirrore
 
         $this->db_transaction_executor->execute(
             function () use ($feature_plan_change, $user, $program_increment_id) {
-                $milestones = $this->mirrored_milestone_retriever->retrieveMilestonesLinkedTo($program_increment_id);
-                foreach ($milestones as $mirrored_milestone) {
-                    $this->logger->error(sprintf("Found mirrored milestone %d", $mirrored_milestone->getId()));
-                    $milestone = $this->tracker_artifact_factory->getArtifactById($mirrored_milestone->getId());
-                    if (! $milestone) {
-                        $this->logger->error(sprintf("Mirrored milestone %d not found", $mirrored_milestone->getId()));
+                $program_increments = $this->mirrored_milestone_retriever->retrieveMilestonesLinkedTo($program_increment_id);
+                foreach ($program_increments as $mirrored_program_increment) {
+                    $this->logger->info(sprintf("Found mirrored PI %d", $mirrored_program_increment->getId()));
+                    $mirror_artifact = $this->tracker_artifact_factory->getArtifactById($mirrored_program_increment->getId());
+                    if (! $mirror_artifact) {
+                        $this->logger->error(sprintf("Mirrored PI %d is not an artifact", $mirrored_program_increment->getId()));
                         continue;
                     }
 
-                    $field_artifact_link = $milestone->getAnArtifactLinkField($user);
+                    $field_artifact_link = $mirror_artifact->getAnArtifactLinkField($user);
                     if (! $field_artifact_link) {
-                        $this->logger->info(sprintf("Mirrored milestone %d does not have an artifact link field", $mirrored_milestone->getId()));
+                        $this->logger->info(sprintf("Mirrored PI %d does not have an artifact link field", $mirrored_program_increment->getId()));
                         continue;
                     }
 
                     $fields_data = new FieldData(
                         $feature_plan_change->user_stories,
-                        $this->artifacts_linked_to_parent_dao->getUserStoriesOfMirroredMilestoneThatAreNotLinkedToASprint($mirrored_milestone->getId()),
+                        $this->artifacts_linked_to_parent_dao->getUserStoriesOfMirroredProgramIncrementThatAreNotLinkedToASprint($mirrored_program_increment->getId()),
                         $field_artifact_link->getId()
                     );
 
                     try {
                         $this->logger->debug(
                             sprintf(
-                                "Change in PI #%d trying to add a changeset to the mirrored milestone #%d",
+                                "Change in PI #%d trying to add a changeset to the mirrored PI #%d",
                                 $program_increment_id,
-                                $milestone->getId()
+                                $mirror_artifact->getId()
                             )
                         );
-                        $milestone->createNewChangeset(
-                            $fields_data->getFieldDataForChangesetCreationFormat((int) $milestone->getTracker()->getGroupId()),
+                        $mirror_artifact->createNewChangeset(
+                            $fields_data->getFieldDataForChangesetCreationFormat((int) $mirror_artifact->getTracker()->getGroupId()),
                             "",
                             $user
                         );

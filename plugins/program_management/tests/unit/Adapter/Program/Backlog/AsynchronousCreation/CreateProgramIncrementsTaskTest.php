@@ -28,7 +28,7 @@ use Project;
 use Psr\Log\LoggerInterface;
 use Tracker_Artifact_Changeset;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\ReplicationDataAdapter;
-use Tuleap\ProgramManagement\Adapter\Program\Feature\UserStoriesInMirroredMilestonesPlanner;
+use Tuleap\ProgramManagement\Adapter\Program\Feature\UserStoriesInMirroredProgramIncrementsPlanner;
 use Tuleap\ProgramManagement\Adapter\Program\PlanningAdapter;
 use Tuleap\ProgramManagement\Adapter\Program\ProgramDao;
 use Tuleap\ProgramManagement\Adapter\ProjectAdapter;
@@ -58,7 +58,7 @@ final class CreateProgramIncrementsTaskTest extends \Tuleap\Test\PHPUnit\TestCas
     use MockeryPHPUnitIntegration;
 
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|UserStoriesInMirroredMilestonesPlanner
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|UserStoriesInMirroredProgramIncrementsPlanner
      */
     private $user_stories_planner;
 
@@ -122,7 +122,7 @@ final class CreateProgramIncrementsTaskTest extends \Tuleap\Test\PHPUnit\TestCas
         $this->mirror_creator                  = \Mockery::mock(ProgramIncrementsCreator::class);
         $this->logger                          = \Mockery::mock(LoggerInterface::class);
         $this->pending_artifact_creation_store = \Mockery::mock(PendingArtifactCreationStore::class);
-        $this->user_stories_planner            = Mockery::mock(UserStoriesInMirroredMilestonesPlanner::class);
+        $this->user_stories_planner            = Mockery::mock(UserStoriesInMirroredProgramIncrementsPlanner::class);
 
         $this->task = new CreateProgramIncrementsTask(
             $this->changeset_values_adapter,

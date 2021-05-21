@@ -30,7 +30,7 @@ use Tracker_ArtifactFactory;
 use Tracker_FormElement_Field_ArtifactLink;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Content\ContentDao;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\ArtifactsLinkedToParentDao;
-use Tuleap\ProgramManagement\Adapter\Program\Feature\UserStoriesInMirroredMilestonesPlanner;
+use Tuleap\ProgramManagement\Adapter\Program\Feature\UserStoriesInMirroredProgramIncrementsPlanner;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\PrioritizeFeaturesPermissionVerifier;
 use Tuleap\ProgramManagement\Adapter\Team\MirroredMilestones\MirroredMilestoneRetriever;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Content\FeatureChange;
@@ -43,7 +43,7 @@ use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
-final class UserStoriesInMirroredMilestonesPlannerTest extends TestCase
+final class UserStoriesInMirroredProgramIncrementsPlannerTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
@@ -53,7 +53,7 @@ final class UserStoriesInMirroredMilestonesPlannerTest extends TestCase
     private $content_dao;
 
     /**
-     * @var UserStoriesInMirroredMilestonesPlanner
+     * @var UserStoriesInMirroredProgramIncrementsPlanner
      */
     private $planner;
 
@@ -90,7 +90,7 @@ final class UserStoriesInMirroredMilestonesPlannerTest extends TestCase
         $this->mirrored_milestone_retriever = \Mockery::mock(MirroredMilestoneRetriever::class);
         $this->content_dao                  = \Mockery::mock(ContentDao::class);
 
-        $this->planner = new UserStoriesInMirroredMilestonesPlanner(
+        $this->planner = new UserStoriesInMirroredProgramIncrementsPlanner(
             $db_transaction_executor,
             $this->artifacts_linked_dao,
             $this->tracker_artifact_factory,
@@ -127,7 +127,7 @@ final class UserStoriesInMirroredMilestonesPlannerTest extends TestCase
             $milestone
         );
 
-        $this->artifacts_linked_dao->shouldReceive('getUserStoriesOfMirroredMilestoneThatAreNotLinkedToASprint')->andReturn(
+        $this->artifacts_linked_dao->shouldReceive('getUserStoriesOfMirroredProgramIncrementThatAreNotLinkedToASprint')->andReturn(
             [['id' => 1234]]
         );
 
@@ -227,7 +227,7 @@ final class UserStoriesInMirroredMilestonesPlannerTest extends TestCase
             $milestone
         );
 
-        $this->artifacts_linked_dao->shouldReceive('getUserStoriesOfMirroredMilestoneThatAreNotLinkedToASprint')->andReturn(
+        $this->artifacts_linked_dao->shouldReceive('getUserStoriesOfMirroredProgramIncrementThatAreNotLinkedToASprint')->andReturn(
             [['id' => 1234]]
         );
 

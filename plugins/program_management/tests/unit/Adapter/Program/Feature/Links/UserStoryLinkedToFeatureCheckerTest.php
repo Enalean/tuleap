@@ -97,12 +97,12 @@ final class UserStoryLinkedToFeatureCheckerTest extends \Tuleap\Test\PHPUnit\Tes
             ->andReturn([$user_story_666, $user_story_236]);
 
         $this->feature_dao
-            ->shouldReceive("isLinkedToASprintInMirroredMilestones")
+            ->shouldReceive("isLinkedToASprintInMirroredProgramIncrement")
             ->once()
             ->with(666, 20, 666)
             ->andReturn(false);
         $this->feature_dao
-            ->shouldReceive("isLinkedToASprintInMirroredMilestones")
+            ->shouldReceive("isLinkedToASprintInMirroredProgramIncrement")
             ->once()
             ->with(236, 20, 25)
             ->andReturn(true);
@@ -121,7 +121,7 @@ final class UserStoryLinkedToFeatureCheckerTest extends \Tuleap\Test\PHPUnit\Tes
             ->andReturn([$user_story_666]);
 
         $this->feature_dao
-            ->shouldReceive("isLinkedToASprintInMirroredMilestones")
+            ->shouldReceive("isLinkedToASprintInMirroredProgramIncrement")
             ->once()
             ->with(666, 20, 666)
             ->andReturn(false);

@@ -23,7 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation;
 
 use Psr\Log\LoggerInterface;
-use Tuleap\ProgramManagement\Adapter\Program\Feature\UserStoriesInMirroredMilestonesPlanner;
+use Tuleap\ProgramManagement\Adapter\Program\Feature\UserStoriesInMirroredProgramIncrementsPlanner;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\CreateTaskProgramIncrement;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\PendingArtifactCreationStore;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\ProgramIncrementCreationException;
@@ -65,7 +65,7 @@ final class CreateProgramIncrementsTask implements CreateTaskProgramIncrement
      */
     private $pending_artifact_creation_store;
     /**
-     * @var UserStoriesInMirroredMilestonesPlanner
+     * @var UserStoriesInMirroredProgramIncrementsPlanner
      */
     private $user_stories_planner;
 
@@ -76,7 +76,7 @@ final class CreateProgramIncrementsTask implements CreateTaskProgramIncrement
         ProgramIncrementsCreator $program_increment_creator,
         LoggerInterface $logger,
         PendingArtifactCreationStore $pending_artifact_creation_store,
-        UserStoriesInMirroredMilestonesPlanner $user_stories_planner
+        UserStoriesInMirroredProgramIncrementsPlanner $user_stories_planner
     ) {
         $this->changeset_collection_adapter    = $changeset_collection_adapter;
         $this->projects_collection_builder     = $projects_collection_builder;
