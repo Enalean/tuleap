@@ -148,4 +148,15 @@ class GitlabRepositoryIntegrationDao extends DataAccessObject
 
         return count($rows) > 0;
     }
+
+    public function updateGitlabRepositoryIntegrationAllowArtifactClosureValue(
+        int $id,
+        bool $allow_artifact_closure
+    ): void {
+        $this->getDB()->update(
+            'plugin_gitlab_repository_integration',
+            ['allow_artifact_closure' => $allow_artifact_closure],
+            ['id' => $id]
+        );
+    }
 }
