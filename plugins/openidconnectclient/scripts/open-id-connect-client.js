@@ -22,7 +22,9 @@ import jQuery from "jquery";
 
 !(function ($) {
     function formatOptionIcon(option) {
-        return $('<i class="fa fa-' + option.id + '"></i>');
+        const icon = document.createElement("i");
+        icon.classList.add("fa", "fa-" + option.id);
+        return icon;
     }
 
     function initIconSelectors() {
@@ -39,7 +41,11 @@ import jQuery from "jquery";
     }
 
     function formatOptionColor(option) {
-        return $('<span class="' + option.id + '"></span>');
+        const color = document.createElement("span");
+        if (option.id !== "") {
+            color.classList.add(option.id);
+        }
+        return color;
     }
 
     function initColorSelectors() {
@@ -60,7 +66,7 @@ import jQuery from "jquery";
             $(this)
                 .parents(".tlp-modal-body")
                 .find(".provider-admin-modal-provider-button-preview > button > span")
-                .html($(this).val());
+                .text($(this).val());
         });
 
         $(".provider-icon-selector").change(function () {
