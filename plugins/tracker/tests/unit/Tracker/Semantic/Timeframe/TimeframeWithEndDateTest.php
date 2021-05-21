@@ -20,6 +20,9 @@
 
 namespace Tuleap\Tracker\Semantic\Timeframe;
 
+use PHPUnit\Framework\MockObject\MockObject;
+use Psr\Log\NullLogger;
+use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\REST\SemanticTimeframeWithEndDateRepresentation;
 
 class TimeframeWithEndDateTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -29,18 +32,31 @@ class TimeframeWithEndDateTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $timeframe;
     /**
-     * @var \Tracker_FormElement_Field_Date
+     * @var \PHPUnit\Framework\MockObject\MockObject|\Tracker_FormElement_Field_Date
      */
     private $start_date_field;
     /**
-     * @var \Tracker_FormElement_Field_Date
+     * @var \PHPUnit\Framework\MockObject\MockObject|\Tracker_FormElement_Field_Date
      */
     private $end_date_field;
+    /**
+     * @var \PHPUnit\Framework\MockObject\MockObject|Artifact
+     */
+    private $artifact;
+    /**
+     * @var \PFUser|\PHPUnit\Framework\MockObject\MockObject
+     */
+    private $user;
 
     protected function setUp(): void
     {
         $this->start_date_field = $this->getMockedDateField(1001);
         $this->end_date_field   = $this->getMockedDateField(1003);
+        $this->artifact         = $this->getMockBuilder(Artifact::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $this->user = $this->getMockBuilder(\PFUser::class)->disableOriginalConstructor()->getMock();
 
         $this->timeframe = new TimeframeWithEndDate(
             $this->start_date_field,
@@ -152,6 +168,93 @@ class TimeframeWithEndDateTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
+    public function testItBuildsATimePeriodWithNoEndDateWhenNoEndDateValueExist(): void
+    {
+        $start_date = '01/20/2021';
+
+        $this->start_date_field->expects(self::once())->method('userCanRead')->will(self::returnValue(true));
+        $this->end_date_field->expects(self::once())->method('userCanRead')->will(self::returnValue(true));
+
+        $this->mockDateFieldWithValue($this->start_date_field, $start_date);
+        $this->mockDateFieldWithValue($this->end_date_field, null);
+
+        $time_period = $this->timeframe->buildTimePeriodWithoutWeekendForArtifactForREST(
+            $this->artifact,
+            $this->user,
+            new NullLogger()
+        );
+
+        self::assertSame(strtotime($start_date), $time_period->getStartDate());
+        self::assertNull($time_period->getEndDate());
+        self::assertSame(null, $time_period->getDuration());
+    }
+
+    public function testItBuildsATimePeriodForRESTFromEndDate(): void
+    {
+        $start_date = '07/01/2013';
+        $end_date   = '07/03/2013';
+
+        $this->start_date_field->expects(self::once())->method('userCanRead')->will(self::returnValue(true));
+        $this->end_date_field->expects(self::once())->method('userCanRead')->will(self::returnValue(true));
+
+        $this->mockDateFieldWithValue($this->start_date_field, $start_date);
+        $this->mockDateFieldWithValue($this->end_date_field, $end_date);
+
+        $time_period = $this->timeframe->buildTimePeriodWithoutWeekendForArtifactForREST(
+            $this->artifact,
+            $this->user,
+            new NullLogger()
+        );
+
+        $this->assertSame(strtotime($start_date), $time_period->getStartDate());
+        $this->assertSame(strtotime($end_date), $time_period->getEndDate());
+        $this->assertEquals(2, $time_period->getDuration());
+    }
+
+    public function testItBuildsATimePeriodForRESTFromEndDateWithNullIfEndDateIsNotReadable(): void
+    {
+        $start_date = '07/01/2013';
+
+        $this->start_date_field->expects(self::once())->method('userCanRead')->will(self::returnValue(true));
+        $this->end_date_field->expects(self::once())->method('userCanRead')->will(self::returnValue(false));
+
+        $this->mockDateFieldWithValue($this->start_date_field, $start_date);
+
+        $time_period = $this->timeframe->buildTimePeriodWithoutWeekendForArtifactForREST(
+            $this->artifact,
+            $this->user,
+            new NullLogger()
+        );
+
+        $this->assertSame(strtotime($start_date), $time_period->getStartDate());
+        $this->assertNull($time_period->getEndDate());
+        $this->assertNull($time_period->getDuration());
+    }
+
+    public function testItBuildsATimePeriodForRESTFromEndDateWithNullIfEndDateHasNoValue(): void
+    {
+        $start_date = '07/01/2013';
+
+        $this->start_date_field->expects(self::once())->method('userCanRead')->will(self::returnValue(true));
+        $this->end_date_field->expects(self::once())->method('userCanRead')->will(self::returnValue(true));
+
+        $this->mockDateFieldWithValue($this->start_date_field, $start_date);
+        $this->end_date_field->expects(self::once())
+            ->method('getLastChangesetValue')
+            ->with($this->artifact)
+            ->will(self::returnValue(null));
+
+        $time_period = $this->timeframe->buildTimePeriodWithoutWeekendForArtifactForREST(
+            $this->artifact,
+            $this->user,
+            new NullLogger()
+        );
+
+        $this->assertSame(strtotime($start_date), $time_period->getStartDate());
+        $this->assertNull($time_period->getEndDate());
+        $this->assertNull($time_period->getDuration());
+    }
+
     private function getMockedDateField(int $field_id): \Tracker_FormElement_Field_Date
     {
         $mock = $this->getMockBuilder(\Tracker_FormElement_Field_Date::class)
@@ -161,5 +264,19 @@ class TimeframeWithEndDateTest extends \Tuleap\Test\PHPUnit\TestCase
         $mock->expects($this->any())->method('getId')->will($this->returnValue($field_id));
 
         return $mock;
+    }
+
+    private function mockDateFieldWithValue(MockObject $date_field, ?string $string_date): void
+    {
+        $date                 = $string_date !== null ? strtotime($string_date) : null;
+        $date_changeset_value = self::getMockBuilder(\Tracker_Artifact_ChangesetValue_Date::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $date_changeset_value->expects(self::once())->method('getTimestamp')->will(self::returnValue($date));
+
+        $date_field->expects(self::once())->method('getLastChangesetValue')
+            ->with($this->artifact)
+            ->will(self::returnValue($date_changeset_value));
     }
 }

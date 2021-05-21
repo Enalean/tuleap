@@ -22,6 +22,9 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Semantic\Timeframe;
 
+use Psr\Log\LoggerInterface;
+use TimePeriodWithoutWeekEnd;
+use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\REST\SemanticTimeframeWithDurationRepresentation;
 
 class TimeframeWithDuration implements IComputeTimeframes
@@ -128,5 +131,22 @@ class TimeframeWithDuration implements IComputeTimeframes
     public function getEndDateField(): ?\Tracker_FormElement_Field_Date
     {
         return null;
+    }
+
+    public function buildTimePeriodWithoutWeekendForArtifactForREST(Artifact $artifact, \PFUser $user, LoggerInterface $logger): TimePeriodWithoutWeekEnd
+    {
+        try {
+            $start_date = TimeframeArtifactFieldsValueRetriever::getTimestamp($this->start_date_field, $user, $artifact);
+        } catch (TimeframeFieldNotFoundException | TimeframeFieldNoValueException $exception) {
+            $start_date = null;
+        }
+
+        try {
+            $duration = TimeframeArtifactFieldsValueRetriever::getDurationFieldValue($this->duration_field, $user, $artifact);
+        } catch (TimeframeFieldNotFoundException | TimeframeFieldNoValueException $exception) {
+            $duration = null;
+        }
+
+        return TimePeriodWithoutWeekEnd::buildFromDuration($start_date, $duration);
     }
 }

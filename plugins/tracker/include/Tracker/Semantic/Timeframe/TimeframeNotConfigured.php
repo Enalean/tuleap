@@ -22,6 +22,10 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Semantic\Timeframe;
 
+use Psr\Log\LoggerInterface;
+use TimePeriodWithoutWeekEnd;
+use Tuleap\Tracker\Artifact\Artifact;
+
 class TimeframeNotConfigured implements IComputeTimeframes
 {
     private const NAME = 'timeframe-not-configured';
@@ -73,5 +77,10 @@ class TimeframeNotConfigured implements IComputeTimeframes
     public function getDurationField(): ?\Tracker_FormElement_Field_Numeric
     {
         return null;
+    }
+
+    public function buildTimePeriodWithoutWeekendForArtifactForREST(Artifact $artifact, \PFUser $user, LoggerInterface $logger): TimePeriodWithoutWeekEnd
+    {
+        return TimePeriodWithoutWeekEnd::buildFromNothing();
     }
 }

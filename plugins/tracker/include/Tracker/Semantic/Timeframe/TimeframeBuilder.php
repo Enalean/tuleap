@@ -82,6 +82,9 @@ class TimeframeBuilder
         return TimePeriodWithoutWeekEnd::buildFromDuration($start_date, $duration);
     }
 
+    /**
+     * @deprecated Use IComputeTimeframes::buildTimePeriodWithoutWeekendForArtifactForREST instead
+     */
     public function buildTimePeriodWithoutWeekendForArtifactForREST(Artifact $artifact, PFUser $user): TimePeriodWithoutWeekEnd
     {
         $semantic_timeframe = $this->semantic_timeframe_builder->getSemantic($artifact->getTracker());

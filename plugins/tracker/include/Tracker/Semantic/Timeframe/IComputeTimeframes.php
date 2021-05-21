@@ -20,6 +20,10 @@
 
 namespace Tuleap\Tracker\Semantic\Timeframe;
 
+use Psr\Log\LoggerInterface;
+use TimePeriodWithoutWeekEnd;
+use Tuleap\Tracker\Artifact\Artifact;
+
 interface IComputeTimeframes
 {
     public static function getName(): string;
@@ -31,6 +35,8 @@ interface IComputeTimeframes
     public function getEndDateField(): ?\Tracker_FormElement_Field_Date;
 
     public function getDurationField(): ?\Tracker_FormElement_Field_Numeric;
+
+    public function buildTimePeriodWithoutWeekendForArtifactForREST(Artifact $artifact, \PFUser $user, LoggerInterface $logger): TimePeriodWithoutWeekEnd;
 
     public function exportToXML(\SimpleXMLElement $root, array $xml_mapping): void;
 

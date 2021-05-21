@@ -90,6 +90,11 @@ class TimePeriodWithoutWeekEnd implements TimePeriod
         return new self($start_date, $duration, $end_date);
     }
 
+    public static function buildFromNothing(): TimePeriodWithoutWeekEnd
+    {
+        return new self(null, null, null);
+    }
+
     /**
      * @psalm-pure
      */

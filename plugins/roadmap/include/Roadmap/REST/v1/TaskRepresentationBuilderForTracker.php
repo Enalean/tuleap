@@ -22,18 +22,19 @@ declare(strict_types=1);
 
 namespace Tuleap\Roadmap\REST\v1;
 
+use Psr\Log\LoggerInterface;
 use Tracker;
 use Tuleap\Project\REST\ProjectReference;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Semantic\Progress\SemanticProgressBuilder;
-use Tuleap\Tracker\Semantic\Timeframe\TimeframeBuilder;
+use Tuleap\Tracker\Semantic\Timeframe\IComputeTimeframes;
 
 final class TaskRepresentationBuilderForTracker implements IBuildATaskRepresentation
 {
     /**
-     * @var TimeframeBuilder
+     * @var IComputeTimeframes
      */
-    private $timeframe_builder;
+    private $timeframe_calculator;
     /**
      * @var IRetrieveDependencies
      */
@@ -46,17 +47,23 @@ final class TaskRepresentationBuilderForTracker implements IBuildATaskRepresenta
      * @var Tracker
      */
     private $tracker;
+    /**
+     * @var LoggerInterface
+     */
+    private $logger;
 
     public function __construct(
         Tracker $tracker,
-        TimeframeBuilder $timeframe_builder,
+        IComputeTimeframes $timeframe_calculator,
         IRetrieveDependencies $dependencies_retriever,
-        SemanticProgressBuilder $progress_builder
+        SemanticProgressBuilder $progress_builder,
+        LoggerInterface $logger
     ) {
         $this->tracker                = $tracker;
-        $this->timeframe_builder      = $timeframe_builder;
+        $this->timeframe_calculator   = $timeframe_calculator;
         $this->dependencies_retriever = $dependencies_retriever;
         $this->progress_calculator    = $progress_builder->getSemantic($tracker)->getComputationMethod();
+        $this->logger                 = $logger;
     }
 
     public function buildRepresentation(Artifact $artifact, \PFUser $user): TaskRepresentation
@@ -65,7 +72,7 @@ final class TaskRepresentationBuilderForTracker implements IBuildATaskRepresenta
             throw new \RuntimeException("Given artifact is not part of the tracker");
         }
 
-        $time_period = $this->timeframe_builder->buildTimePeriodWithoutWeekendForArtifactForREST($artifact, $user);
+        $time_period = $this->timeframe_calculator->buildTimePeriodWithoutWeekendForArtifactForREST($artifact, $user, $this->logger);
         $start_date  = $time_period->getStartDate();
         $start       = $start_date ? (new \DateTimeImmutable())->setTimestamp($start_date) : null;
         $end_date    = $time_period->getEndDate();

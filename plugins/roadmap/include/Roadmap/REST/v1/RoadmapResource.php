@@ -36,7 +36,6 @@ use Tuleap\Tracker\Semantic\Progress\SemanticProgressDao;
 use Tuleap\Tracker\Semantic\Status\SemanticStatusRetriever;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao;
-use Tuleap\Tracker\Semantic\Timeframe\TimeframeBuilder;
 
 final class RoadmapResource
 {
@@ -85,22 +84,20 @@ final class RoadmapResource
             $form_element_factory
         );
 
-        $timeframe_builder = new TimeframeBuilder($semantic_timeframe_builder, \BackendLogger::getDefaultLogger());
-        $progress_dao      = new SemanticProgressDao();
-        $retriever         = new RoadmapTasksRetriever(
+        $progress_dao = new SemanticProgressDao();
+        $retriever    = new RoadmapTasksRetriever(
             new RoadmapWidgetDao(),
             \ProjectManager::instance(),
             \UserManager::instance(),
             new \URLVerification(),
             \TrackerFactory::instance(),
             $semantic_timeframe_builder,
-            $timeframe_builder,
             \Tracker_ArtifactFactory::instance(),
             new DependenciesRetriever(new NatureForRoadmapDao()),
             new RoadmapTasksOutOfDateFilter(
                 new TaskOutOfDateDetector(
                     new SemanticStatusRetriever(),
-                    $timeframe_builder,
+                    $semantic_timeframe_builder,
                     $this->getLogger(),
                 ),
             ),
@@ -114,7 +111,8 @@ final class RoadmapResource
                         new ArtifactLinksUsageDao()
                     )
                 )
-            )
+            ),
+            \BackendLogger::getDefaultLogger()
         );
 
         $tasks = $retriever->getTasks($id, $limit, $offset);
@@ -179,8 +177,8 @@ final class RoadmapResource
             new \URLVerification(),
             \TrackerFactory::instance(),
             $semantic_timeframe_builder,
-            new TimeframeBuilder($semantic_timeframe_builder, \BackendLogger::getDefaultLogger()),
             \Tracker_ArtifactFactory::instance(),
+            \BackendLogger::getDefaultLogger()
         );
 
         $iterations = $retriever->getIterations($id, $level, $limit, $offset);

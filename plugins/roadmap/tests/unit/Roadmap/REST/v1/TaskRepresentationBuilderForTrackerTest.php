@@ -27,7 +27,7 @@ use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Semantic\Progress\MethodNotConfigured;
 use Tuleap\Tracker\Semantic\Progress\SemanticProgress;
 use Tuleap\Tracker\Semantic\Progress\SemanticProgressBuilder;
-use Tuleap\Tracker\Semantic\Timeframe\TimeframeBuilder;
+use Tuleap\Tracker\Semantic\Timeframe\TimeframeWithEndDate;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
@@ -42,13 +42,13 @@ class TaskRepresentationBuilderForTrackerTest extends \Tuleap\Test\PHPUnit\TestC
      */
     private $progress_builder;
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|TimeframeBuilder
-     */
-    private $timeframe_builder;
-    /**
      * @var \PHPUnit\Framework\MockObject\MockObject|IRetrieveDependencies
      */
     private $dependencies_retriever;
+    /**
+     * @var \PHPUnit\Framework\MockObject\MockObject|TimeframeWithEndDate
+     */
+    private $timeframe_calculator;
 
     protected function setUp(): void
     {
@@ -58,7 +58,7 @@ class TaskRepresentationBuilderForTrackerTest extends \Tuleap\Test\PHPUnit\TestC
         $this->progress_builder = $this->createMock(SemanticProgressBuilder::class);
         $this->progress_builder->method('getSemantic')->willReturn($semantic);
 
-        $this->timeframe_builder      = $this->createMock(TimeframeBuilder::class);
+        $this->timeframe_calculator   = $this->createMock(TimeframeWithEndDate::class);
         $this->dependencies_retriever = $this->createMock(IRetrieveDependencies::class);
 
         $this->user = UserTestBuilder::aUser()->build();
@@ -72,12 +72,13 @@ class TaskRepresentationBuilderForTrackerTest extends \Tuleap\Test\PHPUnit\TestC
             ->build();
         $builder  = new TaskRepresentationBuilderForTracker(
             $artifact->getTracker(),
-            $this->timeframe_builder,
+            $this->timeframe_calculator,
             $this->dependencies_retriever,
-            $this->progress_builder
+            $this->progress_builder,
+            new NullLogger()
         );
 
-        $this->timeframe_builder->method('buildTimePeriodWithoutWeekendForArtifactForREST')->willReturn(
+        $this->timeframe_calculator->method('buildTimePeriodWithoutWeekendForArtifactForREST')->willReturn(
             \TimePeriodWithoutWeekEnd::buildFromEndDate(
                 (new \DateTimeImmutable('@1234567890'))->getTimestamp(),
                 1234567891,
@@ -105,9 +106,10 @@ class TaskRepresentationBuilderForTrackerTest extends \Tuleap\Test\PHPUnit\TestC
             ->build();
         $builder  = new TaskRepresentationBuilderForTracker(
             TrackerTestBuilder::aTracker()->build(),
-            $this->timeframe_builder,
+            $this->timeframe_calculator,
             $this->dependencies_retriever,
-            $this->progress_builder
+            $this->progress_builder,
+            new NullLogger()
         );
 
         $this->expectException(\RuntimeException::class);

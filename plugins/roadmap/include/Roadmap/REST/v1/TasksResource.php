@@ -34,7 +34,6 @@ use Tuleap\Tracker\Semantic\Progress\SemanticProgressDao;
 use Tuleap\Tracker\Semantic\Status\SemanticStatusRetriever;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao;
-use Tuleap\Tracker\Semantic\Timeframe\TimeframeBuilder;
 use UserManager;
 
 final class TasksResource
@@ -85,15 +84,12 @@ final class TasksResource
             $form_element_factory
         );
 
-        $timeframe_builder = new TimeframeBuilder($semantic_timeframe_builder, \BackendLogger::getDefaultLogger());
-        $progress_dao      = new SemanticProgressDao();
-
-        $retriever = new SubtasksRetriever(
+        $progress_dao = new SemanticProgressDao();
+        $retriever    = new SubtasksRetriever(
             \Tracker_ArtifactFactory::instance(),
             UserManager::instance(),
             new TaskRepresentationBuilderForTrackerCache(
                 $semantic_timeframe_builder,
-                $timeframe_builder,
                 new DependenciesRetriever(new NatureForRoadmapDao()),
                 new SemanticProgressBuilder(
                     $progress_dao,
@@ -106,10 +102,11 @@ final class TasksResource
                         )
                     )
                 ),
+                \BackendLogger::getDefaultLogger()
             ),
             new TaskOutOfDateDetector(
                 new SemanticStatusRetriever(),
-                $timeframe_builder,
+                $semantic_timeframe_builder,
                 \BackendLogger::getDefaultLogger(),
             )
         );

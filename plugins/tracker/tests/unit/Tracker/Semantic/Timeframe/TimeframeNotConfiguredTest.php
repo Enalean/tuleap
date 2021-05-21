@@ -22,9 +22,12 @@ declare(strict_types=1);
 
 namespace unit\Tracker\Semantic\Timeframe;
 
+use Psr\Log\NullLogger;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Semantic\Timeframe\TimeframeNotConfigured;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao;
+use function PHPUnit\Framework\assertNull;
 
 class TimeframeNotConfiguredTest extends TestCase
 {
@@ -88,5 +91,18 @@ class TimeframeNotConfiguredTest extends TestCase
         self::assertFalse(
             $this->timeframe->save($tracker, $dao)
         );
+    }
+
+    public function testItReturnsAnEmptyTimePeriodForArtifactREST(): void
+    {
+        $time_period = $this->timeframe->buildTimePeriodWithoutWeekendForArtifactForREST(
+            self::createMock(Artifact::class),
+            self::createMock(\PFUser::class),
+            new NullLogger()
+        );
+
+        assertNull($time_period->getStartDate());
+        assertNull($time_period->getDuration());
+        assertNull($time_period->getEndDate());
     }
 }

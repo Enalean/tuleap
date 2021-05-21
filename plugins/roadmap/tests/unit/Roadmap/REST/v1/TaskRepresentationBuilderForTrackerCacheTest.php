@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Roadmap\REST\v1;
 
+use Psr\Log\NullLogger;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Semantic\Progress\IComputeProgression;
 use Tuleap\Tracker\Semantic\Progress\SemanticProgress;
@@ -31,7 +32,6 @@ use Tuleap\Tracker\Semantic\Timeframe\TimeframeWithDuration;
 use Tuleap\Tracker\Semantic\Timeframe\TimeframeWithEndDate;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframe;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
-use Tuleap\Tracker\Semantic\Timeframe\TimeframeBuilder;
 
 class TaskRepresentationBuilderForTrackerCacheTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -43,10 +43,6 @@ class TaskRepresentationBuilderForTrackerCacheTest extends \Tuleap\Test\PHPUnit\
      * @var \PHPUnit\Framework\MockObject\MockObject|SemanticTimeframeBuilder
      */
     private $semantic_timeframe_builder;
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|TimeframeBuilder
-     */
-    private $timeframe_builder;
     /**
      * @var \PHPUnit\Framework\MockObject\MockObject|IRetrieveDependencies
      */
@@ -63,15 +59,14 @@ class TaskRepresentationBuilderForTrackerCacheTest extends \Tuleap\Test\PHPUnit\
     protected function setUp(): void
     {
         $this->semantic_timeframe_builder = $this->createMock(SemanticTimeframeBuilder::class);
-        $this->timeframe_builder          = $this->createMock(TimeframeBuilder::class);
         $this->dependencies_retriever     = $this->createMock(IRetrieveDependencies::class);
         $this->progress_builder           = $this->createMock(SemanticProgressBuilder::class);
 
         $this->cache = new TaskRepresentationBuilderForTrackerCache(
             $this->semantic_timeframe_builder,
-            $this->timeframe_builder,
             $this->dependencies_retriever,
-            $this->progress_builder
+            $this->progress_builder,
+            new NullLogger()
         );
 
         $this->user = UserTestBuilder::aUser()->build();
