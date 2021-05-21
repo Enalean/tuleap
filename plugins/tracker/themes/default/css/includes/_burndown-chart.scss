@@ -17,9 +17,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@import './graph';
+@use '../../src/themes/tlp/src/scss/variables/colors/swatch-colors';
+@use './graph';
 
-$remaining-effort-color : #57b258;
+$remaining-effort-color : swatch-colors.$tlp-swatch-neon-green;
 
 .chart-plot-remaining-effort {
     fill: $remaining-effort-color;
@@ -56,7 +57,7 @@ $remaining-effort-color : #57b258;
     fill: transparent;
 
     &.highlighted {
-        fill: $text-color;
+        fill: graph.$text-color;
     }
 }
 
@@ -65,17 +66,17 @@ $remaining-effort-color : #57b258;
 }
 
 .chart-plot-ideal-burndown {
-    fill: $line-color;
+    fill: graph.$line-color;
 }
 
 .ideal-line {
     > circle {
-        fill: $line-color;
+        fill: graph.$line-color;
     }
 
     > path {
         stroke-width: 3px;
-        stroke: $line-color;
+        stroke: graph.$line-color;
         fill: transparent;
     }
 }

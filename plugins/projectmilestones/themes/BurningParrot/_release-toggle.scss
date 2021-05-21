@@ -17,8 +17,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-$timeline-color: mix($tlp-theme-color, $tlp-ui-white, 10%);
-
 .release-toggle {
     margin: 0 0 0 35px;
 }
@@ -46,7 +44,7 @@ $timeline-color: mix($tlp-theme-color, $tlp-ui-white, 10%);
 
     .tlp-pane-subtitle {
         margin: 0 0 var(--tlp-small-spacing);
-        color: $tlp-ui-dimmed;
+        color: var(--tlp-ui-dimmed);
         font-size: 14px;
         font-weight: 600;
         letter-spacing: normal;
@@ -64,7 +62,7 @@ $timeline-color: mix($tlp-theme-color, $tlp-ui-white, 10%);
 
 .release-description-link-icon {
     margin: 0 2px 0 0;
-    color: $tlp-theme-color;
+    color: var(--tlp-theme-color);
     font-size: 14px;
 }
 

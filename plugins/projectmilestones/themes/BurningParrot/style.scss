@@ -17,16 +17,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-$timeline-color: mix($tlp-theme-color, $tlp-ui-white, 10%);
+@use '../../../../plugins/tracker/themes/default/css/includes/burndown-chart';
+@use '../../../../plugins/agiledashboard/themes/FlamingParrot/css/burnup-chart';
+@use 'headers';
+@use 'release-toggle';
+@use 'release-toggle-tracker-artifacts-badges';
+@use 'release-chart';
+@use 'release-toggle-badges-sprints';
 
-@import '../../../../plugins/tracker/themes/default/css/includes/burndown-chart';
-@import '../../../../plugins/agiledashboard/themes/FlamingParrot/css/burnup-chart';
-@import '../../../../plugins/testmanagement/themes/BurningParrot/css/includes/colors';
-@import 'headers';
-@import 'release-toggle';
-@import 'release-toggle-tracker-artifacts-badges';
-@import 'release-chart';
-@import 'release-toggle-badges-sprints';
 
 .dashboard-widget-content-dashboardprojectmilestone {
     margin: 0;
@@ -41,8 +39,8 @@ $timeline-color: mix($tlp-theme-color, $tlp-ui-white, 10%);
     margin: 0 0 var(--tlp-medium-spacing);
     padding: 5px;
     border-radius: 3px;
-    background: $timeline-color;
-    color: $tlp-theme-color;
+    background: release-chart.$timeline-color;
+    color: var(--tlp-theme-color);
     font-size: 10px;
     font-weight: 600;
     letter-spacing: .5px;
@@ -65,8 +63,8 @@ $timeline-color: mix($tlp-theme-color, $tlp-ui-white, 10%);
         left: 10px;
         width: 4px;
         height: 100%;
-        background: linear-gradient(to top, $tlp-ui-white 0, $timeline-color var(--tlp-medium-spacing), transparent calc(var(--tlp-medium-spacing) + 1px)),
-            linear-gradient(to bottom, $tlp-ui-white 0, $timeline-color var(--tlp-medium-spacing));
+        background: linear-gradient(to top, var(--tlp-ui-white) 0, release-chart.$timeline-color var(--tlp-medium-spacing), transparent calc(var(--tlp-medium-spacing) + 1px)),
+            linear-gradient(to bottom, var(--tlp-ui-white) 0, release-chart.$timeline-color var(--tlp-medium-spacing));
     }
 }
 
@@ -103,19 +101,19 @@ $timeline-color: mix($tlp-theme-color, $tlp-ui-white, 10%);
     height: 16px;
     margin: 0 var(--tlp-small-spacing) 0 0;
     border-radius: 50%;
-    background: $tlp-theme-color;
-    color: $tlp-ui-white;
+    background: var(--tlp-theme-color);
+    color: var(--tlp-ui-white);
     font-size: 12px;
 }
 
 .project-other-releases .releases-link {
-    color: $tlp-ui-dimmed;
+    color: var(--tlp-ui-dimmed);
     font-size: 16px;
 }
 
 .releases-link {
     display: inline-block;
-    color: $tlp-ui-dimmed;
+    color: var(--tlp-ui-dimmed);
     font-size: 16px;
 }
 

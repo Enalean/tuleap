@@ -17,11 +17,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+@use 'release-chart';
+
 $border-width-px: calc(12px - 1px * var(--tlp-is-condensed));
 $heigh-bar-px: calc(32px - 6px * var(--tlp-is-condensed));
 $top-compress-icon-px: calc(6px - 2px * var(--tlp-is-condensed));
 
-$timeline-color: mix($tlp-theme-color, $tlp-ui-white, 10%);
 $width-bar-left-sprints: 16px;
 
 .project-release-infos-badges .project-release-info-badge-open-sprint {
@@ -38,7 +39,7 @@ $width-bar-left-sprints: 16px;
     left: -25px;
     width: 25px;
     height: 2px;
-    background: $tlp-theme-color;
+    background: var(--tlp-theme-color);
 }
 
 .project-release-open-sprint-badge-icon-toggle {
@@ -54,8 +55,8 @@ $width-bar-left-sprints: 16px;
     width: 16px;
     height: 16px;
     border-radius: 50%;
-    background: $tlp-theme-color;
-    color: $tlp-ui-white;
+    background: var(--tlp-theme-color);
+    color: var(--tlp-ui-white);
     line-height: normal;
 
     &::before {
@@ -107,8 +108,8 @@ $width-bar-left-sprints: 16px;
 
         &::after {
             right: -11px;
-            filter: drop-shadow(1px 0 0 $tlp-theme-color);
-            border-color: transparent transparent transparent mix($tlp-theme-color, $tlp-ui-white, 10%);
+            filter: drop-shadow(1px 0 0 var(--tlp-theme-color));
+            border-color: transparent transparent transparent var(--tlp-theme-color-lighter-10);
         }
     }
 
@@ -121,7 +122,7 @@ $width-bar-left-sprints: 16px;
         height: 0;
         border-width: $border-width-px 0 $border-width-px 12px;
         border-style: solid;
-        border-color: transparent transparent transparent $tlp-theme-color;
+        border-color: transparent transparent transparent var(--tlp-theme-color);
     }
 }
 
@@ -146,15 +147,15 @@ $width-bar-left-sprints: 16px;
     height: 1px;
     margin: var(--tlp-small-spacing) calc(-1 * var(--tlp-medium-spacing)) var(--tlp-medium-spacing) calc(-1 * var(--tlp-medium-spacing) - 6px);
     border: 0;
-    background: linear-gradient(to right, $timeline-color, $tlp-ui-border-normal);
+    background: linear-gradient(to right, release-chart.$timeline-color, var(--tlp-ui-border-normal));
 }
 
 .project-release-closed-sprint-badge {
     position: relative;
     width: min-content;
     margin: 0;
-    background: $tlp-ui-border-dark;
-    color: $tlp-ui-dimmed;
+    background: var(--tlp-ui-border-dark);
+    color: var(--tlp-ui-dimmed);
 }
 
 .project-release-closed-sprint-badge::after {
@@ -165,7 +166,7 @@ $width-bar-left-sprints: 16px;
     left: -25px;
     width: 25px;
     height: 2px;
-    background: $tlp-ui-dimmed;
+    background: var(--tlp-ui-dimmed);
 }
 
 .project-release-closed-sprint-badge::before {
@@ -177,7 +178,7 @@ $width-bar-left-sprints: 16px;
     width: 16px;
     height: 16px;
     border-radius: 50%;
-    background: $tlp-ui-dimmed;
+    background: var(--tlp-ui-dimmed);
 }
 
 .can-close-sprint .open-badges-sprints:hover .project-release-closed-sprint-badge::before {
@@ -208,7 +209,7 @@ $width-bar-left-sprints: 16px;
     height: 16px;
     margin: calc(-1 * var(--tlp-medium-spacing)) 0;
     background: transparent;
-    color: $tlp-ui-white;
+    color: var(--tlp-ui-white);
 
     &::before {
         content: '';
@@ -265,7 +266,7 @@ $width-bar-left-sprints: 16px;
         left: 10px;
         width: 4px;
         height: calc(100% - #{$heigh-bar-px});
-        background: $tlp-theme-color;
+        background: var(--tlp-theme-color);
     }
 
     &::after {
@@ -277,7 +278,7 @@ $width-bar-left-sprints: 16px;
         width: 16px;
         height: 16px;
         border-radius: 50%;
-        background: $tlp-theme-color;
+        background: var(--tlp-theme-color);
     }
 }
 

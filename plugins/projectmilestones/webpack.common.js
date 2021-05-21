@@ -25,19 +25,13 @@ const output = webpack_configurator.configureOutput(
     "/assets/projectmilestones/"
 );
 
-let entry_points = {
-    projectmilestones: "./scripts/projectmilestones/index.ts",
-    "projectmilestones-preferences": "./scripts/projectmilestones-preferences/index.ts",
-};
-
-const colors = ["blue", "green", "grey", "orange", "purple", "red"];
-for (const color of colors) {
-    entry_points[`style-${color}`] = `./themes/BurningParrot/style-${color}.scss`;
-}
-
 module.exports = [
     {
-        entry: entry_points,
+        entry: {
+            projectmilestones: "./scripts/projectmilestones/index.ts",
+            "projectmilestones-preferences": "./scripts/projectmilestones-preferences/index.ts",
+            "projectmilestones-style": "./themes/BurningParrot/style.scss",
+        },
         context,
         output,
         resolve: {

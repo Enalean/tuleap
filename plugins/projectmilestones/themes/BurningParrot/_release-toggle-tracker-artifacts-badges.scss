@@ -17,8 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-$timeline-color: mix($tlp-theme-color, $tlp-ui-white, 10%);
-
+@use '../../src/themes/tlp/src/scss/variables/colors/swatch-colors';
 
 .release-number-artifact {
     grid-column: 1;
@@ -54,7 +53,7 @@ body.theme-condensed .release-number-artifacts-value { //stylelint-disable-line 
     font-size: 18px;
 }
 
-@each $color-name, $colors in $tlp-swatch-color-map {
+@each $color-name, $colors in swatch-colors.$tlp-swatch-color-map {
     .release-number-artifacts-tracker-#{$color-name} > .release-number-artifacts-value {
         border: 1px solid transparentize(map-get($colors, 'primary'), .4);
         background: transparentize(map-get($colors, 'primary'), .9);

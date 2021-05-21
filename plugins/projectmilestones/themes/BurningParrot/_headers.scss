@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-$timeline-color: mix($tlp-theme-color, $tlp-ui-white, 10%);
+@use '../../src/themes/tlp/src/scss/variables/colors/swatch-colors';
 
 .project-release-toggle-closed > .project-release-header {
     background: none;
@@ -31,11 +31,11 @@ $timeline-color: mix($tlp-theme-color, $tlp-ui-white, 10%);
     > .project-release-date {
         @keyframes blinkText {
             from {
-                color: mix($tlp-ui-dimmed, $tlp-ui-white, 30%);
+                color: var(--tlp-ui-dimmed-lighter-70);
             }
 
             to {
-                color: mix($tlp-ui-dimmed, $tlp-ui-white, 5%);
+                color: var(--tlp-ui-dimmed-lighter-95);
             }
         }
         animation: blinkText 750ms linear infinite alternate;
@@ -44,11 +44,11 @@ $timeline-color: mix($tlp-theme-color, $tlp-ui-white, 10%);
     > .project-release-whats-hot-icon {
         @keyframes blinkIcon {
             from {
-                background: mix($tlp-ui-dimmed, $tlp-ui-white, 30%);
+                background: var(--tlp-ui-dimmed-lighter-70);
             }
 
             to {
-                background: mix($tlp-ui-dimmed, $tlp-ui-white, 5%);
+                background: var(--tlp-ui-dimmed-lighter-95);
             }
         }
         animation: blinkIcon 750ms linear infinite alternate;
@@ -77,7 +77,7 @@ $timeline-color: mix($tlp-theme-color, $tlp-ui-white, 10%);
     margin: 0 calc(-1 * var(--tlp-medium-spacing)) var(--tlp-medium-spacing) 0;
     padding: var(--tlp-small-spacing) var(--tlp-medium-spacing) var(--tlp-small-spacing) 0;
     overflow: hidden;
-    background: linear-gradient(to right, transparent, transparentize($tlp-theme-background-color, .4) 50%);
+    background: linear-gradient(to right, transparent, var(--tlp-theme-background-color-transparent-50) 50%);
     cursor: pointer;
 }
 
@@ -93,8 +93,8 @@ $timeline-color: mix($tlp-theme-color, $tlp-ui-white, 10%);
     height: 24px;
     margin: 0 var(--tlp-small-spacing) 0 0;
     border-radius: 50%;
-    background: $tlp-theme-color;
-    color: $tlp-ui-white;
+    background: var(--tlp-theme-color);
+    color: var(--tlp-ui-white);
     font-size: 100%;
 }
 
@@ -107,7 +107,7 @@ $timeline-color: mix($tlp-theme-color, $tlp-ui-white, 10%);
 
 .project-release-date {
     display: inline-block;
-    color: $tlp-ui-dimmed;
+    color: var(--tlp-ui-dimmed);
     font-size: 12px;
 }
 
@@ -130,25 +130,25 @@ $timeline-color: mix($tlp-theme-color, $tlp-ui-white, 10%);
 
 .release-remaining-value {
     margin: 0 2px 0 0;
-    color: $tlp-theme-color;
+    color: var(--tlp-theme-color);
     font-size: 16px;
     font-weight: 600;
 }
 
 .past-release > .release-remaining-value {
-    color: $tlp-ui-success;
+    color: var(--tlp-ui-success);
 }
 
 .release-remaining-value-danger {
-    color: $tlp-ui-danger;
+    color: var(--tlp-ui-danger);
 }
 
 .release-remaining-value-disabled {
-    color: $tlp-ui-dimmed;
+    color: var(--tlp-ui-dimmed);
 }
 
 .release-remaining-value-success {
-    color: $tlp-ui-success;
+    color: var(--tlp-ui-success);
 }
 
 .release-remaining-header {
@@ -163,25 +163,25 @@ $timeline-color: mix($tlp-theme-color, $tlp-ui-white, 10%);
     align-self: center;
     margin: 0 5px 0 0;
     opacity: .9;
-    color: $tlp-ui-dimmed;
+    color: var(--tlp-ui-dimmed);
     font-size: 12px;
 }
 
 .past-release > .release-remaining-icon {
-    color: $tlp-ui-success;
+    color: var(--tlp-ui-success);
 }
 
 .release-remaining-text {
     padding: 0 0 2px;
     overflow: hidden;
-    color: $tlp-ui-dimmed;
+    color: var(--tlp-ui-dimmed);
     font-size: 12px;
     text-overflow: ellipsis;
     white-space: nowrap;
 }
 
 .past-release > .release-remaining-text {
-    color: $tlp-ui-success;
+    color: var(--tlp-ui-success);
 }
 
 .release-remaining-progress {
@@ -189,24 +189,24 @@ $timeline-color: mix($tlp-theme-color, $tlp-ui-white, 10%);
     height: 3px;
     overflow: hidden;
     border-radius: 3px;
-    background: $tlp-swatch-firemist-silver;
+    background: swatch-colors.$tlp-swatch-firemist-silver;
 }
 
 .release-remaining-progress-value {
     height: 3px;
-    background: $tlp-theme-color;
+    background: var(--tlp-theme-color);
 }
 
 .release-remaining-progress-value-danger {
-    background: $tlp-ui-danger;
+    background: var(--tlp-ui-danger);
 }
 
 .release-remaining-progress-value-disabled {
-    background: $tlp-ui-dimmed;
+    background: var(--tlp-ui-dimmed);
 }
 
 .release-remaining-progress-value-success {
-    background: $tlp-ui-success;
+    background: var(--tlp-ui-success);
 }
 
 .release-remaining-disabled {
