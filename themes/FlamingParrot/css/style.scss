@@ -17,42 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@import '../../default/css/style';
+@use '../../default/css/style';
 
-@mixin definitions($main) {
-    #git-notification-mattermost-section .panel-header {
-        border-bottom-color: $main;
-    }
-}
-
-body {
-    &.FlamingParrot_Orange { //stylelint-disable-line selector-no-qualifying-type, selector-class-pattern
-        @import '../../src/themes/FlamingParrot/css/utils/variables-orange';
-        @include definitions($main);
-    }
-
-    &.FlamingParrot_Blue { //stylelint-disable-line selector-no-qualifying-type, selector-class-pattern
-        @import '../../src/themes/FlamingParrot/css/utils/variables-blue';
-        @include definitions($main);
-    }
-
-    &.FlamingParrot_Green { //stylelint-disable-line selector-no-qualifying-type, selector-class-pattern
-        @import '../../src/themes/FlamingParrot/css/utils/variables-green';
-        @include definitions($main);
-    }
-
-    &.FlamingParrot_BlueGrey { //stylelint-disable-line selector-no-qualifying-type, selector-class-pattern
-        @import '../../src/themes/FlamingParrot/css/utils/variables-bluegrey';
-        @include definitions($main);
-    }
-
-    &.FlamingParrot_Purple { //stylelint-disable-line selector-no-qualifying-type, selector-class-pattern
-        @import '../../src/themes/FlamingParrot/css/utils/variables-purple';
-        @include definitions($main);
-    }
-
-    &.FlamingParrot_Red { //stylelint-disable-line selector-no-qualifying-type, selector-class-pattern
-        @import '../../src/themes/FlamingParrot/css/utils/variables-red';
-        @include definitions($main);
-    }
+#git-notification-mattermost-section .panel-header {
+    border-bottom-color: var(--tlp-theme-color);
 }
