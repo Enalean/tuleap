@@ -95,7 +95,8 @@ export default class FieldChosenTemplate extends Vue {
             this.selected_template_name = this.selected_tracker_template.name;
         } else if (this.is_a_duplication) {
             this.selected_template_name = this.selected_tracker_template.name;
-            this.selected_template_project_name = this.project_of_selected_tracker_template.project_name;
+            this.selected_template_project_name =
+                this.project_of_selected_tracker_template.project_name;
         } else if (this.is_created_from_empty) {
             this.selected_template_name = this.$gettext("Empty");
         } else if (this.is_a_xml_import) {

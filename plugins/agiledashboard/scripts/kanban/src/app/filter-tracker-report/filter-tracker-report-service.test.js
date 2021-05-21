@@ -31,7 +31,8 @@ describe("FilterTrackerReportService -", () => {
                     selected: true,
                 },
             ]);
-            const selected_tracker_report_id = FilterTrackerReportService.getSelectedFilterTrackerReportId();
+            const selected_tracker_report_id =
+                FilterTrackerReportService.getSelectedFilterTrackerReportId();
             expect(selected_tracker_report_id).toEqual(306);
         });
 
@@ -50,7 +51,8 @@ describe("FilterTrackerReportService -", () => {
                     selectable: true,
                 },
             ]);
-            const selected_tracker_report_id = FilterTrackerReportService.getSelectedFilterTrackerReportId();
+            const selected_tracker_report_id =
+                FilterTrackerReportService.getSelectedFilterTrackerReportId();
             expect(selected_tracker_report_id).toEqual(0);
         });
     });

@@ -73,34 +73,34 @@ describe("event manager", () => {
 
         search_field = getSearchField(search_field_element);
         dropdown = dropdown_element;
-        dropdown_manager = ({
+        dropdown_manager = {
             openListPicker: jest.fn(),
             closeListPicker: jest.fn(),
             isDropdownOpen: jest.fn(),
-        } as unknown) as DropdownManager;
+        } as unknown as DropdownManager;
 
-        item_highlighter = ({
+        item_highlighter = {
             resetHighlight: jest.fn(),
             highlightItem: jest.fn(),
             getHighlightedItem: jest.fn(),
-        } as unknown) as ListItemHighlighter;
+        } as unknown as ListItemHighlighter;
 
-        dropdown_content_renderer = ({
+        dropdown_content_renderer = {
             renderFilteredListPickerDropdownContent: jest.fn(),
             renderAfterDependenciesUpdate: jest.fn(),
-        } as unknown) as DropdownContentRenderer;
+        } as unknown as DropdownContentRenderer;
 
-        selection_manager = ({
+        selection_manager = {
             processSelection: jest.fn(),
             handleBackspaceKey: jest.fn(),
             resetAfterDependenciesUpdate: jest.fn(),
-        } as unknown) as SingleSelectionManager;
+        } as unknown as SingleSelectionManager;
 
-        field_focus_manager = ({
+        field_focus_manager = {
             doesSelectionElementHaveTheFocus: jest.fn(),
-        } as unknown) as FieldFocusManager;
+        } as unknown as FieldFocusManager;
 
-        navigation_manager = ({ navigate: jest.fn() } as unknown) as KeyboardNavigationManager;
+        navigation_manager = { navigate: jest.fn() } as unknown as KeyboardNavigationManager;
 
         manager = new EventManager(
             doc,

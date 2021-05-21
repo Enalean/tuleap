@@ -146,11 +146,8 @@ describe("administration", () => {
         }
 
         it("display legacy text when user switch from explicit backlog to legacy one", () => {
-            const {
-                modal_legacy_text,
-                modal_explicit_text,
-                submit_with_modal,
-            } = createModalLocalDom();
+            const { modal_legacy_text, modal_explicit_text, submit_with_modal } =
+                createModalLocalDom();
             submit_with_modal.dataset.ExplicitBacklogValue = "0";
 
             addModalListeners(submit_with_modal);
@@ -161,11 +158,8 @@ describe("administration", () => {
         });
 
         it("display explicit backlog text when user switch from legacy to explicit mode", () => {
-            const {
-                modal_legacy_text,
-                modal_explicit_text,
-                submit_with_modal,
-            } = createModalLocalDom();
+            const { modal_legacy_text, modal_explicit_text, submit_with_modal } =
+                createModalLocalDom();
             submit_with_modal.dataset.ExplicitBacklogValue = "1";
 
             addModalListeners(submit_with_modal);

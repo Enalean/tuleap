@@ -348,7 +348,8 @@ function KanbanService(
     }
 
     function augmentQueryParamsWithFilterTrackerReport(query_params) {
-        const selected_filter_tracker_report_id = FilterTrackerReportService.getSelectedFilterTrackerReportId();
+        const selected_filter_tracker_report_id =
+            FilterTrackerReportService.getSelectedFilterTrackerReportId();
 
         if (selected_filter_tracker_report_id) {
             query_params.query = JSON.stringify({

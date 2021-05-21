@@ -62,9 +62,9 @@ describe(`OngoingDrag`, () => {
             mirror_container = doc.createElement("div");
             const drag_start_context = createDragStartContext(doc, true);
             ongoing_drag = new OngoingDrag(mock_event_source, drag_start_context);
-            options = ({
+            options = {
                 mirror_container,
-            } as unknown) as DrekkenovInitOptions;
+            } as unknown as DrekkenovInitOptions;
         });
 
         it(`when the dragged element is not already hidden,

@@ -854,9 +854,8 @@ function Graph(
             return ArtifactLinksGraphRestService.getArtifactGraph(artifact_id).then(function (
                 artifact
             ) {
-                ArtifactLinksArtifactsList.artifacts[
-                    artifact_id
-                ] = ArtifactLinksModelService.getGraphStructure(artifact);
+                ArtifactLinksArtifactsList.artifacts[artifact_id] =
+                    ArtifactLinksModelService.getGraphStructure(artifact);
                 return ArtifactLinksArtifactsList.artifacts[artifact_id];
             });
         } else {

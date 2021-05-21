@@ -51,7 +51,7 @@ describe(`drag-drop-actions`, () => {
     let context: ActionContext<SwimlaneState, RootState>;
 
     beforeEach(() => {
-        context = ({
+        context = {
             commit: jest.fn(),
             getters: {
                 cards_in_cell: jest.fn(),
@@ -63,7 +63,7 @@ describe(`drag-drop-actions`, () => {
             },
             dispatch: jest.fn(),
             rootState: {} as RootState,
-        } as unknown) as ActionContext<SwimlaneState, RootState>;
+        } as unknown as ActionContext<SwimlaneState, RootState>;
     });
 
     describe(`handleDrop()`, () => {

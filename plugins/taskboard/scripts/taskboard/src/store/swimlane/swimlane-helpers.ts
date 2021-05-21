@@ -20,7 +20,10 @@
 import type { SwimlaneState } from "./type";
 import type { Swimlane, Card } from "../../type";
 
-const swimlaneHasSameId = (a: Swimlane) => (b: Swimlane): boolean => a.card.id === b.card.id;
+const swimlaneHasSameId =
+    (a: Swimlane) =>
+    (b: Swimlane): boolean =>
+        a.card.id === b.card.id;
 
 /**
  * @throws Error

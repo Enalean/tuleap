@@ -99,9 +99,8 @@ Object.extend(com.xerox.codendi.Docman.prototype, {
         document.observe("dom:loaded", this.focusEvent, true);
 
         // Metadata multiple value checkbox toggling
-        this.toggleMultipleValuesChoiceEvent = this.toggleMultipleValuesChoice.bindAsEventListener(
-            this
-        );
+        this.toggleMultipleValuesChoiceEvent =
+            this.toggleMultipleValuesChoice.bindAsEventListener(this);
         if (this.options.action == "browse") {
             document.observe("dom:loaded", this.toggleMultipleValuesChoiceEvent, true);
         }
@@ -214,9 +213,8 @@ Object.extend(com.xerox.codendi.Docman.prototype, {
                 if (panel && !checkbox.checked) {
                     Element.hide(panel);
                 }
-                this.onNewItemCheckboxChangeEvent = this.onNewItemCheckboxChange.bindAsEventListener(
-                    this
-                );
+                this.onNewItemCheckboxChangeEvent =
+                    this.onNewItemCheckboxChange.bindAsEventListener(this);
                 Event.observe(checkbox, "click", this.onNewItemCheckboxChangeEvent);
             }.bind(this)
         );

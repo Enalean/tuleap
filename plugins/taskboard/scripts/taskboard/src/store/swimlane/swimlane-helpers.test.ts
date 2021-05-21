@@ -65,10 +65,10 @@ describe(`swimlane-helpers`, () => {
     describe(`replaceSwimlane`, () => {
         it(`Given a swimlane,
             it will find it in the state and replace it with the parameter`, () => {
-            const replacement = ({
+            const replacement = {
                 card: { id: 24 },
                 children_cards: [{ card: { id: 473 } }],
-            } as unknown) as Swimlane;
+            } as unknown as Swimlane;
             helpers.replaceSwimlane(state, replacement);
 
             const replacement_index = helpers.findSwimlaneIndex(state, replacement);

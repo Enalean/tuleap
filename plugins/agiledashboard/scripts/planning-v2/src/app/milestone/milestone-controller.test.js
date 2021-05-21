@@ -53,20 +53,17 @@ describe("MilestoneController", function () {
             dragularService = _dragularService_;
 
             BacklogService = _BacklogService_;
-            jest.spyOn(
-                BacklogService,
-                "addOrReorderBacklogItemsInBacklog"
-            ).mockImplementation(() => {});
+            jest.spyOn(BacklogService, "addOrReorderBacklogItemsInBacklog").mockImplementation(
+                () => {}
+            );
 
             DroppedService = _DroppedService_;
-            jest.spyOn(
-                DroppedService,
-                "moveFromSubmilestoneToBacklog"
-            ).mockImplementation(() => {});
-            jest.spyOn(
-                DroppedService,
-                "moveFromSubmilestoneToSubmilestone"
-            ).mockImplementation(() => {});
+            jest.spyOn(DroppedService, "moveFromSubmilestoneToBacklog").mockImplementation(
+                () => {}
+            );
+            jest.spyOn(DroppedService, "moveFromSubmilestoneToSubmilestone").mockImplementation(
+                () => {}
+            );
             jest.spyOn(DroppedService, "defineComparedToBeFirstItem");
             jest.spyOn(DroppedService, "defineComparedToBeLastItem");
             jest.spyOn(DroppedService, "reorderSubmilestone").mockImplementation(() => {});

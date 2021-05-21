@@ -104,8 +104,8 @@ describe("TemplateFooter", () => {
             wrapper.vm.$store.getters.is_template_selected = true;
             await wrapper.vm.$nextTick();
 
-            const template_footer: HTMLElement = (wrapper.get("[data-test=project-template-footer]")
-                .element as unknown) as HTMLElement;
+            const template_footer: HTMLElement = wrapper.get("[data-test=project-template-footer]")
+                .element as unknown as HTMLElement;
 
             expect(template_footer.classList).toContain("pinned");
         });
@@ -115,8 +115,8 @@ describe("TemplateFooter", () => {
 
             wrapper.vm.$store.getters.is_template_selected = true;
 
-            const template_footer: HTMLElement = (wrapper.get("[data-test=project-template-footer]")
-                .element as unknown) as HTMLElement;
+            const template_footer: HTMLElement = wrapper.get("[data-test=project-template-footer]")
+                .element as unknown as HTMLElement;
 
             expect(template_footer.classList).not.toContain("pinned");
         });
@@ -125,8 +125,8 @@ describe("TemplateFooter", () => {
             const wrapper = factory;
 
             wrapper.vm.$store.getters.is_template_selected = false;
-            const template_footer: HTMLElement = (wrapper.get("[data-test=project-template-footer]")
-                .element as unknown) as HTMLElement;
+            const template_footer: HTMLElement = wrapper.get("[data-test=project-template-footer]")
+                .element as unknown as HTMLElement;
 
             expect(template_footer.classList).not.toContain("pinned");
         });

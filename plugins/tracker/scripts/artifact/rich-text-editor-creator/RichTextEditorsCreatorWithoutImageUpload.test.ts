@@ -30,9 +30,9 @@ describe(`RichTextEditorsCreatorWithoutImageUpload`, () => {
             creator: RichTextEditorsCreatorWithoutImageUpload;
         beforeEach(() => {
             doc = createDocument();
-            editor_factory = ({
+            editor_factory = {
                 createRichTextEditor: jest.fn(),
-            } as unknown) as RichTextEditorFactory;
+            } as unknown as RichTextEditorFactory;
             creator = new RichTextEditorsCreatorWithoutImageUpload(doc, editor_factory);
         });
 

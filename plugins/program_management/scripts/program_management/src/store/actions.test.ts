@@ -36,11 +36,11 @@ jest.mock("../helpers/feature-reordering");
 describe("Actions", () => {
     let context: ActionContext<State, State>;
     beforeEach(() => {
-        context = ({
+        context = {
             commit: jest.fn(),
             state: {} as State,
             getters: {},
-        } as unknown) as ActionContext<State, State>;
+        } as unknown as ActionContext<State, State>;
     });
 
     describe(`handleDrop()`, () => {

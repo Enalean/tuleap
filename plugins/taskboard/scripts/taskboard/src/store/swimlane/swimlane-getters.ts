@@ -26,38 +26,35 @@ import { findSwimlane } from "./swimlane-helpers";
 
 export * from "./card/card-getters";
 
-export const cards_in_cell = (state: SwimlaneState, getters: [], root_state: RootState) => (
-    current_swimlane: Swimlane,
-    current_column: ColumnDefinition
-): Card[] => {
-    const swimlane_in_state = findSwimlane(state, current_swimlane);
+export const cards_in_cell =
+    (state: SwimlaneState, getters: [], root_state: RootState) =>
+    (current_swimlane: Swimlane, current_column: ColumnDefinition): Card[] => {
+        const swimlane_in_state = findSwimlane(state, current_swimlane);
 
-    return swimlane_in_state.children_cards.filter((card: Card) => {
-        const column_of_card = getColumnOfCard(root_state.column.columns, card);
+        return swimlane_in_state.children_cards.filter((card: Card) => {
+            const column_of_card = getColumnOfCard(root_state.column.columns, card);
 
-        if (!column_of_card) {
+            if (!column_of_card) {
+                return false;
+            }
+
+            return column_of_card.id === current_column.id;
+        });
+    };
+
+export const is_there_at_least_one_children_to_display =
+    (state: SwimlaneState, getters: [], root_state: RootState) =>
+    (current_swimlane: Swimlane): boolean => {
+        if (!current_swimlane.card.has_children) {
             return false;
         }
 
-        return column_of_card.id === current_column.id;
-    });
-};
+        return current_swimlane.children_cards.some((card: Card): boolean => {
+            const column_of_card = getColumnOfCard(root_state.column.columns, card);
 
-export const is_there_at_least_one_children_to_display = (
-    state: SwimlaneState,
-    getters: [],
-    root_state: RootState
-) => (current_swimlane: Swimlane): boolean => {
-    if (!current_swimlane.card.has_children) {
-        return false;
-    }
-
-    return current_swimlane.children_cards.some((card: Card): boolean => {
-        const column_of_card = getColumnOfCard(root_state.column.columns, card);
-
-        return column_of_card !== undefined;
-    });
-};
+            return column_of_card !== undefined;
+        });
+    };
 
 export const has_at_least_one_card_in_edit_mode = (state: SwimlaneState): boolean => {
     return state.swimlanes.some(doesSwimlaneContainACardInEditMode);
@@ -70,12 +67,14 @@ export const is_loading_cards = (state: SwimlaneState): boolean => {
     );
 };
 
-export const nb_cards_in_column = (state: SwimlaneState) => (column: ColumnDefinition): number => {
-    return state.swimlanes.reduce(
-        (sum: number, swimlane) => nbCardsInColumnForSwimlane(swimlane, column) + sum,
-        0
-    );
-};
+export const nb_cards_in_column =
+    (state: SwimlaneState) =>
+    (column: ColumnDefinition): number => {
+        return state.swimlanes.reduce(
+            (sum: number, swimlane) => nbCardsInColumnForSwimlane(swimlane, column) + sum,
+            0
+        );
+    };
 
 function nbCardsInColumnForSwimlane(swimlane: Swimlane, column: ColumnDefinition): number {
     if (!swimlane.card.has_children) {

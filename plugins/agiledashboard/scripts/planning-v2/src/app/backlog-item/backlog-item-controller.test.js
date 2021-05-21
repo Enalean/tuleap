@@ -65,10 +65,9 @@ describe("BacklogItemController -", function () {
             BacklogItemService = _BacklogItemService_;
             jest.spyOn(BacklogItemService, "getBacklogItemChildren").mockImplementation(() => {});
             jest.spyOn(BacklogItemService, "getBacklogItem").mockImplementation(() => {});
-            jest.spyOn(
-                BacklogItemService,
-                "removeAddBacklogItemChildren"
-            ).mockImplementation(() => {});
+            jest.spyOn(BacklogItemService, "removeAddBacklogItemChildren").mockImplementation(
+                () => {}
+            );
 
             DroppedService = _DroppedService_;
             jest.spyOn(DroppedService, "reorderBacklogItemChildren").mockImplementation(() => {});
@@ -79,10 +78,9 @@ describe("BacklogItemController -", function () {
             CardFieldsService = _CardFieldsService_;
 
             BacklogItemCollectionService = _BacklogItemCollectionService_;
-            jest.spyOn(
-                BacklogItemCollectionService,
-                "refreshBacklogItem"
-            ).mockImplementation(() => {});
+            jest.spyOn(BacklogItemCollectionService, "refreshBacklogItem").mockImplementation(
+                () => {}
+            );
             jest.spyOn(
                 BacklogItemCollectionService,
                 "addOrReorderBacklogItemsInCollection"
@@ -605,10 +603,11 @@ describe("BacklogItemController -", function () {
                         .element($target_container_element)
                         .data("accept", "trackerId38|trackerId49");
 
-                    var result = BacklogItemController.dragularOptionsForBacklogItemChildren().accepts(
-                        $element_to_drop,
-                        $target_container_element
-                    );
+                    var result =
+                        BacklogItemController.dragularOptionsForBacklogItemChildren().accepts(
+                            $element_to_drop,
+                            $target_container_element
+                        );
 
                     expect(result).toBeTruthy();
                 });
@@ -617,10 +616,11 @@ describe("BacklogItemController -", function () {
                     angular.element($element_to_drop).data("type", "trackerId49");
                     angular.element($target_container_element).data("accept", "trackerId38");
 
-                    var result = BacklogItemController.dragularOptionsForBacklogItemChildren().accepts(
-                        $element_to_drop,
-                        $target_container_element
-                    );
+                    var result =
+                        BacklogItemController.dragularOptionsForBacklogItemChildren().accepts(
+                            $element_to_drop,
+                            $target_container_element
+                        );
 
                     expect(result).toBeFalsy();
                 });
@@ -628,10 +628,11 @@ describe("BacklogItemController -", function () {
                 it("and given that the container had nodrop data, when I check if the element can be dropped, then it will return false", function () {
                     angular.element($target_container_element).data("nodrop", true);
 
-                    var result = BacklogItemController.dragularOptionsForBacklogItemChildren().accepts(
-                        $element_to_drop,
-                        $target_container_element
-                    );
+                    var result =
+                        BacklogItemController.dragularOptionsForBacklogItemChildren().accepts(
+                            $element_to_drop,
+                            $target_container_element
+                        );
 
                     expect(result).toBeFalsy();
                 });
@@ -655,11 +656,12 @@ describe("BacklogItemController -", function () {
                     angular.element(handle_child).append($handle_element);
                     $element_to_drag.appendChild(handle_child);
 
-                    var result = BacklogItemController.dragularOptionsForBacklogItemChildren().moves(
-                        $element_to_drag,
-                        $container,
-                        $handle_element
-                    );
+                    var result =
+                        BacklogItemController.dragularOptionsForBacklogItemChildren().moves(
+                            $element_to_drag,
+                            $container,
+                            $handle_element
+                        );
 
                     expect(result).toBeTruthy();
                 });
@@ -671,11 +673,12 @@ describe("BacklogItemController -", function () {
                     const $handle_element = createElement("span");
                     $element_to_drag.appendChild($handle_element);
 
-                    var result = BacklogItemController.dragularOptionsForBacklogItemChildren().moves(
-                        $element_to_drag,
-                        $container,
-                        $handle_element
-                    );
+                    var result =
+                        BacklogItemController.dragularOptionsForBacklogItemChildren().moves(
+                            $element_to_drag,
+                            $container,
+                            $handle_element
+                        );
 
                     expect(result).toBeFalsy();
                 });
@@ -683,11 +686,12 @@ describe("BacklogItemController -", function () {
                 it("and given that the element had nodrag data, when I check if the element can be dragged, then it will return false", function () {
                     angular.element($element_to_drag).data("nodrag", true);
 
-                    var result = BacklogItemController.dragularOptionsForBacklogItemChildren().moves(
-                        $element_to_drag,
-                        $container,
-                        $handle_element
-                    );
+                    var result =
+                        BacklogItemController.dragularOptionsForBacklogItemChildren().moves(
+                            $element_to_drag,
+                            $container,
+                            $handle_element
+                        );
 
                     expect(result).toBeFalsy();
                 });

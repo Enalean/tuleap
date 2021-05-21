@@ -206,9 +206,10 @@ export const loadFolder = (context, folder_id) => {
     return Promise.all(promises);
 
     function getCurrentFolder() {
-        const index_of_folder_in_hierarchy = context.state.current_folder_ascendant_hierarchy.findIndex(
-            (item) => item.id === folder_id
-        );
+        const index_of_folder_in_hierarchy =
+            context.state.current_folder_ascendant_hierarchy.findIndex(
+                (item) => item.id === folder_id
+            );
         const is_folder_found_in_hierarchy = index_of_folder_in_hierarchy !== -1;
         const current_folder = is_folder_found_in_hierarchy
             ? switchToFolderWeFoundInHierarchy(index_of_folder_in_hierarchy)

@@ -480,9 +480,8 @@ codendi.tracker.report.loadAggregates = function (selectbox, report_id, renderer
         toggle = function (evt) {
             var li = evt.element();
             li.addClassName(prefix + "waiting");
-            parameters["renderer_table[add_aggregate][" + field_id + "]"] = li.id.match(
-                /\d_(\w+)$/
-            )[1];
+            parameters["renderer_table[add_aggregate][" + field_id + "]"] =
+                li.id.match(/\d_(\w+)$/)[1];
             new Ajax.Request(location.href, {
                 method: "POST",
                 parameters: parameters,

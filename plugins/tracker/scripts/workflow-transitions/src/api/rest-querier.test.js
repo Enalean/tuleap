@@ -197,8 +197,7 @@ describe("Rest queries:", () => {
             it("calls PATCH transition", () =>
                 expect(patch).toHaveBeenCalledWith("/api/tracker_workflow_transitions/1", {
                     headers: json_headers,
-                    body:
-                        '{"authorized_user_group_ids":["1","2"],"not_empty_field_ids":[3],"is_comment_required":true}',
+                    body: '{"authorized_user_group_ids":["1","2"],"not_empty_field_ids":[3],"is_comment_required":true}',
                 }));
 
             describe("when no authorized_user_group_ids provided", () => {

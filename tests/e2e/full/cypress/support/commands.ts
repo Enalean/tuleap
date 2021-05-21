@@ -194,13 +194,12 @@ Cypress.Commands.add("updatePlatformVisibilityForAnonymous", (): void => {
     cy.userLogout();
 });
 
-Cypress.Commands.add(
-    "getProjectId",
-    (project_shortname: string): Cypress.Chainable<JQuery<HTMLElement>> => {
-        cy.visit(`/projects/${project_shortname}/`);
-        return cy.get("[data-test=project-sidebar]").should("have.attr", "data-project-id");
-    }
-);
+Cypress.Commands.add("getProjectId", (project_shortname: string): Cypress.Chainable<
+    JQuery<HTMLElement>
+> => {
+    cy.visit(`/projects/${project_shortname}/`);
+    return cy.get("[data-test=project-sidebar]").should("have.attr", "data-project-id");
+});
 
 // Use this command to attach a file to a file input
 // Don't forget to pass the filename in the arguments

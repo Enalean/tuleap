@@ -208,15 +208,17 @@ codendi.tracker.artifact.artifactLink = {
                                     var renderer_table = $("tracker_report_table_" + pair.key);
                                     if (!renderer_table) {
                                         // remove the empty element
-                                        var empty_value = codendi.tracker.artifact.artifactLinker_currentField.down(
-                                            ".empty_value"
-                                        );
+                                        var empty_value =
+                                            codendi.tracker.artifact.artifactLinker_currentField.down(
+                                                ".empty_value"
+                                            );
                                         if (empty_value) {
                                             empty_value.remove();
                                         }
-                                        var list = codendi.tracker.artifact.artifactLinker_currentField.down(
-                                            ".tracker-form-element-artifactlink-list"
-                                        );
+                                        var list =
+                                            codendi.tracker.artifact.artifactLinker_currentField.down(
+                                                ".tracker-form-element-artifactlink-list"
+                                            );
                                         list.insert(json.head[pair.key] + "<tbody>");
                                         var first_list = $$(
                                             ".tracker-form-element-artifactlink-list ul"
@@ -303,9 +305,8 @@ codendi.tracker.artifact.artifactLink = {
             .split("]")[0];
 
         //Compute the new aggregates
-        codendi.tracker.artifact.artifactLink.reload_aggregates_functions_request = new Ajax.Request(
-            codendi.tracker.base_url + "?",
-            {
+        codendi.tracker.artifact.artifactLink.reload_aggregates_functions_request =
+            new Ajax.Request(codendi.tracker.base_url + "?", {
                 parameters: {
                     formElement: field_id,
                     func: "fetch-aggregates",
@@ -337,8 +338,7 @@ codendi.tracker.artifact.artifactLink = {
                         }
                     });
                 },
-            }
-        );
+            });
     },
     load_nb_artifacts: function (tracker_panel) {
         var nb_artifacts = tracker_panel
@@ -435,9 +435,8 @@ codendi.tracker.artifact.artifactLink = {
 
             if (!ul.up("div").hasClassName("read-only")) {
                 //change the current tracker for the selector
-                codendi.tracker.artifact.artifactLink.selector_url.tracker = h2.className.split(
-                    "_"
-                )[1]; // class="tracker-form-element-artifactlink-tracker_974"
+                codendi.tracker.artifact.artifactLink.selector_url.tracker =
+                    h2.className.split("_")[1]; // class="tracker-form-element-artifactlink-tracker_974"
             }
 
             // stop the propagation of the event
@@ -495,9 +494,8 @@ codendi.tracker.artifact.artifactLink = {
 
             //hide this panel and its title unless is first
             if (this.tracker_panels.size() == 0) {
-                codendi.tracker.artifact.artifactLink.selector_url.tracker = h2.className.split(
-                    "_"
-                )[1]; // class="tracker-form-element-artifactlink-tracker_974"
+                codendi.tracker.artifact.artifactLink.selector_url.tracker =
+                    h2.className.split("_")[1]; // class="tracker-form-element-artifactlink-tracker_974"
             }
 
             var firstNotLabel = tab_list //eslint-disable-line @typescript-eslint/no-unused-vars

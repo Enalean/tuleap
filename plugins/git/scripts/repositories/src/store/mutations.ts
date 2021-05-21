@@ -82,9 +82,8 @@ export default {
         state.services_name_used = services_name_used;
     },
     removeRepository(state: State, repository: Repository | FormattedGitLabRepository): void {
-        const index_of_repository = state.repositories_for_owner[state.selected_owner_id].indexOf(
-            repository
-        );
+        const index_of_repository =
+            state.repositories_for_owner[state.selected_owner_id].indexOf(repository);
         state.repositories_for_owner[state.selected_owner_id].splice(index_of_repository, 1);
     },
     resetRepositories(state: State): void {

@@ -31,8 +31,7 @@ document.observe("dom:loaded", function () {
                     '<label style="font-weight: bold;">' + codendi.locales.git.preview + "</label>"
                 );
             var preview = new Element("div", {
-                style:
-                    "color: #999; border-bottom: 1px solid #EEE; margin-bottom:0.5em; padding-bottom:0.5em;",
+                style: "color: #999; border-bottom: 1px solid #EEE; margin-bottom:0.5em; padding-bottom:0.5em;",
             });
             table.down("tbody > tr > td", previewPos).insert({ top: preview });
 
@@ -289,12 +288,10 @@ document.observe("dom:loaded", function () {
                         $("git_admin_config_edit_area").show();
                         $("git_admin_config_form").show();
                         $("git_admin_config_template_name").show();
-                        $("git_admin_config_template_name").textContent = edit_link.readAttribute(
-                            "data-template-name"
-                        );
-                        $("git_admin_template_id").value = edit_link.readAttribute(
-                            "data-template-id"
-                        );
+                        $("git_admin_config_template_name").textContent =
+                            edit_link.readAttribute("data-template-name");
+                        $("git_admin_template_id").value =
+                            edit_link.readAttribute("data-template-id");
                     },
                 });
             });
@@ -331,9 +328,8 @@ document.observe("dom:loaded", function () {
                         $("git_admin_config_edit_area").show();
                         $("git_admin_config_form").show();
                         $("git_admin_config_template_name").show();
-                        $("git_admin_config_template_name").textContent = view_link.readAttribute(
-                            "data-template-name"
-                        );
+                        $("git_admin_config_template_name").textContent =
+                            view_link.readAttribute("data-template-name");
                     },
                 });
             });
@@ -368,9 +364,10 @@ document.observe("dom:loaded", function () {
     })();
 
     function toggleMigrateDeleteRemote() {
-        var should_delete = $("gerrit_url").options[$("gerrit_url").selectedIndex].readAttribute(
-                "data-repo-delete"
-            ),
+        var should_delete =
+                $("gerrit_url").options[$("gerrit_url").selectedIndex].readAttribute(
+                    "data-repo-delete"
+                ),
             plugin_enabled = $("gerrit_url").options[$("gerrit_url").selectedIndex].readAttribute(
                 "data-repo-delete-plugin-enabled"
             );

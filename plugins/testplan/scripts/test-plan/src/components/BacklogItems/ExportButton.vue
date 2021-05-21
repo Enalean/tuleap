@@ -21,7 +21,10 @@
 <template>
     <div>
         <button
-            class="tlp-button tlp-button-primary tlp-button-outline tlp-button-small test-plan-export-button"
+            class="
+                tlp-button tlp-button-primary tlp-button-outline tlp-button-small
+                test-plan-export-button
+            "
             v-bind:disabled="!can_export"
             v-on:click="exportTestPlan"
             data-test="testplan-export-button"

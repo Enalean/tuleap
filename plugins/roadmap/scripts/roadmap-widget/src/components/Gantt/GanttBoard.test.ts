@@ -385,10 +385,10 @@ describe("GanttBoard", () => {
 
         const observerCallback = mockResizeObserver.mock.calls[0][0];
         await observerCallback([
-            ({
+            {
                 contentRect: { width: 450 } as DOMRectReadOnly,
                 target: time_period_header.element,
-            } as unknown) as ResizeObserverEntry,
+            } as unknown as ResizeObserverEntry,
         ]);
 
         expect(time_period_header.props("nb_additional_units")).toBe(1);

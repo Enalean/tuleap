@@ -216,10 +216,9 @@ describe("KanbanColumnController -", function () {
 
     describe("dragularDrag() -", function () {
         it("When I start dragging an item, then all wip edition dropdowns will be closed", function () {
-            jest.spyOn(
-                ColumnCollectionService,
-                "cancelWipEditionOnAllColumns"
-            ).mockImplementation(() => {});
+            jest.spyOn(ColumnCollectionService, "cancelWipEditionOnAllColumns").mockImplementation(
+                () => {}
+            );
             KanbanColumnController.dragularOptions().onInit();
 
             $scope.$emit("dragulardrag");

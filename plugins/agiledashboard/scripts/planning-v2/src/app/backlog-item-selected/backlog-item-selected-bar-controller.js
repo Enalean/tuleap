@@ -20,7 +20,8 @@ function BacklogItemSelectedBarController($scope, BacklogItemSelectedService) {
                 return BacklogItemSelectedService.getNumberOfSelectedBacklogItem();
             },
             function () {
-                self.nb_selected_backlog_items = BacklogItemSelectedService.getNumberOfSelectedBacklogItem();
+                self.nb_selected_backlog_items =
+                    BacklogItemSelectedService.getNumberOfSelectedBacklogItem();
             },
             true
         );

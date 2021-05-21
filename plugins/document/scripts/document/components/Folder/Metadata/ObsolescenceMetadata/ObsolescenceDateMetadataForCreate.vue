@@ -29,7 +29,10 @@
             <i class="fa fa-asterisk"></i>
         </label>
         <div
-            class="tlp-form-element tlp-form-element-prepend document-obsolescence-date-metadata-select"
+            class="
+                tlp-form-element tlp-form-element-prepend
+                document-obsolescence-date-metadata-select
+            "
         >
             <select
                 class="tlp-select document-obsolescence-date-metadata-select"

@@ -58,15 +58,15 @@ describe("dropdown-manager", () => {
             is_filterable: true,
         }).renderBaseComponent();
 
-        scroll_manager = ({
+        scroll_manager = {
             lockScrolling: jest.fn(),
             unlockScrolling: jest.fn(),
-        } as unknown) as ScrollingManager;
+        } as unknown as ScrollingManager;
 
-        field_focus_manager = ({
+        field_focus_manager = {
             applyFocusOnSelectionElement: jest.fn(),
             applyFocusOnSearchField: jest.fn(),
-        } as unknown) as FieldFocusManager;
+        } as unknown as FieldFocusManager;
 
         wrapper = wrapper_element;
         list_picker = list_picker_element;
@@ -157,12 +157,12 @@ describe("dropdown-manager", () => {
         function getDropdownManagerWithSizedElements(
             document_client_height: number
         ): DropdownManager {
-            const mocked_doc = ({
+            const mocked_doc = {
                 documentElement: {
                     clientHeight: document_client_height,
                 },
                 body: document.createElement("body"),
-            } as unknown) as HTMLDocument;
+            } as unknown as HTMLDocument;
 
             return new DropdownManager(
                 mocked_doc,

@@ -34,18 +34,22 @@ describe("API querier", () => {
                 const repository_collection: GitRepositoryRecursiveGet = {
                     repositories,
                 };
-                const tlpRecursiveGet = jest.spyOn(tlp, "recursiveGet").mockImplementation(
-                    <T>(
-                        url: string,
-                        init?: RecursiveGetInit<GitRepositoryRecursiveGet, T>
-                    ): Promise<T[]> => {
-                        if (!init || !init.getCollectionCallback) {
-                            throw new Error();
-                        }
+                const tlpRecursiveGet = jest
+                    .spyOn(tlp, "recursiveGet")
+                    .mockImplementation(
+                        <T>(
+                            url: string,
+                            init?: RecursiveGetInit<GitRepositoryRecursiveGet, T>
+                        ): Promise<T[]> => {
+                            if (!init || !init.getCollectionCallback) {
+                                throw new Error();
+                            }
 
-                        return Promise.resolve(init.getCollectionCallback(repository_collection));
-                    }
-                );
+                            return Promise.resolve(
+                                init.getCollectionCallback(repository_collection)
+                            );
+                        }
+                    );
 
                 function displayCallback(result: Array<Repository>): void {
                     expect(result).toEqual(repositories);
@@ -77,18 +81,22 @@ describe("API querier", () => {
                 const repository_collection: GitRepositoryRecursiveGet = {
                     repositories,
                 };
-                const tlpRecursiveGet = jest.spyOn(tlp, "recursiveGet").mockImplementation(
-                    <T>(
-                        url: string,
-                        init?: RecursiveGetInit<GitRepositoryRecursiveGet, T>
-                    ): Promise<T[]> => {
-                        if (!init || !init.getCollectionCallback) {
-                            throw new Error();
-                        }
+                const tlpRecursiveGet = jest
+                    .spyOn(tlp, "recursiveGet")
+                    .mockImplementation(
+                        <T>(
+                            url: string,
+                            init?: RecursiveGetInit<GitRepositoryRecursiveGet, T>
+                        ): Promise<T[]> => {
+                            if (!init || !init.getCollectionCallback) {
+                                throw new Error();
+                            }
 
-                        return Promise.resolve(init.getCollectionCallback(repository_collection));
-                    }
-                );
+                            return Promise.resolve(
+                                init.getCollectionCallback(repository_collection)
+                            );
+                        }
+                    );
 
                 function displayCallback(result: Array<Repository>): void {
                     expect(result).toEqual(repositories);

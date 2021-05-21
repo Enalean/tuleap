@@ -125,13 +125,8 @@ function CodeMirrorHelperService(
     }
 
     function displayPlaceholderWidget(widget_params) {
-        const {
-            code_mirror,
-            handle,
-            widget_height,
-            display_above_line,
-            is_comment_placeholder,
-        } = widget_params;
+        const { code_mirror, handle, widget_height, display_above_line, is_comment_placeholder } =
+            widget_params;
 
         const options = {
             coverGutter: true,

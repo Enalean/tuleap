@@ -259,13 +259,13 @@ function getEmptyOptions(): InternalTextEditorOptions {
 function getMockedCKEditorInstance(): CKEDITOR.editor {
     let _data = "";
     const fake_ckeditor_document = createDocument();
-    return ({
+    return {
         on: emptyFunction,
         document: {
             getBody(): CKEDITOR.dom.element {
-                return ({
+                return {
                     $: fake_ckeditor_document.createElement("body"),
-                } as unknown) as CKEDITOR.dom.element;
+                } as unknown as CKEDITOR.dom.element;
             },
         },
         setData(data: string): void {
@@ -275,5 +275,5 @@ function getMockedCKEditorInstance(): CKEDITOR.editor {
             return _data;
         },
         destroy: emptyFunction,
-    } as unknown) as CKEDITOR.editor;
+    } as unknown as CKEDITOR.editor;
 }

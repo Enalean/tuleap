@@ -23,11 +23,9 @@ import { select } from "d3-selection";
 import type { XYSizeElement } from "../type";
 
 jest.mock("./chart-badge-services", () => ({
-    getContainerProperties: jest.fn(
-        (): XYSizeElement => {
-            return { x: 10, y: 10, width: 10, height: 10 };
-        }
-    ),
+    getContainerProperties: jest.fn((): XYSizeElement => {
+        return { x: 10, y: 10, width: 10, height: 10 };
+    }),
 }));
 
 describe("ChartBadgeGenerator -", () => {

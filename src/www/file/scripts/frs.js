@@ -333,13 +333,11 @@ function cancel_update_change_log() {
     //remove the file input and add it just after to set the file value to "" otherwise the file will be upload when saving the release
     Element.remove("upload_change_log");
     Element.insert("change_log_title", {
-        after:
-            '<TR id="upload_change_log"><TD><input type="file" id="uploaded_change_log" name="uploaded_change_log"  size="30"></TD></TR>',
+        after: '<TR id="upload_change_log"><TD><input type="file" id="uploaded_change_log" name="uploaded_change_log"  size="30"></TD></TR>',
     });
     Element.hide("upload_change_log");
     Element.insert("uploaded_change_log", {
-        after:
-            '<input type="button" id="cancel_change_log" name="cancel_change_log"  size="30" value="cancel" onclick="cancel_update_change_log(); return false;">',
+        after: '<input type="button" id="cancel_change_log" name="cancel_change_log"  size="30" value="cancel" onclick="cancel_update_change_log(); return false;">',
     });
     Element.hide("cancel_change_log");
 }
@@ -356,8 +354,7 @@ function add_change_log() {
             "</a>",
     });
     Element.insert("uploaded_change_log", {
-        after:
-            '<input type="button" id="cancel_change_log" name="cancel_change_log"  size="30" value="cancel" onclick="cancel_update_change_log(); return false;">',
+        after: '<input type="button" id="cancel_change_log" name="cancel_change_log"  size="30" value="cancel" onclick="cancel_update_change_log(); return false;">',
     });
 }
 
@@ -366,8 +363,7 @@ function show_upload_notes() {
     Element.show("upload_notes");
     Element.hide("rn_upload_link");
     Element.insert("uploaded_notes", {
-        after:
-            '<input type="button" id="cancel_notes" name="cancel_notes"  size="30" value="cancel" onclick="cancel_update_notes(); return false;">',
+        after: '<input type="button" id="cancel_notes" name="cancel_notes"  size="30" value="cancel" onclick="cancel_update_notes(); return false;">',
     });
     Element.hide("release_notes_area");
 }
@@ -379,13 +375,11 @@ function cancel_update_notes() {
     //remove the file input and add it just after to set the file value to "" otherwise the file will be upload when saving the release
     Element.remove("upload_notes");
     Element.insert("notes_title", {
-        after:
-            '<TR id="upload_notes"><TD><input id="uploaded_notes" type="file" name="uploaded_release_notes"  size="30"></TD></TR>',
+        after: '<TR id="upload_notes"><TD><input id="uploaded_notes" type="file" name="uploaded_release_notes"  size="30"></TD></TR>',
     });
     Element.hide("upload_notes");
     Element.insert("uploaded_notes", {
-        after:
-            '<input type="button" id="cancel_notes" name="cancel_notes"  size="30" value="cancel" onclick="cancel_update_notes(); return false;">',
+        after: '<input type="button" id="cancel_notes" name="cancel_notes"  size="30" value="cancel" onclick="cancel_update_notes(); return false;">',
     });
     Element.hide("cancel_notes");
 }
@@ -430,8 +424,7 @@ Event.observe(window, "load", function () {
                 "<a>",
         });
         Element.insert("files", {
-            after:
-                '<a id="file_help_link" href="#help" onclick="Element.hide(\'file_help_link\');Element.show( \'files_help\'); return false;"> [?]</a>',
+            after: '<a id="file_help_link" href="#help" onclick="Element.hide(\'file_help_link\');Element.show( \'files_help\'); return false;"> [?]</a>',
         });
         //Upload files help
         Element.hide("files_help");
@@ -469,8 +462,7 @@ Event.observe(window, "load", function () {
         });
     } else if (release_mode == "edition" && $("text_area_change_log").value != "") {
         Element.insert("uploaded_change_log", {
-            after:
-                '<input type="button" id="cancel_change_log" name="cancel_change_log"  size="30" value="cancel" onclick="cancel_update_change_log(); return false;">',
+            after: '<input type="button" id="cancel_change_log" name="cancel_change_log"  size="30" value="cancel" onclick="cancel_update_change_log(); return false;">',
         });
         Element.hide("cancel_change_log");
         Element.hide("upload_change_log");

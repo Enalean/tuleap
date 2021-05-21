@@ -38,16 +38,14 @@ export async function loadSwimlanes(
                 limit: 100,
             },
             getCollectionCallback: (collection: Card[]): Swimlane[] => {
-                const swimlanes = collection.map(
-                    (card: Card): Swimlane => {
-                        injectDefaultPropertiesInCard(card);
-                        return {
-                            card,
-                            children_cards: [],
-                            is_loading_children_cards: false,
-                        };
-                    }
-                );
+                const swimlanes = collection.map((card: Card): Swimlane => {
+                    injectDefaultPropertiesInCard(card);
+                    return {
+                        card,
+                        children_cards: [],
+                        is_loading_children_cards: false,
+                    };
+                });
                 context.commit("addSwimlanes", swimlanes);
                 swimlanes
                     .filter((swimlane) => swimlane.card.has_children)

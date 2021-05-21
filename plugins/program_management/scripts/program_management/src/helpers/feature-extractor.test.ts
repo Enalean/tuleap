@@ -47,9 +47,8 @@ describe("FeatureExtractor", () => {
                 } as ProgramIncrement,
             };
 
-            const index = featureExtractor.extractFeatureIndexFromProgramIncrement(
-                feature_id_with_increment
-            );
+            const index =
+                featureExtractor.extractFeatureIndexFromProgramIncrement(feature_id_with_increment);
 
             expect(index).toEqual(1);
         });

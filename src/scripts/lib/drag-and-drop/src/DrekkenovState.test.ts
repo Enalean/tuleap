@@ -41,9 +41,9 @@ jest.mock("./DropGhost");
 jest.mock("./DocumentEventsHandler", () => {
     return {
         DocumentEventsHandler: jest.fn().mockImplementation(() => {
-            return ({
+            return {
                 attachDragDropListeners: jest.fn(),
-            } as unknown) as DocumentEventsHandler;
+            } as unknown as DocumentEventsHandler;
         }),
     };
 });
@@ -54,16 +54,16 @@ describe(`DrekkenovState`, () => {
     let doc: Document;
     beforeEach(() => {
         doc = createLocalDocument();
-        options = ({
+        options = {
             cleanupAfterDragCallback: jest.fn(),
-        } as unknown) as DrekkenovInitOptions;
+        } as unknown as DrekkenovInitOptions;
         state = new DrekkenovState(options, doc);
     });
 
     afterEach(() => {
-        const ongoing_drag_constructor = (OngoingDrag as unknown) as jest.SpyInstance;
+        const ongoing_drag_constructor = OngoingDrag as unknown as jest.SpyInstance;
         ongoing_drag_constructor.mockClear();
-        const document_constructor = (DocumentEventsHandler as unknown) as jest.SpyInstance;
+        const document_constructor = DocumentEventsHandler as unknown as jest.SpyInstance;
         document_constructor.mockClear();
     });
 
@@ -126,13 +126,13 @@ describe(`DrekkenovState`, () => {
 
             state.startDrag(drag_start_context);
 
-            const ongoing_drag_constructor = (OngoingDrag as unknown) as jest.SpyInstance;
+            const ongoing_drag_constructor = OngoingDrag as unknown as jest.SpyInstance;
             const ongoing_drag = ongoing_drag_constructor.mock.results[0].value;
             expect(ongoing_drag_constructor).toHaveBeenCalledWith(state, drag_start_context);
             expect(DropGhost.create).toHaveBeenCalledWith(state, ongoing_drag);
             expect(handlersFactory).toHaveBeenCalledWith(options, state, ongoing_drag, drop_ghost);
 
-            const document_constructor = (DocumentEventsHandler as unknown) as jest.SpyInstance;
+            const document_constructor = DocumentEventsHandler as unknown as jest.SpyInstance;
             const document_event_handler = document_constructor.mock.results[0].value;
             expect(document_constructor).toHaveBeenCalledWith(state, handlers, doc);
             expect(document_event_handler.attachDragDropListeners).toHaveBeenCalled();

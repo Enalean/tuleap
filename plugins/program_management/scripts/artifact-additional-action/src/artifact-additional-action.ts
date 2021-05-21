@@ -57,97 +57,86 @@ export function initArtifactAdditionalAction(mount_point: Document): void {
         throw new Error("Cannot find button icon, title or parent element");
     }
 
-    action_button.addEventListener(
-        "click",
-        async (): Promise<void> => {
-            if (action_button_wrapper.classList.contains("disabled")) {
-                return;
-            }
-            const gettext_provider = await initGettext(
-                language,
-                "artifact-additional-action",
-                (locale) =>
-                    import(
-                        /* webpackChunkName: "artifact-additional-action-po-" */ "../po/" +
-                            getPOFileFromLocale(locale)
-                    )
-            );
-
-            clearAllFeedbacks();
-            if (action === "add") {
-                try {
-                    action_button_wrapper.classList.add("disabled");
-                    await patch(
-                        `/api/v1/projects/${encodeURIComponent(project_id)}/program_backlog`,
-                        {
-                            headers: {
-                                "Content-Type": "application/json",
-                            },
-                            body: JSON.stringify({
-                                add: [{ id: Number.parseInt(artifact_id, 10) }],
-                                remove: [],
-                            }),
-                        }
-                    );
-                } catch (e) {
-                    addFeedback(
-                        "error",
-                        gettext_provider.gettext(
-                            "An error occurred while adding this artifact to top backlog."
-                        )
-                    );
-
-                    return;
-                } finally {
-                    action_button_wrapper.classList.remove("disabled");
-                }
-
-                addFeedback(
-                    "info",
-                    gettext_provider.gettext("This artifact has been added to top backlog.")
-                );
-                action_button_icon.classList.remove("fa-tlp-add-to-backlog");
-                action_button_icon.classList.add("fa-tlp-remove-from-backlog");
-                action_button_title.textContent = gettext_provider.gettext(
-                    "Remove from top backlog"
-                );
-                action = "remove";
-            } else if (action === "remove") {
-                try {
-                    action_button_wrapper.classList.add("disabled");
-                    await patch(
-                        `/api/v1/projects/${encodeURIComponent(project_id)}/program_backlog`,
-                        {
-                            headers: {
-                                "Content-Type": "application/json",
-                            },
-                            body: JSON.stringify({
-                                add: [],
-                                remove: [{ id: Number.parseInt(artifact_id, 10) }],
-                            }),
-                        }
-                    );
-                } catch (e) {
-                    addFeedback(
-                        "error",
-                        gettext_provider.gettext(
-                            "An error occurred while removing this artifact from top backlog."
-                        )
-                    );
-
-                    return;
-                } finally {
-                    action_button_wrapper.classList.remove("disabled");
-                }
-                addFeedback(
-                    "info",
-                    gettext_provider.gettext("This artifact has been removed from top backlog.")
-                );
-                action_button_icon.classList.remove("fa-tlp-remove-from-backlog");
-                action_button_icon.classList.add("fa-tlp-add-to-backlog");
-                action_button_title.textContent = gettext_provider.gettext("Add to top backlog");
-                action = "add";
-            }
+    action_button.addEventListener("click", async (): Promise<void> => {
+        if (action_button_wrapper.classList.contains("disabled")) {
+            return;
         }
-    );
+        const gettext_provider = await initGettext(
+            language,
+            "artifact-additional-action",
+            (locale) =>
+                import(
+                    /* webpackChunkName: "artifact-additional-action-po-" */ "../po/" +
+                        getPOFileFromLocale(locale)
+                )
+        );
+
+        clearAllFeedbacks();
+        if (action === "add") {
+            try {
+                action_button_wrapper.classList.add("disabled");
+                await patch(`/api/v1/projects/${encodeURIComponent(project_id)}/program_backlog`, {
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        add: [{ id: Number.parseInt(artifact_id, 10) }],
+                        remove: [],
+                    }),
+                });
+            } catch (e) {
+                addFeedback(
+                    "error",
+                    gettext_provider.gettext(
+                        "An error occurred while adding this artifact to top backlog."
+                    )
+                );
+
+                return;
+            } finally {
+                action_button_wrapper.classList.remove("disabled");
+            }
+
+            addFeedback(
+                "info",
+                gettext_provider.gettext("This artifact has been added to top backlog.")
+            );
+            action_button_icon.classList.remove("fa-tlp-add-to-backlog");
+            action_button_icon.classList.add("fa-tlp-remove-from-backlog");
+            action_button_title.textContent = gettext_provider.gettext("Remove from top backlog");
+            action = "remove";
+        } else if (action === "remove") {
+            try {
+                action_button_wrapper.classList.add("disabled");
+                await patch(`/api/v1/projects/${encodeURIComponent(project_id)}/program_backlog`, {
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        add: [],
+                        remove: [{ id: Number.parseInt(artifact_id, 10) }],
+                    }),
+                });
+            } catch (e) {
+                addFeedback(
+                    "error",
+                    gettext_provider.gettext(
+                        "An error occurred while removing this artifact from top backlog."
+                    )
+                );
+
+                return;
+            } finally {
+                action_button_wrapper.classList.remove("disabled");
+            }
+            addFeedback(
+                "info",
+                gettext_provider.gettext("This artifact has been removed from top backlog.")
+            );
+            action_button_icon.classList.remove("fa-tlp-remove-from-backlog");
+            action_button_icon.classList.add("fa-tlp-add-to-backlog");
+            action_button_title.textContent = gettext_provider.gettext("Add to top backlog");
+            action = "add";
+        }
+    });
 }

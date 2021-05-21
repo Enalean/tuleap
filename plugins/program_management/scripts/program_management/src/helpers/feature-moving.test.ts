@@ -42,7 +42,7 @@ import * as featurePlanner from "./ProgramIncrement/Feature/feature-planner";
 describe("FeatureMoving", () => {
     let context: ActionContext<State, State>;
     beforeEach(() => {
-        context = ({
+        context = {
             commit: jest.fn(),
             state: {
                 program_increments: [
@@ -53,7 +53,7 @@ describe("FeatureMoving", () => {
                 to_be_planned_elements: [{ id: 125 } as Feature, { id: 99 } as Feature],
             } as State,
             getters: {},
-        } as unknown) as ActionContext<State, State>;
+        } as unknown as ActionContext<State, State>;
         context.getters = {
             getToBePlannedElementFromId: getToBePlannedElementFromId(context.state),
             getProgramIncrementFromId: getProgramIncrementFromId(context.state),

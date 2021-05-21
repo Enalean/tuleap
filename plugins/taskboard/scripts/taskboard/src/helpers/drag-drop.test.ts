@@ -85,14 +85,14 @@ describe(`drag-drop helper`, () => {
                 dropzone_rejecting_drop: undefined,
             } as SwimlaneState;
 
-            store = ({
+            store = {
                 modules: {
                     swimlane: {
                         state: swimlane_state,
                     },
                 },
                 commit: jest.fn(),
-            } as unknown) as Store<RootState>;
+            } as unknown as Store<RootState>;
         });
 
         it(`When the card has been dropped in another swimlane, then it will return false`, () => {

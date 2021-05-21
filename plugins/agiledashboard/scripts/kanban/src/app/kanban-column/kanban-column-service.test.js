@@ -339,12 +339,12 @@ describe("KanbanColumnService -", () => {
             jest.spyOn(KanbanColumnService, "moveItem").mockImplementation(() => {});
             jest.spyOn(KanbanColumnService, "filterItems").mockImplementation(() => {});
 
-            KanbanColumnService.findItemAndReorderItems(50, source_column, destination_column, [
-                46,
+            KanbanColumnService.findItemAndReorderItems(
                 50,
-                37,
-                62,
-            ]);
+                source_column,
+                destination_column,
+                [46, 50, 37, 62]
+            );
             $rootScope.$apply();
 
             expect(KanbanItemRestService.getItem).toHaveBeenCalledWith(50);
@@ -375,12 +375,12 @@ describe("KanbanColumnService -", () => {
             jest.spyOn(KanbanColumnService, "moveItem").mockImplementation(() => {});
             jest.spyOn(KanbanColumnService, "filterItems").mockImplementation(() => {});
 
-            KanbanColumnService.findItemAndReorderItems(50, source_column, destination_column, [
-                46,
+            KanbanColumnService.findItemAndReorderItems(
                 50,
-                37,
-                62,
-            ]);
+                source_column,
+                destination_column,
+                [46, 50, 37, 62]
+            );
             $rootScope.$apply();
 
             expect(KanbanColumnService.moveItem).toHaveBeenCalledWith(
@@ -411,12 +411,12 @@ describe("KanbanColumnService -", () => {
 
             KanbanItemRestService.getItem.mockReturnValue($q.when(item));
 
-            KanbanColumnService.findItemAndReorderItems(50, source_column, destination_column, [
-                46,
+            KanbanColumnService.findItemAndReorderItems(
                 50,
-                37,
-                62,
-            ]);
+                source_column,
+                destination_column,
+                [46, 50, 37, 62]
+            );
             $rootScope.$apply();
             expect(source_column.content).toEqual([]);
             expect(destination_column.content.map((item) => item.id)).toEqual([46, 50, 37, 62]);
@@ -437,12 +437,12 @@ describe("KanbanColumnService -", () => {
                 filtered_content: [{ id: 46 }, { id: 37 }, { id: 62 }],
             };
 
-            KanbanColumnService.findItemAndReorderItems(50, source_column, destination_column, [
-                46,
+            KanbanColumnService.findItemAndReorderItems(
                 50,
-                37,
-                62,
-            ]);
+                source_column,
+                destination_column,
+                [46, 50, 37, 62]
+            );
             $rootScope.$apply();
             expect(source_column.content).toEqual([]);
             expect(destination_column.content.map((item) => item.id)).toEqual([46, 50, 37, 62]);

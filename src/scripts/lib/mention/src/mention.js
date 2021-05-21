@@ -30,8 +30,7 @@ export function initMentions(selector) {
     jQuery(selector).atwho({
         at: "@",
         /* eslint-disable no-template-curly-in-string */
-        tpl:
-            '<li data-value="${atwho-at}${username}"><img class="user-avatar" src="${avatar_url}"> ${real_name} (${username})</li>',
+        tpl: '<li data-value="${atwho-at}${username}"><img class="user-avatar" src="${avatar_url}"> ${real_name} (${username})</li>',
         /* eslint-enable no-template-curly-in-string */
         callbacks: {
             remote_filter: function (query, callback) {

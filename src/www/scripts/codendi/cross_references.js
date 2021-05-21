@@ -85,7 +85,8 @@ function delete_ref(id, message) {
             method: "get",
             onComplete: function () {
                 const is_the_deleted_reference_the_last_one = isTheDeletedReferenceTheLastOne();
-                const is_the_full_cross_references_section_empty = isTheFullCrossReferencesSectionEmpty();
+                const is_the_full_cross_references_section_empty =
+                    isTheFullCrossReferencesSectionEmpty();
 
                 if (
                     is_the_deleted_reference_the_last_one &&

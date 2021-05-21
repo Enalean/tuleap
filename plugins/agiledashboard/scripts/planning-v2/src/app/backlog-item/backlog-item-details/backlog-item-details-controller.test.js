@@ -27,18 +27,16 @@ describe("BacklogItemDetailsController -", function () {
             $scope = $rootScope.$new();
 
             BacklogItemCollectionService = _BacklogItemCollectionService_;
-            jest.spyOn(
-                BacklogItemCollectionService,
-                "refreshBacklogItem"
-            ).mockImplementation(() => {});
+            jest.spyOn(BacklogItemCollectionService, "refreshBacklogItem").mockImplementation(
+                () => {}
+            );
 
             BacklogItemService = _BacklogItemService_;
             jest.spyOn(BacklogItemService, "getBacklogItem").mockImplementation(() => {});
             jest.spyOn(BacklogItemService, "getBacklogItemChildren").mockImplementation(() => {});
-            jest.spyOn(
-                BacklogItemService,
-                "removeAddBacklogItemChildren"
-            ).mockImplementation(() => {});
+            jest.spyOn(BacklogItemService, "removeAddBacklogItemChildren").mockImplementation(
+                () => {}
+            );
 
             NewTuleapArtifactModalService = _NewTuleapArtifactModalService_;
             jest.spyOn(NewTuleapArtifactModalService, "showCreation").mockImplementation(() => {});
@@ -102,9 +100,11 @@ describe("BacklogItemDetailsController -", function () {
                 BacklogItemDetailsController.showAddChildModal(event, item_type);
                 $scope.$apply();
 
-                expect(
-                    BacklogItemService.removeAddBacklogItemChildren
-                ).toHaveBeenCalledWith(undefined, 53, [207]);
+                expect(BacklogItemService.removeAddBacklogItemChildren).toHaveBeenCalledWith(
+                    undefined,
+                    53,
+                    [207]
+                );
                 expect(BacklogItemService.getBacklogItem).toHaveBeenCalledWith(207);
                 expect(BacklogItemCollectionService.items[207].id).toEqual(207);
                 expect(BacklogItemCollectionService.items[207].parent.id).toEqual(53);

@@ -35,14 +35,14 @@ describe("Campaign state actions", () => {
     let tlpGetMock: jest.SpyInstance;
 
     beforeEach(() => {
-        context = ({
+        context = {
             commit: jest.fn(),
             dispatch: jest.fn(),
             rootState: {
                 milestone_id: 42,
                 project_id: 104,
             } as RootState,
-        } as unknown) as ActionContext<CampaignState, RootState>;
+        } as unknown as ActionContext<CampaignState, RootState>;
         tlpRecursiveGetMock = jest.spyOn(tlp, "recursiveGet");
         tlpPostMock = jest.spyOn(tlp, "post");
         tlpGetMock = jest.spyOn(tlp, "get");

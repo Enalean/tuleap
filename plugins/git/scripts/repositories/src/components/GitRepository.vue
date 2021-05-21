@@ -76,7 +76,10 @@
                             v-bind:data-test="`dropdown-gitlab-administration-${repository.id}`"
                         ></i>
                         <div
-                            class="tlp-dropdown-menu tlp-dropdown-menu-on-icon tlp-dropdown-menu-right gitlab-administration-dropdown"
+                            class="
+                                tlp-dropdown-menu tlp-dropdown-menu-on-icon tlp-dropdown-menu-right
+                                gitlab-administration-dropdown
+                            "
                             ref="dropdown_gitlab_administration_menu_options"
                             data-test="dropdown-gitlab-administration-menu-options"
                             role="menu"
@@ -141,7 +144,11 @@
                     ></i>
                     <i
                         v-if="!isGitlabRepositoryWellConfigured"
-                        class="fas fa-exclamation-triangle git-gitlab-integration-not-well-configured"
+                        class="
+                            fas
+                            fa-exclamation-triangle
+                            git-gitlab-integration-not-well-configured
+                        "
                         v-bind:title="$gettext('Webhook must be regenerated.')"
                     ></i>
                 </section>

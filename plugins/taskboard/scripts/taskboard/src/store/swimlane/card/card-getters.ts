@@ -21,18 +21,23 @@ import type { SwimlaneState } from "../type";
 import type { Tracker } from "../../../type";
 import type { UserForPeoplePicker } from "./type";
 
-export const have_possible_assignees_been_loaded_for_tracker = (state: SwimlaneState) => (
-    tracker: Tracker
-): boolean => {
-    return !tracker.assigned_to_field || state.possible_assignees.has(tracker.assigned_to_field.id);
-};
+export const have_possible_assignees_been_loaded_for_tracker =
+    (state: SwimlaneState) =>
+    (tracker: Tracker): boolean => {
+        return (
+            !tracker.assigned_to_field || state.possible_assignees.has(tracker.assigned_to_field.id)
+        );
+    };
 
-export const assignable_users = (state: SwimlaneState) => (
-    tracker: Tracker
-): UserForPeoplePicker[] => {
-    if (!tracker.assigned_to_field || !state.possible_assignees.has(tracker.assigned_to_field.id)) {
-        return [];
-    }
+export const assignable_users =
+    (state: SwimlaneState) =>
+    (tracker: Tracker): UserForPeoplePicker[] => {
+        if (
+            !tracker.assigned_to_field ||
+            !state.possible_assignees.has(tracker.assigned_to_field.id)
+        ) {
+            return [];
+        }
 
-    return state.possible_assignees.get(tracker.assigned_to_field.id) || [];
-};
+        return state.possible_assignees.get(tracker.assigned_to_field.id) || [];
+    };

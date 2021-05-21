@@ -26,7 +26,9 @@
                     v-bind:class="[props.icon_name]"
                 ></i>
                 <span
-                    class="project-sidebar-nav-item-label project-admin-services-modal-preview-label"
+                    class="
+                        project-sidebar-nav-item-label project-admin-services-modal-preview-label
+                    "
                 >
                     {{ props.label }}
                 </span>

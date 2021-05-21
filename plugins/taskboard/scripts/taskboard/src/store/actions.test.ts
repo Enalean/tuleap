@@ -27,7 +27,7 @@ describe("State actions", () => {
     let context: ActionContext<State, RootState>;
 
     beforeEach(() => {
-        context = ({
+        context = {
             commit: jest.fn(),
             dispatch: jest.fn(),
             rootState: {
@@ -36,7 +36,7 @@ describe("State actions", () => {
                     user_id: 101,
                 },
             } as RootState,
-        } as unknown) as ActionContext<State, RootState>;
+        } as unknown as ActionContext<State, RootState>;
     });
 
     describe("displayClosedItems", () => {

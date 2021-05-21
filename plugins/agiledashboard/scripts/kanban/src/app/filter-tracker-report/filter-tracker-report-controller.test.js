@@ -10,8 +10,7 @@ describe("FilterTrackerReportController -", () => {
         angular.mock.module(kanban_module, ($provide) => {
             $provide.value("$window", {
                 location: {
-                    href:
-                        "https://tuleap-web.tuleap-aio-dev.docker/plugins/agiledashboard/?group_id=126&action=showKanban&id=19&tracker_report_id=305#!/kanban",
+                    href: "https://tuleap-web.tuleap-aio-dev.docker/plugins/agiledashboard/?group_id=126&action=showKanban&id=19&tracker_report_id=305#!/kanban",
                     search: "?group_id=126&action=showKanban&id=19&tracker_report_id=305",
                 },
             });

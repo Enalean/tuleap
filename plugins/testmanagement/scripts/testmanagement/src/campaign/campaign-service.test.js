@@ -95,9 +95,7 @@ describe("CampaignService", () => {
             );
             await wrapPromise(promise);
 
-            expect(
-                tlpPost
-            ).toHaveBeenCalledWith(
+            expect(tlpPost).toHaveBeenCalledWith(
                 `/api/v1/testmanagement_campaigns?test_selector=report&milestone_id=133&report_id=24`,
                 { headers: expected_headers, body: JSON.stringify(campaign_to_create) }
             );
@@ -113,9 +111,7 @@ describe("CampaignService", () => {
             );
             await wrapPromise(promise);
 
-            expect(
-                tlpPost
-            ).toHaveBeenCalledWith(
+            expect(tlpPost).toHaveBeenCalledWith(
                 `/api/v1/testmanagement_campaigns?test_selector=report&report_id=24`,
                 { headers: expected_headers, body: JSON.stringify(campaign_to_create) }
             );
@@ -131,9 +127,7 @@ describe("CampaignService", () => {
             );
             await wrapPromise(promise);
 
-            expect(
-                tlpPost
-            ).toHaveBeenCalledWith(
+            expect(tlpPost).toHaveBeenCalledWith(
                 `/api/v1/testmanagement_campaigns?test_selector=all&milestone_id=133`,
                 { headers: expected_headers, body: JSON.stringify(campaign_to_create) }
             );

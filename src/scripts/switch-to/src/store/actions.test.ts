@@ -31,14 +31,14 @@ describe("SwitchTo actions", () => {
 
             mockFetchError(tlpGetMock, {});
 
-            const context = ({
+            const context = {
                 commit: jest.fn(),
                 dispatch: jest.fn(),
                 state: {
                     user_id: 102,
                     is_history_loaded: false,
                 } as State,
-            } as unknown) as ActionContext<State, State>;
+            } as unknown as ActionContext<State, State>;
 
             await expect(actions.loadHistory(context)).rejects.toBeDefined();
 
@@ -54,14 +54,14 @@ describe("SwitchTo actions", () => {
                 },
             });
 
-            const context = ({
+            const context = {
                 commit: jest.fn(),
                 dispatch: jest.fn(),
                 state: {
                     user_id: 102,
                     is_history_loaded: false,
                 } as State,
-            } as unknown) as ActionContext<State, State>;
+            } as unknown as ActionContext<State, State>;
 
             await actions.loadHistory(context);
 
@@ -73,14 +73,14 @@ describe("SwitchTo actions", () => {
         it("Does not fetch user history if it has already been loaded", async () => {
             const tlpGetMock = jest.spyOn(tlp, "get");
 
-            const context = ({
+            const context = {
                 commit: jest.fn(),
                 dispatch: jest.fn(),
                 state: {
                     user_id: 102,
                     is_history_loaded: true,
                 } as State,
-            } as unknown) as ActionContext<State, State>;
+            } as unknown as ActionContext<State, State>;
 
             await actions.loadHistory(context);
 
@@ -90,9 +90,9 @@ describe("SwitchTo actions", () => {
 
     describe("changeFocusFromProject", () => {
         it("does nothing if user hits left key", () => {
-            const context = ({
+            const context = {
                 commit: jest.fn(),
-            } as unknown) as ActionContext<State, State>;
+            } as unknown as ActionContext<State, State>;
 
             actions.changeFocusFromProject(context, {
                 project: {} as Project,
@@ -104,12 +104,12 @@ describe("SwitchTo actions", () => {
 
         describe("When user hits ArrowRight", () => {
             it("does nothing if the history is not loaded yet", () => {
-                const context = ({
+                const context = {
                     commit: jest.fn(),
                     state: {
                         is_history_loaded: false,
                     } as State,
-                } as unknown) as ActionContext<State, State>;
+                } as unknown as ActionContext<State, State>;
 
                 actions.changeFocusFromProject(context, {
                     project: {} as Project,
@@ -120,13 +120,13 @@ describe("SwitchTo actions", () => {
             });
 
             it("does nothing if the history is in error", () => {
-                const context = ({
+                const context = {
                     commit: jest.fn(),
                     state: {
                         is_history_loaded: true,
                         is_history_in_error: true,
                     } as State,
-                } as unknown) as ActionContext<State, State>;
+                } as unknown as ActionContext<State, State>;
 
                 actions.changeFocusFromProject(context, {
                     project: {} as Project,
@@ -137,7 +137,7 @@ describe("SwitchTo actions", () => {
             });
 
             it("does nothing if the history is empty", () => {
-                const context = ({
+                const context = {
                     commit: jest.fn(),
                     state: {
                         is_history_loaded: true,
@@ -146,7 +146,7 @@ describe("SwitchTo actions", () => {
                     getters: {
                         filtered_history: { entries: [] } as UserHistory,
                     },
-                } as unknown) as ActionContext<State, State>;
+                } as unknown as ActionContext<State, State>;
 
                 actions.changeFocusFromProject(context, {
                     project: {} as Project,
@@ -160,7 +160,7 @@ describe("SwitchTo actions", () => {
                 const first_project = { html_url: "/first" } as UserHistoryEntry;
                 const another_project = { html_url: "/another" } as UserHistoryEntry;
 
-                const context = ({
+                const context = {
                     commit: jest.fn(),
                     state: {
                         is_history_loaded: true,
@@ -171,7 +171,7 @@ describe("SwitchTo actions", () => {
                             entries: [first_project, another_project],
                         } as UserHistory,
                     },
-                } as unknown) as ActionContext<State, State>;
+                } as unknown as ActionContext<State, State>;
 
                 actions.changeFocusFromProject(context, {
                     project: {} as Project,
@@ -187,12 +187,12 @@ describe("SwitchTo actions", () => {
 
         describe("When user hits ArrowUp", () => {
             it("does nothing if the project list is empty", () => {
-                const context = ({
+                const context = {
                     commit: jest.fn(),
                     getters: {
                         filtered_projects: [] as Project[],
                     },
-                } as unknown) as ActionContext<State, State>;
+                } as unknown as ActionContext<State, State>;
 
                 actions.changeFocusFromProject(context, {
                     project: {} as Project,
@@ -203,12 +203,12 @@ describe("SwitchTo actions", () => {
             });
 
             it("does nothing if the project list contains only one element", () => {
-                const context = ({
+                const context = {
                     commit: jest.fn(),
                     getters: {
                         filtered_projects: [{} as Project],
                     },
-                } as unknown) as ActionContext<State, State>;
+                } as unknown as ActionContext<State, State>;
 
                 actions.changeFocusFromProject(context, {
                     project: {} as Project,
@@ -222,12 +222,12 @@ describe("SwitchTo actions", () => {
                 const first_project = { project_uri: "/first" } as Project;
                 const another_project = { project_uri: "/another" } as Project;
 
-                const context = ({
+                const context = {
                     commit: jest.fn(),
                     getters: {
                         filtered_projects: [first_project, another_project],
                     },
-                } as unknown) as ActionContext<State, State>;
+                } as unknown as ActionContext<State, State>;
 
                 actions.changeFocusFromProject(context, {
                     project: another_project,
@@ -244,12 +244,12 @@ describe("SwitchTo actions", () => {
                 const first_project = { project_uri: "/first" } as Project;
                 const another_project = { project_uri: "/another" } as Project;
 
-                const context = ({
+                const context = {
                     commit: jest.fn(),
                     getters: {
                         filtered_projects: [first_project, another_project],
                     },
-                } as unknown) as ActionContext<State, State>;
+                } as unknown as ActionContext<State, State>;
 
                 actions.changeFocusFromProject(context, {
                     project: first_project,
@@ -265,12 +265,12 @@ describe("SwitchTo actions", () => {
 
         describe("When user hits ArrowDown", () => {
             it("does nothing if the project list is empty", () => {
-                const context = ({
+                const context = {
                     commit: jest.fn(),
                     getters: {
                         filtered_projects: [] as Project[],
                     },
-                } as unknown) as ActionContext<State, State>;
+                } as unknown as ActionContext<State, State>;
 
                 actions.changeFocusFromProject(context, {
                     project: {} as Project,
@@ -281,12 +281,12 @@ describe("SwitchTo actions", () => {
             });
 
             it("does nothing if the project list contains only one element", () => {
-                const context = ({
+                const context = {
                     commit: jest.fn(),
                     getters: {
                         filtered_projects: [{} as Project],
                     },
-                } as unknown) as ActionContext<State, State>;
+                } as unknown as ActionContext<State, State>;
 
                 actions.changeFocusFromProject(context, {
                     project: {} as Project,
@@ -300,12 +300,12 @@ describe("SwitchTo actions", () => {
                 const first_project = { project_uri: "/first" } as Project;
                 const another_project = { project_uri: "/another" } as Project;
 
-                const context = ({
+                const context = {
                     commit: jest.fn(),
                     getters: {
                         filtered_projects: [first_project, another_project],
                     },
-                } as unknown) as ActionContext<State, State>;
+                } as unknown as ActionContext<State, State>;
 
                 actions.changeFocusFromProject(context, {
                     project: first_project,
@@ -322,12 +322,12 @@ describe("SwitchTo actions", () => {
                 const first_project = { project_uri: "/first" } as Project;
                 const another_project = { project_uri: "/another" } as Project;
 
-                const context = ({
+                const context = {
                     commit: jest.fn(),
                     getters: {
                         filtered_projects: [first_project, another_project],
                     },
-                } as unknown) as ActionContext<State, State>;
+                } as unknown as ActionContext<State, State>;
 
                 actions.changeFocusFromProject(context, {
                     project: another_project,
@@ -344,9 +344,9 @@ describe("SwitchTo actions", () => {
 
     describe("changeFocusFromHistory", () => {
         it("does nothing if user hits right key", () => {
-            const context = ({
+            const context = {
                 commit: jest.fn(),
-            } as unknown) as ActionContext<State, State>;
+            } as unknown as ActionContext<State, State>;
 
             actions.changeFocusFromHistory(context, {
                 entry: {} as UserHistoryEntry,
@@ -358,13 +358,13 @@ describe("SwitchTo actions", () => {
 
         describe("When user hits ArrowLeft", () => {
             it("does nothing if the project list is empty", () => {
-                const context = ({
+                const context = {
                     commit: jest.fn(),
                     state: {} as State,
                     getters: {
                         filtered_projects: [] as Project[],
                     },
-                } as unknown) as ActionContext<State, State>;
+                } as unknown as ActionContext<State, State>;
 
                 actions.changeFocusFromHistory(context, {
                     entry: {} as UserHistoryEntry,
@@ -378,13 +378,13 @@ describe("SwitchTo actions", () => {
                 const first_project = { project_uri: "/first" } as Project;
                 const another_project = { project_uri: "/another" } as Project;
 
-                const context = ({
+                const context = {
                     commit: jest.fn(),
                     state: {} as State,
                     getters: {
                         filtered_projects: [first_project, another_project],
                     },
-                } as unknown) as ActionContext<State, State>;
+                } as unknown as ActionContext<State, State>;
 
                 actions.changeFocusFromHistory(context, {
                     entry: {} as UserHistoryEntry,
@@ -400,12 +400,12 @@ describe("SwitchTo actions", () => {
 
         describe("When user hits ArrowUp", () => {
             it("does nothing if the history is empty", () => {
-                const context = ({
+                const context = {
                     commit: jest.fn(),
                     getters: {
                         filtered_history: { entries: [] as UserHistoryEntry[] },
                     },
-                } as unknown) as ActionContext<State, State>;
+                } as unknown as ActionContext<State, State>;
 
                 actions.changeFocusFromHistory(context, {
                     entry: {} as UserHistoryEntry,
@@ -416,12 +416,12 @@ describe("SwitchTo actions", () => {
             });
 
             it("does nothing if the history contains only one element", () => {
-                const context = ({
+                const context = {
                     commit: jest.fn(),
                     getters: {
                         filtered_history: { entries: [{} as UserHistoryEntry] },
                     },
-                } as unknown) as ActionContext<State, State>;
+                } as unknown as ActionContext<State, State>;
 
                 actions.changeFocusFromHistory(context, {
                     entry: {} as UserHistoryEntry,
@@ -435,12 +435,12 @@ describe("SwitchTo actions", () => {
                 const first_entry = { html_url: "/first" } as UserHistoryEntry;
                 const another_entry = { html_url: "/another" } as UserHistoryEntry;
 
-                const context = ({
+                const context = {
                     commit: jest.fn(),
                     getters: {
                         filtered_history: { entries: [first_entry, another_entry] },
                     },
-                } as unknown) as ActionContext<State, State>;
+                } as unknown as ActionContext<State, State>;
 
                 actions.changeFocusFromHistory(context, {
                     entry: another_entry,
@@ -457,12 +457,12 @@ describe("SwitchTo actions", () => {
                 const first_entry = { html_url: "/first" } as UserHistoryEntry;
                 const another_entry = { html_url: "/another" } as UserHistoryEntry;
 
-                const context = ({
+                const context = {
                     commit: jest.fn(),
                     getters: {
                         filtered_history: { entries: [first_entry, another_entry] },
                     },
-                } as unknown) as ActionContext<State, State>;
+                } as unknown as ActionContext<State, State>;
 
                 actions.changeFocusFromHistory(context, {
                     entry: first_entry,
@@ -478,12 +478,12 @@ describe("SwitchTo actions", () => {
 
         describe("When user hits ArrowDown", () => {
             it("does nothing if the history is empty", () => {
-                const context = ({
+                const context = {
                     commit: jest.fn(),
                     getters: {
                         filtered_history: { entries: [] as UserHistoryEntry[] },
                     },
-                } as unknown) as ActionContext<State, State>;
+                } as unknown as ActionContext<State, State>;
 
                 actions.changeFocusFromHistory(context, {
                     entry: {} as UserHistoryEntry,
@@ -494,12 +494,12 @@ describe("SwitchTo actions", () => {
             });
 
             it("does nothing if the history contains only one element", () => {
-                const context = ({
+                const context = {
                     commit: jest.fn(),
                     getters: {
                         filtered_history: { entries: [{} as UserHistoryEntry] },
                     },
-                } as unknown) as ActionContext<State, State>;
+                } as unknown as ActionContext<State, State>;
 
                 actions.changeFocusFromHistory(context, {
                     entry: {} as UserHistoryEntry,
@@ -513,12 +513,12 @@ describe("SwitchTo actions", () => {
                 const first_entry = { html_url: "/first" } as UserHistoryEntry;
                 const another_entry = { html_url: "/another" } as UserHistoryEntry;
 
-                const context = ({
+                const context = {
                     commit: jest.fn(),
                     getters: {
                         filtered_history: { entries: [first_entry, another_entry] },
                     },
-                } as unknown) as ActionContext<State, State>;
+                } as unknown as ActionContext<State, State>;
 
                 actions.changeFocusFromHistory(context, {
                     entry: first_entry,
@@ -535,12 +535,12 @@ describe("SwitchTo actions", () => {
                 const first_entry = { html_url: "/first" } as UserHistoryEntry;
                 const another_entry = { html_url: "/another" } as UserHistoryEntry;
 
-                const context = ({
+                const context = {
                     commit: jest.fn(),
                     getters: {
                         filtered_history: { entries: [first_entry, another_entry] },
                     },
-                } as unknown) as ActionContext<State, State>;
+                } as unknown as ActionContext<State, State>;
 
                 actions.changeFocusFromHistory(context, {
                     entry: another_entry,

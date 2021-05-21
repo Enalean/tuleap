@@ -28,9 +28,7 @@ describe("list-pickers-creator", () => {
     let doc: HTMLDocument;
     let createListPicker: ListPickerCreator;
 
-    function createArtifactFormElementFieldInReadModeOfType(
-        type: string
-    ): {
+    function createArtifactFormElementFieldInReadModeOfType(type: string): {
         button: Element;
         select: HTMLSelectElement;
     } {
@@ -145,10 +143,8 @@ describe("list-pickers-creator", () => {
     });
 
     it("when the field has targets, then it should initialize the target fields recursively", () => {
-        const {
-            button: button_1,
-            select: select_1,
-        } = createArtifactFormElementFieldInReadModeOfType("sb");
+        const { button: button_1, select: select_1 } =
+            createArtifactFormElementFieldInReadModeOfType("sb");
         const { select: select_2 } = createArtifactFormElementFieldInReadModeOfType("sb");
         const { select: select_3 } = createArtifactFormElementFieldInReadModeOfType("msb");
 

@@ -49,10 +49,9 @@ describe("StepController", () => {
         setError = jest.spyOn(feedback_state, "setError");
         resetError = jest.spyOn(feedback_state, "resetError");
 
-        jest.spyOn(
-            execution_with_steps_updater,
-            "updateStatusWithStepResults"
-        ).mockImplementation(() => {});
+        jest.spyOn(execution_with_steps_updater, "updateStatusWithStepResults").mockImplementation(
+            () => {}
+        );
 
         angular.mock.module(execution_module);
 

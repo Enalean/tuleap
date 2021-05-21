@@ -34,7 +34,7 @@ describe("Card actions", () => {
 
     beforeEach(() => {
         jest.clearAllMocks();
-        context = ({
+        context = {
             commit: jest.fn(),
             dispatch: jest.fn(),
             rootState: {
@@ -57,7 +57,7 @@ describe("Card actions", () => {
             getters: {
                 have_possible_assignees_been_loaded_for_tracker: (): boolean => false,
             },
-        } as unknown) as ActionContext<SwimlaneState, RootState>;
+        } as unknown as ActionContext<SwimlaneState, RootState>;
     });
 
     describe("saveRemainingEffort", () => {
@@ -251,21 +251,19 @@ describe("Card actions", () => {
             mockFetchSuccess(tlpPostMock, { return_json: { id: 1001 } });
 
             const tlpGetMock = jest.spyOn(tlp, "get");
-            tlpGetMock.mockImplementation(
-                (uri: string): Promise<Response> => {
-                    if (uri === "/api/v1/artifacts/74") {
-                        return Promise.resolve({
-                            json: () => Promise.resolve({ values: [] }),
-                        } as Response);
-                    }
-                    if (uri === "/api/v1/taskboard_cards/1001?milestone_id=42") {
-                        return Promise.resolve({
-                            json: () => Promise.resolve({ id: 1001, color: "fiesta-red" }),
-                        } as Response);
-                    }
-                    throw new Error();
+            tlpGetMock.mockImplementation((uri: string): Promise<Response> => {
+                if (uri === "/api/v1/artifacts/74") {
+                    return Promise.resolve({
+                        json: () => Promise.resolve({ values: [] }),
+                    } as Response);
                 }
-            );
+                if (uri === "/api/v1/taskboard_cards/1001?milestone_id=42") {
+                    return Promise.resolve({
+                        json: () => Promise.resolve({ id: 1001, color: "fiesta-red" }),
+                    } as Response);
+                }
+                throw new Error();
+            });
 
             await actions.addCard(context, payload);
 

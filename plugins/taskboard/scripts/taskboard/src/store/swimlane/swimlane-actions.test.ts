@@ -34,7 +34,7 @@ describe("Swimlane state actions", () => {
     let tlpRecursiveGetMock: jest.SpyInstance;
 
     beforeEach(() => {
-        context = ({
+        context = {
             commit: jest.fn(),
             dispatch: jest.fn(),
             getters: {
@@ -48,7 +48,7 @@ describe("Swimlane state actions", () => {
                     user_id: 101,
                 },
             } as RootState,
-        } as unknown) as ActionContext<SwimlaneState, RootState>;
+        } as unknown as ActionContext<SwimlaneState, RootState>;
         tlpRecursiveGetMock = jest.spyOn(tlp, "recursiveGet");
     });
 
@@ -64,8 +64,11 @@ describe("Swimlane state actions", () => {
         });
 
         it("Stores the new swimlanes", async () => {
-            tlpRecursiveGetMock = jest.spyOn(tlp, "recursiveGet").mockImplementation(
-                <T>(url: string, init?: RecursiveGetInit<Card[], T>): Promise<T[]> => {
+            tlpRecursiveGetMock = jest
+                .spyOn(tlp, "recursiveGet")
+                .mockImplementation(<T>(url: string, init?: RecursiveGetInit<Card[], T>): Promise<
+                    T[]
+                > => {
                     if (!init || !init.getCollectionCallback) {
                         throw new Error();
                     }
@@ -73,8 +76,7 @@ describe("Swimlane state actions", () => {
                     return Promise.resolve(
                         init.getCollectionCallback([{ id: 43 } as Card, { id: 44 } as Card])
                     );
-                }
-            );
+                });
             await actions.loadSwimlanes(context);
             expect(context.commit).toHaveBeenCalledWith("addSwimlanes", [
                 {
@@ -113,8 +115,11 @@ describe("Swimlane state actions", () => {
                 id: 45,
                 has_children: false,
             } as Card;
-            tlpRecursiveGetMock = jest.spyOn(tlp, "recursiveGet").mockImplementation(
-                <T>(url: string, init?: RecursiveGetInit<Card[], T>): Promise<T[]> => {
+            tlpRecursiveGetMock = jest
+                .spyOn(tlp, "recursiveGet")
+                .mockImplementation(<T>(url: string, init?: RecursiveGetInit<Card[], T>): Promise<
+                    T[]
+                > => {
                     if (!init || !init.getCollectionCallback) {
                         throw new Error();
                     }
@@ -126,8 +131,7 @@ describe("Swimlane state actions", () => {
                             card_without_children,
                         ])
                     );
-                }
-            );
+                });
             await actions.loadSwimlanes(context);
             expect(context.dispatch).toHaveBeenCalledWith(
                 "loadChildrenCards",
@@ -205,15 +209,17 @@ describe("Swimlane state actions", () => {
 
         it(`Adds the new children cards to the swimlane in the store`, async () => {
             const children_cards = [{ id: 43 } as Card, { id: 44 } as Card];
-            tlpRecursiveGetMock = jest.spyOn(tlp, "recursiveGet").mockImplementation(
-                <T>(url: string, init?: RecursiveGetInit<Card[], T>): Promise<Array<T>> => {
+            tlpRecursiveGetMock = jest
+                .spyOn(tlp, "recursiveGet")
+                .mockImplementation(<T>(url: string, init?: RecursiveGetInit<Card[], T>): Promise<
+                    Array<T>
+                > => {
                     if (!init || !init.getCollectionCallback) {
                         throw new Error();
                     }
 
                     return Promise.resolve(init.getCollectionCallback(children_cards));
-                }
-            );
+                });
 
             await actions.loadChildrenCards(context, swimlane);
             expect(context.commit).toHaveBeenCalledWith("addChildrenToSwimlane", {

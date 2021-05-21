@@ -167,11 +167,9 @@ function fitColumnWidthsToContent(cells: CellObjectWithExtraInfo[][]): ColInfo[]
         });
     });
 
-    return max_column_width.map(
-        (column_width: number): ColInfo => {
-            return { wch: column_width };
-        }
-    );
+    return max_column_width.map((column_width: number): ColInfo => {
+        return { wch: column_width };
+    });
 }
 
 function fitRowHeightsToContent(cells: CellObjectWithExtraInfo[][]): RowInfo[] {

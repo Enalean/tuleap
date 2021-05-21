@@ -96,10 +96,9 @@ describe("EditKanbanController", () => {
                 selectable_report_ids,
             });
             jest.spyOn(KanbanService, "updateSelectableReports").mockImplementation(() => {});
-            jest.spyOn(
-                FilterTrackerReportService,
-                "changeSelectableReports"
-            ).mockImplementation(() => {});
+            jest.spyOn(FilterTrackerReportService, "changeSelectableReports").mockImplementation(
+                () => {}
+            );
         });
 
         it("Given that we selected reports to be selectable, then the reports' ids will be saved in backend and will be updated in the dedicated service", () => {

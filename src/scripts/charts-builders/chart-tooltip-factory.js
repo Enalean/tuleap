@@ -105,13 +105,8 @@ export class TooltipFactory {
     }
 
     positionBubble() {
-        const {
-            tooltip_x,
-            tooltip_y,
-            arrow_x,
-            arrow_y,
-            arrow_angle,
-        } = this.getTooltipCoordinates();
+        const { tooltip_x, tooltip_y, arrow_x, arrow_y, arrow_angle } =
+            this.getTooltipCoordinates();
 
         this.tooltip.attr("transform", `translate(${tooltip_x}, ${tooltip_y})`);
 

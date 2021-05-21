@@ -67,9 +67,8 @@ describe("get-shortcuts-section.ts", () => {
 
         it("widen the help modal when specific shortcuts section is not found and should be created", () => {
             getSpecificShortcutsSection(doc);
-            const wide_shortcuts_modal = shortcuts_modal.classList.contains(
-                "tlp-modal-medium-sized"
-            );
+            const wide_shortcuts_modal =
+                shortcuts_modal.classList.contains("tlp-modal-medium-sized");
 
             expect(wide_shortcuts_modal).toBe(true);
         });

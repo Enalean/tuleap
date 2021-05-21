@@ -86,12 +86,12 @@ describe(`drag-drop helper`, () => {
         };
 
         beforeEach(() => {
-            store = (createStoreMock({
+            store = createStoreMock({
                 state,
                 getters: {
                     getFeatureInProgramIncrement: getFeatureInProgramIncrement(state),
                 },
-            }) as unknown) as Store<State>;
+            }) as unknown as Store<State>;
         });
 
         it(`Given can plan attribute is not provided, Then the drop is rejected`, () => {
@@ -151,12 +151,12 @@ describe(`drag-drop helper`, () => {
                     { id: 14, features: [{ id: 1, has_user_story_planned: true }] },
                 ],
             } as State;
-            store = (createStoreMock({
+            store = createStoreMock({
                 state,
                 getters: {
                     getFeatureInProgramIncrement: getFeatureInProgramIncrement(state),
                 },
-            }) as unknown) as Store<State>;
+            }) as unknown as Store<State>;
 
             const dropped_card = createElement();
             dropped_card.setAttribute("data-element-id", "1");
@@ -190,12 +190,12 @@ describe(`drag-drop helper`, () => {
                     { id: 14, features: [{ id: 1, has_user_story_planned: true }] },
                 ],
             } as State;
-            store = (createStoreMock({
+            store = createStoreMock({
                 state,
                 getters: {
                     getFeatureInProgramIncrement: getFeatureInProgramIncrement(state),
                 },
-            }) as unknown) as Store<State>;
+            }) as unknown as Store<State>;
 
             const dropped_card = createElement();
             dropped_card.setAttribute("data-element-id", "1");
@@ -228,12 +228,12 @@ describe(`drag-drop helper`, () => {
                     { id: 14, features: [{ id: 1, has_user_story_planned: true }] },
                 ],
             } as State;
-            store = (createStoreMock({
+            store = createStoreMock({
                 state,
                 getters: {
                     getFeatureInProgramIncrement: getFeatureInProgramIncrement(state),
                 },
-            }) as unknown) as Store<State>;
+            }) as unknown as Store<State>;
 
             const dropped_card = createElement();
             dropped_card.setAttribute("data-element-id", "1");

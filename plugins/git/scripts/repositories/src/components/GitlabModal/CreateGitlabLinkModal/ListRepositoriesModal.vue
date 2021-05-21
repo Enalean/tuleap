@@ -55,9 +55,8 @@
                         <td class="gitlab-select-radio-button-container">
                             <span
                                 v-bind:class="{
-                                    'gitlab-tooltip-button-radio tlp-tooltip tlp-tooltip-top': isRepositoryDisabled(
-                                        repository
-                                    ),
+                                    'gitlab-tooltip-button-radio tlp-tooltip tlp-tooltip-top':
+                                        isRepositoryDisabled(repository),
                                 }"
                                 v-bind:data-tlp-tooltip="
                                     message_tooltip_repository_disabled(repository)
@@ -82,9 +81,8 @@
                         >
                             <span
                                 v-bind:class="{
-                                    'gitlab-tooltip-avatar tlp-tooltip tlp-tooltip-top': isRepositoryDisabled(
-                                        repository
-                                    ),
+                                    'gitlab-tooltip-avatar tlp-tooltip tlp-tooltip-top':
+                                        isRepositoryDisabled(repository),
                                 }"
                                 v-bind:data-tlp-tooltip="
                                     message_tooltip_repository_disabled(repository)
@@ -107,9 +105,8 @@
                         >
                             <span
                                 v-bind:class="{
-                                    'gitlab-tooltip-name tlp-tooltip tlp-tooltip-top': isRepositoryDisabled(
-                                        repository
-                                    ),
+                                    'gitlab-tooltip-name tlp-tooltip tlp-tooltip-top':
+                                        isRepositoryDisabled(repository),
                                 }"
                                 v-bind:data-tlp-tooltip="
                                     message_tooltip_repository_disabled(repository)

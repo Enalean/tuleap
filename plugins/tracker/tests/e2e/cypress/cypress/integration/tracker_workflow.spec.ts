@@ -86,9 +86,10 @@ describe(`Tracker Workflow`, () => {
             cy.get("[data-test=transition-modal]").within(() => {
                 const project_administrators_ugroup_id =
                     this.project_id + "_" + PROJECT_ADMINISTRATORS_ID;
-                cy.get(
-                    "[data-test=authorized-ugroups-select]"
-                ).select(project_administrators_ugroup_id, { force: true });
+                cy.get("[data-test=authorized-ugroups-select]").select(
+                    project_administrators_ugroup_id,
+                    { force: true }
+                );
                 cy.get("[data-test=not-empty-field-form-element]").within(() => {
                     cy.get("[data-test=list-picker-search-field]").type(
                         REMAINING_EFFORT_FIELD_LABEL + "{enter}"

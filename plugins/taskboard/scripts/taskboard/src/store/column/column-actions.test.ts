@@ -29,7 +29,7 @@ describe("Column module actions", () => {
     let context: ActionContext<ColumnState, RootState>;
 
     beforeEach(() => {
-        context = ({
+        context = {
             commit: jest.fn(),
             dispatch: jest.fn(),
             rootState: {
@@ -38,7 +38,7 @@ describe("Column module actions", () => {
                     user_id: 101,
                 },
             } as RootState,
-        } as unknown) as ActionContext<ColumnState, RootState>;
+        } as unknown as ActionContext<ColumnState, RootState>;
     });
 
     describe("expandColumn", () => {

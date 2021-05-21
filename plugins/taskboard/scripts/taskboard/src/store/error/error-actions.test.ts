@@ -27,9 +27,9 @@ describe("Error modules actions", () => {
     let context: ActionContext<ErrorState, RootState>;
 
     beforeEach(() => {
-        context = ({
+        context = {
             commit: jest.fn(),
-        } as unknown) as ActionContext<ErrorState, RootState>;
+        } as unknown as ActionContext<ErrorState, RootState>;
     });
 
     describe(`handleGlobalError`, () => {

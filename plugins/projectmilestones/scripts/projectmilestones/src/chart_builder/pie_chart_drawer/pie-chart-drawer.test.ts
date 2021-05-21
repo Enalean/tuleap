@@ -53,7 +53,7 @@ describe("PieChartDrawer", () => {
                 prefix: "release-widget-pie-chart-ttm",
             };
 
-            const statistic_pie_constructor = (StatisticsPieChart as unknown) as jest.SpyInstance;
+            const statistic_pie_constructor = StatisticsPieChart as unknown as jest.SpyInstance;
             const statistic_pie_chart = statistic_pie_constructor.mock.results[0].value;
             expect(statistic_pie_constructor).toHaveBeenCalledWith(args);
             expect(statistic_pie_chart.init).toHaveBeenCalled();
