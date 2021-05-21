@@ -27,7 +27,7 @@ use Tuleap\Cryptography\ConcealedString;
 /**
  * @psalm-immutable
  */
-final class GitlabBotApiToken
+final class IntegrationApiToken
 {
     /**
      * @var ConcealedString

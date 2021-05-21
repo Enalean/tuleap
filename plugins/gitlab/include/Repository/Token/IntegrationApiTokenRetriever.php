@@ -24,10 +24,10 @@ use Tuleap\Gitlab\Repository\GitlabRepositoryIntegration;
 use Tuleap\Cryptography\KeyFactory;
 use Tuleap\Cryptography\Symmetric\SymmetricCrypto;
 
-class GitlabBotApiTokenRetriever
+class IntegrationApiTokenRetriever
 {
     /**
-     * @var GitlabBotApiTokenDao
+     * @var IntegrationApiTokenDao
      */
     private $dao;
     /**
@@ -35,21 +35,21 @@ class GitlabBotApiTokenRetriever
      */
     private $key_factory;
 
-    public function __construct(GitlabBotApiTokenDao $dao, KeyFactory $key_factory)
+    public function __construct(IntegrationApiTokenDao $dao, KeyFactory $key_factory)
     {
         $this->dao         = $dao;
         $this->key_factory = $key_factory;
     }
 
-    public function getBotAPIToken(GitlabRepositoryIntegration $repository_integration): ?GitlabBotApiToken
+    public function getIntegrationAPIToken(GitlabRepositoryIntegration $repository_integration): ?IntegrationApiToken
     {
-        $row = $this->dao->getBotAPIToken($repository_integration->getId());
+        $row = $this->dao->searchIntegrationAPIToken($repository_integration->getId());
 
         if (! $row) {
             return null;
         }
 
-        return GitlabBotApiToken::buildAlreadyKnownToken(
+        return IntegrationApiToken::buildAlreadyKnownToken(
             SymmetricCrypto::decrypt(
                 $row['token'],
                 $this->key_factory->getEncryptionKey()

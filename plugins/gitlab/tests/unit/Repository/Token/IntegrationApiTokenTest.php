@@ -25,7 +25,7 @@ namespace Tuleap\Gitlab\Repository\Token;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\Cryptography\ConcealedString;
 
-class GitlabBotApiTokenTest extends \Tuleap\Test\PHPUnit\TestCase
+class IntegrationApiTokenTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 
@@ -33,11 +33,11 @@ class GitlabBotApiTokenTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $secret = new ConcealedString('Ny secret');
 
-        $apparently_valid_token = GitlabBotApiToken::buildAlreadyKnownToken($secret, false);
+        $apparently_valid_token = IntegrationApiToken::buildAlreadyKnownToken($secret, false);
         self::assertEquals($secret, $apparently_valid_token->getToken());
         self::assertFalse($apparently_valid_token->isEmailAlreadySendForInvalidToken());
 
-        $probably_expired_token = GitlabBotApiToken::buildAlreadyKnownToken($secret, true);
+        $probably_expired_token = IntegrationApiToken::buildAlreadyKnownToken($secret, true);
         self::assertEquals($secret, $probably_expired_token->getToken());
         self::assertTrue($probably_expired_token->isEmailAlreadySendForInvalidToken());
     }
@@ -46,7 +46,7 @@ class GitlabBotApiTokenTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $secret = new ConcealedString('Ny secret');
 
-        $brand_new_token = GitlabBotApiToken::buildBrandNewToken($secret);
+        $brand_new_token = IntegrationApiToken::buildBrandNewToken($secret);
         self::assertEquals($secret, $brand_new_token->getToken());
         self::assertFalse($brand_new_token->isEmailAlreadySendForInvalidToken());
     }

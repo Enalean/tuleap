@@ -53,10 +53,10 @@ use Tuleap\Gitlab\Repository\GitlabRepositoryIntegrationFactory;
 use Tuleap\Gitlab\Repository\GitlabRepositoryNotInProjectException;
 use Tuleap\Gitlab\Repository\GitlabRepositoryNotIntegratedInAnyProjectException;
 use Tuleap\Gitlab\Repository\GitlabRepositoryWithSameNameAlreadyIntegratedInProjectException;
-use Tuleap\Gitlab\Repository\Token\GitlabBotApiToken;
-use Tuleap\Gitlab\Repository\Token\GitlabBotApiTokenDao;
-use Tuleap\Gitlab\Repository\Token\GitlabBotApiTokenInserter;
-use Tuleap\Gitlab\Repository\Token\GitlabBotApiTokenRetriever;
+use Tuleap\Gitlab\Repository\Token\IntegrationApiToken;
+use Tuleap\Gitlab\Repository\Token\IntegrationApiTokenDao;
+use Tuleap\Gitlab\Repository\Token\IntegrationApiTokenInserter;
+use Tuleap\Gitlab\Repository\Token\IntegrationApiTokenRetriever;
 use Tuleap\Gitlab\Repository\Webhook\Bot\CredentialsRetriever;
 use Tuleap\Gitlab\Repository\Webhook\PostMergeRequest\MergeRequestTuleapReferenceDao;
 use Tuleap\Gitlab\Repository\Webhook\PostPush\Commits\CommitTuleapReferenceDao;
@@ -118,13 +118,13 @@ final class GitlabRepositoryResource
     {
         $this->options();
 
-        $gitlab_server_url    = $gitlab_repository->gitlab_server_url;
-        $bot_api_token        = GitlabBotApiToken::buildBrandNewToken(new ConcealedString($gitlab_repository->gitlab_bot_api_token));
-        $project_id           = $gitlab_repository->project_id;
-        $gitlab_repository_id = $gitlab_repository->gitlab_repository_id;
+        $gitlab_server_url     = $gitlab_repository->gitlab_server_url;
+        $integration_api_token = IntegrationApiToken::buildBrandNewToken(new ConcealedString($gitlab_repository->gitlab_bot_api_token));
+        $project_id            = $gitlab_repository->project_id;
+        $gitlab_repository_id  = $gitlab_repository->gitlab_repository_id;
 
         $project     = $this->getProjectById($project_id);
-        $credentials = new Credentials($gitlab_server_url, $bot_api_token);
+        $credentials = new Credentials($gitlab_server_url, $integration_api_token);
 
         $request_factory       = HTTPFactoryBuilder::requestFactory();
         $stream_factory        = HTTPFactoryBuilder::streamFactory();
@@ -163,7 +163,7 @@ final class GitlabRepositoryResource
                     new InstanceBaseURLBuilder(),
                     BackendLogger::getDefaultLogger(\gitlabPlugin::LOG_IDENTIFIER),
                 ),
-                new GitlabBotApiTokenInserter(new GitlabBotApiTokenDao(), new KeyFactory())
+                new IntegrationApiTokenInserter(new IntegrationApiTokenDao(), new KeyFactory())
             );
 
             if (isset($gitlab_repository->allow_artifact_closure) && $gitlab_repository->allow_artifact_closure === true) {
@@ -267,8 +267,8 @@ final class GitlabRepositoryResource
                 ),
                 new GitlabProjectBuilder($gitlab_api_client),
                 $this->getGitPermissionsManager(),
-                new GitlabBotApiTokenInserter(
-                    new GitlabBotApiTokenDao(),
+                new IntegrationApiTokenInserter(
+                    new IntegrationApiTokenDao(),
                     new KeyFactory()
                 ),
                 new WebhookCreator(
@@ -303,8 +303,8 @@ final class GitlabRepositoryResource
                 ),
                 $this->getGitPermissionsManager(),
                 new CredentialsRetriever(
-                    new GitlabBotApiTokenRetriever(
-                        new GitlabBotApiTokenDao(),
+                    new IntegrationApiTokenRetriever(
+                        new IntegrationApiTokenDao(),
                         new KeyFactory()
                     ),
                 ),
@@ -386,11 +386,11 @@ final class GitlabRepositoryResource
                 BackendLogger::getDefaultLogger(\gitlabPlugin::LOG_IDENTIFIER)
             ),
             new GitlabRepositoryIntegrationDao(),
-            new GitlabBotApiTokenDao(),
+            new IntegrationApiTokenDao(),
             new CommitTuleapReferenceDao(),
             new MergeRequestTuleapReferenceDao(),
             new TagInfoDao(),
-            new CredentialsRetriever(new GitlabBotApiTokenRetriever(new GitlabBotApiTokenDao(), new KeyFactory()))
+            new CredentialsRetriever(new IntegrationApiTokenRetriever(new IntegrationApiTokenDao(), new KeyFactory()))
         );
 
         try {

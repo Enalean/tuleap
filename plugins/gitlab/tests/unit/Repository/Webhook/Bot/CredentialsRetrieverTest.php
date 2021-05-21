@@ -24,8 +24,8 @@ use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\Gitlab\Repository\GitlabRepositoryIntegration;
-use Tuleap\Gitlab\Repository\Token\GitlabBotApiToken;
-use Tuleap\Gitlab\Repository\Token\GitlabBotApiTokenRetriever;
+use Tuleap\Gitlab\Repository\Token\IntegrationApiToken;
+use Tuleap\Gitlab\Repository\Token\IntegrationApiTokenRetriever;
 
 class CredentialsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -36,7 +36,7 @@ class CredentialsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $credentials_retriever;
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|GitlabBotApiTokenRetriever
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|IntegrationApiTokenRetriever
      */
     private $token_retriever;
 
@@ -44,7 +44,7 @@ class CredentialsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         parent::setUp();
 
-        $this->token_retriever = Mockery::mock(GitlabBotApiTokenRetriever::class);
+        $this->token_retriever = Mockery::mock(IntegrationApiTokenRetriever::class);
 
         $this->credentials_retriever = new CredentialsRetriever(
             $this->token_retriever
@@ -59,13 +59,13 @@ class CredentialsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             ->andReturn("https://www.example.com/")
             ->once();
 
-        $bot_api_token = GitlabBotApiToken::buildBrandNewToken(new ConcealedString("My_Token123"));
+        $integration_api_token = IntegrationApiToken::buildBrandNewToken(new ConcealedString("My_Token123"));
 
-        $this->token_retriever->shouldReceive("getBotAPIToken")->with($gitlab_repository)->andReturn($bot_api_token);
+        $this->token_retriever->shouldReceive("getIntegrationAPIToken")->with($gitlab_repository)->andReturn($integration_api_token);
 
         $credentials = $this->credentials_retriever->getCredentials($gitlab_repository);
 
-        $this->assertEquals($bot_api_token, $credentials->getBotApiToken());
+        $this->assertEquals($integration_api_token, $credentials->getBotApiToken());
         $this->assertEquals("https://www.example.com/", $credentials->getGitlabServerUrl());
     }
 
@@ -76,7 +76,7 @@ class CredentialsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             ->shouldReceive('getGitlabServerUrl')
             ->never();
 
-        $this->token_retriever->shouldReceive("getBotAPIToken")->with($gitlab_repository)->andReturnNull();
+        $this->token_retriever->shouldReceive("getIntegrationAPIToken")->with($gitlab_repository)->andReturnNull();
 
         $credentials = $this->credentials_retriever->getCredentials($gitlab_repository);
 

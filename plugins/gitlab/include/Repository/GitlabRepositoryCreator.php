@@ -25,7 +25,7 @@ use Project;
 use Tuleap\DB\DBTransactionExecutor;
 use Tuleap\Gitlab\API\Credentials;
 use Tuleap\Gitlab\API\GitlabProject;
-use Tuleap\Gitlab\Repository\Token\GitlabBotApiTokenInserter;
+use Tuleap\Gitlab\Repository\Token\IntegrationApiTokenInserter;
 use Tuleap\Gitlab\Repository\Webhook\WebhookCreator;
 
 class GitlabRepositoryCreator
@@ -50,7 +50,7 @@ class GitlabRepositoryCreator
      */
     private $webhook_creator;
     /**
-     * @var GitlabBotApiTokenInserter
+     * @var IntegrationApiTokenInserter
      */
     private $token_inserter;
 
@@ -59,7 +59,7 @@ class GitlabRepositoryCreator
         GitlabRepositoryIntegrationFactory $repository_integration_factory,
         GitlabRepositoryIntegrationDao $gitlab_repository_dao,
         WebhookCreator $webhook_creator,
-        GitlabBotApiTokenInserter $token_inserter
+        IntegrationApiTokenInserter $token_inserter
     ) {
         $this->db_transaction_executor        = $db_transaction_executor;
         $this->repository_integration_factory = $repository_integration_factory;

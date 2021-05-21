@@ -22,23 +22,23 @@ namespace Tuleap\Gitlab\Repository\Webhook\Bot;
 
 use Tuleap\Gitlab\API\Credentials;
 use Tuleap\Gitlab\Repository\GitlabRepositoryIntegration;
-use Tuleap\Gitlab\Repository\Token\GitlabBotApiTokenRetriever;
+use Tuleap\Gitlab\Repository\Token\IntegrationApiTokenRetriever;
 
 class CredentialsRetriever
 {
     /**
-     * @var GitlabBotApiTokenRetriever
+     * @var IntegrationApiTokenRetriever
      */
     private $token_retriever;
 
-    public function __construct(GitlabBotApiTokenRetriever $token_retriever)
+    public function __construct(IntegrationApiTokenRetriever $token_retriever)
     {
         $this->token_retriever = $token_retriever;
     }
 
     public function getCredentials(GitlabRepositoryIntegration $repository_integration): ?Credentials
     {
-        $token = $this->token_retriever->getBotAPIToken($repository_integration);
+        $token = $this->token_retriever->getIntegrationAPIToken($repository_integration);
 
         if (! $token) {
             return null;

@@ -30,7 +30,7 @@ use Project;
 use Psr\Log\LoggerInterface;
 use Tuleap\Git\GitService;
 use Tuleap\Gitlab\Repository\GitlabRepositoryIntegration;
-use Tuleap\Gitlab\Repository\Token\GitlabBotApiTokenDao;
+use Tuleap\Gitlab\Repository\Token\IntegrationApiTokenDao;
 use Tuleap\Gitlab\Test\Builder\CredentialsTestBuilder;
 use Tuleap\InstanceBaseURLBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
@@ -57,7 +57,7 @@ class InvalidCredentialsNotifierTest extends \Tuleap\Test\PHPUnit\TestCase
         $mail_builder = Mockery::mock(\MailBuilder::class);
         $mail_builder->shouldReceive('buildAndSendEmail')->never();
 
-        $dao = Mockery::mock(GitlabBotApiTokenDao::class);
+        $dao = Mockery::mock(IntegrationApiTokenDao::class);
         $dao->shouldReceive('storeTheFactWeAlreadySendEmailForInvalidToken')->never();
 
         $notifier = new InvalidCredentialsNotifier(
@@ -90,7 +90,7 @@ class InvalidCredentialsNotifierTest extends \Tuleap\Test\PHPUnit\TestCase
         $mail_builder = Mockery::mock(\MailBuilder::class);
         $mail_builder->shouldReceive('buildAndSendEmail')->never();
 
-        $dao = Mockery::mock(GitlabBotApiTokenDao::class);
+        $dao = Mockery::mock(IntegrationApiTokenDao::class);
         $dao->shouldReceive('storeTheFactWeAlreadySendEmailForInvalidToken')->never();
 
         $notifier = new InvalidCredentialsNotifier(
@@ -153,7 +153,7 @@ class InvalidCredentialsNotifierTest extends \Tuleap\Test\PHPUnit\TestCase
             )
             ->once();
 
-        $dao = Mockery::mock(GitlabBotApiTokenDao::class);
+        $dao = Mockery::mock(IntegrationApiTokenDao::class);
         $dao
             ->shouldReceive('storeTheFactWeAlreadySendEmailForInvalidToken')
             ->with(1)

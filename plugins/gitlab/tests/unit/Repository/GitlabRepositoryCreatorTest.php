@@ -27,7 +27,7 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Project;
 use Tuleap\Gitlab\API\Credentials;
 use Tuleap\Gitlab\API\GitlabProject;
-use Tuleap\Gitlab\Repository\Token\GitlabBotApiTokenInserter;
+use Tuleap\Gitlab\Repository\Token\IntegrationApiTokenInserter;
 use Tuleap\Gitlab\Repository\Webhook\WebhookCreator;
 use Tuleap\Gitlab\Test\Builder\CredentialsTestBuilder;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
@@ -70,7 +70,7 @@ class GitlabRepositoryCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $credentials;
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|GitlabBotApiTokenInserter
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|IntegrationApiTokenInserter
      */
     private $token_inserter;
 
@@ -81,7 +81,7 @@ class GitlabRepositoryCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->repository_integration_factory = Mockery::mock(GitlabRepositoryIntegrationFactory::class);
         $this->repository_integration_dao     = Mockery::mock(GitlabRepositoryIntegrationDao::class);
         $this->webhook_creator                = Mockery::mock(WebhookCreator::class);
-        $this->token_inserter                 = Mockery::mock(GitlabBotApiTokenInserter::class);
+        $this->token_inserter                 = Mockery::mock(IntegrationApiTokenInserter::class);
 
         $this->credentials = CredentialsTestBuilder::get()->build();
 

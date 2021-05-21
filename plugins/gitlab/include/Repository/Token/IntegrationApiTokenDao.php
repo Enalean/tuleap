@@ -22,7 +22,7 @@ namespace Tuleap\Gitlab\Repository\Token;
 
 use Tuleap\DB\DataAccessObject;
 
-class GitlabBotApiTokenDao extends DataAccessObject
+class IntegrationApiTokenDao extends DataAccessObject
 {
 
     public function storeToken(int $integration_id, string $encrypted_token): void
@@ -57,7 +57,7 @@ class GitlabBotApiTokenDao extends DataAccessObject
     /**
      * @return array{token: string, is_email_already_send_for_invalid_token: bool}|null
      */
-    public function getBotAPIToken(int $integration_id): ?array
+    public function searchIntegrationAPIToken(int $integration_id): ?array
     {
         $sql = 'SELECT *
                 FROM plugin_gitlab_repository_integration_token

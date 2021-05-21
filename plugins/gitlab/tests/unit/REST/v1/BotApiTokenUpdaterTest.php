@@ -35,7 +35,7 @@ use Tuleap\Gitlab\API\GitlabRequestException;
 use Tuleap\Gitlab\API\GitlabResponseAPIException;
 use Tuleap\Gitlab\Repository\GitlabRepositoryIntegration;
 use Tuleap\Gitlab\Repository\GitlabRepositoryIntegrationFactory;
-use Tuleap\Gitlab\Repository\Token\GitlabBotApiTokenInserter;
+use Tuleap\Gitlab\Repository\Token\IntegrationApiTokenInserter;
 use Tuleap\Gitlab\Repository\Webhook\WebhookCreator;
 use Tuleap\REST\I18NRestException;
 
@@ -56,9 +56,9 @@ class BotApiTokenUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $permissions_manager;
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|GitlabBotApiTokenInserter
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|IntegrationApiTokenInserter
      */
-    private $bot_api_token_inserter;
+    private $token_inserter;
     /**
      * @var BotApiTokenUpdater
      */
@@ -77,7 +77,7 @@ class BotApiTokenUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->repository_integration_factory = Mockery::mock(GitlabRepositoryIntegrationFactory::class);
         $this->project_builder                = Mockery::mock(GitlabProjectBuilder::class);
         $this->permissions_manager            = Mockery::mock(GitPermissionsManager::class);
-        $this->bot_api_token_inserter         = Mockery::mock(GitlabBotApiTokenInserter::class);
+        $this->token_inserter                 = Mockery::mock(IntegrationApiTokenInserter::class);
         $this->webhook_creator                = Mockery::mock(WebhookCreator::class);
         $this->logger                         = Mockery::mock(LoggerInterface::class);
 
@@ -85,7 +85,7 @@ class BotApiTokenUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->repository_integration_factory,
             $this->project_builder,
             $this->permissions_manager,
-            $this->bot_api_token_inserter,
+            $this->token_inserter,
             $this->webhook_creator,
             $this->logger,
         );
@@ -291,7 +291,7 @@ class BotApiTokenUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
             ->once()
             ->andThrow(Mockery::spy(GitlabRequestException::class));
 
-        $this->bot_api_token_inserter
+        $this->token_inserter
             ->shouldReceive('insertToken')
             ->with($repository, $token)
             ->never();
@@ -351,7 +351,7 @@ class BotApiTokenUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
             ->with($expected_credentials, $repository)
             ->once();
 
-        $this->bot_api_token_inserter
+        $this->token_inserter
             ->shouldReceive('insertToken')
             ->with($repository, $token)
             ->once();

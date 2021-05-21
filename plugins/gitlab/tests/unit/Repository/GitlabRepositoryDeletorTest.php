@@ -28,7 +28,7 @@ use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
 use Project;
-use Tuleap\Gitlab\Repository\Token\GitlabBotApiTokenDao;
+use Tuleap\Gitlab\Repository\Token\IntegrationApiTokenDao;
 use Tuleap\Gitlab\Repository\Webhook\Bot\CredentialsRetriever;
 use Tuleap\Gitlab\Repository\Webhook\PostMergeRequest\MergeRequestTuleapReferenceDao;
 use Tuleap\Gitlab\Repository\Webhook\PostPush\Commits\CommitTuleapReferenceDao;
@@ -76,9 +76,9 @@ class GitlabRepositoryDeletorTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $user;
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|GitlabBotApiTokenDao
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|IntegrationApiTokenDao
      */
-    private $gitlab_bot_api_token_dao;
+    private $integration_api_token_dao;
     /**
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|CommitTuleapReferenceDao
      */
@@ -109,7 +109,7 @@ class GitlabRepositoryDeletorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->webhook_deletor             = Mockery::mock(WebhookDeletor::class);
         $this->commit_tuleap_reference_dao = Mockery::mock(CommitTuleapReferenceDao::class);
         $this->repository_integration_dao  = Mockery::mock(GitlabRepositoryIntegrationDao::class);
-        $this->gitlab_bot_api_token_dao    = Mockery::mock(GitlabBotApiTokenDao::class);
+        $this->integration_api_token_dao   = Mockery::mock(IntegrationApiTokenDao::class);
         $this->merge_request_dao           = Mockery::mock(MergeRequestTuleapReferenceDao::class);
         $this->tag_info_dao                = Mockery::mock(TagInfoDao::class);
         $this->credentials_retriever       = Mockery::mock(CredentialsRetriever::class);
@@ -119,7 +119,7 @@ class GitlabRepositoryDeletorTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->db_transaction_executor,
             $this->webhook_deletor,
             $this->repository_integration_dao,
-            $this->gitlab_bot_api_token_dao,
+            $this->integration_api_token_dao,
             $this->commit_tuleap_reference_dao,
             $this->merge_request_dao,
             $this->tag_info_dao,
@@ -176,7 +176,7 @@ class GitlabRepositoryDeletorTest extends \Tuleap\Test\PHPUnit\TestCase
             ->with($credentials, $this->gitlab_repository_integration);
 
         $this->repository_integration_dao->shouldReceive('deleteIntegration')->once();
-        $this->gitlab_bot_api_token_dao->shouldReceive('deleteIntegrationToken')->once();
+        $this->integration_api_token_dao->shouldReceive('deleteIntegrationToken')->once();
 
         $this->commit_tuleap_reference_dao
             ->shouldReceive('deleteCommitsInIntegration')

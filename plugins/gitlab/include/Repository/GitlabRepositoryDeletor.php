@@ -25,7 +25,7 @@ use GitPermissionsManager;
 use GitUserNotAdminException;
 use PFUser;
 use Tuleap\DB\DBTransactionExecutor;
-use Tuleap\Gitlab\Repository\Token\GitlabBotApiTokenDao;
+use Tuleap\Gitlab\Repository\Token\IntegrationApiTokenDao;
 use Tuleap\Gitlab\Repository\Webhook\Bot\CredentialsRetriever;
 use Tuleap\Gitlab\Repository\Webhook\PostMergeRequest\MergeRequestTuleapReferenceDao;
 use Tuleap\Gitlab\Repository\Webhook\PostPush\Commits\CommitTuleapReferenceDao;
@@ -47,7 +47,7 @@ class GitlabRepositoryDeletor
      */
     private $gitlab_repository_dao;
     /**
-     * @var GitlabBotApiTokenDao
+     * @var IntegrationApiTokenDao
      */
     private $gitlab_bot_api_token_dao;
     /**
@@ -76,7 +76,7 @@ class GitlabRepositoryDeletor
         DBTransactionExecutor $db_transaction_executor,
         WebhookDeletor $webhook_deletor,
         GitlabRepositoryIntegrationDao $gitlab_repository_dao,
-        GitlabBotApiTokenDao $gitlab_bot_api_token_dao,
+        IntegrationApiTokenDao $gitlab_bot_api_token_dao,
         CommitTuleapReferenceDao $commit_tuleap_reference_dao,
         MergeRequestTuleapReferenceDao $merge_request_dao,
         TagInfoDao $tag_info_dao,
