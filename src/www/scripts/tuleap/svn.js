@@ -145,7 +145,7 @@
             if (!immutable_tags_tree_empty_state) {
                 immutable_tags_tree_empty_state = $("<div>")
                     .addClass("empty-state")
-                    .html($("#immutable-tags-tree").data("empty-state-text"));
+                    .text($("#immutable-tags-tree").data("empty-state-text"));
 
                 immutable_tags_tree.prepend(immutable_tags_tree_empty_state);
             }
@@ -198,14 +198,14 @@
         function displayExistingTree() {
             var root = convertFlatTreeIntoTreeNode();
 
-            immutable_tags_tree.html("");
+            immutable_tags_tree.text("");
             displayTreeNode(immutable_tags_tree, root);
         }
 
         function displayTreeNode(element, root) {
             var icon_folder = '<i class="far fa-folder-open"></i> ',
                 children_element = $("<div>").addClass("children"),
-                label_element = $("<span>").attr("title", root.path).html(basename(root.path)),
+                label_element = $("<span>").attr("title", root.path).text(basename(root.path)),
                 root_element = $("<div>")
                     .attr("data-path", root.path)
                     .addClass("tag")
@@ -236,9 +236,9 @@
             $("#tag-name-example")
                 .removeClass("label-important label-success")
                 .addClass($(this).hasClass("label-important") ? "label-important" : "label-success")
-                .html(basename($(this).attr("title")));
+                .text(basename($(this).attr("title")));
 
-            $(".tag-path-example").html($(this).attr("title").replace(/\/$/, ""));
+            $(".tag-path-example").text($(this).attr("title").replace(/\/$/, ""));
 
             if ($(this).hasClass("label-success") && $(this).parents(".immutable").length === 0) {
                 $("#immutable-tags-console").addClass("whitelist-not-in-immutable");
