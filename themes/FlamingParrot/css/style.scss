@@ -17,68 +17,28 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@import '../../default/css/style';
+@use '../../default/css/style';
 
-@mixin definitions($main, $main-background, $tlp-ui-success, $tlp-ui-danger) {
-    .contact-support-modal {
-        > .modal-body {
-            background: $main-background;
+.contact-support-modal {
+    > .modal-body {
+        background: var(--tlp-theme-background-color);
 
-            h1 {
-                color: #747474;
-            }
-
-            .tlp-pane-subtitle {
-                color: $main;
-            }
+        h1 {
+            color: #747474;
         }
 
+        .tlp-pane-subtitle {
+            color: var(--tlp-theme-color);
+        }
     }
 
-    .contact-support-modal-submit.thank-you {
-        border-color: $tlp-ui-success;
-        background: $tlp-ui-success;
-    }
-
-    .contact-support-modal-form .fa-asterisk {
-        color: $tlp-ui-danger;
-    }
 }
 
-body {
-    &.FlamingParrot_Orange { //stylelint-disable-line selector-no-qualifying-type, selector-class-pattern
-        @import '../../src/themes/FlamingParrot/css/utils/variables-orange';
+.contact-support-modal-submit.thank-you {
+    border-color: var(--tlp-ui-success);
+    background: var(--tlp-ui-success);
+}
 
-        @include definitions($main, $main-background, $tlp-ui-success, $tlp-ui-danger);
-    }
-
-    &.FlamingParrot_Blue { //stylelint-disable-line selector-no-qualifying-type, selector-class-pattern
-        @import '../../src/themes/FlamingParrot/css/utils/variables-blue';
-
-        @include definitions($main, $main-background, $tlp-ui-success, $tlp-ui-danger);
-    }
-
-    &.FlamingParrot_Green { //stylelint-disable-line selector-no-qualifying-type, selector-class-pattern
-        @import '../../src/themes/FlamingParrot/css/utils/variables-green';
-
-        @include definitions($main, $main-background, $tlp-ui-success, $tlp-ui-danger);
-    }
-
-    &.FlamingParrot_BlueGrey { //stylelint-disable-line selector-no-qualifying-type, selector-class-pattern
-        @import '../../src/themes/FlamingParrot/css/utils/variables-bluegrey';
-
-        @include definitions($main, $main-background, $tlp-ui-success, $tlp-ui-danger);
-    }
-
-    &.FlamingParrot_Purple { //stylelint-disable-line selector-no-qualifying-type, selector-class-pattern
-        @import '../../src/themes/FlamingParrot/css/utils/variables-purple';
-
-        @include definitions($main, $main-background, $tlp-ui-success, $tlp-ui-danger);
-    }
-
-    &.FlamingParrot_Red { //stylelint-disable-line selector-no-qualifying-type, selector-class-pattern
-        @import '../../src/themes/FlamingParrot/css/utils/variables-red';
-
-        @include definitions($main, $main-background, $tlp-ui-success, $tlp-ui-danger);
-    }
+.contact-support-modal-form .fa-asterisk {
+    color: var(--tlp-ui-danger);
 }
