@@ -19,6 +19,8 @@
 
 @use 'sass:color';
 
+$theme-color-dimmed-background: mix($tlp-theme-background-color, $tlp-ui-white, 50);
+
 :root {
     // Fonts
     --tlp-font-family: #{$tlp-font-family};
@@ -32,13 +34,12 @@
     --tlp-ui-white: #{$tlp-ui-white};
     --tlp-theme-color: #{$tlp-theme-color};
     --tlp-theme-background-color: #{$tlp-theme-background-color};
-    --tlp-theme-color-hover-background: #{$tlp-theme-color-hover-background};
-    --tlp-theme-color-dimmed-background: #{$tlp-theme-color-dimmed-background};
+    --tlp-theme-color-hover-background: #{mix($tlp-theme-color, $tlp-ui-white, 7)};
+    --tlp-theme-color-dimmed-background: #{$theme-color-dimmed-background};
     --tlp-typo-default-text-color: #{$tlp-typo-default-text-color};
     --tlp-table-row-background-odd: #{$tlp-table-row-background-odd};
     --tlp-table-row-background-even: #{$tlp-table-row-background-even};
     --tlp-table-row-background-empty: #{$tlp-table-row-background-empty};
-
 
     --tlp-theme-background-color-lighter-02: #{lighten($tlp-theme-background-color, 2%)};
     --tlp-theme-background-color-lighter-03: #{lighten($tlp-theme-background-color, 3%)};
@@ -48,6 +49,10 @@
     --tlp-theme-background-color-darker-20: #{darken($tlp-theme-background-color, 20%)};
 
     --tlp-theme-background-color-transparent-50: #{transparentize($tlp-theme-background-color, .5)};
+
+    --tlp-theme-color-dimmed-background-darker-01: #{darken($theme-color-dimmed-background, 1%)};
+    --tlp-theme-color-dimmed-background-hover-background: #{mix($tlp-theme-background-color, $tlp-ui-white, 90)};
+    --tlp-theme-color-dimmed-background-hover-border: #{mix($tlp-theme-background-color, $tlp-ui-white, 90)};
 
     --tlp-theme-color-darker-15: #{darken($tlp-theme-color, 15%)};
     --tlp-theme-color-lighter-10: #{ mix($tlp-theme-color, $tlp-ui-white, 10%)};

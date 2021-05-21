@@ -32,7 +32,7 @@
 }
 
 .tlp-card-inactive {
-    background: darken($tlp-theme-color-dimmed-background, 1%);
+    background: var(--tlp-theme-color-dimmed-background-darker-01);
 }
 
 .tlp-card-selectable {
@@ -48,7 +48,7 @@
         text-decoration: none;
 
         &.tlp-card-inactive {
-            border-color: $tlp-theme-color-dimmed-hover-border;
+            border-color: var(--tlp-theme-color-dimmed-background-hover-border);
         }
     }
 }
@@ -91,7 +91,7 @@
         &:hover,
         &:focus {
             border-color: $tlp-ui-border-light;
-            background-color: $tlp-theme-color-hover-background;
+            background-color: var(--tlp-theme-color-hover-background);
             text-decoration: none;
         }
     }
@@ -99,11 +99,11 @@
     > .tlp-card-container > .tlp-card-inactive,
     > .tlp-card-inactive {
         border: 0;
-        background: $tlp-theme-color-dimmed-background;
+        background: var(--tlp-theme-color-dimmed-background);
 
         &:hover,
         &:focus {
-            background-color: $tlp-theme-color-dimmed-hover-background;
+            background-color: var(--tlp-theme-color-dimmed-background-hover-border);
         }
 
         + .tlp-card-inactive {
