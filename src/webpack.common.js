@@ -354,7 +354,6 @@ const fat_combined_files = [
         "./www/scripts/viewportchecker/viewport-checker.js",
         "./www/scripts/clamp.js",
         "./www/scripts/codendi/common.js",
-        "./www/scripts/tuleap/get-style-class-property.js",
         "./scripts/tuleap/listFilter.js",
         "./www/scripts/codendi/feedback.js",
         "./www/scripts/codendi/cross_references.js",
