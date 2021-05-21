@@ -86,11 +86,11 @@ load_project() {
 }
 
 seed_data() {
-    su -c "PHP='$PHP_CLI' /usr/share/tuleap/src/utils/php-launcher.sh /usr/share/tuleap/tools/utils/admin/activate_plugin.php docman" -l codendiadm
+    sudo -u codendiadm PHP="$PHP_CLI" /usr/share/tuleap/src/utils/tuleap plugin:install docman
     load_project /usr/share/tuleap/tests/soap/_fixtures/01-project
 
     # Import done after so that TV3 can be created ...
-    su -c "PHP='$PHP_CLI' /usr/share/tuleap/src/utils/php-launcher.sh /usr/share/tuleap/tools/utils/admin/activate_plugin.php tracker" -l codendiadm
+    sudo -u codendiadm PHP="$PHP_CLI" /usr/share/tuleap/src/utils/tuleap plugin:install tracker
 
     echo "Load initial data"
     PHP="$PHP_CLI" "$PHP_CLI" /usr/share/tuleap/tests/soap/bin/init_data.php

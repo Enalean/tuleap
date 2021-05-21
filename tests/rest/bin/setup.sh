@@ -111,7 +111,12 @@ seed_data() {
         hudson \
         hudson_git \
         gitlab \
-        timetracking
+        timetracking \
+        testmanagement \
+        testplan \
+        taskboard \
+        roadmap \
+        program_management
 
     load_project /usr/share/tuleap/tests/rest/_fixtures/01-private-member
     load_project /usr/share/tuleap/tests/rest/_fixtures/02-private
