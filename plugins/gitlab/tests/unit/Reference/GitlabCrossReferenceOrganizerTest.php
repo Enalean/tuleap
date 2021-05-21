@@ -36,7 +36,7 @@ use Tuleap\Gitlab\Reference\MergeRequest\GitlabMergeRequestReferenceRetriever;
 use Tuleap\Gitlab\Reference\Tag\GitlabTag;
 use Tuleap\Gitlab\Reference\Tag\GitlabTagFactory;
 use Tuleap\Gitlab\Repository\GitlabRepositoryIntegration;
-use Tuleap\Gitlab\Repository\GitlabRepositoryFactory;
+use Tuleap\Gitlab\Repository\GitlabRepositoryIntegrationFactory;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\Reference\CrossReferenceByNatureOrganizer;
 use Tuleap\Reference\CrossReferencePresenter;
@@ -48,9 +48,9 @@ class GitlabCrossReferenceOrganizerTest extends \Tuleap\Test\PHPUnit\TestCase
     use GlobalLanguageMock;
 
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|GitlabRepositoryFactory
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|GitlabRepositoryIntegrationFactory
      */
-    private $gitlab_repository_factory;
+    private $repository_integration_factory;
     /**
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|GitlabCommitFactory
      */
@@ -91,7 +91,7 @@ class GitlabCrossReferenceOrganizerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     protected function setUp(): void
     {
-        $this->gitlab_repository_factory                = Mockery::mock(GitlabRepositoryFactory::class);
+        $this->repository_integration_factory           = Mockery::mock(GitlabRepositoryIntegrationFactory::class);
         $this->gitlab_commit_factory                    = Mockery::mock(GitlabCommitFactory::class);
         $this->gitlab_commit_cross_reference_enhancer   = Mockery::mock(GitlabCommitCrossReferenceEnhancer::class);
         $this->gitlab_merge_request_reference_retriever = Mockery::mock(GitlabMergeRequestReferenceRetriever::class);
@@ -107,7 +107,7 @@ class GitlabCrossReferenceOrganizerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->willReturn('d/m/Y H:i');
 
         $this->organizer = new GitlabCrossReferenceOrganizer(
-            $this->gitlab_repository_factory,
+            $this->repository_integration_factory,
             $this->gitlab_commit_factory,
             $this->gitlab_commit_cross_reference_enhancer,
             $this->gitlab_merge_request_reference_retriever,
@@ -149,8 +149,8 @@ class GitlabCrossReferenceOrganizerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->shouldReceive(['getProject' => $project])
             ->getMock();
 
-        $this->gitlab_repository_factory
-            ->shouldReceive('getGitlabRepositoryByNameInProject')
+        $this->repository_integration_factory
+            ->shouldReceive('getIntegrationByNameInProject')
             ->with($project, 'john-snow/winter-is-coming')
             ->andReturn(null);
 
@@ -200,8 +200,8 @@ class GitlabCrossReferenceOrganizerTest extends \Tuleap\Test\PHPUnit\TestCase
             false
         );
 
-        $this->gitlab_repository_factory
-            ->shouldReceive('getGitlabRepositoryByNameInProject')
+        $this->repository_integration_factory
+            ->shouldReceive('getIntegrationByNameInProject')
             ->with($project, 'john-snow/winter-is-coming')
             ->andReturn($integration);
 
@@ -278,13 +278,13 @@ class GitlabCrossReferenceOrganizerTest extends \Tuleap\Test\PHPUnit\TestCase
             false
         );
 
-        $this->gitlab_repository_factory
-            ->shouldReceive('getGitlabRepositoryByNameInProject')
+        $this->repository_integration_factory
+            ->shouldReceive('getIntegrationByNameInProject')
             ->with($project, 'john-snow/winter-is-coming')
             ->andReturn($integration);
 
-        $this->gitlab_repository_factory
-            ->shouldReceive('getGitlabRepositoryByNameInProject')
+        $this->repository_integration_factory
+            ->shouldReceive('getIntegrationByNameInProject')
             ->with($another_project, 'samwell-tarly/winter-is-coming')
             ->andReturn($another_integration);
 
@@ -405,13 +405,13 @@ class GitlabCrossReferenceOrganizerTest extends \Tuleap\Test\PHPUnit\TestCase
             false
         );
 
-        $this->gitlab_repository_factory
-            ->shouldReceive('getGitlabRepositoryByNameInProject')
+        $this->repository_integration_factory
+            ->shouldReceive('getIntegrationByNameInProject')
             ->with($project, 'john-snow/winter-is-coming')
             ->andReturn($integration);
 
-        $this->gitlab_repository_factory
-            ->shouldReceive('getGitlabRepositoryByNameInProject')
+        $this->repository_integration_factory
+            ->shouldReceive('getIntegrationByNameInProject')
             ->with($another_project, 'samwell-tarly/winter-is-coming')
             ->andReturn($another_integration);
 
@@ -528,8 +528,8 @@ class GitlabCrossReferenceOrganizerTest extends \Tuleap\Test\PHPUnit\TestCase
             false
         );
 
-        $this->gitlab_repository_factory
-            ->shouldReceive('getGitlabRepositoryByNameInProject')
+        $this->repository_integration_factory
+            ->shouldReceive('getIntegrationByNameInProject')
             ->with($project, 'john-snow/winter-is-coming')
             ->andReturn($integration);
 
@@ -610,8 +610,8 @@ class GitlabCrossReferenceOrganizerTest extends \Tuleap\Test\PHPUnit\TestCase
             false
         );
 
-        $this->gitlab_repository_factory
-            ->shouldReceive('getGitlabRepositoryByNameInProject')
+        $this->repository_integration_factory
+            ->shouldReceive('getIntegrationByNameInProject')
             ->with($project, 'john-snow/winter-is-coming')
             ->andReturn($integration);
 
@@ -687,8 +687,8 @@ class GitlabCrossReferenceOrganizerTest extends \Tuleap\Test\PHPUnit\TestCase
             false
         );
 
-        $this->gitlab_repository_factory
-            ->shouldReceive('getGitlabRepositoryByNameInProject')
+        $this->repository_integration_factory
+            ->shouldReceive('getIntegrationByNameInProject')
             ->with($project, 'john-snow/winter-is-coming')
             ->andReturn($integration);
 
@@ -763,8 +763,8 @@ class GitlabCrossReferenceOrganizerTest extends \Tuleap\Test\PHPUnit\TestCase
             false
         );
 
-        $this->gitlab_repository_factory
-            ->shouldReceive('getGitlabRepositoryByNameInProject')
+        $this->repository_integration_factory
+            ->shouldReceive('getIntegrationByNameInProject')
             ->with($project, 'john-snow/winter-is-coming')
             ->andReturn($integration);
 

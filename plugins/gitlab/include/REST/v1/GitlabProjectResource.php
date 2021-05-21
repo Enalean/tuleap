@@ -25,8 +25,8 @@ use Luracast\Restler\RestException;
 use PFUser;
 use Project;
 use ProjectManager;
-use Tuleap\Gitlab\Repository\GitlabRepositoryDao;
-use Tuleap\Gitlab\Repository\GitlabRepositoryFactory;
+use Tuleap\Gitlab\Repository\GitlabRepositoryIntegrationDao;
+use Tuleap\Gitlab\Repository\GitlabRepositoryIntegrationFactory;
 use Tuleap\Gitlab\Repository\Webhook\WebhookDao;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
@@ -81,14 +81,14 @@ final class GitlabProjectResource extends AuthenticatedResource
         $user    = \UserManager::instance()->getCurrentUser();
         $project = $this->getProject($id, $user);
 
-        $gitlab_repository_factory = new GitlabRepositoryFactory(
-            new GitlabRepositoryDao(),
+        $repository_integration_factory = new GitlabRepositoryIntegrationFactory(
+            new GitlabRepositoryIntegrationDao(),
             ProjectManager::instance()
         );
 
         $webhook_dao = new WebhookDao();
 
-        $gitlab_repositories                 = $gitlab_repository_factory->getGitlabRepositoriesForProject($project);
+        $gitlab_repositories                 = $repository_integration_factory->getAllIntegrationsInProject($project);
         $gitlab_repositories_representations = [];
         foreach ($gitlab_repositories as $gitlab_repository) {
             $integration_webhook = $webhook_dao->getGitlabRepositoryWebhook(

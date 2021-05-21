@@ -26,7 +26,7 @@ use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Project;
 use Tuleap\Gitlab\Repository\GitlabRepositoryIntegration;
-use Tuleap\Gitlab\Repository\GitlabRepositoryFactory;
+use Tuleap\Gitlab\Repository\GitlabRepositoryIntegrationFactory;
 
 class GitlabReferenceBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -43,20 +43,20 @@ class GitlabReferenceBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
     private $reference_dao;
 
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|GitlabRepositoryFactory
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|GitlabRepositoryIntegrationFactory
      */
-    private $gitlab_repository_factory;
+    private $repository_integration_factory;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->reference_dao             = Mockery::mock(ReferenceDao::class);
-        $this->gitlab_repository_factory = Mockery::mock(GitlabRepositoryFactory::class);
+        $this->reference_dao                  = Mockery::mock(ReferenceDao::class);
+        $this->repository_integration_factory = Mockery::mock(GitlabRepositoryIntegrationFactory::class);
 
         $this->builder = new GitlabReferenceBuilder(
             $this->reference_dao,
-            $this->gitlab_repository_factory
+            $this->repository_integration_factory
         );
     }
 
@@ -112,7 +112,7 @@ class GitlabReferenceBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             ->with('gitlab_commit', 101)
             ->andReturnFalse();
 
-        $this->gitlab_repository_factory->shouldReceive('getGitlabRepositoryByNameInProject')
+        $this->repository_integration_factory->shouldReceive('getIntegrationByNameInProject')
             ->once()
             ->with(
                 $project,
@@ -138,7 +138,7 @@ class GitlabReferenceBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             ->with('gitlab_commit', 101)
             ->andReturnFalse();
 
-        $this->gitlab_repository_factory->shouldReceive('getGitlabRepositoryByNameInProject')
+        $this->repository_integration_factory->shouldReceive('getIntegrationByNameInProject')
             ->once()
             ->with(
                 $project,
@@ -178,7 +178,7 @@ class GitlabReferenceBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             ->with('gitlab_mr', 101)
             ->andReturnFalse();
 
-        $this->gitlab_repository_factory->shouldReceive('getGitlabRepositoryByNameInProject')
+        $this->repository_integration_factory->shouldReceive('getIntegrationByNameInProject')
             ->once()
             ->with(
                 $project,
@@ -218,7 +218,7 @@ class GitlabReferenceBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             ->with('gitlab_tag', 101)
             ->andReturnFalse();
 
-        $this->gitlab_repository_factory->shouldReceive('getGitlabRepositoryByNameInProject')
+        $this->repository_integration_factory->shouldReceive('getIntegrationByNameInProject')
             ->once()
             ->with(
                 $project,

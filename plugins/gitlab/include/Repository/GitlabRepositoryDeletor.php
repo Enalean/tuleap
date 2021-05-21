@@ -43,7 +43,7 @@ class GitlabRepositoryDeletor
      */
     private $db_transaction_executor;
     /**
-     * @var GitlabRepositoryDao
+     * @var GitlabRepositoryIntegrationDao
      */
     private $gitlab_repository_dao;
     /**
@@ -75,7 +75,7 @@ class GitlabRepositoryDeletor
         GitPermissionsManager $git_permissions_manager,
         DBTransactionExecutor $db_transaction_executor,
         WebhookDeletor $webhook_deletor,
-        GitlabRepositoryDao $gitlab_repository_dao,
+        GitlabRepositoryIntegrationDao $gitlab_repository_dao,
         GitlabBotApiTokenDao $gitlab_bot_api_token_dao,
         CommitTuleapReferenceDao $commit_tuleap_reference_dao,
         MergeRequestTuleapReferenceDao $merge_request_dao,
@@ -116,7 +116,7 @@ class GitlabRepositoryDeletor
             $this->commit_tuleap_reference_dao->deleteCommitsInIntegration($repository_id);
             $this->merge_request_dao->deleteAllMergeRequestInIntegration($repository_id);
             $this->tag_info_dao->deleteTagsInIntegration($repository_id);
-            $this->gitlab_repository_dao->deleteGitlabRepository($repository_id);
+            $this->gitlab_repository_dao->deleteIntegration($repository_id);
         });
     }
 }

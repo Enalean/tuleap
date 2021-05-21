@@ -39,8 +39,8 @@ use Tuleap\Gitlab\Reference\MergeRequest\GitlabMergeRequestReferenceRetriever;
 use Tuleap\Gitlab\Reference\Tag\GitlabTagFactory;
 use Tuleap\Gitlab\Reference\Tag\GitlabTagReference;
 use Tuleap\Gitlab\Reference\TuleapReferenceRetriever;
-use Tuleap\Gitlab\Repository\GitlabRepositoryDao;
-use Tuleap\Gitlab\Repository\GitlabRepositoryFactory;
+use Tuleap\Gitlab\Repository\GitlabRepositoryIntegrationDao;
+use Tuleap\Gitlab\Repository\GitlabRepositoryIntegrationFactory;
 use Tuleap\Gitlab\Repository\GitlabRepositoryWebhookController;
 use Tuleap\Gitlab\Repository\IntegrationWebhookController;
 use Tuleap\Gitlab\Repository\Project\GitlabRepositoryProjectDao;
@@ -243,7 +243,7 @@ class gitlabPlugin extends Plugin
                 new TagPushWebhookDataBuilder(),
                 $logger
             ),
-            $this->getGitlabRepositoryFactory(),
+            $this->getGitlabRepositoryIntegrationFactory(),
             new SecretChecker(
                 new SecretRetriever(
                     new WebhookDao(),
@@ -251,7 +251,7 @@ class gitlabPlugin extends Plugin
                 )
             ),
             new WebhookActions(
-                new GitlabRepositoryDao(),
+                new GitlabRepositoryIntegrationDao(),
                 new PostPushWebhookActionProcessor(
                     new WebhookTuleapReferencesParser(),
                     new CommitTuleapReferenceDao(),
@@ -389,7 +389,7 @@ class gitlabPlugin extends Plugin
                 new TagPushWebhookDataBuilder(),
                 $logger
             ),
-            $this->getGitlabRepositoryFactory(),
+            $this->getGitlabRepositoryIntegrationFactory(),
             new SecretChecker(
                 new SecretRetriever(
                     new WebhookDao(),
@@ -397,7 +397,7 @@ class gitlabPlugin extends Plugin
                 )
             ),
             new WebhookActions(
-                new GitlabRepositoryDao(),
+                new GitlabRepositoryIntegrationDao(),
                 new PostPushWebhookActionProcessor(
                     new WebhookTuleapReferencesParser(),
                     new CommitTuleapReferenceDao(),
@@ -484,7 +484,7 @@ class gitlabPlugin extends Plugin
         ) {
             $builder = new GitlabReferenceBuilder(
                 new \Tuleap\Gitlab\Reference\ReferenceDao(),
-                $this->getGitlabRepositoryFactory()
+                $this->getGitlabRepositoryIntegrationFactory()
             );
 
             $reference = $builder->buildGitlabReference(
@@ -522,10 +522,10 @@ class gitlabPlugin extends Plugin
         }
     }
 
-    private function getGitlabRepositoryFactory(): GitlabRepositoryFactory
+    private function getGitlabRepositoryIntegrationFactory(): GitlabRepositoryIntegrationFactory
     {
-        return new GitlabRepositoryFactory(
-            new GitlabRepositoryDao(),
+        return new GitlabRepositoryIntegrationFactory(
+            new GitlabRepositoryIntegrationDao(),
             ProjectManager::instance()
         );
     }
@@ -570,9 +570,9 @@ class gitlabPlugin extends Plugin
 
     public function crossReferenceByNatureOrganizer(CrossReferenceByNatureOrganizer $organizer): void
     {
-        $gitlab_repository_dao = new GitlabRepositoryDao();
-        $gitlab_organizer      = new GitlabCrossReferenceOrganizer(
-            new GitlabRepositoryFactory($gitlab_repository_dao, ProjectManager::instance()),
+        $repository_integration_dao = new GitlabRepositoryIntegrationDao();
+        $gitlab_organizer           = new GitlabCrossReferenceOrganizer(
+            new GitlabRepositoryIntegrationFactory($repository_integration_dao, ProjectManager::instance()),
             new GitlabCommitFactory(new CommitTuleapReferenceDao()),
             new GitlabCommitCrossReferenceEnhancer(
                 \UserManager::instance(),

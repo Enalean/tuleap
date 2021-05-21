@@ -30,7 +30,7 @@ use Tuleap\Gitlab\API\GitlabProjectBuilder;
 use Tuleap\Gitlab\API\GitlabRequestException;
 use Tuleap\Gitlab\API\GitlabResponseAPIException;
 use Tuleap\Gitlab\Repository\GitlabRepositoryIntegration;
-use Tuleap\Gitlab\Repository\GitlabRepositoryFactory;
+use Tuleap\Gitlab\Repository\GitlabRepositoryIntegrationFactory;
 use Tuleap\Gitlab\Repository\Token\GitlabBotApiToken;
 use Tuleap\Gitlab\Repository\Token\GitlabBotApiTokenInserter;
 use Tuleap\Gitlab\Repository\Webhook\WebhookCreator;
@@ -43,9 +43,9 @@ class BotApiTokenUpdater
      */
     private $project_builder;
     /**
-     * @var GitlabRepositoryFactory
+     * @var GitlabRepositoryIntegrationFactory
      */
-    private $repository_factory;
+    private $repository_integration_factory;
     /**
      * @var GitPermissionsManager
      */
@@ -64,24 +64,24 @@ class BotApiTokenUpdater
     private $logger;
 
     public function __construct(
-        GitlabRepositoryFactory $repository_factory,
+        GitlabRepositoryIntegrationFactory $repository_integration_factory,
         GitlabProjectBuilder $project_builder,
         GitPermissionsManager $permissions_manager,
         GitlabBotApiTokenInserter $bot_api_token_inserter,
         WebhookCreator $webhook_creator,
         LoggerInterface $logger
     ) {
-        $this->project_builder        = $project_builder;
-        $this->repository_factory     = $repository_factory;
-        $this->permissions_manager    = $permissions_manager;
-        $this->bot_api_token_inserter = $bot_api_token_inserter;
-        $this->webhook_creator        = $webhook_creator;
-        $this->logger                 = $logger;
+        $this->project_builder                = $project_builder;
+        $this->repository_integration_factory = $repository_integration_factory;
+        $this->permissions_manager            = $permissions_manager;
+        $this->bot_api_token_inserter         = $bot_api_token_inserter;
+        $this->webhook_creator                = $webhook_creator;
+        $this->logger                         = $logger;
     }
 
     public function update(ConcealedBotApiTokenPatchRepresentation $patch_representation, \PFUser $current_user): void
     {
-        $repository = $this->repository_factory->getGitlabRepositoryById(
+        $repository = $this->repository_integration_factory->getIntegrationById(
             $patch_representation->gitlab_integration_id,
         );
         if (! $repository) {

@@ -26,23 +26,23 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Project;
 use ProjectManager;
 
-final class GitlabRepositoryFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
+final class GitlabRepositoryIntegrationFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 
     public function testItRetrievesGitlabIntegrationsForProject(): void
     {
-        $dao             = Mockery::mock(GitlabRepositoryDao::class);
+        $dao             = Mockery::mock(GitlabRepositoryIntegrationDao::class);
         $project_manager = Mockery::mock(ProjectManager::class);
 
-        $factory = new GitlabRepositoryFactory(
+        $factory = new GitlabRepositoryIntegrationFactory(
             $dao,
             $project_manager
         );
 
         $project = Project::buildForTest();
 
-        $dao->shouldReceive('getGitlabRepositoriesForProject')
+        $dao->shouldReceive('searchAllIntegrationsInProject')
             ->once()
             ->with(101)
             ->andReturn(
@@ -63,7 +63,7 @@ final class GitlabRepositoryFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
         $project_manager->shouldReceive('getProject')
             ->andReturn(Project::buildForTest());
 
-        $gitlab_repositories = $factory->getGitlabRepositoriesForProject($project);
+        $gitlab_repositories = $factory->getAllIntegrationsInProject($project);
 
         $this->assertCount(1, $gitlab_repositories);
 

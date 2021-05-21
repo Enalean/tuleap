@@ -36,12 +36,12 @@ class GitlabRepositoryCreator
     private $db_transaction_executor;
 
     /**
-     * @var GitlabRepositoryFactory
+     * @var GitlabRepositoryIntegrationFactory
      */
-    private $gitlab_repository_factory;
+    private $repository_integration_factory;
 
     /**
-     * @var GitlabRepositoryDao
+     * @var GitlabRepositoryIntegrationDao
      */
     private $gitlab_repository_dao;
 
@@ -56,16 +56,16 @@ class GitlabRepositoryCreator
 
     public function __construct(
         DBTransactionExecutor $db_transaction_executor,
-        GitlabRepositoryFactory $gitlab_repository_factory,
-        GitlabRepositoryDao $gitlab_repository_dao,
+        GitlabRepositoryIntegrationFactory $repository_integration_factory,
+        GitlabRepositoryIntegrationDao $gitlab_repository_dao,
         WebhookCreator $webhook_creator,
         GitlabBotApiTokenInserter $token_inserter
     ) {
-        $this->db_transaction_executor   = $db_transaction_executor;
-        $this->gitlab_repository_factory = $gitlab_repository_factory;
-        $this->gitlab_repository_dao     = $gitlab_repository_dao;
-        $this->webhook_creator           = $webhook_creator;
-        $this->token_inserter            = $token_inserter;
+        $this->db_transaction_executor        = $db_transaction_executor;
+        $this->repository_integration_factory = $repository_integration_factory;
+        $this->gitlab_repository_dao          = $gitlab_repository_dao;
+        $this->webhook_creator                = $webhook_creator;
+        $this->token_inserter                 = $token_inserter;
     }
 
     /**
@@ -124,7 +124,7 @@ class GitlabRepositoryCreator
         Project $project,
         GitlabRepositoryCreatorConfiguration $configuration
     ): GitlabRepositoryIntegration {
-        $gitlab_repository = $this->gitlab_repository_factory->createRepositoryIntegration(
+        $gitlab_repository = $this->repository_integration_factory->createRepositoryIntegration(
             $gitlab_project,
             $project,
             $configuration
