@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Domain\Program\Plan;
 
 use Tuleap\ProgramManagement\Domain\Program\ProgramForManagement;
-use Tuleap\ProgramManagement\Domain\Program\ProgramTrackerException;
 
 final class PlanCreator implements CreatePlan
 {
@@ -56,45 +55,34 @@ final class PlanCreator implements CreatePlan
         $this->plan_store               = $plan_store;
     }
 
-    /**
-     * @param int[] $trackers_id
-     * @param non-empty-list<string> $can_possibly_prioritize_ugroups
-     *
-     * @throws CannotPlanIntoItselfException
-     * @throws PlanTrackerException
-     * @throws ProgramAccessException
-     * @throws ProjectIsNotAProgramException
-     * @throws ProgramTrackerException
-     * @throws InvalidProgramUserGroup
-     */
-    public function create(
-        \PFUser $user,
-        int $project_id,
-        int $program_increment_id,
-        array $trackers_id,
-        array $can_possibly_prioritize_ugroups,
-        ?string $custom_label,
-        ?string $custom_sub_label
-    ): void {
-        if (in_array($program_increment_id, $trackers_id, true)) {
-            throw new CannotPlanIntoItselfException();
-        }
-        $program_project            = ProgramForManagement::fromId($this->program_build, $project_id, $user);
+    public function create(PlanChange $plan_change): void
+    {
+        $program_project            = ProgramForManagement::fromId(
+            $this->program_build,
+            $plan_change->project_id,
+            $plan_change->user
+        );
         $program_tracker            = ProgramIncrementTracker::buildProgramIncrementTracker(
             $this->build_tracker,
-            $program_increment_id,
+            $plan_change->program_increment_change->tracker_id,
             $program_project->id
         );
         $plannable_tracker_ids      = $this->build_tracker->buildPlannableTrackerList(
-            $trackers_id,
+            $plan_change->tracker_ids_that_can_be_planned,
             $program_project->id
         );
         $can_prioritize_user_groups = $this->build_program_user_group->buildProgramUserGroups(
             $program_project,
-            $can_possibly_prioritize_ugroups
+            $plan_change->can_possibly_prioritize_ugroups
         );
 
-        $plan = new Plan($program_tracker, $plannable_tracker_ids, $can_prioritize_user_groups, $custom_label, $custom_sub_label);
+        $plan = new Plan(
+            $program_tracker,
+            $plannable_tracker_ids,
+            $can_prioritize_user_groups,
+            $plan_change->program_increment_change->label,
+            $plan_change->program_increment_change->sub_label
+        );
         $this->plan_store->save($plan);
     }
 }

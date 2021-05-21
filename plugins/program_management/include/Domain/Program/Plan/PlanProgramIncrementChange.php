@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2020 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,31 +20,30 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\REST\v1;
+namespace Tuleap\ProgramManagement\Domain\Program\Plan;
 
 /**
  * @psalm-immutable
  */
-final class ProjectResourcePutPlanRepresentation
+final class PlanProgramIncrementChange
 {
     /**
-     * @var int {@required true}
+     * @var int
      */
-    public $program_increment_tracker_id;
+    public $tracker_id;
     /**
-     * @var array {@type int}
+     * @var string|null
      */
-    public $plannable_tracker_ids;
+    public $label;
     /**
-     * @var PlanPutPermissions {@type \Tuleap\ProgramManagement\REST\v1\PlanPutPermissions} {@required true}
+     * @var string|null
      */
-    public $permissions;
-    /**
-     * @var string | null {@required false} {@max 255}
-     */
-    public $program_increment_label = null;
-    /**
-     * @var string | null {@required false} {@max 255}
-     */
-    public $program_increment_sub_label = null;
+    public $sub_label;
+
+    public function __construct(int $tracker_id, ?string $label, ?string $sub_label)
+    {
+        $this->tracker_id = $tracker_id;
+        $this->label      = $label;
+        $this->sub_label  = $sub_label;
+    }
 }

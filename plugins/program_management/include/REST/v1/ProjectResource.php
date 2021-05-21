@@ -59,7 +59,9 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\TopBacklogChange;
 use Tuleap\ProgramManagement\Domain\Program\Plan\CannotPlanIntoItselfException;
 use Tuleap\ProgramManagement\Domain\Program\Plan\CreatePlan;
 use Tuleap\ProgramManagement\Domain\Program\Plan\InvalidProgramUserGroup;
+use Tuleap\ProgramManagement\Domain\Program\Plan\PlanChange;
 use Tuleap\ProgramManagement\Domain\Program\Plan\PlanCreator;
+use Tuleap\ProgramManagement\Domain\Program\Plan\PlanProgramIncrementChange;
 use Tuleap\ProgramManagement\Domain\Program\Plan\PlanTrackerException;
 use Tuleap\ProgramManagement\Domain\Program\Plan\ProgramAccessException;
 use Tuleap\ProgramManagement\Domain\Program\Plan\ProjectIsNotAProgramException;
@@ -170,16 +172,17 @@ final class ProjectResource extends AuthenticatedResource
     /**
      * Define a program plan
      *
-     * Define the program increment and the tracker plannable inside
+     * Define which tracker is program increment and which trackers can be planned in it.
+     * It also lets you define which user groups have permission to plan in program increments.
      * <br/>
-     * <strong>"custom_label"</strong> and <strong>"custom_sub_label"</strong> are optional.
-     * They will be used to have a custom label for Program Increment in UI.
+     * <strong>"program_increment_label"</strong> and <strong>"program_increment_sub_label"</strong> are optional.
+     * They will be used to set a custom label for Program Increment in the UI.
      * <br/>
-     * If there are not used, by default:
+     * The following values are used by default:
      * <pre>
      * {<br/>
-     * &nbsp;"custom_label": "Program Increments",<br/>
-     * &nbsp;"custom_sub_label": "program increment"<br/>
+     * &nbsp;"program_increment_label": "Program Increments",<br/>
+     * &nbsp;"program_increment_sub_label": "program increment"<br/>
      * }
      * </pre>
      *
@@ -195,16 +198,21 @@ final class ProjectResource extends AuthenticatedResource
     protected function putPlan(int $id, ProjectResourcePutPlanRepresentation $representation): void
     {
         $user = $this->user_manager->getCurrentUser();
+
+        $plan_program_increment_change = new PlanProgramIncrementChange(
+            $representation->program_increment_tracker_id,
+            $representation->program_increment_label,
+            $representation->program_increment_sub_label
+        );
         try {
-            $this->plan_creator->create(
+            $plan_change = PlanChange::fromProgramIncrementAndRaw(
+                $plan_program_increment_change,
                 $user,
                 $id,
-                $representation->program_increment_tracker_id,
                 $representation->plannable_tracker_ids,
-                $representation->permissions->can_prioritize_features,
-                $representation->custom_label,
-                $representation->custom_sub_label
+                $representation->permissions->can_prioritize_features
             );
+            $this->plan_creator->create($plan_change);
         } catch (ProjectIsNotAProgramException | CannotPlanIntoItselfException | PlanTrackerException | ProgramTrackerException | InvalidProgramUserGroup $e) {
             throw new RestException(400, $e->getMessage());
         } catch (ProgramAccessException $e) {
