@@ -105,7 +105,11 @@ export default class ReleaseBadgesDisplayerIfOpenSprints extends Vue {
     @State
     readonly user_can_view_sub_milestones_planning!: boolean;
 
-    open_sprints_details = this.isOpen;
+    open_sprints_details = false;
+
+    mounted(): void {
+        this.open_sprints_details = this.isOpen;
+    }
 
     on_click_open_sprints_details(): void {
         if (!this.only_one_open_sprint_and_no_closed_sprints) {

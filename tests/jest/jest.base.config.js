@@ -40,7 +40,9 @@ module.exports = {
     setupFilesAfterEnv: [path.resolve(__dirname, "./fail-console-error-warning.js")],
     globals: {
         "vue-jest": {
-            babelConfig: path.resolve(__dirname, "./babel.config.js"),
+            transform: {
+                "^js$": path.resolve(__dirname, "./babel-jest-process.js"),
+            },
         },
     },
     snapshotSerializers: ["jest-serializer-vue"],
