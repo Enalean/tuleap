@@ -17,42 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-$cardwall-font-basepath: '../../default/fonts/';
-@import '../../default/css/cardwall';
+@use '../../default/css/cardwall';
 
-@mixin definitions($main, $main-background) {
-    .cardwall-cell-header {
-        background-color: $main-background;
-    }
-}
-
-body {
-    @import '../../../../../src/themes/FlamingParrot/css/utils/variables-orange';
-    @include definitions($main, $main-background);
-
-    //scss-lint:disable SelectorFormat
-    &.FlamingParrot_Blue { //stylelint-disable-line selector-no-qualifying-type, selector-class-pattern
-        @import '../../../../../src/themes/FlamingParrot/css/utils/variables-blue';
-        @include definitions($main, $main-background);
-    }
-
-    &.FlamingParrot_Green { //stylelint-disable-line selector-no-qualifying-type, selector-class-pattern
-        @import '../../../../../src/themes/FlamingParrot/css/utils/variables-green';
-        @include definitions($main, $main-background);
-    }
-
-    &.FlamingParrot_BlueGrey { //stylelint-disable-line selector-no-qualifying-type, selector-class-pattern
-        @import '../../../../../src/themes/FlamingParrot/css/utils/variables-bluegrey';
-        @include definitions($main, $main-background);
-    }
-
-    &.FlamingParrot_Purple { //stylelint-disable-line selector-no-qualifying-type, selector-class-pattern
-        @import '../../../../../src/themes/FlamingParrot/css/utils/variables-purple';
-        @include definitions($main, $main-background);
-    }
-
-    &.FlamingParrot_Red { //stylelint-disable-line selector-no-qualifying-type, selector-class-pattern
-        @import '../../../../../src/themes/FlamingParrot/css/utils/variables-red';
-        @include definitions($main, $main-background);
-    }
+.cardwall-cell-header {
+    background-color: var(--tlp-theme-background-color);
 }
