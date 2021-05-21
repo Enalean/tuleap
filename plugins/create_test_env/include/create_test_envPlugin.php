@@ -160,8 +160,7 @@ class create_test_envPlugin extends Plugin
         (new ActivityLoggerDao())->insert($current_user->getId(), 0, 'platform', 'Connexion');
     }
 
-    // @codingStandardsIgnoreLine
-    public function service_is_used(array $params): void
+    public function service_is_used(array $params): void //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $request      = HTTPRequest::instance();
         $current_user = $request->getCurrentUser();
@@ -188,48 +187,11 @@ class create_test_envPlugin extends Plugin
         (new ActivityLoggerDao())->insert($current_user->getId(), $project_id, $event->getServiceName(), "Access");
     }
 
-    // @codingStandardsIgnoreLine
-    public function codendi_daily_start()
+    public function codendi_daily_start(): void //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
-        $emails = $this->getDailyActivityNotificationEmails();
-        if (count($emails) === 0) {
-            return;
-        }
-        $dao        = new ActivityLoggerDao();
-        $now        = new DateTimeImmutable();
-        $yesterday  = $now->sub(new DateInterval('P1DT30M'));
-        $csv_handle = fopen('php://temp', 'w+');
-        fputcsv($csv_handle, ['user_id', 'login', 'email', 'service', 'action', 'time']);
-        foreach ($dao->fetchActivityBetweenDates($yesterday->getTimestamp(), $now->getTimestamp()) as $row) {
-            fputcsv($csv_handle, $row);
-        }
-        rewind($csv_handle);
-
-        $zip_file_name = tempnam(ForgeConfig::get('codendi_cache_dir'), 'create_test_env_daily_zip_');
-        try {
-            $date_tag = $now->format('Y-m-d');
-            $zip      = new ZipArchive();
-            $zip->open($zip_file_name, ZipArchive::CREATE);
-            $zip->addFromString("csv-export-$date_tag.csv", stream_get_contents($csv_handle));
-            $zip->close();
-            fclose($csv_handle);
-
-            $mail = new Codendi_Mail();
-            $mail->setTo(implode(',', $emails));
-            $mail->setSubject("[create_test_env] Activity snapshot at " . $now->format('c'));
-            $mail->addAttachment(file_get_contents($zip_file_name), 'application/zip', "csv-export-$date_tag.zip");
-            $mail->send();
-        } finally {
-            unlink($zip_file_name);
-            $one_year_ago = $now->sub(new DateInterval('P1Y'));
-            $dao->purgeOldData($one_year_ago->getTimestamp());
-        }
-    }
-
-    private function getDailyActivityNotificationEmails()
-    {
-        $str_value = $this->getPluginInfo()->getPropertyValueForName('create_test_env_daily_snapshot_email');
-        return array_filter(array_map('trim', explode(',', $str_value)));
+        $one_year_ago = (new DateTimeImmutable())->sub(new DateInterval('P1Y'));
+        $dao          = new ActivityLoggerDao();
+        $dao->purgeOldData($one_year_ago->getTimestamp());
     }
 
     public function get_permission_delegation(array &$params): void //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
