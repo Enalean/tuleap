@@ -36,17 +36,12 @@ class CreateTestEnvironment
      */
     private $project;
     /**
-     * @var Notifier
-     */
-    private $notifier;
-    /**
      * @var PasswordSanityChecker
      */
     private $password_sanity_checker;
 
-    public function __construct(Notifier $notifier, PasswordSanityChecker $password_sanity_checker, $output_dir)
+    public function __construct(PasswordSanityChecker $password_sanity_checker, $output_dir)
     {
-        $this->notifier                = $notifier;
         $this->password_sanity_checker = $password_sanity_checker;
         $this->output_dir              = $output_dir;
     }
@@ -103,9 +98,6 @@ class CreateTestEnvironment
         if (! $this->project instanceof \Project || $this->project->isError()) {
             throw new Exception\ProjectNotCreatedException();
         }
-
-        $base_url = \HTTPRequest::instance()->getServerUrl();
-        $this->notifier->notify("New project created for {$this->user->getRealName()} ({$this->user->getEmail()}): $base_url/projects/{$this->project->getUnixNameLowerCase()}. #{$this->user->getUnixName()}");
     }
 
     private function getArchiveBaseDir($archive_dir_name)

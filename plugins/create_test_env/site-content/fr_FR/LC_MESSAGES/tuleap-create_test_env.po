@@ -18,29 +18,5 @@ msgstr "Accéder aux activités de test"
 msgid "Automate creation of test users and environments"
 msgstr "Automatise la création d'utilisateurs et d'environments de test"
 
-msgid "Bot list"
-msgstr "Liste des bots"
-
-msgid ""
-"Configure a mattermost bot that will receive notification about people tests."
-msgstr ""
-"Selectionnez un bot mattermost qui recevra les notifications de tests des "
-"utilisateurs"
-
 msgid "Create test environment"
 msgstr "Création d'environment de test"
-
-msgid "Mattermost"
-msgstr "Mattermost"
-
-msgid "Mattermost notifications added"
-msgstr "Notification mattermost ajoutée"
-
-msgid "Mattermost notifications removed"
-msgstr "Notification mattermost supprimée"
-
-msgid "Save"
-msgstr "Enregistrer"
-
-msgid "You should be site administrator to access this page"
-msgstr "Vous devez être administrateur site pour accèder à cette page"

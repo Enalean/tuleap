@@ -21,30 +21,20 @@
 require_once __DIR__ . '/../../tracker/include/trackerPlugin.php';
 require_once __DIR__ . '/../vendor/autoload.php';
 
-use Tuleap\Admin\SiteAdministrationAddOption;
-use Tuleap\Admin\SiteAdministrationPluginOption;
 use Tuleap\CreateTestEnv\ActivitiesAnalytics\DisplayUserActivities;
 use Tuleap\CreateTestEnv\ActivitiesAnalytics\WeeklySummaryController;
 use Tuleap\CreateTestEnv\ActivityLogger\ActivityLoggerDao;
-use Tuleap\BotMattermost\Bot\BotDao;
-use Tuleap\BotMattermost\Bot\BotFactory;
 use Tuleap\CreateTestEnv\ActivitiesAnalytics\ListActivitiesController;
-use Tuleap\CreateTestEnv\NotificationBotDao;
-use Tuleap\CreateTestEnv\NotificationBotIndexController;
-use Tuleap\CreateTestEnv\NotificationBotSaveController;
 use Tuleap\CreateTestEnv\REST\ResourcesInjector as CreateTestEnvResourcesInjector;
 use Tuleap\CreateTestEnv\Plugin\PluginInfo;
 use Tuleap\Project\ServiceAccessEvent;
 use Tuleap\Request\CollectRoutesEvent;
-use Tuleap\BurningParrotCompatiblePageEvent;
-use Tuleap\CreateTestEnv\Notifier;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Tracker\Artifact\Event\ArtifactCreated;
 use Tuleap\Tracker\Artifact\Event\ArtifactUpdated;
 use Tuleap\User\User_ForgeUserGroupPermissionsFactory;
 use Tuleap\User\UserAuthenticationSucceeded;
 use Tuleap\User\UserConnectionUpdateEvent;
-use Tuleap\Admin\AdminPageRenderer;
 
 // @codingStandardsIgnoreLine
 class create_test_envPlugin extends Plugin
@@ -77,8 +67,6 @@ class create_test_envPlugin extends Plugin
     {
         $this->addHook(Event::REST_RESOURCES);
         $this->addHook(CollectRoutesEvent::NAME);
-        $this->addHook(BurningParrotCompatiblePageEvent::NAME);
-        $this->addHook(SiteAdministrationAddOption::NAME);
 
         $this->addHook(UserAuthenticationSucceeded::NAME);
         $this->addHook(UserConnectionUpdateEvent::NAME);
@@ -94,38 +82,10 @@ class create_test_envPlugin extends Plugin
         return parent::getHooksAndCallbacks();
     }
 
-    public function restResources(array $params)
+    public function restResources(array $params): void
     {
         $create_test_env_injector = new CreateTestEnvResourcesInjector();
         $create_test_env_injector->populate($params['restler']);
-    }
-
-    public function burningParrotCompatiblePage(BurningParrotCompatiblePageEvent $event)
-    {
-        if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0) {
-            $event->setIsInBurningParrotCompatiblePage();
-        }
-    }
-
-    public function routeGetNotificationBot(): NotificationBotIndexController
-    {
-        require_once __DIR__ . '/../../botmattermost/include/botmattermostPlugin.php';
-
-        return new NotificationBotIndexController(
-            new BotFactory(new BotDao()),
-            new NotificationBotDao(),
-            new AdminPageRenderer()
-        );
-    }
-
-    public function routePostNotificationBot(): NotificationBotSaveController
-    {
-        require_once __DIR__ . '/../../botmattermost/include/botmattermostPlugin.php';
-
-        return new NotificationBotSaveController(
-            new NotificationBotDao(),
-            $this->getPluginPath()
-        );
     }
 
     public function routeGetActivities(): DispatchableWithRequest
@@ -150,28 +110,15 @@ class create_test_envPlugin extends Plugin
         );
     }
 
-    public function collectRoutesEvent(CollectRoutesEvent $event)
+    public function collectRoutesEvent(CollectRoutesEvent $event): void
     {
         $event->getRouteCollector()->addGroup($this->getPluginPath(), function (FastRoute\RouteCollector $r) {
-            $r->get('/notification-bot', $this->getRouteHandler('routeGetNotificationBot'));
-            $r->post('/notification-bot', $this->getRouteHandler('routePostNotificationBot'));
-
             $r->get('/daily-activities', $this->getRouteHandler('routeGetActivities'));
             $r->get('/weekly-summary', $this->getRouteHandler('routeGetWeeklySummary'));
         });
     }
 
-    public function siteAdministrationAddOption(SiteAdministrationAddOption $site_administration_add_option): void
-    {
-        $site_administration_add_option->addPluginOption(
-            SiteAdministrationPluginOption::build(
-                dgettext('tuleap-create_test_env', 'Create test environment'),
-                $this->getPluginPath() . '/notification-bot'
-            )
-        );
-    }
-
-    public function trackerArtifactCreated(ArtifactCreated $event)
+    public function trackerArtifactCreated(ArtifactCreated $event): void
     {
         $request      = HTTPRequest::instance();
         $current_user = $request->getCurrentUser();
@@ -183,7 +130,7 @@ class create_test_envPlugin extends Plugin
         (new ActivityLoggerDao())->insert($current_user->getId(), $project->getID(), 'tracker', "Created artifact #" . $artifact->getId());
     }
 
-    public function trackerArtifactUpdated(ArtifactUpdated $event)
+    public function trackerArtifactUpdated(ArtifactUpdated $event): void
     {
         $request      = HTTPRequest::instance();
         $current_user = $request->getCurrentUser();
@@ -195,40 +142,34 @@ class create_test_envPlugin extends Plugin
         (new ActivityLoggerDao())->insert($current_user->getId(), $project->getID(), 'tracker', "Updated artifact #" . $artifact->getId());
     }
 
-    public function userAuthenticationSucceeded(UserAuthenticationSucceeded $event)
+    public function userAuthenticationSucceeded(UserAuthenticationSucceeded $event): void
     {
-        $platform_url = HTTPRequest::instance()->getServerUrl();
         $current_user = $event->user;
         if ($current_user->isSuperUser()) {
             return;
         }
-        $this->notify("[{$current_user->getRealName()}](mailto:{$current_user->getEmail()}) logged in $platform_url. #connection #{$current_user->getUnixName()}");
         (new ActivityLoggerDao())->insert($current_user->getId(), 0, 'platform', 'Login');
     }
 
-    public function userConnectionUpdateEvent(UserConnectionUpdateEvent $event)
+    public function userConnectionUpdateEvent(UserConnectionUpdateEvent $event): void
     {
-        $platform_url = HTTPRequest::instance()->getServerUrl();
         $current_user = $event->getUser();
         if ($current_user->isSuperUser()) {
             return;
         }
-        $this->notify("[{$current_user->getRealName()}](mailto:{$current_user->getEmail()}) is using $platform_url. #connection #{$current_user->getUnixName()}");
         (new ActivityLoggerDao())->insert($current_user->getId(), 0, 'platform', 'Connexion');
     }
 
     // @codingStandardsIgnoreLine
-    public function service_is_used(array $params)
+    public function service_is_used(array $params): void
     {
         $request      = HTTPRequest::instance();
         $current_user = $request->getCurrentUser();
         if ($current_user->isSuperUser()) {
             return;
         }
-        $platform_url = $request->getServerUrl();
-        $project      = ProjectManager::instance()->getProject($params['group_id']);
-        $verb         = $params['is_used'] ? 'activated' : 'desactivated';
-        $this->notify("[{$current_user->getRealName()}](mailto:{$current_user->getEmail()}) $verb service {$params['shortname']} in [{$project->getPublicName()}]({$platform_url}/project/{$project->getID()}/admin/services. #project-admin #{$current_user->getUnixName()}");
+        $project = ProjectManager::instance()->getProject($params['group_id']);
+        $verb    = $params['is_used'] ? 'activated' : 'desactivated';
         (new ActivityLoggerDao())->insert($current_user->getId(), $project->getID(), 'project_admin', "$verb service {$params['shortname']}");
     }
 
@@ -245,11 +186,6 @@ class create_test_envPlugin extends Plugin
             $project_id = $project->getID();
         }
         (new ActivityLoggerDao())->insert($current_user->getId(), $project_id, $event->getServiceName(), "Access");
-    }
-
-    private function notify($text)
-    {
-        (new Notifier(new NotificationBotDao()))->notify($text);
     }
 
     // @codingStandardsIgnoreLine
