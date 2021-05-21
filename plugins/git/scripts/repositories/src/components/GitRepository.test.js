@@ -341,4 +341,29 @@ describe("GitRepository", () => {
             repository
         );
     });
+
+    it("When repository is Git and handled by Gerrit, Then Gerrit icon and description are displayed", () => {
+        propsData = {
+            repository: {
+                id: 1,
+                normalized_path: "MyPath/MyRepo",
+                description: "This is my description.",
+                path_without_project: "MyPath",
+                label: "MyRepo",
+                last_update_date: "2020-10-28T15:13:13+01:00",
+                additional_information: [],
+                server: {
+                    id: 1,
+                    html_url: "https://example.com/MyPath/MyRepo",
+                },
+            },
+        };
+        const wrapper = instantiateComponent();
+
+        expect(wrapper.find("[data-test=git-repository-card-description]").exists()).toBeTruthy();
+        expect(wrapper.find("[data-test=git-repository-card-description]").text()).toEqual(
+            "This is my description."
+        );
+        expect(wrapper.find("[data-test=git-repository-card-gerrit-icon]").exists()).toBeTruthy();
+    });
 });

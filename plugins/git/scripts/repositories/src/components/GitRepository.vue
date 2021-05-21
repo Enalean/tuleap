@@ -125,7 +125,11 @@
                 </div>
                 <section
                     class="tlp-pane-section git-repository-card-header"
-                    v-if="hasRepositoryDescription || isGitlabRepository"
+                    v-if="
+                        hasRepositoryDescription ||
+                        isGitlabRepository ||
+                        isRepositoryHandledByGerrit
+                    "
                 >
                     <p
                         v-if="hasRepositoryDescription"
@@ -135,15 +139,25 @@
                     >
                         {{ repository.description }}
                     </p>
-                    <div v-if="isGitlabRepository" class="git-repository-links-spacer"></div>
+                    <div
+                        v-if="mustDisplayAdditionalInformation"
+                        class="git-repository-links-spacer"
+                    ></div>
+                    <i
+                        v-if="isRepositoryHandledByGerrit"
+                        class="fas fa-tlp-gerrit"
+                        v-bind:title="$gettext('This repository is handled by Gerrit.')"
+                        data-test="git-repository-card-gerrit-icon"
+                    ></i>
                     <i
                         v-if="isGitlabRepository"
                         class="fab fa-gitlab"
                         v-bind:class="{ 'git-gitlab-icon-align-to-date': !is_admin }"
+                        v-bind:title="$gettext('This repository comes from GitLab.')"
                         data-test="git-repository-card-gitlab-icon"
                     ></i>
                     <i
-                        v-if="!isGitlabRepositoryWellConfigured"
+                        v-if="isGitlabRepository && !isGitlabRepositoryWellConfigured"
                         class="
                             fas
                             fa-exclamation-triangle
@@ -160,6 +174,7 @@
 const DEFAULT_DESCRIPTION = "-- Default description --";
 
 import { isGitlabRepository, isGitlabRepositoryWellConfigured } from "../gitlab/gitlab-checker";
+import { isRepositoryHandledByGerrit } from "../gerrit/gerrit-checker";
 import { mapActions, mapGetters } from "vuex";
 import TimeAgo from "javascript-time-ago";
 import { getDashCasedLocale, getProjectId, getUserIsAdmin } from "../repository-list-presenter";
@@ -186,6 +201,16 @@ export default {
         },
         isGitlabRepositoryWellConfigured() {
             return isGitlabRepositoryWellConfigured(this.repository);
+        },
+        isRepositoryHandledByGerrit() {
+            return isRepositoryHandledByGerrit(this.repository);
+        },
+        mustDisplayAdditionalInformation() {
+            return (
+                this.isRepositoryHandledByGerrit ||
+                this.isGitlabRepository ||
+                this.isGitlabRepositoryWellConfigured
+            );
         },
         hasRepositoryDescription() {
             return this.repository.description !== DEFAULT_DESCRIPTION;
