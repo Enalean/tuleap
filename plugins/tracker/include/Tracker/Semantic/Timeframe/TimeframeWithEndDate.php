@@ -148,4 +148,20 @@ class TimeframeWithEndDate implements IComputeTimeframes
         }
         return TimePeriodWithoutWeekEnd::buildFromEndDate($start_date, $end_date, $logger);
     }
+
+    public function buildTimePeriodWithoutWeekendForArtifact(Artifact $artifact, \PFUser $user, LoggerInterface $logger): TimePeriodWithoutWeekEnd
+    {
+        try {
+            $start_date = TimeframeArtifactFieldsValueRetriever::getTimestamp($this->start_date_field, $user, $artifact);
+        } catch (TimeframeFieldNotFoundException | TimeframeFieldNoValueException $exception) {
+            $start_date = 0;
+        }
+
+        try {
+            $end_date = TimeframeArtifactFieldsValueRetriever::getTimestamp($this->end_date_field, $user, $artifact);
+        } catch (TimeframeFieldNotFoundException | TimeframeFieldNoValueException $exception) {
+            $end_date = 0;
+        }
+        return TimePeriodWithoutWeekEnd::buildFromEndDate($start_date, $end_date, $logger);
+    }
 }

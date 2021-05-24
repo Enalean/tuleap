@@ -22,6 +22,7 @@ namespace Tuleap\Tracker\Semantic\Timeframe;
 
 use DateTime;
 use PFUser;
+use Psr\Log\LoggerInterface;
 use Tracker_FormElement_Field;
 use Tuleap\Tracker\Artifact\Artifact;
 
@@ -31,18 +32,17 @@ class ArtifactTimeframeHelper
      * @var SemanticTimeframeBuilder
      */
     private $semantic_builder;
-
     /**
-     * @var TimeframeBuilder
+     * @var LoggerInterface
      */
-    private $time_frame_builder;
+    private $logger;
 
     public function __construct(
         SemanticTimeframeBuilder $semantic_builder,
-        TimeframeBuilder $time_frame_builder
+        LoggerInterface $logger
     ) {
-        $this->semantic_builder   = $semantic_builder;
-        $this->time_frame_builder = $time_frame_builder;
+        $this->semantic_builder = $semantic_builder;
+        $this->logger           = $logger;
     }
 
     public function artifactHelpShouldBeShownToUser(PFUser $user, Tracker_FormElement_Field $field): bool
@@ -74,7 +74,14 @@ class ArtifactTimeframeHelper
 
     public function getEndDateArtifactHelperForReadOnlyView(PFUser $user, Artifact $artifact): string
     {
-        $time_period = $this->time_frame_builder->buildTimePeriodWithoutWeekendForArtifact($artifact, $user);
+        $timeframe_semantic = $this->semantic_builder->getSemantic($artifact->getTracker());
+        $time_period        = $timeframe_semantic
+            ->getTimeframeCalculator()
+            ->buildTimePeriodWithoutWeekendForArtifact(
+                $artifact,
+                $user,
+                $this->logger
+            );
 
         $end_date = new DateTime();
         $end_date->setTimestamp((int) $time_period->getEndDate());
@@ -84,8 +91,10 @@ class ArtifactTimeframeHelper
 
     public function getDurationArtifactHelperForReadOnlyView(PFUser $user, Artifact $artifact): string
     {
-        $duration = (int) $this->time_frame_builder
-            ->buildTimePeriodWithoutWeekendForArtifact($artifact, $user)
+        $timeframe_semantic = $this->semantic_builder->getSemantic($artifact->getTracker());
+        $duration           = (int) $timeframe_semantic
+            ->getTimeframeCalculator()
+            ->buildTimePeriodWithoutWeekendForArtifact($artifact, $user, $this->logger)
             ->getDuration();
 
         return sprintf(dngettext('tuleap-tracker', '%s working day', '%s working days', $duration), $duration);

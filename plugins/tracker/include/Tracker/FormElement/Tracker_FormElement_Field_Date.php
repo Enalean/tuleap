@@ -26,9 +26,9 @@ use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 use Tuleap\Tracker\Semantic\Timeframe\ArtifactTimeframeHelper;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao;
-use Tuleap\Tracker\Semantic\Timeframe\TimeframeBuilder;
 use Tuleap\Tracker\XML\TrackerXmlImportFeedbackCollector;
 
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field
 {
     public const DEFAULT_VALUE_TYPE_TODAY    = 0;
@@ -571,7 +571,7 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field
      *
      * @return string the CSV date format of the user regarding its preferences
      */
-    public function _getUserCSVDateFormat()
+    public function _getUserCSVDateFormat() // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         $user = UserManager::instance()->getCurrentUser();
         return (string) $user->getPreference('user_csv_dateformat');
@@ -868,7 +868,7 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field
      * etc.
      *
      */
-    public function _nbDigits($int_value)
+    public function _nbDigits($int_value) // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         return 1 + (int) (log($int_value) / log(10));
     }
@@ -1103,10 +1103,7 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field
 
         return new ArtifactTimeframeHelper(
             $semantic_timeframe_builder,
-            new TimeframeBuilder(
-                $semantic_timeframe_builder,
-                \BackendLogger::getDefaultLogger()
-            )
+            \BackendLogger::getDefaultLogger()
         );
     }
 }

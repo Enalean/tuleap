@@ -38,6 +38,8 @@ interface IComputeTimeframes
 
     public function buildTimePeriodWithoutWeekendForArtifactForREST(Artifact $artifact, \PFUser $user, LoggerInterface $logger): TimePeriodWithoutWeekEnd;
 
+    public function buildTimePeriodWithoutWeekendForArtifact(Artifact $artifact, \PFUser $user, LoggerInterface $logger): TimePeriodWithoutWeekEnd;
+
     public function exportToXML(\SimpleXMLElement $root, array $xml_mapping): void;
 
     public function exportToREST(\PFUser $user): ?IRepresentSemanticTimeframe;
