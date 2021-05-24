@@ -53,7 +53,11 @@
         selector = selector && selector.replace(/.*(?=#[^\s]*$)/, '') //strip for ie7
       }
 
-      $parent = $(selector)
+      if (selector === '#') {
+          $parent = $(selector)
+      } else {
+          $parent = $.find(selector)
+      }
       $parent.length || ($parent = $this.parent())
 
       isActive = $parent.hasClass('open')
