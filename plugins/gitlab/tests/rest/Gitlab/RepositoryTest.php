@@ -20,6 +20,8 @@
 
 namespace Tuleap\Gitlab\REST;
 
+use Guzzle\Http\Message\Response;
+
 require_once __DIR__ . '/../bootstrap.php';
 
 class RepositoryTest extends TestBase
@@ -32,8 +34,32 @@ class RepositoryTest extends TestBase
             )
         );
 
-        $this->assertSame(200, $response->getStatusCode());
-        $this->assertEquals(['OPTIONS', 'DELETE'], $response->getHeader('Allow')->normalize()->toArray());
+        self::assertSame(200, $response->getStatusCode());
+        self::assertEquals(['OPTIONS', 'PATCH', 'DELETE'], $response->getHeader('Allow')->normalize()->toArray());
+    }
+
+    public function testPatchGitlabRepositoryIntegration(): void
+    {
+        $gitlab_integration_before_patch = $this->getGitlabRepositoryIntegration()->json()[0];
+        self::assertFalse($gitlab_integration_before_patch["allow_artifact_closure"]);
+
+        $patch_body = json_encode(
+            [
+                'allow_artifact_closure' => true
+            ]
+        );
+
+        $response = $this->getResponse(
+            $this->client->patch(
+                'gitlab_repositories/' . $this->gitlab_repository_id,
+                null,
+                $patch_body
+            )
+        );
+        self::assertSame(200, $response->getStatusCode());
+
+        $gitlab_integration_after_patch = $response->json();
+        self::assertTrue($gitlab_integration_after_patch["allow_artifact_closure"]);
     }
 
     public function testDeleteGitLabRepositories(): void
@@ -44,24 +70,29 @@ class RepositoryTest extends TestBase
             )
         );
 
-        $this->assertSame(204, $response->getStatusCode());
+        self::assertSame(204, $response->getStatusCode());
 
-        $this->assertRepositoryDeleted();
+        self::assertRepositoryDeleted();
     }
 
     private function assertRepositoryDeleted(): void
     {
-        $response = $this->getResponse(
+        $response = $this->getGitlabRepositoryIntegration();
+
+        self::assertSame(200, $response->getStatusCode());
+
+        self::assertEquals(0, (int) (string) $response->getHeader('X-Pagination-Size'));
+
+        $gitlab_repositories = $response->json();
+        $this->assertCount(0, $gitlab_repositories);
+    }
+
+    private function getGitlabRepositoryIntegration(): Response
+    {
+        return $this->getResponse(
             $this->client->get(
                 'projects/' . $this->gitlab_project_id . '/gitlab_repositories'
             )
         );
-
-        $this->assertSame(200, $response->getStatusCode());
-
-        $this->assertEquals(0, (int) (string) $response->getHeader('X-Pagination-Size'));
-
-        $gitlab_repositories = $response->json();
-        $this->assertCount(0, $gitlab_repositories);
     }
 }

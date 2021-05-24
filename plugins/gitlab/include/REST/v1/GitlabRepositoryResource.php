@@ -47,9 +47,10 @@ use Tuleap\Gitlab\API\GitlabResponseAPIException;
 use Tuleap\Gitlab\Repository\GitlabRepositoryAlreadyIntegratedInProjectException;
 use Tuleap\Gitlab\Repository\GitlabRepositoryCreator;
 use Tuleap\Gitlab\Repository\GitlabRepositoryCreatorConfiguration;
-use Tuleap\Gitlab\Repository\GitlabRepositoryIntegrationDao;
 use Tuleap\Gitlab\Repository\GitlabRepositoryDeletor;
+use Tuleap\Gitlab\Repository\GitlabRepositoryIntegrationDao;
 use Tuleap\Gitlab\Repository\GitlabRepositoryIntegrationFactory;
+use Tuleap\Gitlab\Repository\GitlabRepositoryIntegrationUpdator;
 use Tuleap\Gitlab\Repository\GitlabRepositoryNotInProjectException;
 use Tuleap\Gitlab\Repository\GitlabRepositoryNotIntegratedInAnyProjectException;
 use Tuleap\Gitlab\Repository\GitlabRepositoryWithSameNameAlreadyIntegratedInProjectException;
@@ -244,6 +245,10 @@ final class GitlabRepositoryResource
      * @access protected
      *
      * @param GitlabRepositoryPatchRepresentation $patch_representation {@from body}
+     *
+     * @throws RestException 400
+     * @throws RestException 401
+     * @throws RestException 404
      */
     protected function patch(GitlabRepositoryPatchRepresentation $patch_representation): void
     {
@@ -333,7 +338,7 @@ final class GitlabRepositoryResource
      */
     public function optionsId(int $id): void
     {
-        Header::allowOptionsDelete();
+        Header::allowOptionsPatchDelete();
     }
 
     /**
@@ -403,6 +408,87 @@ final class GitlabRepositoryResource
         } catch (GitlabRepositoryNotInProjectException | GitlabRepositoryNotIntegratedInAnyProjectException $exception) {
             throw new RestException(400, $exception->getMessage());
         }
+    }
+
+    /**
+     * Update GitLab integration
+     *
+     * <pre>
+     * /!\ This route is under construction and subject to changes /!\
+     * </pre>
+     *
+     * <p>
+     * <strong> Note: </strong> Only the allowing closure artifact value can be updated for now
+     * </p>
+     *
+     * @url    PATCH {id}
+     * @access protected
+     *
+     * @param int                                            $id                   Id of the Gitlab integration
+     * @param GitlabRepositoryIntegrationPATCHRepresentation $patch_representation {@from body}
+     *
+     * @return GitlabRepositoryRepresentation {@type GitlabRepositoryRepresentation}
+     *
+     * @throws RestException 401
+     * @throws RestException 404
+     */
+    protected function patchId(
+        int $id,
+        GitlabRepositoryIntegrationPATCHRepresentation $patch_representation
+    ): GitlabRepositoryRepresentation {
+        $this->optionsId($id);
+
+        $current_user = UserManager::instance()->getCurrentUser();
+
+        if (isset($patch_representation->allow_artifact_closure)) {
+            $dao                                   = new GitlabRepositoryIntegrationDao();
+            $gitlab_repository_integration_factory =   new GitlabRepositoryIntegrationFactory(
+                $dao,
+                ProjectManager::instance()
+            );
+            $updater                               = new GitlabRepositoryIntegrationUpdator(
+                $dao,
+                $this->getGitPermissionsManager(),
+                $gitlab_repository_integration_factory,
+                new DBTransactionExecutorWithConnection(
+                    DBFactory::getMainTuleapDBConnection()
+                ),
+            );
+            try {
+                $updater->updateTuleapArtifactClosureOfAGitlabIntegration(
+                    $id,
+                    $patch_representation,
+                    $current_user
+                );
+
+                $updated_gitlab_integration =  $gitlab_repository_integration_factory->getIntegrationById($id);
+                if (! $updated_gitlab_integration) {
+                    throw new RestException(500, "An error occurred during the Gitlab integration update");
+                }
+
+                $webhook_dao         = new WebhookDao();
+                $integration_webhook = $webhook_dao->getGitlabRepositoryWebhook(
+                    $updated_gitlab_integration->getId()
+                );
+
+                return new GitlabRepositoryRepresentation(
+                    $updated_gitlab_integration->getId(),
+                    $updated_gitlab_integration->getGitlabRepositoryId(),
+                    $updated_gitlab_integration->getName(),
+                    $updated_gitlab_integration->getDescription(),
+                    $updated_gitlab_integration->getGitlabRepositoryUrl(),
+                    $updated_gitlab_integration->getLastPushDate()->getTimestamp(),
+                    $updated_gitlab_integration->getProject(),
+                    $updated_gitlab_integration->isArtifactClosureAllowed(),
+                    $integration_webhook !== null
+                );
+            } catch (GitUserNotAdminException $e) {
+                throw new RestException(401, "User must be Git administrator.");
+            } catch (GitlabRepositoryNotIntegratedInAnyProjectException $e) {
+                throw new RestException(404, $e->getMessage());
+            }
+        }
+        throw new RestException(400, "The JSON representation cannot be null");
     }
 
     private function getGitPermissionsManager(): GitPermissionsManager
