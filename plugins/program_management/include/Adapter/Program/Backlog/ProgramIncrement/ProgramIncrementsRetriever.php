@@ -23,11 +23,12 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement;
 
 use PFUser;
+use Psr\Log\LoggerInterface;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrement;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\RetrieveProgramIncrements;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\Tracker\Artifact\Artifact;
-use Tuleap\Tracker\Semantic\Timeframe\TimeframeBuilder;
+use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 
 final class ProgramIncrementsRetriever implements RetrieveProgramIncrements
 {
@@ -40,18 +41,24 @@ final class ProgramIncrementsRetriever implements RetrieveProgramIncrements
      */
     private $artifact_factory;
     /**
-     * @var TimeframeBuilder
+     * @var SemanticTimeframeBuilder
      */
-    private $timeframe_builder;
+    private $semantic_timeframe_builder;
+    /**
+     * @var LoggerInterface
+     */
+    private $logger;
 
     public function __construct(
         ProgramIncrementsDAO $program_increments_dao,
         \Tracker_ArtifactFactory $artifact_factory,
-        TimeframeBuilder $timeframe_builder
+        SemanticTimeframeBuilder $semantic_timeframe_builder,
+        LoggerInterface $logger
     ) {
-        $this->program_increments_dao = $program_increments_dao;
-        $this->artifact_factory       = $artifact_factory;
-        $this->timeframe_builder      = $timeframe_builder;
+        $this->program_increments_dao     = $program_increments_dao;
+        $this->artifact_factory           = $artifact_factory;
+        $this->semantic_timeframe_builder = $semantic_timeframe_builder;
+        $this->logger                     = $logger;
     }
 
     /**
@@ -95,7 +102,12 @@ final class ProgramIncrementsRetriever implements RetrieveProgramIncrements
             $status = $program_increment_artifact->getStatus();
         }
 
-        $time_period = $this->timeframe_builder->buildTimePeriodWithoutWeekendForArtifactForREST($program_increment_artifact, $user);
+        $semantic_timeframe = $this->semantic_timeframe_builder->getSemantic($program_increment_artifact->getTracker());
+        $time_period        = $semantic_timeframe->getTimeframeCalculator()->buildTimePeriodWithoutWeekendForArtifactForREST(
+            $program_increment_artifact,
+            $user,
+            $this->logger
+        );
 
         return new ProgramIncrement(
             $program_increment_artifact->getId(),
