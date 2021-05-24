@@ -25,10 +25,10 @@ use Tuleap\Gitlab\Repository\GitlabRepositoryIntegration;
 use Tuleap\Cryptography\KeyFactory;
 use Tuleap\Cryptography\Symmetric\SymmetricCrypto;
 
-class GitlabBotApiTokenInserter
+class IntegrationApiTokenInserter
 {
     /**
-     * @var GitlabBotApiTokenDao
+     * @var IntegrationApiTokenDao
      */
     private $dao;
     /**
@@ -36,7 +36,7 @@ class GitlabBotApiTokenInserter
      */
     private $key_factory;
 
-    public function __construct(GitlabBotApiTokenDao $dao, KeyFactory $key_factory)
+    public function __construct(IntegrationApiTokenDao $dao, KeyFactory $key_factory)
     {
         $this->dao         = $dao;
         $this->key_factory = $key_factory;

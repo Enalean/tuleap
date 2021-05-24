@@ -28,7 +28,7 @@ use Psr\Log\LoggerInterface;
 use Tuleap\Git\GitService;
 use Tuleap\Gitlab\API\Credentials;
 use Tuleap\Gitlab\Repository\GitlabRepositoryIntegration;
-use Tuleap\Gitlab\Repository\Token\GitlabBotApiTokenDao;
+use Tuleap\Gitlab\Repository\Token\IntegrationApiTokenDao;
 use Tuleap\InstanceBaseURLBuilder;
 
 class InvalidCredentialsNotifier
@@ -42,7 +42,7 @@ class InvalidCredentialsNotifier
      */
     private $instance_base_url;
     /**
-     * @var GitlabBotApiTokenDao
+     * @var IntegrationApiTokenDao
      */
     private $dao;
     /**
@@ -53,7 +53,7 @@ class InvalidCredentialsNotifier
     public function __construct(
         MailBuilder $mail_builder,
         InstanceBaseURLBuilder $instance_base_url,
-        GitlabBotApiTokenDao $dao,
+        IntegrationApiTokenDao $dao,
         LoggerInterface $logger
     ) {
         $this->mail_builder      = $mail_builder;

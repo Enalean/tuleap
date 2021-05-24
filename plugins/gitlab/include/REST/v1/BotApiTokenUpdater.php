@@ -31,8 +31,8 @@ use Tuleap\Gitlab\API\GitlabRequestException;
 use Tuleap\Gitlab\API\GitlabResponseAPIException;
 use Tuleap\Gitlab\Repository\GitlabRepositoryIntegration;
 use Tuleap\Gitlab\Repository\GitlabRepositoryIntegrationFactory;
-use Tuleap\Gitlab\Repository\Token\GitlabBotApiToken;
-use Tuleap\Gitlab\Repository\Token\GitlabBotApiTokenInserter;
+use Tuleap\Gitlab\Repository\Token\IntegrationApiToken;
+use Tuleap\Gitlab\Repository\Token\IntegrationApiTokenInserter;
 use Tuleap\Gitlab\Repository\Webhook\WebhookCreator;
 use Tuleap\REST\I18NRestException;
 
@@ -51,7 +51,7 @@ class BotApiTokenUpdater
      */
     private $permissions_manager;
     /**
-     * @var GitlabBotApiTokenInserter
+     * @var IntegrationApiTokenInserter
      */
     private $bot_api_token_inserter;
     /**
@@ -67,7 +67,7 @@ class BotApiTokenUpdater
         GitlabRepositoryIntegrationFactory $repository_integration_factory,
         GitlabProjectBuilder $project_builder,
         GitPermissionsManager $permissions_manager,
-        GitlabBotApiTokenInserter $bot_api_token_inserter,
+        IntegrationApiTokenInserter $bot_api_token_inserter,
         WebhookCreator $webhook_creator,
         LoggerInterface $logger
     ) {
@@ -94,7 +94,7 @@ class BotApiTokenUpdater
 
         $credentials = new Credentials(
             $repository->getGitlabServerUrl(),
-            GitlabBotApiToken::buildBrandNewToken($patch_representation->gitlab_bot_api_token)
+            IntegrationApiToken::buildBrandNewToken($patch_representation->gitlab_bot_api_token)
         );
 
         try {

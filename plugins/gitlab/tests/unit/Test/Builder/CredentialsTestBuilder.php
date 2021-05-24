@@ -24,7 +24,7 @@ namespace Tuleap\Gitlab\Test\Builder;
 
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\Gitlab\API\Credentials;
-use Tuleap\Gitlab\Repository\Token\GitlabBotApiToken;
+use Tuleap\Gitlab\Repository\Token\IntegrationApiToken;
 
 final class CredentialsTestBuilder
 {
@@ -60,7 +60,7 @@ final class CredentialsTestBuilder
     {
         return new Credentials(
             'https://gitlab.example.com',
-            GitlabBotApiToken::buildAlreadyKnownToken(
+            IntegrationApiToken::buildAlreadyKnownToken(
                 new ConcealedString($this->secret),
                 $this->email_already_sent,
             )

@@ -44,8 +44,8 @@ use Tuleap\Gitlab\Repository\GitlabRepositoryIntegrationFactory;
 use Tuleap\Gitlab\Repository\GitlabRepositoryWebhookController;
 use Tuleap\Gitlab\Repository\IntegrationWebhookController;
 use Tuleap\Gitlab\Repository\Project\GitlabRepositoryProjectDao;
-use Tuleap\Gitlab\Repository\Token\GitlabBotApiTokenDao;
-use Tuleap\Gitlab\Repository\Token\GitlabBotApiTokenRetriever;
+use Tuleap\Gitlab\Repository\Token\IntegrationApiTokenDao;
+use Tuleap\Gitlab\Repository\Token\IntegrationApiTokenRetriever;
 use Tuleap\Gitlab\Repository\Webhook\Bot\BotCommentReferencePresenterBuilder;
 use Tuleap\Gitlab\Repository\Webhook\Bot\CommentSender;
 use Tuleap\Gitlab\Repository\Webhook\Bot\CredentialsRetriever;
@@ -219,14 +219,14 @@ class gitlabPlugin extends Plugin
                     ),
                 ),
                 new InstanceBaseURLBuilder(),
-                new GitlabBotApiTokenDao(),
+                new IntegrationApiTokenDao(),
                 $logger,
             ),
         );
 
         $commenter = new PostPushCommitBotCommenter(
             $comment_sender,
-            new CredentialsRetriever(new GitlabBotApiTokenRetriever(new GitlabBotApiTokenDao(), new KeyFactory())),
+            new CredentialsRetriever(new IntegrationApiTokenRetriever(new IntegrationApiTokenDao(), new KeyFactory())),
             $logger,
             new BotCommentReferencePresenterBuilder(new InstanceBaseURLBuilder()),
             TemplateRendererFactory::build(),
@@ -277,7 +277,7 @@ class gitlabPlugin extends Plugin
                     $logger,
                     new PostMergeRequestBotCommenter(
                         $comment_sender,
-                        new CredentialsRetriever(new GitlabBotApiTokenRetriever(new GitlabBotApiTokenDao(), new KeyFactory())),
+                        new CredentialsRetriever(new IntegrationApiTokenRetriever(new IntegrationApiTokenDao(), new KeyFactory())),
                         $logger,
                         new BotCommentReferencePresenterBuilder(new InstanceBaseURLBuilder()),
                         TemplateRendererFactory::build()
@@ -295,13 +295,13 @@ class gitlabPlugin extends Plugin
                     ),
                     new PostMergeRequestWebhookAuthorDataRetriever(
                         $gitlab_api_client,
-                        new CredentialsRetriever(new GitlabBotApiTokenRetriever(new GitlabBotApiTokenDao(), new KeyFactory()))
+                        new CredentialsRetriever(new IntegrationApiTokenRetriever(new IntegrationApiTokenDao(), new KeyFactory()))
                     ),
                     new GitlabMergeRequestReferenceRetriever(new MergeRequestTuleapReferenceDao())
                 ),
                 new TagPushWebhookActionProcessor(
                     new TagPushWebhookCreateAction(
-                        new CredentialsRetriever(new GitlabBotApiTokenRetriever(new GitlabBotApiTokenDao(), new KeyFactory())),
+                        new CredentialsRetriever(new IntegrationApiTokenRetriever(new IntegrationApiTokenDao(), new KeyFactory())),
                         new GitlabTagRetriever(
                             $gitlab_api_client
                         ),
@@ -365,14 +365,14 @@ class gitlabPlugin extends Plugin
                     ),
                 ),
                 new InstanceBaseURLBuilder(),
-                new GitlabBotApiTokenDao(),
+                new IntegrationApiTokenDao(),
                 $logger,
             ),
         );
 
         $commenter = new PostPushCommitBotCommenter(
             $comment_sender,
-            new CredentialsRetriever(new GitlabBotApiTokenRetriever(new GitlabBotApiTokenDao(), new KeyFactory())),
+            new CredentialsRetriever(new IntegrationApiTokenRetriever(new IntegrationApiTokenDao(), new KeyFactory())),
             $logger,
             new BotCommentReferencePresenterBuilder(new InstanceBaseURLBuilder()),
             TemplateRendererFactory::build(),
@@ -423,7 +423,7 @@ class gitlabPlugin extends Plugin
                     $logger,
                     new PostMergeRequestBotCommenter(
                         $comment_sender,
-                        new CredentialsRetriever(new GitlabBotApiTokenRetriever(new GitlabBotApiTokenDao(), new KeyFactory())),
+                        new CredentialsRetriever(new IntegrationApiTokenRetriever(new IntegrationApiTokenDao(), new KeyFactory())),
                         $logger,
                         new BotCommentReferencePresenterBuilder(new InstanceBaseURLBuilder()),
                         TemplateRendererFactory::build()
@@ -441,13 +441,13 @@ class gitlabPlugin extends Plugin
                     ),
                     new PostMergeRequestWebhookAuthorDataRetriever(
                         $gitlab_api_client,
-                        new CredentialsRetriever(new GitlabBotApiTokenRetriever(new GitlabBotApiTokenDao(), new KeyFactory()))
+                        new CredentialsRetriever(new IntegrationApiTokenRetriever(new IntegrationApiTokenDao(), new KeyFactory()))
                     ),
                     new GitlabMergeRequestReferenceRetriever(new MergeRequestTuleapReferenceDao())
                 ),
                 new TagPushWebhookActionProcessor(
                     new TagPushWebhookCreateAction(
-                        new CredentialsRetriever(new GitlabBotApiTokenRetriever(new GitlabBotApiTokenDao(), new KeyFactory())),
+                        new CredentialsRetriever(new IntegrationApiTokenRetriever(new IntegrationApiTokenDao(), new KeyFactory())),
                         new GitlabTagRetriever(
                             $gitlab_api_client
                         ),

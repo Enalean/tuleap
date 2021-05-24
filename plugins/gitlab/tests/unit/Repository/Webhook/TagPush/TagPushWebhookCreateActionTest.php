@@ -38,7 +38,7 @@ use Tuleap\Gitlab\Reference\Tag\GitlabTagReference;
 use Tuleap\Gitlab\Reference\TuleapReferenceNotFoundException;
 use Tuleap\Gitlab\Reference\TuleapReferenceRetriever;
 use Tuleap\Gitlab\Repository\GitlabRepositoryIntegration;
-use Tuleap\Gitlab\Repository\Token\GitlabBotApiToken;
+use Tuleap\Gitlab\Repository\Token\IntegrationApiToken;
 use Tuleap\Gitlab\Repository\Webhook\Bot\CredentialsRetriever;
 use Tuleap\Gitlab\Repository\Webhook\WebhookTuleapReferencesParser;
 
@@ -125,7 +125,7 @@ class TagPushWebhookCreateActionTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $credentials = new Credentials(
             "https://example.com",
-            GitlabBotApiToken::buildBrandNewToken(new ConcealedString("DAT-TOKEN"))
+            IntegrationApiToken::buildBrandNewToken(new ConcealedString("DAT-TOKEN"))
         );
 
         $this->credentials_retriever->shouldReceive('getCredentials')
@@ -240,7 +240,7 @@ class TagPushWebhookCreateActionTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $credentials = new Credentials(
             "https://example.com",
-            GitlabBotApiToken::buildBrandNewToken(new ConcealedString("DAT-TOKEN"))
+            IntegrationApiToken::buildBrandNewToken(new ConcealedString("DAT-TOKEN"))
         );
 
         $this->credentials_retriever->shouldReceive('getCredentials')
@@ -292,7 +292,7 @@ class TagPushWebhookCreateActionTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $credentials = new Credentials(
             "https://example.com",
-            GitlabBotApiToken::buildBrandNewToken(new ConcealedString("DAT-TOKEN"))
+            IntegrationApiToken::buildBrandNewToken(new ConcealedString("DAT-TOKEN"))
         );
 
         $this->credentials_retriever->shouldReceive('getCredentials')

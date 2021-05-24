@@ -30,18 +30,18 @@ use Tuleap\Cryptography\ConcealedString;
 use Tuleap\Cryptography\Symmetric\SymmetricCrypto;
 use Tuleap\Cryptography\Symmetric\EncryptionKey;
 
-class GitlabBotApiTokenInserterTest extends \Tuleap\Test\PHPUnit\TestCase
+class IntegrationApiTokenInserterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 
     /**
-     * @var GitlabBotApiTokenInserter
+     * @var IntegrationApiTokenInserter
      */
     private $inserter;
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|GitlabBotApiTokenDao
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|IntegrationApiTokenDao
      */
-    private $gitlab_bot_api_token_dao;
+    private $integration_api_token_dao;
     /**
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|KeyFactory
      */
@@ -51,11 +51,11 @@ class GitlabBotApiTokenInserterTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         parent::setUp();
 
-        $this->gitlab_bot_api_token_dao = Mockery::mock(GitlabBotApiTokenDao::class);
-        $this->key_factory              = Mockery::mock(KeyFactory::class);
+        $this->integration_api_token_dao = Mockery::mock(IntegrationApiTokenDao::class);
+        $this->key_factory               = Mockery::mock(KeyFactory::class);
 
-        $this->inserter = new GitlabBotApiTokenInserter(
-            $this->gitlab_bot_api_token_dao,
+        $this->inserter = new IntegrationApiTokenInserter(
+            $this->integration_api_token_dao,
             $this->key_factory
         );
     }
@@ -75,7 +75,7 @@ class GitlabBotApiTokenInserterTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->key_factory->shouldReceive('getEncryptionKey')->andReturn($encryption_key)->once();
 
-        $this->gitlab_bot_api_token_dao
+        $this->integration_api_token_dao
             ->shouldReceive('storeToken')
             ->with(
                 123,
