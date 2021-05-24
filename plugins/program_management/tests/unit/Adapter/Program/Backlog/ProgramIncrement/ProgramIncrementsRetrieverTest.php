@@ -23,13 +23,16 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement;
 
 use Mockery;
+use Psr\Log\NullLogger;
 use Tracker_FormElement_Field_List;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrement;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Stub\BuildProgramStub;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
-use Tuleap\Tracker\Semantic\Timeframe\TimeframeBuilder;
+use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframe;
+use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
+use Tuleap\Tracker\Semantic\Timeframe\TimeframeWithDuration;
 
 final class ProgramIncrementsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -44,21 +47,31 @@ final class ProgramIncrementsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $artifact_factory;
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|TimeframeBuilder
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|SemanticTimeframeBuilder
      */
-    private $timeframe_builder;
+    private $semantic_timeframe_builder;
     /**
      * @var ProgramIncrementsRetriever
      */
     private $retriever;
+    /**
+     * @var NullLogger
+     */
+    private $logger;
 
     protected function setUp(): void
     {
-        $this->dao               = Mockery::mock(ProgramIncrementsDAO::class);
-        $this->artifact_factory  = Mockery::mock(\Tracker_ArtifactFactory::class);
-        $this->timeframe_builder = Mockery::mock(TimeframeBuilder::class);
+        $this->dao                        = Mockery::mock(ProgramIncrementsDAO::class);
+        $this->artifact_factory           = Mockery::mock(\Tracker_ArtifactFactory::class);
+        $this->semantic_timeframe_builder = Mockery::mock(SemanticTimeframeBuilder::class);
 
-        $this->retriever = new ProgramIncrementsRetriever($this->dao, $this->artifact_factory, $this->timeframe_builder);
+        $this->logger    = new NullLogger();
+        $this->retriever = new ProgramIncrementsRetriever(
+            $this->dao,
+            $this->artifact_factory,
+            $this->semantic_timeframe_builder,
+            $this->logger
+        );
     }
 
     public function testCanRetrievesOpenProgramIncrements(): void
@@ -92,11 +105,19 @@ final class ProgramIncrementsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             $mock_artifact->shouldReceive('getTracker')->andReturn($tracker);
             $mock_artifact->shouldReceive('getStatus')->andReturn('Open');
         }
-        $this->timeframe_builder->shouldReceive('buildTimePeriodWithoutWeekendForArtifactForREST')
-            ->with($artifact_14, $user)
+
+        $timeframe_calculator = Mockery::mock(TimeframeWithDuration::class);
+
+        $this->semantic_timeframe_builder->shouldReceive('getSemantic')
+            ->with($tracker)
+            ->andReturn(new SemanticTimeframe($tracker, $timeframe_calculator));
+
+
+        $timeframe_calculator->shouldReceive('buildTimePeriodWithoutWeekendForArtifactForREST')
+            ->with($artifact_14, $user, $this->logger)
             ->andReturn($time_period_14);
-        $this->timeframe_builder->shouldReceive('buildTimePeriodWithoutWeekendForArtifactForREST')
-            ->with($artifact_15, $user)
+        $timeframe_calculator->shouldReceive('buildTimePeriodWithoutWeekendForArtifactForREST')
+            ->with($artifact_15, $user, $this->logger)
             ->andReturn($time_period_15);
         $status_field = Mockery::mock(Tracker_FormElement_Field_List::class);
         $status_field->shouldReceive('userCanRead')->andReturn(true);

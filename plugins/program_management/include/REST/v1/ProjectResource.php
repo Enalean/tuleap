@@ -79,7 +79,6 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkUpdaterDataFormate
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDecoratorRetriever;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao;
-use Tuleap\Tracker\Semantic\Timeframe\TimeframeBuilder;
 
 final class ProjectResource extends AuthenticatedResource
 {
@@ -151,10 +150,8 @@ final class ProjectResource extends AuthenticatedResource
             new ProgramIncrementsRetriever(
                 new ProgramIncrementsDAO(),
                 $artifact_factory,
-                new TimeframeBuilder(
-                    new SemanticTimeframeBuilder(new SemanticTimeframeDao(), $form_element_factory),
-                    BackendLogger::getDefaultLogger()
-                )
+                new SemanticTimeframeBuilder(new SemanticTimeframeDao(), $form_element_factory),
+                BackendLogger::getDefaultLogger()
             )
         );
     }
