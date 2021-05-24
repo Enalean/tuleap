@@ -24,6 +24,7 @@ namespace Tuleap\ProgramManagement\Domain\Program\Plan;
 
 use Tuleap\ProgramManagement\Domain\Program\ProgramForManagement;
 use Tuleap\ProgramManagement\Stub\BuildProgramStub;
+use Tuleap\ProgramManagement\Stub\BuildTrackerStub;
 use Tuleap\Test\Builders\UserTestBuilder;
 
 final class PlanCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -31,7 +32,7 @@ final class PlanCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItCreatesAPlan(): void
     {
         $program_adapter = BuildProgramStub::stubValidProgramForManagement();
-        $tracker_adapter = $this->createMock(BuildTracker::class);
+        $tracker_adapter = BuildTrackerStub::buildTrackerIsValidAndGetPlannableTrackerList();
         $build_ugroups   = $this->createMock(BuildProgramUserGroup::class);
 
         $project_id           = 102;
@@ -40,28 +41,19 @@ final class PlanCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $user = UserTestBuilder::aUser()->build();
 
         $program = ProgramForManagement::fromId($program_adapter, $project_id, $user);
-        $tracker_adapter->expects(self::exactly(2))->method('checkTrackerIsValid');
-        $tracker_adapter->expects(self::once())->method('buildPlannableTrackerList')->with(
-            [$plannable_tracker_id],
-            $project_id
-        )->willReturn(
-            [$plannable_tracker_id => ProgramPlannableTracker::build(
-                $tracker_adapter,
-                $plannable_tracker_id,
-                $project_id
-            )]
-        );
         $build_ugroups->method('buildProgramUserGroups')->willReturn([$program]);
 
         $plan_dao = $this->createMock(PlanStore::class);
         $plan_dao->expects(self::once())->method('save')->with(self::isInstanceOf(Plan::class));
         $plan_program_increment_change = new PlanProgramIncrementChange(1, 'Program Increments', 'program increment');
+        $iteration_representation      = new PlanIterationChange(150, null, null);
         $plan_change                   = PlanChange::fromProgramIncrementAndRaw(
             $plan_program_increment_change,
             $user,
             $project_id,
             [$plannable_tracker_id],
-            ['102_4']
+            ['102_4'],
+            $iteration_representation
         );
 
         $plan_adapter = new PlanCreator($program_adapter, $tracker_adapter, $build_ugroups, $plan_dao);

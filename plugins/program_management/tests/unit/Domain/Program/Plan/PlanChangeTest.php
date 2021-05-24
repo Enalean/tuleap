@@ -33,13 +33,32 @@ final class PlanChangeTest extends TestCase
         $tracker_ids_that_can_be_planned = [99, $program_increment_tracker_id, 67];
         $plan_program_increment_change   = new PlanProgramIncrementChange($program_increment_tracker_id, null, null);
 
-        $this->expectException(CannotPlanIntoItselfException::class);
+        $this->expectException(ProgramIncrementCannotPlanIntoItselfException::class);
         PlanChange::fromProgramIncrementAndRaw(
             $plan_program_increment_change,
             UserTestBuilder::aUser()->build(),
             101,
             $tracker_ids_that_can_be_planned,
-            []
+            [],
+            null
+        );
+    }
+
+    public function testItThrowsWhenIterationTrackerIdCanAlsoBePlanned(): void
+    {
+        $program_increment_tracker_id    = 16;
+        $tracker_ids_that_can_be_planned = [99, 67];
+        $plan_program_increment_change   = new PlanProgramIncrementChange($program_increment_tracker_id, null, null);
+        $iteration_representation        = new PlanIterationChange(99, null, null);
+
+        $this->expectException(IterationCannotBePlannedException::class);
+        PlanChange::fromProgramIncrementAndRaw(
+            $plan_program_increment_change,
+            UserTestBuilder::aUser()->build(),
+            101,
+            $tracker_ids_that_can_be_planned,
+            [],
+            $iteration_representation
         );
     }
 
@@ -56,7 +75,8 @@ final class PlanChangeTest extends TestCase
             $user,
             $project_id,
             $tracker_ids_that_can_be_planned,
-            $can_possibly_prioritize_ugroups
+            $can_possibly_prioritize_ugroups,
+            null
         );
 
         self::assertSame($plan_program_increment_change, $plan_change->program_increment_change);
@@ -64,5 +84,32 @@ final class PlanChangeTest extends TestCase
         self::assertSame($project_id, $plan_change->project_id);
         self::assertSame($tracker_ids_that_can_be_planned, $plan_change->tracker_ids_that_can_be_planned);
         self::assertSame($can_possibly_prioritize_ugroups, $plan_change->can_possibly_prioritize_ugroups);
+        self::assertNull($plan_change->iteration);
+    }
+
+    public function testItBuildsAValidPlanChangeWithIterationChange(): void
+    {
+        $plan_program_increment_change   = new PlanProgramIncrementChange(16, 'Releases', 'release');
+        $user                            = UserTestBuilder::aUser()->build();
+        $project_id                      = 101;
+        $tracker_ids_that_can_be_planned = [99, 67];
+        $can_possibly_prioritize_ugroups = ['198', '101_3'];
+        $plan_iteration_change           = new PlanIterationChange(130, "Iterations", "iteration");
+
+        $plan_change = PlanChange::fromProgramIncrementAndRaw(
+            $plan_program_increment_change,
+            $user,
+            $project_id,
+            $tracker_ids_that_can_be_planned,
+            $can_possibly_prioritize_ugroups,
+            $plan_iteration_change
+        );
+
+        self::assertSame($plan_program_increment_change, $plan_change->program_increment_change);
+        self::assertSame($user, $plan_change->user);
+        self::assertSame($project_id, $plan_change->project_id);
+        self::assertSame($tracker_ids_that_can_be_planned, $plan_change->tracker_ids_that_can_be_planned);
+        self::assertSame($can_possibly_prioritize_ugroups, $plan_change->can_possibly_prioritize_ugroups);
+        self::assertSame($plan_iteration_change, $plan_change->iteration);
     }
 }
