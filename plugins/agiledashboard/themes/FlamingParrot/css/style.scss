@@ -19,102 +19,76 @@
 @import './default-style';
 @import '../../../../../src/themes/common/css/utils/colors';
 
-@mixin definitions($main) {
-    /* stylelint-disable selector-no-qualifying-type */
-    div.milestones > fieldset.milestone {
+/* stylelint-disable selector-no-qualifying-type */
+div.milestones > fieldset.milestone {
+    legend {
+        border-bottom-color: var(--tlp-theme-color);
+        color: var(--tlp-theme-color);
+
+        > span.status {
+            &.open {
+                background-color: var(--tlp-theme-color);
+            }
+        }
+    }
+
+    &.collapsed {
         legend {
-            border-bottom-color: $main;
-            color: $main;
-
-            > span.status {
-                &.open {
-                    background-color: $main;
-                }
-            }
-        }
-
-        &.collapsed {
-            legend {
-                border-bottom-color: #e9e9e9;
-            }
+            border-bottom-color: #e9e9e9;
         }
     }
-    /* stylelint-enable */
+}
+/* stylelint-enable */
 
-    .tuleap-artifact-modal {
-        .followups-title {
-            color: $main;
-        }
-
-        .modal-body fieldset > legend {
-            border-bottom-color: $main;
-            color: $main;
-        }
+.tuleap-artifact-modal {
+    .followups-title {
+        color: var(--tlp-theme-color);
     }
 
-    /* stylelint-disable-next-line selector-no-qualifying-type */
-    #details .table > tbody > tr:hover > td.agiledashboard-milestone-details-items-list-is-closed {
-        background: transparentize($main, .93);
+    .modal-body fieldset > legend {
+        border-bottom-color: var(--tlp-theme-color);
+        color: var(--tlp-theme-color);
     }
+}
+
+/* stylelint-disable-next-line selector-no-qualifying-type */
+#details .table > tbody > tr:hover > td.agiledashboard-milestone-details-items-list-is-closed {
+    background: var(--tlp-theme-color-transparent-90);
 }
 
 /* stylelint-disable selector-no-qualifying-type, selector-class-pattern */
 body {
     &.FlamingParrot_Orange {
-        @import '../../../../../src/themes/FlamingParrot/css/utils/variables-orange';
-
-        @include definitions($main);
-
         .empty-home {
             background: transparent url('../images/agile-dashboard-not-configured-orange.png') no-repeat center 20px;
         }
     }
 
     &.FlamingParrot_Blue {
-        @import '../../../../../src/themes/FlamingParrot/css/utils/variables-blue';
-
-        @include definitions($main);
-
         .empty-home {
             background: transparent url('../images/agile-dashboard-not-configured-blue.png') no-repeat center 20px;
         }
     }
 
     &.FlamingParrot_Green {
-        @import '../../../../../src/themes/FlamingParrot/css/utils/variables-green';
-
-        @include definitions($main);
-
         .empty-home {
             background: transparent url('../images/agile-dashboard-not-configured-green.png') no-repeat center 20px;
         }
     }
 
     &.FlamingParrot_BlueGrey {
-        @import '../../../../../src/themes/FlamingParrot/css/utils/variables-bluegrey';
-
-        @include definitions($main);
-
         .empty-home {
             background: transparent url('../images/agile-dashboard-not-configured-bluegrey.png') no-repeat center 20px;
         }
     }
 
     &.FlamingParrot_Purple {
-        @import '../../../../../src/themes/FlamingParrot/css/utils/variables-purple';
-
-        @include definitions($main);
-
         .empty-home {
             background: transparent url('../images/agile-dashboard-not-configured-purple.png') no-repeat center 20px;
         }
     }
 
     &.FlamingParrot_Red {
-        @import '../../../../../src/themes/FlamingParrot/css/utils/variables-red';
-
-        @include definitions($main);
-
         .empty-home {
             background: transparent url('../images/agile-dashboard-not-configured-red.png') no-repeat center 20px;
         }

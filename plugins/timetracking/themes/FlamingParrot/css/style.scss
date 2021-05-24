@@ -73,31 +73,9 @@
     vertical-align: middle;
 }
 
-/* stylelint-disable selector-no-qualifying-type, selector-class-pattern */
+/* stylelint-disable selector-no-qualifying-type */
 body.tracker-administration {
-    @import '../../src/themes/FlamingParrot/css/utils/variables-orange';
-
-    background: $main-background;
-
-    &.FlamingParrot_Blue {
-        @import '../../src/themes/FlamingParrot/css/utils/variables-blue';
-    }
-
-    &.FlamingParrot_Green {
-        @import '../../src/themes/FlamingParrot/css/utils/variables-green';
-    }
-
-    &.FlamingParrot_BlueGrey {
-        @import '../../src/themes/FlamingParrot/css/utils/variables-bluegrey';
-    }
-
-    &.FlamingParrot_Purple {
-        @import '../../src/themes/FlamingParrot/css/utils/variables-purple';
-    }
-
-    &.FlamingParrot_Red {
-        @import '../../src/themes/FlamingParrot/css/utils/variables-red';
-    }
+    background: var(--tlp-theme-background-color);
 
     .main {
         #feedback > ul {
