@@ -12,7 +12,7 @@
   "dependencies": {
     "@juggle/resize-observer": "^3.3.0",
     "@tuleap/gettext": "file://../gettext",
-    "lit-html": "^1.3.0"
+    "lit-html": "^1.4.1"
   },
   "devDependencies": {},
   "config": {
