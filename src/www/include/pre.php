@@ -44,7 +44,7 @@ textdomain('tuleap-core');
 
 // Detect whether this file is called by a script running in cli mode, or in normal web mode
 if (! defined('IS_SCRIPT')) {
-    if (php_sapi_name() == "cli") {
+    if (PHP_SAPI === "cli") {
         // Backend scripts should never ends because of lack of time or memory
         ini_set('max_execution_time', '0');
         ini_set('memory_limit', '-1');

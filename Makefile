@@ -131,31 +131,19 @@ generate-po: ## Generate translatable strings
 generate-mo: ## Compile translated strings into binary format
 	@tools/utils/generate-mo.sh `pwd`
 
-tests_rest_php73:
-	$(MAKE) tests-rest DB=mysql57
-
-tests_rest_setup_73:
-	$(MAKE) tests-rest DB=mysql57 SETUP_ONLY=1
-
-tests-rest: ## Run all REST tests. SETUP_ONLY=1 to disable auto run. PHP_VERSION to select the version of PHP to use (73, 74). DB to select the database to use (mysql57, mariadb103)
+tests-rest: ## Run all REST tests. SETUP_ONLY=1 to disable auto run. PHP_VERSION to select the version of PHP to use (74). DB to select the database to use (mysql57, mariadb103)
 	$(eval PHP_VERSION ?= 74)
 	$(eval DB ?= mysql57)
 	$(eval SETUP_ONLY ?= 0)
 	$(eval TESTS_RESULT ?= ./test_results_rest_$(PHP_VERSION)_$(DB))
 	SETUP_ONLY="$(SETUP_ONLY)" TESTS_RESULT="$(TESTS_RESULT)" tests/rest/bin/run-compose.sh "$(PHP_VERSION)" "$(DB)"
 
-tests_soap_73:
-	$(MAKE) tests-soap DB=mysql57
-
-tests-soap: ## Run all SOAP tests. PHP_VERSION to select the version of PHP to use (73, 74). DB to select the database to use (mysql57, mariadb103)
+tests-soap: ## Run all SOAP tests. PHP_VERSION to select the version of PHP to use (74). DB to select the database to use (mysql57, mariadb103)
 	$(eval PHP_VERSION ?= 74)
 	$(eval DB ?= mysql57)
 	SETUP_ONLY="$(SETUP_ONLY)" tests/soap/bin/run-compose.sh "$(PHP_VERSION)" "$(DB)"
 
-tests_db_73:
-	$(MAKE) tests-db DB=mysql57
-
-tests-db: ## Run all DB integration tests with PHP 7.3. SETUP_ONLY=1 to disable auto run. PHP_VERSION to select the version of PHP to use (73, 74). DB to select the database to use (mysql57, mariadb103)
+tests-db: ## Run all DB integration tests with PHP 7.3. SETUP_ONLY=1 to disable auto run. PHP_VERSION to select the version of PHP to use (74). DB to select the database to use (mysql57, mariadb103)
 	$(eval PHP_VERSION ?= 74)
 	$(eval DB ?= mysql57)
 	$(eval SETUP_ONLY ?= 0)
@@ -189,14 +177,6 @@ run-as-owner:
 	useradd -u $$USER_ID -g $$GROUP_ID runner
 	su -c "$(MAKE) -C $(CURDIR) $(TARGET) PHP=$(PHP)" -l runner
 
-phpunit-ci-73:
-	$(eval COVERAGE_ENABLED ?= 1)
-	mkdir -p $(WORKSPACE)/results/ut-phpunit/php-73
-	@docker run --rm -v $(CURDIR):/tuleap:ro -v $(WORKSPACE)/results/ut-phpunit/php-73:/tmp/results --network none enalean/tuleap-test-phpunit:c7-php73 make -C /tuleap TARGET="phpunit-ci-run COVERAGE_ENABLED=$(COVERAGE_ENABLED)" PHP=/opt/remi/php73/root/usr/bin/php run-as-owner
-
-phpunit-docker-73:
-	$(MAKE) tests-unit-php PHP_VERSION=73
-
 phpunit-ci-74:
 	$(eval COVERAGE_ENABLED ?= 1)
 	mkdir -p $(WORKSPACE)/results/ut-phpunit/php-74
@@ -206,7 +186,7 @@ phpunit-docker-74:
 	$(MAKE) tests-unit-php PHP_VERSION=74
 
 .PHONY: tests-unit-php
-tests-unit-php: ## Run PHPUnit unit tests in a Docker container. PHP_VERSION to select the version of PHP to use (73, 74, 80). FILES to run specific tests.
+tests-unit-php: ## Run PHPUnit unit tests in a Docker container. PHP_VERSION to select the version of PHP to use (74, 80). FILES to run specific tests.
 	$(eval PHP_VERSION ?= 74)
 	@docker run --rm -v $(CURDIR):/tuleap:ro --network none enalean/tuleap-test-phpunit:c7-php$(PHP_VERSION) scl enable php$(PHP_VERSION) "make -C /tuleap phpunit FILES=$(FILES)"
 
@@ -277,10 +257,8 @@ bash-web: ## Give a bash on web container
 	@docker exec -e COLUMNS="`tput cols`" -e LINES="`tput lines`" -ti `docker-compose ps -q web` bash
 
 pull-docker-images: ## Pull all docker images used for development
-	$(DOCKER) pull enalean/tuleap-test-phpunit:c7-php73
 	$(DOCKER) pull enalean/tuleap-test-phpunit:c7-php74
 	$(DOCKER) pull enalean/tuleap-test-phpunit:c7-php80
-	$(DOCKER) pull enalean/tuleap-test-rest:c7-php73
 	$(DOCKER) pull enalean/tuleap-test-rest:c7-php74
 	$(DOCKER) pull enalean/tuleap-aio:centos7
 	$(DOCKER) pull enalean/rnc2rng:latest

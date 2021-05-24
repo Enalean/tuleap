@@ -26,6 +26,7 @@ namespace TuleapCfg\Command\SiteDeploy\FPM;
 use ForgeConfig;
 use Psr\Log\LogLevel;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Formatter\OutputFormatter;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Logger\ConsoleLogger;
@@ -35,7 +36,6 @@ final class SiteDeployFPMCommand extends Command
 {
     public const NAME            = 'site-deploy:fpm';
     public const OPT_PHP_VERSION = 'php-version';
-    public const PHP73           = 'php73';
     public const PHP74           = 'php74';
     public const OPT_FORCE       = 'force';
 
@@ -49,7 +49,7 @@ final class SiteDeployFPMCommand extends Command
     protected function configure(): void
     {
         $this->setDescription('Deploy PHP FPM configuration files')
-            ->addOption(self::OPT_PHP_VERSION, '', InputOption::VALUE_REQUIRED, 'Target php version: `php73` or `php74` (default)', self::PHP74)
+            ->addOption(self::OPT_PHP_VERSION, '', InputOption::VALUE_REQUIRED, 'Target php version: `php74` (default)', self::PHP74)
             ->addOption(self::OPT_DEVELOPMENT, '', InputOption::VALUE_NONE, 'Deploy development version of the configuration files')
             ->addOption(self::OPT_FORCE, '', InputOption::VALUE_NONE, 'Force files to be rewritten (by default existing files are not modified)');
     }
@@ -66,9 +66,17 @@ final class SiteDeployFPMCommand extends Command
 
         $console_logger = new ConsoleLogger($output, [LogLevel::INFO => OutputInterface::VERBOSITY_NORMAL]);
 
-        $deploy = SiteDeployFPM::buildForPHP73($console_logger, ForgeConfig::get('sys_http_user'), $development);
         if ($php_version === self::PHP74) {
             $deploy = SiteDeployFPM::buildForPHP74($console_logger, ForgeConfig::get('sys_http_user'), $development);
+        } else {
+            $output->write(
+                sprintf(
+                    '<error>%s option does not support "%s"</error>',
+                    OutputFormatter::escape(self::OPT_PHP_VERSION),
+                    OutputFormatter::escape($php_version)
+                )
+            );
+            return self::FAILURE;
         }
         if ($force) {
             $deploy->forceDeploy();
