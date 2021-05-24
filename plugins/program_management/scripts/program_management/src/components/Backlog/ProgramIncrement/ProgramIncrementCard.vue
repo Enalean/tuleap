@@ -89,7 +89,9 @@ export default class ProgramIncrementCard extends Vue {
 
     private is_open = false;
 
-    formatDate = (date: string): string => formatDateYearMonthDay(this.user_locale, date);
+    formatDate(date: string): string {
+        return formatDateYearMonthDay(this.user_locale, date);
+    }
 
     toggleIsOpen(): void {
         this.is_open = !this.is_open;
