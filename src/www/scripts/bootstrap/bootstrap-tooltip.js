@@ -138,7 +138,7 @@
           .detach()
           .css({ top: 0, left: 0, display: 'block' })
 
-        this.options.container ? $tip.appendTo(this.options.container) : $tip.insertAfter(this.$element)
+        this.options.container ? $tip.appendTo($.find(this.options.container)) : $tip.insertAfter(this.$element)
 
         pos = this.getPosition()
 
@@ -216,7 +216,7 @@
       var $tip = this.tip()
         , title = this.getTitle()
 
-      $tip.find('.tooltip-inner')[this.options.html ? 'html' : 'text'](title)
+      $tip.find('.tooltip-inner')[this.options.html ? 'html' : 'text']($.find(title))
       $tip.removeClass('fade in top bottom left right')
     }
 
