@@ -58,7 +58,10 @@ export interface Repository {
         write: PermissionsRepository[];
         rewind: PermissionsRepository[];
     };
-    server: null | string;
+    server: null | {
+        id: number;
+        html_url: string;
+    };
     html_url: string;
     gitlab_data?: null | GitLabData;
 }

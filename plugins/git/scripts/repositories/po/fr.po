@@ -245,8 +245,14 @@ msgstr ""
 "Ces serveurs seront appelés lors de chaque push fait dans les dépôts du "
 "projet :"
 
+msgid "This repository comes from GitLab."
+msgstr "Ce dépôt vient de GitLab."
+
 msgid "This repository is already integrated."
 msgstr "Ce dépôt est déjà intégré."
+
+msgid "This repository is handled by Gerrit."
+msgstr "Ce dépôt est géré par Gerrit."
 
 msgid "Token of GitLab repository %{ label } has been successfully updated."
 msgstr ""
