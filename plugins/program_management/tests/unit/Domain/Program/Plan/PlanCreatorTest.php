@@ -22,73 +22,49 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Plan;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\ProgramManagement\Domain\Program\ProgramForManagement;
 use Tuleap\ProgramManagement\Stub\BuildProgramStub;
 use Tuleap\Test\Builders\UserTestBuilder;
 
 final class PlanCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     public function testItCreatesAPlan(): void
     {
         $program_adapter = BuildProgramStub::stubValidProgramForManagement();
-        $tracker_adapter = \Mockery::mock(BuildTracker::class);
-        $build_ugroups   = \Mockery::mock(BuildProgramUserGroup::class);
+        $tracker_adapter = $this->createMock(BuildTracker::class);
+        $build_ugroups   = $this->createMock(BuildProgramUserGroup::class);
 
-        $project_id                   = 101;
-        $program_increment_tracker_id = 1;
-        $plannable_tracker_id         = 2;
+        $project_id           = 102;
+        $plannable_tracker_id = 2;
 
         $user = UserTestBuilder::aUser()->build();
 
         $program = ProgramForManagement::fromId($program_adapter, $project_id, $user);
-        $tracker_adapter->shouldReceive('checkTrackerIsValid')->twice();
-        $tracker_adapter->shouldReceive('buildPlannableTrackerList')
-            ->with([$plannable_tracker_id], $project_id)->once()
-            ->andReturn([$plannable_tracker_id => ProgramPlannableTracker::build($tracker_adapter, $plannable_tracker_id, $project_id)]);
-        $build_ugroups->shouldReceive('buildProgramUserGroups')->andReturn([$program]);
+        $tracker_adapter->expects(self::exactly(2))->method('checkTrackerIsValid');
+        $tracker_adapter->expects(self::once())->method('buildPlannableTrackerList')->with(
+            [$plannable_tracker_id],
+            $project_id
+        )->willReturn(
+            [$plannable_tracker_id => ProgramPlannableTracker::build(
+                $tracker_adapter,
+                $plannable_tracker_id,
+                $project_id
+            )]
+        );
+        $build_ugroups->method('buildProgramUserGroups')->willReturn([$program]);
 
-        $plan_dao = \Mockery::mock(PlanStore::class);
-        $plan_dao->shouldReceive('save')->with(\Mockery::type(Plan::class))->once();
-
-        $plan_adapter = new PlanCreator($program_adapter, $tracker_adapter, $build_ugroups, $plan_dao);
-        $plan_adapter->create(
+        $plan_dao = $this->createMock(PlanStore::class);
+        $plan_dao->expects(self::once())->method('save')->with(self::isInstanceOf(Plan::class));
+        $plan_program_increment_change = new PlanProgramIncrementChange(1, 'Program Increments', 'program increment');
+        $plan_change                   = PlanChange::fromProgramIncrementAndRaw(
+            $plan_program_increment_change,
             $user,
             $project_id,
-            $program_increment_tracker_id,
             [$plannable_tracker_id],
-            ['102_4'],
-            "Program Increments",
-            "program increment"
+            ['102_4']
         );
-    }
-
-    public function testItThrowsAnExceptionWhenProgramIncrementTrackerIsInPlannableTracker(): void
-    {
-        $program_adapter = \Mockery::mock(BuildProgram::class);
-        $tracker_adapter = \Mockery::mock(BuildTracker::class);
-        $build_ugroups   = \Mockery::mock(BuildProgramUserGroup::class);
-        $plan_dao        = \Mockery::mock(PlanStore::class);
-
-        $user = UserTestBuilder::aUser()->build();
-
-        $project_id                   = 101;
-        $program_increment_tracker_id = 1;
-        $plannable_tracker_id         = 1;
-
-        $this->expectException(CannotPlanIntoItselfException::class);
 
         $plan_adapter = new PlanCreator($program_adapter, $tracker_adapter, $build_ugroups, $plan_dao);
-        $plan_adapter->create(
-            $user,
-            $project_id,
-            $program_increment_tracker_id,
-            [$plannable_tracker_id],
-            ['101_4'],
-            "Program Increments",
-            "program increment"
-        );
+        $plan_adapter->create($plan_change);
     }
 }
