@@ -164,4 +164,48 @@ class TimeframeWithEndDate implements IComputeTimeframes
         }
         return TimePeriodWithoutWeekEnd::buildFromEndDate($start_date, $end_date, $logger);
     }
+
+    /**
+     * @throws \Tracker_FormElement_Chart_Field_Exception
+     */
+    public function buildTimePeriodWithoutWeekendForArtifactChartRendering(Artifact $artifact, \PFUser $user, LoggerInterface $logger): TimePeriodWithoutWeekEnd
+    {
+        try {
+            try {
+                $start_date = TimeframeArtifactFieldsValueRetriever::getTimestamp($this->start_date_field, $user, $artifact);
+            } catch (TimeframeFieldNoValueException $exception) {
+                $start_date = null;
+            }
+
+            if (! $start_date) {
+                throw new \Tracker_FormElement_Chart_Field_Exception(
+                    dgettext('tuleap-tracker', '"start date" field is empty or invalid')
+                );
+            }
+        } catch (TimeframeFieldNotFoundException $exception) {
+            throw new \Tracker_FormElement_Chart_Field_Exception(
+                dgettext('tuleap-tracker', 'The tracker doesn\'t have a "start_date" Date field or you don\'t have the permission to access it.')
+            );
+        }
+
+        try {
+            $end_date = TimeframeArtifactFieldsValueRetriever::getTimestamp($this->end_date_field, $user, $artifact);
+
+            if (! $end_date) {
+                throw new \Tracker_FormElement_Chart_Field_Exception(
+                    dgettext('tuleap-tracker', '"end date" field is empty or invalid')
+                );
+            }
+        } catch (TimeframeFieldNotFoundException $exception) {
+            throw new \Tracker_FormElement_Chart_Field_Exception(
+                dgettext('tuleap-tracker', 'The tracker doesn\'t have a "end_date" Date field or you don\'t have the permission to access it.')
+            );
+        } catch (TimeframeFieldNoValueException $exception) {
+            throw new \Tracker_FormElement_Chart_Field_Exception(
+                dgettext('tuleap-tracker', '"end date" field is empty or invalid')
+            );
+        }
+
+        return TimePeriodWithoutWeekEnd::buildFromEndDate($start_date, $end_date, $logger);
+    }
 }

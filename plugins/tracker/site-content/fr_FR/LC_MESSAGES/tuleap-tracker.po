@@ -2567,6 +2567,10 @@ msgstr "Sélectionner la valeur par défaut"
 msgid "Selectbox"
 msgstr "Liste de choix"
 
+#, php-format
+msgid "Semantic Timeframe is not configured for tracker %s."
+msgstr "La sémantique Plage de temps n'est pas configurée pour le tracker %s."
+
 msgid "Semantic has been deleted successfully"
 msgstr "La sémantique a été supprimée avec succès"
 

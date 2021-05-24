@@ -22,7 +22,7 @@ namespace Tuleap\Tracker\FormElement;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use Tuleap\Tracker\Semantic\Timeframe\TimeframeBuilder;
+use Tuleap\Tracker\Semantic\Timeframe\IComputeTimeframes;
 
 require_once __DIR__ . '/../../bootstrap.php';
 
@@ -86,7 +86,7 @@ class ChartConfigurationValueRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->configuration_value_retriever = new ChartConfigurationValueRetriever(
             $this->field_retriever,
-            Mockery::mock(TimeframeBuilder::class),
+            Mockery::mock(IComputeTimeframes::class),
             \Mockery::mock(\Psr\Log\LoggerInterface::class)
         );
     }

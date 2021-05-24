@@ -96,8 +96,8 @@ class TimeframeNotConfiguredTest extends TestCase
     public function testItReturnsAnEmptyTimePeriodForArtifact(): void
     {
         $time_period = $this->timeframe->buildTimePeriodWithoutWeekendForArtifact(
-            self::createMock(Artifact::class),
-            self::createMock(\PFUser::class),
+            $this->createMock(Artifact::class),
+            $this->createMock(\PFUser::class),
             new NullLogger()
         );
 
@@ -109,13 +109,30 @@ class TimeframeNotConfiguredTest extends TestCase
     public function testItReturnsAnEmptyTimePeriodForArtifactREST(): void
     {
         $time_period = $this->timeframe->buildTimePeriodWithoutWeekendForArtifactForREST(
-            self::createMock(Artifact::class),
-            self::createMock(\PFUser::class),
+            $this->createMock(Artifact::class),
+            $this->createMock(\PFUser::class),
             new NullLogger()
         );
 
         assertNull($time_period->getStartDate());
         assertNull($time_period->getDuration());
         assertNull($time_period->getEndDate());
+    }
+
+    public function testItThrowsAnExceptionWhenInChartContext(): void
+    {
+        $artifact = $this->createMock(Artifact::class);
+        $tracker  = $this->createMock(\Tracker::class);
+
+        $artifact->expects(self::once())->method('getTracker')->will(self::returnValue($tracker));
+        $tracker->expects(self::once())->method('getName')->will(self::returnValue('User story'));
+
+        self::expectException(\Tracker_FormElement_Chart_Field_Exception::class);
+
+        $this->timeframe->buildTimePeriodWithoutWeekendForArtifactChartRendering(
+            $artifact,
+            $this->createMock(\PFUser::class),
+            new NullLogger()
+        );
     }
 }

@@ -130,7 +130,6 @@ use Tuleap\Tracker\Semantic\Status\StatusValueForChangesetProvider;
 use Tuleap\Tracker\Semantic\Status\StatusValueProvider;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao;
-use Tuleap\Tracker\Semantic\Timeframe\TimeframeBuilder;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldDetector;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsRetriever;
 use Tuleap\Tracker\Workflow\PostAction\HiddenFieldsets\HiddenFieldsetsDetector;
@@ -2224,10 +2223,7 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
                 $field_retriever,
                 new ChartConfigurationValueRetriever(
                     $field_retriever,
-                    new TimeframeBuilder(
-                        $semantic_timeframe_builder,
-                        $logger
-                    ),
+                    $semantic_timeframe_builder->getSemantic($this->tracker)->getTimeframeCalculator(),
                     $logger
                 )
             ),

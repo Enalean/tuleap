@@ -327,6 +327,84 @@ class TimeframeWithEndDateTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertSame(-11347, $time_period->getDuration());
     }
 
+    public function testItThrowsAnExceptionWhenEndDateHasNoLastChangesetValueInChartContext(): void
+    {
+        $start_date = '07/01/2013';
+
+        $this->start_date_field->expects(self::once())->method('userCanRead')->will(self::returnValue(true));
+        $this->end_date_field->expects(self::once())->method('userCanRead')->will(self::returnValue(true));
+
+        $this->mockDateFieldWithValue($this->start_date_field, $start_date);
+        $this->end_date_field->expects(self::once())
+            ->method('getLastChangesetValue')
+            ->with($this->artifact)
+            ->will(self::returnValue(null));
+
+        $this->expectException(\Tracker_FormElement_Chart_Field_Exception::class);
+        $this->timeframe->buildTimePeriodWithoutWeekendForArtifactChartRendering(
+            $this->artifact,
+            $this->user,
+            new NullLogger()
+        );
+    }
+
+    public function testItThrowsAnExceptionWhenEndDateIsNotReadableInChartContext(): void
+    {
+        $start_date = '07/01/2013';
+
+        $this->start_date_field->expects(self::once())->method('userCanRead')->will(self::returnValue(true));
+        $this->end_date_field->expects(self::once())->method('userCanRead')->will(self::returnValue(false));
+
+        $this->mockDateFieldWithValue($this->start_date_field, $start_date);
+
+        $this->expectException(\Tracker_FormElement_Chart_Field_Exception::class);
+        $this->timeframe->buildTimePeriodWithoutWeekendForArtifactChartRendering(
+            $this->artifact,
+            $this->user,
+            new NullLogger()
+        );
+    }
+
+    public function testItThrowsAnExceptionWhenEndDateIsEmpty(): void
+    {
+        $start_date = '07/01/2013';
+
+        $this->start_date_field->expects(self::once())->method('userCanRead')->will(self::returnValue(true));
+        $this->end_date_field->expects(self::once())->method('userCanRead')->will(self::returnValue(true));
+
+        $this->mockDateFieldWithValue($this->start_date_field, $start_date);
+        $this->mockDateFieldWithValue($this->end_date_field, null);
+
+        $this->expectException(\Tracker_FormElement_Chart_Field_Exception::class);
+        $this->timeframe->buildTimePeriodWithoutWeekendForArtifactChartRendering(
+            $this->artifact,
+            $this->user,
+            new NullLogger()
+        );
+    }
+
+    public function testItReturnsTimeframeFromEndDateInChartContext(): void
+    {
+        $start_date = '07/01/2013';
+        $end_date   = '07/15/2013';
+
+        $this->start_date_field->expects(self::once())->method('userCanRead')->will(self::returnValue(true));
+        $this->end_date_field->expects(self::once())->method('userCanRead')->will(self::returnValue(true));
+
+        $this->mockDateFieldWithValue($this->start_date_field, $start_date);
+        $this->mockDateFieldWithValue($this->end_date_field, $end_date);
+
+        $time_period = $this->timeframe->buildTimePeriodWithoutWeekendForArtifactChartRendering(
+            $this->artifact,
+            $this->user,
+            new NullLogger()
+        );
+
+        $this->assertSame(strtotime($start_date), $time_period->getStartDate());
+        $this->assertSame(strtotime($end_date), $time_period->getEndDate());
+        $this->assertSame(10, $time_period->getDuration());
+    }
+
     private function getMockedDateField(int $field_id): \Tracker_FormElement_Field_Date
     {
         $mock = $this->getMockBuilder(\Tracker_FormElement_Field_Date::class)

@@ -37,6 +37,7 @@ use Tracker_FormElement_Field_Burndown;
 use Tracker_FormElementFactory;
 use TrackerManager;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Semantic\Timeframe\IComputeTimeframes;
 
 // phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 class Tracker_FormElement_Field_BurndownTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -118,6 +119,8 @@ class Tracker_FormElement_Field_BurndownTest extends \Tuleap\Test\PHPUnit\TestCa
             ->with($this->artifact)
             ->andReturn('<div id="burndown-chart"></div>');
         $this->burndown_field->shouldReceive('isCacheBurndownAlreadyAsked')->andReturnFalse();
+        $this->burndown_field->shouldReceive('getTimeframeCalculator')
+            ->andReturn(Mockery::mock(IComputeTimeframes::class));
 
         $this->user = \Mockery::spy(\PFUser::class);
 

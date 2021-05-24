@@ -40,6 +40,11 @@ interface IComputeTimeframes
 
     public function buildTimePeriodWithoutWeekendForArtifact(Artifact $artifact, \PFUser $user, LoggerInterface $logger): TimePeriodWithoutWeekEnd;
 
+    /**
+     * @throws \Tracker_FormElement_Chart_Field_Exception
+     */
+    public function buildTimePeriodWithoutWeekendForArtifactChartRendering(Artifact $artifact, \PFUser $user, LoggerInterface $logger): TimePeriodWithoutWeekEnd;
+
     public function exportToXML(\SimpleXMLElement $root, array $xml_mapping): void;
 
     public function exportToREST(\PFUser $user): ?IRepresentSemanticTimeframe;

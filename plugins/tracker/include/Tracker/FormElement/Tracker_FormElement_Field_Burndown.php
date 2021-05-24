@@ -39,9 +39,9 @@ use Tuleap\Tracker\FormElement\Field\Burndown\BurndownRemainingEffortAdderForRES
 use Tuleap\Tracker\FormElement\Field\Computed\ComputedFieldDao;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 use Tuleap\Tracker\REST\Artifact\ArtifactFieldValueFullRepresentation;
+use Tuleap\Tracker\Semantic\Timeframe\IComputeTimeframes;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao;
-use Tuleap\Tracker\Semantic\Timeframe\TimeframeBuilder;
 use Tuleap\Tracker\UserWithReadAllPermissionBuilder;
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
@@ -331,9 +331,9 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
 
     private function getTimePeriodForRESTRepresentation(Artifact $artifact, PFUser $user)
     {
-        $builder = $this->getTimeframeBuilder();
+        $calculator = $this->getTimeframeCalculator();
 
-        return $builder->buildTimePeriodWithoutWeekendForArtifactForREST($artifact, $user);
+        return $calculator->buildTimePeriodWithoutWeekendForArtifactForREST($artifact, $user, $this->getLogger());
     }
 
     protected function getLogger(): \Psr\Log\LoggerInterface
@@ -654,7 +654,7 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
     {
         return new ChartConfigurationValueRetriever(
             $this->getBurdownConfigurationFieldRetriever(),
-            $this->getTimeframeBuilder(),
+            $this->getTimeframeCalculator(),
             $this->getLogger()
         );
     }
@@ -801,12 +801,12 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
         );
     }
 
-    private function getTimeframeBuilder(): TimeframeBuilder
+    /**
+     * protected for testing purpose
+     */
+    protected function getTimeframeCalculator(): IComputeTimeframes
     {
-        return new TimeframeBuilder(
-            $this->getSemanticTimeframeBuilder(),
-            $this->getLogger()
-        );
+        return $this->getSemanticTimeframeBuilder()->getSemantic($this->getTracker())->getTimeframeCalculator();
     }
 
     private function getSemanticTimeframeBuilder(): SemanticTimeframeBuilder
