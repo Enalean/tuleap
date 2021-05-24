@@ -98,7 +98,6 @@ final class BannerResource extends AuthenticatedResource
      * @url GET
      *
      * @access hybrid
-     * @oauth2-scope read:project
      *
      * @throws RestException
      */
