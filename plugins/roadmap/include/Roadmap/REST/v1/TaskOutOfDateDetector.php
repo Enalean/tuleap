@@ -27,7 +27,8 @@ use Psr\Log\LoggerInterface;
 use Tracker_Semantic_Status;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Semantic\Status\SemanticStatusRetriever;
-use Tuleap\Tracker\Semantic\Timeframe\TimeframeBuilder;
+use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframe;
+use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 
 final class TaskOutOfDateDetector implements IDetectIfArtifactIsOutOfDate
 {
@@ -40,18 +41,18 @@ final class TaskOutOfDateDetector implements IDetectIfArtifactIsOutOfDate
      */
     private $logger;
     /**
-     * @var TimeframeBuilder
+     * @var SemanticTimeframeBuilder
      */
-    private $timeframe_builder;
+    private $semantic_timeframe_builder;
 
     public function __construct(
         SemanticStatusRetriever $semantic_status_retriever,
-        TimeframeBuilder $timeframe_builder,
+        SemanticTimeframeBuilder $semantic_timeframe_builder,
         LoggerInterface $logger
     ) {
-        $this->semantic_status_retriever = $semantic_status_retriever;
-        $this->timeframe_builder         = $timeframe_builder;
-        $this->logger                    = $logger;
+        $this->semantic_status_retriever  = $semantic_status_retriever;
+        $this->semantic_timeframe_builder = $semantic_timeframe_builder;
+        $this->logger                     = $logger;
     }
 
     public function isArtifactOutOfDate(
@@ -59,7 +60,8 @@ final class TaskOutOfDateDetector implements IDetectIfArtifactIsOutOfDate
         DateTimeImmutable $now,
         \PFUser $user
     ): bool {
-        $semantic_status = $this->semantic_status_retriever->retrieveSemantic($artifact->getTracker());
+        $semantic_status    = $this->semantic_status_retriever->retrieveSemantic($artifact->getTracker());
+        $semantic_timeframe = $this->semantic_timeframe_builder->getSemantic($artifact->getTracker());
 
         $status_field = $semantic_status->getField();
         if ($status_field === null || $semantic_status->isOpen($artifact)) {
@@ -67,7 +69,7 @@ final class TaskOutOfDateDetector implements IDetectIfArtifactIsOutOfDate
         }
 
         return $this->hasBeenClosedMoreThanOneYearAgo($artifact, $semantic_status, $status_field, $now)
-            || $this->isEndDateMoreThanOneYearAgo($artifact, $user, $now);
+            || $this->isEndDateMoreThanOneYearAgo($semantic_timeframe, $artifact, $user, $now);
     }
 
     private function hasBeenClosedMoreThanOneYearAgo(
@@ -119,10 +121,15 @@ final class TaskOutOfDateDetector implements IDetectIfArtifactIsOutOfDate
         return true;
     }
 
-    private function isEndDateMoreThanOneYearAgo(Artifact $artifact, \PFUser $user, DateTimeImmutable $now): bool
-    {
-        $time_period   = $this->timeframe_builder->buildTimePeriodWithoutWeekendForArtifactForREST($artifact, $user);
-        $task_end_date = $this->getDateTheTaskEnds($time_period);
+    private function isEndDateMoreThanOneYearAgo(
+        SemanticTimeframe $semantic_timeframe,
+        Artifact $artifact,
+        \PFUser $user,
+        DateTimeImmutable $now
+    ): bool {
+        $timeframe_calculator = $semantic_timeframe->getTimeframeCalculator();
+        $time_period          = $timeframe_calculator->buildTimePeriodWithoutWeekendForArtifactForREST($artifact, $user, $this->logger);
+        $task_end_date        = $this->getDateTheTaskEnds($time_period);
 
         if ($task_end_date === null) {
             return false;

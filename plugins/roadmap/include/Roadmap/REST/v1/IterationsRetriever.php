@@ -25,6 +25,7 @@ namespace Tuleap\Roadmap\REST\v1;
 
 use Luracast\Restler\RestException;
 use ProjectManager;
+use Psr\Log\LoggerInterface;
 use Tracker_ArtifactFactory;
 use TrackerFactory;
 use Tuleap\REST\I18NRestException;
@@ -32,7 +33,6 @@ use Tuleap\REST\ProjectAuthorization;
 use Tuleap\Roadmap\RoadmapWidgetDao;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframe;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
-use Tuleap\Tracker\Semantic\Timeframe\TimeframeBuilder;
 use URLVerification;
 use UserManager;
 
@@ -64,13 +64,13 @@ class IterationsRetriever
      */
     private $semantic_timeframe_builder;
     /**
-     * @var TimeframeBuilder
-     */
-    private $timeframe_builder;
-    /**
      * @var Tracker_ArtifactFactory
      */
     private $artifact_factory;
+    /**
+     * @var LoggerInterface
+     */
+    private $logger;
 
     public function __construct(
         RoadmapWidgetDao $dao,
@@ -79,8 +79,8 @@ class IterationsRetriever
         URLVerification $url_verification,
         TrackerFactory $tracker_factory,
         SemanticTimeframeBuilder $semantic_timeframe_builder,
-        TimeframeBuilder $timeframe_builder,
-        Tracker_ArtifactFactory $artifact_factory
+        Tracker_ArtifactFactory $artifact_factory,
+        LoggerInterface $logger
     ) {
         $this->dao                        = $dao;
         $this->project_manager            = $project_manager;
@@ -88,8 +88,8 @@ class IterationsRetriever
         $this->url_verification           = $url_verification;
         $this->tracker_factory            = $tracker_factory;
         $this->semantic_timeframe_builder = $semantic_timeframe_builder;
-        $this->timeframe_builder          = $timeframe_builder;
         $this->artifact_factory           = $artifact_factory;
+        $this->logger                     = $logger;
     }
 
     /**
@@ -136,7 +136,9 @@ class IterationsRetriever
         }
         $this->checkTrackerHasTitleSemantic($tracker, $user);
 
-        $semantic_timeframe = $this->semantic_timeframe_builder->getSemantic($tracker);
+        $semantic_timeframe    = $this->semantic_timeframe_builder->getSemantic($tracker);
+        $timeframes_calculator = $semantic_timeframe->getTimeframeCalculator();
+
         $this->checkTrackerHasTimeframeSemantic($semantic_timeframe, $user);
 
         $paginated_artifacts = $this->artifact_factory->getPaginatedArtifactsByTrackerId(
@@ -152,7 +154,7 @@ class IterationsRetriever
                 continue;
             }
 
-            $time_period = $this->timeframe_builder->buildTimePeriodWithoutWeekendForArtifactForREST($artifact, $user);
+            $time_period = $timeframes_calculator->buildTimePeriodWithoutWeekendForArtifactForREST($artifact, $user, $this->logger);
             $start_date  = $time_period->getStartDate();
             if (! $start_date) {
                 continue;

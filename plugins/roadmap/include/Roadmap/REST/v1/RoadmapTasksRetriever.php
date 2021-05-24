@@ -24,6 +24,7 @@ namespace Tuleap\Roadmap\REST\v1;
 
 use DateTimeImmutable;
 use Luracast\Restler\RestException;
+use Psr\Log\LoggerInterface;
 use TrackerFactory;
 use Tuleap\REST\I18NRestException;
 use Tuleap\REST\ProjectAuthorization;
@@ -31,7 +32,6 @@ use Tuleap\Roadmap\RoadmapWidgetDao;
 use Tuleap\Tracker\Semantic\Progress\SemanticProgressBuilder;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframe;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
-use Tuleap\Tracker\Semantic\Timeframe\TimeframeBuilder;
 use URLVerification;
 use UserManager;
 
@@ -66,10 +66,6 @@ final class RoadmapTasksRetriever
      */
     private $artifact_factory;
     /**
-     * @var TimeframeBuilder
-     */
-    private $timeframe_builder;
-    /**
      * @var IRetrieveDependencies
      */
     private $dependencies_retriever;
@@ -81,6 +77,10 @@ final class RoadmapTasksRetriever
      * @var SemanticProgressBuilder
      */
     private $progress_builder;
+    /**
+     * @var LoggerInterface
+     */
+    private $logger;
 
     public function __construct(
         RoadmapWidgetDao $dao,
@@ -89,11 +89,11 @@ final class RoadmapTasksRetriever
         URLVerification $url_verification,
         TrackerFactory $tracker_factory,
         SemanticTimeframeBuilder $semantic_timeframe_builder,
-        TimeframeBuilder $timeframe_builder,
         \Tracker_ArtifactFactory $artifact_factory,
         IRetrieveDependencies $dependencies_retriever,
         RoadmapTasksOutOfDateFilter $tasks_filter,
-        SemanticProgressBuilder $progress_builder
+        SemanticProgressBuilder $progress_builder,
+        LoggerInterface $logger
     ) {
         $this->dao                        = $dao;
         $this->project_manager            = $project_manager;
@@ -102,10 +102,10 @@ final class RoadmapTasksRetriever
         $this->tracker_factory            = $tracker_factory;
         $this->semantic_timeframe_builder = $semantic_timeframe_builder;
         $this->artifact_factory           = $artifact_factory;
-        $this->timeframe_builder          = $timeframe_builder;
         $this->dependencies_retriever     = $dependencies_retriever;
         $this->tasks_filter               = $tasks_filter;
         $this->progress_builder           = $progress_builder;
+        $this->logger                     = $logger;
     }
 
     /**
@@ -135,9 +135,10 @@ final class RoadmapTasksRetriever
 
         $representation_builder = new TaskRepresentationBuilderForTracker(
             $tracker,
-            $this->timeframe_builder,
+            $semantic_timeframe->getTimeframeCalculator(),
             $this->dependencies_retriever,
-            $this->progress_builder
+            $this->progress_builder,
+            $this->logger
         );
 
         $paginated_artifacts = $this->artifact_factory->getPaginatedArtifactsByTrackerId(

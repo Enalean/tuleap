@@ -22,10 +22,10 @@ declare(strict_types=1);
 
 namespace Tuleap\Roadmap\REST\v1;
 
+use Psr\Log\LoggerInterface;
 use Tracker;
 use Tuleap\Tracker\Semantic\Progress\SemanticProgressBuilder;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
-use Tuleap\Tracker\Semantic\Timeframe\TimeframeBuilder;
 
 final class TaskRepresentationBuilderForTrackerCache implements ICacheTaskRepresentationBuilderForTracker
 {
@@ -33,10 +33,6 @@ final class TaskRepresentationBuilderForTrackerCache implements ICacheTaskRepres
      * @var array<int, IBuildATaskRepresentation|null>
      */
     private $builders = [];
-    /**
-     * @var TimeframeBuilder
-     */
-    private $timeframe_builder;
     /**
      * @var SemanticProgressBuilder
      */
@@ -49,17 +45,21 @@ final class TaskRepresentationBuilderForTrackerCache implements ICacheTaskRepres
      * @var IRetrieveDependencies
      */
     private $dependencies_retriever;
+    /**
+     * @var LoggerInterface
+     */
+    private $logger;
 
     public function __construct(
         SemanticTimeframeBuilder $semantic_timeframe_builder,
-        TimeframeBuilder $timeframe_builder,
         IRetrieveDependencies $dependencies_retriever,
-        SemanticProgressBuilder $progress_builder
+        SemanticProgressBuilder $progress_builder,
+        LoggerInterface $logger
     ) {
         $this->semantic_timeframe_builder = $semantic_timeframe_builder;
-        $this->timeframe_builder          = $timeframe_builder;
         $this->progress_builder           = $progress_builder;
         $this->dependencies_retriever     = $dependencies_retriever;
+        $this->logger                     = $logger;
     }
 
     public function getRepresentationBuilderForTracker(Tracker $tracker, \PFUser $user): ?IBuildATaskRepresentation
@@ -99,9 +99,10 @@ final class TaskRepresentationBuilderForTrackerCache implements ICacheTaskRepres
 
         return new TaskRepresentationBuilderForTracker(
             $tracker,
-            $this->timeframe_builder,
+            $semantic_timeframe->getTimeframeCalculator(),
             $this->dependencies_retriever,
-            $this->progress_builder
+            $this->progress_builder,
+            $this->logger
         );
     }
 }

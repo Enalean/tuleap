@@ -45,7 +45,6 @@ use Tuleap\Tracker\Semantic\Timeframe\TimeframeWithDuration;
 use Tuleap\Tracker\Semantic\Timeframe\TimeframeWithEndDate;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframe;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
-use Tuleap\Tracker\Semantic\Timeframe\TimeframeBuilder;
 use Tuleap\Tracker\TrackerColor;
 
 class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -125,11 +124,11 @@ class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->url_verification,
             $this->tracker_factory,
             $this->semantic_timeframe_builder,
-            new TimeframeBuilder($this->semantic_timeframe_builder, new NullLogger()),
             $this->artifact_factory,
             $dependencies_retriever,
             $this->tasks_filter,
-            $this->progress_builder
+            $this->progress_builder,
+            new NullLogger()
         );
     }
 

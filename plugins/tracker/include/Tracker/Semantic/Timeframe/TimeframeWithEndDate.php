@@ -22,16 +22,14 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Semantic\Timeframe;
 
+use Psr\Log\LoggerInterface;
+use TimePeriodWithoutWeekEnd;
+use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\REST\SemanticTimeframeWithEndDateRepresentation;
 
 class TimeframeWithEndDate implements IComputeTimeframes
 {
     private const NAME = 'timeframe-with-end-date';
-
-    public static function getName(): string
-    {
-        return self::NAME;
-    }
 
     /**
      * @var \Tracker_FormElement_Field_Date
@@ -48,6 +46,11 @@ class TimeframeWithEndDate implements IComputeTimeframes
     ) {
         $this->start_date_field = $start_date_field;
         $this->end_date_field   = $end_date_field;
+    }
+
+    public static function getName(): string
+    {
+        return self::NAME;
     }
 
     public function isFieldUsed(\Tracker_FormElement_Field $field): bool
@@ -128,5 +131,21 @@ class TimeframeWithEndDate implements IComputeTimeframes
     public function getDurationField(): ?\Tracker_FormElement_Field_Numeric
     {
         return null;
+    }
+
+    public function buildTimePeriodWithoutWeekendForArtifactForREST(Artifact $artifact, \PFUser $user, LoggerInterface $logger): TimePeriodWithoutWeekEnd
+    {
+        try {
+            $start_date = TimeframeArtifactFieldsValueRetriever::getTimestamp($this->start_date_field, $user, $artifact);
+        } catch (TimeframeFieldNotFoundException | TimeframeFieldNoValueException $exception) {
+            $start_date = null;
+        }
+
+        try {
+            $end_date = TimeframeArtifactFieldsValueRetriever::getTimestamp($this->end_date_field, $user, $artifact);
+        } catch (TimeframeFieldNotFoundException | TimeframeFieldNoValueException $exception) {
+            $end_date = null;
+        }
+        return TimePeriodWithoutWeekEnd::buildFromEndDate($start_date, $end_date, $logger);
     }
 }

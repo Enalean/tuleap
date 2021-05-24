@@ -171,6 +171,11 @@ class SemanticTimeframe extends Tracker_Semantic
         return $this->timeframe->getEndDateField();
     }
 
+    public function getTimeframeCalculator(): IComputeTimeframes
+    {
+        return $this->timeframe;
+    }
+
     public function isDefined(): bool
     {
         return $this->timeframe->isDefined();

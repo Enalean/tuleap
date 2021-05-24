@@ -20,6 +20,9 @@
 
 namespace Tuleap\Tracker\Semantic\Timeframe;
 
+use PHPUnit\Framework\MockObject\MockObject;
+use Psr\Log\NullLogger;
+use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\REST\SemanticTimeframeWithDurationRepresentation;
 
 class TimeframeWithDurationTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -36,11 +39,24 @@ class TimeframeWithDurationTest extends \Tuleap\Test\PHPUnit\TestCase
      * @var \PHPUnit\Framework\MockObject\MockObject|\Tracker_FormElement_Field_Integer
      */
     private $duration_field;
+    /**
+     * @var MockObject|Artifact
+     */
+    private $artifact;
+    /**
+     * @var \PFUser|MockObject
+     */
+    private $user;
 
     protected function setUp(): void
     {
         $this->start_date_field = $this->getMockedDateField(1001);
         $this->duration_field   = $this->getMockedDurationField(1002);
+        $this->artifact         = $this->getMockBuilder(Artifact::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $this->user = $this->getMockBuilder(\PFUser::class)->disableOriginalConstructor()->getMock();
 
         $this->timeframe = new TimeframeWithDuration(
             $this->start_date_field,
@@ -117,16 +133,14 @@ class TimeframeWithDurationTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     public function testItDoesNotExportToRESTWhenUserCanReadFields(bool $can_read_start_date, bool $can_read_duration): void
     {
-        $user = $this->getMockBuilder(\PFUser::class)->disableOriginalConstructor()->getMock();
         $this->start_date_field->expects(self::any())->method('userCanRead')->will(self::returnValue($can_read_start_date));
         $this->duration_field->expects(self::any())->method('userCanRead')->will(self::returnValue($can_read_duration));
 
-        $this->assertNull($this->timeframe->exportToREST($user));
+        $this->assertNull($this->timeframe->exportToREST($this->user));
     }
 
     public function testItExportsToREST(): void
     {
-        $user = $this->getMockBuilder(\PFUser::class)->disableOriginalConstructor()->getMock();
         $this->start_date_field->expects(self::any())->method('userCanRead')->will(self::returnValue(true));
         $this->duration_field->expects(self::any())->method('userCanRead')->will(self::returnValue(true));
 
@@ -135,7 +149,7 @@ class TimeframeWithDurationTest extends \Tuleap\Test\PHPUnit\TestCase
                 1001,
                 1002
             ),
-            $this->timeframe->exportToREST($user)
+            $this->timeframe->exportToREST($this->user)
         );
     }
 
@@ -150,6 +164,77 @@ class TimeframeWithDurationTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertTrue(
             $this->timeframe->save($tracker, $dao)
         );
+    }
+
+    public function testItBuildATimePeriodWithoutWeekObjectForArtifactForREST(): void
+    {
+        // Sprint 10 days, from `Monday, Jul 1, 2013` to `Monday, Jul 15, 2013`
+        $duration          = 10;
+        $start_date        = '07/01/2013';
+        $expected_end_date = '07/15/2013';
+
+        $this->start_date_field->expects(self::once())->method('userCanRead')->will(self::returnValue(true));
+        $this->duration_field->expects(self::once())->method('userCanRead')->will(self::returnValue(true));
+
+        $this->mockStartDateFieldWithValue($start_date);
+        $this->mockDurationFieldWithValue($duration);
+
+        $time_period = $this->timeframe->buildTimePeriodWithoutWeekendForArtifactForREST(
+            $this->artifact,
+            $this->user,
+            new NullLogger()
+        );
+
+        $this->assertSame(strtotime($start_date), $time_period->getStartDate());
+        $this->assertSame(strtotime($expected_end_date), $time_period->getEndDate());
+        $this->assertSame(10, $time_period->getDuration());
+    }
+
+    public function testItBuildsATimePeriodWithoutWeekObjectForRESTWithStartDateAsNullForArtifactIfNoLastChangesetValueForStartDate(): void
+    {
+        $duration = 10;
+
+        $this->start_date_field->expects(self::once())->method('userCanRead')->will(self::returnValue(true));
+        $this->duration_field->expects(self::once())->method('userCanRead')->will(self::returnValue(true));
+
+        $this->start_date_field->expects(self::once())->method('getLastChangesetValue')
+            ->with($this->artifact)
+            ->will(self::returnValue(null));
+
+        $this->mockDurationFieldWithValue($duration);
+
+        $time_period = $this->timeframe->buildTimePeriodWithoutWeekendForArtifactForREST(
+            $this->artifact,
+            $this->user,
+            new NullLogger()
+        );
+
+        $this->assertNull($time_period->getStartDate());
+        $this->assertSame(1209600, $time_period->getEndDate());
+        $this->assertSame(10, $time_period->getDuration());
+    }
+
+    public function testItBuildsATimePeriodForRESTWithNullDurationWhenDurationFieldHasNoLastChangeset(): void
+    {
+        $start_date = '07/01/2013';
+
+        $this->start_date_field->expects(self::once())->method('userCanRead')->will(self::returnValue(true));
+        $this->duration_field->expects(self::once())->method('userCanRead')->will(self::returnValue(true));
+
+        $this->mockStartDateFieldWithValue($start_date);
+        $this->duration_field->expects(self::once())->method('getLastChangesetValue')
+            ->with($this->artifact)
+            ->will(self::returnValue(null));
+
+        $time_period = $this->timeframe->buildTimePeriodWithoutWeekendForArtifactForREST(
+            $this->artifact,
+            $this->user,
+            new NullLogger()
+        );
+
+        $this->assertSame(strtotime($start_date), $time_period->getStartDate());
+        self::assertNull($time_period->getEndDate());
+        self::assertNull($time_period->getDuration());
     }
 
     private function getMockedDateField(int $field_id): \Tracker_FormElement_Field_Date
@@ -172,5 +257,32 @@ class TimeframeWithDurationTest extends \Tuleap\Test\PHPUnit\TestCase
         $mock->expects(self::any())->method('getId')->will(self::returnValue($field_id));
 
         return $mock;
+    }
+
+    private function mockStartDateFieldWithValue(?string $string_date): void
+    {
+        $timestamp            = $string_date !== null ? strtotime($string_date) : null;
+        $date_changeset_value = self::getMockBuilder(\Tracker_Artifact_ChangesetValue_Date::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $date_changeset_value->expects(self::any())->method('getTimestamp')->will(self::returnValue($timestamp));
+
+        $this->start_date_field->expects(self::any())->method('getLastChangesetValue')
+            ->with($this->artifact)
+            ->will(self::returnValue($date_changeset_value));
+    }
+
+    private function mockDurationFieldWithValue(?int $duration): void
+    {
+        $duration_changeset_value = self::getMockBuilder(\Tracker_Artifact_ChangesetValue_Integer::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $duration_changeset_value->expects(self::any())->method('getNumeric')->will(self::returnValue($duration));
+
+        $this->duration_field->expects(self::any())->method('getLastChangesetValue')
+            ->with($this->artifact)
+            ->will(self::returnValue($duration_changeset_value));
     }
 }

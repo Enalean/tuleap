@@ -32,7 +32,9 @@ use Tracker_FormElement_Field_List_Bind_StaticValue;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Semantic\Status\SemanticStatusRetriever;
-use Tuleap\Tracker\Semantic\Timeframe\TimeframeBuilder;
+use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframe;
+use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
+use Tuleap\Tracker\Semantic\Timeframe\TimeframeWithEndDate;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 
 class TaskOutOfDateDetectorTest extends TestCase
@@ -60,13 +62,13 @@ class TaskOutOfDateDetectorTest extends TestCase
      */
     private $logger;
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|TimeframeBuilder
-     */
-    private $timeframe_builder;
-    /**
      * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|\PFUser
      */
     private $user;
+    /**
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|TimeframeWithEndDate
+     */
+    private $timeframe_calculator;
 
     private const TODO_VALUE_ID     = 128;
     private const ON_GOING_VALUE_ID = 129;
@@ -76,14 +78,19 @@ class TaskOutOfDateDetectorTest extends TestCase
     {
         $this->artifact = ArtifactTestBuilder::anArtifact(150)->build();
 
-        $this->status_field      = \Mockery::mock(\Tracker_FormElement_Field_List::class, ['getId' => 365]);
-        $this->logger            = \Mockery::mock(LoggerInterface::class);
-        $this->timeframe_builder = \Mockery::mock(TimeframeBuilder::class);
-        $this->user              = \Mockery::mock(\PFUser::class);
+        $this->status_field = \Mockery::mock(\Tracker_FormElement_Field_List::class, ['getId' => 365]);
+        $this->logger       = \Mockery::mock(LoggerInterface::class);
+        $this->user         = \Mockery::mock(\PFUser::class);
 
         $this->semantic_status = \Mockery::mock(
             \Tracker_Semantic_Status::class,
             ['getOpenValues' => [self::TODO_VALUE_ID, self::ON_GOING_VALUE_ID]]
+        );
+
+        $this->timeframe_calculator = \Mockery::mock(TimeframeWithEndDate::class);
+        $semantic_timeframe         = \Mockery::mock(
+            SemanticTimeframe::class,
+            ['getTimeframeCalculator' => $this->timeframe_calculator]
         );
 
         $semantic_status_retriever = \Mockery::mock(SemanticStatusRetriever::class);
@@ -91,9 +98,14 @@ class TaskOutOfDateDetectorTest extends TestCase
             ->with($this->artifact->getTracker())
             ->andReturn($this->semantic_status);
 
+        $semantic_timeframe_builder = \Mockery::mock(SemanticTimeframeBuilder::class);
+        $semantic_timeframe_builder->shouldReceive('getSemantic')
+            ->with($this->artifact->getTracker())
+            ->andReturn($semantic_timeframe);
+
         $this->detector = new TaskOutOfDateDetector(
             $semantic_status_retriever,
-            $this->timeframe_builder,
+            $semantic_timeframe_builder,
             $this->logger
         );
     }
@@ -129,8 +141,8 @@ class TaskOutOfDateDetectorTest extends TestCase
     {
         $this->semantic_status->shouldReceive('getField')->once()->andReturn($this->status_field);
         $this->semantic_status->shouldReceive('isOpen')->with($this->artifact)->once()->andReturn(false);
-        $this->timeframe_builder->shouldReceive('buildTimePeriodWithoutWeekendForArtifactForREST')
-            ->with($this->artifact, $this->user)
+        $this->timeframe_calculator->shouldReceive('buildTimePeriodWithoutWeekendForArtifactForREST')
+            ->with($this->artifact, $this->user, $this->logger)
             ->andReturn(
                 $this->getTimePeriodWithoutWeekend("2021-01-01", null)
             );
@@ -184,8 +196,8 @@ class TaskOutOfDateDetectorTest extends TestCase
     {
         $this->semantic_status->shouldReceive('getField')->once()->andReturn($this->status_field);
         $this->semantic_status->shouldReceive('isOpen')->with($this->artifact)->once()->andReturn(false);
-        $this->timeframe_builder->shouldReceive('buildTimePeriodWithoutWeekendForArtifactForREST')
-            ->with($this->artifact, $this->user)
+        $this->timeframe_calculator->shouldReceive('buildTimePeriodWithoutWeekendForArtifactForREST')
+            ->with($this->artifact, $this->user, $this->logger)
             ->andReturn(
                 $this->getTimePeriodWithoutWeekend("2021-01-01", null)
             );
@@ -247,8 +259,8 @@ class TaskOutOfDateDetectorTest extends TestCase
     ): void {
         $now_string_date = "2021-04-14";
 
-        $this->timeframe_builder->shouldReceive('buildTimePeriodWithoutWeekendForArtifactForREST')
-            ->with($this->artifact, $this->user)
+        $this->timeframe_calculator->shouldReceive('buildTimePeriodWithoutWeekendForArtifactForREST')
+            ->with($this->artifact, $this->user, $this->logger)
             ->andReturn(
                 $this->getTimePeriodWithoutWeekend("2020-01-01", $end_string_date)
             );
