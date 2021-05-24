@@ -124,6 +124,72 @@ final class RoadmapResource
         return $tasks->getRepresentations();
     }
 
+    /**
+     * @url OPTIONS {id}/iterations
+     *
+     * @param int $id Id of the roadmap
+     */
+    public function optionsIterations(int $id): void
+    {
+        Header::allowOptionsGet();
+    }
+
+    /**
+     * Get the iterations
+     *
+     * Retrieve paginated iterations of a given roadmap
+     *
+     * <pre>
+     * /!\ Roadmap REST route is under construction and subject to changes /!\
+     * </pre>
+     *
+     * @url    GET {id}/iterations
+     * @access hybrid
+     *
+     * @param int $id     Id of the roadmap
+     * @param int $level  Level of the iteration {@min 1} {@max 2}
+     * @param int $offset Position of the first element to display{ @min 0}
+     * @param int $limit  Number of elements displayed per page {@min 0} {@max 100}
+     *
+     * @return array {@type IterationRepresentation}
+     * @psalm-return IterationRepresentation[]
+     *
+     * @throws RestException 400
+     * @throws RestException 403
+     * @throws RestException 404
+     */
+    public function getIterations(
+        int $id,
+        int $level,
+        int $offset = 0,
+        int $limit = self::MAX_LIMIT
+    ): array {
+        $this->optionsIterations($id);
+
+        $form_element_factory       = \Tracker_FormElementFactory::instance();
+        $semantic_timeframe_builder = new SemanticTimeframeBuilder(
+            new SemanticTimeframeDao(),
+            $form_element_factory
+        );
+
+        $retriever = new IterationsRetriever(
+            new RoadmapWidgetDao(),
+            \ProjectManager::instance(),
+            \UserManager::instance(),
+            new \URLVerification(),
+            \TrackerFactory::instance(),
+            $semantic_timeframe_builder,
+            new TimeframeBuilder($semantic_timeframe_builder, \BackendLogger::getDefaultLogger()),
+            \Tracker_ArtifactFactory::instance(),
+        );
+
+        $iterations = $retriever->getIterations($id, $level, $limit, $offset);
+
+        Header::sendPaginationHeaders($limit, $offset, $iterations->getTotalSize(), self::MAX_LIMIT);
+
+        return $iterations->getRepresentations();
+    }
+
     private function getLogger(): LoggerInterface
     {
         return \BackendLogger::getDefaultLogger();
