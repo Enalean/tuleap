@@ -63,7 +63,7 @@
     "vite": "^2.3.2",
     "vite-plugin-vue2": "^1.4.1",
     "vue-eslint-parser": "^7.6.0",
-    "vue-jest": "^3.0.7",
+    "vue-jest": "^4.0.1",
     "vue-loader": "^15.9.6",
     "vue-template-compiler": "^2.6.12",
     "webpack": "^5.26.0",
