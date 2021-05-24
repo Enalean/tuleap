@@ -26,6 +26,7 @@ use Tuleap\Project\XML\Import\ImportConfig;
 use Tuleap\Tracker\Artifact\XMLImport\TrackerXmlImportConfig;
 use Tuleap\Tracker\Creation\TrackerCreationDataChecker;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
+use Tuleap\Tracker\Migration\KeepReverseCrossReferenceDAO;
 use Tuleap\Tracker\Migration\LegacyTrackerMigrationDao;
 use Tuleap\Tracker\TrackerIsInvalidException;
 
@@ -59,6 +60,10 @@ class Tracker_Migration_MigrationManager // phpcs:ignore PSR1.Classes.ClassDecla
      * @var LegacyTrackerMigrationDao
      */
     private $legacy_tracker_migration_dao;
+    /**
+     * @var KeepReverseCrossReferenceDAO
+     */
+    private $keep_reverse_cross_reference_dao;
 
     public function __construct(
         Tracker_SystemEventManager $system_event_manager,
@@ -67,15 +72,17 @@ class Tracker_Migration_MigrationManager // phpcs:ignore PSR1.Classes.ClassDecla
         ProjectManager $project_manager,
         TrackerCreationDataChecker $creation_data_checker,
         LegacyTrackerMigrationDao $legacy_tracker_migration_dao,
+        KeepReverseCrossReferenceDAO $keep_reverse_cross_reference_dao,
         Tracker_Migration_MailLogger $mail_logger,
         Tracker_Migration_MigrationLogger $logger
     ) {
-        $this->system_event_manager         = $system_event_manager;
-        $this->tracker_factory              = $tracker_factory;
-        $this->user_manager                 = $user_manager;
-        $this->project_manager              = $project_manager;
-        $this->creation_data_checker        = $creation_data_checker;
-        $this->legacy_tracker_migration_dao = $legacy_tracker_migration_dao;
+        $this->system_event_manager             = $system_event_manager;
+        $this->tracker_factory                  = $tracker_factory;
+        $this->user_manager                     = $user_manager;
+        $this->project_manager                  = $project_manager;
+        $this->creation_data_checker            = $creation_data_checker;
+        $this->legacy_tracker_migration_dao     = $legacy_tracker_migration_dao;
+        $this->keep_reverse_cross_reference_dao = $keep_reverse_cross_reference_dao;
 
         // Log everything in Backend
         // Only Warn and errors by email
@@ -119,6 +126,7 @@ class Tracker_Migration_MigrationManager // phpcs:ignore PSR1.Classes.ClassDecla
             $this->legacy_tracker_migration_dao->flagLegacyTrackerMigratedWithOriginalIds(
                 (int) $tv3_id
             );
+            $this->keep_reverse_cross_reference_dao->createCrossReferenceFromTrackerIDs((int) $tv3_id, $tracker_id);
         }
 
         $this->logger->info('-- End of migration of tracker v3 ' . $tv3_id . ' to ' . $tracker_name . ' --');

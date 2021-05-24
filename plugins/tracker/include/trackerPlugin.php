@@ -163,6 +163,7 @@ use Tuleap\Tracker\FormElement\SystemEvent\SystemEvent_BURNDOWN_DAILY;
 use Tuleap\Tracker\FormElement\SystemEvent\SystemEvent_BURNDOWN_GENERATE;
 use Tuleap\Tracker\Import\Spotter;
 use Tuleap\Tracker\Legacy\Inheritor;
+use Tuleap\Tracker\Migration\KeepReverseCrossReferenceDAO;
 use Tuleap\Tracker\Migration\LegacyTrackerMigrationDao;
 use Tuleap\Tracker\NewDropdown\TrackerInNewDropdownDao;
 use Tuleap\Tracker\NewDropdown\TrackerInNewDropdownRetriever;
@@ -1265,6 +1266,7 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
             $this->getProjectManager(),
             $this->getTrackerChecker(),
             new LegacyTrackerMigrationDao(),
+            new KeepReverseCrossReferenceDAO(),
             $mail_logger,
             new Tracker_Migration_MigrationLogger(
                 $backend_logger,
