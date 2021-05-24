@@ -38,7 +38,7 @@ import SomethingWentWrongEmptyState from "./SomethingWentWrongEmptyState.vue";
 import GanttBoard from "./Gantt/GanttBoard.vue";
 import type { NaturesLabels, Row } from "../type";
 import LoadingState from "./LoadingState.vue";
-import { namespace } from "vuex-class";
+import { namespace, State } from "vuex-class";
 
 const tasks = namespace("tasks");
 
@@ -52,13 +52,13 @@ export default class App extends Vue {
     @Prop({ required: true })
     private readonly visible_natures!: NaturesLabels;
 
-    @tasks.State
+    @State
     private error_message!: string;
 
-    @tasks.State
+    @State
     private should_display_error_state!: boolean;
 
-    @tasks.State
+    @State
     private should_display_empty_state!: boolean;
 
     @tasks.Action

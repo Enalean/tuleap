@@ -28,9 +28,6 @@ export function createTaskModule(): Module<TasksState, RootState> {
     const state: TasksState = {
         tasks: [],
         is_loading: true,
-        should_display_empty_state: false,
-        should_display_error_state: false,
-        error_message: "",
     };
 
     return {

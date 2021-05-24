@@ -43,25 +43,30 @@ describe("tasks-actions", () => {
 
             await actions.loadTasks(context, 123);
 
-            expect(context.commit).toHaveBeenCalledWith("setShouldDisplayEmptyState", true);
+            expect(context.commit).toHaveBeenCalledWith("setApplicationInEmptyState", null, {
+                root: true,
+            });
             expect(context.commit).toHaveBeenCalledWith("setIsLoading", false);
         });
 
-        it("should display an error state for a 400", async () => {
+        it.each([[400], [500]])("should display an error state for a %i", async (status) => {
             const recursive_get = jest.spyOn(TaskRetriever, "retrieveAllTasks");
             mockFetchError(recursive_get, {
-                status: 400,
+                status,
                 error_json: {
                     error: {
-                        i18n_error_message: "Missing timeframe",
+                        i18n_error_message: "Error message",
                     },
                 },
             });
 
             await actions.loadTasks(context, 123);
 
-            expect(context.commit).toHaveBeenCalledWith("setShouldDisplayErrorState", true);
-            expect(context.commit).toHaveBeenCalledWith("setErrorMessage", "Missing timeframe");
+            expect(context.commit).toHaveBeenCalledWith(
+                "setApplicationInErrorStateDueToRestError",
+                expect.anything(),
+                { root: true }
+            );
             expect(context.commit).toHaveBeenCalledWith("setIsLoading", false);
         });
 
@@ -73,25 +78,9 @@ describe("tasks-actions", () => {
 
             await actions.loadTasks(context, 123);
 
-            expect(context.commit).toHaveBeenCalledWith("setShouldDisplayEmptyState", true);
-            expect(context.commit).toHaveBeenCalledWith("setIsLoading", false);
-        });
-
-        it("should display a generic error state for a 500", async () => {
-            const recursive_get = jest.spyOn(TaskRetriever, "retrieveAllTasks");
-            mockFetchError(recursive_get, {
-                status: 500,
-                error_json: {
-                    error: {
-                        message: "Internal Server Error",
-                    },
-                },
+            expect(context.commit).toHaveBeenCalledWith("setApplicationInEmptyState", null, {
+                root: true,
             });
-
-            await actions.loadTasks(context, 123);
-
-            expect(context.commit).toHaveBeenCalledWith("setShouldDisplayErrorState", true);
-            expect(context.commit).toHaveBeenCalledWith("setErrorMessage", "");
             expect(context.commit).toHaveBeenCalledWith("setIsLoading", false);
         });
 

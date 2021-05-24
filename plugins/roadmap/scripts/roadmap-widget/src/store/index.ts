@@ -21,10 +21,17 @@ import type { StoreOptions } from "vuex";
 import { Store } from "vuex";
 import type { RootState } from "./type";
 import { createTaskModule } from "./tasks";
+import * as mutations from "./root-mutations";
 
 export function createStore(initial_root_state: RootState): Store<RootState> {
     const store_options: StoreOptions<RootState> = {
-        state: initial_root_state,
+        state: {
+            ...initial_root_state,
+            should_display_empty_state: false,
+            should_display_error_state: false,
+            error_message: "",
+        },
+        mutations,
         modules: {
             tasks: createTaskModule(),
         },

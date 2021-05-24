@@ -31,7 +31,10 @@ import { createStoreMock } from "../../../../../../src/scripts/vue-components/st
 import type { TasksState } from "../store/tasks/type";
 
 describe("App", () => {
-    async function mountComponent(tasks: TasksState = {} as TasksState): Promise<Wrapper<App>> {
+    async function mountComponent(
+        tasks: TasksState = {} as TasksState,
+        root: RootState = {} as RootState
+    ): Promise<Wrapper<App>> {
         return shallowMount(App, {
             propsData: {
                 roadmap_id: 123,
@@ -41,6 +44,7 @@ describe("App", () => {
             mocks: {
                 $store: createStoreMock({
                     state: {
+                        ...root,
                         tasks,
                     } as RootState,
                     getters: {
@@ -52,13 +56,17 @@ describe("App", () => {
     }
 
     it("Displays a loading state", async () => {
-        const wrapper = await mountComponent({
-            tasks: [],
-            is_loading: true,
-            should_display_empty_state: false,
-            should_display_error_state: false,
-            error_message: "",
-        });
+        const wrapper = await mountComponent(
+            {
+                tasks: [],
+                is_loading: true,
+            },
+            {
+                should_display_empty_state: false,
+                should_display_error_state: false,
+                error_message: "",
+            } as RootState
+        );
 
         expect(wrapper.findComponent(NoDataToShowEmptyState).exists()).toBe(false);
         expect(wrapper.findComponent(SomethingWentWrongEmptyState).exists()).toBe(false);
@@ -67,13 +75,17 @@ describe("App", () => {
     });
 
     it("Displays an empty state", async () => {
-        const wrapper = await mountComponent({
-            tasks: [],
-            is_loading: false,
-            should_display_empty_state: true,
-            should_display_error_state: false,
-            error_message: "",
-        });
+        const wrapper = await mountComponent(
+            {
+                tasks: [],
+                is_loading: false,
+            },
+            {
+                should_display_empty_state: true,
+                should_display_error_state: false,
+                error_message: "",
+            } as RootState
+        );
 
         expect(wrapper.findComponent(NoDataToShowEmptyState).exists()).toBe(true);
         expect(wrapper.findComponent(SomethingWentWrongEmptyState).exists()).toBe(false);
@@ -82,13 +94,17 @@ describe("App", () => {
     });
 
     it("Displays an error state with a message", async () => {
-        const wrapper = await mountComponent({
-            tasks: [],
-            is_loading: false,
-            should_display_empty_state: false,
-            should_display_error_state: true,
-            error_message: "Missing timeframe",
-        });
+        const wrapper = await mountComponent(
+            {
+                tasks: [],
+                is_loading: false,
+            },
+            {
+                should_display_empty_state: false,
+                should_display_error_state: true,
+                error_message: "Missing timeframe",
+            } as RootState
+        );
 
         expect(wrapper.findComponent(NoDataToShowEmptyState).exists()).toBe(false);
         expect(wrapper.findComponent(LoadingState).exists()).toBe(false);
@@ -100,13 +116,17 @@ describe("App", () => {
     });
 
     it("Displays an error state with a message even if there is no error message", async () => {
-        const wrapper = await mountComponent({
-            tasks: [],
-            is_loading: false,
-            should_display_empty_state: false,
-            should_display_error_state: true,
-            error_message: "",
-        });
+        const wrapper = await mountComponent(
+            {
+                tasks: [],
+                is_loading: false,
+            },
+            {
+                should_display_empty_state: false,
+                should_display_error_state: true,
+                error_message: "",
+            } as RootState
+        );
 
         expect(wrapper.findComponent(NoDataToShowEmptyState).exists()).toBe(false);
         expect(wrapper.findComponent(LoadingState).exists()).toBe(false);
@@ -118,16 +138,20 @@ describe("App", () => {
     });
 
     it("Displays a gantt board with tasks", async () => {
-        const wrapper = await mountComponent({
-            tasks: [
-                { id: 1, start: new Date(2020, 3, 15), end: null } as Task,
-                { id: 2, start: new Date(2020, 4, 15), end: null } as Task,
-            ],
-            is_loading: false,
-            should_display_empty_state: false,
-            should_display_error_state: false,
-            error_message: "",
-        });
+        const wrapper = await mountComponent(
+            {
+                tasks: [
+                    { id: 1, start: new Date(2020, 3, 15), end: null } as Task,
+                    { id: 2, start: new Date(2020, 4, 15), end: null } as Task,
+                ],
+                is_loading: false,
+            },
+            {
+                should_display_empty_state: false,
+                should_display_error_state: false,
+                error_message: "",
+            } as RootState
+        );
 
         expect(wrapper.findComponent(NoDataToShowEmptyState).exists()).toBe(false);
         expect(wrapper.findComponent(LoadingState).exists()).toBe(false);

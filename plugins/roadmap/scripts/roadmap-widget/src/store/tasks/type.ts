@@ -27,7 +27,4 @@ export interface SetSubtasksPayload {
 export interface TasksState {
     tasks: Task[];
     is_loading: boolean;
-    should_display_empty_state: boolean;
-    should_display_error_state: boolean;
-    error_message: string;
 }

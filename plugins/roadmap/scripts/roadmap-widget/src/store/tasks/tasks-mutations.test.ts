@@ -39,36 +39,6 @@ describe("tasks-mutations", () => {
         expect(state.is_loading).toBe(true);
     });
 
-    it("setShouldDisplayEmptyState set the corresponding boolean", () => {
-        const state: TasksState = {
-            should_display_empty_state: false,
-        } as TasksState;
-
-        mutations.setShouldDisplayEmptyState(state, true);
-
-        expect(state.should_display_empty_state).toBe(true);
-    });
-
-    it("setShouldDisplayErrorState set the corresponding boolean", () => {
-        const state: TasksState = {
-            should_display_error_state: false,
-        } as TasksState;
-
-        mutations.setShouldDisplayErrorState(state, true);
-
-        expect(state.should_display_error_state).toBe(true);
-    });
-
-    it("setErrorMessage sets the error message", () => {
-        const state: TasksState = {
-            error_message: "",
-        } as TasksState;
-
-        mutations.setErrorMessage(state, "This is not right!");
-
-        expect(state.error_message).toBe("This is not right!");
-    });
-
     it("setTasks stores the tasks", () => {
         const state: TasksState = {
             tasks: [] as Task[],
