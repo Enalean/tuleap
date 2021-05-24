@@ -33,7 +33,7 @@ import type { GitlabState } from "./state";
 import type { ActionContext } from "vuex";
 import type {
     GitLabCredentials,
-    GitLabDataWithToken,
+    GitLabDataWithTokenPayload,
     GitLabRepository,
     Repository,
 } from "../../type";
@@ -195,13 +195,15 @@ export async function postIntegrationGitlab(
 
 export async function updateBotApiTokenGitlab(
     context: ActionContext<GitlabState, GitlabState>,
-    token: GitLabDataWithToken
+    payload: GitLabDataWithTokenPayload
 ): Promise<void> {
     const body: GitLabRepositoryUpdate = {
-        update_bot_api_token: { ...token },
+        update_bot_api_token: {
+            gitlab_api_token: payload.gitlab_api_token,
+        },
     };
 
-    await patchGitlabRepository(body);
+    await patchGitlabRepository(payload.gitlab_integration_id, body);
 }
 
 export async function regenerateGitlabWebhook(
@@ -209,10 +211,8 @@ export async function regenerateGitlabWebhook(
     integration_id: number | string
 ): Promise<void> {
     const body: GitLabRepositoryUpdate = {
-        generate_new_secret: {
-            gitlab_integration_id: integration_id,
-        },
+        generate_new_secret: true,
     };
 
-    await patchGitlabRepository(body);
+    await patchGitlabRepository(integration_id, body);
 }

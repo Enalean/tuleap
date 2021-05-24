@@ -26,8 +26,7 @@ import {
 } from "./actions";
 import type { ActionContext } from "plugins/document/node_modules/vuex/types";
 import type { GitlabState } from "./state";
-import type { GitLabCredentials, GitLabRepository } from "../../type";
-import type { GitLabDataWithToken } from "../../type";
+import type { GitLabCredentials, GitLabDataWithTokenPayload, GitLabRepository } from "../../type";
 import type { Modal } from "tlp";
 
 describe("action", () => {
@@ -204,15 +203,17 @@ describe("action", () => {
                 })
             );
 
-            const credentials: GitLabDataWithToken = {
+            const payload: GitLabDataWithTokenPayload = {
                 gitlab_api_token: "AZERTY1234",
                 gitlab_integration_id: 10,
             };
 
-            await updateBotApiTokenGitlab(context, credentials);
+            await updateBotApiTokenGitlab(context, payload);
 
-            expect(patchGitlabRepository).toHaveBeenCalledWith({
-                update_bot_api_token: credentials,
+            expect(patchGitlabRepository).toHaveBeenCalledWith(10, {
+                update_bot_api_token: {
+                    gitlab_api_token: payload.gitlab_api_token,
+                },
             });
         });
 
@@ -227,17 +228,19 @@ describe("action", () => {
                 })
             );
 
-            const credentials: GitLabDataWithToken = {
+            const payload: GitLabDataWithTokenPayload = {
                 gitlab_api_token: "AZERTY1234",
                 gitlab_integration_id: 10,
             };
 
-            await expect(updateBotApiTokenGitlab(context, credentials)).rejects.toEqual({
+            await expect(updateBotApiTokenGitlab(context, payload)).rejects.toEqual({
                 status: 401,
             });
 
-            expect(patchGitlabRepository).toHaveBeenCalledWith({
-                update_bot_api_token: credentials,
+            expect(patchGitlabRepository).toHaveBeenCalledWith(10, {
+                update_bot_api_token: {
+                    gitlab_api_token: payload.gitlab_api_token,
+                },
             });
         });
     });

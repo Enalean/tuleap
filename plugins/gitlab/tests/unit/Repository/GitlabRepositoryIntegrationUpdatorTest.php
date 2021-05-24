@@ -28,7 +28,6 @@ use GitPermissionsManager;
 use GitUserNotAdminException;
 use PFUser;
 use Project;
-use Tuleap\Gitlab\REST\v1\GitlabRepositoryIntegrationPATCHRepresentation;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 use Tuleap\Test\PHPUnit\TestCase;
 
@@ -69,9 +68,6 @@ final class GitlabRepositoryIntegrationUpdatorTest extends TestCase
     {
         $integration_id = 1;
 
-        $representation                         = new GitlabRepositoryIntegrationPATCHRepresentation();
-        $representation->allow_artifact_closure = true;
-
         $user = new PFUser(['language_id' => 'en']);
 
         $this->gitlab_repository_factory->method("getIntegrationById")->with(1)->willReturn(null);
@@ -81,15 +77,12 @@ final class GitlabRepositoryIntegrationUpdatorTest extends TestCase
         );
         self::expectException(GitlabRepositoryNotIntegratedInAnyProjectException::class);
 
-        $this->updator->updateTuleapArtifactClosureOfAGitlabIntegration($integration_id, $representation, $user);
+        $this->updator->updateTuleapArtifactClosureOfAGitlabIntegration($integration_id, true, $user);
     }
 
     public function testItThrowsAnExceptionIfTheUserIsNotGitAdmin(): void
     {
         $integration_id = 1;
-
-        $representation                         = new GitlabRepositoryIntegrationPATCHRepresentation();
-        $representation->allow_artifact_closure = true;
 
         $user = new PFUser(['language_id' => 'en']);
 
@@ -115,15 +108,12 @@ final class GitlabRepositoryIntegrationUpdatorTest extends TestCase
         );
         self::expectException(GitUserNotAdminException::class);
 
-        $this->updator->updateTuleapArtifactClosureOfAGitlabIntegration($integration_id, $representation, $user);
+        $this->updator->updateTuleapArtifactClosureOfAGitlabIntegration($integration_id, true, $user);
     }
 
     public function testItUpdatesTheArtifactClosureValueInDB(): void
     {
         $integration_id = 1;
-
-        $representation                         = new GitlabRepositoryIntegrationPATCHRepresentation();
-        $representation->allow_artifact_closure = true;
 
         $user = new PFUser(['language_id' => 'en']);
 
@@ -146,6 +136,6 @@ final class GitlabRepositoryIntegrationUpdatorTest extends TestCase
 
         $this->gitlab_repository_dao->expects($this->once())->method("updateGitlabRepositoryIntegrationAllowArtifactClosureValue");
 
-        $this->updator->updateTuleapArtifactClosureOfAGitlabIntegration($integration_id, $representation, $user);
+        $this->updator->updateTuleapArtifactClosureOfAGitlabIntegration($integration_id, true, $user);
     }
 }

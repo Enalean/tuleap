@@ -33,7 +33,12 @@ final class GitlabRepositoryPatchRepresentation
     public $update_bot_api_token;
 
     /**
-     * @var GitlabRepositoryWebhookSecretPatchRepresentation | null {@type \Tuleap\Gitlab\REST\v1\GitlabRepositoryWebhookSecretPatchRepresentation} {@required false}
+     * @var bool | null {@required false}
      */
     public $generate_new_secret;
+
+    /**
+     * @var bool | null {@required false}
+     */
+    public $allow_artifact_closure;
 }

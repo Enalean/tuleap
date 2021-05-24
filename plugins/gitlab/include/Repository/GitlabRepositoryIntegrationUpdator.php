@@ -27,7 +27,6 @@ use GitPermissionsManager;
 use GitUserNotAdminException;
 use PFUser;
 use Tuleap\DB\DBTransactionExecutor;
-use Tuleap\Gitlab\REST\v1\GitlabRepositoryIntegrationPATCHRepresentation;
 
 class GitlabRepositoryIntegrationUpdator
 {
@@ -67,11 +66,11 @@ class GitlabRepositoryIntegrationUpdator
      */
     public function updateTuleapArtifactClosureOfAGitlabIntegration(
         int $gitlab_repository_integration_id,
-        GitlabRepositoryIntegrationPATCHRepresentation $representation,
+        bool $allow_artifact_closure,
         PFUser $user
     ): void {
         $this->db_transaction_executor->execute(
-            function () use ($gitlab_repository_integration_id, $representation, $user) {
+            function () use ($gitlab_repository_integration_id, $allow_artifact_closure, $user) {
                 $gitlab_repository = $this->gitlab_repository_factory->getIntegrationById(
                     $gitlab_repository_integration_id
                 );
@@ -86,7 +85,7 @@ class GitlabRepositoryIntegrationUpdator
 
                 $this->gitlab_repository_dao->updateGitlabRepositoryIntegrationAllowArtifactClosureValue(
                     $gitlab_repository_integration_id,
-                    $representation->allow_artifact_closure
+                    $allow_artifact_closure
                 );
             }
         );

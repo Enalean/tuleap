@@ -21,7 +21,6 @@ import type { GitLabCredentials } from "../type";
 import { del, get, patch, post, recursiveGet } from "tlp";
 import type { GitLabDataWithToken, Repository } from "../type";
 import type { RepositoryCallback } from "../api/rest-querier";
-import type { GitLabDataIntegrationId } from "../type";
 
 export interface GitLabRepositoryDeletion {
     integration_id: number;
@@ -37,7 +36,7 @@ export interface GitLabRepositoryCreation {
 
 export interface GitLabRepositoryUpdate {
     update_bot_api_token?: GitLabDataWithToken;
-    generate_new_secret?: GitLabDataIntegrationId;
+    generate_new_secret?: boolean;
 }
 
 export function getAsyncGitlabRepositoryList(credentials: GitLabCredentials): Promise<Response> {
@@ -93,12 +92,15 @@ export function postGitlabRepository(repository: GitLabRepositoryCreation): Prom
     });
 }
 
-export function patchGitlabRepository(body: GitLabRepositoryUpdate): Promise<Response> {
+export function patchGitlabRepository(
+    integration_id: number | string,
+    body: GitLabRepositoryUpdate
+): Promise<Response> {
     const headers = {
         "content-type": "application/json",
     };
 
-    return patch("/api/gitlab_repositories", {
+    return patch("/api/gitlab_repositories/" + integration_id, {
         headers,
         body: JSON.stringify(body),
     });

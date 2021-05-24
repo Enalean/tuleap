@@ -65,7 +65,7 @@
 
 <script lang="ts">
 import { Component, Prop } from "vue-property-decorator";
-import type { GitLabDataWithToken, Repository } from "../../../type";
+import type { GitLabDataWithTokenPayload, Repository } from "../../../type";
 import Vue from "vue";
 import type { FetchWrapperError } from "@tuleap/tlp-fetch";
 import { namespace } from "vuex-class";
@@ -81,7 +81,7 @@ export default class ConfirmReplaceTokenModal extends Vue {
     readonly gitlab_new_token!: string;
 
     @gitlab.Action
-    readonly updateBotApiTokenGitlab!: (gitlab_data: GitLabDataWithToken) => Promise<void>;
+    readonly updateBotApiTokenGitlab!: (gitlab_data: GitLabDataWithTokenPayload) => Promise<void>;
 
     private message_error_rest = "";
     private is_patching_new_token = false;
