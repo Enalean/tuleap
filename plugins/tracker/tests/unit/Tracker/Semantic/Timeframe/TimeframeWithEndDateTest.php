@@ -21,6 +21,7 @@
 namespace Tuleap\Tracker\Semantic\Timeframe;
 
 use PHPUnit\Framework\MockObject\MockObject;
+use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\REST\SemanticTimeframeWithEndDateRepresentation;
@@ -253,6 +254,77 @@ class TimeframeWithEndDateTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertSame(strtotime($start_date), $time_period->getStartDate());
         $this->assertNull($time_period->getEndDate());
         $this->assertNull($time_period->getDuration());
+    }
+
+    public function testItBuildsATimePeriodWithEndDateForArtifact(): void
+    {
+        $start_date = '07/01/2013';
+        $end_date   = '07/03/2013';
+
+        $this->start_date_field->expects(self::once())->method('userCanRead')->will(self::returnValue(true));
+        $this->end_date_field->expects(self::once())->method('userCanRead')->will(self::returnValue(true));
+
+        $this->mockDateFieldWithValue($this->start_date_field, $start_date);
+        $this->mockDateFieldWithValue($this->end_date_field, $end_date);
+
+        $time_period = $this->timeframe->buildTimePeriodWithoutWeekendForArtifact(
+            $this->artifact,
+            $this->user,
+            new NullLogger()
+        );
+
+        self::assertSame(strtotime($start_date), $time_period->getStartDate());
+        self::assertSame(strtotime($end_date), $time_period->getEndDate());
+        self::assertSame(2, $time_period->getDuration());
+    }
+
+    public function testItBuildsATimePeriodWithEndDateForArtifactWithZeroForEndDateIfUserCannotRead(): void
+    {
+        $start_date = '07/01/2013';
+        $logger     = $this->getMockBuilder(LoggerInterface::class)->disableOriginalConstructor()->getMock();
+
+        $logger->expects(self::once())->method('warning');
+        $this->start_date_field->expects(self::once())->method('userCanRead')->will(self::returnValue(true));
+        $this->end_date_field->expects(self::once())->method('userCanRead')->will(self::returnValue(false));
+
+        $this->mockDateFieldWithValue($this->start_date_field, $start_date);
+
+        $time_period = $this->timeframe->buildTimePeriodWithoutWeekendForArtifact(
+            $this->artifact,
+            $this->user,
+            $logger
+        );
+
+        $this->assertSame(strtotime($start_date), $time_period->getStartDate());
+        $this->assertSame(0, $time_period->getEndDate());
+        // duration between start date (07/01/2013) and 01/01/1970 since user cannot read the field.
+        // Weird but consistent with date field/duration behavior.
+        $this->assertSame(-11347, $time_period->getDuration());
+    }
+
+    public function testItBuildsATimePeriodWithEndDateForArtifactWithZeroForEndDateIfNoLastChangesetValue(): void
+    {
+        $start_date = '07/01/2013';
+        $logger     = $this->getMockBuilder(LoggerInterface::class)->disableOriginalConstructor()->getMock();
+
+        $logger->expects(self::once())->method('warning');
+        $this->start_date_field->expects(self::once())->method('userCanRead')->will(self::returnValue(true));
+        $this->end_date_field->expects(self::once())->method('userCanRead')->will(self::returnValue(true));
+
+        $this->mockDateFieldWithValue($this->start_date_field, $start_date);
+        $this->mockDateFieldWithValue($this->end_date_field, null);
+
+        $time_period = $this->timeframe->buildTimePeriodWithoutWeekendForArtifact(
+            $this->artifact,
+            $this->user,
+            $logger
+        );
+
+        $this->assertSame(strtotime($start_date), $time_period->getStartDate());
+        $this->assertSame(0, $time_period->getEndDate());
+        // duration between start date (07/01/2013) and 01/01/1970 since user cannot read the field.
+        // Weird but consistent with date field/duration behavior.
+        $this->assertSame(-11347, $time_period->getDuration());
     }
 
     private function getMockedDateField(int $field_id): \Tracker_FormElement_Field_Date

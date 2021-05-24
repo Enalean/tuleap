@@ -93,6 +93,19 @@ class TimeframeNotConfiguredTest extends TestCase
         );
     }
 
+    public function testItReturnsAnEmptyTimePeriodForArtifact(): void
+    {
+        $time_period = $this->timeframe->buildTimePeriodWithoutWeekendForArtifact(
+            self::createMock(Artifact::class),
+            self::createMock(\PFUser::class),
+            new NullLogger()
+        );
+
+        assertNull($time_period->getStartDate());
+        assertNull($time_period->getDuration());
+        assertNull($time_period->getEndDate());
+    }
+
     public function testItReturnsAnEmptyTimePeriodForArtifactREST(): void
     {
         $time_period = $this->timeframe->buildTimePeriodWithoutWeekendForArtifactForREST(

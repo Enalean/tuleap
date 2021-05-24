@@ -83,4 +83,9 @@ class TimeframeNotConfigured implements IComputeTimeframes
     {
         return TimePeriodWithoutWeekEnd::buildFromNothing();
     }
+
+    public function buildTimePeriodWithoutWeekendForArtifact(Artifact $artifact, \PFUser $user, LoggerInterface $logger): TimePeriodWithoutWeekEnd
+    {
+        return TimePeriodWithoutWeekEnd::buildFromNothing();
+    }
 }

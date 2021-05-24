@@ -149,4 +149,21 @@ class TimeframeWithDuration implements IComputeTimeframes
 
         return TimePeriodWithoutWeekEnd::buildFromDuration($start_date, $duration);
     }
+
+    public function buildTimePeriodWithoutWeekendForArtifact(Artifact $artifact, \PFUser $user, LoggerInterface $logger): TimePeriodWithoutWeekEnd
+    {
+        try {
+            $start_date = TimeframeArtifactFieldsValueRetriever::getTimestamp($this->start_date_field, $user, $artifact);
+        } catch (TimeframeFieldNotFoundException | TimeframeFieldNoValueException $exception) {
+            $start_date = 0;
+        }
+
+        try {
+            $duration = TimeframeArtifactFieldsValueRetriever::getDurationFieldValue($this->duration_field, $user, $artifact);
+        } catch (TimeframeFieldNotFoundException | TimeframeFieldNoValueException $exception) {
+            $duration = 0;
+        }
+
+        return TimePeriodWithoutWeekEnd::buildFromDuration($start_date, $duration);
+    }
 }

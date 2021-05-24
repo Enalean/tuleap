@@ -22,15 +22,25 @@ namespace Tuleap\Tracker\Semantic\Timeframe;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use Psr\Log\NullLogger;
 
 class ArtifactTimeframeHelperTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 
+    /**
+     * @var NullLogger
+     */
+    private $logger;
+
+    protected function setUp(): void
+    {
+        $this->logger = new NullLogger();
+    }
+
     public function testItShouldReturnFalseIfSemanticIsNotDefined(): void
     {
         $semantic_timeframe_builder = Mockery::mock(SemanticTimeframeBuilder::class);
-        $timeframe_builder          = Mockery::mock(TimeframeBuilder::class);
         $user                       = Mockery::mock(\PFUser::class);
         $duration_field             = Mockery::mock(\Tracker_FormElement_Field_Numeric::class);
         $tracker                    = Mockery::mock(\Tracker::class);
@@ -40,7 +50,7 @@ class ArtifactTimeframeHelperTest extends \Tuleap\Test\PHPUnit\TestCase
         $semantic_timeframe_builder->shouldReceive('getSemantic')->with($tracker)->andReturn($semantic);
         $semantic->shouldReceive('isDefined')->andReturnFalse();
 
-        $artifact_timeframe_helper = new ArtifactTimeframeHelper($semantic_timeframe_builder, $timeframe_builder);
+        $artifact_timeframe_helper = new ArtifactTimeframeHelper($semantic_timeframe_builder, $this->logger);
 
         $this->assertFalse($artifact_timeframe_helper->artifactHelpShouldBeShownToUser($user, $duration_field));
     }
@@ -48,7 +58,6 @@ class ArtifactTimeframeHelperTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItShouldReturnFalseIfNotUsedInSemantics(): void
     {
         $semantic_timeframe_builder = Mockery::mock(SemanticTimeframeBuilder::class);
-        $timeframe_builder          = Mockery::mock(TimeframeBuilder::class);
         $user                       = Mockery::mock(\PFUser::class);
         $duration_field             = Mockery::mock(\Tracker_FormElement_Field_Numeric::class, ['getId' => 1002]);
         $tracker                    = Mockery::mock(\Tracker::class);
@@ -62,7 +71,7 @@ class ArtifactTimeframeHelperTest extends \Tuleap\Test\PHPUnit\TestCase
         $semantic->shouldReceive('getStartDateField')->andReturn($start_date_field);
         $start_date_field->shouldReceive('userCanRead')->with($user)->andReturnTrue();
 
-        $artifact_timeframe_helper = new ArtifactTimeframeHelper($semantic_timeframe_builder, $timeframe_builder);
+        $artifact_timeframe_helper = new ArtifactTimeframeHelper($semantic_timeframe_builder, $this->logger);
 
         $this->assertFalse($artifact_timeframe_helper->artifactHelpShouldBeShownToUser($user, $duration_field));
     }
@@ -70,7 +79,6 @@ class ArtifactTimeframeHelperTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItShouldReturnFalseIfUserCannotViewStartDate(): void
     {
         $semantic_timeframe_builder = Mockery::mock(SemanticTimeframeBuilder::class);
-        $timeframe_builder          = Mockery::mock(TimeframeBuilder::class);
         $user                       = Mockery::mock(\PFUser::class);
         $duration_field             = Mockery::mock(\Tracker_FormElement_Field_Numeric::class);
         $tracker                    = Mockery::mock(\Tracker::class);
@@ -85,7 +93,7 @@ class ArtifactTimeframeHelperTest extends \Tuleap\Test\PHPUnit\TestCase
         $semantic->shouldReceive('getStartDateField')->andReturn($start_date_field);
         $start_date_field->shouldReceive('userCanRead')->with($user)->andReturnFalse();
 
-        $artifact_timeframe_helper = new ArtifactTimeframeHelper($semantic_timeframe_builder, $timeframe_builder);
+        $artifact_timeframe_helper = new ArtifactTimeframeHelper($semantic_timeframe_builder, $this->logger);
 
         $this->assertFalse($artifact_timeframe_helper->artifactHelpShouldBeShownToUser($user, $duration_field));
     }
@@ -93,7 +101,6 @@ class ArtifactTimeframeHelperTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItShouldReturnTrueIfUserShouldBeShownArtifactHelperForDuration(): void
     {
         $semantic_timeframe_builder = Mockery::mock(SemanticTimeframeBuilder::class);
-        $timeframe_builder          = Mockery::mock(TimeframeBuilder::class);
         $user                       = Mockery::mock(\PFUser::class);
         $duration_field             = Mockery::mock(\Tracker_FormElement_Field_Numeric::class, ['getId' => 1002]);
         $tracker                    = Mockery::mock(\Tracker::class);
@@ -107,7 +114,7 @@ class ArtifactTimeframeHelperTest extends \Tuleap\Test\PHPUnit\TestCase
         $semantic->shouldReceive('getStartDateField')->andReturn($start_date_field);
         $start_date_field->shouldReceive('userCanRead')->with($user)->andReturnTrue();
 
-        $artifact_timeframe_helper = new ArtifactTimeframeHelper($semantic_timeframe_builder, $timeframe_builder);
+        $artifact_timeframe_helper = new ArtifactTimeframeHelper($semantic_timeframe_builder, $this->logger);
 
         $this->assertTrue($artifact_timeframe_helper->artifactHelpShouldBeShownToUser($user, $duration_field));
     }
@@ -115,7 +122,6 @@ class ArtifactTimeframeHelperTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItShouldReturnTrueIfUserShouldBeShownArtifactHelperForEndDate(): void
     {
         $semantic_timeframe_builder = Mockery::mock(SemanticTimeframeBuilder::class);
-        $timeframe_builder          = Mockery::mock(TimeframeBuilder::class);
         $user                       = Mockery::mock(\PFUser::class);
         $end_date_field             = Mockery::mock(\Tracker_FormElement_Field_Numeric::class, ['getId' => 1002]);
         $tracker                    = Mockery::mock(\Tracker::class);
@@ -129,7 +135,7 @@ class ArtifactTimeframeHelperTest extends \Tuleap\Test\PHPUnit\TestCase
         $semantic->shouldReceive('getStartDateField')->andReturn($start_date_field);
         $start_date_field->shouldReceive('userCanRead')->with($user)->andReturnTrue();
 
-        $artifact_timeframe_helper = new ArtifactTimeframeHelper($semantic_timeframe_builder, $timeframe_builder);
+        $artifact_timeframe_helper = new ArtifactTimeframeHelper($semantic_timeframe_builder, $this->logger);
 
         $this->assertTrue($artifact_timeframe_helper->artifactHelpShouldBeShownToUser($user, $end_date_field));
     }
@@ -137,7 +143,6 @@ class ArtifactTimeframeHelperTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItShouldNotDisplayTheHelperOnStartDateField(): void
     {
         $semantic_timeframe_builder = Mockery::mock(SemanticTimeframeBuilder::class);
-        $timeframe_builder          = Mockery::mock(TimeframeBuilder::class);
         $user                       = Mockery::mock(\PFUser::class);
         $tracker                    = Mockery::mock(\Tracker::class);
         $semantic                   = Mockery::mock(SemanticTimeframe::class);
@@ -149,7 +154,7 @@ class ArtifactTimeframeHelperTest extends \Tuleap\Test\PHPUnit\TestCase
         $semantic->shouldReceive('getStartDateField')->andReturn($start_date_field);
         $start_date_field->shouldReceive('userCanRead')->with($user)->andReturnTrue();
 
-        $artifact_timeframe_helper = new ArtifactTimeframeHelper($semantic_timeframe_builder, $timeframe_builder);
+        $artifact_timeframe_helper = new ArtifactTimeframeHelper($semantic_timeframe_builder, $this->logger);
 
         $this->assertFalse($artifact_timeframe_helper->artifactHelpShouldBeShownToUser($user, $start_date_field));
     }
