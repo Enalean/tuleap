@@ -2,9 +2,11 @@
 
 This log lists the architectural decisions for Program Management plugin.
 
-<!-- adrlog Regenerate the content by using "adr-log -e template.md -i". You can install it via "npm install -g adr-log" -->
-
 * [Glossary](glossary.md) - Definition of terms used in Program Management plugin
+
+<!-- adrlog Regenerate the content by using "adr-log -e "+(template|glossary).md" -i". You can install it via "npm install -g adr-log" -->
+
+* [ADR-0001](0001-mirror-milestones.md) - Create Mirror Artifacts to filter what Teams can view
 
 <!-- adrlogstop -->
 
