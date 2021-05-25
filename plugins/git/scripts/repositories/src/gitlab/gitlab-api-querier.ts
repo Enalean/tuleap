@@ -17,9 +17,8 @@
  * along with Tuleap. If not, see http://www.gnu.org/licenses/.
  */
 
-import type { GitLabCredentials } from "../type";
+import type { GitLabCredentials, GitLabDataWithToken, Repository } from "../type";
 import { del, get, patch, post, recursiveGet } from "tlp";
-import type { GitLabDataWithToken, Repository } from "../type";
 import type { RepositoryCallback } from "../api/rest-querier";
 
 export interface GitLabRepositoryDeletion {
@@ -37,6 +36,7 @@ export interface GitLabRepositoryCreation {
 export interface GitLabRepositoryUpdate {
     update_bot_api_token?: GitLabDataWithToken;
     generate_new_secret?: boolean;
+    allow_artifact_closure?: boolean;
 }
 
 export function getAsyncGitlabRepositoryList(credentials: GitLabCredentials): Promise<Response> {
@@ -100,7 +100,7 @@ export function patchGitlabRepository(
         "content-type": "application/json",
     };
 
-    return patch("/api/gitlab_repositories/" + integration_id, {
+    return patch("/api/gitlab_repositories/" + encodeURIComponent(integration_id), {
         headers,
         body: JSON.stringify(body),
     });

@@ -109,6 +109,18 @@
                                 {{ regenerate_gitlab_webhook_title }}
                             </div>
                             <div
+                                class="tlp-dropdown-menu-item"
+                                role="menuitem"
+                                ref="artifact_closure"
+                                data-test="artifact-closure-gitlab-repository"
+                            >
+                                <i
+                                    class="far fa-fw fa-times-circle tlp-dropdown-menu-item-icon"
+                                    aria-hidden="true"
+                                ></i>
+                                <translate>Allow artifact closure</translate>
+                            </div>
+                            <div
                                 class="tlp-dropdown-menu-item unlink-repository-gitlab"
                                 role="menuitem"
                                 ref="unlink_gitlab_repository"
@@ -292,6 +304,15 @@ export default {
                 });
             }
 
+            const button_artifact_closure = this.$refs.artifact_closure;
+
+            if (button_artifact_closure) {
+                button_artifact_closure.addEventListener("click", (event) => {
+                    event.preventDefault();
+                    this.showArtifactClosureModal(this.repository);
+                });
+            }
+
             const button_gitlab_administration = this.$refs.gitlab_administration;
             const dropdown_gitlab_administration = this.$refs.dropdown_gitlab_administration;
 
@@ -311,6 +332,7 @@ export default {
             "showDeleteGitlabRepositoryModal",
             "showEditAccessTokenGitlabRepositoryModal",
             "showRegenerateGitlabWebhookModal",
+            "showArtifactClosureModal",
         ]),
     },
 };

@@ -47,3 +47,14 @@ export function setRegenerateGitlabWebhookRepository(
 ): void {
     state.regenerate_gitlab_webhook_repository = repository;
 }
+
+export function setArtifactClosureModal(state: GitlabState, modal: Modal): void {
+    state.artifact_closure_modal = modal;
+}
+
+export function setArtifactClosureRepository(
+    state: GitlabState,
+    repository: GitLabRepository
+): void {
+    state.artifact_closure_repository = repository;
+}

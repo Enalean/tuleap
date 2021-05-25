@@ -64,6 +64,7 @@ export interface Repository {
     };
     html_url: string;
     gitlab_data?: null | GitLabData;
+    allow_artifact_closure: boolean;
 }
 
 export interface FormattedGitLabRepository {
@@ -76,6 +77,7 @@ export interface FormattedGitLabRepository {
     normalized_path?: string;
     path_without_project: string;
     gitlab_data?: null | GitLabData;
+    allow_artifact_closure: boolean;
 }
 
 export interface GitlabDataWithPath {
@@ -134,6 +136,7 @@ export interface GitLabRepository {
     last_push_date: string;
     name: string;
     is_webhook_configured: boolean;
+    allow_artifact_closure: boolean;
 }
 
 export interface RepositoryOwner {

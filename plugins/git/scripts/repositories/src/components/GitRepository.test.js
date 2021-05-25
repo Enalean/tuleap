@@ -342,6 +342,31 @@ describe("GitRepository", () => {
         );
     });
 
+    it("When repository is GitLab and user clicks to update the allowing artifact closure value, Then modal opens", async () => {
+        const repository = {
+            id: 1,
+            normalized_path: "MyPath/MyRepo",
+            description: "This is my description.",
+            path_without_project: "MyPath",
+            label: "MyRepo",
+            last_update_date: "2020-10-28T15:13:13+01:00",
+            additional_information: [],
+            gitlab_data: {
+                gitlab_repository_url: "https://example.com/MyPath/MyRepo",
+                gitlab_repository_id: 1,
+            },
+        };
+        propsData = { repository };
+
+        const wrapper = instantiateComponent();
+
+        wrapper.find("[data-test=artifact-closure-gitlab-repository]").trigger("click");
+
+        await wrapper.vm.$nextTick();
+
+        expect(store.dispatch).toHaveBeenCalledWith("gitlab/showArtifactClosureModal", repository);
+    });
+
     it("When repository is Git and handled by Gerrit, Then Gerrit icon and description are displayed", () => {
         propsData = {
             repository: {
