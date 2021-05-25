@@ -232,6 +232,7 @@ fieldset.gerrit_disconnect {
 
 .mass-mirrors-list {
     width: 600px;
+    margin-bottom: 100px;
 
     > thead > tr > th {
         padding: 0 40px;
@@ -377,6 +378,7 @@ body.sidebar-expanded .mass-mirrors-list-update-bar {
 
 .git-admin-mass-update-table {
     max-width: 800px;
+    margin-bottom: 100px;
 
     > thead > tr > th:first-child,
     > tbody > tr > td:first-child {
