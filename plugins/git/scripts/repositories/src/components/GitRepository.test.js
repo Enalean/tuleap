@@ -102,6 +102,7 @@ describe("GitRepository", () => {
             "This is my description."
         );
         expect(wrapper.find("[data-test=git-repository-card-gitlab-icon]").exists()).toBeTruthy();
+        expect(wrapper.find("[data-test=git-repository-card-gerrit-icon]").exists()).toBeFalsy();
     });
 
     it("When repository doesn't come from Gitlab and there is a description, Then only description is displayed", () => {
@@ -390,5 +391,6 @@ describe("GitRepository", () => {
             "This is my description."
         );
         expect(wrapper.find("[data-test=git-repository-card-gerrit-icon]").exists()).toBeTruthy();
+        expect(wrapper.find("[data-test=git-repository-card-gitlab-icon]").exists()).toBeFalsy();
     });
 });

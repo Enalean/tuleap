@@ -16,9 +16,9 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see http://www.gnu.org/licenses/.
  */
-import type { Repository } from "../type";
+import type { Repository, FormattedGitLabRepository } from "../type";
 
-export function isGitlabRepository(repository: Repository): boolean {
+export function isGitlabRepository(repository: FormattedGitLabRepository | Repository): boolean {
     return (
         Object.prototype.hasOwnProperty.call(repository, "gitlab_data") &&
         repository.gitlab_data !== null &&
@@ -28,7 +28,9 @@ export function isGitlabRepository(repository: Repository): boolean {
     );
 }
 
-export function isGitlabRepositoryWellConfigured(repository: Repository): boolean {
+export function isGitlabRepositoryWellConfigured(
+    repository: FormattedGitLabRepository | Repository
+): boolean {
     return (
         Object.prototype.hasOwnProperty.call(repository, "gitlab_data") &&
         repository.gitlab_data !== null &&
