@@ -1,7 +1,7 @@
 { pkgs }:
 
 let
-    node = pkgs.nodejs-15_x;
+    node = pkgs.nodejs-16_x;
     nodePackages = (import ./npm { inherit pkgs; nodejs = node; });
     npm = nodePackages."npm-^6".override { dontNpmInstall = true; };
 in
