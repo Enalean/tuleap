@@ -37,6 +37,14 @@ CREATE TABLE plugin_program_management_plan(
     PRIMARY KEY (program_increment_tracker_id, plannable_tracker_id)
 ) ENGINE=InnoDB;
 
+CREATE TABLE plugin_program_management_program(
+    program_project_id INT(11) NOT NULL,
+    iteration_tracker_id INT(11) DEFAULT NULL,
+    iteration_label VARCHAR(255) DEFAULT NULL,
+    iteration_sub_label VARCHAR(255) DEFAULT NULL,
+    PRIMARY KEY (program_project_id)
+) ENGINE=InnoDB;
+
 CREATE TABLE plugin_program_management_can_prioritize_features(
     program_increment_tracker_id INT(11) NOT NULL,
     user_group_id INT(11) NOT NULL,

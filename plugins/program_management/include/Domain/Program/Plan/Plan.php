@@ -47,6 +47,14 @@ final class Plan
      * @var string|null
      */
     private $custom_sub_label;
+    /**
+     * @var ?IterationTracker
+     */
+    private $iteration_tracker;
+    /**
+     * @var int
+     */
+    private $project_id;
 
     /**
      * @param ProgramPlannableTracker[] $plannable_trackers
@@ -54,16 +62,20 @@ final class Plan
      */
     public function __construct(
         ProgramIncrementTracker $program_increment_tracker,
+        int $project_id,
         array $plannable_trackers,
         array $can_prioritize,
         ?string $custom_label,
-        ?string $custom_sub_label
+        ?string $custom_sub_label,
+        ?IterationTracker $iteration_tracker
     ) {
         $this->program_increment_tracker = $program_increment_tracker;
+        $this->project_id                = $project_id;
         $this->plannable_trackers        = $plannable_trackers;
         $this->can_prioritize            = $can_prioritize;
         $this->custom_label              = $custom_label;
         $this->custom_sub_label          = $custom_sub_label;
+        $this->iteration_tracker         = $iteration_tracker;
     }
 
     public function getProgramIncrementTracker(): ProgramIncrementTracker
@@ -100,5 +112,15 @@ final class Plan
     public function getCustomSubLabel(): ?string
     {
         return $this->custom_sub_label;
+    }
+
+    public function getIterationTracker(): ?IterationTracker
+    {
+        return $this->iteration_tracker;
+    }
+
+    public function getProjectId(): int
+    {
+        return $this->project_id;
     }
 }

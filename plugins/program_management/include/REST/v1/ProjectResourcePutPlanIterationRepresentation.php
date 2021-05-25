@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2020 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2021 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -25,30 +25,18 @@ namespace Tuleap\ProgramManagement\REST\v1;
 /**
  * @psalm-immutable
  */
-final class ProjectResourcePutPlanRepresentation
+final class ProjectResourcePutPlanIterationRepresentation
 {
     /**
      * @var int {@required true}
      */
-    public $program_increment_tracker_id;
-    /**
-     * @var array {@type int}
-     */
-    public $plannable_tracker_ids;
-    /**
-     * @var PlanPutPermissions {@type \Tuleap\ProgramManagement\REST\v1\PlanPutPermissions} {@required true}
-     */
-    public $permissions;
+    public $iteration_tracker_id;
     /**
      * @var string | null {@required false} {@max 255}
      */
-    public $program_increment_label = null;
+    public $iteration_label = null;
     /**
      * @var string | null {@required false} {@max 255}
      */
-    public $program_increment_sub_label = null;
-    /**
-     * @var ProjectResourcePutPlanIterationRepresentation | null {@type \Tuleap\ProgramManagement\REST\v1\ProjectResourcePutPlanIterationRepresentation} {@required false}
-     */
-    public $iteration = null;
+    public $iteration_sub_label = null;
 }

@@ -22,46 +22,20 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Plan;
 
-use Exception;
 use Tuleap\ProgramManagement\Domain\Program\PlanTrackerNotFoundException;
+use Tuleap\ProgramManagement\Stub\BuildTrackerStub;
 
 class ProgramIncrementTrackerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItThrowsAnExceptionWhenTrackerIsNotFound(): void
     {
         $this->expectException(PlanTrackerNotFoundException::class);
-        ProgramIncrementTracker::buildProgramIncrementTracker($this->getStubBuildTracker(false), 1, 101);
+        ProgramIncrementTracker::buildProgramIncrementTracker(BuildTrackerStub::buildTrackerNotValid(), 1, 101);
     }
 
     public function testItBuildAProgramIncrement(): void
     {
-        $tracker = ProgramIncrementTracker::buildProgramIncrementTracker($this->getStubBuildTracker(), 1, 101);
+        $tracker = ProgramIncrementTracker::buildProgramIncrementTracker(BuildTrackerStub::buildValidTracker(), 1, 101);
         self::assertEquals(1, $tracker->getId());
-    }
-
-    private function getStubBuildTracker(bool $return_tracker = true): BuildTracker
-    {
-        return new class ($return_tracker) implements BuildTracker {
-
-            /* @var bool */
-            private $return_tracker;
-
-            public function __construct(bool $return_tracker)
-            {
-                $this->return_tracker = $return_tracker;
-            }
-
-            public function buildPlannableTrackerList(array $plannable_trackers_id, int $project_id): array
-            {
-                throw new Exception("Should not be called.");
-            }
-
-            public function checkTrackerIsValid(int $tracker_id, int $project_id): void
-            {
-                if (! $this->return_tracker) {
-                    throw new PlanTrackerNotFoundException($tracker_id);
-                }
-            }
-        };
     }
 }

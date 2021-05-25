@@ -47,19 +47,25 @@ final class PlanChange
      * @var array
      */
     public $can_possibly_prioritize_ugroups;
+    /**
+     * @var ?PlanIterationChange
+     */
+    public $iteration;
 
     private function __construct(
         PlanProgramIncrementChange $program_increment_change,
         \PFUser $user,
         int $project_id,
         array $tracker_ids_that_can_be_planned,
-        array $can_possibly_prioritize_ugroups
+        array $can_possibly_prioritize_ugroups,
+        ?PlanIterationChange $iteration
     ) {
         $this->program_increment_change        = $program_increment_change;
         $this->user                            = $user;
         $this->project_id                      = $project_id;
         $this->tracker_ids_that_can_be_planned = $tracker_ids_that_can_be_planned;
         $this->can_possibly_prioritize_ugroups = $can_possibly_prioritize_ugroups;
+        $this->iteration                       = $iteration;
     }
 
     /**
@@ -72,10 +78,15 @@ final class PlanChange
         \PFUser $user,
         int $project_id,
         array $tracker_ids_that_can_be_planned,
-        array $can_possibly_prioritize_ugroups
+        array $can_possibly_prioritize_ugroups,
+        ?PlanIterationChange $iteration_representation
     ): self {
         if (in_array($program_increment_change->tracker_id, $tracker_ids_that_can_be_planned, true)) {
-            throw new CannotPlanIntoItselfException();
+            throw new ProgramIncrementCannotPlanIntoItselfException();
+        }
+
+        if ($iteration_representation && in_array($iteration_representation->tracker_id, $tracker_ids_that_can_be_planned, true)) {
+            throw new IterationCannotBePlannedException();
         }
 
         return new self(
@@ -84,6 +95,7 @@ final class PlanChange
             $project_id,
             $tracker_ids_that_can_be_planned,
             $can_possibly_prioritize_ugroups,
+            $iteration_representation
         );
     }
 }

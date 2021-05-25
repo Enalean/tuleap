@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2020 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2021 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,6 +22,28 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Plan;
 
-interface CannotPlanIntoItselfException extends \Throwable
+/**
+ * @psalm-immutable
+ */
+final class PlanIterationChange
 {
+    /**
+     * @var int
+     */
+    public $tracker_id;
+    /**
+     * @var string|null
+     */
+    public $label;
+    /**
+     * @var string|null
+     */
+    public $sub_label;
+
+    public function __construct(int $tracker_id, ?string $label, ?string $sub_label)
+    {
+        $this->tracker_id = $tracker_id;
+        $this->label      = $label;
+        $this->sub_label  = $sub_label;
+    }
 }

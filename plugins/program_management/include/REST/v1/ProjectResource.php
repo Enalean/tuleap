@@ -61,6 +61,7 @@ use Tuleap\ProgramManagement\Domain\Program\Plan\CreatePlan;
 use Tuleap\ProgramManagement\Domain\Program\Plan\InvalidProgramUserGroup;
 use Tuleap\ProgramManagement\Domain\Program\Plan\PlanChange;
 use Tuleap\ProgramManagement\Domain\Program\Plan\PlanCreator;
+use Tuleap\ProgramManagement\Domain\Program\Plan\PlanIterationChange;
 use Tuleap\ProgramManagement\Domain\Program\Plan\PlanProgramIncrementChange;
 use Tuleap\ProgramManagement\Domain\Program\Plan\PlanTrackerException;
 use Tuleap\ProgramManagement\Domain\Program\Plan\ProgramAccessException;
@@ -183,6 +184,20 @@ final class ProjectResource extends AuthenticatedResource
      * }
      * </pre>
      *
+     * <br/>
+     * <strong>"iteration_plan"</strong> is optional. It permits to configure iteration tracker.
+     * <br/>
+     * Example:
+     * <pre>
+     * {<br/>
+     * &nbsp;"iteration_tracker_id": 115,<br/>
+     * &nbsp;"iteration_label": "Iterations"<br/>
+     * &nbsp;"iteration_sub_label": "iteration"<br/>
+     * }
+     * </pre>
+     * <br/>
+     * <strong>"iteration_label"</strong> and <strong>"iteration_sub_label"</strong> are optional.
+     *
      * @url    PUT {id}/program_plan
      *
      * @param int                                  $id Id of the program project
@@ -201,13 +216,22 @@ final class ProjectResource extends AuthenticatedResource
             $representation->program_increment_label,
             $representation->program_increment_sub_label
         );
+        $plan_iteration_change         = null;
+        if ($representation->iteration) {
+            $plan_iteration_change = new PlanIterationChange(
+                $representation->iteration->iteration_tracker_id,
+                $representation->iteration->iteration_label,
+                $representation->iteration->iteration_sub_label
+            );
+        }
         try {
             $plan_change = PlanChange::fromProgramIncrementAndRaw(
                 $plan_program_increment_change,
                 $user,
                 $id,
                 $representation->plannable_tracker_ids,
-                $representation->permissions->can_prioritize_features
+                $representation->permissions->can_prioritize_features,
+                $plan_iteration_change
             );
             $this->plan_creator->create($plan_change);
         } catch (ProjectIsNotAProgramException | CannotPlanIntoItselfException | PlanTrackerException | ProgramTrackerException | InvalidProgramUserGroup $e) {

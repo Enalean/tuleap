@@ -22,6 +22,10 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Plan;
 
-interface CannotPlanIntoItselfException extends \Throwable
+final class ProgramIncrementCannotPlanIntoItselfException extends \Exception implements CannotPlanIntoItselfException
 {
+    public function __construct()
+    {
+        parent::__construct("Program increment tracker id must not be contained into plannable tracker ids");
+    }
 }

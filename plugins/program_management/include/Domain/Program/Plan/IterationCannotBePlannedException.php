@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2020 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2021 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,6 +22,10 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Plan;
 
-interface CannotPlanIntoItselfException extends \Throwable
+final class IterationCannotBePlannedException extends \Exception implements CannotPlanIntoItselfException
 {
+    public function __construct()
+    {
+        parent::__construct("Iteration tracker id must not be contained into plannable tracker ids");
+    }
 }

@@ -732,6 +732,91 @@
         </artifact>
       </artifacts>
     </tracker>
+    <tracker id="T977" parent_id="0" instantiate_for_new_projects="1" is_displayed_in_new_dropdown="1">
+      <name><![CDATA[Iterations]]></name>
+      <item_name><![CDATA[iteration]]></item_name>
+      <description><![CDATA[Iterations]]></description>
+      <color><![CDATA[lake-placid-blue]]></color>
+      <cannedResponses/>
+      <formElements>
+        <formElement type="string" ID="F20515" rank="19" id="20515" tracker_id="977" parent_id="0" required="1">
+          <name><![CDATA[description]]></name>
+          <label><![CDATA[Description]]></label>
+          <properties size="30"/>
+        </formElement>
+        <formElement type="fieldset" ID="F20516" rank="785" id="20516" tracker_id="977" parent_id="0" required="1">
+          <name><![CDATA[ fieldset_2 ]]></name>
+          <label><![CDATA[ Progress ]]></label>
+          <formElements>
+            <formElement type="column" ID="F20517" rank="2" id="20517" tracker_id="977" parent_id="20516">
+              <name><![CDATA[ column4 ]]></name>
+              <label><![CDATA[ Column Details 2 ]]></label>
+              <formElements>
+                <formElement type="sb" ID="F20518" rank="0" id="20518" tracker_id="977" parent_id="20517">
+                  <name><![CDATA[status]]></name>
+                  <label><![CDATA[Status]]></label>
+                  <bind type="static" is_rank_alpha="0">
+                    <items>
+                      <item ID="V6540" label="Todo" is_hidden="0"/>
+                      <item ID="V6541" label="On Going" is_hidden="0"/>
+                      <item ID="V6542" label="Review" is_hidden="0"/>
+                      <item ID="V6543" label="Done" is_hidden="0"/>
+                    </items>
+                    <decorators>
+                      <decorator REF="V6540" tlp_color_name="daphne-blue"/>
+                      <decorator REF="V6541" tlp_color_name="lake-placid-blue"/>
+                      <decorator REF="V6542" tlp_color_name="deep-blue"/>
+                      <decorator REF="V6543" tlp_color_name="neon-green"/>
+                    </decorators>
+                    <default_values>
+                      <value REF="V6540"/>
+                    </default_values>
+                  </bind>
+                </formElement>
+              </formElements>
+            </formElement>
+          </formElements>
+        </formElement>
+        <formElement type="fieldset" ID="F20519" rank="2028" id="20519" tracker_id="977" parent_id="0">
+          <name><![CDATA[ fieldset1_1 ]]></name>
+          <label><![CDATA[ References ]]></label>
+          <formElements>
+            <formElement type="art_link" ID="F20520" rank="0" id="20520" tracker_id="977" parent_id="20519">
+              <name><![CDATA[links]]></name>
+              <label><![CDATA[Links]]></label>
+            </formElement>
+          </formElements>
+        </formElement>
+      </formElements>
+      <semantics>
+        <semantic type="title">
+          <shortname><![CDATA[ title ]]></shortname>
+          <label><![CDATA[ Title ]]></label>
+          <description><![CDATA[ Define the title of an artifact ]]></description>
+          <field REF="F20515"/>
+        </semantic>
+        <semantic type="tooltip"/>
+        <semantic type="plugin_cardwall_card_fields"/>
+      </semantics>
+      <rules>
+        <date_rules/>
+        <list_rules/>
+      </rules>
+      <reports/>
+      <permissions>
+        <permission scope="tracker" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_ACCESS_FULL"/>
+        <permission scope="field" REF="F20515" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F20515" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F20515" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F20518" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F20518" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F20518" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F20520" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F20520" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F20520" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+      </permissions>
+      <artifacts />
+    </tracker>
   </trackers>
   <natures />
   <agiledashboard>

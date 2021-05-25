@@ -59,6 +59,8 @@ final class PlanDao extends DataAccessObject implements PlanStore, VerifyCanBePl
         $this->getDB()->insertMany('plugin_program_management_plan', $insert);
         $this->setUpPlanPermissions($plan);
         $this->setUpPlanLabels($plan);
+
+        $this->setUpIterationPlan($plan);
     }
 
     private function setUpPlanPermissions(Plan $plan): void
@@ -100,6 +102,33 @@ final class PlanDao extends DataAccessObject implements PlanStore, VerifyCanBePl
         }
 
         $this->getDB()->insert('plugin_program_management_label_program_increment', $insert);
+    }
+
+    private function setUpIterationPlan(Plan $plan): void
+    {
+        $project_id = $plan->getProjectId();
+
+        $sql = 'DELETE FROM plugin_program_management_program WHERE program_project_id = ?';
+        $this->getDB()->run($sql, $project_id);
+
+        if (! $plan->getIterationTracker()) {
+            return;
+        }
+
+        $insert = [
+            'program_project_id'   => $project_id,
+            'iteration_tracker_id' => $plan->getIterationTracker()->id
+        ];
+
+        if ($plan->getIterationTracker()->label !== null) {
+            $insert['iteration_label'] = $plan->getIterationTracker()->label;
+        }
+
+        if ($plan->getIterationTracker()->sub_label !== null) {
+            $insert['iteration_sub_label'] = $plan->getIterationTracker()->sub_label;
+        }
+
+        $this->getDB()->insert('plugin_program_management_program', $insert);
     }
 
     private function cleanUpTopBacklogs(): void
