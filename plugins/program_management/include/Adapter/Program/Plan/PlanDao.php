@@ -37,6 +37,9 @@ final class PlanDao extends DataAccessObject implements PlanStore, VerifyCanBePl
     {
         $this->getDB()->tryFlatTransaction(function () use ($plan): void {
             $this->setUpPlan($plan);
+            $this->setUpPlanPermissions($plan);
+            $this->setUpPlanLabels($plan);
+            $this->setUpProgramPlan($plan);
             $this->cleanUpTopBacklogs();
             $this->cleanUpWorkflowPostActions();
         });
@@ -44,23 +47,19 @@ final class PlanDao extends DataAccessObject implements PlanStore, VerifyCanBePl
 
     private function setUpPlan(Plan $plan): void
     {
-        $sql = 'DELETE FROM plugin_program_management_plan WHERE program_increment_tracker_id = ?';
+        $sql = 'DELETE FROM plugin_program_management_plan WHERE project_id = ?';
 
-        $program_increment_tracker_id = $plan->getProgramIncrementTracker()->getId();
-        $this->getDB()->run($sql, $program_increment_tracker_id);
+        $project_id = $plan->getProjectId();
+        $this->getDB()->run($sql, $project_id);
 
         $insert = [];
         foreach ($plan->getPlannableTrackerIds() as $plannable_tracker_id) {
             $insert[] = [
-                'program_increment_tracker_id' => $program_increment_tracker_id,
-                'plannable_tracker_id'         => $plannable_tracker_id
+                'project_id'           => $project_id,
+                'plannable_tracker_id' => $plannable_tracker_id
             ];
         }
         $this->getDB()->insertMany('plugin_program_management_plan', $insert);
-        $this->setUpPlanPermissions($plan);
-        $this->setUpPlanLabels($plan);
-
-        $this->setUpIterationPlan($plan);
     }
 
     private function setUpPlanPermissions(Plan $plan): void
@@ -104,28 +103,28 @@ final class PlanDao extends DataAccessObject implements PlanStore, VerifyCanBePl
         $this->getDB()->insert('plugin_program_management_label_program_increment', $insert);
     }
 
-    private function setUpIterationPlan(Plan $plan): void
+    private function setUpProgramPlan(Plan $plan): void
     {
         $project_id = $plan->getProjectId();
 
         $sql = 'DELETE FROM plugin_program_management_program WHERE program_project_id = ?';
         $this->getDB()->run($sql, $project_id);
 
-        if (! $plan->getIterationTracker()) {
-            return;
-        }
-
         $insert = [
             'program_project_id'   => $project_id,
-            'iteration_tracker_id' => $plan->getIterationTracker()->id
+            'program_increment_tracker_id' => $plan->getProgramIncrementTracker()->getId()
         ];
 
-        if ($plan->getIterationTracker()->label !== null) {
-            $insert['iteration_label'] = $plan->getIterationTracker()->label;
-        }
+        if ($plan->getIterationTracker()) {
+            $insert['iteration_tracker_id'] = $plan->getIterationTracker()->id;
 
-        if ($plan->getIterationTracker()->sub_label !== null) {
-            $insert['iteration_sub_label'] = $plan->getIterationTracker()->sub_label;
+            if ($plan->getIterationTracker()->label !== null) {
+                $insert['iteration_label'] = $plan->getIterationTracker()->label;
+            }
+
+            if ($plan->getIterationTracker()->sub_label !== null) {
+                $insert['iteration_sub_label'] = $plan->getIterationTracker()->sub_label;
+            }
         }
 
         $this->getDB()->insert('plugin_program_management_program', $insert);
@@ -160,15 +159,18 @@ final class PlanDao extends DataAccessObject implements PlanStore, VerifyCanBePl
 
     public function isPartOfAPlan(ProgramTracker $tracker_data): bool
     {
-        $sql = 'SELECT COUNT(*) FROM plugin_program_management_plan WHERE plannable_tracker_id = ? OR program_increment_tracker_id = ?';
+        $sql = 'SELECT COUNT(*)
+                FROM plugin_program_management_plan
+                LEFT JOIN plugin_program_management_program ON (plugin_program_management_plan.project_id = plugin_program_management_program.program_project_id)
+                WHERE plannable_tracker_id = ? OR program_increment_tracker_id = ?';
 
         return $this->getDB()->exists($sql, $tracker_data->getTrackerId(), $tracker_data->getTrackerId());
     }
 
     public function getProgramIncrementTrackerId(int $project_id): ?int
     {
-        $sql = 'SELECT program_increment_tracker_id FROM plugin_program_management_plan
-                INNER JOIN tracker ON tracker.id = plugin_program_management_plan.program_increment_tracker_id
+        $sql = 'SELECT program_increment_tracker_id FROM plugin_program_management_program
+                INNER JOIN tracker ON tracker.id = plugin_program_management_program.program_increment_tracker_id
                     WHERE tracker.group_id = ?';
 
         $tracker_id = $this->getDB()->single($sql, [$project_id]);
@@ -195,8 +197,9 @@ final class PlanDao extends DataAccessObject implements PlanStore, VerifyCanBePl
                      INNER JOIN tracker AS program_increment_tracker ON program_increment_tracker.id = program_increment.tracker_id
                      INNER JOIN tracker_artifact AS feature
                      INNER JOIN tracker AS feature_tracker ON feature_tracker.id = feature.tracker_id
-                     INNER JOIN plugin_program_management_plan AS plan
-                ON (plan.program_increment_tracker_id = program_increment_tracker.id AND plan.plannable_tracker_id = feature_tracker.id)
+                     INNER JOIN plugin_program_management_plan AS plan ON (plan.plannable_tracker_id = feature_tracker.id)
+                    INNER JOIN plugin_program_management_program AS program
+                ON (program.program_increment_tracker_id = program_increment_tracker.id AND program.program_project_id = plan.project_id)
                 WHERE program_increment.id = :program_increment_id AND feature.id = :feature_id';
         $rows = $this->getDB()->run($sql, $program_increment_id, $feature_id);
 

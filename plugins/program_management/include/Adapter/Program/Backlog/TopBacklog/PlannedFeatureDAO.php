@@ -32,7 +32,8 @@ class PlannedFeatureDAO extends DataAccessObject
         $sql = 'SELECT COUNT(planned_feature_artifact.id)
             FROM tracker_artifact AS planned_feature_artifact
             JOIN plugin_program_management_plan ON (plugin_program_management_plan.plannable_tracker_id = planned_feature_artifact.tracker_id)
-            JOIN tracker AS program_increment_tracker ON (program_increment_tracker.id = plugin_program_management_plan.program_increment_tracker_id)
+            JOIN plugin_program_management_program ON (plugin_program_management_program.program_project_id = plugin_program_management_plan.project_id)
+            JOIN tracker AS program_increment_tracker ON (program_increment_tracker.id = plugin_program_management_program.program_increment_tracker_id)
             JOIN tracker_artifact AS program_increment_artifact ON (program_increment_artifact.tracker_id = program_increment_tracker.id)
             JOIN tracker_changeset AS program_increment_changeset ON (program_increment_changeset.id = program_increment_artifact.last_changeset_id)
             JOIN tracker_changeset_value AS program_increment_changeset_value ON (program_increment_changeset_value.changeset_id = program_increment_changeset.id)

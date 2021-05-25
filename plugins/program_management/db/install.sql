@@ -32,13 +32,14 @@ CREATE TABLE plugin_program_management_pending_mirrors(
 ) ENGINE=InnoDB;
 
 CREATE TABLE plugin_program_management_plan(
-    program_increment_tracker_id INT(11) NOT NULL,
+    project_id INT(11) NOT NULL,
     plannable_tracker_id INT(11) NOT NULL,
-    PRIMARY KEY (program_increment_tracker_id, plannable_tracker_id)
+    PRIMARY KEY (project_id, plannable_tracker_id)
 ) ENGINE=InnoDB;
 
 CREATE TABLE plugin_program_management_program(
     program_project_id INT(11) NOT NULL,
+    program_increment_tracker_id INT(11) NOT NULL,
     iteration_tracker_id INT(11) DEFAULT NULL,
     iteration_label VARCHAR(255) DEFAULT NULL,
     iteration_sub_label VARCHAR(255) DEFAULT NULL,

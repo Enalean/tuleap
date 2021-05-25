@@ -57,14 +57,11 @@ final class ProgramDao extends DataAccessObject implements ProgramStore, SearchP
 
     public function searchProgramOfProgramIncrement(int $program_increment_id): ?int
     {
-        $sql = 'SELECT teams.program_project_id
-                FROM plugin_program_management_team_projects AS teams
-                    INNER JOIN plugin_program_management_plan AS plan
-                    INNER JOIN tracker
-                        ON tracker.id = plan.program_increment_tracker_id AND tracker.group_id = teams.program_project_id
+        $sql = 'SELECT program.program_project_id
+                FROM plugin_program_management_program AS program
+                    INNER JOIN tracker ON tracker.id = program.program_increment_tracker_id
                     INNER JOIN tracker_artifact AS program_increment ON tracker.id = program_increment.tracker_id
-                WHERE program_increment.id = ?
-                GROUP BY teams.program_project_id';
+                WHERE program_increment.id = ?';
 
         $result = $this->getDB()->cell($sql, $program_increment_id);
         return ($result !== false) ? (int) $result : null;

@@ -37,7 +37,7 @@ class FeatureDAO extends DataAccessObject implements CheckFeatureIsPlannedInProg
                     INNER JOIN tracker_artifact                     AS linked_art ON (linked_art.id = artlink.artifact_id)
                     INNER JOIN tracker                              AS t          ON (t.id = parent_art.tracker_id)
                     INNER JOIN tracker                              AS t_linked   ON (t_linked.id = linked_art.tracker_id AND t.group_id = t_linked.group_id)
-                    INNER JOIN plugin_program_management_plan                     ON (plugin_program_management_plan.program_increment_tracker_id = parent_art.tracker_id)
+                    INNER JOIN plugin_program_management_program                  ON (plugin_program_management_program.program_increment_tracker_id = parent_art.tracker_id)
                 WHERE parent_art.id = :program_increment_id AND linked_art.id = :feature_id";
 
         $rows = $this->getDB()->run($sql, $program_increment_id, $feature_id);
