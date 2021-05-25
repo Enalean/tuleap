@@ -56,7 +56,7 @@
       if (selector === '#') {
           $parent = $(selector)
       } else {
-          $parent = $.find(selector)
+          $parent = $(document.querySelector(selector))
       }
       $parent.length || ($parent = $this.parent())
 

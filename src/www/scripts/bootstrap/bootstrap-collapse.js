@@ -31,7 +31,7 @@
     this.options = $.extend({}, $.fn.collapse.defaults, options)
 
     if (this.options.parent) {
-      this.$parent = $.find(this.options.parent)
+      this.$parent = $(document.querySelector(this.options.parent))
     }
 
     this.options.toggle && this.toggle()
@@ -159,9 +159,9 @@
       , target = $this.attr('data-target')
         || e.preventDefault()
         || (href = $this.attr('href')) && href.replace(/.*(?=#[^\s]+$)/, '') //strip for ie7
-      , option = $.find(target).data('collapse') ? 'toggle' : $this.data()
-    $this[$.find(target).hasClass('in') ? 'addClass' : 'removeClass']('collapsed')
-    $.find(target).collapse(option)
+      , option = $(document.querySelector(target)).data('collapse') ? 'toggle' : $this.data()
+    $this[$(document.querySelector(target)).hasClass('in') ? 'addClass' : 'removeClass']('collapsed')
+    $(document.querySelector(target)).collapse(option)
   })
 
 }(window.jQuery);
