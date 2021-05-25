@@ -26,6 +26,9 @@ msgstr "Veuillez choisir un outil de suivi"
 msgid "Roadmap"
 msgstr "Feuille de route"
 
+msgid "Show progress of"
+msgstr "Afficher la progression de"
+
 msgid "The roadmap cannot be found."
 msgstr "La feuille de route est introuvable."
 
@@ -45,9 +48,6 @@ msgid ""
 msgstr ""
 "L'outil de suivi n'a pas de plage de temps définie, ou vous n'avez pas le "
 "droit de la voir."
-
-msgid "Tracker"
-msgstr "Outil de suivi"
 
 msgid "Unknown level"
 msgstr "Niveau inconnu"
