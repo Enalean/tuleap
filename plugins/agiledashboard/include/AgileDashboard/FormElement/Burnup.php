@@ -57,7 +57,6 @@ use Tuleap\Tracker\FormElement\TrackerFormElementExternalField;
 use Tuleap\Tracker\REST\Artifact\ArtifactFieldValueFullRepresentation;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao;
-use Tuleap\Tracker\Semantic\Timeframe\TimeframeBuilder;
 use UserManager;
 
 class Burnup extends Tracker_FormElement_Field implements Tracker_FormElement_Field_ReadOnly, TrackerFormElementExternalField
@@ -447,13 +446,13 @@ class Burnup extends Tracker_FormElement_Field implements Tracker_FormElement_Fi
     private function getConfigurationValueRetriever()
     {
         $form_element_factory = Tracker_FormElementFactory::instance();
+        $semantic_timeframe   = (
+            new SemanticTimeframeBuilder(new SemanticTimeframeDao(), $form_element_factory)
+        )->getSemantic($this->getTracker());
 
         return new ChartConfigurationValueRetriever(
             $this->getConfigurationFieldRetriever(),
-            new TimeframeBuilder(
-                new SemanticTimeframeBuilder(new SemanticTimeframeDao(), $form_element_factory),
-                $this->getLogger()
-            ),
+            $semantic_timeframe->getTimeframeCalculator(),
             $this->getLogger()
         );
     }

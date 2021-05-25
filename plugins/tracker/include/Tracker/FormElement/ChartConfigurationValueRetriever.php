@@ -25,7 +25,7 @@ use Psr\Log\LoggerInterface;
 use TimePeriodWithoutWeekEnd;
 use Tracker_FormElement_Chart_Field_Exception;
 use Tuleap\Tracker\Artifact\Artifact;
-use Tuleap\Tracker\Semantic\Timeframe\TimeframeBuilder;
+use Tuleap\Tracker\Semantic\Timeframe\IComputeTimeframes;
 
 class ChartConfigurationValueRetriever
 {
@@ -38,17 +38,17 @@ class ChartConfigurationValueRetriever
      */
     private $logger;
     /**
-     * @var TimeframeBuilder
+     * @var IComputeTimeframes
      */
-    private $timeframe_builder;
+    private $timeframe_calculator;
 
     public function __construct(
         ChartConfigurationFieldRetriever $configuration_field_retriever,
-        TimeframeBuilder $timeframe_builder,
+        IComputeTimeframes $timeframe_calculator,
         LoggerInterface $logger
     ) {
         $this->configuration_field_retriever = $configuration_field_retriever;
-        $this->timeframe_builder             = $timeframe_builder;
+        $this->timeframe_calculator          = $timeframe_calculator;
         $this->logger                        = $logger;
     }
 
@@ -77,9 +77,10 @@ class ChartConfigurationValueRetriever
      */
     public function getTimePeriod(Artifact $artifact, PFUser $user): TimePeriodWithoutWeekEnd
     {
-        return $this->timeframe_builder->buildTimePeriodWithoutWeekendForArtifactChartRendering(
+        return $this->timeframe_calculator->buildTimePeriodWithoutWeekendForArtifactChartRendering(
             $artifact,
-            $user
+            $user,
+            $this->logger
         );
     }
 }

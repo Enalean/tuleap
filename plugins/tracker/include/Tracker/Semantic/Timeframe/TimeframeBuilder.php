@@ -35,6 +35,9 @@ use Tracker_FormElement_Chart_Field_Exception;
 use Tracker_FormElement_Field_Date;
 use Tuleap\Tracker\Artifact\Artifact;
 
+/**
+ * @deprecated Use SemanticTimeframe::getTimeframeCalculator instead.
+ */
 class TimeframeBuilder
 {
     /**
@@ -54,6 +57,9 @@ class TimeframeBuilder
         $this->logger                     = $logger;
     }
 
+    /**
+     * @deprecated Use IComputeTimeframes::buildTimePeriodWithoutWeekendForArtifact instead
+     */
     public function buildTimePeriodWithoutWeekendForArtifact(Artifact $artifact, PFUser $user): TimePeriodWithoutWeekEnd
     {
         $semantic_timeframe = $this->semantic_timeframe_builder->getSemantic($artifact->getTracker());
@@ -114,6 +120,7 @@ class TimeframeBuilder
     }
 
     /**
+     * @deprecated Use IComputeTimeframes::buildTimePeriodWithoutWeekendForArtifactChartRendering instead
      * @throws Tracker_FormElement_Chart_Field_Exception
      */
     public function buildTimePeriodWithoutWeekendForArtifactChartRendering(Artifact $artifact, PFUser $user): TimePeriodWithoutWeekEnd

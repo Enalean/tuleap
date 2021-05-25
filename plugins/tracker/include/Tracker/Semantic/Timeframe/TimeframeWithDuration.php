@@ -166,4 +166,60 @@ class TimeframeWithDuration implements IComputeTimeframes
 
         return TimePeriodWithoutWeekEnd::buildFromDuration($start_date, $duration);
     }
+
+    /**
+     * @throws \Tracker_FormElement_Chart_Field_Exception
+     */
+    public function buildTimePeriodWithoutWeekendForArtifactChartRendering(Artifact $artifact, \PFUser $user, LoggerInterface $logger): TimePeriodWithoutWeekEnd
+    {
+        try {
+            try {
+                $start_date = TimeframeArtifactFieldsValueRetriever::getTimestamp($this->start_date_field, $user, $artifact);
+            } catch (TimeframeFieldNoValueException $exception) {
+                $start_date = null;
+            }
+
+            if (! $start_date) {
+                throw new \Tracker_FormElement_Chart_Field_Exception(
+                    dgettext('tuleap-tracker', '"start date" field is empty or invalid')
+                );
+            }
+        } catch (TimeframeFieldNotFoundException $exception) {
+            throw new \Tracker_FormElement_Chart_Field_Exception(
+                dgettext('tuleap-tracker', 'The tracker doesn\'t have a "start_date" Date field or you don\'t have the permission to access it.')
+            );
+        }
+
+        try {
+            $duration = TimeframeArtifactFieldsValueRetriever::getDurationFieldValue($this->duration_field, $user, $artifact);
+
+            if ($duration === null) {
+                throw new \Tracker_FormElement_Chart_Field_Exception(
+                    dgettext('tuleap-tracker', '"duration" field is empty or invalid')
+                );
+            }
+
+            if ($duration <= 0) {
+                throw new \Tracker_FormElement_Chart_Field_Exception(
+                    dgettext('tuleap-tracker', '"duration" field is empty or invalid')
+                );
+            }
+
+            if ($duration === 1) {
+                throw new \Tracker_FormElement_Chart_Field_Exception(
+                    dgettext('tuleap-tracker', '"duration" must be greater than 1 to display burndown graph.')
+                );
+            }
+        } catch (TimeframeFieldNotFoundException $exception) {
+            throw new \Tracker_FormElement_Chart_Field_Exception(
+                dgettext('tuleap-tracker', 'The tracker doesn\'t have a "duration" Integer field or you don\'t have the permission to access it.')
+            );
+        } catch (TimeframeFieldNoValueException $exception) {
+            throw new \Tracker_FormElement_Chart_Field_Exception(
+                dgettext('tuleap-tracker', '"duration" field is empty or invalid')
+            );
+        }
+
+        return TimePeriodWithoutWeekEnd::buildFromDuration($start_date, $duration);
+    }
 }

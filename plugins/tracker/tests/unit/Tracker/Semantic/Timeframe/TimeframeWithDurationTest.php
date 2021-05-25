@@ -307,6 +307,99 @@ class TimeframeWithDurationTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertSame(0, $time_period->getDuration());
     }
 
+    public function testItBuildsATimePeriodForChartWhenStartDateAndDurationAreSet(): void
+    {
+        // Sprint 10 days, from `Monday, Jul 1, 2013` to `Monday, Jul 15, 2013`
+        $duration          = 10;
+        $start_date        = '07/01/2013';
+        $expected_end_date = '07/15/2013';
+
+        $this->start_date_field->expects(self::once())->method('userCanRead')->will(self::returnValue(true));
+        $this->duration_field->expects(self::once())->method('userCanRead')->will(self::returnValue(true));
+
+        $this->mockStartDateFieldWithValue($start_date);
+        $this->mockDurationFieldWithValue($duration);
+
+        $time_period = $this->timeframe->buildTimePeriodWithoutWeekendForArtifactChartRendering(
+            $this->artifact,
+            $this->user,
+            new NullLogger()
+        );
+
+        $this->assertSame(strtotime($start_date), $time_period->getStartDate());
+        $this->assertSame(strtotime($expected_end_date), $time_period->getEndDate());
+        $this->assertSame(10, $time_period->getDuration());
+    }
+
+    public function testItThrowsAnExceptionWhenStartDateIsEmptyOrHasNoValueInChartContext(): void
+    {
+        $this->start_date_field->expects(self::once())->method('userCanRead')->will(self::returnValue(true));
+
+        $start_date_changeset = self::getMockBuilder(\Tracker_Artifact_ChangesetValue_Date::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $start_date_changeset->expects(self::once())->method('getTimestamp')->will(self::returnValue(null));
+
+        $this->start_date_field->expects(self::once())->method('getLastChangesetValue')
+            ->with($this->artifact)
+            ->will(self::returnValue($start_date_changeset));
+
+        self::expectException(\Tracker_FormElement_Chart_Field_Exception::class);
+
+        $this->timeframe->buildTimePeriodWithoutWeekendForArtifactChartRendering(
+            $this->artifact,
+            $this->user,
+            new NullLogger()
+        );
+    }
+
+    /**
+     * @testWith [-1]
+     *           [0]
+     *           [1]
+     *           [null]
+     */
+    public function testItThrowsAnExceptionWhenDurationHasParticularValuesInChartContext(?int $duration): void
+    {
+        $start_date = '07/01/2013';
+
+        $this->start_date_field->expects(self::once())->method('userCanRead')->will(self::returnValue(true));
+        $this->duration_field->expects(self::once())->method('userCanRead')->will(self::returnValue(true));
+
+        $this->mockStartDateFieldWithValue($start_date);
+        $this->mockDurationFieldWithValue($duration);
+
+        $this->expectException(\Tracker_FormElement_Chart_Field_Exception::class);
+
+        $this->timeframe->buildTimePeriodWithoutWeekendForArtifactChartRendering(
+            $this->artifact,
+            $this->user,
+            new NullLogger()
+        );
+    }
+
+    public function testItThrowsAnExceptionWhenDurationHasNoLastChangesetValueInChartContext(): void
+    {
+        $start_date = '07/01/2013';
+
+        $this->start_date_field->expects(self::once())->method('userCanRead')->will(self::returnValue(true));
+        $this->duration_field->expects(self::once())->method('userCanRead')->will(self::returnValue(true));
+
+        $this->mockStartDateFieldWithValue($start_date);
+        $this->duration_field->expects(self::once())->method('getLastChangesetValue')
+            ->with($this->artifact)
+            ->will(self::returnValue(null));
+
+        $this->expectException(\Tracker_FormElement_Chart_Field_Exception::class);
+
+        $this->timeframe->buildTimePeriodWithoutWeekendForArtifactChartRendering(
+            $this->artifact,
+            $this->user,
+            new NullLogger()
+        );
+    }
+
     private function getMockedDateField(int $field_id): \Tracker_FormElement_Field_Date
     {
         $mock = $this->getMockBuilder(\Tracker_FormElement_Field_Date::class)
