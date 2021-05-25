@@ -56,7 +56,7 @@ class TimeframeArtifactFieldsValueRetriever
      * @throws TimeframeFieldNotFoundException
      * @throws TimeframeFieldNoValueException
      */
-    public static function getDurationFieldValue(\Tracker_FormElement_Field_Numeric $duration_field, \PFUser $user, Artifact $artifact): ?int
+    public static function getDurationFieldValue(\Tracker_FormElement_Field_Numeric $duration_field, \PFUser $user, Artifact $artifact): ?float
     {
         if (! $duration_field->userCanRead($user)) {
             throw new TimeframeFieldNotFoundException();
