@@ -30,24 +30,6 @@ export function setIsLoading(state: TasksState, is_loading: boolean): void {
     state.is_loading = is_loading;
 }
 
-export function setShouldDisplayEmptyState(
-    state: TasksState,
-    should_display_empty_state: boolean
-): void {
-    state.should_display_empty_state = should_display_empty_state;
-}
-
-export function setErrorMessage(state: TasksState, error_message: string): void {
-    state.error_message = error_message;
-}
-
-export function setShouldDisplayErrorState(
-    state: TasksState,
-    should_display_error_state: boolean
-): void {
-    state.should_display_error_state = should_display_error_state;
-}
-
 export function setTasks(state: TasksState, tasks: Task[]): void {
     state.tasks = tasks;
 }

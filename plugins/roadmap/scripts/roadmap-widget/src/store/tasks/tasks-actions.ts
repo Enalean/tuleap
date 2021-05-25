@@ -32,13 +32,13 @@ export async function loadTasks(
     try {
         const tasks = await retrieveAllTasks(roadmap_id);
         if (tasks.length === 0) {
-            context.commit("setShouldDisplayEmptyState", true);
+            context.commit("setApplicationInEmptyState", null, { root: true });
         } else {
             context.commit("setTasks", tasks);
         }
     } catch (e) {
         if (isFetchWrapperError(e)) {
-            await handleRestError(context, e);
+            handleRestError(context, e);
         } else {
             throw e;
         }
@@ -81,42 +81,17 @@ function loadSubtasks(context: ActionContext<TasksState, RootState>, task: Task)
         });
 }
 
-async function handleRestError(
+function handleRestError(
     context: ActionContext<TasksState, RootState>,
     rest_error: FetchWrapperError
-): Promise<void> {
-    context.commit("setShouldDisplayErrorState", true);
-    context.commit("setErrorMessage", "");
-
+): void {
     if (rest_error.response.status === 404 || rest_error.response.status === 403) {
-        context.commit("setShouldDisplayEmptyState", true);
-        context.commit("setShouldDisplayErrorState", false);
+        context.commit("setApplicationInEmptyState", null, { root: true });
 
         return;
     }
 
-    if (rest_error.response.status === 400) {
-        try {
-            context.commit("setErrorMessage", await getMessageFromRestError(rest_error));
-        } catch (error) {
-            // no custom message if we are unable to parse the error response
-            throw rest_error;
-        }
-    }
-}
-
-async function getMessageFromRestError(rest_error: FetchWrapperError): Promise<string> {
-    const response = await rest_error.response.json();
-
-    if (Object.prototype.hasOwnProperty.call(response, "error")) {
-        if (Object.prototype.hasOwnProperty.call(response.error, "i18n_error_message")) {
-            return response.error.i18n_error_message;
-        }
-
-        return response.error.message;
-    }
-
-    return "";
+    context.commit("setApplicationInErrorStateDueToRestError", rest_error, { root: true });
 }
 
 function isFetchWrapperError(error: Error): error is FetchWrapperError {
