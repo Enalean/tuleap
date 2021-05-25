@@ -205,7 +205,7 @@ class TimeframeWithDuration implements IComputeTimeframes
                 );
             }
 
-            if ($duration === 1) {
+            if ($duration <= 1) {
                 throw new \Tracker_FormElement_Chart_Field_Exception(
                     dgettext('tuleap-tracker', '"duration" must be greater than 1 to display burndown graph.')
                 );
