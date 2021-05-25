@@ -55,6 +55,19 @@ msgstr "Une erreur est survenue lors de votre dernière action."
 msgid "An error occurred while creating the repository."
 msgstr "Une erreur est survenue lors de la création du dépôt."
 
+msgid "Artifact closure"
+msgstr "Fermeture d'artéfact"
+
+msgid "Artifact closure is now allowed for '%s'!"
+msgstr ""
+"L'ouverture d'artéfact est maintenant possible pour "
+"'%s'."
+
+msgid "Artifact closure is now disabled for '%s'!"
+msgstr ""
+"La fermeture d'artéfact est maintenant désactivé pour "
+"'%s'."
+
 msgid "Back"
 msgstr "Retour"
 
@@ -198,6 +211,9 @@ msgstr ""
 "autorisés : a-zA-Z0-9/_.-, la longueur maximale est de 255 caractères, pas "
 "de slashes au début ou à la fin, les noms des repertoires ne doivent pas "
 "finir par \".git\"."
+
+msgid "Save"
+msgstr "Sauvegarder"
 
 msgid "Save new token"
 msgstr "Sauvegarder le nouveau jeton d'accès"

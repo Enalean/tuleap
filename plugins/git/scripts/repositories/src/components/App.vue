@@ -38,6 +38,7 @@
             <filter-empty-state />
             <no-repository-empty-state />
             <regenerate-gitlab-webhook />
+            <artifact-closure-modal />
         </div>
     </div>
 </template>
@@ -61,11 +62,13 @@ import EditAccessTokenGitlabModal from "./GitlabModal/EditAccessTokenGitlabModal
 import UnlinkRepositoryGitlabModal from "./GitlabModal/UnlinkGitlabRepositoryModal/UnlinkRepositoryGitlabModal.vue";
 import SuccessMessage from "./SuccessMessage";
 import RegenerateGitlabWebhook from "./GitlabModal/RegenerateGitlabWebhookModal/RegenerateGitlabWebhook";
+import ArtifactClosureModal from "./GitlabModal/ArtifactClosureModal/ArtifactClosureModal.vue";
 
 export default {
     name: "App",
     store,
     components: {
+        ArtifactClosureModal,
         RegenerateGitlabWebhook,
         SuccessMessage,
         GitlabRepositoryModal,

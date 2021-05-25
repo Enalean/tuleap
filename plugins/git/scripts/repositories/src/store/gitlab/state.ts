@@ -28,6 +28,8 @@ export interface GitlabState {
     edit_access_token_gitlab_repository: GitLabRepository | null;
     regenerate_gitlab_webhook_modal: Modal | null;
     regenerate_gitlab_webhook_repository: GitLabRepository | null;
+    artifact_closure_modal: Modal | null;
+    artifact_closure_repository: GitLabRepository | null;
 }
 
 const state: GitlabState = {
@@ -38,6 +40,8 @@ const state: GitlabState = {
     edit_access_token_gitlab_repository: null,
     regenerate_gitlab_webhook_modal: null,
     regenerate_gitlab_webhook_repository: null,
+    artifact_closure_modal: null,
+    artifact_closure_repository: null,
 };
 
 export default state;

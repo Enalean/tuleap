@@ -86,6 +86,17 @@ export const showRegenerateGitlabWebhookModal = (
     context.state.regenerate_gitlab_webhook_modal.toggle();
 };
 
+export const showArtifactClosureModal = (
+    context: ActionContext<GitlabState, GitlabState>,
+    repository: GitLabRepository
+): void => {
+    context.commit("setArtifactClosureRepository", repository);
+    if (!context.state.artifact_closure_modal) {
+        return;
+    }
+    context.state.artifact_closure_modal.toggle();
+};
+
 export async function getGitlabRepositories(
     context: ActionContext<GitlabState, GitlabState>,
     order_by: string
@@ -215,4 +226,30 @@ export async function regenerateGitlabWebhook(
     };
 
     await patchGitlabRepository(integration_id, body);
+}
+
+interface UpdateGitlabIntegrationPayload {
+    integration_id: number;
+    allow_artifact_closure: boolean;
+}
+
+export async function updateGitlabRepository(
+    context: ActionContext<GitlabState, GitlabState>,
+    payload: UpdateGitlabIntegrationPayload
+): Promise<GitLabRepository> {
+    const gitlab_repository_update: GitLabRepositoryUpdate = {
+        allow_artifact_closure: payload.allow_artifact_closure,
+    };
+    const response = await patchGitlabRepository(payload.integration_id, gitlab_repository_update);
+
+    const repositories = context.rootGetters.getGitlabRepositoriesIntegrated;
+    const concerned_repository_index = repositories.findIndex(
+        (repository: Repository) => repository.integration_id === payload.integration_id
+    );
+
+    const repo = repositories[concerned_repository_index];
+    repo.allow_artifact_closure = payload.allow_artifact_closure;
+    repositories[concerned_repository_index] = repo;
+
+    return response.json();
 }
