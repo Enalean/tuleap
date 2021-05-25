@@ -32,15 +32,6 @@ class ActivityLoggerDao extends DataAccessObject
         $this->getDB()->run($sql, $user_id, $project_id, $service, $action, $_SERVER['REQUEST_TIME']);
     }
 
-    public function fetchActivityBetweenDates($from, $to)
-    {
-        $sql = 'SELECT user_id, user_name, email, service, action, FROM_UNIXTIME(time)
-                FROM plugin_create_test_env_activity
-                  INNER JOIN user USING (user_id)
-                WHERE time BETWEEN ? AND ?';
-        return $this->getDB()->run($sql, $from, $to);
-    }
-
     public function purgeOldData($timestamp)
     {
         $sql = 'DELETE FROM plugin_create_test_env_activity WHERE time <= ?';
