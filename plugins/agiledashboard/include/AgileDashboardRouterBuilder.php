@@ -33,7 +33,6 @@ use Tuleap\AgileDashboard\PermissionsPerGroup\AgileDashboardJSONPermissionsRetri
 use Tuleap\AgileDashboard\PermissionsPerGroup\AgileDashboardPermissionsRepresentationBuilder;
 use Tuleap\AgileDashboard\PermissionsPerGroup\PlanningPermissionsRepresentationBuilder;
 use Tuleap\AgileDashboard\Planning\HeaderOptionsForPlanningProvider;
-use Tuleap\AgileDashboard\Planning\MilestoneBurndownFieldChecker;
 use Tuleap\AgileDashboard\Planning\PlanningDao;
 use Tuleap\AgileDashboard\Planning\PlanningUpdater;
 use Tuleap\AgileDashboard\Planning\RootPlanning\BacklogTrackerRemovalChecker;
@@ -49,7 +48,6 @@ use Tuleap\Tracker\Artifact\RecentlyVisited\VisitRecorder;
 use Tuleap\Tracker\NewDropdown\TrackerNewDropdownLinkPresenterBuilder;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao;
-use Tuleap\Tracker\Semantic\Timeframe\TimeframeBuilder;
 
 class AgileDashboardRouterBuilder // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
@@ -253,22 +251,7 @@ class AgileDashboardRouterBuilder // phpcs:ignore PSR1.Classes.ClassDeclaration.
      */
     private function getMilestoneFactory()
     {
-        $form_element_factory = Tracker_FormElementFactory::instance();
-
-        return new Planning_MilestoneFactory(
-            $this->getPlanningFactory(),
-            $this->getArtifactFactory(),
-            $form_element_factory,
-            $this->getStatusCounter(),
-            new PlanningPermissionsManager(),
-            new AgileDashboard_Milestone_MilestoneDao(),
-            $this->getMonoMileStoneChecker(),
-            new TimeframeBuilder(
-                new SemanticTimeframeBuilder(new SemanticTimeframeDao(), $form_element_factory),
-                \BackendLogger::getDefaultLogger()
-            ),
-            new MilestoneBurndownFieldChecker($form_element_factory)
-        );
+        return Planning_MilestoneFactory::build();
     }
 
     /**

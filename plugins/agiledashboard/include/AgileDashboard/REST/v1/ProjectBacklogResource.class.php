@@ -25,9 +25,7 @@ use AgileDashboard_BacklogItemDao;
 use AgileDashboard_Milestone_Backlog_BacklogFactory;
 use AgileDashboard_Milestone_Backlog_BacklogItemBuilder;
 use AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory;
-use AgileDashboard_Milestone_MilestoneDao;
 use AgileDashboard_Milestone_MilestoneReportCriterionOptionsProvider;
-use AgileDashboard_Milestone_MilestoneStatusCounter;
 use Luracast\Restler\RestException;
 use PFUser;
 use Planning_MilestoneFactory;
@@ -37,7 +35,6 @@ use Project;
 use Tracker_Artifact_PriorityDao;
 use Tracker_Artifact_PriorityHistoryDao;
 use Tracker_Artifact_PriorityManager;
-use Tracker_ArtifactDao;
 use Tracker_ArtifactFactory;
 use Tracker_FormElementFactory;
 use Tuleap\AgileDashboard\Artifact\PlannedArtifactDao;
@@ -51,7 +48,6 @@ use Tuleap\AgileDashboard\MonoMilestone\MonoMilestoneBacklogItemDao;
 use Tuleap\AgileDashboard\MonoMilestone\MonoMilestoneItemsFinder;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneDao;
-use Tuleap\AgileDashboard\Planning\MilestoneBurndownFieldChecker;
 use Tuleap\AgileDashboard\RemainingEffortValueRetriever;
 use Tuleap\AgileDashboard\REST\v1\Milestone\MilestoneElementAdder;
 use Tuleap\AgileDashboard\REST\v1\Milestone\MilestoneElementRemover;
@@ -68,9 +64,6 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkUpdater;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkUpdaterDataFormater;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ItemListedTwiceException;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDecoratorRetriever;
-use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
-use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao;
-use Tuleap\Tracker\Semantic\Timeframe\TimeframeBuilder;
 use UserManager;
 
 /**
@@ -110,11 +103,6 @@ class ProjectBacklogResource
         $event_manager                      = \EventManager::instance();
         $user_manager                       = UserManager::instance();
         $this->planning_permissions_manager = new PlanningPermissionsManager();
-        $status_counter                     = new AgileDashboard_Milestone_MilestoneStatusCounter(
-            new AgileDashboard_BacklogItemDao(),
-            new Tracker_ArtifactDao(),
-            $tracker_artifact_factory
-        );
 
         $planning_factory             = PlanningFactory::build();
         $scrum_mono_milestone_checker = new ScrumForMonoMilestoneChecker(
@@ -127,20 +115,7 @@ class ProjectBacklogResource
             $tracker_artifact_factory
         );
 
-        $this->milestone_factory = new Planning_MilestoneFactory(
-            $planning_factory,
-            Tracker_ArtifactFactory::instance(),
-            $tracker_form_element_factory,
-            $status_counter,
-            $this->planning_permissions_manager,
-            new AgileDashboard_Milestone_MilestoneDao(),
-            new ScrumForMonoMilestoneChecker(new ScrumForMonoMilestoneDao(), $planning_factory),
-            new TimeframeBuilder(
-                new SemanticTimeframeBuilder(new SemanticTimeframeDao(), $tracker_form_element_factory),
-                \BackendLogger::getDefaultLogger()
-            ),
-            new MilestoneBurndownFieldChecker($tracker_form_element_factory)
-        );
+        $this->milestone_factory = Planning_MilestoneFactory::build();
 
         $backlog_factory = new AgileDashboard_Milestone_Backlog_BacklogFactory(
             new AgileDashboard_BacklogItemDao(),

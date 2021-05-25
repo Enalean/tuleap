@@ -24,6 +24,7 @@ namespace Tuleap\AgileDashboard\Planning;
 
 use Mockery as M;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use Psr\Log\NullLogger;
 use Tuleap\AgileDashboard\Milestone\Criterion\Status\StatusAll;
 use Tuleap\AgileDashboard\Milestone\Criterion\Status\StatusOpen;
 use Tuleap\AgileDashboard\Milestone\Request\FilteringQuery;
@@ -32,7 +33,9 @@ use Tuleap\AgileDashboard\Milestone\Request\SubMilestoneRequest;
 use Tuleap\AgileDashboard\Milestone\Request\TopMilestoneRequest;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
 use Tuleap\Test\Builders\UserTestBuilder;
-use Tuleap\Tracker\Semantic\Timeframe\TimeframeBuilder;
+use Tuleap\Tracker\Semantic\Timeframe\IComputeTimeframes;
+use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframe;
+use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 use Tuleap\Tracker\TrackerColor;
 
 final class MilestoneFactoryGetPaginatedMilestonesTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -60,17 +63,19 @@ final class MilestoneFactoryGetPaginatedMilestonesTest extends \Tuleap\Test\PHPU
      */
     private $artifact_factory;
     /**
-     * @var M\LegacyMockInterface|M\MockInterface|TimeframeBuilder
+     * @var M\LegacyMockInterface|M\MockInterface|IComputeTimeframes
      */
-    private $timeframe_builder;
+    private $timeframe_calculator;
 
     protected function setUp(): void
     {
         $this->planning_factory       = M::mock(\PlanningFactory::class);
         $this->artifact_factory       = M::mock(\Tracker_ArtifactFactory::class);
-        $this->timeframe_builder      = M::mock(TimeframeBuilder::class);
         $this->mono_milestone_checker = M::mock(ScrumForMonoMilestoneChecker::class);
         $this->milestone_dao          = M::mock(\AgileDashboard_Milestone_MilestoneDao::class);
+        $this->timeframe_calculator   = M::mock(IComputeTimeframes::class);
+        $semantic_timeframe           = M::mock(SemanticTimeframe::class, ['getTimeframeCalculator' => $this->timeframe_calculator]);
+        $semantic_timeframe_builder   = M::mock(SemanticTimeframeBuilder::class, ['getSemantic' => $semantic_timeframe]);
 
         $this->milestone_factory = new \Planning_MilestoneFactory(
             $this->planning_factory,
@@ -80,7 +85,8 @@ final class MilestoneFactoryGetPaginatedMilestonesTest extends \Tuleap\Test\PHPU
             M::mock(\PlanningPermissionsManager::class),
             $this->milestone_dao,
             $this->mono_milestone_checker,
-            $this->timeframe_builder,
+            $semantic_timeframe_builder,
+            new NullLogger(),
             M::mock(MilestoneBurndownFieldChecker::class)
         );
     }
@@ -145,7 +151,7 @@ final class MilestoneFactoryGetPaginatedMilestonesTest extends \Tuleap\Test\PHPU
             ->andReturn($first_artifact, $second_artifact);
         $this->planning_factory->shouldReceive('getPlanningByPlanningTracker')
             ->andReturn($planning);
-        $this->timeframe_builder->shouldReceive('buildTimePeriodWithoutWeekendForArtifact')
+        $this->timeframe_calculator->shouldReceive('buildTimePeriodWithoutWeekendForArtifact')
             ->andReturn(\TimePeriodWithoutWeekEnd::buildFromDuration(1, 1));
 
         $milestones = $this->milestone_factory->getPaginatedTopMilestones($request);
@@ -207,7 +213,7 @@ final class MilestoneFactoryGetPaginatedMilestonesTest extends \Tuleap\Test\PHPU
         $this->planning_factory->shouldReceive('getPlanningByPlanningTracker')
             ->with($sub_milestone_tracker)
             ->andReturn($sub_planning);
-        $this->timeframe_builder->shouldReceive('buildTimePeriodWithoutWeekendForArtifact')
+        $this->timeframe_calculator->shouldReceive('buildTimePeriodWithoutWeekendForArtifact')
             ->andReturn(\TimePeriodWithoutWeekEnd::buildFromDuration(1, 1));
 
         $sub_milestones = $this->milestone_factory->getPaginatedSubMilestones($request);
@@ -280,7 +286,7 @@ final class MilestoneFactoryGetPaginatedMilestonesTest extends \Tuleap\Test\PHPU
         $this->planning_factory->shouldReceive('getPlanningByPlanningTracker')
             ->with($sub_milestone_tracker)
             ->andReturn($planning);
-        $this->timeframe_builder->shouldReceive('buildTimePeriodWithoutWeekendForArtifact')
+        $this->timeframe_calculator->shouldReceive('buildTimePeriodWithoutWeekendForArtifact')
             ->andReturn(\TimePeriodWithoutWeekEnd::buildFromDuration(1, 1));
 
         $sibling_milestones = $this->milestone_factory->getPaginatedSiblingMilestones($request);
@@ -371,7 +377,7 @@ final class MilestoneFactoryGetPaginatedMilestonesTest extends \Tuleap\Test\PHPU
         $this->planning_factory->shouldReceive('getPlanningByPlanningTracker')
             ->with($sub_milestone_tracker)
             ->andReturn($sub_planning);
-        $this->timeframe_builder->shouldReceive('buildTimePeriodWithoutWeekendForArtifact')
+        $this->timeframe_calculator->shouldReceive('buildTimePeriodWithoutWeekendForArtifact')
             ->andReturn(\TimePeriodWithoutWeekEnd::buildFromDuration(1, 1));
 
         $sibling_milestones = $this->milestone_factory->getPaginatedSiblingMilestones($request);

@@ -18,6 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Psr\Log\LoggerInterface;
 use Tuleap\AgileDashboard\Milestone\PaginatedMilestones;
 use Tuleap\AgileDashboard\Milestone\Request\SiblingMilestoneRequest;
 use Tuleap\AgileDashboard\Milestone\Request\SubMilestoneRequest;
@@ -30,7 +31,6 @@ use Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao;
-use Tuleap\Tracker\Semantic\Timeframe\TimeframeBuilder;
 
 /**
  * Loads planning milestones from the persistence layer.
@@ -75,9 +75,9 @@ class Planning_MilestoneFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
     private $scrum_mono_milestone_checker;
 
     /**
-     * @var TimeframeBuilder
+     * @var SemanticTimeframeBuilder
      */
-    private $timeframe_builder;
+    private $semantic_timeframe_builder;
     /**
      * @var MilestoneBurndownFieldChecker
      */
@@ -86,6 +86,10 @@ class Planning_MilestoneFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
      * @var array
      */
     private $cache_all_milestone = [];
+    /**
+     * @var LoggerInterface
+     */
+    private $logger;
 
     /**
      * Instanciates a new milestone factory.
@@ -102,7 +106,8 @@ class Planning_MilestoneFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
         PlanningPermissionsManager $planning_permissions_manager,
         AgileDashboard_Milestone_MilestoneDao $milestone_dao,
         ScrumForMonoMilestoneChecker $scrum_mono_milestone_checker,
-        TimeframeBuilder $timeframe_builder,
+        SemanticTimeframeBuilder $semantic_timeframe_builder,
+        LoggerInterface $logger,
         MilestoneBurndownFieldChecker $burndown_field_checker
     ) {
         $this->planning_factory             = $planning_factory;
@@ -112,7 +117,8 @@ class Planning_MilestoneFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
         $this->planning_permissions_manager = $planning_permissions_manager;
         $this->milestone_dao                = $milestone_dao;
         $this->scrum_mono_milestone_checker = $scrum_mono_milestone_checker;
-        $this->timeframe_builder            = $timeframe_builder;
+        $this->semantic_timeframe_builder   = $semantic_timeframe_builder;
+        $this->logger                       = $logger;
         $this->burndown_field_checker       = $burndown_field_checker;
     }
 
@@ -122,7 +128,7 @@ class Planning_MilestoneFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
         $form_element_factory = Tracker_FormElementFactory::instance();
         $planning_factory     = \PlanningFactory::build();
 
-        return new Planning_MilestoneFactory(
+        return new self(
             $planning_factory,
             $artifact_factory,
             $form_element_factory,
@@ -134,10 +140,11 @@ class Planning_MilestoneFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
             new PlanningPermissionsManager(),
             new AgileDashboard_Milestone_MilestoneDao(),
             new ScrumForMonoMilestoneChecker(new ScrumForMonoMilestoneDao(), $planning_factory),
-            new TimeframeBuilder(
-                new SemanticTimeframeBuilder(new SemanticTimeframeDao(), $form_element_factory),
-                BackendLogger::getDefaultLogger()
+            new SemanticTimeframeBuilder(
+                new SemanticTimeframeDao(),
+                $form_element_factory,
             ),
+            BackendLogger::getDefaultLogger(),
             new MilestoneBurndownFieldChecker($form_element_factory)
         );
     }
@@ -961,7 +968,12 @@ class Planning_MilestoneFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
      */
     private function getMilestoneTimePeriod(Artifact $milestone_artifact, PFUser $user)
     {
-        return $this->timeframe_builder->buildTimePeriodWithoutWeekendForArtifact($milestone_artifact, $user);
+        $semantic_timeframe = $this->semantic_timeframe_builder->getSemantic($milestone_artifact->getTracker());
+        return $semantic_timeframe->getTimeframeCalculator()->buildTimePeriodWithoutWeekendForArtifact(
+            $milestone_artifact,
+            $user,
+            $this->logger
+        );
     }
 
     private function milestoneHasStartDate(Artifact $milestone_artifact, PFUser $user)
