@@ -26,8 +26,9 @@ namespace Tuleap\AgileDashboard\Planning;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Planning_MilestoneFactory;
+use Psr\Log\NullLogger;
 use Tuleap\Tracker\Artifact\Artifact;
-use Tuleap\Tracker\Semantic\Timeframe\TimeframeBuilder;
+use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 
 final class MilestoneFactoryPlannedArtifactsTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -59,7 +60,8 @@ final class MilestoneFactoryPlannedArtifactsTest extends \Tuleap\Test\PHPUnit\Te
             Mockery::spy(\PlanningPermissionsManager::class),
             Mockery::spy(\AgileDashboard_Milestone_MilestoneDao::class),
             Mockery::spy(\Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker::class),
-            Mockery::mock(TimeframeBuilder::class),
+            Mockery::mock(SemanticTimeframeBuilder::class),
+            new NullLogger(),
             Mockery::spy(MilestoneBurndownFieldChecker::class)
         );
         $planning_items_tree = $factory->getPlannedArtifacts(Mockery::spy(\PFUser::class), $root_artifact);

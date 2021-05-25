@@ -34,6 +34,7 @@ use Planning_VirtualTopMilestone;
 use PlanningFactory;
 use PlanningPermissionsManager;
 use Project;
+use Psr\Log\NullLogger;
 use TimePeriodWithoutWeekEnd;
 use Tracker;
 use Tracker_Artifact_Changeset;
@@ -41,16 +42,14 @@ use Tracker_ArtifactFactory;
 use Tracker_FormElementFactory;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
 use Tuleap\Tracker\Artifact\Artifact;
-use Tuleap\Tracker\Semantic\Timeframe\TimeframeBuilder;
+use Tuleap\Tracker\Semantic\Timeframe\IComputeTimeframes;
+use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframe;
+use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 
 final class MilestoneFactoryGetTopMilestonesTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|TimeframeBuilder
-     */
-    private $timeframe_builder;
     /**
      * @var Planning_MilestoneFactory
      */
@@ -71,12 +70,23 @@ final class MilestoneFactoryGetTopMilestonesTest extends \Tuleap\Test\PHPUnit\Te
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Tracker
      */
     private $tracker;
+    /**
+     * @var NullLogger
+     */
+    private $logger;
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|IComputeTimeframes
+     */
+    private $timeframe_calculator;
 
     protected function setUp(): void
     {
-        $planning_factory        = Mockery::mock(PlanningFactory::class);
-        $this->artifact_factory  = Mockery::mock(Tracker_ArtifactFactory::class);
-        $this->timeframe_builder = Mockery::mock(TimeframeBuilder::class);
+        $planning_factory           = Mockery::mock(PlanningFactory::class);
+        $this->artifact_factory     = Mockery::mock(Tracker_ArtifactFactory::class);
+        $this->timeframe_calculator = Mockery::mock(IComputeTimeframes::class);
+        $semantic_timeframe         = Mockery::mock(SemanticTimeframe::class, ['getTimeframeCalculator' => $this->timeframe_calculator]);
+        $semantic_timeframe_builder = Mockery::mock(SemanticTimeframeBuilder::class, ['getSemantic' => $semantic_timeframe]);
+        $this->logger               = new NullLogger();
 
         $this->milestone_factory = new Planning_MilestoneFactory(
             $planning_factory,
@@ -86,7 +96,8 @@ final class MilestoneFactoryGetTopMilestonesTest extends \Tuleap\Test\PHPUnit\Te
             Mockery::mock(PlanningPermissionsManager::class),
             Mockery::mock(AgileDashboard_Milestone_MilestoneDao::class),
             Mockery::mock(ScrumForMonoMilestoneChecker::class),
-            $this->timeframe_builder,
+            $semantic_timeframe_builder,
+            $this->logger,
             Mockery::mock(MilestoneBurndownFieldChecker::class)
         );
 
@@ -128,13 +139,13 @@ final class MilestoneFactoryGetTopMilestonesTest extends \Tuleap\Test\PHPUnit\Te
             $artifact_2
         ];
 
-        $this->timeframe_builder->shouldReceive('buildTimePeriodWithoutWeekendForArtifact')
-            ->with($artifact_1, $this->user)
+        $this->timeframe_calculator->shouldReceive('buildTimePeriodWithoutWeekendForArtifact')
+            ->with($artifact_1, $this->user, $this->logger)
             ->once()
             ->andReturn(TimePeriodWithoutWeekEnd::buildFromDuration(1, 1));
 
-        $this->timeframe_builder->shouldReceive('buildTimePeriodWithoutWeekendForArtifact')
-            ->with($artifact_2, $this->user)
+        $this->timeframe_calculator->shouldReceive('buildTimePeriodWithoutWeekendForArtifact')
+            ->with($artifact_2, $this->user, $this->logger)
             ->once()
             ->andReturn(TimePeriodWithoutWeekEnd::buildFromDuration(1, 1));
 
@@ -168,8 +179,8 @@ final class MilestoneFactoryGetTopMilestonesTest extends \Tuleap\Test\PHPUnit\Te
             $artifact_2
         ];
 
-        $this->timeframe_builder->shouldReceive('buildTimePeriodWithoutWeekendForArtifact')
-            ->with($artifact_2, $this->user)
+        $this->timeframe_calculator->shouldReceive('buildTimePeriodWithoutWeekendForArtifact')
+            ->with($artifact_2, $this->user, $this->logger)
             ->once()
             ->andReturn(TimePeriodWithoutWeekEnd::buildFromDuration(1, 1));
 

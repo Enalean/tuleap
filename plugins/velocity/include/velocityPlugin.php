@@ -19,11 +19,8 @@
  */
 
 use Tuleap\AgileDashboard\Milestone\Pane\Details\DetailsChartPresentersRetriever;
-use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
-use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneDao;
 use Tuleap\AgileDashboard\Planning\Admin\AdditionalPlanningConfigurationWarningsRetriever;
 use Tuleap\AgileDashboard\Planning\Admin\PlanningWarningPossibleMisconfigurationPresenter;
-use Tuleap\AgileDashboard\Planning\MilestoneBurndownFieldChecker;
 use Tuleap\AgileDashboard\Semantic\Dao\SemanticDoneDao;
 use Tuleap\AgileDashboard\Semantic\SemanticDone;
 use Tuleap\AgileDashboard\Semantic\SemanticDoneFactory;
@@ -33,7 +30,6 @@ use Tuleap\Layout\IncludeAssets;
 use Tuleap\Tracker\Semantic\Timeframe\Events\DoesAPluginRenderAChartBasedOnSemanticTimeframeForTrackerEvent;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao;
-use Tuleap\Tracker\Semantic\Timeframe\TimeframeBuilder;
 use Tuleap\Tracker\Workflow\BeforeEvent;
 use Tuleap\Velocity\JiraImporter\AddVelocityToScrumTemplate;
 use Tuleap\Velocity\Semantic\SemanticVelocity;
@@ -251,27 +247,7 @@ class velocityPlugin extends Plugin // @codingStandardsIgnoreLine
                 new SemanticDoneValueChecker()
             ),
             $this->getSemanticTimeframeBuilder($form_element_factory),
-            new Planning_MilestoneFactory(
-                PlanningFactory::build(),
-                Tracker_ArtifactFactory::instance(),
-                $form_element_factory,
-                new AgileDashboard_Milestone_MilestoneStatusCounter(
-                    new AgileDashboard_BacklogItemDao(),
-                    new Tracker_ArtifactDao(),
-                    Tracker_ArtifactFactory::instance()
-                ),
-                new PlanningPermissionsManager(),
-                new AgileDashboard_Milestone_MilestoneDao(),
-                new ScrumForMonoMilestoneChecker(
-                    new ScrumForMonoMilestoneDao(),
-                    PlanningFactory::build()
-                ),
-                new TimeframeBuilder(
-                    $this->getSemanticTimeframeBuilder($form_element_factory),
-                    \BackendLogger::getDefaultLogger()
-                ),
-                new MilestoneBurndownFieldChecker($form_element_factory)
-            )
+            Planning_MilestoneFactory::build()
         );
 
         $representations_collection = $builder->buildCollectionOfRepresentations(

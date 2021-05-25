@@ -26,15 +26,12 @@ use AgileDashboard_BacklogItemDao;
 use AgileDashboard_Milestone_Backlog_BacklogFactory;
 use AgileDashboard_Milestone_Backlog_BacklogItemBuilder;
 use AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory;
-use AgileDashboard_Milestone_MilestoneDao;
-use AgileDashboard_Milestone_MilestoneStatusCounter;
 use HTTPRequest;
 use Planning;
 use Planning_MilestoneFactory;
 use PlanningFactory;
 use PlanningPermissionsManager;
 use Tracker_Artifact_PriorityDao;
-use Tracker_ArtifactDao;
 use Tracker_ArtifactFactory;
 use Tracker_FormElementFactory;
 use TrackerFactory;
@@ -46,14 +43,12 @@ use Tuleap\AgileDashboard\MonoMilestone\MonoMilestoneBacklogItemDao;
 use Tuleap\AgileDashboard\MonoMilestone\MonoMilestoneItemsFinder;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneDao;
-use Tuleap\AgileDashboard\Planning\MilestoneBurndownFieldChecker;
 use Tuleap\AgileDashboard\Planning\PlanningDao;
 use Tuleap\AgileDashboard\RemainingEffortValueRetriever;
 use Tuleap\BrowserDetection\DetectedBrowser;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao;
 use Tuleap\Tracker\Semantic\Timeframe\TimeframeBrokenConfigurationException;
-use Tuleap\Tracker\Semantic\Timeframe\TimeframeBuilder;
 use Project;
 use Tuleap\Project\ProjectAccessChecker;
 use Planning_VirtualTopMilestone;
@@ -174,17 +169,7 @@ class ProjectMilestonesPresenterBuilder
             Tracker_ArtifactFactory::instance()
         );
 
-        $milestone_factory = new Planning_MilestoneFactory(
-            $planning_factory,
-            Tracker_ArtifactFactory::instance(),
-            Tracker_FormElementFactory::instance(),
-            new AgileDashboard_Milestone_MilestoneStatusCounter(new AgileDashboard_BacklogItemDao(), new Tracker_ArtifactDao(), Tracker_ArtifactFactory::instance()),
-            new PlanningPermissionsManager(),
-            new AgileDashboard_Milestone_MilestoneDao(),
-            $scrum_mono_milestone_checker,
-            new TimeframeBuilder(new SemanticTimeframeBuilder(new SemanticTimeframeDao(), Tracker_FormElementFactory::instance()), \BackendLogger::getDefaultLogger()),
-            new MilestoneBurndownFieldChecker(Tracker_FormElementFactory::instance())
-        );
+        $milestone_factory = Planning_MilestoneFactory::build();
 
         return new self(
             HTTPRequest::instance(),

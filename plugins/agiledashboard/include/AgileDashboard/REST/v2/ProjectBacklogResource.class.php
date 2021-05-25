@@ -24,8 +24,6 @@ use AgileDashboard_BacklogItemDao;
 use AgileDashboard_Milestone_Backlog_BacklogFactory;
 use AgileDashboard_Milestone_Backlog_BacklogItemBuilder;
 use AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory;
-use AgileDashboard_Milestone_MilestoneDao;
-use AgileDashboard_Milestone_MilestoneStatusCounter;
 use Luracast\Restler\RestException;
 use PFUser;
 use Planning_MilestoneFactory;
@@ -34,7 +32,6 @@ use Planning_VirtualTopMilestone;
 use PlanningFactory;
 use PlanningPermissionsManager;
 use Project;
-use Tracker_ArtifactDao;
 use Tracker_ArtifactFactory;
 use Tracker_FormElementFactory;
 use Tuleap\AgileDashboard\ExplicitBacklog\ArtifactsInExplicitBacklogDao;
@@ -43,14 +40,10 @@ use Tuleap\AgileDashboard\MonoMilestone\MonoMilestoneBacklogItemDao;
 use Tuleap\AgileDashboard\MonoMilestone\MonoMilestoneItemsFinder;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneDao;
-use Tuleap\AgileDashboard\Planning\MilestoneBurndownFieldChecker;
 use Tuleap\AgileDashboard\RemainingEffortValueRetriever;
 use Tuleap\Project\ProjectBackground\ProjectBackgroundConfiguration;
 use Tuleap\Project\ProjectBackground\ProjectBackgroundDao;
 use Tuleap\REST\Header;
-use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
-use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao;
-use Tuleap\Tracker\Semantic\Timeframe\TimeframeBuilder;
 
 /**
  * Wrapper for backlog related REST methods
@@ -85,11 +78,6 @@ class ProjectBacklogResource
         $tracker_artifact_factory           = Tracker_ArtifactFactory::instance();
         $tracker_form_element_factory       = Tracker_FormElementFactory::instance();
         $this->planning_permissions_manager = new PlanningPermissionsManager();
-        $status_counter                     = new AgileDashboard_Milestone_MilestoneStatusCounter(
-            new AgileDashboard_BacklogItemDao(),
-            new Tracker_ArtifactDao(),
-            $tracker_artifact_factory
-        );
 
         $mono_milestone_items_finder = new MonoMilestoneItemsFinder(
             new MonoMilestoneBacklogItemDao(),
@@ -101,20 +89,7 @@ class ProjectBacklogResource
             $this->planning_factory
         );
 
-        $this->milestone_factory = new Planning_MilestoneFactory(
-            $this->planning_factory,
-            Tracker_ArtifactFactory::instance(),
-            $tracker_form_element_factory,
-            $status_counter,
-            $this->planning_permissions_manager,
-            new AgileDashboard_Milestone_MilestoneDao(),
-            $scrum_mono_milestone_checker,
-            new TimeframeBuilder(
-                new SemanticTimeframeBuilder(new SemanticTimeframeDao(), $tracker_form_element_factory),
-                \BackendLogger::getDefaultLogger()
-            ),
-            new MilestoneBurndownFieldChecker($tracker_form_element_factory)
-        );
+        $this->milestone_factory = Planning_MilestoneFactory::build();
 
         $this->backlog_factory = new AgileDashboard_Milestone_Backlog_BacklogFactory(
             new AgileDashboard_BacklogItemDao(),

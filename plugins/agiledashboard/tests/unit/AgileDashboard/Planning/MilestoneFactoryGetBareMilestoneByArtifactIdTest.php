@@ -32,13 +32,16 @@ use Planning_MilestoneFactory;
 use PlanningFactory;
 use PlanningPermissionsManager;
 use Project;
+use Psr\Log\NullLogger;
 use TimePeriodWithoutWeekEnd;
 use Tracker;
 use Tracker_ArtifactFactory;
 use Tracker_FormElementFactory;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
 use Tuleap\Tracker\Artifact\Artifact;
-use Tuleap\Tracker\Semantic\Timeframe\TimeframeBuilder;
+use Tuleap\Tracker\Semantic\Timeframe\IComputeTimeframes;
+use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframe;
+use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 
 final class MilestoneFactoryGetBareMilestoneByArtifactIdTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -48,10 +51,6 @@ final class MilestoneFactoryGetBareMilestoneByArtifactIdTest extends \Tuleap\Tes
      * @var int
      */
     private $artifact_id;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|TimeframeBuilder
-     */
-    private $timeframe_builder;
     /**
      * @var Planning_MilestoneFactory
      */
@@ -68,12 +67,23 @@ final class MilestoneFactoryGetBareMilestoneByArtifactIdTest extends \Tuleap\Tes
      * @var PFUser
      */
     private $user;
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|IComputeTimeframes
+     */
+    private $timeframe_calculator;
+    /**
+     * @var NullLogger
+     */
+    private $logger;
 
     protected function setUp(): void
     {
-        $this->planning_factory  = Mockery::spy(PlanningFactory::class);
-        $this->artifact_factory  = Mockery::spy(Tracker_ArtifactFactory::class);
-        $this->timeframe_builder = Mockery::mock(TimeframeBuilder::class);
+        $this->planning_factory     = Mockery::spy(PlanningFactory::class);
+        $this->artifact_factory     = Mockery::spy(Tracker_ArtifactFactory::class);
+        $this->timeframe_calculator = Mockery::mock(IComputeTimeframes::class);
+        $semantic_timeframe         = Mockery::mock(SemanticTimeframe::class, ['getTimeframeCalculator' => $this->timeframe_calculator]);
+        $semantic_timeframe_builder = Mockery::mock(SemanticTimeframeBuilder::class, ['getSemantic' => $semantic_timeframe]);
+        $this->logger               = new NullLogger();
 
         $this->milestone_factory = new Planning_MilestoneFactory(
             $this->planning_factory,
@@ -83,7 +93,8 @@ final class MilestoneFactoryGetBareMilestoneByArtifactIdTest extends \Tuleap\Tes
             Mockery::spy(PlanningPermissionsManager::class),
             Mockery::spy(AgileDashboard_Milestone_MilestoneDao::class),
             Mockery::spy(ScrumForMonoMilestoneChecker::class),
-            $this->timeframe_builder,
+            $semantic_timeframe_builder,
+            $this->logger,
             Mockery::spy(MilestoneBurndownFieldChecker::class)
         );
         $this->user              = Mockery::mock(PFUser::class);
@@ -111,8 +122,8 @@ final class MilestoneFactoryGetBareMilestoneByArtifactIdTest extends \Tuleap\Tes
         $artifact->shouldReceive('getAllAncestors')->with($this->user)->once()->andReturn([]);
         $this->artifact_factory->shouldReceive('getArtifactById')->with($this->artifact_id)->andReturn($artifact);
 
-        $this->timeframe_builder->shouldReceive('buildTimePeriodWithoutWeekendForArtifact')
-            ->with($artifact, $this->user)
+        $this->timeframe_calculator->shouldReceive('buildTimePeriodWithoutWeekendForArtifact')
+            ->with($artifact, $this->user, $this->logger)
             ->once()
             ->andReturn(TimePeriodWithoutWeekEnd::buildFromDuration(1, 1));
 

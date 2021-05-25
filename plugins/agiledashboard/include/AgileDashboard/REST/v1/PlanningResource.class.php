@@ -22,24 +22,12 @@ namespace Tuleap\AgileDashboard\REST\v1;
 use PlanningFactory;
 use Luracast\Restler\RestException;
 use Planning;
-use Tracker_FormElementFactory;
-use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
-use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneDao;
-use Tuleap\AgileDashboard\Planning\MilestoneBurndownFieldChecker;
 use Tuleap\REST\Header;
 use Tuleap\REST\ProjectAuthorization;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\ProjectStatusVerificator;
-use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
-use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao;
-use Tuleap\Tracker\Semantic\Timeframe\TimeframeBuilder;
 use UserManager;
-use AgileDashboard_Milestone_MilestoneStatusCounter;
-use AgileDashboard_BacklogItemDao;
-use Tracker_ArtifactDao;
 use URLVerification;
-use PlanningPermissionsManager;
-use AgileDashboard_Milestone_MilestoneDao;
 
 class PlanningResource extends AuthenticatedResource
 {
@@ -51,28 +39,7 @@ class PlanningResource extends AuthenticatedResource
 
     public function __construct()
     {
-        $artifact_factory        = \Tracker_ArtifactFactory::instance();
-        $status_counter          = new AgileDashboard_Milestone_MilestoneStatusCounter(
-            new AgileDashboard_BacklogItemDao(),
-            new Tracker_ArtifactDao(),
-            $artifact_factory
-        );
-        $planning_factory        = PlanningFactory::build();
-        $form_element_factory    = Tracker_FormElementFactory::instance();
-        $this->milestone_factory = new \Planning_MilestoneFactory(
-            $planning_factory,
-            $artifact_factory,
-            \Tracker_FormElementFactory::instance(),
-            $status_counter,
-            new PlanningPermissionsManager(),
-            new AgileDashboard_Milestone_MilestoneDao(),
-            new ScrumForMonoMilestoneChecker(new ScrumForMonoMilestoneDao(), $planning_factory),
-            new TimeframeBuilder(
-                new SemanticTimeframeBuilder(new SemanticTimeframeDao(), $form_element_factory),
-                \BackendLogger::getDefaultLogger()
-            ),
-            new MilestoneBurndownFieldChecker($form_element_factory)
-        );
+        $this->milestone_factory = \Planning_MilestoneFactory::build();
     }
 
     /**

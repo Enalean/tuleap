@@ -34,13 +34,14 @@ use Planning_MilestoneFactory;
 use PlanningFactory;
 use PlanningPermissionsManager;
 use Project;
+use Psr\Log\NullLogger;
 use Tracker;
 use Tracker_Artifact_Changeset;
 use Tracker_ArtifactFactory;
 use Tracker_FormElementFactory;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
 use Tuleap\Tracker\Artifact\Artifact;
-use Tuleap\Tracker\Semantic\Timeframe\TimeframeBuilder;
+use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 
 final class MilestoneFactoryGetAllMilestonesTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -187,7 +188,8 @@ final class MilestoneFactoryGetAllMilestonesTest extends \Tuleap\Test\PHPUnit\Te
             Mockery::spy(PlanningPermissionsManager::class),
             Mockery::spy(AgileDashboard_Milestone_MilestoneDao::class),
             Mockery::spy(ScrumForMonoMilestoneChecker::class),
-            Mockery::mock(TimeframeBuilder::class),
+            Mockery::mock(SemanticTimeframeBuilder::class),
+            new NullLogger(),
             Mockery::mock(MilestoneBurndownFieldChecker::class)
             ]
         )
