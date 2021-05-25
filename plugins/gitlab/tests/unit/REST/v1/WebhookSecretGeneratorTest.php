@@ -78,9 +78,7 @@ class WebhookSecretGeneratorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function test404IfRequestedRepositoryIsNotFound(): void
     {
-        $patch = new GitlabRepositoryWebhookSecretPatchRepresentation();
-
-        $patch->gitlab_integration_id = 123;
+        $id = 123;
 
         $this->repository_integration_factory
             ->shouldReceive('getIntegrationById')
@@ -90,16 +88,14 @@ class WebhookSecretGeneratorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->expectException(RestException::class);
         $this->expectExceptionCode(404);
 
-        $this->generator->regenerate($patch, Mockery::mock(\PFUser::class));
+        $this->generator->regenerate($id, Mockery::mock(\PFUser::class));
     }
 
     public function test404IfUserIsNotGitAdminOfTheProjectWhereTheGitlabRepositoryIsIntegrated(): void
     {
         $user = Mockery::mock(\PFUser::class);
 
-        $patch = new GitlabRepositoryWebhookSecretPatchRepresentation();
-
-        $patch->gitlab_integration_id = 123;
+        $id = 123;
 
         $repository = Mockery::mock(GitlabRepositoryIntegration::class);
 
@@ -119,16 +115,14 @@ class WebhookSecretGeneratorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->expectException(RestException::class);
         $this->expectExceptionCode(404);
 
-        $this->generator->regenerate($patch, $user);
+        $this->generator->regenerate($id, $user);
     }
 
     public function test400IfNoCredentialsAreFoundForTheRepository(): void
     {
         $user = Mockery::mock(\PFUser::class);
 
-        $patch = new GitlabRepositoryWebhookSecretPatchRepresentation();
-
-        $patch->gitlab_integration_id = 123;
+        $id = 123;
 
         $repository = Mockery::mock(
             GitlabRepositoryIntegration::class,
@@ -159,16 +153,14 @@ class WebhookSecretGeneratorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->expectException(I18NRestException::class);
         $this->expectExceptionCode(400);
 
-        $this->generator->regenerate($patch, $user);
+        $this->generator->regenerate($id, $user);
     }
 
     public function test400IfGitlabServerDoesNotAcceptsTheWebhook(): void
     {
         $user = Mockery::mock(\PFUser::class);
 
-        $patch = new GitlabRepositoryWebhookSecretPatchRepresentation();
-
-        $patch->gitlab_integration_id = 123;
+        $id = 123;
 
         $repository = Mockery::mock(
             GitlabRepositoryIntegration::class,
@@ -206,16 +198,14 @@ class WebhookSecretGeneratorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->expectException(I18NRestException::class);
         $this->expectExceptionCode(400);
 
-        $this->generator->regenerate($patch, $user);
+        $this->generator->regenerate($id, $user);
     }
 
     public function test500IfWeAreNotAbleToParseGitlabResponse(): void
     {
         $user = Mockery::mock(\PFUser::class);
 
-        $patch = new GitlabRepositoryWebhookSecretPatchRepresentation();
-
-        $patch->gitlab_integration_id = 123;
+        $id = 123;
 
         $repository = Mockery::mock(
             GitlabRepositoryIntegration::class,
@@ -254,16 +244,14 @@ class WebhookSecretGeneratorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->expectException(I18NRestException::class);
         $this->expectExceptionCode(500);
 
-        $this->generator->regenerate($patch, $user);
+        $this->generator->regenerate($id, $user);
     }
 
     public function testItSavesTheNewTokenIfGitlabServerAcceptsTheNewToken(): void
     {
         $user = Mockery::mock(\PFUser::class);
 
-        $patch = new GitlabRepositoryWebhookSecretPatchRepresentation();
-
-        $patch->gitlab_integration_id = 123;
+        $id = 123;
 
         $repository = Mockery::mock(
             GitlabRepositoryIntegration::class,
@@ -298,6 +286,6 @@ class WebhookSecretGeneratorTest extends \Tuleap\Test\PHPUnit\TestCase
             ->with($credentials, $repository)
             ->once();
 
-        $this->generator->regenerate($patch, $user);
+        $this->generator->regenerate($id, $user);
     }
 }

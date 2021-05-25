@@ -28,11 +28,6 @@ namespace Tuleap\Gitlab\REST\v1;
 final class GitlabRepositoryBotApiTokenPatchRepresentation
 {
     /**
-     * @var int {@required true}
-     */
-    public $gitlab_integration_id;
-
-    /**
      * @var string {@required true}
      */
     public $gitlab_api_token;

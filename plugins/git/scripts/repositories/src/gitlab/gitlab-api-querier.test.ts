@@ -138,10 +138,10 @@ describe("Gitlab Api Querier", () => {
                 "content-type": "application/json",
             };
 
+            const gitlab_integration_id = 20;
             const body = {
                 update_bot_api_token: {
                     gitlab_api_token: "AZERTY12345",
-                    gitlab_integration_id: 20,
                 },
             } as GitLabRepositoryUpdate;
 
@@ -150,9 +150,9 @@ describe("Gitlab Api Querier", () => {
             const tlpPatch = jest.spyOn(tlp, "patch");
             mockFetchSuccess(tlpPatch);
 
-            await patchGitlabRepository(body);
+            await patchGitlabRepository(gitlab_integration_id, body);
 
-            expect(tlpPatch).toHaveBeenCalledWith("/api/gitlab_repositories", {
+            expect(tlpPatch).toHaveBeenCalledWith("/api/gitlab_repositories/20", {
                 headers,
                 body: body_stringify,
             });

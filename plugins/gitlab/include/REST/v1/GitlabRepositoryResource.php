@@ -78,7 +78,7 @@ final class GitlabRepositoryResource
      */
     public function options(): void
     {
-        Header::allowOptionsPostPatch();
+        Header::allowOptionsPost();
     }
 
     /**
@@ -211,127 +211,6 @@ final class GitlabRepositoryResource
     }
 
     /**
-     * Update GitLab integration
-     *
-     * <p>To update the API token, used by Tuleap to communicate with GitLab:</p>
-     * <pre>
-     * {<br>
-     *   &nbsp;"update_bot_api_token": {<br>
-     *   &nbsp;&nbsp;&nbsp;"gitlab_api_token" : "The new token",<br>
-     *   &nbsp;&nbsp;&nbsp;"gitlab_integration_id" : 145896<br>
-     *   &nbsp;}<br>
-     *  }<br>
-     * </pre>
-     * <br>
-     * <p>
-     * <strong>Note:</strong> To ensure that the new token has needed access, it will regenerate the webhook used by GitLab.
-     * </p>
-     *
-     * <p>To update the webhook secret, used by GitLab to communicate with Tuleap:</p>
-     * <pre>
-     * {<br>
-     *   &nbsp;"generate_new_secret": {<br>
-     *   &nbsp;&nbsp;&nbsp;"gitlab_integration_id" : 145896<br>
-     *   &nbsp;}<br>
-     * }<br>
-     * </pre>
-     *
-     * <p>
-     * <strong>Note:</strong> You cannot at the same time update the token and update the secret.
-     * You will get a <code>400</code> if you send both <code>update_bot_api_token</code> and <code>generate_new_secret</code>.
-     * </p>
-     *
-     * @url    PATCH
-     * @access protected
-     *
-     * @param GitlabRepositoryPatchRepresentation $patch_representation {@from body}
-     *
-     * @throws RestException 400
-     * @throws RestException 401
-     * @throws RestException 404
-     */
-    protected function patch(GitlabRepositoryPatchRepresentation $patch_representation): void
-    {
-        $request_factory       = HTTPFactoryBuilder::requestFactory();
-        $stream_factory        = HTTPFactoryBuilder::streamFactory();
-        $gitlab_client_factory = new GitlabHTTPClientFactory(HttpClientFactory::createClient());
-        $gitlab_api_client     = new ClientWrapper($request_factory, $stream_factory, $gitlab_client_factory);
-        $logger                = BackendLogger::getDefaultLogger(\gitlabPlugin::LOG_IDENTIFIER);
-
-        $current_user = UserManager::instance()->getCurrentUser();
-
-        if ($patch_representation->update_bot_api_token && $patch_representation->generate_new_secret) {
-            throw new RestException(400, 'You cannot ask at the same time to update the api token and generate a new webhook secret');
-        }
-
-        if ($patch_representation->update_bot_api_token) {
-            $bot_api_token_updater = new BotApiTokenUpdater(
-                new GitlabRepositoryIntegrationFactory(
-                    new GitlabRepositoryIntegrationDao(),
-                    ProjectManager::instance()
-                ),
-                new GitlabProjectBuilder($gitlab_api_client),
-                $this->getGitPermissionsManager(),
-                new IntegrationApiTokenInserter(
-                    new IntegrationApiTokenDao(),
-                    new KeyFactory()
-                ),
-                new WebhookCreator(
-                    new KeyFactory(),
-                    new WebhookDao(),
-                    new WebhookDeletor(
-                        new WebhookDao(),
-                        $gitlab_api_client,
-                        BackendLogger::getDefaultLogger(\gitlabPlugin::LOG_IDENTIFIER)
-                    ),
-                    $gitlab_api_client,
-                    new InstanceBaseURLBuilder(),
-                    $logger,
-                ),
-                $logger,
-            );
-
-            $bot_api_token_updater->update(
-                new ConcealedBotApiTokenPatchRepresentation(
-                    $patch_representation->update_bot_api_token->gitlab_integration_id,
-                    new ConcealedString($patch_representation->update_bot_api_token->gitlab_api_token),
-                ),
-                $current_user,
-            );
-        }
-
-        if ($patch_representation->generate_new_secret) {
-            $generator = new WebhookSecretGenerator(
-                new GitlabRepositoryIntegrationFactory(
-                    new GitlabRepositoryIntegrationDao(),
-                    ProjectManager::instance()
-                ),
-                $this->getGitPermissionsManager(),
-                new CredentialsRetriever(
-                    new IntegrationApiTokenRetriever(
-                        new IntegrationApiTokenDao(),
-                        new KeyFactory()
-                    ),
-                ),
-                new WebhookCreator(
-                    new KeyFactory(),
-                    new WebhookDao(),
-                    new WebhookDeletor(
-                        new WebhookDao(),
-                        $gitlab_api_client,
-                        BackendLogger::getDefaultLogger(\gitlabPlugin::LOG_IDENTIFIER)
-                    ),
-                    $gitlab_api_client,
-                    new InstanceBaseURLBuilder(),
-                    $logger,
-                )
-            );
-
-            $generator->regenerate($patch_representation->generate_new_secret, $current_user);
-        }
-    }
-
-    /**
      * @url OPTIONS {id}
      *
      * @param int $id Id of the GitLab repository integration
@@ -417,28 +296,135 @@ final class GitlabRepositoryResource
      * /!\ This route is under construction and subject to changes /!\
      * </pre>
      *
+     * <p>To update the API token, used by Tuleap to communicate with GitLab:</p>
+     * <pre>
+     * {<br>
+     *   &nbsp;"update_bot_api_token": {<br>
+     *   &nbsp;&nbsp;&nbsp;"gitlab_api_token" : "The new token"<br>
+     *   &nbsp;}<br>
+     *  }<br>
+     * </pre>
+     * <br>
      * <p>
-     * <strong> Note: </strong> Only the allowing closure artifact value can be updated for now
+     * <strong>Note:</strong> To ensure that the new token has needed access, it will regenerate the webhook used by GitLab.
+     * </p>
+     *
+     * <p>To update the webhook secret, used by GitLab to communicate with Tuleap:</p>
+     * <pre>
+     * {<br>
+     *   &nbsp;"generate_new_secret": true
+     * }<br>
+     * </pre>
+     *
+     * <p>To update the artifact closure option :</p>
+     * <pre>
+     * {<br>
+     *   &nbsp;"allow_artifact_closure" : false<br>
+     * }<br>
+     * </pre>
+     *
+     * <p>
+     * <strong>Note:</strong> You cannot at the same time update the token or update the secret or update artifact closure option.
+     * You will get a <code>400</code> if you send either <code>update_bot_api_token</code> or <code>generate_new_secret</code> or <code>allow_artifact_closure</code>.
      * </p>
      *
      * @url    PATCH {id}
      * @access protected
      *
-     * @param int                                            $id                   Id of the Gitlab integration
-     * @param GitlabRepositoryIntegrationPATCHRepresentation $patch_representation {@from body}
+     * @param int                                 $id                   Id of the Gitlab integration
+     * @param GitlabRepositoryPatchRepresentation $patch_representation {@from body}
      *
      * @return GitlabRepositoryRepresentation {@type GitlabRepositoryRepresentation}
      *
      * @throws RestException 401
      * @throws RestException 404
+     * @throws RestException 500
      */
     protected function patchId(
         int $id,
-        GitlabRepositoryIntegrationPATCHRepresentation $patch_representation
+        GitlabRepositoryPatchRepresentation $patch_representation
     ): GitlabRepositoryRepresentation {
         $this->optionsId($id);
 
+        $request_factory       = HTTPFactoryBuilder::requestFactory();
+        $stream_factory        = HTTPFactoryBuilder::streamFactory();
+        $gitlab_client_factory = new GitlabHTTPClientFactory(HttpClientFactory::createClient());
+        $gitlab_api_client     = new ClientWrapper($request_factory, $stream_factory, $gitlab_client_factory);
+        $logger                = BackendLogger::getDefaultLogger(\gitlabPlugin::LOG_IDENTIFIER);
+
         $current_user = UserManager::instance()->getCurrentUser();
+
+        $this->validateJSONIsWellFormed($patch_representation);
+
+        if ($patch_representation->update_bot_api_token) {
+            $bot_api_token_updater = new BotApiTokenUpdater(
+                new GitlabRepositoryIntegrationFactory(
+                    new GitlabRepositoryIntegrationDao(),
+                    ProjectManager::instance()
+                ),
+                new GitlabProjectBuilder($gitlab_api_client),
+                $this->getGitPermissionsManager(),
+                new IntegrationApiTokenInserter(
+                    new IntegrationApiTokenDao(),
+                    new KeyFactory()
+                ),
+                new WebhookCreator(
+                    new KeyFactory(),
+                    new WebhookDao(),
+                    new WebhookDeletor(
+                        new WebhookDao(),
+                        $gitlab_api_client,
+                        BackendLogger::getDefaultLogger(\gitlabPlugin::LOG_IDENTIFIER)
+                    ),
+                    $gitlab_api_client,
+                    new InstanceBaseURLBuilder(),
+                    $logger,
+                ),
+                $logger,
+            );
+
+            $bot_api_token_updater->update(
+                new ConcealedBotApiTokenPatchRepresentation(
+                    $id,
+                    new ConcealedString($patch_representation->update_bot_api_token->gitlab_api_token),
+                ),
+                $current_user,
+            );
+
+            return $this->buildUpdatedIntegrationRepresentation($id);
+        }
+
+        if ($patch_representation->generate_new_secret && $patch_representation->generate_new_secret === true) {
+            $generator = new WebhookSecretGenerator(
+                new GitlabRepositoryIntegrationFactory(
+                    new GitlabRepositoryIntegrationDao(),
+                    ProjectManager::instance()
+                ),
+                $this->getGitPermissionsManager(),
+                new CredentialsRetriever(
+                    new IntegrationApiTokenRetriever(
+                        new IntegrationApiTokenDao(),
+                        new KeyFactory()
+                    ),
+                ),
+                new WebhookCreator(
+                    new KeyFactory(),
+                    new WebhookDao(),
+                    new WebhookDeletor(
+                        new WebhookDao(),
+                        $gitlab_api_client,
+                        BackendLogger::getDefaultLogger(\gitlabPlugin::LOG_IDENTIFIER)
+                    ),
+                    $gitlab_api_client,
+                    new InstanceBaseURLBuilder(),
+                    $logger,
+                )
+            );
+
+            $generator->regenerate($id, $current_user);
+
+            return $this->buildUpdatedIntegrationRepresentation($id);
+        }
 
         if (isset($patch_representation->allow_artifact_closure)) {
             $dao                                   = new GitlabRepositoryIntegrationDao();
@@ -457,31 +443,11 @@ final class GitlabRepositoryResource
             try {
                 $updater->updateTuleapArtifactClosureOfAGitlabIntegration(
                     $id,
-                    $patch_representation,
+                    $patch_representation->allow_artifact_closure,
                     $current_user
                 );
 
-                $updated_gitlab_integration =  $gitlab_repository_integration_factory->getIntegrationById($id);
-                if (! $updated_gitlab_integration) {
-                    throw new RestException(500, "An error occurred during the Gitlab integration update");
-                }
-
-                $webhook_dao         = new WebhookDao();
-                $integration_webhook = $webhook_dao->getGitlabRepositoryWebhook(
-                    $updated_gitlab_integration->getId()
-                );
-
-                return new GitlabRepositoryRepresentation(
-                    $updated_gitlab_integration->getId(),
-                    $updated_gitlab_integration->getGitlabRepositoryId(),
-                    $updated_gitlab_integration->getName(),
-                    $updated_gitlab_integration->getDescription(),
-                    $updated_gitlab_integration->getGitlabRepositoryUrl(),
-                    $updated_gitlab_integration->getLastPushDate()->getTimestamp(),
-                    $updated_gitlab_integration->getProject(),
-                    $updated_gitlab_integration->isArtifactClosureAllowed(),
-                    $integration_webhook !== null
-                );
+                return $this->buildUpdatedIntegrationRepresentation($id);
             } catch (GitUserNotAdminException $e) {
                 throw new RestException(401, "User must be Git administrator.");
             } catch (GitlabRepositoryNotIntegratedInAnyProjectException $e) {
@@ -489,6 +455,40 @@ final class GitlabRepositoryResource
             }
         }
         throw new RestException(400, "The JSON representation cannot be null");
+    }
+
+    /**
+     * @throws RestException
+     */
+    private function buildUpdatedIntegrationRepresentation(int $id): GitlabRepositoryRepresentation
+    {
+        $dao                                   = new GitlabRepositoryIntegrationDao();
+        $gitlab_repository_integration_factory = new GitlabRepositoryIntegrationFactory(
+            $dao,
+            ProjectManager::instance()
+        );
+
+        $updated_gitlab_integration = $gitlab_repository_integration_factory->getIntegrationById($id);
+        if ($updated_gitlab_integration === null) {
+            throw new RestException(500, "Updated repository not found, this must not happen");
+        }
+
+        $webhook_dao         = new WebhookDao();
+        $integration_webhook = $webhook_dao->getGitlabRepositoryWebhook(
+            $updated_gitlab_integration->getId()
+        );
+
+        return new GitlabRepositoryRepresentation(
+            $updated_gitlab_integration->getId(),
+            $updated_gitlab_integration->getGitlabRepositoryId(),
+            $updated_gitlab_integration->getName(),
+            $updated_gitlab_integration->getDescription(),
+            $updated_gitlab_integration->getGitlabRepositoryUrl(),
+            $updated_gitlab_integration->getLastPushDate()->getTimestamp(),
+            $updated_gitlab_integration->getProject(),
+            $updated_gitlab_integration->isArtifactClosureAllowed(),
+            $integration_webhook !== null
+        );
     }
 
     private function getGitPermissionsManager(): GitPermissionsManager
@@ -523,5 +523,25 @@ final class GitlabRepositoryResource
         }
 
         return $project;
+    }
+
+    /**
+     * @throws RestException
+     */
+    protected function validateJSONIsWellFormed(GitlabRepositoryPatchRepresentation $patch_representation): void
+    {
+        $provided_parameter = 0;
+        foreach (get_object_vars($patch_representation) as $parameter) {
+            if ($parameter !== null) {
+                $provided_parameter++;
+            }
+        }
+
+        if ($provided_parameter > 1) {
+            throw new RestException(
+                400,
+                'You cannot ask at the same time to update the api token, generate a new webhook secret or allowing artifact closure'
+            );
+        }
     }
 }

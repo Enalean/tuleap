@@ -64,12 +64,10 @@ class WebhookSecretGenerator
     }
 
     public function regenerate(
-        GitlabRepositoryWebhookSecretPatchRepresentation $patch_representation,
+        int $id,
         \PFUser $current_user
     ): void {
-        $repository = $this->repository_integration_factory->getIntegrationById(
-            $patch_representation->gitlab_integration_id,
-        );
+        $repository = $this->repository_integration_factory->getIntegrationById($id);
         if (! $repository) {
             throw new RestException(404);
         }

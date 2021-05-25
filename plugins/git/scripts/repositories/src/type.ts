@@ -99,12 +99,12 @@ export interface GitLabData {
 }
 
 export interface GitLabDataWithToken {
-    gitlab_integration_id: number | string;
     gitlab_api_token: string;
 }
 
-export interface GitLabDataIntegrationId {
+export interface GitLabDataWithTokenPayload {
     gitlab_integration_id: number | string;
+    gitlab_api_token: string;
 }
 
 export interface Folder {
