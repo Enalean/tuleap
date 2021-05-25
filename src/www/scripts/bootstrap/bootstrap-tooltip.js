@@ -216,7 +216,7 @@
       var $tip = this.tip()
         , title = this.getTitle()
 
-      $tip.find('.tooltip-inner')[this.options.html ? 'html' : 'text']($.find(title))
+      $tip.find('.tooltip-inner').text(title)
       $tip.removeClass('fade in top bottom left right')
     }
 
