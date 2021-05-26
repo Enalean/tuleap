@@ -38,7 +38,6 @@ final class PlanDao extends DataAccessObject implements PlanStore, VerifyCanBePl
         $this->getDB()->tryFlatTransaction(function () use ($plan): void {
             $this->setUpPlan($plan);
             $this->setUpPlanPermissions($plan);
-            $this->setUpPlanLabels($plan);
             $this->setUpProgramPlan($plan);
             $this->cleanUpTopBacklogs();
             $this->cleanUpWorkflowPostActions();
@@ -79,30 +78,6 @@ final class PlanDao extends DataAccessObject implements PlanStore, VerifyCanBePl
         $this->getDB()->insertMany('plugin_program_management_can_prioritize_features', $insert);
     }
 
-    private function setUpPlanLabels(Plan $plan): void
-    {
-        $sql = 'DELETE FROM plugin_program_management_label_program_increment WHERE program_increment_tracker_id = ?';
-
-        $program_increment_tracker_id = $plan->getProgramIncrementTracker()->getId();
-        $this->getDB()->run($sql, $program_increment_tracker_id);
-
-        if ($plan->getCustomLabel() === null && $plan->getCustomSubLabel() === null) {
-            return;
-        }
-
-        $insert = ['program_increment_tracker_id' => $program_increment_tracker_id];
-
-        if ($plan->getCustomLabel() !== null) {
-            $insert['label'] = $plan->getCustomLabel();
-        }
-
-        if ($plan->getCustomSubLabel() !== null) {
-            $insert['sub_label'] = $plan->getCustomSubLabel();
-        }
-
-        $this->getDB()->insert('plugin_program_management_label_program_increment', $insert);
-    }
-
     private function setUpProgramPlan(Plan $plan): void
     {
         $project_id = $plan->getProjectId();
@@ -125,6 +100,14 @@ final class PlanDao extends DataAccessObject implements PlanStore, VerifyCanBePl
             if ($plan->getIterationTracker()->sub_label !== null) {
                 $insert['iteration_sub_label'] = $plan->getIterationTracker()->sub_label;
             }
+        }
+
+        if ($plan->getCustomLabel() !== null) {
+            $insert['program_increment_label'] = $plan->getCustomLabel();
+        }
+
+        if ($plan->getCustomSubLabel() !== null) {
+            $insert['program_increment_sub_label'] = $plan->getCustomSubLabel();
         }
 
         $this->getDB()->insert('plugin_program_management_program', $insert);
@@ -182,11 +165,11 @@ final class PlanDao extends DataAccessObject implements PlanStore, VerifyCanBePl
     }
 
     /**
-     * @psalm-return null|array{label: ?string, sub_label: ?string}
+     * @psalm-return null|array{program_increment_label: ?string, program_increment_sub_label: ?string}
      */
     public function getProgramIncrementLabels(int $program_increment_tracker_id): ?array
     {
-        $sql = "SELECT label, sub_label FROM plugin_program_management_label_program_increment WHERE program_increment_tracker_id = ?";
+        $sql = "SELECT program_increment_label, program_increment_sub_label FROM plugin_program_management_program WHERE program_increment_tracker_id = ?";
         return $this->getDB()->row($sql, $program_increment_tracker_id);
     }
 

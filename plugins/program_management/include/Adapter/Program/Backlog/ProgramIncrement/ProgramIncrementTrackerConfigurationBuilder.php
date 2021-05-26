@@ -66,8 +66,8 @@ class ProgramIncrementTrackerConfigurationBuilder implements BuildProgramIncreme
         $program_increment_sub_label = null;
 
         if ($program_increments_labels !== null) {
-            $program_increment_label     = $program_increments_labels['label'];
-            $program_increment_sub_label = $program_increments_labels['sub_label'];
+            $program_increment_label     = $program_increments_labels['program_increment_label'];
+            $program_increment_sub_label = $program_increments_labels['program_increment_sub_label'];
         }
 
         return new ProgramIncrementTrackerConfiguration(
