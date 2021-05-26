@@ -38,12 +38,14 @@ export function contactSupportModalShown(mount_point: Document, tlp_post: typeof
                     const contact_support_modal_submit = contact_support_modal_form.querySelector(
                             ".contact-support-modal-submit"
                         ),
-                        contact_support_modal_success_message = contact_support_modal_form.querySelector(
-                            ".contact-support-modal-success-message"
-                        ),
-                        contact_support_modal_error_message = contact_support_modal_form.querySelector(
-                            ".contact-support-modal-error-message"
-                        );
+                        contact_support_modal_success_message =
+                            contact_support_modal_form.querySelector(
+                                ".contact-support-modal-success-message"
+                            ),
+                        contact_support_modal_error_message =
+                            contact_support_modal_form.querySelector(
+                                ".contact-support-modal-error-message"
+                            );
 
                     if (!(contact_support_modal_submit instanceof HTMLButtonElement)) {
                         throw new Error("Contact support modal submit button not found");
