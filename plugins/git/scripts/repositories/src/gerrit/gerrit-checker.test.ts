@@ -19,9 +19,14 @@
 
 import { isRepositoryHandledByGerrit } from "./gerrit-checker";
 import type { Repository } from "../type";
+import type { FormattedGitLabRepository } from "../type";
 
 describe("gitlabChecker", () => {
     describe("isRepositoryHandledByGerrit", () => {
+        it("When repository does not have server (comes from GitLab), Then return false", () => {
+            const repo = {} as FormattedGitLabRepository;
+            expect(isRepositoryHandledByGerrit(repo)).toBeFalsy();
+        });
         it("When repository has server but null, Then return false", () => {
             const repo = { server: null } as Repository;
             expect(isRepositoryHandledByGerrit(repo)).toBeFalsy();

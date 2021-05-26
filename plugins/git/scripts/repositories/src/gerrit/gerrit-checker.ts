@@ -16,8 +16,10 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see http://www.gnu.org/licenses/.
  */
-import type { Repository } from "../type";
+import type { FormattedGitLabRepository, Repository } from "../type";
 
-export function isRepositoryHandledByGerrit(repository: Repository): boolean {
-    return repository.server !== null;
+export function isRepositoryHandledByGerrit(
+    repository: FormattedGitLabRepository | Repository
+): boolean {
+    return "server" in repository && repository.server !== null;
 }
