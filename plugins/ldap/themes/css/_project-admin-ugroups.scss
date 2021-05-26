@@ -37,11 +37,13 @@
 }
 
 .project-admin-ugroup-ldap-binding-modal-preview-add-alert::before {
-    content: '\f067'; // fa-plus
+    content: '\f067'; // fas fa-plus
+    font-weight: 900;
 }
 
 .project-admin-ugroup-ldap-binding-modal-preview-remove-alert::before {
-    content: '\f014'; // fa-trash-o
+    content: '\f2ed'; // fas fa-trash-alt
+    font-weight: 900;
 }
 
 ul.project-admin-ugroup-ldap-binding-modal-preview-list { /* stylelint-disable-line selector-no-qualifying-type */
