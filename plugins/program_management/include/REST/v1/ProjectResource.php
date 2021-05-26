@@ -151,7 +151,11 @@ final class ProjectResource extends AuthenticatedResource
             new ProgramIncrementsRetriever(
                 new ProgramIncrementsDAO(),
                 $artifact_factory,
-                new SemanticTimeframeBuilder(new SemanticTimeframeDao(), $form_element_factory),
+                new SemanticTimeframeBuilder(
+                    new SemanticTimeframeDao(),
+                    $form_element_factory,
+                    \TrackerFactory::instance()
+                ),
                 BackendLogger::getDefaultLogger()
             )
         );

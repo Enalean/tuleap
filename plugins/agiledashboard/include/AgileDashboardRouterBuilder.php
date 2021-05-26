@@ -93,9 +93,10 @@ class AgileDashboardRouterBuilder // phpcs:ignore PSR1.Classes.ClassDeclaration.
         $tracker_dao                  = new TrackerDao();
         $planning_dao                 = new PlanningDao($tracker_dao);
         $planning_permissions_manager = new PlanningPermissionsManager();
+        $tracker_factory              = TrackerFactory::instance();
         $planning_factory             = new PlanningFactory(
             $planning_dao,
-            TrackerFactory::instance(),
+            $tracker_factory,
             $planning_permissions_manager
         );
         $milestone_factory            = $this->getMilestoneFactory();
@@ -180,7 +181,7 @@ class AgileDashboardRouterBuilder // phpcs:ignore PSR1.Classes.ClassDeclaration.
             ),
             $service_crumb_builder,
             $admin_crumb_builder,
-            new SemanticTimeframeBuilder(new SemanticTimeframeDao(), $form_element_factory),
+            new SemanticTimeframeBuilder(new SemanticTimeframeDao(), $form_element_factory, $tracker_factory),
             new CountElementsModeChecker(new ProjectsCountModeDao()),
             new DBTransactionExecutorWithConnection($db_connection),
             new ArtifactsInExplicitBacklogDao(),
@@ -205,7 +206,7 @@ class AgileDashboardRouterBuilder // phpcs:ignore PSR1.Classes.ClassDeclaration.
             new UpdateIsAllowedChecker(
                 $planning_factory,
                 new BacklogTrackerRemovalChecker(new AddToTopBacklogPostActionDao()),
-                TrackerFactory::instance()
+                $tracker_factory
             ),
             new \Tuleap\AgileDashboard\Planning\Admin\PlanningEditionPresenterBuilder(
                 $planning_factory,
@@ -217,10 +218,10 @@ class AgileDashboardRouterBuilder // phpcs:ignore PSR1.Classes.ClassDeclaration.
             new \Tuleap\AgileDashboard\Planning\Admin\UpdateRequestValidator(),
             new \Tuleap\AgileDashboard\Kanban\NewDropdownCurrentContextSectionForKanbanProvider(
                 $this->getKanbanFactory(),
-                TrackerFactory::instance(),
+                $tracker_factory,
                 $tracker_new_dropdown_link_presenter_builder,
                 new AgileDashboard_KanbanActionsChecker(
-                    TrackerFactory::instance(),
+                    $tracker_factory,
                     new AgileDashboard_PermissionsManager(),
                     Tracker_FormElementFactory::instance()
                 )

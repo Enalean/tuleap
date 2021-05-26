@@ -266,7 +266,8 @@ class velocityPlugin extends Plugin // @codingStandardsIgnoreLine
     {
         return new SemanticTimeframeBuilder(
             new SemanticTimeframeDao(),
-            $form_element_factory
+            $form_element_factory,
+            \TrackerFactory::instance()
         );
     }
 

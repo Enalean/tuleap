@@ -1393,7 +1393,11 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
                 $params['class']        = SystemEvent_BURNUP_GENERATE::class;
                 $params['dependencies'] = [
                     Tracker_ArtifactFactory::instance(),
-                    new SemanticTimeframeBuilder(new SemanticTimeframeDao(), Tracker_FormElementFactory::instance()),
+                    new SemanticTimeframeBuilder(
+                        new SemanticTimeframeDao(),
+                        Tracker_FormElementFactory::instance(),
+                        TrackerFactory::instance()
+                    ),
                     new BurnupDao(),
                     $this->getBurnupCalculator(),
                     $this->getBurnupCountElementsCalculator(),

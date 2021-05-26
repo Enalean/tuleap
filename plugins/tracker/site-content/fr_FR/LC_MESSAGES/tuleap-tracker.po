@@ -3767,6 +3767,12 @@ msgstr ""
 "La plage de temps est définie par le champ date de début \"%s\" et le champ "
 "date de fin \"%s\"."
 
+#, php-format
+msgid "Timeframes will be based on %s linking artifacts of this tracker."
+msgstr ""
+"Les plages de temps seront basées sur les %s liant les artéfacts de cet "
+"outil de suivi."
+
 msgid "Title"
 msgstr "Titre"
 

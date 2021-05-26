@@ -79,9 +79,11 @@ final class RoadmapResource
         $this->optionsTasks($id);
 
         $form_element_factory       = \Tracker_FormElementFactory::instance();
+        $tracker_factory            = \TrackerFactory::instance();
         $semantic_timeframe_builder = new SemanticTimeframeBuilder(
             new SemanticTimeframeDao(),
-            $form_element_factory
+            $form_element_factory,
+            $tracker_factory
         );
 
         $progress_dao = new SemanticProgressDao();
@@ -90,7 +92,7 @@ final class RoadmapResource
             \ProjectManager::instance(),
             \UserManager::instance(),
             new \URLVerification(),
-            \TrackerFactory::instance(),
+            $tracker_factory,
             $semantic_timeframe_builder,
             \Tracker_ArtifactFactory::instance(),
             new DependenciesRetriever(new NatureForRoadmapDao()),
@@ -167,7 +169,8 @@ final class RoadmapResource
         $form_element_factory       = \Tracker_FormElementFactory::instance();
         $semantic_timeframe_builder = new SemanticTimeframeBuilder(
             new SemanticTimeframeDao(),
-            $form_element_factory
+            $form_element_factory,
+            \TrackerFactory::instance()
         );
 
         $retriever = new IterationsRetriever(

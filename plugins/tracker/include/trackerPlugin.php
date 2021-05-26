@@ -529,7 +529,11 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
                 $params['class']        = 'Tuleap\\Tracker\\FormElement\\SystemEvent\\' . SystemEvent_BURNDOWN_GENERATE::NAME;
                 $params['dependencies'] = [
                     Tracker_ArtifactFactory::instance(),
-                    new SemanticTimeframeBuilder(new SemanticTimeframeDao(), Tracker_FormElementFactory::instance()),
+                    new SemanticTimeframeBuilder(
+                        new SemanticTimeframeDao(),
+                        Tracker_FormElementFactory::instance(),
+                        \TrackerFactory::instance()
+                    ),
                     new BurndownFieldDao(),
                     new FieldCalculator(new BurndownCalculator(new ComputedFieldDao())),
                     new ComputedFieldDaoCache(new ComputedFieldDao()),

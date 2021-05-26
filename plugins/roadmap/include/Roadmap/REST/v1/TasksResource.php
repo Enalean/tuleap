@@ -81,7 +81,8 @@ final class TasksResource
         $form_element_factory       = \Tracker_FormElementFactory::instance();
         $semantic_timeframe_builder = new SemanticTimeframeBuilder(
             new SemanticTimeframeDao(),
-            $form_element_factory
+            $form_element_factory,
+            \TrackerFactory::instance()
         );
 
         $progress_dao = new SemanticProgressDao();
