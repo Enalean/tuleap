@@ -28,11 +28,11 @@
     }
 
     .tuleap-viewvc-file-content-line:target {
-        background: transparentize($main, .9);
+        background: var(--tlp-theme-color-transparent-90);
 
         > .tuleap-viewvc-file-content-line-number {
-            border-left-color: $main;
-            box-shadow: inset 2px 0 0 0 $main;
+            border-left-color: var(--tlp-theme-color);
+            box-shadow: inset 2px 0 0 0 var(--tlp-theme-color);
         }
     }
 
@@ -42,7 +42,7 @@
     .log-revision.log-revision--selected > .log-revision-header,
     #revision-changed-files > thead > tr > th,
     #directory-content > thead > tr > th {
-        border-bottom-color: $main;
+        border-bottom-color: var(--tlp-theme-color);
     }
     /* stylelint-enable */
 }

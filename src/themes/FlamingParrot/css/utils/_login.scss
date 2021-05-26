@@ -24,12 +24,12 @@
         #login-help:hover,
         #login-help:active,
         .not-a-member > a {
-            color: $main;
+            color: var(--tlp-theme-color);
         }
 
         > form {
             #login-lost-password {
-                color: $main;
+                color: var(--tlp-theme-color);
             }
         }
     }

@@ -28,7 +28,7 @@ h1.almost-tlp-title {
 /* stylelint-disable-next-line selector-no-qualifying-type */
 h2.almost-tlp-title {
     margin: 0 0 20px;
-    color: $main;
+    color: var(--tlp-theme-color);
     font-size: 28px;
     font-weight: 400;
 }

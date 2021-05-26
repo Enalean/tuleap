@@ -21,11 +21,11 @@
     padding: 0;
 
     &.widgetable {
-        background: $main-background;
+        background: var(--tlp-theme-background-color);
     }
 
     &.project-administration {
-        background: $main-background;
+        background: var(--tlp-theme-background-color);
 
         .content {
             padding: 0;
@@ -41,7 +41,7 @@
         #logo {
             width: $sidebar-width-collapsed;
             max-width: $sidebar-width-collapsed;
-            background: darken($sidebar-background, 5%) url('/images/organization_logo_small.png') no-repeat center center;
+            background: var(--tlp-theme-dark-background-color-darker-05) url('/images/organization_logo_small.png') no-repeat center center;
         }
 
         .sidebar-nav {

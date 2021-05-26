@@ -5,17 +5,17 @@
 
     form .input-append {
         input {
-            color: $main;
+            color: var(--tlp-theme-color);
         }
 
         button {
             transition: background .1s linear;
-            background: $main;
+            background: var(--tlp-theme-color);
             color: #ffffff;
 
             &:hover {
                 transition: background .1s linear;
-                background: lighten($main, 3%);
+                background: var(--tlp-theme-color-lighter-10);
             }
         }
     }
@@ -27,15 +27,15 @@
             color: #777777;
 
             &:hover {
-                box-shadow: inset 0 -2px 0 $main;
-                color: $main;
+                box-shadow: inset 0 -2px 0 var(--tlp-theme-color);
+                color: var(--tlp-theme-color);
             }
         }
 
         &.active {
             > a { /* stylelint-disable-line selector-no-qualifying-type */
-                box-shadow: inset 0 -2px 0 $main;
-                color: $main;
+                box-shadow: inset 0 -2px 0 var(--tlp-theme-color);
+                color: var(--tlp-theme-color);
             }
         }
     }
@@ -44,8 +44,8 @@
 .search-panes {
     .search-pane {
         .search-pane-header {
-            border-color: $main;
-            color: $main;
+            border-color: var(--tlp-theme-color);
+            color: var(--tlp-theme-color);
         }
 
         .search-pane-body {
@@ -55,7 +55,7 @@
                     a,
                     span {
                         &.active {
-                            color: $main;
+                            color: var(--tlp-theme-color);
                             text-decoration: none;
                         }
                     }
@@ -68,10 +68,10 @@
 
 #search-results {
     ul li a {
-        color: $main;
+        color: var(--tlp-theme-color);
 
         &:hover {
-            color: $dark-main;
+            color: var(--tlp-theme-color-darker-10);
         }
     }
 }

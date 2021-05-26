@@ -42,7 +42,7 @@ $tlp-font-basepath: '../../tlp/src';
 html,
 body {
     height: 100%;
-    color: $sidebar-background;
+    color: var(--tlp-theme-dark-background-color);
     font-family: $base-font;
 }
 

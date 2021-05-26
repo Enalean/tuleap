@@ -12,18 +12,18 @@ $border-radius: 3px;
         padding: 8px 12px 10px;
         border-top: $border;
         border-right: $border;
-        border-bottom: 1px solid $main;
+        border-bottom: 1px solid var(--tlp-theme-color);
         border-left: $border;
         border-top-left-radius: $border-radius;
         border-top-right-radius: $border-radius;
         background: #ffffff;
-        color: $main;
+        color: var(--tlp-theme-color);
         font-weight: 400;
     }
 
     .widget_content { /* stylelint-disable-line selector-class-pattern */
         padding: 12px;
-        border-top: 1px solid $main;
+        border-top: 1px solid var(--tlp-theme-color);
         border-right: $border;
         border-bottom: $border;
         border-left: $border;

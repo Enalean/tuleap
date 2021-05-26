@@ -23,17 +23,17 @@
     width: $sidebar-width;
     max-width: $sidebar-width;
     height: $navbar-height;
-    background: $navbar-color url('/images/organization_logo.png') no-repeat center center;
+    background: var(--tlp-theme-color) url('/images/organization_logo.png') no-repeat center center;
 
     &.collapsed {
         width: $sidebar-width-collapsed;
         max-width: $sidebar-width-collapsed;
-        background: $navbar-color url('/images/organization_logo_small.png') no-repeat center center;
+        background: var(--tlp-theme-color) url('/images/organization_logo_small.png') no-repeat center center;
     }
 }
 
 .sidebar-nav #logo {
-    background-color: darken($sidebar-background, 5%);
+    background-color: var(--tlp-theme-dark-background-color-darker-05);
 }
 
 .logo-svg-link {
@@ -44,18 +44,18 @@
 }
 
 .logo-svg-fill-theme-color {
-    fill: $main;
+    fill: var(--tlp-theme-color);
 }
 
 .logo-svg-fill-default-text-color {
-    fill: $sidebar-background;
+    fill: var(--tlp-theme-dark-background-color);
 }
 
 .sidebar-nav .logo-svg-link {
     justify-content: center;
     width: $sidebar-width;
     margin: 0;
-    background: darken($sidebar-background, 5%);
+    background: var(--tlp-theme-dark-background-color-darker-05);
 
     .logo-svg-fill-default-text-color {
         fill: $white;

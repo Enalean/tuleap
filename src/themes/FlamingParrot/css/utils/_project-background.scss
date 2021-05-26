@@ -19,7 +19,7 @@
 
 @use '../../../common/css/project-background/background';
 
-$tlp-theme-sidebar-background-color: $sidebar-background;
+$tlp-theme-sidebar-background-color: var(--tlp-theme-dark-background-color);
 $sidebar-expanded-width: $sidebar-width;
 $sidebar-collapsed-width: $sidebar-width-collapsed;
 
@@ -74,7 +74,7 @@ $sidebar-collapsed-width: $sidebar-width-collapsed;
         &.fa-lock,
         &.fa-tlp-lock-plus-r {
             background: $white;
-            color: $sidebar-background;
+            color: var(--tlp-theme-dark-background-color);
         }
 
         &.fa-lock-open,

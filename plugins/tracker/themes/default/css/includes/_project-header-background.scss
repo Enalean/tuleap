@@ -19,12 +19,6 @@
 
 @use '../../src/themes/common/css/project-background/background';
 @use '../../src/themes/FlamingParrot/css/utils/variables-common';
-@use '../../../../../../src/themes/FlamingParrot/css/utils/variables-orange';
-@use '../../../../../../src/themes/FlamingParrot/css/utils/variables-blue';
-@use '../../../../../../src/themes/FlamingParrot/css/utils/variables-green';
-@use '../../../../../../src/themes/FlamingParrot/css/utils/variables-bluegrey';
-@use '../../../../../../src/themes/FlamingParrot/css/utils/variables-purple';
-@use '../../../../../../src/themes/FlamingParrot/css/utils/variables-red';
 
 .project-with-background {
     // stylelint-disable selector-id-pattern, selector-class-pattern
@@ -53,7 +47,7 @@ body.in_tracker_report .project-with-background .content { // stylelint-disable-
     padding-top: 0;
 }
 
-@mixin definitions-with-theme-colors($sidebar-background) {
+body {
     $elements-with-project-background: '#tracker_report_config_options', '.tracker_artifact_title', '.tracker-hierarchy:not(.tracker-hierarchy-admin)';
 
     @each $element-with-project-background in $elements-with-project-background {
@@ -62,31 +56,5 @@ body.in_tracker_report .project-with-background .content { // stylelint-disable-
             variables-common.$sidebar-width,
             variables-common.$sidebar-width-collapsed,
         );
-    }
-}
-
-body {
-    &.FlamingParrot_Orange { // stylelint-disable-line selector-no-qualifying-type, selector-class-pattern
-        @include definitions-with-theme-colors(variables-orange.$sidebar-background);
-    }
-
-    &.FlamingParrot_Blue { // stylelint-disable-line selector-no-qualifying-type, selector-class-pattern
-        @include definitions-with-theme-colors(variables-blue.$sidebar-background);
-    }
-
-    &.FlamingParrot_Green { // stylelint-disable-line selector-no-qualifying-type, selector-class-pattern
-        @include definitions-with-theme-colors(variables-green.$sidebar-background);
-    }
-
-    &.FlamingParrot_BlueGrey { // stylelint-disable-line selector-no-qualifying-type, selector-class-pattern
-        @include definitions-with-theme-colors(variables-bluegrey.$sidebar-background);
-    }
-
-    &.FlamingParrot_Purple { // stylelint-disable-line selector-no-qualifying-type, selector-class-pattern
-        @include definitions-with-theme-colors(variables-purple.$sidebar-background);
-    }
-
-    &.FlamingParrot_Red { // stylelint-disable-line selector-no-qualifying-type, selector-class-pattern
-        @include definitions-with-theme-colors(variables-red.$sidebar-background);
     }
 }

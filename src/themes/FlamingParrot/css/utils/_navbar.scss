@@ -47,7 +47,7 @@ header {
 
     &.pinned {
         background: $white;
-        box-shadow: 0 1px 2px transparentize($sidebar-background, .9);
+        box-shadow: 0 1px 2px var(--tlp-theme-dark-background-color-transparent-90);
 
         > .header-container {
             padding: 0 $tlp-medium-spacing 0 0;
@@ -110,7 +110,7 @@ header {
         box-shadow:  0 1px 4px rgba(0, 0, 0, .08),
             0 1px 2px rgba(0, 0, 0, .1),
             0 -1px 0 rgba(0, 0, 0, .03) !important;
-        color: $sidebar-background;
+        color: var(--tlp-theme-dark-background-color);
         font-family: $base-font;
         font-size: .875rem;
         font-weight: 400;
@@ -135,7 +135,7 @@ header {
 
         &:active,
         &:focus {
-            background: opacify(mix(transparentize($sidebar-background, .8), $white), .8) !important;
+            background: var(--tlp-theme-background-color-lighter-50) !important;
         }
 
         > .btn-icon {
@@ -166,11 +166,11 @@ header {
     > .nav-link {
         margin: 0 0 0 $tlp-large-spacing;
         transition: opacity ease-in-out 75ms;
-        color: $ui-dimmed;
+        color: var(--tlp-ui-dimmed);
         font-size: .875rem;
 
         &:hover {
-            color: $sidebar-background;
+            color: var(--tlp-theme-dark-background-color);
             text-decoration: none;
         }
     }
@@ -179,13 +179,13 @@ header {
         width: $dropdown-width;
 
         > .tlp-popover-arrow {
-            background: $sidebar-background;
+            background: var(--tlp-theme-dark-background-color);
         }
 
         > .tlp-popover-header {
             min-height: 4px;
             padding: 0 $tlp-small-spacing;
-            background: $sidebar-background;
+            background: var(--tlp-theme-dark-background-color);
         }
 
         > .tlp-popover-body {
@@ -203,7 +203,7 @@ header {
     overflow: hidden;
     border: 0;
     background: $white;
-    color: $sidebar-background;
+    color: var(--tlp-theme-dark-background-color);
     font-family: $base-font;
     font-size: .875rem;
     font-weight: 500;
@@ -217,8 +217,8 @@ header {
 
     &:focus,
     &:hover {
-        background: transparentize($main, .93);
-        color: $main;
+        background: var(--tlp-theme-color-transparent-90);
+        color: var(--tlp-theme-color);
         text-decoration: none;
     }
 
@@ -234,7 +234,7 @@ header {
 
 .nav-dropdown-item-title {
     padding: $tlp-medium-spacing $tlp-medium-spacing $tlp-small-spacing;
-    color: $ui-dimmed;
+    color: var(--tlp-ui-dimmed);
     font-size: .65rem;
     font-weight: 600;
     letter-spacing: .5px;
@@ -244,7 +244,7 @@ header {
 
 .nav-dropdown-item-divider {
     margin: $tlp-small-spacing 0;
-    border-top: 1px solid $ui-border-normal;
+    border-top: 1px solid var(--tlp-ui-border-normal);
 
     &:first-child {
         display: none;
@@ -312,7 +312,7 @@ header {
     }
 
     .user-infos-login-name {
-        color: $ui-border-dark;
+        color: var(--tlp-ui-border-dark);
         font-size: .75rem;
         font-weight: 400;
         line-height: 1;

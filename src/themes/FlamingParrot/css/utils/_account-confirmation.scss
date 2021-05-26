@@ -32,15 +32,15 @@ $url-base: '../images/account-confirmation/account-registration-feedback-backgro
 
 #account-confirmation-content {
     i {
-        color: $main;
+        color: var(--tlp-theme-color);
     }
 
     #account-confirmation-fake-email-title {
-        background-color: $main;
+        background-color: var(--tlp-theme-color);
     }
 
     #account-confirmation-fake-email-button span {
-        background-color: $main;
+        background-color: var(--tlp-theme-color);
     }
 }
 
@@ -48,14 +48,14 @@ $url-base: '../images/account-confirmation/account-registration-feedback-backgro
 #account-confirmation-redirect {
     a {
         border-radius: 4px;
-        border-color: $main $main #002a80;
+        border-color: var(--tlp-theme-color) var(--tlp-theme-color) #002a80;
         border-color: rgba(0, 0, 0, .1) rgba(0, 0, 0, .1) rgba(0, 0, 0, .25);
-        background-color: $main;
-        background-image: -moz-linear-gradient(top, $main, $main);
-        background-image: -webkit-gradient(linear, 0 0, 0 100%, $main, $main);
-        background-image: -webkit-linear-gradient(top, $main, $main);
-        background-image: -o-linear-gradient(top, $main, $main);
-        background-image: linear-gradient(to bottom, $main, $main);
+        background-color: var(--tlp-theme-color);
+        background-image: -moz-linear-gradient(top, var(--tlp-theme-color), var(--tlp-theme-color));
+        background-image: -webkit-gradient(linear, 0 0, 0 100%, var(--tlp-theme-color), var(--tlp-theme-color));
+        background-image: -webkit-linear-gradient(top, var(--tlp-theme-color), var(--tlp-theme-color));
+        background-image: -o-linear-gradient(top, var(--tlp-theme-color), var(--tlp-theme-color));
+        background-image: linear-gradient(to bottom, var(--tlp-theme-color), var(--tlp-theme-color));
         background-repeat: repeat-x;
         font-weight: 400;
         letter-spacing: .03em;

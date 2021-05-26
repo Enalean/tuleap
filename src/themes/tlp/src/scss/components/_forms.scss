@@ -17,7 +17,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-$tlp-label-color: darken($tlp-ui-dimmed, 3.5%);
 $tlp-form-element-font-size: .875rem;
 $tlp-form-element-height: 40px;
 $tlp-form-element-padding-horizontal: 12px;
@@ -115,7 +114,7 @@ $tlp-form-element-select-small-background-size: 6px;
     display: block;
     position: relative;
     margin: 0 0 8px;
-    color: $tlp-label-color;
+    color: var(--tlp-label-color);
     font-size: .8125rem;
     font-weight: 500;
 
