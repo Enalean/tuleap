@@ -57,7 +57,8 @@ class ArtifactsExplicitTopBacklogDAO extends DataAccessObject implements TopBack
                     SELECT planned_feature_artifact.id
                     FROM tracker_artifact AS planned_feature_artifact
                     JOIN plugin_program_management_plan ON (plugin_program_management_plan.plannable_tracker_id = planned_feature_artifact.tracker_id)
-                    JOIN tracker AS program_increment_tracker ON (program_increment_tracker.id = plugin_program_management_plan.program_increment_tracker_id)
+                    JOIN plugin_program_management_program ON (plugin_program_management_program.program_project_id = plugin_program_management_plan.project_id)
+                    JOIN tracker AS program_increment_tracker ON (program_increment_tracker.id = plugin_program_management_program.program_increment_tracker_id)
                     JOIN tracker_artifact AS program_increment_artifact ON (program_increment_artifact.tracker_id = program_increment_tracker.id)
                     JOIN tracker_changeset AS program_increment_changeset ON (program_increment_changeset.id = program_increment_artifact.last_changeset_id)
                     JOIN tracker_changeset_value AS program_increment_changeset_value ON (program_increment_changeset_value.changeset_id = program_increment_changeset.id)
@@ -90,7 +91,7 @@ class ArtifactsExplicitTopBacklogDAO extends DataAccessObject implements TopBack
             JOIN tracker_changeset_value ON (tracker_changeset_value.id = tracker_changeset_value_artifactlink.changeset_value_id)
             JOIN tracker_changeset ON (tracker_changeset.id = tracker_changeset_value.changeset_id)
             JOIN tracker_artifact ON (tracker_artifact.last_changeset_id = tracker_changeset.id)
-            JOIN plugin_program_management_plan ON (tracker_artifact.tracker_id = plugin_program_management_plan.program_increment_tracker_id)
+            JOIN plugin_program_management_program ON (tracker_artifact.tracker_id = plugin_program_management_program.program_increment_tracker_id)
             JOIN plugin_program_management_explicit_top_backlog ON (plugin_program_management_explicit_top_backlog.artifact_id = tracker_changeset_value_artifactlink.artifact_id)
             WHERE tracker_changeset.artifact_id = ?',
             $potential_program_increment_id

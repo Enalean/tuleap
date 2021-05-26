@@ -31,6 +31,7 @@ final class WorkspaceDAO extends DataAccessObject implements UnusedComponentClea
     {
         $sql = 'DELETE
                     plugin_program_management_plan.*,
+                    plugin_program_management_program.*,
                     plugin_program_management_can_prioritize_features.*,
                     plugin_program_management_team_projects.*,
                     plugin_program_management_pending_mirrors.*,
@@ -39,8 +40,9 @@ final class WorkspaceDAO extends DataAccessObject implements UnusedComponentClea
                     plugin_program_management_label_program_increment.*
                 FROM `groups`
                 LEFT JOIN tracker ON (tracker.group_id = `groups`.group_id)
-                LEFT JOIN plugin_program_management_plan ON (plugin_program_management_plan.program_increment_tracker_id = tracker.group_id OR plugin_program_management_plan.plannable_tracker_id = tracker.group_id)
-                LEFT JOIN plugin_program_management_can_prioritize_features ON (plugin_program_management_can_prioritize_features.program_increment_tracker_id = plugin_program_management_plan.program_increment_tracker_id)
+                LEFT JOIN plugin_program_management_plan ON (plugin_program_management_plan.project_id = tracker.group_id)
+                LEFT JOIN plugin_program_management_program ON (plugin_program_management_program.program_project_id = tracker.group_id)
+                LEFT JOIN plugin_program_management_can_prioritize_features ON (plugin_program_management_can_prioritize_features.program_increment_tracker_id = plugin_program_management_program.program_increment_tracker_id)
                 LEFT JOIN plugin_program_management_team_projects ON (plugin_program_management_team_projects.team_project_id = `groups`.group_id OR plugin_program_management_team_projects.program_project_id = `groups`.group_id)
                 LEFT JOIN tracker_artifact ON (tracker_artifact.tracker_id = tracker.id)
                 LEFT JOIN plugin_program_management_pending_mirrors ON (plugin_program_management_pending_mirrors.program_artifact_id = tracker_artifact.id)
@@ -48,7 +50,8 @@ final class WorkspaceDAO extends DataAccessObject implements UnusedComponentClea
                 LEFT JOIN tracker_workflow ON (tracker_workflow.tracker_id = tracker.id)
                 LEFT JOIN tracker_workflow_transition ON (tracker_workflow_transition.workflow_id = tracker_workflow.workflow_id)
                 LEFT JOIN plugin_program_management_workflow_action_add_top_backlog ON (plugin_program_management_workflow_action_add_top_backlog.transition_id = tracker_workflow_transition.transition_id)
-                LEFT JOIN plugin_program_management_label_program_increment ON (plugin_program_management_label_program_increment.program_increment_tracker_id = tracker.group_id)
+                LEFT JOIN plugin_program_management_label_program_increment ON (plugin_program_management_label_program_increment.program_increment_tracker_id = tracker.id)
+
                 WHERE `groups`.status = "D"';
 
         $this->getDB()->run($sql);

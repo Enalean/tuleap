@@ -41,9 +41,10 @@ class ArtifactsLinkedToParentDao extends DataAccessObject implements ArtifactsLi
                          INNER JOIN tracker_artifact                        AS linked_art ON (linked_art.id = artlink.artifact_id)
                          INNER JOIN tracker                                 AS t          ON (t.id = linked_art.tracker_id)
                          INNER JOIN plugin_program_management_plan          AS plan       ON parent_art.tracker_id = plan.plannable_tracker_id
+                         INNER JOIN plugin_program_management_program       AS program    ON plan.project_id = program.program_project_id
                 WHERE parent_art.id  = ?
                   AND t.deletion_date IS NULL
-                  AND plan.program_increment_tracker_id = ?";
+                  AND program.program_increment_tracker_id = ?";
 
         return $this->getDB()->run($sql, $artifact_id, $program_increment_id);
     }
