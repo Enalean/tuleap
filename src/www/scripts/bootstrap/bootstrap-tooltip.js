@@ -138,7 +138,13 @@
           .detach()
           .css({ top: 0, left: 0, display: 'block' })
 
-        this.options.container ? $tip.appendTo($.find(this.options.container)) : $tip.insertAfter(this.$element)
+        if (! this.options.container) {
+            $tip.insertAfter(this.$element);
+        } else if (typeof this.options.container === "string") {
+            $tip.appendTo($.find(this.options.container));
+        } else {
+            $tip.appendTo(this.options.container);
+        }
 
         pos = this.getPosition()
 
