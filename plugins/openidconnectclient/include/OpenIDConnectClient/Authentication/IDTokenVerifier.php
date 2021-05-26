@@ -23,10 +23,11 @@ declare(strict_types=1);
 namespace Tuleap\OpenIDConnectClient\Authentication;
 
 use Lcobucci\Clock\FrozenClock;
-use Lcobucci\JWT\Parser;
+use Lcobucci\JWT\Token\Parser;
 use Lcobucci\JWT\Signer\Key\InMemory;
 use Lcobucci\JWT\Signer\Rsa\Sha256;
 use Lcobucci\JWT\Token;
+use Lcobucci\JWT\UnencryptedToken;
 use Lcobucci\JWT\Validation\Constraint\SignedWith;
 use Lcobucci\JWT\Validation\Constraint\ValidAt;
 use Lcobucci\JWT\Validation\Validator;
@@ -84,6 +85,7 @@ class IDTokenVerifier
     {
         try {
             $id_token = $this->parser->parse($encoded_id_token);
+            assert($id_token instanceof UnencryptedToken);
         } catch (\InvalidArgumentException | \RuntimeException $exception) {
             throw new MalformedIDTokenException($exception->getMessage(), 0, $exception);
         }
@@ -121,7 +123,7 @@ class IDTokenVerifier
         return $id_token->isPermittedFor($provider_client_id);
     }
 
-    private function isNonceValid(string $nonce, Token $id_token): bool
+    private function isNonceValid(string $nonce, UnencryptedToken $id_token): bool
     {
         return hash_equals($nonce, $id_token->claims()->get('nonce', '') ?? '');
     }

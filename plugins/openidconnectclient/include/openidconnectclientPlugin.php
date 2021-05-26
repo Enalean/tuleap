@@ -19,8 +19,9 @@
  */
 
 use FastRoute\RouteCollector;
-use Lcobucci\JWT\Parser;
+use Lcobucci\JWT\Encoding\JoseEncoder;
 use Lcobucci\JWT\Signer\Rsa\Sha256;
+use Lcobucci\JWT\Token\Parser;
 use Lcobucci\JWT\Validation\Validator;
 use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\Admin\SiteAdministrationAddOption;
@@ -230,7 +231,7 @@ class openidconnectclientPlugin extends Plugin // phpcs:ignore PSR1.Classes.Clas
         $request_factory   = HTTPFactoryBuilder::requestFactory();
         $stream_factory    = HTTPFactoryBuilder::streamFactory();
         $http_client       = HttpClientFactory::createClient();
-        $id_token_verifier = new IDTokenVerifier(new Parser(), $issuer_claim_validator, new JWKSKeyFetcher($http_client, $request_factory), new Sha256(), new Validator());
+        $id_token_verifier = new IDTokenVerifier(new Parser(new JoseEncoder()), $issuer_claim_validator, new JWKSKeyFetcher($http_client, $request_factory), new Sha256(), new Validator());
         return new Flow(
             $state_manager,
             $provider_manager,

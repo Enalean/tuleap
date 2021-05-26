@@ -22,9 +22,11 @@ declare(strict_types=1);
 
 namespace Tuleap\OpenIDConnectClient\Authentication;
 
-use Lcobucci\JWT\Builder;
-use Lcobucci\JWT\Parser;
-use Lcobucci\JWT\Signer\Key;
+use Lcobucci\JWT\Encoding\ChainedFormatter;
+use Lcobucci\JWT\Signer\Key\InMemory;
+use Lcobucci\JWT\Token\Builder;
+use Lcobucci\JWT\Encoding\JoseEncoder;
+use Lcobucci\JWT\Token\Parser;
 use Lcobucci\JWT\Signer\Rsa\Sha256;
 use Lcobucci\JWT\Validation\Validator;
 use Mockery;
@@ -63,7 +65,7 @@ final class IDTokenVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
     protected function setUp(): void
     {
         $this->jwks_key_fetcher  = Mockery::mock(JWKSKeyFetcher::class);
-        $this->id_token_verifier = new IDTokenVerifier(new Parser(), $this->generateIssuerValidatorValid(), $this->jwks_key_fetcher, new Sha256(), new Validator());
+        $this->id_token_verifier = new IDTokenVerifier(new Parser(new JoseEncoder()), $this->generateIssuerValidatorValid(), $this->jwks_key_fetcher, new Sha256(), new Validator());
     }
 
     public function testItRejectsIDTokenIfPartsAreMissingInTheJWT(): void
@@ -97,7 +99,7 @@ final class IDTokenVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
         $nonce = 'random_string';
 
         $id_token = $this->buildIDToken(
-            (new Builder())->issuedBy('example.com')->permittedFor('client_id')
+            (new Builder(new JoseEncoder(), ChainedFormatter::default()))->issuedBy('example.com')->permittedFor('client_id')
         );
 
         $this->expectException(MalformedIDTokenException::class);
@@ -113,7 +115,7 @@ final class IDTokenVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
         $nonce = 'random_string';
 
         $id_token = $this->buildIDToken(
-            (new Builder())
+            (new Builder(new JoseEncoder(), ChainedFormatter::default()))
                 ->withClaim('nonce', $nonce)
                 ->issuedBy('example.com')
                 ->permittedFor('evil_client_id')
@@ -132,9 +134,9 @@ final class IDTokenVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
         $provider->shouldReceive('getClientId')->andReturns('client_id');
         $nonce = 'random_string';
 
-        $id_token_verifier = new IDTokenVerifier(new Parser(), $this->generateIssuerValidatorInvalid(), $this->jwks_key_fetcher, new Sha256(), new Validator());
+        $id_token_verifier = new IDTokenVerifier(new Parser(new JoseEncoder()), $this->generateIssuerValidatorInvalid(), $this->jwks_key_fetcher, new Sha256(), new Validator());
         $id_token          = $this->buildIDToken(
-            (new Builder())
+            (new Builder(new JoseEncoder(), ChainedFormatter::default()))
                 ->withClaim('nonce', $nonce)
                 ->issuedBy('evil.example.com')
                 ->permittedFor('client_id')
@@ -154,7 +156,7 @@ final class IDTokenVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
         $nonce = 'random_string';
 
         $id_token = $this->buildIDToken(
-            (new Builder())
+            (new Builder(new JoseEncoder(), ChainedFormatter::default()))
                 ->withClaim('nonce', 'different_random_string')
                 ->issuedBy('evil.example.com')
                 ->permittedFor('client_id')
@@ -174,7 +176,7 @@ final class IDTokenVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
         $nonce = 'random_string';
 
         $id_token = $this->buildIDToken(
-            (new Builder())
+            (new Builder(new JoseEncoder(), ChainedFormatter::default()))
                 ->withClaim('nonce', $nonce)
                 ->issuedBy('evil.example.com')
                 ->permittedFor('client_id')
@@ -194,12 +196,12 @@ final class IDTokenVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
         $provider->shouldReceive('getClientId')->andReturns('client_id_2');
         $nonce = 'random_string';
 
-        $id_token_builder = new Builder();
+        $id_token_builder = (new Builder(new JoseEncoder(), ChainedFormatter::default()));
         $id_token_builder->issuedBy('example.com');
         $id_token_builder->withClaim('nonce', $nonce);
         $id_token_builder->permittedFor('client_id_2');
         $id_token_builder->relatedTo('123');
-        $id_token = (string) $id_token_builder->getToken(new \Lcobucci\JWT\Signer\Hmac\Sha256(), new Key('HMAC'));
+        $id_token = $id_token_builder->getToken(new \Lcobucci\JWT\Signer\Hmac\Sha256(), InMemory::plainText('HMAC'))->toString();
 
         $key_details = openssl_pkey_get_details(self::$rsa_key);
         $this->jwks_key_fetcher->shouldReceive('fetchKey')->andReturn([$key_details['key']]);
@@ -220,7 +222,7 @@ final class IDTokenVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
         $nonce = 'random_string';
 
         $id_token = $this->buildIDToken(
-            (new Builder())
+            (new Builder(new JoseEncoder(), ChainedFormatter::default()))
                 ->withClaim('nonce', $nonce)
                 ->issuedBy('example.com')
                 ->permittedFor('client_id_2')
@@ -248,7 +250,7 @@ final class IDTokenVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
     private function buildIDToken(Builder $id_token_builder): string
     {
         openssl_pkey_export(self::$rsa_key, $private_key);
-        return (string) $id_token_builder->getToken(new Sha256(), new Key($private_key));
+        return $id_token_builder->getToken(new Sha256(), InMemory::plainText($private_key))->toString();
     }
 
     private function generateIssuerValidatorValid(): IssuerClaimValidator

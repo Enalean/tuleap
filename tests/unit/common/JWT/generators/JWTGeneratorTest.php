@@ -23,7 +23,8 @@ declare(strict_types=1);
 namespace Tuleap\JWT\Generators;
 
 use Lcobucci\JWT\Configuration;
-use Lcobucci\JWT\Parser;
+use Lcobucci\JWT\Encoding\JoseEncoder;
+use Lcobucci\JWT\Token\Parser;
 use Lcobucci\JWT\Signer\Hmac\Sha512;
 use Lcobucci\JWT\Signer\Key;
 use Lcobucci\JWT\Validation\Constraint\SignedWith;
@@ -32,7 +33,7 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\Project\UGroupLiteralizer;
 use UserManager;
 
-class JWTGeneratorTest extends \Tuleap\Test\PHPUnit\TestCase
+final class JWTGeneratorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 
@@ -84,7 +85,7 @@ class JWTGeneratorTest extends \Tuleap\Test\PHPUnit\TestCase
         ];
 
         $token   = $this->jwt_generator->getToken();
-        $decoded = (new Parser())->parse($token);
+        $decoded = (new Parser(new JoseEncoder()))->parse($token);
 
         self::assertSame($expected, (array) $decoded->claims()->get('data'));
     }

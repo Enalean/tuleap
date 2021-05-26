@@ -22,15 +22,15 @@ declare(strict_types=1);
 
 namespace Tuleap\OAuth2Server\OpenIDConnect\IDToken;
 
-use Lcobucci\JWT\Builder;
+use Lcobucci\JWT\Builder as BuilderInterface;
+use Lcobucci\JWT\Encoding\ChainedFormatter;
+use Lcobucci\JWT\Encoding\JoseEncoder;
+use Lcobucci\JWT\Token\Builder;
 
 final class JWTBuilderFactory
 {
-    /**
-     * @psalm-mutation-free
-     */
-    public function getBuilder(): Builder
+    public function getBuilder(): BuilderInterface
     {
-        return new Builder();
+        return new Builder(new JoseEncoder(), ChainedFormatter::default());
     }
 }
