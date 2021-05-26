@@ -36,29 +36,32 @@
             <div class="current-test-header-actions">
                 <div class="tlp-dropdown" ng-if="linkMenuIsVisible">
                     <button class="current-test-header-action tlp-button-secondary"
+                            type="button"
                             id="dropdown-link-bug"
                             title="{{ 'Open bug options dropdown' | translate }}"
                             open-tlp-dropdown
                     >
-                        <i class="fa fa-fw fa-bug"></i>
+                        <i class="fa fa-fw fa-bug" aria-hidden="true"></i>
                     </button>
                     <div class="tlp-dropdown-menu tlp-dropdown-menu-right tlp-dropdown-menu-on-icon" role="menu">
                         <button class="tlp-dropdown-menu-item"
+                                type="button"
                                 role="menuitem"
                                 ng-if="canCreateIssue"
                                 ng-click="showLinkToNewBugModal()"
                                 data-shortcut-new-bug
                         >
-                            <i class="tlp-dropdown-menu-item-icon fa fa-fw fa-plus"></i>
+                            <i class="tlp-dropdown-menu-item-icon fa fa-fw fa-plus" aria-hidden="true"></i>
                             <span translate>Create a new bug</span>
                         </button>
                         <button class="tlp-dropdown-menu-item"
+                                type="button"
                                 role="menuitem"
                                 ng-if="canLinkIssue"
                                 ng-click="showLinkToExistingBugModal()"
                                 data-shortcut-link-bug
                         >
-                            <i class="tlp-dropdown-menu-item-icon fa fa-fw fa-link"></i>
+                            <i class="tlp-dropdown-menu-item-icon fa fa-fw fa-link" aria-hidden="true"></i>
                             <span translate>Link to an existing bug</span>
                         </button>
                         <span
@@ -80,28 +83,32 @@
                 </div>
 
                 <button class="current-test-header-action tlp-button-secondary"
+                        type="button"
                         ng-if="! linkMenuIsVisible && canCreateIssue"
                         ng-click="showLinkToNewBugModal()"
                         title="{{ 'Create a new bug' | translate }}"
                         data-shortcut-new-bug
                 >
-                    <i class="fa fa-fw fa-bug"></i>
+                    <i class="fa fa-fw fa-bug" aria-hidden="true"></i>
                 </button>
 
-                <a href="/plugins/tracker/?aid={{ execution.definition.id }}" class="current-test-header-action tlp-button-secondary">
-                    <i class="fas fa-fw fa-pencil-alt"
-                       data-test="current-test-edit"
-                       ng-click="showEditArtifactModal($event, execution.definition)"
-                       title="{{ 'Edit this test' | translate }}"
-                       data-shortcut-edit-test
-                    ></i>
+                <a href="/plugins/tracker/?aid={{ execution.definition.id }}"
+                   class="current-test-header-action tlp-button-secondary"
+                   data-test="current-test-edit"
+                   ng-click="showEditArtifactModal($event, execution.definition)"
+                   title="{{ 'Edit this test' | translate }}"
+                   data-shortcut-edit-test
+                >
+                    <i class="fas fa-fw fa-pencil-alt" aria-hidden="true"></i>
                 </a>
+
                 <button class="current-test-header-action tlp-button-secondary"
+                        type="button"
                         ng-click="showArtifactLinksGraphModal(execution)"
                         title="{{ 'Show dependencies graph for this test' | translate }}"
                         data-shortcut-dependency-graph
                 >
-                    <i class="fa fa-tlp-dependencies-graph"></i>
+                    <i class="fa fa-tlp-dependencies-graph" aria-hidden="true"></i>
                 </button>
             </div>
         </section>
