@@ -92,7 +92,7 @@ final class PsalmCommandLauncherWithIgnoreDirectoryTest extends \Tuleap\Test\PHP
         $shell_passthrough = Mockery::mock(ShellPassthrough::class);
         $shell_passthrough->shouldReceive('__invoke')->withArgs(
             function (string $command) use ($temporary_dir_for_rewritten_config): bool {
-                return strpos($command, '/usr/bin/php73 ') === 0;
+                return strpos($command, '/usr/bin/phpversion ') === 0;
             }
         )->andReturn(147);
 
@@ -102,7 +102,7 @@ final class PsalmCommandLauncherWithIgnoreDirectoryTest extends \Tuleap\Test\PHP
             $shell_passthrough
         );
 
-        $exit_code = $command_launcher->execute('/usr/bin/php73', 'init_script', $existing_config_path, './src/vendor/bin/psalm', '-c={config_path}');
+        $exit_code = $command_launcher->execute('/usr/bin/phpversion', 'init_script', $existing_config_path, './src/vendor/bin/psalm', '-c={config_path}');
         $this->assertEquals(147, $exit_code);
     }
 

@@ -2,7 +2,7 @@
 Description=The PHP FastCGI Process Manager for Tuleap
 After=tuleap.service
 PartOf=tuleap.service
-Conflicts=php73-php-fpm.service
+Conflicts=php74-php-fpm.service
 
 [Service]
 Type=notify

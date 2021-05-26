@@ -30,11 +30,6 @@ function findPHPCLI() {
         echo "$php74_remi_scl"
         return
     fi
-    local php73_remi_scl='/opt/remi/php73/root/usr/bin/php'
-    if [ -x "$php73_remi_scl" ]; then
-        echo "$php73_remi_scl"
-        return
-    fi
     echo "php"
 }
 

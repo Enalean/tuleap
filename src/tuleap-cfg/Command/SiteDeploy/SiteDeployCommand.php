@@ -42,7 +42,7 @@ final class SiteDeployCommand extends Command
     protected function configure(): void
     {
         $this->setDescription('Execute all deploy actions needed at site update')
-            ->addOption(SiteDeployFPMCommand::OPT_PHP_VERSION, '', InputOption::VALUE_REQUIRED, 'Target php version: `php73` or `php74` (default)', SiteDeployFPMCommand::PHP74)
+            ->addOption(SiteDeployFPMCommand::OPT_PHP_VERSION, '', InputOption::VALUE_REQUIRED, 'Target php version: `php74` (default)', SiteDeployFPMCommand::PHP74)
             ->addOption(SiteDeployFPMCommand::OPT_FORCE, '', InputOption::VALUE_NONE, 'Force files to be rewritten (by default existing files are not modified)');
     }
 

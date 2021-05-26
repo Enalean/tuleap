@@ -28,8 +28,6 @@ use TuleapCfg\Command\TemplateHelper;
 
 final class SiteDeployFPM
 {
-    public const PHP73_DST_CONF_DIR = '/etc/opt/remi/php73';
-    public const PHP73_SRC_CONF_DIR = __DIR__ . '/../../../../etc/fpm73';
     public const PHP74_DST_CONF_DIR = '/etc/opt/remi/php74';
     public const PHP74_SRC_CONF_DIR = __DIR__ . '/../../../../etc/fpm74';
 
@@ -108,22 +106,6 @@ final class SiteDeployFPM
             return new FPMSessionRedis(\ForgeConfig::get('redis_config_file'), \ForgeConfig::get('sys_http_user'), $server, $use_tls, $port, $password);
         }
         return new FPMSessionFiles();
-    }
-
-    public static function buildForPHP73(
-        LoggerInterface $logger,
-        string $application_user,
-        bool $development
-    ): self {
-        return new self(
-            $logger,
-            $application_user,
-            $development,
-            self::buildSessionFromEnv(),
-            self::PHP73_DST_CONF_DIR,
-            self::PHP73_SRC_CONF_DIR,
-            []
-        );
     }
 
     public static function buildForPHP74(
