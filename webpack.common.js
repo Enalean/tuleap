@@ -36,9 +36,7 @@ module.exports = [
             tlp: "tlp",
         },
         module: {
-            rules: [
-                webpack_configurator.rule_scss_loader,
-            ],
+            rules: [webpack_configurator.rule_scss_loader],
         },
         plugins: [
             webpack_configurator.getCleanWebpackPlugin(),
