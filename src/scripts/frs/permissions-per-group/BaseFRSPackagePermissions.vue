@@ -1,5 +1,5 @@
 <!--
-  - Copyright (c) Enalean, 2018 - Present. All Rights Reserved.
+  - Copyright (c) Enalean, 2021 - Present. All Rights Reserved.
   -
   - This file is a part of Tuleap.
   -
@@ -44,54 +44,52 @@
         />
     </section>
 </template>
-<script>
-import { getPackagesPermissions } from "./rest-querier.js";
+<script lang="ts">
+import { getPackagesPermissions } from "./api/rest-querier";
 import PackagePermissionsTable from "./FRSPackagePermissionsTable.vue";
+import Component from "vue-class-component";
+import { Prop } from "vue-property-decorator";
+import Vue from "vue";
+import type { PackagePermission } from "./type";
 
-export default {
-    name: "BaseFRSPackagePermissions",
-    components: {
-        PackagePermissionsTable,
-    },
-    props: {
-        selectedUgroupId: String,
-        selectedProjectId: String,
-        selectedUgroupName: String,
-    },
-    data() {
-        return {
-            is_loaded: false,
-            is_loading: false,
-            rest_error: null,
-            packages_list: [],
-        };
-    },
-    computed: {
-        hasRestError() {
-            return this.rest_error !== null;
-        },
-        packages_are_loading() {
-            return this.$gettext("Packages are loading");
-        },
-    },
-    methods: {
-        async loadAll() {
-            try {
-                this.is_loading = true;
+@Component({ components: { PackagePermissionsTable } })
+export default class BaseFRSPackagePermissions extends Vue {
+    @Prop()
+    private readonly selectedUgroupId!: string;
+    @Prop()
+    private readonly selectedProjectId!: string;
+    @Prop()
+    private readonly selectedUgroupName!: string;
 
-                this.packages_list = await getPackagesPermissions(
-                    this.selectedProjectId,
-                    this.selectedUgroupId
-                );
+    private is_loaded = false;
+    private is_loading = false;
+    private rest_error: string | null = null;
+    private packages_list: PackagePermission[] = [];
 
-                this.is_loaded = true;
-            } catch (e) {
-                const { error } = await e.response.json();
-                this.rest_error = error;
-            } finally {
-                this.is_loading = false;
-            }
-        },
-    },
-};
+    get hasRestError(): boolean {
+        return this.rest_error !== null;
+    }
+
+    get packages_are_loading(): string {
+        return this.$gettext("Packages are loading");
+    }
+
+    async loadAll(): Promise<void> {
+        try {
+            this.is_loading = true;
+
+            this.packages_list = await getPackagesPermissions(
+                this.selectedProjectId,
+                this.selectedUgroupId
+            );
+
+            this.is_loaded = true;
+        } catch (e) {
+            const { error } = await e.response.json();
+            this.rest_error = error;
+        } finally {
+            this.is_loading = false;
+        }
+    }
+}
 </script>

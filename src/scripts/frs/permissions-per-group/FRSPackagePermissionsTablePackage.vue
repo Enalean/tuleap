@@ -1,5 +1,5 @@
 <!--
-  - Copyright (c) Enalean, 2018 - Present. All Rights Reserved.
+  - Copyright (c) Enalean, 2021 - Present. All Rights Reserved.
   -
   - This file is a part of Tuleap.
   -
@@ -46,26 +46,24 @@
         <empty-state v-if="!has_permissions" v-bind:selected-ugroup-name="selectedUgroupName" />
     </tbody>
 </template>
-<script>
+<script lang="ts">
 import UgroupBadge from "../../project/admin/permissions-per-group/PermissionsPerGroupBadge.vue";
 import EmptyState from "./FRSPackagePermissionsTablePackageEmptyState.vue";
 import ReleasePermissions from "./FRSPackagePermissionsTablePackageRelease.vue";
+import Component from "vue-class-component";
+import Vue from "vue";
+import { Prop } from "vue-property-decorator";
+import type { PackagePermission } from "./type";
 
-export default {
-    name: "FRSPackagePermissionsTablePackage",
-    components: {
-        EmptyState,
-        UgroupBadge,
-        ReleasePermissions,
-    },
-    props: {
-        packagePermissions: Array,
-        selectedUgroupName: String,
-    },
-    computed: {
-        has_permissions() {
-            return this.packagePermissions.length > 0;
-        },
-    },
-};
+@Component({ components: { EmptyState, UgroupBadge, ReleasePermissions } })
+export default class FRSPackagePermissionsTablePackage extends Vue {
+    @Prop()
+    private readonly packagePermissions!: PackagePermission[];
+    @Prop()
+    private readonly selectedUgroupName!: string;
+
+    get has_permissions(): boolean {
+        return this.packagePermissions.length > 0;
+    }
+}
 </script>

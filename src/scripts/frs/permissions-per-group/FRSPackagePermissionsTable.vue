@@ -1,5 +1,5 @@
 <!--
-  - Copyright (c) Enalean, 2018 - Present. All Rights Reserved.
+  - Copyright (c) Enalean, 2021 - Present. All Rights Reserved.
   -
   - This file is a part of Tuleap.
   -
@@ -30,17 +30,18 @@
         <package-permissions v-bind="$props" />
     </table>
 </template>
-<script>
+<script lang="ts">
 import PackagePermissions from "./FRSPackagePermissionsTablePackage.vue";
+import Component from "vue-class-component";
+import Vue from "vue";
+import type { PackagePermission } from "./type";
+import { Prop } from "vue-property-decorator";
 
-export default {
-    name: "FRSPackagePermissionsTable",
-    components: {
-        PackagePermissions,
-    },
-    props: {
-        packagePermissions: Array,
-        selectedUgroupName: String,
-    },
-};
+@Component({ components: { PackagePermissions } })
+export default class FRSPackagePermissionsTable extends Vue {
+    @Prop()
+    private readonly packagePermissions!: PackagePermission;
+    @Prop()
+    private readonly selectedUgroupName!: string;
+}
 </script>
