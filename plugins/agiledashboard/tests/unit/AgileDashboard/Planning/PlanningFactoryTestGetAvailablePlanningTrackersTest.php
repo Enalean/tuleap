@@ -62,15 +62,36 @@ final class PlanningFactoryTestGetAvailablePlanningTrackersTest extends \Tuleap\
         $this->partial_factory->shouldReceive('getPotentialPlanningTrackerIds')->andReturn([1, 2, 3]);
         $this->partial_factory->shouldReceive('getPlanningTrackerIdsByGroupId')->andReturn([1, 3]);
 
-        $releases_tracker = Mockery::mock(\Tracker::class);
+        $releases_tracker = $this->createMock(\Tracker::class);
+        $releases_tracker->method('userCanView')->willReturn(true);
 
-        $this->tracker_factory->shouldReceive('getTrackerById')->with(2)->andReturn($releases_tracker)->once();
+        $this->tracker_factory->shouldReceive('getTrackerById')->with(2)->andReturn($releases_tracker);
 
         $actual_trackers = $this->partial_factory->getAvailablePlanningTrackers(
             Mockery::mock(PFUser::class),
             $group_id
         );
 
-        $this->assertEquals([$releases_tracker], $actual_trackers);
+        self::assertEquals([$releases_tracker], $actual_trackers);
+    }
+
+    public function testDoesNotRetrieveAvailablePlanningTrackersCurrentUserCannotSee(): void
+    {
+        $group_id = 789;
+
+        $this->partial_factory->shouldReceive('getPotentialPlanningTrackerIds')->andReturn([1, 2, 3]);
+        $this->partial_factory->shouldReceive('getPlanningTrackerIdsByGroupId')->andReturn([1, 3]);
+
+        $releases_tracker = $this->createMock(\Tracker::class);
+        $releases_tracker->method('userCanView')->willReturn(false);
+
+        $this->tracker_factory->shouldReceive('getTrackerById')->with(2)->andReturn($releases_tracker);
+
+        $actual_trackers = $this->partial_factory->getAvailablePlanningTrackers(
+            Mockery::mock(PFUser::class),
+            $group_id
+        );
+
+        self::assertEquals([], $actual_trackers);
     }
 }

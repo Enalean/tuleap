@@ -576,7 +576,10 @@ class PlanningFactory
         $backlog_trackers = [];
         foreach ($rows as $row) {
             if (! in_array($row['id'], $potential_planning_trackers)) {
-                $backlog_trackers[] = $this->tracker_factory->getInstanceFromRow($row);
+                $backlog_tracker = $this->tracker_factory->getInstanceFromRow($row);
+                if ($backlog_tracker->userCanView($user)) {
+                    $backlog_trackers[] = $this->tracker_factory->getInstanceFromRow($row);
+                }
             }
         }
         return $backlog_trackers;
@@ -595,12 +598,15 @@ class PlanningFactory
             $trackers           = [];
             foreach ($potential_planning_trackers as $tracker_id) {
                 if (! in_array($tracker_id, $existing_plannings)) {
-                    $trackers[] = $this->tracker_factory->getTrackerById($tracker_id);
+                    $tracker = $this->tracker_factory->getTrackerById($tracker_id);
+                    if ($tracker !== null && $tracker->userCanView($user)) {
+                        $trackers[] = $this->tracker_factory->getTrackerById($tracker_id);
+                    }
                 }
             }
             return $trackers;
         } else {
-            return array_values($this->tracker_factory->getTrackersByGroupId($group_id));
+            return array_values($this->tracker_factory->getTrackersByGroupIdUserCanView($group_id, $user));
         }
     }
 

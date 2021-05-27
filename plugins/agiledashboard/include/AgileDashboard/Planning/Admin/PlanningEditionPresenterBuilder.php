@@ -167,7 +167,7 @@ class PlanningEditionPresenterBuilder
 
     private function isRootPlanning(\Planning $planning, \PFUser $user): bool
     {
-        $root_planning = $this->planning_factory->getRootPlanning($user, (int) $planning->getGroupId());
+        $root_planning = $this->planning_factory->getRootPlanning($user, $planning->getGroupId());
 
         if (! $root_planning) {
             return false;

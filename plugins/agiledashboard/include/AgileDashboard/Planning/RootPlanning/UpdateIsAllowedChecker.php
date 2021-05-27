@@ -60,7 +60,7 @@ class UpdateIsAllowedChecker
     ): void {
         $root_planning = $this->planning_factory->getRootPlanning(
             $user,
-            (int) $planning->getGroupId()
+            $planning->getGroupId()
         );
 
         if (! $root_planning) {
@@ -72,7 +72,7 @@ class UpdateIsAllowedChecker
         }
 
         $this->backlog_tracker_removal_checker->checkRemovedBacklogTrackersCanBeRemoved($planning, $updated_planning);
-        $this->checkMilestoneTrackerIdIsStillAValidTracker($updated_planning);
+        $this->checkMilestoneTrackerIdIsStillAValidTracker($planning, $updated_planning);
     }
 
     private function isPlanningTheRootPlanning(\Planning $planning, \Planning $root_planning): bool
@@ -83,9 +83,10 @@ class UpdateIsAllowedChecker
     /**
      * @throws TrackerNotFoundException
      */
-    private function checkMilestoneTrackerIdIsStillAValidTracker(\PlanningParameters $updated_planning): void
+    private function checkMilestoneTrackerIdIsStillAValidTracker(\Planning $planning, \PlanningParameters $updated_planning): void
     {
-        if (! $this->tracker_factory->getTrackerById((int) $updated_planning->planning_tracker_id)) {
+        $tracker = $this->tracker_factory->getTrackerById((int) $updated_planning->planning_tracker_id);
+        if ($tracker === null || (int) $tracker->getGroupId() !== $planning->getGroupId()) {
             throw new TrackerNotFoundException();
         }
     }
