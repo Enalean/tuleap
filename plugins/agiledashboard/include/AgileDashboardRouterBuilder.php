@@ -200,7 +200,7 @@ class AgileDashboardRouterBuilder // phpcs:ignore PSR1.Classes.ClassDeclaration.
                 $planning_permissions_manager,
                 new DBTransactionExecutorWithConnection($db_connection)
             ),
-            new Planning_RequestValidator($planning_factory),
+            new Planning_RequestValidator($planning_factory, TrackerFactory::instance()),
             AgileDashboard_XMLExporter::build(),
             new UpdateIsAllowedChecker(
                 $planning_factory,

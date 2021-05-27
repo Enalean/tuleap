@@ -21,6 +21,7 @@
 final class Planning_RequestValidatorTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+    use \Tuleap\GlobalLanguageMock;
 
     /**
      * @var Planning
@@ -51,12 +52,17 @@ final class Planning_RequestValidatorTest extends \Tuleap\Test\PHPUnit\TestCase 
     /**
      * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|PlanningFactory
      */
-    private $factory;
+    private $planning_factory;
+    /**
+     * @var \PHPUnit\Framework\MockObject\MockObject&TrackerFactory
+     */
+    private $tracker_factory;
 
     protected function setUp(): void
     {
-        $this->factory   = \Mockery::spy(\PlanningFactory::class);
-        $this->validator = new Planning_RequestValidator($this->factory);
+        $this->planning_factory = \Mockery::spy(\PlanningFactory::class);
+        $this->tracker_factory  = $this->createMock(TrackerFactory::class);
+        $this->validator        = new Planning_RequestValidator($this->planning_factory, $this->tracker_factory);
 
         $this->release_planning_id = 34;
         $this->releases_tracker_id = 56;
@@ -72,14 +78,55 @@ final class Planning_RequestValidatorTest extends \Tuleap\Test\PHPUnit\TestCase 
 
     public function testItRejectsTheRequestWhenBacklogTrackerIdsAreMissing(): void
     {
+        $this->tracker_factory->method('getTrackerById')->willReturnCallback(
+            function (?int $tracker_id): ?Tracker {
+                if ($tracker_id === null) {
+                    return null;
+                }
+                $tracker = $this->createMock(Tracker::class);
+                $tracker->method('getGroupId')->willReturn('12');
+                $tracker->method('userCanView')->willReturn(true);
+                return $tracker;
+            }
+        );
         $request = $this->getPlanningRequest("test", 1, null, null);
         $this->assertFalse($this->validator->isValid($request));
     }
 
     public function testItRejectsTheRequestWhenPlanningTrackerIdIsMissing(): void
     {
+        $this->tracker_factory->method('getTrackerById')->willReturnCallback(
+            function (?int $tracker_id): ?Tracker {
+                if ($tracker_id === null) {
+                    return null;
+                }
+                $tracker = $this->createMock(Tracker::class);
+                $tracker->method('getGroupId')->willReturn('12');
+                $tracker->method('userCanView')->willReturn(true);
+                return $tracker;
+            }
+        );
         $request = $this->getPlanningRequest("test", null, 2, null);
         $this->assertFalse($this->validator->isValid($request));
+    }
+
+    public function testItRejectsTheRequestWhenPlanningTrackerIsFromAnotherProject(): void
+    {
+        $tracker = $this->createMock(Tracker::class);
+        $tracker->method('getGroupId')->willReturn('403');
+        $this->tracker_factory->method('getTrackerById')->willReturn($tracker);
+        $request = $this->getPlanningRequest("test", 52, 2, null);
+        self::assertFalse($this->validator->isValid($request));
+    }
+
+    public function testItRejectsTheRequestWhenPlanningTrackerCannotBeSeenByTheCurrentUser(): void
+    {
+        $tracker = $this->createMock(Tracker::class);
+        $tracker->method('getGroupId')->willReturn('12');
+        $tracker->method('userCanView')->willReturn(false);
+        $this->tracker_factory->method('getTrackerById')->willReturn($tracker);
+        $request = $this->getPlanningRequest("test", 53, 2, null);
+        self::assertFalse($this->validator->isValid($request));
     }
 
     private function getPlanningRequest(
@@ -145,14 +192,18 @@ final class Planning_RequestValidatorTest extends \Tuleap\Test\PHPUnit\TestCase 
             $this->releases_tracker_id
         );
 
-        $this->factory->shouldReceive('getPlanning')->with($this->release_planning_id)->andReturns(
+        $this->planning_factory->shouldReceive('getPlanning')->with($this->release_planning_id)->andReturns(
             $this->release_planning
         );
-        $this->factory->shouldReceive('getPlanningTrackerIdsByGroupId')->with($group_id)->andReturns(
+        $this->planning_factory->shouldReceive('getPlanningTrackerIdsByGroupId')->with($group_id)->andReturns(
             [
                 $this->releases_tracker_id,
                 $this->sprints_tracker_id
             ]
         );
+        $tracker = $this->createMock(Tracker::class);
+        $tracker->method('getGroupId')->willReturn('12');
+        $tracker->method('userCanView')->willReturn(true);
+        $this->tracker_factory->method('getTrackerById')->willReturn($tracker);
     }
 }

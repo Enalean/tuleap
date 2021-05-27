@@ -24,6 +24,7 @@ namespace Tuleap\AgileDashboard\Planning\RootPlanning;
 
 use Mockery as M;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use Tracker;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Report\TrackerNotFoundException;
 
@@ -63,7 +64,7 @@ final class UpdateIsAllowedCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItReturnsIfNoRootPlanning(): void
     {
         $user     = UserTestBuilder::aUser()->build();
-        $planning = new \Planning(15, '102', 'Not root planning', '', '');
+        $planning = new \Planning(15, 'Not root planning', '102', '', '');
         $this->planning_factory->shouldReceive('getRootPlanning')
             ->once()
             ->andReturnFalse();
@@ -74,7 +75,7 @@ final class UpdateIsAllowedCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItReturnsIfNotARootPlanning(): void
     {
         $user     = UserTestBuilder::aUser()->build();
-        $planning = new \Planning(15, '102', 'Not root planning', '', '');
+        $planning = new \Planning(15, 'Not root planning', '102', '', '');
         $this->planning_factory->shouldReceive('getRootPlanning')
             ->once()
             ->andReturn(new \Planning(1, '102', 'Root planning', '', ''));
@@ -85,7 +86,7 @@ final class UpdateIsAllowedCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItThrowsWhenNewMilestoneTrackerIDIsNotAValidTrackerID(): void
     {
         $user     = UserTestBuilder::aUser()->build();
-        $planning = new \Planning(15, '102', 'Not root planning', '', '');
+        $planning = new \Planning(15, 'Not root planning', '102', '', '');
         $this->planning_factory->shouldReceive('getRootPlanning')
             ->once()
             ->andReturn($planning);
@@ -103,19 +104,44 @@ final class UpdateIsAllowedCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
-    public function testItReturnsWhenUpdateIsAllowed(): void
+    public function testItThrowsWhenNewMilestoneTrackerIDIsInAnotherProject(): void
     {
         $user     = UserTestBuilder::aUser()->build();
-        $planning = new \Planning(15, '102', 'Not root planning', '', '');
+        $planning = new \Planning(15, 'Not root planning', '102', '', '');
         $this->planning_factory->shouldReceive('getRootPlanning')
             ->once()
             ->andReturn($planning);
         $this->backlog_tracker_removal_checker->shouldReceive('checkRemovedBacklogTrackersCanBeRemoved')
             ->once();
+        $tracker = $this->createMock(Tracker::class);
+        $tracker->method('getGroupId')->willReturn('103');
+        $this->tracker_factory->shouldReceive('getTrackerById')
+            ->once()
+            ->andReturn($tracker);
+
+        $this->expectException(TrackerNotFoundException::class);
+        $this->checker->checkUpdateIsAllowed(
+            $planning,
+            \PlanningParameters::fromArray(['planning_tracker_id' => '404']),
+            $user
+        );
+    }
+
+    public function testItReturnsWhenUpdateIsAllowed(): void
+    {
+        $user     = UserTestBuilder::aUser()->build();
+        $planning = new \Planning(15, 'Not root planning', '102', '', '');
+        $this->planning_factory->shouldReceive('getRootPlanning')
+            ->once()
+            ->andReturn($planning);
+        $this->backlog_tracker_removal_checker->shouldReceive('checkRemovedBacklogTrackersCanBeRemoved')
+            ->once();
+        $tracker = $this->createMock(Tracker::class);
+        $tracker->method('getGroupId')->willReturn('102');
         $this->tracker_factory->shouldReceive('getTrackerById')
             ->once()
             ->with(86)
-            ->andReturn(M::mock(\Tracker::class));
+            ->andReturn($tracker);
 
         $this->checker->checkUpdateIsAllowed(
             $planning,

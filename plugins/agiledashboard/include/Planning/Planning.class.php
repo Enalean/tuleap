@@ -102,7 +102,7 @@ class Planning
     /**
      * @return int the group_id the planning belongs to
      */
-    public function getGroupId()
+    public function getGroupId(): int
     {
         return $this->group_id;
     }

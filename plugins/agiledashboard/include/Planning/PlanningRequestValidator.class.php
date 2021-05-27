@@ -28,15 +28,17 @@ class Planning_RequestValidator
      * @var PlanningFactory
      */
     private $factory;
+    private TrackerFactory $tracker_factory;
 
     /**
      * Creates a new validator instance.
      *
      * @param PlanningFactory $factory Used to retrieve existing planning trackers for validation purpose.
      */
-    public function __construct(PlanningFactory $factory)
+    public function __construct(PlanningFactory $factory, TrackerFactory $tracker_factory)
     {
-        $this->factory = $factory;
+        $this->factory         = $factory;
+        $this->tracker_factory = $tracker_factory;
     }
 
     /**
@@ -44,11 +46,8 @@ class Planning_RequestValidator
      * Planning.
      *
      * Existing planning update validation is not implemented yet.
-     *
-     *
-     * @return bool
      */
-    public function isValid(Codendi_Request $request)
+    public function isValid(Codendi_Request $request): bool
     {
         $group_id            = (int) $request->get('group_id');
         $planning_id         = $request->get('planning_id');
@@ -58,11 +57,13 @@ class Planning_RequestValidator
             $planning_parameters = [];
         }
 
+        $current_user = $request->getCurrentUser();
+
         $planning_parameters = PlanningParameters::fromArray($planning_parameters);
 
         return $this->nameIsPresent($planning_parameters)
-            && $this->backlogTrackerIdsArePresentAndArePositiveIntegers($planning_parameters)
-            && $this->planningTrackerIdIsPresentAndIsAPositiveInteger($planning_parameters)
+            && $this->backlogTrackerIdsArePresentAndAreValid($planning_parameters, $group_id, $current_user)
+            && $this->planningTrackerIdIsValid($planning_parameters, $group_id, $current_user)
             && $this->planningTrackerIsNotThePlanningTrackerOfAnotherPlanningInTheSameProject($group_id, $planning_id, $planning_parameters);
     }
 
@@ -86,18 +87,14 @@ class Planning_RequestValidator
      * a valid positive integer.
      *
      * @param PlanningParameters $planning_parameters The validated parameters.
-     *
-     * @return bool
      */
-    private function backlogTrackerIdsArePresentAndArePositiveIntegers(PlanningParameters $planning_parameters)
+    private function backlogTrackerIdsArePresentAndAreValid(PlanningParameters $planning_parameters, int $project_id, PFUser $user): bool
     {
-        $backlog_tracker_id = new Valid_UInt();
-        $backlog_tracker_id->required();
         $are_present = count($planning_parameters->backlog_tracker_ids) > 0;
         $are_valid   = true;
 
         foreach ($planning_parameters->backlog_tracker_ids as $tracker_id) {
-            $are_valid = $are_valid && $backlog_tracker_id->validate($tracker_id);
+            $are_valid = $are_valid && $this->doesTrackerExistInProject($user, $tracker_id, $project_id);
         }
 
         return $are_present && $are_valid;
@@ -108,15 +105,14 @@ class Planning_RequestValidator
      * a valid positive integer.
      *
      * @param PlanningParameters $planning_parameters The validated parameters.
-     *
-     * @return bool
      */
-    private function planningTrackerIdIsPresentAndIsAPositiveInteger(PlanningParameters $planning_parameters)
+    private function planningTrackerIdIsValid(PlanningParameters $planning_parameters, int $project_id, PFUser $user): bool
     {
-        $planning_tracker_id = new Valid_UInt();
-        $planning_tracker_id->required();
-
-        return $planning_tracker_id->validate($planning_parameters->planning_tracker_id);
+        $planning_tracker_id = null;
+        if ($planning_parameters->planning_tracker_id !== null) {
+            $planning_tracker_id = (int) $planning_parameters->planning_tracker_id;
+        }
+        return $this->doesTrackerExistInProject($user, $planning_tracker_id, $project_id);
     }
 
     /**
@@ -174,5 +170,22 @@ class Planning_RequestValidator
         $project_planning_tracker_ids = $this->factory->getPlanningTrackerIdsByGroupId($group_id);
 
         return ! in_array($planning_tracker_id, $project_planning_tracker_ids);
+    }
+
+    private function doesTrackerExistInProject(PFUser $user, ?int $tracker_id, int $project_id): bool
+    {
+        if ($tracker_id === null) {
+            return false;
+        }
+        $tracker = $this->tracker_factory->getTrackerById($tracker_id);
+        if ($tracker === null) {
+            return false;
+        }
+
+        if ((int) $tracker->getGroupId() !== $project_id) {
+            return false;
+        }
+
+        return $tracker->userCanView($user);
     }
 }
