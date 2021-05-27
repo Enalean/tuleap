@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export function init() {
+export function init(): void {
     const header = document.querySelector("header");
     if (!header) {
         return;
@@ -44,7 +44,7 @@ export function init() {
     });
 }
 
-function handlePinnedHeader(header) {
+function handlePinnedHeader(header: HTMLElement): void {
     const scroll_coordinates = {
         x: window.pageXOffset,
         y: window.pageYOffset,

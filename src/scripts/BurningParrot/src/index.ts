@@ -18,19 +18,25 @@
  */
 
 import { createPopover } from "tlp";
-import { init as initNavbarDropdown } from "../../navbar-dropdowns/navbar-dropdown.ts";
-import { initSidebarPosition } from "../../tuleap/sidebar-position.ts";
-import { initMainPosition } from "../../tuleap/main-position.ts";
-import { initHeaderPosition } from "../../tuleap/header-position.ts";
-import { init as initNavbarPinned } from "../../tuleap/navbar-pinned.js";
+import { init as initNavbarDropdown } from "../../navbar-dropdowns/navbar-dropdown";
+import { initSidebarPosition } from "../../tuleap/sidebar-position";
+import { initMainPosition } from "../../tuleap/main-position";
+import { initHeaderPosition } from "../../tuleap/header-position";
+import { init as initNavbarPinned } from "../../tuleap/navbar-pinned";
 import { init as initSidebar } from "./sidebar";
-import { init as initScrollbar } from "./scrollbar.js";
+import { init as initScrollbar } from "./scrollbar";
 import { init as initProjectFlags } from "./project-flags";
 import { init as initProjectPrivacy } from "./project-privacy";
 import { initHelpDropdown } from "./help-dropdown";
 import { init as initInviteBuddies } from "./invite-buddies";
-import * as autocomplete from "../../tuleap/autocomplete-for-select2.js";
-import "../../global-shortcuts/index.ts";
+import * as autocomplete from "../../tuleap/autocomplete-for-select2";
+import "../../global-shortcuts/index";
+
+declare global {
+    interface Window {
+        tuleap: unknown;
+    }
+}
 
 document.addEventListener("DOMContentLoaded", () => {
     const sidebar = document.querySelector(".sidebar");

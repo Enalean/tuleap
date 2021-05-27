@@ -4,10 +4,6 @@
         "chart-builders": {
             "src": "src/scripts/charts-builders",
             "po": "src/scripts/charts-builders/po"
-        },
-        "burning-parrot": {
-            "src": "src/scripts/BurningParrot/src",
-            "po": "src/scripts/BurningParrot/po"
         }
     },
     "gettext-ts": {
