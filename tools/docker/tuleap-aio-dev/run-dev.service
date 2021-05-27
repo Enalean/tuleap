@@ -1,0 +1,16 @@
+[Unit]
+Description=Run Tuleap dev
+After=network.target
+After=network-online.target
+After=default.target
+
+[Service]
+User=root
+Type=oneshot
+StandardOutput=journal+console
+ExecStart=/usr/share/tuleap/tools/docker/tuleap-aio-dev/run.sh
+EnvironmentFile=/root/.tuleap_env
+PassEnvironment=PHP_VERSION
+
+[Install]
+WantedBy=default.target

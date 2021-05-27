@@ -12,7 +12,7 @@ services:
       - backend-svn
 
   backend-web:
-    image: ${DOCKER_REGISTRY:-docker.io}/enalean/tuleap-aio-dev:c7-php74-nginx
+    image: ${DOCKER_REGISTRY:-docker.io}/enalean/tuleap-aio-dev:c7-php74-nginx-v2
     environment:
       RUN_COMMAND: "/opt/remi/php74/root/usr/bin/php /usr/share/tuleap/tools/distlp/backend-web/run.php"
     volumes:
