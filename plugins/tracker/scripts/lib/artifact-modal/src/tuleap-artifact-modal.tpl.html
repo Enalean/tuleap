@@ -67,46 +67,12 @@
 </script>
 
 <script type="text/ng-template" id="field-rb.tpl.html">
-<div class="tlp-form-element" data-test="radiobutton-field">
-    <label class="tlp-label">
-        {{ field.label }}
-        <i ng-if="field.required" class="fa fa-asterisk"></i>
-    </label>
-
-    <label for="{{ 'rb_' + field.field_id + '_100' }}"
-        class="tlp-label tlp-radio"
-        ng-if="! field.required"
-        data-test="radiobutton-field-value"
-    >
-        <input type="radio"
-            ng-model="modal.values[field.field_id].bind_value_ids[0]"
-            name="{{ field.name }}"
-            ng-value="100"
-            ng-required="{{ field.required }}"
-            ng-disabled="modal.isDisabled(field)"
-            id="{{ 'rb_' + field.field_id + '_100' }}"
-            data-test="radiobutton-field-input"
-        >
-        <span translate>None</span>
-    </label>
-
-    <label ng-repeat="field_value in field.values"
-        for="{{ 'rb_' + field.field_id + '_' + field_value.id }}"
-        class="tlp-label tlp-radio"
-        data-test="radiobutton-field-value"
-    >
-        <input type="radio"
-            ng-model="modal.values[field.field_id].bind_value_ids[0]"
-            name="{{ field.name }}"
-            ng-value="{{ field_value.id }}"
-            ng-required="{{ field.required }}"
-            ng-disabled="modal.isDisabled(field)"
-            id="{{ 'rb_' + field.field_id + '_' + field_value.id }}"
-            data-test="radiobutton-field-input"
-        >
-        {{ field_value.label }}
-    </label>
-</div>
+<tuleap-artifact-modal-radio-button-field
+    class="field"
+    field="field"
+    is-disabled="modal.isDisabled(field)"
+    value-model="modal.values[field.field_id]"
+></tuleap-artifact-modal-radio-button-field>
 </script>
 
 <script type="text/ng-template" id="field-cb.tpl.html">

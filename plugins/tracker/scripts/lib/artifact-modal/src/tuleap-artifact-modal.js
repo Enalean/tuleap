@@ -53,6 +53,7 @@ import QuotaDisplayDirective from "./quota-display/quota-display-directive.js";
 import HighlightDirective from "./tuleap-highlight/highlight-directive.js";
 import ListPickerDirective from "./fields/list-picker-field/list-picker-field-directive.js";
 import ListPickerMultipleDirective from "./fields/list-picker-multiple-field/list-picker-mulitple-field-directive.js";
+import RadioButtonFieldComponent from "./fields/radio-button-field/radio-button-field-component.js";
 
 export default angular
     .module("tuleap.artifact-modal", [
@@ -92,6 +93,7 @@ export default angular
     .directive("tuleapHighlightDirective", HighlightDirective)
     .directive("tuleapArtifactModalListPickerField", ListPickerDirective)
     .directive("tuleapArtifactModalListPickerMultipleField", ListPickerMultipleDirective)
+    .component("tuleapArtifactModalRadioButtonField", RadioButtonFieldComponent)
     .service("NewTuleapArtifactModalService", ArtifactModalService)
     .value("TuleapArtifactModalLoading", {
         loading: false,
