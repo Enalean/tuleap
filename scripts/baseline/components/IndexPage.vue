@@ -27,7 +27,10 @@
                         <span v-translate>your baselines</span>
                         <span
                             v-if="baselines !== null"
-                            class="tlp-badge-secondary tlp-badge-outline tlp-tooltip tlp-tooltip-right baselines-count"
+                            class="
+                                tlp-badge-secondary tlp-badge-outline tlp-tooltip tlp-tooltip-right
+                                baselines-count
+                            "
                             v-bind:data-tlp-tooltip="baselines_tooltip"
                         >
                             {{ baselines.length }}
@@ -61,7 +64,10 @@
                         <span v-translate>Comparisons</span>
                         <span
                             v-if="comparisons !== null"
-                            class="tlp-badge-secondary tlp-badge-outline tlp-tooltip tlp-tooltip-right comparisons-count"
+                            class="
+                                tlp-badge-secondary tlp-badge-outline tlp-tooltip tlp-tooltip-right
+                                comparisons-count
+                            "
                             v-bind:data-tlp-tooltip="comparisons_tooltip"
                         >
                             {{ comparisons.length }}
