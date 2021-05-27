@@ -60,7 +60,7 @@ kbd {
     display: inline-block;
     padding: 2px $tlp-small-spacing;
     border-radius: 4px;
-    background: $sidebar-background;
+    background: var(--tlp-theme-dark-background-color);
     color: $white;
     font-family: -apple-system, BlinkMacSystemFont, Roboto, 'Helvetica Neue',sans-serif;
     font-size: .875rem;
@@ -186,7 +186,7 @@ legend {
         border-top: 1px solid transparent;
         border-right: 0;
         border-left: 0;
-        box-shadow: inset 0 -2px 0 $navbar-color;
+        box-shadow: inset 0 -2px 0 var(--tlp-theme-color);
     }
 
     > li > a {
@@ -209,30 +209,30 @@ legend {
         border-right: 0;
         border-left: 0;
         background-color: transparent;
-        color: $navbar-color;
+        color: var(--tlp-theme-color);
 
         > .caret {
-            border-top-color: $navbar-color;
-            border-bottom-color: $navbar-color;
+            border-top-color: var(--tlp-theme-color);
+            border-bottom-color: var(--tlp-theme-color);
         }
     }
 
     /* stylelint-disable selector-no-qualifying-type */
     li.active {
         > a {
-            border-bottom: 2px solid $navbar-color;
-            color: $navbar-color;
+            border-bottom: 2px solid var(--tlp-theme-color);
+            color: var(--tlp-theme-color);
 
             > .caret {
-                border-top-color: $navbar-color;
-                border-bottom-color: $navbar-color;
+                border-top-color: var(--tlp-theme-color);
+                border-bottom-color: var(--tlp-theme-color);
             }
         }
     }
     /* stylelint-enable */
 
     a.active { /* stylelint-disable-line selector-no-qualifying-type */
-        border-bottom-color: $navbar-color;
+        border-bottom-color: var(--tlp-theme-color);
     }
 
     .dropdown-toggle {
@@ -264,8 +264,8 @@ legend {
 .nav li.dropdown.open .caret,
 .nav li.dropdown.open.active .caret,
 .nav li.dropdown.open a:hover .caret {
-    border-top-color: $navbar-color;
-    border-bottom-color: $navbar-color;
+    border-top-color: var(--tlp-theme-color);
+    border-bottom-color: var(--tlp-theme-color);
 }
 
 .nav > li.dropdown.open {
@@ -274,7 +274,7 @@ legend {
         a:focus {
             border-color: transparent;
             background-color: transparent;
-            color: $navbar-color;
+            color: var(--tlp-theme-color);
         }
     }
 
@@ -286,14 +286,14 @@ legend {
 
         a {
             padding: 10px 20px;
-            color: $navbar-color;
+            color: var(--tlp-theme-color);
             line-height: 14px;
 
             &:hover,
             &:focus {
                 border-color: transparent;
                 background: #f3f3f3;
-                color: $navbar-color;
+                color: var(--tlp-theme-color);
             }
 
             &.text-error {
@@ -317,8 +317,8 @@ legend {
  * BUTTONS
  ************/
 
-@mixin btn($background-color, $color) {
-    padding: 9px $tlp-medium-spacing; // match TLP buttons
+@mixin btn($background-color, $background-color-disabled, $background-color-active, $color) {
+    padding: 9px var(--tlp-medium-spacing); // match TLP buttons
     border-color: $background-color;
     outline: none;
     background: $background-color;
@@ -331,7 +331,7 @@ legend {
     }
 
     &.btn-large {
-        padding: 11px $tlp-large-spacing; // match TLP buttons
+        padding: 11px var(--tlp-large-spacing); // match TLP buttons
         font-size: 1.25rem;
         line-height: 1.5rem;
 
@@ -342,7 +342,7 @@ legend {
 
 
     &.btn-small {
-        padding: 3px $tlp-medium-spacing; // match TLP buttons
+        padding: 3px var(--tlp-medium-spacing); // match TLP buttons
         font-size: .75rem;
         line-height: 1.5rem;
 
@@ -352,7 +352,7 @@ legend {
     }
 
     &.btn-mini {
-        padding: 2px $tlp-small-spacing; // match TLP buttons
+        padding: 2px var(--tlp-small-spacing); // match TLP buttons
         font-size: .75rem;
         line-height: 1.15rem;
     }
@@ -360,14 +360,14 @@ legend {
     &:disabled,
     &.disabled {
         border-color: transparent;
-        background: transparentize($background-color, .4);
+        background: $background-color-disabled;
         box-shadow: none;
         cursor: not-allowed;
     }
 
     &.active:not(.disabled):not(:disabled) {
-        border-color: darken($background-color, 10%);
-        background: darken($background-color, 10%);
+        border-color: $background-color-active;
+        background: $background-color-active;
     }
 
     > i {
@@ -377,8 +377,8 @@ legend {
 
 @mixin btn-hover($color) {
     transition: box-shadow 75ms ease-in-out,background 75ms ease-in-out,border-color 75ms ease-in-out;
-    border-color: darken($color, 5%);
-    background: darken($color, 5%);
+    border-color: $color;
+    background: $color;
     box-shadow: none;
 }
 
@@ -400,16 +400,16 @@ legend {
 
 .btn-group {
     .btn-primary + .dropdown-menu > li {
-        @include dropdown-menu($main);
+        @include dropdown-menu(var(--tlp-theme-color));
     }
 
     /* stylelint-disable selector-no-qualifying-type */
     > .dropdown-menu > li {
-        @include dropdown-menu($main);
+        @include dropdown-menu(var(--tlp-theme-color));
 
         &.dropdown-submenu {
             > .dropdown-menu > li {
-                @include dropdown-menu($main);
+                @include dropdown-menu(var(--tlp-theme-color));
             }
 
             &:hover > a,
@@ -427,49 +427,79 @@ legend {
 }
 
 .btn:not(.btn-link) {
-    @include btn($ui-border-light, $sidebar-background);
+    @include btn(
+        var(--tlp-ui-border-light),
+        var(--tlp-ui-border-light-transparent-40),
+        var(--tlp-ui-border-light-darker-10),
+        var(--tlp-theme-dark-background-color)
+    );
 
     &.btn-primary {
-        @include btn($main, $white);
+        @include btn(
+            var(--tlp-theme-color),
+            var(--tlp-theme-color-transparent-40),
+            var(--tlp-theme-color-darker-10),
+            var(--tlp-ui-white)
+        );
     }
 
     &.btn-danger {
-        @include btn($tlp-ui-danger, $white);
+        @include btn(
+            var(--tlp-ui-danger),
+            var(--tlp-ui-danger-color-transparent-40),
+            var(--tlp-ui-danger-darker-10),
+            var(--tlp-ui-white)
+        );
     }
 
     &.btn-success {
-        @include btn($tlp-ui-success, $white);
+        @include btn(
+            var(--tlp-ui-success),
+            var(--tlp-ui-success-transparent-40),
+            var(--tlp-ui-success-darker-10),
+            var(--tlp-ui-white)
+        );
     }
 
     &.btn-warning {
-        @include btn($tlp-ui-warning, $white);
+        @include btn(
+            var(--tlp-ui-warning),
+            var(--tlp-ui-warning-transparent-40),
+            var(--tlp-ui-warning-darker-10),
+            var(--tlp-ui-white)
+        );
     }
 
     &.btn-info {
-        @include btn($tlp-ui-info, $white);
+        @include btn(
+            var(--tlp-ui-info),
+            var(--tlp-ui-info-transparent-40),
+            var(--tlp-ui-info-darker-10),
+            var(--tlp-ui-white)
+        );
     }
 
     &:hover:not(:disabled):not(.disabled):not(.active) {
-        @include btn-hover($ui-border-light);
+        @include btn-hover(var(--tlp-ui-border-light-darker-05));
 
         &.btn-primary {
-            @include btn-hover($main);
+            @include btn-hover(var(--tlp-theme-color-darker-05));
         }
 
         &.btn-danger {
-            @include btn-hover($tlp-ui-danger);
+            @include btn-hover(var(--tlp-ui-danger-darker-05));
         }
 
         &.btn-success {
-            @include btn-hover($tlp-ui-success);
+            @include btn-hover(var(--tlp-ui-success-darker-05));
         }
 
         &.btn-warning {
-            @include btn-hover($tlp-ui-warning);
+            @include btn-hover(var(--tlp-ui-warning-darker-05));
         }
 
         &.btn-info {
-            @include btn-hover($tlp-ui-info);
+            @include btn-hover(var(--tlp-ui-info-darker-05));
         }
     }
 }
@@ -517,11 +547,11 @@ legend {
     border-bottom: 0;
     border-top-left-radius: 3px;
     border-top-right-radius: 3px;
-    background: $main;
-    color: $white;
+    background: var(--tlp-theme-color);
+    color: var(--tlp-ui-white);
 
     &.modal-header-error {
-        background: $tlp-ui-danger;
+        background: var(--tlp-ui-danger);
     }
 
     i {
@@ -596,11 +626,11 @@ legend {
  */
 %tlp-table-th {
     padding: 10px;
-    color: $main;
+    color: var(--tlp-theme-color);
     font-weight: 600;
 
     > a {
-        color: $main;
+        color: var(--tlp-theme-color);
         text-decoration: none;
     }
 }
@@ -609,7 +639,7 @@ legend {
     > thead > tr > th {
         @extend %tlp-table-th;
 
-        border-bottom: 2px solid $main;
+        border-bottom: 2px solid var(--tlp-theme-color);
     }
 
     > .table-sticky-header > tr > th {
@@ -618,13 +648,13 @@ legend {
         border-bottom: 0;
         background: $white;
         background-clip: padding-box;
-        box-shadow: inset 0 -2px 0 0 $main;
+        box-shadow: inset 0 -2px 0 0 var(--tlp-theme-color);
     }
 
     > tfoot > tr > th {
         @extend %tlp-table-th;
 
-        border-top: 2px solid $main;
+        border-top: 2px solid var(--tlp-theme-color);
     }
 
     > tbody {
@@ -641,7 +671,7 @@ legend {
         }
 
         > tr:hover > td {
-            background: transparentize($main, .93);
+            background: var(--tlp-theme-color-transparent-90);
         }
 
         /* stylelint-disable selector-no-qualifying-type */
@@ -653,8 +683,8 @@ legend {
 
             &.table-cell-section {
                 padding: 5px 10px;
-                background: $main-background;
-                color: $main;
+                background: var(--tlp-theme-background-color);
+                color: var(--tlp-theme-color);
                 font-size: 11px;
                 font-weight: 600;
                 letter-spacing: .3px;
@@ -664,7 +694,7 @@ legend {
             &.table-cell-empty {
                 height: 100px;
                 background: #fcfcfc;
-                color: transparentize($main, .7);
+                color: var(--tlp-theme-color-transparent-70);
                 font-style: italic;
                 text-align: center;
                 vertical-align: middle;

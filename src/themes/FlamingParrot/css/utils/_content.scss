@@ -16,8 +16,8 @@
         margin: 0;
         padding: $tlp-medium-spacing $tlp-medium-spacing 0;
         border: 0;
-        border-bottom: 1px solid darken($main-background, 5%);
-        background: $main-background;
+        border-bottom: 1px solid var(--tlp-theme-background-color-darker-05);
+        background: var(--tlp-theme-background-color);
         font-size: 13px;
 
         li > a {

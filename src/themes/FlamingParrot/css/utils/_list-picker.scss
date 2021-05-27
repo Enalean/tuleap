@@ -19,7 +19,7 @@
 
 @import '~@tuleap/list-picker';
 
-$form-element-border-color: darken($ui-border-dark, 5%);
+$form-element-border-color: var(--tlp-ui-border-dark-darker-05);
 $form-element-padding-horizontal: 12px;
 $form-element-select-background-size: 8px;
 $form-element-height: 40px;
@@ -53,7 +53,7 @@ $form-element-small-font-size: .8125rem;
 
     &.list-picker-with-open-dropdown .list-picker-selection {
         border-radius: 4px 4px 0 0;
-        border-color: $main;
+        border-color: var(--tlp-theme-color);
     }
 
     &.list-picker-with-open-dropdown {
@@ -93,13 +93,13 @@ $form-element-small-font-size: .8125rem;
     z-index: 2002;
     box-sizing: border-box;
     padding: 0;
-    border-right: 1px solid $main;
-    border-bottom: 1px solid $main;
-    border-left: 1px solid $main;
+    border-right: 1px solid var(--tlp-theme-color);
+    border-bottom: 1px solid var(--tlp-theme-color);
+    border-left: 1px solid var(--tlp-theme-color);
     box-shadow: 0 6px 12px rgba(0, 0, 0, .175);
 
     &.list-picker-dropdown-above {
-        border-top: 1px solid $main;
+        border-top: 1px solid var(--tlp-theme-color);
         border-bottom: unset;
         box-shadow: 0 0 12px rgba(0, 0, 0, .175);
     }
@@ -107,7 +107,7 @@ $form-element-small-font-size: .8125rem;
 
 .list-picker-dropdown-option-value {
     &.list-picker-item-highlighted {
-        background-color: $main;
+        background-color: var(--tlp-theme-color);
         color: $white;
     }
 
@@ -124,7 +124,7 @@ $form-element-small-font-size: .8125rem;
     &[aria-selected='true'] {
         position: relative;
         padding: 6px 12px 6px 32px;
-        color: $main;
+        color: var(--tlp-theme-color);
 
         &.list-picker-item-highlighted {
             color: $white;
@@ -138,10 +138,10 @@ $form-element-small-font-size: .8125rem;
     align-items: center;
     margin: 5px 5px 0 0;
     padding: 5px 8px;
-    border: 1px solid transparentize($main, .4);
+    border: 1px solid var(--tlp-theme-color-transparent-50);
     border-radius: 15px;
-    background: transparentize($main, .9);
-    color: $main;
+    background: var(--tlp-theme-color-transparent-90);
+    color: var(--tlp-theme-color);
     font-size: .75rem;
     font-weight: 600;
     line-height: .75rem;
@@ -189,21 +189,21 @@ $form-element-small-font-size: .8125rem;
         padding: 0 4px;
 
         &:focus {
-            border-color: $main;
+            border-color: var(--tlp-theme-color);
         }
     }
 }
 
 .list-picker-empty-dropdown-state {
     padding: $form-element-padding-horizontal;
-    color: $ui-dimmed;
+    color: var(--ui-dimmed);
     font-size: $form-element-small-font-size;
     line-height: normal;
 }
 
 .list-picker-group-label {
     padding: 6px $form-element-padding-horizontal;
-    color: $ui-dimmed;
+    color: var(--ui-dimmed);
     font-size: $form-element-small-font-size;
     font-weight: 600;
     line-height: 30px;

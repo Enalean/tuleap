@@ -20,20 +20,20 @@
 $step-transition-duration: 75ms;
 
 $step-background: $white;
-$step-color: $sidebar-background;
-$step-active-color: $main;
-$step-active-background: transparentize($main, .9);
+$step-color: var(--tlp-theme-dark-background-color);
+$step-active-color: var(--tlp-theme-color);
+$step-active-background: var(--tlp-theme-color-transparent-90);
 
 $switch-menu-background: $white;
-$switch-menu-item-color: $main;
-$switch-menu-item-hover-background: transparentize($main, .93);
-$switch-menu-item-hover-color: $main;
+$switch-menu-item-color: var(--tlp-theme-color);
+$switch-menu-item-hover-background: var(--tlp-theme-color-transparent-90);
+$switch-menu-item-hover-color: var(--tlp-theme-color);
 
 .breadcrumb-container {
     display: flex;
     align-items: center;
     padding: $tlp-medium-spacing;
-    background: $main-background;
+    background: var(--tlp-theme-background-color);
 }
 
 .breadcrumb {
@@ -136,7 +136,7 @@ $switch-menu-item-hover-color: $main;
 .breadcrumb-switch-menu {
     border-radius: 4px;
     background: $switch-menu-background;
-    box-shadow: 0 0 0 1px transparentize($sidebar-background, .97), 0 6px 12px -5px transparentize($sidebar-background, .85);
+    box-shadow: 0 0 0 1px var(--tlp-theme-dark-background-color-transparent-90), 0 6px 12px -5px var(--tlp-theme-dark-background-color-transparent-85);
 }
 
 .breadcrumb-dropdown-item {
@@ -220,13 +220,13 @@ $switch-menu-item-hover-color: $main;
 
     &.fa-lock,
     &.fa-tlp-lock-plus-r {
-        background: $main;
+        background: var(--tlp-theme-color);
     }
 
     &.fa-lock-open,
     &.fa-tlp-unlock-plus-r {
-        background: transparentize($sidebar-background, .9);
-        color: transparentize($sidebar-background, .2);
+        background: var(--tlp-theme-dark-background-color-transparent-90);
+        color: var(--tlp-theme-dark-background-color-transparent-30);
     }
 }
 
@@ -240,21 +240,21 @@ $switch-menu-item-hover-color: $main;
 
     &[data-privacy-icon='fa-lock'],
     &[data-privacy-icon='fa-tlp-lock-plus-r'] {
-        background: transparentize($main, .9);
-        color: darken($main, 3%);
+        background: var(--tlp-theme-color-transparent-90);
+        color: var(--tlp-theme-color-darker-03);
 
         > .fas {
-            color: darken($main, 3%);
+            color: var(--tlp-theme-color-darker-03);
         }
     }
 
     &[data-privacy-icon='fa-lock-open'],
     &[data-privacy-icon='fa-tlp-unlock-plus-r'] {
-        background: transparentize($sidebar-background, .9);
-        color: transparentize($sidebar-background, .2);
+        background: var(--tlp-theme-dark-background-color-transparent-90);
+        color: var(--tlp-theme-dark-background-color-transparent-30);
 
         > .fas {
-            color: transparentize($sidebar-background, .2);
+            color: var(--tlp-theme-dark-background-color-transparent-30);
         }
     }
 

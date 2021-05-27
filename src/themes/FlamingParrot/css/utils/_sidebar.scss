@@ -28,7 +28,7 @@
     max-width: $sidebar-width;
     height: 100vh;
     overflow: hidden;
-    background: $sidebar-background;
+    background: var(--tlp-theme-dark-background-color);
     @media screen and (max-width: 880px) {
         padding: $navbar-height 0 0;
     }
@@ -40,7 +40,7 @@
     .jspDrag {
         width: 9px;
         border-radius: 0;
-        background: lighten($sidebar-background, 13%);
+        background: var(--tlp-theme-dark-background-color-lighter-10);
     }
 
     .jspPane {
@@ -69,8 +69,8 @@
     .nav-list > .active > a,
     .nav-list > .active > a:hover,
     .nav-list > .active > a:focus {
-        border-left: 3px solid $main;
-        background: darken($sidebar-background, 2%);
+        border-left: 3px solid var(--tlp-theme-color);
+        background: var(--tlp-theme-dark-background-color-darker-05);
         color: lighten($grey, 25%);
         font-weight: normal;
 
@@ -84,14 +84,14 @@
             transform: translateY(-50%);
             border-width: 10px 10px 10px 0;
             border-style: solid;
-            border-color: transparent $main-background transparent transparent;
+            border-color: transparent var(--tlp-theme-background-color) transparent transparent;
         }
     }
 
     .nav > li > a:hover,
     .nav > li > a:focus {
         border-left: 3px solid transparent;
-        background: darken($sidebar-background, 2%);
+        background: var(--tlp-theme-dark-background-color-darker-05);
     }
 
     .project-sidebar-nav-item-new-tab {
@@ -118,7 +118,7 @@
         margin: 20px auto;
         padding: 8px 2px 0 0;
         border-radius: 50%;
-        background: darken($sidebar-background, 2%);
+        background: var(--tlp-theme-dark-background-color-darker-05);
         color: transparentize(#ffffff, .3);
         font-size: 1em;
         text-align: center;
@@ -129,7 +129,7 @@
         }
 
         &:hover {
-            background: darken($sidebar-background, 4%);
+            background: var(--tlp-theme-dark-background-color-darker-05);
             color: lighten($grey, 10%);
         }
     }
@@ -155,7 +155,7 @@
 
         > .sidebar-about-logo > .tuleap-logo,
         > .sidebar-about-logo-without-product-name > .tuleap-logo {
-            fill: lighten($main-color-tuleap-orange, 5%);
+            fill: var(--tlp-theme-orange-lighter-05);
         }
     }
 
@@ -169,7 +169,7 @@
 
         > .tuleap-logo {
             transition: fill 100ms;
-            fill: $main-color-tuleap-orange;
+            fill: var(--tlp-theme-orange);
         }
     }
 
@@ -244,7 +244,7 @@
     text-decoration: none;
 
     &:hover {
-        background: darken($sidebar-background, 5%);
+        background: var(--tlp-theme-dark-background-color-darker-05);
     }
 
     > .fas {
@@ -263,13 +263,13 @@
 
         &.fa-lock,
         &.fa-tlp-lock-plus-r {
-            background: $main;
+            background: var(--tlp-theme-color);
             text-shadow: 0 0 1px rgba(0, 0, 0, .2);
         }
 
         &.fa-lock-open,
         &.fa-tlp-unlock-plus-r {
-            background: darken($sidebar-background, 5%);
+            background: var(--tlp-theme-dark-background-color-darker-05);
         }
 
         &.fa-tlp-lock-plus-r,
@@ -316,13 +316,13 @@
         width: 24px;
         height: 24px;
         border-radius: 50%;
-        background: $ui-dimmed;
+        background: var(--tlp-ui-dimmed);
 
         > .tuleap-svg {
             height: 12px;
 
             > path {
-                fill: $ui-border-normal;
+                fill: var(--tlp-ui-border-normal);
             }
         }
     }

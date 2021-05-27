@@ -22,220 +22,219 @@
 @import '~@tuleap/mention';
 @import '~@tuleap/plugin-tracker-rich-text-editor';
 
-@mixin definitions($main, $main-background, $tlp-ui-danger, $tlp-ui-warning, $tlp-ui-info, $tlp-ui-dimmed, $tlp-ui-border-normal, $tlp-ui-white) {
-    /* stylelint-disable-next-line selector-class-pattern,selector-id-pattern */
-    .widget_content #tracker_report_table > thead > tr > th {
-        border-bottom-color: #b2b2b2;
+/* stylelint-disable-next-line selector-class-pattern,selector-id-pattern */
+.widget_content #tracker_report_table > thead > tr > th {
+    border-bottom-color: #b2b2b2;
+}
+
+.tracker-report-query {
+    border-top: 2px solid var(--tlp-theme-color);
+    border-bottom: 1px solid var(--tlp-theme-background-color-darker-05);
+    background: var(--tlp-theme-background-color);
+}
+
+/* stylelint-disable-next-line selector-class-pattern */
+.tracker_artifact_fieldset legend {
+    color: var(--tlp-theme-color);
+
+    &.toggler-noajax { /* stylelint-disable-line selector-no-qualifying-type */
+        border-bottom: 2px solid var(--tlp-theme-color);
+    }
+}
+
+.format-warning {
+    color: var(--tlp-theme-color);
+}
+
+/* stylelint-disable-next-line selector-id-pattern */
+#tracker_artifact_followup_comments {
+    position: absolute;
+    -moz-box-sizing: initial; /* stylelint-disable-line property-no-vendor-prefix */
+    box-sizing: initial;
+    width: 100%;
+}
+
+/* stylelint-disable-next-line selector-class-pattern */
+.table.tracker_report_table {
+    thead:first-child > tr:first-child > th,
+    > thead > tr > th,
+    > tbody > tr > td {
+        border-top-color: var(--tlp-theme-background-color-darker-05);
+        border-right-color: var(--tlp-theme-background-color-darker-05);
+        border-left-color: var(--tlp-theme-background-color-darker-05);
     }
 
-    .tracker-report-query {
-        border-top: 2px solid $main;
-        border-bottom: 1px solid darken($main-background, 5%);
-        background: $main-background;
+    > tbody > tr:last-child > td {
+        border-color: var(--tlp-theme-background-color-darker-05) !important;
+    }
+
+    > thead > tr > th.drop-over { /* stylelint-disable-line selector-no-qualifying-type */
+        background: var(--tlp-theme-background-color);
+    }
+
+    > thead > tr > th > table > tbody > tr > td > a { /* stylelint-disable-line selector-max-compound-selectors */
+        color: var(--tlp-theme-color);
     }
 
     /* stylelint-disable-next-line selector-class-pattern */
-    .tracker_artifact_fieldset legend {
-        color: $main;
+    > tbody > tr.tracker_report_table_aggregates > td { /* stylelint-disable-line selector-no-qualifying-type */
+        > table {
+            /* stylelint-disable selector-max-compound-selectors */
+            > thead > tr > th,
+            > thead:first-child > tr:first-child > th {
+                border-left-color: var(--tlp-theme-background-color-darker-05);
+                background: var(--tlp-theme-background-color);
+            }
 
-        &.toggler-noajax { /* stylelint-disable-line selector-no-qualifying-type */
-            border-bottom: 2px solid $main;
+            > tbody > tr > td {
+                border-color: var(--tlp-theme-background-color-darker-05);
+            }
+            /* stylelint-enable selector-max-compound-selectors */
         }
     }
+}
 
-    .format-warning {
-        color: $main;
+/* stylelint-disable-next-line selector-class-pattern */
+.tracker_artifact_followup-with_comment {
+    border-left: 3px solid var(--tlp-theme-color);
+}
+
+.card-details .avatar {
+    display: inline-block;
+    position: relative;
+    top: -2px;
+    left: 1px;
+    width: 25px;
+    height: 25px;
+    border: 0;
+}
+
+.card-details .avatar > img {
+    width: 25px;
+    height: 25px;
+}
+
+.modal-header-with-side-panels {
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+}
+
+.modal-header-side-panel {
+    justify-content: center;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+}
+
+.tracker-action-button > svg {
+    margin: 0 5px 0 2px;
+
+    path {
+        fill: var(--tlp-theme-color);
     }
+}
 
-    /* stylelint-disable-next-line selector-id-pattern */
-    #tracker_artifact_followup_comments {
-        position: absolute;
-        -moz-box-sizing: initial; /* stylelint-disable-line property-no-vendor-prefix */
-        box-sizing: initial;
+.alert-error.move-artifact-error {
+    margin: 15px;
+}
+
+.move-artifact-display-more-field-not-migrated {
+    color: var(--tlp-ui-danger);
+}
+
+.move-artifact-display-more-field-partially-migrated {
+    color: var(--tlp-ui-warning-darker-10);
+}
+
+.move-artifact-display-more-field-fully-migrated {
+    color: var(--tlp-ui-info-darker-30);
+}
+
+.tracker-form-element-artifactlink-section-loading {
+    margin: 0 0 0 20px;
+}
+
+.tracker-admin-permissions-per-field > tbody > tr:first-child:hover > td:first-child {
+    background: #ffffff;
+}
+
+.tracker-administration-content {
+    margin: 20px;
+}
+
+#tracker-settings {
+    padding: 0 0 150px;
+}
+
+.tracker-form-element-artifactlink-list-nav {
+    min-height: 0;
+}
+
+/* stylelint-disable selector-no-qualifying-type */
+body.tracker-administration {
+    background: var(--tlp-theme-background-color);
+
+    .main {
+        #feedback > ul {
+            margin: 0 20px 20px;
+        }
+
+        .content {
+            padding: 0;
+        }
+    }
+}
+/* stylelint-enable */
+
+
+.tracker-cross-reference-delete-link {
+    color: var(--tlp-ui-dimmed);
+
+    &:focus,
+    &:hover {
+        color: var(--tlp-theme-color);
+    }
+}
+
+.tracker-cross-reference-card-deletable.tlp-card-selectable {
+    $room-for-trash-icon: $tlp-medium-spacing + 12px;
+
+    padding: var(--tlp-medium-spacing) calc(var(--tlp-medium-spacing) + #{$room-for-trash-icon}) var(--tlp-medium-spacing) var(--tlp-medium-spacing);
+}
+
+.tracker-cross-reference-creation-metadata {
+    display: flex;
+    align-items: center;
+    color: var(--tlp-ui-dimmed);
+    font-size: .75rem;
+    line-height: 1.375rem;
+}
+
+.tracker-cross-reference-created-by-tlp-avatar-mini {
+    display: inline-block;
+    flex: 0 0 auto;
+    width: 20px;
+    height: 20px;
+    margin: 0 6px 0 0;
+    overflow: hidden;
+    border-radius: 50%;
+    background: var(--tlp-ui-border-normal) url('../../../../../src/themes/tlp/src/images/tlp-default-avatar.svg') no-repeat center center;
+    background-size: contain;
+    vertical-align: top;
+
+    > img {
         width: 100%;
-    }
-
-    /* stylelint-disable-next-line selector-class-pattern */
-    .table.tracker_report_table {
-        thead:first-child > tr:first-child > th,
-        > thead > tr > th,
-        > tbody > tr > td {
-            border-top-color: darken($main-background, 5%);
-            border-right-color: darken($main-background, 5%);
-            border-left-color: darken($main-background, 5%);
-        }
-
-        > tbody > tr:last-child > td {
-            border-color: darken($main-background, 5%) !important;
-        }
-
-        > thead > tr > th.drop-over { /* stylelint-disable-line selector-no-qualifying-type */
-            background: $main-background;
-        }
-
-        > thead > tr > th > table > tbody > tr > td > a { /* stylelint-disable-line selector-max-compound-selectors */
-            color: $main;
-        }
-
-        /* stylelint-disable-next-line selector-class-pattern */
-        > tbody > tr.tracker_report_table_aggregates > td { /* stylelint-disable-line selector-no-qualifying-type */
-            > table {
-                /* stylelint-disable selector-max-compound-selectors */
-                > thead > tr > th,
-                > thead:first-child > tr:first-child > th {
-                    border-left-color: darken($main-background, 5%);
-                    background: $main-background;
-                }
-
-                > tbody > tr > td {
-                    border-color: darken($main-background, 5%);
-                }
-                /* stylelint-enable selector-max-compound-selectors */
-            }
-        }
-    }
-
-    /* stylelint-disable-next-line selector-class-pattern */
-    .tracker_artifact_followup-with_comment {
-        border-left: 3px solid $main;
-    }
-
-    .card-details .avatar {
-        display: inline-block;
-        position: relative;
-        top: -2px;
-        left: 1px;
-        width: 25px;
-        height: 25px;
-        border: 0;
-    }
-
-    .card-details .avatar > img {
-        width: 25px;
-        height: 25px;
-    }
-
-    .modal-header-with-side-panels {
-        border-top-left-radius: 0;
-        border-top-right-radius: 0;
-    }
-
-    .modal-header-side-panel {
-        justify-content: center;
-        border-top-left-radius: 0;
-        border-top-right-radius: 0;
-    }
-
-    .tracker-action-button > svg {
-        margin: 0 5px 0 2px;
-
-        path {
-            fill: $main;
-        }
-    }
-
-    .alert-error.move-artifact-error {
-        margin: 15px;
-    }
-
-    .move-artifact-display-more-field-not-migrated {
-        color: $tlp-ui-danger;
-    }
-
-    .move-artifact-display-more-field-partially-migrated {
-        color: darken($tlp-ui-warning, 10%);
-    }
-
-    .move-artifact-display-more-field-fully-migrated {
-        color: darken($tlp-ui-info, 30%);
-    }
-
-    .tracker-form-element-artifactlink-section-loading {
-        margin: 0 0 0 20px;
-    }
-
-    .tracker-admin-permissions-per-field > tbody > tr:first-child:hover > td:first-child {
-        background: #ffffff;
-    }
-
-    .tracker-administration-content {
-        margin: 20px;
-    }
-
-    #tracker-settings {
-        padding: 0 0 150px;
-    }
-
-    .tracker-form-element-artifactlink-list-nav {
-        min-height: 0;
-    }
-
-    &.tracker-administration {
-        background: $main-background;
-
-        .main {
-            #feedback > ul {
-                margin: 0 20px 20px;
-            }
-
-            .content {
-                padding: 0;
-            }
-        }
-    }
-
-
-    .tracker-cross-reference-delete-link {
-        color: $tlp-ui-dimmed;
-
-        &:focus,
-        &:hover {
-            color: $main;
-        }
-    }
-
-    .tracker-cross-reference-card-deletable.tlp-card-selectable {
-        $room-for-trash-icon: $tlp-medium-spacing + 12px;
-
-        padding: $tlp-medium-spacing ($tlp-medium-spacing + $room-for-trash-icon) $tlp-medium-spacing $tlp-medium-spacing;
-    }
-
-    .tracker-cross-reference-creation-metadata {
-        display: flex;
-        align-items: center;
-        color: $tlp-ui-dimmed;
-        font-size: .75rem;
-        line-height: 1.375rem;
-    }
-
-    .tracker-cross-reference-created-by-tlp-avatar-mini {
-        display: inline-block;
-        flex: 0 0 auto;
-        width: 20px;
-        height: 20px;
-        margin: 0 6px 0 0;
-        overflow: hidden;
-        border-radius: 50%;
-        background: $tlp-ui-border-normal url('../../../../../src/themes/tlp/src/images/tlp-default-avatar.svg') no-repeat center center;
-        background-size: contain;
+        height: 100%;
         vertical-align: top;
-
-        > img {
-            width: 100%;
-            height: 100%;
-            vertical-align: top;
-        }
     }
+}
 
-    .tracker-cross-reference-title-icon {
-        color: $tlp-ui-white;
-    }
+.tracker-cross-reference-title-icon {
+    color: var(--tlp-ui-white);
 }
 
 body {
     &.FlamingParrot_Orange { /* stylelint-disable-line selector-no-qualifying-type, selector-class-pattern */
         @import '../../../../../src/themes/FlamingParrot/css/utils/variables-orange';
-        @include definitions($main, $main-background, $tlp-ui-danger, $tlp-ui-warning, $tlp-ui-info, $tlp-ui-dimmed, $tlp-ui-border-normal, $tlp-ui-white);
         @import '../../../../../src/themes/tlp/src/scss/variables/shadows';
         @import '../../../../../src/themes/tlp/src/scss/components/switch';
         @import '../../../../../src/themes/tlp/src/scss/components/panes';
@@ -246,7 +245,6 @@ body {
 
     &.FlamingParrot_Blue { /* stylelint-disable-line selector-no-qualifying-type, selector-class-pattern */
         @import '../../../../../src/themes/FlamingParrot/css/utils/variables-blue';
-        @include definitions($main, $main-background, $tlp-ui-danger, $tlp-ui-warning, $tlp-ui-info, $tlp-ui-dimmed, $tlp-ui-border-normal, $tlp-ui-white);
         @import '../../../../../src/themes/tlp/src/scss/variables/shadows';
         @import '../../../../../src/themes/tlp/src/scss/components/switch';
         @import '../../../../../src/themes/tlp/src/scss/components/panes';
@@ -257,7 +255,6 @@ body {
 
     &.FlamingParrot_Green { /* stylelint-disable-line selector-no-qualifying-type, selector-class-pattern */
         @import '../../../../../src/themes/FlamingParrot/css/utils/variables-green';
-        @include definitions($main, $main-background, $tlp-ui-danger, $tlp-ui-warning, $tlp-ui-info, $tlp-ui-dimmed, $tlp-ui-border-normal, $tlp-ui-white);
         @import '../../../../../src/themes/tlp/src/scss/variables/shadows';
         @import '../../../../../src/themes/tlp/src/scss/components/switch';
         @import '../../../../../src/themes/tlp/src/scss/components/panes';
@@ -268,7 +265,6 @@ body {
 
     &.FlamingParrot_BlueGrey { /* stylelint-disable-line selector-no-qualifying-type, selector-class-pattern */
         @import '../../../../../src/themes/FlamingParrot/css/utils/variables-bluegrey';
-        @include definitions($main, $main-background, $tlp-ui-danger, $tlp-ui-warning, $tlp-ui-info, $tlp-ui-dimmed, $tlp-ui-border-normal, $tlp-ui-white);
         @import '../../../../../src/themes/tlp/src/scss/variables/shadows';
         @import '../../../../../src/themes/tlp/src/scss/components/switch';
         @import '../../../../../src/themes/tlp/src/scss/components/panes';
@@ -279,7 +275,6 @@ body {
 
     &.FlamingParrot_Purple { /* stylelint-disable-line selector-no-qualifying-type, selector-class-pattern */
         @import '../../../../../src/themes/FlamingParrot/css/utils/variables-purple';
-        @include definitions($main, $main-background, $tlp-ui-danger, $tlp-ui-warning, $tlp-ui-info, $tlp-ui-dimmed, $tlp-ui-border-normal, $tlp-ui-white);
         @import '../../../../../src/themes/tlp/src/scss/variables/shadows';
         @import '../../../../../src/themes/tlp/src/scss/components/switch';
         @import '../../../../../src/themes/tlp/src/scss/components/panes';
@@ -290,7 +285,6 @@ body {
 
     &.FlamingParrot_Red { /* stylelint-disable-line selector-no-qualifying-type, selector-class-pattern */
         @import '../../../../../src/themes/FlamingParrot/css/utils/variables-red';
-        @include definitions($main, $main-background, $tlp-ui-danger, $tlp-ui-warning, $tlp-ui-info, $tlp-ui-dimmed, $tlp-ui-border-normal, $tlp-ui-white);
         @import '../../../../../src/themes/tlp/src/scss/variables/shadows';
         @import '../../../../../src/themes/tlp/src/scss/components/switch';
         @import '../../../../../src/themes/tlp/src/scss/components/panes';

@@ -22,8 +22,8 @@
     padding: 0;
     border: 0;
     border-radius: 4px;
-    background: $sidebar-background;
-    color: $ui-border-dark;
+    background: var(--tlp-theme-dark-background-color);
+    color: var(--tlp-ui-border-dark);
     font-size: .875rem;
     font-weight: normal;
     letter-spacing: normal;
@@ -31,13 +31,13 @@
     text-transform: none;
 
     &.right > .arrow::after {
-        border-right-color: darken($sidebar-background, 5%);
+        border-right-color: var(--tlp-theme-dark-background-color-darker-05);
         border-bottom-color: transparent;
     }
 
     > .arrow {
         &::after {
-            border-bottom-color: darken($sidebar-background, 5%);
+            border-bottom-color: var(--tlp-theme-dark-background-color-darker-05);
         }
 
         + .popover-content {
@@ -51,8 +51,8 @@
         border-bottom: 0;
         border-top-left-radius: $nav-dropdown-content-border-radius;
         border-top-right-radius: $nav-dropdown-content-border-radius;
-        background-color: darken($sidebar-background, 5%);
-        color: $ui-border-light;
+        background-color: var(--tlp-theme-dark-background-color-darker-05);
+        color: var(--tlp-ui-border-light);
         font-size: 1.125rem;
         font-weight: 600;
         letter-spacing: normal;
@@ -64,12 +64,12 @@
         padding: $tlp-medium-spacing;
         border-bottom-right-radius: $nav-dropdown-content-border-radius;
         border-bottom-left-radius: $nav-dropdown-content-border-radius;
-        background: $sidebar-background;
-        color: $ui-border-dark;
+        background: var(--tlp-theme-dark-background-color);
+        color: var(--tlp-ui-border-dark);
 
         .current-project-nav-flag-popover-separator {
             margin: $tlp-medium-spacing (-$tlp-medium-spacing);
-            border-top: 1px solid darken($sidebar-background, 5%);
+            border-top: 1px solid var(--tlp-theme-dark-background-color-darker-05);
             border-bottom: 0;
             background: none;
         }
@@ -78,7 +78,7 @@
             margin: 0 0 $tlp-small-spacing;
             padding: 0;
             border: 0;
-            color: $ui-border-light;
+            color: var(--tlp-ui-border-light);
             font-size: 1.125rem;
             font-weight: 600;
             line-height: 1.625rem;
@@ -107,7 +107,7 @@
             > .fas,
             > .fa {
                 top: 8px;
-                color: $ui-border-light;
+                color: var(--tlp-ui-border-light);
                 font-size: .75rem;
             }
 
@@ -116,7 +116,7 @@
                 width: 12px;
 
                 > path {
-                    fill: $ui-border-light;
+                    fill: var(--tlp-ui-border-light);
                 }
             }
 

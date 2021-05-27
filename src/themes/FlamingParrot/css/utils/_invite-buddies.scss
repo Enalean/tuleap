@@ -21,8 +21,8 @@
     label {
         display: block;
         position: relative;
-        margin: 0 0 $tlp-small-spacing;
-        color: darken($ui-dimmed, 3.5%);
+        margin: 0 0 var(--tlp-small-spacing);
+        color: var(--tlp-label-color);
         font-size: .8125rem;
         font-weight: 500;
     }
@@ -30,7 +30,7 @@
     .fa-asterisk {
         position: absolute;
         margin: 0 0 0 3px;
-        color: $tlp-ui-danger;
+        color: var(--tlp-ui-danger);
         font-size: .6em;
     }
 }
@@ -49,8 +49,8 @@
 
 #invite-buddies-modal-feedback {
     padding: 16px;
-    border-bottom: 1px solid $ui-border-light;
-    background: $white;
+    border-bottom: 1px solid var(--tlp-ui-border-light);
+    background: var(--tlp-ui-white);
 
     &:empty {
         display: none;

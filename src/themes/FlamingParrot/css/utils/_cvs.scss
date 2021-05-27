@@ -22,7 +22,7 @@
 }
 
 .cvs-header {
-    background: $main-background;
+    background: var(--tlp-theme-background-color);
 
     > .administration-title {
         margin: 0;

@@ -62,47 +62,18 @@
     top: var(--tlp-medium-spacing);
     right: var(--tlp-medium-spacing);
     transition: color ease-in-out 150ms;
-}
+    color: var(--tlp-ui-dimmed-transparent-50);
 
-.svn-homepage-create-repository-button {
-    margin: 0 0 0 var(--tlp-medium-spacing);
-}
+    &:hover,
+    &:focus {
+        color: var(--tlp-ui-dimmed);
 
-@mixin definitions-with-theme-colors($tlp-ui-dimmed, $tlp-theme-color) {
-    .svn-homepage-repository-settings {
-        color: transparentize(blue-colors.$tlp-ui-dimmed, .3);
-
-        &:hover,
-        &:focus {
-            color: blue-colors.$tlp-ui-dimmed;
-
-            + .svn-homepage-repository-card {
-                border-color: $tlp-theme-color;
-            }
+        + .svn-homepage-repository-card {
+            border-color: var(--tlp-theme-color);
         }
     }
 }
 
-.theme-blue {
-    @include definitions-with-theme-colors(blue-colors.$tlp-ui-dimmed, blue-colors.$tlp-theme-color);
-}
-
-.theme-green {
-    @include definitions-with-theme-colors(green-colors.$tlp-ui-dimmed, green-colors.$tlp-theme-color);
-}
-
-.theme-grey {
-    @include definitions-with-theme-colors(grey-colors.$tlp-ui-dimmed, grey-colors.$tlp-theme-color);
-}
-
-.theme-orange {
-    @include definitions-with-theme-colors(orange-colors.$tlp-ui-dimmed, orange-colors.$tlp-theme-color);
-}
-
-.theme-purple {
-    @include definitions-with-theme-colors(purple-colors.$tlp-ui-dimmed, purple-colors.$tlp-theme-color);
-}
-
-.theme-red {
-    @include definitions-with-theme-colors(red-colors.$tlp-ui-dimmed, red-colors.$tlp-theme-color);
+.svn-homepage-create-repository-button {
+    margin: 0 0 0 var(--tlp-medium-spacing);
 }
