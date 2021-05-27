@@ -66,21 +66,21 @@ pipeline {
             parallel {
                 stage('UT PHPUnit') {
                     stages {
-                        stage('UT PHPUnit PHP 7.3') { steps { script { actions.runPHPUnitTests('73') } } }
+                        stage('UT PHPUnit PHP 7.4') { steps { script { actions.runPHPUnitTests('74') } } }
                     }
                     post { always { junit 'results/ut-phpunit/*/phpunit_tests_results.xml' } }
                 }
                 stage('REST') {
                     stages {
-                        stage('REST CentOS 6 PHP 7.3 MySQL 5.7') {
-                            steps { script { actions.runRESTTests('mysql57', '73') } }
+                        stage('REST CentOS 6 PHP 7.4 MySQL 5.7') {
+                            steps { script { actions.runRESTTests('mysql57', '74') } }
                         }
                     }
                     post { always { junit 'results/api-rest/*/rest_tests.xml' } }
                 }
                 stage('SOAP') {
                     stages {
-                        stage('SOAP PHP 7.3') { steps { script { actions.runSOAPTests('mysql57', '73') } } }
+                        stage('SOAP PHP 7.4') { steps { script { actions.runSOAPTests('mysql57', '74') } } }
                     }
                     post { always { junit "results/soap/*/soap_tests.xml" } }
                 }
