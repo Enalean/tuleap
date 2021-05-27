@@ -232,64 +232,8 @@ body.tracker-administration {
     color: var(--tlp-ui-white);
 }
 
-body {
-    &.FlamingParrot_Orange { /* stylelint-disable-line selector-no-qualifying-type, selector-class-pattern */
-        @import '../../../../../src/themes/FlamingParrot/css/utils/variables-orange';
-        @import '../../../../../src/themes/tlp/src/scss/variables/shadows';
-        @import '../../../../../src/themes/tlp/src/scss/components/switch';
-        @import '../../../../../src/themes/tlp/src/scss/components/panes';
-        @import '../../../../../src/themes/tlp/src/scss/components/cards';
-        @import '../../../../../src/themes/tlp/src/scss/components/badges';
-        @import '../../../../../src/themes/tlp/src/scss/components/tables';
-    }
-
-    &.FlamingParrot_Blue { /* stylelint-disable-line selector-no-qualifying-type, selector-class-pattern */
-        @import '../../../../../src/themes/FlamingParrot/css/utils/variables-blue';
-        @import '../../../../../src/themes/tlp/src/scss/variables/shadows';
-        @import '../../../../../src/themes/tlp/src/scss/components/switch';
-        @import '../../../../../src/themes/tlp/src/scss/components/panes';
-        @import '../../../../../src/themes/tlp/src/scss/components/cards';
-        @import '../../../../../src/themes/tlp/src/scss/components/badges';
-        @import '../../../../../src/themes/tlp/src/scss/components/tables';
-    }
-
-    &.FlamingParrot_Green { /* stylelint-disable-line selector-no-qualifying-type, selector-class-pattern */
-        @import '../../../../../src/themes/FlamingParrot/css/utils/variables-green';
-        @import '../../../../../src/themes/tlp/src/scss/variables/shadows';
-        @import '../../../../../src/themes/tlp/src/scss/components/switch';
-        @import '../../../../../src/themes/tlp/src/scss/components/panes';
-        @import '../../../../../src/themes/tlp/src/scss/components/cards';
-        @import '../../../../../src/themes/tlp/src/scss/components/badges';
-        @import '../../../../../src/themes/tlp/src/scss/components/tables';
-    }
-
-    &.FlamingParrot_BlueGrey { /* stylelint-disable-line selector-no-qualifying-type, selector-class-pattern */
-        @import '../../../../../src/themes/FlamingParrot/css/utils/variables-bluegrey';
-        @import '../../../../../src/themes/tlp/src/scss/variables/shadows';
-        @import '../../../../../src/themes/tlp/src/scss/components/switch';
-        @import '../../../../../src/themes/tlp/src/scss/components/panes';
-        @import '../../../../../src/themes/tlp/src/scss/components/cards';
-        @import '../../../../../src/themes/tlp/src/scss/components/badges';
-        @import '../../../../../src/themes/tlp/src/scss/components/tables';
-    }
-
-    &.FlamingParrot_Purple { /* stylelint-disable-line selector-no-qualifying-type, selector-class-pattern */
-        @import '../../../../../src/themes/FlamingParrot/css/utils/variables-purple';
-        @import '../../../../../src/themes/tlp/src/scss/variables/shadows';
-        @import '../../../../../src/themes/tlp/src/scss/components/switch';
-        @import '../../../../../src/themes/tlp/src/scss/components/panes';
-        @import '../../../../../src/themes/tlp/src/scss/components/cards';
-        @import '../../../../../src/themes/tlp/src/scss/components/badges';
-        @import '../../../../../src/themes/tlp/src/scss/components/tables';
-    }
-
-    &.FlamingParrot_Red { /* stylelint-disable-line selector-no-qualifying-type, selector-class-pattern */
-        @import '../../../../../src/themes/FlamingParrot/css/utils/variables-red';
-        @import '../../../../../src/themes/tlp/src/scss/variables/shadows';
-        @import '../../../../../src/themes/tlp/src/scss/components/switch';
-        @import '../../../../../src/themes/tlp/src/scss/components/panes';
-        @import '../../../../../src/themes/tlp/src/scss/components/cards';
-        @import '../../../../../src/themes/tlp/src/scss/components/badges';
-        @import '../../../../../src/themes/tlp/src/scss/components/tables';
-    }
-}
+@import '../../../../../src/themes/tlp/src/scss/components/switch';
+@import '../../../../../src/themes/tlp/src/scss/components/panes';
+@import '../../../../../src/themes/tlp/src/scss/components/cards';
+@import '../../../../../src/themes/tlp/src/scss/components/badges';
+@import '../../../../../src/themes/tlp/src/scss/components/tables';

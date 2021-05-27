@@ -68,7 +68,7 @@ $sections[$current_section]['selected'] = true;
 
 $include_asset_framework = new IncludeAssets(__DIR__ . '/../assets/core', '../assets/core');
 $tlp_script_url          = $include_asset_framework->getFileURL('tlp-en_US.js');
-$tlp_blue_css            = $include_asset_framework->getFileURL('tlp-blue.css');
+$tlp_blue_css            = $include_asset_framework->getFileURL('tlp.css');
 $tlp_vars_blue_css       = $include_asset_framework->getFileURL('tlp-vars-blue.css');
 
 $include_asset_doc   = new IncludeAssets(__DIR__ . '/dist', 'dist');

@@ -28,7 +28,6 @@ use ThemeVariantColor;
 use Tuleap\BrowserDetection\DetectedBrowser;
 use Tuleap\HelpDropdown\HelpDropdownPresenter;
 use Tuleap\InviteBuddy\InviteBuddiesPresenter;
-use Tuleap\Layout\CssAsset;
 use Tuleap\Layout\CssAssetCollection;
 use Tuleap\Layout\CssAssetWithDensityVariants;
 use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
@@ -169,7 +168,7 @@ class HeaderPresenterBuilder
         $core_assets      = new \Tuleap\Layout\IncludeCoreAssets();
         $css_assets       = new CssAssetCollection(
             [
-                new CssAsset($core_assets, 'tlp'),
+                new CssAssetWithoutVariantDeclinaisons($core_assets, 'tlp'),
                 new CssAssetWithDensityVariants($core_assets, 'tlp-vars'),
                 new CssAssetWithoutVariantDeclinaisons($core_assets, 'BurningParrot/burning-parrot')
             ]

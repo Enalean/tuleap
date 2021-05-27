@@ -17,13 +17,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@import 'fonts';
+@use 'fonts';
 
-$tlp-h1-color: $tlp-theme-sidebar-background-color;
+$tlp-paragraph-line-height: 1.5rem;
+$tlp-h1-color: var(--tlp-theme-dark-background-color);
 
 body {
-    color: $tlp-typo-default-text-color;
-    font-family: $tlp-font-family;
+    color: var(--tlp-typo-default-text-color);
+    font-family: var(--tlp-font-family);
 }
 
 h1,
@@ -37,7 +38,7 @@ h6 {
 
     small {
         margin: 0 0 0 5px;
-        color: $tlp-ui-dimmed;
+        color: var(--tlp-ui-dimmed);
     }
 }
 
@@ -54,7 +55,7 @@ h1 {
 }
 
 h2 {
-    color: $tlp-theme-color;
+    color: var(--tlp-theme-color);
     font-size: 28px;
     font-weight: 400;
     line-height: 36px;
@@ -65,7 +66,7 @@ h2 {
 }
 
 h3 {
-    color: $tlp-ui-dimmed;
+    color: var(--tlp-ui-dimmed);
     font-size: 20px;
     font-weight: 600;
     text-transform: uppercase;
@@ -105,7 +106,7 @@ h6 {
 
 hr {
     border: 0;
-    border-top: 2px solid $tlp-ui-border-normal;
+    border-top: 2px solid var(--tlp-ui-border-normal);
 }
 
 p {
@@ -130,7 +131,7 @@ ol {
 }
 
 a {
-    color: $tlp-theme-color;
+    color: var(--tlp-theme-color);
     text-decoration: none;
 
     &:hover,
@@ -165,29 +166,29 @@ blockquote {
 }
 
 .tlp-text-muted {
-    color: $tlp-ui-dimmed;
+    color: var(--tlp-ui-dimmed);
 }
 
 .tlp-text-info {
-    color: $tlp-ui-info;
+    color: var(--tlp-ui-info);
 }
 
 .tlp-text-success {
-    color: $tlp-ui-success;
+    color: var(--tlp-ui-success);
 }
 
 .tlp-text-warning {
-    color: $tlp-ui-warning;
+    color: var(--tlp-ui-warning);
 }
 
 .tlp-text-danger {
-    color: $tlp-ui-danger;
+    color: var(--tlp-ui-danger);
 }
 
 %tlp-code {
-    background: transparentize($tlp-theme-color, .95);
-    color: $tlp-theme-color;
-    font-family: $tlp-font-family-mono;
+    background: var(--tlp-theme-color-transparent-90);
+    color: var(--tlp-theme-color);
+    font-family: var(--tlp-font-family-mono);
     font-size: .875rem;
     font-weight: 400;
     line-height: 1.375rem;
@@ -197,9 +198,9 @@ kbd {
     display: inline-block;
     padding: 2px var(--tlp-small-spacing);
     border-radius: 4px;
-    background: $tlp-theme-sidebar-background-color;
-    color: $tlp-ui-white;
-    font-family: $tlp-font-family-mono;
+    background: var(--tlp-theme-dark-background-color);
+    color: var(--tlp-ui-white);
+    font-family: var(--tlp-font-family-mono);
     font-size: .875rem;
     line-height: 1.25rem;
     vertical-align: 1px;
@@ -221,7 +222,7 @@ pre {
     @extend %tlp-code;
 
     padding: 5px 3px 5px calc(var(--tlp-medium-spacing) / 2);
-    border-left: 5px solid transparentize($tlp-theme-color, .5);
+    border-left: 5px solid var(--tlp-theme-color-transparent-50);
 
     code {
         padding: 0;

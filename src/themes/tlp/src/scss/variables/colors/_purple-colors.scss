@@ -37,9 +37,6 @@ $tlp-theme-sidebar-background-color: common-colors.$tlp-theme-sidebar-background
 
 $tlp-typo-default-text-color: $tlp-theme-sidebar-background-color;
 
-$tlp-table-header-background : #ffffff;
-$tlp-table-row-background-even : mix($tlp-theme-background-color, $tlp-table-header-background, 50%);
-$tlp-table-row-background-odd : #ffffff;
 $tlp-table-row-background-empty: #fcfcfc;
 
 $tlp-illustration-primary-color        : #d2b7de;

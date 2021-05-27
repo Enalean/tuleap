@@ -17,7 +17,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-$tlp-button-color: $tlp-ui-white;
 $tlp-button-box-shadow-timing: 75ms;
 $tlp-button-background-timing: 75ms;
 
@@ -51,10 +50,7 @@ $tlp-button-mini-radius: 3px;
 
 $tlp-button-outline-hover-color: #fafafa;
 
-$tlp-button-secondary-background: $tlp-ui-border-light;
-$tlp-button-secondary-color: $tlp-theme-sidebar-background-color;
 $tlp-button-secondary-box-shadow: rgba(0, 0, 0, .05);
-$tlp-button-secondary-outline-color: $tlp-theme-sidebar-background-color;
 
 
 %tlp-button {
@@ -67,9 +63,9 @@ $tlp-button-secondary-outline-color: $tlp-theme-sidebar-background-color;
     transition: box-shadow $tlp-button-box-shadow-timing ease-in-out, background $tlp-button-background-timing ease-in-out, border-color $tlp-button-background-timing ease-in-out;
     border: 1px solid transparent;
     border-radius: $tlp-button-normal-radius;
-    box-shadow: $tlp-button-shadow;
-    color: $tlp-button-color;
-    font-family: $tlp-font-family;
+    box-shadow: var(--tlp-button-shadow);
+    color: var(--tlp-ui-white);
+    font-family: var(--tlp-font-family);
     font-size: $tlp-button-normal-font-size;
     font-weight: $tlp-button-normal-font-weight;
     letter-spacing: 0;
@@ -85,12 +81,12 @@ $tlp-button-secondary-outline-color: $tlp-theme-sidebar-background-color;
     &:active,
     &:focus {
         transition: box-shadow $tlp-button-box-shadow-timing ease-in-out, background $tlp-button-background-timing ease-in-out, border-color $tlp-button-background-timing ease-in-out;
-        box-shadow: $tlp-button-shadow-hover;
+        box-shadow: var(--tlp-button-shadow-hover);
         text-decoration: none;
     }
 
     &:focus {
-        box-shadow: $tlp-shadow-focus;
+        box-shadow: var(--tlp-shadow-focus);
     }
 
     &:disabled,
@@ -123,13 +119,13 @@ $tlp-button-secondary-outline-color: $tlp-theme-sidebar-background-color;
 
 @mixin tlp-button-disabled($background-color, $text-color) {
     border-color: transparent;
-    background: desaturate(lighten($background-color, 17%), 19%);
-    color: transparentize($text-color, .4);
+    background: $background-color;
+    color: $text-color;
 }
 
-@mixin tlp-button-outline($outline-color) {
-    border: 1px solid $tlp-ui-white;
-    background: $tlp-ui-white;
+@mixin tlp-button-outline($outline-color, $outline-color-disabled, $outline-background-color-active) {
+    border: 1px solid var(--tlp-ui-white);
+    background: var(--tlp-ui-white);
     color: $outline-color;
 
     &:hover,
@@ -138,39 +134,49 @@ $tlp-button-secondary-outline-color: $tlp-theme-sidebar-background-color;
     }
 
     &:active {
-        background: opacify(mix(transparentize($outline-color, .8), $tlp-ui-white), .8);
+        background: $outline-background-color-active;
     }
 
     &:disabled,
     &.disabled {
-        color: transparentize($outline-color, .5);
+        color: $outline-color-disabled;
 
         &:hover {
-            background: $tlp-ui-white;
+            background: var(--tlp-ui-white);
         }
     }
 }
 
-@mixin tlp-button-type($button-color, $disabled-button-text-color) {
+@mixin tlp-button-type(
+    $button-color,
+    $button-color-focus,
+    $button-color-active,
+    $button-color-disabled,
+    $disabled-button-text-color,
+    $outline-background-color-active,
+    $outline-color-disabled
+) {
     border-color: $button-color;
     background: $button-color;
 
     &:hover,
     &:focus {
-        @include tlp-button-darken($button-color, 5%);
+        border-color: $button-color-focus;
+        background: $button-color-focus;
     }
 
     &:active {
-        @include tlp-button-darken($button-color, 10%);
+        border-color: $button-color-active;
+        background: $button-color-active;
     }
 
     &:disabled,
     &.disabled {
-        @include tlp-button-disabled($button-color, $disabled-button-text-color);
+        @include tlp-button-disabled($button-color-disabled, $disabled-button-text-color);
     }
 
     &.tlp-button-outline {
-        @include tlp-button-outline($button-color);
+        @include tlp-button-outline($button-color, $outline-color-disabled, $outline-background-color-active);
     }
 }
 
@@ -179,52 +185,101 @@ $tlp-button-secondary-outline-color: $tlp-theme-sidebar-background-color;
  */
 .tlp-button-primary {
     @extend %tlp-button;
-    @include tlp-button-type($tlp-theme-color, $tlp-button-color);
+    @include tlp-button-type(
+        var(--tlp-theme-color),
+        var(--tlp-theme-color-darker-05),
+        var(--tlp-theme-color-darker-10),
+        var(--tlp-theme-color-lighter-30),
+        var(--tlp-ui-white-transparent-40),
+        var(--tlp-theme-color-lighter-90),
+        var(--tlp-theme-color-transparent-50)
+    );
 }
 
 .tlp-button-secondary {
     @extend %tlp-button;
-    border-color: $tlp-button-secondary-background;
-    background: $tlp-button-secondary-background;
-    color: $tlp-button-secondary-color;
+    border-color: var(--tlp-ui-border-light);
+    background: var(--tlp-ui-border-light);
+    color: var(--tlp-theme-dark-background-color);
 
     &:hover,
     &:focus {
-        @include tlp-button-darken($tlp-button-secondary-background, 5%);
+        border-color: var(--tlp-ui-border-light-darker-05);
+        background: var(--tlp-ui-border-light-darker-05);
     }
 
     &:active {
-        @include tlp-button-darken($tlp-button-secondary-background, 10%);
+        border-color: var(--tlp-ui-border-light-darker-10);
+        background: var(--tlp-ui-border-light-darker-10);
     }
 
     &:disabled,
     &.disabled {
-        @include tlp-button-disabled($tlp-button-secondary-background, $tlp-button-secondary-color);
+        @include tlp-button-disabled(
+            var(--tlp-ui-border-light-lighter-30),
+            var(--tlp-ui-border-light-transparent-40)
+        );
     }
 
     &.tlp-button-outline {
-        @include tlp-button-outline($tlp-button-secondary-outline-color);
+        @include tlp-button-outline(
+            var(--tlp-theme-dark-background-color),
+            var(--tlp-theme-dark-background-color-transparent-50),
+            var(--tlp-theme-dark-background-color-lighter-90)
+        );
     }
 }
 
 .tlp-button-info {
     @extend %tlp-button;
-    @include tlp-button-type($tlp-ui-info, $tlp-button-color);
+    @include tlp-button-type(
+        var(--tlp-ui-info),
+        var(--tlp-ui-info-darker-05),
+        var(--tlp-ui-info-darker-10),
+        var(--tlp-ui-info-lighter-30),
+        var(--tlp-ui-white-transparent-40),
+        var(--tlp-ui-info-lighter-90),
+        var(--tlp-ui-info-transparent-50)
+    );
 }
 
 .tlp-button-success {
     @extend %tlp-button;
-    @include tlp-button-type($tlp-ui-success, $tlp-button-color);
+    @include tlp-button-type(
+        var(--tlp-ui-success),
+        var(--tlp-ui-success-darker-05),
+        var(--tlp-ui-success-darker-10),
+        var(--tlp-ui-success-lighter-30),
+        var(--tlp-ui-white-transparent-40),
+        var(--tlp-ui-success-lighter-90),
+        var(--tlp-ui-success-color-transparent-50)
+    );
 }
 
 .tlp-button-warning {
     @extend %tlp-button;
-    @include tlp-button-type($tlp-ui-warning, $tlp-button-color);
+    @include tlp-button-type(
+        var(--tlp-ui-warning),
+        var(--tlp-ui-warning-darker-05),
+        var(--tlp-ui-warning-darker-10),
+        var(--tlp-ui-warning-lighter-30),
+        var(--tlp-ui-white-transparent-40),
+        var(--tlp-ui-warning-lighter-90),
+        var(--tlp-ui-warning-transparent-50)
+    );
 }
 
 .tlp-button-danger {
     @extend %tlp-button;
-    @include tlp-button-type($tlp-ui-danger, $tlp-button-color);
+    @include tlp-button-type(
+        var(--tlp-ui-danger),
+        var(--tlp-ui-danger-darker-05),
+        var(--tlp-ui-danger-darker-10),
+        var(--tlp-ui-danger-lighter-30),
+        var(--tlp-ui-white-transparent-40),
+        var(--tlp-ui-danger-lighter-90),
+        var(--tlp-ui-danger-color-transparent-50)
+    );
 }
 
 /**

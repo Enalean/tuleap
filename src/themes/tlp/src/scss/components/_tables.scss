@@ -50,8 +50,8 @@ $tlp-table-cell-padding: calc(var(--tlp-small-spacing) / 2) var(--tlp-small-spac
  */
 %tlp-table-th {
     padding: $tlp-table-cell-padding;
-    background: $tlp-table-header-background;
-    color: $tlp-theme-color;
+    background: var(--tlp-ui-white);
+    color: var(--tlp-theme-color);
     font-weight: 600;
 
     &.tlp-table-cell-numeric {
@@ -68,13 +68,13 @@ $tlp-table-cell-padding: calc(var(--tlp-small-spacing) / 2) var(--tlp-small-spac
     > thead > tr > th {
         @extend %tlp-table-th;
 
-        border-bottom: 2px solid $tlp-theme-color;
+        border-bottom: 2px solid var(--tlp-theme-color);
     }
 
     > tfoot > tr > th {
         @extend %tlp-table-th;
 
-        border-top: 2px solid $tlp-theme-color;
+        border-top: 2px solid var(--tlp-theme-color);
     }
 
     > tbody {
@@ -83,16 +83,16 @@ $tlp-table-cell-padding: calc(var(--tlp-small-spacing) / 2) var(--tlp-small-spac
         }
 
         > tr:nth-child(even) > td {
-            background: $tlp-table-row-background-even;
+            background: var(--tlp-table-row-background-even);
         }
 
         > tr:nth-child(odd) > td {
-            background: $tlp-table-row-background-odd;
+            background: var(--tlp-table-row-background-odd);
         }
 
         > tr:hover > td,
         > tr:focus-within > td {
-            background: mix($tlp-theme-color, $tlp-ui-white, 15%);
+            background: var(--tlp-theme-color-lighter-85);
         }
 
         > tr > td {
@@ -101,8 +101,8 @@ $tlp-table-cell-padding: calc(var(--tlp-small-spacing) / 2) var(--tlp-small-spac
             vertical-align: middle;
 
             &.tlp-table-cell-section {
-                background: $tlp-theme-background-color;
-                color: $tlp-theme-color;
+                background: var(--tlp-theme-background-color);
+                color: var(--tlp-theme-color);
                 font-size: .75rem;
                 font-weight: 600;
                 text-transform: uppercase;
@@ -110,8 +110,8 @@ $tlp-table-cell-padding: calc(var(--tlp-small-spacing) / 2) var(--tlp-small-spac
 
             &.tlp-table-cell-empty {
                 height: 100px;
-                background: $tlp-table-row-background-empty;
-                color: transparentize($tlp-theme-color, .7);
+                background: var(--tlp-table-row-background-empty);
+                color: var(--tlp-theme-color-transparent-70);
                 font-style: italic;
                 text-align: center;
                 vertical-align: middle;

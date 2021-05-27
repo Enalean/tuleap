@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-$tlp-font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
-$tlp-paragraph-line-height: 1.5rem;
-
-$tlp-font-family-mono: Menlo, Monaco, Consolas, 'Courier New', monospace;
+@import './reset';
+@import './variables/colors/color-classes';
+@import './vendor';
+@import './components';

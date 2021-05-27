@@ -57,16 +57,16 @@
     }
 
     code {
-        background: transparentize($tlp-ui-info, .9);
+        background: var(--tlp-ui-info-transparent-90);
     }
 }
 
 .tlp-alert-success {
     @extend %tlp-alert;
 
-    border-left-color: $tlp-ui-success;
-    background: desaturate(lighten(mix($tlp-ui-white, $tlp-ui-success, 25%), 26%), 15%);
-    color: darken($tlp-ui-success, 20%);
+    border-left: var(--tlp-alert-success-border);
+    background: var(--tlp-alert-success-background);
+    color: var(--tlp-alert-success-color);
 
     &::before {
         content: '\f164'; // fa-thumbs-up
@@ -74,16 +74,16 @@
     }
 
     code {
-        background: transparentize($tlp-ui-success, .9);
+        background: var(--tlp-ui-success-color-transparent-90);
     }
 }
 
 .tlp-alert-warning {
     @extend %tlp-alert;
 
-    border-left-color: $tlp-ui-warning;
-    background: desaturate(lighten(mix($tlp-ui-white, $tlp-ui-warning, 20%), 23%), 15%);
-    color: saturate(darken($tlp-ui-warning, 30%), 10%);
+    border-left: var(--tlp-alert-warning-border);
+    background: var(--tlp-alert-warning-background);
+    color: var(--tlp-alert-warning-color);
 
     &::before {
         content: '\f071'; // fa-exclamation-triangle
@@ -91,7 +91,7 @@
     }
 
     code {
-        background: transparentize($tlp-ui-warning, .9);
+        background: var(--tlp-ui-warning-transparent-90);
     }
 }
 
@@ -108,6 +108,6 @@
     }
 
     code {
-        background: transparentize($tlp-ui-danger, .9);
+        background: var(--tlp-ui-danger-color-transparent-90);
     }
 }

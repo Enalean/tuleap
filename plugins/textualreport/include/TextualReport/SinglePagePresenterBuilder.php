@@ -25,7 +25,6 @@ namespace Tuleap\TextualReport;
 use PFUser;
 use ThemeVariant;
 use ThemeVariantColor;
-use Tuleap\Layout\CssAsset;
 use Tuleap\Layout\CssAssetWithDensityVariants;
 use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
 use Tuleap\Layout\IncludeAssets;
@@ -89,7 +88,7 @@ class SinglePagePresenterBuilder
 
         $css_assets = [
             new CssAssetWithDensityVariants($assets, 'tlp-vars'),
-            new CssAsset($assets, 'tlp'),
+            new CssAssetWithoutVariantDeclinaisons($assets, 'tlp'),
             new CssAssetWithoutVariantDeclinaisons($assets, 'BurningParrot/burning-parrot'),
         ];
 

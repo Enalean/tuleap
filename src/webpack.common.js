@@ -84,6 +84,7 @@ const webpack_config_for_ckeditor = {
 };
 
 let entry_points = {
+    tlp: "./themes/tlp/src/scss/tlp.scss",
     // DO NOT add new entrypoints unless it's for a new TLP locale. TLP is exported as a "library". If you add another
     // entrypoint, all scripts that depend on TLP will try to access "select2" or "createModal" from your file
     // (and they will fail).
@@ -93,7 +94,6 @@ let entry_points = {
 
 const tlp_colors = ["orange", "blue", "green", "red", "grey", "purple"];
 for (const color of tlp_colors) {
-    entry_points[`tlp-${color}`] = `./themes/tlp/src/scss/tlp-${color}.scss`;
     entry_points[`tlp-vars-${color}`] = `./themes/tlp/src/scss/tlp-vars-${color}.scss`;
     entry_points[
         `tlp-vars-${color}-condensed`
