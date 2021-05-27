@@ -20,6 +20,7 @@
 
 namespace Tuleap\ProjectMilestones\Widget;
 
+use Tuleap\Project\MappingRegistry;
 use Widget;
 use Tuleap\Layout\CssAssetCollection;
 use Codendi_Request;
@@ -175,11 +176,37 @@ class DashboardProjectMilestones extends Widget
         $this->project_milestones_widget_retriever->updatePreferences($request);
     }
 
+    /**
+     * @param int|string $id
+     * @param int|string $owner_id
+     * @param string     $owner_type
+     * @return int|string
+     */
+    public function cloneContent(
+        Project $template_project,
+        Project $new_project,
+        $id,
+        $owner_id,
+        $owner_type,
+        MappingRegistry $mapping_registry
+    ) {
+        $widget_project_id = $this->project_milestones_dao->searchProjectIdById((int) $id);
+
+        if ($widget_project_id && $widget_project_id !== (int) $template_project->getID()) {
+            return $this->project_milestones_dao->create($widget_project_id);
+        } else {
+            return $this->project_milestones_dao->create((int) $new_project->getID());
+        }
+    }
+
     public function create(Codendi_Request $request)
     {
         return $this->project_milestones_widget_retriever->create($request);
     }
 
+    /**
+     * @param string $id
+     */
     public function destroy($id)
     {
         $this->project_milestones_dao->delete((int) $id);
