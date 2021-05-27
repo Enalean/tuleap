@@ -101,6 +101,7 @@ export class ListItemMapBuilder {
                     aria-selected="false"
                     data-item-id="${option_id}"
                     class="${class_name}"
+                    data-test="list-picker-item"
                 >
                     ${template}
                 </li>

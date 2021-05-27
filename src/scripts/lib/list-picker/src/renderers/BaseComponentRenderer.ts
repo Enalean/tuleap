@@ -113,6 +113,7 @@ export class BaseComponentRenderer {
     private createSelectionElement(): HTMLElement {
         const selection_element = document.createElement("span");
         selection_element.classList.add("list-picker-selection");
+        selection_element.setAttribute("data-test", "list-picker-selection");
 
         if (this.source_select_box.multiple) {
             selection_element.classList.add("list-picker-multiple");

@@ -23,6 +23,9 @@ describe(`Artifact Modal`, function () {
         cy.clearSessionCookie();
         cy.projectMemberLogin();
         getArtifactLinkIdFromREST().as("artifact_link_id");
+
+        cy.visitProjectService("kanban-artifact-modal", "Agile Dashboard");
+        cy.get("[data-test=go-to-kanban]").first().click();
     });
 
     beforeEach(function () {
@@ -30,8 +33,6 @@ describe(`Artifact Modal`, function () {
     });
 
     it(`can create an artifact with all fields`, function () {
-        cy.visitProjectService("kanban-artifact-modal", "Agile Dashboard");
-        cy.get("[data-test=go-to-kanban]").first().click();
         cy.get("[data-test=kanban-add-artifact]").click();
 
         cy.get("[data-test=artifact-modal-form]").within(() => {
@@ -59,16 +60,16 @@ describe(`Artifact Modal`, function () {
 
                 getFieldWithLabel("Date", "[data-test=date-field]").within(() => {
                     // flatpickr lib sets "readonly" attribute on the input. Testing date picker specifically should be a dedicated test, therefore we use "force".
-                    cy.get("[data-test=date-field-input]").type("{selectall}2021-02-05", {
-                        force: true,
-                    });
+                    cy.get("[data-test=date-field-input]")
+                        .clear({ force: true })
+                        .type("2021-02-05", { force: true });
                 });
 
                 getFieldWithLabel("Datetime", "[data-test=date-field]").within(() => {
                     // flatpickr lib sets "readonly" attribute on the input. Testing date picker specifically should be a dedicated test, therefore we use "force".
-                    cy.get("[data-test=date-field-input]").type("{selectall}2021-02-04 16:54", {
-                        force: true,
-                    });
+                    cy.get("[data-test=date-field-input]")
+                        .clear({ force: true })
+                        .type("2021-02-04 16:54", { force: true });
                 });
 
                 getFieldWithLabel("Computed", "[data-test=computed-field]").within(() => {
@@ -92,28 +93,18 @@ describe(`Artifact Modal`, function () {
 
             getFieldsetWithLabel("List fields").within(() => {
                 getFieldWithLabel("Selectbox static", "[data-test=selectbox-field]").within(() => {
-                    // list-picker hides the select. Testing list picker specifically should be a dedicated test, therefore we use "force".
-                    cy.get("[data-test=selectbox-field-select]").select("Dos", { force: true });
+                    selectLabelInListPickerDropdown("Dos");
                 });
 
                 getFieldWithLabel(
                     "Selectbox users (members)",
                     "[data-test=selectbox-field]"
                 ).within(() => {
-                    // list-picker hides the select. Testing list picker specifically should be a dedicated test, therefore we use "force".
-                    cy.get("[data-test=selectbox-field-select]").select(
-                        "ProjectMember (ProjectMember)",
-                        {
-                            force: true,
-                        }
-                    );
+                    selectLabelInListPickerDropdown("ProjectMember (ProjectMember)");
                 });
 
                 getFieldWithLabel("Selectbox ugroups", "[data-test=selectbox-field]").within(() => {
-                    // list-picker hides the select. Testing list picker specifically should be a dedicated test, therefore we use "force".
-                    cy.get("[data-test=selectbox-field-select]").select("Integrators", {
-                        force: true,
-                    });
+                    selectLabelInListPickerDropdown("Integrators");
                 });
 
                 getFieldWithLabel("Radio static", "[data-test=radiobutton-field]").within(() => {
@@ -131,32 +122,20 @@ describe(`Artifact Modal`, function () {
                 });
 
                 getFieldWithLabel("MSB static", "[data-test=multi-selectbox-field]").within(() => {
-                    // list-picker hides the select. Testing list picker specifically should be a dedicated test, therefore we use "force".
-                    cy.get("[data-test=multi-selectbox-field-select]").select(["Deux", "Trois"], {
-                        force: true,
-                    });
+                    selectLabelInListPickerDropdown("Deux");
+                    selectLabelInListPickerDropdown("Trois");
                 });
 
                 getFieldWithLabel(
                     "MSB users (members)",
                     "[data-test=multi-selectbox-field]"
                 ).within(() => {
-                    // list-picker hides the select. Testing list picker specifically should be a dedicated test, therefore we use "force".
-                    cy.get("[data-test=multi-selectbox-field-select]").select(
-                        [
-                            "ProjectMember (ProjectMember)",
-                            "ProjectAdministrator (ProjectAdministrator)",
-                        ],
-                        { force: true }
-                    );
+                    selectLabelInListPickerDropdown("ProjectMember (ProjectMember)");
+                    selectLabelInListPickerDropdown("ProjectAdministrator (ProjectAdministrator)");
                 });
 
                 getFieldWithLabel("MSB ugroups", "[data-test=multi-selectbox-field]").within(() => {
-                    // list-picker hides the select. Testing list picker specifically should be a dedicated test, therefore we use "force".
-                    cy.get("[data-test=multi-selectbox-field-select]").select(
-                        ["Project members", "Integrators"],
-                        { force: true }
-                    );
+                    selectLabelInListPickerDropdown("Integrators");
                 });
 
                 getFieldWithLabel("Checkbox static", "[data-test=checkbox-field]").within(() => {
@@ -201,6 +180,170 @@ describe(`Artifact Modal`, function () {
 
             getFieldWithLabel("Artifact link", "[data-test=artifactlink-field]").within(() => {
                 cy.get("[data-test=artifactlink-field-input]").type(this.artifact_link_id);
+            });
+
+            cy.get("[data-test=artifact-modal-save-button]").click();
+        });
+    });
+
+    it(`can edit an artifact with all fields`, function () {
+        getKanbanCard("Editable Artifact").within(() => {
+            cy.get("[data-test=edit-link]").click();
+        });
+
+        cy.get("[data-test=artifact-modal-form]").within(() => {
+            getFieldWithLabel("Title", "[data-test=string-field]").within(() => {
+                cy.get("[data-test=string-field-input]")
+                    .clear()
+                    .type("Editable Artifact " + now);
+            });
+
+            getFieldsetWithLabel("Other fields").within(() => {
+                getFieldWithLabel("String", "[data-test=string-field]").within(() => {
+                    cy.get("[data-test=string-field-input]").clear().type("Edit String value");
+                });
+
+                getFieldWithLabel("Text", "[data-test=text-field]").within(() => {
+                    cy.get("[data-test=format]").select("Markdown");
+                    cy.get("[data-test=textarea]").clear().type("Edit Text value");
+                });
+
+                getFieldWithLabel("Integer", "[data-test=int-field]").within(() => {
+                    cy.get("[data-test=int-field-input]").clear().type("87");
+                });
+
+                getFieldWithLabel("Float", "[data-test=float-field]").within(() => {
+                    cy.get("[data-test=float-field-input]").clear().type("87.9");
+                });
+
+                getFieldWithLabel("Date", "[data-test=date-field]").within(() => {
+                    // flatpickr lib sets "readonly" attribute on the input. Testing date picker specifically should be a dedicated test, therefore we use "force".
+                    cy.get("[data-test=date-field-input]")
+                        .clear({ force: true })
+                        // Escape to close the flatpickr popover
+                        .type("2021-05-27 {esc}", { force: true });
+                });
+
+                getFieldWithLabel("Datetime", "[data-test=date-field]").within(() => {
+                    // flatpickr lib sets "readonly" attribute on the input. Testing date picker specifically should be a dedicated test, therefore we use "force".
+                    cy.get("[data-test=date-field-input]")
+                        .clear({ force: true })
+                        // Escape to close the flatpickr popover
+                        .type("2021-05-27 10:58 {esc}", { force: true });
+                });
+
+                getFieldWithLabel("Computed", "[data-test=computed-field]").within(() => {
+                    cy.get("[data-test=computed-field-input]").clear().type("13");
+                });
+
+                getFieldWithLabel("Attachments", "[data-test=file-field]").within(() => {
+                    cy.get("[data-test=file-field-file-input]").attachFile("svg_attachment.svg");
+                    cy.get("[data-test=file-field-description-input]").type("My SVG attachment");
+                });
+
+                getFieldWithLabel("Permissions", "[data-test=permission-field]").within(() => {
+                    cy.get("[data-test=permission-field-select]").select([
+                        "Project members",
+                        "Contributors",
+                    ]);
+                });
+            });
+
+            getFieldsetWithLabel("List fields").within(() => {
+                getFieldWithLabel("Selectbox static", "[data-test=selectbox-field]").within(() => {
+                    selectLabelInListPickerDropdown("Tres");
+                });
+
+                getFieldWithLabel(
+                    "Selectbox users (members)",
+                    "[data-test=selectbox-field]"
+                ).within(() => {
+                    selectLabelInListPickerDropdown("ProjectAdministrator (ProjectAdministrator)");
+                });
+
+                getFieldWithLabel("Selectbox ugroups", "[data-test=selectbox-field]").within(() => {
+                    selectLabelInListPickerDropdown("Contributors");
+                });
+
+                getFieldWithLabel("Radio static", "[data-test=radiobutton-field]").within(() => {
+                    checkRadioButtonWithLabel("二");
+                });
+
+                getFieldWithLabel("Radio users (members)", "[data-test=radiobutton-field]").within(
+                    () => {
+                        checkRadioButtonWithLabel("ProjectAdministrator (ProjectAdministrator)");
+                    }
+                );
+
+                getFieldWithLabel("Radio ugroups", "[data-test=radiobutton-field]").within(() => {
+                    checkRadioButtonWithLabel("Integrators");
+                });
+
+                getFieldWithLabel("MSB static", "[data-test=multi-selectbox-field]").within(() => {
+                    selectLabelInListPickerDropdown("Un");
+                    selectLabelInListPickerDropdown("Quatre");
+                });
+
+                getFieldWithLabel(
+                    "MSB users (members)",
+                    "[data-test=multi-selectbox-field]"
+                ).within(() => {
+                    selectLabelInListPickerDropdown("ProjectMember (ProjectMember)");
+                });
+
+                getFieldWithLabel("MSB ugroups", "[data-test=multi-selectbox-field]").within(() => {
+                    selectLabelInListPickerDropdown("Project administrators");
+                    selectLabelInListPickerDropdown("Contributors");
+                });
+
+                getFieldWithLabel("Checkbox static", "[data-test=checkbox-field]").within(() => {
+                    uncheckBoxWithLabel("One");
+                    checkBoxWithLabel("Two");
+                    uncheckBoxWithLabel("Three");
+                    checkBoxWithLabel("Four");
+                });
+
+                getFieldWithLabel("Checkbox users (members)", "[data-test=checkbox-field]").within(
+                    () => {
+                        checkBoxWithLabel("ProjectMember (ProjectMember)");
+                        uncheckBoxWithLabel("ProjectAdministrator (ProjectAdministrator)");
+                    }
+                );
+
+                getFieldWithLabel("Checkbox ugroups", "[data-test=checkbox-field]").within(() => {
+                    checkBoxWithLabel("Project administrators");
+                    checkBoxWithLabel("Integrators");
+                    uncheckBoxWithLabel("Contributors");
+                });
+
+                getFieldWithLabel("Openlist static", "[data-test=openlist-field]").within(() => {
+                    selectLabelInSelect2Dropdown("Alpha");
+                    selectLabelInSelect2Dropdown("Charlie");
+                });
+
+                getFieldWithLabel("Openlist users (members)", "[data-test=openlist-field]").within(
+                    () => {
+                        clearSelect2();
+                        // The list is never populated, it is fetched dynamically by autocomplete
+                        // eslint-disable-next-line cypress/require-data-selectors
+                        cy.get("input[type=search]").type("proj");
+                        selectLabelInSelect2Dropdown("ProjectMember (ProjectMember)");
+                    }
+                );
+
+                getFieldWithLabel("Openlist ugroups", "[data-test=openlist-field]").within(() => {
+                    selectLabelInSelect2Dropdown("Project members");
+                    selectLabelInSelect2Dropdown("Integrators");
+                });
+            });
+
+            getFieldWithLabel("Artifact link", "[data-test=artifactlink-field]").within(() => {
+                cy.get("[data-test=artifactlink-field-input]").clear().type(this.artifact_link_id);
+            });
+
+            cy.get("[data-test=add-comment-form]").within(() => {
+                cy.get("[data-test=format]").select("Markdown");
+                cy.get("[data-test=textarea]").type("Follow-up comment");
             });
 
             cy.get("[data-test=artifact-modal-save-button]").click();
@@ -264,6 +407,26 @@ function checkBoxWithLabel(label: string): void {
         });
 }
 
+function uncheckBoxWithLabel(label: string): void {
+    cy.get("[data-test=checkbox-field-value]")
+        .contains(label)
+        .within(() => {
+            cy.get("[data-test=checkbox-field-input]").uncheck();
+        });
+}
+
+function selectLabelInListPickerDropdown(label: string): CypressWrapper {
+    cy.get("[data-test=list-picker-selection]").click();
+    return cy
+        .root()
+        .parents("body")
+        .within(() => {
+            cy.get("[data-test-list-picker-dropdown-open]").within(() => {
+                cy.get("[data-test=list-picker-item]").contains(label).click();
+            });
+        });
+}
+
 function selectLabelInSelect2Dropdown(label: string): CypressWrapper {
     // eslint-disable-next-line cypress/require-data-selectors
     cy.get(".select2-selection").click();
@@ -277,4 +440,16 @@ function selectLabelInSelect2Dropdown(label: string): CypressWrapper {
                 cy.get(".select2-results__option").contains(label).click();
             });
         });
+}
+
+function clearSelect2(): void {
+    // eslint-disable-next-line cypress/require-data-selectors
+    cy.get(".select2-selection__clear").click();
+}
+
+function getKanbanCard(label: string): CypressWrapper {
+    return cy
+        .get("[data-test-static=kanban-item-content]")
+        .contains(label)
+        .parents("[data-test-static=kanban-item-content]");
 }

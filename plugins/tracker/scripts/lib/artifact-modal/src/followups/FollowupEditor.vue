@@ -18,7 +18,7 @@
   -->
 
 <template>
-    <div class="artifact-modal-followups-add-form">
+    <div class="artifact-modal-followups-add-form" data-test="add-comment-form">
         <format-selector
             id="followup_comment"
             v-bind:label="label"
