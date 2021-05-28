@@ -91,10 +91,11 @@
 <script lang="ts">
 import { Component } from "vue-property-decorator";
 import Vue from "vue";
-import type { FetchWrapperError, Modal } from "tlp";
+import type { Modal } from "tlp";
 import { createModal } from "tlp";
 import type { Repository } from "../../../type";
 import { namespace } from "vuex-class";
+import { handleError } from "../../../gitlab/gitlab-error-handler";
 
 const gitlab = namespace("gitlab");
 
@@ -194,34 +195,10 @@ export default class RegenerateGitlabWebhook extends Vue {
                 this.modal.hide();
             }
         } catch (rest_error) {
-            await this.handle_error(rest_error);
+            this.message_error_rest = await handleError(rest_error, this);
+            throw rest_error;
         } finally {
             this.is_updating_webhook = false;
-        }
-    }
-
-    async handle_error(rest_error: FetchWrapperError): Promise<void> {
-        if (!("response" in rest_error)) {
-            this.message_error_rest = "Oops, an error occurred!";
-        }
-
-        try {
-            const json = await rest_error.response.json();
-
-            if (!Object.prototype.hasOwnProperty.call(json, "error")) {
-                this.message_error_rest = "Oops, an error occurred!";
-                return;
-            }
-
-            if (Object.prototype.hasOwnProperty.call(json.error, "i18n_error_message")) {
-                this.message_error_rest = json.error.i18n_error_message;
-                return;
-            }
-
-            this.message_error_rest = json.error.code + " " + json.error.message;
-        } catch (error) {
-            this.message_error_rest = this.$gettext("Oops, an error occurred!");
-            throw error;
         }
     }
 }

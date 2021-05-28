@@ -25,6 +25,7 @@ import VueDOMPurifyHTML from "vue-dompurify-html";
 import GetTextPlugin from "vue-gettext";
 import type { Store } from "vuex-mock-store";
 import type { GitLabData, Repository } from "../../../type";
+import * as gitlab_error_handler from "../../../gitlab/gitlab-error-handler";
 
 describe("RegenerateGitlabWebhook", () => {
     let store_options = {},
@@ -119,17 +120,20 @@ describe("RegenerateGitlabWebhook", () => {
         });
         await wrapper.vm.$nextTick();
 
-        jest.spyOn(store, "dispatch").mockReturnValue(
-            Promise.reject({
-                response: {
-                    status: 404,
-                    json: (): Promise<{ error: { code: number; message: string } }> =>
-                        Promise.resolve({ error: { code: 404, message: "Error on server" } }),
-                },
-            })
-        );
+        jest.spyOn(store, "dispatch").mockRejectedValue({
+            response: {
+                status: 404,
+                json: (): Promise<{ error: { code: number; message: string } }> =>
+                    Promise.resolve({ error: { code: 404, message: "Error on server" } }),
+            },
+        });
+
+        jest.spyOn(gitlab_error_handler, "handleError");
+        // We also display the error in the console.
+        jest.spyOn(global.console, "error").mockImplementation();
 
         wrapper.find("[data-test=regenerate-gitlab-webhook-submit]").trigger("click");
+        await wrapper.vm.$nextTick();
         await wrapper.vm.$nextTick();
         await wrapper.vm.$nextTick();
 
@@ -137,6 +141,7 @@ describe("RegenerateGitlabWebhook", () => {
         expect(
             wrapper.find("[data-test=regenerate-gitlab-webhook-submit]").attributes().disabled
         ).toBeTruthy();
+        expect(gitlab_error_handler.handleError).toHaveBeenCalled();
     });
 
     it("When user cancel, Then data are reset", async () => {
