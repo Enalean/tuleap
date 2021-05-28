@@ -59,7 +59,7 @@
     "stylelint-config-property-sort-order-smacss": "^7.0.0",
     "stylelint-config-sass-guidelines": "^8.0.0",
     "ts-jest": "^26.4.1",
-    "typescript": "^4.2.2",
+    "typescript": "^4.3.2",
     "vite": "^2.3.2",
     "vite-plugin-vue2": "^1.4.1",
     "vue-eslint-parser": "^7.6.0",
