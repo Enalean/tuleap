@@ -1,5 +1,5 @@
 <!--
-  - Copyright (c) Enalean, 2018 - Present. All Rights Reserved.
+  - Copyright (c) Enalean, 2021 - Present. All Rights Reserved.
   -
   - This file is a part of Tuleap.
   -
@@ -35,16 +35,16 @@
         </td>
     </tr>
 </template>
-<script>
+<script lang="ts">
 import UgroupBadge from "../../project/admin/permissions-per-group/PermissionsPerGroupBadge.vue";
+import Component from "vue-class-component";
+import Vue from "vue";
+import type { PackagePermissionPerGroupReleaseRepresentation } from "./type";
+import { Prop } from "vue-property-decorator";
 
-export default {
-    name: "FRSPackagePermissionsTablePackageRelease",
-    components: {
-        UgroupBadge,
-    },
-    props: {
-        release: Object,
-    },
-};
+@Component({ components: { UgroupBadge } })
+export default class FRSPackagePermissionsTablePackageRelease extends Vue {
+    @Prop()
+    private readonly release!: PackagePermissionPerGroupReleaseRepresentation;
+}
 </script>

@@ -1,5 +1,5 @@
 <!--
-  - Copyright (c) Enalean, 2018 - Present. All Rights Reserved.
+  - Copyright (c) Enalean, 2021 - Present. All Rights Reserved.
   -
   - This file is a part of Tuleap.
   -
@@ -34,16 +34,18 @@
         </td>
     </tr>
 </template>
-<script>
-export default {
-    name: "FRSPackagePermissionsTablePackageEmptyState",
-    props: {
-        selectedUgroupName: String,
-    },
-    computed: {
-        hasASelectedUserGroup() {
-            return this.selectedUgroupName !== "";
-        },
-    },
-};
+<script lang="ts">
+import Component from "vue-class-component";
+import Vue from "vue";
+import { Prop } from "vue-property-decorator";
+
+@Component
+export default class FRSPackagePermissionsTablePackageEmptyState extends Vue {
+    @Prop()
+    private readonly selectedUgroupName!: string;
+
+    get hasASelectedUserGroup(): boolean {
+        return this.selectedUgroupName !== "";
+    }
+}
 </script>

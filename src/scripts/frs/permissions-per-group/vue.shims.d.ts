@@ -1,9 +1,5 @@
-/*
- * Copyright Enalean (c) 2018 - Present. All rights reserved.
- *
- * Tuleap and Enalean names and logos are registrated trademarks owned by
- * Enalean SAS. All other trademarks or names are properties of their respective
- * owners.
+/**
+ * Copyright (c) Enalean, 2021 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -21,17 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { get } from "tlp";
-
-export { getPackagesPermissions };
-
-async function getPackagesPermissions(group_id, selected_ugroup_id) {
-    const response = await get("/file/files_permissions_per_group.php", {
-        params: {
-            group_id,
-            selected_ugroup_id,
-        },
-    });
-
-    return response.json();
+declare module "*.vue" {
+    import Vue from "vue";
+    export default Vue;
 }

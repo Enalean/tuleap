@@ -19,7 +19,8 @@
         "scripts/tuleap/**/*",
         "themes/tlp/src/**/*",
         "scripts/BurningParrot/**/*",
-        "scripts/global-shortcuts/**/*"
+        "scripts/global-shortcuts/**/*",
+        "scripts/frs/permissions-per-group/**/*"
     ],
     "exclude": ["node_modules", "scripts/lib"]
 }

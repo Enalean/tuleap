@@ -18,28 +18,33 @@
  */
 
 import Vue from "vue";
-import GettextPlugin from "vue-gettext";
-import french_translations from "./po/fr.po";
-
 import FRSPermissions from "./BaseFRSPackagePermissions.vue";
+import { getPOFileFromLocale, initVueGettext } from "../../tuleap/gettext/vue-gettext-init";
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
     const vue_mount_point = document.getElementById("frs-packages-permissions-per-group");
 
     if (!vue_mount_point) {
         return;
     }
 
-    Vue.use(GettextPlugin, {
-        translations: {
-            fr: french_translations.messages,
-        },
-        silent: true,
-    });
+    const locale = document.body.dataset.userLocale;
+    if (locale === undefined) {
+        throw new Error("Unable to load user locale");
+    }
+
+    Vue.config.language = locale;
+
+    await initVueGettext(
+        Vue,
+        (locale: string) =>
+            import(
+                /* webpackChunkName: "permissions-per-group-frs-po-" */ "./po/" +
+                    getPOFileFromLocale(locale)
+            )
+    );
 
     const rootComponent = Vue.extend(FRSPermissions);
-    const locale = document.body.dataset.userLocale;
-    Vue.config.language = locale;
 
     new rootComponent({
         propsData: { ...vue_mount_point.dataset },
