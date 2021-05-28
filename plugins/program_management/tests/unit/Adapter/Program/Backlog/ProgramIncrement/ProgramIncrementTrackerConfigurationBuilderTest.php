@@ -73,7 +73,7 @@ final class ProgramIncrementTrackerConfigurationBuilderTest extends \Tuleap\Test
     {
         $this->plan_store
             ->shouldReceive("getProgramIncrementLabels")
-            ->andReturn(['label' => "Program Increments", 'sub_label' => "program increment"])
+            ->andReturn(['program_increment_label' => "Program Increments", 'program_increment_sub_label' => "program increment"])
             ->once();
 
         $user                   = UserTestBuilder::aUser()->build();
