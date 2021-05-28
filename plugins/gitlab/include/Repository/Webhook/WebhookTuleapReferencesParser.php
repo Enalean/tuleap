@@ -40,11 +40,11 @@ class WebhookTuleapReferencesParser
             for ($match_index = 0; $match_index < count($matches[2]); $match_index++) {
                 $close_artifact_keyword = preg_replace('/\s+/', '', $matches[1][$match_index]);
                 $artifact_id            = $matches[2][$match_index];
-                if ($close_artifact_keyword === self::RESOLVES_KEYWORD) {
+                if (strcasecmp($close_artifact_keyword, self::RESOLVES_KEYWORD) === 0) {
                     $parsed_tuleap_references[] = new WebhookTuleapReference((int) $artifact_id, self::RESOLVES_KEYWORD);
-                } elseif ($close_artifact_keyword === self::CLOSES_KEYWORD) {
+                } elseif (strcasecmp($close_artifact_keyword, self::CLOSES_KEYWORD) === 0) {
                     $parsed_tuleap_references[] = new WebhookTuleapReference((int) $artifact_id, self::CLOSES_KEYWORD);
-                } elseif ($close_artifact_keyword === self::FIXES_KEYWORD) {
+                } elseif (strcasecmp($close_artifact_keyword, self::FIXES_KEYWORD) === 0) {
                     $parsed_tuleap_references[] = new WebhookTuleapReference((int) $artifact_id, self::FIXES_KEYWORD);
                 } else {
                     $parsed_tuleap_references[] = new WebhookTuleapReference((int) $artifact_id, null);
