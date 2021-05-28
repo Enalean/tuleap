@@ -251,7 +251,7 @@ const webpack_config_for_burning_parrot_code = {
         "site-admin/description-fields": "./scripts/site-admin/description-fields.ts",
         "site-admin/password-policy": "./scripts/site-admin/password-policy.ts",
         "tlp-relative-date": "./scripts/tuleap/custom-elements/relative-date/index.ts",
-        "trovecat-admin": "./scripts/tuleap/trovecat.js",
+        "trovecat-admin": "./scripts/tuleap/trovecat.ts",
         "widget-project-heartbeat": "./scripts/dashboards/widgets/project-heartbeat/index.ts",
         "browser-deprecation-bp": "./scripts/browser-deprecation/browser-deprecation-modal-bp.ts",
         "browser-deprecation-fp": "./scripts/browser-deprecation/browser-deprecation-modal-fp.ts",
