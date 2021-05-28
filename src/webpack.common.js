@@ -217,7 +217,7 @@ const webpack_config_for_burning_parrot_code = {
         "account/preferences-nav": "./scripts/account/preferences-nav.ts",
         "account/security": "./scripts/account/security.ts",
         "account/timezone": "./scripts/account/timezone.ts",
-        "burning-parrot": "./scripts/BurningParrot/src/index.js",
+        "burning-parrot": "./scripts/BurningParrot/src/index.ts",
         "dashboards/dashboard": "./scripts/dashboards/dashboard.js",
         "dashboards/widget-contact-modal": "./scripts/dashboards/widgets/contact-modal.ts",
         "frs-admin-license-agreement": "./scripts/frs/admin/license-agreement.js",

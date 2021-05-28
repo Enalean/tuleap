@@ -18,7 +18,7 @@
  */
 
 import $ from "jquery";
-import { init as initScrollBar } from "../BurningParrot/src/scrollbar.js";
+import { init as initScrollBar } from "../BurningParrot/src/scrollbar";
 
 var width_collapsed = "50px";
 var width_expanded = "250px";

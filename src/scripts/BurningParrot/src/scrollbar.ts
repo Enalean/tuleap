@@ -21,7 +21,7 @@ import Scrollbar from "smooth-scrollbar";
 
 export { init };
 
-function init() {
+function init(): void {
     Scrollbar.initAll({
         damping: 1,
         continuousScrolling: false,
