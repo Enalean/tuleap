@@ -12,10 +12,9 @@ services:
     - realtime
 
   web:
-    image: enalean/tuleap-aio-dev:c7-php74-nginx
+    image: enalean/tuleap-aio-dev:c7-php74-nginx-v2
     volumes:
       - .:/usr/share/tuleap:cached
-      - ../tuleap-plugins:/usr/share/tuleap-plugins:cached
       - tuleap-data:/data
       - realtime-cert:/etc/pki/ca-trust/source/anchors
       - /sys/fs/cgroup:/sys/fs/cgroup:ro
