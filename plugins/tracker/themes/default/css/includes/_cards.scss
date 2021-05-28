@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@import '../../../../../../src/themes/tlp/src/scss/variables/colors/common-colors';
+@use '../../../../../../src/themes/tlp/src/scss/variables/colors/swatch-colors';
 
 .cards {
     margin: 0;
@@ -47,7 +47,7 @@
 
 .card,
 .card-preview {
-    @each $color-name, $colors in $tlp-swatch-color-map {
+    @each $color-name, $colors in swatch-colors.$tlp-swatch-color-map {
         &.card-style-#{$color-name} {
             border-color: map-get($colors, 'border');
             background: map-get($colors, 'secondary');
@@ -92,7 +92,7 @@
     }
 }
 
-@each $color-name, $colors in $tlp-swatch-color-map {
+@each $color-name, $colors in swatch-colors.$tlp-swatch-color-map {
     // Specificity added to win over .card.card-style-$color
     div.card.card-accent-#{$color-name} {
         background: map-get($colors, 'primary');

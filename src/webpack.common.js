@@ -462,20 +462,12 @@ const webpack_config_for_burning_parrot_css = {
     plugins: [manifest_plugin, ...webpack_configurator.getCSSExtractionPlugins()],
 };
 
-const flamingparrot_entry_points = {
-    "FlamingParrot/print": "./themes/FlamingParrot/css/print.scss",
-    "syntax-highlight": "./themes/common/css/syntax-highlight.scss",
-};
-
-const fp_colors = ["Blue", "BlueGrey", "Green", "Orange", "Purple", "Red"];
-for (const color of fp_colors) {
-    flamingparrot_entry_points[
-        `FlamingParrot/FlamingParrot_${color}`
-    ] = `./themes/FlamingParrot/css/FlamingParrot_${color}.scss`;
-}
-
 const webpack_config_for_flaming_parrot_css = {
-    entry: flamingparrot_entry_points,
+    entry: {
+        "FlamingParrot/style": "./themes/FlamingParrot/css/style.scss",
+        "FlamingParrot/print": "./themes/FlamingParrot/css/print.scss",
+        "syntax-highlight": "./themes/common/css/syntax-highlight.scss",
+    },
     context,
     output,
     module: {

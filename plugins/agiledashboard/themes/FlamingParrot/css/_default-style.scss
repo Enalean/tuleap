@@ -17,8 +17,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@use '../../src/themes/FlamingParrot/css/utils/variables-color-common';
-
 /* stylelint-disable selector-no-qualifying-type */
 /* stylelint-disable-next-line selector-class-pattern */
 body.agiledashboard_homepage .main .content {
@@ -373,7 +371,7 @@ body.agiledashboard_homepage .main .content {
 
 .project-with-background {
     .release-date-info {
-        color: variables-color-common.$white;
+        color: var(--tlp-ui-white);
     }
 }
 

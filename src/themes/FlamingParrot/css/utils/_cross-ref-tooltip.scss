@@ -17,6 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+@use 'themes/common/css/utils/colors';
+
 $dimmed-white-over-dark-background: transparentize(#ffffff, .2);
 
 .codendi-tooltip {
@@ -27,7 +29,7 @@ $dimmed-white-over-dark-background: transparentize(#ffffff, .2);
     border-radius: 4px;
     background-color: var(--tlp-theme-dark-background-color);
     box-shadow: 0 20px 30px var(--tlp-theme-dark-background-color-transparent-85), 0 5px 10px var(--tlp-theme-dark-background-color-transparent-85);
-    color: $white;
+    color: var(--tlp-ui-white);
     font-size: 12px;
     font-weight: 600;
     line-height: 14px;
@@ -152,7 +154,7 @@ $dimmed-white-over-dark-background: transparentize(#ffffff, .2);
     line-height: 12px;
 }
 
-@each $color-name, $colors in $swatch-color-map {
+@each $color-name, $colors in colors.$swatch-color-map {
     .crossref-tooltip-header-prefix-circle-#{$color-name} {
         display: flex;
         align-items: center;

@@ -17,13 +17,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-&.viewvc-epel {
+// stylelint-disable selector-no-qualifying-type
+body.viewvc-epel {
     .main .content {
         padding: 0 0 150px;
     }
 
     .tuleap-viewvc-header {
-        padding: $tlp-medium-spacing $tlp-medium-spacing 0;
+        padding: var(--tlp-medium-spacing) var(--tlp-medium-spacing) 0;
         background: none;
     }
 
@@ -44,5 +45,5 @@
     #directory-content > thead > tr > th {
         border-bottom-color: var(--tlp-theme-color);
     }
-    /* stylelint-enable */
 }
+/* stylelint-enable */

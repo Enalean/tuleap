@@ -1,11 +1,14 @@
+@use 'variables-common';
+@use 'variables-color-common';
+
 .main {
     padding: 0;
     @media screen and (max-width: 880px) {
-        padding: $navbar-height 0 0 0;
+        padding: variables-common.$navbar-height 0 0 0;
     }
 
     @media screen and (max-width: 650px) {
-        padding: $navbar-height * 2 0 0 0;
+        padding: variables-common.$navbar-height * 2 0 0 0;
     }
 
     #feedback ul {
@@ -14,7 +17,7 @@
 
     .toolbar.nav-pills {
         margin: 0;
-        padding: $tlp-medium-spacing $tlp-medium-spacing 0;
+        padding: var(--tlp-medium-spacing) var(--tlp-medium-spacing) 0;
         border: 0;
         border-bottom: 1px solid var(--tlp-theme-background-color-darker-05);
         background: var(--tlp-theme-background-color);
@@ -24,20 +27,20 @@
             margin: 0 30px 15px 0;
             padding: 0;
             background: none;
-            color: $medium-grey;
+            color: variables-color-common.$medium-grey;
             font-weight: normal;
         }
 
         li > a:hover,
         li > a:focus {
             background: none;
-            color: $dark-grey;
+            color: variables-color-common.$dark-grey;
             font-weight: normal;
         }
     }
 
     .breadcrumb + .toolbar.nav-pills {
-        padding: 0 $tlp-medium-spacing;
+        padding: 0 var(--tlp-medium-spacing);
     }
 
     .content {

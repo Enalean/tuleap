@@ -17,6 +17,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+@use 'variables-common';
+@use 'variables-color-common';
+
 /* stylelint-disable selector-class-pattern, selector-no-qualifying-type */
 .sidebar-nav {
     display: flex;
@@ -24,17 +27,17 @@
     z-index: 1000;
     top: 0;
     flex-direction: column;
-    width: $sidebar-width;
-    max-width: $sidebar-width;
+    width: variables-common.$sidebar-width;
+    max-width: variables-common.$sidebar-width;
     height: 100vh;
     overflow: hidden;
     background: var(--tlp-theme-dark-background-color);
     @media screen and (max-width: 880px) {
-        padding: $navbar-height 0 0;
+        padding: variables-common.$navbar-height 0 0;
     }
 
     @media screen and (max-width: 650px) {
-        padding: $navbar-height * 2 0 0;
+        padding: variables-common.$navbar-height * 2 0 0;
     }
 
     .jspDrag {
@@ -54,9 +57,9 @@
         position: relative;
         box-sizing: border-box;
         align-items: center;
-        width: $sidebar-width;
-        height: $navbar-height;
-        padding: 0 $tlp-medium-spacing;
+        width: variables-common.$sidebar-width;
+        height: variables-common.$navbar-height;
+        padding: 0 var(--tlp-medium-spacing);
         border-left: 3px solid transparent;
         color: transparentize(#ffffff, .2);
         text-shadow: none;
@@ -71,7 +74,7 @@
     .nav-list > .active > a:focus {
         border-left: 3px solid var(--tlp-theme-color);
         background: var(--tlp-theme-dark-background-color-darker-05);
-        color: lighten($grey, 25%);
+        color: lighten(variables-color-common.$grey, 25%);
         font-weight: normal;
 
         &::before {
@@ -130,7 +133,7 @@
 
         &:hover {
             background: var(--tlp-theme-dark-background-color-darker-05);
-            color: lighten($grey, 10%);
+            color: lighten(variables-color-common.$grey, 10%);
         }
     }
 }
@@ -196,24 +199,24 @@
 .sidebar-copyright,
 .sidebar-copyright a {
     transition: color 100ms;
-    color: transparentize($grey, .2);
+    color: transparentize(variables-color-common.$grey, .2);
     font-size: 13px;
     line-height: 20px;
 }
 
 .sidebar-about:hover > .sidebar-about-version,
 .sidebar-copyright a:hover {
-    color: transparentize($white, .2);
+    color: var(--tlp-ui-white-transparent-20);
     text-decoration: none;
 }
 
 .project-sidebar-nav-item-icon {
-    margin: 0 $tlp-small-spacing 0 0;
+    margin: 0 var(--tlp-small-spacing) 0 0;
     font-size: .875rem;
 }
 
 .project-sidebar-nav-item-label {
-    max-width: $sidebar-width - 60px;
+    max-width: variables-common.$sidebar-width - 60px;
     overflow: hidden;
     font-size: .8125rem;
     text-overflow: ellipsis;
@@ -224,7 +227,7 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: $tlp-medium-spacing $tlp-small-spacing;
+    padding: var(--tlp-medium-spacing) var(--tlp-small-spacing);
 }
 
 .project-title-container {
@@ -234,10 +237,10 @@
 .project-title {
     display: flex;
     align-items: center;
-    padding: $tlp-small-spacing;
+    padding: var(--tlp-small-spacing);
     transition: background 100ms;
     border-radius: 4px;
-    color: transparentize($white, .2);
+    color: var(--tlp-ui-white-transparent-20);
     font-size: 1.125rem;
     font-weight: 600;
     line-height: 1.3125rem;
@@ -254,9 +257,9 @@
         justify-content: center;
         width: 24px;
         height: 24px;
-        margin: 0 $tlp-small-spacing 0 0;
+        margin: 0 var(--tlp-small-spacing) 0 0;
         border-radius: 50%;
-        color: $white;
+        color: var(--tlp-ui-white);
         font-size: .6rem;
         line-height: 0;
         cursor: help;
@@ -281,7 +284,7 @@
 
 .project-sidebar-banner-button {
     flex: 0 0 auto;
-    margin: 0 $tlp-small-spacing;
+    margin: 0 var(--tlp-small-spacing);
     transition: opacity ease-in-out 100ms;
 
     .fa-bullhorn {
@@ -290,8 +293,8 @@
         height: 24px;
         padding: 6.5px;
         border-radius: 50%;
-        background-color: $tlp-ui-warning;
-        color: $white;
+        background-color: var(--tlp-ui-warning);
+        color: var(--tlp-ui-white);
         font-size: .6rem;
         text-shadow: 0 0 1px rgba(0, 0, 0, .5);
     }
@@ -304,7 +307,7 @@
 .project-sidebar-project-flags {
     display: flex;
     align-items: center;
-    margin: 0 0 $tlp-medium-spacing $tlp-medium-spacing;
+    margin: 0 0 var(--tlp-medium-spacing) var(--tlp-medium-spacing);
     color: #d4d7e1;
     cursor: help;
 
@@ -333,7 +336,7 @@
     flex-direction: column;
     align-items: flex-start;
     justify-content: center;
-    margin: 0 0 0 $tlp-small-spacing;
+    margin: 0 0 0 var(--tlp-small-spacing);
 }
 
 .project-sidebar-project-flags-label {
@@ -348,14 +351,14 @@
     white-space: nowrap;
 }
 
-&.sidebar-collapsed {
+body.sidebar-collapsed {
     .project-sidebar-header-name {
         justify-content: center;
         padding: 0;
     }
 
     .project-sidebar-banner-button {
-        margin: $tlp-medium-spacing 0 $tlp-small-spacing;
+        margin: var(--tlp-medium-spacing) 0 var(--tlp-small-spacing);
     }
 
     .project-sidebar-project-flags {

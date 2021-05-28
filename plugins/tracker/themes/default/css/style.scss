@@ -17,17 +17,18 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@import '../../../node_modules/codemirror/lib/codemirror';
-@import '../../../node_modules/codemirror/addon/hint/show-hint';
-@import 'includes/cards';
-@import 'includes/field-bound-colors';
-@import 'includes/columns-colors';
-@import 'includes/move-artifact';
-@import 'includes/artifact-link-field';
-@import 'includes/xml-changesets';
-@import 'includes/xml-validation';
-@import 'includes/project-header-background';
-@import 'includes/cross-references-fields';
+@use '../../../node_modules/codemirror/lib/codemirror';
+@use '../../../node_modules/codemirror/addon/hint/show-hint';
+@use '../../../../../src/themes/tlp/src/scss/variables/colors/swatch-colors';
+@use 'includes/cards';
+@use 'includes/field-bound-colors';
+@use 'includes/columns-colors';
+@use 'includes/move-artifact';
+@use 'includes/artifact-link-field';
+@use 'includes/xml-changesets';
+@use 'includes/xml-validation';
+@use 'includes/project-header-background';
+@use 'includes/cross-references-fields';
 
 $tracker-artifact-submit-buttons-height: 80px;
 $tracker-artifact-submit-buttons-concurrent-edition-height: 286px;
@@ -849,7 +850,7 @@ select.tracker-report-expert-allowed-fields {
     // To avoid to apply the generic H1 style class.
     .helper-popover-title {
         margin: 0;
-        color: $tlp-ui-white;
+        color: var(--tlp-ui-white);
         font-size: 16px;
     }
 
@@ -2715,7 +2716,7 @@ body.sidebar-expanded #tracker-settings > .submit-bar {
     padding-left: 200px;
 }
 
-@each $color-name, $colors in $tlp-swatch-color-map {
+@each $color-name, $colors in swatch-colors.$tlp-swatch-color-map {
     .#{$color-name} {
         &.fa-circle.tracker_color_info,
         &.tracker_color_selector_container {

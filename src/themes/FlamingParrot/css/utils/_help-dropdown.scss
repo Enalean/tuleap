@@ -127,7 +127,7 @@
         }
 
         &.help-dropdown-link-highlight {
-            color: $tlp-ui-warning;
+            color: var(--tlp-ui-warning);
         }
 
         > .review-link-icon {
@@ -144,7 +144,7 @@
         > a {
             margin: 0 10px 0 0;
             opacity: .6;
-            color: $light-grey;
+            color: var(--tlp-ui-border-light);
         }
     }
 }
@@ -187,9 +187,9 @@
 
     &.new-release-note-available {
         animation: pulse 300ms ease-in-out 1s 3 both;
-        border-color: $tlp-ui-warning;
-        background: $tlp-ui-warning;
-        color: $white;
+        border-color: var(--tlp-ui-warning);
+        background: var(--tlp-ui-warning);
+        color: var(--tlp-ui-white);
 
         > .fa-star {
             display: inline-block;

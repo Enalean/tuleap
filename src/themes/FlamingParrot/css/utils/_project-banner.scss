@@ -22,7 +22,7 @@
     display: flex;
     justify-content: space-between;
     padding: 20px 15px 20px 20px;
-    background-color: $tlp-ui-warning;
+    background-color: var(--tlp-ui-warning);
 }
 
 .project-banner-clamped {
@@ -37,11 +37,11 @@
 
 .project-banner > p {
     margin: 0;
-    color: $white;
+    color: var(--tlp-ui-white);
 }
 
 .project-banner > p > a {
-    color: $white;
+    color: var(--tlp-ui-white);
     text-decoration: underline;
 }
 
@@ -51,7 +51,7 @@
     left: -2px;
     align-self: baseline;
     margin-left: 20px;
-    color: $white;
+    color: var(--tlp-ui-white);
     cursor: pointer;
 
     &:hover {

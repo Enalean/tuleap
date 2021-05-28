@@ -18,12 +18,8 @@
  */
 
 @use '../../../common/css/project-background/background';
-
-$tlp-theme-sidebar-background-color: var(--tlp-theme-dark-background-color);
-$sidebar-expanded-width: $sidebar-width;
-$sidebar-collapsed-width: $sidebar-width-collapsed;
-
-@import '../../../common/css/project-background/project-background';
+@use '../../../common/css/project-background/project-background';
+@use 'variables-color-common';
 
 .project-with-background {
     .project-administration-title,
@@ -32,7 +28,7 @@ $sidebar-collapsed-width: $sidebar-width-collapsed;
     .project-header-title {
         @include background.project-background-title-header-typography();
         margin: 0;
-        padding: 0 $tlp-medium-spacing 30px;
+        padding: 0 var(--tlp-medium-spacing) 30px;
     }
 
     .toolbar.nav-pills {
@@ -44,12 +40,12 @@ $sidebar-collapsed-width: $sidebar-width-collapsed;
 
         li > a:hover,
         li > a:focus {
-            color: $grey;
+            color: variables-color-common.$grey;
         }
     }
 
     .breadcrumb-container {
-        padding: $tlp-medium-spacing $tlp-medium-spacing 0;
+        padding: var(--tlp-medium-spacing) var(--tlp-medium-spacing) 0;
     }
 
     .breadcrumb,
@@ -63,34 +59,34 @@ $sidebar-collapsed-width: $sidebar-width-collapsed;
 
     .breadcrumb-item:not(.breadcrumb-item-disabled):hover > .breadcrumb-link {
         @include background.background-for-links();
-        color: $white;
+        color: var(--tlp-ui-white);
     }
 
     .breadcrumb-switchable:hover > .breadcrumb-link::after {
-        color: $white;
+        color: var(--tlp-ui-white);
     }
 
     .breadcrumb-project-privacy-icon {
         &.fa-lock,
         &.fa-tlp-lock-plus-r {
-            background: $white;
+            background: var(--tlp-ui-white);
             color: var(--tlp-theme-dark-background-color);
         }
 
         &.fa-lock-open,
         &.fa-tlp-unlock-plus-r {
             @include background.background-for-links();
-            color: $white;
+            color: var(--tlp-ui-white);
         }
     }
 
     .breadcrumb-project-privacy-icon-with-flags {
         @include background.background-for-links();
-        color: $white;
+        color: var(--tlp-ui-white);
 
         > .fas {
             background: none;
-            color: $white;
+            color: var(--tlp-ui-white);
         }
     }
 
@@ -109,52 +105,52 @@ $sidebar-collapsed-width: $sidebar-width-collapsed;
             }
 
             > a {
-                padding: ($tlp-medium-spacing - 2) $tlp-large-spacing $tlp-medium-spacing;
+                padding: calc(var(--tlp-medium-spacing) - 2px) var(--tlp-large-spacing) var(--tlp-medium-spacing);
                 border: 0;
                 border-top: 2px solid transparent;
-                color: $white;
+                color: var(--tlp-ui-white);
 
                 &.active,
                 &:focus,
                 &:hover {
                     @include background.background-for-links();
                     border-bottom: 0;
-                    border-top-color: $white;
+                    border-top-color: var(--tlp-ui-white);
 
                     > .caret {
-                        border-top-color: $white;
-                        border-bottom-color: $white;
+                        border-top-color: var(--tlp-ui-white);
+                        border-bottom-color: var(--tlp-ui-white);
                     }
                 }
             }
 
             &.dropdown.open > a:hover > .caret {
-                border-top-color: $white;
-                border-bottom-color: $white;
+                border-top-color: var(--tlp-ui-white);
+                border-bottom-color: var(--tlp-ui-white);
             }
 
             &.active {
                 &.open {
-                    color: $white;
+                    color: var(--tlp-ui-white);
                 }
 
                 > a {
                     @include background.background-for-links();
                     border-bottom: 0;
-                    border-top-color: $white;
+                    border-top-color: var(--tlp-ui-white);
                 }
             }
 
             > .dropdown-toggle > .caret {
-                border-top-color: $white;
-                border-bottom-color: $white;
+                border-top-color: var(--tlp-ui-white);
+                border-bottom-color: var(--tlp-ui-white);
             }
         }
     }
     // stylelint-enable
 
     #feedback {
-        padding: $tlp-medium-spacing 0;
+        padding: var(--tlp-medium-spacing) 0;
 
         // stylelint-disable selector-class-pattern
         > .feedback_error,

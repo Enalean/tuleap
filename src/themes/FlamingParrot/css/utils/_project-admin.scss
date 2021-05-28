@@ -17,11 +17,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+@use 'variables-color-common';
+
 .navigation-dropdown-title {
     margin: 10px 0 0;
     padding: 20px 20px 10px;
-    border-top: 1px solid $light-grey;
-    color: $medium-grey;
+    border-top: 1px solid var(--tlp-ui-border-light);
+    color: variables-color-common.$medium-grey;
     line-height: 20px;
 }
 

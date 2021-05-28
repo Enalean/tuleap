@@ -145,6 +145,7 @@ $theme-color-dimmed-background: mix($tlp-theme-background-color, $tlp-ui-white, 
     --tlp-ui-white-darker-02: #{darken($tlp-ui-white, 2%)};
     --tlp-ui-white-darker-10: #{darken($tlp-ui-white, 10%)};
     --tlp-ui-white-transparent-10: #{transparentize($tlp-ui-white, .1)};
+    --tlp-ui-white-transparent-20: #{transparentize($tlp-ui-white, .2)};
     --tlp-ui-white-transparent-30: #{transparentize($tlp-ui-white, .3)};
     --tlp-ui-white-transparent-40: #{transparentize($tlp-ui-white, .4)};
     --tlp-ui-white-transparent-80: #{transparentize($tlp-ui-white, .8)};

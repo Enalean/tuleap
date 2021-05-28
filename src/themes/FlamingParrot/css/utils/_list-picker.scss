@@ -17,6 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+@use 'themes/tlp/src/scss/variables/colors/swatch-colors';
+
 @import '~@tuleap/list-picker';
 
 $form-element-border-color: var(--tlp-ui-border-dark-darker-05);
@@ -46,7 +48,7 @@ $form-element-small-font-size: .8125rem;
         }
 
         .list-picker-multiple-search-section-disabled > .list-picker-search-field {
-            background: $white;
+            background: var(--tlp-ui-white);
             cursor: not-allowed;
         }
     }
@@ -68,13 +70,13 @@ $form-element-small-font-size: .8125rem;
         align-items: center;
         border: 1px solid $form-element-border-color;
         border-radius: 4px;
-        background: $white;
+        background: var(--tlp-ui-white);
         font-size: .875rem;
 
         &.list-picker-single {
             height: $form-element-height;
             padding: 0 ($form-element-padding-horizontal * 2 + $form-element-select-background-size) 0 $form-element-padding-horizontal;
-            background: $white url('../images/list-picker-background.png') no-repeat;
+            background: var(--tlp-ui-white) url('../images/list-picker-background.png') no-repeat;
             background-position: right $form-element-padding-horizontal center;
         }
 
@@ -82,7 +84,7 @@ $form-element-small-font-size: .8125rem;
             position: relative;
             min-height: $form-element-height;
             padding: 0 52px 5px 6px;
-            background: $white url('../images/list-picker-multi-background.svg') no-repeat;
+            background: var(--tlp-ui-white) url('../images/list-picker-multi-background.svg') no-repeat;
             background-position: right 10px top 17px;
             background-size: 15px 5px;
         }
@@ -108,7 +110,7 @@ $form-element-small-font-size: .8125rem;
 .list-picker-dropdown-option-value {
     &.list-picker-item-highlighted {
         background-color: var(--tlp-theme-color);
-        color: $white;
+        color: var(--tlp-ui-white);
     }
 
     &[aria-selected='true']::before {
@@ -127,7 +129,7 @@ $form-element-small-font-size: .8125rem;
         color: var(--tlp-theme-color);
 
         &.list-picker-item-highlighted {
-            color: $white;
+            color: var(--tlp-ui-white);
         }
     }
 }
@@ -151,7 +153,7 @@ $form-element-small-font-size: .8125rem;
     cursor: pointer;
 }
 
-@each $color-name, $colors in $tlp-swatch-color-map {
+@each $color-name, $colors in swatch-colors.$tlp-swatch-color-map {
     .list-picker-badge-#{$color-name} {
         border: 1px solid transparentize(map-get($colors, 'primary'), .4);
         background: transparentize(map-get($colors, 'primary'), .9);
@@ -218,19 +220,19 @@ $form-element-small-font-size: .8125rem;
 
 .list-picker-error {
     .list-picker-selection {
-        border-color: $tlp-ui-danger;
-        color: $tlp-ui-danger;
+        border-color: var(--tlp-ui-danger);
+        color: var(--tlp-ui-danger);
     }
 
     .list-picker-badge {
-        border-color: $tlp-ui-danger;
-        background-color: transparentize($tlp-ui-danger, .9);
-        color: $tlp-ui-danger;
+        border-color: var(--tlp-ui-danger);
+        background-color: var(--tlp-ui-danger-color-transparent-90);
+        color: var(--tlp-ui-danger);
     }
 }
 
 .list-picker-dropdown-option-value-disabled {
-    color: $tlp-ui-dimmed;
+    color: var(--tlp-ui-dimmed);
 }
 
 .list-picker-avatar {
@@ -245,7 +247,7 @@ $form-element-small-font-size: .8125rem;
     vertical-align: middle;
 }
 
-@each $color-name, $colors in $tlp-swatch-color-map {
+@each $color-name, $colors in swatch-colors.$tlp-swatch-color-map {
     .list-picker-circular-color-#{$color-name} {
         width: 14px;
         height: 14px;

@@ -17,16 +17,18 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-&.cvs-body .main .content {
+// stylelint-disable selector-no-qualifying-type
+body.cvs-body .main .content {
     padding: 0;
 }
+// stylelint-enable
 
 .cvs-header {
     background: var(--tlp-theme-background-color);
 
     > .administration-title {
         margin: 0;
-        padding: $tlp-medium-spacing $tlp-medium-spacing 30px;
+        padding: var(--tlp-medium-spacing) var(--tlp-medium-spacing) 30px;
     }
 
     > .main-project-tabs > .nav-tabs {
@@ -35,11 +37,11 @@
 }
 
 .cvs-intro {
-    padding: $tlp-medium-spacing;
+    padding: var(--tlp-medium-spacing);
 }
 
 .cvs-commit,
 .cvs-commits,
 .cvs-admin {
-    padding: 0 $tlp-medium-spacing;
+    padding: 0 var(--tlp-medium-spacing);
 }
