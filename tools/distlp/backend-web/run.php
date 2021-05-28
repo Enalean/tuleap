@@ -20,9 +20,9 @@
 
 use Symfony\Component\Process\Process;
 use Tuleap\Configuration\Logger\Console;
-use Tuleap\Configuration\Nginx\BackendWeb;
 use TuleapCfg\Command\SiteDeploy\FPM\FPMSessionRedis;
 use TuleapCfg\Command\SiteDeploy\FPM\SiteDeployFPM;
+use TuleapCfg\Command\SiteDeploy\Nginx\SiteDeployNginx;
 
 require_once __DIR__ . '/../../Configuration/vendor/autoload.php';
 require_once __DIR__ . '/../../../src/vendor/autoload.php';
@@ -48,7 +48,7 @@ $fpm             = new SiteDeployFPM(
     SiteDeployFPM::PHP74_SRC_CONF_DIR,
     [],
 );
-$nginx           = new BackendWeb($logger, '/usr/share/tuleap', '/etc/nginx', 'reverse-proxy');
+$nginx           = new SiteDeployNginx($logger, '/usr/share/tuleap', '/etc/nginx', 'reverse-proxy', true);
 
 $fpm->forceDeploy();
 $nginx->configure();

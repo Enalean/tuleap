@@ -317,17 +317,6 @@ start: ## Start Tuleap web with php 7.4 & nginx on CentOS7
 	@$(DOCKER_COMPOSE) up --build -d reverse-proxy
 	@echo "Update tuleap-web.tuleap-aio-dev.docker in /etc/hosts with: $(call get_ip_addr,reverse-proxy)"
 
-start-distlp:
-	@echo "Start Tuleap with reverse-proxy, backend web and backend svn"
-	-@$(DOCKER_COMPOSE) stop
-	@$(DOCKER_COMPOSE) -f docker-compose-distlp.yml up -d reverse-proxy-distlp
-	@echo "Add '$(call get_ip_addr,reverse-proxy) tuleap-web.tuleap-aio-dev.docker' to /etc/hosts"
-	@echo "Ensure $(call get_ip_addr,reverse-proxy) is configured as sys_trusted_proxies in /etc/tuleap/conf/local.inc"
-	@echo "You can access :"
-	@echo "* Reverse proxy with: docker-compose -f docker-compose.yml -f -f docker-compose-distlp.yml reverse-proxy-distlp bash"
-	@echo "* Backend web with: docker-compose -f docker-compose.yml -f -f docker-compose-distlp.yml backend-web bash"
-	@echo "* Backend SVN with: docker-compose -f docker-compose.yml -f -f docker-compose-distlp.yml backend-svn bash"
-
 start-ldap-admin: ## Start ldap administration ui
 	@echo "Start ldap administration ui"
 	@docker-compose up -d ldap-admin
@@ -345,9 +334,6 @@ deploy-mailhog-conf:
 	    echo 'relayhost = mailhog:1025' >> /etc/postfix/main.cf; \
 	    systemctl restart postfix; \
 	 fi
-
-stop-distlp:
-	@$(SUDO) docker-compose -f docker-compose-distlp.yml stop
 
 start-gitlab:
 	@echo "Start gitlab instance for your Tuleap dev"
