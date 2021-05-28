@@ -18,50 +18,50 @@
  */
 
 .tlp-illustration {
-    --tlp-illustration-primary-color: #{$tlp-illustration-primary-color};
-    --tlp-illustration-secondary-dark-color: #{$tlp-illustration-secondary-dark-color};
-    --tlp-illustration-secondary-light-color: #{$tlp-illustration-secondary-light-color};
-    --tlp-illustration-tertiary-color: #{$tlp-illustration-tertiary-color};
+    --tlp-illustration-primary-color: var(--tlp-legacy-illustration-primary-color);
+    --tlp-illustration-secondary-dark-color: var(--tlp-legacy-illustration-secondary-dark-color);
+    --tlp-illustration-secondary-light-color: var(--tlp-legacy-illustration-secondary-light-color);
+    --tlp-illustration-tertiary-color: var(--tlp-illustration-tertiary-color);
 }
 
 .tlp-illustration-primary-box {
-    stroke: $tlp-illustration-primary-color;
-    fill: $tlp-illustration-secondary-light-color;
+    stroke: var(--tlp-legacy-illustration-primary-color);
+    fill: var(--tlp-legacy-illustration-secondary-light-color);
 }
 
 .tlp-illustration-primary-dark-box {
-    stroke: $tlp-illustration-primary-color;
-    fill: $tlp-illustration-secondary-dark-color;
+    stroke: var(--tlp-legacy-illustration-primary-color);
+    fill: var(--tlp-legacy-illustration-secondary-dark-color);
 }
 
 .tlp-illustration-primary-fill {
-    fill: $tlp-illustration-primary-color;
+    fill: var(--tlp-legacy-illustration-primary-color);
 }
 
 .tlp-illustration-primary-stroke {
-    stroke: $tlp-illustration-primary-color;
+    stroke: var(--tlp-legacy-illustration-primary-color);
 }
 
 .tlp-illustration-secondary-light-stroke {
-    stroke: $tlp-illustration-secondary-light-color;
+    stroke: var(--tlp-legacy-illustration-secondary-light-color);
 }
 
 .tlp-illustration-secondary-light-fill {
-    fill: $tlp-illustration-secondary-light-color;
+    fill: var(--tlp-legacy-illustration-secondary-light-color);
 }
 
 .tlp-illustration-secondary-dark-stroke {
-    stroke: $tlp-illustration-secondary-dark-color;
+    stroke: var(--tlp-legacy-illustration-secondary-dark-color);
 }
 
 .tlp-illustration-secondary-dark-fill {
-    fill: $tlp-illustration-secondary-dark-color;
+    fill: var(--tlp-legacy-illustration-secondary-dark-color);
 }
 
 .tlp-illustration-tertiary-fill {
-    fill: $tlp-illustration-tertiary-color;
+    fill: var(--tlp-illustration-tertiary-color);
 }
 
 .tlp-illustration-tertiary-stroke {
-    stroke: $tlp-illustration-tertiary-color;
+    stroke: var(--tlp-illustration-tertiary-color);
 }

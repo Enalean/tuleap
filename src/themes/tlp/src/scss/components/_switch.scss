@@ -23,8 +23,8 @@ $tlp-switch-large-height: 48px;
 $tlp-switch-large-width: 96px;
 $tlp-switch-mini-height: 16px;
 $tlp-switch-mini-width: 40px;
-$tlp-switch-mini-background: $tlp-theme-color;
-$tlp-switch-background: $tlp-ui-border-dark;
+$tlp-switch-mini-background: var(--tlp-theme-color);
+$tlp-switch-background: var(--tlp-ui-border-dark);
 $tlp-switch-button-background: #ffffff;
 $tlp-switch-button-width: 37px;
 $tlp-switch-large-button-width: 57px;
@@ -44,7 +44,7 @@ $tlp-switch-button-spinner-size: $tlp-switch-height - 2 * ($tlp-switch-button-pa
     opacity: 0;
 
     &:focus + label::before {
-        box-shadow: $tlp-shadow-focus;
+        box-shadow: var(--tlp-shadow-focus);
     }
 }
 
@@ -101,7 +101,7 @@ $tlp-switch-button-spinner-size: $tlp-switch-height - 2 * ($tlp-switch-button-pa
             width: $tlp-switch-button-spinner-size;
             height: $tlp-switch-button-spinner-size;
             animation: tlp-switch-loading-spin 2s infinite linear;
-            color: $tlp-ui-dimmed;
+            color: var(--tlp-ui-dimmed);
         }
     }
 }
@@ -124,12 +124,12 @@ $tlp-switch-button-spinner-size: $tlp-switch-height - 2 * ($tlp-switch-button-pa
 
 .tlp-switch-checkbox:checked + .tlp-switch-button:not(.loading) {
     &::before {
-        background-color: $tlp-ui-success;
+        background-color: var(--tlp-ui-success);
     }
 
     &::after {
         left: 25px;
-        color: $tlp-ui-success;
+        color: var(--tlp-ui-success);
     }
 }
 

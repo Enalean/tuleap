@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@import 'tooltips-mixins';
+@use 'tooltips-mixins';
 
 .tlp-tooltip {
     position: relative;
@@ -44,8 +44,8 @@
     &::before {
         content: attr(data-tlp-tooltip);
         padding: calc(var(--tlp-medium-spacing) / 2);
-        border-radius: $tlp-tooltip-border-radius;
-        background: $tlp-tooltip-background;
+        border-radius: tooltips-mixins.$tlp-tooltip-border-radius;
+        background: tooltips-mixins.$tlp-tooltip-background;
         color: #ffffff;
         font-size: 14px;
         font-weight: 400;
@@ -62,17 +62,17 @@
 }
 
 .tlp-tooltip-top {
-    @include tlp-tooltip-top();
+    @include tooltips-mixins.tlp-tooltip-top();
 }
 
 .tlp-tooltip-right {
-    @include tlp-tooltip-right();
+    @include tooltips-mixins.tlp-tooltip-right();
 }
 
 .tlp-tooltip-bottom {
-    @include tlp-tooltip-bottom();
+    @include tooltips-mixins.tlp-tooltip-bottom();
 }
 
 .tlp-tooltip-left {
-    @include tlp-tooltip-left();
+    @include tooltips-mixins.tlp-tooltip-left();
 }

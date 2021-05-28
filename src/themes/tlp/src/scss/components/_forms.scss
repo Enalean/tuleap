@@ -17,6 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+@use '../variables/colors/swatch-colors';
+
 $tlp-form-element-font-size: .875rem;
 $tlp-form-element-height: 40px;
 $tlp-form-element-padding-horizontal: 12px;
@@ -27,10 +29,10 @@ $tlp-form-element-large-font-size: 1rem;
 $tlp-form-element-large-height: 48px;
 $tlp-form-element-large-padding-horizontal: var(--tlp-medium-spacing);
 $tlp-form-element-border-radius: 4px;
-$tlp-form-element-border-color: darken($tlp-ui-border-dark, 5%);
-$tlp-form-element-background: $tlp-ui-white;
+$tlp-form-element-border-color: var(--tlp-ui-border-dark-darker-05);
+$tlp-form-element-background: var(--tlp-ui-white);
 $tlp-form-element-border-transition-duration: 150ms;
-$tlp-form-element-placeholder-color: darken($tlp-ui-border-dark, 10%);
+$tlp-form-element-placeholder-color: var(--tlp-ui-border-dark-darker-10);
 
 $tlp-form-element-select-background-size: 8px;
 $tlp-form-element-select-small-background-size: 6px;
@@ -78,7 +80,7 @@ $tlp-form-element-select-small-background-size: 6px;
 
     &.tlp-form-element-error {
         > .tlp-label {
-            color: $tlp-ui-danger;
+            color: var(--tlp-ui-danger);
         }
 
         /* stylelint-disable selector-class-pattern, selector-max-compound-selectors */
@@ -93,15 +95,15 @@ $tlp-form-element-select-small-background-size: 6px;
         .select2-container--tlp-select2-large .select2-selection--multiple,
         .select2-container--tlp-select2 .select2-selection--multiple .select2-selection__rendered .select2-selection__choice .select2-selection__choice__remove:hover::before,
         .list-picker-selection {
-            border-color: $tlp-ui-danger;
-            color: $tlp-ui-danger;
+            border-color: var(--tlp-ui-danger);
+            color: var(--tlp-ui-danger);
         }
 
         .select2-container--tlp-select2 .select2-selection--multiple .select2-selection__rendered .select2-selection__choice,
         .list-picker-badge {
-            border-color: $tlp-ui-danger;
-            background-color: transparentize($tlp-ui-danger, .9);
-            color: $tlp-ui-danger;
+            border-color: var(--tlp-ui-danger);
+            background-color: var(--tlp-ui-danger-color-transparent-90);
+            color: var(--tlp-ui-danger);
         }
         /* stylelint-enable */
     }
@@ -127,7 +129,7 @@ $tlp-form-element-select-small-background-size: 6px;
     > .fa-asterisk {
         position: absolute;
         margin: 0 0 0 3px;
-        color: $tlp-ui-danger;
+        color: var(--tlp-ui-danger);
         font-size: .6em;
         vertical-align: text-top;
     }
@@ -156,7 +158,7 @@ $tlp-form-element-select-small-background-size: 6px;
 }
 
 .tlp-property-empty {
-    color: $tlp-ui-dimmed;
+    color: var(--tlp-ui-dimmed);
     font-style: italic;
 }
 
@@ -171,7 +173,7 @@ $tlp-form-element-select-small-background-size: 6px;
     border: 1px solid $tlp-form-element-border-color;
     border-radius: $tlp-form-element-border-radius;
     background: $tlp-form-element-background;
-    font-family: $tlp-font-family;
+    font-family: var(--tlp-font-family);
     font-size: $tlp-form-element-font-size;
 
     &::-webkit-input-placeholder { //stylelint-disable-line selector-no-vendor-prefix
@@ -184,8 +186,8 @@ $tlp-form-element-select-small-background-size: 6px;
 
     &:focus {
         transition: border-color $tlp-form-element-border-transition-duration linear, box-shadow 350ms;
-        border-color: $tlp-theme-color;
-        box-shadow: $tlp-shadow-focus;
+        border-color: var(--tlp-theme-color);
+        box-shadow: var(--tlp-shadow-focus);
     }
 }
 
@@ -328,14 +330,14 @@ $tlp-form-element-select-small-background-size: 6px;
         }
 
         .list-picker-multiple-search-section-disabled > .list-picker-search-field {
-            background: $tlp-ui-white;
+            background: var(--tlp-ui-white);
             cursor: not-allowed;
         }
     }
 
     &.list-picker-with-open-dropdown .list-picker-selection {
         border-radius: $tlp-form-element-border-radius $tlp-form-element-border-radius 0 0;
-        border-color: $tlp-theme-color;
+        border-color: var(--tlp-theme-color);
     }
 
     &.list-picker-with-open-dropdown {
@@ -355,7 +357,7 @@ $tlp-form-element-select-small-background-size: 6px;
         cursor: pointer;
     }
 
-    @each $color-name, $colors in $tlp-swatch-color-map {
+    @each $color-name, $colors in swatch-colors.$tlp-swatch-color-map {
         .list-picker-badge-#{$color-name} {
             @extend %tlp-badge, .tlp-badge-#{$color-name}, .tlp-badge-outline;;
         }
@@ -396,24 +398,24 @@ $tlp-form-element-select-small-background-size: 6px;
 .list-picker-dropdown {
     z-index: 2002;
     padding: 0;
-    border-right: 1px solid $tlp-theme-color;
-    border-bottom: 1px solid $tlp-theme-color;
-    border-left: 1px solid $tlp-theme-color;
+    border-right: 1px solid var(--tlp-theme-color);
+    border-bottom: 1px solid var(--tlp-theme-color);
+    border-left: 1px solid var(--tlp-theme-color);
     box-shadow: 0 6px 12px rgba(0, 0, 0, .175);
 
     &.list-picker-dropdown-above {
-        border-top: 1px solid $tlp-theme-color;
+        border-top: 1px solid var(--tlp-theme-color);
         border-bottom: unset;
         box-shadow: 0 0 12px rgba(0, 0, 0, .175);
     }
 
     .list-picker-dropdown-option-value-disabled {
-        color: $tlp-ui-dimmed;
+        color: var(--tlp-ui-dimmed);
     }
 
     .list-picker-group-label {
         padding: 6px $tlp-form-element-padding-horizontal;
-        color: $tlp-ui-dimmed;
+        color: var(--tlp-ui-dimmed);
         font-size: $tlp-form-element-small-font-size;
         font-weight: 600;
         line-height: 30px;
@@ -422,7 +424,7 @@ $tlp-form-element-select-small-background-size: 6px;
 
     .list-picker-empty-dropdown-state {
         padding: $tlp-form-element-padding-horizontal;
-        color: $tlp-ui-dimmed;
+        color: var(--tlp-ui-dimmed);
         font-size: $tlp-form-element-small-font-size;
         line-height: normal;
     }
@@ -447,8 +449,8 @@ $tlp-form-element-select-small-background-size: 6px;
 
 .list-picker-dropdown-option-value {
     &.list-picker-item-highlighted {
-        background-color: $tlp-theme-color;
-        color: $tlp-ui-white;
+        background-color: var(--tlp-theme-color);
+        color: var(--tlp-ui-white);
     }
 
     &[aria-selected='true']::before {
@@ -464,10 +466,10 @@ $tlp-form-element-select-small-background-size: 6px;
     &[aria-selected='true'] {
         position: relative;
         padding: 6px $tlp-form-element-padding-horizontal 6px 32px;
-        color: $tlp-theme-color;
+        color: var(--tlp-theme-color);
 
         &.list-picker-item-highlighted {
-            color: $tlp-ui-white;
+            color: var(--tlp-ui-white);
         }
     }
 }
@@ -479,13 +481,13 @@ $tlp-form-element-select-small-background-size: 6px;
     margin: 0 4px 0 0;
 }
 
-@each $color-name, $colors in $tlp-swatch-color-map {
+@each $color-name, $colors in swatch-colors.$tlp-swatch-color-map {
     .list-picker-badge-#{$color-name} {
         @extend %tlp-badge, .tlp-badge-#{$color-name}, .tlp-badge-outline;
     }
 }
 
-@each $color-name, $colors in $tlp-swatch-color-map {
+@each $color-name, $colors in swatch-colors.$tlp-swatch-color-map {
     .list-picker-circular-color-#{$color-name} {
         width: 20px;
         height: 20px;
@@ -510,13 +512,13 @@ $tlp-form-element-select-small-background-size: 6px;
         &.select2-container--above .select2-selection--single,
         &.select2-container--above .select2-selection--multiple {
             border-radius: 0 0 $tlp-form-element-border-radius $tlp-form-element-border-radius;
-            border-color: $tlp-theme-color;
+            border-color: var(--tlp-theme-color);
         }
 
         &.select2-container--below .select2-selection--single,
         &.select2-container--below .select2-selection--multiple {
             border-radius: $tlp-form-element-border-radius $tlp-form-element-border-radius 0 0;
-            border-color: $tlp-theme-color;
+            border-color: var(--tlp-theme-color);
         }
 
         .select2-dropdown--above {
@@ -599,7 +601,7 @@ $tlp-form-element-select-small-background-size: 6px;
                 .select2-search__field { //stylelint-disable-line selector-class-pattern
                     margin: 10px 0 0 6px;
                     background: transparent;
-                    font-family: $tlp-font-family;
+                    font-family: var(--tlp-font-family);
                 }
             }
 
@@ -621,7 +623,7 @@ $tlp-form-element-select-small-background-size: 6px;
     .select2-dropdown {
         z-index: 2002;
         padding: 0;
-        border-color: $tlp-theme-color;
+        border-color: var(--tlp-theme-color);
         box-shadow: 0 6px 12px rgba(0, 0, 0, .175);
 
         .select2-search--dropdown {
@@ -655,7 +657,7 @@ $tlp-form-element-select-small-background-size: 6px;
 
                 .select2-results__group { //stylelint-disable-line selector-class-pattern
                     padding: 6px $tlp-form-element-padding-horizontal;
-                    color: $tlp-ui-dimmed;
+                    color: var(--tlp-ui-dimmed);
                     font-size: $tlp-form-element-small-font-size;
                     font-weight: 600;
                     line-height: 30px;
@@ -672,14 +674,14 @@ $tlp-form-element-select-small-background-size: 6px;
             }
 
             &.select2-results__option--highlighted { //stylelint-disable-line selector-class-pattern
-                background: $tlp-theme-color;
-                color: $tlp-ui-white;
+                background: var(--tlp-theme-color);
+                color: var(--tlp-ui-white);
             }
 
             &[aria-selected='true'] {
                 position: relative;
                 padding: 6px $tlp-form-element-padding-horizontal 6px 32px;
-                color: $tlp-theme-color;
+                color: var(--tlp-theme-color);
 
                 &::before {
                     content: '\f00c'; // fa-check
@@ -692,12 +694,12 @@ $tlp-form-element-select-small-background-size: 6px;
                 }
 
                 &.select2-results__option--highlighted { //stylelint-disable-line selector-class-pattern
-                    color: $tlp-ui-white;
+                    color: var(--tlp-ui-white);
                 }
             }
 
             &[aria-disabled] {
-                color: $tlp-ui-dimmed;
+                color: var(--tlp-ui-dimmed);
                 cursor: not-allowed;
             }
 
@@ -705,7 +707,7 @@ $tlp-form-element-select-small-background-size: 6px;
             &.select2-results__message,
             &.loading-results {
                 padding: $tlp-form-element-padding-horizontal;
-                color: $tlp-ui-dimmed;
+                color: var(--tlp-ui-dimmed);
             }
         }
 
@@ -829,7 +831,7 @@ span.select2-container--tlp-select2-large {
 
         &:focus {
             transition: outline-color $tlp-form-element-border-transition-duration linear;
-            outline: 1px solid $tlp-theme-color;
+            outline: 1px solid var(--tlp-theme-color);
         }
     }
 
@@ -858,8 +860,8 @@ span.select2-container--tlp-select2-large {
         padding: 0 $tlp-form-element-padding-horizontal;
         transition: border-color $tlp-form-element-border-transition-duration linear;
         border: 1px solid $tlp-form-element-border-color;
-        background: transparentize($tlp-theme-color, .95);
-        color: $tlp-theme-color;
+        background: var(--tlp-theme-color-transparent-90);
+        color: var(--tlp-theme-color);
         font-size: $tlp-form-element-font-size;
         font-weight: 600;
         vertical-align: middle;

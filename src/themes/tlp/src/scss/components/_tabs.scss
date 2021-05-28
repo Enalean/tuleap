@@ -28,15 +28,15 @@ $tlp-tabs-transition: 75ms ease-out;
     min-height: 44px;
     margin: 0 0 var(--tlp-medium-spacing);
     padding: 0 var(--tlp-medium-spacing);
-    background: $tlp-ui-white;
-    box-shadow: inset 0 1px 0 $tlp-ui-border-normal, inset 0 -1px 0 $tlp-ui-border-normal;
+    background: var(--tlp-ui-white);
+    box-shadow: inset 0 1px 0 var(--tlp-ui-border-normal), inset 0 -1px 0 var(--tlp-ui-border-normal);
 }
 
 .tlp-tabs-vertical {
     flex-direction: column;
     align-items: flex-start;
     padding: 0;
-    border: 1px solid $tlp-ui-border-normal;
+    border: 1px solid var(--tlp-ui-border-normal);
     border-radius: 3px;
     box-shadow: none;
 }
@@ -44,7 +44,7 @@ $tlp-tabs-transition: 75ms ease-out;
 .tlp-pane > .tlp-pane-container > .tlp-tabs {
     margin: 0;
     padding: 0;
-    box-shadow: inset 0 -1px 0 $tlp-ui-border-normal;
+    box-shadow: inset 0 -1px 0 var(--tlp-ui-border-normal);
 }
 
 .tlp-tab-menu {
@@ -58,7 +58,7 @@ $tlp-tabs-transition: 75ms ease-out;
     padding: var(--tlp-medium-spacing) / 2 0;
     transform: translateY(100%);
     transition: bottom $tlp-tabs-transition, opacity $tlp-tabs-transition, box-shadow $tlp-tabs-transition;
-    border: 1px solid $tlp-ui-border-normal;
+    border: 1px solid var(--tlp-ui-border-normal);
     border-top: 0;
     border-bottom: 0;
     border-radius: 0 0 $tlp-tabs-radius $tlp-tabs-radius;
@@ -71,8 +71,8 @@ $tlp-tabs-transition: 75ms ease-out;
 .tlp-tab-menu-title {
     margin: calc(var(--tlp-medium-spacing) / 2) 0 0;
     padding: var(--tlp-medium-spacing) var(--tlp-medium-spacing) calc(var(--tlp-medium-spacing) / 2);
-    border-top: 1px solid $tlp-ui-border-light;
-    color: $tlp-ui-dimmed;
+    border-top: 1px solid var(--tlp-ui-border-light);
+    color: var(--tlp-ui-dimmed);
     line-height: 20px;
 
     &:first-child {
@@ -92,14 +92,14 @@ $tlp-tabs-transition: 75ms ease-out;
     white-space: nowrap;
 
     &:hover {
-        background: $tlp-ui-border-light;
+        background: var(--tlp-ui-border-light);
         text-decoration: none;
     }
 }
 
 .tlp-tab-menu-separator {
     width: 100%;
-    border-top: 1px solid $tlp-ui-border-light;
+    border-top: 1px solid var(--tlp-ui-border-light);
 }
 
 .tlp-tab {
@@ -112,7 +112,7 @@ $tlp-tabs-transition: 75ms ease-out;
     padding: $tab-vertical-padding var(--tlp-large-spacing) ($tab-vertical-padding - 2);
     transition: color $tlp-tabs-transition, border-bottom-color $tlp-tabs-transition;
     border-bottom: 2px solid transparent;
-    color: $tlp-ui-dimmed;
+    color: var(--tlp-ui-dimmed);
     font-size: .75rem;
     font-weight: 500;
     letter-spacing: .02rem;
@@ -121,8 +121,8 @@ $tlp-tabs-transition: 75ms ease-out;
 
     &.tlp-tab-active,
     &:hover {
-        border-bottom-color: $tlp-theme-color;
-        color: $tlp-theme-color;
+        border-bottom-color: var(--tlp-theme-color);
+        color: var(--tlp-theme-color);
         text-decoration: none;
 
         > .tlp-tab-badge-append {
@@ -134,7 +134,7 @@ $tlp-tabs-transition: 75ms ease-out;
     &.tlp-tab-disabled:hover {
         border-bottom-color: transparent;
         opacity: .5;
-        color: $tlp-ui-dimmed;
+        color: var(--tlp-ui-dimmed);
         cursor: not-allowed;
 
         > .tlp-tab-badge-append {
@@ -159,7 +159,7 @@ $tlp-tabs-transition: 75ms ease-out;
     width: 100%;
     padding: 16px var(--tlp-medium-spacing) 14px;
     transition: color $tlp-tabs-transition;
-    border-bottom: 1px solid $tlp-ui-border-normal;
+    border-bottom: 1px solid var(--tlp-ui-border-normal);
 
     &::before {
         content: '';
@@ -171,7 +171,7 @@ $tlp-tabs-transition: 75ms ease-out;
         height: calc(100% + 2px);
         transition: opacity $tlp-tabs-transition;
         opacity: 0;
-        background: $tlp-theme-color;
+        background: var(--tlp-theme-color);
     }
 
     &.tlp-tab-active,
@@ -187,7 +187,7 @@ $tlp-tabs-transition: 75ms ease-out;
     &.tlp-tab-disabled:hover {
         border-bottom-color: inherit;
         opacity: 1;
-        color: mix($tlp-ui-white, $tlp-ui-dimmed, 50%);
+        color: var(--tlp-ui-dimmed-lighter-50);
 
         &::before {
             display: none;

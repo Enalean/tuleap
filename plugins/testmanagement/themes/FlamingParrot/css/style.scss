@@ -242,38 +242,5 @@
     align-items: center;
 }
 
-body {
-    @import '../../src/themes/FlamingParrot/css/utils/variables-orange';
-    @import '../../src/themes/tlp/src/scss/components/tables';
-    @import './includes/popovers';
-
-    &.FlamingParrot_Blue { //stylelint-disable-line selector-no-qualifying-type, selector-class-pattern
-        @import '../../src/themes/FlamingParrot/css/utils/variables-blue';
-        @import '../../src/themes/tlp/src/scss/components/tables';
-        @import './includes/popovers';
-    }
-
-    &.FlamingParrot_Green { //stylelint-disable-line selector-no-qualifying-type, selector-class-pattern
-        @import '../../src/themes/FlamingParrot/css/utils/variables-green';
-        @import '../../src/themes/tlp/src/scss/components/tables';
-        @import './includes/popovers';
-    }
-
-    &.FlamingParrot_BlueGrey { //stylelint-disable-line selector-no-qualifying-type, selector-class-pattern
-        @import '../../src/themes/FlamingParrot/css/utils/variables-bluegrey';
-        @import '../../src/themes/tlp/src/scss/components/tables';
-        @import './includes/popovers';
-    }
-
-    &.FlamingParrot_Purple { //stylelint-disable-line selector-no-qualifying-type, selector-class-pattern
-        @import '../../src/themes/FlamingParrot/css/utils/variables-purple';
-        @import '../../src/themes/tlp/src/scss/components/tables';
-        @import './includes/popovers';
-    }
-
-    &.FlamingParrot_Red { //stylelint-disable-line selector-no-qualifying-type, selector-class-pattern
-        @import '../../src/themes/FlamingParrot/css/utils/variables-red';
-        @import '../../src/themes/tlp/src/scss/components/tables';
-        @import './includes/popovers';
-    }
-}
+@import '../../src/themes/tlp/src/scss/components/tables';
+@import './includes/popovers';

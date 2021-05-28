@@ -22,9 +22,9 @@
 .tlp-card {
     margin: 0 0 var(--tlp-medium-spacing);
     padding: var(--tlp-medium-spacing);
-    border: 1px solid $tlp-ui-border-normal;
+    border: 1px solid var(--tlp-ui-border-normal);
     border-radius: radius.$tlp-card-radius;
-    background: $tlp-ui-white;
+    background: var(--tlp-ui-white);
 
     &:last-child {
         margin: 0;
@@ -38,13 +38,13 @@
 .tlp-card-selectable {
     display: block;
     transition: border-color 100ms linear;
-    color: $tlp-typo-default-text-color;
+    color: var(--tlp-typo-default-text-color);
     cursor: pointer;
 
     &:hover,
     &:focus,
     &:focus-within {
-        border-color: $tlp-theme-color;
+        border-color: var(--tlp-theme-color);
         text-decoration: none;
 
         &.tlp-card-inactive {
@@ -64,7 +64,7 @@
     }
 
     > .tlp-card-container {
-        border-bottom: 1px solid $tlp-ui-border-light;
+        border-bottom: 1px solid var(--tlp-ui-border-light);
 
         &:last-child,
         > .tlp-card {
@@ -76,7 +76,7 @@
     > .tlp-card {
         margin: 0;
         border: 0;
-        border-bottom: 1px solid $tlp-ui-border-light;
+        border-bottom: 1px solid var(--tlp-ui-border-light);
         border-radius: 0;
 
         &:last-child {
@@ -90,7 +90,7 @@
 
         &:hover,
         &:focus {
-            border-color: $tlp-ui-border-light;
+            border-color: var(--tlp-ui-border-light);
             background-color: var(--tlp-theme-color-hover-background);
             text-decoration: none;
         }
@@ -107,11 +107,11 @@
         }
 
         + .tlp-card-inactive {
-            border-top: 1px solid darken($tlp-ui-border-light, 1%);
+            border-top: 1px solid var(--tlp-ui-border-light-darker-05);
         }
 
         + .tlp-card:not(.tlp-card-inactive) {
-            border-top: 1px solid $tlp-ui-border-light;
+            border-top: 1px solid var(--tlp-ui-border-light);
         }
     }
 }

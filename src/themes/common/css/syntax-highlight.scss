@@ -17,11 +17,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@use '../../tlp/src/scss/variables/typography';
-
 @import '../../../node_modules/prismjs/themes/prism';
 
 code[class*='language-'],
 pre[class*='language-'] {
-    font-family: typography.$tlp-font-family-mono;
+    font-family: var(--tlp-font-family-mono);
 }
