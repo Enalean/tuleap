@@ -152,7 +152,9 @@ describe("ExecutionLinkIssueController", () => {
             expect.assertions(2);
             // eslint-disable-next-line jest/valid-expect-in-promise
             var promise = ExecutionLinkIssueController.validateIssueId("", "17").catch(() => {
+                // eslint-disable-next-line jest/no-conditional-expect
                 expect(ExecutionRestService.getArtifactById).toHaveBeenCalledWith("17");
+                // eslint-disable-next-line jest/no-conditional-expect
                 expect(ExecutionLinkIssueController.issue_artifact).toBe(null);
             });
 

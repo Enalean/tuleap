@@ -332,6 +332,7 @@ describe("BacklogController -", () => {
             expect.assertions(1);
             // eslint-disable-next-line jest/valid-expect-in-promise
             const promise = BacklogController.fetchAllBacklogItems(50, 50).catch(() => {
+                // eslint-disable-next-line jest/no-conditional-expect
                 expect(BacklogController.fetchBacklogItems).not.toHaveBeenCalled();
             });
             return wrapPromise(promise);
@@ -346,6 +347,7 @@ describe("BacklogController -", () => {
             expect.assertions(1);
             // eslint-disable-next-line jest/valid-expect-in-promise
             const promise = BacklogController.fetchAllBacklogItems(50, 50).catch(() => {
+                // eslint-disable-next-line jest/no-conditional-expect
                 expect(BacklogController.fetchBacklogItems).not.toHaveBeenCalled();
             });
             return wrapPromise(promise);

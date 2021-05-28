@@ -280,6 +280,7 @@ describe("KanbanService", () => {
             });
 
             const promise = methodUnderTest().catch(() => {
+                // eslint-disable-next-line jest/no-conditional-expect
                 expect(RestErrorService.reload).toHaveBeenCalled();
             });
 
