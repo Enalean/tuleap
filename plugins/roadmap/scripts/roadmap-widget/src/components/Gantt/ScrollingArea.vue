@@ -39,7 +39,7 @@ const timeperiod = namespace("timeperiod");
     components: { TodayIndicator },
 })
 export default class ScrollingArea extends Vue {
-    $refs!: {
+    override $refs!: {
         today: TodayIndicator;
         empty_pixel: HTMLElement;
     };

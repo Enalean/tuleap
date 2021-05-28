@@ -79,7 +79,7 @@ const timeperiod = namespace("timeperiod");
     components: { DependencyArrow, TaskBar, BackgroundGrid },
 })
 export default class GanttTask extends Vue {
-    $refs!: {
+    override $refs!: {
         bar: TaskBar;
     };
 

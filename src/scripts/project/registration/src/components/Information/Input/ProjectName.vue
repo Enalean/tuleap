@@ -69,7 +69,7 @@ import EventBus from "../../../helpers/event-bus";
     components: { ProjectShortName },
 })
 export default class ProjectName extends Vue {
-    $refs!: {
+    override $refs!: {
         name: HTMLFormElement;
     };
 

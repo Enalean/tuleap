@@ -93,7 +93,7 @@ export default class TestDefinitionCardXrefTitle extends Vue {
     @Prop({ required: true })
     readonly test_definition!: TestDefinition;
 
-    $refs!: {
+    override $refs!: {
         dropdownTrigger: HTMLElement;
         dropdownMenu: HTMLElement;
     };

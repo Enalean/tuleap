@@ -85,7 +85,7 @@ export default class AddTestButtonWithAdditionalActionsMenu extends Vue {
     @State
     readonly milestone_id!: number;
 
-    $refs!: {
+    override $refs!: {
         dropdownTrigger: HTMLElement;
         dropdownMenu: HTMLElement;
     };

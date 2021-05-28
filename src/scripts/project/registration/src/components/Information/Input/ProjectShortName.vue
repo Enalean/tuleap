@@ -84,7 +84,7 @@ export default class ProjectShortName extends Vue {
     @Getter
     has_error!: boolean;
 
-    $refs!: {
+    override $refs!: {
         shortname: HTMLFormElement;
     };
 

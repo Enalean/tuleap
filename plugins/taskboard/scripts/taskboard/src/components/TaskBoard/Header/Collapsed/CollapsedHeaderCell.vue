@@ -34,7 +34,7 @@ import CollapsedLabel from "./CollapsedLabel.vue";
     components: { CollapsedLabel, CardsInColumnCount, ExpandButton },
 })
 export default class CollapsedHeaderCell extends Mixins(HeaderCellMixin) {
-    get classes(): string {
+    override get classes(): string {
         const classes = [...this.classes_as_array];
 
         if (this.column.has_hover) {
