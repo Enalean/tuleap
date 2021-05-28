@@ -22,10 +22,13 @@ declare(strict_types=1);
 
 namespace Tuleap\OpenIDConnectClient\Authentication;
 
-use Lcobucci\JWT\Builder;
-use Lcobucci\JWT\Parser;
+use Lcobucci\JWT\Encoding\ChainedFormatter;
+use Lcobucci\JWT\Encoding\JoseEncoder;
+use Lcobucci\JWT\Token\Parser;
 use Lcobucci\JWT\Signer\Hmac\Sha256;
 use Lcobucci\JWT\Signer\Key;
+use Lcobucci\JWT\Signer\Key\InMemory;
+use Lcobucci\JWT\UnencryptedToken;
 use Lcobucci\JWT\Validation\Constraint\SignedWith;
 use Lcobucci\JWT\Validation\Validator;
 use Tuleap\Cryptography\ConcealedString;
@@ -64,7 +67,8 @@ class State
 
     public static function createFromSignature(string $signed_state, ?string $return_to, string $secret_key, string $nonce, ConcealedString $pkce_code_verifier): self
     {
-        $token = (new Parser())->parse($signed_state);
+        $token = (new Parser(new JoseEncoder()))->parse($signed_state);
+        assert($token instanceof UnencryptedToken);
         if (! (new Validator())->validate($token, new SignedWith(new Sha256(), Key\InMemory::plainText($secret_key)))) {
             throw new \RuntimeException('Signed state cannot be verified');
         }
@@ -74,7 +78,7 @@ class State
 
     public function getSignedState(): string
     {
-        return (string) (new Builder())->withClaim('provider_id', $this->provider_id)->getToken(new Sha256(), new Key($this->secret_key));
+        return (new \Lcobucci\JWT\Token\Builder(new JoseEncoder(), ChainedFormatter::default()))->withClaim('provider_id', $this->provider_id)->getToken(new Sha256(), InMemory::plaintext($this->secret_key))->toString();
     }
 
     public function getProviderId(): int

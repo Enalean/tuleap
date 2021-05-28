@@ -62,7 +62,7 @@ class JWTGenerator
             ->expiresAt($this->getExpireDate())
             ->getToken($this->jwt_configuration->signer(), $this->jwt_configuration->signingKey());
 
-        return (string) $token;
+        return $token->toString();
     }
 
     private function getExpireDate(): \DateTimeImmutable

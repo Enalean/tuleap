@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\OAuth2Server\OpenIDConnect\IDToken;
 
 use Lcobucci\JWT\Signer\Key;
+use Lcobucci\JWT\Signer\Key\InMemory;
 use Tuleap\Cryptography\ConcealedString;
 
 final class SigningPrivateKey
@@ -51,6 +52,6 @@ final class SigningPrivateKey
 
     public function getPrivateKey(): Key
     {
-        return new Key($this->private_key_material->getString());
+        return InMemory::plainText($this->private_key_material->getString());
     }
 }

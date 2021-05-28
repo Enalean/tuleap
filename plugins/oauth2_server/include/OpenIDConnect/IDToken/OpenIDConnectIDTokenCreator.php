@@ -102,7 +102,7 @@ class OpenIDConnectIDTokenCreator
             $builder = $builder->withClaim('nonce', $nonce);
         }
 
-        return (string) $builder->getToken($this->signer, $signing_private_key->getPrivateKey());
+        return $builder->getToken($this->signer, $signing_private_key->getPrivateKey())->toString();
     }
 
     /**

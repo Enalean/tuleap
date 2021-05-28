@@ -67,7 +67,7 @@ final class ConfigurationResponseRepresentation implements \JsonSerializable
             'response_modes_supported'              => ['query'],
             'grant_types_supported'                 => ['authorization_code'],
             'subject_types_supported'               => ['public'],
-            'id_token_signing_alg_values_supported' => [(new Sha256())->getAlgorithmId()],
+            'id_token_signing_alg_values_supported' => [(new Sha256())->algorithmId()],
             'userinfo_signing_alg_values_supported' => ['none'],
             'token_endpoint_auth_methods_supported' => ['client_secret_basic'],
             'service_documentation'                 => $issuer . '/doc/en/user-guide/oauth2.html',

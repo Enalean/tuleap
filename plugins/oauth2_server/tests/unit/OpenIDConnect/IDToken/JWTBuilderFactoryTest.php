@@ -22,7 +22,9 @@ declare(strict_types=1);
 
 namespace Tuleap\OAuth2Server\OpenIDConnect\IDToken;
 
-use Lcobucci\JWT\Builder;
+use Lcobucci\JWT\Encoding\ChainedFormatter;
+use Lcobucci\JWT\Encoding\JoseEncoder;
+use Lcobucci\JWT\Token\Builder;
 
 final class JWTBuilderFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -30,6 +32,6 @@ final class JWTBuilderFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $builder_factory = new JWTBuilderFactory();
 
-        $this->assertEquals(new Builder(), $builder_factory->getBuilder());
+        $this->assertEquals(new Builder(new JoseEncoder(), ChainedFormatter::default()), $builder_factory->getBuilder());
     }
 }

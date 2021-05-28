@@ -22,9 +22,11 @@ declare(strict_types=1);
 
 namespace Tuleap\OAuth2Server\OpenIDConnect\IDToken;
 
-use Lcobucci\JWT\Parser;
+use Lcobucci\JWT\Encoding\JoseEncoder;
+use Lcobucci\JWT\Token\Parser;
 use Lcobucci\JWT\Signer\Key\InMemory;
 use Lcobucci\JWT\Signer\Rsa\Sha256;
+use Lcobucci\JWT\UnencryptedToken;
 use Lcobucci\JWT\Validation\Constraint\SignedWith;
 use Lcobucci\JWT\Validation\Validator;
 use Tuleap\Authentication\SplitToken\SplitToken;
@@ -137,7 +139,8 @@ final class OpenIDConnectIDTokenCreatorTest extends \Tuleap\Test\PHPUnit\TestCas
 
         $this->assertNotNull($payload);
 
-        $token = (new Parser())->parse($payload);
+        $token = (new Parser(new JoseEncoder()))->parse($payload);
+        assert($token instanceof UnencryptedToken);
         $this->assertEquals('https://tuleap.example.com', $token->claims()->get('iss'));
         $this->assertEquals('147', $token->claims()->get('sub'));
         $this->assertEquals(['tlp-client-id-987'], $token->claims()->get('aud'));
