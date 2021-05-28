@@ -253,6 +253,7 @@ describe("TlpModalService -", function () {
                 });
 
                 return wrapPromise(promise).catch((error) => {
+                    // eslint-disable-next-line jest/no-conditional-expect
                     expect(error).toEqual(fake_resolve_function);
                 });
             });

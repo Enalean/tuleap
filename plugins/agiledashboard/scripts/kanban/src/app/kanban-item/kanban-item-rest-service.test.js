@@ -146,6 +146,7 @@ describe("KanbanItemRestService -", function () {
 
             // eslint-disable-next-line jest/valid-expect-in-promise
             const promise = KanbanItemRestService.getItem(410).catch(() => {
+                // eslint-disable-next-line jest/no-conditional-expect
                 expect(RestErrorService.reload).toHaveBeenCalled();
             });
             return wrapPromise(promise);

@@ -237,6 +237,7 @@ describe("DroppedService", () => {
                     rest_route_id: 2,
                 }
             ).catch(() => {
+                // eslint-disable-next-line jest/no-conditional-expect
                 expect(RestErrorService.setError).toHaveBeenCalledWith(rest_error.data.error);
             });
             reorder_request.reject(rest_error);
@@ -258,6 +259,7 @@ describe("DroppedService", () => {
             expect.assertions(1);
             // eslint-disable-next-line jest/valid-expect-in-promise
             const promise = DroppedService.reorderSubmilestone(1, {}, 2).catch(() => {
+                // eslint-disable-next-line jest/no-conditional-expect
                 expect(RestErrorService.setError).toHaveBeenCalledWith(rest_error.data.error);
             });
             reorder_request.reject(rest_error);
@@ -281,6 +283,7 @@ describe("DroppedService", () => {
             expect.assertions(1);
             // eslint-disable-next-line jest/valid-expect-in-promise
             const promise = DroppedService.reorderBacklogItemChildren(1, {}, 2).catch(() => {
+                // eslint-disable-next-line jest/no-conditional-expect
                 expect(RestErrorService.setError).toHaveBeenCalledWith(rest_error.data.error);
             });
             reorder_request.reject(rest_error);
@@ -309,6 +312,7 @@ describe("DroppedService", () => {
             expect.assertions(1);
             // eslint-disable-next-line jest/valid-expect-in-promise
             const promise = DroppedService.moveFromBacklogToSubmilestone(1, {}, 2).catch(() => {
+                // eslint-disable-next-line jest/no-conditional-expect
                 expect(RestErrorService.setError).toHaveBeenCalledWith(rest_error.data.error);
             });
             move_request.reject(rest_error);
@@ -344,6 +348,7 @@ describe("DroppedService", () => {
             expect.assertions(1);
             // eslint-disable-next-line jest/valid-expect-in-promise
             const promise = DroppedService.moveFromChildrenToChildren(1, {}, 2, 3).catch(() => {
+                // eslint-disable-next-line jest/no-conditional-expect
                 expect(RestErrorService.setError).toHaveBeenCalledWith(rest_error.data.error);
             });
             move_request.reject(rest_error);
@@ -397,6 +402,7 @@ describe("DroppedService", () => {
                 rest_base_route: "projects",
                 rest_route_id: 3,
             }).catch(() => {
+                // eslint-disable-next-line jest/no-conditional-expect
                 expect(RestErrorService.setError).toHaveBeenCalledWith(rest_error.data.error);
             });
             move_request.reject(rest_error);
@@ -425,6 +431,7 @@ describe("DroppedService", () => {
             // eslint-disable-next-line jest/valid-expect-in-promise
             const promise = DroppedService.moveFromSubmilestoneToSubmilestone(1, {}, 2, 3).catch(
                 () => {
+                    // eslint-disable-next-line jest/no-conditional-expect
                     expect(RestErrorService.setError).toHaveBeenCalledWith(rest_error.data.error);
                 }
             );

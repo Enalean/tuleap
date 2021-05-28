@@ -234,6 +234,7 @@ describe("CampaignService", () => {
             expect.assertions(1);
             // eslint-disable-next-line jest/valid-expect-in-promise
             const promise = CampaignService.triggerAutomatedTests(31).catch((error) => {
+                // eslint-disable-next-line jest/no-conditional-expect
                 expect(error.message).toEqual(
                     "Message: The requested URL returned error: 403 Forbidden"
                 );

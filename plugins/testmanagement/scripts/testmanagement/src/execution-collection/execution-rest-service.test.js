@@ -242,6 +242,7 @@ describe("ExecutionRestService", () => {
             expect.assertions(1);
             // eslint-disable-next-line jest/valid-expect-in-promise
             const promise = ExecutionRestService.linkIssue(123, execution).catch((error) => {
+                // eslint-disable-next-line jest/no-conditional-expect
                 expect(error).toEqual("Forbidden");
             });
 
@@ -273,6 +274,7 @@ describe("ExecutionRestService", () => {
             // eslint-disable-next-line jest/valid-expect-in-promise
             const promise = ExecutionRestService.linkIssueWithoutComment(123, { id: 456 }).catch(
                 (error) => {
+                    // eslint-disable-next-line jest/no-conditional-expect
                     expect(error).toEqual("Forbidden");
                 }
             );
@@ -368,6 +370,7 @@ describe("ExecutionRestService", () => {
                 step_id,
                 status
             ).catch((error) => {
+                // eslint-disable-next-line jest/no-conditional-expect
                 expect(error).toEqual("This user cannot update the execution");
             });
             return wrapPromise(promise);
