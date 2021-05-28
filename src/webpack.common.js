@@ -219,7 +219,7 @@ const webpack_config_for_burning_parrot_code = {
         "account/timezone": "./scripts/account/timezone.ts",
         "burning-parrot": "./scripts/BurningParrot/src/index.js",
         "dashboards/dashboard": "./scripts/dashboards/dashboard.js",
-        "dashboards/widget-contact-modal": "./scripts/dashboards/widgets/contact-modal.js",
+        "dashboards/widget-contact-modal": "./scripts/dashboards/widgets/contact-modal.ts",
         "frs-admin-license-agreement": "./scripts/frs/admin/license-agreement.js",
         "manage-allowed-projects-on-resource":
             "./scripts/tuleap/manage-allowed-projects-on-resource.js",
