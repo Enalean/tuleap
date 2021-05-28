@@ -70,6 +70,7 @@ export class DropdownManager {
         this.scrolling_manager.unlockScrolling();
 
         this.dropdown_element.classList.remove("list-picker-dropdown-shown");
+        this.dropdown_element.removeAttribute("data-test-list-picker-dropdown-open");
         this.list_picker_element.classList.remove("list-picker-with-open-dropdown");
         this.setAriaExpandedAttribute(this.dropdown_list_element, false);
         this.field_focus_manager.applyFocusOnSelectionElement();
@@ -86,6 +87,7 @@ export class DropdownManager {
 
         this.scrolling_manager.lockScrolling();
         this.dropdown_element.classList.add("list-picker-dropdown-shown");
+        this.dropdown_element.setAttribute("data-test-list-picker-dropdown-open", "");
         this.list_picker_element.classList.add("list-picker-with-open-dropdown");
         this.resizeAndMoveDropdownUnderWrapperElement(false);
         this.setAriaExpandedAttribute(this.dropdown_list_element, true);
