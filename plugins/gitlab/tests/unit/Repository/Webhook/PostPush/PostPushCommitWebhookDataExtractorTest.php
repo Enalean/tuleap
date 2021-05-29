@@ -226,24 +226,24 @@ class PostPushCommitWebhookDataExtractorTest extends \Tuleap\Test\PHPUnit\TestCa
         ];
 
         $commits_data = $this->extractor->retrieveWebhookCommitsData($webhook_content);
-        $this->assertCount(2, $commits_data);
+        self::assertCount(2, $commits_data);
 
         $first_commit = $commits_data[0];
-        $this->assertSame("feff4ced04b237abb8b4a50b4160099313152c3c", $first_commit->getSha1());
-        $this->assertSame("commit 01", $first_commit->getTitle());
-        $this->assertSame("commit 01", $first_commit->getMessage());
-        $this->assertSame("master", $first_commit->getBranchName());
-        $this->assertSame(1608110510, $first_commit->getCommitDate());
-        $this->assertSame('John Snow', $first_commit->getAuthorName());
-        $this->assertSame('john-snow@the-wall.com', $first_commit->getAuthorEmail());
+        self::assertSame("feff4ced04b237abb8b4a50b4160099313152c3c", $first_commit->getSha1());
+        self::assertSame("commit 01", $first_commit->getTitle());
+        self::assertSame("commit 01", $first_commit->getMessage());
+        self::assertSame("master", $first_commit->getBranchName());
+        self::assertSame(1608110510, $first_commit->getCommitDate());
+        self::assertSame('John Snow', $first_commit->getAuthorName());
+        self::assertSame('john-snow@the-wall.com', $first_commit->getAuthorEmail());
 
         $second_commit = $commits_data[1];
-        $this->assertSame("08596fb6360bcc951a06471c616f8bc77800d4f4", $second_commit->getSha1());
-        $this->assertSame("commit 02", $second_commit->getTitle());
-        $this->assertSame("commit 02", $second_commit->getMessage());
-        $this->assertSame("master", $first_commit->getBranchName());
-        $this->assertSame(1608110510, $second_commit->getCommitDate());
-        $this->assertSame('The Night King', $second_commit->getAuthorName());
-        $this->assertSame('the-night-king@the-wall.com', $second_commit->getAuthorEmail());
+        self::assertSame("08596fb6360bcc951a06471c616f8bc77800d4f4", $second_commit->getSha1());
+        self::assertSame("commit 02", $second_commit->getTitle());
+        self::assertSame("commit 02", $second_commit->getMessage());
+        self::assertSame("master", $first_commit->getBranchName());
+        self::assertSame(1608110510, $second_commit->getCommitDate());
+        self::assertSame('The Night King', $second_commit->getAuthorName());
+        self::assertSame('the-night-king@the-wall.com', $second_commit->getAuthorEmail());
     }
 }

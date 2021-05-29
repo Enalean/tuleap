@@ -120,6 +120,6 @@ class TuleapReferenceRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             ->andReturn($reference);
         $retrieved_reference = $this->tuleap_reference_retriever->retrieveTuleapReference(100);
 
-        $this->assertSame($reference, $retrieved_reference);
+        self::assertSame($reference, $retrieved_reference);
     }
 }

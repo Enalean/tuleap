@@ -51,7 +51,7 @@ class ReferenceAdministrationWarningsCollectorEventHandlerTest extends \Tuleap\T
 
 
         $this->handler->handle($event);
-        $this->assertContains(
+        self::assertContains(
             "The project reference based on the keyword 'gitlab_commit' is overriding the system reference used by the GitLab plugin.",
             $event->getWarningMessages()
         );
@@ -68,7 +68,7 @@ class ReferenceAdministrationWarningsCollectorEventHandlerTest extends \Tuleap\T
 
 
         $this->handler->handle($event);
-        $this->assertContains(
+        self::assertContains(
             "The project reference based on the keyword 'gitlab_mr' is overriding the system reference used by the GitLab plugin.",
             $event->getWarningMessages()
         );
@@ -84,7 +84,7 @@ class ReferenceAdministrationWarningsCollectorEventHandlerTest extends \Tuleap\T
         ]);
 
         $this->handler->handle($event);
-        $this->assertEquals([], $event->getWarningMessages());
+        self::assertEquals([], $event->getWarningMessages());
     }
 
     private function buildReferenceWithKeyword(string $keyword): \Reference

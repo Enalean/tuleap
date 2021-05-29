@@ -94,21 +94,21 @@ class GitlabCommitCrossReferenceEnhancerTest extends \Tuleap\Test\PHPUnit\TestCa
             $user
         );
 
-        $this->assertEquals('Increase blankets stocks for winter', $enhanced_reference->title);
+        self::assertEquals('Increase blankets stocks for winter', $enhanced_reference->title);
 
-        $this->assertCount(2, $enhanced_reference->additional_badges);
-        $this->assertEquals('dev/feature', $enhanced_reference->additional_badges[0]->label);
-        $this->assertEquals('14a9b6c0c0', $enhanced_reference->additional_badges[1]->label);
+        self::assertCount(2, $enhanced_reference->additional_badges);
+        self::assertEquals('dev/feature', $enhanced_reference->additional_badges[0]->label);
+        self::assertEquals('14a9b6c0c0', $enhanced_reference->additional_badges[1]->label);
 
-        $this->assertEquals('2020-12-21T14:00:18+01:00', $enhanced_reference->creation_metadata->created_on->date);
-        $this->assertEquals('21/12/2020 14:00', $enhanced_reference->creation_metadata->created_on->absolute_date);
-        $this->assertEquals('tooltip', $enhanced_reference->creation_metadata->created_on->placement);
-        $this->assertEquals('relative', $enhanced_reference->creation_metadata->created_on->preference);
-        $this->assertEquals('en_US', $enhanced_reference->creation_metadata->created_on->locale);
+        self::assertEquals('2020-12-21T14:00:18+01:00', $enhanced_reference->creation_metadata->created_on->date);
+        self::assertEquals('21/12/2020 14:00', $enhanced_reference->creation_metadata->created_on->absolute_date);
+        self::assertEquals('tooltip', $enhanced_reference->creation_metadata->created_on->placement);
+        self::assertEquals('relative', $enhanced_reference->creation_metadata->created_on->preference);
+        self::assertEquals('en_US', $enhanced_reference->creation_metadata->created_on->locale);
 
-        $this->assertEquals('John Snow (jsnow)', $enhanced_reference->creation_metadata->created_by->display_name);
-        $this->assertTrue($enhanced_reference->creation_metadata->created_by->has_avatar);
-        $this->assertEquals('john_snow_avatar_url.png', $enhanced_reference->creation_metadata->created_by->avatar_url);
+        self::assertEquals('John Snow (jsnow)', $enhanced_reference->creation_metadata->created_by->display_name);
+        self::assertTrue($enhanced_reference->creation_metadata->created_by->has_avatar);
+        self::assertEquals('john_snow_avatar_url.png', $enhanced_reference->creation_metadata->created_by->avatar_url);
     }
 
     public function testItDisplaysCommitterNameAndDefaultTuleapAvatarWhenUserEmailMatchNoAccountOnTuleap(): void
@@ -130,21 +130,21 @@ class GitlabCommitCrossReferenceEnhancerTest extends \Tuleap\Test\PHPUnit\TestCa
             $user
         );
 
-        $this->assertEquals('Increase blankets stocks for winter', $enhanced_reference->title);
+        self::assertEquals('Increase blankets stocks for winter', $enhanced_reference->title);
 
-        $this->assertCount(2, $enhanced_reference->additional_badges);
-        $this->assertEquals('dev/feature', $enhanced_reference->additional_badges[0]->label);
-        $this->assertEquals('14a9b6c0c0', $enhanced_reference->additional_badges[1]->label);
+        self::assertCount(2, $enhanced_reference->additional_badges);
+        self::assertEquals('dev/feature', $enhanced_reference->additional_badges[0]->label);
+        self::assertEquals('14a9b6c0c0', $enhanced_reference->additional_badges[1]->label);
 
-        $this->assertEquals('2020-12-21T14:00:18+01:00', $enhanced_reference->creation_metadata->created_on->date);
-        $this->assertEquals('21/12/2020 14:00', $enhanced_reference->creation_metadata->created_on->absolute_date);
-        $this->assertEquals('tooltip', $enhanced_reference->creation_metadata->created_on->placement);
-        $this->assertEquals('relative', $enhanced_reference->creation_metadata->created_on->preference);
-        $this->assertEquals('en_US', $enhanced_reference->creation_metadata->created_on->locale);
+        self::assertEquals('2020-12-21T14:00:18+01:00', $enhanced_reference->creation_metadata->created_on->date);
+        self::assertEquals('21/12/2020 14:00', $enhanced_reference->creation_metadata->created_on->absolute_date);
+        self::assertEquals('tooltip', $enhanced_reference->creation_metadata->created_on->placement);
+        self::assertEquals('relative', $enhanced_reference->creation_metadata->created_on->preference);
+        self::assertEquals('en_US', $enhanced_reference->creation_metadata->created_on->locale);
 
-        $this->assertEquals('The Night King', $enhanced_reference->creation_metadata->created_by->display_name);
-        $this->assertFalse($enhanced_reference->creation_metadata->created_by->has_avatar);
-        $this->assertEquals('', $enhanced_reference->creation_metadata->created_by->avatar_url);
+        self::assertEquals('The Night King', $enhanced_reference->creation_metadata->created_by->display_name);
+        self::assertFalse($enhanced_reference->creation_metadata->created_by->has_avatar);
+        self::assertEquals('', $enhanced_reference->creation_metadata->created_by->avatar_url);
     }
 
     public function testItDoesNotDisplayTheBranchNameBadgeIfCommitBranchIsUnknown(): void
@@ -179,10 +179,10 @@ class GitlabCommitCrossReferenceEnhancerTest extends \Tuleap\Test\PHPUnit\TestCa
             $user
         );
 
-        $this->assertEquals('Increase blankets stocks for winter', $enhanced_reference->title);
+        self::assertEquals('Increase blankets stocks for winter', $enhanced_reference->title);
 
-        $this->assertCount(1, $enhanced_reference->additional_badges);
-        $this->assertEquals('14a9b6c0c0', $enhanced_reference->additional_badges[0]->label);
+        self::assertCount(1, $enhanced_reference->additional_badges);
+        self::assertEquals('14a9b6c0c0', $enhanced_reference->additional_badges[0]->label);
     }
 
     private function buildGitlabCommit(string $committer_name, string $committer_email, string $branch_name): GitlabCommit

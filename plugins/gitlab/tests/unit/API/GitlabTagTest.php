@@ -53,7 +53,7 @@ class GitlabTagTest extends \Tuleap\Test\PHPUnit\TestCase
             ]
         ];
 
-        self::expectException(GitlabResponseAPIException::class);
+        $this->expectException(GitlabResponseAPIException::class);
 
         GitlabTag::buildFromAPIResponse($response);
     }
@@ -67,7 +67,7 @@ class GitlabTagTest extends \Tuleap\Test\PHPUnit\TestCase
             ]
         ];
 
-        self::expectException(GitlabResponseAPIException::class);
+        $this->expectException(GitlabResponseAPIException::class);
 
         GitlabTag::buildFromAPIResponse($response);
     }
@@ -79,7 +79,7 @@ class GitlabTagTest extends \Tuleap\Test\PHPUnit\TestCase
             "message" => "Message from tag",
         ];
 
-        self::expectException(GitlabResponseAPIException::class);
+        $this->expectException(GitlabResponseAPIException::class);
 
         GitlabTag::buildFromAPIResponse($response);
     }
@@ -92,7 +92,7 @@ class GitlabTagTest extends \Tuleap\Test\PHPUnit\TestCase
             "commit" => []
         ];
 
-        self::expectException(GitlabResponseAPIException::class);
+        $this->expectException(GitlabResponseAPIException::class);
 
         GitlabTag::buildFromAPIResponse($response);
     }

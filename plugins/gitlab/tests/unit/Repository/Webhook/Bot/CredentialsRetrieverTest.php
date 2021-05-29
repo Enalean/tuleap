@@ -65,8 +65,8 @@ class CredentialsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $credentials = $this->credentials_retriever->getCredentials($gitlab_repository);
 
-        $this->assertEquals($integration_api_token, $credentials->getBotApiToken());
-        $this->assertEquals("https://www.example.com/", $credentials->getGitlabServerUrl());
+        self::assertEquals($integration_api_token, $credentials->getBotApiToken());
+        self::assertEquals("https://www.example.com/", $credentials->getGitlabServerUrl());
     }
 
     public function testReturnsNullIfNoSavedToken(): void
@@ -80,6 +80,6 @@ class CredentialsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $credentials = $this->credentials_retriever->getCredentials($gitlab_repository);
 
-        $this->assertEquals(null, $credentials);
+        self::assertEquals(null, $credentials);
     }
 }

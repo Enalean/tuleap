@@ -44,7 +44,7 @@ class ArtifactRetrieverTest extends TestCase
             ->with(10)
             ->andReturnNull();
 
-        self::expectException(ArtifactNotFoundException::class);
+        $this->expectException(ArtifactNotFoundException::class);
 
         $artifact_retriever->retrieveArtifactById($reference);
     }

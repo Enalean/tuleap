@@ -62,7 +62,7 @@ class GitlabReferenceBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItReturnsNullIfKeywordIsNotKnown(): void
     {
-        $this->assertNull(
+        self::assertNull(
             $this->builder->buildGitlabReference(
                 Project::buildForTest(),
                 'whatever',
@@ -78,7 +78,7 @@ class GitlabReferenceBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             ->with('gitlab_commit', 101)
             ->andReturnTrue();
 
-        $this->assertNull(
+        self::assertNull(
             $this->builder->buildGitlabReference(
                 Project::buildForTest(),
                 'gitlab_commit',
@@ -94,7 +94,7 @@ class GitlabReferenceBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             ->with('gitlab_commit', 101)
             ->andReturnFalse();
 
-        $this->assertNull(
+        self::assertNull(
             $this->builder->buildGitlabReference(
                 Project::buildForTest(),
                 'gitlab_commit',
@@ -120,7 +120,7 @@ class GitlabReferenceBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             )
             ->andReturnNull();
 
-        $this->assertNull(
+        self::assertNull(
             $this->builder->buildGitlabReference(
                 $project,
                 'gitlab_commit',
@@ -163,10 +163,10 @@ class GitlabReferenceBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             'root/project01/10ee559cb0'
         );
 
-        $this->assertSame('gitlab_commit', $reference->getKeyword());
-        $this->assertSame('plugin_gitlab', $reference->getNature());
-        $this->assertSame('https://example.com/root/project01/-/commit/10ee559cb0', $reference->getLink());
-        $this->assertSame(101, $reference->getGroupId());
+        self::assertSame('gitlab_commit', $reference->getKeyword());
+        self::assertSame('plugin_gitlab', $reference->getNature());
+        self::assertSame('https://example.com/root/project01/-/commit/10ee559cb0', $reference->getLink());
+        self::assertSame(101, $reference->getGroupId());
     }
 
     public function testItReturnsTheMergeRequestReference(): void
@@ -203,10 +203,10 @@ class GitlabReferenceBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             'root/project01/123'
         );
 
-        $this->assertSame('gitlab_mr', $reference->getKeyword());
-        $this->assertSame('plugin_gitlab', $reference->getNature());
-        $this->assertSame('https://example.com/root/project01/-/merge_requests/123', $reference->getLink());
-        $this->assertSame(101, $reference->getGroupId());
+        self::assertSame('gitlab_mr', $reference->getKeyword());
+        self::assertSame('plugin_gitlab', $reference->getNature());
+        self::assertSame('https://example.com/root/project01/-/merge_requests/123', $reference->getLink());
+        self::assertSame(101, $reference->getGroupId());
     }
 
     public function testItReturnsTheTagReference(): void
@@ -243,9 +243,9 @@ class GitlabReferenceBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             'root/project01/v1.0.2'
         );
 
-        $this->assertSame('gitlab_tag', $reference->getKeyword());
-        $this->assertSame('plugin_gitlab', $reference->getNature());
-        $this->assertSame('https://example.com/root/project01/-/tree/v1.0.2', $reference->getLink());
-        $this->assertSame(101, $reference->getGroupId());
+        self::assertSame('gitlab_tag', $reference->getKeyword());
+        self::assertSame('plugin_gitlab', $reference->getNature());
+        self::assertSame('https://example.com/root/project01/-/tree/v1.0.2', $reference->getLink());
+        self::assertSame(101, $reference->getGroupId());
     }
 }

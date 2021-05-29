@@ -84,7 +84,7 @@ class RepositoryTest extends TestBase
         self::assertEquals(0, (int) (string) $response->getHeader('X-Pagination-Size'));
 
         $gitlab_repositories = $response->json();
-        $this->assertCount(0, $gitlab_repositories);
+        self::assertCount(0, $gitlab_repositories);
     }
 
     private function getGitlabRepositoryIntegration(): Response

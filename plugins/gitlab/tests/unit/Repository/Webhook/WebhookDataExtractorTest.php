@@ -268,11 +268,11 @@ class WebhookDataExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
             $request
         );
 
-        $this->assertSame("Push Hook", $webhook_data->getEventName());
-        $this->assertSame(123456, $webhook_data->getGitlabProjectId());
-        $this->assertSame("https://example.com/path/repo01", $webhook_data->getGitlabWebUrl());
-        $this->assertInstanceOf(PostPushWebhookData::class, $webhook_data);
-        $this->assertCount(2, $webhook_data->getCommits());
+        self::assertSame("Push Hook", $webhook_data->getEventName());
+        self::assertSame(123456, $webhook_data->getGitlabProjectId());
+        self::assertSame("https://example.com/path/repo01", $webhook_data->getGitlabWebUrl());
+        self::assertInstanceOf(PostPushWebhookData::class, $webhook_data);
+        self::assertCount(2, $webhook_data->getCommits());
     }
 
     public function testItRetrievesPostMergeRequestWebhookData(): void
@@ -304,13 +304,13 @@ class WebhookDataExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
             $request
         );
 
-        $this->assertSame("Merge Request Hook", $webhook_data->getEventName());
-        $this->assertSame(123456, $webhook_data->getGitlabProjectId());
-        $this->assertSame("https://example.com/path/repo01", $webhook_data->getGitlabWebUrl());
-        $this->assertInstanceOf(PostMergeRequestWebhookData::class, $webhook_data);
-        $this->assertSame(2, $webhook_data->getMergeRequestId());
-        $this->assertSame("My Title", $webhook_data->getTitle());
-        $this->assertSame("My Description", $webhook_data->getDescription());
+        self::assertSame("Merge Request Hook", $webhook_data->getEventName());
+        self::assertSame(123456, $webhook_data->getGitlabProjectId());
+        self::assertSame("https://example.com/path/repo01", $webhook_data->getGitlabWebUrl());
+        self::assertInstanceOf(PostMergeRequestWebhookData::class, $webhook_data);
+        self::assertSame(2, $webhook_data->getMergeRequestId());
+        self::assertSame("My Title", $webhook_data->getTitle());
+        self::assertSame("My Description", $webhook_data->getDescription());
     }
 
     public function testItRetrievesTagPushRequestWebhookData(): void
@@ -337,10 +337,10 @@ class WebhookDataExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
             $request
         );
 
-        $this->assertSame("Tag Push Hook", $webhook_data->getEventName());
-        $this->assertSame(123456, $webhook_data->getGitlabProjectId());
-        $this->assertSame("https://example.com/path/repo01", $webhook_data->getGitlabWebUrl());
-        $this->assertInstanceOf(TagPushWebhookData::class, $webhook_data);
-        $this->assertSame("refs/tags/v1.0", $webhook_data->getRef());
+        self::assertSame("Tag Push Hook", $webhook_data->getEventName());
+        self::assertSame(123456, $webhook_data->getGitlabProjectId());
+        self::assertSame("https://example.com/path/repo01", $webhook_data->getGitlabWebUrl());
+        self::assertInstanceOf(TagPushWebhookData::class, $webhook_data);
+        self::assertSame("refs/tags/v1.0", $webhook_data->getRef());
     }
 }

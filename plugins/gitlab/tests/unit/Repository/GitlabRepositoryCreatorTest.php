@@ -185,7 +185,7 @@ class GitlabRepositoryCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             $configuration
         );
 
-        $this->assertSame($integration, $result);
+        self::assertSame($integration, $result);
     }
 
     private function buildGitlabRepositoryIntegration(): GitlabRepositoryIntegration

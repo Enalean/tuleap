@@ -65,14 +65,14 @@ final class GitlabRepositoryIntegrationFactoryTest extends \Tuleap\Test\PHPUnit\
 
         $gitlab_repositories = $factory->getAllIntegrationsInProject($project);
 
-        $this->assertCount(1, $gitlab_repositories);
+        self::assertCount(1, $gitlab_repositories);
 
         $gitlab_repository = $gitlab_repositories[0];
-        $this->assertSame(1, $gitlab_repository->getId());
-        $this->assertSame(1254652, $gitlab_repository->getGitlabRepositoryId());
-        $this->assertSame('proj/test01', $gitlab_repository->getName());
-        $this->assertSame('', $gitlab_repository->getDescription());
-        $this->assertSame('https://example.com/proj/test01', $gitlab_repository->getGitlabRepositoryUrl());
-        $this->assertSame(1603371803, $gitlab_repository->getLastPushDate()->getTimestamp());
+        self::assertSame(1, $gitlab_repository->getId());
+        self::assertSame(1254652, $gitlab_repository->getGitlabRepositoryId());
+        self::assertSame('proj/test01', $gitlab_repository->getName());
+        self::assertSame('', $gitlab_repository->getDescription());
+        self::assertSame('https://example.com/proj/test01', $gitlab_repository->getGitlabRepositoryUrl());
+        self::assertSame(1603371803, $gitlab_repository->getLastPushDate()->getTimestamp());
     }
 }
