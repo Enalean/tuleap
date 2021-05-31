@@ -38,7 +38,7 @@ import SomethingWentWrongEmptyState from "./SomethingWentWrongEmptyState.vue";
 import GanttBoard from "./Gantt/GanttBoard.vue";
 import type { NaturesLabels, Row } from "../type";
 import LoadingState from "./LoadingState.vue";
-import { namespace, State } from "vuex-class";
+import { Action, namespace, State } from "vuex-class";
 
 const tasks = namespace("tasks");
 
@@ -61,8 +61,8 @@ export default class App extends Vue {
     @State
     private should_display_empty_state!: boolean;
 
-    @tasks.Action
-    private readonly loadTasks!: (roadmap_id: number) => Promise<void>;
+    @Action
+    private readonly loadRoadmap!: (roadmap_id: number) => Promise<void>;
 
     @tasks.Getter
     private readonly rows!: Row[];
@@ -71,7 +71,7 @@ export default class App extends Vue {
     private readonly is_loading!: boolean;
 
     mounted(): void {
-        this.loadTasks(this.roadmap_id);
+        this.loadRoadmap(this.roadmap_id);
     }
 }
 </script>
