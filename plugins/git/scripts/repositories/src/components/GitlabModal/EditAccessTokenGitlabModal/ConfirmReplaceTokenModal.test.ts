@@ -24,6 +24,7 @@ import ConfirmReplaceTokenModal from "./ConfirmReplaceTokenModal.vue";
 import VueDOMPurifyHTML from "vue-dompurify-html";
 import GetTextPlugin from "vue-gettext";
 import type { Store } from "vuex-mock-store";
+import * as gitlab_error_handler from "../../../gitlab/gitlab-error-handler";
 
 describe("ConfirmReplaceTokenModal", () => {
     let store_options = {},
@@ -159,21 +160,26 @@ describe("ConfirmReplaceTokenModal", () => {
         };
 
         const wrapper = instantiateComponent();
-        jest.spyOn(store, "dispatch").mockReturnValue(
-            Promise.reject({
-                response: {
-                    status: 404,
-                    json: (): Promise<{ error: { code: number; message: string } }> =>
-                        Promise.resolve({ error: { code: 404, message: "Error on server" } }),
-                },
-            })
-        );
+
+        jest.spyOn(store, "dispatch").mockRejectedValue({
+            response: {
+                status: 404,
+                json: (): Promise<{ error: { code: number; message: string } }> =>
+                    Promise.resolve({ error: { code: 404, message: "Error on server" } }),
+            },
+        });
+
+        jest.spyOn(gitlab_error_handler, "handleError");
+        // We also display the error in the console.
+        jest.spyOn(global.console, "error").mockImplementation();
 
         wrapper.find("[data-test=button-confirm-edit-token-gitlab]").trigger("click");
         await wrapper.vm.$nextTick();
         await wrapper.vm.$nextTick();
+        await wrapper.vm.$nextTick();
 
         expect(wrapper.vm.$data.message_error_rest).toEqual("404 Error on server");
+        expect(gitlab_error_handler.handleError).toHaveBeenCalled();
     });
 
     it("When user back to form, Then event is emitted", async () => {

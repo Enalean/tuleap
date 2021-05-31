@@ -25,6 +25,7 @@ import GetTextPlugin from "vue-gettext";
 import { createStoreMock } from "@tuleap/core/scripts/vue-components/store-wrapper-jest";
 import type { Store } from "vuex-mock-store";
 import ArtifactClosureModal from "./ArtifactClosureModal.vue";
+import * as gitlab_error_handler from "../../../gitlab/gitlab-error-handler";
 
 describe("ArtifactClosureModal", () => {
     let localVue, store: Store;
@@ -158,7 +159,7 @@ describe("ArtifactClosureModal", () => {
             }
         );
 
-        it("set the message error if there is error during the update", async () => {
+        it("set the message error and display this error in the console if there is error during the update", async () => {
             const wrapper = instantiateComponent();
 
             wrapper.setData({
@@ -167,17 +168,20 @@ describe("ArtifactClosureModal", () => {
 
             await wrapper.vm.$nextTick();
 
-            jest.spyOn(store, "dispatch").mockReturnValue(
-                Promise.reject({
-                    response: {
-                        status: 404,
-                        json: (): Promise<{ error: { code: number; message: string } }> =>
-                            Promise.resolve({ error: { code: 404, message: "Error on server" } }),
-                    },
-                })
-            );
+            jest.spyOn(store, "dispatch").mockRejectedValue({
+                response: {
+                    status: 404,
+                    json: (): Promise<{ error: { code: number; message: string } }> =>
+                        Promise.resolve({ error: { code: 404, message: "Error on server" } }),
+                },
+            });
+
+            jest.spyOn(gitlab_error_handler, "handleError");
+            // We also display the error in the console.
+            jest.spyOn(global.console, "error").mockImplementation();
 
             wrapper.find("[data-test=update-artifact-closure-modal-save-button]").trigger("click");
+            await wrapper.vm.$nextTick();
             await wrapper.vm.$nextTick();
             await wrapper.vm.$nextTick();
 
