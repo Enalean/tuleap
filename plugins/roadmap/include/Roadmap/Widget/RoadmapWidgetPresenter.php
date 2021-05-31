@@ -29,21 +29,23 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenter;
  */
 final class RoadmapWidgetPresenter
 {
-    /**
-     * @var int
-     */
-    public $roadmap_id;
-    /**
-     * @var string
-     */
-    public $visible_natures;
+    public int $roadmap_id;
+    public string $visible_natures;
+    public bool $should_load_lvl1_iterations;
+    public bool $should_load_lvl2_iterations;
 
     /**
      * @param NaturePresenter[] $visible_natures
      */
-    public function __construct(int $roadmap_id, array $visible_natures)
-    {
-        $this->roadmap_id      = $roadmap_id;
-        $this->visible_natures = \json_encode(array_values($visible_natures), \JSON_THROW_ON_ERROR);
+    public function __construct(
+        int $roadmap_id,
+        array $visible_natures,
+        bool $should_load_lvl1_iterations,
+        bool $should_load_lvl2_iterations
+    ) {
+        $this->roadmap_id                  = $roadmap_id;
+        $this->visible_natures             = \json_encode(array_values($visible_natures), \JSON_THROW_ON_ERROR);
+        $this->should_load_lvl1_iterations = $should_load_lvl1_iterations;
+        $this->should_load_lvl2_iterations = $should_load_lvl2_iterations;
     }
 }

@@ -94,6 +94,7 @@ class RoadmapPlugin extends Plugin
                 \TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../templates'),
                 new RoadmapWidgetPresenterBuilder(
                     new NaturePresenterFactory(new NatureDao(), new ArtifactLinksUsageDao()),
+                    TrackerFactory::instance(),
                 ),
                 TrackerFactory::instance()
             ));

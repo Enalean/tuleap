@@ -102,3 +102,9 @@ export interface SubtaskRow {
 }
 
 export type Row = TaskRow | SkeletonRow | EmptySubtasksRow | ErrorRow | SubtaskRow;
+
+export interface Iteration {
+    readonly id: number;
+}
+
+export type IterationLevel = 1 | 2;
