@@ -27,8 +27,8 @@ class GitlabReferenceExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItReturnsANullRepositoryNameAndANullSha1WhenTheStringDoesNotContainAPath(): void
     {
         [$repository_name, $sha1] = GitlabReferenceExtractor::splitRepositoryNameAndReferencedItemId("a_string_with_no_path");
-        $this->assertEquals(null, $repository_name);
-        $this->assertEquals(null, $sha1);
+        self::assertEquals(null, $repository_name);
+        self::assertEquals(null, $sha1);
     }
 
     public function testItReturnsTheRepositoryNameAndTheCommitSha1(): void
@@ -36,8 +36,8 @@ class GitlabReferenceExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
         [$repository_name, $sha1] = GitlabReferenceExtractor::splitRepositoryNameAndReferencedItemId(
             'john-snow/winter-is-coming/14a9b6c0c0c965977cf2af2199f93df82afcdea3'
         );
-        $this->assertEquals('john-snow/winter-is-coming', $repository_name);
-        $this->assertEquals('14a9b6c0c0c965977cf2af2199f93df82afcdea3', $sha1);
+        self::assertEquals('john-snow/winter-is-coming', $repository_name);
+        self::assertEquals('14a9b6c0c0c965977cf2af2199f93df82afcdea3', $sha1);
     }
 
     public function testItReturnsTheRepositoryNameAndTheMergeRequestId(): void
@@ -45,7 +45,7 @@ class GitlabReferenceExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
         [$repository_name, $id] = GitlabReferenceExtractor::splitRepositoryNameAndReferencedItemId(
             'john-snow/winter-is-coming/25'
         );
-        $this->assertEquals('john-snow/winter-is-coming', $repository_name);
-        $this->assertEquals('25', $id);
+        self::assertEquals('john-snow/winter-is-coming', $repository_name);
+        self::assertEquals('25', $id);
     }
 }

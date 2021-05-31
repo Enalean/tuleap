@@ -66,13 +66,13 @@ class GitlabCommitFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
             '11645a413d7af2995cd92e40bf387e39d06d0e61'
         );
 
-        $this->assertNotNull($commit_info);
-        $this->assertEquals('11645a413d7af2995cd92e40bf387e39d06d0e61', $commit_info->getCommitSha1());
-        $this->assertEquals(1608555618, $commit_info->getCommitDate());
-        $this->assertEquals('TULEAP-1234 Improve the README', $commit_info->getCommitTitle());
-        $this->assertEquals('master', $commit_info->getCommitBranchName());
-        $this->assertEquals('John Snow', $commit_info->getCommitAuthorName());
-        $this->assertEquals('john-snow@the-wall.com', $commit_info->getCommitAuthorEmail());
+        self::assertNotNull($commit_info);
+        self::assertEquals('11645a413d7af2995cd92e40bf387e39d06d0e61', $commit_info->getCommitSha1());
+        self::assertEquals(1608555618, $commit_info->getCommitDate());
+        self::assertEquals('TULEAP-1234 Improve the README', $commit_info->getCommitTitle());
+        self::assertEquals('master', $commit_info->getCommitBranchName());
+        self::assertEquals('John Snow', $commit_info->getCommitAuthorName());
+        self::assertEquals('john-snow@the-wall.com', $commit_info->getCommitAuthorEmail());
     }
 
     public function testItReturnsNullWhenThereIsNoMatchingCommit(): void
@@ -87,7 +87,7 @@ class GitlabCommitFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
             '11645a413d7af2995cd92e40bf387e39d06d0e61'
         );
 
-        $this->assertNull($commit_info);
+        self::assertNull($commit_info);
     }
 
     /**

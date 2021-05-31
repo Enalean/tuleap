@@ -78,10 +78,10 @@ class PostPushWebhookDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             $webhook_data
         );
 
-        $this->assertSame("Push Hook", $webhook_data->getEventName());
-        $this->assertSame(123456, $webhook_data->getGitlabProjectId());
-        $this->assertSame("https://example.com/path/repo01", $webhook_data->getGitlabWebUrl());
-        $this->assertInstanceOf(PostPushWebhookData::class, $webhook_data);
-        $this->assertCount(2, $webhook_data->getCommits());
+        self::assertSame("Push Hook", $webhook_data->getEventName());
+        self::assertSame(123456, $webhook_data->getGitlabProjectId());
+        self::assertSame("https://example.com/path/repo01", $webhook_data->getGitlabWebUrl());
+        self::assertInstanceOf(PostPushWebhookData::class, $webhook_data);
+        self::assertCount(2, $webhook_data->getCommits());
     }
 }

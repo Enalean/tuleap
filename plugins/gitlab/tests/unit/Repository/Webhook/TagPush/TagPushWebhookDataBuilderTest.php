@@ -166,10 +166,10 @@ class TagPushWebhookDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             $webhook_data
         );
 
-        $this->assertSame("Tag Push Hook", $tag_push_webhook_data->getEventName());
-        $this->assertSame(123456, $tag_push_webhook_data->getGitlabProjectId());
-        $this->assertSame("https://example.com/path/repo01", $tag_push_webhook_data->getGitlabWebUrl());
-        $this->assertInstanceOf(TagPushWebhookData::class, $tag_push_webhook_data);
-        $this->assertSame("refs/tags/v1.0", $tag_push_webhook_data->getRef());
+        self::assertSame("Tag Push Hook", $tag_push_webhook_data->getEventName());
+        self::assertSame(123456, $tag_push_webhook_data->getGitlabProjectId());
+        self::assertSame("https://example.com/path/repo01", $tag_push_webhook_data->getGitlabWebUrl());
+        self::assertInstanceOf(TagPushWebhookData::class, $tag_push_webhook_data);
+        self::assertSame("refs/tags/v1.0", $tag_push_webhook_data->getRef());
     }
 }

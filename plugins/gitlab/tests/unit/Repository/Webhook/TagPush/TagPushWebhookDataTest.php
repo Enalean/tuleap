@@ -36,6 +36,6 @@ class TagPushWebhookDataTest extends \Tuleap\Test\PHPUnit\TestCase
             "after"
         );
 
-        $this->assertSame("v1.0.1", $webhook_data->getTagName());
+        self::assertSame("v1.0.1", $webhook_data->getTagName());
     }
 }

@@ -34,7 +34,7 @@ class GitlabMergeRequestTest extends \Tuleap\Test\PHPUnit\TestCase
             null
         );
 
-        $this->assertFalse($merge_request->isAuthorAlreadyFetched());
+        self::assertFalse($merge_request->isAuthorAlreadyFetched());
     }
 
     public function testReturnsTrueIfAuthorNameIsNotEmptyToAvoidARateLimitOnAPI(): void
@@ -47,6 +47,6 @@ class GitlabMergeRequestTest extends \Tuleap\Test\PHPUnit\TestCase
             null
         );
 
-        $this->assertTrue($merge_request->isAuthorAlreadyFetched());
+        self::assertTrue($merge_request->isAuthorAlreadyFetched());
     }
 }

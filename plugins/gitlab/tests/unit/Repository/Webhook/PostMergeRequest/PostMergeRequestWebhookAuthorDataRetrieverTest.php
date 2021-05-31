@@ -90,7 +90,7 @@ class PostMergeRequestWebhookAuthorDataRetrieverTest extends \Tuleap\Test\PHPUni
 
         $author = $this->author_retriever->retrieveAuthorData($integration, $merge_request_webhook_data);
 
-        $this->assertNull($author);
+        self::assertNull($author);
     }
 
     public function testGitlabApiClientIsCallToGetAuthor(): void
@@ -134,6 +134,6 @@ class PostMergeRequestWebhookAuthorDataRetrieverTest extends \Tuleap\Test\PHPUni
 
         $author = $this->author_retriever->retrieveAuthorData($integration, $merge_request_webhook_data);
 
-        $this->assertEquals(['name' => 'John', 'email' => 'john@thewall.fr'], $author);
+        self::assertEquals(['name' => 'John', 'email' => 'john@thewall.fr'], $author);
     }
 }

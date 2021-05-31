@@ -175,11 +175,11 @@ final class GitlabProjectBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $gitlab_project = $this->project_builder->getProjectFromGitlabAPI($this->credentials, 1);
 
-        $this->assertSame(1, $gitlab_project->getId());
-        $this->assertSame("My GitLab project", $gitlab_project->getDescription());
-        $this->assertSame("root/project01", $gitlab_project->getPathWithNamespace());
-        $this->assertSame("https://example.com/root/project01", $gitlab_project->getWebUrl());
-        $this->assertSame(1605135600, $gitlab_project->getLastActivityAt()->getTimestamp());
+        self::assertSame(1, $gitlab_project->getId());
+        self::assertSame("My GitLab project", $gitlab_project->getDescription());
+        self::assertSame("root/project01", $gitlab_project->getPathWithNamespace());
+        self::assertSame("https://example.com/root/project01", $gitlab_project->getWebUrl());
+        self::assertSame(1605135600, $gitlab_project->getLastActivityAt()->getTimestamp());
     }
 
     public function testItBuildsAGitlabProjectObjectWithNullDescription(): void
@@ -198,10 +198,10 @@ final class GitlabProjectBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $gitlab_project = $this->project_builder->getProjectFromGitlabAPI($this->credentials, 1);
 
-        $this->assertSame(1, $gitlab_project->getId());
-        $this->assertSame("", $gitlab_project->getDescription());
-        $this->assertSame("root/project01", $gitlab_project->getPathWithNamespace());
-        $this->assertSame("https://example.com/root/project01", $gitlab_project->getWebUrl());
-        $this->assertSame(1605135600, $gitlab_project->getLastActivityAt()->getTimestamp());
+        self::assertSame(1, $gitlab_project->getId());
+        self::assertSame("", $gitlab_project->getDescription());
+        self::assertSame("root/project01", $gitlab_project->getPathWithNamespace());
+        self::assertSame("https://example.com/root/project01", $gitlab_project->getWebUrl());
+        self::assertSame(1605135600, $gitlab_project->getLastActivityAt()->getTimestamp());
     }
 }
