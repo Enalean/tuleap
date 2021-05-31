@@ -182,6 +182,11 @@ phpunit-ci-74:
 	mkdir -p $(WORKSPACE)/results/ut-phpunit/php-74
 	@docker run --rm -v $(CURDIR):/tuleap:ro --network none -v $(WORKSPACE)/results/ut-phpunit/php-74:/tmp/results enalean/tuleap-test-phpunit:c7-php74 make -C /tuleap TARGET="phpunit-ci-run COVERAGE_ENABLED=$(COVERAGE_ENABLED)" PHP=/opt/remi/php74/root/usr/bin/php run-as-owner
 
+phpunit-ci-80:
+	$(eval COVERAGE_ENABLED ?= 1)
+	mkdir -p $(WORKSPACE)/results/ut-phpunit/php-80
+	@docker run --rm -v $(CURDIR):/tuleap:ro --network none -v $(WORKSPACE)/results/ut-phpunit/php-80:/tmp/results enalean/tuleap-test-phpunit:c7-php80 make -C /tuleap TARGET="phpunit-ci-run COVERAGE_ENABLED=$(COVERAGE_ENABLED)" PHP=/opt/remi/php80/root/usr/bin/php run-as-owner
+
 phpunit-docker-74:
 	$(MAKE) tests-unit-php PHP_VERSION=74
 
