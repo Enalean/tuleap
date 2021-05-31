@@ -80,6 +80,7 @@ if ($request->valid($vUserId)) {
 }
 if (! $user_id || ! $user) {
     $GLOBALS['Response']->addFeedback('error', 'Invalid user');
+    $GLOBALS['Response']->redirect('/admin/userlist.php');
 }
 
 // Validate action
