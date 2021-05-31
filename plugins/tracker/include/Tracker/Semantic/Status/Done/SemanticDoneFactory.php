@@ -18,14 +18,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\AgileDashboard\Semantic;
+declare(strict_types=1);
+
+namespace Tuleap\Tracker\Semantic\Status\Done;
 
 use SimpleXMLElement;
 use Tracker;
+use Tracker_Semantic;
 use Tracker_Semantic_Status;
-use Tuleap\AgileDashboard\Semantic\Dao\SemanticDoneDao;
+use Tuleap\Tracker\Semantic\IBuildSemanticFromXML;
 
-class SemanticDoneFactory
+class SemanticDoneFactory implements IBuildSemanticFromXML
 {
     /**
      * @var SemanticDoneDao
@@ -51,17 +54,14 @@ class SemanticDoneFactory
         return SemanticDone::load($tracker);
     }
 
-    /**
-     * @return SemanticDone
-     */
     public function getInstanceFromXML(
-        SimpleXMLElement $xml,
-        SimpleXMLElement $full_semantic_xml,
-        array &$xmlMapping,
+        SimpleXMLElement $current_semantic_xml,
+        SimpleXMLElement $all_semantics_xml,
+        array $xml_mapping,
         Tracker $tracker
-    ) {
+    ): ?Tracker_Semantic {
         $semantic_status = Tracker_Semantic_Status::load($tracker);
-        $done_values     = $this->getDoneValues($xml, $full_semantic_xml, $xmlMapping);
+        $done_values     = $this->getDoneValues($current_semantic_xml, $all_semantics_xml, $xml_mapping);
 
         return new SemanticDone($tracker, $semantic_status, $this->dao, $this->value_checker, $done_values);
     }
@@ -69,10 +69,10 @@ class SemanticDoneFactory
     /**
      * @return array
      */
-    private function getDoneValues(SimpleXMLElement $xml, SimpleXMLElement $full_semantic_xml, array $xmlMapping)
+    private function getDoneValues(SimpleXMLElement $xml, SimpleXMLElement $full_semantic_xml, array $xml_mapping)
     {
         $done_values         = [];
-        $xml_semantic_status = $this->getSemanticDoneFromXML($full_semantic_xml);
+        $xml_semantic_status = $this->getXMLSemanticStatusFromAllSemanticsXML($full_semantic_xml);
 
         if (! $xml_semantic_status) {
             return $done_values;
@@ -81,10 +81,10 @@ class SemanticDoneFactory
         foreach ($xml->closed_values->closed_value as $xml_closed_value) {
             $ref = (string) $xml_closed_value['REF'];
 
-            if (! isset($xmlMapping[$ref])) {
+            if (! isset($xml_mapping[$ref])) {
                 continue;
             }
-            $value = $xmlMapping[$ref];
+            $value = $xml_mapping[$ref];
 
             if ($value && $this->value_checker->isValueAPossibleDoneValueInXMLImport($value, $xml_semantic_status)) {
                 $done_values[] = $value;
@@ -94,7 +94,7 @@ class SemanticDoneFactory
         return $done_values;
     }
 
-    private function getSemanticDoneFromXML(SimpleXMLElement $full_semantic_xml)
+    private function getXMLSemanticStatusFromAllSemanticsXML(SimpleXMLElement $full_semantic_xml): ?SimpleXMLElement
     {
         foreach ($full_semantic_xml->semantic as $xml_semantic) {
             if ((string) $xml_semantic['type'] === Tracker_Semantic_Status::NAME) {

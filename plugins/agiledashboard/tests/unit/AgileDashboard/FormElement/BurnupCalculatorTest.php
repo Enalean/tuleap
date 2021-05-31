@@ -29,9 +29,9 @@ use Tracker_Artifact_Changeset;
 use Tracker_Artifact_ChangesetFactory;
 use Tracker_Artifact_ChangesetValue;
 use Tracker_ArtifactFactory;
-use Tuleap\AgileDashboard\Semantic\SemanticDone;
-use Tuleap\AgileDashboard\Semantic\SemanticDoneFactory;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Semantic\Status\Done\SemanticDone;
+use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneFactory;
 
 class BurnupCalculatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {

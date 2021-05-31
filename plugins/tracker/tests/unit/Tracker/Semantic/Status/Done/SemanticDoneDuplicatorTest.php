@@ -20,13 +20,12 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\AgileDashboard\Semantic;
+namespace Tuleap\Tracker\Semantic\Status\Done;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use TestHelper;
 use Tracker_Semantic_StatusDao;
-use Tuleap\AgileDashboard\Semantic\Dao\SemanticDoneDao;
 
 class SemanticDoneDuplicatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -74,9 +73,9 @@ class SemanticDoneDuplicatorTest extends \Tuleap\Test\PHPUnit\TestCase
             ]
         ];
 
-        $this->done_dao->shouldReceive('getSelectedValues')->once()->andReturn(TestHelper::arrayToDar([
-            'value_id' => '462'
-        ]));
+        $this->done_dao->shouldReceive('getSelectedValues')->once()->andReturn([
+            ['value_id' => '462']
+        ]);
 
         $this->status_dao->shouldReceive('searchByTrackerId')->once()->andReturn(TestHelper::arrayToDar([
             'field_id' => '712'
@@ -103,7 +102,7 @@ class SemanticDoneDuplicatorTest extends \Tuleap\Test\PHPUnit\TestCase
             ]
         ];
 
-        $this->done_dao->shouldReceive('getSelectedValues')->once()->andReturn(TestHelper::emptyDar());
+        $this->done_dao->shouldReceive('getSelectedValues')->once()->andReturn([]);
 
         $this->status_dao->shouldNotReceive('searchByTrackerId');
         $this->done_dao->shouldNotReceive('addForTracker');
@@ -125,9 +124,9 @@ class SemanticDoneDuplicatorTest extends \Tuleap\Test\PHPUnit\TestCase
             ]
         ];
 
-        $this->done_dao->shouldReceive('getSelectedValues')->once()->andReturn(TestHelper::arrayToDar([
-            'value_id' => '462'
-        ]));
+        $this->done_dao->shouldReceive('getSelectedValues')->once()->andReturn([
+            ['value_id' => '462']
+        ]);
 
         $this->status_dao->shouldReceive('searchByTrackerId')->once()->andReturn(TestHelper::emptyDar());
 
@@ -150,9 +149,9 @@ class SemanticDoneDuplicatorTest extends \Tuleap\Test\PHPUnit\TestCase
             ]
         ];
 
-        $this->done_dao->shouldReceive('getSelectedValues')->once()->andReturn(TestHelper::arrayToDar([
-            'value_id' => '463'
-        ]));
+        $this->done_dao->shouldReceive('getSelectedValues')->once()->andReturn([
+            ['value_id' => '463']
+        ]);
 
         $this->status_dao->shouldReceive('searchByTrackerId')->once()->andReturn(TestHelper::arrayToDar([
             'field_id' => '712'

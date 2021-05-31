@@ -25,6 +25,7 @@ namespace Tuleap\unit\Tracker\Creation\JiraImporter\Import\Semantic;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use Psr\Log\NullLogger;
 use SimpleXMLElement;
 use Tracker_FormElementFactory;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Semantic\SemanticsXMLExporter;
@@ -34,6 +35,7 @@ use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\JiraFieldAPIAllowedVal
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\ListFieldMapping;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\ScalarFieldMapping;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Values\StatusValuesCollection;
+use Tuleap\Tracker\Creation\JiraImporter\JiraClient;
 
 class SemanticsXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -80,12 +82,26 @@ class SemanticsXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
             )
         );
 
-        $collection = Mockery::mock(StatusValuesCollection::class);
-
-        $collection->shouldReceive('getOpenValues')->andReturn([
-            JiraFieldAPIAllowedValueRepresentation::buildWithJiraIdOnly(10001, new FieldAndValueIDGenerator()),
-            JiraFieldAPIAllowedValueRepresentation::buildWithJiraIdOnly(3, new FieldAndValueIDGenerator()),
-        ]);
+        $collection = new StatusValuesCollection(
+            new class () implements JiraClient {
+                public function getUrl(string $url): ?array
+                {
+                    return null;
+                }
+            },
+            new NullLogger()
+        );
+        $collection->initCollectionWithValues(
+            [
+                JiraFieldAPIAllowedValueRepresentation::buildWithJiraIdOnly(10001, new FieldAndValueIDGenerator()),
+                JiraFieldAPIAllowedValueRepresentation::buildWithJiraIdOnly(3, new FieldAndValueIDGenerator()),
+            ],
+            [
+                JiraFieldAPIAllowedValueRepresentation::buildWithJiraIdOnly(10002, new FieldAndValueIDGenerator()),
+                JiraFieldAPIAllowedValueRepresentation::buildWithJiraIdOnly(10004, new FieldAndValueIDGenerator()),
+                JiraFieldAPIAllowedValueRepresentation::buildWithJiraIdOnly(2, new FieldAndValueIDGenerator()),
+            ]
+        );
 
         $exporter = new SemanticsXMLExporter();
         $exporter->exportSemantics(
@@ -95,7 +111,7 @@ class SemanticsXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $this->assertNotNull($tracker_node->semantics);
-        $this->assertCount(4, $tracker_node->semantics->children());
+        $this->assertCount(5, $tracker_node->semantics->children());
 
         $semantic_title_node = $tracker_node->semantics->semantic[0];
         $this->assertSame("title", (string) $semantic_title_node['type']);
@@ -110,7 +126,11 @@ class SemanticsXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertSame("Fstatus", (string) $semantic_status_node->field['REF']);
         $this->assertCount(2, $semantic_status_node->open_values->children());
 
-        $semantic_assignee_node = $tracker_node->semantics->semantic[3];
+        $semantic_done_node = $tracker_node->semantics->semantic[3];
+        self::assertSame("done", (string) $semantic_done_node['type']);
+        self::assertCount(3, $semantic_done_node->closed_values->children());
+
+        $semantic_assignee_node = $tracker_node->semantics->semantic[4];
         $this->assertSame("contributor", (string) $semantic_assignee_node['type']);
         $this->assertSame("Fassignee", (string) $semantic_assignee_node->field['REF']);
     }

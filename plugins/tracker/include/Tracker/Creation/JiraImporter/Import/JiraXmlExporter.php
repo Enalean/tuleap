@@ -482,8 +482,7 @@ class JiraXmlExporter
                 $this->jira_user_retriever,
                 $this->wrapper,
                 $this->logger,
-                $jira_field_mapping_collection,
-                $status_values_collection,
+                $jira_field_mapping_collection
             )
         );
 

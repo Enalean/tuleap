@@ -37,6 +37,8 @@ class Tracker_Semantic_TitleFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
             file_get_contents(__DIR__ . '/../../_fixtures/ImportTrackerSemanticTitleTest.xml')
         );
 
+        $all_semantics_xml = new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><foo/>');
+
         $tracker = Mockery::mock(\Tracker::class);
 
         $f1 = Mockery::mock(Tracker_FormElement_Field_Text::class);
@@ -51,7 +53,7 @@ class Tracker_Semantic_TitleFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
             'F13' => $f2,
             'F16' => $f3
         ];
-        $semantic_title = Tracker_Semantic_TitleFactory::instance()->getInstanceFromXML($xml, $mapping, $tracker);
+        $semantic_title = Tracker_Semantic_TitleFactory::instance()->getInstanceFromXML($xml, $all_semantics_xml, $mapping, $tracker);
 
         $this->assertEquals('title', $semantic_title->getShortName());
         $this->assertEquals(112, $semantic_title->getFieldId());

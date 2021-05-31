@@ -22,7 +22,7 @@ namespace Tuleap\Velocity\Semantic;
 
 use Tracker;
 use Tracker_FormElement_Field;
-use Tuleap\AgileDashboard\Semantic\SemanticDone;
+use Tuleap\Tracker\Semantic\Status\Done\SemanticDone;
 
 class SemanticVelocityPresenterBuilder
 {

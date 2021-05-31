@@ -18,24 +18,27 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\AgileDashboard\Semantic;
+declare(strict_types=1);
+
+namespace Tuleap\Tracker\Semantic\Status\Done;
 
 use Codendi_Request;
 use CSRFSynchronizerToken;
-use DataAccessException;
 use Feedback;
+use PDOException;
 use PFUser;
 use SimpleXMLElement;
 use TemplateRendererFactory;
 use Tracker;
 use Tracker_Artifact_Changeset;
+use Tracker_Artifact_ChangesetValue_List;
 use Tracker_FormElement_Field;
+use Tracker_FormElement_Field_List;
 use Tracker_FormElement_Field_List_Value;
 use Tracker_Semantic;
 use Tracker_Semantic_Status;
 use Tracker_SemanticManager;
 use TrackerManager;
-use Tuleap\AgileDashboard\Semantic\Dao\SemanticDoneDao;
 use XML_SimpleXMLCDATAFactory;
 
 class SemanticDone extends Tracker_Semantic
@@ -94,7 +97,7 @@ class SemanticDone extends Tracker_Semantic
      */
     public function getLabel()
     {
-        return dgettext('tuleap-agiledashboard', 'Done');
+        return dgettext('tuleap-tracker', 'Done');
     }
 
     /**
@@ -104,7 +107,7 @@ class SemanticDone extends Tracker_Semantic
      */
     public function getDescription()
     {
-        return dgettext('tuleap-agiledashboard', 'Define the closed status that are considered Done');
+        return dgettext('tuleap-tracker', 'Define the closed status that are considered Done');
     }
 
     /**
@@ -204,7 +207,7 @@ class SemanticDone extends Tracker_Semantic
     /**
      * @return array
      */
-    private function getFormattedClosedValues(Tracker_FormElement_Field $semantic_status_field)
+    private function getFormattedClosedValues(Tracker_FormElement_Field_List $semantic_status_field)
     {
         $done_values_ids        = $this->getDoneValuesIds();
         $formated_closed_values = [];
@@ -223,7 +226,7 @@ class SemanticDone extends Tracker_Semantic
     /**
      * @return array
      */
-    private function getClosedValues(Tracker_FormElement_Field $semantic_status_field)
+    private function getClosedValues(Tracker_FormElement_Field_List $semantic_status_field)
     {
         $all_values    = $semantic_status_field->getAllVisibleValues();
         $open_values   = $this->semantic_status->getOpenValues();
@@ -264,7 +267,7 @@ class SemanticDone extends Tracker_Semantic
             if (! $semantic_status_field) {
                 $GLOBALS['Response']->addFeedback(
                     Feedback::WARN,
-                    dgettext('tuleap-agiledashboard', 'Semantic status is not defined.')
+                    dgettext('tuleap-tracker', 'Semantic status is not defined.')
                 );
             } elseif (! $values) {
                 $this->clearValuesForTracker($tracker_id);
@@ -273,7 +276,7 @@ class SemanticDone extends Tracker_Semantic
             } else {
                 $GLOBALS['Response']->addFeedback(
                     Feedback::ERROR,
-                    dgettext('tuleap-agiledashboard', 'The request is not valid.')
+                    dgettext('tuleap-tracker', 'The request is not valid.')
                 );
             }
         }
@@ -281,7 +284,7 @@ class SemanticDone extends Tracker_Semantic
         $this->displayAdmin($semantic_manager, $tracker_manager, $request, $current_user);
     }
 
-    private function clearValuesForTracker($tracker_id)
+    private function clearValuesForTracker(int $tracker_id): void
     {
         try {
             $this->dao->clearForTracker($tracker_id);
@@ -290,21 +293,21 @@ class SemanticDone extends Tracker_Semantic
 
             $GLOBALS['Response']->addFeedback(
                 Feedback::INFO,
-                dgettext('tuleap-agiledashboard', 'Done values successfully cleared.')
+                dgettext('tuleap-tracker', 'Done values successfully cleared.')
             );
-        } catch (DataAccessException $exception) {
+        } catch (PDOException $exception) {
             $GLOBALS['Response']->addFeedback(
                 Feedback::ERROR,
-                dgettext('tuleap-agiledashboard', 'An error occurred while clearing done values.')
+                dgettext('tuleap-tracker', 'An error occurred while clearing done values.')
             );
         }
     }
 
     private function updateValuesForTracker(
-        Tracker_FormElement_Field $semantic_status_field,
-        $tracker_id,
+        Tracker_FormElement_Field_List $semantic_status_field,
+        int $tracker_id,
         array $selected_values
-    ) {
+    ): void {
         $selected_values            = array_map('intval', $selected_values);
         $closed_values              = $this->getClosedValues($semantic_status_field);
         $non_closed_selected_values = array_diff($selected_values, array_keys($closed_values));
@@ -312,7 +315,7 @@ class SemanticDone extends Tracker_Semantic
         if (count($non_closed_selected_values) > 0) {
             $GLOBALS['Response']->addFeedback(
                 Feedback::ERROR,
-                dgettext('tuleap-agiledashboard', 'Selected values are invalid because some are not closed values anymore.')
+                dgettext('tuleap-tracker', 'Selected values are invalid because some are not closed values anymore.')
             );
 
             return;
@@ -325,17 +328,17 @@ class SemanticDone extends Tracker_Semantic
 
             $GLOBALS['Response']->addFeedback(
                 Feedback::INFO,
-                dgettext('tuleap-agiledashboard', 'Done values successfully updated.')
+                dgettext('tuleap-tracker', 'Done values successfully updated.')
             );
-        } catch (DataAccessException $exception) {
+        } catch (PDOException $exception) {
             $GLOBALS['Response']->addFeedback(
                 Feedback::ERROR,
-                dgettext('tuleap-agiledashboard', 'An error occurred while updating done values.')
+                dgettext('tuleap-tracker', 'An error occurred while updating done values.')
             );
         }
     }
 
-    private function setNewDoneValues(array $selected_values)
+    private function setNewDoneValues(array $selected_values): void
     {
         $this->done_values = [];
 
@@ -457,15 +460,21 @@ class SemanticDone extends Tracker_Semantic
         if ($status_value === null) {
             return false;
         }
+
+        assert($status_value instanceof Tracker_Artifact_ChangesetValue_List);
+
         $list_values = $status_value->getListValues();
         foreach ($list_values as $list_value) {
-            if ($this->dao->isValueADoneValue($changeset->getTracker()->getId(), $list_value->getId())) {
+            if ($this->dao->isValueADoneValue($changeset->getTracker()->getId(), (int) $list_value->getId())) {
                 return true;
             }
         }
         return false;
     }
 
+    /**
+     * @var self[]
+     */
     private static $instances;
     /**
      * Load an instance of a SemanticDone

@@ -23,9 +23,9 @@ namespace Tuleap\Velocity\Semantic;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tracker;
-use Tuleap\AgileDashboard\Semantic\Dao\SemanticDoneDao;
-use Tuleap\AgileDashboard\Semantic\SemanticDone;
-use Tuleap\AgileDashboard\Semantic\SemanticDoneValueChecker;
+use Tuleap\Tracker\Semantic\Status\Done\SemanticDone;
+use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneDao;
+use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneValueChecker;
 
 class BacklogRequiredTrackerCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
 {

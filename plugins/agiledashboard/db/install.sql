@@ -86,15 +86,6 @@ CREATE TABLE plugin_agiledashboard_kanban_widget_config(
     PRIMARY KEY (widget_id)
 ) ENGINE=InnoDB;
 
-
-DROP TABLE IF EXISTS plugin_agiledashboard_semantic_done;
-CREATE TABLE plugin_agiledashboard_semantic_done (
-  tracker_id INT(11) NOT NULL,
-  value_id INT(11) NOT NULL,
-  PRIMARY KEY(tracker_id, value_id),
-  INDEX semantic_done_tracker_idx(tracker_id)
-) ENGINE=InnoDB;
-
 DROP TABLE IF EXISTS plugin_agiledashboard_kanban_tracker_reports;
 CREATE TABLE plugin_agiledashboard_kanban_tracker_reports (
   kanban_id INT(11) NOT NULL,

@@ -39,14 +39,18 @@ class SemanticProgressFromXMLBuilder implements IBuildSemanticFromXML
         $this->dao = $dao;
     }
 
-    public function getInstanceFromXML(SimpleXMLElement $xml, array $xml_mapping, Tracker $tracker): ?Tracker_Semantic
-    {
-        if ($this->isEffortBased($xml)) {
-            return $this->buildEffortBasedSemanticProgress($xml, $xml_mapping, $tracker);
+    public function getInstanceFromXML(
+        SimpleXMLElement $current_semantic_xml,
+        SimpleXMLElement $all_semantics_xml,
+        array $xml_mapping,
+        Tracker $tracker
+    ): ?Tracker_Semantic {
+        if ($this->isEffortBased($current_semantic_xml)) {
+            return $this->buildEffortBasedSemanticProgress($current_semantic_xml, $xml_mapping, $tracker);
         }
 
-        if ($this->isLinksCountBased($xml)) {
-            return $this->buildLinksCountBasedSemanticProgress($xml, $tracker);
+        if ($this->isLinksCountBased($current_semantic_xml)) {
+            return $this->buildLinksCountBasedSemanticProgress($current_semantic_xml, $tracker);
         }
 
         return null;

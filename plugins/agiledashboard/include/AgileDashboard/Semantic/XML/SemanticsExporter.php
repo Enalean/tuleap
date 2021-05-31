@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -26,24 +26,19 @@ namespace Tuleap\AgileDashboard\Semantic\XML;
 use AgileDashBoard_Semantic_InitialEffort;
 use Tuleap\Tracker\Creation\JiraImporter\Configuration\PlatformConfiguration;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMappingCollection;
-use Tuleap\Tracker\Creation\JiraImporter\Import\Values\StatusValuesCollection;
-use Tuleap\Tracker\FormElement\Field\ListFields\Bind\XML\XMLBindValueReferenceById;
-use Tuleap\Tracker\FormElement\XML\XMLFormElementFlattenedCollection;
 
 final class SemanticsExporter
 {
     public function process(
         \SimpleXMLElement $xml_tracker,
         PlatformConfiguration $platform_configuration,
-        FieldMappingCollection $field_mapping_collection,
-        StatusValuesCollection $status_values_collection
+        FieldMappingCollection $field_mapping_collection
     ): void {
         if (! $xml_tracker->semantics) {
             throw new \LogicException('tracker XML node does not have a `semantics` node');
         }
 
         $this->exportInitialEffort($platform_configuration, $field_mapping_collection, $xml_tracker->semantics);
-        $this->exportDone($status_values_collection, $xml_tracker->semantics);
     }
 
     private function exportInitialEffort(
@@ -73,16 +68,5 @@ final class SemanticsExporter
         );
         $field_node = $semantic_node->addChild("field");
         $field_node->addAttribute("REF", $story_points_field->getXMLId());
-    }
-
-    private function exportDone(StatusValuesCollection $status_values_collection, \SimpleXMLElement $xml_semantics): void
-    {
-        $xml_done = new XMLDoneSemantic();
-        foreach ($status_values_collection->getClosedValues() as $closed_value) {
-            $xml_done = $xml_done->withDoneValues(
-                new XMLBindValueReferenceById($closed_value->getXMLId()),
-            );
-        }
-        $xml_done->export($xml_semantics, new XMLFormElementFlattenedCollection([]));
     }
 }

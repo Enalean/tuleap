@@ -8,7 +8,6 @@ DROP TABLE IF EXISTS plugin_agiledashboard_kanban_configuration_column;
 DROP TABLE IF EXISTS plugin_agiledashboard_scrum_mono_milestones;
 DROP TABLE IF EXISTS plugin_agiledashboard_kanban_widget;
 DROP TABLE IF EXISTS plugin_agiledashboard_kanban_widget_config;
-DROP TABLE IF EXISTS plugin_agiledashboard_semantic_done;
 DROP TABLE IF EXISTS plugin_agiledashboard_tracker_field_burnup_cache;
 DROP TABLE IF EXISTS plugin_agiledashboard_kanban_recently_visited;
 DROP TABLE IF EXISTS plugin_agiledashboard_planning_explicit_backlog_usage;

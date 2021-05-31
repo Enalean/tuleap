@@ -1018,6 +1018,14 @@ CREATE TABLE IF NOT EXISTS plugin_tracker_private_comment_permission(
     PRIMARY KEY(comment_id, ugroup_id)
 ) ENGINE=InnoDB;
 
+DROP TABLE IF EXISTS plugin_tracker_semantic_done;
+CREATE TABLE plugin_tracker_semantic_done (
+     tracker_id INT(11) NOT NULL,
+     value_id INT(11) NOT NULL,
+     PRIMARY KEY(tracker_id, value_id),
+     INDEX semantic_done_tracker_idx(tracker_id)
+) ENGINE=InnoDB;
+
 -- Enable service for project 100
 INSERT INTO service(group_id, label, description, short_name, link, is_active, is_used, scope, rank)
        VALUES      ( 100, 'plugin_tracker:service_lbl_key', 'plugin_tracker:service_desc_key', 'plugin_tracker', '/plugins/tracker/?group_id=$group_id', 1, 1, 'system', 151);

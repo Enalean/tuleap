@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -23,14 +23,10 @@ declare(strict_types=1);
 
 namespace Tuleap\AgileDashboard\Semantic\XML;
 
-use Psr\Log\NullLogger;
 use Tuleap\Tracker\Creation\JiraImporter\Configuration\PlatformConfiguration;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldAndValueIDGenerator;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMappingCollection;
-use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\JiraFieldAPIAllowedValueRepresentation;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\ScalarFieldMapping;
-use Tuleap\Tracker\Creation\JiraImporter\Import\Values\StatusValuesCollection;
-use Tuleap\Tracker\Creation\JiraImporter\JiraClient;
 use function PHPUnit\Framework\assertCount;
 use function PHPUnit\Framework\assertEquals;
 use function PHPUnit\Framework\assertNotNull;
@@ -46,8 +42,7 @@ final class SemanticExporterTest extends \Tuleap\Test\PHPUnit\TestCase
         $add->process(
             new \SimpleXMLElement('<tracker />'),
             new PlatformConfiguration(),
-            new FieldMappingCollection(new FieldAndValueIDGenerator()),
-            new StatusValuesCollection($this->getJiraClient(), new NullLogger()),
+            new FieldMappingCollection(new FieldAndValueIDGenerator())
         );
     }
 
@@ -73,8 +68,7 @@ final class SemanticExporterTest extends \Tuleap\Test\PHPUnit\TestCase
         $add->process(
             $xml,
             new PlatformConfiguration(),
-            $mapping,
-            new StatusValuesCollection($this->getJiraClient(), new NullLogger())
+            $mapping
         );
 
         $semantic = $xml->xpath('/tracker/semantics/semantic[@type="initial_effort"]');
@@ -95,8 +89,7 @@ final class SemanticExporterTest extends \Tuleap\Test\PHPUnit\TestCase
         $add->process(
             $xml,
             $platform_configuration,
-            new FieldMappingCollection(new FieldAndValueIDGenerator()),
-            new StatusValuesCollection($this->getJiraClient(), new NullLogger())
+            new FieldMappingCollection(new FieldAndValueIDGenerator())
         );
 
         $semantic = $xml->xpath('/tracker/semantics/semantic[@type="initial_effort"]');
@@ -128,8 +121,7 @@ final class SemanticExporterTest extends \Tuleap\Test\PHPUnit\TestCase
         $add->process(
             $xml,
             $platform_configuration,
-            $mapping,
-            new StatusValuesCollection($this->getJiraClient(), new NullLogger())
+            $mapping
         );
 
         $semantic = $xml->xpath('/tracker/semantics/semantic[@type="initial_effort"]')[0];
@@ -137,43 +129,5 @@ final class SemanticExporterTest extends \Tuleap\Test\PHPUnit\TestCase
         assertNotNull($semantic->label);
         assertNotNull($semantic->description);
         assertEquals($xml_story_points_id, $semantic->field['REF']);
-    }
-
-    public function testItAddsTheDoneSemantic(): void
-    {
-        $id_generator             = new FieldAndValueIDGenerator();
-        $status_values_collection = new StatusValuesCollection($this->getJiraClient(), new NullLogger());
-        $status_values_collection->initCollectionWithValues(
-            [],
-            [
-                JiraFieldAPIAllowedValueRepresentation::buildFromAPIResponse(['id' => '10005', 'name' => 'done'], $id_generator),
-            ],
-        );
-
-        $xml = new \SimpleXMLElement('<tracker><semantics></semantics></tracker>');
-
-        $add = new SemanticsExporter();
-        $add->process(
-            $xml,
-            new PlatformConfiguration(),
-            new FieldMappingCollection(new FieldAndValueIDGenerator()),
-            $status_values_collection,
-        );
-
-        $semantic = $xml->xpath('/tracker/semantics/semantic[@type="done"]');
-        assertCount(1, $semantic);
-        assertCount(1, $semantic[0]->closed_values->closed_value);
-        assertEquals('V1', $semantic[0]->closed_values->closed_value[0]['REF']);
-    }
-
-    private function getJiraClient(): JiraClient
-    {
-        return new class implements JiraClient
-        {
-            public function getUrl(string $url): ?array
-            {
-                return [];
-            }
-        };
     }
 }

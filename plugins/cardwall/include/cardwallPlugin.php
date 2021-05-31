@@ -342,13 +342,19 @@ class cardwallPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration
      */
     public function tracker_event_semantic_from_xml($params) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
-        $tracker     = $params['tracker'];
-        $xml         = $params['xml'];
-        $xml_mapping = $params['xml_mapping'];
-        $type        = $params['type'];
+        $tracker           = $params['tracker'];
+        $xml               = $params['xml'];
+        $full_semantic_xml = $params['full_semantic_xml'];
+        $xml_mapping       = $params['xml_mapping'];
+        $type              = $params['type'];
 
         if ($type == Cardwall_Semantic_CardFields::NAME) {
-            $params['semantic'] = (new Cardwall_Semantic_CardFieldsFactory())->getInstanceFromXML($xml, $xml_mapping, $tracker);
+            $params['semantic'] = (new Cardwall_Semantic_CardFieldsFactory())->getInstanceFromXML(
+                $xml,
+                $full_semantic_xml,
+                $xml_mapping,
+                $tracker
+            );
         }
     }
 

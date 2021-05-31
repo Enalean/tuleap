@@ -20,7 +20,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\AgileDashboard\Semantic;
+namespace Tuleap\Tracker\Semantic\Status\Done;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
@@ -28,7 +28,6 @@ use Tracker;
 use Tracker_FormElement_Field_List_Value;
 use Tracker_FormElement_InvalidFieldValueException;
 use Tracker_Semantic_Status;
-use Tuleap\AgileDashboard\Semantic\Dao\SemanticDoneDao;
 
 class SemanticDoneLoaderTest extends \Tuleap\Test\PHPUnit\TestCase
 {

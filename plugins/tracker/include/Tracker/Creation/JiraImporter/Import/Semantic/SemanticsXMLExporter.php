@@ -31,6 +31,9 @@ use Tracker_Semantic_Title;
 use Tuleap\Tracker\Creation\JiraImporter\Import\AlwaysThereFieldsExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMappingCollection;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Values\StatusValuesCollection;
+use Tuleap\Tracker\FormElement\Field\ListFields\Bind\XML\XMLBindValueReferenceById;
+use Tuleap\Tracker\FormElement\XML\XMLFormElementFlattenedCollection;
+use Tuleap\Tracker\Semantic\Status\Done\XML\XMLDoneSemantic;
 
 class SemanticsXMLExporter
 {
@@ -43,6 +46,7 @@ class SemanticsXMLExporter
         $this->exportTitleSemantic($semantics_node, $field_mapping_collection);
         $this->exportDescriptionSemantic($semantics_node, $field_mapping_collection);
         $this->exportStatusSemantic($semantics_node, $field_mapping_collection, $status_values_collection);
+        $this->exportDoneSemantic($semantics_node, $field_mapping_collection, $status_values_collection);
         $this->exportContributorSemantic($semantics_node, $field_mapping_collection);
     }
 
@@ -104,6 +108,25 @@ class SemanticsXMLExporter
             $open_value_node = $open_values_node->addChild('open_value');
             $open_value_node->addAttribute("REF", $allowed_value_representation->getXMLId());
         }
+    }
+
+    private function exportDoneSemantic(
+        SimpleXMLElement $semantics_node,
+        FieldMappingCollection $field_mapping_collection,
+        StatusValuesCollection $status_values_collection
+    ): void {
+        $status_field = $field_mapping_collection->getMappingFromJiraField(AlwaysThereFieldsExporter::JIRA_STATUS_NAME);
+        if ($status_field === null) {
+            return;
+        }
+
+        $xml_done = new XMLDoneSemantic();
+        foreach ($status_values_collection->getClosedValues() as $closed_value) {
+            $xml_done = $xml_done->withDoneValues(
+                new XMLBindValueReferenceById($closed_value->getXMLId()),
+            );
+        }
+        $xml_done->export($semantics_node, new XMLFormElementFlattenedCollection([]));
     }
 
     private function exportContributorSemantic(SimpleXMLElement $semantics_node, FieldMappingCollection $field_mapping_collection): void

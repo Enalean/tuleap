@@ -23,7 +23,7 @@ namespace Tuleap\Velocity\Semantic;
 use Tracker;
 use Tracker_HierarchyFactory;
 use TrackerFactory;
-use Tuleap\AgileDashboard\Semantic\SemanticDoneFactory;
+use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneFactory;
 
 class MissingRequirementRetriever
 {

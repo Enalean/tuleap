@@ -18,7 +18,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\AgileDashboard\Semantic;
+declare(strict_types=1);
+
+namespace Tuleap\Tracker\Semantic\Status\Done;
 
 use CSRFSynchronizerToken;
 use Tracker;
@@ -65,11 +67,11 @@ class SemanticDoneAdminPresenter
         CSRFSynchronizerToken $csrf,
         Tracker $tracker,
         array $closed_values,
-        $form_url,
-        $go_back_url,
+        string $form_url,
+        string $go_back_url,
         ?Tracker_FormElement_Field $semantic_status_field = null
     ) {
-        $this->semantic_status_is_defined = (bool) ($semantic_status_field !== null);
+        $this->semantic_status_is_defined = ($semantic_status_field !== null);
         $this->tracker_id                 = $tracker->getId();
         $this->closed_values              = $closed_values;
 

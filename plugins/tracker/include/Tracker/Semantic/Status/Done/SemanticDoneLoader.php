@@ -18,13 +18,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\AgileDashboard\Semantic;
+declare(strict_types=1);
+
+namespace Tuleap\Tracker\Semantic\Status\Done;
 
 use Tracker;
 use Tracker_FormElement_Field_List_Value;
 use Tracker_FormElement_InvalidFieldValueException;
 use Tracker_Semantic_Status;
-use Tuleap\AgileDashboard\Semantic\Dao\SemanticDoneDao;
 
 class SemanticDoneLoader
 {
