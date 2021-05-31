@@ -16,7 +16,7 @@ require("../include.pl");  # Include all the predefined functions
 # default (see local.inc) is 60 days
 if ($sys_pending_account_lifetime != 0) {
   $then=(time()-3600*24*$sys_pending_account_lifetime);
-  $rel = $dbh->prepare("DELETE FROM user WHERE status='P' and add_date < '$then'");
+  $rel = $dbh->prepare("UPDATE user SET status='D' WHERE status='P' and add_date < '$then'");
   $rel->execute();
 }
 
