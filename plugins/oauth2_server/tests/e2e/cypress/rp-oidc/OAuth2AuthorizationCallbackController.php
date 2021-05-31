@@ -26,9 +26,15 @@ use Amp\Http\Server\Request;
 use Amp\Http\Server\Response;
 use Amp\Http\Status;
 use Lcobucci\JWT\Parser;
-use Lcobucci\JWT\Signer\Key;
+use Lcobucci\JWT\Signer\Key\InMemory;
 use Lcobucci\JWT\Signer\Rsa\Sha256;
-use Lcobucci\JWT\ValidationData;
+use Lcobucci\JWT\Token;
+use Lcobucci\JWT\Validation\Constraint\IssuedBy;
+use Lcobucci\JWT\Validation\Constraint\PermittedFor;
+use Lcobucci\JWT\Validation\Constraint\RelatedTo;
+use Lcobucci\JWT\Validation\Constraint\SignedWith;
+use Lcobucci\JWT\Validation\RequiredConstraintsViolated;
+use Lcobucci\JWT\Validator;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -74,6 +80,8 @@ final class OAuth2AuthorizationCallbackController
      */
     private $stream_factory;
 
+    private Validator $validator;
+
     public function __construct(
         OAuth2TestFlowSecretGenerator $secret_generator,
         ClientInterface $http_client,
@@ -82,6 +90,7 @@ final class OAuth2AuthorizationCallbackController
         OAuth2TestFlowConfigurationStorage $configuration_storage,
         Parser $parser,
         Sha256 $signer,
+        Validator $validator,
         RequestFactoryInterface $request_factory,
         StreamFactoryInterface $stream_factory
     ) {
@@ -92,6 +101,7 @@ final class OAuth2AuthorizationCallbackController
         $this->configuration_storage                      = $configuration_storage;
         $this->parser                                     = $parser;
         $this->signer                                     = $signer;
+        $this->validator                                  = $validator;
         $this->request_factory                            = $request_factory;
         $this->stream_factory                             = $stream_factory;
     }
@@ -113,15 +123,17 @@ final class OAuth2AuthorizationCallbackController
             $http_client_with_client_credentials,
             $auth_code
         );
-        $sub                                 = $this->validateIDToken($access_token_response['id_token']);
+        $id_token                            = $this->validateIDToken($access_token_response['id_token']);
         $refresh_token_response              = $this->refreshTokens(
             $http_client_with_client_credentials,
             $access_token_response['refresh_token']
         );
 
         $user_info_response = $this->getUserInfo($refresh_token_response['access_token']);
-        if (! hash_equals($sub, $user_info_response['sub'])) {
-            throw new \RuntimeException(sprintf('The user info sub (%s) does not match the ID token sub (%s)', $user_info_response['sub'], $sub));
+        try {
+            $this->validator->assert($id_token, new RelatedTo($user_info_response['sub']));
+        } catch (RequiredConstraintsViolated $e) {
+            throw new \RuntimeException(sprintf('The user info sub (%s) does not match the ID token sub', $user_info_response['sub']));
         }
 
         $this->revoke($http_client_with_client_credentials, $refresh_token_response);
@@ -219,35 +231,35 @@ final class OAuth2AuthorizationCallbackController
         );
     }
 
-    private function validateIDToken(string $id_token_jwt): string
+    private function validateIDToken(string $id_token_jwt): Token
     {
         $id_token = $this->parser->parse($id_token_jwt);
 
         $public_keys        = $this->getPublicKeys();
         $is_signature_valid = false;
         foreach ($public_keys as $public_key) {
-            $is_signature_valid = $is_signature_valid || $id_token->verify($this->signer, new Key($public_key));
+            $is_signature_valid = $is_signature_valid || $this->validator->validate(
+                $id_token,
+                new SignedWith($this->signer, InMemory::plainText($public_key))
+            );
         }
         if (! $is_signature_valid) {
             throw new \RuntimeException('Verification of the ID token signature has failed');
         }
 
-        $validation_data = new ValidationData();
-        $validation_data->setIssuer(OAuth2TestFlowConstants::BASE_CLIENT_URI);
-        $validation_data->setAudience($this->client_credential_storage->getClientId());
-        if (! $id_token->validate($validation_data)) {
+        $expected_nonce = $this->secret_generator->getNonce();
+        if (
+            ! $this->validator->validate(
+                $id_token,
+                new IssuedBy(OAuth2TestFlowConstants::BASE_CLIENT_URI),
+                new PermittedFor($this->client_credential_storage->getClientId()),
+                new HasExpectedNonce($expected_nonce)
+            )
+        ) {
             throw new \RuntimeException('Validation of ID token claims has failed');
         }
 
-        $expected_nonce = $this->secret_generator->getNonce();
-        $nonce_claim    = $id_token->getClaim('nonce', '');
-        if (! hash_equals($expected_nonce, $nonce_claim)) {
-            throw new \RuntimeException(
-                sprintf('Nonce claim (%s) has failed does not have the expected value (%s)', $nonce_claim, $expected_nonce)
-            );
-        }
-
-        return $id_token->getClaim('sub', '');
+        return $id_token;
     }
 
     /**
