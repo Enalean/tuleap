@@ -206,14 +206,15 @@ $tlp-dropdown-transition: 75ms ease-out;
     align-items: center;
 }
 
-.tlp-dropdown-split-button-main,
-.tlp-dropdown-split-button-main.tlp-button-outline {
+.tlp-dropdown-split-button-main[class*='tlp-button'] {
     border-right: 0;
-    border-radius: 4px 0 0 4px;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
 }
 
-.tlp-dropdown-split-button-caret {
-    border-radius: 0 4px 4px 0;
+.tlp-dropdown-split-button-caret[class*='tlp-button'] {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
 
     &.tlp-button-large {
         padding: 0 var(--tlp-medium-spacing);
