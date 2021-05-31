@@ -19,36 +19,10 @@
 
 import type { RootState } from "./type";
 import type { ActionContext } from "vuex";
-import { retrieveIterations } from "../helpers/iterations-retriever";
-import { retrieveAllTasks } from "../helpers/task-retriever";
-import type { Task } from "../type";
-import type { FetchWrapperError } from "@tuleap/tlp-fetch";
 
 export function loadRoadmap(
     context: ActionContext<RootState, RootState>,
     roadmap_id: number
-): void {
-    Promise.all([
-        retrieveAllTasks(roadmap_id),
-        context.state.should_load_lvl1_iterations ? retrieveIterations(roadmap_id, 1) : null,
-        context.state.should_load_lvl2_iterations ? retrieveIterations(roadmap_id, 2) : null,
-    ])
-        .then((values) => {
-            const tasks: Task[] = values[0];
-            if (tasks.length === 0) {
-                context.commit("setApplicationInEmptyState");
-            } else {
-                context.commit("tasks/setTasks", tasks, { root: true });
-            }
-            context.commit("stopLoading");
-        })
-        .catch((rest_error: FetchWrapperError) => {
-            if (rest_error.response.status === 404 || rest_error.response.status === 403) {
-                context.commit("setApplicationInEmptyState");
-
-                return;
-            }
-
-            context.commit("setApplicationInErrorStateDueToRestError", rest_error);
-        });
+): Promise<void> {
+    return context.dispatch("tasks/loadTasks", roadmap_id);
 }

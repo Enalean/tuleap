@@ -26,6 +26,10 @@ import {
     SUBTASKS_ARE_LOADING,
 } from "../../type";
 
+export function setIsLoading(state: TasksState, is_loading: boolean): void {
+    state.is_loading = is_loading;
+}
+
 export function setTasks(state: TasksState, tasks: Task[]): void {
     state.tasks = tasks;
 }

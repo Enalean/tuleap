@@ -53,7 +53,3 @@ async function getMessageFromRestError(rest_error: FetchWrapperError): Promise<s
 
     return "";
 }
-
-export function stopLoading(state: RootState): void {
-    state.is_loading = false;
-}

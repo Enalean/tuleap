@@ -28,7 +28,6 @@ export function createStore(initial_root_state: RootState): Store<RootState> {
     const store_options: StoreOptions<RootState> = {
         state: {
             ...initial_root_state,
-            is_loading: true,
             should_display_empty_state: false,
             should_display_error_state: false,
             error_message: "",
