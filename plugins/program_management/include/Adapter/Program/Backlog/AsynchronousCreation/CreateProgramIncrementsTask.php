@@ -29,11 +29,11 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\Pending
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\ProgramIncrementCreationException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\ProgramIncrementsCreator;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\ProgramIncrementChanged;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\TrackerRetrievalException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\BuildFieldValues;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\FieldRetrievalException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\FieldSynchronizationException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\ReplicationData;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Team\ProgramIncrementTrackerRetrievalException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Team\TeamProjectsCollectionBuilder;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TrackerCollectionFactory;
 use Tuleap\ProgramManagement\Domain\Program\PlanningConfiguration\TopPlanningNotFoundInProjectException;
@@ -91,14 +91,14 @@ final class CreateProgramIncrementsTask implements CreateTaskProgramIncrement
     {
         try {
             $this->create($replication_data);
-        } catch (ProgramIncrementTrackerRetrievalException | ProgramIncrementCreationException | FieldRetrievalException | FieldSynchronizationException $exception) {
+        } catch (TrackerRetrievalException | ProgramIncrementCreationException | FieldRetrievalException | FieldSynchronizationException $exception) {
             $this->logger->error('Error during creation of project increments ', ['exception' => $exception]);
         }
     }
 
     /**
      * @throws ProgramIncrementCreationException
-     * @throws ProgramIncrementTrackerRetrievalException
+     * @throws TrackerRetrievalException
      * @throws FieldRetrievalException
      * @throws FieldSynchronizationException
      * @throws TopPlanningNotFoundInProjectException

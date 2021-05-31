@@ -22,13 +22,13 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck;
 
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Team\ProgramIncrementsTrackerCollection;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\TrackerCollection;
 use Tuleap\ProgramManagement\Domain\ProgramTracker;
 
 interface CheckSemantic
 {
     public function areTrackerSemanticsWellConfigured(
         ProgramTracker $tracker,
-        ProgramIncrementsTrackerCollection $source_tracker_collection
+        TrackerCollection $source_tracker_collection
     ): bool;
 }

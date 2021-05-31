@@ -40,7 +40,7 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fiel
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\Field;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFields;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\SubmissionDate;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Team\ProgramIncrementsTrackerCollection;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\TrackerCollection;
 use Tuleap\ProgramManagement\Domain\ProgramTracker;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
@@ -87,7 +87,7 @@ final class ProgramIncrementsCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $test_tracker_data   = $this->buildTestTrackerData(8, $first_team_project);
         $second_team_project = new \Project(['group_id' => '103']);
         $second_tracker_data = $this->buildTestTrackerData(9, $second_team_project);
-        $trackers            = new ProgramIncrementsTrackerCollection([$test_tracker_data, $second_tracker_data]);
+        $trackers            = new TrackerCollection([$test_tracker_data, $second_tracker_data]);
         $current_user        = UserTestBuilder::aUser()->build();
 
         $this->synchronized_fields_adapter->shouldReceive('build')
@@ -115,7 +115,7 @@ final class ProgramIncrementsCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $copied_values  = $this->buildCopiedValues();
         $a_team_project = new \Project(['group_id' => '110']);
         $tracker        = $this->buildTestTrackerData(10, $a_team_project);
-        $trackers       = new ProgramIncrementsTrackerCollection([$tracker]);
+        $trackers       = new TrackerCollection([$tracker]);
         $current_user   = UserTestBuilder::aUser()->build();
 
         $this->synchronized_fields_adapter->shouldReceive('build')

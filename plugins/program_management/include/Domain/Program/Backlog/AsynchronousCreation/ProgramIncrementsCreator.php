@@ -30,7 +30,7 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fiel
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\FieldRetrievalException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\FieldSynchronizationException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\ProgramIncrementFields;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Team\ProgramIncrementsTrackerCollection;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\TrackerCollection;
 
 class ProgramIncrementsCreator
 {
@@ -70,12 +70,12 @@ class ProgramIncrementsCreator
      */
     public function createProgramIncrements(
         SourceChangesetValuesCollection $copied_values,
-        ProgramIncrementsTrackerCollection $program_increments_tracker_collection,
+        TrackerCollection $program_increments_tracker_collection,
         \PFUser $current_user
     ): void {
         $this->transaction_executor->execute(
             function () use ($copied_values, $program_increments_tracker_collection, $current_user) {
-                foreach ($program_increments_tracker_collection->getProgramIncrementTrackers() as $program_increment_tracker) {
+                foreach ($program_increments_tracker_collection->getTrackers() as $program_increment_tracker) {
                     $synchronized_fields = $this->synchronized_fields_adapter->build($program_increment_tracker);
                     $mapped_status       = $this->status_mapper
                         ->mapStatusValueByDuckTyping($copied_values, $synchronized_fields->getStatusField());

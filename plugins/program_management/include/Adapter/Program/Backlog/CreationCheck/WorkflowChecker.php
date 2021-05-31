@@ -25,7 +25,7 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\CreationCheck;
 use Psr\Log\LoggerInterface;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck\CheckWorkflow;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFieldFromProgramAndTeamTrackersCollection;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Team\ProgramIncrementsTrackerCollection;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\TrackerCollection;
 
 final class WorkflowChecker implements CheckWorkflow
 {
@@ -59,27 +59,27 @@ final class WorkflowChecker implements CheckWorkflow
     }
 
     public function areWorkflowsNotUsedWithSynchronizedFieldsInTeamTrackers(
-        ProgramIncrementsTrackerCollection $program_increment_trackers,
+        TrackerCollection $trackers,
         SynchronizedFieldFromProgramAndTeamTrackersCollection $field_collection
     ): bool {
         return $this->areTransitionRulesNotUsedWithSynchronizedFieldsInTeamTrackers(
-            $program_increment_trackers,
+            $trackers,
             $field_collection
         ) && $this->areDateRulesNotUsedWithSynchronizedFieldsInTeamTrackers(
-            $program_increment_trackers,
+            $trackers,
             $field_collection
         ) && $this->areListRulesNotUsedWithSynchronizedFieldsInTeamTrackers(
-            $program_increment_trackers,
+            $trackers,
             $field_collection
         );
     }
 
     private function areTransitionRulesNotUsedWithSynchronizedFieldsInTeamTrackers(
-        ProgramIncrementsTrackerCollection $program_increment_trackers,
+        TrackerCollection $trackers,
         SynchronizedFieldFromProgramAndTeamTrackersCollection $field_collection
     ): bool {
         $workflow_transition_rules = $this->workflow_dao->searchWorkflowsByFieldIDsAndTrackerIDs(
-            $program_increment_trackers->getTrackerIds(),
+            $trackers->getTrackerIds(),
             $field_collection->getSynchronizedFieldIDs()
         );
 
@@ -101,11 +101,11 @@ final class WorkflowChecker implements CheckWorkflow
     }
 
     private function areDateRulesNotUsedWithSynchronizedFieldsInTeamTrackers(
-        ProgramIncrementsTrackerCollection $program_increment_trackers,
+        TrackerCollection $trackers,
         SynchronizedFieldFromProgramAndTeamTrackersCollection $field_collection
     ): bool {
         $tracker_ids_with_date_rules = $this->tracker_rule_date_dao->searchTrackersWithRulesByFieldIDsAndTrackerIDs(
-            $program_increment_trackers->getTrackerIds(),
+            $trackers->getTrackerIds(),
             $field_collection->getSynchronizedFieldIDs()
         );
 
@@ -123,11 +123,11 @@ final class WorkflowChecker implements CheckWorkflow
     }
 
     private function areListRulesNotUsedWithSynchronizedFieldsInTeamTrackers(
-        ProgramIncrementsTrackerCollection $program_increment_trackers,
+        TrackerCollection $trackers,
         SynchronizedFieldFromProgramAndTeamTrackersCollection $field_collection
     ): bool {
         $tracker_ids_with_list_rules = $this->tracker_rule_list_dao->searchTrackersWithRulesByFieldIDsAndTrackerIDs(
-            $program_increment_trackers->getTrackerIds(),
+            $trackers->getTrackerIds(),
             $field_collection->getSynchronizedFieldIDs()
         );
 

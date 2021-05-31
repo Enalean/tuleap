@@ -85,17 +85,17 @@ use Tuleap\ProgramManagement\Adapter\Team\TeamDao;
 use Tuleap\ProgramManagement\Adapter\Workspace\WorkspaceDAO;
 use Tuleap\ProgramManagement\DisplayProgramBacklogController;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\ArtifactCreatedHandler;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck\ArtifactCreatorChecker;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck\ProgramIncrementArtifactCreatorChecker;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck\ProgramIncrementCreatorChecker;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck\TimeboxCreatorChecker;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\ProgramIncrementChanged;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Plan\ConfigurationChecker;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Plan\PlanCheckException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementArtifactLinkType;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementCollectionFactory;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFieldFromProgramAndTeamTrackersCollectionBuilder;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\NatureAnalyzerException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Team\TeamProjectsCollectionBuilder;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\TopBacklogChangeProcessor;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\TrackerCollectionFactory;
 use Tuleap\ProgramManagement\Domain\Program\Plan\PlanTrackerException;
 use Tuleap\ProgramManagement\Domain\Program\ProgramTrackerException;
 use Tuleap\ProgramManagement\Domain\ProgramTracker;
@@ -293,7 +293,7 @@ final class program_managementPlugin extends Plugin
 
     public function canSubmitNewArtifact(CanSubmitNewArtifact $can_submit_new_artifact): void
     {
-        $artifact_creator_checker = new ArtifactCreatorChecker(
+        $artifact_creator_checker = new ProgramIncrementCreatorChecker(
             $this->getProjectIncrementCreatorChecker(),
             $this->getPlanConfigurationBuilder()
         );
@@ -301,7 +301,7 @@ final class program_managementPlugin extends Plugin
         $tracker_data = new ProgramTracker($can_submit_new_artifact->getTracker());
         $project_data = ProjectAdapter::build($can_submit_new_artifact->getTracker()->getProject());
         if (
-            ! $artifact_creator_checker->canCreateAnArtifact(
+            ! $artifact_creator_checker->canCreateAProgramIncrement(
                 $can_submit_new_artifact->getUser(),
                 $tracker_data,
                 $project_data
@@ -686,16 +686,16 @@ final class program_managementPlugin extends Plugin
         (new AddToTopBacklogPostActionDAO())->deleteTransitionPostActions($transition_id);
     }
 
-    private function getProjectIncrementCreatorChecker(): ProgramIncrementArtifactCreatorChecker
+    private function getProjectIncrementCreatorChecker(): TimeboxCreatorChecker
     {
         $form_element_factory    = \Tracker_FormElementFactory::instance();
         $timeframe_dao           = new \Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao();
         $semantic_status_factory = new Tracker_Semantic_StatusFactory();
         $logger                  = $this->getLogger();
 
-        return new ProgramIncrementArtifactCreatorChecker(
+        return new TimeboxCreatorChecker(
             $this->getTeamProjectCollectionBuilder(),
-            new TrackerCollectionFactory(
+            new ProgramIncrementCollectionFactory(
                 $this->getPlanningAdapter(),
                 $this->getPlanConfigurationBuilder()
             ),

@@ -22,88 +22,36 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog;
 
-use Tuleap\ProgramManagement\Domain\Program\Backlog\Plan\BuildPlanProgramIncrementConfiguration;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\PlanningHasNoProgramIncrementException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\SourceTrackerCollection;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Team\ProgramIncrementsTrackerCollection;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Team\TeamProjectsCollection;
-use Tuleap\ProgramManagement\Domain\Program\BuildPlanning;
 use Tuleap\ProgramManagement\Domain\Program\Plan\PlanTrackerException;
-use Tuleap\ProgramManagement\Domain\Program\PlanningConfiguration\Planning;
-use Tuleap\ProgramManagement\Domain\Program\PlanningConfiguration\TopPlanningNotFoundInProjectException;
+use Tuleap\ProgramManagement\Domain\Program\PlanningConfiguration\PlanningNotFoundException;
 use Tuleap\ProgramManagement\Domain\Program\ProgramTrackerNotFoundException;
-use Tuleap\ProgramManagement\Domain\ProgramTracker;
 use Tuleap\ProgramManagement\Domain\Project;
 
-class TrackerCollectionFactory
+interface TrackerCollectionFactory
 {
     /**
-     * @var BuildPlanning
-     */
-    private $planning_adapter;
-    /**
-     * @var BuildPlanProgramIncrementConfiguration
-     */
-    private $configuration_builder;
-
-    public function __construct(
-        BuildPlanning $planning_adapter,
-        BuildPlanProgramIncrementConfiguration $configuration_builder
-    ) {
-        $this->planning_adapter      = $planning_adapter;
-        $this->configuration_builder = $configuration_builder;
-    }
-
-    /**
      * @throws Plan\PlanCheckException
-     * @throws TopPlanningNotFoundInProjectException
+     * @throws PlanningNotFoundException
      * @throws PlanTrackerException
      * @throws ProgramTrackerNotFoundException
      * @throws PlanningHasNoProgramIncrementException
+     * @throws TrackerRetrievalException
      */
     public function buildFromProgramProjectAndItsTeam(
         Project $program_project,
         TeamProjectsCollection $team_projects_collection,
         \PFUser $user
-    ): SourceTrackerCollection {
-        $trackers = [];
-
-        $trackers[] = $this->configuration_builder->buildTrackerProgramIncrementFromProjectId(
-            $program_project->getId(),
-            $user
-        );
-
-        foreach ($team_projects_collection->getTeamProjects() as $project) {
-            $trackers[] = $this->getPlannableTracker($user, $project);
-        }
-
-        return new SourceTrackerCollection($trackers);
-    }
+    ): SourceTrackerCollection;
 
     /**
-     * @throws TopPlanningNotFoundInProjectException
-     * @throws PlanningHasNoProgramIncrementException
+     * @throws PlanningNotFoundException
+     * @throws TrackerRetrievalException
      */
     public function buildFromTeamProjects(
         TeamProjectsCollection $team_projects_collection,
         \PFUser $user
-    ): ProgramIncrementsTrackerCollection {
-        $trackers = [];
-        foreach ($team_projects_collection->getTeamProjects() as $team_projects) {
-            $trackers[] = $this->getPlannableTracker($user, $team_projects);
-        }
-
-        return new ProgramIncrementsTrackerCollection($trackers);
-    }
-
-    /**
-     * @throws TopPlanningNotFoundInProjectException
-     * @throws PlanningHasNoProgramIncrementException
-     */
-    private function getPlannableTracker(\PFUser $user, Project $project): ProgramTracker
-    {
-        $root_planning = Planning::buildPlanning($this->planning_adapter, $user, $project->getID());
-
-        return $root_planning->getPlanningTracker();
-    }
+    ): TrackerCollection;
 }

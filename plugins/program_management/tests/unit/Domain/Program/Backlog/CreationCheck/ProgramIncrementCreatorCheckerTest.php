@@ -31,7 +31,7 @@ use Tuleap\ProgramManagement\Domain\ProgramTracker;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
-final class ArtifactCreatorCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
+final class ProgramIncrementCreatorCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 
@@ -41,21 +41,21 @@ final class ArtifactCreatorCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
     private $build_plan_configuration;
 
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|ArtifactCreatorChecker
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|ProgramIncrementCreatorChecker
      */
     private $milestone_creator_checker;
 
     /**
-     * @var ArtifactCreatorChecker
+     * @var ProgramIncrementCreatorChecker
      */
     private $artifact_creator_checker;
 
     protected function setUp(): void
     {
-        $this->milestone_creator_checker = \Mockery::mock(ProgramIncrementArtifactCreatorChecker::class);
+        $this->milestone_creator_checker = \Mockery::mock(TimeboxCreatorChecker::class);
         $this->build_plan_configuration  = \Mockery::mock(BuildPlanProgramIncrementConfiguration::class);
 
-        $this->artifact_creator_checker = new ArtifactCreatorChecker(
+        $this->artifact_creator_checker = new ProgramIncrementCreatorChecker(
             $this->milestone_creator_checker,
             $this->build_plan_configuration
         );
@@ -67,10 +67,10 @@ final class ArtifactCreatorCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         $tracker = TrackerTestBuilder::aTracker()->withId(1)->withProject($project)->build();
         $this->build_plan_configuration->shouldReceive('buildTrackerProgramIncrementFromProjectId')
             ->andReturn(new ProgramTracker($tracker));
-        $this->milestone_creator_checker->shouldReceive('canProgramIncrementBeCreated')->once()->andReturn(false);
+        $this->milestone_creator_checker->shouldReceive('canTimeboxBeCreated')->once()->andReturn(false);
 
         self::assertFalse(
-            $this->artifact_creator_checker->canCreateAnArtifact(
+            $this->artifact_creator_checker->canCreateAProgramIncrement(
                 UserTestBuilder::aUser()->build(),
                 new ProgramTracker($tracker),
                 ProjectAdapter::build($project)
@@ -88,7 +88,7 @@ final class ArtifactCreatorCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
             });
 
         self::assertTrue(
-            $this->artifact_creator_checker->canCreateAnArtifact(
+            $this->artifact_creator_checker->canCreateAProgramIncrement(
                 UserTestBuilder::aUser()->build(),
                 new ProgramTracker($tracker),
                 ProjectAdapter::build($project)
@@ -102,10 +102,10 @@ final class ArtifactCreatorCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         $tracker = TrackerTestBuilder::aTracker()->withId(102)->withProject($project)->build();
         $this->build_plan_configuration->shouldReceive('buildTrackerProgramIncrementFromProjectId')
             ->andReturn(new ProgramTracker($tracker));
-        $this->milestone_creator_checker->shouldReceive('canProgramIncrementBeCreated')->andReturn(true);
+        $this->milestone_creator_checker->shouldReceive('canTimeboxBeCreated')->andReturn(true);
 
         self::assertTrue(
-            $this->artifact_creator_checker->canCreateAnArtifact(
+            $this->artifact_creator_checker->canCreateAProgramIncrement(
                 UserTestBuilder::aUser()->build(),
                 new ProgramTracker($tracker),
                 ProjectAdapter::build($project)

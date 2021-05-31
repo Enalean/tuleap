@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\PlanningConfiguration;
 
-class TopPlanningNotFoundInProjectException extends \Exception
+final class TopPlanningNotFoundInProjectException extends \Exception implements PlanningNotFoundException
 {
     public function __construct(int $project_id)
     {

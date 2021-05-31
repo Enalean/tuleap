@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2020 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2021 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,12 +20,8 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Domain\Program\PlanningConfiguration;
+namespace Tuleap\ProgramManagement\Domain\Program\Backlog;
 
-class PlanningFotFoundException extends \Exception
+interface TrackerRetrievalException extends \Throwable
 {
-    public function __construct(int $planning_id)
-    {
-        parent::__construct("The planning with id #$planning_id have not been found.");
-    }
 }

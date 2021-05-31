@@ -30,26 +30,26 @@ use Tuleap\ProgramManagement\Domain\Program\ProgramTrackerException;
 use Tuleap\ProgramManagement\Domain\ProgramTracker;
 use Tuleap\ProgramManagement\Domain\Project;
 
-class ArtifactCreatorChecker
+class ProgramIncrementCreatorChecker
 {
     /**
-     * @var ProgramIncrementArtifactCreatorChecker
+     * @var TimeboxCreatorChecker
      */
-    private $program_increment_artifact_creator_checker;
+    private $timebox_creator_checker;
     /**
      * @var BuildPlanProgramIncrementConfiguration
      */
     private $build_plan_configuration;
 
     public function __construct(
-        ProgramIncrementArtifactCreatorChecker $program_increment_artifact_creator_checker,
+        TimeboxCreatorChecker $timebox_creator_checker,
         BuildPlanProgramIncrementConfiguration $build_plan_configuration
     ) {
-        $this->program_increment_artifact_creator_checker = $program_increment_artifact_creator_checker;
-        $this->build_plan_configuration                   = $build_plan_configuration;
+        $this->timebox_creator_checker  = $timebox_creator_checker;
+        $this->build_plan_configuration = $build_plan_configuration;
     }
 
-    public function canCreateAnArtifact(PFUser $user, ProgramTracker $tracker_data, Project $project_data): bool
+    public function canCreateAProgramIncrement(PFUser $user, ProgramTracker $tracker_data, Project $project_data): bool
     {
         try {
             $program_increment_tracker = $this->build_plan_configuration->buildTrackerProgramIncrementFromProjectId(
@@ -63,6 +63,6 @@ class ArtifactCreatorChecker
             return true;
         }
 
-        return $this->program_increment_artifact_creator_checker->canProgramIncrementBeCreated($tracker_data, $project_data, $user);
+        return $this->timebox_creator_checker->canTimeboxBeCreated($tracker_data, $project_data, $user);
     }
 }

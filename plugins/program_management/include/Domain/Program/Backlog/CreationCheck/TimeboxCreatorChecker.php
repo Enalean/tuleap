@@ -24,16 +24,16 @@ namespace Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck;
 
 use PFUser;
 use Psr\Log\LoggerInterface;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\PlanningHasNoProgramIncrementException;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\TrackerRetrievalException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\FieldSynchronizationException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFieldFromProgramAndTeamTrackersCollectionBuilder;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Team\TeamProjectsCollectionBuilder;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TrackerCollectionFactory;
-use Tuleap\ProgramManagement\Domain\Program\PlanningConfiguration\TopPlanningNotFoundInProjectException;
+use Tuleap\ProgramManagement\Domain\Program\PlanningConfiguration\PlanningNotFoundException;
 use Tuleap\ProgramManagement\Domain\ProgramTracker;
 use Tuleap\ProgramManagement\Domain\Project;
 
-class ProgramIncrementArtifactCreatorChecker
+class TimeboxCreatorChecker
 {
     /**
      * @var TeamProjectsCollectionBuilder
@@ -83,11 +83,11 @@ class ProgramIncrementArtifactCreatorChecker
         $this->logger                   = $logger;
     }
 
-    public function canProgramIncrementBeCreated(ProgramTracker $tracker_data, Project $project_data, PFUser $user): bool
+    public function canTimeboxBeCreated(ProgramTracker $tracker_data, Project $project_data, PFUser $user): bool
     {
         $program_project = $project_data;
         $this->logger->debug(
-            "Checking if program increment can be created in top planning of project " . $program_project->getName() .
+            "Checking if milestone can be created in planning of project " . $program_project->getName() .
             " by user " . $user->getName() . ' (#' . $user->getId() . ')'
         );
 
@@ -99,32 +99,32 @@ class ProgramIncrementArtifactCreatorChecker
             return true;
         }
         try {
-            $program_and_program_increment_trackers = $this->scale_trackers_factory->buildFromProgramProjectAndItsTeam(
+            $program_and_milestone_trackers = $this->scale_trackers_factory->buildFromProgramProjectAndItsTeam(
                 $program_project,
                 $team_projects_collection,
                 $user
             );
-            $program_increment_trackers             = $this->scale_trackers_factory->buildFromTeamProjects(
+            $milestone_trackers             = $this->scale_trackers_factory->buildFromTeamProjects(
                 $team_projects_collection,
                 $user
             );
-        } catch (TopPlanningNotFoundInProjectException | PlanningHasNoProgramIncrementException $exception) {
-            $this->logger->error("Cannot retrieve all the program increments", ['exception' => $exception]);
+        } catch (PlanningNotFoundException | TrackerRetrievalException $exception) {
+            $this->logger->error("Cannot retrieve all milestones", ['exception' => $exception]);
             return false;
         }
-        if (! $this->semantic_checker->areTrackerSemanticsWellConfigured($tracker_data, $program_increment_trackers)) {
+        if (! $this->semantic_checker->areTrackerSemanticsWellConfigured($tracker_data, $milestone_trackers)) {
             $this->logger->error("Semantics are not well configured.");
 
             return false;
         }
-        if (! $program_increment_trackers->canUserSubmitAnArtifactInAllTrackers($user)) {
+        if (! $milestone_trackers->canUserSubmitAnArtifactInAllTrackers($user)) {
             $this->logger->debug("User cannot submit an artifact in all team trackers.");
 
             return false;
         }
 
         try {
-            $synchronized_fields_data_collection = $this->field_collection_builder->buildFromSourceTrackers($program_and_program_increment_trackers);
+            $synchronized_fields_data_collection = $this->field_collection_builder->buildFromSourceTrackers($program_and_milestone_trackers);
         } catch (FieldSynchronizationException $exception) {
             $this->logger->error("Cannot retrieve all the synchronized fields", ['exception' => $exception]);
             return false;
@@ -136,7 +136,7 @@ class ProgramIncrementArtifactCreatorChecker
 
         if (
             ! $this->required_field_checker->areRequiredFieldsOfTeamTrackersLimitedToTheSynchronizedFields(
-                $program_increment_trackers,
+                $milestone_trackers,
                 $synchronized_fields_data_collection
             )
         ) {
@@ -146,7 +146,7 @@ class ProgramIncrementArtifactCreatorChecker
 
         if (
             ! $this->workflow_checker->areWorkflowsNotUsedWithSynchronizedFieldsInTeamTrackers(
-                $program_increment_trackers,
+                $milestone_trackers,
                 $synchronized_fields_data_collection
             )
         ) {
@@ -154,7 +154,7 @@ class ProgramIncrementArtifactCreatorChecker
             return false;
         }
 
-        $this->logger->debug("User can create a project increment in the project.");
+        $this->logger->debug("User can create a milestone in the project.");
         return true;
     }
 }

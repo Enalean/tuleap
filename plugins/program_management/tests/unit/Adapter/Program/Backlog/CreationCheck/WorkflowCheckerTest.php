@@ -28,7 +28,7 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fiel
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFieldFromProgramAndTeamTrackers;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFieldFromProgramAndTeamTrackersCollection;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFields;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Team\ProgramIncrementsTrackerCollection;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\TrackerCollection;
 use Tuleap\ProgramManagement\Domain\ProgramTracker;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
@@ -78,7 +78,7 @@ final class WorkflowCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->assertTrue(
             $this->checker->areWorkflowsNotUsedWithSynchronizedFieldsInTeamTrackers(
-                new ProgramIncrementsTrackerCollection([]),
+                new TrackerCollection([]),
                 new SynchronizedFieldFromProgramAndTeamTrackersCollection(new NullLogger())
             )
         );
@@ -97,7 +97,7 @@ final class WorkflowCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->assertFalse(
             $this->checker->areWorkflowsNotUsedWithSynchronizedFieldsInTeamTrackers(
-                new ProgramIncrementsTrackerCollection([new ProgramTracker($tracker)]),
+                new TrackerCollection([new ProgramTracker($tracker)]),
                 new SynchronizedFieldFromProgramAndTeamTrackersCollection(new NullLogger())
             )
         );
@@ -115,7 +115,7 @@ final class WorkflowCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->assertFalse(
             $this->checker->areWorkflowsNotUsedWithSynchronizedFieldsInTeamTrackers(
-                new ProgramIncrementsTrackerCollection([new ProgramTracker($tracker)]),
+                new TrackerCollection([new ProgramTracker($tracker)]),
                 new SynchronizedFieldFromProgramAndTeamTrackersCollection(new NullLogger())
             )
         );
@@ -134,7 +134,7 @@ final class WorkflowCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->assertFalse(
             $this->checker->areWorkflowsNotUsedWithSynchronizedFieldsInTeamTrackers(
-                new ProgramIncrementsTrackerCollection([new ProgramTracker($tracker)]),
+                new TrackerCollection([new ProgramTracker($tracker)]),
                 new SynchronizedFieldFromProgramAndTeamTrackersCollection(new NullLogger())
             )
         );
