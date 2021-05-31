@@ -17,27 +17,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { StoreOptions } from "vuex";
-import { Store } from "vuex";
 import type { RootState } from "./type";
-import { createTaskModule } from "./tasks";
-import * as actions from "./root-actions";
-import * as mutations from "./root-mutations";
+import type { ActionContext } from "vuex";
 
-export function createStore(initial_root_state: RootState): Store<RootState> {
-    const store_options: StoreOptions<RootState> = {
-        state: {
-            ...initial_root_state,
-            should_display_empty_state: false,
-            should_display_error_state: false,
-            error_message: "",
-        },
-        actions,
-        mutations,
-        modules: {
-            tasks: createTaskModule(),
-        },
-    };
-
-    return new Store(store_options);
+export function loadRoadmap(
+    context: ActionContext<RootState, RootState>,
+    roadmap_id: number
+): Promise<void> {
+    return context.dispatch("tasks/loadTasks", roadmap_id);
 }
