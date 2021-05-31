@@ -92,6 +92,12 @@ button[name=tracker_query_submit] {
     width: auto;
 }
 
+#tracker_report_form_modal {
+    display: inline;
+    color: var(--tlp-typo-default-text-color);
+    text-shadow: initial;
+}
+
 #tracker_report_save_or_revert {
     display: none;
     padding-top: 18px;
