@@ -17,23 +17,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { RootState } from "../type";
-import type { TasksState } from "./type";
-import type { Module } from "vuex";
-import * as mutations from "./tasks-mutations";
-import * as actions from "./tasks-actions";
-import * as getters from "./tasks-getters";
+import { recursiveGet } from "tlp";
+import type { Iteration, IterationLevel } from "../type";
 
-export function createTaskModule(): Module<TasksState, RootState> {
-    const state: TasksState = {
-        tasks: [],
-    };
-
-    return {
-        namespaced: true,
-        state,
-        mutations,
-        actions,
-        getters,
-    };
+export function retrieveIterations(
+    roadmap_id: number,
+    level: IterationLevel
+): Promise<Iteration[]> {
+    return recursiveGet<Array<unknown>, Iteration>(`/api/roadmaps/${roadmap_id}/iterations`, {
+        params: { level },
+    });
 }

@@ -67,7 +67,7 @@ export default class App extends Vue {
     @tasks.Getter
     private readonly rows!: Row[];
 
-    @tasks.State
+    @State
     private readonly is_loading!: boolean;
 
     mounted(): void {
