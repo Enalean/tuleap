@@ -27,6 +27,7 @@ import * as getters from "./tasks-getters";
 export function createTaskModule(): Module<TasksState, RootState> {
     const state: TasksState = {
         tasks: [],
+        is_loading: true,
     };
 
     return {

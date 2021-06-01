@@ -64,8 +64,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
         const initial_root_state: RootState = {
             locale_bcp47: toBCP47(document.body.dataset.userLocale || "en_US"),
-            should_load_lvl1_iterations: Boolean(vue_mount_point.dataset.shouldLoadLvl1Iterations),
-            should_load_lvl2_iterations: Boolean(vue_mount_point.dataset.shouldLoadLvl2Iterations),
         } as RootState;
 
         new AppComponent({

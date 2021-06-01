@@ -21,9 +21,6 @@ import type { TasksState } from "./tasks/type";
 
 export interface State {
     readonly locale_bcp47: string;
-    readonly should_load_lvl1_iterations: boolean;
-    readonly should_load_lvl2_iterations: boolean;
-    is_loading: boolean;
     should_display_empty_state: boolean;
     should_display_error_state: boolean;
     error_message: string;

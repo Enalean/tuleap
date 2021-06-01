@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\Roadmap\Widget;
 
 use Tuleap\ArtifactsFolders\Nature\NatureInFolderPresenter;
-use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\TestManagement\Nature\NatureCoveredByPresenter;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureIsChildPresenter;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenterFactory;
@@ -39,157 +38,13 @@ class RoadmapWidgetPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             new NatureCoveredByPresenter(),
         ]);
 
-        $user = UserTestBuilder::aUser()->build();
-
-        $tracker_factory = $this->createMock(\TrackerFactory::class);
-
-        $builder   = new RoadmapWidgetPresenterBuilder($nature_presenter_factory, $tracker_factory);
-        $presenter = $builder->getPresenter(123, null, null, $user);
+        $builder   = new RoadmapWidgetPresenterBuilder($nature_presenter_factory);
+        $presenter = $builder->getPresenter(123);
         self::assertEquals(123, $presenter->roadmap_id);
-        self::assertFalse($presenter->should_load_lvl1_iterations);
-        self::assertFalse($presenter->should_load_lvl2_iterations);
 
         $natures = \json_decode($presenter->visible_natures, true);
         self::assertCount(2, $natures);
         self::assertEquals(NatureInFolderPresenter::NATURE_IN_FOLDER, $natures[0]['shortname']);
         self::assertEquals(NatureCoveredByPresenter::NATURE_COVERED_BY, $natures[1]['shortname']);
-    }
-
-    public function testItInformsThatIterationsAtLevel1ShouldBeLoaded(): void
-    {
-        $nature_presenter_factory = $this->createMock(NaturePresenterFactory::class);
-        $nature_presenter_factory->method('getOnlyVisibleNatures')->willReturn([]);
-
-        $user = UserTestBuilder::aUser()->build();
-
-        $iteration_tracker = $this->createMock(\Tracker::class);
-        $iteration_tracker->method('isActive')->willReturn(true);
-        $iteration_tracker->method('userCanView')->willReturn(true);
-
-        $tracker_factory = $this->createMock(\TrackerFactory::class);
-        $tracker_factory
-            ->method('getTrackerById')
-            ->with(42)
-            ->willReturn($iteration_tracker);
-
-
-        $builder   = new RoadmapWidgetPresenterBuilder($nature_presenter_factory, $tracker_factory);
-        $presenter = $builder->getPresenter(123, 42, null, $user);
-        self::assertEquals(123, $presenter->roadmap_id);
-        self::assertTrue($presenter->should_load_lvl1_iterations);
-        self::assertFalse($presenter->should_load_lvl2_iterations);
-    }
-
-    public function testItInformsThatIterationsAtLevel2ShouldBeLoaded(): void
-    {
-        $nature_presenter_factory = $this->createMock(NaturePresenterFactory::class);
-        $nature_presenter_factory->method('getOnlyVisibleNatures')->willReturn([]);
-
-        $user = UserTestBuilder::aUser()->build();
-
-        $iteration_tracker = $this->createMock(\Tracker::class);
-        $iteration_tracker->method('isActive')->willReturn(true);
-        $iteration_tracker->method('userCanView')->willReturn(true);
-
-        $tracker_factory = $this->createMock(\TrackerFactory::class);
-        $tracker_factory
-            ->method('getTrackerById')
-            ->with(42)
-            ->willReturn($iteration_tracker);
-
-
-        $builder   = new RoadmapWidgetPresenterBuilder($nature_presenter_factory, $tracker_factory);
-        $presenter = $builder->getPresenter(123, null, 42, $user);
-        self::assertEquals(123, $presenter->roadmap_id);
-        self::assertFalse($presenter->should_load_lvl1_iterations);
-        self::assertTrue($presenter->should_load_lvl2_iterations);
-    }
-
-    /**
-     * @testWith [42, null]
-     *           [null, 42]
-     */
-    public function testItWillNotLoadIterationsIfTrackerDoesNotExists(
-        ?int $lvl1_iteration_tracker_id,
-        ?int $lvl2_iteration_tracker_id
-    ): void {
-        $nature_presenter_factory = $this->createMock(NaturePresenterFactory::class);
-        $nature_presenter_factory->method('getOnlyVisibleNatures')->willReturn([]);
-
-        $user = UserTestBuilder::aUser()->build();
-
-        $tracker_factory = $this->createMock(\TrackerFactory::class);
-        $tracker_factory
-            ->method('getTrackerById')
-            ->with(42)
-            ->willReturn(null);
-
-
-        $builder   = new RoadmapWidgetPresenterBuilder($nature_presenter_factory, $tracker_factory);
-        $presenter = $builder->getPresenter(123, 42, null, $user);
-        self::assertEquals(123, $presenter->roadmap_id);
-        self::assertFalse($presenter->should_load_lvl1_iterations);
-        self::assertFalse($presenter->should_load_lvl2_iterations);
-    }
-
-    /**
-     * @testWith [42, null]
-     *           [null, 42]
-     */
-    public function testItWillNotLoadIterationsIfTrackerIsNotActive(
-        ?int $lvl1_iteration_tracker_id,
-        ?int $lvl2_iteration_tracker_id
-    ): void {
-        $nature_presenter_factory = $this->createMock(NaturePresenterFactory::class);
-        $nature_presenter_factory->method('getOnlyVisibleNatures')->willReturn([]);
-
-        $user = UserTestBuilder::aUser()->build();
-
-        $iteration_tracker = $this->createMock(\Tracker::class);
-        $iteration_tracker->method('isActive')->willReturn(false);
-
-        $tracker_factory = $this->createMock(\TrackerFactory::class);
-        $tracker_factory
-            ->method('getTrackerById')
-            ->with(42)
-            ->willReturn($iteration_tracker);
-
-
-        $builder   = new RoadmapWidgetPresenterBuilder($nature_presenter_factory, $tracker_factory);
-        $presenter = $builder->getPresenter(123, 42, null, $user);
-        self::assertEquals(123, $presenter->roadmap_id);
-        self::assertFalse($presenter->should_load_lvl1_iterations);
-        self::assertFalse($presenter->should_load_lvl2_iterations);
-    }
-
-    /**
-     * @testWith [42, null]
-     *           [null, 42]
-     */
-    public function testItWillNotLoadIterationsIfTrackerIsNotReadable(
-        ?int $lvl1_iteration_tracker_id,
-        ?int $lvl2_iteration_tracker_id
-    ): void {
-        $nature_presenter_factory = $this->createMock(NaturePresenterFactory::class);
-        $nature_presenter_factory->method('getOnlyVisibleNatures')->willReturn([]);
-
-        $user = UserTestBuilder::aUser()->build();
-
-        $iteration_tracker = $this->createMock(\Tracker::class);
-        $iteration_tracker->method('isActive')->willReturn(true);
-        $iteration_tracker->method('userCanView')->willReturn(false);
-
-        $tracker_factory = $this->createMock(\TrackerFactory::class);
-        $tracker_factory
-            ->method('getTrackerById')
-            ->with(42)
-            ->willReturn($iteration_tracker);
-
-
-        $builder   = new RoadmapWidgetPresenterBuilder($nature_presenter_factory, $tracker_factory);
-        $presenter = $builder->getPresenter(123, 42, null, $user);
-        self::assertEquals(123, $presenter->roadmap_id);
-        self::assertFalse($presenter->should_load_lvl1_iterations);
-        self::assertFalse($presenter->should_load_lvl2_iterations);
     }
 }
