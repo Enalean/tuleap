@@ -105,6 +105,20 @@
     text-decoration: none;
 }
 
+.sidebar-content-vertical-scroll {
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: var(--tlp-theme-dark-background-color-lighter-10) transparent;
+
+    &::-webkit-scrollbar {
+        width: 8px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background-color: var(--tlp-theme-dark-background-color-lighter-10);
+    }
+}
+
 @import './sidebar-project';
 @import './sidebar-siteadmin';
 @import './sidebar-collapsed';

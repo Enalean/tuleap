@@ -24,7 +24,6 @@ import { initMainPosition } from "../../tuleap/main-position";
 import { initHeaderPosition } from "../../tuleap/header-position";
 import { init as initNavbarPinned } from "../../tuleap/navbar-pinned";
 import { init as initSidebar } from "./sidebar";
-import { init as initScrollbar } from "./scrollbar";
 import { init as initProjectFlags } from "./project-flags";
 import { init as initProjectPrivacy } from "./project-privacy";
 import { initHelpDropdown } from "./help-dropdown";
@@ -53,7 +52,6 @@ document.addEventListener("DOMContentLoaded", () => {
     initNavbarDropdown(createPopover);
     initSidebar();
     initHelpDropdown();
-    initScrollbar();
     initProjectFlags();
     initProjectPrivacy();
     initInviteBuddies();
