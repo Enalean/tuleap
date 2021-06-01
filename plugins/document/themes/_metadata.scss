@@ -33,14 +33,19 @@
 
 .document-metadata-title {
     flex-grow: 1;
-    margin: 0 var(--tlp-medium-spacing) 0 0;
+    margin: 0 var(--tlp-large-spacing) 0 0;
 }
 
 .document-obsolescence-date-section {
     flex: 0 0 auto;
 }
 
-.document-obsolescence-date-metadata-select {
+.document-obsolescence-date-metadata-fields {
+    display: flex;
+}
+
+#document-obsolescence-date-select,
+#document-obsolescence-date-select-update {
     margin: 0 var(--tlp-medium-spacing) 0 0;
 }
 

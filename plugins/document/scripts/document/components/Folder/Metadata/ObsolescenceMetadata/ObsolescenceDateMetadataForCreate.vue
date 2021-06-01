@@ -28,14 +28,9 @@
             <translate>Obsolescence date</translate>
             <i class="fa fa-asterisk"></i>
         </label>
-        <div
-            class="
-                tlp-form-element tlp-form-element-prepend
-                document-obsolescence-date-metadata-select
-            "
-        >
+        <div class="tlp-form-element document-obsolescence-date-metadata-fields">
             <select
-                class="tlp-select document-obsolescence-date-metadata-select"
+                class="tlp-select tlp-select-adjusted"
                 id="document-obsolescence-date-select"
                 ref="selectDateValue"
                 data-test="document-obsolescence-date-select"
@@ -49,13 +44,15 @@
                 <option name="fixedDate" value="fixed" v-translate>Fixed date</option>
                 <option name="today" value="today" v-translate>Obsolete today</option>
             </select>
-            <span class="tlp-prepend"><i class="fas fa-calendar-alt"></i></span>
-            <date-flat-picker
-                v-bind:id="'document-new-obsolescence-date'"
-                v-bind:required="true"
-                v-model="obsolescence_date"
-                ref="input"
-            />
+            <div class="tlp-form-element tlp-form-element-prepend">
+                <span class="tlp-prepend"><i class="fas fa-calendar-alt"></i></span>
+                <date-flat-picker
+                    v-bind:id="'document-new-obsolescence-date'"
+                    v-bind:required="true"
+                    v-model="obsolescence_date"
+                    ref="input"
+                />
+            </div>
         </div>
         <p
             class="tlp-text-danger"
