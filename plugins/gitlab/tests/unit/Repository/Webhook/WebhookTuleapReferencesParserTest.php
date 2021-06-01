@@ -165,18 +165,36 @@ final class WebhookTuleapReferencesParserTest extends \Tuleap\Test\PHPUnit\TestC
         self::assertEmpty($references, "${char}TULEAP-123 should not be parsed");
     }
 
-    public function testItRetrievesTheTuleapReferenceAndTheCloseKeywordResolvesWhenGiven(): void
-    {
-        $references_collection = $this->parser->extractCollectionOfTuleapReferences('vroom resolve TULEAP-15 vroom resolves tuleap-3');
+    /**
+     * @dataProvider resolveKeywordsProvider
+     */
+    public function testItRetrievesTheTuleapReferenceAndTheCloseKeywordResolvesWhenGiven(
+        string $message,
+        bool $reference_must_be_found
+    ): void {
+        $references_collection = $this->parser->extractCollectionOfTuleapReferences($message);
         $references            = $references_collection->getTuleapReferences();
 
-        self::assertCount(2, $references);
+        self::assertSame(15, $references[0]->getId());
+        if ($reference_must_be_found) {
+            self::assertSame('resolves', $references[0]->getCloseArtifactKeyword());
+        } else {
+            self::assertNull($references[0]->getCloseArtifactKeyword());
+        }
+    }
 
-        self::assertSame(3, $references[0]->getId());
-        self::assertSame('resolves', $references[0]->getCloseArtifactKeyword());
-
-        self::assertSame(15, $references[1]->getId());
-        self::assertNull($references[1]->getCloseArtifactKeyword());
+    public function resolveKeywordsProvider(): array
+    {
+        return [
+            ['vroom resolve TULEAP-15', true],
+            ['vroom resolved TULEAP-15', true],
+            ['vroom resolves TULEAP-15', true],
+            ['vroom resolving TULEAP-15', true],
+            ['vroom resOLving TULEAP-15', true],
+            ['Resolves TULEAP-15', true],
+            ['blablabla TULEAP-15', false],
+            ['vroom resolvedes TULEAP-15', false],
+        ];
     }
 
     /**
@@ -203,7 +221,7 @@ final class WebhookTuleapReferencesParserTest extends \Tuleap\Test\PHPUnit\TestC
         self::assertCount(4, $references);
 
         self::assertSame(15, $references[0]->getId());
-        self::assertNull($references[0]->getCloseArtifactKeyword());
+        self::assertSame('resolves', $references[0]->getCloseArtifactKeyword());
 
         self::assertSame(36, $references[1]->getId());
         self::assertSame('resolves', $references[1]->getCloseArtifactKeyword());
@@ -215,21 +233,36 @@ final class WebhookTuleapReferencesParserTest extends \Tuleap\Test\PHPUnit\TestC
         self::assertSame('resolves', $references[3]->getCloseArtifactKeyword());
     }
 
-    public function testItRetrievesTheTuleapReferenceAndTheCloseKeywordClosesWhenGiven(): void
+    /**
+     * @dataProvider closeKeywordsProvider
+     */
+    public function testItRetrievesTheTuleapReferenceAndTheCloseKeywordClosesWhenGiven(
+        string $message,
+        bool $reference_must_be_found
+    ): void {
+        $references_collection = $this->parser->extractCollectionOfTuleapReferences($message);
+        $references            = $references_collection->getTuleapReferences();
+
+        self::assertSame(15, $references[0]->getId());
+        if ($reference_must_be_found) {
+            self::assertSame('closes', $references[0]->getCloseArtifactKeyword());
+        } else {
+            self::assertNull($references[0]->getCloseArtifactKeyword());
+        }
+    }
+
+    public function closeKeywordsProvider(): array
     {
-        $references_collection = $this->parser->extractCollectionOfTuleapReferences(
-            'vroom close TULEAP-15 vroom Closes tuleap-3'
-        );
-
-        $references = $references_collection->getTuleapReferences();
-
-        self::assertCount(2, $references);
-
-        self::assertSame(3, $references[0]->getId());
-        self::assertSame('closes', $references[0]->getCloseArtifactKeyword());
-
-        self::assertSame(15, $references[1]->getId());
-        self::assertNull($references[1]->getCloseArtifactKeyword());
+        return [
+            ['vroom close TULEAP-15', true],
+            ['vroom closed TULEAP-15', true],
+            ['vroom closes TULEAP-15', true],
+            ['vroom closing TULEAP-15', true],
+            ['vroom closINg TULEAP-15', true],
+            ['Closes TULEAP-15', true],
+            ['blablabla TULEAP-15', false],
+            ['vroom closeding TULEAP-15', false],
+        ];
     }
 
     /**
@@ -256,7 +289,7 @@ final class WebhookTuleapReferencesParserTest extends \Tuleap\Test\PHPUnit\TestC
         self::assertCount(4, $references);
 
         self::assertSame(15, $references[0]->getId());
-        self::assertNull($references[0]->getCloseArtifactKeyword());
+        self::assertSame('closes', $references[0]->getCloseArtifactKeyword());
 
         self::assertSame(36, $references[1]->getId());
         self::assertSame('closes', $references[1]->getCloseArtifactKeyword());
@@ -267,6 +300,75 @@ final class WebhookTuleapReferencesParserTest extends \Tuleap\Test\PHPUnit\TestC
         self::assertSame(88, $references[3]->getId());
         self::assertSame('closes', $references[3]->getCloseArtifactKeyword());
     }
+
+    /**
+     * @dataProvider fixKeywordsProvider
+     */
+    public function testItRetrievesTheTuleapReferenceAndTheCloseKeywordFixesWhenGiven(
+        string $message,
+        bool $reference_must_be_found
+    ): void {
+        $references_collection = $this->parser->extractCollectionOfTuleapReferences($message);
+        $references            = $references_collection->getTuleapReferences();
+
+        self::assertSame(15, $references[0]->getId());
+        if ($reference_must_be_found) {
+            self::assertSame('fixes', $references[0]->getCloseArtifactKeyword());
+        } else {
+            self::assertNull($references[0]->getCloseArtifactKeyword());
+        }
+    }
+
+    public function fixKeywordsProvider(): array
+    {
+        return [
+            ['vroom fix TULEAP-15', true],
+            ['vroom fixed TULEAP-15', true],
+            ['vroom fixes TULEAP-15', true],
+            ['vroom fixing TULEAP-15', true],
+            ['vroom fIx TULEAP-15', true],
+            ['Fixes TULEAP-15', true],
+            ['blablabla TULEAP-15', false],
+            ['vroom fixinges TULEAP-15', false],
+        ];
+    }
+
+    /**
+     * @testWith [","]
+     *           ["."]
+     *           ["|"]
+     *           ["["]
+     *           ["]"]
+     *           ["("]
+     *           [")"]
+     *           ["{"]
+     *           ["}"]
+     *           ["'"]
+     *           ["\""]
+     */
+    public function testItRetrievesEachTheTuleapReferenceAndTheCloseKeywordFixesIfTheCloseKeywordIsGiven(string $accepted_boundary): void
+    {
+        $references_collection = $this->parser->extractCollectionOfTuleapReferences(
+            "vroom fix TULEAP-15 and fixesTULEAP-987 (not found) Fixes tuleap-36 fixes" . $accepted_boundary . "tuleAp-88] (fixes [tuleap-68 vroom"
+        );
+
+        $references = $references_collection->getTuleapReferences();
+
+        self::assertCount(4, $references);
+
+        self::assertSame(15, $references[0]->getId());
+        self::assertSame('fixes', $references[0]->getCloseArtifactKeyword());
+
+        self::assertSame(36, $references[1]->getId());
+        self::assertSame('fixes', $references[1]->getCloseArtifactKeyword());
+
+        self::assertSame(68, $references[2]->getId());
+        self::assertSame('fixes', $references[2]->getCloseArtifactKeyword());
+
+        self::assertSame(88, $references[3]->getId());
+        self::assertSame('fixes', $references[3]->getCloseArtifactKeyword());
+    }
+
 
     /**
      * @testWith [","]
@@ -292,7 +394,7 @@ final class WebhookTuleapReferencesParserTest extends \Tuleap\Test\PHPUnit\TestC
         self::assertCount(4, $references);
 
         self::assertSame(15, $references[0]->getId());
-        self::assertNull($references[0]->getCloseArtifactKeyword());
+        self::assertSame('fixes', $references[0]->getCloseArtifactKeyword());
 
         self::assertSame(36, $references[1]->getId());
         self::assertSame('fixes', $references[1]->getCloseArtifactKeyword());
@@ -307,7 +409,7 @@ final class WebhookTuleapReferencesParserTest extends \Tuleap\Test\PHPUnit\TestC
     public function testItRetrievesEachTheTuleapReferenceAndTheCloseKeywordsWhenMixed(): void
     {
         $references_collection = $this->parser->extractCollectionOfTuleapReferences(
-            "vroom close TULEAP-15 and closes tuleap-36 and resolves tuleap-68 and fixes TuLeap-85 vroom"
+            "vroom close TULEAP-15 and closes tuleap-36 and resolved tuleap-68 and fixing TuLeap-85 vroom"
         );
 
         $references = $references_collection->getTuleapReferences();
@@ -315,7 +417,7 @@ final class WebhookTuleapReferencesParserTest extends \Tuleap\Test\PHPUnit\TestC
         self::assertCount(4, $references);
 
         self::assertSame(15, $references[0]->getId());
-        self::assertNull($references[0]->getCloseArtifactKeyword());
+        self::assertSame('closes', $references[0]->getCloseArtifactKeyword());
 
         self::assertSame(36, $references[1]->getId());
         self::assertSame('closes', $references[1]->getCloseArtifactKeyword());
