@@ -29,14 +29,15 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\Pending
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\ProgramIncrementCreationException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\ProgramIncrementsCreator;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\ProgramIncrementChanged;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\TrackerRetrievalException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\BuildFieldValues;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\FieldRetrievalException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\FieldSynchronizationException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\ReplicationData;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Team\TeamProjectsCollectionBuilder;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\TrackerCollectionFactory;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\TrackerCollection;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\TrackerRetrievalException;
 use Tuleap\ProgramManagement\Domain\Program\PlanningConfiguration\TopPlanningNotFoundInProjectException;
+use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\RetrieveRootPlanningMilestoneTracker;
 
 final class CreateProgramIncrementsTask implements CreateTaskProgramIncrement
 {
@@ -49,13 +50,11 @@ final class CreateProgramIncrementsTask implements CreateTaskProgramIncrement
      */
     private $projects_collection_builder;
     /**
-     * @var TrackerCollectionFactory
-     */
-    private $scale_tracker_factory;
-    /**
      * @var ProgramIncrementsCreator
      */
     private $program_increment_creator;
+
+    private RetrieveRootPlanningMilestoneTracker $root_milestone_retriever;
     /**
      * @var LoggerInterface
      */
@@ -72,7 +71,7 @@ final class CreateProgramIncrementsTask implements CreateTaskProgramIncrement
     public function __construct(
         BuildFieldValues $changeset_collection_adapter,
         TeamProjectsCollectionBuilder $projects_collection_builder,
-        TrackerCollectionFactory $scale_tracker_factory,
+        RetrieveRootPlanningMilestoneTracker $root_milestone_retriever,
         ProgramIncrementsCreator $program_increment_creator,
         LoggerInterface $logger,
         PendingArtifactCreationStore $pending_artifact_creation_store,
@@ -80,7 +79,7 @@ final class CreateProgramIncrementsTask implements CreateTaskProgramIncrement
     ) {
         $this->changeset_collection_adapter    = $changeset_collection_adapter;
         $this->projects_collection_builder     = $projects_collection_builder;
-        $this->scale_tracker_factory           = $scale_tracker_factory;
+        $this->root_milestone_retriever        = $root_milestone_retriever;
         $this->program_increment_creator       = $program_increment_creator;
         $this->logger                          = $logger;
         $this->pending_artifact_creation_store = $pending_artifact_creation_store;
@@ -107,16 +106,19 @@ final class CreateProgramIncrementsTask implements CreateTaskProgramIncrement
     {
         $copied_values = $this->changeset_collection_adapter->buildCollection($replication_data);
 
-        $team_projects = $this->projects_collection_builder->getTeamProjectForAGivenProgramProject($replication_data->getProject());
+        $team_projects = $this->projects_collection_builder->getTeamProjectForAGivenProgramProject(
+            $replication_data->getProject()
+        );
 
-        $team_program_increments_tracker = $this->scale_tracker_factory->buildFromTeamProjects(
+        $root_planning_tracker_team = TrackerCollection::buildRootPlanningMilestoneTrackers(
+            $this->root_milestone_retriever,
             $team_projects,
             $replication_data->getUser()
         );
 
         $this->program_increment_creator->createProgramIncrements(
             $copied_values,
-            $team_program_increments_tracker,
+            $root_planning_tracker_team,
             $replication_data->getUser()
         );
 

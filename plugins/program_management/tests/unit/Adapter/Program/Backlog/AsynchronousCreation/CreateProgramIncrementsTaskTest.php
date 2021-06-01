@@ -34,8 +34,6 @@ use Tuleap\ProgramManagement\Adapter\Program\ProgramDao;
 use Tuleap\ProgramManagement\Adapter\ProjectAdapter;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\PendingArtifactCreationStore;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\ProgramIncrementsCreator;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\Plan\BuildPlanProgramIncrementConfiguration;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementCollectionFactory;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\ArtifactLinkValue;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\BuildFieldValues;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\DescriptionValue;
@@ -115,10 +113,6 @@ final class CreateProgramIncrementsTaskTest extends \Tuleap\Test\PHPUnit\TestCas
             $project_data_adapter
         );
         $this->planning_factory                = Mockery::mock(\PlanningFactory::class);
-        $milestone_trackers_factory            = new ProgramIncrementCollectionFactory(
-            new PlanningAdapter($this->planning_factory),
-            Mockery::mock(BuildPlanProgramIncrementConfiguration::class)
-        );
         $this->mirror_creator                  = \Mockery::mock(ProgramIncrementsCreator::class);
         $this->logger                          = \Mockery::mock(LoggerInterface::class);
         $this->pending_artifact_creation_store = \Mockery::mock(PendingArtifactCreationStore::class);
@@ -127,7 +121,7 @@ final class CreateProgramIncrementsTaskTest extends \Tuleap\Test\PHPUnit\TestCas
         $this->task = new CreateProgramIncrementsTask(
             $this->changeset_values_adapter,
             $projects_collection_builder,
-            $milestone_trackers_factory,
+            new PlanningAdapter($this->planning_factory),
             $this->mirror_creator,
             $this->logger,
             $this->pending_artifact_creation_store,

@@ -22,20 +22,32 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain;
 
-use Tracker;
-use Tuleap\Tracker\TrackerColor;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\PlanningHasNoProgramIncrementException;
+use Tuleap\ProgramManagement\Domain\Program\PlanningConfiguration\TopPlanningNotFoundInProjectException;
+use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\RetrieveRootPlanningMilestoneTracker;
 
 final class ProgramTracker
 {
     /**
-     * @var Tracker
      * @psalm-readonly
      */
-    private $tracker;
+    private \Tracker $tracker;
 
-    public function __construct(Tracker $tracker)
+    public function __construct(\Tracker $tracker)
     {
         $this->tracker = $tracker;
+    }
+
+    /**
+     * @throws TopPlanningNotFoundInProjectException
+     * @throws PlanningHasNoProgramIncrementException
+     */
+    public static function buildMilestoneTrackerFromRootPlanning(
+        RetrieveRootPlanningMilestoneTracker $retriever,
+        Project $project,
+        \PFUser $user
+    ): self {
+        return new self($retriever->retrieveRootPlanningMilestoneTracker($project, $user));
     }
 
     /**
@@ -49,7 +61,7 @@ final class ProgramTracker
     /**
      * @psalm-mutation-free
      */
-    public function getFullTracker(): Tracker
+    public function getFullTracker(): \Tracker
     {
         return $this->tracker;
     }
@@ -57,21 +69,5 @@ final class ProgramTracker
     public function userCanSubmitArtifact(\PFUser $user): bool
     {
         return $this->tracker->userCanSubmitArtifact($user);
-    }
-
-    /**
-     * @psalm-mutation-free
-     */
-    public function getName(): string
-    {
-        return $this->tracker->getName();
-    }
-
-    /**
-     * @psalm-mutation-free
-     */
-    public function getColor(): TrackerColor
-    {
-        return $this->tracker->getColor();
     }
 }

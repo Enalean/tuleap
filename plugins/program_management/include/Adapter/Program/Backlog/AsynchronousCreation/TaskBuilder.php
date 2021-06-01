@@ -50,15 +50,12 @@ use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\TitleValue
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Content\ContentDao;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\ArtifactsLinkedToParentDao;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\UserStoriesInMirroredProgramIncrementsPlanner;
-use Tuleap\ProgramManagement\Adapter\Program\Plan\PlanDao;
-use Tuleap\ProgramManagement\Adapter\Program\Plan\PlanProgramIncrementConfigurationBuilder;
 use Tuleap\ProgramManagement\Adapter\Program\PlanningAdapter;
 use Tuleap\ProgramManagement\Adapter\Program\ProgramDao;
 use Tuleap\ProgramManagement\Adapter\ProjectAdapter;
 use Tuleap\ProgramManagement\Adapter\Team\MirroredTimeboxes\MirroredTimeboxRetriever;
 use Tuleap\ProgramManagement\Adapter\Team\MirroredTimeboxes\MirroredTimeboxesDao;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\ProgramIncrementsCreator;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementCollectionFactory;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Team\TeamProjectsCollectionBuilder;
 use Tuleap\Tracker\Artifact\Creation\TrackerArtifactCreator;
 use Tuleap\Tracker\FormElement\Field\ListFields\FieldValueMatcher;
@@ -131,10 +128,7 @@ class TaskBuilder
                 $program_dao,
                 new ProjectAdapter(ProjectManager::instance())
             ),
-            new ProgramIncrementCollectionFactory(
-                new PlanningAdapter(\PlanningFactory::build()),
-                new PlanProgramIncrementConfigurationBuilder(new PlanDao(), $tracker_factory)
-            ),
+            new PlanningAdapter(\PlanningFactory::build()),
             $mirror_creator,
             $logger,
             new PendingArtifactCreationDao(),

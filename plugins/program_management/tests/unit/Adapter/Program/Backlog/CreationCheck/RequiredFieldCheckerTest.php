@@ -22,23 +22,20 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\CreationCheck;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Psr\Log\NullLogger;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\Field;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFieldFromProgramAndTeamTrackers;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFieldFromProgramAndTeamTrackersCollection;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFields;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Team\TeamProjectsCollection;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TrackerCollection;
-use Tuleap\ProgramManagement\Domain\ProgramTracker;
+use Tuleap\ProgramManagement\Domain\Project;
+use Tuleap\ProgramManagement\Stub\RetrieveRootPlanningMilestoneTrackerStub;
+use Tuleap\Test\Builders\UserTestBuilder;
 
 final class RequiredFieldCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var RequiredFieldChecker
-     */
-    private $checker;
+    private RequiredFieldChecker $checker;
 
     protected function setUp(): void
     {
@@ -47,24 +44,32 @@ final class RequiredFieldCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testAllowsCreationWhenOnlySynchronizedFieldsAreRequired(): void
     {
-        $required_title = \Mockery::mock(\Tracker_FormElement_Field_Text::class);
-        $required_title->shouldReceive('isRequired')->andReturn(true);
-        $required_title->shouldReceive('getId')->andReturn(789);
-        $non_required_artifact_link = \Mockery::mock(\Tracker_FormElement_Field_ArtifactLink::class);
-        $non_required_artifact_link->shouldReceive('isRequired')->andReturn(false);
-        $non_required_artifact_link->shouldReceive('getId')->andReturn(987);
+        $first_team  = new Project(147, 'blue_team', 'Blue Team');
+        $second_team = new Project(148, 'red_team', 'Red Team');
+        $teams       = new TeamProjectsCollection([$first_team, $second_team]);
 
-        $tracker = \Mockery::mock(\Tracker::class);
-        $tracker->shouldReceive('getFormElementFields')->andReturn([$required_title, $non_required_artifact_link]);
-        $tracker->shouldReceive('getGroupId')->andReturn('147');
+        $required_title = $this->createMock(\Tracker_FormElement_Field_Text::class);
+        $required_title->method('isRequired')->willReturn(true);
+        $required_title->method('getId')->willReturn(789);
+        $non_required_artifact_link = $this->createMock(\Tracker_FormElement_Field_ArtifactLink::class);
+        $non_required_artifact_link->method('isRequired')->willReturn(false);
+        $non_required_artifact_link->method('getId')->willReturn(987);
 
-        $other_tracker_with_no_required_field = \Mockery::mock(\Tracker::class);
-        $other_non_required_field             = \Mockery::mock(\Tracker_FormElement_Field_Date::class);
-        $other_non_required_field->shouldReceive('isRequired')->andReturn(false);
-        $other_tracker_with_no_required_field->shouldReceive('getFormElementFields')->andReturn(
+        $tracker = $this->createMock(\Tracker::class);
+        $tracker->method('getFormElementFields')->willReturn([$required_title, $non_required_artifact_link]);
+
+        $other_tracker_with_no_required_field = $this->createMock(\Tracker::class);
+        $other_non_required_field             = $this->createMock(\Tracker_FormElement_Field_Date::class);
+        $other_non_required_field->method('isRequired')->willReturn(false);
+        $other_tracker_with_no_required_field->method('getFormElementFields')->willReturn(
             [$other_non_required_field]
         );
-        $other_tracker_with_no_required_field->shouldReceive('getGroupId')->andReturn(148);
+        $retriever = RetrieveRootPlanningMilestoneTrackerStub::withValidTrackers(
+            $tracker,
+            $other_tracker_with_no_required_field
+        );
+        $user      = UserTestBuilder::aUser()->build();
+        $trackers  = TrackerCollection::buildRootPlanningMilestoneTrackers($retriever, $teams, $user);
 
         $synchronized_field = $this->buildSynchronizedFieldDataFromProgramAndTeamTrackers(
             $required_title,
@@ -73,9 +78,7 @@ final class RequiredFieldCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         $collection         = new SynchronizedFieldFromProgramAndTeamTrackersCollection(new NullLogger());
         $collection->add($synchronized_field);
         $no_other_required_fields = $this->checker->areRequiredFieldsOfTeamTrackersLimitedToTheSynchronizedFields(
-            new TrackerCollection(
-                [new ProgramTracker($tracker), new ProgramTracker($other_tracker_with_no_required_field)]
-            ),
+            $trackers,
             $collection
         );
         self::assertTrue($no_other_required_fields);
@@ -83,22 +86,25 @@ final class RequiredFieldCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testDisallowsCreationWhenAnyFieldIsRequiredAndNotSynchronized(): void
     {
-        $required_title = \Mockery::mock(\Tracker_FormElement_Field_Text::class);
-        $required_title->shouldReceive('isRequired')->andReturn(true);
-        $required_title->shouldReceive('getId')->andReturn(789);
-        $required_artifact_link = \Mockery::mock(\Tracker_FormElement_Field_ArtifactLink::class);
-        $required_artifact_link->shouldReceive('isRequired')->andReturn(true);
-        $required_artifact_link->shouldReceive('getId')->andReturn(789);
+        $teams = new TeamProjectsCollection([new Project(147, 'blue_team', 'Blue Team')]);
 
-        $other_required_field = \Mockery::mock(\Tracker_FormElement_Field_String::class);
-        $other_required_field->shouldReceive('isRequired')->andReturn(true);
-        $other_required_field->shouldReceive('getId')->andReturn('987');
-        $other_required_field->shouldReceive('getLabel')->andReturn('some_label');
+        $required_title = $this->createMock(\Tracker_FormElement_Field_Text::class);
+        $required_title->method('isRequired')->willReturn(true);
+        $required_title->method('getId')->willReturn(789);
+        $required_artifact_link = $this->createMock(\Tracker_FormElement_Field_ArtifactLink::class);
+        $required_artifact_link->method('isRequired')->willReturn(true);
+        $required_artifact_link->method('getId')->willReturn(789);
 
-        $tracker = \Mockery::mock(\Tracker::class);
-        $tracker->shouldReceive('getId')->andReturn('412');
-        $tracker->shouldReceive('getFormElementFields')->andReturn([$required_title, $required_artifact_link, $other_required_field]);
-        $tracker->shouldReceive('getGroupId')->andReturn('147');
+        $other_required_field = $this->createMock(\Tracker_FormElement_Field_String::class);
+        $other_required_field->method('isRequired')->willReturn(true);
+        $other_required_field->method('getId')->willReturn('987');
+        $other_required_field->method('getLabel')->willReturn('some_label');
+
+        $tracker = $this->createMock(\Tracker::class);
+        $tracker->method('getId')->willReturn(412);
+        $tracker->method('getFormElementFields')->willReturn(
+            [$required_title, $required_artifact_link, $other_required_field]
+        );
 
         $synchronized_field = $this->buildSynchronizedFieldDataFromProgramAndTeamTrackers(
             $required_title,
@@ -107,11 +113,15 @@ final class RequiredFieldCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         $collection         = new SynchronizedFieldFromProgramAndTeamTrackersCollection(new NullLogger());
         $collection->add($synchronized_field);
 
+        $retriever = RetrieveRootPlanningMilestoneTrackerStub::withValidTrackers($tracker);
+        $user      = UserTestBuilder::aUser()->build();
+        $trackers  = TrackerCollection::buildRootPlanningMilestoneTrackers($retriever, $teams, $user);
+
         $no_other_required_fields = $this->checker->areRequiredFieldsOfTeamTrackersLimitedToTheSynchronizedFields(
-            new TrackerCollection([new ProgramTracker($tracker)]),
+            $trackers,
             $collection
         );
-        $this->assertFalse($no_other_required_fields);
+        self::assertFalse($no_other_required_fields);
     }
 
     private function buildSynchronizedFieldDataFromProgramAndTeamTrackers(
