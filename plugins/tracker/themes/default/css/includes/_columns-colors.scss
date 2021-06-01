@@ -17,7 +17,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@each $color-name, $colors in $tlp-swatch-color-map {
+@use '../../../../../../src/themes/tlp/src/scss/variables/colors/swatch-colors';
+
+@each $color-name, $colors in swatch-colors.$tlp-swatch-color-map {
     .cardwall-column-header-color-#{$color-name} {
         background-color: map-get($colors, 'primary');
     }

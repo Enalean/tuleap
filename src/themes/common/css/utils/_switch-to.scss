@@ -333,6 +333,7 @@ $white-space-above-and-after-a-project-link: var(--tlp-small-spacing);
     &:focus,
     &:hover {
         background: rgba(0, 0, 0, .2);
+        color: var(--tlp-ui-white);
         text-decoration: none;
     }
 }

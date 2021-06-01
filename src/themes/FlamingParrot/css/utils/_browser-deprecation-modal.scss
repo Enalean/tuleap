@@ -19,6 +19,6 @@
 
 #browser-deprecation-modal {
     .modal-header {
-        background: $tlp-ui-warning;
+        background: var(--tlp-ui-warning);
     }
 }

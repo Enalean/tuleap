@@ -29,6 +29,8 @@ $elements-that-can-contain-background: '.main-project-tabs',
     '.project-header-title',
     '.toolbar.nav-pills';
 
-@each $element in $elements-that-can-contain-background {
-    @include background.apply-background($element, global-variables.$sidebar-expanded-width, global-variables.$sidebar-collapsed-width);
+body {
+    @each $element in $elements-that-can-contain-background {
+        @include background.apply-background($element, global-variables.$sidebar-expanded-width, global-variables.$sidebar-collapsed-width);
+    }
 }

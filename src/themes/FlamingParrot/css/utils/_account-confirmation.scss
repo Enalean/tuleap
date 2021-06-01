@@ -21,12 +21,48 @@ $url-base: '../images/account-confirmation/account-registration-feedback-backgro
 
 #account-confirmation-header {
     height: 336px;
-    background-image: url('#{$url-base}#{$color-name}.png');
+    background-image: url('#{$url-base}orange.png');
     background-position: center top;
 
     > h2 {
         margin: 0;
         padding: 280px 0 20px;
+    }
+}
+
+.FlamingParrot_Orange { // stylelint-disable-line selector-class-pattern
+    #account-confirmation-header {
+        background-image: url('#{$url-base}orange.png');
+    }
+}
+
+.FlamingParrot_Blue { // stylelint-disable-line selector-class-pattern
+    #account-confirmation-header {
+        background-image: url('#{$url-base}blue.png');
+    }
+}
+
+.FlamingParrot_Green { // stylelint-disable-line selector-class-pattern
+    #account-confirmation-header {
+        background-image: url('#{$url-base}green.png');
+    }
+}
+
+.FlamingParrot_BlueGrey { // stylelint-disable-line selector-class-pattern
+    #account-confirmation-header {
+        background-image: url('#{$url-base}bluegrey.png');
+    }
+}
+
+.FlamingParrot_Purple { // stylelint-disable-line selector-class-pattern
+    #account-confirmation-header {
+        background-image: url('#{$url-base}purple.png');
+    }
+}
+
+.FlamingParrot_Red { // stylelint-disable-line selector-class-pattern
+    #account-confirmation-header {
+        background-image: url('#{$url-base}red.png');
     }
 }
 

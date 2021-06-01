@@ -23,10 +23,7 @@ $tuleap-common-theme-basepath: '../../../www/themes/common/';
 
 @import '../../../www/themes/common/css/bootstrap-tuleap-22d39b3.min.css';
 @import '../../../www/themes/common/css/bootstrap-tuleap-responsive-22d39b3.min.css';
-@import '../../../tlp/src/scss/variables/density';
-@import '../../../tlp/src/scss/variables/margins';
 @import '../../../common/css/utils/utils';
-@import './variables-common';
 
 $fa-font-path: '~@fortawesome/fontawesome-free/webfonts/';
 @import '~@fortawesome/fontawesome-free/scss/fontawesome';
@@ -42,7 +39,7 @@ html,
 body {
     height: 100%;
     color: var(--tlp-theme-dark-background-color);
-    font-family: $base-font;
+    font-family: var(--tlp-font-family);
 }
 
 iframe {

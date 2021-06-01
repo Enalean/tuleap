@@ -17,15 +17,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+@use 'variables-common';
+
 $nav-dropdown-content-border-radius: 4px;
 $dropdown-width: 250px;
 
 /* stylelint-disable selector-no-qualifying-type */
-&.has-visible-project-banner > .platform-banner:not(.platform-banner-hidden) {
-    padding: $tlp-medium-spacing $tlp-medium-spacing $top-floating-buttons-space;
+body.has-visible-project-banner > .platform-banner:not(.platform-banner-hidden) {
+    padding: var(--tlp-medium-spacing) var(--tlp-medium-spacing) variables-common.$top-floating-buttons-space;
 
     + header > .header-container {
-        padding: $tlp-small-spacing $tlp-medium-spacing 0 0;
+        padding: var(--tlp-small-spacing) var(--tlp-medium-spacing) 0 0;
     }
 }
 
@@ -46,14 +48,14 @@ header {
     }
 
     &.pinned {
-        background: $white;
+        background: var(--tlp-ui-white);
         box-shadow: 0 1px 2px var(--tlp-theme-dark-background-color-transparent-90);
 
         > .header-container {
-            padding: 0 $tlp-medium-spacing 0 0;
+            padding: 0 var(--tlp-medium-spacing) 0 0;
 
             .btn {
-                padding: 0 $tlp-small-spacing;
+                padding: 0 var(--tlp-small-spacing);
                 border: 0 !important;
                 box-shadow: none !important;
 
@@ -72,17 +74,17 @@ header {
     }
 }
 
-&.has-sidebar {
+body.has-sidebar {
     header.pinned {
         display: flex;
         align-items: center;
         justify-content: flex-end;
-        width: calc(100% - #{$sidebar-width});
-        height: $navbar-height;
+        width: calc(100% - #{variables-common.$sidebar-width});
+        height: variables-common.$navbar-height;
     }
 
     &.sidebar-collapsed header.pinned {
-        width: calc(100% - #{$sidebar-width-collapsed});
+        width: calc(100% - #{variables-common.$sidebar-width-collapsed});
     }
 }
 
@@ -91,7 +93,7 @@ header {
     box-sizing: border-box;
     align-items: center;
     justify-content: space-between;
-    padding: $tlp-medium-spacing $tlp-medium-spacing 0;
+    padding: var(--tlp-medium-spacing) var(--tlp-medium-spacing) 0;
     transition: padding ease-in-out 100ms;
 
     .btn {
@@ -100,18 +102,18 @@ header {
         align-items: center;
         justify-content: center;
         height: 40px;
-        margin: 0 0 0 $tlp-small-spacing;
-        padding: 0 $tlp-medium-spacing;
+        margin: 0 0 0 var(--tlp-small-spacing);
+        padding: 0 var(--tlp-medium-spacing);
         overflow: hidden;
         transition: box-shadow 75ms ease-in-out, background 75ms ease-in-out, border-color 75ms ease-in-out, padding 75ms ease-in-out;
-        border: 1px solid $white !important;
+        border: 1px solid var(--tlp-ui-white) !important;
         border-radius: 30px;
-        background: $white !important;
+        background: var(--tlp-ui-white) !important;
         box-shadow:  0 1px 4px rgba(0, 0, 0, .08),
             0 1px 2px rgba(0, 0, 0, .1),
             0 -1px 0 rgba(0, 0, 0, .03) !important;
         color: var(--tlp-theme-dark-background-color);
-        font-family: $base-font;
+        font-family: var(--tlp-font-family);
         font-size: .875rem;
         font-weight: 400;
         letter-spacing: 0;
@@ -152,7 +154,7 @@ header {
 .btn.admin-link:not(.btn-link) {
     width: 40px;
     padding: 0;
-    color: $tlp-ui-danger;
+    color: var(--tlp-ui-danger);
 
     > .fa-cogs {
         margin: 0;
@@ -164,7 +166,7 @@ header {
     position: relative;
 
     > .nav-link {
-        margin: 0 0 0 $tlp-large-spacing;
+        margin: 0 0 0 var(--tlp-large-spacing);
         transition: opacity ease-in-out 75ms;
         color: var(--tlp-ui-dimmed);
         font-size: .875rem;
@@ -184,7 +186,7 @@ header {
 
         > .tlp-popover-header {
             min-height: 4px;
-            padding: 0 $tlp-small-spacing;
+            padding: 0 var(--tlp-small-spacing);
             background: var(--tlp-theme-dark-background-color);
         }
 
@@ -199,12 +201,12 @@ header {
     box-sizing: border-box;
     align-items: center;
     width: 100%;
-    padding: $tlp-small-spacing $tlp-medium-spacing;
+    padding: var(--tlp-small-spacing) var(--tlp-medium-spacing);
     overflow: hidden;
     border: 0;
-    background: $white;
+    background: var(--tlp-ui-white);
     color: var(--tlp-theme-dark-background-color);
-    font-family: $base-font;
+    font-family: var(--tlp-font-family);
     font-size: .875rem;
     font-weight: 500;
     letter-spacing: normal;
@@ -223,7 +225,7 @@ header {
     }
 
     &:last-child {
-        margin: 0 0 $tlp-small-spacing;
+        margin: 0 0 var(--tlp-small-spacing);
     }
 
     > .nav-dropdown-item-icon {
@@ -233,7 +235,7 @@ header {
 }
 
 .nav-dropdown-item-title {
-    padding: $tlp-medium-spacing $tlp-medium-spacing $tlp-small-spacing;
+    padding: var(--tlp-medium-spacing) var(--tlp-medium-spacing) var(--tlp-small-spacing);
     color: var(--tlp-ui-dimmed);
     font-size: .65rem;
     font-weight: 600;
@@ -243,7 +245,7 @@ header {
 }
 
 .nav-dropdown-item-divider {
-    margin: $tlp-small-spacing 0;
+    margin: var(--tlp-small-spacing) 0;
     border-top: 1px solid var(--tlp-ui-border-normal);
 
     &:first-child {
@@ -256,17 +258,17 @@ header {
 }
 
 .nav-dropdown-item-unique-dashboard:last-child {
-    margin: $tlp-small-spacing 0;
+    margin: var(--tlp-small-spacing) 0;
 }
 
 .user-nav {
     > .user-avatar {
         width: 38px;
         height: 38px;
-        margin: 0 0 0 $tlp-small-spacing;
+        margin: 0 0 0 var(--tlp-small-spacing);
         padding: 0;
         overflow: hidden;
-        border: 1px solid $white;
+        border: 1px solid var(--tlp-ui-white);
         border-radius: 50%;
         box-shadow:  0 1px 4px rgba(0, 0, 0, .08),
             0 1px 2px rgba(0, 0, 0, .1),
@@ -285,7 +287,7 @@ header {
         flex: 0 0 auto;
         width: 40px;
         height: 40px;
-        margin: $tlp-small-spacing $tlp-small-spacing $tlp-small-spacing 0;
+        margin: var(--tlp-small-spacing) var(--tlp-small-spacing) var(--tlp-small-spacing) 0;
         overflow: hidden;
         border-radius: 50%;
     }
@@ -300,10 +302,10 @@ header {
 
     .user-infos-real-name {
         // we substract the size of the tlp-avatar and the padding around and between the elements
-        max-width: $dropdown-width - ($tlp-small-spacing + 40px + $tlp-small-spacing + $tlp-small-spacing);
+        max-width: calc(#{$dropdown-width} - (var(--tlp-small-spacing) + 40px + var(--tlp-small-spacing) + var(--tlp-small-spacing)));
         margin: 0 0 4px;
         overflow: hidden;
-        color: $white;
+        color: var(--tlp-ui-white);
         font-size: .875rem;
         font-weight: 600;
         line-height: 1;

@@ -18,8 +18,6 @@
  */
 
 @use '../../../../../../src/themes/tlp/src/scss/variables/colors/swatch-colors';
-@import '../../../../../../src/themes/tlp/src/scss/variables/density';
-@import '../../../../../../src/themes/tlp/src/scss/variables/margins';
 
 .tracker-cross-reference-hide-referenced-by {
     display: none;
@@ -30,7 +28,7 @@
 }
 
 .tracker-cross-reference-switch {
-    margin: 0 0 0 $tlp-medium-spacing;
+    margin: 0 0 0 var(--tlp-medium-spacing);
 }
 
 .tracker-cross-reference-nature {
@@ -40,8 +38,8 @@
 
 .tracker-cross-reference-delete-link {
     position: absolute;
-    top: $tlp-medium-spacing;
-    right: $tlp-medium-spacing;
+    top: var(--tlp-medium-spacing);
+    right: var(--tlp-medium-spacing);
     transition: color 150ms linear;
 }
 

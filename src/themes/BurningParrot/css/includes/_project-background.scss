@@ -21,16 +21,14 @@
 @use 'sass:map';
 @use 'global-variables';
 
-body {
-    @import '../../../common/css/project-background/project-background';
+@import '../../../common/css/project-background/project-background';
 
-    @each $identifier, $definition in background.$definitions {
-        .project-admin-background-preview-#{$identifier} {
-            background: linear-gradient(var(--tlp-theme-dark-background-color-transparent-70), var(--tlp-theme-dark-background-color-transparent-70)),
-                map-get($definition, 'image-1680px'),
-                linear-gradient(map-get($definition, 'color'), map-get($definition, 'color'));
-            background-size: map-get($definition, 'size');
-        }
+@each $identifier, $definition in background.$definitions {
+    .project-admin-background-preview-#{$identifier} {
+        background: linear-gradient(var(--tlp-theme-dark-background-color-transparent-70), var(--tlp-theme-dark-background-color-transparent-70)),
+            map-get($definition, 'image-1680px'),
+            linear-gradient(map-get($definition, 'color'), map-get($definition, 'color'));
+        background-size: map-get($definition, 'size');
     }
 }
 

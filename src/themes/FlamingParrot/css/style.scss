@@ -17,7 +17,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@import './variables-color-common';
-@import '../../../tlp/src/scss/variables/colors/purple-colors';
-
-$color-name: 'purple';
+@use './utils/pre-definitions';
+@use './utils/definitions';
+@use './utils/post-definitions';

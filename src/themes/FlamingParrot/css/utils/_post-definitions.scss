@@ -17,7 +17,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-& { // stylelint-disable-line scss/selector-no-redundant-nesting-selector
+@use 'variables-common';
+
+// stylelint-disable selector-no-qualifying-type
+body {
     padding: 0;
 
     &.widgetable {
@@ -39,13 +42,13 @@
 
     &.has-sidebar.sidebar-collapsed {
         #logo {
-            width: $sidebar-width-collapsed;
-            max-width: $sidebar-width-collapsed;
+            width: variables-common.$sidebar-width-collapsed;
+            max-width: variables-common.$sidebar-width-collapsed;
             background: var(--tlp-theme-dark-background-color-darker-05) url('/images/organization_logo_small.png') no-repeat center center;
         }
 
         .sidebar-nav {
-            width: $sidebar-width-collapsed;
+            width: variables-common.$sidebar-width-collapsed;
 
             .sidebar-about-logo-without-product-name {
                 display: inline;
@@ -60,7 +63,7 @@
 
             li a {
                 justify-content: center;
-                width: $sidebar-width-collapsed;
+                width: variables-common.$sidebar-width-collapsed;
                 padding: 0 3px 0 0;
 
                 > .project-sidebar-nav-item-icon {
@@ -80,7 +83,7 @@
         }
 
         .main {
-            margin-left: $sidebar-width-collapsed;
+            margin-left: variables-common.$sidebar-width-collapsed;
         }
     }
 
@@ -89,7 +92,7 @@
     }
 
     &.has-sidebar .main {
-        margin: 0 0 0 $sidebar-width;
+        margin: 0 0 0 variables-common.$sidebar-width;
     }
 
     &.admin_register { //stylelint-disable-line selector-class-pattern
@@ -127,10 +130,10 @@
     &.account-maintenance .main .content {
         padding: 0;
 
-        h3.account-title { //stylelint-disable-line selector-no-qualifying-type
+        h3.account-title {
             font-size: 1.2em;
 
-            i.help-button { //stylelint-disable-line selector-no-qualifying-type
+            i.help-button {
                 vertical-align: initial;
             }
         }

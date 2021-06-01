@@ -17,6 +17,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+@use 'navbar';
+@use 'variables-common';
+
 .current-project-nav-popover {
     max-width: 600px;
     padding: 0;
@@ -41,16 +44,16 @@
         }
 
         + .popover-content {
-            border-radius: $nav-dropdown-content-border-radius;
+            border-radius: navbar.$nav-dropdown-content-border-radius;
         }
     }
 
     > h3 {
         margin: 0;
-        padding: $tlp-medium-spacing;
+        padding: var(--tlp-medium-spacing);
         border-bottom: 0;
-        border-top-left-radius: $nav-dropdown-content-border-radius;
-        border-top-right-radius: $nav-dropdown-content-border-radius;
+        border-top-left-radius: navbar.$nav-dropdown-content-border-radius;
+        border-top-right-radius: navbar.$nav-dropdown-content-border-radius;
         background-color: var(--tlp-theme-dark-background-color-darker-05);
         color: var(--tlp-ui-border-light);
         font-size: 1.125rem;
@@ -61,21 +64,21 @@
     }
 
     > .popover-content {
-        padding: $tlp-medium-spacing;
-        border-bottom-right-radius: $nav-dropdown-content-border-radius;
-        border-bottom-left-radius: $nav-dropdown-content-border-radius;
+        padding: var(--tlp-medium-spacing);
+        border-bottom-right-radius: navbar.$nav-dropdown-content-border-radius;
+        border-bottom-left-radius: navbar.$nav-dropdown-content-border-radius;
         background: var(--tlp-theme-dark-background-color);
         color: var(--tlp-ui-border-dark);
 
         .current-project-nav-flag-popover-separator {
-            margin: $tlp-medium-spacing (-$tlp-medium-spacing);
+            margin: var(--tlp-medium-spacing) calc(-1px * var(--tlp-medium-spacing));
             border-top: 1px solid var(--tlp-theme-dark-background-color-darker-05);
             border-bottom: 0;
             background: none;
         }
 
         .current-project-nav-flag-popover-content-title {
-            margin: 0 0 $tlp-small-spacing;
+            margin: 0 0 var(--tlp-small-spacing);
             padding: 0;
             border: 0;
             color: var(--tlp-ui-border-light);
@@ -90,7 +93,7 @@
 
         .current-project-nav-flag-popover-flag {
             position: relative;
-            margin: 0 0 $tlp-medium-spacing;
+            margin: 0 0 var(--tlp-medium-spacing);
             padding: 0 0 0 20px; // magic value independant of density so that it looks nice with svg flag
 
             &:last-child {
@@ -129,7 +132,7 @@
 
 .current-project-sidebar-popover-privacy {
     top: 4px !important;
-    left: $sidebar-width - 6px !important;
+    left: variables-common.$sidebar-width - 6px !important;
 
     > .arrow {
         top: calc(50% - 4px);
@@ -165,10 +168,10 @@
 
 .project-sidebar-project-flags-popover {
     > .arrow {
-        top: calc(50% - #{$tlp-large-spacing});
+        top: calc(50% - var(--tlp-large-spacing));
     }
 
     &.in {
-        margin: $tlp-large-spacing 4px;
+        margin: var(--tlp-large-spacing) 4px;
     }
 }

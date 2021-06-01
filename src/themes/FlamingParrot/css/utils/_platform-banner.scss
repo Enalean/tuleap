@@ -17,15 +17,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@import '../../../common/css/platform-banner/platform-banner';
+@use '../../../common/css/platform-banner/platform-banner';
 
 .platform-banner {
     box-sizing: border-box;
 }
 
-&.has-visible-project-banner .platform-banner {
+// stylelint-disable selector-no-qualifying-type
+body.has-visible-project-banner .platform-banner {
     box-shadow: inset 0 -1px 0 rgba(0, 0, 0, .1);
 }
+// stylelint-enable
 
 @mixin override-navbar-important-definitions($button-color) {
     border: 0 !important;
@@ -43,14 +45,14 @@
     border-radius: 50%;
 
     &.btn-danger {
-        @include override-navbar-important-definitions($tlp-ui-danger);
+        @include override-navbar-important-definitions(var(--tlp-ui-danger));
     }
 
     &.btn-warning {
-        @include override-navbar-important-definitions($tlp-ui-warning);
+        @include override-navbar-important-definitions(var(--tlp-ui-warning));
     }
 
     &.btn-info {
-        @include override-navbar-important-definitions($tlp-ui-info);
+        @include override-navbar-important-definitions(var(--tlp-ui-info));
     }
 }

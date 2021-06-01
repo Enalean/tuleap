@@ -21,9 +21,9 @@
     position: fixed;
     z-index: 9999;
     width: 100%;
-    padding: $tlp-x-large-spacing 0;
-    background: $tlp-ui-white;
-    color: $tlp-swatch-fiesta-red;
+    padding: var(--tlp-x-large-spacing) 0;
+    background: var(--tlp-ui-white);
+    color: var(--tlp-swatch-fiesta-red);
     font-size: 1.5em;
     text-align: center;
 }

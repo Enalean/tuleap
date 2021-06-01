@@ -19,12 +19,12 @@
 
 $step-transition-duration: 75ms;
 
-$step-background: $white;
+$step-background: var(--tlp-ui-white);
 $step-color: var(--tlp-theme-dark-background-color);
 $step-active-color: var(--tlp-theme-color);
 $step-active-background: var(--tlp-theme-color-transparent-90);
 
-$switch-menu-background: $white;
+$switch-menu-background: var(--tlp-ui-white);
 $switch-menu-item-color: var(--tlp-theme-color);
 $switch-menu-item-hover-background: var(--tlp-theme-color-transparent-90);
 $switch-menu-item-hover-color: var(--tlp-theme-color);
@@ -32,7 +32,7 @@ $switch-menu-item-hover-color: var(--tlp-theme-color);
 .breadcrumb-container {
     display: flex;
     align-items: center;
-    padding: $tlp-medium-spacing;
+    padding: var(--tlp-medium-spacing);
     background: var(--tlp-theme-background-color);
 }
 
@@ -160,7 +160,7 @@ $switch-menu-item-hover-color: var(--tlp-theme-color);
 
 .breadcrumb-dropdown-link {
     display: block;
-    padding: $tlp-small-spacing $tlp-medium-spacing;
+    padding: var(--tlp-small-spacing) var(--tlp-medium-spacing);
     overflow: hidden;
     color: $switch-menu-item-color;
     font-size: .8125rem;
@@ -178,7 +178,7 @@ $switch-menu-item-hover-color: var(--tlp-theme-color);
 .breadcrumb-dropdown-separator {
     display: block;
     margin: 10px 0;
-    border-top: 1px solid $light-grey;
+    border-top: 1px solid var(--tlp-ui-border-light);
 
     &:first-child {
         display: none;
@@ -188,7 +188,7 @@ $switch-menu-item-hover-color: var(--tlp-theme-color);
 .breadcrumb-dropdown-section-title {
     margin: 10px 0 0;
     padding: 20px 20px 10px;
-    border-top: 1px solid $light-grey;
+    border-top: 1px solid var(--tlp-ui-border-light);
     color: #747474;
     font-size: .65rem;
     font-weight: 600;
@@ -214,7 +214,7 @@ $switch-menu-item-hover-color: var(--tlp-theme-color);
     width: 24px;
     height: 24px;
     border-radius: 50%;
-    color: $white;
+    color: var(--tlp-ui-white);
     font-size: .7rem;
     cursor: help;
 
@@ -233,7 +233,7 @@ $switch-menu-item-hover-color: var(--tlp-theme-color);
 .breadcrumb-project-privacy-icon-with-flags {
     display: flex;
     align-items: center;
-    margin: 0 $tlp-small-spacing 0 0;
+    margin: 0 var(--tlp-small-spacing) 0 0;
     padding: 4px;
     border-radius: 4px;
     cursor: help;
@@ -271,7 +271,7 @@ $switch-menu-item-hover-color: var(--tlp-theme-color);
     }
 }
 
-&:not(.sidebar-collapsed) {
+body:not(.sidebar-collapsed) {
     #breadcrumb-project-privacy-icon,
     .breadcrumb-project-privacy-icon-with-flags,
     .breadcrumb-project-privacy-icon,

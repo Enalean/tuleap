@@ -18,10 +18,9 @@
  */
 
 @use 'project-colors';
-@import '../../../../scripts/planning-v2/node_modules/@tuleap/plugin-tracker-artifact-modal';
-@import '../../../../scripts/planning-v2/node_modules/dragular/dist/dragular';
-@import '../../../../scripts/planning-v2/node_modules/animate.css/animate';
-@import '../../../../../../src/themes/BurningParrot/css/includes/global-variables';
+@use '../../../../scripts/planning-v2/node_modules/@tuleap/plugin-tracker-artifact-modal';
+@use '../../../../scripts/planning-v2/node_modules/dragular/dist/dragular';
+@use '../../../../scripts/planning-v2/node_modules/animate.css/animate';
 
 @import './planning/backlog';
 @import './planning/milestones';
