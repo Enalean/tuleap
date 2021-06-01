@@ -40,7 +40,8 @@ class PostPushTuleapArtifactCommentBuilder
         if (
             $tuleap_reference->getCloseArtifactKeyword() !== WebhookTuleapReferencesParser::RESOLVES_KEYWORD &&
             $tuleap_reference->getCloseArtifactKeyword() !== WebhookTuleapReferencesParser::CLOSES_KEYWORD &&
-            $tuleap_reference->getCloseArtifactKeyword() !== WebhookTuleapReferencesParser::FIXES_KEYWORD
+            $tuleap_reference->getCloseArtifactKeyword() !== WebhookTuleapReferencesParser::FIXES_KEYWORD &&
+            $tuleap_reference->getCloseArtifactKeyword() !== WebhookTuleapReferencesParser::IMPLEMENTS_KEYWORD
         ) {
             return "";
         }
@@ -50,6 +51,8 @@ class PostPushTuleapArtifactCommentBuilder
             $action_word = "closed";
         } elseif ($tuleap_reference->getCloseArtifactKeyword() === WebhookTuleapReferencesParser::FIXES_KEYWORD) {
             $action_word = "{$artifact->getTracker()->getItemName()} fixed";
+        } elseif ($tuleap_reference->getCloseArtifactKeyword() === WebhookTuleapReferencesParser::IMPLEMENTS_KEYWORD) {
+            $action_word = "implemented";
         }
 
         return "$action_word by $user_name with " . GitlabCommitReference::REFERENCE_NAME . " #{$gitlab_repository_integration->getName()}/{$commit->getSha1()}";
