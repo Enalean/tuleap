@@ -34,7 +34,6 @@ src/tuleap-cfg/vendor/
 src/www/tlp-doc/dist/
 src/themes/*/vendor/
 plugins/*/vendor/
-tools/Configuration/vendor/
 /.idea/
 npm-debug.log
 yarn-error.log
