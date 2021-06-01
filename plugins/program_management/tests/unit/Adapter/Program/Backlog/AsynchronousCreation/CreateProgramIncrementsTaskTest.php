@@ -35,6 +35,7 @@ use Tuleap\ProgramManagement\Adapter\ProjectAdapter;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\PendingArtifactCreationStore;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\ProgramIncrementsCreator;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Plan\BuildPlanProgramIncrementConfiguration;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementCollectionFactory;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\ArtifactLinkValue;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\BuildFieldValues;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\DescriptionValue;
@@ -47,7 +48,6 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fiel
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\ReplicationData;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\SubmissionDate;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Team\TeamProjectsCollectionBuilder;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\TrackerCollectionFactory;
 use Tuleap\ProgramManagement\Domain\Program\ProgramStore;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
@@ -115,7 +115,7 @@ final class CreateProgramIncrementsTaskTest extends \Tuleap\Test\PHPUnit\TestCas
             $project_data_adapter
         );
         $this->planning_factory                = Mockery::mock(\PlanningFactory::class);
-        $milestone_trackers_factory            = new TrackerCollectionFactory(
+        $milestone_trackers_factory            = new ProgramIncrementCollectionFactory(
             new PlanningAdapter($this->planning_factory),
             Mockery::mock(BuildPlanProgramIncrementConfiguration::class)
         );

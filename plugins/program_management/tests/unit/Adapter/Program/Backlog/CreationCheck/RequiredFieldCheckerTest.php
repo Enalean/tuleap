@@ -28,7 +28,7 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fiel
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFieldFromProgramAndTeamTrackers;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFieldFromProgramAndTeamTrackersCollection;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFields;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Team\ProgramIncrementsTrackerCollection;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\TrackerCollection;
 use Tuleap\ProgramManagement\Domain\ProgramTracker;
 
 final class RequiredFieldCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -73,7 +73,7 @@ final class RequiredFieldCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         $collection         = new SynchronizedFieldFromProgramAndTeamTrackersCollection(new NullLogger());
         $collection->add($synchronized_field);
         $no_other_required_fields = $this->checker->areRequiredFieldsOfTeamTrackersLimitedToTheSynchronizedFields(
-            new ProgramIncrementsTrackerCollection(
+            new TrackerCollection(
                 [new ProgramTracker($tracker), new ProgramTracker($other_tracker_with_no_required_field)]
             ),
             $collection
@@ -108,7 +108,7 @@ final class RequiredFieldCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         $collection->add($synchronized_field);
 
         $no_other_required_fields = $this->checker->areRequiredFieldsOfTeamTrackersLimitedToTheSynchronizedFields(
-            new ProgramIncrementsTrackerCollection([new ProgramTracker($tracker)]),
+            new TrackerCollection([new ProgramTracker($tracker)]),
             $collection
         );
         $this->assertFalse($no_other_required_fields);

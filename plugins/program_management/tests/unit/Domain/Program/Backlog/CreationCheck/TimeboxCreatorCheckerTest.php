@@ -33,6 +33,7 @@ use Tracker_FormElement_Field_Date;
 use Tracker_FormElement_Field_Selectbox;
 use Tracker_FormElement_Field_Text;
 use Tuleap\ProgramManagement\Adapter\ProjectAdapter;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\TrackerCollection;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\PlanningHasNoProgramIncrementException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\BuildSynchronizedFields;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\Field;
@@ -40,7 +41,6 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fiel
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFieldFromProgramAndTeamTrackersCollectionBuilder;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFields;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\SourceTrackerCollection;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Team\ProgramIncrementsTrackerCollection;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Team\TeamProjectsCollectionBuilder;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TrackerCollectionFactory;
 use Tuleap\ProgramManagement\Domain\Program\ProgramStore;
@@ -48,7 +48,7 @@ use Tuleap\ProgramManagement\Domain\ProgramTracker;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
-final class ProgramIncrementArtifactCreatorCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
+final class TimeboxCreatorCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 
@@ -78,7 +78,7 @@ final class ProgramIncrementArtifactCreatorCheckerTest extends \Tuleap\Test\PHPU
     private $project_data;
 
     /**
-     * @var ProgramIncrementArtifactCreatorChecker
+     * @var TimeboxCreatorChecker
      */
     private $checker;
     /**
@@ -127,7 +127,7 @@ final class ProgramIncrementArtifactCreatorCheckerTest extends \Tuleap\Test\PHPU
         $this->required_field_checker   = Mockery::mock(CheckRequiredField::class);
         $this->workflow_checker         = Mockery::mock(CheckWorkflow::class);
 
-        $this->checker = new ProgramIncrementArtifactCreatorChecker(
+        $this->checker = new TimeboxCreatorChecker(
             $projects_collection_builder,
             $this->trackers_builder,
             $this->field_collection_builder,
@@ -164,7 +164,7 @@ final class ProgramIncrementArtifactCreatorCheckerTest extends \Tuleap\Test\PHPU
         $this->workflow_checker->shouldReceive('areWorkflowsNotUsedWithSynchronizedFieldsInTeamTrackers')
             ->andReturnTrue();
 
-        self::assertTrue($this->checker->canProgramIncrementBeCreated($program_increment_tracker, $program, $user));
+        self::assertTrue($this->checker->canTimeboxBeCreated($program_increment_tracker, $program, $user));
     }
 
     public function testItReturnsTrueWhenAProjectHasNoTeamProjects(): void
@@ -176,7 +176,7 @@ final class ProgramIncrementArtifactCreatorCheckerTest extends \Tuleap\Test\PHPU
 
         $this->program_store->shouldReceive('getTeamProjectIdsForGivenProgramProject')->andReturn([]);
 
-        self::assertTrue($this->checker->canProgramIncrementBeCreated($program_increment_tracker, $program, $user));
+        self::assertTrue($this->checker->canTimeboxBeCreated($program_increment_tracker, $program, $user));
     }
 
     public function testItReturnsFalseIfOneProjectDoesNotHaveARootPlanningWithAMilestoneTracker(): void
@@ -199,7 +199,7 @@ final class ProgramIncrementArtifactCreatorCheckerTest extends \Tuleap\Test\PHPU
             ->once()
             ->andReturn($first_team_project);
 
-        self::assertFalse($this->checker->canProgramIncrementBeCreated($program_increment_tracker, $program, $user));
+        self::assertFalse($this->checker->canTimeboxBeCreated($program_increment_tracker, $program, $user));
     }
 
     public function testItReturnsFalseIfSemanticsAreNotWellConfigured(): void
@@ -213,7 +213,7 @@ final class ProgramIncrementArtifactCreatorCheckerTest extends \Tuleap\Test\PHPU
         $this->semantic_checker->shouldReceive('areTrackerSemanticsWellConfigured')
             ->andReturnFalse();
 
-        self::assertFalse($this->checker->canProgramIncrementBeCreated($program_increment_tracker, $program, $user));
+        self::assertFalse($this->checker->canTimeboxBeCreated($program_increment_tracker, $program, $user));
     }
 
     public function testItReturnsFalseIfUserCannotSubmitArtifact(): void
@@ -227,7 +227,7 @@ final class ProgramIncrementArtifactCreatorCheckerTest extends \Tuleap\Test\PHPU
         $this->semantic_checker->shouldReceive('areTrackerSemanticsWellConfigured')
             ->andReturnTrue();
 
-        self::assertFalse($this->checker->canProgramIncrementBeCreated($program_increment_tracker, $program, $user));
+        self::assertFalse($this->checker->canTimeboxBeCreated($program_increment_tracker, $program, $user));
     }
 
     public function testItReturnsFalseIfFieldsCantBeExtractedFromMilestoneTrackers(): void
@@ -244,7 +244,7 @@ final class ProgramIncrementArtifactCreatorCheckerTest extends \Tuleap\Test\PHPU
         $this->fields_adapter->shouldReceive('build')
             ->andThrow(new FieldRetrievalException(1, 'title'));
 
-        self::assertFalse($this->checker->canProgramIncrementBeCreated($program_increment_tracker, $program, $user));
+        self::assertFalse($this->checker->canTimeboxBeCreated($program_increment_tracker, $program, $user));
     }
 
     public function testItReturnsFalseIfUserCantSubmitOneArtifactLink(): void
@@ -260,7 +260,7 @@ final class ProgramIncrementArtifactCreatorCheckerTest extends \Tuleap\Test\PHPU
 
         $this->buildSynchronizedFields(false);
 
-        self::assertFalse($this->checker->canProgramIncrementBeCreated($program_increment_tracker, $program, $user));
+        self::assertFalse($this->checker->canTimeboxBeCreated($program_increment_tracker, $program, $user));
     }
 
     public function testItReturnsFalseIfTrackersHaveRequiredFieldsThatCannotBeSynchronized(): void
@@ -280,7 +280,7 @@ final class ProgramIncrementArtifactCreatorCheckerTest extends \Tuleap\Test\PHPU
         $this->required_field_checker->shouldReceive('areRequiredFieldsOfTeamTrackersLimitedToTheSynchronizedFields')
             ->andReturnFalse();
 
-        self::assertFalse($this->checker->canProgramIncrementBeCreated($program_increment_tracker, $program, $user));
+        self::assertFalse($this->checker->canTimeboxBeCreated($program_increment_tracker, $program, $user));
     }
 
     public function testItReturnsFalseIfTeamTrackersAreUsingSynchronizedFieldsInWorkflowRules(): void
@@ -302,7 +302,7 @@ final class ProgramIncrementArtifactCreatorCheckerTest extends \Tuleap\Test\PHPU
         $this->workflow_checker->shouldReceive('areWorkflowsNotUsedWithSynchronizedFieldsInTeamTrackers')
             ->andReturnFalse();
 
-        self::assertFalse($this->checker->canProgramIncrementBeCreated($program_increment_tracker, $program, $user));
+        self::assertFalse($this->checker->canTimeboxBeCreated($program_increment_tracker, $program, $user));
     }
 
     private function mockTeamMilestoneTrackers(\Tracker $tracker, bool $user_can_submit_artifact = true): void
@@ -323,7 +323,7 @@ final class ProgramIncrementArtifactCreatorCheckerTest extends \Tuleap\Test\PHPU
         $this->trackers_builder->shouldReceive('buildFromProgramProjectAndItsTeam')
             ->andReturn(new SourceTrackerCollection([new ProgramTracker($tracker)]));
         $this->trackers_builder->shouldReceive('buildFromTeamProjects')
-            ->andReturn(new ProgramIncrementsTrackerCollection([new ProgramTracker($first_milestone_tracker)]));
+            ->andReturn(new TrackerCollection([new ProgramTracker($first_milestone_tracker)]));
         $this->project_manager->shouldReceive('getProject')
             ->with($first_team_project->getID())
             ->once()

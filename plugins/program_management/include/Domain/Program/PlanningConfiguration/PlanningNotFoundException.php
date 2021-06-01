@@ -20,15 +20,8 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck;
+namespace Tuleap\ProgramManagement\Domain\Program\PlanningConfiguration;
 
-use Tuleap\ProgramManagement\Domain\Program\Backlog\TrackerCollection;
-use Tuleap\ProgramManagement\Domain\ProgramTracker;
-
-interface CheckStatus
+interface PlanningNotFoundException extends \Throwable
 {
-    public function isStatusWellConfigured(
-        ProgramTracker $tracker,
-        TrackerCollection $source_tracker_collection
-    ): bool;
 }

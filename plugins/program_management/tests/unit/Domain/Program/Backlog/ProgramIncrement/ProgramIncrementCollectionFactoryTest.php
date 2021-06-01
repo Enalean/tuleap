@@ -20,7 +20,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Domain\Program\Backlog;
+namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement;
 
 use Mockery as M;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
@@ -29,13 +29,12 @@ use Project;
 use Tuleap\ProgramManagement\Adapter\Program\PlanningAdapter;
 use Tuleap\ProgramManagement\Adapter\ProjectAdapter;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Plan\BuildPlanProgramIncrementConfiguration;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\PlanningHasNoProgramIncrementException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Team\TeamProjectsCollection;
 use Tuleap\ProgramManagement\Domain\ProgramTracker;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
-final class TrackerCollectionFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
+final class ProgramIncrementCollectionFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 
@@ -78,7 +77,7 @@ final class TrackerCollectionFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $program_project_data;
     /**
-     * @var TrackerCollectionFactory
+     * @var ProgramIncrementCollectionFactory
      */
     private $builder;
 
@@ -88,7 +87,7 @@ final class TrackerCollectionFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
         $planning_adapter       = new PlanningAdapter($this->planning_factory);
 
         $this->configuration_builder = \Mockery::mock(BuildPlanProgramIncrementConfiguration::class);
-        $this->builder               = new TrackerCollectionFactory($planning_adapter, $this->configuration_builder);
+        $this->builder               = new ProgramIncrementCollectionFactory($planning_adapter, $this->configuration_builder);
 
         $this->program_project_data     = ProjectAdapter::build(
             new \Project(['group_id' => $this->program_project_id, 'unix_group_name' => "program", 'group_name' => 'Program'])

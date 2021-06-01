@@ -29,7 +29,7 @@ use Tracker_FormElement_Field_List;
 use Tracker_Semantic_Status;
 use Tracker_Semantic_StatusDao;
 use Tracker_Semantic_StatusFactory;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Team\ProgramIncrementsTrackerCollection;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\TrackerCollection;
 use Tuleap\ProgramManagement\Domain\ProgramTracker;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\TrackerColor;
@@ -54,7 +54,7 @@ final class StatusSemanticCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
     private $semantic_status_factory;
 
     /**
-     * @var ProgramIncrementsTrackerCollection
+     * @var TrackerCollection
      */
     private $collection;
 
@@ -82,7 +82,7 @@ final class StatusSemanticCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->tracker_team_01 = new Tracker(123, null, null, null, null, null, null, null, null, null, null, null, null, TrackerColor::default(), null);
         $this->tracker_team_02 = new Tracker(124, null, null, null, null, null, null, null, null, null, null, null, null, TrackerColor::default(), null);
-        $this->collection      = new ProgramIncrementsTrackerCollection(
+        $this->collection      = new TrackerCollection(
             [
                 new ProgramTracker($this->tracker_team_01),
                 new ProgramTracker($this->tracker_team_02)

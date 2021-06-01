@@ -58,8 +58,8 @@ use Tuleap\ProgramManagement\Adapter\ProjectAdapter;
 use Tuleap\ProgramManagement\Adapter\Team\MirroredMilestones\MirroredMilestoneRetriever;
 use Tuleap\ProgramManagement\Adapter\Team\MirroredMilestones\MirroredMilestonesDao;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\ProgramIncrementsCreator;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementCollectionFactory;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Team\TeamProjectsCollectionBuilder;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\TrackerCollectionFactory;
 use Tuleap\Tracker\Artifact\Creation\TrackerArtifactCreator;
 use Tuleap\Tracker\FormElement\Field\ListFields\FieldValueMatcher;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
@@ -129,7 +129,7 @@ class TaskBuilder
                 $program_dao,
                 new ProjectAdapter(ProjectManager::instance())
             ),
-            new TrackerCollectionFactory(
+            new ProgramIncrementCollectionFactory(
                 new PlanningAdapter(\PlanningFactory::build()),
                 new PlanProgramIncrementConfigurationBuilder(new PlanDao(), \TrackerFactory::instance())
             ),

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2020 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,7 +20,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Team;
+namespace Tuleap\ProgramManagement\Domain\Program\Backlog;
 
 use Mockery as M;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
@@ -28,7 +28,7 @@ use Tuleap\ProgramManagement\Domain\ProgramTracker;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
-final class ProgramIncrementsTrackerCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
+final class TrackerCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 
@@ -37,16 +37,16 @@ final class ProgramIncrementsTrackerCollectionTest extends \Tuleap\Test\PHPUnit\
         $first_tracker  = new ProgramTracker(TrackerTestBuilder::aTracker()->withId(78)->withProject(new \Project(['group_id' => 103]))->build());
         $second_tracker = new ProgramTracker(TrackerTestBuilder::aTracker()->withId(57)->withProject(new \Project(['group_id' => 104]))->build());
 
-        $collection = new ProgramIncrementsTrackerCollection([$first_tracker, $second_tracker]);
+        $collection = new TrackerCollection([$first_tracker, $second_tracker]);
         $ids        = $collection->getTrackerIds();
-        $this->assertContains(78, $ids);
-        $this->assertContains(57, $ids);
+        self::assertContains(78, $ids);
+        self::assertContains(57, $ids);
     }
 
     public function testGetTrackerIdsReturnsEmpty(): void
     {
-        $collection = new ProgramIncrementsTrackerCollection([]);
-        $this->assertEmpty($collection->getTrackerIds());
+        $collection = new TrackerCollection([]);
+        self::assertEmpty($collection->getTrackerIds());
     }
 
     public function testGetMilestoneTrackersReturnTrackers(): void
@@ -54,16 +54,16 @@ final class ProgramIncrementsTrackerCollectionTest extends \Tuleap\Test\PHPUnit\
         $first_tracker  = TrackerTestBuilder::aTracker()->withId(78)->withProject(new \Project(['group_id' => 103]))->build();
         $second_tracker = TrackerTestBuilder::aTracker()->withId(57)->withProject(new \Project(['group_id' => 104]))->build();
 
-        $collection = new ProgramIncrementsTrackerCollection([$first_tracker, $second_tracker]);
-        $trackers   = $collection->getProgramIncrementTrackers();
-        $this->assertContains($first_tracker, $trackers);
-        $this->assertContains($second_tracker, $trackers);
+        $collection = new TrackerCollection([$first_tracker, $second_tracker]);
+        $trackers   = $collection->getTrackers();
+        self::assertContains($first_tracker, $trackers);
+        self::assertContains($second_tracker, $trackers);
     }
 
     public function testGetMilestoneTrackersReturnsEmpty(): void
     {
-        $collection = new ProgramIncrementsTrackerCollection([]);
-        $this->assertEmpty($collection->getProgramIncrementTrackers());
+        $collection = new TrackerCollection([]);
+        self::assertEmpty($collection->getTrackers());
     }
 
     public function testCanUserSubmitAnArtifactInAllTrackersReturnsTrue(): void
@@ -77,10 +77,10 @@ final class ProgramIncrementsTrackerCollectionTest extends \Tuleap\Test\PHPUnit\
 
         $user = UserTestBuilder::aUser()->build();
 
-        $collection = new ProgramIncrementsTrackerCollection(
+        $collection = new TrackerCollection(
             [$first_team_tracker, $second_team_tracker]
         );
-        $this->assertTrue($collection->canUserSubmitAnArtifactInAllTrackers($user));
+        self::assertTrue($collection->canUserSubmitAnArtifactInAllTrackers($user));
     }
 
     public function testCanUserSubmitAnArtifactInAllTrackersReturnsFalse(): void
@@ -94,9 +94,9 @@ final class ProgramIncrementsTrackerCollectionTest extends \Tuleap\Test\PHPUnit\
 
         $user = UserTestBuilder::aUser()->build();
 
-        $collection = new ProgramIncrementsTrackerCollection(
+        $collection = new TrackerCollection(
             [$first_team_tracker, $second_team_tracker]
         );
-        $this->assertFalse($collection->canUserSubmitAnArtifactInAllTrackers($user));
+        self::assertFalse($collection->canUserSubmitAnArtifactInAllTrackers($user));
     }
 }

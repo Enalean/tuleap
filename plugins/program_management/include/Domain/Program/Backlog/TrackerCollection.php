@@ -20,24 +20,24 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Team;
+namespace Tuleap\ProgramManagement\Domain\Program\Backlog;
 
 use Tuleap\ProgramManagement\Domain\ProgramTracker;
 
-final class ProgramIncrementsTrackerCollection
+final class TrackerCollection
 {
     /**
      * @var ProgramTracker[]
      * @psalm-readonly
      */
-    private $program_increments_tracker_collection;
+    private $milestone_tracker_collection;
 
     /**
      * @param ProgramTracker[] $program_increment_tracker
      */
     public function __construct(array $program_increment_tracker)
     {
-        $this->program_increments_tracker_collection = $program_increment_tracker;
+        $this->milestone_tracker_collection = $program_increment_tracker;
     }
 
     /**
@@ -50,7 +50,7 @@ final class ProgramIncrementsTrackerCollection
             static function (ProgramTracker $tracker) {
                 return $tracker->getTrackerId();
             },
-            $this->program_increments_tracker_collection
+            $this->milestone_tracker_collection
         );
     }
 
@@ -58,15 +58,15 @@ final class ProgramIncrementsTrackerCollection
      * @return ProgramTracker[]
      * @psalm-mutation-free
      */
-    public function getProgramIncrementTrackers(): array
+    public function getTrackers(): array
     {
-        return $this->program_increments_tracker_collection;
+        return $this->milestone_tracker_collection;
     }
 
     public function canUserSubmitAnArtifactInAllTrackers(\PFUser $user): bool
     {
-        foreach ($this->program_increments_tracker_collection as $program_increment_tracker) {
-            if (! $program_increment_tracker->userCanSubmitArtifact($user)) {
+        foreach ($this->milestone_tracker_collection as $milestone_tracker) {
+            if (! $milestone_tracker->userCanSubmitArtifact($user)) {
                 return false;
             }
         }

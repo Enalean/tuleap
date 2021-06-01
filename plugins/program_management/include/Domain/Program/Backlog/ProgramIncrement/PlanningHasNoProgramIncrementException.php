@@ -22,9 +22,9 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement;
 
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Team\ProgramIncrementTrackerRetrievalException;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\TrackerRetrievalException;
 
-final class PlanningHasNoProgramIncrementException extends \RuntimeException implements ProgramIncrementTrackerRetrievalException
+final class PlanningHasNoProgramIncrementException extends \RuntimeException implements TrackerRetrievalException
 {
     public function __construct(int $planning_id)
     {
