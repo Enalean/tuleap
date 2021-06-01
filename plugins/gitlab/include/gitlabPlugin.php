@@ -92,6 +92,10 @@ use Tuleap\Reference\GetReferenceEvent;
 use Tuleap\Reference\Nature;
 use Tuleap\Reference\NatureCollection;
 use Tuleap\Request\CollectRoutesEvent;
+use Tuleap\Tracker\Semantic\Status\Done\DoneValueRetriever;
+use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneDao;
+use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneFactory;
+use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneValueChecker;
 use Tuleap\Tracker\Semantic\Status\StatusValueRetriever;
 
 require_once __DIR__ . '/../vendor/autoload.php';
@@ -262,6 +266,12 @@ class gitlabPlugin extends Plugin
                     new PostPushWebhookCloseArtifactHandler(
                         new PostPushCommitArtifactUpdater(
                             new StatusValueRetriever(new Tracker_Semantic_StatusFactory()),
+                            new DoneValueRetriever(
+                                new SemanticDoneFactory(
+                                    new SemanticDoneDao(),
+                                    new SemanticDoneValueChecker()
+                                )
+                            ),
                             UserManager::instance(),
                             $logger
                         ),
@@ -408,6 +418,12 @@ class gitlabPlugin extends Plugin
                     new PostPushWebhookCloseArtifactHandler(
                         new PostPushCommitArtifactUpdater(
                             new StatusValueRetriever(new Tracker_Semantic_StatusFactory()),
+                            new DoneValueRetriever(
+                                new SemanticDoneFactory(
+                                    new SemanticDoneDao(),
+                                    new SemanticDoneValueChecker()
+                                )
+                            ),
                             UserManager::instance(),
                             $logger
                         ),

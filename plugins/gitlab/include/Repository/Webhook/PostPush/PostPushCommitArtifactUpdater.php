@@ -24,11 +24,16 @@ namespace Tuleap\Gitlab\Repository\Webhook\PostPush;
 
 use PFUser;
 use Psr\Log\LoggerInterface;
+use Tracker;
 use Tracker_Exception;
+use Tracker_FormElement_Field_List_BindValue;
 use Tracker_NoChangeException;
 use Tuleap\Gitlab\Repository\GitlabRepositoryIntegration;
 use Tuleap\Gitlab\Repository\Webhook\WebhookTuleapReference;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Semantic\Status\Done\DoneValueRetriever;
+use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneNotDefinedException;
+use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneValueNotFoundException;
 use Tuleap\Tracker\Semantic\Status\SemanticStatusClosedValueNotFoundException;
 use Tuleap\Tracker\Semantic\Status\StatusValueRetriever;
 use UserManager;
@@ -47,13 +52,19 @@ class PostPushCommitArtifactUpdater
      * @var UserManager
      */
     private $user_manager;
+    /**
+     * @var DoneValueRetriever
+     */
+    private $done_value_retriever;
 
     public function __construct(
         StatusValueRetriever $status_value_retriever,
+        DoneValueRetriever $done_value_retriever,
         UserManager $user_manager,
         LoggerInterface $logger
     ) {
         $this->status_value_retriever = $status_value_retriever;
+        $this->done_value_retriever   = $done_value_retriever;
         $this->user_manager           = $user_manager;
         $this->logger                 = $logger;
     }
@@ -73,9 +84,14 @@ class PostPushCommitArtifactUpdater
                 );
                 return;
             }
-            $first_closed_value = $this->status_value_retriever->getFirstClosedValueUserCanRead($artifact->getTracker(), $tracker_workflow_user);
-            $fields_data        = [
-                $status_field->getId() => $status_field->getFieldData($first_closed_value->getLabel())
+
+            $closed_value = $this->getClosedValue(
+                $artifact->getTracker(),
+                $tracker_workflow_user
+            );
+
+            $fields_data = [
+                $status_field->getId() => $status_field->getFieldData($closed_value->getLabel())
             ];
 
             $new_followups = $artifact->createNewChangeset(
@@ -100,6 +116,19 @@ class PostPushCommitArtifactUpdater
         }
     }
 
+    private function getClosedValue(Tracker $tracker, PFUser $tracker_workflow_user): Tracker_FormElement_Field_List_BindValue
+    {
+        try {
+            return $this->done_value_retriever->getFirstDoneValueUserCanRead($tracker, $tracker_workflow_user);
+        } catch (
+            SemanticDoneNotDefinedException | SemanticDoneValueNotFoundException $exception
+        ) {
+            $this->logger->warning("|  |_ " . $exception->getMessage() . " Status semantic will be checked to close the artifact.");
+        }
+
+        return $this->status_value_retriever->getFirstClosedValueUserCanRead($tracker, $tracker_workflow_user);
+    }
+
     public function addTuleapArtifactCommentNoSemanticDefined(
         Artifact $artifact,
         PFUser $tracker_workflow_user,
@@ -107,7 +136,7 @@ class PostPushCommitArtifactUpdater
     ): void {
         try {
             $committer           = $this->getTuleapUserNameFromGitlabCommitter($commit);
-            $no_semantic_comment = "$committer attempts to close this artifact from GitLab but no status semantic defined.";
+            $no_semantic_comment = "$committer attempts to close this artifact from GitLab but neither done nor status semantic defined.";
 
             $new_followups = $artifact->createNewChangeset([], $no_semantic_comment, $tracker_workflow_user);
 
