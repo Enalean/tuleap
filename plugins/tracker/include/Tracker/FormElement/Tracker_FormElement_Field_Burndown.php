@@ -813,7 +813,8 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
     {
         return new SemanticTimeframeBuilder(
             new SemanticTimeframeDao(),
-            $this->getFormElementFactory()
+            $this->getFormElementFactory(),
+            \TrackerFactory::instance()
         );
     }
 

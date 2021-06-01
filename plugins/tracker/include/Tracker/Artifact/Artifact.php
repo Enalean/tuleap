@@ -2207,7 +2207,11 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
         );
         $computed_dao               = new ComputedFieldDao();
         $form_element_factory       = Tracker_FormElementFactory::instance();
-        $semantic_timeframe_builder = new SemanticTimeframeBuilder(new SemanticTimeframeDao(), $form_element_factory);
+        $semantic_timeframe_builder = new SemanticTimeframeBuilder(
+            new SemanticTimeframeDao(),
+            $form_element_factory,
+            \TrackerFactory::instance()
+        );
         $field_retriever            = new ChartConfigurationFieldRetriever(
             $this->getFormElementFactory(),
             $semantic_timeframe_builder,

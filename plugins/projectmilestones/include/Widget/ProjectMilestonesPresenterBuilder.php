@@ -150,7 +150,8 @@ class ProjectMilestonesPresenterBuilder
     {
         $semantic_timeframe_builder = new SemanticTimeframeBuilder(
             new SemanticTimeframeDao(),
-            Tracker_FormElementFactory::instance()
+            Tracker_FormElementFactory::instance(),
+            \TrackerFactory::instance()
         );
 
         $planning_factory = new PlanningFactory(

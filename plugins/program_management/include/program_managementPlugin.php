@@ -705,7 +705,13 @@ final class program_managementPlugin extends Plugin
                     new TitleFieldAdapter(new Tracker_Semantic_TitleFactory()),
                     new DescriptionFieldAdapter(new Tracker_Semantic_DescriptionFactory()),
                     new StatusFieldAdapter($semantic_status_factory),
-                    new TimeFrameFieldsAdapter(new SemanticTimeframeBuilder($timeframe_dao, $form_element_factory))
+                    new TimeFrameFieldsAdapter(
+                        new SemanticTimeframeBuilder(
+                            $timeframe_dao,
+                            $form_element_factory,
+                            \TrackerFactory::instance()
+                        )
+                    )
                 ),
                 $this->getLogger()
             ),

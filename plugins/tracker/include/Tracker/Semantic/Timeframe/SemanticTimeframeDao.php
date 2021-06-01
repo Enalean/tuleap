@@ -30,11 +30,11 @@ class SemanticTimeframeDao extends DataAccessObject
     private const SQL_TRUE_VALUE = 1;
 
     /**
-     * @psalm-return array{start_date_field_id: int, duration_field_id: ?int, end_date_field_id: ?int}|null
+     * @psalm-return array{start_date_field_id: ?int, duration_field_id: ?int, end_date_field_id: ?int, implied_from_tracker_id: ?int}|null
      */
     public function searchByTrackerId(int $tracker_id): ?array
     {
-        $sql = 'SELECT start_date_field_id, duration_field_id, end_date_field_id
+        $sql = 'SELECT start_date_field_id, duration_field_id, end_date_field_id, implied_from_tracker_id
             FROM tracker_semantic_timeframe
                 WHERE tracker_id = ?';
 

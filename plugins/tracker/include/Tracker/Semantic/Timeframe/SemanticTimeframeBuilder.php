@@ -28,19 +28,24 @@ use Tracker_FormElement_Field_Numeric;
 
 class SemanticTimeframeBuilder
 {
-    /**
-     * @var SemanticTimeframeDao
-     */
-    private $dao;
+    private SemanticTimeframeDao $dao;
     /**
      * @var \Tracker_FormElementFactory
      */
     private $form_element_factory;
+    /**
+     * @var \TrackerFactory
+     */
+    private $tracker_factory;
 
-    public function __construct(SemanticTimeframeDao $dao, \Tracker_FormElementFactory $form_element_factory)
-    {
+    public function __construct(
+        SemanticTimeframeDao $dao,
+        \Tracker_FormElementFactory $form_element_factory,
+        \TrackerFactory $tracker_factory
+    ) {
         $this->dao                  = $dao;
         $this->form_element_factory = $form_element_factory;
+        $this->tracker_factory      = $tracker_factory;
     }
 
     /**
@@ -50,7 +55,11 @@ class SemanticTimeframeBuilder
     {
         $row = $this->dao->searchByTrackerId((int) $tracker->getId());
         if ($row === null) {
-            return new SemanticTimeframe($tracker, new TimeframeNotConfigured());
+            return $this->buildTimeframeSemanticNotConfigured($tracker);
+        }
+
+        if (isset($row['implied_from_tracker_id'])) {
+            return $this->buildSemanticTimeframeImpliedFromAnotherTracker($tracker, $row['implied_from_tracker_id']);
         }
 
         $start_date_field = $this->form_element_factory->getUsedDateFieldById(
@@ -58,7 +67,11 @@ class SemanticTimeframeBuilder
             (int) $row['start_date_field_id']
         );
 
-        if ($start_date_field !== null && $row['duration_field_id'] !== null) {
+        if ($start_date_field === null) {
+            return $this->buildTimeframeSemanticNotConfigured($tracker);
+        }
+
+        if ($row['duration_field_id'] !== null) {
             $duration_field = $this->form_element_factory->getUsedFieldByIdAndType(
                 $tracker,
                 (int) $row['duration_field_id'],
@@ -69,7 +82,7 @@ class SemanticTimeframeBuilder
             return new SemanticTimeframe($tracker, new TimeframeWithDuration($start_date_field, $duration_field));
         }
 
-        if ($start_date_field !== null && $row['end_date_field_id'] !== null) {
+        if ($row['end_date_field_id'] !== null) {
             $end_date_field = $this->form_element_factory->getUsedDateFieldById(
                 $tracker,
                 (int) $row['end_date_field_id']
@@ -79,6 +92,37 @@ class SemanticTimeframeBuilder
             return new SemanticTimeframe($tracker, new TimeframeWithEndDate($start_date_field, $end_date_field));
         }
 
-        return new SemanticTimeframe($tracker, new TimeframeNotConfigured());
+        return $this->buildTimeframeSemanticNotConfigured($tracker);
+    }
+
+    private function buildSemanticTimeframeImpliedFromAnotherTracker(Tracker $tracker, int $implied_from_tracker_id): SemanticTimeframe
+    {
+        $implied_from_tracker = $this->tracker_factory->getTrackerById($implied_from_tracker_id);
+        if ($implied_from_tracker === null) {
+            return $this->buildTimeframeSemanticNotConfigured($tracker);
+        }
+
+        $implied_semantic = $this->getSemantic($implied_from_tracker);
+        if (
+            $implied_semantic->getTimeframeCalculator()::getName() === TimeframeImpliedFromAnotherTracker::getName() ||
+            $implied_semantic->getTimeframeCalculator()::getName() === TimeframeNotConfigured::getName()
+        ) {
+            return $this->buildTimeframeSemanticNotConfigured($tracker);
+        }
+
+        return new SemanticTimeframe(
+            $tracker,
+            new TimeframeImpliedFromAnotherTracker(
+                $implied_semantic
+            )
+        );
+    }
+
+    private function buildTimeframeSemanticNotConfigured(Tracker $tracker): SemanticTimeframe
+    {
+        return new SemanticTimeframe(
+            $tracker,
+            new TimeframeNotConfigured()
+        );
     }
 }

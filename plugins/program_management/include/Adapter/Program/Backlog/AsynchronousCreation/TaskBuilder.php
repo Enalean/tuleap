@@ -93,6 +93,7 @@ class TaskBuilder
                 $logger
             )
         );
+        $tracker_factory              = \TrackerFactory::instance();
         $synchronized_fields_gatherer = new SynchronizedFieldsAdapter(
             new ArtifactLinkFieldAdapter($form_element_factory),
             new TitleFieldAdapter(new Tracker_Semantic_TitleFactory()),
@@ -101,7 +102,8 @@ class TaskBuilder
             new TimeFrameFieldsAdapter(
                 new SemanticTimeframeBuilder(
                     new SemanticTimeframeDao(),
-                    $form_element_factory
+                    $form_element_factory,
+                    $tracker_factory
                 )
             )
         );
@@ -131,7 +133,7 @@ class TaskBuilder
             ),
             new ProgramIncrementCollectionFactory(
                 new PlanningAdapter(\PlanningFactory::build()),
-                new PlanProgramIncrementConfigurationBuilder(new PlanDao(), \TrackerFactory::instance())
+                new PlanProgramIncrementConfigurationBuilder(new PlanDao(), $tracker_factory)
             ),
             $mirror_creator,
             $logger,

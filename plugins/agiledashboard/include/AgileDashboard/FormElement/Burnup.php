@@ -447,7 +447,11 @@ class Burnup extends Tracker_FormElement_Field implements Tracker_FormElement_Fi
     {
         $form_element_factory = Tracker_FormElementFactory::instance();
         $semantic_timeframe   = (
-            new SemanticTimeframeBuilder(new SemanticTimeframeDao(), $form_element_factory)
+            new SemanticTimeframeBuilder(
+                new SemanticTimeframeDao(),
+                $form_element_factory,
+                \TrackerFactory::instance()
+            )
         )->getSemantic($this->getTracker());
 
         return new ChartConfigurationValueRetriever(
@@ -461,7 +465,8 @@ class Burnup extends Tracker_FormElement_Field implements Tracker_FormElement_Fi
     {
         return new SemanticTimeframeBuilder(
             new SemanticTimeframeDao(),
-            Tracker_FormElementFactory::instance()
+            Tracker_FormElementFactory::instance(),
+            \TrackerFactory::instance()
         );
     }
 

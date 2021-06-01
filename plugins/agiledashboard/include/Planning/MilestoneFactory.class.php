@@ -143,6 +143,7 @@ class Planning_MilestoneFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
             new SemanticTimeframeBuilder(
                 new SemanticTimeframeDao(),
                 $form_element_factory,
+                \TrackerFactory::instance()
             ),
             BackendLogger::getDefaultLogger(),
             new MilestoneBurndownFieldChecker($form_element_factory)

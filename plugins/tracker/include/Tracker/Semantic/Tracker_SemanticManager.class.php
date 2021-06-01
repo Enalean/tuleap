@@ -132,7 +132,8 @@ class Tracker_SemanticManager
 
         $semantic_timeframe_builder = new SemanticTimeframeBuilder(
             new SemanticTimeframeDao(),
-            Tracker_FormElementFactory::instance()
+            Tracker_FormElementFactory::instance(),
+            \TrackerFactory::instance()
         );
 
         $semantic_timeframe    = $semantic_timeframe_builder->getSemantic($this->tracker);
