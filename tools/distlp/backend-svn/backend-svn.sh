@@ -20,15 +20,23 @@ done
 export TULEAP_FPM_SESSION_MODE=redis
 export REDIS_SERVER=redis
 
+mv /etc/tuleap /etc/tuleap.old || true
 ln -s /data/etc/tuleap /etc/tuleap
-/usr/sbin/groupadd -r codendiadm
-/usr/sbin/useradd -c 'Tuleap user' -m -d '/var/lib/tuleap' -r -g "codendiadm" -s '/bin/bash' codendiadm
-mkdir /var/log/tuleap
+
+/bin/rm -r /var/lib/tuleap/svn_plugin || true
+ln -s /data/lib/tuleap/svn_plugin /var/lib/tuleap/svn_plugin
 
 /usr/share/tuleap/src/utils/tuleap wait-for-redis
 
-/usr/share/tuleap/src/utils/tuleap config-set init_mode supervisord
+/usr/share/tuleap/src/tuleap-cfg/tuleap-cfg.php site-deploy
 
-/opt/remi/php74/root/bin/php /usr/share/tuleap/tools/distlp/backend-svn/run.php
+systemctl enable tuleap \
+    httpd \
+    nginx \
+    tuleap-svn-updater \
+    tuleap-process-system-events-default.timer \
+    tuleap-launch-system-check.timer
 
-exec supervisord -n
+sed -i -e 's%// $sys_nb_backend_workers = 0;%$sys_nb_backend_workers = 1;%' /data/etc/tuleap/conf/local.inc
+
+exec /usr/sbin/init

@@ -23,17 +23,9 @@ namespace Tuleap\Configuration\Setup;
 
 use Psr\Log\LoggerInterface;
 use Tuleap\Configuration;
-use TuleapCfg\Command\SiteDeploy\Apache\LogrotateDeployer;
-use TuleapCfg\Command\SiteDeploy\FPM\SiteDeployFPM;
 
 class DistributedSVN
 {
-    public const OPT_REVERSE_PROXY = 'reverse-proxy';
-    public const OPT_BACKEND_SVN   = 'backend-svn';
-
-    public const PID_ONE_SYSTEMD     = 'systemd';
-    public const PID_ONE_SUPERVISORD = 'supervisord';
-
     /**
      * @var LoggerInterface
      */
@@ -57,80 +49,18 @@ class DistributedSVN
         $this->tuleap_conf_dir = $dir;
     }
 
-    public function main(array $options)
-    {
-        if (isset($options['h']) || isset($options['help'])) {
-            $this->help();
-            exit(0);
-        }
-        if (isset($options['tuleap-base-dir'])) {
-            $this->setTuleapBaseDir($options['tuleap-base-dir']);
-        }
-        if (isset($options['tuleap-conf-dir'])) {
-            $this->setTuleapConfDir($options['tuleap-conf-dir']);
-        }
-        if (isset($options['module'])) {
-            switch ($options['module']) {
-                case self::OPT_REVERSE_PROXY:
-                    $this->reverseProxy();
-                    exit(0);
-                    break;
-
-                case self::OPT_BACKEND_SVN:
-                    $this->backendSVN();
-                    exit(0);
-                    break;
-            }
-        }
-        $this->help();
-        exit(1);
-    }
-
-    public function backendSVN(): void
-    {
-        $vars = $this->getVars();
-
-        $fpm           = SiteDeployFPM::buildForPHP74($this->logger, $vars->getApplicationUser(), true);
-        $nginx         = new Configuration\Nginx\BackendSVN($this->logger, $vars->getApplicationBaseDir(), '/etc/nginx', $vars->getServerName());
-        $apache_config = new Configuration\Apache\BackendSVN($this->logger, $vars->getApplicationUser(), new LogrotateDeployer($this->logger));
-
-        $fpm->forceDeploy();
-        $nginx->configure();
-        $apache_config->configure();
-    }
-
     public function reverseProxy()
     {
-        $vars          = $this->getVars();
+        \ForgeConfig::loadFromFile($this->tuleap_conf_dir . '/conf/local.inc');
+
         $reverse_proxy = new Configuration\Nginx\ReverseProxy(
             $this->logger,
             $this->tuleap_base_dir,
             '/etc/nginx',
-            $vars->getServerName()
+            \ForgeConfig::get('sys_default_domain'),
         );
 
         $reverse_proxy->configure();
-    }
-
-    private function getVars()
-    {
-        $configuration_loader = new Configuration\Etc\LoadLocalInc($this->tuleap_conf_dir, $this->tuleap_base_dir);
-        return $configuration_loader->getVars();
-    }
-
-    private function help()
-    {
-        echo <<<EOT
-
-Usage: /usr/share/tuleap/tools/distlp/setup.sh OPTIONS --module=reverse-proxy|backend-svn
-
-Configuration of Tuleap for with Distributed SVN.
-
-Options:
-    --tuleap-base-dir=/path      Where Tuleap sources are available
-    --tuleap-conf-dir=/path      Where Tuleap configuration directory is available
-
-EOT;
     }
 
     private function setErrorHandler()

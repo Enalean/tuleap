@@ -63,10 +63,14 @@ class SiteDeployApache
             [
                 '/^Include conf\/ssl\.conf$/m',
                 '/^Listen .*$/m',
+                '/^User.*$/m',
+                '/^Group.*$/m',
             ],
             [
                 '#Include conf/ssl.conf',
                 'Listen 127.0.0.1:8080',
+                'User codendiadm',
+                'Group codendiadm',
             ],
             $httpd_conf
         );
