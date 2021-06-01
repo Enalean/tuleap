@@ -11,7 +11,7 @@ def runPHPUnitTests(String version, Boolean with_coverage = false) {
     if (with_coverage) {
         coverage_enabled='1'
     }
-    sh "make -C $WORKSPACE/sources phpunit-ci-${version} COVERAGE_ENABLED=${coverage_enabled}"
+    sh "make -C $WORKSPACE/sources phpunit-ci PHP_VERSION=${version} COVERAGE_ENABLED=${coverage_enabled}"
 }
 
 def runJestTests(String name, String path, Boolean with_coverage = false) {
