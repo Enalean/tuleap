@@ -28,6 +28,8 @@ use Tuleap\REST\Header;
 use Tuleap\Roadmap\NatureForRoadmapDao;
 use Tuleap\Roadmap\RoadmapWidgetDao;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkFieldValueDao;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\LinksRetriever;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenterFactory;
 use Tuleap\Tracker\Semantic\Progress\MethodBuilder;
@@ -78,12 +80,17 @@ final class RoadmapResource
     {
         $this->optionsTasks($id);
 
+        $tracker_artifact_factory   = \Tracker_ArtifactFactory::instance();
         $form_element_factory       = \Tracker_FormElementFactory::instance();
         $tracker_factory            = \TrackerFactory::instance();
         $semantic_timeframe_builder = new SemanticTimeframeBuilder(
             new SemanticTimeframeDao(),
             $form_element_factory,
-            $tracker_factory
+            $tracker_factory,
+            new LinksRetriever(
+                new ArtifactLinkFieldValueDao(),
+                $tracker_artifact_factory
+            )
         );
 
         $progress_dao = new SemanticProgressDao();
@@ -94,7 +101,7 @@ final class RoadmapResource
             new \URLVerification(),
             $tracker_factory,
             $semantic_timeframe_builder,
-            \Tracker_ArtifactFactory::instance(),
+            $tracker_artifact_factory,
             new DependenciesRetriever(new NatureForRoadmapDao()),
             new RoadmapTasksOutOfDateFilter(
                 new TaskOutOfDateDetector(
@@ -167,10 +174,15 @@ final class RoadmapResource
         $this->optionsIterations($id);
 
         $form_element_factory       = \Tracker_FormElementFactory::instance();
+        $tracker_artifact_factory   = \Tracker_ArtifactFactory::instance();
         $semantic_timeframe_builder = new SemanticTimeframeBuilder(
             new SemanticTimeframeDao(),
             $form_element_factory,
-            \TrackerFactory::instance()
+            \TrackerFactory::instance(),
+            new LinksRetriever(
+                new ArtifactLinkFieldValueDao(),
+                $tracker_artifact_factory
+            )
         );
 
         $retriever = new IterationsRetriever(
@@ -180,7 +192,7 @@ final class RoadmapResource
             new \URLVerification(),
             \TrackerFactory::instance(),
             $semantic_timeframe_builder,
-            \Tracker_ArtifactFactory::instance(),
+            $tracker_artifact_factory,
             \BackendLogger::getDefaultLogger()
         );
 

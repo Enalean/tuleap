@@ -29,6 +29,8 @@ use Tuleap\AgileDashboard\Planning\MilestoneBurndownFieldChecker;
 use Tuleap\AgileDashboard\Planning\NotFoundException;
 use Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkFieldValueDao;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\LinksRetriever;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao;
 
@@ -143,7 +145,11 @@ class Planning_MilestoneFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
             new SemanticTimeframeBuilder(
                 new SemanticTimeframeDao(),
                 $form_element_factory,
-                \TrackerFactory::instance()
+                \TrackerFactory::instance(),
+                new LinksRetriever(
+                    new ArtifactLinkFieldValueDao(),
+                    $artifact_factory
+                )
             ),
             BackendLogger::getDefaultLogger(),
             new MilestoneBurndownFieldChecker($form_element_factory)

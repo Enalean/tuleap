@@ -138,6 +138,8 @@ use Tuleap\Tracker\Creation\TrackerCreator;
 use Tuleap\Tracker\ForgeUserGroupPermission\TrackerAdminAllProjects;
 use Tuleap\Tracker\FormElement\BurndownCacheDateRetriever;
 use Tuleap\Tracker\FormElement\BurndownCalculator;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkFieldValueDao;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\LinksRetriever;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureConfigController;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureCreator;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
@@ -532,7 +534,11 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
                     new SemanticTimeframeBuilder(
                         new SemanticTimeframeDao(),
                         Tracker_FormElementFactory::instance(),
-                        \TrackerFactory::instance()
+                        \TrackerFactory::instance(),
+                        new LinksRetriever(
+                            new ArtifactLinkFieldValueDao(),
+                            \Tracker_ArtifactFactory::instance()
+                        )
                     ),
                     new BurndownFieldDao(),
                     new FieldCalculator(new BurndownCalculator(new ComputedFieldDao())),

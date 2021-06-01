@@ -63,6 +63,27 @@ class ArtifactLinkFieldValueDao extends FieldValueDao
         return $this->retrieve($sql);
     }
 
+    /**
+     * @psalm-return \DataAccessResult|false
+     */
+    public function searchReverseLinksByIdAndSourceTrackerId(int $artifact_id, int $source_tracker_id)
+    {
+        $artifact_id = $this->da->escapeInt($artifact_id);
+
+        $sql = "SELECT DISTINCT a.id as artifact_id
+                FROM tracker_changeset_value_artifactlink AS artlink
+                    JOIN tracker_changeset_value          AS cv ON (cv.id = artlink.changeset_value_id)
+                    JOIN tracker_artifact                 AS a  ON (a.last_changeset_id = cv.changeset_id)
+                    JOIN tracker                          AS t  ON (t.id = a.tracker_id)
+                    JOIN groups ON (groups.group_id = t.group_id)
+                WHERE artlink.artifact_id = $artifact_id
+                    AND tracker_id = $source_tracker_id
+                    AND t.deletion_date IS NULL
+                    AND groups.status = 'A'";
+
+        return $this->retrieve($sql);
+    }
+
     public function searchIsChildReverseLinksById($artifact_id)
     {
         $artifact_id = $this->da->escapeInt($artifact_id);

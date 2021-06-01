@@ -23,6 +23,8 @@ use Tuleap\AgileDashboard\Planning\Admin\AdditionalPlanningConfigurationWarnings
 use Tuleap\AgileDashboard\Planning\Admin\PlanningWarningPossibleMisconfigurationPresenter;
 use Tuleap\JiraImport\JiraAgile\ScrumTrackerStructureEvent;
 use Tuleap\Layout\IncludeAssets;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkFieldValueDao;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\LinksRetriever;
 use Tuleap\Tracker\Semantic\Status\Done\SemanticDone;
 use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneDao;
 use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneFactory;
@@ -267,7 +269,11 @@ class velocityPlugin extends Plugin // @codingStandardsIgnoreLine
         return new SemanticTimeframeBuilder(
             new SemanticTimeframeDao(),
             $form_element_factory,
-            \TrackerFactory::instance()
+            \TrackerFactory::instance(),
+            new LinksRetriever(
+                new ArtifactLinkFieldValueDao(),
+                \Tracker_ArtifactFactory::instance()
+            )
         );
     }
 

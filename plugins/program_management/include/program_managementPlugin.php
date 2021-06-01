@@ -118,8 +118,10 @@ use Tuleap\Tracker\Artifact\Event\ArtifactDeleted;
 use Tuleap\Tracker\Artifact\Event\ArtifactUpdated;
 use Tuleap\Tracker\Artifact\RedirectAfterArtifactCreationOrUpdateEvent;
 use Tuleap\Tracker\Artifact\Renderer\BuildArtifactFormActionEvent;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkFieldValueDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkUpdater;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkUpdaterDataFormater;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\LinksRetriever;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenterFactory;
 use Tuleap\Tracker\Masschange\TrackerMasschangeGetExternalActionsEvent;
 use Tuleap\Tracker\Masschange\TrackerMasschangeProcessExternalActionsEvent;
@@ -707,7 +709,11 @@ final class program_managementPlugin extends Plugin
                         new SemanticTimeframeBuilder(
                             $timeframe_dao,
                             $form_element_factory,
-                            \TrackerFactory::instance()
+                            \TrackerFactory::instance(),
+                            new LinksRetriever(
+                                new ArtifactLinkFieldValueDao(),
+                                \Tracker_ArtifactFactory::instance()
+                            )
                         )
                     )
                 ),

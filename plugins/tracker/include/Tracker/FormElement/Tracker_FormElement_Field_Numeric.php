@@ -20,6 +20,8 @@
  */
 
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkFieldValueDao;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\LinksRetriever;
 use Tuleap\Tracker\Semantic\Timeframe\ArtifactTimeframeHelper;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao;
@@ -421,7 +423,11 @@ abstract class Tracker_FormElement_Field_Numeric extends Tracker_FormElement_Fie
         $semantic_timeframe_builder = new SemanticTimeframeBuilder(
             new SemanticTimeframeDao(),
             $form_element_factory,
-            \TrackerFactory::instance()
+            \TrackerFactory::instance(),
+            new LinksRetriever(
+                new ArtifactLinkFieldValueDao(),
+                \Tracker_ArtifactFactory::instance()
+            )
         );
 
         return new ArtifactTimeframeHelper(

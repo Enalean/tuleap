@@ -45,6 +45,8 @@ use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\layout\NewDropdown\CurrentContextSectionToHeaderOptionsInserter;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupUGroupRepresentationBuilder;
 use Tuleap\Tracker\Artifact\RecentlyVisited\VisitRecorder;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkFieldValueDao;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\LinksRetriever;
 use Tuleap\Tracker\NewDropdown\TrackerNewDropdownLinkPresenterBuilder;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao;
@@ -185,7 +187,15 @@ class AgileDashboardRouterBuilder // phpcs:ignore PSR1.Classes.ClassDeclaration.
             ),
             $service_crumb_builder,
             $admin_crumb_builder,
-            new SemanticTimeframeBuilder(new SemanticTimeframeDao(), $form_element_factory, $tracker_factory),
+            new SemanticTimeframeBuilder(
+                new SemanticTimeframeDao(),
+                $form_element_factory,
+                $tracker_factory,
+                new LinksRetriever(
+                    new ArtifactLinkFieldValueDao(),
+                    $this->getArtifactFactory()
+                )
+            ),
             new CountElementsModeChecker(new ProjectsCountModeDao()),
             new DBTransactionExecutorWithConnection($db_connection),
             new ArtifactsInExplicitBacklogDao(),

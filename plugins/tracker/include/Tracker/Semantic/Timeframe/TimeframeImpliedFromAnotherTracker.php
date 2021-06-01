@@ -25,6 +25,9 @@ namespace Tuleap\Tracker\Semantic\Timeframe;
 use Psr\Log\LoggerInterface;
 use TimePeriodWithoutWeekEnd;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\LinksRetriever;
+use Tuleap\Tracker\Semantic\Timeframe\Exceptions\ArtifactHasNoLinkToArtifactOfTargetTracker;
+use Tuleap\Tracker\Semantic\Timeframe\Exceptions\ArtifactHasTooManyLinksToArtifactsOfTargetTracker;
 
 class TimeframeImpliedFromAnotherTracker implements IComputeTimeframes
 {
@@ -32,10 +35,14 @@ class TimeframeImpliedFromAnotherTracker implements IComputeTimeframes
 
     private SemanticTimeframe $semantic_timeframe_implied_from_tracker;
 
+    private LinksRetriever $links_retriever;
+
     public function __construct(
-        SemanticTimeframe $semantic_timeframe_implied_from_tracker
+        SemanticTimeframe $semantic_timeframe_implied_from_tracker,
+        LinksRetriever $links_retriever
     ) {
         $this->semantic_timeframe_implied_from_tracker = $semantic_timeframe_implied_from_tracker;
+        $this->links_retriever                         = $links_retriever;
     }
 
     public static function getName(): string
@@ -68,17 +75,65 @@ class TimeframeImpliedFromAnotherTracker implements IComputeTimeframes
 
     public function buildTimePeriodWithoutWeekendForArtifactForREST(Artifact $artifact, \PFUser $user, LoggerInterface $logger): TimePeriodWithoutWeekEnd
     {
-        return TimePeriodWithoutWeekEnd::buildFromNothing();
+        try {
+            $artifact_from_target_tracker = $this->getReverselyLinkedArtifactFromTracker($artifact, $user);
+            return $this->semantic_timeframe_implied_from_tracker->getTimeframeCalculator()
+                ->buildTimePeriodWithoutWeekendForArtifactForREST(
+                    $artifact_from_target_tracker,
+                    $user,
+                    $logger
+                );
+        } catch (
+            ArtifactHasTooManyLinksToArtifactsOfTargetTracker |
+            ArtifactHasNoLinkToArtifactOfTargetTracker $exception
+        ) {
+            $logger->error($exception->getMessage());
+
+            return TimePeriodWithoutWeekEnd::buildFromNothing();
+        }
     }
 
     public function buildTimePeriodWithoutWeekendForArtifact(Artifact $artifact, \PFUser $user, LoggerInterface $logger): TimePeriodWithoutWeekEnd
     {
-        return TimePeriodWithoutWeekEnd::buildFromNothing();
+        try {
+            $artifact_from_target_tracker = $this->getReverselyLinkedArtifactFromTracker($artifact, $user);
+            return $this->semantic_timeframe_implied_from_tracker->getTimeframeCalculator()
+                ->buildTimePeriodWithoutWeekendForArtifact(
+                    $artifact_from_target_tracker,
+                    $user,
+                    $logger
+                );
+        } catch (
+            ArtifactHasTooManyLinksToArtifactsOfTargetTracker |
+            ArtifactHasNoLinkToArtifactOfTargetTracker $exception
+        ) {
+            $logger->error($exception->getMessage());
+
+            return TimePeriodWithoutWeekEnd::buildFromNothing();
+        }
     }
 
+    /**
+     * @throws \Tracker_FormElement_Chart_Field_Exception
+     */
     public function buildTimePeriodWithoutWeekendForArtifactChartRendering(Artifact $artifact, \PFUser $user, LoggerInterface $logger): TimePeriodWithoutWeekEnd
     {
-        return TimePeriodWithoutWeekEnd::buildFromNothing();
+        try {
+            $artifact_from_target_tracker = $this->getReverselyLinkedArtifactFromTracker($artifact, $user);
+            return $this->semantic_timeframe_implied_from_tracker->getTimeframeCalculator()
+                ->buildTimePeriodWithoutWeekendForArtifactChartRendering(
+                    $artifact_from_target_tracker,
+                    $user,
+                    $logger
+                );
+        } catch (
+            ArtifactHasTooManyLinksToArtifactsOfTargetTracker |
+            ArtifactHasNoLinkToArtifactOfTargetTracker $exception
+        ) {
+            throw new \Tracker_FormElement_Chart_Field_Exception(
+                $exception->getMessage()
+            );
+        }
     }
 
     public function exportToXML(\SimpleXMLElement $root, array $xml_mapping): void
@@ -103,5 +158,26 @@ class TimeframeImpliedFromAnotherTracker implements IComputeTimeframes
     public function isDefined(): bool
     {
         return true;
+    }
+
+    /**
+     * @throws ArtifactHasTooManyLinksToArtifactsOfTargetTracker
+     * @throws ArtifactHasNoLinkToArtifactOfTargetTracker
+     */
+    private function getReverselyLinkedArtifactFromTracker(Artifact $artifact, \PFUser $user): Artifact
+    {
+        $implied_from_tracker       = $this->semantic_timeframe_implied_from_tracker->getTracker();
+        $reversely_linked_artifacts = $this->links_retriever->retrieveReverseLinksFromTracker($artifact, $user, $implied_from_tracker);
+        $nb_links                   = count($reversely_linked_artifacts);
+
+        if ($nb_links > 1) {
+            throw new ArtifactHasTooManyLinksToArtifactsOfTargetTracker($artifact, $implied_from_tracker);
+        }
+
+        if ($nb_links === 0) {
+            throw new ArtifactHasNoLinkToArtifactOfTargetTracker($artifact, $implied_from_tracker);
+        }
+
+        return $reversely_linked_artifacts[0];
     }
 }

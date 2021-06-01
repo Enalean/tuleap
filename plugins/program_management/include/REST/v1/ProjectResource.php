@@ -75,8 +75,10 @@ use Tuleap\Project\REST\UserGroupRetriever;
 use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkFieldValueDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkUpdater;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkUpdaterDataFormater;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\LinksRetriever;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDecoratorRetriever;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao;
@@ -154,7 +156,11 @@ final class ProjectResource extends AuthenticatedResource
                 new SemanticTimeframeBuilder(
                     new SemanticTimeframeDao(),
                     $form_element_factory,
-                    \TrackerFactory::instance()
+                    \TrackerFactory::instance(),
+                    new LinksRetriever(
+                        new ArtifactLinkFieldValueDao(),
+                        $artifact_factory
+                    )
                 ),
                 BackendLogger::getDefaultLogger()
             )

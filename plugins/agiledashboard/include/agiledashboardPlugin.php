@@ -122,6 +122,8 @@ use Tuleap\Tracker\Creation\JiraImporter\Import\JiraImporterExternalPluginsEvent
 use Tuleap\Tracker\Events\MoveArtifactGetExternalSemanticCheckers;
 use Tuleap\Tracker\Events\MoveArtifactParseFieldChangeNodes;
 use Tuleap\Tracker\FormElement\Event\MessageFetcherAdditionalWarnings;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkFieldValueDao;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\LinksRetriever;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStaticValueDao;
 use Tuleap\Tracker\FormElement\Field\ListFields\FieldValueMatcher;
 use Tuleap\Tracker\Masschange\TrackerMasschangeGetExternalActionsEvent;
@@ -1393,13 +1395,18 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
                 ];
                 break;
             case SystemEvent_BURNUP_GENERATE::class:
-                $params['class']        = SystemEvent_BURNUP_GENERATE::class;
-                $params['dependencies'] = [
-                    Tracker_ArtifactFactory::instance(),
+                $tracker_artifact_factory = Tracker_ArtifactFactory::instance();
+                $params['class']          = SystemEvent_BURNUP_GENERATE::class;
+                $params['dependencies']   = [
+                    $tracker_artifact_factory,
                     new SemanticTimeframeBuilder(
                         new SemanticTimeframeDao(),
                         Tracker_FormElementFactory::instance(),
-                        TrackerFactory::instance()
+                        TrackerFactory::instance(),
+                        new LinksRetriever(
+                            new ArtifactLinkFieldValueDao(),
+                            $tracker_artifact_factory
+                        )
                     ),
                     new BurnupDao(),
                     $this->getBurnupCalculator(),
