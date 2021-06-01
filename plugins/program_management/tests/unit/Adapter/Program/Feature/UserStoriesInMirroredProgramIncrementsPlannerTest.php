@@ -32,12 +32,12 @@ use Tuleap\ProgramManagement\Adapter\Program\Feature\Content\ContentDao;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\ArtifactsLinkedToParentDao;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\UserStoriesInMirroredProgramIncrementsPlanner;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\PrioritizeFeaturesPermissionVerifier;
-use Tuleap\ProgramManagement\Adapter\Team\MirroredMilestones\MirroredMilestoneRetriever;
+use Tuleap\ProgramManagement\Adapter\Team\MirroredTimeboxes\MirroredTimeboxRetriever;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Content\FeatureChange;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FieldData;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\ProgramIncrementChanged;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\CheckProgramIncrement;
-use Tuleap\ProgramManagement\Domain\Team\MirroredMilestone\MirroredMilestone;
+use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\MirroredTimebox;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 use Tuleap\Tracker\Artifact\Artifact;
@@ -58,7 +58,7 @@ final class UserStoriesInMirroredProgramIncrementsPlannerTest extends TestCase
     private $planner;
 
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|MirroredMilestoneRetriever
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|MirroredTimeboxRetriever
      */
     private $mirrored_milestone_retriever;
 
@@ -87,7 +87,7 @@ final class UserStoriesInMirroredProgramIncrementsPlannerTest extends TestCase
         $db_transaction_executor            = new DBTransactionExecutorPassthrough();
         $this->artifacts_linked_dao         = \Mockery::mock(ArtifactsLinkedToParentDao::class);
         $this->tracker_artifact_factory     = \Mockery::mock(Tracker_ArtifactFactory::class);
-        $this->mirrored_milestone_retriever = \Mockery::mock(MirroredMilestoneRetriever::class);
+        $this->mirrored_milestone_retriever = \Mockery::mock(MirroredTimeboxRetriever::class);
         $this->content_dao                  = \Mockery::mock(ContentDao::class);
 
         $this->planner = new UserStoriesInMirroredProgramIncrementsPlanner(
@@ -115,7 +115,7 @@ final class UserStoriesInMirroredProgramIncrementsPlannerTest extends TestCase
 
         $milestone_id = 666;
         $this->mirrored_milestone_retriever->shouldReceive('retrieveMilestonesLinkedTo')->with(1)
-            ->once()->andReturn([new MirroredMilestone($milestone_id)]);
+            ->once()->andReturn([new MirroredTimebox($milestone_id)]);
 
         $milestone = \Mockery::mock(Artifact::class);
         $milestone->shouldReceive('getId')->andReturn($milestone_id);
@@ -156,7 +156,7 @@ final class UserStoriesInMirroredProgramIncrementsPlannerTest extends TestCase
 
         $milestone_id = 666;
         $this->mirrored_milestone_retriever->shouldReceive('retrieveMilestonesLinkedTo')->with(1)
-            ->once()->andReturn([new MirroredMilestone($milestone_id)]);
+            ->once()->andReturn([new MirroredTimebox($milestone_id)]);
 
         $milestone = \Mockery::mock(Artifact::class);
         $milestone->shouldReceive('getAnArtifactLinkField')->andReturnNull();
@@ -183,7 +183,7 @@ final class UserStoriesInMirroredProgramIncrementsPlannerTest extends TestCase
 
         $milestone_id = 666;
         $this->mirrored_milestone_retriever->shouldReceive('retrieveMilestonesLinkedTo')->with(1)
-            ->once()->andReturn([new MirroredMilestone($milestone_id)]);
+            ->once()->andReturn([new MirroredTimebox($milestone_id)]);
 
         $this->tracker_artifact_factory->shouldReceive('getArtifactById')
             ->once()->with($milestone_id)->andReturn([]);
@@ -204,7 +204,7 @@ final class UserStoriesInMirroredProgramIncrementsPlannerTest extends TestCase
 
         $milestone_id = 666;
         $this->mirrored_milestone_retriever->shouldReceive('retrieveMilestonesLinkedTo')->with(1)
-            ->once()->andReturn([new MirroredMilestone($milestone_id)]);
+            ->once()->andReturn([new MirroredTimebox($milestone_id)]);
 
         $milestone = \Mockery::mock(Artifact::class);
         $milestone->shouldReceive('getId')->andReturn($milestone_id);

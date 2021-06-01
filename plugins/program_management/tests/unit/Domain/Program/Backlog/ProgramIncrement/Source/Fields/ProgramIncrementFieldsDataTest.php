@@ -34,6 +34,7 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fiel
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\ProgramIncrementFields;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFields;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\SubmissionDate;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\TimeboxArtifactLinkType;
 
 final class ProgramIncrementFieldsDataTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -57,7 +58,7 @@ final class ProgramIncrementFieldsDataTest extends \Tuleap\Test\PHPUnit\TestCase
 
         self::assertEquals(
             [
-                1001 => ['new_values' => '112', 'natures' => ['112' => ProgramIncrementArtifactLinkType::ART_LINK_SHORT_NAME]],
+                1001 => ['new_values' => '112', 'natures' => ['112' => TimeboxArtifactLinkType::ART_LINK_SHORT_NAME]],
                 1002 => 'Program Release',
                 1003 => ['content' => '<p>Description</p>', 'format' => 'html'],
                 1004 => [3001],

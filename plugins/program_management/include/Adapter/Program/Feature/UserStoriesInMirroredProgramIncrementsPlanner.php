@@ -27,7 +27,7 @@ use Tracker_NoChangeException;
 use Tuleap\DB\DBTransactionExecutor;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Content\ContentDao;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\ArtifactsLinkedToParentDao;
-use Tuleap\ProgramManagement\Adapter\Team\MirroredMilestones\MirroredMilestoneRetriever;
+use Tuleap\ProgramManagement\Adapter\Team\MirroredTimeboxes\MirroredTimeboxRetriever;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Content\FeaturePlanChange;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FieldData;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\PlanUserStoriesInMirroredProgramIncrements;
@@ -44,9 +44,9 @@ class UserStoriesInMirroredProgramIncrementsPlanner implements PlanUserStoriesIn
      */
     private $tracker_artifact_factory;
     /**
-     * @var MirroredMilestoneRetriever
+     * @var MirroredTimeboxRetriever
      */
-    private $mirrored_milestone_retriever;
+    private $mirrored_timebox_retriever;
     /**
      * @var ContentDao
      */
@@ -64,13 +64,13 @@ class UserStoriesInMirroredProgramIncrementsPlanner implements PlanUserStoriesIn
         DBTransactionExecutor $db_transaction_executor,
         ArtifactsLinkedToParentDao $artifacts_linked_to_parent_dao,
         \Tracker_ArtifactFactory $tracker_artifact_factory,
-        MirroredMilestoneRetriever $mirrored_milestone_retriever,
+        MirroredTimeboxRetriever $mirrored_timebox_retriever,
         ContentDao $content_dao,
         LoggerInterface $logger
     ) {
         $this->db_transaction_executor        = $db_transaction_executor;
         $this->tracker_artifact_factory       = $tracker_artifact_factory;
-        $this->mirrored_milestone_retriever   = $mirrored_milestone_retriever;
+        $this->mirrored_timebox_retriever     = $mirrored_timebox_retriever;
         $this->content_dao                    = $content_dao;
         $this->logger                         = $logger;
         $this->artifacts_linked_to_parent_dao = $artifacts_linked_to_parent_dao;
@@ -98,7 +98,7 @@ class UserStoriesInMirroredProgramIncrementsPlanner implements PlanUserStoriesIn
 
         $this->db_transaction_executor->execute(
             function () use ($feature_plan_change, $user, $program_increment_id) {
-                $program_increments = $this->mirrored_milestone_retriever->retrieveMilestonesLinkedTo($program_increment_id);
+                $program_increments = $this->mirrored_timebox_retriever->retrieveMilestonesLinkedTo($program_increment_id);
                 foreach ($program_increments as $mirrored_program_increment) {
                     $this->logger->info(sprintf("Found mirrored PI %d", $mirrored_program_increment->getId()));
                     $mirror_artifact = $this->tracker_artifact_factory->getArtifactById($mirrored_program_increment->getId());

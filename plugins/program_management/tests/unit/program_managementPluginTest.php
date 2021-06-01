@@ -21,7 +21,7 @@
 declare(strict_types=1);
 
 use Tuleap\Layout\ServiceUrlCollector;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementArtifactLinkType;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\TimeboxArtifactLinkType;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
@@ -34,17 +34,17 @@ final class program_managementPluginTest extends \Tuleap\Test\PHPUnit\TestCase
         $params  = ['natures' => &$natures];
         $plugin->getArtifactLinkNatures($params);
 
-        self::assertEquals([new ProgramIncrementArtifactLinkType()], $natures);
+        self::assertEquals([new TimeboxArtifactLinkType()], $natures);
     }
 
     public function testProvidesNaturePresenterWhenTheTypeIsExposedByThePlugin(): void
     {
         $plugin    = new program_managementPlugin(1);
         $presenter = null;
-        $params    = ['shortname' => ProgramIncrementArtifactLinkType::ART_LINK_SHORT_NAME, 'presenter' => &$presenter];
+        $params    = ['shortname' => TimeboxArtifactLinkType::ART_LINK_SHORT_NAME, 'presenter' => &$presenter];
         $plugin->getNaturePresenter($params);
 
-        self::assertEquals(new ProgramIncrementArtifactLinkType(), $presenter);
+        self::assertEquals(new TimeboxArtifactLinkType(), $presenter);
     }
 
     public function testDoesNotProvideNaturePresenterWhenTheTypeIsNotExposedByThePlugin(): void
@@ -64,7 +64,7 @@ final class program_managementPluginTest extends \Tuleap\Test\PHPUnit\TestCase
         $params  = ['natures' => &$natures];
         $plugin->trackerAddSystemNatures($params);
 
-        self::assertEquals([ProgramIncrementArtifactLinkType::ART_LINK_SHORT_NAME], $natures);
+        self::assertEquals([TimeboxArtifactLinkType::ART_LINK_SHORT_NAME], $natures);
     }
 
     public function testSetsItsServiceURL(): void

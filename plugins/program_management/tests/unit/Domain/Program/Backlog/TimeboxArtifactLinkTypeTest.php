@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2020 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2021 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,16 +20,16 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement;
+namespace Tuleap\ProgramManagement\Domain\Program\Backlog;
 
 
-final class MirroredMilestoneArtifactLinkTypeTest extends \Tuleap\Test\PHPUnit\TestCase
+final class TimeboxArtifactLinkTypeTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testHasAMirroredMilestoneArtifactLinkType(): void
     {
-        $art_link_type = new ProgramIncrementArtifactLinkType();
+        $art_link_type = new TimeboxArtifactLinkType();
 
-        self::assertEquals(ProgramIncrementArtifactLinkType::ART_LINK_SHORT_NAME, $art_link_type->shortname);
+        self::assertEquals(TimeboxArtifactLinkType::ART_LINK_SHORT_NAME, $art_link_type->shortname);
         self::assertTrue($art_link_type->is_system);
         self::assertFalse($art_link_type->is_visible);
     }

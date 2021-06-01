@@ -79,8 +79,8 @@ use Tuleap\ProgramManagement\Adapter\Program\PlanningAdapter;
 use Tuleap\ProgramManagement\Adapter\Program\ProgramDao;
 use Tuleap\ProgramManagement\Adapter\ProjectAdapter;
 use Tuleap\ProgramManagement\Adapter\ProjectAdmin\PermissionPerGroupSectionBuilder;
-use Tuleap\ProgramManagement\Adapter\Team\MirroredMilestones\MirroredMilestoneRetriever;
-use Tuleap\ProgramManagement\Adapter\Team\MirroredMilestones\MirroredMilestonesDao;
+use Tuleap\ProgramManagement\Adapter\Team\MirroredTimeboxes\MirroredTimeboxRetriever;
+use Tuleap\ProgramManagement\Adapter\Team\MirroredTimeboxes\MirroredTimeboxesDao;
 use Tuleap\ProgramManagement\Adapter\Team\TeamDao;
 use Tuleap\ProgramManagement\Adapter\Workspace\WorkspaceDAO;
 use Tuleap\ProgramManagement\DisplayProgramBacklogController;
@@ -90,11 +90,11 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck\TimeboxCreator
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\ProgramIncrementChanged;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Plan\ConfigurationChecker;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Plan\PlanCheckException;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementArtifactLinkType;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementCollectionFactory;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFieldFromProgramAndTeamTrackersCollectionBuilder;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\NatureAnalyzerException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Team\TeamProjectsCollectionBuilder;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\TimeboxArtifactLinkType;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\TopBacklogChangeProcessor;
 use Tuleap\ProgramManagement\Domain\Program\Plan\PlanTrackerException;
 use Tuleap\ProgramManagement\Domain\Program\ProgramTrackerException;
@@ -270,7 +270,7 @@ final class program_managementPlugin extends Plugin
      */
     public function getArtifactLinkNatures(array $params): void
     {
-        $params['natures'][] = new ProgramIncrementArtifactLinkType();
+        $params['natures'][] = new TimeboxArtifactLinkType();
     }
 
     /**
@@ -278,8 +278,8 @@ final class program_managementPlugin extends Plugin
      */
     public function getNaturePresenter(array $params): void
     {
-        if ($params['shortname'] === ProgramIncrementArtifactLinkType::ART_LINK_SHORT_NAME) {
-            $params['presenter'] = new ProgramIncrementArtifactLinkType();
+        if ($params['shortname'] === TimeboxArtifactLinkType::ART_LINK_SHORT_NAME) {
+            $params['presenter'] = new TimeboxArtifactLinkType();
         }
     }
 
@@ -288,7 +288,7 @@ final class program_managementPlugin extends Plugin
      */
     public function trackerAddSystemNatures(array $params): void
     {
-        $params['natures'][] = ProgramIncrementArtifactLinkType::ART_LINK_SHORT_NAME;
+        $params['natures'][] = TimeboxArtifactLinkType::ART_LINK_SHORT_NAME;
     }
 
     public function canSubmitNewArtifact(CanSubmitNewArtifact $can_submit_new_artifact): void
@@ -817,7 +817,7 @@ final class program_managementPlugin extends Plugin
             new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection()),
             new ArtifactsLinkedToParentDao(),
             $artifact_factory,
-            new MirroredMilestoneRetriever(new MirroredMilestonesDao()),
+            new MirroredTimeboxRetriever(new MirroredTimeboxesDao()),
             new ContentDao(),
             $this->getLogger()
         );
