@@ -44,9 +44,17 @@ class WebhookTuleapReferencesParser
         'fixing',
     ];
 
-    public const  RESOLVES_KEYWORD = "resolves";
-    public const  CLOSES_KEYWORD   = "closes";
-    public const  FIXES_KEYWORD    = "fixes";
+    private const IMPLEMENT_KEYWORDS = [
+        'implement',
+        'implements',
+        'implemented',
+        'implementing',
+    ];
+
+    public const  RESOLVES_KEYWORD   = "resolves";
+    public const  CLOSES_KEYWORD     = "closes";
+    public const  FIXES_KEYWORD      = "fixes";
+    public const  IMPLEMENTS_KEYWORD = "implements";
 
     public function extractCollectionOfTuleapReferences(
         string $message
@@ -66,6 +74,8 @@ class WebhookTuleapReferencesParser
                     $parsed_tuleap_references[] = new WebhookTuleapReference((int) $artifact_id, self::CLOSES_KEYWORD);
                 } elseif (in_array(strtolower($close_artifact_keyword), self::FIX_KEYWORDS) === true) {
                     $parsed_tuleap_references[] = new WebhookTuleapReference((int) $artifact_id, self::FIXES_KEYWORD);
+                } elseif (in_array(strtolower($close_artifact_keyword), self::IMPLEMENT_KEYWORDS) === true) {
+                    $parsed_tuleap_references[] = new WebhookTuleapReference((int) $artifact_id, self::IMPLEMENTS_KEYWORD);
                 } else {
                     $parsed_tuleap_references[] = new WebhookTuleapReference((int) $artifact_id, null);
                 }
@@ -85,6 +95,7 @@ class WebhookTuleapReferencesParser
             self::CLOSE_KEYWORDS,
             self::FIX_KEYWORDS,
             self::RESOLVE_KEYWORDS,
+            self::IMPLEMENT_KEYWORDS,
         );
 
         $regexp = implode(

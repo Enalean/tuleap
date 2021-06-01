@@ -211,4 +211,43 @@ final class PostPushTuleapArtifactCommentBuilderTest extends TestCase
         );
         self::assertEquals("tracker_isetta fixed by user with gitlab_commit #MyRepo/123aze", $comment);
     }
+
+    public function testReturnCommentWhenKeywordIsImplements(): void
+    {
+        $commit = new PostPushCommitWebhookData(
+            "123aze",
+            "commit",
+            "",
+            "branch_name",
+            1620725174,
+            "user@example.fr",
+            "user"
+        );
+
+        $reference   = new WebhookTuleapReference(12, "implements");
+        $integration = new GitlabRepositoryIntegration(
+            1,
+            12,
+            "MyRepo",
+            "",
+            "https://example",
+            new DateTimeImmutable(),
+            Project::buildForTest(),
+            false
+        );
+
+        $tracker = $this->createMock(Tracker::class);
+        $tracker->method('getItemName')->willReturn("tracker_isetta");
+        $artifact = $this->createMock(Artifact::class);
+        $artifact->method("getTracker")->willReturn($tracker);
+
+        $comment = PostPushTuleapArtifactCommentBuilder::buildComment(
+            "user",
+            $commit,
+            $reference,
+            $integration,
+            $artifact
+        );
+        self::assertEquals("implemented by user with gitlab_commit #MyRepo/123aze", $comment);
+    }
 }
