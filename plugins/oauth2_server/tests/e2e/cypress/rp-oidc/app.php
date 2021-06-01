@@ -31,8 +31,10 @@ use Amp\Socket\Server;
 use Amp\Socket\ServerTlsContext;
 use Http\Adapter\Guzzle7\Client;
 use Http\Client\Common\Plugin\LoggerPlugin;
-use Lcobucci\JWT\Parser;
+use Lcobucci\JWT\Encoding\JoseEncoder;
 use Lcobucci\JWT\Signer\Rsa\Sha256;
+use Lcobucci\JWT\Token\Parser;
+use Lcobucci\JWT\Validation\Validator;
 use Monolog\Logger;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\OAuth2Server\E2E\RelyingPartyOIDC\OAuth2AuthorizationCallbackController;
@@ -107,8 +109,9 @@ Amp\Loop::run(
                     ),
                     $client_credential_storage,
                     $configuration_storage,
-                    new Parser(),
+                    new Parser(new JoseEncoder()),
                     new Sha256(),
+                    new Validator(),
                     HTTPFactoryBuilder::requestFactory(),
                     HTTPFactoryBuilder::streamFactory()
                 )
