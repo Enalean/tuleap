@@ -119,13 +119,13 @@ $tlp-badge-padding: calc(5px - 1px * var(--tlp-is-condensed)) var(--tlp-small-sp
     background: var(--tlp-ui-success);
 
     &.tlp-badge-outline {
-        border: 1px solid var(--tlp-ui-success-color-transparent-40);
-        background: var(--tlp-ui-success-color-transparent-90);
+        border: 1px solid var(--tlp-ui-success-transparent-40);
+        background: var(--tlp-ui-success-transparent-90);
         color: var(--tlp-ui-success);
 
         &.tlp-badge-on-dark-background {
             border: 1px solid var(--tlp-ui-success-lighter-15);
-            background: var(--tlp-ui-success-color-transparent-85);
+            background: var(--tlp-ui-success-transparent-85);
             color: var(--tlp-ui-success-lighter-35);
         }
     }
@@ -157,13 +157,13 @@ $tlp-badge-padding: calc(5px - 1px * var(--tlp-is-condensed)) var(--tlp-small-sp
     background: var(--tlp-ui-danger);
 
     &.tlp-badge-outline {
-        border: 1px solid var(--tlp-ui-danger-color-transparent-40);
-        background: var(--tlp-ui-danger-color-transparent-90);
+        border: 1px solid var(--tlp-ui-danger-transparent-40);
+        background: var(--tlp-ui-danger-transparent-90);
         color: var(--tlp-ui-danger);
 
         &.tlp-badge-on-dark-background {
             border: 1px solid var(--tlp-ui-danger-on-dark-background);
-            background: var(--tlp-ui-danger-color-transparent-85);
+            background: var(--tlp-ui-danger-transparent-85);
             color: var(--tlp-ui-danger-lighter-40);
         }
     }

@@ -20,8 +20,8 @@
 @import 'files-uploads-modal';
 @import 'dragndrop';
 
-$document-upload-animation-color: var(--tlp-ui-success-color-transparent-90);
-$document-upload-animation-secondary-color: var(--tlp-ui-success-color-transparent-95);
+$document-upload-animation-color: var(--tlp-ui-success-transparent-90);
+$document-upload-animation-secondary-color: var(--tlp-ui-success-transparent-95);
 $progress-bar-background-color: var(--tlp-ui-border-normal);
 
 /* stylelint-disable selector-no-qualifying-type */
@@ -54,8 +54,8 @@ $progress-bar-background-color: var(--tlp-ui-border-normal);
     border-bottom: 1px solid var(--tlp-ui-border-light);
 
     &.document-dragndrop-file-upload-error {
-        border-bottom: 1px solid var(--tlp-ui-danger-color-transparent-90);
-        background-color: var(--tlp-ui-danger-color-transparent-90);
+        border-bottom: 1px solid var(--tlp-ui-danger-transparent-90);
+        background-color: var(--tlp-ui-danger-transparent-90);
     }
 
     &:last-child {
@@ -83,8 +83,8 @@ $progress-bar-background-color: var(--tlp-ui-border-normal);
 }
 
 .tlp-table > tbody > tr.document-tree-item-hightlighted-forbidden > td {
-    border-bottom-color: var(--tlp-ui-danger-color-transparent-15);
-    background: var(--tlp-ui-danger-color-transparent-15);
+    border-bottom-color: var(--tlp-ui-danger-transparent-15);
+    background: var(--tlp-ui-danger-transparent-15);
 
     .document-folder-content-icon::before {
         content: '\f05e'; // fa-ban

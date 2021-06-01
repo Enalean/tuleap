@@ -104,14 +104,14 @@
         transition: border-color 75ms ease-in-out, background-color 75ms ease-in-out;
         animation: pulse 500ms ease-in-out;
         border-color: var(--tlp-ui-success);
-        background: var(--tlp-ui-success-color-transparent-90);
+        background: var(--tlp-ui-success-transparent-90);
     }
 
     &.created {
         transition: border-color 75ms ease-in-out, background-color 75ms ease-in-out;
         animation: pulse 500ms ease-in-out;
         border-color: var(--tlp-ui-success);
-        background: var(--tlp-ui-success-color-transparent-90);
+        background: var(--tlp-ui-success-transparent-90);
     }
 
     &:hover,

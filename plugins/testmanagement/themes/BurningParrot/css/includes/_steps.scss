@@ -18,7 +18,7 @@
     }
 
     &.passed {
-        background: var(--tlp-ui-success-color-transparent-90);
+        background: var(--tlp-ui-success-transparent-90);
 
         > .steps-step-description > .steps-step-expected {
             > div > .steps-step-expected-title {
@@ -32,7 +32,7 @@
     }
 
     &.failed {
-        background: var(--tlp-ui-danger-color-transparent-90);
+        background: var(--tlp-ui-danger-transparent-90);
 
         > .steps-step-description > .steps-step-expected {
             > div > .steps-step-expected-title {

@@ -91,7 +91,7 @@ kbd {
 
 .alert-success {
     border-left-color: var(--tlp-ui-success);
-    background: var(--tlp-ui-success-color-transparent-90);
+    background: var(--tlp-ui-success-transparent-90);
     color: var(--tlp-ui-success);
 }
 
@@ -103,7 +103,7 @@ kbd {
 
 .alert-error {
     border-left-color: var(--tlp-ui-danger);
-    background: var(--tlp-ui-danger-color-transparent-90);
+    background: var(--tlp-ui-danger-transparent-90);
     color: var(--tlp-ui-danger);
 }
 
@@ -455,7 +455,7 @@ legend {
     &.btn-danger {
         @include btn(
             var(--tlp-ui-danger),
-            var(--tlp-ui-danger-color-transparent-40),
+            var(--tlp-ui-danger-transparent-40),
             var(--tlp-ui-danger-darker-10),
             var(--tlp-ui-white)
         );
