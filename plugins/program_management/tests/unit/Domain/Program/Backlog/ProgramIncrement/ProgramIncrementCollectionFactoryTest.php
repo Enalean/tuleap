@@ -175,24 +175,6 @@ final class ProgramIncrementCollectionFactoryTest extends \Tuleap\Test\PHPUnit\T
         $this->builder->buildFromProgramProjectAndItsTeam($this->program_project_data, $teams, $user);
     }
 
-    public function testBuildFromTeamProjects(): void
-    {
-        $teams = new TeamProjectsCollection(
-            [$this->first_team_project_data, $this->second_team_project_data]
-        );
-        $user  = UserTestBuilder::aUser()->build();
-
-        $first_tracker_id = 1024;
-        $this->mockRootPlanning($first_tracker_id, $this->team_project_id, $user);
-        $second_tracker_id = 2048;
-        $this->mockRootPlanning($second_tracker_id, 123, $user);
-
-        $trackers = $this->builder->buildFromTeamProjects($teams, $user);
-        $ids      = $trackers->getTrackerIds();
-        self::assertContains($first_tracker_id, $ids);
-        self::assertContains($second_tracker_id, $ids);
-    }
-
     private function mockRootPlanning(int $tracker_id, int $project_id, \PFUser $user): void
     {
         $project           = new Project(

@@ -22,7 +22,11 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog;
 
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\PlanningHasNoProgramIncrementException;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Team\TeamProjectsCollection;
+use Tuleap\ProgramManagement\Domain\Program\PlanningConfiguration\TopPlanningNotFoundInProjectException;
 use Tuleap\ProgramManagement\Domain\ProgramTracker;
+use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\RetrieveRootPlanningMilestoneTracker;
 
 final class TrackerCollection
 {
@@ -30,14 +34,30 @@ final class TrackerCollection
      * @var ProgramTracker[]
      * @psalm-readonly
      */
-    private $milestone_tracker_collection;
+    private $mirrored_timebox_trackers;
 
     /**
-     * @param ProgramTracker[] $program_increment_tracker
+     * @param ProgramTracker[] $mirrored_timebox_trackers
      */
-    public function __construct(array $program_increment_tracker)
+    private function __construct(array $mirrored_timebox_trackers)
     {
-        $this->milestone_tracker_collection = $program_increment_tracker;
+        $this->mirrored_timebox_trackers = $mirrored_timebox_trackers;
+    }
+
+    /**
+     * @throws TopPlanningNotFoundInProjectException
+     * @throws PlanningHasNoProgramIncrementException
+     */
+    public static function buildRootPlanningMilestoneTrackers(
+        RetrieveRootPlanningMilestoneTracker $retriever,
+        TeamProjectsCollection $teams,
+        \PFUser $user
+    ): self {
+        $trackers = [];
+        foreach ($teams->getTeamProjects() as $team) {
+            $trackers[] = ProgramTracker::buildMilestoneTrackerFromRootPlanning($retriever, $team, $user);
+        }
+        return new self($trackers);
     }
 
     /**
@@ -47,10 +67,8 @@ final class TrackerCollection
     public function getTrackerIds(): array
     {
         return array_map(
-            static function (ProgramTracker $tracker) {
-                return $tracker->getTrackerId();
-            },
-            $this->milestone_tracker_collection
+            static fn(ProgramTracker $tracker) => $tracker->getTrackerId(),
+            $this->mirrored_timebox_trackers
         );
     }
 
@@ -60,12 +78,12 @@ final class TrackerCollection
      */
     public function getTrackers(): array
     {
-        return $this->milestone_tracker_collection;
+        return $this->mirrored_timebox_trackers;
     }
 
     public function canUserSubmitAnArtifactInAllTrackers(\PFUser $user): bool
     {
-        foreach ($this->milestone_tracker_collection as $milestone_tracker) {
+        foreach ($this->mirrored_timebox_trackers as $milestone_tracker) {
             if (! $milestone_tracker->userCanSubmitArtifact($user)) {
                 return false;
             }

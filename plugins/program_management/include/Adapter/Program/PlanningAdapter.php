@@ -27,8 +27,9 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\PlanningHas
 use Tuleap\ProgramManagement\Domain\Program\BuildPlanning;
 use Tuleap\ProgramManagement\Domain\Program\PlanningConfiguration\TopPlanningNotFoundInProjectException;
 use Tuleap\ProgramManagement\Domain\Project;
+use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\RetrieveRootPlanningMilestoneTracker;
 
-final class PlanningAdapter implements BuildPlanning
+final class PlanningAdapter implements BuildPlanning, RetrieveRootPlanningMilestoneTracker
 {
     /**
      * @var \PlanningFactory
@@ -65,5 +66,11 @@ final class PlanningAdapter implements BuildPlanning
     public function getProjectFromPlanning(\Planning $root_planning): Project
     {
         return ProjectAdapter::build($root_planning->getPlanningTracker()->getProject());
+    }
+
+    public function retrieveRootPlanningMilestoneTracker(Project $project, \PFUser $user): \Tracker
+    {
+        $root_planning = $this->getRootPlanning($user, $project->getId());
+        return $root_planning->getPlanningTracker();
     }
 }

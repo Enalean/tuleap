@@ -24,14 +24,16 @@ namespace Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck;
 
 use PFUser;
 use Psr\Log\LoggerInterface;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\TrackerRetrievalException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\FieldSynchronizationException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFieldFromProgramAndTeamTrackersCollectionBuilder;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Team\TeamProjectsCollectionBuilder;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\TrackerCollection;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TrackerCollectionFactory;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\TrackerRetrievalException;
 use Tuleap\ProgramManagement\Domain\Program\PlanningConfiguration\PlanningNotFoundException;
 use Tuleap\ProgramManagement\Domain\ProgramTracker;
 use Tuleap\ProgramManagement\Domain\Project;
+use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\RetrieveRootPlanningMilestoneTracker;
 
 class TimeboxCreatorChecker
 {
@@ -65,6 +67,8 @@ class TimeboxCreatorChecker
      */
     private $logger;
 
+    private RetrieveRootPlanningMilestoneTracker $root_milestone_retriever;
+
     public function __construct(
         TeamProjectsCollectionBuilder $team_projects_collection_builder,
         TrackerCollectionFactory $scale_tracker_factory,
@@ -72,7 +76,8 @@ class TimeboxCreatorChecker
         CheckSemantic $semantic_checker,
         CheckRequiredField $required_field_checker,
         CheckWorkflow $workflow_checker,
-        LoggerInterface $logger
+        LoggerInterface $logger,
+        RetrieveRootPlanningMilestoneTracker $root_milestone_retriever
     ) {
         $this->projects_builder         = $team_projects_collection_builder;
         $this->scale_trackers_factory   = $scale_tracker_factory;
@@ -81,6 +86,7 @@ class TimeboxCreatorChecker
         $this->required_field_checker   = $required_field_checker;
         $this->workflow_checker         = $workflow_checker;
         $this->logger                   = $logger;
+        $this->root_milestone_retriever = $root_milestone_retriever;
     }
 
     public function canTimeboxBeCreated(ProgramTracker $tracker_data, Project $project_data, PFUser $user): bool
@@ -104,7 +110,8 @@ class TimeboxCreatorChecker
                 $team_projects_collection,
                 $user
             );
-            $milestone_trackers             = $this->scale_trackers_factory->buildFromTeamProjects(
+            $team_trackers                  = TrackerCollection::buildRootPlanningMilestoneTrackers(
+                $this->root_milestone_retriever,
                 $team_projects_collection,
                 $user
             );
@@ -112,12 +119,12 @@ class TimeboxCreatorChecker
             $this->logger->error("Cannot retrieve all milestones", ['exception' => $exception]);
             return false;
         }
-        if (! $this->semantic_checker->areTrackerSemanticsWellConfigured($tracker_data, $milestone_trackers)) {
+        if (! $this->semantic_checker->areTrackerSemanticsWellConfigured($tracker_data, $team_trackers)) {
             $this->logger->error("Semantics are not well configured.");
 
             return false;
         }
-        if (! $milestone_trackers->canUserSubmitAnArtifactInAllTrackers($user)) {
+        if (! $team_trackers->canUserSubmitAnArtifactInAllTrackers($user)) {
             $this->logger->debug("User cannot submit an artifact in all team trackers.");
 
             return false;
@@ -136,7 +143,7 @@ class TimeboxCreatorChecker
 
         if (
             ! $this->required_field_checker->areRequiredFieldsOfTeamTrackersLimitedToTheSynchronizedFields(
-                $milestone_trackers,
+                $team_trackers,
                 $synchronized_fields_data_collection
             )
         ) {
@@ -146,7 +153,7 @@ class TimeboxCreatorChecker
 
         if (
             ! $this->workflow_checker->areWorkflowsNotUsedWithSynchronizedFieldsInTeamTrackers(
-                $milestone_trackers,
+                $team_trackers,
                 $synchronized_fields_data_collection
             )
         ) {

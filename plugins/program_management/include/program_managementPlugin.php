@@ -692,11 +692,12 @@ final class program_managementPlugin extends Plugin
         $timeframe_dao           = new \Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao();
         $semantic_status_factory = new Tracker_Semantic_StatusFactory();
         $logger                  = $this->getLogger();
+        $planning_adapter        = new PlanningAdapter(\PlanningFactory::build());
 
         return new TimeboxCreatorChecker(
             $this->getTeamProjectCollectionBuilder(),
             new ProgramIncrementCollectionFactory(
-                $this->getPlanningAdapter(),
+                $planning_adapter,
                 $this->getPlanConfigurationBuilder()
             ),
             new SynchronizedFieldFromProgramAndTeamTrackersCollectionBuilder(
@@ -728,18 +729,14 @@ final class program_managementPlugin extends Plugin
                 new Tracker_Rule_List_Dao(),
                 $logger
             ),
-            $logger
+            $logger,
+            $planning_adapter
         );
     }
 
     private function getLogger(): \Psr\Log\LoggerInterface
     {
         return BackendLogger::getDefaultLogger("program_management_syslog");
-    }
-
-    private function getPlanningAdapter(): PlanningAdapter
-    {
-        return new PlanningAdapter(\PlanningFactory::build());
     }
 
     private function getTeamProjectCollectionBuilder(): TeamProjectsCollectionBuilder

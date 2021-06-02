@@ -22,13 +22,12 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement;
 
-use Tuleap\ProgramManagement\Domain\Program\Backlog\TrackerCollection;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\TrackerRetrievalException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Plan\BuildPlanProgramIncrementConfiguration;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Plan\PlanCheckException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\SourceTrackerCollection;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Team\TeamProjectsCollection;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TrackerCollectionFactory;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\TrackerRetrievalException;
 use Tuleap\ProgramManagement\Domain\Program\BuildPlanning;
 use Tuleap\ProgramManagement\Domain\Program\Plan\PlanTrackerException;
 use Tuleap\ProgramManagement\Domain\Program\PlanningConfiguration\Planning;
@@ -91,21 +90,5 @@ class ProgramIncrementCollectionFactory implements TrackerCollectionFactory
         $root_planning = Planning::buildPlanning($this->planning_adapter, $user, $project->getID());
 
         return $root_planning->getPlanningTracker();
-    }
-
-    /**
-     * @throws PlanningNotFoundException
-     * @throws TrackerRetrievalException
-     */
-    public function buildFromTeamProjects(
-        TeamProjectsCollection $team_projects_collection,
-        \PFUser $user
-    ): TrackerCollection {
-        $trackers = [];
-        foreach ($team_projects_collection->getTeamProjects() as $team_projects) {
-            $trackers[] = $this->getPlannableTracker($user, $team_projects);
-        }
-
-        return new TrackerCollection($trackers);
     }
 }

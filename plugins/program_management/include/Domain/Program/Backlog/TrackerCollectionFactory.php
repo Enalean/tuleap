@@ -45,13 +45,4 @@ interface TrackerCollectionFactory
         TeamProjectsCollection $team_projects_collection,
         \PFUser $user
     ): SourceTrackerCollection;
-
-    /**
-     * @throws PlanningNotFoundException
-     * @throws TrackerRetrievalException
-     */
-    public function buildFromTeamProjects(
-        TeamProjectsCollection $team_projects_collection,
-        \PFUser $user
-    ): TrackerCollection;
 }

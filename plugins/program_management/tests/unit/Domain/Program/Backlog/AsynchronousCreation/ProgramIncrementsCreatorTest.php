@@ -22,12 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation;
 
-use Mockery as M;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\SynchronizedFieldsAdapter;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ArtifactCreationException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\CreateArtifact;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Artifact;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\ArtifactLinkValue;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\DescriptionValue;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\EndPeriodValue;
@@ -40,38 +36,35 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fiel
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\Field;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFields;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\SubmissionDate;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Team\TeamProjectsCollection;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TrackerCollection;
-use Tuleap\ProgramManagement\Domain\ProgramTracker;
+use Tuleap\ProgramManagement\Domain\Project;
+use Tuleap\ProgramManagement\Stub\RetrieveRootPlanningMilestoneTrackerStub;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 
 final class ProgramIncrementsCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
+    private ProgramIncrementsCreator $mirrors_creator;
     /**
-     * @var ProgramIncrementsCreator
-     */
-    private $mirrors_creator;
-    /**
-     * @var M\LegacyMockInterface|M\MockInterface|SynchronizedFieldsAdapter
+     * @var \PHPUnit\Framework\MockObject\MockObject|BuildSynchronizedFields
      */
     private $synchronized_fields_adapter;
     /**
-     * @var M\LegacyMockInterface|M\MockInterface|MapStatusByValue
-     */
-    private $status_mapper;
-    /**
-     * @var M\LegacyMockInterface|M\MockInterface|CreateArtifact
+     * @var \PHPUnit\Framework\MockObject\MockObject|CreateArtifact
      */
     private $artifact_creator;
+    /**
+     * @var \PHPUnit\Framework\MockObject\MockObject|MapStatusByValue
+     */
+    private $status_mapper;
 
     protected function setUp(): void
     {
         $transaction_executor              = new DBTransactionExecutorPassthrough();
-        $this->synchronized_fields_adapter = M::mock(BuildSynchronizedFields::class);
-        $this->artifact_creator            = M::mock(CreateArtifact::class);
-        $this->status_mapper               = M::mock(MapStatusByValue::class);
+        $this->synchronized_fields_adapter = $this->createMock(BuildSynchronizedFields::class);
+        $this->artifact_creator            = $this->createMock(CreateArtifact::class);
+        $this->status_mapper               = $this->createMock(MapStatusByValue::class);
         $this->mirrors_creator             = new ProgramIncrementsCreator(
             $transaction_executor,
             $this->synchronized_fields_adapter,
@@ -80,49 +73,49 @@ final class ProgramIncrementsCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
-    public function testItCreatesMirrorMilestones(): void
+    public function testItCreatesMirrorProgramIncrements(): void
     {
-        $copied_values       = $this->buildCopiedValues();
-        $first_team_project  = new \Project(['group_id' => '102']);
-        $test_tracker_data   = $this->buildTestTrackerData(8, $first_team_project);
-        $second_team_project = new \Project(['group_id' => '103']);
-        $second_tracker_data = $this->buildTestTrackerData(9, $second_team_project);
-        $trackers            = new TrackerCollection([$test_tracker_data, $second_tracker_data]);
-        $current_user        = UserTestBuilder::aUser()->build();
+        $copied_values = $this->buildCopiedValues();
+        $first_team    = new Project(101, 'team_blue', 'Team Blue');
+        $second_team   = new Project(102, 'team_red', 'Team Red');
+        $teams         = new TeamProjectsCollection([$first_team, $second_team]);
+        $current_user  = UserTestBuilder::aUser()->build();
+        $retriever     = RetrieveRootPlanningMilestoneTrackerStub::withValidTrackerIds(1024, 2048);
+        $trackers      = TrackerCollection::buildRootPlanningMilestoneTrackers($retriever, $teams, $current_user);
 
-        $this->synchronized_fields_adapter->shouldReceive('build')
-            ->with($test_tracker_data)
-            ->andReturn($this->buildSynchronizedFields(1001, 1002, 1003, 1004, 1005, 1006));
-        $this->synchronized_fields_adapter->shouldReceive('build')
-            ->with($second_tracker_data)
-            ->andReturn($this->buildSynchronizedFields(2001, 2002, 2003, 2004, 2005, 2006));
-        $this->status_mapper->shouldReceive('mapStatusValueByDuckTyping')
-            ->andReturns($this->buildMappedValue(5000), $this->buildMappedValue(6000));
-        $this->artifact_creator->shouldReceive('create')
-            ->once()
-            ->with($test_tracker_data, M::any(), $current_user, $copied_values->getSubmittedOn())
-            ->andReturn(new Artifact(201, 123456789));
-        $this->artifact_creator->shouldReceive('create')
-            ->once()
-            ->with($second_tracker_data, M::any(), $current_user, $copied_values->getSubmittedOn())
-            ->andReturn(new Artifact(202, 123456789));
+        [$first_tracker, $second_tracker] = $trackers->getTrackers();
+
+        $first_synchronized_fields  = $this->buildSynchronizedFields(1001, 1002, 1003, 1004, 1005, 1006);
+        $second_synchronized_fields = $this->buildSynchronizedFields(2001, 2002, 2003, 2004, 2005, 2006);
+        $this->synchronized_fields_adapter->method('build')
+            ->willReturnOnConsecutiveCalls($first_synchronized_fields, $second_synchronized_fields);
+
+        $this->status_mapper->method('mapStatusValueByDuckTyping')
+            ->willReturnOnConsecutiveCalls($this->buildMappedValue(5000), $this->buildMappedValue(6000));
+        $this->artifact_creator->expects(self::atLeast(2))
+            ->method('create')
+            ->withConsecutive(
+                [$first_tracker, self::anything(), $current_user, $copied_values->getSubmittedOn()],
+                [$second_tracker, self::anything(), $current_user, $copied_values->getSubmittedOn()]
+            );
 
         $this->mirrors_creator->createProgramIncrements($copied_values, $trackers, $current_user);
     }
 
     public function testItThrowsWhenThereIsAnErrorDuringCreation(): void
     {
-        $copied_values  = $this->buildCopiedValues();
-        $a_team_project = new \Project(['group_id' => '110']);
-        $tracker        = $this->buildTestTrackerData(10, $a_team_project);
-        $trackers       = new TrackerCollection([$tracker]);
-        $current_user   = UserTestBuilder::aUser()->build();
+        $copied_values = $this->buildCopiedValues();
+        $a_team        = new Project(101, 'team_blue', 'Team Blue');
+        $teams         = new TeamProjectsCollection([$a_team]);
+        $current_user  = UserTestBuilder::aUser()->build();
+        $retriever     = RetrieveRootPlanningMilestoneTrackerStub::withValidTrackerIds(1024, 2048);
+        $trackers      = TrackerCollection::buildRootPlanningMilestoneTrackers($retriever, $teams, $current_user);
 
-        $this->synchronized_fields_adapter->shouldReceive('build')
-            ->andReturn($this->buildSynchronizedFields(1001, 1002, 1003, 1004, 1005, 1006));
-        $this->status_mapper->shouldReceive('mapStatusValueByDuckTyping')
-            ->andReturn($this->buildMappedValue(5000));
-        $this->artifact_creator->shouldReceive('create')->andThrow(new ArtifactCreationException());
+        $this->synchronized_fields_adapter->method('build')
+            ->willReturn($this->buildSynchronizedFields(1001, 1002, 1003, 1004, 1005, 1006));
+        $this->status_mapper->method('mapStatusValueByDuckTyping')
+            ->willReturn($this->buildMappedValue(5000));
+        $this->artifact_creator->method('create')->willThrowException(new ArtifactCreationException());
 
         $this->expectException(ProgramIncrementArtifactCreationException::class);
         $this->mirrors_creator->createProgramIncrements($copied_values, $trackers, $current_user);
@@ -150,29 +143,6 @@ final class ProgramIncrementsCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             $end_period_value,
             $artifact_link_value
         );
-    }
-
-    private function buildTestTrackerData(int $tracker_id, \Project $project): ProgramTracker
-    {
-        $tracker = new \Tracker(
-            $tracker_id,
-            $project->getID(),
-            'Irrelevant',
-            'Irrelevant',
-            'irrelevant',
-            false,
-            null,
-            null,
-            null,
-            null,
-            true,
-            false,
-            \Tracker::NOTIFICATIONS_LEVEL_DEFAULT,
-            \Tuleap\Tracker\TrackerColor::default(),
-            false
-        );
-        $tracker->setProject($project);
-        return new ProgramTracker($tracker);
     }
 
     private function buildSynchronizedFields(

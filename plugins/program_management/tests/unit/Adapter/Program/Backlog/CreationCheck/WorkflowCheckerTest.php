@@ -22,42 +22,38 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\CreationCheck;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Psr\Log\NullLogger;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\Field;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFieldFromProgramAndTeamTrackers;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFieldFromProgramAndTeamTrackersCollection;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFields;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Team\TeamProjectsCollection;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TrackerCollection;
-use Tuleap\ProgramManagement\Domain\ProgramTracker;
-use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
+use Tuleap\ProgramManagement\Domain\Project;
+use Tuleap\ProgramManagement\Stub\RetrieveRootPlanningMilestoneTrackerStub;
+use Tuleap\Test\Builders\UserTestBuilder;
 
 final class WorkflowCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
+    private WorkflowChecker $checker;
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|\Workflow_Dao
+     * @var \PHPUnit\Framework\MockObject\MockObject|\Workflow_Dao
      */
     private $workflow_dao;
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|\Tracker_Rule_Date_Dao
+     * @var \PHPUnit\Framework\MockObject\MockObject|\Tracker_Rule_Date_Dao
      */
     private $rule_date_dao;
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|\Tracker_Rule_List_Dao
+     * @var \PHPUnit\Framework\MockObject\MockObject|\Tracker_Rule_List_Dao
      */
     private $rule_list_dao;
-    /**
-     * @var WorkflowChecker
-     */
-    private $checker;
 
     protected function setUp(): void
     {
-        $this->workflow_dao  = \Mockery::mock(\Workflow_Dao::class);
-        $this->rule_date_dao = \Mockery::mock(\Tracker_Rule_Date_Dao::class);
-        $this->rule_list_dao = \Mockery::mock(\Tracker_Rule_List_Dao::class);
+        $this->workflow_dao  = $this->createMock(\Workflow_Dao::class);
+        $this->rule_date_dao = $this->createMock(\Tracker_Rule_Date_Dao::class);
+        $this->rule_list_dao = $this->createMock(\Tracker_Rule_List_Dao::class);
         $this->checker       = new WorkflowChecker(
             $this->workflow_dao,
             $this->rule_date_dao,
@@ -68,17 +64,22 @@ final class WorkflowCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testConsiderTrackerTeamsAreValidWhenAllRulesAreVerified(): void
     {
-        $this->workflow_dao->shouldReceive('searchWorkflowsByFieldIDsAndTrackerIDs')->andReturn([]);
-        $this->rule_date_dao->shouldReceive('searchTrackersWithRulesByFieldIDsAndTrackerIDs')->andReturn([]);
-        $this->rule_list_dao->shouldReceive('searchTrackersWithRulesByFieldIDsAndTrackerIDs')->andReturn([]);
+        $this->workflow_dao->method('searchWorkflowsByFieldIDsAndTrackerIDs')->willReturn([]);
+        $this->rule_date_dao->method('searchTrackersWithRulesByFieldIDsAndTrackerIDs')->willReturn([]);
+        $this->rule_list_dao->method('searchTrackersWithRulesByFieldIDsAndTrackerIDs')->willReturn([]);
+
+        $teams     = new TeamProjectsCollection([]);
+        $retriever = RetrieveRootPlanningMilestoneTrackerStub::withValidTrackerIds(123);
+        $user      = UserTestBuilder::aUser()->build();
+        $trackers  = TrackerCollection::buildRootPlanningMilestoneTrackers($retriever, $teams, $user);
 
         $synchronized_fields = $this->buildSynchronizedFieldsCollectionFromProgramAndTeam();
         $collection          = new SynchronizedFieldFromProgramAndTeamTrackersCollection(new NullLogger());
         $collection->add($synchronized_fields);
 
-        $this->assertTrue(
+        self::assertTrue(
             $this->checker->areWorkflowsNotUsedWithSynchronizedFieldsInTeamTrackers(
-                new TrackerCollection([]),
+                $trackers,
                 new SynchronizedFieldFromProgramAndTeamTrackersCollection(new NullLogger())
             )
         );
@@ -86,18 +87,23 @@ final class WorkflowCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testRejectsWhenSomeWorkflowTransitionRulesAreDefinedWithASynchronizedField(): void
     {
-        $this->workflow_dao->shouldReceive('searchWorkflowsByFieldIDsAndTrackerIDs')->andReturn(
+        $this->workflow_dao->method('searchWorkflowsByFieldIDsAndTrackerIDs')->willReturn(
             [['tracker_id' => 758, 'field_id' => 963]]
         );
 
-        $tracker             = TrackerTestBuilder::aTracker()->withId(758)->withProject(new \Project(['group_id' => 147]))->build();
+        $team      = new Project(147, 'team_blue', 'Team Blue');
+        $teams     = new TeamProjectsCollection([$team]);
+        $retriever = RetrieveRootPlanningMilestoneTrackerStub::withValidTrackerIds(758);
+        $user      = UserTestBuilder::aUser()->build();
+        $trackers  = TrackerCollection::buildRootPlanningMilestoneTrackers($retriever, $teams, $user);
+
         $synchronized_fields = $this->buildSynchronizedFieldsCollectionFromProgramAndTeam();
         $collection          = new SynchronizedFieldFromProgramAndTeamTrackersCollection(new NullLogger());
         $collection->add($synchronized_fields);
 
-        $this->assertFalse(
+        self::assertFalse(
             $this->checker->areWorkflowsNotUsedWithSynchronizedFieldsInTeamTrackers(
-                new TrackerCollection([new ProgramTracker($tracker)]),
+                $trackers,
                 new SynchronizedFieldFromProgramAndTeamTrackersCollection(new NullLogger())
             )
         );
@@ -105,17 +111,22 @@ final class WorkflowCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testRejectsWhenSomeDateRulesAreDefinedWithASynchronizedField(): void
     {
-        $this->workflow_dao->shouldReceive('searchWorkflowsByFieldIDsAndTrackerIDs')->andReturn([]);
-        $this->rule_date_dao->shouldReceive('searchTrackersWithRulesByFieldIDsAndTrackerIDs')->andReturn([758]);
+        $this->workflow_dao->method('searchWorkflowsByFieldIDsAndTrackerIDs')->willReturn([]);
+        $this->rule_date_dao->method('searchTrackersWithRulesByFieldIDsAndTrackerIDs')->willReturn([758]);
 
-        $tracker             = TrackerTestBuilder::aTracker()->withId(758)->withProject(new \Project(['group_id' => 147]))->build();
+        $team      = new Project(147, 'team_blue', 'Team Blue');
+        $teams     = new TeamProjectsCollection([$team]);
+        $retriever = RetrieveRootPlanningMilestoneTrackerStub::withValidTrackerIds(758);
+        $user      = UserTestBuilder::aUser()->build();
+        $trackers  = TrackerCollection::buildRootPlanningMilestoneTrackers($retriever, $teams, $user);
+
         $synchronized_fields = $this->buildSynchronizedFieldsCollectionFromProgramAndTeam();
         $collection          = new SynchronizedFieldFromProgramAndTeamTrackersCollection(new NullLogger());
         $collection->add($synchronized_fields);
 
-        $this->assertFalse(
+        self::assertFalse(
             $this->checker->areWorkflowsNotUsedWithSynchronizedFieldsInTeamTrackers(
-                new TrackerCollection([new ProgramTracker($tracker)]),
+                $trackers,
                 new SynchronizedFieldFromProgramAndTeamTrackersCollection(new NullLogger())
             )
         );
@@ -123,18 +134,23 @@ final class WorkflowCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testRejectsWhenSomeListRulesAreDefinedWithASynchronizedField(): void
     {
-        $this->workflow_dao->shouldReceive('searchWorkflowsByFieldIDsAndTrackerIDs')->andReturn([]);
-        $this->rule_date_dao->shouldReceive('searchTrackersWithRulesByFieldIDsAndTrackerIDs')->andReturn([]);
-        $this->rule_list_dao->shouldReceive('searchTrackersWithRulesByFieldIDsAndTrackerIDs')->andReturn([758]);
+        $this->workflow_dao->method('searchWorkflowsByFieldIDsAndTrackerIDs')->willReturn([]);
+        $this->rule_date_dao->method('searchTrackersWithRulesByFieldIDsAndTrackerIDs')->willReturn([]);
+        $this->rule_list_dao->method('searchTrackersWithRulesByFieldIDsAndTrackerIDs')->willReturn([758]);
 
-        $tracker             = TrackerTestBuilder::aTracker()->withId(758)->withProject(new \Project(['group_id' => 147]))->build();
+        $team      = new Project(147, 'team_blue', 'Team Blue');
+        $teams     = new TeamProjectsCollection([$team]);
+        $retriever = RetrieveRootPlanningMilestoneTrackerStub::withValidTrackerIds(758);
+        $user      = UserTestBuilder::aUser()->build();
+        $trackers  = TrackerCollection::buildRootPlanningMilestoneTrackers($retriever, $teams, $user);
+
         $synchronized_fields = $this->buildSynchronizedFieldsCollectionFromProgramAndTeam();
         $collection          = new SynchronizedFieldFromProgramAndTeamTrackersCollection(new NullLogger());
         $collection->add($synchronized_fields);
 
-        $this->assertFalse(
+        self::assertFalse(
             $this->checker->areWorkflowsNotUsedWithSynchronizedFieldsInTeamTrackers(
-                new TrackerCollection([new ProgramTracker($tracker)]),
+                $trackers,
                 new SynchronizedFieldFromProgramAndTeamTrackersCollection(new NullLogger())
             )
         );

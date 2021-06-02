@@ -22,22 +22,23 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog;
 
-use Mockery as M;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use Tuleap\ProgramManagement\Domain\ProgramTracker;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Team\TeamProjectsCollection;
+use Tuleap\ProgramManagement\Domain\Project;
+use Tuleap\ProgramManagement\Stub\RetrieveRootPlanningMilestoneTrackerStub;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class TrackerCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     public function testGetTrackerIdsReturnsTrackerIds(): void
     {
-        $first_tracker  = new ProgramTracker(TrackerTestBuilder::aTracker()->withId(78)->withProject(new \Project(['group_id' => 103]))->build());
-        $second_tracker = new ProgramTracker(TrackerTestBuilder::aTracker()->withId(57)->withProject(new \Project(['group_id' => 104]))->build());
+        $first_team  = new Project(103, 'team_blue', 'Team Blue');
+        $second_team = new Project(104, 'team_red', 'Team Red');
+        $teams       = new TeamProjectsCollection([$first_team, $second_team]);
+        $user        = UserTestBuilder::aUser()->build();
+        $retriever   = RetrieveRootPlanningMilestoneTrackerStub::withValidTrackerIds(78, 57);
 
-        $collection = new TrackerCollection([$first_tracker, $second_tracker]);
+        $collection = TrackerCollection::buildRootPlanningMilestoneTrackers($retriever, $teams, $user);
         $ids        = $collection->getTrackerIds();
         self::assertContains(78, $ids);
         self::assertContains(57, $ids);
@@ -45,58 +46,67 @@ final class TrackerCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testGetTrackerIdsReturnsEmpty(): void
     {
-        $collection = new TrackerCollection([]);
+        $user        = UserTestBuilder::aUser()->build();
+        $empty_teams = new TeamProjectsCollection([]);
+        $retriever   = RetrieveRootPlanningMilestoneTrackerStub::withValidTrackerIds(78);
+        $collection  = TrackerCollection::buildRootPlanningMilestoneTrackers($retriever, $empty_teams, $user);
         self::assertEmpty($collection->getTrackerIds());
     }
 
-    public function testGetMilestoneTrackersReturnTrackers(): void
+    public function testGetTrackersReturnTrackers(): void
     {
-        $first_tracker  = TrackerTestBuilder::aTracker()->withId(78)->withProject(new \Project(['group_id' => 103]))->build();
-        $second_tracker = TrackerTestBuilder::aTracker()->withId(57)->withProject(new \Project(['group_id' => 104]))->build();
+        $first_team     = new Project(103, 'team_blue', 'Team Blue');
+        $second_team    = new Project(104, 'team_red', 'Team Red');
+        $teams          = new TeamProjectsCollection([$first_team, $second_team]);
+        $user           = UserTestBuilder::aUser()->build();
+        $first_tracker  = TrackerTestBuilder::aTracker()->withId(78)->build();
+        $second_tracker = TrackerTestBuilder::aTracker()->withId(57)->build();
+        $retriever      = RetrieveRootPlanningMilestoneTrackerStub::withValidTrackers($first_tracker, $second_tracker);
 
-        $collection = new TrackerCollection([$first_tracker, $second_tracker]);
+        $collection = TrackerCollection::buildRootPlanningMilestoneTrackers($retriever, $teams, $user);
         $trackers   = $collection->getTrackers();
-        self::assertContains($first_tracker, $trackers);
-        self::assertContains($second_tracker, $trackers);
+        self::assertEquals($first_tracker, $trackers[0]->getFullTracker());
+        self::assertEquals($second_tracker, $trackers[1]->getFullTracker());
     }
 
-    public function testGetMilestoneTrackersReturnsEmpty(): void
+    public function testGetTrackersReturnsEmpty(): void
     {
-        $collection = new TrackerCollection([]);
+        $user        = UserTestBuilder::aUser()->build();
+        $empty_teams = new TeamProjectsCollection([]);
+        $retriever   = RetrieveRootPlanningMilestoneTrackerStub::withValidTrackerIds(78);
+        $collection  = TrackerCollection::buildRootPlanningMilestoneTrackers($retriever, $empty_teams, $user);
         self::assertEmpty($collection->getTrackers());
     }
 
     public function testCanUserSubmitAnArtifactInAllTrackersReturnsTrue(): void
     {
-        $first_team_tracker = M::mock(\Tracker::class);
-        $first_team_tracker->shouldReceive('userCanSubmitArtifact')->andReturnTrue();
-        $first_team_tracker->shouldReceive('getGroupId')->andReturn('963');
-        $second_team_tracker = M::mock(\Tracker::class);
-        $second_team_tracker->shouldReceive('userCanSubmitArtifact')->andReturnTrue();
-        $second_team_tracker->shouldReceive('getGroupId')->andReturn('789');
+        $first_team    = new Project(103, 'team_blue', 'Team Blue');
+        $second_team   = new Project(104, 'team_red', 'Team Red');
+        $teams         = new TeamProjectsCollection([$first_team, $second_team]);
+        $first_tracker = $this->createMock(\Tracker::class);
+        $first_tracker->method('userCanSubmitArtifact')->willReturn(true);
+        $second_tracker = $this->createMock(\Tracker::class);
+        $second_tracker->method('userCanSubmitArtifact')->willReturn(true);
+        $retriever = RetrieveRootPlanningMilestoneTrackerStub::withValidTrackers($first_tracker, $second_tracker);
+        $user      = UserTestBuilder::aUser()->build();
 
-        $user = UserTestBuilder::aUser()->build();
-
-        $collection = new TrackerCollection(
-            [$first_team_tracker, $second_team_tracker]
-        );
+        $collection = TrackerCollection::buildRootPlanningMilestoneTrackers($retriever, $teams, $user);
         self::assertTrue($collection->canUserSubmitAnArtifactInAllTrackers($user));
     }
 
     public function testCanUserSubmitAnArtifactInAllTrackersReturnsFalse(): void
     {
-        $first_team_tracker = M::mock(\Tracker::class);
-        $first_team_tracker->shouldReceive('userCanSubmitArtifact')->andReturnTrue();
-        $first_team_tracker->shouldReceive('getGroupId')->andReturn('963');
-        $second_team_tracker = M::mock(\Tracker::class);
-        $second_team_tracker->shouldReceive('userCanSubmitArtifact')->andReturnFalse();
-        $second_team_tracker->shouldReceive('getGroupId')->andReturn('789');
+        $first_team    = new Project(103, 'team_blue', 'Team Blue');
+        $second_team   = new Project(104, 'team_red', 'Team Red');
+        $teams         = new TeamProjectsCollection([$first_team, $second_team]);
+        $first_tracker = $this->createMock(\Tracker::class);
+        $first_tracker->method('userCanSubmitArtifact')->willReturn(true);
+        $second_tracker = $this->createMock(\Tracker::class);
+        $second_tracker->method('userCanSubmitArtifact')->willReturn(false);
+        $retriever = RetrieveRootPlanningMilestoneTrackerStub::withValidTrackers($first_tracker, $second_tracker);
+        $user      = UserTestBuilder::aUser()->build();
 
-        $user = UserTestBuilder::aUser()->build();
-
-        $collection = new TrackerCollection(
-            [$first_team_tracker, $second_team_tracker]
-        );
+        $collection = TrackerCollection::buildRootPlanningMilestoneTrackers($retriever, $teams, $user);
         self::assertFalse($collection->canUserSubmitAnArtifactInAllTrackers($user));
     }
 }

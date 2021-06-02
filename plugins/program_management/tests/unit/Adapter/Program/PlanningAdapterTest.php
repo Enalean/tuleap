@@ -22,29 +22,25 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program;
 
-use Mockery;
 use Planning;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\PlanningHasNoProgramIncrementException;
 use Tuleap\ProgramManagement\Domain\Program\PlanningConfiguration\TopPlanningNotFoundInProjectException;
+use Tuleap\ProgramManagement\Domain\Project;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class PlanningAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
+    private PlanningAdapter $adapter;
     /**
-     * @var PlanningAdapter
-     */
-    private $adapter;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|\PlanningFactory
+     * @var \PHPUnit\Framework\MockObject\MockObject|\PlanningFactory
      */
     private $planning_factory;
 
     protected function setUp(): void
     {
-        $this->planning_factory = Mockery::mock(\PlanningFactory::class);
+        $this->planning_factory = $this->createMock(\PlanningFactory::class);
         $this->adapter          = new PlanningAdapter($this->planning_factory);
     }
 
@@ -52,7 +48,7 @@ final class PlanningAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $user       = UserTestBuilder::aUser()->build();
         $project_id = 101;
-        $this->planning_factory->shouldReceive('getRootPlanning')->once()->andReturn(false);
+        $this->planning_factory->expects(self::once())->method('getRootPlanning')->willReturn(false);
 
         $this->expectException(TopPlanningNotFoundInProjectException::class);
         $this->adapter->getRootPlanning($user, $project_id);
@@ -60,10 +56,10 @@ final class PlanningAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testThrowExceptionIfRootPlanningHasNoPlanningTracker(): void
     {
-        $planning   = new Planning(1, "test", 101, "backlog title", "plan title", []);
-        $user       = UserTestBuilder::aUser()->build();
         $project_id = 101;
-        $this->planning_factory->shouldReceive('getRootPlanning')->once()->andReturn($planning);
+        $planning   = new Planning(1, 'test', $project_id, 'backlog title', 'plan title', []);
+        $user       = UserTestBuilder::aUser()->build();
+        $this->planning_factory->expects(self::once())->method('getRootPlanning')->willReturn($planning);
 
         $this->expectException(PlanningHasNoProgramIncrementException::class);
         $this->adapter->getRootPlanning($user, $project_id);
@@ -71,18 +67,32 @@ final class PlanningAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItBuildARootPlanning(): void
     {
-        $planning = new Planning(1, "test", 101, "backlog title", "plan title", []);
-        $project  = new \Project(
-            ['group_id' => 101, 'unix_group_name' => "project_name", 'group_name' => 'Public Name']
-        );
-        $tracker  = TrackerTestBuilder::aTracker()->withId(1)->withProject($project)->build();
+        $project_id = 101;
+        $planning   = new Planning(1, 'test', $project_id, 'backlog title', 'plan title', []);
+        $project    = ProjectTestBuilder::aProject()->withId($project_id)->build();
+        $tracker    = TrackerTestBuilder::aTracker()->withId(1)->withProject($project)->build();
         $planning->setPlanningTracker($tracker);
 
-        $this->planning_factory->shouldReceive('getRootPlanning')->once()->andReturn($planning);
+        $this->planning_factory->expects(self::once())->method('getRootPlanning')->willReturn($planning);
 
         $user       = UserTestBuilder::aUser()->build();
         $project_id = 101;
 
-        $this->assertEquals($planning, $this->adapter->getRootPlanning($user, $project_id));
+        self::assertEquals($planning, $this->adapter->getRootPlanning($user, $project_id));
+    }
+
+    public function testItRetrievesTheRootMilestoneTracker(): void
+    {
+        $project_id = 101;
+        $planning   = new Planning(1, 'test', $project_id, 'backlog title', 'plan title', []);
+        $project    = ProjectTestBuilder::aProject()->withId($project_id)->build();
+        $tracker    = TrackerTestBuilder::aTracker()->withId(1)->withProject($project)->build();
+        $planning->setPlanningTracker($tracker);
+
+        $this->planning_factory->expects(self::once())->method('getRootPlanning')->willReturn($planning);
+
+        $user            = UserTestBuilder::aUser()->build();
+        $wrapper_project = new Project($project_id, 'team_blue', 'Team Blue');
+        self::assertSame($tracker, $this->adapter->retrieveRootPlanningMilestoneTracker($wrapper_project, $user));
     }
 }
