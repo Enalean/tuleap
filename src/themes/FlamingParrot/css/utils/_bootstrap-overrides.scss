@@ -394,7 +394,7 @@ legend {
 
 @mixin dropdown-menu($color) {
     &:not(.disabled) > a,
-    > input {
+    > input:not(.btn-link) {
         color: $color;
 
         &:hover,
