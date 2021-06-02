@@ -40,7 +40,7 @@ final class PostPushTuleapArtifactCommentBuilderTest extends TestCase
             "",
             "branch_name",
             1620725174,
-            "user@example.fr",
+            "user@example.com",
             "user"
         );
 
@@ -76,7 +76,7 @@ final class PostPushTuleapArtifactCommentBuilderTest extends TestCase
             "",
             "branch_name",
             1620725174,
-            "user@example.fr",
+            "user@example.com",
             "user"
         );
 
@@ -111,7 +111,7 @@ final class PostPushTuleapArtifactCommentBuilderTest extends TestCase
             "",
             "branch_name",
             1620725174,
-            "user@example.fr",
+            "user@example.com",
             "user"
         );
 
@@ -146,7 +146,7 @@ final class PostPushTuleapArtifactCommentBuilderTest extends TestCase
             "",
             "branch_name",
             1620725174,
-            "user@example.fr",
+            "user@example.com",
             "user"
         );
 
@@ -181,7 +181,7 @@ final class PostPushTuleapArtifactCommentBuilderTest extends TestCase
             "",
             "branch_name",
             1620725174,
-            "user@example.fr",
+            "user@example.com",
             "user"
         );
 
@@ -220,7 +220,7 @@ final class PostPushTuleapArtifactCommentBuilderTest extends TestCase
             "",
             "branch_name",
             1620725174,
-            "user@example.fr",
+            "user@example.com",
             "user"
         );
 
