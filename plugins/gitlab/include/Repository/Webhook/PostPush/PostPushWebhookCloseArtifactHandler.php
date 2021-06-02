@@ -25,10 +25,12 @@ namespace Tuleap\Gitlab\Repository\Webhook\PostPush;
 use Psr\Log\LoggerInterface;
 use Tracker_Semantic_StatusFactory;
 use Tracker_Workflow_WorkflowUser;
+use Tuleap\Gitlab\API\GitlabProjectBuilder;
 use Tuleap\Gitlab\Artifact\ArtifactNotFoundException;
 use Tuleap\Gitlab\Artifact\ArtifactRetriever;
 use Tuleap\Gitlab\Repository\GitlabRepositoryIntegration;
 use Tuleap\Gitlab\Repository\Project\GitlabRepositoryProjectDao;
+use Tuleap\Gitlab\Repository\Webhook\Bot\CredentialsRetriever;
 use Tuleap\Gitlab\Repository\Webhook\WebhookTuleapReference;
 use UserManager;
 use UserNotExistException;
@@ -60,12 +62,17 @@ class PostPushWebhookCloseArtifactHandler
      */
     private $artifact_updater;
 
+    private CredentialsRetriever $credentials_retriever;
+    private GitlabProjectBuilder $gitlab_project_builder;
+
     public function __construct(
         PostPushCommitArtifactUpdater $artifact_updater,
         ArtifactRetriever $artifact_retriever,
         UserManager $user_manager,
         Tracker_Semantic_StatusFactory $semantic_status_factory,
         GitlabRepositoryProjectDao $repository_project_dao,
+        CredentialsRetriever $credentials_retriever,
+        GitlabProjectBuilder $gitlab_project_builder,
         LoggerInterface $logger
     ) {
         $this->artifact_updater        = $artifact_updater;
@@ -73,6 +80,8 @@ class PostPushWebhookCloseArtifactHandler
         $this->user_manager            = $user_manager;
         $this->semantic_status_factory = $semantic_status_factory;
         $this->repository_project_dao  = $repository_project_dao;
+        $this->credentials_retriever   = $credentials_retriever;
+        $this->gitlab_project_builder  = $gitlab_project_builder;
         $this->logger                  = $logger;
     }
 
@@ -106,6 +115,26 @@ class PostPushWebhookCloseArtifactHandler
             $tracker_workflow_user = $this->user_manager->getUserById(Tracker_Workflow_WorkflowUser::ID);
             if (! $tracker_workflow_user) {
                 throw new UserNotExistException("Tracker Workflow Manager does not exists, the comment cannot be added");
+            }
+
+            $credentials = $this->credentials_retriever->getCredentials(
+                $gitlab_repository_integration
+            );
+
+            if ($credentials === null) {
+                $this->logger->warning(
+                    "|  |  |_ Artifact #{$tuleap_reference->getId()} cannot be closed because no token found for integration. Skipping."
+                );
+                return;
+            }
+
+            $gitlab_project = $this->gitlab_project_builder->getProjectFromGitlabAPI(
+                $credentials,
+                $gitlab_repository_integration->getGitlabRepositoryId()
+            );
+
+            if ($gitlab_project->getDefaultBranch() !== $post_push_commit_webhook_data->getBranchName()) {
+                return;
             }
 
             $status_semantic = $this->semantic_status_factory->getByTracker(

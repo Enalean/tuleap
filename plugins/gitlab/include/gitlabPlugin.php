@@ -26,6 +26,7 @@ use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Git\Events\GetExternalUsedServiceEvent;
 use Tuleap\Gitlab\API\ClientWrapper;
 use Tuleap\Gitlab\API\GitlabHTTPClientFactory;
+use Tuleap\Gitlab\API\GitlabProjectBuilder;
 use Tuleap\Gitlab\API\Tag\GitlabTagRetriever;
 use Tuleap\Gitlab\Artifact\ArtifactRetriever;
 use Tuleap\Gitlab\EventsHandlers\ReferenceAdministrationWarningsCollectorEventHandler;
@@ -279,6 +280,8 @@ class gitlabPlugin extends Plugin
                         UserManager::instance(),
                         Tracker_Semantic_StatusFactory::instance(),
                         new GitlabRepositoryProjectDao(),
+                        new CredentialsRetriever(new IntegrationApiTokenRetriever(new IntegrationApiTokenDao(), new KeyFactory())),
+                        new GitlabProjectBuilder($gitlab_api_client),
                         $logger
                     )
                 ),
@@ -431,6 +434,8 @@ class gitlabPlugin extends Plugin
                         UserManager::instance(),
                         Tracker_Semantic_StatusFactory::instance(),
                         new GitlabRepositoryProjectDao(),
+                        new CredentialsRetriever(new IntegrationApiTokenRetriever(new IntegrationApiTokenDao(), new KeyFactory())),
+                        new GitlabProjectBuilder($gitlab_api_client),
                         $logger
                     )
                 ),

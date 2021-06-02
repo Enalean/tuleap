@@ -80,6 +80,7 @@ final class GitlabProjectBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                 'name' => 'Project 01',
                 'path_with_namespace' => 'root/project01',
                 'last_activity_at' => '2020-11-12',
+                'default_branch' => "main"
             ]);
 
         $this->expectException(GitlabResponseAPIException::class);
@@ -98,6 +99,7 @@ final class GitlabProjectBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                 'name' => 'Project 01',
                 'path_with_namespace' => 'root/project01',
                 'last_activity_at' => '2020-11-12',
+                'default_branch' => "main"
             ]);
 
         $this->expectException(GitlabResponseAPIException::class);
@@ -116,6 +118,7 @@ final class GitlabProjectBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                 'name' => 'Project 01',
                 'path_with_namespace' => 'root/project01',
                 'last_activity_at' => '2020-11-12',
+                'default_branch' => "main"
             ]);
 
         $this->expectException(GitlabResponseAPIException::class);
@@ -134,6 +137,7 @@ final class GitlabProjectBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                 'web_url' => 'https://example.com/root/project01',
                 'name' => 'Project 01',
                 'last_activity_at' => '2020-11-12',
+                'default_branch' => "main"
             ]);
 
         $this->expectException(GitlabResponseAPIException::class);
@@ -152,6 +156,26 @@ final class GitlabProjectBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                 'web_url' => 'https://example.com/root/project01',
                 'name' => 'Project 01',
                 'path_with_namespace' => 'root/project01',
+                'default_branch' => "main"
+            ]);
+
+        $this->expectException(GitlabResponseAPIException::class);
+
+        $this->project_builder->getProjectFromGitlabAPI($this->credentials, 1);
+    }
+
+    public function testItThrowsAnExceptionIfRequestBodyDoesNotHaveDefaultBranchKey(): void
+    {
+        $this->gitlab_api_client->shouldReceive("getUrl")
+            ->once()
+            ->with($this->credentials, "/projects/1")
+            ->andReturn([
+                'id' => 1,
+                'description' => 'My GitLab project',
+                'web_url' => 'https://example.com/root/project01',
+                'name' => 'Project 01',
+                'path_with_namespace' => 'root/project01',
+                'last_activity_at' => '2020-11-12',
             ]);
 
         $this->expectException(GitlabResponseAPIException::class);
@@ -171,6 +195,7 @@ final class GitlabProjectBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                 'name' => 'Project 01',
                 'path_with_namespace' => 'root/project01',
                 'last_activity_at' => '2020-11-12',
+                'default_branch' => "main"
             ]);
 
         $gitlab_project = $this->project_builder->getProjectFromGitlabAPI($this->credentials, 1);
@@ -180,6 +205,7 @@ final class GitlabProjectBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertSame("root/project01", $gitlab_project->getPathWithNamespace());
         self::assertSame("https://example.com/root/project01", $gitlab_project->getWebUrl());
         self::assertSame(1605135600, $gitlab_project->getLastActivityAt()->getTimestamp());
+        self::assertSame("main", $gitlab_project->getDefaultBranch());
     }
 
     public function testItBuildsAGitlabProjectObjectWithNullDescription(): void
@@ -194,6 +220,7 @@ final class GitlabProjectBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                 'name' => 'Project 01',
                 'path_with_namespace' => 'root/project01',
                 'last_activity_at' => '2020-11-12',
+                'default_branch' => "main"
             ]);
 
         $gitlab_project = $this->project_builder->getProjectFromGitlabAPI($this->credentials, 1);
@@ -203,5 +230,6 @@ final class GitlabProjectBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertSame("root/project01", $gitlab_project->getPathWithNamespace());
         self::assertSame("https://example.com/root/project01", $gitlab_project->getWebUrl());
         self::assertSame(1605135600, $gitlab_project->getLastActivityAt()->getTimestamp());
+        self::assertSame("main", $gitlab_project->getDefaultBranch());
     }
 }

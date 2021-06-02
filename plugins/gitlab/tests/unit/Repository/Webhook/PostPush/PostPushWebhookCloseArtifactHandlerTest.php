@@ -30,10 +30,14 @@ use Tracker_FormElement_Field_Selectbox;
 use Tracker_Semantic_Status;
 use Tracker_Semantic_StatusFactory;
 use Tracker_Workflow_WorkflowUser;
+use Tuleap\Gitlab\API\Credentials;
+use Tuleap\Gitlab\API\GitlabProject;
+use Tuleap\Gitlab\API\GitlabProjectBuilder;
 use Tuleap\Gitlab\Artifact\ArtifactNotFoundException;
 use Tuleap\Gitlab\Artifact\ArtifactRetriever;
 use Tuleap\Gitlab\Repository\GitlabRepositoryIntegration;
 use Tuleap\Gitlab\Repository\Project\GitlabRepositoryProjectDao;
+use Tuleap\Gitlab\Repository\Webhook\Bot\CredentialsRetriever;
 use Tuleap\Gitlab\Repository\Webhook\WebhookTuleapReference;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
@@ -70,6 +74,14 @@ class PostPushWebhookCloseArtifactHandlerTest extends TestCase
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|PostPushCommitArtifactUpdater
      */
     private $artifact_updater;
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|CredentialsRetriever
+     */
+    private $credentials_retriever;
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|GitlabProjectBuilder
+     */
+    private $gitlab_project_builder;
 
     protected function setUp(): void
     {
@@ -80,6 +92,8 @@ class PostPushWebhookCloseArtifactHandlerTest extends TestCase
         $this->user_manager            = Mockery::mock(UserManager::class);
         $this->semantic_status_factory = Mockery::mock(Tracker_Semantic_StatusFactory::class);
         $this->repository_project_dao  = Mockery::mock(GitlabRepositoryProjectDao::class);
+        $this->credentials_retriever   = Mockery::mock(CredentialsRetriever::class);
+        $this->gitlab_project_builder  = Mockery::mock(GitlabProjectBuilder::class);
 
         $this->handler = new PostPushWebhookCloseArtifactHandler(
             $this->artifact_updater,
@@ -87,6 +101,8 @@ class PostPushWebhookCloseArtifactHandlerTest extends TestCase
             $this->user_manager,
             $this->semantic_status_factory,
             $this->repository_project_dao,
+            $this->credentials_retriever,
+            $this->gitlab_project_builder,
             new NullLogger()
         );
     }
@@ -143,6 +159,8 @@ class PostPushWebhookCloseArtifactHandlerTest extends TestCase
             ->with($tracker)
             ->andReturn($status_semantic);
 
+        $this->mockGitlabProjectDefaultBranch();
+
         $this->artifact_updater->shouldReceive('addTuleapArtifactCommentNoSemanticDefined')
             ->once()
             ->with(
@@ -188,6 +206,7 @@ class PostPushWebhookCloseArtifactHandlerTest extends TestCase
             ->andThrow(new ArtifactNotFoundException());
 
         $this->artifact_updater->shouldNotReceive('addTuleapArtifactCommentNoSemanticDefined');
+        $this->artifact_updater->shouldNotReceive('closeTuleapArtifactcloseTuleapArtifact');
 
         $this->handler->handleArtifactClosure(
             $reference,
@@ -242,6 +261,123 @@ class PostPushWebhookCloseArtifactHandlerTest extends TestCase
         $this->expectException(UserNotExistException::class);
 
         $this->artifact_updater->shouldNotReceive('addTuleapArtifactCommentNoSemanticDefined');
+        $this->artifact_updater->shouldNotReceive('closeTuleapArtifactcloseTuleapArtifact');
+
+        $this->handler->handleArtifactClosure(
+            $reference,
+            $webhook_data,
+            $integration
+        );
+    }
+
+    public function testItDoesNothingIfRepositoryDoesNotHaveCredential(): void
+    {
+        $reference    = new WebhookTuleapReference(123, "resolve");
+        $webhook_data = new PostPushCommitWebhookData(
+            'feff4ced04b237abb8b4a50b4160099313152c3c',
+            'A commit with references containing close artifact keyword',
+            'A commit with reference: resolve TULEAP-123',
+            "master",
+            1608110510,
+            "john-snow@example.com",
+            "John Snow"
+        );
+
+        $integration = new GitlabRepositoryIntegration(
+            1,
+            12,
+            "MyRepo",
+            "",
+            "https://example",
+            new DateTimeImmutable(),
+            Project::buildForTest(),
+            false
+        );
+
+        $tracker  = TrackerTestBuilder::aTracker()->withProject(\Project::buildForTest())->build();
+        $artifact = Mockery::mock(Artifact::class);
+        $artifact->shouldReceive('getTracker')->andReturn($tracker);
+
+        $this->artifact_retriever->shouldReceive('retrieveArtifactById')
+            ->once()
+            ->with($reference)
+            ->andReturn($artifact);
+
+        $this->repository_project_dao->shouldReceive('isArtifactClosureActionEnabledForRepositoryInProject')
+            ->once()
+            ->with(1, 101)
+            ->andReturn(true);
+
+        $user = UserTestBuilder::anActiveUser()->withId(Tracker_Workflow_WorkflowUser::ID)->build();
+        $this->user_manager->shouldReceive('getUserById')
+            ->once()
+            ->with(Tracker_Workflow_WorkflowUser::ID)
+            ->andReturn($user);
+
+        $this->credentials_retriever->shouldReceive('getCredentials')
+            ->once()
+            ->andReturnNull();
+
+        $this->gitlab_project_builder->shouldNotReceive('getProjectFromGitlabAPI');
+
+        $this->artifact_updater->shouldNotReceive('addTuleapArtifactCommentNoSemanticDefined');
+        $this->artifact_updater->shouldNotReceive('closeTuleapArtifactcloseTuleapArtifact');
+
+        $this->handler->handleArtifactClosure(
+            $reference,
+            $webhook_data,
+            $integration
+        );
+    }
+
+    public function testItDoesNothingIfBranchIsNotDefault(): void
+    {
+        $reference    = new WebhookTuleapReference(123, "resolve");
+        $webhook_data = new PostPushCommitWebhookData(
+            'feff4ced04b237abb8b4a50b4160099313152c3c',
+            'A commit with references containing close artifact keyword',
+            'A commit with reference: resolve TULEAP-123',
+            "master",
+            1608110510,
+            "john-snow@example.com",
+            "John Snow"
+        );
+
+        $integration = new GitlabRepositoryIntegration(
+            1,
+            12,
+            "MyRepo",
+            "",
+            "https://example",
+            new DateTimeImmutable(),
+            Project::buildForTest(),
+            false
+        );
+
+        $tracker  = TrackerTestBuilder::aTracker()->withProject(\Project::buildForTest())->build();
+        $artifact = Mockery::mock(Artifact::class);
+        $artifact->shouldReceive('getTracker')->andReturn($tracker);
+
+        $this->artifact_retriever->shouldReceive('retrieveArtifactById')
+            ->once()
+            ->with($reference)
+            ->andReturn($artifact);
+
+        $this->repository_project_dao->shouldReceive('isArtifactClosureActionEnabledForRepositoryInProject')
+            ->once()
+            ->with(1, 101)
+            ->andReturn(true);
+
+        $user = UserTestBuilder::anActiveUser()->withId(Tracker_Workflow_WorkflowUser::ID)->build();
+        $this->user_manager->shouldReceive('getUserById')
+            ->once()
+            ->with(Tracker_Workflow_WorkflowUser::ID)
+            ->andReturn($user);
+
+        $this->mockGitlabProjectAnotherDefaultBranch();
+
+        $this->artifact_updater->shouldNotReceive('addTuleapArtifactCommentNoSemanticDefined');
+        $this->artifact_updater->shouldNotReceive('closeTuleapArtifactcloseTuleapArtifact');
 
         $this->handler->handleArtifactClosure(
             $reference,
@@ -303,6 +439,8 @@ class PostPushWebhookCloseArtifactHandlerTest extends TestCase
             ->once()
             ->with($tracker)
             ->andReturn($status_semantic);
+
+        $this->mockGitlabProjectDefaultBranch();
 
         $this->artifact_updater->shouldReceive('closeTuleapArtifact')
             ->once()
@@ -406,5 +544,55 @@ class PostPushWebhookCloseArtifactHandlerTest extends TestCase
             $webhook_data,
             $integration
         );
+    }
+
+    protected function mockGitlabProjectDefaultBranch(): void
+    {
+        $credentials = Mockery::mock(Credentials::class);
+        $this->credentials_retriever->shouldReceive('getCredentials')
+            ->once()
+            ->andReturn($credentials);
+
+        $this->gitlab_project_builder->shouldReceive('getProjectFromGitlabAPI')
+            ->once()
+            ->with(
+                $credentials,
+                12
+            )
+            ->andReturn(
+                new GitlabProject(
+                    12,
+                    "",
+                    "https://example/MyRepo",
+                    "MyRepo",
+                    new DateTimeImmutable(),
+                    "master"
+                )
+            );
+    }
+
+    protected function mockGitlabProjectAnotherDefaultBranch(): void
+    {
+        $credentials = Mockery::mock(Credentials::class);
+        $this->credentials_retriever->shouldReceive('getCredentials')
+            ->once()
+            ->andReturn($credentials);
+
+        $this->gitlab_project_builder->shouldReceive('getProjectFromGitlabAPI')
+            ->once()
+            ->with(
+                $credentials,
+                12
+            )
+            ->andReturn(
+                new GitlabProject(
+                    12,
+                    "",
+                    "https://example/MyRepo",
+                    "MyRepo",
+                    new DateTimeImmutable(),
+                    "main"
+                )
+            );
     }
 }
