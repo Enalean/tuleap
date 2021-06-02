@@ -54,19 +54,25 @@ class GitlabProject
      * @var DateTimeImmutable
      */
     private $last_activity_at;
+    /**
+     * @var string
+     */
+    private $default_branch;
 
     public function __construct(
         int $id,
         string $description,
         string $web_url,
         string $path_with_namespace,
-        DateTimeImmutable $last_activity_at
+        DateTimeImmutable $last_activity_at,
+        string $default_branch
     ) {
         $this->id                  = $id;
         $this->description         = $description;
         $this->web_url             = $web_url;
         $this->path_with_namespace = $path_with_namespace;
         $this->last_activity_at    = $last_activity_at;
+        $this->default_branch      = $default_branch;
     }
 
     public function getId(): int
@@ -92,5 +98,10 @@ class GitlabProject
     public function getLastActivityAt(): DateTimeImmutable
     {
         return $this->last_activity_at;
+    }
+
+    public function getDefaultBranch(): string
+    {
+        return $this->default_branch;
     }
 }

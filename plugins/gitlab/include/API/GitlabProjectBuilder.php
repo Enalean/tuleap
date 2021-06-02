@@ -64,7 +64,8 @@ class GitlabProjectBuilder
             ! array_key_exists('description', $gitlab_project_data) ||
             ! array_key_exists('web_url', $gitlab_project_data) ||
             ! array_key_exists('path_with_namespace', $gitlab_project_data) ||
-            ! array_key_exists('last_activity_at', $gitlab_project_data)
+            ! array_key_exists('last_activity_at', $gitlab_project_data) ||
+            ! array_key_exists('default_branch', $gitlab_project_data)
         ) {
             throw new GitlabResponseAPIException("Some keys are missing in the project Json. This is not expected. Aborting.");
         }
@@ -74,7 +75,8 @@ class GitlabProjectBuilder
             ! (is_string($gitlab_project_data['description']) || $gitlab_project_data['description'] === null) ||
             ! is_string($gitlab_project_data['web_url']) ||
             ! is_string($gitlab_project_data['path_with_namespace']) ||
-            ! is_string($gitlab_project_data['last_activity_at'])
+            ! is_string($gitlab_project_data['last_activity_at']) ||
+            ! is_string($gitlab_project_data['default_branch'])
         ) {
             throw new GitlabResponseAPIException("Some keys haven't the expected types. This is not expected. Aborting.");
         }
@@ -84,7 +86,8 @@ class GitlabProjectBuilder
             (string) $gitlab_project_data['description'],
             $gitlab_project_data['web_url'],
             $gitlab_project_data['path_with_namespace'],
-            new DateTimeImmutable($gitlab_project_data['last_activity_at'])
+            new DateTimeImmutable($gitlab_project_data['last_activity_at']),
+            $gitlab_project_data['default_branch']
         );
     }
 }

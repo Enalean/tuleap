@@ -99,6 +99,7 @@ class GitlabRepositoryCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             'https://example.com/root/project01',
             'root/project01',
             new DateTimeImmutable(),
+            "main"
         );
 
         $this->project = Project::buildForTest();
