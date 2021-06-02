@@ -22,27 +22,21 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\Feature\Content;
 
-use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\ProgramIncrementsDAO;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\CheckProgramIncrement;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementNotFoundException;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\VerifyIsProgramIncrementTracker;
 
 final class ProgramIncrementChecker implements CheckProgramIncrement
 {
-    /**
-     * @var \Tracker_ArtifactFactory
-     */
-    private $artifact_factory;
-    /**
-     * @var ProgramIncrementsDAO
-     */
-    private $program_increments_dao;
+    private \Tracker_ArtifactFactory $artifact_factory;
+    private VerifyIsProgramIncrementTracker $verify_is_program_increment_tracker;
 
     public function __construct(
         \Tracker_ArtifactFactory $artifact_factory,
-        ProgramIncrementsDAO $program_increments_dao
+        VerifyIsProgramIncrementTracker $verify_is_program_increment_tracker
     ) {
-        $this->artifact_factory       = $artifact_factory;
-        $this->program_increments_dao = $program_increments_dao;
+        $this->artifact_factory                    = $artifact_factory;
+        $this->verify_is_program_increment_tracker = $verify_is_program_increment_tracker;
     }
 
     /**
@@ -55,7 +49,7 @@ final class ProgramIncrementChecker implements CheckProgramIncrement
         if (
             ! $program_increment ||
             ! $program_increment->userCanView($user) ||
-            ! $this->program_increments_dao->isProgramIncrementTracker($program_increment->getTrackerId())
+            ! $this->verify_is_program_increment_tracker->isProgramIncrementTracker($program_increment->getTrackerId())
         ) {
             throw new ProgramIncrementNotFoundException($program_increment_id);
         }

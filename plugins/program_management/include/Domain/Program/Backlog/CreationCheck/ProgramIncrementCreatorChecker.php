@@ -23,46 +23,29 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck;
 
 use PFUser;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\Plan\BuildPlanProgramIncrementConfiguration;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\Plan\PlanCheckException;
-use Tuleap\ProgramManagement\Domain\Program\Plan\PlanTrackerException;
-use Tuleap\ProgramManagement\Domain\Program\ProgramTrackerException;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\VerifyIsProgramIncrementTracker;
 use Tuleap\ProgramManagement\Domain\ProgramTracker;
 use Tuleap\ProgramManagement\Domain\Project;
 
 class ProgramIncrementCreatorChecker
 {
-    /**
-     * @var TimeboxCreatorChecker
-     */
-    private $timebox_creator_checker;
-    /**
-     * @var BuildPlanProgramIncrementConfiguration
-     */
-    private $build_plan_configuration;
+    private TimeboxCreatorChecker $timebox_creator_checker;
+    private VerifyIsProgramIncrementTracker $verify_is_program_increment;
 
     public function __construct(
         TimeboxCreatorChecker $timebox_creator_checker,
-        BuildPlanProgramIncrementConfiguration $build_plan_configuration
+        VerifyIsProgramIncrementTracker $verify_is_program_increment
     ) {
-        $this->timebox_creator_checker  = $timebox_creator_checker;
-        $this->build_plan_configuration = $build_plan_configuration;
+        $this->timebox_creator_checker     = $timebox_creator_checker;
+        $this->verify_is_program_increment = $verify_is_program_increment;
     }
 
-    public function canCreateAProgramIncrement(PFUser $user, ProgramTracker $tracker_data, Project $project_data): bool
+    public function canCreateAProgramIncrement(PFUser $user, ProgramTracker $tracker, Project $project): bool
     {
-        try {
-            $program_increment_tracker = $this->build_plan_configuration->buildTrackerProgramIncrementFromProjectId(
-                $project_data->getId(),
-                $user
-            );
-        } catch (PlanCheckException | PlanTrackerException | ProgramTrackerException $e) {
-            return true;
-        }
-        if ($program_increment_tracker->getTrackerId() !== $tracker_data->getTrackerId()) {
+        if (! $this->verify_is_program_increment->isProgramIncrementTracker($tracker->getTrackerId())) {
             return true;
         }
 
-        return $this->timebox_creator_checker->canTimeboxBeCreated($tracker_data, $project_data, $user);
+        return $this->timebox_creator_checker->canTimeboxBeCreated($tracker, $project, $user);
     }
 }

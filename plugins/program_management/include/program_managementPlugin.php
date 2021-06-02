@@ -66,7 +66,6 @@ use Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\Workflow\AddToTo
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Content\ContentDao;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\ArtifactsLinkedToParentDao;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\UserStoryLinkedToFeatureChecker;
-use Tuleap\ProgramManagement\Adapter\Program\Feature\TrackerShouldPlanFeatureChecker;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\UserStoriesInMirroredProgramIncrementsPlanner;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\VerifyIsVisibleFeatureAdapter;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\CanPrioritizeFeaturesDAO;
@@ -79,8 +78,8 @@ use Tuleap\ProgramManagement\Adapter\Program\PlanningAdapter;
 use Tuleap\ProgramManagement\Adapter\Program\ProgramDao;
 use Tuleap\ProgramManagement\Adapter\ProjectAdapter;
 use Tuleap\ProgramManagement\Adapter\ProjectAdmin\PermissionPerGroupSectionBuilder;
-use Tuleap\ProgramManagement\Adapter\Team\MirroredTimeboxes\MirroredTimeboxRetriever;
 use Tuleap\ProgramManagement\Adapter\Team\MirroredTimeboxes\MirroredTimeboxesDao;
+use Tuleap\ProgramManagement\Adapter\Team\MirroredTimeboxes\MirroredTimeboxRetriever;
 use Tuleap\ProgramManagement\Adapter\Team\TeamDao;
 use Tuleap\ProgramManagement\Adapter\Workspace\WorkspaceDAO;
 use Tuleap\ProgramManagement\DisplayProgramBacklogController;
@@ -295,7 +294,7 @@ final class program_managementPlugin extends Plugin
     {
         $artifact_creator_checker = new ProgramIncrementCreatorChecker(
             $this->getProjectIncrementCreatorChecker(),
-            $this->getPlanConfigurationBuilder()
+            new PlanDao()
         );
 
         $tracker_data = new ProgramTracker($can_submit_new_artifact->getTracker());
@@ -319,19 +318,16 @@ final class program_managementPlugin extends Plugin
 
     public function trackerArtifactCreated(ArtifactCreated $event): void
     {
-        $program_dao = new ProgramDao();
-        $logger      = $this->getLogger();
-
         $artifact = $event->getArtifact();
 
         $this->cleanUpFromTopBacklogFeatureAddedToAProgramIncrement($artifact);
 
         $handler = new ArtifactCreatedHandler(
-            $program_dao,
+            new ProgramDao(),
             $this->getProgramIncrementRunner(),
             new PendingArtifactCreationDao(),
-            $this->getPlanConfigurationBuilder(),
-            $logger
+            new PlanDao(),
+            $this->getLogger()
         );
         $handler->handle($event);
     }
@@ -345,14 +341,15 @@ final class program_managementPlugin extends Plugin
 
     private function planArtifactIfNeeded(ArtifactUpdated $event): void
     {
-        $checker = new TrackerShouldPlanFeatureChecker($this->getPlanConfigurationBuilder());
-        if (! $checker->checkTrackerCanPlanFeature($event)) {
+        $checker    = new PlanDao();
+        $tracker_id = $event->getArtifact()->getTrackerId();
+        if (! $checker->isProgramIncrementTracker($tracker_id)) {
             return;
         }
 
         $program_increment_changed = new ProgramIncrementChanged(
             $event->getArtifact()->getId(),
-            $event->getArtifact()->getTrackerId(),
+            $tracker_id,
             $event->getUser()
         );
 

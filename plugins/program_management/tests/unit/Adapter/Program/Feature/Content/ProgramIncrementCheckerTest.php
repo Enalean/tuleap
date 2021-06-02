@@ -22,101 +22,89 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\Feature\Content;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tracker_ArtifactFactory;
-use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\ProgramIncrementsDAO;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementNotFoundException;
+use Tuleap\ProgramManagement\Stub\VerifyIsProgramIncrementTrackerStub;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class ProgramIncrementCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Tracker_ArtifactFactory
+     * @var \PHPUnit\Framework\MockObject\MockObject|Tracker_ArtifactFactory
      */
     private $tracker_artifact_factory;
-    /**
-     * @var ProgramIncrementChecker
-     */
-    private $checker;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|ProgramIncrementsDAO
-     */
-    private $dao;
 
     protected function setUp(): void
     {
-        $this->tracker_artifact_factory = \Mockery::mock(Tracker_ArtifactFactory::class);
-        $this->dao                      = \Mockery::mock(ProgramIncrementsDAO::class);
-        $this->checker                  = new ProgramIncrementChecker(
-            $this->tracker_artifact_factory,
-            $this->dao
-        );
+        $this->tracker_artifact_factory = $this->createMock(Tracker_ArtifactFactory::class);
     }
 
     public function testItThrowAnExceptionWhenIncrementIsNotFound(): void
     {
-        $this->tracker_artifact_factory->shouldReceive('getArtifactById')->once()->andReturnNull();
-
-        $this->expectException(ProgramIncrementNotFoundException::class);
-
+        $this->tracker_artifact_factory->method('getArtifactById')->willReturn(null);
         $user = UserTestBuilder::aUser()->build();
 
-        $this->checker->checkIsAProgramIncrement(300, $user);
+        $checker = new ProgramIncrementChecker(
+            $this->tracker_artifact_factory,
+            VerifyIsProgramIncrementTrackerStub::buildValidProgramIncrement()
+        );
+        $this->expectException(ProgramIncrementNotFoundException::class);
+        $checker->checkIsAProgramIncrement(300, $user);
     }
 
     public function testItThrowAnExceptionWhenUserCanNotSeeTheIncrement(): void
     {
-        $program_increment = \Mockery::mock(Artifact::class);
-        $this->tracker_artifact_factory->shouldReceive('getArtifactById')->once()->andReturn($program_increment);
+        $program_increment = $this->createMock(Artifact::class);
+        $this->tracker_artifact_factory->method('getArtifactById')->willReturn($program_increment);
 
-        $program_increment->shouldReceive('userCanView')->once()->andReturnFalse();
-
-        $this->expectException(ProgramIncrementNotFoundException::class);
-
+        $program_increment->method('userCanView')->willReturn(false);
         $user = UserTestBuilder::aUser()->build();
 
-        $this->checker->checkIsAProgramIncrement(300, $user);
+        $checker = new ProgramIncrementChecker(
+            $this->tracker_artifact_factory,
+            VerifyIsProgramIncrementTrackerStub::buildValidProgramIncrement()
+        );
+        $this->expectException(ProgramIncrementNotFoundException::class);
+        $checker->checkIsAProgramIncrement(300, $user);
     }
 
     public function testItDoesNotThrowWhenTrackerIsAProgramIncrement(): void
     {
-        $program_increment = \Mockery::mock(Artifact::class);
-        $program_increment->shouldReceive('getId')->andReturn(101);
-        $program_increment->shouldReceive('getTrackerId')->andReturn(1);
+        $program_increment = $this->createMock(Artifact::class);
+        $program_increment->method('getId')->willReturn(101);
+        $program_increment->method('getTrackerId')->willReturn(1);
 
         $tracker = TrackerTestBuilder::aTracker()->withProject(new \Project(['group_id' => 100]))->build();
-        $program_increment->shouldReceive('getTracker')->andReturn($tracker);
-        $this->tracker_artifact_factory->shouldReceive('getArtifactById')->once()->andReturn($program_increment);
+        $program_increment->method('getTracker')->willReturn($tracker);
+        $this->tracker_artifact_factory->method('getArtifactById')->willReturn($program_increment);
 
-        $program_increment->shouldReceive('userCanView')->once()->andReturnTrue();
-
-        $this->dao->shouldReceive("isProgramIncrementTracker")->once()->with(1)->andReturnTrue();
-
+        $program_increment->method('userCanView')->willReturn(true);
         $user = UserTestBuilder::aUser()->build();
 
-        $this->checker->checkIsAProgramIncrement(300, $user);
+        $checker = new ProgramIncrementChecker(
+            $this->tracker_artifact_factory,
+            VerifyIsProgramIncrementTrackerStub::buildValidProgramIncrement()
+        );
+        $checker->checkIsAProgramIncrement(300, $user);
         $this->addToAssertionCount(1);
     }
 
     public function testItThrowsIfIsNotProgramIncrementTracker(): void
     {
-        $program_increment = \Mockery::mock(Artifact::class);
-        $program_increment->shouldReceive('getTrackerId')->andReturn(1);
+        $program_increment = $this->createMock(Artifact::class);
+        $program_increment->method('getTrackerId')->willReturn(1);
+        $this->tracker_artifact_factory->method('getArtifactById')->willReturn($program_increment);
 
-        $this->tracker_artifact_factory->shouldReceive('getArtifactById')->once()->andReturn($program_increment);
-
-        $program_increment->shouldReceive('userCanView')->once()->andReturnTrue();
-
-        $this->dao->shouldReceive("isProgramIncrementTracker")->once()->with(1)->andReturnFalse();
-
-        $this->expectException(ProgramIncrementNotFoundException::class);
-
+        $program_increment->method('userCanView')->willReturn(true);
         $user = UserTestBuilder::aUser()->build();
 
-        $this->checker->checkIsAProgramIncrement(300, $user);
+        $checker = new ProgramIncrementChecker(
+            $this->tracker_artifact_factory,
+            VerifyIsProgramIncrementTrackerStub::buildNotProgramIncrement()
+        );
+        $this->expectException(ProgramIncrementNotFoundException::class);
+        $checker->checkIsAProgramIncrement(300, $user);
     }
 }
