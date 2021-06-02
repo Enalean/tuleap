@@ -4,3 +4,4 @@ DROP TABLE IF EXISTS plugin_gitlab_repository_integration_token;
 DROP TABLE IF EXISTS plugin_gitlab_repository_integration_commit_info;
 DROP TABLE IF EXISTS plugin_gitlab_repository_integration_merge_request_info;
 DROP TABLE IF EXISTS plugin_gitlab_repository_integration_tag_info;
+DROP TABLE IF EXISTS plugin_gitlab_repository_integration_branch_info;

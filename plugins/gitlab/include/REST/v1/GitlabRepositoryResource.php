@@ -60,6 +60,7 @@ use Tuleap\Gitlab\Repository\Token\IntegrationApiTokenInserter;
 use Tuleap\Gitlab\Repository\Token\IntegrationApiTokenRetriever;
 use Tuleap\Gitlab\Repository\Webhook\Bot\CredentialsRetriever;
 use Tuleap\Gitlab\Repository\Webhook\PostMergeRequest\MergeRequestTuleapReferenceDao;
+use Tuleap\Gitlab\Repository\Webhook\PostPush\Branch\BranchTuleapReferenceDao;
 use Tuleap\Gitlab\Repository\Webhook\PostPush\Commits\CommitTuleapReferenceDao;
 use Tuleap\Gitlab\Repository\Webhook\TagPush\TagInfoDao;
 use Tuleap\Gitlab\Repository\Webhook\WebhookCreator;
@@ -274,6 +275,7 @@ final class GitlabRepositoryResource
             new CommitTuleapReferenceDao(),
             new MergeRequestTuleapReferenceDao(),
             new TagInfoDao(),
+            new BranchTuleapReferenceDao(),
             new CredentialsRetriever(new IntegrationApiTokenRetriever(new IntegrationApiTokenDao(), new KeyFactory()))
         );
 

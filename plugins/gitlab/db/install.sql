@@ -55,3 +55,11 @@ CREATE TABLE IF NOT EXISTS plugin_gitlab_repository_integration_tag_info (
     tag_message TEXT NOT NULL,
     UNIQUE(integration_id, tag_name(255))
 ) ENGINE=InnoDB;
+
+CREATE TABLE IF NOT EXISTS plugin_gitlab_repository_integration_branch_info (
+     id INT(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,
+     integration_id INT(11) NOT NULL,
+     commit_sha1 BINARY(20) NOT NULL,
+     branch_name TEXT NOT NULL,
+     UNIQUE(integration_id, branch_name(255))
+) ENGINE=InnoDB;
