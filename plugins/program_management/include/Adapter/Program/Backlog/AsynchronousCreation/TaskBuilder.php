@@ -55,8 +55,8 @@ use Tuleap\ProgramManagement\Adapter\Program\Plan\PlanProgramIncrementConfigurat
 use Tuleap\ProgramManagement\Adapter\Program\PlanningAdapter;
 use Tuleap\ProgramManagement\Adapter\Program\ProgramDao;
 use Tuleap\ProgramManagement\Adapter\ProjectAdapter;
-use Tuleap\ProgramManagement\Adapter\Team\MirroredMilestones\MirroredMilestoneRetriever;
-use Tuleap\ProgramManagement\Adapter\Team\MirroredMilestones\MirroredMilestonesDao;
+use Tuleap\ProgramManagement\Adapter\Team\MirroredTimeboxes\MirroredTimeboxRetriever;
+use Tuleap\ProgramManagement\Adapter\Team\MirroredTimeboxes\MirroredTimeboxesDao;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\ProgramIncrementsCreator;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementCollectionFactory;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Team\TeamProjectsCollectionBuilder;
@@ -82,7 +82,7 @@ class TaskBuilder
             new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection()),
             new ArtifactsLinkedToParentDao(),
             Tracker_ArtifactFactory::instance(),
-            new MirroredMilestoneRetriever(new MirroredMilestonesDao()),
+            new MirroredTimeboxRetriever(new MirroredTimeboxesDao()),
             new ContentDao(),
             $logger
         );

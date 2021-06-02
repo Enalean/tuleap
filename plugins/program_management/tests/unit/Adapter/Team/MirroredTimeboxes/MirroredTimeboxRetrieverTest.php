@@ -20,25 +20,24 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Domain\Team\MirroredMilestone;
+namespace Tuleap\ProgramManagement\Adapter\Team\MirroredTimeboxes;
 
-/**
- * @psalm-immutable
- */
-final class MirroredMilestone
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\MirroredTimebox;
+
+final class MirroredTimeboxRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    /**
-     * @var int
-     */
-    private $id;
+    use MockeryPHPUnitIntegration;
 
-    public function __construct(int $id)
+    public function testItBuildsAListOfMirroredArtifact(): void
     {
-        $this->id = $id;
-    }
+        $dao       = \Mockery::mock(MirroredTimeboxesDao::class);
+        $retriever = new MirroredTimeboxRetriever($dao);
 
-    public function getId(): int
-    {
-        return $this->id;
+        $dao->shouldReceive('getMirroredTimeboxes')->andReturn([['id' => 1], ['id' => 2]]);
+
+        $expected = [new MirroredTimebox(1), new MirroredTimebox(2)];
+
+        self::assertEquals($expected, $retriever->retrieveMilestonesLinkedTo(101));
     }
 }

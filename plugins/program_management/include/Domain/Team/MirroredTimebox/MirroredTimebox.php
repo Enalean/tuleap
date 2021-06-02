@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2020 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2021 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,26 +20,25 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement;
+namespace Tuleap\ProgramManagement\Domain\Team\MirroredTimebox;
 
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenter;
-
-final class ProgramIncrementArtifactLinkType extends NaturePresenter
+/**
+ * @psalm-immutable
+ */
+final class MirroredTimebox
 {
-    public const ART_LINK_SHORT_NAME = '_mirrored_milestone';
-
     /**
-     * @psalm-readonly
+     * @var int
      */
-    public $is_system = true;
+    private $id;
 
-    public function __construct()
+    public function __construct(int $id)
     {
-        parent::__construct(
-            self::ART_LINK_SHORT_NAME,
-            dgettext('tuleap-program_management', 'Mirror of'),
-            dgettext('tuleap-program_management', 'Mirrored by'),
-            false
-        );
+        $this->id = $id;
+    }
+
+    public function getId(): int
+    {
+        return $this->id;
     }
 }

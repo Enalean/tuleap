@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values;
 
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementArtifactLinkType;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\TimeboxArtifactLinkType;
 
 /**
  * @psalm-immutable
@@ -46,7 +46,7 @@ final class ArtifactLinkValue
     {
         return [
             'new_values' => (string) $this->source_artifact_id,
-            'natures'    => [(string) $this->source_artifact_id => ProgramIncrementArtifactLinkType::ART_LINK_SHORT_NAME]
+            'natures'    => [(string) $this->source_artifact_id => TimeboxArtifactLinkType::ART_LINK_SHORT_NAME]
         ];
     }
 }

@@ -20,24 +20,26 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Adapter\Team\MirroredMilestones;
+namespace Tuleap\ProgramManagement\Domain\Program\Backlog;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use Tuleap\ProgramManagement\Domain\Team\MirroredMilestone\MirroredMilestone;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenter;
 
-final class MirroredMilestoneRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
+final class TimeboxArtifactLinkType extends NaturePresenter
 {
-    use MockeryPHPUnitIntegration;
+    public const ART_LINK_SHORT_NAME = '_mirrored_milestone';
 
-    public function testItBuildsAListOfMirroredArtifact(): void
+    /**
+     * @psalm-readonly
+     */
+    public $is_system = true;
+
+    public function __construct()
     {
-        $dao       = \Mockery::mock(MirroredMilestonesDao::class);
-        $retriever = new MirroredMilestoneRetriever($dao);
-
-        $dao->shouldReceive('getMirroredMilestones')->andReturn([['id' => 1], ['id' => 2]]);
-
-        $expected = [new MirroredMilestone(1), new MirroredMilestone(2)];
-
-        self::assertEquals($expected, $retriever->retrieveMilestonesLinkedTo(101));
+        parent::__construct(
+            self::ART_LINK_SHORT_NAME,
+            dgettext('tuleap-program_management', 'Mirror of'),
+            dgettext('tuleap-program_management', 'Mirrored by'),
+            false
+        );
     }
 }

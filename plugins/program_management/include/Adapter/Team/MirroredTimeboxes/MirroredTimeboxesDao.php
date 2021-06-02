@@ -20,13 +20,13 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Adapter\Team\MirroredMilestones;
+namespace Tuleap\ProgramManagement\Adapter\Team\MirroredTimeboxes;
 
 use Tuleap\DB\DataAccessObject;
 
-class MirroredMilestonesDao extends DataAccessObject
+class MirroredTimeboxesDao extends DataAccessObject
 {
-    public function getMirroredMilestones(int $artifact_id, string $nature): array
+    public function getMirroredTimeboxes(int $artifact_id, string $nature): array
     {
         $sql = "SELECT parent_art.id AS id
                 FROM tracker_artifact parent_art

@@ -20,36 +20,36 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Adapter\Team\MirroredMilestones;
+namespace Tuleap\ProgramManagement\Adapter\Team\MirroredTimeboxes;
 
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementArtifactLinkType;
-use Tuleap\ProgramManagement\Domain\Team\MirroredMilestone\MirroredMilestone;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\TimeboxArtifactLinkType;
+use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\MirroredTimebox;
 
-class MirroredMilestoneRetriever
+class MirroredTimeboxRetriever
 {
     /**
-     * @var MirroredMilestonesDao
+     * @var MirroredTimeboxesDao
      */
     private $mirrored_milestones_dao;
 
-    public function __construct(MirroredMilestonesDao $mirrored_milestones_dao)
+    public function __construct(MirroredTimeboxesDao $mirrored_milestones_dao)
     {
         $this->mirrored_milestones_dao = $mirrored_milestones_dao;
     }
 
     /**
-     * @return MirroredMilestone[]
+     * @return MirroredTimebox[]
      */
     public function retrieveMilestonesLinkedTo(int $program_increment_id): array
     {
-        $linked_artifacts_ids = $this->mirrored_milestones_dao->getMirroredMilestones(
+        $linked_artifacts_ids = $this->mirrored_milestones_dao->getMirroredTimeboxes(
             $program_increment_id,
-            ProgramIncrementArtifactLinkType::ART_LINK_SHORT_NAME
+            TimeboxArtifactLinkType::ART_LINK_SHORT_NAME
         );
 
         $link_to = [];
         foreach ($linked_artifacts_ids as $link) {
-            $link_to[] = new MirroredMilestone($link['id']);
+            $link_to[] = new MirroredTimebox($link['id']);
         }
 
         return $link_to;

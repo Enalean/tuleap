@@ -22,12 +22,12 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source;
 
 use PFUser;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementArtifactLinkType;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\AnalyzeNatureOfSourceArtifact;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\ArtifactLinkFieldNotFoundException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\ChangesetValueNotFoundException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\NatureAnalyzerException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\ProgramNotFoundException;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\TimeboxArtifactLinkType;
 use Tuleap\ProgramManagement\Domain\Team\Creation\TeamStore;
 use Tuleap\Tracker\Artifact\Artifact;
 
@@ -84,7 +84,7 @@ class SourceArtifactNatureAnalyzer implements AnalyzeNatureOfSourceArtifact
             if (! $original_artifact || ! $original_artifact->userCanView($user)) {
                 return null;
             }
-            if ($artifact_link_value->getNature() === ProgramIncrementArtifactLinkType::ART_LINK_SHORT_NAME) {
+            if ($artifact_link_value->getNature() === TimeboxArtifactLinkType::ART_LINK_SHORT_NAME) {
                 return $project;
             }
         }
