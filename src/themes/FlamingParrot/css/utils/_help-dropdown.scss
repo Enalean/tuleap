@@ -165,7 +165,7 @@
     padding: 0;
     border-radius: 50%;
     border-color: var(--tlp-theme-dark-background-color);
-    background: var(--tlp-theme-dark-background-color);
+    background: var(--tlp-theme-dark-background-color) !important;
 
     > .fa {
         font-size: 20px;
@@ -188,7 +188,7 @@
     &.new-release-note-available {
         animation: pulse 300ms ease-in-out 1s 3 both;
         border-color: var(--tlp-ui-warning);
-        background: var(--tlp-ui-warning);
+        background: var(--tlp-ui-warning) !important;
         color: var(--tlp-ui-white);
 
         > .fa-star {
