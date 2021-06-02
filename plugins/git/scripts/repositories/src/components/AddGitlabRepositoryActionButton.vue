@@ -26,7 +26,7 @@
             class="tlp-dropdown-menu-item"
             role="menuitem"
         >
-            <i class="fab fa-gitlab tlp-button-icon"></i>
+            <i class="fab fa-gitlab tlp-button-icon git-gitlab-icon" aria-hidden="true"></i>
             <translate class="git-add-action-button">Add GitLab repository</translate>
         </button>
     </div>

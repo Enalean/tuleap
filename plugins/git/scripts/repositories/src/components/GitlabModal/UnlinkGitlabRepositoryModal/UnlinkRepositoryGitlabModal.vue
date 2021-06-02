@@ -27,7 +27,7 @@
     >
         <div class="tlp-modal-header">
             <h1 class="tlp-modal-title" id="create-repository-modal-title">
-                <i class="fab fa-gitlab tlp-modal-title-icon"></i>
+                <i class="fab fa-gitlab tlp-modal-title-icon" aria-hidden="true"></i>
                 <translate>Unlink GitLab repository?</translate>
             </h1>
             <button

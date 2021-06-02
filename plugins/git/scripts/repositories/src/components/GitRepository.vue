@@ -157,13 +157,13 @@
                     ></div>
                     <i
                         v-if="isRepositoryHandledByGerrit"
-                        class="fas fa-tlp-gerrit"
+                        class="fas fa-tlp-gerrit git-gerrit-icon"
                         v-bind:title="$gettext('This repository is handled by Gerrit.')"
                         data-test="git-repository-card-gerrit-icon"
                     ></i>
                     <i
                         v-if="isGitlabRepository"
-                        class="fab fa-gitlab"
+                        class="fab fa-gitlab git-gitlab-icon"
                         v-bind:class="{ 'git-gitlab-icon-align-to-date': !is_admin }"
                         v-bind:title="$gettext('This repository comes from GitLab.')"
                         data-test="git-repository-card-gitlab-icon"
