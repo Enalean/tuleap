@@ -29,7 +29,6 @@ use Tuleap\Reference\GetReferenceEvent;
 use Tuleap\Reference\ReferenceGetTooltipChainJson;
 use Tuleap\Reference\ReferenceGetTooltipChainLegacy;
 use Tuleap\Reference\ReferenceGetTooltipChainOpenGraph;
-use Tuleap\Reference\ReferenceOpenGraphDispatcher;
 
 $reference_manager = ReferenceManager::instance();
 $request           = HTTPRequest::instance();
@@ -211,9 +210,12 @@ if ($request->isAjax()) {
                 ->chain(
                     new ReferenceGetTooltipChainOpenGraph(
                         $html_purifier,
-                        new ReferenceOpenGraphDispatcher(
-                            HttpClientFactory::createClient(),
-                            HTTPFactoryBuilder::requestFactory()
+                        new \Embed\Embed(
+                            new \Embed\Http\Crawler(
+                                HttpClientFactory::createClient(),
+                                HTTPFactoryBuilder::requestFactory(),
+                                HTTPFactoryBuilder::URIFactory()
+                            )
                         )
                     )
                 );

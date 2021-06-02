@@ -36,19 +36,16 @@ class ReferenceOpenGraph
      * @var Reference
      */
     private $reference;
-    /**
-     * @var ReferenceOpenGraphDispatcher
-     */
-    private $dispatcher;
+    private Embed $embed;
 
     public function __construct(
         Codendi_HTMLPurifier $purifier,
         Reference $reference,
-        ReferenceOpenGraphDispatcher $dispatcher
+        Embed $embed
     ) {
-        $this->purifier   = $purifier;
-        $this->reference  = $reference;
-        $this->dispatcher = $dispatcher;
+        $this->purifier  = $purifier;
+        $this->reference = $reference;
+        $this->embed     = $embed;
     }
 
     public function getContent(): string
@@ -59,20 +56,15 @@ class ReferenceOpenGraph
                 return '';
             }
 
-            $embed = Embed::create(
-                $this->reference->getLink(),
-                null,
-                $this->dispatcher
-            );
-
-            if ($embed->title) {
-                $html .= $this->purifier->purify($embed->title);
+            $embed_extractor = $this->embed->get($this->reference->getLink());
+            if ($embed_extractor->title) {
+                $html .= $this->purifier->purify($embed_extractor->title);
             }
-            if ($embed->description) {
-                if ($embed->title) {
+            if ($embed_extractor->description) {
+                if ($embed_extractor->title) {
                     $html .= "<br />";
                 }
-                $html .= $this->purifier->purify($embed->description);
+                $html .= $this->purifier->purify($embed_extractor->description);
             }
         } catch (Exception $exception) {
             // Skip invalid URLs
