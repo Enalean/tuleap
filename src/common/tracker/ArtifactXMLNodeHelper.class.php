@@ -79,7 +79,14 @@ class ArtifactXMLNodeHelper
     public function getNodeWithValue($node_name, $value)
     {
         $node = $this->document->createElement($node_name);
-        $node->appendChild($this->getCDATASection($node, $value));
+
+        $node->appendChild(
+            $this->getCDATASection(
+                $node,
+                Encoding_SupportedXmlCharEncoding::getXMLCompatibleString($value)
+            )
+        );
+
         return $node;
     }
 }
