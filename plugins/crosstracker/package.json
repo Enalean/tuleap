@@ -9,7 +9,7 @@
     "@tuleap/plugin-tracker": "file://../tracker",
     "extendable-error": "^0.1.5",
     "moment": "^2.29.1",
-    "vue": "^2.6.12",
+    "vue": "^2.6.13",
     "vue-gettext": "^2.1.12",
     "vuex": "^3.6.2",
     "vuex-class": "^0.3.2"
