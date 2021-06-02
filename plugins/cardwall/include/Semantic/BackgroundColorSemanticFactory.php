@@ -34,7 +34,7 @@ class BackgroundColorSemanticFactory implements IDuplicateSemantic
         $this->background_color_dao = $background_color_dao;
     }
 
-    public function duplicate($from_tracker_id, $to_tracker_id, array $field_mapping)
+    public function duplicate(int $from_tracker_id, int $to_tracker_id, array $field_mapping): void
     {
         $old_background_field = $this->background_color_dao->searchBackgroundColor($from_tracker_id);
         if (! $old_background_field) {
