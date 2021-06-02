@@ -21,7 +21,7 @@
     --tlp-illustration-primary-color: var(--tlp-legacy-illustration-primary-color);
     --tlp-illustration-secondary-dark-color: var(--tlp-legacy-illustration-secondary-dark-color);
     --tlp-illustration-secondary-light-color: var(--tlp-legacy-illustration-secondary-light-color);
-    --tlp-illustration-tertiary-color: var(--tlp-illustration-tertiary-color);
+    --tlp-illustration-tertiary-color: var(--tlp-legacy-illustration-tertiary-color);
 }
 
 .tlp-illustration-primary-box {
@@ -59,9 +59,9 @@
 }
 
 .tlp-illustration-tertiary-fill {
-    fill: var(--tlp-illustration-tertiary-color);
+    fill: var(--tlp-legacy-illustration-tertiary-color);
 }
 
 .tlp-illustration-tertiary-stroke {
-    stroke: var(--tlp-illustration-tertiary-color);
+    stroke: var(--tlp-legacy-illustration-tertiary-color);
 }

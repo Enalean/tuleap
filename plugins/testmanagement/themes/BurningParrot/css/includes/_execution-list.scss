@@ -361,13 +361,13 @@ $height-testmanagement-header: calc(var(--tlp-title-spacing) + var(--tlp-small-s
 
     &.passed {
         border-left: 3px solid var(--tlp-ui-success);
-        background: var(--tlp-ui-success-color-transparent-90);
+        background: var(--tlp-ui-success-transparent-90);
         color: var(--tlp-ui-success);
     }
 
     &.failed {
         border-left: 3px solid var(--tlp-ui-danger);
-        background: var(--tlp-ui-danger-color-transparent-90);
+        background: var(--tlp-ui-danger-transparent-90);
         color: var(--tlp-ui-danger);
     }
 
