@@ -530,6 +530,10 @@ legend {
     }
 }
 
+select.input-small { // stylelint-disable-line selector-no-qualifying-type
+    width: auto;
+}
+
 /************
  * MODALS
  ************/
