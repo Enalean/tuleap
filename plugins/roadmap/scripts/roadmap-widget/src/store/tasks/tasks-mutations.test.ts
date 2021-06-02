@@ -29,16 +29,6 @@ import {
 } from "../../type";
 
 describe("tasks-mutations", () => {
-    it("setIsLoading set the corresponding boolean", () => {
-        const state: TasksState = {
-            is_loading: false,
-        } as TasksState;
-
-        mutations.setIsLoading(state, true);
-
-        expect(state.is_loading).toBe(true);
-    });
-
     it("setTasks stores the tasks", () => {
         const state: TasksState = {
             tasks: [] as Task[],

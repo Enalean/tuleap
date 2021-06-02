@@ -28,18 +28,21 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenterFactory;
 
 class RoadmapWidgetPresenterBuilder
 {
-    /**
-     * @var NaturePresenterFactory
-     */
-    private $nature_presenter_factory;
+    private NaturePresenterFactory $nature_presenter_factory;
+    private \TrackerFactory $tracker_factory;
 
-    public function __construct(NaturePresenterFactory $nature_presenter_factory)
+    public function __construct(NaturePresenterFactory $nature_presenter_factory, \TrackerFactory $tracker_factory)
     {
         $this->nature_presenter_factory = $nature_presenter_factory;
+        $this->tracker_factory          = $tracker_factory;
     }
 
-    public function getPresenter(int $roadmap_id): RoadmapWidgetPresenter
-    {
+    public function getPresenter(
+        int $roadmap_id,
+        ?int $lvl1_iteration_tracker_id,
+        ?int $lvl2_iteration_tracker_id,
+        \PFUser $user
+    ): RoadmapWidgetPresenter {
         $visible_natures = array_filter(
             $this->nature_presenter_factory->getOnlyVisibleNatures(),
             static function (NaturePresenter $nature) {
@@ -47,6 +50,22 @@ class RoadmapWidgetPresenterBuilder
             }
         );
 
-        return new RoadmapWidgetPresenter($roadmap_id, $visible_natures);
+        return new RoadmapWidgetPresenter(
+            $roadmap_id,
+            $visible_natures,
+            $this->shouldLoadIterations($lvl1_iteration_tracker_id, $user),
+            $this->shouldLoadIterations($lvl2_iteration_tracker_id, $user)
+        );
+    }
+
+    private function shouldLoadIterations(?int $iteration_tracker_id, \PFUser $user): bool
+    {
+        if (! $iteration_tracker_id) {
+            return false;
+        }
+
+        $tracker = $this->tracker_factory->getTrackerById($iteration_tracker_id);
+
+        return $tracker && $tracker->isActive() && $tracker->userCanView($user);
     }
 }

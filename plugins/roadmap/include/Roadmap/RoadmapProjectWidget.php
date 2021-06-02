@@ -39,6 +39,9 @@ final class RoadmapProjectWidget extends \Widget
 {
     public const ID = 'plugin_roadmap_project_widget';
 
+    private ?int $lvl1_iteration_tracker_id;
+    private ?int $lvl2_iteration_tracker_id;
+
     /**
      * @var ?int
      */
@@ -98,7 +101,12 @@ final class RoadmapProjectWidget extends \Widget
 
         return $this->renderer->renderToString(
             'widget-roadmap',
-            $this->presenter_builder->getPresenter((int) $this->content_id)
+            $this->presenter_builder->getPresenter(
+                (int) $this->content_id,
+                $this->lvl1_iteration_tracker_id,
+                $this->lvl2_iteration_tracker_id,
+                $this->getCurrentUser(),
+            )
         );
     }
 
@@ -236,9 +244,11 @@ final class RoadmapProjectWidget extends \Widget
         );
 
         if ($row) {
-            $this->title      = $row['title'];
-            $this->tracker_id = $row['tracker_id'];
-            $this->content_id = $id;
+            $this->lvl1_iteration_tracker_id = $row['lvl1_iteration_tracker_id'];
+            $this->lvl2_iteration_tracker_id = $row['lvl2_iteration_tracker_id'];
+            $this->title                     = $row['title'];
+            $this->tracker_id                = $row['tracker_id'];
+            $this->content_id                = $id;
         }
     }
 

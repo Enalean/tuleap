@@ -20,32 +20,9 @@
 import type { RootState } from "../type";
 import type { TasksState } from "./type";
 import type { ActionContext } from "vuex";
-import type { FetchWrapperError } from "@tuleap/tlp-fetch";
-import { retrieveAllSubtasks, retrieveAllTasks } from "../../helpers/task-retriever";
+import { retrieveAllSubtasks } from "../../helpers/task-retriever";
 import type { Task } from "../../type";
 import { SUBTASKS_WAITING_TO_BE_LOADED } from "../../type";
-
-export async function loadTasks(
-    context: ActionContext<TasksState, RootState>,
-    roadmap_id: number
-): Promise<void> {
-    try {
-        const tasks = await retrieveAllTasks(roadmap_id);
-        if (tasks.length === 0) {
-            context.commit("setApplicationInEmptyState", null, { root: true });
-        } else {
-            context.commit("setTasks", tasks);
-        }
-    } catch (e) {
-        if (isFetchWrapperError(e)) {
-            handleRestError(context, e);
-        } else {
-            throw e;
-        }
-    } finally {
-        context.commit("setIsLoading", false);
-    }
-}
 
 export function toggleSubtasks(
     context: ActionContext<TasksState, RootState>,
@@ -79,21 +56,4 @@ function loadSubtasks(context: ActionContext<TasksState, RootState>, task: Task)
         .catch(() => {
             context.commit("markSubtasksAsError", task);
         });
-}
-
-function handleRestError(
-    context: ActionContext<TasksState, RootState>,
-    rest_error: FetchWrapperError
-): void {
-    if (rest_error.response.status === 404 || rest_error.response.status === 403) {
-        context.commit("setApplicationInEmptyState", null, { root: true });
-
-        return;
-    }
-
-    context.commit("setApplicationInErrorStateDueToRestError", rest_error, { root: true });
-}
-
-function isFetchWrapperError(error: Error): error is FetchWrapperError {
-    return "response" in error;
 }

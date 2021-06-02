@@ -59,9 +59,9 @@ describe("App", () => {
         const wrapper = await mountComponent(
             {
                 tasks: [],
-                is_loading: true,
             },
             {
+                is_loading: true,
                 should_display_empty_state: false,
                 should_display_error_state: false,
                 error_message: "",
@@ -78,9 +78,9 @@ describe("App", () => {
         const wrapper = await mountComponent(
             {
                 tasks: [],
-                is_loading: false,
             },
             {
+                is_loading: false,
                 should_display_empty_state: true,
                 should_display_error_state: false,
                 error_message: "",
@@ -97,9 +97,9 @@ describe("App", () => {
         const wrapper = await mountComponent(
             {
                 tasks: [],
-                is_loading: false,
             },
             {
+                is_loading: false,
                 should_display_empty_state: false,
                 should_display_error_state: true,
                 error_message: "Missing timeframe",
@@ -119,9 +119,9 @@ describe("App", () => {
         const wrapper = await mountComponent(
             {
                 tasks: [],
-                is_loading: false,
             },
             {
+                is_loading: false,
                 should_display_empty_state: false,
                 should_display_error_state: true,
                 error_message: "",
@@ -144,9 +144,9 @@ describe("App", () => {
                     { id: 1, start: new Date(2020, 3, 15), end: null } as Task,
                     { id: 2, start: new Date(2020, 4, 15), end: null } as Task,
                 ],
-                is_loading: false,
             },
             {
+                is_loading: false,
                 should_display_empty_state: false,
                 should_display_error_state: false,
                 error_message: "",

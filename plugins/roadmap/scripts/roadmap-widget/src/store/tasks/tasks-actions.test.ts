@@ -22,7 +22,6 @@ import type { ActionContext } from "vuex";
 import type { TasksState } from "./type";
 import type { RootState } from "../type";
 import type { Task } from "../../type";
-import { mockFetchError } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper";
 import { SUBTASKS_ARE_LOADED, SUBTASKS_WAITING_TO_BE_LOADED } from "../../type";
 import * as TaskRetriever from "../../helpers/task-retriever";
 
@@ -35,77 +34,6 @@ describe("tasks-actions", () => {
             root_state: {} as RootState,
         } as unknown as ActionContext<TasksState, RootState>;
         jest.clearAllMocks();
-    });
-
-    describe("loadTasks", () => {
-        it("should display an empty state if there is no tasks", async () => {
-            jest.spyOn(TaskRetriever, "retrieveAllTasks").mockResolvedValue([]);
-
-            await actions.loadTasks(context, 123);
-
-            expect(context.commit).toHaveBeenCalledWith("setApplicationInEmptyState", null, {
-                root: true,
-            });
-            expect(context.commit).toHaveBeenCalledWith("setIsLoading", false);
-        });
-
-        it.each([[400], [500]])("should display an error state for a %i", async (status) => {
-            const recursive_get = jest.spyOn(TaskRetriever, "retrieveAllTasks");
-            mockFetchError(recursive_get, {
-                status,
-                error_json: {
-                    error: {
-                        i18n_error_message: "Error message",
-                    },
-                },
-            });
-
-            await actions.loadTasks(context, 123);
-
-            expect(context.commit).toHaveBeenCalledWith(
-                "setApplicationInErrorStateDueToRestError",
-                expect.anything(),
-                { root: true }
-            );
-            expect(context.commit).toHaveBeenCalledWith("setIsLoading", false);
-        });
-
-        it.each([[403], [404]])("should display an empty state for a %i", async (status) => {
-            const recursive_get = jest.spyOn(TaskRetriever, "retrieveAllTasks");
-            mockFetchError(recursive_get, {
-                status,
-            });
-
-            await actions.loadTasks(context, 123);
-
-            expect(context.commit).toHaveBeenCalledWith("setApplicationInEmptyState", null, {
-                root: true,
-            });
-            expect(context.commit).toHaveBeenCalledWith("setIsLoading", false);
-        });
-
-        it("should store the tasks in the store", async () => {
-            const task_1 = {
-                id: 1,
-                start: new Date(2020, 3, 15),
-                end: null,
-                is_milestone: true,
-                dependencies: {},
-            } as Task;
-            const task_2 = {
-                id: 2,
-                start: new Date(2020, 4, 15),
-                end: null,
-                is_milestone: true,
-                dependencies: {},
-            } as Task;
-            jest.spyOn(TaskRetriever, "retrieveAllTasks").mockResolvedValue([task_1, task_2]);
-
-            await actions.loadTasks(context, 123);
-
-            expect(context.commit).toHaveBeenCalledWith("setTasks", [task_1, task_2]);
-            expect(context.commit).toHaveBeenCalledWith("setIsLoading", false);
-        });
     });
 
     describe("toggleSubtasks", () => {
