@@ -301,52 +301,39 @@ class BackendSVN extends Backend
      */
     public function updateHooks(Project $project, $system_path, $can_change_svn_log, $hook_commit_path, $post_commit_file, $post_commit_launcher, $pre_commit_file)
     {
-        $unix_group_name = $project->getUnixNameMixedCase(); // May contain upper-case letters
-        if ($project->isSVNTracked()) {
-            $filename    = "$system_path/hooks/post-commit";
-            $update_hook = false;
-            if (! is_file($filename)) {
-                // File header
-                $fp = fopen($filename, 'w');
-                fwrite($fp, "#!/bin/sh\n");
-                fwrite($fp, "# POST-COMMIT HOOK\n");
-                fwrite($fp, "#\n");
-                fwrite($fp, "# The post-commit hook is invoked after a commit.  Subversion runs\n");
-                fwrite($fp, "# this hook by invoking a program (script, executable, binary, etc.)\n");
-                fwrite($fp, "# named 'post-commit' (for which this file is a template) with the \n");
-                fwrite($fp, "# following ordered arguments:\n");
-                fwrite($fp, "#\n");
-                fwrite($fp, "#   [1] REPOS-PATH   (the path to this repository)\n");
-                fwrite($fp, "#   [2] REV          (the number of the revision just committed)\n\n");
-                fclose($fp);
-                $update_hook = true;
-            } else {
-                $file_array = file($filename);
-                if (! in_array($this->block_marker_start, $file_array)) {
-                    $update_hook = true;
-                }
-            }
-            if ($update_hook) {
-                $command  = 'REPOS="$1"' . "\n";
-                $command .= 'REV="$2"' . "\n";
-
-                $command .= $post_commit_launcher . ' ' . $hook_commit_path . '/' . $post_commit_file . ' "$REPOS" "$REV" >/dev/null';
-
-                $this->addBlock($filename, $command);
-                $this->chown($filename, $this->getHTTPUser());
-                $this->chgrp($filename, $this->getSvnFilesUnixGroupName($project));
-                chmod("$filename", 0775);
-            }
+        $filename    = "$system_path/hooks/post-commit";
+        $update_hook = false;
+        if (! is_file($filename)) {
+            // File header
+            $fp = fopen($filename, 'w');
+            fwrite($fp, "#!/bin/sh\n");
+            fwrite($fp, "# POST-COMMIT HOOK\n");
+            fwrite($fp, "#\n");
+            fwrite($fp, "# The post-commit hook is invoked after a commit.  Subversion runs\n");
+            fwrite($fp, "# this hook by invoking a program (script, executable, binary, etc.)\n");
+            fwrite($fp, "# named 'post-commit' (for which this file is a template) with the \n");
+            fwrite($fp, "# following ordered arguments:\n");
+            fwrite($fp, "#\n");
+            fwrite($fp, "#   [1] REPOS-PATH   (the path to this repository)\n");
+            fwrite($fp, "#   [2] REV          (the number of the revision just committed)\n\n");
+            fclose($fp);
+            $update_hook = true;
         } else {
-            // Make sure that the Codendi blocks are removed
-            $filename    = "$system_path/hooks/post-commit";
-            $update_hook = false;
-            if (is_file($filename)) {
-                $file_array = file($filename);
-                if (in_array($this->block_marker_start, $file_array)) {
-                    $this->removeBlock($filename);
-                }
+            $file_array = file($filename);
+            if (! in_array($this->block_marker_start, $file_array)) {
+                $update_hook = true;
             }
+        }
+        if ($update_hook) {
+            $command  = 'REPOS="$1"' . "\n";
+            $command .= 'REV="$2"' . "\n";
+
+            $command .= $post_commit_launcher . ' ' . $hook_commit_path . '/' . $post_commit_file . ' "$REPOS" "$REV" >/dev/null';
+
+            $this->addBlock($filename, $command);
+            $this->chown($filename, $this->getHTTPUser());
+            $this->chgrp($filename, $this->getSvnFilesUnixGroupName($project));
+            chmod("$filename", 0775);
         }
 
         // Put in place the Codendi svn pre-commit hook
