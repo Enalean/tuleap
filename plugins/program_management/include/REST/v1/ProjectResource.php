@@ -189,18 +189,26 @@ final class ProjectResource extends AuthenticatedResource
      * </pre>
      *
      * <br/>
-     * <strong>"iteration_plan"</strong> is optional. It permits to configure iteration tracker.
+     * <strong>"iteration"</strong> is optional. It permits to configure iteration tracker.
      * <br/>
      * Example:
      * <pre>
      * {<br/>
-     * &nbsp;"iteration_tracker_id": 115,<br/>
+     * &nbsp;"iteration_tracker_id": 115<br/>
+     * }
+     * </pre>
+     * <br/>
+     *
+     * <strong>"iteration_label"</strong> and <strong>"iteration_sub_label"</strong> are optional. They permit to set a custom label for iterations.
+     * <br/>
+     * The following values are used by default:
+     * <pre>
+     * {<br/>
      * &nbsp;"iteration_label": "Iterations"<br/>
      * &nbsp;"iteration_sub_label": "iteration"<br/>
      * }
      * </pre>
      * <br/>
-     * <strong>"iteration_label"</strong> and <strong>"iteration_sub_label"</strong> are optional.
      *
      * @url    PUT {id}/program_plan
      *
