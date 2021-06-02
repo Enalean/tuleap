@@ -19,166 +19,30 @@
 
 @use '../../src/themes/tlp/src/scss/variables/colors/swatch-colors';
 
+@function to-snake-case($string) {
+    $index: str-index($string, '-');
+
+    @if $index {
+        @return str-slice($string, 1, $index - 1) + '_' + to-snake-case(str-slice($string, $index + str-length('-')));
+    }
+
+    @return $string;
+}
+
+@mixin provider-button-colors() {
+    @each $color-name, $colors in swatch-colors.$tlp-swatch-color-map {
+        &.#{to-snake-case($color-name)} {
+            border-color: map-get($colors, 'primary');
+            background: map-get($colors, 'primary') !important;
+
+            &:hover {
+                border-color: darken(map-get($colors, 'primary'), 5%);
+                background: darken(map-get($colors, 'primary'), 5%) !important;
+            }
+        }
+    }
+}
+
 .provider-button {
-    /* stylelint-disable selector-class-pattern */
-    &.inca_silver {
-        border-color: swatch-colors.$tlp-swatch-inca-silver;
-        background: swatch-colors.$tlp-swatch-inca-silver;
-
-        &:hover {
-            border-color: darken(swatch-colors.$tlp-swatch-inca-silver, 5%);
-            background: darken(swatch-colors.$tlp-swatch-inca-silver, 5%);
-        }
-    }
-
-    &.chrome_silver {
-        border-color: swatch-colors.$tlp-swatch-chrome-silver;
-        background: swatch-colors.$tlp-swatch-chrome-silver;
-
-        &:hover {
-            border-color: darken(swatch-colors.$tlp-swatch-chrome-silver, 5%);
-            background: darken(swatch-colors.$tlp-swatch-chrome-silver, 5%);
-        }
-    }
-
-    &.fiesta_red {
-        border-color: swatch-colors.$tlp-swatch-fiesta-red;
-        background: swatch-colors.$tlp-swatch-fiesta-red;
-
-        &:hover {
-            border-color: darken(swatch-colors.$tlp-swatch-fiesta-red, 5%);
-            background: darken(swatch-colors.$tlp-swatch-fiesta-red, 5%);
-        }
-    }
-
-    &.teddy_brown {
-        border-color: swatch-colors.$tlp-swatch-teddy-brown;
-        background: swatch-colors.$tlp-swatch-teddy-brown;
-
-        &:hover {
-            border-color: darken(swatch-colors.$tlp-swatch-teddy-brown, 5%);
-            background: darken(swatch-colors.$tlp-swatch-teddy-brown, 5%);
-        }
-    }
-
-    &.clockwork_orange {
-        border-color: swatch-colors.$tlp-swatch-clockwork-orange;
-        background: swatch-colors.$tlp-swatch-clockwork-orange;
-
-        &:hover {
-            border-color: darken(swatch-colors.$tlp-swatch-clockwork-orange, 5%);
-            background: darken(swatch-colors.$tlp-swatch-clockwork-orange, 5%);
-        }
-    }
-
-    &.red_wine {
-        border-color: swatch-colors.$tlp-swatch-red-wine;
-        background: swatch-colors.$tlp-swatch-red-wine;
-
-        &:hover {
-            border-color: darken(swatch-colors.$tlp-swatch-red-wine, 5%);
-            background: darken(swatch-colors.$tlp-swatch-red-wine, 5%);
-        }
-    }
-
-    &.acid_green {
-        border-color: swatch-colors.$tlp-swatch-acid-green;
-        background: swatch-colors.$tlp-swatch-acid-green;
-
-        &:hover {
-            border-color: darken(swatch-colors.$tlp-swatch-acid-green, 5%);
-            background: darken(swatch-colors.$tlp-swatch-acid-green, 5%);
-        }
-    }
-
-    &.army_green {
-        border-color: swatch-colors.$tlp-swatch-army-green;
-        background: swatch-colors.$tlp-swatch-army-green;
-
-        &:hover {
-            border-color: darken(swatch-colors.$tlp-swatch-army-green, 5%);
-            background: darken(swatch-colors.$tlp-swatch-army-green, 5%);
-        }
-    }
-
-    &.sherwood_green {
-        border-color: swatch-colors.$tlp-swatch-sherwood-green;
-        background: swatch-colors.$tlp-swatch-sherwood-green;
-
-        &:hover {
-            border-color: darken(swatch-colors.$tlp-swatch-sherwood-green, 5%);
-            background: darken(swatch-colors.$tlp-swatch-sherwood-green, 5%);
-        }
-    }
-
-    &.ocean_turquoise {
-        border-color: swatch-colors.$tlp-swatch-ocean-turquoise;
-        background: swatch-colors.$tlp-swatch-ocean-turquoise;
-
-        &:hover {
-            border-color: darken(swatch-colors.$tlp-swatch-ocean-turquoise, 5%);
-            background: darken(swatch-colors.$tlp-swatch-ocean-turquoise, 5%);
-        }
-    }
-
-    &.daphne_blue {
-        border-color: swatch-colors.$tlp-swatch-daphne-blue;
-        background: swatch-colors.$tlp-swatch-daphne-blue;
-
-        &:hover {
-            border-color: darken(swatch-colors.$tlp-swatch-daphne-blue, 5%);
-            background: darken(swatch-colors.$tlp-swatch-daphne-blue, 5%);
-        }
-    }
-
-    &.lake_placid_blue {
-        border-color: swatch-colors.$tlp-swatch-lake-placid-blue;
-        background: swatch-colors.$tlp-swatch-lake-placid-blue;
-
-        &:hover {
-            border-color: darken(swatch-colors.$tlp-swatch-lake-placid-blue, 5%);
-            background: darken(swatch-colors.$tlp-swatch-lake-placid-blue, 5%);
-        }
-    }
-
-    &.deep_blue {
-        border-color: swatch-colors.$tlp-swatch-deep-blue;
-        background: swatch-colors.$tlp-swatch-deep-blue;
-
-        &:hover {
-            border-color: darken(swatch-colors.$tlp-swatch-deep-blue, 5%);
-            background: darken(swatch-colors.$tlp-swatch-deep-blue, 5%);
-        }
-    }
-
-    &.plum_crazy {
-        border-color: swatch-colors.$tlp-swatch-plum-crazy;
-        background: swatch-colors.$tlp-swatch-plum-crazy;
-
-        &:hover {
-            border-color: darken(swatch-colors.$tlp-swatch-plum-crazy, 5%);
-            background: darken(swatch-colors.$tlp-swatch-plum-crazy, 5%);
-        }
-    }
-
-    &.peggy_pink {
-        border-color: swatch-colors.$tlp-swatch-peggy-pink;
-        background: swatch-colors.$tlp-swatch-peggy-pink;
-
-        &:hover {
-            border-color: darken(swatch-colors.$tlp-swatch-peggy-pink, 5%);
-            background: darken(swatch-colors.$tlp-swatch-peggy-pink, 5%);
-        }
-    }
-
-    &.flamingo_pink {
-        border-color: swatch-colors.$tlp-swatch-flamingo-pink;
-        background: swatch-colors.$tlp-swatch-flamingo-pink;
-
-        &:hover {
-            border-color: darken(swatch-colors.$tlp-swatch-flamingo-pink, 5%);
-            background: darken(swatch-colors.$tlp-swatch-flamingo-pink, 5%);
-        }
-    }
-    /* stylelint-enable */
+    @include provider-button-colors;
 }
