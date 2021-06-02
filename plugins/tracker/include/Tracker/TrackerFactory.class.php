@@ -426,11 +426,7 @@ class TrackerFactory
         );
 
         // Duplicate Semantics
-        Tracker_SemanticFactory::instance()->duplicate(
-            (int) $id_template,
-            $id,
-            $field_mapping
-        );
+        Tracker_SemanticFactory::instance()->duplicate($id_template, $id, $field_mapping);
 
         // Duplicate Canned Responses
         Tracker_CannedResponseFactory::instance()->duplicate($id_template, $id);

@@ -85,8 +85,14 @@ class Tracker_Semantic_StatusFactory implements IBuildSemanticFromXML, IDuplicat
 
     /**
      * Duplicate the semantic from tracker source to tracker target
+     *
+     * @param int   $from_tracker_id The Id of the tracker source
+     * @param int   $to_tracker_id   The Id of the tracker target
+     * @param array $field_mapping   The mapping of the fields of the tracker
+     *
+     * @return void
      */
-    public function duplicate(int $from_tracker_id, int $to_tracker_id, array $field_mapping): void
+    public function duplicate($from_tracker_id, $to_tracker_id, array $field_mapping)
     {
         $dar                  = $this->getDao()->searchByTrackerId($from_tracker_id);
         $from_status_field_id = null;
