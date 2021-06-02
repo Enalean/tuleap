@@ -34,7 +34,7 @@ use Tuleap\User\UserConnectionUpdateEvent;
 use Tuleap\User\UserRetrieverByLoginNameEvent;
 use Tuleap\Widget\WidgetFactory;
 
-class UserManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
+class UserManager implements \Tuleap\User\ProvideCurrentUser // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
 
     /**
@@ -449,7 +449,7 @@ class UserManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
      *                             else it will check from the user cookies
      * @return PFUser the user currently logged in (who made the request)
      */
-    public function getCurrentUser($session_hash = false)
+    public function getCurrentUser($session_hash = false): PFUser
     {
         if (! isset($this->_currentuser) || $session_hash !== false) {
             if ($session_hash === false) {

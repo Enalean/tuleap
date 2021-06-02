@@ -1112,10 +1112,6 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
 
         $user = UserManager::instance()->getCurrentUser();
 
-        if (! $user) {
-            $import_spotter->endImport();
-        }
-
         TrackerXmlImport::build($params['user_finder'], $params['logger'])->import(
             $params['configuration'],
             $params['project'],

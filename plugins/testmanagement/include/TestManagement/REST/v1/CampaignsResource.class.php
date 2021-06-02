@@ -885,16 +885,7 @@ class CampaignsResource
 
     private function getCurrentUser(): PFUser
     {
-        $user = $this->user_manager->getCurrentUser();
-
-        if (! $user) {
-            throw new RestException(
-                400,
-                'User not found'
-            );
-        }
-
-        return $user;
+        return $this->user_manager->getCurrentUser();
     }
 
     private function getFrozenFieldDetector(): FrozenFieldDetector

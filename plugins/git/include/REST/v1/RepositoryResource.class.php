@@ -581,7 +581,6 @@ class RepositoryResource extends AuthenticatedResource
         );
 
         if (
-            ! $user ||
             ! $set_build_status_permission_manager->canUserSetBuildStatusInRepository($user, $repository)
         ) {
             throw new RestException(403, 'You are not allowed to set the build status');

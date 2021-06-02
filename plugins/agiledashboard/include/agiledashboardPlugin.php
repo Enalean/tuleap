@@ -65,6 +65,7 @@ use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneDao;
 use Tuleap\AgileDashboard\Planning\PlanningJavascriptDependenciesProvider;
 use Tuleap\AgileDashboard\Planning\PlanningTrackerBacklogChecker;
+use Tuleap\AgileDashboard\Planning\XML\ProvideCurrentUserForXMLImport;
 use Tuleap\AgileDashboard\RealTime\RealTimeArtifactMessageController;
 use Tuleap\AgileDashboard\RemainingEffortValueRetriever;
 use Tuleap\AgileDashboard\Semantic\MoveChangesetXMLUpdater;
@@ -152,6 +153,7 @@ use Tuleap\Tracker\XML\Importer\ImportXMLProjectTrackerDone;
 use Tuleap\User\History\HistoryEntryCollection;
 use Tuleap\User\History\HistoryQuickLink;
 use Tuleap\User\History\HistoryRetriever;
+use Tuleap\User\ProvideCurrentUser;
 
 require_once __DIR__ . '/../../tracker/include/trackerPlugin.php';
 require_once __DIR__ . '/../../cardwall/include/cardwallPlugin.php';
@@ -962,7 +964,8 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
         $request->set('project_id', $params['project_id']);
         $request->set('group_id', $params['project_id']);
 
-        $this->routeLegacyController()->process($request, $GLOBALS['Response'], []);
+        $this->routeLegacyController(new ProvideCurrentUserForXMLImport(UserManager::instance()))
+            ->process($request, $GLOBALS['Response'], []);
     }
 
     public function plugin_statistics_service_usage($params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
@@ -1647,8 +1650,12 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
         });
     }
 
-    public function routeLegacyController(): \Tuleap\AgileDashboard\AgileDashboardLegacyController
+    public function routeLegacyController(?ProvideCurrentUser $current_user_provider = null): \Tuleap\AgileDashboard\AgileDashboardLegacyController
     {
+        if ($current_user_provider === null) {
+            $current_user_provider = UserManager::instance();
+        }
+
         return new \Tuleap\AgileDashboard\AgileDashboardLegacyController(
             new AgileDashboardRouterBuilder(
                 PluginFactory::instance(),
@@ -1656,6 +1663,7 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
                 new VisitRecorder(new RecentlyVisitedDao()),
                 $this->getAllBreadCrumbsForMilestoneBuilder(),
                 $this->getBacklogFactory(),
+                $current_user_provider,
             )
         );
     }

@@ -705,12 +705,7 @@ class ExecutionsResource
      */
     private function getCurrentUser(): PFUser
     {
-        $user = $this->user_manager->getCurrentUser();
-        if (! $user) {
-            throw new RestException(404, "User not found");
-        }
-
-        return $user;
+        return $this->user_manager->getCurrentUser();
     }
 
     private function getFrozenFieldDetector(): FrozenFieldDetector

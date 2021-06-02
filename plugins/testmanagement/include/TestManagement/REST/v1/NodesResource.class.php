@@ -101,11 +101,6 @@ class NodeResource
      */
     private function getCurrentUser(): PFUser
     {
-        $user = UserManager::instance()->getCurrentUser();
-        if (! $user) {
-            throw new RestException(404, "User not found");
-        }
-
-        return $user;
+        return UserManager::instance()->getCurrentUser();
     }
 }
