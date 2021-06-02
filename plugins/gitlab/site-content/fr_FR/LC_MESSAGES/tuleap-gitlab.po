@@ -24,6 +24,9 @@ msgstr "Étiquette GitLab"
 msgid "GitLab commit"
 msgstr "Commit GitLab"
 
+msgid "GitLab integration"
+msgstr "L'intégration GitLab"
+
 msgid "GitLab merge request"
 msgstr "Demande de fusion GitLab"
 
@@ -93,3 +96,6 @@ msgstr ""
 "Nous avons réussi à générer un nouveau secret et à l'envoyer au serveur, "
 "mais n'avons pas pu analyser sa réponse. Vous devriez vérifier que tout est "
 "ok."
+
+msgid "close artifacts"
+msgstr "fermer les artéfacts"

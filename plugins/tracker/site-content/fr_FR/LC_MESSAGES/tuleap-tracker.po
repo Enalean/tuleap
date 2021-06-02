@@ -515,6 +515,20 @@ msgid "An action on the field '%1$s' already exists."
 msgstr "Une action sur le champ '%1$s' existe déjà."
 
 msgid ""
+"An artifact could be considered <strong>done</strong> only if a semantic "
+"status is defined."
+msgstr ""
+"Un artéfact sera considéré comme <strong>fini</strong> seulement lorsqu'une "
+"sémantique statut sera définie."
+
+msgid ""
+"An artifact is considered to be <strong>done</strong> when its field %s will "
+"have one of the following closed values:"
+msgstr ""
+"Un artéfact sera considéré comme <strong>fini</strong> lorsque son champ %s "
+"aura une des valeurs fermées suivantes :"
+
+msgid ""
 "An email not truncated will be sent at the end of the migration process."
 msgstr ""
 "Un courriel non tronqué sera envoyé à la fin du processus de migration."
@@ -669,6 +683,13 @@ msgstr "Artéfacts"
 
 msgid "Artifacts Data Import"
 msgstr "Importation des artefacts"
+
+msgid ""
+"Artifacts cannot be considered <strong>done</strong> because there is no "
+"value selected for this semantic."
+msgstr ""
+"Les artéfacts ne peuvent être considérés comme <strong>fini</strong> car il "
+"n'y aucune valeur selectionnée pour cette sémantique."
 
 msgid "Artifacts deletion"
 msgstr "Suppression d'artéfacts"
@@ -1603,6 +1624,9 @@ msgstr "Règles globales"
 
 msgid "Global rules are not respected"
 msgstr "Règles globales non respectées"
+
+msgid "Go back to semantic overview"
+msgstr "retour à l'administration de la sémantique"
 
 msgid "Go see this tracker"
 msgstr "Aller voir cet outil de suivi"
@@ -3389,6 +3413,16 @@ msgstr ""
 "La même valeur ne peut pas être à la fois source et destination en même "
 "temps."
 
+msgid "The selected values will define the artifact as done:"
+msgstr "Les valeurs sélectionnées définissent l'artéfact comme fini :"
+
+msgid ""
+"The semantic done cannot be defined because the semantic status is not "
+"defined."
+msgstr ""
+"La sémantique fini ne peut être définie car la sémantique statut n'est pas "
+"définie."
+
 msgid ""
 "The semantic status cannot de deleted because the semantic done is defined "
 "for this tracker."
@@ -3725,6 +3759,9 @@ msgstr ""
 "Cette sémantique est inutilisée pour le moment. À plus long terme, nous "
 "prévoyons de l'utiliser dans %s."
 
+msgid "This semantic will be used in:"
+msgstr "Cette sémantique sera utilisée par :"
+
 msgid "This template does not use trackers"
 msgstr "Ce modèle n'utilise pas les trackers"
 
@@ -3865,6 +3902,9 @@ msgstr "Permissions de l'outil de suivi"
 
 msgid "Tracker renderer"
 msgstr "Rendu d'un tracker"
+
+msgid "Tracker semantic done"
+msgstr "Sémantique fini"
 
 msgid "Tracker service is disabled."
 msgstr "Le service tracker est désactivé."
@@ -4280,6 +4320,14 @@ msgid ""
 msgstr ""
 "Vous pouvez utiliser : AND, OR, BETWEEN(), NOW(), MYSELF(), IN(), NOT IN(), "
 "parenthèses. Ctrl + Espace active l'autocompletion."
+
+msgid ""
+"You can't add values in this semantic because all possible values are "
+"defined as open in semantic status."
+msgstr ""
+"Vous ne pouvez pas ajouter de valeur dans cette sémantique car l'ensemble "
+"des valeurs possibles sont définies en tant que valeurs ouvertes dans la "
+"sémantique statut."
 
 msgid ""
 "You can't choose your notifications level for this tracker because tracker "
