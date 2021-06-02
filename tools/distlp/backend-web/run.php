@@ -19,12 +19,10 @@
  */
 
 use Symfony\Component\Process\Process;
-use Tuleap\Configuration\Logger\Console;
 use TuleapCfg\Command\SiteDeploy\FPM\FPMSessionRedis;
 use TuleapCfg\Command\SiteDeploy\FPM\SiteDeployFPM;
 use TuleapCfg\Command\SiteDeploy\Nginx\SiteDeployNginx;
 
-require_once __DIR__ . '/../../Configuration/vendor/autoload.php';
 require_once __DIR__ . '/../../../src/vendor/autoload.php';
 
 // Make all warnings or notices fatal
@@ -32,7 +30,8 @@ set_error_handler(function ($errno, $errstr, $errfile, $errline) {
     die("$errno $errstr $errfile $errline");
 }, E_ALL | E_STRICT);
 
-$logger = new Console();
+$logger = new \Monolog\Logger('backend-svn');
+$logger->pushHandler(new \Monolog\Handler\StreamHandler(STDOUT));
 
 $redis_conf_file = '/etc/tuleap/conf/redis.inc';
 $fpm             = new SiteDeployFPM(
