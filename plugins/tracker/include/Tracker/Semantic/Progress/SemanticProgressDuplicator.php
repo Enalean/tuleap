@@ -36,13 +36,9 @@ class SemanticProgressDuplicator implements IDuplicateSemantic
         $this->dao = $dao;
     }
 
-    /**
-     * @param int|string   $from_tracker_id
-     * @param int|string   $to_tracker_id
-     */
-    public function duplicate($from_tracker_id, $to_tracker_id, array $field_mapping): void
+    public function duplicate(int $from_tracker_id, int $to_tracker_id, array $field_mapping): void
     {
-        $row = $this->dao->searchByTrackerId((int) $from_tracker_id);
+        $row = $this->dao->searchByTrackerId($from_tracker_id);
         if ($row === null) {
             return;
         }
@@ -52,7 +48,7 @@ class SemanticProgressDuplicator implements IDuplicateSemantic
         $artifact_link_type             = $row['artifact_link_type'];
 
         if ($this->isLinksCountBased($from_total_effort_field_id, $from_remaining_effort_field_id, $artifact_link_type)) {
-            $this->dao->save((int) $to_tracker_id, null, null, $artifact_link_type);
+            $this->dao->save($to_tracker_id, null, null, $artifact_link_type);
             return;
         }
 
@@ -71,7 +67,7 @@ class SemanticProgressDuplicator implements IDuplicateSemantic
             return;
         }
 
-        $this->dao->save((int) $to_tracker_id, $to_total_effort_field_id, $to_remaining_effort_field_id, null);
+        $this->dao->save($to_tracker_id, $to_total_effort_field_id, $to_remaining_effort_field_id, null);
     }
 
     private function isLinksCountBased(?int $from_total_effort_field_id, ?int $from_remaining_effort_field_id, ?string $artifact_link_type): bool
