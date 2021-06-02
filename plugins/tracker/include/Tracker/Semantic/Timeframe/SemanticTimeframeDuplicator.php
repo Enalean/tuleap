@@ -38,16 +38,10 @@ class SemanticTimeframeDuplicator implements IDuplicateSemantic
 
     /**
      * Duplicate the semantic from tracker source to tracker target
-     *
-     * @param int   $from_tracker_id The Id of the tracker source
-     * @param int   $to_tracker_id   The Id of the tracker target
-     * @param array $field_mapping   The mapping of the fields of the tracker
-     *
-     * @return void
      */
-    public function duplicate($from_tracker_id, $to_tracker_id, array $field_mapping)
+    public function duplicate(int $from_tracker_id, int $to_tracker_id, array $field_mapping): void
     {
-        $row = $this->dao->searchByTrackerId((int) $from_tracker_id);
+        $row = $this->dao->searchByTrackerId($from_tracker_id);
         if ($row === null) {
             return;
         }
@@ -76,6 +70,6 @@ class SemanticTimeframeDuplicator implements IDuplicateSemantic
             return;
         }
 
-        $this->dao->save((int) $to_tracker_id, $to_start_date_field_id, $to_duration_field_id, $to_end_date_field_id);
+        $this->dao->save($to_tracker_id, $to_start_date_field_id, $to_duration_field_id, $to_end_date_field_id);
     }
 }
