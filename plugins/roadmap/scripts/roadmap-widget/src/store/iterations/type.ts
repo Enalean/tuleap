@@ -17,19 +17,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export const Styles = {
-    TIME_UNIT_WIDTH_IN_PX: 100,
-    TIME_UNIT_HEIGHT_IN_PX: 28,
-    TODAY_PIN_HEAD_SIZE_IN_PX: 7,
-    ITERATION_HEIGHT_IN_PX: 24,
-    MILESTONE_WIDTH_IN_PX: 23,
-    TASK_BAR_MIN_WIDTH_IN_PX: 10,
-    TASK_HEIGHT_IN_PX: 42,
-    TEXT_PERCENTAGE_MARGIN_IN_PX: 4,
-    TEXT_PERCENTAGE_APPROXIMATE_WIDTH_OF_PERCENT_SIGN_IN_PX: 10,
-    TEXT_PERCENTAGE_APPROXIMATE_WIDTH_OF_DIGIT_IN_PX: 6,
-    // approximate width of a percentage with 3 digits + margins
-    TEXT_PERCENTAGE_IN_PROGRESS_BAR_THRESOLD_IN_PX: 30,
-    // approximate width of the fa-exclamation-triangle + margins
-    MINIMUM_WIDTH_TO_DISPLAY_WARNING_SIGN_IN_PX: 22,
-} as const;
+import type { Iteration } from "../../type";
+
+export interface IterationsState {
+    lvl1_iterations: Iteration[];
+    lvl2_iterations: Iteration[];
+}

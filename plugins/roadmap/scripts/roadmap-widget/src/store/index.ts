@@ -21,6 +21,7 @@ import type { StoreOptions } from "vuex";
 import { Store } from "vuex";
 import type { RootState } from "./type";
 import { createTaskModule } from "./tasks";
+import { createIterationsModule } from "./iterations";
 import * as actions from "./root-actions";
 import * as mutations from "./root-mutations";
 
@@ -37,6 +38,7 @@ export function createStore(initial_root_state: RootState): Store<RootState> {
         mutations,
         modules: {
             tasks: createTaskModule(),
+            iterations: createIterationsModule(),
         },
     };
 

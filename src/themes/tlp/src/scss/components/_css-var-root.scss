@@ -197,6 +197,7 @@ $theme-color-dimmed-background: mix($tlp-theme-background-color, $tlp-ui-white, 
     --tlp-ui-border-normal: #{$tlp-ui-border-normal};
     --tlp-ui-border-dark: #{$tlp-ui-border-dark};
 
+    --tlp-ui-border-normal-lighter-40: #{mix($tlp-ui-border-normal, $tlp-ui-white, 60%)};
     --tlp-ui-border-normal-transparent-25: #{transparentize($tlp-ui-border-normal, .25)};
     --tlp-ui-border-normal-transparent-50: #{transparentize($tlp-ui-border-normal, .5)};
 

@@ -64,6 +64,9 @@ export default class SubtaskMessage extends Vue {
     @Prop({ required: true })
     readonly dimensions_map!: TaskDimensionMap;
 
+    @Prop({ required: true })
+    readonly nb_iterations_ribbons!: number;
+
     @tasks.Mutation
     readonly removeSubtasksDisplayForTask!: (task: Task) => void;
 
@@ -78,6 +81,7 @@ export default class SubtaskMessage extends Vue {
             (this.dimensions.index + 1) * Styles.TASK_HEIGHT_IN_PX +
             2 * Styles.TIME_UNIT_HEIGHT_IN_PX +
             Styles.TODAY_PIN_HEAD_SIZE_IN_PX +
+            this.nb_iterations_ribbons * Styles.ITERATION_HEIGHT_IN_PX +
             1;
 
         return `top: ${top}px`;

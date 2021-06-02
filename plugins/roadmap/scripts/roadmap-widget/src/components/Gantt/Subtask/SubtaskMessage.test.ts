@@ -27,7 +27,7 @@ import type { TasksState } from "../../../store/tasks/type";
 import type { RootState } from "../../../store/type";
 
 describe("SubtaskMessage", () => {
-    it("should position itself by taking account the size of pin head + year + month + tasks above us + 1px for the border", async () => {
+    it("should position itself by taking account the size of pin head + year + month + iterations ribbons + tasks above us + 1px for the border", async () => {
         const task = { id: 123 } as Task;
 
         const dimensions_map = new TaskDimensionMap();
@@ -37,11 +37,12 @@ describe("SubtaskMessage", () => {
             localVue: await createRoadmapLocalVue(),
             propsData: {
                 row: { for_task: task, is_error: true },
+                nb_iterations_ribbons: 2,
                 dimensions_map,
             },
         });
 
-        expect(wrapper.element.style.top).toBe("274px");
+        expect(wrapper.element.style.top).toBe("322px");
     });
 
     describe("empty subtasks", () => {
@@ -55,6 +56,7 @@ describe("SubtaskMessage", () => {
                 localVue: await createRoadmapLocalVue(),
                 propsData: {
                     row: { for_task: task, is_empty: true },
+                    nb_iterations_ribbons: 0,
                     dimensions_map,
                 },
                 mocks: {

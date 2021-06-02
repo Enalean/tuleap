@@ -24,7 +24,7 @@ import * as TaskRetriever from "../helpers/task-retriever";
 import * as IterationsRetriever from "../helpers/iterations-retriever";
 import Vue from "vue";
 import { mockFetchError } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper";
-import type { Task } from "../type";
+import type { Iteration, Task } from "../type";
 
 describe("root-actions", () => {
     let context: ActionContext<RootState, RootState>;
@@ -206,5 +206,36 @@ describe("root-actions", () => {
                 );
             }
         );
+
+        it.each([[1], [2]])("should store the level %i iterations in the store", async (level) => {
+            context.state = {
+                ...context.state,
+                should_load_lvl1_iterations: level === 1,
+                should_load_lvl2_iterations: level === 2,
+            };
+
+            jest.spyOn(TaskRetriever, "retrieveAllTasks").mockResolvedValue([]);
+
+            const iterations: Iteration[] = [
+                {
+                    id: 1,
+                } as Iteration,
+                {
+                    id: 2,
+                } as Iteration,
+            ];
+
+            jest.spyOn(IterationsRetriever, "retrieveIterations").mockResolvedValue(iterations);
+
+            actions.loadRoadmap(context, 42);
+            await Vue.nextTick();
+            await Vue.nextTick();
+
+            expect(context.commit).toHaveBeenCalledWith(
+                `iterations/setLvl${level}Iterations`,
+                iterations,
+                { root: true }
+            );
+        });
     });
 });

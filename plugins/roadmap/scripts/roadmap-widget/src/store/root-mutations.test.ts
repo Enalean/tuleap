@@ -21,6 +21,7 @@ import * as mutations from "./root-mutations";
 import type { RootState } from "./type";
 import type { TasksState } from "./tasks/type";
 import type { FetchWrapperError } from "@tuleap/tlp-fetch";
+import type { IterationsState } from "./iterations/type";
 
 describe("root-mutations", () => {
     it("stopLoading set the corresponding boolean to false", () => {
@@ -33,6 +34,7 @@ describe("root-mutations", () => {
             should_display_error_state: false,
             error_message: "",
             tasks: {} as TasksState,
+            iterations: {} as IterationsState,
         };
 
         mutations.stopLoading(state);
@@ -51,6 +53,7 @@ describe("root-mutations", () => {
                 should_display_error_state: false,
                 error_message: "",
                 tasks: {} as TasksState,
+                iterations: {} as IterationsState,
             };
 
             await mutations.setApplicationInErrorStateDueToRestError(state, {
@@ -81,6 +84,7 @@ describe("root-mutations", () => {
                 should_display_error_state: false,
                 error_message: "",
                 tasks: {} as TasksState,
+                iterations: {} as IterationsState,
             };
 
             await mutations.setApplicationInErrorStateDueToRestError(state, {
@@ -106,6 +110,7 @@ describe("root-mutations", () => {
             should_display_error_state: false,
             error_message: "",
             tasks: {} as TasksState,
+            iterations: {} as IterationsState,
         };
 
         mutations.setApplicationInEmptyState(state);

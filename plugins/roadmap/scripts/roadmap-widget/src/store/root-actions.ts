@@ -40,6 +40,17 @@ export function loadRoadmap(
             } else {
                 context.commit("tasks/setTasks", tasks, { root: true });
             }
+
+            const lvl1_iterations = values[1];
+            if (lvl1_iterations !== null && lvl1_iterations.length > 0) {
+                context.commit("iterations/setLvl1Iterations", lvl1_iterations, { root: true });
+            }
+
+            const lvl2_iterations = values[2];
+            if (lvl2_iterations !== null && lvl2_iterations.length > 0) {
+                context.commit("iterations/setLvl2Iterations", lvl2_iterations, { root: true });
+            }
+
             context.commit("stopLoading");
         })
         .catch((rest_error: FetchWrapperError) => {

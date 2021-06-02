@@ -24,10 +24,20 @@ $border-width: 4px;
 $caret-width: 20px;
 
 .roadmap-gantt-header {
+    $padding-for-time-units: 2 * roadmap-variables.$time-unit-height;
+
     position: relative;
     margin: (roadmap-variables.$today-pin-head-size + 2px) 0 0;
-    padding: 2 * roadmap-variables.$time-unit-height 0 0;
+    padding: $padding-for-time-units 0 0;
     border-right: 2px solid var(--tlp-ui-border-normal);
+
+    &.roadmap-gantt-header-with-1-ribbons {
+        padding: $padding-for-time-units + roadmap-variables.$iteration-height 0 0;
+    }
+
+    &.roadmap-gantt-header-with-2-ribbons {
+        padding: $padding-for-time-units + 2 * roadmap-variables.$iteration-height 0 0;
+    }
 
     &.roadmap-gantt-header-is-scrolling::before {
         content: '';

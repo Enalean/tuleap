@@ -1,0 +1,53 @@
+/**
+ * Copyright (c) Enalean, 2021 - Present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+@use 'roadmap-variables';
+
+.roadmap-gantt-ribbon-iterations {
+    display: flex;
+    position: relative;
+    height: roadmap-variables.$iteration-height;
+
+    > .roadmap-gantt-task-background-grid > .roadmap-gantt-task-background-grid-unit {
+        border-bottom: 0;
+    }
+
+    &::before {
+        content: 'level 1';
+        display: flex;
+        position: absolute;
+        z-index: roadmap-variables.$z-index-bars;
+        top: 0;
+        left: 150px;
+        align-items: center;
+        justify-content: center;
+        width: 200px;
+        height: 24px;
+        background: var(--tlp-ui-border-normal);
+        color: var(--tlp-ui-dimmed);
+        font-size: .625rem;
+        font-weight: 700;
+        line-height: .75rem;
+    }
+
+    + .roadmap-gantt-ribbon-iterations::before {
+        content: 'level 2';
+        background: var(--tlp-ui-border-normal-lighter-40);
+    }
+}
