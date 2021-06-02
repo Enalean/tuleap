@@ -32,6 +32,13 @@
     }
 }
 
+.git-gitlab-icon {
+    // This color is expected to not be dependent of the theme
+    // It is the "Light Orange" described in the GitLab Brand Standards document
+    // https://about.gitlab.com/handbook/marketing/corporate-marketing/brand-activation/brand-guidelines/
+    color: #fca121;
+}
+
 .git-gitlab-icon-align-to-date {
     margin: 0 var(--tlp-medium-spacing) 0 0;
 }

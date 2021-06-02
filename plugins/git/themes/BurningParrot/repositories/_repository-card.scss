@@ -125,3 +125,12 @@
         color: var(--tlp-theme-color);
     }
 }
+
+.git-gerrit-icon {
+    // This color is expected to not be dependent of the theme
+    // It is the green used by Gerrit for positive texts/merged status
+    // https://gerrit.googlesource.com/gerrit/+/refs/tags/v3.4.0/polygerrit-ui/app/styles/themes/app-theme.ts#189
+    // https://gerrit.googlesource.com/gerrit/+/refs/tags/v3.4.0/polygerrit-ui/app/styles/themes/app-theme.ts#251
+    // https://gerrit.googlesource.com/gerrit/+/refs/tags/v3.4.0/polygerrit-ui/app/styles/themes/app-theme.ts#85
+    color: #188038;
+}
