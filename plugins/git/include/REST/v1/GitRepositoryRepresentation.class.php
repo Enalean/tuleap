@@ -105,6 +105,11 @@ class GitRepositoryRepresentation
     public $html_url;
 
     /**
+     * @psalm-readonly
+     */
+    public ?string $default_branch;
+
+    /**
      * @var array
      */
     public $additional_information;
@@ -113,6 +118,7 @@ class GitRepositoryRepresentation
         GitRepository $repository,
         string $repository_path,
         string $html_url,
+        ?string $default_branch,
         ?GerritServerRepresentation $server_representation,
         string $last_update_date,
         array $additional_information,
@@ -127,6 +133,7 @@ class GitRepositoryRepresentation
         $this->description            = $repository->getDescription();
         $this->server                 = $server_representation;
         $this->html_url               = $html_url;
+        $this->default_branch         = $default_branch;
         $this->last_update_date       = JsonCast::toDate($last_update_date);
         $this->additional_information = $additional_information;
         $this->permissions            = $permissions;
@@ -140,10 +147,13 @@ class GitRepositoryRepresentation
         array $additional_information,
         ?GitRepositoryPermissionRepresentation $permissions
     ): self {
+        $git_exec = \Git_Exec::buildFromRepository($repository);
+
         return new self(
             $repository,
             $repository->getPath(),
             $html_url,
+            $git_exec->getDefaultBranch(),
             $server_representation,
             $last_update_date,
             $additional_information,

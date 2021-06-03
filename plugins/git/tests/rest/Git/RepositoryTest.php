@@ -25,12 +25,10 @@ use Guzzle\Http\Message\Response;
 use REST_TestDataBuilder;
 use Tuleap\Git\REST\TestBase;
 
-require_once dirname(__FILE__) . '/../bootstrap.php';
-
 /**
  * @group GitTests
  */
-class RepositoryTest extends TestBase
+final class RepositoryTest extends TestBase
 {
 
     protected function getResponseForNonMember($request)
@@ -63,10 +61,11 @@ class RepositoryTest extends TestBase
     {
         $repository = $response->json();
 
-        $this->assertArrayHasKey('id', $repository);
-        $this->assertEquals($repository['name'], 'repo01');
-        $this->assertEquals($repository['description'], 'Git repository');
-        $this->assertArrayHasKey('server', $repository);
+        self::assertArrayHasKey('id', $repository);
+        self::assertEquals('repo01', $repository['name']);
+        self::assertEquals('Git repository', $repository['description']);
+        self::assertArrayHasKey('server', $repository);
+        self::assertEquals('master', $repository['default_branch']);
     }
 
     public function testOPTIONS(): void

@@ -22,10 +22,8 @@
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\TemporaryTestDirectory;
 
-require_once 'bootstrap.php';
-
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
-class Git_ExecTest extends \Tuleap\Test\PHPUnit\TestCase
+final class Git_ExecTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
     use TemporaryTestDirectory;
@@ -171,5 +169,10 @@ class Git_ExecTest extends \Tuleap\Test\PHPUnit\TestCase
         $res = $this->git_exec->doesObjectExists('this_is_not_a_rev');
 
         $this->assertFalse($res);
+    }
+
+    public function testRetrievesDefaultBranch(): void
+    {
+        self::assertEquals('master', $this->git_exec->getDefaultBranch());
     }
 }

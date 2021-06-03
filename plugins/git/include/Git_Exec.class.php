@@ -245,6 +245,22 @@ class Git_Exec
         return $output;
     }
 
+    public function getDefaultBranch(): ?string
+    {
+        return $this->getSymbolicRef('HEAD');
+    }
+
+    private function getSymbolicRef(string $reference): ?string
+    {
+        $output = [];
+        try {
+            $this->gitCmdWithOutput('symbolic-ref --short ' . escapeshellarg($reference), $output);
+        } catch (Git_Command_Exception $e) {
+            return null;
+        }
+        return implode('', $output);
+    }
+
     public function getAllTagsSortedByCreationDate(): array
     {
         $output = [];
