@@ -62,7 +62,17 @@ final class Planning_RequestValidatorTest extends \Tuleap\Test\PHPUnit\TestCase 
     {
         $this->planning_factory = \Mockery::spy(\PlanningFactory::class);
         $this->tracker_factory  = $this->createMock(TrackerFactory::class);
-        $this->validator        = new Planning_RequestValidator($this->planning_factory, $this->tracker_factory);
+        $this->validator        = new Planning_RequestValidator(
+            $this->planning_factory,
+            $this->tracker_factory,
+            new class implements \Tuleap\User\ProvideCurrentUser
+            {
+                public function getCurrentUser(): \PFUser
+                {
+                    return \Tuleap\Test\Builders\UserTestBuilder::aUser()->build();
+                }
+            }
+        );
 
         $this->release_planning_id = 34;
         $this->releases_tracker_id = 56;

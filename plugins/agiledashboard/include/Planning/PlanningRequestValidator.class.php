@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\User\ProvideCurrentUser;
+
 /**
  * Validates planning creation requests.
  */
@@ -29,16 +31,21 @@ class Planning_RequestValidator
      */
     private $factory;
     private TrackerFactory $tracker_factory;
+    private ProvideCurrentUser $current_user_provider;
 
     /**
      * Creates a new validator instance.
      *
      * @param PlanningFactory $factory Used to retrieve existing planning trackers for validation purpose.
      */
-    public function __construct(PlanningFactory $factory, TrackerFactory $tracker_factory)
-    {
-        $this->factory         = $factory;
-        $this->tracker_factory = $tracker_factory;
+    public function __construct(
+        PlanningFactory $factory,
+        TrackerFactory $tracker_factory,
+        ProvideCurrentUser $current_user_provider
+    ) {
+        $this->factory               = $factory;
+        $this->tracker_factory       = $tracker_factory;
+        $this->current_user_provider = $current_user_provider;
     }
 
     /**
@@ -57,7 +64,7 @@ class Planning_RequestValidator
             $planning_parameters = [];
         }
 
-        $current_user = $request->getCurrentUser();
+        $current_user = $this->current_user_provider->getCurrentUser();
 
         $planning_parameters = PlanningParameters::fromArray($planning_parameters);
 

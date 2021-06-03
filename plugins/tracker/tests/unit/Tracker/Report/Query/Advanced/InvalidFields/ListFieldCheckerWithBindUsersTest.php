@@ -25,6 +25,7 @@ use Tracker_FormElement_Field_Checkbox;
 use Tracker_FormElement_Field_List;
 use Tracker_FormElement_Field_List_Bind_Users;
 use Tracker_FormElement_Field_List_Bind_UsersValue;
+use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Report\Query\Advanced\CollectionOfListValuesExtractor;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\CurrentUserValueWrapper;
@@ -149,7 +150,7 @@ class ListFieldCheckerWithBindUsersTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItThrowsWithMyselfValueAndCurrentUserIsAnonymous(): void
     {
-        $this->user_manager->shouldReceive('getCurrentUser')->andReturns(null);
+        $this->user_manager->shouldReceive('getCurrentUser')->andReturns(UserTestBuilder::anAnonymousUser()->build());
         $value_wrapper = new CurrentUserValueWrapper($this->user_manager);
 
         $this->comparison->shouldReceive('getValueWrapper')->andReturns($value_wrapper);

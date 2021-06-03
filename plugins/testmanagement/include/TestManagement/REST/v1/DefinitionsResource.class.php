@@ -124,10 +124,7 @@ class DefinitionsResource
      */
     protected function getId(int $id)
     {
-        $user = $this->user_manager->getCurrentUser();
-        if (! $user) {
-            throw new RestException(404, 'User not found');
-        }
+        $user       = $this->user_manager->getCurrentUser();
         $definition = $this->testmanagement_artifact_factory->getArtifactByIdUserCanView($user, $id);
         if ($definition === null) {
             throw new RestException(404, 'The test definition does not exist or is not visible');

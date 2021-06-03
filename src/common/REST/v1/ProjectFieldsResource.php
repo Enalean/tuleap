@@ -76,10 +76,6 @@ class ProjectFieldsResource extends AuthenticatedResource
     {
         $user = $this->user_manager->getCurrentUser();
 
-        if (! $user) {
-            throw new RestException(404, "Current user not found.");
-        }
-
         try {
             $this->permission_checker->checkUserHasThePermissionToCreateProject($user);
         } catch (LimitedToSiteAdministratorsException $exception) {

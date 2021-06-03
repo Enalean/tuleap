@@ -48,6 +48,7 @@ use Tuleap\Tracker\Artifact\RecentlyVisited\VisitRecorder;
 use Tuleap\Tracker\NewDropdown\TrackerNewDropdownLinkPresenterBuilder;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao;
+use Tuleap\User\ProvideCurrentUser;
 
 class AgileDashboardRouterBuilder // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
@@ -69,19 +70,22 @@ class AgileDashboardRouterBuilder // phpcs:ignore PSR1.Classes.ClassDeclaration.
      * @var AgileDashboard_Milestone_Backlog_BacklogFactory
      */
     private $backlog_factory;
+    private ProvideCurrentUser $current_user_provider;
 
     public function __construct(
         PluginFactory $plugin_factory,
         Planning_MilestonePaneFactory $pane_factory,
         VisitRecorder $visit_recorder,
         AllBreadCrumbsForMilestoneBuilder $all_bread_crumbs_for_milestone_builder,
-        AgileDashboard_Milestone_Backlog_BacklogFactory $backlog_factory
+        AgileDashboard_Milestone_Backlog_BacklogFactory $backlog_factory,
+        ProvideCurrentUser $current_user_provider
     ) {
         $this->plugin_factory                         = $plugin_factory;
         $this->pane_factory                           = $pane_factory;
         $this->visit_recorder                         = $visit_recorder;
         $this->all_bread_crumbs_for_milestone_builder = $all_bread_crumbs_for_milestone_builder;
         $this->backlog_factory                        = $backlog_factory;
+        $this->current_user_provider                  = $current_user_provider;
     }
 
     public function build(Codendi_Request $request): AgileDashboardRouter
@@ -201,7 +205,7 @@ class AgileDashboardRouterBuilder // phpcs:ignore PSR1.Classes.ClassDeclaration.
                 $planning_permissions_manager,
                 new DBTransactionExecutorWithConnection($db_connection)
             ),
-            new Planning_RequestValidator($planning_factory, TrackerFactory::instance()),
+            new Planning_RequestValidator($planning_factory, TrackerFactory::instance(), $this->current_user_provider),
             AgileDashboard_XMLExporter::build(),
             new UpdateIsAllowedChecker(
                 $planning_factory,
