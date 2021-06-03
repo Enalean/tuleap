@@ -24,8 +24,8 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Plan;
 
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Plan\BuildPlanProgramIncrementConfiguration;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Plan\PlanCheckException;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\RetrieveProgramIncrementTracker;
 use Tuleap\ProgramManagement\Domain\Program\Plan\ConfigurationUserCanNotSeeProgramException;
-use Tuleap\ProgramManagement\Domain\Program\Plan\PlanStore;
 use Tuleap\ProgramManagement\Domain\Program\Plan\PlanTrackerException;
 use Tuleap\ProgramManagement\Domain\Program\Plan\ProgramNotFoundException;
 use Tuleap\ProgramManagement\Domain\Program\ProgramTrackerNotFoundException;
@@ -33,19 +33,15 @@ use Tuleap\ProgramManagement\Domain\ProgramTracker;
 
 class PlanProgramIncrementConfigurationBuilder implements BuildPlanProgramIncrementConfiguration
 {
-    /**
-     * @var PlanStore
-     */
-    private $plan_store;
-    /**
-     * @var \TrackerFactory
-     */
-    private $tracker_factory;
+    private RetrieveProgramIncrementTracker $program_increment_tracker_retriever;
+    private \TrackerFactory $tracker_factory;
 
-    public function __construct(PlanStore $plan_store, \TrackerFactory $tracker_factory)
-    {
-        $this->plan_store      = $plan_store;
-        $this->tracker_factory = $tracker_factory;
+    public function __construct(
+        RetrieveProgramIncrementTracker $program_increment_tracker_retriever,
+        \TrackerFactory $tracker_factory
+    ) {
+        $this->program_increment_tracker_retriever = $program_increment_tracker_retriever;
+        $this->tracker_factory                     = $tracker_factory;
     }
 
     /**
@@ -55,7 +51,9 @@ class PlanProgramIncrementConfigurationBuilder implements BuildPlanProgramIncrem
      */
     public function buildTrackerProgramIncrementFromProjectId(int $project_id, \PFUser $user): ProgramTracker
     {
-        $program_increment_tracker_id = $this->plan_store->getProgramIncrementTrackerId($project_id);
+        $program_increment_tracker_id = $this->program_increment_tracker_retriever->getProgramIncrementTrackerId(
+            $project_id
+        );
         if (! $program_increment_tracker_id) {
             throw new ProgramTrackerNotFoundException($project_id);
         }

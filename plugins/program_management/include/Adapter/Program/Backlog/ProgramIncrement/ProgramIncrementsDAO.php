@@ -23,8 +23,11 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement;
 
 use Tuleap\DB\DataAccessObject;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\RetrieveProgramIncrementLabels;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\RetrieveProgramIncrementTracker;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\VerifyIsProgramIncrementTracker;
 
-class ProgramIncrementsDAO extends DataAccessObject
+class ProgramIncrementsDAO extends DataAccessObject implements VerifyIsProgramIncrementTracker, RetrieveProgramIncrementTracker, RetrieveProgramIncrementLabels
 {
     /**
      * @psalm-return array{id:int}[]
@@ -63,5 +66,36 @@ class ProgramIncrementsDAO extends DataAccessObject
                 WHERE linked_art.id = ?";
 
         return $this->getDB()->run($sql, $artifact_id);
+    }
+
+    public function isProgramIncrementTracker(int $tracker_id): bool
+    {
+        $sql  = 'SELECT NULL FROM plugin_program_management_program WHERE program_increment_tracker_id = ?';
+        $rows = $this->getDB()->run($sql, $tracker_id);
+
+        return count($rows) > 0;
+    }
+
+    public function getProgramIncrementTrackerId(int $project_id): ?int
+    {
+        $sql = 'SELECT program_increment_tracker_id FROM plugin_program_management_program
+                INNER JOIN tracker ON tracker.id = plugin_program_management_program.program_increment_tracker_id
+                    WHERE tracker.group_id = ?';
+
+        $tracker_id = $this->getDB()->cell($sql, $project_id);
+        if (! $tracker_id) {
+            return null;
+        }
+
+        return $tracker_id;
+    }
+
+    /**
+     * @psalm-return null|array{program_increment_label: ?string, program_increment_sub_label: ?string}
+     */
+    public function getProgramIncrementLabels(int $program_increment_tracker_id): ?array
+    {
+        $sql = 'SELECT program_increment_label, program_increment_sub_label FROM plugin_program_management_program WHERE program_increment_tracker_id = ?';
+        return $this->getDB()->row($sql, $program_increment_tracker_id);
     }
 }
