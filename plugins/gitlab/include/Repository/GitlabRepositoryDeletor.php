@@ -28,6 +28,7 @@ use Tuleap\DB\DBTransactionExecutor;
 use Tuleap\Gitlab\Repository\Token\IntegrationApiTokenDao;
 use Tuleap\Gitlab\Repository\Webhook\Bot\CredentialsRetriever;
 use Tuleap\Gitlab\Repository\Webhook\PostMergeRequest\MergeRequestTuleapReferenceDao;
+use Tuleap\Gitlab\Repository\Webhook\PostPush\Branch\BranchTuleapReferenceDao;
 use Tuleap\Gitlab\Repository\Webhook\PostPush\Commits\CommitTuleapReferenceDao;
 use Tuleap\Gitlab\Repository\Webhook\TagPush\TagInfoDao;
 use Tuleap\Gitlab\Repository\Webhook\WebhookDeletor;
@@ -71,6 +72,8 @@ class GitlabRepositoryDeletor
      */
     private $tag_info_dao;
 
+    private BranchTuleapReferenceDao $branch_tuleap_reference_dao;
+
     public function __construct(
         GitPermissionsManager $git_permissions_manager,
         DBTransactionExecutor $db_transaction_executor,
@@ -80,6 +83,7 @@ class GitlabRepositoryDeletor
         CommitTuleapReferenceDao $commit_tuleap_reference_dao,
         MergeRequestTuleapReferenceDao $merge_request_dao,
         TagInfoDao $tag_info_dao,
+        BranchTuleapReferenceDao $branch_tuleap_reference_dao,
         CredentialsRetriever $credentials_retriever
     ) {
         $this->git_permissions_manager     = $git_permissions_manager;
@@ -91,6 +95,7 @@ class GitlabRepositoryDeletor
         $this->merge_request_dao           = $merge_request_dao;
         $this->tag_info_dao                = $tag_info_dao;
         $this->credentials_retriever       = $credentials_retriever;
+        $this->branch_tuleap_reference_dao = $branch_tuleap_reference_dao;
     }
 
     /**
@@ -116,6 +121,7 @@ class GitlabRepositoryDeletor
             $this->commit_tuleap_reference_dao->deleteCommitsInIntegration($repository_id);
             $this->merge_request_dao->deleteAllMergeRequestInIntegration($repository_id);
             $this->tag_info_dao->deleteTagsInIntegration($repository_id);
+            $this->branch_tuleap_reference_dao->deleteBranchesInIntegration($repository_id);
             $this->gitlab_repository_dao->deleteIntegration($repository_id);
         });
     }

@@ -126,7 +126,7 @@ class PostPushCommitWebhookDataExtractorTest extends \Tuleap\Test\PHPUnit\TestCa
                     'message' => "commit 01",
                     'author' => [
                         'name' => "John Snow",
-                        'email' => "john-snow@the-wall.com"
+                        'email' => "john-snow@example.com"
                     ]
                 ]
             ]
@@ -167,7 +167,7 @@ class PostPushCommitWebhookDataExtractorTest extends \Tuleap\Test\PHPUnit\TestCa
                     'message' => "commit 01",
                     'timestamp' => "2020-12-16T10:21:50+01:00",
                     'author' => [
-                        'email' => 'john-snow@the-wall.com'
+                        'email' => 'john-snow@example.com'
                     ]
                 ]
             ]
@@ -209,7 +209,7 @@ class PostPushCommitWebhookDataExtractorTest extends \Tuleap\Test\PHPUnit\TestCa
                     'timestamp' => '2020-12-16T10:21:50+01:00',
                     'author' => [
                         'name' => 'John Snow',
-                        'email' => 'john-snow@the-wall.com'
+                        'email' => 'john-snow@example.com'
                     ]
                 ],
                 [
@@ -219,7 +219,7 @@ class PostPushCommitWebhookDataExtractorTest extends \Tuleap\Test\PHPUnit\TestCa
                     'timestamp' => '2020-12-16T10:21:50+01:00',
                     'author' => [
                         'name' => 'The Night King',
-                        'email' => 'the-night-king@the-wall.com'
+                        'email' => 'the-night-king@example.com'
                     ]
                 ]
             ]
@@ -235,7 +235,7 @@ class PostPushCommitWebhookDataExtractorTest extends \Tuleap\Test\PHPUnit\TestCa
         self::assertSame("master", $first_commit->getBranchName());
         self::assertSame(1608110510, $first_commit->getCommitDate());
         self::assertSame('John Snow', $first_commit->getAuthorName());
-        self::assertSame('john-snow@the-wall.com', $first_commit->getAuthorEmail());
+        self::assertSame('john-snow@example.com', $first_commit->getAuthorEmail());
 
         $second_commit = $commits_data[1];
         self::assertSame("08596fb6360bcc951a06471c616f8bc77800d4f4", $second_commit->getSha1());
@@ -244,6 +244,6 @@ class PostPushCommitWebhookDataExtractorTest extends \Tuleap\Test\PHPUnit\TestCa
         self::assertSame("master", $first_commit->getBranchName());
         self::assertSame(1608110510, $second_commit->getCommitDate());
         self::assertSame('The Night King', $second_commit->getAuthorName());
-        self::assertSame('the-night-king@the-wall.com', $second_commit->getAuthorEmail());
+        self::assertSame('the-night-king@example.com', $second_commit->getAuthorEmail());
     }
 }

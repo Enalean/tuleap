@@ -21,6 +21,9 @@ msgstr "GitLab"
 msgid "GitLab Tag"
 msgstr "Étiquette GitLab"
 
+msgid "GitLab branch"
+msgstr "Branche GitLab"
+
 msgid "GitLab commit"
 msgstr "Commit GitLab"
 

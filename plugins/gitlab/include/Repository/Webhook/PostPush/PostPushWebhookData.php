@@ -48,16 +48,23 @@ class PostPushWebhookData implements WebhookData
      */
     private $commits;
 
+    private string $reference;
+    private string $checkout_sha;
+
     public function __construct(
         string $event_name,
         int $gitlab_project_id,
         string $gitlab_web_url,
+        string $checkout_sha,
+        string $reference,
         array $commits
     ) {
         $this->event_name        = $event_name;
         $this->gitlab_project_id = $gitlab_project_id;
         $this->gitlab_web_url    = $gitlab_web_url;
         $this->commits           = $commits;
+        $this->reference         = $reference;
+        $this->checkout_sha      = $checkout_sha;
     }
 
     public function getEventName(): string
@@ -81,5 +88,15 @@ class PostPushWebhookData implements WebhookData
     public function getCommits(): array
     {
         return $this->commits;
+    }
+
+    public function getReference(): string
+    {
+        return $this->reference;
+    }
+
+    public function getCheckoutSha(): string
+    {
+        return $this->checkout_sha;
     }
 }

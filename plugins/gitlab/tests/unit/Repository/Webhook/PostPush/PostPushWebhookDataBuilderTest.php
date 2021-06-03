@@ -47,6 +47,7 @@ class PostPushWebhookDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $webhook_data = [
             "project" => ["id" => 123456, "web_url" => "https://example.com/path/repo01"],
             "ref" => "refs/heads/master",
+            "checkout_sha" => "08596fb6360bcc951a06471c616f8bc77800d4f4",
             "commits" => [
                 [
                     "id" => "feff4ced04b237abb8b4a50b4160099313152c3c",
@@ -55,17 +56,17 @@ class PostPushWebhookDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                     "timestamp" => "2020-12-16T10:21:50+01:00",
                     "author" => [
                         "name" => "John Snow",
-                        "email" => "john-snow@the-wall.com"
+                        "email" => "john-snow@example.com"
                     ]
                 ],
                 [
                     "id" => "08596fb6360bcc951a06471c616f8bc77800d4f4",
                     "title" => "commit 02",
                     "message" => "commit 02",
-                    "timestamp" => "2020-12-16T10:21:50+01:00",
+                    "timestamp" => "2020-12-16T10:21:52+01:00",
                     "author" => [
                         "name" => "John Snow",
-                        "email" => "john-snow@the-wall.com"
+                        "email" => "john-snow@example.com"
                     ]
                 ]
             ]

@@ -59,6 +59,9 @@ use Tuleap\Gitlab\Repository\Webhook\PostMergeRequest\PostMergeRequestWebhookAut
 use Tuleap\Gitlab\Repository\Webhook\PostMergeRequest\PostMergeRequestWebhookDataBuilder;
 use Tuleap\Gitlab\Repository\Webhook\PostMergeRequest\PreviouslySavedReferencesRetriever;
 use Tuleap\Gitlab\Repository\Webhook\PostMergeRequest\TuleapReferencesFromMergeRequestDataExtractor;
+use Tuleap\Gitlab\Repository\Webhook\PostPush\Branch\BranchNameTuleapReferenceParser;
+use Tuleap\Gitlab\Repository\Webhook\PostPush\Branch\BranchTuleapReferenceDao;
+use Tuleap\Gitlab\Repository\Webhook\PostPush\Branch\PostPushWebhookActionBranchHandler;
 use Tuleap\Gitlab\Repository\Webhook\PostPush\Commits\CommitTuleapReferenceDao;
 use Tuleap\Gitlab\Repository\Webhook\PostPush\PostPushCommitArtifactUpdater;
 use Tuleap\Gitlab\Repository\Webhook\PostPush\PostPushCommitBotCommenter;
@@ -286,6 +289,14 @@ class gitlabPlugin extends Plugin
                         new CredentialsRetriever(new IntegrationApiTokenRetriever(new IntegrationApiTokenDao(), new KeyFactory())),
                         new GitlabProjectBuilder($gitlab_api_client),
                         $logger
+                    ),
+                    new PostPushWebhookActionBranchHandler(
+                        new BranchNameTuleapReferenceParser(),
+                        $reference_manager,
+                        $tuleap_reference_retriever,
+                        new BranchTuleapReferenceDao(),
+                        new CrossReferenceDao(),
+                        $logger
                     )
                 ),
                 new PostMergeRequestWebhookActionProcessor(
@@ -439,6 +450,14 @@ class gitlabPlugin extends Plugin
                         new GitlabRepositoryProjectDao(),
                         new CredentialsRetriever(new IntegrationApiTokenRetriever(new IntegrationApiTokenDao(), new KeyFactory())),
                         new GitlabProjectBuilder($gitlab_api_client),
+                        $logger
+                    ),
+                    new PostPushWebhookActionBranchHandler(
+                        new BranchNameTuleapReferenceParser(),
+                        $reference_manager,
+                        $tuleap_reference_retriever,
+                        new BranchTuleapReferenceDao(),
+                        new CrossReferenceDao(),
                         $logger
                     )
                 ),

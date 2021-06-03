@@ -30,6 +30,7 @@ use Reference;
 use ReferenceManager;
 use Tuleap\Gitlab\Reference\TuleapReferenceRetriever;
 use Tuleap\Gitlab\Repository\GitlabRepositoryIntegration;
+use Tuleap\Gitlab\Repository\Webhook\PostPush\Branch\PostPushWebhookActionBranchHandler;
 use Tuleap\Gitlab\Repository\Webhook\PostPush\Commits\CommitTuleapReferenceDao;
 use Tuleap\Gitlab\Repository\Webhook\WebhookTuleapReferencesParser;
 use Tuleap\Gitlab\Reference\TuleapReferencedArtifactNotFoundException;
@@ -71,6 +72,10 @@ final class PostPushWebhookActionProcessorTest extends \Tuleap\Test\PHPUnit\Test
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|PostPushWebhookCloseArtifactHandler
      */
     private $close_artifact_handler;
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|PostPushWebhookActionBranchHandler
+     */
+    private $action_branch_handler;
 
     protected function setUp(): void
     {
@@ -83,6 +88,7 @@ final class PostPushWebhookActionProcessorTest extends \Tuleap\Test\PHPUnit\Test
         $this->tuleap_reference_retriever  = Mockery::mock(TuleapReferenceRetriever::class);
         $this->commenter                   = Mockery::mock(PostPushCommitBotCommenter::class);
         $this->close_artifact_handler      = Mockery::mock(PostPushWebhookCloseArtifactHandler::class);
+        $this->action_branch_handler       = Mockery::mock(PostPushWebhookActionBranchHandler::class);
 
         $this->processor = new PostPushWebhookActionProcessor(
             new WebhookTuleapReferencesParser(),
@@ -92,7 +98,12 @@ final class PostPushWebhookActionProcessorTest extends \Tuleap\Test\PHPUnit\Test
             $this->logger,
             $this->commenter,
             $this->close_artifact_handler,
+            $this->action_branch_handler,
         );
+
+        $this->action_branch_handler->shouldReceive('parseBranchReference')
+            ->once()
+            ->byDefault();
     }
 
     public function testItProcessesActionsForPostPushWebhookWithoutAnyCloseArtifactKeyword(): void
@@ -112,6 +123,8 @@ final class PostPushWebhookActionProcessorTest extends \Tuleap\Test\PHPUnit\Test
             'push',
             123654,
             'https://example.com/root/repo01',
+            "3cffabe5",
+            "refs/heads/main",
             [
                 new PostPushCommitWebhookData(
                     'feff4ced04b237abb8b4a50b4160099313152c3c',
@@ -119,7 +132,7 @@ final class PostPushWebhookActionProcessorTest extends \Tuleap\Test\PHPUnit\Test
                     'A commit with three references: TULEAP-666 TULEAP-777 TULEAP-123',
                     "master",
                     1608110510,
-                    "john-snow@the-wall.com",
+                    "john-snow@example.com",
                     "John Snow"
                 )
             ]
@@ -195,7 +208,7 @@ final class PostPushWebhookActionProcessorTest extends \Tuleap\Test\PHPUnit\Test
                 'A commit with three references, two bad, one good',
                 "master",
                 'John Snow',
-                'john-snow@the-wall.com'
+                'john-snow@example.com'
             );
 
         $this->commenter
@@ -226,6 +239,8 @@ final class PostPushWebhookActionProcessorTest extends \Tuleap\Test\PHPUnit\Test
             'push',
             123654,
             'https://example.com/root/repo01',
+            "3cffabe5",
+            "refs/heads/main",
             [
                 new PostPushCommitWebhookData(
                     'feff4ced04b237abb8b4a50b4160099313152c3c',
@@ -233,7 +248,7 @@ final class PostPushWebhookActionProcessorTest extends \Tuleap\Test\PHPUnit\Test
                     'A commit with reference: resolve TULEAP-123',
                     "master",
                     1608110510,
-                    "john-snow@the-wall.com",
+                    "john-snow@example.com",
                     "John Snow"
                 )
             ]
@@ -283,7 +298,7 @@ final class PostPushWebhookActionProcessorTest extends \Tuleap\Test\PHPUnit\Test
                 'A commit with references containing close artifact keyword',
                 "master",
                 'John Snow',
-                'john-snow@the-wall.com'
+                'john-snow@example.com'
             );
 
         $this->commenter
@@ -314,6 +329,8 @@ final class PostPushWebhookActionProcessorTest extends \Tuleap\Test\PHPUnit\Test
             'push',
             123654,
             'https://example.com/root/repo01',
+            "3cffabe5",
+            "refs/heads/main",
             [
                 new PostPushCommitWebhookData(
                     'feff4ced04b237abb8b4a50b4160099313152c3c',
@@ -321,7 +338,7 @@ final class PostPushWebhookActionProcessorTest extends \Tuleap\Test\PHPUnit\Test
                     'commit TULEAP-123 01',
                     "master",
                     1608110510,
-                    "john-snow@the-wall.com",
+                    "john-snow@example.com",
                     "John Snow"
                 )
             ]
@@ -378,6 +395,8 @@ final class PostPushWebhookActionProcessorTest extends \Tuleap\Test\PHPUnit\Test
             'push',
             123654,
             'https://example.com/root/repo01',
+            "3cffabe5",
+            "refs/heads/main",
             [
                 new PostPushCommitWebhookData(
                     'feff4ced04b237abb8b4a50b4160099313152c3c',
@@ -385,7 +404,7 @@ final class PostPushWebhookActionProcessorTest extends \Tuleap\Test\PHPUnit\Test
                     'commit TULEAP-123 01',
                     "master",
                     1608110510,
-                    "john-snow@the-wall.com",
+                    "john-snow@example.com",
                     "John Snow"
                 )
             ]
