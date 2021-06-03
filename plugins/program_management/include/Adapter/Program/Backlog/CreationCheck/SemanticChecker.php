@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\CreationCheck;
 
+use Psr\Log\LoggerInterface;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck\CheckSemantic;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck\CheckStatus;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TrackerCollection;
@@ -30,33 +31,24 @@ use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao;
 
 final class SemanticChecker implements CheckSemantic
 {
-    /**
-     * @var \Tracker_Semantic_TitleDao
-     */
-    private $semantic_title_dao;
-    /**
-     * @var \Tracker_Semantic_DescriptionDao
-     */
-    private $semantic_description_dao;
-    /**
-     * @var SemanticTimeframeDao
-     */
-    private $semantic_timeframe_dao;
-    /**
-     * @var CheckStatus
-     */
-    private $semantic_status_checker;
+    private \Tracker_Semantic_TitleDao $semantic_title_dao;
+    private \Tracker_Semantic_DescriptionDao $semantic_description_dao;
+    private SemanticTimeframeDao $semantic_timeframe_dao;
+    private CheckStatus $semantic_status_checker;
+    private LoggerInterface $logger;
 
     public function __construct(
         \Tracker_Semantic_TitleDao $semantic_title_dao,
         \Tracker_Semantic_DescriptionDao $semantic_description_dao,
         SemanticTimeframeDao $semantic_timeframe_dao,
-        CheckStatus $semantic_status_checker
+        CheckStatus $semantic_status_checker,
+        LoggerInterface $logger
     ) {
         $this->semantic_title_dao       = $semantic_title_dao;
         $this->semantic_description_dao = $semantic_description_dao;
         $this->semantic_timeframe_dao   = $semantic_timeframe_dao;
         $this->semantic_status_checker  = $semantic_status_checker;
+        $this->logger                   = $logger;
     }
 
     public function areTrackerSemanticsWellConfigured(
@@ -65,12 +57,15 @@ final class SemanticChecker implements CheckSemantic
     ): bool {
         $tracker_ids = $source_tracker_collection->getTrackerIds();
         if ($this->semantic_title_dao->getNbOfTrackerWithoutSemanticTitleDefined($tracker_ids) > 0) {
+            $this->logger->error("Semantic 'Title' is not well configured. Please check semantic of mirrored milestone trackers.");
             return false;
         }
         if ($this->semantic_description_dao->getNbOfTrackerWithoutSemanticDescriptionDefined($tracker_ids) > 0) {
+            $this->logger->error("Semantic 'Description' is not well configured. Please check semantic of mirrored milestone trackers.");
             return false;
         }
         if (! $this->areTimeFrameSemanticsAligned($tracker_ids)) {
+            $this->logger->error("Semantic 'Timeframe' is not well configured. Please check semantic of mirrored milestone trackers.");
             return false;
         }
         if (
@@ -79,6 +74,7 @@ final class SemanticChecker implements CheckSemantic
                 $source_tracker_collection
             ) === false
         ) {
+            $this->logger->error("Semantic 'Status' is not well configured. Please check semantic of mirrored milestone trackers.");
             return false;
         }
 
