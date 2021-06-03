@@ -16,20 +16,13 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+import type { Iteration } from "../../type";
+import type { IterationsState } from "./type";
 
-export const Styles = {
-    TIME_UNIT_WIDTH_IN_PX: 100,
-    TIME_UNIT_HEIGHT_IN_PX: 28,
-    TODAY_PIN_HEAD_SIZE_IN_PX: 7,
-    ITERATION_HEIGHT_IN_PX: 24,
-    MILESTONE_WIDTH_IN_PX: 23,
-    TASK_BAR_MIN_WIDTH_IN_PX: 10,
-    TASK_HEIGHT_IN_PX: 42,
-    TEXT_PERCENTAGE_MARGIN_IN_PX: 4,
-    TEXT_PERCENTAGE_APPROXIMATE_WIDTH_OF_PERCENT_SIGN_IN_PX: 10,
-    TEXT_PERCENTAGE_APPROXIMATE_WIDTH_OF_DIGIT_IN_PX: 6,
-    // approximate width of a percentage with 3 digits + margins
-    TEXT_PERCENTAGE_IN_PROGRESS_BAR_THRESOLD_IN_PX: 30,
-    // approximate width of the fa-exclamation-triangle + margins
-    MINIMUM_WIDTH_TO_DISPLAY_WARNING_SIGN_IN_PX: 22,
-} as const;
+export function setLvl1Iterations(state: IterationsState, iterations: Iteration[]): void {
+    state.lvl1_iterations = iterations;
+}
+
+export function setLvl2Iterations(state: IterationsState, iterations: Iteration[]): void {
+    state.lvl2_iterations = iterations;
+}

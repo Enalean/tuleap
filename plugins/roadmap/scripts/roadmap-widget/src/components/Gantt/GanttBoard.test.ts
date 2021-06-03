@@ -19,7 +19,7 @@
 
 import { shallowMount } from "@vue/test-utils";
 import GanttBoard from "./GanttBoard.vue";
-import type { Row, Task } from "../../type";
+import type { Iteration, Row, Task } from "../../type";
 import GanttTask from "./Task/GanttTask.vue";
 import TimePeriodHeader from "./TimePeriod/TimePeriodHeader.vue";
 import { TimePeriodMonth } from "../../helpers/time-period-month";
@@ -35,6 +35,8 @@ import SubtaskHeader from "./Subtask/SubtaskHeader.vue";
 import SubtaskMessage from "./Subtask/SubtaskMessage.vue";
 import BarPopover from "./Task/BarPopover.vue";
 import SubtaskMessageHeader from "./Subtask/SubtaskMessageHeader.vue";
+import type { IterationsState } from "../../store/iterations/type";
+import IterationsRibbon from "./Iteration/IterationsRibbon.vue";
 
 window.ResizeObserver =
     window.ResizeObserver ||
@@ -44,11 +46,125 @@ window.ResizeObserver =
         unobserve: jest.fn(),
     }));
 
+function getRootState(): RootState {
+    return {
+        locale_bcp47: "en-US",
+        should_load_lvl1_iterations: false,
+        should_load_lvl2_iterations: false,
+        should_display_error_state: false,
+        should_display_empty_state: false,
+        is_loading: false,
+        error_message: "",
+        iterations: {
+            lvl1_iterations: [],
+            lvl2_iterations: [],
+        } as IterationsState,
+        tasks: {} as TasksState,
+    } as RootState;
+}
+
 describe("GanttBoard", () => {
     const windowResizeObserver = window.ResizeObserver;
 
     afterEach(() => {
         window.ResizeObserver = windowResizeObserver;
+    });
+
+    it("Displays no iterations if there isn't any", () => {
+        const wrapper = shallowMount(GanttBoard, {
+            propsData: {
+                visible_natures: [],
+            },
+            mocks: {
+                $store: createStoreMock({
+                    state: getRootState(),
+                    getters: {
+                        "tasks/rows": [],
+                    },
+                }),
+            },
+        });
+
+        expect(wrapper.findAllComponents(IterationsRibbon).length).toBe(0);
+    });
+
+    it("Displays level 1 iterations", () => {
+        const root_state = getRootState();
+
+        const wrapper = shallowMount(GanttBoard, {
+            propsData: {
+                visible_natures: [],
+            },
+            mocks: {
+                $store: createStoreMock({
+                    state: {
+                        ...root_state,
+                        iterations: {
+                            ...root_state.iterations,
+                            lvl1_iterations: [{ id: 1 } as Iteration],
+                        },
+                    },
+                    getters: {
+                        "tasks/rows": [],
+                    },
+                }),
+            },
+        });
+
+        expect(wrapper.findAllComponents(IterationsRibbon).length).toBe(1);
+    });
+
+    it("Displays level 2 iterations", () => {
+        const root_state = getRootState();
+
+        const wrapper = shallowMount(GanttBoard, {
+            propsData: {
+                visible_natures: [],
+            },
+            mocks: {
+                $store: createStoreMock({
+                    state: {
+                        ...root_state,
+                        iterations: {
+                            ...root_state.iterations,
+                            lvl2_iterations: [{ id: 1 } as Iteration],
+                        },
+                    },
+                    getters: {
+                        "tasks/rows": [],
+                    },
+                }),
+            },
+        });
+
+        expect(wrapper.findAllComponents(IterationsRibbon).length).toBe(1);
+    });
+
+    it("Displays levels 1 & 2 iterations", () => {
+        const root_state = getRootState();
+
+        const wrapper = shallowMount(GanttBoard, {
+            propsData: {
+                visible_natures: [],
+            },
+            mocks: {
+                $store: createStoreMock({
+                    state: {
+                        ...root_state,
+                        iterations: {
+                            ...root_state.iterations,
+                            lvl1_iterations: [{ id: 1 } as Iteration],
+                            lvl2_iterations: [{ id: 2 } as Iteration],
+                        },
+                    },
+                    getters: {
+                        "tasks/rows": [],
+                    },
+                }),
+            },
+        });
+
+        expect(wrapper.findAllComponents(IterationsRibbon).length).toBe(2);
     });
 
     it("Displays all tasks", () => {
@@ -58,10 +174,7 @@ describe("GanttBoard", () => {
             },
             mocks: {
                 $store: createStoreMock({
-                    state: {
-                        locale_bcp47: "en-US",
-                        tasks: {} as TasksState,
-                    } as RootState,
+                    state: getRootState(),
                     getters: {
                         "tasks/rows": [
                             { task: { id: 1, dependencies: {} } as Task },
@@ -83,10 +196,7 @@ describe("GanttBoard", () => {
             },
             mocks: {
                 $store: createStoreMock({
-                    state: {
-                        locale_bcp47: "en-US",
-                        tasks: {} as TasksState,
-                    } as RootState,
+                    state: getRootState(),
                     getters: {
                         "tasks/rows": [
                             { task: { id: 1, dependencies: {} } as Task },
@@ -114,10 +224,7 @@ describe("GanttBoard", () => {
             },
             mocks: {
                 $store: createStoreMock({
-                    state: {
-                        locale_bcp47: "en-US",
-                        tasks: {} as TasksState,
-                    } as RootState,
+                    state: getRootState(),
                     getters: {
                         "tasks/rows": [
                             { task: { id: 1, dependencies: {} } as Task },
@@ -144,10 +251,7 @@ describe("GanttBoard", () => {
             },
             mocks: {
                 $store: createStoreMock({
-                    state: {
-                        locale_bcp47: "en-US",
-                        tasks: {} as TasksState,
-                    } as RootState,
+                    state: getRootState(),
                     getters: {
                         "tasks/rows": [
                             { task: { id: 1, dependencies: {} } as Task },
@@ -187,10 +291,7 @@ describe("GanttBoard", () => {
             },
             mocks: {
                 $store: createStoreMock({
-                    state: {
-                        locale_bcp47: "en-US",
-                        tasks: {} as TasksState,
-                    } as RootState,
+                    state: getRootState(),
                     getters: {
                         "tasks/rows": [
                             { task: { id: 1, dependencies: {} } as Task },
@@ -217,10 +318,7 @@ describe("GanttBoard", () => {
             },
             mocks: {
                 $store: createStoreMock({
-                    state: {
-                        locale_bcp47: "en-US",
-                        tasks: {} as TasksState,
-                    } as RootState,
+                    state: getRootState(),
                     getters: {
                         "tasks/rows": [
                             { task: { id: 1, dependencies: {} } as Task },
@@ -247,10 +345,7 @@ describe("GanttBoard", () => {
             },
             mocks: {
                 $store: createStoreMock({
-                    state: {
-                        locale_bcp47: "en-US",
-                        tasks: {} as TasksState,
-                    } as RootState,
+                    state: getRootState(),
                     getters: {
                         "tasks/rows": [
                             {
@@ -300,10 +395,7 @@ describe("GanttBoard", () => {
             },
             mocks: {
                 $store: createStoreMock({
-                    state: {
-                        locale_bcp47: "en-US",
-                        tasks: {} as TasksState,
-                    } as RootState,
+                    state: getRootState(),
                     getters: {
                         "tasks/rows": [
                             {
@@ -345,10 +437,7 @@ describe("GanttBoard", () => {
             },
             mocks: {
                 $store: createStoreMock({
-                    state: {
-                        locale_bcp47: "en-US",
-                        tasks: {} as TasksState,
-                    } as RootState,
+                    state: getRootState(),
                     getters: {
                         "tasks/rows": [
                             {
@@ -401,10 +490,7 @@ describe("GanttBoard", () => {
             },
             mocks: {
                 $store: createStoreMock({
-                    state: {
-                        locale_bcp47: "en-US",
-                        tasks: {} as TasksState,
-                    } as RootState,
+                    state: getRootState(),
                     getters: {
                         "tasks/rows": [
                             { task: { id: 1, dependencies: {} } as Task },
@@ -432,10 +518,7 @@ describe("GanttBoard", () => {
             },
             mocks: {
                 $store: createStoreMock({
-                    state: {
-                        locale_bcp47: "en-US",
-                        tasks: {} as TasksState,
-                    } as RootState,
+                    state: getRootState(),
                     getters: {
                         "tasks/rows": [
                             { task: { id: 1, dependencies: {} } as Task },

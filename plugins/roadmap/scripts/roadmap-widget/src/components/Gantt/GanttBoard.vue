@@ -34,6 +34,7 @@
                     v-bind:key="'message-' + index"
                     v-bind:row="row"
                     v-bind:dimensions_map="dimensions_map"
+                    v-bind:nb_iterations_ribbons="nb_iterations_ribbons"
                 />
             </template>
             <div class="roadmap-gantt-header" v-bind:class="header_class" data-test="gantt-header">
@@ -75,6 +76,16 @@
                     v-bind:time_period="time_period"
                     v-bind:nb_additional_units="nb_additional_units"
                     ref="time_period"
+                />
+                <iterations-ribbon
+                    v-if="has_lvl1_iterations"
+                    v-bind:time_period="time_period"
+                    v-bind:nb_additional_units="nb_additional_units"
+                />
+                <iterations-ribbon
+                    v-if="has_lvl2_iterations"
+                    v-bind:time_period="time_period"
+                    v-bind:nb_additional_units="nb_additional_units"
                 />
                 <template v-for="(row, index) in rows">
                     <gantt-task
@@ -149,6 +160,7 @@ import type {
     SubtaskRow,
     ErrorRow,
     EmptySubtasksRow,
+    Iteration,
 } from "../../type";
 import TimePeriodHeader from "./TimePeriod/TimePeriodHeader.vue";
 import { getFirstDate } from "../../helpers/first-date";
@@ -173,11 +185,14 @@ import SubtaskSkeletonBar from "./Subtask/SubtaskSkeletonBar.vue";
 import SubtaskHeader from "./Subtask/SubtaskHeader.vue";
 import SubtaskMessage from "./Subtask/SubtaskMessage.vue";
 import SubtaskMessageHeader from "./Subtask/SubtaskMessageHeader.vue";
+import IterationsRibbon from "./Iteration/IterationsRibbon.vue";
 
 const tasks = namespace("tasks");
+const iterations = namespace("iterations");
 
 @Component({
     components: {
+        IterationsRibbon,
         SubtaskMessageHeader,
         SubtaskMessage,
         SubtaskHeader,
@@ -200,6 +215,12 @@ export default class GanttBoard extends Vue {
 
     @tasks.Getter
     readonly rows!: Row[];
+
+    @iterations.State
+    readonly lvl1_iterations!: Iteration[];
+
+    @iterations.State
+    readonly lvl2_iterations!: Iteration[];
 
     @State
     private readonly locale_bcp47!: string;
@@ -321,8 +342,38 @@ export default class GanttBoard extends Vue {
         return getNatureLabelsForTasks(this.tasks, this.dependencies, this.visible_natures);
     }
 
-    get header_class(): string {
-        return this.is_scrolling ? "roadmap-gantt-header-is-scrolling" : "";
+    get header_class(): string[] {
+        const classes = [];
+
+        if (this.is_scrolling) {
+            classes.push("roadmap-gantt-header-is-scrolling");
+        }
+
+        if (this.nb_iterations_ribbons) {
+            classes.push(`roadmap-gantt-header-with-${this.nb_iterations_ribbons}-ribbons`);
+        }
+
+        return classes;
+    }
+
+    get nb_iterations_ribbons(): number {
+        if (this.has_lvl1_iterations && this.has_lvl2_iterations) {
+            return 2;
+        }
+
+        if (this.has_lvl1_iterations || this.has_lvl2_iterations) {
+            return 1;
+        }
+
+        return 0;
+    }
+
+    get has_lvl1_iterations(): boolean {
+        return this.lvl1_iterations.length > 0;
+    }
+
+    get has_lvl2_iterations(): boolean {
+        return this.lvl2_iterations.length > 0;
     }
 
     getFirstDateWithOffset(nb_days_to_substract: number): Date {

@@ -18,6 +18,7 @@
  */
 
 import type { TasksState } from "./tasks/type";
+import type { IterationsState } from "./iterations/type";
 
 export interface State {
     readonly locale_bcp47: string;
@@ -31,4 +32,5 @@ export interface State {
 
 export interface RootState extends State {
     readonly tasks: TasksState;
+    readonly iterations: IterationsState;
 }
