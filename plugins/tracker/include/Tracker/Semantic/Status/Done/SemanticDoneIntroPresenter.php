@@ -46,8 +46,17 @@ class SemanticDoneIntroPresenter
      */
     public $semantic_status_field_label = '';
 
-    public function __construct(array $selected_values, ?Tracker_FormElement_Field $semantic_status_field = null)
-    {
+    /**
+     * @var SemanticDoneUsedExternalService[]
+     */
+    public array $external_services;
+    public bool $has_external_service_used;
+
+    public function __construct(
+        array $selected_values,
+        ?Tracker_FormElement_Field $semantic_status_field = null,
+        array $external_services_descriptions
+    ) {
         $this->semantic_status_is_defined = ($semantic_status_field !== null);
         $this->selected_values            = $selected_values;
         $this->has_selected_values        = count($selected_values) > 0;
@@ -55,5 +64,8 @@ class SemanticDoneIntroPresenter
         if ($semantic_status_field !== null) {
             $this->semantic_status_field_label = $semantic_status_field->getLabel();
         }
+
+        $this->has_external_service_used = count($external_services_descriptions) > 0;
+        $this->external_services         = $external_services_descriptions;
     }
 }

@@ -99,6 +99,9 @@ msgstr "Administration de l'Agile Dashboard"
 msgid "Agile dashboard"
 msgstr "Tableau de bord agile"
 
+msgid "AgileDashboard service"
+msgstr "Le service Dashboard agile"
+
 msgid "Agiledashboard plannings"
 msgstr "Plannings du tableau de bord agile"
 
@@ -121,20 +124,6 @@ msgstr ""
 msgid ""
 "All tracker workflow post-actions \"AddToTopBacklog\" have been removed."
 msgstr "Les actions workflow de type \"AddToTopBacklog\" ont été supprimées."
-
-msgid ""
-"An artifact could be considered <strong>done</strong> only if a semantic "
-"status is defined."
-msgstr ""
-"Un artéfact sera considéré comme <strong>fini</strong> seulement lorsqu'une "
-"sémantique statut sera définie."
-
-msgid ""
-"An artifact is considered to be <strong>done</strong> when its field %s will "
-"have one of the following closed values:"
-msgstr ""
-"Un artéfact sera considéré comme <strong>fini</strong> lorsque son champ %s "
-"aura une des valeurs fermées suivantes :"
 
 msgid "An error occurred while trying to solve inconsistencies."
 msgstr "Une erreur s'est produite pendant la résolution des inconsistences."
@@ -161,13 +150,6 @@ msgid ""
 msgstr ""
 "L'artéfact #%d n'a pas été supprimé de la planification générale car il est "
 "déjà présent dans un sous jalon."
-
-msgid ""
-"Artifacts cannot be considered <strong>done</strong> because there is no "
-"value selected for this semantic."
-msgstr ""
-"Les artéfacts ne peuvent être considérés comme <strong>fini</strong> car il "
-"n'y aucune valeur selectionnée pour cette sémantique."
 
 #, php-format
 msgid "Available %1$s"
@@ -295,9 +277,6 @@ msgstr "Reconstruire le cache"
 
 msgid "General settings"
 msgstr "Options générales"
-
-msgid "Go back to semantic overview"
-msgstr "Retour à l'administration de la sémantique"
 
 msgid ""
 "If you switch back to the old mode, some tracker reports could be updated to "
@@ -608,16 +587,6 @@ msgstr ""
 msgid "The request is invalid."
 msgstr "La requête n'est pas valide."
 
-msgid "The selected values will define the artifact as done:"
-msgstr "Les valeurs sélectionnées définissent l'artéfact comme fini :"
-
-msgid ""
-"The semantic done cannot be defined because the semantic status is not "
-"defined."
-msgstr ""
-"La sémantique fini ne peut être définie car la sémantique statut n'est pas "
-"définie."
-
 #, php-format
 msgid "The tracker %s is not found"
 msgstr "L'outil de suivi %s n'a pas été trouvé"
@@ -671,13 +640,6 @@ msgstr ""
 "Ce planning n'appartient pas à la hierarchie du planning racine (%1$s). "
 "Cette configuration n'est pas supportée. Vous devriez supprimer ce planning."
 
-msgid ""
-"This semantic will be used in the <strong>AgileDashboard</strong> service "
-"for burnup and velocity charts."
-msgstr ""
-"Cette sémantique sera utilisée par le service <strong>AgileDashboard</"
-"strong> pour le calcul des graphiques de burnup et de vélocité."
-
 msgid "This tracker is not a planning tracker"
 msgstr "Cet outil de suivi n'est pas un outil de suivi lié à un planning"
 
@@ -706,9 +668,6 @@ msgstr "Planification générale"
 
 msgid "Tracker already used by another Kanban."
 msgstr "Le tracker est déjà utilisé par un autre Kanban."
-
-msgid "Tracker semantic done"
-msgstr "Sémantique fini"
 
 msgid "Unable to export the configuration"
 msgstr "Impossible d'exporter la configuration"
@@ -791,14 +750,6 @@ msgstr ""
 "niveau sera vide après la suppresion du planning de plus niveau. Merci de "
 "confirmer votre action."
 
-msgid ""
-"You can't add values in this semantic because all possible values are "
-"defined as open in semantic status."
-msgstr ""
-"Vous ne pouvez pas ajouter de valeur dans cette sémantique car l'ensemble "
-"des valeurs possibles sont définies en tant que valeurs ouvertes dans la "
-"sémantique statut."
-
 msgid "You cannot create more than one planning in scrum V2."
 msgstr "Vous ne pouvez pas créer plus d'un planning en utilisant scrum V2."
 
@@ -828,6 +779,9 @@ msgid ""
 msgstr ""
 "ou alors tous les trackers \"planning\" potentiels (%1$s) sont déjà utilisés "
 "par une configuration (ci-dessous)."
+
+msgid "burnup and velocity charts"
+msgstr "calcul des graphiques de burnup et de vélocité"
 
 msgid "closed"
 msgstr "fermés"

@@ -136,6 +136,8 @@ use Tuleap\Tracker\REST\v1\Workflow\PostAction\CheckPostActionsForTracker;
 use Tuleap\Tracker\Semantic\Progress\Events\GetSemanticProgressUsageEvent;
 use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneDao;
 use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneFactory;
+use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneUsedExternalService;
+use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneUsedExternalServiceEvent;
 use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneValueChecker;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao;
@@ -276,6 +278,7 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
             $this->addHook(GetWhitelistedKeys::NAME);
             $this->addHook(JiraImporterExternalPluginsEvent::NAME);
             $this->addHook(GetSemanticProgressUsageEvent::NAME);
+            $this->addHook(SemanticDoneUsedExternalServiceEvent::NAME);
         }
 
         if (defined('CARDWALL_BASE_URL')) {
@@ -2142,6 +2145,21 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
     {
         $event->addFutureUsageLocation(
             dgettext('tuleap-agiledashboard', 'the Agile Dashboard')
+        );
+    }
+
+    public function semanticDoneUsedExternalServiceEvent(SemanticDoneUsedExternalServiceEvent $event): void
+    {
+        $project = $event->getTracker()->getProject();
+        if (! $project->usesService($this->getServiceShortname())) {
+            return;
+        }
+
+        $event->setExternalServicesDescriptions(
+            new SemanticDoneUsedExternalService(
+                dgettext('tuleap-agiledashboard', 'AgileDashboard service'),
+                dgettext('tuleap-agiledashboard', 'burnup and velocity charts')
+            )
         );
     }
 }

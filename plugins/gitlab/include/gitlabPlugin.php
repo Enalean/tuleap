@@ -96,6 +96,8 @@ use Tuleap\Request\CollectRoutesEvent;
 use Tuleap\Tracker\Semantic\Status\Done\DoneValueRetriever;
 use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneDao;
 use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneFactory;
+use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneUsedExternalService;
+use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneUsedExternalServiceEvent;
 use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneValueChecker;
 use Tuleap\Tracker\Semantic\Status\StatusValueRetriever;
 
@@ -141,6 +143,7 @@ class gitlabPlugin extends Plugin
         $this->addHook(CrossReferenceByNatureOrganizer::NAME);
 
         $this->addHook(ExternalSystemReferencePresentersCollector::NAME);
+        $this->addHook(SemanticDoneUsedExternalServiceEvent::NAME);
 
         return parent::getHooksAndCallbacks();
     }
@@ -633,6 +636,24 @@ class gitlabPlugin extends Plugin
                 GitlabTagReference::REFERENCE_NAME,
                 dgettext('tuleap-gitlab', 'Reference to a GitLab tag'),
                 dgettext('tuleap-gitlab', 'GitLab tag'),
+            )
+        );
+    }
+
+    public function semanticDoneUsedExternalServiceEvent(SemanticDoneUsedExternalServiceEvent $event): void
+    {
+        $project = $event->getTracker()->getProject();
+        if (! $project->usesService(GitPlugin::SERVICE_SHORTNAME)) {
+            return;
+        }
+        if (! $this->_getPluginManager()->isPluginAllowedForProject($this, $project->getID())) {
+            return;
+        }
+
+        $event->setExternalServicesDescriptions(
+            new SemanticDoneUsedExternalService(
+                dgettext('tuleap-gitlab', 'GitLab integration'),
+                dgettext('tuleap-gitlab', 'close artifacts'),
             )
         );
     }

@@ -1,0 +1,32 @@
+{{^ semantic_status_is_defined }}
+    <div id="tracker-semantic-disabled">
+        <p class="tracker-semantic-content">{{# dgettext }}tuleap-tracker | Tracker semantic done{{/ dgettext }}</p>
+        <p class="tracker-semantic-content tracker-semantic-description">
+            {{# dgettext }}tuleap-tracker | The semantic done cannot be defined because the semantic status is not defined.{{/ dgettext }}
+        </p>
+    </div>
+{{/ semantic_status_is_defined }}
+
+{{# semantic_status_is_defined }}
+    {{# has_closed_values_selectable }}
+    <form method="POST" action="{{ form_url }}">
+        {{# csrf_token }}
+            {{> csrf_token_input }}
+        {{/ csrf_token }}
+
+        <p>{{# dgettext }}tuleap-tracker | The selected values will define the artifact as done:{{/ dgettext }}</p>
+        <select name="done_values[{{ tracker_id }}][]" multiple="multiple">
+        {{# closed_values }}
+            <option value="{{ id }}" {{# selected }} selected="selected" {{/ selected }}>{{ label }}</option>
+        {{/closed_values}}
+        </select>
+        <button type="submit" class="btn btn-primary tracker-semantic-submit" name="submit">{{# dgettext }}tuleap-tracker | Submit{{/ dgettext }}</button>
+    </form>
+    {{/ has_closed_values_selectable }}
+
+    {{^ has_closed_values_selectable }}
+        <p>{{# dgettext }}tuleap-tracker | You can't add values in this semantic because all possible values are defined as open in semantic status.{{/ dgettext }}</p>
+    {{/ has_closed_values_selectable }}
+
+    <a class="tracker-semantic-admin-go-back" href="{{ go_back_url }}">&laquo; {{# dgettext }}tuleap-tracker | Go back to semantic overview{{/ dgettext }}</a>
+{{/ semantic_status_is_defined }}

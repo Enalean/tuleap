@@ -117,7 +117,7 @@ class SemanticDone extends Tracker_Semantic
      */
     public function display()
     {
-        $renderer = TemplateRendererFactory::build()->getRenderer(AGILEDASHBOARD_TEMPLATE_DIR . '/semantic');
+        $renderer = TemplateRendererFactory::build()->getRenderer(TRACKER_TEMPLATE_DIR . '/done-semantic');
 
         $semantic_status_field = $this->semantic_status->getField();
         $selected_values       = [];
@@ -126,7 +126,16 @@ class SemanticDone extends Tracker_Semantic
             $selected_values = $this->getFormattedDoneValues();
         }
 
-        $presenter = new SemanticDoneIntroPresenter($selected_values, $semantic_status_field);
+        $event = \EventManager::instance()->dispatch(
+            new SemanticDoneUsedExternalServiceEvent($this->tracker)
+        );
+        assert($event instanceof SemanticDoneUsedExternalServiceEvent);
+
+        $presenter = new SemanticDoneIntroPresenter(
+            $selected_values,
+            $semantic_status_field,
+            $event->getExternalServicesDescriptions()
+        );
 
         $renderer->renderToPage('done-intro', $presenter);
     }
@@ -154,7 +163,7 @@ class SemanticDone extends Tracker_Semantic
 
         $csrf = $this->getCSRFSynchronizerToken();
 
-        $renderer  = TemplateRendererFactory::build()->getRenderer(AGILEDASHBOARD_TEMPLATE_DIR . '/semantic');
+        $renderer  = TemplateRendererFactory::build()->getRenderer(TRACKER_TEMPLATE_DIR . '/done-semantic');
         $presenter = new SemanticDoneAdminPresenter(
             $csrf,
             $this->tracker,
