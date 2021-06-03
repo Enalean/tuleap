@@ -18,7 +18,7 @@
  */
 
 import { getFirstDate } from "./first-date";
-import type { Task } from "../type";
+import type { Iteration, Task } from "../type";
 
 describe("first-date", () => {
     it("Returns now if there isn't any tasks", () => {
@@ -226,5 +226,22 @@ describe("first-date", () => {
                 now
             )
         ).toBe(other_start);
+    });
+
+    it("Accepts both tasks and iterations", () => {
+        const now = new Date(2020, 3, 30);
+        const start = new Date(2020, 3, 15);
+        const end = new Date(2020, 3, 20);
+        const iteration_start = new Date(2020, 3, 10);
+        const iteration_end = new Date(2020, 3, 5);
+        expect(
+            getFirstDate(
+                [
+                    { start, end } as Task,
+                    { start: iteration_start, end: iteration_end } as Iteration,
+                ],
+                now
+            )
+        ).toBe(iteration_start);
     });
 });

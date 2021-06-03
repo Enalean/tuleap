@@ -1159,6 +1159,98 @@ class IterationsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
      * @testWith [1]
      *           [2]
      */
+    public function testItSkipsArtifactsThatHaveEndDateLesserThanStartDate(int $level): void
+    {
+        $this->mockRoadmapConfig(
+            [
+                'id'                        => self::ROADMAP_ID,
+                'owner_id'                  => self::PROJECT_ID,
+                'owner_type'                => 'g',
+                'title'                     => 'My Roadmap',
+                'lvl1_iteration_tracker_id' => ($level === 1 ? self::ITERATION_TRACKER_ID : null),
+                'lvl2_iteration_tracker_id' => ($level === 2 ? self::ITERATION_TRACKER_ID : null),
+            ]
+        );
+
+        $this->project_manager
+            ->expects(self::once())
+            ->method('getProject')
+            ->with(self::PROJECT_ID)
+            ->willReturn(ProjectTestBuilder::aProject()->build());
+
+        $this->user_manager
+            ->expects(self::once())
+            ->method('getCurrentUser')
+            ->willReturn($this->user);
+
+        $this->url_verification
+            ->expects(self::once())
+            ->method('userCanAccessProject');
+
+        $this->tracker_factory
+            ->expects(self::once())
+            ->method('getTrackerById')
+            ->with(self::ITERATION_TRACKER_ID)
+            ->willReturn($this->tracker);
+
+        $this->tracker
+            ->method('isActive')
+            ->willReturn(true);
+        $this->tracker
+            ->method('userCanView')
+            ->with($this->user)
+            ->willReturn(true);
+
+        $title_field = $this->createMock(\Tracker_FormElement_Field_String::class);
+        $title_field->method('userCanRead')->willReturn(true);
+
+        $this->tracker
+            ->method('getTitleField')
+            ->willReturn($title_field);
+
+        $start_date_field = $this->createMock(\Tracker_FormElement_Field_Date::class);
+        $start_date_field->method('userCanRead')->willReturn(true);
+
+        $end_date_field = $this->createMock(\Tracker_FormElement_Field_Date::class);
+        $end_date_field->method('userCanRead')->willReturn(true);
+
+        $this->semantic_timeframe_builder
+            ->method('getSemantic')
+            ->with($this->tracker)
+            ->willReturn(
+                new SemanticTimeframe(
+                    $this->tracker,
+                    new TimeframeWithEndDate(
+                        $start_date_field,
+                        $end_date_field,
+                    )
+                )
+            );
+
+        $iteration = $this->createMock(Artifact::class);
+        $iteration->method('userCanView')->willReturn(true);
+        $iteration->method('getTracker')->willReturn($this->tracker);
+        $iteration->method('getTitle')->willReturn("");
+        $this->mockDate($iteration, $start_date_field, 1234567890);
+        $this->mockDate($iteration, $end_date_field, 1123456789);
+
+        $this->artifact_factory
+            ->expects(self::once())
+            ->method('getPaginatedArtifactsByTrackerId')
+            ->with(self::ITERATION_TRACKER_ID, 0, 10, false)
+            ->willReturn(
+                new \Tracker_Artifact_PaginatedArtifacts([$iteration], 1)
+            );
+
+        $collection = $this->retriever->getIterations(self::ROADMAP_ID, $level, 0, 10);
+        self::assertEquals(1, $collection->getTotalSize());
+        self::assertEquals([], $collection->getRepresentations());
+    }
+
+    /**
+     * @testWith [1]
+     *           [2]
+     */
     public function testItReturnsPaginatedListOfIterationRepresentation(int $level): void
     {
         $this->mockRoadmapConfig(

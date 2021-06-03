@@ -105,6 +105,10 @@ export type Row = TaskRow | SkeletonRow | EmptySubtasksRow | ErrorRow | SubtaskR
 
 export interface Iteration {
     readonly id: number;
+    readonly start: Date;
+    readonly end: Date;
+    readonly title: string;
+    readonly html_url: string;
 }
 
 export type IterationLevel = 1 | 2;

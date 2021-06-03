@@ -27,21 +27,35 @@ import type { RootState } from "../type";
 import type { TimeperiodState } from "./type";
 
 export const first_date = (
-    state: TimeperiodState,
+    state: unknown,
     getters: unknown,
     root_state: RootState,
     root_getters: { "tasks/tasks": Task[] }
 ): Date => {
-    return getFirstDate(root_getters["tasks/tasks"], root_state.now);
+    return getFirstDate(
+        [
+            ...root_getters["tasks/tasks"],
+            ...root_state.iterations.lvl1_iterations,
+            ...root_state.iterations.lvl2_iterations,
+        ],
+        root_state.now
+    );
 };
 
 export const last_date = (
-    state: TimeperiodState,
+    state: unknown,
     getters: unknown,
     root_state: RootState,
     root_getters: { "tasks/tasks": Task[] }
 ): Date => {
-    return getLastDate(root_getters["tasks/tasks"], root_state.now);
+    return getLastDate(
+        [
+            ...root_getters["tasks/tasks"],
+            ...root_state.iterations.lvl1_iterations,
+            ...root_state.iterations.lvl2_iterations,
+        ],
+        root_state.now
+    );
 };
 
 export const time_period = (
