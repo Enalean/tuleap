@@ -24,11 +24,12 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Plan;
 
 use Tuleap\DB\DataAccessObject;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Content\VerifyCanBePlannedInProgramIncrement;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\VerifyIsProgramIncrementTracker;
 use Tuleap\ProgramManagement\Domain\Program\Plan\Plan;
 use Tuleap\ProgramManagement\Domain\Program\Plan\PlanStore;
 use Tuleap\ProgramManagement\Domain\ProgramTracker;
 
-final class PlanDao extends DataAccessObject implements PlanStore, VerifyCanBePlannedInProgramIncrement
+final class PlanDao extends DataAccessObject implements PlanStore, VerifyCanBePlannedInProgramIncrement, VerifyIsProgramIncrementTracker
 {
     /**
      * @throws \Throwable
@@ -162,6 +163,14 @@ final class PlanDao extends DataAccessObject implements PlanStore, VerifyCanBePl
         }
 
         return $tracker_id;
+    }
+
+    public function isProgramIncrementTracker(int $tracker_id): bool
+    {
+        $sql  = 'SELECT NULL FROM plugin_program_management_program WHERE program_increment_tracker_id = ?';
+        $rows = $this->getDB()->run($sql, $tracker_id);
+
+        return count($rows) > 0;
     }
 
     /**

@@ -22,12 +22,11 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation;
 
-use Mockery as M;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use Psr\Log\Test\TestLogger;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\Plan\BuildPlanProgramIncrementConfiguration;
+use Psr\Log\NullLogger;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\VerifyIsProgramIncrementTracker;
 use Tuleap\ProgramManagement\Domain\Program\ProgramStore;
-use Tuleap\ProgramManagement\Domain\ProgramTracker;
+use Tuleap\ProgramManagement\Stub\VerifyIsProgramIncrementTrackerStub;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\Event\ArtifactCreated;
@@ -35,84 +34,92 @@ use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class ArtifactCreatedHandlerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     /**
-     * @var M\LegacyMockInterface|M\MockInterface|BuildPlanProgramIncrementConfiguration
+     * @var \PHPUnit\Framework\MockObject\MockObject|ProgramStore
      */
-    private $build_plan_configuration;
-
+    private $program_store;
     /**
-     * @var M\LegacyMockInterface|M\MockInterface|RunProgramIncrementCreation
+     * @var \PHPUnit\Framework\MockObject\MockObject|PendingArtifactCreationStore
+     */
+    private $pending_artifact_creation_store;
+    /**
+     * @var \PHPUnit\Framework\MockObject\Stub|RunProgramIncrementCreation
      */
     private $asyncronous_runner;
 
-    /**
-     * @var M\LegacyMockInterface|M\MockInterface|PendingArtifactCreationStore
-     */
-    private $pending_artifact_creation_store;
-
-    /**
-     * @var ArtifactCreatedHandler
-     */
-    private $handler;
-    /**
-     * @var M\LegacyMockInterface|M\MockInterface|ProgramStore
-     */
-    private $program_store;
-
     protected function setUp(): void
     {
-        $this->program_store                   = M::mock(ProgramStore::class);
-        $this->build_plan_configuration        = M::mock(BuildPlanProgramIncrementConfiguration::class);
-        $this->pending_artifact_creation_store = M::mock(PendingArtifactCreationStore::class);
-        $this->asyncronous_runner              = M::mock(RunProgramIncrementCreation::class);
-        $this->handler                         = new ArtifactCreatedHandler(
+        $this->program_store                   = $this->createMock(ProgramStore::class);
+        $this->pending_artifact_creation_store = $this->createMock(PendingArtifactCreationStore::class);
+        $this->asyncronous_runner              = $this->createMock(RunProgramIncrementCreation::class);
+    }
+
+    private function getHandler(VerifyIsProgramIncrementTracker $verifier): ArtifactCreatedHandler
+    {
+        return new ArtifactCreatedHandler(
             $this->program_store,
             $this->asyncronous_runner,
             $this->pending_artifact_creation_store,
-            $this->build_plan_configuration,
-            new TestLogger()
+            $verifier,
+            new NullLogger()
         );
     }
 
     public function testHandleDelegatesToAsynchronousMirrorCreator(): void
     {
-        $project = new \Project(['group_id' => 101, 'unix_group_name' => 'project', 'group_name' => 'My project']);
+        $project = ProjectTestBuilder::aProject()->withId(101)->build();
         $tracker = TrackerTestBuilder::aTracker()->withId(15)->withProject($project)->build();
-        $this->program_store->shouldReceive('isProjectAProgramProject')->andReturnTrue();
+        $this->program_store->method('isProjectAProgramProject')->willReturn(true);
+
         $current_user = UserTestBuilder::aUser()->withId(1001)->build();
         $artifact     = new Artifact(1, $tracker->getId(), $current_user->getId(), 12345678, false);
         $artifact->setTracker($tracker);
         $changeset = new \Tracker_Artifact_Changeset(21, $artifact, 36, 12345678, '');
 
-        $this->build_plan_configuration->shouldReceive('buildTrackerProgramIncrementFromProjectId')
-            ->andReturn(new ProgramTracker($tracker));
+        $this->pending_artifact_creation_store->expects(self::once())
+            ->method('addArtifactToPendingCreation')
+            ->with($artifact->getId(), $current_user->getId(), $changeset->getId());
 
-        $this->pending_artifact_creation_store->shouldReceive('addArtifactToPendingCreation')
-            ->withArgs([$artifact->getId(), $current_user->getId(), $changeset->getId()])
-            ->once();
+        $this->asyncronous_runner->expects(self::once())->method('executeProgramIncrementsCreation');
 
-        $this->asyncronous_runner->shouldReceive('executeProgramIncrementsCreation')
-            ->once();
-
-        $this->handler->handle(new ArtifactCreated($artifact, $changeset, $current_user));
+        $handler = $this->getHandler(VerifyIsProgramIncrementTrackerStub::buildValidProgramIncrement());
+        $handler->handle(new ArtifactCreated($artifact, $changeset, $current_user));
     }
 
     public function testHandleReactsOnlyToArtifactsFromProgramProjects(): void
     {
-        $project = new \Project(['group_id' => 101, 'unix_group_name' => 'project', 'group_name' => 'My project']);
+        $project = ProjectTestBuilder::aProject()->withId(101)->build();
         $tracker = TrackerTestBuilder::aTracker()->withId(15)->withProject($project)->build();
-
-        $this->program_store->shouldReceive('isProjectAProgramProject')->with(101)->once()->andReturnFalse();
+        $this->program_store->expects(self::once())
+            ->method('isProjectAProgramProject')
+            ->with(101)
+            ->willReturn(false);
 
         $current_user = UserTestBuilder::aUser()->build();
         $artifact     = new Artifact(1, $tracker->getId(), $current_user->getId(), 12345678, false);
         $artifact->setTracker($tracker);
         $changeset = new \Tracker_Artifact_Changeset(21, $artifact, 36, 12345678, '');
 
-        $this->handler->handle(new ArtifactCreated($artifact, $changeset, $current_user));
+        $this->asyncronous_runner->expects(self::never())->method('executeProgramIncrementsCreation');
 
-        $this->asyncronous_runner->shouldNotHaveReceived('executeMirrorsCreation');
+        $handler = $this->getHandler(VerifyIsProgramIncrementTrackerStub::buildValidProgramIncrement());
+        $handler->handle(new ArtifactCreated($artifact, $changeset, $current_user));
+    }
+
+    public function testHandleReactsOnlyToTrackersThatAreProgramIncrements(): void
+    {
+        $project = ProjectTestBuilder::aProject()->withId(101)->build();
+        $tracker = TrackerTestBuilder::aTracker()->withId(15)->withProject($project)->build();
+        $this->program_store->method('isProjectAProgramProject')->willReturn(true);
+
+        $current_user = UserTestBuilder::aUser()->build();
+        $artifact     = new Artifact(1, $tracker->getId(), $current_user->getId(), 12345678, false);
+        $artifact->setTracker($tracker);
+        $changeset = new \Tracker_Artifact_Changeset(21, $artifact, 36, 12345678, '');
+
+        $this->asyncronous_runner->expects(self::never())->method('executeProgramIncrementsCreation');
+
+        $handler = $this->getHandler(VerifyIsProgramIncrementTrackerStub::buildNotProgramIncrement());
+        $handler->handle(new ArtifactCreated($artifact, $changeset, $current_user));
     }
 }

@@ -24,56 +24,33 @@ namespace Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation;
 
 use Psr\Log\LoggerInterface;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\ReplicationDataAdapter;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\Plan\BuildPlanProgramIncrementConfiguration;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\Plan\PlanCheckException;
-use Tuleap\ProgramManagement\Domain\Program\Plan\PlanTrackerException;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\VerifyIsProgramIncrementTracker;
 use Tuleap\ProgramManagement\Domain\Program\ProgramStore;
-use Tuleap\ProgramManagement\Domain\Program\ProgramTrackerNotFoundException;
 use Tuleap\Tracker\Artifact\Event\ArtifactCreated;
 
-class ArtifactCreatedHandler
+final class ArtifactCreatedHandler
 {
-    /**
-     * @var ProgramStore
-     */
-    private $program_store;
-    /**
-     * @var RunProgramIncrementCreation
-     */
-    private $run_program_increment_creation;
-    /**
-     * @var PendingArtifactCreationStore
-     */
-    private $pending_artifact_creation_store;
-    /**
-     * @var BuildPlanProgramIncrementConfiguration
-     */
-    private $build_plan_configuration;
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
+    private ProgramStore $program_store;
+    private RunProgramIncrementCreation $run_program_increment_creation;
+    private PendingArtifactCreationStore $pending_artifact_creation_store;
+    private VerifyIsProgramIncrementTracker $verify_is_program_increment;
+    private LoggerInterface $logger;
 
     public function __construct(
         ProgramStore $program_store,
         RunProgramIncrementCreation $run_program_increment_creation,
         PendingArtifactCreationStore $pending_artifact_creation_store,
-        BuildPlanProgramIncrementConfiguration $build_plan_configuration,
+        VerifyIsProgramIncrementTracker $verify_is_program_increment,
         LoggerInterface $logger
     ) {
         $this->program_store                   = $program_store;
         $this->run_program_increment_creation  = $run_program_increment_creation;
         $this->pending_artifact_creation_store = $pending_artifact_creation_store;
-        $this->build_plan_configuration        = $build_plan_configuration;
+        $this->verify_is_program_increment     = $verify_is_program_increment;
         $this->logger                          = $logger;
     }
 
 
-    /**
-     * @throws PlanTrackerException
-     * @throws ProgramTrackerNotFoundException
-     * @throws PlanCheckException
-     */
     public function handle(ArtifactCreated $event): void
     {
         $source_artifact = $event->getArtifact();
@@ -94,11 +71,9 @@ class ArtifactCreatedHandler
             )
         );
 
-        $program_increment = $this->build_plan_configuration->buildTrackerProgramIncrementFromProjectId((int) $source_project->getID(), $current_user);
-        if ($source_tracker->getId() !== $program_increment->getTrackerId()) {
+        if (! $this->verify_is_program_increment->isProgramIncrementTracker($source_tracker->getId())) {
             return;
         }
-
         $this->pending_artifact_creation_store->addArtifactToPendingCreation(
             $event->getArtifact()->getId(),
             (int) $event->getUser()->getId(),

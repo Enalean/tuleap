@@ -22,55 +22,37 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Project;
 use Tuleap\ProgramManagement\Adapter\ProjectAdapter;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\Plan\BuildPlanProgramIncrementConfiguration;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\Plan\PlanCheckException;
 use Tuleap\ProgramManagement\Domain\ProgramTracker;
+use Tuleap\ProgramManagement\Stub\VerifyIsProgramIncrementTrackerStub;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class ProgramIncrementCreatorCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|BuildPlanProgramIncrementConfiguration
+     * @var \PHPUnit\Framework\MockObject\MockObject|TimeboxCreatorChecker
      */
-    private $build_plan_configuration;
-
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|ProgramIncrementCreatorChecker
-     */
-    private $milestone_creator_checker;
-
-    /**
-     * @var ProgramIncrementCreatorChecker
-     */
-    private $artifact_creator_checker;
+    private $timebox_creator_checker;
 
     protected function setUp(): void
     {
-        $this->milestone_creator_checker = \Mockery::mock(TimeboxCreatorChecker::class);
-        $this->build_plan_configuration  = \Mockery::mock(BuildPlanProgramIncrementConfiguration::class);
-
-        $this->artifact_creator_checker = new ProgramIncrementCreatorChecker(
-            $this->milestone_creator_checker,
-            $this->build_plan_configuration
-        );
+        $this->timebox_creator_checker = $this->createMock(TimeboxCreatorChecker::class);
     }
 
-    public function testDisallowArtifactCreationWhenItIsAMilestoneTrackerAndMilestoneCannotBeCreated(): void
+    public function testDisallowArtifactCreationWhenItIsAProgramIncrementTrackerAndOtherChecksDoNotPass(): void
     {
         $project = new Project(['group_id' => 105, 'unix_group_name' => "project", "group_name" => "Project"]);
         $tracker = TrackerTestBuilder::aTracker()->withId(1)->withProject($project)->build();
-        $this->build_plan_configuration->shouldReceive('buildTrackerProgramIncrementFromProjectId')
-            ->andReturn(new ProgramTracker($tracker));
-        $this->milestone_creator_checker->shouldReceive('canTimeboxBeCreated')->once()->andReturn(false);
+        $this->timebox_creator_checker->method('canTimeboxBeCreated')->willReturn(false);
 
+        $checker = new ProgramIncrementCreatorChecker(
+            $this->timebox_creator_checker,
+            VerifyIsProgramIncrementTrackerStub::buildValidProgramIncrement(),
+        );
         self::assertFalse(
-            $this->artifact_creator_checker->canCreateAProgramIncrement(
+            $checker->canCreateAProgramIncrement(
                 UserTestBuilder::aUser()->build(),
                 new ProgramTracker($tracker),
                 ProjectAdapter::build($project)
@@ -78,17 +60,17 @@ final class ProgramIncrementCreatorCheckerTest extends \Tuleap\Test\PHPUnit\Test
         );
     }
 
-    public function testAllowArtifactCreationWhenProgramNotFound(): void
+    public function testAllowArtifactCreationWhenTrackerIsNotProgramIncrement(): void
     {
         $project = new Project(['group_id' => 105, 'unix_group_name' => "project", "group_name" => "Project"]);
         $tracker = TrackerTestBuilder::aTracker()->withId(102)->withProject(\Project::buildForTest())->build();
 
-        $this->build_plan_configuration->shouldReceive('buildTrackerProgramIncrementFromProjectId')
-            ->andThrow(new class extends \Exception implements PlanCheckException {
-            });
-
+        $checker = new ProgramIncrementCreatorChecker(
+            $this->timebox_creator_checker,
+            VerifyIsProgramIncrementTrackerStub::buildNotProgramIncrement(),
+        );
         self::assertTrue(
-            $this->artifact_creator_checker->canCreateAProgramIncrement(
+            $checker->canCreateAProgramIncrement(
                 UserTestBuilder::aUser()->build(),
                 new ProgramTracker($tracker),
                 ProjectAdapter::build($project)
@@ -96,16 +78,18 @@ final class ProgramIncrementCreatorCheckerTest extends \Tuleap\Test\PHPUnit\Test
         );
     }
 
-    public function testAllowArtifactCreationWhenTrackerDoesNotCreateMilestone(): void
+    public function testAllowArtifactCreationWhenOtherChecksPass(): void
     {
         $project = new Project(['group_id' => 105, 'unix_group_name' => "project", "group_name" => "Project"]);
         $tracker = TrackerTestBuilder::aTracker()->withId(102)->withProject($project)->build();
-        $this->build_plan_configuration->shouldReceive('buildTrackerProgramIncrementFromProjectId')
-            ->andReturn(new ProgramTracker($tracker));
-        $this->milestone_creator_checker->shouldReceive('canTimeboxBeCreated')->andReturn(true);
+        $this->timebox_creator_checker->method('canTimeboxBeCreated')->willReturn(true);
 
+        $checker = new ProgramIncrementCreatorChecker(
+            $this->timebox_creator_checker,
+            VerifyIsProgramIncrementTrackerStub::buildValidProgramIncrement(),
+        );
         self::assertTrue(
-            $this->artifact_creator_checker->canCreateAProgramIncrement(
+            $checker->canCreateAProgramIncrement(
                 UserTestBuilder::aUser()->build(),
                 new ProgramTracker($tracker),
                 ProjectAdapter::build($project)

@@ -86,7 +86,7 @@ final class ProgramIncrementResource extends AuthenticatedResource
         $this->user_manager                        = \UserManager::instance();
         $artifact_factory                          = \Tracker_ArtifactFactory::instance();
         $this->program_increment_content_retriever = new FeatureContentRetriever(
-            new ProgramIncrementChecker($artifact_factory, new ProgramIncrementsDAO()),
+            new ProgramIncrementChecker($artifact_factory, new PlanDao()),
             new ContentDao(),
             new FeatureRepresentationBuilder(
                 $artifact_factory,
@@ -170,6 +170,7 @@ final class ProgramIncrementResource extends AuthenticatedResource
             \Tracker_Artifact_PriorityManager::build(),
             new ArtifactLinkUpdaterDataFormater()
         );
+        $plan_dao               = new PlanDao();
         $modifier               = new ContentModifier(
             new PrioritizeFeaturesPermissionVerifier(
                 \ProjectManager::instance(),
@@ -179,10 +180,10 @@ final class ProgramIncrementResource extends AuthenticatedResource
                 ),
                 new CanPrioritizeFeaturesDAO()
             ),
-            new ProgramIncrementChecker($artifact_factory, $program_increments_dao),
+            new ProgramIncrementChecker($artifact_factory, $plan_dao),
             $this->getProgramSearcher(),
             new VerifyIsVisibleFeatureAdapter($artifact_factory),
-            new PlanDao(),
+            $plan_dao,
             new FeaturePlanner(
                 new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection()),
                 new UserStoryLinkedToFeatureChecker(
