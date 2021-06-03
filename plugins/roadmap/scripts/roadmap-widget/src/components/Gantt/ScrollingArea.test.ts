@@ -22,6 +22,9 @@ import { shallowMount } from "@vue/test-utils";
 import ScrollingArea from "./ScrollingArea.vue";
 import { TimePeriodMonth } from "../../helpers/time-period-month";
 import Vue from "vue";
+import { createStoreMock } from "../../../../../../../src/scripts/vue-components/store-wrapper-jest";
+import type { RootState } from "../../store/type";
+import type { TimeperiodState } from "../../store/timeperiod/type";
 
 describe("ScrollingArea", () => {
     const windowIntersectionObserver = window.IntersectionObserver;
@@ -35,13 +38,22 @@ describe("ScrollingArea", () => {
     function aScrollingArea(): Wrapper<ScrollingArea> {
         return shallowMount(ScrollingArea, {
             propsData: {
-                time_period: new TimePeriodMonth(
-                    new Date("2020-03-31T22:00:00.000Z"),
-                    new Date("2020-04-31T22:00:00.000Z"),
-                    "en-US"
-                ),
                 now: new Date(),
                 timescale: "month",
+            },
+            mocks: {
+                $store: createStoreMock({
+                    state: {
+                        timeperiod: {} as TimeperiodState,
+                    } as RootState,
+                    getters: {
+                        "timeperiod/time_period": new TimePeriodMonth(
+                            new Date("2020-03-31T22:00:00.000Z"),
+                            new Date("2020-04-31T22:00:00.000Z"),
+                            "en-US"
+                        ),
+                    },
+                }),
             },
         });
     }

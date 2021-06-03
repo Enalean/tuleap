@@ -18,7 +18,7 @@
  */
 
 import type { TasksState } from "./type";
-import type { Row } from "../../type";
+import type { Row, Task, SubtaskRow, TaskRow } from "../../type";
 import {
     SUBTASKS_ARE_EMPTY,
     SUBTASKS_ARE_IN_ERROR,
@@ -71,3 +71,25 @@ export const rows = (state: TasksState): Row[] => {
         return rows;
     }, []);
 };
+
+export const tasks = (state: unknown, { rows }: { rows: Row[] }): Task[] => {
+    return rows.reduce((tasks: Task[], row: Row) => {
+        if (isTaskRow(row)) {
+            tasks.push(row.task);
+        }
+
+        if (isSubtaskRow(row)) {
+            tasks.push(row.subtask);
+        }
+
+        return tasks;
+    }, []);
+};
+
+function isTaskRow(row: Row): row is TaskRow {
+    return "task" in row;
+}
+
+function isSubtaskRow(row: Row): row is SubtaskRow {
+    return "subtask" in row;
+}

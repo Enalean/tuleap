@@ -21,7 +21,7 @@
 <template>
     <div>
         <div class="roadmap-gantt-controls">
-            <time-period-control v-model="timescale" />
+            <time-period-control v-bind:value="timescale" v-on:input="setTimescale" />
             <dependency-nature-control
                 v-model="dependencies_nature_to_display"
                 v-bind:available_natures="available_natures"
@@ -66,25 +66,17 @@
                     />
                 </template>
             </div>
-            <scrolling-area
-                v-bind:time_period="time_period"
-                v-bind:now="now"
-                v-bind:timescale="timescale"
-                v-on:is_scrolling="isScrolling"
-            >
+            <scrolling-area v-bind:timescale="timescale" v-on:is_scrolling="isScrolling">
                 <time-period-header
-                    v-bind:time_period="time_period"
                     v-bind:nb_additional_units="nb_additional_units"
                     ref="time_period"
                 />
                 <iterations-ribbon
                     v-if="has_lvl1_iterations"
-                    v-bind:time_period="time_period"
                     v-bind:nb_additional_units="nb_additional_units"
                 />
                 <iterations-ribbon
                     v-if="has_lvl2_iterations"
-                    v-bind:time_period="time_period"
                     v-bind:nb_additional_units="nb_additional_units"
                 />
                 <template v-for="(row, index) in rows">
@@ -92,7 +84,6 @@
                         v-if="isTaskRow(row)"
                         v-bind:key="'body-task-' + row.task.id"
                         v-bind:task="row.task"
-                        v-bind:time_period="time_period"
                         v-bind:nb_additional_units="nb_additional_units"
                         v-bind:dependencies="dependencies"
                         v-bind:dimensions_map="dimensions_map"
@@ -103,7 +94,6 @@
                         v-else-if="isSubtaskRow(row)"
                         v-bind:key="'body-task-' + row.parent.id + '-subtask-' + row.subtask.id"
                         v-bind:task="row.subtask"
-                        v-bind:time_period="time_period"
                         v-bind:nb_additional_units="nb_additional_units"
                         v-bind:dependencies="dependencies"
                         v-bind:dimensions_map="dimensions_map"
@@ -120,7 +110,6 @@
                     <subtask-skeleton-bar
                         v-else
                         v-bind:key="'body-skeleton-' + row.for_task.id + '-' + index"
-                        v-bind:time_period="time_period"
                         v-bind:nb_additional_units="nb_additional_units"
                     />
                 </template>
@@ -163,18 +152,13 @@ import type {
     Iteration,
 } from "../../type";
 import TimePeriodHeader from "./TimePeriod/TimePeriodHeader.vue";
-import { getFirstDate } from "../../helpers/first-date";
-import { getLastDate } from "../../helpers/last-date";
 import TodayIndicator from "./TodayIndicator.vue";
 import { Styles } from "../../helpers/styles";
-import { TimePeriodQuarter } from "../../helpers/time-period-quarter";
 import { getTasksDependencies } from "../../helpers/dependency-map-builder";
 import { getDimensionsMap } from "../../helpers/tasks-dimensions";
-import { TimePeriodMonth } from "../../helpers/time-period-month";
 import TimePeriodControl from "./TimePeriod/TimePeriodControl.vue";
 import DependencyNatureControl from "./DependencyNatureControl.vue";
 import { getNatureLabelsForTasks } from "../../helpers/natures-labels-for-tasks";
-import { TimePeriodWeek } from "../../helpers/time-period-week";
 import TaskHeader from "./Task/TaskHeader.vue";
 import ScrollingArea from "./ScrollingArea.vue";
 import BarPopover from "./Task/BarPopover.vue";
@@ -189,6 +173,7 @@ import IterationsRibbon from "./Iteration/IterationsRibbon.vue";
 
 const tasks = namespace("tasks");
 const iterations = namespace("iterations");
+const timeperiod = namespace("timeperiod");
 
 @Component({
     components: {
@@ -216,14 +201,29 @@ export default class GanttBoard extends Vue {
     @tasks.Getter
     readonly rows!: Row[];
 
-    @iterations.State
-    readonly lvl1_iterations!: Iteration[];
+    @tasks.Getter
+    private readonly tasks!: Task[];
 
     @iterations.State
-    readonly lvl2_iterations!: Iteration[];
+    private readonly lvl1_iterations!: Iteration[];
+
+    @iterations.State
+    private readonly lvl2_iterations!: Iteration[];
+
+    @timeperiod.State
+    private readonly timescale!: TimeScale;
+
+    @timeperiod.Mutation
+    private readonly setTimescale!: (timescale: TimeScale) => void;
+
+    @timeperiod.Getter
+    private readonly time_period!: TimePeriod;
 
     @State
     private readonly locale_bcp47!: string;
+
+    @State
+    private readonly now!: Date;
 
     @Prop({ required: true })
     private readonly visible_natures!: NaturesLabels;
@@ -231,10 +231,6 @@ export default class GanttBoard extends Vue {
     private nb_additional_units = 0;
 
     private observer: ResizeObserver | null = null;
-
-    private now = new Date();
-
-    private timescale: TimeScale = "month";
 
     private dependencies_nature_to_display: string | null = null;
 
@@ -292,44 +288,6 @@ export default class GanttBoard extends Vue {
         this.nb_additional_units = nb_visible_units - this.time_period.units.length - 1;
     }
 
-    get tasks(): Task[] {
-        return this.rows.reduce((tasks: Task[], row: Row) => {
-            if (this.isTaskRow(row)) {
-                tasks.push(row.task);
-            }
-
-            if (this.isSubtaskRow(row)) {
-                tasks.push(row.subtask);
-            }
-
-            return tasks;
-        }, []);
-    }
-
-    get first_date(): Date {
-        return getFirstDate(this.tasks, this.now);
-    }
-
-    get last_date(): Date {
-        return getLastDate(this.tasks, this.now);
-    }
-
-    get time_period(): TimePeriod {
-        if (this.timescale === "week") {
-            return new TimePeriodWeek(this.getFirstDateWithOffset(7), this.last_date, this);
-        }
-
-        if (this.timescale === "quarter") {
-            return new TimePeriodQuarter(this.getFirstDateWithOffset(90), this.last_date, this);
-        }
-
-        return new TimePeriodMonth(
-            this.getFirstDateWithOffset(30),
-            this.last_date,
-            this.locale_bcp47
-        );
-    }
-
     get dependencies(): TasksDependencies {
         return getTasksDependencies(this.tasks);
     }
@@ -374,15 +332,6 @@ export default class GanttBoard extends Vue {
 
     get has_lvl2_iterations(): boolean {
         return this.lvl2_iterations.length > 0;
-    }
-
-    getFirstDateWithOffset(nb_days_to_substract: number): Date {
-        const first_date_with_offset = new Date(this.first_date);
-        first_date_with_offset.setUTCDate(
-            first_date_with_offset.getUTCDate() - nb_days_to_substract
-        );
-
-        return first_date_with_offset;
     }
 
     isTaskRow(row: Row): row is TaskRow {

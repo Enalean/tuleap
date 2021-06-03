@@ -28,6 +28,9 @@ import { TimePeriodMonth } from "../../../helpers/time-period-month";
 import { TasksByNature, TasksDependencies } from "../../../type";
 import DependencyArrow from "./DependencyArrow.vue";
 import { getDimensionsMap } from "../../../helpers/tasks-dimensions";
+import { createStoreMock } from "../../../../../../../../src/scripts/vue-components/store-wrapper-jest";
+import type { TimeperiodState } from "../../../store/timeperiod/type";
+import type { RootState } from "../../../store/type";
 
 describe("GanttTask", () => {
     function mountGanttTask(
@@ -64,12 +67,21 @@ describe("GanttTask", () => {
         return shallowMount(GanttTask, {
             propsData: {
                 task: my_task,
-                time_period,
                 nb_additional_units: 2,
                 dimensions_map: getDimensionsMap([{ task: my_task }], time_period),
                 dependencies,
                 dependencies_nature_to_display,
                 popover_element_id: "roadmap-gantt-bar-popover-1-123",
+            },
+            mocks: {
+                $store: createStoreMock({
+                    state: {
+                        timeperiod: {} as TimeperiodState,
+                    } as RootState,
+                    getters: {
+                        "timeperiod/time_period": time_period,
+                    },
+                }),
             },
         });
     }

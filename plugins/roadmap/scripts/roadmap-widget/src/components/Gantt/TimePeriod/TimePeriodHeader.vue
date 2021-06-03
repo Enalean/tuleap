@@ -32,12 +32,15 @@ import { NbUnitsPerYear } from "../../../type";
 import type { TimePeriod } from "../../../type";
 import TimePeriodUnits from "./TimePeriodUnits.vue";
 import TimePeriodYears from "./TimePeriodYears.vue";
+import { namespace } from "vuex-class";
+
+const timeperiod = namespace("timeperiod");
 
 @Component({
     components: { TimePeriodYears, TimePeriodUnits },
 })
 export default class TimePeriodHeader extends Vue {
-    @Prop({ required: true })
+    @timeperiod.Getter
     private readonly time_period!: TimePeriod;
 
     @Prop({ required: true })

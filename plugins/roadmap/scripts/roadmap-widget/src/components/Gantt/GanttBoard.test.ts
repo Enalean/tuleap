@@ -24,7 +24,6 @@ import GanttTask from "./Task/GanttTask.vue";
 import TimePeriodHeader from "./TimePeriod/TimePeriodHeader.vue";
 import { TimePeriodMonth } from "../../helpers/time-period-month";
 import TimePeriodControl from "./TimePeriod/TimePeriodControl.vue";
-import { TimePeriodQuarter } from "../../helpers/time-period-quarter";
 import ScrollingArea from "./ScrollingArea.vue";
 import { createStoreMock } from "../../../../../../../src/scripts/vue-components/store-wrapper-jest";
 import type { RootState } from "../../store/type";
@@ -48,6 +47,7 @@ window.ResizeObserver =
 
 function getRootState(): RootState {
     return {
+        now: new Date(2020, 3, 15),
         locale_bcp47: "en-US",
         should_load_lvl1_iterations: false,
         should_load_lvl2_iterations: false,
@@ -60,6 +60,9 @@ function getRootState(): RootState {
             lvl2_iterations: [],
         } as IterationsState,
         tasks: {} as TasksState,
+        timeperiod: {
+            timescale: "month",
+        },
     } as RootState;
 }
 
@@ -80,6 +83,7 @@ describe("GanttBoard", () => {
                     state: getRootState(),
                     getters: {
                         "tasks/rows": [],
+                        "tasks/tasks": [],
                     },
                 }),
             },
@@ -106,6 +110,7 @@ describe("GanttBoard", () => {
                     },
                     getters: {
                         "tasks/rows": [],
+                        "tasks/tasks": [],
                     },
                 }),
             },
@@ -132,6 +137,7 @@ describe("GanttBoard", () => {
                     },
                     getters: {
                         "tasks/rows": [],
+                        "tasks/tasks": [],
                     },
                 }),
             },
@@ -159,6 +165,7 @@ describe("GanttBoard", () => {
                     },
                     getters: {
                         "tasks/rows": [],
+                        "tasks/tasks": [],
                     },
                 }),
             },
@@ -181,6 +188,16 @@ describe("GanttBoard", () => {
                             { task: { id: 2, dependencies: {} } as Task },
                             { task: { id: 3, dependencies: {} } as Task },
                         ],
+                        "tasks/tasks": [
+                            { id: 1, dependencies: {} } as Task,
+                            { id: 2, dependencies: {} } as Task,
+                            { id: 3, dependencies: {} } as Task,
+                        ],
+                        "timeperiod/time_period": new TimePeriodMonth(
+                            new Date("2020-03-31T22:00:00.000Z"),
+                            new Date("2020-04-31T22:00:00.000Z"),
+                            "en-US"
+                        ),
                     },
                 }),
             },
@@ -207,6 +224,15 @@ describe("GanttBoard", () => {
                             },
                             { task: { id: 3, dependencies: {} } as Task },
                         ],
+                        "tasks/tasks": [
+                            { id: 1, dependencies: {} } as Task,
+                            { id: 3, dependencies: {} } as Task,
+                        ],
+                        "timeperiod/time_period": new TimePeriodMonth(
+                            new Date("2020-03-31T22:00:00.000Z"),
+                            new Date("2020-04-31T22:00:00.000Z"),
+                            "en-US"
+                        ),
                     },
                 }),
             },
@@ -235,6 +261,16 @@ describe("GanttBoard", () => {
                             },
                             { task: { id: 3, dependencies: {} } as Task },
                         ] as Row[],
+                        "tasks/tasks": [
+                            { id: 1, dependencies: {} } as Task,
+                            { id: 11, dependencies: {} } as Task,
+                            { id: 3, dependencies: {} } as Task,
+                        ],
+                        "timeperiod/time_period": new TimePeriodMonth(
+                            new Date("2020-03-31T22:00:00.000Z"),
+                            new Date("2020-04-31T22:00:00.000Z"),
+                            "en-US"
+                        ),
                     },
                 }),
             },
@@ -267,6 +303,17 @@ describe("GanttBoard", () => {
                                 is_last_one: true,
                             },
                         ] as Row[],
+                        "tasks/tasks": [
+                            { id: 1, dependencies: {} } as Task,
+                            { id: 11, dependencies: {} } as Task,
+                            { id: 3, dependencies: {} } as Task,
+                            { id: 11, dependencies: {} } as Task,
+                        ],
+                        "timeperiod/time_period": new TimePeriodMonth(
+                            new Date("2020-03-31T22:00:00.000Z"),
+                            new Date("2020-04-31T22:00:00.000Z"),
+                            "en-US"
+                        ),
                     },
                 }),
             },
@@ -301,6 +348,15 @@ describe("GanttBoard", () => {
                             },
                             { task: { id: 3, dependencies: {} } as Task },
                         ] as Row[],
+                        "tasks/tasks": [
+                            { id: 1, dependencies: {} } as Task,
+                            { id: 3, dependencies: {} } as Task,
+                        ],
+                        "timeperiod/time_period": new TimePeriodMonth(
+                            new Date("2020-03-31T22:00:00.000Z"),
+                            new Date("2020-04-31T22:00:00.000Z"),
+                            "en-US"
+                        ),
                     },
                 }),
             },
@@ -328,6 +384,15 @@ describe("GanttBoard", () => {
                             },
                             { task: { id: 3, dependencies: {} } as Task },
                         ] as Row[],
+                        "tasks/tasks": [
+                            { id: 1, dependencies: {} } as Task,
+                            { id: 3, dependencies: {} } as Task,
+                        ],
+                        "timeperiod/time_period": new TimePeriodMonth(
+                            new Date("2020-03-31T22:00:00.000Z"),
+                            new Date("2020-04-31T22:00:00.000Z"),
+                            "en-US"
+                        ),
                     },
                 }),
             },
@@ -338,49 +403,6 @@ describe("GanttBoard", () => {
         expect(wrapper.findAllComponents(SubtaskMessage).length).toBe(1);
     });
 
-    it("Displays months according to tasks", async () => {
-        const wrapper = shallowMount(GanttBoard, {
-            propsData: {
-                visible_natures: [],
-            },
-            mocks: {
-                $store: createStoreMock({
-                    state: getRootState(),
-                    getters: {
-                        "tasks/rows": [
-                            {
-                                task: {
-                                    id: 1,
-                                    start: new Date(2020, 3, 15),
-                                    dependencies: {},
-                                } as Task,
-                            },
-                            {
-                                task: {
-                                    id: 2,
-                                    start: new Date(2020, 3, 20),
-                                    dependencies: {},
-                                } as Task,
-                            },
-                        ],
-                    },
-                }),
-            },
-        });
-
-        wrapper.setData({
-            now: new Date(2020, 3, 15),
-        });
-        await wrapper.vm.$nextTick();
-
-        const time_period_header = wrapper.findComponent(TimePeriodHeader);
-        expect(time_period_header.exists()).toBe(true);
-        expect(
-            time_period_header.props("time_period").units.map((month: Date) => month.toDateString())
-        ).toStrictEqual(["Sun Mar 01 2020", "Wed Apr 01 2020", "Fri May 01 2020"]);
-        expect(time_period_header.props("nb_additional_units")).toBe(0);
-    });
-
     it("Observes the resize of the time period", () => {
         const observe = jest.fn();
         const mockResizeObserver = jest.fn();
@@ -389,6 +411,16 @@ describe("GanttBoard", () => {
         });
         window.ResizeObserver = mockResizeObserver;
 
+        const task_1 = {
+            id: 1,
+            start: new Date(2020, 3, 15),
+            dependencies: {},
+        } as Task;
+        const task_2 = {
+            id: 2,
+            start: new Date(2020, 3, 20),
+            dependencies: {},
+        } as Task;
         const wrapper = shallowMount(GanttBoard, {
             propsData: {
                 visible_natures: [],
@@ -399,20 +431,18 @@ describe("GanttBoard", () => {
                     getters: {
                         "tasks/rows": [
                             {
-                                task: {
-                                    id: 1,
-                                    start: new Date(2020, 3, 15),
-                                    dependencies: {},
-                                } as Task,
+                                task: task_1,
                             },
                             {
-                                task: {
-                                    id: 2,
-                                    start: new Date(2020, 3, 20),
-                                    dependencies: {},
-                                } as Task,
+                                task: task_2,
                             },
                         ],
+                        "tasks/tasks": [task_1, task_2],
+                        "timeperiod/time_period": new TimePeriodMonth(
+                            new Date("2020-03-31T22:00:00.000Z"),
+                            new Date("2020-04-31T22:00:00.000Z"),
+                            "en-US"
+                        ),
                     },
                 }),
             },
@@ -431,6 +461,16 @@ describe("GanttBoard", () => {
         });
         window.ResizeObserver = mockResizeObserver;
 
+        const task_1 = {
+            id: 1,
+            start: new Date(2020, 3, 15),
+            dependencies: {},
+        } as Task;
+        const task_2 = {
+            id: 2,
+            start: new Date(2020, 3, 20),
+            dependencies: {},
+        } as Task;
         const wrapper = shallowMount(GanttBoard, {
             propsData: {
                 visible_natures: [],
@@ -441,41 +481,31 @@ describe("GanttBoard", () => {
                     getters: {
                         "tasks/rows": [
                             {
-                                task: {
-                                    id: 1,
-                                    start: new Date(2020, 3, 15),
-                                    dependencies: {},
-                                } as Task,
+                                task: task_1,
                             },
                             {
-                                task: {
-                                    id: 2,
-                                    start: new Date(2020, 3, 20),
-                                    dependencies: {},
-                                } as Task,
+                                task: task_2,
                             },
                         ],
+                        "tasks/tasks": [task_1, task_2],
+                        "timeperiod/time_period": new TimePeriodMonth(
+                            new Date("2020-03-31T22:00:00.000Z"),
+                            new Date("2020-04-31T22:00:00.000Z"),
+                            "en-US"
+                        ),
                     },
                 }),
             },
         });
 
-        wrapper.setData({
-            now: new Date(2020, 3, 15),
-        });
-        await wrapper.vm.$nextTick();
-
         const time_period_header = wrapper.findComponent(TimePeriodHeader);
         expect(time_period_header.exists()).toBe(true);
-        expect(
-            time_period_header.props("time_period").units.map((month: Date) => month.toDateString())
-        ).toStrictEqual(["Sun Mar 01 2020", "Wed Apr 01 2020", "Fri May 01 2020"]);
         expect(time_period_header.props("nb_additional_units")).toBe(0);
 
         const observerCallback = mockResizeObserver.mock.calls[0][0];
         await observerCallback([
             {
-                contentRect: { width: 450 } as DOMRectReadOnly,
+                contentRect: { width: 550 } as DOMRectReadOnly,
                 target: time_period_header.element,
             } as unknown as ResizeObserverEntry,
         ]);
@@ -497,18 +527,23 @@ describe("GanttBoard", () => {
                             { task: { id: 2, dependencies: {} } as Task },
                             { task: { id: 3, dependencies: {} } as Task },
                         ],
+                        "tasks/tasks": [
+                            { id: 1, dependencies: {} } as Task,
+                            { id: 2, dependencies: {} } as Task,
+                            { id: 3, dependencies: {} } as Task,
+                        ],
+                        "timeperiod/time_period": new TimePeriodMonth(
+                            new Date("2020-03-31T22:00:00.000Z"),
+                            new Date("2020-04-31T22:00:00.000Z"),
+                            "en-US"
+                        ),
                     },
                 }),
             },
         });
 
-        expect(wrapper.findComponent(TimePeriodHeader).props("time_period")).toBeInstanceOf(
-            TimePeriodMonth
-        );
         await wrapper.findComponent(TimePeriodControl).vm.$emit("input", "quarter");
-        expect(wrapper.findComponent(TimePeriodHeader).props("time_period")).toBeInstanceOf(
-            TimePeriodQuarter
-        );
+        expect(wrapper.vm.$store.commit).toHaveBeenCalledWith("timeperiod/setTimescale", "quarter");
     });
 
     it("switch is-scrolling class on header so that user is knowing that some data is hidden behind the header", async () => {
@@ -525,6 +560,16 @@ describe("GanttBoard", () => {
                             { task: { id: 2, dependencies: {} } as Task },
                             { task: { id: 3, dependencies: {} } as Task },
                         ],
+                        "tasks/tasks": [
+                            { id: 1, dependencies: {} } as Task,
+                            { id: 2, dependencies: {} } as Task,
+                            { id: 3, dependencies: {} } as Task,
+                        ],
+                        "timeperiod/time_period": new TimePeriodMonth(
+                            new Date("2020-03-31T22:00:00.000Z"),
+                            new Date("2020-04-31T22:00:00.000Z"),
+                            "en-US"
+                        ),
                     },
                 }),
             },

@@ -23,17 +23,29 @@ import { TimePeriodMonth } from "../../../helpers/time-period-month";
 import TimePeriodYears from "./TimePeriodYears.vue";
 import { NbUnitsPerYear } from "../../../type";
 import TimePeriodUnits from "./TimePeriodUnits.vue";
+import { createStoreMock } from "../../../../../../../../src/scripts/vue-components/store-wrapper-jest";
+import type { TimeperiodState } from "../../../store/timeperiod/type";
+import type { RootState } from "../../../store/type";
 
 describe("TimePeriodHeader", () => {
     it("should display years and units", () => {
         const wrapper = shallowMount(TimePeriodHeader, {
             propsData: {
-                time_period: new TimePeriodMonth(
-                    new Date("2020-03-31T22:00:00.000Z"),
-                    new Date("2020-04-30T22:00:00.000Z"),
-                    "en-US"
-                ),
                 nb_additional_units: 2,
+            },
+            mocks: {
+                $store: createStoreMock({
+                    state: {
+                        timeperiod: {} as TimeperiodState,
+                    } as RootState,
+                    getters: {
+                        "timeperiod/time_period": new TimePeriodMonth(
+                            new Date("2020-03-31T22:00:00.000Z"),
+                            new Date("2020-04-30T22:00:00.000Z"),
+                            "en-US"
+                        ),
+                    },
+                }),
             },
         });
 
@@ -52,12 +64,21 @@ describe("TimePeriodHeader", () => {
     it("should count how much units the years are spanning on", () => {
         const wrapper = shallowMount(TimePeriodHeader, {
             propsData: {
-                time_period: new TimePeriodMonth(
-                    new Date("2019-12-15T22:00:00.000Z"),
-                    new Date("2021-05-15T22:00:00.000Z"),
-                    "en-US"
-                ),
                 nb_additional_units: 0,
+            },
+            mocks: {
+                $store: createStoreMock({
+                    state: {
+                        timeperiod: {} as TimeperiodState,
+                    } as RootState,
+                    getters: {
+                        "timeperiod/time_period": new TimePeriodMonth(
+                            new Date("2019-12-15T22:00:00.000Z"),
+                            new Date("2021-05-15T22:00:00.000Z"),
+                            "en-US"
+                        ),
+                    },
+                }),
             },
         });
 

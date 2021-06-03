@@ -18,7 +18,15 @@
  */
 
 import * as getters from "./tasks-getters";
-import type { Row, Task } from "../../type";
+import type {
+    EmptySubtasksRow,
+    ErrorRow,
+    Row,
+    SkeletonRow,
+    SubtaskRow,
+    Task,
+    TaskRow,
+} from "../../type";
 import type { TasksState } from "./type";
 import {
     SUBTASKS_ARE_EMPTY,
@@ -273,5 +281,31 @@ describe("tasks-getters", () => {
             { task: task_2 },
             { task: task_3 },
         ] as Row[]);
+    });
+
+    describe("tasks", () => {
+        it("extract task and subtasks from rows", () => {
+            const task_row: TaskRow = { task: { id: 123 } as Task };
+            const skeleton_row: SkeletonRow = { is_skeleton: true } as SkeletonRow;
+            const empty_subtask_row: EmptySubtasksRow = { is_empty: true } as EmptySubtasksRow;
+            const error_row: ErrorRow = { is_error: true } as ErrorRow;
+            const subtask_row: SubtaskRow = { subtask: { id: 234 } as Task } as SubtaskRow;
+
+            const tasks = getters.tasks(
+                {},
+                {
+                    rows: [
+                        task_row,
+                        skeleton_row,
+                        empty_subtask_row,
+                        error_row,
+                        error_row,
+                        subtask_row,
+                    ],
+                }
+            );
+
+            expect(tasks).toStrictEqual([{ id: 123 }, { id: 234 }]);
+        });
     });
 });

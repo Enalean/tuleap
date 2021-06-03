@@ -19,23 +19,13 @@
 
 import * as mutations from "./root-mutations";
 import type { RootState } from "./type";
-import type { TasksState } from "./tasks/type";
 import type { FetchWrapperError } from "@tuleap/tlp-fetch";
-import type { IterationsState } from "./iterations/type";
 
 describe("root-mutations", () => {
     it("stopLoading set the corresponding boolean to false", () => {
         const state: RootState = {
-            locale_bcp47: "fr-FR",
-            should_load_lvl1_iterations: false,
-            should_load_lvl2_iterations: false,
             is_loading: true,
-            should_display_empty_state: false,
-            should_display_error_state: false,
-            error_message: "",
-            tasks: {} as TasksState,
-            iterations: {} as IterationsState,
-        };
+        } as RootState;
 
         mutations.stopLoading(state);
 
@@ -45,16 +35,9 @@ describe("root-mutations", () => {
     describe("setApplicationInErrorStateDueToRestError", () => {
         it("should display an error state for a 400", async () => {
             const state: RootState = {
-                locale_bcp47: "fr-FR",
-                should_load_lvl1_iterations: false,
-                should_load_lvl2_iterations: false,
-                is_loading: true,
-                should_display_empty_state: false,
                 should_display_error_state: false,
                 error_message: "",
-                tasks: {} as TasksState,
-                iterations: {} as IterationsState,
-            };
+            } as RootState;
 
             await mutations.setApplicationInErrorStateDueToRestError(state, {
                 response: {
@@ -76,16 +59,9 @@ describe("root-mutations", () => {
 
         it("should display a generic error state for a 500", async () => {
             const state: RootState = {
-                locale_bcp47: "fr-FR",
-                should_load_lvl1_iterations: false,
-                should_load_lvl2_iterations: false,
-                is_loading: true,
-                should_display_empty_state: false,
                 should_display_error_state: false,
                 error_message: "",
-                tasks: {} as TasksState,
-                iterations: {} as IterationsState,
-            };
+            } as RootState;
 
             await mutations.setApplicationInErrorStateDueToRestError(state, {
                 response: {
@@ -102,16 +78,8 @@ describe("root-mutations", () => {
 
     it("setApplicationInEmptyState should switch the application in empty state, as suggested by the name", () => {
         const state: RootState = {
-            locale_bcp47: "fr-FR",
-            should_load_lvl1_iterations: false,
-            should_load_lvl2_iterations: false,
-            is_loading: true,
             should_display_empty_state: false,
-            should_display_error_state: false,
-            error_message: "",
-            tasks: {} as TasksState,
-            iterations: {} as IterationsState,
-        };
+        } as RootState;
 
         mutations.setApplicationInEmptyState(state);
 

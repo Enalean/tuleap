@@ -71,6 +71,9 @@ import { createPopover } from "@tuleap/tlp-popovers";
 import type { Popover } from "@tuleap/tlp-popovers/types/scripts/lib/tlp-popovers/src/popovers";
 import { Styles } from "../../../helpers/styles";
 import { doesTaskHaveEndDateGreaterOrEqualToStartDate } from "../../../helpers/task-has-valid-dates";
+import { namespace } from "vuex-class";
+
+const timeperiod = namespace("timeperiod");
 
 @Component({
     components: { DependencyArrow, TaskBar, BackgroundGrid },
@@ -80,14 +83,14 @@ export default class GanttTask extends Vue {
         bar: TaskBar;
     };
 
+    @timeperiod.Getter
+    private readonly time_period!: TimePeriod;
+
     @Prop({ required: true })
     readonly task!: Task;
 
     @Prop({ required: true })
     readonly dimensions_map!: TaskDimensionMap;
-
-    @Prop({ required: true })
-    readonly time_period!: TimePeriod;
 
     @Prop({ required: true })
     readonly nb_additional_units!: number;
