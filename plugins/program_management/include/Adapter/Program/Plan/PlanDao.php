@@ -24,12 +24,11 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Plan;
 
 use Tuleap\DB\DataAccessObject;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Content\VerifyCanBePlannedInProgramIncrement;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\VerifyIsProgramIncrementTracker;
 use Tuleap\ProgramManagement\Domain\Program\Plan\Plan;
 use Tuleap\ProgramManagement\Domain\Program\Plan\PlanStore;
 use Tuleap\ProgramManagement\Domain\ProgramTracker;
 
-final class PlanDao extends DataAccessObject implements PlanStore, VerifyCanBePlannedInProgramIncrement, VerifyIsProgramIncrementTracker
+final class PlanDao extends DataAccessObject implements PlanStore, VerifyCanBePlannedInProgramIncrement
 {
     /**
      * @throws \Throwable
@@ -149,37 +148,6 @@ final class PlanDao extends DataAccessObject implements PlanStore, VerifyCanBePl
                 WHERE plannable_tracker_id = ? OR program_increment_tracker_id = ?';
 
         return $this->getDB()->exists($sql, $tracker_data->getTrackerId(), $tracker_data->getTrackerId());
-    }
-
-    public function getProgramIncrementTrackerId(int $project_id): ?int
-    {
-        $sql = 'SELECT program_increment_tracker_id FROM plugin_program_management_program
-                INNER JOIN tracker ON tracker.id = plugin_program_management_program.program_increment_tracker_id
-                    WHERE tracker.group_id = ?';
-
-        $tracker_id = $this->getDB()->single($sql, [$project_id]);
-        if (! $tracker_id) {
-            return null;
-        }
-
-        return $tracker_id;
-    }
-
-    public function isProgramIncrementTracker(int $tracker_id): bool
-    {
-        $sql  = 'SELECT NULL FROM plugin_program_management_program WHERE program_increment_tracker_id = ?';
-        $rows = $this->getDB()->run($sql, $tracker_id);
-
-        return count($rows) > 0;
-    }
-
-    /**
-     * @psalm-return null|array{program_increment_label: ?string, program_increment_sub_label: ?string}
-     */
-    public function getProgramIncrementLabels(int $program_increment_tracker_id): ?array
-    {
-        $sql = "SELECT program_increment_label, program_increment_sub_label FROM plugin_program_management_program WHERE program_increment_tracker_id = ?";
-        return $this->getDB()->row($sql, $program_increment_tracker_id);
     }
 
     public function canBePlannedInProgramIncrement(int $feature_id, int $program_increment_id): bool

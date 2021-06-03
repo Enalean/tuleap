@@ -27,33 +27,18 @@ namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement;
  */
 final class ProgramIncrementTrackerConfiguration
 {
-    /**
-     * @var bool
-     */
-    public $can_create_program_increment;
-    /**
-     * @var int
-     */
-    private $program_increment_tracker_id;
-    /**
-     * @var ?string
-     */
-    private $program_increment_label;
-    /**
-     * @var ?string
-     */
-    private $program_increment_sub_label;
+    private bool $can_create_program_increment;
+    private int $program_increment_tracker_id;
+    private ProgramIncrementLabels $program_increment_labels;
 
     public function __construct(
         int $program_increment_tracker_id,
         bool $can_create_program_increment,
-        ?string $program_increment_label,
-        ?string $program_increment_sub_label
+        ProgramIncrementLabels $program_increment_labels
     ) {
         $this->can_create_program_increment = $can_create_program_increment;
         $this->program_increment_tracker_id = $program_increment_tracker_id;
-        $this->program_increment_label      = $program_increment_label;
-        $this->program_increment_sub_label  = $program_increment_sub_label;
+        $this->program_increment_labels     = $program_increment_labels;
     }
 
     public function canCreateProgramIncrement(): bool
@@ -68,11 +53,11 @@ final class ProgramIncrementTrackerConfiguration
 
     public function getProgramIncrementLabel(): ?string
     {
-        return $this->program_increment_label;
+        return $this->program_increment_labels->label;
     }
 
     public function getProgramIncrementSubLabel(): ?string
     {
-        return $this->program_increment_sub_label;
+        return $this->program_increment_labels->sub_label;
     }
 }

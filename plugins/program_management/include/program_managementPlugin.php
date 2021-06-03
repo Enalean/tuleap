@@ -253,7 +253,7 @@ final class program_managementPlugin extends Plugin
             TemplateRendererFactory::build()->getRenderer(__DIR__ . "/../templates"),
             new ProgramIncrementTrackerConfigurationBuilder(
                 $this->getPlanConfigurationBuilder(),
-                new PlanDao()
+                new ProgramIncrementsDAO()
             ),
         );
     }
@@ -294,7 +294,7 @@ final class program_managementPlugin extends Plugin
     {
         $artifact_creator_checker = new ProgramIncrementCreatorChecker(
             $this->getProjectIncrementCreatorChecker(),
-            new PlanDao()
+            new ProgramIncrementsDAO()
         );
 
         $tracker_data = new ProgramTracker($can_submit_new_artifact->getTracker());
@@ -326,7 +326,7 @@ final class program_managementPlugin extends Plugin
             new ProgramDao(),
             $this->getProgramIncrementRunner(),
             new PendingArtifactCreationDao(),
-            new PlanDao(),
+            new ProgramIncrementsDAO(),
             $this->getLogger()
         );
         $handler->handle($event);
@@ -341,7 +341,7 @@ final class program_managementPlugin extends Plugin
 
     private function planArtifactIfNeeded(ArtifactUpdated $event): void
     {
-        $checker    = new PlanDao();
+        $checker    = new ProgramIncrementsDAO();
         $tracker_id = $event->getArtifact()->getTrackerId();
         if (! $checker->isProgramIncrementTracker($tracker_id)) {
             return;
@@ -769,7 +769,7 @@ final class program_managementPlugin extends Plugin
     private function getPlanConfigurationBuilder(): PlanProgramIncrementConfigurationBuilder
     {
         return new PlanProgramIncrementConfigurationBuilder(
-            new PlanDao(),
+            new ProgramIncrementsDAO(),
             TrackerFactory::instance()
         );
     }

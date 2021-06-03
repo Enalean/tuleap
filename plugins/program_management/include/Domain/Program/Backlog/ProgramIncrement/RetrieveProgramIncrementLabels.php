@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2020 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,15 +20,12 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Domain\Program\Plan;
+namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement;
 
-use Tuleap\ProgramManagement\Domain\ProgramTracker;
-
-interface PlanStore
+interface RetrieveProgramIncrementLabels
 {
-    public function save(Plan $plan): void;
-
-    public function isPlannable(int $plannable_tracker_id): bool;
-
-    public function isPartOfAPlan(ProgramTracker $tracker_data): bool;
+    /**
+     * @psalm-return null|array{program_increment_label: ?string, program_increment_sub_label: ?string}
+     */
+    public function getProgramIncrementLabels(int $program_increment_tracker_id): ?array;
 }

@@ -29,14 +29,18 @@ use TrackerFactory;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\ProgramIncrementTrackerConfigurationBuilder;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementLabels;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementTrackerConfiguration;
 use Tuleap\ProgramManagement\Domain\Program\Plan\BuildProgram;
+use Tuleap\ProgramManagement\Domain\ProgramTracker;
 use Tuleap\ProgramManagement\Stub\BuildProgramStub;
+use Tuleap\ProgramManagement\Stub\RetrieveProgramIncrementLabelsStub;
 use Tuleap\Project\Flags\ProjectFlagsBuilder;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Request\NotFoundException;
 use Tuleap\Test\Builders\LayoutBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class DisplayProgramBacklogControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -141,12 +145,17 @@ final class DisplayProgramBacklogControllerTest extends \Tuleap\Test\PHPUnit\Tes
         $this->template_renderer->shouldReceive('renderToPage')->once()
             ->with('program-backlog', \Mockery::type(ProgramBacklogPresenter::class));
 
+        $tracker         = TrackerTestBuilder::aTracker()->withId(78)->build();
+        $program_tracker = new ProgramTracker($tracker);
+
         $this->configuration_builder->shouldReceive('build')->andReturn(
             new ProgramIncrementTrackerConfiguration(
                 $project->getId(),
                 true,
-                "Program Increments",
-                "program increment"
+                ProgramIncrementLabels::fromProgramIncrementTracker(
+                    RetrieveProgramIncrementLabelsStub::buildLabels('Program Increments', 'program increment'),
+                    $program_tracker
+                )
             )
         );
 

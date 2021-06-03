@@ -22,88 +22,35 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement;
 
-use Mockery;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Plan\BuildPlanProgramIncrementConfiguration;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementTrackerConfiguration;
-use Tuleap\ProgramManagement\Domain\Program\Plan\PlanStore;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\ProgramTracker;
 use Tuleap\ProgramManagement\Stub\BuildProgramStub;
+use Tuleap\ProgramManagement\Stub\RetrieveProgramIncrementLabelsStub;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class ProgramIncrementTrackerConfigurationBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
-    /**
-     * @var ProgramIncrementTrackerConfigurationBuilder
-     */
-    private $configuration_builder;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|BuildPlanProgramIncrementConfiguration
-     */
-    private $plan_builder;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|PlanStore
-     */
-    private $plan_store;
-
-    protected function setUp(): void
-    {
-        $this->plan_builder = Mockery::mock(BuildPlanProgramIncrementConfiguration::class);
-        $this->plan_store   = Mockery::mock(PlanStore::class);
-
-        $tracker = TrackerTestBuilder::aTracker()->withId(101)->build();
-
-        $program_tracker = new ProgramTracker($tracker);
-        $this->plan_builder
-            ->shouldReceive('buildTrackerProgramIncrementFromProjectId')
-            ->andReturn($program_tracker)
-            ->byDefault();
-
-        $this->configuration_builder = new ProgramIncrementTrackerConfigurationBuilder(
-            $this->plan_builder,
-            $this->plan_store
-        );
-    }
-
     public function testItBuildsAProgramIncrementTrackerConfiguration(): void
     {
-        $this->plan_store
-            ->shouldReceive("getProgramIncrementLabels")
-            ->andReturn(['program_increment_label' => "Program Increments", 'program_increment_sub_label' => "program increment"])
-            ->once();
+        $tracker                   = TrackerTestBuilder::aTracker()->withId(101)->build();
+        $program_increment_tracker = new ProgramTracker($tracker);
+        $plan_builder              = $this->createMock(BuildPlanProgramIncrementConfiguration::class);
+        $plan_builder->method('buildTrackerProgramIncrementFromProjectId')
+            ->willReturn($program_increment_tracker);
 
-        $user                   = UserTestBuilder::aUser()->build();
-        $project                = ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 101, $user);
-        $expected_configuration = new ProgramIncrementTrackerConfiguration(
-            $project->getId(),
-            false,
-            "Program Increments",
-            "program increment"
+        $user    = UserTestBuilder::aUser()->build();
+        $project = ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 101, $user);
+
+        $builder       = new ProgramIncrementTrackerConfigurationBuilder(
+            $plan_builder,
+            RetrieveProgramIncrementLabelsStub::buildLabels('Program Increments', 'program increment')
         );
-
-        self::assertEquals($expected_configuration, $this->configuration_builder->build($user, $project));
-    }
-
-    public function testItBuildsAProgramIncrementTrackerConfigurationWithNullLabel(): void
-    {
-        $this->plan_store
-            ->shouldReceive("getProgramIncrementLabels")
-            ->andReturnNull()
-            ->once();
-
-        $user                   = UserTestBuilder::aUser()->build();
-        $project                = ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 101, $user);
-        $expected_configuration = new ProgramIncrementTrackerConfiguration(
-            $project->getId(),
-            false,
-            null,
-            null
-        );
-
-        self::assertEquals($expected_configuration, $this->configuration_builder->build($user, $project));
+        $configuration = $builder->build($user, $project);
+        self::assertSame(101, $configuration->getProgramIncrementTrackerId());
+        self::assertFalse($configuration->canCreateProgramIncrement());
+        self::assertSame('Program Increments', $configuration->getProgramIncrementLabel());
+        self::assertSame('program increment', $configuration->getProgramIncrementSubLabel());
     }
 }

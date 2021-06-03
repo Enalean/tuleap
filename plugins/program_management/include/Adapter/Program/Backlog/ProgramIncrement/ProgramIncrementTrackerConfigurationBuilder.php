@@ -24,28 +24,23 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement;
 
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Plan\BuildPlanProgramIncrementConfiguration;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\BuildProgramIncrementTrackerConfiguration;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementLabels;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementTrackerConfiguration;
-use Tuleap\ProgramManagement\Domain\Program\Plan\PlanStore;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\RetrieveProgramIncrementLabels;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\ProgramTrackerException;
 
 class ProgramIncrementTrackerConfigurationBuilder implements BuildProgramIncrementTrackerConfiguration
 {
-    /**
-     * @var BuildPlanProgramIncrementConfiguration
-     */
-    private $plan_configuration_builder;
-    /**
-     * @var PlanStore
-     */
-    private $plan_store;
+    private BuildPlanProgramIncrementConfiguration $plan_configuration_builder;
+    private RetrieveProgramIncrementLabels $label_retriever;
 
     public function __construct(
         BuildPlanProgramIncrementConfiguration $plan_configuration_builder,
-        PlanStore $plan_store
+        RetrieveProgramIncrementLabels $label_retriever
     ) {
         $this->plan_configuration_builder = $plan_configuration_builder;
-        $this->plan_store                 = $plan_store;
+        $this->label_retriever            = $label_retriever;
     }
 
     /**
@@ -61,20 +56,14 @@ class ProgramIncrementTrackerConfigurationBuilder implements BuildProgramIncreme
         );
         $can_create_program_increment = $tracker->userCanSubmitArtifact($user);
 
-        $program_increments_labels   = $this->plan_store->getProgramIncrementLabels($tracker->getTrackerId());
-        $program_increment_label     = null;
-        $program_increment_sub_label = null;
-
-        if ($program_increments_labels !== null) {
-            $program_increment_label     = $program_increments_labels['program_increment_label'];
-            $program_increment_sub_label = $program_increments_labels['program_increment_sub_label'];
-        }
-
+        $program_increments_labels = ProgramIncrementLabels::fromProgramIncrementTracker(
+            $this->label_retriever,
+            $tracker
+        );
         return new ProgramIncrementTrackerConfiguration(
             $tracker->getTrackerId(),
             $can_create_program_increment,
-            $program_increment_label,
-            $program_increment_sub_label
+            $program_increments_labels
         );
     }
 }
