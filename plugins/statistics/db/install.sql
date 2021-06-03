@@ -10,7 +10,8 @@ INSERT INTO plugin_statistics_configuration (daily_purge_is_activated) VALUE (1)
 DROP TABLE IF EXISTS plugin_statistics_user_session;
 CREATE TABLE plugin_statistics_user_session (
     user_id INT UNSIGNED DEFAULT 0 NOT NULL,
-    time    INT UNSIGNED DEFAULT 0 NOT NULL
+    time    INT UNSIGNED DEFAULT 0 NOT NULL,
+    INDEX idx_time (time)
 ) ENGINE = InnoDB;
 
 DROP TABLE IF EXISTS plugin_statistics_diskusage_group;
