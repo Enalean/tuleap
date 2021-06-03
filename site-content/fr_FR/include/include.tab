@@ -131,7 +131,6 @@ include_menu	auth_last_failure	Dernière tentative de connexion:
 include_menu	auth_nb_failure	Nombre de tentatives:
 include_menu	help	Aide
 include_menu	get_help	Rubriques d'aide
-include_menu	browse_all	Voir tous les projets
 include_menu	filter_projects	Filtrer ...
 include_menu	add_project	Nouveau projet
 #

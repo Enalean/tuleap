@@ -2,7 +2,7 @@
 #  *
 #  * Include scripts message catalog (English)
 #  *
-#  * Codendi 
+#  * Codendi
 #  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
 #  * http://www.codendi.com
 #  *
@@ -12,7 +12,7 @@
 #-----------------------------------------------
 # Script: SF/www/softwaremap/trove_list.php
 #
-softwaremap_trove_list	map	Project map
+softwaremap_trove_list	map	Public projects map
 softwaremap_trove_list	invalid_cat	Invalid Trove Category
 softwaremap_trove_list	cat_not_exist	That Trove category does not exist.
 softwaremap_trove_list	projs	projects

@@ -283,10 +283,10 @@ admin_trove_cat_edit	update_forbidden	Cannot move a project category under its o
 #-----------------------------------------------
 # Script: SF/www/admin/trove/trove_cat_list.php
 #
-admin_trove_cat_list	title	Project categories
+admin_trove_cat_list	title	Public project categories
 admin_trove_cat_list	header_name	Full name
 admin_trove_cat_list	header_description	Description
-admin_trove_cat_list	header	Project categories
+admin_trove_cat_list	header	Public project categories
 admin_trove_cat_list	edit	Edit
 admin_trove_cat_list	delete	Delete
 admin_trove_cat_list	add	Add a trove category
