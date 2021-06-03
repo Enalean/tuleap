@@ -24,6 +24,8 @@ namespace Tuleap\Gitlab\Reference;
 use Project;
 use Tuleap\Date\TlpRelativeDatePresenter;
 use Tuleap\Date\TlpRelativeDatePresenterBuilder;
+use Tuleap\Gitlab\Reference\Branch\GitlabBranchFactory;
+use Tuleap\Gitlab\Reference\Branch\GitlabBranchReference;
 use Tuleap\Gitlab\Reference\Commit\GitlabCommitCrossReferenceEnhancer;
 use Tuleap\Gitlab\Reference\Commit\GitlabCommitFactory;
 use Tuleap\Gitlab\Reference\Commit\GitlabCommitReference;
@@ -79,12 +81,15 @@ class GitlabCrossReferenceOrganizer
      */
     private $gitlab_tag_factory;
 
+    private GitlabBranchFactory $gitlab_branch_factory;
+
     public function __construct(
         GitlabRepositoryIntegrationFactory $repository_integration_factory,
         GitlabCommitFactory $gitlab_commit_factory,
         GitlabCommitCrossReferenceEnhancer $gitlab_cross_reference_enhancer,
         GitlabMergeRequestReferenceRetriever $gitlab_merge_request_reference_retriever,
         GitlabTagFactory $gitlab_tag_factory,
+        GitlabBranchFactory $gitlab_branch_factory,
         \ProjectManager $project_manager,
         TlpRelativeDatePresenterBuilder $relative_date_builder,
         \UserManager $user_manager,
@@ -95,6 +100,7 @@ class GitlabCrossReferenceOrganizer
         $this->gitlab_cross_reference_enhancer          = $gitlab_cross_reference_enhancer;
         $this->gitlab_merge_request_reference_retriever = $gitlab_merge_request_reference_retriever;
         $this->gitlab_tag_factory                       = $gitlab_tag_factory;
+        $this->gitlab_branch_factory                    = $gitlab_branch_factory;
         $this->project_manager                          = $project_manager;
         $this->relative_date_builder                    = $relative_date_builder;
         $this->user_manager                             = $user_manager;
@@ -107,7 +113,8 @@ class GitlabCrossReferenceOrganizer
             if (
                 $cross_reference_presenter->type === GitlabCommitReference::NATURE_NAME ||
                 $cross_reference_presenter->type === GitlabMergeRequestReference::NATURE_NAME ||
-                $cross_reference_presenter->type === GitlabTagReference::NATURE_NAME
+                $cross_reference_presenter->type === GitlabTagReference::NATURE_NAME ||
+                $cross_reference_presenter->type === GitlabBranchReference::NATURE_NAME
             ) {
                 $this->moveGitlabCrossReferenceToRepositorySection($by_nature_organizer, $cross_reference_presenter);
             }
@@ -149,6 +156,14 @@ class GitlabCrossReferenceOrganizer
             );
         } elseif ($cross_reference_presenter->type === GitlabTagReference::NATURE_NAME) {
             $this->moveGitlabTagCrossReferenceToRepositorySection(
+                $by_nature_organizer,
+                $cross_reference_presenter,
+                $project,
+                $repository,
+                $item_id
+            );
+        } elseif ($cross_reference_presenter->type === GitlabBranchReference::NATURE_NAME) {
+            $this->moveGitlabBranchCrossReferenceToRepositorySection(
                 $by_nature_organizer,
                 $cross_reference_presenter,
                 $project,
@@ -255,6 +270,35 @@ class GitlabCrossReferenceOrganizer
                     [
                         AdditionalBadgePresenter::buildPrimary($tag_info->getTagName()),
                         AdditionalBadgePresenter::buildSecondary(substr($tag_info->getCommitSha1(), 0, 10))
+                    ]
+                ),
+            $project->getUnixNameLowerCase() . '/' . $repository_integration->getName()
+        );
+    }
+
+    private function moveGitlabBranchCrossReferenceToRepositorySection(
+        CrossReferenceByNatureOrganizer $by_nature_organizer,
+        CrossReferencePresenter $cross_reference_presenter,
+        Project $project,
+        GitlabRepositoryIntegration $repository_integration,
+        string $branch_name
+    ): void {
+        $branch_info = $this->gitlab_branch_factory->getGitlabBranchInRepositoryWithBranchName(
+            $repository_integration,
+            $branch_name
+        );
+
+        if ($branch_info === null) {
+            $by_nature_organizer->removeUnreadableCrossReference($cross_reference_presenter);
+            return;
+        }
+
+        $by_nature_organizer->moveCrossReferenceToSection(
+            $cross_reference_presenter
+                ->withTitle($branch_info->getBranchName(), null)
+                ->withAdditionalBadges(
+                    [
+                        AdditionalBadgePresenter::buildSecondary(substr($branch_info->getCommitSha1(), 0, 10))
                     ]
                 ),
             $project->getUnixNameLowerCase() . '/' . $repository_integration->getName()

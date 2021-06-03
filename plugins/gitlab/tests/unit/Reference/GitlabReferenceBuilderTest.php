@@ -248,4 +248,44 @@ class GitlabReferenceBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertSame('https://example.com/root/project01/-/tree/v1.0.2', $reference->getLink());
         self::assertSame(101, $reference->getGroupId());
     }
+
+    public function testItReturnsTheBranchReference(): void
+    {
+        $project = Project::buildForTest();
+
+        $this->reference_dao->shouldReceive('isAProjectReferenceExisting')
+            ->once()
+            ->with('gitlab_branch', 101)
+            ->andReturnFalse();
+
+        $this->repository_integration_factory->shouldReceive('getIntegrationByNameInProject')
+            ->once()
+            ->with(
+                $project,
+                'root/project01'
+            )
+            ->andReturn(
+                new GitlabRepositoryIntegration(
+                    1,
+                    123456,
+                    'root/project01',
+                    '',
+                    'https://example.com/root/project01',
+                    new DateTimeImmutable(),
+                    $project,
+                    false
+                )
+            );
+
+        $reference = $this->builder->buildGitlabReference(
+            $project,
+            'gitlab_branch',
+            'root/project01/dev'
+        );
+
+        self::assertSame('gitlab_branch', $reference->getKeyword());
+        self::assertSame('plugin_gitlab', $reference->getNature());
+        self::assertSame('https://example.com/root/project01/-/tree/dev', $reference->getLink());
+        self::assertSame(101, $reference->getGroupId());
+    }
 }

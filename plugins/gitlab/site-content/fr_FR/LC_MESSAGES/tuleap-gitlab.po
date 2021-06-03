@@ -18,6 +18,9 @@ msgstr "Fermée"
 msgid "GitLab"
 msgstr "GitLab"
 
+msgid "GitLab Branch"
+msgstr "Branche GitLab"
+
 msgid "GitLab Tag"
 msgstr "Étiquette GitLab"
 
@@ -55,6 +58,9 @@ msgstr "Ouverte"
 
 msgid "Provides an integration GitLab to Tuleap."
 msgstr "Fournit une integration de GitLab vers Tuleap."
+
+msgid "Reference to a GitLab branch"
+msgstr "Référence vers une branche GitLab"
 
 msgid "Reference to a GitLab commit"
 msgstr "Référence vers un commit GitLab"

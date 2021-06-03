@@ -23,7 +23,7 @@ namespace Tuleap\Gitlab\Repository\Webhook\PostPush\Branch;
 
 use Tuleap\DB\DataAccessObject;
 
-class BranchTuleapReferenceDao extends DataAccessObject
+class BranchInfoDao extends DataAccessObject
 {
     public function saveGitlabBranchInfo(
         int $integration_id,
@@ -46,6 +46,22 @@ class BranchTuleapReferenceDao extends DataAccessObject
             $commit_sha1,
             $branch_name
         );
+    }
+
+    /**
+     * @psalm-return null|array{commit_sha1: string, branch_name: string}
+     */
+    public function searchBranchInRepositoryWithBranchName(int $integration_id, string $branch_name): ?array
+    {
+        $sql = "
+            SELECT LOWER(HEX(commit_sha1)) as commit_sha1,
+                   branch_name
+            FROM plugin_gitlab_repository_integration_branch_info
+            WHERE integration_id = ?
+                AND branch_name = ?
+        ";
+
+        return $this->getDB()->row($sql, $integration_id, $branch_name);
     }
 
     public function deleteBranchesInIntegration(int $integration_id): void

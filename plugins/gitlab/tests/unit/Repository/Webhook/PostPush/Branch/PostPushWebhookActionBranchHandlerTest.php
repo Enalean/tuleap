@@ -46,9 +46,9 @@ class PostPushWebhookActionBranchHandlerTest extends TestCase
      */
     private $tuleap_reference_retriever;
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|BranchTuleapReferenceDao
+     * @var \PHPUnit\Framework\MockObject\MockObject|BranchInfoDao
      */
-    private $branch_tuleap_reference_dao;
+    private $branch_info_dao;
     /**
      * @var CrossReferenceDao|\PHPUnit\Framework\MockObject\MockObject
      */
@@ -58,16 +58,16 @@ class PostPushWebhookActionBranchHandlerTest extends TestCase
     {
         parent::setUp();
 
-        $this->reference_manager           = $this->createMock(ReferenceManager::class);
-        $this->tuleap_reference_retriever  = $this->createMock(TuleapReferenceRetriever::class);
-        $this->branch_tuleap_reference_dao = $this->createMock(BranchTuleapReferenceDao::class);
-        $this->cross_reference_dao         = $this->createMock(CrossReferenceDao::class);
+        $this->reference_manager          = $this->createMock(ReferenceManager::class);
+        $this->tuleap_reference_retriever = $this->createMock(TuleapReferenceRetriever::class);
+        $this->branch_info_dao            = $this->createMock(BranchInfoDao::class);
+        $this->cross_reference_dao        = $this->createMock(CrossReferenceDao::class);
 
         $this->handler = new PostPushWebhookActionBranchHandler(
             new BranchNameTuleapReferenceParser(),
             $this->reference_manager,
             $this->tuleap_reference_retriever,
-            $this->branch_tuleap_reference_dao,
+            $this->branch_info_dao,
             $this->cross_reference_dao,
             new NullLogger()
         );
@@ -129,7 +129,7 @@ class PostPushWebhookActionBranchHandlerTest extends TestCase
         $this->reference_manager->expects(self::once())
             ->method('insertCrossReference');
 
-        $this->branch_tuleap_reference_dao->expects(self::once())
+        $this->branch_info_dao->expects(self::once())
             ->method('saveGitlabBranchInfo');
 
         $this->handler->parseBranchReference(
@@ -176,7 +176,7 @@ class PostPushWebhookActionBranchHandlerTest extends TestCase
             ->method('existInDb');
         $this->reference_manager->expects(self::never())
             ->method('insertCrossReference');
-        $this->branch_tuleap_reference_dao->expects(self::never())
+        $this->branch_info_dao->expects(self::never())
             ->method('saveGitlabBranchInfo');
 
         $this->handler->parseBranchReference(
@@ -223,7 +223,7 @@ class PostPushWebhookActionBranchHandlerTest extends TestCase
             ->method('existInDb');
         $this->reference_manager->expects(self::never())
             ->method('insertCrossReference');
-        $this->branch_tuleap_reference_dao->expects(self::never())
+        $this->branch_info_dao->expects(self::never())
             ->method('saveGitlabBranchInfo');
 
         $this->handler->parseBranchReference(
@@ -275,7 +275,7 @@ class PostPushWebhookActionBranchHandlerTest extends TestCase
             ->method('existInDb');
         $this->reference_manager->expects(self::never())
             ->method('insertCrossReference');
-        $this->branch_tuleap_reference_dao->expects(self::never())
+        $this->branch_info_dao->expects(self::never())
             ->method('saveGitlabBranchInfo');
 
         $this->handler->parseBranchReference(
@@ -339,7 +339,7 @@ class PostPushWebhookActionBranchHandlerTest extends TestCase
 
         $this->reference_manager->expects(self::never())
             ->method('insertCrossReference');
-        $this->branch_tuleap_reference_dao->expects(self::never())
+        $this->branch_info_dao->expects(self::never())
             ->method('saveGitlabBranchInfo');
 
         $this->handler->parseBranchReference(
