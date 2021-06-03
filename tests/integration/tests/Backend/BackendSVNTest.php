@@ -150,7 +150,6 @@ final class BackendSVNTest extends \Tuleap\Test\PHPUnit\TestCase
         $project = \Mockery::spy(\Project::class);
         $project->shouldReceive('getUnixNameMixedCase')->andReturns('TestProj');
         $project->shouldReceive('getSVNRootPath')->andReturns(ForgeConfig::get('svn_prefix') . '/TestProj');
-        $project->shouldReceive('isSVNTracked')->andReturns(true);
         $proj_members = ["0" =>
                                [
                                      "user_name" => "user1",
@@ -221,7 +220,6 @@ final class BackendSVNTest extends \Tuleap\Test\PHPUnit\TestCase
         $project = \Mockery::spy(\Project::class);
         $project->shouldReceive('getUnixNameMixedCase')->andReturns('TestProj');
         $project->shouldReceive('getSVNRootPath')->andReturns(ForgeConfig::get('svn_prefix') . '/TestProj');
-        $project->shouldReceive('isSVNTracked')->andReturns(true);
         $proj_members = ["0" =>
                                [
                                      "user_name" => "user1",
@@ -368,7 +366,6 @@ final class BackendSVNTest extends \Tuleap\Test\PHPUnit\TestCase
         $project = \Mockery::spy(\Project::class);
         $project->shouldReceive('getUnixNameMixedCase')->andReturns('TestProj');
         $project->shouldReceive('getSVNRootPath')->andReturns(ForgeConfig::get('svn_prefix') . '/TestProj');
-        $project->shouldReceive('isSVNTracked')->andReturns(false);
 
         $project->shouldReceive('getMembersUserNames')->andReturns([]);
 
@@ -430,7 +427,6 @@ final class BackendSVNTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $project = \Mockery::spy(\Project::class)->shouldReceive('getUnixName')->andReturns('toto')->getMock();
         $project->shouldReceive('getSVNRootPath')->andReturns(ForgeConfig::get('svn_prefix') . '/toto');
-        $project->shouldReceive('isSVNTracked')->andReturns(true);
         $backend->shouldReceive('log')->once();
 
         $this->expectException(\BackendSVNFileForSimlinkAlreadyExistsException::class);
@@ -455,7 +451,6 @@ final class BackendSVNTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $project = \Mockery::spy(\Project::class)->shouldReceive('getUnixName')->andReturns('toto')->getMock();
         $project->shouldReceive('getSVNRootPath')->andReturns(ForgeConfig::get('svn_prefix') . '/toto');
-        $project->shouldReceive('isSVNTracked')->andReturns(true);
         $backend->shouldReceive('log')->never();
 
         $backend->updateHooks(
