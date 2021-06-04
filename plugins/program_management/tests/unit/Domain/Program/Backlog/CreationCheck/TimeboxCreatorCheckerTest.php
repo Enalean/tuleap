@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck;
 
-use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use Psr\Log\NullLogger;
 use Tracker_FormElement_Field_ArtifactLink;
 use Tracker_FormElement_Field_Date;
@@ -45,20 +45,20 @@ use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 final class TimeboxCreatorCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|BuildSynchronizedFields
+     * @var \PHPUnit\Framework\MockObject\Stub|BuildSynchronizedFields
      */
     private $fields_adapter;
     private SynchronizedFieldFromProgramAndTeamTrackersCollectionBuilder $field_collection_builder;
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|CheckSemantic
+     * @var \PHPUnit\Framework\MockObject\Stub|CheckSemantic
      */
     private $semantic_checker;
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|CheckRequiredField
+     * @var \PHPUnit\Framework\MockObject\Stub|CheckRequiredField
      */
     private $required_field_checker;
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|CheckWorkflow
+     * @var \PHPUnit\Framework\MockObject\Stub|CheckWorkflow
      */
     private $workflow_checker;
     private \Project $project;
@@ -69,14 +69,14 @@ final class TimeboxCreatorCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     protected function setUp(): void
     {
-        $this->fields_adapter           = $this->createMock(BuildSynchronizedFields::class);
+        $this->fields_adapter           = $this->createStub(BuildSynchronizedFields::class);
         $this->field_collection_builder = new SynchronizedFieldFromProgramAndTeamTrackersCollectionBuilder(
             $this->fields_adapter,
             new NullLogger()
         );
-        $this->semantic_checker         = $this->createMock(CheckSemantic::class);
-        $this->required_field_checker   = $this->createMock(CheckRequiredField::class);
-        $this->workflow_checker         = $this->createMock(CheckWorkflow::class);
+        $this->semantic_checker         = $this->createStub(CheckSemantic::class);
+        $this->required_field_checker   = $this->createStub(CheckRequiredField::class);
+        $this->workflow_checker         = $this->createStub(CheckWorkflow::class);
 
         $this->project = new \Project(
             ['group_id' => 101, 'unix_group_name' => 'proj01', 'group_name' => 'Project 01']
@@ -212,7 +212,7 @@ final class TimeboxCreatorCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     private function getRetrieveRootPlanningMilestoneTrackerStub(bool $user_can_submit_artifact_in_team = true): RetrieveRootPlanningMilestoneTrackerStub
     {
-        $first_milestone_tracker = $this->createMock(\Tracker::class);
+        $first_milestone_tracker = $this->createStub(\Tracker::class);
         $first_milestone_tracker->method('userCanSubmitArtifact')->willReturn($user_can_submit_artifact_in_team);
         $first_milestone_tracker->method('getId')->willReturn(1);
         return RetrieveRootPlanningMilestoneTrackerStub::withValidTrackers(
@@ -234,29 +234,29 @@ final class TimeboxCreatorCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     private function buildSynchronizedFields(bool $submitable): void
     {
-        $title_field = $this->createMock(\Tracker_FormElement_Field_Text::class);
+        $title_field = $this->createStub(\Tracker_FormElement_Field_Text::class);
         $this->mockField($title_field, 1, true, true);
         $title_field_data = new Field($title_field);
 
-        $artifact_link = $this->createMock(Tracker_FormElement_Field_ArtifactLink::class);
+        $artifact_link = $this->createStub(Tracker_FormElement_Field_ArtifactLink::class);
         $artifact_link->method("getLabel")->willReturn('Link');
         $artifact_link->method("getTrackerId")->willReturn(49);
         $this->mockField($artifact_link, 1, $submitable, true);
         $artifact_link_field_data = new Field($artifact_link);
 
-        $description_field = $this->createMock(Tracker_FormElement_Field_Text::class);
+        $description_field = $this->createStub(Tracker_FormElement_Field_Text::class);
         $this->mockField($description_field, 2, true, true);
         $description_field_data = new Field($description_field);
 
-        $status_field = $this->createMock(Tracker_FormElement_Field_Selectbox::class);
+        $status_field = $this->createStub(Tracker_FormElement_Field_Selectbox::class);
         $this->mockField($status_field, 3, true, true);
         $status_field_data = new Field($status_field);
 
-        $field_start_date = $this->createMock(Tracker_FormElement_Field_Date::class);
+        $field_start_date = $this->createStub(Tracker_FormElement_Field_Date::class);
         $this->mockField($field_start_date, 4, true, true);
         $start_date_field_data = new Field($field_start_date);
 
-        $field_end_date = $this->createMock(Tracker_FormElement_Field_Date::class);
+        $field_end_date = $this->createStub(Tracker_FormElement_Field_Date::class);
         $this->mockField($field_end_date, 5, true, true);
         $end_date_field_data = new Field($field_end_date);
 
@@ -271,7 +271,7 @@ final class TimeboxCreatorCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->fields_adapter->method('build')->willReturn($synchronized_fields);
     }
 
-    private function mockField(MockObject $field, int $id, bool $submitable, bool $updatable): void
+    private function mockField(Stub $field, int $id, bool $submitable, bool $updatable): void
     {
         $field->method('getId')->willReturn($id);
         $field->method('userCanSubmit')->willReturn($submitable);
