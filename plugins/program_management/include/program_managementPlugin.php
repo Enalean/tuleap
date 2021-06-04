@@ -294,9 +294,18 @@ final class program_managementPlugin extends Plugin
 
     public function canSubmitNewArtifact(CanSubmitNewArtifact $can_submit_new_artifact): void
     {
+        $planning_adapter = new PlanningAdapter(\PlanningFactory::build());
+
         $artifact_creator_checker = new ProgramIncrementCreatorChecker(
-            $this->getProjectIncrementCreatorChecker(),
-            new ProgramIncrementsDAO()
+            $this->getTimeboxCreatorChecker(),
+            new ProgramIncrementsDAO(),
+            $this->getTeamProjectCollectionBuilder(),
+            new ProgramIncrementCollectionFactory(
+                $planning_adapter,
+                $this->getPlanConfigurationBuilder()
+            ),
+            $planning_adapter,
+            $this->getLogger()
         );
 
         $tracker_data = new ProgramTracker($can_submit_new_artifact->getTracker());
@@ -685,20 +694,14 @@ final class program_managementPlugin extends Plugin
         (new AddToTopBacklogPostActionDAO())->deleteTransitionPostActions($transition_id);
     }
 
-    private function getProjectIncrementCreatorChecker(): TimeboxCreatorChecker
+    private function getTimeboxCreatorChecker(): TimeboxCreatorChecker
     {
         $form_element_factory    = \Tracker_FormElementFactory::instance();
         $timeframe_dao           = new \Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao();
         $semantic_status_factory = new Tracker_Semantic_StatusFactory();
         $logger                  = $this->getLogger();
-        $planning_adapter        = new PlanningAdapter(\PlanningFactory::build());
 
         return new TimeboxCreatorChecker(
-            $this->getTeamProjectCollectionBuilder(),
-            new ProgramIncrementCollectionFactory(
-                $planning_adapter,
-                $this->getPlanConfigurationBuilder()
-            ),
             new SynchronizedFieldFromProgramAndTeamTrackersCollectionBuilder(
                 new SynchronizedFieldsAdapter(
                     new ArtifactLinkFieldAdapter($form_element_factory),
@@ -733,8 +736,7 @@ final class program_managementPlugin extends Plugin
                 new Tracker_Rule_List_Dao(),
                 $logger
             ),
-            $logger,
-            $planning_adapter
+            $logger
         );
     }
 

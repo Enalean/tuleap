@@ -23,21 +23,40 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck;
 
 use PFUser;
+use Psr\Log\LoggerInterface;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Team\TeamProjectsCollectionBuilder;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\VerifyIsProgramIncrementTracker;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\TrackerCollection;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\TrackerCollectionFactory;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\TrackerRetrievalException;
+use Tuleap\ProgramManagement\Domain\Program\PlanningConfiguration\PlanningNotFoundException;
 use Tuleap\ProgramManagement\Domain\ProgramTracker;
 use Tuleap\ProgramManagement\Domain\Project;
+use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\RetrieveRootPlanningMilestoneTracker;
 
 class ProgramIncrementCreatorChecker
 {
     private TimeboxCreatorChecker $timebox_creator_checker;
     private VerifyIsProgramIncrementTracker $verify_is_program_increment;
+    private TeamProjectsCollectionBuilder $team_projects_collection_builder;
+    private TrackerCollectionFactory $scale_tracker_factory;
+    private RetrieveRootPlanningMilestoneTracker $root_milestone_retriever;
+    private LoggerInterface $logger;
 
     public function __construct(
         TimeboxCreatorChecker $timebox_creator_checker,
-        VerifyIsProgramIncrementTracker $verify_is_program_increment
+        VerifyIsProgramIncrementTracker $verify_is_program_increment,
+        TeamProjectsCollectionBuilder $team_projects_collection_builder,
+        TrackerCollectionFactory $scale_tracker_factory,
+        RetrieveRootPlanningMilestoneTracker $root_milestone_retriever,
+        LoggerInterface $logger
     ) {
-        $this->timebox_creator_checker     = $timebox_creator_checker;
-        $this->verify_is_program_increment = $verify_is_program_increment;
+        $this->timebox_creator_checker          = $timebox_creator_checker;
+        $this->verify_is_program_increment      = $verify_is_program_increment;
+        $this->team_projects_collection_builder = $team_projects_collection_builder;
+        $this->scale_tracker_factory            = $scale_tracker_factory;
+        $this->root_milestone_retriever         = $root_milestone_retriever;
+        $this->logger                           = $logger;
     }
 
     public function canCreateAProgramIncrement(PFUser $user, ProgramTracker $tracker, Project $project): bool
@@ -46,6 +65,34 @@ class ProgramIncrementCreatorChecker
             return true;
         }
 
-        return $this->timebox_creator_checker->canTimeboxBeCreated($tracker, $project, $user);
+        $this->logger->debug(
+            "Checking if Program Increment can be created in top planning of project " . $project->getName() .
+            " by user " . $user->getName() . ' (#' . $user->getId() . ')'
+        );
+
+        $team_projects_collection = $this->team_projects_collection_builder->getTeamProjectForAGivenProgramProject(
+            $project
+        );
+        if ($team_projects_collection->isEmpty()) {
+            $this->logger->debug("No team project found.");
+            return true;
+        }
+        try {
+            $program_and_milestone_trackers = $this->scale_tracker_factory->buildFromProgramProjectAndItsTeam(
+                $project,
+                $team_projects_collection,
+                $user
+            );
+            $team_trackers                  = TrackerCollection::buildRootPlanningMilestoneTrackers(
+                $this->root_milestone_retriever,
+                $team_projects_collection,
+                $user
+            );
+        } catch (PlanningNotFoundException | TrackerRetrievalException $exception) {
+            $this->logger->error("Cannot retrieve all milestones", ['exception' => $exception]);
+            return false;
+        }
+
+        return $this->timebox_creator_checker->canTimeboxBeCreated($tracker, $program_and_milestone_trackers, $team_trackers, $user);
     }
 }
