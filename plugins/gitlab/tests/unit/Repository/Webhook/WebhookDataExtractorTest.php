@@ -236,6 +236,7 @@ class WebhookDataExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
                 '{"project":{"id": 123456, "web_url": "https://example.com/path/repo01"},
                   "ref": "refs/heads/master",
                   "checkout_sha": "08596fb6360bcc951a06471c616f8bc77800d4f4",
+                  "after": "whatever_after",
                   "commits": [
                       {
                           "id": "feff4ced04b237abb8b4a50b4160099313152c3c",

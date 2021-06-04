@@ -48,6 +48,8 @@ class PostPushWebhookDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             "project" => ["id" => 123456, "web_url" => "https://example.com/path/repo01"],
             "ref" => "refs/heads/master",
             "checkout_sha" => "08596fb6360bcc951a06471c616f8bc77800d4f4",
+            "before" => "feff4ced04b237abb8b4a50b4160099313152c3d",
+            "after" => "08596fb6360bcc951a06471c616f8bc77800d4f4",
             "commits" => [
                 [
                     "id" => "feff4ced04b237abb8b4a50b4160099313152c3c",
@@ -72,17 +74,44 @@ class PostPushWebhookDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             ]
         ];
 
-        $webhook_data = $this->builder->build(
+        $post_push_webhook_data = $this->builder->build(
             "Push Hook",
             123456,
             "https://example.com/path/repo01",
             $webhook_data
         );
 
-        self::assertSame("Push Hook", $webhook_data->getEventName());
-        self::assertSame(123456, $webhook_data->getGitlabProjectId());
-        self::assertSame("https://example.com/path/repo01", $webhook_data->getGitlabWebUrl());
-        self::assertInstanceOf(PostPushWebhookData::class, $webhook_data);
-        self::assertCount(2, $webhook_data->getCommits());
+        self::assertSame("Push Hook", $post_push_webhook_data->getEventName());
+        self::assertSame(123456, $post_push_webhook_data->getGitlabProjectId());
+        self::assertSame("https://example.com/path/repo01", $post_push_webhook_data->getGitlabWebUrl());
+        self::assertInstanceOf(PostPushWebhookData::class, $post_push_webhook_data);
+        self::assertCount(2, $post_push_webhook_data->getCommits());
+        self::assertSame("08596fb6360bcc951a06471c616f8bc77800d4f4", $post_push_webhook_data->getCheckoutSha());
+    }
+
+    public function testItRetrievesPostPushWebhookDataAtBranchDeletion(): void
+    {
+        $webhook_data = [
+            "project" => ["id" => 123456, "web_url" => "https://example.com/path/repo01"],
+            "ref" => "refs/heads/master",
+            "checkout_sha" => null,
+            "before" => "08596fb6360bcc951a06471c616f8bc77800d4f4",
+            "after" => "0000000000000000000000000000000000000000",
+            "commits" => []
+        ];
+
+        $post_push_webhook_data = $this->builder->build(
+            "Push Hook",
+            123456,
+            "https://example.com/path/repo01",
+            $webhook_data
+        );
+
+        self::assertSame("Push Hook", $post_push_webhook_data->getEventName());
+        self::assertSame(123456, $post_push_webhook_data->getGitlabProjectId());
+        self::assertSame("https://example.com/path/repo01", $post_push_webhook_data->getGitlabWebUrl());
+        self::assertInstanceOf(PostPushWebhookData::class, $post_push_webhook_data);
+        self::assertEmpty($post_push_webhook_data->getCommits());
+        self::assertNull($post_push_webhook_data->getCheckoutSha());
     }
 }
