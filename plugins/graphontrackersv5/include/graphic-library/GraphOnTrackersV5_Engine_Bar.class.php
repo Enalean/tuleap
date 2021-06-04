@@ -22,6 +22,7 @@
  */
 
 use Tuleap\Chart\Chart;
+use Tuleap\GraphOnTrackersV5\GraphicLibrary\BarChartDataBuilder;
 
 class GraphOnTrackersV5_Engine_Bar extends GraphOnTrackersV5_Engine
 {
@@ -32,8 +33,9 @@ class GraphOnTrackersV5_Engine_Bar extends GraphOnTrackersV5_Engine
     public $field_group;
     public $height;
     public $width;
-    public $legend;
-    public $xaxis;
+    public array $legend = [];
+    public array $xaxis  = [];
+    public array $labels = [];
     private $keys;
 
     /**
@@ -164,47 +166,15 @@ class GraphOnTrackersV5_Engine_Bar extends GraphOnTrackersV5_Engine
         }
     }
 
-    private function getGroupedBarChartData(array $info)
+    private function getGroupedBarChartData(array $info): array
     {
+        $bar_chart_data_builder = new BarChartDataBuilder();
         return $info + [
             'type'           => 'groupedbar',
             'grouped_labels' => array_values($this->legend),
-            'values'         => $this->buildGroupedBarChartData(),
+            'values'         => $bar_chart_data_builder->buildGroupedBarChartData($this),
             'colors'         => $this->getColorPerLegend(),
         ];
-    }
-
-    private function buildGroupedBarChartData()
-    {
-        $values = [];
-        foreach ($this->getGroupedValuesBySource() as $source_key => $source_values) {
-            $grouped_source_values = [];
-            foreach ($this->legend as $legend_key => $legend_label) {
-                $grouped_source_values[] = [
-                    'label' => $legend_label,
-                    'value' => isset($source_values[$legend_key]) ? $source_values[$legend_key] : ''
-                ];
-            }
-
-            $values[] = [
-                'label'  => $this->xaxis[$source_key],
-                'values' => $grouped_source_values,
-            ];
-        }
-
-        return $values;
-    }
-
-    private function getGroupedValuesBySource()
-    {
-        $grouped_values_by_source = [];
-        foreach ($this->data as $group_by => $source_data_values) {
-            foreach ($source_data_values as $source_data_key => $value) {
-                $grouped_values_by_source[$source_data_key][$group_by] = $value;
-            }
-        }
-
-        return $grouped_values_by_source;
     }
 
     private function getColorPerLegend()
