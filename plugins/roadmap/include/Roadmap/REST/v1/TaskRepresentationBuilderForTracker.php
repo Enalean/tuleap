@@ -28,6 +28,7 @@ use Tuleap\Project\REST\ProjectReference;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Semantic\Progress\SemanticProgressBuilder;
 use Tuleap\Tracker\Semantic\Timeframe\IComputeTimeframes;
+use Tuleap\Tracker\Semantic\Timeframe\TimeframeImpliedFromAnotherTracker;
 
 final class TaskRepresentationBuilderForTracker implements IBuildATaskRepresentation
 {
@@ -79,7 +80,7 @@ final class TaskRepresentationBuilderForTracker implements IBuildATaskRepresenta
         $end         = $end_date ? (new \DateTimeImmutable())->setTimestamp($end_date) : null;
 
         $progress_result   = $this->progress_calculator->computeProgression($artifact, $user);
-        $are_dates_implied = false;
+        $are_dates_implied = $this->timeframe_calculator->getName() === TimeframeImpliedFromAnotherTracker::getName();
 
         return new TaskRepresentation(
             $artifact->getId(),
