@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\CreationCheck;
 
+use Psr\Log\Test\TestLogger;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck\CheckStatus;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Team\TeamProjectsCollection;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TrackerCollection;
@@ -51,6 +52,7 @@ final class SemanticCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
      * @var \PHPUnit\Framework\MockObject\MockObject|CheckStatus
      */
     private $semantic_status_checker;
+    private TestLogger $logger;
 
     protected function setUp(): void
     {
@@ -58,11 +60,13 @@ final class SemanticCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->description_dao         = $this->createMock(\Tracker_Semantic_DescriptionDao::class);
         $this->timeframe_dao           = $this->createMock(SemanticTimeframeDao::class);
         $this->semantic_status_checker = $this->createMock(CheckStatus::class);
+        $this->logger                  = new TestLogger();
         $this->checker                 = new SemanticChecker(
             $this->title_dao,
             $this->description_dao,
             $this->timeframe_dao,
             $this->semantic_status_checker,
+            $this->logger
         );
     }
 
@@ -101,6 +105,7 @@ final class SemanticCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertTrue(
             $this->checker->areTrackerSemanticsWellConfigured($program_increment_tracker, $trackers)
         );
+        self::assertFalse($this->logger->hasErrorRecords());
     }
 
     public function testItReturnsFalseIfOneMilestoneTrackerDoesNotHaveTitleSemantic(): void
@@ -121,6 +126,7 @@ final class SemanticCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertFalse(
             $this->checker->areTrackerSemanticsWellConfigured($program_increment_tracker, $trackers)
         );
+        self::assertTrue($this->logger->hasRecords('error'));
     }
 
     public function testItReturnsFalseIfOneMilestoneTrackerDoesNotHaveDescriptionSemantic(): void
@@ -143,6 +149,7 @@ final class SemanticCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertFalse(
             $this->checker->areTrackerSemanticsWellConfigured($program_increment_tracker, $trackers)
         );
+        self::assertTrue($this->logger->hasErrorThatContains('Description'));
     }
 
     public function testItReturnsFalseIfOneMilestoneTrackerDoesNotHaveTimeFrameSemantic(): void
@@ -169,6 +176,7 @@ final class SemanticCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertFalse(
             $this->checker->areTrackerSemanticsWellConfigured($program_increment_tracker, $trackers)
         );
+        self::assertTrue($this->logger->hasErrorThatContains('Timeframe'));
     }
 
     public function testItReturnsFalseIfTimeFrameSemanticsDontUseTheSameFieldType(): void
@@ -197,6 +205,7 @@ final class SemanticCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertFalse(
             $this->checker->areTrackerSemanticsWellConfigured($program_increment_tracker, $trackers)
         );
+        self::assertTrue($this->logger->hasErrorThatContains('Timeframe'));
     }
 
     public function testItReturnsFalseIfOneStatusSemanticIsNotWellConfigured(): void
@@ -226,5 +235,6 @@ final class SemanticCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertFalse(
             $this->checker->areTrackerSemanticsWellConfigured($program_increment_tracker, $trackers)
         );
+        self::assertTrue($this->logger->hasErrorThatContains('Status'));
     }
 }

@@ -717,13 +717,14 @@ final class program_managementPlugin extends Plugin
                         )
                     )
                 ),
-                $this->getLogger()
+                $logger
             ),
             new SemanticChecker(
                 new \Tracker_Semantic_TitleDao(),
                 new \Tracker_Semantic_DescriptionDao(),
                 $timeframe_dao,
                 new StatusSemanticChecker(new Tracker_Semantic_StatusDao(), $semantic_status_factory),
+                $logger
             ),
             new RequiredFieldChecker($logger),
             new WorkflowChecker(
