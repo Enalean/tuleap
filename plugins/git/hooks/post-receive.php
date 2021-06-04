@@ -127,7 +127,8 @@ $post_receive = new Git_Hook_PostReceive(
             new \Tuleap\Git\Notifications\UgroupsToNotifyDao(),
             new UGroupManager()
         )
-    )
+    ),
+    new \Tuleap\Git\DefaultBranch\DefaultBranchPostReceiveUpdater()
 );
 
 $post_receive->beforeParsingReferences($repository_path);

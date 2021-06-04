@@ -22,9 +22,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once __DIR__ . '/../../bootstrap.php';
+use Tuleap\Git\DefaultBranch\DefaultBranchPostReceiveUpdater;
 
-class Git_Hook_PostReceive_CommonTest extends \Tuleap\Test\PHPUnit\TestCase
+final class Git_Hook_PostReceive_CommonTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
     use \Tuleap\GlobalLanguageMock;
@@ -41,21 +41,26 @@ class Git_Hook_PostReceive_CommonTest extends \Tuleap\Test\PHPUnit\TestCase
     protected $system_event_manager;
     protected $mail_builder;
     protected $event_manager;
+    /**
+     * @var \PHPUnit\Framework\MockObject\MockObject&DefaultBranchPostReceiveUpdater
+     */
+    private $default_branch_post_receive_updater;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->user                   = \Mockery::spy(\PFUser::class);
-        $this->log_analyzer           = \Mockery::spy(\Git_Hook_LogAnalyzer::class);
-        $this->git_repository_factory = \Mockery::spy(\GitRepositoryFactory::class);
-        $this->user_manager           = \Mockery::spy(\UserManager::class);
-        $this->repository             = \Mockery::spy(\GitRepository::class);
-        $this->ci_launcher            = \Mockery::spy(\Git_Ci_Launcher::class);
-        $this->parse_log              = \Mockery::spy(\Git_Hook_ParseLog::class);
-        $this->system_event_manager   = \Mockery::spy(\Git_SystemEventManager::class);
-        $this->mail_builder           = \Mockery::spy(\MailBuilder::class);
-        $this->event_manager          = \Mockery::spy(\EventManager::class);
-        $this->request_sender         = \Mockery::spy(\Tuleap\Git\Webhook\WebhookRequestSender::class);
+        $this->user                                = \Mockery::spy(\PFUser::class);
+        $this->log_analyzer                        = \Mockery::spy(\Git_Hook_LogAnalyzer::class);
+        $this->git_repository_factory              = \Mockery::spy(\GitRepositoryFactory::class);
+        $this->user_manager                        = \Mockery::spy(\UserManager::class);
+        $this->repository                          = \Mockery::spy(\GitRepository::class);
+        $this->ci_launcher                         = \Mockery::spy(\Git_Ci_Launcher::class);
+        $this->parse_log                           = \Mockery::spy(\Git_Hook_ParseLog::class);
+        $this->system_event_manager                = \Mockery::spy(\Git_SystemEventManager::class);
+        $this->mail_builder                        = \Mockery::spy(\MailBuilder::class);
+        $this->event_manager                       = \Mockery::spy(\EventManager::class);
+        $this->request_sender                      = \Mockery::spy(\Tuleap\Git\Webhook\WebhookRequestSender::class);
+        $this->default_branch_post_receive_updater = $this->createMock(DefaultBranchPostReceiveUpdater::class);
 
         $this->post_receive = new Git_Hook_PostReceive(
             $this->log_analyzer,
@@ -66,7 +71,8 @@ class Git_Hook_PostReceive_CommonTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->system_event_manager,
             $this->event_manager,
             $this->request_sender,
-            \Mockery::spy(\Tuleap\Git\Hook\PostReceiveMailSender::class)
+            \Mockery::spy(\Tuleap\Git\Hook\PostReceiveMailSender::class),
+            $this->default_branch_post_receive_updater
         );
 
         $this->repository->shouldReceive('getNotifiedMails')->andReturns([]);
@@ -164,8 +170,19 @@ class Git_Hook_PostReceive_CommonTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItLaunchesGrokMirrorUpdates(): void
     {
         $this->git_repository_factory->shouldReceive('getFromFullPath')->andReturns($this->repository);
+        $this->default_branch_post_receive_updater->method('updateDefaultBranchWhenNeeded');
 
         $this->system_event_manager->shouldReceive('queueGrokMirrorManifestFollowingAGitPush')->with($this->repository)->once();
+        $this->post_receive->beforeParsingReferences('/var/lib/tuleap/gitolite/repositories/garden/dev.git');
+    }
+
+    public function testUpdatesDefaultBranch(): void
+    {
+        $this->git_repository_factory->shouldReceive('getFromFullPath')->andReturns($this->repository);
+        $this->system_event_manager->shouldReceive('queueGrokMirrorManifestFollowingAGitPush');
+
+        $this->default_branch_post_receive_updater->expects(self::once())->method('updateDefaultBranchWhenNeeded');
+
         $this->post_receive->beforeParsingReferences('/var/lib/tuleap/gitolite/repositories/garden/dev.git');
     }
 }

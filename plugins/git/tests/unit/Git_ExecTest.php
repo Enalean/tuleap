@@ -175,4 +175,11 @@ final class Git_ExecTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         self::assertEquals('master', $this->git_exec->getDefaultBranch());
     }
+
+
+    public function testSetDefaultBranch(): void
+    {
+        $this->git_exec->setDefaultBranch('foo');
+        self::assertEquals('foo', $this->git_exec->getDefaultBranch());
+    }
 }
