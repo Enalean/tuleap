@@ -22,50 +22,39 @@ declare(strict_types=1);
 
 namespace Tuleap\Gitlab\Repository\Webhook;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Project;
 use Psr\Log\LoggerInterface;
 use Tuleap\Gitlab\API\ClientWrapper;
 use Tuleap\Gitlab\API\Credentials;
 use Tuleap\Gitlab\API\GitlabRequestException;
 use Tuleap\Gitlab\Repository\GitlabRepositoryIntegration;
-use Tuleap\Gitlab\Repository\Webhook\Bot\CredentialsRetriever;
 use Tuleap\Gitlab\Test\Builder\CredentialsTestBuilder;
 
 class WebhookDeletorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
 
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|WebhookDao
+     * @var \PHPUnit\Framework\MockObject\MockObject&WebhookDao
      */
     private $dao;
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ClientWrapper
+     * @var \PHPUnit\Framework\MockObject\MockObject&ClientWrapper
      */
     private $gitlab_api_client;
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|LoggerInterface
+     * @var \PHPUnit\Framework\MockObject\MockObject&LoggerInterface
      */
     private $logger;
-    /**
-     * @var WebhookDeletor
-     */
-    private $deletor;
-    /**
-     * @var Credentials
-     */
-    private $credentials;
+
+    private Credentials $credentials;
+    private WebhookDeletor $deletor;
 
     protected function setUp(): void
     {
-        $this->dao                   = Mockery::mock(WebhookDao::class);
-        $this->gitlab_api_client     = Mockery::mock(ClientWrapper::class);
-        $this->logger                = Mockery::mock(LoggerInterface::class);
-        $this->credentials_retriever = Mockery::mock(CredentialsRetriever::class);
-
-        $this->credentials = CredentialsTestBuilder::get()->build();
+        $this->dao               = $this->createMock(WebhookDao::class);
+        $this->gitlab_api_client = $this->createMock(ClientWrapper::class);
+        $this->logger            = $this->createMock(LoggerInterface::class);
+        $this->credentials       = CredentialsTestBuilder::get()->build();
 
         $this->deletor = new WebhookDeletor(
             $this->dao,
@@ -88,18 +77,18 @@ class WebhookDeletorTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $this->dao
-            ->shouldReceive('getGitlabRepositoryWebhook')
+            ->expects(self::once())
+            ->method('getGitlabRepositoryWebhook')
             ->with(1)
-            ->once()
-            ->andReturn(null);
+            ->willReturn(null);
 
-        $this->logger->shouldReceive('error')->never();
+        $this->logger->expects(self::never())->method('error');
 
-        $this->gitlab_api_client->shouldReceive('deleteUrl')->never();
+        $this->gitlab_api_client->expects(self::never())->method('deleteUrl');
 
-        $this->dao->shouldReceive('deleteGitlabRepositoryWebhook')->never();
+        $this->dao->expects(self::never())->method('deleteGitlabRepositoryWebhook');
 
-        $this->logger->shouldReceive('info')->never();
+        $this->logger->expects(self::never())->method('info');
 
         $this->deletor->deleteGitlabWebhookFromGitlabRepository($this->credentials, $integration);
     }
@@ -118,16 +107,22 @@ class WebhookDeletorTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $this->dao
-            ->shouldReceive('getGitlabRepositoryWebhook')
+            ->expects(self::once())
+            ->method('getGitlabRepositoryWebhook')
             ->with(1)
-            ->once()
-            ->andReturn([]);
+            ->willReturn([]);
 
-        $this->gitlab_api_client->shouldReceive('deleteUrl')->never();
+        $this->gitlab_api_client
+            ->expects(self::never())
+            ->method('deleteUrl');
 
-        $this->dao->shouldReceive('deleteGitlabRepositoryWebhook')->never();
+        $this->dao
+            ->expects(self::never())
+            ->method('deleteGitlabRepositoryWebhook');
 
-        $this->logger->shouldReceive('info')->never();
+        $this->logger
+            ->expects(self::never())
+            ->method('info');
 
         $this->deletor->deleteGitlabWebhookFromGitlabRepository($this->credentials, $integration);
     }
@@ -146,18 +141,26 @@ class WebhookDeletorTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $this->dao
-            ->shouldReceive('getGitlabRepositoryWebhook')
+            ->expects(self::once())
+            ->method('getGitlabRepositoryWebhook')
             ->with(1)
-            ->once()
-            ->andReturn(['gitlab_webhook_id' => 6]);
+            ->willReturn(['gitlab_webhook_id' => 6]);
 
-        $this->logger->shouldReceive('error')->never();
+        $this->logger
+            ->expects(self::never())
+            ->method('error');
 
-        $this->gitlab_api_client->shouldReceive('deleteUrl')->never();
+        $this->gitlab_api_client
+            ->expects(self::never())
+            ->method('deleteUrl');
 
-        $this->dao->shouldReceive('deleteGitlabRepositoryWebhook')->once();
+        $this->dao
+            ->expects(self::once())
+            ->method('deleteGitlabRepositoryWebhook');
 
-        $this->logger->shouldReceive('info')->never();
+        $this->logger
+            ->expects(self::never())
+            ->method('info');
 
         $this->deletor->deleteGitlabWebhookFromGitlabRepository(null, $integration);
     }
@@ -176,29 +179,32 @@ class WebhookDeletorTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $this->dao
-            ->shouldReceive('getGitlabRepositoryWebhook')
+            ->expects(self::once())
+            ->method('getGitlabRepositoryWebhook')
             ->with(1)
-            ->once()
-            ->andReturn(['gitlab_webhook_id' => 6]);
+            ->willReturn(['gitlab_webhook_id' => 6]);
 
         $this->gitlab_api_client
-            ->shouldReceive('deleteUrl')
+            ->method('deleteUrl')
             ->with(
                 $this->credentials,
                 '/projects/2/hooks/6'
             );
 
         $this->dao
-            ->shouldReceive('deleteGitlabRepositoryWebhook')
-            ->with(1)
-            ->once();
+            ->expects(self::once())
+            ->method('deleteGitlabRepositoryWebhook')
+            ->with(1);
 
         $this->dao
-            ->shouldReceive('isIntegrationWebhookUsedByIntegrations')
+            ->method('isIntegrationWebhookUsedByIntegrations')
             ->with(6)
-            ->andReturnFalse();
+            ->willReturn(false);
 
-        $this->logger->shouldReceive('info')->with("Deleting previous hook for the_full_url")->once();
+        $this->logger
+            ->expects(self::once())
+            ->method('info')
+            ->with("Deleting previous hook for the_full_url");
 
         $this->deletor->deleteGitlabWebhookFromGitlabRepository($this->credentials, $integration);
     }
@@ -217,41 +223,45 @@ class WebhookDeletorTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $this->dao
-            ->shouldReceive('getGitlabRepositoryWebhook')
+            ->expects(self::once())
+            ->method('getGitlabRepositoryWebhook')
             ->with(1)
-            ->once()
-            ->andReturn(['gitlab_webhook_id' => 6]);
+            ->willReturn(['gitlab_webhook_id' => 6]);
 
         $this->gitlab_api_client
-            ->shouldReceive('deleteUrl')
+            ->method('deleteUrl')
             ->with(
                 $this->credentials,
                 '/projects/2/hooks/6'
             );
 
         $this->dao
-            ->shouldReceive('deleteGitlabRepositoryWebhook')
-            ->with(1)
-            ->once();
+            ->expects(self::once())
+            ->method('deleteGitlabRepositoryWebhook')
+            ->with(1);
 
         $this->dao
-            ->shouldReceive('isIntegrationWebhookUsedByIntegrations')
+            ->method('isIntegrationWebhookUsedByIntegrations')
             ->with(6)
-            ->andReturnTrue();
+            ->willReturn(true);
 
         $this->dao
-            ->shouldReceive('deleteAllGitlabRepositoryWebhookConfigurationUsingOldOne')
-            ->with(6)
-            ->once();
+            ->expects(self::once())
+            ->method('deleteAllGitlabRepositoryWebhookConfigurationUsingOldOne')
+            ->with(6);
 
-        $this->logger->shouldReceive('info')->with("Deleting previous hook for the_full_url")->once();
+        $this->logger
+            ->expects(self::once())
+            ->method('info')
+            ->with("Deleting previous hook for the_full_url");
 
-        $this->logger->shouldReceive('warning')
+        $this->logger
+            ->expects(self::once())
+            ->method('warning')
             ->with(
                 "The webhook is used by another integrations (it may come from old integration). " .
                 "It will be deleted on GitLab side and configuration must be regenerated for these integrations."
-            )
-            ->once();
+            );
 
         $this->deletor->deleteGitlabWebhookFromGitlabRepository($this->credentials, $integration);
     }
@@ -270,38 +280,35 @@ class WebhookDeletorTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $this->dao
-            ->shouldReceive('getGitlabRepositoryWebhook')
+            ->expects(self::once())
+            ->method('getGitlabRepositoryWebhook')
             ->with(1)
-            ->once()
-            ->andReturn(['gitlab_webhook_id' => 6]);
+            ->willReturn(['gitlab_webhook_id' => 6]);
 
         $this->gitlab_api_client
-            ->shouldReceive('deleteUrl')
+            ->expects(self::once())
+            ->method('deleteUrl')
             ->with(
                 $this->credentials,
                 '/projects/2/hooks/6'
             )
-            ->andThrow(new GitlabRequestException(404, "Not found"))
-            ->once();
+            ->willThrowException(new GitlabRequestException(404, "Not found"));
 
         $this->dao
-            ->shouldReceive('storeWebhook')
-            ->never();
+            ->expects(self::never())
+            ->method('storeWebhook');
 
         $this->logger
-            ->shouldReceive('info')
-            ->with('Deleting previous hook for the_full_url')
-            ->once();
-
-        $this->logger
-            ->shouldReceive('info')
-            ->with('Unable to delete the hook. Ignoring error: Error returned by the GitLab server: Not found')
-            ->once();
+            ->method('info')
+            ->withConsecutive(
+                ['Deleting previous hook for the_full_url'],
+                ['Unable to delete the hook. Ignoring error: Error returned by the GitLab server: Not found']
+            );
 
         $this->dao
-            ->shouldReceive('isIntegrationWebhookUsedByIntegrations')
+            ->method('isIntegrationWebhookUsedByIntegrations')
             ->with(1)
-            ->andReturnFalse();
+            ->willReturn(false);
 
         $this->deletor->deleteGitlabWebhookFromGitlabRepository($this->credentials, $integration);
     }

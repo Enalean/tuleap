@@ -28,7 +28,6 @@ use Tuleap\Http\Server\NullServerRequest;
 use Tuleap\Gitlab\Repository\Webhook\PostPush\PostPushWebhookData;
 use Tuleap\Gitlab\Repository\Webhook\PostMergeRequest\PostMergeRequestWebhookData;
 use Psr\Log\LoggerInterface;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\Gitlab\Repository\Webhook\PostMergeRequest\PostMergeRequestWebhookDataBuilder;
 use Tuleap\Gitlab\Repository\Webhook\PostPush\PostPushWebhookDataBuilder;
 use Psr\Log\NullLogger;
@@ -36,16 +35,12 @@ use Tuleap\Gitlab\Repository\Webhook\PostPush\PostPushCommitWebhookDataExtractor
 
 class WebhookDataExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     /**
-     * @var WebhookDataExtractor
-     */
-    private $extractor;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|LoggerInterface
+     * @var \PHPUnit\Framework\MockObject\MockObject&LoggerInterface
      */
     private $logger;
+
+    private WebhookDataExtractor $extractor;
 
     protected function setUp(): void
     {
@@ -57,7 +52,7 @@ class WebhookDataExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
             )
         );
 
-        $this->logger = \Mockery::mock(LoggerInterface::class);
+        $this->logger = $this->createMock(LoggerInterface::class);
 
         $this->extractor = new WebhookDataExtractor(
             $post_push_webhook_data_builder,
@@ -227,9 +222,9 @@ class WebhookDataExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItRetrievesPostPushWebhookData(): void
     {
         $this->logger
-            ->shouldReceive("info")
-            ->with("|_ Webhook of type Push Hook received.")
-            ->once();
+            ->expects(self::once())
+            ->method("info")
+            ->with("|_ Webhook of type Push Hook received.");
 
         $request = (new NullServerRequest())->withBody(
             HTTPFactoryBuilder::streamFactory()->createStream(
@@ -280,9 +275,9 @@ class WebhookDataExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItRetrievesPostMergeRequestWebhookData(): void
     {
         $this->logger
-            ->shouldReceive("info")
-            ->with("|_ Webhook of type Merge Request Hook received.")
-            ->once();
+            ->expects(self::once())
+            ->method("info")
+            ->with("|_ Webhook of type Merge Request Hook received.");
 
         $request = (new NullServerRequest())->withBody(
             HTTPFactoryBuilder::streamFactory()->createStream(
@@ -318,9 +313,9 @@ class WebhookDataExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItRetrievesTagPushRequestWebhookData(): void
     {
         $this->logger
-            ->shouldReceive("info")
-            ->with("|_ Webhook of type Tag Push Hook received.")
-            ->once();
+            ->expects(self::once())
+            ->method("info")
+            ->with("|_ Webhook of type Tag Push Hook received.");
 
         $request = (new NullServerRequest())->withBody(
             HTTPFactoryBuilder::streamFactory()->createStream(

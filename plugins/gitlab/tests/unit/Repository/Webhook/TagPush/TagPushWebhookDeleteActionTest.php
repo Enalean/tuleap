@@ -24,8 +24,6 @@ namespace Tuleap\Gitlab\Repository\Webhook\TagPush;
 
 use CrossReferenceManager;
 use DateTimeImmutable;
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Project;
 use Psr\Log\NullLogger;
 use Tuleap\Gitlab\Reference\Tag\GitlabTagReference;
@@ -33,27 +31,23 @@ use Tuleap\Gitlab\Repository\GitlabRepositoryIntegration;
 
 class TagPushWebhookDeleteActionTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     /**
-     * @var TagPushWebhookDeleteAction
-     */
-    private $delete_action;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|TagInfoDao
+     * @var \PHPUnit\Framework\MockObject\MockObject&TagInfoDao
      */
     private $tag_info_dao;
     /**
-     * @var CrossReferenceManager|Mockery\LegacyMockInterface|Mockery\MockInterface
+     * @var \PHPUnit\Framework\MockObject\MockObject&CrossReferenceManager
      */
     private $cross_reference_manager;
+
+    private TagPushWebhookDeleteAction $delete_action;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->tag_info_dao            = Mockery::mock(TagInfoDao::class);
-        $this->cross_reference_manager = Mockery::mock(CrossReferenceManager::class);
+        $this->tag_info_dao            = $this->createMock(TagInfoDao::class);
+        $this->cross_reference_manager = $this->createMock(CrossReferenceManager::class);
 
         $this->delete_action = new TagPushWebhookDeleteAction(
             $this->tag_info_dao,
@@ -84,16 +78,18 @@ class TagPushWebhookDeleteActionTest extends \Tuleap\Test\PHPUnit\TestCase
             "0000000000000000000000000000000000000000",
         );
 
-        $this->cross_reference_manager->shouldReceive('deleteEntity')
+        $this->cross_reference_manager
+            ->expects(self::once())
+            ->method('deleteEntity')
             ->with(
                 "root/repo01/v1.0.2",
                 GitlabTagReference::NATURE_NAME,
                 101
-            )
-            ->once();
+            );
 
-        $this->tag_info_dao->shouldReceive('deleteTagInGitlabRepository')
-            ->once()
+        $this->tag_info_dao
+            ->expects(self::once())
+            ->method('deleteTagInGitlabRepository')
             ->with(
                 1,
                 "v1.0.2"

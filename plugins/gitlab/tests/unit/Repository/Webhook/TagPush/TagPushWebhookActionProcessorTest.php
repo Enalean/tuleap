@@ -23,35 +23,29 @@ declare(strict_types=1);
 namespace Tuleap\Gitlab\Repository\Webhook\TagPush;
 
 use DateTimeImmutable;
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Project;
 use Tuleap\Gitlab\Repository\GitlabRepositoryIntegration;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 
 class TagPushWebhookActionProcessorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     /**
-     * @var TagPushWebhookActionProcessor
-     */
-    private $action_processor;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|TagPushWebhookDeleteAction
+     * @var \PHPUnit\Framework\MockObject\MockObject&TagPushWebhookDeleteAction
      */
     private $push_webhook_delete_action;
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|TagPushWebhookCreateAction
+     * @var \PHPUnit\Framework\MockObject\MockObject&TagPushWebhookCreateAction
      */
     private $push_webhook_create_action;
+
+    private TagPushWebhookActionProcessor $action_processor;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->push_webhook_delete_action = Mockery::mock(TagPushWebhookDeleteAction::class);
-        $this->push_webhook_create_action = Mockery::mock(TagPushWebhookCreateAction::class);
+        $this->push_webhook_delete_action = $this->createMock(TagPushWebhookDeleteAction::class);
+        $this->push_webhook_create_action = $this->createMock(TagPushWebhookCreateAction::class);
 
         $this->action_processor = new TagPushWebhookActionProcessor(
             $this->push_webhook_create_action,
@@ -82,10 +76,11 @@ class TagPushWebhookActionProcessorTest extends \Tuleap\Test\PHPUnit\TestCase
             "0000000000000000000000000000000000000000",
         );
 
-        $this->push_webhook_create_action->shouldNotReceive('createTagReferences');
+        $this->push_webhook_create_action->expects(self::never())->method('createTagReferences');
 
-        $this->push_webhook_delete_action->shouldReceive('deleteTagReferences')
-            ->once()
+        $this->push_webhook_delete_action
+            ->expects(self::once())
+            ->method('deleteTagReferences')
             ->with(
                 $integration,
                 $tag_webhook_data
@@ -119,14 +114,15 @@ class TagPushWebhookActionProcessorTest extends \Tuleap\Test\PHPUnit\TestCase
             "after"
         );
 
-        $this->push_webhook_create_action->shouldReceive('createTagReferences')
-            ->once()
+        $this->push_webhook_create_action
+            ->expects(self::once())
+            ->method('createTagReferences')
             ->with(
                 $integration,
                 $tag_webhook_data
             );
 
-        $this->push_webhook_delete_action->shouldNotReceive('deleteTagReferences');
+        $this->push_webhook_delete_action->expects(self::never())->method('deleteTagReferences');
 
         $this->action_processor->process(
             $integration,
@@ -156,15 +152,17 @@ class TagPushWebhookActionProcessorTest extends \Tuleap\Test\PHPUnit\TestCase
             "after"
         );
 
-        $this->push_webhook_delete_action->shouldReceive('deleteTagReferences')
-            ->once()
+        $this->push_webhook_delete_action
+            ->expects(self::once())
+            ->method('deleteTagReferences')
             ->with(
                 $integration,
                 $tag_webhook_data
             );
 
-        $this->push_webhook_create_action->shouldReceive('createTagReferences')
-            ->once()
+        $this->push_webhook_create_action
+            ->expects(self::once())
+            ->method('createTagReferences')
             ->with(
                 $integration,
                 $tag_webhook_data

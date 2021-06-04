@@ -22,13 +22,10 @@ declare(strict_types=1);
 
 namespace Tuleap\Gitlab\Repository\Token;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\Cryptography\ConcealedString;
 
 class IntegrationApiTokenTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     public function testBuildAlreadyKnownToken(): void
     {
         $secret = new ConcealedString('Ny secret');

@@ -21,26 +21,23 @@ declare(strict_types=1);
 
 namespace Tuleap\Gitlab\Reference\Commit;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\Gitlab\Repository\GitlabRepositoryIntegration;
 use Tuleap\Gitlab\Repository\Webhook\PostPush\Commits\CommitTuleapReferenceDao;
 
 class GitlabCommitFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|CommitTuleapReferenceDao
-     */
-    private $commit_dao;
     /**
      * @var GitlabCommitFactory
      */
     private $factory;
+    /**
+     * @var \PHPUnit\Framework\MockObject\MockObject&CommitTuleapReferenceDao
+     */
+    private $commit_dao;
 
     protected function setUp(): void
     {
-        $this->commit_dao = \Mockery::mock(CommitTuleapReferenceDao::class);
+        $this->commit_dao = $this->createMock(CommitTuleapReferenceDao::class);
         $this->factory    = new GitlabCommitFactory(
             $this->commit_dao
         );
@@ -48,9 +45,9 @@ class GitlabCommitFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItReturnsTheGitlabCommitData(): void
     {
-        $this->commit_dao->shouldReceive('searchCommitInRepositoryWithSha1')
+        $this->commit_dao->method('searchCommitInRepositoryWithSha1')
             ->with(2, '11645a413d7af2995cd92e40bf387e39d06d0e61')
-            ->andReturn([
+            ->willReturn([
                 'gitlab_repository_id' => 2,
                 'commit_sha1' => '11645a413d7af2995cd92e40bf387e39d06d0e61',
                 'commit_date' => 1608555618,
@@ -77,9 +74,9 @@ class GitlabCommitFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItReturnsNullWhenThereIsNoMatchingCommit(): void
     {
-        $this->commit_dao->shouldReceive('searchCommitInRepositoryWithSha1')
+        $this->commit_dao->method('searchCommitInRepositoryWithSha1')
             ->with(2, '11645a413d7af2995cd92e40bf387e39d06d0e61')
-            ->andReturn(null);
+            ->willReturn(null);
 
         $repository  = $this->getMockedGitlabRepository();
         $commit_info = $this->factory->getGitlabCommitInRepositoryWithSha1(
@@ -91,12 +88,12 @@ class GitlabCommitFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
     }
 
     /**
-     * @return \Mockery\LegacyMockInterface|\Mockery\MockInterface|GitlabRepositoryIntegration
+     * @return \PHPUnit\Framework\MockObject\MockObject&GitlabRepositoryIntegration
      */
     private function getMockedGitlabRepository()
     {
-        $repository = \Mockery::mock(GitlabRepositoryIntegration::class);
-        $repository->shouldReceive('getId')->andReturn(2);
+        $repository = $this->createMock(GitlabRepositoryIntegration::class);
+        $repository->method('getId')->willReturn(2);
         return $repository;
     }
 }

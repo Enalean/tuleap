@@ -34,15 +34,15 @@ use Tuleap\Test\PHPUnit\TestCase;
 final class GitlabRepositoryIntegrationUpdatorTest extends TestCase
 {
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|GitlabRepositoryIntegrationDao
+     * @var \PHPUnit\Framework\MockObject\MockObject&GitlabRepositoryIntegrationDao
      */
     private $gitlab_repository_dao;
     /**
-     * @var GitPermissionsManager|\PHPUnit\Framework\MockObject\MockObject
+     * @var \PHPUnit\Framework\MockObject\MockObject&GitPermissionsManager
      */
     private $git_permission_manager;
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|GitlabRepositoryIntegrationFactory
+     * @var \PHPUnit\Framework\MockObject\MockObject&GitlabRepositoryIntegrationFactory
      */
     private $gitlab_repository_factory;
     /**

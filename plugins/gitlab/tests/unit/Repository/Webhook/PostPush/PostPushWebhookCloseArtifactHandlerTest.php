@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\Gitlab\Repository\Webhook\PostPush;
 
 use DateTimeImmutable;
-use Mockery;
 use Project;
 use Psr\Log\NullLogger;
 use Tracker_FormElement_Field_Selectbox;
@@ -48,52 +47,49 @@ use UserNotExistException;
 
 class PostPushWebhookCloseArtifactHandlerTest extends TestCase
 {
-    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
     /**
-     * @var PostPushWebhookCloseArtifactHandler
-     */
-    private $handler;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ArtifactRetriever
-     */
-    private $artifact_retriever;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|UserManager
-     */
-    private $user_manager;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Tracker_Semantic_StatusFactory
-     */
-    private $semantic_status_factory;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|GitlabRepositoryProjectDao
-     */
-    private $repository_project_dao;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|PostPushCommitArtifactUpdater
+     * @var \PHPUnit\Framework\MockObject\MockObject&PostPushCommitArtifactUpdater
      */
     private $artifact_updater;
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|CredentialsRetriever
+     * @var \PHPUnit\Framework\MockObject\MockObject&ArtifactRetriever
+     */
+    private $artifact_retriever;
+    /**
+     * @var \PHPUnit\Framework\MockObject\MockObject&UserManager
+     */
+    private $user_manager;
+    /**
+     * @var \PHPUnit\Framework\MockObject\MockObject&Tracker_Semantic_StatusFactory
+     */
+    private $semantic_status_factory;
+    /**
+     * @var \PHPUnit\Framework\MockObject\MockObject&GitlabRepositoryProjectDao
+     */
+    private $repository_project_dao;
+    /**
+     * @var \PHPUnit\Framework\MockObject\MockObject&CredentialsRetriever
      */
     private $credentials_retriever;
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|GitlabProjectBuilder
+     * @var \PHPUnit\Framework\MockObject\MockObject&GitlabProjectBuilder
      */
     private $gitlab_project_builder;
+
+    private PostPushWebhookCloseArtifactHandler $handler;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->artifact_updater        = Mockery::mock(PostPushCommitArtifactUpdater::class);
-        $this->artifact_retriever      = Mockery::mock(ArtifactRetriever::class);
-        $this->user_manager            = Mockery::mock(UserManager::class);
-        $this->semantic_status_factory = Mockery::mock(Tracker_Semantic_StatusFactory::class);
-        $this->repository_project_dao  = Mockery::mock(GitlabRepositoryProjectDao::class);
-        $this->credentials_retriever   = Mockery::mock(CredentialsRetriever::class);
-        $this->gitlab_project_builder  = Mockery::mock(GitlabProjectBuilder::class);
+        $this->artifact_updater        = $this->createMock(PostPushCommitArtifactUpdater::class);
+        $this->artifact_retriever      = $this->createMock(ArtifactRetriever::class);
+        $this->user_manager            = $this->createMock(UserManager::class);
+        $this->semantic_status_factory = $this->createMock(Tracker_Semantic_StatusFactory::class);
+        $this->repository_project_dao  = $this->createMock(GitlabRepositoryProjectDao::class);
+        $this->credentials_retriever   = $this->createMock(CredentialsRetriever::class);
+        $this->gitlab_project_builder  = $this->createMock(GitlabProjectBuilder::class);
 
         $this->handler = new PostPushWebhookCloseArtifactHandler(
             $this->artifact_updater,
@@ -132,37 +128,42 @@ class PostPushWebhookCloseArtifactHandlerTest extends TestCase
         );
 
         $tracker  = TrackerTestBuilder::aTracker()->withProject(\Project::buildForTest())->build();
-        $artifact = Mockery::mock(Artifact::class);
-        $artifact->shouldReceive('getTracker')->andReturn($tracker);
+        $artifact = $this->createMock(Artifact::class);
+        $artifact->method('getTracker')->willReturn($tracker);
 
-        $this->artifact_retriever->shouldReceive('retrieveArtifactById')
-            ->once()
+        $this->artifact_retriever
+            ->expects(self::once())
+            ->method('retrieveArtifactById')
             ->with($reference)
-            ->andReturn($artifact);
+            ->willReturn($artifact);
 
-        $this->repository_project_dao->shouldReceive('isArtifactClosureActionEnabledForRepositoryInProject')
-            ->once()
+        $this->repository_project_dao
+            ->expects(self::once())
+            ->method('isArtifactClosureActionEnabledForRepositoryInProject')
             ->with(1, 101)
-            ->andReturn(true);
+            ->willReturn(true);
 
         $user = UserTestBuilder::anActiveUser()->withId(Tracker_Workflow_WorkflowUser::ID)->build();
-        $this->user_manager->shouldReceive('getUserById')
-            ->once()
+        $this->user_manager
+            ->expects(self::once())
+            ->method('getUserById')
             ->with(Tracker_Workflow_WorkflowUser::ID)
-            ->andReturn($user);
+            ->willReturn($user);
 
-        $status_semantic = Mockery::mock(Tracker_Semantic_Status::class);
-        $status_semantic->shouldReceive('getField')->andReturnNull();
+        $status_semantic = $this->createMock(Tracker_Semantic_Status::class);
+        $status_semantic->method('getField')->willReturn(null);
 
-        $this->semantic_status_factory->shouldReceive('getByTracker')
-            ->once()
+        $this->semantic_status_factory
+            ->expects(self::once())
+            ->method('getByTracker')
             ->with($tracker)
-            ->andReturn($status_semantic);
+            ->willReturn($status_semantic);
 
         $this->mockGitlabProjectDefaultBranch();
 
-        $this->artifact_updater->shouldReceive('addTuleapArtifactCommentNoSemanticDefined')
-            ->once()
+        $this->artifact_updater
+            ->expects(self::once())
+            ->method('addTuleapArtifactCommentNoSemanticDefined')
             ->with(
                 $artifact,
                 $user,
@@ -200,13 +201,14 @@ class PostPushWebhookCloseArtifactHandlerTest extends TestCase
             false
         );
 
-        $this->artifact_retriever->shouldReceive('retrieveArtifactById')
-            ->once()
+        $this->artifact_retriever
+            ->expects(self::once())
+            ->method('retrieveArtifactById')
             ->with($reference)
-            ->andThrow(new ArtifactNotFoundException());
+            ->willThrowException(new ArtifactNotFoundException());
 
-        $this->artifact_updater->shouldNotReceive('addTuleapArtifactCommentNoSemanticDefined');
-        $this->artifact_updater->shouldNotReceive('closeTuleapArtifactcloseTuleapArtifact');
+        $this->artifact_updater->expects(self::never())->method('addTuleapArtifactCommentNoSemanticDefined');
+        $this->artifact_updater->expects(self::never())->method('closeTuleapArtifact');
 
         $this->handler->handleArtifactClosure(
             $reference,
@@ -240,28 +242,31 @@ class PostPushWebhookCloseArtifactHandlerTest extends TestCase
         );
 
         $tracker  = TrackerTestBuilder::aTracker()->withProject(\Project::buildForTest())->build();
-        $artifact = Mockery::mock(Artifact::class);
-        $artifact->shouldReceive('getTracker')->andReturn($tracker);
+        $artifact = $this->createMock(Artifact::class);
+        $artifact->method('getTracker')->willReturn($tracker);
 
-        $this->artifact_retriever->shouldReceive('retrieveArtifactById')
-            ->once()
+        $this->artifact_retriever
+            ->expects(self::once())
+            ->method('retrieveArtifactById')
             ->with($reference)
-            ->andReturn($artifact);
+            ->willReturn($artifact);
 
-        $this->repository_project_dao->shouldReceive('isArtifactClosureActionEnabledForRepositoryInProject')
-            ->once()
+        $this->repository_project_dao
+            ->expects(self::once())
+            ->method('isArtifactClosureActionEnabledForRepositoryInProject')
             ->with(1, 101)
-            ->andReturn(true);
+            ->willReturn(true);
 
-        $this->user_manager->shouldReceive('getUserById')
-            ->once()
+        $this->user_manager
+            ->expects(self::once())
+            ->method('getUserById')
             ->with(Tracker_Workflow_WorkflowUser::ID)
-            ->andReturnNull();
+            ->willReturn(null);
 
         $this->expectException(UserNotExistException::class);
 
-        $this->artifact_updater->shouldNotReceive('addTuleapArtifactCommentNoSemanticDefined');
-        $this->artifact_updater->shouldNotReceive('closeTuleapArtifactcloseTuleapArtifact');
+        $this->artifact_updater->expects(self::never())->method('addTuleapArtifactCommentNoSemanticDefined');
+        $this->artifact_updater->expects(self::never())->method('closeTuleapArtifact');
 
         $this->handler->handleArtifactClosure(
             $reference,
@@ -295,33 +300,37 @@ class PostPushWebhookCloseArtifactHandlerTest extends TestCase
         );
 
         $tracker  = TrackerTestBuilder::aTracker()->withProject(\Project::buildForTest())->build();
-        $artifact = Mockery::mock(Artifact::class);
-        $artifact->shouldReceive('getTracker')->andReturn($tracker);
+        $artifact = $this->createMock(Artifact::class);
+        $artifact->method('getTracker')->willReturn($tracker);
 
-        $this->artifact_retriever->shouldReceive('retrieveArtifactById')
-            ->once()
+        $this->artifact_retriever
+            ->expects(self::once())
+            ->method('retrieveArtifactById')
             ->with($reference)
-            ->andReturn($artifact);
+            ->willReturn($artifact);
 
-        $this->repository_project_dao->shouldReceive('isArtifactClosureActionEnabledForRepositoryInProject')
-            ->once()
+        $this->repository_project_dao
+            ->expects(self::once())
+            ->method('isArtifactClosureActionEnabledForRepositoryInProject')
             ->with(1, 101)
-            ->andReturn(true);
+            ->willReturn(true);
 
         $user = UserTestBuilder::anActiveUser()->withId(Tracker_Workflow_WorkflowUser::ID)->build();
-        $this->user_manager->shouldReceive('getUserById')
-            ->once()
+        $this->user_manager
+            ->expects(self::once())
+            ->method('getUserById')
             ->with(Tracker_Workflow_WorkflowUser::ID)
-            ->andReturn($user);
+            ->willReturn($user);
 
-        $this->credentials_retriever->shouldReceive('getCredentials')
-            ->once()
-            ->andReturnNull();
+        $this->credentials_retriever
+            ->expects(self::once())
+            ->method('getCredentials')
+            ->willReturn(null);
 
-        $this->gitlab_project_builder->shouldNotReceive('getProjectFromGitlabAPI');
+        $this->gitlab_project_builder->expects(self::never())->method('getProjectFromGitlabAPI');
 
-        $this->artifact_updater->shouldNotReceive('addTuleapArtifactCommentNoSemanticDefined');
-        $this->artifact_updater->shouldNotReceive('closeTuleapArtifactcloseTuleapArtifact');
+        $this->artifact_updater->expects(self::never())->method('addTuleapArtifactCommentNoSemanticDefined');
+        $this->artifact_updater->expects(self::never())->method('closeTuleapArtifact');
 
         $this->handler->handleArtifactClosure(
             $reference,
@@ -355,29 +364,32 @@ class PostPushWebhookCloseArtifactHandlerTest extends TestCase
         );
 
         $tracker  = TrackerTestBuilder::aTracker()->withProject(\Project::buildForTest())->build();
-        $artifact = Mockery::mock(Artifact::class);
-        $artifact->shouldReceive('getTracker')->andReturn($tracker);
+        $artifact = $this->createMock(Artifact::class);
+        $artifact->method('getTracker')->willReturn($tracker);
 
-        $this->artifact_retriever->shouldReceive('retrieveArtifactById')
-            ->once()
+        $this->artifact_retriever
+            ->expects(self::once())
+            ->method('retrieveArtifactById')
             ->with($reference)
-            ->andReturn($artifact);
+            ->willReturn($artifact);
 
-        $this->repository_project_dao->shouldReceive('isArtifactClosureActionEnabledForRepositoryInProject')
-            ->once()
+        $this->repository_project_dao
+            ->expects(self::once())
+            ->method('isArtifactClosureActionEnabledForRepositoryInProject')
             ->with(1, 101)
-            ->andReturn(true);
+            ->willReturn(true);
 
         $user = UserTestBuilder::anActiveUser()->withId(Tracker_Workflow_WorkflowUser::ID)->build();
-        $this->user_manager->shouldReceive('getUserById')
-            ->once()
+        $this->user_manager
+            ->expects(self::once())
+            ->method('getUserById')
             ->with(Tracker_Workflow_WorkflowUser::ID)
-            ->andReturn($user);
+            ->willReturn($user);
 
         $this->mockGitlabProjectAnotherDefaultBranch();
 
-        $this->artifact_updater->shouldNotReceive('addTuleapArtifactCommentNoSemanticDefined');
-        $this->artifact_updater->shouldNotReceive('closeTuleapArtifactcloseTuleapArtifact');
+        $this->artifact_updater->expects(self::never())->method('addTuleapArtifactCommentNoSemanticDefined');
+        $this->artifact_updater->expects(self::never())->method('closeTuleapArtifact');
 
         $this->handler->handleArtifactClosure(
             $reference,
@@ -411,39 +423,44 @@ class PostPushWebhookCloseArtifactHandlerTest extends TestCase
         );
 
         $tracker  = TrackerTestBuilder::aTracker()->withProject(\Project::buildForTest())->build();
-        $artifact = Mockery::mock(Artifact::class);
-        $artifact->shouldReceive('getTracker')->andReturn($tracker);
+        $artifact = $this->createMock(Artifact::class);
+        $artifact->method('getTracker')->willReturn($tracker);
 
-        $this->artifact_retriever->shouldReceive('retrieveArtifactById')
-            ->once()
+        $this->artifact_retriever
+            ->expects(self::once())
+            ->method('retrieveArtifactById')
             ->with($reference)
-            ->andReturn($artifact);
+            ->willReturn($artifact);
 
-        $this->repository_project_dao->shouldReceive('isArtifactClosureActionEnabledForRepositoryInProject')
-            ->once()
+        $this->repository_project_dao
+            ->expects(self::once())
+            ->method('isArtifactClosureActionEnabledForRepositoryInProject')
             ->with(1, 101)
-            ->andReturn(true);
+            ->willReturn(true);
 
         $user = UserTestBuilder::anActiveUser()->withId(Tracker_Workflow_WorkflowUser::ID)->build();
-        $this->user_manager->shouldReceive('getUserById')
-            ->once()
+        $this->user_manager
+            ->expects(self::once())
+            ->method('getUserById')
             ->with(Tracker_Workflow_WorkflowUser::ID)
-            ->andReturn($user);
+            ->willReturn($user);
 
-        $status_semantic = Mockery::mock(Tracker_Semantic_Status::class);
-        $status_semantic->shouldReceive('getField')->andReturn(
-            Mockery::mock(Tracker_FormElement_Field_Selectbox::class)
+        $status_semantic = $this->createMock(Tracker_Semantic_Status::class);
+        $status_semantic->method('getField')->willReturn(
+            $this->createMock(Tracker_FormElement_Field_Selectbox::class)
         );
 
-        $this->semantic_status_factory->shouldReceive('getByTracker')
-            ->once()
+        $this->semantic_status_factory
+            ->expects(self::once())
+            ->method('getByTracker')
             ->with($tracker)
-            ->andReturn($status_semantic);
+            ->willReturn($status_semantic);
 
         $this->mockGitlabProjectDefaultBranch();
 
-        $this->artifact_updater->shouldReceive('closeTuleapArtifact')
-            ->once()
+        $this->artifact_updater
+            ->expects(self::once())
+            ->method('closeTuleapArtifact')
             ->with(
                 $artifact,
                 $user,
@@ -484,11 +501,11 @@ class PostPushWebhookCloseArtifactHandlerTest extends TestCase
             false
         );
 
-        $this->artifact_retriever->shouldNotReceive('retrieveArtifactById');
-        $this->repository_project_dao->shouldNotReceive('isArtifactClosureActionEnabledForRepositoryInProject');
-        $this->user_manager->shouldNotReceive('getUserById');
-        $this->semantic_status_factory->shouldNotReceive('getByTracker');
-        $this->artifact_updater->shouldNotReceive('closeTuleapArtifact');
+        $this->artifact_retriever->expects(self::never())->method('retrieveArtifactById');
+        $this->repository_project_dao->expects(self::never())->method('isArtifactClosureActionEnabledForRepositoryInProject');
+        $this->user_manager->expects(self::never())->method('getUserById');
+        $this->semantic_status_factory->expects(self::never())->method('getByTracker');
+        $this->artifact_updater->expects(self::never())->method('closeTuleapArtifact');
 
         $this->handler->handleArtifactClosure(
             $reference,
@@ -522,22 +539,24 @@ class PostPushWebhookCloseArtifactHandlerTest extends TestCase
         );
 
         $tracker  = TrackerTestBuilder::aTracker()->withProject(\Project::buildForTest())->build();
-        $artifact = Mockery::mock(Artifact::class);
-        $artifact->shouldReceive('getTracker')->andReturn($tracker);
+        $artifact = $this->createMock(Artifact::class);
+        $artifact->method('getTracker')->willReturn($tracker);
 
-        $this->artifact_retriever->shouldReceive('retrieveArtifactById')
-            ->once()
+        $this->artifact_retriever
+            ->expects(self::once())
+            ->method('retrieveArtifactById')
             ->with($reference)
-            ->andReturn($artifact);
+            ->willReturn($artifact);
 
-        $this->repository_project_dao->shouldReceive('isArtifactClosureActionEnabledForRepositoryInProject')
-            ->once()
+        $this->repository_project_dao
+            ->expects(self::once())
+            ->method('isArtifactClosureActionEnabledForRepositoryInProject')
             ->with(1, 101)
-            ->andReturn(false);
+            ->willReturn(false);
 
-        $this->user_manager->shouldNotReceive('getUserById');
-        $this->semantic_status_factory->shouldNotReceive('getByTracker');
-        $this->artifact_updater->shouldNotReceive('closeTuleapArtifact');
+        $this->user_manager->expects(self::never())->method('getUserById');
+        $this->semantic_status_factory->expects(self::never())->method('getByTracker');
+        $this->artifact_updater->expects(self::never())->method('closeTuleapArtifact');
 
         $this->handler->handleArtifactClosure(
             $reference,
@@ -548,18 +567,20 @@ class PostPushWebhookCloseArtifactHandlerTest extends TestCase
 
     protected function mockGitlabProjectDefaultBranch(): void
     {
-        $credentials = Mockery::mock(Credentials::class);
-        $this->credentials_retriever->shouldReceive('getCredentials')
-            ->once()
-            ->andReturn($credentials);
+        $credentials = $this->createMock(Credentials::class);
+        $this->credentials_retriever
+            ->expects(self::once())
+            ->method('getCredentials')
+            ->willReturn($credentials);
 
-        $this->gitlab_project_builder->shouldReceive('getProjectFromGitlabAPI')
-            ->once()
+        $this->gitlab_project_builder
+            ->expects(self::once())
+            ->method('getProjectFromGitlabAPI')
             ->with(
                 $credentials,
                 12
             )
-            ->andReturn(
+            ->willReturn(
                 new GitlabProject(
                     12,
                     "",
@@ -573,18 +594,20 @@ class PostPushWebhookCloseArtifactHandlerTest extends TestCase
 
     protected function mockGitlabProjectAnotherDefaultBranch(): void
     {
-        $credentials = Mockery::mock(Credentials::class);
-        $this->credentials_retriever->shouldReceive('getCredentials')
-            ->once()
-            ->andReturn($credentials);
+        $credentials = $this->createMock(Credentials::class);
+        $this->credentials_retriever
+            ->expects(self::once())
+            ->method('getCredentials')
+            ->willReturn($credentials);
 
-        $this->gitlab_project_builder->shouldReceive('getProjectFromGitlabAPI')
-            ->once()
+        $this->gitlab_project_builder
+            ->expects(self::once())
+            ->method('getProjectFromGitlabAPI')
             ->with(
                 $credentials,
                 12
             )
-            ->andReturn(
+            ->willReturn(
                 new GitlabProject(
                     12,
                     "",

@@ -20,8 +20,6 @@
 
 namespace Tuleap\Gitlab\Repository\Webhook\Bot;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\Gitlab\Repository\GitlabRepositoryIntegration;
 use Tuleap\Gitlab\Repository\Token\IntegrationApiToken;
@@ -29,22 +27,18 @@ use Tuleap\Gitlab\Repository\Token\IntegrationApiTokenRetriever;
 
 class CredentialsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     /**
-     * @var CredentialsRetriever
-     */
-    private $credentials_retriever;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|IntegrationApiTokenRetriever
+     * @var \PHPUnit\Framework\MockObject\MockObject&IntegrationApiTokenRetriever
      */
     private $token_retriever;
+
+    private CredentialsRetriever $credentials_retriever;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->token_retriever = Mockery::mock(IntegrationApiTokenRetriever::class);
+        $this->token_retriever = $this->createMock(IntegrationApiTokenRetriever::class);
 
         $this->credentials_retriever = new CredentialsRetriever(
             $this->token_retriever
@@ -53,30 +47,31 @@ class CredentialsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testReturnsCredentialsWithTokenAndURL(): void
     {
-        $gitlab_repository = Mockery::mock(GitlabRepositoryIntegration::class);
+        $gitlab_repository = $this->createMock(GitlabRepositoryIntegration::class);
         $gitlab_repository
-            ->shouldReceive('getGitlabServerUrl')
-            ->andReturn("https://www.example.com/")
-            ->once();
+            ->expects(self::once())
+            ->method('getGitlabServerUrl')
+            ->willReturn("https://www.example.com/");
 
         $integration_api_token = IntegrationApiToken::buildBrandNewToken(new ConcealedString("My_Token123"));
 
-        $this->token_retriever->shouldReceive("getIntegrationAPIToken")->with($gitlab_repository)->andReturn($integration_api_token);
+        $this->token_retriever->method("getIntegrationAPIToken")->with($gitlab_repository)->willReturn($integration_api_token);
 
         $credentials = $this->credentials_retriever->getCredentials($gitlab_repository);
 
+        self::assertNotNull($credentials);
         self::assertEquals($integration_api_token, $credentials->getBotApiToken());
         self::assertEquals("https://www.example.com/", $credentials->getGitlabServerUrl());
     }
 
     public function testReturnsNullIfNoSavedToken(): void
     {
-        $gitlab_repository = Mockery::mock(GitlabRepositoryIntegration::class);
+        $gitlab_repository = $this->createMock(GitlabRepositoryIntegration::class);
         $gitlab_repository
-            ->shouldReceive('getGitlabServerUrl')
-            ->never();
+            ->expects(self::never())
+            ->method('getGitlabServerUrl');
 
-        $this->token_retriever->shouldReceive("getIntegrationAPIToken")->with($gitlab_repository)->andReturnNull();
+        $this->token_retriever->method("getIntegrationAPIToken")->with($gitlab_repository)->willReturn(null);
 
         $credentials = $this->credentials_retriever->getCredentials($gitlab_repository);
 

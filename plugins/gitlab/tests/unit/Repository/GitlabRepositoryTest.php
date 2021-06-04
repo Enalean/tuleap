@@ -22,12 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\Gitlab\Repository;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
 class GitlabRepositoryTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     public function testGetGitlabServerUrl(): void
     {
         $integration = new GitlabRepositoryIntegration(

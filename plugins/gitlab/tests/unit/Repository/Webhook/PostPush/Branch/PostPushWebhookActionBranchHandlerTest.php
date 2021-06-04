@@ -39,23 +39,23 @@ class PostPushWebhookActionBranchHandlerTest extends TestCase
 {
     private PostPushWebhookActionBranchHandler $handler;
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|ReferenceManager
+     * @var \PHPUnit\Framework\MockObject\MockObject&ReferenceManager
      */
     private $reference_manager;
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|TuleapReferenceRetriever
+     * @var \PHPUnit\Framework\MockObject\MockObject&TuleapReferenceRetriever
      */
     private $tuleap_reference_retriever;
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|BranchInfoDao
+     * @var \PHPUnit\Framework\MockObject\MockObject&BranchInfoDao
      */
     private $branch_info_dao;
     /**
-     * @var CrossReferenceDao|\PHPUnit\Framework\MockObject\MockObject
+     * @var \PHPUnit\Framework\MockObject\MockObject&CrossReferenceDao
      */
     private $cross_reference_dao;
     /**
-     * @var CrossReferenceManager|\PHPUnit\Framework\MockObject\MockObject
+     * @var \PHPUnit\Framework\MockObject\MockObject&CrossReferenceManager
      */
     private $cross_reference_manager;
 

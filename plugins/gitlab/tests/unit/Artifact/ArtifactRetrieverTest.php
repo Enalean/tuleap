@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Gitlab\Artifact;
 
-use Mockery;
 use Tracker_ArtifactFactory;
 use Tuleap\Gitlab\Repository\Webhook\WebhookTuleapReference;
 use Tuleap\Test\PHPUnit\TestCase;
@@ -31,18 +30,17 @@ use Tuleap\Tracker\Artifact\Artifact;
 
 class ArtifactRetrieverTest extends TestCase
 {
-    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
     public function testItThrowsAnExceptionWhenTheArtifactIsNotFound(): void
     {
-        $artifact_factory   = Mockery::mock(Tracker_ArtifactFactory::class);
+        $artifact_factory   = $this->createMock(Tracker_ArtifactFactory::class);
         $artifact_retriever = new ArtifactRetriever($artifact_factory);
         $reference          = new WebhookTuleapReference(10, null);
 
-        $artifact_factory->shouldReceive('getArtifactById')
-            ->once()
+        $artifact_factory
+            ->expects(self::once())
+            ->method('getArtifactById')
             ->with(10)
-            ->andReturnNull();
+            ->willReturn(null);
 
         $this->expectException(ArtifactNotFoundException::class);
 
@@ -51,15 +49,17 @@ class ArtifactRetrieverTest extends TestCase
 
     public function testItReturnsTheArtifact(): void
     {
-        $artifact_factory   = Mockery::mock(Tracker_ArtifactFactory::class);
+        $artifact_factory   = $this->createMock(Tracker_ArtifactFactory::class);
         $artifact_retriever = new ArtifactRetriever($artifact_factory);
         $reference          = new WebhookTuleapReference(10, null);
+        $submitted_by       = 101;
 
-        $expected_artifact = new Artifact(10, 1, 'submitter', 10050, false);
-        $artifact_factory->shouldReceive('getArtifactById')
-            ->once()
+        $expected_artifact = new Artifact(10, 1, $submitted_by, 10050, false);
+        $artifact_factory
+            ->expects(self::once())
+            ->method('getArtifactById')
             ->with(10)
-            ->andReturn($expected_artifact);
+            ->willReturn($expected_artifact);
 
         $retrieved_artifact = $artifact_retriever->retrieveArtifactById($reference);
 

@@ -24,10 +24,6 @@ declare(strict_types=1);
 namespace Tuleap\Gitlab\API;
 
 use Http\Client\Common\PluginClient;
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use Mockery\LegacyMockInterface;
-use Mockery\MockInterface;
 use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestFactoryInterface;
@@ -38,30 +34,28 @@ use Tuleap\Gitlab\Test\Builder\CredentialsTestBuilder;
 
 final class ClientWrapperTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     /**
      * @var ClientWrapper
      */
     private $wrapper;
     /**
-     * @var LegacyMockInterface|MockInterface|RequestFactoryInterface
+     * @var \PHPUnit\Framework\MockObject\MockObject&RequestFactoryInterface
      */
     private $factory;
     /**
-     * @var LegacyMockInterface|MockInterface|StreamFactoryInterface
+     * @var \PHPUnit\Framework\MockObject\MockObject&StreamFactoryInterface
      */
     private $stream_factory;
     /**
-     * @var LegacyMockInterface|MockInterface|GitlabHTTPClientFactory
+     * @var \PHPUnit\Framework\MockObject\MockObject&GitlabHTTPClientFactory
      */
     private $client_factory;
 
     protected function setUp(): void
     {
-        $this->factory        = Mockery::mock(RequestFactoryInterface::class);
-        $this->stream_factory = Mockery::mock(StreamFactoryInterface::class);
-        $this->client_factory = Mockery::mock(GitlabHTTPClientFactory::class);
+        $this->factory        = $this->createMock(RequestFactoryInterface::class);
+        $this->stream_factory = $this->createMock(StreamFactoryInterface::class);
+        $this->client_factory = $this->createMock(GitlabHTTPClientFactory::class);
 
         $this->wrapper = new ClientWrapper($this->factory, $this->stream_factory, $this->client_factory);
     }
@@ -74,37 +68,40 @@ final class ClientWrapperTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $credentials = CredentialsTestBuilder::get()->build();
 
-        $client_interface = Mockery::mock(ClientInterface::class);
+        $client_interface = $this->createMock(ClientInterface::class);
         $client           = new PluginClient($client_interface);
 
         $this->client_factory
-            ->shouldReceive('buildHTTPClient')
+            ->expects(self::once())
+            ->method('buildHTTPClient')
             ->with($credentials)
-            ->andReturn($client);
+            ->willReturn($client);
 
-        $bare_request = Mockery::mock(RequestInterface::class);
+        $bare_request = $this->createMock(RequestInterface::class);
 
         $this->factory
-            ->shouldReceive('createRequest')
+            ->expects(self::once())
+            ->method('createRequest')
             ->with('DELETE', 'https://gitlab.example.com/api/v4/url')
-            ->andReturn($bare_request);
+            ->willReturn($bare_request);
 
-        $request = Mockery::mock(RequestInterface::class);
+        $request = $this->createMock(RequestInterface::class);
 
         $bare_request
-            ->shouldReceive('withHeader')
+            ->expects(self::once())
+            ->method('withHeader')
             ->with('Content-Type', 'application/json')
-            ->andReturn($request);
+            ->willReturn($request);
 
-        $response = Mockery::mock(ResponseInterface::class, [
-            'getStatusCode'   => $status_code,
-            'getReasonPhrase' => $reason,
-        ]);
+        $response = $this->createMock(ResponseInterface::class);
+        $response->method('getStatusCode')->willReturn($status_code);
+        $response->method('getReasonPhrase')->willReturn($reason);
 
         $client_interface
-            ->shouldReceive('sendRequest')
+            ->expects(self::once())
+            ->method('sendRequest')
             ->with($request)
-            ->andReturn($response);
+            ->willReturn($response);
 
         $this->wrapper->deleteUrl($credentials, '/url');
     }
@@ -119,37 +116,40 @@ final class ClientWrapperTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $credentials = CredentialsTestBuilder::get()->build();
 
-        $client_interface = Mockery::mock(ClientInterface::class);
+        $client_interface = $this->createMock(ClientInterface::class);
         $client           = new PluginClient($client_interface);
 
         $this->client_factory
-            ->shouldReceive('buildHTTPClient')
+            ->expects(self::once())
+            ->method('buildHTTPClient')
             ->with($credentials)
-            ->andReturn($client);
+            ->willReturn($client);
 
-        $bare_request = Mockery::mock(RequestInterface::class);
+        $bare_request = $this->createMock(RequestInterface::class);
 
         $this->factory
-            ->shouldReceive('createRequest')
+            ->expects(self::once())
+            ->method('createRequest')
             ->with('DELETE', 'https://gitlab.example.com/api/v4/url')
-            ->andReturn($bare_request);
+            ->willReturn($bare_request);
 
-        $request = Mockery::mock(RequestInterface::class);
+        $request = $this->createMock(RequestInterface::class);
 
         $bare_request
-            ->shouldReceive('withHeader')
+            ->expects(self::once())
+            ->method('withHeader')
             ->with('Content-Type', 'application/json')
-            ->andReturn($request);
+            ->willReturn($request);
 
-        $response = Mockery::mock(ResponseInterface::class, [
-            'getStatusCode'   => $status_code,
-            'getReasonPhrase' => $reason,
-        ]);
+        $response = $this->createMock(ResponseInterface::class);
+        $response->method('getStatusCode')->willReturn($status_code);
+        $response->method('getReasonPhrase')->willReturn($reason);
 
         $client_interface
-            ->shouldReceive('sendRequest')
+            ->expects(self::once())
+            ->method('sendRequest')
             ->with($request)
-            ->andReturn($response);
+            ->willReturn($response);
 
         $this->expectException(GitlabRequestException::class);
 
@@ -160,32 +160,36 @@ final class ClientWrapperTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $credentials = CredentialsTestBuilder::get()->build();
 
-        $client_interface = Mockery::mock(ClientInterface::class);
+        $client_interface = $this->createMock(ClientInterface::class);
         $client           = new PluginClient($client_interface);
 
         $this->client_factory
-            ->shouldReceive('buildHTTPClient')
+            ->expects(self::once())
+            ->method('buildHTTPClient')
             ->with($credentials)
-            ->andReturn($client);
+            ->willReturn($client);
 
-        $bare_request = Mockery::mock(RequestInterface::class);
+        $bare_request = $this->createMock(RequestInterface::class);
 
         $this->factory
-            ->shouldReceive('createRequest')
+            ->expects(self::once())
+            ->method('createRequest')
             ->with('DELETE', 'https://gitlab.example.com/api/v4/url')
-            ->andReturn($bare_request);
+            ->willReturn($bare_request);
 
-        $request = Mockery::mock(RequestInterface::class);
+        $request = $this->createMock(RequestInterface::class);
 
         $bare_request
-            ->shouldReceive('withHeader')
+            ->expects(self::once())
+            ->method('withHeader')
             ->with('Content-Type', 'application/json')
-            ->andReturn($request);
+            ->willReturn($request);
 
         $client_interface
-            ->shouldReceive('sendRequest')
+            ->expects(self::once())
+            ->method('sendRequest')
             ->with($request)
-            ->andThrow(new class extends \Exception implements ClientExceptionInterface {
+            ->willThrowException(new class extends \Exception implements ClientExceptionInterface {
             });
 
         $this->expectException(GitlabRequestException::class);

@@ -70,6 +70,8 @@ class GitlabBranchCrossReferenceEnhancerTest extends TestCase
         self::assertCount(1, $enhanced_reference->additional_badges);
         self::assertEquals('14a9b6c0c0', $enhanced_reference->additional_badges[0]->label);
 
+        self::assertNotNull($enhanced_reference->creation_metadata);
+        self::assertNotNull($enhanced_reference->creation_metadata->created_on);
         self::assertEquals('2020-12-21T14:00:18+01:00', $enhanced_reference->creation_metadata->created_on->date);
         self::assertEquals('21/12/2020 14:00', $enhanced_reference->creation_metadata->created_on->absolute_date);
         self::assertEquals('tooltip', $enhanced_reference->creation_metadata->created_on->placement);

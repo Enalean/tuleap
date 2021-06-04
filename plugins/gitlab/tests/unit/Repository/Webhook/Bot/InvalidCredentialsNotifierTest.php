@@ -22,8 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Gitlab\Repository\Webhook\Bot;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Notification;
 use PFUser;
 use Project;
@@ -37,8 +35,6 @@ use Tuleap\Test\Builders\UserTestBuilder;
 
 class InvalidCredentialsNotifierTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     public function testItDoesNothingIfEmailIsAlreadySent(): void
     {
         $integration = new GitlabRepositoryIntegration(
@@ -54,17 +50,21 @@ class InvalidCredentialsNotifierTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $credentials = CredentialsTestBuilder::get()->withEmailAlreadySent()->build();
 
-        $mail_builder = Mockery::mock(\MailBuilder::class);
-        $mail_builder->shouldReceive('buildAndSendEmail')->never();
+        $mail_builder = $this->createMock(\MailBuilder::class);
+        $mail_builder
+            ->expects(self::never())
+            ->method('buildAndSendEmail');
 
-        $dao = Mockery::mock(IntegrationApiTokenDao::class);
-        $dao->shouldReceive('storeTheFactWeAlreadySendEmailForInvalidToken')->never();
+        $dao = $this->createMock(IntegrationApiTokenDao::class);
+        $dao
+            ->expects(self::never())
+            ->method('storeTheFactWeAlreadySendEmailForInvalidToken');
 
         $notifier = new InvalidCredentialsNotifier(
             $mail_builder,
             new InstanceBaseURLBuilder(),
             $dao,
-            Mockery::mock(LoggerInterface::class),
+            $this->createMock(LoggerInterface::class),
         );
 
         $notifier->notifyGitAdministratorsThatCredentialsAreInvalid($integration, $credentials);
@@ -72,7 +72,8 @@ class InvalidCredentialsNotifierTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItDoesNothingIfGitIsNotActivatedInProject(): void
     {
-        $project = Mockery::mock(Project::class, ['getService' => null]);
+        $project = $this->createMock(Project::class);
+        $project->method('getService')->willReturn(null);
 
         $integration = new GitlabRepositoryIntegration(
             1,
@@ -87,17 +88,21 @@ class InvalidCredentialsNotifierTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $credentials = CredentialsTestBuilder::get()->withoutEmailAlreadySent()->build();
 
-        $mail_builder = Mockery::mock(\MailBuilder::class);
-        $mail_builder->shouldReceive('buildAndSendEmail')->never();
+        $mail_builder = $this->createMock(\MailBuilder::class);
+        $mail_builder
+            ->expects(self::never())
+            ->method('buildAndSendEmail');
 
-        $dao = Mockery::mock(IntegrationApiTokenDao::class);
-        $dao->shouldReceive('storeTheFactWeAlreadySendEmailForInvalidToken')->never();
+        $dao = $this->createMock(IntegrationApiTokenDao::class);
+        $dao
+            ->expects(self::never())
+            ->method('storeTheFactWeAlreadySendEmailForInvalidToken');
 
         $notifier = new InvalidCredentialsNotifier(
             $mail_builder,
             new InstanceBaseURLBuilder(),
             $dao,
-            Mockery::mock(LoggerInterface::class),
+            $this->createMock(LoggerInterface::class),
         );
 
         $notifier->notifyGitAdministratorsThatCredentialsAreInvalid($integration, $credentials);
@@ -114,15 +119,11 @@ class InvalidCredentialsNotifierTest extends \Tuleap\Test\PHPUnit\TestCase
             ->withEmail('cypher@example.com')
             ->build();
 
-        $git_service = Mockery::mock(GitService::class);
-        $project     = Mockery::mock(
-            Project::class,
-            [
-                'getService'           => $git_service,
-                'getAdmins'            => [$admin_1, $admin_2, $admin_3],
-                'getUnixNameLowerCase' => 'reloaded',
-            ]
-        );
+        $git_service = $this->createMock(GitService::class);
+        $project     = $this->createMock(Project::class);
+        $project->method('getService')->willReturn($git_service);
+        $project->method('getAdmins')->willReturn([$admin_1, $admin_2, $admin_3]);
+        $project->method('getUnixNameLowerCase')->willReturn('reloaded');
 
         $integration = new GitlabRepositoryIntegration(
             1,
@@ -135,12 +136,13 @@ class InvalidCredentialsNotifierTest extends \Tuleap\Test\PHPUnit\TestCase
             false
         );
 
-        $mail_builder = Mockery::mock(\MailBuilder::class);
+        $mail_builder = $this->createMock(\MailBuilder::class);
         $mail_builder
-            ->shouldReceive('buildAndSendEmail')
+            ->expects(self::once())
+            ->method('buildAndSendEmail')
             ->with(
                 $project,
-                Mockery::on(
+                $this->callback(
                     function (Notification $notification) {
                         return $notification->getEmails() === ['morpheus@example.com', 'neo@example.com']
                             && $notification->getSubject() === 'Invalid GitLab credentials'
@@ -149,24 +151,25 @@ class InvalidCredentialsNotifierTest extends \Tuleap\Test\PHPUnit\TestCase
                             && $notification->getServiceName() === 'Git';
                     }
                 ),
-                Mockery::type(\MailEnhancer::class),
-            )
-            ->once();
+                self::isInstanceOf(\MailEnhancer::class),
+            );
 
-        $dao = Mockery::mock(IntegrationApiTokenDao::class);
+        $dao = $this->createMock(IntegrationApiTokenDao::class);
         $dao
-            ->shouldReceive('storeTheFactWeAlreadySendEmailForInvalidToken')
-            ->with(1)
-            ->once();
+            ->expects(self::once())
+            ->method('storeTheFactWeAlreadySendEmailForInvalidToken')
+            ->with(1);
 
-        $logger = Mockery::mock(LoggerInterface::class);
+        $logger = $this->createMock(LoggerInterface::class);
         $logger
-            ->shouldReceive('info')
-            ->with('Notification has been sent to project administrators to warn them that the token appears to be invalid')
-            ->once();
+            ->expects(self::once())
+            ->method('info')
+            ->with('Notification has been sent to project administrators to warn them that the token appears to be invalid');
 
-        $instance_base_url = Mockery::mock(InstanceBaseURLBuilder::class, ['build' => 'https://tuleap.example.com']);
-        $notifier          = new InvalidCredentialsNotifier(
+        $instance_base_url = $this->createMock(InstanceBaseURLBuilder::class);
+        $instance_base_url->method('build')->willReturn('https://tuleap.example.com');
+
+        $notifier = new InvalidCredentialsNotifier(
             $mail_builder,
             $instance_base_url,
             $dao,

@@ -30,7 +30,7 @@ class GitlabBranchFactoryTest extends TestCase
 {
     private GitlabBranchFactory $factory;
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|BranchInfoDao
+     * @var \PHPUnit\Framework\MockObject\MockObject&BranchInfoDao
      */
     private $dao;
 
@@ -62,8 +62,10 @@ class GitlabBranchFactoryTest extends TestCase
             'dev_tuleap-123'
         );
 
+        self::assertNotNull($gitlab_branch);
         self::assertSame('dev_tuleap-123', $gitlab_branch->getBranchName());
         self::assertSame('11645a413d7af2995cd92e40bf387e39d06d0e61', $gitlab_branch->getCommitSha1());
+        self::assertNotNull($gitlab_branch->getLastPushDate());
         self::assertSame(1608555618, $gitlab_branch->getLastPushDate()->getTimestamp());
     }
 
@@ -86,6 +88,7 @@ class GitlabBranchFactoryTest extends TestCase
             'dev_tuleap-123'
         );
 
+        self::assertNotNull($gitlab_branch);
         self::assertSame('dev_tuleap-123', $gitlab_branch->getBranchName());
         self::assertSame('11645a413d7af2995cd92e40bf387e39d06d0e61', $gitlab_branch->getCommitSha1());
         self::assertNull($gitlab_branch->getLastPushDate());

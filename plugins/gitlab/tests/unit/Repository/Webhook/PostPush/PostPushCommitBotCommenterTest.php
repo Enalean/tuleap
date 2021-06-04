@@ -22,14 +22,11 @@ declare(strict_types=1);
 
 namespace Tuleap\Gitlab\Repository\Webhook\PostPush;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Psr\Log\LoggerInterface;
 use TemplateRendererFactory;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\Gitlab\API\ClientWrapper;
 use Tuleap\Gitlab\API\GitlabRequestException;
-use Tuleap\Gitlab\Artifact\ArtifactRetriever;
 use Tuleap\Gitlab\Repository\GitlabRepositoryIntegration;
 use Tuleap\Gitlab\Repository\Webhook\Bot\BotCommentReferencePresenter;
 use Tuleap\Gitlab\Repository\Webhook\Bot\BotCommentReferencePresenterBuilder;
@@ -38,67 +35,58 @@ use Tuleap\Gitlab\Repository\Webhook\Bot\CredentialsRetriever;
 use Tuleap\Gitlab\Repository\Webhook\Bot\InvalidCredentialsNotifier;
 use Tuleap\Gitlab\Repository\Webhook\WebhookTuleapReference;
 use Tuleap\Gitlab\Test\Builder\CredentialsTestBuilder;
-use Tuleap\InstanceBaseURLBuilder;
 use Tuleap\Templating\TemplateCache;
 
 class PostPushCommitBotCommenterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
     use ForgeConfigSandbox;
 
     /**
-     * @var PostPushCommitBotCommenter
-     */
-    private $commenter;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ClientWrapper
+     * @var \PHPUnit\Framework\MockObject\MockObject&ClientWrapper
      */
     private $client_wrapper;
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|CredentialsRetriever
+     * @var \PHPUnit\Framework\MockObject\MockObject&CredentialsRetriever
      */
     private $credentials_retriever;
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|LoggerInterface
+     * @var \PHPUnit\Framework\MockObject\MockObject&LoggerInterface
      */
     private $logger;
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|PostPushCommitWebhookData
+     * @var \PHPUnit\Framework\MockObject\MockObject&PostPushCommitWebhookData
      */
     private $webhook_data;
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|GitlabRepositoryIntegration
+     * @var \PHPUnit\Framework\MockObject\MockObject&GitlabRepositoryIntegration
      */
     private $gitlab_repository;
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|InstanceBaseURLBuilder
+     * @var \PHPUnit\Framework\MockObject\MockObject&BotCommentReferencePresenterBuilder
      */
     private $bot_comment_reference_presenter_builder;
-    /**
-     * @var TemplateRendererFactory
-     */
-    private $template_factory;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ArtifactRetriever
-     */
-    private $artifact_retriever;
+
+    private TemplateRendererFactory $template_factory;
+    private PostPushCommitBotCommenter $commenter;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->client_wrapper                          = Mockery::mock(ClientWrapper::class);
-        $this->credentials_retriever                   = Mockery::mock(CredentialsRetriever::class);
-        $this->logger                                  = Mockery::mock(LoggerInterface::class);
-        $this->webhook_data                            = Mockery::mock(PostPushCommitWebhookData::class);
-        $this->gitlab_repository                       = Mockery::mock(GitlabRepositoryIntegration::class);
-        $this->bot_comment_reference_presenter_builder = Mockery::mock(BotCommentReferencePresenterBuilder::class);
+        $this->client_wrapper                          = $this->createMock(ClientWrapper::class);
+        $this->credentials_retriever                   = $this->createMock(CredentialsRetriever::class);
+        $this->logger                                  = $this->createMock(LoggerInterface::class);
+        $this->webhook_data                            = $this->createMock(PostPushCommitWebhookData::class);
+        $this->gitlab_repository                       = $this->createMock(GitlabRepositoryIntegration::class);
+        $this->bot_comment_reference_presenter_builder = $this->createMock(BotCommentReferencePresenterBuilder::class);
 
-        $template_cache         = \Mockery::mock(TemplateCache::class, ['getPath' => null]);
+        $template_cache = $this->createMock(TemplateCache::class);
+        $template_cache->method('getPath')->willReturn(null);
+
         $this->template_factory = new TemplateRendererFactory($template_cache);
 
         $this->commenter = new PostPushCommitBotCommenter(
-            new CommentSender($this->client_wrapper, Mockery::mock(InvalidCredentialsNotifier::class)),
+            new CommentSender($this->client_wrapper, $this->createMock(InvalidCredentialsNotifier::class)),
             $this->credentials_retriever,
             $this->logger,
             $this->bot_comment_reference_presenter_builder,
@@ -108,9 +96,17 @@ class PostPushCommitBotCommenterTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testNothingHappenIfNoReferences(): void
     {
-        $this->credentials_retriever->shouldReceive('getCredentials')->never();
-        $this->logger->shouldReceive('debug')->never();
-        $this->client_wrapper->shouldReceive('postUrl')->never();
+        $this->credentials_retriever
+            ->expects(self::never())
+            ->method('getCredentials');
+
+        $this->logger
+            ->expects(self::never())
+            ->method('debug');
+
+        $this->client_wrapper
+            ->expects(self::never())
+            ->method('postUrl');
 
         $this->commenter->addCommentOnCommit($this->webhook_data, $this->gitlab_repository, []);
     }
@@ -118,22 +114,24 @@ class PostPushCommitBotCommenterTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testNothingHappenIfNoCredentialsRetrieved(): void
     {
         $this->webhook_data
-            ->shouldReceive("getSha1")
-            ->andReturn("azer12563")
-            ->once();
+            ->expects(self::once())
+            ->method("getSha1")
+            ->willReturn("azer12563");
 
         $this->logger
-            ->shouldReceive("debug")
-            ->with("Comment can't be added on commit #azer12563 because there is no bot API token.")
-            ->once();
+            ->expects(self::once())
+            ->method("debug")
+            ->with("Comment can't be added on commit #azer12563 because there is no bot API token.");
 
         $this->credentials_retriever
-            ->shouldReceive('getCredentials')
+            ->expects(self::once())
+            ->method('getCredentials')
             ->with($this->gitlab_repository)
-            ->andReturnNull()
-            ->once();
+            ->willReturn(null);
 
-        $this->client_wrapper->shouldReceive('postUrl')->never();
+        $this->client_wrapper
+            ->expects(self::never())
+            ->method('postUrl');
 
         $this->commenter->addCommentOnCommit(
             $this->webhook_data,
@@ -145,22 +143,22 @@ class PostPushCommitBotCommenterTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testClientWrapperThrowErrorAndLogIt(): void
     {
         $this->webhook_data
-            ->shouldReceive("getSha1")
-            ->andReturn("azer12563")
-            ->twice();
+            ->expects(self::exactly(2))
+            ->method("getSha1")
+            ->willReturn("azer12563");
 
         $this->gitlab_repository
-            ->shouldReceive('getGitlabRepositoryId')
-            ->andReturn(4)
-            ->once();
+            ->expects(self::once())
+            ->method('getGitlabRepositoryId')
+            ->willReturn(4);
 
         $credentials = CredentialsTestBuilder::get()->build();
 
         $this->credentials_retriever
-            ->shouldReceive('getCredentials')
+            ->expects(self::once())
+            ->method('getCredentials')
             ->with($this->gitlab_repository)
-            ->andReturn($credentials)
-            ->once();
+            ->willReturn($credentials);
 
         $references = [
             new WebhookTuleapReference(123),
@@ -173,28 +171,27 @@ class PostPushCommitBotCommenterTest extends \Tuleap\Test\PHPUnit\TestCase
         ];
 
         $this->bot_comment_reference_presenter_builder
-            ->shouldReceive('build')
+            ->expects(self::once())
+            ->method('build')
             ->with($references)
-            ->andReturn($references_presenter)
-            ->once();
+            ->willReturn($references_presenter);
 
         $url     = "/projects/4/repository/commits/azer12563/comments";
         $comment = "\nThis commit references:\n * [TULEAP-123](https://example.fr)\n * [TULEAP-59](https://example.fr)\n";
 
         $this->client_wrapper
-            ->shouldReceive('postUrl')
+            ->expects(self::once())
+            ->method('postUrl')
             ->with($credentials, $url, ["note" => $comment])
-            ->once()
-            ->andThrow(new GitlabRequestException(404, "not found"));
+            ->willThrowException(new GitlabRequestException(404, "not found"));
 
         $this->logger
-            ->shouldReceive('error')
-            ->with("An error occurred during automatically comment commit #azer12563")
-            ->once();
-        $this->logger
-            ->shouldReceive('error')
-            ->with("|  |_Error returned by the GitLab server: not found")
-            ->once();
+            ->expects(self::exactly(2))
+            ->method('error')
+            ->withConsecutive(
+                ["An error occurred during automatically comment commit #azer12563"],
+                ["|  |_Error returned by the GitLab server: not found"],
+            );
 
         $this->commenter->addCommentOnCommit(
             $this->webhook_data,
@@ -206,22 +203,22 @@ class PostPushCommitBotCommenterTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testPOSTCommentOnCommit(): void
     {
         $this->webhook_data
-            ->shouldReceive("getSha1")
-            ->andReturn("azer12563")
-            ->twice();
+            ->expects(self::exactly(2))
+            ->method("getSha1")
+            ->willReturn("azer12563");
 
         $this->gitlab_repository
-            ->shouldReceive('getGitlabRepositoryId')
-            ->andReturn(4)
-            ->once();
+            ->expects(self::once())
+            ->method('getGitlabRepositoryId')
+            ->willReturn(4);
 
         $credentials = CredentialsTestBuilder::get()->build();
 
         $this->credentials_retriever
-            ->shouldReceive('getCredentials')
+            ->expects(self::once())
+            ->method('getCredentials')
             ->with($this->gitlab_repository)
-            ->andReturn($credentials)
-            ->once();
+            ->willReturn($credentials);
 
         $references = [
             new WebhookTuleapReference(123),
@@ -232,23 +229,23 @@ class PostPushCommitBotCommenterTest extends \Tuleap\Test\PHPUnit\TestCase
         ];
 
         $this->bot_comment_reference_presenter_builder
-            ->shouldReceive('build')
+            ->expects(self::once())
+            ->method('build')
             ->with($references)
-            ->andReturn($references_presenter)
-            ->once();
+            ->willReturn($references_presenter);
 
         $url     = "/projects/4/repository/commits/azer12563/comments";
         $comment = "This commit references: [TULEAP-123](https://example.fr).\n";
 
         $this->client_wrapper
-            ->shouldReceive('postUrl')
-            ->with($credentials, $url, ["note" => $comment])
-            ->once();
+            ->expects(self::once())
+            ->method('postUrl')
+            ->with($credentials, $url, ["note" => $comment]);
 
         $this->logger
-            ->shouldReceive("debug")
-            ->with("Comment was successfully added on commit #azer12563")
-            ->once();
+            ->expects(self::once())
+            ->method("debug")
+            ->with("Comment was successfully added on commit #azer12563");
 
         $this->commenter->addCommentOnCommit(
             $this->webhook_data,

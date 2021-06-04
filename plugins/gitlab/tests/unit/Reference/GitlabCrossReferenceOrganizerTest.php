@@ -92,11 +92,11 @@ class GitlabCrossReferenceOrganizerTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $gitlab_tag_factory;
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|GitlabBranchFactory
+     * @var \PHPUnit\Framework\MockObject\MockObject&GitlabBranchFactory
      */
     private $gitlab_branch_factory;
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|GitlabBranchCrossReferenceEnhancer
+     * @var \PHPUnit\Framework\MockObject\MockObject&GitlabBranchCrossReferenceEnhancer
      */
     private $gitlab_branch_cross_reference_enhancer;
 

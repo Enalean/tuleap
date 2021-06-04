@@ -22,31 +22,27 @@ declare(strict_types=1);
 namespace Tuleap\Gitlab\Reference;
 
 use EventManager;
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use ReferenceManager;
 
 class TuleapReferenceRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ReferenceManager
-     */
-    private $reference_manager;
-    /**
-     * @var EventManager|Mockery\LegacyMockInterface|Mockery\MockInterface
-     */
-    private $event_manager;
     /**
      * @var TuleapReferenceRetriever
      */
     private $tuleap_reference_retriever;
+    /**
+     * @var \PHPUnit\Framework\MockObject\MockObject&ReferenceManager
+     */
+    private $reference_manager;
+    /**
+     * @var \PHPUnit\Framework\MockObject\MockObject&EventManager
+     */
+    private $event_manager;
 
     protected function setUp(): void
     {
-        $this->reference_manager          = Mockery::mock(ReferenceManager::class);
-        $this->event_manager              = Mockery::mock(EventManager::class);
+        $this->reference_manager          = $this->createMock(ReferenceManager::class);
+        $this->event_manager              = $this->createMock(EventManager::class);
         $this->tuleap_reference_retriever = new TuleapReferenceRetriever(
             $this->event_manager,
             $this->reference_manager
@@ -56,11 +52,12 @@ class TuleapReferenceRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItThrowsAnErrorWhenTheArtifactCantBeFound(): void
     {
         $this->expectException(TuleapReferencedArtifactNotFoundException::class);
-        $this->event_manager->shouldReceive('processEvent')
-            ->once()
+        $this->event_manager
+            ->expects(self::once())
+            ->method('processEvent')
             ->with(
                 'get_artifact_reference_group_id',
-                Mockery::on(function (array &$params) {
+                $this->callback(function (array $params) {
                     $params['artifact_id'] = 100;
                     $params['group_id']    = null;
                     return true;
@@ -73,33 +70,36 @@ class TuleapReferenceRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItThrowsAnErrorWhenTheArtifactReferenceCantBeFound(): void
     {
         $this->expectException(TuleapReferenceNotFoundException::class);
-        $this->event_manager->shouldReceive('processEvent')
-            ->once()
+        $this->event_manager
+            ->expects(self::once())
+            ->method('processEvent')
             ->with(
                 'get_artifact_reference_group_id',
-                Mockery::on(function (array &$params) {
+                $this->callback(function (array $params) {
                     $params['artifact_id'] = 100;
                     $params['group_id']    = "101";
                     return true;
                 })
             );
 
-        $this->reference_manager->shouldReceive('loadReferenceFromKeyword')
+        $this->reference_manager
+            ->method('loadReferenceFromKeyword')
             ->with('art', 100)
-            ->andReturn(null);
+            ->willReturn(null);
 
         $this->tuleap_reference_retriever->retrieveTuleapReference(100);
     }
 
     public function testItReturnsTheReference(): void
     {
-        $this->event_manager->shouldReceive('processEvent')
-            ->once()
+        $this->event_manager
+            ->expects(self::once())
+            ->method('processEvent')
             ->with(
                 'get_artifact_reference_group_id',
-                Mockery::on(function (array &$params) {
+                $this->callback(function (array $params) {
                     $params['artifact_id'] = 100;
-                    $params['group_id']    = "101";
+                    $params['group_id']    = "102";
                     return true;
                 })
             );
@@ -115,11 +115,19 @@ class TuleapReferenceRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             1,
             101
         );
-        $this->reference_manager->shouldReceive('loadReferenceFromKeyword')
+        $this->reference_manager
+            ->method('loadReferenceFromKeyword')
             ->with('art', 100)
-            ->andReturn($reference);
+            ->willReturn($reference);
+
         $retrieved_reference = $this->tuleap_reference_retriever->retrieveTuleapReference(100);
 
-        self::assertSame($reference, $retrieved_reference);
+        self::assertSame(0, $retrieved_reference->getId());
+        self::assertSame(102, $retrieved_reference->getGroupId());
+        self::assertSame('key', $retrieved_reference->getKeyword());
+        self::assertSame('desc', $retrieved_reference->getDescription());
+        self::assertSame('link', $retrieved_reference->getLink());
+        self::assertSame('service_short_name', $retrieved_reference->getServiceShortName());
+        self::assertSame('nature', $retrieved_reference->getNature());
     }
 }

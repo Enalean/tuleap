@@ -22,8 +22,6 @@ declare(strict_types=1);
 namespace Tuleap\Gitlab\Repository;
 
 use DateTimeImmutable;
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Project;
 use Tuleap\Gitlab\API\Credentials;
 use Tuleap\Gitlab\API\GitlabProject;
@@ -34,33 +32,14 @@ use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 
 class GitlabRepositoryCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     /**
      * @var GitlabRepositoryCreator
      */
     private $creator;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|GitlabRepositoryIntegrationFactory
-     */
-    private $repository_integration_factory;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|GitlabRepositoryIntegrationDao
-     */
-    private $repository_integration_dao;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|WebhookCreator
-     */
-    private $webhook_creator;
-
     /**
      * @var GitlabProject
      */
     private $gitlab_project;
-
     /**
      * @var Project
      */
@@ -70,7 +49,19 @@ class GitlabRepositoryCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $credentials;
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|IntegrationApiTokenInserter
+     * @var \PHPUnit\Framework\MockObject\MockObject&GitlabRepositoryIntegrationFactory
+     */
+    private $repository_integration_factory;
+    /**
+     * @var \PHPUnit\Framework\MockObject\MockObject&GitlabRepositoryIntegrationDao
+     */
+    private $repository_integration_dao;
+    /**
+     * @var \PHPUnit\Framework\MockObject\MockObject&WebhookCreator
+     */
+    private $webhook_creator;
+    /**
+     * @var \PHPUnit\Framework\MockObject\MockObject&IntegrationApiTokenInserter
      */
     private $token_inserter;
 
@@ -78,10 +69,10 @@ class GitlabRepositoryCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         parent::setUp();
 
-        $this->repository_integration_factory = Mockery::mock(GitlabRepositoryIntegrationFactory::class);
-        $this->repository_integration_dao     = Mockery::mock(GitlabRepositoryIntegrationDao::class);
-        $this->webhook_creator                = Mockery::mock(WebhookCreator::class);
-        $this->token_inserter                 = Mockery::mock(IntegrationApiTokenInserter::class);
+        $this->repository_integration_factory = $this->createMock(GitlabRepositoryIntegrationFactory::class);
+        $this->repository_integration_dao     = $this->createMock(GitlabRepositoryIntegrationDao::class);
+        $this->webhook_creator                = $this->createMock(WebhookCreator::class);
+        $this->token_inserter                 = $this->createMock(IntegrationApiTokenInserter::class);
 
         $this->credentials = CredentialsTestBuilder::get()->build();
 
@@ -107,14 +98,14 @@ class GitlabRepositoryCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItThrowsAnExceptionIfARepositoryWithSameNameAlreadyIntegratedInProject(): void
     {
-        $this->repository_integration_dao->shouldReceive('isAGitlabRepositoryWithSameNameAlreadyIntegratedInProject')
-            ->once()
-            ->andReturnTrue();
+        $this->repository_integration_dao
+            ->expects(self::once())
+            ->method('isAGitlabRepositoryWithSameNameAlreadyIntegratedInProject')
+            ->willReturn(true);
 
-        $this->repository_integration_factory->shouldNotReceive('getGitlabRepositoryByGitlabRepositoryIdAndPath');
-        $this->repository_integration_dao->shouldNotReceive('createGitlabRepository');
-        $this->repository_integration_factory->shouldNotReceive('getGitlabRepositoryByGitlabProjectAndIntegrationId');
-        $this->webhook_creator->shouldNotReceive('addWebhookInGitlabProject');
+        $this->repository_integration_factory->expects(self::never())->method('createRepositoryIntegration');
+        $this->webhook_creator->expects(self::never())->method('generateWebhookInGitlabProject');
+        $this->token_inserter->expects(self::never())->method('insertToken');
 
         $this->expectException(GitlabRepositoryWithSameNameAlreadyIntegratedInProjectException::class);
 
@@ -128,18 +119,20 @@ class GitlabRepositoryCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItThrowsAnExceptionIfRepositoryIsAlreadyIntegratedInProject(): void
     {
-        $this->repository_integration_dao->shouldReceive('isAGitlabRepositoryWithSameNameAlreadyIntegratedInProject')
-            ->once()
-            ->andReturnFalse();
+        $this->repository_integration_dao
+            ->expects(self::once())
+            ->method('isAGitlabRepositoryWithSameNameAlreadyIntegratedInProject')
+            ->willReturn(false);
 
-        $this->repository_integration_dao->shouldReceive('isTheGitlabRepositoryAlreadyIntegratedInProject')
-            ->once()
+        $this->repository_integration_dao
+            ->expects(self::once())
+            ->method('isTheGitlabRepositoryAlreadyIntegratedInProject')
             ->with(101, 12569, 'https://example.com/root/project01')
-            ->andReturnTrue();
+            ->willReturn(true);
 
-        $this->repository_integration_dao->shouldNotReceive('createGitlabRepository');
-        $this->repository_integration_factory->shouldNotReceive('getGitlabRepositoryByGitlabProjectAndIntegrationId');
-        $this->webhook_creator->shouldNotReceive('addWebhookInGitlabProject');
+        $this->repository_integration_factory->expects(self::never())->method('createRepositoryIntegration');
+        $this->webhook_creator->expects(self::never())->method('generateWebhookInGitlabProject');
+        $this->token_inserter->expects(self::never())->method('insertToken');
 
         $this->expectException(GitlabRepositoryAlreadyIntegratedInProjectException::class);
 
@@ -155,29 +148,33 @@ class GitlabRepositoryCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $configuration = GitlabRepositoryCreatorConfiguration::buildDefaultConfiguration();
 
-        $this->repository_integration_dao->shouldReceive('isAGitlabRepositoryWithSameNameAlreadyIntegratedInProject')
-            ->once()
-            ->andReturnFalse();
+        $this->repository_integration_dao
+            ->expects(self::once())
+            ->method('isAGitlabRepositoryWithSameNameAlreadyIntegratedInProject')
+            ->willReturn(false);
 
-        $this->repository_integration_dao->shouldReceive('isTheGitlabRepositoryAlreadyIntegratedInProject')
-            ->once()
+        $this->repository_integration_dao
+            ->expects(self::once())
+            ->method('isTheGitlabRepositoryAlreadyIntegratedInProject')
             ->with(101, 12569, 'https://example.com/root/project01')
-            ->andReturnFalse();
+            ->willReturn(false);
 
         $integration = $this->buildGitlabRepositoryIntegration();
-        $this->repository_integration_factory->shouldReceive('createRepositoryIntegration')
-            ->once()
+        $this->repository_integration_factory
+            ->expects(self::once())
+            ->method('createRepositoryIntegration')
             ->with($this->gitlab_project, $this->project, $configuration)
-            ->andReturn($integration);
+            ->willReturn($integration);
 
-        $this->webhook_creator->shouldReceive('generateWebhookInGitlabProject')
-            ->once()
+        $this->webhook_creator
+            ->expects(self::once())
+            ->method('generateWebhookInGitlabProject')
             ->with($this->credentials, $integration);
 
         $this->token_inserter
-            ->shouldReceive('insertToken')
-            ->with($integration, $this->credentials->getBotApiToken()->getToken())
-            ->once();
+            ->expects(self::once())
+            ->method('insertToken')
+            ->with($integration, $this->credentials->getBotApiToken()->getToken());
 
         $result = $this->creator->integrateGitlabRepositoryInProject(
             $this->credentials,

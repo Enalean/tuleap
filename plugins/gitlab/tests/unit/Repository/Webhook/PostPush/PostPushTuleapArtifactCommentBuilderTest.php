@@ -56,8 +56,10 @@ final class PostPushTuleapArtifactCommentBuilderTest extends TestCase
             false
         );
 
-        $artifact = new Artifact(10, 1, 'submitter', 10050, false);
-        $comment  = PostPushTuleapArtifactCommentBuilder::buildComment(
+        $submitted_by = 101;
+        $artifact     = new Artifact(10, 1, $submitted_by, 10050, false);
+
+        $comment = PostPushTuleapArtifactCommentBuilder::buildComment(
             "user",
             $commit,
             $reference,
@@ -92,8 +94,10 @@ final class PostPushTuleapArtifactCommentBuilderTest extends TestCase
             false
         );
 
-        $artifact = new Artifact(10, 1, 'submitter', 10050, false);
-        $comment  = PostPushTuleapArtifactCommentBuilder::buildComment(
+        $submitted_by = 101;
+        $artifact     = new Artifact(10, 1, $submitted_by, 10050, false);
+
+        $comment = PostPushTuleapArtifactCommentBuilder::buildComment(
             "user",
             $commit,
             $reference,
@@ -127,8 +131,10 @@ final class PostPushTuleapArtifactCommentBuilderTest extends TestCase
             false
         );
 
-        $artifact = new Artifact(10, 1, 'submitter', 10050, false);
-        $comment  = PostPushTuleapArtifactCommentBuilder::buildComment(
+        $submitted_by = 101;
+        $artifact     = new Artifact(10, 1, $submitted_by, 10050, false);
+
+        $comment = PostPushTuleapArtifactCommentBuilder::buildComment(
             "user",
             $commit,
             $reference,
@@ -162,8 +168,10 @@ final class PostPushTuleapArtifactCommentBuilderTest extends TestCase
             false
         );
 
-        $artifact = new Artifact(10, 1, 'submitter', 10050, false);
-        $comment  = PostPushTuleapArtifactCommentBuilder::buildComment(
+        $submitted_by = 101;
+        $artifact     = new Artifact(10, 1, $submitted_by, 10050, false);
+
+        $comment = PostPushTuleapArtifactCommentBuilder::buildComment(
             "user",
             $commit,
             $reference,

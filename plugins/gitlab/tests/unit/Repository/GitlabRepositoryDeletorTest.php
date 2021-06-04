@@ -24,8 +24,6 @@ namespace Tuleap\Gitlab\Repository;
 use DateTimeImmutable;
 use GitPermissionsManager;
 use GitUserNotAdminException;
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
 use Project;
 use Tuleap\Gitlab\Repository\Token\IntegrationApiTokenDao;
@@ -40,85 +38,77 @@ use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 
 class GitlabRepositoryDeletorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     /**
      * @var GitlabRepositoryDeletor
      */
     private $deletor;
-
-    /**
-     * @var GitPermissionsManager|Mockery\LegacyMockInterface|Mockery\MockInterface
-     */
-    private $git_permissions_manager;
-
     /**
      * @var DBTransactionExecutorPassthrough
      */
     private $db_transaction_executor;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|GitlabRepositoryIntegrationDao
-     */
-    private $repository_integration_dao;
-
     /**
      * @var Project
      */
     private $project;
-
     /**
      * @var GitlabRepositoryIntegration
      */
     private $gitlab_repository_integration;
-
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|PFUser
+     * @var \PHPUnit\Framework\MockObject\MockObject&GitPermissionsManager
      */
-    private $user;
+    private $git_permissions_manager;
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|IntegrationApiTokenDao
-     */
-    private $integration_api_token_dao;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|CommitTuleapReferenceDao
-     */
-    private $commit_tuleap_reference_dao;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|MergeRequestTuleapReferenceDao
-     */
-    private $merge_request_dao;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|WebhookDeletor
+     * @var \PHPUnit\Framework\MockObject\MockObject&WebhookDeletor
      */
     private $webhook_deletor;
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|CredentialsRetriever
+     * @var \PHPUnit\Framework\MockObject\MockObject&CommitTuleapReferenceDao
      */
-    private $credentials_retriever;
+    private $commit_tuleap_reference_dao;
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|TagInfoDao
+     * @var \PHPUnit\Framework\MockObject\MockObject&GitlabRepositoryIntegrationDao
+     */
+    private $repository_integration_dao;
+    /**
+     * @var \PHPUnit\Framework\MockObject\MockObject&IntegrationApiTokenDao
+     */
+    private $integration_api_token_dao;
+    /**
+     * @var \PHPUnit\Framework\MockObject\MockObject&MergeRequestTuleapReferenceDao
+     */
+    private $merge_request_dao;
+    /**
+     * @var \PHPUnit\Framework\MockObject\MockObject&TagInfoDao
      */
     private $tag_info_dao;
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|BranchInfoDao
+     * @var \PHPUnit\Framework\MockObject\MockObject&CredentialsRetriever
+     */
+    private $credentials_retriever;
+    /**
+     * @var \PHPUnit\Framework\MockObject\MockObject&BranchInfoDao
      */
     private $branch_info_dao;
+    /**
+     * @var \PHPUnit\Framework\MockObject\MockObject&PFUser
+     */
+    private $user;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->git_permissions_manager     = Mockery::mock(GitPermissionsManager::class);
+        $this->git_permissions_manager     = $this->createMock(GitPermissionsManager::class);
         $this->db_transaction_executor     = new DBTransactionExecutorPassthrough();
-        $this->webhook_deletor             = Mockery::mock(WebhookDeletor::class);
-        $this->commit_tuleap_reference_dao = Mockery::mock(CommitTuleapReferenceDao::class);
-        $this->repository_integration_dao  = Mockery::mock(GitlabRepositoryIntegrationDao::class);
-        $this->integration_api_token_dao   = Mockery::mock(IntegrationApiTokenDao::class);
-        $this->merge_request_dao           = Mockery::mock(MergeRequestTuleapReferenceDao::class);
-        $this->tag_info_dao                = Mockery::mock(TagInfoDao::class);
-        $this->credentials_retriever       = Mockery::mock(CredentialsRetriever::class);
-        $this->branch_info_dao             = Mockery::mock(BranchInfoDao::class);
+        $this->webhook_deletor             = $this->createMock(WebhookDeletor::class);
+        $this->commit_tuleap_reference_dao = $this->createMock(CommitTuleapReferenceDao::class);
+        $this->repository_integration_dao  = $this->createMock(GitlabRepositoryIntegrationDao::class);
+        $this->integration_api_token_dao   = $this->createMock(IntegrationApiTokenDao::class);
+        $this->merge_request_dao           = $this->createMock(MergeRequestTuleapReferenceDao::class);
+        $this->tag_info_dao                = $this->createMock(TagInfoDao::class);
+        $this->credentials_retriever       = $this->createMock(CredentialsRetriever::class);
+        $this->branch_info_dao             = $this->createMock(BranchInfoDao::class);
 
         $this->deletor = new GitlabRepositoryDeletor(
             $this->git_permissions_manager,
@@ -134,7 +124,7 @@ class GitlabRepositoryDeletorTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $this->project = Project::buildForTest();
-        $this->user    = Mockery::mock(PFUser::class);
+        $this->user    = $this->createMock(PFUser::class);
 
         $this->gitlab_repository_integration = new GitlabRepositoryIntegration(
             1,
@@ -150,10 +140,11 @@ class GitlabRepositoryDeletorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItThrowsAnExceptionIfUserIsNotGitAdministrator(): void
     {
-        $this->git_permissions_manager->shouldReceive('userIsGitAdmin')
-            ->once()
+        $this->git_permissions_manager
+            ->expects(self::once())
+            ->method('userIsGitAdmin')
             ->with($this->user, $this->project)
-            ->andReturnFalse();
+            ->willReturn(false);
 
         $this->expectException(GitUserNotAdminException::class);
 
@@ -165,34 +156,45 @@ class GitlabRepositoryDeletorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItDeletesAllIntegrationData(): void
     {
-        $this->git_permissions_manager->shouldReceive('userIsGitAdmin')
-            ->once()
+        $this->git_permissions_manager
+            ->expects(self::once())
+            ->method('userIsGitAdmin')
             ->with($this->user, $this->project)
-            ->andReturnTrue();
+            ->willReturn(true);
 
         $credentials = CredentialsTestBuilder::get()->build();
 
         $this->credentials_retriever
-            ->shouldReceive('getCredentials')
-            ->andReturn($credentials)
-            ->once();
+            ->expects(self::once())
+            ->method('getCredentials')
+            ->willReturn($credentials);
 
         $this->webhook_deletor
-            ->shouldReceive('deleteGitlabWebhookFromGitlabRepository')
-            ->once()
+            ->expects(self::once())
+            ->method('deleteGitlabWebhookFromGitlabRepository')
             ->with($credentials, $this->gitlab_repository_integration);
 
-        $this->repository_integration_dao->shouldReceive('deleteIntegration')->once();
-        $this->integration_api_token_dao->shouldReceive('deleteIntegrationToken')->once();
+        $this->repository_integration_dao
+            ->expects(self::once())
+            ->method('deleteIntegration');
+        $this->integration_api_token_dao
+            ->expects(self::once())
+            ->method('deleteIntegrationToken');
 
         $this->commit_tuleap_reference_dao
-            ->shouldReceive('deleteCommitsInIntegration')
-            ->with("root/repo01", 1, 101)
-            ->once();
+            ->expects(self::once())
+            ->method('deleteCommitsInIntegration')
+            ->with("root/repo01", 1, 101);
 
-        $this->merge_request_dao->shouldReceive('deleteAllMergeRequestInIntegration')->once();
-        $this->tag_info_dao->shouldReceive('deleteTagsInIntegration')->once();
-        $this->branch_info_dao->shouldReceive('deleteBranchesInIntegration')->once();
+        $this->merge_request_dao
+            ->expects(self::once())
+            ->method('deleteAllMergeRequestInIntegration');
+        $this->tag_info_dao
+            ->expects(self::once())
+            ->method('deleteTagsInIntegration');
+        $this->branch_info_dao
+            ->expects(self::once())
+            ->method('deleteBranchesInIntegration');
 
         $this->deletor->deleteRepositoryIntegration(
             $this->gitlab_repository_integration,

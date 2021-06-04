@@ -22,8 +22,6 @@ declare(strict_types=1);
 namespace Tuleap\Gitlab\Repository\Webhook;
 
 use DateTimeImmutable;
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Project;
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\Gitlab\Repository\GitlabRepositoryIntegration;
@@ -36,22 +34,13 @@ use Tuleap\Http\Server\NullServerRequest;
 
 class SecretCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     /**
-     * @var GitlabRepositoryIntegration
-     */
-    private $gitlab_repository_integration;
-
-    /**
-     * @var SecretChecker
-     */
-    private $secret_checker;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|SecretRetriever
+     * @var \PHPUnit\Framework\MockObject\MockObject&SecretRetriever
      */
     private $secret_retriever;
+
+    private GitlabRepositoryIntegration $gitlab_repository_integration;
+    private SecretChecker $secret_checker;
 
     protected function setUp(): void
     {
@@ -66,7 +55,7 @@ class SecretCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
             false
         );
 
-        $this->secret_retriever = Mockery::mock(SecretRetriever::class);
+        $this->secret_retriever = $this->createMock(SecretRetriever::class);
 
         $this->secret_checker = new SecretChecker(
             $this->secret_retriever
@@ -102,10 +91,11 @@ class SecretCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
                 'secret'
             );
 
-        $this->secret_retriever->shouldReceive('getWebhookSecretForRepository')
-            ->once()
+        $this->secret_retriever
+            ->expects(self::once())
+            ->method('getWebhookSecretForRepository')
             ->with($this->gitlab_repository_integration)
-            ->andReturn(new ConcealedString('anotherSecret'));
+            ->willReturn(new ConcealedString('anotherSecret'));
 
         $this->expectException(SecretHeaderNotMatchingException::class);
 
@@ -128,16 +118,15 @@ class SecretCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
                 'secret'
             );
 
-        $this->secret_retriever->shouldReceive('getWebhookSecretForRepository')
-            ->once()
+        $this->secret_retriever
+            ->expects(self::once())
+            ->method('getWebhookSecretForRepository')
             ->with($this->gitlab_repository_integration)
-            ->andReturn(new ConcealedString('secret'));
+            ->willReturn(new ConcealedString('secret'));
 
         $this->secret_checker->checkSecret(
             $this->gitlab_repository_integration,
             $request
         );
-
-        $this->addToAssertionCount(1);
     }
 }

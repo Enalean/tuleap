@@ -24,8 +24,6 @@ namespace Tuleap\Gitlab\REST\v1;
 
 use GitPermissionsManager;
 use Luracast\Restler\RestException;
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Project;
 use Tuleap\Gitlab\API\GitlabRequestException;
 use Tuleap\Gitlab\API\GitlabResponseAPIException;
@@ -38,35 +36,31 @@ use Tuleap\REST\I18NRestException;
 
 class WebhookSecretGeneratorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|GitlabRepositoryIntegrationFactory
+     * @var \PHPUnit\Framework\MockObject\MockObject&GitlabRepositoryIntegrationFactory
      */
     private $repository_integration_factory;
     /**
-     * @var GitPermissionsManager|Mockery\LegacyMockInterface|Mockery\MockInterface
+     * @var \PHPUnit\Framework\MockObject\MockObject&GitPermissionsManager
      */
     private $permissions_manager;
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|CredentialsRetriever
+     * @var \PHPUnit\Framework\MockObject\MockObject&CredentialsRetriever
      */
     private $credentials_retriever;
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|WebhookCreator
+     * @var \PHPUnit\Framework\MockObject\MockObject&WebhookCreator
      */
     private $webhook_creator;
-    /**
-     * @var WebhookSecretGenerator
-     */
-    private $generator;
+
+    private WebhookSecretGenerator $generator;
 
     protected function setUp(): void
     {
-        $this->repository_integration_factory = Mockery::mock(GitlabRepositoryIntegrationFactory::class);
-        $this->permissions_manager            = Mockery::mock(GitPermissionsManager::class);
-        $this->credentials_retriever          = Mockery::mock(CredentialsRetriever::class);
-        $this->webhook_creator                = Mockery::mock(WebhookCreator::class);
+        $this->repository_integration_factory = $this->createMock(GitlabRepositoryIntegrationFactory::class);
+        $this->permissions_manager            = $this->createMock(GitPermissionsManager::class);
+        $this->credentials_retriever          = $this->createMock(CredentialsRetriever::class);
+        $this->webhook_creator                = $this->createMock(WebhookCreator::class);
 
         $this->generator = new WebhookSecretGenerator(
             $this->repository_integration_factory,
@@ -81,36 +75,36 @@ class WebhookSecretGeneratorTest extends \Tuleap\Test\PHPUnit\TestCase
         $id = 123;
 
         $this->repository_integration_factory
-            ->shouldReceive('getIntegrationById')
+            ->method('getIntegrationById')
             ->with(123)
-            ->andReturnNull();
+            ->willReturn(null);
 
         $this->expectException(RestException::class);
         $this->expectExceptionCode(404);
 
-        $this->generator->regenerate($id, Mockery::mock(\PFUser::class));
+        $this->generator->regenerate($id, $this->createMock(\PFUser::class));
     }
 
     public function test404IfUserIsNotGitAdminOfTheProjectWhereTheGitlabRepositoryIsIntegrated(): void
     {
-        $user = Mockery::mock(\PFUser::class);
+        $user = $this->createMock(\PFUser::class);
 
         $id = 123;
 
-        $repository = Mockery::mock(GitlabRepositoryIntegration::class);
+        $repository = $this->createMock(GitlabRepositoryIntegration::class);
 
         $this->repository_integration_factory
-            ->shouldReceive('getIntegrationById')
+            ->method('getIntegrationById')
             ->with(123)
-            ->andReturn($repository);
+            ->willReturn($repository);
 
-        $project = Mockery::mock(Project::class);
-        $repository->shouldReceive('getProject')->andReturn($project);
+        $project = $this->createMock(Project::class);
+        $repository->method('getProject')->willReturn($project);
 
         $this->permissions_manager
-            ->shouldReceive('userIsGitAdmin')
+            ->method('userIsGitAdmin')
             ->with($user, $project)
-            ->andReturnFalse();
+            ->willReturn(false);
 
         $this->expectException(RestException::class);
         $this->expectExceptionCode(404);
@@ -120,35 +114,31 @@ class WebhookSecretGeneratorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function test400IfNoCredentialsAreFoundForTheRepository(): void
     {
-        $user = Mockery::mock(\PFUser::class);
+        $user = $this->createMock(\PFUser::class);
 
         $id = 123;
 
-        $repository = Mockery::mock(
-            GitlabRepositoryIntegration::class,
-            [
-                'getGitlabRepositoryId' => 123,
-                'getGitlabServerUrl'    => 'https://gitlab.example.com',
-            ]
-        );
+        $repository = $this->createMock(GitlabRepositoryIntegration::class);
+        $repository->method('getGitlabRepositoryId')->willReturn(123);
+        $repository->method('getGitlabServerUrl')->willReturn('https://gitlab.example.com');
 
         $this->repository_integration_factory
-            ->shouldReceive('getIntegrationById')
+            ->method('getIntegrationById')
             ->with(123)
-            ->andReturn($repository);
+            ->willReturn($repository);
 
-        $project = Mockery::mock(Project::class);
-        $repository->shouldReceive('getProject')->andReturn($project);
+        $project = $this->createMock(Project::class);
+        $repository->method('getProject')->willReturn($project);
 
         $this->permissions_manager
-            ->shouldReceive('userIsGitAdmin')
+            ->method('userIsGitAdmin')
             ->with($user, $project)
-            ->andReturnTrue();
+            ->willReturn(true);
 
         $this->credentials_retriever
-            ->shouldReceive('getCredentials')
+            ->method('getCredentials')
             ->with($repository)
-            ->andReturnNull();
+            ->willReturn(null);
 
         $this->expectException(I18NRestException::class);
         $this->expectExceptionCode(400);
@@ -158,42 +148,38 @@ class WebhookSecretGeneratorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function test400IfGitlabServerDoesNotAcceptsTheWebhook(): void
     {
-        $user = Mockery::mock(\PFUser::class);
+        $user = $this->createMock(\PFUser::class);
 
         $id = 123;
 
-        $repository = Mockery::mock(
-            GitlabRepositoryIntegration::class,
-            [
-                'getGitlabRepositoryId' => 123,
-                'getGitlabServerUrl'    => 'https://gitlab.example.com',
-            ]
-        );
+        $repository = $this->createMock(GitlabRepositoryIntegration::class);
+        $repository->method('getGitlabRepositoryId')->willReturn(123);
+        $repository->method('getGitlabServerUrl')->willReturn('https://gitlab.example.com');
 
         $this->repository_integration_factory
-            ->shouldReceive('getIntegrationById')
+            ->method('getIntegrationById')
             ->with(123)
-            ->andReturn($repository);
+            ->willReturn($repository);
 
-        $project = Mockery::mock(Project::class);
-        $repository->shouldReceive('getProject')->andReturn($project);
+        $project = $this->createMock(Project::class);
+        $repository->method('getProject')->willReturn($project);
 
         $this->permissions_manager
-            ->shouldReceive('userIsGitAdmin')
+            ->method('userIsGitAdmin')
             ->with($user, $project)
-            ->andReturnTrue();
+            ->willReturn(true);
 
         $credentials = CredentialsTestBuilder::get()->build();
 
         $this->credentials_retriever
-            ->shouldReceive('getCredentials')
+            ->method('getCredentials')
             ->with($repository)
-            ->andReturn($credentials);
+            ->willReturn($credentials);
 
         $this->webhook_creator
-            ->shouldReceive('generateWebhookInGitlabProject')
+            ->method('generateWebhookInGitlabProject')
             ->with($credentials, $repository)
-            ->andThrow(Mockery::mock(GitlabRequestException::class, ['getGitlabServerMessage' => 'Error']));
+            ->willThrowException(new GitlabRequestException(400, 'getGitlabServerMessage'));
 
         $this->expectException(I18NRestException::class);
         $this->expectExceptionCode(400);
@@ -203,42 +189,38 @@ class WebhookSecretGeneratorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function test500IfWeAreNotAbleToParseGitlabResponse(): void
     {
-        $user = Mockery::mock(\PFUser::class);
+        $user = $this->createMock(\PFUser::class);
 
         $id = 123;
 
-        $repository = Mockery::mock(
-            GitlabRepositoryIntegration::class,
-            [
-                'getGitlabRepositoryId' => 123,
-                'getGitlabServerUrl'    => 'https://gitlab.example.com',
-            ]
-        );
+        $repository = $this->createMock(GitlabRepositoryIntegration::class);
+        $repository->method('getGitlabRepositoryId')->willReturn(123);
+        $repository->method('getGitlabServerUrl')->willReturn('https://gitlab.example.com');
 
         $this->repository_integration_factory
-            ->shouldReceive('getIntegrationById')
+            ->method('getIntegrationById')
             ->with(123)
-            ->andReturn($repository);
+            ->willReturn($repository);
 
-        $project = Mockery::mock(Project::class);
-        $repository->shouldReceive('getProject')->andReturn($project);
+        $project = $this->createMock(Project::class);
+        $repository->method('getProject')->willReturn($project);
 
         $this->permissions_manager
-            ->shouldReceive('userIsGitAdmin')
+            ->method('userIsGitAdmin')
             ->with($user, $project)
-            ->andReturnTrue();
+            ->willReturn(true);
 
         $credentials = CredentialsTestBuilder::get()->build();
 
         $this->credentials_retriever
-            ->shouldReceive('getCredentials')
+            ->method('getCredentials')
             ->with($repository)
-            ->andReturn($credentials);
+            ->willReturn($credentials);
 
         $this->webhook_creator
-            ->shouldReceive('generateWebhookInGitlabProject')
+            ->method('generateWebhookInGitlabProject')
             ->with($credentials, $repository)
-            ->andThrow(Mockery::mock(GitlabResponseAPIException::class));
+            ->willThrowException(new GitlabResponseAPIException('error'));
 
 
         $this->expectException(I18NRestException::class);
@@ -249,42 +231,38 @@ class WebhookSecretGeneratorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItSavesTheNewTokenIfGitlabServerAcceptsTheNewToken(): void
     {
-        $user = Mockery::mock(\PFUser::class);
+        $user = $this->createMock(\PFUser::class);
 
         $id = 123;
 
-        $repository = Mockery::mock(
-            GitlabRepositoryIntegration::class,
-            [
-                'getGitlabRepositoryId' => 123,
-                'getGitlabServerUrl'    => 'https://gitlab.example.com',
-            ]
-        );
+        $repository = $this->createMock(GitlabRepositoryIntegration::class);
+        $repository->method('getGitlabRepositoryId')->willReturn(123);
+        $repository->method('getGitlabServerUrl')->willReturn('https://gitlab.example.com');
 
         $this->repository_integration_factory
-            ->shouldReceive('getIntegrationById')
+            ->method('getIntegrationById')
             ->with(123)
-            ->andReturn($repository);
+            ->willReturn($repository);
 
-        $project = Mockery::mock(Project::class);
-        $repository->shouldReceive('getProject')->andReturn($project);
+        $project = $this->createMock(Project::class);
+        $repository->method('getProject')->willReturn($project);
 
         $this->permissions_manager
-            ->shouldReceive('userIsGitAdmin')
+            ->method('userIsGitAdmin')
             ->with($user, $project)
-            ->andReturnTrue();
+            ->willReturn(true);
 
         $credentials = CredentialsTestBuilder::get()->build();
 
         $this->credentials_retriever
-            ->shouldReceive('getCredentials')
+            ->method('getCredentials')
             ->with($repository)
-            ->andReturn($credentials);
+            ->willReturn($credentials);
 
         $this->webhook_creator
-            ->shouldReceive('generateWebhookInGitlabProject')
-            ->with($credentials, $repository)
-            ->once();
+            ->expects(self::once())
+            ->method('generateWebhookInGitlabProject')
+            ->with($credentials, $repository);
 
         $this->generator->regenerate($id, $user);
     }

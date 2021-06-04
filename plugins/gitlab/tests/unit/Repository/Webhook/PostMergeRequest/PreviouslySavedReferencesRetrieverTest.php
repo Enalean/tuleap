@@ -22,8 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Gitlab\Repository\Webhook\PostMergeRequest;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Project;
 use Tuleap\Gitlab\Reference\TuleapReferencedArtifactNotFoundException;
 use Tuleap\Gitlab\Reference\TuleapReferenceNotFoundException;
@@ -34,25 +32,21 @@ use Tuleap\Gitlab\Repository\Webhook\WebhookTuleapReferencesParser;
 
 class PreviouslySavedReferencesRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     /**
-     * @var PreviouslySavedReferencesRetriever
-     */
-    private $retriever;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|TuleapReferenceRetriever
+     * @var \PHPUnit\Framework\MockObject\MockObject&TuleapReferenceRetriever
      */
     private $tuleap_reference_retriever;
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|MergeRequestTuleapReferenceDao
+     * @var \PHPUnit\Framework\MockObject\MockObject&MergeRequestTuleapReferenceDao
      */
     private $dao;
 
+    private PreviouslySavedReferencesRetriever $retriever;
+
     protected function setUp(): void
     {
-        $this->tuleap_reference_retriever = Mockery::mock(TuleapReferenceRetriever::class);
-        $this->dao                        = Mockery::mock(MergeRequestTuleapReferenceDao::class);
+        $this->tuleap_reference_retriever = $this->createMock(TuleapReferenceRetriever::class);
+        $this->dao                        = $this->createMock(MergeRequestTuleapReferenceDao::class);
 
         $this->retriever = new PreviouslySavedReferencesRetriever(
             new TuleapReferencesFromMergeRequestDataExtractor(
@@ -89,9 +83,9 @@ class PreviouslySavedReferencesRetrieverTest extends \Tuleap\Test\PHPUnit\TestCa
         );
 
         $this->dao
-            ->shouldReceive('searchMergeRequestInRepositoryWithId')
+            ->method('searchMergeRequestInRepositoryWithId')
             ->with(1, 2)
-            ->andReturn([]);
+            ->willReturn([]);
 
         self::assertEmpty(
             $this->retriever->retrievePreviousReferences($webhook_data, $integration)
@@ -124,9 +118,9 @@ class PreviouslySavedReferencesRetrieverTest extends \Tuleap\Test\PHPUnit\TestCa
         );
 
         $this->dao
-            ->shouldReceive('searchMergeRequestInRepositoryWithId')
+            ->method('searchMergeRequestInRepositoryWithId')
             ->with(1, 2)
-            ->andReturn(
+            ->willReturn(
                 [
                     'title'       => 'Title of merge request',
                     'description' => 'Description of merge request',
@@ -164,9 +158,9 @@ class PreviouslySavedReferencesRetrieverTest extends \Tuleap\Test\PHPUnit\TestCa
         );
 
         $this->dao
-            ->shouldReceive('searchMergeRequestInRepositoryWithId')
+            ->method('searchMergeRequestInRepositoryWithId')
             ->with(1, 2)
-            ->andReturn(
+            ->willReturn(
                 [
                     'title'       => 'Title of merge request TULEAP-8',
                     'description' => 'Description of merge request',
@@ -174,10 +168,10 @@ class PreviouslySavedReferencesRetrieverTest extends \Tuleap\Test\PHPUnit\TestCa
             );
 
         $this->tuleap_reference_retriever
-            ->shouldReceive('retrieveTuleapReference')
+            ->expects(self::once())
+            ->method('retrieveTuleapReference')
             ->with(8)
-            ->once()
-            ->andThrow(TuleapReferenceNotFoundException::class);
+            ->willThrowException(new TuleapReferenceNotFoundException());
 
         self::assertEmpty(
             $this->retriever->retrievePreviousReferences($webhook_data, $integration)
@@ -210,9 +204,9 @@ class PreviouslySavedReferencesRetrieverTest extends \Tuleap\Test\PHPUnit\TestCa
         );
 
         $this->dao
-            ->shouldReceive('searchMergeRequestInRepositoryWithId')
+            ->method('searchMergeRequestInRepositoryWithId')
             ->with(1, 2)
-            ->andReturn(
+            ->willReturn(
                 [
                     'title'       => 'Title of merge request TULEAP-8',
                     'description' => 'Description of merge request',
@@ -220,10 +214,10 @@ class PreviouslySavedReferencesRetrieverTest extends \Tuleap\Test\PHPUnit\TestCa
             );
 
         $this->tuleap_reference_retriever
-            ->shouldReceive('retrieveTuleapReference')
+            ->expects(self::once())
+            ->method('retrieveTuleapReference')
             ->with(8)
-            ->once()
-            ->andThrow(Mockery::mock(TuleapReferencedArtifactNotFoundException::class));
+            ->willThrowException(new TuleapReferencedArtifactNotFoundException(8));
 
         self::assertEmpty(
             $this->retriever->retrievePreviousReferences($webhook_data, $integration)
@@ -256,9 +250,9 @@ class PreviouslySavedReferencesRetrieverTest extends \Tuleap\Test\PHPUnit\TestCa
         );
 
         $this->dao
-            ->shouldReceive('searchMergeRequestInRepositoryWithId')
+            ->method('searchMergeRequestInRepositoryWithId')
             ->with(1, 2)
-            ->andReturn(
+            ->willReturn(
                 [
                     'title'       => 'Title of merge request TULEAP-8',
                     'description' => 'Description of merge request TULEAP-58',
@@ -266,14 +260,12 @@ class PreviouslySavedReferencesRetrieverTest extends \Tuleap\Test\PHPUnit\TestCa
             );
 
         $this->tuleap_reference_retriever
-            ->shouldReceive('retrieveTuleapReference')
-            ->with(8)
-            ->once();
-
-        $this->tuleap_reference_retriever
-            ->shouldReceive('retrieveTuleapReference')
-            ->with(58)
-            ->once();
+            ->expects(self::exactly(2))
+            ->method('retrieveTuleapReference')
+            ->withConsecutive(
+                [8],
+                [58]
+            );
 
         self::assertEquals(
             [

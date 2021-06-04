@@ -23,32 +23,28 @@ declare(strict_types=1);
 
 namespace Tuleap\Gitlab\API;
 
-use Mockery;
 use Tuleap\Gitlab\Test\Builder\CredentialsTestBuilder;
 
 final class GitlabProjectBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
     /**
      * @var GitlabProjectBuilder
      */
     private $project_builder;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ClientWrapper
-     */
-    private $gitlab_api_client;
     /**
      * @var Credentials
      */
     private $credentials;
+    /**
+     * @var \PHPUnit\Framework\MockObject\MockObject&ClientWrapper
+     */
+    private $gitlab_api_client;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->gitlab_api_client = Mockery::mock(ClientWrapper::class);
+        $this->gitlab_api_client = $this->createMock(ClientWrapper::class);
 
         $this->credentials = CredentialsTestBuilder::get()->build();
 
@@ -59,10 +55,11 @@ final class GitlabProjectBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItThrowsAnExceptionIfRequestBodyIsEmpty(): void
     {
-        $this->gitlab_api_client->shouldReceive("getUrl")
-            ->once()
+        $this->gitlab_api_client
+            ->expects(self::once())
+            ->method("getUrl")
             ->with($this->credentials, "/projects/1")
-            ->andReturn([]);
+            ->willReturn([]);
 
         $this->expectException(GitlabResponseAPIException::class);
 
@@ -71,10 +68,11 @@ final class GitlabProjectBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItThrowsAnExceptionIfRequestBodyDoesNotHaveIdKey(): void
     {
-        $this->gitlab_api_client->shouldReceive("getUrl")
-            ->once()
+        $this->gitlab_api_client
+            ->expects(self::once())
+            ->method("getUrl")
             ->with($this->credentials, "/projects/1")
-            ->andReturn([
+            ->willReturn([
                 'description' => 'My GitLab project',
                 'web_url' => 'https://example.com/root/project01',
                 'name' => 'Project 01',
@@ -90,10 +88,11 @@ final class GitlabProjectBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItThrowsAnExceptionIfRequestBodyDoesNotHaveDescriptionKey(): void
     {
-        $this->gitlab_api_client->shouldReceive("getUrl")
-            ->once()
+        $this->gitlab_api_client
+            ->expects(self::once())
+            ->method("getUrl")
             ->with($this->credentials, "/projects/1")
-            ->andReturn([
+            ->willReturn([
                 'id' => 1,
                 'web_url' => 'https://example.com/root/project01',
                 'name' => 'Project 01',
@@ -109,10 +108,11 @@ final class GitlabProjectBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItThrowsAnExceptionIfRequestBodyDoesNotHaveWebURLKey(): void
     {
-        $this->gitlab_api_client->shouldReceive("getUrl")
-            ->once()
+        $this->gitlab_api_client
+            ->expects(self::once())
+            ->method("getUrl")
             ->with($this->credentials, "/projects/1")
-            ->andReturn([
+            ->willReturn([
                 'id' => 1,
                 'description' => 'My GitLab project',
                 'name' => 'Project 01',
@@ -128,10 +128,11 @@ final class GitlabProjectBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItThrowsAnExceptionIfRequestBodyDoesNotHavePathKey(): void
     {
-        $this->gitlab_api_client->shouldReceive("getUrl")
-            ->once()
+        $this->gitlab_api_client
+            ->expects(self::once())
+            ->method("getUrl")
             ->with($this->credentials, "/projects/1")
-            ->andReturn([
+            ->willReturn([
                 'id' => 1,
                 'description' => 'My GitLab project',
                 'web_url' => 'https://example.com/root/project01',
@@ -147,10 +148,11 @@ final class GitlabProjectBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItThrowsAnExceptionIfRequestBodyDoesNotHaveLastActivityKey(): void
     {
-        $this->gitlab_api_client->shouldReceive("getUrl")
-            ->once()
+        $this->gitlab_api_client
+            ->expects(self::once())
+            ->method("getUrl")
             ->with($this->credentials, "/projects/1")
-            ->andReturn([
+            ->willReturn([
                 'id' => 1,
                 'description' => 'My GitLab project',
                 'web_url' => 'https://example.com/root/project01',
@@ -166,10 +168,11 @@ final class GitlabProjectBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItThrowsAnExceptionIfRequestBodyDoesNotHaveDefaultBranchKey(): void
     {
-        $this->gitlab_api_client->shouldReceive("getUrl")
-            ->once()
+        $this->gitlab_api_client
+            ->expects(self::once())
+            ->method("getUrl")
             ->with($this->credentials, "/projects/1")
-            ->andReturn([
+            ->willReturn([
                 'id' => 1,
                 'description' => 'My GitLab project',
                 'web_url' => 'https://example.com/root/project01',
@@ -185,10 +188,11 @@ final class GitlabProjectBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItBuildsAGitlabProjectObject(): void
     {
-        $this->gitlab_api_client->shouldReceive("getUrl")
-            ->once()
+        $this->gitlab_api_client
+            ->expects(self::once())
+            ->method("getUrl")
             ->with($this->credentials, "/projects/1")
-            ->andReturn([
+            ->willReturn([
                 'id' => 1,
                 'description' => 'My GitLab project',
                 'web_url' => 'https://example.com/root/project01',
@@ -210,10 +214,11 @@ final class GitlabProjectBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItBuildsAGitlabProjectObjectWithNullDescription(): void
     {
-        $this->gitlab_api_client->shouldReceive("getUrl")
-            ->once()
+        $this->gitlab_api_client
+            ->expects(self::once())
+            ->method("getUrl")
             ->with($this->credentials, "/projects/1")
-            ->andReturn([
+            ->willReturn([
                 'id' => 1,
                 'description' => null,
                 'web_url' => 'https://example.com/root/project01',

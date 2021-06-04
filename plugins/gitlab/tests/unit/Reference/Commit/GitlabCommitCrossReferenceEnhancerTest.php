@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * Copyright (c) Enalean, 2020 - Present. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
@@ -21,8 +21,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Gitlab\Reference\Commit;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\Date\TlpRelativeDatePresenterBuilder;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\Reference\CrossReferencePresenter;
@@ -30,7 +28,6 @@ use Tuleap\Test\Builders\CrossReferencePresenterBuilder;
 
 class GitlabCommitCrossReferenceEnhancerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
     use GlobalLanguageMock;
 
     /**
@@ -38,18 +35,18 @@ class GitlabCommitCrossReferenceEnhancerTest extends \Tuleap\Test\PHPUnit\TestCa
      */
     private $gitlab_cross_reference_enhancer;
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|\UserManager
+     * @var \PHPUnit\Framework\MockObject\MockObject&\UserManager
      */
     private $user_manager;
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|\UserHelper
+     * @var \PHPUnit\Framework\MockObject\MockObject&\UserHelper
      */
     private $user_helper;
 
     protected function setUp(): void
     {
-        $this->user_manager                    = Mockery::mock(\UserManager::class);
-        $this->user_helper                     = Mockery::mock(\UserHelper::class);
+        $this->user_manager                    = $this->createMock(\UserManager::class);
+        $this->user_helper                     = $this->createMock(\UserHelper::class);
         $this->gitlab_cross_reference_enhancer = new GitlabCommitCrossReferenceEnhancer(
             $this->user_manager,
             $this->user_helper,
@@ -64,27 +61,24 @@ class GitlabCommitCrossReferenceEnhancerTest extends \Tuleap\Test\PHPUnit\TestCa
 
     public function testItEnhancesTheReferenceAndRetrievesTheCommitterAccountOnTuleap(): void
     {
-        $user = Mockery::mock(\PFUser::class);
-        $user->shouldReceive('getPreference')->andReturn("relative_first-absolute_tooltip");
-        $user->shouldReceive('getLocale')->andReturn("en_US");
+        $user = $this->createMock(\PFUser::class);
+        $user->method('getPreference')->willReturn("relative_first-absolute_tooltip");
+        $user->method('getLocale')->willReturn("en_US");
 
-        $committer = Mockery::mock(\PFUser::class)
-            ->shouldReceive([
-                'hasAvatar' => true,
-                'getAvatarUrl' => "john_snow_avatar_url.png"
-            ])
-            ->getMock();
+        $committer = $this->createMock(\PFUser::class);
+        $committer->method('hasAvatar')->willReturn(true);
+        $committer->method('getAvatarUrl')->willReturn('john_snow_avatar_url.png');
 
         $commit = $this->buildGitlabCommit(
             'John Snow',
-            'john-snow@the-wall.com',
+            'john-snow@example.com',
             'dev/feature'
         );
 
-        $this->user_manager->shouldReceive('getUserByEmail')->andReturn($committer);
-        $this->user_helper->shouldReceive('getDisplayNameFromUser')
+        $this->user_manager->method('getUserByEmail')->willReturn($committer);
+        $this->user_helper->method('getDisplayNameFromUser')
             ->with($committer)
-            ->andReturn("John Snow (jsnow)");
+            ->willReturn("John Snow (jsnow)");
 
         $reference = $this->getCrossReferencePresenter();
 
@@ -100,11 +94,15 @@ class GitlabCommitCrossReferenceEnhancerTest extends \Tuleap\Test\PHPUnit\TestCa
         self::assertEquals('dev/feature', $enhanced_reference->additional_badges[0]->label);
         self::assertEquals('14a9b6c0c0', $enhanced_reference->additional_badges[1]->label);
 
+        self::assertNotNull($enhanced_reference->creation_metadata);
+
         self::assertEquals('2020-12-21T14:00:18+01:00', $enhanced_reference->creation_metadata->created_on->date);
         self::assertEquals('21/12/2020 14:00', $enhanced_reference->creation_metadata->created_on->absolute_date);
         self::assertEquals('tooltip', $enhanced_reference->creation_metadata->created_on->placement);
         self::assertEquals('relative', $enhanced_reference->creation_metadata->created_on->preference);
         self::assertEquals('en_US', $enhanced_reference->creation_metadata->created_on->locale);
+
+        self::assertNotNull($enhanced_reference->creation_metadata->created_by);
 
         self::assertEquals('John Snow (jsnow)', $enhanced_reference->creation_metadata->created_by->display_name);
         self::assertTrue($enhanced_reference->creation_metadata->created_by->has_avatar);
@@ -113,14 +111,14 @@ class GitlabCommitCrossReferenceEnhancerTest extends \Tuleap\Test\PHPUnit\TestCa
 
     public function testItDisplaysCommitterNameAndDefaultTuleapAvatarWhenUserEmailMatchNoAccountOnTuleap(): void
     {
-        $user = Mockery::mock(\PFUser::class);
-        $user->shouldReceive('getPreference')->andReturn("relative_first-absolute_tooltip");
-        $user->shouldReceive('getLocale')->andReturn("en_US");
+        $user = $this->createMock(\PFUser::class);
+        $user->method('getPreference')->willReturn("relative_first-absolute_tooltip");
+        $user->method('getLocale')->willReturn("en_US");
 
         $commit = $this->buildGitlabCommit('The Night King', 'knight-king@is-comming.com', 'dev/feature');
 
-        $this->user_manager->shouldReceive('getUserByEmail')->andReturn(null);
-        $this->user_helper->shouldReceive('getDisplayNameFromUser')->never();
+        $this->user_manager->method('getUserByEmail')->willReturn(null);
+        $this->user_helper->expects(self::never())->method('getDisplayNameFromUser');
 
         $reference = $this->getCrossReferencePresenter();
 
@@ -136,11 +134,15 @@ class GitlabCommitCrossReferenceEnhancerTest extends \Tuleap\Test\PHPUnit\TestCa
         self::assertEquals('dev/feature', $enhanced_reference->additional_badges[0]->label);
         self::assertEquals('14a9b6c0c0', $enhanced_reference->additional_badges[1]->label);
 
+        self::assertNotNull($enhanced_reference->creation_metadata);
+
         self::assertEquals('2020-12-21T14:00:18+01:00', $enhanced_reference->creation_metadata->created_on->date);
         self::assertEquals('21/12/2020 14:00', $enhanced_reference->creation_metadata->created_on->absolute_date);
         self::assertEquals('tooltip', $enhanced_reference->creation_metadata->created_on->placement);
         self::assertEquals('relative', $enhanced_reference->creation_metadata->created_on->preference);
         self::assertEquals('en_US', $enhanced_reference->creation_metadata->created_on->locale);
+
+        self::assertNotNull($enhanced_reference->creation_metadata->created_by);
 
         self::assertEquals('The Night King', $enhanced_reference->creation_metadata->created_by->display_name);
         self::assertFalse($enhanced_reference->creation_metadata->created_by->has_avatar);
@@ -149,27 +151,24 @@ class GitlabCommitCrossReferenceEnhancerTest extends \Tuleap\Test\PHPUnit\TestCa
 
     public function testItDoesNotDisplayTheBranchNameBadgeIfCommitBranchIsUnknown(): void
     {
-        $user = Mockery::mock(\PFUser::class);
-        $user->shouldReceive('getPreference')->andReturn("relative_first-absolute_tooltip");
-        $user->shouldReceive('getLocale')->andReturn("en_US");
+        $user = $this->createMock(\PFUser::class);
+        $user->method('getPreference')->willReturn("relative_first-absolute_tooltip");
+        $user->method('getLocale')->willReturn("en_US");
 
-        $committer = Mockery::mock(\PFUser::class)
-            ->shouldReceive([
-                'hasAvatar' => true,
-                'getAvatarUrl' => "john_snow_avatar_url.png"
-            ])
-            ->getMock();
+        $committer = $this->createMock(\PFUser::class);
+        $committer->method('hasAvatar')->willReturn(true);
+        $committer->method('getAvatarUrl')->willReturn('john_snow_avatar_url');
 
         $commit = $this->buildGitlabCommit(
             'John Snow',
-            'john-snow@the-wall.com',
+            'john-snow@example.com',
             ''
         );
 
-        $this->user_manager->shouldReceive('getUserByEmail')->andReturn($committer);
-        $this->user_helper->shouldReceive('getDisplayNameFromUser')
+        $this->user_manager->method('getUserByEmail')->willReturn($committer);
+        $this->user_helper->method('getDisplayNameFromUser')
             ->with($committer)
-            ->andReturn("John Snow (jsnow)");
+            ->willReturn("John Snow (jsnow)");
 
         $reference = $this->getCrossReferencePresenter();
 
