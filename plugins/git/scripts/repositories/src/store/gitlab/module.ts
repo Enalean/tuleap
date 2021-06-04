@@ -20,10 +20,15 @@
 import * as actions from "./actions";
 import * as mutations from "./mutations";
 import defaultState from "./state";
+import type { GitlabState } from "./state";
+import type { Module } from "vuex";
+import type { State } from "../../type";
 
-export default {
-    namespaced: true,
-    state: defaultState,
-    actions,
-    mutations,
-};
+export function createGitLabModule(): Module<GitlabState, State> {
+    return {
+        namespaced: true,
+        state: defaultState,
+        actions,
+        mutations,
+    };
+}

@@ -36,6 +36,7 @@ import type {
     GitLabDataWithTokenPayload,
     GitLabRepository,
     Repository,
+    State,
 } from "../../type";
 import {
     formatUrlToGetAllProject,
@@ -44,9 +45,7 @@ import {
 
 export type GitlabRepositoryCallback = (repositories: Repository[]) => void;
 
-export const showAddGitlabRepositoryModal = (
-    context: ActionContext<GitlabState, GitlabState>
-): void => {
+export const showAddGitlabRepositoryModal = (context: ActionContext<GitlabState, State>): void => {
     if (!context.state.add_gitlab_repository_modal) {
         return;
     }
@@ -54,7 +53,7 @@ export const showAddGitlabRepositoryModal = (
 };
 
 export const showDeleteGitlabRepositoryModal = (
-    context: ActionContext<GitlabState, GitlabState>,
+    context: ActionContext<GitlabState, State>,
     repository: GitLabRepository
 ): void => {
     context.commit("setUnlinkGitlabRepository", repository);
@@ -65,7 +64,7 @@ export const showDeleteGitlabRepositoryModal = (
 };
 
 export const showEditAccessTokenGitlabRepositoryModal = (
-    context: ActionContext<GitlabState, GitlabState>,
+    context: ActionContext<GitlabState, State>,
     repository: GitLabRepository
 ): void => {
     context.commit("setEditAccessTokenGitlabRepository", repository);
@@ -76,7 +75,7 @@ export const showEditAccessTokenGitlabRepositoryModal = (
 };
 
 export const showRegenerateGitlabWebhookModal = (
-    context: ActionContext<GitlabState, GitlabState>,
+    context: ActionContext<GitlabState, State>,
     repository: GitLabRepository
 ): void => {
     context.commit("setRegenerateGitlabWebhookRepository", repository);
@@ -87,7 +86,7 @@ export const showRegenerateGitlabWebhookModal = (
 };
 
 export const showArtifactClosureModal = (
-    context: ActionContext<GitlabState, GitlabState>,
+    context: ActionContext<GitlabState, State>,
     repository: GitLabRepository
 ): void => {
     context.commit("setArtifactClosureRepository", repository);
@@ -98,7 +97,7 @@ export const showArtifactClosureModal = (
 };
 
 export const showCreateBranchPrefixModal = (
-    context: ActionContext<GitlabState, GitlabState>,
+    context: ActionContext<GitlabState, State>,
     repository: GitLabRepository
 ): void => {
     context.commit("setCreateBranchPrefixRepository", repository);
@@ -109,7 +108,7 @@ export const showCreateBranchPrefixModal = (
 };
 
 export async function getGitlabRepositories(
-    context: ActionContext<GitlabState, GitlabState>,
+    context: ActionContext<GitlabState, State>,
     order_by: string
 ): Promise<Array<Repository>> {
     const getGitlabRepositories = (
@@ -133,7 +132,7 @@ export async function getGitlabRepositories(
 }
 
 export async function getGitlabProjectList(
-    context: ActionContext<GitlabState, GitlabState>,
+    context: ActionContext<GitlabState, State>,
     credentials: GitLabCredentials
 ): Promise<Array<GitLabRepository>> {
     let pagination = 1;
@@ -174,7 +173,7 @@ interface GitLabRepositoryPayload {
 }
 
 export async function getGitlabRepositoryFromId(
-    context: ActionContext<GitlabState, GitlabState>,
+    context: ActionContext<GitlabState, State>,
     payload: GitLabRepositoryPayload
 ): Promise<Response> {
     payload.credentials.server_url = formatUrlToGetProjectFromId(
@@ -207,7 +206,7 @@ async function queryAPIGitlab(
 }
 
 export async function postIntegrationGitlab(
-    context: ActionContext<GitlabState, GitlabState>,
+    context: ActionContext<GitlabState, State>,
     data: GitLabRepositoryCreation
 ): Promise<Response> {
     const response = await postGitlabRepository(data);
@@ -216,7 +215,7 @@ export async function postIntegrationGitlab(
 }
 
 export async function updateBotApiTokenGitlab(
-    context: ActionContext<GitlabState, GitlabState>,
+    context: ActionContext<GitlabState, State>,
     payload: GitLabDataWithTokenPayload
 ): Promise<void> {
     const body: GitLabRepositoryUpdate = {
@@ -229,7 +228,7 @@ export async function updateBotApiTokenGitlab(
 }
 
 export async function regenerateGitlabWebhook(
-    context: ActionContext<GitlabState, GitlabState>,
+    context: ActionContext<GitlabState, State>,
     integration_id: number | string
 ): Promise<void> {
     const body: GitLabRepositoryUpdate = {
@@ -250,7 +249,7 @@ interface UpdateGitlabIntegrationCreateBranchPrefixPayload {
 }
 
 export async function updateGitlabRepositoryArtifactClosure(
-    context: ActionContext<GitlabState, GitlabState>,
+    context: ActionContext<GitlabState, State>,
     payload: UpdateGitlabIntegrationArtifactClosurePayload
 ): Promise<GitLabRepository> {
     const gitlab_repository_update: GitLabRepositoryUpdate = {
@@ -271,7 +270,7 @@ export async function updateGitlabRepositoryArtifactClosure(
 }
 
 export async function updateGitlabRepositoryCreateBranchPrefix(
-    context: ActionContext<GitlabState, GitlabState>,
+    context: ActionContext<GitlabState, State>,
     payload: UpdateGitlabIntegrationCreateBranchPrefixPayload
 ): Promise<GitLabRepository> {
     const gitlab_repository_update: GitLabRepositoryUpdate = {

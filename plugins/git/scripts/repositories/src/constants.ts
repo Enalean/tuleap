@@ -26,4 +26,4 @@ export const PROJECT_KEY = "project";
 export const REPOSITORIES_SORTED_BY_LAST_UPDATE = "last_update";
 export const REPOSITORIES_SORTED_BY_PATH = "path";
 
-export const ANONYMOUS_USER_ID = "0";
+export const ANONYMOUS_USER_ID = 0;

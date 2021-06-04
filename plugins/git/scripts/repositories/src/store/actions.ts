@@ -26,8 +26,16 @@ import {
 import { getProjectId, getUserId } from "../repository-list-presenter";
 import { PROJECT_KEY, REPOSITORIES_SORTED_BY_PATH, ANONYMOUS_USER_ID } from "../constants";
 import { getErrorCode } from "../support/error-handler";
+import type { ActionContext } from "vuex";
+import type { State } from "../type";
+import type { Repository } from "../type";
 
-export const setDisplayMode = async (context, new_mode) => {
+export type RepositoryCallback = (repositories: Repository[]) => void;
+
+export const setDisplayMode = async (
+    context: ActionContext<State, State>,
+    new_mode: string
+): Promise<void> => {
     context.commit("setDisplayMode", new_mode);
 
     const user_id = getUserId();
@@ -43,11 +51,17 @@ export const setDisplayMode = async (context, new_mode) => {
     }
 };
 
-export const showAddRepositoryModal = ({ state }) => {
-    state.add_repository_modal.toggle();
+export const showAddRepositoryModal = (context: ActionContext<State, State>): void => {
+    if (!context.state.add_repository_modal) {
+        throw new Error("Add Modal element not exists");
+    }
+    context.state.add_repository_modal.toggle();
 };
 
-export const changeRepositories = async (context, new_owner_id) => {
+export const changeRepositories = async (
+    context: ActionContext<State, State>,
+    new_owner_id: string | number
+): Promise<void> => {
     context.commit("setSelectedOwnerId", new_owner_id);
     context.commit("setFilter", "");
 
@@ -57,38 +71,41 @@ export const changeRepositories = async (context, new_owner_id) => {
 
     const order_by = context.getters.isFolderDisplayMode ? "path" : "push_date";
     if (new_owner_id === PROJECT_KEY) {
-        const getProjectRepositories = (callback) =>
+        const getProjectRepositories = (callback: RepositoryCallback): Promise<Array<Repository>> =>
             getRepositoryList(getProjectId(), order_by, callback);
-        await getAsyncRepositoryList(context.commit, getProjectRepositories);
+        await getAsyncRepositoryList(context, getProjectRepositories);
 
         if (context.getters.isGitlabUsed) {
             await context.dispatch("gitlab/getGitlabRepositories", order_by, { root: true });
         }
     } else {
-        const getForkedRepositories = (callback) =>
+        const getForkedRepositories = (callback: RepositoryCallback): Promise<Array<Repository>> =>
             getForkedRepositoryList(
                 getProjectId(),
-                context.state.selected_owner_id,
+                String(context.state.selected_owner_id),
                 order_by,
                 callback
             );
-        await getAsyncRepositoryList(context.commit, getForkedRepositories);
+        await getAsyncRepositoryList(context, getForkedRepositories);
     }
 };
 
-export async function getAsyncRepositoryList(commit, getRepositories) {
-    commit("setIsLoadingInitial", true);
-    commit("setIsLoadingNext", true);
+export async function getAsyncRepositoryList(
+    context: ActionContext<State, State>,
+    getRepositories: (callback: RepositoryCallback) => Promise<Array<Repository>>
+): Promise<Array<Repository>> {
+    context.commit("setIsLoadingInitial", true);
+    context.commit("setIsLoadingNext", true);
     try {
         return await getRepositories((repositories) => {
-            commit("pushRepositoriesForCurrentOwner", repositories);
-            commit("setIsLoadingInitial", false);
+            context.commit("pushRepositoriesForCurrentOwner", repositories);
+            context.commit("setIsLoadingInitial", false);
         });
     } catch (e) {
-        commit("setErrorMessageType", getErrorCode(e));
+        context.commit("setErrorMessageType", getErrorCode(e));
         throw e;
     } finally {
-        commit("setIsLoadingNext", false);
-        commit("setIsFirstLoadDone", true);
+        context.commit("setIsLoadingNext", false);
+        context.commit("setIsFirstLoadDone", true);
     }
 }
