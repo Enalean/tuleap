@@ -26,99 +26,42 @@ use PFUser;
 use Psr\Log\LoggerInterface;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\FieldSynchronizationException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFieldFromProgramAndTeamTrackersCollectionBuilder;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Team\TeamProjectsCollectionBuilder;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\SourceTrackerCollection;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TrackerCollection;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\TrackerCollectionFactory;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\TrackerRetrievalException;
-use Tuleap\ProgramManagement\Domain\Program\PlanningConfiguration\PlanningNotFoundException;
 use Tuleap\ProgramManagement\Domain\ProgramTracker;
-use Tuleap\ProgramManagement\Domain\Project;
-use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\RetrieveRootPlanningMilestoneTracker;
 
 class TimeboxCreatorChecker
 {
-    /**
-     * @var TeamProjectsCollectionBuilder
-     */
-    private $projects_builder;
-    /**
-     * @var TrackerCollectionFactory
-     */
-    private $scale_trackers_factory;
-    /**
-     * @var SynchronizedFieldFromProgramAndTeamTrackersCollectionBuilder
-     */
-    private $field_collection_builder;
-    /**
-     * @var CheckSemantic
-     */
-    private $semantic_checker;
-
-    /**
-     * @var CheckRequiredField
-     */
-    private $required_field_checker;
-    /**
-     * @var CheckWorkflow
-     */
-    private $workflow_checker;
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
-
-    private RetrieveRootPlanningMilestoneTracker $root_milestone_retriever;
+    private SynchronizedFieldFromProgramAndTeamTrackersCollectionBuilder $field_collection_builder;
+    private CheckSemantic $semantic_checker;
+    private CheckRequiredField $required_field_checker;
+    private CheckWorkflow $workflow_checker;
+    private LoggerInterface $logger;
 
     public function __construct(
-        TeamProjectsCollectionBuilder $team_projects_collection_builder,
-        TrackerCollectionFactory $scale_tracker_factory,
         SynchronizedFieldFromProgramAndTeamTrackersCollectionBuilder $field_collection_builder,
         CheckSemantic $semantic_checker,
         CheckRequiredField $required_field_checker,
         CheckWorkflow $workflow_checker,
-        LoggerInterface $logger,
-        RetrieveRootPlanningMilestoneTracker $root_milestone_retriever
+        LoggerInterface $logger
     ) {
-        $this->projects_builder         = $team_projects_collection_builder;
-        $this->scale_trackers_factory   = $scale_tracker_factory;
         $this->field_collection_builder = $field_collection_builder;
         $this->semantic_checker         = $semantic_checker;
         $this->required_field_checker   = $required_field_checker;
         $this->workflow_checker         = $workflow_checker;
         $this->logger                   = $logger;
-        $this->root_milestone_retriever = $root_milestone_retriever;
     }
 
-    public function canTimeboxBeCreated(ProgramTracker $tracker_data, Project $project_data, PFUser $user): bool
-    {
-        $program_project = $project_data;
+    public function canTimeboxBeCreated(
+        ProgramTracker $tracker_data,
+        SourceTrackerCollection $program_and_milestone_trackers,
+        TrackerCollection $team_trackers,
+        PFUser $user
+    ): bool {
         $this->logger->debug(
-            "Checking if milestone can be created in planning of project " . $program_project->getName() .
-            " by user " . $user->getName() . ' (#' . $user->getId() . ')'
+            "Checking if milestone can be created in planning of project"
         );
 
-        $team_projects_collection = $this->projects_builder->getTeamProjectForAGivenProgramProject(
-            $program_project
-        );
-        if ($team_projects_collection->isEmpty()) {
-            $this->logger->debug("No team project found.");
-            return true;
-        }
-        try {
-            $program_and_milestone_trackers = $this->scale_trackers_factory->buildFromProgramProjectAndItsTeam(
-                $program_project,
-                $team_projects_collection,
-                $user
-            );
-            $team_trackers                  = TrackerCollection::buildRootPlanningMilestoneTrackers(
-                $this->root_milestone_retriever,
-                $team_projects_collection,
-                $user
-            );
-        } catch (PlanningNotFoundException | TrackerRetrievalException $exception) {
-            $this->logger->error("Cannot retrieve all milestones", ['exception' => $exception]);
-            return false;
-        }
         if (! $this->semantic_checker->areTrackerSemanticsWellConfigured($tracker_data, $team_trackers)) {
             $this->logger->error("Semantics are not well configured.");
 
