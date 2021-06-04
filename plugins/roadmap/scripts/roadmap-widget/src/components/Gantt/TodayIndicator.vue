@@ -24,17 +24,19 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { Component, Prop } from "vue-property-decorator";
+import { Component } from "vue-property-decorator";
 import { getLeftForDate } from "../../helpers/left-postion";
 import type { TimePeriod } from "../../type";
-import { State } from "vuex-class";
+import { namespace, State } from "vuex-class";
+
+const timeperiod = namespace("timeperiod");
 
 @Component
 export default class TodayIndicator extends Vue {
-    @Prop({ required: true })
-    readonly time_period!: TimePeriod;
+    @timeperiod.Getter
+    private readonly time_period!: TimePeriod;
 
-    @Prop({ required: true })
+    @State
     readonly now!: Date;
 
     @State

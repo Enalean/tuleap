@@ -22,6 +22,8 @@ import TodayIndicator from "./TodayIndicator.vue";
 import { createRoadmapLocalVue } from "../../helpers/local-vue-for-test";
 import { TimePeriodMonth } from "../../helpers/time-period-month";
 import { createStoreMock } from "../../../../../../../src/scripts/vue-components/store-wrapper-jest";
+import type { TimeperiodState } from "../../store/timeperiod/type";
+import type { RootState } from "../../store/type";
 
 describe("TodayIndicator", () => {
     it("Displays a div with a left position depending on the time period", async () => {
@@ -29,18 +31,19 @@ describe("TodayIndicator", () => {
         const locale_bcp47 = "en-US";
         const wrapper = shallowMount(TodayIndicator, {
             localVue: await createRoadmapLocalVue(),
-            propsData: {
-                now,
-                time_period: new TimePeriodMonth(
-                    new Date("2020-03-31T22:00:00.000Z"),
-                    new Date("2020-04-31T22:00:00.000Z"),
-                    locale_bcp47
-                ),
-            },
             mocks: {
                 $store: createStoreMock({
                     state: {
                         locale_bcp47,
+                        now,
+                        timeperiod: {} as TimeperiodState,
+                    } as RootState,
+                    getters: {
+                        "timeperiod/time_period": new TimePeriodMonth(
+                            new Date("2020-03-31T22:00:00.000Z"),
+                            new Date("2020-04-31T22:00:00.000Z"),
+                            locale_bcp47
+                        ),
                     },
                 }),
             },

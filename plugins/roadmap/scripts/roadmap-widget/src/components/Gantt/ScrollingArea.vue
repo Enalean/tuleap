@@ -21,7 +21,7 @@
 <template>
     <div class="roadmap-gantt-scrolling-area">
         <div class="roadmap-gantt-scrolling-area-empty-pixel" ref="empty_pixel" />
-        <today-indicator v-bind:time_period="time_period" v-bind:now="now" ref="today" />
+        <today-indicator ref="today" />
         <slot></slot>
     </div>
 </template>
@@ -31,6 +31,9 @@ import Vue from "vue";
 import { Component, Prop, Watch } from "vue-property-decorator";
 import TodayIndicator from "./TodayIndicator.vue";
 import type { TimePeriod, TimeScale } from "../../type";
+import { namespace } from "vuex-class";
+
+const timeperiod = namespace("timeperiod");
 
 @Component({
     components: { TodayIndicator },
@@ -41,11 +44,8 @@ export default class ScrollingArea extends Vue {
         empty_pixel: HTMLElement;
     };
 
-    @Prop({ required: true })
-    readonly time_period!: TimePeriod;
-
-    @Prop({ required: true })
-    readonly now!: Date;
+    @timeperiod.Getter
+    private readonly time_period!: TimePeriod;
 
     @Prop({ required: true })
     readonly timescale!: TimeScale;

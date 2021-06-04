@@ -19,11 +19,15 @@
 
 import type { TasksState } from "./tasks/type";
 import type { IterationsState } from "./iterations/type";
+import type { TimeperiodState } from "./timeperiod/type";
+import type { VueGettextProvider } from "../helpers/vue-gettext-provider";
 
 export interface State {
     readonly locale_bcp47: string;
     readonly should_load_lvl1_iterations: boolean;
     readonly should_load_lvl2_iterations: boolean;
+    readonly now: Date;
+    readonly gettext_provider: VueGettextProvider;
     is_loading: boolean;
     should_display_empty_state: boolean;
     should_display_error_state: boolean;
@@ -33,4 +37,5 @@ export interface State {
 export interface RootState extends State {
     readonly tasks: TasksState;
     readonly iterations: IterationsState;
+    readonly timeperiod: TimeperiodState;
 }

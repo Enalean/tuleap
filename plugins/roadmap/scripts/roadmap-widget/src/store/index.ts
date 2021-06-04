@@ -22,23 +22,28 @@ import { Store } from "vuex";
 import type { RootState } from "./type";
 import { createTaskModule } from "./tasks";
 import { createIterationsModule } from "./iterations";
+import { createTimeperiodModule } from "./timeperiod";
 import * as actions from "./root-actions";
 import * as mutations from "./root-mutations";
 
 export function createStore(initial_root_state: RootState): Store<RootState> {
+    const state: RootState = {
+        ...initial_root_state,
+        is_loading: true,
+        should_display_empty_state: false,
+        should_display_error_state: false,
+        error_message: "",
+        now: new Date(),
+    };
+
     const store_options: StoreOptions<RootState> = {
-        state: {
-            ...initial_root_state,
-            is_loading: true,
-            should_display_empty_state: false,
-            should_display_error_state: false,
-            error_message: "",
-        },
+        state,
         actions,
         mutations,
         modules: {
             tasks: createTaskModule(),
             iterations: createIterationsModule(),
+            timeperiod: createTimeperiodModule(),
         },
     };
 

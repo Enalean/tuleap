@@ -28,6 +28,7 @@ import { parseNatureLabels } from "./helpers/nature-labels-from-mountpoint";
 import { createStore } from "./store";
 import type { RootState } from "./store/type";
 import { toBCP47 } from "./helpers/locale-for-intl";
+import type { VueGettextProvider } from "./helpers/vue-gettext-provider";
 
 document.addEventListener("DOMContentLoaded", async () => {
     const all_vue_mount_points = document.querySelectorAll(".roadmap");
@@ -56,13 +57,15 @@ document.addEventListener("DOMContentLoaded", async () => {
             continue;
         }
 
-        const visible_natures = await parseNatureLabels(vue_mount_point, {
+        const gettext_provider: VueGettextProvider = {
             $gettext: Vue.prototype.$gettext,
             $gettextInterpolate: Vue.prototype.$gettextInterpolate,
-        });
+        };
+        const visible_natures = await parseNatureLabels(vue_mount_point, gettext_provider);
 
         // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
         const initial_root_state: RootState = {
+            gettext_provider,
             locale_bcp47: toBCP47(document.body.dataset.userLocale || "en_US"),
             should_load_lvl1_iterations: Boolean(vue_mount_point.dataset.shouldLoadLvl1Iterations),
             should_load_lvl2_iterations: Boolean(vue_mount_point.dataset.shouldLoadLvl2Iterations),

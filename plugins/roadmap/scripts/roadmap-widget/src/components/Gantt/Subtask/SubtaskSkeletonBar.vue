@@ -38,13 +38,16 @@ import { Component, Prop } from "vue-property-decorator";
 import { Styles } from "../../../helpers/styles";
 import BackgroundGrid from "../Task/BackgroundGrid.vue";
 import type { TimePeriod } from "../../../type";
+import { namespace } from "vuex-class";
+
+const timeperiod = namespace("timeperiod");
 
 @Component({
     components: { BackgroundGrid },
 })
 export default class SubtaskSkeletonBar extends Vue {
-    @Prop({ required: true })
-    readonly time_period!: TimePeriod;
+    @timeperiod.Getter
+    private readonly time_period!: TimePeriod;
 
     @Prop({ required: true })
     readonly nb_additional_units!: number;
