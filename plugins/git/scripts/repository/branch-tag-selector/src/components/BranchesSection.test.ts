@@ -40,6 +40,7 @@ describe("BranchesSection", () => {
             propsData: {
                 repository_id: 1,
                 repository_url: "https://example.com/repo/",
+                repository_default_branch: "main",
                 is_displaying_branches: true,
                 is_tag: false,
                 current_ref_name: "main",
@@ -55,9 +56,13 @@ describe("BranchesSection", () => {
               <div class="git-repository-branch-tag-selector-filter"><input type="search" placeholder="Branch name" class="tlp-search tlp-search-small" value=""></div> <a href="https://example.com/repo/?hb=develop" role="menuitem" class="tlp-dropdown-menu-item">
                 <!---->
                 develop
-              </a><a href="https://example.com/repo/?hb=main" role="menuitem" class="tlp-dropdown-menu-item"><i class="fa fa-check fa-fw tlp-dropdown-menu-item-icon"></i>
+                <!----></a><a href="https://example.com/repo/?hb=main" role="menuitem" class="tlp-dropdown-menu-item"><i class="fa fa-check fa-fw tlp-dropdown-menu-item-icon"></i>
                 main
-              </a>
+                <span class="tlp-badge-secondary tlp-badge-outline" data-msgid="
+                        default
+                    " data-current-language="en_US">
+                        default
+                    </span></a>
               <!---->
               <!---->
               <!---->

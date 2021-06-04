@@ -38,6 +38,10 @@ class FilesHeaderPresenter
     public $repository_id;
     /** @var string */
     public $repository_url;
+    /**
+     * @psalm-readonly
+     */
+    public ?string $repository_default_branch;
     /** @var array */
     public $json_encoded_parameters;
 
@@ -50,9 +54,10 @@ class FilesHeaderPresenter
         $committer_epoch,
         array $url_parameters
     ) {
-        $this->repository_id        = $repository->getId();
-        $this->repository_url       = $repository_url;
-        $this->can_display_selector = $can_display_selector;
+        $this->repository_id             = $repository->getId();
+        $this->repository_url            = $repository_url;
+        $this->repository_default_branch = \Git_Exec::buildFromRepository($repository)->getDefaultBranch();
+        $this->can_display_selector      = $can_display_selector;
         if ($head_name) {
             $this->head_name = $head_name;
         } else {

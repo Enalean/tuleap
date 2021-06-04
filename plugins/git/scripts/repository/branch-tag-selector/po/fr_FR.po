@@ -41,3 +41,6 @@ msgstr "Il n'y a pas d'étiquette correspondante"
 
 msgid "There isn't any tags defined yet"
 msgstr "Il n'y a pas d'étiquette"
+
+msgid "default"
+msgstr "par défaut"

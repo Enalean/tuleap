@@ -38,6 +38,13 @@
                 v-if="!is_tag && branch.name === current_ref_name"
             ></i>
             {{ branch.name }}
+            <span
+                class="tlp-badge-secondary tlp-badge-outline"
+                v-if="branch.name === repository_default_branch"
+                v-translate
+            >
+                default
+            </span>
         </a>
         <div class="tlp-dropdown-menu-item" v-if="has_error_while_loading_branches">
             <div class="tlp-alert-danger" v-translate>An error occurred while loading branches</div>
@@ -72,6 +79,8 @@ export default class BranchesSection extends Vue {
     readonly repository_id!: number;
     @Prop()
     readonly repository_url!: string;
+    @Prop({ required: true })
+    readonly repository_default_branch!: string;
     @Prop()
     readonly is_displaying_branches!: boolean;
     @Prop()

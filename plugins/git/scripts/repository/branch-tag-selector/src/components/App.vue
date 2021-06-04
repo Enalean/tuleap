@@ -42,6 +42,7 @@
         <branches-section
             v-bind:repository_id="repository_id"
             v-bind:repository_url="repository_url"
+            v-bind:repository_default_branch="repository_default_branch"
             v-bind:is_displaying_branches="is_displaying_branches"
             v-bind:is_tag="is_tag"
             v-bind:current_ref_name="current_ref_name"
@@ -73,6 +74,8 @@ export default class App extends Vue {
     readonly repository_id!: number;
     @Prop()
     readonly repository_url!: string;
+    @Prop({ required: true })
+    readonly repository_default_branch!: string;
     @Prop()
     readonly is_tag!: boolean;
     @Prop()
