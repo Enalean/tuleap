@@ -18,7 +18,6 @@
  */
 
 import $ from "jquery";
-import { init as initScrollBar } from "../BurningParrot/src/scrollbar";
 
 var width_collapsed = "50px";
 var width_expanded = "250px";
@@ -140,7 +139,6 @@ function sidebarCollapseEvent(duration) {
 
 $(window).load(function () {
     var current_size = getSidebarUserPreference();
-    initScrollBar();
 
     if ($(".sidebar-nav").length > 0) {
         $(".sidebar-nav li a").tooltip({
