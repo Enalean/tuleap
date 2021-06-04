@@ -44,7 +44,7 @@ final class ProgramIncrementCreatorCheckerTest extends \Tuleap\Test\PHPUnit\Test
      */
     private $timebox_creator_checker;
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|ProgramStore
+     * @var \PHPUnit\Framework\MockObject\Stub|ProgramStore
      */
     private $program_store;
     /**
@@ -52,11 +52,7 @@ final class ProgramIncrementCreatorCheckerTest extends \Tuleap\Test\PHPUnit\Test
      */
     private $project_manager;
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|\PlanningFactory
-     */
-    private $planning_factory;
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|TrackerCollectionFactory
+     * @var \PHPUnit\Framework\MockObject\Stub|TrackerCollectionFactory
      */
     private $trackers_builder;
     private Project $project;
@@ -64,10 +60,9 @@ final class ProgramIncrementCreatorCheckerTest extends \Tuleap\Test\PHPUnit\Test
 
     protected function setUp(): void
     {
-        $this->program_store           = $this->createMock(ProgramStore::class);
+        $this->program_store           = $this->createStub(ProgramStore::class);
         $this->project_manager         = $this->createMock(ProjectManager::class);
-        $this->planning_factory        = $this->createMock(\PlanningFactory::class);
-        $this->trackers_builder        = $this->createMock(TrackerCollectionFactory::class);
+        $this->trackers_builder        = $this->createStub(TrackerCollectionFactory::class);
         $this->timebox_creator_checker = $this->createMock(TimeboxCreatorChecker::class);
         $this->project                 = new Project(['group_id' => 105, 'unix_group_name' => "project", "group_name" => "Project"]);
         $this->tracker                 = TrackerTestBuilder::aTracker()->withId(102)->withProject($this->project)->build();
@@ -146,7 +141,6 @@ final class ProgramIncrementCreatorCheckerTest extends \Tuleap\Test\PHPUnit\Test
             ->expects(self::once())
             ->method('getProject')
             ->with($first_team_project->getID())
-
             ->willReturn($first_team_project);
 
         self::assertFalse($this->getChecker()->canCreateAProgramIncrement(
@@ -163,7 +157,7 @@ final class ProgramIncrementCreatorCheckerTest extends \Tuleap\Test\PHPUnit\Test
             $this->program_store,
             $project_data_adapter
         );
-        $first_milestone_tracker     = $this->createMock(\Tracker::class);
+        $first_milestone_tracker     = $this->createStub(\Tracker::class);
         $first_milestone_tracker->method('userCanSubmitArtifact')->willReturn(true);
         $first_milestone_tracker->method('getId')->willReturn(1);
         $root_milestone_retriever = RetrieveRootPlanningMilestoneTrackerStub::withValidTrackers(
