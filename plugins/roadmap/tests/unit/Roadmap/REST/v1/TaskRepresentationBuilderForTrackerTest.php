@@ -27,7 +27,7 @@ use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Semantic\Progress\MethodNotConfigured;
 use Tuleap\Tracker\Semantic\Progress\SemanticProgress;
 use Tuleap\Tracker\Semantic\Progress\SemanticProgressBuilder;
-use Tuleap\Tracker\Semantic\Timeframe\TimeframeWithEndDate;
+use Tuleap\Tracker\Semantic\Timeframe\TimeframeImpliedFromAnotherTracker;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
@@ -46,7 +46,7 @@ class TaskRepresentationBuilderForTrackerTest extends \Tuleap\Test\PHPUnit\TestC
      */
     private $dependencies_retriever;
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|TimeframeWithEndDate
+     * @var \PHPUnit\Framework\MockObject\MockObject|TimeframeImpliedFromAnotherTracker
      */
     private $timeframe_calculator;
 
@@ -58,8 +58,11 @@ class TaskRepresentationBuilderForTrackerTest extends \Tuleap\Test\PHPUnit\TestC
         $this->progress_builder = $this->createMock(SemanticProgressBuilder::class);
         $this->progress_builder->method('getSemantic')->willReturn($semantic);
 
-        $this->timeframe_calculator   = $this->createMock(TimeframeWithEndDate::class);
         $this->dependencies_retriever = $this->createMock(IRetrieveDependencies::class);
+        $this->timeframe_calculator   = $this->getMockBuilder(TimeframeImpliedFromAnotherTracker::class)
+            ->disableOriginalConstructor()
+            ->setMethodsExcept(['getName'])
+            ->getMock();
 
         $this->user = UserTestBuilder::aUser()->build();
     }
@@ -96,6 +99,7 @@ class TaskRepresentationBuilderForTrackerTest extends \Tuleap\Test\PHPUnit\TestC
         self::assertEquals('roadmap_tasks/42/subtasks', $representation->subtasks_uri);
         self::assertEquals(null, $representation->progress);
         self::assertEquals('ACME Corp', $representation->project->label);
+        self::assertTrue($representation->are_dates_implied);
     }
 
     public function testArtifactBelongsToTheRightTracker(): void
