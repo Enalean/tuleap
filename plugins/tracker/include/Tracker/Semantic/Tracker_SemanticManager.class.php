@@ -21,6 +21,8 @@
  */
 
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkFieldValueDao;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\LinksRetriever;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenterFactory;
 use Tuleap\Tracker\Semantic\Progress\MethodBuilder;
@@ -133,7 +135,11 @@ class Tracker_SemanticManager
         $semantic_timeframe_builder = new SemanticTimeframeBuilder(
             new SemanticTimeframeDao(),
             Tracker_FormElementFactory::instance(),
-            \TrackerFactory::instance()
+            \TrackerFactory::instance(),
+            new LinksRetriever(
+                new ArtifactLinkFieldValueDao(),
+                \Tracker_ArtifactFactory::instance()
+            )
         );
 
         $semantic_timeframe    = $semantic_timeframe_builder->getSemantic($this->tracker);

@@ -3987,6 +3987,22 @@ msgstr "Impossible d'ouvrir le fichier %1$s"
 msgid "Unable to render the chart"
 msgstr "Impossible de construire le graphique"
 
+#, php-format
+msgid ""
+"Unable to retrieve the time period: No artifact from tracker %s links "
+"artifact #%d"
+msgstr ""
+"Impossible de récupérer la période : Aucun artéfact provenant de l'outil de "
+"suivi %s ne lie l'artéfact #%d"
+
+#, php-format
+msgid ""
+"Unable to retrieve the time period: Too many artifacts from tracker %s are "
+"linking artifact #%d. There should only be one."
+msgstr ""
+"Impossible de récupérer la période : Trop d'artéfacts provenant de l'outil "
+"de suivi %s lient l'artéfact #%d. Il ne devrait y en avoir qu'un seul."
+
 msgid "Unable to save the contributor/assignee"
 msgstr "Impossible de sauvegarder la sémantique contributeur"
 

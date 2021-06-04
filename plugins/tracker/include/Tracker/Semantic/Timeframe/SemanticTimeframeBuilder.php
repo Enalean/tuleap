@@ -25,27 +25,28 @@ namespace Tuleap\Tracker\Semantic\Timeframe;
 use Tracker;
 use Tracker_FormElement_Field_Date;
 use Tracker_FormElement_Field_Numeric;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\LinksRetriever;
 
 class SemanticTimeframeBuilder
 {
     private SemanticTimeframeDao $dao;
-    /**
-     * @var \Tracker_FormElementFactory
-     */
-    private $form_element_factory;
-    /**
-     * @var \TrackerFactory
-     */
-    private $tracker_factory;
+
+    private \Tracker_FormElementFactory $form_element_factory;
+
+    private \TrackerFactory $tracker_factory;
+
+    private LinksRetriever $links_retriever;
 
     public function __construct(
         SemanticTimeframeDao $dao,
         \Tracker_FormElementFactory $form_element_factory,
-        \TrackerFactory $tracker_factory
+        \TrackerFactory $tracker_factory,
+        LinksRetriever $links_retriever
     ) {
         $this->dao                  = $dao;
         $this->form_element_factory = $form_element_factory;
         $this->tracker_factory      = $tracker_factory;
+        $this->links_retriever      = $links_retriever;
     }
 
     /**
@@ -113,7 +114,8 @@ class SemanticTimeframeBuilder
         return new SemanticTimeframe(
             $tracker,
             new TimeframeImpliedFromAnotherTracker(
-                $implied_semantic
+                $implied_semantic,
+                $this->links_retriever
             )
         );
     }

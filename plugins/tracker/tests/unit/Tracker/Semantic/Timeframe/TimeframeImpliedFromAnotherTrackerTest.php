@@ -20,8 +20,9 @@
 
 namespace Tuleap\Tracker\Semantic\Timeframe;
 
-use Psr\Log\NullLogger;
+use Psr\Log\LoggerInterface;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\LinksRetriever;
 
 class TimeframeImpliedFromAnotherTrackerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -30,23 +31,37 @@ class TimeframeImpliedFromAnotherTrackerTest extends \Tuleap\Test\PHPUnit\TestCa
      */
     private $timeframe;
     /**
+     * @var \PHPUnit\Framework\MockObject\MockObject|TimeframeWithDuration
+     */
+    private $timeframe_calculator;
+    /**
+     * @var \PHPUnit\Framework\MockObject\MockObject|LoggerInterface
+     */
+    private $logger;
+    /**
+     * @var \PHPUnit\Framework\MockObject\MockObject|LinksRetriever
+     */
+    private $links_retriever;
+    /**
      * @var \PHPUnit\Framework\MockObject\MockObject|\Tracker
      */
     private $implied_from_tracker;
 
     protected function setUp(): void
     {
-        $implied_from_tracker = $this->createMock(\Tracker::class);
-        $implied_from_tracker->expects(self::any())->method('getName')->will(self::returnValue("Releases"));
+        $this->implied_from_tracker = $this->createMock(\Tracker::class);
+        $this->implied_from_tracker->expects(self::any())->method('getName')->will(self::returnValue("Releases"));
+
+        $this->timeframe_calculator = $this->createMock(TimeframeWithDuration::class);
+        $this->logger               = $this->createMock(LoggerInterface::class);
+        $this->links_retriever      = $this->createMock(LinksRetriever::class);
 
         $this->timeframe = new TimeframeImpliedFromAnotherTracker(
             new SemanticTimeframe(
-                $implied_from_tracker,
-                new TimeframeWithEndDate(
-                    $this->createMock(\Tracker_FormElement_Field_Date::class),
-                    $this->createMock(\Tracker_FormElement_Field_Date::class)
-                )
-            )
+                $this->implied_from_tracker,
+                $this->timeframe_calculator
+            ),
+            $this->links_retriever
         );
     }
 
@@ -102,12 +117,22 @@ class TimeframeImpliedFromAnotherTrackerTest extends \Tuleap\Test\PHPUnit\TestCa
         );
     }
 
-    public function testItReturnsAnEmptyTimePeriodForArtifactForTheMoment(): void
+    public function testItReturnsAnEmptyTimePeriodForArtifactWhenThereIsNoArtifactLinkingIt(): void
     {
+        $user     = $this->createMock(\PFUser::class);
+        $artifact = $this->getMockedArtifact(73);
+
+        $this->links_retriever->expects(self::once())
+            ->method('retrieveReverseLinksFromTracker')
+            ->with($artifact, $user, $this->implied_from_tracker)
+            ->will(self::returnValue([]));
+
+        $this->logger->expects(self::once())->method('error')->with('Unable to retrieve the time period: No artifact from tracker Releases links artifact #73');
+
         $time_period = $this->timeframe->buildTimePeriodWithoutWeekendForArtifact(
-            $this->createMock(Artifact::class),
-            $this->createMock(\PFUser::class),
-            new NullLogger()
+            $artifact,
+            $user,
+            $this->logger
         );
 
         self::assertNull($time_period->getStartDate());
@@ -115,12 +140,75 @@ class TimeframeImpliedFromAnotherTrackerTest extends \Tuleap\Test\PHPUnit\TestCa
         self::assertNull($time_period->getEndDate());
     }
 
-    public function testItReturnsAnEmptyTimePeriodForArtifactRESTForTheMoment(): void
+    public function testItReturnsAnEmptyTimePeriodForArtifactWhenThereAreMoreThanOneArtifactReversLinkingIt(): void
     {
+        $user     = $this->createMock(\PFUser::class);
+        $artifact = $this->getMockedArtifact(73);
+        $this->links_retriever->expects(self::once())
+            ->method('retrieveReverseLinksFromTracker')
+            ->with($artifact, $user, $this->implied_from_tracker)
+            ->will(self::returnValue([
+                $this->getMockedArtifact(59),
+                $this->getMockedArtifact(60),
+            ]));
+
+        $this->logger->expects(self::once())->method('error')->with('Unable to retrieve the time period: Too many artifacts from tracker Releases are linking artifact #73. There should only be one.');
+
+        $time_period = $this->timeframe->buildTimePeriodWithoutWeekendForArtifact(
+            $artifact,
+            $user,
+            $this->logger
+        );
+
+        self::assertNull($time_period->getStartDate());
+        self::assertNull($time_period->getDuration());
+        self::assertNull($time_period->getEndDate());
+    }
+
+    public function testItReturnsTheTimePeriodOfTheArtifactLinkingIt(): void
+    {
+        $user             = $this->createMock(\PFUser::class);
+        $artifact         = $this->getMockedArtifact(73);
+        $linking_artifact = $this->getMockedArtifact(59);
+
+        $this->timeframe_calculator->expects(self::once())
+            ->method('buildTimePeriodWithoutWeekendForArtifact')
+            ->with($linking_artifact, $user, $this->logger)
+            ->willReturn(\TimePeriodWithoutWeekEnd::buildFromDuration(1622557210, 10));
+
+        $this->links_retriever->expects(self::once())
+            ->method('retrieveReverseLinksFromTracker')
+            ->with($artifact, $user, $this->implied_from_tracker)
+            ->will(self::returnValue([
+                $linking_artifact
+            ]));
+
+        $time_period = $this->timeframe->buildTimePeriodWithoutWeekendForArtifact(
+            $artifact,
+            $user,
+            $this->logger
+        );
+
+        self::assertEquals(1622557210, $time_period->getStartDate());
+        self::assertEquals(10, $time_period->getDuration());
+        self::assertEquals(1623766810, $time_period->getEndDate());
+    }
+
+    public function testItReturnsAnEmptyTimePeriodForArtifactRESTWhenThereAreNoArtifactReverseLinkingIt(): void
+    {
+        $user     = $this->createMock(\PFUser::class);
+        $artifact = $this->getMockedArtifact(73);
+        $this->links_retriever->expects(self::once())
+            ->method('retrieveReverseLinksFromTracker')
+            ->with($artifact, $user, $this->implied_from_tracker)
+            ->will(self::returnValue([]));
+
+        $this->logger->expects(self::once())->method('error')->with('Unable to retrieve the time period: No artifact from tracker Releases links artifact #73');
+
         $time_period = $this->timeframe->buildTimePeriodWithoutWeekendForArtifactForREST(
-            $this->createMock(Artifact::class),
-            $this->createMock(\PFUser::class),
-            new NullLogger()
+            $artifact,
+            $user,
+            $this->logger
         );
 
         self::assertNull($time_period->getStartDate());
@@ -128,16 +216,146 @@ class TimeframeImpliedFromAnotherTrackerTest extends \Tuleap\Test\PHPUnit\TestCa
         self::assertNull($time_period->getEndDate());
     }
 
-    public function testItReturnsAnEmptyTimePeriodInChartContextForTheMoment(): void
+    public function testItReturnsAnEmptyTimePeriodForArtifactRESTWhenThereAreMoreThanOneArtifactReversLinkingIt(): void
     {
-        $time_period = $this->timeframe->buildTimePeriodWithoutWeekendForArtifactChartRendering(
-            $this->createMock(Artifact::class),
-            $this->createMock(\PFUser::class),
-            new NullLogger()
+        $user     = $this->createMock(\PFUser::class);
+        $artifact = $this->getMockedArtifact(73);
+        $this->links_retriever->expects(self::once())
+            ->method('retrieveReverseLinksFromTracker')
+            ->with($artifact, $user, $this->implied_from_tracker)
+            ->will(self::returnValue([
+                $this->getMockedArtifact(59),
+                $this->getMockedArtifact(60),
+            ]));
+
+        $this->logger->expects(self::once())->method('error')->with('Unable to retrieve the time period: Too many artifacts from tracker Releases are linking artifact #73. There should only be one.');
+
+        $time_period = $this->timeframe->buildTimePeriodWithoutWeekendForArtifactForREST(
+            $artifact,
+            $user,
+            $this->logger
         );
 
         self::assertNull($time_period->getStartDate());
         self::assertNull($time_period->getDuration());
         self::assertNull($time_period->getEndDate());
+    }
+
+    public function testItReturnsTheTimePeriodOfTheArtifactLinkingItForREST(): void
+    {
+        $user             = $this->createMock(\PFUser::class);
+        $artifact         = $this->getMockedArtifact(73);
+        $linking_artifact = $this->getMockedArtifact(59);
+
+        $this->timeframe_calculator->expects(self::once())
+            ->method('buildTimePeriodWithoutWeekendForArtifactForREST')
+            ->with($linking_artifact, $user, $this->logger)
+            ->willReturn(\TimePeriodWithoutWeekEnd::buildFromDuration(1622557210, 10));
+
+        $this->links_retriever->expects(self::once())
+            ->method('retrieveReverseLinksFromTracker')
+            ->with($artifact, $user, $this->implied_from_tracker)
+            ->will(self::returnValue([
+                $linking_artifact
+            ]));
+
+        $time_period = $this->timeframe->buildTimePeriodWithoutWeekendForArtifactForREST(
+            $artifact,
+            $user,
+            $this->logger
+        );
+
+        self::assertEquals(1622557210, $time_period->getStartDate());
+        self::assertEquals(10, $time_period->getDuration());
+        self::assertEquals(1623766810, $time_period->getEndDate());
+    }
+
+    public function testItReturnsAnEmptyTimePeriodForArtifactChartRenderingWhenThereAreNoArtifactReverseLinkingIt(): void
+    {
+        $user     = $this->createMock(\PFUser::class);
+        $artifact = $this->getMockedArtifact(73);
+        $this->links_retriever->expects(self::once())
+            ->method('retrieveReverseLinksFromTracker')
+            ->with($artifact, $user, $this->implied_from_tracker)
+            ->will(self::returnValue([]));
+
+        $this->expectException(\Tracker_FormElement_Chart_Field_Exception::class);
+        $this->expectExceptionMessage('Unable to retrieve the time period: No artifact from tracker Releases links artifact #73');
+
+        $time_period = $this->timeframe->buildTimePeriodWithoutWeekendForArtifactChartRendering(
+            $artifact,
+            $user,
+            $this->logger
+        );
+
+        self::assertNull($time_period->getStartDate());
+        self::assertNull($time_period->getDuration());
+        self::assertNull($time_period->getEndDate());
+    }
+
+    public function testItReturnsAnEmptyTimePeriodForArtifactChartRenderingWhenThereAreMoreThanOneArtifactReversLinkingIt(): void
+    {
+        $user     = $this->createMock(\PFUser::class);
+        $artifact = $this->getMockedArtifact(73);
+        $this->links_retriever->expects(self::once())
+            ->method('retrieveReverseLinksFromTracker')
+            ->with($artifact, $user, $this->implied_from_tracker)
+            ->will(self::returnValue([
+                $this->getMockedArtifact(59),
+                $this->getMockedArtifact(60),
+            ]));
+
+        $this->expectException(\Tracker_FormElement_Chart_Field_Exception::class);
+        $this->expectExceptionMessage('Unable to retrieve the time period: Too many artifacts from tracker Releases are linking artifact #73. There should only be one.');
+
+        $time_period = $this->timeframe->buildTimePeriodWithoutWeekendForArtifactChartRendering(
+            $artifact,
+            $user,
+            $this->logger
+        );
+
+        self::assertNull($time_period->getStartDate());
+        self::assertNull($time_period->getDuration());
+        self::assertNull($time_period->getEndDate());
+    }
+
+    public function testItReturnsTheTimePeriodOfTheArtifactLinkingItForChartRendering(): void
+    {
+        $user             = $this->createMock(\PFUser::class);
+        $artifact         = $this->getMockedArtifact(73);
+        $linking_artifact = $this->getMockedArtifact(59);
+
+        $this->timeframe_calculator->expects(self::once())
+            ->method('buildTimePeriodWithoutWeekendForArtifactChartRendering')
+            ->with($linking_artifact, $user, $this->logger)
+            ->willReturn(\TimePeriodWithoutWeekEnd::buildFromDuration(1622557210, 10));
+
+        $this->links_retriever->expects(self::once())
+            ->method('retrieveReverseLinksFromTracker')
+            ->with($artifact, $user, $this->implied_from_tracker)
+            ->will(self::returnValue([
+                $linking_artifact
+            ]));
+
+        $time_period = $this->timeframe->buildTimePeriodWithoutWeekendForArtifactChartRendering(
+            $artifact,
+            $user,
+            $this->logger
+        );
+
+        self::assertEquals(1622557210, $time_period->getStartDate());
+        self::assertEquals(10, $time_period->getDuration());
+        self::assertEquals(1623766810, $time_period->getEndDate());
+    }
+
+    /**
+     * @return \PHPUnit\Framework\MockObject\MockObject|Artifact
+     */
+    private function getMockedArtifact(int $id)
+    {
+        $artifact = $this->createMock(Artifact::class);
+        $artifact->expects(self::any())->method('getId')->willReturn($id);
+
+        return $artifact;
     }
 }

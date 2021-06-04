@@ -31,14 +31,15 @@ use Tuleap\Tracker\Artifact\Artifact;
 
 class LinksRetriever
 {
-    /**
-     * @var ArtifactLinkFieldValueDao
-     */
-    private $artifact_link_dao;
+    private ArtifactLinkFieldValueDao $artifact_link_dao;
+    private \Tracker_ArtifactFactory $artifact_factory;
 
-    public function __construct(ArtifactLinkFieldValueDao $artifact_link_dao)
-    {
+    public function __construct(
+        ArtifactLinkFieldValueDao $artifact_link_dao,
+        \Tracker_ArtifactFactory $artifact_factory
+    ) {
         $this->artifact_link_dao = $artifact_link_dao;
+        $this->artifact_factory  = $artifact_factory;
     }
 
     /**
@@ -55,6 +56,35 @@ class LinksRetriever
         }
 
         return $linked_and_reverse_artifacts;
+    }
+
+    /**
+     * @return Artifact[]
+     */
+    public function retrieveReverseLinksFromTracker(Artifact $artifact, \PFUser $user, \Tracker $target_tracker): array
+    {
+        $artifact_link_field = $artifact->getAnArtifactLinkField($user);
+        $last_changeset      = $artifact->getLastChangeset();
+
+        if (! $artifact_link_field || ! $last_changeset) {
+            return [];
+        }
+
+        $dar = $this->artifact_link_dao->searchReverseLinksByIdAndSourceTrackerId(
+            $artifact->getId(),
+            $target_tracker->getId()
+        );
+
+        if ($dar === false) {
+            return [];
+        }
+
+        $artifacts_ids = [];
+        foreach ($dar as $link_info) {
+            $artifacts_ids[] = $link_info['artifact_id'];
+        }
+
+        return $this->getArtifactsFromIdsUserCanRead($artifacts_ids, $user);
     }
 
     /**
@@ -80,7 +110,6 @@ class LinksRetriever
      */
     private function getLinkedAndReverseArtifacts(Tracker_Artifact_Changeset $changeset, PFUser $user, Tracker_FormElement_Field_ArtifactLink $artifact_link): array
     {
-        $artifacts        = [];
         $changeset_value  = $changeset->getValue($artifact_link);
         $all_artifact_ids = $this->getReverseLinksIds($changeset->getArtifact());
 
@@ -89,11 +118,7 @@ class LinksRetriever
             $all_artifact_ids = array_unique(array_merge($all_artifact_ids, $changeset_value->getArtifactIds()));
         }
 
-        foreach ($all_artifact_ids as $id) {
-            $artifact_link->addArtifactUserCanViewFromId($artifacts, $id, $user);
-        }
-
-        return $artifacts;
+        return $this->getArtifactsFromIdsUserCanRead($all_artifact_ids, $user);
     }
 
     /**
@@ -101,14 +126,9 @@ class LinksRetriever
      */
     private function getReverseArtifacts(Tracker_Artifact_Changeset $changeset, PFUser $user, Tracker_FormElement_Field_ArtifactLink $artifact_link): array
     {
-        $artifacts        = [];
         $all_artifact_ids = $this->getReverseLinksIds($changeset->getArtifact());
 
-        foreach ($all_artifact_ids as $id) {
-            $artifact_link->addArtifactUserCanViewFromId($artifacts, $id, $user);
-        }
-
-        return $artifacts;
+        return $this->getArtifactsFromIdsUserCanRead($all_artifact_ids, $user);
     }
 
     /**
@@ -124,5 +144,23 @@ class LinksRetriever
         }
 
         return $reverse_links_ids;
+    }
+
+    /**
+     * @return Artifact[]
+     */
+    private function getArtifactsFromIdsUserCanRead(array $artifacts_ids, PFUser $user): array
+    {
+        $artifacts = [];
+        foreach ($artifacts_ids as $reverse_link_info) {
+            $artifact_linking = $this->artifact_factory->getArtifactById($reverse_link_info);
+
+            if ($artifact_linking === null || ! $artifact_linking->userCanView($user)) {
+                continue;
+            }
+
+            $artifacts[] = $artifact_linking;
+        }
+        return $artifacts;
     }
 }

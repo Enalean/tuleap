@@ -49,6 +49,8 @@ use Tuleap\Tracker\FormElement\ChartConfigurationValueChecker;
 use Tuleap\Tracker\FormElement\ChartConfigurationValueRetriever;
 use Tuleap\Tracker\FormElement\ChartFieldUsage;
 use Tuleap\Tracker\FormElement\ChartMessageFetcher;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkFieldValueDao;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\LinksRetriever;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 use Tuleap\Tracker\FormElement\TrackerFormElementExternalField;
 use Tuleap\Tracker\REST\Artifact\ArtifactFieldValueFullRepresentation;
@@ -445,14 +447,7 @@ class Burnup extends Tracker_FormElement_Field implements Tracker_FormElement_Fi
      */
     private function getConfigurationValueRetriever()
     {
-        $form_element_factory = Tracker_FormElementFactory::instance();
-        $semantic_timeframe   = (
-            new SemanticTimeframeBuilder(
-                new SemanticTimeframeDao(),
-                $form_element_factory,
-                \TrackerFactory::instance()
-            )
-        )->getSemantic($this->getTracker());
+        $semantic_timeframe = $this->getSemanticTimeframeBuilder()->getSemantic($this->getTracker());
 
         return new ChartConfigurationValueRetriever(
             $this->getConfigurationFieldRetriever(),
@@ -466,7 +461,11 @@ class Burnup extends Tracker_FormElement_Field implements Tracker_FormElement_Fi
         return new SemanticTimeframeBuilder(
             new SemanticTimeframeDao(),
             Tracker_FormElementFactory::instance(),
-            \TrackerFactory::instance()
+            \TrackerFactory::instance(),
+            new LinksRetriever(
+                new ArtifactLinkFieldValueDao(),
+                \Tracker_ArtifactFactory::instance()
+            )
         );
     }
 

@@ -58,6 +58,8 @@ use Tuleap\ProgramManagement\Adapter\Team\MirroredTimeboxes\MirroredTimeboxesDao
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\ProgramIncrementsCreator;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Team\TeamProjectsCollectionBuilder;
 use Tuleap\Tracker\Artifact\Creation\TrackerArtifactCreator;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkFieldValueDao;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\LinksRetriever;
 use Tuleap\Tracker\FormElement\Field\ListFields\FieldValueMatcher;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao;
@@ -75,10 +77,11 @@ class TaskBuilder
         $transaction_executor = new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection());
         $logger               = BackendLogger::getDefaultLogger("program_management_syslog");
 
+        $tracker_artifact_factory     = Tracker_ArtifactFactory::instance();
         $user_stories_planner         = new UserStoriesInMirroredProgramIncrementsPlanner(
             new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection()),
             new ArtifactsLinkedToParentDao(),
-            Tracker_ArtifactFactory::instance(),
+            $tracker_artifact_factory,
             new MirroredTimeboxRetriever(new MirroredTimeboxesDao()),
             new ContentDao(),
             $logger
@@ -100,7 +103,11 @@ class TaskBuilder
                 new SemanticTimeframeBuilder(
                     new SemanticTimeframeDao(),
                     $form_element_factory,
-                    $tracker_factory
+                    $tracker_factory,
+                    new LinksRetriever(
+                        new ArtifactLinkFieldValueDao(),
+                        $tracker_artifact_factory
+                    )
                 )
             )
         );

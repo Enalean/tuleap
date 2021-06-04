@@ -46,6 +46,8 @@ use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneDao;
 use Tuleap\AgileDashboard\Planning\PlanningDao;
 use Tuleap\AgileDashboard\RemainingEffortValueRetriever;
 use Tuleap\BrowserDetection\DetectedBrowser;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkFieldValueDao;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\LinksRetriever;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao;
 use Tuleap\Tracker\Semantic\Timeframe\TimeframeBrokenConfigurationException;
@@ -148,10 +150,15 @@ class ProjectMilestonesPresenterBuilder
 
     public static function build(): ProjectMilestonesPresenterBuilder
     {
+        $artifact_factory           = Tracker_ArtifactFactory::instance();
         $semantic_timeframe_builder = new SemanticTimeframeBuilder(
             new SemanticTimeframeDao(),
             Tracker_FormElementFactory::instance(),
-            \TrackerFactory::instance()
+            \TrackerFactory::instance(),
+            new LinksRetriever(
+                new ArtifactLinkFieldValueDao(),
+                $artifact_factory
+            )
         );
 
         $planning_factory = new PlanningFactory(
@@ -167,7 +174,7 @@ class ProjectMilestonesPresenterBuilder
 
         $mono_milestone_items_finder = new MonoMilestoneItemsFinder(
             new MonoMilestoneBacklogItemDao(),
-            Tracker_ArtifactFactory::instance()
+            $artifact_factory
         );
 
         $milestone_factory = Planning_MilestoneFactory::build();
@@ -176,14 +183,14 @@ class ProjectMilestonesPresenterBuilder
             HTTPRequest::instance(),
             new AgileDashboard_Milestone_Backlog_BacklogFactory(
                 new AgileDashboard_BacklogItemDao(),
-                Tracker_ArtifactFactory::instance(),
+                $artifact_factory,
                 $planning_factory,
                 $scrum_mono_milestone_checker,
                 $mono_milestone_items_finder
             ),
             new AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory(
                 new AgileDashboard_BacklogItemDao(),
-                Tracker_ArtifactFactory::instance(),
+                $artifact_factory,
                 $milestone_factory,
                 $planning_factory,
                 new AgileDashboard_Milestone_Backlog_BacklogItemBuilder(),

@@ -1806,7 +1806,7 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
      */
     public function getLinkedAndReverseArtifacts(PFUser $user): array
     {
-        $links = new LinksRetriever($this->getArtifactlinkDao());
+        $links = new LinksRetriever($this->getArtifactlinkDao(), \Tracker_ArtifactFactory::instance());
 
         return $links->retrieveLinkedAndReverseArtifacts($this, $user);
     }
@@ -2210,7 +2210,11 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
         $semantic_timeframe_builder = new SemanticTimeframeBuilder(
             new SemanticTimeframeDao(),
             $form_element_factory,
-            \TrackerFactory::instance()
+            \TrackerFactory::instance(),
+            new LinksRetriever(
+                new ArtifactLinkFieldValueDao(),
+                $this->getArtifactFactory()
+            )
         );
         $field_retriever            = new ChartConfigurationFieldRetriever(
             $this->getFormElementFactory(),

@@ -1787,7 +1787,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
         return new Tracker_Artifact_PaginatedArtifacts($artifacts, $size);
     }
 
-    public function addArtifactUserCanViewFromId(array &$artifacts, $id, PFUser $user): void
+    private function addArtifactUserCanViewFromId(array &$artifacts, $id, PFUser $user): void
     {
         $artifact = $this->getArtifactFactory()->getArtifactById($id);
         if ($artifact && $artifact->userCanView($user)) {

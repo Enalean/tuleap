@@ -26,6 +26,7 @@ use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tracker;
 use Tracker_FormElementFactory;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\LinksRetriever;
 
 class SemanticTimeframeBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -49,12 +50,17 @@ class SemanticTimeframeBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Tracker
      */
     private $story_tracker;
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|LinksRetriever
+     */
+    private $links_retriever;
 
     protected function setUp(): void
     {
         $this->dao                  = Mockery::mock(SemanticTimeframeDao::class);
         $this->form_element_factory = Mockery::mock(Tracker_FormElementFactory::class);
         $this->tracker_factory      = Mockery::mock(\TrackerFactory::class);
+        $this->links_retriever      = Mockery::mock(LinksRetriever::class);
         $this->story_tracker        = Mockery::mock(Tracker::class, (['getId' => self::STORY_TRACKER_ID]));
     }
 
@@ -65,7 +71,7 @@ class SemanticTimeframeBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             ->once()
             ->andReturn(null);
 
-        $builder = new SemanticTimeframeBuilder($this->dao, $this->form_element_factory, $this->tracker_factory);
+        $builder = new SemanticTimeframeBuilder($this->dao, $this->form_element_factory, $this->tracker_factory, $this->links_retriever);
         $this->assertEquals(
             new SemanticTimeframe($this->story_tracker, new TimeframeNotConfigured()),
             $builder->getSemantic($this->story_tracker)
@@ -97,7 +103,7 @@ class SemanticTimeframeBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             ->once()
             ->andReturn($end_date_field);
 
-        $builder = new SemanticTimeframeBuilder($this->dao, $this->form_element_factory, $this->tracker_factory);
+        $builder = new SemanticTimeframeBuilder($this->dao, $this->form_element_factory, $this->tracker_factory, $this->links_retriever);
         $this->assertEquals(
             new SemanticTimeframe($this->story_tracker, new TimeframeWithEndDate($start_date_field, $end_date_field)),
             $builder->getSemantic($this->story_tracker)
@@ -129,7 +135,7 @@ class SemanticTimeframeBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             ->once()
             ->andReturn($duration_field);
 
-        $builder = new SemanticTimeframeBuilder($this->dao, $this->form_element_factory, $this->tracker_factory);
+        $builder = new SemanticTimeframeBuilder($this->dao, $this->form_element_factory, $this->tracker_factory, $this->links_retriever);
         $this->assertEquals(
             new SemanticTimeframe($this->story_tracker, new TimeframeWithDuration($start_date_field, $duration_field)),
             $builder->getSemantic($this->story_tracker)
@@ -155,7 +161,7 @@ class SemanticTimeframeBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             ->once()
             ->andReturn($start_date_field);
 
-        $builder = new SemanticTimeframeBuilder($this->dao, $this->form_element_factory, $this->tracker_factory);
+        $builder = new SemanticTimeframeBuilder($this->dao, $this->form_element_factory, $this->tracker_factory, $this->links_retriever);
         $this->assertFalse($builder->getSemantic($this->story_tracker)->isDefined());
     }
 
@@ -176,7 +182,7 @@ class SemanticTimeframeBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             ->once()
             ->andReturn(null);
 
-        $builder = new SemanticTimeframeBuilder($this->dao, $this->form_element_factory, $this->tracker_factory);
+        $builder = new SemanticTimeframeBuilder($this->dao, $this->form_element_factory, $this->tracker_factory, $this->links_retriever);
         $this->assertFalse($builder->getSemantic($this->story_tracker)->isDefined());
     }
 
@@ -232,11 +238,11 @@ class SemanticTimeframeBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             new TimeframeWithDuration($start_date_field, $duration_field)
         );
 
-        $builder = new SemanticTimeframeBuilder($this->dao, $this->form_element_factory, $this->tracker_factory);
+        $builder = new SemanticTimeframeBuilder($this->dao, $this->form_element_factory, $this->tracker_factory, $this->links_retriever);
         $this->assertEquals(
             new SemanticTimeframe(
                 $this->story_tracker,
-                new TimeframeImpliedFromAnotherTracker($semantic_implied_from_tracker)
+                new TimeframeImpliedFromAnotherTracker($semantic_implied_from_tracker, $this->links_retriever)
             ),
             $builder->getSemantic($this->story_tracker)
         );
@@ -267,7 +273,7 @@ class SemanticTimeframeBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             ->once()
             ->andReturn($release_tracker);
 
-        $builder = new SemanticTimeframeBuilder($this->dao, $this->form_element_factory, $this->tracker_factory);
+        $builder = new SemanticTimeframeBuilder($this->dao, $this->form_element_factory, $this->tracker_factory, $this->links_retriever);
         $this->assertEquals(
             new SemanticTimeframe(
                 $this->story_tracker,
@@ -338,7 +344,7 @@ class SemanticTimeframeBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             ->once()
             ->andReturn($duration_field);
 
-        $builder = new SemanticTimeframeBuilder($this->dao, $this->form_element_factory, $this->tracker_factory);
+        $builder = new SemanticTimeframeBuilder($this->dao, $this->form_element_factory, $this->tracker_factory, $this->links_retriever);
         $this->assertEquals(
             new SemanticTimeframe(
                 $this->story_tracker,
