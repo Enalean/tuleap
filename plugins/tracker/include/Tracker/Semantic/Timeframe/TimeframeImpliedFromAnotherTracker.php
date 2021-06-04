@@ -31,7 +31,7 @@ use Tuleap\Tracker\Semantic\Timeframe\Exceptions\ArtifactHasTooManyLinksToArtifa
 
 class TimeframeImpliedFromAnotherTracker implements IComputeTimeframes
 {
-    public const NAME = 'timeframe-inherited';
+    public const NAME = 'timeframe-implied-from-another-tracker';
 
     private SemanticTimeframe $semantic_timeframe_implied_from_tracker;
 
