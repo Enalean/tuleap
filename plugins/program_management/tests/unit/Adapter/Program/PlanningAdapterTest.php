@@ -139,8 +139,6 @@ final class PlanningAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
         $project_id    = 101;
         $root_planning = new Planning(1, 'test', $project_id, 'backlog title', 'plan title', []);
         $project       = ProjectTestBuilder::aProject()->withId($project_id)->build();
-        $root_tracker  = TrackerTestBuilder::aTracker()->withId(1)->withProject($project)->build();
-        $root_planning->setPlanningTracker($root_tracker);
 
         $second_planning = new Planning(2, 'second', $project_id, 'backlog title', 'plan title', []);
         $second_tracker  = TrackerTestBuilder::aTracker()->withId(2)->withProject($project)->build();

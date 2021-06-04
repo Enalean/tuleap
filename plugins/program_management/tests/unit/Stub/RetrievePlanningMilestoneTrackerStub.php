@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Stub;
 
 use Tuleap\ProgramManagement\Domain\Program\PlanningConfiguration\SecondPlanningNotFoundInProjectException;
+use Tuleap\ProgramManagement\Domain\Program\PlanningConfiguration\TopPlanningNotFoundInProjectException;
 use Tuleap\ProgramManagement\Domain\Project;
 use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\RetrievePlanningMilestoneTracker;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
@@ -37,19 +38,24 @@ final class RetrievePlanningMilestoneTrackerStub implements RetrievePlanningMile
      * @var \Tracker[]
      */
     private array $trackers;
+    private bool $has_no_planning;
 
     /**
      * @param int[]      $tracker_ids
      * @param \Tracker[] $trackers
      */
-    private function __construct(array $tracker_ids, array $trackers)
+    private function __construct(array $tracker_ids, array $trackers, bool $has_no_planning)
     {
-        $this->tracker_ids = $tracker_ids;
-        $this->trackers    = $trackers;
+        $this->tracker_ids     = $tracker_ids;
+        $this->trackers        = $trackers;
+        $this->has_no_planning = $has_no_planning;
     }
 
     public function retrieveRootPlanningMilestoneTracker(Project $project, \PFUser $user): \Tracker
     {
+        if ($this->has_no_planning) {
+            throw new TopPlanningNotFoundInProjectException($project->getId());
+        }
         if (count($this->trackers) > 0) {
             return array_shift($this->trackers);
         }
@@ -58,12 +64,14 @@ final class RetrievePlanningMilestoneTrackerStub implements RetrievePlanningMile
             return TrackerTestBuilder::aTracker()->withId($tracker_id)->build();
         }
 
-        throw new \Exception("No root planning trackers or tracker ids");
+        throw new \LogicException('No milestone tracker configured');
     }
-
 
     public function retrieveSecondPlanningMilestoneTracker(Project $project, \PFUser $user): \Tracker
     {
+        if ($this->has_no_planning) {
+            throw new SecondPlanningNotFoundInProjectException($project->getId());
+        }
         if (count($this->trackers) > 0) {
             return array_shift($this->trackers);
         }
@@ -72,16 +80,21 @@ final class RetrievePlanningMilestoneTrackerStub implements RetrievePlanningMile
             return TrackerTestBuilder::aTracker()->withId($tracker_id)->build();
         }
 
-        throw new SecondPlanningNotFoundInProjectException($project->getId());
+        throw new \LogicException('No milestone tracker configured');
     }
 
     public static function withValidTrackerIds(int ...$tracker_ids): self
     {
-        return new self($tracker_ids, []);
+        return new self($tracker_ids, [], false);
     }
 
     public static function withValidTrackers(\Tracker ...$trackers): self
     {
-        return new self([], $trackers);
+        return new self([], $trackers, false);
+    }
+
+    public static function withNoPlanning(): self
+    {
+        return new self([], [], true);
     }
 }

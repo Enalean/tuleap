@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck;
 
 use PFUser;
-use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\MockObject\Stub;
 use ProjectManager;
 use Psr\Log\Test\TestLogger;
@@ -32,37 +31,43 @@ use Tuleap\ProgramManagement\Adapter\ProjectAdapter;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Team\TeamProjectsCollectionBuilder;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\ProgramStore;
+use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\RetrievePlanningMilestoneTracker;
 use Tuleap\ProgramManagement\Stub\BuildProgramStub;
 use Tuleap\ProgramManagement\Stub\RetrievePlanningMilestoneTrackerStub;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 
-class IterationCreatorCheckerTest extends TestCase
+final class IterationCreatorCheckerTest extends TestCase
 {
     /**
      * @var Stub|ProgramStore
      */
     private $program_store;
     /**
-     * @var MockObject|ProjectManager
+     * @var Stub|ProjectManager
      */
     private $project_manager;
     private PFUser $user;
     private ProgramIdentifier $program;
     private TestLogger $logger;
+    private RetrievePlanningMilestoneTracker $milestone_retriever;
 
     protected function setUp(): void
     {
         $this->program_store   = $this->createStub(ProgramStore::class);
-        $this->project_manager = $this->createMock(ProjectManager::class);
+        $this->project_manager = $this->createStub(ProjectManager::class);
         $this->logger          = new TestLogger();
 
-        $this->user    = UserTestBuilder::aUser()->build();
-        $this->program = ProgramIdentifier::fromId(
+        $this->user              = UserTestBuilder::aUser()->build();
+        $this->program           = ProgramIdentifier::fromId(
             BuildProgramStub::stubValidProgram(),
             101,
             $this->user
         );
+        $first_milestone_tracker = $this->createStub(Tracker::class);
+        $first_milestone_tracker->method('getId')->willReturn(1);
+        $this->milestone_retriever = RetrievePlanningMilestoneTrackerStub::withValidTrackers($first_milestone_tracker);
     }
 
     public function testAllowArtifactCreationWhenNoTeamLinkedToProgram(): void
@@ -83,46 +88,32 @@ class IterationCreatorCheckerTest extends TestCase
             ->expects(self::once())
             ->method('getTeamProjectIdsForGivenProgramProject')
             ->willReturn([['team_project_id' => 104]]);
-
-        $first_team_project = new \Project(
-            ['group_id' => '104', 'unix_group_name' => 'proj02', 'group_name' => 'Project 02']
-        );
+        $first_team_project = ProjectTestBuilder::aProject()->withId(104)->build();
 
         $this->project_manager
-            ->expects(self::once())
             ->method('getProject')
-            ->with($first_team_project->getID())
             ->willReturn($first_team_project);
+        $this->milestone_retriever = RetrievePlanningMilestoneTrackerStub::withNoPlanning();
 
-        self::assertTrue($this->getChecker(false)->canCreateAnIteration(
-            $this->user,
-            $this->program
-        ));
-
-
+        self::assertTrue(
+            $this->getChecker()->canCreateAnIteration(
+                $this->user,
+                $this->program
+            )
+        );
         self::assertTrue($this->logger->hasErrorRecords());
     }
 
-    private function getChecker(bool $retrieve_planning_trackers = true): IterationCreatorChecker
+    private function getChecker(): IterationCreatorChecker
     {
         $project_data_adapter        = new ProjectAdapter($this->project_manager);
         $projects_collection_builder = new TeamProjectsCollectionBuilder(
             $this->program_store,
             $project_data_adapter
         );
-        $root_milestone_retriever    = RetrievePlanningMilestoneTrackerStub::withValidTrackers();
-
-        if ($retrieve_planning_trackers) {
-            $first_milestone_tracker = $this->createStub(Tracker::class);
-            $first_milestone_tracker->method('getId')->willReturn(1);
-            $root_milestone_retriever = RetrievePlanningMilestoneTrackerStub::withValidTrackers(
-                $first_milestone_tracker
-            );
-        }
-
         return new IterationCreatorChecker(
             $projects_collection_builder,
-            $root_milestone_retriever,
+            $this->milestone_retriever,
             $this->logger
         );
     }

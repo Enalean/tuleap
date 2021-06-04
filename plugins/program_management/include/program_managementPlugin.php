@@ -90,7 +90,6 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck\ProgramIncreme
 use Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck\TimeboxCreatorChecker;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\ProgramIncrementChanged;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Plan\ConfigurationChecker;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementCollectionFactory;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFieldFromProgramAndTeamTrackersCollectionBuilder;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\NatureAnalyzerException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Team\TeamProjectsCollectionBuilder;
@@ -817,11 +816,8 @@ final class program_managementPlugin extends Plugin
                 $checker,
                 new ProgramIncrementsDAO(),
                 $this->getTeamProjectCollectionBuilder(),
-                new ProgramIncrementCollectionFactory(
-                    $planning_adapter,
-                    $this->getPlanConfigurationBuilder()
-                ),
                 $planning_adapter,
+                $this->getPlanConfigurationBuilder(),
                 $logger
             ),
             new IterationCreatorChecker(
