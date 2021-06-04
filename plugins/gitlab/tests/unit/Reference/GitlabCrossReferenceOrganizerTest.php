@@ -28,6 +28,8 @@ use PFUser;
 use Project;
 use ProjectManager;
 use Tuleap\Date\TlpRelativeDatePresenterBuilder;
+use Tuleap\Gitlab\Reference\Branch\GitlabBranch;
+use Tuleap\Gitlab\Reference\Branch\GitlabBranchFactory;
 use Tuleap\Gitlab\Reference\Commit\GitlabCommit;
 use Tuleap\Gitlab\Reference\Commit\GitlabCommitCrossReferenceEnhancer;
 use Tuleap\Gitlab\Reference\Commit\GitlabCommitFactory;
@@ -88,6 +90,10 @@ class GitlabCrossReferenceOrganizerTest extends \Tuleap\Test\PHPUnit\TestCase
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|GitlabTagFactory
      */
     private $gitlab_tag_factory;
+    /**
+     * @var \PHPUnit\Framework\MockObject\MockObject|GitlabBranchFactory
+     */
+    private $gitlab_branch_factory;
 
     protected function setUp(): void
     {
@@ -96,6 +102,7 @@ class GitlabCrossReferenceOrganizerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->gitlab_commit_cross_reference_enhancer   = Mockery::mock(GitlabCommitCrossReferenceEnhancer::class);
         $this->gitlab_merge_request_reference_retriever = Mockery::mock(GitlabMergeRequestReferenceRetriever::class);
         $this->gitlab_tag_factory                       = Mockery::mock(GitlabTagFactory::class);
+        $this->gitlab_branch_factory                    = $this->createMock(GitlabBranchFactory::class);
         $this->project_manager                          = Mockery::mock(ProjectManager::class);
         $this->relative_date_builder                    = new TlpRelativeDatePresenterBuilder();
         $this->user_manager                             = Mockery::mock(\UserManager::class);
@@ -112,6 +119,7 @@ class GitlabCrossReferenceOrganizerTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->gitlab_commit_cross_reference_enhancer,
             $this->gitlab_merge_request_reference_retriever,
             $this->gitlab_tag_factory,
+            $this->gitlab_branch_factory,
             $this->project_manager,
             $this->relative_date_builder,
             $this->user_manager,
@@ -783,6 +791,65 @@ class GitlabCrossReferenceOrganizerTest extends \Tuleap\Test\PHPUnit\TestCase
         $a_ref = CrossReferencePresenterBuilder::get(1)
             ->withType('plugin_gitlab_tag')
             ->withValue('john-snow/winter-is-coming/v1.0.2')
+            ->withProjectId(1)
+            ->build();
+
+        $by_nature_organizer = Mockery::mock(CrossReferenceByNatureOrganizer::class)
+            ->shouldReceive(
+                [
+                    'getCrossReferencePresenters' => [$a_ref],
+                ]
+            )->getMock();
+
+        $by_nature_organizer->shouldReceive('removeCrossReferenceToSection')->never();
+        $by_nature_organizer
+            ->shouldReceive('moveCrossReferenceToSection')
+            ->once();
+
+        $this->organizer->organizeGitLabReferences($by_nature_organizer);
+    }
+
+    public function testItOrganizesGitlabBranchCrossReferencesInTheirRespectiveRepositorySection(): void
+    {
+        $project = Mockery::mock(Project::class)
+            ->shouldReceive('getUnixNameLowercase')
+            ->andReturn('thenightwatch')
+            ->getMock();
+
+        $this->project_manager
+            ->shouldReceive('getProject')
+            ->with(1)
+            ->andReturn($project);
+
+        $integration = new GitlabRepositoryIntegration(
+            1,
+            2,
+            'winter-is-coming',
+            'Need more blankets, we are going to freeze our asses',
+            'the_full_url',
+            new DateTimeImmutable(),
+            Project::buildForTest(),
+            false
+        );
+
+        $this->repository_integration_factory
+            ->shouldReceive('getIntegrationByNameInProject')
+            ->with($project, 'john-snow/winter-is-coming')
+            ->andReturn($integration);
+
+        $gitlab_branch = new GitlabBranch(
+            'sha1',
+            'dev',
+        );
+
+        $this->gitlab_branch_factory->expects(self::once())
+            ->method('getGitlabBranchInRepositoryWithBranchName')
+            ->with($integration, "dev")
+            ->willReturn($gitlab_branch);
+
+        $a_ref = CrossReferencePresenterBuilder::get(1)
+            ->withType('plugin_gitlab_branch')
+            ->withValue('john-snow/winter-is-coming/dev')
             ->withProjectId(1)
             ->build();
 

@@ -31,7 +31,7 @@ use Project;
 use Tuleap\Gitlab\Repository\Token\IntegrationApiTokenDao;
 use Tuleap\Gitlab\Repository\Webhook\Bot\CredentialsRetriever;
 use Tuleap\Gitlab\Repository\Webhook\PostMergeRequest\MergeRequestTuleapReferenceDao;
-use Tuleap\Gitlab\Repository\Webhook\PostPush\Branch\BranchTuleapReferenceDao;
+use Tuleap\Gitlab\Repository\Webhook\PostPush\Branch\BranchInfoDao;
 use Tuleap\Gitlab\Repository\Webhook\PostPush\Commits\CommitTuleapReferenceDao;
 use Tuleap\Gitlab\Repository\Webhook\TagPush\TagInfoDao;
 use Tuleap\Gitlab\Repository\Webhook\WebhookDeletor;
@@ -101,9 +101,9 @@ class GitlabRepositoryDeletorTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $tag_info_dao;
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|BranchTuleapReferenceDao
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|BranchInfoDao
      */
-    private $branch_tuleap_reference_dao;
+    private $branch_info_dao;
 
     protected function setUp(): void
     {
@@ -118,7 +118,7 @@ class GitlabRepositoryDeletorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->merge_request_dao           = Mockery::mock(MergeRequestTuleapReferenceDao::class);
         $this->tag_info_dao                = Mockery::mock(TagInfoDao::class);
         $this->credentials_retriever       = Mockery::mock(CredentialsRetriever::class);
-        $this->branch_tuleap_reference_dao = Mockery::mock(BranchTuleapReferenceDao::class);
+        $this->branch_info_dao             = Mockery::mock(BranchInfoDao::class);
 
         $this->deletor = new GitlabRepositoryDeletor(
             $this->git_permissions_manager,
@@ -129,7 +129,7 @@ class GitlabRepositoryDeletorTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->commit_tuleap_reference_dao,
             $this->merge_request_dao,
             $this->tag_info_dao,
-            $this->branch_tuleap_reference_dao,
+            $this->branch_info_dao,
             $this->credentials_retriever
         );
 
@@ -192,7 +192,7 @@ class GitlabRepositoryDeletorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->merge_request_dao->shouldReceive('deleteAllMergeRequestInIntegration')->once();
         $this->tag_info_dao->shouldReceive('deleteTagsInIntegration')->once();
-        $this->branch_tuleap_reference_dao->shouldReceive('deleteBranchesInIntegration')->once();
+        $this->branch_info_dao->shouldReceive('deleteBranchesInIntegration')->once();
 
         $this->deletor->deleteRepositoryIntegration(
             $this->gitlab_repository_integration,

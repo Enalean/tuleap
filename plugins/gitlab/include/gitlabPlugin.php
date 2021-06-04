@@ -30,6 +30,8 @@ use Tuleap\Gitlab\API\GitlabProjectBuilder;
 use Tuleap\Gitlab\API\Tag\GitlabTagRetriever;
 use Tuleap\Gitlab\Artifact\ArtifactRetriever;
 use Tuleap\Gitlab\EventsHandlers\ReferenceAdministrationWarningsCollectorEventHandler;
+use Tuleap\Gitlab\Reference\Branch\GitlabBranchFactory;
+use Tuleap\Gitlab\Reference\Branch\GitlabBranchReference;
 use Tuleap\Gitlab\Reference\Commit\GitlabCommitCrossReferenceEnhancer;
 use Tuleap\Gitlab\Reference\Commit\GitlabCommitFactory;
 use Tuleap\Gitlab\Reference\Commit\GitlabCommitReference;
@@ -60,7 +62,7 @@ use Tuleap\Gitlab\Repository\Webhook\PostMergeRequest\PostMergeRequestWebhookDat
 use Tuleap\Gitlab\Repository\Webhook\PostMergeRequest\PreviouslySavedReferencesRetriever;
 use Tuleap\Gitlab\Repository\Webhook\PostMergeRequest\TuleapReferencesFromMergeRequestDataExtractor;
 use Tuleap\Gitlab\Repository\Webhook\PostPush\Branch\BranchNameTuleapReferenceParser;
-use Tuleap\Gitlab\Repository\Webhook\PostPush\Branch\BranchTuleapReferenceDao;
+use Tuleap\Gitlab\Repository\Webhook\PostPush\Branch\BranchInfoDao;
 use Tuleap\Gitlab\Repository\Webhook\PostPush\Branch\PostPushWebhookActionBranchHandler;
 use Tuleap\Gitlab\Repository\Webhook\PostPush\Commits\CommitTuleapReferenceDao;
 use Tuleap\Gitlab\Repository\Webhook\PostPush\PostPushCommitArtifactUpdater;
@@ -294,7 +296,7 @@ class gitlabPlugin extends Plugin
                         new BranchNameTuleapReferenceParser(),
                         $reference_manager,
                         $tuleap_reference_retriever,
-                        new BranchTuleapReferenceDao(),
+                        new BranchInfoDao(),
                         new CrossReferenceDao(),
                         $logger
                     )
@@ -456,7 +458,7 @@ class gitlabPlugin extends Plugin
                         new BranchNameTuleapReferenceParser(),
                         $reference_manager,
                         $tuleap_reference_retriever,
-                        new BranchTuleapReferenceDao(),
+                        new BranchInfoDao(),
                         new CrossReferenceDao(),
                         $logger
                     )
@@ -523,7 +525,8 @@ class gitlabPlugin extends Plugin
         if (
             $event->getKeyword() === GitlabCommitReference::REFERENCE_NAME ||
             $event->getKeyword() === GitlabMergeRequestReference::REFERENCE_NAME ||
-            $event->getKeyword() === GitlabTagReference::REFERENCE_NAME
+            $event->getKeyword() === GitlabTagReference::REFERENCE_NAME ||
+            $event->getKeyword() === GitlabBranchReference::REFERENCE_NAME
         ) {
             $builder = new GitlabReferenceBuilder(
                 new \Tuleap\Gitlab\Reference\ReferenceDao(),
@@ -547,6 +550,7 @@ class gitlabPlugin extends Plugin
         $params['keywords'][] = GitlabCommitReference::REFERENCE_NAME;
         $params['keywords'][] = GitlabMergeRequestReference::REFERENCE_NAME;
         $params['keywords'][] = GitlabTagReference::REFERENCE_NAME;
+        $params['keywords'][] = GitlabBranchReference::REFERENCE_NAME;
     }
 
     /** @see \Event::GET_REFERENCE_ADMIN_CAPABILITIES */
@@ -558,7 +562,8 @@ class gitlabPlugin extends Plugin
         if (
             $reference->getNature() === GitlabCommitReference::NATURE_NAME ||
             $reference->getNature() === GitlabMergeRequestReference::NATURE_NAME ||
-            $reference->getNature() === GitlabTagReference::NATURE_NAME
+            $reference->getNature() === GitlabTagReference::NATURE_NAME ||
+            $reference->getNature() === GitlabBranchReference::NATURE_NAME
         ) {
             $params['can_be_deleted'] = false;
             $params['can_be_edited']  = false;
@@ -604,6 +609,16 @@ class gitlabPlugin extends Plugin
                 false
             )
         );
+
+        $natures->addNature(
+            GitlabBranchReference::NATURE_NAME,
+            new Nature(
+                GitlabBranchReference::REFERENCE_NAME,
+                'fab fa-gitlab',
+                dgettext('tuleap-gitlab', 'GitLab Branch'),
+                false
+            )
+        );
     }
 
     public function referenceAdministrationWarningsCollectorEvent(ReferenceAdministrationWarningsCollectorEvent $event): void
@@ -625,6 +640,9 @@ class gitlabPlugin extends Plugin
             new GitlabMergeRequestReferenceRetriever(new MergeRequestTuleapReferenceDao()),
             new GitlabTagFactory(
                 new TagInfoDao()
+            ),
+            new GitlabBranchFactory(
+                new BranchInfoDao()
             ),
             ProjectManager::instance(),
             new TlpRelativeDatePresenterBuilder(),
@@ -655,6 +673,13 @@ class gitlabPlugin extends Plugin
                 GitlabTagReference::REFERENCE_NAME,
                 dgettext('tuleap-gitlab', 'Reference to a GitLab tag'),
                 dgettext('tuleap-gitlab', 'GitLab tag'),
+            )
+        );
+        $collector->add(
+            new ExternalSystemReferencePresenter(
+                GitlabBranchReference::REFERENCE_NAME,
+                dgettext('tuleap-gitlab', 'Reference to a GitLab branch'),
+                dgettext('tuleap-gitlab', 'GitLab branch'),
             )
         );
     }

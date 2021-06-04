@@ -41,21 +41,21 @@ class PostPushWebhookActionBranchHandler
     private TuleapReferenceRetriever $tuleap_reference_retriever;
     private CrossReferenceDao $cross_reference_dao;
     private LoggerInterface $logger;
-    private BranchTuleapReferenceDao $branch_tuleap_reference_dao;
+    private BranchInfoDao $branch_info_dao;
     private BranchNameTuleapReferenceParser $branch_name_tuleap_reference_parser;
 
     public function __construct(
         BranchNameTuleapReferenceParser $branch_name_tuleap_reference_parser,
         ReferenceManager $reference_manager,
         TuleapReferenceRetriever $tuleap_reference_retriever,
-        BranchTuleapReferenceDao $branch_tuleap_reference_dao,
+        BranchInfoDao $branch_info_dao,
         CrossReferenceDao $cross_reference_dao,
         LoggerInterface $logger
     ) {
         $this->branch_name_tuleap_reference_parser = $branch_name_tuleap_reference_parser;
         $this->reference_manager                   = $reference_manager;
         $this->tuleap_reference_retriever          = $tuleap_reference_retriever;
-        $this->branch_tuleap_reference_dao         = $branch_tuleap_reference_dao;
+        $this->branch_info_dao                     = $branch_info_dao;
         $this->cross_reference_dao                 = $cross_reference_dao;
         $this->logger                              = $logger;
     }
@@ -138,7 +138,7 @@ class PostPushWebhookActionBranchHandler
     ): void {
         $commit_sha1 = $webhook_data->getCheckoutSha();
 
-        $this->branch_tuleap_reference_dao->saveGitlabBranchInfo(
+        $this->branch_info_dao->saveGitlabBranchInfo(
             $gitlab_repository_integration->getId(),
             $commit_sha1,
             $branch_name
