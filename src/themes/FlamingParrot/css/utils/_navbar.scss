@@ -97,6 +97,7 @@ body.has-sidebar {
     padding: var(--tlp-medium-spacing) var(--tlp-medium-spacing) 0;
     transition: padding ease-in-out 100ms;
 
+    .btn:not(.btn-link),
     .btn {
         display: inline-flex;
         box-sizing: border-box;
@@ -107,7 +108,7 @@ body.has-sidebar {
         padding: 0 var(--tlp-medium-spacing);
         overflow: hidden;
         transition: box-shadow 75ms ease-in-out, background 75ms ease-in-out, border-color 75ms ease-in-out, padding 75ms ease-in-out;
-        border: 1px solid var(--tlp-ui-white) !important;
+        border: 1px solid var(--tlp-ui-white);
         border-radius: 30px;
         background: var(--tlp-ui-white) !important;
         box-shadow:  0 1px 4px rgba(0, 0, 0, .08),
