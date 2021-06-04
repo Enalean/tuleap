@@ -20,26 +20,20 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ForumML\Threads;
+namespace Tuleap\ForumML;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Project;
 use System_Command;
 use Tuleap\ForgeConfigSandbox;
-use Tuleap\ForumML\CurrentListBreadcrumbCollectionBuilder;
-use Tuleap\ForumML\ListInfoFromVariablesProvider;
-use Tuleap\ForumML\ThreadsDao;
-use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbCollection;
-use Tuleap\Layout\IncludeAssets;
-use Tuleap\Layout\PaginationPresenter;
 use Tuleap\MailingList\ServiceMailingList;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Request\NotFoundException;
 use Tuleap\Test\Builders\HTTPRequestBuilder;
-use Tuleap\Test\Builders\LayoutBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
 
-class ThreadsControllerTest extends \Tuleap\Test\PHPUnit\TestCase
+class ListInfoFromVariablesProviderTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
     use ForgeConfigSandbox;
@@ -57,52 +51,26 @@ class ThreadsControllerTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $project_manager;
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|\TemplateRenderer
-     */
-    private $renderer;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|IncludeAssets
-     */
-    private $include_assets;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ThreadsPresenterBuilder
-     */
-    private $presenter_builder;
-    /**
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|System_Command
      */
     private $command;
     /**
-     * @var ThreadsController
+     * @var ListInfoFromVariablesProvider
      */
-    private $controller;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|CurrentListBreadcrumbCollectionBuilder
-     */
-    private $breadcrumb_builder;
+    private $provider;
 
     protected function setUp(): void
     {
-        $this->plugin             = Mockery::mock(\ForumMLPlugin::class);
-        $this->project_manager    = Mockery::mock(\ProjectManager::class);
-        $this->dao                = Mockery::mock(ThreadsDao::class);
-        $this->renderer           = Mockery::mock(\TemplateRenderer::class);
-        $this->include_assets     = Mockery::mock(IncludeAssets::class);
-        $this->presenter_builder  = Mockery::mock(ThreadsPresenterBuilder::class);
-        $this->command            = Mockery::mock(System_Command::class);
-        $this->breadcrumb_builder = Mockery::mock(CurrentListBreadcrumbCollectionBuilder::class);
+        $this->plugin          = Mockery::mock(\ForumMLPlugin::class);
+        $this->project_manager = Mockery::mock(\ProjectManager::class);
+        $this->dao             = Mockery::mock(ThreadsDao::class);
+        $this->command         = Mockery::mock(System_Command::class);
 
-        $this->controller = new ThreadsController(
-            $this->renderer,
-            $this->include_assets,
-            $this->presenter_builder,
-            $this->breadcrumb_builder,
-            new ListInfoFromVariablesProvider(
-                $this->plugin,
-                $this->project_manager,
-                $this->dao,
-                $this->command,
-            )
+        $this->provider = new ListInfoFromVariablesProvider(
+            $this->plugin,
+            $this->project_manager,
+            $this->dao,
+            $this->command,
         );
 
         \ForgeConfig::set('mailman_bin_dir', '/mailman');
@@ -117,9 +85,8 @@ class ThreadsControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->expectException(NotFoundException::class);
 
-        $this->controller->process(
+        $this->provider->getListInfoFromVariables(
             HTTPRequestBuilder::get()->build(),
-            LayoutBuilder::build(),
             ['id' => '123']
         );
     }
@@ -150,9 +117,8 @@ class ThreadsControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->expectException(ForbiddenException::class);
 
-        $this->controller->process(
+        $this->provider->getListInfoFromVariables(
             HTTPRequestBuilder::get()->build(),
-            LayoutBuilder::build(),
             ['id' => '123']
         );
     }
@@ -190,9 +156,8 @@ class ThreadsControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->expectException(ForbiddenException::class);
 
-        $this->controller->process(
+        $this->provider->getListInfoFromVariables(
             HTTPRequestBuilder::get()->build(),
-            LayoutBuilder::build(),
             ['id' => '123']
         );
     }
@@ -232,9 +197,8 @@ class ThreadsControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->expectException(ForbiddenException::class);
 
-        $this->controller->process(
+        $this->provider->getListInfoFromVariables(
             HTTPRequestBuilder::get()->withUser($user)->build(),
-            LayoutBuilder::build(),
             ['id' => '123']
         );
     }
@@ -278,9 +242,8 @@ class ThreadsControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->expectException(ForbiddenException::class);
 
-        $this->controller->process(
+        $this->provider->getListInfoFromVariables(
             HTTPRequestBuilder::get()->withUser($user)->build(),
-            LayoutBuilder::build(),
             ['id' => '123']
         );
     }
@@ -335,25 +298,23 @@ class ThreadsControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->expectException(ForbiddenException::class);
 
-        $this->controller->process(
+        $this->provider->getListInfoFromVariables(
             HTTPRequestBuilder::get()->withUser($user)->build(),
-            LayoutBuilder::build(),
             ['id' => '123']
         );
     }
 
-    public function testThreadsAreDisplayedWhenLoggedInUserTriesToAccessToAPrivateListSheIsMemberOf(): void
+    public function testItReturnsListInfoWhenLoggedInUserTriesToAccessToAPrivateListSheIsMemberOf(): void
     {
+        $list_row = [
+            'list_name' => 'foobar-devel',
+            'group_id'  => 101,
+            'is_public' => 0,
+        ];
         $this->dao
             ->shouldReceive('searchActiveList')
             ->with(123)
-            ->andReturn(
-                [
-                    'list_name' => 'foobar-devel',
-                    'group_id'  => 101,
-                    'is_public' => 0,
-                ]
-            );
+            ->andReturn($list_row);
 
         $service = Mockery::mock(ServiceMailingList::class);
 
@@ -390,55 +351,29 @@ class ThreadsControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->with("/mailman/list_members 'foobar-devel'")
             ->andReturn(['neo@example.com', 'jdoe@example.com']);
 
-        $this->presenter_builder
-            ->shouldReceive('getThreadsPresenter')
-            ->andReturn(
-                new ThreadsPresenter('foobar-devel', 0, [], '/url', '', Mockery::spy(PaginationPresenter::class))
-            );
-
-        $this->include_assets
-            ->shouldReceive('getPath')
-            ->andReturn('/whatever');
-
-        $this->include_assets
-            ->shouldReceive('getFileUrl')
-            ->with('new-thread.js')
-            ->andReturn('new-thread.js');
-
-        $service
-            ->shouldReceive('displayMailingListHeaderWithAdditionalBreadcrumbs')
-            ->once();
-        $service
-            ->shouldReceive('displayFooter')
-            ->once();
-
-        $this->renderer
-            ->shouldReceive('renderToPage')
-            ->once();
-
-        $this->breadcrumb_builder
-            ->shouldReceive('getCurrentListBreadcrumbCollectionFromRow')
-            ->andReturn(Mockery::mock(BreadCrumbCollection::class));
-
-        $this->controller->process(
+        $list_info = $this->provider->getListInfoFromVariables(
             HTTPRequestBuilder::get()->withUser($user)->build(),
-            LayoutBuilder::build(),
             ['id' => '123']
         );
+
+        self::assertEquals(123, $list_info->getListId());
+        self::assertEquals('foobar-devel', $list_info->getListName());
+        self::assertEquals($project, $list_info->getProject());
+        self::assertEquals($service, $list_info->getService());
+        self::assertEquals($list_row, $list_info->getListRow());
     }
 
-    public function testThreadsAreDisplayedWhenLoggedInUserTriesToAccessToAPublicList(): void
+    public function testItReturnsListInfoThreadsAreDisplayedWhenLoggedInUserTriesToAccessToAPublicList(): void
     {
+        $list_row = [
+            'list_name' => 'foobar-devel',
+            'group_id'  => 101,
+            'is_public' => 1,
+        ];
         $this->dao
             ->shouldReceive('searchActiveList')
             ->with(123)
-            ->andReturn(
-                [
-                    'list_name' => 'foobar-devel',
-                    'group_id'  => 101,
-                    'is_public' => 1,
-                ]
-            );
+            ->andReturn($list_row);
 
         $service = Mockery::mock(ServiceMailingList::class);
 
@@ -465,56 +400,15 @@ class ThreadsControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             ]
         );
 
-        $this->presenter_builder
-            ->shouldReceive('getThreadsPresenter')
-            ->andReturn(
-                new ThreadsPresenter('foobar-devel', 0, [], '/url', '', Mockery::spy(PaginationPresenter::class))
-            );
-
-        $this->include_assets
-            ->shouldReceive('getPath')
-            ->andReturn('/whatever');
-
-        $this->include_assets
-            ->shouldReceive('getFileUrl')
-            ->with('new-thread.js')
-            ->andReturn('new-thread.js');
-
-        $service
-            ->shouldReceive('displayMailingListHeaderWithAdditionalBreadcrumbs')
-            ->once();
-        $service
-            ->shouldReceive('displayFooter')
-            ->once();
-
-        $this->renderer
-            ->shouldReceive('renderToPage')
-            ->once();
-
-        $this->breadcrumb_builder
-            ->shouldReceive('getCurrentListBreadcrumbCollectionFromRow')
-            ->andReturn(Mockery::mock(BreadCrumbCollection::class));
-
-        $this->controller->process(
+        $list_info = $this->provider->getListInfoFromVariables(
             HTTPRequestBuilder::get()->withUser($user)->build(),
-            LayoutBuilder::build(),
             ['id' => '123']
         );
-    }
 
-    public function testItBuildsUrl(): void
-    {
-        self::assertEquals(
-            '/plugins/forumml/list/123/threads',
-            ThreadsController::getUrl(123),
-        );
-    }
-
-    public function testItBuildsSearchUrl(): void
-    {
-        self::assertEquals(
-            '/plugins/forumml/list/123/threads?search=hello+world',
-            ThreadsController::getSearchUrl(123, 'hello world'),
-        );
+        self::assertEquals(123, $list_info->getListId());
+        self::assertEquals('foobar-devel', $list_info->getListName());
+        self::assertEquals($project, $list_info->getProject());
+        self::assertEquals($service, $list_info->getService());
+        self::assertEquals($list_row, $list_info->getListRow());
     }
 }

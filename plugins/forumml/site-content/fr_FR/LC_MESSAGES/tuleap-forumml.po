@@ -27,6 +27,9 @@ msgstr "Attacher un fichier"
 msgid "Attachment not found"
 msgstr "Attachement manquant"
 
+msgid "Avatar of %s"
+msgstr "Avatar de %s"
+
 msgid "Back to the list"
 msgstr "Retour à la liste"
 
@@ -63,6 +66,9 @@ msgstr "Message"
 
 msgid "Missing 'date' and/or 'filename' parameters."
 msgstr "Les paramètres 'date' et/ou 'filename' sont manquants."
+
+msgid "Permalink"
+msgstr "Lien permanent"
 
 msgid "Post a new Thread"
 msgstr "Soumettre un nouveau fil de discussion"

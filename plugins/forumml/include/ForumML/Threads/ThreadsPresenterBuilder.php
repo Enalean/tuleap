@@ -24,6 +24,7 @@ namespace Tuleap\ForumML\Threads;
 
 use Project;
 use Tuleap\Date\TlpRelativeDatePresenterBuilder;
+use Tuleap\ForumML\ThreadsDao;
 use Tuleap\Layout\PaginationPresenter;
 
 class ThreadsPresenterBuilder
@@ -139,6 +140,8 @@ class ThreadsPresenterBuilder
                     'list'     => $list_id,
                 ]
             );
+        // Uncomment the instruction below to have new urls when you browse a ML
+        // $url = OneThreadController::getUrl($list_id, $id_message);
 
         $has_avatar = false;
         $avatar_url = '';

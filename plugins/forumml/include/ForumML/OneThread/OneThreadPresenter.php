@@ -1,5 +1,6 @@
+<?php
 /**
- * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2021 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,6 +18,30 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@use 'thread-list';
-@use 'new-thread';
-@use 'message';
+declare(strict_types=1);
+
+namespace Tuleap\ForumML\OneThread;
+
+/**
+ * @psalm-immutable
+ */
+final class OneThreadPresenter
+{
+    /**
+     * @var string
+     */
+    public $thread_name;
+    /**
+     * @var MessagePresenter[]
+     */
+    public $messages;
+
+    /**
+     * @param MessagePresenter[] $messages
+     */
+    public function __construct(string $thread_name, array $messages)
+    {
+        $this->thread_name = $thread_name;
+        $this->messages    = $messages;
+    }
+}

@@ -78,7 +78,7 @@ class ForumMLPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
 
         preg_match('%/plugins/forumml/list/(?P<list_id>\d+)/%', $_SERVER['REQUEST_URI'], $matches);
         if (isset($matches['list_id'])) {
-            $row = (new ForumML\Threads\ThreadsDao())->searchActiveList((int) $matches['list_id']);
+            $row = (new ForumML\ThreadsDao())->searchActiveList((int) $matches['list_id']);
             if ($row) {
                 $group_id = $row['group_id'];
                 $list_id  = $matches['list_id'];
@@ -258,20 +258,48 @@ class ForumMLPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
     public function routeThreads(): ForumML\Threads\ThreadsController
     {
         return new ForumML\Threads\ThreadsController(
-            $this,
-            ProjectManager::instance(),
-            new ForumML\Threads\ThreadsDao(),
             TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../templates/'),
             new IncludeAssets(__DIR__ . '/../../../src/www/assets/forumml', '/assets/forumml'),
             new ForumML\Threads\ThreadsPresenterBuilder(
-                new ForumML\Threads\ThreadsDao(),
+                new ForumML\ThreadsDao(),
                 new TlpRelativeDatePresenterBuilder(),
                 UserManager::instance(),
                 UserHelper::instance(),
             ),
-            new System_Command(),
             new CurrentListBreadcrumbCollectionBuilder(
                 new MailingListPresenterBuilder(EventManager::instance()),
+            ),
+            new ForumML\ListInfoFromVariablesProvider(
+                $this,
+                ProjectManager::instance(),
+                new ForumML\ThreadsDao(),
+                new System_Command(),
+            ),
+        );
+    }
+
+    public function routeOneThread(): ForumML\OneThread\OneThreadController
+    {
+        return new ForumML\OneThread\OneThreadController(
+            TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../templates/'),
+            new IncludeAssets(__DIR__ . '/../../../src/www/assets/forumml', '/assets/forumml'),
+            new ForumML\OneThread\OneThreadPresenterBuilder(
+                new ForumML\ThreadsDao(),
+                new ForumML\OneThread\MessageInfoToMessagePresenterConvertor(
+                    UserHelper::instance(),
+                    new TlpRelativeDatePresenterBuilder(),
+                    new ForumML\ThreadsDao(),
+                ),
+                UserManager::instance(),
+            ),
+            new CurrentListBreadcrumbCollectionBuilder(
+                new MailingListPresenterBuilder(EventManager::instance()),
+            ),
+            new ForumML\ListInfoFromVariablesProvider(
+                $this,
+                ProjectManager::instance(),
+                new ForumML\ThreadsDao(),
+                new System_Command(),
             ),
         );
     }
@@ -280,6 +308,8 @@ class ForumMLPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
     {
         $event->getRouteCollector()->addGroup($this->getPluginPath(), function (RouteCollector $r) {
             $r->get('/list/{id:\d+}/threads', $this->getRouteHandler('routeThreads'));
+            $r->get('/list/{id:\d+}/threads/{thread_id:\d+}', $this->getRouteHandler('routeOneThread'));
+            $r->get('/list/{id:\d+}/threads/upload.php', $this->getRouteHandler('routeOutputAttachment'));
 
             $r->get('/message.php', $this->getRouteHandler('routeGetMessages'));
             $r->get('/upload.php', $this->getRouteHandler('routeOutputAttachment'));
