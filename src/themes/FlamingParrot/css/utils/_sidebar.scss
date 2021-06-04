@@ -247,7 +247,9 @@
     text-decoration: none;
 
     &:hover {
-        background: var(--tlp-theme-dark-background-color-darker-05);
+        background: var(--tlp-theme-dark-background-color-darker);
+        color: var(--tlp-ui-border-normal);
+        text-decoration: none;
     }
 
     > .fas {
