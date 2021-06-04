@@ -238,6 +238,9 @@ class Git_Exec
         return $output;
     }
 
+    /**
+     * @psalm-return list<string>
+     */
     public function getAllBranchesSortedByCreationDate(): array
     {
         $output = [];
@@ -250,15 +253,25 @@ class Git_Exec
         return $this->getSymbolicRef('HEAD');
     }
 
-    private function getSymbolicRef(string $reference): ?string
+    private function getSymbolicRef(string $name): ?string
     {
         $output = [];
         try {
-            $this->gitCmdWithOutput('symbolic-ref --short ' . escapeshellarg($reference), $output);
+            $this->gitCmdWithOutput('symbolic-ref --short ' . escapeshellarg($name), $output);
         } catch (Git_Command_Exception $e) {
             return null;
         }
         return implode('', $output);
+    }
+
+    public function setDefaultBranch(string $branch_name): void
+    {
+        $this->setSymbolicRef('HEAD', 'refs/heads/' . $branch_name);
+    }
+
+    private function setSymbolicRef(string $name, string $reference): void
+    {
+        $this->gitCmd(sprintf('symbolic-ref %s %s', escapeshellarg($name), escapeshellarg($reference)));
     }
 
     public function getAllTagsSortedByCreationDate(): array
