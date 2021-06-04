@@ -22,6 +22,7 @@ declare(strict_types=1);
 namespace Tuleap\Gitlab\Repository\Webhook\PostPush\Commits;
 
 use Tuleap\DB\DataAccessObject;
+use Tuleap\Gitlab\Reference\Commit\GitlabCommitReference;
 
 class CommitTuleapReferenceDao extends DataAccessObject
 {
@@ -80,13 +81,28 @@ class CommitTuleapReferenceDao extends DataAccessObject
         return $this->getDB()->row($sql, $integration, $commit_sha1);
     }
 
-    public function deleteCommitsInIntegration(int $integration_id): void
-    {
+    public function deleteCommitsInIntegration(
+        string $integration_path,
+        int $integration_id,
+        int $integration_project_id
+    ): void {
         $this->getDB()->delete(
             'plugin_gitlab_repository_integration_commit_info',
             [
                 'integration_id' => $integration_id,
             ]
+        );
+
+        $sql = "DELETE FROM cross_references
+                WHERE source_id LIKE CONCAT(?, '/%')
+                    AND source_type = ?
+                    AND source_gid = ?";
+
+        $this->getDB()->run(
+            $sql,
+            $integration_path,
+            GitlabCommitReference::NATURE_NAME,
+            $integration_project_id
         );
     }
 }

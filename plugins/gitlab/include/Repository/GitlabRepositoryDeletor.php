@@ -113,16 +113,34 @@ class GitlabRepositoryDeletor
         }
 
         $this->db_transaction_executor->execute(function () use ($repository_integration, $project) {
-            $repository_id = $repository_integration->getId();
+            $integration_id         = $repository_integration->getId();
+            $integration_path       = $repository_integration->getName();
+            $integration_project_id = (int) $repository_integration->getProject()->getID();
 
             $credentials = $this->credentials_retriever->getCredentials($repository_integration);
             $this->webhook_deletor->deleteGitlabWebhookFromGitlabRepository($credentials, $repository_integration);
-            $this->gitlab_bot_api_token_dao->deleteIntegrationToken($repository_id);
-            $this->commit_tuleap_reference_dao->deleteCommitsInIntegration($repository_id);
-            $this->merge_request_dao->deleteAllMergeRequestInIntegration($repository_id);
-            $this->tag_info_dao->deleteTagsInIntegration($repository_id);
-            $this->branch_info_dao->deleteBranchesInIntegration($repository_id);
-            $this->gitlab_repository_dao->deleteIntegration($repository_id);
+            $this->gitlab_bot_api_token_dao->deleteIntegrationToken($integration_id);
+            $this->commit_tuleap_reference_dao->deleteCommitsInIntegration(
+                $integration_path,
+                $integration_id,
+                $integration_project_id
+            );
+            $this->merge_request_dao->deleteAllMergeRequestInIntegration(
+                $integration_path,
+                $integration_id,
+                $integration_project_id
+            );
+            $this->tag_info_dao->deleteTagsInIntegration(
+                $integration_path,
+                $integration_id,
+                $integration_project_id
+            );
+            $this->branch_info_dao->deleteBranchesInIntegration(
+                $integration_path,
+                $integration_id,
+                $integration_project_id
+            );
+            $this->gitlab_repository_dao->deleteIntegration($integration_id);
         });
     }
 }

@@ -22,6 +22,7 @@ declare(strict_types=1);
 namespace Tuleap\Gitlab\Repository\Webhook\TagPush;
 
 use Tuleap\DB\DataAccessObject;
+use Tuleap\Gitlab\Reference\Tag\GitlabTagReference;
 
 class TagInfoDao extends DataAccessObject
 {
@@ -68,13 +69,28 @@ class TagInfoDao extends DataAccessObject
         return $this->getDB()->row($sql, $integration_id, $tag_name);
     }
 
-    public function deleteTagsInIntegration(int $integration_id): void
-    {
+    public function deleteTagsInIntegration(
+        string $integration_path,
+        int $integration_id,
+        int $integration_project_id
+    ): void {
         $this->getDB()->delete(
             'plugin_gitlab_repository_integration_tag_info',
             [
                 'integration_id' => $integration_id,
             ]
+        );
+
+        $sql = "DELETE FROM cross_references
+                WHERE source_id LIKE CONCAT(?, '/%')
+                    AND source_type = ?
+                    AND source_gid = ?";
+
+        $this->getDB()->run(
+            $sql,
+            $integration_path,
+            GitlabTagReference::NATURE_NAME,
+            $integration_project_id
         );
     }
 

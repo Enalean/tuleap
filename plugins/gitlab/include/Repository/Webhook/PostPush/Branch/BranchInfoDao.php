@@ -22,6 +22,7 @@ declare(strict_types=1);
 namespace Tuleap\Gitlab\Repository\Webhook\PostPush\Branch;
 
 use Tuleap\DB\DataAccessObject;
+use Tuleap\Gitlab\Reference\Branch\GitlabBranchReference;
 
 class BranchInfoDao extends DataAccessObject
 {
@@ -83,13 +84,28 @@ class BranchInfoDao extends DataAccessObject
         return $this->getDB()->row($sql, $integration_id, $branch_name);
     }
 
-    public function deleteBranchesInIntegration(int $integration_id): void
-    {
+    public function deleteBranchesInIntegration(
+        string $integration_path,
+        int $integration_id,
+        int $integration_project_id
+    ): void {
         $this->getDB()->delete(
             'plugin_gitlab_repository_integration_branch_info',
             [
                 'integration_id' => $integration_id,
             ]
+        );
+
+        $sql = "DELETE FROM cross_references
+                WHERE source_id LIKE CONCAT(?, '/%')
+                    AND source_type = ?
+                    AND source_gid = ?";
+
+        $this->getDB()->run(
+            $sql,
+            $integration_path,
+            GitlabBranchReference::NATURE_NAME,
+            $integration_project_id
         );
     }
 
