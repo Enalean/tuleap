@@ -100,7 +100,12 @@ class PostPushWebhookActionBranchHandler
             if ($this->cross_reference_dao->existInDb($cross_reference)) {
                 //We do not add a branch already referenced in artifact
                 $this->logger->info(
-                    "|  |_ Tuleap artifact #" . $tuleap_reference->getId() . " already references branch $branch_name. Skipping."
+                    "|  |_ Tuleap artifact #" . $tuleap_reference->getId() . " already references branch $branch_name. Updating the SHA1."
+                );
+                $this->updateBranchSHA1(
+                    $gitlab_repository_integration,
+                    $webhook_data,
+                    $branch_name
                 );
                 return;
             }
@@ -129,6 +134,22 @@ class PostPushWebhookActionBranchHandler
             $external_reference->getKeyword(),
             0
         );
+    }
+
+    private function updateBranchSHA1(
+        GitlabRepositoryIntegration $gitlab_repository_integration,
+        PostPushWebhookData $webhook_data,
+        string $branch_name
+    ): void {
+        $commit_sha1 = $webhook_data->getCheckoutSha();
+
+        $this->branch_info_dao->updateGitlabBranchSHA1(
+            $gitlab_repository_integration->getId(),
+            $commit_sha1,
+            $branch_name
+        );
+
+        $this->logger->info("|  |_ SHA1 of branch data for $branch_name updated in database");
     }
 
     private function saveBranchData(

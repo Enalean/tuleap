@@ -131,6 +131,8 @@ class PostPushWebhookActionBranchHandlerTest extends TestCase
 
         $this->branch_info_dao->expects(self::once())
             ->method('saveGitlabBranchInfo');
+        $this->branch_info_dao->expects(self::never())
+            ->method('updateGitlabBranchSHA1');
 
         $this->handler->parseBranchReference(
             $integration,
@@ -178,6 +180,8 @@ class PostPushWebhookActionBranchHandlerTest extends TestCase
             ->method('insertCrossReference');
         $this->branch_info_dao->expects(self::never())
             ->method('saveGitlabBranchInfo');
+        $this->branch_info_dao->expects(self::never())
+            ->method('updateGitlabBranchSHA1');
 
         $this->handler->parseBranchReference(
             $integration,
@@ -225,6 +229,8 @@ class PostPushWebhookActionBranchHandlerTest extends TestCase
             ->method('insertCrossReference');
         $this->branch_info_dao->expects(self::never())
             ->method('saveGitlabBranchInfo');
+        $this->branch_info_dao->expects(self::never())
+            ->method('updateGitlabBranchSHA1');
 
         $this->handler->parseBranchReference(
             $integration,
@@ -277,6 +283,8 @@ class PostPushWebhookActionBranchHandlerTest extends TestCase
             ->method('insertCrossReference');
         $this->branch_info_dao->expects(self::never())
             ->method('saveGitlabBranchInfo');
+        $this->branch_info_dao->expects(self::never())
+            ->method('updateGitlabBranchSHA1');
 
         $this->handler->parseBranchReference(
             $integration,
@@ -284,7 +292,7 @@ class PostPushWebhookActionBranchHandlerTest extends TestCase
         );
     }
 
-    public function testItDoesNotSaveMultipleTimeTheSameBranch(): void
+    public function testItDoesNotSaveMultipleTimeTheSameBranchButUpdatesTheAssociatedSHA1(): void
     {
         $integration = new GitlabRepositoryIntegration(
             1,
@@ -341,6 +349,9 @@ class PostPushWebhookActionBranchHandlerTest extends TestCase
             ->method('insertCrossReference');
         $this->branch_info_dao->expects(self::never())
             ->method('saveGitlabBranchInfo');
+
+        $this->branch_info_dao->expects(self::once())
+            ->method('updateGitlabBranchSHA1');
 
         $this->handler->parseBranchReference(
             $integration,

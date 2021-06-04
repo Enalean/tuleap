@@ -48,6 +48,25 @@ class BranchInfoDao extends DataAccessObject
         );
     }
 
+    public function updateGitlabBranchSHA1(
+        int $integration_id,
+        string $commit_sha1,
+        string $branch_name
+    ): void {
+        $sql = '
+            UPDATE plugin_gitlab_repository_integration_branch_info
+            SET commit_sha1 = UNHEX(?)
+            WHERE integration_id = ?
+                AND branch_name = ?';
+
+        $this->getDB()->run(
+            $sql,
+            $commit_sha1,
+            $integration_id,
+            $branch_name
+        );
+    }
+
     /**
      * @psalm-return null|array{commit_sha1: string, branch_name: string}
      */
