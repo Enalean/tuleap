@@ -23,13 +23,17 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Adapter\Program;
 
 use Tuleap\ProgramManagement\Adapter\ProjectAdapter;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration\PlanningHasNoMilestoneTrackerException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\PlanningHasNoProgramIncrementException;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\TrackerRetrievalException;
 use Tuleap\ProgramManagement\Domain\Program\BuildPlanning;
+use Tuleap\ProgramManagement\Domain\Program\PlanningConfiguration\PlanningNotFoundException;
+use Tuleap\ProgramManagement\Domain\Program\PlanningConfiguration\SecondPlanningNotFoundInProjectException;
 use Tuleap\ProgramManagement\Domain\Program\PlanningConfiguration\TopPlanningNotFoundInProjectException;
 use Tuleap\ProgramManagement\Domain\Project;
-use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\RetrieveRootPlanningMilestoneTracker;
+use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\RetrievePlanningMilestoneTracker;
 
-final class PlanningAdapter implements BuildPlanning, RetrieveRootPlanningMilestoneTracker
+final class PlanningAdapter implements BuildPlanning, RetrievePlanningMilestoneTracker
 {
     /**
      * @var \PlanningFactory
@@ -72,5 +76,30 @@ final class PlanningAdapter implements BuildPlanning, RetrieveRootPlanningMilest
     {
         $root_planning = $this->getRootPlanning($user, $project->getId());
         return $root_planning->getPlanningTracker();
+    }
+
+    /**
+     * @throws PlanningNotFoundException
+     * @throws TrackerRetrievalException
+     */
+    public function retrieveSecondPlanningMilestoneTracker(Project $project, \PFUser $user): \Tracker
+    {
+        $root_planning = $this->planning_factory->getRootPlanning(
+            $user,
+            $project->getId()
+        );
+
+        if (! $root_planning) {
+            throw new TopPlanningNotFoundInProjectException($project->getId());
+        }
+
+        $children_planning = $this->planning_factory->getChildrenPlanning($root_planning);
+        if (! $children_planning) {
+            throw new SecondPlanningNotFoundInProjectException($project->getId());
+        }
+        if ($children_planning->getPlanningTracker() instanceof \NullTracker) {
+            throw new PlanningHasNoMilestoneTrackerException($children_planning->getId());
+        }
+        return $children_planning->getPlanningTracker();
     }
 }

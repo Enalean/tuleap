@@ -38,7 +38,7 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\TrackerCollection;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TrackerRetrievalException;
 use Tuleap\ProgramManagement\Domain\Program\PlanningConfiguration\TopPlanningNotFoundInProjectException;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
-use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\RetrieveRootPlanningMilestoneTracker;
+use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\RetrievePlanningMilestoneTracker;
 
 final class CreateProgramIncrementsTask implements CreateTaskProgramIncrement
 {
@@ -55,7 +55,7 @@ final class CreateProgramIncrementsTask implements CreateTaskProgramIncrement
      */
     private $program_increment_creator;
 
-    private RetrieveRootPlanningMilestoneTracker $root_milestone_retriever;
+    private RetrievePlanningMilestoneTracker $root_milestone_retriever;
     /**
      * @var LoggerInterface
      */
@@ -72,7 +72,7 @@ final class CreateProgramIncrementsTask implements CreateTaskProgramIncrement
     public function __construct(
         BuildFieldValues $changeset_collection_adapter,
         TeamProjectsCollectionBuilder $projects_collection_builder,
-        RetrieveRootPlanningMilestoneTracker $root_milestone_retriever,
+        RetrievePlanningMilestoneTracker $root_milestone_retriever,
         ProgramIncrementsCreator $program_increment_creator,
         LoggerInterface $logger,
         PendingArtifactCreationStore $pending_artifact_creation_store,

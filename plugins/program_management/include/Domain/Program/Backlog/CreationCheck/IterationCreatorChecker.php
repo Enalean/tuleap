@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2020 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2021 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -25,49 +25,33 @@ namespace Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck;
 use PFUser;
 use Psr\Log\LoggerInterface;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Team\TeamProjectsCollectionBuilder;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\VerifyIsProgramIncrementTracker;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TrackerCollection;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\TrackerCollectionFactory;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TrackerRetrievalException;
 use Tuleap\ProgramManagement\Domain\Program\PlanningConfiguration\PlanningNotFoundException;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
-use Tuleap\ProgramManagement\Domain\ProgramTracker;
 use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\RetrievePlanningMilestoneTracker;
 
-class ProgramIncrementCreatorChecker
+class IterationCreatorChecker
 {
-    private TimeboxCreatorChecker $timebox_creator_checker;
-    private VerifyIsProgramIncrementTracker $verify_is_program_increment;
     private TeamProjectsCollectionBuilder $team_projects_collection_builder;
-    private TrackerCollectionFactory $scale_tracker_factory;
     private RetrievePlanningMilestoneTracker $root_milestone_retriever;
     private LoggerInterface $logger;
 
     public function __construct(
-        TimeboxCreatorChecker $timebox_creator_checker,
-        VerifyIsProgramIncrementTracker $verify_is_program_increment,
         TeamProjectsCollectionBuilder $team_projects_collection_builder,
-        TrackerCollectionFactory $scale_tracker_factory,
         RetrievePlanningMilestoneTracker $root_milestone_retriever,
         LoggerInterface $logger
     ) {
-        $this->timebox_creator_checker          = $timebox_creator_checker;
-        $this->verify_is_program_increment      = $verify_is_program_increment;
         $this->team_projects_collection_builder = $team_projects_collection_builder;
-        $this->scale_tracker_factory            = $scale_tracker_factory;
         $this->root_milestone_retriever         = $root_milestone_retriever;
         $this->logger                           = $logger;
     }
 
-    public function canCreateAProgramIncrement(PFUser $user, ProgramTracker $tracker, ProgramIdentifier $program): bool
+    public function canCreateAnIteration(PFUser $user, ProgramIdentifier $program): bool
     {
-        if (! $this->verify_is_program_increment->isProgramIncrementTracker($tracker->getTrackerId())) {
-            return true;
-        }
-
         $this->logger->debug(
             sprintf(
-                'Checking if Program Increment can be created in top planning of project #%s by user %s (#%s)',
+                'Checking if Iteration can be created in second planning of project #%s by user %s (#%s)',
                 $program->getId(),
                 $user->getName(),
                 $user->getId()
@@ -82,21 +66,15 @@ class ProgramIncrementCreatorChecker
             return true;
         }
         try {
-            $program_and_milestone_trackers = $this->scale_tracker_factory->buildFromProgramProjectAndItsTeam(
-                $program,
-                $team_projects_collection,
-                $user
-            );
-            $team_trackers                  = TrackerCollection::buildRootPlanningMilestoneTrackers(
+            TrackerCollection::buildSecondPlanningMilestoneTracker(
                 $this->root_milestone_retriever,
                 $team_projects_collection,
                 $user
             );
         } catch (PlanningNotFoundException | TrackerRetrievalException $exception) {
             $this->logger->error("Cannot retrieve all milestones", ['exception' => $exception]);
-            return false;
         }
 
-        return $this->timebox_creator_checker->canTimeboxBeCreated($tracker, $program_and_milestone_trackers, $team_trackers, $user);
+        return true;
     }
 }

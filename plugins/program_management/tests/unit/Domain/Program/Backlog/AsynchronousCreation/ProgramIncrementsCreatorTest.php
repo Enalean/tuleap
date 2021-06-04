@@ -39,7 +39,7 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Subm
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Team\TeamProjectsCollection;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TrackerCollection;
 use Tuleap\ProgramManagement\Domain\Project;
-use Tuleap\ProgramManagement\Stub\RetrieveRootPlanningMilestoneTrackerStub;
+use Tuleap\ProgramManagement\Stub\RetrievePlanningMilestoneTrackerStub;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 
@@ -80,7 +80,7 @@ final class ProgramIncrementsCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $second_team   = new Project(102, 'team_red', 'Team Red');
         $teams         = new TeamProjectsCollection([$first_team, $second_team]);
         $current_user  = UserTestBuilder::aUser()->build();
-        $retriever     = RetrieveRootPlanningMilestoneTrackerStub::withValidTrackerIds(1024, 2048);
+        $retriever     = RetrievePlanningMilestoneTrackerStub::withValidTrackerIds(1024, 2048);
         $trackers      = TrackerCollection::buildRootPlanningMilestoneTrackers($retriever, $teams, $current_user);
 
         [$first_tracker, $second_tracker] = $trackers->getTrackers();
@@ -108,7 +108,7 @@ final class ProgramIncrementsCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $a_team        = new Project(101, 'team_blue', 'Team Blue');
         $teams         = new TeamProjectsCollection([$a_team]);
         $current_user  = UserTestBuilder::aUser()->build();
-        $retriever     = RetrieveRootPlanningMilestoneTrackerStub::withValidTrackerIds(1024, 2048);
+        $retriever     = RetrievePlanningMilestoneTrackerStub::withValidTrackerIds(1024, 2048);
         $trackers      = TrackerCollection::buildRootPlanningMilestoneTrackers($retriever, $teams, $current_user);
 
         $this->synchronized_fields_adapter->method('build')

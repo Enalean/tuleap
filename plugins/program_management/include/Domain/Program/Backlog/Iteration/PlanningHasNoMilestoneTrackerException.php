@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2020 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,17 +20,14 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Domain\Team\MirroredTimebox;
+namespace Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration;
 
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\PlanningHasNoProgramIncrementException;
-use Tuleap\ProgramManagement\Domain\Program\PlanningConfiguration\TopPlanningNotFoundInProjectException;
-use Tuleap\ProgramManagement\Domain\Project;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\TrackerRetrievalException;
 
-interface RetrieveRootPlanningMilestoneTracker
+final class PlanningHasNoMilestoneTrackerException extends \RuntimeException implements TrackerRetrievalException
 {
-    /**
-     * @throws TopPlanningNotFoundInProjectException
-     * @throws PlanningHasNoProgramIncrementException
-     */
-    public function retrieveRootPlanningMilestoneTracker(Project $project, \PFUser $user): \Tracker;
+    public function __construct(int $planning_id)
+    {
+        parent::__construct("Planning with id $planning_id has no milestone tracker");
+    }
 }
