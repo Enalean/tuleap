@@ -76,7 +76,7 @@ class PullRequestsCommitRepresentationFactory
             $commits[] = $this->project->GetCommit($reference);
         }
 
-        $commit_representation_collection = $this->commit_representation_builder->build(
+        $commit_representation_collection = $this->commit_representation_builder->buildCollection(
             $repository_destination,
             ...$commits
         );

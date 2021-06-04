@@ -472,4 +472,52 @@ final class RepositoryTest extends TestBase
         $this->assertEquals(2, count($content['collection']));
         $this->assertEquals(2, $content['total_size']);
     }
+
+    public function testOPTIONSGetCommits(): void
+    {
+        $response = $this->getResponse($this->client->options('git/' . GitDataBuilder::REPOSITORY_GIT_ID . '/commits/whateverreference'));
+        $this->assertEquals(['OPTIONS', 'GET'], $response->getHeader('Allow')->normalize()->toArray());
+    }
+
+    public function testGETCommits(): void
+    {
+        $response = $this->getResponse($this->client->get(
+            'git/' . GitDataBuilder::REPOSITORY_GIT_ID . '/commits/8957aa17cf3f56658d91d1c67f60e738f3fdcb3e'
+        ));
+
+        $this->assertGETCommits($response);
+    }
+
+    private function assertGetCommits(Response $response): void
+    {
+        $commit = $response->json();
+
+        $this->assertEqualsCanonicalizing(
+            $commit,
+            [
+                'html_url'       => '/plugins/git/test-git/repo01?a=commit&h=8957aa17cf3f56658d91d1c67f60e738f3fdcb3e',
+                'id'             => '8957aa17cf3f56658d91d1c67f60e738f3fdcb3e',
+                'title'          => '04',
+                'message'        => '04',
+                'author_name'    => 'Test User 1',
+                'author_email'   => 'test_user_1@example.com',
+                'authored_date'  => '2018-09-05T11:12:07+02:00',
+                'committed_date' => '2018-09-05T11:12:07+02:00',
+                'author'         => [
+                    'id'           => 102,
+                    'uri'          => 'users/102',
+                    'user_url'     => '/users/rest_api_tester_1',
+                    'real_name'    => 'Test User 1',
+                    'display_name' => 'Test User 1 (rest_api_tester_1)',
+                    'username'     => 'rest_api_tester_1',
+                    'ldap_id'      => 'tester1',
+                    'avatar_url'   => 'https://localhost/users/rest_api_tester_1/avatar.png',
+                    'is_anonymous' => false,
+                    'has_avatar'   => true
+                ],
+                'commit_status' => null,
+                'verification'  => ['signature' => null]
+            ]
+        );
+    }
 }

@@ -23,8 +23,11 @@ namespace Tuleap\Git\REST\v1;
 
 use Git_GitRepositoryUrlManager;
 use GitRepository;
+use Tuleap\Git\CommitMetadata\CommitMetadata;
 use Tuleap\Git\CommitMetadata\CommitMetadataRetriever;
+use Tuleap\Git\CommitStatus\CommitStatusUnknown;
 use Tuleap\Git\GitPHP\Commit;
+use Tuleap\User\REST\MinimalUserRepresentation;
 
 class GitCommitRepresentationBuilder
 {
@@ -43,10 +46,7 @@ class GitCommitRepresentationBuilder
         $this->url_manager        = $url_manager;
     }
 
-    /**
-     * @return GitCommitRepresentationCollection
-     */
-    public function build(GitRepository $repository, Commit ...$commits)
+    public function buildCollection(GitRepository $repository, Commit ...$commits): GitCommitRepresentationCollection
     {
         $metadata = $this->metadata_retriever->getMetadataByRepositoryAndCommits($repository, ...$commits);
 
@@ -55,14 +55,85 @@ class GitCommitRepresentationBuilder
         $commit_representation_iterator->attachIterator(new \ArrayIterator($metadata));
 
         $representations = [];
-        $repository_path = $this->url_manager->getRepositoryBaseUrl($repository);
 
         foreach ($commit_representation_iterator as list($commit, $metadata)) {
-            $commit_representation = new GitCommitRepresentation();
-            $commit_representation->build($repository_path, $commit, $metadata);
-            $representations[] = $commit_representation;
+            $message = implode("\n", $commit->GetComment());
+
+            $verification = new GitCommitVerificationRepresentation();
+            $verification->build($commit->getPGPSignature());
+
+            $commit_representation = $this->buildGitCommitRepresentation(
+                $commit,
+                $message,
+                $verification,
+                $metadata,
+                $repository
+            );
+            $representations[]     = $commit_representation;
         }
 
         return new GitCommitRepresentationCollection(...$representations);
+    }
+
+    public function build(GitRepository $repository, Commit $commit): GitCommitRepresentation
+    {
+        $metadata = $this->metadata_retriever->getMetadataByRepositoryAndCommits($repository, $commit);
+
+        $message = implode("\n", $commit->GetComment());
+
+        $verification = new GitCommitVerificationRepresentation();
+        $verification->build($commit->getPGPSignature());
+
+        return $this->buildGitCommitRepresentation(
+            $commit,
+            $message,
+            $verification,
+            $metadata[0],
+            $repository
+        );
+    }
+
+    private function buildGitCommitRepresentation(
+        Commit $commit,
+        string $message,
+        GitCommitVerificationRepresentation $verification,
+        CommitMetadata $metadata,
+        GitRepository $repository
+    ): GitCommitRepresentation {
+        return new GitCommitRepresentation(
+            $commit->GetHash(),
+            (string) $commit->GetTitle(),
+            $message,
+            $commit->GetAuthorName(),
+            $commit->getAuthorEmail(),
+            $commit->GetAuthorEpoch(),
+            $commit->GetCommitterEpoch(),
+            $verification,
+            $this->buildAuthorMetadata($metadata),
+            $this->buildCommitStatusMetadata($metadata),
+            $this->url_manager->getRepositoryBaseUrl($repository)
+        );
+    }
+
+    private function buildAuthorMetadata(CommitMetadata $metadata): ?MinimalUserRepresentation
+    {
+        $author = $metadata->getAuthor();
+
+        if ($author !== null) {
+            $author_representation = MinimalUserRepresentation::build($author);
+            $author                = $author_representation;
+        }
+        return $author;
+    }
+
+    private function buildCommitStatusMetadata(CommitMetadata $metadata): ?GitCommitStatusRepresentation
+    {
+        $commit_status          = null;
+        $metadata_commit_status = $metadata->getCommitStatus();
+        if ($metadata_commit_status->getStatusName() !== CommitStatusUnknown::NAME) {
+            $commit_status = new GitCommitStatusRepresentation();
+            $commit_status->build($metadata_commit_status);
+        }
+        return $commit_status;
     }
 }

@@ -776,7 +776,7 @@ class RepositoryResource extends AuthenticatedResource
             }
         }
 
-        $commit_representation_collection = $this->commit_representation_builder->build($repository, ...$commits);
+        $commit_representation_collection = $this->commit_representation_builder->buildCollection($repository, ...$commits);
 
         $result = [];
         foreach ($sliced_branches_refs as $branch) {
@@ -859,7 +859,7 @@ class RepositoryResource extends AuthenticatedResource
             }
         }
 
-        $commit_representation_collection = $this->commit_representation_builder->build($repository, ...$commits);
+        $commit_representation_collection = $this->commit_representation_builder->buildCollection($repository, ...$commits);
 
         $result = [];
         foreach ($sliced_tags_refs as $tag) {
@@ -885,6 +885,50 @@ class RepositoryResource extends AuthenticatedResource
         Header::sendPaginationHeaders($limit, $offset, $total_size, self::MAX_LIMIT);
 
         return $result;
+    }
+
+    /**
+     * @url OPTIONS {id}/commits/{commit_reference}
+     *
+     * @param int $id Id of the repository
+     * @param string $commit_reference Commit SHA-1
+     */
+    public function optionsGetCommits(int $id, string $commit_reference): void
+    {
+        Header::allowOptionsGet();
+    }
+
+    /**
+     * Get a commit
+     *
+     * @url GET {id}/commits/{commit_reference}
+     *
+     * @access hybrid
+     *
+     * @param int $id      Git repository id
+     * @param string $commit_reference Commit reference (sha-1, branch etc...)
+     *
+     *
+     * @status 200
+     * @throws RestException 403
+     * @throws RestException 404
+     */
+    public function getCommits(int $id, string $commit_reference): GitCommitRepresentation
+    {
+        $this->checkAccess();
+
+        $project = $this->getGitPHPProject($id);
+
+        $commit = $project->GetCommit($commit_reference);
+        if (! $commit) {
+             throw new RestException(404, 'Commit not found');
+        }
+
+        $repository = $this->getRepositoryForCurrentUser($id);
+
+        Header::allowOptionsGet();
+
+        return $this->commit_representation_builder->build($repository, $commit);
     }
 
     /**
