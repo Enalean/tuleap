@@ -26,13 +26,14 @@ use GitRepository;
 use HTTPRequest;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use org\bovigo\vfs\vfsStream;
 use Tuleap\Git\GitPHP\Commit;
 use Tuleap\Git\GitPHP\Head;
 use Tuleap\Git\GitPHP\Project;
 use Tuleap\Git\GitPHP\Tag;
 use Tuleap\Git\Repository\GitPHPProjectRetriever;
 
-class FilesHeaderPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
+final class FilesHeaderPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 
@@ -72,6 +73,7 @@ class FilesHeaderPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->gitphp_project_retriever = Mockery::mock(GitPHPProjectRetriever::class);
 
         $this->repository->allows()->getId()->andReturns(123);
+        $this->repository->shouldReceive('getFullPath')->andReturn(vfsStream::setup()->url());
 
         $project = Mockery::mock(\Project::class);
         $project->allows()->getID()->andReturns(42);
