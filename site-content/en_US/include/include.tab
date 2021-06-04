@@ -137,7 +137,6 @@ include_menu	auth_nb_failure	Number of bad attempts:
 include_menu	help	Help
 include_menu	api	API
 include_menu	get_help	Get Help
-include_menu	browse_all	Browse all
 include_menu	filter_projects	Filter...
 include_menu	add_project	New project
 #

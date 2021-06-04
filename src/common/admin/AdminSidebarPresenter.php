@@ -100,7 +100,7 @@ class AdminSidebarPresenter
         $this->configuration_section_title             = _('Global configuration');
         $this->configuration_nav_global_access_rights  = _('Global access rights');
         $this->configuration_nav_homepage              = _('Homepage');
-        $this->configuration_nav_categories            = _('Project categories');
+        $this->configuration_nav_categories            = _('Public project categories');
         $this->configuration_nav_project_fields        =  _('Project fields');
         $this->configuration_nav_predefined_references = _('Predefined project references');
         $this->configuration_nav_tracker_restore       = _('Pending trackers removal');

@@ -276,10 +276,10 @@ admin_trove_cat_edit	update_forbidden	Il est impossible de déplacer une catégo
 #-----------------------------------------------
 # Script: SF/www/admin/trove/trove_cat_list.php
 #
-admin_trove_cat_list	title	Catégories de projets
+admin_trove_cat_list	title	Catégories de projets publics
 admin_trove_cat_list	header_name	Nom complet
 admin_trove_cat_list	header_description	Description
-admin_trove_cat_list	header	Catégories de projets
+admin_trove_cat_list	header	Catégories de projets publics
 admin_trove_cat_list	edit	Modifier
 admin_trove_cat_list	delete	Supprimer
 admin_trove_cat_list	add	Ajouter une catégorie

@@ -2623,6 +2623,9 @@ msgstr ""
 "Publique signifie que tous les utilisateurs peuvent s'abonner, et que les "
 "archives sont publiques"
 
+msgid "Public project categories"
+msgstr "Catégories de projet publics"
+
 msgid "Public?"
 msgstr "Public ?"
 
