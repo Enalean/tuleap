@@ -37,6 +37,7 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Team\TeamPr
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TrackerCollection;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TrackerRetrievalException;
 use Tuleap\ProgramManagement\Domain\Program\PlanningConfiguration\TopPlanningNotFoundInProjectException;
+use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\RetrieveRootPlanningMilestoneTracker;
 
 final class CreateProgramIncrementsTask implements CreateTaskProgramIncrement
@@ -107,7 +108,7 @@ final class CreateProgramIncrementsTask implements CreateTaskProgramIncrement
         $copied_values = $this->changeset_collection_adapter->buildCollection($replication_data);
 
         $team_projects = $this->projects_collection_builder->getTeamProjectForAGivenProgramProject(
-            $replication_data->getProject()
+            ProgramIdentifier::fromReplicationData($replication_data)
         );
 
         $root_planning_tracker_team = TrackerCollection::buildRootPlanningMilestoneTrackers(

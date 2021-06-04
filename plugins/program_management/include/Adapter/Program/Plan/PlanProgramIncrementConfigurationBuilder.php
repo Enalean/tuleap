@@ -23,11 +23,9 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Adapter\Program\Plan;
 
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Plan\BuildPlanProgramIncrementConfiguration;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\Plan\PlanCheckException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\RetrieveProgramIncrementTracker;
-use Tuleap\ProgramManagement\Domain\Program\Plan\ConfigurationUserCanNotSeeProgramException;
-use Tuleap\ProgramManagement\Domain\Program\Plan\PlanTrackerException;
-use Tuleap\ProgramManagement\Domain\Program\Plan\ProgramNotFoundException;
+use Tuleap\ProgramManagement\Domain\Program\Plan\ProgramHasNoProgramIncrementTrackerException;
+use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\ProgramTrackerNotFoundException;
 use Tuleap\ProgramManagement\Domain\ProgramTracker;
 
@@ -44,42 +42,35 @@ class PlanProgramIncrementConfigurationBuilder implements BuildPlanProgramIncrem
         $this->tracker_factory                     = $tracker_factory;
     }
 
-    /**
-     * @throws PlanTrackerException
-     * @throws ProgramTrackerNotFoundException
-     * @throws PlanCheckException
-     */
-    public function buildTrackerProgramIncrementFromProjectId(int $project_id, \PFUser $user): ProgramTracker
+    public function buildProgramIncrementTrackerFromProgram(ProgramIdentifier $program, \PFUser $user): ProgramTracker
     {
+        $program_id                   = $program->getId();
         $program_increment_tracker_id = $this->program_increment_tracker_retriever->getProgramIncrementTrackerId(
-            $project_id
+            $program_id
         );
         if (! $program_increment_tracker_id) {
-            throw new ProgramTrackerNotFoundException($project_id);
+            throw new ProgramHasNoProgramIncrementTrackerException($program_id);
         }
         $program_increment_tracker = $this->getValidTracker(
             $program_increment_tracker_id
         );
 
         if (! $program_increment_tracker->userCanView($user)) {
-            throw new ConfigurationUserCanNotSeeProgramException(
-                (int) $user->getId(),
-                $program_increment_tracker->getId()
-            );
+            throw new ProgramTrackerNotFoundException($program_increment_tracker_id);
         }
 
         return new ProgramTracker($program_increment_tracker);
     }
 
     /**
-     * @throws ProgramNotFoundException
+     * @throws ProgramTrackerNotFoundException
      */
     private function getValidTracker(int $tracker_id): \Tracker
     {
         $tracker = $this->tracker_factory->getTrackerById($tracker_id);
 
         if (! $tracker) {
-            throw new ProgramNotFoundException($tracker_id);
+            throw new ProgramTrackerNotFoundException($tracker_id);
         }
 
         return $tracker;

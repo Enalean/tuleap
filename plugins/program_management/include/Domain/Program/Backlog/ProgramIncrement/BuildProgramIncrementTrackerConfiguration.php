@@ -26,5 +26,9 @@ use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 
 interface BuildProgramIncrementTrackerConfiguration
 {
-    public function build(\PFUser $user, ProgramIdentifier $project): ProgramIncrementTrackerConfiguration;
+    /**
+     * @throws \Tuleap\ProgramManagement\Domain\Program\ProgramTrackerNotFoundException
+     * @throws \Tuleap\ProgramManagement\Domain\Program\Plan\ProgramHasNoProgramIncrementTrackerException
+     */
+    public function build(ProgramIdentifier $project, \PFUser $user): ProgramIncrementTrackerConfiguration;
 }

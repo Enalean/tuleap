@@ -23,8 +23,8 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Team;
 
 use Tuleap\ProgramManagement\Domain\BuildProject;
+use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\ProgramStore;
-use Tuleap\ProgramManagement\Domain\Project;
 
 final class TeamProjectsCollectionBuilder
 {
@@ -43,9 +43,9 @@ final class TeamProjectsCollectionBuilder
         $this->project_data_adapter = $project_data_adapter;
     }
 
-    public function getTeamProjectForAGivenProgramProject(Project $project): TeamProjectsCollection
+    public function getTeamProjectForAGivenProgramProject(ProgramIdentifier $program): TeamProjectsCollection
     {
-        $program_project_id = $project->getID();
+        $program_project_id = $program->getID();
         $team_projects      = [];
         foreach ($this->program_store->getTeamProjectIdsForGivenProgramProject($program_project_id) as $row) {
             $team_projects[] = $this->project_data_adapter->buildFromId($row['team_project_id']);

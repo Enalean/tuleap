@@ -28,7 +28,6 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncr
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementTrackerConfiguration;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\RetrieveProgramIncrementLabels;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
-use Tuleap\ProgramManagement\Domain\Program\ProgramTrackerException;
 
 class ProgramIncrementTrackerConfigurationBuilder implements BuildProgramIncrementTrackerConfiguration
 {
@@ -43,17 +42,10 @@ class ProgramIncrementTrackerConfigurationBuilder implements BuildProgramIncreme
         $this->label_retriever            = $label_retriever;
     }
 
-    /**
-     * @throws \Tuleap\ProgramManagement\Domain\Program\Plan\PlanTrackerException
-     * @throws ProgramTrackerException
-     * @throws \Tuleap\ProgramManagement\Domain\Program\Backlog\Plan\PlanCheckException
-     */
-    public function build(\PFUser $user, ProgramIdentifier $project): ProgramIncrementTrackerConfiguration
+    public function build(ProgramIdentifier $project, \PFUser $user): ProgramIncrementTrackerConfiguration
     {
-        $tracker                      = $this->plan_configuration_builder->buildTrackerProgramIncrementFromProjectId(
-            $project->getId(),
-            $user
-        );
+        $tracker = $this->plan_configuration_builder->buildProgramIncrementTrackerFromProgram($project, $user);
+
         $can_create_program_increment = $tracker->userCanSubmitArtifact($user);
 
         $program_increments_labels = ProgramIncrementLabels::fromProgramIncrementTracker(

@@ -22,16 +22,19 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\Plan;
 
-use Tuleap\ProgramManagement\Domain\Program\Plan\PlanTrackerException;
+use Tuleap\ProgramManagement\Domain\Program\Plan\ProgramHasNoProgramIncrementTrackerException;
+use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\ProgramTrackerNotFoundException;
 use Tuleap\ProgramManagement\Domain\ProgramTracker;
 
 interface BuildPlanProgramIncrementConfiguration
 {
     /**
-     * @throws PlanTrackerException
      * @throws ProgramTrackerNotFoundException
-     * @throws PlanCheckException
+     * @throws ProgramHasNoProgramIncrementTrackerException
      */
-    public function buildTrackerProgramIncrementFromProjectId(int $project_id, \PFUser $user): ProgramTracker;
+    public function buildProgramIncrementTrackerFromProgram(
+        ProgramIdentifier $program,
+        \PFUser $user
+    ): ProgramTracker;
 }

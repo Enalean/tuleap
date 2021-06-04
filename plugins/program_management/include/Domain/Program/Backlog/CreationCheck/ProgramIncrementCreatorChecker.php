@@ -30,8 +30,8 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\TrackerCollection;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TrackerCollectionFactory;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TrackerRetrievalException;
 use Tuleap\ProgramManagement\Domain\Program\PlanningConfiguration\PlanningNotFoundException;
+use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\ProgramTracker;
-use Tuleap\ProgramManagement\Domain\Project;
 use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\RetrieveRootPlanningMilestoneTracker;
 
 class ProgramIncrementCreatorChecker
@@ -59,19 +59,23 @@ class ProgramIncrementCreatorChecker
         $this->logger                           = $logger;
     }
 
-    public function canCreateAProgramIncrement(PFUser $user, ProgramTracker $tracker, Project $project): bool
+    public function canCreateAProgramIncrement(PFUser $user, ProgramTracker $tracker, ProgramIdentifier $program): bool
     {
         if (! $this->verify_is_program_increment->isProgramIncrementTracker($tracker->getTrackerId())) {
             return true;
         }
 
         $this->logger->debug(
-            "Checking if Program Increment can be created in top planning of project " . $project->getName() .
-            " by user " . $user->getName() . ' (#' . $user->getId() . ')'
+            sprintf(
+                'Checking if Program Increment can be created in top planning of project #%s by user %s (#%s)',
+                $program->getId(),
+                $user->getName(),
+                $user->getId()
+            )
         );
 
         $team_projects_collection = $this->team_projects_collection_builder->getTeamProjectForAGivenProgramProject(
-            $project
+            $program
         );
         if ($team_projects_collection->isEmpty()) {
             $this->logger->debug("No team project found.");
@@ -79,7 +83,7 @@ class ProgramIncrementCreatorChecker
         }
         try {
             $program_and_milestone_trackers = $this->scale_tracker_factory->buildFromProgramProjectAndItsTeam(
-                $project,
+                $program,
                 $team_projects_collection,
                 $user
             );

@@ -78,6 +78,13 @@ class ArtifactTestBuilder
         return $this;
     }
 
+    public function inTracker(\Tracker $tracker): self
+    {
+        $this->tracker = $tracker;
+
+        return $this;
+    }
+
     public function inProject(\Project $project): self
     {
         $this->project = $project;

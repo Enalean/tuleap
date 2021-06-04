@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2021 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,12 +22,10 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Plan;
 
-use Tuleap\ProgramManagement\Domain\Program\Backlog\Plan\PlanCheckException;
-
-final class ConfigurationUserCanNotSeeProgramException extends \Exception implements PlanCheckException
+final class ProgramHasNoProgramIncrementTrackerException extends \Exception
 {
-    public function __construct(int $user_id, int $tracker_id)
+    public function __construct(int $program_id)
     {
-        parent::__construct("User #$user_id can not view the the tracker #$tracker_id");
+        parent::__construct("Program #$program_id has no program increment tracker configured");
     }
 }

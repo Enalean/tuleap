@@ -22,15 +22,10 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use Project;
-use Psr\Log\LoggerInterface;
-use Tracker_Artifact_Changeset;
+use Psr\Log\Test\TestLogger;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\ReplicationDataAdapter;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\UserStoriesInMirroredProgramIncrementsPlanner;
 use Tuleap\ProgramManagement\Adapter\Program\PlanningAdapter;
-use Tuleap\ProgramManagement\Adapter\Program\ProgramDao;
 use Tuleap\ProgramManagement\Adapter\ProjectAdapter;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\PendingArtifactCreationStore;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\ProgramIncrementsCreator;
@@ -47,76 +42,61 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Repl
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\SubmissionDate;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Team\TeamProjectsCollectionBuilder;
 use Tuleap\ProgramManagement\Domain\Program\ProgramStore;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
-use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class CreateProgramIncrementsTaskTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|UserStoriesInMirroredProgramIncrementsPlanner
-     */
-    private $user_stories_planner;
-
-    /**
-     * @var Project
-     */
-    private $project;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|\PlanningFactory
-     */
-    private $planning_factory;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|BuildFieldValues
+     * @var \PHPUnit\Framework\MockObject\Stub|BuildFieldValues
      */
     private $changeset_values_adapter;
-
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|\ProjectManager
-     */
-    private $project_manager;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ProgramDao
+     * @var \PHPUnit\Framework\MockObject\Stub|ProgramStore
      */
     private $program_store;
-
     /**
-     * @var CreateProgramIncrementsTask
+     * @var \PHPUnit\Framework\MockObject\Stub|\ProjectManager
      */
-    private $task;
+    private $project_manager;
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|PendingArtifactCreationStore
+     * @var \PHPUnit\Framework\MockObject\Stub|\PlanningFactory
+     */
+    private $planning_factory;
+    /**
+     * @var \PHPUnit\Framework\MockObject\MockObject|ProgramIncrementsCreator
+     */
+    private $mirror_creator;
+    /**
+     * @var \PHPUnit\Framework\MockObject\MockObject|PendingArtifactCreationStore
      */
     private $pending_artifact_creation_store;
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|LoggerInterface
+     * @var \PHPUnit\Framework\MockObject\MockObject|UserStoriesInMirroredProgramIncrementsPlanner
      */
-    private $logger;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|ProgramIncrementsCreator
-     */
-    private $mirror_creator;
+    private $user_stories_planner;
+    private TestLogger $logger;
+    private CreateProgramIncrementsTask $task;
 
     protected function setUp(): void
     {
-        $this->changeset_values_adapter        = \Mockery::mock(BuildFieldValues::class);
-        $this->program_store                   = \Mockery::mock(ProgramStore::class);
-        $this->project_manager                 = Mockery::mock(\ProjectManager::class);
+        $this->changeset_values_adapter        = $this->createStub(BuildFieldValues::class);
+        $this->program_store                   = $this->createStub(ProgramStore::class);
+        $this->project_manager                 = $this->createStub(\ProjectManager::class);
         $project_data_adapter                  = new ProjectAdapter($this->project_manager);
         $projects_collection_builder           = new TeamProjectsCollectionBuilder(
             $this->program_store,
             $project_data_adapter
         );
-        $this->planning_factory                = Mockery::mock(\PlanningFactory::class);
-        $this->mirror_creator                  = \Mockery::mock(ProgramIncrementsCreator::class);
-        $this->logger                          = \Mockery::mock(LoggerInterface::class);
-        $this->pending_artifact_creation_store = \Mockery::mock(PendingArtifactCreationStore::class);
-        $this->user_stories_planner            = Mockery::mock(UserStoriesInMirroredProgramIncrementsPlanner::class);
+        $this->planning_factory                = $this->createStub(\PlanningFactory::class);
+        $this->mirror_creator                  = $this->createMock(ProgramIncrementsCreator::class);
+        $this->logger                          = new TestLogger();
+        $this->pending_artifact_creation_store = $this->createMock(PendingArtifactCreationStore::class);
+        $this->user_stories_planner            = $this->createMock(
+            UserStoriesInMirroredProgramIncrementsPlanner::class
+        );
 
         $this->task = new CreateProgramIncrementsTask(
             $this->changeset_values_adapter,
@@ -127,49 +107,49 @@ final class CreateProgramIncrementsTaskTest extends \Tuleap\Test\PHPUnit\TestCas
             $this->pending_artifact_creation_store,
             $this->user_stories_planner
         );
-
-        $this->project = new Project(['group_id' => 101, 'unix_group_name' => 'test', 'group_name' => 'My project']);
     }
 
     public function testItCreateMirrors(): void
     {
-        $replication_data = $this->getReplicationData();
+        $program_project  = ProjectTestBuilder::aProject()->withId(101)->build();
+        $replication_data = $this->getReplicationData($program_project);
 
         $copied_values = $this->buildCopiedValues();
-        $this->changeset_values_adapter->shouldReceive('buildCollection')->andReturn($copied_values);
-        $this->program_store->shouldReceive('getTeamProjectIdsForGivenProgramProject')
-            ->andReturn([['team_project_id' => $this->project->getID()]]);
-        $this->project_manager->shouldReceive('getProject')->andReturn($this->project);
+        $this->changeset_values_adapter->method('buildCollection')->willReturn($copied_values);
 
-        $planning = new \Planning(1, "Root planning", $this->project->getID(), '', '');
+        $team_project_id = 102;
+        $team_project    = ProjectTestBuilder::aProject()->withId($team_project_id)->build();
+        $this->program_store->method('getTeamProjectIdsForGivenProgramProject')
+            ->willReturn([['team_project_id' => $team_project_id]]);
+        $this->project_manager->method('getProject')->willReturn($team_project);
+
+        $planning = new \Planning(1, 'Root planning', $team_project_id, '', '');
         $planning->setPlanningTracker($replication_data->getTracker()->getFullTracker());
-        $this->planning_factory->shouldReceive('getRootPlanning')->once()->andReturn($planning);
+        $this->planning_factory->method('getRootPlanning')->willReturn($planning);
 
-        $this->mirror_creator->shouldReceive('createProgramIncrements')->once();
+        $this->mirror_creator->expects(self::once())->method('createProgramIncrements');
 
-        $this->pending_artifact_creation_store->shouldReceive('deleteArtifactFromPendingCreation')
-            ->once()
-            ->withArgs(
-                [(int) $replication_data->getArtifact()->getId(), (int) $replication_data->getUser()->getId()]
-            );
+        $this->pending_artifact_creation_store->expects(self::once())
+            ->method('deleteArtifactFromPendingCreation')
+            ->with($replication_data->getArtifact()->getId(), (int) $replication_data->getUser()->getId());
 
-        $this->user_stories_planner->shouldReceive('plan')->once();
+        $this->user_stories_planner->expects(self::once())->method('plan');
 
         $this->task->createProgramIncrements($replication_data);
     }
 
     public function testItLogsWhenAnExceptionOccurrs(): void
     {
-        $replication_data = $this->getReplicationData();
+        $program_project  = ProjectTestBuilder::aProject()->withId(101)->build();
+        $replication_data = $this->getReplicationData($program_project);
 
-        $this->changeset_values_adapter->shouldReceive('buildCollection')
-            ->andThrow(new FieldRetrievalException(1, 'title'));
+        $this->changeset_values_adapter->method('buildCollection')
+            ->willThrowException(new FieldRetrievalException(1, 'title'));
 
-        $this->logger->shouldReceive('error')->once();
-
-        $this->user_stories_planner->shouldReceive('plan')->never();
+        $this->user_stories_planner->expects(self::never())->method('plan');
 
         $this->task->createProgramIncrements($replication_data);
+        self::assertTrue($this->logger->hasErrorRecords());
     }
 
     private function buildCopiedValues(): SourceChangesetValuesCollection
@@ -196,13 +176,12 @@ final class CreateProgramIncrementsTaskTest extends \Tuleap\Test\PHPUnit\TestCas
         );
     }
 
-    private function getReplicationData(): ReplicationData
+    private function getReplicationData(\Project $program_project): ReplicationData
     {
-        $user     = UserTestBuilder::aUser()->withId(1001)->build();
-        $tracker  = TrackerTestBuilder::aTracker()->withId(89)->withProject($this->project)->build();
-        $artifact = new Artifact(101, $tracker->getId(), $user->getId(), 12345678, false);
-        $artifact->setTracker($tracker);
-        $changeset = new Tracker_Artifact_Changeset(1, $artifact, $user->getId(), 12345678, "user@email.com");
+        $user      = UserTestBuilder::aUser()->withId(1001)->build();
+        $tracker   = TrackerTestBuilder::aTracker()->withId(89)->withProject($program_project)->build();
+        $artifact  = ArtifactTestBuilder::anArtifact(101)->inTracker($tracker)->build();
+        $changeset = new \Tracker_Artifact_Changeset(1, $artifact, $user->getId(), 1234567890, null);
 
         return ReplicationDataAdapter::build($artifact, $user, $changeset);
     }

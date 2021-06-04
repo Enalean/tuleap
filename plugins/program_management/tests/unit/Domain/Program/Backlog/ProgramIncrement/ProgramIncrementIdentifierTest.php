@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement;
 
-use Tuleap\ProgramManagement\Domain\Program\ProgramTrackerNotFoundException;
 use Tuleap\ProgramManagement\Stub\CheckProgramIncrementStub;
 use Tuleap\Test\Builders\UserTestBuilder;
 
@@ -31,7 +30,7 @@ final class ProgramIncrementIdentifierTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItThrowsAnExceptionWhenTrackerIsNotValid(): void
     {
         $user = UserTestBuilder::aUser()->build();
-        $this->expectException(ProgramTrackerNotFoundException::class);
+        $this->expectException(ProgramIncrementNotFoundException::class);
         ProgramIncrementIdentifier::fromId(CheckProgramIncrementStub::buildOtherArtifactChecker(), 1, $user);
     }
 

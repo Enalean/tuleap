@@ -22,8 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement;
 
-use Tracker_Artifact_ChangesetFactory;
-use Tracker_ArtifactFactory;
 use Tuleap\ProgramManagement\Adapter\ProjectAdapter;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\PendingArtifactCreationStore;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\PendingArtifactChangesetNotFoundException;
@@ -33,32 +31,19 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Arti
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\BuildReplicationData;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\ReplicationData;
 use Tuleap\ProgramManagement\Domain\ProgramTracker;
-use UserManager;
 
 final class ReplicationDataAdapter implements BuildReplicationData
 {
-    /**
-     * @var Tracker_ArtifactFactory
-     */
-    private $artifact_factory;
-    /**
-     * @var UserManager
-     */
-    private $user_manager;
-    /**
-     * @var PendingArtifactCreationStore
-     */
-    private $pending_artifact_creation_store;
-    /**
-     * @var \Tracker_Artifact_ChangesetFactory
-     */
-    private $changeset_factory;
+    private \Tracker_ArtifactFactory $artifact_factory;
+    private \UserManager $user_manager;
+    private PendingArtifactCreationStore $pending_artifact_creation_store;
+    private \Tracker_Artifact_ChangesetFactory $changeset_factory;
 
     public function __construct(
-        Tracker_ArtifactFactory $artifact_factory,
-        UserManager $user_manager,
+        \Tracker_ArtifactFactory $artifact_factory,
+        \UserManager $user_manager,
         PendingArtifactCreationStore $pending_artifact_creation_store,
-        Tracker_Artifact_ChangesetFactory $changeset_factory
+        \Tracker_Artifact_ChangesetFactory $changeset_factory
     ) {
         $this->artifact_factory                = $artifact_factory;
         $this->user_manager                    = $user_manager;

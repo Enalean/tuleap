@@ -22,13 +22,10 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement;
 
-use Tuleap\ProgramManagement\Domain\Program\ProgramTrackerException;
-
 interface CheckProgramIncrement
 {
     /**
      * @throws ProgramIncrementNotFoundException
-     * @throws ProgramTrackerException
      */
     public function checkIsAProgramIncrement(int $program_increment_id, \PFUser $user): void;
 }

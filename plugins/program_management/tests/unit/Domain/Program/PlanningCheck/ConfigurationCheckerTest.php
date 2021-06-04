@@ -43,7 +43,7 @@ final class ConfigurationCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         $program           = ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 1, $user);
         $program_increment = new ProgramTracker(TrackerTestBuilder::aTracker()->build());
         $planning_adapter->shouldReceive('buildProgramIdentifierFromTeamProject')->andReturn($program);
-        $plan_adapter->shouldReceive('buildTrackerProgramIncrementFromProjectId')->andReturn($program_increment);
+        $plan_adapter->shouldReceive('buildProgramIncrementTrackerFromProgram')->andReturn($program_increment);
 
         $project = new Project(['group_id' => 1]);
 
