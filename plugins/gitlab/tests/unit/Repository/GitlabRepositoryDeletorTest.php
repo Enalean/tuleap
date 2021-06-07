@@ -187,7 +187,7 @@ class GitlabRepositoryDeletorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->commit_tuleap_reference_dao
             ->shouldReceive('deleteCommitsInIntegration')
-            ->with(1)
+            ->with("root/repo01", 1, 101)
             ->once();
 
         $this->merge_request_dao->shouldReceive('deleteAllMergeRequestInIntegration')->once();
