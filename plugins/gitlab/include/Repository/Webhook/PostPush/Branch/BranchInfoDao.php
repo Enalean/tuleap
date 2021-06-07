@@ -92,4 +92,15 @@ class BranchInfoDao extends DataAccessObject
             ]
         );
     }
+
+    public function deleteBranchInGitlabIntegration(int $integration_id, string $branch_name): void
+    {
+        $this->getDB()->delete(
+            'plugin_gitlab_repository_integration_branch_info',
+            [
+                'integration_id' => $integration_id,
+                'branch_name' => $branch_name,
+            ]
+        );
+    }
 }

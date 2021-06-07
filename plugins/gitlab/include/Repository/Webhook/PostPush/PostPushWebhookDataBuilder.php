@@ -46,11 +46,11 @@ class PostPushWebhookDataBuilder
         string $project_url,
         array $webhook_content
     ): PostPushWebhookData {
-        if (! isset($webhook_content[self::REFERENCE_KEY])) {
+        if (! array_key_exists(self::REFERENCE_KEY, $webhook_content)) {
             throw new MissingKeyException(self::REFERENCE_KEY);
         }
 
-        if (! isset($webhook_content[self::CHECKOUT_SHA_KEY])) {
+        if (! array_key_exists(self::CHECKOUT_SHA_KEY, $webhook_content)) {
             throw new MissingKeyException(self::CHECKOUT_SHA_KEY);
         }
 
@@ -58,8 +58,11 @@ class PostPushWebhookDataBuilder
             throw new InvalidValueFormatException(self::REFERENCE_KEY, "string");
         }
 
-        if (! is_string($webhook_content[self::CHECKOUT_SHA_KEY])) {
-            throw new InvalidValueFormatException(self::CHECKOUT_SHA_KEY, "string");
+        if (
+            ! is_string($webhook_content[self::CHECKOUT_SHA_KEY]) &&
+            ! is_null($webhook_content[self::CHECKOUT_SHA_KEY])
+        ) {
+            throw new InvalidValueFormatException(self::CHECKOUT_SHA_KEY, "string|null");
         }
 
         return new PostPushWebhookData(

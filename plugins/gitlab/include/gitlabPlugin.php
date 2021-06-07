@@ -298,6 +298,7 @@ class gitlabPlugin extends Plugin
                         $tuleap_reference_retriever,
                         new BranchInfoDao(),
                         new CrossReferenceDao(),
+                        new CrossReferenceManager(),
                         $logger
                     )
                 ),
@@ -460,6 +461,7 @@ class gitlabPlugin extends Plugin
                         $tuleap_reference_retriever,
                         new BranchInfoDao(),
                         new CrossReferenceDao(),
+                        new CrossReferenceManager(),
                         $logger
                     )
                 ),
