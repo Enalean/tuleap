@@ -22,13 +22,17 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain;
 
+use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
+use Tuleap\ProgramManagement\Stub\BuildProgramStub;
 use Tuleap\ProgramManagement\Stub\RetrievePlanningMilestoneTrackerStub;
+use Tuleap\ProgramManagement\Stub\RetrieveVisibleProgramIncrementTrackerStub;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class ProgramTrackerTest extends TestCase
 {
-    public function testItBuildsValidTracker(): void
+    public function testItBuildsMilestoneTrackerFromRootPlanning(): void
     {
         $retriever = RetrievePlanningMilestoneTrackerStub::withValidTrackerIds(101);
         $project   = new Project(101, 'team_blue', 'Team Blue');
@@ -36,6 +40,27 @@ final class ProgramTrackerTest extends TestCase
 
         $tracker = ProgramTracker::buildMilestoneTrackerFromRootPlanning($retriever, $project, $user);
         self::assertSame(101, $tracker->getTrackerId());
+    }
+
+    public function testItBuildsMilestoneTrackerFromSecondPlanning(): void
+    {
+        $retriever = RetrievePlanningMilestoneTrackerStub::withValidTrackerIds(76);
+        $project   = new Project(101, 'team_blue', 'Team Blue');
+        $user      = UserTestBuilder::aUser()->build();
+
+        $tracker = ProgramTracker::buildSecondPlanningMilestoneTracker($retriever, $project, $user);
+        self::assertSame(76, $tracker->getTrackerId());
+    }
+
+    public function testItBuildsProgramIncrementTracker(): void
+    {
+        $tracker   = TrackerTestBuilder::aTracker()->withId(78)->build();
+        $retriever = RetrieveVisibleProgramIncrementTrackerStub::withValidTracker($tracker);
+        $user      = UserTestBuilder::aUser()->build();
+        $program   = ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 101, $user);
+
+        $program_increment_tracker = ProgramTracker::buildProgramIncrementTrackerFromProgram($retriever, $program, $user);
+        self::assertSame(78, $program_increment_tracker->getTrackerId());
     }
 
     public function testItDelegatesPermissionCheckToWrappedTracker(): void

@@ -23,16 +23,16 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck;
 
 use Psr\Log\Test\TestLogger;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\Plan\BuildPlanProgramIncrementConfiguration;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Team\TeamProjectsCollection;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\VerifyIsProgramIncrementTracker;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracker\RetrieveVisibleProgramIncrementTracker;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracker\VerifyIsProgramIncrementTracker;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\ProgramTracker;
 use Tuleap\ProgramManagement\Domain\Project;
 use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\RetrievePlanningMilestoneTracker;
-use Tuleap\ProgramManagement\Stub\BuildPlanProgramIncrementConfigurationStub;
 use Tuleap\ProgramManagement\Stub\BuildProgramStub;
 use Tuleap\ProgramManagement\Stub\RetrievePlanningMilestoneTrackerStub;
+use Tuleap\ProgramManagement\Stub\RetrieveVisibleProgramIncrementTrackerStub;
 use Tuleap\ProgramManagement\Stub\VerifyIsProgramIncrementTrackerStub;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
@@ -47,7 +47,7 @@ final class ProgramIncrementCreatorCheckerTest extends \Tuleap\Test\PHPUnit\Test
     private \PFUser $user;
     private ProgramIdentifier $program;
     private VerifyIsProgramIncrementTracker $program_verifier;
-    private BuildPlanProgramIncrementConfiguration $program_increment_tracker_retriever;
+    private RetrieveVisibleProgramIncrementTracker $program_increment_tracker_retriever;
     private RetrievePlanningMilestoneTracker $root_milestone_retriever;
 
     protected function setUp(): void
@@ -55,11 +55,11 @@ final class ProgramIncrementCreatorCheckerTest extends \Tuleap\Test\PHPUnit\Test
         $this->timebox_creator_checker = $this->createMock(TimeboxCreatorChecker::class);
         $this->program_verifier        = VerifyIsProgramIncrementTrackerStub::buildValidProgramIncrement();
 
-        $this->tracker                             = new ProgramTracker(
-            TrackerTestBuilder::aTracker()->withId(102)->build()
-        );
-        $this->program_increment_tracker_retriever = BuildPlanProgramIncrementConfigurationStub::withValidTracker(
-            $this->tracker
+        $program_increment_tracker = TrackerTestBuilder::aTracker()->withId(102)->build();
+        $this->tracker             = new ProgramTracker($program_increment_tracker);
+
+        $this->program_increment_tracker_retriever = RetrieveVisibleProgramIncrementTrackerStub::withValidTracker(
+            $program_increment_tracker
         );
 
         $first_milestone_tracker = $this->createStub(\Tracker::class);
@@ -136,7 +136,8 @@ final class ProgramIncrementCreatorCheckerTest extends \Tuleap\Test\PHPUnit\Test
 
     public function testDisallowArtifactCreationIfProgramIncrementTrackerIsNotVisible(): void
     {
-        $this->program_increment_tracker_retriever = BuildPlanProgramIncrementConfigurationStub::withNotVisibleProgramIncrementTracker();
+        $this->program_increment_tracker_retriever =
+            RetrieveVisibleProgramIncrementTrackerStub::withNotVisibleProgramIncrementTracker();
 
         self::assertFalse(
             $this->getChecker()->canCreateAProgramIncrement(

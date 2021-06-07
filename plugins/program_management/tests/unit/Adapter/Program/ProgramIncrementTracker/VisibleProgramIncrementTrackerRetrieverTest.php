@@ -20,17 +20,17 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Adapter\Program\Plan;
+namespace Tuleap\ProgramManagement\Adapter\Program\ProgramIncrementTracker;
 
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracker\RetrieveProgramIncrementTracker;
 use Tuleap\ProgramManagement\Domain\Program\Plan\ProgramHasNoProgramIncrementTrackerException;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\ProgramTrackerNotFoundException;
-use Tuleap\ProgramManagement\Domain\ProgramTracker;
 use Tuleap\ProgramManagement\Stub\BuildProgramStub;
 use Tuleap\ProgramManagement\Stub\RetrieveProgramIncrementTrackerStub;
 use Tuleap\Test\Builders\UserTestBuilder;
 
-final class PlanProgramIncrementConfigurationBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
+final class VisibleProgramIncrementTrackerRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**
      * @var \PHPUnit\Framework\MockObject\MockObject|\TrackerFactory
@@ -38,66 +38,58 @@ final class PlanProgramIncrementConfigurationBuilderTest extends \Tuleap\Test\PH
     private $tracker_factory;
     private \PFUser $user;
     private ProgramIdentifier $program;
+    private RetrieveProgramIncrementTracker $tracker_id_retriever;
 
     protected function setUp(): void
     {
-        $this->tracker_factory = $this->createMock(\TrackerFactory::class);
-        $this->user            = UserTestBuilder::aUser()->build();
-        $this->program         = ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 101, $this->user);
+        $this->tracker_factory      = $this->createMock(\TrackerFactory::class);
+        $this->user                 = UserTestBuilder::aUser()->build();
+        $this->program              = ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 101, $this->user);
+        $this->tracker_id_retriever = RetrieveProgramIncrementTrackerStub::buildValidTrackerId(1);
     }
 
     public function testItThrowsAnExceptionIfProgramIncrementTrackerIsNotFound(): void
     {
         $this->tracker_factory->method('getTrackerById')->with(1)->willReturn(null);
 
-        $builder = new PlanProgramIncrementConfigurationBuilder(
-            RetrieveProgramIncrementTrackerStub::buildValidTrackerId(1),
-            $this->tracker_factory
-        );
         $this->expectException(ProgramTrackerNotFoundException::class);
-        $builder->buildProgramIncrementTrackerFromProgram($this->program, $this->user);
+        $this->getRetriever()->retrieveVisibleProgramIncrementTracker($this->program, $this->user);
     }
 
     public function testItThrowsIfGivenProjectIsNotAProgram(): void
     {
-        $builder = new PlanProgramIncrementConfigurationBuilder(
-            RetrieveProgramIncrementTrackerStub::buildNoProgramIncrementTracker(),
-            $this->tracker_factory
-        );
+        $this->tracker_id_retriever = RetrieveProgramIncrementTrackerStub::buildNoProgramIncrementTracker();
+
         $this->expectException(ProgramHasNoProgramIncrementTrackerException::class);
-        $builder->buildProgramIncrementTrackerFromProgram($this->program, $this->user);
+        $this->getRetriever()->retrieveVisibleProgramIncrementTracker($this->program, $this->user);
     }
 
     public function testItThrowsAnExceptionIfUserCanNotSeeProgramIncrementTracker(): void
     {
-        $tracker = $this->createMock(\Tracker::class);
+        $tracker = $this->createStub(\Tracker::class);
         $tracker->method('getId')->willReturn(1);
         $tracker->method('userCanView')->willReturn(false);
         $this->tracker_factory->method('getTrackerById')->with(1)->willReturn($tracker);
 
-        $builder = new PlanProgramIncrementConfigurationBuilder(
-            RetrieveProgramIncrementTrackerStub::buildValidTrackerId(1),
-            $this->tracker_factory
-        );
         $this->expectException(ProgramTrackerNotFoundException::class);
-        $builder->buildProgramIncrementTrackerFromProgram($this->program, $this->user);
+        $this->getRetriever()->retrieveVisibleProgramIncrementTracker($this->program, $this->user);
     }
 
     public function testItBuildProgramIncrementTracker(): void
     {
-        $tracker = $this->createMock(\Tracker::class);
+        $tracker = $this->createStub(\Tracker::class);
         $tracker->method('getId')->willReturn(1);
         $tracker->method('userCanView')->willReturn(true);
         $this->tracker_factory->method('getTrackerById')->with(1)->willReturn($tracker);
 
-        $builder           = new PlanProgramIncrementConfigurationBuilder(
-            RetrieveProgramIncrementTrackerStub::buildValidTrackerId(1),
-            $this->tracker_factory
-        );
-        $program_increment = new ProgramTracker($tracker);
         self::assertEquals(
-            $program_increment,
-            $builder->buildProgramIncrementTrackerFromProgram($this->program, $this->user)
+            $tracker,
+            $this->getRetriever()->retrieveVisibleProgramIncrementTracker($this->program, $this->user)
         );
+    }
+
+    private function getRetriever(): VisibleProgramIncrementTrackerRetriever
+    {
+        return new VisibleProgramIncrementTrackerRetriever($this->tracker_id_retriever, $this->tracker_factory);
     }
 }

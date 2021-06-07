@@ -29,7 +29,9 @@ use Project;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
 use Tuleap\Layout\IncludeAssets;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\BuildProgramIncrementTrackerConfiguration;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracker\ProgramIncrementTrackerConfiguration;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracker\RetrieveProgramIncrementLabels;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracker\RetrieveVisibleProgramIncrementTracker;
 use Tuleap\ProgramManagement\Domain\Program\Plan\BuildProgram;
 use Tuleap\ProgramManagement\Domain\Program\Plan\ProjectIsNotAProgramException;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
@@ -43,41 +45,32 @@ use Tuleap\Request\NotFoundException;
 
 final class DisplayProgramBacklogController implements DispatchableWithRequest, DispatchableWithProject, DispatchableWithBurningParrot
 {
-    /**
-     * @var \ProjectManager
-     */
-    private $project_manager;
-    /**
-     * @var ProjectFlagsBuilder
-     */
-    private $project_flags_builder;
-    /**
-     * @var BuildProgram
-     */
-    private $build_program;
-    /**
-     * @var \TemplateRenderer
-     */
-    private $template_renderer;
-    /**
-     * @var BuildProgramIncrementTrackerConfiguration
-     */
-    private $tracker_configuration_builder;
+    private \ProjectManager $project_manager;
+    private ProjectFlagsBuilder $project_flags_builder;
+    private \TemplateRenderer $template_renderer;
+    private BuildProgram $build_program;
+    private RetrieveVisibleProgramIncrementTracker $program_increment_tracker_retriever;
+    private RetrieveProgramIncrementLabels $labels_retriever;
 
     public function __construct(
         \ProjectManager $project_manager,
         ProjectFlagsBuilder $project_flags_builder,
         BuildProgram $build_program,
         \TemplateRenderer $template_renderer,
-        BuildProgramIncrementTrackerConfiguration $tracker_configuration_builder
+        RetrieveVisibleProgramIncrementTracker $program_increment_tracker_retriever,
+        RetrieveProgramIncrementLabels $labels_retriever
     ) {
-        $this->project_manager               = $project_manager;
-        $this->project_flags_builder         = $project_flags_builder;
-        $this->build_program                 = $build_program;
-        $this->template_renderer             = $template_renderer;
-        $this->tracker_configuration_builder = $tracker_configuration_builder;
+        $this->project_manager                     = $project_manager;
+        $this->project_flags_builder               = $project_flags_builder;
+        $this->build_program                       = $build_program;
+        $this->template_renderer                   = $template_renderer;
+        $this->program_increment_tracker_retriever = $program_increment_tracker_retriever;
+        $this->labels_retriever                    = $labels_retriever;
     }
 
+    /**
+     * @throws NotFoundException
+     */
     public function getProject(array $variables): Project
     {
         $project = $this->project_manager->getProjectByUnixName($variables['project_name']);
@@ -108,7 +101,12 @@ final class DisplayProgramBacklogController implements DispatchableWithRequest, 
 
         $user = $request->getCurrentUser();
         try {
-            $plan_configuration = $this->tracker_configuration_builder->build($program, $user);
+            $plan_configuration = ProgramIncrementTrackerConfiguration::fromProgram(
+                $this->program_increment_tracker_retriever,
+                $this->labels_retriever,
+                $program,
+                $user
+            );
         } catch (ProgramTrackerNotFoundException $e) {
             throw new NotFoundException();
         }
@@ -120,8 +118,6 @@ final class DisplayProgramBacklogController implements DispatchableWithRequest, 
 
         $this->includeHeaderAndNavigationBar($layout, $project);
         $layout->includeFooterJavascriptFile($assets->getFileURL('program_management.js'));
-
-        $user = $request->getCurrentUser();
 
         $this->template_renderer->renderToPage(
             'program-backlog',

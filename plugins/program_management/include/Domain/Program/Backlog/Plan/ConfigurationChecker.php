@@ -23,41 +23,37 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\Plan;
 
 use Project;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracker\RetrieveVisibleProgramIncrementTracker;
 use Tuleap\ProgramManagement\Domain\Program\Plan\PlanTrackerException;
-use Tuleap\ProgramManagement\Domain\ProgramTracker;
+use Tuleap\ProgramManagement\Domain\Program\Plan\ProgramHasNoProgramIncrementTrackerException;
+use Tuleap\ProgramManagement\Domain\Program\ProgramTrackerNotFoundException;
 
 final class ConfigurationChecker
 {
-    /**
-     * @var BuildPlanProgramConfiguration
-     */
-    private $plan_program_builder;
-    /**
-     * @var BuildPlanProgramIncrementConfiguration
-     */
-    private $plan_program_increment_builder;
+    private BuildPlanProgramConfiguration $plan_program_builder;
+    private RetrieveVisibleProgramIncrementTracker $program_increment_tracker_retriever;
 
     public function __construct(
         BuildPlanProgramConfiguration $plan_program_builder,
-        BuildPlanProgramIncrementConfiguration $plan_program_increment_builder
+        RetrieveVisibleProgramIncrementTracker $plan_program_increment_builder
     ) {
-        $this->plan_program_builder           = $plan_program_builder;
-        $this->plan_program_increment_builder = $plan_program_increment_builder;
+        $this->plan_program_builder                = $plan_program_builder;
+        $this->program_increment_tracker_retriever = $plan_program_increment_builder;
     }
 
     /**
      * @throws PlanTrackerException
-     * @throws \Tuleap\ProgramManagement\Domain\Program\ProgramTrackerNotFoundException
-     * @throws \Tuleap\ProgramManagement\Domain\Program\Plan\ProgramHasNoProgramIncrementTrackerException
+     * @throws ProgramTrackerNotFoundException
+     * @throws ProgramHasNoProgramIncrementTrackerException
      */
-    public function getProgramIncrementTracker(\PFUser $user, Project $project): ?ProgramTracker
+    public function checkProgramIncrementTracker(\PFUser $user, Project $project): void
     {
         $program = $this->plan_program_builder->buildProgramIdentifierFromTeamProject($project, $user);
 
         if (! $program) {
-            return null;
+            return;
         }
 
-        return $this->plan_program_increment_builder->buildProgramIncrementTrackerFromProgram($program, $user);
+        $this->program_increment_tracker_retriever->retrieveVisibleProgramIncrementTracker($program, $user);
     }
 }

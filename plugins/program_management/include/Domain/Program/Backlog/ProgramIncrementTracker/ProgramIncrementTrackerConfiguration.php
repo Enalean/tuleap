@@ -20,7 +20,12 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement;
+namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracker;
+
+use Tuleap\ProgramManagement\Domain\Program\Plan\ProgramHasNoProgramIncrementTrackerException;
+use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
+use Tuleap\ProgramManagement\Domain\Program\ProgramTrackerNotFoundException;
+use Tuleap\ProgramManagement\Domain\ProgramTracker;
 
 /**
  * @psalm-immutable
@@ -31,7 +36,7 @@ final class ProgramIncrementTrackerConfiguration
     private int $program_increment_tracker_id;
     private ProgramIncrementLabels $program_increment_labels;
 
-    public function __construct(
+    private function __construct(
         int $program_increment_tracker_id,
         bool $can_create_program_increment,
         ProgramIncrementLabels $program_increment_labels
@@ -39,6 +44,35 @@ final class ProgramIncrementTrackerConfiguration
         $this->can_create_program_increment = $can_create_program_increment;
         $this->program_increment_tracker_id = $program_increment_tracker_id;
         $this->program_increment_labels     = $program_increment_labels;
+    }
+
+    /**
+     * @throws ProgramTrackerNotFoundException
+     * @throws ProgramHasNoProgramIncrementTrackerException
+     */
+    public static function fromProgram(
+        RetrieveVisibleProgramIncrementTracker $retrieve_tracker,
+        RetrieveProgramIncrementLabels $retrieve_labels,
+        ProgramIdentifier $program,
+        \PFUser $user
+    ): self {
+        $program_increment_tracker = ProgramTracker::buildProgramIncrementTrackerFromProgram(
+            $retrieve_tracker,
+            $program,
+            $user
+        );
+
+        $can_create_program_increment = $program_increment_tracker->userCanSubmitArtifact($user);
+
+        $program_increments_labels = ProgramIncrementLabels::fromProgramIncrementTracker(
+            $retrieve_labels,
+            $program_increment_tracker
+        );
+        return new self(
+            $program_increment_tracker->getTrackerId(),
+            $can_create_program_increment,
+            $program_increments_labels
+        );
     }
 
     public function canCreateProgramIncrement(): bool
