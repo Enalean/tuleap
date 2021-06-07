@@ -24,7 +24,16 @@ export function retrieveIterations(
     roadmap_id: number,
     level: IterationLevel
 ): Promise<Iteration[]> {
-    return recursiveGet<Array<unknown>, Iteration>(`/api/roadmaps/${roadmap_id}/iterations`, {
+    return recursiveGet<Array<Iteration>, Iteration>(`/api/roadmaps/${roadmap_id}/iterations`, {
         params: { level },
+        getCollectionCallback: (iterations: Iteration[]): Iteration[] => {
+            return iterations.map((iteration: Iteration): Iteration => {
+                return {
+                    ...iteration,
+                    start: new Date(iteration.start),
+                    end: new Date(iteration.end),
+                };
+            });
+        },
     });
 }

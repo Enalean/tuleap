@@ -74,10 +74,14 @@
                 <iterations-ribbon
                     v-if="has_lvl1_iterations"
                     v-bind:nb_additional_units="nb_additional_units"
+                    v-bind:level="1"
+                    v-bind:iterations="lvl1_iterations"
                 />
                 <iterations-ribbon
                     v-if="has_lvl2_iterations"
                     v-bind:nb_additional_units="nb_additional_units"
+                    v-bind:level="2"
+                    v-bind:iterations="lvl2_iterations"
                 />
                 <template v-for="(row, index) in rows">
                     <gantt-task

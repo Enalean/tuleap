@@ -24,8 +24,69 @@ import type { VueGettextProvider } from "../../helpers/vue-gettext-provider";
 import { TimePeriodWeek } from "../../helpers/time-period-week";
 import { TimePeriodMonth } from "../../helpers/time-period-month";
 import { TimePeriodQuarter } from "../../helpers/time-period-quarter";
+import type { Iteration, Task } from "../../type";
 
 describe("timeperiod-getters", () => {
+    describe("first_date", () => {
+        it("should return the first date among tasks and iterations", () => {
+            const first_date = getters.first_date(
+                {},
+                {},
+                {
+                    iterations: {
+                        lvl1_iterations: [
+                            { start: new Date(2020, 2, 15) } as Iteration,
+                            { start: new Date(2020, 5, 15) } as Iteration,
+                        ],
+                        lvl2_iterations: [
+                            { start: new Date(2020, 3, 15) } as Iteration,
+                            { start: new Date(2020, 6, 15) } as Iteration,
+                        ],
+                    },
+                    now: new Date(2020, 3, 20),
+                } as RootState,
+                {
+                    "tasks/tasks": [
+                        { start: new Date(2020, 3, 15) } as Task,
+                        { start: new Date(2020, 4, 15) } as Task,
+                    ],
+                }
+            );
+
+            expect(first_date.getMonth()).toBe(2);
+        });
+    });
+
+    describe("last_date", () => {
+        it("should return the last date among tasks and iterations", () => {
+            const last_date = getters.last_date(
+                {},
+                {},
+                {
+                    iterations: {
+                        lvl1_iterations: [
+                            { start: new Date(2020, 2, 15) } as Iteration,
+                            { start: new Date(2020, 5, 15) } as Iteration,
+                        ],
+                        lvl2_iterations: [
+                            { start: new Date(2020, 3, 15) } as Iteration,
+                            { start: new Date(2020, 6, 15) } as Iteration,
+                        ],
+                    },
+                    now: new Date(2020, 3, 20),
+                } as RootState,
+                {
+                    "tasks/tasks": [
+                        { start: new Date(2020, 3, 15) } as Task,
+                        { start: new Date(2020, 4, 15) } as Task,
+                    ],
+                }
+            );
+
+            expect(last_date.getMonth()).toBe(6);
+        });
+    });
+
     describe("time_period", () => {
         it("should return a TimePeriod based on weeks", () => {
             const state: TimeperiodState = {

@@ -24,6 +24,12 @@
             v-bind:time_period="time_period"
             v-bind:nb_additional_units="nb_additional_units"
         />
+        <iteration-bar
+            v-for="iteration of iterations"
+            v-bind:key="iteration.id"
+            v-bind:iteration="iteration"
+            v-bind:level="level"
+        />
     </div>
 </template>
 
@@ -31,13 +37,14 @@
 import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
 import BackgroundGrid from "../Task/BackgroundGrid.vue";
-import type { TimePeriod } from "../../../type";
+import type { Iteration, IterationLevel, TimePeriod } from "../../../type";
 import { namespace } from "vuex-class";
+import IterationBar from "./IterationBar.vue";
 
 const timeperiod = namespace("timeperiod");
 
 @Component({
-    components: { BackgroundGrid },
+    components: { IterationBar, BackgroundGrid },
 })
 export default class IterationsRibbon extends Vue {
     @timeperiod.Getter
@@ -45,5 +52,11 @@ export default class IterationsRibbon extends Vue {
 
     @Prop({ required: true })
     readonly nb_additional_units!: number;
+
+    @Prop({ required: true })
+    readonly level!: IterationLevel;
+
+    @Prop({ required: true })
+    readonly iterations!: Iteration[];
 }
 </script>

@@ -27,27 +27,42 @@
     > .roadmap-gantt-task-background-grid > .roadmap-gantt-task-background-grid-unit {
         border-bottom: 0;
     }
+}
 
-    &::before {
-        content: 'level 1';
-        display: flex;
-        position: absolute;
-        z-index: roadmap-variables.$z-index-bars;
-        top: 0;
-        left: 150px;
-        align-items: center;
-        justify-content: center;
-        width: 200px;
-        height: 24px;
-        background: var(--tlp-ui-border-normal);
+.roadmap-gantt-ribbon-iterations-iteration-level-1,
+.roadmap-gantt-ribbon-iterations-iteration-level-2 {
+    display: flex;
+    position: absolute;
+    z-index: roadmap-variables.$z-index-bars;
+    top: 0;
+    height: roadmap-variables.$iteration-height;
+    padding: 5px;
+    overflow: hidden;
+    border-radius: 4px 4px 0 0;
+    font-size: .625rem;
+    font-weight: 700;
+    line-height: .75rem;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+
+    > a {
+        flex: 1 1 auto;
+        overflow: hidden;
         color: var(--tlp-ui-dimmed);
-        font-size: .625rem;
-        font-weight: 700;
-        line-height: .75rem;
+        text-align: center;
+        text-overflow: ellipsis;
+        white-space: nowrap;
     }
+}
 
-    + .roadmap-gantt-ribbon-iterations::before {
-        content: 'level 2';
-        background: var(--tlp-ui-border-normal-lighter-40);
-    }
+.roadmap-gantt-ribbon-iterations-iteration-level-1 {
+    border: 1px solid var(--tlp-ui-border-normal);
+    border-bottom: 0;
+    background: linear-gradient(180deg, var(--tlp-ui-border-normal) roadmap-variables.$iteration-height, transparent 24px, transparent 100%);
+}
+
+.roadmap-gantt-ribbon-iterations-iteration-level-2 {
+    border: 1px solid var(--tlp-ui-border-normal-lighter-40);
+    border-bottom: 0;
+    background: linear-gradient(180deg, var(--tlp-ui-border-normal-lighter-40) roadmap-variables.$iteration-height, transparent 24px, transparent 100%);
 }

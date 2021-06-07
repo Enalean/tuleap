@@ -17,28 +17,31 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { Task } from "../type";
+import type { Iteration, Task } from "../type";
 
-export function getFirstDate(tasks: Task[], now: Date): Date {
-    const first_date_in_tasks = tasks.reduce((first: Date | null, current: Task): Date | null => {
-        if (!first) {
-            return current.start || current.end;
-        }
+export function getFirstDate(elements: (Task | Iteration)[], now: Date): Date {
+    const first_date = elements.reduce(
+        (first: Date | null, current: Task | Iteration): Date | null => {
+            if (!first) {
+                return current.start || current.end;
+            }
 
-        if (current.start && current.start < first) {
-            return current.start;
-        }
+            if (current.start && current.start < first) {
+                return current.start;
+            }
 
-        if (!current.start && current.end && current.end < first) {
-            return current.end;
-        }
+            if (!current.start && current.end && current.end < first) {
+                return current.end;
+            }
 
-        return first;
-    }, null);
+            return first;
+        },
+        null
+    );
 
-    if (!first_date_in_tasks) {
+    if (!first_date) {
         return now;
     }
 
-    return first_date_in_tasks < now ? first_date_in_tasks : now;
+    return first_date < now ? first_date : now;
 }

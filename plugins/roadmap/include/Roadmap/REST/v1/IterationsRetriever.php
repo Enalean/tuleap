@@ -165,6 +165,9 @@ class IterationsRetriever
             if (! $end_date) {
                 continue;
             }
+            if ($end_date < $start_date) {
+                continue;
+            }
             $end = (new \DateTimeImmutable())->setTimestamp($end_date);
 
             $title = (string) $artifact->getTitle();
