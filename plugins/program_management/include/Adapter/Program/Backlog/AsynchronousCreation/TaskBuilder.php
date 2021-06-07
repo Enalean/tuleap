@@ -58,11 +58,8 @@ use Tuleap\ProgramManagement\Adapter\Team\MirroredTimeboxes\MirroredTimeboxesDao
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\ProgramIncrementsCreator;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Team\TeamProjectsCollectionBuilder;
 use Tuleap\Tracker\Artifact\Creation\TrackerArtifactCreator;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkFieldValueDao;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\LinksRetriever;
 use Tuleap\Tracker\FormElement\Field\ListFields\FieldValueMatcher;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
-use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao;
 use UserManager;
 use XMLImportHelper;
 
@@ -77,8 +74,8 @@ class TaskBuilder
         $transaction_executor = new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection());
         $logger               = BackendLogger::getDefaultLogger("program_management_syslog");
 
-        $tracker_artifact_factory     = Tracker_ArtifactFactory::instance();
-        $user_stories_planner         = new UserStoriesInMirroredProgramIncrementsPlanner(
+        $tracker_artifact_factory = Tracker_ArtifactFactory::instance();
+        $user_stories_planner     = new UserStoriesInMirroredProgramIncrementsPlanner(
             new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection()),
             new ArtifactsLinkedToParentDao(),
             $tracker_artifact_factory,
@@ -86,29 +83,21 @@ class TaskBuilder
             new ContentDao(),
             $logger
         );
-        $artifact_creator             = new ArtifactCreatorAdapter(
+        $artifact_creator         = new ArtifactCreatorAdapter(
             TrackerArtifactCreator::build(
                 Tracker_Artifact_Changeset_InitialChangesetCreator::build($logger),
                 Tracker_Artifact_Changeset_InitialChangesetFieldsValidator::build(),
                 $logger
             )
         );
-        $tracker_factory              = \TrackerFactory::instance();
+
         $synchronized_fields_gatherer = new SynchronizedFieldsAdapter(
             new ArtifactLinkFieldAdapter($form_element_factory),
             new TitleFieldAdapter(new Tracker_Semantic_TitleFactory()),
             new DescriptionFieldAdapter(new Tracker_Semantic_DescriptionFactory()),
             new StatusFieldAdapter(new Tracker_Semantic_StatusFactory()),
             new TimeFrameFieldsAdapter(
-                new SemanticTimeframeBuilder(
-                    new SemanticTimeframeDao(),
-                    $form_element_factory,
-                    $tracker_factory,
-                    new LinksRetriever(
-                        new ArtifactLinkFieldValueDao(),
-                        $tracker_artifact_factory
-                    )
-                )
+                SemanticTimeframeBuilder::build()
             )
         );
 

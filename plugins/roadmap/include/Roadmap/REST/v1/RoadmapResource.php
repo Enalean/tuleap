@@ -28,8 +28,6 @@ use Tuleap\REST\Header;
 use Tuleap\Roadmap\NatureForRoadmapDao;
 use Tuleap\Roadmap\RoadmapWidgetDao;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkFieldValueDao;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\LinksRetriever;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenterFactory;
 use Tuleap\Tracker\Semantic\Progress\MethodBuilder;
@@ -37,7 +35,6 @@ use Tuleap\Tracker\Semantic\Progress\SemanticProgressBuilder;
 use Tuleap\Tracker\Semantic\Progress\SemanticProgressDao;
 use Tuleap\Tracker\Semantic\Status\SemanticStatusRetriever;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
-use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao;
 
 final class RoadmapResource
 {
@@ -83,15 +80,7 @@ final class RoadmapResource
         $tracker_artifact_factory   = \Tracker_ArtifactFactory::instance();
         $form_element_factory       = \Tracker_FormElementFactory::instance();
         $tracker_factory            = \TrackerFactory::instance();
-        $semantic_timeframe_builder = new SemanticTimeframeBuilder(
-            new SemanticTimeframeDao(),
-            $form_element_factory,
-            $tracker_factory,
-            new LinksRetriever(
-                new ArtifactLinkFieldValueDao(),
-                $tracker_artifact_factory
-            )
-        );
+        $semantic_timeframe_builder = SemanticTimeframeBuilder::build();
 
         $progress_dao = new SemanticProgressDao();
         $retriever    = new RoadmapTasksRetriever(
@@ -173,17 +162,8 @@ final class RoadmapResource
     ): array {
         $this->optionsIterations($id);
 
-        $form_element_factory       = \Tracker_FormElementFactory::instance();
         $tracker_artifact_factory   = \Tracker_ArtifactFactory::instance();
-        $semantic_timeframe_builder = new SemanticTimeframeBuilder(
-            new SemanticTimeframeDao(),
-            $form_element_factory,
-            \TrackerFactory::instance(),
-            new LinksRetriever(
-                new ArtifactLinkFieldValueDao(),
-                $tracker_artifact_factory
-            )
-        );
+        $semantic_timeframe_builder = SemanticTimeframeBuilder::build();
 
         $retriever = new IterationsRetriever(
             new RoadmapWidgetDao(),

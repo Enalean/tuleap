@@ -20,11 +20,8 @@
  */
 
 use Tuleap\Tracker\Artifact\Artifact;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkFieldValueDao;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\LinksRetriever;
 use Tuleap\Tracker\Semantic\Timeframe\ArtifactTimeframeHelper;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
-use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao;
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 abstract class Tracker_FormElement_Field_Numeric extends Tracker_FormElement_Field_Alphanum implements Tracker_FormElement_IComputeValues
@@ -419,19 +416,8 @@ abstract class Tracker_FormElement_Field_Numeric extends Tracker_FormElement_Fie
 
     protected function getArtifactTimeframeHelper(): ArtifactTimeframeHelper
     {
-        $form_element_factory       = Tracker_FormElementFactory::instance();
-        $semantic_timeframe_builder = new SemanticTimeframeBuilder(
-            new SemanticTimeframeDao(),
-            $form_element_factory,
-            \TrackerFactory::instance(),
-            new LinksRetriever(
-                new ArtifactLinkFieldValueDao(),
-                \Tracker_ArtifactFactory::instance()
-            )
-        );
-
         return new ArtifactTimeframeHelper(
-            $semantic_timeframe_builder,
+            SemanticTimeframeBuilder::build(),
             \BackendLogger::getDefaultLogger()
         );
     }

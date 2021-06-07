@@ -46,10 +46,7 @@ use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneDao;
 use Tuleap\AgileDashboard\Planning\PlanningDao;
 use Tuleap\AgileDashboard\RemainingEffortValueRetriever;
 use Tuleap\BrowserDetection\DetectedBrowser;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkFieldValueDao;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\LinksRetriever;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
-use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao;
 use Tuleap\Tracker\Semantic\Timeframe\TimeframeBrokenConfigurationException;
 use Project;
 use Tuleap\Project\ProjectAccessChecker;
@@ -151,15 +148,7 @@ class ProjectMilestonesPresenterBuilder
     public static function build(): ProjectMilestonesPresenterBuilder
     {
         $artifact_factory           = Tracker_ArtifactFactory::instance();
-        $semantic_timeframe_builder = new SemanticTimeframeBuilder(
-            new SemanticTimeframeDao(),
-            Tracker_FormElementFactory::instance(),
-            \TrackerFactory::instance(),
-            new LinksRetriever(
-                new ArtifactLinkFieldValueDao(),
-                $artifact_factory
-            )
-        );
+        $semantic_timeframe_builder = SemanticTimeframeBuilder::build();
 
         $planning_factory = new PlanningFactory(
             new PlanningDao(),

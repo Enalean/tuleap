@@ -29,10 +29,7 @@ use Tuleap\AgileDashboard\Planning\MilestoneBurndownFieldChecker;
 use Tuleap\AgileDashboard\Planning\NotFoundException;
 use Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface;
 use Tuleap\Tracker\Artifact\Artifact;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkFieldValueDao;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\LinksRetriever;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
-use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao;
 
 /**
  * Loads planning milestones from the persistence layer.
@@ -142,15 +139,7 @@ class Planning_MilestoneFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
             new PlanningPermissionsManager(),
             new AgileDashboard_Milestone_MilestoneDao(),
             new ScrumForMonoMilestoneChecker(new ScrumForMonoMilestoneDao(), $planning_factory),
-            new SemanticTimeframeBuilder(
-                new SemanticTimeframeDao(),
-                $form_element_factory,
-                \TrackerFactory::instance(),
-                new LinksRetriever(
-                    new ArtifactLinkFieldValueDao(),
-                    $artifact_factory
-                )
-            ),
+            SemanticTimeframeBuilder::build(),
             BackendLogger::getDefaultLogger(),
             new MilestoneBurndownFieldChecker($form_element_factory)
         );

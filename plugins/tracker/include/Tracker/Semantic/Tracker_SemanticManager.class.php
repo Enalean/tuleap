@@ -21,8 +21,6 @@
  */
 
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkFieldValueDao;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\LinksRetriever;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenterFactory;
 use Tuleap\Tracker\Semantic\CollectionOfSemanticsUsingAParticularTrackerField;
@@ -106,7 +104,7 @@ class Tracker_SemanticManager
         $semantics_using_field = [];
 
         $configs                    = $timeframe_dao->getSemanticsImpliedFromGivenTracker($this->tracker->getId()) ?: [];
-        $semantic_timeframe_builder = $this->getSemanticTimeframeBuilder();
+        $semantic_timeframe_builder = SemanticTimeframeBuilder::build();
 
         foreach ($semantics as $semantic) {
             if ($semantic->isUsedInSemantics($field)) {
@@ -146,9 +144,7 @@ class Tracker_SemanticManager
         );
         $semantics->add(Tracker_Semantic_Contributor::load($this->tracker));
 
-        $semantic_timeframe_builder = $this->getSemanticTimeframeBuilder();
-
-        $semantic_timeframe    = $semantic_timeframe_builder->getSemantic($this->tracker);
+        $semantic_timeframe    = SemanticTimeframeBuilder::build()->getSemantic($this->tracker);
         $semantic_progress_dao = new SemanticProgressDao();
         $semantic_progress     = (new SemanticProgressBuilder(
             $semantic_progress_dao,
@@ -228,18 +224,5 @@ class Tracker_SemanticManager
         );
 
         return $order;
-    }
-
-    private function getSemanticTimeframeBuilder(): SemanticTimeframeBuilder
-    {
-        return new SemanticTimeframeBuilder(
-            new SemanticTimeframeDao(),
-            Tracker_FormElementFactory::instance(),
-            \TrackerFactory::instance(),
-            new LinksRetriever(
-                new ArtifactLinkFieldValueDao(),
-                \Tracker_ArtifactFactory::instance()
-            )
-        );
     }
 }

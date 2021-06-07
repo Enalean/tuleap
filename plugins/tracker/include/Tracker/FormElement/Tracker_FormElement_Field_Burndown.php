@@ -28,8 +28,6 @@ use Tuleap\Tracker\FormElement\ChartConfigurationValueChecker;
 use Tuleap\Tracker\FormElement\ChartConfigurationValueRetriever;
 use Tuleap\Tracker\FormElement\ChartFieldUsage;
 use Tuleap\Tracker\FormElement\ChartMessageFetcher;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkFieldValueDao;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\LinksRetriever;
 use Tuleap\Tracker\FormElement\Field\Burndown\BurndownCacheGenerationChecker;
 use Tuleap\Tracker\FormElement\Field\Burndown\BurndownCacheGenerator;
 use Tuleap\Tracker\FormElement\Field\Burndown\BurndownCommonDataBuilder;
@@ -43,7 +41,6 @@ use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 use Tuleap\Tracker\REST\Artifact\ArtifactFieldValueFullRepresentation;
 use Tuleap\Tracker\Semantic\Timeframe\IComputeTimeframes;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
-use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao;
 use Tuleap\Tracker\UserWithReadAllPermissionBuilder;
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
@@ -644,7 +641,7 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
     {
         return new ChartConfigurationFieldRetriever(
             $this->getFormElementFactory(),
-            $this->getSemanticTimeframeBuilder(),
+            SemanticTimeframeBuilder::build(),
             $this->getLogger()
         );
     }
@@ -808,20 +805,7 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
      */
     protected function getTimeframeCalculator(): IComputeTimeframes
     {
-        return $this->getSemanticTimeframeBuilder()->getSemantic($this->getTracker())->getTimeframeCalculator();
-    }
-
-    private function getSemanticTimeframeBuilder(): SemanticTimeframeBuilder
-    {
-        return new SemanticTimeframeBuilder(
-            new SemanticTimeframeDao(),
-            $this->getFormElementFactory(),
-            \TrackerFactory::instance(),
-            new LinksRetriever(
-                new ArtifactLinkFieldValueDao(),
-                $this->getArtifactFactory()
-            )
-        );
+        return SemanticTimeframeBuilder::build()->getSemantic($this->getTracker())->getTimeframeCalculator();
     }
 
     /**

@@ -25,6 +25,7 @@ namespace Tuleap\Tracker\Semantic\Timeframe;
 use Tracker;
 use Tracker_FormElement_Field_Date;
 use Tracker_FormElement_Field_Numeric;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkFieldValueDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\LinksRetriever;
 
 class SemanticTimeframeBuilder
@@ -47,6 +48,19 @@ class SemanticTimeframeBuilder
         $this->form_element_factory = $form_element_factory;
         $this->tracker_factory      = $tracker_factory;
         $this->links_retriever      = $links_retriever;
+    }
+
+    public static function build(): self
+    {
+        return new self(
+            new SemanticTimeframeDao(),
+            \Tracker_FormElementFactory::instance(),
+            \TrackerFactory::instance(),
+            new LinksRetriever(
+                new ArtifactLinkFieldValueDao(),
+                \Tracker_ArtifactFactory::instance()
+            )
+        );
     }
 
     /**

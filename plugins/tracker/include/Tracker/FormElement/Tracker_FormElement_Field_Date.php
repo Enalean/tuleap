@@ -20,14 +20,11 @@
  */
 
 use Tuleap\Tracker\Artifact\Artifact;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkFieldValueDao;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\LinksRetriever;
 use Tuleap\Tracker\FormElement\Field\Date\DateFieldDao;
 use Tuleap\Tracker\FormElement\Field\Date\DateValueDao;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 use Tuleap\Tracker\Semantic\Timeframe\ArtifactTimeframeHelper;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
-use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao;
 use Tuleap\Tracker\XML\TrackerXmlImportFeedbackCollector;
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
@@ -1100,19 +1097,8 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field
 
     protected function getArtifactTimeframeHelper(): ArtifactTimeframeHelper
     {
-        $form_element_factory       = Tracker_FormElementFactory::instance();
-        $semantic_timeframe_builder = new SemanticTimeframeBuilder(
-            new SemanticTimeframeDao(),
-            $form_element_factory,
-            \TrackerFactory::instance(),
-            new LinksRetriever(
-                new ArtifactLinkFieldValueDao(),
-                \Tracker_ArtifactFactory::instance()
-            )
-        );
-
         return new ArtifactTimeframeHelper(
-            $semantic_timeframe_builder,
+            SemanticTimeframeBuilder::build(),
             \BackendLogger::getDefaultLogger()
         );
     }
