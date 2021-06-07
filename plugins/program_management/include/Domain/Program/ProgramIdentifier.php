@@ -22,19 +22,19 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program;
 
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\ReplicationData;
 use Tuleap\ProgramManagement\Domain\Program\Plan\BuildProgram;
 use Tuleap\ProgramManagement\Domain\Program\Plan\ProgramAccessException;
 use Tuleap\ProgramManagement\Domain\Program\Plan\ProjectIsNotAProgramException;
 
 /**
+ * A program is a Tuleap Project that hosts Program Increments and Iterations and synchronizes them with Teams.
+ * This represents its project ID number.
  * @psalm-immutable
  */
 final class ProgramIdentifier
 {
-    /**
-     * @var int
-     */
-    private $id;
+    private int $id;
 
     private function __construct(int $id)
     {
@@ -55,5 +55,11 @@ final class ProgramIdentifier
         $build_program->ensureProgramIsAProject($id, $user);
 
         return new self($id);
+    }
+
+    public static function fromReplicationData(ReplicationData $replication_data): self
+    {
+        // We assume that ReplicationData has already made sure that its project is a Program
+        return new self($replication_data->getProject()->getId());
     }
 }

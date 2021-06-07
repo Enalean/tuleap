@@ -84,11 +84,11 @@ use Tuleap\ProgramManagement\Adapter\Team\TeamDao;
 use Tuleap\ProgramManagement\Adapter\Workspace\WorkspaceDAO;
 use Tuleap\ProgramManagement\DisplayProgramBacklogController;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\ArtifactCreatedHandler;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck\CanSubmitNewArtifactHandler;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck\ProgramIncrementCreatorChecker;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck\TimeboxCreatorChecker;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\ProgramIncrementChanged;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Plan\ConfigurationChecker;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\Plan\PlanCheckException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementCollectionFactory;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFieldFromProgramAndTeamTrackersCollectionBuilder;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\NatureAnalyzerException;
@@ -294,31 +294,8 @@ final class program_managementPlugin extends Plugin
 
     public function canSubmitNewArtifact(CanSubmitNewArtifact $can_submit_new_artifact): void
     {
-        $planning_adapter = new PlanningAdapter(\PlanningFactory::build());
-
-        $artifact_creator_checker = new ProgramIncrementCreatorChecker(
-            $this->getTimeboxCreatorChecker(),
-            new ProgramIncrementsDAO(),
-            $this->getTeamProjectCollectionBuilder(),
-            new ProgramIncrementCollectionFactory(
-                $planning_adapter,
-                $this->getPlanConfigurationBuilder()
-            ),
-            $planning_adapter,
-            $this->getLogger()
-        );
-
-        $tracker_data = new ProgramTracker($can_submit_new_artifact->getTracker());
-        $project_data = ProjectAdapter::build($can_submit_new_artifact->getTracker()->getProject());
-        if (
-            ! $artifact_creator_checker->canCreateAProgramIncrement(
-                $can_submit_new_artifact->getUser(),
-                $tracker_data,
-                $project_data
-            )
-        ) {
-            $can_submit_new_artifact->disableArtifactSubmission();
-        }
+        $handler = $this->getCanSubmitNewArtifactHandler();
+        $handler->handle($can_submit_new_artifact);
     }
 
     public function workerEvent(WorkerEvent $event): void
@@ -452,7 +429,7 @@ final class program_managementPlugin extends Plugin
                 $configuration_check_delegation->getUser(),
                 $configuration_check_delegation->getProject()
             );
-        } catch (PlanTrackerException | ProgramTrackerException | PlanCheckException $e) {
+        } catch (PlanTrackerException | ProgramTrackerException $e) {
             $configuration_check_delegation->disablePlanning();
             $this->getLogger()->debug($e->getMessage());
         }
@@ -694,52 +671,6 @@ final class program_managementPlugin extends Plugin
         (new AddToTopBacklogPostActionDAO())->deleteTransitionPostActions($transition_id);
     }
 
-    private function getTimeboxCreatorChecker(): TimeboxCreatorChecker
-    {
-        $form_element_factory    = \Tracker_FormElementFactory::instance();
-        $timeframe_dao           = new \Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao();
-        $semantic_status_factory = new Tracker_Semantic_StatusFactory();
-        $logger                  = $this->getLogger();
-
-        return new TimeboxCreatorChecker(
-            new SynchronizedFieldFromProgramAndTeamTrackersCollectionBuilder(
-                new SynchronizedFieldsAdapter(
-                    new ArtifactLinkFieldAdapter($form_element_factory),
-                    new TitleFieldAdapter(new Tracker_Semantic_TitleFactory()),
-                    new DescriptionFieldAdapter(new Tracker_Semantic_DescriptionFactory()),
-                    new StatusFieldAdapter($semantic_status_factory),
-                    new TimeFrameFieldsAdapter(
-                        new SemanticTimeframeBuilder(
-                            $timeframe_dao,
-                            $form_element_factory,
-                            \TrackerFactory::instance(),
-                            new LinksRetriever(
-                                new ArtifactLinkFieldValueDao(),
-                                \Tracker_ArtifactFactory::instance()
-                            )
-                        )
-                    )
-                ),
-                $logger
-            ),
-            new SemanticChecker(
-                new \Tracker_Semantic_TitleDao(),
-                new \Tracker_Semantic_DescriptionDao(),
-                $timeframe_dao,
-                new StatusSemanticChecker(new Tracker_Semantic_StatusDao(), $semantic_status_factory),
-                $logger
-            ),
-            new RequiredFieldChecker($logger),
-            new WorkflowChecker(
-                new Workflow_Dao(),
-                new Tracker_Rule_Date_Dao(),
-                new Tracker_Rule_List_Dao(),
-                $logger
-            ),
-            $logger
-        );
-    }
-
     private function getLogger(): \Psr\Log\LoggerInterface
     {
         return BackendLogger::getDefaultLogger("program_management_syslog");
@@ -829,6 +760,69 @@ final class program_managementPlugin extends Plugin
             new MirroredTimeboxRetriever(new MirroredTimeboxesDao()),
             new ContentDao(),
             $this->getLogger()
+        );
+    }
+
+    private function getCanSubmitNewArtifactHandler(): CanSubmitNewArtifactHandler
+    {
+        $form_element_factory    = \Tracker_FormElementFactory::instance();
+        $timeframe_dao           = new \Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao();
+        $semantic_status_factory = new Tracker_Semantic_StatusFactory();
+        $logger                  = $this->getLogger();
+        $planning_adapter        = new PlanningAdapter(\PlanningFactory::build());
+
+        $synchronized_fields_builder = new SynchronizedFieldFromProgramAndTeamTrackersCollectionBuilder(
+            new SynchronizedFieldsAdapter(
+                new ArtifactLinkFieldAdapter($form_element_factory),
+                new TitleFieldAdapter(new Tracker_Semantic_TitleFactory()),
+                new DescriptionFieldAdapter(new Tracker_Semantic_DescriptionFactory()),
+                new StatusFieldAdapter($semantic_status_factory),
+                new TimeFrameFieldsAdapter(
+                    new SemanticTimeframeBuilder(
+                        $timeframe_dao,
+                        $form_element_factory,
+                        \TrackerFactory::instance(),
+                        new LinksRetriever(
+                            new ArtifactLinkFieldValueDao(),
+                            \Tracker_ArtifactFactory::instance()
+                        )
+                    )
+                )
+            ),
+            $logger
+        );
+
+        $checker = new TimeboxCreatorChecker(
+            $synchronized_fields_builder,
+            new SemanticChecker(
+                new \Tracker_Semantic_TitleDao(),
+                new \Tracker_Semantic_DescriptionDao(),
+                $timeframe_dao,
+                new StatusSemanticChecker(new Tracker_Semantic_StatusDao(), $semantic_status_factory),
+                $logger
+            ),
+            new RequiredFieldChecker($logger),
+            new WorkflowChecker(
+                new Workflow_Dao(),
+                new Tracker_Rule_Date_Dao(),
+                new Tracker_Rule_List_Dao(),
+                $logger
+            ),
+            $logger
+        );
+        return new CanSubmitNewArtifactHandler(
+            $this->getProgramAdapter(),
+            new ProgramIncrementCreatorChecker(
+                $checker,
+                new ProgramIncrementsDAO(),
+                $this->getTeamProjectCollectionBuilder(),
+                new ProgramIncrementCollectionFactory(
+                    $planning_adapter,
+                    $this->getPlanConfigurationBuilder()
+                ),
+                $planning_adapter,
+                $logger
+            )
         );
     }
 }

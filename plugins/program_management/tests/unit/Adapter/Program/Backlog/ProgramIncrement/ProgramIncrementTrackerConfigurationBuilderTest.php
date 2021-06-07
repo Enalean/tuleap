@@ -37,7 +37,7 @@ final class ProgramIncrementTrackerConfigurationBuilderTest extends \Tuleap\Test
         $tracker                   = TrackerTestBuilder::aTracker()->withId(101)->build();
         $program_increment_tracker = new ProgramTracker($tracker);
         $plan_builder              = $this->createMock(BuildPlanProgramIncrementConfiguration::class);
-        $plan_builder->method('buildTrackerProgramIncrementFromProjectId')
+        $plan_builder->method('buildProgramIncrementTrackerFromProgram')
             ->willReturn($program_increment_tracker);
 
         $user    = UserTestBuilder::aUser()->build();
@@ -47,7 +47,7 @@ final class ProgramIncrementTrackerConfigurationBuilderTest extends \Tuleap\Test
             $plan_builder,
             RetrieveProgramIncrementLabelsStub::buildLabels('Program Increments', 'program increment')
         );
-        $configuration = $builder->build($user, $project);
+        $configuration = $builder->build($project, $user);
         self::assertSame(101, $configuration->getProgramIncrementTrackerId());
         self::assertFalse($configuration->canCreateProgramIncrement());
         self::assertSame('Program Increments', $configuration->getProgramIncrementLabel());

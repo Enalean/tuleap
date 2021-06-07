@@ -24,7 +24,6 @@ namespace Tuleap\ProgramManagement\Domain\Program\Backlog\Plan;
 
 use Project;
 use Tuleap\ProgramManagement\Domain\Program\Plan\PlanTrackerException;
-use Tuleap\ProgramManagement\Domain\Program\ProgramTrackerException;
 use Tuleap\ProgramManagement\Domain\ProgramTracker;
 
 final class ConfigurationChecker
@@ -47,9 +46,9 @@ final class ConfigurationChecker
     }
 
     /**
-     * @throws PlanCheckException
      * @throws PlanTrackerException
-     * @throws ProgramTrackerException
+     * @throws \Tuleap\ProgramManagement\Domain\Program\ProgramTrackerNotFoundException
+     * @throws \Tuleap\ProgramManagement\Domain\Program\Plan\ProgramHasNoProgramIncrementTrackerException
      */
     public function getProgramIncrementTracker(\PFUser $user, Project $project): ?ProgramTracker
     {
@@ -59,6 +58,6 @@ final class ConfigurationChecker
             return null;
         }
 
-        return $this->plan_program_increment_builder->buildTrackerProgramIncrementFromProjectId($program->getId(), $user);
+        return $this->plan_program_increment_builder->buildProgramIncrementTrackerFromProgram($program, $user);
     }
 }

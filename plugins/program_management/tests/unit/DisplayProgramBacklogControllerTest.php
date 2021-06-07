@@ -28,10 +28,11 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use TrackerFactory;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\Layout\BaseLayout;
-use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\ProgramIncrementTrackerConfigurationBuilder;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\BuildProgramIncrementTrackerConfiguration;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementLabels;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementTrackerConfiguration;
 use Tuleap\ProgramManagement\Domain\Program\Plan\BuildProgram;
+use Tuleap\ProgramManagement\Domain\Program\ProgramTrackerNotFoundException;
 use Tuleap\ProgramManagement\Domain\ProgramTracker;
 use Tuleap\ProgramManagement\Stub\BuildProgramStub;
 use Tuleap\ProgramManagement\Stub\RetrieveProgramIncrementLabelsStub;
@@ -51,12 +52,6 @@ final class DisplayProgramBacklogControllerTest extends \Tuleap\Test\PHPUnit\Tes
      * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|TrackerFactory
      */
     private $tracker_factory;
-
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|ProgramIncrementTrackerConfigurationBuilder
-     */
-    private $configuration_builder;
-
     /**
      * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|\TemplateRenderer
      */
@@ -73,6 +68,10 @@ final class DisplayProgramBacklogControllerTest extends \Tuleap\Test\PHPUnit\Tes
      * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|ProjectFlagsBuilder
      */
     private $project_flags_builder;
+    /**
+     * @var \PHPUnit\Framework\MockObject\Stub|BuildProgramIncrementTrackerConfiguration
+     */
+    private $configuration_builder;
 
     protected function setUp(): void
     {
@@ -80,7 +79,7 @@ final class DisplayProgramBacklogControllerTest extends \Tuleap\Test\PHPUnit\Tes
         $this->project_flags_builder = \Mockery::mock(ProjectFlagsBuilder::class);
         $this->build_program         = BuildProgramStub::stubValidProgram();
         $this->template_renderer     = \Mockery::mock(\TemplateRenderer::class);
-        $this->configuration_builder = \Mockery::mock(ProgramIncrementTrackerConfigurationBuilder::class);
+        $this->configuration_builder = $this->createStub(BuildProgramIncrementTrackerConfiguration::class);
     }
 
     public function testItThrowsExceptionWhenServiceIsNotAvailable(): void
@@ -89,12 +88,11 @@ final class DisplayProgramBacklogControllerTest extends \Tuleap\Test\PHPUnit\Tes
         $project->shouldReceive('usesService')->once()->with(\program_managementPlugin::SERVICE_SHORTNAME)->andReturnFalse();
         $this->project_manager->shouldReceive('getProjectByUnixName')->once()->andReturn($project);
 
-        $this->expectException(NotFoundException::class);
-
         $request   = \Mockery::mock(\HTTPRequest::class);
         $layout    = \Mockery::mock(BaseLayout::class);
         $variables = ['project_name' => 'test_project'];
 
+        $this->expectException(NotFoundException::class);
         $this->getController()->process($request, $layout, $variables);
     }
 
@@ -106,12 +104,30 @@ final class DisplayProgramBacklogControllerTest extends \Tuleap\Test\PHPUnit\Tes
         $this->project_manager->shouldReceive('getProjectByUnixName')->once()->andReturn($project);
         $this->build_program = BuildProgramStub::stubInvalidProgram();
 
-        $this->expectException(ForbiddenException::class);
 
         $request = \Mockery::mock(\HTTPRequest::class);
         $request->shouldReceive('getCurrentUser')->andReturn(UserTestBuilder::aUser()->build());
         $variables = ['project_name' => 'test_project'];
 
+        $this->expectException(ForbiddenException::class);
+        $this->getController()->process($request, LayoutBuilder::build(), $variables);
+    }
+
+    public function testPreventsAccessWhenProgramIncrementTrackerIsNotVisible(): void
+    {
+        $project = $this->createMock(\Project::class);
+        $project->method('getID')->willReturn(102);
+        $project->method('usesService')
+            ->with(\program_managementPlugin::SERVICE_SHORTNAME)
+            ->willReturn(true);
+        $this->project_manager->shouldReceive('getProjectByUnixName')->once()->andReturn($project);
+        $this->configuration_builder->method('build')->willThrowException(new ProgramTrackerNotFoundException(404));
+
+        $request = $this->createStub(\HTTPRequest::class);
+        $request->method('getCurrentUser')->willReturn(UserTestBuilder::aUser()->build());
+        $variables = ['project_name' => 'test_project'];
+
+        $this->expectException(NotFoundException::class);
         $this->getController()->process($request, LayoutBuilder::build(), $variables);
     }
 
@@ -120,13 +136,26 @@ final class DisplayProgramBacklogControllerTest extends \Tuleap\Test\PHPUnit\Tes
         ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::REGULAR);
 
         $project = \Mockery::mock(\Project::class);
-        $project->shouldReceive('usesService')->once()->with(\program_managementPlugin::SERVICE_SHORTNAME)->andReturnTrue();
+        $project->shouldReceive('usesService')->once()->with(
+            \program_managementPlugin::SERVICE_SHORTNAME
+        )->andReturnTrue();
         $project->shouldReceive('getId')->andReturn(101);
         $project->shouldReceive('isPublic')->andReturn(true);
         $project->shouldReceive('getPublicName')->andReturn('test_project');
         $project->shouldReceive('getUnixNameLowerCase')->andReturn('test_project');
         $this->project_manager->shouldReceive('getProjectByUnixName')->andReturn($project);
         $this->project_flags_builder->shouldReceive('buildProjectFlags')->andReturn([]);
+        $this->configuration_builder->method('build')
+            ->willReturn(
+                new ProgramIncrementTrackerConfiguration(
+                    103,
+                    true,
+                    ProgramIncrementLabels::fromProgramIncrementTracker(
+                        RetrieveProgramIncrementLabelsStub::buildLabels('Program Increments', 'program_increment'),
+                        new ProgramTracker(TrackerTestBuilder::aTracker()->withId(103)->build())
+                    )
+                )
+            );
 
         $request = \Mockery::mock(\HTTPRequest::class);
         $user    = UserTestBuilder::aUser()->build();
@@ -144,20 +173,6 @@ final class DisplayProgramBacklogControllerTest extends \Tuleap\Test\PHPUnit\Tes
 
         $this->template_renderer->shouldReceive('renderToPage')->once()
             ->with('program-backlog', \Mockery::type(ProgramBacklogPresenter::class));
-
-        $tracker         = TrackerTestBuilder::aTracker()->withId(78)->build();
-        $program_tracker = new ProgramTracker($tracker);
-
-        $this->configuration_builder->shouldReceive('build')->andReturn(
-            new ProgramIncrementTrackerConfiguration(
-                $project->getId(),
-                true,
-                ProgramIncrementLabels::fromProgramIncrementTracker(
-                    RetrieveProgramIncrementLabelsStub::buildLabels('Program Increments', 'program increment'),
-                    $program_tracker
-                )
-            )
-        );
 
         $this->getController()->process($request, $layout, $variables);
     }

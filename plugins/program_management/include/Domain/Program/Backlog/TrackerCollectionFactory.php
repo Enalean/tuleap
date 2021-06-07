@@ -22,26 +22,23 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog;
 
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\PlanningHasNoProgramIncrementException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\SourceTrackerCollection;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Team\TeamProjectsCollection;
-use Tuleap\ProgramManagement\Domain\Program\Plan\PlanTrackerException;
+use Tuleap\ProgramManagement\Domain\Program\Plan\ProgramHasNoProgramIncrementTrackerException;
 use Tuleap\ProgramManagement\Domain\Program\PlanningConfiguration\PlanningNotFoundException;
+use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\ProgramTrackerNotFoundException;
-use Tuleap\ProgramManagement\Domain\Project;
 
 interface TrackerCollectionFactory
 {
     /**
-     * @throws Plan\PlanCheckException
+     * @throws ProgramHasNoProgramIncrementTrackerException
      * @throws PlanningNotFoundException
-     * @throws PlanTrackerException
      * @throws ProgramTrackerNotFoundException
-     * @throws PlanningHasNoProgramIncrementException
      * @throws TrackerRetrievalException
      */
     public function buildFromProgramProjectAndItsTeam(
-        Project $program_project,
+        ProgramIdentifier $program,
         TeamProjectsCollection $team_projects_collection,
         \PFUser $user
     ): SourceTrackerCollection;

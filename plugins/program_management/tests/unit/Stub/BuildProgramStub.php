@@ -25,21 +25,16 @@ namespace Tuleap\ProgramManagement\Stub;
 use Tuleap\ProgramManagement\Domain\Program\Plan\BuildProgram;
 use Tuleap\ProgramManagement\Domain\Program\Plan\ProjectIsNotAProgramException;
 
-class BuildProgramStub implements BuildProgram
+final class BuildProgramStub implements BuildProgram
 {
-    /** @var bool */
-    private $is_allowed;
-    /** @var bool */
-    private $is_existing_program;
-    /** @var bool */
-    private $is_valid_program_for_management;
-    /** @var bool */
-    private $is_valid_to_be_created_program;
+    private bool $is_allowed;
+    private bool $is_valid_program_for_management;
+    private bool $is_valid_to_be_created_program;
 
     private function __construct(
-        bool $is_allowed = true,
-        bool $is_valid_program_for_management = false,
-        bool $is_valid_to_be_created_program = false
+        bool $is_allowed,
+        bool $is_valid_program_for_management,
+        bool $is_valid_to_be_created_program
     ) {
         $this->is_allowed                      = $is_allowed;
         $this->is_valid_program_for_management = $is_valid_program_for_management;
@@ -69,7 +64,7 @@ class BuildProgramStub implements BuildProgram
     public function ensureProgramIsAProject(int $project_id, \PFUser $user): void
     {
         if (! $this->is_allowed) {
-            throw new ProjectIsNotAProgramException(1);
+            throw new ProjectIsNotAProgramException($project_id);
         }
     }
 

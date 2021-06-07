@@ -22,95 +22,66 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Team;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use Project;
-use ProjectManager;
-use Tuleap\ProgramManagement\Adapter\Program\ProgramDao;
 use Tuleap\ProgramManagement\Adapter\ProjectAdapter;
+use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\ProgramStore;
+use Tuleap\ProgramManagement\Stub\BuildProgramStub;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\Builders\UserTestBuilder;
 
 final class TeamProjectsCollectionBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
+    private TeamProjectsCollectionBuilder $builder;
     /**
-     * @var TeamProjectsCollectionBuilder
-     */
-    private $builder;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ProgramDao
+     * @var \PHPUnit\Framework\MockObject\Stub|ProgramStore
      */
     private $program_store;
-
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ProjectManager
+     * @var \PHPUnit\Framework\MockObject\Stub|\ProjectManager
      */
     private $project_manager;
 
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Project
-     */
-    private $project;
-
     protected function setUp(): void
     {
-        parent::setUp();
-
-        $this->program_store   = Mockery::mock(ProgramStore::class);
-        $this->project_manager = Mockery::mock(ProjectManager::class);
+        $this->program_store   = $this->createStub(ProgramStore::class);
+        $this->project_manager = $this->createStub(\ProjectManager::class);
         $project_data_adapter  = new ProjectAdapter($this->project_manager);
-
-        $this->builder = new TeamProjectsCollectionBuilder(
+        $this->builder         = new TeamProjectsCollectionBuilder(
             $this->program_store,
             $project_data_adapter
         );
-
-        $this->project = new Project(['group_id' => 123, 'unix_group_name' => 'program', 'group_name' => 'Program']);
     }
 
     public function testItBuildsACollectionOfTeamProjects(): void
     {
-        $this->program_store->shouldReceive('getTeamProjectIdsForGivenProgramProject')
-            ->once()
-            ->with(123)
-            ->andReturn([
-                ['team_project_id' => 124],
-                ['team_project_id' => 125],
-            ]);
+        $this->program_store->method('getTeamProjectIdsForGivenProgramProject')
+            ->willReturn([['team_project_id' => 124], ['team_project_id' => 125],]);
 
-        $team_project_01 = new Project(['group_id' => 124, 'unix_group_name' => 'team_a', 'group_name' => 'Team A']);
-        $team_project_02 = new Project(['group_id' => 125, 'unix_group_name' => 'team_b', 'group_name' => 'Team B']);
+        $team_project_01 = ProjectTestBuilder::aProject()->withId(124)->build();
+        $team_project_02 = ProjectTestBuilder::aProject()->withId(125)->build();
+        $this->project_manager->method('getProject')->willReturnOnConsecutiveCalls($team_project_01, $team_project_02);
 
-        $this->project_manager->shouldReceive('getProject')
-            ->with(124)
-            ->once()
-            ->andReturn($team_project_01);
+        $user    = UserTestBuilder::aUser()->build();
+        $program = ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 123, $user);
 
-        $this->project_manager->shouldReceive('getProject')
-            ->with(125)
-            ->once()
-            ->andReturn($team_project_02);
+        $collection = $this->builder->getTeamProjectForAGivenProgramProject($program);
 
-        $collection = $this->builder->getTeamProjectForAGivenProgramProject(ProjectAdapter::build($this->project));
-
-        $this->assertCount(2, $collection->getTeamProjects());
-        $this->assertEquals(
+        self::assertCount(2, $collection->getTeamProjects());
+        self::assertEquals(
             [ProjectAdapter::build($team_project_01), ProjectAdapter::build($team_project_02)],
             $collection->getTeamProjects()
         );
     }
 
-    public function testItReturnsAnEmptyCollectionIfProvidedProjectIsNotProgram(): void
+    public function testItReturnsAnEmptyCollectionIfDatabaseIsInconsistent(): void
     {
-        $this->program_store->shouldReceive('getTeamProjectIdsForGivenProgramProject')
-            ->once()
-            ->with(123)
-            ->andReturn([]);
+        $this->program_store->method('getTeamProjectIdsForGivenProgramProject')
+            ->willReturn([]);
 
-        $collection = $this->builder->getTeamProjectForAGivenProgramProject(ProjectAdapter::build($this->project));
+        $user    = UserTestBuilder::aUser()->build();
+        $program = ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 123, $user);
 
-        $this->assertEmpty($collection->getTeamProjects());
+        $collection = $this->builder->getTeamProjectForAGivenProgramProject($program);
+        self::assertEmpty($collection->getTeamProjects());
     }
 }

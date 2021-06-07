@@ -33,6 +33,7 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\BuildProgra
 use Tuleap\ProgramManagement\Domain\Program\Plan\BuildProgram;
 use Tuleap\ProgramManagement\Domain\Program\Plan\ProjectIsNotAProgramException;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
+use Tuleap\ProgramManagement\Domain\Program\ProgramTrackerNotFoundException;
 use Tuleap\Project\Flags\ProjectFlagsBuilder;
 use Tuleap\Request\DispatchableWithBurningParrot;
 use Tuleap\Request\DispatchableWithProject;
@@ -105,8 +106,12 @@ final class DisplayProgramBacklogController implements DispatchableWithRequest, 
             );
         }
 
-        $user               = $request->getCurrentUser();
-        $plan_configuration = $this->tracker_configuration_builder->build($user, $program);
+        $user = $request->getCurrentUser();
+        try {
+            $plan_configuration = $this->tracker_configuration_builder->build($program, $user);
+        } catch (ProgramTrackerNotFoundException $e) {
+            throw new NotFoundException();
+        }
 
         \Tuleap\Project\ServiceInstrumentation::increment('program_management');
 

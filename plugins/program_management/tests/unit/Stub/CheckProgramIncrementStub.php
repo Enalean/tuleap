@@ -23,14 +23,13 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Stub;
 
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\CheckProgramIncrement;
-use Tuleap\ProgramManagement\Domain\Program\ProgramTrackerNotFoundException;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementNotFoundException;
 
 final class CheckProgramIncrementStub implements CheckProgramIncrement
 {
-    /** @var bool */
-    private $is_allowed;
+    private bool $is_allowed;
 
-    private function __construct(bool $is_allowed = true)
+    private function __construct(bool $is_allowed)
     {
         $this->is_allowed = $is_allowed;
     }
@@ -38,7 +37,7 @@ final class CheckProgramIncrementStub implements CheckProgramIncrement
     public function checkIsAProgramIncrement(int $program_increment_id, \PFUser $user): void
     {
         if (! $this->is_allowed) {
-            throw new ProgramTrackerNotFoundException(1);
+            throw new ProgramIncrementNotFoundException($program_increment_id);
         }
     }
 

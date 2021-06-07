@@ -23,16 +23,14 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement;
 
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Plan\BuildPlanProgramIncrementConfiguration;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\Plan\PlanCheckException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\SourceTrackerCollection;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Team\TeamProjectsCollection;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TrackerCollectionFactory;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TrackerRetrievalException;
 use Tuleap\ProgramManagement\Domain\Program\BuildPlanning;
-use Tuleap\ProgramManagement\Domain\Program\Plan\PlanTrackerException;
 use Tuleap\ProgramManagement\Domain\Program\PlanningConfiguration\Planning;
 use Tuleap\ProgramManagement\Domain\Program\PlanningConfiguration\PlanningNotFoundException;
-use Tuleap\ProgramManagement\Domain\Program\ProgramTrackerNotFoundException;
+use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\ProgramTracker;
 use Tuleap\ProgramManagement\Domain\Project;
 
@@ -55,24 +53,14 @@ class ProgramIncrementCollectionFactory implements TrackerCollectionFactory
         $this->configuration_builder = $configuration_builder;
     }
 
-    /**
-     * @throws PlanCheckException
-     * @throws PlanningNotFoundException
-     * @throws PlanTrackerException
-     * @throws ProgramTrackerNotFoundException
-     * @throws TrackerRetrievalException
-     */
     public function buildFromProgramProjectAndItsTeam(
-        Project $program_project,
+        ProgramIdentifier $program,
         TeamProjectsCollection $team_projects_collection,
         \PFUser $user
     ): SourceTrackerCollection {
         $trackers = [];
 
-        $trackers[] = $this->configuration_builder->buildTrackerProgramIncrementFromProjectId(
-            $program_project->getId(),
-            $user
-        );
+        $trackers[] = $this->configuration_builder->buildProgramIncrementTrackerFromProgram($program, $user);
 
         foreach ($team_projects_collection->getTeamProjects() as $project) {
             $trackers[] = $this->getPlannableTracker($user, $project);
