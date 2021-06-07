@@ -12,7 +12,7 @@
     "javascript-time-ago": "^2.3.4",
     "node-gettext": "^3.0.0",
     "sprintf-js": "^1.1.2",
-    "vue": "^2.6.12",
+    "vue": "^2.6.13",
     "vue-dompurify-html": "^2.3.0",
     "vue-gettext": "^2.1.12",
     "vuex": "^3.6.2"

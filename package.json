@@ -4,7 +4,6 @@
   "homepage": "https://tuleap.org",
   "license": "GPL-2.0-or-later",
   "private": true,
-  "dependencies": {},
   "devDependencies": {
     "@babel/core": "^7.11.6",
     "@babel/preset-env": "^7.11.5",
@@ -65,7 +64,7 @@
     "vue-eslint-parser": "^7.6.0",
     "vue-jest": "^4.0.1",
     "vue-loader": "^15.9.6",
-    "vue-template-compiler": "^2.6.12",
+    "vue-template-compiler": "^2.6.13",
     "webpack": "^5.26.0",
     "webpack-assets-manifest": "^5.0.4",
     "webpack-cli": "^4.5.0",
