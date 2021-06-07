@@ -29,53 +29,59 @@ class BranchInfoDao extends DataAccessObject
     public function saveGitlabBranchInfo(
         int $integration_id,
         string $commit_sha1,
-        string $branch_name
+        string $branch_name,
+        int $last_push_date
     ): void {
         $sql = '
             INSERT INTO plugin_gitlab_repository_integration_branch_info
                 (
                      integration_id,
                      commit_sha1,
-                     branch_name
+                     branch_name,
+                     last_push_date
                  )
-            VALUES (?, UNHEX(?), ?)
+            VALUES (?, UNHEX(?), ?, ?)
         ';
 
         $this->getDB()->run(
             $sql,
             $integration_id,
             $commit_sha1,
-            $branch_name
+            $branch_name,
+            $last_push_date
         );
     }
 
-    public function updateGitlabBranchSHA1(
+    public function updateGitlabBranchInformation(
         int $integration_id,
         string $commit_sha1,
-        string $branch_name
+        string $branch_name,
+        int $last_push_date
     ): void {
         $sql = '
             UPDATE plugin_gitlab_repository_integration_branch_info
-            SET commit_sha1 = UNHEX(?)
+            SET commit_sha1 = UNHEX(?), last_push_date = ?
             WHERE integration_id = ?
                 AND branch_name = ?';
 
         $this->getDB()->run(
             $sql,
             $commit_sha1,
+            $last_push_date,
             $integration_id,
             $branch_name
         );
     }
 
     /**
-     * @psalm-return null|array{commit_sha1: string, branch_name: string}
+     * @psalm-return null|array{commit_sha1: string, branch_name: string, last_push_date:?int}
      */
     public function searchBranchInRepositoryWithBranchName(int $integration_id, string $branch_name): ?array
     {
         $sql = "
             SELECT LOWER(HEX(commit_sha1)) as commit_sha1,
-                   branch_name
+                   branch_name,
+                   last_push_date
             FROM plugin_gitlab_repository_integration_branch_info
             WHERE integration_id = ?
                 AND branch_name = ?

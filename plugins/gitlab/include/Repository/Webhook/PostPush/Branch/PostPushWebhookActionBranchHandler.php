@@ -24,6 +24,7 @@ namespace Tuleap\Gitlab\Repository\Webhook\PostPush\Branch;
 use CrossReference;
 use CrossReferenceDao;
 use CrossReferenceManager;
+use DateTimeImmutable;
 use Psr\Log\LoggerInterface;
 use ReferenceManager;
 use Tuleap\Gitlab\Reference\Branch\GitlabBranchReference;
@@ -66,7 +67,8 @@ class PostPushWebhookActionBranchHandler
 
     public function parseBranchReference(
         GitlabRepositoryIntegration $gitlab_repository_integration,
-        PostPushWebhookData $webhook_data
+        PostPushWebhookData $webhook_data,
+        DateTimeImmutable $webhook_reception_date
     ): void {
         try {
             $branch_name = WebhookDataBranchNameExtractor::extractBranchName($webhook_data->getReference());
@@ -111,17 +113,23 @@ class PostPushWebhookActionBranchHandler
             }
 
             if ($this->cross_reference_dao->existInDb($cross_reference)) {
-                $this->updateBranchSHA1(
+                $this->updateBranchInformation(
                     $tuleap_reference,
                     $gitlab_repository_integration,
                     $sha1,
-                    $branch_name
+                    $branch_name,
+                    $webhook_reception_date
                 );
                 return;
             }
 
             $this->reference_manager->insertCrossReference($cross_reference);
-            $this->saveBranchData($gitlab_repository_integration, $sha1, $branch_name);
+            $this->saveBranchData(
+                $gitlab_repository_integration,
+                $sha1,
+                $branch_name,
+                $webhook_reception_date
+            );
         } catch (TuleapReferencedArtifactNotFoundException | TuleapReferenceNotFoundException $exception) {
             $this->logger->error($exception->getMessage());
         }
@@ -146,20 +154,22 @@ class PostPushWebhookActionBranchHandler
         );
     }
 
-    private function updateBranchSHA1(
+    private function updateBranchInformation(
         WebhookTuleapReference $tuleap_reference,
         GitlabRepositoryIntegration $gitlab_repository_integration,
         string $commit_sha1,
-        string $branch_name
+        string $branch_name,
+        DateTimeImmutable $webhook_reception_date
     ): void {
         $this->logger->info(
-            "|  |_ Tuleap artifact #" . $tuleap_reference->getId() . " already references branch $branch_name. Updating the SHA1."
+            "|  |_ Tuleap artifact #" . $tuleap_reference->getId() . " already references branch $branch_name. Updating the SHA1 and last push date."
         );
 
-        $this->branch_info_dao->updateGitlabBranchSHA1(
+        $this->branch_info_dao->updateGitlabBranchInformation(
             $gitlab_repository_integration->getId(),
             $commit_sha1,
-            $branch_name
+            $branch_name,
+            $webhook_reception_date->getTimestamp()
         );
 
         $this->logger->info("|  |_ SHA1 of branch data for $branch_name updated in database");
@@ -168,12 +178,14 @@ class PostPushWebhookActionBranchHandler
     private function saveBranchData(
         GitlabRepositoryIntegration $gitlab_repository_integration,
         string $commit_sha1,
-        string $branch_name
+        string $branch_name,
+        DateTimeImmutable $webhook_reception_date
     ): void {
         $this->branch_info_dao->saveGitlabBranchInfo(
             $gitlab_repository_integration->getId(),
             $commit_sha1,
-            $branch_name
+            $branch_name,
+            $webhook_reception_date->getTimestamp()
         );
 
         $this->logger->info("|  |_ Branch data for $branch_name saved in database");

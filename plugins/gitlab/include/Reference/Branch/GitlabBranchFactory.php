@@ -21,6 +21,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Gitlab\Reference\Branch;
 
+use DateTimeImmutable;
 use Tuleap\Gitlab\Repository\GitlabRepositoryIntegration;
 use Tuleap\Gitlab\Repository\Webhook\PostPush\Branch\BranchInfoDao;
 
@@ -46,9 +47,15 @@ class GitlabBranchFactory
             return null;
         }
 
+        $last_push_date = null;
+        if ($row['last_push_date'] !== null) {
+            $last_push_date = (new DateTimeImmutable())->setTimestamp($row['last_push_date']);
+        }
+
         return new GitlabBranch(
             $row['commit_sha1'],
             $row['branch_name'],
+            $last_push_date,
         );
     }
 }

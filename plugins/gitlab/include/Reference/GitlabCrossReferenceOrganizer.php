@@ -24,6 +24,7 @@ namespace Tuleap\Gitlab\Reference;
 use Project;
 use Tuleap\Date\TlpRelativeDatePresenter;
 use Tuleap\Date\TlpRelativeDatePresenterBuilder;
+use Tuleap\Gitlab\Reference\Branch\GitlabBranchCrossReferenceEnhancer;
 use Tuleap\Gitlab\Reference\Branch\GitlabBranchFactory;
 use Tuleap\Gitlab\Reference\Branch\GitlabBranchReference;
 use Tuleap\Gitlab\Reference\Commit\GitlabCommitCrossReferenceEnhancer;
@@ -59,7 +60,7 @@ class GitlabCrossReferenceOrganizer
     /**
      * @var GitlabCommitCrossReferenceEnhancer
      */
-    private $gitlab_cross_reference_enhancer;
+    private $gitlab_commit_cross_reference_enhancer;
     /**
      * @var GitlabMergeRequestReferenceRetriever
      */
@@ -81,15 +82,17 @@ class GitlabCrossReferenceOrganizer
      */
     private $gitlab_tag_factory;
 
+    private GitlabBranchCrossReferenceEnhancer $gitlab_branch_cross_reference_enhancer;
     private GitlabBranchFactory $gitlab_branch_factory;
 
     public function __construct(
         GitlabRepositoryIntegrationFactory $repository_integration_factory,
         GitlabCommitFactory $gitlab_commit_factory,
-        GitlabCommitCrossReferenceEnhancer $gitlab_cross_reference_enhancer,
+        GitlabCommitCrossReferenceEnhancer $gitlab_commit_cross_reference_enhancer,
         GitlabMergeRequestReferenceRetriever $gitlab_merge_request_reference_retriever,
         GitlabTagFactory $gitlab_tag_factory,
         GitlabBranchFactory $gitlab_branch_factory,
+        GitlabBranchCrossReferenceEnhancer $gitlab_branch_cross_reference_enhancer,
         \ProjectManager $project_manager,
         TlpRelativeDatePresenterBuilder $relative_date_builder,
         \UserManager $user_manager,
@@ -97,10 +100,11 @@ class GitlabCrossReferenceOrganizer
     ) {
         $this->repository_integration_factory           = $repository_integration_factory;
         $this->gitlab_commit_factory                    = $gitlab_commit_factory;
-        $this->gitlab_cross_reference_enhancer          = $gitlab_cross_reference_enhancer;
+        $this->gitlab_commit_cross_reference_enhancer   = $gitlab_commit_cross_reference_enhancer;
         $this->gitlab_merge_request_reference_retriever = $gitlab_merge_request_reference_retriever;
         $this->gitlab_tag_factory                       = $gitlab_tag_factory;
         $this->gitlab_branch_factory                    = $gitlab_branch_factory;
+        $this->gitlab_branch_cross_reference_enhancer   = $gitlab_branch_cross_reference_enhancer;
         $this->project_manager                          = $project_manager;
         $this->relative_date_builder                    = $relative_date_builder;
         $this->user_manager                             = $user_manager;
@@ -204,7 +208,7 @@ class GitlabCrossReferenceOrganizer
         }
 
         $by_nature_organizer->moveCrossReferenceToSection(
-            $this->gitlab_cross_reference_enhancer->getCrossReferencePresenterWithCommitInformation(
+            $this->gitlab_commit_cross_reference_enhancer->getCrossReferencePresenterWithCommitInformation(
                 $cross_reference_presenter,
                 $commit_info,
                 $user
@@ -294,13 +298,11 @@ class GitlabCrossReferenceOrganizer
         }
 
         $by_nature_organizer->moveCrossReferenceToSection(
-            $cross_reference_presenter
-                ->withTitle($branch_info->getBranchName(), null)
-                ->withAdditionalBadges(
-                    [
-                        AdditionalBadgePresenter::buildSecondary(substr($branch_info->getCommitSha1(), 0, 10))
-                    ]
-                ),
+            $this->gitlab_branch_cross_reference_enhancer->getCrossReferencePresenterWithBranchInformation(
+                $cross_reference_presenter,
+                $branch_info,
+                $by_nature_organizer->getCurrentUser()
+            ),
             $project->getUnixNameLowerCase() . '/' . $repository_integration->getName()
         );
     }

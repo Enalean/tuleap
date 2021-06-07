@@ -29,6 +29,7 @@ use Project;
 use ProjectManager;
 use Tuleap\Date\TlpRelativeDatePresenterBuilder;
 use Tuleap\Gitlab\Reference\Branch\GitlabBranch;
+use Tuleap\Gitlab\Reference\Branch\GitlabBranchCrossReferenceEnhancer;
 use Tuleap\Gitlab\Reference\Branch\GitlabBranchFactory;
 use Tuleap\Gitlab\Reference\Commit\GitlabCommit;
 use Tuleap\Gitlab\Reference\Commit\GitlabCommitCrossReferenceEnhancer;
@@ -94,6 +95,10 @@ class GitlabCrossReferenceOrganizerTest extends \Tuleap\Test\PHPUnit\TestCase
      * @var \PHPUnit\Framework\MockObject\MockObject|GitlabBranchFactory
      */
     private $gitlab_branch_factory;
+    /**
+     * @var \PHPUnit\Framework\MockObject\MockObject|GitlabBranchCrossReferenceEnhancer
+     */
+    private $gitlab_branch_cross_reference_enhancer;
 
     protected function setUp(): void
     {
@@ -103,6 +108,7 @@ class GitlabCrossReferenceOrganizerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->gitlab_merge_request_reference_retriever = Mockery::mock(GitlabMergeRequestReferenceRetriever::class);
         $this->gitlab_tag_factory                       = Mockery::mock(GitlabTagFactory::class);
         $this->gitlab_branch_factory                    = $this->createMock(GitlabBranchFactory::class);
+        $this->gitlab_branch_cross_reference_enhancer   = $this->createMock(GitlabBranchCrossReferenceEnhancer::class);
         $this->project_manager                          = Mockery::mock(ProjectManager::class);
         $this->relative_date_builder                    = new TlpRelativeDatePresenterBuilder();
         $this->user_manager                             = Mockery::mock(\UserManager::class);
@@ -120,6 +126,7 @@ class GitlabCrossReferenceOrganizerTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->gitlab_merge_request_reference_retriever,
             $this->gitlab_tag_factory,
             $this->gitlab_branch_factory,
+            $this->gitlab_branch_cross_reference_enhancer,
             $this->project_manager,
             $this->relative_date_builder,
             $this->user_manager,
@@ -840,6 +847,7 @@ class GitlabCrossReferenceOrganizerTest extends \Tuleap\Test\PHPUnit\TestCase
         $gitlab_branch = new GitlabBranch(
             'sha1',
             'dev',
+            new DateTimeImmutable()
         );
 
         $this->gitlab_branch_factory->expects(self::once())
@@ -853,10 +861,20 @@ class GitlabCrossReferenceOrganizerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->withProjectId(1)
             ->build();
 
+        $user = Mockery::mock(PFUser::class);
+        $user->shouldReceive('getPreference')->andReturn("relative_first-absolute_tooltip");
+        $user->shouldReceive('getLocale')->andReturn("en_US");
+
+        $this->gitlab_branch_cross_reference_enhancer->expects(self::once())
+            ->method('getCrossReferencePresenterWithBranchInformation')
+            ->with($a_ref, $gitlab_branch, $user)
+            ->willReturn($a_ref);
+
         $by_nature_organizer = Mockery::mock(CrossReferenceByNatureOrganizer::class)
             ->shouldReceive(
                 [
                     'getCrossReferencePresenters' => [$a_ref],
+                    'getCurrentUser' => $user
                 ]
             )->getMock();
 

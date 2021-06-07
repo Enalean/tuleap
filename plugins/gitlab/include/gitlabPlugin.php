@@ -30,6 +30,7 @@ use Tuleap\Gitlab\API\GitlabProjectBuilder;
 use Tuleap\Gitlab\API\Tag\GitlabTagRetriever;
 use Tuleap\Gitlab\Artifact\ArtifactRetriever;
 use Tuleap\Gitlab\EventsHandlers\ReferenceAdministrationWarningsCollectorEventHandler;
+use Tuleap\Gitlab\Reference\Branch\GitlabBranchCrossReferenceEnhancer;
 use Tuleap\Gitlab\Reference\Branch\GitlabBranchFactory;
 use Tuleap\Gitlab\Reference\Branch\GitlabBranchReference;
 use Tuleap\Gitlab\Reference\Commit\GitlabCommitCrossReferenceEnhancer;
@@ -645,6 +646,9 @@ class gitlabPlugin extends Plugin
             ),
             new GitlabBranchFactory(
                 new BranchInfoDao()
+            ),
+            new GitlabBranchCrossReferenceEnhancer(
+                new TlpRelativeDatePresenterBuilder()
             ),
             ProjectManager::instance(),
             new TlpRelativeDatePresenterBuilder(),

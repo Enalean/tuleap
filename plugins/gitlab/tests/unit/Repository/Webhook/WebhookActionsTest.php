@@ -134,7 +134,7 @@ final class WebhookActionsTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->post_push_webhook_action_processor
             ->shouldReceive('process')
-            ->with($this->gitlab_repository_integration, $webhook_data)
+            ->with($this->gitlab_repository_integration, $webhook_data, $now)
             ->once();
 
         $this->actions->performActions(

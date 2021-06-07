@@ -139,7 +139,7 @@ class PostPushWebhookActionBranchHandlerTest extends TestCase
         $this->branch_info_dao->expects(self::once())
             ->method('saveGitlabBranchInfo');
         $this->branch_info_dao->expects(self::never())
-            ->method('updateGitlabBranchSHA1');
+            ->method('updateGitlabBranchInformation');
 
         $this->branch_info_dao->expects(self::never())
             ->method('deleteBranchInGitlabIntegration');
@@ -148,7 +148,8 @@ class PostPushWebhookActionBranchHandlerTest extends TestCase
 
         $this->handler->parseBranchReference(
             $integration,
-            $webhook_data
+            $webhook_data,
+            new DateTimeImmutable()
         );
     }
 
@@ -193,7 +194,7 @@ class PostPushWebhookActionBranchHandlerTest extends TestCase
         $this->branch_info_dao->expects(self::never())
             ->method('saveGitlabBranchInfo');
         $this->branch_info_dao->expects(self::never())
-            ->method('updateGitlabBranchSHA1');
+            ->method('updateGitlabBranchInformation');
 
         $this->branch_info_dao->expects(self::never())
             ->method('deleteBranchInGitlabIntegration');
@@ -202,7 +203,8 @@ class PostPushWebhookActionBranchHandlerTest extends TestCase
 
         $this->handler->parseBranchReference(
             $integration,
-            $webhook_data
+            $webhook_data,
+            new DateTimeImmutable()
         );
     }
 
@@ -247,7 +249,7 @@ class PostPushWebhookActionBranchHandlerTest extends TestCase
         $this->branch_info_dao->expects(self::never())
             ->method('saveGitlabBranchInfo');
         $this->branch_info_dao->expects(self::never())
-            ->method('updateGitlabBranchSHA1');
+            ->method('updateGitlabBranchInformation');
 
         $this->branch_info_dao->expects(self::never())
             ->method('deleteBranchInGitlabIntegration');
@@ -256,7 +258,8 @@ class PostPushWebhookActionBranchHandlerTest extends TestCase
 
         $this->handler->parseBranchReference(
             $integration,
-            $webhook_data
+            $webhook_data,
+            new DateTimeImmutable()
         );
     }
 
@@ -306,7 +309,7 @@ class PostPushWebhookActionBranchHandlerTest extends TestCase
         $this->branch_info_dao->expects(self::never())
             ->method('saveGitlabBranchInfo');
         $this->branch_info_dao->expects(self::never())
-            ->method('updateGitlabBranchSHA1');
+            ->method('updateGitlabBranchInformation');
 
         $this->branch_info_dao->expects(self::never())
             ->method('deleteBranchInGitlabIntegration');
@@ -315,7 +318,8 @@ class PostPushWebhookActionBranchHandlerTest extends TestCase
 
         $this->handler->parseBranchReference(
             $integration,
-            $webhook_data
+            $webhook_data,
+            new DateTimeImmutable()
         );
     }
 
@@ -378,7 +382,7 @@ class PostPushWebhookActionBranchHandlerTest extends TestCase
             ->method('saveGitlabBranchInfo');
 
         $this->branch_info_dao->expects(self::once())
-            ->method('updateGitlabBranchSHA1');
+            ->method('updateGitlabBranchInformation');
 
         $this->branch_info_dao->expects(self::never())
             ->method('deleteBranchInGitlabIntegration');
@@ -387,7 +391,8 @@ class PostPushWebhookActionBranchHandlerTest extends TestCase
 
         $this->handler->parseBranchReference(
             $integration,
-            $webhook_data
+            $webhook_data,
+            new DateTimeImmutable()
         );
     }
 
@@ -447,7 +452,7 @@ class PostPushWebhookActionBranchHandlerTest extends TestCase
         $this->branch_info_dao->expects(self::never())
             ->method('saveGitlabBranchInfo');
         $this->branch_info_dao->expects(self::never())
-            ->method('updateGitlabBranchSHA1');
+            ->method('updateGitlabBranchInformation');
 
         $this->branch_info_dao->expects(self::once())
             ->method('deleteBranchInGitlabIntegration');
@@ -456,7 +461,8 @@ class PostPushWebhookActionBranchHandlerTest extends TestCase
 
         $this->handler->parseBranchReference(
             $integration,
-            $webhook_data
+            $webhook_data,
+            new DateTimeImmutable()
         );
     }
 }

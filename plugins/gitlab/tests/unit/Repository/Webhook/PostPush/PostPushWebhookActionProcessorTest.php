@@ -219,7 +219,7 @@ final class PostPushWebhookActionProcessorTest extends \Tuleap\Test\PHPUnit\Test
             ->shouldReceive('handleArtifactClosure')
             ->once();
 
-        $this->processor->process($integration, $webhook_data);
+        $this->processor->process($integration, $webhook_data, new DateTimeImmutable());
     }
 
     public function testItProcessesActionsForPostPushWebhookWithCloseArtifactKeyword(): void
@@ -309,7 +309,7 @@ final class PostPushWebhookActionProcessorTest extends \Tuleap\Test\PHPUnit\Test
             ->shouldReceive('handleArtifactClosure')
             ->once();
 
-        $this->processor->process($integration, $webhook_data);
+        $this->processor->process($integration, $webhook_data, new DateTimeImmutable());
     }
 
     public function testItDoesNothingIfArtifactDoesNotExist(): void
@@ -375,7 +375,7 @@ final class PostPushWebhookActionProcessorTest extends \Tuleap\Test\PHPUnit\Test
 
         $this->reference_manager->shouldNotReceive('insertCrossReference');
 
-        $this->processor->process($integration, $webhook_data);
+        $this->processor->process($integration, $webhook_data, new DateTimeImmutable());
     }
 
     public function testItDoesNothingIfArtReferenceNotFound(): void
@@ -441,6 +441,6 @@ final class PostPushWebhookActionProcessorTest extends \Tuleap\Test\PHPUnit\Test
 
         $this->reference_manager->shouldNotReceive('insertCrossReference');
 
-        $this->processor->process($integration, $webhook_data);
+        $this->processor->process($integration, $webhook_data, new DateTimeImmutable());
     }
 }
