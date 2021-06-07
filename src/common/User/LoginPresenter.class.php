@@ -18,6 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 class User_LoginPresenter
 {
     private $return_to;
@@ -66,7 +67,7 @@ class User_LoginPresenter
         return 'login';
     }
 
-    public function form_loginname()
+    public function form_loginname()//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         return $this->getFormLoginName();
     }
@@ -76,72 +77,72 @@ class User_LoginPresenter
         return $this->pv;
     }
 
-    public function return_to()
+    public function return_to()//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         return $this->getReturnTo();
     }
 
-    public function display_new_account_button()
+    public function display_new_account_button()//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         return $this->display_new_account_button;
     }
 
-    public function allow_password_recovery()
+    public function allow_password_recovery()//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         return $this->allow_password_recovery;
     }
 
-    public function help_email()
+    public function help_email()//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         return ForgeConfig::get('sys_email_admin');
     }
 
-    public function not_a_member()
+    public function not_a_member()//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         return $GLOBALS['Language']->getText('account_login', 'not_a_member');
     }
 
-    public function create_account_label()
+    public function create_account_label()//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         return $GLOBALS['Language']->getText('account_login', 'create_account_label');
     }
 
-    public function need_help()
+    public function need_help()//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
-        return $GLOBALS['Language']->getText('account_login', 'need_help');
+        return $GLOBALS['Language']->getOverridableText('account_login', 'need_help');
     }
 
-    public function help_subject()
+    public function help_subject()//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         return $GLOBALS['Language']->getText('account_login', 'help_subject', [ForgeConfig::get('sys_name')]);
     }
 
-    public function account_login_page_title()
+    public function account_login_page_title()//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         return $GLOBALS['Language']->getOverridableText('account_login', 'page_title', [ForgeConfig::get('sys_name')]);
     }
 
-    public function account_login_name()
+    public function account_login_name()//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         return $GLOBALS['Language']->getOverridableText('account_login', 'name');
     }
 
-    public function account_login_password()
+    public function account_login_password()//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
-        return $GLOBALS['Language']->getText('account_login', 'password');
+        return $GLOBALS['Language']->getOverridableText('account_login', 'password');
     }
 
-    public function account_login_login_btn()
+    public function account_login_login_btn()//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         return $GLOBALS['Language']->getText('account_login', 'login_btn');
     }
 
-    public function account_login_lost_pw()
+    public function account_login_lost_pw()//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         return $GLOBALS['Language']->getText('account_login', 'lost_pw');
     }
 
-    public function account_login_login_with_tuleap()
+    public function account_login_login_with_tuleap()//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         return $GLOBALS['Language']->getText('account_login', 'login_with_tuleap', [ForgeConfig::get('sys_name')]);
     }
@@ -161,12 +162,12 @@ class User_LoginPresenter
         return $this->form_loginname;
     }
 
-    public function login_intro()
+    public function login_intro()//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         return file_get_contents($GLOBALS['Language']->getContent('account/login_intro', null, null, '.html'));
     }
 
-    public function additional_connectors()
+    public function additional_connectors()//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         return $this->additional_connectors;
     }
@@ -182,7 +183,7 @@ class User_LoginPresenter
     /**
      * @return string
      */
-    public function csrf_token_name()
+    public function csrf_token_name()//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         return $this->csrf_token->getTokenName();
     }
@@ -190,7 +191,7 @@ class User_LoginPresenter
     /**
      * @return string
      */
-    public function csrf_token_value()
+    public function csrf_token_value()//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         return $this->csrf_token->getToken();
     }

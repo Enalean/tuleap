@@ -83,8 +83,8 @@ class HomePagePresenter
 
         $this->create_account_label = $GLOBALS['Language']->getText('homepage', 'create_account');
         $this->welcome_back         = $GLOBALS['Language']->getText('homepage', 'welcome_back');
-        $this->username_placeholder = $GLOBALS['Language']->getText('homepage', 'username_placeholder');
-        $this->password_placeholder = $GLOBALS['Language']->getText('homepage', 'password_placeholder');
+        $this->username_placeholder = $GLOBALS['Language']->getOverridableText('homepage', 'username_placeholder');
+        $this->password_placeholder = $GLOBALS['Language']->getOverridableText('homepage', 'password_placeholder');
         $this->sign_in_submit       = $GLOBALS['Language']->getText('homepage', 'sign_in_submit');
         $this->forgot_password      = $GLOBALS['Language']->getText('homepage', 'forgot_password');
         $this->not_a_member         = $GLOBALS['Language']->getText('homepage', 'not_a_member');

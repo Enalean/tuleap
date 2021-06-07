@@ -34,27 +34,27 @@ class SpecificLoginPresenter
         $this->providers = $providers;
     }
 
-    public function help_email()
+    public function help_email() //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         return ForgeConfig::get('sys_email_admin');
     }
 
-    public function need_help()
+    public function need_help() //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
-        return $GLOBALS['Language']->getText('account_login', 'need_help');
+        return $GLOBALS['Language']->getOverridableText('account_login', 'need_help');
     }
 
-    public function help_subject()
+    public function help_subject() //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         return $GLOBALS['Language']->getText('account_login', 'help_subject', [ForgeConfig::get('sys_name')]);
     }
 
-    public function account_login_login_with_tuleap()
+    public function account_login_login_with_tuleap() //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         return $GLOBALS['Language']->getText('account_login', 'login_with_tuleap', [ForgeConfig::get('sys_name')]);
     }
 
-    public function login_intro()
+    public function login_intro() //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         return file_get_contents($GLOBALS['Language']->getContent('account/login_intro', null, null, '.html'));
     }
