@@ -33,14 +33,18 @@ class TimeframeImpliedFromAnotherTracker implements IComputeTimeframes
 {
     public const NAME = 'timeframe-implied-from-another-tracker';
 
+    private \Tracker $tracker;
+
     private SemanticTimeframe $semantic_timeframe_implied_from_tracker;
 
     private LinksRetriever $links_retriever;
 
     public function __construct(
+        \Tracker $tracker,
         SemanticTimeframe $semantic_timeframe_implied_from_tracker,
         LinksRetriever $links_retriever
     ) {
+        $this->tracker                                 = $tracker;
         $this->semantic_timeframe_implied_from_tracker = $semantic_timeframe_implied_from_tracker;
         $this->links_retriever                         = $links_retriever;
     }
@@ -152,7 +156,14 @@ class TimeframeImpliedFromAnotherTracker implements IComputeTimeframes
 
     public function isFieldUsed(\Tracker_FormElement_Field $field): bool
     {
-        return false;
+        if (! ($field instanceof \Tracker_FormElement_Field_ArtifactLink)) {
+            return false;
+        }
+
+        $field_tracker_id = $field->getTrackerId();
+
+        return $field_tracker_id === $this->tracker->getId()
+            || $field_tracker_id === $this->semantic_timeframe_implied_from_tracker->getTracker()->getId();
     }
 
     public function isDefined(): bool

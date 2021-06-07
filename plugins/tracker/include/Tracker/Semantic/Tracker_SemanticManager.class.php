@@ -25,6 +25,7 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkFieldValueDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\LinksRetriever;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenterFactory;
+use Tuleap\Tracker\Semantic\CollectionOfSemanticsUsingAParticularTrackerField;
 use Tuleap\Tracker\Semantic\Progress\MethodBuilder;
 use Tuleap\Tracker\Semantic\Progress\SemanticProgress;
 use Tuleap\Tracker\Semantic\Progress\SemanticProgressBuilder;
@@ -98,22 +99,35 @@ class Tracker_SemanticManager
         die();
     }
 
-    /**
-     * Is the field used in semantics?
-     *
-     * @param Tracker_FormElement_Field the field to test if it is used in semantics or not
-     *
-     * @return bool returns true if the field is used in semantics, false otherwise
-     */
-    public function isUsedInSemantics(Tracker_FormElement_Field $field)
+    public function getSemanticsTheFieldBelongsTo(Tracker_FormElement_Field $field): CollectionOfSemanticsUsingAParticularTrackerField
     {
-        $semantics = $this->getSemantics();
+        $semantics             = $this->getSemantics();
+        $timeframe_dao         = new SemanticTimeframeDao();
+        $semantics_using_field = [];
+
+        $configs                    = $timeframe_dao->getSemanticsImpliedFromGivenTracker($this->tracker->getId()) ?: [];
+        $semantic_timeframe_builder = $this->getSemanticTimeframeBuilder();
+
         foreach ($semantics as $semantic) {
             if ($semantic->isUsedInSemantics($field)) {
-                return true;
+                $semantics_using_field[] = $semantic;
             }
         }
-        return false;
+
+        foreach ($configs as $config) {
+            $tracker = \TrackerFactory::instance()->getTrackerById($config['tracker_id']);
+            if ($tracker === null) {
+                continue;
+            }
+
+            $semantic_timeframe = $semantic_timeframe_builder->getSemantic($tracker);
+
+            if ($semantic_timeframe->isUsedInSemantics($field)) {
+                $semantics_using_field[] = $semantic_timeframe;
+            }
+        }
+
+        return new CollectionOfSemanticsUsingAParticularTrackerField($field, $semantics_using_field);
     }
 
     /**
@@ -132,15 +146,7 @@ class Tracker_SemanticManager
         );
         $semantics->add(Tracker_Semantic_Contributor::load($this->tracker));
 
-        $semantic_timeframe_builder = new SemanticTimeframeBuilder(
-            new SemanticTimeframeDao(),
-            Tracker_FormElementFactory::instance(),
-            \TrackerFactory::instance(),
-            new LinksRetriever(
-                new ArtifactLinkFieldValueDao(),
-                \Tracker_ArtifactFactory::instance()
-            )
-        );
+        $semantic_timeframe_builder = $this->getSemanticTimeframeBuilder();
 
         $semantic_timeframe    = $semantic_timeframe_builder->getSemantic($this->tracker);
         $semantic_progress_dao = new SemanticProgressDao();
@@ -222,5 +228,18 @@ class Tracker_SemanticManager
         );
 
         return $order;
+    }
+
+    private function getSemanticTimeframeBuilder(): SemanticTimeframeBuilder
+    {
+        return new SemanticTimeframeBuilder(
+            new SemanticTimeframeDao(),
+            Tracker_FormElementFactory::instance(),
+            \TrackerFactory::instance(),
+            new LinksRetriever(
+                new ArtifactLinkFieldValueDao(),
+                \Tracker_ArtifactFactory::instance()
+            )
+        );
     }
 }

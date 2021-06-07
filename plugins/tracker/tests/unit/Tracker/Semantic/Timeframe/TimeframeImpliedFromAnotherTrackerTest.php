@@ -46,9 +46,14 @@ class TimeframeImpliedFromAnotherTrackerTest extends \Tuleap\Test\PHPUnit\TestCa
      * @var \PHPUnit\Framework\MockObject\MockObject|\Tracker
      */
     private $implied_from_tracker;
+    /**
+     * @var \PHPUnit\Framework\MockObject\MockObject|\Tracker
+     */
+    private $tracker;
 
     protected function setUp(): void
     {
+        $this->tracker              = $this->createMock(\Tracker::class);
         $this->implied_from_tracker = $this->createMock(\Tracker::class);
         $this->implied_from_tracker->expects(self::any())->method('getName')->will(self::returnValue("Releases"));
 
@@ -57,6 +62,7 @@ class TimeframeImpliedFromAnotherTrackerTest extends \Tuleap\Test\PHPUnit\TestCa
         $this->links_retriever      = $this->createMock(LinksRetriever::class);
 
         $this->timeframe = new TimeframeImpliedFromAnotherTracker(
+            $this->tracker,
             new SemanticTimeframe(
                 $this->implied_from_tracker,
                 $this->timeframe_calculator
@@ -91,11 +97,41 @@ class TimeframeImpliedFromAnotherTrackerTest extends \Tuleap\Test\PHPUnit\TestCa
         );
     }
 
-    public function testFieldsAreAlwaysUnused(): void
+    public function testFieldIsUsedWhenItIsAnArtLinkFieldComingFromCurrentTracker(): void
     {
-        $a_field = $this->getMockBuilder(\Tracker_FormElement_Field_Date::class)
-            ->disableOriginalConstructor()
-            ->getMock();
+        $a_field = $this->createMock(\Tracker_FormElement_Field_ArtifactLink::class);
+        $a_field->expects(self::once())->method('getTrackerId')->willReturn(10);
+
+        $this->tracker->expects(self::once())->method('getId')->willReturn(10);
+
+        self::assertTrue($this->timeframe->isFieldUsed($a_field));
+    }
+
+    public function testFieldIsUsedWhenItIsAnArtLinkFieldComingFromTheTrackerWeUseTheSemantic(): void
+    {
+        $a_field = $this->createMock(\Tracker_FormElement_Field_ArtifactLink::class);
+        $a_field->expects(self::once())->method('getTrackerId')->willReturn(12);
+
+        $this->tracker->expects(self::once())->method('getId')->willReturn(10);
+        $this->implied_from_tracker->expects(self::once())->method('getId')->willReturn(12);
+
+        self::assertTrue($this->timeframe->isFieldUsed($a_field));
+    }
+
+    public function testFieldIsNotUsedWhenItIsNotAnArtLinkField(): void
+    {
+        $a_field = $this->createMock(\Tracker_FormElement_Field_Date::class);
+
+        self::assertFalse($this->timeframe->isFieldUsed($a_field));
+    }
+
+    public function testFieldIsNotUsedWhenItIsAnArtLinkFieldComingFromATrackerDifferentThanTheCurrentOneAndTheTargetOne(): void
+    {
+        $a_field = $this->createMock(\Tracker_FormElement_Field_ArtifactLink::class);
+        $a_field->expects(self::once())->method('getTrackerId')->willReturn(16);
+
+        $this->tracker->expects(self::once())->method('getId')->willReturn(10);
+        $this->implied_from_tracker->expects(self::once())->method('getId')->willReturn(12);
 
         self::assertFalse($this->timeframe->isFieldUsed($a_field));
     }

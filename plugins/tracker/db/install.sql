@@ -748,7 +748,8 @@ CREATE TABLE tracker_semantic_timeframe (
   start_date_field_id int(11) NULL,
   duration_field_id int(11) NULL,
   end_date_field_id int(11) NULL,
-  implied_from_tracker_id int(11) NULL
+  implied_from_tracker_id int(11) NULL,
+  INDEX idx_implied(implied_from_tracker_id)
 ) ENGINE=InnoDB;
 
 DROP TABLE IF EXISTS tracker_semantic_progress;

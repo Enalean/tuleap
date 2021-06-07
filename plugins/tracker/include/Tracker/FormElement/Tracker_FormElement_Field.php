@@ -24,6 +24,7 @@ use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 use Tuleap\Tracker\FormElement\Field\XMLCriteriaValueCache;
 use Tuleap\Tracker\Rule\TrackerRulesDateValidator;
 use Tuleap\Tracker\Rule\TrackerRulesListValidator;
+use Tuleap\Tracker\Semantic\CollectionOfSemanticsUsingAParticularTrackerField;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldDetector;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsDao;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsRetriever;
@@ -823,17 +824,19 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
         $html     = '';
         $required = $this->required ? ' <span class="highlight">*</span>' : '';
 
+        $usage_in_semantics = $this->getUsagesInSemantics();
+
         $html         .= '<div class="tracker-admin-field" id="tracker-admin-formElements_' . $this->id . '">';
         $html         .= '<div class="tracker-admin-field-controls">';
                 $html .= '<a class="edit-field" href="' . $this->getAdminEditUrl() . '">' . $GLOBALS['HTML']->getImage('ic/edit.png', ['alt' => 'edit']) . '</a> ';
-        if ($this->canBeRemovedFromUsage()) {
+        if ($usage_in_semantics->areThereSemanticsUsingField() === false && $this->canBeRemovedFromUsage()) {
             $html .= '<a href="?' . http_build_query([
                 'tracker'  => $tracker->id,
                 'func'     => 'admin-formElement-remove',
                 'formElement'    => $this->id,
             ]) . '">' . $GLOBALS['HTML']->getImage('ic/cross.png', ['alt' => 'remove']) . '</a>';
         } else {
-            $cannot_remove_message = $this->getCannotRemoveMessage();
+            $cannot_remove_message = $usage_in_semantics->getUsages() . ' ' . $this->getCannotRemoveMessage();
             $html                 .= '<span style="color:gray;" title="' . $cannot_remove_message . '">';
             $html                 .= $GLOBALS['HTML']->getImage('ic/cross-disabled.png', ['alt' => 'remove']);
             $html                 .= '</span>';
@@ -936,15 +939,10 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
         return true;
     }
 
-    /**
-     * Is the field used in semantics?
-     *
-     * @return bool returns true if the field is used in semantics, false otherwise
-     */
-    public function isUsedInSemantics()
+    public function getUsagesInSemantics(): CollectionOfSemanticsUsingAParticularTrackerField
     {
         $sm = new Tracker_SemanticManager($this->getTracker());
-        return $sm->isUsedInSemantics($this);
+        return $sm->getSemanticsTheFieldBelongsTo($this);
     }
 
     /**
@@ -997,10 +995,6 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
     {
         $message = '';
 
-        if ($this->isUsedInSemantics()) {
-            $message .= dgettext('tuleap-tracker', 'Impossible to delete this field (used in semantics)') . ' ';
-        }
-
         if ($this->isUsedInWorkflow()) {
             $message .= dgettext('tuleap-tracker', 'Impossible to delete this field (used in workflow)') . ' ';
         }
@@ -1022,8 +1016,7 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
      */
     public function canBeRemovedFromUsage()
     {
-        $is_used = $this->isUsedInSemantics() ||
-            $this->isUsedInWorkflow() ||
+        $is_used = $this->isUsedInWorkflow() ||
             $this->isUsedInFieldDependency() ||
             $this->isUsedInTrigger();
 
