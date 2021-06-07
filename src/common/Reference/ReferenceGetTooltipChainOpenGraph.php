@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Reference;
 
+use Embed\Embed;
 use ReferenceManager;
 
 class ReferenceGetTooltipChainOpenGraph extends ReferenceGetTooltipChain
@@ -30,17 +31,14 @@ class ReferenceGetTooltipChainOpenGraph extends ReferenceGetTooltipChain
      * @var \Codendi_HTMLPurifier
      */
     private $html_purifier;
-    /**
-     * @var ReferenceOpenGraphDispatcher
-     */
-    private $open_graph_dispatcher;
+    private Embed $embed;
 
     public function __construct(
         \Codendi_HTMLPurifier $html_purifier,
-        ReferenceOpenGraphDispatcher $open_graph_dispatcher
+        Embed $embed
     ) {
-        $this->html_purifier         = $html_purifier;
-        $this->open_graph_dispatcher = $open_graph_dispatcher;
+        $this->html_purifier = $html_purifier;
+        $this->embed         = $embed;
     }
 
     public function process(
@@ -54,7 +52,7 @@ class ReferenceGetTooltipChainOpenGraph extends ReferenceGetTooltipChain
             $reference_open_graph = new ReferenceOpenGraph(
                 $this->html_purifier,
                 $reference,
-                $this->open_graph_dispatcher
+                $this->embed
             );
             echo $reference_open_graph->getContent();
         } else {

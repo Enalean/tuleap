@@ -44,7 +44,7 @@
     }
   ],
   "require": {
-    "embed/embed": "^3.3",
+    "embed/embed": "^4.3",
     "ezyang/htmlpurifier": "^4.10",
     "graylog2/gelf-php": "^1.6",
     "gumlet/php-image-resize": "^2.0",
