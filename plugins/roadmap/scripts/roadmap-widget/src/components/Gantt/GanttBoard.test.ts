@@ -55,10 +55,7 @@ function getRootState(): RootState {
         should_display_empty_state: false,
         is_loading: false,
         error_message: "",
-        iterations: {
-            lvl1_iterations: [],
-            lvl2_iterations: [],
-        } as IterationsState,
+        iterations: {} as IterationsState,
         tasks: {} as TasksState,
         timeperiod: {
             timescale: "month",
@@ -84,6 +81,8 @@ describe("GanttBoard", () => {
                     getters: {
                         "tasks/rows": [],
                         "tasks/tasks": [],
+                        "iterations/lvl1_iterations_to_display": [],
+                        "iterations/lvl2_iterations_to_display": [],
                     },
                 }),
             },
@@ -93,24 +92,18 @@ describe("GanttBoard", () => {
     });
 
     it("Displays level 1 iterations", () => {
-        const root_state = getRootState();
-
         const wrapper = shallowMount(GanttBoard, {
             propsData: {
                 visible_natures: [],
             },
             mocks: {
                 $store: createStoreMock({
-                    state: {
-                        ...root_state,
-                        iterations: {
-                            ...root_state.iterations,
-                            lvl1_iterations: [{ id: 1 } as Iteration],
-                        },
-                    },
+                    state: getRootState(),
                     getters: {
                         "tasks/rows": [],
                         "tasks/tasks": [],
+                        "iterations/lvl1_iterations_to_display": [{ id: 1 } as Iteration],
+                        "iterations/lvl2_iterations_to_display": [],
                     },
                 }),
             },
@@ -120,24 +113,18 @@ describe("GanttBoard", () => {
     });
 
     it("Displays level 2 iterations", () => {
-        const root_state = getRootState();
-
         const wrapper = shallowMount(GanttBoard, {
             propsData: {
                 visible_natures: [],
             },
             mocks: {
                 $store: createStoreMock({
-                    state: {
-                        ...root_state,
-                        iterations: {
-                            ...root_state.iterations,
-                            lvl2_iterations: [{ id: 1 } as Iteration],
-                        },
-                    },
+                    state: getRootState(),
                     getters: {
                         "tasks/rows": [],
                         "tasks/tasks": [],
+                        "iterations/lvl1_iterations_to_display": [],
+                        "iterations/lvl2_iterations_to_display": [{ id: 1 } as Iteration],
                     },
                 }),
             },
@@ -147,25 +134,18 @@ describe("GanttBoard", () => {
     });
 
     it("Displays levels 1 & 2 iterations", () => {
-        const root_state = getRootState();
-
         const wrapper = shallowMount(GanttBoard, {
             propsData: {
                 visible_natures: [],
             },
             mocks: {
                 $store: createStoreMock({
-                    state: {
-                        ...root_state,
-                        iterations: {
-                            ...root_state.iterations,
-                            lvl1_iterations: [{ id: 1 } as Iteration],
-                            lvl2_iterations: [{ id: 2 } as Iteration],
-                        },
-                    },
+                    state: getRootState(),
                     getters: {
                         "tasks/rows": [],
                         "tasks/tasks": [],
+                        "iterations/lvl1_iterations_to_display": [{ id: 1 } as Iteration],
+                        "iterations/lvl2_iterations_to_display": [{ id: 2 } as Iteration],
                     },
                 }),
             },
@@ -198,6 +178,8 @@ describe("GanttBoard", () => {
                             new Date("2020-04-31T22:00:00.000Z"),
                             "en-US"
                         ),
+                        "iterations/lvl1_iterations_to_display": [],
+                        "iterations/lvl2_iterations_to_display": [],
                     },
                 }),
             },
@@ -233,6 +215,8 @@ describe("GanttBoard", () => {
                             new Date("2020-04-31T22:00:00.000Z"),
                             "en-US"
                         ),
+                        "iterations/lvl1_iterations_to_display": [],
+                        "iterations/lvl2_iterations_to_display": [],
                     },
                 }),
             },
@@ -271,6 +255,8 @@ describe("GanttBoard", () => {
                             new Date("2020-04-31T22:00:00.000Z"),
                             "en-US"
                         ),
+                        "iterations/lvl1_iterations_to_display": [],
+                        "iterations/lvl2_iterations_to_display": [],
                     },
                 }),
             },
@@ -314,6 +300,8 @@ describe("GanttBoard", () => {
                             new Date("2020-04-31T22:00:00.000Z"),
                             "en-US"
                         ),
+                        "iterations/lvl1_iterations_to_display": [],
+                        "iterations/lvl2_iterations_to_display": [],
                     },
                 }),
             },
@@ -357,6 +345,8 @@ describe("GanttBoard", () => {
                             new Date("2020-04-31T22:00:00.000Z"),
                             "en-US"
                         ),
+                        "iterations/lvl1_iterations_to_display": [],
+                        "iterations/lvl2_iterations_to_display": [],
                     },
                 }),
             },
@@ -393,6 +383,8 @@ describe("GanttBoard", () => {
                             new Date("2020-04-31T22:00:00.000Z"),
                             "en-US"
                         ),
+                        "iterations/lvl1_iterations_to_display": [],
+                        "iterations/lvl2_iterations_to_display": [],
                     },
                 }),
             },
@@ -443,6 +435,8 @@ describe("GanttBoard", () => {
                             new Date("2020-04-31T22:00:00.000Z"),
                             "en-US"
                         ),
+                        "iterations/lvl1_iterations_to_display": [],
+                        "iterations/lvl2_iterations_to_display": [],
                     },
                 }),
             },
@@ -493,6 +487,8 @@ describe("GanttBoard", () => {
                             new Date("2020-04-31T22:00:00.000Z"),
                             "en-US"
                         ),
+                        "iterations/lvl1_iterations_to_display": [],
+                        "iterations/lvl2_iterations_to_display": [],
                     },
                 }),
             },
@@ -537,6 +533,8 @@ describe("GanttBoard", () => {
                             new Date("2020-04-31T22:00:00.000Z"),
                             "en-US"
                         ),
+                        "iterations/lvl1_iterations_to_display": [],
+                        "iterations/lvl2_iterations_to_display": [],
                     },
                 }),
             },
@@ -570,6 +568,8 @@ describe("GanttBoard", () => {
                             new Date("2020-04-31T22:00:00.000Z"),
                             "en-US"
                         ),
+                        "iterations/lvl1_iterations_to_display": [],
+                        "iterations/lvl2_iterations_to_display": [],
                     },
                 }),
             },

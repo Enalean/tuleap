@@ -75,13 +75,13 @@
                     v-if="has_lvl1_iterations"
                     v-bind:nb_additional_units="nb_additional_units"
                     v-bind:level="1"
-                    v-bind:iterations="lvl1_iterations"
+                    v-bind:iterations="lvl1_iterations_to_display"
                 />
                 <iterations-ribbon
                     v-if="has_lvl2_iterations"
                     v-bind:nb_additional_units="nb_additional_units"
                     v-bind:level="2"
-                    v-bind:iterations="lvl2_iterations"
+                    v-bind:iterations="lvl2_iterations_to_display"
                 />
                 <template v-for="(row, index) in rows">
                     <gantt-task
@@ -208,11 +208,11 @@ export default class GanttBoard extends Vue {
     @tasks.Getter
     private readonly tasks!: Task[];
 
-    @iterations.State
-    private readonly lvl1_iterations!: Iteration[];
+    @iterations.Getter
+    private readonly lvl1_iterations_to_display!: Iteration[];
 
-    @iterations.State
-    private readonly lvl2_iterations!: Iteration[];
+    @iterations.Getter
+    private readonly lvl2_iterations_to_display!: Iteration[];
 
     @timeperiod.State
     private readonly timescale!: TimeScale;
@@ -331,11 +331,11 @@ export default class GanttBoard extends Vue {
     }
 
     get has_lvl1_iterations(): boolean {
-        return this.lvl1_iterations.length > 0;
+        return this.lvl1_iterations_to_display.length > 0;
     }
 
     get has_lvl2_iterations(): boolean {
-        return this.lvl2_iterations.length > 0;
+        return this.lvl2_iterations_to_display.length > 0;
     }
 
     isTaskRow(row: Row): row is TaskRow {

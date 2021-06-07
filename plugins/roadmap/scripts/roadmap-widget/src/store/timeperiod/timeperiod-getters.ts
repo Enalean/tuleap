@@ -19,7 +19,7 @@
 
 import { getFirstDate } from "../../helpers/first-date";
 import { getLastDate } from "../../helpers/last-date";
-import type { Task, TimePeriod } from "../../type";
+import type { Iteration, Task, TimePeriod } from "../../type";
 import { TimePeriodWeek } from "../../helpers/time-period-week";
 import { TimePeriodQuarter } from "../../helpers/time-period-quarter";
 import { TimePeriodMonth } from "../../helpers/time-period-month";
@@ -32,14 +32,24 @@ export const first_date = (
     root_state: RootState,
     root_getters: { "tasks/tasks": Task[] }
 ): Date => {
-    return getFirstDate(
-        [
-            ...root_getters["tasks/tasks"],
-            ...root_state.iterations.lvl1_iterations,
-            ...root_state.iterations.lvl2_iterations,
-        ],
-        root_state.now
+    const first_task_date = getFirstDate(root_getters["tasks/tasks"], root_state.now);
+
+    const iterations_containing_first_task_date = getIterationsAroundDate(
+        root_state,
+        first_task_date
     );
+
+    if (iterations_containing_first_task_date.length === 0) {
+        return first_task_date;
+    }
+
+    return iterations_containing_first_task_date.reduce((first_date, iteration) => {
+        if (iteration.start < first_date) {
+            return iteration.start;
+        }
+
+        return first_date;
+    }, first_task_date);
 };
 
 export const last_date = (
@@ -48,14 +58,24 @@ export const last_date = (
     root_state: RootState,
     root_getters: { "tasks/tasks": Task[] }
 ): Date => {
-    return getLastDate(
-        [
-            ...root_getters["tasks/tasks"],
-            ...root_state.iterations.lvl1_iterations,
-            ...root_state.iterations.lvl2_iterations,
-        ],
-        root_state.now
+    const last_task_date = getLastDate(root_getters["tasks/tasks"], root_state.now);
+
+    const iterations_containing_last_task_date = getIterationsAroundDate(
+        root_state,
+        last_task_date
     );
+
+    if (iterations_containing_last_task_date.length === 0) {
+        return last_task_date;
+    }
+
+    return iterations_containing_last_task_date.reduce((last_date, iteration) => {
+        if (last_date < iteration.end) {
+            return iteration.end;
+        }
+
+        return last_date;
+    }, last_task_date);
 };
 
 export const time_period = (
@@ -91,4 +111,13 @@ function getFirstDateWithOffset(nb_days_to_substract: number, first_date: Date):
     first_date_with_offset.setUTCDate(first_date_with_offset.getUTCDate() - nb_days_to_substract);
 
     return first_date_with_offset;
+}
+
+function getIterationsAroundDate(root_state: RootState, date: Date): Iteration[] {
+    return [
+        ...root_state.iterations.lvl1_iterations,
+        ...root_state.iterations.lvl2_iterations,
+    ].filter((iteration: Iteration) => {
+        return iteration.start <= date && date <= iteration.end;
+    });
 }
