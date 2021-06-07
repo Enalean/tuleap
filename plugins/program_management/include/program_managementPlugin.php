@@ -85,6 +85,7 @@ use Tuleap\ProgramManagement\Adapter\Workspace\WorkspaceDAO;
 use Tuleap\ProgramManagement\DisplayProgramBacklogController;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\ArtifactCreatedHandler;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck\CanSubmitNewArtifactHandler;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck\IterationCreatorChecker;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck\ProgramIncrementCreatorChecker;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck\TimeboxCreatorChecker;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\ProgramIncrementChanged;
@@ -820,6 +821,11 @@ final class program_managementPlugin extends Plugin
                     $planning_adapter,
                     $this->getPlanConfigurationBuilder()
                 ),
+                $planning_adapter,
+                $logger
+            ),
+            new IterationCreatorChecker(
+                $this->getTeamProjectCollectionBuilder(),
                 $planning_adapter,
                 $logger
             )

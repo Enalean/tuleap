@@ -28,7 +28,7 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Team\TeamPr
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TrackerCollection;
 use Tuleap\ProgramManagement\Domain\ProgramTracker;
 use Tuleap\ProgramManagement\Domain\Project;
-use Tuleap\ProgramManagement\Stub\RetrieveRootPlanningMilestoneTrackerStub;
+use Tuleap\ProgramManagement\Stub\RetrievePlanningMilestoneTrackerStub;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
@@ -78,7 +78,7 @@ final class SemanticCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         $first_team  = new Project(101, 'team_blue', 'Team Blue');
         $second_team = new Project(102, 'team_red', 'Team Red');
         $teams       = new TeamProjectsCollection([$first_team, $second_team]);
-        $retriever   = RetrieveRootPlanningMilestoneTrackerStub::withValidTrackerIds(1024, 2048);
+        $retriever   = RetrievePlanningMilestoneTrackerStub::withValidTrackerIds(1024, 2048);
         $user        = UserTestBuilder::aUser()->build();
         $trackers    = TrackerCollection::buildRootPlanningMilestoneTrackers($retriever, $teams, $user);
 
@@ -116,7 +116,7 @@ final class SemanticCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         $first_team  = new Project(101, 'team_blue', 'Team Blue');
         $second_team = new Project(102, 'team_red', 'Team Red');
         $teams       = new TeamProjectsCollection([$first_team, $second_team]);
-        $retriever   = RetrieveRootPlanningMilestoneTrackerStub::withValidTrackerIds(1024, 2048);
+        $retriever   = RetrievePlanningMilestoneTrackerStub::withValidTrackerIds(1024, 2048);
         $user        = UserTestBuilder::aUser()->build();
         $trackers    = TrackerCollection::buildRootPlanningMilestoneTrackers($retriever, $teams, $user);
 
@@ -137,7 +137,7 @@ final class SemanticCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         $first_team  = new Project(101, 'team_blue', 'Team Blue');
         $second_team = new Project(102, 'team_red', 'Team Red');
         $teams       = new TeamProjectsCollection([$first_team, $second_team]);
-        $retriever   = RetrieveRootPlanningMilestoneTrackerStub::withValidTrackerIds(1024, 2048);
+        $retriever   = RetrievePlanningMilestoneTrackerStub::withValidTrackerIds(1024, 2048);
         $user        = UserTestBuilder::aUser()->build();
         $trackers    = TrackerCollection::buildRootPlanningMilestoneTrackers($retriever, $teams, $user);
 
@@ -160,7 +160,7 @@ final class SemanticCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         $first_team  = new Project(101, 'team_blue', 'Team Blue');
         $second_team = new Project(102, 'team_red', 'Team Red');
         $teams       = new TeamProjectsCollection([$first_team, $second_team]);
-        $retriever   = RetrieveRootPlanningMilestoneTrackerStub::withValidTrackerIds(1024, 2048);
+        $retriever   = RetrievePlanningMilestoneTrackerStub::withValidTrackerIds(1024, 2048);
         $user        = UserTestBuilder::aUser()->build();
         $trackers    = TrackerCollection::buildRootPlanningMilestoneTrackers($retriever, $teams, $user);
 
@@ -187,7 +187,7 @@ final class SemanticCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         $first_team  = new Project(101, 'team_blue', 'Team Blue');
         $second_team = new Project(102, 'team_red', 'Team Red');
         $teams       = new TeamProjectsCollection([$first_team, $second_team]);
-        $retriever   = RetrieveRootPlanningMilestoneTrackerStub::withValidTrackerIds(1024, 2048);
+        $retriever   = RetrievePlanningMilestoneTrackerStub::withValidTrackerIds(1024, 2048);
         $user        = UserTestBuilder::aUser()->build();
         $trackers    = TrackerCollection::buildRootPlanningMilestoneTrackers($retriever, $teams, $user);
 
@@ -216,7 +216,7 @@ final class SemanticCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         $first_team  = new Project(101, 'team_blue', 'Team Blue');
         $second_team = new Project(102, 'team_red', 'Team Red');
         $teams       = new TeamProjectsCollection([$first_team, $second_team]);
-        $retriever   = RetrieveRootPlanningMilestoneTrackerStub::withValidTrackerIds(1024, 2048);
+        $retriever   = RetrievePlanningMilestoneTrackerStub::withValidTrackerIds(1024, 2048);
         $user        = UserTestBuilder::aUser()->build();
         $trackers    = TrackerCollection::buildRootPlanningMilestoneTrackers($retriever, $teams, $user);
 

@@ -30,7 +30,7 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fiel
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Team\TeamProjectsCollection;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TrackerCollection;
 use Tuleap\ProgramManagement\Domain\Project;
-use Tuleap\ProgramManagement\Stub\RetrieveRootPlanningMilestoneTrackerStub;
+use Tuleap\ProgramManagement\Stub\RetrievePlanningMilestoneTrackerStub;
 use Tuleap\Test\Builders\UserTestBuilder;
 
 final class RequiredFieldCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -64,7 +64,7 @@ final class RequiredFieldCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         $other_tracker_with_no_required_field->method('getFormElementFields')->willReturn(
             [$other_non_required_field]
         );
-        $retriever = RetrieveRootPlanningMilestoneTrackerStub::withValidTrackers(
+        $retriever = RetrievePlanningMilestoneTrackerStub::withValidTrackers(
             $tracker,
             $other_tracker_with_no_required_field
         );
@@ -113,7 +113,7 @@ final class RequiredFieldCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         $collection         = new SynchronizedFieldFromProgramAndTeamTrackersCollection(new NullLogger());
         $collection->add($synchronized_field);
 
-        $retriever = RetrieveRootPlanningMilestoneTrackerStub::withValidTrackers($tracker);
+        $retriever = RetrievePlanningMilestoneTrackerStub::withValidTrackers($tracker);
         $user      = UserTestBuilder::aUser()->build();
         $trackers  = TrackerCollection::buildRootPlanningMilestoneTrackers($retriever, $teams, $user);
 

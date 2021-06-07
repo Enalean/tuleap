@@ -35,13 +35,18 @@ final class CanSubmitNewArtifactHandlerTest extends TestCase
      * @var \PHPUnit\Framework\MockObject\Stub|ProgramIncrementCreatorChecker
      */
     private $program_increment_creator_checker;
+    /**
+     * @var \PHPUnit\Framework\MockObject\Stub|IterationCreatorChecker
+     */
+    private $iteration_creator_checker;
 
     protected function setUp(): void
     {
         $this->program_increment_creator_checker = $this->createStub(ProgramIncrementCreatorChecker::class);
+        $this->iteration_creator_checker         = $this->createStub(IterationCreatorChecker::class);
     }
 
-    public function testItDisablesArtifactSubmission(): void
+    public function testItDisablesArtifactSubmissionWhenCanNotCreateProgramIncrement(): void
     {
         $user    = UserTestBuilder::aUser()->build();
         $tracker = TrackerTestBuilder::aTracker()->withId(98)
@@ -53,13 +58,14 @@ final class CanSubmitNewArtifactHandlerTest extends TestCase
 
         $handler = new CanSubmitNewArtifactHandler(
             BuildProgramStub::stubValidProgram(),
-            $this->program_increment_creator_checker
+            $this->program_increment_creator_checker,
+            $this->iteration_creator_checker
         );
         $handler->handle($event);
         self::assertFalse($event->canSubmitNewArtifact());
     }
 
-    public function testItAllowsArtifactSubmissionWhenChecksAreValid(): void
+    public function testItDisablesArtifactSubmissionWhenCanNotCreateIteration(): void
     {
         $user    = UserTestBuilder::aUser()->build();
         $tracker = TrackerTestBuilder::aTracker()->withId(98)
@@ -68,10 +74,32 @@ final class CanSubmitNewArtifactHandlerTest extends TestCase
         $event   = new CanSubmitNewArtifact($user, $tracker);
 
         $this->program_increment_creator_checker->method('canCreateAProgramIncrement')->willReturn(true);
+        $this->iteration_creator_checker->method('canCreateAnIteration')->willReturn(false);
 
         $handler = new CanSubmitNewArtifactHandler(
             BuildProgramStub::stubValidProgram(),
-            $this->program_increment_creator_checker
+            $this->program_increment_creator_checker,
+            $this->iteration_creator_checker
+        );
+        $handler->handle($event);
+        self::assertFalse($event->canSubmitNewArtifact());
+    }
+
+    public function testItAllowsArtifactSubmissionWhenAllChecksAreValid(): void
+    {
+        $user    = UserTestBuilder::aUser()->build();
+        $tracker = TrackerTestBuilder::aTracker()->withId(98)
+            ->withProject(ProjectTestBuilder::aProject()->withId(101)->build())
+            ->build();
+        $event   = new CanSubmitNewArtifact($user, $tracker);
+
+        $this->program_increment_creator_checker->method('canCreateAProgramIncrement')->willReturn(true);
+        $this->iteration_creator_checker->method('canCreateAnIteration')->willReturn(true);
+
+        $handler = new CanSubmitNewArtifactHandler(
+            BuildProgramStub::stubValidProgram(),
+            $this->program_increment_creator_checker,
+            $this->iteration_creator_checker
         );
         $handler->handle($event);
         self::assertTrue($event->canSubmitNewArtifact());
@@ -87,7 +115,8 @@ final class CanSubmitNewArtifactHandlerTest extends TestCase
 
         $handler = new CanSubmitNewArtifactHandler(
             BuildProgramStub::stubInvalidProgram(),
-            $this->program_increment_creator_checker
+            $this->program_increment_creator_checker,
+            $this->iteration_creator_checker
         );
         $handler->handle($event);
         self::assertTrue($event->canSubmitNewArtifact());

@@ -23,8 +23,10 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Domain;
 
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\PlanningHasNoProgramIncrementException;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\TrackerRetrievalException;
+use Tuleap\ProgramManagement\Domain\Program\PlanningConfiguration\PlanningNotFoundException;
 use Tuleap\ProgramManagement\Domain\Program\PlanningConfiguration\TopPlanningNotFoundInProjectException;
-use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\RetrieveRootPlanningMilestoneTracker;
+use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\RetrievePlanningMilestoneTracker;
 
 final class ProgramTracker
 {
@@ -43,11 +45,23 @@ final class ProgramTracker
      * @throws PlanningHasNoProgramIncrementException
      */
     public static function buildMilestoneTrackerFromRootPlanning(
-        RetrieveRootPlanningMilestoneTracker $retriever,
+        RetrievePlanningMilestoneTracker $retriever,
         Project $project,
         \PFUser $user
     ): self {
         return new self($retriever->retrieveRootPlanningMilestoneTracker($project, $user));
+    }
+
+    /**
+     * @throws PlanningNotFoundException
+     * @throws TrackerRetrievalException
+     */
+    public static function buildSecondPlanningMilestoneTracker(
+        RetrievePlanningMilestoneTracker $retriever,
+        Project $project,
+        \PFUser $user
+    ): self {
+        return new self($retriever->retrieveSecondPlanningMilestoneTracker($project, $user));
     }
 
     /**

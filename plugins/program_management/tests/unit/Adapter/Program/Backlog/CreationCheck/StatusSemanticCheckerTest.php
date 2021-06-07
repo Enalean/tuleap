@@ -31,7 +31,7 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Team\TeamPr
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TrackerCollection;
 use Tuleap\ProgramManagement\Domain\ProgramTracker;
 use Tuleap\ProgramManagement\Domain\Project;
-use Tuleap\ProgramManagement\Stub\RetrieveRootPlanningMilestoneTrackerStub;
+use Tuleap\ProgramManagement\Stub\RetrievePlanningMilestoneTrackerStub;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
@@ -68,7 +68,7 @@ final class StatusSemanticCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         $first_team       = new Project(101, 'team_blue', 'Team Blue');
         $second_team      = new Project(102, 'team_red', 'Team Red');
         $teams            = new TeamProjectsCollection([$first_team, $second_team]);
-        $retriever        = RetrieveRootPlanningMilestoneTrackerStub::withValidTrackers(
+        $retriever        = RetrievePlanningMilestoneTrackerStub::withValidTrackers(
             $this->tracker_team_01,
             $this->tracker_team_02
         );

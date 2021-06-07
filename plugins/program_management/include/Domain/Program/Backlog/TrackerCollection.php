@@ -24,9 +24,10 @@ namespace Tuleap\ProgramManagement\Domain\Program\Backlog;
 
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\PlanningHasNoProgramIncrementException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Team\TeamProjectsCollection;
+use Tuleap\ProgramManagement\Domain\Program\PlanningConfiguration\PlanningNotFoundException;
 use Tuleap\ProgramManagement\Domain\Program\PlanningConfiguration\TopPlanningNotFoundInProjectException;
 use Tuleap\ProgramManagement\Domain\ProgramTracker;
-use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\RetrieveRootPlanningMilestoneTracker;
+use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\RetrievePlanningMilestoneTracker;
 
 final class TrackerCollection
 {
@@ -49,13 +50,29 @@ final class TrackerCollection
      * @throws PlanningHasNoProgramIncrementException
      */
     public static function buildRootPlanningMilestoneTrackers(
-        RetrieveRootPlanningMilestoneTracker $retriever,
+        RetrievePlanningMilestoneTracker $retriever,
         TeamProjectsCollection $teams,
         \PFUser $user
     ): self {
         $trackers = [];
         foreach ($teams->getTeamProjects() as $team) {
             $trackers[] = ProgramTracker::buildMilestoneTrackerFromRootPlanning($retriever, $team, $user);
+        }
+        return new self($trackers);
+    }
+
+    /**
+     * @throws PlanningNotFoundException
+     * @throws TrackerRetrievalException
+     */
+    public static function buildSecondPlanningMilestoneTracker(
+        RetrievePlanningMilestoneTracker $retriever,
+        TeamProjectsCollection $teams,
+        \PFUser $user
+    ): self {
+        $trackers = [];
+        foreach ($teams->getTeamProjects() as $team) {
+            $trackers[] = ProgramTracker::buildSecondPlanningMilestoneTracker($retriever, $team, $user);
         }
         return new self($trackers);
     }

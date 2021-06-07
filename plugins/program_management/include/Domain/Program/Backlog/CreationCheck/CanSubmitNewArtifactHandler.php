@@ -33,13 +33,16 @@ final class CanSubmitNewArtifactHandler
 {
     private BuildProgram $program_builder;
     private ProgramIncrementCreatorChecker $program_increment_creator_checker;
+    private IterationCreatorChecker $iteration_creator_checker;
 
     public function __construct(
         BuildProgram $program_builder,
-        ProgramIncrementCreatorChecker $program_increment_creator_checker
+        ProgramIncrementCreatorChecker $program_increment_creator_checker,
+        IterationCreatorChecker $iteration_creator_checker
     ) {
         $this->program_builder                   = $program_builder;
         $this->program_increment_creator_checker = $program_increment_creator_checker;
+        $this->iteration_creator_checker         = $iteration_creator_checker;
     }
 
     public function handle(CanSubmitNewArtifact $event): void
@@ -54,6 +57,10 @@ final class CanSubmitNewArtifactHandler
             return;
         }
         if (! $this->program_increment_creator_checker->canCreateAProgramIncrement($user, $tracker_data, $program)) {
+            $event->disableArtifactSubmission();
+            return;
+        }
+        if (! $this->iteration_creator_checker->canCreateAnIteration($user, $program)) {
             $event->disableArtifactSubmission();
         }
     }
