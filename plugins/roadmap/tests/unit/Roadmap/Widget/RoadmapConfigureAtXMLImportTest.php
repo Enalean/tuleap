@@ -142,7 +142,7 @@ final class RoadmapConfigureAtXMLImportTest extends \Tuleap\Test\PHPUnit\TestCas
         );
         $dao->shouldReceive('insertContent')
             ->once()
-            ->with(Mockery::any(), Mockery::any(), "My Roadmap", 1234);
+            ->with(Mockery::any(), Mockery::any(), "My Roadmap", 1234, null, null);
 
         $configurator = new RoadmapConfigureAtXMLImport();
         $configurator->configure($event);

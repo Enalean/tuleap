@@ -1611,6 +1611,8 @@ class Tracker implements Tracker_Dispatchable_Interface
     /**
      * Test if the tracker is active
      * @return bool
+     *
+     * @psalm-mutation-free
      */
     public function isActive()
     {
@@ -1621,6 +1623,8 @@ class Tracker implements Tracker_Dispatchable_Interface
      * Test if tracker is deleted
      *
      * @return bool
+     *
+     * @psalm-mutation-free
      */
     public function isDeleted()
     {

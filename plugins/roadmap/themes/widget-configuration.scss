@@ -1,4 +1,3 @@
-<?php
 /**
  * Copyright (c) Enalean, 2021 - Present. All Rights Reserved.
  *
@@ -18,23 +17,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
+.roadmap-widget-configuration-separator {
+    margin: var(--tlp-large-spacing) calc(-1 * var(--tlp-medium-spacing)) var(--tlp-medium-spacing);
+    border-top-width: 1px;
+}
 
-namespace Tuleap\Roadmap\Widget;
-
-use Tracker;
-
-/**
- * @psalm-immutable
- */
-class TrackerPresenter
-{
-    public int $id;
-    public string $title;
-
-    public function __construct(Tracker $tracker)
-    {
-        $this->id    = $tracker->getId();
-        $this->title = $tracker->getName();
-    }
+.roadmap-widget-configuration-subtitle {
+    color: var(--tlp-theme-dark-background-color);
+    font-size: 1rem;
 }

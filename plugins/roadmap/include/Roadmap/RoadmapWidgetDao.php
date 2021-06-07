@@ -27,15 +27,23 @@ use Tuleap\DB\DataAccessObject;
 class RoadmapWidgetDao extends DataAccessObject
 {
 
-    public function insertContent(int $owner_id, string $owner_type, string $title, int $tracker_id): int
-    {
+    public function insertContent(
+        int $owner_id,
+        string $owner_type,
+        string $title,
+        int $tracker_id,
+        ?int $lvl1_iteration_tracker_id,
+        ?int $lvl2_iteration_tracker_id
+    ): int {
         return (int) $this->getDB()->insertReturnId(
             'plugin_roadmap_widget',
             [
-                'owner_id'   => $owner_id,
-                'owner_type' => $owner_type,
-                'title'      => $title,
-                'tracker_id' => $tracker_id,
+                'owner_id'                  => $owner_id,
+                'owner_type'                => $owner_type,
+                'title'                     => $title,
+                'tracker_id'                => $tracker_id,
+                'lvl1_iteration_tracker_id' => $lvl1_iteration_tracker_id,
+                'lvl2_iteration_tracker_id' => $lvl2_iteration_tracker_id,
             ]
         );
     }
@@ -46,8 +54,8 @@ class RoadmapWidgetDao extends DataAccessObject
         int $destination_owner_id,
         string $destination_owner_type
     ): int {
-        $sql = 'INSERT INTO plugin_roadmap_widget (owner_id, owner_type, title, tracker_id)
-                SELECT  ?, ?, title, tracker_id
+        $sql = 'INSERT INTO plugin_roadmap_widget (owner_id, owner_type, title, tracker_id, lvl1_iteration_tracker_id, lvl2_iteration_tracker_id)
+                SELECT  ?, ?, title, tracker_id, lvl1_iteration_tracker_id, lvl2_iteration_tracker_id
                 FROM plugin_roadmap_widget
                 WHERE owner_id = ?
                   AND owner_type = ?';
@@ -83,13 +91,22 @@ class RoadmapWidgetDao extends DataAccessObject
         return $this->getDB()->row($sql, $id, $owner_id, $owner_type);
     }
 
-    public function update(int $id, int $owner_id, string $owner_type, string $title, int $tracker_id): void
-    {
+    public function update(
+        int $id,
+        int $owner_id,
+        string $owner_type,
+        string $title,
+        int $tracker_id,
+        ?int $lvl1_iteration_tracker_id,
+        ?int $lvl2_iteration_tracker_id
+    ): void {
         $this->getDB()->update(
             'plugin_roadmap_widget',
             [
-                'title'      => $title,
-                'tracker_id' => $tracker_id,
+                'title'                     => $title,
+                'tracker_id'                => $tracker_id,
+                'lvl1_iteration_tracker_id' => $lvl1_iteration_tracker_id,
+                'lvl2_iteration_tracker_id' => $lvl2_iteration_tracker_id,
             ],
             [
                 'owner_id'   => $owner_id,

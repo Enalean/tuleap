@@ -1,6 +1,5 @@
-<?php
 /**
- * Copyright (c) Enalean, 2021 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2021 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,23 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
-
-namespace Tuleap\Roadmap\Widget;
-
-use Tracker;
-
-/**
- * @psalm-immutable
- */
-class TrackerPresenter
-{
-    public int $id;
-    public string $title;
-
-    public function __construct(Tracker $tracker)
-    {
-        $this->id    = $tracker->getId();
-        $this->title = $tracker->getName();
-    }
+export interface Tracker {
+    readonly id: number;
+    readonly title: string;
 }

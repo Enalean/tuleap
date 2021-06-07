@@ -30,6 +30,8 @@ module.exports = [
         entry: {
             "widget-script": "./scripts/roadmap-widget/src/index.ts",
             "widget-style": "./themes/widget-roadmap.scss",
+            "configure-roadmap-widget-script": "./scripts/configure-widget/src/index.ts",
+            "configure-roadmap-widget-style": "./themes/widget-configuration.scss",
         },
         context,
         output,

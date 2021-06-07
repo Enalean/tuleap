@@ -154,6 +154,8 @@ final class RoadmapProjectWidget extends \Widget
                 $widget_id,
                 $this->getTitle(),
                 $this->tracker_id,
+                $this->lvl1_iteration_tracker_id,
+                $this->lvl2_iteration_tracker_id,
                 $this->tracker_factory->getTrackersByGroupIdUserCanView(
                     $this->owner_id,
                     $this->getCurrentUser()
@@ -169,6 +171,8 @@ final class RoadmapProjectWidget extends \Widget
             new PreferencePresenter(
                 self::ID,
                 $this->getTitle(),
+                null,
+                null,
                 null,
                 $this->tracker_factory->getTrackersByGroupIdUserCanView(
                     $this->owner_id,
@@ -212,21 +216,18 @@ final class RoadmapProjectWidget extends \Widget
                     );
                 }
 
-                $tracker_mapping = $mapping_registry->getCustomMapping(TrackerFactory::TRACKER_MAPPING_KEY);
-                if (! isset($tracker_mapping[$data['tracker_id']])) {
-                    return $this->dao->insertContent(
-                        (int) $owner_id,
-                        $owner_type,
-                        $data['title'],
-                        $data['tracker_id'],
-                    );
-                }
+                $tracker_mapping           = $mapping_registry->getCustomMapping(TrackerFactory::TRACKER_MAPPING_KEY);
+                $tracker_id                = $tracker_mapping[$data['tracker_id']] ?? $data['tracker_id'];
+                $lvl1_iteration_tracker_id = $tracker_mapping[$data['lvl1_iteration_tracker_id']] ?? $data['lvl1_iteration_tracker_id'];
+                $lvl2_iteration_tracker_id = $tracker_mapping[$data['lvl2_iteration_tracker_id']] ?? $data['lvl2_iteration_tracker_id'];
 
                 return $this->dao->insertContent(
                     (int) $owner_id,
                     $owner_type,
                     $data['title'],
-                    $tracker_mapping[$data['tracker_id']],
+                    $tracker_id,
+                    $lvl1_iteration_tracker_id,
+                    $lvl2_iteration_tracker_id,
                 );
             }
         );
@@ -271,11 +272,16 @@ final class RoadmapProjectWidget extends \Widget
             return false;
         }
 
+        $lvl1_iteration_tracker_id = isset($roadmap_parameters['lvl1_iteration_tracker_id']) ? (int) $roadmap_parameters['lvl1_iteration_tracker_id'] : null;
+        $lvl2_iteration_tracker_id = isset($roadmap_parameters['lvl2_iteration_tracker_id']) ? (int) $roadmap_parameters['lvl2_iteration_tracker_id'] : null;
+
         return $this->dao->insertContent(
             (int) $this->owner_id,
             (string) $this->owner_type,
             $roadmap_parameters['title'],
             $tracker_id,
+            $lvl1_iteration_tracker_id,
+            $lvl2_iteration_tracker_id,
         );
     }
 
@@ -300,12 +306,17 @@ final class RoadmapProjectWidget extends \Widget
             return false;
         }
 
+        $lvl1_iteration_tracker_id = isset($roadmap_parameters['lvl1_iteration_tracker_id']) ? (int) $roadmap_parameters['lvl1_iteration_tracker_id'] : null;
+        $lvl2_iteration_tracker_id = isset($roadmap_parameters['lvl2_iteration_tracker_id']) ? (int) $roadmap_parameters['lvl2_iteration_tracker_id'] : null;
+
         $this->dao->update(
             $id,
             (int) $this->owner_id,
             (string) $this->owner_type,
             $roadmap_parameters['title'],
             $tracker_id,
+            $lvl1_iteration_tracker_id,
+            $lvl2_iteration_tracker_id,
         );
 
         return true;
@@ -324,13 +335,19 @@ final class RoadmapProjectWidget extends \Widget
         return [
             [
                 'file' => $this->getAssets()->getFileURL('widget-script.js'),
+            ],
+            [
+                'file' => $this->getAssets()->getFileURL('configure-roadmap-widget-script.js'),
             ]
         ];
     }
 
     public function getStylesheetDependencies(): CssAssetCollection
     {
-        return new CssAssetCollection([new CssAssetWithoutVariantDeclinaisons($this->getAssets(), 'widget-style')]);
+        return new CssAssetCollection([
+            new CssAssetWithoutVariantDeclinaisons($this->getAssets(), 'widget-style'),
+            new CssAssetWithoutVariantDeclinaisons($this->getAssets(), 'configure-roadmap-widget-style'),
+        ]);
     }
 
     private function getAssets(): IncludeAssets
