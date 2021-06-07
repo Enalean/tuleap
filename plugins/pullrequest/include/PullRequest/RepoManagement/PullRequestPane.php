@@ -23,6 +23,7 @@ namespace Tuleap\PullRequest\RepoManagement;
 use Codendi_Request;
 use GitRepository;
 use TemplateRendererFactory;
+use Tuleap\CSRFSynchronizerTokenPresenter;
 use Tuleap\Git\GitViews\RepoManagement\Pane\Pane;
 use Tuleap\PullRequest\MergeSetting\MergeSettingRetriever;
 
@@ -71,7 +72,7 @@ class PullRequestPane extends Pane
 
         return $renderer->renderToString(
             'repository-settings',
-            new PullRequestPanePresenter($this->repository, $merge_setting)
+            new PullRequestPanePresenter(CSRFSynchronizerTokenPresenter::fromToken($this->csrf_token()), $this->repository, $merge_setting)
         );
     }
 }

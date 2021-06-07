@@ -30,7 +30,10 @@
         <div>
             <p> {{ git_admins_description }} </p>
         </div>
-        <form method="POST" action="{{ git_admins_form_action }}">
+        <form method="POST" action="{{ form_action }}">
+            {{# csrf_token }}
+                {{> csrf_token_input }}
+            {{/ csrf_token }}
             <input type="hidden" value="{{ project_id }}" name="group_id"/>
             <input type="hidden" name="git_admins[]" value="4"/>
 

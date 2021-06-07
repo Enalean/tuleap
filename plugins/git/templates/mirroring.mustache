@@ -41,6 +41,9 @@
 
     <input type="hidden" name="action" value="update_mirroring">
     <input type="hidden" name="repo_id" value="{{ repository_id }}">
+    {{# csrf_token }}
+        {{> csrf_token_input }}
+    {{/ csrf_token }}
 
     <input type="submit" class="btn btn-primary" name="mirror" value="{{ mirroring_update_mirroring }}">
 </form>

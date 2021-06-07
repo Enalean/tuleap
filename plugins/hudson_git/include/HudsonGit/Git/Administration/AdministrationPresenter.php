@@ -49,4 +49,9 @@ class AdministrationPresenter extends GitPresenters_AdminPresenter
         $this->csrf_token                = $csrf_token;
         $this->jenkins_server_presenters = $jenkins_server_presenters;
     }
+
+    public function form_action(): string
+    {
+        return '';
+    }
 }

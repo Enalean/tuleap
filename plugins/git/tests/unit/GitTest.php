@@ -28,6 +28,7 @@ class GitTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
     use GlobalResponseMock;
+    use \Tuleap\GlobalLanguageMock;
 
     protected function setup(): void
     {
@@ -42,14 +43,17 @@ class GitTest extends \Tuleap\Test\PHPUnit\TestCase
     protected function tearDown(): void
     {
         SystemEventManager::clearInstance();
+        unset($_SERVER['REQUEST_METHOD'], $GLOBALS['_SESSION']);
 
         parent::tearDown();
     }
 
     public function testTheDelRouteExecutesDeleteRepositoryWithTheIndexView(): void
     {
-        $usermanager = \Mockery::spy(\UserManager::class);
-        $request     = new Codendi_Request(['repo_id' => 1]);
+        $usermanager               = \Mockery::spy(\UserManager::class);
+        $_SERVER['REQUEST_METHOD'] = 'POST';
+        $request                   = new HTTPRequest();
+        $request->params           = ['repo_id' => 1];
 
         $git = \Mockery::mock(\Git::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $git->setRequest($request);
@@ -72,8 +76,9 @@ class GitTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testDispatchToForkRepositoriesIfRequestsPersonal(): void
     {
-        $git     = \Mockery::mock(\Git::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $request = new Codendi_Request(['choose_destination' => 'personal']);
+        $git             = \Mockery::mock(\Git::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $request         = new HTTPRequest();
+        $request->params = ['choose_destination' => 'personal'];
         $git->setRequest($request);
         $git->shouldReceive('_doDispatchForkRepositories')->once();
 
@@ -89,8 +94,9 @@ class GitTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testDispatchToForkRepositoriesIfRequestsPersonalAndNonMember(): void
     {
-        $git     = \Mockery::mock(\Git::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $request = new Codendi_Request(['choose_destination' => 'personal']);
+        $git             = \Mockery::mock(\Git::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $request         = new HTTPRequest();
+        $request->params = ['choose_destination' => 'personal'];
         $git->setRequest($request);
         $git->shouldReceive('_doDispatchForkRepositories')->never();
 
@@ -106,8 +112,9 @@ class GitTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testDispatchToForkCrossProjectIfRequestsProject(): void
     {
-        $git     = \Mockery::mock(\Git::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $request = new Codendi_Request(['choose_destination' => 'project']);
+        $git             = \Mockery::mock(\Git::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $request         = new HTTPRequest();
+        $request->params = ['choose_destination' => 'project'];
         $git->setRequest($request);
 
         $factory = \Mockery::spy(\GitRepositoryFactory::class);

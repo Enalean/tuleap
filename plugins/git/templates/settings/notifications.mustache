@@ -1,6 +1,9 @@
 <h2>{{ title }}</h2>
 
 <form id="mail_prefix_form" action="/plugins/git/" method="POST">
+    {{# csrf_token }}
+        {{> csrf_token_input }}
+    {{/ csrf_token }}
     <input type="hidden" id="action" name="action" value="mail" />
     <input type="hidden" name="pane" value="{{ identifier }}" />
     <input type="hidden" id="group_id" name="group_id" value="{{ repository_project_id }}" />

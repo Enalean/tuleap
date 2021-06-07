@@ -24,6 +24,7 @@ namespace Tuleap\Git;
 
 use Codendi_Request;
 use GitRepository;
+use HTTPRequest;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
@@ -50,7 +51,8 @@ final class GitForkRepositoriesTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testRendersForkRepositoriesView(): void
     {
-        $request = new Codendi_Request(['choose_destination' => 'personal']);
+        $request         = new HTTPRequest();
+        $request->params = ['choose_destination' => 'personal'];
 
         $git = \Mockery::mock(\Git::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $git->setRequest($request);
