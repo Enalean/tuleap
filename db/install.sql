@@ -42,6 +42,3 @@ CREATE TABLE IF NOT EXISTS plugin_baseline_role_assignment
 	project_id int not null
 );
 
--- Allow all
-INSERT INTO plugin_baseline_role_assignment(user_group_id, role, project_id)
-SELECT DISTINCT ugroup_id, 'BASELINE_ADMIN', group_id FROM ugroup;
