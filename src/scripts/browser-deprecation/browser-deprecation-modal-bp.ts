@@ -22,7 +22,7 @@ import { createModal } from "tlp";
 import { Modal } from "../../themes/tlp/src/js/modal";
 
 class NonDismissibleModal extends Modal {
-    hide(): void {
+    override hide(): void {
         // Empty on purpose, we do not want this modal to be hidden
     }
 }

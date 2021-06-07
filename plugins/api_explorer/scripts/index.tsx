@@ -35,7 +35,7 @@ interface TuleapLayoutProps {
 
 class TuleapLayout extends React.Component<TuleapLayoutProps> {
 
-    render() {
+    override render() {
         const {errSelectors, specSelectors, getComponent} = this.props;
 
         const SvgAssets = getComponent("SvgAssets");

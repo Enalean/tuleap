@@ -4,11 +4,12 @@
         "module": "ES2015",
         "lib": ["ES2015"],
         "strict": true,
+        "isolatedModules": true,
+        "noImplicitOverride": true,
         "declaration": true,
         "emitDeclarationOnly": true,
         "sourceMap": true,
         "allowSyntheticDefaultImports": true,
-        "isolatedModules": true,
         "moduleResolution": "Node",
         "skipLibCheck": true,
         "types": []

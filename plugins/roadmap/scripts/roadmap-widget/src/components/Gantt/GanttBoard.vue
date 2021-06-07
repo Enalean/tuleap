@@ -198,7 +198,7 @@ const timeperiod = namespace("timeperiod");
     },
 })
 export default class GanttBoard extends Vue {
-    $refs!: {
+    override $refs!: {
         time_period: TimePeriodHeader;
     };
 

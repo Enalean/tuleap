@@ -91,7 +91,7 @@ import { TimePeriodMonth } from "../helpers/time-period-month";
 
 @Component
 export default class LoadingState extends Vue {
-    $refs!: {
+    override $refs!: {
         time_period: HTMLDivElement;
     };
 
