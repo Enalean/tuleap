@@ -61,5 +61,6 @@ CREATE TABLE IF NOT EXISTS plugin_gitlab_repository_integration_branch_info (
      integration_id INT(11) NOT NULL,
      commit_sha1 BINARY(20) NOT NULL,
      branch_name TEXT NOT NULL,
+     last_push_date INT(11) DEFAULT NULL,
      UNIQUE(integration_id, branch_name(255))
 ) ENGINE=InnoDB;

@@ -22,6 +22,7 @@ declare(strict_types=1);
 namespace Tuleap\Gitlab\Repository\Webhook\PostPush;
 
 use CrossReference;
+use DateTimeImmutable;
 use Psr\Log\LoggerInterface;
 use ReferenceManager;
 use Tuleap\Gitlab\Reference\Commit\GitlabCommitReference;
@@ -92,15 +93,19 @@ class PostPushWebhookActionProcessor
         $this->action_branch_handler           = $action_branch_handler;
     }
 
-    public function process(GitlabRepositoryIntegration $gitlab_repository_integration, PostPushWebhookData $webhook_data): void
-    {
+    public function process(
+        GitlabRepositoryIntegration $gitlab_repository_integration,
+        PostPushWebhookData $webhook_data,
+        DateTimeImmutable $webhook_reception_date
+    ): void {
         foreach ($webhook_data->getCommits() as $commit_webhook_data) {
             $this->parseCommitReferences($gitlab_repository_integration, $commit_webhook_data);
         }
 
         $this->action_branch_handler->parseBranchReference(
             $gitlab_repository_integration,
-            $webhook_data
+            $webhook_data,
+            $webhook_reception_date
         );
     }
 

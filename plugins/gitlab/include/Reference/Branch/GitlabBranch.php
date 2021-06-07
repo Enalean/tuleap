@@ -21,6 +21,8 @@ declare(strict_types=1);
 
 namespace Tuleap\Gitlab\Reference\Branch;
 
+use DateTimeImmutable;
+
 /**
  * @psalm-immutable
  */
@@ -28,13 +30,16 @@ class GitlabBranch
 {
     private string $commit_sha1;
     private string $branch_name;
+    private ?DateTimeImmutable $last_push_date;
 
     public function __construct(
         string $commit_sha1,
-        string $branch_name
+        string $branch_name,
+        ?DateTimeImmutable $last_push_date
     ) {
-        $this->commit_sha1 = $commit_sha1;
-        $this->branch_name = $branch_name;
+        $this->commit_sha1    = $commit_sha1;
+        $this->branch_name    = $branch_name;
+        $this->last_push_date = $last_push_date;
     }
 
     public function getCommitSha1(): string
@@ -45,5 +50,10 @@ class GitlabBranch
     public function getBranchName(): string
     {
         return $this->branch_name;
+    }
+
+    public function getLastPushDate(): ?DateTimeImmutable
+    {
+        return $this->last_push_date;
     }
 }
