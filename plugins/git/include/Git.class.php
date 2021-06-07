@@ -279,7 +279,7 @@ class Git extends PluginController
         GitRepositoryFactory $git_repository_factory,
         UserManager $user_manager,
         ProjectManager $project_manager,
-        Codendi_Request $request,
+        HTTPRequest $request,
         Git_Driver_Gerrit_ProjectCreator $project_creator,
         Git_Driver_Gerrit_Template_TemplateFactory $template_factory,
         GitPermissionsManager $permissions_manager,
@@ -405,7 +405,7 @@ class Git extends PluginController
         $this->factory = $factory;
     }
 
-    public function setRequest(Codendi_Request $request)
+    public function setRequest(HTTPRequest $request)
     {
         $this->request = $request;
     }
@@ -569,12 +569,13 @@ class Git extends PluginController
         switch ($action) {
              // DELETE a repository
             case 'del':
+                $this->defaultCSRFChecks($repository, 'delete');
                 $this->addAction('deleteRepository', [$this->groupId, $repository->getId()]);
                 $this->addView('index');
                 break;
             // EDIT
             case 'edit-description':
-                $description = null;
+                $this->defaultCSRFChecks($repository, 'settings');
                 if ($this->request->exist('repo_desc')) {
                     $description       = GitRepository::DEFAULT_DESCRIPTION;
                     $valid_descrpition = new Valid_Text('repo_desc');
@@ -602,6 +603,7 @@ class Git extends PluginController
                     }
                     $this->addView('view');
                 } elseif ($this->isAPermittedAction('save') && $this->request->get('save')) {
+                    $this->defaultCSRFChecks($repository, 'perms');
                     $repoAccess = null;
                     $valid_url  = new Valid_String('repo_access');
                     $valid_url->required();
@@ -676,6 +678,7 @@ class Git extends PluginController
                 $this->addView('repoManagement');
                 break;
             case 'mail':
+                $this->defaultCSRFChecks($repository, 'mail');
                 $this->processRepoManagementNotifications($pane, $repository->getId(), $repositoryName, $user);
                 break;
             // fork
@@ -714,6 +717,7 @@ class Git extends PluginController
                 break;
             case 'admin-git-admins':
                 if ($this->request->get('submit')) {
+                    $this->defaultProjectAdminCSRFChecks($action);
                     $valid_url = new Valid_Numeric(GitPresenters_AdminGitAdminsPresenter::GIT_ADMIN_SELECTBOX_NAME);
                     $project   = $this->projectManager->getProject($this->groupId);
 
@@ -742,6 +746,7 @@ class Git extends PluginController
                 $project = $this->projectManager->getProject($this->groupId);
 
                 if ($this->request->get('save')) {
+                    $this->defaultProjectAdminCSRFChecks('admin-gerrit-templates');
                     $template_content = $this->request->getValidated('git_admin_config_data', 'text');
                     if ($this->request->getValidated('git_admin_template_id', 'uint')) {
                         $template_id = $this->request->get('git_admin_template_id');
@@ -753,6 +758,7 @@ class Git extends PluginController
                 }
 
                 if ($this->request->get('delete')) {
+                    $this->defaultProjectAdminCSRFChecks('admin-gerrit-templates');
                     if ($this->request->getValidated('git_admin_template_id', 'uint')) {
                         $template_id = $this->request->get('git_admin_template_id');
                         $this->addAction('deleteGerritTemplate', [$template_id, $project, $user]);
@@ -889,6 +895,7 @@ class Git extends PluginController
                 $imageRenderer->display();
                 break;
             case 'migrate_to_gerrit':
+                $this->defaultCSRFChecks($repository, 'gerrit');
                 if (! $this->gerrit_can_migrate_checker->canMigrate($repository->getProject())) {
                     $this->redirect('/plugins/git/' . urlencode($this->project->getUnixNameLowerCase()) . '/');
                     break;
@@ -897,7 +904,7 @@ class Git extends PluginController
                 $remote_server_id   = $this->request->getValidated('remote_server_id', 'uint');
                 $gerrit_template_id = $this->getValidatedGerritTemplateId($repository);
 
-                if (empty($repository) || empty($remote_server_id) || empty($gerrit_template_id)) {
+                if (empty($remote_server_id) || empty($gerrit_template_id)) {
                     $this->addError(dgettext('tuleap-git', 'Empty required parameter(s)'));
                     $this->redirect('/plugins/git/' . urlencode($this->project->getUnixNameLowerCase()) . '/');
                 } else {
@@ -921,6 +928,7 @@ class Git extends PluginController
                     $this->addError(dgettext('tuleap-git', 'Empty required parameter(s)'));
                     $this->redirect('/plugins/git/' . urlencode($this->project->getUnixNameLowerCase()) . '/');
                 } else {
+                    $this->defaultCSRFChecks($repository, 'gerrit');
                     $this->addAction('disconnectFromGerrit', [$repository]);
                     $this->addAction('redirectToRepoManagement', [$this->groupId, $repository->getId(), $pane]);
                 }
@@ -928,6 +936,7 @@ class Git extends PluginController
             case 'delete_gerrit_project':
                 $server              = $this->gerrit_server_factory->getServerById($repository->getRemoteServerId());
                 $project_gerrit_name = $this->driver_factory->getDriver($server)->getGerritProjectName($repository);
+                $this->defaultCSRFChecks($repository, 'gerrit');
 
                 try {
                     $this->driver_factory->getDriver($server)->deleteProject($server, $project_gerrit_name);
@@ -944,6 +953,8 @@ class Git extends PluginController
                 if (! $repository) {
                     $this->addError(dgettext('tuleap-git', 'The repository does not exist'));
                 }
+
+                $this->defaultCSRFChecks($repository, 'mirroring');
 
                 $selected_mirror_ids = $this->request->get('selected_mirror_ids');
 
@@ -1298,6 +1309,24 @@ class Git extends PluginController
     {
         $this->addError(dgettext('tuleap-git', 'The repository does not exist'));
         $this->redirect('/plugins/git/?action=index&group_id=' . $this->groupId);
+    }
+
+    private function defaultCSRFChecks(GitRepository $repository, string $pane): void
+    {
+        $default_url = '/plugins/git/?' . http_build_query(['action' => 'repo_management', 'group_id' => $this->groupId, 'repo_id' => $repository->getId(), 'pane' => $pane]);
+        if (! $this->request->isPost()) {
+            $this->redirect($default_url);
+        }
+        $this->checkSynchronizerToken($default_url);
+    }
+
+    public function defaultProjectAdminCSRFChecks(string $action): void
+    {
+        $url = '/plugins/git/?' . http_build_query(['group_id' => $this->groupId, 'action' => $action]);
+        if (! $this->request->isPost()) {
+            $this->redirect($url);
+        }
+        $this->checkSynchronizerToken($url);
     }
 
     protected function checkSynchronizerToken($url)

@@ -64,7 +64,7 @@ class GitPresenters_AdminMassUpdateSelectRepositoriesPresenter extends GitPresen
         return dgettext('tuleap-git', 'Update selected repositories');
     }
 
-    public function form_action()
+    public function form_action(): string
     {
         return '/plugins/git/?group_id=' . $this->project_id . '&action=admin-mass-update';
     }

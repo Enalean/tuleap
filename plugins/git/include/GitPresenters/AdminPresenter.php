@@ -64,4 +64,11 @@ abstract class GitPresenters_AdminPresenter
     {
         return dgettext('tuleap-git', 'Git settings template');
     }
+
+    abstract public function form_action(): string;
+
+    public function csrf_token(): CSRFSynchronizerToken
+    {
+        return new CSRFSynchronizerToken($this->form_action());
+    }
 }

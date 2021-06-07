@@ -148,6 +148,7 @@ class Gerrit extends Pane
         $html .= '<h2>' . dgettext('tuleap-git', 'Migration to Gerrit') . '</h2>';
         $html .= '<form id="repoAction" name="repoAction" method="POST" action="/plugins/git/?group_id=' . $this->repository->getProjectId() . '">';
         $html .= '<input type="hidden" id="action" name="action" value="migrate_to_gerrit" />';
+        $html .= $this->csrf_token()->fetchHTMLInput();
         $html .= '<input type="hidden" name="pane" value="' . $this->getIdentifier() . '" />';
         $html .= '<input type="hidden" id="repo_id" name="repo_id" value="' . $this->repository->getId() . '" />';
 
@@ -276,6 +277,7 @@ class Gerrit extends Pane
         $html .= '</fieldset>';
 
         $html .= '<form method="POST" action="' . $_SERVER['REQUEST_URI'] . '">';
+        $html .= $this->csrf_token()->fetchHTMLInput();
         $html .= '<fieldset class="gerrit_disconnect">';
         $html .= '<legend class="gerrit_disconnect">' . dgettext('tuleap-git', 'Disconnect from Gerrit') . '</legend>';
         $html .= $this->getDisconnectFromGerritOptions();
@@ -338,6 +340,7 @@ class Gerrit extends Pane
         $html .= '<h3>' . dgettext('tuleap-git', 'Disconnect from Gerrit') . '</h3>';
 
         $html .= '<form method="POST" action="/plugins/git/?group_id=' . $this->repository->getProjectId() . '">';
+        $html .= $this->csrf_token()->fetchHTMLInput();
         $html .= '<input type="hidden" name="action" value="disconnect_gerrit" />';
         $html .= '<input type="hidden" name="pane" value="' . $this->getIdentifier() . '" />';
         $html .= '<input type="hidden" id="repo_id" name="repo_id" value="' . $this->repository->getId() . '" />';

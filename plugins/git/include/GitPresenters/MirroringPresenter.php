@@ -30,11 +30,16 @@ class GitPresenters_MirroringPresenter
      * @var GitPresenters_MirrorPresenter[]
      */
     public $mirror_presenters;
+    /**
+     * @psalm-readonly
+     */
+    public \Tuleap\CSRFSynchronizerTokenPresenter $csrf_token;
 
-    public function __construct(GitRepository $repository, array $mirror_presenters)
+    public function __construct(\Tuleap\CSRFSynchronizerTokenPresenter $csrf_token, GitRepository $repository, array $mirror_presenters)
     {
         $this->repository        = $repository;
         $this->mirror_presenters = $mirror_presenters;
+        $this->csrf_token        = $csrf_token;
     }
 
     public function repository_id()

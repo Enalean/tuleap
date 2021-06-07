@@ -112,6 +112,7 @@ class AccessControl extends Pane
         $html .= '<h2>' . $this->getTitle() . '</h2>';
         $html .= '<form id="repoAction" name="repoAction" method="POST" action="/plugins/git/?group_id=' .
             $this->repository->getProjectId() . '">';
+        $html .= $this->csrf_token()->fetchHTMLInput();
         $html .= '<input type="hidden" id="action" name="action" value="edit" />';
         $html .= '<input type="hidden" name="pane" value="' . $this->getIdentifier() . '" />';
         $html .= '<input type="hidden" id="repo_id" name="repo_id" value="' . $this->repository->getId() . '" />';

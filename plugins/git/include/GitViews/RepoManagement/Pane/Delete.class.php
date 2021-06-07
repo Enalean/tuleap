@@ -85,6 +85,7 @@ class Delete extends Pane
         $html   .= '<p>' . sprintf(dgettext('tuleap-git', 'You are about to permanently delete the repository <strong>%1$s</strong>. This operation <strong>cannot</strong> be undone. Do you confirm the deletion?'), $this->repository->getFullName()) . '</p>';
         $html   .= '<p>';
         $html   .= '<input type="hidden" id="action" name="action" value="del" />';
+        $html   .= $this->csrf_token()->fetchHTMLInput();
         $html   .= '<input type="submit" class="btn btn-danger" id="submit" name="submit" value="' . dgettext('tuleap-git', 'Yes') . '"data-test="deletion-confirmation-button"/> ';
         $onclick = 'onclick="window.location=\'/plugins/git/?' . http_build_query([
             'action'   => 'repo_management',

@@ -55,8 +55,9 @@ abstract class PluginController
      * @var bool
      */
     protected $default_page_rendering = true;
+    protected HTTPRequest $request;
 
-    public function __construct(UserManager $user_manager, Codendi_Request $request)
+    public function __construct(UserManager $user_manager, HTTPRequest $request)
     {
         $this->user    = $user_manager->getCurrentUser();
         $this->request = $request;

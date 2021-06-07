@@ -109,7 +109,7 @@ class GitPresenters_AdminMassUpdatePresenter extends GitPresenters_AdminPresente
         return sprintf(dgettext('tuleap-git', 'We cannot handle the mass update of all selected repositoies therefore we kept only %1$s repositories in your selection.'), count($this->repositories));
     }
 
-    public function form_action()
+    public function form_action(): string
     {
         return '/plugins/git/?group_id=' . $this->project_id . '&action=admin-mass-update';
     }

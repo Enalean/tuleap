@@ -63,19 +63,12 @@ class RepoManagementController implements DispatchableWithRequest
         \Tuleap\Project\ServiceInstrumentation::increment('git');
 
         $repository = $this->getRepositoryFromRequest($request);
+        $pane_url   = $this->getPaneURL($request, $repository);
+        (new \CSRFSynchronizerToken($pane_url))->check();
 
         $this->merge_setting_dao->save($repository->getId(), (int) $request->get('is_merge_commit_allowed'));
         $layout->addFeedback(\Feedback::INFO, dgettext("tuleap-pullrequest", "Pull requests settings updated"));
-        $layout->redirect(
-            GIT_BASE_URL . '/?' . http_build_query(
-                [
-                    'action'   => 'repo_management',
-                    'group_id' => $request->getProject()->getID(),
-                    'repo_id'  => $repository->getId(),
-                    'pane'     => PullRequestPane::NAME
-                ]
-            )
-        );
+        $layout->redirect($pane_url);
     }
 
     /**
@@ -101,5 +94,17 @@ class RepoManagementController implements DispatchableWithRequest
     {
         return $this->permissions_manager->userIsGitAdmin($user, $repository->getProject()) ||
             $repository->belongsTo($user);
+    }
+
+    private function getPaneURL(HTTPRequest $request, GitRepository $repository): string
+    {
+        return GIT_BASE_URL . '/?' . http_build_query(
+            [
+                'action'   => 'repo_management',
+                'group_id' => $request->getProject()->getID(),
+                'repo_id'  => $repository->getId(),
+                'pane'     => PullRequestPane::NAME
+            ]
+        );
     }
 }

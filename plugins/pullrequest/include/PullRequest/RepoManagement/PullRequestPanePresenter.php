@@ -21,10 +21,15 @@
 namespace Tuleap\PullRequest\RepoManagement;
 
 use GitRepository;
+use Tuleap\CSRFSynchronizerTokenPresenter;
 use Tuleap\PullRequest\MergeSetting\MergeSetting;
 
 class PullRequestPanePresenter
 {
+    /**
+     * @psalm-readonly
+     */
+    public CSRFSynchronizerTokenPresenter $csrf_token;
     /**
      * @var int
      */
@@ -38,8 +43,9 @@ class PullRequestPanePresenter
      */
     public $is_merge_commit_allowed;
 
-    public function __construct(GitRepository $repository, MergeSetting $merge_setting)
+    public function __construct(CSRFSynchronizerTokenPresenter $csrf_token, GitRepository $repository, MergeSetting $merge_setting)
     {
+        $this->csrf_token              = $csrf_token;
         $this->repository_id           = $repository->getId();
         $this->project_id              = $repository->getProjectId();
         $this->is_merge_commit_allowed = $merge_setting->isMergeCommitAllowed();

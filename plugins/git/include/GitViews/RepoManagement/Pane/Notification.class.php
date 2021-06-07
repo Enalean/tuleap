@@ -24,6 +24,7 @@ use Codendi_Request;
 use EventManager;
 use GitRepository;
 use TemplateRendererFactory;
+use Tuleap\CSRFSynchronizerTokenPresenter;
 use Tuleap\Git\GitPresenters\RepositoryPaneNotificationPresenter;
 use Tuleap\Git\Notifications\CollectionOfUgroupToBeNotifiedPresenterBuilder;
 use Tuleap\Git\Notifications\CollectionOfUserToBeNotifiedPresenterBuilder;
@@ -83,6 +84,7 @@ class Notification extends Pane
         $html     = $renderer->renderToString(
             'notifications',
             new RepositoryPaneNotificationPresenter(
+                CSRFSynchronizerTokenPresenter::fromToken($this->csrf_token()),
                 $this->repository,
                 $this->getIdentifier(),
                 $users,

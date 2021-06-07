@@ -75,11 +75,13 @@ final class GitForkCrossProjectTest extends \Tuleap\Test\PHPUnit\TestCase
         $repositoryFactory = \Mockery::spy(\GitRepositoryFactory::class);
         $repositoryFactory->shouldReceive('getRepositoryById')->with($repo_ids)->andReturns($repo);
 
-        $request = new Codendi_Request([
-                                        'choose_destination' => 'project',
-                                        'to_project' => $toProjectId,
-                                        'repos' => $repo_ids,
-                                        'repo_access' => $forkPermissions]);
+        $request         = new \HTTPRequest();
+        $request->params = [
+            'choose_destination' => 'project',
+            'to_project' => $toProjectId,
+            'repos' => $repo_ids,
+            'repo_access' => $forkPermissions
+        ];
 
         $permissions_manager = \Mockery::spy(\GitPermissionsManager::class)->shouldReceive('userIsGitAdmin')->with($user, $toProject)->andReturns(true)->getMock();
 

@@ -76,7 +76,10 @@
             </div>
         </div>
 
-        <form class="form-horizontal" id="git_admin_config_form" style="display: none" method="POST" action="{{ templates_form_action }}">
+        <form class="form-horizontal" id="git_admin_config_form" style="display: none" method="POST" action="{{ form_action }}">
+            {{# csrf_token }}
+                {{> csrf_token_input }}
+            {{/ csrf_token }}
             <input type="hidden" value="{{ project_id }}" id="project_id"/>
             <div id="git_admin_config_list_area" style="display: none;">
                 <div class="control-group">

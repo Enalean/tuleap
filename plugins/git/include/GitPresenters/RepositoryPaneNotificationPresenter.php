@@ -21,14 +21,20 @@
 namespace Tuleap\Git\GitPresenters;
 
 use GitRepository;
+use Tuleap\CSRFSynchronizerTokenPresenter;
 
 class RepositoryPaneNotificationPresenter
 {
     public $identifier;
     public $users_to_be_notified;
     public $groups_to_be_notified;
+    /**
+     * @psalm-readonly
+     */
+    public CSRFSynchronizerTokenPresenter $csrf_token;
 
     public function __construct(
+        CSRFSynchronizerTokenPresenter $csrf_token,
         GitRepository $repository,
         $identifier,
         array $users_to_be_notified,
@@ -53,6 +59,7 @@ class RepositoryPaneNotificationPresenter
         $this->notified_people      = dgettext('tuleap-git', 'Notified people');
         $this->empty_notification   = dgettext('tuleap-git', 'No notifications set');
         $this->placeholder          = dgettext('tuleap-git', 'User, group, email');
+        $this->csrf_token           = $csrf_token;
     }
 
     private function buildListOfMailsPresenter(GitRepository $repository)

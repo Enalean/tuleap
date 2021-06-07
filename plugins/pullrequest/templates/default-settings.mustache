@@ -1,5 +1,8 @@
 <h2>{{# dgettext }}tuleap-pullrequest | Pull requests{{/ dgettext }}</h2>
 <form method="POST" action="/plugins/pullrequest/default-settings">
+    {{# csrf_token }}
+        {{> csrf_token_input }}
+    {{/ csrf_token }}
     <input type="hidden" name="group_id" value="{{ project_id }}" />
 
     <h3>{{# dgettext }}tuleap-pullrequest | Merge{{/ dgettext }}</h3>

@@ -78,4 +78,18 @@ abstract class Pane
      * @return string eg: '<form>...</form>'
      */
     abstract public function getContent();
+
+    public function csrf_token(): \CSRFSynchronizerToken
+    {
+        return new \CSRFSynchronizerToken(
+            '/plugins/git/?' . http_build_query(
+                [
+                    'action'   => 'repo_management',
+                    'group_id' => $this->repository->getProjectId(),
+                    'repo_id'  => $this->repository->getId(),
+                    'pane'     => $this->getIdentifier(),
+                ]
+            )
+        );
+    }
 }

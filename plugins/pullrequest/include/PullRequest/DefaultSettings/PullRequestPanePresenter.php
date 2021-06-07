@@ -21,10 +21,15 @@
 namespace Tuleap\PullRequest\DefaultSettings;
 
 use Project;
+use Tuleap\CSRFSynchronizerTokenPresenter;
 use Tuleap\PullRequest\MergeSetting\MergeSetting;
 
 class PullRequestPanePresenter
 {
+    /**
+     * @psalm-readonly
+     */
+    public CSRFSynchronizerTokenPresenter $csrf_token;
     /**
      * @var int
      */
@@ -34,8 +39,12 @@ class PullRequestPanePresenter
      */
     public $is_merge_commit_allowed;
 
-    public function __construct(Project $project, MergeSetting $merge_setting)
-    {
+    public function __construct(
+        CSRFSynchronizerTokenPresenter $csrf_token,
+        Project $project,
+        MergeSetting $merge_setting
+    ) {
+        $this->csrf_token              = $csrf_token;
         $this->project_id              = $project->getID();
         $this->is_merge_commit_allowed = $merge_setting->isMergeCommitAllowed();
     }

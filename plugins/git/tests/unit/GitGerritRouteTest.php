@@ -30,6 +30,7 @@ class GitGerritRouteTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
     use ForgeConfigSandbox;
+    use \Tuleap\GlobalLanguageMock;
 
     protected $repo_id           = 999;
     protected $group_id          = 101;
@@ -61,8 +62,9 @@ class GitGerritRouteTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->project_creator->shouldReceive('checkTemplateIsAvailableForProject')->andReturns(true);
         $this->git_permissions_manager->shouldReceive('userIsGitAdmin')->with($this->admin, $project)->andReturns(true);
 
-        $_SERVER['REQUEST_URI'] = '/plugins/tests/';
-        $GLOBALS['Response']    = Mockery::spy(\Response::class);
+        $_SERVER['REQUEST_URI']    = '/plugins/tests/';
+        $_SERVER['REQUEST_METHOD'] = 'POST';
+        $GLOBALS['Response']       = Mockery::spy(\Response::class);
 
         $system_event_manager = Mockery::mock(SystemEventManager::class);
         $sys_dao              = Mockery::mock(SystemEventDao::class);
@@ -75,7 +77,7 @@ class GitGerritRouteTest extends \Tuleap\Test\PHPUnit\TestCase
     protected function tearDown(): void
     {
         SystemEventManager::clearInstance();
-        unset($_SERVER['REQUEST_URI']);
+        unset($_SERVER['REQUEST_URI'], $_SERVER['REQUEST_METHOD'], $GLOBALS['_SESSION']);
         unset($GLOBALS['Response']);
 
         parent::tearDown();
@@ -98,7 +100,9 @@ class GitGerritRouteTest extends \Tuleap\Test\PHPUnit\TestCase
         $gerrit_driver->shouldReceive('doesTheProjectExist')->andReturn(false);
         $gerrit_driver->shouldReceive('getGerritProjectName');
 
-        $git = Mockery::mock(
+        $http_request         = new HTTPRequest();
+        $http_request->params = ['group_id' => $this->group_id];
+        $git                  = Mockery::mock(
             Git::class,
             [
                 \Mockery::mock(GitPlugin::class),
@@ -110,7 +114,7 @@ class GitGerritRouteTest extends \Tuleap\Test\PHPUnit\TestCase
                 $factory,
                 $this->user_manager,
                 $this->project_manager,
-                new Codendi_Request(['group_id' => $this->group_id]),
+                $http_request,
                 $this->project_creator,
                 $template_factory,
                 $this->git_permissions_manager,
@@ -156,7 +160,8 @@ class GitGerritRouteTest extends \Tuleap\Test\PHPUnit\TestCase
     protected function assertItIsForbiddenForNonProjectAdmins($factory)
     {
         $this->user_manager->shouldReceive('getCurrentUser')->andReturns($this->user);
-        $request = new Codendi_Request(['repo_id' => $this->repo_id]);
+        $request         = new HTTPRequest();
+        $request->params = ['repo_id' => $this->repo_id];
 
         $git = $this->getGitDisconnect($request, $factory);
 
@@ -186,10 +191,11 @@ class GitGerritRouteTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItDispatchToDisconnectFromGerritWithRepoManagementView(): void
     {
         $this->user_manager->shouldReceive('getCurrentUser')->andReturns($this->admin);
-        $request = new Codendi_Request(['repo_id' => $this->repo_id]);
-        $repo    = \Mockery::spy(\GitRepository::class);
-        $factory = \Mockery::spy(\GitRepositoryFactory::class)->shouldReceive('getRepositoryById')->once()->andReturns($repo)->getMock();
-        $git     = $this->getGitDisconnect($request, $factory);
+        $request         = new HTTPRequest();
+        $request->params = ['repo_id' => $this->repo_id];
+        $repo            = \Mockery::spy(\GitRepository::class);
+        $factory         = \Mockery::spy(\GitRepositoryFactory::class)->shouldReceive('getRepositoryById')->once()->andReturns($repo)->getMock();
+        $git             = $this->getGitDisconnect($request, $factory);
 
         $git->shouldReceive('addAction')->with('disconnectFromGerrit', [$repo])->ordered();
         $git->shouldReceive('addAction')->with('redirectToRepoManagement', \Mockery::any())->ordered();
