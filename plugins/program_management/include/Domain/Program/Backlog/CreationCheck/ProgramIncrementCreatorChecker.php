@@ -26,7 +26,7 @@ use PFUser;
 use Psr\Log\LoggerInterface;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Plan\BuildPlanProgramIncrementConfiguration;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\SourceTrackerCollection;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Team\TeamProjectsCollectionBuilder;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Team\TeamProjectsCollection;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\VerifyIsProgramIncrementTracker;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TrackerCollection;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TrackerRetrievalException;
@@ -40,7 +40,6 @@ class ProgramIncrementCreatorChecker
 {
     private TimeboxCreatorChecker $timebox_creator_checker;
     private VerifyIsProgramIncrementTracker $verify_is_program_increment;
-    private TeamProjectsCollectionBuilder $team_projects_collection_builder;
     private RetrievePlanningMilestoneTracker $milestone_retriever;
     private BuildPlanProgramIncrementConfiguration $program_increment_tracker_builder;
     private LoggerInterface $logger;
@@ -48,21 +47,23 @@ class ProgramIncrementCreatorChecker
     public function __construct(
         TimeboxCreatorChecker $timebox_creator_checker,
         VerifyIsProgramIncrementTracker $verify_is_program_increment,
-        TeamProjectsCollectionBuilder $team_projects_collection_builder,
         RetrievePlanningMilestoneTracker $milestone_retriever,
         BuildPlanProgramIncrementConfiguration $program_increment_tracker_builder,
         LoggerInterface $logger
     ) {
         $this->timebox_creator_checker           = $timebox_creator_checker;
         $this->verify_is_program_increment       = $verify_is_program_increment;
-        $this->team_projects_collection_builder  = $team_projects_collection_builder;
         $this->milestone_retriever               = $milestone_retriever;
         $this->program_increment_tracker_builder = $program_increment_tracker_builder;
         $this->logger                            = $logger;
     }
 
-    public function canCreateAProgramIncrement(PFUser $user, ProgramTracker $tracker, ProgramIdentifier $program): bool
-    {
+    public function canCreateAProgramIncrement(
+        PFUser $user,
+        ProgramTracker $tracker,
+        ProgramIdentifier $program,
+        TeamProjectsCollection $team_projects_collection
+    ): bool {
         if (! $this->verify_is_program_increment->isProgramIncrementTracker($tracker->getTrackerId())) {
             return true;
         }
@@ -76,13 +77,11 @@ class ProgramIncrementCreatorChecker
             )
         );
 
-        $team_projects_collection = $this->team_projects_collection_builder->getTeamProjectForAGivenProgramProject(
-            $program
-        );
         if ($team_projects_collection->isEmpty()) {
-            $this->logger->debug("No team project found.");
+            $this->logger->debug('No team project found.');
             return true;
         }
+
         try {
             $team_trackers             = TrackerCollection::buildRootPlanningMilestoneTrackers(
                 $this->milestone_retriever,
@@ -96,7 +95,7 @@ class ProgramIncrementCreatorChecker
                 $user
             );
         } catch (PlanningNotFoundException | TrackerRetrievalException | ProgramTrackerNotFoundException $exception) {
-            $this->logger->error("Cannot retrieve all milestones", ['exception' => $exception]);
+            $this->logger->error('Cannot retrieve all milestones', ['exception' => $exception]);
             return false;
         }
 

@@ -24,7 +24,7 @@ namespace Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck;
 
 use PFUser;
 use Psr\Log\LoggerInterface;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Team\TeamProjectsCollectionBuilder;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Team\TeamProjectsCollection;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TrackerCollection;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TrackerRetrievalException;
 use Tuleap\ProgramManagement\Domain\Program\PlanningConfiguration\PlanningNotFoundException;
@@ -33,21 +33,18 @@ use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\RetrievePlanningMilesto
 
 class IterationCreatorChecker
 {
-    private TeamProjectsCollectionBuilder $team_projects_collection_builder;
     private RetrievePlanningMilestoneTracker $root_milestone_retriever;
     private LoggerInterface $logger;
 
     public function __construct(
-        TeamProjectsCollectionBuilder $team_projects_collection_builder,
         RetrievePlanningMilestoneTracker $root_milestone_retriever,
         LoggerInterface $logger
     ) {
-        $this->team_projects_collection_builder = $team_projects_collection_builder;
-        $this->root_milestone_retriever         = $root_milestone_retriever;
-        $this->logger                           = $logger;
+        $this->root_milestone_retriever = $root_milestone_retriever;
+        $this->logger                   = $logger;
     }
 
-    public function canCreateAnIteration(PFUser $user, ProgramIdentifier $program): bool
+    public function canCreateAnIteration(PFUser $user, ProgramIdentifier $program, TeamProjectsCollection $team_projects_collection): bool
     {
         $this->logger->debug(
             sprintf(
@@ -58,13 +55,11 @@ class IterationCreatorChecker
             )
         );
 
-        $team_projects_collection = $this->team_projects_collection_builder->getTeamProjectForAGivenProgramProject(
-            $program
-        );
         if ($team_projects_collection->isEmpty()) {
-            $this->logger->debug("No team project found.");
+            $this->logger->debug('No team project found.');
             return true;
         }
+
         try {
             TrackerCollection::buildSecondPlanningMilestoneTracker(
                 $this->root_milestone_retriever,
@@ -72,7 +67,7 @@ class IterationCreatorChecker
                 $user
             );
         } catch (PlanningNotFoundException | TrackerRetrievalException $exception) {
-            $this->logger->error("Cannot retrieve all milestones", ['exception' => $exception]);
+            $this->logger->error('Cannot retrieve all milestones', ['exception' => $exception]);
         }
 
         return true;

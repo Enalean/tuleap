@@ -815,16 +815,15 @@ final class program_managementPlugin extends Plugin
             new ProgramIncrementCreatorChecker(
                 $checker,
                 new ProgramIncrementsDAO(),
-                $this->getTeamProjectCollectionBuilder(),
                 $planning_adapter,
                 $this->getPlanConfigurationBuilder(),
                 $logger
             ),
             new IterationCreatorChecker(
-                $this->getTeamProjectCollectionBuilder(),
                 $planning_adapter,
                 $logger
-            )
+            ),
+            $this->getTeamProjectCollectionBuilder(),
         );
     }
 }
