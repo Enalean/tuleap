@@ -24,10 +24,10 @@ declare(strict_types=1);
 namespace Tuleap\JiraImport\JiraAgile\Board\Backlog;
 
 use Psr\Log\NullLogger;
+use RuntimeException;
 use Tuleap\JiraImport\JiraAgile\JiraBoard;
 use Tuleap\Tracker\Creation\JiraImporter\JiraClient;
 use Tuleap\Tracker\Creation\JiraImporter\UnexpectedFormatException;
-use function PHPUnit\Framework\assertCount;
 use function PHPUnit\Framework\assertEquals;
 
 final class JiraBoardBacklogRetrieverFromAPITest extends \Tuleap\Test\PHPUnit\TestCase
@@ -36,7 +36,7 @@ final class JiraBoardBacklogRetrieverFromAPITest extends \Tuleap\Test\PHPUnit\Te
     {
         $client = new class implements JiraClient
         {
-            public $called = 0;
+            public int $called = 0;
 
             public function getUrl(string $url): ?array
             {
@@ -58,14 +58,14 @@ final class JiraBoardBacklogRetrieverFromAPITest extends \Tuleap\Test\PHPUnit\Te
 
         $retriever->getBoardBacklogIssues(JiraBoard::buildFakeBoard());
 
-        assertEquals(1, $client->called);
+        self::assertEquals(1, $client->called);
     }
 
     public function testItQueriesTheURL(): void
     {
         $client = new class implements JiraClient
         {
-            public $called = 0;
+            public int $called = 0;
 
             public function getUrl(string $url): ?array
             {
@@ -86,14 +86,14 @@ final class JiraBoardBacklogRetrieverFromAPITest extends \Tuleap\Test\PHPUnit\Te
 
         $retriever->getBoardBacklogIssues(JiraBoard::buildFakeBoard());
 
-        assertEquals(1, $client->called);
+        self::assertEquals(1, $client->called);
     }
 
     public function testItReturnsEmptySetWhenNoIssues(): void
     {
         $client = new class implements JiraClient
         {
-            public $called = 0;
+            public int $called = 0;
 
             public function getUrl(string $url): ?array
             {
@@ -112,15 +112,15 @@ final class JiraBoardBacklogRetrieverFromAPITest extends \Tuleap\Test\PHPUnit\Te
 
         $backlog_issues = $retriever->getBoardBacklogIssues(JiraBoard::buildFakeBoard());
 
-        assertEquals(1, $client->called);
-        assertCount(0, $backlog_issues);
+        self::assertEquals(1, $client->called);
+        self::assertCount(0, $backlog_issues);
     }
 
     public function testItReturnsOneIssue(): void
     {
         $client = new class implements JiraClient
         {
-            public $called = 0;
+            public int $called = 0;
 
             public function getUrl(string $url): ?array
             {
@@ -146,8 +146,8 @@ final class JiraBoardBacklogRetrieverFromAPITest extends \Tuleap\Test\PHPUnit\Te
 
         $backlog_issues = $retriever->getBoardBacklogIssues(JiraBoard::buildFakeBoard());
 
-        assertEquals(1, $client->called);
-        assertEquals(
+        self::assertEquals(1, $client->called);
+        self::assertEquals(
             [
                 new BacklogIssueRepresentation(10000, "SP-1")
             ],
@@ -159,7 +159,7 @@ final class JiraBoardBacklogRetrieverFromAPITest extends \Tuleap\Test\PHPUnit\Te
     {
         $client = new class implements JiraClient
         {
-            public $called = 0;
+            public int $called = 0;
 
             public function getUrl(string $url): ?array
             {
@@ -196,6 +196,8 @@ final class JiraBoardBacklogRetrieverFromAPITest extends \Tuleap\Test\PHPUnit\Te
                         ],
                     ];
                 }
+
+                throw new RuntimeException("Must not happen");
             }
         };
 
@@ -203,8 +205,8 @@ final class JiraBoardBacklogRetrieverFromAPITest extends \Tuleap\Test\PHPUnit\Te
 
         $backlog_issues = $retriever->getBoardBacklogIssues(JiraBoard::buildFakeBoard());
 
-        assertEquals(2, $client->called);
-        assertEquals(
+        self::assertEquals(2, $client->called);
+        self::assertEquals(
             [
                 new BacklogIssueRepresentation(10000, "SP-1"),
                 new BacklogIssueRepresentation(10001, "SP-2")

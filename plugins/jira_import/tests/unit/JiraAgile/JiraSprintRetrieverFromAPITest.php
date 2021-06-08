@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -26,10 +26,7 @@ namespace Tuleap\JiraImport\JiraAgile;
 use Psr\Log\NullLogger;
 use Tuleap\Tracker\Creation\JiraImporter\JiraClient;
 use Tuleap\Tracker\Creation\JiraImporter\UnexpectedFormatException;
-use function PHPUnit\Framework\assertCount;
-use function PHPUnit\Framework\assertEmpty;
 use function PHPUnit\Framework\assertEquals;
-use function PHPUnit\Framework\assertNull;
 
 /**
  * @covers \Tuleap\JiraImport\JiraAgile\JiraSprint
@@ -37,7 +34,7 @@ use function PHPUnit\Framework\assertNull;
  */
 final class JiraSprintRetrieverFromAPITest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    public function testItHasNoSprints()
+    public function testItHasNoSprints(): void
     {
         $client = new class implements JiraClient
         {
@@ -55,7 +52,7 @@ final class JiraSprintRetrieverFromAPITest extends \Tuleap\Test\PHPUnit\TestCase
         };
 
         $retriever = new JiraSprintRetrieverFromAPI($client, new NullLogger());
-        assertEmpty($retriever->getAllSprints(JiraBoard::buildFakeBoard()));
+        self::assertEmpty($retriever->getAllSprints(JiraBoard::buildFakeBoard()));
     }
 
     public function testItHasOneSprint(): void
@@ -89,21 +86,23 @@ final class JiraSprintRetrieverFromAPITest extends \Tuleap\Test\PHPUnit\TestCase
         $retriever = new JiraSprintRetrieverFromAPI($client, new NullLogger());
         $sprints   = $retriever->getAllSprints(JiraBoard::buildFakeBoard());
 
-        assertCount(1, $sprints);
-        assertEquals(1, $sprints[0]->id);
-        assertEquals('https://example.com/rest/agile/1.0/sprint/1', $sprints[0]->url);
-        assertEquals('active', $sprints[0]->state);
-        assertEquals('Sample Sprint 2', $sprints[0]->name);
-        assertEquals('2018-01-25T04:04:09+00:00', $sprints[0]->start_date->format('c'));
-        assertEquals('2018-02-08T04:24:09+00:00', $sprints[0]->end_date->format('c'));
-        assertNull($sprints[0]->complete_date);
+        self::assertCount(1, $sprints);
+        self::assertEquals(1, $sprints[0]->id);
+        self::assertEquals('https://example.com/rest/agile/1.0/sprint/1', $sprints[0]->url);
+        self::assertEquals('active', $sprints[0]->state);
+        self::assertEquals('Sample Sprint 2', $sprints[0]->name);
+        self::assertNotNull($sprints[0]->start_date);
+        self::assertNotNull($sprints[0]->end_date);
+        self::assertEquals('2018-01-25T04:04:09+00:00', $sprints[0]->start_date->format('c'));
+        self::assertEquals('2018-02-08T04:24:09+00:00', $sprints[0]->end_date->format('c'));
+        self::assertNull($sprints[0]->complete_date);
     }
 
     public function testItHasSprintsOnSeveralPages(): void
     {
         $client = new class implements JiraClient
         {
-            private $call_count = 0;
+            private int $call_count = 0;
 
             public function getUrl(string $url): ?array
             {
@@ -127,8 +126,7 @@ final class JiraSprintRetrieverFromAPITest extends \Tuleap\Test\PHPUnit\TestCase
 
                         ],
                     ];
-                }
-                if ($this->call_count === 1) {
+                } elseif ($this->call_count === 1) {
                     $this->call_count++;
                     assertEquals('/rest/agile/latest/board/1/sprint?startAt=1', $url);
 
@@ -147,8 +145,7 @@ final class JiraSprintRetrieverFromAPITest extends \Tuleap\Test\PHPUnit\TestCase
 
                         ],
                     ];
-                }
-                if ($this->call_count > 1) {
+                } else {
                     throw new \RuntimeException("Should not happen");
                 }
             }
@@ -157,9 +154,9 @@ final class JiraSprintRetrieverFromAPITest extends \Tuleap\Test\PHPUnit\TestCase
         $retriever = new JiraSprintRetrieverFromAPI($client, new NullLogger());
         $sprints   = $retriever->getAllSprints(JiraBoard::buildFakeBoard());
 
-        assertCount(2, $sprints);
-        assertEquals(1, $sprints[0]->id);
-        assertEquals(2, $sprints[1]->id);
+        self::assertCount(2, $sprints);
+        self::assertEquals(1, $sprints[0]->id);
+        self::assertEquals(2, $sprints[1]->id);
     }
 
     public function testItHasOneSprintWithUnSupportedState(): void

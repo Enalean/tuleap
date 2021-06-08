@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -25,16 +25,14 @@ namespace Tuleap\JiraImport\JiraAgile;
 
 use Psr\Log\NullLogger;
 use Tuleap\Tracker\Creation\JiraImporter\JiraClient;
-use function PHPUnit\Framework\assertCount;
 use function PHPUnit\Framework\assertEquals;
-use function PHPUnit\Framework\assertTrue;
 
 final class JiraEpicRetrieverFromAPITest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItCallsTheEpicsURL(): void
     {
         $client = new class implements JiraClient {
-            public $called = false;
+            public bool $called = false;
             public function getUrl(string $url): ?array
             {
                 $this->called = true;
@@ -49,7 +47,7 @@ final class JiraEpicRetrieverFromAPITest extends \Tuleap\Test\PHPUnit\TestCase
         $epic_retriever = new JiraEpicRetrieverFromAPI($client, new NullLogger());
         $epic_retriever->getEpics(JiraBoard::buildFakeBoard());
 
-        assertTrue($client->called);
+        self::assertTrue($client->called);
     }
 
     public function testIfBuildEpics(): void
@@ -79,9 +77,9 @@ final class JiraEpicRetrieverFromAPITest extends \Tuleap\Test\PHPUnit\TestCase
         $epic_retriever = new JiraEpicRetrieverFromAPI($client, new NullLogger());
         $epics          = $epic_retriever->getEpics(JiraBoard::buildFakeBoard());
 
-        assertCount(1, $epics);
-        assertEquals(10143, $epics[0]->id);
-        assertEquals("https://example.com/rest/agile/1.0/epic/10143", $epics[0]->url);
-        assertEquals("SP-36", $epics[0]->key);
+        self::assertCount(1, $epics);
+        self::assertEquals(10143, $epics[0]->id);
+        self::assertEquals("https://example.com/rest/agile/1.0/epic/10143", $epics[0]->url);
+        self::assertEquals("SP-36", $epics[0]->key);
     }
 }

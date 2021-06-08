@@ -91,7 +91,7 @@ final class ArtifactLinkTypeImporterTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $creator = new class implements NatureCreatorInterface
         {
-            public $natures = [];
+            public array $natures = [];
             public function createFromNature(NaturePresenter $nature): void
             {
                 $this->natures[] = $nature;
@@ -136,7 +136,7 @@ final class ArtifactLinkTypeImporterTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $creator = new class implements NatureCreatorInterface
         {
-            public $natures = [];
+            public array $natures = [];
             public function createFromNature(NaturePresenter $nature): void
             {
                 $this->natures[] = $nature;

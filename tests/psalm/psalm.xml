@@ -18,6 +18,7 @@
         <directory name="tests/phpcs/TuleapCodingStandard/" />
         <directory name="plugins/oauth2_server/tests/unit/" />
         <directory name="plugins/gitlab/tests/unit/" />
+        <directory name="plugins/jira_import/tests/unit/" />
         <ignoreFiles>
             <directory name="src/common/wiki/phpwiki/"/>
             <directory name="src/www/assets/"/>
