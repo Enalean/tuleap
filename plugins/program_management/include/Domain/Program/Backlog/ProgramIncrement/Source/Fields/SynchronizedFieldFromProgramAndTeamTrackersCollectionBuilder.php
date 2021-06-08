@@ -23,7 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields;
 
 use Psr\Log\LoggerInterface;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\SourceTrackerCollection;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Source\SourceTrackerCollection;
 
 class SynchronizedFieldFromProgramAndTeamTrackersCollectionBuilder
 {

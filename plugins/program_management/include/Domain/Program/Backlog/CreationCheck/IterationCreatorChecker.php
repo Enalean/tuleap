@@ -25,7 +25,9 @@ namespace Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck;
 use PFUser;
 use Psr\Log\LoggerInterface;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration\VerifyIsIterationTracker;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\IterationTracker\RetrieveVisibleIterationTracker;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Team\TeamProjectsCollection;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Source\SourceTrackerCollection;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TrackerCollection;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TrackerRetrievalException;
 use Tuleap\ProgramManagement\Domain\Program\PlanningConfiguration\PlanningNotFoundException;
@@ -37,16 +39,22 @@ class IterationCreatorChecker
 {
     private RetrievePlanningMilestoneTracker $root_milestone_retriever;
     private VerifyIsIterationTracker $verify_is_iteration;
+    private RetrieveVisibleIterationTracker $iteration_tracker_retriever;
+    private TimeboxCreatorChecker $timebox_creator_checker;
     private LoggerInterface $logger;
 
     public function __construct(
         RetrievePlanningMilestoneTracker $root_milestone_retriever,
         VerifyIsIterationTracker $verify_is_iteration,
+        RetrieveVisibleIterationTracker $iteration_tracker_retriever,
+        TimeboxCreatorChecker $timebox_creator_checker,
         LoggerInterface $logger
     ) {
-        $this->root_milestone_retriever = $root_milestone_retriever;
-        $this->verify_is_iteration      = $verify_is_iteration;
-        $this->logger                   = $logger;
+        $this->root_milestone_retriever    = $root_milestone_retriever;
+        $this->verify_is_iteration         = $verify_is_iteration;
+        $this->iteration_tracker_retriever = $iteration_tracker_retriever;
+        $this->timebox_creator_checker     = $timebox_creator_checker;
+        $this->logger                      = $logger;
     }
 
     public function canCreateAnIteration(
@@ -74,15 +82,32 @@ class IterationCreatorChecker
         }
 
         try {
-            TrackerCollection::buildSecondPlanningMilestoneTracker(
+            $team_trackers = TrackerCollection::buildSecondPlanningMilestoneTracker(
                 $this->root_milestone_retriever,
                 $team_projects_collection,
                 $user
             );
+
+            $iteration_and_team_trackers = SourceTrackerCollection::fromIterationAndTeamTrackers(
+                $this->iteration_tracker_retriever,
+                $program,
+                $team_trackers,
+                $user
+            );
         } catch (PlanningNotFoundException | TrackerRetrievalException $exception) {
             $this->logger->error('Cannot retrieve all milestones', ['exception' => $exception]);
+            return false;
         }
 
-        return true;
+        if ($iteration_and_team_trackers === null) {
+            return true;
+        }
+
+        return $this->timebox_creator_checker->canTimeboxBeCreated(
+            $tracker,
+            $iteration_and_team_trackers,
+            $team_trackers,
+            $user
+        );
     }
 }

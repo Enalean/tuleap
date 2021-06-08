@@ -68,6 +68,7 @@ use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\ArtifactsLinkedToPare
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\UserStoryLinkedToFeatureChecker;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\UserStoriesInMirroredProgramIncrementsPlanner;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\VerifyIsVisibleFeatureAdapter;
+use Tuleap\ProgramManagement\Adapter\Program\IterationTracker\VisibleIterationTrackerRetriever;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\CanPrioritizeFeaturesDAO;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\PlanDao;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\PlanProgramAdapter;
@@ -770,6 +771,7 @@ final class program_managementPlugin extends Plugin
         $planning_adapter        = new PlanningAdapter(\PlanningFactory::build());
         $program_increments_dao  = new ProgramIncrementsDAO();
         $tracker_factory         = \TrackerFactory::instance();
+        $iteration_dao           = new IterationsDAO();
 
         $synchronized_fields_builder = new SynchronizedFieldFromProgramAndTeamTrackersCollectionBuilder(
             new SynchronizedFieldsAdapter(
@@ -824,7 +826,12 @@ final class program_managementPlugin extends Plugin
             ),
             new IterationCreatorChecker(
                 $planning_adapter,
-                new IterationsDAO(),
+                $iteration_dao,
+                new VisibleIterationTrackerRetriever(
+                    $iteration_dao,
+                    $tracker_factory
+                ),
+                $checker,
                 $logger
             ),
             $this->getTeamProjectCollectionBuilder(),

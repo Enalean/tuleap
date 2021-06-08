@@ -25,6 +25,7 @@ namespace Tuleap\ProgramManagement\Domain;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Stub\BuildProgramStub;
 use Tuleap\ProgramManagement\Stub\RetrievePlanningMilestoneTrackerStub;
+use Tuleap\ProgramManagement\Stub\RetrieveVisibleIterationTrackerStub;
 use Tuleap\ProgramManagement\Stub\RetrieveVisibleProgramIncrementTrackerStub;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
@@ -61,6 +62,27 @@ final class ProgramTrackerTest extends TestCase
 
         $program_increment_tracker = ProgramTracker::buildProgramIncrementTrackerFromProgram($retriever, $program, $user);
         self::assertSame(78, $program_increment_tracker->getTrackerId());
+    }
+
+    public function testItBuildsIterationTracker(): void
+    {
+        $tracker   = TrackerTestBuilder::aTracker()->withId(78)->build();
+        $retriever = RetrieveVisibleIterationTrackerStub::withValidTracker($tracker);
+        $user      = UserTestBuilder::aUser()->build();
+        $program   = ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 101, $user);
+
+        $iteration_tracker = ProgramTracker::buildIterationTrackerFromProgram($retriever, $program, $user);
+        self::assertSame(78, $iteration_tracker->getTrackerId());
+    }
+
+    public function testItReturnsNullIfNoIterationTracker(): void
+    {
+        $retriever = RetrieveVisibleIterationTrackerStub::withNotVisibleIterationTracker();
+        $user      = UserTestBuilder::aUser()->build();
+        $program   = ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 101, $user);
+
+        $iteration_tracker = ProgramTracker::buildIterationTrackerFromProgram($retriever, $program, $user);
+        self::assertNull($iteration_tracker);
     }
 
     public function testItDelegatesPermissionCheckToWrappedTracker(): void

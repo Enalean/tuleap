@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain;
 
+use Tuleap\ProgramManagement\Domain\Program\Backlog\IterationTracker\RetrieveVisibleIterationTracker;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\PlanningHasNoProgramIncrementException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TrackerRetrievalException;
 use Tuleap\ProgramManagement\Domain\Program\PlanningConfiguration\PlanningNotFoundException;
@@ -76,6 +77,23 @@ final class ProgramTracker
         \PFUser $user
     ): self {
         return new self($retriever->retrieveVisibleProgramIncrementTracker($program, $user));
+    }
+
+    /**
+     * @throws Program\ProgramTrackerNotFoundException
+     */
+    public static function buildIterationTrackerFromProgram(
+        RetrieveVisibleIterationTracker $retriever,
+        ProgramIdentifier $program,
+        \PFUser $user
+    ): ?self {
+        $tracker = $retriever->retrieveVisibleIterationTracker($program, $user);
+
+        if ($tracker === null) {
+            return null;
+        }
+
+        return new self($tracker);
     }
 
     /**
