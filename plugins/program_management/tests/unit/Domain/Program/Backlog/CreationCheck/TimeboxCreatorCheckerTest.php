@@ -36,36 +36,39 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fiel
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\SourceTrackerCollection;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Team\TeamProjectsCollection;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TrackerCollection;
+use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\ProgramTracker;
 use Tuleap\ProgramManagement\Domain\Project;
+use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\RetrievePlanningMilestoneTracker;
+use Tuleap\ProgramManagement\Stub\BuildPlanProgramIncrementConfigurationStub;
+use Tuleap\ProgramManagement\Stub\BuildProgramStub;
 use Tuleap\ProgramManagement\Stub\RetrievePlanningMilestoneTrackerStub;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class TimeboxCreatorCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**
-     * @var \PHPUnit\Framework\MockObject\Stub|BuildSynchronizedFields
+     * @var Stub|BuildSynchronizedFields
      */
     private $fields_adapter;
     private SynchronizedFieldFromProgramAndTeamTrackersCollectionBuilder $field_collection_builder;
     /**
-     * @var \PHPUnit\Framework\MockObject\Stub|CheckSemantic
+     * @var Stub|CheckSemantic
      */
     private $semantic_checker;
     /**
-     * @var \PHPUnit\Framework\MockObject\Stub|CheckRequiredField
+     * @var Stub|CheckRequiredField
      */
     private $required_field_checker;
     /**
-     * @var \PHPUnit\Framework\MockObject\Stub|CheckWorkflow
+     * @var Stub|CheckWorkflow
      */
     private $workflow_checker;
-    private \Project $project;
     private \PFUser $user;
-    private \Tracker $tracker;
     private ProgramTracker $program_increment_tracker;
-    private Project $program;
+    private RetrievePlanningMilestoneTracker $root_milestone_retriever;
 
     protected function setUp(): void
     {
@@ -78,22 +81,19 @@ final class TimeboxCreatorCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->required_field_checker   = $this->createStub(CheckRequiredField::class);
         $this->workflow_checker         = $this->createStub(CheckWorkflow::class);
 
-        $this->project = new \Project(
-            ['group_id' => 101, 'unix_group_name' => 'proj01', 'group_name' => 'Project 01']
-        );
+        $project = ProjectTestBuilder::aProject()->withId(101)->build();
 
-        $this->user                      = UserTestBuilder::aUser()->build();
-        $this->tracker                   = TrackerTestBuilder::aTracker()->withId(1)->withProject($this->project)->build();
-        $this->program_increment_tracker = new ProgramTracker($this->tracker);
-        $this->program                   = new \Tuleap\ProgramManagement\Domain\Project(101, 'my_project', "My project");
+        $this->user = UserTestBuilder::aUser()->build();
+        $tracker    = TrackerTestBuilder::aTracker()->withId(1)->withProject($project)->build();
+
+        $this->program_increment_tracker = new ProgramTracker($tracker);
+        $this->root_milestone_retriever  = $this->getMilestoneRetriever(true);
     }
 
     public function testItReturnsTrueIfAllChecksAreOk(): void
     {
-        $root_milestone_retriever = $this->getRetrievePlanningMilestoneTrackerStub(true);
-        $source_tracker           = new SourceTrackerCollection([ProgramTracker::buildMilestoneTrackerFromRootPlanning($root_milestone_retriever, $this->program, $this->user)]);
-        $first_team_project       = new TeamProjectsCollection([new Project(104, "proj02", "Project 02")]);
-        $tracker_collection       = TrackerCollection::buildRootPlanningMilestoneTrackers($root_milestone_retriever, $first_team_project, $this->user);
+        $team_trackers             = $this->buildTeamTrackers();
+        $program_and_team_trackers = $this->buildProgramAndTeamTrackers($team_trackers);
 
         $this->semantic_checker->expects(self::once())
             ->method('areTrackerSemanticsWellConfigured')
@@ -106,74 +106,95 @@ final class TimeboxCreatorCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->workflow_checker->method('areWorkflowsNotUsedWithSynchronizedFieldsInTeamTrackers')
             ->willReturn(true);
 
-        $checker = $this->getChecker();
-        self::assertTrue($checker->canTimeboxBeCreated($this->program_increment_tracker, $source_tracker, $tracker_collection, $this->user));
+        self::assertTrue(
+            $this->getChecker()->canTimeboxBeCreated(
+                $this->program_increment_tracker,
+                $program_and_team_trackers,
+                $team_trackers,
+                $this->user
+            )
+        );
     }
 
     public function testItReturnsFalseIfSemanticsAreNotWellConfigured(): void
     {
-        $root_milestone_retriever = $this->getRetrievePlanningMilestoneTrackerStub(true);
-        $source_tracker           = new SourceTrackerCollection([ProgramTracker::buildMilestoneTrackerFromRootPlanning($root_milestone_retriever, $this->program, $this->user)]);
-        $first_team_project       = new TeamProjectsCollection([new Project(104, "proj02", "Project 02")]);
-        $tracker_collection       = TrackerCollection::buildRootPlanningMilestoneTrackers($root_milestone_retriever, $first_team_project, $this->user);
+        $team_trackers             = $this->buildTeamTrackers();
+        $program_and_team_trackers = $this->buildProgramAndTeamTrackers($team_trackers);
 
         $this->semantic_checker->method('areTrackerSemanticsWellConfigured')
             ->willReturn(false);
 
-        $checker = $this->getChecker();
-        self::assertFalse($checker->canTimeboxBeCreated($this->program_increment_tracker, $source_tracker, $tracker_collection, $this->user));
+        self::assertFalse(
+            $this->getChecker()->canTimeboxBeCreated(
+                $this->program_increment_tracker,
+                $program_and_team_trackers,
+                $team_trackers,
+                $this->user
+            )
+        );
     }
 
     public function testItReturnsFalseIfUserCannotSubmitArtifact(): void
     {
-        $root_milestone_retriever = $this->getRetrievePlanningMilestoneTrackerStub(false);
-        $source_tracker           = new SourceTrackerCollection([ProgramTracker::buildMilestoneTrackerFromRootPlanning($root_milestone_retriever, $this->program, $this->user)]);
-        $first_team_project       = new TeamProjectsCollection([new Project(104, "proj02", "Project 02")]);
-        $tracker_collection       = TrackerCollection::buildRootPlanningMilestoneTrackers($root_milestone_retriever, $first_team_project, $this->user);
+        $this->root_milestone_retriever = $this->getMilestoneRetriever(false);
+        $team_trackers                  = $this->buildTeamTrackers();
+        $program_and_team_trackers      = $this->buildProgramAndTeamTrackers($team_trackers);
 
         $this->semantic_checker->method('areTrackerSemanticsWellConfigured')->willReturn(true);
 
-        $checker = $this->getChecker();
-        self::assertFalse($checker->canTimeboxBeCreated($this->program_increment_tracker, $source_tracker, $tracker_collection, $this->user));
+        self::assertFalse(
+            $this->getChecker()->canTimeboxBeCreated(
+                $this->program_increment_tracker,
+                $program_and_team_trackers,
+                $team_trackers,
+                $this->user
+            )
+        );
     }
 
     public function testItReturnsFalseIfFieldsCantBeExtractedFromMilestoneTrackers(): void
     {
-        $root_milestone_retriever = $this->getRetrievePlanningMilestoneTrackerStub(true);
-        $source_tracker           = new SourceTrackerCollection([ProgramTracker::buildMilestoneTrackerFromRootPlanning($root_milestone_retriever, $this->program, $this->user)]);
-        $first_team_project       = new TeamProjectsCollection([new Project(104, "proj02", "Project 02")]);
-        $tracker_collection       = TrackerCollection::buildRootPlanningMilestoneTrackers($root_milestone_retriever, $first_team_project, $this->user);
+        $team_trackers             = $this->buildTeamTrackers();
+        $program_and_team_trackers = $this->buildProgramAndTeamTrackers($team_trackers);
 
         $this->semantic_checker->method('areTrackerSemanticsWellConfigured')
             ->willReturn(true);
 
         $this->fields_adapter->method('build')->willThrowException(new FieldRetrievalException(1, 'title'));
 
-        $checker = $this->getChecker();
-        self::assertFalse($checker->canTimeboxBeCreated($this->program_increment_tracker, $source_tracker, $tracker_collection, $this->user));
+        self::assertFalse(
+            $this->getChecker()->canTimeboxBeCreated(
+                $this->program_increment_tracker,
+                $program_and_team_trackers,
+                $team_trackers,
+                $this->user
+            )
+        );
     }
 
     public function testItReturnsFalseIfUserCantSubmitOneArtifactLink(): void
     {
-        $root_milestone_retriever = $this->getRetrievePlanningMilestoneTrackerStub(true);
-        $source_tracker           = new SourceTrackerCollection([ProgramTracker::buildMilestoneTrackerFromRootPlanning($root_milestone_retriever, $this->program, $this->user)]);
-        $first_team_project       = new TeamProjectsCollection([new Project(104, "proj02", "Project 02")]);
-        $tracker_collection       = TrackerCollection::buildRootPlanningMilestoneTrackers($root_milestone_retriever, $first_team_project, $this->user);
+        $team_trackers             = $this->buildTeamTrackers();
+        $program_and_team_trackers = $this->buildProgramAndTeamTrackers($team_trackers);
 
         $this->semantic_checker->method('areTrackerSemanticsWellConfigured')->willReturn(true);
 
         $this->buildSynchronizedFields(false);
 
-        $checker = $this->getChecker();
-        self::assertFalse($checker->canTimeboxBeCreated($this->program_increment_tracker, $source_tracker, $tracker_collection, $this->user));
+        self::assertFalse(
+            $this->getChecker()->canTimeboxBeCreated(
+                $this->program_increment_tracker,
+                $program_and_team_trackers,
+                $team_trackers,
+                $this->user
+            )
+        );
     }
 
     public function testItReturnsFalseIfTrackersHaveRequiredFieldsThatCannotBeSynchronized(): void
     {
-        $root_milestone_retriever = $this->getRetrievePlanningMilestoneTrackerStub(true);
-        $source_tracker           = new SourceTrackerCollection([ProgramTracker::buildMilestoneTrackerFromRootPlanning($root_milestone_retriever, $this->program, $this->user)]);
-        $first_team_project       = new TeamProjectsCollection([new Project(104, "proj02", "Project 02")]);
-        $tracker_collection       = TrackerCollection::buildRootPlanningMilestoneTrackers($root_milestone_retriever, $first_team_project, $this->user);
+        $team_trackers             = $this->buildTeamTrackers();
+        $program_and_team_trackers = $this->buildProgramAndTeamTrackers($team_trackers);
 
         $this->semantic_checker->expects(self::once())
             ->method('areTrackerSemanticsWellConfigured')
@@ -184,16 +205,20 @@ final class TimeboxCreatorCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->required_field_checker->method('areRequiredFieldsOfTeamTrackersLimitedToTheSynchronizedFields')
             ->willReturn(false);
 
-        $checker = $this->getChecker();
-        self::assertFalse($checker->canTimeboxBeCreated($this->program_increment_tracker, $source_tracker, $tracker_collection, $this->user));
+        self::assertFalse(
+            $this->getChecker()->canTimeboxBeCreated(
+                $this->program_increment_tracker,
+                $program_and_team_trackers,
+                $team_trackers,
+                $this->user
+            )
+        );
     }
 
     public function testItReturnsFalseIfTeamTrackersAreUsingSynchronizedFieldsInWorkflowRules(): void
     {
-        $root_milestone_retriever = $this->getRetrievePlanningMilestoneTrackerStub(true);
-        $source_tracker           = new SourceTrackerCollection([ProgramTracker::buildMilestoneTrackerFromRootPlanning($root_milestone_retriever, $this->program, $this->user)]);
-        $first_team_project       = new TeamProjectsCollection([new Project(104, "proj02", "Project 02")]);
-        $tracker_collection       = TrackerCollection::buildRootPlanningMilestoneTrackers($root_milestone_retriever, $first_team_project, $this->user);
+        $team_trackers             = $this->buildTeamTrackers();
+        $program_and_team_trackers = $this->buildProgramAndTeamTrackers($team_trackers);
 
         $this->semantic_checker->expects(self::once())
             ->method('areTrackerSemanticsWellConfigured')
@@ -206,19 +231,23 @@ final class TimeboxCreatorCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->workflow_checker->method('areWorkflowsNotUsedWithSynchronizedFieldsInTeamTrackers')
             ->willReturn(false);
 
-        $checker = $this->getChecker();
-        self::assertFalse($checker->canTimeboxBeCreated($this->program_increment_tracker, $source_tracker, $tracker_collection, $this->user));
+        self::assertFalse(
+            $this->getChecker()->canTimeboxBeCreated(
+                $this->program_increment_tracker,
+                $program_and_team_trackers,
+                $team_trackers,
+                $this->user
+            )
+        );
     }
 
-    private function getRetrievePlanningMilestoneTrackerStub(bool $user_can_submit_artifact_in_team = true): RetrievePlanningMilestoneTrackerStub
-    {
+    private function getMilestoneRetriever(
+        bool $user_can_submit_artifact_in_team
+    ): RetrievePlanningMilestoneTracker {
         $first_milestone_tracker = $this->createStub(\Tracker::class);
         $first_milestone_tracker->method('userCanSubmitArtifact')->willReturn($user_can_submit_artifact_in_team);
         $first_milestone_tracker->method('getId')->willReturn(1);
-        return RetrievePlanningMilestoneTrackerStub::withValidTrackers(
-            $first_milestone_tracker,
-            $first_milestone_tracker
-        );
+        return RetrievePlanningMilestoneTrackerStub::withValidTrackers($first_milestone_tracker);
     }
 
     private function getChecker(): TimeboxCreatorChecker
@@ -276,5 +305,25 @@ final class TimeboxCreatorCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         $field->method('getId')->willReturn($id);
         $field->method('userCanSubmit')->willReturn($submitable);
         $field->method('userCanUpdate')->willReturn($updatable);
+    }
+
+    private function buildTeamTrackers(): TrackerCollection
+    {
+        $first_team_project = new TeamProjectsCollection([new Project(104, 'proj02', 'Project 02')]);
+        return TrackerCollection::buildRootPlanningMilestoneTrackers(
+            $this->root_milestone_retriever,
+            $first_team_project,
+            $this->user
+        );
+    }
+
+    private function buildProgramAndTeamTrackers(TrackerCollection $team_trackers): SourceTrackerCollection
+    {
+        return SourceTrackerCollection::fromProgramAndTeamTrackers(
+            BuildPlanProgramIncrementConfigurationStub::withValidTracker($this->program_increment_tracker),
+            ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 101, $this->user),
+            $team_trackers,
+            $this->user
+        );
     }
 }

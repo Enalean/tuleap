@@ -29,7 +29,7 @@ use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\ProgramTrackerNotFoundException;
 use Tuleap\ProgramManagement\Domain\ProgramTracker;
 
-class PlanProgramIncrementConfigurationBuilder implements BuildPlanProgramIncrementConfiguration
+final class PlanProgramIncrementConfigurationBuilder implements BuildPlanProgramIncrementConfiguration
 {
     private RetrieveProgramIncrementTracker $program_increment_tracker_retriever;
     private \TrackerFactory $tracker_factory;

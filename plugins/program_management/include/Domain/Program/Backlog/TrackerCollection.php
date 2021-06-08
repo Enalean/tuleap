@@ -29,13 +29,16 @@ use Tuleap\ProgramManagement\Domain\Program\PlanningConfiguration\TopPlanningNot
 use Tuleap\ProgramManagement\Domain\ProgramTracker;
 use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\RetrievePlanningMilestoneTracker;
 
+/**
+ * I contain all the Teams' Mirrored Program Increment trackers.
+ */
 final class TrackerCollection
 {
     /**
      * @var ProgramTracker[]
      * @psalm-readonly
      */
-    private $mirrored_timebox_trackers;
+    private array $mirrored_timebox_trackers;
 
     /**
      * @param ProgramTracker[] $mirrored_timebox_trackers

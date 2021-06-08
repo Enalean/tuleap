@@ -22,50 +22,46 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use Project;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Team\TeamProjectsCollection;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\TrackerCollection;
+use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\ProgramTracker;
+use Tuleap\ProgramManagement\Domain\Project;
+use Tuleap\ProgramManagement\Stub\BuildPlanProgramIncrementConfigurationStub;
+use Tuleap\ProgramManagement\Stub\BuildProgramStub;
+use Tuleap\ProgramManagement\Stub\RetrievePlanningMilestoneTrackerStub;
+use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class SourceTrackerCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    public function testGetTrackerIdsReturnsTrackerIds(): void
+    public function testItBuildsValidCollection(): void
     {
-        $first_tracker  = new ProgramTracker(
-            TrackerTestBuilder::aTracker()->withId(78)->withProject(new Project(['group_id' => 103]))->build()
+        $user      = UserTestBuilder::aUser()->build();
+        $program   = ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 101, $user);
+        $team_blue = new Project(102, 'team_blue', 'Team Blue');
+        $team_red  = new Project(103, 'tea_red', 'Team Red');
+        $teams     = new TeamProjectsCollection([$team_blue, $team_red]);
+
+        $expected_program_increment_tracker = new ProgramTracker(TrackerTestBuilder::aTracker()->withId(78)->build());
+        $blue_team_tracker                  = TrackerTestBuilder::aTracker()->withId(79)->build();
+        $red_team_tracker                   = TrackerTestBuilder::aTracker()->withId(80)->build();
+
+        $team_trackers = TrackerCollection::buildRootPlanningMilestoneTrackers(
+            RetrievePlanningMilestoneTrackerStub::withValidTrackers($blue_team_tracker, $red_team_tracker),
+            $teams,
+            $user
         );
-        $second_tracker = new ProgramTracker(
-            TrackerTestBuilder::aTracker()->withId(57)->withProject(new Project(['group_id' => 104]))->build()
+
+        $collection = SourceTrackerCollection::fromProgramAndTeamTrackers(
+            BuildPlanProgramIncrementConfigurationStub::withValidTracker($expected_program_increment_tracker),
+            $program,
+            $team_trackers,
+            $user
         );
-
-        $collection = new SourceTrackerCollection([$first_tracker, $second_tracker]);
-        $ids        = $collection->getTrackerIds();
-        $this->assertContains(78, $ids);
-        $this->assertContains(57, $ids);
-    }
-
-    public function testGetTrackerIdsReturnsEmpty(): void
-    {
-        $collection = new SourceTrackerCollection([]);
-        $this->assertEmpty($collection->getTrackerIds());
-    }
-
-    public function testGetMilestoneTrackersReturnTrackers(): void
-    {
-        $first_tracker  = TrackerTestBuilder::aTracker()->withId(78)->withProject(new Project(['group_id' => 103]))->build();
-        $second_tracker = TrackerTestBuilder::aTracker()->withId(57)->withProject(new Project(['group_id' => 104]))->build();
-
-        $collection = new SourceTrackerCollection([$first_tracker, $second_tracker]);
         $trackers   = $collection->getSourceTrackers();
-        $this->assertContains($first_tracker, $trackers);
-        $this->assertContains($second_tracker, $trackers);
-    }
-
-    public function testGetMilestoneTrackersReturnsEmpty(): void
-    {
-        $collection = new SourceTrackerCollection([]);
-        $this->assertEmpty($collection->getSourceTrackers());
+        self::assertContains($expected_program_increment_tracker, $trackers);
+        self::assertContainsEquals(new ProgramTracker($blue_team_tracker), $trackers);
+        self::assertContainsEquals(new ProgramTracker($red_team_tracker), $trackers);
     }
 }

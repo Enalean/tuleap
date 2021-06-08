@@ -22,55 +22,55 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source;
 
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Plan\BuildPlanProgramIncrementConfiguration;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\TrackerCollection;
+use Tuleap\ProgramManagement\Domain\Program\Plan\ProgramHasNoProgramIncrementTrackerException;
+use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
+use Tuleap\ProgramManagement\Domain\Program\ProgramTrackerNotFoundException;
 use Tuleap\ProgramManagement\Domain\ProgramTracker;
 
+/**
+ * I contain the Program Increment Tracker and all its Mirrored Program Increment trackers from
+ * the Program's Teams.
+ * @psalm-immutable
+ */
 final class SourceTrackerCollection
 {
     /**
      * @var ProgramTracker[]
-     * @psalm-readonly
      */
-    private $source_trackers;
+    private array $source_trackers;
 
     /**
      * @param ProgramTracker[] $source_trackers
      */
-    public function __construct(array $source_trackers)
+    private function __construct(array $source_trackers)
     {
         $this->source_trackers = $source_trackers;
     }
 
     /**
-     * @return int[]
-     * @psalm-mutation-free
+     * @throws ProgramTrackerNotFoundException
+     * @throws ProgramHasNoProgramIncrementTrackerException
      */
-    public function getTrackerIds(): array
-    {
-        return self::extractTrackerIDs($this->source_trackers);
+    public static function fromProgramAndTeamTrackers(
+        BuildPlanProgramIncrementConfiguration $program_increment_builder,
+        ProgramIdentifier $program,
+        TrackerCollection $team_trackers,
+        \PFUser $user
+    ): self {
+        $trackers = [$program_increment_builder->buildProgramIncrementTrackerFromProgram($program, $user)];
+        foreach ($team_trackers->getTrackers() as $team_tracker) {
+            $trackers[] = $team_tracker;
+        }
+        return new self($trackers);
     }
 
     /**
      * @return ProgramTracker[]
-     * @psalm-mutation-free
      */
     public function getSourceTrackers(): array
     {
         return $this->source_trackers;
-    }
-
-    /**
-     * @param ProgramTracker[] $trackers
-     *
-     * @return int[]
-     * @psalm-pure
-     */
-    private static function extractTrackerIDs(array $trackers): array
-    {
-        return array_map(
-            static function (ProgramTracker $tracker) {
-                return $tracker->getTrackerId();
-            },
-            $trackers
-        );
     }
 }

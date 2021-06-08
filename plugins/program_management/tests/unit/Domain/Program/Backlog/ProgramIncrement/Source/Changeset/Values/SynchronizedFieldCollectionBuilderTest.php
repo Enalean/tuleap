@@ -22,35 +22,38 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Data\SynchronizedFields;
 
-use Mockery as M;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Psr\Log\NullLogger;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\BuildSynchronizedFields;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\Field;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFieldFromProgramAndTeamTrackersCollectionBuilder;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFields;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\SourceTrackerCollection;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Team\TeamProjectsCollection;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\TrackerCollection;
+use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\ProgramTracker;
+use Tuleap\ProgramManagement\Domain\Project;
+use Tuleap\ProgramManagement\Stub\BuildPlanProgramIncrementConfigurationStub;
+use Tuleap\ProgramManagement\Stub\BuildProgramStub;
+use Tuleap\ProgramManagement\Stub\RetrievePlanningMilestoneTrackerStub;
+use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class SynchronizedFieldCollectionBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var M\LegacyMockInterface|M\MockInterface|BuildSynchronizedFields
-     */
-    private $fields_adapter;
-
     /**
      * @var SynchronizedFieldFromProgramAndTeamTrackersCollectionBuilder
      */
-    private $collection;
+    private SynchronizedFieldFromProgramAndTeamTrackersCollectionBuilder $collection_builder;
+    /**
+     * @var \PHPUnit\Framework\MockObject\Stub|BuildSynchronizedFields
+     */
+    private $fields_adapter;
 
     protected function setUp(): void
     {
-        $this->fields_adapter = \Mockery::mock(BuildSynchronizedFields::class);
-        $this->collection     = new SynchronizedFieldFromProgramAndTeamTrackersCollectionBuilder(
+        $this->fields_adapter     = $this->createStub(BuildSynchronizedFields::class);
+        $this->collection_builder = new SynchronizedFieldFromProgramAndTeamTrackersCollectionBuilder(
             $this->fields_adapter,
             new NullLogger()
         );
@@ -58,33 +61,39 @@ final class SynchronizedFieldCollectionBuilderTest extends \Tuleap\Test\PHPUnit\
 
     public function testBuildFromMilestoneTrackersReturnsACollection(): void
     {
-        $first_tracker  = new ProgramTracker(TrackerTestBuilder::aTracker()->withId(102)->build());
-        $second_tracker = new ProgramTracker(TrackerTestBuilder::aTracker()->withId(104)->build());
-        $milestones     = new SourceTrackerCollection([$first_tracker, $second_tracker]);
-
-        $first_synchronized_fields = $this->buildSynchronizedFieldsWithIds(1, 2, 3, 4, 5, 6);
-        $this->fields_adapter->shouldReceive('build')->with($first_tracker)->andReturn($first_synchronized_fields);
-        $second_synchronized_fields = $this->buildSynchronizedFieldsWithIds(1001, 1002, 1003, 1004, 1005, 1006);
-        $this->fields_adapter->shouldReceive('build')->with($second_tracker)->andReturn($second_synchronized_fields);
-
-        $expected_ids = [
-            1,
-            2,
-            3,
-            4,
-            5,
-            6,
-            1001,
-            1002,
-            1003,
-            1004,
-            1005,
-            1006
-        ];
-        $collection   = $this->collection->buildFromSourceTrackers(
-            $milestones
+        $user           = UserTestBuilder::aUser()->build();
+        $program        = ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 101, $user);
+        $team_red       = new Project(102, 'team_red', 'Team Red');
+        $team_blue      = new Project(104, 'team_red', 'Team Red');
+        $teams          = new TeamProjectsCollection([$team_blue, $team_red]);
+        $first_tracker  = TrackerTestBuilder::aTracker()->withId(102)->build();
+        $second_tracker = TrackerTestBuilder::aTracker()->withId(104)->build();
+        $team_trackers  = TrackerCollection::buildRootPlanningMilestoneTrackers(
+            RetrievePlanningMilestoneTrackerStub::withValidTrackers($first_tracker, $second_tracker),
+            $teams,
+            $user
         );
-        $this->assertEquals($expected_ids, $collection->getSynchronizedFieldIDs());
+
+        $program_increment_tracker = new ProgramTracker(TrackerTestBuilder::aTracker()->withId(67)->build());
+        $all_trackers              = SourceTrackerCollection::fromProgramAndTeamTrackers(
+            BuildPlanProgramIncrementConfigurationStub::withValidTracker($program_increment_tracker),
+            $program,
+            $team_trackers,
+            $user
+        );
+
+        $program_increment_fields = $this->buildSynchronizedFieldsWithIds(1, 2, 3, 4, 5, 6);
+        $first_team_fields        = $this->buildSynchronizedFieldsWithIds(1001, 1002, 1003, 1004, 1005, 1006);
+        $second_team_fields       = $this->buildSynchronizedFieldsWithIds(2001, 2002, 2003, 2004, 2005, 2006);
+        $this->fields_adapter->method('build')->willReturnOnConsecutiveCalls(
+            $program_increment_fields,
+            $first_team_fields,
+            $second_team_fields
+        );
+
+        $expected_ids = [1, 2, 3, 4, 5, 6, 1001, 1002, 1003, 1004, 1005, 1006, 2001, 2002, 2003, 2004, 2005, 2006];
+        $collection   = $this->collection_builder->buildFromSourceTrackers($all_trackers);
+        self::assertEquals($expected_ids, $collection->getSynchronizedFieldIDs());
     }
 
     private function buildSynchronizedFieldsWithIds(
