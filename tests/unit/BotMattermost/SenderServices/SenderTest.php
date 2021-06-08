@@ -20,48 +20,51 @@
 
 namespace Tuleap\BotMattermost\SenderServices;
 
+use Psr\Log\NullLogger;
+use Tuleap\BotMattermost\Bot\Bot;
+use Tuleap\Test\PHPUnit\TestCase;
+
 require_once __DIR__ . '/../../bootstrap.php';
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
-class SenderTest extends \Tuleap\Test\PHPUnit\TestCase
+class SenderTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     /**
-     * @var Sender
+     * @var \PHPUnit\Framework\MockObject\MockObject|ClientBotMattermost
      */
-    private $sender;
-
-    private $encoder_message;
     private $botMattermost_client;
-    private $logger;
+
+    private Sender $sender;
+    private EncoderMessage $encoder_message;
 
     public function setUp(): void
     {
         parent::setUp();
         $this->encoder_message      = new EncoderMessage();
-        $this->botMattermost_client = \Mockery::spy(\Tuleap\BotMattermost\SenderServices\ClientBotMattermost::class);
-        $this->logger               = \Mockery::spy(\Tuleap\BotMattermost\BotMattermostLogger::class);
+        $this->botMattermost_client = $this->createMock(ClientBotMattermost::class);
 
         $this->sender = new Sender(
             $this->encoder_message,
             $this->botMattermost_client,
-            $this->logger
+            new NullLogger()
         );
     }
 
-    public function testItVerifiedThatPushNotificationForEachChannels()
+    public function testItVerifiedThatPushNotificationForEachChannels(): void
     {
         $message  = new Message();
         $channels = ['channel1', 'channel2'];
-        $message->setText('{"username":"toto","channel":"channel","icon_url":"https:\/\/avatar_url.com","text":"text"}');
+        $message->setText('{"username":"toto","channel":"channel","icon_url":"https:\/\/example.com\/hook","text":"text"}');
 
-        $bot = \Mockery::spy(\Tuleap\BotMattermost\Bot\Bot::class);
-        $bot->allows()->getWebhookUrl()->andReturns('https:\/\/webhook_url.com');
+        $bot = new Bot(
+            1,
+            'Robot',
+            'https://example.com/hook',
+            'https://example.com/avatar'
+        );
 
-        $this_botMattermost_client_sendMessage = $this->botMattermost_client->shouldReceive('sendMessage');
-        $this_botMattermost_client_sendMessage->times(2);
+        $this->botMattermost_client
+            ->expects(self::exactly(2))
+            ->method('sendMessage');
 
         $this->sender->pushNotification($bot, $message, $channels);
     }

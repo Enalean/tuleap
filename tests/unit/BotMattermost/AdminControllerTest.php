@@ -26,14 +26,12 @@ use BaseLanguage;
 use CSRFSynchronizerToken;
 use EventManager;
 use HTTPRequest;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\BotMattermost\Bot\Bot;
 use Tuleap\Layout\BaseLayout;
+use Tuleap\Test\PHPUnit\TestCase;
 
-class AdminControllerTest extends \Tuleap\Test\PHPUnit\TestCase
+final class AdminControllerTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     /**
      * @var AdminController
      */
@@ -44,44 +42,56 @@ class AdminControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     private $event_manager;
     private $http_request;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
 
-        $this->csrf             = \Mockery::spy(CSRFSynchronizerToken::class);
-        $this->bot_factory      = \Mockery::spy(\Tuleap\BotMattermost\Bot\BotFactory::class);
-        $this->event_manager    = \Mockery::spy(EventManager::class);
+        $this->csrf             = $this->createMock(CSRFSynchronizerToken::class);
+        $this->bot_factory      = $this->createMock(\Tuleap\BotMattermost\Bot\BotFactory::class);
+        $this->event_manager    = $this->createMock(EventManager::class);
         $this->admin_controller = new AdminController(
             $this->csrf,
             $this->bot_factory,
             $this->event_manager,
-            \Mockery::spy(BaseLanguage::class)
+            $this->createMock(BaseLanguage::class)
         );
 
-        $this->http_request = \Mockery::spy(HTTPRequest::class);
+        $this->http_request = $this->createMock(HTTPRequest::class);
 
         HTTPRequest::setInstance($this->http_request);
     }
 
-    public function tearDown(): void
+    protected  function tearDown(): void
     {
         HTTPRequest::clearInstance();
 
         parent::tearDown();
     }
 
-    public function testDeleteBotProcessBotDeletedEvent()
+    public function testDeleteBotProcessBotDeletedEvent(): void
     {
         $bot = new Bot(1, 'bot', 'webhook_url', '');
 
-        $this->csrf->allows()->check()->andReturns(true);
-        $this->http_request->allows()->get('bot_id')->andReturns(1);
-        $this->bot_factory->allows()->getBotById(1)->andReturns($bot);
-        $this->bot_factory->allows()->deleteBotById(1)->andReturns(true);
+        $this->csrf->expects(self::once())->method('check')->willReturn(true);
+        $this->http_request->expects(self::once())->method('get')->with('bot_id')->willReturn(1);
+        $this->bot_factory->expects(self::exactly(2))->method('getBotById')->with(1)->willReturn($bot);
+        $this->bot_factory->expects(self::once())->method('deleteBotById')->with(1)->willReturn(true);
 
-        $this_event_manager_processEvent = $this->event_manager->shouldReceive('processEvent');
-        $this_event_manager_processEvent->times(1);
+        $this->event_manager
+            ->expects(self::once())
+            ->method('processEvent');
 
-        $this->admin_controller->deleteBot($this->http_request, \Mockery::spy(BaseLayout::class));
+        $base_layout = $this->createMock(BaseLayout::class);
+        $base_layout
+            ->expects(self::once())
+            ->method('addFeedback');
+        $base_layout
+            ->expects(self::once())
+            ->method('redirect');
+
+        $this->admin_controller->deleteBot(
+            $this->http_request,
+            $base_layout
+        );
     }
 }

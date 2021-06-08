@@ -22,32 +22,28 @@ namespace Tuleap\BotMattermost\SenderServices;
 
 require_once __DIR__ . '/../../bootstrap.php';
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use Tuleap\BotMattermost\Bot\Bot;
 use Tuleap\BotMattermostGit\SenderServices\Attachment;
+use Tuleap\Test\PHPUnit\TestCase;
 
-class EncoderMessageTest extends \Tuleap\Test\PHPUnit\TestCase
+final class EncoderMessageTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var EncoderMessage
-     */
-    private $encoder_message;
-    private $bot;
+    private EncoderMessage $encoder_message;
+    private Bot $bot;
 
     public function setUp(): void
     {
         parent::setUp();
-        $this->bot             = \Mockery::spy(\Tuleap\BotMattermost\Bot\Bot::class);
         $this->encoder_message = new EncoderMessage();
-
-        $this->bot->shouldReceive([
-            'getName'      => 'toto',
-            'getAvatarUrl' => 'https://avatar_url.com',
-        ]);
+        $this->bot             = new Bot(
+            1,
+            'Robot',
+            'https://example.com/hook',
+            'https://example.com/avatar'
+        );
     }
 
-    public function testItVerifiesThatGeneratedMessageWithTextReturnsPostFormatForMattermost()
+    public function testItVerifiesThatGeneratedMessageWithTextReturnsPostFormatForMattermost(): void
     {
         $message = new Message();
         $message->setText("text");
@@ -55,13 +51,13 @@ class EncoderMessageTest extends \Tuleap\Test\PHPUnit\TestCase
         $channel = "channel";
         $result  = $this->encoder_message->generateJsonMessage($this->bot, $message, $channel);
 
-        $this->assertEquals(
+        self::assertEquals(
             $result,
-            '{"username":"toto","channel":"channel","icon_url":"https:\/\/avatar_url.com","text":"text"}'
+            '{"username":"Robot","channel":"channel","icon_url":"https:\/\/example.com\/avatar","text":"text"}'
         );
     }
 
-    public function testItVerifiesThatGeneratedMessageWithAttachmentReturnsPostFormatForMattermost()
+    public function testItVerifiesThatGeneratedMessageWithAttachmentReturnsPostFormatForMattermost(): void
     {
         $message    = new Message();
         $attachment = new Attachment('pre-text', 'title', 'https://www.example.com', 'description');
@@ -70,9 +66,9 @@ class EncoderMessageTest extends \Tuleap\Test\PHPUnit\TestCase
         $message->addAttachment($attachment);
 
         $result = $this->encoder_message->generateJsonMessage($this->bot, $message, $channel);
-        $this->assertEquals(
+        self::assertEquals(
             $result,
-            '{"username":"toto","channel":"channel","icon_url":"https:\/\/avatar_url.com","attachments":[{"color":"#36a64f","pretext":"pre-text","title":"title","title_link":"https:\/\/www.example.com","text":"description"}]}'
+            '{"username":"Robot","channel":"channel","icon_url":"https:\/\/example.com\/avatar","attachments":[{"color":"#36a64f","pretext":"pre-text","title":"title","title_link":"https:\/\/www.example.com","text":"description"}]}'
         );
     }
 }
