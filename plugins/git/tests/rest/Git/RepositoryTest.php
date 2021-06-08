@@ -354,6 +354,38 @@ final class RepositoryTest extends TestBase
         $this->assertGETTags($response);
     }
 
+    public function testPATCHDefaultBranch(): void
+    {
+        $this->setDefaultBranch(GitDataBuilder::REPOSITORY_GIT_ID, 'branch_file_02');
+
+        $response = $this->getResponse(
+            $this->client->get(
+                'git/' . GitDataBuilder::REPOSITORY_GIT_ID
+            )
+        );
+        self::assertEquals(200, $response->getStatusCode());
+        self::assertEquals('branch_file_02', $response->json()['default_branch']);
+
+        $this->setDefaultBranch(GitDataBuilder::REPOSITORY_GIT_ID, 'master');
+    }
+
+    private function setDefaultBranch(int $repository_id, string $branch_name): void
+    {
+        $patch_payload = json_encode(
+            ['default_branch' => $branch_name],
+            JSON_THROW_ON_ERROR
+        );
+
+        $response = $this->getResponse(
+            $this->client->patch(
+                'git/' . urlencode((string) $repository_id),
+                null,
+                $patch_payload
+            )
+        );
+        self::assertEquals(200, $response->getStatusCode());
+    }
+
     public function testPOSTGitWithReadOnlyAdmin(): void
     {
         $project_id   = $this->getProjectId(GitDataBuilder::PROJECT_TEST_GIT_SHORTNAME);

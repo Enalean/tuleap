@@ -58,6 +58,8 @@ use Tuleap\Git\CommitStatus\CommitStatusCreator;
 use Tuleap\Git\CommitStatus\CommitStatusDAO;
 use Tuleap\Git\CommitStatus\CommitStatusRetriever;
 use Tuleap\Git\CommitStatus\InvalidCommitReferenceException;
+use Tuleap\Git\DefaultBranch\CannotSetANonExistingBranchAsDefaultException;
+use Tuleap\Git\DefaultBranch\DefaultBranchUpdater;
 use Tuleap\Git\Exceptions\DeletePluginNotInstalledException;
 use Tuleap\Git\Exceptions\GitRepoRefNotFoundException;
 use Tuleap\Git\Exceptions\RepositoryAlreadyInQueueForMigrationException;
@@ -614,6 +616,14 @@ class RepositoryResource extends AuthenticatedResource
      * &nbsp;"disconnect_from_gerrit": "read-only"<br/>
      * }
      * </pre>
+     * <br>
+     *
+     * To change the default branch of a repository:
+     * <pre>
+     * {<br>
+     * &nbsp;"default_branch": "dev"<br/>
+     * }
+     * </pre>
      *
      * @url PATCH {id}
      * @access protected
@@ -621,6 +631,9 @@ class RepositoryResource extends AuthenticatedResource
      * @param int    $id    Id of the Git repository
      * @param GitRepositoryGerritMigratePATCHRepresentation $migrate_to_gerrit {@from body}{@required false}
      * @param string $disconnect_from_gerrit {@from body}{@required false} {@choice delete,read-only,noop}
+     * @param string $default_branch {@from body}{@required false} New default branch to set, the branch needs to exist
+     * @psalm-param string|null $default_branch
+     *
      *
      * @throws RestException 400
      * @throws RestException 403
@@ -629,7 +642,8 @@ class RepositoryResource extends AuthenticatedResource
     protected function patchId(
         $id,
         ?GitRepositoryGerritMigratePATCHRepresentation $migrate_to_gerrit = null,
-        $disconnect_from_gerrit = null
+        $disconnect_from_gerrit = null,
+        ?string $default_branch = null
     ) {
         $this->checkAccess();
 
@@ -641,7 +655,7 @@ class RepositoryResource extends AuthenticatedResource
         );
 
         if (! $repository->userCanAdmin($user)) {
-            throw new RestException(403, 'User is not allowed to migrate repository');
+            throw new RestException(403, 'User is not allowed to administrate this repository');
         }
 
         if ($migrate_to_gerrit && $disconnect_from_gerrit) {
@@ -654,6 +668,15 @@ class RepositoryResource extends AuthenticatedResource
 
         if ($disconnect_from_gerrit) {
             $this->disconnect($repository, $disconnect_from_gerrit);
+        }
+
+        if ($default_branch !== null) {
+            $default_branch_updater = new DefaultBranchUpdater();
+            try {
+                $default_branch_updater->updateDefaultBranch(Git_Exec::buildFromRepository($repository), $default_branch);
+            } catch (CannotSetANonExistingBranchAsDefaultException $exception) {
+                throw new RestException(400, $exception->getMessage(), [], $exception);
+            }
         }
 
         $this->sendAllowHeaders();
