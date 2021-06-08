@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck;
 
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Team\TeamProjectsCollectionBuilder;
 use Tuleap\ProgramManagement\Domain\Program\Plan\BuildProgram;
 use Tuleap\ProgramManagement\Domain\Program\Plan\ProgramAccessException;
 use Tuleap\ProgramManagement\Domain\Program\Plan\ProjectIsNotAProgramException;
@@ -34,15 +35,18 @@ final class CanSubmitNewArtifactHandler
     private BuildProgram $program_builder;
     private ProgramIncrementCreatorChecker $program_increment_creator_checker;
     private IterationCreatorChecker $iteration_creator_checker;
+    private TeamProjectsCollectionBuilder $team_projects_collection_builder;
 
     public function __construct(
         BuildProgram $program_builder,
         ProgramIncrementCreatorChecker $program_increment_creator_checker,
-        IterationCreatorChecker $iteration_creator_checker
+        IterationCreatorChecker $iteration_creator_checker,
+        TeamProjectsCollectionBuilder $team_projects_collection_builder
     ) {
         $this->program_builder                   = $program_builder;
         $this->program_increment_creator_checker = $program_increment_creator_checker;
         $this->iteration_creator_checker         = $iteration_creator_checker;
+        $this->team_projects_collection_builder  = $team_projects_collection_builder;
     }
 
     public function handle(CanSubmitNewArtifact $event): void
@@ -50,17 +54,24 @@ final class CanSubmitNewArtifactHandler
         $tracker      = $event->getTracker();
         $user         = $event->getUser();
         $tracker_data = new ProgramTracker($tracker);
+
         try {
             $program = ProgramIdentifier::fromId($this->program_builder, (int) $tracker->getGroupId(), $user);
         } catch (ProgramAccessException | ProjectIsNotAProgramException $e) {
             // Do not disable artifact submission. Keep it enabled
             return;
         }
-        if (! $this->program_increment_creator_checker->canCreateAProgramIncrement($user, $tracker_data, $program)) {
+
+        $team_projects_collection = $this->team_projects_collection_builder->getTeamProjectForAGivenProgramProject(
+            $program
+        );
+
+        if (! $this->program_increment_creator_checker->canCreateAProgramIncrement($user, $tracker_data, $program, $team_projects_collection)) {
             $event->disableArtifactSubmission();
             return;
         }
-        if (! $this->iteration_creator_checker->canCreateAnIteration($user, $program)) {
+
+        if (! $this->iteration_creator_checker->canCreateAnIteration($user, $program, $team_projects_collection)) {
             $event->disableArtifactSubmission();
         }
     }
