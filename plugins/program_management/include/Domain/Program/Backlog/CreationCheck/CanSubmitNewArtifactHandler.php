@@ -71,7 +71,7 @@ final class CanSubmitNewArtifactHandler
             return;
         }
 
-        if (! $this->iteration_creator_checker->canCreateAnIteration($user, $program, $team_projects_collection)) {
+        if (! $this->iteration_creator_checker->canCreateAnIteration($user, $tracker_data, $program, $team_projects_collection)) {
             $event->disableArtifactSubmission();
         }
     }

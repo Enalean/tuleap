@@ -27,12 +27,15 @@ use Psr\Log\Test\TestLogger;
 use Tracker;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Team\TeamProjectsCollection;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
+use Tuleap\ProgramManagement\Domain\ProgramTracker;
 use Tuleap\ProgramManagement\Domain\Project;
 use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\RetrievePlanningMilestoneTracker;
 use Tuleap\ProgramManagement\Stub\BuildProgramStub;
 use Tuleap\ProgramManagement\Stub\RetrievePlanningMilestoneTrackerStub;
+use Tuleap\ProgramManagement\Stub\VerifyIsIterationTrackerStub;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class IterationCreatorCheckerTest extends TestCase
 {
@@ -40,6 +43,8 @@ final class IterationCreatorCheckerTest extends TestCase
     private ProgramIdentifier $program;
     private TestLogger $logger;
     private RetrievePlanningMilestoneTracker $milestone_retriever;
+    private VerifyIsIterationTrackerStub $iteration_tracker_verifier;
+    private ProgramTracker $program_tracker;
 
     protected function setUp(): void
     {
@@ -52,7 +57,23 @@ final class IterationCreatorCheckerTest extends TestCase
         );
         $first_milestone_tracker = $this->createStub(Tracker::class);
         $first_milestone_tracker->method('getId')->willReturn(1);
-        $this->milestone_retriever = RetrievePlanningMilestoneTrackerStub::withValidTrackers($first_milestone_tracker);
+        $this->milestone_retriever        = RetrievePlanningMilestoneTrackerStub::withValidTrackers($first_milestone_tracker);
+        $this->iteration_tracker_verifier = VerifyIsIterationTrackerStub::buildValidIteration();
+        $this->program_tracker            = new ProgramTracker(TrackerTestBuilder::aTracker()->build());
+    }
+
+    public function testAllowArtifactCreationWhenTrackerIsNotIterationTracker(): void
+    {
+        $this->iteration_tracker_verifier = VerifyIsIterationTrackerStub::buildNotIteration();
+        self::assertTrue(
+            $this->getChecker()->canCreateAnIteration(
+                $this->user,
+                $this->program_tracker,
+                $this->program,
+                new TeamProjectsCollection([])
+            )
+        );
+        self::assertFalse($this->logger->hasDebugRecords());
     }
 
     public function testAllowArtifactCreationWhenNoTeamLinkedToProgram(): void
@@ -60,6 +81,7 @@ final class IterationCreatorCheckerTest extends TestCase
         self::assertTrue(
             $this->getChecker()->canCreateAnIteration(
                 $this->user,
+                $this->program_tracker,
                 $this->program,
                 new TeamProjectsCollection([])
             )
@@ -73,6 +95,7 @@ final class IterationCreatorCheckerTest extends TestCase
         self::assertTrue(
             $this->getChecker()->canCreateAnIteration(
                 $this->user,
+                $this->program_tracker,
                 $this->program,
                 new TeamProjectsCollection([new Project(104, 'project', 'Project 1')])
             )
@@ -85,6 +108,7 @@ final class IterationCreatorCheckerTest extends TestCase
     {
         return new IterationCreatorChecker(
             $this->milestone_retriever,
+            $this->iteration_tracker_verifier,
             $this->logger
         );
     }

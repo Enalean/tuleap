@@ -24,28 +24,41 @@ namespace Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck;
 
 use PFUser;
 use Psr\Log\LoggerInterface;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration\VerifyIsIterationTracker;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Team\TeamProjectsCollection;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TrackerCollection;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TrackerRetrievalException;
 use Tuleap\ProgramManagement\Domain\Program\PlanningConfiguration\PlanningNotFoundException;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
+use Tuleap\ProgramManagement\Domain\ProgramTracker;
 use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\RetrievePlanningMilestoneTracker;
 
 class IterationCreatorChecker
 {
     private RetrievePlanningMilestoneTracker $root_milestone_retriever;
+    private VerifyIsIterationTracker $verify_is_iteration;
     private LoggerInterface $logger;
 
     public function __construct(
         RetrievePlanningMilestoneTracker $root_milestone_retriever,
+        VerifyIsIterationTracker $verify_is_iteration,
         LoggerInterface $logger
     ) {
         $this->root_milestone_retriever = $root_milestone_retriever;
+        $this->verify_is_iteration      = $verify_is_iteration;
         $this->logger                   = $logger;
     }
 
-    public function canCreateAnIteration(PFUser $user, ProgramIdentifier $program, TeamProjectsCollection $team_projects_collection): bool
-    {
+    public function canCreateAnIteration(
+        PFUser $user,
+        ProgramTracker $tracker,
+        ProgramIdentifier $program,
+        TeamProjectsCollection $team_projects_collection
+    ): bool {
+        if (! $this->verify_is_iteration->isIterationTracker($tracker->getTrackerId())) {
+            return true;
+        }
+
         $this->logger->debug(
             sprintf(
                 'Checking if Iteration can be created in second planning of project #%s by user %s (#%s)',
