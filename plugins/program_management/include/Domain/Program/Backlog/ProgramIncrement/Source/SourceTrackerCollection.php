@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source;
 
-use Tuleap\ProgramManagement\Domain\Program\Backlog\Plan\BuildPlanProgramIncrementConfiguration;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracker\RetrieveVisibleProgramIncrementTracker;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TrackerCollection;
 use Tuleap\ProgramManagement\Domain\Program\Plan\ProgramHasNoProgramIncrementTrackerException;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
@@ -54,12 +54,12 @@ final class SourceTrackerCollection
      * @throws ProgramHasNoProgramIncrementTrackerException
      */
     public static function fromProgramAndTeamTrackers(
-        BuildPlanProgramIncrementConfiguration $program_increment_builder,
+        RetrieveVisibleProgramIncrementTracker $retriever,
         ProgramIdentifier $program,
         TrackerCollection $team_trackers,
         \PFUser $user
     ): self {
-        $trackers = [$program_increment_builder->buildProgramIncrementTrackerFromProgram($program, $user)];
+        $trackers = [ProgramTracker::buildProgramIncrementTrackerFromProgram($retriever, $program, $user)];
         foreach ($team_trackers->getTrackers() as $team_tracker) {
             $trackers[] = $team_tracker;
         }

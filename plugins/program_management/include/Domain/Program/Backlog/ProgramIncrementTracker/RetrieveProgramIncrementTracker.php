@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2021 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,15 +20,9 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement;
+namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracker;
 
-use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
-
-interface BuildProgramIncrementTrackerConfiguration
+interface RetrieveProgramIncrementTracker
 {
-    /**
-     * @throws \Tuleap\ProgramManagement\Domain\Program\ProgramTrackerNotFoundException
-     * @throws \Tuleap\ProgramManagement\Domain\Program\Plan\ProgramHasNoProgramIncrementTrackerException
-     */
-    public function build(ProgramIdentifier $project, \PFUser $user): ProgramIncrementTrackerConfiguration;
+    public function getProgramIncrementTrackerId(int $project_id): ?int;
 }

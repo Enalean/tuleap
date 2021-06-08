@@ -24,10 +24,10 @@ namespace Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck;
 
 use PFUser;
 use Psr\Log\LoggerInterface;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\Plan\BuildPlanProgramIncrementConfiguration;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\SourceTrackerCollection;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracker\RetrieveVisibleProgramIncrementTracker;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracker\VerifyIsProgramIncrementTracker;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Team\TeamProjectsCollection;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\VerifyIsProgramIncrementTracker;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TrackerCollection;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TrackerRetrievalException;
 use Tuleap\ProgramManagement\Domain\Program\PlanningConfiguration\PlanningNotFoundException;
@@ -41,21 +41,21 @@ class ProgramIncrementCreatorChecker
     private TimeboxCreatorChecker $timebox_creator_checker;
     private VerifyIsProgramIncrementTracker $verify_is_program_increment;
     private RetrievePlanningMilestoneTracker $milestone_retriever;
-    private BuildPlanProgramIncrementConfiguration $program_increment_tracker_builder;
+    private RetrieveVisibleProgramIncrementTracker $program_increment_tracker_retriever;
     private LoggerInterface $logger;
 
     public function __construct(
         TimeboxCreatorChecker $timebox_creator_checker,
         VerifyIsProgramIncrementTracker $verify_is_program_increment,
         RetrievePlanningMilestoneTracker $milestone_retriever,
-        BuildPlanProgramIncrementConfiguration $program_increment_tracker_builder,
+        RetrieveVisibleProgramIncrementTracker $program_increment_tracker_retriever,
         LoggerInterface $logger
     ) {
-        $this->timebox_creator_checker           = $timebox_creator_checker;
-        $this->verify_is_program_increment       = $verify_is_program_increment;
-        $this->milestone_retriever               = $milestone_retriever;
-        $this->program_increment_tracker_builder = $program_increment_tracker_builder;
-        $this->logger                            = $logger;
+        $this->timebox_creator_checker             = $timebox_creator_checker;
+        $this->verify_is_program_increment         = $verify_is_program_increment;
+        $this->milestone_retriever                 = $milestone_retriever;
+        $this->program_increment_tracker_retriever = $program_increment_tracker_retriever;
+        $this->logger                              = $logger;
     }
 
     public function canCreateAProgramIncrement(
@@ -89,7 +89,7 @@ class ProgramIncrementCreatorChecker
                 $user
             );
             $program_and_team_trackers = SourceTrackerCollection::fromProgramAndTeamTrackers(
-                $this->program_increment_tracker_builder,
+                $this->program_increment_tracker_retriever,
                 $program,
                 $team_trackers,
                 $user

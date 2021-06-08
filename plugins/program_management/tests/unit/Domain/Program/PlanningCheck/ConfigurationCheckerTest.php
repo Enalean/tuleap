@@ -22,45 +22,47 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\Plan;
 
-use Mockery;
-use Project;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
-use Tuleap\ProgramManagement\Domain\ProgramTracker;
 use Tuleap\ProgramManagement\Stub\BuildProgramStub;
+use Tuleap\ProgramManagement\Stub\RetrieveVisibleProgramIncrementTrackerStub;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class ConfigurationCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
-    public function testItBuildAProgramIncrementTracker(): void
+    public function testItChecksIfAProgramIncrementTrackerCanBeBuilt(): void
     {
-        $planning_adapter  = Mockery::mock(BuildPlanProgramConfiguration::class);
-        $plan_adapter      = Mockery::mock(BuildPlanProgramIncrementConfiguration::class);
-        $checker           = new ConfigurationChecker($planning_adapter, $plan_adapter);
-        $user              = UserTestBuilder::aUser()->build();
-        $program           = ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 1, $user);
-        $program_increment = new ProgramTracker(TrackerTestBuilder::aTracker()->build());
-        $planning_adapter->shouldReceive('buildProgramIdentifierFromTeamProject')->andReturn($program);
-        $plan_adapter->shouldReceive('buildProgramIncrementTrackerFromProgram')->andReturn($program_increment);
+        $planning_adapter = $this->createStub(BuildPlanProgramConfiguration::class);
+        $tracker          = TrackerTestBuilder::aTracker()->withId(78)->build();
+        $checker          = new ConfigurationChecker(
+            $planning_adapter,
+            RetrieveVisibleProgramIncrementTrackerStub::withValidTracker($tracker)
+        );
+        $user             = UserTestBuilder::aUser()->build();
+        $program          = ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 101, $user);
+        $planning_adapter->method('buildProgramIdentifierFromTeamProject')->willReturn($program);
 
-        $project = new Project(['group_id' => 1]);
+        $project = ProjectTestBuilder::aProject()->withId(101)->build();
 
-        self::assertEquals($program_increment, $checker->getProgramIncrementTracker($user, $project));
+        $checker->checkProgramIncrementTracker($user, $project);
+        $this->addToAssertionCount(1);
     }
 
-    public function testItReturnsNullWhenThereIsNOProgram(): void
+    public function testItReturnsVoidWhenThereIsNOProgram(): void
     {
-        $planning_adapter = Mockery::mock(BuildPlanProgramConfiguration::class);
-        $plan_adapter     = Mockery::mock(BuildPlanProgramIncrementConfiguration::class);
-        $checker          = new ConfigurationChecker($planning_adapter, $plan_adapter);
+        $planning_adapter = $this->createStub(BuildPlanProgramConfiguration::class);
+        $checker          = new ConfigurationChecker(
+            $planning_adapter,
+            RetrieveVisibleProgramIncrementTrackerStub::withNoProgramIncrementTracker()
+        );
 
-        $planning_adapter->shouldReceive('buildProgramIdentifierFromTeamProject')->andReturn(null);
+        $planning_adapter->method('buildProgramIdentifierFromTeamProject')->willReturn(null);
 
         $user    = UserTestBuilder::aUser()->build();
-        $project = new Project(['group_id' => 1]);
+        $project = ProjectTestBuilder::aProject()->withId(101)->build();
 
-        self::assertNull($checker->getProgramIncrementTracker($user, $project));
+        $checker->checkProgramIncrementTracker($user, $project);
+        $this->addToAssertionCount(1);
     }
 }

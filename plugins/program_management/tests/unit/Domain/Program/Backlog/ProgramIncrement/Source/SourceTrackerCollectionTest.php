@@ -27,9 +27,9 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\TrackerCollection;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\ProgramTracker;
 use Tuleap\ProgramManagement\Domain\Project;
-use Tuleap\ProgramManagement\Stub\BuildPlanProgramIncrementConfigurationStub;
 use Tuleap\ProgramManagement\Stub\BuildProgramStub;
 use Tuleap\ProgramManagement\Stub\RetrievePlanningMilestoneTrackerStub;
+use Tuleap\ProgramManagement\Stub\RetrieveVisibleProgramIncrementTrackerStub;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
@@ -43,9 +43,9 @@ final class SourceTrackerCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
         $team_red  = new Project(103, 'tea_red', 'Team Red');
         $teams     = new TeamProjectsCollection([$team_blue, $team_red]);
 
-        $expected_program_increment_tracker = new ProgramTracker(TrackerTestBuilder::aTracker()->withId(78)->build());
-        $blue_team_tracker                  = TrackerTestBuilder::aTracker()->withId(79)->build();
-        $red_team_tracker                   = TrackerTestBuilder::aTracker()->withId(80)->build();
+        $program_increment_tracker = TrackerTestBuilder::aTracker()->withId(78)->build();
+        $blue_team_tracker         = TrackerTestBuilder::aTracker()->withId(79)->build();
+        $red_team_tracker          = TrackerTestBuilder::aTracker()->withId(80)->build();
 
         $team_trackers = TrackerCollection::buildRootPlanningMilestoneTrackers(
             RetrievePlanningMilestoneTrackerStub::withValidTrackers($blue_team_tracker, $red_team_tracker),
@@ -54,13 +54,13 @@ final class SourceTrackerCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $collection = SourceTrackerCollection::fromProgramAndTeamTrackers(
-            BuildPlanProgramIncrementConfigurationStub::withValidTracker($expected_program_increment_tracker),
+            RetrieveVisibleProgramIncrementTrackerStub::withValidTracker($program_increment_tracker),
             $program,
             $team_trackers,
             $user
         );
         $trackers   = $collection->getSourceTrackers();
-        self::assertContains($expected_program_increment_tracker, $trackers);
+        self::assertContainsEquals(new ProgramTracker($program_increment_tracker), $trackers);
         self::assertContainsEquals(new ProgramTracker($blue_team_tracker), $trackers);
         self::assertContainsEquals(new ProgramTracker($red_team_tracker), $trackers);
     }

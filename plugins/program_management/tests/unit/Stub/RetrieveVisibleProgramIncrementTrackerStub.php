@@ -22,24 +22,23 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Stub;
 
-use Tuleap\ProgramManagement\Domain\Program\Backlog\Plan\BuildPlanProgramIncrementConfiguration;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracker\RetrieveVisibleProgramIncrementTracker;
 use Tuleap\ProgramManagement\Domain\Program\Plan\ProgramHasNoProgramIncrementTrackerException;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\ProgramTrackerNotFoundException;
-use Tuleap\ProgramManagement\Domain\ProgramTracker;
 
-final class BuildPlanProgramIncrementConfigurationStub implements BuildPlanProgramIncrementConfiguration
+final class RetrieveVisibleProgramIncrementTrackerStub implements RetrieveVisibleProgramIncrementTracker
 {
-    private ?ProgramTracker $tracker;
+    private ?\Tracker $tracker;
     private bool $is_visible;
 
-    private function __construct(?ProgramTracker $tracker, bool $is_visible)
+    private function __construct(?\Tracker $tracker, bool $is_visible)
     {
         $this->tracker    = $tracker;
         $this->is_visible = $is_visible;
     }
 
-    public function buildProgramIncrementTrackerFromProgram(ProgramIdentifier $program, \PFUser $user): ProgramTracker
+    public function retrieveVisibleProgramIncrementTracker(ProgramIdentifier $program, \PFUser $user): \Tracker
     {
         if (! $this->is_visible) {
             throw new ProgramTrackerNotFoundException(101);
@@ -50,7 +49,7 @@ final class BuildPlanProgramIncrementConfigurationStub implements BuildPlanProgr
         return $this->tracker;
     }
 
-    public static function withValidTracker(ProgramTracker $tracker): self
+    public static function withValidTracker(\Tracker $tracker): self
     {
         return new self($tracker, true);
     }

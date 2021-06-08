@@ -20,9 +20,12 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement;
+namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracker;
 
-interface RetrieveProgramIncrementTracker
+interface RetrieveProgramIncrementLabels
 {
-    public function getProgramIncrementTrackerId(int $project_id): ?int;
+    /**
+     * @psalm-return null|array{program_increment_label: ?string, program_increment_sub_label: ?string}
+     */
+    public function getProgramIncrementLabels(int $program_increment_tracker_id): ?array;
 }

@@ -20,16 +20,15 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Adapter\Program\Plan;
+namespace Tuleap\ProgramManagement\Adapter\Program\ProgramIncrementTracker;
 
-use Tuleap\ProgramManagement\Domain\Program\Backlog\Plan\BuildPlanProgramIncrementConfiguration;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\RetrieveProgramIncrementTracker;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracker\RetrieveProgramIncrementTracker;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracker\RetrieveVisibleProgramIncrementTracker;
 use Tuleap\ProgramManagement\Domain\Program\Plan\ProgramHasNoProgramIncrementTrackerException;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\ProgramTrackerNotFoundException;
-use Tuleap\ProgramManagement\Domain\ProgramTracker;
 
-final class PlanProgramIncrementConfigurationBuilder implements BuildPlanProgramIncrementConfiguration
+final class VisibleProgramIncrementTrackerRetriever implements RetrieveVisibleProgramIncrementTracker
 {
     private RetrieveProgramIncrementTracker $program_increment_tracker_retriever;
     private \TrackerFactory $tracker_factory;
@@ -42,7 +41,7 @@ final class PlanProgramIncrementConfigurationBuilder implements BuildPlanProgram
         $this->tracker_factory                     = $tracker_factory;
     }
 
-    public function buildProgramIncrementTrackerFromProgram(ProgramIdentifier $program, \PFUser $user): ProgramTracker
+    public function retrieveVisibleProgramIncrementTracker(ProgramIdentifier $program, \PFUser $user): \Tracker
     {
         $program_id                   = $program->getId();
         $program_increment_tracker_id = $this->program_increment_tracker_retriever->getProgramIncrementTrackerId(
@@ -59,7 +58,7 @@ final class PlanProgramIncrementConfigurationBuilder implements BuildPlanProgram
             throw new ProgramTrackerNotFoundException($program_increment_tracker_id);
         }
 
-        return new ProgramTracker($program_increment_tracker);
+        return $program_increment_tracker;
     }
 
     /**

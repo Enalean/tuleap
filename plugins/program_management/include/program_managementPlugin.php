@@ -40,7 +40,6 @@ use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\ArtifactLi
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Content\FeatureRemovalProcessor;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\DescriptionFieldAdapter;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\ProgramIncrementsDAO;
-use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\ProgramIncrementTrackerConfigurationBuilder;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\ReplicationDataAdapter;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\SourceArtifactNatureAnalyzer;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\StatusFieldAdapter;
@@ -71,11 +70,11 @@ use Tuleap\ProgramManagement\Adapter\Program\Feature\VerifyIsVisibleFeatureAdapt
 use Tuleap\ProgramManagement\Adapter\Program\Plan\CanPrioritizeFeaturesDAO;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\PlanDao;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\PlanProgramAdapter;
-use Tuleap\ProgramManagement\Adapter\Program\Plan\PlanProgramIncrementConfigurationBuilder;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\PrioritizeFeaturesPermissionVerifier;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\ProgramAdapter;
 use Tuleap\ProgramManagement\Adapter\Program\PlanningAdapter;
 use Tuleap\ProgramManagement\Adapter\Program\ProgramDao;
+use Tuleap\ProgramManagement\Adapter\Program\ProgramIncrementTracker\VisibleProgramIncrementTrackerRetriever;
 use Tuleap\ProgramManagement\Adapter\ProjectAdapter;
 use Tuleap\ProgramManagement\Adapter\ProjectAdmin\PermissionPerGroupSectionBuilder;
 use Tuleap\ProgramManagement\Adapter\Team\MirroredTimeboxes\MirroredTimeboxesDao;
@@ -248,15 +247,18 @@ final class program_managementPlugin extends Plugin
 
     public function routeGetProgramManagement(): DisplayProgramBacklogController
     {
+        $program_increments_dao = new ProgramIncrementsDAO();
+
         return new DisplayProgramBacklogController(
             ProjectManager::instance(),
             new \Tuleap\Project\Flags\ProjectFlagsBuilder(new \Tuleap\Project\Flags\ProjectFlagsDao()),
             $this->getProgramAdapter(),
             TemplateRendererFactory::build()->getRenderer(__DIR__ . "/../templates"),
-            new ProgramIncrementTrackerConfigurationBuilder(
-                $this->getPlanConfigurationBuilder(),
-                new ProgramIncrementsDAO()
+            new VisibleProgramIncrementTrackerRetriever(
+                $program_increments_dao,
+                TrackerFactory::instance()
             ),
+            $program_increments_dao
         );
     }
 
@@ -422,10 +424,13 @@ final class program_managementPlugin extends Plugin
 
         $configuration_checker = new ConfigurationChecker(
             $plan_program_builder,
-            $this->getPlanConfigurationBuilder()
+            new VisibleProgramIncrementTrackerRetriever(
+                new ProgramIncrementsDAO(),
+                TrackerFactory::instance()
+            )
         );
         try {
-            $configuration_checker->getProgramIncrementTracker(
+            $configuration_checker->checkProgramIncrementTracker(
                 $configuration_check_delegation->getUser(),
                 $configuration_check_delegation->getProject()
             );
@@ -706,14 +711,6 @@ final class program_managementPlugin extends Plugin
         );
     }
 
-    private function getPlanConfigurationBuilder(): PlanProgramIncrementConfigurationBuilder
-    {
-        return new PlanProgramIncrementConfigurationBuilder(
-            new ProgramIncrementsDAO(),
-            TrackerFactory::instance()
-        );
-    }
-
     public function permissionPerGroupPaneCollector(PermissionPerGroupPaneCollector $event): void
     {
         $ugroup_manager                       = new UGroupManager();
@@ -770,6 +767,8 @@ final class program_managementPlugin extends Plugin
         $semantic_status_factory = new Tracker_Semantic_StatusFactory();
         $logger                  = $this->getLogger();
         $planning_adapter        = new PlanningAdapter(\PlanningFactory::build());
+        $program_increments_dao  = new ProgramIncrementsDAO();
+        $tracker_factory         = \TrackerFactory::instance();
 
         $synchronized_fields_builder = new SynchronizedFieldFromProgramAndTeamTrackersCollectionBuilder(
             new SynchronizedFieldsAdapter(
@@ -781,7 +780,7 @@ final class program_managementPlugin extends Plugin
                     new SemanticTimeframeBuilder(
                         $timeframe_dao,
                         $form_element_factory,
-                        \TrackerFactory::instance(),
+                        $tracker_factory,
                         new LinksRetriever(
                             new ArtifactLinkFieldValueDao(),
                             \Tracker_ArtifactFactory::instance()
@@ -814,9 +813,12 @@ final class program_managementPlugin extends Plugin
             $this->getProgramAdapter(),
             new ProgramIncrementCreatorChecker(
                 $checker,
-                new ProgramIncrementsDAO(),
+                $program_increments_dao,
                 $planning_adapter,
-                $this->getPlanConfigurationBuilder(),
+                new VisibleProgramIncrementTrackerRetriever(
+                    $program_increments_dao,
+                    $tracker_factory
+                ),
                 $logger
             ),
             new IterationCreatorChecker(
