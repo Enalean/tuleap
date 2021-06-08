@@ -20,10 +20,48 @@
 
 namespace Tuleap\Git\GitViews\RepoManagement\Pane;
 
+use Codendi_Request;
+use GitRepository;
 use TemplateRendererFactory;
+use Tuleap\Git\DefaultBranch\RepositoryBranchSelectorOptionPresenter;
 
 class GeneralSettings extends Pane
 {
+    /**
+     * @var RepositoryBranchSelectorOptionPresenter[]
+     * @psalm-readonly
+     */
+    public array $available_branches;
+    /**
+     * @psalm-readonly
+     */
+    public bool $have_branches;
+
+    public function __construct(GitRepository $repository, Codendi_Request $request)
+    {
+        parent::__construct($repository, $request);
+
+        $this->available_branches = self::getAvailableBranchPresenters($repository);
+        $this->have_branches      = count($this->available_branches) > 0;
+    }
+
+    /**
+     * @return RepositoryBranchSelectorOptionPresenter[]
+     */
+    private static function getAvailableBranchPresenters(GitRepository $repository): array
+    {
+        $git_exec       = \Git_Exec::buildFromRepository($repository);
+        $all_branches   = $git_exec->getAllBranchesSortedByCreationDate();
+        $default_branch = $git_exec->getDefaultBranch();
+
+        $presenters = [];
+
+        foreach ($all_branches as $branch) {
+            $presenters[] = new RepositoryBranchSelectorOptionPresenter($branch, $default_branch);
+        }
+
+        return $presenters;
+    }
 
     /**
      * @see GitViews_RepoManagement_Pane::getIdentifier()

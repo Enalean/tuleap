@@ -383,6 +383,12 @@ msgstr "Actuellement, il n'y a aucun projet autorisé à utiliser ce miroir."
 msgid "Date"
 msgstr "Date"
 
+msgid "Default branch successfully updated"
+msgstr "La branche par défaut a été mise à jour"
+
+msgid "Default branch:"
+msgstr "Branche par défaut : "
+
 msgid "Default mirrors updated."
 msgstr "Miroirs par défaut mis à jour."
 
@@ -1327,8 +1333,8 @@ msgid ""
 "The project reference based on the keyword '%s' is overriding the system "
 "reference used by the Git plugin."
 msgstr ""
-"La référence de projet basée sur le mot-clé '%s' surcharge la référence système "
-"utilisée par le plugin Git."
+"La référence de projet basée sur le mot-clé '%s' surcharge la référence "
+"système utilisée par le plugin Git."
 
 msgid "The regular expressions option has been disabled at plateform level."
 msgstr ""
@@ -1391,6 +1397,9 @@ msgid ""
 msgstr ""
 "La mise en lecture-seule du projet sous Gerrit est en cours, veuillez "
 "patienter quelques minutes."
+
+msgid "The update of the default branch did not succeed"
+msgstr "La mise à jour de la branche par défaut n'a pas réussi"
 
 msgid "There are no projects matching the filter"
 msgstr "Aucun projet ne correspond au filtre"

@@ -19,6 +19,8 @@
   * along with Tuleap. If not, see <http://www.gnu.org/licenses/
   */
 
+use Tuleap\Git\DefaultBranch\CannotSetANonExistingBranchAsDefaultException;
+use Tuleap\Git\DefaultBranch\DefaultBranchUpdater;
 use Tuleap\Git\GerritCanMigrateChecker;
 use Tuleap\Git\GitViews\Header\HeaderRenderer;
 use Tuleap\Git\History\GitPhpAccessLogger;
@@ -53,6 +55,7 @@ class Git extends PluginController
      * @var DescriptionUpdater
      */
     private $description_updater;
+    private DefaultBranchUpdater $default_branch_updater;
 
     public const PERM_READ  = 'PLUGIN_GIT_READ';
     public const PERM_WRITE = 'PLUGIN_GIT_WRITE';
@@ -299,6 +302,7 @@ class Git extends PluginController
         PermissionChangesDetector $permission_changes_detector,
         TemplatePermissionsUpdater $template_permission_updater,
         ProjectHistoryDao $history_dao,
+        DefaultBranchUpdater $default_branch_updater,
         DescriptionUpdater $description_updater,
         GitPhpAccessLogger $access_loger,
         RegexpFineGrainedRetriever $regexp_retriever,
@@ -361,6 +365,7 @@ class Git extends PluginController
         $this->permission_changes_detector             = $permission_changes_detector;
         $this->template_permission_updater             = $template_permission_updater;
         $this->history_dao                             = $history_dao;
+        $this->default_branch_updater                  = $default_branch_updater;
         $this->description_updater                     = $description_updater;
         $this->regexp_retriever                        = $regexp_retriever;
         $this->regexp_enabler                          = $regexp_enabler;
@@ -449,7 +454,7 @@ class Git extends PluginController
                 'index',
                 'view' ,
                 'edit',
-                'edit-description',
+                'edit-general-settings',
                 'clone',
                 'add',
                 'del',
@@ -574,8 +579,19 @@ class Git extends PluginController
                 $this->addView('index');
                 break;
             // EDIT
-            case 'edit-description':
+            case 'edit-general-settings':
                 $this->defaultCSRFChecks($repository, 'settings');
+                if ($this->request->exist('repo-default-branch')) {
+                    try {
+                        $this->default_branch_updater->updateDefaultBranch(
+                            Git_Exec::buildFromRepository($repository),
+                            $this->request->get('repo-default-branch')
+                        );
+                        $this->addInfo(dgettext('tuleap-git', 'Default branch successfully updated'));
+                    } catch (CannotSetANonExistingBranchAsDefaultException $exception) {
+                        $this->addError(dgettext('tuleap-git', 'The update of the default branch did not succeed'));
+                    }
+                }
                 if ($this->request->exist('repo_desc')) {
                     $description       = GitRepository::DEFAULT_DESCRIPTION;
                     $valid_descrpition = new Valid_Text('repo_desc');
