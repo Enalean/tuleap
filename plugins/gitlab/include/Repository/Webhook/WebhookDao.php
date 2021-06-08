@@ -48,6 +48,20 @@ class WebhookDao extends DataAccessObject
         return count($rows) > 0;
     }
 
+    public function projectHasIntegrationsWithSecretConfigured(int $project_id): bool
+    {
+        $sql = 'SELECT NULL
+                FROM plugin_gitlab_repository_integration
+                    LEFT JOIN plugin_gitlab_repository_integration_webhook
+                        ON (plugin_gitlab_repository_integration.id = plugin_gitlab_repository_integration_webhook.integration_id)
+                WHERE plugin_gitlab_repository_integration_webhook.integration_id IS NOT NULL
+                    AND plugin_gitlab_repository_integration.project_id = ?';
+
+        $rows = $this->getDB()->run($sql, $project_id);
+
+        return count($rows) > 0;
+    }
+
     public function deleteGitlabRepositoryWebhook(int $integration_id): void
     {
         $this->getDB()->delete(
