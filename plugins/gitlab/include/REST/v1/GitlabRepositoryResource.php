@@ -530,7 +530,7 @@ final class GitlabRepositoryResource
     /**
      * @throws RestException
      */
-    protected function validateJSONIsWellFormed(GitlabRepositoryPatchRepresentation $patch_representation): void
+    private function validateJSONIsWellFormed(GitlabRepositoryPatchRepresentation $patch_representation): void
     {
         $provided_parameter = 0;
         foreach (get_object_vars($patch_representation) as $parameter) {
