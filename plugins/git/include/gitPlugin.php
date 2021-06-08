@@ -44,6 +44,7 @@ use Tuleap\Git\CIBuilds\BuildStatusChangePermissionManager;
 use Tuleap\Git\CIBuilds\CITokenDao;
 use Tuleap\Git\CIBuilds\CITokenManager;
 use Tuleap\Git\CreateRepositoryController;
+use Tuleap\Git\DefaultBranch\DefaultBranchUpdater;
 use Tuleap\Git\DefaultSettings\DefaultSettingsRouter;
 use Tuleap\Git\DefaultSettings\IndexController;
 use Tuleap\Git\DiskUsage\Collector;
@@ -1631,6 +1632,7 @@ class GitPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
             $this->getPermissionChangesDetector(),
             $this->getTemplatePermissionsUpdater(),
             new ProjectHistoryDao(),
+            new DefaultBranchUpdater(),
             $this->getDescriptionUpdater(),
             $this->getGitPhpAccessLogger(),
             $this->getRegexpFineGrainedRetriever(),
