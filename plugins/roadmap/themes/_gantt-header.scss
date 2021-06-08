@@ -119,7 +119,9 @@ $caret-width: 20px;
 
 .roadmap-gantt-task-header-xref {
     display: flex;
+    flex: 1 1 auto;
     align-items: baseline;
+    max-width: calc(100% - var(--tlp-small-spacing));
     margin: 0 var(--tlp-small-spacing) 2px 0;
     font-size: .625rem;
     line-height: .75rem;
@@ -143,6 +145,7 @@ $caret-width: 20px;
 
 .roadmap-gantt-task-header-title {
     display: inline-block;
+    max-width: 100%;
     overflow: hidden;
     font-size: .8125rem;
     line-height: .9375rem;
@@ -192,6 +195,7 @@ $caret-width: 20px;
 
     > .roadmap-gantt-task-header-link {
         position: relative;
+        align-items: flex-start;
         padding: calc(var(--tlp-small-spacing) - 2px) 0 calc(var(--tlp-small-spacing) - 2px) calc(var(--tlp-small-spacing) + #{$border-width});
 
         &::before {
