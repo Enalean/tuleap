@@ -36,6 +36,7 @@ use Tuleap\ProgramManagement\Adapter\Program\Backlog\CreationCheck\RequiredField
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\CreationCheck\SemanticChecker;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\CreationCheck\StatusSemanticChecker;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\CreationCheck\WorkflowChecker;
+use Tuleap\ProgramManagement\Adapter\Program\Backlog\Iteration\IterationsDAO;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\ArtifactLinkFieldAdapter;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Content\FeatureRemovalProcessor;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\DescriptionFieldAdapter;
@@ -823,6 +824,7 @@ final class program_managementPlugin extends Plugin
             ),
             new IterationCreatorChecker(
                 $planning_adapter,
+                new IterationsDAO(),
                 $logger
             ),
             $this->getTeamProjectCollectionBuilder(),
