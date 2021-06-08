@@ -21,6 +21,7 @@ import type { RootState } from "../type";
 import type { IterationsState } from "./type";
 import type { Module } from "vuex";
 import * as mutations from "./iterations-mutations";
+import * as getters from "./iterations-getters";
 
 export function createIterationsModule(): Module<IterationsState, RootState> {
     const state: IterationsState = {
@@ -32,5 +33,6 @@ export function createIterationsModule(): Module<IterationsState, RootState> {
         namespaced: true,
         state,
         mutations,
+        getters,
     };
 }
