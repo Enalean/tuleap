@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
@@ -21,15 +21,12 @@ declare(strict_types=1);
 
 namespace Tuleap\Gitlab\EventsHandlers;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\Gitlab\Reference\MergeRequest\GitlabMergeRequestReference;
 use Tuleap\Gitlab\Reference\Commit\GitlabCommitReference;
 use Tuleap\Project\Admin\Reference\ReferenceAdministrationWarningsCollectorEvent;
 
 class ReferenceAdministrationWarningsCollectorEventHandlerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     /**
      * @var ReferenceAdministrationWarningsCollectorEventHandler
      */

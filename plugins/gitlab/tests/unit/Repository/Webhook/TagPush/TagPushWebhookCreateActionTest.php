@@ -24,8 +24,6 @@ namespace Tuleap\Gitlab\Repository\Webhook\TagPush;
 
 use CrossReference;
 use DateTimeImmutable;
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Project;
 use Psr\Log\NullLogger;
 use Reference;
@@ -44,51 +42,40 @@ use Tuleap\Gitlab\Repository\Webhook\WebhookTuleapReferencesParser;
 
 class TagPushWebhookCreateActionTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     /**
-     * @var TagPushWebhookCreateAction
-     */
-    private $action;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|CredentialsRetriever
+     * @var \PHPUnit\Framework\MockObject\MockObject&CredentialsRetriever
      */
     private $credentials_retriever;
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|GitlabTagRetriever
+     * @var \PHPUnit\Framework\MockObject\MockObject&GitlabTagRetriever
      */
     private $gitlab_tag_retriever;
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|TuleapReferenceRetriever
+     * @var \PHPUnit\Framework\MockObject\MockObject&TuleapReferenceRetriever
      */
     private $tuleap_reference_retriever;
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ReferenceManager
+     * @var \PHPUnit\Framework\MockObject\MockObject&ReferenceManager
      */
     private $reference_manager;
     /**
-     * @var WebhookTuleapReferencesParser
-     */
-    private $tuleap_references_parser;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|TagInfoDao
+     * @var \PHPUnit\Framework\MockObject\MockObject&TagInfoDao
      */
     private $tag_info_dao;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|TagPushWebhookDeleteAction
-     */
-    private $push_webhook_delete_action;
+
+    private WebhookTuleapReferencesParser $tuleap_references_parser;
+    private TagPushWebhookCreateAction $action;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->credentials_retriever      = Mockery::mock(CredentialsRetriever::class);
-        $this->gitlab_tag_retriever       = Mockery::mock(GitlabTagRetriever::class);
+        $this->credentials_retriever      = $this->createMock(CredentialsRetriever::class);
+        $this->gitlab_tag_retriever       = $this->createMock(GitlabTagRetriever::class);
         $this->tuleap_references_parser   = new WebhookTuleapReferencesParser();
-        $this->tuleap_reference_retriever = Mockery::mock(TuleapReferenceRetriever::class);
-        $this->reference_manager          = Mockery::mock(ReferenceManager::class);
-        $this->tag_info_dao               = Mockery::mock(TagInfoDao::class);
+        $this->tuleap_reference_retriever = $this->createMock(TuleapReferenceRetriever::class);
+        $this->reference_manager          = $this->createMock(ReferenceManager::class);
+        $this->tag_info_dao               = $this->createMock(TagInfoDao::class);
 
         $this->action = new TagPushWebhookCreateAction(
             $this->credentials_retriever,
@@ -128,10 +115,11 @@ class TagPushWebhookCreateActionTest extends \Tuleap\Test\PHPUnit\TestCase
             IntegrationApiToken::buildBrandNewToken(new ConcealedString("DAT-TOKEN"))
         );
 
-        $this->credentials_retriever->shouldReceive('getCredentials')
-            ->once()
+        $this->credentials_retriever
+            ->expects(self::once())
+            ->method('getCredentials')
             ->with($integration)
-            ->andReturn($credentials);
+            ->willReturn($credentials);
 
         $gitlab_tag = new GitlabTag(
             "v1.0.2",
@@ -139,10 +127,11 @@ class TagPushWebhookCreateActionTest extends \Tuleap\Test\PHPUnit\TestCase
             "sha1"
         );
 
-        $this->gitlab_tag_retriever->shouldReceive('getTagFromGitlabAPI')
-            ->once()
+        $this->gitlab_tag_retriever
+            ->expects(self::once())
+            ->method('getTagFromGitlabAPI')
             ->with($credentials, $integration, "v1.0.2")
-            ->andReturn($gitlab_tag);
+            ->willReturn($gitlab_tag);
 
         $tuleap_reference = new Reference(
             2337,
@@ -156,14 +145,15 @@ class TagPushWebhookCreateActionTest extends \Tuleap\Test\PHPUnit\TestCase
             101
         );
 
-        $this->tuleap_reference_retriever->shouldReceive('retrieveTuleapReference')
+        $this->tuleap_reference_retriever->method('retrieveTuleapReference')
             ->with(2337)
-            ->andReturn($tuleap_reference);
+            ->willReturn($tuleap_reference);
 
-        $this->reference_manager->shouldReceive('insertCrossReference')
-            ->once()
+        $this->reference_manager
+            ->expects(self::once())
+            ->method('insertCrossReference')
             ->with(
-                Mockery::on(
+                $this->callback(
                     function (CrossReference $cross_reference): bool {
                         return $cross_reference->getRefSourceType() === GitlabTagReference::NATURE_NAME
                             && $cross_reference->getRefSourceKey() === GitlabTagReference::REFERENCE_NAME;
@@ -171,8 +161,9 @@ class TagPushWebhookCreateActionTest extends \Tuleap\Test\PHPUnit\TestCase
                 )
             );
 
-        $this->tag_info_dao->shouldReceive('saveGitlabTagInfo')
-            ->once();
+        $this->tag_info_dao
+            ->expects(self::once())
+            ->method('saveGitlabTagInfo');
 
         $this->action->createTagReferences(
             $integration,
@@ -202,13 +193,14 @@ class TagPushWebhookCreateActionTest extends \Tuleap\Test\PHPUnit\TestCase
             "after",
         );
 
-        $this->credentials_retriever->shouldReceive('getCredentials')
-            ->once()
+        $this->credentials_retriever
+            ->expects(self::once())
+            ->method('getCredentials')
             ->with($integration)
-            ->andReturnNull();
+            ->willReturn(null);
 
-        $this->reference_manager->shouldNotReceive('insertCrossReference');
-        $this->tag_info_dao->shouldNotReceive('saveGitlabTagInfo');
+        $this->reference_manager->expects(self::never())->method('insertCrossReference');
+        $this->tag_info_dao->expects(self::never())->method('saveGitlabTagInfo');
 
         $this->action->createTagReferences(
             $integration,
@@ -243,10 +235,11 @@ class TagPushWebhookCreateActionTest extends \Tuleap\Test\PHPUnit\TestCase
             IntegrationApiToken::buildBrandNewToken(new ConcealedString("DAT-TOKEN"))
         );
 
-        $this->credentials_retriever->shouldReceive('getCredentials')
-            ->once()
+        $this->credentials_retriever
+            ->expects(self::once())
+            ->method('getCredentials')
             ->with($integration)
-            ->andReturn($credentials);
+            ->willReturn($credentials);
 
         $gitlab_tag = new GitlabTag(
             "v1.0.2",
@@ -254,13 +247,14 @@ class TagPushWebhookCreateActionTest extends \Tuleap\Test\PHPUnit\TestCase
             "sha1"
         );
 
-        $this->gitlab_tag_retriever->shouldReceive('getTagFromGitlabAPI')
-            ->once()
+        $this->gitlab_tag_retriever
+            ->expects(self::once())
+            ->method('getTagFromGitlabAPI')
             ->with($credentials, $integration, "v1.0.2")
-            ->andReturn($gitlab_tag);
+            ->willReturn($gitlab_tag);
 
-        $this->reference_manager->shouldNotReceive('insertCrossReference');
-        $this->tag_info_dao->shouldNotReceive('saveGitlabTagInfo');
+        $this->reference_manager->expects(self::never())->method('insertCrossReference');
+        $this->tag_info_dao->expects(self::never())->method('saveGitlabTagInfo');
 
         $this->action->createTagReferences(
             $integration,
@@ -295,30 +289,34 @@ class TagPushWebhookCreateActionTest extends \Tuleap\Test\PHPUnit\TestCase
             IntegrationApiToken::buildBrandNewToken(new ConcealedString("DAT-TOKEN"))
         );
 
-        $this->credentials_retriever->shouldReceive('getCredentials')
-            ->once()
+        $this->credentials_retriever
+            ->expects(self::once())
+            ->method('getCredentials')
             ->with($integration)
-            ->andReturn($credentials);
+            ->willReturn($credentials);
 
         $gitlab_tag = new GitlabTag(
             "v1.0.2",
-            "This tag references 1337",
+            "This tag references tuleap-1337",
             "sha1"
         );
 
-        $this->gitlab_tag_retriever->shouldReceive('getTagFromGitlabAPI')
-            ->once()
+        $this->gitlab_tag_retriever
+            ->expects(self::once())
+            ->method('getTagFromGitlabAPI')
             ->with($credentials, $integration, "v1.0.2")
-            ->andReturn($gitlab_tag);
+            ->willReturn($gitlab_tag);
 
-        $this->tuleap_reference_retriever->shouldReceive('retrieveTuleapReference')
+        $this->tuleap_reference_retriever
+            ->expects(self::once())
+            ->method('retrieveTuleapReference')
             ->with(1337)
-            ->andThrow(
+            ->willThrowException(
                 new TuleapReferenceNotFoundException()
             );
 
-        $this->reference_manager->shouldNotReceive('insertCrossReference');
-        $this->tag_info_dao->shouldNotReceive('saveGitlabTagInfo');
+        $this->reference_manager->expects(self::never())->method('insertCrossReference');
+        $this->tag_info_dao->expects(self::never())->method('saveGitlabTagInfo');
 
         $this->action->createTagReferences(
             $integration,

@@ -22,37 +22,26 @@ declare(strict_types=1);
 
 namespace Tuleap\Gitlab\Repository\Webhook\Bot;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\Gitlab\API\ClientWrapper;
+use Tuleap\Gitlab\API\Credentials;
 use Tuleap\Gitlab\API\GitlabRequestException;
 use Tuleap\Gitlab\Repository\GitlabRepositoryIntegration;
 use Tuleap\Gitlab\Test\Builder\CredentialsTestBuilder;
 
 class CommentSenderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     /**
-     * @var \Tuleap\Gitlab\API\Credentials
-     */
-    private $credentials;
-    /**
-     * @var GitlabRepositoryIntegration
-     */
-    private $integration;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ClientWrapper
+     * @var \PHPUnit\Framework\MockObject\MockObject&ClientWrapper
      */
     private $client;
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|InvalidCredentialsNotifier
+     * @var \PHPUnit\Framework\MockObject\MockObject&InvalidCredentialsNotifier
      */
     private $notifier;
-    /**
-     * @var CommentSender
-     */
-    private $sender;
+
+    private Credentials $credentials;
+    private GitlabRepositoryIntegration $integration;
+    private CommentSender $sender;
 
     protected function setUp(): void
     {
@@ -69,53 +58,53 @@ class CommentSenderTest extends \Tuleap\Test\PHPUnit\TestCase
             false
         );
 
-        $this->client   = Mockery::mock(ClientWrapper::class);
-        $this->notifier = Mockery::mock(InvalidCredentialsNotifier::class);
+        $this->client   = $this->createMock(ClientWrapper::class);
+        $this->notifier = $this->createMock(InvalidCredentialsNotifier::class);
 
         $this->sender = new CommentSender($this->client, $this->notifier);
     }
 
-    public function testSendComment()
+    public function testSendComment(): void
     {
         $this->client
-            ->shouldReceive('postUrl')
-            ->with($this->credentials, 'gitlab/api', [])
-            ->once();
+            ->expects(self::once())
+            ->method('postUrl')
+            ->with($this->credentials, 'gitlab/api', []);
 
         $this->sender->sendComment($this->integration, $this->credentials, 'gitlab/api', []);
     }
 
-    public function testNotifyAboutInvalidCredentials()
+    public function testNotifyAboutInvalidCredentials(): void
     {
         $exception = new GitlabRequestException(401, 'Unhautorized');
 
         $this->client
-            ->shouldReceive('postUrl')
+            ->method('postUrl')
             ->with($this->credentials, 'gitlab/api', [])
-            ->andThrow($exception);
+            ->willThrowException($exception);
 
         $this->notifier
-            ->shouldReceive('notifyGitAdministratorsThatCredentialsAreInvalid')
-            ->with($this->integration, $this->credentials)
-            ->once();
+            ->expects(self::once())
+            ->method('notifyGitAdministratorsThatCredentialsAreInvalid')
+            ->with($this->integration, $this->credentials);
 
         $this->expectExceptionObject($exception);
 
         $this->sender->sendComment($this->integration, $this->credentials, 'gitlab/api', []);
     }
 
-    public function testDoesNotNotifyForOtherExceptionThan401()
+    public function testDoesNotNotifyForOtherExceptionThan401(): void
     {
         $exception = new GitlabRequestException(404, 'Not found');
 
         $this->client
-            ->shouldReceive('postUrl')
+            ->method('postUrl')
             ->with($this->credentials, 'gitlab/api', [])
-            ->andThrow($exception);
+            ->willThrowException($exception);
 
         $this->notifier
-            ->shouldReceive('notifyGitAdministratorsThatCredentialsAreInvalid')
-            ->never();
+            ->expects(self::never())
+            ->method('notifyGitAdministratorsThatCredentialsAreInvalid');
 
         $this->expectExceptionObject($exception);
 

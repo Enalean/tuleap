@@ -20,8 +20,6 @@
 
 namespace Tuleap\Gitlab\Repository\Webhook\PostMergeRequest;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Psr\Log\LoggerInterface;
 use TemplateRendererFactory;
 use Tuleap\ForgeConfigSandbox;
@@ -35,64 +33,59 @@ use Tuleap\Gitlab\Repository\Webhook\Bot\CredentialsRetriever;
 use Tuleap\Gitlab\Repository\Webhook\Bot\InvalidCredentialsNotifier;
 use Tuleap\Gitlab\Repository\Webhook\WebhookTuleapReference;
 use Tuleap\Gitlab\Test\Builder\CredentialsTestBuilder;
-use Tuleap\InstanceBaseURLBuilder;
 use Tuleap\Templating\TemplateCache;
 
 class PostMergeRequestBotCommenterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
     use ForgeConfigSandbox;
 
     /**
-     * @var PostMergeRequestBotCommenter
-     */
-    private $commenter;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ClientWrapper
+     * @var \PHPUnit\Framework\MockObject\MockObject&ClientWrapper
      */
     private $client_wrapper;
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|CredentialsRetriever
+     * @var \PHPUnit\Framework\MockObject\MockObject&CredentialsRetriever
      */
     private $credentials_retriever;
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|LoggerInterface
+     * @var \PHPUnit\Framework\MockObject\MockObject&LoggerInterface
      */
     private $logger;
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|PostMergeRequestWebhookData
+     * @var \PHPUnit\Framework\MockObject\MockObject&PostMergeRequestWebhookData
      */
     private $webhook_data;
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|GitlabRepositoryIntegration
+     * @var \PHPUnit\Framework\MockObject\MockObject&GitlabRepositoryIntegration
      */
     private $gitlab_repository;
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|InstanceBaseURLBuilder
+     * @var \PHPUnit\Framework\MockObject\MockObject&BotCommentReferencePresenterBuilder
      */
     private $bot_comment_reference_presenter_builder;
-    /**
-     * @var TemplateRendererFactory
-     */
-    private $template_factory;
+
+    private TemplateRendererFactory $template_factory;
+    private PostMergeRequestBotCommenter $commenter;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->client_wrapper        = Mockery::mock(ClientWrapper::class);
-        $this->credentials_retriever = Mockery::mock(CredentialsRetriever::class);
-        $this->logger                = Mockery::mock(LoggerInterface::class);
-        $this->webhook_data          = Mockery::mock(PostMergeRequestWebhookData::class);
-        $this->gitlab_repository     = Mockery::mock(GitlabRepositoryIntegration::class);
+        $this->client_wrapper        = $this->createMock(ClientWrapper::class);
+        $this->credentials_retriever = $this->createMock(CredentialsRetriever::class);
+        $this->logger                = $this->createMock(LoggerInterface::class);
+        $this->webhook_data          = $this->createMock(PostMergeRequestWebhookData::class);
+        $this->gitlab_repository     = $this->createMock(GitlabRepositoryIntegration::class);
 
-        $this->bot_comment_reference_presenter_builder = Mockery::mock(BotCommentReferencePresenterBuilder::class);
+        $this->bot_comment_reference_presenter_builder = $this->createMock(BotCommentReferencePresenterBuilder::class);
 
-        $template_cache         = \Mockery::mock(TemplateCache::class, ['getPath' => null]);
+        $template_cache = $this->createMock(TemplateCache::class);
+        $template_cache->method('getPath')->willReturn(null);
+
         $this->template_factory = new TemplateRendererFactory($template_cache);
 
         $this->commenter = new PostMergeRequestBotCommenter(
-            new CommentSender($this->client_wrapper, Mockery::mock(InvalidCredentialsNotifier::class)),
+            new CommentSender($this->client_wrapper, $this->createMock(InvalidCredentialsNotifier::class)),
             $this->credentials_retriever,
             $this->logger,
             $this->bot_comment_reference_presenter_builder,
@@ -102,9 +95,17 @@ class PostMergeRequestBotCommenterTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testNothingHappenIfNoReferences(): void
     {
-        $this->credentials_retriever->shouldReceive('getCredentials')->never();
-        $this->logger->shouldReceive('debug')->never();
-        $this->client_wrapper->shouldReceive('postUrl')->never();
+        $this->credentials_retriever
+            ->expects(self::never())
+            ->method('getCredentials');
+
+        $this->logger
+            ->expects(self::never())
+            ->method('debug');
+
+        $this->client_wrapper
+            ->expects(self::never())
+            ->method('postUrl');
 
         $this->commenter->addCommentOnMergeRequest($this->webhook_data, $this->gitlab_repository, []);
     }
@@ -112,21 +113,23 @@ class PostMergeRequestBotCommenterTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testNothingHappenIfNoCredentialsRetrieved(): void
     {
         $this->webhook_data
-            ->shouldReceive("getMergeRequestId")
-            ->andReturn("42");
+            ->method("getMergeRequestId")
+            ->willReturn(42);
 
         $this->logger
-            ->shouldReceive("debug")
-            ->with("Comment can't be added on merge request #42 because there is no bot API token.")
-            ->once();
+            ->expects(self::once())
+            ->method("debug")
+            ->with("Comment can't be added on merge request #42 because there is no bot API token.");
 
         $this->credentials_retriever
-            ->shouldReceive('getCredentials')
+            ->expects(self::once())
+            ->method('getCredentials')
             ->with($this->gitlab_repository)
-            ->andReturnNull()
-            ->once();
+            ->willReturn(null);
 
-        $this->client_wrapper->shouldReceive('postUrl')->never();
+        $this->client_wrapper
+            ->expects(self::never())
+            ->method('postUrl');
 
         $this->commenter->addCommentOnMergeRequest($this->webhook_data, $this->gitlab_repository, [new WebhookTuleapReference(123)]);
     }
@@ -134,21 +137,21 @@ class PostMergeRequestBotCommenterTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testClientWrapperThrowErrorAndLogIt(): void
     {
         $this->webhook_data
-            ->shouldReceive("getMergeRequestId")
-            ->andReturn("42");
+            ->method("getMergeRequestId")
+            ->willReturn(42);
 
         $this->gitlab_repository
-            ->shouldReceive('getGitlabRepositoryId')
-            ->andReturn(4)
-            ->once();
+            ->expects(self::once())
+            ->method('getGitlabRepositoryId')
+            ->willReturn(4);
 
         $credentials = CredentialsTestBuilder::get()->build();
 
         $this->credentials_retriever
-            ->shouldReceive('getCredentials')
+            ->expects(self::once())
+            ->method('getCredentials')
             ->with($this->gitlab_repository)
-            ->andReturn($credentials)
-            ->once();
+            ->willReturn($credentials);
 
         $references = [
             new WebhookTuleapReference(123),
@@ -161,10 +164,10 @@ class PostMergeRequestBotCommenterTest extends \Tuleap\Test\PHPUnit\TestCase
         ];
 
         $this->bot_comment_reference_presenter_builder
-            ->shouldReceive('build')
+            ->expects(self::once())
+            ->method('build')
             ->with($references)
-            ->andReturn($references_presenter)
-            ->once();
+            ->willReturn($references_presenter);
 
         $url     = "/projects/4/merge_requests/42/notes";
         $comment = <<<EOS
@@ -178,19 +181,18 @@ class PostMergeRequestBotCommenterTest extends \Tuleap\Test\PHPUnit\TestCase
             EOS;
 
         $this->client_wrapper
-            ->shouldReceive('postUrl')
+            ->expects(self::once())
+            ->method('postUrl')
             ->with($credentials, $url, ["body" => $comment])
-            ->once()
-            ->andThrow(new GitlabRequestException("404", "not found"));
+            ->willThrowException(new GitlabRequestException(404, "not found"));
 
         $this->logger
-            ->shouldReceive('error')
-            ->with("An error occurred during automatically comment merge request #42")
-            ->once();
-        $this->logger
-            ->shouldReceive('error')
-            ->with("|  |_Error returned by the GitLab server: not found")
-            ->once();
+            ->expects(self::exactly(2))
+            ->method('error')
+            ->withConsecutive(
+                ["An error occurred during automatically comment merge request #42"],
+                ["|  |_Error returned by the GitLab server: not found"],
+            );
 
         $this->commenter->addCommentOnMergeRequest(
             $this->webhook_data,
@@ -202,21 +204,21 @@ class PostMergeRequestBotCommenterTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testPOSTCommentOnCommit(): void
     {
         $this->webhook_data
-            ->shouldReceive("getMergeRequestId")
-            ->andReturn("42");
+            ->method("getMergeRequestId")
+            ->willReturn(42);
 
         $this->gitlab_repository
-            ->shouldReceive('getGitlabRepositoryId')
-            ->andReturn(4)
-            ->once();
+            ->expects(self::once())
+            ->method('getGitlabRepositoryId')
+            ->willReturn(4);
 
         $credentials = CredentialsTestBuilder::get()->build();
 
         $this->credentials_retriever
-            ->shouldReceive('getCredentials')
+            ->expects(self::once())
+            ->method('getCredentials')
             ->with($this->gitlab_repository)
-            ->andReturn($credentials)
-            ->once();
+            ->willReturn($credentials);
 
         $references = [
             new WebhookTuleapReference(123),
@@ -227,10 +229,10 @@ class PostMergeRequestBotCommenterTest extends \Tuleap\Test\PHPUnit\TestCase
         ];
 
         $this->bot_comment_reference_presenter_builder
-            ->shouldReceive('build')
+            ->expects(self::once())
+            ->method('build')
             ->with($references)
-            ->andReturn($references_presenter)
-            ->once();
+            ->willReturn($references_presenter);
 
         $url     = "/projects/4/merge_requests/42/notes";
         $comment = <<<EOS
@@ -241,14 +243,14 @@ class PostMergeRequestBotCommenterTest extends \Tuleap\Test\PHPUnit\TestCase
             EOS;
 
         $this->client_wrapper
-            ->shouldReceive('postUrl')
-            ->with($credentials, $url, ['body' => $comment])
-            ->once();
+            ->expects(self::once())
+            ->method('postUrl')
+            ->with($credentials, $url, ['body' => $comment]);
 
         $this->logger
-            ->shouldReceive("debug")
-            ->with("Comment was successfully added on merge request #42")
-            ->once();
+            ->expects(self::once())
+            ->method("debug")
+            ->with("Comment was successfully added on merge request #42");
 
         $this->commenter->addCommentOnMergeRequest(
             $this->webhook_data,

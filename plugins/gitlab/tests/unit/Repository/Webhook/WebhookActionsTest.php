@@ -23,8 +23,6 @@ namespace Tuleap\Gitlab\Repository\Webhook;
 
 use DateTimeImmutable;
 use LogicException;
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Project;
 use Psr\Log\LoggerInterface;
 use Tuleap\Gitlab\Repository\GitlabRepositoryIntegration;
@@ -38,46 +36,44 @@ use Tuleap\Gitlab\Repository\Webhook\TagPush\TagPushWebhookActionProcessor;
 
 final class WebhookActionsTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     /**
      * @var WebhookActions
      */
     private $actions;
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|GitlabRepositoryIntegrationDao
-     */
-    private $repository_integration_dao;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|LoggerInterface
-     */
-    private $logger;
-    /**
      * @var GitlabRepositoryIntegration
      */
     private $gitlab_repository_integration;
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|PostPushWebhookActionProcessor
+     * @var \PHPUnit\Framework\MockObject\MockObject&GitlabRepositoryIntegrationDao
+     */
+    private $repository_integration_dao;
+    /**
+     * @var \PHPUnit\Framework\MockObject\MockObject&PostPushWebhookActionProcessor
      */
     private $post_push_webhook_action_processor;
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|PostMergeRequestWebhookActionProcessor
+     * @var \PHPUnit\Framework\MockObject\MockObject&PostMergeRequestWebhookActionProcessor
      */
     private $post_merge_request_webhook_action_processor;
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|TagPushWebhookActionProcessor
+     * @var \PHPUnit\Framework\MockObject\MockObject&TagPushWebhookActionProcessor
      */
     private $tag_push_webhook_action_processor;
+    /**
+     * @var \PHPUnit\Framework\MockObject\MockObject&LoggerInterface
+     */
+    private $logger;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->repository_integration_dao                  = Mockery::mock(GitlabRepositoryIntegrationDao::class);
-        $this->post_push_webhook_action_processor          = Mockery::mock(PostPushWebhookActionProcessor::class);
-        $this->post_merge_request_webhook_action_processor = Mockery::mock(PostMergeRequestWebhookActionProcessor::class);
-        $this->tag_push_webhook_action_processor           = Mockery::mock(TagPushWebhookActionProcessor::class);
-        $this->logger                                      = Mockery::mock(LoggerInterface::class);
+        $this->repository_integration_dao                  = $this->createMock(GitlabRepositoryIntegrationDao::class);
+        $this->post_push_webhook_action_processor          = $this->createMock(PostPushWebhookActionProcessor::class);
+        $this->post_merge_request_webhook_action_processor = $this->createMock(PostMergeRequestWebhookActionProcessor::class);
+        $this->tag_push_webhook_action_processor           = $this->createMock(TagPushWebhookActionProcessor::class);
+        $this->logger                                      = $this->createMock(LoggerInterface::class);
 
         $this->actions = new WebhookActions(
             $this->repository_integration_dao,
@@ -122,20 +118,23 @@ final class WebhookActionsTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $now = new DateTimeImmutable();
 
-        $this->repository_integration_dao->shouldReceive('updateLastPushDateForIntegration')
-            ->once()
+        $this->repository_integration_dao
+            ->expects(self::once())
+            ->method('updateLastPushDateForIntegration')
             ->with(1, $now->getTimestamp());
 
         $this->logger
-            ->shouldReceive('info')
-            ->with('Last update date successfully updated for GitLab repository #1')
-            ->once();
-        $this->logger->shouldNotReceive('error');
+            ->expects(self::once())
+            ->method('info')
+            ->with('Last update date successfully updated for GitLab repository #1');
+        $this->logger
+            ->expects(self::never())
+            ->method('error');
 
         $this->post_push_webhook_action_processor
-            ->shouldReceive('process')
-            ->with($this->gitlab_repository_integration, $webhook_data, $now)
-            ->once();
+            ->expects(self::once())
+            ->method('process')
+            ->with($this->gitlab_repository_integration, $webhook_data, $now);
 
         $this->actions->performActions(
             $this->gitlab_repository_integration,
@@ -160,23 +159,26 @@ final class WebhookActionsTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $now = new DateTimeImmutable();
 
-        $this->repository_integration_dao->shouldReceive('updateLastPushDateForIntegration')
-            ->once()
+        $this->repository_integration_dao
+            ->expects(self::once())
+            ->method('updateLastPushDateForIntegration')
             ->with(1, $now->getTimestamp());
 
         $this->logger
-            ->shouldReceive('info')
-            ->with('Last update date successfully updated for GitLab repository #1')
-            ->once();
-        $this->logger->shouldNotReceive('error');
+            ->expects(self::once())
+            ->method('info')
+            ->with('Last update date successfully updated for GitLab repository #1');
+
+        $this->logger->expects(self::never())->method('error');
 
         $this->post_push_webhook_action_processor
-            ->shouldNotReceive('process');
+            ->expects(self::never())
+            ->method('process');
 
         $this->post_merge_request_webhook_action_processor
-            ->shouldReceive('process')
-            ->with($this->gitlab_repository_integration, $merge_request_webhook_data)
-            ->once();
+            ->expects(self::once())
+            ->method('process')
+            ->with($this->gitlab_repository_integration, $merge_request_webhook_data);
 
         $this->actions->performActions(
             $this->gitlab_repository_integration,
@@ -210,12 +212,13 @@ final class WebhookActionsTest extends \Tuleap\Test\PHPUnit\TestCase
         };
 
         $this->repository_integration_dao
-            ->shouldNotReceive('updateLastPushDateForIntegration');
+            ->expects(self::never())
+            ->method('updateLastPushDateForIntegration');
 
         $this->logger
-            ->shouldReceive('error')
-            ->with('The provided webhook type WHATEVER is unknown')
-            ->once();
+            ->expects(self::once())
+            ->method('error')
+            ->with('The provided webhook type WHATEVER is unknown');
 
         $this->expectException(LogicException::class);
 

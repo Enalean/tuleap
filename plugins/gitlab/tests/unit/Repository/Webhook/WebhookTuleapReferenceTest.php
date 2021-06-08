@@ -22,12 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\Gitlab\Repository\Webhook;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
 class WebhookTuleapReferenceTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     public function testItCanBeConvertedToStringForArrayDiffOperations(): void
     {
         $ref = new WebhookTuleapReference(123, null);

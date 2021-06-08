@@ -20,28 +20,23 @@
 
 namespace Tuleap\Gitlab\Repository\Webhook\PostMergeRequest;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Psr\Log\LoggerInterface;
 use Tuleap\Gitlab\Repository\Webhook\MissingKeyException;
 
 class PostMergeRequestWebhookDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     /**
-     * @var PostMergeRequestWebhookDataBuilder
-     */
-    private $builder;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|LoggerInterface
+     * @var \PHPUnit\Framework\MockObject\MockObject&LoggerInterface
      */
     private $logger;
+
+    private PostMergeRequestWebhookDataBuilder $builder;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->logger = \Mockery::mock(LoggerInterface::class);
+        $this->logger = $this->createMock(LoggerInterface::class);
 
         $this->builder = new PostMergeRequestWebhookDataBuilder(
             $this->logger
@@ -131,19 +126,13 @@ class PostMergeRequestWebhookDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCa
         ];
 
         $this->logger
-            ->shouldReceive('debug')
-            ->with("Webhook merge request with id 1 retrieved.")
-            ->once();
-
-        $this->logger
-            ->shouldReceive('debug')
-            ->with("|_ Its title is: My Title")
-            ->once();
-
-        $this->logger
-            ->shouldReceive('debug')
-            ->with("|_ Its description is: My description")
-            ->once();
+            ->expects(self::exactly(3))
+            ->method('debug')
+            ->withConsecutive(
+                ["Webhook merge request with id 1 retrieved."],
+                ["|_ Its title is: My Title"],
+                ["|_ Its description is: My description"]
+            );
 
         $this->builder->build("Merge Request Hook", 123, "https://example.com", $webhook_content);
     }

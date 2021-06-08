@@ -21,8 +21,6 @@
 namespace Tuleap\Gitlab\Repository\Webhook\PostMergeRequest;
 
 use DateTimeImmutable;
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Project;
 use Tuleap\Gitlab\API\ClientWrapper;
 use Tuleap\Gitlab\Repository\GitlabRepositoryIntegration;
@@ -31,25 +29,21 @@ use Tuleap\Gitlab\Test\Builder\CredentialsTestBuilder;
 
 class PostMergeRequestWebhookAuthorDataRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|CredentialsRetriever
+     * @var \PHPUnit\Framework\MockObject\MockObject&CredentialsRetriever
      */
     private $credentials_retriever;
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ClientWrapper
+     * @var \PHPUnit\Framework\MockObject\MockObject&ClientWrapper
      */
     private $gitlab_api_client;
-    /**
-     * @var PostMergeRequestWebhookAuthorDataRetriever
-     */
-    private $author_retriever;
+
+    private PostMergeRequestWebhookAuthorDataRetriever $author_retriever;
 
     protected function setUp(): void
     {
-        $this->credentials_retriever = Mockery::mock(CredentialsRetriever::class);
-        $this->gitlab_api_client     = Mockery::mock(ClientWrapper::class);
+        $this->credentials_retriever = $this->createMock(CredentialsRetriever::class);
+        $this->gitlab_api_client     = $this->createMock(ClientWrapper::class);
 
         $this->author_retriever = new PostMergeRequestWebhookAuthorDataRetriever(
             $this->gitlab_api_client,
@@ -83,10 +77,10 @@ class PostMergeRequestWebhookAuthorDataRetrieverTest extends \Tuleap\Test\PHPUni
         );
 
         $this->credentials_retriever
-            ->shouldReceive('getCredentials')
+            ->expects(self::once())
+            ->method('getCredentials')
             ->with($integration)
-            ->andReturn(null)
-            ->once();
+            ->willReturn(null);
 
         $author = $this->author_retriever->retrieveAuthorData($integration, $merge_request_webhook_data);
 
@@ -121,16 +115,16 @@ class PostMergeRequestWebhookAuthorDataRetrieverTest extends \Tuleap\Test\PHPUni
         $credentials = CredentialsTestBuilder::get()->build();
 
         $this->credentials_retriever
-            ->shouldReceive('getCredentials')
+            ->expects(self::once())
+            ->method('getCredentials')
             ->with($integration)
-            ->andReturn($credentials)
-            ->once();
+            ->willReturn($credentials);
 
         $this->gitlab_api_client
-            ->shouldReceive('getUrl')
+            ->expects(self::once())
+            ->method('getUrl')
             ->with($credentials, '/users/10')
-            ->andReturn(['name' => 'John', 'email' => 'john@thewall.fr'])
-            ->once();
+            ->willReturn(['name' => 'John', 'email' => 'john@thewall.fr']);
 
         $author = $this->author_retriever->retrieveAuthorData($integration, $merge_request_webhook_data);
 

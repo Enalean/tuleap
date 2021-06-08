@@ -22,25 +22,21 @@ declare(strict_types=1);
 
 namespace Tuleap\Gitlab\Repository\Webhook\PostMergeRequest;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\Gitlab\Repository\Webhook\WebhookTuleapReferenceCollection;
 use Tuleap\Gitlab\Repository\Webhook\WebhookTuleapReferencesParser;
 
 class TuleapReferencesFromMergeRequestDataExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     public function testItExtractsReferencesFromTitleConcatenatedToDescription(): void
     {
-        $reference_parser = Mockery::mock(WebhookTuleapReferencesParser::class);
+        $reference_parser = $this->createMock(WebhookTuleapReferencesParser::class);
 
         $collection = new WebhookTuleapReferenceCollection([]);
         $reference_parser
-            ->shouldReceive('extractCollectionOfTuleapReferences')
+            ->expects(self::once())
+            ->method('extractCollectionOfTuleapReferences')
             ->with('title description')
-            ->once()
-            ->andReturn($collection);
+            ->willReturn($collection);
 
         $extractor = new TuleapReferencesFromMergeRequestDataExtractor($reference_parser);
 

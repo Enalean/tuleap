@@ -21,19 +21,15 @@ declare(strict_types=1);
 
 namespace Tuleap\Gitlab\Repository;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Project;
 use ProjectManager;
 
 final class GitlabRepositoryIntegrationFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     public function testItRetrievesGitlabIntegrationsForProject(): void
     {
-        $dao             = Mockery::mock(GitlabRepositoryIntegrationDao::class);
-        $project_manager = Mockery::mock(ProjectManager::class);
+        $dao             = $this->createMock(GitlabRepositoryIntegrationDao::class);
+        $project_manager = $this->createMock(ProjectManager::class);
 
         $factory = new GitlabRepositoryIntegrationFactory(
             $dao,
@@ -42,10 +38,11 @@ final class GitlabRepositoryIntegrationFactoryTest extends \Tuleap\Test\PHPUnit\
 
         $project = Project::buildForTest();
 
-        $dao->shouldReceive('searchAllIntegrationsInProject')
-            ->once()
+        $dao
+            ->expects(self::once())
+            ->method('searchAllIntegrationsInProject')
             ->with(101)
-            ->andReturn(
+            ->willReturn(
                 [
                     [
                         'id'                     => 1,
@@ -60,8 +57,9 @@ final class GitlabRepositoryIntegrationFactoryTest extends \Tuleap\Test\PHPUnit\
                 ]
             );
 
-        $project_manager->shouldReceive('getProject')
-            ->andReturn(Project::buildForTest());
+        $project_manager
+            ->method('getProject')
+            ->willReturn(Project::buildForTest());
 
         $gitlab_repositories = $factory->getAllIntegrationsInProject($project);
 
