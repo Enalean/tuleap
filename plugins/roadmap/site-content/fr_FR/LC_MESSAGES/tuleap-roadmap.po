@@ -20,14 +20,8 @@ msgstr ""
 "Il n'y a pas de tracker d'itération configuré, ou vous n'avez pas le doit de "
 "le voir."
 
-msgid "Please choose a tracker"
-msgstr "Veuillez choisir un outil de suivi"
-
 msgid "Roadmap"
 msgstr "Feuille de route"
-
-msgid "Show progress of"
-msgstr "Afficher la progression de"
 
 msgid "The roadmap cannot be found."
 msgstr "La feuille de route est introuvable."

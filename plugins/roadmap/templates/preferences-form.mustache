@@ -1,30 +1,8 @@
-<div class="tlp-form-element">
-    <label class="tlp-label" for="title-{{ widget_id }} ">
-        {{# gettext }}Title{{/ gettext }}
-        <i class="fas fa-asterisk" aria-hidden="true"></i>
-    </label>
-    <input
-        type="text"
-        class="tlp-input"
-        id="title-{{ widget_id }} "
-        name="roadmap[title]"
-        value="{{ title }}"
-        required
-        placeholder="{{# dgettext }}tuleap-roadmap | Roadmap{{/ dgettext }}"
-    >
-</div>
-<div class="tlp-form-element">
-    <label class="tlp-label" for="roadmap-tracker-{{ widget_id }}">
-        {{# dgettext }}tuleap-roadmap | Show progress of{{/ dgettext }}
-        <i class="fas fa-asterisk" aria-hidden="true"></i>
-    </label>
-
-    <select class="tlp-select" id="roadmap-tracker-{{ widget_id }}" name="roadmap[tracker_id]">
-        {{# is_in_creation }}
-            <option value="" selected disabled>{{# dgettext }}tuleap-roadmap | Please choose a tracker{{/ dgettext }}</option>
-        {{/ is_in_creation }}
-        {{# project_trackers }}
-            <option value="{{ id }}" {{# selected }}selected="selected"{{/ selected }}>{{ title }}</option>
-        {{/ project_trackers }}
-    </select>
-</div>
+<div class="configure-roadmap-widget-mount-point"
+     data-widget-id="{{ widget_id }}"
+     data-title="{{ title }}"
+     data-trackers="{{ json_encoded_trackers }}"
+     data-selected-tracker-id="{{ selected_tracker_id }}"
+     data-selected-lvl1-iteration-tracker-id="{{ selected_lvl1_iteration_tracker_id }}"
+     data-selected-lvl2-iteration-tracker-id="{{ selected_lvl2_iteration_tracker_id }}"
+></div>

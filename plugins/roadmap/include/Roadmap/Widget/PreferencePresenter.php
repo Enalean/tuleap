@@ -24,42 +24,42 @@ namespace Tuleap\Roadmap\Widget;
 
 use Tracker;
 
+/**
+ * @psalm-immutable
+ */
 class PreferencePresenter
 {
-    /**
-     * @var string
-     */
-    public $widget_id;
-    /**
-     * @var string
-     */
-    public $title;
-    /**
-     * @var TrackerPresenter[]
-     */
-    public $project_trackers;
-    /**
-     * @var bool
-     */
-    public $is_in_creation;
+    public string $widget_id;
+    public string $title;
+    public ?string $json_encoded_trackers;
+    public int $selected_tracker_id;
+    public int $selected_lvl1_iteration_tracker_id;
+    public int $selected_lvl2_iteration_tracker_id;
 
     public function __construct(
         string $widget_id,
         string $title,
         ?int $selected_tracker_id,
+        ?int $selected_lvl1_iteration_tracker_id,
+        ?int $selected_lvl2_iteration_tracker_id,
         array $trackers
     ) {
-        $this->widget_id        = $widget_id;
-        $this->title            = $title;
-        $this->is_in_creation   = $selected_tracker_id === null;
-        $this->project_trackers = $this->buildTrackerPresenters($trackers, $selected_tracker_id);
+        $this->widget_id = $widget_id;
+        $this->title     = $title;
+
+        $this->json_encoded_trackers = \json_encode($this->buildTrackerPresenters($trackers));
+
+        $this->selected_tracker_id                = (int) $selected_tracker_id;
+        $this->selected_lvl1_iteration_tracker_id = (int) $selected_lvl1_iteration_tracker_id;
+        $this->selected_lvl2_iteration_tracker_id = (int) $selected_lvl2_iteration_tracker_id;
     }
 
     /**
      * @param Tracker[] $trackers
+     *
      * @return TrackerPresenter[]
      */
-    private function buildTrackerPresenters(array $trackers, ?int $selected_tracker_id): array
+    private function buildTrackerPresenters(array $trackers): array
     {
         $presenters = [];
         foreach ($trackers as $tracker) {
@@ -67,10 +67,7 @@ class PreferencePresenter
                 continue;
             }
 
-            $presenters[] = TrackerPresenter::buildFromPreferencePresenter(
-                $tracker,
-                $selected_tracker_id
-            );
+            $presenters[] = new TrackerPresenter($tracker);
         }
 
         return $presenters;
