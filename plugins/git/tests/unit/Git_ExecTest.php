@@ -40,9 +40,9 @@ final class Git_ExecTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->fixture_dir  = $this->getTmpDir() . '/tuleap-git-exec-test_' . random_int(0, 99999999);
         mkdir($this->fixture_dir);
         symlink($this->fixture_dir, $this->symlink_repo);
-        system("cd $this->fixture_dir && git init 2>&1 >/dev/null");
 
         $this->git_exec = new Git_Exec($this->fixture_dir);
+        $this->git_exec->init();
         $this->git_exec->setLocalCommiter('test', 'test@example.com');
     }
 
@@ -107,7 +107,7 @@ final class Git_ExecTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->git_exec->commit('test');
         system("cd $this->fixture_dir && git branch test");
 
-        $this->assertEquals(["test", "master"], $this->git_exec->getAllBranchesSortedByCreationDate());
+        $this->assertEquals(["test", "main"], $this->git_exec->getAllBranchesSortedByCreationDate());
     }
 
     public function testGetAllTagsSortedByCreationDate(): void
@@ -159,7 +159,7 @@ final class Git_ExecTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->git_exec->add("$this->fixture_dir/toto");
         $this->git_exec->commit("add stuff");
 
-        $res = $this->git_exec->doesObjectExists('master');
+        $res = $this->git_exec->doesObjectExists('main');
 
         $this->assertTrue($res);
     }
@@ -173,7 +173,7 @@ final class Git_ExecTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testRetrievesDefaultBranch(): void
     {
-        self::assertEquals('master', $this->git_exec->getDefaultBranch());
+        self::assertEquals('main', $this->git_exec->getDefaultBranch());
     }
 
 

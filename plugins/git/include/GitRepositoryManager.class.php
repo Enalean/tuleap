@@ -18,6 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Git\Branch\BranchName;
 use Tuleap\Git\Events\AfterRepositoryForked;
 use Tuleap\Git\PathJoinUtil;
 use Tuleap\Git\Permissions\FineGrainedPermissionReplicator;
@@ -155,7 +156,7 @@ class GitRepositoryManager
      * @throws GitRepositoryAlreadyExistsException
      * @throws GitRepositoryNameIsInvalidException
      */
-    public function create(GitRepository $repository, GitRepositoryCreator $creator, array $mirror_ids)
+    public function create(GitRepository $repository, GitRepositoryCreator $creator, array $mirror_ids, BranchName $default_branch): void
     {
         $this->initRepository($repository, $creator);
 
@@ -163,7 +164,7 @@ class GitRepositoryManager
             $this->mirror_updater->updateRepositoryMirrors($repository, $mirror_ids);
         }
 
-        $this->git_system_event_manager->queueRepositoryUpdate($repository);
+        $this->git_system_event_manager->queueRepositoryUpdate($repository, $default_branch);
     }
 
     /**

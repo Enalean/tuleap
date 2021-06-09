@@ -18,6 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Git\Branch\BranchName;
 use Tuleap\Git\Events\XMLImportExternalContentEvent;
 use Tuleap\Git\Permissions\FineGrainedPermissionFactory;
 use Tuleap\Git\Permissions\FineGrainedPermissionSaver;
@@ -228,7 +229,7 @@ class GitXmlImporter
                 (string) $repository_info['bundle-path']
             );
         } else {
-            $this->repository_manager->create($repository, $this->gitolite_backend, []);
+            $this->repository_manager->create($repository, $this->gitolite_backend, [], BranchName::defaultBranchName());
         }
         if ($this->hasLegacyPermissions($repository_xmlnode)) {
             $this->importPermissions($project, $repository_xmlnode, $repository);
