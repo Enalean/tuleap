@@ -1104,14 +1104,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
         return $this;
     }
 
-    /**
-     * Add a criteria
-     *
-     * @param Tracker_Report_Criteria the formElement used for the criteria
-     *
-     * @return int the id of the new criteria
-     */
-    public function addCriteria(Tracker_Report_Criteria $criteria)
+    public function addCriteria(Tracker_Report_Criteria $criteria): int
     {
         $id = $this->getCriteriaDao()->create($this->id, $criteria->field->id, $criteria->is_advanced);
         return $id;
