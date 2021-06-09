@@ -8,25 +8,26 @@
     "packages": [
         {
             "name": "smarty-gettext/smarty-gettext",
-            "version": "1.5.1",
+            "version": "1.6.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/smarty-gettext/smarty-gettext.git",
-                "reference": "00fe2fcbc41e24e0245cd9d73f96bc7b0337972d"
+                "reference": "22e5b91b642cd643f9acdd8d04ab0e05647b98a7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/smarty-gettext/smarty-gettext/zipball/00fe2fcbc41e24e0245cd9d73f96bc7b0337972d",
-                "reference": "00fe2fcbc41e24e0245cd9d73f96bc7b0337972d",
+                "url": "https://api.github.com/repos/smarty-gettext/smarty-gettext/zipball/22e5b91b642cd643f9acdd8d04ab0e05647b98a7",
+                "reference": "22e5b91b642cd643f9acdd8d04ab0e05647b98a7",
                 "shasum": ""
             },
             "require": {
                 "ext-gettext": "*",
                 "ext-pcre": "*",
-                "php": "~5.3|~7.0"
+                "php": "~5.3|~7.0|~8.0"
             },
             "require-dev": {
                 "azatoth/php-pgettext": "~1.0",
+                "phpunit/phpunit": ">=4.8.36",
                 "smarty/smarty": "3.1.*"
             },
             "suggest": {
@@ -44,7 +45,7 @@
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
-                "LGPL-2.1+"
+                "LGPL-2.1"
             ],
             "authors": [
                 {
@@ -60,9 +61,9 @@
             "homepage": "https://github.com/smarty-gettext/smarty-gettext",
             "support": {
                 "issues": "https://github.com/smarty-gettext/smarty-gettext/issues",
-                "source": "https://github.com/smarty-gettext/smarty-gettext/tree/master"
+                "source": "https://github.com/smarty-gettext/smarty-gettext/tree/1.6.2"
             },
-            "time": "2017-05-12T12:14:46+00:00"
+            "time": "2021-02-23T22:00:29+00:00"
         },
         {
             "name": "smarty/smarty",
