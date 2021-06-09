@@ -25,7 +25,7 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\CreationCheck;
 use Tracker_Semantic_StatusDao;
 use Tracker_Semantic_StatusFactory;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck\CheckStatus;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\TrackerCollection;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Source\SourceTrackerCollection;
 use Tuleap\ProgramManagement\Domain\ProgramTracker;
 
 final class StatusSemanticChecker implements CheckStatus
@@ -50,7 +50,7 @@ final class StatusSemanticChecker implements CheckStatus
 
     public function isStatusWellConfigured(
         ProgramTracker $tracker,
-        TrackerCollection $source_tracker_collection
+        SourceTrackerCollection $source_tracker_collection
     ): bool {
         $program_tracker_status_semantic = $this->semantic_status_factory->getByTracker(
             $tracker->getFullTracker()
@@ -61,7 +61,7 @@ final class StatusSemanticChecker implements CheckStatus
         }
 
         $nb_of_trackers_without_status = $this->semantic_status_dao->getNbOfTrackerWithoutSemanticStatusDefined(
-            $source_tracker_collection->getTrackerIds()
+            $source_tracker_collection->getSourceTrackerIds()
         );
         if ($nb_of_trackers_without_status > 0) {
             return false;
@@ -69,7 +69,7 @@ final class StatusSemanticChecker implements CheckStatus
 
         $program_open_values_labels = $program_tracker_status_semantic->getOpenLabels();
 
-        foreach ($source_tracker_collection->getTrackers() as $source_tracker) {
+        foreach ($source_tracker_collection->getSourceTrackers() as $source_tracker) {
             $status_semantic = $this->semantic_status_factory->getByTracker($source_tracker->getFullTracker());
             if (count(array_diff($program_open_values_labels, $status_semantic->getOpenLabels())) > 0) {
                 return false;

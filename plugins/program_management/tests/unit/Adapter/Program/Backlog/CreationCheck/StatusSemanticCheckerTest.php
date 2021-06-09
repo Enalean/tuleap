@@ -28,10 +28,14 @@ use Tracker_Semantic_Status;
 use Tracker_Semantic_StatusDao;
 use Tracker_Semantic_StatusFactory;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Team\TeamProjectsCollection;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Source\SourceTrackerCollection;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TrackerCollection;
+use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\ProgramTracker;
 use Tuleap\ProgramManagement\Domain\Project;
+use Tuleap\ProgramManagement\Stub\BuildProgramStub;
 use Tuleap\ProgramManagement\Stub\RetrievePlanningMilestoneTrackerStub;
+use Tuleap\ProgramManagement\Stub\RetrieveVisibleProgramIncrementTrackerStub;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
@@ -51,6 +55,14 @@ final class StatusSemanticCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
     private TrackerCollection $collection;
     private Tracker $tracker_team_01;
     private Tracker $tracker_team_02;
+    private SourceTrackerCollection $source_trackers;
+    private Tracker $timebox_tracker;
+    /**
+     * @var \PHPUnit\Framework\MockObject\MockObject|Tracker_Semantic_Status
+     */
+    private $timebox_tracker_semantic_status;
+    private Tracker $program_increment;
+    private ProgramTracker $program_increment_tracker;
 
     protected function setUp(): void
     {
@@ -65,22 +77,32 @@ final class StatusSemanticCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->tracker_team_01 = TrackerTestBuilder::aTracker()->withId(123)->build();
         $this->tracker_team_02 = TrackerTestBuilder::aTracker()->withId(124)->build();
 
-        $first_team       = new Project(101, 'team_blue', 'Team Blue');
-        $second_team      = new Project(102, 'team_red', 'Team Red');
-        $teams            = new TeamProjectsCollection([$first_team, $second_team]);
-        $retriever        = RetrievePlanningMilestoneTrackerStub::withValidTrackers(
+        $this->timebox_tracker                 = TrackerTestBuilder::aTracker()->withId(1)->build();
+        $this->timebox_tracker_semantic_status = $this->createMock(Tracker_Semantic_Status::class);
+        $this->timebox_tracker_semantic_status->method('getOpenLabels')->willReturn(['open', 'review']);
+
+        $this->program_increment         = TrackerTestBuilder::aTracker()->withId(104)->build();
+        $this->program_increment_tracker = new ProgramTracker($this->program_increment);
+
+        $first_team            = new Project(101, 'team_blue', 'Team Blue');
+        $second_team           = new Project(102, 'team_red', 'Team Red');
+        $teams                 = new TeamProjectsCollection([$first_team, $second_team]);
+        $retriever             = RetrievePlanningMilestoneTrackerStub::withValidTrackers(
             $this->tracker_team_01,
             $this->tracker_team_02
         );
-        $user             = UserTestBuilder::aUser()->build();
-        $this->collection = TrackerCollection::buildRootPlanningMilestoneTrackers($retriever, $teams, $user);
+        $user                  = UserTestBuilder::aUser()->build();
+        $this->collection      = TrackerCollection::buildRootPlanningMilestoneTrackers($retriever, $teams, $user);
+        $this->source_trackers = SourceTrackerCollection::fromProgramAndTeamTrackers(
+            RetrieveVisibleProgramIncrementTrackerStub::withValidTracker($this->timebox_tracker),
+            ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 101, $user),
+            $this->collection,
+            $user
+        );
     }
 
     public function testItReturnsTrueIfAllStatusSemanticAreWellConfigured(): void
     {
-        $tracker                   = TrackerTestBuilder::aTracker()->withId(104)->build();
-        $program_increment_tracker = new ProgramTracker($tracker);
-
         $list_field = $this->createMock(Tracker_FormElement_Field_List::class);
 
         $top_planning_tracker_semantic_status = $this->createMock(Tracker_Semantic_Status::class);
@@ -88,7 +110,7 @@ final class StatusSemanticCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->willReturn($list_field);
 
         $this->semantic_status_dao->method('getNbOfTrackerWithoutSemanticStatusDefined')
-            ->with([123, 124])
+            ->with([1, 123, 124])
             ->willReturn(0);
 
         $top_planning_tracker_semantic_status->expects(self::once())
@@ -106,29 +128,27 @@ final class StatusSemanticCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->willReturn(['open', 'in progress', 'review']);
 
         $this->semantic_status_factory->method('getByTracker')
-            ->withConsecutive([$tracker], [$this->tracker_team_01], [$this->tracker_team_02])
+            ->withConsecutive([$this->program_increment], [$this->timebox_tracker], [$this->tracker_team_01], [$this->tracker_team_02])
             ->willReturnOnConsecutiveCalls(
                 $top_planning_tracker_semantic_status,
+                $this->timebox_tracker_semantic_status,
                 $tracker_01_semantic_status,
                 $tracker_02_semantic_status
             );
 
         self::assertTrue(
             $this->checker->isStatusWellConfigured(
-                $program_increment_tracker,
-                $this->collection
+                $this->program_increment_tracker,
+                $this->source_trackers
             )
         );
     }
 
     public function testItReturnsFalseIfProgramTrackerDoesNotHaveStatusSemantic(): void
     {
-        $tracker                   = TrackerTestBuilder::aTracker()->withId(104)->build();
-        $program_increment_tracker = new ProgramTracker($tracker);
-
         $top_planning_tracker_semantic_status = $this->createMock(Tracker_Semantic_Status::class);
         $this->semantic_status_factory->method('getByTracker')
-            ->with($tracker)
+            ->with($this->program_increment)
             ->willReturn($top_planning_tracker_semantic_status);
 
         $top_planning_tracker_semantic_status->method('getField')
@@ -136,20 +156,17 @@ final class StatusSemanticCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         self::assertFalse(
             $this->checker->isStatusWellConfigured(
-                $program_increment_tracker,
-                $this->collection
+                $this->program_increment_tracker,
+                $this->source_trackers
             )
         );
     }
 
     public function testItReturnsFalseIfSomeTeamTrackersDoNotHaveSemanticStatusDefined(): void
     {
-        $tracker                   = TrackerTestBuilder::aTracker()->withId(104)->build();
-        $program_increment_tracker = new ProgramTracker($tracker);
-
         $top_planning_tracker_semantic_status = $this->createMock(Tracker_Semantic_Status::class);
         $this->semantic_status_factory->method('getByTracker')
-            ->with($tracker)
+            ->with($this->program_increment)
             ->willReturn($top_planning_tracker_semantic_status);
 
         $list_field = $this->createMock(Tracker_FormElement_Field_List::class);
@@ -157,22 +174,19 @@ final class StatusSemanticCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->willReturn($list_field);
 
         $this->semantic_status_dao->method('getNbOfTrackerWithoutSemanticStatusDefined')
-            ->with([123, 124])
+            ->with([1, 123, 124])
             ->willReturn(1);
 
         self::assertFalse(
             $this->checker->isStatusWellConfigured(
-                $program_increment_tracker,
-                $this->collection
+                $this->program_increment_tracker,
+                $this->source_trackers
             )
         );
     }
 
     public function testItReturnsFalseIfSomeTeamStatusSemanticDoesNotContainTheProgramOpenValue(): void
     {
-        $tracker                   = TrackerTestBuilder::aTracker()->withId(104)->build();
-        $program_increment_tracker = new ProgramTracker($tracker);
-
         $list_field = $this->createMock(Tracker_FormElement_Field_List::class);
 
         $top_planning_tracker_semantic_status = $this->createMock(Tracker_Semantic_Status::class);
@@ -180,7 +194,7 @@ final class StatusSemanticCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->willReturn($list_field);
 
         $this->semantic_status_dao->method('getNbOfTrackerWithoutSemanticStatusDefined')
-            ->with([123, 124])
+            ->with([1, 123, 124])
             ->willReturn(0);
 
         $top_planning_tracker_semantic_status->expects(self::once())
@@ -189,8 +203,8 @@ final class StatusSemanticCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $tracker_01_semantic_status = $this->createMock(Tracker_Semantic_Status::class);
         $this->semantic_status_factory->method('getByTracker')
-            ->withConsecutive([$tracker], [$this->tracker_team_01])
-            ->willReturnOnConsecutiveCalls($top_planning_tracker_semantic_status, $tracker_01_semantic_status);
+            ->withConsecutive([$this->program_increment], [$this->timebox_tracker], [$this->tracker_team_01])
+            ->willReturnOnConsecutiveCalls($top_planning_tracker_semantic_status, $this->timebox_tracker_semantic_status, $tracker_01_semantic_status);
 
         $tracker_01_semantic_status->expects(self::once())
             ->method('getOpenLabels')
@@ -198,8 +212,8 @@ final class StatusSemanticCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         self::assertFalse(
             $this->checker->isStatusWellConfigured(
-                $program_increment_tracker,
-                $this->collection
+                $this->program_increment_tracker,
+                $this->source_trackers
             )
         );
     }

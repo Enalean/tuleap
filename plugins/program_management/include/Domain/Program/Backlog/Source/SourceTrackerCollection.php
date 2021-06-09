@@ -96,4 +96,16 @@ final class SourceTrackerCollection
     {
         return $this->source_trackers;
     }
+
+    /**
+     * @return int[]
+     * @psalm-mutation-free
+     */
+    public function getSourceTrackerIds(): array
+    {
+        return array_map(
+            static fn(ProgramTracker $tracker) => $tracker->getTrackerId(),
+            $this->source_trackers
+        );
+    }
 }
