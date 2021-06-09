@@ -14,5 +14,6 @@ repo    gitolite-admin
 # Codendiadm has write access to all repositories to merge and update pull requests
 repo @all
     RW+ = id_rsa_gl-adm
+    - VREF/TULEAP_PROTECT_DEFAULT_BRANCH = @all
 
 include "%HOSTNAME.conf"

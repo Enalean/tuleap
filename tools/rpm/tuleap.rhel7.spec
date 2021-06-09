@@ -753,6 +753,7 @@ done
 %{__sed} -i "s~%app_path%~/usr/share/tuleap~g" $RPM_BUILD_ROOT/etc/sudoers.d/tuleap_plugin_git
 %{__install} -D plugins/git/etc/sudoers.d/gitolite-access-command $RPM_BUILD_ROOT/etc/sudoers.d/gitolite-access-command
 %{__install} -D plugins/git/bin/TULEAP_MAX_NEWBIN_SIZE $RPM_BUILD_ROOT/usr/share/gitolite3/VREF/TULEAP_MAX_NEWBIN_SIZE
+%{__ln_s} %{APP_DIR}/plugins/git/bin/TULEAP_PROTECT_DEFAULT_BRANCH $RPM_BUILD_ROOT/usr/share/gitolite3/VREF/TULEAP_PROTECT_DEFAULT_BRANCH
 %{__install} plugins/git/etc/systemd/tuleap-process-system-events-git.timer $RPM_BUILD_ROOT/%{_unitdir}
 %{__install} plugins/git/etc/systemd/tuleap-process-system-events-git.service $RPM_BUILD_ROOT/%{_unitdir}
 %{__install} plugins/git/etc/systemd/tuleap-process-system-events-grokmirror.timer $RPM_BUILD_ROOT/%{_unitdir}
@@ -1206,6 +1207,7 @@ fi
 %attr(00644,root,root) %{_unitdir}/tuleap-process-system-events-grokmirror.timer
 %attr(00644,root,root) %{_unitdir}/tuleap-process-system-events-grokmirror.service
 %attr(00755,root,root) /usr/share/gitolite3/VREF/TULEAP_MAX_NEWBIN_SIZE
+/usr/share/gitolite3/VREF/TULEAP_PROTECT_DEFAULT_BRANCH
 
 %files plugin-gitlfs
 %defattr(-,root,root,-)
