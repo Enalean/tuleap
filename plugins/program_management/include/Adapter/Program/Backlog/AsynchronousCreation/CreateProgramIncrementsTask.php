@@ -24,6 +24,7 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation;
 
 use Psr\Log\LoggerInterface;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\UserStoriesInMirroredProgramIncrementsPlanner;
+use Tuleap\ProgramManagement\Domain\BuildProject;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\CreateTaskProgramIncrement;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\PendingArtifactCreationStore;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\ProgramIncrementCreationException;
@@ -33,11 +34,12 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Chan
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\FieldRetrievalException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\FieldSynchronizationException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\ReplicationData;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Team\TeamProjectsCollectionBuilder;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Team\TeamProjectsCollection;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TrackerCollection;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TrackerRetrievalException;
 use Tuleap\ProgramManagement\Domain\Program\PlanningConfiguration\TopPlanningNotFoundInProjectException;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
+use Tuleap\ProgramManagement\Domain\Program\ProgramStore;
 use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\RetrievePlanningMilestoneTracker;
 
 final class CreateProgramIncrementsTask implements CreateTaskProgramIncrement
@@ -46,10 +48,6 @@ final class CreateProgramIncrementsTask implements CreateTaskProgramIncrement
      * @var BuildFieldValues
      */
     private $changeset_collection_adapter;
-    /**
-     * @var TeamProjectsCollectionBuilder
-     */
-    private $projects_collection_builder;
     /**
      * @var ProgramIncrementsCreator
      */
@@ -68,23 +66,27 @@ final class CreateProgramIncrementsTask implements CreateTaskProgramIncrement
      * @var UserStoriesInMirroredProgramIncrementsPlanner
      */
     private $user_stories_planner;
+    private ProgramStore $program_store;
+    private BuildProject $project_builder;
 
     public function __construct(
         BuildFieldValues $changeset_collection_adapter,
-        TeamProjectsCollectionBuilder $projects_collection_builder,
         RetrievePlanningMilestoneTracker $root_milestone_retriever,
         ProgramIncrementsCreator $program_increment_creator,
         LoggerInterface $logger,
         PendingArtifactCreationStore $pending_artifact_creation_store,
-        UserStoriesInMirroredProgramIncrementsPlanner $user_stories_planner
+        UserStoriesInMirroredProgramIncrementsPlanner $user_stories_planner,
+        ProgramStore $program_store,
+        BuildProject $project_builder
     ) {
         $this->changeset_collection_adapter    = $changeset_collection_adapter;
-        $this->projects_collection_builder     = $projects_collection_builder;
         $this->root_milestone_retriever        = $root_milestone_retriever;
         $this->program_increment_creator       = $program_increment_creator;
         $this->logger                          = $logger;
         $this->pending_artifact_creation_store = $pending_artifact_creation_store;
         $this->user_stories_planner            = $user_stories_planner;
+        $this->program_store                   = $program_store;
+        $this->project_builder                 = $project_builder;
     }
 
     public function createProgramIncrements(ReplicationData $replication_data): void
@@ -107,7 +109,9 @@ final class CreateProgramIncrementsTask implements CreateTaskProgramIncrement
     {
         $copied_values = $this->changeset_collection_adapter->buildCollection($replication_data);
 
-        $team_projects = $this->projects_collection_builder->getTeamProjectForAGivenProgramProject(
+        $team_projects = TeamProjectsCollection::fromProgramIdentifier(
+            $this->program_store,
+            $this->project_builder,
             ProgramIdentifier::fromReplicationData($replication_data)
         );
 

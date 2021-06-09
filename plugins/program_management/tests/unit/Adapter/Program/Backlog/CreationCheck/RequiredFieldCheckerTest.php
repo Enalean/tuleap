@@ -29,7 +29,10 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fiel
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFields;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Team\TeamProjectsCollection;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TrackerCollection;
-use Tuleap\ProgramManagement\Domain\Project;
+use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
+use Tuleap\ProgramManagement\Stub\BuildProgramStub;
+use Tuleap\ProgramManagement\Stub\BuildProjectStub;
+use Tuleap\ProgramManagement\Stub\ProgramStoreStub;
 use Tuleap\ProgramManagement\Stub\RetrievePlanningMilestoneTrackerStub;
 use Tuleap\Test\Builders\UserTestBuilder;
 
@@ -44,9 +47,11 @@ final class RequiredFieldCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testAllowsCreationWhenOnlySynchronizedFieldsAreRequired(): void
     {
-        $first_team  = new Project(147, 'blue_team', 'Blue Team');
-        $second_team = new Project(148, 'red_team', 'Red Team');
-        $teams       = new TeamProjectsCollection([$first_team, $second_team]);
+        $teams = TeamProjectsCollection::fromProgramIdentifier(
+            ProgramStoreStub::buildTeams(147, 148),
+            new BuildProjectStub(),
+            ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 100, UserTestBuilder::aUser()->build())
+        );
 
         $required_title = $this->createMock(\Tracker_FormElement_Field_Text::class);
         $required_title->method('isRequired')->willReturn(true);
@@ -86,7 +91,11 @@ final class RequiredFieldCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testDisallowsCreationWhenAnyFieldIsRequiredAndNotSynchronized(): void
     {
-        $teams = new TeamProjectsCollection([new Project(147, 'blue_team', 'Blue Team')]);
+        $teams = TeamProjectsCollection::fromProgramIdentifier(
+            ProgramStoreStub::buildTeams(147),
+            new BuildProjectStub(),
+            ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 100, UserTestBuilder::aUser()->build())
+        );
 
         $required_title = $this->createMock(\Tracker_FormElement_Field_Text::class);
         $required_title->method('isRequired')->willReturn(true);

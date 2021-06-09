@@ -38,7 +38,10 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fiel
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\SubmissionDate;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Team\TeamProjectsCollection;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TrackerCollection;
-use Tuleap\ProgramManagement\Domain\Project;
+use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
+use Tuleap\ProgramManagement\Stub\BuildProgramStub;
+use Tuleap\ProgramManagement\Stub\BuildProjectStub;
+use Tuleap\ProgramManagement\Stub\ProgramStoreStub;
 use Tuleap\ProgramManagement\Stub\RetrievePlanningMilestoneTrackerStub;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
@@ -76,9 +79,11 @@ final class ProgramIncrementsCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItCreatesMirrorProgramIncrements(): void
     {
         $copied_values = $this->buildCopiedValues();
-        $first_team    = new Project(101, 'team_blue', 'Team Blue');
-        $second_team   = new Project(102, 'team_red', 'Team Red');
-        $teams         = new TeamProjectsCollection([$first_team, $second_team]);
+        $teams         = TeamProjectsCollection::fromProgramIdentifier(
+            ProgramStoreStub::buildTeams(101, 102),
+            new BuildProjectStub(),
+            ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 100, UserTestBuilder::aUser()->build())
+        );
         $current_user  = UserTestBuilder::aUser()->build();
         $retriever     = RetrievePlanningMilestoneTrackerStub::withValidTrackerIds(1024, 2048);
         $trackers      = TrackerCollection::buildRootPlanningMilestoneTrackers($retriever, $teams, $current_user);
@@ -105,8 +110,11 @@ final class ProgramIncrementsCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItThrowsWhenThereIsAnErrorDuringCreation(): void
     {
         $copied_values = $this->buildCopiedValues();
-        $a_team        = new Project(101, 'team_blue', 'Team Blue');
-        $teams         = new TeamProjectsCollection([$a_team]);
+        $teams         = TeamProjectsCollection::fromProgramIdentifier(
+            ProgramStoreStub::buildTeams(101),
+            new BuildProjectStub(),
+            ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 100, UserTestBuilder::aUser()->build())
+        );
         $current_user  = UserTestBuilder::aUser()->build();
         $retriever     = RetrievePlanningMilestoneTrackerStub::withValidTrackerIds(1024, 2048);
         $trackers      = TrackerCollection::buildRootPlanningMilestoneTrackers($retriever, $teams, $current_user);

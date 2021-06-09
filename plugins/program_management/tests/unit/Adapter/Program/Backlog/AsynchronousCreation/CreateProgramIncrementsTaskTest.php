@@ -40,7 +40,6 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Chan
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\FieldRetrievalException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\ReplicationData;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\SubmissionDate;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Team\TeamProjectsCollectionBuilder;
 use Tuleap\ProgramManagement\Domain\Program\ProgramStore;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
@@ -86,10 +85,6 @@ final class CreateProgramIncrementsTaskTest extends \Tuleap\Test\PHPUnit\TestCas
         $this->program_store                   = $this->createStub(ProgramStore::class);
         $this->project_manager                 = $this->createStub(\ProjectManager::class);
         $project_data_adapter                  = new ProjectAdapter($this->project_manager);
-        $projects_collection_builder           = new TeamProjectsCollectionBuilder(
-            $this->program_store,
-            $project_data_adapter
-        );
         $this->planning_factory                = $this->createStub(\PlanningFactory::class);
         $this->mirror_creator                  = $this->createMock(ProgramIncrementsCreator::class);
         $this->logger                          = new TestLogger();
@@ -100,12 +95,13 @@ final class CreateProgramIncrementsTaskTest extends \Tuleap\Test\PHPUnit\TestCas
 
         $this->task = new CreateProgramIncrementsTask(
             $this->changeset_values_adapter,
-            $projects_collection_builder,
             new PlanningAdapter($this->planning_factory),
             $this->mirror_creator,
             $this->logger,
             $this->pending_artifact_creation_store,
-            $this->user_stories_planner
+            $this->user_stories_planner,
+            $this->program_store,
+            $project_data_adapter
         );
     }
 

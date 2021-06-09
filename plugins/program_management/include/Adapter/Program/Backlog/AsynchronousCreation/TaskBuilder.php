@@ -53,10 +53,9 @@ use Tuleap\ProgramManagement\Adapter\Program\Feature\UserStoriesInMirroredProgra
 use Tuleap\ProgramManagement\Adapter\Program\PlanningAdapter;
 use Tuleap\ProgramManagement\Adapter\Program\ProgramDao;
 use Tuleap\ProgramManagement\Adapter\ProjectAdapter;
-use Tuleap\ProgramManagement\Adapter\Team\MirroredTimeboxes\MirroredTimeboxRetriever;
 use Tuleap\ProgramManagement\Adapter\Team\MirroredTimeboxes\MirroredTimeboxesDao;
+use Tuleap\ProgramManagement\Adapter\Team\MirroredTimeboxes\MirroredTimeboxRetriever;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\ProgramIncrementsCreator;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Team\TeamProjectsCollectionBuilder;
 use Tuleap\Tracker\Artifact\Creation\TrackerArtifactCreator;
 use Tuleap\Tracker\FormElement\Field\ListFields\FieldValueMatcher;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
@@ -120,15 +119,13 @@ class TaskBuilder
                 new EndPeriodValueAdapter(),
                 new ArtifactLinkValueAdapter()
             ),
-            new TeamProjectsCollectionBuilder(
-                $program_dao,
-                new ProjectAdapter(ProjectManager::instance())
-            ),
             new PlanningAdapter(\PlanningFactory::build()),
             $mirror_creator,
             $logger,
             new PendingArtifactCreationDao(),
-            $user_stories_planner
+            $user_stories_planner,
+            $program_dao,
+            new ProjectAdapter(ProjectManager::instance())
         );
     }
 }

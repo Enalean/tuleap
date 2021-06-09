@@ -31,8 +31,9 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\Source\SourceTrackerCollecti
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Team\TeamProjectsCollection;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TrackerCollection;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
-use Tuleap\ProgramManagement\Domain\Project;
 use Tuleap\ProgramManagement\Stub\BuildProgramStub;
+use Tuleap\ProgramManagement\Stub\BuildProjectStub;
+use Tuleap\ProgramManagement\Stub\ProgramStoreStub;
 use Tuleap\ProgramManagement\Stub\RetrievePlanningMilestoneTrackerStub;
 use Tuleap\ProgramManagement\Stub\RetrieveVisibleProgramIncrementTrackerStub;
 use Tuleap\Test\Builders\UserTestBuilder;
@@ -62,9 +63,11 @@ final class SynchronizedFieldCollectionBuilderTest extends \Tuleap\Test\PHPUnit\
     {
         $user           = UserTestBuilder::aUser()->build();
         $program        = ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 101, $user);
-        $team_red       = new Project(102, 'team_red', 'Team Red');
-        $team_blue      = new Project(104, 'team_red', 'Team Red');
-        $teams          = new TeamProjectsCollection([$team_blue, $team_red]);
+        $teams          = TeamProjectsCollection::fromProgramIdentifier(
+            ProgramStoreStub::buildTeams(102, 104),
+            new BuildProjectStub(),
+            ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 100, UserTestBuilder::aUser()->build())
+        );
         $first_tracker  = TrackerTestBuilder::aTracker()->withId(102)->build();
         $second_tracker = TrackerTestBuilder::aTracker()->withId(104)->build();
         $team_trackers  = TrackerCollection::buildRootPlanningMilestoneTrackers(

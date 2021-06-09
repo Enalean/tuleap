@@ -23,7 +23,10 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog;
 
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Team\TeamProjectsCollection;
-use Tuleap\ProgramManagement\Domain\Project;
+use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
+use Tuleap\ProgramManagement\Stub\BuildProgramStub;
+use Tuleap\ProgramManagement\Stub\BuildProjectStub;
+use Tuleap\ProgramManagement\Stub\ProgramStoreStub;
 use Tuleap\ProgramManagement\Stub\RetrievePlanningMilestoneTrackerStub;
 use Tuleap\Test\Builders\UserTestBuilder;
 
@@ -32,7 +35,11 @@ final class TrackerCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testGetEmptyTrackerArrayEmptyWhenNoRootPlanningTrackers(): void
     {
         $user        = UserTestBuilder::aUser()->build();
-        $empty_teams = new TeamProjectsCollection([]);
+        $empty_teams = TeamProjectsCollection::fromProgramIdentifier(
+            ProgramStoreStub::buildTeams(),
+            new BuildProjectStub(),
+            ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 100, UserTestBuilder::aUser()->build())
+        );
         $retriever   = RetrievePlanningMilestoneTrackerStub::withValidTrackerIds(78);
         $collection  = TrackerCollection::buildRootPlanningMilestoneTrackers($retriever, $empty_teams, $user);
         self::assertEmpty($collection->getTrackerIds());
@@ -42,7 +49,11 @@ final class TrackerCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testGetEmptyTrackerArrayEmptyWhenNoSecondPlanningTrackers(): void
     {
         $user        = UserTestBuilder::aUser()->build();
-        $empty_teams = new TeamProjectsCollection([]);
+        $empty_teams = TeamProjectsCollection::fromProgramIdentifier(
+            ProgramStoreStub::buildTeams(),
+            new BuildProjectStub(),
+            ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 100, UserTestBuilder::aUser()->build())
+        );
         $retriever   = RetrievePlanningMilestoneTrackerStub::withValidTrackerIds(78);
         $collection  = TrackerCollection::buildSecondPlanningMilestoneTracker($retriever, $empty_teams, $user);
         self::assertEmpty($collection->getTrackerIds());
@@ -51,9 +62,11 @@ final class TrackerCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testReturnsTrueWhenUserCanSubmitInAllRootPlanningTrackers(): void
     {
-        $first_team    = new Project(103, 'team_blue', 'Team Blue');
-        $second_team   = new Project(104, 'team_red', 'Team Red');
-        $teams         = new TeamProjectsCollection([$first_team, $second_team]);
+        $teams         = TeamProjectsCollection::fromProgramIdentifier(
+            ProgramStoreStub::buildTeams(103, 104),
+            new BuildProjectStub(),
+            ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 100, UserTestBuilder::aUser()->build())
+        );
         $first_tracker = $this->createMock(\Tracker::class);
         $first_tracker->method('userCanSubmitArtifact')->willReturn(true);
         $first_tracker->method('getId')->willReturn(78);
@@ -77,9 +90,11 @@ final class TrackerCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testReturnsTrueWhenUserCanSubmitInAllSecondPlanningTrackers(): void
     {
-        $first_team    = new Project(103, 'team_blue', 'Team Blue');
-        $second_team   = new Project(104, 'team_red', 'Team Red');
-        $teams         = new TeamProjectsCollection([$first_team, $second_team]);
+        $teams         = TeamProjectsCollection::fromProgramIdentifier(
+            ProgramStoreStub::buildTeams(103, 104),
+            new BuildProjectStub(),
+            ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 100, UserTestBuilder::aUser()->build())
+        );
         $first_tracker = $this->createMock(\Tracker::class);
         $first_tracker->method('userCanSubmitArtifact')->willReturn(true);
         $first_tracker->method('getId')->willReturn(78);
@@ -99,9 +114,11 @@ final class TrackerCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testReturnsFalseWhenUserCanNotSubmitAnArtifactInAllRootPlanningTrackers(): void
     {
-        $first_team    = new Project(103, 'team_blue', 'Team Blue');
-        $second_team   = new Project(104, 'team_red', 'Team Red');
-        $teams         = new TeamProjectsCollection([$first_team, $second_team]);
+        $teams         = TeamProjectsCollection::fromProgramIdentifier(
+            ProgramStoreStub::buildTeams(103, 104),
+            new BuildProjectStub(),
+            ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 100, UserTestBuilder::aUser()->build())
+        );
         $first_tracker = $this->createMock(\Tracker::class);
         $first_tracker->method('userCanSubmitArtifact')->willReturn(true);
         $second_tracker = $this->createMock(\Tracker::class);
@@ -115,9 +132,11 @@ final class TrackerCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testReturnsFalseWhenUserCanNotSubmitAnArtifactInAllSecondPlanningTrackers(): void
     {
-        $first_team    = new Project(103, 'team_blue', 'Team Blue');
-        $second_team   = new Project(104, 'team_red', 'Team Red');
-        $teams         = new TeamProjectsCollection([$first_team, $second_team]);
+        $teams         = TeamProjectsCollection::fromProgramIdentifier(
+            ProgramStoreStub::buildTeams(103, 104),
+            new BuildProjectStub(),
+            ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 100, UserTestBuilder::aUser()->build())
+        );
         $first_tracker = $this->createMock(\Tracker::class);
         $first_tracker->method('userCanSubmitArtifact')->willReturn(true);
         $second_tracker = $this->createMock(\Tracker::class);
