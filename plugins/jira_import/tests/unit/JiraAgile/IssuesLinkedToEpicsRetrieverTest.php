@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -23,7 +23,7 @@ declare(strict_types=1);
 
 namespace Tuleap\JiraImport\JiraAgile;
 
-use function PHPUnit\Framework\assertEquals;
+use RuntimeException;
 
 final class IssuesLinkedToEpicsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -51,7 +51,7 @@ final class IssuesLinkedToEpicsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCa
         );
         $linked_issues           = $linked_issues_retriever->getLinkedIssues(JiraBoard::buildFakeBoard());
 
-        assertEquals(['10005', '10013'], $linked_issues->getChildren('SP-36'));
+        self::assertEquals(['10005', '10013'], $linked_issues->getChildren('SP-36'));
     }
 
     public function testItReturnsIssuesLinkedToTwoEpics(): void
@@ -75,6 +75,7 @@ final class IssuesLinkedToEpicsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCa
                 if ($epic->key === 'SP-39') {
                     return ['10006'];
                 }
+                throw new RuntimeException("Must not happen");
             }
         };
 
@@ -84,7 +85,7 @@ final class IssuesLinkedToEpicsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCa
         );
         $linked_issues           = $linked_issues_retriever->getLinkedIssues(JiraBoard::buildFakeBoard());
 
-        assertEquals(['10005', '10013'], $linked_issues->getChildren('SP-36'));
-        assertEquals(['10006'], $linked_issues->getChildren('SP-39'));
+        self::assertEquals(['10005', '10013'], $linked_issues->getChildren('SP-36'));
+        self::assertEquals(['10006'], $linked_issues->getChildren('SP-39'));
     }
 }

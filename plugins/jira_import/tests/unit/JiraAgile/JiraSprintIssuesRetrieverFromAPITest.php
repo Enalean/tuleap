@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -24,10 +24,10 @@ declare(strict_types=1);
 namespace Tuleap\JiraImport\JiraAgile;
 
 use Psr\Log\NullLogger;
+use RuntimeException;
 use Tuleap\Tracker\Creation\JiraImporter\JiraClient;
 use Tuleap\Tracker\Creation\JiraImporter\UnexpectedFormatException;
 use Tuleap\Tracker\XML\Exporter\FieldChange\ArtifactLinkChange;
-use function PHPUnit\Framework\assertCount;
 use function PHPUnit\Framework\assertEquals;
 
 final class JiraSprintIssuesRetrieverFromAPITest extends \Tuleap\Test\PHPUnit\TestCase
@@ -36,7 +36,7 @@ final class JiraSprintIssuesRetrieverFromAPITest extends \Tuleap\Test\PHPUnit\Te
     {
         $client = new class implements JiraClient
         {
-            public $called = 0;
+            public int $called = 0;
 
             public function getUrl(string $url): ?array
             {
@@ -58,14 +58,14 @@ final class JiraSprintIssuesRetrieverFromAPITest extends \Tuleap\Test\PHPUnit\Te
 
         $retriever->getArtifactLinkChange(JiraSprint::buildActive(14, 'Sprint 1'));
 
-        assertEquals(1, $client->called);
+        self::assertEquals(1, $client->called);
     }
 
     public function testItQueriesTheURL(): void
     {
         $client = new class implements JiraClient
         {
-            public $called = 0;
+            public int $called = 0;
 
             public function getUrl(string $url): ?array
             {
@@ -86,14 +86,14 @@ final class JiraSprintIssuesRetrieverFromAPITest extends \Tuleap\Test\PHPUnit\Te
 
         $retriever->getArtifactLinkChange(JiraSprint::buildActive(14, 'Sprint 1'));
 
-        assertEquals(1, $client->called);
+        self::assertEquals(1, $client->called);
     }
 
     public function testItReturnsEmptySetWhenNoIssues(): void
     {
         $client = new class implements JiraClient
         {
-            public $called = 0;
+            public int $called = 0;
 
             public function getUrl(string $url): ?array
             {
@@ -112,15 +112,15 @@ final class JiraSprintIssuesRetrieverFromAPITest extends \Tuleap\Test\PHPUnit\Te
 
         $issue_ids = $retriever->getArtifactLinkChange(JiraSprint::buildActive(14, 'Sprint 1'));
 
-        assertEquals(1, $client->called);
-        assertCount(0, $issue_ids);
+        self::assertEquals(1, $client->called);
+        self::assertCount(0, $issue_ids);
     }
 
     public function testItReturnsOneIssue(): void
     {
         $client = new class implements JiraClient
         {
-            public $called = 0;
+            public int $called = 0;
 
             public function getUrl(string $url): ?array
             {
@@ -146,15 +146,15 @@ final class JiraSprintIssuesRetrieverFromAPITest extends \Tuleap\Test\PHPUnit\Te
 
         $issue_ids = $retriever->getArtifactLinkChange(JiraSprint::buildActive(14, 'Sprint 1'));
 
-        assertEquals(1, $client->called);
-        assertEquals([new ArtifactLinkChange(10000)], $issue_ids);
+        self::assertEquals(1, $client->called);
+        self::assertEquals([new ArtifactLinkChange(10000)], $issue_ids);
     }
 
     public function testItReturnsIssuesOnSeveralPages(): void
     {
         $client = new class implements JiraClient
         {
-            public $called = 0;
+            public int $called = 0;
 
             public function getUrl(string $url): ?array
             {
@@ -173,8 +173,7 @@ final class JiraSprintIssuesRetrieverFromAPITest extends \Tuleap\Test\PHPUnit\Te
                             ]
                         ],
                     ];
-                }
-                if ($this->called === 1) {
+                } elseif ($this->called === 1) {
                     assertEquals('/rest/agile/1.0/sprint/14/issue?fields=id&startAt=1', $url);
                     $this->called++;
                     return [
@@ -190,6 +189,8 @@ final class JiraSprintIssuesRetrieverFromAPITest extends \Tuleap\Test\PHPUnit\Te
                             ]
                         ],
                     ];
+                } else {
+                    throw new RuntimeException("Must not happen");
                 }
             }
         };
@@ -198,15 +199,15 @@ final class JiraSprintIssuesRetrieverFromAPITest extends \Tuleap\Test\PHPUnit\Te
 
         $issue_ids = $retriever->getArtifactLinkChange(JiraSprint::buildActive(14, 'Sprint 1'));
 
-        assertEquals(2, $client->called);
-        assertEquals([new ArtifactLinkChange(10000), new ArtifactLinkChange(10001)], $issue_ids);
+        self::assertEquals(2, $client->called);
+        self::assertEquals([new ArtifactLinkChange(10000), new ArtifactLinkChange(10001)], $issue_ids);
     }
 
     public function testItThrowAnExceptionIfIdIsNotNumeric(): void
     {
         $client = new class implements JiraClient
         {
-            public $called = 0;
+            public int $called = 0;
 
             public function getUrl(string $url): ?array
             {
@@ -234,6 +235,6 @@ final class JiraSprintIssuesRetrieverFromAPITest extends \Tuleap\Test\PHPUnit\Te
 
         $retriever->getArtifactLinkChange(JiraSprint::buildActive(14, 'Sprint 1'));
 
-        assertEquals(1, $client->called);
+        self::assertEquals(1, $client->called);
     }
 }

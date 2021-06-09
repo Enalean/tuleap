@@ -26,8 +26,6 @@ namespace Tuleap\JiraImport\JiraAgile;
 use Psr\Log\NullLogger;
 use Tuleap\Tracker\Creation\JiraImporter\JiraClient;
 use Tuleap\Tracker\Creation\JiraImporter\UnexpectedFormatException;
-use function PHPUnit\Framework\assertEmpty;
-use function PHPUnit\Framework\assertNull;
 use function PHPUnit\Framework\assertSame;
 
 class JiraBoardsRetrieverFromAPITest extends \Tuleap\Test\PHPUnit\TestCase
@@ -69,7 +67,7 @@ class JiraBoardsRetrieverFromAPITest extends \Tuleap\Test\PHPUnit\TestCase
         };
 
         $retriever = new JiraBoardsRetrieverFromAPI($client, new NullLogger());
-        assertEmpty($retriever->getFirstScrumBoardForProject('FOO'));
+        self::assertEmpty($retriever->getFirstScrumBoardForProject('FOO'));
     }
 
     public function testItHasOneBoard(): void
@@ -107,10 +105,11 @@ class JiraBoardsRetrieverFromAPITest extends \Tuleap\Test\PHPUnit\TestCase
         $retriever = new JiraBoardsRetrieverFromAPI($client, new NullLogger());
         $board     = $retriever->getFirstScrumBoardForProject('SP');
 
-        assertSame(1, $board->id);
-        assertSame('https://example.com/rest/agile/1.0/board/1', $board->url);
-        assertSame('SP', $board->project_key);
-        assertSame(10000, $board->project_id);
+        self::assertNotNull($board);
+        self::assertSame(1, $board->id);
+        self::assertSame('https://example.com/rest/agile/1.0/board/1', $board->url);
+        self::assertSame('SP', $board->project_key);
+        self::assertSame(10000, $board->project_id);
     }
 
     public function testItHasNoBoardForRequiredProject(): void
@@ -148,7 +147,7 @@ class JiraBoardsRetrieverFromAPITest extends \Tuleap\Test\PHPUnit\TestCase
         $retriever = new JiraBoardsRetrieverFromAPI($client, new NullLogger());
         $board     = $retriever->getFirstScrumBoardForProject('BAR');
 
-        assertNull($board);
+        self::assertNull($board);
     }
 
     public function testItGetTheBoardOnTheSecondPage(): void
@@ -187,8 +186,7 @@ class JiraBoardsRetrieverFromAPITest extends \Tuleap\Test\PHPUnit\TestCase
                             ],
                         ],
                     ];
-                }
-                if ($this->call_count === 1) {
+                } elseif ($this->call_count === 1) {
                     $this->call_count++;
                     parse_str(parse_url($url, PHP_URL_QUERY), $url_query_parts);
                     assertSame('1', $url_query_parts['startAt']);
@@ -224,7 +222,8 @@ class JiraBoardsRetrieverFromAPITest extends \Tuleap\Test\PHPUnit\TestCase
         $retriever = new JiraBoardsRetrieverFromAPI($client, new NullLogger());
         $board     = $retriever->getFirstScrumBoardForProject('BAR');
 
-        assertSame(2, $board->id);
-        assertSame('BAR', $board->project_key);
+        self::assertNotNull($board);
+        self::assertSame(2, $board->id);
+        self::assertSame('BAR', $board->project_key);
     }
 }

@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -26,14 +26,13 @@ namespace Tuleap\JiraImport\JiraAgile;
 use Psr\Log\NullLogger;
 use Tuleap\Tracker\Creation\JiraImporter\JiraClient;
 use function PHPUnit\Framework\assertEquals;
-use function PHPUnit\Framework\assertTrue;
 
 final class JiraEpicIssuesRetrieverFromAPITest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItCallsTheEpicsIssueURL(): void
     {
         $client = new class implements JiraClient {
-            public $called = false;
+            public bool $called = false;
             public function getUrl(string $url): ?array
             {
                 $this->called = true;
@@ -48,7 +47,7 @@ final class JiraEpicIssuesRetrieverFromAPITest extends \Tuleap\Test\PHPUnit\Test
         $epic_retriever = new JiraEpicIssuesRetrieverFromAPI($client, new NullLogger());
         $epic_retriever->getIssueIds(new JiraEpic(10143, '', 'https://example.com/rest/agile/latest/board/1/epic/10143'));
 
-        assertTrue($client->called);
+        self::assertTrue($client->called);
     }
 
     public function testItReturnsTheIssueIds(): void
@@ -79,6 +78,6 @@ final class JiraEpicIssuesRetrieverFromAPITest extends \Tuleap\Test\PHPUnit\Test
         $epic_retriever = new JiraEpicIssuesRetrieverFromAPI($client, new NullLogger());
         $ids            = $epic_retriever->getIssueIds(new JiraEpic(10143, '', 'https://example.com/rest/agile/latest/board/1/epic/10143'));
 
-        assertEquals(['10005', '10013'], $ids);
+        self::assertEquals(['10005', '10013'], $ids);
     }
 }
