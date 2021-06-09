@@ -122,8 +122,6 @@ use Tuleap\Tracker\Creation\JiraImporter\Import\JiraImporterExternalPluginsEvent
 use Tuleap\Tracker\Events\MoveArtifactGetExternalSemanticCheckers;
 use Tuleap\Tracker\Events\MoveArtifactParseFieldChangeNodes;
 use Tuleap\Tracker\FormElement\Event\MessageFetcherAdditionalWarnings;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkFieldValueDao;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\LinksRetriever;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStaticValueDao;
 use Tuleap\Tracker\FormElement\Field\ListFields\FieldValueMatcher;
 use Tuleap\Tracker\Masschange\TrackerMasschangeGetExternalActionsEvent;
@@ -142,7 +140,6 @@ use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneUsedExternalService;
 use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneUsedExternalServiceEvent;
 use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneValueChecker;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
-use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao;
 use Tuleap\Tracker\TrackerCrumbInContext;
 use Tuleap\Tracker\Workflow\Event\GetWorkflowExternalPostActionsValuesForUpdate;
 use Tuleap\Tracker\Workflow\Event\GetWorkflowExternalPostActionsValueUpdater;
@@ -1402,15 +1399,7 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
                 $params['class']          = SystemEvent_BURNUP_GENERATE::class;
                 $params['dependencies']   = [
                     $tracker_artifact_factory,
-                    new SemanticTimeframeBuilder(
-                        new SemanticTimeframeDao(),
-                        Tracker_FormElementFactory::instance(),
-                        TrackerFactory::instance(),
-                        new LinksRetriever(
-                            new ArtifactLinkFieldValueDao(),
-                            $tracker_artifact_factory
-                        )
-                    ),
+                    SemanticTimeframeBuilder::build(),
                     new BurnupDao(),
                     $this->getBurnupCalculator(),
                     $this->getBurnupCountElementsCalculator(),

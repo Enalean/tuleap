@@ -49,8 +49,6 @@ use Tuleap\Tracker\FormElement\ChartConfigurationValueChecker;
 use Tuleap\Tracker\FormElement\ChartConfigurationValueRetriever;
 use Tuleap\Tracker\FormElement\ChartFieldUsage;
 use Tuleap\Tracker\FormElement\ChartMessageFetcher;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkFieldValueDao;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\LinksRetriever;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 use Tuleap\Tracker\FormElement\TrackerFormElementExternalField;
 use Tuleap\Tracker\REST\Artifact\ArtifactFieldValueFullRepresentation;
@@ -58,7 +56,6 @@ use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneDao;
 use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneFactory;
 use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneValueChecker;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
-use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao;
 use UserManager;
 
 class Burnup extends Tracker_FormElement_Field implements Tracker_FormElement_Field_ReadOnly, TrackerFormElementExternalField
@@ -116,7 +113,7 @@ class Burnup extends Tracker_FormElement_Field implements Tracker_FormElement_Fi
     {
         return new ChartConfigurationFieldRetriever(
             $this->getFormElementFactory(),
-            $this->getSemanticTimeframeBuilder(),
+            SemanticTimeframeBuilder::build(),
             $this->getLogger()
         );
     }
@@ -447,25 +444,12 @@ class Burnup extends Tracker_FormElement_Field implements Tracker_FormElement_Fi
      */
     private function getConfigurationValueRetriever()
     {
-        $semantic_timeframe = $this->getSemanticTimeframeBuilder()->getSemantic($this->getTracker());
+        $semantic_timeframe = SemanticTimeframeBuilder::build()->getSemantic($this->getTracker());
 
         return new ChartConfigurationValueRetriever(
             $this->getConfigurationFieldRetriever(),
             $semantic_timeframe->getTimeframeCalculator(),
             $this->getLogger()
-        );
-    }
-
-    private function getSemanticTimeframeBuilder()
-    {
-        return new SemanticTimeframeBuilder(
-            new SemanticTimeframeDao(),
-            Tracker_FormElementFactory::instance(),
-            \TrackerFactory::instance(),
-            new LinksRetriever(
-                new ArtifactLinkFieldValueDao(),
-                \Tracker_ArtifactFactory::instance()
-            )
         );
     }
 

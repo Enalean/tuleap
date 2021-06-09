@@ -23,15 +23,12 @@ use Tuleap\AgileDashboard\Planning\Admin\AdditionalPlanningConfigurationWarnings
 use Tuleap\AgileDashboard\Planning\Admin\PlanningWarningPossibleMisconfigurationPresenter;
 use Tuleap\JiraImport\JiraAgile\ScrumTrackerStructureEvent;
 use Tuleap\Layout\IncludeAssets;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkFieldValueDao;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\LinksRetriever;
 use Tuleap\Tracker\Semantic\Status\Done\SemanticDone;
 use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneDao;
 use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneFactory;
 use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneValueChecker;
 use Tuleap\Tracker\Semantic\Timeframe\Events\DoesAPluginRenderAChartBasedOnSemanticTimeframeForTrackerEvent;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
-use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao;
 use Tuleap\Tracker\Workflow\BeforeEvent;
 use Tuleap\Velocity\JiraImporter\AddVelocityToScrumTemplate;
 use Tuleap\Velocity\Semantic\SemanticVelocity;
@@ -240,15 +237,13 @@ class velocityPlugin extends Plugin // @codingStandardsIgnoreLine
 
     public function detailsChartPresentersRetriever(DetailsChartPresentersRetriever $event)
     {
-        $form_element_factory = Tracker_FormElementFactory::instance();
-
         $builder = new VelocityRepresentationBuilder(
             new SemanticVelocityFactory(),
             new SemanticDoneFactory(
                 new SemanticDoneDao(),
                 new SemanticDoneValueChecker()
             ),
-            $this->getSemanticTimeframeBuilder($form_element_factory),
+            SemanticTimeframeBuilder::build(),
             Planning_MilestoneFactory::build()
         );
 
@@ -262,19 +257,6 @@ class velocityPlugin extends Plugin // @codingStandardsIgnoreLine
         $string_representation = $renderer->renderToString("chart-field", $presenter);
 
         $event->addEscapedChart($string_representation);
-    }
-
-    private function getSemanticTimeframeBuilder(Tracker_FormElementFactory $form_element_factory): SemanticTimeframeBuilder
-    {
-        return new SemanticTimeframeBuilder(
-            new SemanticTimeframeDao(),
-            $form_element_factory,
-            \TrackerFactory::instance(),
-            new LinksRetriever(
-                new ArtifactLinkFieldValueDao(),
-                \Tracker_ArtifactFactory::instance()
-            )
-        );
     }
 
     public function doesAPluginRenderAChartBasedOnSemanticTimeframeForTracker(DoesAPluginRenderAChartBasedOnSemanticTimeframeForTrackerEvent $event): void

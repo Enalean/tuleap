@@ -129,7 +129,6 @@ use Tuleap\Tracker\Notifications\UnsubscribersNotificationDAO;
 use Tuleap\Tracker\Semantic\Status\StatusValueForChangesetProvider;
 use Tuleap\Tracker\Semantic\Status\StatusValueProvider;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
-use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldDetector;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsRetriever;
 use Tuleap\Tracker\Workflow\PostAction\HiddenFieldsets\HiddenFieldsetsDetector;
@@ -2207,15 +2206,7 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
         );
         $computed_dao               = new ComputedFieldDao();
         $form_element_factory       = Tracker_FormElementFactory::instance();
-        $semantic_timeframe_builder = new SemanticTimeframeBuilder(
-            new SemanticTimeframeDao(),
-            $form_element_factory,
-            \TrackerFactory::instance(),
-            new LinksRetriever(
-                new ArtifactLinkFieldValueDao(),
-                $this->getArtifactFactory()
-            )
-        );
+        $semantic_timeframe_builder = SemanticTimeframeBuilder::build();
         $field_retriever            = new ChartConfigurationFieldRetriever(
             $this->getFormElementFactory(),
             $semantic_timeframe_builder,

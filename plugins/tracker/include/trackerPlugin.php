@@ -138,8 +138,6 @@ use Tuleap\Tracker\Creation\TrackerCreator;
 use Tuleap\Tracker\ForgeUserGroupPermission\TrackerAdminAllProjects;
 use Tuleap\Tracker\FormElement\BurndownCacheDateRetriever;
 use Tuleap\Tracker\FormElement\BurndownCalculator;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkFieldValueDao;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\LinksRetriever;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureConfigController;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureCreator;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
@@ -203,7 +201,6 @@ use Tuleap\Tracker\Report\TrackerReportConfigController;
 use Tuleap\Tracker\Report\TrackerReportConfigDao;
 use Tuleap\Tracker\REST\OAuth2\OAuth2TrackerReadScope;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
-use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao;
 use Tuleap\Tracker\Service\ServiceActivator;
 use Tuleap\Tracker\Webhook\Actions\WebhookCreateController;
 use Tuleap\Tracker\Webhook\Actions\WebhookDeleteController;
@@ -531,15 +528,7 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
                 $params['class']        = 'Tuleap\\Tracker\\FormElement\\SystemEvent\\' . SystemEvent_BURNDOWN_GENERATE::NAME;
                 $params['dependencies'] = [
                     Tracker_ArtifactFactory::instance(),
-                    new SemanticTimeframeBuilder(
-                        new SemanticTimeframeDao(),
-                        Tracker_FormElementFactory::instance(),
-                        \TrackerFactory::instance(),
-                        new LinksRetriever(
-                            new ArtifactLinkFieldValueDao(),
-                            \Tracker_ArtifactFactory::instance()
-                        )
-                    ),
+                    SemanticTimeframeBuilder::build(),
                     new BurndownFieldDao(),
                     new FieldCalculator(new BurndownCalculator(new ComputedFieldDao())),
                     new ComputedFieldDaoCache(new ComputedFieldDao()),

@@ -26,8 +26,6 @@ use Luracast\Restler\RestException;
 use Tuleap\REST\Header;
 use Tuleap\Roadmap\NatureForRoadmapDao;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkFieldValueDao;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\LinksRetriever;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenterFactory;
 use Tuleap\Tracker\Semantic\Progress\MethodBuilder;
@@ -35,7 +33,6 @@ use Tuleap\Tracker\Semantic\Progress\SemanticProgressBuilder;
 use Tuleap\Tracker\Semantic\Progress\SemanticProgressDao;
 use Tuleap\Tracker\Semantic\Status\SemanticStatusRetriever;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
-use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao;
 use UserManager;
 
 final class TasksResource
@@ -81,15 +78,7 @@ final class TasksResource
         $this->optionsSubtasks($id);
 
         $form_element_factory       = \Tracker_FormElementFactory::instance();
-        $semantic_timeframe_builder = new SemanticTimeframeBuilder(
-            new SemanticTimeframeDao(),
-            $form_element_factory,
-            \TrackerFactory::instance(),
-            new LinksRetriever(
-                new ArtifactLinkFieldValueDao(),
-                \Tracker_ArtifactFactory::instance()
-            )
-        );
+        $semantic_timeframe_builder = SemanticTimeframeBuilder::build();
 
         $progress_dao = new SemanticProgressDao();
         $retriever    = new SubtasksRetriever(
