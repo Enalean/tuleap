@@ -32,6 +32,7 @@ use Tuleap\ProgramManagement\Domain\Project;
 use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\RetrievePlanningMilestoneTracker;
 use Tuleap\ProgramManagement\Stub\BuildProgramStub;
 use Tuleap\ProgramManagement\Stub\RetrievePlanningMilestoneTrackerStub;
+use Tuleap\ProgramManagement\Stub\RetrieveVisibleIterationTrackerStub;
 use Tuleap\ProgramManagement\Stub\VerifyIsIterationTrackerStub;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
@@ -45,6 +46,11 @@ final class IterationCreatorCheckerTest extends TestCase
     private RetrievePlanningMilestoneTracker $milestone_retriever;
     private VerifyIsIterationTrackerStub $iteration_tracker_verifier;
     private ProgramTracker $program_tracker;
+    private RetrieveVisibleIterationTrackerStub $iteration_tracker_retriever;
+    /**
+     * @var \PHPUnit\Framework\MockObject\MockObject|TimeboxCreatorChecker
+     */
+    private $timebox_creator_checker;
 
     protected function setUp(): void
     {
@@ -60,6 +66,14 @@ final class IterationCreatorCheckerTest extends TestCase
         $this->milestone_retriever        = RetrievePlanningMilestoneTrackerStub::withValidTrackers($first_milestone_tracker);
         $this->iteration_tracker_verifier = VerifyIsIterationTrackerStub::buildValidIteration();
         $this->program_tracker            = new ProgramTracker(TrackerTestBuilder::aTracker()->build());
+
+        $this->timebox_creator_checker = $this->createMock(TimeboxCreatorChecker::class);
+
+        $iteration_tracker = TrackerTestBuilder::aTracker()->withId(102)->build();
+
+        $this->iteration_tracker_retriever = RetrieveVisibleIterationTrackerStub::withValidTracker(
+            $iteration_tracker
+        );
     }
 
     public function testAllowArtifactCreationWhenTrackerIsNotIterationTracker(): void
@@ -88,11 +102,11 @@ final class IterationCreatorCheckerTest extends TestCase
         );
     }
 
-    public function testAllowArtifactCreationAndLogsExceptionWhenAtLeastOneTeamHasNoSecondPlanning(): void
+    public function testDisallowArtifactCreationAndLogsExceptionWhenAtLeastOneTeamHasNoSecondPlanning(): void
     {
         $this->milestone_retriever = RetrievePlanningMilestoneTrackerStub::withNoPlanning();
 
-        self::assertTrue(
+        self::assertFalse(
             $this->getChecker()->canCreateAnIteration(
                 $this->user,
                 $this->program_tracker,
@@ -104,11 +118,55 @@ final class IterationCreatorCheckerTest extends TestCase
         self::assertTrue($this->logger->hasErrorRecords());
     }
 
+    public function testAllowArtifactCreationWhenUserCanNotSeeIterationTracker(): void
+    {
+        $this->iteration_tracker_retriever = RetrieveVisibleIterationTrackerStub::withNotVisibleIterationTracker();
+
+        self::assertTrue(
+            $this->getChecker()->canCreateAnIteration(
+                $this->user,
+                $this->program_tracker,
+                $this->program,
+                new TeamProjectsCollection([new Project(104, 'project', 'Project 1')])
+            )
+        );
+    }
+
+    public function testAllowArtifactCreationWhenUserCanSeeTrackerAndAllChecksAreGoods(): void
+    {
+        $this->timebox_creator_checker->method('canTimeboxBeCreated')->willReturn(true);
+
+        self::assertTrue(
+            $this->getChecker()->canCreateAnIteration(
+                $this->user,
+                $this->program_tracker,
+                $this->program,
+                new TeamProjectsCollection([new Project(104, 'project', 'Project 1')])
+            )
+        );
+    }
+
+    public function testDisallowArtifactCreationWhenUserCanSeeTrackerButAllChecksAreNotGoods(): void
+    {
+        $this->timebox_creator_checker->method('canTimeboxBeCreated')->willReturn(false);
+
+        self::assertFalse(
+            $this->getChecker()->canCreateAnIteration(
+                $this->user,
+                $this->program_tracker,
+                $this->program,
+                new TeamProjectsCollection([new Project(104, 'project', 'Project 1')])
+            )
+        );
+    }
+
     private function getChecker(): IterationCreatorChecker
     {
         return new IterationCreatorChecker(
             $this->milestone_retriever,
             $this->iteration_tracker_verifier,
+            $this->iteration_tracker_retriever,
+            $this->timebox_creator_checker,
             $this->logger
         );
     }

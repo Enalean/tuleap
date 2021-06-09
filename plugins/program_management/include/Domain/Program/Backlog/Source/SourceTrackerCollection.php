@@ -20,8 +20,9 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source;
+namespace Tuleap\ProgramManagement\Domain\Program\Backlog\Source;
 
+use Tuleap\ProgramManagement\Domain\Program\Backlog\IterationTracker\RetrieveVisibleIterationTracker;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracker\RetrieveVisibleProgramIncrementTracker;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TrackerCollection;
 use Tuleap\ProgramManagement\Domain\Program\Plan\ProgramHasNoProgramIncrementTrackerException;
@@ -30,7 +31,7 @@ use Tuleap\ProgramManagement\Domain\Program\ProgramTrackerNotFoundException;
 use Tuleap\ProgramManagement\Domain\ProgramTracker;
 
 /**
- * I contain the Program Increment Tracker and all its Mirrored Program Increment trackers from
+ * I contain the Timebox tracker and all its Mirrored Timebox trackers from
  * the Program's Teams.
  * @psalm-immutable
  */
@@ -60,6 +61,28 @@ final class SourceTrackerCollection
         \PFUser $user
     ): self {
         $trackers = [ProgramTracker::buildProgramIncrementTrackerFromProgram($retriever, $program, $user)];
+        foreach ($team_trackers->getTrackers() as $team_tracker) {
+            $trackers[] = $team_tracker;
+        }
+        return new self($trackers);
+    }
+
+    /**
+     * @throws ProgramTrackerNotFoundException
+     */
+    public static function fromIterationAndTeamTrackers(
+        RetrieveVisibleIterationTracker $retriever,
+        ProgramIdentifier $program,
+        TrackerCollection $team_trackers,
+        \PFUser $user
+    ): ?self {
+        $iteration_tracker = ProgramTracker::buildIterationTrackerFromProgram($retriever, $program, $user);
+
+        if ($iteration_tracker === null) {
+            return null;
+        }
+
+        $trackers = [$iteration_tracker];
         foreach ($team_trackers->getTrackers() as $team_tracker) {
             $trackers[] = $team_tracker;
         }

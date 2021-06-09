@@ -24,8 +24,9 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\Iteration;
 
 use Tuleap\DB\DataAccessObject;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration\VerifyIsIterationTracker;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\IterationTracker\RetrieveIterationTracker;
 
-final class IterationsDAO extends DataAccessObject implements VerifyIsIterationTracker
+final class IterationsDAO extends DataAccessObject implements VerifyIsIterationTracker, RetrieveIterationTracker
 {
     public function isIterationTracker(int $tracker_id): bool
     {
@@ -33,5 +34,19 @@ final class IterationsDAO extends DataAccessObject implements VerifyIsIterationT
         $rows = $this->getDB()->run($sql, $tracker_id);
 
         return count($rows) > 0;
+    }
+
+    public function getIterationTrackerId(int $project_id): ?int
+    {
+        $sql = 'SELECT iteration_tracker_id FROM plugin_program_management_program
+                INNER JOIN tracker ON tracker.id = plugin_program_management_program.iteration_tracker_id
+                    WHERE tracker.group_id = ?';
+
+        $tracker_id = $this->getDB()->cell($sql, $project_id);
+        if (! $tracker_id) {
+            return null;
+        }
+
+        return $tracker_id;
     }
 }
