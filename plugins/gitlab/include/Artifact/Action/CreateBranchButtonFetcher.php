@@ -27,6 +27,7 @@ use ForgeConfig;
 use PFUser;
 use Tuleap\Gitlab\Plugin\GitlabIntegrationAvailabilityChecker;
 use Tuleap\Gitlab\Repository\Webhook\WebhookDao;
+use Tuleap\Layout\JavascriptAsset;
 use Tuleap\Tracker\Artifact\ActionButtons\AdditionalButtonAction;
 use Tuleap\Tracker\Artifact\ActionButtons\AdditionalButtonLinkPresenter;
 use Tuleap\Tracker\Artifact\Artifact;
@@ -42,13 +43,16 @@ class CreateBranchButtonFetcher
 
     private GitlabIntegrationAvailabilityChecker $availability_checker;
     private WebhookDao $webhook_dao;
+    private JavascriptAsset $javascript_asset;
 
     public function __construct(
         GitlabIntegrationAvailabilityChecker $availability_checker,
-        WebhookDao $webhook_dao
+        WebhookDao $webhook_dao,
+        JavascriptAsset $javascript_asset
     ) {
         $this->availability_checker = $availability_checker;
         $this->webhook_dao          = $webhook_dao;
+        $this->javascript_asset     = $javascript_asset;
     }
 
     public function getActionButton(Artifact $artifact, PFUser $user): ?AdditionalButtonAction
@@ -87,7 +91,7 @@ class CreateBranchButtonFetcher
 
         return new AdditionalButtonAction(
             $link,
-            ""
+            $this->javascript_asset->getFileURL()
         );
     }
 }

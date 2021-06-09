@@ -1,0 +1,9 @@
+{
+    "name": "gitlab",
+    "gettext-vue": {
+        "artifact-create-branch-action": {
+            "src": "scripts/artifact-create-branch-action",
+            "po": "scripts/artifact-create-branch-action/po"
+        }
+    }
+}

@@ -29,6 +29,8 @@ use Tracker;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\Gitlab\Plugin\GitlabIntegrationAvailabilityChecker;
 use Tuleap\Gitlab\Repository\Webhook\WebhookDao;
+use Tuleap\Layout\JavascriptAsset;
+use Tuleap\Test\Builders\IncludeAssetsBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\Artifact;
 
@@ -46,6 +48,7 @@ final class CreateBranchButtonFetcherTest extends TestCase
     private $webhook_dao;
 
     private CreateBranchButtonFetcher $fetcher;
+    private JavascriptAsset $javascript_asset;
 
     protected function setUp(): void
     {
@@ -53,10 +56,12 @@ final class CreateBranchButtonFetcherTest extends TestCase
 
         $this->availability_checker = $this->createMock(GitlabIntegrationAvailabilityChecker::class);
         $this->webhook_dao          = $this->createMock(WebhookDao::class);
+        $this->javascript_asset     = new JavascriptAsset(IncludeAssetsBuilder::build(), 'action.js');
 
         $this->fetcher = new CreateBranchButtonFetcher(
             $this->availability_checker,
-            $this->webhook_dao
+            $this->webhook_dao,
+            $this->javascript_asset
         );
     }
 
@@ -107,6 +112,7 @@ final class CreateBranchButtonFetcherTest extends TestCase
 
         self::assertNotNull($button_action);
         self::assertSame('Create GitLab branch', $button_action->getLinkPresenter()->link_label);
+        self::assertSame('action.js', $button_action->getAssetLink());
     }
 
     public function testItReturnsNullIfFeatureFlagIsNotSet(): void

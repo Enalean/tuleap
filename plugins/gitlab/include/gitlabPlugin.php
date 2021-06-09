@@ -90,6 +90,8 @@ use Tuleap\Gitlab\REST\ResourcesInjector;
 use Tuleap\Http\HttpClientFactory;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\InstanceBaseURLBuilder;
+use Tuleap\Layout\IncludeAssets;
+use Tuleap\Layout\JavascriptAsset;
 use Tuleap\Mail\MailFilter;
 use Tuleap\Mail\MailLogger;
 use Tuleap\Project\Admin\Reference\Browse\ExternalSystemReferencePresenter;
@@ -729,7 +731,14 @@ class gitlabPlugin extends Plugin
     {
         $button_fecther = new CreateBranchButtonFetcher(
             $this->getGitlabIntegrationAvailabilityChecker(),
-            new WebhookDao()
+            new WebhookDao(),
+            new JavascriptAsset(
+                new IncludeAssets(
+                    __DIR__ . '/../../../src/www/assets/gitlab',
+                    '/assets/gitlab'
+                ),
+                "artifact-create-branch.js"
+            )
         );
 
         $button_action = $button_fecther->getActionButton(
