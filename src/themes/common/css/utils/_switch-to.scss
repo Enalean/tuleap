@@ -150,6 +150,7 @@ $white-space-above-and-after-a-project-link: var(--tlp-small-spacing);
     &:hover,
     &:focus {
         background: rgba(0, 0, 0, .2);
+        color: var(--tlp-typo-default-text-color-on-dark-background);
         text-decoration: none;
 
         > .switch-to-projects-project-label {
@@ -370,6 +371,7 @@ $white-space-above-and-after-a-project-link: var(--tlp-small-spacing);
     &:focus,
     &:hover {
         background: rgba(0, 0, 0, .2);
+        color: var(--tlp-typo-default-text-color-on-dark-background);
         text-decoration: none;
     }
 }
