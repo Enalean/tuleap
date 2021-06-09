@@ -24,7 +24,6 @@ namespace Tuleap\BotMattermostAgileDashboard\SenderServices;
 
 use AgileDashboard_Milestone_MilestoneStatusCounter;
 use HTTPRequest;
-use Mockery;
 use PFUser;
 use Planning;
 use Planning_Milestone;
@@ -32,18 +31,17 @@ use Planning_MilestoneFactory;
 use PlanningFactory;
 use Project;
 use Tuleap\BotMattermost\SenderServices\MarkdownEngine\MarkdownMustacheRenderer;
+use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\Artifact;
 
-final class StandUpNotificationBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
+final class StandUpNotificationBuilderTest extends TestCase
 {
-    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
     public function testNotificationCanBeBuiltWhenTheParentOfTheMilestoneArtifactCanNotBeFound(): void
     {
-        $planning_milestone_factory = Mockery::mock(Planning_MilestoneFactory::class);
-        $milestone_status_counter   = Mockery::mock(AgileDashboard_Milestone_MilestoneStatusCounter::class);
-        $planning_factory           = Mockery::mock(PlanningFactory::class);
-        $markdown_renderer          = Mockery::mock(MarkdownMustacheRenderer::class);
+        $planning_milestone_factory = $this->createMock(Planning_MilestoneFactory::class);
+        $milestone_status_counter   = $this->createMock(AgileDashboard_Milestone_MilestoneStatusCounter::class);
+        $planning_factory           = $this->createMock(PlanningFactory::class);
+        $markdown_renderer          = $this->createMock(MarkdownMustacheRenderer::class);
         $notification_builder       = new StandUpNotificationBuilder(
             $planning_milestone_factory,
             $milestone_status_counter,
@@ -51,37 +49,46 @@ final class StandUpNotificationBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             $markdown_renderer
         );
 
-        $planning = Mockery::mock(Planning::class);
-        $planning->shouldReceive('getName')->andReturn('My planning name');
-        $planning_factory->shouldReceive('getLastLevelPlannings')->andReturn([$planning]);
-        $planning_milestone = Mockery::mock(Planning_Milestone::class);
-        $planning_milestone_factory->shouldReceive('getAllCurrentMilestones')->andReturn([$planning_milestone]);
-        $planning_milestone_factory->shouldReceive('updateMilestoneContextualInfo')->andReturn($planning_milestone);
-        $planning_milestone->shouldReceive('getLinkedArtifacts')->andReturn([]);
-        $planning_milestone->shouldReceive('getGroupId')->andReturn(102);
-        $planning_milestone->shouldReceive('getPlanningId')->andReturn(741);
-        $planning_milestone->shouldReceive('getArtifactId')->andReturn(852);
-        $planning_milestone->shouldReceive('getArtifactTitle')->andReturn('My Release');
-        $planning_milestone->shouldReceive('getStartDate')->andReturn(0);
-        $planning_milestone->shouldReceive('getEndDate')->andReturn(1);
-        $milestone_artifact = Mockery::mock(Artifact::class);
-        $planning_milestone->shouldReceive('getArtifact')->andReturn($milestone_artifact);
-        $planning_milestone->shouldReceive('getDaysUntilEnd')->andReturn(0);
-        $milestone_status_counter->shouldReceive('getStatus')->andReturn(['open' => 0, 'closed' => 0]);
+        $planning = $this->createMock(Planning::class);
+        $planning->method('getName')->willReturn('My planning name');
+        $planning_factory->method('getLastLevelPlannings')->willReturn([$planning]);
+        $planning_milestone = $this->createMock(Planning_Milestone::class);
+        $planning_milestone_factory->method('getAllCurrentMilestones')->willReturn([$planning_milestone]);
+        $planning_milestone_factory->method('updateMilestoneContextualInfo')->willReturn($planning_milestone);
+        $planning_milestone->method('getLinkedArtifacts')->willReturn([]);
+        $planning_milestone->method('getGroupId')->willReturn(102);
+        $planning_milestone->method('getPlanningId')->willReturn(741);
+        $planning_milestone->method('getArtifactId')->willReturn(852);
+        $planning_milestone->method('getArtifactTitle')->willReturn('My Release');
+        $planning_milestone->method('getStartDate')->willReturn(0);
+        $planning_milestone->method('getEndDate')->willReturn(1);
+        $milestone_artifact = $this->createMock(Artifact::class);
+        $planning_milestone->method('getArtifact')->willReturn($milestone_artifact);
+        $planning_milestone->method('getDaysUntilEnd')->willReturn(0);
+        $milestone_status_counter->method('getStatus')->willReturn(['open' => 0, 'closed' => 0]);
 
-        $milestone_artifact->shouldReceive('getParent')->andReturn(null); // Issue is here
-        $milestone_artifact->shouldReceive('getABurndownField')->andReturn(null);
-        $milestone_artifact->shouldReceive('getUri')->andReturn('/milestone_artifact_uri');
-        $milestone_artifact->shouldReceive('getXRef')->andReturn('release #852');
+        $milestone_artifact->method('getParent')->willReturn(null); // Issue is here
+        $milestone_artifact->method('getABurndownField')->willReturn(null);
+        $milestone_artifact->method('getUri')->willReturn('/milestone_artifact_uri');
+        $milestone_artifact->method('getXRef')->willReturn('release #852');
 
         $rendered_text = 'rendered_markdown_notif';
-        $markdown_renderer->shouldReceive('renderToString')->andReturn($rendered_text);
+        $markdown_renderer->method('renderToString')->willReturn($rendered_text);
+
+        $project = new Project([
+            'group_id' => '101',
+            'group_name' => 'test',
+        ]);
+
+        $http_request = $this->createMock(HTTPRequest::class);
+        $http_request->method('getServerUrl');
 
         $notification_text = $notification_builder->buildNotificationText(
-            Mockery::spy(HTTPRequest::class),
-            Mockery::spy(PFUser::class),
-            Mockery::spy(Project::class)
+            $http_request,
+            $this->createMock(PFUser::class),
+            $project
         );
-        $this->assertEquals($rendered_text, $notification_text);
+
+        self::assertSame($rendered_text, $notification_text);
     }
 }
