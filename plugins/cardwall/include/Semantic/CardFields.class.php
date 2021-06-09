@@ -224,7 +224,7 @@ class Cardwall_Semantic_CardFields extends Tracker_Semantic
 
     public function getLabel()
     {
-        return dgettext('tuleap-cardwall', 'Cards semantics');
+        return dgettext('tuleap-cardwall', 'Cards');
     }
 
     public function getShortName()

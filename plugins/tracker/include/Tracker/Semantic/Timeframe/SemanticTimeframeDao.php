@@ -82,4 +82,17 @@ WHERE tracker_id IN $tracker_ids_statement";
         $result = $this->getDB()->single($sql, $tracker_ids_statement->values());
         return $result === self::SQL_TRUE_VALUE;
     }
+
+    /**
+     * @psalm-return array<int, array{tracker_id: int, implied_from_tracker_id: int}>
+     */
+    public function getSemanticsImpliedFromGivenTracker(int $tracker_id): ?array
+    {
+        $sql = '
+            SELECT tracker_id, implied_from_tracker_id
+            FROM tracker_semantic_timeframe
+            WHERE implied_from_tracker_id = ?
+        ';
+        return $this->getDB()->run($sql, $tracker_id);
+    }
 }

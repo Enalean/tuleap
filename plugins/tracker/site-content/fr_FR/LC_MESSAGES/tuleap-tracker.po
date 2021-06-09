@@ -1697,8 +1697,9 @@ msgid "Impossible to delete this field (field dependencies)"
 msgstr ""
 "Impossible de supprimer ce champ (utilisé pour une dépendance entre champs)"
 
-msgid "Impossible to delete this field (used in semantics)"
-msgstr "Impossible de supprimer ce champ (utilisé en sémantique)"
+#, php-format
+msgid "Impossible to delete this field (used by: %s)"
+msgstr "Impossible de supprimer ce champ (utilisé par: %s)"
 
 msgid "Impossible to delete this field (used in triggers)"
 msgstr "Impossible de supprimer ce champ (utilisé pour dans les déclencheurs)"
@@ -4698,6 +4699,18 @@ msgstr "sélectionner le champ du tracker"
 
 msgid "select value"
 msgstr "sélectionner la valeur"
+
+#, php-format
+msgid "semantic %s"
+msgstr "sémantique %s"
+
+#, php-format
+msgid "semantic %s of tracker %s"
+msgstr "sémantique %s de l'outil de suivi %s"
+
+#, php-format
+msgid "semantic %s of tracker %s in project %s"
+msgstr "sémantique %s de l'outil de suivi %s du projet %s"
 
 msgid "set to"
 msgstr "valué à"

@@ -242,7 +242,11 @@ class SemanticTimeframeBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertEquals(
             new SemanticTimeframe(
                 $this->story_tracker,
-                new TimeframeImpliedFromAnotherTracker($semantic_implied_from_tracker, $this->links_retriever)
+                new TimeframeImpliedFromAnotherTracker(
+                    $this->story_tracker,
+                    $semantic_implied_from_tracker,
+                    $this->links_retriever
+                )
             ),
             $builder->getSemantic($this->story_tracker)
         );

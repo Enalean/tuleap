@@ -114,6 +114,7 @@ class SemanticTimeframeBuilder
         return new SemanticTimeframe(
             $tracker,
             new TimeframeImpliedFromAnotherTracker(
+                $tracker,
                 $implied_semantic,
                 $this->links_retriever
             )
