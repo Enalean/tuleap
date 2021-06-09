@@ -91,9 +91,7 @@ class TimeframeImpliedFromAnotherTracker implements IComputeTimeframes
             ArtifactHasTooManyLinksToArtifactsOfTargetTracker |
             ArtifactHasNoLinkToArtifactOfTargetTracker $exception
         ) {
-            $logger->error($exception->getMessage());
-
-            return TimePeriodWithoutWeekEnd::buildFromNothing();
+            return TimePeriodWithoutWeekEnd::buildFromNothingWithErrorMessage($exception->getMessage());
         }
     }
 
@@ -111,9 +109,7 @@ class TimeframeImpliedFromAnotherTracker implements IComputeTimeframes
             ArtifactHasTooManyLinksToArtifactsOfTargetTracker |
             ArtifactHasNoLinkToArtifactOfTargetTracker $exception
         ) {
-            $logger->error($exception->getMessage());
-
-            return TimePeriodWithoutWeekEnd::buildFromNothing();
+            return TimePeriodWithoutWeekEnd::buildFromNothingWithErrorMessage($exception->getMessage());
         }
     }
 

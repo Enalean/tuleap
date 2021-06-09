@@ -93,6 +93,7 @@ final class TaskRepresentationBuilderForTracker implements IBuildATaskRepresenta
             $start,
             $end,
             $are_dates_implied,
+            $time_period->getErrorMessage(),
             $this->dependencies_retriever->getDependencies($artifact),
             new ProjectReference($artifact->getTracker()->getProject()),
         );

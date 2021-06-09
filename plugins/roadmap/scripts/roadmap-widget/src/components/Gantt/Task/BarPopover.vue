@@ -62,6 +62,12 @@
                             </p>
                             <p v-else class="roadmap-gantt-task-popover-value-undefined">
                                 <translate>Undefined</translate>
+                                <template v-if="is_time_period_in_error">
+                                    <br />
+                                    <span class="roadmap-gantt-task-popover-value-error">
+                                        {{ task.time_period_error_message }}
+                                    </span>
+                                </template>
                             </p>
                         </td>
                     </tr>
@@ -143,6 +149,10 @@ export default class BarPopover extends Vue {
 
     get is_progress_in_error(): boolean {
         return this.task.progress_error_message.length > 0;
+    }
+
+    get is_time_period_in_error(): boolean {
+        return this.task.time_period_error_message.length > 0;
     }
 
     get percentage(): string | null {

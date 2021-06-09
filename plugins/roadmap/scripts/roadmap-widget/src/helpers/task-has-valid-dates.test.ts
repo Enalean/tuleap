@@ -51,6 +51,15 @@ describe("doesTaskHaveEndDateGreaterOrEqualToStartDate", () => {
         ).toBe(true);
     });
 
+    it("Returns false if no start date and no end date", () => {
+        expect(
+            doesTaskHaveEndDateGreaterOrEqualToStartDate({
+                start: null,
+                end: null,
+            } as Task)
+        ).toBe(false);
+    });
+
     it("Returns false if end date < start date", () => {
         expect(
             doesTaskHaveEndDateGreaterOrEqualToStartDate({

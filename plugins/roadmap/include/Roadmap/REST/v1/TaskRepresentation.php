@@ -83,6 +83,8 @@ final class TaskRepresentation
      */
     public $are_dates_implied;
 
+    public string $time_period_error_message;
+
     /**
      * @param DependenciesByNature[] $dependencies
      */
@@ -97,6 +99,7 @@ final class TaskRepresentation
         ?\DateTimeImmutable $start,
         ?\DateTimeImmutable $end,
         bool $are_dates_implied,
+        string $time_period_error_message,
         array $dependencies,
         ProjectReference $project
     ) {
@@ -110,9 +113,10 @@ final class TaskRepresentation
         $this->end        = JsonCast::fromDateTimeToDate($end);
         $this->project    = $project;
 
-        $this->are_dates_implied      = $are_dates_implied;
-        $this->progress_error_message = $progress_error_message;
-        $this->subtasks_uri           = TasksResource::ROUTE . '/' . $id . '/subtasks';
+        $this->are_dates_implied         = $are_dates_implied;
+        $this->time_period_error_message = $time_period_error_message;
+        $this->progress_error_message    = $progress_error_message;
+        $this->subtasks_uri              = TasksResource::ROUTE . '/' . $id . '/subtasks';
 
         $this->dependencies = [];
         foreach ($dependencies as $dep) {

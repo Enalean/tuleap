@@ -27,7 +27,6 @@ use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Semantic\Timeframe\TimeframeNotConfigured;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao;
-use function PHPUnit\Framework\assertNull;
 
 class TimeframeNotConfiguredTest extends TestCase
 {
@@ -93,30 +92,50 @@ class TimeframeNotConfiguredTest extends TestCase
         );
     }
 
-    public function testItReturnsAnEmptyTimePeriodForArtifact(): void
+    public function testItReturnsAnEmptyTimePeriodWithAnErrorMessageForArtifact(): void
     {
-        $time_period = $this->timeframe->buildTimePeriodWithoutWeekendForArtifact(
-            $this->createMock(Artifact::class),
+        $artifact = $this->createMock(Artifact::class);
+        $tracker  = $this->createMock(\Tracker::class);
+
+        $artifact->expects(self::once())->method('getTracker')->will(self::returnValue($tracker));
+        $tracker->expects(self::once())->method('getName')->will(self::returnValue('User story'));
+
+        $time_period = $this->timeframe->buildTimePeriodWithoutWeekendForArtifactForREST(
+            $artifact,
             $this->createMock(\PFUser::class),
             new NullLogger()
         );
 
-        assertNull($time_period->getStartDate());
-        assertNull($time_period->getDuration());
-        assertNull($time_period->getEndDate());
+        self::assertNull($time_period->getStartDate());
+        self::assertNull($time_period->getDuration());
+        self::assertNull($time_period->getEndDate());
+        self::assertEquals(
+            'Semantic Timeframe is not configured for tracker User story.',
+            $time_period->getErrorMessage()
+        );
     }
 
-    public function testItReturnsAnEmptyTimePeriodForArtifactREST(): void
+    public function testItReturnsAnEmptyTimePeriodWithAnErrorMessageForArtifactREST(): void
     {
+        $artifact = $this->createMock(Artifact::class);
+        $tracker  = $this->createMock(\Tracker::class);
+
+        $artifact->expects(self::once())->method('getTracker')->will(self::returnValue($tracker));
+        $tracker->expects(self::once())->method('getName')->will(self::returnValue('User story'));
+
         $time_period = $this->timeframe->buildTimePeriodWithoutWeekendForArtifactForREST(
-            $this->createMock(Artifact::class),
+            $artifact,
             $this->createMock(\PFUser::class),
             new NullLogger()
         );
 
-        assertNull($time_period->getStartDate());
-        assertNull($time_period->getDuration());
-        assertNull($time_period->getEndDate());
+        self::assertNull($time_period->getStartDate());
+        self::assertNull($time_period->getDuration());
+        self::assertNull($time_period->getEndDate());
+        self::assertEquals(
+            'Semantic Timeframe is not configured for tracker User story.',
+            $time_period->getErrorMessage()
+        );
     }
 
     public function testItThrowsAnExceptionWhenInChartContext(): void

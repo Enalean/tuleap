@@ -49,6 +49,7 @@ export interface Task {
     readonly subtasks: Task[];
     readonly parent: Task | undefined;
     readonly are_dates_implied: boolean;
+    readonly time_period_error_message: string;
 }
 
 export type TimeScale = "month" | "quarter" | "week";

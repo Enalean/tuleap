@@ -30,6 +30,10 @@ export function retrieveAllSubtasks(task: Task): Promise<Task[]> {
     return retrieveAll("/api/" + task.subtasks_uri, { parent: task });
 }
 
+function hasTimePeriodError(a: Task): boolean {
+    return a.time_period_error_message.length > 0;
+}
+
 export async function retrieveAll(
     url: string,
     additional_defaults: Partial<Task>
@@ -57,6 +61,10 @@ export async function retrieveAll(
             };
         })
         .filter((task: Task): boolean => {
+            if (hasTimePeriodError(task)) {
+                return true;
+            }
+
             return Boolean(task.start || task.end);
         })
         .sort((a: Task, b: Task) => {
@@ -66,7 +74,17 @@ export async function retrieveAll(
             const end_of_b = b.end;
 
             if (!start_of_a || !start_of_b) {
-                // should not happen, according to the filter above
+                if (hasTimePeriodError(a)) {
+                    return 1;
+                }
+
+                if (hasTimePeriodError(b)) {
+                    return -1;
+                }
+
+                // should not happen. Either:
+                // - both dates are null because of a time period error
+                // - or both dates are defined
                 return -1;
             }
 
@@ -75,7 +93,6 @@ export async function retrieveAll(
                     // both tasks a and b are invalid, switch to alphabetical sort
                     return a.title.localeCompare(b.title, undefined, { numeric: true });
                 }
-
                 // put invalid task a at the end
                 return 1;
             }
