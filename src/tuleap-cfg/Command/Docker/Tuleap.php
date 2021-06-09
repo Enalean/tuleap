@@ -65,14 +65,15 @@ final class Tuleap
         $this->regenerateConfigurations($output);
     }
 
-    public function update(OutputInterface $output): void
+    public function update(OutputInterface $output): string
     {
-        $this->regenerateConfigurations($output);
+        $tuleap_fqdn = $this->regenerateConfigurations($output);
         $this->runForgeUpgrade($output);
         $this->queueSystemCheck($output);
+        return $tuleap_fqdn;
     }
 
-    private function regenerateConfigurations(OutputInterface $output): void
+    private function regenerateConfigurations(OutputInterface $output): string
     {
         $logger      = new ConsoleLogger($output, [LogLevel::INFO => OutputInterface::VERBOSITY_NORMAL]);
         $server_name = $this->getServerFQDNFromConfiguration();
@@ -110,6 +111,8 @@ final class Tuleap
         $output->writeln('<info>Regenerate configuration for apache</info>');
         $configure_apache = new ConfigureApache('/');
         $configure_apache->configure();
+
+        return $server_name;
     }
 
     private function runForgeUpgrade(OutputInterface $output): void
