@@ -22,13 +22,13 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck;
 
-use Tuleap\ProgramManagement\Domain\Program\Backlog\TrackerCollection;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Source\SourceTrackerCollection;
 use Tuleap\ProgramManagement\Domain\ProgramTracker;
 
 interface CheckStatus
 {
     public function isStatusWellConfigured(
         ProgramTracker $tracker,
-        TrackerCollection $source_tracker_collection
+        SourceTrackerCollection $source_tracker_collection
     ): bool;
 }

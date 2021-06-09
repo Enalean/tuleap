@@ -59,16 +59,17 @@ class TimeboxCreatorChecker
         PFUser $user
     ): bool {
         $this->logger->debug(
-            "Checking if milestone can be created in planning of project"
+            'Checking if milestone can be created in planning of project'
         );
 
-        if (! $this->semantic_checker->areTrackerSemanticsWellConfigured($tracker_data, $team_trackers)) {
-            $this->logger->error("Semantics are not well configured.");
+        if (! $this->semantic_checker->areTrackerSemanticsWellConfigured($tracker_data, $program_and_milestone_trackers)) {
+            $this->logger->error('Semantics are not well configured.');
 
             return false;
         }
+
         if (! $team_trackers->canUserSubmitAnArtifactInAllTrackers($user)) {
-            $this->logger->debug("User cannot submit an artifact in all team trackers.");
+            $this->logger->debug('User cannot submit an artifact in all team trackers.');
 
             return false;
         }
@@ -76,11 +77,11 @@ class TimeboxCreatorChecker
         try {
             $synchronized_fields_data_collection = $this->field_collection_builder->buildFromSourceTrackers($program_and_milestone_trackers);
         } catch (FieldSynchronizationException $exception) {
-            $this->logger->error("Cannot retrieve all the synchronized fields", ['exception' => $exception]);
+            $this->logger->error('Cannot retrieve all the synchronized fields', ['exception' => $exception]);
             return false;
         }
         if (! $synchronized_fields_data_collection->canUserSubmitAndUpdateAllFields($user)) {
-            $this->logger->debug("User cannot submit and update all needed fields in all trackers.");
+            $this->logger->debug('User cannot submit and update all needed fields in all trackers.');
             return false;
         }
 
@@ -90,7 +91,7 @@ class TimeboxCreatorChecker
                 $synchronized_fields_data_collection
             )
         ) {
-            $this->logger->debug("A team tracker has a required fields outside the synchronized fields.");
+            $this->logger->debug('A team tracker has a required fields outside the synchronized fields.');
             return false;
         }
 
@@ -100,11 +101,11 @@ class TimeboxCreatorChecker
                 $synchronized_fields_data_collection
             )
         ) {
-            $this->logger->debug("A team tracker is using one of the synchronized fields in a workflow rule.");
+            $this->logger->debug('A team tracker is using one of the synchronized fields in a workflow rule.');
             return false;
         }
 
-        $this->logger->debug("User can create a milestone in the project.");
+        $this->logger->debug('User can create a milestone in the project.');
         return true;
     }
 }

@@ -25,10 +25,14 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\CreationCheck;
 use Psr\Log\Test\TestLogger;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck\CheckStatus;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Team\TeamProjectsCollection;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Source\SourceTrackerCollection;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TrackerCollection;
+use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\ProgramTracker;
 use Tuleap\ProgramManagement\Domain\Project;
+use Tuleap\ProgramManagement\Stub\BuildProgramStub;
 use Tuleap\ProgramManagement\Stub\RetrievePlanningMilestoneTrackerStub;
+use Tuleap\ProgramManagement\Stub\RetrieveVisibleProgramIncrementTrackerStub;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
@@ -53,9 +57,30 @@ final class SemanticCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $semantic_status_checker;
     private TestLogger $logger;
+    private ProgramTracker $program_increment_tracker;
+    private \PFUser $user;
+    private TrackerCollection $trackers;
+    private SourceTrackerCollection $source_trackers;
 
     protected function setUp(): void
     {
+        $tracker                         = TrackerTestBuilder::aTracker()->withId(104)->build();
+        $this->program_increment_tracker = new ProgramTracker($tracker);
+
+        $first_team  = new Project(101, 'team_blue', 'Team Blue');
+        $second_team = new Project(102, 'team_red', 'Team Red');
+        $teams       = new TeamProjectsCollection([$first_team, $second_team]);
+
+        $retriever             = RetrievePlanningMilestoneTrackerStub::withValidTrackerIds(1024, 2048);
+        $this->user            = UserTestBuilder::aUser()->build();
+        $this->trackers        = TrackerCollection::buildRootPlanningMilestoneTrackers($retriever, $teams, $this->user);
+        $this->source_trackers = SourceTrackerCollection::fromProgramAndTeamTrackers(
+            RetrieveVisibleProgramIncrementTrackerStub::withValidTracker(TrackerTestBuilder::aTracker()->withId(1)->build()),
+            ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 101, $this->user),
+            $this->trackers,
+            $this->user
+        );
+
         $this->title_dao               = $this->createMock(\Tracker_Semantic_TitleDao::class);
         $this->description_dao         = $this->createMock(\Tracker_Semantic_DescriptionDao::class);
         $this->timeframe_dao           = $this->createMock(SemanticTimeframeDao::class);
@@ -72,98 +97,58 @@ final class SemanticCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItReturnsTrueIfAllChecksAreOk(): void
     {
-        $tracker                   = TrackerTestBuilder::aTracker()->withId(104)->build();
-        $program_increment_tracker = new ProgramTracker($tracker);
-
-        $first_team  = new Project(101, 'team_blue', 'Team Blue');
-        $second_team = new Project(102, 'team_red', 'Team Red');
-        $teams       = new TeamProjectsCollection([$first_team, $second_team]);
-        $retriever   = RetrievePlanningMilestoneTrackerStub::withValidTrackerIds(1024, 2048);
-        $user        = UserTestBuilder::aUser()->build();
-        $trackers    = TrackerCollection::buildRootPlanningMilestoneTrackers($retriever, $teams, $user);
-
         $this->title_dao->expects(self::once())
             ->method('getNbOfTrackerWithoutSemanticTitleDefined')
-            ->with([1024, 2048])
+            ->with([1, 1024, 2048])
             ->willReturn(0);
         $this->description_dao->expects(self::once())
             ->method('getNbOfTrackerWithoutSemanticDescriptionDefined')
-            ->with([1024, 2048])
+            ->with([1, 1024, 2048])
             ->willReturn(0);
         $this->semantic_status_checker->expects(self::once())
             ->method('isStatusWellConfigured')
             ->willReturn(true);
         $this->timeframe_dao->expects(self::once())
             ->method('getNbOfTrackersWithoutTimeFrameSemanticDefined')
-            ->with([1024, 2048])
+            ->with([1, 1024, 2048])
             ->willReturn(0);
         $this->timeframe_dao->expects(self::once())
             ->method('areTimeFrameSemanticsUsingSameTypeOfField')
-            ->with([1024, 2048])
+            ->with([1, 1024, 2048])
             ->willReturn(true);
 
         self::assertTrue(
-            $this->checker->areTrackerSemanticsWellConfigured($program_increment_tracker, $trackers)
+            $this->checker->areTrackerSemanticsWellConfigured($this->program_increment_tracker, $this->source_trackers)
         );
         self::assertFalse($this->logger->hasErrorRecords());
     }
 
     public function testItReturnsFalseIfOneMilestoneTrackerDoesNotHaveTitleSemantic(): void
     {
-        $tracker                   = TrackerTestBuilder::aTracker()->withId(104)->build();
-        $program_increment_tracker = new ProgramTracker($tracker);
-
-        $first_team  = new Project(101, 'team_blue', 'Team Blue');
-        $second_team = new Project(102, 'team_red', 'Team Red');
-        $teams       = new TeamProjectsCollection([$first_team, $second_team]);
-        $retriever   = RetrievePlanningMilestoneTrackerStub::withValidTrackerIds(1024, 2048);
-        $user        = UserTestBuilder::aUser()->build();
-        $trackers    = TrackerCollection::buildRootPlanningMilestoneTrackers($retriever, $teams, $user);
-
         $this->title_dao->method('getNbOfTrackerWithoutSemanticTitleDefined')
             ->willReturn(1);
 
         self::assertFalse(
-            $this->checker->areTrackerSemanticsWellConfigured($program_increment_tracker, $trackers)
+            $this->checker->areTrackerSemanticsWellConfigured($this->program_increment_tracker, $this->source_trackers)
         );
         self::assertTrue($this->logger->hasRecords('error'));
     }
 
     public function testItReturnsFalseIfOneMilestoneTrackerDoesNotHaveDescriptionSemantic(): void
     {
-        $tracker                   = TrackerTestBuilder::aTracker()->withId(104)->build();
-        $program_increment_tracker = new ProgramTracker($tracker);
-
-        $first_team  = new Project(101, 'team_blue', 'Team Blue');
-        $second_team = new Project(102, 'team_red', 'Team Red');
-        $teams       = new TeamProjectsCollection([$first_team, $second_team]);
-        $retriever   = RetrievePlanningMilestoneTrackerStub::withValidTrackerIds(1024, 2048);
-        $user        = UserTestBuilder::aUser()->build();
-        $trackers    = TrackerCollection::buildRootPlanningMilestoneTrackers($retriever, $teams, $user);
-
         $this->title_dao->method('getNbOfTrackerWithoutSemanticTitleDefined')
             ->willReturn(0);
         $this->description_dao->method('getNbOfTrackerWithoutSemanticDescriptionDefined')
             ->willReturn(1);
 
         self::assertFalse(
-            $this->checker->areTrackerSemanticsWellConfigured($program_increment_tracker, $trackers)
+            $this->checker->areTrackerSemanticsWellConfigured($this->program_increment_tracker, $this->source_trackers)
         );
         self::assertTrue($this->logger->hasErrorThatContains('Description'));
     }
 
     public function testItReturnsFalseIfOneMilestoneTrackerDoesNotHaveTimeFrameSemantic(): void
     {
-        $tracker                   = TrackerTestBuilder::aTracker()->withId(104)->build();
-        $program_increment_tracker = new ProgramTracker($tracker);
-
-        $first_team  = new Project(101, 'team_blue', 'Team Blue');
-        $second_team = new Project(102, 'team_red', 'Team Red');
-        $teams       = new TeamProjectsCollection([$first_team, $second_team]);
-        $retriever   = RetrievePlanningMilestoneTrackerStub::withValidTrackerIds(1024, 2048);
-        $user        = UserTestBuilder::aUser()->build();
-        $trackers    = TrackerCollection::buildRootPlanningMilestoneTrackers($retriever, $teams, $user);
-
         $this->title_dao->method('getNbOfTrackerWithoutSemanticTitleDefined')
             ->willReturn(0);
         $this->description_dao->method('getNbOfTrackerWithoutSemanticDescriptionDefined')
@@ -174,23 +159,13 @@ final class SemanticCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->willReturn(1);
 
         self::assertFalse(
-            $this->checker->areTrackerSemanticsWellConfigured($program_increment_tracker, $trackers)
+            $this->checker->areTrackerSemanticsWellConfigured($this->program_increment_tracker, $this->source_trackers)
         );
         self::assertTrue($this->logger->hasErrorThatContains('Timeframe'));
     }
 
     public function testItReturnsFalseIfTimeFrameSemanticsDontUseTheSameFieldType(): void
     {
-        $tracker                   = TrackerTestBuilder::aTracker()->withId(104)->build();
-        $program_increment_tracker = new ProgramTracker($tracker);
-
-        $first_team  = new Project(101, 'team_blue', 'Team Blue');
-        $second_team = new Project(102, 'team_red', 'Team Red');
-        $teams       = new TeamProjectsCollection([$first_team, $second_team]);
-        $retriever   = RetrievePlanningMilestoneTrackerStub::withValidTrackerIds(1024, 2048);
-        $user        = UserTestBuilder::aUser()->build();
-        $trackers    = TrackerCollection::buildRootPlanningMilestoneTrackers($retriever, $teams, $user);
-
         $this->title_dao->method('getNbOfTrackerWithoutSemanticTitleDefined')
             ->willReturn(0);
         $this->description_dao->method('getNbOfTrackerWithoutSemanticDescriptionDefined')
@@ -203,23 +178,13 @@ final class SemanticCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->willReturn(false);
 
         self::assertFalse(
-            $this->checker->areTrackerSemanticsWellConfigured($program_increment_tracker, $trackers)
+            $this->checker->areTrackerSemanticsWellConfigured($this->program_increment_tracker, $this->source_trackers)
         );
         self::assertTrue($this->logger->hasErrorThatContains('Timeframe'));
     }
 
     public function testItReturnsFalseIfOneStatusSemanticIsNotWellConfigured(): void
     {
-        $tracker                   = TrackerTestBuilder::aTracker()->withId(104)->build();
-        $program_increment_tracker = new ProgramTracker($tracker);
-
-        $first_team  = new Project(101, 'team_blue', 'Team Blue');
-        $second_team = new Project(102, 'team_red', 'Team Red');
-        $teams       = new TeamProjectsCollection([$first_team, $second_team]);
-        $retriever   = RetrievePlanningMilestoneTrackerStub::withValidTrackerIds(1024, 2048);
-        $user        = UserTestBuilder::aUser()->build();
-        $trackers    = TrackerCollection::buildRootPlanningMilestoneTrackers($retriever, $teams, $user);
-
         $this->title_dao->method('getNbOfTrackerWithoutSemanticTitleDefined')
             ->willReturn(0);
         $this->description_dao->method('getNbOfTrackerWithoutSemanticDescriptionDefined')
@@ -233,7 +198,7 @@ final class SemanticCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->willReturn(false);
 
         self::assertFalse(
-            $this->checker->areTrackerSemanticsWellConfigured($program_increment_tracker, $trackers)
+            $this->checker->areTrackerSemanticsWellConfigured($this->program_increment_tracker, $this->source_trackers)
         );
         self::assertTrue($this->logger->hasErrorThatContains('Status'));
     }

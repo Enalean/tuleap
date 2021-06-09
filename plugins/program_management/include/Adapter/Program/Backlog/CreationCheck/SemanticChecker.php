@@ -25,7 +25,7 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\CreationCheck;
 use Psr\Log\LoggerInterface;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck\CheckSemantic;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck\CheckStatus;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\TrackerCollection;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Source\SourceTrackerCollection;
 use Tuleap\ProgramManagement\Domain\ProgramTracker;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao;
 
@@ -53,19 +53,19 @@ final class SemanticChecker implements CheckSemantic
 
     public function areTrackerSemanticsWellConfigured(
         ProgramTracker $tracker,
-        TrackerCollection $source_tracker_collection
+        SourceTrackerCollection $source_tracker_collection
     ): bool {
-        $tracker_ids = $source_tracker_collection->getTrackerIds();
+        $tracker_ids = $source_tracker_collection->getSourceTrackerIds();
         if ($this->semantic_title_dao->getNbOfTrackerWithoutSemanticTitleDefined($tracker_ids) > 0) {
-            $this->logger->error("Semantic 'Title' is not well configured. Please check semantic of mirrored milestone trackers.");
+            $this->logger->error("Semantic 'Title' is not well configured. Please check semantic of timebox tracker and mirrored timebox trackers.");
             return false;
         }
         if ($this->semantic_description_dao->getNbOfTrackerWithoutSemanticDescriptionDefined($tracker_ids) > 0) {
-            $this->logger->error("Semantic 'Description' is not well configured. Please check semantic of mirrored milestone trackers.");
+            $this->logger->error("Semantic 'Description' is not well configured. Please check semantic of timebox tracker and mirrored timebox trackers.");
             return false;
         }
         if (! $this->areTimeFrameSemanticsAligned($tracker_ids)) {
-            $this->logger->error("Semantic 'Timeframe' is not well configured. Please check semantic of mirrored milestone trackers.");
+            $this->logger->error("Semantic 'Timeframe' is not well configured. Please check semantic of timebox tracker and mirrored timebox trackers.");
             return false;
         }
         if (
@@ -74,7 +74,7 @@ final class SemanticChecker implements CheckSemantic
                 $source_tracker_collection
             ) === false
         ) {
-            $this->logger->error("Semantic 'Status' is not well configured. Please check semantic of mirrored milestone trackers.");
+            $this->logger->error("Semantic 'Status' is not well configured. Please check semantic of timebox tracker and mirrored timebox trackers.");
             return false;
         }
 
