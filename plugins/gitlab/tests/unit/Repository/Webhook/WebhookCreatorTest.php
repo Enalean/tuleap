@@ -22,10 +22,9 @@ declare(strict_types=1);
 
 namespace Tuleap\Gitlab\Repository\Webhook;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Project;
-use Psr\Log\LoggerInterface;
+use Psr\Log\Test\TestLogger;
+use Tuleap\Cryptography\ConcealedString;
 use Tuleap\Cryptography\KeyFactory;
 use Tuleap\Cryptography\Symmetric\EncryptionKey;
 use Tuleap\Gitlab\API\ClientWrapper;
@@ -34,48 +33,44 @@ use Tuleap\Gitlab\Repository\GitlabRepositoryIntegration;
 use Tuleap\Gitlab\Test\Builder\CredentialsTestBuilder;
 use Tuleap\InstanceBaseURLBuilder;
 
-class WebhookCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
+final class WebhookCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     /**
      * @var WebhookCreator
      */
     private $creator;
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|KeyFactory
+     * @var \PHPUnit\Framework\MockObject\MockObject&KeyFactory
      */
     private $key_factory;
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|WebhookDao
+     * @var \PHPUnit\Framework\MockObject\MockObject&WebhookDao
      */
     private $dao;
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ClientWrapper
+     * @var \PHPUnit\Framework\MockObject\MockObject&ClientWrapper
      */
     private $gitlab_api_client;
+    private TestLogger $logger;
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|LoggerInterface
-     */
-    private $logger;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|WebhookDeletor
+     * @var WebhookDeletor
      */
     private $webhook_deletor;
 
     protected function setUp(): void
     {
-        $this->key_factory       = Mockery::mock(KeyFactory::class);
-        $this->dao               = Mockery::mock(WebhookDao::class);
-        $this->gitlab_api_client = Mockery::mock(ClientWrapper::class);
-        $this->logger            = Mockery::mock(LoggerInterface::class);
+        $this->key_factory       = $this->createMock(KeyFactory::class);
+        $this->dao               = $this->createMock(WebhookDao::class);
+        $this->gitlab_api_client = $this->createMock(ClientWrapper::class);
+        $this->logger            = new TestLogger();
         $this->webhook_deletor   = new WebhookDeletor(
             $this->dao,
             $this->gitlab_api_client,
             $this->logger
         );
 
-        $instance_base_url = Mockery::mock(InstanceBaseURLBuilder::class, ['build' => 'https://tuleap.example.com']);
+        $instance_base_url = $this->createMock(InstanceBaseURLBuilder::class);
+        $instance_base_url->method('build')->willReturn('https://tuleap.example.com');
 
         $this->creator = new WebhookCreator(
             $this->key_factory,
@@ -103,29 +98,25 @@ class WebhookCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $this->dao
-            ->shouldReceive('getGitlabRepositoryWebhook')
+            ->expects(self::once())
+            ->method('getGitlabRepositoryWebhook')
             ->with(1)
-            ->once()
-            ->andReturn([]);
+            ->willReturn([]);
 
-        $encryption_key = \Mockery::mock(EncryptionKey::class);
-        $encryption_key
-            ->shouldReceive('getRawKeyMaterial')
-            ->andReturns(
-                str_repeat('a', SODIUM_CRYPTO_SECRETBOX_KEYBYTES)
-            );
+        $encryption_key = new EncryptionKey(new ConcealedString(str_repeat('a', SODIUM_CRYPTO_SECRETBOX_KEYBYTES)));
         $this->key_factory
-            ->shouldReceive('getEncryptionKey')
-            ->andReturn($encryption_key)
-            ->once();
+            ->expects(self::once())
+            ->method('getEncryptionKey')
+            ->willReturn($encryption_key);
 
         $this->gitlab_api_client
-            ->shouldReceive('postUrl')
+            ->expects(self::once())
+            ->method('postUrl')
             ->with(
                 $credentials,
                 '/projects/2/hooks',
-                Mockery::on(
-                    function (array $config) {
+                self::callback(
+                    function (array $config): bool {
                         return count(array_keys($config)) === 6
                             && $config['url'] === 'https://tuleap.example.com/plugins/gitlab/integration/1/webhook'
                             && is_string($config['token'])
@@ -136,24 +127,20 @@ class WebhookCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
                     }
                 )
             )
-            ->once()
-            ->andReturn(
+            ->willReturn(
                 [
                     'id' => 7,
                 ]
             );
 
         $this->dao
-            ->shouldReceive('storeWebhook')
-            ->with(1, 7, Mockery::type('string'))
-            ->once();
-
-        $this->logger
-            ->shouldReceive('info')
-            ->with('Creating new hook for the_full_url')
-            ->once();
+            ->expects(self::once())
+            ->method('storeWebhook')
+            ->with(1, 7, self::anything());
 
         $this->creator->generateWebhookInGitlabProject($credentials, $integration);
+
+        self::assertTrue($this->logger->hasInfoThatContains('Creating new hook for the_full_url'));
     }
 
     public function testItGeneratesAWebhookForRepositoryAndRemoveTheOldOne(): void
@@ -172,40 +159,36 @@ class WebhookCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $this->dao
-            ->shouldReceive('getGitlabRepositoryWebhook')
+            ->expects(self::once())
+            ->method('getGitlabRepositoryWebhook')
             ->with(1)
-            ->once()
-            ->andReturn(['gitlab_webhook_id' => 6]);
+            ->willReturn(['gitlab_webhook_id' => 6]);
 
         $this->gitlab_api_client
-            ->shouldReceive('deleteUrl')
+            ->method('deleteUrl')
             ->with(
                 $credentials,
                 '/projects/2/hooks/6'
             );
         $this->dao
-            ->shouldReceive('deleteGitlabRepositoryWebhook')
-            ->with(1)
-            ->once();
+            ->expects(self::once())
+            ->method('deleteGitlabRepositoryWebhook')
+            ->with(1);
 
-        $encryption_key = \Mockery::mock(EncryptionKey::class);
-        $encryption_key
-            ->shouldReceive('getRawKeyMaterial')
-            ->andReturns(
-                str_repeat('a', SODIUM_CRYPTO_SECRETBOX_KEYBYTES)
-            );
+        $encryption_key = new EncryptionKey(new ConcealedString(str_repeat('a', SODIUM_CRYPTO_SECRETBOX_KEYBYTES)));
         $this->key_factory
-            ->shouldReceive('getEncryptionKey')
-            ->andReturn($encryption_key)
-            ->once();
+            ->expects(self::once())
+            ->method('getEncryptionKey')
+            ->willReturn($encryption_key);
 
         $this->gitlab_api_client
-            ->shouldReceive('postUrl')
+            ->expects(self::once())
+            ->method('postUrl')
             ->with(
                 $credentials,
                 '/projects/2/hooks',
-                Mockery::on(
-                    function (array $config) {
+                self::callback(
+                    function (array $config): bool {
                         return count(array_keys($config)) === 6
                             && $config['url'] === 'https://tuleap.example.com/plugins/gitlab/integration/1/webhook'
                             && is_string($config['token'])
@@ -216,34 +199,26 @@ class WebhookCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
                     }
                 )
             )
-            ->once()
-            ->andReturn(
+            ->willReturn(
                 [
                     'id' => 7,
                 ]
             );
 
         $this->dao
-            ->shouldReceive('storeWebhook')
-            ->with(1, 7, Mockery::type('string'))
-            ->once();
+            ->expects(self::once())
+            ->method('storeWebhook')
+            ->with(1, 7, self::anything());
 
         $this->dao
-            ->shouldReceive('isIntegrationWebhookUsedByIntegrations')
+            ->method('isIntegrationWebhookUsedByIntegrations')
             ->with(6)
-            ->andReturnFalse();
-
-        $this->logger
-            ->shouldReceive('info')
-            ->with('Deleting previous hook for the_full_url')
-            ->once();
-
-        $this->logger
-            ->shouldReceive('info')
-            ->with('Creating new hook for the_full_url')
-            ->once();
+            ->willReturn(false);
 
         $this->creator->generateWebhookInGitlabProject($credentials, $integration);
+
+        self::assertTrue($this->logger->hasInfoThatContains('Deleting previous hook for the_full_url'));
+        self::assertTrue($this->logger->hasInfoThatContains('Creating new hook for the_full_url'));
     }
 
     public function testItGeneratesAWebhookForRepositoryAndDoesNotRemoveTheOldOneIfWebhookUsedByAnotherIntegration(): void
@@ -262,40 +237,36 @@ class WebhookCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $this->dao
-            ->shouldReceive('getGitlabRepositoryWebhook')
+            ->expects(self::once())
+            ->method('getGitlabRepositoryWebhook')
             ->with(1)
-            ->once()
-            ->andReturn(['gitlab_webhook_id' => 6]);
+            ->willReturn(['gitlab_webhook_id' => 6]);
 
         $this->gitlab_api_client
-            ->shouldReceive('deleteUrl')
+            ->method('deleteUrl')
             ->with(
                 $credentials,
                 '/projects/2/hooks/6'
             );
         $this->dao
-            ->shouldReceive('deleteGitlabRepositoryWebhook')
-            ->with(1)
-            ->once();
+            ->expects(self::once())
+            ->method('deleteGitlabRepositoryWebhook')
+            ->with(1);
 
-        $encryption_key = \Mockery::mock(EncryptionKey::class);
-        $encryption_key
-            ->shouldReceive('getRawKeyMaterial')
-            ->andReturns(
-                str_repeat('a', SODIUM_CRYPTO_SECRETBOX_KEYBYTES)
-            );
+        $encryption_key = new EncryptionKey(new ConcealedString(str_repeat('a', SODIUM_CRYPTO_SECRETBOX_KEYBYTES)));
         $this->key_factory
-            ->shouldReceive('getEncryptionKey')
-            ->andReturn($encryption_key)
-            ->once();
+            ->expects(self::once())
+            ->method('getEncryptionKey')
+            ->willReturn($encryption_key);
 
         $this->gitlab_api_client
-            ->shouldReceive('postUrl')
+            ->expects(self::once())
+            ->method('postUrl')
             ->with(
                 $credentials,
                 '/projects/2/hooks',
-                Mockery::on(
-                    function (array $config) {
+                self::callback(
+                    function (array $config): bool {
                         return count(array_keys($config)) === 6
                             && $config['url'] === 'https://tuleap.example.com/plugins/gitlab/integration/1/webhook'
                             && is_string($config['token'])
@@ -306,46 +277,31 @@ class WebhookCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
                     }
                 )
             )
-            ->once()
-            ->andReturn(
+            ->willReturn(
                 [
                     'id' => 7,
                 ]
             );
 
         $this->dao
-            ->shouldReceive('storeWebhook')
-            ->with(1, 7, Mockery::type('string'))
-            ->once();
+            ->expects(self::once())
+            ->method('storeWebhook')
+            ->with(1, 7, self::anything());
 
         $this->dao
-            ->shouldReceive('isIntegrationWebhookUsedByIntegrations')
+            ->method('isIntegrationWebhookUsedByIntegrations')
             ->with(6)
-            ->andReturnTrue();
-
-        $this->logger
-            ->shouldReceive('warning')
-            ->with(
-                "The webhook is used by another integrations (it may come from old integration). It will be deleted on GitLab side and configuration must be regenerated for these integrations."
-            )
-            ->once();
-
-        $this->logger
-            ->shouldReceive('info')
-            ->with('Creating new hook for the_full_url')
-            ->once();
-
-        $this->logger
-            ->shouldReceive('info')
-            ->with('Deleting previous hook for the_full_url')
-            ->once();
+            ->willReturn(true);
 
         $this->dao
-            ->shouldReceive('deleteAllGitlabRepositoryWebhookConfigurationUsingOldOne')
-            ->with(6)
-            ->andReturnTrue();
+            ->method('deleteAllGitlabRepositoryWebhookConfigurationUsingOldOne')
+            ->with(6);
 
         $this->creator->generateWebhookInGitlabProject($credentials, $integration);
+
+        self::assertTrue($this->logger->hasWarningThatContains("The webhook is used by another integrations (it may come from old integration). It will be deleted on GitLab side and configuration must be regenerated for these integrations."));
+        self::assertTrue($this->logger->hasInfoThatContains('Creating new hook for the_full_url'));
+        self::assertTrue($this->logger->hasInfoThatContains('Deleting previous hook for the_full_url'));
     }
 
     public function testItDoesNotSaveAnythingIfGitlabDidNotCreateTheWebhook(): void
@@ -364,17 +320,18 @@ class WebhookCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $this->dao
-            ->shouldReceive('getGitlabRepositoryWebhook')
+            ->expects(self::once())
+            ->method('getGitlabRepositoryWebhook')
             ->with(1)
-            ->once()
-            ->andReturn([]);
+            ->willReturn([]);
 
         $this->gitlab_api_client
-            ->shouldReceive('postUrl')
+            ->expects(self::once())
+            ->method('postUrl')
             ->with(
                 $credentials,
                 "/projects/2/hooks",
-                Mockery::on(
+                self::callback(
                     function (array $config) {
                         return count(array_keys($config)) === 6
                             && $config['url'] === 'https://tuleap.example.com/plugins/gitlab/integration/1/webhook'
@@ -386,21 +343,19 @@ class WebhookCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
                     }
                 )
             )
-            ->once()
-            ->andThrow(Mockery::mock(GitlabRequestException::class));
+            ->willThrowException($this->createStub(GitlabRequestException::class));
 
         $this->dao
-            ->shouldReceive('storeWebhook')
-            ->never();
-
-        $this->logger
-            ->shouldReceive('info')
-            ->with('Creating new hook for the_full_url')
-            ->once();
+            ->expects(self::never())
+            ->method('storeWebhook');
 
         $this->expectException(GitlabRequestException::class);
 
-        $this->creator->generateWebhookInGitlabProject($credentials, $integration);
+        try {
+            $this->creator->generateWebhookInGitlabProject($credentials, $integration);
+        } finally {
+            $this->logger->hasInfo('Creating new hook for the_full_url');
+        }
     }
 
     public function testItThrowsExceptionIfWebhookCreationReturnsUnexpectedPayload(): void
@@ -419,18 +374,19 @@ class WebhookCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $this->dao
-            ->shouldReceive('getGitlabRepositoryWebhook')
+            ->expects(self::once())
+            ->method('getGitlabRepositoryWebhook')
             ->with(1)
-            ->once()
-            ->andReturn([]);
+            ->willReturn([]);
 
         $this->gitlab_api_client
-            ->shouldReceive('postUrl')
+            ->expects(self::once())
+            ->method('postUrl')
             ->with(
                 $credentials,
                 "/projects/2/hooks",
-                Mockery::on(
-                    function (array $config) {
+                self::callback(
+                    function (array $config): bool {
                         return count(array_keys($config)) === 6
                             && $config['url'] === 'https://tuleap.example.com/plugins/gitlab/integration/1/webhook'
                             && is_string($config['token'])
@@ -441,25 +397,19 @@ class WebhookCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
                     }
                 )
             )
-            ->once()
-            ->andReturn([]);
+            ->willReturn([]);
 
         $this->dao
-            ->shouldReceive('storeWebhook')
-            ->never();
-
-        $this->logger
-            ->shouldReceive('info')
-            ->with('Creating new hook for the_full_url')
-            ->once();
-
-        $this->logger
-            ->shouldReceive('error')
-            ->with('Received response payload seems invalid')
-            ->once();
+            ->expects(self::never())
+            ->method('storeWebhook');
 
         $this->expectException(WebhookCreationException::class);
 
-        $this->creator->generateWebhookInGitlabProject($credentials, $integration);
+        try {
+            $this->creator->generateWebhookInGitlabProject($credentials, $integration);
+        } finally {
+            self::assertTrue($this->logger->hasInfoThatContains('Creating new hook for the_full_url'));
+            self::assertTrue($this->logger->hasErrorThatContains('Received response payload seems invalid'));
+        }
     }
 }

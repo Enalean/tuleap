@@ -26,11 +26,6 @@
             <directory name="src/themes/BurningParrot/vendor/"/>
             <directory name="src/embedded_vendor/jpgraph/"/>
             <file name="plugins/tracker/include/Tracker/Report/Query/Advanced/Grammar/Parser.php"/>
-            <file name="plugins/gitlab/tests/unit/Reference/GitlabCrossReferenceOrganizerTest.php"/>
-            <file name="plugins/gitlab/tests/unit/Repository/Token/IntegrationApiTokenInserterTest.php"/>
-            <file name="plugins/gitlab/tests/unit/Repository/Webhook/WebhookCreatorTest.php"/>
-            <file name="plugins/gitlab/tests/unit/Repository/Webhook/PostMergeRequest/PostMergeRequestWebhookActionProcessorTest.php"/>
-            <file name="plugins/gitlab/tests/unit/Repository/Webhook/PostPush/PostPushWebhookActionProcessorTest.php"/>
         </ignoreFiles>
     </projectFiles>
 

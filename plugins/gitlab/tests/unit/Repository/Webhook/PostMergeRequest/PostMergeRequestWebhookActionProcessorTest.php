@@ -21,10 +21,8 @@
 namespace Tuleap\Gitlab\Repository\Webhook\PostMergeRequest;
 
 use DateTimeImmutable;
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Project;
-use Psr\Log\LoggerInterface;
+use Psr\Log\Test\TestLogger;
 use Reference;
 use Tuleap\Gitlab\API\GitlabRequestException;
 use Tuleap\Gitlab\Reference\MergeRequest\GitlabMergeRequest;
@@ -36,40 +34,35 @@ use Tuleap\Gitlab\Repository\GitlabRepositoryIntegration;
 use Tuleap\Gitlab\Repository\Webhook\WebhookTuleapReference;
 use Tuleap\Gitlab\Repository\Webhook\WebhookTuleapReferencesParser;
 
-class PostMergeRequestWebhookActionProcessorTest extends \Tuleap\Test\PHPUnit\TestCase
+final class PostMergeRequestWebhookActionProcessorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     /**
      * @var PostMergeRequestWebhookActionProcessor
      */
     private $processor;
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|TuleapReferenceRetriever
+     * @var \PHPUnit\Framework\MockObject\MockObject&TuleapReferenceRetriever
      */
     private $tuleap_reference_retriever;
+    private TestLogger $logger;
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|LoggerInterface
-     */
-    private $logger;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|\ReferenceManager
+     * @var \PHPUnit\Framework\MockObject\MockObject&\ReferenceManager
      */
     private $reference_manager;
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|MergeRequestTuleapReferenceDao
+     * @var \PHPUnit\Framework\MockObject\MockObject&MergeRequestTuleapReferenceDao
      */
     private $merge_request_reference_dao;
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|PostMergeRequestBotCommenter
+     * @var \PHPUnit\Framework\MockObject\MockObject&PostMergeRequestBotCommenter
      */
     private $bot_commenter;
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|PostMergeRequestWebhookAuthorDataRetriever
+     * @var \PHPUnit\Framework\MockObject\MockObject&PostMergeRequestWebhookAuthorDataRetriever
      */
     private $author_retriever;
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|GitlabMergeRequestReferenceRetriever
+     * @var \PHPUnit\Framework\MockObject\MockObject&GitlabMergeRequestReferenceRetriever
      */
     private $merge_request_retriever;
 
@@ -77,13 +70,13 @@ class PostMergeRequestWebhookActionProcessorTest extends \Tuleap\Test\PHPUnit\Te
     {
         parent::setUp();
 
-        $this->tuleap_reference_retriever  = Mockery::mock(TuleapReferenceRetriever::class);
-        $this->logger                      = Mockery::mock(LoggerInterface::class);
-        $this->reference_manager           = Mockery::mock(\ReferenceManager::class);
-        $this->merge_request_reference_dao = Mockery::mock(MergeRequestTuleapReferenceDao::class);
-        $this->bot_commenter               = Mockery::mock(PostMergeRequestBotCommenter::class);
-        $this->author_retriever            = Mockery::mock(PostMergeRequestWebhookAuthorDataRetriever::class);
-        $this->merge_request_retriever     = Mockery::mock(GitlabMergeRequestReferenceRetriever::class);
+        $this->tuleap_reference_retriever  = $this->createMock(TuleapReferenceRetriever::class);
+        $this->logger                      = new TestLogger();
+        $this->reference_manager           = $this->createMock(\ReferenceManager::class);
+        $this->merge_request_reference_dao = $this->createMock(MergeRequestTuleapReferenceDao::class);
+        $this->bot_commenter               = $this->createMock(PostMergeRequestBotCommenter::class);
+        $this->author_retriever            = $this->createMock(PostMergeRequestWebhookAuthorDataRetriever::class);
+        $this->merge_request_retriever     = $this->createMock(GitlabMergeRequestReferenceRetriever::class);
 
         $references_from_merge_request_data_extractor = new TuleapReferencesFromMergeRequestDataExtractor(
             new WebhookTuleapReferencesParser()
@@ -135,143 +128,86 @@ class PostMergeRequestWebhookActionProcessorTest extends \Tuleap\Test\PHPUnit\Te
         );
 
         $this->merge_request_reference_dao
-            ->shouldReceive('searchMergeRequestInRepositoryWithId')
+            ->method('searchMergeRequestInRepositoryWithId')
             ->with(1, 2)
-            ->andReturn([]);
+            ->willReturn([]);
 
         $this->merge_request_retriever
-            ->shouldReceive('getGitlabMergeRequestInRepositoryWithId')
+            ->method('getGitlabMergeRequestInRepositoryWithId')
             ->with($integration, 2)
-            ->andReturn(null);
+            ->willReturn(null);
 
         $this->merge_request_reference_dao
-            ->shouldReceive('saveGitlabMergeRequestInfo')
-            ->with(1, 2, 'My Title TULEAP-58', 'TULEAP-666 TULEAP-45', 'opened', 1611315112)
-            ->once();
+            ->expects(self::once())
+            ->method('saveGitlabMergeRequestInfo')
+            ->with(1, 2, 'My Title TULEAP-58', 'TULEAP-666 TULEAP-45', 'opened', 1611315112);
 
         $this->reference_manager
-            ->shouldReceive('insertCrossReference')
-            ->once();
-
-        $this->logger
-            ->shouldReceive('info')
-            ->with('3 Tuleap references found in merge request 2')
-            ->once();
-
-        $this->logger
-            ->shouldReceive('info')
-            ->with(
-                '|_ Reference to Tuleap artifact #58 found, cross-reference will be added in project the GitLab repository is integrated in.'
-            )
-            ->once();
-
-
-        $this->logger
-            ->shouldReceive('info')
-            ->with(
-                '|_ Reference to Tuleap artifact #666 found, cross-reference will be added in project the GitLab repository is integrated in.'
-            )
-            ->once();
-
-        $this->logger
-            ->shouldReceive('info')
-            ->with(
-                '|_ Reference to Tuleap artifact #45 found, cross-reference will be added in project the GitLab repository is integrated in.'
-            )
-            ->once();
+            ->expects(self::once())
+            ->method('insertCrossReference');
 
         $this->tuleap_reference_retriever
-            ->shouldReceive('retrieveTuleapReference')
-            ->with(58)
-            ->andThrow(new TuleapReferencedArtifactNotFoundException(58))
-            ->once();
+            ->method('retrieveTuleapReference')
+            ->willReturnCallback(
+                function (int $id): Reference {
+                    if ($id === 58) {
+                        throw new TuleapReferencedArtifactNotFoundException(58);
+                    }
+                    if ($id === 666) {
+                        throw new TuleapReferenceNotFoundException();
+                    }
+                    if ($id === 45) {
+                        return new Reference(
+                            45,
+                            'key',
+                            'desc',
+                            'link',
+                            'P',
+                            'service_short_name',
+                            'nature',
+                            1,
+                            100
+                        );
+                    }
 
-        $this->tuleap_reference_retriever
-            ->shouldReceive('retrieveTuleapReference')
-            ->with(666)
-            ->andThrow(new TuleapReferenceNotFoundException())
-            ->once();
-
-        $this->tuleap_reference_retriever
-            ->shouldReceive('retrieveTuleapReference')
-            ->with(45)
-            ->andReturn(
-                new Reference(
-                    43,
-                    'key',
-                    'desc',
-                    'link',
-                    'P',
-                    'service_short_name',
-                    'nature',
-                    1,
-                    100
-                )
-            )
-            ->once();
-
-        $this->logger
-            ->shouldReceive("error")
-            ->with('Tuleap artifact #58 not found, no cross-reference will be added.')
-            ->once();
-
-        $this->logger
-            ->shouldReceive("error")
-            ->with(
-                'No reference found with the keyword \'art\', and this must not happen. If you read this, this is really bad.'
-            )
-            ->once();
-
-        $this->logger
-            ->shouldReceive("info")
-            ->with('|  |_ Tuleap artifact #45 found')
-            ->once();
-
-        $this->logger
-            ->shouldReceive('info')
-            ->with('Merge request data for 2 saved in database')
-            ->once();
-
-        $this->logger
-            ->shouldReceive('info')
-            ->with('Try to get author data of merge request #2')
-            ->once();
+                    throw new \RuntimeException("Unexpected reference ID #" . $id);
+                }
+            );
 
         $this->author_retriever
-            ->shouldReceive('retrieveAuthorData')
+            ->expects(self::once())
+            ->method('retrieveAuthorData')
             ->with($integration, $merge_request_webhook_data)
-            ->once()
-            ->andReturn(['name' => 'John', 'public_email' => 'john@thewall.fr']);
-
-        $this->logger
-            ->shouldReceive('info')
-            ->with('|_ Author name of merge request #2 is: John')
-            ->once();
+            ->willReturn(['name' => 'John', 'public_email' => 'john@thewall.fr']);
 
         $this->merge_request_reference_dao
-            ->shouldReceive('setAuthorData')
-            ->with(1, 2, 'John', 'john@thewall.fr')
-            ->once();
-
-        $this->logger
-            ->shouldReceive('info')
-            ->with('|_ Author has been saved in database')
-            ->once();
-
-        $this->logger
-            ->shouldReceive('debug')
-            ->with('Some references are added, a comment should be added');
+            ->expects(self::once())
+            ->method('setAuthorData')
+            ->with(1, 2, 'John', 'john@thewall.fr');
 
         $this->bot_commenter
-            ->shouldReceive('addCommentOnMergeRequest')
+            ->expects(self::once())
+            ->method('addCommentOnMergeRequest')
             ->with(
                 $merge_request_webhook_data,
                 $integration,
                 [new WebhookTuleapReference(45)]
-            )
-            ->once();
+            );
 
         $this->processor->process($integration, $merge_request_webhook_data);
+
+        self::assertTrue($this->logger->hasInfoThatContains('3 Tuleap references found in merge request 2'));
+        self::assertTrue($this->logger->hasInfoThatContains('Reference to Tuleap artifact #58 found, cross-reference will be added in project the GitLab repository is integrated in.'));
+        self::assertTrue($this->logger->hasInfoThatContains('Reference to Tuleap artifact #666 found, cross-reference will be added in project the GitLab repository is integrated in.'));
+        self::assertTrue($this->logger->hasInfoThatContains('Reference to Tuleap artifact #45 found, cross-reference will be added in project the GitLab repository is integrated in.'));
+        self::assertTrue($this->logger->hasErrorThatContains('Tuleap artifact #58 not found, no cross-reference will be added.'));
+        self::assertTrue($this->logger->hasErrorThatContains('No reference found with the keyword \'art\', and this must not happen. If you read this, this is really bad.'));
+        self::assertTrue($this->logger->hasInfoThatContains('Tuleap artifact #45 found'));
+        self::assertTrue($this->logger->hasInfoThatContains('Merge request data for 2 saved in database'));
+        self::assertTrue($this->logger->hasInfoThatContains('Try to get author data of merge request #2'));
+        self::assertTrue($this->logger->hasInfoThatContains('Author name of merge request #2 is: John'));
+        self::assertTrue($this->logger->hasInfoThatContains('Author has been saved in database'));
+        self::assertTrue($this->logger->hasDebug('Some references are added, a comment should be added'));
     }
 
     public function testItDoesNotWriteACommentIfReferencesAreTheSameThanPreviousOnes(): void
@@ -300,9 +236,9 @@ class PostMergeRequestWebhookActionProcessorTest extends \Tuleap\Test\PHPUnit\Te
         );
 
         $this->merge_request_reference_dao
-            ->shouldReceive('searchMergeRequestInRepositoryWithId')
+            ->method('searchMergeRequestInRepositoryWithId')
             ->with(1, 2)
-            ->andReturn(
+            ->willReturn(
                 [
                     'title'        => 'My Title TULEAP-58',
                     'description'  => 'TULEAP-666 TULEAP-45',
@@ -312,9 +248,9 @@ class PostMergeRequestWebhookActionProcessorTest extends \Tuleap\Test\PHPUnit\Te
             );
 
         $this->merge_request_retriever
-            ->shouldReceive('getGitlabMergeRequestInRepositoryWithId')
+            ->method('getGitlabMergeRequestInRepositoryWithId')
             ->with($integration, 2)
-            ->andReturn(new GitlabMergeRequest(
+            ->willReturn(new GitlabMergeRequest(
                 'My Title TULEAP-58',
                 'TULEAP-666 TULEAP-45',
                 new DateTimeImmutable(),
@@ -323,132 +259,81 @@ class PostMergeRequestWebhookActionProcessorTest extends \Tuleap\Test\PHPUnit\Te
             ));
 
         $this->merge_request_reference_dao
-            ->shouldReceive('saveGitlabMergeRequestInfo')
-            ->with(1, 2, 'My Title TULEAP-58', 'TULEAP-666 TULEAP-45', 'opened', 1611315112)
-            ->once();
+            ->expects(self::once())
+            ->method('saveGitlabMergeRequestInfo')
+            ->with(1, 2, 'My Title TULEAP-58', 'TULEAP-666 TULEAP-45', 'opened', 1611315112);
 
         $this->reference_manager
-            ->shouldReceive('insertCrossReference')
-            ->twice();
-
-        $this->logger
-            ->shouldReceive('info')
-            ->with('3 Tuleap references found in merge request 2')
-            ->once();
-
-        $this->logger
-            ->shouldReceive('info')
-            ->with(
-                '|_ Reference to Tuleap artifact #58 found, cross-reference will be added in project the GitLab repository is integrated in.'
-            )
-            ->once();
-
-
-        $this->logger
-            ->shouldReceive('info')
-            ->with(
-                '|_ Reference to Tuleap artifact #666 found, cross-reference will be added in project the GitLab repository is integrated in.'
-            )
-            ->once();
-
-        $this->logger
-            ->shouldReceive('info')
-            ->with(
-                '|_ Reference to Tuleap artifact #45 found, cross-reference will be added in project the GitLab repository is integrated in.'
-            )
-            ->once();
+            ->expects(self::exactly(2))
+            ->method('insertCrossReference');
 
         $this->tuleap_reference_retriever
-            ->shouldReceive('retrieveTuleapReference')
-            ->with(58)
-            ->andReturn(
-                new Reference(
-                    58,
-                    'key',
-                    'desc',
-                    'link',
-                    'P',
-                    'service_short_name',
-                    'nature',
-                    1,
-                    100
-                )
+            ->method('retrieveTuleapReference')
+            ->willReturnCallback(
+                function (int $id): Reference {
+                    if ($id === 58) {
+                        return new Reference(
+                            58,
+                            'key',
+                            'desc',
+                            'link',
+                            'P',
+                            'service_short_name',
+                            'nature',
+                            1,
+                            100
+                        );
+                    }
+                    if ($id === 666) {
+                        throw new TuleapReferenceNotFoundException();
+                    }
+                    if ($id === 45) {
+                        return new Reference(
+                            45,
+                            'key',
+                            'desc',
+                            'link',
+                            'P',
+                            'service_short_name',
+                            'nature',
+                            1,
+                            100
+                        );
+                    }
+
+                    throw new \RuntimeException("Unexpected reference ID #" . $id);
+                }
             );
-
-        $this->tuleap_reference_retriever
-            ->shouldReceive('retrieveTuleapReference')
-            ->with(666)
-            ->andThrow(new TuleapReferenceNotFoundException());
-
-        $this->tuleap_reference_retriever
-            ->shouldReceive('retrieveTuleapReference')
-            ->with(45)
-            ->andReturn(
-                new Reference(
-                    43,
-                    'key',
-                    'desc',
-                    'link',
-                    'P',
-                    'service_short_name',
-                    'nature',
-                    1,
-                    100
-                )
-            );
-
-        $this->logger
-            ->shouldReceive("error")
-            ->with(
-                'No reference found with the keyword \'art\', and this must not happen. If you read this, this is really bad.'
-            )
-            ->once();
-
-        $this->logger
-            ->shouldReceive("info")
-            ->with('|  |_ Tuleap artifact #45 found')
-            ->once();
-        $this->logger
-            ->shouldReceive("info")
-            ->with('|  |_ Tuleap artifact #58 found')
-            ->once();
-
-        $this->logger
-            ->shouldReceive('info')
-            ->with('Merge request data for 2 saved in database')
-            ->once();
-
-        $this->logger
-            ->shouldReceive('info')
-            ->with('Try to get author data of merge request #2')
-            ->once();
 
         $this->author_retriever
-            ->shouldReceive('retrieveAuthorData')
+            ->expects(self::once())
+            ->method('retrieveAuthorData')
             ->with($integration, $merge_request_webhook_data)
-            ->once()
-            ->andReturn(['name' => 'John', 'public_email' => 'john@thewall.fr']);
-
-        $this->logger
-            ->shouldReceive('info')
-            ->with('|_ Author name of merge request #2 is: John')
-            ->once();
+            ->willReturn(['name' => 'John', 'public_email' => 'john@thewall.fr']);
 
         $this->merge_request_reference_dao
-            ->shouldReceive('setAuthorData')
-            ->with(1, 2, 'John', 'john@thewall.fr')
-            ->once();
-
-        $this->logger
-            ->shouldReceive('info')
-            ->with('|_ Author has been saved in database')
-            ->once();
+            ->expects(self::once())
+            ->method('setAuthorData')
+            ->with(1, 2, 'John', 'john@thewall.fr');
 
         $this->bot_commenter
-            ->shouldReceive('addCommentOnMergeRequest')
-            ->never();
+            ->expects(self::never())
+            ->method('addCommentOnMergeRequest');
 
         $this->processor->process($integration, $merge_request_webhook_data);
+
+        self::assertTrue($this->logger->hasInfoThatContains('3 Tuleap references found in merge request 2'));
+        self::assertTrue($this->logger->hasInfoThatContains('Reference to Tuleap artifact #58 found, cross-reference will be added in project the GitLab repository is integrated in.'));
+        self::assertTrue($this->logger->hasInfoThatContains('Reference to Tuleap artifact #666 found, cross-reference will be added in project the GitLab repository is integrated in.'));
+        self::assertTrue($this->logger->hasInfoThatContains('Reference to Tuleap artifact #45 found, cross-reference will be added in project the GitLab repository is integrated in.'));
+        self::assertTrue($this->logger->hasInfoThatContains('Reference to Tuleap artifact #45 found, cross-reference will be added in project the GitLab repository is integrated in.'));
+        self::assertTrue($this->logger->hasErrorThatContains('No reference found with the keyword \'art\', and this must not happen. If you read this, this is really bad.'));
+        self::assertTrue($this->logger->hasInfoThatContains('Tuleap artifact #45 found'));
+        self::assertTrue($this->logger->hasInfoThatContains('Tuleap artifact #58 found'));
+        self::assertTrue($this->logger->hasInfoThatContains('Merge request data for 2 saved in database'));
+        self::assertTrue($this->logger->hasInfoThatContains('Try to get author data of merge request #2'));
+        self::assertTrue($this->logger->hasInfoThatContains('Author name of merge request #2 is: John'));
+        self::assertTrue($this->logger->hasInfoThatContains('Author has been saved in database'));
     }
 
     public function testItWritesACommentIfSomeReferencesAreRemoved(): void
@@ -477,9 +362,9 @@ class PostMergeRequestWebhookActionProcessorTest extends \Tuleap\Test\PHPUnit\Te
         );
 
         $this->merge_request_reference_dao
-            ->shouldReceive('searchMergeRequestInRepositoryWithId')
+            ->method('searchMergeRequestInRepositoryWithId')
             ->with(1, 2)
-            ->andReturn(
+            ->willReturn(
                 [
                     'title'        => 'My Title TULEAP-58',
                     'description'  => 'TULEAP-666 TULEAP-45',
@@ -489,9 +374,9 @@ class PostMergeRequestWebhookActionProcessorTest extends \Tuleap\Test\PHPUnit\Te
             );
 
         $this->merge_request_retriever
-            ->shouldReceive('getGitlabMergeRequestInRepositoryWithId')
+            ->method('getGitlabMergeRequestInRepositoryWithId')
             ->with($integration, 2)
-            ->andReturn(new GitlabMergeRequest(
+            ->willReturn(new GitlabMergeRequest(
                 'My Title TULEAP-58',
                 'TULEAP-666 TULEAP-45',
                 new DateTimeImmutable(),
@@ -500,15 +385,15 @@ class PostMergeRequestWebhookActionProcessorTest extends \Tuleap\Test\PHPUnit\Te
             ));
 
         $this->merge_request_reference_dao
-            ->shouldReceive('saveGitlabMergeRequestInfo')
-            ->with(1, 2, 'My Title TULEAP-58', 'TULEAP-666', 'opened', 1611315112)
-            ->once();
+            ->expects(self::once())
+            ->method('saveGitlabMergeRequestInfo')
+            ->with(1, 2, 'My Title TULEAP-58', 'TULEAP-666', 'opened', 1611315112);
 
         $this->reference_manager
-            ->shouldReceive('insertCrossReference')
-            ->once();
+            ->expects(self::once())
+            ->method('insertCrossReference');
 
-        $this->logger
+        /*$this->logger
             ->shouldReceive('info')
             ->with('2 Tuleap references found in merge request 2')
             ->once();
@@ -526,48 +411,47 @@ class PostMergeRequestWebhookActionProcessorTest extends \Tuleap\Test\PHPUnit\Te
             ->with(
                 '|_ Reference to Tuleap artifact #666 found, cross-reference will be added in project the GitLab repository is integrated in.'
             )
-            ->once();
+            ->once();*/
 
         $this->tuleap_reference_retriever
-            ->shouldReceive('retrieveTuleapReference')
-            ->with(58)
-            ->andReturn(
-                new Reference(
-                    58,
-                    'key',
-                    'desc',
-                    'link',
-                    'P',
-                    'service_short_name',
-                    'nature',
-                    1,
-                    100
-                )
+            ->method('retrieveTuleapReference')
+            ->willReturnCallback(
+                function (int $id): Reference {
+                    if ($id === 58) {
+                        return new Reference(
+                            58,
+                            'key',
+                            'desc',
+                            'link',
+                            'P',
+                            'service_short_name',
+                            'nature',
+                            1,
+                            100
+                        );
+                    }
+                    if ($id === 666) {
+                        throw new TuleapReferenceNotFoundException();
+                    }
+                    if ($id === 45) {
+                        return new Reference(
+                            43,
+                            'key',
+                            'desc',
+                            'link',
+                            'P',
+                            'service_short_name',
+                            'nature',
+                            1,
+                            100
+                        );
+                    }
+
+                    throw new \RuntimeException("Unexpected reference ID #" . $id);
+                }
             );
 
-        $this->tuleap_reference_retriever
-            ->shouldReceive('retrieveTuleapReference')
-            ->with(666)
-            ->andThrow(new TuleapReferenceNotFoundException());
-
-        $this->tuleap_reference_retriever
-            ->shouldReceive('retrieveTuleapReference')
-            ->with(45)
-            ->andReturn(
-                new Reference(
-                    43,
-                    'key',
-                    'desc',
-                    'link',
-                    'P',
-                    'service_short_name',
-                    'nature',
-                    1,
-                    100
-                )
-            );
-
-        $this->logger
+        /*$this->logger
             ->shouldReceive("error")
             ->with(
                 'No reference found with the keyword \'art\', and this must not happen. If you read this, this is really bad.'
@@ -587,41 +471,41 @@ class PostMergeRequestWebhookActionProcessorTest extends \Tuleap\Test\PHPUnit\Te
         $this->logger
             ->shouldReceive('info')
             ->with('Try to get author data of merge request #2')
-            ->once();
+            ->once();*/
 
         $this->author_retriever
-            ->shouldReceive('retrieveAuthorData')
+            ->expects(self::once())
+            ->method('retrieveAuthorData')
             ->with($integration, $merge_request_webhook_data)
-            ->once()
-            ->andReturn(['name' => 'John', 'public_email' => 'john@thewall.fr']);
+            ->willReturn(['name' => 'John', 'public_email' => 'john@thewall.fr']);
 
-        $this->logger
+        /*$this->logger
             ->shouldReceive('info')
             ->with('|_ Author name of merge request #2 is: John')
-            ->once();
+            ->once();*/
 
         $this->merge_request_reference_dao
-            ->shouldReceive('setAuthorData')
-            ->with(1, 2, 'John', 'john@thewall.fr')
-            ->once();
+            ->expects(self::once())
+            ->method('setAuthorData')
+            ->with(1, 2, 'John', 'john@thewall.fr');
 
-        $this->logger
+        /*$this->logger
             ->shouldReceive('info')
             ->with('|_ Author has been saved in database')
             ->once();
 
         $this->logger
             ->shouldReceive('debug')
-            ->with('Some references are removed, a comment should be added');
+            ->with('Some references are removed, a comment should be added');*/
 
         $this->bot_commenter
-            ->shouldReceive('addCommentOnMergeRequest')
+            ->expects(self::once())
+            ->method('addCommentOnMergeRequest')
             ->with(
                 $merge_request_webhook_data,
                 $integration,
                 [new WebhookTuleapReference(58)]
-            )
-            ->once();
+            );
 
         $this->processor->process($integration, $merge_request_webhook_data);
     }
@@ -652,40 +536,29 @@ class PostMergeRequestWebhookActionProcessorTest extends \Tuleap\Test\PHPUnit\Te
         );
 
         $this->merge_request_reference_dao
-            ->shouldReceive('searchMergeRequestInRepositoryWithId')
+            ->method('searchMergeRequestInRepositoryWithId')
             ->with(1, 2)
-            ->andReturn([]);
+            ->willReturn([]);
 
         $this->merge_request_retriever
-            ->shouldReceive('getGitlabMergeRequestInRepositoryWithId')
+            ->method('getGitlabMergeRequestInRepositoryWithId')
             ->with($integration, 2)
-            ->andReturn(null);
+            ->willReturn(null);
 
         $this->merge_request_reference_dao
-            ->shouldReceive('saveGitlabMergeRequestInfo')
-            ->with(1, 2, 'My Title TULEAP-58', '', 'closed', 1611315112)
-            ->once();
+            ->expects(self::once())
+            ->method('saveGitlabMergeRequestInfo')
+            ->with(1, 2, 'My Title TULEAP-58', '', 'closed', 1611315112);
 
         $this->reference_manager
-            ->shouldReceive('insertCrossReference')
-            ->once();
-
-        $this->logger
-            ->shouldReceive('info')
-            ->with('1 Tuleap references found in merge request 2')
-            ->once();
-
-        $this->logger
-            ->shouldReceive('info')
-            ->with(
-                '|_ Reference to Tuleap artifact #58 found, cross-reference will be added in project the GitLab repository is integrated in.'
-            )
-            ->once();
+            ->expects(self::once())
+            ->method('insertCrossReference');
 
         $this->tuleap_reference_retriever
-            ->shouldReceive('retrieveTuleapReference')
+            ->expects(self::once())
+            ->method('retrieveTuleapReference')
             ->with(58)
-            ->andReturn(
+            ->willReturn(
                 new Reference(
                     58,
                     'key',
@@ -697,54 +570,33 @@ class PostMergeRequestWebhookActionProcessorTest extends \Tuleap\Test\PHPUnit\Te
                     1,
                     100
                 )
-            )
-            ->once();
-
-        $this->logger
-            ->shouldReceive("info")
-            ->with('|  |_ Tuleap artifact #58 found')
-            ->once();
-
-        $this->logger
-            ->shouldReceive('info')
-            ->with('Merge request data for 2 saved in database')
-            ->once();
-
-        $this->logger
-            ->shouldReceive('info')
-            ->with('Try to get author data of merge request #2')
-            ->once();
+            );
 
         $this->author_retriever
-            ->shouldReceive('retrieveAuthorData')
+            ->expects(self::once())
+            ->method('retrieveAuthorData')
             ->with($integration, $merge_request_webhook_data)
-            ->once()
-            ->andReturn(['name' => 'John', 'public_email' => 'john@thewall.fr']);
-
-        $this->logger
-            ->shouldReceive('info')
-            ->with('|_ Author name of merge request #2 is: John')
-            ->once();
+            ->willReturn(['name' => 'John', 'public_email' => 'john@thewall.fr']);
 
         $this->merge_request_reference_dao
-            ->shouldReceive('setAuthorData')
-            ->with(1, 2, 'John', 'john@thewall.fr')
-            ->once();
-
-        $this->logger
-            ->shouldReceive('info')
-            ->with('|_ Author has been saved in database')
-            ->once();
-
-        $this->logger
-            ->shouldReceive('debug')
-            ->with('Some references are added, a comment should be added');
+            ->expects(self::once())
+            ->method('setAuthorData')
+            ->with(1, 2, 'John', 'john@thewall.fr');
 
         $this->bot_commenter
-            ->shouldReceive('addCommentOnMergeRequest')
-            ->once();
+            ->expects(self::once())
+            ->method('addCommentOnMergeRequest');
 
         $this->processor->process($integration, $merge_request_webhook_data);
+
+        self::assertTrue($this->logger->hasInfoThatContains('1 Tuleap references found in merge request 2'));
+        self::assertTrue($this->logger->hasInfoThatContains('Reference to Tuleap artifact #58 found, cross-reference will be added in project the GitLab repository is integrated in.'));
+        self::assertTrue($this->logger->hasInfoThatContains('Tuleap artifact #58 found'));
+        self::assertTrue($this->logger->hasInfoThatContains('Merge request data for 2 saved in database'));
+        self::assertTrue($this->logger->hasInfoThatContains('Try to get author data of merge request #2'));
+        self::assertTrue($this->logger->hasInfoThatContains('Author name of merge request #2 is: John'));
+        self::assertTrue($this->logger->hasInfoThatContains('Author has been saved in database'));
+        self::assertTrue($this->logger->hasDebugThatContains('Some references are added, a comment should be added'));
     }
 
     public function testItProcessesActionsForPostMergeRequestWebhookAlreadyIntegratedAndLogErrorIfCantGetAuthor(): void
@@ -773,40 +625,29 @@ class PostMergeRequestWebhookActionProcessorTest extends \Tuleap\Test\PHPUnit\Te
         );
 
         $this->merge_request_reference_dao
-            ->shouldReceive('searchMergeRequestInRepositoryWithId')
+            ->method('searchMergeRequestInRepositoryWithId')
             ->with(1, 2)
-            ->andReturn([]);
+            ->willReturn([]);
 
         $this->merge_request_retriever
-            ->shouldReceive('getGitlabMergeRequestInRepositoryWithId')
+            ->method('getGitlabMergeRequestInRepositoryWithId')
             ->with($integration, 2)
-            ->andReturn(null);
+            ->willReturn(null);
 
         $this->merge_request_reference_dao
-            ->shouldReceive('saveGitlabMergeRequestInfo')
-            ->with(1, 2, 'My Title TULEAP-58', '', 'closed', 1611315112)
-            ->once();
+            ->expects(self::once())
+            ->method('saveGitlabMergeRequestInfo')
+            ->with(1, 2, 'My Title TULEAP-58', '', 'closed', 1611315112);
 
         $this->reference_manager
-            ->shouldReceive('insertCrossReference')
-            ->once();
-
-        $this->logger
-            ->shouldReceive('info')
-            ->with('1 Tuleap references found in merge request 2')
-            ->once();
-
-        $this->logger
-            ->shouldReceive('info')
-            ->with(
-                '|_ Reference to Tuleap artifact #58 found, cross-reference will be added in project the GitLab repository is integrated in.'
-            )
-            ->once();
+            ->expects(self::once())
+            ->method('insertCrossReference');
 
         $this->tuleap_reference_retriever
-            ->shouldReceive('retrieveTuleapReference')
+            ->expects(self::once())
+            ->method('retrieveTuleapReference')
             ->with(58)
-            ->andReturn(
+            ->willReturn(
                 new Reference(
                     58,
                     'key',
@@ -818,50 +659,33 @@ class PostMergeRequestWebhookActionProcessorTest extends \Tuleap\Test\PHPUnit\Te
                     1,
                     100
                 )
-            )
-            ->once();
-
-        $this->logger
-            ->shouldReceive("info")
-            ->with('|  |_ Tuleap artifact #58 found')
-            ->once();
-
-        $this->logger
-            ->shouldReceive('info')
-            ->with('Merge request data for 2 saved in database')
-            ->once();
-
-        $this->logger
-            ->shouldReceive('info')
-            ->with('Try to get author data of merge request #2')
-            ->once();
+            );
 
         $exception = new GitlabRequestException(404, "Unauthorized");
 
         $this->author_retriever
-            ->shouldReceive('retrieveAuthorData')
+            ->expects(self::once())
+            ->method('retrieveAuthorData')
             ->with($integration, $merge_request_webhook_data)
-            ->andThrow($exception)
-            ->once();
-
-        $this->logger
-            ->shouldReceive('error')
-            ->with("| |_Can't get data on author of merge request #2", ['exception' => $exception])
-            ->once();
+            ->willThrowException($exception);
 
         $this->merge_request_reference_dao
-            ->shouldReceive('setAuthorData')
-            ->never();
-
-        $this->logger
-            ->shouldReceive('debug')
-            ->with('Some references are added, a comment should be added');
+            ->expects(self::never())
+            ->method('setAuthorData');
 
         $this->bot_commenter
-            ->shouldReceive('addCommentOnMergeRequest')
-            ->once();
+            ->expects(self::once())
+            ->method('addCommentOnMergeRequest');
 
         $this->processor->process($integration, $merge_request_webhook_data);
+
+        self::assertTrue($this->logger->hasInfoThatContains('1 Tuleap references found in merge request 2'));
+        self::assertTrue($this->logger->hasInfoThatContains('Reference to Tuleap artifact #58 found, cross-reference will be added in project the GitLab repository is integrated in'));
+        self::assertTrue($this->logger->hasInfoThatContains('Tuleap artifact #58 found'));
+        self::assertTrue($this->logger->hasInfoThatContains('Merge request data for 2 saved in database'));
+        self::assertTrue($this->logger->hasInfoThatContains('Try to get author data of merge request #2'));
+        self::assertTrue($this->logger->hasErrorThatContains('Can\'t get data on author of merge request #2'));
+        self::assertTrue($this->logger->hasDebugThatContains('Some references are added, a comment should be added'));
     }
 
     public function testIDoesNotSaveMergeRequestDataIfNoReferencesAreFound(): void
@@ -890,29 +714,26 @@ class PostMergeRequestWebhookActionProcessorTest extends \Tuleap\Test\PHPUnit\Te
         );
 
         $this->merge_request_reference_dao
-            ->shouldReceive('searchMergeRequestInRepositoryWithId')
+            ->method('searchMergeRequestInRepositoryWithId')
             ->with(1, 2)
-            ->andReturn([]);
+            ->willReturn([]);
 
         $this->merge_request_retriever
-            ->shouldReceive('getGitlabMergeRequestInRepositoryWithId')
+            ->method('getGitlabMergeRequestInRepositoryWithId')
             ->with($integration, 2)
-            ->andReturn(null);
-
-        $this->logger
-            ->shouldReceive('info')
-            ->with('0 Tuleap references found in merge request 2')
-            ->once();
+            ->willReturn(null);
 
         $this->merge_request_reference_dao
-            ->shouldReceive('saveGitlabMergeRequestInfo')
-            ->never();
+            ->expects(self::never())
+            ->method('saveGitlabMergeRequestInfo');
 
         $this->bot_commenter
-            ->shouldReceive('addCommentOnMergeRequest')
-            ->never();
+            ->expects(self::never())
+            ->method('addCommentOnMergeRequest');
 
         $this->processor->process($integration, $merge_request_webhook_data);
+
+        self::assertTrue($this->logger->hasInfoThatContains('0 Tuleap references found in merge request 2'));
     }
 
     public function testItUpdatesSavedMergeRequestDataIfNoReferencesAreFoundButMergeRequestWasAlreadySaved(): void
@@ -940,14 +761,9 @@ class PostMergeRequestWebhookActionProcessorTest extends \Tuleap\Test\PHPUnit\Te
             10
         );
 
-        $this->logger
-            ->shouldReceive('info')
-            ->with('0 Tuleap references found in merge request 2')
-            ->once();
-
         $this->merge_request_reference_dao
-            ->shouldReceive('searchMergeRequestInRepositoryWithId')
-            ->andReturn(
+            ->method('searchMergeRequestInRepositoryWithId')
+            ->willReturn(
                 [
                     'title'        => 'Previous title',
                     'state'        => 'opened',
@@ -958,9 +774,9 @@ class PostMergeRequestWebhookActionProcessorTest extends \Tuleap\Test\PHPUnit\Te
             );
 
         $this->merge_request_retriever
-            ->shouldReceive('getGitlabMergeRequestInRepositoryWithId')
+            ->method('getGitlabMergeRequestInRepositoryWithId')
             ->with($integration, 2)
-            ->andReturn(new GitlabMergeRequest(
+            ->willReturn(new GitlabMergeRequest(
                 'My Title TULEAP-58',
                 'TULEAP-666 TULEAP-45',
                 new DateTimeImmutable(),
@@ -969,44 +785,30 @@ class PostMergeRequestWebhookActionProcessorTest extends \Tuleap\Test\PHPUnit\Te
             ));
 
         $this->merge_request_reference_dao
-            ->shouldReceive('saveGitlabMergeRequestInfo')
-            ->with(1, 2, 'My Title', '', 'closed', 1611315112)
-            ->once();
-
-        $this->logger
-            ->shouldReceive('info')
-            ->with('Merge request data for 2 saved in database')
-            ->once();
-
-        $this->logger
-            ->shouldReceive('info')
-            ->with('Try to get author data of merge request #2')
-            ->never();
+            ->expects(self::once())
+            ->method('saveGitlabMergeRequestInfo')
+            ->with(1, 2, 'My Title', '', 'closed', 1611315112);
 
         $this->author_retriever
-            ->shouldReceive('retrieveAuthorData')
-            ->with($integration, $merge_request_webhook_data)
-            ->never();
-
-        $this->logger
-            ->shouldReceive('info')
-            ->with('|_ Author name of merge request #2 is: John')
-            ->never();
+            ->expects(self::never())
+            ->method('retrieveAuthorData')
+            ->with($integration, $merge_request_webhook_data);
 
         $this->merge_request_reference_dao
-            ->shouldReceive('setAuthorData')
-            ->with(1, 2, 'John', 'john@thewall.fr')
-            ->never();
-
-        $this->logger
-            ->shouldReceive('info')
-            ->with('|_ Author has been saved in database')
-            ->never();
+            ->expects(self::never())
+            ->method('setAuthorData')
+            ->with(1, 2, 'John', 'john@thewall.fr');
 
         $this->bot_commenter
-            ->shouldReceive('addCommentOnMergeRequest')
-            ->never();
+            ->expects(self::never())
+            ->method('addCommentOnMergeRequest');
 
         $this->processor->process($integration, $merge_request_webhook_data);
+
+        self::assertTrue($this->logger->hasInfoThatContains('0 Tuleap references found in merge request 2'));
+        self::assertTrue($this->logger->hasInfoThatContains('Merge request data for 2 saved in database'));
+        self::assertFalse($this->logger->hasInfoThatContains('Try to get author data of merge request #2'));
+        self::assertFalse($this->logger->hasInfoThatContains('Author name of merge request #2 is: John'));
+        self::assertFalse($this->logger->hasInfoThatContains('Author has been saved in database'));
     }
 }
