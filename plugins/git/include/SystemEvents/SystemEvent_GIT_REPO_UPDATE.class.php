@@ -92,7 +92,9 @@ class SystemEvent_GIT_REPO_UPDATE extends SystemEvent
             $driver->push();
 
             try {
-                Git_Exec::buildFromRepository($repository)->setDefaultBranch($default_branch);
+                // Disabled temporarily to avoid breaking newly created repository
+                // It can breaks newly created repository if the Git template dire does not set explicitly the default branch
+                //Git_Exec::buildFromRepository($repository)->setDefaultBranch($default_branch);
             } catch (Git_Command_Exception $exception) {
                 $this->error($exception->getMessage());
                 return;
