@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import * as rest_querier from "../../api/rest-querier.js";
+import * as rest_querier from "../../api/rest-querier";
 import { getProjectUserGroupsWithoutServiceSpecialUGroups } from "./ugroups";
 
 describe("User groups", () => {

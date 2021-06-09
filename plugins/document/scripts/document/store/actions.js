@@ -43,7 +43,7 @@ import {
     postNewFileVersionFromEmpty,
     postNewLinkVersionFromEmpty,
     postWiki,
-} from "../api/rest-querier.js";
+} from "../api/rest-querier";
 
 import {
     getErrorMessage,

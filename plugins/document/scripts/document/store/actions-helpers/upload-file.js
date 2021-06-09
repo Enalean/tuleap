@@ -18,7 +18,7 @@
  */
 
 import { Upload } from "tus-js-client";
-import { getItem } from "../../api/rest-querier.js";
+import { getItem } from "../../api/rest-querier";
 import { flagItemAsCreated } from "./flag-item-as-created.js";
 import { FILE_UPLOAD_UNKNOWN_ERROR } from "../../constants";
 

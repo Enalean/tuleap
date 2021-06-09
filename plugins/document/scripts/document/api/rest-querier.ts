@@ -18,6 +18,19 @@
  */
 
 import { del, get, post, recursiveGet } from "tlp";
+import type {
+    AdminPermissions,
+    ApprovalTable,
+    Embedded,
+    Empty,
+    Folder,
+    Item,
+    ItemFile,
+    Link,
+    Wiki,
+    ItemFileUploader,
+    UserGroup,
+} from "../type";
 
 export {
     getDocumentManagerServiceInformation,
@@ -49,7 +62,12 @@ export {
     getItemWithSize,
 };
 
-async function getDocumentManagerServiceInformation(project_id) {
+export interface ProjectService {
+    permissions_for_groups: AdminPermissions;
+    root_item: Folder;
+}
+
+async function getDocumentManagerServiceInformation(project_id: number): Promise<ProjectService> {
     const response = await get(
         "/api/projects/" + encodeURIComponent(project_id) + "/docman_service"
     );
@@ -57,13 +75,13 @@ async function getDocumentManagerServiceInformation(project_id) {
     return response.json();
 }
 
-async function getItem(id) {
+async function getItem(id: number): Promise<Item> {
     const response = await get("/api/docman_items/" + encodeURIComponent(id));
 
     return response.json();
 }
 
-async function addNewDocumentType(url, item) {
+async function addNewDocumentType(url: string, item: Item): Promise<Response> {
     const headers = {
         "content-type": "application/json",
     };
@@ -78,42 +96,42 @@ async function addNewDocumentType(url, item) {
     return response.json();
 }
 
-function addNewFile(item, parent_id) {
+function addNewFile(item: ItemFile, parent_id: number): Promise<Response> {
     return addNewDocumentType(
         "/api/docman_folders/" + encodeURIComponent(parent_id) + "/files",
         item
     );
 }
 
-function addNewEmpty(item, parent_id) {
+function addNewEmpty(item: Empty, parent_id: number): Promise<Response> {
     return addNewDocumentType(
         "/api/docman_folders/" + encodeURIComponent(parent_id) + "/empties",
         item
     );
 }
 
-function addNewEmbedded(item, parent_id) {
+function addNewEmbedded(item: Embedded, parent_id: number): Promise<Response> {
     return addNewDocumentType(
         "/api/docman_folders/" + encodeURIComponent(parent_id) + "/embedded_files",
         item
     );
 }
 
-function addNewWiki(item, parent_id) {
+function addNewWiki(item: Wiki, parent_id: number): Promise<Response> {
     return addNewDocumentType(
         "/api/docman_folders/" + encodeURIComponent(parent_id) + "/wikis",
         item
     );
 }
 
-function addNewLink(item, parent_id) {
+function addNewLink(item: Link, parent_id: number): Promise<Response> {
     return addNewDocumentType(
         "/api/docman_folders/" + encodeURIComponent(parent_id) + "/links",
         item
     );
 }
 
-function addNewFolder(item, parent_id) {
+function addNewFolder(item: Folder, parent_id: number): Promise<Response> {
     return addNewDocumentType(
         "/api/docman_folders/" + encodeURIComponent(parent_id) + "/folders",
         item
@@ -121,13 +139,13 @@ function addNewFolder(item, parent_id) {
 }
 
 async function createNewVersion(
-    item,
-    version_title,
-    change_log,
-    dropped_file,
-    should_lock_file,
-    approval_table_action
-) {
+    item: ItemFile,
+    version_title: string,
+    change_log: string,
+    dropped_file: ItemFile,
+    should_lock_file: boolean,
+    approval_table_action: ApprovalTable | null
+): Promise<Response> {
     const response = await post(`/api/docman_files/${encodeURIComponent(item.id)}/version`, {
         headers: {
             "Content-Type": "application/json",
@@ -149,7 +167,7 @@ async function createNewVersion(
     return response.json();
 }
 
-function getFolderContent(folder_id) {
+function getFolderContent(folder_id: number): Promise<Array<Item>> {
     return recursiveGet("/api/docman_items/" + encodeURIComponent(folder_id) + "/docman_items", {
         params: {
             limit: 50,
@@ -158,7 +176,7 @@ function getFolderContent(folder_id) {
     });
 }
 
-function getParents(folder_id) {
+function getParents(folder_id: number): Promise<Array<Item>> {
     return recursiveGet("/api/docman_items/" + encodeURIComponent(folder_id) + "/parents", {
         params: {
             limit: 50,
@@ -168,13 +186,13 @@ function getParents(folder_id) {
 }
 
 function postEmbeddedFile(
-    item,
-    content,
-    version_title,
-    change_log,
-    should_lock_file,
-    approval_table_action
-) {
+    item: Embedded,
+    content: string,
+    version_title: string,
+    change_log: string,
+    should_lock_file: boolean,
+    approval_table_action: ApprovalTable | null
+): Promise<Response> {
     return post(`/api/docman_embedded_files/${encodeURIComponent(item.id)}/version`, {
         headers: {
             "Content-Type": "application/json",
@@ -191,7 +209,13 @@ function postEmbeddedFile(
     });
 }
 
-function postWiki(item, page_name, version_title, change_log, should_lock_file) {
+function postWiki(
+    item: Wiki,
+    page_name: string,
+    version_title: string,
+    change_log: string,
+    should_lock_file: boolean
+): Promise<Response> {
     return post(`/api/docman_wikis/${encodeURIComponent(item.id)}/version`, {
         headers: {
             "Content-Type": "application/json",
@@ -206,13 +230,13 @@ function postWiki(item, page_name, version_title, change_log, should_lock_file) 
 }
 
 function postLinkVersion(
-    item,
-    link_url,
-    version_title,
-    change_log,
-    should_lock_file,
-    approval_table_action
-) {
+    item: Link,
+    link_url: string,
+    version_title: string,
+    change_log: string,
+    should_lock_file: boolean,
+    approval_table_action: ApprovalTable | null
+): Promise<Response> {
     return post(`/api/docman_links/${encodeURIComponent(item.id)}/version`, {
         headers: {
             "Content-Type": "application/json",
@@ -229,7 +253,7 @@ function postLinkVersion(
     });
 }
 
-function cancelUpload(item) {
+function cancelUpload(item: ItemFileUploader): Promise<Response> {
     return del(item.uploader.url, {
         headers: {
             "Tus-Resumable": "1.0.0",
@@ -237,22 +261,22 @@ function cancelUpload(item) {
     });
 }
 
-function deleteFile(item) {
+function deleteFile(item: ItemFileUploader): Promise<Response> {
     const escaped_item_id = encodeURIComponent(item.id);
     return del(`/api/docman_files/${escaped_item_id}`);
 }
 
-function deleteLink(item) {
+function deleteLink(item: Link): Promise<Response> {
     const escaped_item_id = encodeURIComponent(item.id);
     return del(`/api/docman_links/${escaped_item_id}`);
 }
 
-function deleteEmbeddedFile(item) {
+function deleteEmbeddedFile(item: Embedded): Promise<Response> {
     const escaped_item_id = encodeURIComponent(item.id);
     return del(`/api/docman_embedded_files/${escaped_item_id}`);
 }
 
-function deleteWiki(item, { delete_associated_wiki_page = false }) {
+function deleteWiki(item: Wiki, delete_associated_wiki_page = false): Promise<Response> {
     const escaped_item_id = encodeURIComponent(item.id);
     const escaped_option = encodeURIComponent(delete_associated_wiki_page);
 
@@ -261,24 +285,24 @@ function deleteWiki(item, { delete_associated_wiki_page = false }) {
     );
 }
 
-function deleteFolder(item) {
+function deleteFolder(item: Folder): Promise<Response> {
     const escaped_item_id = encodeURIComponent(item.id);
     return del(`/api/docman_folders/${escaped_item_id}`);
 }
 
-function deleteEmptyDocument(item) {
+function deleteEmptyDocument(item: Empty): Promise<Response> {
     const escaped_item_id = encodeURIComponent(item.id);
     return del(`/api/docman_empty_documents/${escaped_item_id}`);
 }
 
-async function getItemsReferencingSameWikiPage(page_id) {
+async function getItemsReferencingSameWikiPage(page_id: number): Promise<Item> {
     const escaped_page_id = encodeURIComponent(page_id);
     const response = await get(`/api/phpwiki/${escaped_page_id}/items_referencing_wiki_page`);
 
     return response.json();
 }
 
-async function getProjectUserGroups(project_id) {
+async function getProjectUserGroups(project_id: number): Promise<Array<UserGroup>> {
     const response = await get(
         "/api/projects/" +
             encodeURIComponent(project_id) +
@@ -289,7 +313,7 @@ async function getProjectUserGroups(project_id) {
     return response.json();
 }
 
-function postNewLinkVersionFromEmpty(item_id, link_url) {
+function postNewLinkVersionFromEmpty(item_id: number, link_url: string): Promise<Response> {
     const escaped_item_id = encodeURIComponent(item_id);
     return post(`/api/docman_empty_documents/${escaped_item_id}/link`, {
         headers: {
@@ -301,7 +325,7 @@ function postNewLinkVersionFromEmpty(item_id, link_url) {
     });
 }
 
-function postNewEmbeddedFileVersionFromEmpty(item_id, content) {
+function postNewEmbeddedFileVersionFromEmpty(item_id: number, content: string): Promise<Response> {
     const escaped_item_id = encodeURIComponent(item_id);
     return post(`/api/docman_empty_documents/${escaped_item_id}/embedded_file`, {
         headers: {
@@ -313,7 +337,10 @@ function postNewEmbeddedFileVersionFromEmpty(item_id, content) {
     });
 }
 
-async function postNewFileVersionFromEmpty(item_id, dropped_file) {
+async function postNewFileVersionFromEmpty(
+    item_id: number,
+    dropped_file: ItemFile
+): Promise<Response> {
     const response = await post(`/api/docman_empty_documents/${encodeURIComponent(item_id)}/file`, {
         headers: {
             "Content-Type": "application/json",
@@ -327,7 +354,7 @@ async function postNewFileVersionFromEmpty(item_id, dropped_file) {
     return response.json();
 }
 
-async function getItemWithSize(folder_id) {
+async function getItemWithSize(folder_id: number): Promise<Array<Item>> {
     const response = await get(`/api/docman_items/${encodeURIComponent(folder_id)}?with_size=true`);
 
     return response.json();

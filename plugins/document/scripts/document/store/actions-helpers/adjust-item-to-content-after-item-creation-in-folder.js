@@ -19,7 +19,7 @@
 
 export { adjustItemToContentAfterItemCreationInAFolder };
 
-import { getItem } from "../../api/rest-querier.js";
+import { getItem } from "../../api/rest-querier";
 import { flagItemAsCreated } from "./flag-item-as-created.js";
 
 async function adjustItemToContentAfterItemCreationInAFolder(

@@ -114,6 +114,17 @@ export interface ItemFile extends Item, ApprovableDocument {
     is_uploading_in_collapsed_folder: boolean;
     is_uploading: boolean;
     is_uploading_new_version: boolean;
+    name?: string;
+    size?: number;
+    uploader?: FileUploader;
+}
+
+export interface ItemFileUploader extends ItemFile {
+    uploader: FileUploader;
+}
+
+export interface FileUploader {
+    url: string;
 }
 
 export interface Link extends Item, ApprovableDocument {
@@ -160,6 +171,10 @@ export interface Permissions {
     can_manage: Array<Permission>;
 }
 
+export interface AdminPermissions {
+    can_admin: Array<Permission>;
+}
+
 export interface Permission {
     id: string;
     key: string;
@@ -199,4 +214,8 @@ export interface EmbeddedProperties {
 export interface WikiProperties {
     page_name: string;
     page_id: number | null;
+}
+
+export interface UserGroup {
+    id: string;
 }
