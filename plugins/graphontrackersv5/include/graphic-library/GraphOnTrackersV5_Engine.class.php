@@ -48,6 +48,15 @@ abstract class GraphOnTrackersV5_Engine
         }
     }
 
+    public function getDataAsArray(): array
+    {
+        if (! is_array($this->data)) {
+            throw new LogicException("Data must be an array");
+        }
+        return $this->data;
+    }
+
+
     /**
      * @return array of hexa colors
      */
