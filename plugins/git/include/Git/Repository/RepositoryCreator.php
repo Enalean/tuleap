@@ -29,6 +29,7 @@ use GitRepositoryManager;
 use PFUser;
 use Project;
 use ProjectHistoryDao;
+use Tuleap\Git\Branch\BranchName;
 use Tuleap\Git\CIBuilds\CITokenManager;
 use Tuleap\Git\Events\AfterRepositoryCreated;
 use Tuleap\Git\Permissions\FineGrainedPermissionReplicator;
@@ -104,12 +105,11 @@ class RepositoryCreator
     /**
      * @param         $repository_name
      *
-     * @return \GitRepository
      * @throws GitRepositoryNameIsInvalidException
      * @throws \GitDaoException
      * @throws \GitRepositoryAlreadyExistsException
      */
-    public function create(Project $project, PFUser $creator, $repository_name)
+    public function create(Project $project, PFUser $creator, string $repository_name): \GitRepository
     {
         $repository = $this->factory->buildRepository(
             $project,
@@ -123,7 +123,7 @@ class RepositoryCreator
             $default_mirrors = [];
         }
 
-        $this->manager->create($repository, $this->backend_gitolite, $default_mirrors);
+        $this->manager->create($repository, $this->backend_gitolite, $default_mirrors, BranchName::defaultBranchName());
 
         $this->backend_gitolite->savePermissions(
             $repository,

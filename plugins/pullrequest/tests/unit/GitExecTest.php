@@ -54,7 +54,7 @@ class GitExecTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItReturnsTheSha1OfAGivenBranch(): void
     {
-        $sha1 = $this->git_exec->getBranchSha1('refs/heads/master');
+        $sha1 = $this->git_exec->getBranchSha1('refs/heads/main');
 
         $this->assertNotNull($sha1);
         $this->assertNotEmpty($sha1);
@@ -76,7 +76,7 @@ class GitExecTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->git_exec->commit("modify toto");
 
         $sha1_src  = $this->git_exec->getBranchSha1('refs/heads/dev');
-        $sha1_dest = $this->git_exec->getBranchSha1('refs/heads/master');
+        $sha1_dest = $this->git_exec->getBranchSha1('refs/heads/main');
 
         $files = $this->git_exec->getModifiedFilesNameStatus($sha1_src, $sha1_dest);
 
@@ -87,7 +87,7 @@ class GitExecTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItUsesTheCommonAncestorToDoTheDiff(): void
     {
         system("cd $this->fixture_dir && git checkout --quiet -b dev 2>&1 >/dev/null");
-        system("cd $this->fixture_dir && git checkout --quiet master 2>&1 >/dev/null");
+        system("cd $this->fixture_dir && git checkout --quiet main 2>&1 >/dev/null");
         file_put_contents("$this->fixture_dir/added-file-in-master", "whatever");
         $this->git_exec->add("$this->fixture_dir/added-file-in-master");
         $this->git_exec->commit("add file added-file-in-master");
@@ -98,7 +98,7 @@ class GitExecTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->git_exec->commit("add file added-file-in-dev");
 
         $sha1_src  = $this->git_exec->getBranchSha1('refs/heads/dev');
-        $sha1_dest = $this->git_exec->getBranchSha1('refs/heads/master');
+        $sha1_dest = $this->git_exec->getBranchSha1('refs/heads/main');
 
         $files = $this->git_exec->getModifiedFilesNameStatus($sha1_src, $sha1_dest);
 
@@ -108,7 +108,7 @@ class GitExecTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItThrowsAnExceptionIfReferenceIsUnknown(): void
     {
         $sha1_src  = 'weeakplbrhmj03pjcjtw5blestib2hy3rgpwxmwt';
-        $sha1_dest = $this->git_exec->getBranchSha1('refs/heads/master');
+        $sha1_dest = $this->git_exec->getBranchSha1('refs/heads/main');
 
         $this->expectException('Tuleap\PullRequest\Exception\UnknownReferenceException');
 
@@ -133,7 +133,7 @@ class GitExecTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->git_exec->add($file1_path);
         $this->git_exec->commit("rm $file2_path & modify $file1_path");
 
-        $short_stat = $this->git_exec->getShortStat('master', 'dev');
+        $short_stat = $this->git_exec->getShortStat('main', 'dev');
         $this->assertEquals(2, $short_stat->getFilesChangedNumber());
         $this->assertEquals(1, $short_stat->getLinesAddedNumber());
         $this->assertEquals(1, $short_stat->getLinesRemovedNumber());
@@ -157,7 +157,7 @@ class GitExecTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->git_exec->add($file1_path);
         $this->git_exec->commit("rm $file2_path & modify $file1_path");
 
-        $modified_files = $this->git_exec->getModifiedFilesLineStat('master', 'dev');
+        $modified_files = $this->git_exec->getModifiedFilesLineStat('main', 'dev');
 
         $this->assertEquals(["1\t0\tfile1", "0\t1\tfile2"], $modified_files);
     }

@@ -46,15 +46,21 @@ class SystemEvent_GIT_REPO_UPDATE extends SystemEvent
         );
     }
 
-    private function getRepositoryIdFromParameters()
+    private function getRepositoryIdFromParameters(): int
     {
         $parameters = $this->getParametersAsArray();
-        return intval($parameters[0]);
+        return (int) $parameters[0];
     }
 
     private function getRepositoryFromParameters()
     {
         return $this->repository_factory->getRepositoryById($this->getRepositoryIdFromParameters());
+    }
+
+    private function getDefaultBranchIfItExistsFromParameters(): ?string
+    {
+        $parameters = $this->getParametersAsArray();
+        return $parameters[1] ?? null;
     }
 
     public function process()
@@ -70,24 +76,53 @@ class SystemEvent_GIT_REPO_UPDATE extends SystemEvent
             return;
         }
 
-        if (! $repository->getBackend()->updateRepoConf($repository)) {
-            $this->error('Unable to update gitolite configuration for repoistory with ID ' . $this->getRepositoryIdFromParameters());
+        $backend = $repository->getBackend();
+
+        if (! $backend->updateRepoConf($repository)) {
+            $this->error('Unable to update gitolite configuration for repository with ID ' . $this->getRepositoryIdFromParameters());
             return;
         }
 
         $this->system_event_manager->queueGrokMirrorManifest($repository);
+
+        $default_branch = $this->getDefaultBranchIfItExistsFromParameters();
+        if ($default_branch !== null) {
+            $driver = $backend->getDriver();
+            $driver->commit(sprintf('Modifications from event #%d (repository #%d, default branch:%s)', $this->getId(), $repository->getId(), $default_branch));
+            $driver->push();
+
+            try {
+                Git_Exec::buildFromRepository($repository)->setDefaultBranch($default_branch);
+            } catch (Git_Command_Exception $exception) {
+                $this->error($exception->getMessage());
+                return;
+            }
+        }
 
         $this->done();
     }
 
     public function verbalizeParameters($with_link)
     {
+        $html_purifier  = Codendi_HTMLPurifier::instance();
+        $default_branch = $this->getDefaultBranchIfItExistsFromParameters();
+
         if ($with_link) {
             $repository = $this->getRepositoryFromParameters();
             if ($repository) {
-                return '<a href="/plugins/git/?action=repo_management&group_id=' . $repository->getProjectId() . '&repo_id=' . $repository->getId() . '">' . $repository->getName() . '</a>';
+                $link_name = $repository->getName();
+                if ($default_branch !== null) {
+                    $link_name .= ' (' . $default_branch . ')';
+                }
+
+                return '<a href="/plugins/git/?action=repo_management&group_id=' . urlencode($repository->getProjectId()) . '&repo_id=' . urlencode($repository->getId()) . '">' . $html_purifier->purify($link_name) . '</a>';
             }
         }
-        return $this->getRepositoryIdFromParameters();
+
+        $verbalized_parameters = $this->getRepositoryIdFromParameters();
+        if ($default_branch !== null) {
+            $verbalized_parameters .= ' (' . $default_branch . ')';
+        }
+        return $html_purifier->purify($verbalized_parameters);
     }
 }

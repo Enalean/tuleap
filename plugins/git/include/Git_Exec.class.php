@@ -19,6 +19,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+use Tuleap\Git\Branch\BranchName;
+
 /**
  * Wrap access to git commands
  */
@@ -97,6 +99,8 @@ class Git_Exec
     public function init()
     {
         $this->gitCmd('init');
+        // Not all version of Git knows init.defaultBranch setting, let's force it
+        $this->setDefaultBranch(BranchName::defaultBranchName()->name);
     }
 
     public function setLocalCommiter($name, $email)
@@ -470,7 +474,9 @@ class Git_Exec
 
     private function buildGitCommandForWorkTree(): string
     {
-        return $this->getAllowedProtocolEnvVariable() . $this->git_cmd . ' --work-tree=' . escapeshellarg($this->work_tree) .
+        return $this->getAllowedProtocolEnvVariable() . $this->git_cmd .
+               ' -c init.defaultBranch=' . escapeshellarg(BranchName::defaultBranchName()->name) .
+               ' --work-tree=' . escapeshellarg($this->work_tree) .
                ' --git-dir=' . escapeshellarg($this->git_dir);
     }
 }

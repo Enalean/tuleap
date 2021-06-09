@@ -22,6 +22,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Git\Branch\BranchName;
 use Tuleap\Git\SystemEvents\ParseGitolite3Logs;
 use Tuleap\Git\SystemEvents\ProjectIsSuspended;
 
@@ -53,15 +54,19 @@ class Git_SystemEventManager
         );
     }
 
-    public function queueRepositoryUpdate(GitRepository $repository)
+    public function queueRepositoryUpdate(GitRepository $repository, ?BranchName $default_branch = null): void
     {
         if (
             $repository->getBackend() instanceof Git_Backend_Gitolite &&
             ! $this->isRepositoryUpdateAlreadyQueued($repository)
         ) {
+            $parameters = $repository->getId();
+            if ($default_branch !== null) {
+                $parameters .= SystemEvent::PARAMETER_SEPARATOR . $default_branch->name;
+            }
             $this->system_event_manager->createEvent(
                 SystemEvent_GIT_REPO_UPDATE::NAME,
-                $repository->getId(),
+                $parameters,
                 SystemEvent::PRIORITY_HIGH,
                 SystemEvent::OWNER_APP
             );

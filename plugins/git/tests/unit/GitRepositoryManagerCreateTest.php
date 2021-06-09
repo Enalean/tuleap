@@ -20,12 +20,11 @@
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use org\bovigo\vfs\vfsStream;
+use Tuleap\Git\Branch\BranchName;
 use Tuleap\Git\Repository\GitRepositoryNameIsInvalidException;
 
-require_once __DIR__ . '/bootstrap.php';
-
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
-class GitRepositoryManagerCreateTest extends \Tuleap\Test\PHPUnit\TestCase
+final class GitRepositoryManagerCreateTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 
@@ -76,7 +75,7 @@ class GitRepositoryManagerCreateTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->creator->shouldReceive('isNameValid')->andReturns(true);
 
         $this->expectException(GitRepositoryAlreadyExistsException::class);
-        $this->manager->create($this->repository, $this->creator, []);
+        $this->manager->create($this->repository, $this->creator, [], BranchName::defaultBranchName());
     }
 
     public function testItThrowsAnExceptionIfNameIsNotCompliantToBackendStandards(): void
@@ -85,7 +84,7 @@ class GitRepositoryManagerCreateTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->creator->shouldReceive('isNameValid')->andReturns(false);
 
         $this->expectException(GitRepositoryNameIsInvalidException::class);
-        $this->manager->create($this->repository, $this->creator, []);
+        $this->manager->create($this->repository, $this->creator, [], BranchName::defaultBranchName());
     }
 
     public function testItCreatesOnRepositoryBackendIfEverythingIsClean()
@@ -94,7 +93,7 @@ class GitRepositoryManagerCreateTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->creator->shouldReceive('isNameValid')->andReturns(true);
 
         $this->dao->shouldReceive('save')->with($this->repository)->once();
-        $this->manager->create($this->repository, $this->creator, []);
+        $this->manager->create($this->repository, $this->creator, [], BranchName::defaultBranchName());
     }
 
     public function testItScheduleAnEventToCreateTheRepositoryInGitolite(): void
@@ -104,9 +103,9 @@ class GitRepositoryManagerCreateTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->dao->shouldReceive('save')->andReturns(54);
 
-        $this->git_system_event_manager->shouldReceive('queueRepositoryUpdate')->with($this->repository)->once();
+        $this->git_system_event_manager->shouldReceive('queueRepositoryUpdate')->with($this->repository, Mockery::any())->once();
 
-        $this->manager->create($this->repository, $this->creator, []);
+        $this->manager->create($this->repository, $this->creator, [], BranchName::defaultBranchName());
     }
 
     public function testItSetRepositoryIdOnceSavedInDatabase(): void
@@ -116,7 +115,7 @@ class GitRepositoryManagerCreateTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->dao->shouldReceive('save')->andReturns(54);
 
-        $this->manager->create($this->repository, $this->creator, []);
+        $this->manager->create($this->repository, $this->creator, [], BranchName::defaultBranchName());
         $this->assertEquals(54, $this->repository->getId());
     }
 }
