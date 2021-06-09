@@ -39,9 +39,9 @@ use TuleapCfg\Command\Docker\LogToSyslog;
 use TuleapCfg\Command\Docker\Postfix;
 use TuleapCfg\Command\Docker\Realtime;
 use TuleapCfg\Command\Docker\Rsyslog;
-use TuleapCfg\Command\Docker\SSHDaemon;
 use TuleapCfg\Command\Docker\Supervisord;
 use TuleapCfg\Command\Docker\Tuleap;
+use TuleapCfg\Command\Docker\VariableProviderFromEnvironment;
 use TuleapCfg\Command\ProcessFactory;
 
 final class StartContainerCommand extends Command
@@ -59,6 +59,17 @@ final class StartContainerCommand extends Command
         '/root/.tuleap_passwd',
         '/var/lib/gitolite',
         '/var/lib/tuleap',
+    ];
+
+    private const SUPERVISORD_UNITS = [
+        Supervisord::UNIT_CROND,
+        Supervisord::UNIT_SSHD,
+        Supervisord::UNIT_RSYSLOG,
+        Supervisord::UNIT_NGINX,
+        Supervisord::UNIT_POSTFIX,
+        Supervisord::UNIT_HTTPD,
+        Supervisord::UNIT_FPM,
+        Supervisord::UNIT_BACKEND_WORKERS,
     ];
 
     private const OPTION_NO_SUPERVISORD = 'no-supervisord';
@@ -89,19 +100,13 @@ final class StartContainerCommand extends Command
         $version_presenter = VersionPresenter::fromFlavorFinder(new FlavorFinderFromFilePresence());
         $output->writeln(sprintf('<info>Start init sequence for %s</info>', $version_presenter->getFullDescriptiveVersion()));
         try {
-            $tuleap_fqdn = $this->getStringFromEnvironment('TULEAP_FQDN');
-            if ($tuleap_fqdn === '') {
-                throw new \RuntimeException('TULEAP_FQDN environment variable must be set');
-            }
-            $tuleap = new Tuleap($this->process_factory);
-            if (! $this->data_persistence->isThereAnyData()) {
-                $this->installTuleap($output, $tuleap, $tuleap_fqdn);
-                $this->data_persistence->store($output);
-                $this->data_persistence->restore($output);
-            } else {
-                $this->data_persistence->restore($output);
-                $tuleap->update($output);
-            }
+            $tuleap      = new Tuleap($this->process_factory);
+            $tuleap_fqdn = $tuleap->setupOrUpdate(
+                $output,
+                $this->data_persistence,
+                new VariableProviderFromEnvironment(),
+            );
+
             $console_logger = new ConsoleLogger($output, [LogLevel::INFO => OutputInterface::VERBOSITY_NORMAL]);
             $realtime       = new Realtime($console_logger);
             $realtime->setup($tuleap_fqdn);
@@ -115,16 +120,7 @@ final class StartContainerCommand extends Command
             $log_to_syslog = new LogToSyslog($console_logger);
             $log_to_syslog->configure();
 
-            $supervisord = new Supervisord(
-                Supervisord::UNIT_CROND,
-                Supervisord::UNIT_SSHD,
-                Supervisord::UNIT_RSYSLOG,
-                Supervisord::UNIT_NGINX,
-                Supervisord::UNIT_POSTFIX,
-                Supervisord::UNIT_HTTPD,
-                Supervisord::UNIT_FPM,
-                Supervisord::UNIT_BACKEND_WORKERS,
-            );
+            $supervisord = new Supervisord(...self::SUPERVISORD_UNITS);
             $supervisord->configure($output);
 
             $option_exec = $input->getOption(self::OPTION_EXEC);
@@ -133,40 +129,23 @@ final class StartContainerCommand extends Command
             }
 
             if ($input->getOption(self::OPTION_NO_SUPERVISORD) !== true) {
+                $output->writeln(
+                    <<<EOT
+                    ***********************************************************************************************************
+                    * You can get `admin` password with following command: `docker-compose exec web cat /root/.tuleap_passwd` *
+                    ***********************************************************************************************************
+                    EOT
+                );
                 $supervisord->run($output);
             }
-            return 0;
+            return Command::SUCCESS;
         } catch (\Exception $exception) {
             $output->writeln(sprintf('<error>%s</error>', OutputFormatter::escape($exception->getMessage())));
             $output->writeln('Something went wrong, here is a shell to debug: ');
             pcntl_exec('/bin/bash');
             $output->writeln('exec of bash failed');
         }
-        return 1;
-    }
-
-    private function installTuleap(OutputInterface $output, Tuleap $tuleap, string $tuleap_fqdn): void
-    {
-        $ssh_daemon = new SSHDaemon($this->process_factory);
-
-        $ssh_daemon->startDaemon($output);
-        $tuleap->setup(
-            $output,
-            $tuleap_fqdn,
-            $this->getStringFromEnvironment('DB_HOST'),
-            $this->getStringFromEnvironment('DB_ADMIN_USER'),
-            $this->getStringFromEnvironment('DB_ADMIN_PASSWORD'),
-        );
-        $ssh_daemon->shutdownDaemon($output);
-    }
-
-    private function getStringFromEnvironment(string $key): string
-    {
-        $value = getenv($key);
-        if ($value !== false) {
-            return $value;
-        }
-        return '';
+        return Command::FAILURE;
     }
 
     private function exec(LoggerInterface $logger, string $command): void

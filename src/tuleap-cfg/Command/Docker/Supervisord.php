@@ -108,6 +108,10 @@ final class Supervisord
                 [unix_http_server]
                 username = tuleap
                 password = $password
+
+                # Override supervisord defaults. Avoid supervisord to scream because it runs as root
+                [supervisord]
+                user=root
                 EOT;
     }
 

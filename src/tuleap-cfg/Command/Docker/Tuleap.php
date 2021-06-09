@@ -36,14 +36,53 @@ use TuleapCfg\Command\SiteDeploy\Nginx\SiteDeployNginx;
 
 final class Tuleap
 {
-    /**
-     * @var ProcessFactory
-     */
-    private $process_factory;
+    private const TULEAP_FQDN       = 'TULEAP_FQDN';
+    private const DB_HOST           = 'DB_HOST';
+    private const DB_ADMIN_USER     = 'DB_ADMIN_USER';
+    private const DB_ADMIN_PASSWORD = 'DB_ADMIN_PASSWORD';
+
+    private ProcessFactory $process_factory;
 
     public function __construct(ProcessFactory $process_factory)
     {
         $this->process_factory = $process_factory;
+    }
+
+    public function setupOrUpdate(OutputInterface $output, DataPersistence $data_persistence, VariableProviderInterface $variable_provider, ?\Closure $post_install = null): string
+    {
+        if (! $data_persistence->isThereAnyData()) {
+            $tuleap_fqdn = $this->installTuleap($output, $variable_provider, $post_install);
+            $data_persistence->store($output);
+            $data_persistence->restore($output);
+            return $tuleap_fqdn;
+        } else {
+            $data_persistence->restore($output);
+            return $this->update($output);
+        }
+    }
+
+    private function installTuleap(OutputInterface $output, VariableProviderInterface $variable_provider, ?\Closure $post_install = null): string
+    {
+        $ssh_daemon = new SSHDaemon($this->process_factory);
+
+        $fqdn = $variable_provider->get(self::TULEAP_FQDN);
+
+        $ssh_daemon->startDaemon($output);
+        $this->setup(
+            $output,
+            $fqdn,
+            $variable_provider->get(self::DB_HOST),
+            $variable_provider->get(self::DB_ADMIN_USER),
+            $variable_provider->get(self::DB_ADMIN_PASSWORD),
+        );
+
+        if ($post_install !== null) {
+            $post_install();
+        }
+
+        $ssh_daemon->shutdownDaemon($output);
+
+        return $fqdn;
     }
 
     public function setup(OutputInterface $output, string $tuleap_fqdn, string $db_host, string $db_admin_user, string $db_admin_password): void
