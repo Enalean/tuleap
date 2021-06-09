@@ -19,6 +19,7 @@
  */
 
 use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
+use Tuleap\CLI\Events\GetWhitelistedKeys;
 use Tuleap\Cryptography\KeyFactory;
 use Tuleap\Date\TlpRelativeDatePresenterBuilder;
 use Tuleap\DB\DBFactory;
@@ -28,8 +29,10 @@ use Tuleap\Gitlab\API\ClientWrapper;
 use Tuleap\Gitlab\API\GitlabHTTPClientFactory;
 use Tuleap\Gitlab\API\GitlabProjectBuilder;
 use Tuleap\Gitlab\API\Tag\GitlabTagRetriever;
+use Tuleap\Gitlab\Artifact\Action\CreateBranchButtonFetcher;
 use Tuleap\Gitlab\Artifact\ArtifactRetriever;
 use Tuleap\Gitlab\EventsHandlers\ReferenceAdministrationWarningsCollectorEventHandler;
+use Tuleap\Gitlab\Plugin\GitlabIntegrationAvailabilityChecker;
 use Tuleap\Gitlab\Reference\Branch\GitlabBranchCrossReferenceEnhancer;
 use Tuleap\Gitlab\Reference\Branch\GitlabBranchFactory;
 use Tuleap\Gitlab\Reference\Branch\GitlabBranchReference;
@@ -99,6 +102,7 @@ use Tuleap\Reference\GetReferenceEvent;
 use Tuleap\Reference\Nature;
 use Tuleap\Reference\NatureCollection;
 use Tuleap\Request\CollectRoutesEvent;
+use Tuleap\Tracker\Artifact\ActionButtons\AdditionalArtifactActionButtonsFetcher;
 use Tuleap\Tracker\Semantic\Status\Done\DoneValueRetriever;
 use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneDao;
 use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneFactory;
@@ -150,6 +154,8 @@ class gitlabPlugin extends Plugin
 
         $this->addHook(ExternalSystemReferencePresentersCollector::NAME);
         $this->addHook(SemanticDoneUsedExternalServiceEvent::NAME);
+        $this->addHook(AdditionalArtifactActionButtonsFetcher::NAME);
+        $this->addHook(GetWhitelistedKeys::NAME);
 
         return parent::getHooksAndCallbacks();
     }
@@ -693,10 +699,8 @@ class gitlabPlugin extends Plugin
     public function semanticDoneUsedExternalServiceEvent(SemanticDoneUsedExternalServiceEvent $event): void
     {
         $project = $event->getTracker()->getProject();
-        if (! $project->usesService(GitPlugin::SERVICE_SHORTNAME)) {
-            return;
-        }
-        if (! $this->_getPluginManager()->isPluginAllowedForProject($this, $project->getID())) {
+
+        if (! $this->getGitlabIntegrationAvailabilityChecker()->isGitlabIntegrationAvailableForProject($project)) {
             return;
         }
 
@@ -706,5 +710,37 @@ class gitlabPlugin extends Plugin
                 dgettext('tuleap-gitlab', 'close artifacts'),
             )
         );
+    }
+
+    private function getGitlabIntegrationAvailabilityChecker(): GitlabIntegrationAvailabilityChecker
+    {
+        return new GitlabIntegrationAvailabilityChecker(
+            $this->_getPluginManager(),
+            $this
+        );
+    }
+
+    public function getWhitelistedKeys(GetWhitelistedKeys $event): void
+    {
+        $event->addConfigClass(CreateBranchButtonFetcher::class);
+    }
+
+    public function additionalArtifactActionButtonsFetcher(AdditionalArtifactActionButtonsFetcher $event): void
+    {
+        $button_fecther = new CreateBranchButtonFetcher(
+            $this->getGitlabIntegrationAvailabilityChecker(),
+            new WebhookDao()
+        );
+
+        $button_action = $button_fecther->getActionButton(
+            $event->getArtifact(),
+            $event->getUser()
+        );
+
+        if ($button_action === null) {
+            return;
+        }
+
+        $event->addAction($button_action);
     }
 }
