@@ -50,6 +50,7 @@
     "gumlet/php-image-resize": "^2.0",
     "http-interop/http-factory-guzzle": "^1.0",
     "laminas/laminas-cache": "^2.8",
+    "laminas/laminas-cache-storage-adapter-filesystem": "^1.1",
     "laminas/laminas-feed": "^2.10",
     "laminas/laminas-httphandlerrunner": "^1.1",
     "laminas/laminas-mail": "^2.10",
@@ -79,6 +80,22 @@
     "tuleap/prometheus-client": "^1.0",
     "webimpress/safe-writer": "^2.0",
     "willdurand/negotiation": "^3.0"
+  },
+  "replace": {
+    "laminas/laminas-cache-storage-adapter-apc": "*",
+    "laminas/laminas-cache-storage-adapter-apcu": "*",
+    "laminas/laminas-cache-storage-adapter-blackhole": "*",
+    "laminas/laminas-cache-storage-adapter-dba": "*",
+    "laminas/laminas-cache-storage-adapter-ext-mongodb": "*",
+    "laminas/laminas-cache-storage-adapter-memory": "*",
+    "laminas/laminas-cache-storage-adapter-memcache": "*",
+    "laminas/laminas-cache-storage-adapter-memcached": "*",
+    "laminas/laminas-cache-storage-adapter-mongodb": "*",
+    "laminas/laminas-cache-storage-adapter-redis": "*",
+    "laminas/laminas-cache-storage-adapter-session": "*",
+    "laminas/laminas-cache-storage-adapter-wincache": "*",
+    "laminas/laminas-cache-storage-adapter-xcache": "*",
+    "laminas/laminas-cache-storage-adapter-zend-server": "*"
   },
   "config": {
     "sort-packages": true
