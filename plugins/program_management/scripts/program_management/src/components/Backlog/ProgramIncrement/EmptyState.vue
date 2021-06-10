@@ -20,7 +20,7 @@
 <template>
     <div class="program-increment-empty-state">
         <empty-svg />
-        <p v-translate class="empty-page-text">There are no iterations yet</p>
+        <p v-translate class="empty-page-text">There are no program increments yet</p>
         <form v-bind:action="create_new_program_increment" method="post">
             <button
                 class="tlp-button-primary program-increment-title-button-icon"

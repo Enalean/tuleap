@@ -39,7 +39,7 @@
                             program_increment_sub_label: tracker_program_increment_sub_label,
                         }"
                     >
-                        Add %{ program_increment_sub_label }
+                        New %{ program_increment_sub_label }
                     </span>
                 </button>
             </div>

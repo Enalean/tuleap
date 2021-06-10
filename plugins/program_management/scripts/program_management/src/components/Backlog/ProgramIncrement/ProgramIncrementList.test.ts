@@ -162,7 +162,7 @@ describe("ProgramIncrementList", () => {
             "Program Increments"
         );
         expect(wrapper.find("[data-test=button-add-program-increment-label]").text()).toEqual(
-            "Add program increment"
+            "New program increment"
         );
     });
 
