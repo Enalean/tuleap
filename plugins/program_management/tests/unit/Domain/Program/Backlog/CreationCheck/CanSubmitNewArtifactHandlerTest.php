@@ -24,7 +24,6 @@ namespace Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck;
 
 use ProjectManager;
 use Tuleap\ProgramManagement\Adapter\ProjectAdapter;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Team\TeamProjectsCollectionBuilder;
 use Tuleap\ProgramManagement\Domain\Program\ProgramStore;
 use Tuleap\ProgramManagement\Stub\BuildProgramStub;
 use Tuleap\Test\Builders\ProjectTestBuilder;
@@ -124,11 +123,7 @@ final class CanSubmitNewArtifactHandlerTest extends TestCase
 
     private function getHandler(bool $build_valid_program = true): CanSubmitNewArtifactHandler
     {
-        $project_data_adapter        = new ProjectAdapter($this->project_manager);
-        $projects_collection_builder = new TeamProjectsCollectionBuilder(
-            $this->program_store,
-            $project_data_adapter
-        );
+        $project_data_adapter = new ProjectAdapter($this->project_manager);
 
         $program_build = BuildProgramStub::stubValidProgram();
         if (! $build_valid_program) {
@@ -139,7 +134,8 @@ final class CanSubmitNewArtifactHandlerTest extends TestCase
             $program_build,
             $this->program_increment_creator_checker,
             $this->iteration_creator_checker,
-            $projects_collection_builder
+            $this->program_store,
+            $project_data_adapter
         );
     }
 

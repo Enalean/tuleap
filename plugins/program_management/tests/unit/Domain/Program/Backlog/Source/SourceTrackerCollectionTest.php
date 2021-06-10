@@ -26,8 +26,9 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Team\TeamPr
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TrackerCollection;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\ProgramTracker;
-use Tuleap\ProgramManagement\Domain\Project;
 use Tuleap\ProgramManagement\Stub\BuildProgramStub;
+use Tuleap\ProgramManagement\Stub\BuildProjectStub;
+use Tuleap\ProgramManagement\Stub\ProgramStoreStub;
 use Tuleap\ProgramManagement\Stub\RetrievePlanningMilestoneTrackerStub;
 use Tuleap\ProgramManagement\Stub\RetrieveVisibleIterationTrackerStub;
 use Tuleap\ProgramManagement\Stub\RetrieveVisibleProgramIncrementTrackerStub;
@@ -49,9 +50,11 @@ final class SourceTrackerCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->user    = UserTestBuilder::aUser()->build();
         $this->program = ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 101, $this->user);
 
-        $team_blue   = new Project(102, 'team_blue', 'Team Blue');
-        $team_red    = new Project(103, 'tea_red', 'Team Red');
-        $this->teams = new TeamProjectsCollection([$team_blue, $team_red]);
+        $this->teams = TeamProjectsCollection::fromProgramIdentifier(
+            ProgramStoreStub::buildTeams(102, 103),
+            new BuildProjectStub(),
+            ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 100, UserTestBuilder::aUser()->build())
+        );
 
         $this->timebox_tracker   = TrackerTestBuilder::aTracker()->withId(78)->build();
         $this->blue_team_tracker = TrackerTestBuilder::aTracker()->withId(79)->build();

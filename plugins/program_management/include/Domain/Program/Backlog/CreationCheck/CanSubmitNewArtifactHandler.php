@@ -22,11 +22,13 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck;
 
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Team\TeamProjectsCollectionBuilder;
+use Tuleap\ProgramManagement\Domain\BuildProject;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Team\TeamProjectsCollection;
 use Tuleap\ProgramManagement\Domain\Program\Plan\BuildProgram;
 use Tuleap\ProgramManagement\Domain\Program\Plan\ProgramAccessException;
 use Tuleap\ProgramManagement\Domain\Program\Plan\ProjectIsNotAProgramException;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
+use Tuleap\ProgramManagement\Domain\Program\ProgramStore;
 use Tuleap\ProgramManagement\Domain\ProgramTracker;
 use Tuleap\Tracker\Artifact\CanSubmitNewArtifact;
 
@@ -35,18 +37,21 @@ final class CanSubmitNewArtifactHandler
     private BuildProgram $program_builder;
     private ProgramIncrementCreatorChecker $program_increment_creator_checker;
     private IterationCreatorChecker $iteration_creator_checker;
-    private TeamProjectsCollectionBuilder $team_projects_collection_builder;
+    private ProgramStore $program_store;
+    private BuildProject $project_builder;
 
     public function __construct(
         BuildProgram $program_builder,
         ProgramIncrementCreatorChecker $program_increment_creator_checker,
         IterationCreatorChecker $iteration_creator_checker,
-        TeamProjectsCollectionBuilder $team_projects_collection_builder
+        ProgramStore $program_store,
+        BuildProject $project_builder
     ) {
         $this->program_builder                   = $program_builder;
         $this->program_increment_creator_checker = $program_increment_creator_checker;
         $this->iteration_creator_checker         = $iteration_creator_checker;
-        $this->team_projects_collection_builder  = $team_projects_collection_builder;
+        $this->program_store                     = $program_store;
+        $this->project_builder                   = $project_builder;
     }
 
     public function handle(CanSubmitNewArtifact $event): void
@@ -62,7 +67,9 @@ final class CanSubmitNewArtifactHandler
             return;
         }
 
-        $team_projects_collection = $this->team_projects_collection_builder->getTeamProjectForAGivenProgramProject(
+        $team_projects_collection = TeamProjectsCollection::fromProgramIdentifier(
+            $this->program_store,
+            $this->project_builder,
             $program
         );
 

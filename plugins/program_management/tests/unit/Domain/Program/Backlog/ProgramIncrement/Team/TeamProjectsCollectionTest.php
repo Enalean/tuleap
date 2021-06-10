@@ -22,30 +22,42 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Team;
 
-use Tuleap\ProgramManagement\Adapter\ProjectAdapter;
+use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
+use Tuleap\ProgramManagement\Stub\BuildProgramStub;
+use Tuleap\ProgramManagement\Stub\BuildProjectStub;
+use Tuleap\ProgramManagement\Stub\ProgramStoreStub;
+use Tuleap\Test\Builders\UserTestBuilder;
 
 final class TeamProjectsCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testGetTeamProjectsReturnsProjects(): void
     {
-        $first_team_project  = ProjectAdapter::build(new \Project(['group_id' => '103', 'unix_group_name' => 'project', 'group_name' => 'My project']));
-        $second_team_project = ProjectAdapter::build(new \Project(['group_id' => '125', 'unix_group_name' => 'other_project', 'group_name' => 'Other project']));
-        $collection          = new TeamProjectsCollection(
-            [$first_team_project, $second_team_project]
+        $collection = TeamProjectsCollection::fromProgramIdentifier(
+            ProgramStoreStub::buildTeams(103, 125),
+            new BuildProjectStub(),
+            ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 100, UserTestBuilder::aUser()->build())
         );
-        $this->assertContains($first_team_project, $collection->getTeamProjects());
-        $this->assertContains($second_team_project, $collection->getTeamProjects());
+        self::assertSame(103, $collection->getTeamProjects()[0]->getId());
+        self::assertSame(125, $collection->getTeamProjects()[1]->getId());
     }
 
     public function testIsEmptyReturnsTrue(): void
     {
-        $collection = new TeamProjectsCollection([]);
-        $this->assertTrue($collection->isEmpty());
+        $collection = TeamProjectsCollection::fromProgramIdentifier(
+            ProgramStoreStub::buildTeams(),
+            new BuildProjectStub(),
+            ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 100, UserTestBuilder::aUser()->build())
+        );
+        self::assertTrue($collection->isEmpty());
     }
 
     public function testIsEmptyReturnsFalse()
     {
-        $collection = new TeamProjectsCollection([\Project::buildForTest()]);
-        $this->assertFalse($collection->isEmpty());
+        $collection = TeamProjectsCollection::fromProgramIdentifier(
+            ProgramStoreStub::buildTeams(101, 102),
+            new BuildProjectStub(),
+            ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 100, UserTestBuilder::aUser()->build())
+        );
+        self::assertFalse($collection->isEmpty());
     }
 }

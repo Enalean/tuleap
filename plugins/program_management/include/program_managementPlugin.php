@@ -93,7 +93,6 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\ProgramIncrementChan
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Plan\ConfigurationChecker;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFieldFromProgramAndTeamTrackersCollectionBuilder;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\NatureAnalyzerException;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Team\TeamProjectsCollectionBuilder;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TimeboxArtifactLinkType;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\TopBacklogChangeProcessor;
 use Tuleap\ProgramManagement\Domain\Program\Plan\PlanTrackerException;
@@ -683,14 +682,6 @@ final class program_managementPlugin extends Plugin
         return BackendLogger::getDefaultLogger("program_management_syslog");
     }
 
-    private function getTeamProjectCollectionBuilder(): TeamProjectsCollectionBuilder
-    {
-        return new TeamProjectsCollectionBuilder(
-            new ProgramDao(),
-            $this->getProjectDataAdapter()
-        );
-    }
-
     private function getProjectDataAdapter(): ProjectAdapter
     {
         return new ProjectAdapter(ProjectManager::instance());
@@ -834,7 +825,8 @@ final class program_managementPlugin extends Plugin
                 $checker,
                 $logger
             ),
-            $this->getTeamProjectCollectionBuilder(),
+            new ProgramDao(),
+            $this->getProjectDataAdapter()
         );
     }
 }

@@ -22,6 +22,9 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Team;
 
+use Tuleap\ProgramManagement\Domain\BuildProject;
+use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
+use Tuleap\ProgramManagement\Domain\Program\ProgramStore;
 use Tuleap\ProgramManagement\Domain\Project;
 
 /**
@@ -37,10 +40,11 @@ final class TeamProjectsCollection
     /**
      * @param Project[] $team_projects
      */
-    public function __construct(array $team_projects)
+    private function __construct(array $team_projects)
     {
         $this->team_projects = $team_projects;
     }
+
     public function isEmpty(): bool
     {
         return empty($this->team_projects);
@@ -52,5 +56,16 @@ final class TeamProjectsCollection
     public function getTeamProjects(): array
     {
         return $this->team_projects;
+    }
+
+    public static function fromProgramIdentifier(ProgramStore $program_store, BuildProject $project_data_adapter, ProgramIdentifier $program): self
+    {
+        $program_project_id = $program->getID();
+        $team_projects      = [];
+        foreach ($program_store->getTeamProjectIdsForGivenProgramProject($program_project_id) as $row) {
+            $team_projects[] = $project_data_adapter->buildFromId($row['team_project_id']);
+        }
+
+        return new self($team_projects);
     }
 }

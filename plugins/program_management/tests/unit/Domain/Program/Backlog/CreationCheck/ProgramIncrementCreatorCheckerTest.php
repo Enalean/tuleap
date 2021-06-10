@@ -28,9 +28,10 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracker\Retr
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracker\VerifyIsProgramIncrementTracker;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\ProgramTracker;
-use Tuleap\ProgramManagement\Domain\Project;
 use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\RetrievePlanningMilestoneTracker;
 use Tuleap\ProgramManagement\Stub\BuildProgramStub;
+use Tuleap\ProgramManagement\Stub\BuildProjectStub;
+use Tuleap\ProgramManagement\Stub\ProgramStoreStub;
 use Tuleap\ProgramManagement\Stub\RetrievePlanningMilestoneTrackerStub;
 use Tuleap\ProgramManagement\Stub\RetrieveVisibleProgramIncrementTrackerStub;
 use Tuleap\ProgramManagement\Stub\VerifyIsProgramIncrementTrackerStub;
@@ -86,7 +87,11 @@ final class ProgramIncrementCreatorCheckerTest extends \Tuleap\Test\PHPUnit\Test
                 $this->user,
                 $this->tracker,
                 $this->program,
-                new TeamProjectsCollection([new Project(104, 'project', 'Project 1')])
+                TeamProjectsCollection::fromProgramIdentifier(
+                    ProgramStoreStub::buildTeams(104),
+                    new BuildProjectStub(),
+                    ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 100, UserTestBuilder::aUser()->build())
+                )
             )
         );
     }
@@ -101,7 +106,11 @@ final class ProgramIncrementCreatorCheckerTest extends \Tuleap\Test\PHPUnit\Test
                 $this->user,
                 $this->tracker,
                 $this->program,
-                new TeamProjectsCollection([])
+                TeamProjectsCollection::fromProgramIdentifier(
+                    ProgramStoreStub::buildTeams(),
+                    new BuildProjectStub(),
+                    ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 100, UserTestBuilder::aUser()->build())
+                )
             )
         );
     }
@@ -115,7 +124,11 @@ final class ProgramIncrementCreatorCheckerTest extends \Tuleap\Test\PHPUnit\Test
                 $this->user,
                 $this->tracker,
                 $this->program,
-                new TeamProjectsCollection([new Project(104, 'project', 'Project 1')])
+                TeamProjectsCollection::fromProgramIdentifier(
+                    ProgramStoreStub::buildTeams(104),
+                    new BuildProjectStub(),
+                    ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 100, UserTestBuilder::aUser()->build())
+                )
             )
         );
     }
@@ -129,7 +142,11 @@ final class ProgramIncrementCreatorCheckerTest extends \Tuleap\Test\PHPUnit\Test
                 $this->user,
                 $this->tracker,
                 $this->program,
-                new TeamProjectsCollection([])
+                TeamProjectsCollection::fromProgramIdentifier(
+                    ProgramStoreStub::buildTeams(),
+                    new BuildProjectStub(),
+                    ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 100, UserTestBuilder::aUser()->build())
+                )
             )
         );
     }
@@ -144,7 +161,11 @@ final class ProgramIncrementCreatorCheckerTest extends \Tuleap\Test\PHPUnit\Test
                 $this->user,
                 $this->tracker,
                 $this->program,
-                new TeamProjectsCollection([new Project(104, 'project', 'Project 1')])
+                TeamProjectsCollection::fromProgramIdentifier(
+                    ProgramStoreStub::buildTeams(104),
+                    new BuildProjectStub(),
+                    ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 100, UserTestBuilder::aUser()->build())
+                )
             )
         );
     }
@@ -157,7 +178,11 @@ final class ProgramIncrementCreatorCheckerTest extends \Tuleap\Test\PHPUnit\Test
             $this->user,
             $this->tracker,
             $this->program,
-            new TeamProjectsCollection([new Project(104, 'project', 'Project 1')])
+            TeamProjectsCollection::fromProgramIdentifier(
+                ProgramStoreStub::buildTeams(104),
+                new BuildProjectStub(),
+                ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 100, UserTestBuilder::aUser()->build())
+            )
         ));
     }
 
