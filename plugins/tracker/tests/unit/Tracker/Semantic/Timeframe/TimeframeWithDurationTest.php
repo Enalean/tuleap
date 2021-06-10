@@ -85,7 +85,7 @@ class TimeframeWithDurationTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->duration_field->expects(self::any())->method('getLabel')->will(self::returnValue('Duration'));
 
         $this->assertEquals(
-            'Timeframe is based on start date field &quot;Start date&quot; and duration field &quot;Duration&quot;.',
+            'Timeframe is based on start date field "Start date" and duration field "Duration".',
             $this->timeframe->getConfigDescription()
         );
     }

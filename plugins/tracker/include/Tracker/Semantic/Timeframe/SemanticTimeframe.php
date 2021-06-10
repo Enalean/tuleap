@@ -34,6 +34,7 @@ use Tracker_SemanticManager;
 use TrackerManager;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Tracker\Semantic\Timeframe\Administration\SemanticTimeframeAdministrationPresenterBuilder;
+use Tuleap\Tracker\Semantic\Timeframe\Administration\SemanticTimeframeCurrentConfigurationPresenterBuilder;
 
 class SemanticTimeframe extends Tracker_Semantic
 {
@@ -72,7 +73,16 @@ class SemanticTimeframe extends Tracker_Semantic
 
     public function display(): void
     {
-        echo $this->timeframe->getConfigDescription();
+        $presenter = (
+            new SemanticTimeframeCurrentConfigurationPresenterBuilder(
+                $this->tracker,
+                $this->timeframe,
+                new SemanticTimeframeDao(),
+                \TrackerFactory::instance()
+            )
+        )->build();
+
+        $this->getRenderer()->renderToPage('semantic-timeframe-current-configuration', $presenter);
     }
 
     public function displayAdmin(
@@ -87,9 +97,6 @@ class SemanticTimeframe extends Tracker_Semantic
             \Tracker_FormElementFactory::instance()
         );
 
-        $renderer  = \TemplateRendererFactory::build()->getRenderer(
-            __DIR__ . '/../../../../templates/timeframe-semantic'
-        );
         $presenter = $builder->build(
             $this->getCSRFSynchronizerToken(),
             $this->tracker,
@@ -99,7 +106,7 @@ class SemanticTimeframe extends Tracker_Semantic
             $this->getEndDateField()
         );
 
-        $renderer->renderToPage('timeframe-semantic-admin', $presenter);
+        $this->getRenderer()->renderToPage('timeframe-semantic-admin', $presenter);
 
         $assets = new IncludeAssets(__DIR__ . '/../../../../../../src/www/assets/trackers', '/assets/trackers');
 
@@ -207,6 +214,13 @@ class SemanticTimeframe extends Tracker_Semantic
         $GLOBALS['Response']->addFeedback(
             \Feedback::INFO,
             dgettext('tuleap-tracker', 'Semantic timeframe reset successfully')
+        );
+    }
+
+    private function getRenderer(): \TemplateRenderer
+    {
+        return \TemplateRendererFactory::build()->getRenderer(
+            __DIR__ . '/../../../../templates/timeframe-semantic'
         );
     }
 }

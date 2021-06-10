@@ -63,12 +63,11 @@ class TimeframeWithDuration implements IComputeTimeframes
 
     public function getConfigDescription(): string
     {
-        return \Codendi_HTMLPurifier::instance()
-            ->purify(sprintf(
-                dgettext('tuleap-tracker', 'Timeframe is based on start date field "%s" and duration field "%s".'),
-                $this->start_date_field->getLabel(),
-                $this->duration_field->getLabel()
-            ));
+        return sprintf(
+            dgettext('tuleap-tracker', 'Timeframe is based on start date field "%s" and duration field "%s".'),
+            $this->start_date_field->getLabel(),
+            $this->duration_field->getLabel()
+        );
     }
 
     public function isDefined(): bool

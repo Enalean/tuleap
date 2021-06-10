@@ -1,0 +1,20 @@
+<p>{{ current_config_description }}</p>
+
+{{# is_semantic_implied }}
+    <p>
+        <a href="{{ tracker_from_which_we_imply_the_semantic_admin_url }}">
+            {{# dgettext }} tuleap-tracker | See the {{ tracker_name_from_which_we_imply_the_semantic }} tracker configuration {{/ dgettext }}
+        </a>
+    </p>
+{{/ is_semantic_implied }}
+
+{{# are_semantics_implied_from_current_tracker }}
+    {{# dgettext }} tuleap-tracker | Some trackers have their semantic timeframe implied from the current tracker: {{/ dgettext }}
+    <ul>
+        {{# semantics_implied_from_current_tracker }}
+            <li>
+                <a href="{{ tracker_semantic_timeframe_admin_url }}">{{ tracker_name }}</a>
+            </li>
+        {{/ semantics_implied_from_current_tracker }}
+    </ul>
+{{/ are_semantics_implied_from_current_tracker }}

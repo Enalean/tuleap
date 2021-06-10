@@ -2590,6 +2590,13 @@ msgstr "Rechercher"
 msgid "Search artifacts"
 msgstr "Rechercher des artefacts"
 
+msgid ""
+"See the {{ tracker_name_from_which_we_imply_the_semantic }} tracker "
+"configuration"
+msgstr ""
+"Voir la configuration de l'outil de suivi "
+"{{ tracker_name_from_which_we_imply_the_semantic }}"
+
 #, php-format
 msgid "Select %1$s parent:"
 msgstr "Sélectionner un parent %1$s :"
@@ -2730,6 +2737,12 @@ msgid ""
 msgstr ""
 "Certaines valeurs selectionnées n'ont pu être enregistrées car elle sont "
 "utilisées par une autre sémantique."
+
+msgid ""
+"Some trackers have their semantic timeframe implied from the current tracker:"
+msgstr ""
+"Certains outils de suivi appuient leurs sémantiques Plage de temps sur "
+"l'outil de suivi actuel :"
 
 msgid "Something went wrong, the follow up content couldn't be loaded"
 msgstr "Quelque chose s'est mal passé, l'historique n'a pas pu être chargé"
