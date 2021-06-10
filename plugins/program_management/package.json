@@ -10,7 +10,7 @@
     "@tuleap/drag-and-drop": "file://../../src/scripts/lib/drag-and-drop",
     "@tuleap/tlp-fetch": "file:../../src/scripts/lib/tlp-fetch",
     "@tuleap/vue-breadcrumb-privacy": "file:../../src/scripts/lib/vue-breadcrumb-privacy",
-    "vue": "^2.6.13",
+    "vue": "^2.6.14",
     "vuex": "^3.6.2"
   },
   "devDependencies": {
