@@ -222,9 +222,8 @@ abstract class Tracker_Artifact_Changeset_NewChangesetCreatorBase extends Tracke
             if (! $new_changeset) {
                 return null;
             }
-
-            if ($send_notification) {
-                $artifact->getChangeset((int) $new_changeset->getId())->executePostCreationActions();
+            if (! $tracker_import_config->isFromXml()) {
+                $artifact->getChangeset((int) $new_changeset->getId())->executePostCreationActions($send_notification);
             }
 
             $this->event_manager->processEvent(new ArtifactUpdated($artifact, $submitter, $artifact->getTracker()->getProject()));

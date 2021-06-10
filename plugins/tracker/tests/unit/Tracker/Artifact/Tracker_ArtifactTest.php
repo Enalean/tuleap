@@ -173,7 +173,7 @@ final class Tracker_ArtifactTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:i
         $factory->shouldReceive('getAllFormElementsForTracker')->andReturns([]);
 
         $new_changeset = \Mockery::spy(\Tracker_Artifact_Changeset::class);
-        $new_changeset->shouldReceive('executePostCreationActions')->with([]);
+        $new_changeset->shouldReceive('executePostCreationActions')->with([true]);
 
         $changeset = \Mockery::spy(\Tracker_Artifact_Changeset::class);
         $changeset->shouldReceive('getValues')->andReturns([]);
@@ -199,6 +199,7 @@ final class Tracker_ArtifactTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:i
         $artifact->shouldReceive('getTracker')->andReturns($tracker);
         $artifact->shouldReceive('getId')->andReturns(66);
         $artifact->shouldReceive('getLastChangeset')->andReturns($changeset);
+        $artifact->shouldReceive('getChangeset')->andReturns($new_changeset);
 
         // Valid
         $fields_data = [
@@ -375,7 +376,7 @@ final class Tracker_ArtifactTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:i
         $factory->shouldReceive('getAllFormElementsForTracker')->andReturns([]);
 
         $new_changeset = \Mockery::spy(\Tracker_Artifact_Changeset::class);
-        $new_changeset->shouldReceive('executePostCreationActions')->with([]);
+        $new_changeset->shouldReceive('executePostCreationActions')->with([true]);
 
         $changeset = \Mockery::spy(\Tracker_Artifact_Changeset::class);
         $changeset->shouldReceive('hasChanges')->andReturns(true);
@@ -496,7 +497,7 @@ final class Tracker_ArtifactTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:i
         $factory->shouldReceive('getAllFormElementsForTracker')->andReturns([]);
 
         $new_changeset = \Mockery::spy(\Tracker_Artifact_Changeset::class);
-        $new_changeset->shouldReceive('executePostCreationActions')->never();
+        $new_changeset->shouldReceive('executePostCreationActions')->with([false]);
 
         $changeset = \Mockery::spy(\Tracker_Artifact_Changeset::class);
         $changeset->shouldReceive('hasChanges')->andReturns(true);
@@ -627,7 +628,7 @@ final class Tracker_ArtifactTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:i
         $factory->shouldReceive('getAllFormElementsForTracker')->andReturns([]);
 
         $new_changeset = \Mockery::spy(\Tracker_Artifact_Changeset::class);
-        $new_changeset->shouldReceive('executePostCreationActions')->never();
+        $new_changeset->shouldReceive('executePostCreationActions')->with([false]);
 
         $changeset = \Mockery::spy(\Tracker_Artifact_Changeset::class);
         $changeset->shouldReceive('hasChanges')->andReturns(true);

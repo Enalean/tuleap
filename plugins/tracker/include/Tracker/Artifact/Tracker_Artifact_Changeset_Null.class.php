@@ -157,7 +157,7 @@ class Tracker_Artifact_Changeset_Null extends Tracker_Artifact_Changeset
         return null;
     }
 
-    public function executePostCreationActions()
+    public function executePostCreationActions(bool $send_notifications)
     {
     }
 }

@@ -64,10 +64,10 @@ final class ActionsRunnerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $changeset = \Mockery::mock(\Tracker_Artifact_Changeset::class);
 
-        $task_1->shouldReceive('execute')->with($changeset)->once();
-        $task_2->shouldReceive('execute')->with($changeset)->once();
+        $task_1->shouldReceive('execute')->with($changeset, true)->once();
+        $task_2->shouldReceive('execute')->with($changeset, true)->once();
 
-        $actions_runner->executePostCreationActions($changeset);
+        $actions_runner->executePostCreationActions($changeset, true);
     }
 
     public function testPostCreationTaskCanBeExecutedAsynchronously(): void
@@ -93,7 +93,7 @@ final class ActionsRunnerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->dao->shouldNotReceive('addEndDate');
         $task->shouldNotReceive('execute');
 
-        $actions_runner->executePostCreationActions($changeset);
+        $actions_runner->executePostCreationActions($changeset, true);
     }
 
     public function testAsyncPostCreationTasksFallbackInSyncProcessingInCaseOfError(): void
@@ -113,7 +113,7 @@ final class ActionsRunnerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $task->shouldReceive('execute')->once();
 
-        $actions_runner->executePostCreationActions($changeset);
+        $actions_runner->executePostCreationActions($changeset, true);
     }
 
     public function testTasksAreExecutedInOrder(): void
@@ -142,7 +142,7 @@ final class ActionsRunnerTest extends \Tuleap\Test\PHPUnit\TestCase
             $last_task_name = 'task_3';
         });
 
-        $actions_runner->executePostCreationActions($changeset);
+        $actions_runner->executePostCreationActions($changeset, true);
         $this->assertSame($last_task_name, 'task_3');
     }
 }

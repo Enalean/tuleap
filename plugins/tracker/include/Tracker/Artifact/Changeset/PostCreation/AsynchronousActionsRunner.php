@@ -64,6 +64,8 @@ class AsynchronousActionsRunner
             return;
         }
 
+        $send_notifications = $message['send_notifications'] ?? true;
+
         $artifact = $this->tracker_artifact_factory->getArtifactById($message['artifact_id']);
         if ($artifact === null) {
             $event->getLogger()->info(
@@ -81,6 +83,6 @@ class AsynchronousActionsRunner
             return;
         }
 
-        $this->actions_runner->processAsyncPostCreationActions($changeset);
+        $this->actions_runner->processAsyncPostCreationActions($changeset, $send_notifications);
     }
 }

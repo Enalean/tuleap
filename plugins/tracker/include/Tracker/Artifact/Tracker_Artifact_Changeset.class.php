@@ -488,7 +488,7 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item
     public function updateComment($body, $user, $comment_format, $timestamp)
     {
         if ($this->updateCommentWithoutNotification($body, $user, $comment_format, $timestamp, [])) {
-            $this->executePostCreationActions();
+            $this->executePostCreationActions(true);
         }
     }
 
@@ -819,9 +819,9 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item
         return $this->getArtifact()->getTracker();
     }
 
-    public function executePostCreationActions()
+    public function executePostCreationActions(bool $send_notifications)
     {
-        ActionsRunner::build(BackendLogger::getDefaultLogger())->executePostCreationActions($this);
+        ActionsRunner::build(BackendLogger::getDefaultLogger())->executePostCreationActions($this, $send_notifications);
     }
 
     /**
