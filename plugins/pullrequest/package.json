@@ -14,7 +14,7 @@
     "angular-ui-router": "^0.4.3",
     "codemirror": "^5.61.0",
     "sprintf-js": "^1.1.2",
-    "vue": "^2.6.13",
+    "vue": "^2.6.14",
     "vue-gettext": "^2.1.12",
     "vuex": "^3.6.2"
   },

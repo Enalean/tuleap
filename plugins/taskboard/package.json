@@ -11,7 +11,7 @@
     "fscreen": "^1.2.0",
     "mustache": "^4.1.0",
     "p-retry": "^4.5.0",
-    "vue": "^2.6.13",
+    "vue": "^2.6.14",
     "vue-dompurify-html": "^2.3.0",
     "vuex": "^3.6.2"
   },
