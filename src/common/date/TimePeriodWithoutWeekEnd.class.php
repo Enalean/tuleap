@@ -37,11 +37,14 @@ class TimePeriodWithoutWeekEnd implements TimePeriod
      */
     private $end_date;
 
-    private function __construct(?int $start_date, ?int $duration, ?int $end_date)
+    private string $error_message;
+
+    private function __construct(?int $start_date, ?int $duration, ?int $end_date, string $error_message)
     {
-        $this->start_date = $start_date;
-        $this->duration   = $duration;
-        $this->end_date   = $end_date;
+        $this->start_date    = $start_date;
+        $this->duration      = $duration;
+        $this->end_date      = $end_date;
+        $this->error_message = $error_message;
     }
 
     public static function buildFromDuration(?int $start_date, $duration): TimePeriodWithoutWeekEnd
@@ -51,7 +54,7 @@ class TimePeriodWithoutWeekEnd implements TimePeriod
         }
 
         if ($duration === null) {
-            return new TimePeriodWithoutWeekEnd($start_date, null, null);
+            return new TimePeriodWithoutWeekEnd($start_date, null, null, '');
         }
 
         $day_offsets = self::getDayOffsetsFromStartDateAndDuration((int) $start_date, (int) $duration);
@@ -61,17 +64,18 @@ class TimePeriodWithoutWeekEnd implements TimePeriod
         return new TimePeriodWithoutWeekEnd(
             $start_date,
             $duration,
-            $end_date
+            $end_date,
+            ''
         );
     }
 
     public static function buildFromEndDate(?int $start_date, ?int $end_date, \Psr\Log\LoggerInterface $logger): TimePeriodWithoutWeekEnd
     {
         if ($start_date === null) {
-            return new self(null, null, $end_date);
+            return new self(null, null, $end_date, '');
         }
         if ($end_date === null) {
-            return new self($start_date, null, null);
+            return new self($start_date, null, null, '');
         }
 
         if ($end_date < $start_date) {
@@ -87,12 +91,12 @@ class TimePeriodWithoutWeekEnd implements TimePeriod
             $duration = self::getNumberOfDaysWithoutWeekEndBetweenTwoDates($start_date, $end_date);
         }
 
-        return new self($start_date, $duration, $end_date);
+        return new self($start_date, $duration, $end_date, '');
     }
 
-    public static function buildFromNothing(): TimePeriodWithoutWeekEnd
+    public static function buildFromNothingWithErrorMessage(string $error_message): TimePeriodWithoutWeekEnd
     {
-        return new self(null, null, null);
+        return new self(null, null, null, $error_message);
     }
 
     /**
@@ -320,5 +324,10 @@ class TimePeriodWithoutWeekEnd implements TimePeriod
         }
 
         return false;
+    }
+
+    public function getErrorMessage(): string
+    {
+        return $this->error_message;
     }
 }

@@ -45,6 +45,7 @@ describe("task-retriever", () => {
                     color_name: "panther-pink",
                     start: "2020-03-01T10:00:00+01:00",
                     end: "2020-03-14T10:00:00+01:00",
+                    time_period_error_message: "",
                 },
             ]);
 
@@ -65,12 +66,32 @@ describe("task-retriever", () => {
                     color_name: "panther-pink",
                     start: null,
                     end: null,
+                    time_period_error_message: "",
                 },
             ]);
 
             const tasks = await retrieveTasks();
 
             expect(tasks.length).toBe(0);
+        });
+
+        it("Keeps tasks with no start and end dates and a time period error message so we can display it", async () => {
+            jest.spyOn(tlp, "recursiveGet").mockResolvedValue([
+                {
+                    id: 6422,
+                    xref: "epic #6422",
+                    title: "Do this",
+                    html_url: "/plugins/tracker/?aid=6422",
+                    color_name: "panther-pink",
+                    start: null,
+                    end: null,
+                    time_period_error_message: "The time period is fucked up",
+                },
+            ]);
+
+            const tasks = await retrieveTasks();
+
+            expect(tasks.length).toBe(1);
         });
 
         it("Marks a task as a milestone if it does not have a start date", async () => {
@@ -83,6 +104,7 @@ describe("task-retriever", () => {
                     color_name: "panther-pink",
                     start: null,
                     end: "2020-03-14T10:00:00+01:00",
+                    time_period_error_message: "",
                 },
             ]);
 
@@ -101,6 +123,7 @@ describe("task-retriever", () => {
                     color_name: "panther-pink",
                     start: "2020-03-01T10:00:00+01:00",
                     end: null,
+                    time_period_error_message: "",
                 },
             ]);
 
@@ -119,6 +142,7 @@ describe("task-retriever", () => {
                     color_name: "panther-pink",
                     start: "2020-03-01T10:00:00+01:00",
                     end: "2020-03-01T10:00:00+01:00",
+                    time_period_error_message: "",
                 },
             ]);
 
@@ -137,6 +161,7 @@ describe("task-retriever", () => {
                     color_name: "panther-pink",
                     start: "2020-03-01T10:00:00+01:00",
                     end: "2020-03-14T10:00:00+01:00",
+                    time_period_error_message: "",
                 },
             ]);
 
@@ -156,6 +181,7 @@ describe("task-retriever", () => {
                     start: "2020-03-01T10:00:00+01:00",
                     end: "2020-03-14T10:00:00+01:00",
                     dependencies: { depends_on: [124] },
+                    time_period_error_message: "",
                 },
             ]);
 
@@ -175,6 +201,7 @@ describe("task-retriever", () => {
                     start: "2020-03-01T10:00:00+01:00",
                     end: "2020-03-14T10:00:00+01:00",
                     dependencies: { _is_child: [] },
+                    time_period_error_message: "",
                 },
             ]);
 
@@ -194,6 +221,7 @@ describe("task-retriever", () => {
                     start: "2020-03-01T10:00:00+01:00",
                     end: "2020-03-14T10:00:00+01:00",
                     dependencies: { _is_child: [124] },
+                    time_period_error_message: "",
                 },
             ]);
 
@@ -213,6 +241,7 @@ describe("task-retriever", () => {
                     start: "2020-03-20T10:00:00+01:00",
                     end: "2020-03-14T10:00:00+01:00",
                     dependencies: { _is_child: [124] },
+                    time_period_error_message: "",
                 },
             ]);
 
@@ -232,6 +261,7 @@ describe("task-retriever", () => {
                     start: "2020-03-01T10:00:00+01:00",
                     end: "2020-03-14T10:00:00+01:00",
                     dependencies: { _is_child: [124] },
+                    time_period_error_message: "",
                 },
             ]);
 
@@ -249,11 +279,13 @@ describe("task-retriever", () => {
                         id: 1231,
                         start: "2020-03-02T10:00:00+01:00",
                         end: "2020-03-14T10:00:00+01:00",
+                        time_period_error_message: "",
                     },
                     {
                         id: 1232,
                         start: "2020-03-01T10:00:00+01:00",
                         end: "2020-03-14T10:00:00+01:00",
+                        time_period_error_message: "",
                     },
                 ]);
 
@@ -269,11 +301,13 @@ describe("task-retriever", () => {
                         id: 1231,
                         start: null,
                         end: "2020-03-15T10:00:00+01:00",
+                        time_period_error_message: "",
                     },
                     {
                         id: 1232,
                         start: null,
                         end: "2020-03-14T10:00:00+01:00",
+                        time_period_error_message: "",
                     },
                 ]);
 
@@ -290,18 +324,21 @@ describe("task-retriever", () => {
                         title: "Do this",
                         start: "2020-03-16T10:00:00+01:00",
                         end: "2020-03-15T10:00:00+01:00",
+                        time_period_error_message: "",
                     },
                     {
                         id: 1232,
                         title: "Do that",
                         start: "2020-03-16T10:00:00+01:00",
                         end: "2020-03-14T10:00:00+01:00",
+                        time_period_error_message: "",
                     },
                     {
                         id: 1233,
                         title: "Do it",
                         start: "2020-03-14T10:00:00+01:00",
                         end: "2020-03-16T10:00:00+01:00",
+                        time_period_error_message: "",
                     },
                 ]);
 
@@ -310,6 +347,38 @@ describe("task-retriever", () => {
                 expect(tasks[0].id).toBe(1233);
                 expect(tasks[1].id).toBe(1232);
                 expect(tasks[2].id).toBe(1231);
+            });
+
+            it("should put tasks with time period error at the end", async () => {
+                jest.spyOn(tlp, "recursiveGet").mockResolvedValue([
+                    {
+                        id: 1231,
+                        title: "Do this",
+                        start: null,
+                        end: null,
+                        time_period_error_message: "This is fucked up",
+                    },
+                    {
+                        id: 1232,
+                        title: "Do that",
+                        start: "2020-03-16T10:00:00+01:00",
+                        end: "2020-03-14T10:00:00+01:00",
+                        time_period_error_message: "",
+                    },
+                    {
+                        id: 1233,
+                        title: "Do it",
+                        start: null,
+                        end: null,
+                        time_period_error_message: "This is fucked up too",
+                    },
+                ]);
+
+                const tasks = await retrieveTasks();
+
+                expect(tasks[0].id).toBe(1232);
+                expect(tasks[1].id).toBe(1231);
+                expect(tasks[2].id).toBe(1233);
             });
         });
     });
@@ -326,6 +395,7 @@ describe("task-retriever", () => {
                 color_name: "panther-pink",
                 start: null,
                 end: "2020-03-14T10:00:00+01:00",
+                time_period_error_message: "",
             },
         ]);
 

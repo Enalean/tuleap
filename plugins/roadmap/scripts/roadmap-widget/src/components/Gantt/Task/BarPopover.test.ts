@@ -36,6 +36,7 @@ describe("BarPopover", () => {
                     progress: null,
                     progress_error_message: "",
                     is_milestone: false,
+                    time_period_error_message: "",
                 } as Task,
             },
             mocks: {
@@ -67,6 +68,7 @@ describe("BarPopover", () => {
                     progress: null,
                     progress_error_message: "",
                     is_milestone: true,
+                    time_period_error_message: "",
                 } as Task,
             },
             mocks: {
@@ -92,6 +94,7 @@ describe("BarPopover", () => {
                     end: new Date("2020-01-30T15:00:00.000Z"),
                     progress: 0.42123,
                     progress_error_message: "",
+                    time_period_error_message: "",
                 } as Task,
             },
             mocks: {
@@ -117,6 +120,7 @@ describe("BarPopover", () => {
                     end: new Date("2020-01-30T15:00:00.000Z"),
                     progress: null,
                     progress_error_message: "You fucked up!",
+                    time_period_error_message: "",
                 } as Task,
             },
             mocks: {
@@ -142,6 +146,7 @@ describe("BarPopover", () => {
                     end: new Date("2020-01-30T15:00:00.000Z"),
                     progress: null,
                     progress_error_message: "",
+                    time_period_error_message: "",
                 } as Task,
             },
             mocks: {
@@ -168,6 +173,7 @@ describe("BarPopover", () => {
                     end: null,
                     progress: null,
                     progress_error_message: "",
+                    time_period_error_message: "",
                 } as Task,
             },
             mocks: {
@@ -194,6 +200,7 @@ describe("BarPopover", () => {
                     end: new Date("2020-01-10T15:00:00.000Z"),
                     progress: null,
                     progress_error_message: "",
+                    time_period_error_message: "",
                 } as Task,
             },
             mocks: {
@@ -206,5 +213,31 @@ describe("BarPopover", () => {
         });
 
         expect(wrapper.text()).toContain("End date is lesser than start date!");
+    });
+
+    it("should display the time period error message", async () => {
+        const wrapper = shallowMount(BarPopover, {
+            localVue: await createRoadmapLocalVue(),
+            propsData: {
+                task: {
+                    xref: "art #123",
+                    title: "Create button",
+                    start: null,
+                    end: null,
+                    progress: null,
+                    progress_error_message: "",
+                    time_period_error_message: "The time period is fucked up",
+                } as Task,
+            },
+            mocks: {
+                $store: createStoreMock({
+                    state: {
+                        locale_bcp47: "en-US",
+                    },
+                }),
+            },
+        });
+
+        expect(wrapper.text()).toContain("The time period is fucked up");
     });
 });

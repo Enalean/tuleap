@@ -81,12 +81,16 @@ class TimeframeNotConfigured implements IComputeTimeframes
 
     public function buildTimePeriodWithoutWeekendForArtifactForREST(Artifact $artifact, \PFUser $user, LoggerInterface $logger): TimePeriodWithoutWeekEnd
     {
-        return TimePeriodWithoutWeekEnd::buildFromNothing();
+        return TimePeriodWithoutWeekEnd::buildFromNothingWithErrorMessage(
+            $this->getErrorMessage($artifact)
+        );
     }
 
     public function buildTimePeriodWithoutWeekendForArtifact(Artifact $artifact, \PFUser $user, LoggerInterface $logger): TimePeriodWithoutWeekEnd
     {
-        return TimePeriodWithoutWeekEnd::buildFromNothing();
+        return TimePeriodWithoutWeekEnd::buildFromNothingWithErrorMessage(
+            $this->getErrorMessage($artifact)
+        );
     }
 
     /**
@@ -95,10 +99,15 @@ class TimeframeNotConfigured implements IComputeTimeframes
     public function buildTimePeriodWithoutWeekendForArtifactChartRendering(Artifact $artifact, \PFUser $user, LoggerInterface $logger): TimePeriodWithoutWeekEnd
     {
         throw new \Tracker_FormElement_Chart_Field_Exception(
-            sprintf(
-                dgettext('tuleap-tracker', 'Semantic Timeframe is not configured for tracker %s.'),
-                $artifact->getTracker()->getName()
-            )
+            $this->getErrorMessage($artifact)
+        );
+    }
+
+    private function getErrorMessage(Artifact $artifact): string
+    {
+        return sprintf(
+            dgettext('tuleap-tracker', 'Semantic Timeframe is not configured for tracker %s.'),
+            $artifact->getTracker()->getName()
         );
     }
 }

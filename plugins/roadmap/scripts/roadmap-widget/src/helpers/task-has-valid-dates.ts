@@ -19,5 +19,9 @@
 import type { Task } from "../type";
 
 export function doesTaskHaveEndDateGreaterOrEqualToStartDate(task: Task): boolean {
+    if (task.start === null && task.end === null) {
+        return false;
+    }
+
     return !task.start || !task.end || task.end >= task.start;
 }
