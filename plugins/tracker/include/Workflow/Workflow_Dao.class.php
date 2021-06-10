@@ -117,7 +117,7 @@ class Workflow_Dao extends \Tuleap\DB\DataAccessObject
         $where_statement = EasyStatement::open()->in('tracker_id IN (?*)', $tracker_ids)->andIn('field_id IN (?*)', $field_ids);
 
         return $this->getDB()->run(
-            "SELECT tracker_id, field_id FROM tracker_workflow WHERE $where_statement",
+            "SELECT tracker_id, field_id FROM tracker_workflow WHERE is_used = 1 AND $where_statement",
             ...$where_statement->values()
         );
     }
