@@ -150,124 +150,31 @@ describe("timeperiod-getters", () => {
     });
 
     describe("last_date", () => {
-        it("should return the last task date if no iteration ends after", () => {
+        it("should return the last date among tasks and iterations", () => {
             const last_date = getters.last_date(
                 {},
                 {},
                 {
                     iterations: {
                         lvl1_iterations: [
-                            {
-                                start: new Date(2020, 3, 15),
-                                end: new Date(2020, 4, 15),
-                            } as Iteration,
-                            {
-                                start: new Date(2020, 5, 15),
-                                end: new Date(2020, 6, 15),
-                            } as Iteration,
+                            { start: new Date(2020, 2, 15) } as Iteration,
+                            { start: new Date(2020, 5, 15) } as Iteration,
                         ],
                         lvl2_iterations: [
-                            {
-                                start: new Date(2020, 4, 15),
-                                end: new Date(2020, 5, 15),
-                            } as Iteration,
-                            {
-                                start: new Date(2020, 6, 15),
-                                end: new Date(2020, 7, 15),
-                            } as Iteration,
+                            { start: new Date(2020, 3, 15) } as Iteration,
+                            { start: new Date(2020, 6, 15) } as Iteration,
                         ],
                     },
                     now: new Date(2020, 3, 20),
                 } as RootState,
                 {
                     "tasks/tasks": [
-                        { end: new Date(2020, 3, 15) } as Task,
-                        { end: new Date(2020, 8, 15) } as Task,
+                        { start: new Date(2020, 3, 15) } as Task,
+                        { start: new Date(2020, 4, 15) } as Task,
                     ],
                 }
             );
-
-            expect(last_date.getMonth()).toBe(8);
-        });
-
-        it("should return the end date of the older iteration having dates around first task date", () => {
-            const last_date = getters.last_date(
-                {},
-                {},
-                {
-                    iterations: {
-                        lvl1_iterations: [
-                            {
-                                start: new Date(2020, 1, 15),
-                                end: new Date(2020, 4, 15),
-                            } as Iteration,
-                            {
-                                start: new Date(2020, 5, 15),
-                                end: new Date(2020, 9, 15),
-                            } as Iteration,
-                        ],
-                        lvl2_iterations: [
-                            {
-                                start: new Date(2020, 2, 15),
-                                end: new Date(2020, 5, 15),
-                            } as Iteration,
-                            {
-                                start: new Date(2020, 6, 15),
-                                end: new Date(2020, 10, 15),
-                            } as Iteration,
-                        ],
-                    },
-                    now: new Date(2020, 3, 20),
-                } as RootState,
-                {
-                    "tasks/tasks": [
-                        { end: new Date(2020, 3, 15) } as Task,
-                        { end: new Date(2020, 8, 15) } as Task,
-                    ],
-                }
-            );
-
-            expect(last_date.getMonth()).toBe(10);
-        });
-
-        it("should ignore the iterations that  ends before the first task date", () => {
-            const last_date = getters.last_date(
-                {},
-                {},
-                {
-                    iterations: {
-                        lvl1_iterations: [
-                            {
-                                start: new Date(2020, 1, 15),
-                                end: new Date(2020, 2, 15),
-                            } as Iteration,
-                            {
-                                start: new Date(2020, 5, 15),
-                                end: new Date(2020, 9, 15),
-                            } as Iteration,
-                        ],
-                        lvl2_iterations: [
-                            {
-                                start: new Date(2020, 2, 15),
-                                end: new Date(2020, 5, 15),
-                            } as Iteration,
-                            {
-                                start: new Date(2020, 9, 15),
-                                end: new Date(2020, 10, 15),
-                            } as Iteration,
-                        ],
-                    },
-                    now: new Date(2020, 3, 20),
-                } as RootState,
-                {
-                    "tasks/tasks": [
-                        { end: new Date(2020, 3, 15) } as Task,
-                        { end: new Date(2020, 8, 15) } as Task,
-                    ],
-                }
-            );
-
-            expect(last_date.getMonth()).toBe(9);
+            expect(last_date.getMonth()).toBe(6);
         });
     });
 

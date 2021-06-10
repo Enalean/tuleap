@@ -58,24 +58,14 @@ export const last_date = (
     root_state: RootState,
     root_getters: { "tasks/tasks": Task[] }
 ): Date => {
-    const last_task_date = getLastDate(root_getters["tasks/tasks"], root_state.now);
-
-    const iterations_containing_last_task_date = getIterationsAroundDate(
-        root_state,
-        last_task_date
+    return getLastDate(
+        [
+            ...root_getters["tasks/tasks"],
+            ...root_state.iterations.lvl1_iterations,
+            ...root_state.iterations.lvl2_iterations,
+        ],
+        root_state.now
     );
-
-    if (iterations_containing_last_task_date.length === 0) {
-        return last_task_date;
-    }
-
-    return iterations_containing_last_task_date.reduce((last_date, iteration) => {
-        if (last_date < iteration.end) {
-            return iteration.end;
-        }
-
-        return last_date;
-    }, last_task_date);
 };
 
 export const time_period = (
