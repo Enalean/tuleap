@@ -17,11 +17,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { expiringLocalStorage } from "./storage.js";
+import { expiringLocalStorage } from "./storage";
 
 describe("Persistent storage with an expiration", () => {
     const current_time = 1568230293600;
-    let date_now_spy;
+    let date_now_spy: jest.SpyInstance;
 
     beforeEach(() => {
         date_now_spy = jest.spyOn(Date, "now").mockImplementation(() => current_time);

@@ -17,26 +17,35 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export function expiringLocalStorage(expirationTimeoutSeconds) {
-    function getExpirationKey(key) {
+export interface localStorage {
+    getItem(key: string): string | null;
+    setItem(key: string, value: string): void;
+    removeItem(key: string): void;
+}
+
+export function expiringLocalStorage(expirationTimeoutSeconds: number): localStorage {
+    function getExpirationKey(key: string): string {
         return key + "_expiration";
     }
     return {
-        getItem(key) {
-            const expiration = window.localStorage.getItem(getExpirationKey(key));
-            if (expiration === null || Date.now() > expiration) {
+        getItem(key: string): string | null {
+            const item_expiration_key = window.localStorage.getItem(getExpirationKey(key));
+            if (!item_expiration_key) {
+                throw new Error("Item does not have an expiration for key " + key);
+            }
+            if (String(Date.now()) > item_expiration_key) {
                 this.removeItem(key);
             }
             return window.localStorage.getItem(key);
         },
-        setItem(key, value) {
+        setItem(key: string, value: string): void {
             window.localStorage.setItem(
                 getExpirationKey(key),
-                Date.now() + expirationTimeoutSeconds * 1000
+                String(Date.now() + expirationTimeoutSeconds * 1000)
             );
             window.localStorage.setItem(key, value);
         },
-        removeItem(key) {
+        removeItem(key: string): void {
             window.localStorage.removeItem(getExpirationKey(key));
             window.localStorage.removeItem(key);
         },
