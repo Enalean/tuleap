@@ -82,7 +82,7 @@ final class RoadmapConfigureAtXMLImportTest extends \Tuleap\Test\PHPUnit\TestCas
         $configurator->configure($event);
     }
 
-    public function testItThrowsAnErrorWhenTrackerIdReferenceIsNotFoundInRegistery(): void
+    public function testItThrowsAnErrorWhenTrackerIdReferenceIsNotFoundInRegistry(): void
     {
         $project = ProjectTestBuilder::aProject()->build();
         $event   = new ConfigureAtXMLImport(
@@ -143,6 +143,193 @@ final class RoadmapConfigureAtXMLImportTest extends \Tuleap\Test\PHPUnit\TestCas
         $dao->shouldReceive('insertContent')
             ->once()
             ->with(Mockery::any(), Mockery::any(), "My Roadmap", 1234, null, null);
+
+        $configurator = new RoadmapConfigureAtXMLImport();
+        $configurator->configure($event);
+
+        self::assertTrue($event->isWidgetConfigured());
+    }
+
+    public function testItThrowsAnErrorWhenLevel1IterationTrackerIdReferenceIsNotFoundInRegistry(): void
+    {
+        $project  = ProjectTestBuilder::aProject()->build();
+        $registry = new MappingsRegistry();
+        $registry->addReference("T754", 1234);
+        $event = new ConfigureAtXMLImport(
+            new \Tuleap\Roadmap\RoadmapProjectWidget(
+                $project,
+                Mockery::mock(RoadmapWidgetDao::class),
+                new \Tuleap\Test\DB\DBTransactionExecutorPassthrough(),
+                Mockery::mock(TemplateRenderer::class),
+                Mockery::mock(RoadmapWidgetPresenterBuilder::class),
+                Mockery::mock(\TrackerFactory::class),
+            ),
+            new SimpleXMLElement(
+                '<?xml version="1.0" encoding="UTF-8"?>
+                <widget name="plugin_roadmap_project_widget">
+                    <preference name="roadmap">
+                      <value name="tracker_id">T754</value>
+                      <value name="lvl1_iteration_tracker_id">T755</value>
+                    </preference>
+                </widget>'
+            ),
+            $registry,
+            $project
+        );
+
+        $this->expectException(\RuntimeException::class);
+        $this->expectErrorMessage("Reference lvl1_iteration_tracker_id for roadmap widget was not found");
+
+        $configurator = new RoadmapConfigureAtXMLImport();
+        $configurator->configure($event);
+    }
+
+    public function testItConfiguresWidgetWithLevel1IterationTracker(): void
+    {
+        $project  = ProjectTestBuilder::aProject()->build();
+        $registry = new MappingsRegistry();
+        $registry->addReference("T754", 1234);
+        $registry->addReference("T755", 1235);
+        $dao   = Mockery::mock(RoadmapWidgetDao::class);
+        $event = new ConfigureAtXMLImport(
+            new \Tuleap\Roadmap\RoadmapProjectWidget(
+                $project,
+                $dao,
+                new \Tuleap\Test\DB\DBTransactionExecutorPassthrough(),
+                Mockery::mock(TemplateRenderer::class),
+                Mockery::mock(RoadmapWidgetPresenterBuilder::class),
+                Mockery::mock(\TrackerFactory::class),
+            ),
+            new SimpleXMLElement(
+                '<?xml version="1.0" encoding="UTF-8"?>
+                <widget name="plugin_roadmap_project_widget">
+                    <preference name="roadmap">
+                      <value name="tracker_id">T754</value>
+                      <value name="title">My Roadmap</value>
+                      <value name="lvl1_iteration_tracker_id">T755</value>
+                    </preference>
+                </widget>'
+            ),
+            $registry,
+            $project
+        );
+        $dao->shouldReceive('insertContent')
+            ->once()
+            ->with(Mockery::any(), Mockery::any(), "My Roadmap", 1234, 1235, null);
+
+        $configurator = new RoadmapConfigureAtXMLImport();
+        $configurator->configure($event);
+
+        self::assertTrue($event->isWidgetConfigured());
+    }
+
+    public function testItThrowsAnErrorWhenLevel2IterationTrackerIdReferenceIsNotFoundInRegistry(): void
+    {
+        $project  = ProjectTestBuilder::aProject()->build();
+        $registry = new MappingsRegistry();
+        $registry->addReference("T754", 1234);
+        $event = new ConfigureAtXMLImport(
+            new \Tuleap\Roadmap\RoadmapProjectWidget(
+                $project,
+                Mockery::mock(RoadmapWidgetDao::class),
+                new \Tuleap\Test\DB\DBTransactionExecutorPassthrough(),
+                Mockery::mock(TemplateRenderer::class),
+                Mockery::mock(RoadmapWidgetPresenterBuilder::class),
+                Mockery::mock(\TrackerFactory::class),
+            ),
+            new SimpleXMLElement(
+                '<?xml version="1.0" encoding="UTF-8"?>
+                <widget name="plugin_roadmap_project_widget">
+                    <preference name="roadmap">
+                      <value name="tracker_id">T754</value>
+                      <value name="lvl2_iteration_tracker_id">T756</value>
+                    </preference>
+                </widget>'
+            ),
+            $registry,
+            $project
+        );
+
+        $this->expectException(\RuntimeException::class);
+        $this->expectErrorMessage("Reference lvl2_iteration_tracker_id for roadmap widget was not found");
+
+        $configurator = new RoadmapConfigureAtXMLImport();
+        $configurator->configure($event);
+    }
+
+    public function testItConfiguresWidgetWithLevel2IterationTracker(): void
+    {
+        $project  = ProjectTestBuilder::aProject()->build();
+        $registry = new MappingsRegistry();
+        $registry->addReference("T754", 1234);
+        $registry->addReference("T756", 1236);
+        $dao   = Mockery::mock(RoadmapWidgetDao::class);
+        $event = new ConfigureAtXMLImport(
+            new \Tuleap\Roadmap\RoadmapProjectWidget(
+                $project,
+                $dao,
+                new \Tuleap\Test\DB\DBTransactionExecutorPassthrough(),
+                Mockery::mock(TemplateRenderer::class),
+                Mockery::mock(RoadmapWidgetPresenterBuilder::class),
+                Mockery::mock(\TrackerFactory::class),
+            ),
+            new SimpleXMLElement(
+                '<?xml version="1.0" encoding="UTF-8"?>
+                <widget name="plugin_roadmap_project_widget">
+                    <preference name="roadmap">
+                      <value name="tracker_id">T754</value>
+                      <value name="title">My Roadmap</value>
+                      <value name="lvl2_iteration_tracker_id">T756</value>
+                    </preference>
+                </widget>'
+            ),
+            $registry,
+            $project
+        );
+        $dao->shouldReceive('insertContent')
+            ->once()
+            ->with(Mockery::any(), Mockery::any(), "My Roadmap", 1234, null, 1236);
+
+        $configurator = new RoadmapConfigureAtXMLImport();
+        $configurator->configure($event);
+
+        self::assertTrue($event->isWidgetConfigured());
+    }
+
+    public function testItConfiguresWidgetWithBothLevelsIterationTrackers(): void
+    {
+        $project  = ProjectTestBuilder::aProject()->build();
+        $registry = new MappingsRegistry();
+        $registry->addReference("T754", 1234);
+        $registry->addReference("T755", 1235);
+        $registry->addReference("T756", 1236);
+        $dao   = Mockery::mock(RoadmapWidgetDao::class);
+        $event = new ConfigureAtXMLImport(
+            new \Tuleap\Roadmap\RoadmapProjectWidget(
+                $project,
+                $dao,
+                new \Tuleap\Test\DB\DBTransactionExecutorPassthrough(),
+                Mockery::mock(TemplateRenderer::class),
+                Mockery::mock(RoadmapWidgetPresenterBuilder::class),
+                Mockery::mock(\TrackerFactory::class),
+            ),
+            new SimpleXMLElement(
+                '<?xml version="1.0" encoding="UTF-8"?>
+                <widget name="plugin_roadmap_project_widget">
+                    <preference name="roadmap">
+                      <value name="tracker_id">T754</value>
+                      <value name="title">My Roadmap</value>
+                      <value name="lvl1_iteration_tracker_id">T755</value>
+                      <value name="lvl2_iteration_tracker_id">T756</value>
+                    </preference>
+                </widget>'
+            ),
+            $registry,
+            $project
+        );
+        $dao->shouldReceive('insertContent')
+            ->once()
+            ->with(Mockery::any(), Mockery::any(), "My Roadmap", 1234, 1235, 1236);
 
         $configurator = new RoadmapConfigureAtXMLImport();
         $configurator->configure($event);
