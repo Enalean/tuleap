@@ -59,14 +59,7 @@
             .card-accessibility {
                 opacity: .5;
                 background-color: map-get($colors, 'text');
-                /* stylelint-disable-next-line property-no-vendor-prefix */
-                -webkit-mask-image: url(map-get($colors, 'pattern')); /* stylelint-disable-line function-url-quotes */
-                mask-image: url(map-get($colors, 'pattern')); /* stylelint-disable-line function-url-quotes */
-
-                @media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {
-                    background-color: transparent;
-                    background-image: url(map-get($colors, 'pattern')); /* stylelint-disable-line function-url-quotes */
-                }
+                mask-image: url("#{map-get($colors, 'pattern')}");
             }
 
             .card-actions {

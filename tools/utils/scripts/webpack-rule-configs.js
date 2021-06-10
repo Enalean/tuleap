@@ -19,7 +19,7 @@
 
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const path = require("path");
-const { esbuild_target } = require("./browserslist_config");
+const { browserlist_config, esbuild_target } = require("./browserslist_config");
 
 function configureTypescriptRules() {
     return [
@@ -105,6 +105,14 @@ const rule_scss_loader = {
                         !url.endsWith("organization_logo.png") &&
                         !url.endsWith("organization_logo_small.png")
                     );
+                },
+            },
+        },
+        {
+            loader: "postcss-loader",
+            options: {
+                postcssOptions: {
+                    plugins: [["autoprefixer", { overrideBrowserslist: browserlist_config }]],
                 },
             },
         },
