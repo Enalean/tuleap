@@ -21,7 +21,6 @@
 declare(strict_types=1);
 
 use Tuleap\AgileDashboard\BlockScrumAccess;
-use Tuleap\AgileDashboard\Planning\ConfigurationCheckDelegation;
 use Tuleap\AgileDashboard\Planning\PlanningAdministrationDelegation;
 use Tuleap\AgileDashboard\Planning\RootPlanning\RootPlanningEditionEvent;
 use Tuleap\AgileDashboard\REST\v1\Milestone\OriginalProjectCollector;
@@ -71,7 +70,6 @@ use Tuleap\ProgramManagement\Adapter\Program\Feature\VerifyIsVisibleFeatureAdapt
 use Tuleap\ProgramManagement\Adapter\Program\IterationTracker\VisibleIterationTrackerRetriever;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\CanPrioritizeFeaturesDAO;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\PlanDao;
-use Tuleap\ProgramManagement\Adapter\Program\Plan\PlanProgramAdapter;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\PrioritizeFeaturesPermissionVerifier;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\ProgramAdapter;
 use Tuleap\ProgramManagement\Adapter\Program\PlanningAdapter;
@@ -90,13 +88,10 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck\IterationCreat
 use Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck\ProgramIncrementCreatorChecker;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck\TimeboxCreatorChecker;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\ProgramIncrementChanged;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\Plan\ConfigurationChecker;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFieldFromProgramAndTeamTrackersCollectionBuilder;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\NatureAnalyzerException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TimeboxArtifactLinkType;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\TopBacklogChangeProcessor;
-use Tuleap\ProgramManagement\Domain\Program\Plan\PlanTrackerException;
-use Tuleap\ProgramManagement\Domain\Program\ProgramTrackerException;
 use Tuleap\ProgramManagement\Domain\ProgramTracker;
 use Tuleap\ProgramManagement\Domain\Team\RootPlanning\RootPlanningEditionHandler;
 use Tuleap\ProgramManagement\Domain\Workspace\ComponentInvolvedVerifier;
@@ -169,7 +164,6 @@ final class program_managementPlugin extends Plugin
         $this->addHook(PlanningAdministrationDelegation::NAME);
         $this->addHook('tracker_usage', 'trackerUsage');
         $this->addHook('project_is_deleted', 'projectIsDeleted');
-        $this->addHook(ConfigurationCheckDelegation::NAME);
         $this->addHook(BlockScrumAccess::NAME);
         $this->addHook(OriginalProjectCollector::NAME);
         $this->addHook(Event::SERVICE_CLASSNAMES);
@@ -408,33 +402,6 @@ final class program_managementPlugin extends Plugin
         } catch (NatureAnalyzerException $exception) {
             $logger = $this->getLogger();
             $logger->debug($exception->getMessage(), ['exception' => $exception]);
-        }
-    }
-
-    public function configurationCheckDelegation(ConfigurationCheckDelegation $configuration_check_delegation): void
-    {
-        $plan_program_builder = new PlanProgramAdapter(
-            ProjectManager::instance(),
-            new URLVerification(),
-            new TeamDao(),
-            $this->getProgramAdapter()
-        );
-
-        $configuration_checker = new ConfigurationChecker(
-            $plan_program_builder,
-            new VisibleProgramIncrementTrackerRetriever(
-                new ProgramIncrementsDAO(),
-                TrackerFactory::instance()
-            )
-        );
-        try {
-            $configuration_checker->checkProgramIncrementTracker(
-                $configuration_check_delegation->getUser(),
-                $configuration_check_delegation->getProject()
-            );
-        } catch (PlanTrackerException | ProgramTrackerException $e) {
-            $configuration_check_delegation->disablePlanning();
-            $this->getLogger()->debug($e->getMessage());
         }
     }
 

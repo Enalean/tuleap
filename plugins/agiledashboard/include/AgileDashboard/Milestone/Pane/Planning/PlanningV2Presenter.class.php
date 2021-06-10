@@ -64,11 +64,6 @@ class AgileDashboard_Milestone_Pane_Planning_PlanningV2Presenter
     public $trackers_ids_having_list_picker_disabled;
 
     /**
-     * @var bool
-     */
-    public $is_planning_available;
-
-    /**
      * @param string[] $allowed_additional_panes_to_display
      */
     public function __construct(
@@ -76,8 +71,7 @@ class AgileDashboard_Milestone_Pane_Planning_PlanningV2Presenter
         Project $project,
         $milestone_id,
         bool $is_in_explicit_top_backlog,
-        array $allowed_additional_panes_to_display,
-        bool $is_planning_available
+        array $allowed_additional_panes_to_display
     ) {
         $this->user_id                                  = $current_user->getId();
         $this->lang                                     = $this->getLanguageAbbreviation($current_user);
@@ -85,7 +79,6 @@ class AgileDashboard_Milestone_Pane_Planning_PlanningV2Presenter
         $this->milestone_id                             = $milestone_id;
         $this->view_mode                                = (string) $current_user->getPreference('agiledashboard_planning_item_view_mode_' . $this->project_id);
         $this->is_in_explicit_top_backlog               = $is_in_explicit_top_backlog;
-        $this->is_planning_available                    = $is_planning_available;
         $this->user_accessibility_mode                  = json_encode((bool) $current_user->getPreference(PFUser::ACCESSIBILITY_MODE));
         $this->allowed_additional_panes_to_display      = json_encode($allowed_additional_panes_to_display);
         $this->trackers_ids_having_list_picker_disabled = json_encode(ListPickerIncluder::getTrackersHavingListPickerDisabled());
