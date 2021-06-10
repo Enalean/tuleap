@@ -26,7 +26,7 @@ import {
 } from "./metadata-actions.js";
 import * as handle_errors from "../actions-helpers/handle-errors";
 import * as metadata_rest_querier from "../../api/metadata-rest-querier";
-import * as rest_querier from "../../api/rest-querier.js";
+import * as rest_querier from "../../api/rest-querier";
 import {
     TYPE_EMBEDDED,
     TYPE_EMPTY,

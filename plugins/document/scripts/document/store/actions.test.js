@@ -48,7 +48,7 @@ import {
 } from "./actions.js";
 import * as load_ascendant_hierarchy from "./actions-helpers/load-ascendant-hierarchy.js";
 import * as load_folder_content from "./actions-helpers/load-folder-content.js";
-import * as rest_querier from "../api/rest-querier.js";
+import * as rest_querier from "../api/rest-querier";
 
 import * as upload_file from "./actions-helpers/upload-file.js";
 import * as error_handler from "./actions-helpers/handle-errors";

@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { getFolderContent } from "../../api/rest-querier.js";
+import { getFolderContent } from "../../api/rest-querier";
 import { handleErrors } from "./handle-errors";
 
 export async function loadFolderContent(context, folder_id, loading_current_folder_promise) {

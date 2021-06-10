@@ -32,10 +32,22 @@ import {
     postEmbeddedFile,
     postLinkVersion,
     postWiki,
-} from "./rest-querier.js";
+} from "./rest-querier";
+import type { ProjectService } from "./rest-querier";
 
 import { mockFetchSuccess } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper";
 import * as tlp from "tlp";
+import type {
+    Empty,
+    FileProperties,
+    Folder,
+    Item,
+    ItemFile,
+    Wiki,
+    User,
+    Link,
+    Embedded,
+} from "../type";
 
 jest.mock("tlp");
 
@@ -50,7 +62,7 @@ describe("rest-querier", () => {
                     display_name: "user (login)",
                 },
                 last_update_date: "2018-08-21T17:01:49+02:00",
-            };
+            } as Item;
             const tlpGet = jest.spyOn(tlp, "get");
             mockFetchSuccess(tlpGet, { return_json: item });
 
@@ -73,7 +85,7 @@ describe("rest-querier", () => {
                     },
                     last_update_date: "2018-08-21T17:01:49+02:00",
                 },
-            };
+            } as ProjectService;
             const tlpGet = jest.spyOn(tlp, "get");
             mockFetchSuccess(tlpGet, { return_json: service });
 
@@ -95,7 +107,7 @@ describe("rest-querier", () => {
                         display_name: "username (userlogin)",
                     },
                     last_update_date: "2018-10-03T11:16:11+02:00",
-                },
+                } as Folder,
                 {
                     id: 2,
                     title: "folder",
@@ -104,10 +116,10 @@ describe("rest-querier", () => {
                         display_name: "docmanusername (docmanuserlogin)",
                     },
                     last_update_date: "2018-10-03T11:16:11+02:00",
-                },
+                } as Folder,
             ];
             const tlpRecursiveGet = jest.spyOn(tlp, "recursiveGet");
-            tlpRecursiveGet.mockReturnValue(items);
+            tlpRecursiveGet.mockResolvedValue(items);
 
             const result = await getFolderContent(3);
 
@@ -126,26 +138,26 @@ describe("rest-querier", () => {
         it("the REST API will be queried and parents of will be returned", async () => {
             const parents = [
                 {
-                    item_id: 1,
-                    name: "folder A",
+                    id: 1,
+                    title: "folder A",
                     owner: {
                         id: 101,
                         display_name: "username (userlogin)",
-                    },
+                    } as User,
                     last_update_date: "2018-10-03T11:16:11+02:00",
-                },
+                } as Folder,
                 {
-                    item_id: 2,
-                    name: "folder B",
+                    id: 2,
+                    title: "folder B",
                     owner: {
                         id: 101,
                         display_name: "docmanusername (docmanuserlogin)",
-                    },
+                    } as User,
                     last_update_date: "2018-10-03T11:16:11+02:00",
-                },
+                } as Folder,
             ];
             const tlpRecursiveGet = jest.spyOn(tlp, "recursiveGet");
-            tlpRecursiveGet.mockReturnValue(parents);
+            tlpRecursiveGet.mockResolvedValue(parents);
 
             const result = await getParents(3);
 
@@ -162,23 +174,21 @@ describe("rest-querier", () => {
 
     describe("createNewVersion()", () => {
         it("Given data are valid, then a new version of item will be created", async () => {
-            const item = JSON.stringify({
-                version_title: "my document title",
-                changelog: "",
+            const item = {
                 file_properties: {
-                    filename: "file",
-                    filesize: 123,
-                },
-            });
+                    file_size: 123,
+                } as FileProperties,
+            } as ItemFile;
             const dropped_file = {
-                filename: "file",
-                filesize: 123,
-            };
+                file_properties: {
+                    file_size: 124,
+                } as FileProperties,
+            } as ItemFile;
             const tlpPost = jest.spyOn(tlp, "post");
 
-            mockFetchSuccess(tlpPost, JSON.stringify({ id: 10 }));
+            mockFetchSuccess(tlpPost, { return_json: JSON.stringify(JSON.stringify({ id: 10 })) });
 
-            await createNewVersion(item, "my document title", "", dropped_file);
+            await createNewVersion(item, "my document title", "", dropped_file, false, null);
             expect(tlpPost).toHaveBeenCalled();
         });
     });
@@ -198,7 +208,7 @@ describe("rest-querier", () => {
                     title: "my new folder",
                     description: "",
                     type: "folder",
-                },
+                } as Folder,
                 2
             );
 
@@ -214,12 +224,7 @@ describe("rest-querier", () => {
                 title: "my new file",
                 description: "",
                 type: "file",
-                permissions_for_groups: [
-                    { can_manage: [{ id: 166_4 }] },
-                    { can_read: [{ id: 166_3 }] },
-                    { can_write: [{ id: 166_5 }] },
-                ],
-            });
+            } as ItemFile);
             const tlpPost = jest.spyOn(tlp, "post");
             mockFetchSuccess(tlpPost, { return_json: { id: 66, uri: "path/to/66" } });
 
@@ -228,12 +233,7 @@ describe("rest-querier", () => {
                     title: "my new file",
                     description: "",
                     type: "file",
-                    permissions_for_groups: [
-                        { can_manage: [{ id: 166_4 }] },
-                        { can_read: [{ id: 166_3 }] },
-                        { can_write: [{ id: 166_5 }] },
-                    ],
-                },
+                } as ItemFile,
                 2
             );
 
@@ -259,7 +259,7 @@ describe("rest-querier", () => {
                     title: "my empty document",
                     description: "",
                     type: "empty",
-                },
+                } as Empty,
                 2
             );
 
@@ -285,7 +285,7 @@ describe("rest-querier", () => {
                     title: "my wiki document",
                     description: "",
                     type: "wiki",
-                },
+                } as Wiki,
                 2
             );
 
@@ -313,7 +313,7 @@ describe("rest-querier", () => {
                     description: "",
                     type: "link",
                     link_properties: { link_url: "http://example.test" },
-                },
+                } as Link,
                 2
             );
 
@@ -326,11 +326,11 @@ describe("rest-querier", () => {
 
     describe("postEmbeddedFile()", () => {
         it("Creates an embedded file", async () => {
-            const item = JSON.stringify({
+            const item = {
                 title: "Hello",
                 description: "Howdy!",
                 type: "embedded",
-            });
+            } as Embedded;
 
             const content = "<h1>Hello world!</h1>";
             const version_title = "Hi!";
@@ -353,11 +353,11 @@ describe("rest-querier", () => {
 
     describe("postWiki()", () => {
         it("Creates a wiki document", async () => {
-            const item = JSON.stringify({
+            const item = {
                 title: "Kinky wiki",
                 description: "Not for children",
                 type: "wiki",
-            });
+            } as Wiki;
 
             const page_name = "nsfw";
             const version_title = "a title";
@@ -372,11 +372,11 @@ describe("rest-querier", () => {
 
     describe("postLinkVersion()", () => {
         it("Creates a link version", async () => {
-            const item = JSON.stringify({
+            const item = {
                 title: "A link to the past",
                 description: "Time travel machine is here",
                 type: "link",
-            });
+            } as Link;
 
             const link_url = "https://archive.org/web/web.php";
             const version_title = "Marty, get in the DeLorean!";

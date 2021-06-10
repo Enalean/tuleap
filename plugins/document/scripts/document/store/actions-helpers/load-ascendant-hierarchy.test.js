@@ -18,7 +18,7 @@
  */
 
 import { mockFetchError } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper";
-import * as rest_querier from "../../api/rest-querier.js";
+import * as rest_querier from "../../api/rest-querier";
 import { loadAscendantHierarchy } from "./load-ascendant-hierarchy.js";
 
 describe("loadAscendantHierarchy", () => {

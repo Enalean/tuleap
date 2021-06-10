@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { getProjectUserGroups } from "../../api/rest-querier.js";
+import { getProjectUserGroups } from "../../api/rest-querier";
 
 const PROJECT_MEMBERS_ID = "3";
 const PROJECT_ADMINS_ID = "4";

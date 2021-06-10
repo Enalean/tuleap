@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { getParents } from "../../api/rest-querier.js";
+import { getParents } from "../../api/rest-querier";
 import { handleErrors } from "./handle-errors";
 
 export async function loadAscendantHierarchy(context, folder_id, loading_current_folder_promise) {
