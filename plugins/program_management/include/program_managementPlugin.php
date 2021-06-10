@@ -397,15 +397,12 @@ final class program_managementPlugin extends Plugin
 
     public function externalParentCollector(OriginalProjectCollector $original_project_collector): void
     {
-        $source_analyser = new SourceArtifactNatureAnalyzer(new TeamDao(), ProjectManager::instance(), Tracker_ArtifactFactory::instance());
+        $source_analyser = new SourceArtifactNatureAnalyzer(new MirroredTimeboxesDao(), Tracker_ArtifactFactory::instance());
         $artifact        = $original_project_collector->getOriginalArtifact();
         $user            = $original_project_collector->getUser();
 
         try {
             $project = $source_analyser->retrieveProjectOfMirroredArtifact($artifact, $user);
-            if (! $project) {
-                return;
-            }
 
             $original_project_collector->setOriginalProject($project);
         } catch (NatureAnalyzerException $exception) {

@@ -345,7 +345,7 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory
     {
         $parents        = $this->artifact_factory->getParents($backlog_item_ids);
         $parent_tracker = $this->getParentTracker($parents);
-        if ($parent_tracker) {
+        if ($parent_tracker && $parent_tracker->userCanView($user)) {
             $this->setParentItemName($milestone, $parent_tracker->getName());
             if ($this->userCanReadBacklogTitleField($user, $parent_tracker)) {
                 $this->artifact_factory->setTitles($parents);
