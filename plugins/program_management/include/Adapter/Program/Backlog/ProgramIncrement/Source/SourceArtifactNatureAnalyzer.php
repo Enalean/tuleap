@@ -22,73 +22,44 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source;
 
 use PFUser;
+use Tuleap\ProgramManagement\Adapter\Team\MirroredTimeboxes\MirroredTimeboxesDao;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\AnalyzeNatureOfSourceArtifact;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\ArtifactLinkFieldNotFoundException;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\ChangesetValueNotFoundException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\NatureAnalyzerException;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\ProgramNotFoundException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TimeboxArtifactLinkType;
-use Tuleap\ProgramManagement\Domain\Team\Creation\TeamStore;
+use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\TimeboxOfMirroredTimeboxNotFoundException;
 use Tuleap\Tracker\Artifact\Artifact;
 
 class SourceArtifactNatureAnalyzer implements AnalyzeNatureOfSourceArtifact
 {
-    /**
-     * @var TeamStore
-     */
-    private $team_store;
-    /**
-     * @var \ProjectManager
-     */
-    private $project_manager;
-    /**
-     * @var \Tracker_ArtifactFactory
-     */
-    private $artifact_factory;
+    private MirroredTimeboxesDao $mirrored_timeboxes_dao;
+    private \Tracker_ArtifactFactory $artifact_factory;
 
     public function __construct(
-        TeamStore $team_store,
-        \ProjectManager $project_manager,
+        MirroredTimeboxesDao $mirrored_timeboxes_dao,
         \Tracker_ArtifactFactory $artifact_factory
     ) {
-        $this->team_store       = $team_store;
-        $this->project_manager  = $project_manager;
-        $this->artifact_factory = $artifact_factory;
+        $this->mirrored_timeboxes_dao = $mirrored_timeboxes_dao;
+        $this->artifact_factory       = $artifact_factory;
     }
 
     /**
      * @throws NatureAnalyzerException
      */
-    public function retrieveProjectOfMirroredArtifact(Artifact $artifact, PFUser $user): ?\Project
+    public function retrieveProjectOfMirroredArtifact(Artifact $artifact, PFUser $user): \Project
     {
-        $artifact_link_field = $artifact->getAnArtifactLinkField($user);
-        if (! $artifact_link_field) {
-            throw new ArtifactLinkFieldNotFoundException($artifact->getId());
+        $program_increment_id = $this->mirrored_timeboxes_dao
+            ->getTimeboxFromMirroredTimeboxId($artifact->getId(), TimeboxArtifactLinkType::ART_LINK_SHORT_NAME);
+
+        if (! $program_increment_id) {
+            throw new TimeboxOfMirroredTimeboxNotFoundException((int) $artifact->getTracker()->getGroupId());
         }
 
-        $changeset_value = $artifact->getValue($artifact_link_field);
-        if (! $changeset_value) {
-            throw new ChangesetValueNotFoundException($artifact->getId());
+        $program_increment = $this->artifact_factory->getArtifactById($program_increment_id);
+
+        if (! $program_increment || ! $program_increment->userCanView($user)) {
+            throw new TimeboxOfMirroredTimeboxNotFoundException($program_increment_id);
         }
 
-        $program_increment = $this->team_store->getProgramIncrementOfTeam((int) $artifact->getTracker()->getGroupId());
-        if (! $program_increment) {
-            throw new ProgramNotFoundException((int) $artifact->getTracker()->getGroupId());
-        }
-
-        $project = $this->project_manager->getProject($program_increment);
-
-        foreach ($changeset_value->getValue() as $artifact_link_value) {
-            $original_artifact = $this->artifact_factory->getArtifactById($artifact_link_value->getArtifactId());
-
-            if (! $original_artifact || ! $original_artifact->userCanView($user)) {
-                return null;
-            }
-            if ($artifact_link_value->getNature() === TimeboxArtifactLinkType::ART_LINK_SHORT_NAME) {
-                return $project;
-            }
-        }
-
-        return null;
+        return $program_increment->getTracker()->getProject();
     }
 }

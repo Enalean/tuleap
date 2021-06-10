@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2020 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2021 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,15 +20,14 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source;
+namespace Tuleap\ProgramManagement\Domain\Team\MirroredTimebox;
 
-use PFUser;
-use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\NatureAnalyzerException;
 
-interface AnalyzeNatureOfSourceArtifact
+final class TimeboxOfMirroredTimeboxNotFoundException extends \RuntimeException implements NatureAnalyzerException
 {
-    /**
-     * @throws NatureAnalyzerException
-     */
-    public function retrieveProjectOfMirroredArtifact(Artifact $artifact, PFUser $user): \Project;
+    public function __construct(int $mirrored_timebox_id)
+    {
+        parent::__construct(sprintf('Timebox of mirrored timebox #%d is not found', $mirrored_timebox_id));
+    }
 }

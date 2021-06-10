@@ -22,242 +22,109 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement;
 
-use Mockery;
 use Tracker_ArtifactFactory;
-use Tracker_ArtifactLinkInfo;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\SourceArtifactNatureAnalyzer;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\ArtifactLinkFieldNotFoundException;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\ChangesetValueNotFoundException;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\ProgramNotFoundException;
-use Tuleap\ProgramManagement\Domain\Team\Creation\TeamStore;
+use Tuleap\ProgramManagement\Adapter\Team\MirroredTimeboxes\MirroredTimeboxesDao;
+use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\TimeboxOfMirroredTimeboxNotFoundException;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class SourceArtifactNatureAnalyzerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Tracker_ArtifactFactory
+     * @var \PHPUnit\Framework\MockObject\MockObject|MirroredTimeboxesDao
+     */
+    private $mirrored_timeboxes_dao;
+    /**
+     * @var \PHPUnit\Framework\MockObject\MockObject|Tracker_ArtifactFactory
      */
     private $artifact_factory;
-
-    /**
-     * @var SourceArtifactNatureAnalyzer
-     */
-    private $analyser;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|\ProjectManager
-     */
-    private $project_manager;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|TeamStore
-     */
-    private $team_store;
+    private SourceArtifactNatureAnalyzer $analyser;
+    private \PFUser $user;
+    private \Project $project;
 
     protected function setUp(): void
     {
-        $this->team_store       = Mockery::mock(TeamStore::class);
-        $this->project_manager  = Mockery::mock(\ProjectManager::class);
-        $this->artifact_factory = Mockery::mock(Tracker_ArtifactFactory::class);
+        $this->user    = UserTestBuilder::aUser()->build();
+        $this->project = \Project::buildForTest();
+
+        $this->mirrored_timeboxes_dao = $this->createMock(MirroredTimeboxesDao::class);
+        $this->artifact_factory       = $this->createMock(Tracker_ArtifactFactory::class);
 
         $this->analyser = new SourceArtifactNatureAnalyzer(
-            $this->team_store,
-            $this->project_manager,
+            $this->mirrored_timeboxes_dao,
             $this->artifact_factory
         );
     }
 
-    public function testItThrowsExceptionWhenArtifactDoNotHaveAnyChangeset(): void
+    public function testItThrowsExceptionWhenProgramIncrementIdIsNotFound(): void
     {
-        $artifact = Mockery::mock(Artifact::class);
-        $artifact->shouldReceive('getId')->andReturn(1);
-        $user = UserTestBuilder::aUser()->build();
+        $mirrored_timebox = $this->getMirroredTimebox();
 
-        $artifact->shouldReceive('getAnArtifactLinkField')->with($user)->once()->andReturnNull();
+        $this->mirrored_timeboxes_dao->method('getTimeboxFromMirroredTimeboxId')->willReturn(null);
 
-        $this->expectException(ArtifactLinkFieldNotFoundException::class);
-        $this->analyser->retrieveProjectOfMirroredArtifact($artifact, $user);
+        $this->expectException(TimeboxOfMirroredTimeboxNotFoundException::class);
+        $this->analyser->retrieveProjectOfMirroredArtifact($mirrored_timebox, $this->user);
     }
 
-    public function testItThrowsExceptionWhenChangesetValueIsNotFound(): void
+    public function testItThrowsExceptionWhenProgramIncrementIsNotFound(): void
     {
-        $artifact = Mockery::mock(Artifact::class);
-        $artifact->shouldReceive('getId')->andReturn(1);
-        $user = UserTestBuilder::aUser()->build();
+        $mirrored_timebox = $this->getMirroredTimebox();
 
-        $field = new \Tracker_FormElement_Field_ArtifactLink(
-            1,
-            100,
-            null,
-            "artlink",
-            "Artifact link",
-            "",
-            true,
-            "P",
-            true,
-            true,
-            1
-        );
-        $artifact->shouldReceive('getAnArtifactLinkField')->with($user)->once()->andReturn($field);
-        $artifact->shouldReceive('getValue')->once()->andReturnNull();
+        $this->mirrored_timeboxes_dao->method('getTimeboxFromMirroredTimeboxId')->willReturn(100);
+        $this->artifact_factory->method('getArtifactById')->willReturn(null);
 
-        $this->expectException(ChangesetValueNotFoundException::class);
-        $this->analyser->retrieveProjectOfMirroredArtifact($artifact, $user);
-    }
-
-    public function testItThrowsExceptionWhenProgramIsNotFound(): void
-    {
-        $artifact = Mockery::mock(Artifact::class);
-        $artifact->shouldReceive('getId')->andReturn(1);
-        $artifact->shouldReceive('getTracker')->andReturn(TrackerTestBuilder::aTracker()->withId(12)->build());
-        $user = UserTestBuilder::aUser()->build();
-
-        $field = new \Tracker_FormElement_Field_ArtifactLink(
-            1,
-            100,
-            null,
-            "artlink",
-            "Artifact link",
-            "",
-            true,
-            "P",
-            true,
-            true,
-            1
-        );
-        $artifact->shouldReceive('getAnArtifactLinkField')->with($user)->once()->andReturn($field);
-
-        $artifact_link_value = Mockery::mock(\Tracker_Artifact_ChangesetValue_ArtifactLink::class);
-        $artifact->shouldReceive('getValue')->once()->andReturn($artifact_link_value);
-
-        $this->team_store->shouldReceive('getProgramIncrementOfTeam')->andReturnNull();
-
-        $this->expectException(ProgramNotFoundException::class);
-        $this->analyser->retrieveProjectOfMirroredArtifact($artifact, $user);
+        $this->expectException(TimeboxOfMirroredTimeboxNotFoundException::class);
+        $this->analyser->retrieveProjectOfMirroredArtifact($mirrored_timebox, $this->user);
     }
 
     public function testReturnsProjectWhenArtifactHaveMirroredMilestoneLink(): void
     {
-        $artifact = Mockery::mock(Artifact::class);
-        $artifact->shouldReceive('getId')->andReturn(1);
-        $artifact->shouldReceive('getTracker')->andReturn(TrackerTestBuilder::aTracker()->withId(12)->build());
-        $user = UserTestBuilder::aUser()->build();
+        $mirrored_timebox = $this->getMirroredTimebox();
 
-        $field = new \Tracker_FormElement_Field_ArtifactLink(
-            1,
-            100,
-            null,
-            "artlink",
-            "Artifact link",
-            "",
-            true,
-            "P",
-            true,
-            true,
-            1
-        );
-        $artifact->shouldReceive('getAnArtifactLinkField')->with($user)->once()->andReturn($field);
+        $timebox = $this->getTimebox(true);
+        $this->artifact_factory->method('getArtifactById')->willReturn($timebox);
 
-        $artifact_link_value = Mockery::mock(\Tracker_Artifact_ChangesetValue_ArtifactLink::class);
-        $artifact->shouldReceive('getValue')->once()->andReturn($artifact_link_value);
+        $this->mirrored_timeboxes_dao->method('getTimeboxFromMirroredTimeboxId')->willReturn(200);
 
-        $original_artifact = Mockery::mock(Artifact::class);
-        $this->artifact_factory->shouldReceive('getArtifactById')->andReturn($original_artifact);
-        $original_artifact->shouldReceive('userCanView')->andReturnTrue();
-
-        $this->team_store->shouldReceive('getProgramIncrementOfTeam')->andReturn(200);
-        $project = new \Project(['group_id' => 101]);
-        $this->project_manager->shouldReceive('getProject')->with(200)->andReturn($project);
-
-        $artifact_link_value->shouldReceive('getValue')->andReturn(
-            [
-                new Tracker_ArtifactLinkInfo(1, 'story', 101, 100, 600, '_is_child'),
-                new Tracker_ArtifactLinkInfo(1, 'story', 101, 100, 600, '_mirrored_milestone')
-            ]
-        );
-
-        $this->assertEquals($project, $this->analyser->retrieveProjectOfMirroredArtifact($artifact, $user));
+        self::assertEquals($this->project, $this->analyser->retrieveProjectOfMirroredArtifact($mirrored_timebox, $this->user));
     }
 
-    public function testReturnsNullWhenArtifactDoesNotHaveLink(): void
+    public function testItThrowsExceptionWhenUserCanNotSeeArtifact(): void
     {
-        $artifact = Mockery::mock(Artifact::class);
-        $artifact->shouldReceive('getId')->andReturn(1);
-        $artifact->shouldReceive('getTracker')->andReturn(TrackerTestBuilder::aTracker()->withId(12)->build());
-        $user = UserTestBuilder::aUser()->build();
+        $timebox = $this->getTimebox(false);
+        $this->artifact_factory->method('getArtifactById')->willReturn($timebox);
 
-        $field = new \Tracker_FormElement_Field_ArtifactLink(
-            1,
-            100,
-            null,
-            "artlink",
-            "Artifact link",
-            "",
-            true,
-            "P",
-            true,
-            true,
-            1
-        );
-        $artifact->shouldReceive('getAnArtifactLinkField')->with($user)->once()->andReturn($field);
+        $mirrored_timebox = $this->getMirroredTimebox();
 
-        $artifact_link_value = Mockery::mock(\Tracker_Artifact_ChangesetValue_ArtifactLink::class);
-        $artifact->shouldReceive('getValue')->once()->andReturn($artifact_link_value);
+        $this->mirrored_timeboxes_dao->expects(self::once())->method('getTimeboxFromMirroredTimeboxId')->willReturn(200);
 
-        $original_artifact = Mockery::mock(Artifact::class);
-        $this->artifact_factory->shouldReceive('getArtifactById')->andReturn($original_artifact);
-        $original_artifact->shouldReceive('userCanView')->andReturnTrue();
-
-        $this->team_store->shouldReceive('getProgramIncrementOfTeam')->andReturn(200);
-        $project = new \Project(['group_id' => 101]);
-        $this->project_manager->shouldReceive('getProject')->with(200)->andReturn($project);
-
-        $artifact_link_value->shouldReceive('getValue')->andReturn(
-            [new Tracker_ArtifactLinkInfo(1, 'story', 101, 100, 600, '_is_child')]
-        );
-
-        $this->assertNull($this->analyser->retrieveProjectOfMirroredArtifact($artifact, $user));
+        $this->expectException(TimeboxOfMirroredTimeboxNotFoundException::class);
+        $this->analyser->retrieveProjectOfMirroredArtifact($mirrored_timebox, $this->user);
     }
 
-    public function testReturnsNullWhenUserCanNotSeeArtifact(): void
+    /**
+     * @return \PHPUnit\Framework\MockObject\Stub|Artifact
+     */
+    private function getMirroredTimebox()
     {
-        $artifact = Mockery::mock(Artifact::class);
-        $artifact->shouldReceive('getId')->andReturn(1);
-        $artifact->shouldReceive('getTracker')->andReturn(TrackerTestBuilder::aTracker()->withId(12)->build());
-        $user = UserTestBuilder::aUser()->build();
+        $mirrored_timebox = $this->createStub(Artifact::class);
+        $mirrored_timebox->method('getId')->willReturn(1);
+        $mirrored_timebox->method('getTracker')->willReturn(TrackerTestBuilder::aTracker()->withId(12)->build());
 
-        $field = new \Tracker_FormElement_Field_ArtifactLink(
-            1,
-            100,
-            null,
-            "artlink",
-            "Artifact link",
-            "",
-            true,
-            "P",
-            true,
-            true,
-            1
-        );
-        $artifact->shouldReceive('getAnArtifactLinkField')->with($user)->once()->andReturn($field);
+        return $mirrored_timebox;
+    }
 
-        $original_artifact = Mockery::mock(Artifact::class);
-        $this->artifact_factory->shouldReceive('getArtifactById')->andReturn($original_artifact);
-        $original_artifact->shouldReceive('userCanView')->andReturnFalse();
+    /**
+     * @return \PHPUnit\Framework\MockObject\Stub|Artifact
+     */
+    private function getTimebox(bool $user_can_view)
+    {
+        $timebox = $this->createStub(Artifact::class);
+        $timebox->method('userCanView')->willReturn($user_can_view);
+        $timebox->method('getTracker')->willReturn(TrackerTestBuilder::aTracker()->withProject($this->project)->build());
 
-        $artifact_link_value = Mockery::mock(\Tracker_Artifact_ChangesetValue_ArtifactLink::class);
-        $artifact->shouldReceive('getValue')->once()->andReturn($artifact_link_value);
-
-        $this->team_store->shouldReceive('getProgramIncrementOfTeam')->once()->andReturn(200);
-        $project = new \Project(['group_id' => 101]);
-        $this->project_manager->shouldReceive('getProject')->once()->with(200)->andReturn($project);
-
-        $artifact_link_value->shouldReceive('getValue')->once()->andReturn(
-            [new Tracker_ArtifactLinkInfo(1, 'story', 101, 100, 600, '_is_child')]
-        );
-
-        $this->assertNull($this->analyser->retrieveProjectOfMirroredArtifact($artifact, $user));
+        return $timebox;
     }
 }
