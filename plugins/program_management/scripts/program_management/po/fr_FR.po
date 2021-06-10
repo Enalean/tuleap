@@ -12,9 +12,6 @@ msgstr ""
 "X-Generator: Poedit 2.0.6\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-msgid "Add %{ program_increment_sub_label }"
-msgstr "Ajouter %{ program_increment_sub_label }"
-
 msgid "Backlog"
 msgstr "Planification"
 
@@ -30,6 +27,9 @@ msgstr "Modifier"
 msgid "It seems an action you tried to perform can not be done."
 msgstr ""
 "Il semble que l'action que vous venez de tenter ne peut pas être réalisée."
+
+msgid "New %{ program_increment_sub_label }"
+msgstr "Ajouter un(e) %{ program_increment_sub_label }"
 
 msgid "Oops, an error occurred!"
 msgstr "Oups, une erreur s'est produite !"
@@ -65,8 +65,8 @@ msgstr "La récupération des éléments à planifier dans le programme a échou
 msgid "The retrieval of the program increments has failed"
 msgstr "La récupération des incréments du programme a échoué"
 
-msgid "There are no iterations yet"
-msgstr "Il n'y a pas d'itération pour l'instant"
+msgid "There are no program increments yet"
+msgstr "Il n'y a pas d'incréments de programme pour l'instant"
 
 msgid "There is nothing to plan"
 msgstr "Il n'y a rien à planifier"

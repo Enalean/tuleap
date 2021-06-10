@@ -9,9 +9,9 @@ exports[`EmptyState Displays the empty state for Program Increment 1`] = `
   <p
     class="empty-page-text"
     data-current-language="en_US"
-    data-msgid="There are no iterations yet"
+    data-msgid="There are no program increments yet"
   >
-    There are no iterations yet
+    There are no program increments yet
   </p>
    
   <form
