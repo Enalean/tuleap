@@ -744,6 +744,7 @@ done
 %{__install} plugins/git/etc/sudoers.d/gitolite3-http $RPM_BUILD_ROOT/etc/sudoers.d/tuleap_gitolite3_http
 %{__sed} -i "s~%libbin_dir%~%{APP_LIBBIN_DIR}~g" $RPM_BUILD_ROOT/etc/sudoers.d/tuleap_gitolite3_http
 %{__install} plugins/git/etc/sudoers.d/gitolite3-replace-authorized-keys $RPM_BUILD_ROOT/etc/sudoers.d/tuleap_gitolite3_replace_authorized_keys
+%{__install} plugins/git/etc/sudoers.d/git-change-default-branch $RPM_BUILD_ROOT/etc/sudoers.d/tuleap_git_change_default_branch
 %{__install} plugins/git/etc/logrotate.syslog.dist $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_git
 %{__sed} -i "s~%PROJECT_NAME%~%{APP_NAME}~g" $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_git
 %{__sed} -i "s~%%APP_USER%%~%{APP_USER}~g" $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_git
@@ -1200,6 +1201,7 @@ fi
 %attr(00440,root,root) %{_sysconfdir}/sudoers.d/tuleap_gitolite
 %attr(00440,root,root) %{_sysconfdir}/sudoers.d/tuleap_git_postreceive
 %attr(00440,root,root) %{_sysconfdir}/sudoers.d/tuleap_gitolite3_replace_authorized_keys
+%attr(00440,root,root) %{_sysconfdir}/sudoers.d/tuleap_git_change_default_branch
 %attr(00440,root,root) %{_sysconfdir}/sudoers.d/tuleap_plugin_git
 %attr(00440,root,root) %{_sysconfdir}/sudoers.d/gitolite-access-command
 %attr(00644,root,root) %{_unitdir}/tuleap-process-system-events-git.timer

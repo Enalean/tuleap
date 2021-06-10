@@ -25,6 +25,13 @@ namespace Tuleap\Git\DefaultBranch;
 
 class DefaultBranchUpdater
 {
+    private DefaultBranchUpdateExecutor $default_branch_update_executor;
+
+    public function __construct(DefaultBranchUpdateExecutor $default_branch_update_executor)
+    {
+        $this->default_branch_update_executor = $default_branch_update_executor;
+    }
+
     /**
      * @throws CannotSetANonExistingBranchAsDefaultException
      */
@@ -40,6 +47,6 @@ class DefaultBranchUpdater
             throw new CannotSetANonExistingBranchAsDefaultException($branch_name);
         }
 
-        $git_exec->setDefaultBranch($branch_name);
+        $this->default_branch_update_executor->setDefaultBranch($git_exec, $branch_name);
     }
 }

@@ -27,15 +27,28 @@ use Tuleap\Test\PHPUnit\TestCase;
 
 final class DefaultBranchUpdaterTest extends TestCase
 {
+    private DefaultBranchUpdateTestExecutor $default_branch_update_executor;
+    private DefaultBranchUpdater $default_branch_updater;
+
+    protected function setUp(): void
+    {
+        $this->default_branch_update_executor = new DefaultBranchUpdateTestExecutor();
+        $this->default_branch_updater         = new DefaultBranchUpdater($this->default_branch_update_executor);
+    }
+
     public function testUpdatesDefaultBranch(): void
     {
         $git_exec = $this->createMock(\Git_Exec::class);
         $git_exec->method('getDefaultBranch')->willReturn('dev');
         $git_exec->method('getAllBranchesSortedByCreationDate')->willReturn(['main', 'dev']);
 
-        $git_exec->expects(self::once())->method('setDefaultBranch')->with('main');
+        $this->default_branch_update_executor->setCallbackOnSetDefaultBranch(
+            fn (string $branch_name) => self::assertEquals('main', $branch_name)
+        );
 
-        (new DefaultBranchUpdater())->updateDefaultBranch($git_exec, 'main');
+        $this->default_branch_updater->updateDefaultBranch($git_exec, 'main');
+
+        self::assertTrue($this->default_branch_update_executor->doesADefaultBranchBeenSet());
     }
 
     public function testDoesNothingWhenBranchIsAlreadyTheDefault(): void
@@ -44,9 +57,9 @@ final class DefaultBranchUpdaterTest extends TestCase
         $git_exec->method('getDefaultBranch')->willReturn('main');
         $git_exec->method('getAllBranchesSortedByCreationDate')->willReturn(['main', 'dev']);
 
-        $git_exec->expects(self::never())->method('setDefaultBranch');
+        $this->default_branch_updater->updateDefaultBranch($git_exec, 'main');
 
-        (new DefaultBranchUpdater())->updateDefaultBranch($git_exec, 'main');
+        self::assertFalse($this->default_branch_update_executor->doesADefaultBranchBeenSet());
     }
 
     public function testTriesToNotSetAnUnknownReferenceAsTheDefaultBranch(): void
@@ -55,9 +68,12 @@ final class DefaultBranchUpdaterTest extends TestCase
         $git_exec->method('getDefaultBranch')->willReturn('main');
         $git_exec->method('getAllBranchesSortedByCreationDate')->willReturn(['main', 'dev']);
 
-        $git_exec->expects(self::never())->method('setDefaultBranch');
         $this->expectException(CannotSetANonExistingBranchAsDefaultException::class);
 
-        (new DefaultBranchUpdater())->updateDefaultBranch($git_exec, 'trunk');
+        try {
+            $this->default_branch_updater->updateDefaultBranch($git_exec, 'trunk');
+        } finally {
+            self::assertFalse($this->default_branch_update_executor->doesADefaultBranchBeenSet());
+        }
     }
 }

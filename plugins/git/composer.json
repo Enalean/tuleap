@@ -12,7 +12,7 @@
   },
   "autoload-dev": {
     "psr-4": {
-      "Tuleap\\Git\\": ["tests/integration/"]
+      "Tuleap\\Git\\": ["tests/unit/", "tests/integration/"]
     }
   },
   "config": {

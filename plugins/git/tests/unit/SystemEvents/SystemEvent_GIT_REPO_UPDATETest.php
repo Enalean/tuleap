@@ -21,14 +21,17 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-require_once __DIR__ . '/../bootstrap.php';
 
-class SystemEvent_GIT_REPO_UPDATETest extends \Tuleap\Test\PHPUnit\TestCase
+use Tuleap\Git\DefaultBranch\CannotExecuteDefaultBranchUpdateException;
+use Tuleap\Git\DefaultBranch\DefaultBranchUpdateTestExecutor;
+
+final class SystemEvent_GIT_REPO_UPDATETest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
     private $repository_id = 115;
     private $system_event_manager;
+    private DefaultBranchUpdateTestExecutor $default_branch_update_executor;
 
     protected function setUp(): void
     {
@@ -39,14 +42,16 @@ class SystemEvent_GIT_REPO_UPDATETest extends \Tuleap\Test\PHPUnit\TestCase
         $this->repository = \Mockery::spy(\GitRepository::class);
         $this->repository->shouldReceive('getBackend')->andReturns($this->backend);
 
-        $this->repository_factory   = \Mockery::spy(\GitRepositoryFactory::class);
-        $this->system_event_manager = \Mockery::spy(\Git_SystemEventManager::class);
+        $this->repository_factory             = \Mockery::spy(\GitRepositoryFactory::class);
+        $this->system_event_manager           = \Mockery::spy(\Git_SystemEventManager::class);
+        $this->default_branch_update_executor = new DefaultBranchUpdateTestExecutor();
 
         $this->event = \Mockery::mock(\SystemEvent_GIT_REPO_UPDATE::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $this->event->setParameters("$this->repository_id");
         $this->event->injectDependencies(
             $this->repository_factory,
-            $this->system_event_manager
+            $this->system_event_manager,
+            $this->default_branch_update_executor
         );
     }
 
@@ -98,6 +103,42 @@ class SystemEvent_GIT_REPO_UPDATETest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->backend->shouldReceive('updateRepoConf')->once()->andReturns(true);
         $this->system_event_manager->shouldReceive('queueGrokMirrorManifest')->with($this->repository)->once();
+
+        $this->event->process();
+    }
+
+    public function testDefaultBranchIsSet(): void
+    {
+        $this->event->setParameters($this->repository_id . SystemEvent::PARAMETER_SEPARATOR . 'main');
+        $this->repository_factory->shouldReceive('getRepositoryById')->andReturns($this->repository);
+        $driver = $this->createStub(Git_GitoliteDriver::class);
+        $driver->method('commit');
+        $driver->method('push');
+        $this->backend->shouldReceive('getDriver')->andReturns($driver);
+        $this->backend->shouldReceive('updateRepoConf')->andReturn(true);
+        $this->event->shouldReceive('done')->once();
+
+        $this->event->process();
+
+        self::assertTrue($this->default_branch_update_executor->doesADefaultBranchBeenSet());
+    }
+
+    public function testSystemEventIsMarkedAsFailedWhenDefaultBranchCannotBeSet(): void
+    {
+        $this->event->setParameters($this->repository_id . SystemEvent::PARAMETER_SEPARATOR . 'main');
+        $this->repository_factory->shouldReceive('getRepositoryById')->andReturns($this->repository);
+        $driver = $this->createStub(Git_GitoliteDriver::class);
+        $driver->method('commit');
+        $driver->method('push');
+        $this->backend->shouldReceive('getDriver')->andReturns($driver);
+        $this->backend->shouldReceive('updateRepoConf')->andReturn(true);
+        $this->default_branch_update_executor->setCallbackOnSetDefaultBranch(
+            function (): void {
+                throw new CannotExecuteDefaultBranchUpdateException("Something wrong happened");
+            }
+        );
+
+        $this->event->shouldReceive('error')->once();
 
         $this->event->process();
     }

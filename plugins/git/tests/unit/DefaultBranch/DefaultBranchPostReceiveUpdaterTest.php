@@ -27,11 +27,13 @@ use Tuleap\Test\PHPUnit\TestCase;
 
 final class DefaultBranchPostReceiveUpdaterTest extends TestCase
 {
+    private DefaultBranchUpdateTestExecutor $default_branch_update_executor;
     private DefaultBranchPostReceiveUpdater $default_branch_post_receive_updater;
 
     protected function setUp(): void
     {
-        $this->default_branch_post_receive_updater = new DefaultBranchPostReceiveUpdater();
+        $this->default_branch_update_executor      = new DefaultBranchUpdateTestExecutor();
+        $this->default_branch_post_receive_updater = new DefaultBranchPostReceiveUpdater($this->default_branch_update_executor);
     }
 
     public function testUpdatesDefaultBranchWhenTheExistingDefaultBranchDoesNotExist(): void
@@ -40,9 +42,13 @@ final class DefaultBranchPostReceiveUpdaterTest extends TestCase
         $git_exec->method('getAllBranchesSortedByCreationDate')->willReturn(['main']);
         $git_exec->method('getDefaultBranch')->willReturn('dev');
 
-        $git_exec->expects(self::once())->method('setDefaultBranch')->with('main');
+        $this->default_branch_update_executor->setCallbackOnSetDefaultBranch(
+            fn (string $branch_name) => self::assertEquals('main', $branch_name)
+        );
 
         $this->default_branch_post_receive_updater->updateDefaultBranchWhenNeeded($git_exec);
+
+        self::assertTrue($this->default_branch_update_executor->doesADefaultBranchBeenSet());
     }
 
     public function testDoesNotAttemptToUpdateTheDefaultBranchWhenNoneExistInTheRepository(): void
@@ -50,9 +56,9 @@ final class DefaultBranchPostReceiveUpdaterTest extends TestCase
         $git_exec = $this->createMock(\Git_Exec::class);
         $git_exec->method('getAllBranchesSortedByCreationDate')->willReturn([]);
 
-        $git_exec->expects(self::never())->method('setDefaultBranch');
-
         $this->default_branch_post_receive_updater->updateDefaultBranchWhenNeeded($git_exec);
+
+        self::assertFalse($this->default_branch_update_executor->doesADefaultBranchBeenSet());
     }
 
     public function testDoesNotUpdateTheDefaultBranchWhenItExistsInTheRepository(): void
@@ -61,6 +67,6 @@ final class DefaultBranchPostReceiveUpdaterTest extends TestCase
         $git_exec->method('getAllBranchesSortedByCreationDate')->willReturn(['main']);
         $git_exec->method('getDefaultBranch')->willReturn('main');
 
-        $git_exec->expects(self::never())->method('setDefaultBranch');
+        self::assertFalse($this->default_branch_update_executor->doesADefaultBranchBeenSet());
     }
 }

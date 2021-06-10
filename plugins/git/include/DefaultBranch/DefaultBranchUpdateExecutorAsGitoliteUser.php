@@ -23,29 +23,20 @@ declare(strict_types=1);
 
 namespace Tuleap\Git\DefaultBranch;
 
-class DefaultBranchPostReceiveUpdater
+use Symfony\Component\Process\Exception\ProcessFailedException;
+use Symfony\Component\Process\Process;
+
+final class DefaultBranchUpdateExecutorAsGitoliteUser implements DefaultBranchUpdateExecutor
 {
-    private DefaultBranchUpdateExecutor $default_branch_update_executor;
-
-    public function __construct(DefaultBranchUpdateExecutor $default_branch_update_executor)
+    public function setDefaultBranch(\Git_Exec $git_exec, string $default_branch): void
     {
-        $this->default_branch_update_executor = $default_branch_update_executor;
-    }
-
-    public function updateDefaultBranchWhenNeeded(\Git_Exec $git_exec): void
-    {
-        $all_branches = $git_exec->getAllBranchesSortedByCreationDate();
-
-        if (count($all_branches) === 0) {
-            return;
+        $set_default_branch_process = new Process(
+            ['sudo', '-u', 'gitolite', 'DISPLAY_ERRORS=true', __DIR__ . '/../../bin/change-default-branch.php', $git_exec->getPath(), $default_branch]
+        );
+        try {
+            $set_default_branch_process->mustRun();
+        } catch (ProcessFailedException $exception) {
+            throw new CannotExecuteDefaultBranchUpdateException($exception->getMessage(), $exception);
         }
-
-        $current_default_branch = $git_exec->getDefaultBranch();
-        if (in_array($current_default_branch, $all_branches, true)) {
-            return;
-        }
-
-        $new_default_branch = $all_branches[0];
-        $this->default_branch_update_executor->setDefaultBranch($git_exec, $new_default_branch);
     }
 }
