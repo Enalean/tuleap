@@ -50,6 +50,9 @@ class GeneralSettings extends Pane
      */
     private static function getAvailableBranchPresenters(GitRepository $repository): array
     {
+        if (! $repository->isInitialized()) {
+            return [];
+        }
         $git_exec       = \Git_Exec::buildFromRepository($repository);
         $all_branches   = $git_exec->getAllBranchesSortedByCreationDate();
         $default_branch = $git_exec->getDefaultBranch();

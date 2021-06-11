@@ -941,7 +941,11 @@ class RepositoryResource extends AuthenticatedResource
     {
         $this->checkAccess();
 
-        $project = $this->getGitPHPProject($id);
+        try {
+            $project = $this->getGitPHPProject($id);
+        } catch (RepositoryNotExistingException $exception) {
+            throw new RestException(404, 'Commit not found');
+        }
 
         $commit = $project->GetCommit($commit_reference);
         if (! $commit) {
