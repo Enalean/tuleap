@@ -184,6 +184,7 @@ $white-space-above-and-after-a-project-link: var(--tlp-small-spacing);
     &:hover,
     &:focus {
         background: rgba(0, 0, 0, .2);
+        color: var(--tlp-ui-dimmed-on-dark-background);
         text-decoration: none;
     }
 }
@@ -196,7 +197,9 @@ $white-space-above-and-after-a-project-link: var(--tlp-small-spacing);
     font-weight: 500;
     line-height: 1rem;
 
+    &:hover,
     &:focus {
+        color: var(--tlp-ui-dimmed-on-dark-background);
         text-decoration: underline;
     }
 }
