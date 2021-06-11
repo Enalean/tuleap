@@ -23,7 +23,9 @@ declare(strict_types=1);
 
 use Tuleap\AgileDashboard\ExplicitBacklog\ArtifactsInExplicitBacklogDao;
 use Tuleap\AgileDashboard\RemainingEffortValueRetriever;
+use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactoryTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
@@ -104,8 +106,7 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactoryTest extends 
         $backlog                     = Mockery::mock(AgileDashboard_Milestone_Backlog_Backlog::class);
         $descendant_items_collection = new AgileDashboard_Milestone_Backlog_DescendantItemsCollection();
 
-        $artifact = Mockery::mock(Artifact::class);
-        $artifact->shouldReceive('getId')->andReturn(10);
+        $artifact = $this->mockArtifact(10, TrackerTestBuilder::aTracker()->build());
         $descendant_items_collection->push($artifact);
 
         $backlog->shouldReceive('getArtifacts')->once()->andReturn(
@@ -128,7 +129,7 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactoryTest extends 
         $done_collection->push($done_item);
 
         $this->backlog_item_builder->method('getCollection')->will(
-            $this->onConsecutiveCalls(
+            self::onConsecutiveCalls(
                 $open_and_closed_collection,
                 new AgileDashboard_Milestone_Backlog_BacklogItemCollection(),
                 $todo_collection,
@@ -148,7 +149,7 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactoryTest extends 
             false
         );
 
-        $this->assertEquals([8], $open_and_closed_content->getItemIds());
+        self::assertEquals([8], $open_and_closed_content->getItemIds());
 
         $todo_content = $this->collection_factory->getTodoCollection(
             $user,
@@ -157,7 +158,7 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactoryTest extends 
             false
         );
 
-        $this->assertEquals([9], $todo_content->getItemIds());
+        self::assertEquals([9], $todo_content->getItemIds());
 
         $done_content = $this->collection_factory->getDoneCollection(
             $user,
@@ -166,7 +167,7 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactoryTest extends 
             false
         );
 
-        $this->assertEquals([10], $done_content->getItemIds());
+        self::assertEquals([10], $done_content->getItemIds());
     }
 
     public function testSortedCollectionsAreProperlyInit(): void
@@ -199,7 +200,7 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactoryTest extends 
         $sorted_collection = new AgileDashboard_Milestone_Backlog_BacklogItemCollection();
 
         $this->backlog_item_builder->method('getCollection')->will(
-            $this->onConsecutiveCalls(
+            self::onConsecutiveCalls(
                 new AgileDashboard_Milestone_Backlog_BacklogItemCollection(),
                 $open_closed_and_inconsistent_collection,
                 new AgileDashboard_Milestone_Backlog_BacklogItemCollection(),
@@ -229,7 +230,7 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactoryTest extends 
             false
         );
 
-        $this->assertEquals([9], $open_inconsistent_collection->getItemIds());
+        self::assertEquals([9], $open_inconsistent_collection->getItemIds());
 
         $open_inconsistent_collection = $this->collection_factory->getInconsistentCollection(
             $user,
@@ -238,7 +239,7 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactoryTest extends 
             false
         );
 
-        $this->assertEquals([9], $open_inconsistent_collection->getItemIds());
+        self::assertEquals([9], $open_inconsistent_collection->getItemIds());
     }
 
     public function testItRetrievesUnplannedArtifacts(): void
@@ -281,7 +282,7 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactoryTest extends 
         $top_backlog_collection->push($backlog_item);
 
         $this->backlog_item_builder->method('getCollection')->will(
-            $this->onConsecutiveCalls(
+            self::onConsecutiveCalls(
                 $top_backlog_collection,
                 new AgileDashboard_Milestone_Backlog_BacklogItemCollection()
             )
@@ -300,7 +301,7 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactoryTest extends 
             false
         );
 
-        $this->assertEquals([9], $unassigned_open_collection->getItemIds());
+        self::assertEquals([9], $unassigned_open_collection->getItemIds());
     }
 
     public function testItRetrievesUnassignedArtifacts(): void
@@ -315,18 +316,14 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactoryTest extends 
 
         $this->milestone_factory->shouldReceive('getSubMilestoneIds')->andReturn($all_possible_artifacts);
 
-        $artifact = Mockery::mock(Artifact::class);
-        $artifact->shouldReceive('id')->andReturn(9);
-        $artifact->shouldReceive('getId')->andReturn(9);
-        $artifact->shouldReceive('setTitle')->once()->withArgs(['title']);
-        $artifact->shouldReceive('getStatus')->once()->once();
-
-        $project = Mockery::mock(Project::class);
-        $project->shouldReceive('getID')->andReturn(101);
+        $project = Project::buildForTest();
 
         $tracker = Mockery::mock(Tracker::class);
         $tracker->shouldReceive('getProject')->once()->andReturn($project);
-        $artifact->shouldReceive('getTracker')->andReturn($tracker);
+
+        $artifact = $this->mockArtifact(9, $tracker);
+        $artifact->shouldReceive('setTitle')->once()->withArgs(['title']);
+        $artifact->shouldReceive('getStatus')->once();
 
         $top_backlog_collection = new AgileDashboard_Milestone_Backlog_DescendantItemsCollection();
         $top_backlog_collection->push($artifact);
@@ -334,7 +331,7 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactoryTest extends 
         $backlog->shouldReceive('getUnplannedArtifacts')->once()->andReturn($top_backlog_collection);
 
         $this->backlog_item_builder->method('getCollection')->will(
-            $this->onConsecutiveCalls(
+            self::onConsecutiveCalls(
                 new AgileDashboard_Milestone_Backlog_BacklogItemCollection()
             )
         );
@@ -357,15 +354,10 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactoryTest extends 
 
         $this->remaining_effort_value_retriever->shouldReceive('getRemainingEffortValue')->once()->andReturn(12.6);
 
-        $item_presenter = Mockery::mock(AgileDashboard_BacklogItemPresenter::class);
-        $item_presenter->shouldReceive('setStatus')->once();
-        $item_presenter->shouldReceive('setInitialEffort')->once();
-        $item_presenter->shouldReceive('setRemainingEffort')->once();
-        $item_presenter->shouldReceive('getArtifact')->andReturn($artifact);
-        $item_presenter->shouldReceive('id')->once()->andReturn(23);
+        $item_presenter = $this->mockItemPresenter($artifact, 23);
 
         $this->backlog_item_builder->method('getItem')->will(
-            $this->onConsecutiveCalls(
+            self::onConsecutiveCalls(
                 $item_presenter
             )
         );
@@ -379,7 +371,7 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactoryTest extends 
             false
         );
 
-        $this->assertEquals([23], $unassigned_collection->getItemIds());
+        self::assertEquals([23], $unassigned_collection->getItemIds());
     }
 
     public function testItDoesNotSetSemanticWhenUserCantReadThem(): void
@@ -394,18 +386,13 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactoryTest extends 
 
         $this->milestone_factory->shouldReceive('getSubMilestoneIds')->andReturn($all_possible_artifacts);
 
-        $artifact = Mockery::mock(Artifact::class);
-        $artifact->shouldReceive('id')->andReturn(9);
-        $artifact->shouldReceive('getId')->andReturn(9);
-        $artifact->shouldReceive('setTitle')->once()->withArgs(['title']);
-        $artifact->shouldReceive('getStatus')->once()->once();
-
-        $project = Mockery::mock(Project::class);
-        $project->shouldReceive('getID')->andReturn(101);
-
+        $project = Project::buildForTest();
         $tracker = Mockery::mock(Tracker::class);
         $tracker->shouldReceive('getProject')->once()->andReturn($project);
-        $artifact->shouldReceive('getTracker')->andReturn($tracker);
+
+        $artifact = $this->mockArtifact(9, $tracker);
+        $artifact->shouldReceive('setTitle')->once()->withArgs(['title']);
+        $artifact->shouldReceive('getStatus')->once();
 
         $top_backlog_collection = new AgileDashboard_Milestone_Backlog_DescendantItemsCollection();
         $top_backlog_collection->push($artifact);
@@ -413,7 +400,7 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactoryTest extends 
         $backlog->shouldReceive('getUnplannedArtifacts')->once()->andReturn($top_backlog_collection);
 
         $this->backlog_item_builder->method('getCollection')->will(
-            $this->onConsecutiveCalls(
+            self::onConsecutiveCalls(
                 new AgileDashboard_Milestone_Backlog_BacklogItemCollection()
             )
         );
@@ -436,15 +423,10 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactoryTest extends 
 
         $this->remaining_effort_value_retriever->shouldReceive('getRemainingEffortValue')->once()->andReturn(12.6);
 
-        $item_presenter = Mockery::mock(AgileDashboard_BacklogItemPresenter::class);
-        $item_presenter->shouldReceive('setStatus')->once();
-        $item_presenter->shouldReceive('setInitialEffort')->once();
-        $item_presenter->shouldReceive('setRemainingEffort')->once();
-        $item_presenter->shouldReceive('getArtifact')->andReturn($artifact);
-        $item_presenter->shouldReceive('id')->once()->andReturn(23);
+        $item_presenter = $this->mockItemPresenter($artifact, 23);
 
         $this->backlog_item_builder->method('getItem')->will(
-            $this->onConsecutiveCalls(
+            self::onConsecutiveCalls(
                 $item_presenter
             )
         );
@@ -458,7 +440,7 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactoryTest extends 
             false
         );
 
-        $this->assertEquals([23], $unassigned_collection->getItemIds());
+        self::assertEquals([23], $unassigned_collection->getItemIds());
     }
 
     public function testItBuildExplicitBacklogCollection(): void
@@ -477,12 +459,10 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactoryTest extends 
             );
         $this->artifacts_in_explicit_backlog_dao->shouldReceive('foundRows')->once()->andReturn(2);
 
-        $artifact_9 = Mockery::mock(Artifact::class);
-        $artifact_9->shouldReceive('getId')->andReturn(9);
+        $artifact_9 = $this->mockArtifact(9, TrackerTestBuilder::aTracker()->build());
         $this->artifact_factory->shouldReceive('getArtifactById')->withArgs([9])->andReturn($artifact_9);
 
-        $artifact_10 = Mockery::mock(Artifact::class);
-        $artifact_10->shouldReceive('getId')->andReturn(10);
+        $artifact_10 = $this->mockArtifact(10, TrackerTestBuilder::aTracker()->build());
         $this->artifact_factory->shouldReceive('getArtifactById')->withArgs([10])->andReturn($artifact_10);
 
         $this->artifact_factory->shouldReceive('getParents')->once()->andReturn([]);
@@ -495,7 +475,7 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactoryTest extends 
         $backlog_item_collection->push($backlog_item);
 
         $this->backlog_item_builder->method('getCollection')->will(
-            $this->onConsecutiveCalls(
+            self::onConsecutiveCalls(
                 $backlog_item_collection
             )
         );
@@ -508,6 +488,138 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactoryTest extends 
             0
         );
 
-        $this->assertEquals([9], $explicit_backlog_collection->getItemIds());
+        self::assertEquals([9], $explicit_backlog_collection->getItemIds());
+    }
+
+    public function testSetOnlyParentThatUserCanSee(): void
+    {
+        $user      = UserTestBuilder::aUser()->build();
+        $milestone = Mockery::mock(Planning_Milestone::class);
+        $milestone->shouldReceive('getArtifactId')->andReturn(1);
+
+        $backlog = Mockery::mock(AgileDashboard_Milestone_Backlog_Backlog::class);
+
+        $backlog_item_collection = new AgileDashboard_Milestone_Backlog_BacklogItemCollection();
+
+        $parent_can_be_seen = $this->mockArtifact(555, TrackerTestBuilder::aTracker()->build());
+        $parent_can_be_seen->shouldReceive('userCanView')->andReturn(true);
+
+        $parent_cannot_be_seen = Mockery::mock(Artifact::class);
+        $parent_cannot_be_seen->shouldReceive('userCanView')->andReturn(false);
+
+        $this->backlog_item_builder->method('getCollection')->will(
+            self::onConsecutiveCalls(
+                $backlog_item_collection,
+                $backlog_item_collection,
+                $backlog_item_collection,
+                $backlog_item_collection,
+                $backlog_item_collection,
+                $backlog_item_collection,
+            )
+        );
+
+        $this->remaining_effort_value_retriever->shouldReceive('getRemainingEffortValue')->times(4)->andReturn(12.6);
+
+        $items_collection = new AgileDashboard_Milestone_Backlog_DescendantItemsCollection();
+
+        $artifact_10 = $this->mockArtifact(10, TrackerTestBuilder::aTracker()->build());
+        $artifact_10->shouldReceive('setTitle');
+        $artifact_10->shouldReceive('getStatus');
+        $items_collection->push($artifact_10);
+
+        $item_presenter_artifact_10 = $this->mockItemPresenter($artifact_10, 10);
+        $item_presenter_artifact_10->shouldReceive('setParent')->twice()->with($parent_can_be_seen);
+
+        $artifact_11 = $this->mockArtifact(11, TrackerTestBuilder::aTracker()->build());
+        $artifact_11->shouldReceive('setTitle');
+        $artifact_11->shouldReceive('getStatus');
+        $items_collection->push($artifact_11);
+
+        $item_presenter_artifact_11 = $this->mockItemPresenter($artifact_11, 11);
+        $item_presenter_artifact_11->shouldReceive('setParent')->never();
+
+        $top_backlog_collection = new AgileDashboard_Milestone_Backlog_DescendantItemsCollection();
+        $top_backlog_collection->push($artifact_10);
+        $top_backlog_collection->push($artifact_11);
+
+        $backlog->shouldReceive('getUnplannedArtifacts')->once()->andReturn($top_backlog_collection);
+
+        $this->backlog_item_builder->method('getItem')->will(
+            self::onConsecutiveCalls(
+                $item_presenter_artifact_10,
+                $item_presenter_artifact_11,
+                $item_presenter_artifact_10,
+                $item_presenter_artifact_11,
+            )
+        );
+
+        $backlog->shouldReceive('getArtifacts')->once()->andReturn(
+            $items_collection
+        );
+
+        $this->artifact_factory->shouldReceive('getParents')->twice()->andReturn([10 => $parent_can_be_seen, 11 => $parent_cannot_be_seen]);
+        $this->artifact_factory->shouldReceive('setTitles')->twice();
+        $this->artifact_factory->shouldReceive('getTitleFromRowAsText')->times(4);
+
+        $this->dao->shouldReceive('getArtifactsSemantics')->twice()->andReturn(
+            [
+                ['id' => 10, 'title' => "title", "title_format" => "text", "status" => "open"],
+                ['id' => 11, 'title' => "title", "title_format" => "text", "status" => "open"],
+            ]
+        );
+        $this->collection_factory->shouldReceive('getInitialEffortField')->times(4)->andReturnNull();
+        $this->collection_factory->shouldReceive('userCanReadBacklogTitleField')->times(6)->andReturnTrue();
+        $this->collection_factory->shouldReceive('userCanReadBacklogStatusField')->times(4)->andReturnTrue();
+
+        $this->milestone_factory->shouldReceive('getSubMilestoneIds')->twice()->andReturn([]);
+
+        $collection = $this->collection_factory->getOpenAndClosedCollection(
+            $user,
+            $milestone,
+            $backlog,
+            false
+        );
+
+        self::assertSame([10, 11], $collection->getItemIds());
+
+        $collection = $this->collection_factory->getUnplannedCollection(
+            $user,
+            $milestone,
+            $backlog,
+            false
+        );
+
+        self::assertSame([10, 11], $collection->getItemIds());
+    }
+
+    /**
+     * @param \Mockery\LegacyMockInterface|\Mockery\MockInterface|Artifact $artifact
+     * @param int $id
+     * @return AgileDashboard_BacklogItemPresenter|\Mockery\LegacyMockInterface|\Mockery\MockInterface
+     */
+    private function mockItemPresenter($artifact, $id)
+    {
+        $presenter = Mockery::mock(AgileDashboard_BacklogItemPresenter::class);
+        $presenter->shouldReceive('setStatus');
+        $presenter->shouldReceive('setInitialEffort');
+        $presenter->shouldReceive('setRemainingEffort');
+        $presenter->shouldReceive('getArtifact')->andReturn($artifact);
+        $presenter->shouldReceive('id')->andReturn($id);
+
+        return $presenter;
+    }
+
+    /**
+     * @param \Mockery\LegacyMockInterface|\Mockery\MockInterface|Tracker $tracker
+     * @return \Mockery\LegacyMockInterface|\Mockery\MockInterface|Artifact
+     */
+    private function mockArtifact(int $id, $tracker)
+    {
+        $artifact = Mockery::mock(Artifact::class);
+        $artifact->shouldReceive('getId')->andReturn($id);
+        $artifact->shouldReceive('id')->andReturn($id);
+        $artifact->shouldReceive('getTracker')->andReturn($tracker);
+
+        return $artifact;
     }
 }
