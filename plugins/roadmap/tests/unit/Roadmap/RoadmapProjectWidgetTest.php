@@ -25,8 +25,10 @@ namespace Tuleap\Roadmap;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\Project\MappingRegistry;
+use Tuleap\Roadmap\Widget\RoadmapWidgetPresenter;
 use Tuleap\Roadmap\Widget\RoadmapWidgetPresenterBuilder;
 use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 
 final class RoadmapProjectWidgetTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -41,6 +43,10 @@ final class RoadmapProjectWidgetTest extends \Tuleap\Test\PHPUnit\TestCase
      * @var RoadmapProjectWidget
      */
     private $widget;
+    /**
+     * @var mixed|\PHPUnit\Framework\MockObject\MockObject|RoadmapWidgetPresenterBuilder
+     */
+    private $presenter_builder;
 
     protected function setUp(): void
     {
@@ -53,15 +59,36 @@ final class RoadmapProjectWidgetTest extends \Tuleap\Test\PHPUnit\TestCase
             }
         };
 
+        $this->presenter_builder = $this->createMock(RoadmapWidgetPresenterBuilder::class);
 
         $this->widget = new RoadmapProjectWidget(
             ProjectTestBuilder::aProject()->withId(101)->build(),
             $this->dao,
             new DBTransactionExecutorPassthrough(),
             $template_render,
-            Mockery::mock(RoadmapWidgetPresenterBuilder::class),
+            $this->presenter_builder,
             Mockery::mock(\TrackerFactory::class),
         );
+    }
+
+    protected function tearDown(): void
+    {
+        \UserManager::clearInstance();
+    }
+
+    public function testItDoesNotComplainAboutUninitializedIterationsTrackersId(): void
+    {
+        $user_manager = $this->createMock(\UserManager::class);
+        \UserManager::setInstance($user_manager);
+
+        $user_manager->method('getCurrentUser')->willReturn(UserTestBuilder::anActiveUser()->build());
+
+        $this->presenter_builder
+            ->expects(self::once())
+            ->method('getPresenter')
+            ->willReturn(new RoadmapWidgetPresenter(123, [], false, false));
+
+        $this->widget->getContent();
     }
 
     public function testCloneContentBlindlyCloneContentIfNoTrackerMapping(): void
