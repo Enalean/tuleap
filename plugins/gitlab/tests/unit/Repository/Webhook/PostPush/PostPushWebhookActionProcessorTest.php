@@ -22,10 +22,8 @@ declare(strict_types=1);
 namespace Tuleap\Gitlab\Repository\Webhook\PostPush;
 
 use DateTimeImmutable;
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Project;
-use Psr\Log\LoggerInterface;
+use Psr\Log\Test\TestLogger;
 use Reference;
 use ReferenceManager;
 use Tuleap\Gitlab\Reference\TuleapReferenceRetriever;
@@ -38,42 +36,37 @@ use Tuleap\Gitlab\Reference\TuleapReferenceNotFoundException;
 
 final class PostPushWebhookActionProcessorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     /**
      * @var PostPushWebhookActionProcessor
      */
     private $processor;
 
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|LoggerInterface
-     */
-    private $logger;
+    private TestLogger $logger;
 
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ReferenceManager
+     * @var \PHPUnit\Framework\MockObject\MockObject&ReferenceManager
      */
     private $reference_manager;
 
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|CommitTuleapReferenceDao
+     * @var \PHPUnit\Framework\MockObject\MockObject&CommitTuleapReferenceDao
      */
     private $commit_tuleap_reference_dao;
 
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|TuleapReferenceRetriever
+     * @var \PHPUnit\Framework\MockObject\MockObject&TuleapReferenceRetriever
      */
     private $tuleap_reference_retriever;
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|PostPushCommitBotCommenter
+     * @var \PHPUnit\Framework\MockObject\MockObject&PostPushCommitBotCommenter
      */
     private $commenter;
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|PostPushWebhookCloseArtifactHandler
+     * @var \PHPUnit\Framework\MockObject\MockObject&PostPushWebhookCloseArtifactHandler
      */
     private $close_artifact_handler;
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|PostPushWebhookActionBranchHandler
+     * @var \PHPUnit\Framework\MockObject\MockObject&PostPushWebhookActionBranchHandler
      */
     private $action_branch_handler;
 
@@ -81,14 +74,14 @@ final class PostPushWebhookActionProcessorTest extends \Tuleap\Test\PHPUnit\Test
     {
         parent::setUp();
 
-        $this->logger = Mockery::mock(LoggerInterface::class);
+        $this->logger = new TestLogger();
 
-        $this->commit_tuleap_reference_dao = Mockery::mock(CommitTuleapReferenceDao::class);
-        $this->reference_manager           = Mockery::mock(ReferenceManager::class);
-        $this->tuleap_reference_retriever  = Mockery::mock(TuleapReferenceRetriever::class);
-        $this->commenter                   = Mockery::mock(PostPushCommitBotCommenter::class);
-        $this->close_artifact_handler      = Mockery::mock(PostPushWebhookCloseArtifactHandler::class);
-        $this->action_branch_handler       = Mockery::mock(PostPushWebhookActionBranchHandler::class);
+        $this->commit_tuleap_reference_dao = $this->createMock(CommitTuleapReferenceDao::class);
+        $this->reference_manager           = $this->createMock(ReferenceManager::class);
+        $this->tuleap_reference_retriever  = $this->createMock(TuleapReferenceRetriever::class);
+        $this->commenter                   = $this->createMock(PostPushCommitBotCommenter::class);
+        $this->close_artifact_handler      = $this->createMock(PostPushWebhookCloseArtifactHandler::class);
+        $this->action_branch_handler       = $this->createMock(PostPushWebhookActionBranchHandler::class);
 
         $this->processor = new PostPushWebhookActionProcessor(
             new WebhookTuleapReferencesParser(),
@@ -101,9 +94,7 @@ final class PostPushWebhookActionProcessorTest extends \Tuleap\Test\PHPUnit\Test
             $this->action_branch_handler,
         );
 
-        $this->action_branch_handler->shouldReceive('parseBranchReference')
-            ->once()
-            ->byDefault();
+        $this->action_branch_handler->expects(self::once())->method('parseBranchReference');
     }
 
     public function testItProcessesActionsForPostPushWebhookWithoutAnyCloseArtifactKeyword(): void
@@ -138,69 +129,36 @@ final class PostPushWebhookActionProcessorTest extends \Tuleap\Test\PHPUnit\Test
             ]
         );
 
-        $this->tuleap_reference_retriever->shouldReceive('retrieveTuleapReference')
-            ->once()
-            ->with(666)
-            ->andThrow(new TuleapReferencedArtifactNotFoundException(666));
+        $this->tuleap_reference_retriever
+            ->method('retrieveTuleapReference')
+            ->willReturnCallback(
+                function (int $id): Reference {
+                    if ($id === 666) {
+                        throw new TuleapReferencedArtifactNotFoundException(666);
+                    }
+                    if ($id === 777) {
+                        throw new TuleapReferenceNotFoundException();
+                    }
+                    if ($id === 123) {
+                        return new Reference(
+                            0,
+                            'key',
+                            'desc',
+                            'link',
+                            'P',
+                            'service_short_name',
+                            'nature',
+                            1,
+                            100
+                        );
+                    }
 
-        $this->tuleap_reference_retriever->shouldReceive('retrieveTuleapReference')
-            ->once()
-            ->with(777)
-            ->andThrow(new TuleapReferenceNotFoundException());
-
-        $this->tuleap_reference_retriever->shouldReceive('retrieveTuleapReference')
-            ->once()
-            ->with(123)
-            ->andReturn(
-                new Reference(
-                    0,
-                    'key',
-                    'desc',
-                    'link',
-                    'P',
-                    'service_short_name',
-                    'nature',
-                    1,
-                    100
-                )
+                    throw new \RuntimeException("Unexpected reference ID #" . $id);
+                }
             );
 
-        $this->logger
-            ->shouldReceive('info')
-            ->with("3 Tuleap references found in commit feff4ced04b237abb8b4a50b4160099313152c3c")
-            ->once();
-        $this->logger
-            ->shouldReceive('info')
-            ->with("|_ Reference to Tuleap artifact #123 found.")
-            ->once();
-        $this->logger
-            ->shouldReceive('info')
-            ->with("|_ Reference to Tuleap artifact #666 found.")
-            ->once();
-        $this->logger
-            ->shouldReceive('info')
-            ->with("|_ Reference to Tuleap artifact #777 found.")
-            ->once();
-        $this->logger
-            ->shouldReceive('info')
-            ->with("|  |_ Tuleap artifact #123 found, cross-reference will be added in project the GitLab repository is integrated in.")
-            ->once();
-        $this->logger
-            ->shouldReceive('error')
-            ->with('Tuleap artifact #666 not found, no cross-reference will be added.')
-            ->once();
-        $this->logger
-            ->shouldReceive('error')
-            ->with("No reference found with the keyword 'art', and this must not happen. If you read this, this is really bad.")
-            ->once();
-        $this->logger
-            ->shouldReceive('info')
-            ->with("Commit data for feff4ced04b237abb8b4a50b4160099313152c3c saved in database")
-            ->once();
-
-        $this->reference_manager->shouldReceive('insertCrossReference')->once();
-        $this->commit_tuleap_reference_dao->shouldReceive('saveGitlabCommitInfo')
-            ->once()
+        $this->reference_manager->expects(self::once())->method('insertCrossReference');
+        $this->commit_tuleap_reference_dao->expects(self::once())->method('saveGitlabCommitInfo')
             ->with(
                 1,
                 'feff4ced04b237abb8b4a50b4160099313152c3c',
@@ -212,14 +170,24 @@ final class PostPushWebhookActionProcessorTest extends \Tuleap\Test\PHPUnit\Test
             );
 
         $this->commenter
-            ->shouldReceive('addCommentOnCommit')
-            ->once();
+            ->expects(self::once())
+            ->method('addCommentOnCommit');
 
         $this->close_artifact_handler
-            ->shouldReceive('handleArtifactClosure')
-            ->once();
+            ->expects(self::once())
+            ->method('handleArtifactClosure');
 
         $this->processor->process($integration, $webhook_data, new DateTimeImmutable());
+
+        self::assertTrue($this->logger->hasInfoThatContains('3 Tuleap references found in commit feff4ced04b237abb8b4a50b4160099313152c3c'));
+        self::assertTrue($this->logger->hasInfoThatContains('Reference to Tuleap artifact #123 found'));
+        self::assertTrue($this->logger->hasInfoThatContains('Reference to Tuleap artifact #666 found'));
+        self::assertTrue($this->logger->hasInfoThatContains('Reference to Tuleap artifact #777 found'));
+        self::assertTrue($this->logger->hasInfoThatContains('Tuleap artifact #123 found, cross-reference will be added in project the GitLab repository is integrated in'));
+        self::assertTrue($this->logger->hasErrorThatContains('Tuleap artifact #666 not found, no cross-reference will be added'));
+        self::assertTrue($this->logger->hasErrorThatContains('Tuleap artifact #666 not found, no cross-reference will be added'));
+        self::assertTrue($this->logger->hasErrorThatContains("No reference found with the keyword 'art', and this must not happen. If you read this, this is really bad"));
+        self::assertTrue($this->logger->hasInfoThatContains('Commit data for feff4ced04b237abb8b4a50b4160099313152c3c saved in database'));
     }
 
     public function testItProcessesActionsForPostPushWebhookWithCloseArtifactKeyword(): void
@@ -254,10 +222,9 @@ final class PostPushWebhookActionProcessorTest extends \Tuleap\Test\PHPUnit\Test
             ]
         );
 
-        $this->tuleap_reference_retriever->shouldReceive('retrieveTuleapReference')
-            ->once()
+        $this->tuleap_reference_retriever->expects(self::once())->method('retrieveTuleapReference')
             ->with(123)
-            ->andReturn(
+            ->willReturn(
                 new Reference(
                     0,
                     'key',
@@ -271,26 +238,8 @@ final class PostPushWebhookActionProcessorTest extends \Tuleap\Test\PHPUnit\Test
                 )
             );
 
-        $this->logger
-            ->shouldReceive('info')
-            ->with("1 Tuleap references found in commit feff4ced04b237abb8b4a50b4160099313152c3c")
-            ->once();
-        $this->logger
-            ->shouldReceive('info')
-            ->with("|_ Reference to Tuleap artifact #123 found.")
-            ->once();
-        $this->logger
-            ->shouldReceive('info')
-            ->with("|  |_ Tuleap artifact #123 found, cross-reference will be added in project the GitLab repository is integrated in.")
-            ->once();
-        $this->logger
-            ->shouldReceive('info')
-            ->with("Commit data for feff4ced04b237abb8b4a50b4160099313152c3c saved in database")
-            ->once();
-
-        $this->reference_manager->shouldReceive('insertCrossReference')->once();
-        $this->commit_tuleap_reference_dao->shouldReceive('saveGitlabCommitInfo')
-            ->once()
+        $this->reference_manager->expects(self::once())->method('insertCrossReference');
+        $this->commit_tuleap_reference_dao->expects(self::once())->method('saveGitlabCommitInfo')
             ->with(
                 1,
                 'feff4ced04b237abb8b4a50b4160099313152c3c',
@@ -302,14 +251,19 @@ final class PostPushWebhookActionProcessorTest extends \Tuleap\Test\PHPUnit\Test
             );
 
         $this->commenter
-            ->shouldReceive('addCommentOnCommit')
-            ->once();
+            ->expects(self::once())
+            ->method('addCommentOnCommit');
 
         $this->close_artifact_handler
-            ->shouldReceive('handleArtifactClosure')
-            ->once();
+            ->expects(self::once())
+            ->method('handleArtifactClosure');
 
         $this->processor->process($integration, $webhook_data, new DateTimeImmutable());
+
+        self::assertTrue($this->logger->hasInfoThatContains('1 Tuleap references found in commit feff4ced04b237abb8b4a50b4160099313152c3c'));
+        self::assertTrue($this->logger->hasInfoThatContains('Reference to Tuleap artifact #123 found'));
+        self::assertTrue($this->logger->hasInfoThatContains('Tuleap artifact #123 found, cross-reference will be added in project the GitLab repository is integrated in'));
+        self::assertTrue($this->logger->hasInfoThatContains('Commit data for feff4ced04b237abb8b4a50b4160099313152c3c saved in database'));
     }
 
     public function testItDoesNothingIfArtifactDoesNotExist(): void
@@ -344,38 +298,27 @@ final class PostPushWebhookActionProcessorTest extends \Tuleap\Test\PHPUnit\Test
             ]
         );
 
-        $this->tuleap_reference_retriever->shouldReceive('retrieveTuleapReference')
-            ->once()
+        $this->tuleap_reference_retriever->expects(self::once())->method('retrieveTuleapReference')
             ->with(123)
-            ->andThrow(new TuleapReferencedArtifactNotFoundException(123));
+            ->willThrowException(new TuleapReferencedArtifactNotFoundException(123));
 
-        $this->commit_tuleap_reference_dao->shouldReceive('saveGitlabCommitInfo')
-            ->never();
-
-        $this->logger
-            ->shouldReceive('info')
-            ->with("1 Tuleap references found in commit feff4ced04b237abb8b4a50b4160099313152c3c")
-            ->once();
-        $this->logger
-            ->shouldReceive('info')
-            ->with("|_ Reference to Tuleap artifact #123 found.")
-            ->once();
-        $this->logger
-            ->shouldReceive('error')
-            ->with("Tuleap artifact #123 not found, no cross-reference will be added.")
-            ->once();
+        $this->commit_tuleap_reference_dao->expects(self::never())->method('saveGitlabCommitInfo');
 
         $this->commenter
-            ->shouldReceive('addCommentOnCommit')
-            ->never();
+            ->expects(self::never())
+            ->method('addCommentOnCommit');
 
         $this->close_artifact_handler
-            ->shouldReceive('handleArtifactClosure')
-            ->never();
+            ->expects(self::never())
+            ->method('handleArtifactClosure');
 
-        $this->reference_manager->shouldNotReceive('insertCrossReference');
+        $this->reference_manager->expects(self::never())->method('insertCrossReference');
 
         $this->processor->process($integration, $webhook_data, new DateTimeImmutable());
+
+        self::assertTrue($this->logger->hasInfoThatContains('1 Tuleap references found in commit feff4ced04b237abb8b4a50b4160099313152c3c'));
+        self::assertTrue($this->logger->hasInfoThatContains('Reference to Tuleap artifact #123 found'));
+        self::assertTrue($this->logger->hasErrorThatContains('Tuleap artifact #123 not found, no cross-reference will be added'));
     }
 
     public function testItDoesNothingIfArtReferenceNotFound(): void
@@ -410,37 +353,26 @@ final class PostPushWebhookActionProcessorTest extends \Tuleap\Test\PHPUnit\Test
             ]
         );
 
-        $this->tuleap_reference_retriever->shouldReceive('retrieveTuleapReference')
-            ->once()
+        $this->tuleap_reference_retriever->expects(self::once())->method('retrieveTuleapReference')
             ->with(123)
-            ->andThrow(new TuleapReferenceNotFoundException());
+            ->willThrowException(new TuleapReferenceNotFoundException());
 
-        $this->commit_tuleap_reference_dao->shouldReceive('saveGitlabCommitInfo')
-            ->never();
-
-        $this->logger
-            ->shouldReceive('info')
-            ->with("1 Tuleap references found in commit feff4ced04b237abb8b4a50b4160099313152c3c")
-            ->once();
-        $this->logger
-            ->shouldReceive('info')
-            ->with("|_ Reference to Tuleap artifact #123 found.")
-            ->once();
-        $this->logger
-            ->shouldReceive('error')
-            ->with("No reference found with the keyword 'art', and this must not happen. If you read this, this is really bad.")
-            ->once();
+        $this->commit_tuleap_reference_dao->expects(self::never())->method('saveGitlabCommitInfo');
 
         $this->commenter
-            ->shouldReceive('addCommentOnCommit')
-            ->never();
+            ->expects(self::never())
+            ->method('addCommentOnCommit');
 
         $this->close_artifact_handler
-            ->shouldReceive('handleArtifactClosure')
-            ->never();
+            ->expects(self::never())
+            ->method('handleArtifactClosure');
 
-        $this->reference_manager->shouldNotReceive('insertCrossReference');
+        $this->reference_manager->expects(self::never())->method('insertCrossReference');
 
         $this->processor->process($integration, $webhook_data, new DateTimeImmutable());
+
+        self::assertTrue($this->logger->hasInfoThatContains('1 Tuleap references found in commit feff4ced04b237abb8b4a50b4160099313152c3c'));
+        self::assertTrue($this->logger->hasInfoThatContains('Reference to Tuleap artifact #123 found'));
+        self::assertTrue($this->logger->hasErrorThatContains('No reference found with the keyword \'art\', and this must not happen. If you read this, this is really bad'));
     }
 }

@@ -22,28 +22,24 @@ declare(strict_types=1);
 
 namespace Tuleap\Gitlab\Repository\Token;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\Cryptography\KeyFactory;
-use Mockery;
 use Tuleap\Gitlab\Repository\GitlabRepositoryIntegration;
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\Cryptography\Symmetric\SymmetricCrypto;
 use Tuleap\Cryptography\Symmetric\EncryptionKey;
 
-class IntegrationApiTokenInserterTest extends \Tuleap\Test\PHPUnit\TestCase
+final class IntegrationApiTokenInserterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     /**
      * @var IntegrationApiTokenInserter
      */
     private $inserter;
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|IntegrationApiTokenDao
+     * @var \PHPUnit\Framework\MockObject\MockObject&IntegrationApiTokenDao
      */
     private $integration_api_token_dao;
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|KeyFactory
+     * @var \PHPUnit\Framework\MockObject\MockObject&KeyFactory
      */
     private $key_factory;
 
@@ -51,8 +47,8 @@ class IntegrationApiTokenInserterTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         parent::setUp();
 
-        $this->integration_api_token_dao = Mockery::mock(IntegrationApiTokenDao::class);
-        $this->key_factory               = Mockery::mock(KeyFactory::class);
+        $this->integration_api_token_dao = $this->createMock(IntegrationApiTokenDao::class);
+        $this->key_factory               = $this->createMock(KeyFactory::class);
 
         $this->inserter = new IntegrationApiTokenInserter(
             $this->integration_api_token_dao,
@@ -62,30 +58,25 @@ class IntegrationApiTokenInserterTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItInsertEncryptedToken(): void
     {
-        $gitlab_repository = Mockery::mock(GitlabRepositoryIntegration::class, ['getId' => 123]);
+        $gitlab_repository = $this->createStub(GitlabRepositoryIntegration::class);
+        $gitlab_repository->method('getId')->willReturn(123);
 
         $token = new ConcealedString('myToken123');
 
-        $encryption_key = \Mockery::mock(EncryptionKey::class);
-        $encryption_key
-            ->shouldReceive('getRawKeyMaterial')
-            ->andReturns(
-                str_repeat('a', SODIUM_CRYPTO_SECRETBOX_KEYBYTES)
-            );
+        $encryption_key = new EncryptionKey(new ConcealedString(str_repeat('a', SODIUM_CRYPTO_SECRETBOX_KEYBYTES)));
 
-        $this->key_factory->shouldReceive('getEncryptionKey')->andReturn($encryption_key)->once();
+        $this->key_factory->expects(self::once())->method('getEncryptionKey')->willReturn($encryption_key);
 
         $this->integration_api_token_dao
-            ->shouldReceive('storeToken')
-            ->with(
-                123,
-                \Mockery::on(
-                    static function (string $encrypted_jira_token) use ($encryption_key) {
-                        return SymmetricCrypto::decrypt($encrypted_jira_token, $encryption_key)->getString() === 'myToken123';
+            ->expects(self::once())
+            ->method('storeToken')
+            ->willReturnCallback(
+                function (int $integration_id, string $encrypted_token) use ($encryption_key): void {
+                    if ($integration_id !== 123 || SymmetricCrypto::decrypt($encrypted_token, $encryption_key)->getString() !== 'myToken123') {
+                        throw new \RuntimeException('Received unexpected values to store');
                     }
-                )
-            )
-            ->once();
+                }
+            );
 
         $this->inserter->insertToken($gitlab_repository, $token);
     }
