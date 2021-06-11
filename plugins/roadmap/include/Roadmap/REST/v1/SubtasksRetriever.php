@@ -63,7 +63,6 @@ final class SubtasksRetriever
      */
     public function getTasks(int $id, int $limit, int $offset): PaginatedCollectionOfTaskRepresentations
     {
-        throw new RestException(500);
         $user   = $this->user_manager->getCurrentUser();
         $parent = $this->artifact_factory->getArtifactByIdUserCanView($user, $id);
         if (! $parent) {
