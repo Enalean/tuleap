@@ -59,7 +59,7 @@ const fault = Fault.fromErrorWithMessage(
 Parameters:
 - `param: unknown`
 
-Returns: `true` if `param` is a Fault
+Returns: `true` if `param` is a `Fault`
 
 Example:
 ```typescript
@@ -89,6 +89,9 @@ Example:
 const fault = Fault.fromError(functionThrowingAnError());
 console.log(fault.getStackTraceAsString());
 ```
+### `fault_object[string]: () => boolean | string`
+
+See the [Specialized Fault](#specialized_fault) paragraph below.
 
 ## Examples
 
@@ -142,21 +145,35 @@ function itReturnsValueOrFails(id: number): CustomValue | Fault {
     return CustomValue(id);
 }
 ```
+
+<span id="specialized_fault"></span>
 ### Specialized `Fault`
 
-```typescript
-interface PermissionFault extends Fault {
-    isPermissionDenied: () => true;
-}
+Faults can also be extended to add methods that return `boolean` or `string`. It helps distinguish faults based on their _behaviour_ instead of their _type_. Treating Faults like opaque values this way allows to decouple code handling Faults from code producing them. We don't have to `import` anything, we just have to know that the produced Fault will have a method `isPermissionDenied()` that returns `true` to handle this specific kind of Fault. If we want to add another error that should be handled the same way, we can create a second type of Fault with the same method.
 
-const PermissionFault = (): PermissionFault => {
+Example:
+```typescript
+const PermissionFault = (): Fault => {
     const fault = Fault.fromMessage("Permission denied");
     return {
-        isPermissionDenied: (): true => true,
+        isPermissionDenied: () => true,
         ...fault
     };
 };
 ```
+```typescript
+// In Fault handling code
+const isPermissionDenied = (fault: Fault): boolean =>
+    "isPermissionDenied" in fault && fault.isPermissionDenied() === true;
+
+if (isPermissionDenied(fault)) {
+    // Ignore specifically Permission Denied error
+} else {
+    console.log(String(fault));
+}
+```
+
+See the [Errors as opaque values](#opaque_values) paragraph for more details.
 
 ## Why `Fault` instead of `Error` ?
 
@@ -194,6 +211,7 @@ On a semantic front, it makes more sense: non-catastrophic errors are regular ob
 
 `Errors` are still necessary for problems that the program has _no way_ of resolving by itself. For example, running out of memory, when there is a syntax error in the code, etc. For _all other cases_, we should use `Fault` objects.
 
+<span id="opaque_values"></span>
 ### Errors as opaque values
 
 Even though it is tempting to test for the type of error using `instanceof`, we should not. TypeScript uses a [Structural type system][6] that lets us assert an object implements an interface if it has at least the same properties defined by it. This means we can write functions that test an unknown object for some properties and if the property is present, we can say that it implements the interface.
@@ -219,18 +237,18 @@ interface NotFound extends Fault {
 interface InvalidData extends Fault {
     hasInvalidData: () => true;
 }
-````
+```
 
 ```typescript
 function handleErrors(): void {
     const fault = itCouldFail();
-    // Assert Faults for behaviour, not type. This way, error-handling code does not have to depend on types from other parts of the program
-    // It only depends on the behaviour of the Fault object.
-    if (typeof fault.isNotFound === "function" && fault.isNotFound()) {
+    // Assert Faults for behaviour, not type. This way, error-handling code does not have to depend on types from other parts of the program.
+    // There is nothing to "import". It only depends on the behaviour of the Fault object.
+    if ("isNotFound" in fault && fault.isNotFound() === true) {
         displayErrorNotFound();
         return;
     }
-    if (typeof fault.hasInvalidData === "function" && fault.hasInvalidData()) {
+    if ("hasInvalidData" in fault && fault.hasInvalidData() === true) {
         displayInvalidDataError();
         return;
     }

@@ -29,10 +29,9 @@ export type FaultFeedbackPresenter = {
 };
 
 const isLinkRetrievalFault = (fault: Fault): boolean =>
-    typeof fault.isLinkRetrieval === "function" && fault.isLinkRetrieval();
-
+    "isLinkRetrieval" in fault && fault.isLinkRetrieval() === true;
 const isParentRetrievalFault = (fault: Fault): boolean =>
-    typeof fault.isParentRetrieval === "function" && fault.isParentRetrieval();
+    "isParentRetrieval" in fault && fault.isParentRetrieval() === true;
 
 export const FaultFeedbackPresenter = {
     buildEmpty: (): FaultFeedbackPresenter => ({ message: "" }),

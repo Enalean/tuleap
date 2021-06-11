@@ -53,9 +53,8 @@ export interface LinkFieldControllerType {
     addNewLink(artifact: LinkableArtifact, type: LinkType): NewLinkCollectionPresenter;
 }
 
-const isCreationModeFault = (fault: Fault): boolean => {
-    return typeof fault.isCreationMode === "function" && fault.isCreationMode();
-};
+const isCreationModeFault = (fault: Fault): boolean =>
+    "isCreationMode" in fault && fault.isCreationMode() === true;
 
 const buildPresenter = (
     links_store: RetrieveLinkedArtifactsSync,

@@ -25,11 +25,12 @@ const FaultSymbol = Symbol("Fault");
  * For example: A network error prevents loading an external API.
  * Another example: A user does not have permission to make an action.
  */
-export interface Fault extends Record<string, unknown> {
-    [FaultSymbol]: true;
+export interface Fault {
+    readonly [FaultSymbol]: true;
     getStackTraceAsString(): string;
     toString(): string;
     valueOf(): string;
+    readonly [key: string]: () => boolean | string; // Allow defining arbitrary functions that return boolean or string
 }
 
 const newFault = (message: string, error: Error | null = null): Fault => {
@@ -46,7 +47,6 @@ const newFault = (message: string, error: Error | null = null): Fault => {
 
 /**
  * `isFault` returns true if `param` is a Fault
- * @param param
  */
 export const isFault = (param: unknown): param is Fault =>
     Object.getOwnPropertySymbols(param).includes(FaultSymbol);

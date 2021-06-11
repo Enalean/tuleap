@@ -29,7 +29,7 @@ interface SpecializedFault extends Fault {
 }
 
 const isSpecializedFault = (fault: Fault): fault is SpecializedFault =>
-    typeof fault.isPermissionDenied === "function";
+    "isPermissionDenied" in fault && fault.isPermissionDenied() === true;
 
 const getUnknownFault = (): unknown => Fault.fromMessage(FAULT_MESSAGE);
 
@@ -73,7 +73,7 @@ describe(`Fault`, () => {
         const PermissionFault = (): SpecializedFault => {
             const fault = Fault.fromMessage(FAULT_MESSAGE);
             return {
-                isPermissionDenied: (): true => true,
+                isPermissionDenied: () => true,
                 ...fault,
             };
         };
