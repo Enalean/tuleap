@@ -86,7 +86,7 @@ class TimeframeWithEndDateTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->end_date_field->expects($this->any())->method('getLabel')->will(self::returnValue('End date'));
 
         $this->assertEquals(
-            'Timeframe is based on start date field &quot;Start date&quot; and end date field &quot;End date&quot;.',
+            'Timeframe is based on start date field "Start date" and end date field "End date".',
             $this->timeframe->getConfigDescription()
         );
     }
