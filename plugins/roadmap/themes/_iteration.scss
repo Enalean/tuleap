@@ -31,17 +31,18 @@
 
 .roadmap-gantt-ribbon-iterations-iteration-level-1,
 .roadmap-gantt-ribbon-iterations-iteration-level-2 {
-    display: flex;
     position: absolute;
-    z-index: roadmap-variables.$z-index-bars;
+    z-index: roadmap-variables.$z-index-ribbon-iterations;
     top: 0;
     height: roadmap-variables.$iteration-height;
     padding: 5px;
     overflow: hidden;
-    border-radius: 4px 4px 0 0;
-    font-size: .625rem;
-    font-weight: 700;
+    border-radius: 6px 6px 0 0;
+    color: var(--tlp-ui-dimmed);
+    font-size: .7rem;
+    font-weight: 600;
     line-height: .75rem;
+    text-align: center;
     text-overflow: ellipsis;
     white-space: nowrap;
 
@@ -49,7 +50,6 @@
         flex: 1 1 auto;
         overflow: hidden;
         color: var(--tlp-ui-dimmed);
-        text-align: center;
         text-overflow: ellipsis;
         white-space: nowrap;
     }
@@ -62,6 +62,7 @@
 }
 
 .roadmap-gantt-ribbon-iterations-iteration-level-2 {
+    margin-top: 2px;
     border: 1px solid var(--tlp-ui-border-normal-lighter-40);
     border-bottom: 0;
     background: linear-gradient(180deg, var(--tlp-ui-border-normal-lighter-40) roadmap-variables.$iteration-height, transparent 24px, transparent 100%);
