@@ -1,0 +1,30 @@
+{
+  "author": "Enalean Team",
+  "name": "@tuleap/fetch-result",
+  "homepage": "https://tuleap.org",
+  "license": "GPL-2.0-or-later",
+  "private": true,
+  "version": "0.0.0",
+  "module": "dist/fetch-result.es.js",
+  "main": "dist/fetch-result.umd.js",
+  "exports": {
+    ".": {
+      "import": "./dist/fetch-result.es.js",
+      "require": "./dist/fetch-result.umd.js"
+    }
+  },
+  "dependencies": {
+    "@tuleap/concurrency-limit-pool": "file:../concurrency-limit-pool",
+    "@tuleap/fault": "file:../fault",
+    "neverthrow": "^4.3.1"
+  },
+  "devDependencies": {
+    "@tuleap/build-system-configurator": "file:../build-system-configurator"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "build": "vite build",
+    "watch": "vite build --watch --mode development --minify false",
+    "test": "jest"
+  }
+}

@@ -25,6 +25,8 @@ import type { ResultAsync } from "neverthrow";
 import type { LinkedArtifactCollection } from "./TuleapAPIClient";
 import { TuleapAPIClient } from "./TuleapAPIClient";
 import { mockFetchError, mockFetchSuccess } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper";
+import * as fetch_result from "@tuleap/fetch-result";
+import { ResponseStub } from "@tuleap/fetch-result/tests/helper/ResponseStub";
 import type { LinkedArtifact } from "../../domain/fields/link-field-v2/LinkedArtifact";
 import type { ParentArtifact } from "../../domain/parent/ParentArtifact";
 import { CurrentArtifactIdentifierStub } from "../../../tests/stubs/CurrentArtifactIdentifierStub";
@@ -91,33 +93,20 @@ describe(`TuleapAPIClient`, () => {
                 xref: ARTIFACT_XREF,
                 tracker: { color_name: COLOR },
             } as ArtifactWithStatus;
-            const getSpy = jest.spyOn(tlp_fetch, "get");
-            mockFetchSuccess(getSpy, {
-                return_json: artifact,
-            });
+            const getSpy = jest.spyOn(fetch_result, "getJSON");
+            getSpy.mockReturnValue(ResponseStub.withSuccessfulPayload(artifact));
 
             const result = await getMatching();
 
             if (!result.isOk()) {
                 throw new Error("Expected an Ok");
             }
+            expect(getSpy.mock.calls[0][0]).toBe(`/api/v1/artifacts/${ARTIFACT_ID}`);
             const linkable_artifact = result.value;
             expect(linkable_artifact.id).toBe(ARTIFACT_ID);
             expect(linkable_artifact.title).toBe(ARTIFACT_TITLE);
             expect(linkable_artifact.xref.ref).toBe(ARTIFACT_XREF);
             expect(linkable_artifact.xref.color).toBe(COLOR);
-        });
-
-        it(`will return a Fault if it fails`, async () => {
-            const getSpy = jest.spyOn(tlp_fetch, "get");
-            mockFetchError(getSpy, { status: 404, statusText: "Not found" });
-
-            const result = await getMatching();
-
-            if (!result.isErr()) {
-                throw new Error("Expected an Err");
-            }
-            expect(isFault(result.error)).toBe(true);
         });
     });
 

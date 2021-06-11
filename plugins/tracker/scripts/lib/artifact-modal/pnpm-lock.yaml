@@ -7,6 +7,7 @@ specifiers:
   '@tuleap/core': file:../../../../../src
   '@tuleap/date-helper': file:../../../../../lib/frontend/date-helper
   '@tuleap/fault': file:../../../../../lib/frontend/fault
+  '@tuleap/fetch-result': file:../../../../../lib/frontend/fetch-result
   '@tuleap/link-selector': file:../../../../../lib/frontend/link-selector
   '@tuleap/list-picker': file:../../../../../lib/frontend/list-picker
   '@tuleap/plugin-tracker-constants': file:../constants
@@ -39,6 +40,7 @@ dependencies:
   '@tuleap/core': link:../../../../../src
   '@tuleap/date-helper': link:../../../../../lib/frontend/date-helper
   '@tuleap/fault': link:../../../../../lib/frontend/fault
+  '@tuleap/fetch-result': link:../../../../../lib/frontend/fetch-result
   '@tuleap/link-selector': link:../../../../../lib/frontend/link-selector
   '@tuleap/list-picker': link:../../../../../lib/frontend/list-picker
   '@tuleap/plugin-tracker-constants': link:../constants

@@ -22,7 +22,6 @@ import type { FetchWrapperError } from "@tuleap/tlp-fetch";
 import { resetError, setError } from "./rest-error-state";
 import type { TextFieldFormat } from "@tuleap/plugin-tracker-constants";
 import type { ArtifactResponseNoInstance } from "@tuleap/plugin-tracker-rest-api-types";
-import type { ArtifactWithStatus } from "../adapters/REST/ArtifactWithStatus";
 
 const headers = {
     "content-type": "application/json",
@@ -46,12 +45,6 @@ export function getArtifact(artifact_id: number): Promise<ArtifactRepresentation
         resetError();
         return response.json();
     }, errorHandler);
-}
-
-export function getMatchingArtifact(artifact_id: number): Promise<ArtifactWithStatus> {
-    return get(encodeURI(`/api/v1/artifacts/${artifact_id}`)).then((response) => {
-        return response.json();
-    });
 }
 
 type EtagValue = string | null;
