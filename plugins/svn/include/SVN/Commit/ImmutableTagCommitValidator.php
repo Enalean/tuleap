@@ -61,7 +61,7 @@ final class ImmutableTagCommitValidator implements PathValidator
     /**
      * @throws SVN_CommitToTagDeniedException
      */
-    public function assertCommitIsNotDoneInImmutableTag(Repository $repository, string $path): void
+    private function assertCommitIsNotDoneInImmutableTag(Repository $repository, string $path): void
     {
         if ($this->immutable_tag === null) {
             $this->immutable_tag = $this->immutable_tag_factory->getByRepositoryId($repository);
@@ -118,7 +118,7 @@ final class ImmutableTagCommitValidator implements PathValidator
     private function getWellFormedRegexImmutablePath(string $immutable_path): string
     {
         $immutable_path = trim($immutable_path, '/');
-        $immutable_path = preg_quote($immutable_path);
+        $immutable_path = preg_quote($immutable_path, '%');
         $immutable_path = str_replace('\*', '[^/]+', $immutable_path);
         $immutable_path = str_replace(" ", "\s", $immutable_path);
 
