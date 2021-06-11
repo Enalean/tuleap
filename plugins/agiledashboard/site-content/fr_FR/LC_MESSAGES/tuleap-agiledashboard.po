@@ -563,11 +563,6 @@ msgstr "Le champ soumis n'est pas un champ numérique"
 msgid "The initial effort is now: %1$s"
 msgstr "L'effort estimé est maintenant : %1$s"
 
-msgid "The planning configuration is incorrect, you can not plan items here."
-msgstr ""
-"La configuration du planning est incorrecte, vous ne pouvez pas planifier "
-"d'éléments ici."
-
 msgid ""
 "The post actions cannot be saved because this tracker is not a top backlog "
 "tracker and a \"AddToTopBacklog\" is defined."

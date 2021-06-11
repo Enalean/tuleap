@@ -24,7 +24,6 @@ use Tuleap\AgileDashboard\Milestone\Pane\PaneInfo;
 use Tuleap\AgileDashboard\Milestone\Pane\PanePresenterData;
 use Tuleap\AgileDashboard\Milestone\Pane\Planning\PlanningV2PaneInfo;
 use Tuleap\AgileDashboard\Planning\AllowedAdditionalPanesToDisplayCollector;
-use Tuleap\AgileDashboard\Planning\ConfigurationCheckDelegation;
 
 /**
  * I build panes for a Planning_Milestone
@@ -113,7 +112,7 @@ class Planning_MilestonePaneFactory // phpcs:ignore PSR1.Classes.ClassDeclaratio
 
         $this->list_of_pane_info[$milestone->getArtifactId() ?? 0][] = $this->getDetailsPaneInfo($milestone);
 
-        $planning_v2_pane_info = $this->getPlanningV2PaneInfo($milestone, $user);
+        $planning_v2_pane_info = $this->getPlanningV2PaneInfo($milestone);
         if ($planning_v2_pane_info) {
             $this->list_of_pane_info[$milestone->getArtifactId() ?? 0][] = $planning_v2_pane_info;
         }
@@ -161,7 +160,7 @@ class Planning_MilestonePaneFactory // phpcs:ignore PSR1.Classes.ClassDeclaratio
         $this->active_pane[$milestone->getArtifactId() ?? 0] = $this->getDetailsPane($pane_info, $milestone);
     }
 
-    private function getPlanningV2PaneInfo(Planning_Milestone $milestone, PFUser $user): ?PaneInfo
+    private function getPlanningV2PaneInfo(Planning_Milestone $milestone): ?PaneInfo
     {
         $submilestone_tracker = $this->submilestone_finder->findFirstSubmilestoneTracker($milestone);
         if (! $submilestone_tracker) {
@@ -171,7 +170,7 @@ class Planning_MilestonePaneFactory // phpcs:ignore PSR1.Classes.ClassDeclaratio
         $pane_info = $this->pane_info_factory->getPlanningV2PaneInfo($milestone);
         if ($this->request->get('pane') == PlanningV2PaneInfo::IDENTIFIER) {
             $pane_info->setActive(true);
-            $this->active_pane[$milestone->getArtifactId() ?? 0] = $this->getPlanningV2Pane($pane_info, $milestone, $user);
+            $this->active_pane[$milestone->getArtifactId() ?? 0] = $this->getPlanningV2Pane($pane_info, $milestone);
         }
 
         return $pane_info;
@@ -179,15 +178,12 @@ class Planning_MilestonePaneFactory // phpcs:ignore PSR1.Classes.ClassDeclaratio
 
     private function getPlanningV2Pane(
         PlanningV2PaneInfo $info,
-        Planning_Milestone $milestone,
-        PFUser $user
+        Planning_Milestone $milestone
     ): AgileDashboard_Milestone_Pane_Planning_PlanningV2Pane {
         $allowed_additional_panes_to_display_collector = new AllowedAdditionalPanesToDisplayCollector();
         $this->event_manager->processEvent($allowed_additional_panes_to_display_collector);
 
-        $project             = $this->request->getProject();
-        $configuration_check = new ConfigurationCheckDelegation($user, $project);
-        $this->event_manager->processEvent($configuration_check);
+        $project = $this->request->getProject();
 
         return new AgileDashboard_Milestone_Pane_Planning_PlanningV2Pane(
             $info,
@@ -196,8 +192,7 @@ class Planning_MilestonePaneFactory // phpcs:ignore PSR1.Classes.ClassDeclaratio
                 $project,
                 (int) $milestone->getArtifactId(),
                 false,
-                $allowed_additional_panes_to_display_collector->getIdentifiers(),
-                $configuration_check->isPlanningAvailable()
+                $allowed_additional_panes_to_display_collector->getIdentifiers()
             )
         );
     }
