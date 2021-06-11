@@ -73,19 +73,19 @@ class Tracker_SemanticFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
         ];
 
         //Title
-        $title = $tsf->getInstanceFromXML($xml_title, $xml_title, $mapping, $tracker);
+        $title = $tsf->getInstanceFromXML($xml_title, $xml_title, $mapping, $tracker, []);
         $this->assertEquals($semantic_title, $title);
 
         //Status
-        $status = $tsf->getInstanceFromXML($xml_status, $xml_status, $mapping, $tracker);
+        $status = $tsf->getInstanceFromXML($xml_status, $xml_status, $mapping, $tracker, []);
         $this->assertEquals($semantic_status, $status);
 
         //Tooltip
-        $tooltip = $tsf->getInstanceFromXML($xml_tooltip, $xml_tooltip, $mapping, $tracker);
+        $tooltip = $tsf->getInstanceFromXML($xml_tooltip, $xml_tooltip, $mapping, $tracker, []);
         $this->assertEquals($semantic_tooltip, $tooltip);
 
         //Contributor
-        $contributor = $tsf->getInstanceFromXML($xml_contributor, $xml_contributor, $mapping, $tracker);
+        $contributor = $tsf->getInstanceFromXML($xml_contributor, $xml_contributor, $mapping, $tracker, []);
         $this->assertEquals($semantic_contributor, $contributor);
     }
 }

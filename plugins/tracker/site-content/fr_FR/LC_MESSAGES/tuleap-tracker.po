@@ -1776,6 +1776,11 @@ msgstr "Est promu"
 msgid "It encountered the following error:"
 msgstr "L'erreur suivante a été remontée :"
 
+msgid "It is inherited from a tracker of another project, this is not allowed"
+msgstr ""
+"Elle est héritée de celle d'un outil de suivi appartenant à un autre projet, "
+"ceci n'est pas autorisé."
+
 msgid "Items"
 msgstr "Items"
 
@@ -3734,6 +3739,9 @@ msgstr "Cette permission donne le droit d'administration sur tous les trackers"
 
 msgid "This report does not exist."
 msgstr "Ce rapport n'existe pas."
+
+msgid "This semantic has invalid configuration: "
+msgstr "Cette sémantique est mal configurée : "
 
 msgid "This semantic is not defined yet."
 msgstr "Cette sémantique n'est pas encore définie."

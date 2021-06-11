@@ -27,6 +27,7 @@ use Tracker_FormElement_Field_Date;
 use Tracker_FormElement_Field_Numeric;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkFieldValueDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\LinksRetriever;
+use Tuleap\Tracker\Semantic\TimeframeConfigInvalid;
 
 class SemanticTimeframeBuilder
 {
@@ -68,7 +69,7 @@ class SemanticTimeframeBuilder
      */
     public function getSemantic(Tracker $tracker): SemanticTimeframe
     {
-        $row = $this->dao->searchByTrackerId((int) $tracker->getId());
+        $row = $this->dao->searchByTrackerId($tracker->getId());
         if ($row === null) {
             return $this->buildTimeframeSemanticNotConfigured($tracker);
         }
@@ -117,11 +118,12 @@ class SemanticTimeframeBuilder
             return $this->buildTimeframeSemanticNotConfigured($tracker);
         }
 
+        if ($implied_from_tracker->getProject()->getID() !== $tracker->getProject()->getID()) {
+            return $this->buildTimeframeSemanticConfigInvalid($tracker);
+        }
+
         $implied_semantic = $this->getSemantic($implied_from_tracker);
-        if (
-            $implied_semantic->getTimeframeCalculator()::getName() === TimeframeImpliedFromAnotherTracker::getName() ||
-            $implied_semantic->getTimeframeCalculator()::getName() === TimeframeNotConfigured::getName()
-        ) {
+        if ($implied_semantic->isTimeframeNotConfiguredNorImplied()) {
             return $this->buildTimeframeSemanticNotConfigured($tracker);
         }
 
@@ -135,11 +137,19 @@ class SemanticTimeframeBuilder
         );
     }
 
-    private function buildTimeframeSemanticNotConfigured(Tracker $tracker): SemanticTimeframe
+    public function buildTimeframeSemanticNotConfigured(Tracker $tracker): SemanticTimeframe
     {
         return new SemanticTimeframe(
             $tracker,
             new TimeframeNotConfigured()
+        );
+    }
+
+    private function buildTimeframeSemanticConfigInvalid(Tracker $tracker): SemanticTimeframe
+    {
+        return new SemanticTimeframe(
+            $tracker,
+            new TimeframeConfigInvalid()
         );
     }
 }

@@ -230,4 +230,10 @@ class SemanticTimeframe extends Tracker_Semantic
             )
         );
     }
+
+    public function isTimeframeNotConfiguredNorImplied(): bool
+    {
+        return $this->getTimeframeCalculator()::getName() === TimeframeImpliedFromAnotherTracker::getName() ||
+               $this->getTimeframeCalculator()::getName() === TimeframeNotConfigured::getName();
+    }
 }

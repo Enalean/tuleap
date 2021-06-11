@@ -47,7 +47,7 @@ class Tracker_TooltipFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
                     'F16' => 116,
                     'F14' => 114
         ];
-        $tooltip = Tracker_TooltipFactory::instance()->getInstanceFromXML($xml, $all_semantics_xml, $mapping, $tracker);
+        $tooltip = Tracker_TooltipFactory::instance()->getInstanceFromXML($xml, $all_semantics_xml, $mapping, $tracker, []);
 
         $this->assertEquals(3, count($tooltip->getFields()));
         $fields = $tooltip->getFields();

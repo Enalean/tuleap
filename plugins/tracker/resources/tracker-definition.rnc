@@ -382,19 +382,27 @@ tracker =
                 element start_date_field {
                     attribute REF { xsd:IDREF }
                 },
-                (
-                    (
-                        element duration_field {
-                            attribute REF { xsd:IDREF }
-                        }
-                    )
-                |
-                    (
-                        element end_date_field {
-                            attribute REF { xsd:IDREF }
-                        }
-                    )
-                )
+                element duration_field {
+                    attribute REF { xsd:IDREF }
+                }
+            )
+        |
+            (
+                attribute type { "timeframe" },
+                element start_date_field {
+                    attribute REF { xsd:IDREF }
+                },
+                element end_date_field {
+                    attribute REF { xsd:IDREF }
+                }
+            )
+        |
+            (
+                attribute type { "timeframe" },
+                element inherited_from_tracker {
+                # This attribute cannot use IDREF because it is not possible to always assure the presence of the tracker involved within the XML document
+                    attribute id { xsd:string }
+                }
             )
         |
             (

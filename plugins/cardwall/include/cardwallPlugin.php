@@ -353,7 +353,8 @@ class cardwallPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration
                 $xml,
                 $full_semantic_xml,
                 $xml_mapping,
-                $tracker
+                $tracker,
+                []
             );
         }
     }

@@ -82,14 +82,17 @@ class TimeframeImpliedFromAnotherTrackerTest extends \Tuleap\Test\PHPUnit\TestCa
         );
     }
 
-    public function testItDoesNotExportToXMLYet(): void
+    public function testItExportsToXML(): void
     {
         $root = new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><tracker />');
         $this->timeframe->exportToXml($root, [
             'F101' => 1001,
             'F102' => 1002
         ]);
-        self::assertCount(0, $root->children());
+
+        self::assertCount(1, $root->children());
+        $this->assertEquals('timeframe', (string) $root->semantic['type']);
+        $this->assertEquals('T150', (string) $root->semantic->inherited_from_tracker['id']);
     }
 
     public function testItDoesNotExportToRESTWhenUserCannotViewTheTargetTracker(): void
@@ -156,15 +159,14 @@ class TimeframeImpliedFromAnotherTrackerTest extends \Tuleap\Test\PHPUnit\TestCa
         self::assertTrue($this->timeframe->isDefined());
     }
 
-    public function testItDoesNotSaveYet(): void
+    public function testItSaves(): void
     {
-        $dao     = $this->createMock(SemanticTimeframeDao::class);
-        $tracker = $this->createMock(\Tracker::class);
+        $dao = $this->getMockBuilder(SemanticTimeframeDao::class)->disableOriginalConstructor()->getMock();
+        $this->tracker->expects(self::once())->method('getId')->will(self::returnValue(10));
+        $dao->expects(self::once())->method('save')->with(10, null, null, null, 150)->will(self::returnValue(true));
 
-        $dao->expects(self::never())->method('save');
-
-        self::assertFalse(
-            $this->timeframe->save($tracker, $dao)
+        self::assertTrue(
+            $this->timeframe->save($this->tracker, $dao)
         );
     }
 
