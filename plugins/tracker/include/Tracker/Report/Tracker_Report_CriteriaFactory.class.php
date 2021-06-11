@@ -18,6 +18,7 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\Report\dao\ReportCriteriaDao;
 
 class Tracker_Report_CriteriaFactory
 {
@@ -84,17 +85,17 @@ class Tracker_Report_CriteriaFactory
         return $this->getInstanceFromRow($row);
     }
 
-    public function duplicate($from_report, $to_report, $fields_mapping)
+    public function duplicate(Tracker_Report $from_report, Tracker_Report $to_report, array $fields_mapping): void
     {
-        $this->getDao()->duplicate($from_report->id, $to_report->id, $fields_mapping);
+        $this->getReportCriteriaDao()->duplicate($from_report->id, $to_report->id, $fields_mapping);
     }
 
     public function saveObject($criteria)
     {
     }
 
-    protected function getDao()
+    private function getReportCriteriaDao(): ReportCriteriaDao
     {
-        return new Tracker_Report_CriteriaDao();
+        return new ReportCriteriaDao();
     }
 }

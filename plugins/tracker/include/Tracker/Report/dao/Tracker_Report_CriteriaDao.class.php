@@ -81,25 +81,4 @@ class Tracker_Report_CriteriaDao extends DataAccessObject
                 WHERE report_id = $report_id AND field_id = $field_id";
         return $this->retrieve($sql);
     }
-
-    public function duplicate($from_report_id, $to_report_id, $field_mapping)
-    {
-        $from_report_id = $this->da->escapeInt($from_report_id);
-        $to_report_id   = $this->da->escapeInt($to_report_id);
-        $sql            = "INSERT INTO $this->table_name (report_id, field_id, rank, is_advanced)
-                SELECT $to_report_id, field_id, rank, is_advanced
-                FROM $this->table_name
-                WHERE report_id = $from_report_id";
-        $this->update($sql);
-
-        foreach ($field_mapping as $mapping) {
-            $from = $this->da->escapeInt($mapping['from']);
-            $to   = $this->da->escapeInt($mapping['to']);
-            $sql  = "UPDATE $this->table_name
-                    SET field_id = $to
-                    WHERE report_id = $to_report_id
-                      AND field_id = $from";
-            $this->update($sql);
-        }
-    }
 }
