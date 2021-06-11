@@ -1383,6 +1383,7 @@ fi
 %files plugin-gitlab
 %defattr(-,root,root,-)
 %{APP_DIR}/plugins/gitlab
+%{APP_DIR}/src/www/assets/gitlab
 %attr(00644,root,root) /etc/logrotate.d/%{APP_NAME}_gitlab
 %config(noreplace) /etc/logrotate.d/%{APP_NAME}_gitlab
 
