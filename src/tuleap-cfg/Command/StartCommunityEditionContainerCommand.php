@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -21,30 +21,22 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\TEEContainer;
+namespace TuleapCfg\Command;
 
-use Psr\Log\LoggerInterface;
-use Psr\Log\LogLevel;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Formatter\OutputFormatter;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
-use Symfony\Component\Console\Logger\ConsoleLogger;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Process\Process;
 use Tuleap\BuildVersion\FlavorFinderFromFilePresence;
 use Tuleap\BuildVersion\VersionPresenter;
 use TuleapCfg\Command\Docker\DataPersistence;
-use TuleapCfg\Command\Docker\LogToSyslog;
 use TuleapCfg\Command\Docker\Postfix;
-use TuleapCfg\Command\Docker\Realtime;
 use TuleapCfg\Command\Docker\Rsyslog;
 use TuleapCfg\Command\Docker\SSHDaemon;
 use TuleapCfg\Command\Docker\Supervisord;
 use TuleapCfg\Command\Docker\Tuleap;
-use TuleapCfg\Command\ProcessFactory;
 
-final class StartContainerCommand extends Command
+final class StartCommunityEditionContainerCommand extends Command
 {
     private const PERSISTENT_DATA = [
         '/etc/pki/tls/private/localhost.key.pem',
@@ -61,8 +53,16 @@ final class StartContainerCommand extends Command
         '/var/lib/tuleap',
     ];
 
-    private const OPTION_NO_SUPERVISORD = 'no-supervisord';
-    private const OPTION_EXEC           = 'exec';
+    private const SUPERVISORD_UNITS = [
+        Supervisord::UNIT_CROND,
+        Supervisord::UNIT_SSHD,
+        Supervisord::UNIT_RSYSLOG,
+        Supervisord::UNIT_NGINX,
+        Supervisord::UNIT_POSTFIX,
+        Supervisord::UNIT_HTTPD,
+        Supervisord::UNIT_FPM,
+        Supervisord::UNIT_BACKEND_WORKERS,
+    ];
 
     private ProcessFactory $process_factory;
     private DataPersistence $data_persistence;
@@ -78,33 +78,29 @@ final class StartContainerCommand extends Command
     protected function configure(): void
     {
         $this
-            ->setName('run')
-            ->setDescription('Run Tuleap Enterprise Edition Docker container')
-            ->addOption(self::OPTION_NO_SUPERVISORD, '', InputOption::VALUE_NONE, 'Do not run supervisord at the end of the setup')
-            ->addOption(self::OPTION_EXEC, '', InputOption::VALUE_REQUIRED, 'Select a command to run inside the container, before supervisord (if any)');
+            ->setName('docker:tuleap-run')
+            ->setDescription('Run Tuleap in the context of `tuleap/tuleap-community-edition` image');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $version_presenter = VersionPresenter::fromFlavorFinder(new FlavorFinderFromFilePresence());
-        $output->writeln(sprintf('<info>Start init sequence for %s</info>', $version_presenter->getFullDescriptiveVersion()));
         try {
-            $tuleap_fqdn = $this->getStringFromEnvironment('TULEAP_FQDN');
-            if ($tuleap_fqdn === '') {
-                throw new \RuntimeException('TULEAP_FQDN environment variable must be set');
-            }
+            $version_presenter = VersionPresenter::fromFlavorFinder(new FlavorFinderFromFilePresence());
+            $output->writeln(sprintf('<info>Start init sequence for %s</info>', $version_presenter->getFullDescriptiveVersion()));
+
             $tuleap = new Tuleap($this->process_factory);
             if (! $this->data_persistence->isThereAnyData()) {
+                $tuleap_fqdn = $this->getStringFromEnvironment('TULEAP_FQDN');
+                if ($tuleap_fqdn === '') {
+                    throw new \RuntimeException('TULEAP_FQDN environment variable must be set');
+                }
                 $this->installTuleap($output, $tuleap, $tuleap_fqdn);
                 $this->data_persistence->store($output);
                 $this->data_persistence->restore($output);
             } else {
                 $this->data_persistence->restore($output);
-                $tuleap->update($output);
+                $tuleap_fqdn = $tuleap->update($output);
             }
-            $console_logger = new ConsoleLogger($output, [LogLevel::INFO => OutputInterface::VERBOSITY_NORMAL]);
-            $realtime       = new Realtime($console_logger);
-            $realtime->setup($tuleap_fqdn);
 
             $rsyslog = new Rsyslog();
             $rsyslog->setup($output, $tuleap_fqdn);
@@ -112,37 +108,17 @@ final class StartContainerCommand extends Command
             $postfix = new Postfix($this->process_factory);
             $postfix->setup($output, $tuleap_fqdn);
 
-            $log_to_syslog = new LogToSyslog($console_logger);
-            $log_to_syslog->configure();
-
-            $supervisord = new Supervisord(
-                Supervisord::UNIT_CROND,
-                Supervisord::UNIT_SSHD,
-                Supervisord::UNIT_RSYSLOG,
-                Supervisord::UNIT_NGINX,
-                Supervisord::UNIT_POSTFIX,
-                Supervisord::UNIT_HTTPD,
-                Supervisord::UNIT_FPM,
-                Supervisord::UNIT_BACKEND_WORKERS,
-            );
-            $supervisord->configure($output);
-
-            $option_exec = $input->getOption(self::OPTION_EXEC);
-            if ($option_exec !== null && is_string($option_exec)) {
-                $this->exec($console_logger, $option_exec);
-            }
-
-            if ($input->getOption(self::OPTION_NO_SUPERVISORD) !== true) {
-                $supervisord->run($output);
-            }
-            return 0;
+            $supervisord = new Supervisord(...self::SUPERVISORD_UNITS);
+            $supervisord->run($output);
         } catch (\Exception $exception) {
             $output->writeln(sprintf('<error>%s</error>', OutputFormatter::escape($exception->getMessage())));
             $output->writeln('Something went wrong, here is a shell to debug: ');
-            pcntl_exec('/bin/bash');
-            $output->writeln('exec of bash failed');
+            $return = pcntl_exec('/bin/bash');
+            if ($return !== null) {
+                throw new \RuntimeException('Exec of /usr/bin/supervisord failed');
+            }
         }
-        return 1;
+        return 0;
     }
 
     private function installTuleap(OutputInterface $output, Tuleap $tuleap, string $tuleap_fqdn): void
@@ -157,6 +133,7 @@ final class StartContainerCommand extends Command
             $this->getStringFromEnvironment('DB_ADMIN_USER'),
             $this->getStringFromEnvironment('DB_ADMIN_PASSWORD'),
         );
+        $this->process_factory->getProcessWithoutTimeout(['sudo', '-u', 'codendiadm', '/usr/bin/tuleap', 'plugin:install', '--all'])->mustRun();
         $ssh_daemon->shutdownDaemon($output);
     }
 
@@ -167,19 +144,5 @@ final class StartContainerCommand extends Command
             return $value;
         }
         return '';
-    }
-
-    private function exec(LoggerInterface $logger, string $command): void
-    {
-        $logger->info("Execute command `$command`");
-        $process = Process::fromShellCommandline($command);
-        $process->setTimeout(0);
-        $process->mustRun(function (string $type, string $cmd_output) use ($logger) {
-            if ($type == Process::ERR) {
-                $logger->error($cmd_output);
-            } else {
-                $logger->info($cmd_output);
-            }
-        });
     }
 }

@@ -55,14 +55,8 @@ class DockerAioRunCommand extends Command
         '/var/opt/rh/rh-mysql57/lib/mysql',
     ];
 
-    /**
-     * @var ProcessFactory
-     */
-    private $process_factory;
-    /**
-     * @var DataPersistence
-     */
-    private $data_persistence;
+    private ProcessFactory $process_factory;
+    private DataPersistence $data_persistence;
 
     public function __construct(ProcessFactory $process_factory)
     {
