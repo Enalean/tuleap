@@ -44,8 +44,10 @@ export function groupedbar(id, graph) {
 
     // Fix a d3 color when the backend doesn't define one
     graph.colors.forEach(({ color }, i) => {
-        if (color === null) {
+        if (color === null && d3_colors[i]) {
             graph.colors[i].color = d3_colors[i];
+        } else if (color === null && !d3_colors[i]) {
+            graph.colors[i].color = "#" + Math.random().toString(16).substr(-6);
         } else {
             graph.colors[i].color = color;
         }
@@ -76,7 +78,7 @@ export function groupedbar(id, graph) {
 
     x.domain(graph.values.map((d, i) => i));
 
-    xGrouped.domain(graph["grouped_labels"].map((d, i) => i)).range([0, x.bandwidth()]);
+    xGrouped.domain(graph.grouped_labels.map((d, i) => i)).range([0, x.bandwidth()]);
 
     const max_grouped_value = max(graph.values, ({ values }) =>
         max(Object.values(values).map(({ value }) => parseFloat(value)))
