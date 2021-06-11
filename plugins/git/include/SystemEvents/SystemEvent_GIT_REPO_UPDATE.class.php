@@ -18,6 +18,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Git\DefaultBranch\CannotExecuteDefaultBranchUpdateException;
+use Tuleap\Git\DefaultBranch\DefaultBranchUpdateExecutor;
+
 class SystemEvent_GIT_REPO_UPDATE extends SystemEvent
 {
     public const NAME = 'GIT_REPO_UPDATE';
@@ -28,12 +31,16 @@ class SystemEvent_GIT_REPO_UPDATE extends SystemEvent
     /** @var Git_SystemEventManager */
     private $system_event_manager;
 
+    private DefaultBranchUpdateExecutor $default_branch_update_executor;
+
     public function injectDependencies(
         GitRepositoryFactory $repository_factory,
-        Git_SystemEventManager $system_event_manager
+        Git_SystemEventManager $system_event_manager,
+        DefaultBranchUpdateExecutor $default_branch_update_executor
     ) {
-        $this->repository_factory   = $repository_factory;
-        $this->system_event_manager = $system_event_manager;
+        $this->repository_factory             = $repository_factory;
+        $this->system_event_manager           = $system_event_manager;
+        $this->default_branch_update_executor = $default_branch_update_executor;
     }
 
     public static function queueInSystemEventManager(SystemEventManager $system_event_manager, GitRepository $repository)
@@ -92,10 +99,8 @@ class SystemEvent_GIT_REPO_UPDATE extends SystemEvent
             $driver->push();
 
             try {
-                // Disabled temporarily to avoid breaking newly created repository
-                // It can breaks newly created repository if the Git template dire does not set explicitly the default branch
-                //Git_Exec::buildFromRepository($repository)->setDefaultBranch($default_branch);
-            } catch (Git_Command_Exception $exception) {
+                $this->default_branch_update_executor->setDefaultBranch(Git_Exec::buildFromRepository($repository), $default_branch);
+            } catch (CannotExecuteDefaultBranchUpdateException $exception) {
                 $this->error($exception->getMessage());
                 return;
             }

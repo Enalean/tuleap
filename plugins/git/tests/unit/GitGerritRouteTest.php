@@ -23,10 +23,8 @@ use Tuleap\ForgeConfigSandbox;
 use Tuleap\Git\Notifications\UgroupsToNotifyDao;
 use Tuleap\Git\Notifications\UsersToNotifyDao;
 
-require_once 'bootstrap.php';
-
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
-class GitGerritRouteTest extends \Tuleap\Test\PHPUnit\TestCase
+final class GitGerritRouteTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
     use ForgeConfigSandbox;
@@ -134,7 +132,7 @@ class GitGerritRouteTest extends \Tuleap\Test\PHPUnit\TestCase
                 \Mockery::spy(\Tuleap\Git\Permissions\PermissionChangesDetector::class),
                 \Mockery::spy(\Tuleap\Git\Permissions\TemplatePermissionsUpdater::class),
                 \Mockery::spy(\ProjectHistoryDao::class),
-                new \Tuleap\Git\DefaultBranch\DefaultBranchUpdater(),
+                new \Tuleap\Git\DefaultBranch\DefaultBranchUpdater(new \Tuleap\Git\DefaultBranch\DefaultBranchUpdateTestExecutor()),
                 \Mockery::spy(\Tuleap\Git\Repository\DescriptionUpdater::class),
                 \Mockery::spy(\Tuleap\Git\History\GitPhpAccessLogger::class),
                 \Mockery::spy(\Tuleap\Git\Permissions\RegexpFineGrainedRetriever::class),

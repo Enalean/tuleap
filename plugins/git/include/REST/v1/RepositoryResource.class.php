@@ -59,6 +59,7 @@ use Tuleap\Git\CommitStatus\CommitStatusDAO;
 use Tuleap\Git\CommitStatus\CommitStatusRetriever;
 use Tuleap\Git\CommitStatus\InvalidCommitReferenceException;
 use Tuleap\Git\DefaultBranch\CannotSetANonExistingBranchAsDefaultException;
+use Tuleap\Git\DefaultBranch\DefaultBranchUpdateExecutorAsGitoliteUser;
 use Tuleap\Git\DefaultBranch\DefaultBranchUpdater;
 use Tuleap\Git\Exceptions\DeletePluginNotInstalledException;
 use Tuleap\Git\Exceptions\GitRepoRefNotFoundException;
@@ -671,7 +672,7 @@ class RepositoryResource extends AuthenticatedResource
         }
 
         if ($default_branch !== null) {
-            $default_branch_updater = new DefaultBranchUpdater();
+            $default_branch_updater = new DefaultBranchUpdater(new DefaultBranchUpdateExecutorAsGitoliteUser());
             try {
                 $default_branch_updater->updateDefaultBranch(Git_Exec::buildFromRepository($repository), $default_branch);
             } catch (CannotSetANonExistingBranchAsDefaultException $exception) {
