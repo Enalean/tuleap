@@ -24,7 +24,7 @@ import createMutationsSharer, {
     BroadcastChannelStrategy,
     LocalStorageStratery as LocalStorageStrategy,
 } from "vuex-shared-mutations";
-import { expiringLocalStorage } from "./store-persistence/storage.js";
+import { expiringLocalStorage } from "./store-persistence/storage";
 import * as mutations from "./mutations.js";
 import * as getters from "./getters.js";
 import * as actions from "./actions.js";
