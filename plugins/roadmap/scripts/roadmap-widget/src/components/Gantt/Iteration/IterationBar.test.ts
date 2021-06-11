@@ -29,38 +29,6 @@ import type { TasksState } from "../../../store/tasks/type";
 
 describe("IterationBar", () => {
     describe("should adjust the height of the iteration according to the number of rows so that we have borders of the iteration that take all the height", () => {
-        it("when there isn't any row", () => {
-            const wrapper = shallowMount(IterationBar, {
-                propsData: {
-                    iteration: {
-                        start: new Date("2020-01-10T13:42:08+02:00"),
-                        end: new Date("2020-01-20T13:42:08+02:00"),
-                        html_url: "/path/to/iteration",
-                    } as Iteration,
-                    level: 2,
-                },
-                mocks: {
-                    $store: createStoreMock({
-                        state: {
-                            timeperiod: {} as TimeperiodState,
-                            iterations: {} as IterationsState,
-                            tasks: {} as TasksState,
-                        } as RootState,
-                        getters: {
-                            "timeperiod/time_period": new TimePeriodMonth(
-                                new Date("2020-01-01T13:42:08+02:00"),
-                                new Date("2020-01-30T13:42:08+02:00"),
-                                "en-US"
-                            ),
-                            "tasks/rows": [],
-                        },
-                    }),
-                },
-            });
-
-            expect(wrapper.element.style.height).toBe("24px");
-        });
-
         it("when there is many rows", () => {
             const wrapper = shallowMount(IterationBar, {
                 propsData: {
@@ -90,7 +58,7 @@ describe("IterationBar", () => {
                 },
             });
 
-            expect(wrapper.element.style.height).toBe("108px");
+            expect(wrapper.element.style.height).toBe("106px");
         });
 
         it("when there is many rows but the iteration is at level 1 and there is another level under", () => {
@@ -124,7 +92,7 @@ describe("IterationBar", () => {
                 },
             });
 
-            expect(wrapper.element.style.height).toBe("132px");
+            expect(wrapper.element.style.height).toBe("130px");
         });
     });
 });
