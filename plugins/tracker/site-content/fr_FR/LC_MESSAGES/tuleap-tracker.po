@@ -4431,6 +4431,13 @@ msgstr ""
 "mettre le déclencheur à jour avant de supprimer le champs."
 
 msgid ""
+"You cannot reset this semantic because some trackers imply their own "
+"semantic timeframe on this one."
+msgstr ""
+"Vous ne pouvez pas réinitialiser cette sémantique car certains outils de "
+"suivi basent leurs propres sémantiques Plage de temps sur celle ci."
+
+msgid ""
 "You cannot reset this semantic because this tracker has a burnup, burndown "
 "or another chart rendered by an external plugin"
 msgstr ""

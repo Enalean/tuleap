@@ -1,6 +1,12 @@
 <div class="tracker-administration-semantic-timeframe">
-    <p>{{# dgettext }} tuleap-tracker | The timeframe of an artifact will be defined by:{{/ dgettext }}</p>
+    {{# configuration_presenter }}
+        <div class="alert alert-info">
+            {{> semantic-timeframe-current-configuration  }}
+        </div>
+        <br />
+    {{/ configuration_presenter }}
 
+    <p>{{# dgettext }} tuleap-tracker | The timeframe of an artifact will be defined by:{{/ dgettext }}</p>
     <form action="{{ target_url }}" method="POST">
         {{# csrf }}
             {{> csrf_token_input }}
@@ -90,10 +96,16 @@
                     class="btn btn-danger"
                     type="submit"
                     name="reset-semantic-timeframe"
-                    {{# has_tracker_charts }}
-                        title="{{# dgettext }} tuleap-tracker | You cannot reset this semantic because this tracker has a burnup, burndown or another chart rendered by an external plugin{{/ dgettext }}"
-                        disabled
-                    {{/ has_tracker_charts }}
+                    {{# has_other_trackers_implying_their_timeframes }}
+                    title="{{# dgettext }} tuleap-tracker | You cannot reset this semantic because some trackers imply their own semantic timeframe on this one. {{/ dgettext }}"
+                    disabled
+                    {{/ has_other_trackers_implying_their_timeframes }}
+                    {{^ has_other_trackers_implying_their_timeframes }}
+                        {{# has_tracker_charts }}
+                    title="{{# dgettext }} tuleap-tracker | You cannot reset this semantic because this tracker has a burnup, burndown or another chart rendered by an external plugin {{/ dgettext }}"
+                    disabled
+                        {{/ has_tracker_charts }}
+                    {{/ has_other_trackers_implying_their_timeframes }}
                 >
                     {{# dgettext }} tuleap-tracker | Reset this semantic {{/ dgettext }}
                 </button>

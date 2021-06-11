@@ -79,6 +79,10 @@ class SemanticTimeframeAdministrationPresenter
      */
     public $is_semantic_in_start_date_duration_mode;
 
+    public bool $has_other_trackers_implying_their_timeframes;
+
+    public SemanticTimeframeCurrentConfigurationPresenter $configuration_presenter;
+
     public function __construct(
         \CSRFSynchronizerToken $csrf,
         \Tracker $tracker,
@@ -90,23 +94,26 @@ class SemanticTimeframeAdministrationPresenter
         array $usable_numeric_fields,
         ?\Tracker_FormElement_Field_Date $start_date_field,
         ?\Tracker_FormElement_Field_Numeric $duration_field,
-        ?\Tracker_FormElement_Field_Date $end_date_field
+        ?\Tracker_FormElement_Field_Date $end_date_field,
+        SemanticTimeframeCurrentConfigurationPresenter $configuration_presenter
     ) {
-        $this->csrf                                    = $csrf;
-        $this->start_date_field                        = $start_date_field;
-        $this->duration_field                          = $duration_field;
-        $this->usable_start_date_fields                = $usable_start_date_fields;
-        $this->usable_end_date_fields                  = $usable_end_date_fields;
-        $this->usable_numeric_fields                   = $usable_numeric_fields;
-        $this->is_semantic_configured                  = $start_date_field !== null && ($duration_field !== null || $end_date_field !== null);
-        $this->has_tracker_charts                      = $has_tracker_charts;
-        $this->is_semantic_in_start_date_duration_mode = $is_semantic_in_start_date_duration_mode;
-        $this->target_url                              = $target_url;
-        $this->tracker_semantic_admin_url              = TRACKER_BASE_URL . '/?' . http_build_query(
+        $this->csrf                                         = $csrf;
+        $this->start_date_field                             = $start_date_field;
+        $this->duration_field                               = $duration_field;
+        $this->usable_start_date_fields                     = $usable_start_date_fields;
+        $this->usable_end_date_fields                       = $usable_end_date_fields;
+        $this->usable_numeric_fields                        = $usable_numeric_fields;
+        $this->is_semantic_configured                       = $start_date_field !== null && ($duration_field !== null || $end_date_field !== null);
+        $this->has_tracker_charts                           = $has_tracker_charts;
+        $this->is_semantic_in_start_date_duration_mode      = $is_semantic_in_start_date_duration_mode;
+        $this->target_url                                   = $target_url;
+        $this->tracker_semantic_admin_url                   = TRACKER_BASE_URL . '/?' . http_build_query(
             [
                 'tracker' => $tracker->getId(),
                 'func'    => 'admin-semantic'
             ]
         );
+        $this->has_other_trackers_implying_their_timeframes = $configuration_presenter->are_semantics_implied_from_current_tracker;
+        $this->configuration_presenter                      = $configuration_presenter;
     }
 }
