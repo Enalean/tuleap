@@ -88,25 +88,14 @@ final class GitlabProjectResource extends AuthenticatedResource
 
         $webhook_dao = new WebhookDao();
 
-        $gitlab_repositories                 = $repository_integration_factory->getAllIntegrationsInProject($project);
-        $gitlab_repositories_representations = [];
-        foreach ($gitlab_repositories as $gitlab_repository) {
-            $integration_webhook = $webhook_dao->getGitlabRepositoryWebhook(
-                $gitlab_repository->getId()
-            );
+        $representation_factory = new GitlabRepositoryRepresentationFactory(
+            $repository_integration_factory,
+            $webhook_dao
+        );
 
-            $gitlab_repositories_representations[] = new GitlabRepositoryRepresentation(
-                $gitlab_repository->getId(),
-                $gitlab_repository->getGitlabRepositoryId(),
-                $gitlab_repository->getName(),
-                $gitlab_repository->getDescription(),
-                $gitlab_repository->getGitlabRepositoryUrl(),
-                $gitlab_repository->getLastPushDate()->getTimestamp(),
-                $gitlab_repository->getProject(),
-                $gitlab_repository->isArtifactClosureAllowed(),
-                $integration_webhook !== null
-            );
-        }
+        $gitlab_repositories_representations = $representation_factory->getAllIntegrationsRepresentationsInProject(
+            $project
+        );
 
         $this->optionsGitlabRepositories($id);
         Header::sendPaginationHeaders($limit, $offset, count($gitlab_repositories_representations), self::MAX_LIMIT);

@@ -87,6 +87,7 @@ use Tuleap\Gitlab\Repository\Webhook\WebhookDao;
 use Tuleap\Gitlab\Repository\Webhook\WebhookDataExtractor;
 use Tuleap\Gitlab\Repository\Webhook\WebhookTuleapReferencesParser;
 use Tuleap\Gitlab\REST\ResourcesInjector;
+use Tuleap\Gitlab\REST\v1\GitlabRepositoryRepresentationFactory;
 use Tuleap\Http\HttpClientFactory;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\InstanceBaseURLBuilder;
@@ -731,7 +732,10 @@ class gitlabPlugin extends Plugin
     {
         $button_fecther = new CreateBranchButtonFetcher(
             $this->getGitlabIntegrationAvailabilityChecker(),
-            new WebhookDao(),
+            new GitlabRepositoryRepresentationFactory(
+                $this->getGitlabRepositoryIntegrationFactory(),
+                new WebhookDao()
+            ),
             new JavascriptAsset(
                 $this->getAssets(),
                 "artifact-create-branch.js"

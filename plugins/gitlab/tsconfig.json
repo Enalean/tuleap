@@ -2,7 +2,7 @@
     "extends": "../../tsconfig.json",
     "compilerOptions": {
         "module": "esnext",
-        "types": ["bootstrap"]
+        "types": ["jest", "bootstrap"]
     },
     "include": [
         "scripts/artifact-create-branch-action/**/*"
