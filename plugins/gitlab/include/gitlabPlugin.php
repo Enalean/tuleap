@@ -733,10 +733,7 @@ class gitlabPlugin extends Plugin
             $this->getGitlabIntegrationAvailabilityChecker(),
             new WebhookDao(),
             new JavascriptAsset(
-                new IncludeAssets(
-                    __DIR__ . '/../../../src/www/assets/gitlab',
-                    '/assets/gitlab'
-                ),
+                $this->getAssets(),
                 "artifact-create-branch.js"
             )
         );
@@ -751,5 +748,13 @@ class gitlabPlugin extends Plugin
         }
 
         $event->addAction($button_action);
+    }
+
+    private function getAssets(): IncludeAssets
+    {
+        return new IncludeAssets(
+            __DIR__ . '/../../../src/www/assets/gitlab',
+            '/assets/gitlab'
+        );
     }
 }
