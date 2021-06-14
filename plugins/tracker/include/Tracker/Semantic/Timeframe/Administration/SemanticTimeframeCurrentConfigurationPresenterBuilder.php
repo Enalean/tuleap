@@ -64,7 +64,7 @@ class SemanticTimeframeCurrentConfigurationPresenterBuilder
         }
 
         $semantics_implied_from_tracker = $this->dao->getSemanticsImpliedFromGivenTracker($this->current_tracker->getId());
-        if ($semantics_implied_from_tracker === null) {
+        if (! $semantics_implied_from_tracker) {
             return [];
         }
 

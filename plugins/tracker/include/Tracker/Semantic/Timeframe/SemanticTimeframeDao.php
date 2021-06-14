@@ -84,7 +84,7 @@ WHERE tracker_id IN $tracker_ids_statement";
     }
 
     /**
-     * @psalm-return array<int, array{tracker_id: int, implied_from_tracker_id: int}>
+     * @psalm-return array<int, array{tracker_id: int, implied_from_tracker_id: int}>|null
      */
     public function getSemanticsImpliedFromGivenTracker(int $tracker_id): ?array
     {

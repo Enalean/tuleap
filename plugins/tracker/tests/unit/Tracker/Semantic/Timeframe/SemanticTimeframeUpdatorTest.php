@@ -246,4 +246,55 @@ class SemanticTimeframeUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->updator->update($this->tracker, $request);
     }
+
+    public function testItDoesNotResetWhenSomeTimeframeConfigurationsRelyOnTheCurrentOne(): void
+    {
+        $sprint_tracker_id = 106;
+        $sprint_tracker    = Mockery::mock(\Tracker::class, ['getId' => $sprint_tracker_id]);
+
+        $this->semantic_timeframe_dao->shouldReceive('getSemanticsImpliedFromGivenTracker')
+            ->with($sprint_tracker_id)
+            ->andReturn([
+                [
+                    'tracker_id' => 104,
+                    'implied_from_tracker_id' => $sprint_tracker_id
+                ]
+            ])
+            ->once();
+
+        $this->semantic_timeframe_dao->shouldReceive('deleteTimeframeSemantic')->never();
+
+        $GLOBALS['Response']->expects(self::once())->method('addFeedback')->with(
+            \Feedback::ERROR,
+            'You cannot reset this semantic because some trackers imply their own semantic timeframe on this one.'
+        );
+
+        $this->updator->reset($sprint_tracker);
+    }
+
+    /**
+     * @testWith [null]
+     *           [[]]
+     */
+    public function testItResetsTheTimeframeSemanticOfAGivenTracker(?array $implied_semantics): void
+    {
+        $sprint_tracker_id = 106;
+        $sprint_tracker    = Mockery::mock(\Tracker::class, ['getId' => $sprint_tracker_id]);
+
+        $this->semantic_timeframe_dao->shouldReceive('getSemanticsImpliedFromGivenTracker')
+            ->with($sprint_tracker_id)
+            ->andReturn($implied_semantics)
+            ->once();
+
+        $this->semantic_timeframe_dao->shouldReceive('deleteTimeframeSemantic')
+            ->with($sprint_tracker_id)
+            ->once();
+
+        $GLOBALS['Response']->expects(self::once())->method('addFeedback')->with(
+            \Feedback::INFO,
+            'Semantic timeframe reset successfully'
+        );
+
+        $this->updator->reset($sprint_tracker);
+    }
 }

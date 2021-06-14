@@ -73,15 +73,7 @@ class SemanticTimeframe extends Tracker_Semantic
 
     public function display(): void
     {
-        $presenter = (
-            new SemanticTimeframeCurrentConfigurationPresenterBuilder(
-                $this->tracker,
-                $this->timeframe,
-                new SemanticTimeframeDao(),
-                \TrackerFactory::instance()
-            )
-        )->build();
-
+        $presenter = $this->getCurrentConfigurationPresenter();
         $this->getRenderer()->renderToPage('semantic-timeframe-current-configuration', $presenter);
     }
 
@@ -101,6 +93,7 @@ class SemanticTimeframe extends Tracker_Semantic
             $this->getCSRFSynchronizerToken(),
             $this->tracker,
             $this->getUrl(),
+            $this->getCurrentConfigurationPresenter(),
             $this->getStartDateField(),
             $this->getDurationField(),
             $this->getEndDateField()
@@ -126,17 +119,14 @@ class SemanticTimeframe extends Tracker_Semantic
         if ($request->exist('update-semantic-timeframe')) {
             $this->getCSRFSynchronizerToken()->check();
 
-            $timeframe_updator = new SemanticTimeframeUpdator(
-                new SemanticTimeframeDao(),
-                \Tracker_FormElementFactory::instance()
-            );
-
-            $timeframe_updator->update($this->tracker, $request);
+            $this->getSemanticTimeframeUpdator()->update($this->tracker, $request);
 
             $this->redirectToSemanticTimeframeAdmin();
         } elseif ($request->exist('reset-semantic-timeframe')) {
             $this->getCSRFSynchronizerToken()->check();
-            $this->resetSemantic();
+
+            $this->getSemanticTimeframeUpdator()->reset($this->tracker);
+
             $this->redirectToSemanticTimeframeAdmin();
         }
 
@@ -205,22 +195,30 @@ class SemanticTimeframe extends Tracker_Semantic
         );
     }
 
-    private function resetSemantic(): void
-    {
-        (new SemanticTimeframeDao())->deleteTimeframeSemantic(
-            (int) $this->tracker->getId()
-        );
-
-        $GLOBALS['Response']->addFeedback(
-            \Feedback::INFO,
-            dgettext('tuleap-tracker', 'Semantic timeframe reset successfully')
-        );
-    }
-
     private function getRenderer(): \TemplateRenderer
     {
         return \TemplateRendererFactory::build()->getRenderer(
             __DIR__ . '/../../../../templates/timeframe-semantic'
+        );
+    }
+
+    private function getCurrentConfigurationPresenter(): Administration\SemanticTimeframeCurrentConfigurationPresenter
+    {
+        return (
+            new SemanticTimeframeCurrentConfigurationPresenterBuilder(
+                $this->tracker,
+                $this->timeframe,
+                new SemanticTimeframeDao(),
+                \TrackerFactory::instance()
+            )
+        )->build();
+    }
+
+    private function getSemanticTimeframeUpdator(): SemanticTimeframeUpdator
+    {
+        return new SemanticTimeframeUpdator(
+            new SemanticTimeframeDao(),
+            \Tracker_FormElementFactory::instance()
         );
     }
 }

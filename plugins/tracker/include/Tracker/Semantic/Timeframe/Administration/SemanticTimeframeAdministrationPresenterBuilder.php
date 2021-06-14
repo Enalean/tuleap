@@ -43,6 +43,7 @@ class SemanticTimeframeAdministrationPresenterBuilder
         \CSRFSynchronizerToken $csrf,
         Tracker $tracker,
         string $target_url,
+        SemanticTimeframeCurrentConfigurationPresenter $configuration_presenter,
         ?Tracker_FormElement_Field_Date $start_date_field,
         ?Tracker_FormElement_Field_Numeric $duration_field,
         ?Tracker_FormElement_Field_Date $end_date_field
@@ -76,7 +77,8 @@ class SemanticTimeframeAdministrationPresenterBuilder
             $usable_numeric_fields,
             $start_date_field,
             $duration_field,
-            $end_date_field
+            $end_date_field,
+            $configuration_presenter
         );
     }
 

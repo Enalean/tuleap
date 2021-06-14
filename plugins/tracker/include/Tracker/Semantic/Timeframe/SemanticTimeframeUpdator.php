@@ -75,6 +75,26 @@ class SemanticTimeframeUpdator
         }
     }
 
+    public function reset(Tracker $tracker): void
+    {
+        $configs_relying_on_current_tracker = $this->dao->getSemanticsImpliedFromGivenTracker($tracker->getId());
+        if (! $configs_relying_on_current_tracker) {
+            $this->dao->deleteTimeframeSemantic($tracker->getId());
+
+            $GLOBALS['Response']->addFeedback(
+                \Feedback::INFO,
+                dgettext('tuleap-tracker', 'Semantic timeframe reset successfully')
+            );
+
+            return;
+        }
+
+        $GLOBALS['Response']->addFeedback(
+            \Feedback::ERROR,
+            dgettext('tuleap-tracker', 'You cannot reset this semantic because some trackers imply their own semantic timeframe on this one.')
+        );
+    }
+
     private function getNumericFieldIdFromRequest(Codendi_Request $request, string $field_name): ?int
     {
         $field_id = $request->get($field_name);
