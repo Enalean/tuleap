@@ -22,15 +22,14 @@
 @use 'workflow/transition-modal';
 @use '~@tuleap/list-picker';
 
-
 .tracker-workflow-loader {
     height: 200px;
     margin: 0 auto;
-    background: url('../../../../../src/www/themes/BurningParrot/images/spinner.gif') no-repeat center center;
+    background: url("../../../../../src/www/themes/BurningParrot/images/spinner.gif") no-repeat center center;
 }
 
 .tracker-workflow-property-disabled {
-    opacity: .5;
+    opacity: 0.5;
 }
 
 .tracker-workflow-rules-enforcement-warning {

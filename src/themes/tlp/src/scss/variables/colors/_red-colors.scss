@@ -20,26 +20,26 @@
 @use 'common-colors';
 
 // UI colors
-$tlp-ui-info         : #4db3d0;
-$tlp-ui-success      : #58b359;
-$tlp-ui-warning      : #f3b13a;
-$tlp-ui-danger       : #7b0000;
+$tlp-ui-info: #4db3d0;
+$tlp-ui-success: #58b359;
+$tlp-ui-warning: #f3b13a;
+$tlp-ui-danger: #7b0000;
 
-$tlp-ui-dimmed       : #747474;
+$tlp-ui-dimmed: #747474;
 
-$tlp-ui-border-light : #f3f3f3;
+$tlp-ui-border-light: #f3f3f3;
 $tlp-ui-border-normal: #e3e5ed;
-$tlp-ui-border-dark : #d4d7e1;
+$tlp-ui-border-dark: #d4d7e1;
 
-$tlp-theme-color                   : common-colors.$tlp-theme-red;
-$tlp-theme-background-color        : common-colors.$tlp-theme-background-red;
+$tlp-theme-color: common-colors.$tlp-theme-red;
+$tlp-theme-background-color: common-colors.$tlp-theme-background-red;
 $tlp-theme-sidebar-background-color: common-colors.$tlp-theme-sidebar-background-red;
 
 $tlp-typo-default-text-color: $tlp-theme-sidebar-background-color;
 
 $tlp-table-row-background-empty: #fcfcfc;
 
-$tlp-illustration-primary-color        : #f89d9d;
+$tlp-illustration-primary-color: #f89d9d;
 $tlp-illustration-secondary-light-color: #ffeded;
-$tlp-illustration-secondary-dark-color : #fdcaca;
-$tlp-illustration-tertiary-color       : #f5dada;
+$tlp-illustration-secondary-dark-color: #fdcaca;
+$tlp-illustration-tertiary-color: #f5dada;

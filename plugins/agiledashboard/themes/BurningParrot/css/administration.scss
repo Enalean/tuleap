@@ -31,11 +31,7 @@
 }
 
 body {
-    @include background.apply-background(
-        '.agiledashboard-administration-title',
-        global-variables.$sidebar-expanded-width,
-        global-variables.$sidebar-collapsed-width,
-    );
+    @include background.apply-background(".agiledashboard-administration-title", global-variables.$sidebar-expanded-width, global-variables.$sidebar-collapsed-width);
 }
 
 .agiledashboard-administration-title {
@@ -45,14 +41,13 @@ body {
 
 .agiledashboard-administration-activated-service {
     &.tlp-alert-success::before {
-        content: '\f05d'; // fa-check-circle-o
+        content: "\f05d"; // fa-check-circle-o
     }
 
     &.tlp-alert-warning::before {
-        content: '\f011'; // fa-power-off
+        content: "\f011"; // fa-power-off
     }
 }
-
 
 .agiledashboard-administration-scrum {
     display: flex;

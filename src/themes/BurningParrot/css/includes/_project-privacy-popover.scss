@@ -42,7 +42,7 @@
     > .tlp-popover-body {
         background: var(--tlp-theme-dark-background-color);
         color: var(--tlp-ui-dimmed-on-dark-background);
-        font-size: .875rem;
+        font-size: 0.875rem;
 
         > .current-project-nav-flag-popover-separator {
             margin: var(--tlp-medium-spacing) calc(-1 * var(--tlp-medium-spacing));
@@ -81,7 +81,7 @@
             > .fa {
                 top: 8px;
                 color: var(--tlp-typo-default-text-color-on-dark-background);
-                font-size: .75rem;
+                font-size: 0.75rem;
             }
 
             > .tuleap-svg-project-shield {

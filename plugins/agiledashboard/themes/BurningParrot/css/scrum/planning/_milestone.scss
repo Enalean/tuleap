@@ -33,14 +33,14 @@ $border-element-separator: 1px solid var(--project-color-border, var(--tlp-ui-wh
     z-index: 2;
     top: 44px;
     align-items: center;
-    transition: background .1s linear;
+    transition: background 0.1s linear;
     border-bottom: $border-element-separator;
     background: $milestone-background;
     color: var(--project-color, var(--tlp-ui-dimmed));
     cursor: pointer;
 
     &:hover {
-        transition: background .1s linear;
+        transition: background 0.1s linear;
         background: var(--project-color-background-gradient-light-hover, var(--tlp-ui-white-darker-02));
     }
 }
@@ -58,11 +58,11 @@ $border-element-separator: 1px solid var(--project-color-border, var(--tlp-ui-wh
     margin: 0 0 0 var(--tlp-small-spacing);
 
     &.ng-enter {
-        animation: fadeIn .2s;
+        animation: fadeIn 0.2s;
     }
 
     &.ng-leave {
-        animation: fadeOut .2s;
+        animation: fadeOut 0.2s;
     }
 }
 

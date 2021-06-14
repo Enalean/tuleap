@@ -40,7 +40,7 @@ $caret-width: 20px;
     }
 
     &.roadmap-gantt-header-is-scrolling::before {
-        content: '';
+        content: "";
         display: block;
         position: absolute;
         z-index: roadmap-variables.$z-index-scroll-indicator;
@@ -48,7 +48,7 @@ $caret-width: 20px;
         right: -14px;
         width: 12px;
         height: 100%;
-        opacity: .075;
+        opacity: 0.075;
         background: linear-gradient(to right, var(--tlp-theme-dark-background-color), transparent);
     }
 }
@@ -80,8 +80,8 @@ $caret-width: 20px;
 .roadmap-gantt-task-header-caret {
     flex: 0 0 auto;
     width: $caret-width;
-    font-size: .625rem;
-    line-height: .75rem;
+    font-size: 0.625rem;
+    line-height: 0.75rem;
     text-align: center;
 
     + .roadmap-gantt-task-header-link {
@@ -123,8 +123,8 @@ $caret-width: 20px;
     align-items: baseline;
     max-width: calc(100% - var(--tlp-small-spacing));
     margin: 0 var(--tlp-small-spacing) 2px 0;
-    font-size: .625rem;
-    line-height: .75rem;
+    font-size: 0.625rem;
+    line-height: 0.75rem;
 }
 
 .roadmap-gantt-task-header-xref-project {
@@ -136,7 +136,7 @@ $caret-width: 20px;
 .roadmap-gantt-task-header-xref-separator {
     flex: 0 0 auto;
     margin: 0 2px;
-    font-size: .7em;
+    font-size: 0.7em;
 }
 
 .roadmap-gantt-task-header-xref-reference {
@@ -147,8 +147,8 @@ $caret-width: 20px;
     display: inline-block;
     max-width: 100%;
     overflow: hidden;
-    font-size: .8125rem;
-    line-height: .9375rem;
+    font-size: 0.8125rem;
+    line-height: 0.9375rem;
     text-overflow: ellipsis;
 
     > .tlp-skeleton-text {
@@ -184,7 +184,7 @@ $caret-width: 20px;
     }
 
     &::before {
-        content: '';
+        content: "";
         display: block;
         position: absolute;
         top: 0;
@@ -199,7 +199,7 @@ $caret-width: 20px;
         padding: calc(var(--tlp-small-spacing) - 2px) 0 calc(var(--tlp-small-spacing) - 2px) calc(var(--tlp-small-spacing) + #{$border-width});
 
         &::before {
-            content: '';
+            content: "";
             display: block;
             position: absolute;
             top: 0;
@@ -231,7 +231,7 @@ $caret-width: 20px;
     width: calc(100% - var(--tlp-medium-spacing));
     height: roadmap-variables.$task-height;
     padding: 0 var(--tlp-medium-spacing);
-    font-size: .875rem;
+    font-size: 0.875rem;
 }
 
 .roadmap-gantt-subtask-header-error-message {
@@ -257,21 +257,21 @@ $caret-width: 20px;
 @each $color-name, $colors in swatch-colors.$tlp-swatch-color-map {
     .roadmap-gantt-task-header-#{$color-name} {
         &:not(.roadmap-gantt-subtask-header) {
-            border-left: $border-width solid map-get($colors, 'border');
+            border-left: $border-width solid map-get($colors, "border");
         }
 
         &.roadmap-gantt-subtask-header::before {
-            background: transparentize(map-get($colors, 'border'), .85);
+            background: transparentize(map-get($colors, "border"), 0.85);
         }
     }
 
     .roadmap-gantt-task-header-link-#{$color-name} {
         > .roadmap-gantt-task-header-xref {
-            color: map-get($colors, 'text');
+            color: map-get($colors, "text");
         }
     }
 
     .roadmap-gantt-subtask-header > .roadmap-gantt-task-header-link-#{$color-name}::before {
-        background: map-get($colors, 'border');
+        background: map-get($colors, "border");
     }
 }

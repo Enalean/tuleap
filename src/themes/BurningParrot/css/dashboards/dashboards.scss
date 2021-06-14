@@ -33,7 +33,7 @@
 
 #dashboard-tabs-dropdown-trigger {
     transition: color 100ms, opacity 100ms;
-    opacity: .5;
+    opacity: 0.5;
     color: var(--tlp-ui-dimmed);
 
     &:hover {
@@ -48,7 +48,7 @@
 
 @keyframes shakeWidget {
     0% {
-        transform: rotate(-.2deg);
+        transform: rotate(-0.2deg);
     }
 
     50% {
@@ -56,7 +56,7 @@
     }
 
     100% {
-        transform: rotate(.2deg);
+        transform: rotate(0.2deg);
     }
 }
 
@@ -79,7 +79,7 @@
             border-right: 0;
             border-bottom: 0;
             border-left: 0;
-            box-shadow: 0 7px 30px 0 rgba(0, 0, 0, .2);
+            box-shadow: 0 7px 30px 0 rgba(0, 0, 0, 0.2);
         }
     }
 
@@ -168,7 +168,7 @@ body.gu-unselectable {
     @keyframes columnWave {
         0% {
             height: $placeholder-height;
-            opacity: .5;
+            opacity: 0.5;
             box-shadow: 0 0 0 0 var(--tlp-theme-color-transparent-50);
         }
 
@@ -180,7 +180,7 @@ body.gu-unselectable {
 
         100% {
             height: $placeholder-height;
-            opacity: .5;
+            opacity: 0.5;
             box-shadow: 0 0 0 0 transparent;
         }
     }
@@ -188,7 +188,7 @@ body.gu-unselectable {
     @keyframes rowWave {
         0% {
             width: $placeholder-width;
-            opacity: .5;
+            opacity: 0.5;
             box-shadow: 0 0 0 0 var(--tlp-theme-color-transparent-50);
         }
 
@@ -200,13 +200,13 @@ body.gu-unselectable {
 
         100% {
             width: $placeholder-width;
-            opacity: .5;
+            opacity: 0.5;
             box-shadow: 0 0 0 0 transparent;
         }
     }
 
     @mixin widget-placeholder($top, $bottom, $left, $direction) {
-        content: '';
+        content: "";
         position: absolute;
         top: $top;
         bottom: $bottom;
@@ -215,11 +215,10 @@ body.gu-unselectable {
         border-radius: $placeholder-radius;
         background: var(--tlp-theme-color);
 
-        @if $direction == 'column' {
+        @if $direction == "column" {
             width: $placeholder-height;
             height: $placeholder-width;
             animation: 1.5s ease-in-out infinite columnWave;
-
         } @else {
             width: $placeholder-width;
             height: $placeholder-height;
@@ -235,22 +234,22 @@ body.gu-unselectable {
     }
 
     .dashboard-widgets-empty-line:empty::before {
-        @include widget-placeholder(50%, auto, 50%, 'row');
+        @include widget-placeholder(50%, auto, 50%, "row");
     }
 
     .dashboard-widgets-empty-column:empty::before {
-        @include widget-placeholder(50%, auto, 50%, 'column');
+        @include widget-placeholder(50%, auto, 50%, "column");
     }
 
     .dashboard-widgets-row:not(.one-column) .dashboard-widget:not(.gu-mirror):not(.gu-transit) {
         position: relative;
 
         &::after {
-            @include widget-placeholder(auto, -14px, 50%, 'row');
+            @include widget-placeholder(auto, -14px, 50%, "row");
         }
 
         &:first-child::before {
-            @include widget-placeholder(-11px, auto, 50%, 'row');
+            @include widget-placeholder(-11px, auto, 50%, "row");
         }
     }
 }
@@ -289,7 +288,7 @@ body.gu-unselectable {
         border-bottom: 0;
         border-left: 0;
         opacity: 1;
-        box-shadow: 0 7px 30px 0 rgba(0, 0, 0, .2);
+        box-shadow: 0 7px 30px 0 rgba(0, 0, 0, 0.2);
     }
 }
 
@@ -308,11 +307,11 @@ $nb-empty-columns-separators-in-four-columns: 5;
 $empty-space-taken-in-three-columns: calc(#{$nb-empty-columns-separators-in-three-columns} * var(--tlp-small-spacing));
 $empty-space-taken-in-four-columns: calc(#{$nb-empty-columns-separators-in-four-columns} * var(--tlp-small-spacing));
 
-$grid-width-in-three-columns: calc((100% - #{$empty-space-taken-in-three-columns} ) / 3);
-$two-columns-span-in-three-columns: calc((#{$grid-width-in-three-columns} * 2 ) + var(--tlp-small-spacing));
+$grid-width-in-three-columns: calc((100% - #{$empty-space-taken-in-three-columns}) / 3);
+$two-columns-span-in-three-columns: calc((#{$grid-width-in-three-columns} * 2) + var(--tlp-small-spacing));
 
-$grid-width-in-four-columns: calc((100% - #{$empty-space-taken-in-four-columns} ) / 4);
-$two-columns-span-in-four-columns: calc((#{$grid-width-in-four-columns} * 2 ) + var(--tlp-small-spacing));
+$grid-width-in-four-columns: calc((100% - #{$empty-space-taken-in-four-columns}) / 4);
+$two-columns-span-in-four-columns: calc((#{$grid-width-in-four-columns} * 2) + var(--tlp-small-spacing));
 
 .two-columns-small-big {
     > div:first-of-type {
@@ -402,6 +401,6 @@ $two-columns-span-in-four-columns: calc((#{$grid-width-in-four-columns} * 2 ) + 
     }
 }
 
-@import 'includes/dashboard-widgets';
-@import 'includes/dashboard-project';
-@import 'includes/dashboard-user';
+@import "includes/dashboard-widgets";
+@import "includes/dashboard-project";
+@import "includes/dashboard-user";

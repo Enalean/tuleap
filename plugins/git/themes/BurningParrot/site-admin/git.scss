@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@import 'gitolite';
+@import "gitolite";
 
 .form-element-group {
     display: flex;
@@ -84,7 +84,6 @@
 .mirror-repo-list-for-project-reponame {
     width: 100%;
 }
-
 
 /* -------------------- GERRIT ---------------------- */
 

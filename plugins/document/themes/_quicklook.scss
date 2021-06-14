@@ -18,13 +18,13 @@
  *
  */
 
-@import 'quicklook/quicklook-header';
-@import 'quicklook/quicklook-actions';
-@import 'quicklook/quicklook-properties';
-@import 'quicklook/quicklook-embedded';
-@import 'quicklook/quicklook-image';
-@import 'quicklook/quicklook-folder';
-@import 'quicklook/quicklook-icon';
+@import "quicklook/quicklook-header";
+@import "quicklook/quicklook-actions";
+@import "quicklook/quicklook-properties";
+@import "quicklook/quicklook-embedded";
+@import "quicklook/quicklook-image";
+@import "quicklook/quicklook-folder";
+@import "quicklook/quicklook-icon";
 
 .document-quick-look-dropzone-text {
     transition: opacity ease-in-out 100ms;

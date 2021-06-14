@@ -17,8 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@import 'files-uploads-modal';
-@import 'dragndrop';
+@import "files-uploads-modal";
+@import "dragndrop";
 
 $document-upload-animation-color: var(--tlp-ui-success-transparent-90);
 $document-upload-animation-secondary-color: var(--tlp-ui-success-transparent-95);
@@ -45,7 +45,6 @@ $progress-bar-background-color: var(--tlp-ui-border-normal);
         background-position: 440px;
     }
 }
-
 
 .document-dragndrop-file-upload {
     display: flex;
@@ -87,7 +86,7 @@ $progress-bar-background-color: var(--tlp-ui-border-normal);
     background: var(--tlp-ui-danger-transparent-15);
 
     .document-folder-content-icon::before {
-        content: '\f05e'; // fa-ban
+        content: "\f05e"; // fa-ban
     }
 }
 /* stylelint-enable selector-no-qualifying-type */
@@ -105,7 +104,7 @@ $progress-bar-background-color: var(--tlp-ui-border-normal);
         animation: none;
 
         &::before {
-            content: '\f064'; //fa-mail-forward
+            content: "\f064"; //fa-mail-forward
         }
     }
 }

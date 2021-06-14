@@ -41,7 +41,7 @@
 
     &.placeholder {
         border: 1px dashed #3a87ad;
-        background: url('../../../../../src/www/themes/common/images/backstripes.gif');
+        background: url("../../../../../src/www/themes/common/images/backstripes.gif");
     }
 }
 
@@ -49,26 +49,26 @@
 .card-preview {
     @each $color-name, $colors in swatch-colors.$tlp-swatch-color-map {
         &.card-style-#{$color-name} {
-            border-color: map-get($colors, 'border');
-            background: map-get($colors, 'secondary');
+            border-color: map-get($colors, "border");
+            background: map-get($colors, "secondary");
 
             > .card-container {
-                background: map-get($colors, 'secondary');
+                background: map-get($colors, "secondary");
             }
 
             .card-accessibility {
-                opacity: .5;
-                background-color: map-get($colors, 'text');
+                opacity: 0.5;
+                background-color: map-get($colors, "text");
                 mask-image: url("#{map-get($colors, 'pattern')}");
             }
 
             .card-actions {
                 a.dropdown-toggle {
-                    color: map-get($colors, 'text');
+                    color: map-get($colors, "text");
                 }
 
                 .caret {
-                    border-top-color: map-get($colors, 'text');
+                    border-top-color: map-get($colors, "text");
                 }
             }
 
@@ -78,7 +78,7 @@
                 > .toggler-hide-noajax,
                 > .toggler-noajax,
                 tr td:first-child {
-                    color: map-get($colors, 'text');
+                    color: map-get($colors, "text");
                 }
             }
         }
@@ -88,7 +88,7 @@
 @each $color-name, $colors in swatch-colors.$tlp-swatch-color-map {
     // Specificity added to win over .card.card-style-$color
     div.card.card-accent-#{$color-name} {
-        background: map-get($colors, 'primary');
+        background: map-get($colors, "primary");
     }
 
     .card-type-border-#{$color-name} {
@@ -96,7 +96,7 @@
         width: 4px;
         border-top-left-radius: 2px;
         border-bottom-left-radius: 2px;
-        background: map-get($colors, 'primary');
+        background: map-get($colors, "primary");
     }
 }
 
@@ -112,7 +112,7 @@
     position: relative;
     height: 100%;
     min-height: 50px;
-    padding: .25em 20px .25em .5em;
+    padding: 0.25em 20px 0.25em 0.5em;
     border-top-right-radius: 3px;
     border-bottom-right-radius: 3px;
     background: #ffffbb;
@@ -122,21 +122,21 @@
     /* stylelint-disable-next-line selector-no-qualifying-type */
     a.dropdown-toggle {
         color: #7d7d7d;
-        font-size: .9em;
+        font-size: 0.9em;
 
         &:hover {
-            opacity: .7;
+            opacity: 0.7;
             text-decoration: none;
         }
     }
 
     ul {
-        padding: .25em .5em;
+        padding: 0.25em 0.5em;
         list-style: none;
     }
 
     &:hover .caret {
-        opacity: .7;
+        opacity: 0.7;
     }
 
     .dropdown.open .dropdown-toggle {
@@ -160,7 +160,7 @@
         padding-left: 0;
         background-image: none;
         color: #808080;
-        font-size: .9em;
+        font-size: 0.9em;
     }
 
     .toggler,
@@ -168,7 +168,7 @@
     .toggler-hide,
     .toggler-hide-noajax {
         &::before {
-            content: '';
+            content: "";
         }
     }
 
@@ -190,7 +190,7 @@
     }
 
     tr td {
-        font-size: .8em;
+        font-size: 0.8em;
 
         &:first-child {
             text-align: right;

@@ -47,7 +47,8 @@
     font-weight: 600;
 }
 
-body.theme-condensed .release-number-artifacts-value { //stylelint-disable-line selector-no-qualifying-type
+//stylelint-disable-next-line selector-no-qualifying-type
+body.theme-condensed .release-number-artifacts-value {
     width: 34px;
     height: 34px;
     font-size: 18px;
@@ -55,9 +56,9 @@ body.theme-condensed .release-number-artifacts-value { //stylelint-disable-line 
 
 @each $color-name, $colors in swatch-colors.$tlp-swatch-color-map {
     .release-number-artifacts-tracker-#{$color-name} > .release-number-artifacts-value {
-        border: 1px solid transparentize(map-get($colors, 'primary'), .4);
-        background: transparentize(map-get($colors, 'primary'), .9);
-        color: map-get($colors, 'text');
+        border: 1px solid transparentize(map-get($colors, "primary"), 0.4);
+        background: transparentize(map-get($colors, "primary"), 0.9);
+        color: map-get($colors, "text");
     }
 
     .release-number-artifacts-tracker-#{$color-name} .release-number-artifacts-text {
@@ -66,7 +67,7 @@ body.theme-condensed .release-number-artifacts-value { //stylelint-disable-line 
         max-width: 160px;
         padding: calc(var(--tlp-small-spacing) / 2) 0 calc(var(--tlp-small-spacing) / 2) 0;
         overflow: hidden;
-        color: map-get($colors, 'text');
+        color: map-get($colors, "text");
         text-overflow: ellipsis;
         white-space: nowrap;
     }
@@ -127,5 +128,4 @@ body.theme-condensed .release-number-artifacts-value { //stylelint-disable-line 
             flex-direction: row;
         }
     }
-;
 }

@@ -17,9 +17,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@import '../../../../../src/themes/common/css/utils/colors';
+@import "../../../../../src/themes/common/css/utils/colors";
 
-body.openid-connect-link { /* stylelint-disable-line selector-no-qualifying-type */
+/* stylelint-disable-next-line selector-no-qualifying-type */
+body.openid-connect-link {
     background: linear-gradient(#ffffff 0%, #f5f5f5 75%);
     text-align: center;
 }
@@ -85,7 +86,8 @@ body.openid-connect-link { /* stylelint-disable-line selector-no-qualifying-type
                     font-size: 20px;
                     line-height: normal;
 
-                    > i { /* stylelint-disable-line max-nesting-depth, selector-max-compound-selectors */
+                    /* stylelint-disable-next-line max-nesting-depth, selector-max-compound-selectors */
+                    > i {
                         margin: 0 3px 0 0;
                         font-size: 18px;
                     }
@@ -120,7 +122,7 @@ body.openid-connect-link { /* stylelint-disable-line selector-no-qualifying-type
                 top: 50%;
                 left: 50%;
                 transform: translate(-50%, -50%);
-                opacity: .03;
+                opacity: 0.03;
                 font-size: 200px;
             }
 
@@ -151,13 +153,15 @@ body.openid-connect-link { /* stylelint-disable-line selector-no-qualifying-type
                     font-size: 13px;
                     word-wrap: break-word;
 
-                    &.provider-label { /* stylelint-disable-line max-nesting-depth */
+                    /* stylelint-disable-next-line max-nesting-depth */
+                    &.provider-label {
                         margin: 10px 0 0;
                         color: #888888;
                         font-size: 11px;
                         font-weight: 600;
 
-                        &:first-child { /* stylelint-disable-line max-nesting-depth */
+                        /* stylelint-disable-next-line max-nesting-depth */
+                        &:first-child {
                             margin: 0;
                         }
                     }
@@ -201,7 +205,7 @@ body.openid-connect-link { /* stylelint-disable-line selector-no-qualifying-type
         }
 
         &::before {
-            content: '';
+            content: "";
             position: absolute;
             z-index: 1;
             top: 50%;
@@ -261,7 +265,7 @@ body.openid-connect-link { /* stylelint-disable-line selector-no-qualifying-type
             display: inline-block;
             width: 49%;
 
-            &:nth-child(2n+1) {
+            &:nth-child(2n + 1) {
                 margin: 0 1% 10px 0;
             }
 

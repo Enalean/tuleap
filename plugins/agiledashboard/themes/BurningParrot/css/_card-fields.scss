@@ -56,13 +56,13 @@ card-fields {
 
     @each $color-name, $colors in swatch-colors.$tlp-swatch-color-map {
         &.card-field-#{$color-name} {
-            background-color: map-get($colors, 'primary');
+            background-color: map-get($colors, "primary");
         }
     }
 }
 
 .extra-card-field-list-item:not(:last-child)::after {
-    content: ', ';
+    content: ", ";
 }
 
 .extra-card-field-user > .tlp-avatar-mini {

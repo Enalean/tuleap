@@ -25,9 +25,9 @@ $expand-collapse-bar-height: 8px;
 $margin-between-kanban-item-on-hover: 1px;
 $margin-between-kanban-item: $expand-collapse-bar-height + $margin-between-kanban-item-on-hover;
 
-@import '../card-fields';
-@import 'kanban-item-moves';
-@import 'kanban-item-transit';
+@import "../card-fields";
+@import "kanban-item-moves";
+@import "kanban-item-transit";
 
 $kanban-item-padding-height: 8px;
 
@@ -59,7 +59,7 @@ $kanban-item-padding-height: 8px;
             flex: 1 1 auto;
             margin: 0 16px 0 0;
             padding: 0;
-            font-size: .875rem;
+            font-size: 0.875rem;
             line-height: 1.125rem;
             text-align: left;
         }
@@ -86,7 +86,7 @@ $kanban-item-padding-height: 8px;
 
     @each $color-name, $colors in swatch-colors.$tlp-swatch-color-map {
         &.#{$color-name} .kanban-item-content-type-border {
-            border-left-color: map-get($colors, 'primary');
+            border-left-color: map-get($colors, "primary");
         }
     }
 
@@ -138,14 +138,14 @@ kanban-item {
 
     @each $color-name, $colors in swatch-colors.$tlp-swatch-color-map {
         &.#{$color-name} {
-            background: map-get($colors, 'secondary');
-            box-shadow: inset 0 0 0 1px map-get($colors, 'border'), 0 4px 4px -3px var(--tlp-theme-dark-background-color-transparent-85);
+            background: map-get($colors, "secondary");
+            box-shadow: inset 0 0 0 1px map-get($colors, "border"), 0 4px 4px -3px var(--tlp-theme-dark-background-color-transparent-85);
 
             .kanban-item-content-info-link,
             .kanban-item-content-clock,
             .extra-card-field-title,
             .kanban-item-content-expand-collapse-icon {
-                color: map-get($colors, 'text');
+                color: map-get($colors, "text");
             }
         }
     }
@@ -167,7 +167,6 @@ kanban-item {
     width: calc(100% - var(--tlp-medium-spacing));
     overflow-y: hidden;
     transition: padding-bottom $transition-duration;
-
 
     &.kanban-item-card-with-accessibility .kanban-item-content-info-label {
         padding: 0 16px;
@@ -194,12 +193,12 @@ kanban-item {
 .kanban-item-content-info-link {
     margin: 0 var(--tlp-small-spacing) 0 0;
     color: var(--tlp-ui-dimmed);
-    font-size: .65rem;
+    font-size: 0.65rem;
     text-decoration: none;
     font-variant-numeric: tabular-nums;
 
     &:hover {
-        opacity: .7;
+        opacity: 0.7;
         text-decoration: none;
     }
 }
@@ -209,7 +208,7 @@ kanban-item {
     width: 100%;
     margin: var(--tlp-small-spacing) 0;
     overflow: hidden;
-    font-size: .9375rem;
+    font-size: 0.9375rem;
     line-height: 1.25rem;
     text-align: center;
     text-overflow: ellipsis;
@@ -226,8 +225,8 @@ kanban-item {
 
     @each $color-name, $colors in swatch-colors.$tlp-swatch-color-map {
         &.#{$color-name} {
-            opacity: .5;
-            background-color: map-get($colors, 'text');
+            opacity: 0.5;
+            background-color: map-get($colors, "text");
             mask-image: url("#{map-get($colors, 'pattern')}");
         }
     }
@@ -248,7 +247,7 @@ kanban-item {
     right: 8px;
     width: 16px;
     height: 16px;
-    background: url('../images/loader-mini.gif') no-repeat;
+    background: url("../images/loader-mini.gif") no-repeat;
 }
 
 .kanban-item-content-expand-collapse {

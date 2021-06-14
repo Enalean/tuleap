@@ -19,13 +19,13 @@
 
 @use 'themes/tlp/src/scss/variables/colors/swatch-colors';
 
-@import '~@tuleap/list-picker';
+@import "~@tuleap/list-picker";
 
 $form-element-border-color: var(--tlp-ui-border-dark-darker-05);
 $form-element-padding-horizontal: 12px;
 $form-element-select-background-size: 8px;
 $form-element-height: 40px;
-$form-element-small-font-size: .8125rem;
+$form-element-small-font-size: 0.8125rem;
 
 .list-picker-component-wrapper {
     box-sizing: border-box;
@@ -71,12 +71,12 @@ $form-element-small-font-size: .8125rem;
         border: 1px solid $form-element-border-color;
         border-radius: 4px;
         background: var(--tlp-ui-white);
-        font-size: .875rem;
+        font-size: 0.875rem;
 
         &.list-picker-single {
             height: $form-element-height;
             padding: 0 ($form-element-padding-horizontal * 2 + $form-element-select-background-size) 0 $form-element-padding-horizontal;
-            background: var(--tlp-ui-white) url('../images/list-picker-background.png') no-repeat;
+            background: var(--tlp-ui-white) url("../images/list-picker-background.png") no-repeat;
             background-position: right $form-element-padding-horizontal center;
         }
 
@@ -84,7 +84,7 @@ $form-element-small-font-size: .8125rem;
             position: relative;
             min-height: $form-element-height;
             padding: 0 52px 5px 6px;
-            background: var(--tlp-ui-white) url('../images/list-picker-multi-background.svg') no-repeat;
+            background: var(--tlp-ui-white) url("../images/list-picker-multi-background.svg") no-repeat;
             background-position: right 10px top 17px;
             background-size: 15px 5px;
         }
@@ -98,12 +98,12 @@ $form-element-small-font-size: .8125rem;
     border-right: 1px solid var(--tlp-theme-color);
     border-bottom: 1px solid var(--tlp-theme-color);
     border-left: 1px solid var(--tlp-theme-color);
-    box-shadow: 0 6px 12px rgba(0, 0, 0, .175);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
 
     &.list-picker-dropdown-above {
         border-top: 1px solid var(--tlp-theme-color);
         border-bottom: unset;
-        box-shadow: 0 0 12px rgba(0, 0, 0, .175);
+        box-shadow: 0 0 12px rgba(0, 0, 0, 0.175);
     }
 }
 
@@ -113,17 +113,17 @@ $form-element-small-font-size: .8125rem;
         color: var(--tlp-ui-white);
     }
 
-    &[aria-selected='true']::before {
-        content: '\f00c'; // fa-check
+    &[aria-selected="true"]::before {
+        content: "\f00c"; // fa-check
         position: absolute;
         top: 9px;
         left: 12px;
-        font-family: 'Font Awesome 5 Free';
+        font-family: "Font Awesome 5 Free";
         font-size: 12px;
         font-weight: 900;
     }
 
-    &[aria-selected='true'] {
+    &[aria-selected="true"] {
         position: relative;
         padding: 6px 12px 6px 32px;
         color: var(--tlp-theme-color);
@@ -144,9 +144,9 @@ $form-element-small-font-size: .8125rem;
     border-radius: 15px;
     background: var(--tlp-theme-color-transparent-90);
     color: var(--tlp-theme-color);
-    font-size: .75rem;
+    font-size: 0.75rem;
     font-weight: 600;
-    line-height: .75rem;
+    line-height: 0.75rem;
     text-decoration: none;
     vertical-align: middle;
     white-space: nowrap;
@@ -155,9 +155,9 @@ $form-element-small-font-size: .8125rem;
 
 @each $color-name, $colors in swatch-colors.$tlp-swatch-color-map {
     .list-picker-badge-#{$color-name} {
-        border: 1px solid transparentize(map-get($colors, 'primary'), .4);
-        background: transparentize(map-get($colors, 'primary'), .9);
-        color: map-get($colors, 'text');
+        border: 1px solid transparentize(map-get($colors, "primary"), 0.4);
+        background: transparentize(map-get($colors, "primary"), 0.9);
+        color: map-get($colors, "text");
     }
 }
 
@@ -242,7 +242,7 @@ $form-element-small-font-size: .8125rem;
     margin: 0 6px 0 0;
     overflow: hidden;
     border-radius: 50%;
-    background: #e3e5ed url('../images/list-picker-default-avatar.svg') no-repeat center center;
+    background: #e3e5ed url("../images/list-picker-default-avatar.svg") no-repeat center center;
     background-size: contain;
     vertical-align: middle;
 }
@@ -252,10 +252,10 @@ $form-element-small-font-size: .8125rem;
         width: 14px;
         height: 14px;
         margin: 0 6px 0 0;
-        border: 3px solid map-get($colors, 'primary');
+        border: 3px solid map-get($colors, "primary");
         border-radius: 50%;
-        background-color: map-get($colors, 'secondary');
-        color: map-get($colors, 'primary');
+        background-color: map-get($colors, "secondary");
+        color: map-get($colors, "primary");
         cursor: pointer;
     }
 }

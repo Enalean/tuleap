@@ -22,16 +22,16 @@
 @use '../../../../scripts/planning-v2/node_modules/dragular/dist/dragular';
 @use '../../../../scripts/planning-v2/node_modules/animate.css/animate';
 
-@import './planning/backlog';
-@import './planning/milestones';
-@import './planning/backlog-item';
-@import './planning/backlog-items-selected-bar';
-@import './planning/errors';
+@import "./planning/backlog";
+@import "./planning/milestones";
+@import "./planning/backlog-item";
+@import "./planning/backlog-items-selected-bar";
+@import "./planning/errors";
 
 %loader {
     height: 30px;
     margin: var(--tlp-small-spacing) 0 0;
-    background: url('../images/spinner.gif') no-repeat center center;
+    background: url("../images/spinner.gif") no-repeat center center;
 
     &:only-child {
         margin: 0;
@@ -61,7 +61,7 @@
 }
 
 .planning-arrows {
-    opacity: .4;
+    opacity: 0.4;
     fill: var(--tlp-theme-background-color-darker-20);
 }
 

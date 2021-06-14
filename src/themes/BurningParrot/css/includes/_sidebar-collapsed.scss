@@ -60,7 +60,7 @@
 
     #logo {
         width: global-variables.$sidebar-collapsed-width;
-        background: var(--tlp-theme-color) url('/images/organization_logo_small.png') no-repeat center center;
+        background: var(--tlp-theme-color) url("/images/organization_logo_small.png") no-repeat center center;
     }
 
     .project-sidebar-title,
@@ -70,6 +70,6 @@
     }
 
     .sidebar-collapser-icon::before {
-        content: '\f054'; // fa-chevron-right
+        content: "\f054"; // fa-chevron-right
     }
 }

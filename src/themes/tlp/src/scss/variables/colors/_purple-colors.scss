@@ -20,26 +20,26 @@
 @use 'common-colors';
 
 // UI colors
-$tlp-ui-info         : #4db3d0;
-$tlp-ui-success      : #58b359;
-$tlp-ui-warning      : #f3b13a;
-$tlp-ui-danger       : #da5353;
+$tlp-ui-info: #4db3d0;
+$tlp-ui-success: #58b359;
+$tlp-ui-warning: #f3b13a;
+$tlp-ui-danger: #da5353;
 
-$tlp-ui-dimmed       : #7a747b;
+$tlp-ui-dimmed: #7a747b;
 
-$tlp-ui-border-light : #f3f3f3;
+$tlp-ui-border-light: #f3f3f3;
 $tlp-ui-border-normal: #e3e5ed;
-$tlp-ui-border-dark : #d4d7e1;
+$tlp-ui-border-dark: #d4d7e1;
 
-$tlp-theme-color                   : common-colors.$tlp-theme-purple;
-$tlp-theme-background-color        : common-colors.$tlp-theme-background-purple;
+$tlp-theme-color: common-colors.$tlp-theme-purple;
+$tlp-theme-background-color: common-colors.$tlp-theme-background-purple;
 $tlp-theme-sidebar-background-color: common-colors.$tlp-theme-sidebar-background-purple;
 
 $tlp-typo-default-text-color: $tlp-theme-sidebar-background-color;
 
 $tlp-table-row-background-empty: #fcfcfc;
 
-$tlp-illustration-primary-color        : #d2b7de;
+$tlp-illustration-primary-color: #d2b7de;
 $tlp-illustration-secondary-light-color: #f5eff8;
-$tlp-illustration-secondary-dark-color : #e9d7f1;
-$tlp-illustration-tertiary-color       : #e8e1f1;
+$tlp-illustration-secondary-dark-color: #e9d7f1;
+$tlp-illustration-tertiary-color: #e8e1f1;

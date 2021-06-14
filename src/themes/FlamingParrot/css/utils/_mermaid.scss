@@ -17,13 +17,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@import '../../../common/css/utils/mermaid';
+@import "../../../common/css/utils/mermaid";
 
 // we have to disable the Bootstrap rules for .label elements which conflict with mermaid ones.
 .diagram-mermaid .label {
     padding: 0;
     background: transparent;
-    font-size: .75rem;
+    font-size: 0.75rem;
     font-weight: inherit;
     line-height: inherit;
     text-shadow: inherit;

@@ -25,7 +25,6 @@
 @use 'release-chart';
 @use 'release-toggle-badges-sprints';
 
-
 .dashboard-widget-content-dashboardprojectmilestone {
     margin: 0;
     padding: var(--tlp-medium-spacing);
@@ -43,7 +42,7 @@
     color: var(--tlp-theme-color);
     font-size: 10px;
     font-weight: 600;
-    letter-spacing: .5px;
+    letter-spacing: 0.5px;
     line-height: 7px;
     text-transform: uppercase;
 }
@@ -57,14 +56,13 @@
     padding: var(--tlp-medium-spacing) 0 var(--tlp-medium-spacing) 0;
 
     &::before {
-        content: '';
+        content: "";
         position: absolute;
         top: 0;
         left: 10px;
         width: 4px;
         height: 100%;
-        background: linear-gradient(to top, var(--tlp-ui-white) 0, release-chart.$timeline-color var(--tlp-medium-spacing), transparent calc(var(--tlp-medium-spacing) + 1px)),
-            linear-gradient(to bottom, var(--tlp-ui-white) 0, release-chart.$timeline-color var(--tlp-medium-spacing));
+        background: linear-gradient(to top, var(--tlp-ui-white) 0, release-chart.$timeline-color var(--tlp-medium-spacing), transparent calc(var(--tlp-medium-spacing) + 1px)), linear-gradient(to bottom, var(--tlp-ui-white) 0, release-chart.$timeline-color var(--tlp-medium-spacing));
     }
 }
 
@@ -119,7 +117,7 @@
 
 .release-loader {
     height: 100px;
-    background: url('../../../../src/www/themes/BurningParrot/images/spinner.gif') no-repeat center center;
+    background: url("../../../../src/www/themes/BurningParrot/images/spinner.gif") no-repeat center center;
 }
 
 .button-backlog-link {

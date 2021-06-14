@@ -20,5 +20,5 @@
 @use 'background';
 
 .project-with-background {
-    @include background.css-custom-properties('green-leaf');
+    @include background.css-custom-properties("green-leaf");
 }

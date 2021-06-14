@@ -98,7 +98,7 @@
         &.gitlab-select-radio-button-container,
         .gitlab-repository-name-namespace,
         .gitlab-avatar {
-            opacity: .5;
+            opacity: 0.5;
         }
 
         .tlp-radio,
@@ -124,7 +124,7 @@
 .gitlab-repository-path-namespace {
     display: block;
     color: var(--tlp-ui-dimmed);
-    font-size: .75rem;
+    font-size: 0.75rem;
 }
 
 .gitlab-tooltip-button-radio {

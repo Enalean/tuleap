@@ -138,7 +138,7 @@ body.homepage > #main-container {
     border: 1px solid var(--tlp-theme-color);
     border-radius: 4px;
     background: var(--tlp-ui-white);
-    box-shadow: 0 8px 15px 0 transparentize(#000000, .95);
+    box-shadow: 0 8px 15px 0 transparentize(#000000, 0.95);
 }
 
 .homepage-sign-in-form {
@@ -271,11 +271,11 @@ body.homepage > #main-container {
 }
 
 .homepage-statistic-label {
-    opacity: .6;
+    opacity: 0.6;
     color: var(--tlp-ui-border-dark);
     font-size: 12px;
     font-weight: 600;
-    letter-spacing: .5px;
+    letter-spacing: 0.5px;
     text-transform: uppercase;
 }
 
@@ -311,11 +311,11 @@ body.homepage > #main-container {
     z-index: 1;
     right: 10px;
     bottom: 0;
-    opacity: .05;
+    opacity: 0.05;
 
     @supports (mix-blend-mode: overlay) {
         mix-blend-mode: overlay;
-        opacity: .3;
+        opacity: 0.3;
     }
 }
 

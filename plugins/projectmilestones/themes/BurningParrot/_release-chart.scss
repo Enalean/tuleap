@@ -57,7 +57,7 @@ $timeline-color: var(--tlp-theme-color-lighter-90);
 
     .chart-y-axis > .tick > text,
     .chart-x-axis > .tick > text {
-        opacity: .8;
+        opacity: 0.8;
         color: var(--tlp-ui-dimmed);
     }
 }
@@ -70,7 +70,7 @@ $timeline-color: var(--tlp-theme-color-lighter-90);
 }
 
 .release-chart-badge-container {
-    animation: shadow-pulse 2s infinite cubic-bezier(.65, .47, .76, 1);
+    animation: shadow-pulse 2s infinite cubic-bezier(0.65, 0.47, 0.76, 1);
     fill: burndown-chart.$remaining-effort-color;
 }
 
@@ -83,7 +83,7 @@ $timeline-color: var(--tlp-theme-color-lighter-90);
 .release-chart-end-icon {
     align-self: center;
     margin: 0 7px 0 0;
-    opacity: .9;
+    opacity: 0.9;
     fill: burndown-chart.$remaining-effort-color;
     font-size: 15px;
 }
@@ -174,7 +174,6 @@ $timeline-color: var(--tlp-theme-color-lighter-90);
     transform: translate(0, calc(-28px + var(--tlp-small-spacing)));
 }
 
-
 .release-widget-pie-chart-ttm-legend-color-span {
     flex: 0 0 auto;
     width: 10px;
@@ -182,7 +181,7 @@ $timeline-color: var(--tlp-theme-color-lighter-90);
     margin: 0 5px 0 0;
     transition: transform ease-out 75ms;
     border-radius: 50%;
-    opacity: .8;
+    opacity: 0.8;
 
     &.release-widget-pie-chart-ttm-legend-color-passed {
         background-color: var(--tlp-ui-success);

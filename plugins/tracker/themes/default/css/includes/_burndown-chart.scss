@@ -20,7 +20,7 @@
 @use '../../src/themes/tlp/src/scss/variables/colors/swatch-colors';
 @use './graph';
 
-$remaining-effort-color : swatch-colors.$tlp-swatch-neon-green;
+$remaining-effort-color: swatch-colors.$tlp-swatch-neon-green;
 
 .chart-plot-remaining-effort {
     fill: $remaining-effort-color;
@@ -53,7 +53,7 @@ $remaining-effort-color : swatch-colors.$tlp-swatch-neon-green;
 }
 
 .chart-column {
-    opacity: .05;
+    opacity: 0.05;
     fill: transparent;
 
     &.highlighted {

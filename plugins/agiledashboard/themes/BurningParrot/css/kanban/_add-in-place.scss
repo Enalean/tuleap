@@ -41,7 +41,7 @@
     overflow: visible;
     transition: border-radius 50ms, width 150ms, height 150ms;
     border-radius: 50%;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, .2);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 
     &.open {
         width: calc(100% - var(--tlp-medium-spacing));

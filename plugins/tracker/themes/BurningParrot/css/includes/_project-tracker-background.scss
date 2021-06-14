@@ -38,14 +38,6 @@
 }
 
 body {
-    @include background.apply-background(
-        '.tracker-administration-title',
-        global-variables.$sidebar-expanded-width,
-        global-variables.$sidebar-collapsed-width
-    );
-    @include background.apply-background(
-        '.trackers-homepage-title',
-        global-variables.$sidebar-expanded-width,
-        global-variables.$sidebar-collapsed-width
-    );
+    @include background.apply-background(".tracker-administration-title", global-variables.$sidebar-expanded-width, global-variables.$sidebar-collapsed-width);
+    @include background.apply-background(".trackers-homepage-title", global-variables.$sidebar-expanded-width, global-variables.$sidebar-collapsed-width);
 }

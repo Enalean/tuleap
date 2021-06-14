@@ -80,7 +80,7 @@
 }
 
 .document-new-item-type-label {
-    font-size: .875rem;
+    font-size: 0.875rem;
 }
 
 .document-new-item-type.document-new-item-type-checked {
@@ -91,7 +91,7 @@
     }
 
     &::before {
-        content: '';
+        content: "";
         position: absolute;
         bottom: calc(0px - var(--tlp-medium-spacing) - 1px);
         width: 0;
@@ -102,7 +102,7 @@
     }
 
     &::after {
-        content: '';
+        content: "";
         position: absolute;
         bottom: calc(0px - var(--tlp-medium-spacing) - 2px);
         width: 0;

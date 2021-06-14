@@ -17,8 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@import '../../../tlp/src/scss/components/skeleton';
-@import '../../../common/css/utils/switch-to';
+@import "../../../tlp/src/scss/components/skeleton";
+@import "../../../common/css/utils/switch-to";
 
 #switch-to-modal {
     top: 5vh;
@@ -40,10 +40,10 @@
 .switch-to-modal-header.modal-header {
     box-sizing: border-box;
     padding: calc(var(--tlp-medium-spacing) + 1px) var(--tlp-medium-spacing) calc(var(--tlp-medium-spacing) + 1px) var(--tlp-large-spacing);
-    border-bottom: 1px solid rgba(104, 122, 124, .2);
+    border-bottom: 1px solid rgba(104, 122, 124, 0.2);
     border-top-left-radius: 6px;
     border-top-right-radius: 6px;
-    background: linear-gradient(0deg, rgba(0, 0, 0, .07), rgba(0, 0, 0, .07)), var(--tlp-theme-dark-background-color);
+    background: linear-gradient(0deg, rgba(0, 0, 0, 0.07), rgba(0, 0, 0, 0.07)), var(--tlp-theme-dark-background-color);
     background-blend-mode: overlay;
 }
 
@@ -70,7 +70,7 @@
     border-radius: 4px;
     background: var(--tlp-theme-background-color);
     color: var(--tlp-theme-dark-background-color);
-    font-size: .875rem;
+    font-size: 0.875rem;
     font-weight: 500;
     line-height: 38px;
     text-align: center;

@@ -36,12 +36,8 @@
 }
 
 body {
-    $elements-with-project-background: '.test-campaigns-header', '.test-campaign-header', '.test-administration-title', '.test-dependency-graph-title';
+    $elements-with-project-background: ".test-campaigns-header", ".test-campaign-header", ".test-administration-title", ".test-dependency-graph-title";
     @each $element-with-project-background in $elements-with-project-background {
-        @include background.apply-background(
-            $element-with-project-background,
-            global-variables.$sidebar-expanded-width,
-            global-variables.$sidebar-collapsed-width,
-        );
+        @include background.apply-background($element-with-project-background, global-variables.$sidebar-expanded-width, global-variables.$sidebar-collapsed-width);
     }
 }

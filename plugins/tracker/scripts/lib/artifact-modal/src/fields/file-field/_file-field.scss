@@ -30,7 +30,7 @@
 
     &.marked-for-removal {
         > .tuleap-artifact-modal-field-file-details {
-            opacity: .5;
+            opacity: 0.5;
             text-decoration: line-through;
         }
     }
@@ -43,7 +43,7 @@
     height: 90px;
     margin: 0 var(--tlp-medium-spacing) 0 0;
     border-radius: 3px;
-    background-image: url('./assets/artifact_attachment_default.png');
+    background-image: url("./assets/artifact_attachment_default.png");
     background-repeat: no-repeat;
     background-position: center;
 }
@@ -99,7 +99,7 @@
 .tuleap-artifact-modal-field-file-new-file {
     margin: 0 0 var(--tlp-medium-spacing);
 
-    > input[type='file'] {
+    > input[type="file"] {
         display: block;
         margin: 0 0 5px;
     }

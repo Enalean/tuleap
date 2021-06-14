@@ -21,7 +21,7 @@
 
 .quick-look-pane-highlighted .document-quick-look-folder-container {
     > .document-quick-look-dropzone-text {
-        opacity: .85;
+        opacity: 0.85;
         color: var(--tlp-theme-color);
     }
 
@@ -31,13 +31,13 @@
 
     > .document-drop-into-folder-icon {
         display: block;
-        opacity: .85;
+        opacity: 0.85;
     }
 }
 
 .quick-look-pane-highlighted-forbidden .document-quick-look-folder-container {
     > .document-quick-look-dropzone-text {
-        opacity: .85;
+        opacity: 0.85;
         color: var(--tlp-ui-danger);
     }
 
@@ -65,7 +65,7 @@
         position: relative;
         top: -10px;
         transition: opacity ease-in-out 100ms;
-        opacity: .85;
+        opacity: 0.85;
         color: var(--tlp-ui-danger);
         font-size: 100px;
     }

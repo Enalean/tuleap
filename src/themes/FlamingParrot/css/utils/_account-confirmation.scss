@@ -17,11 +17,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-$url-base: '../images/account-confirmation/account-registration-feedback-background-';
+$url-base: "../images/account-confirmation/account-registration-feedback-background-";
 
 #account-confirmation-header {
     height: 336px;
-    background-image: url('#{$url-base}orange.png');
+    background-image: url("#{$url-base}orange.png");
     background-position: center top;
 
     > h2 {
@@ -30,39 +30,45 @@ $url-base: '../images/account-confirmation/account-registration-feedback-backgro
     }
 }
 
-.FlamingParrot_Orange { // stylelint-disable-line selector-class-pattern
+// stylelint-disable-next-line selector-class-pattern
+.FlamingParrot_Orange {
     #account-confirmation-header {
-        background-image: url('#{$url-base}orange.png');
+        background-image: url("#{$url-base}orange.png");
     }
 }
 
-.FlamingParrot_Blue { // stylelint-disable-line selector-class-pattern
+// stylelint-disable-next-line selector-class-pattern
+.FlamingParrot_Blue {
     #account-confirmation-header {
-        background-image: url('#{$url-base}blue.png');
+        background-image: url("#{$url-base}blue.png");
     }
 }
 
-.FlamingParrot_Green { // stylelint-disable-line selector-class-pattern
+// stylelint-disable-next-line selector-class-pattern
+.FlamingParrot_Green {
     #account-confirmation-header {
-        background-image: url('#{$url-base}green.png');
+        background-image: url("#{$url-base}green.png");
     }
 }
 
-.FlamingParrot_BlueGrey { // stylelint-disable-line selector-class-pattern
+// stylelint-disable-next-line selector-class-pattern
+.FlamingParrot_BlueGrey {
     #account-confirmation-header {
-        background-image: url('#{$url-base}bluegrey.png');
+        background-image: url("#{$url-base}bluegrey.png");
     }
 }
 
-.FlamingParrot_Purple { // stylelint-disable-line selector-class-pattern
+// stylelint-disable-next-line selector-class-pattern
+.FlamingParrot_Purple {
     #account-confirmation-header {
-        background-image: url('#{$url-base}purple.png');
+        background-image: url("#{$url-base}purple.png");
     }
 }
 
-.FlamingParrot_Red { // stylelint-disable-line selector-class-pattern
+// stylelint-disable-next-line selector-class-pattern
+.FlamingParrot_Red {
     #account-confirmation-header {
-        background-image: url('#{$url-base}red.png');
+        background-image: url("#{$url-base}red.png");
     }
 }
 
@@ -88,6 +94,6 @@ $url-base: '../images/account-confirmation/account-registration-feedback-backgro
         background-image: linear-gradient(to bottom, var(--tlp-theme-color), var(--tlp-theme-color));
         background-repeat: repeat-x;
         font-weight: 400;
-        letter-spacing: .03em;
+        letter-spacing: 0.03em;
     }
 }

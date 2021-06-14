@@ -53,12 +53,12 @@ $switch-menu-item-hover-color: var(--tlp-theme-color);
     }
 
     &:not(:last-child)::after {
-        content: '\f054'; // fa-chevron-right
+        content: "\f054"; // fa-chevron-right
         position: relative;
         top: 1px;
         right: -4px;
-        font-family: 'Font Awesome 5 Free';
-        font-size: .55rem;
+        font-family: "Font Awesome 5 Free";
+        font-size: 0.55rem;
     }
 
     &:not(.breadcrumb-item-disabled):hover > .breadcrumb-link,
@@ -73,7 +73,7 @@ $switch-menu-item-hover-color: var(--tlp-theme-color);
     padding: 4px 6px;
     border-radius: 4px;
     color: $step-color;
-    font-size: .875rem;
+    font-size: 0.875rem;
 
     &:hover {
         text-decoration: none;
@@ -90,14 +90,14 @@ $switch-menu-item-hover-color: var(--tlp-theme-color);
         padding: 4px 20px 4px 6px;
 
         &::after {
-            content: '\f0d7'; // fa-caret-down
+            content: "\f0d7"; // fa-caret-down
             position: absolute;
             z-index: 1;
             right: 8px;
             transition: color $step-transition-duration;
-            opacity: .5;
-            font-family: 'Font Awesome 5 Free';
-            font-size: .625rem;
+            opacity: 0.5;
+            font-family: "Font Awesome 5 Free";
+            font-size: 0.625rem;
         }
     }
 
@@ -124,8 +124,7 @@ $switch-menu-item-hover-color: var(--tlp-theme-color);
     max-width: 350px;
     padding: 6px 0 0;
     transform: translateY(-10px);
-    transition: opacity $step-transition-duration,
-        transform $step-transition-duration;
+    transition: opacity $step-transition-duration, transform $step-transition-duration;
     opacity: 0;
     pointer-events: none;
 }
@@ -160,7 +159,7 @@ $switch-menu-item-hover-color: var(--tlp-theme-color);
     padding: var(--tlp-small-spacing) var(--tlp-medium-spacing);
     overflow: hidden;
     color: $switch-menu-item-color;
-    font-size: .8125rem;
+    font-size: 0.8125rem;
     font-weight: 400;
     letter-spacing: normal;
     line-height: 1rem;
@@ -187,9 +186,9 @@ $switch-menu-item-hover-color: var(--tlp-theme-color);
     padding: var(--tlp-medium-spacing) var(--tlp-medium-spacing) var(--tlp-small-spacing);
     border-top: 1px solid var(--tlp-ui-border-light);
     color: var(--tlp-ui-dimmed);
-    font-size: .65rem;
+    font-size: 0.65rem;
     font-weight: 600;
-    letter-spacing: .5px;
+    letter-spacing: 0.5px;
     text-transform: uppercase;
     white-space: nowrap;
 
@@ -208,7 +207,7 @@ $switch-menu-item-hover-color: var(--tlp-theme-color);
     height: 24px;
     border-radius: 50%;
     color: var(--tlp-ui-white);
-    font-size: .7rem;
+    font-size: 0.7rem;
     cursor: help;
 
     &.fa-lock,
@@ -231,8 +230,8 @@ $switch-menu-item-hover-color: var(--tlp-theme-color);
     border-radius: 4px;
     cursor: help;
 
-    &[data-privacy-icon='fa-lock'],
-    &[data-privacy-icon='fa-tlp-lock-plus-r'] {
+    &[data-privacy-icon="fa-lock"],
+    &[data-privacy-icon="fa-tlp-lock-plus-r"] {
         background: var(--tlp-theme-color-transparent-90);
         color: var(--tlp-theme-color);
 
@@ -241,8 +240,8 @@ $switch-menu-item-hover-color: var(--tlp-theme-color);
         }
     }
 
-    &[data-privacy-icon='fa-lock-open'],
-    &[data-privacy-icon='fa-tlp-unlock-plus-r'] {
+    &[data-privacy-icon="fa-lock-open"],
+    &[data-privacy-icon="fa-tlp-unlock-plus-r"] {
         background: var(--tlp-theme-dark-background-color-transparent-90);
         color: var(--tlp-theme-dark-background-color-lighter-10);
 
@@ -256,7 +255,7 @@ $switch-menu-item-hover-color: var(--tlp-theme-color);
         height: auto;
         margin: 0 8px 0 6px;
         background: none;
-        font-size: .875rem;
+        font-size: 0.875rem;
     }
 
     > .tuleap-svg-project-shield {
@@ -287,10 +286,10 @@ body:not(.sidebar-collapsed) {
 .current-project-nav-flag-label {
     max-width: 150px;
     overflow: hidden;
-    font-size: .6rem;
+    font-size: 0.6rem;
     font-weight: 600;
-    letter-spacing: .2px;
-    line-height: .625rem;
+    letter-spacing: 0.2px;
+    line-height: 0.625rem;
     text-overflow: ellipsis;
     text-transform: uppercase;
     white-space: nowrap;

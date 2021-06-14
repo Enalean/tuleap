@@ -22,7 +22,7 @@ $tlp-button-background-timing: 75ms;
 
 $tlp-button-normal-height: 40px;
 $tlp-button-normal-line-height: 1.5rem;
-$tlp-button-normal-font-size: .875rem;
+$tlp-button-normal-font-size: 0.875rem;
 $tlp-button-normal-font-weight: 500;
 $tlp-button-normal-padding: 0 var(--tlp-medium-spacing);
 $tlp-button-normal-radius: 4px;
@@ -36,22 +36,21 @@ $tlp-button-large-radius: 4px;
 
 $tlp-button-small-height: 32px;
 $tlp-button-small-line-height: 1.5rem;
-$tlp-button-small-font-size: .75rem;
+$tlp-button-small-font-size: 0.75rem;
 $tlp-button-small-font-weight: 500;
 $tlp-button-small-padding: 0 var(--tlp-medium-spacing);
 $tlp-button-small-radius: 3px;
 
 $tlp-button-mini-height: 24px;
 $tlp-button-mini-line-height: 1.15rem;
-$tlp-button-mini-font-size: .75rem;
+$tlp-button-mini-font-size: 0.75rem;
 $tlp-button-mini-font-weight: 500;
 $tlp-button-mini-padding: 0 var(--tlp-small-spacing);
 $tlp-button-mini-radius: 3px;
 
 $tlp-button-outline-hover-color: #fafafa;
 
-$tlp-button-secondary-box-shadow: rgba(0, 0, 0, .05);
-
+$tlp-button-secondary-box-shadow: rgba(0, 0, 0, 0.05);
 
 %tlp-button {
     display: inline-flex;
@@ -103,12 +102,12 @@ $tlp-button-secondary-box-shadow: rgba(0, 0, 0, .05);
 
     > .tlp-button-icon {
         margin: 0 8px 0 0;
-        font-size: .75rem;
+        font-size: 0.75rem;
     }
 
     > .tlp-button-icon-right {
         margin: 0 0 0 8px;
-        font-size: .75rem;
+        font-size: 0.75rem;
     }
 }
 
@@ -147,15 +146,7 @@ $tlp-button-secondary-box-shadow: rgba(0, 0, 0, .05);
     }
 }
 
-@mixin tlp-button-type(
-    $button-color,
-    $button-color-focus,
-    $button-color-active,
-    $button-color-disabled,
-    $disabled-button-text-color,
-    $outline-background-color-active,
-    $outline-color-disabled
-) {
+@mixin tlp-button-type($button-color, $button-color-focus, $button-color-active, $button-color-disabled, $disabled-button-text-color, $outline-background-color-active, $outline-color-disabled) {
     border-color: $button-color;
     background: $button-color;
 
@@ -185,15 +176,7 @@ $tlp-button-secondary-box-shadow: rgba(0, 0, 0, .05);
  */
 .tlp-button-primary {
     @extend %tlp-button;
-    @include tlp-button-type(
-        var(--tlp-theme-color),
-        var(--tlp-theme-color-darker-05),
-        var(--tlp-theme-color-darker-10),
-        var(--tlp-theme-color-lighter-30),
-        var(--tlp-ui-white-transparent-40),
-        var(--tlp-theme-color-lighter-90),
-        var(--tlp-theme-color-transparent-50)
-    );
+    @include tlp-button-type(var(--tlp-theme-color), var(--tlp-theme-color-darker-05), var(--tlp-theme-color-darker-10), var(--tlp-theme-color-lighter-30), var(--tlp-ui-white-transparent-40), var(--tlp-theme-color-lighter-90), var(--tlp-theme-color-transparent-50));
 }
 
 .tlp-button-secondary {
@@ -215,71 +198,32 @@ $tlp-button-secondary-box-shadow: rgba(0, 0, 0, .05);
 
     &:disabled,
     &.disabled {
-        @include tlp-button-disabled(
-            var(--tlp-ui-border-light-lighter-30),
-            var(--tlp-ui-border-light-transparent-40)
-        );
+        @include tlp-button-disabled(var(--tlp-ui-border-light-lighter-30), var(--tlp-ui-border-light-transparent-40));
     }
 
     &.tlp-button-outline {
-        @include tlp-button-outline(
-            var(--tlp-theme-dark-background-color),
-            var(--tlp-theme-dark-background-color-transparent-50),
-            var(--tlp-theme-dark-background-color-lighter-90)
-        );
+        @include tlp-button-outline(var(--tlp-theme-dark-background-color), var(--tlp-theme-dark-background-color-transparent-50), var(--tlp-theme-dark-background-color-lighter-90));
     }
 }
 
 .tlp-button-info {
     @extend %tlp-button;
-    @include tlp-button-type(
-        var(--tlp-ui-info),
-        var(--tlp-ui-info-darker-05),
-        var(--tlp-ui-info-darker-10),
-        var(--tlp-ui-info-lighter-30),
-        var(--tlp-ui-white-transparent-40),
-        var(--tlp-ui-info-lighter-90),
-        var(--tlp-ui-info-transparent-50)
-    );
+    @include tlp-button-type(var(--tlp-ui-info), var(--tlp-ui-info-darker-05), var(--tlp-ui-info-darker-10), var(--tlp-ui-info-lighter-30), var(--tlp-ui-white-transparent-40), var(--tlp-ui-info-lighter-90), var(--tlp-ui-info-transparent-50));
 }
 
 .tlp-button-success {
     @extend %tlp-button;
-    @include tlp-button-type(
-        var(--tlp-ui-success),
-        var(--tlp-ui-success-darker-05),
-        var(--tlp-ui-success-darker-10),
-        var(--tlp-ui-success-lighter-30),
-        var(--tlp-ui-white-transparent-40),
-        var(--tlp-ui-success-lighter-90),
-        var(--tlp-ui-success-transparent-50)
-    );
+    @include tlp-button-type(var(--tlp-ui-success), var(--tlp-ui-success-darker-05), var(--tlp-ui-success-darker-10), var(--tlp-ui-success-lighter-30), var(--tlp-ui-white-transparent-40), var(--tlp-ui-success-lighter-90), var(--tlp-ui-success-transparent-50));
 }
 
 .tlp-button-warning {
     @extend %tlp-button;
-    @include tlp-button-type(
-        var(--tlp-ui-warning),
-        var(--tlp-ui-warning-darker-05),
-        var(--tlp-ui-warning-darker-10),
-        var(--tlp-ui-warning-lighter-30),
-        var(--tlp-ui-white-transparent-40),
-        var(--tlp-ui-warning-lighter-90),
-        var(--tlp-ui-warning-transparent-50)
-    );
+    @include tlp-button-type(var(--tlp-ui-warning), var(--tlp-ui-warning-darker-05), var(--tlp-ui-warning-darker-10), var(--tlp-ui-warning-lighter-30), var(--tlp-ui-white-transparent-40), var(--tlp-ui-warning-lighter-90), var(--tlp-ui-warning-transparent-50));
 }
 
 .tlp-button-danger {
     @extend %tlp-button;
-    @include tlp-button-type(
-        var(--tlp-ui-danger),
-        var(--tlp-ui-danger-darker-05),
-        var(--tlp-ui-danger-darker-10),
-        var(--tlp-ui-danger-lighter-30),
-        var(--tlp-ui-white-transparent-40),
-        var(--tlp-ui-danger-lighter-90),
-        var(--tlp-ui-danger-transparent-50)
-    );
+    @include tlp-button-type(var(--tlp-ui-danger), var(--tlp-ui-danger-darker-05), var(--tlp-ui-danger-darker-10), var(--tlp-ui-danger-lighter-30), var(--tlp-ui-white-transparent-40), var(--tlp-ui-danger-lighter-90), var(--tlp-ui-danger-transparent-50));
 }
 
 /**
@@ -295,12 +239,12 @@ $tlp-button-secondary-box-shadow: rgba(0, 0, 0, .05);
 
     > .tlp-button-icon {
         margin: 0 8px 0 0;
-        font-size: .875rem;
+        font-size: 0.875rem;
     }
 
     > .tlp-button-icon-right {
         margin: 0 0 0 8px;
-        font-size: .75rem;
+        font-size: 0.75rem;
     }
 }
 
@@ -314,12 +258,12 @@ $tlp-button-secondary-box-shadow: rgba(0, 0, 0, .05);
 
     > .tlp-button-icon {
         margin: 0 4px 0 0;
-        font-size: .625rem;
+        font-size: 0.625rem;
     }
 
     > .tlp-button-icon-right {
         margin: 0 0 0 4px;
-        font-size: .625rem;
+        font-size: 0.625rem;
     }
 }
 
@@ -327,19 +271,19 @@ $tlp-button-secondary-box-shadow: rgba(0, 0, 0, .05);
     height: $tlp-button-mini-height;
     padding: $tlp-button-mini-padding;
     border-radius: $tlp-button-mini-radius;
-    box-shadow: 0 1px 2px rgba(0, 0, 0, .08), 0 1px 1px rgba(0, 0, 0, .1), 0 -1px 0 rgba(0, 0, 0, .03);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08), 0 1px 1px rgba(0, 0, 0, 0.1), 0 -1px 0 rgba(0, 0, 0, 0.03);
     font-size: $tlp-button-mini-font-size;
     font-weight: $tlp-button-mini-font-weight;
     line-height: $tlp-button-mini-line-height;
 
     > .tlp-button-icon {
         margin: 0 4px 0 0;
-        font-size: .625rem;
+        font-size: 0.625rem;
     }
 
     > .tlp-button-icon-right {
         margin: 0 0 0 4px;
-        font-size: .625rem;
+        font-size: 0.625rem;
     }
 }
 
@@ -354,20 +298,23 @@ $tlp-button-secondary-box-shadow: rgba(0, 0, 0, .05);
 /**
  * Overrides for a.tlp-button* so they have the good heights
  */
-a[class*='tlp-button'] {
+a[class*="tlp-button"] {
     height: auto;
     line-height: $tlp-button-normal-height - 2px;
     text-align: center;
 }
 
-a.tlp-button-large[class*='tlp-button'] { //stylelint-disable-line selector-no-qualifying-type
+//stylelint-disable-next-line selector-no-qualifying-type
+a.tlp-button-large[class*="tlp-button"] {
     line-height: $tlp-button-large-height - 2px;
 }
 
-a.tlp-button-small[class*='tlp-button'] { //stylelint-disable-line selector-no-qualifying-type
+//stylelint-disable-next-line selector-no-qualifying-type
+a.tlp-button-small[class*="tlp-button"] {
     line-height: $tlp-button-small-height - 2px;
 }
 
-a.tlp-button-mini[class*='tlp-button'] { //stylelint-disable-line selector-no-qualifying-type
+//stylelint-disable-next-line selector-no-qualifying-type
+a.tlp-button-mini[class*="tlp-button"] {
     line-height: $tlp-button-mini-height - 2px;
 }

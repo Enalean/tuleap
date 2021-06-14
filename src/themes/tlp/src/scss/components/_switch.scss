@@ -59,7 +59,7 @@ $tlp-switch-button-spinner-size: $tlp-switch-height - 2 * ($tlp-switch-button-pa
     user-select: none;
 
     &::before {
-        content: '';
+        content: "";
         display: block;
         position: absolute;
         top: $tlp-switch-button-padding;
@@ -72,7 +72,7 @@ $tlp-switch-button-spinner-size: $tlp-switch-height - 2 * ($tlp-switch-button-pa
     }
 
     &::after {
-        content: '\f00c'; // fa-check
+        content: "\f00c"; // fa-check
         display: block;
         position: absolute;
         top: $tlp-switch-button-padding + $tlp-switch-button-slider-margin;
@@ -83,7 +83,7 @@ $tlp-switch-button-spinner-size: $tlp-switch-height - 2 * ($tlp-switch-button-pa
         border-radius: ($tlp-switch-height - (2 * $tlp-switch-button-padding)) / 2;
         background-color: $tlp-switch-button-background;
         color: #ffffff;
-        font-family: 'Font Awesome 5 Free';
+        font-family: "Font Awesome 5 Free";
         font-size: 12px;
         font-weight: 600;
         line-height: $tlp-switch-height - $tlp-switch-button-padding;
@@ -96,7 +96,7 @@ $tlp-switch-button-spinner-size: $tlp-switch-height - 2 * ($tlp-switch-button-pa
         }
 
         &::after {
-            content: '\f1ce'; // fa-spinner
+            content: "\f1ce"; // fa-spinner
             left: ($tlp-switch-width - $tlp-switch-button-spinner-size) / 2;
             width: $tlp-switch-button-spinner-size;
             height: $tlp-switch-button-spinner-size;
@@ -138,7 +138,7 @@ $tlp-switch-button-spinner-size: $tlp-switch-height - 2 * ($tlp-switch-button-pa
 }
 
 .tlp-switch-checkbox:disabled + .tlp-switch-button {
-    opacity: .5;
+    opacity: 0.5;
     cursor: not-allowed;
 }
 
@@ -146,15 +146,14 @@ $tlp-switch-button-spinner-size: $tlp-switch-height - 2 * ($tlp-switch-button-pa
     width: $tlp-switch-mini-width;
     height: $tlp-switch-mini-height;
 
-
     &::before {
-        content: '';
+        content: "";
         border-radius: $tlp-switch-mini-height / 2;
         background-color: $tlp-switch-background;
     }
 
     &::after {
-        content: '';
+        content: "";
         width: $tlp-switch-mini-button-width;
         border-radius: ($tlp-switch-mini-height - (2 * $tlp-switch-button-padding)) / 2;
     }

@@ -19,7 +19,7 @@
 
 .quick-look-pane-highlighted .document-quick-look-image-container {
     .document-quick-look-image-overlay {
-        opacity: .9;
+        opacity: 0.9;
 
         > .document-quick-look-update-image-icon::after {
             transform: scale(1);
@@ -29,14 +29,13 @@
 
 .quick-look-pane-highlighted-forbidden .document-quick-look-image-container {
     .document-quick-look-image-overlay {
-        opacity: .9;
+        opacity: 0.9;
 
         > .document-quick-look-dropzone-text {
             color: var(--tlp-ui-danger);
         }
     }
 }
-
 
 .document-quick-look-image-container {
     position: relative;
@@ -59,7 +58,6 @@
     text-align: center;
     pointer-events: none;
 
-
     > .document-quick-look-dropzone-text {
         margin: var(--tlp-medium-spacing) 0 0;
         opacity: 1;
@@ -70,13 +68,13 @@
         font-size: 80px;
 
         &::after {
-            content: '\f067'; // fa-plus
+            content: "\f067"; // fa-plus
             position: absolute;
             top: -18px;
             right: -18px;
             transform: scale(0);
             transition: opacity ease-in-out 100ms, transform ease-in-out 100ms;
-            font-family: 'Font Awesome 5 Free';
+            font-family: "Font Awesome 5 Free";
             font-size: 40px;
             font-weight: 900;
         }

@@ -14,47 +14,49 @@
         min-width: 100% !important;
     }
 
-    td[id=bodyCell] {
+    td[id="bodyCell"] {
         padding: 10px !important;
     }
 
-    table.kmMobileHide { /* stylelint-disable-line selector-class-pattern, selector-no-qualifying-type */
+    /* stylelint-disable-next-line selector-class-pattern, selector-no-qualifying-type */
+    table.kmMobileHide {
         display: none !important;
     }
 
-    table[class=kmTextContentContainer] {
+    table[class="kmTextContentContainer"] {
         width: 100% !important;
     }
 
-    table[class=kmBoxedTextContentContainer] {
+    table[class="kmBoxedTextContentContainer"] {
         width: 100% !important;
     }
 
-    td[class=kmImageContent] {
+    td[class="kmImageContent"] {
         padding-right: 0 !important;
         padding-left: 0 !important;
     }
 
-    img[class=kmImage] {
+    img[class="kmImage"] {
         width: 100% !important;
     }
 
-    td.kmMobileStretch { /* stylelint-disable-line selector-class-pattern, selector-no-qualifying-type */
+    /* stylelint-disable-next-line selector-class-pattern, selector-no-qualifying-type */
+    td.kmMobileStretch {
         padding-right: 0 !important;
         padding-left: 0 !important;
     }
 
-    table[class=kmSplitContentLeftContentContainer],
-    table[class=kmSplitContentRightContentContainer],
-    table[class=kmColumnContainer],
-    td[class=kmVerticalButtonBarContentOuter] table[class=kmButtonBarContent],
-    td[class=kmVerticalButtonCollectionContentOuter] table[class=kmButtonCollectionContent],
-    table[class=kmVerticalButton],
-    table[class=kmVerticalButtonContent] {
+    table[class="kmSplitContentLeftContentContainer"],
+    table[class="kmSplitContentRightContentContainer"],
+    table[class="kmColumnContainer"],
+    td[class="kmVerticalButtonBarContentOuter"] table[class="kmButtonBarContent"],
+    td[class="kmVerticalButtonCollectionContentOuter"] table[class="kmButtonCollectionContent"],
+    table[class="kmVerticalButton"],
+    table[class="kmVerticalButtonContent"] {
         width: 100% !important;
     }
 
-    td[class=kmButtonCollectionInner] {
+    td[class="kmButtonCollectionInner"] {
         padding-top: 9px !important;
         padding-right: 9px !important;
         padding-bottom: 0 !important;
@@ -62,32 +64,32 @@
         background-color: transparent !important;
     }
 
-    td[class=kmVerticalButtonIconContent],
-    td[class=kmVerticalButtonTextContent],
-    td[class=kmVerticalButtonContentOuter] {
+    td[class="kmVerticalButtonIconContent"],
+    td[class="kmVerticalButtonTextContent"],
+    td[class="kmVerticalButtonContentOuter"] {
         padding-right: 0 !important;
         padding-bottom: 9px !important;
         padding-left: 0 !important;
     }
 
-    table[class=kmSplitContentLeftContentContainer] td[class=kmTextContent],
-    table[class=kmSplitContentRightContentContainer] td[class=kmTextContent],
-    table[class=kmColumnContainer] td[class=kmTextContent],
-    table[class=kmSplitContentLeftContentContainer] td[class=kmImageContent],
-    table[class=kmSplitContentRightContentContainer] td[class=kmImageContent] {
+    table[class="kmSplitContentLeftContentContainer"] td[class="kmTextContent"],
+    table[class="kmSplitContentRightContentContainer"] td[class="kmTextContent"],
+    table[class="kmColumnContainer"] td[class="kmTextContent"],
+    table[class="kmSplitContentLeftContentContainer"] td[class="kmImageContent"],
+    table[class="kmSplitContentRightContentContainer"] td[class="kmImageContent"] {
         padding-top: 9px !important;
     }
 
-    td[class='rowContainer kmFloatLeft'],
-    td[class='rowContainer kmFloatLeft firstColumn'],
-    td[class='rowContainer kmFloatLeft lastColumn'] {
+    td[class="rowContainer kmFloatLeft"],
+    td[class="rowContainer kmFloatLeft firstColumn"],
+    td[class="rowContainer kmFloatLeft lastColumn"] {
         width: 100% !important;
         float: left;
         clear: both;
     }
 
-    table[id=templateContainer],
-    table[class=templateRow] {
+    table[id="templateContainer"],
+    table[class="templateRow"] {
         width: 100% !important;
         max-width: 600px !important;
     }
@@ -112,22 +114,22 @@
         line-height: 130% !important;
     }
 
-    td[class=kmTextContent] {
+    td[class="kmTextContent"] {
         font-size: 14px !important;
         line-height: 130% !important;
     }
 
-    td[class=kmTextBlockInner] td[class=kmTextContent] {
+    td[class="kmTextBlockInner"] td[class="kmTextContent"] {
         padding-right: 18px !important;
         padding-left: 18px !important;
     }
 
-    table[class='kmTableBlock kmTableMobile'] td[class=kmTableBlockInner] {
+    table[class="kmTableBlock kmTableMobile"] td[class="kmTableBlockInner"] {
         padding-right: 9px !important;
         padding-left: 9px !important;
     }
 
-    table[class='kmTableBlock kmTableMobile'] td[class=kmTableBlockInner] [class=kmTextContent] {
+    table[class="kmTableBlock kmTableMobile"] td[class="kmTableBlockInner"] [class="kmTextContent"] {
         padding-right: 4px !important;
         padding-left: 4px !important;
         font-size: 14px !important;

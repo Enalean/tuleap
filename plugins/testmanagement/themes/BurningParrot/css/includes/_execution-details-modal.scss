@@ -19,15 +19,15 @@
 
 .execution-details-modal {
     $status: (
-        'tlp-modal-success': var(--tlp-ui-success),
-        'tlp-modal-danger': var(--tlp-ui-danger),
-        'tlp-modal-info': var(--tlp-ui-info),
-        'notrun': var(--tlp-ui-dimmed)
+        "tlp-modal-success": var(--tlp-ui-success),
+        "tlp-modal-danger": var(--tlp-ui-danger),
+        "tlp-modal-info": var(--tlp-ui-info),
+        "notrun": var(--tlp-ui-dimmed),
     );
 
     @each $name, $color in $status {
         &.#{$name} > .execution-details-modal-info {
-            background: linear-gradient(0deg, rgba(0, 0, 0, .1), rgba(0, 0, 0, .1)), $color;
+            background: linear-gradient(0deg, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.1)), $color;
             color: var(--tlp-ui-white);
         }
     }

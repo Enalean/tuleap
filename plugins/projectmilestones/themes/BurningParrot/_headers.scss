@@ -56,19 +56,19 @@
 }
 
 .project-release-whats-hot-icon::before {
-    content: '\f141'; // fa-ellipsis-h
+    content: "\f141"; // fa-ellipsis-h
 }
 
 .project-release-toggle-closed > .project-release-header.disabled:hover > .project-release-whats-hot-icon::before {
-    content: '\f141'; // fa-ellipsis-h
+    content: "\f141"; // fa-ellipsis-h
 }
 
 .project-release-toggle-closed > .project-release-header:hover > .project-release-whats-hot-icon::before {
-    content: '\f0da'; // fa-caret-right
+    content: "\f0da"; // fa-caret-right
 }
 
 .project-release-header:hover > .project-release-whats-hot-icon::before {
-    content: '\f0d7'; // fa-caret-down
+    content: "\f0d7"; // fa-caret-down
 }
 
 .project-release-header {
@@ -162,7 +162,7 @@
 .release-remaining-icon {
     align-self: center;
     margin: 0 5px 0 0;
-    opacity: .9;
+    opacity: 0.9;
     color: var(--tlp-ui-dimmed);
     font-size: 12px;
 }

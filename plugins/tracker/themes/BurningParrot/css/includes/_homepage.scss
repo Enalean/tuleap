@@ -39,11 +39,11 @@
     @each $color-name, $colors in swatch-colors.$tlp-swatch-color-map {
         &.#{$color-name} {
             &:hover {
-                border-color: map-get($colors, 'border');
+                border-color: map-get($colors, "border");
             }
 
             > .trackers-homepage-tracker-title-container > .trackers-homepage-tracker-title {
-                color: map-get($colors, 'text');
+                color: map-get($colors, "text");
             }
         }
     }
@@ -73,5 +73,5 @@
 .trackers-homepage-tracker-description {
     display: block;
     color: var(--tlp-ui-dimmed);
-    font-size: .875rem;
+    font-size: 0.875rem;
 }

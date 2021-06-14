@@ -19,8 +19,7 @@
 
 .frs-artifact-links-loading-natures {
     height: 30px;
-    background: url('../../../src/www/themes/BurningParrot/images/spinner.gif') no-repeat center
-        center;
+    background: url("../../../src/www/themes/BurningParrot/images/spinner.gif") no-repeat center center;
 }
 
 .frs-artifact-links-table {
@@ -57,6 +56,6 @@
     /* stylelint-disable-next-line selector-no-qualifying-type */
     > .tlp-table > tbody > tr > td.frs-artifact-links-loading-links {
         height: 30px;
-        background: url('./images/loader-mini.gif') no-repeat center center;
+        background: url("./images/loader-mini.gif") no-repeat center center;
     }
 }

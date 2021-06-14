@@ -32,21 +32,22 @@
 
     &.loading {
         height: 100px;
-        background: var(--tlp-ui-white) url('../images/spinner.gif') center center no-repeat;
+        background: var(--tlp-ui-white) url("../images/spinner.gif") center center no-repeat;
     }
 }
 
 .project-admin-ugroup-ldap-binding-modal-preview-add-alert::before {
-    content: '\f067'; // fas fa-plus
+    content: "\f067"; // fas fa-plus
     font-weight: 900;
 }
 
 .project-admin-ugroup-ldap-binding-modal-preview-remove-alert::before {
-    content: '\f2ed'; // fas fa-trash-alt
+    content: "\f2ed"; // fas fa-trash-alt
     font-weight: 900;
 }
 
-ul.project-admin-ugroup-ldap-binding-modal-preview-list { /* stylelint-disable-line selector-no-qualifying-type */
+/* stylelint-disable-next-line selector-no-qualifying-type */
+ul.project-admin-ugroup-ldap-binding-modal-preview-list {
     margin: var(--tlp-small-spacing) 0 0;
     padding: 0;
     list-style: none;

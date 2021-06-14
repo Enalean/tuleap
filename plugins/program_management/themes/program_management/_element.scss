@@ -21,17 +21,17 @@
 
 @each $color-name, $colors in swatch-colors.$tlp-swatch-color-map {
     .element-card-#{$color-name} {
-        --card-color: #{map-get($colors, 'primary')};
+        --card-color: #{map-get($colors, "primary")};
     }
 
     .element-card-xref-#{$color-name} {
-        color: #{map-get($colors, 'text')};
+        color: #{map-get($colors, "text")};
     }
 
     .element-card-background-#{$color-name} {
-        --secondary-color: #{map-get($colors, 'secondary')};
-        --border-color: #{map-get($colors, 'border')};
-        --text-color: #{map-get($colors, 'text')};
+        --secondary-color: #{map-get($colors, "secondary")};
+        --border-color: #{map-get($colors, "border")};
+        --text-color: #{map-get($colors, "text")};
         --accessibility-pattern: url("#{map-get($colors, 'pattern')}");
     }
 }
@@ -43,17 +43,14 @@
     border: 1px solid var(--border-color, transparent);
     border-radius: 3px;
     background: var(--secondary-color, var(--tlp-ui-white));
-    box-shadow:
-        0 1px 4px rgba(0, 0, 0, .08),
-        0 1px 2px rgba(0, 0, 0, .1),
-        0 -1px 0 rgba(0, 0, 0, .03);
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.1), 0 -1px 0 rgba(0, 0, 0, 0.03);
 
-    &[class*='element-card-background-'] {
-        box-shadow: 0 1px 2px rgba(0, 0, 0, .1);
+    &[class*="element-card-background-"] {
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
     }
 
     &::before {
-        content: '';
+        content: "";
         display: block;
         position: absolute;
         top: -1px;
@@ -65,17 +62,17 @@
     }
 
     &.element-card-with-accessibility {
-        &[class*='element-card-background-'] {
+        &[class*="element-card-background-"] {
             padding: var(--tlp-small-spacing) var(--tlp-medium-spacing) var(--tlp-small-spacing) calc(var(--tlp-small-spacing) + 2px);
 
             > .element-card-accessibility {
-                opacity: .5;
+                opacity: 0.5;
                 background-color: var(--text-color);
                 mask-image: var(--accessibility-pattern);
             }
         }
 
-        &:not([class*='element-card-background-']) > .element-card-accessibility {
+        &:not([class*="element-card-background-"]) > .element-card-accessibility {
             display: none;
         }
 
@@ -139,7 +136,7 @@
 .element-card-xref {
     width: max-content;
     margin: 0 0 var(--tlp-small-spacing) 0;
-    font-size: .65rem;
+    font-size: 0.65rem;
 
     &:hover {
         text-decoration: none;
@@ -231,6 +228,6 @@
 
 .element-card-user-story-closed {
     border-color: var(--tlp-ui-border-normal-transparent-50);
-    opacity: .5;
+    opacity: 0.5;
     background: transparent;
 }

@@ -17,9 +17,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@import '../../../node_modules/prismjs/themes/prism';
+@import "../../../node_modules/prismjs/themes/prism";
 
-code[class*='language-'],
-pre[class*='language-'] {
+code[class*="language-"],
+pre[class*="language-"] {
     font-family: var(--tlp-font-family-mono);
 }

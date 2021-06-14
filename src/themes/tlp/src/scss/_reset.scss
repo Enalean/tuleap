@@ -86,7 +86,9 @@ td {
     vertical-align: baseline;
 }
 
-* { box-sizing: border-box; }
+* {
+    box-sizing: border-box;
+}
 
 :focus {
     outline: 0;
@@ -114,15 +116,15 @@ blockquote::before,
 blockquote::after,
 q::before,
 q::after {
-    content: '';
+    content: "";
 }
 
 blockquote,
 q {
-    quotes: '' '';
+    quotes: "" "";
 }
 
-input[type=number] {
+input[type="number"] {
     -moz-appearance: textfield; //stylelint-disable-line property-no-vendor-prefix
 
     &:hover,

@@ -19,10 +19,10 @@
 
 @use '../variables/colors/swatch-colors';
 
-$tlp-form-element-font-size: .875rem;
+$tlp-form-element-font-size: 0.875rem;
 $tlp-form-element-height: 40px;
 $tlp-form-element-padding-horizontal: 12px;
-$tlp-form-element-small-font-size: .8125rem;
+$tlp-form-element-small-font-size: 0.8125rem;
 $tlp-form-element-small-height: 32px;
 $tlp-form-element-small-padding-horizontal: var(--tlp-small-spacing);
 $tlp-form-element-large-font-size: 1rem;
@@ -51,12 +51,12 @@ $tlp-form-element-select-small-background-size: 6px;
     > .tlp-text-warning,
     > .tlp-text-danger {
         margin: 6px 0 0;
-        font-size: .8125rem;
+        font-size: 0.8125rem;
         line-height: 18px;
     }
 
     &.tlp-form-element-disabled {
-        opacity: .5;
+        opacity: 0.5;
 
         /* stylelint-disable selector-class-pattern */
         > .tlp-label,
@@ -76,7 +76,6 @@ $tlp-form-element-select-small-background-size: 6px;
         }
         /* stylelint-enable */
     }
-
 
     &.tlp-form-element-error {
         > .tlp-label {
@@ -117,7 +116,7 @@ $tlp-form-element-select-small-background-size: 6px;
     position: relative;
     margin: 0 0 8px;
     color: var(--tlp-label-color);
-    font-size: .8125rem;
+    font-size: 0.8125rem;
     font-weight: 500;
 
     &[for],
@@ -130,14 +129,14 @@ $tlp-form-element-select-small-background-size: 6px;
         position: absolute;
         margin: 0 0 0 3px;
         color: var(--tlp-ui-danger);
-        font-size: .6em;
+        font-size: 0.6em;
         vertical-align: text-top;
     }
 
     &:not(.tlp-checkbox) ~ &.tlp-checkbox,
     &:not(.tlp-radio) ~ &.tlp-radio {
         color: inherit;
-        font-size: .875rem;
+        font-size: 0.875rem;
         font-weight: normal;
     }
 }
@@ -176,11 +175,13 @@ $tlp-form-element-select-small-background-size: 6px;
     font-family: var(--tlp-font-family);
     font-size: $tlp-form-element-font-size;
 
-    &::-webkit-input-placeholder { //stylelint-disable-line selector-no-vendor-prefix
+    //stylelint-disable-next-line selector-no-vendor-prefix
+    &::-webkit-input-placeholder {
         color: $tlp-form-element-placeholder-color;
     }
 
-    &::-moz-placeholder { //stylelint-disable-line selector-no-vendor-prefix
+    //stylelint-disable-next-line selector-no-vendor-prefix
+    &::-moz-placeholder {
         color: $tlp-form-element-placeholder-color;
     }
 
@@ -219,7 +220,7 @@ $tlp-form-element-select-small-background-size: 6px;
     height: $tlp-form-element-height;
     padding: 0 15px 0 33px;
     border-radius: $tlp-form-element-height / 2;
-    background: $tlp-form-element-background url('../images/tlp-search-background.png') no-repeat;
+    background: $tlp-form-element-background url("../images/tlp-search-background.png") no-repeat;
     background-position: 13px center;
 
     &::-webkit-search-decoration {
@@ -234,7 +235,7 @@ $tlp-form-element-select-small-background-size: 6px;
         height: $tlp-form-element-small-height;
         padding: 0 10px 0 26px;
         border-radius: $tlp-form-element-small-height / 2;
-        background: $tlp-form-element-background url('../images/tlp-search-small-background.png') no-repeat;
+        background: $tlp-form-element-background url("../images/tlp-search-small-background.png") no-repeat;
         background-position: 10px center;
         font-size: $tlp-form-element-small-font-size;
     }
@@ -274,7 +275,7 @@ $tlp-form-element-select-small-background-size: 6px;
 
     height: $tlp-form-element-height;
     padding: 0 ($tlp-form-element-padding-horizontal * 2 + $tlp-form-element-select-background-size) 0 $tlp-form-element-padding-horizontal;
-    background: $tlp-form-element-background url('../images/tlp-select-background.png') no-repeat;
+    background: $tlp-form-element-background url("../images/tlp-select-background.png") no-repeat;
     background-position: right $tlp-form-element-padding-horizontal center;
     -moz-appearance: none; //stylelint-disable-line property-no-vendor-prefix
     -webkit-appearance: none; //stylelint-disable-line property-no-vendor-prefix
@@ -283,7 +284,7 @@ $tlp-form-element-select-small-background-size: 6px;
     &.tlp-select-small {
         height: $tlp-form-element-small-height;
         padding: 0 calc(#{$tlp-form-element-small-padding-horizontal} * 2 + #{$tlp-form-element-select-small-background-size}) 0 $tlp-form-element-small-padding-horizontal;
-        background: $tlp-form-element-background url('../images/tlp-select-small-background.png') no-repeat;
+        background: $tlp-form-element-background url("../images/tlp-select-small-background.png") no-repeat;
         background-position: right $tlp-form-element-small-padding-horizontal center;
         font-size: $tlp-form-element-small-font-size;
     }
@@ -359,7 +360,7 @@ $tlp-form-element-select-small-background-size: 6px;
 
     @each $color-name, $colors in swatch-colors.$tlp-swatch-color-map {
         .list-picker-badge-#{$color-name} {
-            @extend %tlp-badge, .tlp-badge-#{$color-name}, .tlp-badge-outline;;
+            @extend %tlp-badge, .tlp-badge-#{$color-name}, .tlp-badge-outline;
         }
     }
 
@@ -376,7 +377,7 @@ $tlp-form-element-select-small-background-size: 6px;
         &.list-picker-single {
             height: $tlp-form-element-height;
             padding: 0 ($tlp-form-element-padding-horizontal * 2 + $tlp-form-element-select-background-size) 0 $tlp-form-element-padding-horizontal;
-            background: $tlp-form-element-background url('../images/tlp-select-background.png') no-repeat;
+            background: $tlp-form-element-background url("../images/tlp-select-background.png") no-repeat;
             background-position: right $tlp-form-element-padding-horizontal center;
         }
 
@@ -384,7 +385,7 @@ $tlp-form-element-select-small-background-size: 6px;
             position: relative;
             min-height: $tlp-form-element-height;
             padding: 0 52px 5px 6px;
-            background: $tlp-form-element-background url('../images/tlp-select-multi-background.svg') no-repeat;
+            background: $tlp-form-element-background url("../images/tlp-select-multi-background.svg") no-repeat;
             background-position: right 10px top 17px;
             background-size: 15px 5px;
         }
@@ -401,12 +402,12 @@ $tlp-form-element-select-small-background-size: 6px;
     border-right: 1px solid var(--tlp-theme-color);
     border-bottom: 1px solid var(--tlp-theme-color);
     border-left: 1px solid var(--tlp-theme-color);
-    box-shadow: 0 6px 12px rgba(0, 0, 0, .175);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
 
     &.list-picker-dropdown-above {
         border-top: 1px solid var(--tlp-theme-color);
         border-bottom: unset;
-        box-shadow: 0 0 12px rgba(0, 0, 0, .175);
+        box-shadow: 0 0 12px rgba(0, 0, 0, 0.175);
     }
 
     .list-picker-dropdown-option-value-disabled {
@@ -453,17 +454,17 @@ $tlp-form-element-select-small-background-size: 6px;
         color: var(--tlp-ui-white);
     }
 
-    &[aria-selected='true']::before {
-        content: '\f00c'; // fa-check
+    &[aria-selected="true"]::before {
+        content: "\f00c"; // fa-check
         position: absolute;
         top: 9px;
         left: $tlp-form-element-padding-horizontal;
-        font-family: 'Font Awesome 5 Free';
+        font-family: "Font Awesome 5 Free";
         font-size: 12px;
         font-weight: 900;
     }
 
-    &[aria-selected='true'] {
+    &[aria-selected="true"] {
         position: relative;
         padding: 6px $tlp-form-element-padding-horizontal 6px 32px;
         color: var(--tlp-theme-color);
@@ -492,10 +493,10 @@ $tlp-form-element-select-small-background-size: 6px;
         width: 20px;
         height: 20px;
         margin: 0 6px 0 0;
-        border: 3px solid map-get($colors, 'primary');
+        border: 3px solid map-get($colors, "primary");
         border-radius: 50%;
-        background-color: map-get($colors, 'secondary');
-        color: map-get($colors, 'primary');
+        background-color: map-get($colors, "secondary");
+        color: map-get($colors, "primary");
         cursor: pointer;
     }
 }
@@ -537,16 +538,18 @@ $tlp-form-element-select-small-background-size: 6px;
         align-items: center;
         height: $tlp-form-element-height;
         padding: 0 ($tlp-form-element-padding-horizontal * 2 + $tlp-form-element-select-background-size) 0 $tlp-form-element-padding-horizontal;
-        background: $tlp-form-element-background url('../images/tlp-select-background.png') no-repeat;
+        background: $tlp-form-element-background url("../images/tlp-select-background.png") no-repeat;
         background-position: right $tlp-form-element-padding-horizontal center;
         cursor: default;
 
-        .select2-selection__rendered { //stylelint-disable-line selector-class-pattern
+        //stylelint-disable-next-line selector-class-pattern
+        .select2-selection__rendered {
             width: 100%;
             padding: 0;
             line-height: normal;
 
-            .select2-selection__placeholder { //stylelint-disable-line selector-class-pattern
+            //stylelint-disable-next-line selector-class-pattern
+            .select2-selection__placeholder {
                 color: $tlp-form-element-placeholder-color;
             }
         }
@@ -558,7 +561,8 @@ $tlp-form-element-select-small-background-size: 6px;
         min-height: $tlp-form-element-height;
         padding: 0 $tlp-form-element-padding-horizontal 5px 6px;
 
-        .select2-selection__rendered { //stylelint-disable-line selector-class-pattern
+        //stylelint-disable-next-line selector-class-pattern
+        .select2-selection__rendered {
             display: flex;
             flex-wrap: wrap;
             align-items: center;
@@ -566,29 +570,33 @@ $tlp-form-element-select-small-background-size: 6px;
             height: 100%;
             padding: 0;
 
-            .select2-selection__choice { //stylelint-disable-line selector-class-pattern
+            //stylelint-disable-next-line selector-class-pattern
+            .select2-selection__choice {
                 @extend %tlp-badge;
                 @extend .tlp-badge-primary, .tlp-badge-outline; //stylelint-disable-line scss/at-extend-no-missing-placeholder
 
                 flex: 0 0 auto;
                 margin: 6px 5px 0 0;
 
-                .select2-selection__choice__remove { //stylelint-disable-line selector-class-pattern
+                //stylelint-disable-next-line selector-class-pattern
+                .select2-selection__choice__remove {
                     display: inline-block;
                     width: 12px;
                     margin: 0 2px 0 0;
                     font-size: 0;
                     line-height: 0;
 
-                    &::before { //stylelint-disable-line max-nesting-depth
-                        content: '\00d7'; // fa-remove
-                        font-size: .875rem;
+                    //stylelint-disable-next-line max-nesting-depth
+                    &::before {
+                        content: "\00d7"; // fa-remove
+                        font-size: 0.875rem;
                         font-weight: 500;
                         text-align: center;
                     }
 
-                    &:hover::before { //stylelint-disable-line max-nesting-depth
-                        opacity: .5;
+                    //stylelint-disable-next-line max-nesting-depth
+                    &:hover::before {
+                        opacity: 0.5;
                     }
                 }
             }
@@ -598,14 +606,16 @@ $tlp-form-element-select-small-background-size: 6px;
                 order: 2;
                 list-style-type: none;
 
-                .select2-search__field { //stylelint-disable-line selector-class-pattern
+                //stylelint-disable-next-line selector-class-pattern
+                .select2-search__field {
                     margin: 10px 0 0 6px;
                     background: transparent;
                     font-family: var(--tlp-font-family);
                 }
             }
 
-            .select2-selection__clear { //stylelint-disable-line selector-class-pattern
+            //stylelint-disable-next-line selector-class-pattern
+            .select2-selection__clear {
                 flex: 0 0 auto;
                 order: 3;
                 margin: 4px 0 0;
@@ -613,7 +623,8 @@ $tlp-form-element-select-small-background-size: 6px;
         }
     }
 
-    .select2-selection__clear { //stylelint-disable-line selector-class-pattern
+    //stylelint-disable-next-line selector-class-pattern
+    .select2-selection__clear {
         float: right;
         font-size: 18px;
         line-height: 17px;
@@ -624,12 +635,13 @@ $tlp-form-element-select-small-background-size: 6px;
         z-index: 2002;
         padding: 0;
         border-color: var(--tlp-theme-color);
-        box-shadow: 0 6px 12px rgba(0, 0, 0, .175);
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
 
         .select2-search--dropdown {
             padding: $tlp-form-element-padding-horizontal;
 
-            .select2-search__field { //stylelint-disable-line selector-class-pattern
+            //stylelint-disable-next-line selector-class-pattern
+            .select2-search__field {
                 @extend %tlp-form-element;
 
                 height: $tlp-form-element-small-height;
@@ -638,24 +650,27 @@ $tlp-form-element-select-small-background-size: 6px;
             }
         }
 
-        .select2-results__options { //stylelint-disable-line selector-class-pattern
+        //stylelint-disable-next-line selector-class-pattern
+        .select2-results__options {
             max-height: 250px;
             overflow-y: auto;
         }
 
-        .select2-results__option { //stylelint-disable-line selector-class-pattern
+        //stylelint-disable-next-line selector-class-pattern
+        .select2-results__option {
             padding: 6px $tlp-form-element-padding-horizontal 6px ($tlp-form-element-padding-horizontal + 20px);
             font-size: $tlp-form-element-small-font-size;
             line-height: normal;
 
-            &[role='group'] {
+            &[role="group"] {
                 padding: 0;
 
                 &:first-child {
                     margin: 0;
                 }
 
-                .select2-results__group { //stylelint-disable-line selector-class-pattern
+                //stylelint-disable-next-line selector-class-pattern
+                .select2-results__group {
                     padding: 6px $tlp-form-element-padding-horizontal;
                     color: var(--tlp-ui-dimmed);
                     font-size: $tlp-form-element-small-font-size;
@@ -664,36 +679,40 @@ $tlp-form-element-select-small-background-size: 6px;
                     text-transform: uppercase;
                 }
 
-                .select2-results__options--nested > .select2-results__option { //stylelint-disable-line selector-class-pattern
+                //stylelint-disable-next-line selector-class-pattern
+                .select2-results__options--nested > .select2-results__option {
                     padding: 6px $tlp-form-element-padding-horizontal 6px ($tlp-form-element-padding-horizontal + 20px);
 
-                    &[aria-selected='true']::before { //stylelint-disable-line max-nesting-depth
+                    //stylelint-disable-next-line max-nesting-depth
+                    &[aria-selected="true"]::before {
                         left: $tlp-form-element-padding-horizontal;
                     }
                 }
             }
 
-            &.select2-results__option--highlighted { //stylelint-disable-line selector-class-pattern
+            //stylelint-disable-next-line selector-class-pattern
+            &.select2-results__option--highlighted {
                 background: var(--tlp-theme-color);
                 color: var(--tlp-ui-white);
             }
 
-            &[aria-selected='true'] {
+            &[aria-selected="true"] {
                 position: relative;
                 padding: 6px $tlp-form-element-padding-horizontal 6px 32px;
                 color: var(--tlp-theme-color);
 
                 &::before {
-                    content: '\f00c'; // fa-check
+                    content: "\f00c"; // fa-check
                     position: absolute;
                     top: 9px;
                     left: $tlp-form-element-padding-horizontal;
-                    font-family: 'Font Awesome 5 Free';
+                    font-family: "Font Awesome 5 Free";
                     font-size: 12px;
                     font-weight: 900;
                 }
 
-                &.select2-results__option--highlighted { //stylelint-disable-line selector-class-pattern
+                //stylelint-disable-next-line selector-class-pattern
+                &.select2-results__option--highlighted {
                     color: var(--tlp-ui-white);
                 }
             }
@@ -711,7 +730,8 @@ $tlp-form-element-select-small-background-size: 6px;
             }
         }
 
-        .select2-search--hide + .select2-results .select2-results__option:first-child[role='group'] { //stylelint-disable-line selector-class-pattern
+        //stylelint-disable-next-line selector-class-pattern
+        .select2-search--hide + .select2-results .select2-results__option:first-child[role="group"] {
             padding: 6px 0 0;
         }
     }
@@ -728,7 +748,7 @@ span.select2-container--tlp-select2-small {
     .select2-selection--single {
         height: $tlp-form-element-small-height;
         padding: 0 calc(#{$tlp-form-element-small-padding-horizontal} * 2 + #{$tlp-form-element-select-small-background-size}) 0 $tlp-form-element-small-padding-horizontal;
-        background: $tlp-form-element-background url('../images/tlp-select-small-background.png') no-repeat;
+        background: $tlp-form-element-background url("../images/tlp-select-small-background.png") no-repeat;
         background-position: right $tlp-form-element-small-padding-horizontal center;
         font-size: $tlp-form-element-small-font-size;
     }
@@ -737,17 +757,21 @@ span.select2-container--tlp-select2-small {
         min-height: $tlp-form-element-small-height;
         padding: 0 $tlp-form-element-small-padding-horizontal;
 
-        .select2-selection__rendered { //stylelint-disable-line selector-class-pattern
-            .select2-selection__choice { //stylelint-disable-line selector-class-pattern
+        //stylelint-disable-next-line selector-class-pattern
+        .select2-selection__rendered {
+            //stylelint-disable-next-line selector-class-pattern
+            .select2-selection__choice {
                 margin: 1px 3px 0 0;
                 padding: 2px 8px;
             }
 
-            .select2-selection__clear { //stylelint-disable-line selector-class-pattern
+            //stylelint-disable-next-line selector-class-pattern
+            .select2-selection__clear {
                 margin: 0;
             }
 
-            .select2-search--inline .select2-search__field { //stylelint-disable-line selector-class-pattern
+            //stylelint-disable-next-line selector-class-pattern
+            .select2-search--inline .select2-search__field {
                 margin: 6px 0 0;
             }
         }
@@ -763,7 +787,8 @@ span.select2-container--tlp-select2-large {
         background-position: right $tlp-form-element-large-padding-horizontal center;
         font-size: $tlp-form-element-large-font-size;
 
-        .select2-selection__rendered .select2-selection__clear { //stylelint-disable-line selector-class-pattern
+        //stylelint-disable-next-line selector-class-pattern
+        .select2-selection__rendered .select2-selection__clear {
             font-size: 22px;
             line-height: 20px;
         }
@@ -773,33 +798,39 @@ span.select2-container--tlp-select2-large {
         min-height: $tlp-form-element-large-height;
         padding: 0 $tlp-form-element-large-padding-horizontal;
 
-        .select2-selection__rendered { //stylelint-disable-line selector-class-pattern
+        //stylelint-disable-next-line selector-class-pattern
+        .select2-selection__rendered {
             padding: 6px 0;
 
-            .select2-selection__choice { //stylelint-disable-line selector-class-pattern
+            //stylelint-disable-next-line selector-class-pattern
+            .select2-selection__choice {
                 margin: 2px 8px 2px 0;
                 padding: 7px 12px;
                 font-size: $tlp-form-element-large-font-size;
                 font-weight: 400;
 
-                .select2-selection__choice__remove { //stylelint-disable-line selector-class-pattern
+                //stylelint-disable-next-line selector-class-pattern
+                .select2-selection__choice__remove {
                     position: relative;
                     top: -1px;
                     margin: 0 4px 0 0;
 
-                    &::before { //stylelint-disable-line max-nesting-depth
+                    //stylelint-disable-next-line max-nesting-depth
+                    &::before {
                         font-size: 14px;
                     }
                 }
             }
 
-            .select2-selection__clear { //stylelint-disable-line selector-class-pattern
+            //stylelint-disable-next-line selector-class-pattern
+            .select2-selection__clear {
                 margin: 0;
                 font-size: 22px;
                 line-height: 17px;
             }
 
-            .select2-search--inline .select2-search__field { //stylelint-disable-line selector-class-pattern
+            //stylelint-disable-next-line selector-class-pattern
+            .select2-search--inline .select2-search__field {
                 margin: 7px 0 0;
                 font-size: $tlp-form-element-large-font-size;
             }
@@ -852,8 +883,8 @@ span.select2-container--tlp-select2-large {
     display: flex;
     align-items: center;
 
-    > .tlp-prepend:not([class*='tlp-button']):not([class*='tlp-dropdown']),
-    > .tlp-append:not([class*='tlp-button']):not([class*='tlp-dropdown']) {
+    > .tlp-prepend:not([class*="tlp-button"]):not([class*="tlp-dropdown"]),
+    > .tlp-append:not([class*="tlp-button"]):not([class*="tlp-dropdown"]) {
         display: flex;
         align-items: center;
         height: $tlp-form-element-height;
@@ -881,29 +912,32 @@ span.select2-container--tlp-select2-large {
         }
     }
 
-    > span.select2-container--tlp-select2 .select2-selection--single { //stylelint-disable-line selector-no-qualifying-type
+    //stylelint-disable-next-line selector-no-qualifying-type
+    > span.select2-container--tlp-select2 .select2-selection--single {
         padding: 0 $tlp-form-element-padding-horizontal;
         background: none;
     }
 
-    > span.select2-container--tlp-select2-small .select2-selection--single { //stylelint-disable-line selector-no-qualifying-type
+    //stylelint-disable-next-line selector-no-qualifying-type
+    > span.select2-container--tlp-select2-small .select2-selection--single {
         padding: 0 $tlp-form-element-small-padding-horizontal;
         background: none;
     }
 
-    > span.select2-container--tlp-select2-large .select2-selection--single { //stylelint-disable-line selector-no-qualifying-type
+    //stylelint-disable-next-line selector-no-qualifying-type
+    > span.select2-container--tlp-select2-large .select2-selection--single {
         padding: 0 $tlp-form-element-large-padding-horizontal;
         background: none;
     }
 
     /* stylelint-disable selector-no-qualifying-type */
-    > .tlp-prepend[class*='tlp-button'],
-    > .tlp-prepend.tlp-dropdown > a[class*='tlp-button'],
-    > .tlp-prepend.tlp-dropdown > button[class*='tlp-button'],
-    > .tlp-append[class*='tlp-button'],
-    > .tlp-append.tlp-dropdown > a[class*='tlp-button'],
-    > .tlp-append.tlp-dropdown > button[class*='tlp-button'] {
-        box-shadow: 0 1px 2px rgba(0, 0, 0, .08);
+    > .tlp-prepend[class*="tlp-button"],
+    > .tlp-prepend.tlp-dropdown > a[class*="tlp-button"],
+    > .tlp-prepend.tlp-dropdown > button[class*="tlp-button"],
+    > .tlp-append[class*="tlp-button"],
+    > .tlp-append.tlp-dropdown > a[class*="tlp-button"],
+    > .tlp-append.tlp-dropdown > button[class*="tlp-button"] {
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
 
         &.tlp-button-outline {
             border-color: $tlp-form-element-border-color;
@@ -921,7 +955,7 @@ span.select2-container--tlp-select2-large {
         border-radius: 0;
 
         &:first-child,
-        &:first-child > button[class*='tlp-button'] {
+        &:first-child > button[class*="tlp-button"] {
             border-radius: $tlp-form-element-border-radius 0 0 $tlp-form-element-border-radius;
         }
     }
@@ -971,7 +1005,7 @@ span.select2-container--tlp-select2-large {
         border-radius: 0;
 
         &:last-child,
-        &:last-child > button[class*='tlp-button'] {
+        &:last-child > button[class*="tlp-button"] {
             border-radius: 0 $tlp-form-element-border-radius $tlp-form-element-border-radius 0;
         }
     }

@@ -33,7 +33,7 @@ header.pinned > .header-container {
         &:focus,
         &:active,
         &:hover {
-            opacity: .7;
+            opacity: 0.7;
             background: none;
             box-shadow: none;
         }
@@ -63,7 +63,7 @@ header.pinned > .header-container {
     margin: 0 0 0 var(--tlp-large-spacing);
     transition: opacity ease-in-out 75ms;
     color: var(--tlp-ui-dimmed);
-    font-size: .875rem;
+    font-size: 0.875rem;
     font-weight: 500;
 
     &:hover {
@@ -102,7 +102,7 @@ header.pinned > .header-container {
     background: var(--tlp-ui-white);
     color: var(--tlp-typo-default-text-color);
     font-family: var(--tlp-font-family);
-    font-size: .875rem;
+    font-size: 0.875rem;
     font-weight: 500;
     letter-spacing: normal;
     line-height: 1rem;
@@ -125,16 +125,16 @@ header.pinned > .header-container {
 
     > .nav-dropdown-item-icon {
         margin: 0 4px 0 0;
-        font-size: .75rem;
+        font-size: 0.75rem;
     }
 }
 
 .nav-dropdown-item-title {
     padding: var(--tlp-medium-spacing) var(--tlp-medium-spacing) var(--tlp-small-spacing);
     color: var(--tlp-ui-dimmed);
-    font-size: .65rem;
+    font-size: 0.65rem;
     font-weight: 600;
-    letter-spacing: .5px;
+    letter-spacing: 0.5px;
     text-transform: uppercase;
 }
 
@@ -175,14 +175,14 @@ header.pinned > .header-container {
         margin: 0 0 4px;
         overflow: hidden;
         color: var(--tlp-ui-white);
-        font-size: .875rem;
+        font-size: 0.875rem;
         font-weight: 600;
         text-overflow: ellipsis;
     }
 
     > .username {
         color: var(--tlp-ui-border-dark);
-        font-size: .75rem;
+        font-size: 0.75rem;
         font-weight: 400;
     }
 }

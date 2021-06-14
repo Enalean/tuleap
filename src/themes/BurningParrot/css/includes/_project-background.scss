@@ -21,14 +21,12 @@
 @use 'sass:map';
 @use 'global-variables';
 
-@import '../../../common/css/project-background/project-background';
+@import "../../../common/css/project-background/project-background";
 
 @each $identifier, $definition in background.$definitions {
     .project-admin-background-preview-#{$identifier} {
-        background: linear-gradient(var(--tlp-theme-dark-background-color-transparent-70), var(--tlp-theme-dark-background-color-transparent-70)),
-            map-get($definition, 'image-1680px'),
-            linear-gradient(map-get($definition, 'color'), map-get($definition, 'color'));
-        background-size: map-get($definition, 'size');
+        background: linear-gradient(var(--tlp-theme-dark-background-color-transparent-70), var(--tlp-theme-dark-background-color-transparent-70)), map-get($definition, "image-1680px"), linear-gradient(map-get($definition, "color"), map-get($definition, "color"));
+        background-size: map-get($definition, "size");
     }
 }
 
@@ -199,7 +197,7 @@
     opacity: 0;
     background: var(--tlp-theme-dark-background-color-transparent-30);
     color: var(--tlp-ui-white);
-    font-size: .75rem;
+    font-size: 0.75rem;
 }
 
 .project-admin-background-preview {
@@ -213,14 +211,13 @@
     justify-content: center;
     background: var(--tlp-theme-background-color);
     color: var(--tlp-ui-dimmed);
-    font-size: .875rem;
+    font-size: 0.875rem;
 }
 
 #project-admin-background-submit-section.pinned {
     margin: 40px 0 0;
 
     > .project-admin-background-submit-button-container {
-
         position: fixed;
         bottom: 0;
         left: global-variables.$sidebar-expanded-width;
@@ -229,11 +226,15 @@
         animation: footerAppear ease-out 150ms;
         border-top: 0;
         background: var(--tlp-ui-white-transparent-10);
-        box-shadow: 0 -1px 2px 0 rgba(0, 0, 0, .1);
+        box-shadow: 0 -1px 2px 0 rgba(0, 0, 0, 0.1);
         text-align: center;
         @keyframes footerAppear {
-            from { transform: translateY(100%); }
-            to { transform: translateY(0); }
+            from {
+                transform: translateY(100%);
+            }
+            to {
+                transform: translateY(0);
+            }
         }
     }
 }

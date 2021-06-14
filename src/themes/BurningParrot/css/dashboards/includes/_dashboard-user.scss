@@ -14,7 +14,7 @@ $dashboard-header-background: var(--tlp-theme-dark-background-color-lighter-05);
         }
     }
 
-    .full-width + #main-container > main[role='main']:not(.tlp-framed) > #feedback:not(:empty) {
+    .full-width + #main-container > main[role="main"]:not(.tlp-framed) > #feedback:not(:empty) {
         margin: 0;
         padding: var(--tlp-medium-spacing) var(--tlp-medium-spacing) var(--tlp-large-spacing);
         background: $dashboard-header-background;

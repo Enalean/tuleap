@@ -28,7 +28,8 @@
                     border-radius: 0 4px 4px 0;
                 }
 
-                #search_indicator { /* stylelint-disable-line selector-id-pattern */
+                /* stylelint-disable-next-line selector-id-pattern */
+                #search_indicator {
                     visibility: hidden;
                     position: absolute;
                 }
@@ -38,7 +39,7 @@
                 float: right;
 
                 > .add-on {
-                    font-family: 'Font Awesome 5 Free';
+                    font-family: "Font Awesome 5 Free";
                     font-size: 12px;
                 }
 
@@ -60,7 +61,7 @@
             #empty-project-list {
                 padding: 40px;
                 color: #bbbbbb;
-                font-size: .9em;
+                font-size: 0.9em;
                 font-style: italic;
                 text-align: center;
             }

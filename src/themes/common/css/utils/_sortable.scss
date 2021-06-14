@@ -1,16 +1,19 @@
-tbody.ui-sortable tr > td:first-child { /* stylelint-disable-line selector-no-qualifying-type */
-    background-image: url('#{$tuleap-common-theme-basepath}images/sortable-table-left.png');
+/* stylelint-disable-next-line selector-no-qualifying-type */
+tbody.ui-sortable tr > td:first-child {
+    background-image: url("#{$tuleap-common-theme-basepath}images/sortable-table-left.png");
     background-repeat: repeat-y;
     background-position: right top;
 }
 
-tbody.ui-sortable tr > td:nth-child(2) { /* stylelint-disable-line selector-no-qualifying-type */
+/* stylelint-disable-next-line selector-no-qualifying-type */
+tbody.ui-sortable tr > td:nth-child(2) {
     border-left: 0;
-    background-image: url('#{$tuleap-common-theme-basepath}images/sortable-table-right.png');
+    background-image: url("#{$tuleap-common-theme-basepath}images/sortable-table-right.png");
     background-repeat: repeat-y;
     background-position: left top;
 }
 
-tbody.ui-sortable tr > td:last-child { /* stylelint-disable-line selector-no-qualifying-type */
+/* stylelint-disable-next-line selector-no-qualifying-type */
+tbody.ui-sortable tr > td:last-child {
     background-image: none;
 }

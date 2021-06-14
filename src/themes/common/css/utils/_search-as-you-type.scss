@@ -1,9 +1,10 @@
-.searchAsYouType { /* stylelint-disable-line selector-class-pattern */
+/* stylelint-disable-next-line selector-class-pattern */
+.searchAsYouType {
     border: 1px solid #cccccc;
-    border: 1px solid rgba(0, 0, 0, .2); /* stylelint-disable-line declaration-block-no-duplicate-properties */
+    border: 1px solid rgba(0, 0, 0, 0.2); /* stylelint-disable-line declaration-block-no-duplicate-properties */
     border-radius: 3px;
     background: #ffffff;
-    box-shadow: 0 5px 10px rgba(0, 0, 0, .2);
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
 
     ul {
         margin: 0;
@@ -13,7 +14,7 @@
         /* stylelint-disable selector-no-qualifying-type */
         li {
             padding: 5px 10px;
-            font-size: .9em;
+            font-size: 0.9em;
             cursor: pointer;
 
             &.selected {

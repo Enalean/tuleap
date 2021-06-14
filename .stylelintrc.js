@@ -1,5 +1,9 @@
+const fs = require('fs')
+
+const prettier_config = JSON.parse(fs.readFileSync("./.prettierrc", "utf-8"));
+
 module.exports = {
-    extends: ["stylelint-config-sass-guidelines", "stylelint-config-property-sort-order-smacss"],
+    extends: ["stylelint-config-sass-guidelines", "stylelint-config-property-sort-order-smacss", "stylelint-prettier/recommended"],
     syntax: "scss",
     reportNeedlessDisables: true,
     reportInvalidScopeDisables: true,
@@ -23,7 +27,7 @@ module.exports = {
         "max-nesting-depth": [4],
         "no-duplicate-selectors": true,
         "no-eol-whitespace": true,
-        "number-leading-zero": ["never"],
+        "number-leading-zero": ["always"],
         "selector-id-pattern": [
             "^[a-z0-9\\-]+$",
             {
@@ -60,6 +64,10 @@ module.exports = {
         "order/properties-alphabetical-order": null,
         "scss/at-else-empty-line-before": ["never"],
         "scss/dollar-variable-colon-space-before": null,
-        "scss/operator-no-unspaced": true
+        "scss/operator-no-unspaced": true,
+        "prettier/prettier": [
+            true,
+            {...prettier_config, "printWidth": 9999} // Override printWidth to play nice with existing .scss files
+        ]
     }
 };

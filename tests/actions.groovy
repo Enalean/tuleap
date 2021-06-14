@@ -69,7 +69,7 @@ def runESLint() {
 
 def runStylelint() {
     dir ('sources') {
-        sh 'npm run stylelint **/*.scss'
+        sh 'npm run stylelint **/*.scss **/*.vue'
     }
 }
 

@@ -34,7 +34,7 @@
                 border-color: #f3b13a;
                 background: #f3b13a;
                 font-size: 14px;
-                letter-spacing: .5px;
+                letter-spacing: 0.5px;
             }
         }
     }
@@ -54,7 +54,7 @@
                 border-color: #afafaf;
                 background: #afafaf;
                 font-size: 14px;
-                letter-spacing: .5px;
+                letter-spacing: 0.5px;
             }
         }
     }
@@ -74,7 +74,7 @@
                 border-color: #ec8440;
                 background: #ec8440;
                 font-size: 14px;
-                letter-spacing: .5px;
+                letter-spacing: 0.5px;
             }
         }
     }
@@ -97,8 +97,6 @@
     }
 }
 
-
-
 .stand {
     display: flex;
     flex: 1 1 auto;
@@ -107,7 +105,7 @@
     width: 100%;
     padding: var(--tlp-medium-spacing);
     background: #ffffff;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, .07);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.07);
 }
 
 .star {

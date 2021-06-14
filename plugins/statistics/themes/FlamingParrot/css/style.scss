@@ -17,15 +17,15 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@import './disk-usage-pie';
+@import "./disk-usage-pie";
 
 /* stylelint-disable-next-line selector-class-pattern */
 .stat_help {
     width: auto;
-    margin: .5em;
-    padding: .5em .5em .5em 40px;
+    margin: 0.5em;
+    padding: 0.5em 0.5em 0.5em 40px;
     border: 1px solid #dddddd;
-    background: url('../images/ic/help.png') no-repeat 5px center;
+    background: url("../images/ic/help.png") no-repeat 5px center;
 }
 
 /* stylelint-disable-next-line selector-class-pattern */

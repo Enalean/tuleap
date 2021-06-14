@@ -44,14 +44,14 @@
     z-index: 2;
     top: 44px;
     align-items: center;
-    transition: background .1s linear;
+    transition: background 0.1s linear;
     border: 1px solid var(--tlp-ui-border-normal);
     border-radius: 4px;
     background: var(--tlp-ui-white);
     cursor: pointer;
 
     &:hover {
-        transition: background .1s linear;
+        transition: background 0.1s linear;
         background: var(--tlp-ui-white-darker-02);
     }
 

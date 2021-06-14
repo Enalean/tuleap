@@ -19,15 +19,11 @@
 
 @use '../../src/themes/FlamingParrot/css/utils/variables-common';
 @use '../../src/themes/common/css/project-background/background';
-@import '../../default/css/style';
+@import "../../default/css/style";
 
 /* stylelint-disable selector-no-qualifying-type */
 body.viewvc-epel {
-    @include background.apply-background(
-        '.svn-repository-header',
-        variables-common.$sidebar-width,
-        variables-common.$sidebar-width-collapsed,
-    );
+    @include background.apply-background(".svn-repository-header", variables-common.$sidebar-width, variables-common.$sidebar-width-collapsed);
 
     #svn-repository #svn-repository-viewvc {
         border-top-color: var(--tlp-theme-color);

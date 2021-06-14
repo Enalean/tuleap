@@ -1,8 +1,8 @@
 /* stylelint-disable selector-id-pattern, selector-class-pattern */
 #tracker_toolbar_generic,
 #tracker_toolbar_specific {
-    margin-top: .5em;
-    margin-bottom: .5em;
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
     font-weight: bold;
 }
 
@@ -53,7 +53,7 @@ textarea {
 
 .followup_comment_title_date {
     color: #666666;
-    font-size: .95em;
+    font-size: 0.95em;
 }
 
 .followup_comment_title_toolbar {
@@ -62,13 +62,13 @@ textarea {
 
 .followup_comment_content {
     margin-bottom: 1em;
-    padding: .5em 1em .5em 3em;
+    padding: 0.5em 1em 0.5em 3em;
     border-bottom: 1px solid #cccccc;
 }
 
 .followup_comment_content blockquote {
     margin: 0;
-    padding-left: .5em;
+    padding-left: 0.5em;
     border-left: 2px solid #008000;
     background-color: #fffff0;
 }
@@ -84,14 +84,15 @@ textarea {
 .followup_comment_content pre {
     max-width: 1024px;
     margin: 0;
-    padding: .5em;
+    padding: 0.5em;
     overflow: auto;
     border: 1px solid #d2d2d2;
     background: none repeat scroll 0 0 #fffff0;
 }
 
 #tv3-mail-reminders {
-    div.tv3-mail-reminder { /* stylelint-disable-line selector-no-qualifying-type */
+    /* stylelint-disable-next-line selector-no-qualifying-type */
+    div.tv3-mail-reminder {
         margin: 0;
         padding-bottom: 10px;
     }

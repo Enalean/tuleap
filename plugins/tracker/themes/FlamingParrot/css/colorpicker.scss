@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@import '../../../../../src/themes/tlp/src/scss/variables/colors/common-colors';
+@import "../../../../../src/themes/tlp/src/scss/variables/colors/common-colors";
 
 .planning-admin-color-picker {
     display: flex;
@@ -70,16 +70,10 @@
     > .colorpicker-circular-no-color {
         margin-bottom: 12px;
         border: 3px solid #d8d8d8;
-        background: linear-gradient(135deg,
-        #ffffff 44%,
-        #d8d8d8 45%,
-        #d8d8d8 55%,
-        #ffffff 56%);
+        background: linear-gradient(135deg, #ffffff 44%, #d8d8d8 45%, #d8d8d8 55%, #ffffff 56%);
 
         &.colorpicker-no-color-selected {
-            background: linear-gradient(135deg,
-            #ffffff 50%,
-            #ffffff 50%);
+            background: linear-gradient(135deg, #ffffff 50%, #ffffff 50%);
             color: #d8d8d8;
         }
     }
@@ -104,7 +98,7 @@
 }
 
 .colorpicker-squared-shade {
-    content: ' ';
+    content: " ";
     height: 15px;
     padding: 0;
     border: 1px solid #000000;
@@ -139,14 +133,14 @@
 
 @each $color-name, $colors in $tlp-swatch-color-map {
     .colorpicker-circular-color-#{$color-name} {
-        border: 3px solid map-get($colors, 'primary');
-        background-color: map-get($colors, 'secondary');
-        color: map-get($colors, 'primary');
+        border: 3px solid map-get($colors, "primary");
+        background-color: map-get($colors, "secondary");
+        color: map-get($colors, "primary");
     }
 
     .color-picker-preview-#{$color-name} {
         border: 0;
-        background-color: map-get($colors, 'primary');
+        background-color: map-get($colors, "primary");
     }
 }
 

@@ -80,9 +80,9 @@
     font-size: 12px;
 
     &::before {
-        content: '\f017'; // fa-clock
+        content: "\f017"; // fa-clock
         margin: 0 3px 0 0;
-        font-family: 'Font Awesome 5 Free';
+        font-family: "Font Awesome 5 Free";
         font-weight: 400;
     }
 }
@@ -113,13 +113,14 @@
 .git-repository-branch-tag-selector-is-loading {
     height: 40px;
     margin: var(--tlp-medium-spacing) 0;
-    background: url('../../../../src/www/themes/BurningParrot/images/spinner.gif') no-repeat center center;
+    background: url("../../../../src/www/themes/BurningParrot/images/spinner.gif") no-repeat center center;
 }
 
-.plugin_git_gitphp { /* stylelint-disable-line selector-class-pattern */
+/* stylelint-disable-next-line selector-class-pattern */
+.plugin_git_gitphp {
     border: 1px solid #e3e3e3;
     border-radius: 4px;
-    box-shadow: inset 0 1px 1px rgba(0, 0, 0, .05);
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
 }
 
 #readme {

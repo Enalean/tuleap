@@ -51,13 +51,12 @@
     cursor: pointer;
 
     &.test-plan-campaign-is-error {
-        opacity: .5;
+        opacity: 0.5;
     }
 
     &.test-plan-campaign-is-being-refreshed {
         animation: blink-campaign 1200ms ease-in-out alternate infinite;
     }
-
 
     &.test-plan-campaign-is-just-refreshed {
         animation: pulse-campaign 500ms ease-in-out;
@@ -102,7 +101,6 @@
     }
 }
 
-
 .test-plan-campaign-progressions {
     display: flex;
     flex: 0 0 auto;
@@ -112,7 +110,7 @@
     margin: 2px 0 0;
     font-size: 13px;
     font-weight: 600;
-    letter-spacing: .5px;
+    letter-spacing: 0.5px;
     text-align: center;
 }
 
