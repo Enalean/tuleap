@@ -150,14 +150,10 @@ $progress-bar-background-color: var(--tlp-ui-border-normal);
     background: var(--tlp-ui-success);
 }
 
-/* stylelint-disable property-no-vendor-prefix */
 .document-file-upload-progress-bar[value] {
-    -webkit-appearance: none;
-    -moz-appearance: none;
     appearance: none;
     height: 5px;
 }
-/* stylelint-enable property-no-vendor-prefix */
 
 .document-file-upload-progress-bar {
     position: relative;

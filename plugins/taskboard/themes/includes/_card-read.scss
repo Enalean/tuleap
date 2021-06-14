@@ -56,8 +56,6 @@
             > .taskboard-card-accessibility {
                 opacity: .5;
                 background-color: var(--text-color);
-                /* stylelint-disable-next-line property-no-vendor-prefix */
-                -webkit-mask-image: var(--accessibility-pattern);
                 mask-image: var(--accessibility-pattern);
             }
         }

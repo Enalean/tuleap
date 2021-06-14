@@ -103,11 +103,7 @@ body[data-user-has-accessibility-mode='1'] {
             &.#{$color-name} {
                 &::before {
                     background: map-get($colors, 'primary');
-                    /* stylelint-disable function-url-quotes */
-                    /* stylelint-disable-next-line property-no-vendor-prefix */
-                    -webkit-mask-image: url(map-get($colors, 'pattern'));
-                    mask-image: url(map-get($colors, 'pattern'));
-                    /* stylelint-enable function-url-quotes */
+                    mask-image: url("#{map-get($colors, 'pattern')}");
                 }
             }
         }

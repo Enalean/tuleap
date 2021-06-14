@@ -59,11 +59,6 @@
     border-color: var(--tlp-theme-dark-background-color-darker-10);
     background: transparentize(#ffffff, .95) url('../images/admin-sidebar-search-background.png') no-repeat 10px center;
     color: transparentize(#ffffff, .2);
-
-    &:-ms-input-placeholder { // stylelint-disable-line selector-no-vendor-prefix
-        opacity: 1;
-        color: transparentize(#ffffff, .65);
-    }
 }
 
 .admin-sidebar-section-nav {

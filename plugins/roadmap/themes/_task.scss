@@ -169,8 +169,7 @@
 
                 &::before {
                     background: map-get($colors, 'secondary');
-                    -webkit-mask-image: url(map-get($colors, 'pattern')); // stylelint-disable-line property-no-vendor-prefix, function-url-quotes
-                    mask-image: url(map-get($colors, 'pattern')); // stylelint-disable-line function-url-quotes
+                    mask-image: url("#{map-get($colors, 'pattern')}");
                 }
 
                 > .roadmap-gantt-task-bar-progress-text-inside-progress-bar {

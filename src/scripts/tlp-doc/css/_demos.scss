@@ -202,15 +202,7 @@
                 width: 30px;
                 height: 30px;
                 background-color: map-get($colors, 'text');
-                /* stylelint-disable function-url-quotes */
-                -webkit-mask-image: url(map-get($colors, 'pattern')); //stylelint-disable-line property-no-vendor-prefix
-                mask-image: url(map-get($colors, 'pattern'));
-
-                @media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {
-                    background-color: transparent;
-                    background-image: url(map-get($colors, 'pattern'));
-                }
-                /* stylelint-enable */
+                mask-image: url("#{map-get($colors, 'pattern')}");
             }
         }
     }

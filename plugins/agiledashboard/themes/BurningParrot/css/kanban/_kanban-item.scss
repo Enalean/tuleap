@@ -228,16 +228,7 @@ kanban-item {
         &.#{$color-name} {
             opacity: .5;
             background-color: map-get($colors, 'text');
-            /* stylelint-disable function-url-quotes */
-            /* stylelint-disable-next-line property-no-vendor-prefix */
-            -webkit-mask-image: url(map-get($colors, 'pattern'));
-            mask-image: url(map-get($colors, 'pattern'));
-
-            @media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {
-                background-color: transparent;
-                background-image: url(map-get($colors, 'pattern'));
-            }
-            /* stylelint-enable */
+            mask-image: url("#{map-get($colors, 'pattern')}");
         }
     }
 }

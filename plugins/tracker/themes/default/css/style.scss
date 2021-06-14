@@ -60,8 +60,7 @@ button[name=tracker_query_submit] {
 #tracker_report_config_options {
     display: block;
     z-index: 150;
-    -moz-box-sizing: border-box; /* stylelint-disable property-no-vendor-prefix */
-    box-sizing: border-box; /* Firefox */
+    box-sizing: border-box;
     width: 100%;
     padding-right: 14px;
     padding-bottom: 14px;
@@ -284,17 +283,12 @@ select.tracker-report-expert-allowed-fields {
  * need to force inline for inline-block that are not initially inline elements
  * $see http://foohack.com/2007/11/cross-browser-support-for-inline-block-styling/
  */
-/* stylelint-disable declaration-block-no-duplicate-properties, value-no-vendor-prefix */
 #tracker_query > li {
-    display: -moz-inline-block;
-    display: -moz-inline-box;
     display: inline-block;
-    *display: inline;
     padding-right: 20px;
     zoom: 1;
     vertical-align: top;
 }
-/* stylelint-enable declaration-block-no-duplicate-properties, value-no-vendor-prefix */
 
 #tracker_query tr {
     vertical-align: top;
@@ -430,8 +424,6 @@ select.tracker-report-expert-allowed-fields {
     background-repeat: repeat-x;
     background-position: left top;
     cursor: default;
-    -moz-user-select: none;
-    -khtml-user-select: none;
     user-select: none;
 
 }
@@ -495,7 +487,6 @@ select.tracker-report-expert-allowed-fields {
     text-align: center;
 
     > .btn {
-        -moz-box-sizing: border-box;
         box-sizing: border-box;
         width: 45px;
     }
@@ -827,7 +818,6 @@ select.tracker-report-expert-allowed-fields {
 
 #tracker_artifact_followup_comments {
     left: -12px;
-    -moz-box-sizing: border-box;
     box-sizing: border-box;
     width: 960px;
     /* stylelint-disable-next-line declaration-block-no-duplicate-properties */
@@ -867,7 +857,6 @@ select.tracker-report-expert-allowed-fields {
     }
 
     #tracker_followup_comment_new {
-        -moz-box-sizing: border-box;
         box-sizing: border-box;
         width: 100%;
         margin: 0 0 5px;
@@ -1083,13 +1072,7 @@ select.tracker-report-expert-allowed-fields {
 
                 &.active > i:hover::before,
                 &:not(.active) > i:not(:hover)::before {
-                    -webkit-transform: rotate(45deg);
-                    -moz-transform: rotate(45deg);
-                    -ms-transform: rotate(45deg);
-                    -o-transform: rotate(45deg);
                     transform: rotate(45deg);
-                    -ms-filter: "progid:DXImageTransform.Microsoft.Matrix(SizingMethod='auto expand', M11=0.7071067811865476, M12=-0.7071067811865475, M21=0.7071067811865475, M22=0.7071067811865476)"; /* IE8 */
-                    filter: progid:DXImageTransform.Microsoft.Matrix(sizingMethod='auto expand', M11=.7071067811865476, M12=-.7071067811865475, M21=.7071067811865475, M22=.7071067811865476); /* IE6,IE7 */
                 }
             }
         }
@@ -1139,7 +1122,6 @@ select.tracker-report-expert-allowed-fields {
 
 .tracker_artifact_preview_attachment_hover {
     position: absolute;
-    -moz-box-sizing: border-box;
     box-sizing: border-box;
     width: 150px;
     height: 110px;
@@ -1161,11 +1143,8 @@ select.tracker-report-expert-allowed-fields {
     }
 
     &:hover {
-        background-color: transparent;
-        /* stylelint-disable-next-line declaration-block-no-duplicate-properties */
         background-color: rgba(217, 237, 247, .9);
         box-shadow: inset 0 1px 0 #8fcedb, inset 1px 0 0 #8fcedb, inset -1px 0 0 #8fcedb, inset 0 -1px 0 #8fcedb;
-        -ms-filter: "progid:DXImageTransform.Microsoft.gradient(GradientType=1, StartColorStr='#d9edf7', EndColorStr='#d9edf7')";
 
         div {
             opacity: 1;
@@ -1552,8 +1531,6 @@ div.tracker-admin-field-controls {
 .tracker-admin-field-selected {
     border: 1px solid #6666cc;
     background: #fcfcff;
-    -webkit-box-shadow: 2px 2px 10px #cccccc;
-    -moz-box-shadow: 2px 2px 10px #cccccc;
     box-shadow: 2px 2px 10px #cccccc;
 }
 
@@ -1723,8 +1700,6 @@ div.tracker_report_table_hide_masschange .tracker_report_table_masschange {
     margin-bottom: 5px;
     padding: 4px 8px 3px 5px;
     border: 1px solid #c2c2c2;
-    -moz-border-radius: 5px;
-    -webkit-border-radius: 5px;
     border-radius: 5px;
     background: transparent url('../../default/images/button-gradient.png') top left repeat-x;
     color: #565656;
@@ -1738,8 +1713,6 @@ div.tracker_report_table_hide_masschange .tracker_report_table_masschange {
 .tracker-admin-palette a.button_disabled {
     opacity: .5;
     cursor: default;
-    -ms-filter: 'progid:DXImageTransform.Microsoft.Alpha(Opacity=50)'; /* IE 8 */
-    filter: alpha(opacity=50); /* IE < 8 */
 }
 
 .tracker-admin-palette button:focus,
@@ -1786,24 +1759,12 @@ ul.plugin_tracker_my_artifacts_list {
     padding: .5em 1em;
     border: 1px solid #999999;
     border-radius: 1em;
-    /* First background-image statement is for browsers that do not support gradients. */
-    background: #ffffff;
-    /* stylelint-disable-next-line value-no-vendor-prefix */
-    background-image: -moz-linear-gradient(top, #ffffff, #ededed);
-    /* stylelint-disable-next-line declaration-block-no-duplicate-properties */
-    background-image: -webkit-gradient(linear, left top, left bottom,
-    from(#ffffff),
-    to(#ededed));
+    background-image: linear-gradient(top, #ffffff, #ededed);
     box-shadow: 1px 1px 2px #cccccc;
 }
 
 #tracker_admin_menu td:hover {
-    /* stylelint-disable-next-line value-no-vendor-prefix */
-    background-image: -moz-linear-gradient(top, #f2f9fe, #d6f0fd);
-    /* stylelint-disable-next-line declaration-block-no-duplicate-properties */
-    background-image: -webkit-gradient(linear, left top, left bottom,
-    from(#f2f9fe),
-    to(#d6f0fd));
+    background-image: linear-gradient(top, #f2f9fe, #d6f0fd);
 }
 
 #tracker_admin_menu td img {
@@ -2024,7 +1985,6 @@ td.first-column {
     z-index: 1;
     top: -13px;
     right: -12px;
-    -moz-box-sizing: border-box;
     box-sizing: border-box;
     width: 25px;
     height: 25px;
@@ -2156,19 +2116,13 @@ td.first-column {
     margin: 0;
     padding: 8px 10px;
     border-bottom: 1px solid #444444;
-    -webkit-border-top-left-radius: 4px;
     border-top-left-radius: 4px;
-    -webkit-border-top-right-radius: 4px;
     border-top-right-radius: 4px;
     background: #333333;
-    -webkit-box-shadow: inset 0 1px rgba(0, 0, 0, .5), inset 0 2px rgba(255, 255, 255, .2), 0 0 20px rgba(0, 0, 0, .5);
-    -moz-box-shadow: inset 0 1px rgba(0, 0, 0, .5), inset 0 2px rgba(255, 255, 255, .2), 0 0 20px rgba(0, 0, 0, .5);
     box-shadow: inset 0 1px rgba(0, 0, 0, .5), inset 0 2px rgba(255, 255, 255, .2), 0 0 20px rgba(0, 0, 0, .5);
     color: #ffffff;
     line-height: 1.2em;
     text-align: center;
-    -moz-border-radius-topleft: 4px;
-    -moz-border-radius-topright: 4px;
 }
 
 .artifact-event-popup-content {
@@ -2177,8 +2131,6 @@ td.first-column {
     margin: 0;
     padding: 10px;
     background: #000000;
-    -webkit-box-shadow: 0 0 20px rgba(0, 0, 0, .5);
-    -moz-box-shadow: 0 0 20px rgba(0, 0, 0, .5);
     box-shadow: 0 0 20px rgba(0, 0, 0, .5);
     color: #eeeeee;
 }
@@ -2196,8 +2148,6 @@ td.first-column {
 }
 
 .artifact-event-popup-content .tracker_artifact_followup_changes_changes {
-    -webkit-border-radius: 4px;
-    -moz-border-radius: 4px;
     border-radius: 4px;
 }
 
@@ -2207,18 +2157,12 @@ td.first-column {
     margin: 0;
     padding: 7px 10px;
     border-top: 1px solid #444444;
-    -webkit-border-bottom-right-radius: 4px;
     border-bottom-right-radius: 4px;
-    -webkit-border-bottom-left-radius: 4px;
     border-bottom-left-radius: 4px;
     background: #333333;
-    -webkit-box-shadow: 0 0 20px rgba(0, 0, 0, .5);
-    -moz-box-shadow: 0 0 20px rgba(0, 0, 0, .5);
     box-shadow: 0 0 20px rgba(0, 0, 0, .5);
     color: #eeeeee;
     text-align: center;
-    -moz-border-radius-bottomleft: 4px;
-    -moz-border-radius-bottomright: 4px;
 }
 
 .artifact-event-popup-actions .btn {
@@ -2236,12 +2180,8 @@ td.first-column {
     margin-bottom: 1em;
     padding: 19px;
     border: 1px solid #e3e3e3;
-    -webkit-border-radius: 4px;
-    -moz-border-radius: 4px;
     border-radius: 4px;
     background-color: #f5f5f5;
-    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .05);
-    -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .05);
     box-shadow: inset 0 1px 1px rgba(0, 0, 0, .05);
 }
 
@@ -2349,7 +2289,6 @@ body.sidebar-expanded .artifact-copy-button {
 }
 
 .tracker_artifact_followup_content textarea {
-    -moz-box-sizing: border-box;
     box-sizing: border-box;
     width: 100%;
 }
@@ -2430,7 +2369,6 @@ body.sidebar-expanded .artifact-copy-button {
     }
 
     .tuleap-modal-actions textarea {
-        -moz-box-sizing: border-box;
         box-sizing: border-box;
         width: 100%;
     }
@@ -2484,7 +2422,6 @@ body.sidebar-expanded .artifact-copy-button {
                 }
 
                 input[type=text]:not(.field-computed) {
-                    -moz-box-sizing: border-box;
                     box-sizing: border-box;
                     width: 100%;
                     height: 30px;
@@ -2501,7 +2438,6 @@ body.sidebar-expanded .artifact-copy-button {
                 }
 
                 textarea {
-                    -moz-box-sizing: border-box;
                     box-sizing: border-box;
                     width: 100%;
                     margin: 5px 0 0;
