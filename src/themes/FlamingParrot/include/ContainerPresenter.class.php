@@ -41,8 +41,7 @@ class FlamingParrot_ContainerPresenter
      */
     public $project_id;
 
-    /** @var string */
-    private $project_tabs;
+    public ?Generator $sidebar;
 
     /** @var Feedback */
     private $feedback;
@@ -97,7 +96,7 @@ class FlamingParrot_ContainerPresenter
         $toolbar,
         $project_name,
         $project_link,
-        $project_tabs,
+        ?Generator $sidebar,
         $feedback,
         $feedback_content,
         VersionPresenter $version,
@@ -114,7 +113,7 @@ class FlamingParrot_ContainerPresenter
         $this->toolbar                   = $toolbar;
         $this->project_name              = $project_name;
         $this->project_link              = $project_link;
-        $this->project_tabs              = $project_tabs;
+        $this->sidebar                   = $sidebar;
         $this->feedback                  = $feedback;
         $this->feedback_content          = $feedback_content;
         $this->version                   = $version;
@@ -149,17 +148,12 @@ class FlamingParrot_ContainerPresenter
 
     public function hasSidebar()
     {
-        return isset($this->project_tabs);
+        return isset($this->sidebar);
     }
 
     public function is_sidebar_collapsable() //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         return $this->sidebar_collapsable;
-    }
-
-    public function sidebar()
-    {
-        return $this->project_tabs;
     }
 
     public function has_copyright() //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps

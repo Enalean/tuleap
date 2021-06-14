@@ -24,6 +24,7 @@ namespace Tuleap\Project;
 
 use Codendi_HTMLPurifier;
 use Project;
+use Tuleap\Project\Admin\Access\ProjectAdministrationLinkPresenter;
 use Tuleap\Project\Banner\BannerDisplay;
 use Tuleap\Project\Flags\ProjectFlagPresenter;
 
@@ -68,6 +69,8 @@ class ProjectContextPresenter
      * @var bool
      */
     public $has_project_flags;
+    public bool $has_administration_link;
+    public string $administration_link;
 
     /**
      * @param ProjectFlagPresenter[] $project_flags
@@ -75,6 +78,7 @@ class ProjectContextPresenter
     private function __construct(
         Project $project,
         ProjectPrivacyPresenter $privacy,
+        ?ProjectAdministrationLinkPresenter $administration_link_presenter,
         array $project_flags,
         ?BannerDisplay $banner,
         string $purified_banner
@@ -86,6 +90,8 @@ class ProjectContextPresenter
         $this->has_project_flags          = $this->nb_project_flags > 0;
         $this->has_project_banner         = $banner !== null;
         $this->project_banner_is_visible  = $banner && $banner->isVisible();
+        $this->has_administration_link    = $administration_link_presenter !== null;
+        $this->administration_link        = $administration_link_presenter->uri ?? '';
         $this->purified_banner            = $purified_banner;
         $this->json_encoded_project_flags = json_encode($project_flags, JSON_THROW_ON_ERROR);
     }
@@ -93,6 +99,7 @@ class ProjectContextPresenter
     public static function build(
         Project $project,
         ProjectPrivacyPresenter $privacy,
+        ?ProjectAdministrationLinkPresenter $administration_link,
         array $project_flags,
         ?BannerDisplay $banner
     ): self {
@@ -104,6 +111,6 @@ class ProjectContextPresenter
             );
         }
 
-        return new self($project, $privacy, $project_flags, $banner, $purified_banner);
+        return new self($project, $privacy, $administration_link, $project_flags, $banner, $purified_banner);
     }
 }
