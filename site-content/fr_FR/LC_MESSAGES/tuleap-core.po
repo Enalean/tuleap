@@ -2416,6 +2416,9 @@ msgstr "Projet"
 msgid "Project (read only)"
 msgstr "Projet (lecture seule)"
 
+msgid "Project Announcement"
+msgstr "Annonce du projet"
+
 msgid "Project Data Export"
 msgstr "Export des données"
 

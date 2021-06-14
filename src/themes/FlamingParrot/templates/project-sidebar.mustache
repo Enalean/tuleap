@@ -17,9 +17,16 @@
                 {{/ privacy }}
             </div>
             {{# has_project_banner }}
-                <span id="current-project-banner-bullhorn" class="project-sidebar-banner-button">
-                    <a href="#" aria-labelledby="current-project-banner-message"><i class="fa fa-bullhorn" aria-hidden="true"></i></a>
-                </span>
+                <button type="button" aria-labelledby="current-project-banner-message"
+                        class="project-sidebar-banner-button"
+                        id="current-project-banner-bullhorn"
+                >
+                    <span class="project-sidebar-banner-button-icon">
+                        <i class="fas fa-bullhorn" aria-hidden="true"></i>
+                    </span><span class="project-sidebar-banner-button-label">
+                        {{# gettext }}Project Announcement{{/ gettext }}
+                    </span>
+                </button>
             {{/ has_project_banner }}
             {{# has_project_flags }}
                 <div class="project-sidebar-project-flags"
