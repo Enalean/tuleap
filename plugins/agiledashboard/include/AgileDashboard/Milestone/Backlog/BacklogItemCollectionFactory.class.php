@@ -211,7 +211,7 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory
                 $artifact->getStatus(),
                 $semantics[$artifact_id][Tracker_Semantic_Status::NAME] === "1" ? Tracker_Semantic_Status::OPEN : Tracker_Semantic_Status::CLOSED
             );
-            if (isset($parents[$artifact_id])) {
+            if (isset($parents[$artifact_id]) && $parents[$artifact_id]->userCanView($user)) {
                 $backlog_item->setParent($parents[$artifact_id]);
             }
 
@@ -509,6 +509,9 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory
         }
     }
 
+    /**
+     * @param Artifact[] $parents
+     */
     private function pushItem(
         Planning_Milestone $milestone,
         Artifact $artifact,
@@ -526,7 +529,7 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory
 
         $backlog_item = $this->backlog_item_builder->getItem($artifact, $redirect_to_self, false);
 
-        if (isset($parents[$artifact_id])) {
+        if (isset($parents[$artifact_id]) && $parents[$artifact_id]->userCanView($user)) {
             $backlog_item->setParent($parents[$artifact_id]);
         }
 
@@ -767,7 +770,7 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory
 
             $backlog_item = $this->backlog_item_builder->getItem($artifact, $redirection_url, false);
             $backlog_item->setStatus($artifact->getStatus(), Tracker_Semantic_Status::OPEN);
-            if (isset($parents[$artifact_id])) {
+            if (isset($parents[$artifact_id]) && $parents[$artifact_id]->userCanView($user)) {
                 $backlog_item->setParent($parents[$artifact_id]);
             }
             if (isset($children[$artifact_id])) {
