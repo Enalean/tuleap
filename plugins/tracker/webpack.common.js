@@ -60,7 +60,7 @@ const config_for_flaming_parrot = {
         "tracker-email-copy-paste-fp": "./scripts/artifact/tracker-email-copy-paste-fp.ts",
         "tracker-report-expert-mode": "./scripts/report/index.js",
         "tracker-semantic-timeframe-option-selector":
-            "./scripts/semantic-timeframe-option-selector.js",
+            "./scripts/semantics/timeframe/semantic-timeframe-option-selector.ts",
         "tracker-semantic-progress-options-selector":
             "./scripts/semantics/progress/admin-selectors.ts",
         "tracker-admin-fields-permissions": "./scripts/tracker-admin/admin-fields-permissions",
