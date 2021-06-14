@@ -11,12 +11,11 @@ version: "2"
 
 services:
   web:
-    image: enalean/tuleap-aio:centos7
-    command: ["/usr/bin/tuleap-cfg", "docker:tuleap-run"]
+    image: tuleap/tuleap-community-edition:dev
     hostname: ${TULEAP_FQDN}
     volumes:
-      # This is temporary for elaboration of the new image
-      - ../../../:/usr/share/tuleap:ro,cached
+      # For Tuleap devs, un-comment if you want to test stuff with your own code base
+      # - ../../../:/usr/share/tuleap:ro,cached
       - tuleap-data:/data
     depends_on:
       - db
