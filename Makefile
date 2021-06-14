@@ -16,6 +16,7 @@ SUDO=
 DOCKER=$(SUDO) docker
 DOCKER_COMPOSE=$(SUDO) docker-compose $(DOCKER_COMPOSE_FILE)
 
+
 ifeq ($(MODE),Prod)
 COMPOSER_INSTALL=composer --quiet install --classmap-authoritative --no-dev --no-interaction --no-scripts --prefer-dist
 else
@@ -23,6 +24,7 @@ COMPOSER_INSTALL=composer --quiet install --prefer-dist
 endif
 
 PHP=php
+PRELOAD_GENERATOR=$(PHP) $(CURDIR)/tools/utils/preload/generate-preload.php
 
 AUTOLOAD_EXCLUDES=^tests|^template
 
@@ -38,8 +40,22 @@ help:
 
 .PHONY: composer
 composer:  ## Install PHP dependencies with Composer
-	@find . plugins/ src/themes/ src/www/themes/ tests/ -mindepth 2 -maxdepth 2 -type f -name 'composer.json' -print0 | \
+	@find . src/themes/ plugins/ tests/ -mindepth 2 -maxdepth 2 -type f -name 'composer.json' -print0 | \
 	    xargs -0 -P"`node ./tools/utils/scripts/max-usable-processors.js`" -L1 -I{} bash -c 'echo "Processing {}" && cd "`dirname "{}"`" && $(COMPOSER_INSTALL)'
+
+preload:
+	@find . src/themes/ plugins/ -mindepth 2 -maxdepth 2 -type f -name 'composer.json' -print0 | \
+		xargs -0 -P"`node ./tools/utils/scripts/max-usable-processors.js`" -L1 -I{} bash -c 'echo "Generating preload for {}" && cd "`dirname "{}"`" && $(PRELOAD_GENERATOR) composer.json'
+	@echo "Verify preload validity"
+	@$(PHP) \
+		-d error_reporting=2147483647 \
+		-d opcache.enable_cli=1 \
+		-d display_errors=1 \
+		-d display_startup_errors=1 \
+		-d opcache.lockfile_path=${TMP} \
+		-d memory_limit=256M \
+		-d opcache.preload=$(CURDIR)/tools/utils/preload/verification-loader.php \
+		 tools/utils/preload/check-preload.php
 
 ## RNG generation
 
