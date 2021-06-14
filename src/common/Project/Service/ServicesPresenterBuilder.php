@@ -31,14 +31,8 @@ class ServicesPresenterBuilder
 {
     private const NONE_SERVICE_ID = 100;
 
-    /**
-     * @var ServiceManager
-     */
-    private $service_manager;
-    /**
-     * @var \EventManager
-     */
-    private $event_manager;
+    private ServiceManager $service_manager;
+    private \EventManager $event_manager;
 
     public function __construct(ServiceManager $service_manager, \EventManager $event_manager)
     {
@@ -51,7 +45,7 @@ class ServicesPresenterBuilder
         $service_presenters = [];
         $allowed_services   = $this->service_manager->getListOfAllowedServicesForProject($project);
         foreach ($allowed_services as $service) {
-            if (! $this->isServiceReadable($service, $user)) {
+            if (! $this->isServiceReadable($service, $user) || $this->isBannedService($service)) {
                 continue;
             }
 
@@ -85,7 +79,7 @@ class ServicesPresenterBuilder
         );
     }
 
-    private function isServiceReadable(Service $service, PFUser $user)
+    private function isServiceReadable(Service $service, PFUser $user): bool
     {
         if ((int) $service->getId() === self::NONE_SERVICE_ID) {
             return false;
@@ -96,6 +90,19 @@ class ServicesPresenterBuilder
         }
 
         return $service->isActive();
+    }
+
+    private function isBannedService(Service $service): bool
+    {
+        if ($service->getShortName() === \Service::ADMIN) {
+            return true;
+        }
+
+        if ($service->getShortName() === \Service::SUMMARY) {
+            return true;
+        }
+
+        return false;
     }
 
     private function getServiceLink(Service $service, Project $project)
