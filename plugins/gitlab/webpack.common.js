@@ -20,6 +20,18 @@
 const path = require("path");
 const webpack_configurator = require("../../tools/utils/scripts/webpack-configurator.js");
 
+const rule_vue_loader_with_css_extraction = {
+    ...webpack_configurator.rule_vue_loader,
+    use: [
+        {
+            loader: "vue-loader",
+            options: {
+                CSSExtract: true,
+            },
+        },
+    ],
+};
+
 module.exports = [
     {
         entry: {
@@ -37,7 +49,9 @@ module.exports = [
             rules: [
                 ...webpack_configurator.configureTypescriptRules(),
                 webpack_configurator.rule_easygettext_loader,
-                webpack_configurator.rule_vue_loader,
+                rule_vue_loader_with_css_extraction,
+                webpack_configurator.rule_scss_loader,
+                webpack_configurator.rule_css_assets,
             ],
         },
         resolve: {
@@ -48,6 +62,7 @@ module.exports = [
             webpack_configurator.getManifestPlugin(),
             webpack_configurator.getVueLoaderPlugin(),
             webpack_configurator.getTypescriptCheckerPlugin(true),
+            ...webpack_configurator.getCSSExtractionPlugins(),
         ],
         resolveLoader: {
             alias: webpack_configurator.easygettext_loader_alias,
