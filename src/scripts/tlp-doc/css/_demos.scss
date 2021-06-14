@@ -37,7 +37,7 @@
 
             .tlp-framed-vertically::before,
             .tlp-framed-vertically::after {
-                content: '';
+                content: "";
                 position: absolute;
                 left: 0;
                 width: 100%;
@@ -54,7 +54,7 @@
 
             .tlp-framed-horizontally::before,
             .tlp-framed-horizontally::after {
-                content: '';
+                content: "";
                 position: absolute;
                 top: 0;
                 width: 16px;
@@ -100,7 +100,7 @@
         }
     }
 
-    [id^=example-layout-] {
+    [id^="example-layout-"] {
         > div {
             min-height: 300px;
 
@@ -119,15 +119,17 @@
         width: 50%;
         margin: 0 0 0 10px;
 
-        .CodeMirror { //stylelint-disable-line selector-class-pattern
+        //stylelint-disable-next-line selector-class-pattern
+        .CodeMirror {
             flex: 1;
             background-image: none;
             line-height: 18px;
         }
 
-        //stylelint-disable-next-line selector-class-pattern
+        //stylelint-disable selector-class-pattern
         .CodeMirror-overlayscroll-horizontal > div,
-        .CodeMirror-overlayscroll-vertical > div { //stylelint-disable-line selector-class-pattern
+        .CodeMirror-overlayscroll-vertical > div {
+            //stylelint-enable
             background: $editor-scrollbar-color;
         }
     }
@@ -149,12 +151,24 @@
             border-radius: 50%;
             vertical-align: middle;
 
-            &.doc-color-orange { background-color: $tlp-theme-orange; }
-            &.doc-color-blue { background-color: $tlp-theme-blue;   }
-            &.doc-color-green { background-color: $tlp-theme-green;  }
-            &.doc-color-grey { background-color: $tlp-theme-grey;   }
-            &.doc-color-purple { background-color: $tlp-theme-purple; }
-            &.doc-color-red { background-color: $tlp-theme-red;    }
+            &.doc-color-orange {
+                background-color: $tlp-theme-orange;
+            }
+            &.doc-color-blue {
+                background-color: $tlp-theme-blue;
+            }
+            &.doc-color-green {
+                background-color: $tlp-theme-green;
+            }
+            &.doc-color-grey {
+                background-color: $tlp-theme-grey;
+            }
+            &.doc-color-purple {
+                background-color: $tlp-theme-purple;
+            }
+            &.doc-color-red {
+                background-color: $tlp-theme-red;
+            }
         }
 
         tbody > tr > td:first-child,
@@ -164,44 +178,44 @@
 
         @each $color-name, $colors in $tlp-swatch-color-map {
             .doc-color-#{$color-name} {
-                border: 3px solid map-get($colors, 'primary');
-                background-color: map-get($colors, 'secondary');
+                border: 3px solid map-get($colors, "primary");
+                background-color: map-get($colors, "secondary");
             }
 
             .doc-color-code-#{$color-name}-primary {
                 @extend %size;
-                background-color: map-get($colors, 'primary');
+                background-color: map-get($colors, "primary");
                 color: $tlp-ui-white;
             }
 
             .doc-color-code-#{$color-name}-secondary {
                 @extend %size;
-                background-color: map-get($colors, 'secondary');
-                color: map-get($colors, 'text');
+                background-color: map-get($colors, "secondary");
+                color: map-get($colors, "text");
             }
 
             .doc-color-code-#{$color-name}-border {
                 @extend %size;
-                border: 2px solid map-get($colors, 'border');
-                color: map-get($colors, 'border');
+                border: 2px solid map-get($colors, "border");
+                color: map-get($colors, "border");
             }
 
             .doc-color-code-#{$color-name}-text {
                 @extend %size;
-                background-color: map-get($colors, 'secondary');
-                color: map-get($colors, 'text');
+                background-color: map-get($colors, "secondary");
+                color: map-get($colors, "text");
             }
 
             .doc-color-code-#{$color-name}-text-on-dark {
                 @extend %size;
                 background-color: var(--tlp-theme-dark-background-color);
-                color: map-get($colors, 'text-on-dark');
+                color: map-get($colors, "text-on-dark");
             }
 
             .doc-color-#{$color-name}-pattern {
                 width: 30px;
                 height: 30px;
-                background-color: map-get($colors, 'text');
+                background-color: map-get($colors, "text");
                 mask-image: url("#{map-get($colors, 'pattern')}");
             }
         }
@@ -242,7 +256,7 @@
 }
 
 #dropdown-icon-right-example {
-    transition: color .25s;
+    transition: color 0.25s;
     cursor: pointer;
 }
 
@@ -259,7 +273,7 @@
     }
 
     &::before {
-        content: '';
+        content: "";
         grid-column: 1 / 5;
         grid-row: 1 / 5;
         width: 174px;

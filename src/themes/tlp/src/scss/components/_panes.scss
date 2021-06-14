@@ -57,7 +57,7 @@
 }
 
 %tlp-pane-title {
-    font-size: .8125rem;
+    font-size: 0.8125rem;
     font-weight: 600;
     line-height: 1rem;
     text-transform: uppercase;
@@ -79,7 +79,7 @@
 
 .tlp-pane-title-icon {
     margin: 0 4px 0 0;
-    font-size: .75rem;
+    font-size: 0.75rem;
     line-height: 1rem;
 }
 
@@ -104,7 +104,7 @@
         margin: var(--tlp-large-spacing) 0 0;
     }
 
-    > [class*='tlp-button'] {
+    > [class*="tlp-button"] {
         margin: 0 var(--tlp-small-spacing) / 2;
     }
 }

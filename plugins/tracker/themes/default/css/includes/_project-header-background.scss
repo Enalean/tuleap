@@ -34,7 +34,8 @@
     }
     // stylelint-enable
 
-    :not(.browse_instructions) + .tracker-report-query { // stylelint-disable-line selector-class-pattern
+    // stylelint-disable-next-line selector-class-pattern
+    :not(.browse_instructions) + .tracker-report-query {
         border-top: 0;
     }
 
@@ -43,18 +44,15 @@
     }
 }
 
-body.in_tracker_report .project-with-background .content { // stylelint-disable-line selector-no-qualifying-type,selector-class-pattern
+// stylelint-disable-next-line selector-no-qualifying-type,selector-class-pattern
+body.in_tracker_report .project-with-background .content {
     padding-top: 0;
 }
 
 body {
-    $elements-with-project-background: '#tracker_report_config_options', '.tracker_artifact_title', '.tracker-hierarchy:not(.tracker-hierarchy-admin)';
+    $elements-with-project-background: "#tracker_report_config_options", ".tracker_artifact_title", ".tracker-hierarchy:not(.tracker-hierarchy-admin)";
 
     @each $element-with-project-background in $elements-with-project-background {
-        @include background.apply-background(
-            $element-with-project-background,
-            variables-common.$sidebar-width,
-            variables-common.$sidebar-width-collapsed,
-        );
+        @include background.apply-background($element-with-project-background, variables-common.$sidebar-width, variables-common.$sidebar-width-collapsed);
     }
 }

@@ -29,9 +29,9 @@
     border-radius: 0 3px 3px;
 
     /* stylelint-disable selector-class-pattern,selector-no-qualifying-type*/
-    .select2-results__option[aria-selected=true]::before,
-    span.select2-container--tlp-select2-large .select2-dropdown .select2-results__option[aria-selected=true]::before,
-    span.select2-container--tlp-select2-small .select2-dropdown .select2-results__option[aria-selected=true]::before {
+    .select2-results__option[aria-selected="true"]::before,
+    span.select2-container--tlp-select2-large .select2-dropdown .select2-results__option[aria-selected="true"]::before,
+    span.select2-container--tlp-select2-small .select2-dropdown .select2-results__option[aria-selected="true"]::before {
         top: 15px;
     }
     /* stylelint-enable selector-class-pattern,selector-no-qualifying-type*/
@@ -64,7 +64,7 @@
     border-radius: 50%;
 
     &::before {
-        content: '';
+        content: "";
         display: block;
         position: absolute;
         top: 1px;
@@ -75,7 +75,7 @@
     }
 
     &::after {
-        content: '';
+        content: "";
         display: block;
         position: absolute;
         width: 26px;
@@ -86,23 +86,22 @@
 
     @each $color-name, $colors in swatch-colors.$tlp-swatch-color-map {
         &.#{$color-name} {
-            background: map-get($colors, 'secondary');
+            background: map-get($colors, "secondary");
 
             &::after {
-                border-color: map-get($colors, 'primary');
+                border-color: map-get($colors, "primary");
             }
         }
     }
 }
 
-
-body[data-user-has-accessibility-mode='1'] {
+body[data-user-has-accessibility-mode="1"] {
     #select2-tracker-creation-field-color-container > span,
     #select2-tracker-creation-field-color-results > li > span {
         @each $color-name, $colors in swatch-colors.$tlp-swatch-color-map {
             &.#{$color-name} {
                 &::before {
-                    background: map-get($colors, 'primary');
+                    background: map-get($colors, "primary");
                     mask-image: url("#{map-get($colors, 'pattern')}");
                 }
             }

@@ -18,7 +18,7 @@
  */
 
 $tlp-tabs-radius: 3px;
-$tlp-tabs-shadow: 0 4px 15px rgba(0, 0, 0, .175);
+$tlp-tabs-shadow: 0 4px 15px rgba(0, 0, 0, 0.175);
 $tlp-tabs-transition: 75ms ease-out;
 
 .tlp-tabs {
@@ -84,7 +84,7 @@ $tlp-tabs-transition: 75ms ease-out;
 
 .tlp-tab-menu-item {
     padding: calc(var(--tlp-medium-spacing) / 2) var(--tlp-medium-spacing);
-    font-size: .875rem;
+    font-size: 0.875rem;
     font-weight: 400;
     letter-spacing: normal;
     text-decoration: none;
@@ -113,9 +113,9 @@ $tlp-tabs-transition: 75ms ease-out;
     transition: color $tlp-tabs-transition, border-bottom-color $tlp-tabs-transition;
     border-bottom: 2px solid transparent;
     color: var(--tlp-ui-dimmed);
-    font-size: .75rem;
+    font-size: 0.75rem;
     font-weight: 500;
-    letter-spacing: .02rem;
+    letter-spacing: 0.02rem;
     text-decoration: none;
     text-transform: uppercase;
 
@@ -133,12 +133,12 @@ $tlp-tabs-transition: 75ms ease-out;
     &.tlp-tab-disabled,
     &.tlp-tab-disabled:hover {
         border-bottom-color: transparent;
-        opacity: .5;
+        opacity: 0.5;
         color: var(--tlp-ui-dimmed);
         cursor: not-allowed;
 
         > .tlp-tab-badge-append {
-            opacity: .5;
+            opacity: 0.5;
         }
     }
 
@@ -162,7 +162,7 @@ $tlp-tabs-transition: 75ms ease-out;
     border-bottom: 1px solid var(--tlp-ui-border-normal);
 
     &::before {
-        content: '';
+        content: "";
         display: block;
         position: absolute;
         top: -1px;
@@ -194,13 +194,12 @@ $tlp-tabs-transition: 75ms ease-out;
         }
 
         > .tlp-tab-badge-append {
-            opacity: .25;
+            opacity: 0.25;
         }
     }
 
     &:first-child::before {
         border-top-left-radius: 3px;
-
     }
 
     &:last-child {
@@ -225,7 +224,7 @@ $tlp-tabs-transition: 75ms ease-out;
 .tlp-tab-badge-append {
     margin: -10px 0 -9px 10px;
     transition: opacity $tlp-tabs-transition;
-    opacity: .5;
+    opacity: 0.5;
     letter-spacing: normal;
     line-height: unset;
     text-transform: none;

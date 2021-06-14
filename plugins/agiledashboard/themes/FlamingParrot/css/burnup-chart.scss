@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@import '../../../../tracker/themes/default/css/includes/graph';
+@import "../../../../tracker/themes/default/css/includes/graph";
 
 $team-effort-color: #57b258;
 $total-effort-color: #bd2626;
@@ -68,7 +68,7 @@ $total-effort-color: #bd2626;
 }
 
 .chart-column {
-    opacity: .05;
+    opacity: 0.05;
     fill: transparent;
 
     &.highlighted {

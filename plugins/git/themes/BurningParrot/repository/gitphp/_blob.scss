@@ -77,7 +77,6 @@ $codemirror-like-line-numbers-color: #8c8c8c;
     line-height: 1.5;
 }
 
-
 .git-repository-blob-file-code,
 .git-repository-blob-file-linenumbers {
     border: 0;
@@ -125,13 +124,13 @@ $above-highlight-line: 2;
     font-family: code-font-parameters.$code-font-family;
     line-height: 1.5;
 
-    &[class*='language-'] {
+    &[class*="language-"] {
         margin: 0;
         padding: 5px var(--tlp-small-spacing);
         background: none;
     }
 
-    > code[class*='language-'] {
+    > code[class*="language-"] {
         position: relative;
         z-index: $above-highlight-line;
         font-family: code-font-parameters.$code-font-family;

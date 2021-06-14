@@ -41,7 +41,7 @@
     margin: 0 2px 0 0;
     transition: color 150ms ease-in-out;
     color: var(--tlp-ui-dimmed);
-    font-size: .625rem;
+    font-size: 0.625rem;
 
     &:focus,
     &:hover {
@@ -52,7 +52,7 @@
 .forumml-thread-message-sender {
     margin: 0 0 var(--tlp-small-spacing);
     color: var(--tlp-ui-dimmed);
-    font-size: .75rem;
+    font-size: 0.75rem;
     line-height: 1rem;
 }
 
@@ -62,7 +62,7 @@
 
 .forumml-thread-message-attachments {
     margin: var(--tlp-small-spacing) 0 0;
-    font-size: .75rem;
+    font-size: 0.75rem;
     line-height: 1rem;
 }
 

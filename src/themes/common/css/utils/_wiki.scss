@@ -90,7 +90,7 @@ ul.ServiceMenu li.current {
 
 .service-docman .docman-create-news-option {
     display: inline;
-    padding-left: .5em;
+    padding-left: 0.5em;
 }
 
 .service-admin table select {
@@ -102,14 +102,14 @@ ul.ServiceMenu li.current {
     display: block;
 }
 
-label[for='edit[lock]'],
-label[for='edit[minor_edit]'],
-label[for='useOldMarkup'] {
+label[for="edit[lock]"],
+label[for="edit[minor_edit]"],
+label[for="useOldMarkup"] {
     display: inline;
 }
 
-input[type=checkbox][id='edit[locked]'],
-input[type=checkbox][id='edit[minor_edit]'],
-input[type=checkbox][id='useOldMarkup'] {
+input[type="checkbox"][id="edit[locked]"],
+input[type="checkbox"][id="edit[minor_edit]"],
+input[type="checkbox"][id="useOldMarkup"] {
     margin: 0 0 0 4px;
 }

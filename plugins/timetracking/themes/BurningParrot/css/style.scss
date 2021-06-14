@@ -93,7 +93,6 @@
     margin: 0 var(--tlp-medium-spacing) 0 0;
 }
 
-
 .timetracking-writing-mode-selected-date:last-of-type,
 .timetracking-overview-writing-mode-selected-date:last-of-type,
 .timetracking-reading-date:last-of-type {
@@ -160,7 +159,6 @@
     font-style: italic;
 }
 
-
 .timetracking-badge-direct-link-to-artifact {
     margin: 0 5px 0 0;
 }
@@ -178,7 +176,7 @@
 
 .timetracking-loader {
     height: 100px;
-    background: url('../../../../../src/www/themes/BurningParrot/images/spinner.gif') no-repeat center center;
+    background: url("../../../../../src/www/themes/BurningParrot/images/spinner.gif") no-repeat center center;
 }
 
 .timetracking-total-sum {

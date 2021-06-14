@@ -19,21 +19,21 @@
 
 @use '@tuleap/tlp-popovers';
 
-$tuleap-common-theme-basepath: '../../../www/themes/common/';
+$tuleap-common-theme-basepath: "../../../www/themes/common/";
 
-@import '../../../www/themes/common/css/bootstrap-tuleap-22d39b3.min.css';
-@import '../../../www/themes/common/css/bootstrap-tuleap-responsive-22d39b3.min.css';
-@import '../../../common/css/utils/utils';
+@import "../../../www/themes/common/css/bootstrap-tuleap-22d39b3.min.css";
+@import "../../../www/themes/common/css/bootstrap-tuleap-responsive-22d39b3.min.css";
+@import "../../../common/css/utils/utils";
 
-$fa-font-path: '~@fortawesome/fontawesome-free/webfonts/';
-@import '~@fortawesome/fontawesome-free/scss/fontawesome';
-@import '~@fortawesome/fontawesome-free/scss/solid';
-@import '~@fortawesome/fontawesome-free/scss/regular';
-@import '~@fortawesome/fontawesome-free/scss/brands';
-@import '~@fortawesome/fontawesome-free/scss/shims';
+$fa-font-path: "~@fortawesome/fontawesome-free/webfonts/";
+@import "~@fortawesome/fontawesome-free/scss/fontawesome";
+@import "~@fortawesome/fontawesome-free/scss/solid";
+@import "~@fortawesome/fontawesome-free/scss/regular";
+@import "~@fortawesome/fontawesome-free/scss/brands";
+@import "~@fortawesome/fontawesome-free/scss/shims";
 
-$tlp-font-basepath: '../../tlp/src';
-@import '../../../tlp/src/fonts/tlp-font/tlp-font';
+$tlp-font-basepath: "../../tlp/src";
+@import "../../../tlp/src/fonts/tlp-font/tlp-font";
 
 html,
 body {

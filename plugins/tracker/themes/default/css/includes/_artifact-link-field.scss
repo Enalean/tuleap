@@ -27,7 +27,7 @@
 
 .tracker-form-element-artifactlink-renderer-async {
     height: 100px;
-    background: url('../../../../../src/www/themes/BurningParrot/images/spinner.gif') no-repeat center center;
+    background: url("../../../../../src/www/themes/BurningParrot/images/spinner.gif") no-repeat center center;
 
     &.loaded {
         height: auto;
@@ -74,14 +74,14 @@ h5.artifack_link_subtitle {
 }
 
 .tracker-form-element-artifactlink-gototracker {
-    font-size: .8em;
+    font-size: 0.8em;
     text-align: right;
 }
 
 /* stylelint-disable-next-line selector-no-qualifying-type */
 ul.tracker-form-element-artifactlink-list {
     margin-top: 0;
-    padding-left: .5em;
+    padding-left: 0.5em;
     list-style-type: none;
 }
 

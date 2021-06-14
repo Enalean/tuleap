@@ -5,7 +5,7 @@
     left: 0;
     width: 100%;
     height: 100%;
-    opacity: .5;
+    opacity: 0.5;
     background-color: #000000;
     filter: alpha(opacity=50);
 }
@@ -22,7 +22,7 @@
     margin-top: -($loading-size / 2);
     margin-left: -($loading-size / 2);
     border-radius: 50%;
-    background: #303030 url('#{$tuleap-common-theme-basepath}images/tuleap-modal-spinner.gif') no-repeat center center;
+    background: #303030 url("#{$tuleap-common-theme-basepath}images/tuleap-modal-spinner.gif") no-repeat center center;
 }
 
 .tuleap-modal {
@@ -48,9 +48,9 @@
     top: 150px;
     left: 50%;
     height: $modal-height;
-    margin: 0 0 0 #{-($modal-width + 2 * $grip-width) / 2};
+    margin: 0 0 0 #{- ($modal-width + 2 * $grip-width) / 2};
     padding: 0;
-    box-shadow: 0 2px 40px rgba(0, 0, 0, .3);
+    box-shadow: 0 2px 40px rgba(0, 0, 0, 0.3);
     font-style: normal;
 
     .tuleap-modal-side-panel {
@@ -80,7 +80,7 @@
             border-bottom-right-radius: $modal-radius;
             background: $grip-background-color;
             color: darken($grip-background-color, 50%);
-            font-size: .8em;
+            font-size: 0.8em;
             font-weight: bold;
             line-height: 1.2em;
             text-shadow: 0 1px 0 lighten($grip-background-color, 10%);
@@ -99,7 +99,7 @@
                 background-color: $grip-background-color;
                 color: $grip-color;
                 font-weight: normal;
-                letter-spacing: .1em;
+                letter-spacing: 0.1em;
                 line-height: 1.5em;
                 text-align: center;
             }

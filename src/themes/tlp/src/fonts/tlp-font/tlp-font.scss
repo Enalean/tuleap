@@ -17,52 +17,52 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-$tlp-font-basepath: '../' !default;
+$tlp-font-basepath: "../" !default;
 
 @font-face {
-    font-family: 'TLPFontAwesome';
+    font-family: "TLPFontAwesome";
     font-style: normal;
     font-weight: normal;
-    src: url('#{$tlp-font-basepath}/fonts/tlp-font/TLP.woff2') format('woff2');
+    src: url("#{$tlp-font-basepath}/fonts/tlp-font/TLP.woff2") format("woff2");
     font-display: block;
 }
 
 $tlp-fontawesome-icons: (
-    lock-plus-r: '\f000',
-    unlock-plus-r: '\f001',
-    baseline: '\f002',
-    baseline-comparison: '\f003',
-    gavel-pending: '\f004',
-    gavel-approved: '\f005',
-    gavel-rejected: '\f006',
-    gavel-comment: '\f007',
-    text-large: '\f008',
-    text-narrow: '\f009',
-    versioning-cvs: '\f010',
-    versioning-svn: '\f011',
-    versioning-git: '\f012',
-    wiki: '\f013',
-    mediawiki: '\f014',
-    folder-globe: '\f015',
-    add-to-backlog: '\f016',
-    dependencies-graph: '\f017',
-    backlog: '\f018',
-    remove-from-backlog: '\f019',
-    taskboard: '\f020',
-    kanban: '\f021',
-    esc-key: '\f022',
-    enter-key: '\f023',
-    hierarchy-plus: '\f024',
-    user-pencil: '\f025',
-    gerrit: '\f026',
-    tuleap: '\f027',
-    zip-download: '\f028',
-    robot: '\f029',
-    robot-happy: '\f030',
-    robot-unhappy: '\f031',
-    go-to-user: '\f032',
-    webhooks: '\f033',
-    select-test: '\f034'
+    lock-plus-r: "\f000",
+    unlock-plus-r: "\f001",
+    baseline: "\f002",
+    baseline-comparison: "\f003",
+    gavel-pending: "\f004",
+    gavel-approved: "\f005",
+    gavel-rejected: "\f006",
+    gavel-comment: "\f007",
+    text-large: "\f008",
+    text-narrow: "\f009",
+    versioning-cvs: "\f010",
+    versioning-svn: "\f011",
+    versioning-git: "\f012",
+    wiki: "\f013",
+    mediawiki: "\f014",
+    folder-globe: "\f015",
+    add-to-backlog: "\f016",
+    dependencies-graph: "\f017",
+    backlog: "\f018",
+    remove-from-backlog: "\f019",
+    taskboard: "\f020",
+    kanban: "\f021",
+    esc-key: "\f022",
+    enter-key: "\f023",
+    hierarchy-plus: "\f024",
+    user-pencil: "\f025",
+    gerrit: "\f026",
+    tuleap: "\f027",
+    zip-download: "\f028",
+    robot: "\f029",
+    robot-happy: "\f030",
+    robot-unhappy: "\f031",
+    go-to-user: "\f032",
+    webhooks: "\f033",
+    select-test: "\f034",
 );
 
 @each $label, $unicode in $tlp-fontawesome-icons {

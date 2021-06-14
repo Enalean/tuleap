@@ -134,7 +134,7 @@ $height-testmanagement-header: calc(var(--tlp-title-spacing) + var(--tlp-small-s
     border-radius: 15px;
     font-size: 13px;
     font-weight: 700;
-    letter-spacing: .5px;
+    letter-spacing: 0.5px;
     text-align: center;
 
     > div:first-child {
@@ -148,7 +148,6 @@ $height-testmanagement-header: calc(var(--tlp-title-spacing) + var(--tlp-small-s
     > div:only-child {
         border-radius: 10px;
     }
-
 
     > .tests-passed {
         display: table-cell;
@@ -252,7 +251,7 @@ $height-testmanagement-header: calc(var(--tlp-title-spacing) + var(--tlp-small-s
     background: unset;
 
     &:focus-within {
-        transition: border-color .15s linear;
+        transition: border-color 0.15s linear;
         border: 1px solid var(--tlp-theme-color);
     }
 
@@ -262,7 +261,6 @@ $height-testmanagement-header: calc(var(--tlp-title-spacing) + var(--tlp-small-s
         margin: 0 0 0 18px;
         border-style: none;
     }
-
 }
 
 .tests-filters-dropdown {
@@ -349,7 +347,7 @@ $height-testmanagement-header: calc(var(--tlp-title-spacing) + var(--tlp-small-s
     color: var(--tlp-theme-color);
     font-size: 13px;
     font-weight: 600;
-    letter-spacing: .3px;
+    letter-spacing: 0.3px;
     text-transform: uppercase;
 }
 

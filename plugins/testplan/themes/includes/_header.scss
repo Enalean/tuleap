@@ -18,7 +18,7 @@
  */
 
 @use 'media-query-definitions' as media-query;
-@import '../../../agiledashboard/themes/BurningParrot/css/header';
+@import "../../../agiledashboard/themes/BurningParrot/css/header";
 
 .testplan-root {
     margin: var(--tlp-medium-spacing) 0 0;
@@ -31,15 +31,15 @@
 
 .test-plan-app {
     display: grid;
-    grid-template-areas: 'backlog-items campaigns';
+    grid-template-areas: "backlog-items campaigns";
     grid-template-columns: 60% auto;
     column-gap: var(--tlp-large-spacing);
 
     @include media-query.not-large-screen() {
         row-gap: var(--tlp-jumbo-spacing);
         grid-template-areas:
-            'backlog-items'
-            'campaigns';
+            "backlog-items"
+            "campaigns";
         grid-template-columns: none;
     }
 }

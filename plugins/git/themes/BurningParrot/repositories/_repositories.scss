@@ -65,7 +65,7 @@
     width: 250px;
     height: 200px;
     margin: 0 auto;
-    background: url('../../../../src/www/themes/BurningParrot/images/spinner.gif') no-repeat center center;
+    background: url("../../../../src/www/themes/BurningParrot/images/spinner.gif") no-repeat center center;
 }
 
 .git-repository-list-actions {
@@ -102,7 +102,7 @@
 
     .fa-long-arrow-alt-down,
     .fa-calendar-alt {
-        font-size: .8125rem;
+        font-size: 0.8125rem;
     }
 }
 
@@ -115,7 +115,7 @@
     margin: 0 0 0 24px;
 
     &::before {
-        content: '';
+        content: "";
         position: absolute;
         top: 24px;
         left: 10px;
@@ -139,7 +139,7 @@
     > .fa-caret-down,
     > .fa-caret-right {
         color: var(--tlp-ui-dimmed);
-        font-size: .8125rem;
+        font-size: 0.8125rem;
     }
 
     > .git-repository-list-folder-label {
@@ -149,7 +149,7 @@
 
         > .fa-folder {
             margin: 0 2px 0 0;
-            font-size: .8125rem;
+            font-size: 0.8125rem;
         }
     }
 }

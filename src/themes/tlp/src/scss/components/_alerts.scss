@@ -35,7 +35,7 @@
         position: absolute;
         top: calc(var(--tlp-medium-spacing) + 1px);
         left: var(--tlp-medium-spacing);
-        font-family: 'Font Awesome 5 Free';
+        font-family: "Font Awesome 5 Free";
         font-size: 1.125rem;
     }
 
@@ -52,7 +52,7 @@
     color: var(--tlp-alert-info-color);
 
     &::before {
-        content: '\f05a'; // fa-info-circle
+        content: "\f05a"; // fa-info-circle
         font-weight: 900;
     }
 
@@ -69,7 +69,7 @@
     color: var(--tlp-alert-success-color);
 
     &::before {
-        content: '\f164'; // fa-thumbs-up
+        content: "\f164"; // fa-thumbs-up
         font-weight: 400;
     }
 
@@ -86,7 +86,7 @@
     color: var(--tlp-alert-warning-color);
 
     &::before {
-        content: '\f071'; // fa-exclamation-triangle
+        content: "\f071"; // fa-exclamation-triangle
         font-weight: 900;
     }
 
@@ -103,7 +103,7 @@
     color: var(--tlp-alert-danger-color);
 
     &::before {
-        content: '\f06a'; // fa-exclamation-circle
+        content: "\f06a"; // fa-exclamation-circle
         font-weight: 900;
     }
 

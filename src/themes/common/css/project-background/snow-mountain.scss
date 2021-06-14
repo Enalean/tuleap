@@ -20,5 +20,5 @@
 @use 'background';
 
 .project-with-background {
-    @include background.css-custom-properties('snow-mountain');
+    @include background.css-custom-properties("snow-mountain");
 }

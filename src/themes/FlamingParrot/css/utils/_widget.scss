@@ -8,7 +8,8 @@ $border-radius: 3px;
         margin: 0;
     }
 
-    .widget_titlebar { /* stylelint-disable-line selector-class-pattern */
+    /* stylelint-disable-next-line selector-class-pattern */
+    .widget_titlebar {
         padding: 8px 12px 10px;
         border-top: $border;
         border-right: $border;
@@ -21,7 +22,8 @@ $border-radius: 3px;
         font-weight: 400;
     }
 
-    .widget_content { /* stylelint-disable-line selector-class-pattern */
+    /* stylelint-disable-next-line selector-class-pattern */
+    .widget_content {
         padding: 12px;
         border-top: 1px solid var(--tlp-theme-color);
         border-right: $border;
@@ -29,6 +31,6 @@ $border-radius: 3px;
         border-left: $border;
         border-bottom-right-radius: $border-radius;
         border-bottom-left-radius: $border-radius;
-        font-size: .9em;
+        font-size: 0.9em;
     }
 }

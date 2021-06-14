@@ -18,12 +18,14 @@
 #pull-request-update-reviewers-modal {
     width: 800px;
 
-    .select2-selection__choice { /* stylelint-disable-line selector-class-pattern */
+    /* stylelint-disable-next-line selector-class-pattern */
+    .select2-selection__choice {
         padding-top: 2px;
         padding-bottom: 2px;
     }
 
-    .select2-search__field { /* stylelint-disable-line selector-class-pattern */
+    /* stylelint-disable-next-line selector-class-pattern */
+    .select2-search__field {
         width: 100% !important;
     }
 

@@ -17,8 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@import '../../../../../src/themes/tlp/src/scss/variables/colors/common-colors';
-@import '../../../../tracker/themes/default/css/includes/columns-colors';
+@import "../../../../../src/themes/tlp/src/scss/variables/colors/common-colors";
+@import "../../../../tracker/themes/default/css/includes/columns-colors";
 
 /* stylelint-disable selector-class-pattern, selector-id-pattern */
 #cardwall {
@@ -72,7 +72,7 @@
     border: 1px solid #cacaca;
     border-radius: 5px;
     background: #ffffbb;
-    box-shadow: 0 1px 0 0 rgba(217, 217, 217, .5);
+    box-shadow: 0 1px 0 0 rgba(217, 217, 217, 0.5);
     cursor: move;
 }
 
@@ -94,32 +94,34 @@
     cursor: auto;
 }
 
-.cardwall_board ul li.error { /* stylelint-disable-line selector-no-qualifying-type */
-    box-shadow: 5px 5px 12px rgba(254, 0, 0, .7);
+/* stylelint-disable-next-line selector-no-qualifying-type */
+.cardwall_board ul li.error {
+    box-shadow: 5px 5px 12px rgba(254, 0, 0, 0.7);
 }
 
-.cardwall_board ul li p.cardwall_board_title { /* stylelint-disable-line selector-no-qualifying-type */
+/* stylelint-disable-next-line selector-no-qualifying-type */
+.cardwall_board ul li p.cardwall_board_title {
     padding-bottom: 10px;
     font-size: 140%;
     font-weight: bold;
 }
 
 .cardwall_board_column_hover {
-    box-shadow: 0 0 20px 0 rgba(0, 0, 0, .1) inset;
+    box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.1) inset;
 }
 
 #plugin_cardwall_qrcode_toggler {
     filter: alpha(opacity=20);
-    -khtml-opacity: .2;
-    -moz-opacity: .2;
-    opacity: .2;
+    -khtml-opacity: 0.2;
+    -moz-opacity: 0.2;
+    opacity: 0.2;
 }
 
-.card_element_edit_form > input[type=text] {
+.card_element_edit_form > input[type="text"] {
     width: 40px;
 }
 
-.card_element_edit_form > input[type=submit] {
+.card_element_edit_form > input[type="submit"] {
     margin-right: 5px;
     margin-left: 5px;
 }
@@ -142,13 +144,13 @@
     margin: 0;
     padding: 4px 6px;
 
-    transition: border linear .2s, box-shadow linear .2s;
+    transition: border linear 0.2s, box-shadow linear 0.2s;
     border: 1px solid #cccccc;
 
     border-radius: 4px;
     background-color: #ffffff;
 
-    box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
 
     color: #555555;
 
@@ -158,17 +160,18 @@
     vertical-align: middle;
 }
 
-input[type='text'].search-in-cardwall { /* stylelint-disable-line selector-no-qualifying-type */
+/* stylelint-disable-next-line selector-no-qualifying-type */
+input[type="text"].search-in-cardwall {
     margin-bottom: 0;
 }
 
 .search-in-cardwall:focus {
-    border-color: rgba(82, 168, 236, .8);
+    border-color: rgba(82, 168, 236, 0.8);
     outline: 0;
     /* stylelint-disable-next-line declaration-block-no-duplicate-properties */
     outline: thin dotted \9;
 
-    box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 8px rgba(82, 168, 236, .6);
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(82, 168, 236, 0.6);
 }
 
 .cardwall-column-header {
@@ -217,7 +220,7 @@ input[type='text'].search-in-cardwall { /* stylelint-disable-line selector-no-qu
 }
 
 .cardwall_board_postit_flying {
-    box-shadow: -1px 13px 11px 0 rgba(203, 203, 203, .7);
+    box-shadow: -1px 13px 11px 0 rgba(203, 203, 203, 0.7);
 }
 
 .cardwall-cell-stacked > .cardwall-cell-container > ul > .cardwall_board_postit:nth-child(1) {
@@ -281,7 +284,8 @@ input[type='text'].search-in-cardwall { /* stylelint-disable-line selector-no-qu
     }
 }
 
-body.fullscreen { /* stylelint-disable-line selector-no-qualifying-type */
+/* stylelint-disable-next-line selector-no-qualifying-type */
+body.fullscreen {
     $cardwall-full-screen-top-color: #e6e6e6;
     $cardwall-full-screen-bottom-color: #ffffff;
     min-width: 100%;
@@ -304,16 +308,19 @@ body.fullscreen { /* stylelint-disable-line selector-no-qualifying-type */
         display: none;
     }
 
-    .main_body_row { /* stylelint-disable-line selector-no-qualifying-type */
+    /* stylelint-disable-next-line selector-no-qualifying-type */
+    .main_body_row {
         margin: 0;
     }
 
-    .main { /* stylelint-disable-line selector-no-qualifying-type */
+    /* stylelint-disable-next-line selector-no-qualifying-type */
+    .main {
         margin: 0;
         padding: 0;
     }
 
-    #cardwall { /* stylelint-disable-line selector-no-qualifying-type */
+    /* stylelint-disable-next-line selector-no-qualifying-type */
+    #cardwall {
         min-width: 100%;
         min-height: 100%;
 
@@ -334,7 +341,6 @@ body.fullscreen { /* stylelint-disable-line selector-no-qualifying-type */
 }
 
 .cardwall_board-milestone-info {
-
     $cardwall-points-color: #5aaf5a;
     $cardwall-border-between-info-panes: 1px solid #dddddd;
 
@@ -365,7 +371,7 @@ body.fullscreen { /* stylelint-disable-line selector-no-qualifying-type */
 
             i {
                 color: #888888;
-                font-size: .8em;
+                font-size: 0.8em;
             }
 
             &:hover {
@@ -383,7 +389,7 @@ body.fullscreen { /* stylelint-disable-line selector-no-qualifying-type */
     .points-info {
         margin: 0 0 10px;
         color: #888888;
-        font-size: .9em;
+        font-size: 0.9em;
 
         span {
             margin-right: 20px;
@@ -392,7 +398,7 @@ body.fullscreen { /* stylelint-disable-line selector-no-qualifying-type */
 
     .line-break {
         margin: 0;
-        font-size: .9em;
+        font-size: 0.9em;
     }
 
     .progress-bar {
@@ -445,7 +451,7 @@ body.fullscreen { /* stylelint-disable-line selector-no-qualifying-type */
 
     .no-data {
         color: #aaaaaa;
-        font-size: .9em;
+        font-size: 0.9em;
         font-style: italic;
         text-align: center;
     }

@@ -56,11 +56,13 @@
         left: 12px;
         width: calc(100% - 2 * var(--tlp-small-spacing) - 2px);
 
-        .select2-search__field { /* stylelint-disable-line selector-class-pattern */
+        /* stylelint-disable-next-line selector-class-pattern */
+        .select2-search__field {
             width: 100% !important;
         }
 
-        .select2-selection--multiple > .select2-selection__rendered > .select2-selection__choice { /* stylelint-disable-line selector-class-pattern */
+        /* stylelint-disable-next-line selector-class-pattern */
+        .select2-selection--multiple > .select2-selection__rendered > .select2-selection__choice {
             padding-top: 2px;
             padding-bottom: 2px;
         }
@@ -145,7 +147,7 @@
     background: var(--tlp-theme-background-color-lighter-10);
 
     &::before,
-    >.taskboard-card-progress {
+    > .taskboard-card-progress {
         background: var(--tlp-theme-color);
     }
 
@@ -178,7 +180,7 @@
     }
 }
 
-.taskboard-cell:first-child > .taskboard-cell-parent-card > .taskboard-card:not([class*='taskboard-card-background-']) > .taskboard-card-edit-trigger {
+.taskboard-cell:first-child > .taskboard-cell-parent-card > .taskboard-card:not([class*="taskboard-card-background-"]) > .taskboard-card-edit-trigger {
     @include pencil-background(var(--tlp-theme-background-color));
 
     &:focus {
@@ -193,7 +195,6 @@
     &.taskboard-card-is-being-saved {
         animation: blink-card 1200ms ease-in-out alternate infinite;
     }
-
 
     &.taskboard-card-is-just-saved {
         animation: pulse-card 500ms ease-in-out;
@@ -236,7 +237,7 @@
     cursor: pointer;
 
     &::before {
-        content: '\f303'; // fa-pencil-alt
+        content: "\f303"; // fa-pencil-alt
         display: flex;
         position: absolute;
         top: calc(-2px - (1px * var(--tlp-is-condensed)));
@@ -246,7 +247,7 @@
         height: 26px;
         transition: opacity ease-in-out 100ms;
         opacity: 0;
-        font-family: 'Font Awesome 5 Free';
+        font-family: "Font Awesome 5 Free";
         font-size: 14px;
         font-weight: 900;
     }
@@ -277,18 +278,18 @@
 
     @each $color-name, $colors in swatch-colors.$tlp-swatch-color-map {
         &.tlp-badge-#{$color-name}::before {
-            color: darken(map-get($colors, 'primary'), 10%);
+            color: darken(map-get($colors, "primary"), 10%);
         }
 
         &.taskboard-card-remaining-effort-edit-mode,
         &:focus,
         &:hover {
             &.tlp-badge-#{$color-name} {
-                border: 1px solid darken(map-get($colors, 'primary'), 10%);
-                background: darken(map-get($colors, 'primary'), 10%);
+                border: 1px solid darken(map-get($colors, "primary"), 10%);
+                background: darken(map-get($colors, "primary"), 10%);
 
                 &::after {
-                    border-color: transparent transparent transparent darken(map-get($colors, 'primary'), 10%);
+                    border-color: transparent transparent transparent darken(map-get($colors, "primary"), 10%);
                 }
             }
         }

@@ -34,11 +34,12 @@ body {
 }
 
 main {
-    &[role=main] {
+    &[role="main"] {
         width: 100%;
     }
 
-    &.fluid-main { //stylelint-disable-line selector-no-qualifying-type
+    //stylelint-disable-next-line selector-no-qualifying-type
+    &.fluid-main {
         display: table;
     }
 }
@@ -55,7 +56,7 @@ main {
     }
 }
 
-main[role=main]:not(.tlp-framed) > #feedback {
+main[role="main"]:not(.tlp-framed) > #feedback {
     padding: calc(#{global-variables.$top-floating-buttons-space} + var(--tlp-medium-spacing)) var(--tlp-medium-spacing) 0;
 
     &:empty {
@@ -63,11 +64,11 @@ main[role=main]:not(.tlp-framed) > #feedback {
     }
 }
 
-main[role=main]:not(.tlp-framed) > .breadcrumb-container + #feedback:not(:empty) {
+main[role="main"]:not(.tlp-framed) > .breadcrumb-container + #feedback:not(:empty) {
     padding: calc(#{global-variables.$top-floating-buttons-space} - #{global-variables.$breadcrumb-height} + var(--tlp-medium-spacing)) var(--tlp-medium-spacing) 0;
 }
 
-.full-width + #main-container > main[role=main]:not(.tlp-framed) > #feedback:not(:empty) {
+.full-width + #main-container > main[role="main"]:not(.tlp-framed) > #feedback:not(:empty) {
     padding: var(--tlp-medium-spacing) var(--tlp-medium-spacing) 0;
 }
 
@@ -121,9 +122,9 @@ main[role=main]:not(.tlp-framed) > .breadcrumb-container + #feedback:not(:empty)
     margin: 0 0 calc(3 * var(--tlp-medium-spacing));
 }
 
-@import 'header';
-@import 'sidebar';
-@import 'toolbar';
-@import 'navbar';
-@import 'logo';
-@import 'footer';
+@import "header";
+@import "sidebar";
+@import "toolbar";
+@import "navbar";
+@import "logo";
+@import "footer";

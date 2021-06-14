@@ -80,8 +80,12 @@ $title-margin-left: calc(#{$illustration-width} + #{$illustration-spacing});
 
     &.pinned {
         @keyframes footerAppear {
-            from { transform: translateY(100%); }
-            to { transform: translateY(0); }
+            from {
+                transform: translateY(100%);
+            }
+            to {
+                transform: translateY(0);
+            }
         }
 
         position: fixed;
@@ -92,7 +96,7 @@ $title-margin-left: calc(#{$illustration-width} + #{$illustration-spacing});
         animation: footerAppear ease-out 150ms;
         border-top: 0;
         background: var(--tlp-ui-white-transparent-10);
-        box-shadow: 0 -1px 2px 0 rgba(0, 0, 0, .1);
+        box-shadow: 0 -1px 2px 0 rgba(0, 0, 0, 0.1);
     }
 }
 

@@ -1,4 +1,5 @@
-#s2id_timezone { /* stylelint-disable-line selector-id-pattern */
+/* stylelint-disable-next-line selector-id-pattern */
+#s2id_timezone {
     width: 270px;
     height: 40px;
 
@@ -18,6 +19,7 @@
     }
 }
 
-body:not(.register-page) #s2id_timezone { /* stylelint-disable-line selector-id-pattern */
+/* stylelint-disable-next-line selector-id-pattern */
+body:not(.register-page) #s2id_timezone {
     margin-bottom: 10px;
 }

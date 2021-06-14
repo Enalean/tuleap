@@ -39,7 +39,7 @@
 
 .dashboard-widget-content-projectheartbeat-loading {
     height: 200px;
-    background: url('../../../../www/themes/BurningParrot/images/spinner.gif') no-repeat center center;
+    background: url("../../../../www/themes/BurningParrot/images/spinner.gif") no-repeat center center;
 }
 
 .widget-project-heartbeat-empty-icon {
@@ -53,15 +53,14 @@ $timeline-color: var(--tlp-theme-color-lighter-90);
     padding: var(--tlp-medium-spacing) 0;
 
     &::before {
-        content: '';
+        content: "";
         position: absolute;
         z-index: 1;
         top: 0;
         left: 10px;
         width: 4px;
         height: 100%;
-        background: linear-gradient(to top, var(--tlp-ui-white) 0, $timeline-color var(--tlp-medium-spacing), transparent var(--tlp-medium-spacing) + 1px),
-            linear-gradient(to bottom, var(--tlp-ui-white) 0, $timeline-color var(--tlp-medium-spacing));
+        background: linear-gradient(to top, var(--tlp-ui-white) 0, $timeline-color var(--tlp-medium-spacing), transparent var(--tlp-medium-spacing) + 1px), linear-gradient(to bottom, var(--tlp-ui-white) 0, $timeline-color var(--tlp-medium-spacing));
     }
 }
 
@@ -76,7 +75,7 @@ $timeline-color: var(--tlp-theme-color-lighter-90);
     color: var(--tlp-theme-color);
     font-size: 10px;
     font-weight: 600;
-    letter-spacing: .5px;
+    letter-spacing: 0.5px;
     line-height: 7px;
     text-transform: uppercase;
 

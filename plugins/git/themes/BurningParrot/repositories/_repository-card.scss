@@ -82,23 +82,23 @@
 
 .git-repository-card-path {
     display: block;
-    font-size: .875rem;
+    font-size: 0.875rem;
     font-weight: 400;
 }
 
 .git-repository-card-last-update-icon {
-    font-size: .65rem;
+    font-size: 0.65rem;
 }
 
 .git-repository-card-last-update {
     margin: 0 var(--tlp-medium-spacing) 0 0;
     color: var(--tlp-ui-dimmed);
-    font-size: .75rem;
+    font-size: 0.75rem;
 }
 
 .git-repository-card-description {
     color: var(--tlp-ui-dimmed);
-    font-size: .875rem;
+    font-size: 0.875rem;
     line-height: 1.375rem;
 }
 
@@ -109,7 +109,7 @@
 
     &:hover,
     &:focus {
-        opacity: .7;
+        opacity: 0.7;
     }
 }
 
@@ -118,7 +118,7 @@
     top: 1px;
     transition: color 100ms;
     color: var(--tlp-ui-border-dark);
-    font-size: .75rem;
+    font-size: 0.75rem;
 
     &:hover,
     &:focus {

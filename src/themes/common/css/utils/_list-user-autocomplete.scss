@@ -1,20 +1,24 @@
-.lists_users_autocomplete { /* stylelint-disable-line selector-class-pattern */
+/* stylelint-disable-next-line selector-class-pattern */
+.lists_users_autocomplete {
     max-height: 200px;
     overflow: auto;
     border: 1px solid #cccccc;
     background: #ffffff;
 }
 
-.lists_users_autocomplete ul { /* stylelint-disable-line selector-class-pattern */
+/* stylelint-disable-next-line selector-class-pattern */
+.lists_users_autocomplete ul {
     margin: 0;
     padding: 0;
     list-style-type: none;
 }
 
-.lists_users_autocomplete ul li { /* stylelint-disable-line selector-class-pattern */
+/* stylelint-disable-next-line selector-class-pattern */
+.lists_users_autocomplete ul li {
     padding: 0 4px 4px;
 }
 
-.lists_users_autocomplete ul li.selected { /* stylelint-disable-line selector-class-pattern, selector-no-qualifying-type */
+/* stylelint-disable-next-line selector-class-pattern, selector-no-qualifying-type */
+.lists_users_autocomplete ul li.selected {
     background-color: #ffffbb;
 }

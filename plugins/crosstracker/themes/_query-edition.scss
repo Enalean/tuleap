@@ -16,8 +16,8 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-@import '../../tracker/node_modules/codemirror/lib/codemirror';
-@import '../../tracker/node_modules/codemirror/addon/hint/show-hint';
+@import "../../tracker/node_modules/codemirror/lib/codemirror";
+@import "../../tracker/node_modules/codemirror/addon/hint/show-hint";
 
 $expert-query-area-height: 75px;
 
@@ -38,20 +38,21 @@ $expert-query-area-height: 75px;
 
     > .CodeMirror {
         height: $expert-query-area-height;
-        transition: border linear .2s, box-shadow linear .2s;
+        transition: border linear 0.2s, box-shadow linear 0.2s;
         border: 1px solid #cccccc;
         border-radius: 4px;
 
         &.CodeMirror-focused {
-            border-color: rgba(82, 168, 236, .8);
+            border-color: rgba(82, 168, 236, 0.8);
             outline: 0;
-            box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 8px rgba(82, 168, 236, .6);
+            box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(82, 168, 236, 0.6);
         }
 
         pre {
             padding: 0 6px;
 
-            &.CodeMirror-placeholder { /* stylelint-disable-line selector-no-qualifying-type */
+            &.CodeMirror-placeholder {
+                /* stylelint-disable-line selector-no-qualifying-type */
                 color: #999999;
             }
         }

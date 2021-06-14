@@ -37,7 +37,7 @@
 .tlp-table > tbody > tr:nth-child(odd) > td.dashboard-add-widget-content-loading,
 .edit-widget-modal-content-loading {
     height: 200px;
-    background: var(--tlp-ui-white) url('../../../../www/themes/BurningParrot/images/spinner.gif') center center no-repeat;
+    background: var(--tlp-ui-white) url("../../../../www/themes/BurningParrot/images/spinner.gif") center center no-repeat;
 }
 /* stylelint-enable */
 
@@ -63,7 +63,7 @@
 .dashboard-widget-icons-minimize,
 .dashboard-widget-actions {
     transition: color 100ms, opacity 100ms;
-    opacity: .2;
+    opacity: 0.2;
     color: var(--tlp-ui-dimmed);
     cursor: pointer;
 
@@ -102,7 +102,7 @@
     width: 40%;
     margin: 0 0 var(--tlp-small-spacing) 0;
     color: var(--tlp-ui-dimmed);
-    font-size: .875rem;
+    font-size: 0.875rem;
     line-height: var(--tlp-large-spacing);
     text-align: center;
 }

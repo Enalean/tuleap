@@ -1,11 +1,15 @@
-body.account-maintenance .content { /* stylelint-disable-line selector-no-qualifying-type */
+/* stylelint-disable-next-line selector-no-qualifying-type */
+body.account-maintenance .content {
     padding: 0;
 }
 
-h3.account-title { /* stylelint-disable-line selector-no-qualifying-type */
+/* stylelint-disable-next-line selector-no-qualifying-type */
+h3.account-title {
     font-size: 1.2em;
 
-    i.help-button { /* stylelint-disable-line selector-no-qualifying-type */
+    /* stylelint-disable selector-no-qualifying-type */
+    i.help-button {
+        // stylelint-enable
         vertical-align: initial;
     }
 }
@@ -70,7 +74,8 @@ h3.account-title { /* stylelint-disable-line selector-no-qualifying-type */
     margin-bottom: 30px;
 }
 
-i.help-button { /* stylelint-disable-line selector-no-qualifying-type */
+/* stylelint-disable-next-line selector-no-qualifying-type */
+i.help-button {
     color: #c2c2c2;
     font-size: 1.3em;
     text-decoration: none;

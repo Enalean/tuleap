@@ -17,28 +17,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@import '../../../themes/tlp/src/scss/variables/colors/common-colors';
-@import '~@tuleap/list-picker';
+@import "../../../themes/tlp/src/scss/variables/colors/common-colors";
+@import "~@tuleap/list-picker";
 
 $nav-width: 150px;
 $nav-margin: 30px;
 
-@mixin themable(
-    $theme-color,
-    $tlp-theme-background-color,
-    $tlp-theme-sidebar-background-color,
-    $tlp-ui-white,
-    $tlp-ui-dimmed,
-    $tlp-ui-info,
-    $tlp-ui-success,
-    $tlp-ui-warning,
-    $tlp-ui-danger,
-    $tlp-ui-border-normal,
-    $tlp-illustration-primary-color,
-    $tlp-illustration-secondary-light-color,
-    $tlp-illustration-secondary-dark-color,
-    $tlp-illustration-tertiary-color
-) {
+@mixin themable($theme-color, $tlp-theme-background-color, $tlp-theme-sidebar-background-color, $tlp-ui-white, $tlp-ui-dimmed, $tlp-ui-info, $tlp-ui-success, $tlp-ui-warning, $tlp-ui-danger, $tlp-ui-border-normal, $tlp-illustration-primary-color, $tlp-illustration-secondary-light-color, $tlp-illustration-secondary-dark-color, $tlp-illustration-tertiary-color) {
     background: $tlp-theme-background-color;
 
     &.doc-background-white {
@@ -54,17 +39,18 @@ $nav-margin: 30px;
     }
 
     .doc-section {
-        p a:not([class^=tlp-button]) {
+        p a:not([class^="tlp-button"]) {
             color: $theme-color;
         }
 
         .code-inline {
-            background: transparentize($theme-color, .95);
+            background: transparentize($theme-color, 0.95);
             color: darken($theme-color, 20%);
         }
 
-        .CodeMirror-gutters { //stylelint-disable-line selector-class-pattern
-            border-left: 3px solid transparentize($theme-color, .8);
+        //stylelint-disable-next-line selector-class-pattern
+        .CodeMirror-gutters {
+            border-left: 3px solid transparentize($theme-color, 0.8);
         }
     }
 
@@ -83,10 +69,18 @@ $nav-margin: 30px;
         color: $theme-color;
     }
 
-    .doc-color-info { background-color: $tlp-ui-info; }
-    .doc-color-success { background-color: $tlp-ui-success; }
-    .doc-color-warning { background-color: $tlp-ui-warning; }
-    .doc-color-danger { background-color: $tlp-ui-danger; }
+    .doc-color-info {
+        background-color: $tlp-ui-info;
+    }
+    .doc-color-success {
+        background-color: $tlp-ui-success;
+    }
+    .doc-color-warning {
+        background-color: $tlp-ui-warning;
+    }
+    .doc-color-danger {
+        background-color: $tlp-ui-danger;
+    }
 
     .doc-color-illustration-primary-color {
         background-color: $tlp-illustration-primary-color;
@@ -112,27 +106,27 @@ $nav-margin: 30px;
         }
 
         .tlp-framed {
-            box-shadow: inset 0 0 0 16px transparentize($theme-color, .8);
+            box-shadow: inset 0 0 0 16px transparentize($theme-color, 0.8);
         }
 
         .tlp-framed-vertically::before {
-            background: transparentize($theme-color, .8);
+            background: transparentize($theme-color, 0.8);
         }
 
         .tlp-framed-vertically::after {
-            background: transparentize($theme-color, .8);
+            background: transparentize($theme-color, 0.8);
         }
 
         .tlp-framed-horizontally::before {
-            background: transparentize($theme-color, .9);
+            background: transparentize($theme-color, 0.9);
         }
 
         .tlp-framed-horizontally::after {
-            background: transparentize($theme-color, .9);
+            background: transparentize($theme-color, 0.9);
         }
     }
 
-    [id^=example-layout-] {
+    [id^="example-layout-"] {
         > div {
             border: 1px solid $tlp-ui-border-normal;
         }
@@ -158,7 +152,7 @@ $nav-margin: 30px;
     }
 
     #dropdown-icon-right-example {
-        color: transparentize($tlp-ui-dimmed, .2);
+        color: transparentize($tlp-ui-dimmed, 0.2);
 
         &:hover {
             color: $theme-color;
@@ -167,17 +161,14 @@ $nav-margin: 30px;
 
     .popover-examples-container {
         &::before {
-            border-color: transparentize($tlp-ui-dimmed, .2);
+            border-color: transparentize($tlp-ui-dimmed, 0.2);
         }
 
         > i {
-            text-shadow: -5px -5px 0 $tlp-theme-background-color,
-                5px -5px 0 $tlp-theme-background-color,
-                -5px 5px 0 $tlp-theme-background-color,
-                5px 5px 0 $tlp-theme-background-color;
+            text-shadow: -5px -5px 0 $tlp-theme-background-color, 5px -5px 0 $tlp-theme-background-color, -5px 5px 0 $tlp-theme-background-color, 5px 5px 0 $tlp-theme-background-color;
 
             &:not(:hover) {
-                color: transparentize($tlp-ui-dimmed, .2);
+                color: transparentize($tlp-ui-dimmed, 0.2);
             }
         }
     }
@@ -219,14 +210,19 @@ $nav-margin: 30px;
         background: $tlp-theme-sidebar-background-color;
     }
 
-
     .doc-appearance {
         border-top: 2px solid $theme-color;
     }
 
-    .switch-to-background-white { background-color: $tlp-ui-white;   }
-    .switch-to-background-grey { background-color: $tlp-theme-background-color; }
-    .switch-to-background-dark { background-color: $tlp-theme-sidebar-background-color; }
+    .switch-to-background-white {
+        background-color: $tlp-ui-white;
+    }
+    .switch-to-background-grey {
+        background-color: $tlp-theme-background-color;
+    }
+    .switch-to-background-dark {
+        background-color: $tlp-theme-sidebar-background-color;
+    }
 
     .switch-to-background-white,
     .switch-to-background-grey,
@@ -242,123 +238,33 @@ body {
     min-height: 100vh;
 
     &.orange {
-        @import '../../../themes/tlp/src/scss/variables/variables-orange';
-        @include themable(
-            $tlp-theme-color,
-            $tlp-theme-background-color,
-            $tlp-theme-sidebar-background-color,
-            $tlp-ui-white,
-            $tlp-ui-dimmed,
-            $tlp-ui-info,
-            $tlp-ui-success,
-            $tlp-ui-warning,
-            $tlp-ui-danger,
-            $tlp-ui-border-normal,
-            $tlp-illustration-primary-color,
-            $tlp-illustration-secondary-light-color,
-            $tlp-illustration-secondary-dark-color,
-            $tlp-illustration-tertiary-color
-        );
+        @import "../../../themes/tlp/src/scss/variables/variables-orange";
+        @include themable($tlp-theme-color, $tlp-theme-background-color, $tlp-theme-sidebar-background-color, $tlp-ui-white, $tlp-ui-dimmed, $tlp-ui-info, $tlp-ui-success, $tlp-ui-warning, $tlp-ui-danger, $tlp-ui-border-normal, $tlp-illustration-primary-color, $tlp-illustration-secondary-light-color, $tlp-illustration-secondary-dark-color, $tlp-illustration-tertiary-color);
     }
 
     &.blue {
-        @import '../../../themes/tlp/src/scss/variables/variables-blue';
-        @include themable(
-            $tlp-theme-color,
-            $tlp-theme-background-color,
-            $tlp-theme-sidebar-background-color,
-            $tlp-ui-white,
-            $tlp-ui-dimmed,
-            $tlp-ui-info,
-            $tlp-ui-success,
-            $tlp-ui-warning,
-            $tlp-ui-danger,
-            $tlp-ui-border-normal,
-            $tlp-illustration-primary-color,
-            $tlp-illustration-secondary-light-color,
-            $tlp-illustration-secondary-dark-color,
-            $tlp-illustration-tertiary-color
-        );
+        @import "../../../themes/tlp/src/scss/variables/variables-blue";
+        @include themable($tlp-theme-color, $tlp-theme-background-color, $tlp-theme-sidebar-background-color, $tlp-ui-white, $tlp-ui-dimmed, $tlp-ui-info, $tlp-ui-success, $tlp-ui-warning, $tlp-ui-danger, $tlp-ui-border-normal, $tlp-illustration-primary-color, $tlp-illustration-secondary-light-color, $tlp-illustration-secondary-dark-color, $tlp-illustration-tertiary-color);
     }
 
     &.green {
-        @import '../../../themes/tlp/src/scss/variables/variables-green';
-        @include themable(
-            $tlp-theme-color,
-            $tlp-theme-background-color,
-            $tlp-theme-sidebar-background-color,
-            $tlp-ui-white,
-            $tlp-ui-dimmed,
-            $tlp-ui-info,
-            $tlp-ui-success,
-            $tlp-ui-warning,
-            $tlp-ui-danger,
-            $tlp-ui-border-normal,
-            $tlp-illustration-primary-color,
-            $tlp-illustration-secondary-light-color,
-            $tlp-illustration-secondary-dark-color,
-            $tlp-illustration-tertiary-color
-        );
+        @import "../../../themes/tlp/src/scss/variables/variables-green";
+        @include themable($tlp-theme-color, $tlp-theme-background-color, $tlp-theme-sidebar-background-color, $tlp-ui-white, $tlp-ui-dimmed, $tlp-ui-info, $tlp-ui-success, $tlp-ui-warning, $tlp-ui-danger, $tlp-ui-border-normal, $tlp-illustration-primary-color, $tlp-illustration-secondary-light-color, $tlp-illustration-secondary-dark-color, $tlp-illustration-tertiary-color);
     }
 
     &.grey {
-        @import '../../../themes/tlp/src/scss/variables/variables-grey';
-        @include themable(
-            $tlp-theme-color,
-            $tlp-theme-background-color,
-            $tlp-theme-sidebar-background-color,
-            $tlp-ui-white,
-            $tlp-ui-dimmed,
-            $tlp-ui-info,
-            $tlp-ui-success,
-            $tlp-ui-warning,
-            $tlp-ui-danger,
-            $tlp-ui-border-normal,
-            $tlp-illustration-primary-color,
-            $tlp-illustration-secondary-light-color,
-            $tlp-illustration-secondary-dark-color,
-            $tlp-illustration-tertiary-color
-        );
+        @import "../../../themes/tlp/src/scss/variables/variables-grey";
+        @include themable($tlp-theme-color, $tlp-theme-background-color, $tlp-theme-sidebar-background-color, $tlp-ui-white, $tlp-ui-dimmed, $tlp-ui-info, $tlp-ui-success, $tlp-ui-warning, $tlp-ui-danger, $tlp-ui-border-normal, $tlp-illustration-primary-color, $tlp-illustration-secondary-light-color, $tlp-illustration-secondary-dark-color, $tlp-illustration-tertiary-color);
     }
 
     &.purple {
-        @import '../../../themes/tlp/src/scss/variables/variables-purple';
-        @include themable(
-            $tlp-theme-color,
-            $tlp-theme-background-color,
-            $tlp-theme-sidebar-background-color,
-            $tlp-ui-white,
-            $tlp-ui-dimmed,
-            $tlp-ui-info,
-            $tlp-ui-success,
-            $tlp-ui-warning,
-            $tlp-ui-danger,
-            $tlp-ui-border-normal,
-            $tlp-illustration-primary-color,
-            $tlp-illustration-secondary-light-color,
-            $tlp-illustration-secondary-dark-color,
-            $tlp-illustration-tertiary-color
-        );
+        @import "../../../themes/tlp/src/scss/variables/variables-purple";
+        @include themable($tlp-theme-color, $tlp-theme-background-color, $tlp-theme-sidebar-background-color, $tlp-ui-white, $tlp-ui-dimmed, $tlp-ui-info, $tlp-ui-success, $tlp-ui-warning, $tlp-ui-danger, $tlp-ui-border-normal, $tlp-illustration-primary-color, $tlp-illustration-secondary-light-color, $tlp-illustration-secondary-dark-color, $tlp-illustration-tertiary-color);
     }
 
     &.red {
-        @import '../../../themes/tlp/src/scss/variables/variables-red';
-        @include themable(
-            $tlp-theme-color,
-            $tlp-theme-background-color,
-            $tlp-theme-sidebar-background-color,
-            $tlp-ui-white,
-            $tlp-ui-dimmed,
-            $tlp-ui-info,
-            $tlp-ui-success,
-            $tlp-ui-warning,
-            $tlp-ui-danger,
-            $tlp-ui-border-normal,
-            $tlp-illustration-primary-color,
-            $tlp-illustration-secondary-light-color,
-            $tlp-illustration-secondary-dark-color,
-            $tlp-illustration-tertiary-color
-        );
+        @import "../../../themes/tlp/src/scss/variables/variables-red";
+        @include themable($tlp-theme-color, $tlp-theme-background-color, $tlp-theme-sidebar-background-color, $tlp-ui-white, $tlp-ui-dimmed, $tlp-ui-info, $tlp-ui-success, $tlp-ui-warning, $tlp-ui-danger, $tlp-ui-border-normal, $tlp-illustration-primary-color, $tlp-illustration-secondary-light-color, $tlp-illustration-secondary-dark-color, $tlp-illustration-tertiary-color);
     }
 }
 /* stylelint-enable */
@@ -367,9 +273,9 @@ body {
     background: none;
 }
 
-@import './nav';
-@import './sections';
-@import './javascript-sections';
-@import '~codemirror/lib/codemirror';
-@import '~codemirror/theme/mdn-like';
-@import '~codemirror/addon/scroll/simplescrollbars';
+@import "./nav";
+@import "./sections";
+@import "./javascript-sections";
+@import "~codemirror/lib/codemirror";
+@import "~codemirror/theme/mdn-like";
+@import "~codemirror/addon/scroll/simplescrollbars";

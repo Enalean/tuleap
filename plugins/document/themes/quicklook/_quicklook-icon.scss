@@ -17,15 +17,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 .quick-look-pane-highlighted .document-quick-look-icon-container {
     > .document-quick-look-dropzone-text {
-        opacity: .85;
+        opacity: 0.85;
         color: var(--tlp-theme-color);
     }
 
     > .document-quick-look-icon {
-        opacity: .85;
+        opacity: 0.85;
         color: var(--tlp-theme-color);
 
         &::after {
@@ -34,10 +33,9 @@
     }
 }
 
-
 .quick-look-pane-highlighted-forbidden .document-quick-look-icon-container {
     > .document-quick-look-dropzone-text {
-        opacity: .85;
+        opacity: 0.85;
         color: var(--tlp-ui-danger);
     }
 
@@ -70,7 +68,7 @@
         position: relative;
         top: -10px;
         transition: opacity ease-in-out 100ms;
-        opacity: .85;
+        opacity: 0.85;
         color: var(--tlp-ui-danger);
         font-size: 100px;
     }
@@ -87,13 +85,13 @@
     font-size: 100px;
 
     &::after {
-        content: '\f067'; // fa-plus
+        content: "\f067"; // fa-plus
         position: absolute;
         top: -18px;
         right: -18px;
         transform: scale(0);
         transition: opacity ease-in-out 100ms, transform ease-in-out 100ms;
-        font-family: 'Font Awesome 5 Free';
+        font-family: "Font Awesome 5 Free";
         font-size: 40px;
         font-weight: 900;
     }

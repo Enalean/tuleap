@@ -9,12 +9,12 @@
         }
 
         button {
-            transition: background .1s linear;
+            transition: background 0.1s linear;
             background: var(--tlp-theme-color);
             color: #ffffff;
 
             &:hover {
-                transition: background .1s linear;
+                transition: background 0.1s linear;
                 background: var(--tlp-theme-color-lighter-90);
             }
         }
@@ -33,7 +33,9 @@
         }
 
         &.active {
-            > a { /* stylelint-disable-line selector-no-qualifying-type */
+            /* stylelint-disable selector-no-qualifying-type */
+            > a {
+                // stylelint-enable
                 box-shadow: inset 0 -2px 0 var(--tlp-theme-color);
                 color: var(--tlp-theme-color);
             }

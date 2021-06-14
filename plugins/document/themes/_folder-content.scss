@@ -44,7 +44,7 @@
 
     .quick-look-button,
     .document-dropdown-menu,
-    .document-dropdown-menu-button>button {
+    .document-dropdown-menu-button > button {
         visibility: hidden;
     }
 }
@@ -60,20 +60,20 @@
 
 .document-preview-item-is-locked-icon {
     &::before {
-        content: '\f023'; // fa-lock
+        content: "\f023"; // fa-lock
     }
 }
 
 .document-tree-item-toggle-quicklook:hover {
     .quick-look-button,
-    .document-dropdown-menu-button>button {
+    .document-dropdown-menu-button > button {
         visibility: visible;
     }
 }
 
 .document-tree-item-toggle-quicklook:focus-within {
     .quick-look-button,
-    .document-dropdown-menu-button>button {
+    .document-dropdown-menu-button > button {
         visibility: visible;
     }
 }
@@ -162,14 +162,14 @@
     }
 
     &::after {
-        content: '\f067';
+        content: "\f067";
         position: absolute;
         top: -7px;
         right: -4px;
         transform: scale(0);
         transition: opacity ease-in-out 100ms, transform ease-in-out 100ms;
         opacity: 0;
-        font-family: 'Font Awesome 5 Free';
+        font-family: "Font Awesome 5 Free";
         font-size: 12px;
         font-weight: 900;
     }

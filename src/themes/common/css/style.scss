@@ -22,7 +22,7 @@
 
 /* stylelint-disable selector-class-pattern */
 
-@import './utils/utils';
+@import "./utils/utils";
 
 /********  general   **********/
 body {
@@ -76,7 +76,7 @@ body {
 }
 
 .command {
-    font-family: 'Courier New', courier, sans-serif;
+    font-family: "Courier New", courier, sans-serif;
 }
 
 .subdomain {
@@ -223,7 +223,7 @@ a.btn.btn-primary {
     margin-right: 1em;
 }
 
-select[name=type_of_search] {
+select[name="type_of_search"] {
     width: auto;
 }
 
@@ -452,7 +452,7 @@ td.artifact_spacer {
 }
 
 .iframe_showonly {
-    font-size: .85em;
+    font-size: 0.85em;
     text-align: right;
 }
 
@@ -552,7 +552,7 @@ blockquote p {
     font-size: 1em;
 }
 
-input[type='file'] {
+input[type="file"] {
     margin-top: -13px;
 }
 

@@ -19,23 +19,23 @@
 
 @use '../../../../../src/themes/BurningParrot/css/includes/global-variables';
 
-@import '../../../scripts/kanban/node_modules/@tuleap/plugin-tracker-artifact-modal';
-@import '../../../scripts/kanban/node_modules/ng-scrollbar/dist/ng-scrollbar';
-@import '../../../scripts/kanban/node_modules/dragular/dist/dragular';
+@import "../../../scripts/kanban/node_modules/@tuleap/plugin-tracker-artifact-modal";
+@import "../../../scripts/kanban/node_modules/ng-scrollbar/dist/ng-scrollbar";
+@import "../../../scripts/kanban/node_modules/dragular/dist/dragular";
 
-@import './highlight';
+@import "./highlight";
 
-@import 'kanban/socket';
-@import 'kanban/edit-kanban';
-@import 'kanban/kanban-item';
-@import 'kanban/reports-modal';
-@import 'kanban/diagram';
-@import 'kanban/add-to-dashboard';
-@import 'kanban/filter';
-@import 'kanban/feedback';
-@import 'kanban/add-in-place';
-@import 'kanban/under-the-fold-notification';
-@import 'kanban/project-header-background';
+@import "kanban/socket";
+@import "kanban/edit-kanban";
+@import "kanban/kanban-item";
+@import "kanban/reports-modal";
+@import "kanban/diagram";
+@import "kanban/add-to-dashboard";
+@import "kanban/filter";
+@import "kanban/feedback";
+@import "kanban/add-in-place";
+@import "kanban/under-the-fold-notification";
+@import "kanban/project-header-background";
 
 $kanban-column-closed-width: 60px;
 $kanban-column-header-height: 50px;
@@ -43,11 +43,11 @@ $kanban-column-footer-height: 50px;
 
 @keyframes loadingItems {
     0% {
-        opacity: .4;
+        opacity: 0.4;
     }
 
     100% {
-        opacity: .05;
+        opacity: 0.05;
     }
 }
 
@@ -262,12 +262,12 @@ $kanban-column-footer-height: 50px;
         }
 
         > .kanban-column-label {
-            opacity: .6;
+            opacity: 0.6;
             color: var(--tlp-ui-warning);
         }
 
         .kanban-column-header-wip-count {
-            opacity: .6;
+            opacity: 0.6;
         }
     }
 }
@@ -290,7 +290,7 @@ $kanban-column-footer-height: 50px;
 
 .kanban-column-header-toggle {
     color: var(--tlp-theme-color);
-    font-size: .8125rem;
+    font-size: 0.8125rem;
     cursor: pointer;
 }
 
@@ -304,7 +304,7 @@ $kanban-column-footer-height: 50px;
     margin: 0 10px;
     overflow: hidden;
     color: var(--tlp-theme-color);
-    font-size: .875rem;
+    font-size: 0.875rem;
     font-weight: 600;
     text-align: center;
     text-overflow: ellipsis;
@@ -342,7 +342,7 @@ $kanban-column-footer-height: 50px;
     top: -1px;
     margin: 0 5px 0 0;
     animation: none;
-    opacity: .4;
+    opacity: 0.4;
     color: var(--tlp-theme-color);
     font-size: 1.75rem;
     font-weight: 300;
@@ -372,7 +372,6 @@ kanban-column {
     width: 100%;
     height: 100%;
 }
-
 
 .created-in-closed-column {
     @keyframes blink {
@@ -467,7 +466,7 @@ kanban-column {
     width: $kanban-column-closed-width;
     transform: scaleX(-1) scaleY(-1);
     color: var(--tlp-theme-color);
-    font-size: .875rem;
+    font-size: 0.875rem;
     font-weight: 600;
     line-height: $kanban-column-closed-width;
     text-transform: uppercase;
@@ -483,7 +482,7 @@ kanban-column {
 .kanban-column-label-count {
     display: inline-block;
     margin: 10px 0;
-    opacity: .4;
+    opacity: 0.4;
     font-size: 1.75rem;
     font-weight: 300;
 

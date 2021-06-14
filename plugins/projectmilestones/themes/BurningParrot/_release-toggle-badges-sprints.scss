@@ -32,7 +32,7 @@ $width-bar-left-sprints: 16px;
 }
 
 .project-release-infos-badges .project-release-info-badge-open-sprint::before {
-    content: '';
+    content: "";
     position: absolute;
     z-index: 2;
     top: 11px;
@@ -43,7 +43,7 @@ $width-bar-left-sprints: 16px;
 }
 
 .project-release-open-sprint-badge-icon-toggle {
-    content: '';
+    content: "";
     display: flex;
     position: relative;
     z-index: 3;
@@ -60,35 +60,35 @@ $width-bar-left-sprints: 16px;
     line-height: normal;
 
     &::before {
-        content: '';
+        content: "";
     }
 }
 
 .project-release-open-sprint-badges .project-release-open-sprint-badge-icon-toggle::before {
-    content: '\f141'; // fa-ellipsis-h
-    font-size: .8rem;
+    content: "\f141"; // fa-ellipsis-h
+    font-size: 0.8rem;
 }
 
 .can-close-sprint .project-release-open-sprint-badges:hover .project-release-open-sprint-badge-icon-toggle {
     cursor: pointer;
 
     &::before {
-        content: '\f065'; //fa-expand
+        content: "\f065"; //fa-expand
         position: relative;
         top: -1px;
-        font-size: .6rem;
+        font-size: 0.6rem;
     }
 }
 
 .on-open-sprints-details .project-release-open-sprint-badges .project-release-open-sprint-badge-icon-toggle::before {
-    content: '';
+    content: "";
 }
 
 .on-open-sprints-details .project-release-open-sprint-badges:hover .project-release-open-sprint-badge-icon-toggle {
     cursor: default;
 
     &::before {
-        content: '';
+        content: "";
     }
 }
 
@@ -114,7 +114,7 @@ $width-bar-left-sprints: 16px;
     }
 
     &::after {
-        content: '';
+        content: "";
         position: absolute;
         top: -1px;
         right: -13px;
@@ -159,7 +159,7 @@ $width-bar-left-sprints: 16px;
 }
 
 .project-release-closed-sprint-badge::after {
-    content: '';
+    content: "";
     position: absolute;
     z-index: 2;
     top: 11px;
@@ -170,7 +170,7 @@ $width-bar-left-sprints: 16px;
 }
 
 .project-release-closed-sprint-badge::before {
-    content: '';
+    content: "";
     position: absolute;
     z-index: 2;
     top: 4px;
@@ -195,9 +195,8 @@ $width-bar-left-sprints: 16px;
     padding-right: 35px;
 }
 
-
 .can-close-sprint .icon-badge-sprint-to-close {
-    content: '';
+    content: "";
     display: flex;
     position: absolute;
     z-index: 5;
@@ -212,7 +211,7 @@ $width-bar-left-sprints: 16px;
     color: var(--tlp-ui-white);
 
     &::before {
-        content: '';
+        content: "";
     }
 
     &:hover {
@@ -223,8 +222,8 @@ $width-bar-left-sprints: 16px;
 .can-close-sprint .open-badges-sprints:hover .icon-badge-sprint-to-close,
 .can-close-sprint .icon-badge-sprint-to-close:hover {
     &::before {
-        content: '\f066'; //fa-compress
-        font-size: .6rem;
+        content: "\f066"; //fa-compress
+        font-size: 0.6rem;
     }
 }
 
@@ -259,7 +258,7 @@ $width-bar-left-sprints: 16px;
 
 .can-close-sprint .open-badges-sprints:hover {
     &::before {
-        content: '';
+        content: "";
         position: absolute;
         z-index: 2;
         top: 12px;
@@ -270,7 +269,7 @@ $width-bar-left-sprints: 16px;
     }
 
     &::after {
-        content: '';
+        content: "";
         position: absolute;
         z-index: 2;
         top: calc(calc(100% - (25px - (6px * var(--tlp-is-condensed)))) / 2);

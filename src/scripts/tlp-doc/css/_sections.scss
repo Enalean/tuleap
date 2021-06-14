@@ -31,7 +31,7 @@ main {
     border-radius: 3px;
 
     &[id]::before {
-        content: '';
+        content: "";
         display: block;
         height: 100px; /* fixed header height*/
         margin: -100px 0 0; /* negative fixed header height */
@@ -83,4 +83,4 @@ main {
     }
 }
 
-@import 'demos';
+@import "demos";

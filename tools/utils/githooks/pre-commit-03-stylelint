@@ -1,7 +1,7 @@
 #!/bin/bash
 # stylelint pre-commit hook for git
 get_list_of_files() {
-    git diff --cached --name-only --diff-filter=ACMRTUXB | grep \.scss$
+    git diff --cached --name-only --diff-filter=ACMRTUXB | grep -E '\.(scss|vue)$'
 }
 
 main() {

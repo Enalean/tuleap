@@ -70,15 +70,15 @@ header {
     padding: var(--tlp-medium-spacing) var(--tlp-medium-spacing) 0;
     transition: padding ease-in-out 100ms;
 
-    a[class*='tlp-button'],
-    button[class*='tlp-button'] {
+    a[class*="tlp-button"],
+    button[class*="tlp-button"] {
         height: 40px;
         margin: 0 0 0 var(--tlp-small-spacing);
         transition: padding ease-in-out 100ms, box-shadow ease-in-out 100ms;
         border-radius: 30px;
 
         > .tlp-button-icon {
-            font-size: .85rem;
+            font-size: 0.85rem;
         }
     }
 }

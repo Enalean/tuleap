@@ -17,17 +17,19 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@import '../../../../../src/themes/tlp/src/scss/variables/colors/common-colors';
+@import "../../../../../src/themes/tlp/src/scss/variables/colors/common-colors";
 
-form[name=edit_chart_form] label {
+form[name="edit_chart_form"] label {
     font-weight: bold;
 }
 
-.tracker_report_renderer_graphontrackers_charts { //stylelint-disable-line selector-class-pattern
+//stylelint-disable-next-line selector-class-pattern
+.tracker_report_renderer_graphontrackers_charts {
     margin-top: 40px;
     clear: both;
 
-    > .widget_report_graph { //stylelint-disable-line selector-class-pattern
+    //stylelint-disable-next-line selector-class-pattern
+    > .widget_report_graph {
         display: inline-block;
         padding: 0 20px 20px 0;
         text-align: right;
@@ -39,46 +41,55 @@ form[name=edit_chart_form] label {
     }
 }
 
-.widget_content > .tracker_report_renderer_graphontrackers_charts { //stylelint-disable-line selector-class-pattern
+//stylelint-disable-next-line selector-class-pattern
+.widget_content > .tracker_report_renderer_graphontrackers_charts {
     margin-top: 0;
 
-    > .widget_report_graph > .widget { //stylelint-disable-line selector-class-pattern
-        > .widget_titlebar { //stylelint-disable-line selector-class-pattern
+    //stylelint-disable-next-line selector-class-pattern
+    > .widget_report_graph > .widget {
+        //stylelint-disable-next-line selector-class-pattern
+        > .widget_titlebar {
             border-bottom-color: #b2b2b2;
             color: #222222;
 
-            > .plugin_graphontrackersv5_widget_actions { //stylelint-disable-line selector-class-pattern, selector-max-compound-selectors
+            //stylelint-disable-next-line selector-class-pattern, selector-max-compound-selectors
+            > .plugin_graphontrackersv5_widget_actions {
                 display: none;
             }
         }
 
-        > .widget_content { //stylelint-disable-line selector-class-pattern
+        //stylelint-disable-next-line selector-class-pattern
+        > .widget_content {
             border-top-color: #b2b2b2;
         }
     }
 }
 
 .dashboard-widget {
-    .widget_titlebar { //stylelint-disable-line selector-class-pattern
+    //stylelint-disable-next-line selector-class-pattern
+    .widget_titlebar {
         color: #747474;
         text-align: left;
     }
 
-    .plugin_graphontrackersv5_widget_actions { //stylelint-disable-line selector-class-pattern
+    //stylelint-disable-next-line selector-class-pattern
+    .plugin_graphontrackersv5_widget_actions {
         display: none;
     }
 }
 
-.plugin_graphontrackersv5_widget_actions { //stylelint-disable-line selector-class-pattern
+//stylelint-disable-next-line selector-class-pattern
+.plugin_graphontrackersv5_widget_actions {
     float: right;
 }
 
-.tracker_report_renderer_graphontrackers_graph { //stylelint-disable-line selector-class-pattern
+//stylelint-disable-next-line selector-class-pattern
+.tracker_report_renderer_graphontrackers_graph {
     text-align: center;
 
     text {
         fill: #222222;
-        font-size: .9em;
+        font-size: 0.9em;
     }
 
     .legend {
@@ -111,11 +122,11 @@ form[name=edit_chart_form] label {
 
 @each $color-name, $colors in $tlp-swatch-color-map {
     .graph-element-#{$color-name} {
-        fill: map-get($colors, 'primary');
+        fill: map-get($colors, "primary");
     }
 
     .cumulative-flowchart-legend-color-#{$color-name} {
-        background-color: map-get($colors, 'primary');
+        background-color: map-get($colors, "primary");
     }
 }
 
@@ -145,12 +156,12 @@ form[name=edit_chart_form] label {
     min-height: 0;
     margin: 0 5px 0 0;
     border-radius: 50%;
-    opacity: .8;
+    opacity: 0.8;
 }
 
 .graphontrackersv5-chart-spinner {
     min-height: 100px;
-    background: url('./../../../../../src/www/themes/common/images/tuleap-spinner.gif') no-repeat center center;
+    background: url("./../../../../../src/www/themes/common/images/tuleap-spinner.gif") no-repeat center center;
 }
 
 .tlp-alert-danger.graphontrackersv5-chart-error {

@@ -42,7 +42,8 @@
 .tracker_artifact_fieldset legend {
     color: var(--tlp-theme-color);
 
-    &.toggler-noajax { /* stylelint-disable-line selector-no-qualifying-type */
+    &.toggler-noajax {
+        /* stylelint-disable-line selector-no-qualifying-type */
         border-bottom: 2px solid var(--tlp-theme-color);
     }
 }
@@ -72,16 +73,18 @@
         border-color: var(--tlp-theme-background-color-darker-05) !important;
     }
 
-    > thead > tr > th.drop-over { /* stylelint-disable-line selector-no-qualifying-type */
+    > thead > tr > th.drop-over {
+        /* stylelint-disable-line selector-no-qualifying-type */
         background: var(--tlp-theme-background-color);
     }
 
-    > thead > tr > th > table > tbody > tr > td > a { /* stylelint-disable-line selector-max-compound-selectors */
+    /* stylelint-disable-next-line selector-max-compound-selectors */
+    > thead > tr > th > table > tbody > tr > td > a {
         color: var(--tlp-theme-color);
     }
 
-    /* stylelint-disable-next-line selector-class-pattern */
-    > tbody > tr.tracker_report_table_aggregates > td { /* stylelint-disable-line selector-no-qualifying-type */
+    /* stylelint-disable-next-line selector-class-pattern,selector-no-qualifying-type */
+    > tbody > tr.tracker_report_table_aggregates > td {
         > table {
             /* stylelint-disable selector-max-compound-selectors */
             > thead > tr > th,
@@ -189,7 +192,6 @@ body.tracker-administration {
 }
 /* stylelint-enable */
 
-
 .tracker-cross-reference-delete-link {
     color: var(--tlp-ui-dimmed);
 
@@ -209,7 +211,7 @@ body.tracker-administration {
     display: flex;
     align-items: center;
     color: var(--tlp-ui-dimmed);
-    font-size: .75rem;
+    font-size: 0.75rem;
     line-height: 1.375rem;
 }
 
@@ -221,7 +223,7 @@ body.tracker-administration {
     margin: 0 6px 0 0;
     overflow: hidden;
     border-radius: 50%;
-    background: var(--tlp-ui-border-normal) url('../../../../../src/themes/tlp/src/images/tlp-default-avatar.svg') no-repeat center center;
+    background: var(--tlp-ui-border-normal) url("../../../../../src/themes/tlp/src/images/tlp-default-avatar.svg") no-repeat center center;
     background-size: contain;
     vertical-align: top;
 

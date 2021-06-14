@@ -17,15 +17,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-// stylelint-disable-next-line selector-class-pattern
+// stylelint-disable selector-class-pattern
 .pc_checkbox,
-.pc_radiobutton { // stylelint-disable-line selector-class-pattern
+.pc_radiobutton {
+    // stylelint-enable
     padding-left: 24px;
     border: 1px solid transparent;
     background-repeat: no-repeat;
     background-position: 3px center;
 }
 
-.pc_focus { // stylelint-disable-line selector-class-pattern
+// stylelint-disable-next-line selector-class-pattern
+.pc_focus {
     border: 1px dotted #000000;
 }

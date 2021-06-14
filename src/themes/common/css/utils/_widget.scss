@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-.emptyPlaceMarker { // stylelint-disable-line selector-class-pattern
+// stylelint-disable-next-line selector-class-pattern
+.emptyPlaceMarker {
     border: 2px dashed #cccccc;
     border-radius: 4px;
     background: transparent;
@@ -29,24 +30,27 @@
     border: 1px solid #bcbcad;
 }
 
-.widget_content { // stylelint-disable-line selector-class-pattern
-    padding: .5em;
+// stylelint-disable-next-line selector-class-pattern
+.widget_content {
+    padding: 0.5em;
     clear: both;
     background: #ffffff;
 }
 
-.widget_titlebar { // stylelint-disable-line selector-class-pattern
+// stylelint-disable-next-line selector-class-pattern
+.widget_titlebar {
     height: 18px;
     padding-right: 4px;
     padding-left: 40px;
-    background: #e0ddd2 url('../../common/images/widget-header.png') left top repeat-x;
+    background: #e0ddd2 url("../../common/images/widget-header.png") left top repeat-x;
 
     color: #555555;
     font-weight: bold;
     text-align: left;
 }
 
-.widget_titlebar_title { // stylelint-disable-line selector-class-pattern
+// stylelint-disable-next-line selector-class-pattern
+.widget_titlebar_title {
     float: left;
 }
 
@@ -66,7 +70,6 @@
             color: #aaaaaa;
             text-decoration: none;
         }
-    ;
     }
 }
 /* stylelint-enable */

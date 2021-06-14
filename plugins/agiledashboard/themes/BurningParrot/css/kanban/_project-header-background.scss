@@ -34,13 +34,9 @@
 }
 
 .agiledashboard-body {
-    $elements-with-project-background: '.kanban-feedbacks', '.kanban-header', '.kanban-filtered-info';
+    $elements-with-project-background: ".kanban-feedbacks", ".kanban-header", ".kanban-filtered-info";
 
     @each $element-with-project-background in $elements-with-project-background {
-        @include background.apply-background(
-            $element-with-project-background,
-            global-variables.$sidebar-expanded-width,
-            global-variables.$sidebar-collapsed-width,
-        );
+        @include background.apply-background($element-with-project-background, global-variables.$sidebar-expanded-width, global-variables.$sidebar-collapsed-width);
     }
 }

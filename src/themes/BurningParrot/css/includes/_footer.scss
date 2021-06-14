@@ -5,7 +5,7 @@ $footer-white: #e5e8e9;
     justify-content: center;
     padding: 15px 0;
     background: var(--tlp-theme-dark-background-color);
-    color: transparentize($footer-white, .4);
+    color: transparentize($footer-white, 0.4);
 }
 
 .footer-section {

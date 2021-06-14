@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@import 'milestone';
+@import "milestone";
 
 .milestones-load-closed {
     display: flex;
@@ -34,7 +34,7 @@
     top: 20px;
     margin: 0 0 50px;
     color: var(--tlp-theme-color-transparent-70);
-    font-size: .9em;
+    font-size: 0.9em;
     text-align: center;
 
     > span {
@@ -43,7 +43,7 @@
     }
 
     &::after {
-        content: '';
+        content: "";
         position: absolute;
         z-index: -1;
         top: 0;

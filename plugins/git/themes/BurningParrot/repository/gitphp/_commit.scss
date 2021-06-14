@@ -33,7 +33,7 @@
     margin: 0;
     font-size: 20px;
 
-    > a[class*='tlp-badge'] {
+    > a[class*="tlp-badge"] {
         margin: 0 0 0 5px;
 
         &:first-of-type {
@@ -85,7 +85,6 @@
         margin: 0 0 var(--tlp-medium-spacing);
     }
 }
-
 
 .git-repository-commit-reference {
     font-size: 12px;

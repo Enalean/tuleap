@@ -28,7 +28,7 @@
     transform: translateX(-3px);
 
     &::before {
-        content: '';
+        content: "";
         display: block;
         position: absolute;
         top: 0;
@@ -39,7 +39,7 @@
     }
 
     &::after {
-        content: '';
+        content: "";
         display: block;
         position: absolute;
         top: 0;

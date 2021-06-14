@@ -23,7 +23,6 @@
     flex-direction: column;
 }
 
-
 .taskboard-swimlane {
     display: flex;
     flex: 1;
@@ -49,7 +48,6 @@
     > .taskboard-cell-swimlane-header {
         border-right: unset;
     }
-
 }
 
 .taskboard-cell {
@@ -66,7 +64,7 @@
             display: block;
         }
 
-        >.taskboard-draggable-item {
+        > .taskboard-draggable-item {
             display: none;
         }
     }

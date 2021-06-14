@@ -36,13 +36,13 @@ $tlp-pagination-margin: 2px;
 
 .tlp-pagination-pages {
     margin: 0 calc(var(--tlp-medium-spacing) - #{2 * $tlp-pagination-margin});
-    font-size: .875rem;
+    font-size: 0.875rem;
 }
 
 .tlp-pagination-number {
     margin: 0 $tlp-pagination-margin;
     color: #444444;
-    font-size: .875rem;
+    font-size: 0.875rem;
     font-weight: 600;
 }
 

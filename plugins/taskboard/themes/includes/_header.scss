@@ -109,7 +109,7 @@ $taskboard-header-height: 50px;
     transform-origin: center right;
     transition: opacity ease-in-out 100ms;
     opacity: 0;
-    background: linear-gradient(-90deg, transparent, darken(rgba(255, 255, 255, .75), 2%) 3px, darken(rgba(255, 255, 255, .75), 2%) 75%, transparent);
+    background: linear-gradient(-90deg, transparent, darken(rgba(255, 255, 255, 0.75), 2%) 3px, darken(rgba(255, 255, 255, 0.75), 2%) 75%, transparent);
     white-space: nowrap;
     direction: rtl;
     cursor: pointer;
@@ -124,7 +124,7 @@ $taskboard-header-height: 50px;
     flex: 1 0 1%;
     margin: 0 var(--tlp-small-spacing);
     overflow: hidden;
-    font-size: .875rem;
+    font-size: 0.875rem;
     text-align: center;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -164,7 +164,7 @@ $taskboard-header-height: 50px;
     position: relative;
     top: -1px;
     animation: none;
-    opacity: .4;
+    opacity: 0.4;
     font-size: 28px;
     font-weight: 300;
 
@@ -175,10 +175,10 @@ $taskboard-header-height: 50px;
 
 @keyframes loading-items {
     0% {
-        opacity: .4;
+        opacity: 0.4;
     }
 
     100% {
-        opacity: .05;
+        opacity: 0.05;
     }
 }

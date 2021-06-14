@@ -32,8 +32,8 @@ $white-space-above-and-after-a-project-link: var(--tlp-small-spacing);
 
 .switch-to-modal-header {
     padding: calc(var(--tlp-medium-spacing) + 1px) var(--tlp-medium-spacing) calc(var(--tlp-medium-spacing) + 1px) var(--tlp-large-spacing);
-    border-bottom: 1px solid rgba(104, 122, 124, .2);
-    background: linear-gradient(0deg, rgba(0, 0, 0, .07), rgba(0, 0, 0, .07)), var(--tlp-theme-dark-background-color);
+    border-bottom: 1px solid rgba(104, 122, 124, 0.2);
+    background: linear-gradient(0deg, rgba(0, 0, 0, 0.07), rgba(0, 0, 0, 0.07)), var(--tlp-theme-dark-background-color);
     background-blend-mode: overlay;
 }
 
@@ -45,9 +45,9 @@ $white-space-above-and-after-a-project-link: var(--tlp-small-spacing);
 
 .switch-to-modal-header-icon {
     margin: 0 6px 0 0;
-    opacity: .7;
+    opacity: 0.7;
     color: var(--tlp-ui-dimmed);
-    font-size: .875rem;
+    font-size: 0.875rem;
     line-height: 1rem;
 }
 
@@ -77,7 +77,9 @@ $white-space-above-and-after-a-project-link: var(--tlp-small-spacing);
     &::-webkit-search-decoration,
     &::-webkit-search-cancel-button,
     &::-webkit-search-results-button,
-    &::-webkit-search-results-decoration { display: none; }
+    &::-webkit-search-results-decoration {
+        display: none;
+    }
 }
 
 .switch-to-modal-header-legacy-search-button {
@@ -86,11 +88,11 @@ $white-space-above-and-after-a-project-link: var(--tlp-small-spacing);
     transition: opacity 100ms ease-in-out, background 100ms ease-in-out;
     border: 0;
     border-radius: 4px;
-    opacity: .75;
+    opacity: 0.75;
     background: none;
     color: var(--tlp-ui-dimmed-on-dark-background);
     font-family: var(--tlp-font-family);
-    font-size: .8125rem;
+    font-size: 0.8125rem;
     font-weight: 500;
     line-height: 1rem;
     cursor: pointer;
@@ -98,7 +100,7 @@ $white-space-above-and-after-a-project-link: var(--tlp-small-spacing);
     &:focus,
     &:hover {
         opacity: 1;
-        background: rgba(0, 0, 0, .2);
+        background: rgba(0, 0, 0, 0.2);
     }
 
     > .fa-long-arrow-right {
@@ -113,10 +115,9 @@ $white-space-above-and-after-a-project-link: var(--tlp-small-spacing);
     color: var(--tlp-typo-default-text-color-on-dark-background);
 }
 
-
 .switch-to-modal-body-title {
     color: var(--tlp-ui-dimmed);
-    font-size: .8125rem;
+    font-size: 0.8125rem;
     font-weight: 600;
     line-height: 1rem;
     text-transform: uppercase;
@@ -149,7 +150,7 @@ $white-space-above-and-after-a-project-link: var(--tlp-small-spacing);
 
     &:hover,
     &:focus {
-        background: rgba(0, 0, 0, .2);
+        background: rgba(0, 0, 0, 0.2);
         color: var(--tlp-typo-default-text-color-on-dark-background);
         text-decoration: none;
 
@@ -161,7 +162,7 @@ $white-space-above-and-after-a-project-link: var(--tlp-small-spacing);
 
 .switch-to-projects-project-icon {
     margin: 0 var(--tlp-small-spacing) 0 0;
-    font-size: .8rem;
+    font-size: 0.8rem;
 
     &.fa-lock,
     &.fa-tlp-lock-plus-r {
@@ -178,12 +179,12 @@ $white-space-above-and-after-a-project-link: var(--tlp-small-spacing);
     border-radius: 4px;
     opacity: 0;
     color: var(--tlp-ui-dimmed-on-dark-background);
-    font-size: .8125rem;
+    font-size: 0.8125rem;
     cursor: pointer;
 
     &:hover,
     &:focus {
-        background: rgba(0, 0, 0, .2);
+        background: rgba(0, 0, 0, 0.2);
         color: var(--tlp-ui-dimmed-on-dark-background);
         text-decoration: none;
     }
@@ -191,9 +192,9 @@ $white-space-above-and-after-a-project-link: var(--tlp-small-spacing);
 
 .switch-to-projects-softwaremap {
     padding: 6px 8px calc(var(--tlp-large-spacing) + 6px) 36px;
-    opacity: .75;
+    opacity: 0.75;
     color: var(--tlp-ui-dimmed-on-dark-background);
-    font-size: .8125rem;
+    font-size: 0.8125rem;
     font-weight: 500;
     line-height: 1rem;
 
@@ -210,7 +211,6 @@ $white-space-above-and-after-a-project-link: var(--tlp-small-spacing);
     align-items: center;
     padding: 0 0 var(--tlp-jumbo-spacing);
 }
-
 
 .switch-to-modal-body-global-loading {
     display: flex;
@@ -248,15 +248,15 @@ $white-space-above-and-after-a-project-link: var(--tlp-small-spacing);
 .switch-to-recent-items-empty-text,
 .switch-to-projects-empty-text {
     margin: var(--tlp-medium-spacing) 0 var(--tlp-large-spacing);
-    opacity: .75;
+    opacity: 0.75;
     color: var(--tlp-ui-dimmed-on-dark-background);
-    font-size: .8125rem;
+    font-size: 0.8125rem;
     font-weight: 500;
     line-height: 1rem;
 }
 
 .switch-to-empty-illustration {
-    opacity: .5;
+    opacity: 0.5;
 
     .stroked {
         stroke: var(--tlp-ui-dimmed-on-dark-background);
@@ -278,9 +278,9 @@ $white-space-above-and-after-a-project-link: var(--tlp-small-spacing);
 
 .switch-to-modal-no-matching-history,
 .switch-to-modal-no-matching-projects {
-    opacity: .75;
+    opacity: 0.75;
     color: var(--tlp-ui-dimmed-on-dark-background);
-    font-size: .875rem;
+    font-size: 0.875rem;
 }
 
 .switch-to-recent-items {
@@ -293,13 +293,12 @@ $white-space-above-and-after-a-project-link: var(--tlp-small-spacing);
 }
 
 .switch-to-recent-items-error {
-    opacity: .75;
+    opacity: 0.75;
     color: var(--tlp-ui-danger-on-dark-background);
-    font-size: .8125rem;
+    font-size: 0.8125rem;
     font-weight: 600;
     line-height: 1rem;
 }
-
 
 .switch-to-recent-items-error-icon {
     margin: 0 4px 0 0;
@@ -336,7 +335,7 @@ $white-space-above-and-after-a-project-link: var(--tlp-small-spacing);
 
     &:focus,
     &:hover {
-        background: rgba(0, 0, 0, .2);
+        background: rgba(0, 0, 0, 0.2);
         color: var(--tlp-ui-white);
         text-decoration: none;
     }
@@ -369,11 +368,11 @@ $white-space-above-and-after-a-project-link: var(--tlp-small-spacing);
     padding: $white-space-above-and-after-a-project-link var(--tlp-small-spacing);
     border-radius: 4px;
     color: var(--tlp-typo-default-text-color-on-dark-background);
-    font-size: .8125rem;
+    font-size: 0.8125rem;
 
     &:focus,
     &:hover {
-        background: rgba(0, 0, 0, .2);
+        background: rgba(0, 0, 0, 0.2);
         color: var(--tlp-typo-default-text-color-on-dark-background);
         text-decoration: none;
     }
@@ -381,6 +380,6 @@ $white-space-above-and-after-a-project-link: var(--tlp-small-spacing);
 
 @each $color-name, $colors in swatch-colors.$tlp-swatch-color-map {
     .switch-to-recent-items-entry-link.#{$color-name} > .switch-to-recent-items-entry-icon {
-        color: map-get($colors, 'primary');
+        color: map-get($colors, "primary");
     }
 }

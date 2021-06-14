@@ -1,8 +1,10 @@
-th.resize-handle-active { /* stylelint-disable-line selector-no-qualifying-type */
+/* stylelint-disable-next-line selector-no-qualifying-type */
+th.resize-handle-active {
     cursor: e-resize;
 }
 
-div.resize-handle { /* stylelint-disable-line selector-no-qualifying-type */
+/* stylelint-disable-next-line selector-no-qualifying-type */
+div.resize-handle {
     position: absolute;
     top: 0;
     left: 0;
@@ -11,6 +13,7 @@ div.resize-handle { /* stylelint-disable-line selector-no-qualifying-type */
     cursor: e-resize;
 }
 
-th.drop-over { /* stylelint-disable-line selector-no-qualifying-type */
+/* stylelint-disable-next-line selector-no-qualifying-type */
+th.drop-over {
     background-color: #eeeef0;
 }

@@ -34,11 +34,14 @@
     background-color: #da8a8a;
 }
 
-#artifacts_result > table { /* stylelint-disable-line selector-id-pattern */
+/* stylelint-disable-next-line selector-id-pattern */
+#artifacts_result > table {
     border-spacing: 1px;
     border-collapse: separate;
 
-    th.boxtitle { /* stylelint-disable-line selector-no-qualifying-type */
+    // stylelint-disable selector-no-qualifying-type
+    th.boxtitle {
+        // stylelint-enable
         background-color: #f1f1f1;
     }
 }

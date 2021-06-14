@@ -44,7 +44,7 @@ textarea {
     font-family: var(--tlp-font-family);
 }
 
-input[type='file'] {
+input[type="file"] {
     margin-top: -13px;
 }
 
@@ -66,8 +66,8 @@ kbd {
     border-radius: 4px;
     background: var(--tlp-theme-dark-background-color);
     color: var(--tlp-ui-white);
-    font-family: -apple-system, BlinkMacSystemFont, Roboto, 'Helvetica Neue',sans-serif;
-    font-size: .875rem;
+    font-family: -apple-system, BlinkMacSystemFont, Roboto, "Helvetica Neue", sans-serif;
+    font-size: 0.875rem;
     line-height: 1.25rem;
     vertical-align: 1px;
 }
@@ -111,29 +111,26 @@ kbd {
     .badge.tlp-badge-#{$color-name},
     .badge.#{$color-name} {
         padding: 5px 8px;
-        border: 1px solid map-get($colors, 'primary');
+        border: 1px solid map-get($colors, "primary");
         border-radius: 15px;
-        background: map-get($colors, 'primary');
+        background: map-get($colors, "primary");
         color: #ffffff;
-        font-size: .75rem;
+        font-size: 0.75rem;
         line-height: 1;
         text-shadow: none;
 
         &.tlp-badge-outline {
-            border: 1px solid transparentize(map-get($colors, 'primary'), .4);
-            background: transparentize(map-get($colors, 'primary'), .9);
-            color: map-get($colors, 'text');
+            border: 1px solid transparentize(map-get($colors, "primary"), 0.4);
+            background: transparentize(map-get($colors, "primary"), 0.9);
+            color: map-get($colors, "text");
 
             &.tlp-badge-on-dark-background {
-                border: 1px solid mix(map-get($colors, 'primary'), #ffffff, 85%);
-                background: transparentize(map-get($colors, 'primary'), .85);
-                color: mix(map-get($colors, 'border'), #ffffff, 90%);
+                border: 1px solid mix(map-get($colors, "primary"), #ffffff, 85%);
+                background: transparentize(map-get($colors, "primary"), 0.85);
+                color: mix(map-get($colors, "border"), #ffffff, 90%);
 
-                @if $color-name == 'teddy-brown'
-                    or $color-name == 'plum-crazy'
-                    or $color-name == 'red-wine'
-                    or $color-name == 'army-green' {
-                    color: mix(map-get($colors, 'border'), #ffffff, 70%);
+                @if $color-name == "teddy-brown" or $color-name == "plum-crazy" or $color-name == "red-wine" or $color-name == "army-green" {
+                    color: mix(map-get($colors, "border"), #ffffff, 70%);
                 }
             }
         }
@@ -152,7 +149,7 @@ legend {
     z-index: 4000;
 
     .project-privacy {
-        font-size: .9em;
+        font-size: 0.9em;
     }
 }
 
@@ -169,7 +166,7 @@ legend {
     border-bottom: 0;
     background-color: var(--tlp-ui-white);
     box-shadow: inset 0 1px 0 #e3e5ed, inset 0 -1px 0 #e3e5ed;
-    font-size: .75rem;
+    font-size: 0.75rem;
     font-weight: 500;
     text-transform: uppercase;
 
@@ -206,7 +203,7 @@ legend {
         border-radius: 0;
         background-color: transparent;
         color: #747474;
-        line-height: .75rem;
+        line-height: 0.75rem;
     }
 
     > .active > a:hover,
@@ -240,7 +237,8 @@ legend {
     }
     /* stylelint-enable */
 
-    a.active { /* stylelint-disable-line selector-no-qualifying-type */
+    // stylelint-disable-next-line selector-no-qualifying-type
+    a.active {
         border-bottom-color: var(--tlp-theme-color);
     }
 
@@ -261,7 +259,6 @@ legend {
         border-top-color: #747474;
         border-bottom-color: #747474;
     }
-
 }
 
 .tabs-left > .nav-tabs .active > a,
@@ -337,7 +334,7 @@ legend {
     text-shadow: none;
 
     &:not(.btn-link) {
-        box-shadow: 0 1px 1px rgba(0, 0, 0, .12);
+        box-shadow: 0 1px 1px rgba(0, 0, 0, 0.12);
     }
 
     &.btn-large {
@@ -350,10 +347,9 @@ legend {
         }
     }
 
-
     &.btn-small {
         padding: 3px var(--tlp-medium-spacing); // match TLP buttons
-        font-size: .75rem;
+        font-size: 0.75rem;
         line-height: 1.5rem;
 
         > .caret:not(:only-child) {
@@ -363,7 +359,7 @@ legend {
 
     &.btn-mini {
         padding: 2px var(--tlp-small-spacing); // match TLP buttons
-        font-size: .75rem;
+        font-size: 0.75rem;
         line-height: 1.15rem;
     }
 
@@ -386,7 +382,7 @@ legend {
 }
 
 @mixin btn-hover($color) {
-    transition: box-shadow 75ms ease-in-out,background 75ms ease-in-out,border-color 75ms ease-in-out;
+    transition: box-shadow 75ms ease-in-out, background 75ms ease-in-out, border-color 75ms ease-in-out;
     border-color: $color;
     background: $color;
     box-shadow: none;
@@ -437,56 +433,26 @@ legend {
 }
 
 .btn:not(.btn-link) {
-    @include btn(
-        var(--tlp-ui-border-light),
-        var(--tlp-ui-border-light-transparent-40),
-        var(--tlp-ui-border-light-darker-10),
-        var(--tlp-theme-dark-background-color)
-    );
+    @include btn(var(--tlp-ui-border-light), var(--tlp-ui-border-light-transparent-40), var(--tlp-ui-border-light-darker-10), var(--tlp-theme-dark-background-color));
 
     &.btn-primary {
-        @include btn(
-            var(--tlp-theme-color),
-            var(--tlp-theme-color-transparent-40),
-            var(--tlp-theme-color-darker-10),
-            var(--tlp-ui-white)
-        );
+        @include btn(var(--tlp-theme-color), var(--tlp-theme-color-transparent-40), var(--tlp-theme-color-darker-10), var(--tlp-ui-white));
     }
 
     &.btn-danger {
-        @include btn(
-            var(--tlp-ui-danger),
-            var(--tlp-ui-danger-transparent-40),
-            var(--tlp-ui-danger-darker-10),
-            var(--tlp-ui-white)
-        );
+        @include btn(var(--tlp-ui-danger), var(--tlp-ui-danger-transparent-40), var(--tlp-ui-danger-darker-10), var(--tlp-ui-white));
     }
 
     &.btn-success {
-        @include btn(
-            var(--tlp-ui-success),
-            var(--tlp-ui-success-transparent-40),
-            var(--tlp-ui-success-darker-10),
-            var(--tlp-ui-white)
-        );
+        @include btn(var(--tlp-ui-success), var(--tlp-ui-success-transparent-40), var(--tlp-ui-success-darker-10), var(--tlp-ui-white));
     }
 
     &.btn-warning {
-        @include btn(
-            var(--tlp-ui-warning),
-            var(--tlp-ui-warning-transparent-40),
-            var(--tlp-ui-warning-darker-10),
-            var(--tlp-ui-white)
-        );
+        @include btn(var(--tlp-ui-warning), var(--tlp-ui-warning-transparent-40), var(--tlp-ui-warning-darker-10), var(--tlp-ui-white));
     }
 
     &.btn-info {
-        @include btn(
-            var(--tlp-ui-info),
-            var(--tlp-ui-info-transparent-40),
-            var(--tlp-ui-info-darker-10),
-            var(--tlp-ui-white)
-        );
+        @include btn(var(--tlp-ui-info), var(--tlp-ui-info-transparent-40), var(--tlp-ui-info-darker-10), var(--tlp-ui-white));
     }
 
     &:hover:not(:disabled):not(.disabled):not(.active) {
@@ -530,7 +496,8 @@ legend {
     }
 }
 
-select.input-small { // stylelint-disable-line selector-no-qualifying-type
+// stylelint-disable-next-line selector-no-qualifying-type
+select.input-small {
     width: auto;
 }
 
@@ -542,7 +509,7 @@ select.input-small { // stylelint-disable-line selector-no-qualifying-type
     z-index: 2006;
     overflow: hidden;
     border: 1px solid transparent;
-    box-shadow: 0 10px 36px rgba(0, 0, 0, .2);
+    box-shadow: 0 10px 36px rgba(0, 0, 0, 0.2);
     font-size: 14px;
 
     form {
@@ -612,7 +579,7 @@ select.input-small { // stylelint-disable-line selector-no-qualifying-type
 .modal-backdrop,
 .modal-backdrop.fade.in {
     z-index: 2005;
-    opacity: .5;
+    opacity: 0.5;
 }
 
 .tuleap-artifact-modal .modal-header .title {
@@ -701,7 +668,7 @@ select.input-small { // stylelint-disable-line selector-no-qualifying-type
                 color: var(--tlp-theme-color);
                 font-size: 11px;
                 font-weight: 600;
-                letter-spacing: .3px;
+                letter-spacing: 0.3px;
                 text-transform: uppercase;
             }
 

@@ -20,5 +20,5 @@
 @use 'background';
 
 .project-with-background {
-    @include background.css-custom-properties('brown-grass');
+    @include background.css-custom-properties("brown-grass");
 }

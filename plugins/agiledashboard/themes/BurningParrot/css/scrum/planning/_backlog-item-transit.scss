@@ -74,7 +74,7 @@
     &.multiple {
         &::before,
         &::after {
-            content: '';
+            content: "";
             visibility: visible;
             position: absolute;
             z-index: -1;
@@ -84,7 +84,7 @@
             border: 1px solid #efefef;
             border-radius: 3px;
             background: #fdfdfd;
-            box-shadow: inset 5px 0 0 0 #aaaaaa, 0 1px 0 0 rgba(242, 242, 242, .5);
+            box-shadow: inset 5px 0 0 0 #aaaaaa, 0 1px 0 0 rgba(242, 242, 242, 0.5);
         }
 
         &::before {

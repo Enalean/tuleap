@@ -32,31 +32,30 @@
         background: var(--tlp-theme-dark-background-color-darker);
     }
 
-
-    &.tlp-popover[data-popper-placement='left-end'],
-    &.tlp-popover[data-popper-placement='right-end'] {
+    &.tlp-popover[data-popper-placement="left-end"],
+    &.tlp-popover[data-popper-placement="right-end"] {
         &.tlp-popover-shown {
             transform: translateY(7px);
         }
     }
 
-    &.tlp-popover[data-popper-placement='left'],
-    &.tlp-popover[data-popper-placement='right'] {
+    &.tlp-popover[data-popper-placement="left"],
+    &.tlp-popover[data-popper-placement="right"] {
         &.tlp-popover-shown {
             transform: translateY(0);
         }
     }
 
-    &.tlp-popover[data-popper-placement='left'],
-    &.tlp-popover[data-popper-placement='right'],
-    &.tlp-popover[data-popper-placement='left-end'],
-    &.tlp-popover[data-popper-placement='right-end'] {
+    &.tlp-popover[data-popper-placement="left"],
+    &.tlp-popover[data-popper-placement="right"],
+    &.tlp-popover[data-popper-placement="left-end"],
+    &.tlp-popover[data-popper-placement="right-end"] {
         > .roadmap-gantt-task-popover-arrow {
             background: var(--tlp-theme-dark-background-color);
         }
     }
 
-    &.tlp-popover[data-popper-placement^='top'] {
+    &.tlp-popover[data-popper-placement^="top"] {
         &.tlp-popover-shown {
             transform: translateY(0);
         }
@@ -71,13 +70,12 @@
     border-top: 4px solid transparent;
     background: var(--tlp-theme-dark-background-color-darker);
 
-
     @each $color-name, $colors in swatch-colors.$tlp-swatch-color-map {
         &.roadmap-gantt-task-popover-header-#{$color-name} {
-            border-top-color: map-get($colors, 'primary');
+            border-top-color: map-get($colors, "primary");
 
             > .roadmap-gantt-task-popover-title > .roadmap-gantt-task-popover-xref {
-                color: map-get($colors, 'text-on-dark');
+                color: map-get($colors, "text-on-dark");
             }
         }
     }
@@ -90,12 +88,12 @@
 
 .roadmap-gantt-task-popover-xref {
     margin: 0 0 2px;
-    font-size: .625rem;
-    line-height: .75rem;
+    font-size: 0.625rem;
+    line-height: 0.75rem;
 }
 
 .roadmap-gantt-task-popover-task {
-    font-size: .875rem;
+    font-size: 0.875rem;
     line-height: 1.125rem;
 }
 
@@ -110,7 +108,7 @@
 .roadmap-gantt-task-popover-label,
 .roadmap-gantt-task-popover-value,
 .roadmap-gantt-task-popover-value-undefined {
-    font-size: .75rem;
+    font-size: 0.75rem;
     line-height: 1.25rem;
 }
 

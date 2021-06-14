@@ -20,5 +20,5 @@
 @use 'background';
 
 .project-with-background {
-    @include background.css-custom-properties('white-sheep');
+    @include background.css-custom-properties("white-sheep");
 }

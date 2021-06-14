@@ -106,7 +106,7 @@
     cursor: pointer;
 
     &::before {
-        content: '';
+        content: "";
         position: absolute;
         top: 50%;
         left: 50%;
@@ -145,7 +145,7 @@
 }
 
 .tracker-workflow-transition-action-disabled {
-    opacity: .5;
+    opacity: 0.5;
     cursor: not-allowed;
 }
 

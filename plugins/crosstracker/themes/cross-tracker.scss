@@ -16,8 +16,8 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-@import 'reading-mode';
-@import 'writing-mode';
+@import "reading-mode";
+@import "writing-mode";
 
 .dashboard-widget-content-crosstrackersearch {
     margin: 0 calc(-1 * var(--tlp-medium-spacing));
@@ -29,7 +29,7 @@
 
 .cross-tracker-loader {
     height: 100px;
-    background: url('../../../src/www/themes/BurningParrot/images/spinner.gif') no-repeat center center;
+    background: url("../../../src/www/themes/BurningParrot/images/spinner.gif") no-repeat center center;
 }
 
 .cross-tracker-artifacts-table {
@@ -48,10 +48,9 @@
     }
 
     &:not(:last-child)::after {
-        content: ', ';
+        content: ", ";
     }
 }
-
 
 .link-to-tracker-badge {
     margin: 0 5px 0 0;

@@ -1,17 +1,21 @@
-.svn_commit_details { /* stylelint-disable-line selector-class-pattern */
+/* stylelint-disable-next-line selector-class-pattern */
+.svn_commit_details {
     padding: 1em;
     border: 1px solid #808080;
 }
 
-.svn_commit_details .avatar { /* stylelint-disable-line selector-class-pattern */
+/* stylelint-disable-next-line selector-class-pattern */
+.svn_commit_details .avatar {
     float: left;
 }
 
-.svn_commit_message { /* stylelint-disable-line selector-class-pattern */
+/* stylelint-disable-next-line selector-class-pattern */
+.svn_commit_message {
     padding-left: 64px; /* maybe too much if there is no avatar */
 }
 
-.svn_commit_author { /* stylelint-disable-line selector-class-pattern */
+/* stylelint-disable-next-line selector-class-pattern */
+.svn_commit_author {
     font-weight: bold;
 }
 
@@ -25,20 +29,24 @@ textarea.not_resizable {
 }
 /* stylelint-enable */
 
-#access_file_container { /* stylelint-disable-line selector-id-pattern */
+/* stylelint-disable-next-line selector-id-pattern */
+#access_file_container {
     display: inline-block;
 }
 
-#current_access_file_container { /* stylelint-disable-line selector-id-pattern */
+/* stylelint-disable-next-line selector-id-pattern */
+#current_access_file_container {
     display: inline-block;
     margin-right: 10px;
 }
 
-#old_access_file_form { /* stylelint-disable-line selector-id-pattern */
+/* stylelint-disable-next-line selector-id-pattern */
+#old_access_file_form {
     visibility: hidden;
 }
 
-#old_access_file_container { /* stylelint-disable-line selector-id-pattern */
+/* stylelint-disable-next-line selector-id-pattern */
+#old_access_file_container {
     display: inline-block;
 
     > h3 > select {
@@ -46,7 +54,8 @@ textarea.not_resizable {
         top: 3.5px;
     }
 
-    .empty_version { /* stylelint-disable-line selector-class-pattern */
+    /* stylelint-disable-next-line selector-class-pattern */
+    .empty_version {
         color: #bbbbbb;
         font-style: italic;
         text-align: center;
@@ -115,33 +124,33 @@ textarea.not_resizable {
     height: 300px;
     overflow-y: auto;
     box-shadow: none;
-    font-family: 'Courier';
+    font-family: "Courier";
     font-size: 12px;
     line-height: 20px;
 
     .label {
         position: relative;
         padding-right: 18px;
-        transition: opacity linear .07s;
+        transition: opacity linear 0.07s;
         font-size: 12px;
         font-weight: normal;
         cursor: pointer;
 
         &::after {
-            content: '\f0a4'; // fa-hand-o-right
+            content: "\f0a4"; // fa-hand-o-right
             position: absolute;
             top: 2px;
             right: -17px;
-            transition: opacity linear .07s;
+            transition: opacity linear 0.07s;
             opacity: 0;
             color: #222222;
-            font-family: 'Font Awesome 5 Free';
+            font-family: "Font Awesome 5 Free";
             font-size: 13px;
         }
 
         &.active::after,
         &:hover::after {
-            opacity: .8;
+            opacity: 0.8;
         }
     }
 
@@ -196,13 +205,13 @@ textarea.not_resizable {
             text-shadow: none;
 
             &.label-success::before {
-                content: '\f058'; // fa-check-circle
+                content: "\f058"; // fa-check-circle
                 color: #468847;
                 font-size: 16px;
             }
 
             &.label-important::before {
-                content: '\f057'; // fa-times-circle
+                content: "\f057"; // fa-times-circle
                 right: 2px;
                 color: #b94a48;
                 font-size: 16px;
@@ -212,17 +221,17 @@ textarea.not_resizable {
 
     > .label-important::before,
     > .label-success::before {
-        content: '\f00c'; // fa-check
+        content: "\f00c"; // fa-check
         position: absolute;
         top: 1px;
         right: 2px;
-        font-family: 'Font Awesome 5 Free';
+        font-family: "Font Awesome 5 Free";
         font-size: 13px;
         font-weight: 900;
     }
 
     > .label-important::before {
-        content: '\f00d'; // fa-remove
+        content: "\f00d"; // fa-remove
         right: 4px;
     }
 }
@@ -242,7 +251,7 @@ textarea.not_resizable {
     /* stylelint-disable selector-no-qualifying-type */
     div {
         color: #cccccc;
-        font-family: 'Courier New';
+        font-family: "Courier New";
         font-size: 12px;
 
         &.text-success {
@@ -256,8 +265,9 @@ textarea.not_resizable {
     /* stylelint-enable */
 }
 
-.exceeds_max_number_of_folders { /* stylelint-disable-line selector-class-pattern */
-    opacity: .2;
+/* stylelint-disable-next-line selector-class-pattern */
+.exceeds_max_number_of_folders {
+    opacity: 0.2;
 }
 
 .svn-intro-warning {
@@ -269,7 +279,6 @@ textarea.not_resizable {
 }
 
 .svn-intro-command {
-
     margin-bottom: 15px;
 
     > pre {
@@ -277,6 +286,6 @@ textarea.not_resizable {
     }
 
     > .help-block {
-        font-size: .9em;
+        font-size: 0.9em;
     }
 }

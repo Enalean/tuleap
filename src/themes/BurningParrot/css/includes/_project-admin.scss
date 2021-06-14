@@ -17,13 +17,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@import 'project-admin/labels';
-@import 'project-admin/details';
-@import 'project-admin/ugroups';
-@import 'project-admin/members';
-@import 'project-admin/permissions';
-@import 'project-admin/categories';
-@import 'project-admin/services';
+@import "project-admin/labels";
+@import "project-admin/details";
+@import "project-admin/ugroups";
+@import "project-admin/members";
+@import "project-admin/permissions";
+@import "project-admin/categories";
+@import "project-admin/services";
 
 .project-administration-title {
     padding: var(--tlp-medium-spacing) var(--tlp-medium-spacing) 0;

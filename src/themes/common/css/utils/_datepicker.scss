@@ -12,7 +12,7 @@ div.datePicker {
     background: transparent;
 
     /* Change the font-size to suit your design's CSS. The following line is for the demo that has a 12px font-size defined on the body tag */
-    font: .8em/.8em Verdana, Sans-Serif;
+    font: 0.8em/0.8em Verdana, Sans-Serif;
     text-align: center;
 
     user-select: none;
@@ -50,7 +50,7 @@ a.date-picker-control:focus {
     margin: 0 0 0 4px;
     padding: 0;
     border: 0 none;
-    background: transparent url('#{$tuleap-common-theme-basepath}images/ic/cal.png') no-repeat 50% 50%;
+    background: transparent url("#{$tuleap-common-theme-basepath}images/ic/cal.png") no-repeat 50% 50%;
     line-height: 1;
     text-decoration: none;
     vertical-align: middle;
@@ -106,7 +106,7 @@ div.datePicker th span.next-but {
 div.datePicker th span.today-but {
     width: 100%;
     margin: 0 auto;
-    font: normal .8em Verdana, Sans-Serif;
+    font: normal 0.8em Verdana, Sans-Serif;
     line-height: 1em;
     text-align: center;
     text-decoration: none;
@@ -173,14 +173,14 @@ div.datePicker table th {
 div.datePicker table td.date-picker-unused {
     padding: 0;
     border-color: #dcdcdc;
-    background: #ffffff url('#{$tuleap-common-theme-basepath}images/backstripes.gif');
+    background: #ffffff url("#{$tuleap-common-theme-basepath}images/backstripes.gif");
     cursor: default !important;
 }
 
 div.datePicker table thead th.date-picker-title {
     width: auto;
     height: auto;
-    padding: .4em 0;
+    padding: 0.4em 0;
 }
 
 /* The "mon tue wed etc" day header button styles */

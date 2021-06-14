@@ -17,13 +17,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@import 'tuleap-highlight/highlight';
-@import 'quota-display/quota-display';
-@import 'fields/file-field/file-field';
-@import 'fields/computed-field/computed-field';
-@import 'fields/open-list-field/open-list-field';
-@import 'fields/link-field/link-field';
-@import '@tuleap/list-picker';
+@import "tuleap-highlight/highlight";
+@import "quota-display/quota-display";
+@import "fields/file-field/file-field";
+@import "fields/computed-field/computed-field";
+@import "fields/open-list-field/open-list-field";
+@import "fields/link-field/link-field";
+@import "@tuleap/list-picker";
 
 .tuleap-artifact-modal-title {
     display: flex;
@@ -244,7 +244,6 @@ fieldset {
     display: flex;
     flex-direction: column;
 }
-
 
 .tuleap-artifact-modal-followups-comment-content {
     font-size: 14px;

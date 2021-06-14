@@ -22,7 +22,7 @@
 .tlp-tooltip {
     position: relative;
 
-    &[class*='tlp-button'] {
+    &[class*="tlp-button"] {
         overflow: visible;
     }
 
@@ -56,7 +56,7 @@
     }
 
     &::after {
-        content: '';
+        content: "";
         width: 0;
     }
 }

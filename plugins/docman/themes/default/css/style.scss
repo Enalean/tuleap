@@ -34,14 +34,14 @@ h3 {
 }
 
 .newDocument {
-    padding: .5em;
+    padding: 0.5em;
     border: 1px solid #000000;
     background-color: #cccccc;
 }
 
 .newDocument h4 {
     margin: 0;
-    margin-bottom: .5em;
+    margin-bottom: 0.5em;
     padding: 0;
 }
 
@@ -60,16 +60,16 @@ h3 {
 
 .docman_help {
     width: auto;
-    margin: .5em;
-    padding: .5em;
+    margin: 0.5em;
+    padding: 0.5em;
     padding-left: 40px;
     border: 1px solid #dddddd;
-    background: url('../../../www/themes/default/images/ic/help.png') no-repeat;
+    background: url("../../../www/themes/default/images/ic/help.png") no-repeat;
     background-position: 5px center;
 }
 
 .docman_help span.code {
-    font-family: 'Courier New', Courier;
+    font-family: "Courier New", Courier;
 }
 
 /**
@@ -84,7 +84,7 @@ ul.docman_items {
 }
 
 li.docman_item {
-    background: transparent url('../../../www/themes/default/images/line.gif') left top repeat-y;
+    background: transparent url("../../../www/themes/default/images/line.gif") left top repeat-y;
 }
 
 .docman_properties_navlist {
@@ -102,7 +102,7 @@ li.docman_item {
 
 .docman_properties_navlist li a {
     margin-left: 3px;
-    padding: 3px .5em;
+    padding: 3px 0.5em;
     border: 1px solid #bcbcad;
     border-bottom: 0;
     background: #e8e8e0;
@@ -135,7 +135,6 @@ li.docman_item {
     padding: 4px 10px;
     border: medium solid #ff0000;
     background: #ffffcc;
-
 }
 
 .docman_confirm_delete_buttons {
@@ -150,7 +149,7 @@ li.docman_item {
 .docman_item_description {
     margin-left: 30px;
     padding-bottom: 6px;
-    font-size: .9em;
+    font-size: 0.9em;
 }
 
 .docman_item_icon {
@@ -164,7 +163,7 @@ li.docman_item {
 
 .docman_item_show_options {
     margin-left: 24px;
-    font-size: .7em;
+    font-size: 0.7em;
 }
 
 a.docman_item_show_options {
@@ -198,7 +197,7 @@ a img {
 }
 
 #docman_filters_title {
-    margin-bottom: .3em;
+    margin-bottom: 0.3em;
     padding: 2px;
     border: 1px solid #dddddd;
     background-color: #dddddd;
@@ -212,10 +211,10 @@ a img {
 
 #docman_filters_fieldset {
     /* Linked to #docman_filters_title::margin-bottom */
-    margin-top: -.3em;
+    margin-top: -0.3em;
     /* Need to be the same value than #docman_filters_title::margin-bottom */
-    margin-bottom: .3em;
-    padding: .2em;
+    margin-bottom: 0.3em;
+    padding: 0.2em;
     border-right: 1px solid #dddddd;
     border-bottom: 1px solid #dddddd;
     border-left: 1px solid #dddddd;
@@ -289,7 +288,7 @@ a img {
 .docman_item_menu_close {
     height: inherit;
     padding-left: 2px;
-    font-size: .8em;
+    font-size: 0.8em;
     text-align: right;
 }
 
@@ -306,25 +305,25 @@ a img {
     border: 1px solid #e8e8e0;
     background-repeat: no-repeat;
     background-position: 2px 1px;
-    font-size: .8em;
+    font-size: 0.8em;
     text-align: right;
     text-decoration: none;
 }
 
 .docman_item_option_details {
-    background-image: url('../../../www/themes/default/images/ic/item-details.png');
+    background-image: url("../../../www/themes/default/images/ic/item-details.png");
 }
 
 .docman_item_option_newdocument {
-    background-image: url('../../../www/themes/default/images/ic/document-new.png');
+    background-image: url("../../../www/themes/default/images/ic/document-new.png");
 }
 
 .docman_item_option_newfolder {
-    background-image: url('../../../www/themes/default/images/ic/folder-new.png');
+    background-image: url("../../../www/themes/default/images/ic/folder-new.png");
 }
 
 .docman_item_option_newversion {
-    background-image: url('../../../www/themes/default/images/ic/file-newversion.png');
+    background-image: url("../../../www/themes/default/images/ic/file-newversion.png");
 }
 
 /*
@@ -339,60 +338,60 @@ a img {
     padding-bottom: 0;
     padding-left: 24px;
     border: 1px solid #e8e8e0;
-    background-image: url('../../../www/themes/default/images/ic/item-move.png');
+    background-image: url("../../../www/themes/default/images/ic/item-move.png");
     background-repeat: no-repeat;
     background-position: 2px 1px;
     text-decoration: none;
 }
 
 .docman_item_option_history {
-    background-image: url('../../../www/themes/default/images/ic/history.png');
+    background-image: url("../../../www/themes/default/images/ic/history.png");
 }
 
 .docman_item_option_notifications {
-    background-image: url('../../../www/themes/default/images/ic/notifications.png');
+    background-image: url("../../../www/themes/default/images/ic/notifications.png");
 }
 
 .docman_item_option_permissions {
-    background-image: url('../../../www/themes/default/images/ic/permissions.png');
+    background-image: url("../../../www/themes/default/images/ic/permissions.png");
 }
 
 .docman_item_option_delete {
-    background-image: url('../../../www/themes/default/images/ic/delete.png');
+    background-image: url("../../../www/themes/default/images/ic/delete.png");
 }
 
 .docman_item_option_update {
-    background-image: url('../../../www/themes/default/images/ic/file-newversion.png');
+    background-image: url("../../../www/themes/default/images/ic/file-newversion.png");
 }
 
 .docman_item_option_copy {
-    background-image: url('../../../www/themes/default/images/ic/copy.png');
+    background-image: url("../../../www/themes/default/images/ic/copy.png");
 }
 
 .docman_item_option_cut {
-    background-image: url('../../../www/themes/default/images/ic/cut.png');
+    background-image: url("../../../www/themes/default/images/ic/cut.png");
 }
 
 .docman_item_option_paste {
     display: inline;
-    background-image: url('../../../www/themes/default/images/ic/paste.png');
+    background-image: url("../../../www/themes/default/images/ic/paste.png");
 }
 
 .docman_item_option_approval {
-    background-image: url('../../../www/themes/default/images/ic/approval.png');
+    background-image: url("../../../www/themes/default/images/ic/approval.png");
 }
 
 .docman_item_option_lock_add {
-    background-image: url('../../../www/themes/default/images/ic/lock_add.png');
+    background-image: url("../../../www/themes/default/images/ic/lock_add.png");
 }
 
 .docman_item_option_lock_del {
-    background-image: url('../../../www/themes/default/images/ic/lock_delete.png');
+    background-image: url("../../../www/themes/default/images/ic/lock_delete.png");
 }
 
 .docman_item_option_separator {
     width: 10em;
-    margin-top: .25em;
+    margin-top: 0.25em;
     margin-bottom: 0;
     padding: 0;
 }
@@ -527,7 +526,6 @@ body.docman-body #feedback:empty {
 }
 
 /* stylelint-enable */
-
 
 .docman-content {
     padding: 12px 12px 0;

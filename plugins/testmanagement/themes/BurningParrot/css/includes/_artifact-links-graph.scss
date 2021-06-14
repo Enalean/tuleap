@@ -19,7 +19,7 @@
 }
 
 circle {
-    transition: stroke-width linear .05s;
+    transition: stroke-width linear 0.05s;
     stroke-width: 2px;
     cursor: pointer;
 
@@ -29,7 +29,7 @@ circle {
 
     @each $color-name, $colors in swatch-colors.$tlp-swatch-color-map {
         &.#{$color-name} {
-            stroke: darken(map-get($colors, 'primary'), 20%);
+            stroke: darken(map-get($colors, "primary"), 20%);
         }
     }
 }
@@ -56,7 +56,7 @@ text {
 }
 
 .graph-label {
-    opacity: .8;
+    opacity: 0.8;
 
     .ref-name {
         fill: #ffffff;
@@ -75,6 +75,6 @@ text {
 
 @each $color-name, $colors in swatch-colors.$tlp-swatch-color-map {
     .#{$color-name} {
-        fill: darken(map-get($colors, 'primary'), 20%);
+        fill: darken(map-get($colors, "primary"), 20%);
     }
 }

@@ -32,7 +32,7 @@
 }
 
 .sidebar-collapser-icon::before {
-    content: '\f053'; // fa-chevron-left
+    content: "\f053"; // fa-chevron-left
 }
 
 .sidebar-spacer {
@@ -119,6 +119,6 @@
     }
 }
 
-@import './sidebar-project';
-@import './sidebar-siteadmin';
-@import './sidebar-collapsed';
+@import "./sidebar-project";
+@import "./sidebar-siteadmin";
+@import "./sidebar-collapsed";

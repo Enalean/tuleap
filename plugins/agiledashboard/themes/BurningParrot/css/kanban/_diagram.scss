@@ -36,12 +36,12 @@
     }
 
     .area {
-        transition: fill-opacity 250ms linear,stroke-opacity 250ms linear;
-        fill-opacity: .7;
+        transition: fill-opacity 250ms linear, stroke-opacity 250ms linear;
+        fill-opacity: 0.7;
         stroke-opacity: 0;
 
         &.hover {
-            fill-opacity: .9;
+            fill-opacity: 0.9;
         }
     }
 
@@ -58,7 +58,7 @@
 
     .tooltip-displayed {
         display: initial;
-        opacity: .9;
+        opacity: 0.9;
     }
 
     .guide-line-undisplayed {
@@ -88,7 +88,6 @@
             text-overflow: ellipsis;
             cursor: pointer;
 
-
             > .legend-value-color {
                 min-width: 20px;
                 height: 20px;
@@ -103,7 +102,7 @@
 #tooltip {
     position: absolute;
     padding: 1px;
-    border: 1px solid rgba(0, 0, 0, .5);
+    border: 1px solid rgba(0, 0, 0, 0.5);
     border-radius: 4px;
     background-color: #303030;
     color: #ffffff;

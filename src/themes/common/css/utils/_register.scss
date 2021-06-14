@@ -9,7 +9,7 @@
     background: #ffffff;
 
     &::after {
-        content: '';
+        content: "";
         position: absolute;
         z-index: -1;
         top: 30px;
@@ -17,11 +17,11 @@
         bottom: 10px;
         left: 20px;
         border-radius: 10px;
-        box-shadow: 0 0 40px rgba(0, 0, 0, .5);
+        box-shadow: 0 0 40px rgba(0, 0, 0, 0.5);
     }
 
     .popover {
-        font-size: .9em;
+        font-size: 0.9em;
     }
 
     h2 {
@@ -50,16 +50,16 @@
                 display: block;
                 margin-top: 5px;
                 color: #aaaaaa;
-                font-size: .8em;
+                font-size: 0.8em;
                 font-style: italic;
                 line-height: 1.4em;
             }
         }
 
         textarea,
-        input[type='text'],
-        input[type='email'],
-        input[type='password'] {
+        input[type="text"],
+        input[type="email"],
+        input[type="password"] {
             box-sizing: border-box;
             width: 100%;
             height: 40px;
@@ -69,7 +69,7 @@
         .input-prepend {
             width: 100%;
 
-            input[type='text'] {
+            input[type="text"] {
                 box-sizing: border-box;
                 width: 90%;
             }
@@ -90,7 +90,7 @@
             padding: 8px 5px;
         }
 
-        input[type='submit'] {
+        input[type="submit"] {
             display: block;
             box-sizing: border-box;
             width: 100%;

@@ -29,7 +29,7 @@
         position: absolute;
         top: 2px;
         left: 0;
-        font-family: 'Font Awesome 5 Free';
+        font-family: "Font Awesome 5 Free";
         font-size: 14px;
         font-weight: 400;
     }
@@ -38,14 +38,14 @@
 .toggler,
 .toggler-noajax {
     &::before {
-        content: '\f146'; // fa-minus-square
+        content: "\f146"; // fa-minus-square
     }
 }
 
 .toggler-hide,
 .toggler-hide-noajax {
     &::before {
-        content: '\f0fe'; // fa-plus-square
+        content: "\f0fe"; // fa-plus-square
     }
 
     ~ * {

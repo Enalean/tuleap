@@ -32,7 +32,7 @@
 }
 
 .tracker-cross-reference-nature {
-    font-size: .875rem;
+    font-size: 0.875rem;
     line-height: 1.375rem;
 }
 
@@ -68,11 +68,11 @@
     height: 24px;
     margin: 0 4px 0 0;
     border-radius: 50%;
-    font-size: .8125rem;
+    font-size: 0.8125rem;
 }
 
 @each $color-name, $colors in swatch-colors.$tlp-swatch-color-map {
     .tracker-cross-reference-title-icon-#{$color-name} {
-        background: map-get($colors, 'primary');
+        background: map-get($colors, "primary");
     }
 }

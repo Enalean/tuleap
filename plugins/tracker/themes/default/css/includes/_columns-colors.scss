@@ -21,6 +21,6 @@
 
 @each $color-name, $colors in swatch-colors.$tlp-swatch-color-map {
     .cardwall-column-header-color-#{$color-name} {
-        background-color: map-get($colors, 'primary');
+        background-color: map-get($colors, "primary");
     }
 }

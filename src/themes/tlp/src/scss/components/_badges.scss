@@ -21,8 +21,8 @@
 
 $tlp-badge-radius: 15px;
 $tlp-badge-color: #ffffff;
-$tlp-badge-font-size: .75rem;
-$tlp-badge-line-height: .75rem;
+$tlp-badge-font-size: 0.75rem;
+$tlp-badge-line-height: 0.75rem;
 $tlp-badge-font-weight: 600;
 $tlp-badge-padding: calc(5px - 1px * var(--tlp-is-condensed)) var(--tlp-small-spacing);
 
@@ -49,7 +49,7 @@ $tlp-badge-padding: calc(5px - 1px * var(--tlp-is-condensed)) var(--tlp-small-sp
 
 .tlp-badge-icon {
     margin: 0 5px 0 0;
-    font-size: .625rem;
+    font-size: 0.625rem;
 }
 
 .tlp-badge-primary {
@@ -81,13 +81,13 @@ $tlp-badge-padding: calc(5px - 1px * var(--tlp-is-condensed)) var(--tlp-small-sp
     &.tlp-badge-outline {
         $tlp-badge-secondary-outline-border: #999999;
 
-        border: 1px solid transparentize($tlp-badge-secondary-outline-border, .4);
-        background: transparentize($tlp-badge-secondary-outline-border, .9);
+        border: 1px solid transparentize($tlp-badge-secondary-outline-border, 0.4);
+        background: transparentize($tlp-badge-secondary-outline-border, 0.9);
         color: var(--tlp-ui-dimmed);
 
         &.tlp-badge-on-dark-background {
             border: 1px solid mix($tlp-badge-secondary-outline-border, #ffffff, 85%);
-            background: transparentize($tlp-badge-secondary-outline-border, .85);
+            background: transparentize($tlp-badge-secondary-outline-border, 0.85);
             color: mix($tlp-badge-secondary-outline-border, #ffffff, 65%);
         }
     }
@@ -173,24 +173,21 @@ $tlp-badge-padding: calc(5px - 1px * var(--tlp-is-condensed)) var(--tlp-small-sp
     .tlp-badge-#{$color-name} {
         @extend %tlp-badge;
 
-        border: 1px solid map-get($colors, 'primary');
-        background: map-get($colors, 'primary');
+        border: 1px solid map-get($colors, "primary");
+        background: map-get($colors, "primary");
 
         &.tlp-badge-outline {
-            border: 1px solid transparentize(map-get($colors, 'primary'), .4);
-            background: transparentize(map-get($colors, 'primary'), .9);
-            color: map-get($colors, 'text');
+            border: 1px solid transparentize(map-get($colors, "primary"), 0.4);
+            background: transparentize(map-get($colors, "primary"), 0.9);
+            color: map-get($colors, "text");
 
             &.tlp-badge-on-dark-background {
-                border: 1px solid mix(map-get($colors, 'primary'), #ffffff, 85%);
-                background: transparentize(map-get($colors, 'primary'), .85);
-                color: mix(map-get($colors, 'border'), #ffffff, 90%);
+                border: 1px solid mix(map-get($colors, "primary"), #ffffff, 85%);
+                background: transparentize(map-get($colors, "primary"), 0.85);
+                color: mix(map-get($colors, "border"), #ffffff, 90%);
 
-                @if $color-name == 'teddy-brown'
-                    or $color-name == 'plum-crazy'
-                    or $color-name == 'red-wine'
-                    or $color-name == 'army-green' {
-                    color: mix(map-get($colors, 'border'), #ffffff, 70%);
+                @if $color-name == "teddy-brown" or $color-name == "plum-crazy" or $color-name == "red-wine" or $color-name == "army-green" {
+                    color: mix(map-get($colors, "border"), #ffffff, 70%);
                 }
             }
         }

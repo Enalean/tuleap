@@ -50,7 +50,8 @@
 
     .breadcrumb,
     .breadcrumb-link {
-        @include background.project-background-title-header-typography(); }
+        @include background.project-background-title-header-typography();
+    }
 
     .breadcrumb-dropdown-item,
     .breadcrumb-dropdown-section-title {

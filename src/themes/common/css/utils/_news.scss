@@ -23,7 +23,7 @@
 }
 
 .news blockquote small::before {
-    content: '\2014 \00A0';
+    content: "\2014 \00A0";
 }
 
 .news blockquote.pull-right {
@@ -43,7 +43,7 @@
 .news q::after,
 .news blockquote::before,
 .news blockquote::after {
-    content: '';
+    content: "";
 }
 
 .news hr {
@@ -53,7 +53,8 @@
     border-bottom: 1px solid #ffffff;
 }
 
-#display_news_table { /* stylelint-disable-line selector-id-pattern */
+/* stylelint-disable-next-line selector-id-pattern */
+#display_news_table {
     max-width: 960px;
 }
 

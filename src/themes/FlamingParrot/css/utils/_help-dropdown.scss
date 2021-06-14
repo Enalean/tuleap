@@ -56,7 +56,7 @@
     pointer-events: none;
 
     &::after {
-        content: '';
+        content: "";
         display: block;
         position: absolute;
         left: 20px;
@@ -95,7 +95,7 @@
     &.tlp-dropdown-shown {
         transform: translateY(0);
         opacity: 1;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, .175);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.175);
         pointer-events: auto;
 
         &.dropdown-menu-top {
@@ -106,7 +106,7 @@
     .dropdown-menu-separator {
         margin: 8px 0;
         border-top: 1px solid #f3f3f3;
-        opacity: .1;
+        opacity: 0.1;
         background: #d4d7e1;
     }
 
@@ -131,7 +131,7 @@
         }
 
         > .review-link-icon {
-            color: map.get(map.get(swatch-colors.$tlp-swatch-color-map, 'fiesta-red'), 'text-on-dark');
+            color: map.get(map.get(swatch-colors.$tlp-swatch-color-map, "fiesta-red"), "text-on-dark");
         }
     }
 
@@ -143,7 +143,7 @@
 
         > a {
             margin: 0 10px 0 0;
-            opacity: .6;
+            opacity: 0.6;
             color: var(--tlp-ui-border-light);
         }
     }
