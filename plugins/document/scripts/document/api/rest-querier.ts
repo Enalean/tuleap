@@ -67,6 +67,10 @@ export interface ProjectService {
     root_item: Folder;
 }
 
+interface DeleteWikiPageOptions {
+    delete_associated_wiki_page: boolean;
+}
+
 async function getDocumentManagerServiceInformation(project_id: number): Promise<ProjectService> {
     const response = await get(
         "/api/projects/" + encodeURIComponent(project_id) + "/docman_service"
@@ -276,7 +280,10 @@ function deleteEmbeddedFile(item: Embedded): Promise<Response> {
     return del(`/api/docman_embedded_files/${escaped_item_id}`);
 }
 
-function deleteWiki(item: Wiki, delete_associated_wiki_page = false): Promise<Response> {
+function deleteWiki(
+    item: Wiki,
+    { delete_associated_wiki_page = false }: DeleteWikiPageOptions
+): Promise<Response> {
     const escaped_item_id = encodeURIComponent(item.id);
     const escaped_option = encodeURIComponent(delete_associated_wiki_page);
 
