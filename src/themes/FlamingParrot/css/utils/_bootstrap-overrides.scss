@@ -76,10 +76,10 @@ kbd {
     margin: 10px 0;
     padding: 20px;
     border: 0;
-    border-left: 5px solid var(--tlp-ui-warning);
+    border-left: var(--tlp-alert-warning-border);
     border-radius: 3px;
-    background: var(--tlp-ui-warning-transparent-90);
-    color: var(--tlp-ui-warning-darker-10);
+    background: var(--tlp-alert-warning-background);
+    color: var(--tlp-alert-warning-color);
     list-style: none;
     text-shadow: none;
 
@@ -90,21 +90,21 @@ kbd {
 }
 
 .alert-success {
-    border-left-color: var(--tlp-ui-success);
-    background: var(--tlp-ui-success-transparent-90);
-    color: var(--tlp-ui-success);
+    border-left: var(--tlp-alert-success-border);
+    background: var(--tlp-alert-success-background);
+    color: var(--tlp-alert-success-color);
 }
 
 .alert-info {
-    border-left-color: var(--tlp-ui-info);
-    background: var(--tlp-ui-info-transparent-90);
-    color: var(--tlp-ui-info-darker-30);
+    border-left: var(--tlp-alert-info-border);
+    background: var(--tlp-alert-info-background);
+    color: var(--tlp-alert-info-color);
 }
 
 .alert-error {
-    border-left-color: var(--tlp-ui-danger);
-    background: var(--tlp-ui-danger-transparent-90);
-    color: var(--tlp-ui-danger);
+    border-left: var(--tlp-alert-danger-border);
+    background: var(--tlp-alert-danger-background);
+    color: var(--tlp-alert-danger-color);
 }
 
 @each $color-name, $colors in colors.$swatch-color-map {
