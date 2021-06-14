@@ -170,8 +170,12 @@ class UserResource extends AuthenticatedResource
      * ?query can be either:
      * <ul>
      *   <li>a simple string, then it will search on "real_name" and "username" with wildcard</li>
-     *   <li>a json object to search on username with exact match: {"username": "john_doe"}</li>
+     *   <li>a JSON object to search on username or login name with exact match: {"username": "john_doe"} or {"loginname": "john_doe"}</li>
      * </ul>
+     *
+     * When using a JSON object, "username" is equivalent to "loginname" unless you are using an external auth provider
+     * such as an LDAP directory. "username" corresponds to the username of the Tuleap account, "loginname" corresponds
+     * to what the user uses to login on the Tuleap instance.
      *
      * @access hybrid
      *
@@ -196,13 +200,23 @@ class UserResource extends AuthenticatedResource
         return $this->getUsersListRepresentation($user_collection, $offset, $limit);
     }
 
-    private function getUserFromExactSearch($query)
+    private function getUserFromExactSearch(string $query): PaginatedUserCollection
     {
         $json_query = $this->json_decoder->decodeAsAnArray('query', $query);
-        if (! isset($json_query['username'])) {
-            throw new RestException(400, 'You can only search on "username"');
+        if (isset($json_query['username'], $json_query['loginname'])) {
+            throw new RestException(400, 'You cannot search on "username" and "loginname" at the same time');
         }
-        $user  = $this->user_manager->getUserByUserName($json_query['username']);
+
+        $username  = self::extractNameFromExactSearchQuery($json_query, 'username');
+        $loginname = self::extractNameFromExactSearchQuery($json_query, 'loginname');
+        if ($username !== null) {
+            $user = $this->user_manager->getUserByUserName($username);
+        } elseif ($loginname !== null) {
+            $user = $this->user_manager->getUserByLoginName($loginname);
+        } else {
+            throw new RestException(400, 'You need to provide either a "username" or "loginname"');
+        }
+
         $users = [];
         if ($user !== null) {
             $users[] = $user;
@@ -211,6 +225,23 @@ class UserResource extends AuthenticatedResource
             $users,
             count($users)
         );
+    }
+
+    /**
+     * @psalm-pure
+     */
+    private static function extractNameFromExactSearchQuery(array $json_query, string $name_to_extract): ?string
+    {
+        $name = $json_query[$name_to_extract] ?? null;
+        if ($name === null) {
+            return null;
+        }
+
+        if (! is_string($name)) {
+            throw new RestException(400, sprintf('"%s" can only be a string', $name_to_extract));
+        }
+
+        return $name;
     }
 
     private function getUsersFromPatternSearch($query, $offset, $limit)

@@ -654,7 +654,7 @@ final class UsersTest extends RestBase // phpcs:ignore
         $this->assertCount(5, $json);
     }
 
-    public function testGetUserWithExactSearch()
+    public function testGetUserWithExactSearchOnUsername(): void
     {
         $search = urlencode(
             json_encode(
@@ -665,11 +665,30 @@ final class UsersTest extends RestBase // phpcs:ignore
         );
 
         $response = $this->getResponseByName(REST_TestDataBuilder::TEST_USER_1_NAME, $this->client->get("users?query=$search&limit=10"));
-        $this->assertEquals($response->getStatusCode(), 200);
+        self::assertEquals(200, $response->getStatusCode());
 
         $json = $response->json();
-        $this->assertCount(1, $json);
-        $this->assertEquals($this->user_ids[REST_TestDataBuilder::TEST_USER_1_NAME], $json[0]['id']);
+        self::assertCount(1, $json);
+        self::assertEquals($this->user_ids[REST_TestDataBuilder::TEST_USER_1_NAME], $json[0]['id']);
+    }
+
+    public function testGetUserWithExactSearchOnLoginName(): void
+    {
+        $search = urlencode(
+            json_encode(
+                [
+                    'loginname' => REST_TestDataBuilder::TEST_USER_1_NAME
+                ],
+                JSON_THROW_ON_ERROR
+            )
+        );
+
+        $response = $this->getResponseByName(REST_TestDataBuilder::TEST_USER_1_NAME, $this->client->get("users?query=$search&limit=10"));
+        self::assertEquals(200, $response->getStatusCode());
+
+        $json = $response->json();
+        self::assertCount(1, $json);
+        self::assertEquals($this->user_ids[REST_TestDataBuilder::TEST_USER_1_NAME], $json[0]['id']);
     }
 
     public function testGetUserWithExactSearchWithoutResult()
