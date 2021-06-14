@@ -32,9 +32,9 @@ use Tuleap\BuildVersion\VersionPresenter;
 use TuleapCfg\Command\Docker\DataPersistence;
 use TuleapCfg\Command\Docker\Postfix;
 use TuleapCfg\Command\Docker\Rsyslog;
-use TuleapCfg\Command\Docker\SSHDaemon;
 use TuleapCfg\Command\Docker\Supervisord;
 use TuleapCfg\Command\Docker\Tuleap;
+use TuleapCfg\Command\Docker\VariableProviderFromEnvironment;
 
 final class StartCommunityEditionContainerCommand extends Command
 {
@@ -88,19 +88,13 @@ final class StartCommunityEditionContainerCommand extends Command
             $version_presenter = VersionPresenter::fromFlavorFinder(new FlavorFinderFromFilePresence());
             $output->writeln(sprintf('<info>Start init sequence for %s</info>', $version_presenter->getFullDescriptiveVersion()));
 
-            $tuleap = new Tuleap($this->process_factory);
-            if (! $this->data_persistence->isThereAnyData()) {
-                $tuleap_fqdn = $this->getStringFromEnvironment('TULEAP_FQDN');
-                if ($tuleap_fqdn === '') {
-                    throw new \RuntimeException('TULEAP_FQDN environment variable must be set');
-                }
-                $this->installTuleap($output, $tuleap, $tuleap_fqdn);
-                $this->data_persistence->store($output);
-                $this->data_persistence->restore($output);
-            } else {
-                $this->data_persistence->restore($output);
-                $tuleap_fqdn = $tuleap->update($output);
-            }
+            $tuleap      = new Tuleap($this->process_factory);
+            $tuleap_fqdn = $tuleap->setupOrUpdate(
+                $output,
+                $this->data_persistence,
+                new VariableProviderFromEnvironment(),
+                fn () => $this->process_factory->getProcessWithoutTimeout(['sudo', '-u', 'codendiadm', '/usr/bin/tuleap', 'plugin:install', '--all'])->mustRun()
+            );
 
             $rsyslog = new Rsyslog();
             $rsyslog->setup($output, $tuleap_fqdn);
@@ -108,8 +102,20 @@ final class StartCommunityEditionContainerCommand extends Command
             $postfix = new Postfix($this->process_factory);
             $postfix->setup($output, $tuleap_fqdn);
 
+            $host_ip = gethostbyname($tuleap_fqdn);
+
+            $output->writeln(
+                <<<EOT
+                ***********************************************************************************************************
+                * You can get `admin` password with following command: `docker-compose exec web cat /root/.tuleap_passwd` *
+                * Your Tuleap fully qualified domain name is $tuleap_fqdn and it's IP address is $host_ip                 *
+                ***********************************************************************************************************
+                EOT
+            );
+
             $supervisord = new Supervisord(...self::SUPERVISORD_UNITS);
             $supervisord->run($output);
+            return Command::SUCCESS;
         } catch (\Exception $exception) {
             $output->writeln(sprintf('<error>%s</error>', OutputFormatter::escape($exception->getMessage())));
             $output->writeln('Something went wrong, here is a shell to debug: ');
@@ -118,31 +124,6 @@ final class StartCommunityEditionContainerCommand extends Command
                 throw new \RuntimeException('Exec of /usr/bin/supervisord failed');
             }
         }
-        return 0;
-    }
-
-    private function installTuleap(OutputInterface $output, Tuleap $tuleap, string $tuleap_fqdn): void
-    {
-        $ssh_daemon = new SSHDaemon($this->process_factory);
-
-        $ssh_daemon->startDaemon($output);
-        $tuleap->setup(
-            $output,
-            $tuleap_fqdn,
-            $this->getStringFromEnvironment('DB_HOST'),
-            $this->getStringFromEnvironment('DB_ADMIN_USER'),
-            $this->getStringFromEnvironment('DB_ADMIN_PASSWORD'),
-        );
-        $this->process_factory->getProcessWithoutTimeout(['sudo', '-u', 'codendiadm', '/usr/bin/tuleap', 'plugin:install', '--all'])->mustRun();
-        $ssh_daemon->shutdownDaemon($output);
-    }
-
-    private function getStringFromEnvironment(string $key): string
-    {
-        $value = getenv($key);
-        if ($value !== false) {
-            return $value;
-        }
-        return '';
+        return Command::FAILURE;
     }
 }

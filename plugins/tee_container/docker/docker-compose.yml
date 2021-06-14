@@ -9,6 +9,7 @@ services:
     image: docker.tuleap.org/tuleap-enterprise-edition:dev
     #entrypoint: ["/usr/share/tuleap/plugins/tee_container/bin/tee-container.php", "run"]
     #command: ["--no-supervisord", "--exec=sleep 62"]
+    hostname: ${TULEAP_FQDN}
     volumes:
       - ../../../:/usr/share/tuleap:ro,cached
       - tuleap-data:/data
@@ -17,10 +18,10 @@ services:
       - redis
       - mailhog
     environment:
-      - TULEAP_FQDN=tuleap.local
+      - TULEAP_FQDN=${TULEAP_FQDN}
       - DB_HOST=db
       - DB_ADMIN_USER=root
-      - DB_ADMIN_PASSWORD=welcome0
+      - DB_ADMIN_PASSWORD=${MYSQL_ROOT_PASSWORD}
       - TULEAP_FPM_SESSION_MODE=redis
       - TULEAP_REDIS_SERVER=redis
 #      - TULEAP_REDIS_PORT=6380
@@ -35,12 +36,12 @@ services:
     image: mysql:5.7
     command: ["--character-set-server=utf8mb4", "--collation-server=utf8mb4_unicode_ci", "--sql-mode=NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION"]
     environment:
-      - MYSQL_ROOT_PASSWORD=welcome0
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
     volumes:
       - db57-data:/var/lib/mysql
 
   redis:
-    image: redis:5
+    image: redis:6
     volumes:
       - redis-data:/data
     command: redis-server --appendonly yes
