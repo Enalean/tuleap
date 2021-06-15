@@ -18,6 +18,7 @@
  */
 
 @use 'global-variables';
+@use "sidebar/sidebar";
 
 body {
     display: flex;
@@ -123,7 +124,6 @@ main[role="main"]:not(.tlp-framed) > .breadcrumb-container + #feedback:not(:empt
 }
 
 @import "header";
-@import "sidebar";
 @import "toolbar";
 @import "navbar";
 @import "logo";

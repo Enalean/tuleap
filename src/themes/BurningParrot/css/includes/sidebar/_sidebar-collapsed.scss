@@ -16,7 +16,8 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-@use 'global-variables';
+
+@use "../global-variables";
 
 .has-sidebar {
     padding: 0 0 0 global-variables.$sidebar-expanded-width;
@@ -29,6 +30,10 @@
         width: global-variables.$sidebar-collapsed-width;
     }
 
+    .project-sidebar-banner-button {
+        margin: var(--tlp-medium-spacing) 0 var(--tlp-small-spacing) var(--tlp-medium-spacing);
+    }
+
     .project-sidebar-nav-item {
         justify-content: center;
         padding: 0 3px 0 0;
@@ -37,10 +42,6 @@
     .project-sidebar-nav-item-icon {
         margin: 0;
         font-size: 1rem;
-    }
-
-    .project-sidebar-nav-item-label {
-        display: none;
     }
 
     .project-sidebar-nav-item-new-tab {
@@ -52,18 +53,15 @@
         display: inline;
     }
 
-    .sidebar-about-logo,
-    .sidebar-about-version,
-    .sidebar-about-copyright {
-        display: none;
-    }
-
     #logo {
         width: global-variables.$sidebar-collapsed-width;
         background: var(--tlp-theme-color) url("/images/organization_logo_small.png") no-repeat center center;
     }
 
-    .project-sidebar-title,
+    .sidebar-privacy-badge,
+    .project-sidebar-nav-item-label,
+    .sidebar-about-logo,
+    .project-title-container,
     .sidebar-about-version,
     .sidebar-copyright {
         display: none;

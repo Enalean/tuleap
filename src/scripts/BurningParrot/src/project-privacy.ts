@@ -45,9 +45,7 @@ function handleBreadcrumbPrivacyPopover(): void {
 }
 
 function handleSidebarPrivacyPopover(): void {
-    const project_privacy_element = document.querySelector(
-        ".project-sidebar-title > .project-sidebar-title-icon"
-    );
+    const project_privacy_element = document.querySelector("[data-project-privacy-icon]");
     if (!project_privacy_element || !(project_privacy_element instanceof HTMLElement)) {
         return;
     }

@@ -17,7 +17,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@use 'global-variables';
+@use "../global-variables";
+@use "./sidebar-project";
+@use "./sidebar-siteadmin";
+@use "./sidebar-collapsed";
 
 .sidebar {
     display: flex;
@@ -118,7 +121,3 @@
         background-color: var(--tlp-theme-dark-background-color-lighter-10);
     }
 }
-
-@import "./sidebar-project";
-@import "./sidebar-siteadmin";
-@import "./sidebar-collapsed";

@@ -23,6 +23,7 @@ namespace Tuleap\Theme\BurningParrot;
 use PFUser;
 use Project;
 use Tuleap\BuildVersion\VersionPresenter;
+use Tuleap\Project\Admin\Access\ProjectAdministrationLinkPresenter;
 use Tuleap\Project\Banner\BannerDisplay;
 use Tuleap\Project\ProjectPrivacyPresenter;
 
@@ -64,12 +65,21 @@ class ProjectSidebarPresenter
      * @psalm-readonly
      */
     public $has_project_flags;
+    /**
+     * @psalm-readonly
+     */
+    public bool $has_administration_link;
+    /**
+     * @psalm-readonly
+     */
+    public string $administration_link;
 
     public function __construct(
         PFUser $current_user,
         Project $project,
         \Generator $sidebar,
         ProjectPrivacyPresenter $privacy,
+        ?ProjectAdministrationLinkPresenter $administration_link_presenter,
         VersionPresenter $version,
         ?BannerDisplay $banner,
         array $project_flags
@@ -88,10 +98,12 @@ class ProjectSidebarPresenter
             $this->copyright = $GLOBALS['Language']->getOverridableText('global', 'copyright');
         }
 
-        $this->has_project_banner = $banner !== null;
-        $this->privacy            = $privacy;
-        $this->project_flags      = $project_flags;
-        $this->nb_project_flags   = \count($project_flags);
-        $this->has_project_flags  = $this->nb_project_flags > 0;
+        $this->has_project_banner      = $banner !== null;
+        $this->privacy                 = $privacy;
+        $this->project_flags           = $project_flags;
+        $this->nb_project_flags        = \count($project_flags);
+        $this->has_project_flags       = $this->nb_project_flags > 0;
+        $this->has_administration_link = $administration_link_presenter !== null;
+        $this->administration_link     = $administration_link_presenter->uri ?? '';
     }
 }
