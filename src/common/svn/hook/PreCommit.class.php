@@ -223,7 +223,7 @@ class SVN_Hook_PreCommit extends SVN_Hook
     private function getWellFormedRegexImmutablePath($immutable_path)
     {
         $immutable_path = trim($immutable_path, '/');
-        $immutable_path = preg_quote($immutable_path);
+        $immutable_path = preg_quote($immutable_path, '%');
         $immutable_path = str_replace('\*', '[^/]+', $immutable_path);
 
         return $immutable_path;
