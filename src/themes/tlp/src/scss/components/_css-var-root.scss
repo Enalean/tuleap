@@ -210,7 +210,6 @@ $theme-color-dimmed-background: mix($tlp-theme-background-color, $tlp-ui-white, 
     --tlp-ui-border-light-darker-05: #{darken($tlp-ui-border-light, 5%)};
     --tlp-ui-border-light-darker-10: #{darken($tlp-ui-border-light, 10%)};
     --tlp-ui-border-light-lighter-30: #{mix($tlp-ui-border-light, $tlp-ui-white, 70%)};
-    --tlp-ui-border-light-lighter-50: #{mix($tlp-ui-border-light, $tlp-ui-white, 50%)};
     --tlp-ui-border-light-transparent-40: #{transparentize($tlp-ui-border-light, 0.4)};
 
     // density
