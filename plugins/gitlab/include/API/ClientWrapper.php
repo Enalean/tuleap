@@ -117,7 +117,7 @@ class ClientWrapper
             );
         }
 
-        $json =  json_decode($response->getBody()->getContents(), true, 512, JSON_OBJECT_AS_ARRAY);
+        $json = json_decode($response->getBody()->getContents(), true, 512, JSON_OBJECT_AS_ARRAY);
 
         if ($json !== null && ! is_array($json)) {
             throw new GitlabResponseAPIException("The query is not in error but the json content is not an array. This is not expected.");
