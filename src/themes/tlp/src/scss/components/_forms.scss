@@ -175,13 +175,7 @@ $tlp-form-element-select-small-background-size: 6px;
     font-family: var(--tlp-font-family);
     font-size: $tlp-form-element-font-size;
 
-    //stylelint-disable-next-line selector-no-vendor-prefix
-    &::-webkit-input-placeholder {
-        color: $tlp-form-element-placeholder-color;
-    }
-
-    //stylelint-disable-next-line selector-no-vendor-prefix
-    &::-moz-placeholder {
+    &::placeholder {
         color: $tlp-form-element-placeholder-color;
     }
 
