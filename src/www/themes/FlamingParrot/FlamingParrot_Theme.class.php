@@ -41,6 +41,9 @@ use Tuleap\Layout\Logo\CustomizedLogoDetector;
 use Tuleap\Layout\Logo\FileContentComparator;
 use Tuleap\layout\NewDropdown\NewDropdownPresenterBuilder;
 use Tuleap\OpenGraph\NoOpenGraphPresenter;
+use Tuleap\Project\Admin\Access\ProjectAdministrationLinkPresenter;
+use Tuleap\Project\Admin\Access\UserCanAccessProjectAdministrationVerifier;
+use Tuleap\Project\Admin\MembershipDelegationDao;
 use Tuleap\Project\Banner\BannerDisplay;
 use Tuleap\Project\Flags\ProjectFlagsBuilder;
 use Tuleap\Project\Flags\ProjectFlagsDao;
@@ -374,7 +377,7 @@ class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDecla
         bool $is_svg_logo_customized,
         array $main_classes
     ): void {
-        $project_tabs        = null;
+        $sidebar             = null;
         $project_name        = null;
         $project_link        = null;
         $project             = null;
@@ -387,7 +390,7 @@ class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDecla
 
             $project = ProjectManager::instance()->getProject($params['group']);
 
-            $project_tabs        = $this->getProjectSidebar($params, $project);
+            $sidebar             = $this->getProjectSidebar($params, $project);
             $project_name        = $project->getPublicName();
             $project_link        = $this->getProjectLink($project);
             $sidebar_collapsable = (! $current_user->isAnonymous() && $current_user->isLoggedIn()) ? true : false;
@@ -396,9 +399,16 @@ class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDecla
             $crumb->setAdditionalClassname("breadcrumb-project");
             $this->breadcrumbs->addFirst($crumb);
 
+            $administration_link = ProjectAdministrationLinkPresenter::fromProject(
+                new UserCanAccessProjectAdministrationVerifier(new MembershipDelegationDao()),
+                $project,
+                $current_user
+            );
+
             $project_context = \Tuleap\Project\ProjectContextPresenter::build(
                 $project,
                 \Tuleap\Project\ProjectPrivacyPresenter::fromProject($project),
+                $administration_link,
                 $this->project_flags_builder->buildProjectFlags($project),
                 $banner
             );
@@ -413,7 +423,7 @@ class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDecla
             $this->toolbar,
             $project_name,
             $project_link,
-            $project_tabs,
+            $sidebar,
             $this->_feedback,
             $this->_getFeedback(),
             $this->tuleap_version,

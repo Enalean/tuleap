@@ -47,6 +47,9 @@ use Tuleap\layout\NewDropdown\NewDropdownPresenterBuilder;
 use Tuleap\Layout\SearchFormPresenterBuilder;
 use Tuleap\Layout\SidebarPresenter;
 use Tuleap\OpenGraph\NoOpenGraphPresenter;
+use Tuleap\Project\Admin\Access\ProjectAdministrationLinkPresenter;
+use Tuleap\Project\Admin\Access\UserCanAccessProjectAdministrationVerifier;
+use Tuleap\Project\Admin\MembershipDelegationDao;
 use Tuleap\Project\Flags\ProjectFlagsBuilder;
 use Tuleap\Project\Flags\ProjectFlagsDao;
 use Tuleap\Project\ProjectContextPresenter;
@@ -135,9 +138,16 @@ class BurningParrotTheme extends BaseLayout
         if (! empty($params['group'])) {
             $project = $this->project_manager->getProject($params['group']);
 
+            $administration_link = ProjectAdministrationLinkPresenter::fromProject(
+                new UserCanAccessProjectAdministrationVerifier(new MembershipDelegationDao()),
+                $project,
+                $this->user
+            );
+
             $project_context = ProjectContextPresenter::build(
                 $project,
                 ProjectPrivacyPresenter::fromProject($project),
+                $administration_link,
                 $this->project_flags_builder->buildProjectFlags($project),
                 $this->getProjectBannerWithScript($project, $this->user, 'project/project-banner-bp.js'),
             );

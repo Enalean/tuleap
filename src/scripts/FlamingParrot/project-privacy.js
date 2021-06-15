@@ -96,9 +96,7 @@ function handleBreadcrumbPrivacyPopover() {
 }
 
 function handleSidebarPrivacyPopover() {
-    const project_privacy_trigger = document.querySelector(
-        "#sidebar-dashboard > .sidebar-dashboard-privacy-icon"
-    );
+    const project_privacy_trigger = document.querySelector("[data-project-privacy-icon]");
     if (!project_privacy_trigger) {
         return;
     }

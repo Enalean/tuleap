@@ -3,43 +3,24 @@
     <div class="sidebar-content-vertical-scroll">
         <div class="project-sidebar-header">
             <div class="project-sidebar-header-name">
+                <div class="project-title-container">
+                    <a href="{{ project_link }}" id="sidebar-dashboard" class="project-title">
+                        {{ project_name }}
+                    </a>
+                    <span class="project-title-spacer"></span>
+                    {{# has_administration_link }}
+                        <a href="{{ administration_link }}" class="project-administration-link"><i class="fas fa-cog" title="{{# gettext }}Project administration{{/ gettext }}"></i></a>
+                    {{/ has_administration_link }}
+                </div>
                 {{# privacy }}
-                    <div class="project-title-container">
-                        <a href="{{ project_link }}" id="sidebar-dashboard" class="project-title">
-                            {{# are_restricted_users_allowed }}
-                                {{# project_is_public }}
-                                    <i class="sidebar-dashboard-privacy-icon fas fa-lock-open" data-content="{{ explanation_text }}" data-title="{{ privacy_title }}" ></i>
-                                {{/ project_is_public }}
-                                {{# project_is_public_incl_restricted }}
-                                    <i class="sidebar-dashboard-privacy-icon fas fa-tlp-unlock-plus-r" data-content="{{ explanation_text }}" data-title="{{ privacy_title }}" ></i>
-                                {{/ project_is_public_incl_restricted }}
-                                {{# project_is_private }}
-                                    <i class="sidebar-dashboard-privacy-icon fas fa-lock" data-content="{{ explanation_text }}" data-title="{{ privacy_title }}" ></i>
-                                {{/ project_is_private }}
-                                {{# project_is_private_incl_restricted }}
-                                    <i class="sidebar-dashboard-privacy-icon fas fa-tlp-lock-plus-r" data-content="{{ explanation_text }}" data-title="{{ privacy_title }}" ></i>
-                                {{/ project_is_private_incl_restricted }}
-                            {{/ are_restricted_users_allowed }}
-                            {{^ are_restricted_users_allowed }}
-                                {{# project_is_public }}
-                                    <i class="sidebar-dashboard-privacy-icon fas fa-lock-open" data-content="{{ explanation_text }}" data-title="{{ privacy_title }}" ></i>
-                                {{/ project_is_public }}
-                                {{^ project_is_public }}
-                                    <i class="sidebar-dashboard-privacy-icon fas fa-lock" data-content="{{ explanation_text }}" data-title="{{ privacy_title }}" ></i>
-                                {{/ project_is_public }}
-                            {{/ are_restricted_users_allowed }}
-
-                            {{ project_name }}
-                        </a>
-                    </div>
+                    {{> sidebar/project-privacy }}
                 {{/ privacy }}
-
-                {{# has_project_banner }}
-                    <span id="current-project-banner-bullhorn" class="project-sidebar-banner-button">
-                        <a href="#" aria-labelledby="current-project-banner-message"><i class="fa fa-bullhorn" aria-hidden="true"></i></a>
-                    </span>
-                {{/ has_project_banner }}
             </div>
+            {{# has_project_banner }}
+                <span id="current-project-banner-bullhorn" class="project-sidebar-banner-button">
+                    <a href="#" aria-labelledby="current-project-banner-message"><i class="fa fa-bullhorn" aria-hidden="true"></i></a>
+                </span>
+            {{/ has_project_banner }}
             {{# has_project_flags }}
                 <div class="project-sidebar-project-flags"
                       title="{{# project_flags }}{{ label }}{{/ project_flags }}"
