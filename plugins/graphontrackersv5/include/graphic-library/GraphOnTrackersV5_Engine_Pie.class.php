@@ -33,21 +33,6 @@ class GraphOnTrackersV5_Engine_Pie extends GraphOnTrackersV5_Engine
     public $size_pie;
     public $legend;
 
-
-    public function validData()
-    {
-        if ((is_array($this->data)) && (array_sum($this->data) > 0)) {
-            return true;
-        } else {
-            $GLOBALS['Response']->addFeedback(
-                'error',
-                sprintf(dgettext('tuleap-graphontrackersv5', 'No datas to display for graph %1$s'), $this->title)
-            );
-
-            return false;
-        }
-    }
-
     /**
      * Builds pie graph
      */

@@ -88,7 +88,14 @@ final class ChartDataController extends DispatchablePSR15Compatible
         }
 
         try {
-            return $this->json_response_builder->fromData($chart->fetchAsArray());
+            $chart_data = $chart->fetchAsArray();
+            if ($chart_data) {
+                return $this->json_response_builder->fromData($chart_data);
+            } else {
+                return $this->createNotFoundErrorResponse(
+                    dgettext('tuleap-graphontrackersv5', 'No data to display for graph')
+                );
+            }
         } catch (ChartFieldNotFoundException $exception) {
             return $this->createNotFoundErrorResponse($exception->getMessage());
         }

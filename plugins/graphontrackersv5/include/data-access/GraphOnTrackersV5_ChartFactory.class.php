@@ -155,6 +155,9 @@ class GraphOnTrackersV5_ChartFactory
 
             $session = new Tracker_Report_Session($renderer->report->id);
             $session->changeSessionNamespace("renderers.{$renderer->id}");
+            if (! $session->charts) {
+                $session->charts = [];
+            }
             $id   = -count($session->charts) - 1;
             $rank = 0;
 
