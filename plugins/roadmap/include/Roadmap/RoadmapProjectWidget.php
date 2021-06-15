@@ -39,8 +39,8 @@ final class RoadmapProjectWidget extends \Widget
 {
     public const ID = 'plugin_roadmap_project_widget';
 
-    private ?int $lvl1_iteration_tracker_id;
-    private ?int $lvl2_iteration_tracker_id;
+    private ?int $lvl1_iteration_tracker_id = null;
+    private ?int $lvl2_iteration_tracker_id = null;
 
     /**
      * @var ?int
