@@ -48,8 +48,10 @@ export function bar(id, graph) {
     const data = [];
     for (let i = 0; i < graph.data.length; ++i) {
         let c = graph.colors[i];
-        if (c === null) {
+        if (c === null && color[i]) {
             c = color[i];
+        } else if (!color[i]) {
+            c = "#" + Math.random().toString(16).substr(-6);
         }
         data.push({
             label: graph.legend[i],
