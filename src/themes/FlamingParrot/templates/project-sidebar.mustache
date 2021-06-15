@@ -20,11 +20,13 @@
                 <button type="button" aria-labelledby="current-project-banner-message"
                         class="project-sidebar-banner-button"
                         id="current-project-banner-bullhorn"
+                        title="{{# gettext }}Show project announcement{{/ gettext }}"
                 >
                     <span class="project-sidebar-banner-button-icon">
                         <i class="fas fa-bullhorn" aria-hidden="true"></i>
-                    </span><span class="project-sidebar-banner-button-label">
-                        {{# gettext }}Project Announcement{{/ gettext }}
+                    </span>
+                    <span class="project-sidebar-banner-button-label">
+                        {{# gettext }}Project announcement{{/ gettext }}
                     </span>
                 </button>
             {{/ has_project_banner }}

@@ -2416,9 +2416,6 @@ msgstr "Projet"
 msgid "Project (read only)"
 msgstr "Projet (lecture seule)"
 
-msgid "Project Announcement"
-msgstr "Annonce du projet"
-
 msgid "Project Data Export"
 msgstr "Export des données"
 
@@ -2459,6 +2456,9 @@ msgid ""
 msgstr ""
 "Les administrateurs ne peuvent pas être retirés du projet. Vous devez "
 "d'abord les retirer du groupe Administrateurs du projet."
+
+msgid "Project announcement"
+msgstr "Annonce du projet"
 
 msgid "Project background"
 msgstr "Image de fond du projet"
@@ -2968,6 +2968,9 @@ msgstr ""
 #, php-format
 msgid "Show %1$s"
 msgstr "Afficher %1$s"
+
+msgid "Show project announcement"
+msgstr "Afficher l'annonce du projet"
 
 msgid "Site administration"
 msgstr "Administration du site"

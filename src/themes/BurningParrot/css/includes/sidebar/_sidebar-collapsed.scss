@@ -31,7 +31,7 @@
     }
 
     .project-sidebar-banner-button {
-        margin: var(--tlp-medium-spacing) 0 var(--tlp-small-spacing) var(--tlp-medium-spacing);
+        justify-content: center;
     }
 
     .project-sidebar-nav-item {
@@ -58,12 +58,14 @@
         background: var(--tlp-theme-color) url("/images/organization_logo_small.png") no-repeat center center;
     }
 
+    .project-sidebar-header-name,
     .sidebar-privacy-badge,
+    .sidebar-tools-section-label,
+    .project-sidebar-banner-button-label,
+    .project-sidebar-project-flags,
     .project-sidebar-nav-item-label,
     .sidebar-about-logo,
-    .project-title-container,
     .sidebar-about-version,
-    .sidebar-tools-section-label,
     .sidebar-copyright {
         display: none;
     }

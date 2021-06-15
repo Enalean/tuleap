@@ -78,14 +78,14 @@
         }
     }
 
-    > .sidebar-about-logo-without-product-name {
-        display: none;
-    }
-
     > .sidebar-about-version {
         margin: 7px 0 0;
         text-align: center;
     }
+}
+
+.sidebar-about-logo-without-product-name {
+    display: none;
 }
 
 .sidebar-copyright {
