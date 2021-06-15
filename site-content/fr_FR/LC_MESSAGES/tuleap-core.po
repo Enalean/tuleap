@@ -3588,6 +3588,9 @@ msgstr "Aujourd'hui"
 msgid "Token comment"
 msgstr "Commentaire du jeton"
 
+msgid "Tools"
+msgstr "Outils"
+
 msgid "Trace and Track all types of activities."
 msgstr "Suivez et gérez tous types d'activités."
 
