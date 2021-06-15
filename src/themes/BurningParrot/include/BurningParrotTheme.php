@@ -378,11 +378,18 @@ class BurningParrotTheme extends BaseLayout
 
     private function getSidebarPresenterForProject(Project $project, array $params): SidebarPresenter
     {
+        $administration_link = ProjectAdministrationLinkPresenter::fromProject(
+            new UserCanAccessProjectAdministrationVerifier(new MembershipDelegationDao()),
+            $project,
+            $this->user
+        );
+
         $project_sidebar_presenter = new ProjectSidebarPresenter(
-            $this->getUser(),
+            $this->user,
             $project,
             $this->getProjectSidebar($params, $project),
             ProjectPrivacyPresenter::fromProject($project),
+            $administration_link,
             $this->version,
             $this->getProjectBanner($project, $this->user),
             $this->project_flags_builder->buildProjectFlags($project),

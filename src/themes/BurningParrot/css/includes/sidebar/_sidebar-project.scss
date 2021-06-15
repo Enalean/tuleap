@@ -17,43 +17,34 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@use 'global-variables';
+@use "../global-variables";
 
 .project-sidebar-header-name {
     display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: var(--tlp-medium-spacing) var(--tlp-small-spacing);
+    flex-direction: column;
+    padding: var(--tlp-medium-spacing) var(--tlp-medium-spacing) 0;
 }
 
-.project-sidebar-title {
+.project-title-container {
     display: flex;
-    flex: 1 1 auto;
     align-items: center;
-    padding: var(--tlp-small-spacing);
-    transition: background 100ms;
-    border-radius: 4px;
-    color: var(--tlp-ui-border-normal);
-    font-size: 1.125rem;
-    font-weight: 600;
-    line-height: 1.3125rem;
-    text-decoration: none;
-
-    &:hover {
-        background: var(--tlp-theme-dark-background-color-darker);
-        text-decoration: none;
-    }
 }
 
-.project-sidebar-title-icon {
+.project-title-spacer {
+    flex: 1 1 auto;
+}
+
+%round-icon {
     display: inline-flex;
-    flex: 0 0 auto;
     align-items: center;
     justify-content: center;
     width: 24px;
     height: 24px;
-    margin: 0 var(--tlp-small-spacing) 0 0;
     border-radius: 50%;
+}
+
+.sidebar-dashboard-privacy-icon {
+    @extend %round-icon;
     color: var(--tlp-ui-white);
     font-size: 0.6rem;
     line-height: 0;
@@ -76,17 +67,43 @@
     }
 }
 
-.project-sidebar-banner-button {
+.project-sidebar-title {
+    padding: var(--tlp-small-spacing);
+    transition: background 100ms;
+    border-radius: 4px;
+    color: var(--tlp-ui-border-normal);
+    font-size: 1.125rem;
+    font-weight: 600;
+    line-height: 1.3125rem;
+    text-decoration: none;
+
+    &:hover {
+        background: var(--tlp-theme-dark-background-color-darker);
+        text-decoration: none;
+    }
+}
+
+.project-administration-link {
+    @extend %round-icon;
     flex: 0 0 auto;
-    margin: 0 var(--tlp-small-spacing);
+    background: var(--tlp-theme-dark-background-color-darker);
+    color: var(--tlp-ui-white);
+
+    &:hover,
+    &:focus {
+        color: var(--tlp-theme-color);
+        text-decoration: none;
+    }
+}
+
+.project-sidebar-banner-button {
+    @extend %round-icon;
+    margin: var(--tlp-medium-spacing) 0 var(--tlp-medium-spacing) var(--tlp-medium-spacing);
     transition: opacity ease-in-out 100ms;
+    background-color: var(--tlp-ui-warning);
 
     .fa-bullhorn {
-        width: 24px;
-        height: 24px;
         padding: 6.5px;
-        border-radius: 50%;
-        background-color: var(--tlp-ui-warning);
         color: var(--tlp-ui-white);
         font-size: 0.6rem;
         text-shadow: 0 0 1px rgba(0, 0, 0, 0.5);
