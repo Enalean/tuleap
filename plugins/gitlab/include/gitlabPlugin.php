@@ -225,6 +225,7 @@ class gitlabPlugin extends Plugin
 
         $references_from_merge_request_data_extractor = new TuleapReferencesFromMergeRequestDataExtractor(
             new WebhookTuleapReferencesParser(),
+            new BranchNameTuleapReferenceParser(),
         );
 
         $comment_sender = new CommentSender(
@@ -388,6 +389,7 @@ class gitlabPlugin extends Plugin
 
         $references_from_merge_request_data_extractor = new TuleapReferencesFromMergeRequestDataExtractor(
             new WebhookTuleapReferencesParser(),
+            new BranchNameTuleapReferenceParser(),
         );
 
         $comment_sender = new CommentSender(

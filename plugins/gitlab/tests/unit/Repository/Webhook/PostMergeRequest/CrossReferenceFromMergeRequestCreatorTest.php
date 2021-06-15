@@ -29,6 +29,7 @@ use Tuleap\Gitlab\Reference\TuleapReferencedArtifactNotFoundException;
 use Tuleap\Gitlab\Reference\TuleapReferenceNotFoundException;
 use Tuleap\Gitlab\Reference\TuleapReferenceRetriever;
 use Tuleap\Gitlab\Repository\GitlabRepositoryIntegration;
+use Tuleap\Gitlab\Repository\Webhook\PostPush\Branch\BranchNameTuleapReferenceParser;
 use Tuleap\Gitlab\Repository\Webhook\WebhookTuleapReferencesParser;
 
 class CrossReferenceFromMergeRequestCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -55,7 +56,7 @@ class CrossReferenceFromMergeRequestCreatorTest extends \Tuleap\Test\PHPUnit\Tes
         $this->logger                     = $this->createMock(LoggerInterface::class);
 
         $this->creator = new CrossReferenceFromMergeRequestCreator(
-            new TuleapReferencesFromMergeRequestDataExtractor(new WebhookTuleapReferencesParser()),
+            new TuleapReferencesFromMergeRequestDataExtractor(new WebhookTuleapReferencesParser(), new BranchNameTuleapReferenceParser()),
             $this->tuleap_reference_retriever,
             $this->reference_manager,
             $this->logger,
@@ -84,7 +85,8 @@ class CrossReferenceFromMergeRequestCreatorTest extends \Tuleap\Test\PHPUnit\Tes
             'My description',
             'opened',
             (new \DateTimeImmutable())->setTimestamp(1611315112),
-            10
+            10,
+            'some_feature'
         );
 
         $this->reference_manager
@@ -121,7 +123,8 @@ class CrossReferenceFromMergeRequestCreatorTest extends \Tuleap\Test\PHPUnit\Tes
             'My description',
             'opened',
             (new \DateTimeImmutable())->setTimestamp(1611315112),
-            10
+            10,
+            'some_feature'
         );
 
         $this->tuleap_reference_retriever
@@ -171,7 +174,8 @@ class CrossReferenceFromMergeRequestCreatorTest extends \Tuleap\Test\PHPUnit\Tes
             'My description',
             'opened',
             (new \DateTimeImmutable())->setTimestamp(1611315112),
-            10
+            10,
+            'some_feature'
         );
 
         $this->tuleap_reference_retriever
@@ -220,7 +224,8 @@ class CrossReferenceFromMergeRequestCreatorTest extends \Tuleap\Test\PHPUnit\Tes
             'My description tuleap-66',
             'opened',
             (new \DateTimeImmutable())->setTimestamp(1611315112),
-            10
+            10,
+            'some_feature'
         );
 
         $this->tuleap_reference_retriever

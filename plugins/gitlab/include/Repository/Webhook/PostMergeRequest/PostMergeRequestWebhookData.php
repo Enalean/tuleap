@@ -23,6 +23,9 @@ namespace Tuleap\Gitlab\Repository\Webhook\PostMergeRequest;
 use DateTimeImmutable;
 use Tuleap\Gitlab\Repository\Webhook\WebhookData;
 
+/**
+ * @psalm-immutable
+ */
 class PostMergeRequestWebhookData implements WebhookData
 {
     /**
@@ -61,6 +64,7 @@ class PostMergeRequestWebhookData implements WebhookData
      * @var int
      */
     private $author_id;
+    private string $source_branch;
 
     public function __construct(
         string $event_name,
@@ -71,7 +75,8 @@ class PostMergeRequestWebhookData implements WebhookData
         string $description,
         string $state,
         DateTimeImmutable $created_at,
-        int $author_id
+        int $author_id,
+        string $source_branch
     ) {
         $this->event_name        = $event_name;
         $this->gitlab_project_id = $gitlab_project_id;
@@ -82,6 +87,7 @@ class PostMergeRequestWebhookData implements WebhookData
         $this->state             = $state;
         $this->created_at        = $created_at;
         $this->author_id         = $author_id;
+        $this->source_branch     = $source_branch;
     }
 
     public function getEventName(): string
@@ -127,5 +133,10 @@ class PostMergeRequestWebhookData implements WebhookData
     public function getAuthorId(): int
     {
         return $this->author_id;
+    }
+
+    public function getSourceBranch(): string
+    {
+        return $this->source_branch;
     }
 }

@@ -70,7 +70,8 @@ class PreviouslySavedReferencesRetriever
 
         $references_collection = $this->references_from_merge_request_data_extractor->extract(
             $previously_saved_merge_request_row['title'],
-            $previously_saved_merge_request_row['description']
+            $previously_saved_merge_request_row['description'],
+            $previously_saved_merge_request_row['source_branch']
         );
 
         $good_references = [];

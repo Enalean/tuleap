@@ -18,25 +18,23 @@
  * along with Tuleap. If not, see http://www.gnu.org/licenses/.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Gitlab\Repository\Webhook\PostMergeRequest;
 
-use Psr\Log\LoggerInterface;
+use Psr\Log\Test\TestLogger;
 use Tuleap\Gitlab\Repository\Webhook\MissingKeyException;
 
-class PostMergeRequestWebhookDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
+final class PostMergeRequestWebhookDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&LoggerInterface
-     */
-    private $logger;
-
+    private TestLogger $logger;
     private PostMergeRequestWebhookDataBuilder $builder;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->logger = $this->createMock(LoggerInterface::class);
+        $this->logger = new TestLogger();
 
         $this->builder = new PostMergeRequestWebhookDataBuilder(
             $this->logger
@@ -112,6 +110,24 @@ class PostMergeRequestWebhookDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCa
         $this->builder->build("Merge Request Hook", 123, "https://example.com", $webhook_content);
     }
 
+    public function testThrowsAnExceptionIfMergeRequestSourceBranchKeyIsMissing(): void
+    {
+        $this->expectException(MissingKeyException::class);
+        $this->expectExceptionMessage("key source_branch in object_attributes is missing");
+
+        $webhook_content = [
+            'object_attributes' => [
+                'iid'         => 1,
+                'title'       => 'My Title',
+                'description' => 'My description',
+                'state'       => 'closed',
+                'created_at'  => '2021-01-12 13:49:35 UTC',
+                'author_id'   => 10,
+            ],
+        ];
+        $this->builder->build("Merge Request Hook", 123, "https://example.com", $webhook_content);
+    }
+
     public function testItReturnsPostMergeRequestWebhookData(): void
     {
         $webhook_content = [
@@ -121,19 +137,17 @@ class PostMergeRequestWebhookDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCa
                 'description' => 'My description',
                 'state'       => 'closed',
                 'created_at'  => '2021-01-12 13:49:35 UTC',
-                'author_id'   => 10
+                'author_id'   => 10,
+                'source_branch' => 'some_feature',
             ],
         ];
 
-        $this->logger
-            ->expects(self::exactly(3))
-            ->method('debug')
-            ->withConsecutive(
-                ["Webhook merge request with id 1 retrieved."],
-                ["|_ Its title is: My Title"],
-                ["|_ Its description is: My description"]
-            );
-
         $this->builder->build("Merge Request Hook", 123, "https://example.com", $webhook_content);
+
+        self::assertTrue(
+            $this->logger->hasDebugThatContains(
+                "Webhook merge request with id 1 retrieved.\nTitle: My Title\nSource branch: some_feature\nDescription: My description\n"
+            )
+        );
     }
 }

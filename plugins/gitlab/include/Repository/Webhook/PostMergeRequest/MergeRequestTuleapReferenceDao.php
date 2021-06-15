@@ -32,6 +32,7 @@ class MergeRequestTuleapReferenceDao extends DataAccessObject
         int $merge_request_id,
         string $title,
         string $description,
+        string $source_branch,
         string $state,
         int $created_at
     ): void {
@@ -42,12 +43,14 @@ class MergeRequestTuleapReferenceDao extends DataAccessObject
                 'merge_request_id' => $merge_request_id,
                 'title'            => $title,
                 'description'      => $description,
+                'source_branch'    => $source_branch,
                 'state'            => $state,
                 'created_at'       => $created_at
             ],
             [
                 'title',
                 'description',
+                'source_branch',
                 'state',
                 'created_at'
             ]
@@ -70,12 +73,12 @@ class MergeRequestTuleapReferenceDao extends DataAccessObject
     }
 
     /**
-     * @psalm-return array{title: string, state: string, description: string, created_at: int, author_name: ?string, author_email: ?string}
+     * @psalm-return array{title: string, state: string, description: string, source_branch: ?string, created_at: int, author_name: ?string, author_email: ?string}
      */
     public function searchMergeRequestInRepositoryWithId(int $integration_id, int $merge_request_id): ?array
     {
         $sql = "
-            SELECT title, state, description, created_at, author_name, author_email
+            SELECT title, state, description, source_branch, created_at, author_name, author_email
             FROM plugin_gitlab_repository_integration_merge_request_info
             WHERE integration_id = ?
                 AND merge_request_id = ?

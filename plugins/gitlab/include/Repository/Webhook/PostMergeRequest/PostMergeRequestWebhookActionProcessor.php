@@ -117,6 +117,7 @@ class PostMergeRequestWebhookActionProcessor
             $merge_request_id,
             $webhook_data->getTitle(),
             $webhook_data->getDescription(),
+            $webhook_data->getSourceBranch(),
             $webhook_data->getState(),
             $webhook_data->getCreatedAtDate()->getTimestamp()
         );

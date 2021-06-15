@@ -33,6 +33,7 @@ class PostMergeRequestWebhookDataBuilder
     private const MERGE_REQUEST_STATE_KEY       = 'state';
     private const MERGE_REQUEST_CREATED_AT_KEY  = 'created_at';
     private const MERGE_REQUEST_AUTHOR_ID_KEY   = 'author_id';
+    private const MERGE_REQUEST_SOURCE_BRANCH   = 'source_branch';
 
     /**
      * @var LoggerInterface
@@ -57,14 +58,21 @@ class PostMergeRequestWebhookDataBuilder
         $description      = $webhook_content[self::OBJECT_ATTRIBUTES_KEY][self::MERGE_REQUEST_DESCRIPTION_KEY];
         $state            = $webhook_content[self::OBJECT_ATTRIBUTES_KEY][self::MERGE_REQUEST_STATE_KEY];
         $author_id        = $webhook_content[self::OBJECT_ATTRIBUTES_KEY][self::MERGE_REQUEST_AUTHOR_ID_KEY];
+        $source_branch    = $webhook_content[self::OBJECT_ATTRIBUTES_KEY][self::MERGE_REQUEST_SOURCE_BRANCH];
 
         $created_at = new DateTimeImmutable(
             $webhook_content[self::OBJECT_ATTRIBUTES_KEY][self::MERGE_REQUEST_CREATED_AT_KEY]
         );
 
-        $this->logger->debug("Webhook merge request with id $merge_request_id retrieved.");
-        $this->logger->debug("|_ Its title is: $title");
-        $this->logger->debug("|_ Its description is: $description");
+        $this->logger->debug(
+            sprintf(
+                "Webhook merge request with id %d retrieved.\nTitle: %s\nSource branch: %s\nDescription: %s\n\n",
+                $merge_request_id,
+                $title,
+                $source_branch,
+                $description
+            )
+        );
 
         return new PostMergeRequestWebhookData(
             $event_name,
@@ -75,7 +83,8 @@ class PostMergeRequestWebhookDataBuilder
             $description,
             $state,
             $created_at,
-            $author_id
+            $author_id,
+            $source_branch
         );
     }
 
@@ -94,7 +103,8 @@ class PostMergeRequestWebhookDataBuilder
             self::MERGE_REQUEST_DESCRIPTION_KEY,
             self::MERGE_REQUEST_STATE_KEY,
             self::MERGE_REQUEST_CREATED_AT_KEY,
-            self::MERGE_REQUEST_AUTHOR_ID_KEY
+            self::MERGE_REQUEST_AUTHOR_ID_KEY,
+            self::MERGE_REQUEST_SOURCE_BRANCH,
         ];
 
         foreach ($required_keys as $required_key) {
