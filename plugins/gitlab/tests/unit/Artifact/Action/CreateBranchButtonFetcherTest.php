@@ -28,7 +28,8 @@ use Project;
 use Tracker;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\Gitlab\Plugin\GitlabIntegrationAvailabilityChecker;
-use Tuleap\Gitlab\Repository\Webhook\WebhookDao;
+use Tuleap\Gitlab\REST\v1\GitlabRepositoryRepresentation;
+use Tuleap\Gitlab\REST\v1\GitlabRepositoryRepresentationFactory;
 use Tuleap\Layout\JavascriptAsset;
 use Tuleap\Test\Builders\IncludeAssetsBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
@@ -43,9 +44,9 @@ final class CreateBranchButtonFetcherTest extends TestCase
      */
     private $availability_checker;
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&WebhookDao
+     * @var \PHPUnit\Framework\MockObject\MockObject&GitlabRepositoryRepresentationFactory
      */
-    private $webhook_dao;
+    private $representation_factory;
 
     private CreateBranchButtonFetcher $fetcher;
     private JavascriptAsset $javascript_asset;
@@ -54,13 +55,13 @@ final class CreateBranchButtonFetcherTest extends TestCase
     {
         parent::setUp();
 
-        $this->availability_checker = $this->createMock(GitlabIntegrationAvailabilityChecker::class);
-        $this->webhook_dao          = $this->createMock(WebhookDao::class);
-        $this->javascript_asset     = new JavascriptAsset(IncludeAssetsBuilder::build(), 'action.js');
+        $this->availability_checker   = $this->createMock(GitlabIntegrationAvailabilityChecker::class);
+        $this->representation_factory = $this->createMock(GitlabRepositoryRepresentationFactory::class);
+        $this->javascript_asset       = new JavascriptAsset(IncludeAssetsBuilder::build(), 'action.js');
 
         $this->fetcher = new CreateBranchButtonFetcher(
             $this->availability_checker,
-            $this->webhook_dao,
+            $this->representation_factory,
             $this->javascript_asset
         );
     }
@@ -70,7 +71,14 @@ final class CreateBranchButtonFetcherTest extends TestCase
         $this->mockFeatureFlagEnabled();
 
         $user     = $this->createMock(PFUser::class);
-        $project  = Project::buildForTest();
+        $project  = new Project([
+            'group_id' => 101,
+            'group_name' => 'project01',
+            'unix_group_name' => 'project01',
+            'status' => 'A',
+            'access' => 'public',
+            'type' => 1,
+        ]);
         $artifact = $this->createMock(Artifact::class);
         $tracker  = $this->createMock(Tracker::class);
 
@@ -102,11 +110,23 @@ final class CreateBranchButtonFetcherTest extends TestCase
             ->with($user)
             ->willReturn(true);
 
-        $this->webhook_dao
+        $this->representation_factory
             ->expects(self::once())
-            ->method('projectHasIntegrationsWithSecretConfigured')
-            ->with(101)
-            ->willReturn(true);
+            ->method('getAllIntegrationsRepresentationsInProjectWithConfiguredToken')
+            ->with($project)
+            ->willReturn([
+                new GitlabRepositoryRepresentation(
+                    1,
+                    1,
+                    'root/repo01',
+                    '',
+                    'https://example.com',
+                    1236647,
+                    $project,
+                    false,
+                    true
+                )
+            ]);
 
         $button_action = $this->fetcher->getActionButton($artifact, $user);
 
@@ -275,11 +295,11 @@ final class CreateBranchButtonFetcherTest extends TestCase
             ->with($user)
             ->willReturn(true);
 
-        $this->webhook_dao
+        $this->representation_factory
             ->expects(self::once())
-            ->method('projectHasIntegrationsWithSecretConfigured')
-            ->with(101)
-            ->willReturn(false);
+            ->method('getAllIntegrationsRepresentationsInProjectWithConfiguredToken')
+            ->with($project)
+            ->willReturn([]);
 
         self::assertNull(
             $this->fetcher->getActionButton($artifact, $user)

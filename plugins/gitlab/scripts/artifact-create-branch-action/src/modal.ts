@@ -23,8 +23,9 @@ import {
     initVueGettext,
 } from "../../../../../src/scripts/tuleap/gettext/vue-gettext-init";
 import App from "./components/App.vue";
+import { createStore } from "./store";
 
-export async function init(): Promise<void> {
+export async function init(create_branch_link: HTMLElement): Promise<void> {
     const user_locale = document.body.dataset.userLocale;
     if (!user_locale) {
         return;
@@ -37,7 +38,16 @@ export async function init(): Promise<void> {
         (locale: string) =>
             import(/* webpackChunkName: "gitlab-po-" */ "../po/" + getPOFileFromLocale(locale))
     );
+
+    if (!create_branch_link.dataset.integrations) {
+        throw new Error("Missing integrations representations dataset");
+    }
+    const integrations_representations = JSON.parse(create_branch_link.dataset.integrations);
+
+    const store = createStore(integrations_representations);
     const AppComponent = Vue.extend(App);
-    const app = new AppComponent({}).$mount();
+    const app = new AppComponent({
+        store,
+    }).$mount();
     document.body.appendChild(app.$el);
 }

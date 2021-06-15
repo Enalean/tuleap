@@ -26,7 +26,7 @@ namespace Tuleap\Gitlab\Artifact\Action;
 use ForgeConfig;
 use PFUser;
 use Tuleap\Gitlab\Plugin\GitlabIntegrationAvailabilityChecker;
-use Tuleap\Gitlab\Repository\Webhook\WebhookDao;
+use Tuleap\Gitlab\REST\v1\GitlabRepositoryRepresentationFactory;
 use Tuleap\Layout\JavascriptAsset;
 use Tuleap\Tracker\Artifact\ActionButtons\AdditionalButtonAction;
 use Tuleap\Tracker\Artifact\ActionButtons\AdditionalButtonLinkPresenter;
@@ -42,17 +42,17 @@ class CreateBranchButtonFetcher
     public const FEATURE_FLAG_KEY = 'artifact-create-gitlab-branches';
 
     private GitlabIntegrationAvailabilityChecker $availability_checker;
-    private WebhookDao $webhook_dao;
     private JavascriptAsset $javascript_asset;
+    private GitlabRepositoryRepresentationFactory $representation_factory;
 
     public function __construct(
         GitlabIntegrationAvailabilityChecker $availability_checker,
-        WebhookDao $webhook_dao,
+        GitlabRepositoryRepresentationFactory $representation_factory,
         JavascriptAsset $javascript_asset
     ) {
-        $this->availability_checker = $availability_checker;
-        $this->webhook_dao          = $webhook_dao;
-        $this->javascript_asset     = $javascript_asset;
+        $this->availability_checker   = $availability_checker;
+        $this->javascript_asset       = $javascript_asset;
+        $this->representation_factory = $representation_factory;
     }
 
     public function getActionButton(Artifact $artifact, PFUser $user): ?AdditionalButtonAction
@@ -76,7 +76,11 @@ class CreateBranchButtonFetcher
             return null;
         }
 
-        if (! $this->webhook_dao->projectHasIntegrationsWithSecretConfigured($project_id)) {
+        $representations = $this->representation_factory->getAllIntegrationsRepresentationsInProjectWithConfiguredToken(
+            $project
+        );
+
+        if (empty($representations)) {
             return null;
         }
 
@@ -86,7 +90,13 @@ class CreateBranchButtonFetcher
             $link_label,
             "",
             $icon,
-            self::FEATURE_FLAG_KEY
+            self::FEATURE_FLAG_KEY,
+            [
+                [
+                    'name'  => "integrations",
+                    'value' => json_encode($representations, JSON_THROW_ON_ERROR)
+                ]
+            ]
         );
 
         return new AdditionalButtonAction(

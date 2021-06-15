@@ -17,14 +17,6 @@
   - along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<style scoped lang="scss">
-.artifact-create-gitlab-branch-loader {
-    height: 100px;
-    background: url("../../../../../../src/www/themes/common/images/tuleap-spinner.gif") no-repeat
-        center center;
-}
-</style>
-
 <template>
     <div
         class="modal fade hide"
@@ -48,7 +40,7 @@
                     </h3>
                 </div>
                 <div class="modal-body artifact-create-gitlab-branch-modal-body">
-                    <div class="artifact-create-gitlab-branch-loader"></div>
+                    <integrations-list />
                 </div>
                 <div class="modal-footer">
                     <button type="reset" class="btn btn-secondary" data-dismiss="modal">
@@ -67,8 +59,13 @@
 import Vue from "vue";
 import { Component } from "vue-property-decorator";
 import jquery from "jquery";
+import IntegrationsList from "./IntegrationsList.vue";
 
-@Component
+@Component({
+    components: {
+        IntegrationsList,
+    },
+})
 export default class App extends Vue {
     mounted(): void {
         const jquery_element = jquery(this.$el);
