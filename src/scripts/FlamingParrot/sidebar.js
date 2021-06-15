@@ -93,18 +93,6 @@ function updateSidebarIcon(direction) {
         .addClass("fa-chevron-" + direction);
 }
 
-function updateSidebarTitle(show_only_icon) {
-    if (show_only_icon) {
-        $(".project-title-container").css({
-            visibility: "hidden",
-        });
-    } else {
-        $(".project-title-container").css({
-            visibility: "visible",
-        });
-    }
-}
-
 function updateSidebarServices(show_only_icon) {
     if (show_only_icon) {
         $(".sidebar-nav li a > span").hide();
@@ -130,8 +118,6 @@ function sidebarCollapseEvent(duration) {
     }
 
     setSidebarUserPreference(new_size);
-
-    updateSidebarTitle(show_only_icon);
     updateSidebarWidth(new_size, duration);
     updateSidebarIcon(new_direction, show_only_icon);
     updateSidebarServices(show_only_icon, duration);
