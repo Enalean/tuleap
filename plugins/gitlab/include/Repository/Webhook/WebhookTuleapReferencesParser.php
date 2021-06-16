@@ -84,8 +84,8 @@ class WebhookTuleapReferencesParser
 
         sort($parsed_tuleap_references);
 
-        return new WebhookTuleapReferenceCollection(
-            array_values(array_unique($parsed_tuleap_references))
+        return WebhookTuleapReferenceCollection::fromReferences(
+            ...array_values(array_unique($parsed_tuleap_references))
         );
     }
 

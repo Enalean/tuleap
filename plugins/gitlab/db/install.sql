@@ -40,6 +40,7 @@ CREATE TABLE IF NOT EXISTS plugin_gitlab_repository_integration_merge_request_in
     merge_request_id INT(11) NOT NULL,
     title TEXT NOT NULL,
     description TEXT NOT NULL,
+    source_branch TEXT DEFAULT NULL,
     state TEXT NOT NULL,
     created_at INT(11) NOT NULL,
     author_name TEXT DEFAULT NULL,

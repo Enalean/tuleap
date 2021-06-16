@@ -72,6 +72,7 @@ class CrossReferenceFromMergeRequestCreator
         $references_collection = $this->references_from_merge_request_data_extractor->extract(
             $webhook_data->getTitle(),
             $webhook_data->getDescription(),
+            $webhook_data->getSourceBranch(),
         );
 
         $good_references = [];

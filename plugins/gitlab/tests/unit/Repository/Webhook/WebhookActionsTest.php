@@ -154,7 +154,8 @@ final class WebhookActionsTest extends \Tuleap\Test\PHPUnit\TestCase
             '',
             'closed',
             (new \DateTimeImmutable())->setTimestamp(1611315112),
-            10
+            10,
+            'some_feature'
         );
 
         $now = new DateTimeImmutable();

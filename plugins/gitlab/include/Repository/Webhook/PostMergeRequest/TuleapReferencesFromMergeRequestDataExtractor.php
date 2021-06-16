@@ -22,26 +22,44 @@ declare(strict_types=1);
 
 namespace Tuleap\Gitlab\Repository\Webhook\PostMergeRequest;
 
+use Tuleap\Gitlab\Repository\Webhook\PostPush\Branch\BranchNameTuleapReferenceParser;
 use Tuleap\Gitlab\Repository\Webhook\WebhookTuleapReferenceCollection;
 use Tuleap\Gitlab\Repository\Webhook\WebhookTuleapReferencesParser;
 
 class TuleapReferencesFromMergeRequestDataExtractor
 {
-    /**
-     * @var WebhookTuleapReferencesParser
-     */
-    private $reference_parser;
+    private WebhookTuleapReferencesParser $reference_parser;
+    private BranchNameTuleapReferenceParser $branch_name_tuleap_reference_parser;
 
     public function __construct(
-        WebhookTuleapReferencesParser $reference_parser
+        WebhookTuleapReferencesParser $reference_parser,
+        BranchNameTuleapReferenceParser $branch_name_tuleap_reference_parser
     ) {
-        $this->reference_parser = $reference_parser;
+        $this->reference_parser                    = $reference_parser;
+        $this->branch_name_tuleap_reference_parser = $branch_name_tuleap_reference_parser;
     }
 
-    public function extract(string $title, string $description): WebhookTuleapReferenceCollection
+    public function extract(string $title, string $description, ?string $branch_source): WebhookTuleapReferenceCollection
     {
-        return $this->reference_parser->extractCollectionOfTuleapReferences(
-            $title . " " . $description
+        return WebhookTuleapReferenceCollection::aggregateCollections(
+            $this->reference_parser->extractCollectionOfTuleapReferences(
+                $title . " " . $description
+            ),
+            $this->extractFromBranchSource($branch_source),
         );
+    }
+
+    private function extractFromBranchSource(?string $branch_source): WebhookTuleapReferenceCollection
+    {
+        if ($branch_source === null) {
+            return WebhookTuleapReferenceCollection::empty();
+        }
+
+        $extracted_reference = $this->branch_name_tuleap_reference_parser->extractTuleapReferenceFromBranchName($branch_source);
+        if ($extracted_reference === null) {
+            return WebhookTuleapReferenceCollection::empty();
+        }
+
+        return WebhookTuleapReferenceCollection::fromReferences($extracted_reference);
     }
 }

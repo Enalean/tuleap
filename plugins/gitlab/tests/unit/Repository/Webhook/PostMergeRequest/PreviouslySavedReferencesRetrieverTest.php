@@ -27,6 +27,7 @@ use Tuleap\Gitlab\Reference\TuleapReferencedArtifactNotFoundException;
 use Tuleap\Gitlab\Reference\TuleapReferenceNotFoundException;
 use Tuleap\Gitlab\Reference\TuleapReferenceRetriever;
 use Tuleap\Gitlab\Repository\GitlabRepositoryIntegration;
+use Tuleap\Gitlab\Repository\Webhook\PostPush\Branch\BranchNameTuleapReferenceParser;
 use Tuleap\Gitlab\Repository\Webhook\WebhookTuleapReference;
 use Tuleap\Gitlab\Repository\Webhook\WebhookTuleapReferencesParser;
 
@@ -50,7 +51,8 @@ class PreviouslySavedReferencesRetrieverTest extends \Tuleap\Test\PHPUnit\TestCa
 
         $this->retriever = new PreviouslySavedReferencesRetriever(
             new TuleapReferencesFromMergeRequestDataExtractor(
-                new WebhookTuleapReferencesParser()
+                new WebhookTuleapReferencesParser(),
+                new BranchNameTuleapReferenceParser(),
             ),
             $this->tuleap_reference_retriever,
             $this->dao,
@@ -79,7 +81,8 @@ class PreviouslySavedReferencesRetrieverTest extends \Tuleap\Test\PHPUnit\TestCa
             'TULEAP-666 TULEAP-45',
             'opened',
             (new \DateTimeImmutable())->setTimestamp(1611315112),
-            10
+            10,
+            'some_feature'
         );
 
         $this->dao
@@ -114,7 +117,8 @@ class PreviouslySavedReferencesRetrieverTest extends \Tuleap\Test\PHPUnit\TestCa
             'TULEAP-666 TULEAP-45',
             'opened',
             (new \DateTimeImmutable())->setTimestamp(1611315112),
-            10
+            10,
+            'some_feature'
         );
 
         $this->dao
@@ -124,6 +128,7 @@ class PreviouslySavedReferencesRetrieverTest extends \Tuleap\Test\PHPUnit\TestCa
                 [
                     'title'       => 'Title of merge request',
                     'description' => 'Description of merge request',
+                    'source_branch' => 'some_branch',
                 ]
             );
 
@@ -154,7 +159,8 @@ class PreviouslySavedReferencesRetrieverTest extends \Tuleap\Test\PHPUnit\TestCa
             'TULEAP-666 TULEAP-45',
             'opened',
             (new \DateTimeImmutable())->setTimestamp(1611315112),
-            10
+            10,
+            'some_feature'
         );
 
         $this->dao
@@ -164,6 +170,7 @@ class PreviouslySavedReferencesRetrieverTest extends \Tuleap\Test\PHPUnit\TestCa
                 [
                     'title'       => 'Title of merge request TULEAP-8',
                     'description' => 'Description of merge request',
+                    'source_branch' => 'some_branch',
                 ]
             );
 
@@ -200,7 +207,8 @@ class PreviouslySavedReferencesRetrieverTest extends \Tuleap\Test\PHPUnit\TestCa
             'TULEAP-666 TULEAP-45',
             'opened',
             (new \DateTimeImmutable())->setTimestamp(1611315112),
-            10
+            10,
+            'some_feature'
         );
 
         $this->dao
@@ -210,6 +218,7 @@ class PreviouslySavedReferencesRetrieverTest extends \Tuleap\Test\PHPUnit\TestCa
                 [
                     'title'       => 'Title of merge request TULEAP-8',
                     'description' => 'Description of merge request',
+                    'source_branch' => 'some_branch',
                 ]
             );
 
@@ -246,7 +255,8 @@ class PreviouslySavedReferencesRetrieverTest extends \Tuleap\Test\PHPUnit\TestCa
             'TULEAP-666 TULEAP-45',
             'opened',
             (new \DateTimeImmutable())->setTimestamp(1611315112),
-            10
+            10,
+            'some_feature'
         );
 
         $this->dao
@@ -256,6 +266,7 @@ class PreviouslySavedReferencesRetrieverTest extends \Tuleap\Test\PHPUnit\TestCa
                 [
                     'title'       => 'Title of merge request TULEAP-8',
                     'description' => 'Description of merge request TULEAP-58',
+                    'source_branch' => 'some_branch',
                 ]
             );
 

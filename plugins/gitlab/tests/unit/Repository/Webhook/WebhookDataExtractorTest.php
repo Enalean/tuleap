@@ -288,7 +288,8 @@ class WebhookDataExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
                     "description": "My Description",
                     "state": "opened",
                     "created_at": "2021-01-12 13:49:35 UTC",
-                    "author_id": 10
+                    "author_id": 10,
+                    "source_branch": "some_feature"
                   }
                 }'
             )

@@ -31,6 +31,7 @@ use Tuleap\Gitlab\Reference\TuleapReferencedArtifactNotFoundException;
 use Tuleap\Gitlab\Reference\TuleapReferenceNotFoundException;
 use Tuleap\Gitlab\Reference\TuleapReferenceRetriever;
 use Tuleap\Gitlab\Repository\GitlabRepositoryIntegration;
+use Tuleap\Gitlab\Repository\Webhook\PostPush\Branch\BranchNameTuleapReferenceParser;
 use Tuleap\Gitlab\Repository\Webhook\WebhookTuleapReference;
 use Tuleap\Gitlab\Repository\Webhook\WebhookTuleapReferencesParser;
 
@@ -79,7 +80,8 @@ final class PostMergeRequestWebhookActionProcessorTest extends \Tuleap\Test\PHPU
         $this->merge_request_retriever     = $this->createMock(GitlabMergeRequestReferenceRetriever::class);
 
         $references_from_merge_request_data_extractor = new TuleapReferencesFromMergeRequestDataExtractor(
-            new WebhookTuleapReferencesParser()
+            new WebhookTuleapReferencesParser(),
+            new BranchNameTuleapReferenceParser(),
         );
 
         $this->processor = new PostMergeRequestWebhookActionProcessor(
@@ -124,7 +126,8 @@ final class PostMergeRequestWebhookActionProcessorTest extends \Tuleap\Test\PHPU
             'TULEAP-666 TULEAP-45',
             'opened',
             (new \DateTimeImmutable())->setTimestamp(1611315112),
-            10
+            10,
+            'some_feature'
         );
 
         $this->merge_request_reference_dao
@@ -140,7 +143,7 @@ final class PostMergeRequestWebhookActionProcessorTest extends \Tuleap\Test\PHPU
         $this->merge_request_reference_dao
             ->expects(self::once())
             ->method('saveGitlabMergeRequestInfo')
-            ->with(1, 2, 'My Title TULEAP-58', 'TULEAP-666 TULEAP-45', 'opened', 1611315112);
+            ->with(1, 2, 'My Title TULEAP-58', 'TULEAP-666 TULEAP-45', 'some_feature', 'opened', 1611315112);
 
         $this->reference_manager
             ->expects(self::once())
@@ -232,7 +235,8 @@ final class PostMergeRequestWebhookActionProcessorTest extends \Tuleap\Test\PHPU
             'TULEAP-666 TULEAP-45',
             'opened',
             (new \DateTimeImmutable())->setTimestamp(1611315112),
-            10
+            10,
+            'some_feature'
         );
 
         $this->merge_request_reference_dao
@@ -242,6 +246,7 @@ final class PostMergeRequestWebhookActionProcessorTest extends \Tuleap\Test\PHPU
                 [
                     'title'        => 'My Title TULEAP-58',
                     'description'  => 'TULEAP-666 TULEAP-45',
+                    'source_branch' => 'some_feature',
                     'author_name'  => null,
                     'author_email' => null,
                 ]
@@ -261,7 +266,7 @@ final class PostMergeRequestWebhookActionProcessorTest extends \Tuleap\Test\PHPU
         $this->merge_request_reference_dao
             ->expects(self::once())
             ->method('saveGitlabMergeRequestInfo')
-            ->with(1, 2, 'My Title TULEAP-58', 'TULEAP-666 TULEAP-45', 'opened', 1611315112);
+            ->with(1, 2, 'My Title TULEAP-58', 'TULEAP-666 TULEAP-45', 'some_feature', 'opened', 1611315112);
 
         $this->reference_manager
             ->expects(self::exactly(2))
@@ -358,7 +363,8 @@ final class PostMergeRequestWebhookActionProcessorTest extends \Tuleap\Test\PHPU
             'TULEAP-666',
             'opened',
             (new \DateTimeImmutable())->setTimestamp(1611315112),
-            10
+            10,
+            'some_feature'
         );
 
         $this->merge_request_reference_dao
@@ -368,6 +374,7 @@ final class PostMergeRequestWebhookActionProcessorTest extends \Tuleap\Test\PHPU
                 [
                     'title'        => 'My Title TULEAP-58',
                     'description'  => 'TULEAP-666 TULEAP-45',
+                    'source_branch' => 'some_feature',
                     'author_name'  => null,
                     'author_email' => null
                 ]
@@ -387,31 +394,11 @@ final class PostMergeRequestWebhookActionProcessorTest extends \Tuleap\Test\PHPU
         $this->merge_request_reference_dao
             ->expects(self::once())
             ->method('saveGitlabMergeRequestInfo')
-            ->with(1, 2, 'My Title TULEAP-58', 'TULEAP-666', 'opened', 1611315112);
+            ->with(1, 2, 'My Title TULEAP-58', 'TULEAP-666', 'some_feature', 'opened', 1611315112);
 
         $this->reference_manager
             ->expects(self::once())
             ->method('insertCrossReference');
-
-        /*$this->logger
-            ->shouldReceive('info')
-            ->with('2 Tuleap references found in merge request 2')
-            ->once();
-
-        $this->logger
-            ->shouldReceive('info')
-            ->with(
-                '|_ Reference to Tuleap artifact #58 found, cross-reference will be added in project the GitLab repository is integrated in.'
-            )
-            ->once();
-
-
-        $this->logger
-            ->shouldReceive('info')
-            ->with(
-                '|_ Reference to Tuleap artifact #666 found, cross-reference will be added in project the GitLab repository is integrated in.'
-            )
-            ->once();*/
 
         $this->tuleap_reference_retriever
             ->method('retrieveTuleapReference')
@@ -451,52 +438,16 @@ final class PostMergeRequestWebhookActionProcessorTest extends \Tuleap\Test\PHPU
                 }
             );
 
-        /*$this->logger
-            ->shouldReceive("error")
-            ->with(
-                'No reference found with the keyword \'art\', and this must not happen. If you read this, this is really bad.'
-            )
-            ->once();
-
-        $this->logger
-            ->shouldReceive("info")
-            ->with('|  |_ Tuleap artifact #58 found')
-            ->once();
-
-        $this->logger
-            ->shouldReceive('info')
-            ->with('Merge request data for 2 saved in database')
-            ->once();
-
-        $this->logger
-            ->shouldReceive('info')
-            ->with('Try to get author data of merge request #2')
-            ->once();*/
-
         $this->author_retriever
             ->expects(self::once())
             ->method('retrieveAuthorData')
             ->with($integration, $merge_request_webhook_data)
             ->willReturn(['name' => 'John', 'public_email' => 'john@thewall.fr']);
 
-        /*$this->logger
-            ->shouldReceive('info')
-            ->with('|_ Author name of merge request #2 is: John')
-            ->once();*/
-
         $this->merge_request_reference_dao
             ->expects(self::once())
             ->method('setAuthorData')
             ->with(1, 2, 'John', 'john@thewall.fr');
-
-        /*$this->logger
-            ->shouldReceive('info')
-            ->with('|_ Author has been saved in database')
-            ->once();
-
-        $this->logger
-            ->shouldReceive('debug')
-            ->with('Some references are removed, a comment should be added');*/
 
         $this->bot_commenter
             ->expects(self::once())
@@ -532,7 +483,8 @@ final class PostMergeRequestWebhookActionProcessorTest extends \Tuleap\Test\PHPU
             '',
             'closed',
             (new \DateTimeImmutable())->setTimestamp(1611315112),
-            10
+            10,
+            'some_feature'
         );
 
         $this->merge_request_reference_dao
@@ -548,7 +500,7 @@ final class PostMergeRequestWebhookActionProcessorTest extends \Tuleap\Test\PHPU
         $this->merge_request_reference_dao
             ->expects(self::once())
             ->method('saveGitlabMergeRequestInfo')
-            ->with(1, 2, 'My Title TULEAP-58', '', 'closed', 1611315112);
+            ->with(1, 2, 'My Title TULEAP-58', '', 'some_feature', 'closed', 1611315112);
 
         $this->reference_manager
             ->expects(self::once())
@@ -621,7 +573,8 @@ final class PostMergeRequestWebhookActionProcessorTest extends \Tuleap\Test\PHPU
             '',
             'closed',
             (new \DateTimeImmutable())->setTimestamp(1611315112),
-            10
+            10,
+            'some_feature'
         );
 
         $this->merge_request_reference_dao
@@ -637,7 +590,7 @@ final class PostMergeRequestWebhookActionProcessorTest extends \Tuleap\Test\PHPU
         $this->merge_request_reference_dao
             ->expects(self::once())
             ->method('saveGitlabMergeRequestInfo')
-            ->with(1, 2, 'My Title TULEAP-58', '', 'closed', 1611315112);
+            ->with(1, 2, 'My Title TULEAP-58', '', 'some_feature', 'closed', 1611315112);
 
         $this->reference_manager
             ->expects(self::once())
@@ -710,7 +663,8 @@ final class PostMergeRequestWebhookActionProcessorTest extends \Tuleap\Test\PHPU
             '',
             'closed',
             (new \DateTimeImmutable())->setTimestamp(1611315112),
-            10
+            10,
+            'some_feature'
         );
 
         $this->merge_request_reference_dao
@@ -758,7 +712,8 @@ final class PostMergeRequestWebhookActionProcessorTest extends \Tuleap\Test\PHPU
             '',
             'closed',
             (new \DateTimeImmutable())->setTimestamp(1611315112),
-            10
+            10,
+            'some_feature'
         );
 
         $this->merge_request_reference_dao
@@ -767,7 +722,8 @@ final class PostMergeRequestWebhookActionProcessorTest extends \Tuleap\Test\PHPU
                 [
                     'title'        => 'Previous title',
                     'state'        => 'opened',
-                    'description'  => 'Previous descripition',
+                    'description'  => 'Previous description',
+                    'source_branch' => 'some_branch',
                     'author_name'  => 'John',
                     'author_email' => 'john@thewall.fr',
                 ]
@@ -787,7 +743,7 @@ final class PostMergeRequestWebhookActionProcessorTest extends \Tuleap\Test\PHPU
         $this->merge_request_reference_dao
             ->expects(self::once())
             ->method('saveGitlabMergeRequestInfo')
-            ->with(1, 2, 'My Title', '', 'closed', 1611315112);
+            ->with(1, 2, 'My Title', '', 'some_feature', 'closed', 1611315112);
 
         $this->author_retriever
             ->expects(self::never())

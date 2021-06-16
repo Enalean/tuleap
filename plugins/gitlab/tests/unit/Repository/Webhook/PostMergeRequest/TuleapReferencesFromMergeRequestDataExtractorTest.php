@@ -22,24 +22,27 @@ declare(strict_types=1);
 
 namespace Tuleap\Gitlab\Repository\Webhook\PostMergeRequest;
 
+use Tuleap\Gitlab\Repository\Webhook\PostPush\Branch\BranchNameTuleapReferenceParser;
 use Tuleap\Gitlab\Repository\Webhook\WebhookTuleapReferenceCollection;
 use Tuleap\Gitlab\Repository\Webhook\WebhookTuleapReferencesParser;
 
-class TuleapReferencesFromMergeRequestDataExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
+final class TuleapReferencesFromMergeRequestDataExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItExtractsReferencesFromTitleConcatenatedToDescription(): void
     {
-        $reference_parser = $this->createMock(WebhookTuleapReferencesParser::class);
+        $reference_parser             = $this->createMock(WebhookTuleapReferencesParser::class);
+        $branch_name_reference_parser = $this->createMock(BranchNameTuleapReferenceParser::class);
 
-        $collection = new WebhookTuleapReferenceCollection([]);
+        $collection = WebhookTuleapReferenceCollection::empty();
         $reference_parser
             ->expects(self::once())
             ->method('extractCollectionOfTuleapReferences')
             ->with('title description')
             ->willReturn($collection);
+        $branch_name_reference_parser->method('extractTuleapReferenceFromBranchName')->willReturn(null);
 
-        $extractor = new TuleapReferencesFromMergeRequestDataExtractor($reference_parser);
+        $extractor = new TuleapReferencesFromMergeRequestDataExtractor($reference_parser, $branch_name_reference_parser);
 
-        self::assertEquals($collection, $extractor->extract('title', 'description'));
+        self::assertEquals($collection, $extractor->extract('title', 'description', 'branch_source'));
     }
 }

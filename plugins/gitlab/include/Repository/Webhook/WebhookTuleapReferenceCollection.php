@@ -24,20 +24,49 @@ namespace Tuleap\Gitlab\Repository\Webhook;
 /**
  * @psalm-immutable
  */
-class WebhookTuleapReferenceCollection
+final class WebhookTuleapReferenceCollection
 {
     /**
      * @var WebhookTuleapReference[]
+     * @psalm-var list<WebhookTuleapReference>
      */
-    private $tuleap_references;
+    private array $tuleap_references;
 
-    public function __construct(array $collection)
+    /**
+     * @param WebhookTuleapReference[] ...$references_collections
+     */
+    private function __construct(array ...$references_collections)
     {
-        $this->tuleap_references = $collection;
+        $references = [];
+        foreach (array_merge(...$references_collections) as $reference) {
+            $references[$reference->getId()] = $reference;
+        }
+        $this->tuleap_references = array_values($references);
+    }
+
+    public static function fromReferences(WebhookTuleapReference ...$references): self
+    {
+        return new self($references);
+    }
+
+    public static function aggregateCollections(self ...$collections): self
+    {
+        $references_collections = [];
+        foreach ($collections as $collection) {
+            $references_collections[] = $collection->getTuleapReferences();
+        }
+
+        return new self(...$references_collections);
+    }
+
+    public static function empty(): self
+    {
+        return new self();
     }
 
     /**
      * @return WebhookTuleapReference[]
+     * @psalm-return list<WebhookTuleapReference>
      */
     public function getTuleapReferences(): array
     {
