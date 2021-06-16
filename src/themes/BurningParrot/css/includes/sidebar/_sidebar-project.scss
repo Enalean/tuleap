@@ -73,6 +73,7 @@
 }
 
 .project-sidebar-title {
+    margin: 0 0 0 calc(-1 * var(--tlp-small-spacing));
     padding: var(--tlp-small-spacing);
     transition: background 100ms;
     border-radius: 4px;
@@ -104,7 +105,7 @@
 .project-sidebar-banner-button {
     display: flex;
     align-items: center;
-    padding: var(--tlp-medium-spacing);
+    padding: var(--tlp-small-spacing) var(--tlp-medium-spacing);
     border: 0;
     background: var(--tlp-theme-dark-background-color);
     cursor: pointer;
@@ -149,7 +150,7 @@
 .project-sidebar-project-flags {
     display: flex;
     align-items: center;
-    margin: 0 0 var(--tlp-medium-spacing) var(--tlp-medium-spacing);
+    margin: var(--tlp-small-spacing) var(--tlp-medium-spacing);
     color: var(--tlp-ui-border-dark);
     cursor: help;
 
@@ -291,4 +292,20 @@
     &:hover {
         background: var(--tlp-theme-dark-background-color-darker);
     }
+}
+
+.project-sidebar-tools-section-label {
+    margin: 0;
+    padding: var(--tlp-medium-spacing) var(--tlp-medium-spacing) 0;
+    opacity: 0.6;
+    color: var(--tlp-ui-dimmed-lighter-95);
+    font-size: 0.65rem;
+    font-weight: bold;
+    letter-spacing: 0.25px;
+    line-height: 12px;
+    text-transform: uppercase;
+}
+
+.project-sidebar-privacy-badge {
+    margin: var(--tlp-small-spacing) 0;
 }
