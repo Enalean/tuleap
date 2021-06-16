@@ -390,6 +390,17 @@
     white-space: nowrap;
 }
 
+.sidebar-tools-section-label {
+    margin: 0;
+    padding: var(--tlp-medium-spacing) var(--tlp-medium-spacing) 0;
+    opacity: 0.6;
+    color: var(--tlp-ui-dimmed-lighter-95);
+    font-size: 0.65rem;
+    letter-spacing: 0.25px;
+    line-height: 12px;
+    text-transform: uppercase;
+}
+
 body.sidebar-collapsed {
     .project-sidebar-header {
         display: flex;
@@ -403,6 +414,7 @@ body.sidebar-collapsed {
 
     .sidebar-privacy-badge,
     .project-sidebar-header-name,
+    .sidebar-tools-section-label,
     .project-sidebar-project-flags {
         display: none;
     }
