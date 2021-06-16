@@ -62,7 +62,7 @@ docker run -i --name rpm-builder -e "EXPERIMENTAL_BUILD=${EXPERIMENTAL_BUILD:-0}
 
 if [ "$OS" == "centos7" ]; then
     docker run -t -d --rm --name rpm-installer --volumes-from rpm-builder -v /sys/fs/cgroup:/sys/fs/cgroup:ro \
-        --mount type=tmpfs,destination=/run enalean/tuleap-installrpms:centos7
+        --mount type=tmpfs,destination=/run ghcr.io/enalean/tuleap-installrpms:centos7
     docker logs -f rpm-installer | tee >( grep -q 'Started Install and run Tuleap.' ) || true
     docker exec -ti rpm-installer bash
 else

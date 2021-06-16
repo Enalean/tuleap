@@ -44,7 +44,7 @@ composer:  ## Install PHP dependencies with Composer
 ## RNG generation
 
 rnc2rng-docker: clean-rng ## Compile rnc file into rng
-	@$(DOCKER) run --rm=true -v $(CURDIR):/tuleap:cached -w /tuleap -u "`id -u`":"`id -g`" enalean/rnc2rng make rnc2rng
+	@$(DOCKER) run --rm=true -v $(CURDIR):/tuleap:cached -w /tuleap -u "`id -u`":"`id -g`" ghcr.io/enalean/rnc2rng make rnc2rng
 
 rnc2rng: src/common/xml/resources/project/project.rng \
 	 src/common/xml/resources/users.rng  \
@@ -181,7 +181,7 @@ phpunit-ci:
 	$(eval COVERAGE_ENABLED ?= 1)
 	$(eval PHP_VERSION ?= 74)
 	mkdir -p $(WORKSPACE)/results/ut-phpunit/php-$(PHP_VERSION)
-	@docker run --rm -v $(CURDIR):/tuleap:ro --network none -v $(WORKSPACE)/results/ut-phpunit/php-$(PHP_VERSION):/tmp/results enalean/tuleap-test-phpunit:c7-php$(PHP_VERSION) make -C /tuleap TARGET="phpunit-ci-run COVERAGE_ENABLED=$(COVERAGE_ENABLED)" PHP=/opt/remi/php$(PHP_VERSION)/root/usr/bin/php run-as-owner
+	@docker run --rm -v $(CURDIR):/tuleap:ro --network none -v $(WORKSPACE)/results/ut-phpunit/php-$(PHP_VERSION):/tmp/results ghcr.io/enalean/tuleap-test-phpunit:c7-php$(PHP_VERSION) make -C /tuleap TARGET="phpunit-ci-run COVERAGE_ENABLED=$(COVERAGE_ENABLED)" PHP=/opt/remi/php$(PHP_VERSION)/root/usr/bin/php run-as-owner
 
 phpunit-docker-74:
 	$(MAKE) tests-unit-php PHP_VERSION=74
@@ -189,7 +189,7 @@ phpunit-docker-74:
 .PHONY: tests-unit-php
 tests-unit-php: ## Run PHPUnit unit tests in a Docker container. PHP_VERSION to select the version of PHP to use (74, 80). FILES to run specific tests.
 	$(eval PHP_VERSION ?= 74)
-	@docker run --rm -v $(CURDIR):/tuleap:ro --network none enalean/tuleap-test-phpunit:c7-php$(PHP_VERSION) scl enable php$(PHP_VERSION) "make -C /tuleap phpunit FILES=$(FILES)"
+	@docker run --rm -v $(CURDIR):/tuleap:ro --network none ghcr.io/enalean/tuleap-test-phpunit:c7-php$(PHP_VERSION) scl enable php$(PHP_VERSION) "make -C /tuleap phpunit FILES=$(FILES)"
 
 ifneq ($(origin SEED),undefined)
     RANDOM_ORDER_SEED_ARGUMENT=--random-order-seed=$(SEED)
@@ -258,11 +258,10 @@ bash-web: ## Give a bash on web container
 	@docker exec -e COLUMNS="`tput cols`" -e LINES="`tput lines`" -ti `docker-compose ps -q web` bash
 
 pull-docker-images: ## Pull all docker images used for development
-	$(DOCKER) pull enalean/tuleap-test-phpunit:c7-php74
-	$(DOCKER) pull enalean/tuleap-test-phpunit:c7-php80
-	$(DOCKER) pull enalean/tuleap-test-rest:c7-php74
-	$(DOCKER) pull enalean/tuleap-aio:centos7
-	$(DOCKER) pull enalean/rnc2rng:latest
+	$(DOCKER) pull ghcr.io/enalean/tuleap-test-phpunit:c7-php74
+	$(DOCKER) pull ghcr.io/enalean/tuleap-test-phpunit:c7-php80
+	$(DOCKER) pull ghcr.io/enalean/tuleap-test-rest:c7-php74
+	$(DOCKER) pull ghcr.io/enalean/rnc2rng:latest
 	$(DOCKER_COMPOSE) pull web db redis mailhog ldap
 
 #

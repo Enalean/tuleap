@@ -22,9 +22,9 @@ docker build -t "$UNIQUE_NAME-rpm-builder" -f "$WORKSPACE"/sources/tools/utils/n
 docker run -i --name "$UNIQUE_NAME-rpm-builder" -v /rpms -v "$WORKSPACE/sources":/tuleap:ro -w /tuleap "$UNIQUE_NAME-rpm-builder" tools/rpm/build_rpm_inside_container.sh
 
 if [ "$OS" == "centos7" ]; then
-    docker pull $DOCKER_REGISTRY/enalean/tuleap-installrpms:ci-centos7
+    docker pull ${DOCKER_REGISTRY:-ghcr.io}/enalean/tuleap-installrpms:ci-centos7
     docker run -t --name "$UNIQUE_NAME-rpm-installer" --volumes-from "$UNIQUE_NAME-rpm-builder" -v /sys/fs/cgroup:/sys/fs/cgroup:ro \
-        --mount type=tmpfs,destination=/run $DOCKER_REGISTRY/enalean/tuleap-installrpms:ci-centos7
+        --mount type=tmpfs,destination=/run ${DOCKER_REGISTRY:-ghcr.io}/enalean/tuleap-installrpms:ci-centos7
 else
     >&2 echo "OS environment variable value does not have a valid value"
     exit 1

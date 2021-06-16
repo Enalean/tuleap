@@ -122,7 +122,7 @@ pipeline {
                 stage('Psalm static analysis (unused code)') {
                     agent {
                         docker {
-                            image 'enalean/tuleap-test-phpunit:c7-php74'
+                            image 'ghcr.io/enalean/tuleap-test-phpunit:c7-php74'
                             reuseNode true
                             args '--network none'
                         }
