@@ -17,6 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+@use '@tuleap/list-picker';
+
 .roadmap-widget-configuration-separator {
     margin: var(--tlp-large-spacing) calc(-1 * var(--tlp-medium-spacing)) var(--tlp-medium-spacing);
     border-top-width: 1px;

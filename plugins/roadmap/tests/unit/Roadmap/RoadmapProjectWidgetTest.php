@@ -35,6 +35,8 @@ final class RoadmapProjectWidgetTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 
+    private const WIDGET_CONTENT_ID = 13;
+
     /**
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|RoadmapWidgetDao
      */
@@ -95,7 +97,7 @@ final class RoadmapProjectWidgetTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->dao
             ->shouldReceive('cloneContent')
-            ->with(101, "g", 102, "g")
+            ->with(42, 102, "g")
             ->once();
 
         $this->widget->cloneContent(
@@ -118,7 +120,7 @@ final class RoadmapProjectWidgetTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->dao
             ->shouldReceive('cloneContent')
-            ->with(101, "g", 102, "g")
+            ->with(42, 102, "g")
             ->once();
 
         $mapping_registry = new MappingRegistry([]);
@@ -141,14 +143,18 @@ final class RoadmapProjectWidgetTest extends \Tuleap\Test\PHPUnit\TestCase
             ->once()
             ->andReturn([
                 'title'                     => 'Roadmap',
-                'tracker_id'                => 110,
                 'lvl1_iteration_tracker_id' => 120,
                 'lvl2_iteration_tracker_id' => 130,
             ]);
+        $this->dao
+            ->shouldReceive('searchSelectedTrackers')
+            ->with(42)
+            ->once()
+            ->andReturn([110]);
 
         $this->dao
             ->shouldReceive('insertContent')
-            ->with(102, "g", 'Roadmap', 110, 120, 130)
+            ->with(102, "g", 'Roadmap', [110], 120, 130)
             ->once();
 
         $mapping_registry = new MappingRegistry([]);
@@ -171,14 +177,18 @@ final class RoadmapProjectWidgetTest extends \Tuleap\Test\PHPUnit\TestCase
             ->once()
             ->andReturn([
                 'title'                     => 'Roadmap',
-                'tracker_id'                => 111,
                 'lvl1_iteration_tracker_id' => 121,
                 'lvl2_iteration_tracker_id' => 131,
             ]);
+        $this->dao
+            ->shouldReceive('searchSelectedTrackers')
+            ->with(42)
+            ->once()
+            ->andReturn([111]);
 
         $this->dao
             ->shouldReceive('insertContent')
-            ->with(102, "g", 'Roadmap', 1110, 1210, 1310)
+            ->with(102, "g", 'Roadmap', [1110], 1210, 1310)
             ->once();
 
         $mapping_registry = new MappingRegistry([]);

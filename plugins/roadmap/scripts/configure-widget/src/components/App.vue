@@ -42,16 +42,14 @@
             </label>
 
             <select
-                class="tlp-select tlp-select-adjusted"
                 v-bind:id="progress_of_id"
-                name="roadmap[tracker_id]"
-                v-model="user_selected_tracker_id"
+                name="roadmap[tracker_ids][]"
+                v-model="user_selected_tracker_ids"
+                multiple
                 required
                 data-test="tracker"
+                ref="trackers_picker"
             >
-                <option value="" selected disabled v-if="is_in_creation">
-                    <translate>Please choose a tracker</translate>
-                </option>
                 <option
                     v-for="tracker of suitable_trackers"
                     v-bind:key="tracker.id"
@@ -132,11 +130,17 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { Component, Prop, Watch } from "vue-property-decorator";
+import { Component, Prop, Ref, Watch } from "vue-property-decorator";
 import type { Tracker } from "../type";
+import type { ListPicker } from "@tuleap/list-picker";
+import { createListPicker } from "@tuleap/list-picker";
 
 @Component
 export default class App extends Vue {
+    override $refs!: {
+        trackers_picker: HTMLSelectElement;
+    };
+
     @Prop({ required: true })
     private readonly widget_id!: number;
 
@@ -147,7 +151,7 @@ export default class App extends Vue {
     private readonly trackers!: Tracker[];
 
     @Prop({ required: true })
-    private readonly selected_tracker_id!: number | "";
+    private readonly selected_tracker_ids!: number[];
 
     @Prop({ required: true })
     private readonly selected_lvl1_iteration_tracker_id!: number | "";
@@ -158,14 +162,27 @@ export default class App extends Vue {
     @Prop({ required: true })
     private readonly is_in_creation!: boolean;
 
-    private user_selected_tracker_id: number | "" = "";
+    @Ref("trackers-picker")
+    private readonly trackers_picker!: HTMLSelectElement;
+
+    private user_selected_tracker_ids: number[] = [];
     private user_selected_lvl1_iteration_tracker_id: number | "" = "";
     private user_selected_lvl2_iteration_tracker_id: number | "" = "";
+    private list_picker: ListPicker | undefined = undefined;
 
-    mounted(): void {
-        this.user_selected_tracker_id = this.selected_tracker_id;
+    async mounted(): Promise<void> {
+        this.user_selected_tracker_ids = this.selected_tracker_ids;
         this.user_selected_lvl1_iteration_tracker_id = this.selected_lvl1_iteration_tracker_id;
         this.user_selected_lvl2_iteration_tracker_id = this.selected_lvl2_iteration_tracker_id;
+        this.list_picker = await createListPicker(this.$refs.trackers_picker, {
+            locale: document.body.dataset.userLocale,
+            is_filterable: true,
+            placeholder: this.$gettext("Please choose a tracker"),
+        });
+    }
+
+    beforeDestroy(): void {
+        this.list_picker?.destroy();
     }
 
     @Watch("user_selected_lvl1_iteration_tracker_id")
@@ -210,7 +227,7 @@ export default class App extends Vue {
     get suitable_lvl1_iteration_trackers(): Tracker[] {
         return this.trackers.filter(
             (tracker) =>
-                tracker.id !== this.user_selected_tracker_id &&
+                !this.user_selected_tracker_ids.some((id) => tracker.id === id) &&
                 tracker.id !== this.user_selected_lvl2_iteration_tracker_id
         );
     }
@@ -218,7 +235,7 @@ export default class App extends Vue {
     get suitable_lvl2_iteration_trackers(): Tracker[] {
         return this.trackers.filter(
             (tracker) =>
-                tracker.id !== this.user_selected_tracker_id &&
+                !this.user_selected_tracker_ids.some((id) => tracker.id === id) &&
                 tracker.id !== this.user_selected_lvl1_iteration_tracker_id
         );
     }

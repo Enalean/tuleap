@@ -43,9 +43,9 @@ final class RoadmapProjectWidget extends \Widget
     private ?int $lvl2_iteration_tracker_id = null;
 
     /**
-     * @var ?int
+     * @var ?int[]
      */
-    private $tracker_id;
+    private $tracker_ids;
     /**
      * @var ?string
      */
@@ -153,7 +153,7 @@ final class RoadmapProjectWidget extends \Widget
             new PreferencePresenter(
                 $widget_id,
                 $this->getTitle(),
-                $this->tracker_id,
+                $this->tracker_ids,
                 $this->lvl1_iteration_tracker_id,
                 $this->lvl2_iteration_tracker_id,
                 $this->tracker_factory->getTrackersByGroupIdUserCanView(
@@ -197,8 +197,7 @@ final class RoadmapProjectWidget extends \Widget
     ): int {
         if (! $mapping_registry->hasCustomMapping(TrackerFactory::TRACKER_MAPPING_KEY)) {
             return $this->dao->cloneContent(
-                (int) $this->owner_id,
-                (string) $this->owner_type,
+                (int) $id,
                 (int) $owner_id,
                 $owner_type
             );
@@ -209,15 +208,13 @@ final class RoadmapProjectWidget extends \Widget
                 $data = $this->dao->searchContent((int) $id, (int) $this->owner_id, (string) $this->owner_type);
                 if (! $data) {
                     return $this->dao->cloneContent(
-                        (int) $this->owner_id,
-                        (string) $this->owner_type,
+                        (int) $id,
                         (int) $owner_id,
                         $owner_type
                     );
                 }
 
                 $tracker_mapping           = $mapping_registry->getCustomMapping(TrackerFactory::TRACKER_MAPPING_KEY);
-                $tracker_id                = $tracker_mapping[$data['tracker_id']] ?? $data['tracker_id'];
                 $lvl1_iteration_tracker_id = $tracker_mapping[$data['lvl1_iteration_tracker_id']] ?? $data['lvl1_iteration_tracker_id'];
                 $lvl2_iteration_tracker_id = $tracker_mapping[$data['lvl2_iteration_tracker_id']] ?? $data['lvl2_iteration_tracker_id'];
 
@@ -225,7 +222,10 @@ final class RoadmapProjectWidget extends \Widget
                     (int) $owner_id,
                     $owner_type,
                     $data['title'],
-                    $tracker_id,
+                    array_map(
+                        static fn(int $tracker_id): int => $tracker_mapping[$tracker_id] ?? $tracker_id,
+                        $this->dao->searchSelectedTrackers((int) $id) ?? [],
+                    ),
                     $lvl1_iteration_tracker_id,
                     $lvl2_iteration_tracker_id,
                 );
@@ -248,7 +248,7 @@ final class RoadmapProjectWidget extends \Widget
             $this->lvl1_iteration_tracker_id = $row['lvl1_iteration_tracker_id'];
             $this->lvl2_iteration_tracker_id = $row['lvl2_iteration_tracker_id'];
             $this->title                     = $row['title'];
-            $this->tracker_id                = $row['tracker_id'];
+            $this->tracker_ids               = $this->dao->searchSelectedTrackers((int) $id);
             $this->content_id                = $id;
         }
     }
@@ -263,13 +263,18 @@ final class RoadmapProjectWidget extends \Widget
             return false;
         }
 
-        if (! isset($roadmap_parameters['title'], $roadmap_parameters['tracker_id'])) {
+        if (! isset($roadmap_parameters['title'], $roadmap_parameters['tracker_ids'])) {
             return false;
         }
 
-        $tracker_id = (int) $roadmap_parameters['tracker_id'];
-        if ($tracker_id <= 0) {
-            return false;
+        $tracker_ids = array_map(
+            static fn(string $tracker_id): int => (int) $tracker_id,
+            $roadmap_parameters['tracker_ids']
+        );
+        foreach ($tracker_ids as $tracker_id) {
+            if ($tracker_id <= 0) {
+                return false;
+            }
         }
 
         $lvl1_iteration_tracker_id = isset($roadmap_parameters['lvl1_iteration_tracker_id']) ? (int) $roadmap_parameters['lvl1_iteration_tracker_id'] : null;
@@ -279,7 +284,7 @@ final class RoadmapProjectWidget extends \Widget
             (int) $this->owner_id,
             (string) $this->owner_type,
             $roadmap_parameters['title'],
-            $tracker_id,
+            $tracker_ids,
             $lvl1_iteration_tracker_id,
             $lvl2_iteration_tracker_id,
         );
@@ -297,13 +302,18 @@ final class RoadmapProjectWidget extends \Widget
             return false;
         }
 
-        if (! isset($roadmap_parameters['title'], $roadmap_parameters['tracker_id'])) {
+        if (! isset($roadmap_parameters['title'], $roadmap_parameters['tracker_ids'])) {
             return false;
         }
 
-        $tracker_id = (int) $roadmap_parameters['tracker_id'];
-        if ($tracker_id <= 0) {
-            return false;
+        $tracker_ids = array_map(
+            static fn(string $tracker_id): int => (int) $tracker_id,
+            $roadmap_parameters['tracker_ids']
+        );
+        foreach ($tracker_ids as $tracker_id) {
+            if ($tracker_id <= 0) {
+                return false;
+            }
         }
 
         $lvl1_iteration_tracker_id = isset($roadmap_parameters['lvl1_iteration_tracker_id']) ? (int) $roadmap_parameters['lvl1_iteration_tracker_id'] : null;
@@ -314,7 +324,7 @@ final class RoadmapProjectWidget extends \Widget
             (int) $this->owner_id,
             (string) $this->owner_type,
             $roadmap_parameters['title'],
-            $tracker_id,
+            $tracker_ids,
             $lvl1_iteration_tracker_id,
             $lvl2_iteration_tracker_id,
         );

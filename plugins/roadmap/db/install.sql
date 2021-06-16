@@ -8,3 +8,9 @@ CREATE TABLE IF NOT EXISTS plugin_roadmap_widget (
     lvl2_iteration_tracker_id INT(11) NULL,
     KEY (owner_id, owner_type)
 ) ENGINE=InnoDB;
+
+CREATE TABLE IF NOT EXISTS plugin_roadmap_widget_trackers (
+    plugin_roadmap_widget_id INT(11) UNSIGNED NOT NULL,
+    tracker_id INT(11) NOT NULL,
+    PRIMARY KEY (plugin_roadmap_widget_id, tracker_id)
+) ENGINE=InnoDB;

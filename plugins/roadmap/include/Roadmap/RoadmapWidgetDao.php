@@ -22,53 +22,85 @@ declare(strict_types=1);
 
 namespace Tuleap\Roadmap;
 
+use ParagonIE\EasyDB\EasyDB;
 use Tuleap\DB\DataAccessObject;
 
 class RoadmapWidgetDao extends DataAccessObject
 {
-
+    /**
+     * @param int[] $tracker_ids
+     */
     public function insertContent(
         int $owner_id,
         string $owner_type,
         string $title,
-        int $tracker_id,
+        array $tracker_ids,
         ?int $lvl1_iteration_tracker_id,
         ?int $lvl2_iteration_tracker_id
     ): int {
-        return (int) $this->getDB()->insertReturnId(
-            'plugin_roadmap_widget',
-            [
-                'owner_id'                  => $owner_id,
-                'owner_type'                => $owner_type,
-                'title'                     => $title,
-                'tracker_id'                => $tracker_id,
-                'lvl1_iteration_tracker_id' => $lvl1_iteration_tracker_id,
-                'lvl2_iteration_tracker_id' => $lvl2_iteration_tracker_id,
-            ]
+        return $this->getDB()->tryFlatTransaction(
+            function (EasyDB $db) use ($owner_id, $owner_type, $title, $tracker_ids, $lvl1_iteration_tracker_id, $lvl2_iteration_tracker_id): int {
+                $new_id = (int) $db->insertReturnId(
+                    'plugin_roadmap_widget',
+                    [
+                        'owner_id'                  => $owner_id,
+                        'owner_type'                => $owner_type,
+                        'title'                     => $title,
+                        'lvl1_iteration_tracker_id' => $lvl1_iteration_tracker_id,
+                        'lvl2_iteration_tracker_id' => $lvl2_iteration_tracker_id,
+                    ]
+                );
+
+                $db->insertMany(
+                    'plugin_roadmap_widget_trackers',
+                    array_map(
+                        fn ($tracker_id) => ['plugin_roadmap_widget_id' => $new_id, 'tracker_id' => $tracker_id],
+                        $tracker_ids,
+                    )
+                );
+
+                return $new_id;
+            }
         );
     }
 
     public function cloneContent(
-        int $source_owner_id,
-        string $source_owner_type,
+        int $id,
         int $destination_owner_id,
         string $destination_owner_type
     ): int {
-        $sql = 'INSERT INTO plugin_roadmap_widget (owner_id, owner_type, title, tracker_id, lvl1_iteration_tracker_id, lvl2_iteration_tracker_id)
-                SELECT  ?, ?, title, tracker_id, lvl1_iteration_tracker_id, lvl2_iteration_tracker_id
-                FROM plugin_roadmap_widget
-                WHERE owner_id = ?
-                  AND owner_type = ?';
+        return $this->getDB()->tryFlatTransaction(
+            function (EasyDB $db) use ($id, $destination_owner_id, $destination_owner_type): int {
+                $sql = 'INSERT INTO plugin_roadmap_widget (owner_id, owner_type, title, lvl1_iteration_tracker_id, lvl2_iteration_tracker_id)
+                        SELECT  ?, ?, title, lvl1_iteration_tracker_id, lvl2_iteration_tracker_id
+                        FROM plugin_roadmap_widget
+                        WHERE id = ?';
 
-        $this->getDB()->run(
-            $sql,
-            $destination_owner_id,
-            $destination_owner_type,
-            $source_owner_id,
-            $source_owner_type
+                $db->run(
+                    $sql,
+                    $destination_owner_id,
+                    $destination_owner_type,
+                    $id
+                );
+
+                $new_id = (int) $db->lastInsertId();
+
+                if ($new_id) {
+                    $db->run(
+                        'INSERT INTO plugin_roadmap_widget_trackers (plugin_roadmap_widget_id, tracker_id)
+                        SELECT ?, plugin_roadmap_widget_trackers.tracker_id
+                        FROM plugin_roadmap_widget_trackers
+                            INNER JOIN plugin_roadmap_widget
+                                ON (plugin_roadmap_widget_trackers.plugin_roadmap_widget_id = plugin_roadmap_widget.id)
+                        WHERE id = ?',
+                        $new_id,
+                        $id,
+                    );
+                }
+
+                return $new_id;
+            }
         );
-
-        return (int) $this->getDB()->lastInsertId();
     }
 
     public function searchById(int $id): ?array
@@ -78,6 +110,15 @@ class RoadmapWidgetDao extends DataAccessObject
                 WHERE id = ?";
 
         return $this->getDB()->row($sql, $id);
+    }
+
+    public function searchSelectedTrackers(int $id): ?array
+    {
+        $sql = "SELECT tracker_id
+                FROM plugin_roadmap_widget_trackers
+                WHERE plugin_roadmap_widget_id = ?";
+
+        return $this->getDB()->col($sql, 0, $id);
     }
 
     public function searchContent(int $id, int $owner_id, string $owner_type): ?array
@@ -91,40 +132,61 @@ class RoadmapWidgetDao extends DataAccessObject
         return $this->getDB()->row($sql, $id, $owner_id, $owner_type);
     }
 
+    /**
+     * @param int[] $tracker_ids
+     */
     public function update(
         int $id,
         int $owner_id,
         string $owner_type,
         string $title,
-        int $tracker_id,
+        array $tracker_ids,
         ?int $lvl1_iteration_tracker_id,
         ?int $lvl2_iteration_tracker_id
     ): void {
-        $this->getDB()->update(
-            'plugin_roadmap_widget',
-            [
-                'title'                     => $title,
-                'tracker_id'                => $tracker_id,
-                'lvl1_iteration_tracker_id' => $lvl1_iteration_tracker_id,
-                'lvl2_iteration_tracker_id' => $lvl2_iteration_tracker_id,
-            ],
-            [
-                'owner_id'   => $owner_id,
-                'owner_type' => $owner_type,
-                'id'         => $id,
-            ]
+        $this->getDB()->tryFlatTransaction(
+            function (EasyDB $db) use ($id, $owner_id, $owner_type, $title, $tracker_ids, $lvl1_iteration_tracker_id, $lvl2_iteration_tracker_id) {
+                $db->update(
+                    'plugin_roadmap_widget',
+                    [
+                        'title'                     => $title,
+                        'lvl1_iteration_tracker_id' => $lvl1_iteration_tracker_id,
+                        'lvl2_iteration_tracker_id' => $lvl2_iteration_tracker_id,
+                    ],
+                    [
+                        'owner_id'   => $owner_id,
+                        'owner_type' => $owner_type,
+                        'id'         => $id,
+                    ]
+                );
+
+                $db->delete('plugin_roadmap_widget_trackers', ['plugin_roadmap_widget_id' => $id]);
+
+                $db->insertMany(
+                    'plugin_roadmap_widget_trackers',
+                    array_map(
+                        fn ($tracker_id) => ['plugin_roadmap_widget_id' => $id, 'tracker_id' => $tracker_id],
+                        $tracker_ids,
+                    )
+                );
+            }
         );
     }
 
     public function delete(int $id, int $owner_id, string $owner_type): void
     {
-        $this->getDB()->delete(
-            'plugin_roadmap_widget',
-            [
-                'owner_id'   => $owner_id,
-                'owner_type' => $owner_type,
-                'id'         => $id,
-            ]
+        $this->getDB()->tryFlatTransaction(
+            function (EasyDB $db) use ($id, $owner_id, $owner_type) {
+                $db->delete(
+                    'plugin_roadmap_widget',
+                    [
+                        'owner_id'   => $owner_id,
+                        'owner_type' => $owner_type,
+                        'id'         => $id,
+                    ]
+                );
+                $db->delete('plugin_roadmap_widget_trackers', ['plugin_roadmap_widget_id' => $id]);
+            }
         );
     }
 }

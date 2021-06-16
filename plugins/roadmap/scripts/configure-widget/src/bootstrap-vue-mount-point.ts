@@ -47,8 +47,10 @@ export async function bootstrapVueMountPoint(
                 typeof mount_point.dataset.trackers !== "undefined"
                     ? JSON.parse(mount_point.dataset.trackers)
                     : [],
-            selected_tracker_id:
-                Number.parseInt(mount_point.dataset.selectedTrackerId || "0", 10) || "",
+            selected_tracker_ids:
+                typeof mount_point.dataset.selectedTrackerIds !== "undefined"
+                    ? JSON.parse(mount_point.dataset.selectedTrackerIds)
+                    : [],
             selected_lvl1_iteration_tracker_id:
                 Number.parseInt(mount_point.dataset.selectedLvl1IterationTrackerId || "0", 10) ||
                 "",

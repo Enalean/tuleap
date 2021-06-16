@@ -32,14 +32,17 @@ class PreferencePresenter
     public string $widget_id;
     public string $title;
     public ?string $json_encoded_trackers;
-    public int $selected_tracker_id;
+    public ?string $selected_tracker_ids;
     public int $selected_lvl1_iteration_tracker_id;
     public int $selected_lvl2_iteration_tracker_id;
 
+    /**
+     * @param null|int[] $selected_tracker_ids
+     */
     public function __construct(
         string $widget_id,
         string $title,
-        ?int $selected_tracker_id,
+        ?array $selected_tracker_ids,
         ?int $selected_lvl1_iteration_tracker_id,
         ?int $selected_lvl2_iteration_tracker_id,
         array $trackers
@@ -49,7 +52,7 @@ class PreferencePresenter
 
         $this->json_encoded_trackers = \json_encode($this->buildTrackerPresenters($trackers));
 
-        $this->selected_tracker_id                = (int) $selected_tracker_id;
+        $this->selected_tracker_ids               = \json_encode($selected_tracker_ids);
         $this->selected_lvl1_iteration_tracker_id = (int) $selected_lvl1_iteration_tracker_id;
         $this->selected_lvl2_iteration_tracker_id = (int) $selected_lvl2_iteration_tracker_id;
     }
