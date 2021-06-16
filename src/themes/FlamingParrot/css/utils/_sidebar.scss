@@ -223,6 +223,11 @@
     white-space: nowrap;
 }
 
+.project-sidebar-header {
+    display: flex;
+    flex-direction: column;
+}
+
 .project-sidebar-header-name {
     display: flex;
     flex-direction: column;
@@ -301,9 +306,26 @@
     }
 }
 
+.project-sidebar-banner-button {
+    display: flex;
+    align-items: center;
+    padding: var(--tlp-medium-spacing);
+    border: 0;
+    background: var(--tlp-theme-dark-background-color);
+
+    &:hover,
+    &:focus {
+        background: var(--tlp-theme-dark-background-color-darker);
+
+        > .project-sidebar-banner-button-label,
+        > .project-sidebar-banner-button-icon {
+            opacity: 0.8;
+        }
+    }
+}
+
 .project-sidebar-banner-button-icon {
     @extend %round-icon;
-    margin: var(--tlp-medium-spacing) 0 var(--tlp-medium-spacing) var(--tlp-medium-spacing);
     transition: opacity ease-in-out 100ms;
     background-color: var(--tlp-ui-warning);
 
@@ -313,21 +335,6 @@
         font-size: 0.6rem;
         text-shadow: 0 0 1px rgba(0, 0, 0, 0.5);
     }
-
-    &:hover {
-        opacity: 0.8;
-    }
-
-    &:hover,
-    &:focus {
-        text-decoration: none;
-    }
-}
-
-.project-sidebar-banner-button {
-    padding: 0;
-    border: 0;
-    background: var(--tlp-theme-dark-background-color);
 }
 
 .project-sidebar-banner-button-label {
@@ -336,7 +343,7 @@
     color: var(--tlp-ui-warning);
     font-size: 0.6rem;
     font-weight: 600;
-    letter-spacing: 02px;
+    letter-spacing: 2px;
     line-height: 0.7rem;
     text-overflow: ellipsis;
     text-transform: uppercase;
@@ -402,24 +409,15 @@
 }
 
 body.sidebar-collapsed {
-    .project-sidebar-header {
-        display: flex;
-        flex-direction: column;
+    .project-sidebar-banner-button {
         justify-content: center;
     }
 
-    .project-sidebar-banner-button-icon {
-        margin: var(--tlp-medium-spacing) 0;
-    }
-
-    .sidebar-privacy-badge,
     .project-sidebar-header-name,
+    .sidebar-privacy-badge,
     .sidebar-tools-section-label,
+    .project-sidebar-banner-button-label,
     .project-sidebar-project-flags {
-        display: none;
-    }
-
-    .project-sidebar-banner-button-label {
         display: none;
     }
 }
