@@ -413,8 +413,17 @@ body.sidebar-collapsed {
         justify-content: center;
     }
 
-    .project-sidebar-header-name,
+    .project-sidebar-header-name {
+        padding: var(--tlp-medium-spacing);
+    }
+
+    .project-title-container {
+        align-self: center;
+    }
+
     .sidebar-privacy-badge,
+    .project-sidebar-title,
+    .project-title-spacer,
     .sidebar-tools-section-label,
     .project-sidebar-banner-button-label,
     .project-sidebar-project-flags {

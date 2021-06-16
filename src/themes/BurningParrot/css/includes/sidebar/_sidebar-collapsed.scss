@@ -58,13 +58,22 @@
         background: var(--tlp-theme-color) url("/images/organization_logo_small.png") no-repeat center center;
     }
 
-    .project-sidebar-header-name,
+    .project-sidebar-header-name {
+        padding: var(--tlp-medium-spacing);
+    }
+
+    .project-title-container {
+        align-self: center;
+    }
+
     .sidebar-privacy-badge,
     .sidebar-tools-section-label,
     .project-sidebar-banner-button-label,
     .project-sidebar-project-flags,
     .project-sidebar-nav-item-label,
     .sidebar-about-logo,
+    .project-sidebar-title,
+    .project-title-spacer,
     .sidebar-about-version,
     .sidebar-copyright {
         display: none;
