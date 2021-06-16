@@ -24,9 +24,15 @@ import type { Store } from "vuex";
 
 Vue.use(Vuex);
 
-export function createStore(integrations_representations: Array<GitlabIntegration>): Store<State> {
+export function createStore(
+    integrations_representations: Array<GitlabIntegration>,
+    artifact_id: number,
+    branch_name: string
+): Store<State> {
     const state: State = {
         integrations: integrations_representations,
+        artifact_id: artifact_id,
+        branch_name: branch_name,
     };
 
     return new Vuex.Store({

@@ -19,6 +19,8 @@
 
 export interface State {
     integrations: Array<GitlabIntegration>;
+    artifact_id: number;
+    branch_name: string;
 }
 
 export interface GitlabIntegration {
