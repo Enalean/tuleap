@@ -1,5 +1,5 @@
 /*
- *  Copyright (c) Enalean, $today.year-Present. All Rights Reserved.
+ *  Copyright (c) Enalean, 2020-Present. All Rights Reserved.
  *
  *  This file is a part of Tuleap.
  *
@@ -17,8 +17,12 @@
  *  along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export default () => {
-    return {
-        is_embedded_in_large_view: false,
-    };
+export interface PreferenciesState {
+    is_embedded_in_large_view: boolean;
+}
+
+const state: PreferenciesState = {
+    is_embedded_in_large_view: false,
 };
+
+export default state;

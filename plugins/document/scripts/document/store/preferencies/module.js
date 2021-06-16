@@ -17,13 +17,13 @@
  *  along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import * as actions from "./preferencies-actions.js";
-import * as mutations from "./preferencies-mutations.js";
-import defaultState from "./preferencies-default-state.js";
+import * as actions from "./preferencies-actions";
+import * as mutations from "./preferencies-mutations";
+import defaultState from "./preferencies-default-state";
 
 export default {
     namespaced: true,
-    state: defaultState(),
+    state: defaultState,
     actions,
     mutations,
 };

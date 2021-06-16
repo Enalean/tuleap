@@ -17,6 +17,11 @@
  *  along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export function shouldDisplayEmbeddedInLargeMode(state, is_embedded_in_large_view) {
+import type { PreferenciesState } from "./preferencies-default-state";
+
+export function shouldDisplayEmbeddedInLargeMode(
+    state: PreferenciesState,
+    is_embedded_in_large_view: boolean
+): void {
     state.is_embedded_in_large_view = is_embedded_in_large_view;
 }

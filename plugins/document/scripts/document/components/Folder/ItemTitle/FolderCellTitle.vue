@@ -143,10 +143,10 @@ export default {
                 this.is_closed = true;
             }
 
-            this.$store.dispatch("preferencies/setUserPreferenciesForFolder", [
-                this.item.id,
-                this.is_closed,
-            ]);
+            this.$store.dispatch("preferencies/setUserPreferenciesForFolder", {
+                folder_id: this.item.id,
+                should_be_closed: this.is_closed,
+            });
         },
     },
 };
