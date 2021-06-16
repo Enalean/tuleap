@@ -38,6 +38,30 @@ describe("TrackerFromAnotherProject", () => {
         });
     }
 
+    it("should sort the projects alphabetically to ease projects parsing", async () => {
+        const ttm = {
+            id: "101",
+            name: "TTM",
+            trackers: [],
+        } as ProjectWithTrackers;
+
+        const scrum = {
+            id: "102",
+            name: "Scrum",
+            trackers: [],
+        } as ProjectWithTrackers;
+
+        const wrapper = await getWrapper({
+            selected_project_tracker_template: null,
+            selected_project: null,
+            trackers_from_other_projects: [ttm, scrum],
+        } as State);
+
+        const project_select_options = wrapper.get("[data-test=project-select]").findAll("option");
+        expect(project_select_options.at(1).text()).toBe("Scrum");
+        expect(project_select_options.at(2).text()).toBe("TTM");
+    });
+
     it("fills the tracker select options with the trackers of the selected project", async () => {
         const bugs_tracker: Tracker = {
             id: "104",
