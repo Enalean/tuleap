@@ -1,6 +1,8 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -13,15 +15,19 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Tuleap; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
-class Project_AccessDeletedException extends Project_AccessException
+namespace Tuleap\Project;
+
+interface CheckProjectAccess
 {
-    public function __construct()
-    {
-        parent::__construct($GLOBALS['Language']->getText('include_exit', 'project_status_D'));
-    }
+    /**
+     * @throws ProjectAccessSuspendedException
+     * @throws \Project_AccessDeletedException
+     * @throws \Project_AccessPrivateException
+     * @throws \Project_AccessProjectNotFoundException
+     * @throws \Project_AccessRestrictedException
+     */
+    public function checkUserCanAccessProject(\PFUser $user, \Project $project): void;
 }

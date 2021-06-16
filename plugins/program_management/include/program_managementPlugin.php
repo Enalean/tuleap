@@ -80,6 +80,7 @@ use Tuleap\ProgramManagement\Adapter\ProjectAdmin\PermissionPerGroupSectionBuild
 use Tuleap\ProgramManagement\Adapter\Team\MirroredTimeboxes\MirroredTimeboxesDao;
 use Tuleap\ProgramManagement\Adapter\Team\MirroredTimeboxes\MirroredTimeboxRetriever;
 use Tuleap\ProgramManagement\Adapter\Team\TeamDao;
+use Tuleap\ProgramManagement\Adapter\Workspace\ProjectManagerAdapter;
 use Tuleap\ProgramManagement\Adapter\Workspace\WorkspaceDAO;
 use Tuleap\ProgramManagement\DisplayProgramBacklogController;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\ArtifactCreatedHandler;
@@ -94,7 +95,9 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\TimeboxArtifactLinkType;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\TopBacklogChangeProcessor;
 use Tuleap\ProgramManagement\Domain\ProgramTracker;
 use Tuleap\ProgramManagement\Domain\Team\RootPlanning\RootPlanningEditionHandler;
+use Tuleap\ProgramManagement\Domain\Workspace\CollectLinkedProjectsHandler;
 use Tuleap\ProgramManagement\Domain\Workspace\ComponentInvolvedVerifier;
+use Tuleap\ProgramManagement\Domain\Workspace\TeamsSearcher;
 use Tuleap\ProgramManagement\EventRedirectAfterArtifactCreationOrUpdateHandler;
 use Tuleap\ProgramManagement\ProgramService;
 use Tuleap\ProgramManagement\RedirectParameterInjector;
@@ -103,6 +106,7 @@ use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupPaneCollector;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupUGroupFormatter;
 use Tuleap\Project\ProjectAccessChecker;
 use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
+use Tuleap\Project\Sidebar\CollectLinkedProjects;
 use Tuleap\Queue\QueueFactory;
 use Tuleap\Queue\WorkerEvent;
 use Tuleap\Request\CollectRoutesEvent;
@@ -186,6 +190,7 @@ final class program_managementPlugin extends Plugin
         $this->addHook(CheckPostActionsForTracker::NAME);
         $this->addHook(WorkflowDeletionEvent::NAME);
         $this->addHook(TransitionDeletionEvent::NAME);
+        $this->addHook(CollectLinkedProjects::NAME);
 
         return parent::getHooksAndCallbacks();
     }
@@ -639,6 +644,23 @@ final class program_managementPlugin extends Plugin
         $transition_id = (int) $event->getTransition()->getId();
 
         (new AddToTopBacklogPostActionDAO())->deleteTransitionPostActions($transition_id);
+    }
+
+    public function collectLinkedProjects(CollectLinkedProjects $event): void
+    {
+        $program_dao = new ProgramDao();
+        $handler     = new CollectLinkedProjectsHandler(
+            $program_dao,
+            new TeamsSearcher(
+                $program_dao,
+                new ProjectManagerAdapter(ProjectManager::instance())
+            ),
+            new ProjectAccessChecker(
+                new RestrictedUserCanAccessProjectVerifier(),
+                \EventManager::instance()
+            ),
+        );
+        $handler->handle($event);
     }
 
     private function getLogger(): \Psr\Log\LoggerInterface

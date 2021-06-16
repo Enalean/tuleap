@@ -36,7 +36,7 @@ use Tuleap\layout\NewDropdown\NewDropdownPresenter;
 use Tuleap\Layout\SidebarPresenter;
 use Tuleap\Layout\ThemeVariation;
 use Tuleap\OpenGraph\OpenGraphPresenter;
-use Tuleap\Project\ProjectContextPresenter;
+use Tuleap\Project\Sidebar\ProjectContextPresenter;
 use Tuleap\Theme\BurningParrot\Navbar\PresenterBuilder as NavbarPresenterBuilder;
 use Tuleap\User\SwitchToPresenter;
 use URLRedirect;

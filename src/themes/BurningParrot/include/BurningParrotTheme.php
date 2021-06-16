@@ -52,10 +52,12 @@ use Tuleap\Project\Admin\Access\UserCanAccessProjectAdministrationVerifier;
 use Tuleap\Project\Admin\MembershipDelegationDao;
 use Tuleap\Project\Flags\ProjectFlagsBuilder;
 use Tuleap\Project\Flags\ProjectFlagsDao;
-use Tuleap\Project\ProjectContextPresenter;
 use Tuleap\Project\ProjectPresentersBuilder;
 use Tuleap\Project\ProjectPrivacyPresenter;
 use Tuleap\Project\Registration\ProjectRegistrationUserPermissionChecker;
+use Tuleap\Project\Sidebar\CollectLinkedProjects;
+use Tuleap\Project\Sidebar\LinkedProjectsCollectionPresenter;
+use Tuleap\Project\Sidebar\ProjectContextPresenter;
 use Tuleap\Sanitizer\URISanitizer;
 use Tuleap\Theme\BurningParrot\Navbar\PresenterBuilder as NavbarPresenterBuilder;
 use Tuleap\User\SwitchToPresenterBuilder;
@@ -144,10 +146,14 @@ class BurningParrotTheme extends BaseLayout
                 $this->user
             );
 
+            $linked_projects_event = new CollectLinkedProjects($project, $this->user);
+            $this->event_manager->dispatch($linked_projects_event);
+
             $project_context = ProjectContextPresenter::build(
                 $project,
                 ProjectPrivacyPresenter::fromProject($project),
                 $administration_link,
+                LinkedProjectsCollectionPresenter::fromEvent($linked_projects_event),
                 $this->project_flags_builder->buildProjectFlags($project),
                 $this->getProjectBannerWithScript($project, $this->user, 'project/project-banner-bp.js'),
             );
