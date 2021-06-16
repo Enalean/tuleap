@@ -13,8 +13,11 @@ msgstr ""
 msgid "Close"
 msgstr "Fermer"
 
-msgid "Confirm"
-msgstr "Confirmer"
+msgid "Create branch"
+msgstr "Créer la branche"
 
-msgid "Create a GitLab branch"
-msgstr "Créer une branche GitLab"
+msgid "Create branch on a GitLab repository"
+msgstr "Créer une branche dans un dépôt GitLab"
+
+msgid "GitLab repositories integrations"
+msgstr "Intégrations de dépôts GitLab"

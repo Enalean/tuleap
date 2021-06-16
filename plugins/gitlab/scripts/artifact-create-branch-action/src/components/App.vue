@@ -35,20 +35,38 @@
                     >
                         <i class="fas fa-code-branch" aria-hidden="true"></i>
                         <translate class="modal-move-artifact-icon-title">
-                            Create a GitLab branch
+                            Create branch on a GitLab repository
                         </translate>
                     </h3>
                 </div>
                 <div class="modal-body artifact-create-gitlab-branch-modal-body">
-                    <integrations-list />
+                    <div>
+                        <label for="artifact-create-gitlab-branch-select-integration" v-translate>
+                            GitLab repositories integrations
+                            <span
+                                class="artifact-create-branch-action-mandatory-information"
+                                aria-hidden="true"
+                            >
+                                *
+                            </span>
+                        </label>
+                        <select id="artifact-create-gitlab-branch-select-integration">
+                            <option
+                                v-for="integration in integrations"
+                                v-bind:value="integration.id"
+                                v-bind:key="integration.id"
+                            >
+                                {{ integration.name }}
+                            </option>
+                        </select>
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="reset" class="btn btn-secondary" data-dismiss="modal">
                         <translate>Close</translate>
                     </button>
                     <button type="button" class="btn btn-primary" disabled>
-                        <i class="fas fa-check"></i>
-                        <translate>Confirm</translate>
+                        <translate>Create branch</translate>
                     </button>
                 </div>
             </div>
@@ -59,14 +77,14 @@
 import Vue from "vue";
 import { Component } from "vue-property-decorator";
 import jquery from "jquery";
-import IntegrationsList from "./IntegrationsList.vue";
+import { State } from "vuex-class";
+import type { GitlabIntegration } from "../store/type";
 
-@Component({
-    components: {
-        IntegrationsList,
-    },
-})
+@Component
 export default class App extends Vue {
+    @State
+    readonly integrations!: Array<GitlabIntegration>;
+
     mounted(): void {
         const jquery_element = jquery(this.$el);
         jquery_element.on("hidden", () => {
@@ -77,3 +95,8 @@ export default class App extends Vue {
     }
 }
 </script>
+<style scoped lang="scss">
+.artifact-create-branch-action-mandatory-information {
+    color: var(--tlp-ui-danger);
+}
+</style>
