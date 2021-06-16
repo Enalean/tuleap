@@ -552,4 +552,68 @@ final class RepositoryTest extends TestBase
             ]
         );
     }
+
+    public function testOPTIONSGetTree(): void
+    {
+        $response = $this->getResponse($this->client->options('git/' . GitDataBuilder::REPOSITORY_GIT_ID . '/tree?' . http_build_query(
+            [
+                'path' => '',
+                'ref' => 'master'
+            ]
+        )));
+        $this->assertEquals(['OPTIONS', 'GET'], $response->getHeader('Allow')->normalize()->toArray());
+    }
+
+    public function testGETTreeWithEmptyPath(): void
+    {
+        $url = 'git/' . GitDataBuilder::REPOSITORY_GIT_ID . '/tree?' . http_build_query(
+            [
+             'path' => '',
+             'ref'  => 'master'
+            ]
+        );
+
+        $response = $this->getResponse($this->client->get($url));
+
+        $this->assertGetTreeWithEmptyPath($response);
+    }
+
+    public function testGETTreeWithAFilePathReturns404(): void
+    {
+        $url = 'git/' . GitDataBuilder::REPOSITORY_GIT_ID . '/tree?' . http_build_query(
+            [
+             'path' => 'file01',
+             'ref'  => 'master'
+            ]
+        );
+
+        $response = $this->getResponse($this->client->get($url));
+
+        self::assertEquals(404, $response->getStatusCode());
+    }
+
+    private function assertGetTreeWithEmptyPath(Response $response): void
+    {
+        $commit = $response->json();
+
+        self::assertEqualsCanonicalizing(
+            $commit,
+            [
+            [
+                'id'   => '459385229609d3c5f847e75ae61b3859cf90f159',
+                'name' => 'README.mkd',
+                'path' => 'README.mkd',
+                'type' => 'blob',
+                'mode' => '100644',
+            ],
+            [
+                'id'   => '8e72e5b6f640d6df27c219b039c6430d4ed96a1a',
+                'name' => 'file01',
+                'path' => 'file01',
+                'type' => 'blob',
+                'mode' => '100644',
+            ],
+            ]
+        );
+    }
 }

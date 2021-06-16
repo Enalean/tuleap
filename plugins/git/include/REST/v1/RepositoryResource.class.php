@@ -684,6 +684,62 @@ class RepositoryResource extends AuthenticatedResource
     }
 
     /**
+     * Get the tree of a git repository.
+     *
+     * Returns the repository root content when the path is not given.
+     *
+     * @url    GET {id}/tree
+     *
+     * @access hybrid
+     *
+     * @param int    $id   Id of the git repository
+     * @param string $ref  reference {@from path} {@required true}
+     * @param string $path path of the file {@from path} {@required false}
+     *
+     * @return array {@type Tuleap\Git\REST\v1\GitTreeRepresentation}
+     *
+     * @status 200
+     * @throws RestException 401
+     * @throws RestException 403
+     * @throws RestException 404
+     * @throws RestException 500
+     *
+     */
+    public function getTree(int $id, string $ref, string $path = ""): array
+    {
+        Header::allowOptionsGet();
+
+        $this->checkAccess();
+        $tree_representation_factory = new GitTreeRepresentationFactory();
+        try {
+            $repository = $this->getGitPHPProject($id);
+            return $tree_representation_factory->getGitTreeRepresentation(
+                rtrim($path, DIRECTORY_SEPARATOR),
+                $ref,
+                $repository
+            );
+        } catch (\GitRepositoryException | GitRepoRefNotFoundException $exception) {
+            throw new RestException(404, $exception->getMessage());
+        } catch (RepositoryNotExistingException $exception) {
+            throw new RestException(404, "Reference $ref does not exist");
+        } catch (GitObjectTypeNotSupportedException $exception) {
+            throw new RestException(500, $exception->getMessage());
+        }
+    }
+
+    /**
+     * @url OPTIONS {id}/tree
+     *
+     * @param int    $id           Id of the git repository
+     * @param string $ref          ref {@from path} {@required true}
+     * @param string $path         path {@from path} {@required false}
+     */
+    public function optionsGetTree(int $id, string $ref, string $path): void
+    {
+        Header::allowOptionsGet();
+    }
+
+    /**
      * @url OPTIONS {id}/files
      *
      * @param int    $id           Id of the git repository
@@ -694,7 +750,6 @@ class RepositoryResource extends AuthenticatedResource
     {
         Header::allowOptionsGet();
     }
-
 
     /**
      * Get the content of a specific file from a git repository.
