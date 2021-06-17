@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Gitlab\Artifact\Action;
 
+use Cocur\Slugify\Slugify;
 use ForgeConfig;
 use PFUser;
 use Tuleap\Gitlab\Plugin\GitlabIntegrationAvailabilityChecker;
@@ -95,7 +96,15 @@ class CreateBranchButtonFetcher
                 [
                     'name'  => "integrations",
                     'value' => json_encode($representations, JSON_THROW_ON_ERROR)
-                ]
+                ],
+                [
+                    'name'  => "artifact-id",
+                    'value' => $artifact->getId()
+                ],
+                [
+                    'name'  => "slugified-artifact-title",
+                    'value' => $this->getSlugifiedArtifactTitle($artifact)
+                ],
             ]
         );
 
@@ -103,5 +112,16 @@ class CreateBranchButtonFetcher
             $link,
             $this->javascript_asset->getFileURL()
         );
+    }
+
+    private function getSlugifiedArtifactTitle(Artifact $artifact): string
+    {
+        $artifact_title = $artifact->getTitle();
+        if ($artifact_title === null) {
+            return '';
+        }
+
+        $slugify = new Slugify();
+        return $slugify->slugify($artifact_title, '_');
     }
 }

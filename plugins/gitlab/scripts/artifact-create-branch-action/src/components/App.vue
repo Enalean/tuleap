@@ -40,7 +40,7 @@
                     </h3>
                 </div>
                 <div class="modal-body artifact-create-gitlab-branch-modal-body">
-                    <div>
+                    <div class="artifact-create-gitlab-branch-form-block">
                         <label for="artifact-create-gitlab-branch-select-integration" v-translate>
                             GitLab repositories integrations
                             <span
@@ -50,7 +50,11 @@
                                 *
                             </span>
                         </label>
-                        <select id="artifact-create-gitlab-branch-select-integration">
+                        <select
+                            id="artifact-create-gitlab-branch-select-integration"
+                            required="required"
+                            aria-required="true"
+                        >
                             <option
                                 v-for="integration in integrations"
                                 v-bind:value="integration.id"
@@ -59,6 +63,33 @@
                                 {{ integration.name }}
                             </option>
                         </select>
+                    </div>
+                    <div class="artifact-create-gitlab-branch-form-block">
+                        <label for="artifact-create-gitlab-branch-reference" v-translate>
+                            Git reference from where the branch should be created
+                            <span
+                                class="artifact-create-branch-action-mandatory-information"
+                                aria-hidden="true"
+                            >
+                                *
+                            </span>
+                        </label>
+                        <input
+                            type="text"
+                            id="artifact-create-gitlab-branch-reference"
+                            placeholder="main"
+                            required="required"
+                            aria-required="true"
+                        />
+                        <p class="text-info" v-translate>
+                            Must be an existing git commit SHA-1 or a branch name
+                        </p>
+                    </div>
+                    <div>
+                        <label for="artifact-create-gitlab-branch-name" v-translate>
+                            The following branch will be created
+                        </label>
+                        <code id="artifact-create-gitlab-branch-name">{{ branch_name }}</code>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -85,6 +116,9 @@ export default class App extends Vue {
     @State
     readonly integrations!: Array<GitlabIntegration>;
 
+    @State
+    readonly branch_name!: string;
+
     mounted(): void {
         const jquery_element = jquery(this.$el);
         jquery_element.on("hidden", () => {
@@ -98,5 +132,8 @@ export default class App extends Vue {
 <style scoped lang="scss">
 .artifact-create-branch-action-mandatory-information {
     color: var(--tlp-ui-danger);
+}
+.artifact-create-gitlab-branch-form-block {
+    margin: 0 0 var(--tlp-medium-spacing);
 }
 </style>

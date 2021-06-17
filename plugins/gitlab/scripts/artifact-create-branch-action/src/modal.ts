@@ -42,9 +42,23 @@ export async function init(create_branch_link: HTMLElement): Promise<void> {
     if (!create_branch_link.dataset.integrations) {
         throw new Error("Missing integrations representations dataset");
     }
-    const integrations_representations = JSON.parse(create_branch_link.dataset.integrations);
+    if (!create_branch_link.dataset.artifactId) {
+        throw new Error("Missing artifact id dataset");
+    }
+    if (!create_branch_link.dataset.slugifiedArtifactTitle) {
+        throw new Error("Missing artifact title dataset");
+    }
 
-    const store = createStore(integrations_representations);
+    const integrations_representations = JSON.parse(create_branch_link.dataset.integrations);
+    const artifact_id = Number(create_branch_link.dataset.artifactId);
+    const slugified_artifact_title = create_branch_link.dataset.slugifiedArtifactTitle;
+
+    let branch_name = "tuleap-" + artifact_id;
+    if (slugified_artifact_title.length > 0) {
+        branch_name += "-" + slugified_artifact_title;
+    }
+
+    const store = createStore(integrations_representations, artifact_id, branch_name);
     const AppComponent = Vue.extend(App);
     const app = new AppComponent({
         store,

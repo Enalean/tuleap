@@ -19,5 +19,14 @@ msgstr "Créer la branche"
 msgid "Create branch on a GitLab repository"
 msgstr "Créer une branche dans un dépôt GitLab"
 
+msgid "Git reference from where the branch should be created"
+msgstr "La référence Git à partir de laquelle la branche va être créée"
+
 msgid "GitLab repositories integrations"
 msgstr "Intégrations de dépôts GitLab"
+
+msgid "Must be an existing git commit SHA-1 or a branch name"
+msgstr "Doit être le SHA-1 d'un commit existant ou le nom d'une branche"
+
+msgid "The following branch will be created"
+msgstr "La branche suivante sera créée"
