@@ -49,7 +49,7 @@
     text-decoration: none;
 
     &:hover {
-        background-color: var(--tlp-theme-color-hover-background);
+        background-color: var(--tlp-main-color-hover-background);
         text-decoration: none;
         cursor: pointer;
 
@@ -65,7 +65,7 @@
 
 .labeled-item-icon {
     margin: 0 var(--tlp-small-spacing) 0 0;
-    fill: var(--tlp-theme-color-transparent-80);
+    fill: var(--tlp-main-color-transparent-80);
 }
 
 .labeled-items-empty {

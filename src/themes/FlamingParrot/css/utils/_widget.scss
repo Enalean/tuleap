@@ -13,19 +13,19 @@ $border-radius: 3px;
         padding: 8px 12px 10px;
         border-top: $border;
         border-right: $border;
-        border-bottom: 1px solid var(--tlp-theme-color);
+        border-bottom: 1px solid var(--tlp-main-color);
         border-left: $border;
         border-top-left-radius: $border-radius;
         border-top-right-radius: $border-radius;
         background: #ffffff;
-        color: var(--tlp-theme-color);
+        color: var(--tlp-main-color);
         font-weight: 400;
     }
 
     /* stylelint-disable-next-line selector-class-pattern */
     .widget_content {
         padding: 12px;
-        border-top: 1px solid var(--tlp-theme-color);
+        border-top: 1px solid var(--tlp-main-color);
         border-right: $border;
         border-bottom: $border;
         border-left: $border;

@@ -29,11 +29,11 @@ body.viewvc-epel {
     }
 
     .tuleap-viewvc-file-content-line:target {
-        background: var(--tlp-theme-color-transparent-90);
+        background: var(--tlp-main-color-transparent-90);
 
         > .tuleap-viewvc-file-content-line-number {
-            border-left-color: var(--tlp-theme-color);
-            box-shadow: inset 2px 0 0 0 var(--tlp-theme-color);
+            border-left-color: var(--tlp-main-color);
+            box-shadow: inset 2px 0 0 0 var(--tlp-main-color);
         }
     }
 
@@ -43,7 +43,7 @@ body.viewvc-epel {
     .log-revision.log-revision--selected > .log-revision-header,
     #revision-changed-files > thead > tr > th,
     #directory-content > thead > tr > th {
-        border-bottom-color: var(--tlp-theme-color);
+        border-bottom-color: var(--tlp-main-color);
     }
 }
 /* stylelint-enable */

@@ -92,7 +92,7 @@
 
 .siteadmin-homepage-users-icon,
 .siteadmin-homepage-projects-icon {
-    fill: var(--tlp-theme-color-transparent-80);
+    fill: var(--tlp-main-color-transparent-80);
 }
 
 .siteadmin-homepage-validation-count {
@@ -101,12 +101,12 @@
     font-weight: 300;
 
     &:not(.tlp-text-warning) {
-        color: var(--tlp-theme-color-transparent-80);
+        color: var(--tlp-main-color-transparent-80);
     }
 }
 
 .siteadmin-homepage-no-validation {
-    color: var(--tlp-theme-color-transparent-70);
+    color: var(--tlp-main-color-transparent-70);
     text-align: center;
 }
 
@@ -147,7 +147,7 @@
     cursor: pointer;
 
     &:hover {
-        background: var(--tlp-theme-color-transparent-90);
+        background: var(--tlp-main-color-transparent-90);
     }
 }
 

@@ -25,12 +25,12 @@
     width: variables-common.$sidebar-width;
     max-width: variables-common.$sidebar-width;
     height: variables-common.$navbar-height;
-    background: var(--tlp-theme-color) url("/images/organization_logo.png") no-repeat center center;
+    background: var(--tlp-main-color) url("/images/organization_logo.png") no-repeat center center;
 
     &.collapsed {
         width: variables-common.$sidebar-width-collapsed;
         max-width: variables-common.$sidebar-width-collapsed;
-        background: var(--tlp-theme-color) url("/images/organization_logo_small.png") no-repeat center center;
+        background: var(--tlp-main-color) url("/images/organization_logo_small.png") no-repeat center center;
     }
 }
 
@@ -46,7 +46,7 @@
 }
 
 .logo-svg-fill-theme-color {
-    fill: var(--tlp-theme-color);
+    fill: var(--tlp-main-color);
 }
 
 .logo-svg-fill-default-text-color {

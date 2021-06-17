@@ -66,22 +66,22 @@ $card-border-margin: 150px;
 
     &:checked {
         + label {
-            border-color: var(--tlp-theme-color);
+            border-color: var(--tlp-main-color);
 
             > div > .project-registration-template-card-title {
                 margin: 0 0 var(--tlp-small-spacing);
-                color: var(--tlp-theme-color);
+                color: var(--tlp-main-color);
                 font-size: 16px;
                 font-weight: normal;
                 line-height: 18px;
             }
 
             > div > svg > .project-registration-template-card-svg {
-                fill: var(--tlp-theme-color);
+                fill: var(--tlp-main-color);
             }
 
             > div > svg > .project-registration-template-card-svg-stroke {
-                stroke: var(--tlp-theme-color);
+                stroke: var(--tlp-main-color);
             }
         }
     }

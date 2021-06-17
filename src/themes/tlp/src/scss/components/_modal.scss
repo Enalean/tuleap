@@ -102,7 +102,7 @@ $tlp-modal-transition: 100ms ease-out;
     padding: $tlp-modal-padding;
     border-top-left-radius: $tlp-modal-radius;
     border-top-right-radius: $tlp-modal-radius;
-    background: var(--tlp-theme-color);
+    background: var(--tlp-main-color);
     color: var(--tlp-ui-white);
 }
 
@@ -132,7 +132,7 @@ $tlp-modal-transition: 100ms ease-out;
 }
 
 .tlp-modal-subtitle {
-    color: var(--tlp-theme-color);
+    color: var(--tlp-main-color);
     font-size: 20px;
     font-weight: 600;
 }

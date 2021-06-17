@@ -5,17 +5,17 @@
 
     form .input-append {
         input {
-            color: var(--tlp-theme-color);
+            color: var(--tlp-main-color);
         }
 
         button {
             transition: background 0.1s linear;
-            background: var(--tlp-theme-color);
+            background: var(--tlp-main-color);
             color: #ffffff;
 
             &:hover {
                 transition: background 0.1s linear;
-                background: var(--tlp-theme-color-lighter-90);
+                background: var(--tlp-main-color-lighter-90);
             }
         }
     }
@@ -27,8 +27,8 @@
             color: #777777;
 
             &:hover {
-                box-shadow: inset 0 -2px 0 var(--tlp-theme-color);
-                color: var(--tlp-theme-color);
+                box-shadow: inset 0 -2px 0 var(--tlp-main-color);
+                color: var(--tlp-main-color);
             }
         }
 
@@ -36,8 +36,8 @@
             /* stylelint-disable selector-no-qualifying-type */
             > a {
                 // stylelint-enable
-                box-shadow: inset 0 -2px 0 var(--tlp-theme-color);
-                color: var(--tlp-theme-color);
+                box-shadow: inset 0 -2px 0 var(--tlp-main-color);
+                color: var(--tlp-main-color);
             }
         }
     }
@@ -46,8 +46,8 @@
 .search-panes {
     .search-pane {
         .search-pane-header {
-            border-color: var(--tlp-theme-color);
-            color: var(--tlp-theme-color);
+            border-color: var(--tlp-main-color);
+            color: var(--tlp-main-color);
         }
 
         .search-pane-body {
@@ -57,7 +57,7 @@
                     a,
                     span {
                         &.active {
-                            color: var(--tlp-theme-color);
+                            color: var(--tlp-main-color);
                             text-decoration: none;
                         }
                     }
@@ -70,10 +70,10 @@
 
 #search-results {
     ul li a {
-        color: var(--tlp-theme-color);
+        color: var(--tlp-main-color);
 
         &:hover {
-            color: var(--tlp-theme-color-darker-10);
+            color: var(--tlp-main-color-darker-10);
         }
     }
 }

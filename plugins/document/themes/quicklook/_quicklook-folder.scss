@@ -22,7 +22,7 @@
 .quick-look-pane-highlighted .document-quick-look-folder-container {
     > .document-quick-look-dropzone-text {
         opacity: 0.85;
-        color: var(--tlp-theme-color);
+        color: var(--tlp-main-color);
     }
 
     > .document-folder-icon {
@@ -81,6 +81,6 @@
     display: none;
 
     > path {
-        fill: var(--tlp-theme-color);
+        fill: var(--tlp-main-color);
     }
 }

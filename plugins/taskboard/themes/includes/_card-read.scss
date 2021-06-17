@@ -85,7 +85,7 @@
         }
 
         &:focus {
-            outline: solid var(--tlp-theme-color) 2px;
+            outline: solid var(--tlp-main-color) 2px;
         }
     }
 
@@ -121,7 +121,7 @@
     align-items: flex-end;
 
     &:focus > .taskboard-card {
-        outline: solid var(--tlp-theme-color) 2px;
+        outline: solid var(--tlp-main-color) 2px;
     }
 }
 

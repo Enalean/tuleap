@@ -20,12 +20,12 @@
 .reading-mode-report {
     display: flex;
     flex-direction: column;
-    color: var(--tlp-theme-color);
+    color: var(--tlp-main-color);
     font-size: 15px;
 
     &:hover:not(.disabled) {
         margin: 0;
-        background-color: var(--tlp-theme-color-transparent-80);
+        background-color: var(--tlp-main-color-transparent-80);
         cursor: pointer;
     }
 }
@@ -61,7 +61,7 @@
 
     > .cross-tracker-project-icon {
         margin: 0 5px 0 0;
-        fill: var(--tlp-theme-color);
+        fill: var(--tlp-main-color);
     }
 }
 

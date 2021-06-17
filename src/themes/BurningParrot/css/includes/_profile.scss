@@ -18,7 +18,7 @@
  */
 
 $profile-header-background: var(--tlp-theme-dark-background-color);
-$theme-color-on-dark-background: var(--tlp-theme-color-on-dark-background);
+$main-color-on-dark-background: var(--tlp-main-color-on-dark-background);
 $profile-max-width: 720px;
 
 .body-user-profile {
@@ -57,7 +57,7 @@ $profile-max-width: 720px;
     display: flex;
     justify-content: center;
     padding: 0 var(--tlp-jumbo-spacing) var(--tlp-jumbo-spacing);
-    border-bottom: 5px solid var(--tlp-theme-color);
+    border-bottom: 5px solid var(--tlp-main-color);
     background: $profile-header-background;
     color: var(--tlp-ui-white);
 }
@@ -88,7 +88,7 @@ $profile-max-width: 720px;
 .user-profile-email {
     max-width: 350px;
     overflow: hidden;
-    color: $theme-color-on-dark-background;
+    color: $main-color-on-dark-background;
     text-overflow: ellipsis;
     white-space: nowrap;
 }
@@ -96,7 +96,7 @@ $profile-max-width: 720px;
 .user-profile-title {
     margin: 0 var(--tlp-medium-spacing) 0 0;
     overflow: hidden;
-    color: $theme-color-on-dark-background;
+    color: $main-color-on-dark-background;
     font-size: 30px;
     font-weight: 300;
     line-height: 26px;
@@ -125,7 +125,7 @@ $profile-max-width: 720px;
 }
 
 .user-profile-additional-information-value > a {
-    color: $theme-color-on-dark-background;
+    color: $main-color-on-dark-background;
 }
 
 .user-profile-member-since,
@@ -195,11 +195,11 @@ $profile-max-width: 720px;
 .user-profile-projects-tumbleweed,
 .user-profile-projects-stem,
 .user-profile-projects-earth {
-    stroke: var(--tlp-theme-color);
+    stroke: var(--tlp-main-color);
 }
 
 .user-profile-projects-flower {
-    fill: var(--tlp-theme-color);
+    fill: var(--tlp-main-color);
 }
 
 @media screen and (max-width: 800px) {

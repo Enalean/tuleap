@@ -64,8 +64,8 @@ $progress-bar-background-color: var(--tlp-ui-border-normal);
 
 /* stylelint-disable selector-no-qualifying-type */
 .tlp-table > tbody > tr.document-tree-item-highlighted > td {
-    border-bottom-color: var(--tlp-theme-color-transparent-15);
-    background: var(--tlp-theme-color-transparent-15);
+    border-bottom-color: var(--tlp-main-color-transparent-15);
+    background: var(--tlp-main-color-transparent-15);
     color: var(--tlp-ui-white);
 
     .document-folder-toggle {

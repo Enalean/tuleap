@@ -26,7 +26,7 @@ item-progress {
 }
 
 .item-progress {
-    border-bottom: 2px solid var(--tlp-theme-color);
+    border-bottom: 2px solid var(--tlp-main-color);
     border-radius: 0 0 3px 3px;
 
     @each $color-name, $colors in swatch-colors.$tlp-swatch-color-map {

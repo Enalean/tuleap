@@ -121,8 +121,8 @@ $tlp-tabs-transition: 75ms ease-out;
 
     &.tlp-tab-active,
     &:hover {
-        border-bottom-color: var(--tlp-theme-color);
-        color: var(--tlp-theme-color);
+        border-bottom-color: var(--tlp-main-color);
+        color: var(--tlp-main-color);
         text-decoration: none;
 
         > .tlp-tab-badge-append {
@@ -171,7 +171,7 @@ $tlp-tabs-transition: 75ms ease-out;
         height: calc(100% + 2px);
         transition: opacity $tlp-tabs-transition;
         opacity: 0;
-        background: var(--tlp-theme-color);
+        background: var(--tlp-main-color);
     }
 
     &.tlp-tab-active,

@@ -23,7 +23,7 @@
 
     &:hover,
     &:focus-within {
-        border: 1px solid var(--tlp-theme-color);
+        border: 1px solid var(--tlp-main-color);
     }
 }
 
@@ -73,7 +73,7 @@
 }
 
 .git-repository-card-title {
-    color: var(--tlp-theme-color);
+    color: var(--tlp-main-color);
     font-size: 1rem;
     font-weight: 600;
     text-transform: none;
@@ -122,7 +122,7 @@
 
     &:hover,
     &:focus {
-        color: var(--tlp-theme-color);
+        color: var(--tlp-main-color);
     }
 }
 

@@ -12,14 +12,14 @@
         display: flex;
         flex: 1 1 auto;
         margin: 0 15px 15px 0;
-        border: 1px solid var(--tlp-theme-color);
+        border: 1px solid var(--tlp-main-color);
         border-radius: 3px;
         background: var(--tlp-ui-white);
         box-shadow: 0 1px 5px rgba(0, 0, 0, 0.1);
 
         .info {
             padding: 4px 6px;
-            background: var(--tlp-theme-color);
+            background: var(--tlp-main-color);
             color: var(--tlp-ui-white);
             font-size: 12px;
             white-space: nowrap;

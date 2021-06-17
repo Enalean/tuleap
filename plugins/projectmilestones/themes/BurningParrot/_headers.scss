@@ -93,7 +93,7 @@
     height: 24px;
     margin: 0 var(--tlp-small-spacing) 0 0;
     border-radius: 50%;
-    background: var(--tlp-theme-color);
+    background: var(--tlp-main-color);
     color: var(--tlp-ui-white);
     font-size: 100%;
 }
@@ -130,7 +130,7 @@
 
 .release-remaining-value {
     margin: 0 2px 0 0;
-    color: var(--tlp-theme-color);
+    color: var(--tlp-main-color);
     font-size: 16px;
     font-weight: 600;
 }
@@ -194,7 +194,7 @@
 
 .release-remaining-progress-value {
     height: 3px;
-    background: var(--tlp-theme-color);
+    background: var(--tlp-main-color);
 }
 
 .release-remaining-progress-value-danger {

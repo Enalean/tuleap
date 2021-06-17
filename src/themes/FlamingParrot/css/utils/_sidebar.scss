@@ -72,7 +72,7 @@
     .nav-list > .active > a,
     .nav-list > .active > a:hover,
     .nav-list > .active > a:focus {
-        border-left: 3px solid var(--tlp-theme-color);
+        border-left: 3px solid var(--tlp-main-color);
         background: var(--tlp-theme-dark-background-color-darker-05);
         color: lighten(variables-color-common.$grey, 25%);
         font-weight: normal;
@@ -261,7 +261,7 @@
 
     &.fa-lock,
     &.fa-tlp-lock-plus-r {
-        background: var(--tlp-theme-color);
+        background: var(--tlp-main-color);
         text-shadow: 0 0 1px rgba(0, 0, 0, 0.2);
     }
 
@@ -302,7 +302,7 @@
 
     &:hover,
     &:focus {
-        color: var(--tlp-theme-color);
+        color: var(--tlp-main-color);
         text-decoration: none;
     }
 }

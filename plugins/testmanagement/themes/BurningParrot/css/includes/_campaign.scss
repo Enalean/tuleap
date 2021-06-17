@@ -35,7 +35,7 @@
 
 .test-campaign-title {
     margin: 0;
-    color: var(--tlp-theme-color);
+    color: var(--tlp-main-color);
     font-size: 16px;
     line-height: 20px;
 
@@ -182,7 +182,7 @@
 
     &:hover,
     &:focus {
-        background: var(--tlp-theme-color-lighter-90);
+        background: var(--tlp-main-color-lighter-90);
     }
 }
 

@@ -50,12 +50,12 @@ body.login-page {
     #login-help:hover,
     #login-help:active,
     .not-a-member > a {
-        color: var(--tlp-theme-color);
+        color: var(--tlp-main-color);
     }
 
     > form {
         #login-lost-password {
-            color: var(--tlp-theme-color);
+            color: var(--tlp-main-color);
         }
     }
 }

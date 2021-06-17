@@ -110,7 +110,7 @@
             transform: translate(-100%, -50%);
             border-width: 7px $arrow-width 7px 0;
             border-style: solid;
-            border-color: transparent var(--tlp-theme-color) transparent transparent;
+            border-color: transparent var(--tlp-main-color) transparent transparent;
         }
 
         &::after {
@@ -121,7 +121,7 @@
             width: 4px;
             height: 100%;
             border-radius: 4px 0 0 4px;
-            background: var(--tlp-theme-color);
+            background: var(--tlp-main-color);
         }
 
         > .pull-request-event-content-info {
@@ -204,7 +204,7 @@
                 left: 100%;
                 transform: translate(0, -50%);
                 border-width: 7px 0 7px $arrow-width;
-                border-color: transparent transparent transparent var(--tlp-theme-color);
+                border-color: transparent transparent transparent var(--tlp-main-color);
             }
 
             &::after {

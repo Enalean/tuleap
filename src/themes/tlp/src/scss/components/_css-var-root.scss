@@ -19,7 +19,7 @@
 
 @use 'sass:color';
 
-$theme-color-dimmed-background: mix($tlp-theme-background-color, $tlp-ui-white, 50);
+$main-color-dimmed-background: mix($tlp-theme-background-color, $tlp-ui-white, 50);
 
 :root {
     // Fonts
@@ -33,10 +33,10 @@ $theme-color-dimmed-background: mix($tlp-theme-background-color, $tlp-ui-white, 
     --tlp-ui-danger: #{$tlp-ui-danger};
     --tlp-ui-dimmed: #{$tlp-ui-dimmed};
     --tlp-ui-white: #{$tlp-ui-white};
-    --tlp-theme-color: #{$tlp-theme-color};
+    --tlp-main-color: #{$tlp-main-color};
     --tlp-theme-background-color: #{$tlp-theme-background-color};
-    --tlp-theme-color-hover-background: #{mix($tlp-theme-color, $tlp-ui-white, 7)};
-    --tlp-theme-color-dimmed-background: #{$theme-color-dimmed-background};
+    --tlp-main-color-hover-background: #{mix($tlp-main-color, $tlp-ui-white, 7)};
+    --tlp-main-color-dimmed-background: #{$main-color-dimmed-background};
     --tlp-typo-default-text-color: #{$tlp-typo-default-text-color};
     --tlp-table-row-background-odd: #{$tlp-ui-white};
     --tlp-table-row-background-even: #{mix($tlp-theme-background-color, $tlp-ui-white, 50%)};
@@ -52,30 +52,30 @@ $theme-color-dimmed-background: mix($tlp-theme-background-color, $tlp-ui-white, 
 
     --tlp-theme-background-color-transparent-50: #{transparentize($tlp-theme-background-color, 0.5)};
 
-    --tlp-theme-color-dimmed-background-darker-01: #{darken($theme-color-dimmed-background, 1%)};
-    --tlp-theme-color-dimmed-background-hover-background: #{mix($tlp-theme-background-color, $tlp-ui-white, 90)};
-    --tlp-theme-color-dimmed-background-hover-border: #{mix($tlp-theme-background-color, $tlp-ui-white, 90)};
+    --tlp-main-color-dimmed-background-darker-01: #{darken($main-color-dimmed-background, 1%)};
+    --tlp-main-color-dimmed-background-hover-background: #{mix($tlp-theme-background-color, $tlp-ui-white, 90)};
+    --tlp-main-color-dimmed-background-hover-border: #{mix($tlp-theme-background-color, $tlp-ui-white, 90)};
 
-    --tlp-theme-color-darker-03: #{darken($tlp-theme-color, 3%)};
-    --tlp-theme-color-darker-05: #{darken($tlp-theme-color, 5%)};
-    --tlp-theme-color-darker-10: #{darken($tlp-theme-color, 10%)};
-    --tlp-theme-color-darker-15: #{darken($tlp-theme-color, 15%)};
-    --tlp-theme-color-lighter-15: #{mix($tlp-theme-color, $tlp-ui-white, 85%)};
-    --tlp-theme-color-lighter-30: #{mix($tlp-theme-color, $tlp-ui-white, 70%)};
-    --tlp-theme-color-lighter-40: #{mix($tlp-theme-color, $tlp-ui-white, 60%)};
-    --tlp-theme-color-lighter-50: #{mix($tlp-theme-color, $tlp-ui-white, 50%)};
-    --tlp-theme-color-lighter-80: #{mix($tlp-theme-color, $tlp-ui-white, 20%)};
-    --tlp-theme-color-lighter-85: #{mix($tlp-theme-color, $tlp-ui-white, 15%)};
-    --tlp-theme-color-lighter-90: #{mix($tlp-theme-color, $tlp-ui-white, 10%)};
-    --tlp-theme-color-transparent-15: #{transparentize($tlp-theme-color, 0.15)};
-    --tlp-theme-color-transparent-20: #{transparentize($tlp-theme-color, 0.2)};
-    --tlp-theme-color-transparent-30: #{transparentize($tlp-theme-color, 0.3)};
-    --tlp-theme-color-transparent-40: #{transparentize($tlp-theme-color, 0.4)};
-    --tlp-theme-color-transparent-50: #{transparentize($tlp-theme-color, 0.5)};
-    --tlp-theme-color-transparent-70: #{transparentize($tlp-theme-color, 0.7)};
-    --tlp-theme-color-transparent-80: #{transparentize($tlp-theme-color, 0.8)};
-    --tlp-theme-color-transparent-85: #{transparentize($tlp-theme-color, 0.85)};
-    --tlp-theme-color-transparent-90: #{transparentize($tlp-theme-color, 0.9)};
+    --tlp-main-color-darker-03: #{darken($tlp-main-color, 3%)};
+    --tlp-main-color-darker-05: #{darken($tlp-main-color, 5%)};
+    --tlp-main-color-darker-10: #{darken($tlp-main-color, 10%)};
+    --tlp-main-color-darker-15: #{darken($tlp-main-color, 15%)};
+    --tlp-main-color-lighter-15: #{mix($tlp-main-color, $tlp-ui-white, 85%)};
+    --tlp-main-color-lighter-30: #{mix($tlp-main-color, $tlp-ui-white, 70%)};
+    --tlp-main-color-lighter-40: #{mix($tlp-main-color, $tlp-ui-white, 60%)};
+    --tlp-main-color-lighter-50: #{mix($tlp-main-color, $tlp-ui-white, 50%)};
+    --tlp-main-color-lighter-80: #{mix($tlp-main-color, $tlp-ui-white, 20%)};
+    --tlp-main-color-lighter-85: #{mix($tlp-main-color, $tlp-ui-white, 15%)};
+    --tlp-main-color-lighter-90: #{mix($tlp-main-color, $tlp-ui-white, 10%)};
+    --tlp-main-color-transparent-15: #{transparentize($tlp-main-color, 0.15)};
+    --tlp-main-color-transparent-20: #{transparentize($tlp-main-color, 0.2)};
+    --tlp-main-color-transparent-30: #{transparentize($tlp-main-color, 0.3)};
+    --tlp-main-color-transparent-40: #{transparentize($tlp-main-color, 0.4)};
+    --tlp-main-color-transparent-50: #{transparentize($tlp-main-color, 0.5)};
+    --tlp-main-color-transparent-70: #{transparentize($tlp-main-color, 0.7)};
+    --tlp-main-color-transparent-80: #{transparentize($tlp-main-color, 0.8)};
+    --tlp-main-color-transparent-85: #{transparentize($tlp-main-color, 0.85)};
+    --tlp-main-color-transparent-90: #{transparentize($tlp-main-color, 0.9)};
 
     --tlp-ui-info-darker-05: #{darken($tlp-ui-info, 5%)};
     --tlp-ui-info-darker-10: #{darken($tlp-ui-info, 10%)};
@@ -176,7 +176,7 @@ $theme-color-dimmed-background: mix($tlp-theme-background-color, $tlp-ui-white, 
     // Dark
     --tlp-ui-danger-on-dark-background: #{mix($tlp-ui-danger, $tlp-ui-white, 85%)};
     --tlp-ui-dimmed-on-dark-background: #{$tlp-ui-border-dark};
-    --tlp-theme-color-on-dark-background: #{lighten($tlp-theme-color, 20%)};
+    --tlp-main-color-on-dark-background: #{lighten($tlp-main-color, 20%)};
     --tlp-theme-dark-background-color: #{$tlp-theme-sidebar-background-color};
     --tlp-theme-dark-background-color-transparent-30: #{transparentize($tlp-theme-sidebar-background-color, 0.3)};
     --tlp-theme-dark-background-color-transparent-50: #{transparentize($tlp-theme-sidebar-background-color, 0.5)};
@@ -228,7 +228,7 @@ $theme-color-dimmed-background: mix($tlp-theme-background-color, $tlp-ui-white, 
     --tlp-jumbo-spacing: #{$tlp-jumbo-spacing};
 
     // illustrations
-    --tlp-illustration-color: #{mix($tlp-theme-color, $tlp-ui-white, 53%)};
+    --tlp-illustration-color: #{mix($tlp-main-color, $tlp-ui-white, 53%)};
     --tlp-illustration-grey: #{$tlp-ui-border-normal};
     --tlp-illustration-yellow: #fbe484;
     --tlp-legacy-illustration-primary-color: #{$tlp-illustration-primary-color};
@@ -244,8 +244,8 @@ $theme-color-dimmed-background: mix($tlp-theme-background-color, $tlp-ui-white, 
     --tlp-dropdown-shadow: 0 0 0 1px #{transparentize($tlp-theme-sidebar-background-color, 0.97)}, 0 6px 12px -5px #{transparentize($tlp-theme-sidebar-background-color, 0.85)};
     --tlp-button-shadow: 0 1px 4px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.1), 0 -1px 0 rgba(0, 0, 0, 0.03);
     --tlp-button-shadow-hover: 0 1px 2px rgba(0, 0, 0, 0.08), 0 0 1px rgba(0, 0, 0, 0.08), 0 -1px 0 rgba(0, 0, 0, 0.03);
-    --tlp-shadow-focus: 0 0 0 2px #{transparentize($tlp-theme-color, 0.65)};
-    --tlp-shadow-theme-color: #{transparentize($tlp-theme-color, 0.15)};
+    --tlp-shadow-focus: 0 0 0 2px #{transparentize($tlp-main-color, 0.65)};
+    --tlp-shadow-main-color: #{transparentize($tlp-main-color, 0.15)};
     --tlp-shadow-danger-color: #{transparentize($tlp-ui-danger, 0.15)};
 
     // radius

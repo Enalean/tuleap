@@ -21,11 +21,11 @@
 @use './gitlab';
 
 .git-repository-list-empty-image {
-    stroke: var(--tlp-theme-color-transparent-70);
+    stroke: var(--tlp-main-color-transparent-70);
 }
 
 .git-repository-list-empty-rect {
-    fill: var(--tlp-theme-color-transparent-70);
+    fill: var(--tlp-main-color-transparent-70);
 }
 
 .git-repository-create-modal-body {
@@ -133,7 +133,7 @@
     display: flex;
     align-items: center;
     margin: 0 0 var(--tlp-small-spacing);
-    color: var(--tlp-theme-color);
+    color: var(--tlp-main-color);
     cursor: pointer;
 
     > .fa-caret-down,

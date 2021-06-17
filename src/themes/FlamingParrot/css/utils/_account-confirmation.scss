@@ -74,24 +74,24 @@ $url-base: "../images/account-confirmation/account-registration-feedback-backgro
 
 #account-confirmation-content {
     i {
-        color: var(--tlp-theme-color);
+        color: var(--tlp-main-color);
     }
 
     #account-confirmation-fake-email-title {
-        background-color: var(--tlp-theme-color);
+        background-color: var(--tlp-main-color);
     }
 
     #account-confirmation-fake-email-button span {
-        background-color: var(--tlp-theme-color);
+        background-color: var(--tlp-main-color);
     }
 }
 
 #account-confirmation-redirect {
     a {
         border-radius: 4px;
-        border-color: var(--tlp-theme-color) var(--tlp-theme-color) #002a80;
-        background-color: var(--tlp-theme-color);
-        background-image: linear-gradient(to bottom, var(--tlp-theme-color), var(--tlp-theme-color));
+        border-color: var(--tlp-main-color) var(--tlp-main-color) #002a80;
+        background-color: var(--tlp-main-color);
+        background-image: linear-gradient(to bottom, var(--tlp-main-color), var(--tlp-main-color));
         background-repeat: repeat-x;
         font-weight: 400;
         letter-spacing: 0.03em;

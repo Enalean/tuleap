@@ -59,7 +59,7 @@ $tlp-popover-click-transition: 75ms ease-out;
     padding: var(--tlp-small-spacing) var(--tlp-medium-spacing);
     border-top-left-radius: $tlp-popover-radius;
     border-top-right-radius: $tlp-popover-radius;
-    background: var(--tlp-theme-color);
+    background: var(--tlp-main-color);
 }
 
 .tlp-popover-title {
@@ -112,7 +112,7 @@ $tlp-popover-click-transition: 75ms ease-out;
 
 .tlp-popover-arrow {
     visibility: hidden;
-    background: var(--tlp-theme-color);
+    background: var(--tlp-main-color);
 
     &::before {
         content: "";

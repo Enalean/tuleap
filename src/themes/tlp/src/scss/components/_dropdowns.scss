@@ -152,7 +152,7 @@ $tlp-dropdown-transition: 75ms ease-out;
     padding: var(--tlp-small-spacing) var(--tlp-medium-spacing);
     border: 0;
     background: var(--tlp-ui-white);
-    color: var(--tlp-theme-color);
+    color: var(--tlp-main-color);
     font-family: var(--tlp-font-family);
     font-size: 0.8125rem;
     font-weight: 400;
@@ -166,7 +166,7 @@ $tlp-dropdown-transition: 75ms ease-out;
 
     &:focus,
     &:hover {
-        background: var(--tlp-theme-color-transparent-90);
+        background: var(--tlp-main-color-transparent-90);
         text-decoration: none;
     }
 
@@ -255,7 +255,7 @@ $flatpickr-animation: 100ms ease-in-out showFlatPickr;
 
     //stylelint-disable-next-line selector-class-pattern
     &.arrowTop::after {
-        border-bottom-color: var(--tlp-theme-color);
+        border-bottom-color: var(--tlp-main-color);
     }
 }
 
@@ -263,7 +263,7 @@ $flatpickr-animation: 100ms ease-in-out showFlatPickr;
     align-items: center;
     justify-content: space-around;
     border-radius: $tlp-dropdown-radius $tlp-dropdown-radius 0 0;
-    background: var(--tlp-theme-color);
+    background: var(--tlp-main-color);
     color: var(--tlp-ui-white);
 
     .flatpickr-prev-month,
@@ -284,7 +284,7 @@ $flatpickr-animation: 100ms ease-in-out showFlatPickr;
 
         &:hover {
             background: var(--tlp-ui-white);
-            color: var(--tlp-theme-color);
+            color: var(--tlp-main-color);
         }
 
         > .fa {
@@ -338,13 +338,13 @@ $flatpickr-animation: 100ms ease-in-out showFlatPickr;
 }
 
 .flatpickr-weekdays {
-    background: var(--tlp-theme-color);
+    background: var(--tlp-main-color);
     color: var(--tlp-ui-white);
 }
 
 //stylelint-disable-next-line selector-no-qualifying-type
 span.flatpickr-weekday {
-    background: var(--tlp-theme-color);
+    background: var(--tlp-main-color);
     color: var(--tlp-ui-white-transparent-30);
     font-weight: 600;
 }
@@ -353,16 +353,16 @@ span.flatpickr-weekday {
     flex: 1 1 auto;
 
     .flatpickr-weekday {
-        color: var(--tlp-theme-color);
+        color: var(--tlp-main-color);
     }
 
     //stylelint-disable selector-no-qualifying-type
     span.flatpickr-day {
         // stylelint-enable
-        color: var(--tlp-theme-color);
+        color: var(--tlp-main-color);
 
         &:hover {
-            color: var(--tlp-theme-color);
+            color: var(--tlp-main-color);
         }
     }
 }
@@ -375,17 +375,17 @@ span.flatpickr-weekday {
 
     &:hover {
         border-color: transparent;
-        background: var(--tlp-theme-color-transparent-90);
-        color: var(--tlp-theme-color);
+        background: var(--tlp-main-color-transparent-90);
+        color: var(--tlp-main-color);
     }
 
     &.today {
-        border-color: var(--tlp-theme-color);
+        border-color: var(--tlp-main-color);
 
         &:hover {
-            border-color: var(--tlp-theme-color);
-            background: var(--tlp-theme-color-transparent-90);
-            color: var(--tlp-theme-color);
+            border-color: var(--tlp-main-color);
+            background: var(--tlp-main-color-transparent-90);
+            color: var(--tlp-main-color);
         }
     }
 
@@ -407,13 +407,13 @@ span.flatpickr-weekday {
     &.nextMonthDay.selected {
         /* stylelint-enable */
         border-color: transparent;
-        background: var(--tlp-theme-color);
+        background: var(--tlp-main-color);
         color: var(--tlp-ui-white);
         font-weight: 600;
 
         &:hover {
             border-color: transparent;
-            background: var(--tlp-theme-color-transparent-20);
+            background: var(--tlp-main-color-transparent-20);
 
             &.today {
                 color: var(--tlp-ui-white);
