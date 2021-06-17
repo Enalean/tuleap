@@ -54,14 +54,14 @@ $artifact-body-padding: var(--tlp-medium-spacing);
         margin-right: 0.3rem;
         padding-right: 0.5rem;
         border-right: 1px solid swatch-colors.$tlp-swatch-firemist-silver;
-        color: var(--tlp-theme-color);
+        color: var(--tlp-main-color);
         font-size: 1.3rem;
     }
 }
 
 .baseline-content-artifact {
     display: initial;
-    color: var(--tlp-theme-color);
+    color: var(--tlp-main-color);
     font-size: 1.3rem;
 }
 
