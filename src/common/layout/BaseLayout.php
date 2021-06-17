@@ -33,7 +33,6 @@ use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbLinkCollection;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbSubItems;
 use Tuleap\Layout\BreadCrumbDropdown\SubItemsUnlabelledSection;
 use Tuleap\layout\NewDropdown\NewDropdownLinkSectionPresenter;
-use Tuleap\Project\Admin\MembershipDelegationDao;
 use Tuleap\Project\Banner\BannerDao;
 use Tuleap\Project\Banner\BannerDisplay;
 use Tuleap\Project\Banner\BannerRetriever;
@@ -344,8 +343,7 @@ abstract class BaseLayout extends Response
             EventManager::instance(),
             ProjectManager::instance(),
             Codendi_HTMLPurifier::instance(),
-            $this->uri_sanitizer,
-            new MembershipDelegationDao()
+            $this->uri_sanitizer
         );
 
         return $builder->getSidebar($this->getUser(), $params['toptab'], $project);

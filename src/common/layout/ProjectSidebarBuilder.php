@@ -27,45 +27,26 @@ use ForgeConfig;
 use PFUser;
 use Project;
 use ProjectManager;
-use Tuleap\Project\Admin\MembershipDelegationDao;
 use Tuleap\Project\Service\ProjectDefinedService;
 use Tuleap\Sanitizer\URISanitizer;
 
 class ProjectSidebarBuilder
 {
-    /**
-     * @var EventManager
-     */
-    private $event_manager;
-    /**
-     * @var ProjectManager
-     */
-    private $project_manager;
-    /**
-     * @var Codendi_HTMLPurifier
-     */
-    private $purifier;
-    /**
-     * @var URISanitizer
-     */
-    private $uri_sanitizer;
-    /**
-     * @var MembershipDelegationDao
-     */
-    private $membership_delegation_dao;
+    private EventManager $event_manager;
+    private ProjectManager $project_manager;
+    private Codendi_HTMLPurifier $purifier;
+    private URISanitizer $uri_sanitizer;
 
     public function __construct(
         EventManager $event_manager,
         ProjectManager $project_manager,
         Codendi_HTMLPurifier $purifier,
-        URISanitizer $uri_sanitizer,
-        MembershipDelegationDao $membership_delegation_dao
+        URISanitizer $uri_sanitizer
     ) {
-        $this->event_manager             = $event_manager;
-        $this->project_manager           = $project_manager;
-        $this->purifier                  = $purifier;
-        $this->uri_sanitizer             = $uri_sanitizer;
-        $this->membership_delegation_dao = $membership_delegation_dao;
+        $this->event_manager   = $event_manager;
+        $this->project_manager = $project_manager;
+        $this->purifier        = $purifier;
+        $this->uri_sanitizer   = $uri_sanitizer;
     }
 
     public function getSidebar(PFUser $user, $toptab, Project $project): \Generator
@@ -136,14 +117,12 @@ class ProjectSidebarBuilder
             return false;
         }
 
-        if ((string) $short_name === "summary") {
+        if ($short_name === \Service::SUMMARY) {
             return false;
         }
 
-        if ((string) $short_name === "admin") {
-            if (! $this->userCanSeeAdminService($project, $user)) {
-                return false;
-            }
+        if ($short_name === \Service::ADMIN) {
+            return false;
         }
 
         if (
@@ -211,16 +190,5 @@ class ProjectSidebarBuilder
         $label .= $this->purifier->purify($service->getInternationalizedName()) . '</span>';
 
         return $label;
-    }
-
-    private function userCanSeeAdminService(Project $project, PFUser $user): bool
-    {
-        if (! $user->isLoggedIn()) {
-            return false;
-        }
-
-        return $user->isSuperUser()
-            || $user->isMember($project->getID(), 'A')
-            || $this->membership_delegation_dao->doesUserHasMembershipDelegation($user->getId(), $project->getID());
     }
 }
