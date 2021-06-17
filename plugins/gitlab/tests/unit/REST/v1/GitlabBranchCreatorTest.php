@@ -84,7 +84,7 @@ final class GitlabBranchCreatorTest extends TestCase
         );
     }
 
-    public function testItAsksToCreateTheBanch(): void
+    public function testItAsksToCreateTheBranch(): void
     {
         $user = $this->buildMockUser();
 

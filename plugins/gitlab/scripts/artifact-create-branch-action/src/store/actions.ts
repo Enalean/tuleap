@@ -16,27 +16,19 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+import type { State } from "./type";
+import type { ActionContext } from "vuex";
+import type { createBranchPayload } from "./type";
+import { postGitlabBranch } from "../api/rest-querier";
 
-export interface State {
-    integrations: Array<GitlabIntegration>;
-    artifact_id: number;
-    branch_name: string;
-}
-
-export interface GitlabIntegration {
-    description: string;
-    gitlab_repository_url: string;
-    gitlab_repository_id: number;
-    id: number;
-    last_push_date: string;
-    name: string;
-    is_webhook_configured: boolean;
-    allow_artifact_closure: boolean;
-}
-
-export interface createBranchPayload {
-    gitlab_integration_id: number;
-    artifact_id: number;
-    branch_name: string;
-    reference: string;
+export async function createBranch(
+    context: ActionContext<State, State>,
+    payload: createBranchPayload
+): Promise<void> {
+    await postGitlabBranch(
+        payload.gitlab_integration_id,
+        payload.artifact_id,
+        payload.branch_name,
+        payload.reference
+    );
 }

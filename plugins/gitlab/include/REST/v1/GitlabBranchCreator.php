@@ -102,8 +102,10 @@ class GitlabBranchCreator
         }
 
         try {
+            $branch_name = $gitlab_branch->branch_name;
+
             $url = "/projects/{$integration->getGitlabRepositoryId()}/repository/branches?branch=" .
-                urlencode($gitlab_branch->branch_name) . "&ref=" . urlencode($gitlab_branch->reference);
+                urlencode($branch_name) . "&ref=" . urlencode($gitlab_branch->reference);
 
             $this->gitlab_api_client->postUrl(
                 $credentials,

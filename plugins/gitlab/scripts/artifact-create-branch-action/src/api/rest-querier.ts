@@ -17,26 +17,27 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export interface State {
-    integrations: Array<GitlabIntegration>;
-    artifact_id: number;
-    branch_name: string;
-}
+import { post } from "@tuleap/tlp-fetch";
 
-export interface GitlabIntegration {
-    description: string;
-    gitlab_repository_url: string;
-    gitlab_repository_id: number;
-    id: number;
-    last_push_date: string;
-    name: string;
-    is_webhook_configured: boolean;
-    allow_artifact_closure: boolean;
-}
+export async function postGitlabBranch(
+    gitlab_integration_id: number,
+    artifact_id: number,
+    branch_name: string,
+    reference: string
+): Promise<void> {
+    const headers = {
+        "content-type": "application/json",
+    };
 
-export interface createBranchPayload {
-    gitlab_integration_id: number;
-    artifact_id: number;
-    branch_name: string;
-    reference: string;
+    const body = JSON.stringify({
+        gitlab_integration_id: gitlab_integration_id,
+        artifact_id: artifact_id,
+        branch_name: branch_name,
+        reference: reference,
+    });
+
+    await post("/api/v1/gitlab_branch", {
+        headers: headers,
+        body: body,
+    });
 }
