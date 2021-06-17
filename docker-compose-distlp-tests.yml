@@ -45,7 +45,7 @@ services:
       - tuleap
 
   backend-web:
-    image: ${DOCKER_REGISTRY:-docker.io}/enalean/tuleap-aio-dev:c7-php74-nginx-v2
+    image: ${DOCKER_REGISTRY:-ghcr.io}/enalean/tuleap-aio-dev:c7-php74-nginx-v2
     volumes:
       - .:/usr/share/tuleap
       - tests-tuleap-data:/data
@@ -60,7 +60,7 @@ services:
       - tuleap
 
   backend-svn:
-    image: ${DOCKER_REGISTRY:-docker.io}/enalean/tuleap-aio-dev:c7-php74-nginx-v2
+    image: ${DOCKER_REGISTRY:-ghcr.io}/enalean/tuleap-aio-dev:c7-php74-nginx-v2
     command: /usr/share/tuleap/tools/distlp/backend-svn/backend-svn.sh
     volumes:
       - .:/usr/share/tuleap
