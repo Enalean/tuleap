@@ -122,6 +122,30 @@ class MethodBasedOnLinksCountTest extends \Tuleap\Test\PHPUnit\TestCase
      * @testWith [true, 0]
      *           [false, 1]
      */
+    public function testItConsidersAnArtifactWithoutArtifactLinkValueAsHavingNoLinks(bool $is_artifact_open, float $expected_progress_value): void
+    {
+        $artifact = \Mockery::mock(Artifact::class, [
+            'isOpen' => $is_artifact_open,
+            'getAnArtifactLinkField' => $this->links_field
+        ]);
+
+        $this->links_field->shouldReceive('getLastChangesetValue')
+            ->once()
+            ->with($artifact)
+            ->andReturnNull();
+
+        $progression_result = $this->method->computeProgression(
+            $artifact,
+            \Mockery::mock(\PFUser::class)
+        );
+
+        $this->assertEquals($expected_progress_value, $progression_result->getValue());
+    }
+
+    /**
+     * @testWith [true, 0]
+     *           [false, 1]
+     */
     public function testItComputesWhenItHasNoLinksOfGivenType(bool $is_artifact_open, float $expected_progress_value): void
     {
         $last_artifact_changeset = \Mockery::mock(
