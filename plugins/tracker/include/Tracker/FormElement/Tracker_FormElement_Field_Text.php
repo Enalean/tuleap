@@ -627,12 +627,25 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum
      *
      * @param Artifact $artifact        The artifact to check
      * @param mixed    $submitted_value The submitted value
-     *
-     * @return bool true on success or false on failure
      */
-    public function isValidRegardingRequiredProperty(Artifact $artifact, $submitted_value)
+    public function isValidRegardingRequiredProperty(Artifact $artifact, $submitted_value): bool
     {
-        if (($submitted_value === null || $submitted_value["content"] === null || $submitted_value["content"] === '') && $this->isRequired()) {
+        if (! $this->isRequired()) {
+            return true;
+        }
+
+        if (empty($submitted_value)) {
+            $this->addRequiredError();
+            return false;
+        }
+
+        if (
+            is_array($submitted_value) &&
+            (
+                ! isset($submitted_value["content"]) ||
+                isset($submitted_value["content"]) && empty($submitted_value["content"])
+            )
+        ) {
             $this->addRequiredError();
             return false;
         }
