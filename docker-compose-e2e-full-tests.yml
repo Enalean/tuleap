@@ -19,13 +19,13 @@ services:
       - external-connectivity
 
   tuleap:
-    image: tuleap-e2e-tests
-    build:
-      context: ./tests/e2e/docker
-      dockerfile: tuleap.dockerfile
-      args:
-        DOCKER_REGISTRY: ${DOCKER_REGISTRY:-docker.io}
-    command: /usr/share/tuleap/tests/e2e/full/tuleap/setup.sh
+    image: ${DOCKER_REGISTRY:-docker.io}/tuleap/tuleap-community-edition:latest
+    entrypoint: /usr/share/tuleap/tests/e2e/full/tuleap/setup.sh
+    environment:
+      - TULEAP_FQDN=tuleap
+      - DB_HOST=db
+      - DB_ADMIN_USER=root
+      - DB_ADMIN_PASSWORD=welcome0
     volumes:
       - .:/usr/share/tuleap:ro
     networks:
