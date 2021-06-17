@@ -11,7 +11,7 @@ version: "2"
 
 services:
   web:
-    image: tuleap/tuleap-community-edition:dev
+    image: tuleap/tuleap-community-edition
     hostname: ${TULEAP_FQDN}
     volumes:
       # For Tuleap devs, un-comment if you want to test stuff with your own code base
