@@ -21,6 +21,7 @@ import Vue from "vue";
 import Vuex from "vuex";
 import type { GitlabIntegration, State } from "./type";
 import type { Store } from "vuex";
+import * as actions from "./actions";
 
 Vue.use(Vuex);
 
@@ -39,5 +40,6 @@ export function createStore(
         state: {
             ...state,
         },
+        actions,
     });
 }

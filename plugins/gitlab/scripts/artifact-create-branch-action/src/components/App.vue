@@ -39,67 +39,74 @@
                         </translate>
                     </h3>
                 </div>
-                <div class="modal-body artifact-create-gitlab-branch-modal-body">
-                    <div class="artifact-create-gitlab-branch-form-block">
-                        <label for="artifact-create-gitlab-branch-select-integration" v-translate>
-                            GitLab repositories integrations
-                            <span
-                                class="artifact-create-branch-action-mandatory-information"
-                                aria-hidden="true"
+                <form v-on:submit.prevent="onClickCreateBranch">
+                    <div class="modal-body artifact-create-gitlab-branch-modal-body">
+                        <div class="artifact-create-gitlab-branch-form-block">
+                            <label
+                                for="artifact-create-gitlab-branch-select-integration"
+                                v-translate
                             >
-                                *
-                            </span>
-                        </label>
-                        <select
-                            id="artifact-create-gitlab-branch-select-integration"
-                            required="required"
-                            aria-required="true"
-                        >
-                            <option
-                                v-for="integration in integrations"
-                                v-bind:value="integration.id"
-                                v-bind:key="integration.id"
+                                GitLab repositories integrations
+                                <span
+                                    class="artifact-create-branch-action-mandatory-information"
+                                    aria-hidden="true"
+                                >
+                                    *
+                                </span>
+                            </label>
+                            <select
+                                id="artifact-create-gitlab-branch-select-integration"
+                                required="required"
+                                aria-required="true"
+                                v-model="selected_integration_id"
                             >
-                                {{ integration.name }}
-                            </option>
-                        </select>
+                                <option
+                                    v-for="integration in integrations"
+                                    v-bind:value="integration.id"
+                                    v-bind:key="integration.id"
+                                >
+                                    {{ integration.name }}
+                                </option>
+                            </select>
+                        </div>
+                        <div class="artifact-create-gitlab-branch-form-block">
+                            <label for="artifact-create-gitlab-branch-reference" v-translate>
+                                Git reference from where the branch should be created
+                                <span
+                                    class="artifact-create-branch-action-mandatory-information"
+                                    aria-hidden="true"
+                                >
+                                    *
+                                </span>
+                            </label>
+                            <input
+                                type="text"
+                                id="artifact-create-gitlab-branch-reference"
+                                placeholder="main"
+                                required="required"
+                                aria-required="true"
+                                v-model="reference"
+                            />
+                            <p class="text-info" v-translate>
+                                Must be an existing git commit SHA-1 or a branch name
+                            </p>
+                        </div>
+                        <div>
+                            <label for="artifact-create-gitlab-branch-name" v-translate>
+                                The following branch will be created
+                            </label>
+                            <code id="artifact-create-gitlab-branch-name">{{ branch_name }}</code>
+                        </div>
                     </div>
-                    <div class="artifact-create-gitlab-branch-form-block">
-                        <label for="artifact-create-gitlab-branch-reference" v-translate>
-                            Git reference from where the branch should be created
-                            <span
-                                class="artifact-create-branch-action-mandatory-information"
-                                aria-hidden="true"
-                            >
-                                *
-                            </span>
-                        </label>
-                        <input
-                            type="text"
-                            id="artifact-create-gitlab-branch-reference"
-                            placeholder="main"
-                            required="required"
-                            aria-required="true"
-                        />
-                        <p class="text-info" v-translate>
-                            Must be an existing git commit SHA-1 or a branch name
-                        </p>
+                    <div class="modal-footer">
+                        <button type="reset" class="btn btn-secondary" data-dismiss="modal">
+                            <translate>Close</translate>
+                        </button>
+                        <button type="submit" class="btn btn-primary">
+                            <translate>Create branch</translate>
+                        </button>
                     </div>
-                    <div>
-                        <label for="artifact-create-gitlab-branch-name" v-translate>
-                            The following branch will be created
-                        </label>
-                        <code id="artifact-create-gitlab-branch-name">{{ branch_name }}</code>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="reset" class="btn btn-secondary" data-dismiss="modal">
-                        <translate>Close</translate>
-                    </button>
-                    <button type="button" class="btn btn-primary" disabled>
-                        <translate>Create branch</translate>
-                    </button>
-                </div>
+                </form>
             </div>
         </div>
     </div>
@@ -108,8 +115,8 @@
 import Vue from "vue";
 import { Component } from "vue-property-decorator";
 import jquery from "jquery";
-import { State } from "vuex-class";
-import type { GitlabIntegration } from "../store/type";
+import { State, Action } from "vuex-class";
+import type { GitlabIntegration, createBranchPayload } from "../store/type";
 
 @Component
 export default class App extends Vue {
@@ -119,6 +126,15 @@ export default class App extends Vue {
     @State
     readonly branch_name!: string;
 
+    @State
+    readonly artifact_id!: number;
+
+    @Action
+    private readonly createBranch!: (payload: createBranchPayload) => Promise<void>;
+
+    private selected_integration_id!: number;
+    private reference!: string;
+
     mounted(): void {
         const jquery_element = jquery(this.$el);
         jquery_element.on("hidden", () => {
@@ -126,6 +142,15 @@ export default class App extends Vue {
             this.$root.$el.parentNode?.removeChild(this.$root.$el);
         });
         jquery_element.modal();
+    }
+
+    onClickCreateBranch(): void {
+        this.createBranch({
+            gitlab_integration_id: this.selected_integration_id,
+            artifact_id: this.artifact_id,
+            branch_name: this.branch_name,
+            reference: this.reference,
+        });
     }
 }
 </script>
