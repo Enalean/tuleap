@@ -31,7 +31,7 @@
     flex-direction: column;
     width: global-variables.$sidebar-expanded-width;
     height: 100vh;
-    background: var(--tlp-theme-dark-background-color);
+    background: var(--tlp-dark-color);
 }
 
 .sidebar-collapser-icon::before {
@@ -111,13 +111,13 @@
 .sidebar-content-vertical-scroll {
     overflow-y: auto;
     scrollbar-width: thin;
-    scrollbar-color: var(--tlp-theme-dark-background-color-lighter-10) transparent;
+    scrollbar-color: var(--tlp-dark-color-lighter-10) transparent;
 
     &::-webkit-scrollbar {
         width: 8px;
     }
 
     &::-webkit-scrollbar-thumb {
-        background-color: var(--tlp-theme-dark-background-color-lighter-10);
+        background-color: var(--tlp-dark-color-lighter-10);
     }
 }

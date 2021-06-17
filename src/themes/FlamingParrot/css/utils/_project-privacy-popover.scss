@@ -25,7 +25,7 @@
     padding: 0;
     border: 0;
     border-radius: 4px;
-    background: var(--tlp-theme-dark-background-color);
+    background: var(--tlp-dark-color);
     color: var(--tlp-ui-border-dark);
     font-size: 0.875rem;
     font-weight: normal;
@@ -34,13 +34,13 @@
     text-transform: none;
 
     &.right > .arrow::after {
-        border-right-color: var(--tlp-theme-dark-background-color-darker-05);
+        border-right-color: var(--tlp-dark-color-darker-05);
         border-bottom-color: transparent;
     }
 
     > .arrow {
         &::after {
-            border-bottom-color: var(--tlp-theme-dark-background-color-darker-05);
+            border-bottom-color: var(--tlp-dark-color-darker-05);
         }
 
         + .popover-content {
@@ -54,7 +54,7 @@
         border-bottom: 0;
         border-top-left-radius: navbar.$nav-dropdown-content-border-radius;
         border-top-right-radius: navbar.$nav-dropdown-content-border-radius;
-        background-color: var(--tlp-theme-dark-background-color-darker-05);
+        background-color: var(--tlp-dark-color-darker-05);
         color: var(--tlp-ui-border-light);
         font-size: 1.125rem;
         font-weight: 600;
@@ -67,12 +67,12 @@
         padding: var(--tlp-medium-spacing);
         border-bottom-right-radius: navbar.$nav-dropdown-content-border-radius;
         border-bottom-left-radius: navbar.$nav-dropdown-content-border-radius;
-        background: var(--tlp-theme-dark-background-color);
+        background: var(--tlp-dark-color);
         color: var(--tlp-ui-border-dark);
 
         .current-project-nav-flag-popover-separator {
             margin: var(--tlp-medium-spacing) calc(-1px * var(--tlp-medium-spacing));
-            border-top: 1px solid var(--tlp-theme-dark-background-color-darker-05);
+            border-top: 1px solid var(--tlp-dark-color-darker-05);
             border-bottom: 0;
             background: none;
         }

@@ -208,7 +208,7 @@
 
             .doc-color-code-#{$color-name}-text-on-dark {
                 @extend %size;
-                background-color: var(--tlp-theme-dark-background-color);
+                background-color: var(--tlp-dark-color);
                 color: map-get($colors, "text-on-dark");
             }
 

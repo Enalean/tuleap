@@ -26,7 +26,7 @@
     height: 100px;
     transform: translate(-50%, -50%);
     border-radius: 50%;
-    background: var(--tlp-theme-dark-background-color);
+    background: var(--tlp-dark-color);
     box-shadow: 0 0 50px rgba(0, 0, 0, 0.2);
 
     @keyframes modalLoading {

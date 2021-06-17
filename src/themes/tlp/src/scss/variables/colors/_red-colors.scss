@@ -33,9 +33,9 @@ $tlp-ui-border-dark: #d4d7e1;
 
 $tlp-main-color: common-colors.$tlp-theme-red;
 $tlp-theme-background-color: common-colors.$tlp-theme-background-red;
-$tlp-theme-sidebar-background-color: common-colors.$tlp-theme-sidebar-background-red;
+$tlp-dark-color: common-colors.$tlp-theme-dark-red;
 
-$tlp-typo-default-text-color: $tlp-theme-sidebar-background-color;
+$tlp-typo-default-text-color: $tlp-dark-color;
 
 $tlp-table-row-background-empty: #fcfcfc;
 

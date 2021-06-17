@@ -21,7 +21,7 @@
 #project-sidebar-nav-title-popover,
 #current-project-nav-title-popover {
     > .tlp-popover-arrow {
-        background: var(--tlp-theme-dark-background-color-darker);
+        background: var(--tlp-dark-color-darker-20);
 
         + .tlp-popover-body {
             border-radius: 4px;
@@ -30,7 +30,7 @@
 
     > .tlp-popover-header {
         padding: var(--tlp-medium-spacing);
-        background: var(--tlp-theme-dark-background-color-darker);
+        background: var(--tlp-dark-color-darker-20);
 
         > .tlp-popover-title {
             color: var(--tlp-ui-border-light);
@@ -40,13 +40,13 @@
     }
 
     > .tlp-popover-body {
-        background: var(--tlp-theme-dark-background-color);
+        background: var(--tlp-dark-color);
         color: var(--tlp-ui-dimmed-on-dark-background);
         font-size: 0.875rem;
 
         > .current-project-nav-flag-popover-separator {
             margin: var(--tlp-medium-spacing) calc(-1 * var(--tlp-medium-spacing));
-            border-top: 1px solid var(--tlp-theme-dark-background-color-darker);
+            border-top: 1px solid var(--tlp-dark-color-darker-20);
         }
 
         .current-project-nav-flag-popover-content-title {

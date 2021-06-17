@@ -36,8 +36,8 @@
         padding: 0;
         overflow: visible;
         border-radius: 50%;
-        border-color: var(--tlp-theme-dark-background-color);
-        background: var(--tlp-theme-dark-background-color);
+        border-color: var(--tlp-dark-color);
+        background: var(--tlp-dark-color);
 
         > .fa {
             font-size: 20px;
@@ -80,25 +80,25 @@
     }
 
     .tlp-dropdown-menu {
-        border-color: var(--tlp-theme-dark-background-color);
-        background: var(--tlp-theme-dark-background-color);
+        border-color: var(--tlp-dark-color);
+        background: var(--tlp-dark-color);
 
         &::before {
             display: none;
         }
 
         &::after {
-            border-top-color: var(--tlp-theme-dark-background-color);
+            border-top-color: var(--tlp-dark-color);
         }
 
         .help-dropdown-link {
             &.tlp-dropdown-menu-item {
-                background: var(--tlp-theme-dark-background-color);
+                background: var(--tlp-dark-color);
                 color: var(--tlp-ui-border-dark);
                 font-size: 13px;
 
                 &:hover {
-                    background: var(--tlp-theme-dark-background-color-darker);
+                    background: var(--tlp-dark-color-darker-20);
                 }
             }
 

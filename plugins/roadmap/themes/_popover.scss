@@ -29,7 +29,7 @@
     }
 
     > .roadmap-gantt-task-popover-arrow {
-        background: var(--tlp-theme-dark-background-color-darker);
+        background: var(--tlp-dark-color-darker-20);
     }
 
     &.tlp-popover[data-popper-placement="left-end"],
@@ -51,7 +51,7 @@
     &.tlp-popover[data-popper-placement="left-end"],
     &.tlp-popover[data-popper-placement="right-end"] {
         > .roadmap-gantt-task-popover-arrow {
-            background: var(--tlp-theme-dark-background-color);
+            background: var(--tlp-dark-color);
         }
     }
 
@@ -61,14 +61,14 @@
         }
 
         > .roadmap-gantt-task-popover-arrow {
-            background: var(--tlp-theme-dark-background-color);
+            background: var(--tlp-dark-color);
         }
     }
 }
 
 .roadmap-gantt-task-popover-header {
     border-top: 4px solid transparent;
-    background: var(--tlp-theme-dark-background-color-darker);
+    background: var(--tlp-dark-color-darker-20);
 
     @each $color-name, $colors in swatch-colors.$tlp-swatch-color-map {
         &.roadmap-gantt-task-popover-header-#{$color-name} {
@@ -98,7 +98,7 @@
 }
 
 .roadmap-gantt-task-popover-body {
-    background: var(--tlp-theme-dark-background-color);
+    background: var(--tlp-dark-color);
 
     &.tlp-popover-body {
         padding: var(--tlp-small-spacing) var(--tlp-medium-spacing) var(--tlp-medium-spacing);

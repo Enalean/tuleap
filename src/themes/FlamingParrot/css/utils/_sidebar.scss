@@ -31,7 +31,7 @@
     max-width: variables-common.$sidebar-width;
     height: 100vh;
     overflow: hidden;
-    background: var(--tlp-theme-dark-background-color);
+    background: var(--tlp-dark-color);
     @media screen and (max-width: 880px) {
         padding: variables-common.$navbar-height 0 0;
     }
@@ -43,7 +43,7 @@
     .jspDrag {
         width: 9px;
         border-radius: 0;
-        background: var(--tlp-theme-dark-background-color-lighter-10);
+        background: var(--tlp-dark-color-lighter-10);
     }
 
     .jspPane {
@@ -289,7 +289,7 @@
     text-decoration: none;
 
     &:hover {
-        background: var(--tlp-theme-dark-background-color-darker);
+        background: var(--tlp-dark-color-darker-20);
         color: var(--tlp-ui-border-normal);
         text-decoration: none;
     }
@@ -314,11 +314,11 @@
     align-items: center;
     padding: var(--tlp-small-spacing) var(--tlp-medium-spacing);
     border: 0;
-    background: var(--tlp-theme-dark-background-color);
+    background: var(--tlp-dark-color);
 
     &:hover,
     &:focus {
-        background: var(--tlp-theme-dark-background-color-darker);
+        background: var(--tlp-dark-color-darker-20);
 
         > .project-sidebar-banner-button-label,
         > .project-sidebar-banner-button-icon {
@@ -440,13 +440,13 @@ body.sidebar-collapsed {
 .sidebar-content-vertical-scroll {
     overflow-y: auto;
     scrollbar-width: thin;
-    scrollbar-color: var(--tlp-theme-dark-background-color-lighter-10) transparent;
+    scrollbar-color: var(--tlp-dark-color-lighter-10) transparent;
 
     &::-webkit-scrollbar {
         width: 8px;
     }
 
     &::-webkit-scrollbar-thumb {
-        background-color: var(--tlp-theme-dark-background-color-lighter-10);
+        background-color: var(--tlp-dark-color-lighter-10);
     }
 }

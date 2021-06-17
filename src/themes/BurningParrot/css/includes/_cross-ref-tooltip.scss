@@ -25,8 +25,8 @@
     margin: var(--tlp-medium-spacing) 0 0;
     padding: var(--tlp-medium-spacing);
     border-radius: 4px;
-    background-color: var(--tlp-theme-dark-background-color);
-    box-shadow: 0 20px 30px var(--tlp-theme-dark-background-color-transparent-85), 0 5px 10px var(--tlp-theme-dark-background-color-transparent-85);
+    background-color: var(--tlp-dark-color);
+    box-shadow: 0 20px 30px var(--tlp-dark-color-transparent-85), 0 5px 10px var(--tlp-dark-color-transparent-85);
     color: var(--tlp-ui-white);
     font-size: 12px;
     font-weight: 600;
@@ -41,7 +41,7 @@
         height: 0;
         border-width: 0 10px 10px;
         border-style: solid;
-        border-color: transparent transparent var(--tlp-theme-dark-background-color) transparent;
+        border-color: transparent transparent var(--tlp-dark-color) transparent;
     }
 
     > table > tbody > tr {
@@ -106,7 +106,7 @@
     padding: 0;
 
     &::before {
-        border-color: transparent transparent var(--tlp-theme-dark-background-color-darker) transparent;
+        border-color: transparent transparent var(--tlp-dark-color-darker-20) transparent;
     }
 }
 
@@ -116,7 +116,7 @@
     padding: var(--tlp-medium-spacing);
     border-top-left-radius: 4px;
     border-top-right-radius: 4px;
-    background: var(--tlp-theme-dark-background-color-darker);
+    background: var(--tlp-dark-color-darker-20);
     font-size: 16px;
     line-height: 20px;
 

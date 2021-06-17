@@ -34,7 +34,7 @@
 
     flex: 1 1 auto;
     min-height: calc(#{$avatar-size} + 2px * var(--tlp-medium-spacing));
-    box-shadow: 0 3px 4px var(--tlp-theme-dark-background-color-transparent-90);
+    box-shadow: 0 3px 4px var(--tlp-dark-color-transparent-90);
 }
 
 .forumml-thread-message-permalink {

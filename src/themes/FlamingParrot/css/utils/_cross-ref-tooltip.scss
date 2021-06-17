@@ -27,8 +27,8 @@ $dimmed-white-over-dark-background: transparentize(#ffffff, 0.2);
     margin: 16px 0 0;
     padding: 16px;
     border-radius: 4px;
-    background-color: var(--tlp-theme-dark-background-color);
-    box-shadow: 0 20px 30px var(--tlp-theme-dark-background-color-transparent-85), 0 5px 10px var(--tlp-theme-dark-background-color-transparent-85);
+    background-color: var(--tlp-dark-color);
+    box-shadow: 0 20px 30px var(--tlp-dark-color-transparent-85), 0 5px 10px var(--tlp-dark-color-transparent-85);
     color: var(--tlp-ui-white);
     font-size: 12px;
     font-weight: 600;
@@ -43,7 +43,7 @@ $dimmed-white-over-dark-background: transparentize(#ffffff, 0.2);
         height: 0;
         border-width: 0 10px 10px;
         border-style: solid;
-        border-color: transparent transparent var(--tlp-theme-dark-background-color) transparent;
+        border-color: transparent transparent var(--tlp-dark-color) transparent;
     }
 
     > table > tbody > tr {
@@ -102,7 +102,7 @@ $dimmed-white-over-dark-background: transparentize(#ffffff, 0.2);
     padding: 0;
 
     &::before {
-        border-color: transparent transparent var(--tlp-theme-dark-background-color-darker-10) transparent;
+        border-color: transparent transparent var(--tlp-dark-color-darker-10) transparent;
     }
 }
 
@@ -112,7 +112,7 @@ $dimmed-white-over-dark-background: transparentize(#ffffff, 0.2);
     padding: 16px;
     border-top-left-radius: 4px;
     border-top-right-radius: 4px;
-    background: var(--tlp-theme-dark-background-color-darker-10);
+    background: var(--tlp-dark-color-darker-10);
     font-size: 16px;
     line-height: 20px;
 

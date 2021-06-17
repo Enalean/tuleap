@@ -20,7 +20,7 @@
 @use 'fonts';
 
 $tlp-paragraph-line-height: 1.5rem;
-$tlp-h1-color: var(--tlp-theme-dark-background-color);
+$tlp-h1-color: var(--tlp-dark-color);
 
 body {
     color: var(--tlp-typo-default-text-color);
@@ -198,7 +198,7 @@ kbd {
     display: inline-block;
     padding: 2px var(--tlp-small-spacing);
     border-radius: 4px;
-    background: var(--tlp-theme-dark-background-color);
+    background: var(--tlp-dark-color);
     color: var(--tlp-ui-white);
     font-family: var(--tlp-font-family-mono);
     font-size: 0.875rem;

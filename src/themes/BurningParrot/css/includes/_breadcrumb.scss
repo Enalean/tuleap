@@ -20,7 +20,7 @@
 $step-transition-duration: 75ms;
 
 $step-background: var(--tlp-ui-white);
-$step-color: var(--tlp-theme-dark-background-color);
+$step-color: var(--tlp-dark-color);
 $step-active-color: var(--tlp-main-color);
 $step-active-background: var(--tlp-main-color-transparent-90);
 
@@ -217,8 +217,8 @@ $switch-menu-item-hover-color: var(--tlp-main-color);
 
     &.fa-lock-open,
     &.fa-tlp-unlock-plus-r {
-        background: var(--tlp-theme-dark-background-color-transparent-90);
-        color: var(--tlp-theme-dark-background-color-lighter-10);
+        background: var(--tlp-dark-color-transparent-90);
+        color: var(--tlp-dark-color-lighter-10);
     }
 }
 
@@ -242,11 +242,11 @@ $switch-menu-item-hover-color: var(--tlp-main-color);
 
     &[data-privacy-icon="fa-lock-open"],
     &[data-privacy-icon="fa-tlp-unlock-plus-r"] {
-        background: var(--tlp-theme-dark-background-color-transparent-90);
-        color: var(--tlp-theme-dark-background-color-lighter-10);
+        background: var(--tlp-dark-color-transparent-90);
+        color: var(--tlp-dark-color-lighter-10);
 
         > .fas {
-            color: var(--tlp-theme-dark-background-color-lighter-10);
+            color: var(--tlp-dark-color-lighter-10);
         }
     }
 

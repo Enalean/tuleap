@@ -63,7 +63,7 @@
 
     &.fa-lock-open,
     &.fa-tlp-unlock-plus-r {
-        background: var(--tlp-theme-dark-background-color-darker);
+        background: var(--tlp-dark-color-darker-20);
     }
 
     &.fa-tlp-lock-plus-r,
@@ -84,7 +84,7 @@
     text-decoration: none;
 
     &:hover {
-        background: var(--tlp-theme-dark-background-color-darker);
+        background: var(--tlp-dark-color-darker-20);
         text-decoration: none;
     }
 }
@@ -108,12 +108,12 @@
     align-items: center;
     padding: var(--tlp-small-spacing) var(--tlp-medium-spacing);
     border: 0;
-    background: var(--tlp-theme-dark-background-color);
+    background: var(--tlp-dark-color);
     cursor: pointer;
 
     &:hover,
     &:focus {
-        background: var(--tlp-theme-dark-background-color-darker);
+        background: var(--tlp-dark-color-darker-20);
 
         > .project-sidebar-banner-button-label,
         > .project-sidebar-banner-button-icon {
