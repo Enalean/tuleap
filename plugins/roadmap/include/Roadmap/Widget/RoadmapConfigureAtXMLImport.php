@@ -49,13 +49,13 @@ final class RoadmapConfigureAtXMLImport
     }
 
     /**
-     * @return string[][]
+     * @psalm-return array{roadmap: array{tracker_ids: string[], title: string, lvl1_iteration_tracker_id?: string, lvl2_iteration_tracker_id?: string}}
      */
     private function getParametersFromXML(\SimpleXMLElement $xml, MappingsRegistry $mapping_registry): array
     {
         $params = [
-            'tracker_id' => $this->getReferencedTrackerIdFromXML($xml, $mapping_registry),
-            'title'      => $this->getWidgetTitleFromXML($xml),
+            'tracker_ids' => $this->getReferencedTrackerIdsFromXML($xml, $mapping_registry),
+            'title'       => $this->getWidgetTitleFromXML($xml),
         ];
 
         foreach (['lvl1_iteration_tracker_id', 'lvl2_iteration_tracker_id'] as $iteration_tracker_name) {
@@ -81,20 +81,29 @@ final class RoadmapConfigureAtXMLImport
         return count($title_nodes) > 0 ? (string) $title_nodes[0] : 'Roadmap';
     }
 
-    private function getReferencedTrackerIdFromXML(\SimpleXMLElement $xml, MappingsRegistry $mapping_registry): string
+    /**
+     * @return string[]
+     */
+    private function getReferencedTrackerIdsFromXML(\SimpleXMLElement $xml, MappingsRegistry $mapping_registry): array
     {
         $tracker_id_nodes = $xml->xpath("preference/value[@name='tracker_id']");
         if (count($tracker_id_nodes) === 0) {
             throw new \RuntimeException("Reference tracker_id for roadmap widget was not found");
         }
-        $ref = (string) $tracker_id_nodes[0];
 
-        $imported_tracker_id = $mapping_registry->getReference($ref);
-        if ($imported_tracker_id === null) {
-            throw new \RuntimeException("Reference tracker_id for roadmap widget was not found");
+        $imported_tracker_ids = [];
+        foreach ($tracker_id_nodes as $tracker_id_node) {
+            $ref = (string) $tracker_id_node;
+
+            $imported_tracker_id = $mapping_registry->getReference($ref);
+            if ($imported_tracker_id === null) {
+                throw new \RuntimeException("Reference tracker_id for roadmap widget was not found");
+            }
+
+            $imported_tracker_ids[] = (string) $imported_tracker_id;
         }
 
-        return (string) $imported_tracker_id;
+        return $imported_tracker_ids;
     }
 
     private function getReferencedIterationTrackerIdFromXML(

@@ -121,31 +121,15 @@ final class RoadmapTasksRetriever
         }
 
         $user = $this->user_manager->getCurrentUser();
-
         $this->checkUserCanAccessProject($widget_row['owner_id'], $user);
 
-        $tracker = $this->tracker_factory->getTrackerById($widget_row['tracker_id']);
-        if (! $tracker || ! $tracker->isActive() || ! $tracker->userCanView($user)) {
-            throw $this->get404();
-        }
-        $this->checkTrackerHasTitleSemantic($tracker, $user);
+        $representation_builders_by_tracker_id = $this->getRepresentationBuildersIndexedByTrackerId($widget_row['id'], $user);
 
-        $semantic_timeframe = $this->semantic_timeframe_builder->getSemantic($tracker);
-        $this->checkTrackerHasTimeframeSemantic($semantic_timeframe, $user);
-
-        $representation_builder = new TaskRepresentationBuilderForTracker(
-            $tracker,
-            $semantic_timeframe->getTimeframeCalculator(),
-            $this->dependencies_retriever,
-            $this->progress_builder,
-            $this->logger
-        );
-
-        $paginated_artifacts = $this->artifact_factory->getPaginatedArtifactsByTrackerId(
-            $tracker->getId(),
+        $tracker_ids         = array_keys($representation_builders_by_tracker_id);
+        $paginated_artifacts = $this->artifact_factory->getPaginatedArtifactsByListOfTrackerIds(
+            $tracker_ids,
             $limit,
-            $offset,
-            false
+            $offset
         );
 
         $filtered_artifacts = $this->tasks_filter->filterOutOfDateArtifacts(
@@ -161,29 +145,55 @@ final class RoadmapTasksRetriever
             }
 
             $parent = $artifact->getParent($user);
-            if ($parent && $parent->getTracker()->getId() === $tracker->getId()) {
+            if ($parent && in_array($parent->getTracker()->getId(), $tracker_ids, true)) {
                 continue;
             }
 
-            $representations[] = $representation_builder->buildRepresentation($artifact, $user);
+            $tracker_id = $artifact->getTracker()->getId();
+            if (! isset($representation_builders_by_tracker_id[$tracker_id])) {
+                throw new \RuntimeException("Unable to find representation builder");
+            }
+
+            $representations[] = $representation_builders_by_tracker_id[$tracker_id]->buildRepresentation($artifact, $user);
         }
 
         return new PaginatedCollectionOfTaskRepresentations($representations, $paginated_artifacts->getTotalSize());
     }
 
-    private function get404(): RestException
-    {
-        return new I18NRestException(404, dgettext('tuleap-roadmap', 'The roadmap cannot be found.'));
-    }
-
     /**
-     *
-     * @throws I18NRestException
+     * @psalm-return array<int, TaskRepresentationBuilderForTracker>
      */
-    private function checkTrackerHasTitleSemantic(\Tracker $tracker, \PFUser $user): void
+    private function getRepresentationBuildersIndexedByTrackerId(int $id, \PFUser $user): array
     {
-        $title_field = $tracker->getTitleField();
-        if (! $title_field || ! $title_field->userCanRead($user)) {
+        $selected_trackers = $this->dao->searchSelectedTrackers($id);
+        if (! $selected_trackers) {
+            return [];
+        }
+
+        $readable_trackers = [];
+        foreach ($selected_trackers as $tracker_id) {
+            $tracker = $this->tracker_factory->getTrackerById($tracker_id);
+            if (! $tracker || ! $tracker->isActive() || ! $tracker->userCanView($user)) {
+                continue;
+            }
+
+            $readable_trackers[] = $tracker;
+        }
+
+        if (! $readable_trackers) {
+            throw $this->get404();
+        }
+
+        $trackers_with_title_semantics = [];
+        foreach ($readable_trackers as $tracker) {
+            $title_field = $tracker->getTitleField();
+            if (! $title_field || ! $title_field->userCanRead($user)) {
+                continue;
+            }
+            $trackers_with_title_semantics[] = $tracker;
+        }
+
+        if (! $trackers_with_title_semantics) {
             throw new I18NRestException(
                 400,
                 dgettext(
@@ -192,37 +202,63 @@ final class RoadmapTasksRetriever
                 )
             );
         }
+
+        $representations_builder = [];
+        foreach ($trackers_with_title_semantics as $tracker) {
+            $semantic_timeframe = $this->semantic_timeframe_builder->getSemantic($tracker);
+            if (! $this->doesTrakerHaveTrackerSemantic($semantic_timeframe, $user)) {
+                continue;
+            }
+
+            $representations_builder[$tracker->getId()] = new TaskRepresentationBuilderForTracker(
+                $tracker,
+                $semantic_timeframe->getTimeframeCalculator(),
+                $this->dependencies_retriever,
+                $this->progress_builder,
+                $this->logger
+            );
+        }
+
+        if (! $representations_builder) {
+            throw new I18NRestException(
+                400,
+                dgettext(
+                    'tuleap-roadmap',
+                    'The tracker does not have a timeframe defined, or you are not allowed to see it.'
+                )
+            );
+        }
+
+        return $representations_builder;
     }
 
-    /**
-     *
-     * @throws I18NRestException
-     */
-    private function checkTrackerHasTimeframeSemantic(SemanticTimeframe $semantic_timeframe, \PFUser $user): void
+    private function get404(): RestException
     {
-        $error_message = dgettext(
-            'tuleap-roadmap',
-            'The tracker does not have a timeframe defined, or you are not allowed to see it.'
-        );
+        return new I18NRestException(404, dgettext('tuleap-roadmap', 'The roadmap cannot be found.'));
+    }
 
+    private function doesTrakerHaveTrackerSemantic(SemanticTimeframe $semantic_timeframe, \PFUser $user): bool
+    {
         if (! $semantic_timeframe->isDefined()) {
-            throw new I18NRestException(400, $error_message);
+            return false;
         }
 
         $start_date_field = $semantic_timeframe->getStartDateField();
         if ($start_date_field && ! $start_date_field->userCanRead($user)) {
-            throw new I18NRestException(400, $error_message);
+            return false;
         }
 
         $end_date_field = $semantic_timeframe->getEndDateField();
         if ($end_date_field && ! $end_date_field->userCanRead($user)) {
-            throw new I18NRestException(400, $error_message);
+            return false;
         }
 
         $duration_field = $semantic_timeframe->getDurationField();
         if ($duration_field && ! $duration_field->userCanRead($user)) {
-            throw new I18NRestException(400, $error_message);
+            return false;
         }
+
+        return true;
     }
 
     /**

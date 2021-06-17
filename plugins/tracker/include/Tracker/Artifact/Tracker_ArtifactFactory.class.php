@@ -145,6 +145,34 @@ class Tracker_ArtifactFactory
     }
 
     /**
+     * @param int[] $tracker_ids
+     */
+    public function getPaginatedArtifactsByListOfTrackerIds(array $tracker_ids, int $limit, int $offset): Tracker_Artifact_PaginatedArtifacts
+    {
+        if (! $tracker_ids) {
+            return new Tracker_Artifact_PaginatedArtifacts([], 0);
+        }
+
+        $paginated_by_list_of_tracker_ids = $this->getDao()->searchPaginatedByListOfTrackerIds(
+            $tracker_ids,
+            $limit,
+            $offset
+        );
+        if (! $paginated_by_list_of_tracker_ids) {
+            return new Tracker_Artifact_PaginatedArtifacts([], 0);
+        }
+
+        $size      = (int) $this->getDao()->foundRows();
+        $artifacts = [];
+        foreach ($paginated_by_list_of_tracker_ids as $row) {
+            $artifacts[$row['id']] = $this->getInstanceFromRow($row);
+        }
+
+
+        return new Tracker_Artifact_PaginatedArtifacts($artifacts, $size);
+    }
+
+    /**
      * Given a list of artifact ids, return corresponding artifact objects if any
      *
      * @param array $artifact_ids

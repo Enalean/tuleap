@@ -13,6 +13,7 @@
   },
   "devDependencies": {
     "@tuleap/tlp-fetch": "file://../../src/scripts/lib/tlp-fetch",
+    "@tuleap/list-picker": "file://../../src/scripts/lib/list-picker",
     "@tuleap/tlp-popovers": "file://../../src/scripts/lib/tlp-popovers",
     "@vue/test-utils": "^1.2.0",
     "lit-html": "^1.4.1",
