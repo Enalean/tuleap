@@ -85,7 +85,7 @@ final class Tuleap
         return $fqdn;
     }
 
-    public function setup(OutputInterface $output, string $tuleap_fqdn, string $db_host, string $db_admin_user, string $db_admin_password): void
+    private function setup(OutputInterface $output, string $tuleap_fqdn, string $db_host, string $db_admin_user, string $db_admin_password): void
     {
         $output->writeln('Install Tuleap');
         $this->process_factory->getProcessWithoutTimeout(
@@ -104,7 +104,7 @@ final class Tuleap
         $this->regenerateConfigurations($output);
     }
 
-    public function update(OutputInterface $output): string
+    private function update(OutputInterface $output): string
     {
         $tuleap_fqdn = $this->regenerateConfigurations($output);
         $this->runForgeUpgrade($output);
