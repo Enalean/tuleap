@@ -251,22 +251,10 @@
 }
 
 .sidebar-dashboard-privacy-icon {
-    @extend %round-icon;
-    color: var(--tlp-ui-white);
+    margin: 0 var(--tlp-small-spacing) 0 0;
+    color: var(--tlp-main-color-lighter-40);
     font-size: 0.6rem;
     line-height: 0;
-    cursor: help;
-
-    &.fa-lock,
-    &.fa-tlp-lock-plus-r {
-        background: var(--tlp-main-color);
-        text-shadow: 0 0 1px rgba(0, 0, 0, 0.2);
-    }
-
-    &.fa-lock-open,
-    &.fa-tlp-unlock-plus-r {
-        background: var(--tlp-theme-dark-background-color-darker);
-    }
 
     &.fa-tlp-lock-plus-r,
     &.fa-tlp-unlock-plus-r {
@@ -377,7 +365,20 @@
 }
 
 .project-sidebar-privacy-badge {
-    margin: var(--tlp-small-spacing) 0;
+    display: flex;
+    box-sizing: border-box;
+    align-items: center;
+    width: max-content;
+    max-width: 100%;
+    margin: 0 0 var(--tlp-small-spacing) 0;
+    padding: var(--tlp-small-spacing);
+    border-radius: 4px;
+    background: var(--tlp-main-color-transparent-85);
+    color: var(--tlp-main-color-lighter-40);
+    font-size: 0.75rem;
+    font-weight: 600;
+    line-height: 14px;
+    cursor: help;
 }
 
 .project-sidebar-project-flags-labels {
