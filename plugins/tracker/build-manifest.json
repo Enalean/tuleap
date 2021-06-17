@@ -36,6 +36,10 @@
         "tracker-creation": {
             "src": "scripts/tracker-creation",
             "po": "scripts/tracker-creation/po"
+        },
+        "timeframe-admin": {
+            "src": "scripts/semantics/timeframe/src",
+            "po": "scripts/semantics/timeframe/po"
         }
     },
     "gettext-angularjs": {

@@ -6,112 +6,19 @@
         <br />
     {{/ configuration_presenter }}
 
-    <p>{{# dgettext }} tuleap-tracker | The timeframe of an artifact will be defined by:{{/ dgettext }}</p>
-    <form action="{{ target_url }}" method="POST">
-        {{# csrf }}
-            {{> csrf_token_input }}
-        {{/ csrf }}
-        <div class="control-group">
-            <label class="control-label" for="start-date">
-                {{# dgettext }} tuleap-tracker | Start date{{/ dgettext}}
-                <span class="highlight">*</span>
-            </label>
+    <div
+        id="semantic-timeframe-admin-mount-point"
+        data-usable-date-fields="{{ usable_date_fields }}"
+        data-usable-numeric-fields="{{ usable_numeric_fields }}"
+        data-start-date-field-id="{{ start_date_field_id }}"
+        data-end-date-field-id="{{ end_date_field_id }}"
+        data-duration-field-id="{{ duration_field_id }}"
+        data-target-url="{{ target_url }}"
+        data-csrf-token="{{ csrf_token }}"
+        data-has-other-trackers-implying-their-timeframes="{{ has_other_trackers_implying_their_timeframes }}"
+        data-has-tracker-charts="{{ has_tracker_charts }}"
+    ></div>
 
-            <div class="controls">
-                <select id="start-date" name="start-date-field-id" required>
-                    <option value="">{{# dgettext }} tuleap-tracker | Choose a field... {{/ dgettext }}</option>
-                    {{# usable_start_date_fields }}
-                        <option value="{{ id }}" {{# is_selected }}selected{{/ is_selected }}>{{ label }}</option>
-                    {{/ usable_start_date_fields }}
-                </select>
-            </div>
-        </div>
-
-        <div class="control-group">
-            <div id="semantic-timeframe-options" class="controls">
-                <div class="control-group">
-                    <label class="radio" for="option-end-date">
-                        <input
-                            id="option-end-date"
-                            class="semantic-timeframe-option-radio"
-                            type="radio"
-                            name="timeframe-selected-option"
-                            value="end-date"
-                            {{^ is_semantic_in_start_date_duration_mode }}
-                                checked="checked"
-                            {{/ is_semantic_in_start_date_duration_mode }}
-                            data-target-selector="end-date-field"
-                        >
-                        {{# dgettext }} tuleap-tracker | End date{{/ dgettext}}
-                        <span class="highlight">*</span>
-                    </label>
-                    <select
-                        id="end-date-field"
-                        class="tracker-administration-semantic-timeframe-option-selector"
-                        name="end-date-field-id"
-                    >
-                        <option value="">{{# dgettext }} tuleap-tracker | Choose a field... {{/ dgettext }}</option>
-                        {{# usable_end_date_fields }}
-                            <option value="{{ id }}" {{# is_selected }}selected{{/ is_selected }}>{{ label }}</option>
-                        {{/ usable_end_date_fields }}
-                    </select>
-                </div>
-                <div class="control-group">
-                    <label class="radio" for="option-duration">
-                        <input
-                            id="option-duration"
-                            class="semantic-timeframe-option-radio"
-                            type="radio"
-                            name="timeframe-selected-option"
-                            value="duration"
-                            {{# is_semantic_in_start_date_duration_mode }}
-                                checked="checked"
-                            {{/is_semantic_in_start_date_duration_mode}}
-                            data-target-selector="duration-field"
-                        >
-                        {{# dgettext }} tuleap-tracker | Duration{{/ dgettext}}
-                        <span class="highlight">*</span>
-                    </label>
-                    <select
-                        id="duration-field"
-                        class="tracker-administration-semantic-timeframe-option-selector"
-                        name="duration-field-id"
-                    >
-                        <option value="">{{# dgettext }} tuleap-tracker | Choose a field... {{/ dgettext }}</option>
-                        {{# usable_numeric_fields }}
-                            <option value="{{ id }}" {{# is_selected }}selected{{/ is_selected }}>{{ label }}</option>
-                        {{/ usable_numeric_fields}}
-                    </select>
-                </div>
-            </div>
-        </div>
-
-        <div class="tracker-administration-semantic-timeframe-action-buttons">
-            <button class="btn btn-primary" type="submit" name="update-semantic-timeframe">
-                {{# dgettext }} tuleap-tracker | Save your modifications {{/ dgettext }}
-            </button>
-            {{# is_semantic_configured }}
-                {{# dgettext }} tuleap-tracker | or{{/ dgettext }}
-                <button
-                    class="btn btn-danger"
-                    type="submit"
-                    name="reset-semantic-timeframe"
-                    {{# has_other_trackers_implying_their_timeframes }}
-                    title="{{# dgettext }} tuleap-tracker | You cannot reset this semantic because some trackers imply their own semantic timeframe on this one. {{/ dgettext }}"
-                    disabled
-                    {{/ has_other_trackers_implying_their_timeframes }}
-                    {{^ has_other_trackers_implying_their_timeframes }}
-                        {{# has_tracker_charts }}
-                    title="{{# dgettext }} tuleap-tracker | You cannot reset this semantic because this tracker has a burnup, burndown or another chart rendered by an external plugin {{/ dgettext }}"
-                    disabled
-                        {{/ has_tracker_charts }}
-                    {{/ has_other_trackers_implying_their_timeframes }}
-                >
-                    {{# dgettext }} tuleap-tracker | Reset this semantic {{/ dgettext }}
-                </button>
-            {{/ is_semantic_configured }}
-        </div>
-    </form>
     <div>
         <a href="{{ tracker_semantic_admin_url }}">
             {{# dgettext }} tuleap-tracker | « Go back to semantic overview {{/ dgettext }}

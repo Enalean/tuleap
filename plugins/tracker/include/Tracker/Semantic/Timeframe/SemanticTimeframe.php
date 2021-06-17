@@ -94,9 +94,7 @@ class SemanticTimeframe extends Tracker_Semantic
             $this->tracker,
             $this->getUrl(),
             $this->getCurrentConfigurationPresenter(),
-            $this->getStartDateField(),
-            $this->getDurationField(),
-            $this->getEndDateField()
+            $this->timeframe
         );
 
         $this->getRenderer()->renderToPage('timeframe-semantic-admin', $presenter);
