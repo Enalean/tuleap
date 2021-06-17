@@ -33,7 +33,11 @@ services:
       - external-connectivity
 
   reverse-proxy:
-    image: ${DOCKER_REGISTRY:-docker.io}/enalean/tuleap-reverseproxy:distlp-1.5
+    build:
+      context: ./tests/e2e/docker
+      dockerfile: reverse-proxy.dockerfile
+      args:
+        DOCKER_REGISTRY: ${DOCKER_REGISTRY:-docker.io}
     command: /tuleap/tools/distlp/reverse-proxy/run.sh
     volumes:
       - .:/tuleap
