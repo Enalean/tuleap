@@ -27,9 +27,5 @@
 }
 
 body {
-    @include background.apply-background(
-        '.baseline-title-header',
-        global-variables.$sidebar-expanded-width,
-        global-variables.$sidebar-collapsed-width,
-    );
+    @include background.apply-background(".baseline-title-header", global-variables.$sidebar-expanded-width, global-variables.$sidebar-collapsed-width);
 }

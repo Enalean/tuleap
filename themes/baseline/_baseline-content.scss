@@ -50,9 +50,9 @@ $artifact-body-padding: var(--tlp-medium-spacing);
     counter-increment: artifact-counter;
 
     &::before {
-        content: counters(artifact-counter, '.');
-        margin-right: .3rem;
-        padding-right: .5rem;
+        content: counters(artifact-counter, ".");
+        margin-right: 0.3rem;
+        padding-right: 0.5rem;
         border-right: 1px solid swatch-colors.$tlp-swatch-firemist-silver;
         color: var(--tlp-theme-color);
         font-size: 1.3rem;
