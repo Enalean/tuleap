@@ -262,6 +262,7 @@ pull-docker-images: ## Pull all docker images used for development
 	$(DOCKER) pull ghcr.io/enalean/tuleap-test-phpunit:c7-php80
 	$(DOCKER) pull ghcr.io/enalean/tuleap-test-rest:c7-php74
 	$(DOCKER) pull ghcr.io/enalean/rnc2rng:latest
+	$(DOCKER) pull tuleap/tuleap-community-edition:latest
 	$(DOCKER_COMPOSE) pull web db redis mailhog ldap
 
 #
