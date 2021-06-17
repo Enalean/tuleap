@@ -226,6 +226,48 @@ class TaskOutOfDateDetectorTest extends TestCase
         );
     }
 
+    public function testItReturnsTrueForTasksWithoutStatus(): void
+    {
+        $this->semantic_status->shouldReceive('getField')->once()->andReturn($this->status_field);
+        $this->semantic_status->shouldReceive('isOpen')->with($this->artifact)->once()->andReturn(false);
+        $this->timeframe_calculator->shouldReceive('buildTimePeriodWithoutWeekendForArtifactForREST')
+            ->with($this->artifact, $this->user, $this->logger)
+            ->andReturn(
+                $this->getTimePeriodWithoutWeekend("2021-01-01", null)
+            );
+
+        $submitted_on = new \DateTimeImmutable("2021-04-13 15:30");
+        $changeset    = new Tracker_Artifact_Changeset(
+            1,
+            $this->artifact,
+            104,
+            $submitted_on->getTimestamp(),
+            ''
+        );
+
+        $changeset->setFieldValue(
+            $this->status_field,
+            new Tracker_Artifact_ChangesetValue_List(
+                365,
+                $changeset,
+                $this->status_field,
+                true,
+                []
+            )
+        );
+
+        $this->artifact->setChangesets([$changeset]);
+
+        $this->logger->shouldReceive('error')->once();
+        self::assertTrue(
+            $this->detector->isArtifactOutOfDate(
+                $this->artifact,
+                new \DateTimeImmutable("2021-04-14 08:30"),
+                $this->user
+            )
+        );
+    }
+
     public function testItReturnsTrueForClosedArtifactWhenChangesetCantBeFound(): void
     {
         $this->semantic_status->shouldReceive('getField')->once()->andReturn($this->status_field);

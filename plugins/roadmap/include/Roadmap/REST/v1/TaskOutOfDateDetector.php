@@ -94,7 +94,7 @@ final class TaskOutOfDateDetector implements IDetectIfArtifactIsOutOfDate
             }
 
             $value = $status_value->getValue();
-            if ($value === null) {
+            if (empty($value)) {
                 continue;
             }
 
