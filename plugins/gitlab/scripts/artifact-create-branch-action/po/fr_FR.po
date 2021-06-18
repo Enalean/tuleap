@@ -10,6 +10,11 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
+msgid "An error occurred while creating %{ branch_name }, please try again"
+msgstr ""
+"Une erreur est survenue pendant la création de %{ branch_name }, veuillez "
+"réessayer"
+
 msgid "Close"
 msgstr "Fermer"
 
@@ -28,5 +33,20 @@ msgstr "Intégrations de dépôts GitLab"
 msgid "Must be an existing git commit SHA-1 or a branch name"
 msgstr "Doit être le SHA-1 d'un commit existant ou le nom d'une branche"
 
+msgid "The branch %{ branch_name } already exists on %{ repo_name }"
+msgstr ""
+"La branch %{ branch_name } existe déjà dans le dépôt %{ repo_name }"
+
+msgid ""
+"The branch %{ branch_name } has been successfully created on <a href="
+"\"%{ repo_url }\">%{ repo_name }</a>"
+msgstr ""
+"La branche %{ branch_name } a été créé avec succés dans le dépôt <a href="
+"\"%{ repo_url }\">%{ repo_name }</a>"
+
 msgid "The following branch will be created"
 msgstr "La branche suivante sera créée"
+
+msgid "The reference %{ ref_name } does not seem to exist on %{ repo_name }"
+msgstr ""
+"La référence %{ ref_name } ne semble pas exister dans le dépôt %{ repo_name }"

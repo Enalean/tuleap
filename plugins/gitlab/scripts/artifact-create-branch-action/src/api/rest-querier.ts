@@ -18,13 +18,25 @@
  */
 
 import { post } from "@tuleap/tlp-fetch";
+import { ResultAsync } from "neverthrow";
 
-export async function postGitlabBranch(
+export const GitLabBranchCreationPossibleError = {
+    INVALID_REF: "invalid_ref",
+    BRANCH_ALREADY_EXIST: "branch_already_exist",
+    UNKNOWN: "unknown",
+};
+
+interface GitLabBranchCreationError {
+    readonly error_type: typeof GitLabBranchCreationPossibleError[keyof typeof GitLabBranchCreationPossibleError];
+    readonly initial_error: unknown;
+}
+
+export function postGitlabBranch(
     gitlab_integration_id: number,
     artifact_id: number,
     branch_name: string,
     reference: string
-): Promise<void> {
+): ResultAsync<void, Promise<GitLabBranchCreationError>> {
     const headers = {
         "content-type": "application/json",
     };
@@ -36,8 +48,46 @@ export async function postGitlabBranch(
         reference: reference,
     });
 
-    await post("/api/v1/gitlab_branch", {
-        headers: headers,
-        body: body,
-    });
+    return ResultAsync.fromPromise(
+        (async (): Promise<void> => {
+            await post("/api/v1/gitlab_branch", {
+                headers: headers,
+                body: body,
+            });
+        })(),
+        (err: unknown): Promise<GitLabBranchCreationError> => {
+            const default_error = {
+                error_type: GitLabBranchCreationPossibleError.UNKNOWN,
+                initial_error: err,
+            };
+
+            if (!looksLikeAnHTTPResponseError(err) || err.response.status !== 400) {
+                return Promise.resolve(default_error);
+            }
+
+            return ResultAsync.fromPromise(err.response.json(), () => default_error).match(
+                (response_json) => {
+                    let error_type = default_error.error_type;
+
+                    const lowercase_response_text = response_json.error.message.toLowerCase();
+
+                    if (lowercase_response_text.includes("invalid reference name")) {
+                        error_type = GitLabBranchCreationPossibleError.INVALID_REF;
+                    } else if (lowercase_response_text.includes("branch already exists")) {
+                        error_type = GitLabBranchCreationPossibleError.BRANCH_ALREADY_EXIST;
+                    }
+
+                    return {
+                        ...default_error,
+                        error_type,
+                    };
+                },
+                () => default_error
+            );
+        }
+    );
+}
+
+function looksLikeAnHTTPResponseError(err: unknown): err is { response: Response } {
+    return typeof err === "object" && Object.prototype.hasOwnProperty.call(err, "response");
 }
