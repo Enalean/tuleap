@@ -26,6 +26,8 @@ use Tuleap\Tracker\Creation\TrackerCreationDataChecker;
 use Tuleap\Tracker\Creation\TrackerCreationSettings;
 use Tuleap\Tracker\Creation\TrackerCreationSettingsBuilder;
 use Tuleap\Tracker\NewDropdown\TrackerInNewDropdownDao;
+use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao;
+use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDuplicator;
 use Tuleap\Tracker\TrackerColor;
 use Tuleap\Tracker\TrackerIsInvalidException;
 use Tuleap\Tracker\Webhook\WebhookDao;
@@ -562,6 +564,9 @@ class TrackerFactory
 
             $trigger_rules_manager = $this->getTriggerRulesManager();
             $trigger_rules_manager->duplicate($trackers_from_template, $field_mapping);
+
+            $timeframe_duplicator = $this->getSemanticTimeframeDuplicator();
+            $timeframe_duplicator->duplicateSemanticTimeframeForAllTrackers($field_mapping, $tracker_mapping);
         }
         $shared_factory = $this->getFormElementFactory();
         $shared_factory->fixOriginalFieldIdsAfterDuplication($to_project_id, $from_project_id, $field_mapping);
@@ -834,5 +839,13 @@ class TrackerFactory
     protected function getTransactionExecutor(): DBTransactionExecutorWithConnection
     {
         return new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection());
+    }
+
+    /**
+     * protected for testing purpose
+     */
+    protected function getSemanticTimeframeDuplicator(): SemanticTimeframeDuplicator
+    {
+        return new SemanticTimeframeDuplicator(new SemanticTimeframeDao());
     }
 }

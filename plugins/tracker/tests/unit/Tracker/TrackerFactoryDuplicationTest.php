@@ -21,6 +21,8 @@
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\Project\MappingRegistry;
+use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao;
+use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDuplicator;
 
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 class TrackerFactoryDuplicationTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -31,18 +33,24 @@ class TrackerFactoryDuplicationTest extends \Tuleap\Test\PHPUnit\TestCase
      * @var TrackerFactory
      */
     private $tracker_factory;
+    private SemanticTimeframeDao $semantic_timeframe_dao;
+    private SemanticTimeframeDuplicator $semantic_timeframe_duplicator;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->tracker_factory       = \Mockery::mock(\TrackerFactory::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $this->hierarchy_factory     = \Mockery::spy(\Tracker_HierarchyFactory::class);
-        $this->trigger_rules_manager = \Mockery::spy(\Tracker_Workflow_Trigger_RulesManager::class);
-        $this->formelement_factory   = \Mockery::spy(\Tracker_FormElementFactory::class);
+        $this->tracker_factory               = \Mockery::mock(\TrackerFactory::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $this->hierarchy_factory             = \Mockery::spy(\Tracker_HierarchyFactory::class);
+        $this->trigger_rules_manager         = \Mockery::spy(\Tracker_Workflow_Trigger_RulesManager::class);
+        $this->formelement_factory           = \Mockery::spy(\Tracker_FormElementFactory::class);
+        $this->semantic_timeframe_dao        = Mockery::mock(SemanticTimeframeDao::class);
+        $this->semantic_timeframe_duplicator = Mockery::mock(SemanticTimeframeDuplicator::class);
+
 
         $this->tracker_factory->shouldReceive('getHierarchyFactory')->andReturns($this->hierarchy_factory);
         $this->tracker_factory->shouldReceive('getFormElementFactory')->andReturns($this->formelement_factory);
         $this->tracker_factory->shouldReceive('getTriggerRulesManager')->andReturns($this->trigger_rules_manager);
+        $this->tracker_factory->shouldReceive('getSemanticTimeframeDuplicator')->andReturns($this->semantic_timeframe_duplicator);
     }
 
     public function testDuplicateDuplicatesAllTrackersWithHierarchy(): void
@@ -65,6 +73,8 @@ class TrackerFactoryDuplicationTest extends \Tuleap\Test\PHPUnit\TestCase
             ->andReturns(['tracker' => $t_new, 'field_mapping' => [], 'report_mapping' => []]);
 
         $this->hierarchy_factory->shouldReceive('duplicate')->once();
+
+        $this->semantic_timeframe_duplicator->shouldReceive('duplicateSemanticTimeframeForAllTrackers')->once();
 
         $this->tracker_factory->duplicate(100, 999, $mapping_registry);
     }
@@ -133,6 +143,9 @@ class TrackerFactoryDuplicationTest extends \Tuleap\Test\PHPUnit\TestCase
             );
 
         $this->formelement_factory->shouldReceive('fixOriginalFieldIdsAfterDuplication')->with($to_project_id, $from_project_id, $full_field_mapping)->once();
+
+        $this->semantic_timeframe_duplicator->shouldReceive('duplicateSemanticTimeframeForAllTrackers')->once();
+
         $this->tracker_factory->duplicate($from_project_id, $to_project_id, $mapping_registry);
     }
 
@@ -179,6 +192,36 @@ class TrackerFactoryDuplicationTest extends \Tuleap\Test\PHPUnit\TestCase
             ->andReturns(['tracker' => $t_new, 'field_mapping' => [], 'report_mapping' => []]);
 
         $this->trigger_rules_manager->shouldReceive('duplicate')->once();
+
+        $this->semantic_timeframe_duplicator->shouldReceive('duplicateSemanticTimeframeForAllTrackers')->once();
+
+        $this->tracker_factory->duplicate(100, 999, $mapping_registry);
+    }
+
+    public function testDuplicateDuplicatesAllTrackersWithSemanticTimeframe(): void
+    {
+        $tracker_to_duplicate = $this->givenADuplicatableTracker(1234);
+        $tracker_to_duplicate->shouldReceive('getName')->andReturns('User Stories');
+        $tracker_to_duplicate->shouldReceive('getDescription')->andReturns('User Stories');
+        $tracker_to_duplicate->shouldReceive('getItemname')->andReturns('user_stories');
+
+        $trackers = [$tracker_to_duplicate];
+        $this->tracker_factory->shouldReceive('getTrackersByGroupId')->with(100)->andReturns($trackers);
+
+        $new_tracker = \Mockery::mock(\Tracker::class)->shouldReceive('getId')->andReturns(555)->getMock();
+
+        $mapping_registry = new MappingRegistry([]);
+        $this->tracker_factory
+            ->shouldReceive('create')
+            ->with(999, $mapping_registry, 1234, 'User Stories', 'User Stories', 'user_stories', 'inca-silver', [])
+            ->once()
+            ->andReturns(['tracker' => $new_tracker, 'field_mapping' => [], 'report_mapping' => []]);
+
+        $this->hierarchy_factory->shouldReceive('duplicate')->once();
+
+        $this->semantic_timeframe_duplicator->shouldReceive('duplicateSemanticTimeframeForAllTrackers')
+            ->once()
+            ->with([], [1234 => 555]);
 
         $this->tracker_factory->duplicate(100, 999, $mapping_registry);
     }

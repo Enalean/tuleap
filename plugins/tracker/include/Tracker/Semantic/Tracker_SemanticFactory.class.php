@@ -30,8 +30,6 @@ use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneDao;
 use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneDuplicator;
 use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneFactory;
 use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneValueChecker;
-use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao;
-use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDuplicator;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeFromXMLBuilder;
 
 class Tracker_SemanticFactory
@@ -224,17 +222,12 @@ class Tracker_SemanticFactory
     /** @return \Tuleap\Tracker\Semantic\IDuplicateSemantic[] */
     private function getDuplicators()
     {
-        $timeframe_duplicator = new SemanticTimeframeDuplicator(
-            new SemanticTimeframeDao()
-        );
-
         $duplicators = [
             $this->getSemanticTitleFactory(),
             $this->getSemanticDescriptionFactory(),
             $this->getSemanticStatusFactory(),
             $this->getSemanticContributorFactory(),
             $this->getSemanticTooltipFactory(),
-            $timeframe_duplicator,
             new SemanticProgressDuplicator(new SemanticProgressDao()),
             new SemanticDoneDuplicator(
                 new SemanticDoneDao(),
