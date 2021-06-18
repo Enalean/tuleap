@@ -38,7 +38,7 @@ class RepositoryTest extends TestBase
         self::assertEquals(['OPTIONS', 'PATCH', 'DELETE'], $response->getHeader('Allow')->normalize()->toArray());
     }
 
-    public function testPatchGitlabRepositoryIntegration(): void
+    public function testPatchGitlabRepositoryIntegrationToAllowArtifactClosure(): void
     {
         $gitlab_integration_before_patch = $this->getGitlabRepositoryIntegration()->json()[0];
         self::assertFalse($gitlab_integration_before_patch["allow_artifact_closure"]);
@@ -60,6 +60,50 @@ class RepositoryTest extends TestBase
 
         $gitlab_integration_after_patch = $response->json();
         self::assertTrue($gitlab_integration_after_patch["allow_artifact_closure"]);
+    }
+
+    public function testPatchGitlabRepositoryIntegrationToUpdateCreateBranchPrefix(): void
+    {
+        $gitlab_integration_before_patch = $this->getGitlabRepositoryIntegration()->json()[0];
+        self::assertSame("", $gitlab_integration_before_patch["create_branch_prefix"]);
+
+        $patch_body = json_encode(
+            [
+                'create_branch_prefix' => "dev-"
+            ]
+        );
+
+        $response = $this->getResponse(
+            $this->client->patch(
+                'gitlab_repositories/' . $this->gitlab_repository_id,
+                null,
+                $patch_body
+            )
+        );
+        self::assertSame(200, $response->getStatusCode());
+
+        $gitlab_integration_after_patch = $response->json();
+        self::assertSame("dev-", $gitlab_integration_after_patch["create_branch_prefix"]);
+    }
+
+    public function testPatchGitlabRepositoryIntegrationToUpdateCreateBranchPrefixFailsIfPrefixIsNotValid(): void
+    {
+        $gitlab_integration_before_patch = $this->getGitlabRepositoryIntegration()->json()[0];
+
+        $patch_body = json_encode(
+            [
+                'create_branch_prefix' => "dev:"
+            ]
+        );
+
+        $response = $this->getResponse(
+            $this->client->patch(
+                'gitlab_repositories/' . $this->gitlab_repository_id,
+                null,
+                $patch_body
+            )
+        );
+        self::assertSame(400, $response->getStatusCode());
     }
 
     public function testDeleteGitLabRepositories(): void

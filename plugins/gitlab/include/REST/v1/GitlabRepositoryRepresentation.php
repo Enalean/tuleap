@@ -76,6 +76,11 @@ class GitlabRepositoryRepresentation
      */
     public $is_webhook_configured;
 
+    /**
+     * @var string
+     */
+    public string $create_branch_prefix;
+
     public function __construct(
         int $id,
         int $gitlab_repository_id,
@@ -85,7 +90,8 @@ class GitlabRepositoryRepresentation
         int $last_push_date_timestamp,
         Project $project,
         bool $allow_artifact_closure,
-        bool $is_webhook_configured
+        bool $is_webhook_configured,
+        string $create_branch_prefix
     ) {
         $this->id                     = JsonCast::toInt($id);
         $this->gitlab_repository_id   = JsonCast::toInt($gitlab_repository_id);
@@ -96,5 +102,6 @@ class GitlabRepositoryRepresentation
         $this->project                = new MinimalProjectRepresentation($project);
         $this->allow_artifact_closure = JsonCast::toBoolean($allow_artifact_closure);
         $this->is_webhook_configured  = JsonCast::toBoolean($is_webhook_configured);
+        $this->create_branch_prefix   = $create_branch_prefix;
     }
 }

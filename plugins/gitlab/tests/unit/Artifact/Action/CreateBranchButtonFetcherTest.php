@@ -136,7 +136,8 @@ final class CreateBranchButtonFetcherTest extends TestCase
                     1236647,
                     $project,
                     false,
-                    true
+                    true,
+                    "dev-"
                 )
             ]);
 
@@ -157,6 +158,102 @@ final class CreateBranchButtonFetcherTest extends TestCase
             [
                 'name' => 'branch-name',
                 'value' => 'tuleap-89-this_is_a_feature'
+            ],
+            $button_action->getLinkPresenter()->data[2]
+        );
+        self::assertSame('action.js', $button_action->getAssetLink());
+    }
+
+    public function testItReturnsTheActionLinkButtonWithoutArtifactTitle(): void
+    {
+        $this->mockFeatureFlagEnabled();
+
+        $user     = $this->createMock(PFUser::class);
+        $project  = new Project([
+            'group_id' => 101,
+            'group_name' => 'project01',
+            'unix_group_name' => 'project01',
+            'status' => 'A',
+            'access' => 'public',
+            'type' => 1,
+        ]);
+        $artifact = $this->createMock(Artifact::class);
+        $tracker  = $this->createMock(Tracker::class);
+
+        $tracker
+            ->expects(self::once())
+            ->method('getProject')
+            ->willReturn($project);
+
+        $artifact
+            ->expects(self::once())
+            ->method('getTracker')
+            ->willReturn($tracker);
+
+        $this->availability_checker
+            ->expects(self::once())
+            ->method('isGitlabIntegrationAvailableForProject')
+            ->with($project)
+            ->willReturn(true);
+
+        $user
+            ->expects(self::once())
+            ->method('isMember')
+            ->with(101)
+            ->willReturn(true);
+
+        $artifact
+            ->expects(self::once())
+            ->method('userCanView')
+            ->with($user)
+            ->willReturn(true);
+
+        $artifact
+            ->expects(self::exactly(2))
+            ->method('getId')
+            ->willReturn("89");
+
+        $artifact
+            ->expects(self::once())
+            ->method('getTitle')
+            ->willReturn(null);
+
+        $this->representation_factory
+            ->expects(self::once())
+            ->method('getAllIntegrationsRepresentationsInProjectWithConfiguredToken')
+            ->with($project)
+            ->willReturn([
+                new GitlabRepositoryRepresentation(
+                    1,
+                    1,
+                    'root/repo01',
+                    '',
+                    'https://example.com',
+                    1236647,
+                    $project,
+                    false,
+                    true,
+                    "dev-"
+                )
+            ]);
+
+        $button_action = $this->fetcher->getActionButton($artifact, $user);
+
+        self::assertNotNull($button_action);
+        self::assertSame('Create GitLab branch', $button_action->getLinkPresenter()->link_label);
+        self::assertNotNull($button_action->getLinkPresenter()->data);
+        self::assertCount(3, $button_action->getLinkPresenter()->data);
+        self::assertSame(
+            [
+                'name' => 'artifact-id',
+                'value' => '89'
+            ],
+            $button_action->getLinkPresenter()->data[1]
+        );
+        self::assertSame(
+            [
+                'name' => 'branch-name',
+                'value' => 'tuleap-89'
             ],
             $button_action->getLinkPresenter()->data[2]
         );

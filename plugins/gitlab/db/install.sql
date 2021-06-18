@@ -22,6 +22,11 @@ CREATE TABLE IF NOT EXISTS plugin_gitlab_repository_integration_token (
    is_email_already_send_for_invalid_token BOOL NOT NULL DEFAULT FALSE
 ) ENGINE=InnoDB;
 
+CREATE TABLE IF NOT EXISTS plugin_gitlab_repository_integration_create_branch_prefix (
+    integration_id INT(11) NOT NULL PRIMARY KEY,
+    create_branch_prefix VARCHAR(255) NOT NULL
+) ENGINE=InnoDB;
+
 CREATE TABLE IF NOT EXISTS plugin_gitlab_repository_integration_commit_info (
     id INT(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,
     integration_id INT(11) NOT NULL,

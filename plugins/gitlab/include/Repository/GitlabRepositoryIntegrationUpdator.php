@@ -62,7 +62,7 @@ class GitlabRepositoryIntegrationUpdator
 
     /**
      * @throws GitUserNotAdminException
-     * @throws GitlabRepositoryNotIntegratedInAnyProjectException
+     * @throws GitlabRepositoryIntegrationNotFoundException
      */
     public function updateTuleapArtifactClosureOfAGitlabIntegration(
         int $gitlab_repository_integration_id,
@@ -75,7 +75,7 @@ class GitlabRepositoryIntegrationUpdator
                     $gitlab_repository_integration_id
                 );
                 if (! $gitlab_repository) {
-                    throw new GitlabRepositoryNotIntegratedInAnyProjectException($gitlab_repository_integration_id);
+                    throw new GitlabRepositoryIntegrationNotFoundException($gitlab_repository_integration_id);
                 }
 
                 $project = $gitlab_repository->getProject();

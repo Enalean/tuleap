@@ -43,5 +43,10 @@ class DatabaseInitialization extends \DatabaseInitialization
                 VALUES (15412, 'path/repo01', 'desc', 'https://example.com/path/repo01', 1603371803, $project_id, 0)";
 
         $this->mysqli->real_query($sql);
+
+        $sql = "INSERT INTO forgeconfig (name, value)
+                VALUES ('feature_flag_artifact-create-gitlab-branches', true)";
+
+        $this->mysqli->real_query($sql);
     }
 }

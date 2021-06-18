@@ -75,7 +75,7 @@ final class GitlabRepositoryIntegrationUpdatorTest extends TestCase
         $this->gitlab_repository_dao->expects($this->never())->method(
             "updateGitlabRepositoryIntegrationAllowArtifactClosureValue"
         );
-        $this->expectException(GitlabRepositoryNotIntegratedInAnyProjectException::class);
+        $this->expectException(GitlabRepositoryIntegrationNotFoundException::class);
 
         $this->updator->updateTuleapArtifactClosureOfAGitlabIntegration($integration_id, true, $user);
     }

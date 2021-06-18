@@ -25,6 +25,7 @@ use GitPermissionsManager;
 use GitUserNotAdminException;
 use PFUser;
 use Tuleap\DB\DBTransactionExecutor;
+use Tuleap\Gitlab\Artifact\Action\CreateBranchPrefixDao;
 use Tuleap\Gitlab\Repository\Token\IntegrationApiTokenDao;
 use Tuleap\Gitlab\Repository\Webhook\Bot\CredentialsRetriever;
 use Tuleap\Gitlab\Repository\Webhook\PostMergeRequest\MergeRequestTuleapReferenceDao;
@@ -73,6 +74,7 @@ class GitlabRepositoryDeletor
     private $tag_info_dao;
 
     private BranchInfoDao $branch_info_dao;
+    private CreateBranchPrefixDao $branch_prefix_dao;
 
     public function __construct(
         GitPermissionsManager $git_permissions_manager,
@@ -84,7 +86,8 @@ class GitlabRepositoryDeletor
         MergeRequestTuleapReferenceDao $merge_request_dao,
         TagInfoDao $tag_info_dao,
         BranchInfoDao $branch_info_dao,
-        CredentialsRetriever $credentials_retriever
+        CredentialsRetriever $credentials_retriever,
+        CreateBranchPrefixDao $branch_prefix_dao
     ) {
         $this->git_permissions_manager     = $git_permissions_manager;
         $this->db_transaction_executor     = $db_transaction_executor;
@@ -96,12 +99,11 @@ class GitlabRepositoryDeletor
         $this->tag_info_dao                = $tag_info_dao;
         $this->credentials_retriever       = $credentials_retriever;
         $this->branch_info_dao             = $branch_info_dao;
+        $this->branch_prefix_dao           = $branch_prefix_dao;
     }
 
     /**
      * @throws GitUserNotAdminException
-     * @throws GitlabRepositoryNotInProjectException
-     * @throws GitlabRepositoryNotIntegratedInAnyProjectException
      */
     public function deleteRepositoryIntegration(
         GitlabRepositoryIntegration $repository_integration,
@@ -139,6 +141,9 @@ class GitlabRepositoryDeletor
                 $integration_path,
                 $integration_id,
                 $integration_project_id
+            );
+            $this->branch_prefix_dao->deleteIntegrationPrefix(
+                $integration_id
             );
             $this->gitlab_repository_dao->deleteIntegration($integration_id);
         });
