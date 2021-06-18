@@ -23,12 +23,14 @@ declare(strict_types=1);
 
 namespace Tuleap\Gitlab\REST\v1;
 
+use Cocur\Slugify\Slugify;
 use Luracast\Restler\RestException;
 use PFUser;
 use Tracker_ArtifactFactory;
 use Tuleap\Gitlab\API\ClientWrapper;
 use Tuleap\Gitlab\API\GitlabRequestException;
 use Tuleap\Gitlab\API\GitlabResponseAPIException;
+use Tuleap\Gitlab\Artifact\BranchNameCreatorFromArtifact;
 use Tuleap\Gitlab\Plugin\GitlabIntegrationAvailabilityChecker;
 use Tuleap\Gitlab\Repository\GitlabRepositoryIntegrationFactory;
 use Tuleap\Gitlab\Repository\Webhook\Bot\CredentialsRetriever;
@@ -100,10 +102,9 @@ class GitlabBranchCreator
         if ($credentials === null) {
             throw new RestException(400, "Integration is not configured");
         }
-
+        $branch_name_creator = new BranchNameCreatorFromArtifact(new Slugify());
+        $branch_name         = $branch_name_creator->getBranchName($artifact);
         try {
-            $branch_name = $gitlab_branch->branch_name;
-
             $url = "/projects/{$integration->getGitlabRepositoryId()}/repository/branches?branch=" .
                 urlencode($branch_name) . "&ref=" . urlencode($gitlab_branch->reference);
 

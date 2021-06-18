@@ -23,9 +23,9 @@ declare(strict_types=1);
 
 namespace Tuleap\Gitlab\Artifact\Action;
 
-use Cocur\Slugify\Slugify;
 use ForgeConfig;
 use PFUser;
+use Tuleap\Gitlab\Artifact\BranchNameCreatorFromArtifact;
 use Tuleap\Gitlab\Plugin\GitlabIntegrationAvailabilityChecker;
 use Tuleap\Gitlab\REST\v1\GitlabRepositoryRepresentationFactory;
 use Tuleap\Layout\JavascriptAsset;
@@ -45,15 +45,18 @@ class CreateBranchButtonFetcher
     private GitlabIntegrationAvailabilityChecker $availability_checker;
     private JavascriptAsset $javascript_asset;
     private GitlabRepositoryRepresentationFactory $representation_factory;
+    private BranchNameCreatorFromArtifact $branch_name_creator_from_artifact;
 
     public function __construct(
         GitlabIntegrationAvailabilityChecker $availability_checker,
         GitlabRepositoryRepresentationFactory $representation_factory,
+        BranchNameCreatorFromArtifact $branch_name_creator_from_artifact,
         JavascriptAsset $javascript_asset
     ) {
-        $this->availability_checker   = $availability_checker;
-        $this->javascript_asset       = $javascript_asset;
-        $this->representation_factory = $representation_factory;
+        $this->availability_checker              = $availability_checker;
+        $this->javascript_asset                  = $javascript_asset;
+        $this->representation_factory            = $representation_factory;
+        $this->branch_name_creator_from_artifact = $branch_name_creator_from_artifact;
     }
 
     public function getActionButton(Artifact $artifact, PFUser $user): ?AdditionalButtonAction
@@ -102,8 +105,8 @@ class CreateBranchButtonFetcher
                     'value' => $artifact->getId()
                 ],
                 [
-                    'name'  => "slugified-artifact-title",
-                    'value' => $this->getSlugifiedArtifactTitle($artifact)
+                    'name'  => 'branch-name',
+                    'value' => $this->branch_name_creator_from_artifact->getBranchName($artifact)
                 ],
             ]
         );
@@ -112,16 +115,5 @@ class CreateBranchButtonFetcher
             $link,
             $this->javascript_asset->getFileURL()
         );
-    }
-
-    private function getSlugifiedArtifactTitle(Artifact $artifact): string
-    {
-        $artifact_title = $artifact->getTitle();
-        if ($artifact_title === null) {
-            return '';
-        }
-
-        $slugify = new Slugify();
-        return $slugify->slugify($artifact_title, '_');
     }
 }
