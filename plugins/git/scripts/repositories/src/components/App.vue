@@ -39,6 +39,7 @@
             <no-repository-empty-state />
             <regenerate-gitlab-webhook />
             <artifact-closure-modal />
+            <create-branch-prefix-modal />
         </div>
     </div>
 </template>
@@ -63,12 +64,14 @@ import UnlinkRepositoryGitlabModal from "./GitlabModal/UnlinkGitlabRepositoryMod
 import SuccessMessage from "./SuccessMessage";
 import RegenerateGitlabWebhook from "./GitlabModal/RegenerateGitlabWebhookModal/RegenerateGitlabWebhook";
 import ArtifactClosureModal from "./GitlabModal/ArtifactClosureModal/ArtifactClosureModal.vue";
+import CreateBranchPrefixModal from "./GitlabModal/CreateBranchPrefix/CreateBranchPrefixModal.vue";
 
 export default {
     name: "App",
     store,
     components: {
         ArtifactClosureModal,
+        CreateBranchPrefixModal,
         RegenerateGitlabWebhook,
         SuccessMessage,
         GitlabRepositoryModal,

@@ -23,6 +23,8 @@ import {
     getGitlabRepositoryFromId,
     updateBotApiTokenGitlab,
     showEditAccessTokenGitlabRepositoryModal,
+    showArtifactClosureModal,
+    showCreateBranchPrefixModal,
 } from "./actions";
 import type { ActionContext } from "plugins/document/node_modules/vuex/types";
 import type { GitlabState } from "./state";
@@ -274,6 +276,63 @@ describe("action", () => {
             expect(
                 context.state.edit_access_token_gitlab_repository_modal.toggle
             ).toHaveBeenCalled();
+        });
+    });
+
+    describe("showArtifactClosureModal", () => {
+        let context: ActionContext<GitlabState, GitlabState> = {} as ActionContext<
+            GitlabState,
+            GitlabState
+        >;
+        beforeEach(() => {
+            const modal: Modal = { toggle: jest.fn() } as unknown as Modal;
+            context = {
+                commit: jest.fn(),
+                state: {
+                    artifact_closure_modal: modal,
+                } as GitlabState,
+            } as unknown as ActionContext<GitlabState, GitlabState>;
+        });
+
+        const repository = { id: 5 } as GitLabRepository;
+
+        it("When modal should be open, Then repository is set and modal is opened", () => {
+            showArtifactClosureModal(context, repository);
+            expect(context.commit).toHaveBeenCalledWith("setArtifactClosureRepository", repository);
+            if (!context.state.artifact_closure_modal) {
+                throw new Error("Modal is null");
+            }
+            expect(context.state.artifact_closure_modal.toggle).toHaveBeenCalled();
+        });
+    });
+
+    describe("showCreateBranchPrefixModal", () => {
+        let context: ActionContext<GitlabState, GitlabState> = {} as ActionContext<
+            GitlabState,
+            GitlabState
+        >;
+        beforeEach(() => {
+            const modal: Modal = { toggle: jest.fn() } as unknown as Modal;
+            context = {
+                commit: jest.fn(),
+                state: {
+                    create_branch_prefix_modal: modal,
+                } as GitlabState,
+            } as unknown as ActionContext<GitlabState, GitlabState>;
+        });
+
+        const repository = { id: 5 } as GitLabRepository;
+
+        it("When modal should be open, Then repository is set and modal is opened", () => {
+            showCreateBranchPrefixModal(context, repository);
+            expect(context.commit).toHaveBeenCalledWith(
+                "setCreateBranchPrefixRepository",
+                repository
+            );
+            if (!context.state.create_branch_prefix_modal) {
+                throw new Error("Modal is null");
+            }
+            expect(context.state.create_branch_prefix_modal.toggle).toHaveBeenCalled();
         });
     });
 });

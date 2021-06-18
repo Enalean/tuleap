@@ -133,7 +133,7 @@ describe("Gitlab Api Querier", () => {
     });
 
     describe("patchGitlabRepository", () => {
-        it("Given body, Then api is queried to patch gitlab repository", async () => {
+        it("Given upddate bot api body, Then api is queried to patch gitlab repository", async () => {
             const headers = {
                 "content-type": "application/json",
             };
@@ -143,6 +143,50 @@ describe("Gitlab Api Querier", () => {
                 update_bot_api_token: {
                     gitlab_api_token: "AZERTY12345",
                 },
+            } as GitLabRepositoryUpdate;
+
+            const body_stringify = JSON.stringify(body);
+
+            const tlpPatch = jest.spyOn(tlp, "patch");
+            mockFetchSuccess(tlpPatch);
+
+            await patchGitlabRepository(gitlab_integration_id, body);
+
+            expect(tlpPatch).toHaveBeenCalledWith("/api/gitlab_repositories/20", {
+                headers,
+                body: body_stringify,
+            });
+        });
+        it("Given artifact closure body, Then api is queried to patch gitlab repository", async () => {
+            const headers = {
+                "content-type": "application/json",
+            };
+
+            const gitlab_integration_id = 20;
+            const body = {
+                allow_artifact_closure: true,
+            } as GitLabRepositoryUpdate;
+
+            const body_stringify = JSON.stringify(body);
+
+            const tlpPatch = jest.spyOn(tlp, "patch");
+            mockFetchSuccess(tlpPatch);
+
+            await patchGitlabRepository(gitlab_integration_id, body);
+
+            expect(tlpPatch).toHaveBeenCalledWith("/api/gitlab_repositories/20", {
+                headers,
+                body: body_stringify,
+            });
+        });
+        it("Given create brancch prefix body, Then api is queried to patch gitlab repository", async () => {
+            const headers = {
+                "content-type": "application/json",
+            };
+
+            const gitlab_integration_id = 20;
+            const body = {
+                create_branch_prefix: "dev-",
             } as GitLabRepositoryUpdate;
 
             const body_stringify = JSON.stringify(body);

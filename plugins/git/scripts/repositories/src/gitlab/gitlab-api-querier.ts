@@ -37,6 +37,7 @@ export interface GitLabRepositoryUpdate {
     update_bot_api_token?: GitLabDataWithToken;
     generate_new_secret?: boolean;
     allow_artifact_closure?: boolean;
+    create_branch_prefix?: string;
 }
 
 export function getAsyncGitlabRepositoryList(credentials: GitLabCredentials): Promise<Response> {

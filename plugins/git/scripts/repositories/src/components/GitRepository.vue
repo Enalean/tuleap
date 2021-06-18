@@ -121,6 +121,17 @@
                                 <translate>Allow artifact closure</translate>
                             </div>
                             <div
+                                class="tlp-dropdown-menu-item"
+                                role="menuitem"
+                                ref="create_branch_prefix"
+                            >
+                                <i
+                                    class="fas fa-code-branch fa-fw tlp-dropdown-menu-item-icon"
+                                    aria-hidden="true"
+                                ></i>
+                                <translate>Create branch prefix</translate>
+                            </div>
+                            <div
                                 class="tlp-dropdown-menu-item unlink-repository-gitlab"
                                 role="menuitem"
                                 ref="unlink_gitlab_repository"
@@ -313,6 +324,15 @@ export default {
                 });
             }
 
+            const button_create_branch_prefix = this.$refs.create_branch_prefix;
+
+            if (button_create_branch_prefix) {
+                button_create_branch_prefix.addEventListener("click", (event) => {
+                    event.preventDefault();
+                    this.showCreateBranchPrefixModal(this.repository);
+                });
+            }
+
             const button_gitlab_administration = this.$refs.gitlab_administration;
             const dropdown_gitlab_administration = this.$refs.dropdown_gitlab_administration;
 
@@ -333,6 +353,7 @@ export default {
             "showEditAccessTokenGitlabRepositoryModal",
             "showRegenerateGitlabWebhookModal",
             "showArtifactClosureModal",
+            "showCreateBranchPrefixModal",
         ]),
     },
 };

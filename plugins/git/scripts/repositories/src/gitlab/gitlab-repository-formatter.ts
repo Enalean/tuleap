@@ -36,6 +36,7 @@ export function formatRepository(repository: GitLabRepository): FormattedGitLabR
             is_webhook_configured: repository.is_webhook_configured,
         },
         allow_artifact_closure: repository.allow_artifact_closure,
+        create_branch_prefix: repository.create_branch_prefix,
     };
 }
 

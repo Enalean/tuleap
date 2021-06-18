@@ -26,7 +26,7 @@
                     class="far fa-fw fa-times-circle tlp-dropdown-menu-item-icon"
                     aria-hidden="true"
                 ></i>
-                <translate>Artifact closure</translate>
+                <translate>Create GitLab branch prefix</translate>
             </h1>
             <button
                 class="tlp-modal-close"
@@ -40,25 +40,27 @@
         <div
             class="tlp-modal-feedback"
             v-if="have_any_rest_error"
-            data-test="update-integration-fail"
+            data-test="create-branch-prefix-fail"
         >
             <div class="tlp-alert-danger">
                 {{ message_error_rest }}
             </div>
         </div>
         <div class="tlp-modal-body">
+            <p v-translate>
+                If set, this prefix will be automatically added to the branch name in the create
+                GitLab branch action
+            </p>
             <div class="tlp-form-element">
-                <label class="tlp-label tlp-checkbox">
-                    <input type="checkbox" v-model="allow_artifact_closure" />
-                    <translate>Allow artifact closure</translate>
+                <label class="tlp-label" for="create_branch_prefix_input">
+                    <translate>Prefix of the branch name</translate>
                 </label>
-                <p class="tlp-text-info">
-                    <i class="far fa-life-ring" aria-hidden="true"></i>
-                    <translate>
-                        If selected, artifacts of this project can be closed with GitLab commit
-                        messages from the selected repository.
-                    </translate>
-                </p>
+                <input
+                    type="text"
+                    id="create_branch_prefix_input"
+                    class="tlp-input"
+                    v-model="create_branch_prefix"
+                />
             </div>
         </div>
         <div class="tlp-modal-footer">
@@ -72,16 +74,16 @@
             <button
                 type="submit"
                 class="tlp-button-primary tlp-modal-action"
-                v-on:click="updateArtifactClosureValue"
+                v-on:click="updateCreateBranchPrefix"
                 v-bind:disabled="disabled_button"
-                data-test="update-artifact-closure-modal-save-button"
+                data-test="create-branch-prefix-modal-save-button"
             >
                 <i
                     v-if="is_updating_gitlab_repository"
                     class="fas fa-spin fa-circle-notch tlp-button-icon"
-                    data-test="update-artifact-closure-modal-icon-spin"
+                    data-test="create-branch-prefix-modal-icon-spin"
                 ></i>
-                <translate>Save</translate>
+                <translate>Save prefix</translate>
             </button>
         </div>
     </div>
@@ -101,38 +103,38 @@ import { handleError } from "../../../gitlab/gitlab-error-handler";
 const gitlab = namespace("gitlab");
 
 @Component
-export default class ArtifactClosureModal extends Vue {
+export default class CreateBranchPrefixModal extends Vue {
     private modal: Modal | null = null;
     private is_updating_gitlab_repository = false;
-    private allow_artifact_closure = false;
+    private create_branch_prefix = "";
     private message_error_rest = "";
 
     @gitlab.Action
-    readonly updateGitlabRepositoryArtifactClosure!: ({
+    readonly updateGitlabRepositoryCreateBranchPrefix!: ({
         integration_id,
-        allow_artifact_closure,
+        create_branch_prefix,
     }: {
         integration_id: number;
-        allow_artifact_closure: boolean;
+        create_branch_prefix: string;
     }) => Promise<GitLabRepository>;
 
     @gitlab.State
-    readonly artifact_closure_repository!: Repository;
+    readonly create_branch_prefix_repository!: Repository;
 
     mounted(): void {
         this.modal = createModal(this.$el);
         this.modal.addEventListener("tlp-modal-shown", this.onShownModal);
         this.modal.addEventListener("tlp-modal-hidden", this.reset);
-        this.$store.commit("gitlab/setArtifactClosureModal", this.modal);
+        this.$store.commit("gitlab/setCreateBranchPrefixModal", this.modal);
     }
 
     onShownModal(): void {
-        this.allow_artifact_closure = this.artifact_closure_repository.allow_artifact_closure;
+        this.create_branch_prefix = this.create_branch_prefix_repository.create_branch_prefix;
     }
 
     reset(): void {
         this.is_updating_gitlab_repository = false;
-        this.allow_artifact_closure = false;
+        this.create_branch_prefix = "";
         this.message_error_rest = "";
     }
 
@@ -148,28 +150,33 @@ export default class ArtifactClosureModal extends Vue {
         return this.message_error_rest.length > 0;
     }
 
-    getSuccessMessage(allow_closure_artifact: boolean): string {
-        if (allow_closure_artifact) {
+    getSuccessMessage(create_branch_prefix: string): string {
+        if (create_branch_prefix.length === 0) {
             return sprintf(
-                this.$gettext("Artifact closure is now allowed for '%s'!"),
-                this.artifact_closure_repository.label
+                this.$gettext(
+                    "Create branch prefix for integration %s has been successfully cleared."
+                ),
+                this.create_branch_prefix_repository.label
             );
         }
         return sprintf(
-            this.$gettext("Artifact closure is now disabled for '%s'!"),
-            this.artifact_closure_repository.label
+            this.$gettext(
+                "Create branch prefix for integration %s has been successfully been updated to '%s'!"
+            ),
+            this.create_branch_prefix_repository.label,
+            create_branch_prefix
         );
     }
 
-    async updateArtifactClosureValue(event: Event): Promise<void> {
+    async updateCreateBranchPrefix(event: Event): Promise<void> {
         event.preventDefault();
 
         try {
             this.is_updating_gitlab_repository = true;
 
-            const updated_integration = await this.updateGitlabRepositoryArtifactClosure({
-                integration_id: Number(this.artifact_closure_repository.integration_id),
-                allow_artifact_closure: this.allow_artifact_closure,
+            const updated_integration = await this.updateGitlabRepositoryCreateBranchPrefix({
+                integration_id: Number(this.create_branch_prefix_repository.integration_id),
+                create_branch_prefix: this.create_branch_prefix,
             });
 
             if (updated_integration && this.modal) {
@@ -177,7 +184,7 @@ export default class ArtifactClosureModal extends Vue {
             }
 
             const success_message = this.getSuccessMessage(
-                updated_integration.allow_artifact_closure
+                updated_integration.create_branch_prefix
             );
             this.$store.commit("setSuccessMessage", success_message);
         } catch (rest_error) {

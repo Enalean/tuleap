@@ -30,6 +30,8 @@ export interface GitlabState {
     regenerate_gitlab_webhook_repository: GitLabRepository | null;
     artifact_closure_modal: Modal | null;
     artifact_closure_repository: GitLabRepository | null;
+    create_branch_prefix_modal: Modal | null;
+    create_branch_prefix_repository: GitLabRepository | null;
 }
 
 const state: GitlabState = {
@@ -42,6 +44,8 @@ const state: GitlabState = {
     regenerate_gitlab_webhook_repository: null,
     artifact_closure_modal: null,
     artifact_closure_repository: null,
+    create_branch_prefix_modal: null,
+    create_branch_prefix_repository: null,
 };
 
 export default state;
