@@ -5168,21 +5168,21 @@
         },
         {
             "name": "tuleap/prometheus-client",
-            "version": "v1.1.0",
+            "version": "v1.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Enalean/php-prometheus-client.git",
-                "reference": "ca91ad987c42ab461fddd3dcf4ac2acb8bf933e3"
+                "reference": "67dbe491d1fa04bd311c8cb7cd15c61df1779601"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Enalean/php-prometheus-client/zipball/ca91ad987c42ab461fddd3dcf4ac2acb8bf933e3",
-                "reference": "ca91ad987c42ab461fddd3dcf4ac2acb8bf933e3",
+                "url": "https://api.github.com/repos/Enalean/php-prometheus-client/zipball/67dbe491d1fa04bd311c8cb7cd15c61df1779601",
+                "reference": "67dbe491d1fa04bd311c8cb7cd15c61df1779601",
                 "shasum": ""
             },
             "require": {
                 "ext-json": "*",
-                "php": "^7.3|^7.4|^8.0",
+                "php": "~7.3.0|~7.4.0|~8.0.0",
                 "psr/http-client": "^1.0",
                 "psr/http-factory": "^1.0",
                 "psr/http-message": "^1.0"
@@ -5191,15 +5191,16 @@
                 "doctrine/coding-standard": "^8.0",
                 "guzzlehttp/psr7": "^1.6",
                 "http-interop/http-factory-guzzle": "^1.0",
-                "infection/infection": "^0.16.1",
-                "php-http/curl-client": "^2.0",
+                "infection/infection": "^0.18",
+                "php-http/discovery": "^1.12",
+                "php-http/guzzle7-adapter": "^0.1.1",
                 "php-http/mock-client": "^1.3",
                 "phpstan/phpstan": "^0.12.23",
                 "phpstan/phpstan-phpunit": "^0.12.6",
                 "phpstan/phpstan-strict-rules": "^0.12.2",
                 "phpunit/phpunit": "^9.0",
-                "psalm/plugin-phpunit": "^0.10.0",
-                "vimeo/psalm": "^3.3"
+                "psalm/plugin-phpunit": "^0.13.0",
+                "vimeo/psalm": "^4.2"
             },
             "suggest": {
                 "ext-apcu": "Required if using the APCu storage.",
@@ -5218,9 +5219,9 @@
             "description": "Prometheus instrumentation library",
             "support": {
                 "issues": "https://github.com/Enalean/php-prometheus-client/issues",
-                "source": "https://github.com/Enalean/php-prometheus-client/tree/master"
+                "source": "https://github.com/Enalean/php-prometheus-client/tree/v1.2.0"
             },
-            "time": "2020-07-27T16:15:36+00:00"
+            "time": "2020-11-27T14:22:43+00:00"
         },
         {
             "name": "webimpress/safe-writer",
