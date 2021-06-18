@@ -73,7 +73,7 @@
     .nav-list > .active > a:hover,
     .nav-list > .active > a:focus {
         border-left: 3px solid var(--tlp-main-color);
-        background: var(--tlp-button-darker);
+        background: var(--tlp-sidebar-action-color);
         background-blend-mode: overlay;
         font-weight: normal;
 
@@ -94,7 +94,7 @@
     .nav > li > a:hover,
     .nav > li > a:focus {
         border-left: 3px solid transparent;
-        background: var(--tlp-button-darker);
+        background: var(--tlp-sidebar-action-color);
         background-blend-mode: overlay;
     }
 
@@ -122,7 +122,7 @@
         margin: 20px auto;
         padding: 8px 2px 0 0;
         border-radius: 50%;
-        background: var(--tlp-button-darker);
+        background: var(--tlp-sidebar-action-color);
         background-blend-mode: overlay;
         color: var(--tlp-typo-default-text-color-on-dark-background);
         font-size: 1em;
@@ -134,7 +134,7 @@
         }
 
         &:hover {
-            background: var(--tlp-button-darker-hover);
+            background: var(--tlp-sidebar-action-color-hover);
         }
     }
 }
@@ -298,7 +298,7 @@
 .project-administration-link {
     @extend %round-icon;
     flex: 0 0 auto;
-    background: var(--tlp-button-darker);
+    background: var(--tlp-sidebar-action-color);
     background-blend-mode: overlay;
     color: var(--tlp-typo-default-text-color-on-dark-background);
 
