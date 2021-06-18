@@ -92,8 +92,9 @@
 .project-administration-link {
     @extend %round-icon;
     flex: 0 0 auto;
-    background: var(--tlp-theme-dark-background-color-darker);
-    color: var(--tlp-ui-white);
+    background: var(--tlp-button-darker);
+    background-blend-mode: overlay;
+    color: var(--tlp-typo-default-text-color-on-dark-background);
 
     &:hover,
     &:focus {
@@ -212,7 +213,8 @@
 
     &:hover,
     &:focus {
-        background: var(--tlp-theme-dark-background-color-darker);
+        background: var(--tlp-button-darker);
+        background-blend-mode: overlay;
         text-decoration: none;
     }
 
@@ -223,7 +225,8 @@
 
     &.active {
         border-left-color: var(--tlp-main-color);
-        background: var(--tlp-theme-dark-background-color-darker);
+        background: var(--tlp-button-darker);
+        background-blend-mode: overlay;
 
         &::before {
             content: "";
@@ -273,8 +276,9 @@
     margin: 0 auto var(--tlp-medium-spacing);
     transition: background 100ms;
     border-radius: 50px;
-    background: var(--tlp-theme-dark-background-color-darker-10);
-    color: var(--tlp-ui-border-dark-transparent-40);
+    background: var(--tlp-button-darker);
+    background-blend-mode: overlay;
+    color: var(--tlp-typo-default-text-color-on-dark-background);
     font-size: 12px;
     cursor: pointer;
 
@@ -289,7 +293,7 @@
     }
 
     &:hover {
-        background: var(--tlp-theme-dark-background-color-darker);
+        background: var(--tlp-button-darker-hover);
     }
 }
 

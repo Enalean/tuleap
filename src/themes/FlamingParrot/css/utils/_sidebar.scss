@@ -61,7 +61,7 @@
         height: variables-common.$navbar-height;
         padding: 0 var(--tlp-medium-spacing);
         border-left: 3px solid transparent;
-        color: transparentize(#ffffff, 0.2);
+        color: var(--tlp-typo-default-text-color-on-dark-background);
         text-shadow: none;
 
         > i {
@@ -73,8 +73,8 @@
     .nav-list > .active > a:hover,
     .nav-list > .active > a:focus {
         border-left: 3px solid var(--tlp-main-color);
-        background: var(--tlp-theme-dark-background-color-darker-05);
-        color: lighten(variables-color-common.$grey, 25%);
+        background: var(--tlp-button-darker);
+        background-blend-mode: overlay;
         font-weight: normal;
 
         &::before {
@@ -94,7 +94,8 @@
     .nav > li > a:hover,
     .nav > li > a:focus {
         border-left: 3px solid transparent;
-        background: var(--tlp-theme-dark-background-color-darker-05);
+        background: var(--tlp-button-darker);
+        background-blend-mode: overlay;
     }
 
     .project-sidebar-nav-item-new-tab {
@@ -121,8 +122,9 @@
         margin: 20px auto;
         padding: 8px 2px 0 0;
         border-radius: 50%;
-        background: var(--tlp-theme-dark-background-color-darker-05);
-        color: transparentize(#ffffff, 0.3);
+        background: var(--tlp-button-darker);
+        background-blend-mode: overlay;
+        color: var(--tlp-typo-default-text-color-on-dark-background);
         font-size: 1em;
         text-align: center;
         cursor: pointer;
@@ -132,8 +134,7 @@
         }
 
         &:hover {
-            background: var(--tlp-theme-dark-background-color-darker-05);
-            color: lighten(variables-color-common.$grey, 10%);
+            background: var(--tlp-button-darker-hover);
         }
     }
 }
@@ -267,7 +268,7 @@
 
     &.fa-lock-open,
     &.fa-tlp-unlock-plus-r {
-        background: var(--tlp-theme-dark-background-color-darker-05);
+        background: var(--tlp-theme-dark-background-color-darker);
     }
 
     &.fa-tlp-lock-plus-r,
@@ -297,8 +298,9 @@
 .project-administration-link {
     @extend %round-icon;
     flex: 0 0 auto;
-    background: var(--tlp-theme-dark-background-color-darker);
-    color: var(--tlp-ui-white);
+    background: var(--tlp-button-darker);
+    background-blend-mode: overlay;
+    color: var(--tlp-typo-default-text-color-on-dark-background);
 
     &:hover,
     &:focus {
