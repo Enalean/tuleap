@@ -17,7 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 import * as tlp from "@tuleap/tlp-fetch";
-import { postGitlabBranch } from "./rest-querier";
+import { GitLabBranchCreationPossibleError, postGitlabBranch } from "./rest-querier";
+import { mockFetchError } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper";
 
 jest.mock("@tuleap/tlp-fetch");
 
@@ -25,7 +26,7 @@ describe("postGitlabBranch", () => {
     it("asks to create the GitLab branch", async () => {
         const postSpy = jest.spyOn(tlp, "post");
 
-        await postGitlabBranch(1, 123, "dev_TULEAP-123", "main");
+        const result = await postGitlabBranch(1, 123, "dev_TULEAP-123", "main");
 
         expect(postSpy).toHaveBeenCalledWith("/api/v1/gitlab_branch", {
             body: '{"gitlab_integration_id":1,"artifact_id":123,"branch_name":"dev_TULEAP-123","reference":"main"}',
@@ -33,5 +34,51 @@ describe("postGitlabBranch", () => {
                 "content-type": "application/json",
             },
         });
+        expect(result.isOk()).toBe(true);
+    });
+
+    it("detects errors possibly caused by an invalid reference name", async () => {
+        const postSpy = jest.spyOn(tlp, "post");
+        mockFetchError(postSpy, {
+            status: 400,
+            error_json: { error: { message: "Invalid reference name: invalid_ref" } },
+        });
+
+        const result = await postGitlabBranch(1, 123, "dev_TULEAP-123", "invalid_ref");
+
+        let error_type: string | null = null;
+        if (result.isErr()) {
+            error_type = (await result.error).error_type;
+        }
+        expect(error_type).toBe(GitLabBranchCreationPossibleError.INVALID_REF);
+    });
+
+    it("detects errors possibly caused by an already existing branch name", async () => {
+        const postSpy = jest.spyOn(tlp, "post");
+        mockFetchError(postSpy, {
+            status: 400,
+            error_json: { error: { message: "Branch already exists" } },
+        });
+
+        const result = await postGitlabBranch(1, 123, "dev_TULEAP-123", "invalid_ref");
+
+        let error_type: string | null = null;
+        if (result.isErr()) {
+            error_type = (await result.error).error_type;
+        }
+        expect(error_type).toBe(GitLabBranchCreationPossibleError.BRANCH_ALREADY_EXIST);
+    });
+
+    it("does not mark all errors as caused by invalid reference name", async () => {
+        const postSpy = jest.spyOn(tlp, "post");
+        mockFetchError(postSpy, { status: 500 });
+
+        const result = await postGitlabBranch(1, 123, "dev_TULEAP-123", "main");
+
+        let error_type: string | null = null;
+        if (result.isErr()) {
+            error_type = (await result.error).error_type;
+        }
+        expect(error_type).toBe(GitLabBranchCreationPossibleError.UNKNOWN);
     });
 });

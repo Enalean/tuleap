@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace Tuleap\Gitlab\API;
 
 use Http\Client\Common\PluginClient;
+use Http\Mock\Client;
 use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestFactoryInterface;
@@ -31,6 +32,7 @@ use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamFactoryInterface;
 use Tuleap\Gitlab\Test\Builder\CredentialsTestBuilder;
+use Tuleap\Http\HTTPFactoryBuilder;
 
 final class ClientWrapperTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -141,9 +143,7 @@ final class ClientWrapperTest extends \Tuleap\Test\PHPUnit\TestCase
             ->with('Content-Type', 'application/json')
             ->willReturn($request);
 
-        $response = $this->createMock(ResponseInterface::class);
-        $response->method('getStatusCode')->willReturn($status_code);
-        $response->method('getReasonPhrase')->willReturn($reason);
+        $response = HTTPFactoryBuilder::responseFactory()->createResponse()->withStatus($status_code, $reason);
 
         $client_interface
             ->expects(self::once())
@@ -195,5 +195,33 @@ final class ClientWrapperTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->expectException(GitlabRequestException::class);
 
         $this->wrapper->deleteUrl($credentials, '/url');
+    }
+
+    public function testTriesToRetrieveGitLabErrorMessageOnFailure(): void
+    {
+        $credentials = CredentialsTestBuilder::get()->build();
+
+        $mock_http_client = new Client();
+
+        $wrapper = new ClientWrapper(
+            HTTPFactoryBuilder::requestFactory(),
+            HTTPFactoryBuilder::streamFactory(),
+            new GitlabHTTPClientFactory($mock_http_client)
+        );
+
+        $gitlab_error_message = 'Something was invalid';
+
+        $error_response = HTTPFactoryBuilder::responseFactory()->createResponse(400)->withBody(
+            HTTPFactoryBuilder::streamFactory()->createStream(
+                json_encode(['message' => $gitlab_error_message], JSON_THROW_ON_ERROR)
+            )
+        );
+
+        $mock_http_client->addResponse($error_response);
+
+        $this->expectException(GitlabRequestException::class);
+        $this->expectErrorMessageMatches('/' . preg_quote($gitlab_error_message, '/') . '/');
+
+        $wrapper->postUrl($credentials, '/something', ['data' => 'data']);
     }
 }

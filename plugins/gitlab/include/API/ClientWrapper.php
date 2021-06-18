@@ -23,6 +23,7 @@ namespace Tuleap\Gitlab\API;
 
 use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Message\RequestFactoryInterface;
+use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamFactoryInterface;
 
 class ClientWrapper
@@ -63,10 +64,7 @@ class ClientWrapper
         try {
             $response = $client->sendRequest($request);
             if ((int) $response->getStatusCode() !== 200) {
-                throw new GitlabRequestException(
-                    (int) $response->getStatusCode(),
-                    $response->getReasonPhrase()
-                );
+                self::handleInvalidResponse($response);
             }
         } catch (ClientExceptionInterface $exception) {
             throw new GitlabRequestException(
@@ -104,10 +102,7 @@ class ClientWrapper
         try {
             $response = $client->sendRequest($request);
             if ((int) $response->getStatusCode() !== 201) {
-                throw new GitlabRequestException(
-                    (int) $response->getStatusCode(),
-                    $response->getReasonPhrase()
-                );
+                self::handleInvalidResponse($response);
             }
         } catch (ClientExceptionInterface $exception) {
             throw new GitlabRequestException(
@@ -143,10 +138,7 @@ class ClientWrapper
         try {
             $response = $client->sendRequest($request);
             if ($response->getStatusCode() < 200 || 300 <= $response->getStatusCode()) {
-                throw new GitlabRequestException(
-                    $response->getStatusCode(),
-                    $response->getReasonPhrase()
-                );
+                self::handleInvalidResponse($response);
             }
         } catch (ClientExceptionInterface $exception) {
             throw new GitlabRequestException(
@@ -155,5 +147,25 @@ class ClientWrapper
                 $exception
             );
         }
+    }
+
+    /**
+     * @psalm-return never-return
+     * @throws GitlabRequestException
+     */
+    private static function handleInvalidResponse(ResponseInterface $response): void
+    {
+        try {
+            $json_response = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
+            if (isset($json_response['message']) && is_string($json_response['message'])) {
+                $reason = sprintf('%s (%s)', $json_response['message'], $response->getReasonPhrase());
+            } else {
+                $reason = $response->getReasonPhrase();
+            }
+        } catch (\JsonException $e) {
+            $reason = $response->getReasonPhrase();
+        }
+
+        throw new GitlabRequestException($response->getStatusCode(), $reason);
     }
 }
