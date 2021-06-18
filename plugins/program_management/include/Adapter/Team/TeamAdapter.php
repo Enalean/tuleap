@@ -24,8 +24,8 @@ namespace Tuleap\ProgramManagement\Adapter\Team;
 
 use Luracast\Restler\RestException;
 use Tuleap\AgileDashboard\ExplicitBacklog\ExplicitBacklogDao;
-use Tuleap\ProgramManagement\Domain\Program\ProgramStore;
 use Tuleap\ProgramManagement\Domain\Program\ToBeCreatedProgram;
+use Tuleap\ProgramManagement\Domain\Program\VerifyIsProgram;
 use Tuleap\ProgramManagement\Domain\Team\AtLeastOneTeamShouldBeDefinedException;
 use Tuleap\ProgramManagement\Domain\Team\Creation\BuildTeam;
 use Tuleap\ProgramManagement\Domain\Team\Creation\Team;
@@ -37,26 +37,17 @@ use Tuleap\REST\ProjectAuthorization;
 
 final class TeamAdapter implements BuildTeam
 {
-    /**
-     * @var \ProjectManager
-     */
-    private $project_manager;
-    /**
-     * @var ProgramStore
-     */
-    private $program_dao;
-    /**
-     * @var ExplicitBacklogDao
-     */
-    private $explicit_backlog_dao;
+    private \ProjectManager $project_manager;
+    private VerifyIsProgram $program_verifier;
+    private ExplicitBacklogDao $explicit_backlog_dao;
 
     public function __construct(
         \ProjectManager $project_manager,
-        ProgramStore $program_store,
+        VerifyIsProgram $program_verifier,
         ExplicitBacklogDao $explicit_backlog_dao
     ) {
         $this->project_manager      = $project_manager;
-        $this->program_dao          = $program_store;
+        $this->program_verifier     = $program_verifier;
         $this->explicit_backlog_dao = $explicit_backlog_dao;
     }
 
@@ -111,7 +102,7 @@ final class TeamAdapter implements BuildTeam
      */
     private function checkProject(\Project $project): void
     {
-        if ($this->program_dao->isProjectAProgramProject((int) $project->getId())) {
+        if ($this->program_verifier->isAProgram((int) $project->getId())) {
             throw new ProjectIsAProgramException((int) $project->getId());
         }
 

@@ -26,14 +26,15 @@ use Tuleap\DB\DataAccessObject;
 use Tuleap\ProgramManagement\Domain\Program\ProgramStore;
 use Tuleap\ProgramManagement\Domain\Program\SearchProgram;
 use Tuleap\ProgramManagement\Domain\Program\SearchTeamsOfProgram;
+use Tuleap\ProgramManagement\Domain\Program\VerifyIsProgram;
 
-final class ProgramDao extends DataAccessObject implements ProgramStore, SearchProgram, SearchTeamsOfProgram
+final class ProgramDao extends DataAccessObject implements ProgramStore, SearchProgram, SearchTeamsOfProgram, VerifyIsProgram
 {
-    public function isProjectAProgramProject(int $project_id): bool
+    public function isAProgram(int $project_id): bool
     {
-        $sql = "SELECT COUNT(*)
+        $sql = 'SELECT COUNT(*)
                 FROM plugin_program_management_team_projects
-                WHERE program_project_id = ?";
+                WHERE program_project_id = ?';
 
         return $this->getDB()->exists($sql, $project_id);
     }

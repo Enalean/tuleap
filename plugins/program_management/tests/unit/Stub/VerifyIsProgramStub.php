@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,9 +20,31 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Domain\Program;
+namespace Tuleap\ProgramManagement\Stub;
 
-interface ProgramStore
+use Tuleap\ProgramManagement\Domain\Program\VerifyIsProgram;
+
+final class VerifyIsProgramStub implements VerifyIsProgram
 {
-    public function saveProgram(int $program_project_id, int $team_project_id): void;
+    private bool $is_valid;
+
+    private function __construct(bool $is_valid)
+    {
+        $this->is_valid = $is_valid;
+    }
+
+    public static function withValidProgram(): self
+    {
+        return new self(true);
+    }
+
+    public static function withNotValidProgram(): self
+    {
+        return new self(false);
+    }
+
+    public function isAProgram(int $project_id): bool
+    {
+        return $this->is_valid;
+    }
 }

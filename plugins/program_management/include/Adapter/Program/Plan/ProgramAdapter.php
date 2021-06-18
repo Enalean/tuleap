@@ -26,32 +26,23 @@ use Project_AccessException;
 use Tuleap\ProgramManagement\Domain\Program\Plan\BuildProgram;
 use Tuleap\ProgramManagement\Domain\Program\Plan\ProgramAccessException;
 use Tuleap\ProgramManagement\Domain\Program\Plan\ProjectIsNotAProgramException;
-use Tuleap\ProgramManagement\Domain\Program\ProgramStore;
+use Tuleap\ProgramManagement\Domain\Program\VerifyIsProgram;
 use Tuleap\Project\ProjectAccessChecker;
 
 final class ProgramAdapter implements BuildProgram
 {
-    /**
-     * @var \ProjectManager
-     */
-    private $project_manager;
-    /**
-     * @var ProgramStore
-     */
-    private $program_store;
-    /**
-     * @var ProjectAccessChecker
-     */
-    private $project_access_checker;
+    private \ProjectManager $project_manager;
+    private VerifyIsProgram $program_verifier;
+    private ProjectAccessChecker $project_access_checker;
 
     public function __construct(
         \ProjectManager $project_manager,
         ProjectAccessChecker $project_access_checker,
-        ProgramStore $program_store
+        VerifyIsProgram $program_verifier
     ) {
         $this->project_manager        = $project_manager;
         $this->project_access_checker = $project_access_checker;
-        $this->program_store          = $program_store;
+        $this->program_verifier       = $program_verifier;
     }
 
     /**
@@ -61,7 +52,7 @@ final class ProgramAdapter implements BuildProgram
     public function ensureProgramIsAProject(int $project_id, \PFUser $user): void
     {
         $this->ensureUserCanAccessToProject($project_id, $user);
-        if (! $this->program_store->isProjectAProgramProject($project_id)) {
+        if (! $this->program_verifier->isAProgram($project_id)) {
             throw new ProjectIsNotAProgramException($project_id);
         }
     }
