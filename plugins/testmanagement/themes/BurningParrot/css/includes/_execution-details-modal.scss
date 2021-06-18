@@ -22,7 +22,7 @@
         "tlp-modal-success": var(--tlp-ui-success),
         "tlp-modal-danger": var(--tlp-ui-danger),
         "tlp-modal-info": var(--tlp-ui-info),
-        "notrun": var(--tlp-ui-dimmed),
+        "notrun": var(--tlp-dimmed-color),
     );
 
     @each $name, $color in $status {
@@ -33,7 +33,7 @@
     }
 
     &.notrun > .tlp-modal-header {
-        background: var(--tlp-ui-dimmed);
+        background: var(--tlp-dimmed-color);
     }
 }
 

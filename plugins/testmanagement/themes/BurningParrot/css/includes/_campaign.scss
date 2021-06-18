@@ -121,7 +121,7 @@
             flex: 0 0 auto;
 
             > .test-campaign-progression-value {
-                color: var(--tlp-ui-dimmed);
+                color: var(--tlp-dimmed-color);
             }
 
             > .test-campaign-progression-bar {
@@ -196,7 +196,7 @@
     }
 
     &.removed {
-        color: var(--tlp-ui-dimmed);
+        color: var(--tlp-dimmed-color);
         text-decoration: line-through;
     }
 

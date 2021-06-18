@@ -49,7 +49,7 @@ tlp-mermaid-diagram {
         position: absolute;
         top: calc(50% - #{$size} / 2);
         left: calc(50% - #{$size} / 2);
-        color: var(--tlp-ui-dimmed);
+        color: var(--tlp-dimmed-color);
         font-size: $size;
     }
 
@@ -126,7 +126,7 @@ tlp-mermaid-diagram {
     transition: color ease-in-out 150ms;
     border: 0;
     background-color: unset;
-    color: var(--tlp-ui-dimmed);
+    color: var(--tlp-dimmed-color);
     font-size: 1.5rem;
     font-weight: 600;
     cursor: pointer;

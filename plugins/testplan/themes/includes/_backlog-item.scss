@@ -70,13 +70,13 @@
 }
 
 .test-plan-backlog-item-caret {
-    color: var(--tlp-ui-dimmed);
+    color: var(--tlp-dimmed-color);
     font-size: 12px;
 }
 
 .test-plan-backlog-item-title {
     margin: 0 4px;
-    color: var(--tlp-ui-dimmed);
+    color: var(--tlp-dimmed-color);
     font-weight: 600;
     line-height: 28px;
 }
@@ -96,7 +96,7 @@
 }
 
 .test-plan-backlog-item-coverage-text {
-    color: var(--tlp-ui-dimmed);
+    color: var(--tlp-dimmed-color);
     font-size: 14px;
 }
 
@@ -129,7 +129,7 @@
 }
 
 .test-plan-backlog-item-coverage-icon-notrun {
-    background: var(--tlp-ui-dimmed);
+    background: var(--tlp-dimmed-color);
 }
 
 @keyframes pulse-backlog-item-card {

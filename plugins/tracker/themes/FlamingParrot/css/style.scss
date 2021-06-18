@@ -193,7 +193,7 @@ body.tracker-administration {
 /* stylelint-enable */
 
 .tracker-cross-reference-delete-link {
-    color: var(--tlp-ui-dimmed);
+    color: var(--tlp-dimmed-color);
 
     &:focus,
     &:hover {
@@ -210,7 +210,7 @@ body.tracker-administration {
 .tracker-cross-reference-creation-metadata {
     display: flex;
     align-items: center;
-    color: var(--tlp-ui-dimmed);
+    color: var(--tlp-dimmed-color);
     font-size: 0.75rem;
     line-height: 1.375rem;
 }

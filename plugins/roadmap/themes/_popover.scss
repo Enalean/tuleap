@@ -115,7 +115,7 @@
 .roadmap-gantt-task-popover-label,
 .roadmap-gantt-task-popover-label:last-child {
     margin: 0 var(--tlp-small-spacing) 0 0;
-    color: var(--tlp-ui-dimmed-on-dark-background);
+    color: var(--tlp-dimmed-color-on-dark-background);
     font-weight: 600;
     text-align: right;
     white-space: nowrap;
@@ -132,5 +132,5 @@
 }
 
 .roadmap-gantt-task-popover-value-undefined {
-    color: var(--tlp-ui-dimmed-on-dark-background);
+    color: var(--tlp-dimmed-color-on-dark-background);
 }

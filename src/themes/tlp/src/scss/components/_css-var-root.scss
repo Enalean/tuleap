@@ -31,7 +31,7 @@ $main-color-dimmed-background: mix($tlp-background-color, $tlp-ui-white, 50);
     --tlp-ui-success: #{$tlp-ui-success};
     --tlp-ui-warning: #{$tlp-ui-warning};
     --tlp-ui-danger: #{$tlp-ui-danger};
-    --tlp-ui-dimmed: #{$tlp-ui-dimmed};
+    --tlp-dimmed-color: #{$tlp-dimmed-color};
     --tlp-ui-white: #{$tlp-ui-white};
     --tlp-main-color: #{$tlp-main-color};
     --tlp-dark-color: #{$tlp-dark-color};
@@ -135,12 +135,12 @@ $main-color-dimmed-background: mix($tlp-background-color, $tlp-ui-white, 50);
     --tlp-ui-success-transparent-90: #{transparentize($tlp-ui-success, 0.9)};
     --tlp-ui-success-transparent-95: #{transparentize($tlp-ui-success, 0.95)};
 
-    --tlp-ui-dimmed-darker-10: #{darken($tlp-ui-dimmed, 10%)};
-    --tlp-ui-dimmed-lighter-50: #{mix($tlp-ui-dimmed, $tlp-ui-white, 50%)};
-    --tlp-ui-dimmed-lighter-70: #{mix($tlp-ui-dimmed, $tlp-ui-white, 30%)};
-    --tlp-ui-dimmed-lighter-95: #{mix($tlp-ui-dimmed, $tlp-ui-white, 5%)};
-    --tlp-ui-dimmed-transparent-50: #{transparentize($tlp-ui-dimmed, 0.5)};
-    --tlp-ui-dimmed-transparent-90: #{transparentize($tlp-ui-dimmed, 0.9)};
+    --tlp-dimmed-color-darker-10: #{darken($tlp-dimmed-color, 10%)};
+    --tlp-dimmed-color-lighter-50: #{mix($tlp-dimmed-color, $tlp-ui-white, 50%)};
+    --tlp-dimmed-color-lighter-70: #{mix($tlp-dimmed-color, $tlp-ui-white, 30%)};
+    --tlp-dimmed-color-lighter-95: #{mix($tlp-dimmed-color, $tlp-ui-white, 5%)};
+    --tlp-dimmed-color-transparent-50: #{transparentize($tlp-dimmed-color, 0.5)};
+    --tlp-dimmed-color-transparent-90: #{transparentize($tlp-dimmed-color, 0.9)};
 
     --tlp-ui-white-darker-02: #{darken($tlp-ui-white, 2%)};
     --tlp-ui-white-darker-10: #{darken($tlp-ui-white, 10%)};
@@ -155,7 +155,7 @@ $main-color-dimmed-background: mix($tlp-background-color, $tlp-ui-white, 50);
     --tlp-theme-orange: #{$tlp-theme-orange};
     --tlp-theme-orange-lighter-05: #{lighten($tlp-theme-orange, 5%)};
 
-    --tlp-label-color: #{darken($tlp-ui-dimmed, 3.5%)};
+    --tlp-label-color: #{darken($tlp-dimmed-color, 3.5%)};
 
     // Alerts
     --tlp-alert-danger-background: #{desaturate(lighten(mix($tlp-ui-white, $tlp-ui-danger, 25%), 23%), 15%)};
@@ -176,7 +176,7 @@ $main-color-dimmed-background: mix($tlp-background-color, $tlp-ui-white, 50);
 
     // Dark
     --tlp-ui-danger-on-dark-background: #{mix($tlp-ui-danger, $tlp-ui-white, 85%)};
-    --tlp-ui-dimmed-on-dark-background: #{$tlp-ui-border-dark};
+    --tlp-dimmed-color-on-dark-background: #{$tlp-ui-border-dark};
     --tlp-main-color-on-dark-background: #{lighten($tlp-main-color, 20%)};
     --tlp-dark-color-transparent-30: #{transparentize($tlp-dark-color, 0.3)};
     --tlp-dark-color-transparent-50: #{transparentize($tlp-dark-color, 0.5)};
@@ -237,8 +237,8 @@ $main-color-dimmed-background: mix($tlp-background-color, $tlp-ui-white, 50);
     --tlp-legacy-illustration-tertiary-color: #{$tlp-illustration-tertiary-color};
 
     // Skeletons
-    --tlp-skeleton-color: #{transparentize($tlp-ui-dimmed, 0.85)};
-    --tlp-skeleton-highlight-color: #{transparentize($tlp-ui-dimmed, 0.97)};
+    --tlp-skeleton-color: #{transparentize($tlp-dimmed-color, 0.85)};
+    --tlp-skeleton-highlight-color: #{transparentize($tlp-dimmed-color, 0.97)};
 
     // shadows
     --tlp-dropdown-shadow: 0 0 0 1px #{transparentize($tlp-dark-color, 0.97)}, 0 6px 12px -5px #{transparentize($tlp-dark-color, 0.85)};

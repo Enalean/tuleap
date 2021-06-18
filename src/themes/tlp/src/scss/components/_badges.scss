@@ -76,14 +76,14 @@ $tlp-badge-padding: calc(5px - 1px * var(--tlp-is-condensed)) var(--tlp-small-sp
 
     border: 1px solid var(--tlp-ui-border-normal);
     background: var(--tlp-ui-border-normal);
-    color: var(--tlp-ui-dimmed-darker-10);
+    color: var(--tlp-dimmed-color-darker-10);
 
     &.tlp-badge-outline {
         $tlp-badge-secondary-outline-border: #999999;
 
         border: 1px solid transparentize($tlp-badge-secondary-outline-border, 0.4);
         background: transparentize($tlp-badge-secondary-outline-border, 0.9);
-        color: var(--tlp-ui-dimmed);
+        color: var(--tlp-dimmed-color);
 
         &.tlp-badge-on-dark-background {
             border: 1px solid mix($tlp-badge-secondary-outline-border, #ffffff, 85%);

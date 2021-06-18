@@ -130,7 +130,7 @@ $tlp-dropdown-transition: 75ms ease-out;
     margin: var(--tlp-small-spacing) 0 0;
     padding: var(--tlp-medium-spacing) var(--tlp-medium-spacing) var(--tlp-small-spacing);
     border-top: 1px solid var(--tlp-ui-border-light);
-    color: var(--tlp-ui-dimmed);
+    color: var(--tlp-dimmed-color);
     font-size: 0.65rem;
     font-weight: 600;
     letter-spacing: 0.5px;
@@ -184,7 +184,7 @@ $tlp-dropdown-transition: 75ms ease-out;
 .tlp-dropdown-menu-text {
     padding: var(--tlp-small-spacing) var(--tlp-medium-spacing);
     border: 0;
-    color: var(--tlp-ui-dimmed);
+    color: var(--tlp-dimmed-color);
     font-size: 0.875rem;
     font-weight: 400;
     letter-spacing: normal;
@@ -393,11 +393,11 @@ span.flatpickr-weekday {
     &.prevMonthDay,
     &.nextMonthDay {
         //stylelint-enable
-        color: var(--tlp-ui-dimmed);
+        color: var(--tlp-dimmed-color);
 
         &:hover {
             border-color: transparent;
-            background: var(--tlp-ui-dimmed-transparent-90);
+            background: var(--tlp-dimmed-color-transparent-90);
         }
     }
 

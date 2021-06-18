@@ -44,7 +44,7 @@ $taskboard-header-height: 50px;
     border-bottom: 1px solid var(--tlp-ui-border-normal);
     background: var(--tlp-ui-white);
     box-shadow: inset 0 2px 0 0 var(--primary-color, var(--tlp-ui-border-normal)), inset 0 -1px 0 var(--tlp-ui-border-normal);
-    color: var(--text-color, var(--tlp-ui-dimmed));
+    color: var(--text-color, var(--tlp-dimmed-color));
     font-weight: 600;
     text-transform: uppercase;
 

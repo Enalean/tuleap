@@ -64,7 +64,7 @@
 .dashboard-widget-actions {
     transition: color 100ms, opacity 100ms;
     opacity: 0.2;
-    color: var(--tlp-ui-dimmed);
+    color: var(--tlp-dimmed-color);
     cursor: pointer;
 
     &:hover {
@@ -101,7 +101,7 @@
     align-self: center;
     width: 40%;
     margin: 0 0 var(--tlp-small-spacing) 0;
-    color: var(--tlp-ui-dimmed);
+    color: var(--tlp-dimmed-color);
     font-size: 0.875rem;
     line-height: var(--tlp-large-spacing);
     text-align: center;
@@ -180,7 +180,7 @@
 .dashboard-add-widget-list-table-widget-content-link,
 .dashboard-add-widget-list-table-widget-content-used {
     transition: transform 50ms linear;
-    color: var(--tlp-ui-dimmed);
+    color: var(--tlp-dimmed-color);
     font-size: 14px;
     text-align: right;
     white-space: nowrap;

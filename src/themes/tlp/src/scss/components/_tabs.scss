@@ -72,7 +72,7 @@ $tlp-tabs-transition: 75ms ease-out;
     margin: calc(var(--tlp-medium-spacing) / 2) 0 0;
     padding: var(--tlp-medium-spacing) var(--tlp-medium-spacing) calc(var(--tlp-medium-spacing) / 2);
     border-top: 1px solid var(--tlp-ui-border-light);
-    color: var(--tlp-ui-dimmed);
+    color: var(--tlp-dimmed-color);
     line-height: 20px;
 
     &:first-child {
@@ -112,7 +112,7 @@ $tlp-tabs-transition: 75ms ease-out;
     padding: $tab-vertical-padding var(--tlp-large-spacing) ($tab-vertical-padding - 2);
     transition: color $tlp-tabs-transition, border-bottom-color $tlp-tabs-transition;
     border-bottom: 2px solid transparent;
-    color: var(--tlp-ui-dimmed);
+    color: var(--tlp-dimmed-color);
     font-size: 0.75rem;
     font-weight: 500;
     letter-spacing: 0.02rem;
@@ -134,7 +134,7 @@ $tlp-tabs-transition: 75ms ease-out;
     &.tlp-tab-disabled:hover {
         border-bottom-color: transparent;
         opacity: 0.5;
-        color: var(--tlp-ui-dimmed);
+        color: var(--tlp-dimmed-color);
         cursor: not-allowed;
 
         > .tlp-tab-badge-append {
@@ -187,7 +187,7 @@ $tlp-tabs-transition: 75ms ease-out;
     &.tlp-tab-disabled:hover {
         border-bottom-color: inherit;
         opacity: 1;
-        color: var(--tlp-ui-dimmed-lighter-50);
+        color: var(--tlp-dimmed-color-lighter-50);
 
         &::before {
             display: none;

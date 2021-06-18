@@ -192,7 +192,7 @@ kanban-item {
 
 .kanban-item-content-info-link {
     margin: 0 var(--tlp-small-spacing) 0 0;
-    color: var(--tlp-ui-dimmed);
+    color: var(--tlp-dimmed-color);
     font-size: 0.65rem;
     text-decoration: none;
     font-variant-numeric: tabular-nums;
@@ -236,7 +236,7 @@ kanban-item {
     position: absolute;
     z-index: 3;
     right: var(--tlp-small-spacing);
-    color: var(--tlp-ui-dimmed);
+    color: var(--tlp-dimmed-color);
     font-size: 12px;
     cursor: help;
 }
@@ -267,6 +267,6 @@ kanban-item {
 .kanban-item-content-expand-collapse-icon {
     position: relative;
     top: -5px;
-    color: var(--tlp-ui-dimmed);
+    color: var(--tlp-dimmed-color);
     font-weight: 600;
 }

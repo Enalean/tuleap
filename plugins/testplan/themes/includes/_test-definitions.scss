@@ -83,7 +83,7 @@
 
 .test-plan-test-definition-xref {
     margin: 0 4px 0 0;
-    color: var(--tlp-ui-dimmed);
+    color: var(--tlp-dimmed-color);
     font-size: 12px;
 
     &:hover {
@@ -121,7 +121,7 @@
 .test-plan-test-definition-icon-automated-tests.test-plan-test-definition-icon-status-notrun,
 .test-plan-test-definition-icon-automated-tests:last-child {
     opacity: 0.5;
-    color: var(--tlp-ui-dimmed);
+    color: var(--tlp-dimmed-color);
 }
 
 .test-plan-test-definition-icon-status-passed,
@@ -145,11 +145,11 @@
 }
 
 .test-plan-test-definition-icon-status-notrun {
-    color: var(--tlp-ui-dimmed);
+    color: var(--tlp-dimmed-color);
 }
 
 .test-plan-test-definition-icon-status-notplanned {
-    color: var(--tlp-ui-dimmed);
+    color: var(--tlp-dimmed-color);
 }
 
 .test-plan-test-definition-test-status-tooltip-position {

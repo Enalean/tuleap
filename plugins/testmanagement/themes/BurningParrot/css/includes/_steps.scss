@@ -64,11 +64,11 @@
 
         > .steps-step-description > .steps-step-expected {
             > div > .steps-step-expected-title {
-                color: var(--tlp-ui-dimmed);
+                color: var(--tlp-dimmed-color);
             }
 
             > .steps-step-expected-arrow {
-                fill: var(--tlp-ui-dimmed);
+                fill: var(--tlp-dimmed-color);
             }
         }
     }
@@ -137,9 +137,9 @@
 }
 
 .steps-step-action-notrun {
-    color: var(--tlp-ui-dimmed);
+    color: var(--tlp-dimmed-color);
 }
 
 .steps-step-action-disabled {
-    color: var(--tlp-ui-dimmed);
+    color: var(--tlp-dimmed-color);
 }

@@ -38,7 +38,7 @@
 }
 
 .dashboard-project-header-trovecat {
-    color: var(--tlp-ui-dimmed);
+    color: var(--tlp-dimmed-color);
     font-size: 0.75rem;
 }
 
@@ -76,7 +76,7 @@
     width: 13px;
     height: 10px;
     margin: 2px 0 0;
-    fill: var(--tlp-ui-dimmed);
+    fill: var(--tlp-dimmed-color);
     vertical-align: top;
 
     + .dashboard-project-title-name {

@@ -40,7 +40,7 @@
 .forumml-thread-message-permalink {
     margin: 0 2px 0 0;
     transition: color 150ms ease-in-out;
-    color: var(--tlp-ui-dimmed);
+    color: var(--tlp-dimmed-color);
     font-size: 0.625rem;
 
     &:focus,
@@ -51,7 +51,7 @@
 
 .forumml-thread-message-sender {
     margin: 0 0 var(--tlp-small-spacing);
-    color: var(--tlp-ui-dimmed);
+    color: var(--tlp-dimmed-color);
     font-size: 0.75rem;
     line-height: 1rem;
 }
@@ -68,7 +68,7 @@
 
 .forumml-thread-message-attachments-icon {
     margin: 0 2px 0 0;
-    color: var(--tlp-ui-dimmed);
+    color: var(--tlp-dimmed-color);
 }
 
 .forumml-thread-message-attachments-separator:last-child {

@@ -28,13 +28,13 @@
 
     > a {
         margin: 0 var(--tlp-large-spacing) 15px 0;
-        color: var(--tlp-ui-dimmed);
+        color: var(--tlp-dimmed-color);
         font-weight: normal;
         text-decoration: none;
     }
 
     > a:hover,
     > a:focus {
-        color: var(--tlp-ui-dimmed-darker-10);
+        color: var(--tlp-dimmed-color-darker-10);
     }
 }

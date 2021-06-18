@@ -142,7 +142,7 @@
     display: flex;
     align-items: center;
     margin: 5px 0 0;
-    color: var(--tlp-ui-dimmed);
+    color: var(--tlp-dimmed-color);
     font-size: 14px;
     font-weight: 400;
 
@@ -212,7 +212,7 @@
     }
 
     > span:first-child {
-        color: var(--tlp-ui-dimmed);
+        color: var(--tlp-dimmed-color);
         font-size: 18px;
         font-weight: 400;
     }
@@ -224,7 +224,7 @@
 
 .timetracking-details-project-icon {
     margin: 0 5px 0 0;
-    fill: var(--tlp-ui-dimmed);
+    fill: var(--tlp-dimmed-color);
 }
 
 .timetracking-details-modal-content {

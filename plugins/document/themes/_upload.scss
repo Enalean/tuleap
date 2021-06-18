@@ -181,22 +181,22 @@ $progress-bar-background-color: var(--tlp-ui-border-normal);
 .document-file-upload-progress-canceled {
     > .document-file-upload-progress-bar,
     > .document-file-upload-progress-value {
-        color: var(--tlp-ui-dimmed);
+        color: var(--tlp-dimmed-color);
     }
 
     > .document-file-upload-progress-bar::-moz-progress-bar {
-        background: var(--tlp-ui-dimmed);
+        background: var(--tlp-dimmed-color);
     }
 
     > .document-file-upload-progress-bar::-webkit-progress-value {
-        background: var(--tlp-ui-dimmed);
+        background: var(--tlp-dimmed-color);
     }
 
     > .document-file-upload-progress-cancel {
-        color: var(--tlp-ui-dimmed);
+        color: var(--tlp-dimmed-color);
 
         &:hover {
-            color: var(--tlp-ui-dimmed);
+            color: var(--tlp-dimmed-color);
         }
     }
 }
