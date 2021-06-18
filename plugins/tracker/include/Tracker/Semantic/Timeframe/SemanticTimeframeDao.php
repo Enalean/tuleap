@@ -41,12 +41,18 @@ class SemanticTimeframeDao extends DataAccessObject
         return $this->getDB()->row($sql, $tracker_id);
     }
 
-    public function save(int $tracker_id, int $start_date_field_id, ?int $duration_field_id, ?int $end_date_field_id): bool
+    public function save(int $tracker_id, ?int $start_date_field_id, ?int $duration_field_id, ?int $end_date_field_id, ?int $implied_from_tracker_id): bool
     {
-        $sql = 'REPLACE INTO tracker_semantic_timeframe(tracker_id, start_date_field_id, duration_field_id, end_date_field_id) VALUES (?, ?, ?, ?)';
-
-        $result = $this->getDB()->run($sql, $tracker_id, $start_date_field_id, $duration_field_id, $end_date_field_id);
-
+        $sql    = '
+            REPLACE INTO tracker_semantic_timeframe(
+                tracker_id,
+                start_date_field_id,
+                duration_field_id,
+                end_date_field_id,
+                implied_from_tracker_id
+            ) VALUES (?, ?, ?, ?, ?)
+        ';
+        $result = $this->getDB()->run($sql, $tracker_id, $start_date_field_id, $duration_field_id, $end_date_field_id, $implied_from_tracker_id);
         return $result !== null;
     }
 

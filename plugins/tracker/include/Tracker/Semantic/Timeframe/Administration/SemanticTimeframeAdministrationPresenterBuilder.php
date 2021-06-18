@@ -25,6 +25,7 @@ namespace Tuleap\Tracker\Semantic\Timeframe\Administration;
 use Tracker;
 use Tuleap\Tracker\Semantic\Timeframe\Events\DoesAPluginRenderAChartBasedOnSemanticTimeframeForTrackerEvent;
 use Tuleap\Tracker\Semantic\Timeframe\IComputeTimeframes;
+use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeSuitableTrackersOtherSemanticsCanBeImpliedFromRetriever;
 
 class SemanticTimeframeAdministrationPresenterBuilder
 {
@@ -32,10 +33,14 @@ class SemanticTimeframeAdministrationPresenterBuilder
      * @var \Tracker_FormElementFactory
      */
     private $tracker_formelement_factory;
+    private SemanticTimeframeSuitableTrackersOtherSemanticsCanBeImpliedFromRetriever $suitable_trackers_retriever;
 
-    public function __construct(\Tracker_FormElementFactory $tracker_formelement_factory)
-    {
+    public function __construct(
+        \Tracker_FormElementFactory $tracker_formelement_factory,
+        SemanticTimeframeSuitableTrackersOtherSemanticsCanBeImpliedFromRetriever $suitable_trackers_retriever
+    ) {
         $this->tracker_formelement_factory = $tracker_formelement_factory;
+        $this->suitable_trackers_retriever = $suitable_trackers_retriever;
     }
 
     public function build(
@@ -50,10 +55,12 @@ class SemanticTimeframeAdministrationPresenterBuilder
             $tracker,
             $target_url,
             $this->doesTrackerHaveCharts($tracker),
+            $this->hasTrackerAnArtifactLinkField($tracker),
             $this->tracker_formelement_factory->getUsedFormElementsByType($tracker, ['date']),
             $this->tracker_formelement_factory->getUsedFormElementsByType($tracker, ['int', 'float', 'computed']),
             $timeframe,
-            $configuration_presenter
+            $configuration_presenter,
+            $this->getSuitableTrackersSelectBoxEntries($tracker)
         );
     }
 
@@ -67,5 +74,28 @@ class SemanticTimeframeAdministrationPresenterBuilder
         ]);
 
         return count($chart_fields) > 0 || $event->doesAPluginRenderAChartForTracker();
+    }
+
+    private function hasTrackerAnArtifactLinkField(Tracker $tracker): bool
+    {
+        $artifact_link_field = $this->tracker_formelement_factory->getUsedArtifactLinkFields($tracker);
+        return ! empty($artifact_link_field);
+    }
+
+    /**
+     * @psalm-return array<int, array{name: string, id: int}>
+     */
+    private function getSuitableTrackersSelectBoxEntries(Tracker $tracker): array
+    {
+        $select_box_entries = [];
+        $suitable_trackers  = $this->suitable_trackers_retriever->getTrackersWeCanUseToImplyTheSemanticOfTheCurrentTrackerFrom($tracker);
+        foreach ($suitable_trackers as $suitable_tracker) {
+            $select_box_entries[] = [
+                'name' => $suitable_tracker->getName(),
+                'id'   => $suitable_tracker->getId()
+            ];
+        }
+
+        return $select_box_entries;
     }
 }

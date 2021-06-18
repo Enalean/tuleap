@@ -62,10 +62,14 @@ export default class TimeframeAdminSubmitButtons extends Vue {
     @Prop({ required: true })
     private readonly has_tracker_charts!: boolean;
 
+    @Prop({ required: true })
+    private readonly implied_from_tracker_id!: number | "";
+
     get is_semantic_configured(): boolean {
         return (
             (this.start_date_field_id !== "" && this.end_date_field_id !== "") ||
-            (this.start_date_field_id !== "" && this.duration_field_id !== "")
+            (this.start_date_field_id !== "" && this.duration_field_id !== "") ||
+            this.implied_from_tracker_id !== ""
         );
     }
 

@@ -161,7 +161,7 @@ class TimeframeWithEndDateTest extends \Tuleap\Test\PHPUnit\TestCase
         $dao     = $this->getMockBuilder(SemanticTimeframeDao::class)->disableOriginalConstructor()->getMock();
         $tracker = $this->getMockBuilder(\Tracker::class)->disableOriginalConstructor()->getMock();
 
-        $dao->expects(self::once())->method('save')->with(113, 1001, null, 1003)->will(self::returnValue(true));
+        $dao->expects(self::once())->method('save')->with(113, 1001, null, 1003, null)->will(self::returnValue(true));
         $tracker->expects(self::once())->method('getId')->will(self::returnValue(113));
 
         self::assertTrue(

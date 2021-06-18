@@ -113,6 +113,7 @@ class TimeframeWithDuration implements IComputeTimeframes
             $tracker->getId(),
             $this->start_date_field->getId(),
             $this->duration_field->getId(),
+            null,
             null
         );
     }
@@ -220,5 +221,10 @@ class TimeframeWithDuration implements IComputeTimeframes
         }
 
         return TimePeriodWithoutWeekEnd::buildFromDuration($start_date, $duration);
+    }
+
+    public function getTrackerFromWhichTimeframeIsImplied(): ?\Tracker
+    {
+        return null;
     }
 }

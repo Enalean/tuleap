@@ -86,7 +86,12 @@ class SemanticTimeframe extends Tracker_Semantic
         $semantic_manager->displaySemanticHeader($this, $tracker_manager);
 
         $builder = new SemanticTimeframeAdministrationPresenterBuilder(
-            \Tracker_FormElementFactory::instance()
+            \Tracker_FormElementFactory::instance(),
+            new SemanticTimeframeSuitableTrackersOtherSemanticsCanBeImpliedFromRetriever(
+                new SemanticTimeframeDao(),
+                \TrackerFactory::instance(),
+                \Tracker_FormElementFactory::instance(),
+            )
         );
 
         $presenter = $builder->build(
@@ -214,9 +219,15 @@ class SemanticTimeframe extends Tracker_Semantic
 
     private function getSemanticTimeframeUpdator(): SemanticTimeframeUpdator
     {
+        $form_element_factory = \Tracker_FormElementFactory::instance();
         return new SemanticTimeframeUpdator(
             new SemanticTimeframeDao(),
-            \Tracker_FormElementFactory::instance()
+            $form_element_factory,
+            new SemanticTimeframeSuitableTrackersOtherSemanticsCanBeImpliedFromRetriever(
+                new SemanticTimeframeDao(),
+                \TrackerFactory::instance(),
+                $form_element_factory
+            )
         );
     }
 }

@@ -115,7 +115,7 @@ class SemanticTimeframeDuplicatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->dao
             ->shouldReceive('save')
-            ->with(2, 1001, 1002, null)
+            ->with(2, 1001, 1002, null, null)
             ->once();
 
         $this->duplicator->duplicate(
@@ -138,7 +138,7 @@ class SemanticTimeframeDuplicatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->dao
             ->shouldReceive('save')
-            ->with(2, 1001, null, 1003)
+            ->with(2, 1001, null, 1003, null)
             ->once();
 
         $this->duplicator->duplicate(

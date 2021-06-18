@@ -187,4 +187,9 @@ class TimeframeImpliedFromAnotherTracker implements IComputeTimeframes
 
         return $reversely_linked_artifacts[0];
     }
+
+    public function getTrackerFromWhichTimeframeIsImplied(): ?\Tracker
+    {
+        return $this->semantic_timeframe_implied_from_tracker->getTracker();
+    }
 }

@@ -110,4 +110,9 @@ class TimeframeNotConfigured implements IComputeTimeframes
             $artifact->getTracker()->getName()
         );
     }
+
+    public function getTrackerFromWhichTimeframeIsImplied(): ?\Tracker
+    {
+        return null;
+    }
 }
