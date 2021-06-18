@@ -39,7 +39,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 /* webpackChunkName: "create-gitlab-branch-modal" */ "./modal"
             );
 
-            init(create_branch_link);
+            await init(create_branch_link);
         } catch (e) {
             codendi.feedback.log("error", "Error while loading the GitLab branch creation modal.");
             throw e;

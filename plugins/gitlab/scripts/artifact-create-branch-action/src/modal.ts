@@ -23,7 +23,6 @@ import {
     initVueGettext,
 } from "../../../../../src/scripts/tuleap/gettext/vue-gettext-init";
 import App from "./components/App.vue";
-import { createStore } from "./store";
 
 export async function init(create_branch_link: HTMLElement): Promise<void> {
     const user_locale = document.body.dataset.userLocale;
@@ -58,10 +57,13 @@ export async function init(create_branch_link: HTMLElement): Promise<void> {
         branch_name += "-" + slugified_artifact_title;
     }
 
-    const store = createStore(integrations_representations, artifact_id, branch_name);
     const AppComponent = Vue.extend(App);
     const app = new AppComponent({
-        store,
+        propsData: {
+            integrations: integrations_representations,
+            branch_name,
+            artifact_id,
+        },
     }).$mount();
     document.body.appendChild(app.$el);
 }
