@@ -18,7 +18,7 @@
  */
 @use '../../../../plugins/tracker/themes/default/css/includes/burndown-chart';
 
-$timeline-color: var(--tlp-theme-color-lighter-90);
+$timeline-color: var(--tlp-main-color-lighter-90);
 
 .release-charts-row {
     display: flex;

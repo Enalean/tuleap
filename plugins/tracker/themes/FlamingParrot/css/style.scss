@@ -33,23 +33,23 @@
 }
 
 .tracker-report-query {
-    border-top: 2px solid var(--tlp-theme-color);
+    border-top: 2px solid var(--tlp-main-color);
     border-bottom: 1px solid var(--tlp-theme-background-color-darker-05);
     background: var(--tlp-theme-background-color);
 }
 
 /* stylelint-disable-next-line selector-class-pattern */
 .tracker_artifact_fieldset legend {
-    color: var(--tlp-theme-color);
+    color: var(--tlp-main-color);
 
     &.toggler-noajax {
         /* stylelint-disable-line selector-no-qualifying-type */
-        border-bottom: 2px solid var(--tlp-theme-color);
+        border-bottom: 2px solid var(--tlp-main-color);
     }
 }
 
 .format-warning {
-    color: var(--tlp-theme-color);
+    color: var(--tlp-main-color);
 }
 
 /* stylelint-disable-next-line selector-id-pattern */
@@ -80,7 +80,7 @@
 
     /* stylelint-disable-next-line selector-max-compound-selectors */
     > thead > tr > th > table > tbody > tr > td > a {
-        color: var(--tlp-theme-color);
+        color: var(--tlp-main-color);
     }
 
     /* stylelint-disable-next-line selector-class-pattern,selector-no-qualifying-type */
@@ -103,7 +103,7 @@
 
 /* stylelint-disable-next-line selector-class-pattern */
 .tracker_artifact_followup-with_comment {
-    border-left: 3px solid var(--tlp-theme-color);
+    border-left: 3px solid var(--tlp-main-color);
 }
 
 .card-details .avatar {
@@ -136,7 +136,7 @@
     margin: 0 5px 0 2px;
 
     path {
-        fill: var(--tlp-theme-color);
+        fill: var(--tlp-main-color);
     }
 }
 
@@ -197,7 +197,7 @@ body.tracker-administration {
 
     &:focus,
     &:hover {
-        color: var(--tlp-theme-color);
+        color: var(--tlp-main-color);
     }
 }
 

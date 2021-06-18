@@ -55,18 +55,18 @@ $tlp-badge-padding: calc(5px - 1px * var(--tlp-is-condensed)) var(--tlp-small-sp
 .tlp-badge-primary {
     @extend %tlp-badge;
 
-    border: 1px solid var(--tlp-theme-color);
-    background: var(--tlp-theme-color);
+    border: 1px solid var(--tlp-main-color);
+    background: var(--tlp-main-color);
 
     &.tlp-badge-outline {
-        border: 1px solid var(--tlp-theme-color-transparent-40);
-        background: var(--tlp-theme-color-transparent-90);
-        color: var(--tlp-theme-color);
+        border: 1px solid var(--tlp-main-color-transparent-40);
+        background: var(--tlp-main-color-transparent-90);
+        color: var(--tlp-main-color);
 
         &.tlp-badge-on-dark-background {
-            border: 1px solid var(--tlp-theme-color-lighter-15);
-            background: var(--tlp-theme-color-transparent-85);
-            color: var(--tlp-theme-color-lighter-40);
+            border: 1px solid var(--tlp-main-color-lighter-15);
+            background: var(--tlp-main-color-transparent-85);
+            color: var(--tlp-main-color-lighter-40);
         }
     }
 }

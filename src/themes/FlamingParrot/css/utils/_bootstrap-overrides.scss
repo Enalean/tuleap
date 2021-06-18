@@ -187,7 +187,7 @@ legend {
         border-top: 1px solid transparent;
         border-right: 0;
         border-left: 0;
-        box-shadow: inset 0 -2px 0 var(--tlp-theme-color);
+        box-shadow: inset 0 -2px 0 var(--tlp-main-color);
     }
 
     > .active > a,
@@ -214,11 +214,11 @@ legend {
         border-right: 0;
         border-left: 0;
         background-color: transparent;
-        color: var(--tlp-theme-color);
+        color: var(--tlp-main-color);
 
         > .caret {
-            border-top-color: var(--tlp-theme-color);
-            border-bottom-color: var(--tlp-theme-color);
+            border-top-color: var(--tlp-main-color);
+            border-bottom-color: var(--tlp-main-color);
         }
     }
 
@@ -226,12 +226,12 @@ legend {
     li.active {
         > a:focus,
         > a {
-            border-bottom: 2px solid var(--tlp-theme-color);
-            color: var(--tlp-theme-color);
+            border-bottom: 2px solid var(--tlp-main-color);
+            color: var(--tlp-main-color);
 
             > .caret {
-                border-top-color: var(--tlp-theme-color);
-                border-bottom-color: var(--tlp-theme-color);
+                border-top-color: var(--tlp-main-color);
+                border-bottom-color: var(--tlp-main-color);
             }
         }
     }
@@ -239,7 +239,7 @@ legend {
 
     // stylelint-disable-next-line selector-no-qualifying-type
     a.active {
-        border-bottom-color: var(--tlp-theme-color);
+        border-bottom-color: var(--tlp-main-color);
     }
 
     .open .dropdown-toggle,
@@ -271,8 +271,8 @@ legend {
 .nav li.dropdown.open .caret,
 .nav li.dropdown.open.active .caret,
 .nav li.dropdown.open a:hover .caret {
-    border-top-color: var(--tlp-theme-color);
-    border-bottom-color: var(--tlp-theme-color);
+    border-top-color: var(--tlp-main-color);
+    border-bottom-color: var(--tlp-main-color);
 }
 
 .nav > li.dropdown.open {
@@ -281,7 +281,7 @@ legend {
         a:focus {
             border-color: transparent;
             background-color: transparent;
-            color: var(--tlp-theme-color);
+            color: var(--tlp-main-color);
         }
     }
 
@@ -293,14 +293,14 @@ legend {
 
         a {
             padding: 10px 20px;
-            color: var(--tlp-theme-color);
+            color: var(--tlp-main-color);
             line-height: 14px;
 
             &:hover,
             &:focus {
                 border-color: transparent;
                 background: #f3f3f3;
-                color: var(--tlp-theme-color);
+                color: var(--tlp-main-color);
             }
 
             &.text-error {
@@ -406,16 +406,16 @@ legend {
 
 .btn-group {
     .btn-primary + .dropdown-menu > li {
-        @include dropdown-menu(var(--tlp-theme-color));
+        @include dropdown-menu(var(--tlp-main-color));
     }
 
     /* stylelint-disable selector-no-qualifying-type */
     > .dropdown-menu > li {
-        @include dropdown-menu(var(--tlp-theme-color));
+        @include dropdown-menu(var(--tlp-main-color));
 
         &.dropdown-submenu {
             > .dropdown-menu > li {
-                @include dropdown-menu(var(--tlp-theme-color));
+                @include dropdown-menu(var(--tlp-main-color));
             }
 
             &:hover > a,
@@ -436,7 +436,7 @@ legend {
     @include btn(var(--tlp-ui-border-light), var(--tlp-ui-border-light-transparent-40), var(--tlp-ui-border-light-darker-10), var(--tlp-theme-dark-background-color));
 
     &.btn-primary {
-        @include btn(var(--tlp-theme-color), var(--tlp-theme-color-transparent-40), var(--tlp-theme-color-darker-10), var(--tlp-ui-white));
+        @include btn(var(--tlp-main-color), var(--tlp-main-color-transparent-40), var(--tlp-main-color-darker-10), var(--tlp-ui-white));
     }
 
     &.btn-danger {
@@ -459,7 +459,7 @@ legend {
         @include btn-hover(var(--tlp-ui-border-light-darker-05));
 
         &.btn-primary {
-            @include btn-hover(var(--tlp-theme-color-darker-05));
+            @include btn-hover(var(--tlp-main-color-darker-05));
         }
 
         &.btn-danger {
@@ -528,7 +528,7 @@ select.input-small {
     border-bottom: 0;
     border-top-left-radius: 3px;
     border-top-right-radius: 3px;
-    background: var(--tlp-theme-color);
+    background: var(--tlp-main-color);
     color: var(--tlp-ui-white);
 
     &.modal-header-error {
@@ -607,11 +607,11 @@ select.input-small {
  */
 %tlp-table-th {
     padding: 10px;
-    color: var(--tlp-theme-color);
+    color: var(--tlp-main-color);
     font-weight: 600;
 
     > a {
-        color: var(--tlp-theme-color);
+        color: var(--tlp-main-color);
         text-decoration: none;
     }
 }
@@ -620,7 +620,7 @@ select.input-small {
     > thead > tr > th {
         @extend %tlp-table-th;
 
-        border-bottom: 2px solid var(--tlp-theme-color);
+        border-bottom: 2px solid var(--tlp-main-color);
     }
 
     > .table-sticky-header > tr > th {
@@ -629,13 +629,13 @@ select.input-small {
         border-bottom: 0;
         background: var(--tlp-ui-white);
         background-clip: padding-box;
-        box-shadow: inset 0 -2px 0 0 var(--tlp-theme-color);
+        box-shadow: inset 0 -2px 0 0 var(--tlp-main-color);
     }
 
     > tfoot > tr > th {
         @extend %tlp-table-th;
 
-        border-top: 2px solid var(--tlp-theme-color);
+        border-top: 2px solid var(--tlp-main-color);
     }
 
     > tbody {
@@ -652,7 +652,7 @@ select.input-small {
         }
 
         > tr:hover > td {
-            background: var(--tlp-theme-color-transparent-90);
+            background: var(--tlp-main-color-transparent-90);
         }
 
         /* stylelint-disable selector-no-qualifying-type */
@@ -665,7 +665,7 @@ select.input-small {
             &.table-cell-section {
                 padding: 5px 10px;
                 background: var(--tlp-theme-background-color);
-                color: var(--tlp-theme-color);
+                color: var(--tlp-main-color);
                 font-size: 11px;
                 font-weight: 600;
                 letter-spacing: 0.3px;
@@ -675,7 +675,7 @@ select.input-small {
             &.table-cell-empty {
                 height: 100px;
                 background: #fcfcfc;
-                color: var(--tlp-theme-color-transparent-70);
+                color: var(--tlp-main-color-transparent-70);
                 font-style: italic;
                 text-align: center;
                 vertical-align: middle;

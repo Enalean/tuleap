@@ -21,13 +21,13 @@ $step-transition-duration: 75ms;
 
 $step-background: var(--tlp-ui-white);
 $step-color: var(--tlp-theme-dark-background-color);
-$step-active-color: var(--tlp-theme-color);
-$step-active-background: var(--tlp-theme-color-transparent-90);
+$step-active-color: var(--tlp-main-color);
+$step-active-background: var(--tlp-main-color-transparent-90);
 
 $switch-menu-background: var(--tlp-ui-white);
-$switch-menu-item-color: var(--tlp-theme-color);
-$switch-menu-item-hover-background: var(--tlp-theme-color-transparent-90);
-$switch-menu-item-hover-color: var(--tlp-theme-color);
+$switch-menu-item-color: var(--tlp-main-color);
+$switch-menu-item-hover-background: var(--tlp-main-color-transparent-90);
+$switch-menu-item-hover-color: var(--tlp-main-color);
 
 .breadcrumb-container {
     display: flex;
@@ -219,7 +219,7 @@ $switch-menu-item-hover-color: var(--tlp-theme-color);
 
     &.fa-lock,
     &.fa-tlp-lock-plus-r {
-        background: var(--tlp-theme-color);
+        background: var(--tlp-main-color);
     }
 
     &.fa-lock-open,
@@ -239,11 +239,11 @@ $switch-menu-item-hover-color: var(--tlp-theme-color);
 
     &[data-privacy-icon="fa-lock"],
     &[data-privacy-icon="fa-tlp-lock-plus-r"] {
-        background: var(--tlp-theme-color-transparent-90);
-        color: var(--tlp-theme-color-darker-03);
+        background: var(--tlp-main-color-transparent-90);
+        color: var(--tlp-main-color-darker-03);
 
         > .fas {
-            color: var(--tlp-theme-color-darker-03);
+            color: var(--tlp-main-color-darker-03);
         }
     }
 

@@ -25,7 +25,7 @@
 
     /* stylelint-disable-next-line selector-class-pattern */
     .CodeMirror-gutter-wrapper:hover > .CodeMirror-gutter-elt {
-        background: var(--tlp-theme-color);
+        background: var(--tlp-main-color);
         color: var(--tlp-ui-white);
         font-weight: 600;
         cursor: pointer;
@@ -39,7 +39,7 @@
 
     /* stylelint-disable-next-line selector-class-pattern */
     .CodeMirror-gutter-elt:hover {
-        background: var(--tlp-theme-color);
+        background: var(--tlp-main-color);
         color: var(--tlp-ui-white);
         font-weight: 600;
         cursor: pointer;
@@ -146,7 +146,7 @@
 
     .fa-plus-circle {
         margin: 0 11px 0 0;
-        color: var(--tlp-theme-color);
+        color: var(--tlp-main-color);
         font-size: 18px;
     }
 }
@@ -155,7 +155,7 @@
     display: flex;
     flex: 1 1 auto;
     padding: 7px;
-    border: 1px solid var(--tlp-theme-color);
+    border: 1px solid var(--tlp-main-color);
     border-radius: 3px;
     background: var(--tlp-ui-white);
 }
@@ -183,5 +183,5 @@
     height: 0;
     border-width: 5px 5px 5px 0;
     border-style: solid;
-    border-color: transparent var(--tlp-theme-color) transparent transparent;
+    border-color: transparent var(--tlp-main-color) transparent transparent;
 }

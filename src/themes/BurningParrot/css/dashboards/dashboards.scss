@@ -38,7 +38,7 @@
 
     &:hover {
         opacity: 1;
-        color: var(--tlp-theme-color);
+        color: var(--tlp-main-color);
     }
 }
 
@@ -141,7 +141,7 @@
 
     &:hover {
         > .dashboard-row-dropdown-path {
-            fill: var(--tlp-theme-color);
+            fill: var(--tlp-main-color);
         }
     }
 }
@@ -155,7 +155,7 @@
     fill: var(--tlp-ui-dimmed-transparent-50);
 
     &.selected {
-        fill: var(--tlp-theme-color);
+        fill: var(--tlp-main-color);
     }
 }
 
@@ -169,7 +169,7 @@ body.gu-unselectable {
         0% {
             height: $placeholder-height;
             opacity: 0.5;
-            box-shadow: 0 0 0 0 var(--tlp-theme-color-transparent-50);
+            box-shadow: 0 0 0 0 var(--tlp-main-color-transparent-50);
         }
 
         50% {
@@ -189,7 +189,7 @@ body.gu-unselectable {
         0% {
             width: $placeholder-width;
             opacity: 0.5;
-            box-shadow: 0 0 0 0 var(--tlp-theme-color-transparent-50);
+            box-shadow: 0 0 0 0 var(--tlp-main-color-transparent-50);
         }
 
         50% {
@@ -213,7 +213,7 @@ body.gu-unselectable {
         left: $left;
         transform: translate(-50%, -50%);
         border-radius: $placeholder-radius;
-        background: var(--tlp-theme-color);
+        background: var(--tlp-main-color);
 
         @if $direction == "column" {
             width: $placeholder-height;
@@ -273,7 +273,7 @@ body.gu-unselectable {
 
     &:hover {
         .dashboard-dropdown-layout-field-path {
-            fill: var(--tlp-theme-color);
+            fill: var(--tlp-main-color);
         }
     }
 }

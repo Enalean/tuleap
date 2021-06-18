@@ -177,7 +177,7 @@
 
     &:focus + .project-admin-background-card,
     &:checked + .project-admin-background-card {
-        border-color: var(--tlp-theme-color);
+        border-color: var(--tlp-main-color);
     }
 }
 

@@ -57,7 +57,7 @@
 
     &.fa-lock,
     &.fa-tlp-lock-plus-r {
-        background: var(--tlp-theme-color);
+        background: var(--tlp-main-color);
         text-shadow: 0 0 1px rgba(0, 0, 0, 0.2);
     }
 
@@ -97,7 +97,7 @@
 
     &:hover,
     &:focus {
-        color: var(--tlp-theme-color);
+        color: var(--tlp-main-color);
         text-decoration: none;
     }
 }
@@ -223,7 +223,7 @@
     }
 
     &.active {
-        border-left-color: var(--tlp-theme-color);
+        border-left-color: var(--tlp-main-color);
         background: var(--tlp-theme-dark-background-color-darker);
 
         &::before {

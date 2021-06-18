@@ -283,13 +283,13 @@ $kanban-column-footer-height: 50px;
     max-height: 50px;
     padding: 10px;
     transition: background 100ms;
-    border-top: 2px solid var(--tlp-theme-color);
+    border-top: 2px solid var(--tlp-main-color);
     border-bottom: 1px solid var(--tlp-ui-border-normal);
     background: var(--tlp-ui-white);
 }
 
 .kanban-column-header-toggle {
-    color: var(--tlp-theme-color);
+    color: var(--tlp-main-color);
     font-size: 0.8125rem;
     cursor: pointer;
 }
@@ -303,7 +303,7 @@ $kanban-column-footer-height: 50px;
     flex: 1 1 auto;
     margin: 0 10px;
     overflow: hidden;
-    color: var(--tlp-theme-color);
+    color: var(--tlp-main-color);
     font-size: 0.875rem;
     font-weight: 600;
     text-align: center;
@@ -343,7 +343,7 @@ $kanban-column-footer-height: 50px;
     margin: 0 5px 0 0;
     animation: none;
     opacity: 0.4;
-    color: var(--tlp-theme-color);
+    color: var(--tlp-main-color);
     font-size: 1.75rem;
     font-weight: 300;
 
@@ -380,7 +380,7 @@ kanban-column {
         }
 
         50% {
-            background: var(--tlp-theme-color-transparent-90);
+            background: var(--tlp-main-color-transparent-90);
         }
 
         100% {
@@ -465,7 +465,7 @@ kanban-column {
     z-index: 3;
     width: $kanban-column-closed-width;
     transform: scaleX(-1) scaleY(-1);
-    color: var(--tlp-theme-color);
+    color: var(--tlp-main-color);
     font-size: 0.875rem;
     font-weight: 600;
     line-height: $kanban-column-closed-width;
@@ -492,7 +492,7 @@ kanban-column {
 }
 
 .widget-kanban-empty-icon {
-    color: var(--tlp-theme-color-transparent-70);
+    color: var(--tlp-main-color-transparent-70);
     font-size: 100px;
 }
 

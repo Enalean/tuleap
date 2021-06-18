@@ -39,7 +39,7 @@ $width-bar-left-sprints: 16px;
     left: -25px;
     width: 25px;
     height: 2px;
-    background: var(--tlp-theme-color);
+    background: var(--tlp-main-color);
 }
 
 .project-release-open-sprint-badge-icon-toggle {
@@ -55,7 +55,7 @@ $width-bar-left-sprints: 16px;
     width: 16px;
     height: 16px;
     border-radius: 50%;
-    background: var(--tlp-theme-color);
+    background: var(--tlp-main-color);
     color: var(--tlp-ui-white);
     line-height: normal;
 
@@ -108,8 +108,8 @@ $width-bar-left-sprints: 16px;
 
         &::after {
             right: -11px;
-            filter: drop-shadow(1px 0 0 var(--tlp-theme-color));
-            border-color: transparent transparent transparent var(--tlp-theme-color-lighter-90);
+            filter: drop-shadow(1px 0 0 var(--tlp-main-color));
+            border-color: transparent transparent transparent var(--tlp-main-color-lighter-90);
         }
     }
 
@@ -122,7 +122,7 @@ $width-bar-left-sprints: 16px;
         height: 0;
         border-width: $border-width-px 0 $border-width-px 12px;
         border-style: solid;
-        border-color: transparent transparent transparent var(--tlp-theme-color);
+        border-color: transparent transparent transparent var(--tlp-main-color);
     }
 }
 
@@ -265,7 +265,7 @@ $width-bar-left-sprints: 16px;
         left: 10px;
         width: 4px;
         height: calc(100% - #{$heigh-bar-px});
-        background: var(--tlp-theme-color);
+        background: var(--tlp-main-color);
     }
 
     &::after {
@@ -277,7 +277,7 @@ $width-bar-left-sprints: 16px;
         width: 16px;
         height: 16px;
         border-radius: 50%;
-        background: var(--tlp-theme-color);
+        background: var(--tlp-main-color);
     }
 }
 

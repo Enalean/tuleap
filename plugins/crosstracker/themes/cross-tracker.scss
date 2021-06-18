@@ -44,7 +44,7 @@
 
 .cross-tracker-list-bind-user {
     &:hover {
-        color: var(--tlp-theme-color);
+        color: var(--tlp-main-color);
     }
 
     &:not(:last-child)::after {
@@ -61,7 +61,7 @@
     color: inherit;
 
     &:hover {
-        color: var(--tlp-theme-color);
+        color: var(--tlp-main-color);
     }
 }
 

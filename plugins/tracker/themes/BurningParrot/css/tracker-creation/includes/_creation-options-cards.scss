@@ -47,23 +47,23 @@
 
     &.tracker-creation-template-card-active {
         .tlp-card {
-            border-color: var(--tlp-theme-color);
+            border-color: var(--tlp-main-color);
         }
 
         .tlp-label {
-            color: var(--tlp-theme-color);
+            color: var(--tlp-main-color);
         }
 
         .tlp-select {
-            border-color: var(--tlp-theme-color);
+            border-color: var(--tlp-main-color);
         }
 
         .card-glyph-stroke {
-            stroke: var(--tlp-theme-color);
+            stroke: var(--tlp-main-color);
         }
 
         .card-glyph-fill {
-            fill: var(--tlp-theme-color);
+            fill: var(--tlp-main-color);
         }
     }
 

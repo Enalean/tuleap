@@ -20,16 +20,16 @@
 @use '../../default/css/style';
 
 #linked-providers > .provider > .provider-header {
-    border-color: var(--tlp-theme-color);
+    border-color: var(--tlp-main-color);
 }
 
 #providers-configuration {
     .modal .modal-header {
-        border-bottom-color: var(--tlp-theme-color);
+        border-bottom-color: var(--tlp-main-color);
     }
 
     #providers .provider > h3 {
-        border-color: var(--tlp-theme-color);
+        border-color: var(--tlp-main-color);
     }
 }
 

@@ -55,7 +55,7 @@ $form-element-small-font-size: 0.8125rem;
 
     &.list-picker-with-open-dropdown .list-picker-selection {
         border-radius: 4px 4px 0 0;
-        border-color: var(--tlp-theme-color);
+        border-color: var(--tlp-main-color);
     }
 
     &.list-picker-with-open-dropdown {
@@ -95,13 +95,13 @@ $form-element-small-font-size: 0.8125rem;
     z-index: 2002;
     box-sizing: border-box;
     padding: 0;
-    border-right: 1px solid var(--tlp-theme-color);
-    border-bottom: 1px solid var(--tlp-theme-color);
-    border-left: 1px solid var(--tlp-theme-color);
+    border-right: 1px solid var(--tlp-main-color);
+    border-bottom: 1px solid var(--tlp-main-color);
+    border-left: 1px solid var(--tlp-main-color);
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
 
     &.list-picker-dropdown-above {
-        border-top: 1px solid var(--tlp-theme-color);
+        border-top: 1px solid var(--tlp-main-color);
         border-bottom: unset;
         box-shadow: 0 0 12px rgba(0, 0, 0, 0.175);
     }
@@ -109,7 +109,7 @@ $form-element-small-font-size: 0.8125rem;
 
 .list-picker-dropdown-option-value {
     &.list-picker-item-highlighted {
-        background-color: var(--tlp-theme-color);
+        background-color: var(--tlp-main-color);
         color: var(--tlp-ui-white);
     }
 
@@ -126,7 +126,7 @@ $form-element-small-font-size: 0.8125rem;
     &[aria-selected="true"] {
         position: relative;
         padding: 6px 12px 6px 32px;
-        color: var(--tlp-theme-color);
+        color: var(--tlp-main-color);
 
         &.list-picker-item-highlighted {
             color: var(--tlp-ui-white);
@@ -140,10 +140,10 @@ $form-element-small-font-size: 0.8125rem;
     align-items: center;
     margin: 5px 5px 0 0;
     padding: 5px 8px;
-    border: 1px solid var(--tlp-theme-color-transparent-50);
+    border: 1px solid var(--tlp-main-color-transparent-50);
     border-radius: 15px;
-    background: var(--tlp-theme-color-transparent-90);
-    color: var(--tlp-theme-color);
+    background: var(--tlp-main-color-transparent-90);
+    color: var(--tlp-main-color);
     font-size: 0.75rem;
     font-weight: 600;
     line-height: 0.75rem;
@@ -191,7 +191,7 @@ $form-element-small-font-size: 0.8125rem;
         padding: 0 4px;
 
         &:focus {
-            border-color: var(--tlp-theme-color);
+            border-color: var(--tlp-main-color);
         }
     }
 }

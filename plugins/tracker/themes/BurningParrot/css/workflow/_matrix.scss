@@ -54,8 +54,8 @@
                 left: 250px;
                 min-width: 100px;
                 padding: 10px;
-                border-right: 2px solid var(--tlp-theme-color-transparent-15);
-                color: var(--tlp-theme-color);
+                border-right: 2px solid var(--tlp-main-color-transparent-15);
+                color: var(--tlp-main-color);
                 font-weight: 600;
                 text-align: right;
                 white-space: nowrap;
@@ -134,7 +134,7 @@
 
 .tracker-workflow-transition-mark {
     transition: color ease-in-out 100ms;
-    color: var(--tlp-theme-color);
+    color: var(--tlp-main-color);
     font-size: 1rem;
     cursor: pointer;
 

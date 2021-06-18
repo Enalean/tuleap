@@ -181,7 +181,7 @@ $tlp-form-element-select-small-background-size: 6px;
 
     &:focus {
         transition: border-color $tlp-form-element-border-transition-duration linear, box-shadow 350ms;
-        border-color: var(--tlp-theme-color);
+        border-color: var(--tlp-main-color);
         box-shadow: var(--tlp-shadow-focus);
     }
 }
@@ -332,7 +332,7 @@ $tlp-form-element-select-small-background-size: 6px;
 
     &.list-picker-with-open-dropdown .list-picker-selection {
         border-radius: $tlp-form-element-border-radius $tlp-form-element-border-radius 0 0;
-        border-color: var(--tlp-theme-color);
+        border-color: var(--tlp-main-color);
     }
 
     &.list-picker-with-open-dropdown {
@@ -393,13 +393,13 @@ $tlp-form-element-select-small-background-size: 6px;
 .list-picker-dropdown {
     z-index: 2002;
     padding: 0;
-    border-right: 1px solid var(--tlp-theme-color);
-    border-bottom: 1px solid var(--tlp-theme-color);
-    border-left: 1px solid var(--tlp-theme-color);
+    border-right: 1px solid var(--tlp-main-color);
+    border-bottom: 1px solid var(--tlp-main-color);
+    border-left: 1px solid var(--tlp-main-color);
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
 
     &.list-picker-dropdown-above {
-        border-top: 1px solid var(--tlp-theme-color);
+        border-top: 1px solid var(--tlp-main-color);
         border-bottom: unset;
         box-shadow: 0 0 12px rgba(0, 0, 0, 0.175);
     }
@@ -444,7 +444,7 @@ $tlp-form-element-select-small-background-size: 6px;
 
 .list-picker-dropdown-option-value {
     &.list-picker-item-highlighted {
-        background-color: var(--tlp-theme-color);
+        background-color: var(--tlp-main-color);
         color: var(--tlp-ui-white);
     }
 
@@ -461,7 +461,7 @@ $tlp-form-element-select-small-background-size: 6px;
     &[aria-selected="true"] {
         position: relative;
         padding: 6px $tlp-form-element-padding-horizontal 6px 32px;
-        color: var(--tlp-theme-color);
+        color: var(--tlp-main-color);
 
         &.list-picker-item-highlighted {
             color: var(--tlp-ui-white);
@@ -507,13 +507,13 @@ $tlp-form-element-select-small-background-size: 6px;
         &.select2-container--above .select2-selection--single,
         &.select2-container--above .select2-selection--multiple {
             border-radius: 0 0 $tlp-form-element-border-radius $tlp-form-element-border-radius;
-            border-color: var(--tlp-theme-color);
+            border-color: var(--tlp-main-color);
         }
 
         &.select2-container--below .select2-selection--single,
         &.select2-container--below .select2-selection--multiple {
             border-radius: $tlp-form-element-border-radius $tlp-form-element-border-radius 0 0;
-            border-color: var(--tlp-theme-color);
+            border-color: var(--tlp-main-color);
         }
 
         .select2-dropdown--above {
@@ -628,7 +628,7 @@ $tlp-form-element-select-small-background-size: 6px;
     .select2-dropdown {
         z-index: 2002;
         padding: 0;
-        border-color: var(--tlp-theme-color);
+        border-color: var(--tlp-main-color);
         box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
 
         .select2-search--dropdown {
@@ -686,14 +686,14 @@ $tlp-form-element-select-small-background-size: 6px;
 
             //stylelint-disable-next-line selector-class-pattern
             &.select2-results__option--highlighted {
-                background: var(--tlp-theme-color);
+                background: var(--tlp-main-color);
                 color: var(--tlp-ui-white);
             }
 
             &[aria-selected="true"] {
                 position: relative;
                 padding: 6px $tlp-form-element-padding-horizontal 6px 32px;
-                color: var(--tlp-theme-color);
+                color: var(--tlp-main-color);
 
                 &::before {
                     content: "\f00c"; // fa-check
@@ -856,7 +856,7 @@ span.select2-container--tlp-select2-large {
 
         &:focus {
             transition: outline-color $tlp-form-element-border-transition-duration linear;
-            outline: 1px solid var(--tlp-theme-color);
+            outline: 1px solid var(--tlp-main-color);
         }
     }
 
@@ -885,8 +885,8 @@ span.select2-container--tlp-select2-large {
         padding: 0 $tlp-form-element-padding-horizontal;
         transition: border-color $tlp-form-element-border-transition-duration linear;
         border: 1px solid $tlp-form-element-border-color;
-        background: var(--tlp-theme-color-transparent-90);
-        color: var(--tlp-theme-color);
+        background: var(--tlp-main-color-transparent-90);
+        color: var(--tlp-main-color);
         font-size: $tlp-form-element-font-size;
         font-weight: 600;
         vertical-align: middle;

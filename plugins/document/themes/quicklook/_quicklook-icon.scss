@@ -20,12 +20,12 @@
 .quick-look-pane-highlighted .document-quick-look-icon-container {
     > .document-quick-look-dropzone-text {
         opacity: 0.85;
-        color: var(--tlp-theme-color);
+        color: var(--tlp-main-color);
     }
 
     > .document-quick-look-icon {
         opacity: 0.85;
-        color: var(--tlp-theme-color);
+        color: var(--tlp-main-color);
 
         &::after {
             transform: scale(1);

@@ -22,12 +22,12 @@
 /* stylelint-disable selector-no-qualifying-type */
 div.milestones > fieldset.milestone {
     legend {
-        border-bottom-color: var(--tlp-theme-color);
-        color: var(--tlp-theme-color);
+        border-bottom-color: var(--tlp-main-color);
+        color: var(--tlp-main-color);
 
         > span.status {
             &.open {
-                background-color: var(--tlp-theme-color);
+                background-color: var(--tlp-main-color);
             }
         }
     }
@@ -42,18 +42,18 @@ div.milestones > fieldset.milestone {
 
 .tuleap-artifact-modal {
     .followups-title {
-        color: var(--tlp-theme-color);
+        color: var(--tlp-main-color);
     }
 
     .modal-body fieldset > legend {
-        border-bottom-color: var(--tlp-theme-color);
-        color: var(--tlp-theme-color);
+        border-bottom-color: var(--tlp-main-color);
+        color: var(--tlp-main-color);
     }
 }
 
 /* stylelint-disable-next-line selector-no-qualifying-type */
 #details .table > tbody > tr:hover > td.agiledashboard-milestone-details-items-list-is-closed {
-    background: var(--tlp-theme-color-transparent-90);
+    background: var(--tlp-main-color-transparent-90);
 }
 
 /* stylelint-disable selector-no-qualifying-type, selector-class-pattern */

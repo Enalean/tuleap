@@ -86,7 +86,7 @@ body.homepage > #main-container {
 
 .homepage-welcome-standard-logo-tulip {
     margin: 0 18px 0 0;
-    fill: var(--tlp-theme-color);
+    fill: var(--tlp-main-color);
 }
 
 .homepage-welcome-standard-logo-tuleap {
@@ -135,7 +135,7 @@ body.homepage > #main-container {
     align-items: center;
     width: 380px;
     padding: 30px 40px 40px;
-    border: 1px solid var(--tlp-theme-color);
+    border: 1px solid var(--tlp-main-color);
     border-radius: 4px;
     background: var(--tlp-ui-white);
     box-shadow: 0 8px 15px 0 transparentize(#000000, 0.95);
@@ -145,13 +145,13 @@ body.homepage > #main-container {
     width: 100%;
 
     > .tlp-form-element > .tlp-input {
-        border-color: var(--tlp-theme-color);
+        border-color: var(--tlp-main-color);
     }
 }
 
 .homepage-sign-in-title {
     margin: 0 0 40px;
-    color: var(--tlp-theme-color);
+    color: var(--tlp-main-color);
     font-size: 40px;
     font-weight: 400;
 }
@@ -199,16 +199,16 @@ body.homepage > #main-container {
 }
 
 .homepage-background-stroke {
-    stroke: var(--tlp-theme-color);
+    stroke: var(--tlp-main-color);
 }
 
 .homepage-background-dark-circle {
-    stroke: var(--tlp-theme-color);
+    stroke: var(--tlp-main-color);
     fill: var(--tlp-theme-dark-background-color);
 }
 
 .homepage-background-light-circle {
-    stroke: var(--tlp-theme-color);
+    stroke: var(--tlp-main-color);
     fill: var(--tlp-ui-white);
 }
 
@@ -250,7 +250,7 @@ body.homepage > #main-container {
     margin: 10px;
     padding: 30px;
     overflow: hidden;
-    border: 1px solid var(--tlp-theme-color);
+    border: 1px solid var(--tlp-main-color);
     border-radius: 3px;
     background: var(--tlp-theme-dark-background-color);
     color: var(--tlp-ui-white);
@@ -321,7 +321,7 @@ body.homepage > #main-container {
 
 .homepage-news-container-title {
     margin: 0 0 40px;
-    color: var(--tlp-theme-color-lighter-90);
+    color: var(--tlp-main-color-lighter-90);
     font-size: 42px;
 }
 

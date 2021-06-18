@@ -51,7 +51,7 @@ $codemirror-like-line-numbers-color: #8c8c8c;
 .git-repository-blob-body {
     overflow-x: auto;
     overflow-y: hidden;
-    background: var(--tlp-theme-color-dimmed-background);
+    background: var(--tlp-main-color-dimmed-background);
 }
 
 .git-repository-blob-image {
@@ -101,12 +101,12 @@ $codemirror-like-line-numbers-color: #8c8c8c;
     color: $codemirror-like-line-numbers-color;
 
     &:target {
-        background: var(--tlp-theme-color-transparent-50);
+        background: var(--tlp-main-color-transparent-50);
         color: var(--tlp-ui-white);
     }
 
     &:hover {
-        background: var(--tlp-theme-color);
+        background: var(--tlp-main-color);
         color: var(--tlp-ui-white);
         text-decoration: none;
     }
@@ -143,7 +143,7 @@ $above-highlight-line: 2;
     position: absolute;
     width: 100%;
     margin-left: -10px;
-    background: linear-gradient(to right, var(--tlp-theme-color-transparent-90) 60%, transparent 70%);
+    background: linear-gradient(to right, var(--tlp-main-color-transparent-90) 60%, transparent 70%);
 
     &.shown {
         display: block;

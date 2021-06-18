@@ -76,7 +76,7 @@
         left: 9px;
         width: 2px;
         height: 70%;
-        background-image: linear-gradient(to bottom, var(--tlp-ui-border-normal), var(--tlp-theme-color));
+        background-image: linear-gradient(to bottom, var(--tlp-ui-border-normal), var(--tlp-main-color));
     }
 
     > .document-metadata-recursion-option-arrow {
@@ -85,11 +85,11 @@
         left: 9px;
 
         > path {
-            fill: var(--tlp-theme-color);
+            fill: var(--tlp-main-color);
         }
     }
 
     > .tlp-label {
-        color: var(--tlp-theme-color);
+        color: var(--tlp-main-color);
     }
 }

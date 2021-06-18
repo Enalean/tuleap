@@ -44,7 +44,7 @@
 }
 
 .quick-look-pane-highlighted {
-    @include quick-look-pane-highlighted(var(--tlp-theme-color-transparent-15));
+    @include quick-look-pane-highlighted(var(--tlp-main-color-transparent-15));
 }
 
 .quick-look-pane-highlighted-forbidden {

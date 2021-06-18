@@ -55,7 +55,7 @@ h1 {
 }
 
 h2 {
-    color: var(--tlp-theme-color);
+    color: var(--tlp-main-color);
     font-size: 28px;
     font-weight: 400;
     line-height: 36px;
@@ -131,7 +131,7 @@ ol {
 }
 
 a {
-    color: var(--tlp-theme-color);
+    color: var(--tlp-main-color);
     text-decoration: none;
 
     &:hover,
@@ -186,8 +186,8 @@ blockquote {
 }
 
 %tlp-code {
-    background: var(--tlp-theme-color-transparent-90);
-    color: var(--tlp-theme-color);
+    background: var(--tlp-main-color-transparent-90);
+    color: var(--tlp-main-color);
     font-family: var(--tlp-font-family-mono);
     font-size: 0.875rem;
     font-weight: 400;
@@ -222,7 +222,7 @@ pre {
     @extend %tlp-code;
 
     padding: 5px 3px 5px calc(var(--tlp-medium-spacing) / 2);
-    border-left: 5px solid var(--tlp-theme-color-transparent-50);
+    border-left: 5px solid var(--tlp-main-color-transparent-50);
 
     code {
         padding: 0;

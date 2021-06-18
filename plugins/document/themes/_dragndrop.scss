@@ -34,11 +34,11 @@
     pointer-events: none;
 
     &.shown-success {
-        box-shadow: inset 0 0 0 var(--tlp-small-spacing) var(--tlp-shadow-theme-color);
+        box-shadow: inset 0 0 0 var(--tlp-small-spacing) var(--tlp-shadow-main-color);
 
         > .document-upload-to-current-folder-message {
             transform: translateY(calc(-1 * var(--tlp-small-spacing)));
-            background: var(--tlp-shadow-theme-color);
+            background: var(--tlp-shadow-main-color);
         }
     }
 

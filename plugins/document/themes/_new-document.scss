@@ -84,10 +84,10 @@
 }
 
 .document-new-item-type.document-new-item-type-checked {
-    border: 1px solid var(--tlp-theme-color);
+    border: 1px solid var(--tlp-main-color);
 
     > .document-new-item-type-label {
-        color: var(--tlp-theme-color);
+        color: var(--tlp-main-color);
     }
 
     &::before {

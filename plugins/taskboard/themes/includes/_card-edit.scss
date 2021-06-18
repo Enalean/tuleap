@@ -34,7 +34,7 @@
     align-items: center;
     justify-content: flex-end;
     transition: color ease-in-out 100ms;
-    color: var(--tlp-theme-color);
+    color: var(--tlp-main-color);
 
     > .taskboard-card-assignees-avatars:last-child {
         margin: -3px 0 8px 5px;
@@ -45,7 +45,7 @@
 
         &:hover,
         &:focus {
-            color: var(--tlp-theme-color-darker-15);
+            color: var(--tlp-main-color-darker-15);
         }
     }
 
@@ -120,7 +120,7 @@
         }
 
         &:focus {
-            background: var(--tlp-theme-color-lighter-50);
+            background: var(--tlp-main-color-lighter-50);
         }
     }
 
@@ -143,12 +143,12 @@
 .taskboard-cell:first-child > .taskboard-cell-parent-card > .taskboard-card.taskboard-card-edit-mode,
 .taskboard-card.taskboard-card-edit-mode {
     margin: 0;
-    border: 1px solid var(--tlp-theme-color);
+    border: 1px solid var(--tlp-main-color);
     background: var(--tlp-theme-background-color-lighter-10);
 
     &::before,
     > .taskboard-card-progress {
-        background: var(--tlp-theme-color);
+        background: var(--tlp-main-color);
     }
 
     > .taskboard-card-edit-trigger {
@@ -164,15 +164,15 @@
 
         /* stylelint-disable-next-line selector-max-compound-selectors */
         > .taskboard-card-xref {
-            color: var(--tlp-theme-color);
+            color: var(--tlp-main-color);
         }
     }
 
     /* stylelint-disable-next-line selector-max-compound-selectors */
     > .taskboard-card-content > .taskboard-card-info > .taskboard-card-inital-effort {
-        border-color: var(--tlp-theme-color);
-        background: var(--tlp-theme-color-transparent-90);
-        color: var(--tlp-theme-color);
+        border-color: var(--tlp-main-color);
+        background: var(--tlp-main-color-transparent-90);
+        color: var(--tlp-main-color);
     }
 
     > .taskboard-card-accessibility {
@@ -184,7 +184,7 @@
     @include pencil-background(var(--tlp-theme-background-color));
 
     &:focus {
-        background: var(--tlp-theme-color-lighter-90);
+        background: var(--tlp-main-color-lighter-90);
     }
 }
 
@@ -221,7 +221,7 @@
 }
 
 .taskboard-child:focus > .taskboard-card {
-    outline: solid var(--tlp-theme-color) 2px;
+    outline: solid var(--tlp-main-color) 2px;
 }
 
 .taskboard-card-cancel-button {
@@ -303,7 +303,7 @@
     resize: none;
 
     &:focus {
-        border-color: var(--tlp-theme-color-transparent-70);
+        border-color: var(--tlp-main-color-transparent-70);
     }
 }
 

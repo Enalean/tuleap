@@ -26,7 +26,7 @@
     display: flex;
 
     &:hover {
-        background-color: var(--tlp-theme-color-transparent-90);
+        background-color: var(--tlp-main-color-transparent-90);
         cursor: pointer;
     }
 }
@@ -124,7 +124,7 @@
     display: flex;
     flex-direction: row;
     margin: var(--tlp-medium-spacing) var(--tlp-medium-spacing) var(--tlp-small-spacing);
-    color: var(--tlp-theme-color);
+    color: var(--tlp-main-color);
 }
 
 .timetracking-overview-reading-mode-trackers {
@@ -148,7 +148,7 @@
 
     > .timetracking-overview-project-icon {
         margin: 0 5px;
-        fill: var(--tlp-theme-color);
+        fill: var(--tlp-main-color);
     }
 }
 
@@ -188,11 +188,11 @@
 }
 
 .timetracking-details-modal-artifact-infos-project-name {
-    color: var(--tlp-theme-color);
+    color: var(--tlp-main-color);
 }
 
 .timetracking-details-link-to-open-modal {
-    color: var(--tlp-theme-color);
+    color: var(--tlp-main-color);
 }
 
 .timetracking-details-modal-artifact-infos-container {
@@ -269,7 +269,7 @@
     display: flex;
     align-items: center;
     margin: 0;
-    color: var(--tlp-theme-color);
+    color: var(--tlp-main-color);
     font-style: italic;
 }
 

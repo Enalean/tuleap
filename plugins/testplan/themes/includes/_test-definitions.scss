@@ -29,7 +29,7 @@
     border-top: 0;
     border-bottom-right-radius: 3px;
     border-bottom-left-radius: 3px;
-    background: var(--tlp-theme-color-dimmed-background);
+    background: var(--tlp-main-color-dimmed-background);
 }
 
 .test-plan-list-of-test-definitions-empty-text {
@@ -100,8 +100,8 @@
     align-self: center;
     padding: 1px 6px;
     border-radius: 3px;
-    background: var(--tlp-theme-color-hover-background);
-    color: var(--tlp-theme-color);
+    background: var(--tlp-main-color-hover-background);
+    color: var(--tlp-main-color);
     font-size: 12px;
     line-height: 18px;
     text-align: center;

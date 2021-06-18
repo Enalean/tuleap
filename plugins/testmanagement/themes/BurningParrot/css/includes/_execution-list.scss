@@ -252,7 +252,7 @@ $height-testmanagement-header: calc(var(--tlp-title-spacing) + var(--tlp-small-s
 
     &:focus-within {
         transition: border-color 0.15s linear;
-        border: 1px solid var(--tlp-theme-color);
+        border: 1px solid var(--tlp-main-color);
     }
 
     > .tests-list-filter-search {
@@ -344,7 +344,7 @@ $height-testmanagement-header: calc(var(--tlp-title-spacing) + var(--tlp-small-s
     margin: 0;
     padding: 5px 10px;
     background: var(--tlp-theme-background-color);
-    color: var(--tlp-theme-color);
+    color: var(--tlp-main-color);
     font-size: 13px;
     font-weight: 600;
     letter-spacing: 0.3px;
@@ -383,7 +383,7 @@ $height-testmanagement-header: calc(var(--tlp-title-spacing) + var(--tlp-small-s
 
     &:hover,
     &:focus {
-        background: var(--tlp-theme-color-transparent-90);
+        background: var(--tlp-main-color-transparent-90);
         text-decoration: none;
     }
 
@@ -416,7 +416,7 @@ $height-testmanagement-header: calc(var(--tlp-title-spacing) + var(--tlp-small-s
     min-height: 100%;
     margin: 0;
     overflow: hidden;
-    color: var(--tlp-theme-color-transparent-50);
+    color: var(--tlp-main-color-transparent-50);
     font-size: 24px;
 }
 
@@ -430,11 +430,11 @@ $height-testmanagement-header: calc(var(--tlp-title-spacing) + var(--tlp-small-s
 
 @keyframes test-is-back-in-viewport {
     0% {
-        background: var(--tlp-theme-color-transparent-90);
+        background: var(--tlp-main-color-transparent-90);
     }
 
     80% {
-        background: var(--tlp-theme-color-transparent-90);
+        background: var(--tlp-main-color-transparent-90);
     }
 
     100% {
