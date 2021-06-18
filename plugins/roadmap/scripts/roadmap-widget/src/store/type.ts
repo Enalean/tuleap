@@ -32,6 +32,7 @@ export interface State {
     should_display_empty_state: boolean;
     should_display_error_state: boolean;
     error_message: string;
+    show_closed_elements: boolean;
 }
 
 export interface RootState extends State {

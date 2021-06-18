@@ -26,6 +26,7 @@
                 v-model="dependencies_nature_to_display"
                 v-bind:available_natures="available_natures"
             />
+            <show-closed-control />
         </div>
         <div class="roadmap-gantt">
             <template v-for="(row, index) in rows">
@@ -174,6 +175,7 @@ import SubtaskHeader from "./Subtask/SubtaskHeader.vue";
 import SubtaskMessage from "./Subtask/SubtaskMessage.vue";
 import SubtaskMessageHeader from "./Subtask/SubtaskMessageHeader.vue";
 import IterationsRibbon from "./Iteration/IterationsRibbon.vue";
+import ShowClosedControl from "./ShowClosedControl.vue";
 
 const tasks = namespace("tasks");
 const iterations = namespace("iterations");
@@ -181,6 +183,7 @@ const timeperiod = namespace("timeperiod");
 
 @Component({
     components: {
+        ShowClosedControl,
         IterationsRibbon,
         SubtaskMessageHeader,
         SubtaskMessage,

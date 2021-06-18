@@ -57,3 +57,7 @@ async function getMessageFromRestError(rest_error: FetchWrapperError): Promise<s
 export function stopLoading(state: RootState): void {
     state.is_loading = false;
 }
+
+export function toggleClosedElements(state: RootState, show_closed_elements: boolean): void {
+    state.show_closed_elements = show_closed_elements;
+}

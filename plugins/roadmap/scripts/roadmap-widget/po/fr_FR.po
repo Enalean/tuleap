@@ -54,6 +54,9 @@ msgstr "Trimestre"
 msgid "Quarter %{ quarter } of %{ year }"
 msgstr "Trimestre %{ quarter } de %{ year }"
 
+msgid "Show closed items"
+msgstr "Afficher les éléments fermés"
+
 msgid "Start date"
 msgstr "Date de début"
 

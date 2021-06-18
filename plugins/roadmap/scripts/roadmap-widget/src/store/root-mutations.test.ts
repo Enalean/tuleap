@@ -85,4 +85,16 @@ describe("root-mutations", () => {
 
         expect(state.should_display_empty_state).toBe(true);
     });
+
+    it("should toggle the display of closed elements", () => {
+        const state: RootState = {
+            show_closed_elements: false,
+        } as RootState;
+
+        mutations.toggleClosedElements(state, true);
+        expect(state.show_closed_elements).toBe(true);
+
+        mutations.toggleClosedElements(state, false);
+        expect(state.show_closed_elements).toBe(false);
+    });
 });

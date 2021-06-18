@@ -25,6 +25,7 @@ import {
     SUBTASKS_ARE_LOADED,
     SUBTASKS_ARE_LOADING,
 } from "../../type";
+import type { RootState } from "../type";
 
 const NB_SKELETONS_FOR_SUBTASKS = 2;
 
@@ -32,8 +33,12 @@ export const does_at_least_one_task_have_subtasks = (state: TasksState): boolean
     return state.tasks.some((task) => task.has_subtasks);
 };
 
-export const rows = (state: TasksState): Row[] => {
+export const rows = (state: TasksState, getters: unknown, root_state: RootState): Row[] => {
     return state.tasks.reduce((rows: Row[], task): Row[] => {
+        if (!root_state.show_closed_elements && !task.is_open) {
+            return rows;
+        }
+
         rows.push({ task: task });
         if (!task.is_expanded) {
             return rows;
@@ -61,8 +66,12 @@ export const rows = (state: TasksState): Row[] => {
         }
 
         if (task.subtasks_loading_status === SUBTASKS_ARE_LOADED) {
-            const nb_subtasks = task.subtasks.length;
-            task.subtasks.forEach((subtask, index) => {
+            const subtasks_to_display = root_state.show_closed_elements
+                ? task.subtasks
+                : task.subtasks.filter((task) => task.is_open);
+
+            const nb_subtasks = subtasks_to_display.length;
+            subtasks_to_display.forEach((subtask, index) => {
                 const is_last_one = index === nb_subtasks - 1;
                 rows.push({ subtask, parent: task, is_last_one });
             });

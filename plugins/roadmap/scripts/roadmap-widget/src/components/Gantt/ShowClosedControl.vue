@@ -1,0 +1,65 @@
+<!--
+  - Copyright (c) Enalean, 2021 - present. All Rights Reserved.
+  -
+  - This file is a part of Tuleap.
+  -
+  - Tuleap is free software; you can redistribute it and/or modify
+  - it under the terms of the GNU General Public License as published by
+  - the Free Software Foundation; either version 2 of the License, or
+  - (at your option) any later version.
+  -
+  - Tuleap is distributed in the hope that it will be useful,
+  - but WITHOUT ANY WARRANTY; without even the implied warranty of
+  - MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  - GNU General Public License for more details.
+  -
+  - You should have received a copy of the GNU General Public License
+  - along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+  -
+  -->
+
+<template>
+    <div class="tlp-form-element roadmap-gantt-control roadmap-gantt-control-mini-switch">
+        <label class="tlp-label roadmap-gantt-control-label" v-bind:for="id" v-translate>
+            Show closed items
+        </label>
+
+        <div class="tlp-switch tlp-switch-mini">
+            <input
+                type="checkbox"
+                v-bind:id="id"
+                class="tlp-switch-checkbox"
+                v-model="is_checked"
+                v-on:change="toggleClosedElements(is_checked)"
+                data-test="input"
+            />
+            <label v-bind:for="id" class="tlp-switch-button" v-translate>Show closed items</label>
+        </div>
+    </div>
+</template>
+
+<script lang="ts">
+import Vue from "vue";
+import { Component } from "vue-property-decorator";
+import { getUniqueId } from "../../helpers/uniq-id-generator";
+import { Mutation, State } from "vuex-class";
+
+@Component
+export default class ShowClosedControl extends Vue {
+    @State
+    private readonly show_closed_elements!: boolean;
+
+    @Mutation
+    private readonly toggleClosedElements!: (show_closed_elements: boolean) => void;
+
+    private is_checked = true;
+
+    mounted(): void {
+        this.is_checked = this.show_closed_elements;
+    }
+
+    get id(): string {
+        return getUniqueId("roadmap-gantt-show-closed");
+    }
+}
+</script>

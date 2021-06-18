@@ -30,58 +30,23 @@ use Tuleap\REST\JsonCast;
  */
 final class TaskRepresentation
 {
-    /**
-     * @var int
-     */
-    public $id;
-    /**
-     * @var string
-     */
-    public $xref;
-    /**
-     * @var string
-     */
-    public $html_url;
-    /**
-     * @var string
-     */
-    public $title;
-    /**
-     * @var string
-     */
-    public $color_name;
-    /**
-     * @var float|null
-     */
-    public $progress;
-    /**
-     * @var string
-     */
-    public $progress_error_message;
-    /**
-     * @var string|null
-     */
-    public $start;
-    /**
-     * @var string|null
-     */
-    public $end;
+    public int $id;
+    public string $xref;
+    public string $html_url;
+    public string $title;
+    public string $color_name;
+    public ?float $progress;
+    public string $progress_error_message;
+    public ?string $start;
+    public ?string $end;
     /**
      * @var array<string, int[]>
      */
-    public $dependencies;
-    /**
-     * @var string
-     */
-    public $subtasks_uri;
-    /**
-     * @var ProjectReference
-     */
-    public $project;
-    /**
-     * @var bool
-     */
-    public $are_dates_implied;
+    public array $dependencies;
+    public string $subtasks_uri;
+    public ProjectReference $project;
+    public bool $are_dates_implied;
+    public bool $is_open;
 
     public string $time_period_error_message;
 
@@ -99,6 +64,7 @@ final class TaskRepresentation
         ?\DateTimeImmutable $start,
         ?\DateTimeImmutable $end,
         bool $are_dates_implied,
+        bool $is_open,
         string $time_period_error_message,
         array $dependencies,
         ProjectReference $project
@@ -112,6 +78,7 @@ final class TaskRepresentation
         $this->start      = JsonCast::fromDateTimeToDate($start);
         $this->end        = JsonCast::fromDateTimeToDate($end);
         $this->project    = $project;
+        $this->is_open    = $is_open;
 
         $this->are_dates_implied         = $are_dates_implied;
         $this->time_period_error_message = $time_period_error_message;
