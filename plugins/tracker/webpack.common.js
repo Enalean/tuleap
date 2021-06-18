@@ -59,8 +59,6 @@ const config_for_flaming_parrot = {
         "tracker-creation-success": "./scripts/tracker-creation-success-modal/index.ts",
         "tracker-email-copy-paste-fp": "./scripts/artifact/tracker-email-copy-paste-fp.ts",
         "tracker-report-expert-mode": "./scripts/report/index.js",
-        "tracker-semantic-timeframe-option-selector":
-            "./scripts/semantics/timeframe/semantic-timeframe-option-selector.ts",
         "tracker-semantic-progress-options-selector":
             "./scripts/semantics/progress/admin-selectors.ts",
         "tracker-admin-fields-permissions": "./scripts/tracker-admin/admin-fields-permissions",
@@ -88,6 +86,7 @@ const config_for_vue_flaming_parrot = {
     entry: {
         MoveArtifactModal: "./scripts/artifact-action-buttons/src/index.js",
         TrackerAdminFields: "./scripts/TrackerAdminFields.js",
+        "tracker-semantic-timeframe-option-selector": "./scripts/semantics/timeframe/index.ts",
     },
     context,
     output,
@@ -96,12 +95,20 @@ const config_for_vue_flaming_parrot = {
         jquery: "jQuery",
     },
     resolve: {
-        extensions: [".js", ".vue"],
+        extensions: [".js", ".ts", ".vue"],
     },
     module: {
-        rules: [webpack_configurator.rule_easygettext_loader, webpack_configurator.rule_vue_loader],
+        rules: [
+            ...webpack_configurator.configureTypescriptRules(),
+            webpack_configurator.rule_easygettext_loader,
+            webpack_configurator.rule_vue_loader,
+        ],
     },
-    plugins: [manifest_plugin, webpack_configurator.getVueLoaderPlugin()],
+    plugins: [
+        manifest_plugin,
+        webpack_configurator.getVueLoaderPlugin(),
+        webpack_configurator.getTypescriptCheckerPlugin(true),
+    ],
     resolveLoader: {
         alias: webpack_configurator.easygettext_loader_alias,
     },

@@ -23,9 +23,8 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Semantic\Timeframe\Administration;
 
 use Tracker;
-use Tracker_FormElement_Field_Date;
-use Tracker_FormElement_Field_Numeric;
 use Tuleap\Tracker\Semantic\Timeframe\Events\DoesAPluginRenderAChartBasedOnSemanticTimeframeForTrackerEvent;
+use Tuleap\Tracker\Semantic\Timeframe\IComputeTimeframes;
 
 class SemanticTimeframeAdministrationPresenterBuilder
 {
@@ -44,55 +43,19 @@ class SemanticTimeframeAdministrationPresenterBuilder
         Tracker $tracker,
         string $target_url,
         SemanticTimeframeCurrentConfigurationPresenter $configuration_presenter,
-        ?Tracker_FormElement_Field_Date $start_date_field,
-        ?Tracker_FormElement_Field_Numeric $duration_field,
-        ?Tracker_FormElement_Field_Date $end_date_field
+        IComputeTimeframes $timeframe
     ): SemanticTimeframeAdministrationPresenter {
-        $usable_start_date_fields = $this->buildSelectBoxEntries(
-            $this->tracker_formelement_factory->getUsedFormElementsByType($tracker, ['date']),
-            $start_date_field
-        );
-
-        $usable_end_date_fields = $this->buildSelectBoxEntries(
-            $this->tracker_formelement_factory->getUsedFormElementsByType($tracker, ['date']),
-            $end_date_field
-        );
-
-        $usable_numeric_fields = $this->buildSelectBoxEntries(
-            $this->tracker_formelement_factory->getUsedFormElementsByType($tracker, ['int', 'float', 'computed']),
-            $duration_field
-        );
-
-        $has_tracker_charts                      = $this->doesTrackerHaveCharts($tracker);
-        $is_semantic_in_start_date_duration_mode = $duration_field !== null;
-
         return new SemanticTimeframeAdministrationPresenter(
             $csrf,
             $tracker,
             $target_url,
-            $has_tracker_charts,
-            $is_semantic_in_start_date_duration_mode,
-            $usable_start_date_fields,
-            $usable_end_date_fields,
-            $usable_numeric_fields,
-            $start_date_field,
-            $duration_field,
-            $end_date_field,
+            $this->doesTrackerHaveCharts($tracker),
+            $this->tracker_formelement_factory->getUsedFormElementsByType($tracker, ['date']),
+            $this->tracker_formelement_factory->getUsedFormElementsByType($tracker, ['int', 'float', 'computed']),
+            $timeframe,
             $configuration_presenter
         );
     }
-
-    private function buildSelectBoxEntries(array $fields, ?\Tracker_FormElement_Field $current_field): array
-    {
-        return array_map(function (\Tracker_FormElement_Field $field) use ($current_field) {
-            return [
-                'id'          => $field->getId(),
-                'label'       => $field->getLabel(),
-                'is_selected' => $current_field && (int) $field->getId() === (int) $current_field->getId()
-            ];
-        }, $fields);
-    }
-
 
     private function doesTrackerHaveCharts(Tracker $tracker): bool
     {

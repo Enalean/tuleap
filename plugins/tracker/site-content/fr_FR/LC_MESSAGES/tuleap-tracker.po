@@ -1340,9 +1340,6 @@ msgstr "Les valeurs finies ont été mises à jour avec succès."
 msgid "Duplicate this artifact"
 msgstr "Dupliquer cet artefact"
 
-msgid "Duration"
-msgstr "Durée"
-
 msgid "Dynamic fields"
 msgstr "Champs dynamiques"
 
@@ -1429,9 +1426,6 @@ msgstr "Autoriser la création/réponse à des artéfacts par courriel"
 
 msgid "End"
 msgstr "Fin"
-
-msgid "End date"
-msgstr "Date de fin"
 
 msgid "Enter artifact ids separated with a comma"
 msgstr "Entrez des ids d'artefacts séparés par une virgule"
@@ -2759,9 +2753,6 @@ msgstr "L'id source n'existe pas."
 msgid "Start"
 msgstr "Début"
 
-msgid "Start date"
-msgstr "Date de début"
-
 msgid "Start using my tracker"
 msgstr "Commencer à utiliser mon outil de suivi"
 
@@ -3479,9 +3470,6 @@ msgstr "Le champ texte '%s' ne peut pas être comparé à NOW()."
 #, php-format
 msgid "The text field '%s' cannot be compared to OPEN()."
 msgstr "Le champ texte '%s' ne peut pas être comparé à OPEN()."
-
-msgid "The timeframe of an artifact will be defined by:"
-msgstr "La plage de temps d'un artéfact sera définie par :"
 
 #, php-format
 msgid "The title is now: %1$s"
@@ -4436,13 +4424,6 @@ msgid ""
 msgstr ""
 "Vous ne pouvez pas réinitialiser cette sémantique car certains outils de "
 "suivi basent leurs propres sémantiques Plage de temps sur celle ci."
-
-msgid ""
-"You cannot reset this semantic because this tracker has a burnup, burndown "
-"or another chart rendered by an external plugin"
-msgstr ""
-"Vous ne pouvez pas réinitialiser cette sémantique car ce tracker a un "
-"burnup, burndown ou un autre graphique généré par un plugin externe"
 
 msgid "You do not have the necessary right to edit this artifact."
 msgstr "Vous n'avez pas les droits nécessaires pour l'édition de cet artefact."

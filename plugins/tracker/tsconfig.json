@@ -8,6 +8,7 @@
         "scripts/tracker-creation/**/*",
         "scripts/tracker-homepage/**/*",
         "scripts/artifact/**/*",
-        "scripts/form-element/**/*"
+        "scripts/form-element/**/*",
+        "scripts/semantics/timeframe/**/*"
     ]
 }
