@@ -67,7 +67,7 @@ header.pinned > .header-container {
     font-weight: 500;
 
     &:hover {
-        color: var(--tlp-theme-dark-background-color);
+        color: var(--tlp-dark-color);
         text-decoration: none;
     }
 }
@@ -76,7 +76,7 @@ header.pinned > .header-container {
     width: $dropdown-width;
 
     > .tlp-popover-arrow {
-        background: var(--tlp-theme-dark-background-color);
+        background: var(--tlp-dark-color);
     }
 
     > .tlp-popover-header {
@@ -84,7 +84,7 @@ header.pinned > .header-container {
         align-items: center;
         min-height: 4px;
         padding: 0 var(--tlp-small-spacing);
-        background: var(--tlp-theme-dark-background-color);
+        background: var(--tlp-dark-color);
     }
 
     > .tlp-popover-body {

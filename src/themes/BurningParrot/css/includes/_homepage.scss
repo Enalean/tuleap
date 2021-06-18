@@ -21,7 +21,7 @@ $homepage-small-screen-width: 850px;
 
 /* stylelint-disable-next-line selector-no-qualifying-type */
 body.homepage > #main-container {
-    background: linear-gradient(to bottom, var(--tlp-theme-background-color) 300px, var(--tlp-theme-dark-background-color) 300px);
+    background: linear-gradient(to bottom, var(--tlp-theme-background-color) 300px, var(--tlp-dark-color) 300px);
 
     /* stylelint-disable-next-line selector-no-qualifying-type */
     > main > #feedback {
@@ -92,12 +92,12 @@ body.homepage > #main-container {
 .homepage-welcome-standard-logo-tuleap {
     position: relative;
     top: 8px;
-    fill: var(--tlp-theme-dark-background-color);
+    fill: var(--tlp-dark-color);
 }
 
 .homepage-welcome-title {
     margin: 0 0 30px;
-    color: var(--tlp-theme-dark-background-color);
+    color: var(--tlp-dark-color);
     font-size: 30px;
     font-weight: 600;
     line-height: 38px;
@@ -105,7 +105,7 @@ body.homepage > #main-container {
 
 .homepage-welcome-text {
     margin: 0 0 30px;
-    color: var(--tlp-theme-dark-background-color);
+    color: var(--tlp-dark-color);
     font-size: 18px;
     line-height: 30px;
 
@@ -175,7 +175,7 @@ body.homepage > #main-container {
 
 .homepage-already-signed-in-title {
     margin: 0 0 40px;
-    color: var(--tlp-theme-dark-background-color);
+    color: var(--tlp-dark-color);
     line-height: 38px;
     text-align: center;
 }
@@ -195,7 +195,7 @@ body.homepage > #main-container {
 }
 
 .homepage-background-illustration-background {
-    fill: var(--tlp-theme-dark-background-color);
+    fill: var(--tlp-dark-color);
 }
 
 .homepage-background-stroke {
@@ -204,7 +204,7 @@ body.homepage > #main-container {
 
 .homepage-background-dark-circle {
     stroke: var(--tlp-main-color);
-    fill: var(--tlp-theme-dark-background-color);
+    fill: var(--tlp-dark-color);
 }
 
 .homepage-background-light-circle {
@@ -252,7 +252,7 @@ body.homepage > #main-container {
     overflow: hidden;
     border: 1px solid var(--tlp-main-color);
     border-radius: 3px;
-    background: var(--tlp-theme-dark-background-color);
+    background: var(--tlp-dark-color);
     color: var(--tlp-ui-white);
 }
 
@@ -381,5 +381,5 @@ body.homepage > #main-container {
     position: relative;
     z-index: 3;
     background: none;
-    background-image: linear-gradient(to bottom, var(--tlp-theme-dark-background-color), var(--tlp-theme-dark-background-color-darker-10));
+    background-image: linear-gradient(to bottom, var(--tlp-dark-color), var(--tlp-dark-color-darker-10));
 }

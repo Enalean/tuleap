@@ -20,7 +20,7 @@
 .admin-sidebar-section {
     flex: 0 0 auto;
     padding: var(--tlp-medium-spacing) 0;
-    border-top: 1px solid var(--tlp-theme-dark-background-color-lighter-05);
+    border-top: 1px solid var(--tlp-dark-color-lighter-05);
 
     &:first-child {
         border-top: 0;
@@ -55,7 +55,7 @@
 }
 
 .tlp-search.tlp-search-small.admin-sidebar-search {
-    border-color: var(--tlp-theme-dark-background-color-darker-10);
+    border-color: var(--tlp-dark-color-darker-10);
     background: transparentize(#ffffff, 0.95) url("../images/admin-sidebar-search-background.png") no-repeat 10px center;
     color: transparentize(#ffffff, 0.2);
 }
@@ -78,7 +78,7 @@
     }
 
     &:hover {
-        background: var(--tlp-theme-dark-background-color-darker);
+        background: var(--tlp-dark-color-darker-20);
         text-decoration: none;
     }
 }

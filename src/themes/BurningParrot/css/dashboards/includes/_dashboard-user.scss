@@ -1,4 +1,4 @@
-$dashboard-header-background: var(--tlp-theme-dark-background-color-lighter-05);
+$dashboard-header-background: var(--tlp-dark-color-lighter-05);
 
 .body-user-dashboard {
     header:not(.pinned) {
@@ -23,17 +23,17 @@ $dashboard-header-background: var(--tlp-theme-dark-background-color-lighter-05);
     #nav-dropdown-user-content,
     #nav-dropdown-new-content {
         > .tlp-popover-arrow {
-            background: var(--tlp-theme-dark-background-color-lighter-10);
+            background: var(--tlp-dark-color-lighter-10);
         }
 
         > .tlp-popover-header {
-            background: var(--tlp-theme-dark-background-color-lighter-10);
+            background: var(--tlp-dark-color-lighter-10);
         }
     }
 
     .dashboard-tabs {
         padding: 0 calc(var(--tlp-medium-spacing) + 4px);
-        background: var(--tlp-theme-dark-background-color-lighter-05);
+        background: var(--tlp-dark-color-lighter-05);
         box-shadow: none;
 
         > .tlp-tab {

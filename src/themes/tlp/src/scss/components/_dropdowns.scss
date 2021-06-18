@@ -56,7 +56,7 @@ $tlp-dropdown-transition: 75ms ease-out;
 
     &::before {
         bottom: calc(100% + 1px);
-        border-bottom-color: var(--tlp-theme-dark-background-color-transparent-90);
+        border-bottom-color: var(--tlp-dark-color-transparent-90);
     }
 
     &::after {
@@ -74,7 +74,7 @@ $tlp-dropdown-transition: 75ms ease-out;
 
         &::before {
             top: calc(100% + 1px);
-            border-top-color: var(--tlp-theme-dark-background-color-transparent-90);
+            border-top-color: var(--tlp-dark-color-transparent-90);
             border-bottom-color: transparent;
         }
 

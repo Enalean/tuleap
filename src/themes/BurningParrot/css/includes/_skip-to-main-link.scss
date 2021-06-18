@@ -20,10 +20,10 @@
 @import "../../../common/css/utils/skip-to-main-link";
 
 .skip-to-main-link {
-    border-color: var(--tlp-theme-dark-background-color);
+    border-color: var(--tlp-dark-color);
 
     a,
     a:focus {
-        background: var(--tlp-theme-dark-background-color);
+        background: var(--tlp-dark-color);
     }
 }

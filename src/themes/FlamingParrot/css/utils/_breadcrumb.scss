@@ -20,7 +20,7 @@
 $step-transition-duration: 75ms;
 
 $step-background: var(--tlp-ui-white);
-$step-color: var(--tlp-theme-dark-background-color);
+$step-color: var(--tlp-dark-color);
 $step-active-color: var(--tlp-main-color);
 $step-active-background: var(--tlp-main-color-transparent-90);
 
@@ -135,7 +135,7 @@ $switch-menu-item-hover-color: var(--tlp-main-color);
 .breadcrumb-switch-menu {
     border-radius: 4px;
     background: $switch-menu-background;
-    box-shadow: 0 0 0 1px var(--tlp-theme-dark-background-color-transparent-90), 0 6px 12px -5px var(--tlp-theme-dark-background-color-transparent-85);
+    box-shadow: 0 0 0 1px var(--tlp-dark-color-transparent-90), 0 6px 12px -5px var(--tlp-dark-color-transparent-85);
 }
 
 .breadcrumb-dropdown-item {
@@ -224,8 +224,8 @@ $switch-menu-item-hover-color: var(--tlp-main-color);
 
     &.fa-lock-open,
     &.fa-tlp-unlock-plus-r {
-        background: var(--tlp-theme-dark-background-color-transparent-90);
-        color: var(--tlp-theme-dark-background-color-transparent-30);
+        background: var(--tlp-dark-color-transparent-90);
+        color: var(--tlp-dark-color-transparent-30);
     }
 }
 
@@ -249,11 +249,11 @@ $switch-menu-item-hover-color: var(--tlp-main-color);
 
     &[data-privacy-icon="fa-lock-open"],
     &[data-privacy-icon="fa-tlp-unlock-plus-r"] {
-        background: var(--tlp-theme-dark-background-color-transparent-90);
-        color: var(--tlp-theme-dark-background-color-transparent-30);
+        background: var(--tlp-dark-color-transparent-90);
+        color: var(--tlp-dark-color-transparent-30);
 
         > .fas {
-            color: var(--tlp-theme-dark-background-color-transparent-30);
+            color: var(--tlp-dark-color-transparent-30);
         }
     }
 

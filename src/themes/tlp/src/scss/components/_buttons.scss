@@ -183,7 +183,7 @@ $tlp-button-secondary-box-shadow: rgba(0, 0, 0, 0.05);
     @extend %tlp-button;
     border-color: var(--tlp-ui-border-light);
     background: var(--tlp-ui-border-light);
-    color: var(--tlp-theme-dark-background-color);
+    color: var(--tlp-dark-color);
 
     &:hover,
     &:focus {
@@ -202,7 +202,7 @@ $tlp-button-secondary-box-shadow: rgba(0, 0, 0, 0.05);
     }
 
     &.tlp-button-outline {
-        @include tlp-button-outline(var(--tlp-theme-dark-background-color), var(--tlp-theme-dark-background-color-transparent-50), var(--tlp-theme-dark-background-color-lighter-90));
+        @include tlp-button-outline(var(--tlp-dark-color), var(--tlp-dark-color-transparent-50), var(--tlp-dark-color-lighter-90));
     }
 }
 

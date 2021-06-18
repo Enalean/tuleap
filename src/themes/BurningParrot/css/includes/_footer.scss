@@ -4,7 +4,7 @@ $footer-white: #e5e8e9;
     display: flex;
     justify-content: center;
     padding: 15px 0;
-    background: var(--tlp-theme-dark-background-color);
+    background: var(--tlp-dark-color);
     color: transparentize($footer-white, 0.4);
 }
 

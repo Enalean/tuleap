@@ -133,13 +133,13 @@ kanban-item {
     position: relative;
     border-radius: 4px;
     background: var(--tlp-ui-white);
-    box-shadow: 0 4px 4px -3px var(--tlp-theme-dark-background-color-transparent-90);
+    box-shadow: 0 4px 4px -3px var(--tlp-dark-color-transparent-90);
     cursor: move;
 
     @each $color-name, $colors in swatch-colors.$tlp-swatch-color-map {
         &.#{$color-name} {
             background: map-get($colors, "secondary");
-            box-shadow: inset 0 0 0 1px map-get($colors, "border"), 0 4px 4px -3px var(--tlp-theme-dark-background-color-transparent-85);
+            box-shadow: inset 0 0 0 1px map-get($colors, "border"), 0 4px 4px -3px var(--tlp-dark-color-transparent-85);
 
             .kanban-item-content-info-link,
             .kanban-item-content-clock,

@@ -49,7 +49,7 @@ header {
 
     &.pinned {
         background: var(--tlp-ui-white);
-        box-shadow: 0 1px 2px var(--tlp-theme-dark-background-color-transparent-90);
+        box-shadow: 0 1px 2px var(--tlp-dark-color-transparent-90);
 
         > .header-container {
             padding: 0 var(--tlp-medium-spacing) 0 0;
@@ -112,7 +112,7 @@ body.has-sidebar {
         border-radius: 30px;
         background: var(--tlp-ui-white) !important;
         box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.1), 0 -1px 0 rgba(0, 0, 0, 0.03) !important;
-        color: var(--tlp-theme-dark-background-color);
+        color: var(--tlp-dark-color);
         font-family: var(--tlp-font-family);
         font-size: 0.875rem;
         font-weight: 400;
@@ -170,7 +170,7 @@ body.has-sidebar {
         font-size: 0.875rem;
 
         &:hover {
-            color: var(--tlp-theme-dark-background-color);
+            color: var(--tlp-dark-color);
             text-decoration: none;
         }
     }
@@ -179,13 +179,13 @@ body.has-sidebar {
         width: $dropdown-width;
 
         > .tlp-popover-arrow {
-            background: var(--tlp-theme-dark-background-color);
+            background: var(--tlp-dark-color);
         }
 
         > .tlp-popover-header {
             min-height: 4px;
             padding: 0 var(--tlp-small-spacing);
-            background: var(--tlp-theme-dark-background-color);
+            background: var(--tlp-dark-color);
         }
 
         > .tlp-popover-body {
@@ -203,7 +203,7 @@ body.has-sidebar {
     overflow: hidden;
     border: 0;
     background: var(--tlp-ui-white);
-    color: var(--tlp-theme-dark-background-color);
+    color: var(--tlp-dark-color);
     font-family: var(--tlp-font-family);
     font-size: 0.875rem;
     font-weight: 500;

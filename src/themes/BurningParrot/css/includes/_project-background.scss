@@ -25,7 +25,7 @@
 
 @each $identifier, $definition in background.$definitions {
     .project-admin-background-preview-#{$identifier} {
-        background: linear-gradient(var(--tlp-theme-dark-background-color-transparent-70), var(--tlp-theme-dark-background-color-transparent-70)), map-get($definition, "image-1680px"), linear-gradient(map-get($definition, "color"), map-get($definition, "color"));
+        background: linear-gradient(var(--tlp-dark-color-transparent-70), var(--tlp-dark-color-transparent-70)), map-get($definition, "image-1680px"), linear-gradient(map-get($definition, "color"), map-get($definition, "color"));
         background-size: map-get($definition, "size");
     }
 }
@@ -100,7 +100,7 @@
         &.fa-lock,
         &.fa-tlp-lock-plus-r {
             background: var(--tlp-ui-white);
-            color: var(--tlp-theme-dark-background-color);
+            color: var(--tlp-dark-color);
         }
 
         &.fa-lock-open,
@@ -195,7 +195,7 @@
     padding: var(--tlp-small-spacing);
     transition: opacity 300ms ease-in-out;
     opacity: 0;
-    background: var(--tlp-theme-dark-background-color-transparent-30);
+    background: var(--tlp-dark-color-transparent-30);
     color: var(--tlp-ui-white);
     font-size: 0.75rem;
 }

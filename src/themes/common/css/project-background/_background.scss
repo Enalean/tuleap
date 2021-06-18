@@ -256,7 +256,7 @@ $definitions: (
     $project-banner-minimum-height: 56px;
 
     .project-with-background #{$element} {
-        background: linear-gradient(var(--tlp-theme-dark-background-color-transparent-70), var(--tlp-theme-dark-background-color-transparent-70)), var(--project-background-image), linear-gradient(var(--project-background-prominent-color), var(--project-background-prominent-color));
+        background: linear-gradient(var(--tlp-dark-color-transparent-70), var(--tlp-dark-color-transparent-70)), var(--project-background-image), linear-gradient(var(--project-background-prominent-color), var(--project-background-prominent-color));
         background-attachment: fixed;
         background-position: $sidebar-expanded-width 0;
         background-size: calc(var(--project-background-size) - #{$sidebar-expanded-width});

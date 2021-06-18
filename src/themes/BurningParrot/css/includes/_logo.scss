@@ -28,7 +28,7 @@
 }
 
 .sidebar > #logo {
-    background-color: var(--tlp-theme-dark-background-color-darker);
+    background-color: var(--tlp-dark-color-darker-20);
 }
 
 .logo-svg-link {
@@ -49,7 +49,7 @@ header.pinned .logo-svg-link {
 }
 
 .logo-svg-fill-default-text-color {
-    fill: var(--tlp-theme-dark-background-color);
+    fill: var(--tlp-dark-color);
 }
 
 .sidebar > .logo-svg-link {
