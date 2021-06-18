@@ -267,15 +267,11 @@
 }
 
 .project-sidebar-collapser-icon {
+    @extend %round-icon;
     display: flex;
     z-index: 10001;
-    align-items: center;
-    justify-content: center;
-    width: 30px;
-    height: 30px;
     margin: 0 auto var(--tlp-medium-spacing);
     transition: background 100ms;
-    border-radius: 50px;
     background: var(--tlp-sidebar-action-color);
     background-blend-mode: overlay;
     color: var(--tlp-typo-default-text-color-on-dark-background);

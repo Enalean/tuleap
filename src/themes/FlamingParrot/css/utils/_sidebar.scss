@@ -20,6 +20,15 @@
 @use 'variables-common';
 @use 'variables-color-common';
 
+%round-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+}
+
 /* stylelint-disable selector-class-pattern, selector-no-qualifying-type */
 .sidebar-nav {
     display: flex;
@@ -114,18 +123,15 @@
     }
 
     i.sidebar-collapse {
-        display: block;
+        @extend %round-icon;
+        display: flex;
         box-sizing: border-box;
         flex: 0 0 auto;
-        width: 30px;
-        height: 30px;
         margin: 20px auto;
-        padding: 8px 2px 0 0;
-        border-radius: 50%;
         background: var(--tlp-sidebar-action-color);
         background-blend-mode: overlay;
         color: var(--tlp-typo-default-text-color-on-dark-background);
-        font-size: 1em;
+        font-size: 12px;
         text-align: center;
         cursor: pointer;
 
@@ -242,15 +248,6 @@
 
 .project-title-spacer {
     flex: 1 1 auto;
-}
-
-%round-icon {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 24px;
-    height: 24px;
-    border-radius: 50%;
 }
 
 .sidebar-dashboard-privacy-icon {
