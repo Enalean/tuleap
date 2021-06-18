@@ -294,6 +294,7 @@ final class Tracker_FormElement_Field_TextTest extends \Tuleap\Test\PHPUnit\Test
         $this->text_field->shouldReceive("isRequired")->andReturn(true);
         $this->assertFalse($this->text_field->isValidRegardingRequiredProperty($artifact, ["format" => "html", "content" => ""]));
         $this->assertFalse($this->text_field->isValidRegardingRequiredProperty($artifact, ["format" => "html", "content" => null]));
+        $this->assertFalse($this->text_field->isValidRegardingRequiredProperty($artifact, ["format" => "html"]));
         $this->assertFalse($this->text_field->isValidRegardingRequiredProperty($artifact, null));
     }
 
@@ -315,6 +316,24 @@ final class Tracker_FormElement_Field_TextTest extends \Tuleap\Test\PHPUnit\Test
 
         $this->text_field->shouldReceive("isRequired")->andReturn(false);
         $this->assertTrue($this->text_field->isValidRegardingRequiredProperty($artifact, $submited_value));
+    }
+
+    public function testIsValidRegardingRequiredPropertyInCSVContext()
+    {
+        $artifact       = \Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
+        $submited_value = "my content";
+
+        $this->text_field->shouldReceive("isRequired")->andReturn(true);
+        self::assertTrue($this->text_field->isValidRegardingRequiredProperty($artifact, $submited_value));
+    }
+
+    public function testIsNotValidRegardingRequiredPropertyInCSVContext()
+    {
+        $artifact       = \Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
+        $submited_value = "";
+
+        $this->text_field->shouldReceive("isRequired")->andReturn(true);
+        self::assertFalse($this->text_field->isValidRegardingRequiredProperty($artifact, $submited_value));
     }
 
     /**
