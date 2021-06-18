@@ -32,7 +32,7 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\TrackerCollection;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Stub\BuildProgramStub;
 use Tuleap\ProgramManagement\Stub\BuildProjectStub;
-use Tuleap\ProgramManagement\Stub\ProgramStoreStub;
+use Tuleap\ProgramManagement\Stub\SearchTeamsOfProgramStub;
 use Tuleap\ProgramManagement\Stub\RetrievePlanningMilestoneTrackerStub;
 use Tuleap\Test\Builders\UserTestBuilder;
 
@@ -72,7 +72,7 @@ final class WorkflowCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->rule_list_dao->method('searchTrackersWithRulesByFieldIDsAndTrackerIDs')->willReturn([]);
 
         $teams     = TeamProjectsCollection::fromProgramIdentifier(
-            ProgramStoreStub::buildTeams(),
+            SearchTeamsOfProgramStub::buildTeams(),
             new BuildProjectStub(),
             ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 100, UserTestBuilder::aUser()->build())
         );
@@ -99,7 +99,7 @@ final class WorkflowCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $teams     = TeamProjectsCollection::fromProgramIdentifier(
-            ProgramStoreStub::buildTeams(147),
+            SearchTeamsOfProgramStub::buildTeams(147),
             new BuildProjectStub(),
             ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 100, UserTestBuilder::aUser()->build())
         );
@@ -125,7 +125,7 @@ final class WorkflowCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->rule_date_dao->method('searchTrackersWithRulesByFieldIDsAndTrackerIDs')->willReturn([758]);
 
         $teams     = TeamProjectsCollection::fromProgramIdentifier(
-            ProgramStoreStub::buildTeams(147),
+            SearchTeamsOfProgramStub::buildTeams(147),
             new BuildProjectStub(),
             ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 100, UserTestBuilder::aUser()->build())
         );
@@ -152,7 +152,7 @@ final class WorkflowCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->rule_list_dao->method('searchTrackersWithRulesByFieldIDsAndTrackerIDs')->willReturn([758]);
 
         $teams     = TeamProjectsCollection::fromProgramIdentifier(
-            ProgramStoreStub::buildTeams(147),
+            SearchTeamsOfProgramStub::buildTeams(147),
             new BuildProjectStub(),
             ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 100, UserTestBuilder::aUser()->build())
         );

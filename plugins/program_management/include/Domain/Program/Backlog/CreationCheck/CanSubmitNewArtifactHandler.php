@@ -28,7 +28,7 @@ use Tuleap\ProgramManagement\Domain\Program\Plan\BuildProgram;
 use Tuleap\ProgramManagement\Domain\Program\Plan\ProgramAccessException;
 use Tuleap\ProgramManagement\Domain\Program\Plan\ProjectIsNotAProgramException;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
-use Tuleap\ProgramManagement\Domain\Program\ProgramStore;
+use Tuleap\ProgramManagement\Domain\Program\SearchTeamsOfProgram;
 use Tuleap\ProgramManagement\Domain\ProgramTracker;
 use Tuleap\Tracker\Artifact\CanSubmitNewArtifact;
 
@@ -37,20 +37,20 @@ final class CanSubmitNewArtifactHandler
     private BuildProgram $program_builder;
     private ProgramIncrementCreatorChecker $program_increment_creator_checker;
     private IterationCreatorChecker $iteration_creator_checker;
-    private ProgramStore $program_store;
+    private SearchTeamsOfProgram $teams_searcher;
     private BuildProject $project_builder;
 
     public function __construct(
         BuildProgram $program_builder,
         ProgramIncrementCreatorChecker $program_increment_creator_checker,
         IterationCreatorChecker $iteration_creator_checker,
-        ProgramStore $program_store,
+        SearchTeamsOfProgram $teams_searcher,
         BuildProject $project_builder
     ) {
         $this->program_builder                   = $program_builder;
         $this->program_increment_creator_checker = $program_increment_creator_checker;
         $this->iteration_creator_checker         = $iteration_creator_checker;
-        $this->program_store                     = $program_store;
+        $this->teams_searcher                    = $teams_searcher;
         $this->project_builder                   = $project_builder;
     }
 
@@ -68,7 +68,7 @@ final class CanSubmitNewArtifactHandler
         }
 
         $team_projects_collection = TeamProjectsCollection::fromProgramIdentifier(
-            $this->program_store,
+            $this->teams_searcher,
             $this->project_builder,
             $program
         );

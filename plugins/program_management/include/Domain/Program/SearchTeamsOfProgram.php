@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,9 +22,10 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program;
 
-interface ProgramStore
+interface SearchTeamsOfProgram
 {
-    public function isProjectAProgramProject(int $project_id): bool;
-
-    public function saveProgram(int $program_project_id, int $team_project_id): void;
+    /**
+     * @return int[]
+     */
+    public function searchTeamIdsOfProgram(int $project_id): array;
 }

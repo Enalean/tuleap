@@ -31,7 +31,7 @@ use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\ProgramTracker;
 use Tuleap\ProgramManagement\Stub\BuildProgramStub;
 use Tuleap\ProgramManagement\Stub\BuildProjectStub;
-use Tuleap\ProgramManagement\Stub\ProgramStoreStub;
+use Tuleap\ProgramManagement\Stub\SearchTeamsOfProgramStub;
 use Tuleap\ProgramManagement\Stub\RetrievePlanningMilestoneTrackerStub;
 use Tuleap\ProgramManagement\Stub\RetrieveVisibleProgramIncrementTrackerStub;
 use Tuleap\Test\Builders\UserTestBuilder;
@@ -69,7 +69,7 @@ final class SemanticCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->program_increment_tracker = new ProgramTracker($tracker);
 
         $teams = TeamProjectsCollection::fromProgramIdentifier(
-            ProgramStoreStub::buildTeams(101, 102),
+            SearchTeamsOfProgramStub::buildTeams(101, 102),
             new BuildProjectStub(),
             ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 100, UserTestBuilder::aUser()->build())
         );

@@ -24,7 +24,7 @@ namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Team;
 
 use Tuleap\ProgramManagement\Domain\BuildProject;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
-use Tuleap\ProgramManagement\Domain\Program\ProgramStore;
+use Tuleap\ProgramManagement\Domain\Program\SearchTeamsOfProgram;
 use Tuleap\ProgramManagement\Domain\Project;
 
 /**
@@ -35,7 +35,7 @@ final class TeamProjectsCollection
     /**
      * @var Project[]
      */
-    private $team_projects;
+    private array $team_projects;
 
     /**
      * @param Project[] $team_projects
@@ -58,12 +58,15 @@ final class TeamProjectsCollection
         return $this->team_projects;
     }
 
-    public static function fromProgramIdentifier(ProgramStore $program_store, BuildProject $project_data_adapter, ProgramIdentifier $program): self
-    {
+    public static function fromProgramIdentifier(
+        SearchTeamsOfProgram $teams_searcher,
+        BuildProject $project_data_adapter,
+        ProgramIdentifier $program
+    ): self {
         $program_project_id = $program->getID();
         $team_projects      = [];
-        foreach ($program_store->getTeamProjectIdsForGivenProgramProject($program_project_id) as $row) {
-            $team_projects[] = $project_data_adapter->buildFromId($row['team_project_id']);
+        foreach ($teams_searcher->searchTeamIdsOfProgram($program_project_id) as $team_id) {
+            $team_projects[] = $project_data_adapter->buildFromId($team_id);
         }
 
         return new self($team_projects);

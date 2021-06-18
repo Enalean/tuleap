@@ -22,10 +22,9 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Stub;
 
-use Exception;
-use Tuleap\ProgramManagement\Domain\Program\ProgramStore;
+use Tuleap\ProgramManagement\Domain\Program\SearchTeamsOfProgram;
 
-final class ProgramStoreStub implements ProgramStore
+final class SearchTeamsOfProgramStub implements SearchTeamsOfProgram
 {
     /**
      * @var int[]
@@ -35,27 +34,14 @@ final class ProgramStoreStub implements ProgramStore
     /**
      * @param int[] $team_ids
      */
-    public function __construct(array $team_ids)
+    private function __construct(array $team_ids)
     {
         $this->team_ids = $team_ids;
     }
 
-    public function isProjectAProgramProject(int $project_id): bool
+    public function searchTeamIdsOfProgram(int $project_id): array
     {
-        throw new Exception('Not implemented');
-    }
-
-    public function getTeamProjectIdsForGivenProgramProject(int $project_id): array
-    {
-        return array_map(
-            static fn(int $team_id) => ['team_project_id' => $team_id],
-            $this->team_ids
-        );
-    }
-
-    public function saveProgram(int $program_project_id, int $team_project_id): void
-    {
-        throw new Exception('Not implemented');
+        return $this->team_ids;
     }
 
     public static function buildTeams(int ...$ids): self

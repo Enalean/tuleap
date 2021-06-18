@@ -39,7 +39,7 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\TrackerCollection;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TrackerRetrievalException;
 use Tuleap\ProgramManagement\Domain\Program\PlanningConfiguration\TopPlanningNotFoundInProjectException;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
-use Tuleap\ProgramManagement\Domain\Program\ProgramStore;
+use Tuleap\ProgramManagement\Domain\Program\SearchTeamsOfProgram;
 use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\RetrievePlanningMilestoneTracker;
 
 final class CreateProgramIncrementsTask implements CreateTaskProgramIncrement
@@ -66,7 +66,7 @@ final class CreateProgramIncrementsTask implements CreateTaskProgramIncrement
      * @var UserStoriesInMirroredProgramIncrementsPlanner
      */
     private $user_stories_planner;
-    private ProgramStore $program_store;
+    private SearchTeamsOfProgram $teams_searcher;
     private BuildProject $project_builder;
 
     public function __construct(
@@ -76,7 +76,7 @@ final class CreateProgramIncrementsTask implements CreateTaskProgramIncrement
         LoggerInterface $logger,
         PendingArtifactCreationStore $pending_artifact_creation_store,
         UserStoriesInMirroredProgramIncrementsPlanner $user_stories_planner,
-        ProgramStore $program_store,
+        SearchTeamsOfProgram $teams_searcher,
         BuildProject $project_builder
     ) {
         $this->changeset_collection_adapter    = $changeset_collection_adapter;
@@ -85,7 +85,7 @@ final class CreateProgramIncrementsTask implements CreateTaskProgramIncrement
         $this->logger                          = $logger;
         $this->pending_artifact_creation_store = $pending_artifact_creation_store;
         $this->user_stories_planner            = $user_stories_planner;
-        $this->program_store                   = $program_store;
+        $this->teams_searcher                  = $teams_searcher;
         $this->project_builder                 = $project_builder;
     }
 
@@ -110,7 +110,7 @@ final class CreateProgramIncrementsTask implements CreateTaskProgramIncrement
         $copied_values = $this->changeset_collection_adapter->buildCollection($replication_data);
 
         $team_projects = TeamProjectsCollection::fromProgramIdentifier(
-            $this->program_store,
+            $this->teams_searcher,
             $this->project_builder,
             ProgramIdentifier::fromReplicationData($replication_data)
         );
