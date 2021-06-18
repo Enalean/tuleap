@@ -34,8 +34,8 @@
 
 .tracker-report-query {
     border-top: 2px solid var(--tlp-main-color);
-    border-bottom: 1px solid var(--tlp-theme-background-color-darker-05);
-    background: var(--tlp-theme-background-color);
+    border-bottom: 1px solid var(--tlp-background-color-darker-05);
+    background: var(--tlp-background-color);
 }
 
 /* stylelint-disable-next-line selector-class-pattern */
@@ -64,18 +64,18 @@
     thead:first-child > tr:first-child > th,
     > thead > tr > th,
     > tbody > tr > td {
-        border-top-color: var(--tlp-theme-background-color-darker-05);
-        border-right-color: var(--tlp-theme-background-color-darker-05);
-        border-left-color: var(--tlp-theme-background-color-darker-05);
+        border-top-color: var(--tlp-background-color-darker-05);
+        border-right-color: var(--tlp-background-color-darker-05);
+        border-left-color: var(--tlp-background-color-darker-05);
     }
 
     > tbody > tr:last-child > td {
-        border-color: var(--tlp-theme-background-color-darker-05) !important;
+        border-color: var(--tlp-background-color-darker-05) !important;
     }
 
     > thead > tr > th.drop-over {
         /* stylelint-disable-line selector-no-qualifying-type */
-        background: var(--tlp-theme-background-color);
+        background: var(--tlp-background-color);
     }
 
     /* stylelint-disable-next-line selector-max-compound-selectors */
@@ -89,12 +89,12 @@
             /* stylelint-disable selector-max-compound-selectors */
             > thead > tr > th,
             > thead:first-child > tr:first-child > th {
-                border-left-color: var(--tlp-theme-background-color-darker-05);
-                background: var(--tlp-theme-background-color);
+                border-left-color: var(--tlp-background-color-darker-05);
+                background: var(--tlp-background-color);
             }
 
             > tbody > tr > td {
-                border-color: var(--tlp-theme-background-color-darker-05);
+                border-color: var(--tlp-background-color-darker-05);
             }
             /* stylelint-enable selector-max-compound-selectors */
         }
@@ -178,7 +178,7 @@
 
 /* stylelint-disable selector-no-qualifying-type */
 body.tracker-administration {
-    background: var(--tlp-theme-background-color);
+    background: var(--tlp-background-color);
 
     .main {
         #feedback > ul {

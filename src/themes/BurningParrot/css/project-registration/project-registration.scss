@@ -26,12 +26,12 @@ $illustration-spacing: calc(2 * var(--tlp-large-spacing));
 $title-margin-left: calc(#{$illustration-width} + #{$illustration-spacing});
 
 .body-project-registration {
-    background: linear-gradient(180deg, var(--tlp-ui-white) 0, var(--tlp-ui-white) 70px, var(--tlp-theme-background-color) 470px);
+    background: linear-gradient(180deg, var(--tlp-ui-white) 0, var(--tlp-ui-white) 70px, var(--tlp-background-color) 470px);
 }
 
 .project-registration {
     padding: var(--tlp-x-large-spacing) var(--tlp-x-large-spacing) 100px;
-    background: linear-gradient(180deg, var(--tlp-ui-white) 0, var(--tlp-theme-background-color) 400px);
+    background: linear-gradient(180deg, var(--tlp-ui-white) 0, var(--tlp-background-color) 400px);
 }
 
 .project-registration-content {

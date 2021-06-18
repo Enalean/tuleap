@@ -144,7 +144,7 @@
 .taskboard-card.taskboard-card-edit-mode {
     margin: 0;
     border: 1px solid var(--tlp-main-color);
-    background: var(--tlp-theme-background-color-lighter-10);
+    background: var(--tlp-background-color-lighter-10);
 
     &::before,
     > .taskboard-card-progress {
@@ -181,7 +181,7 @@
 }
 
 .taskboard-cell:first-child > .taskboard-cell-parent-card > .taskboard-card:not([class*="taskboard-card-background-"]) > .taskboard-card-edit-trigger {
-    @include pencil-background(var(--tlp-theme-background-color));
+    @include pencil-background(var(--tlp-background-color));
 
     &:focus {
         background: var(--tlp-main-color-lighter-90);
