@@ -23,24 +23,20 @@ namespace Tuleap\Tracker\Report\dao;
 
 final class ReportCriteriaDao extends \Tuleap\DB\DataAccessObject
 {
-    public function duplicate(int $from_report_id, int $to_report_id, array $field_mapping): int
-    {
-        $sql = "INSERT INTO tracker_report_criteria (report_id, field_id, rank, is_advanced)
-                SELECT ?, field_id, rank, is_advanced
-                FROM tracker_report_criteria
-                WHERE report_id = ?";
-        $this->getDB()->run($sql, $to_report_id, $from_report_id);
-
-        $report_criteria_id = (int) $this->getDB()->lastInsertId();
-
-        $this->migrateCriterias($field_mapping, $to_report_id, $report_criteria_id);
-
-        return $report_criteria_id;
-    }
-
-    private function migrateCriterias(array $field_mapping, int $to_report_id, int $report_criteria_id): void
+    public function duplicate(int $from_report_id, int $to_report_id, array $field_mapping): void
     {
         foreach ($field_mapping as $mapping) {
+            $sql = "INSERT INTO tracker_report_criteria (report_id, field_id, rank, is_advanced)
+                SELECT ?, field_id, rank, is_advanced
+                FROM tracker_report_criteria
+                WHERE report_id = ? AND field_id = ?";
+            $this->getDB()->run($sql, $to_report_id, $from_report_id, $mapping['from']);
+
+            $report_criteria_id = (int) $this->getDB()->lastInsertId();
+            if ($report_criteria_id === 0) {
+                continue;
+            }
+
             $sql = "UPDATE tracker_report_criteria SET field_id = ?
                     WHERE report_id = ? AND field_id = ?";
             $this->getDB()->run($sql, $mapping['to'], $to_report_id, $mapping['from']);
@@ -48,19 +44,25 @@ final class ReportCriteriaDao extends \Tuleap\DB\DataAccessObject
             $sql = "SELECT value, 'list' AS field_type
                         FROM tracker_report_criteria AS original_report
                         INNER JOIN tracker_report_criteria_list_value on criteria_id = original_report.id
-                    WHERE original_report.field_id = ?";
+                    WHERE original_report.field_id = ? AND original_report.report_id = ?";
 
-            $criterias = $this->getDB()->run($sql, $mapping['from']);
+            $criterias = $this->getDB()->run($sql, $mapping['from'], $from_report_id);
             if (! $criterias) {
                 continue;
             }
 
             $data_to_insert = [];
             foreach ($criterias as $row) {
-                if (! $this->hasCriteriaValue($mapping, $row['value'])) {
+                if (! $this->hasCriteriaValue($mapping, $row['value']) || $row['value'] === null) {
                     continue;
                 }
-                $data_to_insert[$row['field_type']][] = ['criteria_id' => $report_criteria_id, 'value' => $mapping['values'][$row['value']]];
+
+                if ($row['value'] === \Tracker_FormElement_Field_List_Bind_StaticValue_None::VALUE_ID) {
+                    $value = $row['value'];
+                } else {
+                    $value = $mapping['values'][$row['value']];
+                }
+                $data_to_insert[$row['field_type']][] = ['criteria_id' => $report_criteria_id, 'value' => $value];
             }
 
             $this->insertListCriteria($data_to_insert);
