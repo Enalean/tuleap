@@ -24,8 +24,8 @@ namespace Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck;
 
 use ProjectManager;
 use Tuleap\ProgramManagement\Adapter\ProjectAdapter;
-use Tuleap\ProgramManagement\Domain\Program\ProgramStore;
 use Tuleap\ProgramManagement\Stub\BuildProgramStub;
+use Tuleap\ProgramManagement\Stub\SearchTeamsOfProgramStub;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
@@ -46,17 +46,14 @@ final class CanSubmitNewArtifactHandlerTest extends TestCase
      * @var \PHPUnit\Framework\MockObject\MockObject|ProjectManager
      */
     private $project_manager;
-    /**
-     * @var \PHPUnit\Framework\MockObject\Stub|ProgramStore
-     */
-    private $program_store;
+    private BuildProgramStub $program_builder;
 
     protected function setUp(): void
     {
         $this->program_increment_creator_checker = $this->createStub(ProgramIncrementCreatorChecker::class);
         $this->iteration_creator_checker         = $this->createStub(IterationCreatorChecker::class);
-        $this->program_store                     = $this->createStub(ProgramStore::class);
         $this->project_manager                   = $this->createMock(ProjectManager::class);
+        $this->program_builder                   = BuildProgramStub::stubValidProgram();
     }
 
     public function testItDisablesArtifactSubmissionWhenCanNotCreateProgramIncrement(): void
@@ -111,37 +108,31 @@ final class CanSubmitNewArtifactHandlerTest extends TestCase
 
     public function testItAllowsArtifactSubmissionWhenProjectIsNotAProgram(): void
     {
+        $this->program_builder = BuildProgramStub::stubInvalidProgram();
+
         $user    = UserTestBuilder::aUser()->build();
         $tracker = TrackerTestBuilder::aTracker()->withId(98)
             ->withProject(ProjectTestBuilder::aProject()->withId(101)->build())
             ->build();
         $event   = new CanSubmitNewArtifact($user, $tracker);
 
-        $this->getHandler(false)->handle($event);
+        $this->getHandler()->handle($event);
         self::assertTrue($event->canSubmitNewArtifact());
     }
 
-    private function getHandler(bool $build_valid_program = true): CanSubmitNewArtifactHandler
+    private function getHandler(): CanSubmitNewArtifactHandler
     {
-        $project_data_adapter = new ProjectAdapter($this->project_manager);
-
-        $program_build = BuildProgramStub::stubValidProgram();
-        if (! $build_valid_program) {
-            $program_build = BuildProgramStub::stubInvalidProgram();
-        }
-
         return new CanSubmitNewArtifactHandler(
-            $program_build,
+            $this->program_builder,
             $this->program_increment_creator_checker,
             $this->iteration_creator_checker,
-            $this->program_store,
-            $project_data_adapter
+            SearchTeamsOfProgramStub::buildTeams(104),
+            new ProjectAdapter($this->project_manager)
         );
     }
 
     private function mockProjectTeam(): void
     {
-        $this->program_store->method('getTeamProjectIdsForGivenProgramProject')->willReturn([['team_project_id' => 104]]);
         $first_team_project = new \Project(
             ['group_id' => '104', 'unix_group_name' => 'proj02', 'group_name' => 'Project 02']
         );

@@ -41,7 +41,7 @@ use Tuleap\ProgramManagement\Domain\ProgramTracker;
 use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\RetrievePlanningMilestoneTracker;
 use Tuleap\ProgramManagement\Stub\BuildProgramStub;
 use Tuleap\ProgramManagement\Stub\BuildProjectStub;
-use Tuleap\ProgramManagement\Stub\ProgramStoreStub;
+use Tuleap\ProgramManagement\Stub\SearchTeamsOfProgramStub;
 use Tuleap\ProgramManagement\Stub\RetrievePlanningMilestoneTrackerStub;
 use Tuleap\ProgramManagement\Stub\RetrieveVisibleProgramIncrementTrackerStub;
 use Tuleap\Test\Builders\ProjectTestBuilder;
@@ -311,7 +311,7 @@ final class TimeboxCreatorCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
     private function buildTeamTrackers(): TrackerCollection
     {
         $first_team_project = TeamProjectsCollection::fromProgramIdentifier(
-            ProgramStoreStub::buildTeams(104),
+            SearchTeamsOfProgramStub::buildTeams(104),
             new BuildProjectStub(),
             ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 100, UserTestBuilder::aUser()->build())
         );

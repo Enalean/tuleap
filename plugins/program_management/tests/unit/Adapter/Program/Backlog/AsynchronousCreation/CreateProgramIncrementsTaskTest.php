@@ -40,7 +40,8 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Chan
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\FieldRetrievalException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\ReplicationData;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\SubmissionDate;
-use Tuleap\ProgramManagement\Domain\Program\ProgramStore;
+use Tuleap\ProgramManagement\Domain\Program\SearchTeamsOfProgram;
+use Tuleap\ProgramManagement\Stub\SearchTeamsOfProgramStub;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
@@ -52,10 +53,6 @@ final class CreateProgramIncrementsTaskTest extends \Tuleap\Test\PHPUnit\TestCas
      * @var \PHPUnit\Framework\MockObject\Stub|BuildFieldValues
      */
     private $changeset_values_adapter;
-    /**
-     * @var \PHPUnit\Framework\MockObject\Stub|ProgramStore
-     */
-    private $program_store;
     /**
      * @var \PHPUnit\Framework\MockObject\Stub|\ProjectManager
      */
@@ -77,14 +74,13 @@ final class CreateProgramIncrementsTaskTest extends \Tuleap\Test\PHPUnit\TestCas
      */
     private $user_stories_planner;
     private TestLogger $logger;
-    private CreateProgramIncrementsTask $task;
+    private SearchTeamsOfProgram $teams_searcher;
 
     protected function setUp(): void
     {
         $this->changeset_values_adapter        = $this->createStub(BuildFieldValues::class);
-        $this->program_store                   = $this->createStub(ProgramStore::class);
+        $this->teams_searcher                  = SearchTeamsOfProgramStub::buildTeams(102);
         $this->project_manager                 = $this->createStub(\ProjectManager::class);
-        $project_data_adapter                  = new ProjectAdapter($this->project_manager);
         $this->planning_factory                = $this->createStub(\PlanningFactory::class);
         $this->mirror_creator                  = $this->createMock(ProgramIncrementsCreator::class);
         $this->logger                          = new TestLogger();
@@ -92,16 +88,19 @@ final class CreateProgramIncrementsTaskTest extends \Tuleap\Test\PHPUnit\TestCas
         $this->user_stories_planner            = $this->createMock(
             UserStoriesInMirroredProgramIncrementsPlanner::class
         );
+    }
 
-        $this->task = new CreateProgramIncrementsTask(
+    private function getTask(): CreateProgramIncrementsTask
+    {
+        return new CreateProgramIncrementsTask(
             $this->changeset_values_adapter,
             new PlanningAdapter($this->planning_factory),
             $this->mirror_creator,
             $this->logger,
             $this->pending_artifact_creation_store,
             $this->user_stories_planner,
-            $this->program_store,
-            $project_data_adapter
+            $this->teams_searcher,
+            new ProjectAdapter($this->project_manager)
         );
     }
 
@@ -115,8 +114,6 @@ final class CreateProgramIncrementsTaskTest extends \Tuleap\Test\PHPUnit\TestCas
 
         $team_project_id = 102;
         $team_project    = ProjectTestBuilder::aProject()->withId($team_project_id)->build();
-        $this->program_store->method('getTeamProjectIdsForGivenProgramProject')
-            ->willReturn([['team_project_id' => $team_project_id]]);
         $this->project_manager->method('getProject')->willReturn($team_project);
 
         $planning = new \Planning(1, 'Root planning', $team_project_id, '', '');
@@ -131,10 +128,10 @@ final class CreateProgramIncrementsTaskTest extends \Tuleap\Test\PHPUnit\TestCas
 
         $this->user_stories_planner->expects(self::once())->method('plan');
 
-        $this->task->createProgramIncrements($replication_data);
+        $this->getTask()->createProgramIncrements($replication_data);
     }
 
-    public function testItLogsWhenAnExceptionOccurrs(): void
+    public function testItLogsWhenAnExceptionOccurs(): void
     {
         $program_project  = ProjectTestBuilder::aProject()->withId(101)->build();
         $replication_data = $this->getReplicationData($program_project);
@@ -144,7 +141,7 @@ final class CreateProgramIncrementsTaskTest extends \Tuleap\Test\PHPUnit\TestCas
 
         $this->user_stories_planner->expects(self::never())->method('plan');
 
-        $this->task->createProgramIncrements($replication_data);
+        $this->getTask()->createProgramIncrements($replication_data);
         self::assertTrue($this->logger->hasErrorRecords());
     }
 

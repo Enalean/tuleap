@@ -25,7 +25,7 @@ namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Team;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Stub\BuildProgramStub;
 use Tuleap\ProgramManagement\Stub\BuildProjectStub;
-use Tuleap\ProgramManagement\Stub\ProgramStoreStub;
+use Tuleap\ProgramManagement\Stub\SearchTeamsOfProgramStub;
 use Tuleap\Test\Builders\UserTestBuilder;
 
 final class TeamProjectsCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -33,7 +33,7 @@ final class TeamProjectsCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testGetTeamProjectsReturnsProjects(): void
     {
         $collection = TeamProjectsCollection::fromProgramIdentifier(
-            ProgramStoreStub::buildTeams(103, 125),
+            SearchTeamsOfProgramStub::buildTeams(103, 125),
             new BuildProjectStub(),
             ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 100, UserTestBuilder::aUser()->build())
         );
@@ -44,7 +44,7 @@ final class TeamProjectsCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testIsEmptyReturnsTrue(): void
     {
         $collection = TeamProjectsCollection::fromProgramIdentifier(
-            ProgramStoreStub::buildTeams(),
+            SearchTeamsOfProgramStub::buildTeams(),
             new BuildProjectStub(),
             ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 100, UserTestBuilder::aUser()->build())
         );
@@ -54,7 +54,7 @@ final class TeamProjectsCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testIsEmptyReturnsFalse()
     {
         $collection = TeamProjectsCollection::fromProgramIdentifier(
-            ProgramStoreStub::buildTeams(101, 102),
+            SearchTeamsOfProgramStub::buildTeams(101, 102),
             new BuildProjectStub(),
             ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 100, UserTestBuilder::aUser()->build())
         );

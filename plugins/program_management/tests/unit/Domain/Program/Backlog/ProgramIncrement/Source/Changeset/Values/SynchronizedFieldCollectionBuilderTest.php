@@ -33,7 +33,7 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\TrackerCollection;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Stub\BuildProgramStub;
 use Tuleap\ProgramManagement\Stub\BuildProjectStub;
-use Tuleap\ProgramManagement\Stub\ProgramStoreStub;
+use Tuleap\ProgramManagement\Stub\SearchTeamsOfProgramStub;
 use Tuleap\ProgramManagement\Stub\RetrievePlanningMilestoneTrackerStub;
 use Tuleap\ProgramManagement\Stub\RetrieveVisibleProgramIncrementTrackerStub;
 use Tuleap\Test\Builders\UserTestBuilder;
@@ -64,7 +64,7 @@ final class SynchronizedFieldCollectionBuilderTest extends \Tuleap\Test\PHPUnit\
         $user           = UserTestBuilder::aUser()->build();
         $program        = ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 101, $user);
         $teams          = TeamProjectsCollection::fromProgramIdentifier(
-            ProgramStoreStub::buildTeams(102, 104),
+            SearchTeamsOfProgramStub::buildTeams(102, 104),
             new BuildProjectStub(),
             ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 100, UserTestBuilder::aUser()->build())
         );

@@ -25,8 +25,9 @@ namespace Tuleap\ProgramManagement\Adapter\Program;
 use Tuleap\DB\DataAccessObject;
 use Tuleap\ProgramManagement\Domain\Program\ProgramStore;
 use Tuleap\ProgramManagement\Domain\Program\SearchProgram;
+use Tuleap\ProgramManagement\Domain\Program\SearchTeamsOfProgram;
 
-final class ProgramDao extends DataAccessObject implements ProgramStore, SearchProgram
+final class ProgramDao extends DataAccessObject implements ProgramStore, SearchProgram, SearchTeamsOfProgram
 {
     public function isProjectAProgramProject(int $project_id): bool
     {
@@ -37,16 +38,14 @@ final class ProgramDao extends DataAccessObject implements ProgramStore, SearchP
         return $this->getDB()->exists($sql, $project_id);
     }
 
-    /**
-     * @psalm-return list<array{team_project_id:int}>
-     */
-    public function getTeamProjectIdsForGivenProgramProject(int $project_id): array
+    public function searchTeamIdsOfProgram(int $project_id): array
     {
-        $sql = "SELECT team_project_id
+        $sql = 'SELECT team_project_id
                 FROM plugin_program_management_team_projects
-                WHERE program_project_id = ?";
+                WHERE program_project_id = ?';
 
-        return $this->getDB()->run($sql, $project_id);
+        $rows = $this->getDB()->q($sql, $project_id);
+        return array_map(static fn(array $row): int => $row['team_project_id'], $rows);
     }
 
     public function saveProgram(int $program_project_id, int $team_project_id): void

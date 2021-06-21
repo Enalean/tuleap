@@ -26,17 +26,17 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Team\TeamPr
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Stub\BuildProgramStub;
 use Tuleap\ProgramManagement\Stub\BuildProjectStub;
-use Tuleap\ProgramManagement\Stub\ProgramStoreStub;
+use Tuleap\ProgramManagement\Stub\SearchTeamsOfProgramStub;
 use Tuleap\ProgramManagement\Stub\RetrievePlanningMilestoneTrackerStub;
 use Tuleap\Test\Builders\UserTestBuilder;
 
 final class TrackerCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    public function testGetEmptyTrackerArrayEmptyWhenNoRootPlanningTrackers(): void
+    public function testGetEmptyTrackerArrayWhenNoRootPlanningTrackers(): void
     {
         $user        = UserTestBuilder::aUser()->build();
         $empty_teams = TeamProjectsCollection::fromProgramIdentifier(
-            ProgramStoreStub::buildTeams(),
+            SearchTeamsOfProgramStub::buildTeams(),
             new BuildProjectStub(),
             ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 100, UserTestBuilder::aUser()->build())
         );
@@ -46,11 +46,11 @@ final class TrackerCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertEmpty($collection->getTrackers());
     }
 
-    public function testGetEmptyTrackerArrayEmptyWhenNoSecondPlanningTrackers(): void
+    public function testGetEmptyTrackerArrayWhenNoSecondPlanningTrackers(): void
     {
         $user        = UserTestBuilder::aUser()->build();
         $empty_teams = TeamProjectsCollection::fromProgramIdentifier(
-            ProgramStoreStub::buildTeams(),
+            SearchTeamsOfProgramStub::buildTeams(),
             new BuildProjectStub(),
             ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 100, UserTestBuilder::aUser()->build())
         );
@@ -63,7 +63,7 @@ final class TrackerCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testReturnsTrueWhenUserCanSubmitInAllRootPlanningTrackers(): void
     {
         $teams         = TeamProjectsCollection::fromProgramIdentifier(
-            ProgramStoreStub::buildTeams(103, 104),
+            SearchTeamsOfProgramStub::buildTeams(103, 104),
             new BuildProjectStub(),
             ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 100, UserTestBuilder::aUser()->build())
         );
@@ -91,7 +91,7 @@ final class TrackerCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testReturnsTrueWhenUserCanSubmitInAllSecondPlanningTrackers(): void
     {
         $teams         = TeamProjectsCollection::fromProgramIdentifier(
-            ProgramStoreStub::buildTeams(103, 104),
+            SearchTeamsOfProgramStub::buildTeams(103, 104),
             new BuildProjectStub(),
             ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 100, UserTestBuilder::aUser()->build())
         );
@@ -115,7 +115,7 @@ final class TrackerCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testReturnsFalseWhenUserCanNotSubmitAnArtifactInAllRootPlanningTrackers(): void
     {
         $teams         = TeamProjectsCollection::fromProgramIdentifier(
-            ProgramStoreStub::buildTeams(103, 104),
+            SearchTeamsOfProgramStub::buildTeams(103, 104),
             new BuildProjectStub(),
             ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 100, UserTestBuilder::aUser()->build())
         );
@@ -133,7 +133,7 @@ final class TrackerCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testReturnsFalseWhenUserCanNotSubmitAnArtifactInAllSecondPlanningTrackers(): void
     {
         $teams         = TeamProjectsCollection::fromProgramIdentifier(
-            ProgramStoreStub::buildTeams(103, 104),
+            SearchTeamsOfProgramStub::buildTeams(103, 104),
             new BuildProjectStub(),
             ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 100, UserTestBuilder::aUser()->build())
         );

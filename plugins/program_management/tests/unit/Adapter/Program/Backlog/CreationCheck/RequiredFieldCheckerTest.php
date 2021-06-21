@@ -32,7 +32,7 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\TrackerCollection;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Stub\BuildProgramStub;
 use Tuleap\ProgramManagement\Stub\BuildProjectStub;
-use Tuleap\ProgramManagement\Stub\ProgramStoreStub;
+use Tuleap\ProgramManagement\Stub\SearchTeamsOfProgramStub;
 use Tuleap\ProgramManagement\Stub\RetrievePlanningMilestoneTrackerStub;
 use Tuleap\Test\Builders\UserTestBuilder;
 
@@ -48,7 +48,7 @@ final class RequiredFieldCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testAllowsCreationWhenOnlySynchronizedFieldsAreRequired(): void
     {
         $teams = TeamProjectsCollection::fromProgramIdentifier(
-            ProgramStoreStub::buildTeams(147, 148),
+            SearchTeamsOfProgramStub::buildTeams(147, 148),
             new BuildProjectStub(),
             ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 100, UserTestBuilder::aUser()->build())
         );
@@ -92,7 +92,7 @@ final class RequiredFieldCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testDisallowsCreationWhenAnyFieldIsRequiredAndNotSynchronized(): void
     {
         $teams = TeamProjectsCollection::fromProgramIdentifier(
-            ProgramStoreStub::buildTeams(147),
+            SearchTeamsOfProgramStub::buildTeams(147),
             new BuildProjectStub(),
             ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 100, UserTestBuilder::aUser()->build())
         );

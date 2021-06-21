@@ -41,7 +41,7 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\TrackerCollection;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Stub\BuildProgramStub;
 use Tuleap\ProgramManagement\Stub\BuildProjectStub;
-use Tuleap\ProgramManagement\Stub\ProgramStoreStub;
+use Tuleap\ProgramManagement\Stub\SearchTeamsOfProgramStub;
 use Tuleap\ProgramManagement\Stub\RetrievePlanningMilestoneTrackerStub;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
@@ -80,7 +80,7 @@ final class ProgramIncrementsCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $copied_values = $this->buildCopiedValues();
         $teams         = TeamProjectsCollection::fromProgramIdentifier(
-            ProgramStoreStub::buildTeams(101, 102),
+            SearchTeamsOfProgramStub::buildTeams(101, 102),
             new BuildProjectStub(),
             ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 100, UserTestBuilder::aUser()->build())
         );
@@ -111,7 +111,7 @@ final class ProgramIncrementsCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $copied_values = $this->buildCopiedValues();
         $teams         = TeamProjectsCollection::fromProgramIdentifier(
-            ProgramStoreStub::buildTeams(101),
+            SearchTeamsOfProgramStub::buildTeams(101),
             new BuildProjectStub(),
             ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 100, UserTestBuilder::aUser()->build())
         );
