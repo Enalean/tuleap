@@ -82,6 +82,35 @@ class CreateBranchPrefixUpdaterTest extends TestCase
         );
     }
 
+    public function testItStoresTheBranchPrefixWithSomeSpecialChars(): void
+    {
+        $integration = new GitlabRepositoryIntegration(
+            18,
+            2,
+            'smartoid/browser',
+            'Next gen browser',
+            'https://example.com/smartoid/browser',
+            new \DateTimeImmutable(),
+            \Project::buildForTest(),
+            false
+        );
+
+        $this->integration_factory
+            ->expects(self::once())
+            ->method('getIntegrationById')
+            ->with(18)
+            ->willReturn($integration);
+
+        $this->create_branch_prefix_dao
+            ->expects(self::once())
+            ->method('setCreateBranchPrefixForIntegration');
+
+        $this->updater->updateBranchPrefix(
+            18,
+            "dev/"
+        );
+    }
+
     public function testItThrowsAnExceptionIfIntegrationNotFoundTheBranchPrefix(): void
     {
         $this->integration_factory
