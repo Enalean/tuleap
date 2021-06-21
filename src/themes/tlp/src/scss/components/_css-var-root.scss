@@ -252,6 +252,6 @@ $main-color-dimmed-background: mix($tlp-theme-background-color, $tlp-ui-white, 5
     --tlp-card-radius: #{$tlp-card-radius};
 
     // highlight darker button
-    --tlp-button-darker: rgba(255, 255, 255, 0.1);
-    --tlp-button-darker-hover: rgba(255, 255, 255, 0.3);
+    --tlp-sidebar-action-color: rgba(255, 255, 255, 0.1);
+    --tlp-sidebar-action-color-hover: rgba(255, 255, 255, 0.3);
 }

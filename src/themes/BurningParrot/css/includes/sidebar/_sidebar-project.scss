@@ -92,7 +92,7 @@
 .project-administration-link {
     @extend %round-icon;
     flex: 0 0 auto;
-    background: var(--tlp-button-darker);
+    background: var(--tlp-sidebar-action-color);
     background-blend-mode: overlay;
     color: var(--tlp-typo-default-text-color-on-dark-background);
 
@@ -213,7 +213,7 @@
 
     &:hover,
     &:focus {
-        background: var(--tlp-button-darker);
+        background: var(--tlp-sidebar-action-color);
         background-blend-mode: overlay;
         text-decoration: none;
     }
@@ -225,7 +225,7 @@
 
     &.active {
         border-left-color: var(--tlp-main-color);
-        background: var(--tlp-button-darker);
+        background: var(--tlp-sidebar-action-color);
         background-blend-mode: overlay;
 
         &::before {
@@ -276,7 +276,7 @@
     margin: 0 auto var(--tlp-medium-spacing);
     transition: background 100ms;
     border-radius: 50px;
-    background: var(--tlp-button-darker);
+    background: var(--tlp-sidebar-action-color);
     background-blend-mode: overlay;
     color: var(--tlp-typo-default-text-color-on-dark-background);
     font-size: 12px;
@@ -293,7 +293,7 @@
     }
 
     &:hover {
-        background: var(--tlp-button-darker-hover);
+        background: var(--tlp-sidebar-action-color-hover);
     }
 }
 
