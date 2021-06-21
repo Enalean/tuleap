@@ -19,29 +19,21 @@
 
 class Account_TimezoneSelectorPresenter
 {
-    /**
-     * @var bool
-     */
-    public $has_one_selected;
-    /**
-     * @var string
-     */
-    public $placeholder;
-    /**
-     * @var array
-     */
-    public $list_of_timezones;
+
+    public bool $has_one_selected;
+    public string $placeholder;
+    public array $list_of_timezones;
 
     /**
      * @param string|false $current_timezone falsy if no current timezone
      */
     public function __construct($current_timezone)
     {
-        $this->has_one_selected = $current_timezone !== false;
-        $this->placeholder      = _('Timezone');
+        $this->placeholder = _('Timezone');
 
         $collection = new Account_TimezonesCollection();
 
         $this->list_of_timezones = $collection->getTimezonePresenters($current_timezone ?: '');
+        $this->has_one_selected  = array_search('true', array_column($this->list_of_timezones, 'is_selected')) !== false;
     }
 }
