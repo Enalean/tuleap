@@ -75,4 +75,20 @@ describe("DependencyNatureControl", () => {
         expect(input_event[1][0]).toBe("");
         expect(input_event[2][0]).toBe(null);
     });
+
+    it("should mark the selectbox as disabled when there is no link", async () => {
+        const wrapper = shallowMount(DependencyNatureControl, {
+            localVue: await createRoadmapLocalVue(),
+            propsData: {
+                value: null,
+                available_natures: new NaturesLabels([]),
+            },
+        });
+
+        const select = wrapper.find("[data-test=select-links]").element;
+        if (!(select instanceof HTMLSelectElement)) {
+            throw new Error("Unable to find the select");
+        }
+        expect(select.disabled).toBe(true);
+    });
 });

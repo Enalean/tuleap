@@ -28,6 +28,8 @@
             v-bind:id="id"
             v-on:change="onchange"
             data-test="select-links"
+            v-bind:disabled="disabled"
+            v-bind:title="title"
         >
             <option
                 v-bind:value="NONE_SPECIALVALUE"
@@ -72,6 +74,16 @@ export default class DependencyNatureControl extends Vue {
 
     get sorted_natures(): string[] {
         return Array.from(this.available_natures.keys()).sort((a, b) => a.localeCompare(b));
+    }
+
+    get disabled(): boolean {
+        return this.available_natures.size <= 0;
+    }
+
+    get title(): string {
+        return this.disabled
+            ? this.$gettext("Displayed artifacts don't have any links to each other.")
+            : "";
     }
 
     onchange($event: Event): void {
