@@ -18,8 +18,8 @@
  */
 
 import { get } from "tlp";
-import { limitConcurrencyPool } from "./concurrency-limit-pool";
 import type { MinimalTracker, Tracker } from "./tracker";
+import { limitConcurrencyPool } from "@tuleap/concurrency-limit-pool";
 
 const MAX_CONCURRENT_REQUESTS_WHEN_RETRIEVING_TRACKERS = 5;
 
