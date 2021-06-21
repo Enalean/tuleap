@@ -27,10 +27,7 @@ use GitPresenters_AdminPresenter;
 
 class AdministrationPresenter extends GitPresenters_AdminPresenter
 {
-    /**
-     * @var CSRFSynchronizerToken
-     */
-    public $csrf_token;
+    private CSRFSynchronizerToken $csrf_token;
 
     /**
      * @var JenkinsServerPresenter[]
@@ -53,5 +50,10 @@ class AdministrationPresenter extends GitPresenters_AdminPresenter
     public function form_action(): string
     {
         return '';
+    }
+
+    public function csrf_token(): CSRFSynchronizerToken
+    {
+        return $this->csrf_token;
     }
 }
