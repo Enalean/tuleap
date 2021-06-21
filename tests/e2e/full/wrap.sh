@@ -8,7 +8,7 @@ set -euxo pipefail
 MAX_TEST_EXECUTION_TIME='30m'
 TIMEOUT="$(command -v gtimeout || echo timeout)"
 plugins_compose_file="$(find ./plugins/*/tests/e2e/ -name docker-compose.yml -printf '-f %p ')"
-DOCKERCOMPOSE="docker-compose -f docker-compose-e2e-full-tests.yml $plugins_compose_file -p e2e-tests-${BUILD_TAG:-'dev'}"
+DOCKERCOMPOSE="docker-compose -f docker-compose-e2e-full-tests.yml  -f ./tests/e2e/docker-compose-test-runner.yml $plugins_compose_file -p e2e-tests-${BUILD_TAG:-'dev'}"
 
 test_results_folder='./test_results_e2e_full'
 if [ "$#" -eq "1" ]; then

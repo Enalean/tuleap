@@ -5,7 +5,7 @@
 
 set -euxo pipefail
 plugins_compose_file="$(find ./plugins/*/tests/e2e/ -name docker-compose.yml -printf '-f %p ')"
-DOCKERCOMPOSE="docker-compose -f docker-compose-e2e-full-tests-with-app.yml $plugins_compose_file -p e2e-tests"
+DOCKERCOMPOSE="docker-compose -f docker-compose-e2e-full-tests.yml $plugins_compose_file -p e2e-tests"
 
 test_results_folder='./test_results_e2e_full'
 if [ "$#" -eq "1" ]; then
@@ -20,8 +20,6 @@ mkdir -p "$test_results_folder" || true
 rm -rf "$test_results_folder/*" || true
 
 clean_env
-
-$DOCKERCOMPOSE up -d --build
 
 TEST_RESULT_OUTPUT="$test_results_folder" $DOCKERCOMPOSE up -d --build
 
