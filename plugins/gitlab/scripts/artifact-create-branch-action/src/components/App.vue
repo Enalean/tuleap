@@ -125,22 +125,31 @@
 </template>
 <script lang="ts">
 import Vue from "vue";
-import { Component } from "vue-property-decorator";
+import { Component, Prop } from "vue-property-decorator";
 import jquery from "jquery";
-import { State } from "vuex-class";
-import type { GitlabIntegration } from "../store/type";
 import { GitLabBranchCreationPossibleError, postGitlabBranch } from "../api/rest-querier";
 import * as codendi from "codendi";
 
+interface GitlabIntegration {
+    description: string;
+    gitlab_repository_url: string;
+    gitlab_repository_id: number;
+    id: number;
+    last_push_date: string;
+    name: string;
+    is_webhook_configured: boolean;
+    allow_artifact_closure: boolean;
+}
+
 @Component
 export default class App extends Vue {
-    @State
+    @Prop({ required: true, type: Array })
     private readonly integrations!: ReadonlyArray<GitlabIntegration>;
 
-    @State
+    @Prop({ required: true, type: String })
     private readonly branch_name!: string;
 
-    @State
+    @Prop({ required: true, type: Number })
     private readonly artifact_id!: number;
 
     private selected_integration: GitlabIntegration | null = null;
