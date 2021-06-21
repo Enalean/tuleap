@@ -31,21 +31,9 @@ abstract class GraphOnTrackersV5_Engine
     /** @var array */
     public $colors;
 
-    /**
-     * @return bool true if the data are valid to buid the chart
-     */
-    public function validData()
+    public function validData(): bool
     {
-        if (count($this->data) > 0) {
-            return true;
-        } else {
-            $GLOBALS['Response']->addFeedback(
-                'info',
-                sprintf(dgettext('tuleap-graphontrackersv5', 'No datas to display for graph %1$s'), $this->title)
-            );
-
-            return false;
-        }
+        return is_array($this->data) && count($this->data) > 0;
     }
 
     public function getDataAsArray(): array

@@ -35,7 +35,7 @@ class GraphOnTrackersV5_Engine_CumulativeFlow extends GraphOnTrackersV5_Engine
     public $width;
     public $data;
 
-    public function validData()
+    public function validData(): bool
     {
         if (! $this->hasStart()) {
             $this->setError(

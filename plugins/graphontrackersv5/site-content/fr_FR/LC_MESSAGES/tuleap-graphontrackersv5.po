@@ -92,6 +92,9 @@ msgstr "Information à droite des barres"
 msgid "Month"
 msgstr "Mois"
 
+msgid "No data to display for graph"
+msgstr "Pas de données à afficher pour le graphique"
+
 msgid "No data to display."
 msgstr "Aucune donnée à afficher."
 
