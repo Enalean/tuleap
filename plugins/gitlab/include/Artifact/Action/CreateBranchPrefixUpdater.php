@@ -28,6 +28,8 @@ use Tuleap\Gitlab\Repository\GitlabRepositoryIntegrationNotFoundException;
 
 class CreateBranchPrefixUpdater
 {
+    private const FAKE_BRANCH_NAME = 'branch_name';
+
     private GitlabRepositoryIntegrationFactory $integration_factory;
     private CreateBranchPrefixDao $create_branch_prefix_dao;
 
@@ -50,7 +52,7 @@ class CreateBranchPrefixUpdater
             throw new GitlabRepositoryIntegrationNotFoundException($integration_id);
         }
 
-        BranchName::fromBranchNameShortHand($prefix);
+        BranchName::fromBranchNameShortHand($prefix . self::FAKE_BRANCH_NAME);
 
         $this->create_branch_prefix_dao->setCreateBranchPrefixForIntegration(
             $integration_id,
