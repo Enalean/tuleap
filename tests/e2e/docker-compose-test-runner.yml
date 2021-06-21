@@ -1,0 +1,19 @@
+version: "2"
+
+services:
+  test:
+    image: tuleap-run-e2e-tests-v2
+    build:
+      context: ./tests/e2e/docker # This is resolved from the rout of the sources
+      dockerfile: run-tests.dockerfile
+      args:
+        DOCKER_REGISTRY: ${DOCKER_REGISTRY:-docker.io}
+        CYPRESS_VERSION: $CYPRESS_VERSION
+    command: /tuleap/tests/e2e/full/run.sh
+    shm_size: 512M
+    volumes:
+      - .:/tuleap
+      - ${TEST_RESULT_OUTPUT}:/output
+    networks:
+      - tuleap
+      - external-connectivity
