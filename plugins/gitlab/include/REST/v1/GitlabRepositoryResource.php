@@ -22,7 +22,6 @@ declare(strict_types=1);
 namespace Tuleap\Gitlab\REST\v1;
 
 use BackendLogger;
-use ForgeConfig;
 use Git_PermissionsDao;
 use Git_SystemEventManager;
 use GitDao;
@@ -46,7 +45,6 @@ use Tuleap\Gitlab\API\GitlabHTTPClientFactory;
 use Tuleap\Gitlab\API\GitlabProjectBuilder;
 use Tuleap\Gitlab\API\GitlabRequestException;
 use Tuleap\Gitlab\API\GitlabResponseAPIException;
-use Tuleap\Gitlab\Artifact\Action\CreateBranchButtonFetcher;
 use Tuleap\Gitlab\Artifact\Action\CreateBranchPrefixDao;
 use Tuleap\Gitlab\Artifact\Action\CreateBranchPrefixUpdater;
 use Tuleap\Gitlab\Repository\GitlabRepositoryAlreadyIntegratedInProjectException;
@@ -191,12 +189,9 @@ final class GitlabRepositoryResource
                 $integrated_gitlab_repository->getId()
             );
 
-            $create_branch_prefix = '';
-            if (ForgeConfig::getFeatureFlag(CreateBranchButtonFetcher::FEATURE_FLAG_KEY)) {
-                $create_branch_prefix = (new CreateBranchPrefixDao())->searchCreateBranchPrefixForIntegration(
-                    $integrated_gitlab_repository->getId()
-                );
-            }
+            $create_branch_prefix = (new CreateBranchPrefixDao())->searchCreateBranchPrefixForIntegration(
+                $integrated_gitlab_repository->getId()
+            );
 
             return new GitlabRepositoryRepresentation(
                 $integrated_gitlab_repository->getId(),
@@ -479,10 +474,6 @@ final class GitlabRepositoryResource
         }
 
         if ($patch_representation->create_branch_prefix !== null) {
-            if (! ForgeConfig::getFeatureFlag(CreateBranchButtonFetcher::FEATURE_FLAG_KEY)) {
-                throw new RestException(400, "This parameter is not yet handled.");
-            }
-
             $prefix_updater = new CreateBranchPrefixUpdater(
                 new GitlabRepositoryIntegrationFactory(
                     new GitlabRepositoryIntegrationDao(),
@@ -530,10 +521,7 @@ final class GitlabRepositoryResource
             $updated_gitlab_integration->getId()
         );
 
-        $create_branch_prefix = '';
-        if (ForgeConfig::getFeatureFlag(CreateBranchButtonFetcher::FEATURE_FLAG_KEY)) {
-            $create_branch_prefix = (new CreateBranchPrefixDao())->searchCreateBranchPrefixForIntegration($id);
-        }
+        $create_branch_prefix = (new CreateBranchPrefixDao())->searchCreateBranchPrefixForIntegration($id);
 
         return new GitlabRepositoryRepresentation(
             $updated_gitlab_integration->getId(),

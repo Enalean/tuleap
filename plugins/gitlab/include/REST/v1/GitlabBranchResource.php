@@ -24,7 +24,6 @@ declare(strict_types=1);
 namespace Tuleap\Gitlab\REST\v1;
 
 use Cocur\Slugify\Slugify;
-use ForgeConfig;
 use gitlabPlugin;
 use Luracast\Restler\RestException;
 use PluginManager;
@@ -33,7 +32,6 @@ use Tracker_ArtifactFactory;
 use Tuleap\Cryptography\KeyFactory;
 use Tuleap\Gitlab\API\ClientWrapper;
 use Tuleap\Gitlab\API\GitlabHTTPClientFactory;
-use Tuleap\Gitlab\Artifact\Action\CreateBranchButtonFetcher;
 use Tuleap\Gitlab\Artifact\Action\CreateBranchPrefixDao;
 use Tuleap\Gitlab\Artifact\BranchNameCreatorFromArtifact;
 use Tuleap\Gitlab\Plugin\GitlabIntegrationAvailabilityChecker;
@@ -93,10 +91,6 @@ class GitlabBranchResource
     protected function createGitlabBranch(GitlabBranchPOSTRepresentation $gitlab_branch): void
     {
         $this->options();
-
-        if (! ForgeConfig::getFeatureFlag(CreateBranchButtonFetcher::FEATURE_FLAG_KEY)) {
-            return;
-        }
 
         $current_user          = UserManager::instance()->getCurrentUser();
         $plugin_manager        = PluginManager::instance();

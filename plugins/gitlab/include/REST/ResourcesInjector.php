@@ -20,9 +20,7 @@
 
 namespace Tuleap\Gitlab\REST;
 
-use ForgeConfig;
 use Project;
-use Tuleap\Gitlab\Artifact\Action\CreateBranchButtonFetcher;
 use Tuleap\Gitlab\REST\v1\GitlabBranchResource;
 use Tuleap\Gitlab\REST\v1\GitlabProjectResource;
 use Tuleap\Gitlab\REST\v1\GitlabRepositoryRepresentation;
@@ -40,9 +38,7 @@ class ResourcesInjector
     {
         $restler->addAPIClass(GitlabProjectResource::class, ProjectRepresentation::ROUTE);
         $restler->addAPIClass(GitlabRepositoryResource::class, GitlabRepositoryRepresentation::ROUTE);
-        if (ForgeConfig::getFeatureFlag(CreateBranchButtonFetcher::FEATURE_FLAG_KEY)) {
-            $restler->addAPIClass(GitlabBranchResource::class, GitlabBranchResource::ROUTE);
-        }
+        $restler->addAPIClass(GitlabBranchResource::class, GitlabBranchResource::ROUTE);
     }
 
     public function declareProjectGitlabResource(array &$resources, Project $project): void

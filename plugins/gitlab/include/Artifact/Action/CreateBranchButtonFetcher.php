@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Gitlab\Artifact\Action;
 
-use ForgeConfig;
 use PFUser;
 use Tuleap\Gitlab\Artifact\BranchNameCreatorFromArtifact;
 use Tuleap\Gitlab\Plugin\GitlabIntegrationAvailabilityChecker;
@@ -61,10 +60,6 @@ class CreateBranchButtonFetcher
 
     public function getActionButton(Artifact $artifact, PFUser $user): ?AdditionalButtonAction
     {
-        if (! ForgeConfig::getFeatureFlag(self::FEATURE_FLAG_KEY)) {
-            return null;
-        }
-
         $project    = $artifact->getTracker()->getProject();
         $project_id = (int) $project->getID();
 
@@ -94,7 +89,7 @@ class CreateBranchButtonFetcher
             $link_label,
             "",
             $icon,
-            self::FEATURE_FLAG_KEY,
+            'artifact-create-gitlab-branches',
             [
                 [
                     'name'  => "integrations",

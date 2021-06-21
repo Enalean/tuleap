@@ -21,9 +21,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Gitlab\REST\v1;
 
-use ForgeConfig;
 use Project;
-use Tuleap\Gitlab\Artifact\Action\CreateBranchButtonFetcher;
 use Tuleap\Gitlab\Artifact\Action\CreateBranchPrefixDao;
 use Tuleap\Gitlab\Repository\GitlabRepositoryIntegrationFactory;
 use Tuleap\Gitlab\Repository\Webhook\WebhookDao;
@@ -53,12 +51,9 @@ class GitlabRepositoryRepresentationFactory
                 $gitlab_repository->getId()
             );
 
-            $create_branch_prefix = '';
-            if (ForgeConfig::getFeatureFlag(CreateBranchButtonFetcher::FEATURE_FLAG_KEY)) {
-                $create_branch_prefix = (new CreateBranchPrefixDao())->searchCreateBranchPrefixForIntegration(
-                    $gitlab_repository->getId()
-                );
-            }
+            $create_branch_prefix = (new CreateBranchPrefixDao())->searchCreateBranchPrefixForIntegration(
+                $gitlab_repository->getId()
+            );
 
             $gitlab_repositories_representations[] = new GitlabRepositoryRepresentation(
                 $gitlab_repository->getId(),

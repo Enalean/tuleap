@@ -19,7 +19,6 @@
  */
 
 use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
-use Tuleap\CLI\Events\GetWhitelistedKeys;
 use Tuleap\Cryptography\KeyFactory;
 use Tuleap\Date\TlpRelativeDatePresenterBuilder;
 use Tuleap\DB\DBFactory;
@@ -159,7 +158,6 @@ class gitlabPlugin extends Plugin
         $this->addHook(ExternalSystemReferencePresentersCollector::NAME);
         $this->addHook(SemanticDoneUsedExternalServiceEvent::NAME);
         $this->addHook(AdditionalArtifactActionButtonsFetcher::NAME);
-        $this->addHook(GetWhitelistedKeys::NAME);
 
         return parent::getHooksAndCallbacks();
     }
@@ -724,11 +722,6 @@ class gitlabPlugin extends Plugin
             $this->_getPluginManager(),
             $this
         );
-    }
-
-    public function getWhitelistedKeys(GetWhitelistedKeys $event): void
-    {
-        $event->addConfigClass(CreateBranchButtonFetcher::class);
     }
 
     public function additionalArtifactActionButtonsFetcher(AdditionalArtifactActionButtonsFetcher $event): void
