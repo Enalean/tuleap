@@ -36,7 +36,7 @@ describe("Plateform allows anonymous", function () {
     it("given project is switched from public to private, anonymous are redirected to login page", function () {
         cy.projectAdministratorLogin();
 
-        cy.visitProjectService("platform-allows-anonymous", "Admin");
+        cy.visitProjectAdministration("platform-allows-anonymous");
         cy.contains("Details").click();
         cy.get("[data-test=project_visibility]").select("private");
         cy.get("[data-test=project-details-short-description-input]").type("My short description");

@@ -59,7 +59,7 @@ describe("TTM campaign", () => {
         });
 
         it("Adds user to project members", () => {
-            cy.visitServiceInCurrentProject("Admin");
+            cy.visitProjectAdministrationInCurrentProject();
             cy.get("[data-test=admin-nav-members]").click();
 
             cy.get(
