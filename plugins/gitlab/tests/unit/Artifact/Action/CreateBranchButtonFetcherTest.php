@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\Gitlab\Artifact\Action;
 
 use Cocur\Slugify\Slugify;
-use ForgeConfig;
 use PFUser;
 use Project;
 use Tracker;
@@ -74,8 +73,6 @@ final class CreateBranchButtonFetcherTest extends TestCase
 
     public function testItReturnsTheActionLinkButton(): void
     {
-        $this->mockFeatureFlagEnabled();
-
         $user     = $this->createMock(PFUser::class);
         $project  = new Project([
             'group_id' => 101,
@@ -169,8 +166,6 @@ final class CreateBranchButtonFetcherTest extends TestCase
 
     public function testItReturnsTheActionLinkButtonWithoutArtifactTitle(): void
     {
-        $this->mockFeatureFlagEnabled();
-
         $user     = $this->createMock(PFUser::class);
         $project  = new Project([
             'group_id' => 101,
@@ -263,25 +258,8 @@ final class CreateBranchButtonFetcherTest extends TestCase
         self::assertSame('action.js', $button_action->getAssetLink());
     }
 
-    public function testItReturnsNullIfFeatureFlagIsNotSet(): void
-    {
-        $artifact = $this->createMock(Artifact::class);
-        $user     = $this->createMock(PFUser::class);
-
-        ForgeConfig::set(
-            ForgeConfig::FEATURE_FLAG_PREFIX . CreateBranchButtonFetcher::FEATURE_FLAG_KEY,
-            false
-        );
-
-        self::assertNull(
-            $this->fetcher->getActionButton($artifact, $user)
-        );
-    }
-
     public function testItReturnsNullIfProjectCannotUseGitlabIntegration(): void
     {
-        $this->mockFeatureFlagEnabled();
-
         $artifact = $this->createMock(Artifact::class);
         $user     = $this->createMock(PFUser::class);
         $project  = Project::buildForTest();
@@ -310,8 +288,6 @@ final class CreateBranchButtonFetcherTest extends TestCase
 
     public function testItReturnsNullIfUserIsNotProjectMember(): void
     {
-        $this->mockFeatureFlagEnabled();
-
         $user     = $this->createMock(PFUser::class);
         $project  = Project::buildForTest();
         $artifact = $this->createMock(Artifact::class);
@@ -346,8 +322,6 @@ final class CreateBranchButtonFetcherTest extends TestCase
 
     public function testItReturnsNullIfUserCannotSeeArtifact(): void
     {
-        $this->mockFeatureFlagEnabled();
-
         $user     = $this->createMock(PFUser::class);
         $project  = Project::buildForTest();
         $artifact = $this->createMock(Artifact::class);
@@ -388,8 +362,6 @@ final class CreateBranchButtonFetcherTest extends TestCase
 
     public function testItReturnsNullIfProjectDoesNotHaveIntegrationWithSecretConfigured(): void
     {
-        $this->mockFeatureFlagEnabled();
-
         $user     = $this->createMock(PFUser::class);
         $project  = Project::buildForTest();
         $artifact = $this->createMock(Artifact::class);
@@ -431,14 +403,6 @@ final class CreateBranchButtonFetcherTest extends TestCase
 
         self::assertNull(
             $this->fetcher->getActionButton($artifact, $user)
-        );
-    }
-
-    private function mockFeatureFlagEnabled(): void
-    {
-        ForgeConfig::set(
-            ForgeConfig::FEATURE_FLAG_PREFIX . CreateBranchButtonFetcher::FEATURE_FLAG_KEY,
-            true
         );
     }
 }
