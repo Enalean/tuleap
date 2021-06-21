@@ -142,7 +142,14 @@ class TimeframeImpliedFromAnotherTracker implements IComputeTimeframes
 
     public function exportToREST(\PFUser $user): ?IRepresentSemanticTimeframe
     {
-        return null;
+        $implied_from_tracker = $this->semantic_timeframe_implied_from_tracker->getTracker();
+        if (! $implied_from_tracker->userCanView($user)) {
+            return null;
+        }
+
+        return new SemanticTimeframeImpliedFromAnotherTrackerRepresentation(
+            $implied_from_tracker->getId()
+        );
     }
 
     public function save(\Tracker $tracker, SemanticTimeframeDao $dao): bool

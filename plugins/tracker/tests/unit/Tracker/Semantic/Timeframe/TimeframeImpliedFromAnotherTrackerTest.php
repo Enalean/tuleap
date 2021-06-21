@@ -51,11 +51,14 @@ class TimeframeImpliedFromAnotherTrackerTest extends \Tuleap\Test\PHPUnit\TestCa
      */
     private $tracker;
 
+    private const RELEASE_TRACKER_ID = 150;
+
     protected function setUp(): void
     {
         $this->tracker              = $this->createMock(\Tracker::class);
         $this->implied_from_tracker = $this->createMock(\Tracker::class);
         $this->implied_from_tracker->expects(self::any())->method('getName')->will(self::returnValue("Releases"));
+        $this->implied_from_tracker->expects(self::any())->method('getId')->will(self::returnValue(self::RELEASE_TRACKER_ID));
 
         $this->timeframe_calculator = $this->createMock(TimeframeWithDuration::class);
         $this->logger               = $this->createMock(LoggerInterface::class);
@@ -89,10 +92,23 @@ class TimeframeImpliedFromAnotherTrackerTest extends \Tuleap\Test\PHPUnit\TestCa
         self::assertCount(0, $root->children());
     }
 
-    public function testItDoesNotExportToRESTYet(): void
+    public function testItDoesNotExportToRESTWhenUserCannotViewTheTargetTracker(): void
     {
         $user = $this->createMock(\PFUser::class);
+        $this->implied_from_tracker->expects(self::once())->method('userCanView')->willReturn(false);
+
         self::assertNull(
+            $this->timeframe->exportToREST($user)
+        );
+    }
+
+    public function testItExportsToREST(): void
+    {
+        $user = $this->createMock(\PFUser::class);
+        $this->implied_from_tracker->expects(self::once())->method('userCanView')->willReturn(true);
+
+        self::assertEquals(
+            new SemanticTimeframeImpliedFromAnotherTrackerRepresentation(self::RELEASE_TRACKER_ID),
             $this->timeframe->exportToREST($user)
         );
     }
@@ -110,10 +126,9 @@ class TimeframeImpliedFromAnotherTrackerTest extends \Tuleap\Test\PHPUnit\TestCa
     public function testFieldIsUsedWhenItIsAnArtLinkFieldComingFromTheTrackerWeUseTheSemantic(): void
     {
         $a_field = $this->createMock(\Tracker_FormElement_Field_ArtifactLink::class);
-        $a_field->expects(self::once())->method('getTrackerId')->willReturn(12);
+        $a_field->expects(self::once())->method('getTrackerId')->willReturn(self::RELEASE_TRACKER_ID);
 
         $this->tracker->expects(self::once())->method('getId')->willReturn(10);
-        $this->implied_from_tracker->expects(self::once())->method('getId')->willReturn(12);
 
         self::assertTrue($this->timeframe->isFieldUsed($a_field));
     }
