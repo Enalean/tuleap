@@ -65,6 +65,7 @@ export interface Repository {
     html_url: string;
     gitlab_data?: null | GitLabData;
     allow_artifact_closure: boolean;
+    create_branch_prefix: string;
 }
 
 export interface FormattedGitLabRepository {
@@ -78,6 +79,7 @@ export interface FormattedGitLabRepository {
     path_without_project: string;
     gitlab_data?: null | GitLabData;
     allow_artifact_closure: boolean;
+    create_branch_prefix: string;
 }
 
 export interface GitlabDataWithPath {
@@ -137,6 +139,7 @@ export interface GitLabRepository {
     name: string;
     is_webhook_configured: boolean;
     allow_artifact_closure: boolean;
+    create_branch_prefix: string;
 }
 
 export interface RepositoryOwner {

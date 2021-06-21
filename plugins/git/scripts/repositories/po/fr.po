@@ -59,14 +59,10 @@ msgid "Artifact closure"
 msgstr "Fermeture d'artéfact"
 
 msgid "Artifact closure is now allowed for '%s'!"
-msgstr ""
-"L'ouverture d'artéfact est maintenant possible pour "
-"'%s'."
+msgstr "L'ouverture d'artéfact est maintenant possible pour '%s'."
 
 msgid "Artifact closure is now disabled for '%s'!"
-msgstr ""
-"La fermeture d'artéfact est maintenant désactivé pour "
-"'%s'."
+msgstr "La fermeture d'artéfact est maintenant désactivé pour '%s'."
 
 msgid "Back"
 msgstr "Retour"
@@ -85,8 +81,24 @@ msgstr "Vérifier la validité du nouveau token"
 msgid "Close"
 msgstr "Fermer"
 
+msgid "Create GitLab branch prefix"
+msgstr "Créer un préfix de branche GitLab"
+
 msgid "Create a repository"
 msgstr "Créer un dépôt"
+
+msgid "Create branch prefix"
+msgstr "Créer un préfix de branche"
+
+msgid ""
+"Create branch prefix for integration %s has been successfully been updated "
+"to '%s'!"
+msgstr ""
+"Le préfix de création de branche pour l'intégration %s a été mis à jour avec "
+"succès avec la valeur %s !"
+
+msgid "Create branch prefix for integration %s has been successfully cleared."
+msgstr "Le préfix de création de branche pour l'intégration %s a été vidé avec succès."
 
 msgid "Edit access token"
 msgstr "Éditer le token d'accès"
@@ -135,6 +147,15 @@ msgstr ""
 "messages de commit\n"
 "                    de GitLab depuis le dépôt sélectionné."
 
+msgid ""
+"If set, this prefix will be automatically added to the branch name in the "
+"create\n"
+"            GitLab branch action"
+msgstr ""
+"Si une valeur existe, ce préfix sera automatiquement ajouté au nom de la "
+"branche dans l'action de création\n"
+"            de branche GitLab"
+
 msgid "Integrate selected repository"
 msgstr "Intégrer le dépôt sélectionné"
 
@@ -165,6 +186,9 @@ msgstr "Oups, une erreur s'est produite !"
 
 msgid "Please confirm your action."
 msgstr "Merci de confirmer votre action."
+
+msgid "Prefix of the branch name"
+msgstr "Préfix du nom de la branche"
 
 msgid "Project not found"
 msgstr "Projet non trouvé"
@@ -217,6 +241,9 @@ msgstr "Sauvegarder"
 
 msgid "Save new token"
 msgstr "Sauvegarder le nouveau jeton d'accès"
+
+msgid "Save prefix"
+msgstr "Sauvegarder le préfix"
 
 msgid "Server url is invalid"
 msgstr "L'url du serveur est invalide"

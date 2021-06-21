@@ -58,3 +58,14 @@ export function setArtifactClosureRepository(
 ): void {
     state.artifact_closure_repository = repository;
 }
+
+export function setCreateBranchPrefixModal(state: GitlabState, modal: Modal): void {
+    state.create_branch_prefix_modal = modal;
+}
+
+export function setCreateBranchPrefixRepository(
+    state: GitlabState,
+    repository: GitLabRepository
+): void {
+    state.create_branch_prefix_repository = repository;
+}

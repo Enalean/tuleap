@@ -97,6 +97,17 @@ export const showArtifactClosureModal = (
     context.state.artifact_closure_modal.toggle();
 };
 
+export const showCreateBranchPrefixModal = (
+    context: ActionContext<GitlabState, GitlabState>,
+    repository: GitLabRepository
+): void => {
+    context.commit("setCreateBranchPrefixRepository", repository);
+    if (!context.state.create_branch_prefix_modal) {
+        return;
+    }
+    context.state.create_branch_prefix_modal.toggle();
+};
+
 export async function getGitlabRepositories(
     context: ActionContext<GitlabState, GitlabState>,
     order_by: string
@@ -228,14 +239,19 @@ export async function regenerateGitlabWebhook(
     await patchGitlabRepository(integration_id, body);
 }
 
-interface UpdateGitlabIntegrationPayload {
+interface UpdateGitlabIntegrationArtifactClosurePayload {
     integration_id: number;
     allow_artifact_closure: boolean;
 }
 
-export async function updateGitlabRepository(
+interface UpdateGitlabIntegrationCreateBranchPrefixPayload {
+    integration_id: number;
+    create_branch_prefix: string;
+}
+
+export async function updateGitlabRepositoryArtifactClosure(
     context: ActionContext<GitlabState, GitlabState>,
-    payload: UpdateGitlabIntegrationPayload
+    payload: UpdateGitlabIntegrationArtifactClosurePayload
 ): Promise<GitLabRepository> {
     const gitlab_repository_update: GitLabRepositoryUpdate = {
         allow_artifact_closure: payload.allow_artifact_closure,
@@ -249,6 +265,27 @@ export async function updateGitlabRepository(
 
     const repo = repositories[concerned_repository_index];
     repo.allow_artifact_closure = payload.allow_artifact_closure;
+    repositories[concerned_repository_index] = repo;
+
+    return response.json();
+}
+
+export async function updateGitlabRepositoryCreateBranchPrefix(
+    context: ActionContext<GitlabState, GitlabState>,
+    payload: UpdateGitlabIntegrationCreateBranchPrefixPayload
+): Promise<GitLabRepository> {
+    const gitlab_repository_update: GitLabRepositoryUpdate = {
+        create_branch_prefix: payload.create_branch_prefix,
+    };
+    const response = await patchGitlabRepository(payload.integration_id, gitlab_repository_update);
+
+    const repositories = context.rootGetters.getGitlabRepositoriesIntegrated;
+    const concerned_repository_index = repositories.findIndex(
+        (repository: Repository) => repository.integration_id === payload.integration_id
+    );
+
+    const repo = repositories[concerned_repository_index];
+    repo.create_branch_prefix = payload.create_branch_prefix;
     repositories[concerned_repository_index] = repo;
 
     return response.json();
