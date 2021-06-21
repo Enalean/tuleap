@@ -39,6 +39,8 @@ declare global {
             updatePlatformVisibilityForAnonymous(): void;
             getProjectId(project_shortname: string): Chainable<JQuery<HTMLElement>>;
             visitProjectService(project_unixname: string, service_label: string): void;
+            visitProjectAdministration(project_unixname: string): void;
+            visitProjectAdministrationInCurrentProject(): void;
             uploadFixtureFile(
                 file_name: string,
                 file_type: string
@@ -141,6 +143,15 @@ Cypress.Commands.add(
         });
     }
 );
+
+Cypress.Commands.add("visitProjectAdministration", (project_unixname: string) => {
+    cy.visit("/projects/" + project_unixname);
+    cy.get('[data-test="project-administration-link"]').click();
+});
+
+Cypress.Commands.add("visitProjectAdministrationInCurrentProject", () => {
+    cy.get('[data-test="project-administration-link"]').click();
+});
 
 Cypress.Commands.add("visitServiceInCurrentProject", (service_label: string) => {
     // eslint-disable-next-line @typescript-eslint/no-empty-function

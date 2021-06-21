@@ -51,7 +51,7 @@ describe("Platform allows restricted", function () {
     it("given project is switched from public to private, permissions are respected", function () {
         cy.projectAdministratorLogin();
 
-        cy.visitProjectService("platform-allows-restricted", "Admin");
+        cy.visitProjectAdministration("platform-allows-restricted");
         cy.contains("Details").click();
         cy.get("[data-test=project_visibility]").select("private");
         cy.get("[data-test=project-details-submit-button]").click();

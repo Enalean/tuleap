@@ -69,7 +69,7 @@ describe("Project admin", function () {
         });
 
         it("should be able to add users to a public project", function () {
-            cy.visitProjectService("project-admin-test", "Admin");
+            cy.visitProjectAdministration("project-admin-test");
             cy.contains("Members").click();
 
             cy.get(
@@ -119,7 +119,7 @@ describe("Project admin", function () {
         });
 
         it("should verify that a project administrator can enable a new service", () => {
-            cy.visitProjectService("project-admin-test", "Admin");
+            cy.visitProjectAdministration("project-admin-test");
             cy.contains("Services").click({ force: true });
 
             cy.get("[data-test=edit-service-plugin_svn]").click();
