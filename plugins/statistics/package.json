@@ -6,9 +6,9 @@
   "private": true,
   "dependencies": {
     "@tuleap/filter-inline-table": "file://../../src/scripts/lib/filter-table",
-    "d3-selection": "^2.0.0",
-    "d3-shape": "^2.1.0",
-    "d3-transition": "^2.0.0"
+    "d3-selection": "^3.0.0",
+    "d3-shape": "^3.0.1",
+    "d3-transition": "^3.0.1"
   },
   "devDependencies": {},
   "config": {
