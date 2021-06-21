@@ -24,31 +24,68 @@ declare(strict_types=1);
 namespace Tuleap\Gitlab\Artifact;
 
 use Cocur\Slugify\Slugify;
+use DateTimeImmutable;
+use Project;
+use Tuleap\Gitlab\Artifact\Action\CreateBranchPrefixDao;
+use Tuleap\Gitlab\Repository\GitlabRepositoryIntegration;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\Artifact;
 
 final class BranchNameCreatorFromArtifactTest extends TestCase
 {
     private BranchNameCreatorFromArtifact $branch_name_creator_from_artifact;
+    /**
+     * @var \PHPUnit\Framework\MockObject\MockObject&CreateBranchPrefixDao
+     */
+    private $create_branch_prefix_dao;
 
     protected function setUp(): void
     {
-        $this->branch_name_creator_from_artifact = new BranchNameCreatorFromArtifact(new Slugify());
+        $this->create_branch_prefix_dao = $this->createMock(CreateBranchPrefixDao::class);
+
+        $this->branch_name_creator_from_artifact = new BranchNameCreatorFromArtifact(
+            new Slugify(),
+            $this->create_branch_prefix_dao
+        );
     }
 
     public function testBranchNameIsCreatedFromAnArtifactWithATitle(): void
     {
         $artifact = $this->getArtifact('art title');
 
-        $branch_name = $this->branch_name_creator_from_artifact->getBranchName($artifact);
+        $branch_name = $this->branch_name_creator_from_artifact->getBaseBranchName($artifact);
         self::assertEquals('tuleap-123-art_title', $branch_name);
+    }
+
+    public function testBranchNameIsCreatedFromAnArtifactWithATitleAndAPrefix(): void
+    {
+        $artifact    = $this->getArtifact('art title');
+        $integration = new GitlabRepositoryIntegration(
+            18,
+            12,
+            "MyRepo",
+            "",
+            "https://example",
+            new DateTimeImmutable(),
+            Project::buildForTest(),
+            false
+        );
+
+        $this->create_branch_prefix_dao
+            ->expects(self::once())
+            ->method('searchCreateBranchPrefixForIntegration')
+            ->with(18)
+            ->willReturn("dev-");
+
+        $branch_name = $this->branch_name_creator_from_artifact->getFullBranchName($artifact, $integration);
+        self::assertEquals('dev-tuleap-123-art_title', $branch_name);
     }
 
     public function testBranchNameIsCreatedFromAnArtifactWithoutTitle(): void
     {
         $artifact = $this->getArtifact(null);
 
-        $branch_name = $this->branch_name_creator_from_artifact->getBranchName($artifact);
+        $branch_name = $this->branch_name_creator_from_artifact->getBaseBranchName($artifact);
         self::assertEquals('tuleap-123', $branch_name);
     }
 
@@ -56,7 +93,7 @@ final class BranchNameCreatorFromArtifactTest extends TestCase
     {
         $artifact = $this->getArtifact('');
 
-        $branch_name = $this->branch_name_creator_from_artifact->getBranchName($artifact);
+        $branch_name = $this->branch_name_creator_from_artifact->getBaseBranchName($artifact);
         self::assertEquals('tuleap-123', $branch_name);
     }
 

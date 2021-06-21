@@ -98,7 +98,9 @@
                             <label for="artifact-create-gitlab-branch-name" v-translate>
                                 The following branch will be created
                             </label>
-                            <code id="artifact-create-gitlab-branch-name">{{ branch_name }}</code>
+                            <code id="artifact-create-gitlab-branch-name">
+                                {{ branch_name_placeholder }}
+                            </code>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -139,6 +141,7 @@ interface GitlabIntegration {
     name: string;
     is_webhook_configured: boolean;
     allow_artifact_closure: boolean;
+    create_branch_prefix: string;
 }
 
 @Component
@@ -156,6 +159,14 @@ export default class App extends Vue {
     private reference = "";
     private is_creating_branch = false;
     private error_message = "";
+
+    get branch_name_placeholder(): string {
+        let placeholder = this.branch_name;
+        if (this.selected_integration) {
+            placeholder = this.selected_integration.create_branch_prefix + this.branch_name;
+        }
+        return placeholder;
+    }
 
     mounted(): void {
         const jquery_element = jquery(this.$el);

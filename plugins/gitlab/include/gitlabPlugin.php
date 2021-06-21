@@ -30,6 +30,7 @@ use Tuleap\Gitlab\API\GitlabHTTPClientFactory;
 use Tuleap\Gitlab\API\GitlabProjectBuilder;
 use Tuleap\Gitlab\API\Tag\GitlabTagRetriever;
 use Tuleap\Gitlab\Artifact\Action\CreateBranchButtonFetcher;
+use Tuleap\Gitlab\Artifact\Action\CreateBranchPrefixDao;
 use Tuleap\Gitlab\Artifact\ArtifactRetriever;
 use Tuleap\Gitlab\EventsHandlers\ReferenceAdministrationWarningsCollectorEventHandler;
 use Tuleap\Gitlab\Plugin\GitlabIntegrationAvailabilityChecker;
@@ -738,7 +739,10 @@ class gitlabPlugin extends Plugin
                 $this->getGitlabRepositoryIntegrationFactory(),
                 new WebhookDao()
             ),
-            new \Tuleap\Gitlab\Artifact\BranchNameCreatorFromArtifact(new \Cocur\Slugify\Slugify()),
+            new \Tuleap\Gitlab\Artifact\BranchNameCreatorFromArtifact(
+                new \Cocur\Slugify\Slugify(),
+                new CreateBranchPrefixDao()
+            ),
             new JavascriptAsset(
                 $this->getAssets(),
                 "artifact-create-branch.js"
