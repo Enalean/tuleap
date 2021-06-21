@@ -510,6 +510,50 @@ final class GitlabRepositoryResource
     }
 
     /**
+     * @url    OPTIONS {id}/branches
+     * @access protected
+     */
+    protected function optionBranches(int $id): void
+    {
+        Header::allowOptionsGet();
+    }
+
+    /**
+     * Get information on branches of the GitLab repository
+     *
+     * @url    GET {id}/branches
+     * @access protected
+     *
+     * @param int $id ID of the GitLab integration
+     *
+     *
+     * Only members of the project where the integration lives can access the branches information
+     *
+     * @throws RestException 404
+     */
+    protected function getBranches(int $id): BranchesInformationRepresentation
+    {
+        $this->optionBranches($id);
+
+        $branch_information_retriever = new GitlabBranchInformationRetriever(
+            new GitlabRepositoryIntegrationFactory(
+                new GitlabRepositoryIntegrationDao(),
+                ProjectManager::instance()
+            ),
+            new CredentialsRetriever(new IntegrationApiTokenRetriever(new IntegrationApiTokenDao(), new KeyFactory())),
+            new GitlabProjectBuilder(
+                new ClientWrapper(
+                    HTTPFactoryBuilder::requestFactory(),
+                    HTTPFactoryBuilder::streamFactory(),
+                    new GitlabHTTPClientFactory(HttpClientFactory::createClient())
+                )
+            )
+        );
+
+        return $branch_information_retriever->getBranchInformation(UserManager::instance()->getCurrentUser(), $id);
+    }
+
+    /**
      * @throws RestException
      */
     private function buildUpdatedIntegrationRepresentation(int $id): GitlabRepositoryRepresentation
