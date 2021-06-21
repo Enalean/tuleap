@@ -34,7 +34,6 @@ interface GitLabBranchCreationError {
 export function postGitlabBranch(
     gitlab_integration_id: number,
     artifact_id: number,
-    branch_name: string,
     reference: string
 ): ResultAsync<void, Promise<GitLabBranchCreationError>> {
     const headers = {
@@ -44,7 +43,6 @@ export function postGitlabBranch(
     const body = JSON.stringify({
         gitlab_integration_id: gitlab_integration_id,
         artifact_id: artifact_id,
-        branch_name: branch_name,
         reference: reference,
     });
 

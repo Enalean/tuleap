@@ -26,10 +26,10 @@ describe("postGitlabBranch", () => {
     it("asks to create the GitLab branch", async () => {
         const postSpy = jest.spyOn(tlp, "post");
 
-        const result = await postGitlabBranch(1, 123, "dev_TULEAP-123", "main");
+        const result = await postGitlabBranch(1, 123, "main");
 
         expect(postSpy).toHaveBeenCalledWith("/api/v1/gitlab_branch", {
-            body: '{"gitlab_integration_id":1,"artifact_id":123,"branch_name":"dev_TULEAP-123","reference":"main"}',
+            body: '{"gitlab_integration_id":1,"artifact_id":123,"reference":"main"}',
             headers: {
                 "content-type": "application/json",
             },
@@ -44,7 +44,7 @@ describe("postGitlabBranch", () => {
             error_json: { error: { message: "Invalid reference name: invalid_ref" } },
         });
 
-        const result = await postGitlabBranch(1, 123, "dev_TULEAP-123", "invalid_ref");
+        const result = await postGitlabBranch(1, 123, "invalid_ref");
 
         let error_type: string | null = null;
         if (result.isErr()) {
@@ -60,7 +60,7 @@ describe("postGitlabBranch", () => {
             error_json: { error: { message: "Branch already exists" } },
         });
 
-        const result = await postGitlabBranch(1, 123, "dev_TULEAP-123", "invalid_ref");
+        const result = await postGitlabBranch(1, 123, "invalid_ref");
 
         let error_type: string | null = null;
         if (result.isErr()) {
@@ -73,7 +73,7 @@ describe("postGitlabBranch", () => {
         const postSpy = jest.spyOn(tlp, "post");
         mockFetchError(postSpy, { status: 500 });
 
-        const result = await postGitlabBranch(1, 123, "dev_TULEAP-123", "main");
+        const result = await postGitlabBranch(1, 123, "main");
 
         let error_type: string | null = null;
         if (result.isErr()) {

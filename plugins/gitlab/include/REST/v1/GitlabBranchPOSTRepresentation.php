@@ -39,24 +39,17 @@ class GitlabBranchPOSTRepresentation
     /**
      * @var string
      */
-    public string $branch_name;
-
-    /**
-     * @var string
-     */
     public string $reference;
 
     public static function build(
         int $gitlab_integration_id,
         int $artifact_id,
-        string $branch_name,
         string $reference
     ): self {
         $representation = new self();
 
         $representation->gitlab_integration_id = $gitlab_integration_id;
         $representation->artifact_id           = $artifact_id;
-        $representation->branch_name           = $branch_name;
         $representation->reference             = $reference;
 
         return $representation;

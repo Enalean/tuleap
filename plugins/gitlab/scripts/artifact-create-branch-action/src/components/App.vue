@@ -173,12 +173,7 @@ export default class App extends Vue {
             return;
         }
         this.is_creating_branch = true;
-        const result = postGitlabBranch(
-            integration.id,
-            this.artifact_id,
-            this.branch_name,
-            this.reference
-        );
+        const result = postGitlabBranch(integration.id, this.artifact_id, this.reference);
         await result.match(
             () => {
                 const success_message = this.$gettextInterpolate(

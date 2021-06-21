@@ -738,6 +738,7 @@ class gitlabPlugin extends Plugin
                 $this->getGitlabRepositoryIntegrationFactory(),
                 new WebhookDao()
             ),
+            new \Tuleap\Gitlab\Artifact\BranchNameCreatorFromArtifact(new \Cocur\Slugify\Slugify()),
             new JavascriptAsset(
                 $this->getAssets(),
                 "artifact-create-branch.js"

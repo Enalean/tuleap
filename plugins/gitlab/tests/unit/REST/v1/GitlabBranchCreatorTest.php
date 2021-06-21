@@ -115,7 +115,7 @@ final class GitlabBranchCreatorTest extends TestCase
             ->method('postUrl')
             ->with(
                 $credentials,
-                "/projects/23/repository/branches?branch=dev_TULEAP-123&ref=main",
+                "/projects/23/repository/branches?branch=tuleap-123-art_title&ref=main",
                 []
             );
 
@@ -326,7 +326,7 @@ final class GitlabBranchCreatorTest extends TestCase
             ->method('postUrl')
             ->with(
                 $credentials,
-                "/projects/23/repository/branches?branch=dev_TULEAP-123&ref=main",
+                "/projects/23/repository/branches?branch=tuleap-123-art_title&ref=main",
                 []
             )
             ->willThrowException(
@@ -377,7 +377,7 @@ final class GitlabBranchCreatorTest extends TestCase
             ->method('postUrl')
             ->with(
                 $credentials,
-                "/projects/23/repository/branches?branch=dev_TULEAP-123&ref=main",
+                "/projects/23/repository/branches?branch=tuleap-123-art_title&ref=main",
                 []
             )
             ->willThrowException(
@@ -401,7 +401,6 @@ final class GitlabBranchCreatorTest extends TestCase
         return GitlabBranchPOSTRepresentation::build(
             1,
             123,
-            "dev_TULEAP-123",
             "main"
         );
     }
@@ -420,6 +419,8 @@ final class GitlabBranchCreatorTest extends TestCase
         $artifact
             ->method('getTracker')
             ->willReturn($tracker);
+        $artifact->method('getId')->willReturn(123);
+        $artifact->method('getTitle')->willReturn('art title');
 
         return $artifact;
     }
