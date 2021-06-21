@@ -75,6 +75,7 @@ final class SubtasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
                             new \DateTimeImmutable('@1234567890'),
                             new \DateTimeImmutable('@1234567891'),
                             false,
+                            true,
                             '',
                             [],
                             new ProjectReference($artifact->getTracker()->getProject()),
@@ -165,6 +166,7 @@ final class SubtasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $subtask->method('getTracker')->willReturn($tracker);
         $subtask->method('getUri')->willReturn('/path/to/' . $id);
         $subtask->method('getTitle')->willReturn('Subtask ' . $id);
+        $subtask->method('isOpen')->willReturn(true);
 
         return $subtask;
     }

@@ -34,6 +34,7 @@ export function createStore(initial_root_state: RootState): Store<RootState> {
         should_display_error_state: false,
         error_message: "",
         now: new Date(),
+        show_closed_elements: true,
     };
 
     const store_options: StoreOptions<RootState> = {

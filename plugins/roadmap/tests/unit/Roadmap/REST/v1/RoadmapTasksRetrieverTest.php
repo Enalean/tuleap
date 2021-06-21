@@ -819,6 +819,7 @@ class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
                 'getTitle'    => 'Do this',
                 'getTracker'  => $tracker,
                 'getParent'   => null,
+                'isOpen'      => true,
             ]
         );
         $task_202 = Mockery::mock(
@@ -831,6 +832,7 @@ class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
                 'getTitle'    => 'Do that',
                 'getTracker'  => $tracker,
                 'getParent'   => null,
+                'isOpen'      => true,
             ]
         );
         $task_203 = Mockery::mock(
@@ -843,6 +845,7 @@ class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
                 'getTitle'    => 'Do those',
                 'getTracker'  => $tracker,
                 'getParent'   => null,
+                'isOpen'      => true,
             ]
         );
         $task_204 = Mockery::mock(
@@ -855,6 +858,7 @@ class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
                 'getTitle'    => 'Done more than 1 year ago',
                 'getTracker'  => $tracker,
                 'getParent'   => null,
+                'isOpen'      => true,
             ]
         );
 
@@ -913,6 +917,7 @@ class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
                     (new \DateTimeImmutable())->setTimestamp(1234567890),
                     (new \DateTimeImmutable())->setTimestamp(1234567890),
                     false,
+                    true,
                     '',
                     [new DependenciesByNature('depends_on', [202, 203])],
                     new ProjectReference($project),
@@ -928,6 +933,7 @@ class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
                     null,
                     (new \DateTimeImmutable())->setTimestamp(1234567890),
                     false,
+                    true,
                     '',
                     [],
                     new ProjectReference($project),
@@ -1024,6 +1030,7 @@ class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
                 'getTitle'    => 'Do this',
                 'getTracker'  => $tracker,
                 'getParent'   => null,
+                'isOpen'      => true,
             ]
         );
         $task_202 = Mockery::mock(
@@ -1036,6 +1043,7 @@ class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
                 'getTitle'    => 'Do that',
                 'getTracker'  => $tracker,
                 'getParent'   => $task_201,
+                'isOpen'      => true,
             ]
         );
 
@@ -1090,6 +1098,7 @@ class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
                     (new \DateTimeImmutable())->setTimestamp(1234567890),
                     (new \DateTimeImmutable())->setTimestamp(1234567890),
                     false,
+                    true,
                     '',
                     [],
                     new ProjectReference($project),
@@ -1216,6 +1225,7 @@ class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
                 'getTitle'    => 'Do this',
                 'getTracker'  => $tracker,
                 'getParent'   => null,
+                'isOpen'      => true,
             ]
         );
         $task_203 = Mockery::mock(
@@ -1228,6 +1238,7 @@ class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
                 'getTitle'    => 'Do those',
                 'getTracker'  => $another_tracker,
                 'getParent'   => null,
+                'isOpen'      => true,
             ]
         );
 
@@ -1277,6 +1288,7 @@ class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
                     (new \DateTimeImmutable())->setTimestamp(1234567890),
                     (new \DateTimeImmutable())->setTimestamp(1234567890),
                     false,
+                    true,
                     '',
                     [],
                     new ProjectReference($project),
@@ -1292,6 +1304,7 @@ class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
                     null,
                     (new \DateTimeImmutable())->setTimestamp(1234567890),
                     false,
+                    true,
                     '',
                     [],
                     new ProjectReference($project),

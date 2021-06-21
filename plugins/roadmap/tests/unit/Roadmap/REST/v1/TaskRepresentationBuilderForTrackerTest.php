@@ -30,6 +30,7 @@ use Tuleap\Tracker\Semantic\Progress\SemanticProgressBuilder;
 use Tuleap\Tracker\Semantic\Timeframe\TimeframeImpliedFromAnotherTracker;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
+use Tuleap\Tracker\TrackerColor;
 
 class TaskRepresentationBuilderForTrackerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -49,6 +50,7 @@ class TaskRepresentationBuilderForTrackerTest extends \Tuleap\Test\PHPUnit\TestC
      * @var \PHPUnit\Framework\MockObject\MockObject|TimeframeImpliedFromAnotherTracker
      */
     private $timeframe_calculator;
+    private \Tracker $tracker;
 
     protected function setUp(): void
     {
@@ -65,12 +67,28 @@ class TaskRepresentationBuilderForTrackerTest extends \Tuleap\Test\PHPUnit\TestC
             ->getMock();
 
         $this->user = UserTestBuilder::aUser()->build();
+
+        $this->tracker = TrackerTestBuilder::aTracker()
+            ->withId(101)
+            ->withName("bug")
+            ->withColor(TrackerColor::fromName('fiesta-red'))
+            ->build();
+
+        $semantic_status = $this->createMock(\Tracker_Semantic_Status::class);
+        $semantic_status->method('isOpen')->willReturn(true);
+        \Tracker_Semantic_Status::setInstance($semantic_status, $this->tracker);
+    }
+
+    protected function tearDown(): void
+    {
+        \Tracker_Semantic_Status::clearInstances();
     }
 
     public function testBuildRepresentation(): void
     {
         $artifact = ArtifactTestBuilder::anArtifact(42)
             ->withTitle('There is a bug')
+            ->inTracker($this->tracker)
             ->inProject(new \Project(['group_id' => 101, 'group_name' => 'ACME Corp']))
             ->build();
         $builder  = new TaskRepresentationBuilderForTracker(
@@ -100,6 +118,7 @@ class TaskRepresentationBuilderForTrackerTest extends \Tuleap\Test\PHPUnit\TestC
         self::assertEquals(null, $representation->progress);
         self::assertEquals('ACME Corp', $representation->project->label);
         self::assertTrue($representation->are_dates_implied);
+        self::assertTrue($representation->is_open);
     }
 
     public function testArtifactBelongsToTheRightTracker(): void

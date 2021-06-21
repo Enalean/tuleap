@@ -35,6 +35,7 @@ import {
     SUBTASKS_ARE_LOADING,
     SUBTASKS_WAITING_TO_BE_LOADED,
 } from "../../type";
+import type { RootState } from "../type";
 
 describe("tasks-getters", () => {
     describe("does_at_least_one_task_have_subtasks", () => {
@@ -87,7 +88,11 @@ describe("tasks-getters", () => {
                 tasks: [task_1, task_2, task_3],
             } as TasksState;
 
-            expect(getters.rows(state)).toStrictEqual([
+            const root_state = {
+                show_closed_elements: true,
+            } as RootState;
+
+            expect(getters.rows(state, undefined, root_state)).toStrictEqual([
                 { task: task_1 },
                 { task: task_2 },
                 { task: task_3 },
@@ -117,7 +122,11 @@ describe("tasks-getters", () => {
                 tasks: [task_1, task_2, task_3],
             } as TasksState;
 
-            expect(getters.rows(state)).toStrictEqual([
+            const root_state = {
+                show_closed_elements: true,
+            } as RootState;
+
+            expect(getters.rows(state, undefined, root_state)).toStrictEqual([
                 { task: task_1 },
                 { task: task_2 },
                 { for_task: task_2, is_skeleton: true, is_last_one: false },
@@ -149,7 +158,11 @@ describe("tasks-getters", () => {
                 tasks: [task_1, task_2, task_3],
             } as TasksState;
 
-            expect(getters.rows(state)).toStrictEqual([
+            const root_state = {
+                show_closed_elements: true,
+            } as RootState;
+
+            expect(getters.rows(state, undefined, root_state)).toStrictEqual([
                 { task: task_1 },
                 { task: task_2 },
                 { task: task_3 },
@@ -180,7 +193,11 @@ describe("tasks-getters", () => {
                 tasks: [task_1, task_2, task_3],
             } as TasksState;
 
-            expect(getters.rows(state)).toStrictEqual([
+            const root_state = {
+                show_closed_elements: true,
+            } as RootState;
+
+            expect(getters.rows(state, undefined, root_state)).toStrictEqual([
                 { task: task_1 },
                 { task: task_2 },
                 { parent: task_2, subtask: { id: 1241 }, is_last_one: false },
@@ -212,7 +229,11 @@ describe("tasks-getters", () => {
                 tasks: [task_1, task_2, task_3],
             } as TasksState;
 
-            expect(getters.rows(state)).toStrictEqual([
+            const root_state = {
+                show_closed_elements: true,
+            } as RootState;
+
+            expect(getters.rows(state, undefined, root_state)).toStrictEqual([
                 { task: task_1 },
                 { task: task_2 },
                 { for_task: task_2, is_error: true },
@@ -243,7 +264,11 @@ describe("tasks-getters", () => {
                 tasks: [task_1, task_2, task_3],
             } as TasksState;
 
-            expect(getters.rows(state)).toStrictEqual([
+            const root_state = {
+                show_closed_elements: true,
+            } as RootState;
+
+            expect(getters.rows(state, undefined, root_state)).toStrictEqual([
                 { task: task_1 },
                 { task: task_2 },
                 { for_task: task_2, is_empty: true },
@@ -276,9 +301,92 @@ describe("tasks-getters", () => {
             tasks: [task_1, task_2, task_3],
         } as TasksState;
 
-        expect(getters.rows(state)).toStrictEqual([
+        const root_state = {
+            show_closed_elements: true,
+        } as RootState;
+
+        expect(getters.rows(state, undefined, root_state)).toStrictEqual([
             { task: task_1 },
             { task: task_2 },
+            { task: task_3 },
+        ] as Row[]);
+    });
+
+    it("should not display closed task and its subtasks when closed items must not be shown", () => {
+        const task_1 = {
+            id: 123,
+            is_expanded: false,
+            is_open: true,
+            subtasks_loading_status: SUBTASKS_WAITING_TO_BE_LOADED,
+        } as Task;
+
+        const task_2 = {
+            id: 124,
+            is_expanded: true,
+            is_open: false,
+            subtasks_loading_status: SUBTASKS_ARE_LOADED,
+            subtasks: [{ id: 1241 }, { id: 1242 }] as Task[],
+        } as Task;
+
+        const task_3 = {
+            id: 125,
+            is_expanded: false,
+            is_open: true,
+            subtasks_loading_status: SUBTASKS_WAITING_TO_BE_LOADED,
+        } as Task;
+
+        const state = {
+            tasks: [task_1, task_2, task_3],
+        } as TasksState;
+
+        const root_state = {
+            show_closed_elements: false,
+        } as RootState;
+
+        expect(getters.rows(state, undefined, root_state)).toStrictEqual([
+            { task: task_1 },
+            { task: task_3 },
+        ] as Row[]);
+    });
+
+    it("should not display closed subtasks when closed items must not be shown", () => {
+        const task_1 = {
+            id: 123,
+            is_expanded: false,
+            is_open: true,
+            subtasks_loading_status: SUBTASKS_WAITING_TO_BE_LOADED,
+        } as Task;
+
+        const task_2 = {
+            id: 124,
+            is_expanded: true,
+            is_open: true,
+            subtasks_loading_status: SUBTASKS_ARE_LOADED,
+            subtasks: [
+                { id: 1241, is_open: true },
+                { id: 1242, is_open: false },
+            ] as Task[],
+        } as Task;
+
+        const task_3 = {
+            id: 125,
+            is_expanded: false,
+            is_open: true,
+            subtasks_loading_status: SUBTASKS_WAITING_TO_BE_LOADED,
+        } as Task;
+
+        const state = {
+            tasks: [task_1, task_2, task_3],
+        } as TasksState;
+
+        const root_state = {
+            show_closed_elements: false,
+        } as RootState;
+
+        expect(getters.rows(state, undefined, root_state)).toStrictEqual([
+            { task: task_1 },
+            { task: task_2 },
+            { parent: task_2, subtask: { id: 1241, is_open: true }, is_last_one: true },
             { task: task_3 },
         ] as Row[]);
     });
