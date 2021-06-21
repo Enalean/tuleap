@@ -26,8 +26,8 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use ProjectManager;
 use Tuleap\AgileDashboard\ExplicitBacklog\ExplicitBacklogDao;
 use Tuleap\GlobalLanguageMock;
-use Tuleap\ProgramManagement\Domain\Program\ProgramStore;
 use Tuleap\ProgramManagement\Domain\Program\ToBeCreatedProgram;
+use Tuleap\ProgramManagement\Domain\Program\VerifyIsProgram;
 use Tuleap\ProgramManagement\Domain\Team\AtLeastOneTeamShouldBeDefinedException;
 use Tuleap\ProgramManagement\Domain\Team\Creation\Team;
 use Tuleap\ProgramManagement\Domain\Team\Creation\TeamCollection;
@@ -35,22 +35,13 @@ use Tuleap\ProgramManagement\Domain\Team\ProjectIsAProgramException;
 use Tuleap\ProgramManagement\Domain\Team\TeamAccessException;
 use Tuleap\ProgramManagement\Domain\Team\TeamMustHaveExplicitBacklogEnabledException;
 use Tuleap\ProgramManagement\Stub\BuildProgramStub;
+use Tuleap\ProgramManagement\Stub\VerifyIsProgramStub;
 use Tuleap\Test\Builders\UserTestBuilder;
 
 final class TeamAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
     use GlobalLanguageMock;
-
-    /**
-     * @var TeamAdapter
-     */
-    private $adapter;
-
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|ProgramStore
-     */
-    private $program_store;
 
     /**
      * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|ProjectManager
@@ -60,14 +51,13 @@ final class TeamAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
      * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|ExplicitBacklogDao
      */
     private $explicit_backlog_dao;
+    private VerifyIsProgram $program_verifier;
 
     protected function setUp(): void
     {
         $this->project_manager      = \Mockery::mock(ProjectManager::class);
-        $this->program_store        = \Mockery::mock(ProgramStore::class);
         $this->explicit_backlog_dao = \Mockery::mock(ExplicitBacklogDao::class);
-
-        $this->adapter = new TeamAdapter($this->project_manager, $this->program_store, $this->explicit_backlog_dao);
+        $this->program_verifier     = VerifyIsProgramStub::withValidProgram();
 
         $_SERVER['REQUEST_URI'] = '/';
     }
@@ -92,7 +82,7 @@ final class TeamAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->project_manager->shouldReceive('getProject')->with($team_id)->once()->andReturn($project);
 
         $this->expectException(TeamAccessException::class);
-        $this->adapter->buildTeamProject([$team_id], $program, $user);
+        $this->getAdapter()->buildTeamProject([$team_id], $program, $user);
     }
 
     public function testItThrowExceptionWhenTeamProjectIsAlreadyAProgram(): void
@@ -106,10 +96,9 @@ final class TeamAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
         $user->shouldReceive('isSuperUser')->andReturnTrue();
 
         $this->project_manager->shouldReceive('getProject')->with($team_id)->once()->andReturn($project);
-        $this->program_store->shouldReceive('isProjectAProgramProject')->with($team_id)->andReturn(true);
 
         $this->expectException(ProjectIsAProgramException::class);
-        $this->adapter->buildTeamProject([$team_id], $program, $user);
+        $this->getAdapter()->buildTeamProject([$team_id], $program, $user);
     }
 
     public function testItThrowExceptionWhenNoTeamIsFound(): void
@@ -118,7 +107,7 @@ final class TeamAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
         $user    = \Mockery::mock(\PFUser::class);
 
         $this->expectException(AtLeastOneTeamShouldBeDefinedException::class);
-        $this->adapter->buildTeamProject([], $program, $user);
+        $this->getAdapter()->buildTeamProject([], $program, $user);
     }
 
     public function testThrowsExceptionWhenTeamProjectDoesNotHaveTheExplicitBacklogModeEnabled(): void
@@ -132,12 +121,12 @@ final class TeamAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
         $user->shouldReceive('isSuperUser')->andReturnTrue();
 
         $this->project_manager->shouldReceive('getProject')->with($team_id)->once()->andReturn($project);
-        $this->program_store->shouldReceive('isProjectAProgramProject')->with($team_id)->andReturn(false);
+        $this->program_verifier = VerifyIsProgramStub::withNotValidProgram();
 
         $this->explicit_backlog_dao->shouldReceive('isProjectUsingExplicitBacklog')->andReturn(false);
 
         $this->expectException(TeamMustHaveExplicitBacklogEnabledException::class);
-        $this->adapter->buildTeamProject([$team_id], $program, $user);
+        $this->getAdapter()->buildTeamProject([$team_id], $program, $user);
     }
 
     public function testItBuildTeamCollection(): void
@@ -151,12 +140,18 @@ final class TeamAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
         $user->shouldReceive('isSuperUser')->andReturnTrue();
 
         $this->project_manager->shouldReceive('getProject')->with($team_id)->andReturn($project);
-        $this->program_store->shouldReceive('isProjectAProgramProject')->with($team_id)->andReturn(false);
+        $this->program_verifier = VerifyIsProgramStub::withNotValidProgram();
 
         $this->explicit_backlog_dao->shouldReceive('isProjectUsingExplicitBacklog')->andReturn(true);
 
-        $team_collection = new TeamCollection([Team::build($this->adapter, $team_id, $user)], $program);
+        $adapter         = $this->getAdapter();
+        $team_collection = new TeamCollection([Team::build($adapter, $team_id, $user)], $program);
 
-        self::assertEquals($team_collection, $this->adapter->buildTeamProject([$team_id], $program, $user));
+        self::assertEquals($team_collection, $adapter->buildTeamProject([$team_id], $program, $user));
+    }
+
+    private function getAdapter(): TeamAdapter
+    {
+        return new TeamAdapter($this->project_manager, $this->program_verifier, $this->explicit_backlog_dao);
     }
 }

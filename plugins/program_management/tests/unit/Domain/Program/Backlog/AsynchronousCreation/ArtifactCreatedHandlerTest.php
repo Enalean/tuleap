@@ -24,8 +24,9 @@ namespace Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation;
 
 use Psr\Log\NullLogger;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracker\VerifyIsProgramIncrementTracker;
-use Tuleap\ProgramManagement\Domain\Program\ProgramStore;
+use Tuleap\ProgramManagement\Domain\Program\VerifyIsProgram;
 use Tuleap\ProgramManagement\Stub\VerifyIsProgramIncrementTrackerStub;
+use Tuleap\ProgramManagement\Stub\VerifyIsProgramStub;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
@@ -35,10 +36,6 @@ use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 final class ArtifactCreatedHandlerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|ProgramStore
-     */
-    private $program_store;
-    /**
      * @var \PHPUnit\Framework\MockObject\MockObject|PendingArtifactCreationStore
      */
     private $pending_artifact_creation_store;
@@ -46,10 +43,11 @@ final class ArtifactCreatedHandlerTest extends \Tuleap\Test\PHPUnit\TestCase
      * @var \PHPUnit\Framework\MockObject\Stub|RunProgramIncrementCreation
      */
     private $asyncronous_runner;
+    private VerifyIsProgram $program_verifier;
 
     protected function setUp(): void
     {
-        $this->program_store                   = $this->createMock(ProgramStore::class);
+        $this->program_verifier                = VerifyIsProgramStub::withValidProgram();
         $this->pending_artifact_creation_store = $this->createMock(PendingArtifactCreationStore::class);
         $this->asyncronous_runner              = $this->createMock(RunProgramIncrementCreation::class);
     }
@@ -57,7 +55,7 @@ final class ArtifactCreatedHandlerTest extends \Tuleap\Test\PHPUnit\TestCase
     private function getHandler(VerifyIsProgramIncrementTracker $verifier): ArtifactCreatedHandler
     {
         return new ArtifactCreatedHandler(
-            $this->program_store,
+            $this->program_verifier,
             $this->asyncronous_runner,
             $this->pending_artifact_creation_store,
             $verifier,
@@ -69,7 +67,6 @@ final class ArtifactCreatedHandlerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $project = ProjectTestBuilder::aProject()->withId(101)->build();
         $tracker = TrackerTestBuilder::aTracker()->withId(15)->withProject($project)->build();
-        $this->program_store->method('isProjectAProgramProject')->willReturn(true);
 
         $current_user = UserTestBuilder::aUser()->withId(1001)->build();
         $artifact     = new Artifact(1, $tracker->getId(), $current_user->getId(), 12345678, false);
@@ -88,12 +85,9 @@ final class ArtifactCreatedHandlerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testHandleReactsOnlyToArtifactsFromProgramProjects(): void
     {
-        $project = ProjectTestBuilder::aProject()->withId(101)->build();
-        $tracker = TrackerTestBuilder::aTracker()->withId(15)->withProject($project)->build();
-        $this->program_store->expects(self::once())
-            ->method('isProjectAProgramProject')
-            ->with(101)
-            ->willReturn(false);
+        $project                = ProjectTestBuilder::aProject()->withId(101)->build();
+        $tracker                = TrackerTestBuilder::aTracker()->withId(15)->withProject($project)->build();
+        $this->program_verifier = VerifyIsProgramStub::withNotValidProgram();
 
         $current_user = UserTestBuilder::aUser()->build();
         $artifact     = new Artifact(1, $tracker->getId(), $current_user->getId(), 12345678, false);
@@ -110,7 +104,6 @@ final class ArtifactCreatedHandlerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $project = ProjectTestBuilder::aProject()->withId(101)->build();
         $tracker = TrackerTestBuilder::aTracker()->withId(15)->withProject($project)->build();
-        $this->program_store->method('isProjectAProgramProject')->willReturn(true);
 
         $current_user = UserTestBuilder::aUser()->build();
         $artifact     = new Artifact(1, $tracker->getId(), $current_user->getId(), 12345678, false);

@@ -408,7 +408,7 @@ final class program_managementPlugin extends Plugin
     public function blockScrumAccess(BlockScrumAccess $block_scrum_access): void
     {
         $program_store = new ProgramDao();
-        if ($program_store->isProjectAProgramProject((int) $block_scrum_access->getProject()->getID())) {
+        if ($program_store->isAProgram((int) $block_scrum_access->getProject()->getID())) {
             $block_scrum_access->disableScrumAccess();
         }
     }

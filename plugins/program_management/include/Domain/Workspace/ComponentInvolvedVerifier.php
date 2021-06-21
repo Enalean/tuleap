@@ -22,29 +22,26 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Workspace;
 
-use Tuleap\ProgramManagement\Domain\Program\ProgramStore;
-use Tuleap\ProgramManagement\Domain\Team\Creation\TeamStore;
+use Tuleap\ProgramManagement\Domain\Program\VerifyIsProgram;
 use Tuleap\ProgramManagement\Domain\Project;
+use Tuleap\ProgramManagement\Domain\Team\Creation\TeamStore;
 
 final class ComponentInvolvedVerifier
 {
-    /**
-     * @var TeamStore
-     */
-    private $team_store;
-    /**
-     * @var ProgramStore
-     */
-    private $program_store;
+    private TeamStore $team_store;
+    private VerifyIsProgram $program_verifier;
 
-    public function __construct(TeamStore $team_store, ProgramStore $program_store)
-    {
-        $this->team_store    = $team_store;
-        $this->program_store = $program_store;
+    public function __construct(
+        TeamStore $team_store,
+        VerifyIsProgram $program_verifier
+    ) {
+        $this->team_store       = $team_store;
+        $this->program_verifier = $program_verifier;
     }
 
     public function isInvolvedInAProgramWorkspace(Project $project_data): bool
     {
-        return $this->team_store->isATeam($project_data->getId()) || $this->program_store->isProjectAProgramProject($project_data->getId());
+        return $this->team_store->isATeam($project_data->getId())
+            || $this->program_verifier->isAProgram($project_data->getId());
     }
 }
