@@ -34,6 +34,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
         action_dropdown_icon.classList.add("fa-spin", "fa-spinner");
         create_branch_link.classList.add("disabled");
+
+        const loading_modal_element = document.createElement("div");
+        loading_modal_element.classList.add("tuleap-modal-loading");
+        document.body.appendChild(loading_modal_element);
+
         try {
             const { init } = await import(
                 /* webpackChunkName: "create-gitlab-branch-modal" */ "./modal"
@@ -44,6 +49,7 @@ document.addEventListener("DOMContentLoaded", () => {
             codendi.feedback.log("error", "Error while loading the GitLab branch creation modal.");
             throw e;
         } finally {
+            document.body.removeChild(loading_modal_element);
             action_dropdown_icon.classList.remove("fa-spin", "fa-spinner");
             create_branch_link.classList.remove("disabled");
         }
