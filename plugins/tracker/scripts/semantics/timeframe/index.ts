@@ -18,6 +18,7 @@
  */
 
 import Vue from "vue";
+import VueDOMPurifyHTML from "vue-dompurify-html";
 import App from "./src/components/App.vue";
 import {
     initVueGettext,
@@ -29,6 +30,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (!mount_point) {
         return;
     }
+
+    Vue.use(VueDOMPurifyHTML);
 
     await initVueGettext(
         Vue,
@@ -51,6 +54,12 @@ document.addEventListener("DOMContentLoaded", async () => {
                 typeof mount_point.dataset.usableNumericFields !== "undefined"
                     ? JSON.parse(mount_point.dataset.usableNumericFields)
                     : [],
+            suitable_trackers:
+                typeof mount_point.dataset.suitableTrackers !== "undefined"
+                    ? JSON.parse(mount_point.dataset.suitableTrackers)
+                    : [],
+            implied_from_tracker_id:
+                Number.parseInt(mount_point.dataset.impliedFromTrackerId || "0", 10) || "",
             start_date_field_id:
                 Number.parseInt(mount_point.dataset.startDateFieldId || "0", 10) || "",
             end_date_field_id: Number.parseInt(mount_point.dataset.endDateFieldId || "0", 10) || "",
@@ -62,6 +71,9 @@ document.addEventListener("DOMContentLoaded", async () => {
                 mount_point.dataset.hasOtherTrackersImplyingTheirTimeframes
             ),
             has_tracker_charts: Boolean(mount_point.dataset.hasTrackerCharts),
+            has_artifact_link_field: Boolean(mount_point.dataset.hasArtifactLinkField),
+            current_tracker_id:
+                Number.parseInt(mount_point.dataset.currentTrackerId || "0", 10) || 0,
         },
     }).$mount(mount_point);
 });

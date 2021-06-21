@@ -21,3 +21,13 @@ export interface TrackerField {
     id: string;
     label: string;
 }
+
+export interface Tracker {
+    id: string;
+    name: string;
+}
+
+export interface TimeframeMode {
+    id: string;
+    name: string;
+}

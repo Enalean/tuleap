@@ -36,6 +36,8 @@ interface IComputeTimeframes
 
     public function getDurationField(): ?\Tracker_FormElement_Field_Numeric;
 
+    public function getTrackerFromWhichTimeframeIsImplied(): ?\Tracker;
+
     public function buildTimePeriodWithoutWeekendForArtifactForREST(Artifact $artifact, \PFUser $user, LoggerInterface $logger): TimePeriodWithoutWeekEnd;
 
     public function buildTimePeriodWithoutWeekendForArtifact(Artifact $artifact, \PFUser $user, LoggerInterface $logger): TimePeriodWithoutWeekEnd;

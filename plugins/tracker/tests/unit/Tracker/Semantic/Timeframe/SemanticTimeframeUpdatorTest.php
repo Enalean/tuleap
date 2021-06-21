@@ -55,15 +55,21 @@ class SemanticTimeframeUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
      * @var int
      */
     private $tracker_id;
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|SemanticTimeframeSuitableTrackersOtherSemanticsCanBeImpliedFromRetriever
+     */
+    private $suitable_trackers_retriever;
 
     protected function setUp(): void
     {
-        $this->semantic_timeframe_dao = Mockery::mock(SemanticTimeframeDao::class);
-        $this->tracker                = Mockery::mock(\Tracker::class);
-        $this->formelement_factory    = Mockery::mock(\Tracker_FormElementFactory::class);
-        $this->updator                = new SemanticTimeframeUpdator(
+        $this->semantic_timeframe_dao      = Mockery::mock(SemanticTimeframeDao::class);
+        $this->tracker                     = Mockery::mock(\Tracker::class);
+        $this->formelement_factory         = Mockery::mock(\Tracker_FormElementFactory::class);
+        $this->suitable_trackers_retriever = Mockery::mock(SemanticTimeframeSuitableTrackersOtherSemanticsCanBeImpliedFromRetriever::class);
+        $this->updator                     = new SemanticTimeframeUpdator(
             $this->semantic_timeframe_dao,
-            $this->formelement_factory
+            $this->formelement_factory,
+            $this->suitable_trackers_retriever
         );
 
         $this->tracker_id = 123;
@@ -165,6 +171,7 @@ class SemanticTimeframeUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->tracker_id,
             $start_date_field_id,
             $duration_field_id,
+            null,
             null
         )->andReturn(true)->once();
 
@@ -198,7 +205,40 @@ class SemanticTimeframeUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->tracker_id,
             $start_date_field_id,
             null,
-            $end_date_field_id
+            $end_date_field_id,
+            null
+        )->andReturn(true)->once();
+
+        $GLOBALS['Response']->expects(self::once())->method('addFeedback')->with(
+            \Feedback::INFO,
+            'Semantic timeframe updated successfully'
+        );
+
+        $this->updator->update($this->tracker, $request);
+    }
+
+
+    public function testItUpdatesTheSemanticWhenItIsImpliedFromAnotherTracker(): void
+    {
+        $sprints_tracker_id = 150;
+        $request            = new \Codendi_Request(
+            [
+                'implied-from-tracker-id' => $sprints_tracker_id,
+            ]
+        );
+
+        $this->suitable_trackers_retriever->shouldReceive('getTrackersWeCanUseToImplyTheSemanticOfTheCurrentTrackerFrom')
+            ->with($this->tracker)
+            ->andReturn([
+                '150' => Mockery::mock(\Tracker::class)
+            ]);
+
+        $this->semantic_timeframe_dao->shouldReceive("save")->with(
+            $this->tracker_id,
+            null,
+            null,
+            null,
+            $sprints_tracker_id
         )->andReturn(true)->once();
 
         $GLOBALS['Response']->expects(self::once())->method('addFeedback')->with(

@@ -126,10 +126,10 @@ final class SemanticTimeframeDaoTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testAreTimeFrameSemanticsUsingSameTypeOfField(): void
     {
-        $this->dao->save(self::$first_timeframe_using_end_date_tracker_id, 3937, null, 8146);
-        $this->dao->save(self::$second_timeframe_using_end_date_tracker_id, 6074, null, 7121);
-        $this->dao->save(self::$first_timeframe_using_duration_tracker_id, 5357, 1622, null);
-        $this->dao->save(self::$second_timeframe_using_duration_tracker_id, 7411, 2812, null);
+        $this->dao->save(self::$first_timeframe_using_end_date_tracker_id, 3937, null, 8146, null);
+        $this->dao->save(self::$second_timeframe_using_end_date_tracker_id, 6074, null, 7121, null);
+        $this->dao->save(self::$first_timeframe_using_duration_tracker_id, 5357, 1622, null, null);
+        $this->dao->save(self::$second_timeframe_using_duration_tracker_id, 7411, 2812, null, null);
 
         $this->assertTrue(
             $this->dao->areTimeFrameSemanticsUsingSameTypeOfField(

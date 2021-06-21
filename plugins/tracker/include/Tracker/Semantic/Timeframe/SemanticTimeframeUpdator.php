@@ -28,30 +28,31 @@ use Tracker;
 
 class SemanticTimeframeUpdator
 {
-    /**
-     * @var SemanticTimeframeDao
-     */
-    private $dao;
+    private SemanticTimeframeDao $dao;
 
-    /**
-     * @var \Tracker_FormElementFactory
-     */
-    private $form_factory;
+    private \Tracker_FormElementFactory $form_factory;
 
-    public function __construct(SemanticTimeframeDao $dao, \Tracker_FormElementFactory $form_factory)
-    {
-        $this->dao          = $dao;
-        $this->form_factory = $form_factory;
+    private SemanticTimeframeSuitableTrackersOtherSemanticsCanBeImpliedFromRetriever $suitable_trackers_retriever;
+
+    public function __construct(
+        SemanticTimeframeDao $dao,
+        \Tracker_FormElementFactory $form_factory,
+        SemanticTimeframeSuitableTrackersOtherSemanticsCanBeImpliedFromRetriever $suitable_trackers
+    ) {
+        $this->dao                         = $dao;
+        $this->form_factory                = $form_factory;
+        $this->suitable_trackers_retriever = $suitable_trackers;
     }
 
     public function update(Tracker $tracker, Codendi_Request $request): void
     {
         try {
-            $start_date_field_id = $this->getNumericFieldIdFromRequest($request, 'start-date-field-id');
-            $duration_field_id   = $this->getNumericFieldIdFromRequest($request, 'duration-field-id');
-            $end_date_field_id   = $this->getNumericFieldIdFromRequest($request, 'end-date-field-id');
+            $start_date_field_id     = $this->getNumericFieldIdFromRequest($request, 'start-date-field-id');
+            $duration_field_id       = $this->getNumericFieldIdFromRequest($request, 'duration-field-id');
+            $end_date_field_id       = $this->getNumericFieldIdFromRequest($request, 'end-date-field-id');
+            $implied_from_tracker_id = $this->getNumericFieldIdFromRequest($request, 'implied-from-tracker-id');
 
-            if (! $this->requestIsCorrect($tracker, $start_date_field_id, $duration_field_id, $end_date_field_id)) {
+            if (! $this->requestIsCorrect($tracker, $start_date_field_id, $duration_field_id, $end_date_field_id, $implied_from_tracker_id)) {
                 $this->displayFeedbackError();
                 return;
             }
@@ -60,7 +61,8 @@ class SemanticTimeframeUpdator
                 (int) $tracker->getId(),
                 $start_date_field_id,
                 $duration_field_id,
-                $end_date_field_id
+                $end_date_field_id,
+                $implied_from_tracker_id
             );
 
             if ($result === true) {
@@ -159,11 +161,17 @@ class SemanticTimeframeUpdator
         return $end_date_field !== null;
     }
 
-    /**
-     * @psalm-assert-if-true !null $start_date_field_id
-     */
-    private function requestIsCorrect(Tracker $tracker, ?int $start_date_field_id, ?int $duration_field_id, ?int $end_date_field_id): bool
-    {
+    private function requestIsCorrect(
+        Tracker $tracker,
+        ?int $start_date_field_id,
+        ?int $duration_field_id,
+        ?int $end_date_field_id,
+        ?int $implied_from_tracker_id
+    ): bool {
+        if ($implied_from_tracker_id !== null && ! $start_date_field_id && ! $duration_field_id && ! $end_date_field_id) {
+            return $this->isTrackerSuitableToImplyTheCurrentSemanticFromIt($tracker, $implied_from_tracker_id);
+        }
+
         if ($start_date_field_id === null || ! $this->startDateFieldIdIsCorrect($tracker, $start_date_field_id)) {
             return false;
         }
@@ -197,5 +205,13 @@ class SemanticTimeframeUpdator
         if ($start_date_field_id === $end_date_field_id) {
             throw new TimeframeStartDateAndEndDateAreTheSameFieldException();
         }
+    }
+
+    private function isTrackerSuitableToImplyTheCurrentSemanticFromIt(Tracker $tracker, int $implied_from_tracker_id): bool
+    {
+        return array_key_exists(
+            $implied_from_tracker_id,
+            $this->suitable_trackers_retriever->getTrackersWeCanUseToImplyTheSemanticOfTheCurrentTrackerFrom($tracker)
+        );
     }
 }

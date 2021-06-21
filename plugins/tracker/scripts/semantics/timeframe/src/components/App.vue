@@ -19,16 +19,32 @@
 
 <template>
     <div>
-        <p v-translate>The timeframe of an artifact will be defined by:</p>
+        <timeframe-config-mode-selector
+            v-on:timeframe-mode-selected="toggleTimeframeConfigs"
+            v-bind:implied_from_tracker_id="implied_from_tracker_id"
+        />
 
         <form v-bind:action="target_url" method="POST">
             <input type="hidden" name="challenge" v-bind:value="csrf_token" />
+
             <timeframe-based-on-fields-config
+                v-if="is_based_on_tracker_fields_mode_enabled"
                 v-bind:usable_date_fields="usable_date_fields"
                 v-bind:usable_numeric_fields="usable_numeric_fields"
                 v-bind:selected_start_date_field_id="start_date_field_id"
                 v-bind:selected_end_date_field_id="end_date_field_id"
                 v-bind:selected_duration_field_id="duration_field_id"
+            />
+
+            <timeframe-implied-from-another-tracker-config
+                v-else
+                v-bind:suitable_trackers="suitable_trackers"
+                v-bind:has_artifact_link_field="has_artifact_link_field"
+                v-bind:implied_from_tracker_id="implied_from_tracker_id"
+                v-bind:has_other_trackers_implying_their_timeframes="
+                    has_other_trackers_implying_their_timeframes
+                "
+                v-bind:current_tracker_id="current_tracker_id"
             />
 
             <timeframe-admin-submit-buttons
@@ -39,6 +55,7 @@
                     has_other_trackers_implying_their_timeframes
                 "
                 v-bind:has_tracker_charts="has_tracker_charts"
+                v-bind:implied_from_tracker_id="implied_from_tracker_id"
             />
         </form>
     </div>
@@ -50,13 +67,18 @@ import { Component, Prop } from "vue-property-decorator";
 
 import TimeframeBasedOnFieldsConfig from "./TimeframeBasedOnFieldsConfig.vue";
 import TimeframeAdminSubmitButtons from "./TimeframeAdminSubmitButtons.vue";
+import TimeframeImpliedFromAnotherTrackerConfig from "./TimeframeImpliedFromAnotherTrackerConfig.vue";
+import TimeframeConfigModeSelector from "./TimeframeConfigModeSelector.vue";
 
-import type { TrackerField } from "../../type";
+import type { TrackerField, Tracker } from "../../type";
+import { MODE_BASED_ON_TRACKER_FIELDS } from "../../constants";
 
 @Component({
     components: {
         TimeframeBasedOnFieldsConfig,
         TimeframeAdminSubmitButtons,
+        TimeframeImpliedFromAnotherTrackerConfig,
+        TimeframeConfigModeSelector,
     },
 })
 export default class App extends Vue {
@@ -67,6 +89,9 @@ export default class App extends Vue {
     private readonly usable_numeric_fields!: TrackerField[];
 
     @Prop({ required: true })
+    private readonly suitable_trackers!: Tracker[];
+
+    @Prop({ required: true })
     private readonly start_date_field_id!: number | "";
 
     @Prop({ required: true })
@@ -74,6 +99,12 @@ export default class App extends Vue {
 
     @Prop({ required: true })
     private readonly duration_field_id!: number | "";
+
+    @Prop({ required: true })
+    private readonly implied_from_tracker_id!: number | "";
+
+    @Prop({ required: true })
+    private readonly current_tracker_id!: number;
 
     @Prop({ required: true })
     private readonly target_url!: string;
@@ -86,5 +117,14 @@ export default class App extends Vue {
 
     @Prop({ required: true })
     private readonly has_tracker_charts!: boolean;
+
+    @Prop({ required: true })
+    private readonly has_artifact_link_field!: boolean;
+
+    private is_based_on_tracker_fields_mode_enabled = true;
+
+    toggleTimeframeConfigs(value: string): void {
+        this.is_based_on_tracker_fields_mode_enabled = value === MODE_BASED_ON_TRACKER_FIELDS;
+    }
 }
 </script>

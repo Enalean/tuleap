@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2020 - present. All Rights Reserved.
+ * Copyright (c) Enalean, 2021 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,19 +17,5 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { createLocalVue } from "@vue/test-utils";
-import { initVueGettext } from "../../../../../../../src/scripts/tuleap/gettext/vue-gettext-init";
-import type { Vue } from "vue/types/vue";
-import VueDOMPurifyHTML from "vue-dompurify-html";
-
-export async function createSemanticTimeframeAdminLocalVue(): Promise<typeof Vue> {
-    const local_vue = createLocalVue();
-
-    local_vue.use(VueDOMPurifyHTML);
-
-    await initVueGettext(local_vue, () => {
-        throw new Error("Fallback to default");
-    });
-
-    return local_vue;
-}
+export const MODE_BASED_ON_TRACKER_FIELDS = "based-on-tracker-fields";
+export const MODE_IMPLIED_FROM_ANOTHER_TRACKER = "implied-from-another-tracker";

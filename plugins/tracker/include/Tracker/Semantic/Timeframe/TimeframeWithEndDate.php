@@ -113,7 +113,8 @@ class TimeframeWithEndDate implements IComputeTimeframes
             $tracker->getId(),
             $this->start_date_field->getId(),
             null,
-            $this->end_date_field->getId()
+            $this->end_date_field->getId(),
+            null
         );
     }
 
@@ -206,5 +207,10 @@ class TimeframeWithEndDate implements IComputeTimeframes
         }
 
         return TimePeriodWithoutWeekEnd::buildFromEndDate($start_date, $end_date, $logger);
+    }
+
+    public function getTrackerFromWhichTimeframeIsImplied(): ?\Tracker
+    {
+        return null;
     }
 }
