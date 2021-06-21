@@ -68,5 +68,6 @@ class ProjectTest extends TestBase
         self::assertEquals($this->gitlab_repository_id, $gitlab_repository['id']);
         self::assertFalse($gitlab_repository['allow_artifact_closure']);
         self::assertFalse($gitlab_repository['is_webhook_configured']);
+        self::assertSame('', $gitlab_repository['create_branch_prefix']);
     }
 }

@@ -22,6 +22,7 @@ declare(strict_types=1);
 namespace Tuleap\Gitlab\REST\v1;
 
 use BackendLogger;
+use ForgeConfig;
 use Git_PermissionsDao;
 use Git_SystemEventManager;
 use GitDao;
@@ -36,6 +37,7 @@ use Tuleap\Cryptography\ConcealedString;
 use Tuleap\Cryptography\KeyFactory;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
+use Tuleap\Git\Branch\InvalidBranchNameException;
 use Tuleap\Git\Permissions\FineGrainedDao;
 use Tuleap\Git\Permissions\FineGrainedRetriever;
 use Tuleap\Gitlab\API\ClientWrapper;
@@ -44,6 +46,9 @@ use Tuleap\Gitlab\API\GitlabHTTPClientFactory;
 use Tuleap\Gitlab\API\GitlabProjectBuilder;
 use Tuleap\Gitlab\API\GitlabRequestException;
 use Tuleap\Gitlab\API\GitlabResponseAPIException;
+use Tuleap\Gitlab\Artifact\Action\CreateBranchButtonFetcher;
+use Tuleap\Gitlab\Artifact\Action\CreateBranchPrefixDao;
+use Tuleap\Gitlab\Artifact\Action\CreateBranchPrefixUpdater;
 use Tuleap\Gitlab\Repository\GitlabRepositoryAlreadyIntegratedInProjectException;
 use Tuleap\Gitlab\Repository\GitlabRepositoryCreator;
 use Tuleap\Gitlab\Repository\GitlabRepositoryCreatorConfiguration;
@@ -52,7 +57,7 @@ use Tuleap\Gitlab\Repository\GitlabRepositoryIntegrationDao;
 use Tuleap\Gitlab\Repository\GitlabRepositoryIntegrationFactory;
 use Tuleap\Gitlab\Repository\GitlabRepositoryIntegrationUpdator;
 use Tuleap\Gitlab\Repository\GitlabRepositoryNotInProjectException;
-use Tuleap\Gitlab\Repository\GitlabRepositoryNotIntegratedInAnyProjectException;
+use Tuleap\Gitlab\Repository\GitlabRepositoryIntegrationNotFoundException;
 use Tuleap\Gitlab\Repository\GitlabRepositoryWithSameNameAlreadyIntegratedInProjectException;
 use Tuleap\Gitlab\Repository\Token\IntegrationApiToken;
 use Tuleap\Gitlab\Repository\Token\IntegrationApiTokenDao;
@@ -186,6 +191,13 @@ final class GitlabRepositoryResource
                 $integrated_gitlab_repository->getId()
             );
 
+            $create_branch_prefix = '';
+            if (ForgeConfig::getFeatureFlag(CreateBranchButtonFetcher::FEATURE_FLAG_KEY)) {
+                $create_branch_prefix = (new CreateBranchPrefixDao())->searchCreateBranchPrefixForIntegration(
+                    $integrated_gitlab_repository->getId()
+                );
+            }
+
             return new GitlabRepositoryRepresentation(
                 $integrated_gitlab_repository->getId(),
                 $integrated_gitlab_repository->getGitlabRepositoryId(),
@@ -195,7 +207,8 @@ final class GitlabRepositoryResource
                 $integrated_gitlab_repository->getLastPushDate()->getTimestamp(),
                 $integrated_gitlab_repository->getProject(),
                 $integrated_gitlab_repository->isArtifactClosureAllowed(),
-                $integration_webhook !== null
+                $integration_webhook !== null,
+                $create_branch_prefix
             );
         } catch (
             GitlabResponseAPIException |
@@ -276,7 +289,8 @@ final class GitlabRepositoryResource
             new MergeRequestTuleapReferenceDao(),
             new TagInfoDao(),
             new BranchInfoDao(),
-            new CredentialsRetriever(new IntegrationApiTokenRetriever(new IntegrationApiTokenDao(), new KeyFactory()))
+            new CredentialsRetriever(new IntegrationApiTokenRetriever(new IntegrationApiTokenDao(), new KeyFactory())),
+            new CreateBranchPrefixDao()
         );
 
         try {
@@ -286,7 +300,7 @@ final class GitlabRepositoryResource
             );
         } catch (GitUserNotAdminException $exception) {
             throw new RestException(401, "User is not Git administrator.");
-        } catch (GitlabRepositoryNotInProjectException | GitlabRepositoryNotIntegratedInAnyProjectException $exception) {
+        } catch (GitlabRepositoryNotInProjectException | GitlabRepositoryIntegrationNotFoundException $exception) {
             throw new RestException(400, $exception->getMessage());
         }
     }
@@ -325,9 +339,16 @@ final class GitlabRepositoryResource
      * }<br>
      * </pre>
      *
+     * <p>To update the prefix used in the branch creation (feature flag must be enabled):</p>
+     * <pre>
+     * {<br>
+     *   &nbsp;"create_branch_prefix" : "dev-"<br>
+     * }<br>
+     * </pre>
+     *
      * <p>
-     * <strong>Note:</strong> You cannot at the same time update the token or update the secret or update artifact closure option.
-     * You will get a <code>400</code> if you send either <code>update_bot_api_token</code> or <code>generate_new_secret</code> or <code>allow_artifact_closure</code>.
+     * <strong>Note:</strong> You cannot do multiple actions at the same.
+     * You will get a <code>400</code> if you send either <code>update_bot_api_token</code> or <code>generate_new_secret</code> or <code>allow_artifact_closure</code> or <code>create_branch_prefix</code>.
      * </p>
      *
      * @url    PATCH {id}
@@ -452,10 +473,39 @@ final class GitlabRepositoryResource
                 return $this->buildUpdatedIntegrationRepresentation($id);
             } catch (GitUserNotAdminException $e) {
                 throw new RestException(401, "User must be Git administrator.");
-            } catch (GitlabRepositoryNotIntegratedInAnyProjectException $e) {
+            } catch (GitlabRepositoryIntegrationNotFoundException $e) {
                 throw new RestException(404, $e->getMessage());
             }
         }
+
+        if ($patch_representation->create_branch_prefix !== null) {
+            if (! ForgeConfig::getFeatureFlag(CreateBranchButtonFetcher::FEATURE_FLAG_KEY)) {
+                throw new RestException(400, "This parameter is not yet handled.");
+            }
+
+            $prefix_updater = new CreateBranchPrefixUpdater(
+                new GitlabRepositoryIntegrationFactory(
+                    new GitlabRepositoryIntegrationDao(),
+                    ProjectManager::instance()
+                ),
+                new CreateBranchPrefixDao()
+            );
+
+            try {
+                $prefix_updater->updateBranchPrefix(
+                    $id,
+                    $patch_representation->create_branch_prefix
+                );
+
+                return $this->buildUpdatedIntegrationRepresentation($id);
+            } catch (InvalidBranchNameException $exception) {
+                throw new RestException(
+                    400,
+                    $exception->getMessage()
+                );
+            }
+        }
+
         throw new RestException(400, "The JSON representation cannot be null");
     }
 
@@ -480,6 +530,11 @@ final class GitlabRepositoryResource
             $updated_gitlab_integration->getId()
         );
 
+        $create_branch_prefix = '';
+        if (ForgeConfig::getFeatureFlag(CreateBranchButtonFetcher::FEATURE_FLAG_KEY)) {
+            $create_branch_prefix = (new CreateBranchPrefixDao())->searchCreateBranchPrefixForIntegration($id);
+        }
+
         return new GitlabRepositoryRepresentation(
             $updated_gitlab_integration->getId(),
             $updated_gitlab_integration->getGitlabRepositoryId(),
@@ -489,7 +544,8 @@ final class GitlabRepositoryResource
             $updated_gitlab_integration->getLastPushDate()->getTimestamp(),
             $updated_gitlab_integration->getProject(),
             $updated_gitlab_integration->isArtifactClosureAllowed(),
-            $integration_webhook !== null
+            $integration_webhook !== null,
+            $create_branch_prefix
         );
     }
 
@@ -542,7 +598,7 @@ final class GitlabRepositoryResource
         if ($provided_parameter > 1) {
             throw new RestException(
                 400,
-                'You cannot ask at the same time to update the api token, generate a new webhook secret or allowing artifact closure'
+                'You cannot ask at the same time to update the api token, generate a new webhook secret, allowing artifact closure or updating the create branch prefix.'
             );
         }
     }

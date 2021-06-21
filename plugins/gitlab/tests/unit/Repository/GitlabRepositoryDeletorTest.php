@@ -26,6 +26,7 @@ use GitPermissionsManager;
 use GitUserNotAdminException;
 use PFUser;
 use Project;
+use Tuleap\Gitlab\Artifact\Action\CreateBranchPrefixDao;
 use Tuleap\Gitlab\Repository\Token\IntegrationApiTokenDao;
 use Tuleap\Gitlab\Repository\Webhook\Bot\CredentialsRetriever;
 use Tuleap\Gitlab\Repository\Webhook\PostMergeRequest\MergeRequestTuleapReferenceDao;
@@ -94,6 +95,10 @@ class GitlabRepositoryDeletorTest extends \Tuleap\Test\PHPUnit\TestCase
      * @var \PHPUnit\Framework\MockObject\MockObject&PFUser
      */
     private $user;
+    /**
+     * @var \PHPUnit\Framework\MockObject\MockObject&CreateBranchPrefixDao
+     */
+    private $branch_prefix_dao;
 
     protected function setUp(): void
     {
@@ -109,6 +114,7 @@ class GitlabRepositoryDeletorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->tag_info_dao                = $this->createMock(TagInfoDao::class);
         $this->credentials_retriever       = $this->createMock(CredentialsRetriever::class);
         $this->branch_info_dao             = $this->createMock(BranchInfoDao::class);
+        $this->branch_prefix_dao           = $this->createMock(CreateBranchPrefixDao::class);
 
         $this->deletor = new GitlabRepositoryDeletor(
             $this->git_permissions_manager,
@@ -120,7 +126,8 @@ class GitlabRepositoryDeletorTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->merge_request_dao,
             $this->tag_info_dao,
             $this->branch_info_dao,
-            $this->credentials_retriever
+            $this->credentials_retriever,
+            $this->branch_prefix_dao
         );
 
         $this->project = Project::buildForTest();
@@ -195,6 +202,9 @@ class GitlabRepositoryDeletorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->branch_info_dao
             ->expects(self::once())
             ->method('deleteBranchesInIntegration');
+        $this->branch_prefix_dao
+            ->expects(self::once())
+            ->method('deleteIntegrationPrefix');
 
         $this->deletor->deleteRepositoryIntegration(
             $this->gitlab_repository_integration,

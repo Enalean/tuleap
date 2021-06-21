@@ -21,7 +21,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Gitlab\Repository;
 
-class GitlabRepositoryNotIntegratedInAnyProjectException extends \RuntimeException
+class GitlabRepositoryIntegrationNotFoundException extends \RuntimeException
 {
     public function __construct(int $repository_id)
     {

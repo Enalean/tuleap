@@ -41,4 +41,9 @@ final class GitlabRepositoryPatchRepresentation
      * @var bool | null {@required false}
      */
     public $allow_artifact_closure;
+
+    /**
+     * @var string | null {@required false}
+     */
+    public $create_branch_prefix;
 }
