@@ -19,7 +19,7 @@
   },
   "devDependencies": {
     "@tuleap/tlp-fetch": "file://../../src/scripts/lib/tlp-fetch",
-    "@vue/test-utils": "^1.2.0",
+    "@vue/test-utils": "^1.2.1",
     "vuex-mock-store": "0.0.8"
   },
   "config": {
