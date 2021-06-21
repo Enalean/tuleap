@@ -87,7 +87,7 @@ class MethodBasedOnLinksCount implements IComputeProgression
         $linked_artifacts_value = $artifact_link_field->getLastChangesetValue($artifact);
 
         if (! $linked_artifacts_value) {
-            return $this->getNullProgressionResult();
+            return $this->getProgressResult($artifact, 0, 0);
         }
 
         foreach ($linked_artifacts_value->getValue() as $link_info) {
