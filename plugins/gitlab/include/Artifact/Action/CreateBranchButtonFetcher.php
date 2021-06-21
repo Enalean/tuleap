@@ -106,7 +106,7 @@ class CreateBranchButtonFetcher
                 ],
                 [
                     'name'  => 'branch-name',
-                    'value' => $this->branch_name_creator_from_artifact->getBranchName($artifact)
+                    'value' => $this->branch_name_creator_from_artifact->getBaseBranchName($artifact)
                 ],
             ]
         );

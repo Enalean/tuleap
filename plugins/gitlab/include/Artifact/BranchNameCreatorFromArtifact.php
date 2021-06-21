@@ -24,20 +24,31 @@ declare(strict_types=1);
 namespace Tuleap\Gitlab\Artifact;
 
 use Cocur\Slugify\SlugifyInterface;
+use Tuleap\Gitlab\Artifact\Action\CreateBranchPrefixDao;
+use Tuleap\Gitlab\Repository\GitlabRepositoryIntegration;
 use Tuleap\Tracker\Artifact\Artifact;
 
 class BranchNameCreatorFromArtifact
 {
     private SlugifyInterface $slugify;
+    private CreateBranchPrefixDao $create_branch_prefix_dao;
 
-    public function __construct(SlugifyInterface $slugify)
+    public function __construct(SlugifyInterface $slugify, CreateBranchPrefixDao $create_branch_prefix_dao)
     {
-        $this->slugify = $slugify;
+        $this->slugify                  = $slugify;
+        $this->create_branch_prefix_dao = $create_branch_prefix_dao;
     }
 
-    public function getBranchName(Artifact $artifact): string
+    public function getBaseBranchName(Artifact $artifact): string
     {
         return sprintf('tuleap-%d%s', $artifact->getId(), $this->getSlugifiedArtifactTitle($artifact));
+    }
+
+    public function getFullBranchName(Artifact $artifact, GitlabRepositoryIntegration $integration): string
+    {
+        $prefix = $this->create_branch_prefix_dao->searchCreateBranchPrefixForIntegration($integration->getId());
+
+        return $prefix . $this->getBaseBranchName($artifact);
     }
 
     private function getSlugifiedArtifactTitle(Artifact $artifact): string

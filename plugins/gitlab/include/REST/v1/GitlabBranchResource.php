@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Gitlab\REST\v1;
 
+use Cocur\Slugify\Slugify;
 use ForgeConfig;
 use gitlabPlugin;
 use Luracast\Restler\RestException;
@@ -33,6 +34,8 @@ use Tuleap\Cryptography\KeyFactory;
 use Tuleap\Gitlab\API\ClientWrapper;
 use Tuleap\Gitlab\API\GitlabHTTPClientFactory;
 use Tuleap\Gitlab\Artifact\Action\CreateBranchButtonFetcher;
+use Tuleap\Gitlab\Artifact\Action\CreateBranchPrefixDao;
+use Tuleap\Gitlab\Artifact\BranchNameCreatorFromArtifact;
 use Tuleap\Gitlab\Plugin\GitlabIntegrationAvailabilityChecker;
 use Tuleap\Gitlab\Repository\GitlabRepositoryIntegrationDao;
 use Tuleap\Gitlab\Repository\GitlabRepositoryIntegrationFactory;
@@ -119,7 +122,11 @@ class GitlabBranchResource
                     new KeyFactory()
                 )
             ),
-            $gitlab_api_client
+            $gitlab_api_client,
+            new BranchNameCreatorFromArtifact(
+                new Slugify(),
+                new CreateBranchPrefixDao()
+            )
         );
 
         $branch_creator->createBranchInGitlab(

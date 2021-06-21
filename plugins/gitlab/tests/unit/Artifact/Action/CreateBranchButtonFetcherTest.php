@@ -64,7 +64,10 @@ final class CreateBranchButtonFetcherTest extends TestCase
         $this->fetcher = new CreateBranchButtonFetcher(
             $this->availability_checker,
             $this->representation_factory,
-            new BranchNameCreatorFromArtifact(new Slugify()),
+            new BranchNameCreatorFromArtifact(
+                new Slugify(),
+                $this->createMock(CreateBranchPrefixDao::class)
+            ),
             $this->javascript_asset
         );
     }

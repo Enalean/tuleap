@@ -33,6 +33,7 @@ use Tuleap\Gitlab\API\ClientWrapper;
 use Tuleap\Gitlab\API\Credentials;
 use Tuleap\Gitlab\API\GitlabRequestException;
 use Tuleap\Gitlab\API\GitlabResponseAPIException;
+use Tuleap\Gitlab\Artifact\BranchNameCreatorFromArtifact;
 use Tuleap\Gitlab\Plugin\GitlabIntegrationAvailabilityChecker;
 use Tuleap\Gitlab\Repository\GitlabRepositoryIntegration;
 use Tuleap\Gitlab\Repository\GitlabRepositoryIntegrationFactory;
@@ -69,19 +70,25 @@ final class GitlabBranchCreatorTest extends TestCase
     {
         parent::setUp();
 
-        $this->artifact_factory      = $this->createMock(Tracker_ArtifactFactory::class);
-        $this->availability_checker  = $this->createMock(GitlabIntegrationAvailabilityChecker::class);
-        $this->integration_factory   = $this->createMock(GitlabRepositoryIntegrationFactory::class);
-        $this->credentials_retriever = $this->createMock(CredentialsRetriever::class);
-        $this->gitlab_api_client     = $this->createMock(ClientWrapper::class);
+        $this->artifact_factory            = $this->createMock(Tracker_ArtifactFactory::class);
+        $this->availability_checker        = $this->createMock(GitlabIntegrationAvailabilityChecker::class);
+        $this->integration_factory         = $this->createMock(GitlabRepositoryIntegrationFactory::class);
+        $this->credentials_retriever       = $this->createMock(CredentialsRetriever::class);
+        $this->gitlab_api_client           = $this->createMock(ClientWrapper::class);
+        $branch_name_creator_from_artifact = $this->createMock(BranchNameCreatorFromArtifact::class);
 
         $this->creator = new GitlabBranchCreator(
             $this->artifact_factory,
             $this->availability_checker,
             $this->integration_factory,
             $this->credentials_retriever,
-            $this->gitlab_api_client
+            $this->gitlab_api_client,
+            $branch_name_creator_from_artifact,
         );
+
+        $branch_name_creator_from_artifact
+            ->method('getFullBranchName')
+            ->willReturn('tuleap-123-art_title');
     }
 
     public function testItAsksToCreateTheBranch(): void
