@@ -99,6 +99,11 @@ class TimePeriodWithoutWeekEnd implements TimePeriod
         return new self(null, null, null, $error_message);
     }
 
+    public static function buildWithoutAnyDates(): TimePeriodWithoutWeekEnd
+    {
+        return new self(null, null, null, '');
+    }
+
     /**
      * @psalm-pure
      */
