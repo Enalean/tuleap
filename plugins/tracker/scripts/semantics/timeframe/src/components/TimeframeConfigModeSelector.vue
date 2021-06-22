@@ -73,7 +73,7 @@ export default class TimeframeConfigModeSelector extends Vue {
             },
             {
                 id: MODE_IMPLIED_FROM_ANOTHER_TRACKER,
-                name: this.$gettext("Implied from another tracker"),
+                name: this.$gettext("Inherited from another tracker"),
             },
         ];
     }

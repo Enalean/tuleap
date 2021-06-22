@@ -98,7 +98,7 @@ class SemanticTimeframeCurrentConfigurationPresenterBuilderTest extends \Tuleap\
 
         $presenter = $builder->build();
 
-        self::assertEquals('Timeframes will be based on Sprints linking artifacts of this tracker.', $presenter->current_config_description);
+        self::assertEquals('Timeframes will be inherited from Sprints linking artifacts of this tracker.', $presenter->current_config_description);
         self::assertEmpty($presenter->semantics_implied_from_current_tracker);
         self::assertTrue($presenter->is_semantic_implied);
         self::assertFalse($presenter->are_semantics_implied_from_current_tracker);

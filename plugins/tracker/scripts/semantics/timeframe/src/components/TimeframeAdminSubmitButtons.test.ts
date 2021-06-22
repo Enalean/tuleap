@@ -38,7 +38,7 @@ describe("TimeframeAdminSubmitButtons", () => {
         expect(wrapper.find("[data-test=reset-button]").exists()).toBe(false);
     });
 
-    it("should disable the reset button when some trackers base their own semantic timeframe on the current one", async () => {
+    it("should disable the reset button when some trackers inherit their own semantic timeframe from the current one", async () => {
         const wrapper = shallowMount(TimeframeAdminSubmitButtons, {
             localVue: await createSemanticTimeframeAdminLocalVue(),
             propsData: {
@@ -55,7 +55,7 @@ describe("TimeframeAdminSubmitButtons", () => {
 
         expect(reset_button.hasAttribute("disabled")).toBe(true);
         expect(reset_button.title).toEqual(
-            "You cannot reset this semantic because some trackers imply their own semantic timeframe on this one."
+            "You cannot reset this semantic because some trackers inherit their own semantics timeframe from this one."
         );
     });
 

@@ -77,7 +77,7 @@ class TimeframeImpliedFromAnotherTrackerTest extends \Tuleap\Test\PHPUnit\TestCa
     public function testItReturnsItsConfigDescription(): void
     {
         self::assertEquals(
-            'Timeframes will be based on Releases linking artifacts of this tracker.',
+            'Timeframes will be inherited from Releases linking artifacts of this tracker.',
             $this->timeframe->getConfigDescription()
         );
     }

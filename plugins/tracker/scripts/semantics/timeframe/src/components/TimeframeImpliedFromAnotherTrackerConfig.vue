@@ -45,7 +45,7 @@
                     <i class="fas fa-life-ring"></i>
                     <translate>
                         You can't find the tracker you are looking for? Make sure it has an artifact
-                        link field, and that its semantic is not implied from another tracker.
+                        link field, and that its semantic is not inherited from another tracker.
                     </translate>
                 </p>
             </div>
@@ -56,8 +56,8 @@
             data-test="error-message-other-trackers-implying-their-timeframe"
             v-translate
         >
-            You cannot imply this semantic from another tracker because some other trackers are
-            implying their own semantics timeframe from this one.
+            You cannot make this semantic inherit from another tracker because some other trackers
+            are inheriting their own semantics timeframe from this one.
         </div>
         <div
             v-else

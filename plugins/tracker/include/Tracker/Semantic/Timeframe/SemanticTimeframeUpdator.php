@@ -93,7 +93,7 @@ class SemanticTimeframeUpdator
 
         $GLOBALS['Response']->addFeedback(
             \Feedback::ERROR,
-            dgettext('tuleap-tracker', 'You cannot reset this semantic because some trackers imply their own semantic timeframe on this one.')
+            dgettext('tuleap-tracker', 'You cannot reset this semantic because some trackers inherit their own semantic timeframe from this one.')
         );
     }
 
