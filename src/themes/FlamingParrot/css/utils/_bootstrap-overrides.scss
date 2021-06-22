@@ -444,7 +444,7 @@ legend {
     }
 
     &.btn-success {
-        @include btn(var(--tlp-ui-success), var(--tlp-ui-success-transparent-40), var(--tlp-ui-success-darker-10), var(--tlp-ui-white));
+        @include btn(var(--tlp-success-color), var(--tlp-success-color-transparent-40), var(--tlp-success-color-darker-10), var(--tlp-ui-white));
     }
 
     &.btn-warning {
@@ -467,7 +467,7 @@ legend {
         }
 
         &.btn-success {
-            @include btn-hover(var(--tlp-ui-success-darker-05));
+            @include btn-hover(var(--tlp-success-color-darker-05));
         }
 
         &.btn-warning {

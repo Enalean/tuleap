@@ -127,11 +127,11 @@ $timeline-color: var(--tlp-main-color-lighter-90);
 
 .release-widget-pie-chart-ttm-slice-passed {
     > path {
-        fill: var(--tlp-ui-success);
+        fill: var(--tlp-success-color);
     }
 
     > text {
-        fill: var(--tlp-ui-success);
+        fill: var(--tlp-success-color);
         text-shadow: var(--tlp-ui-white) 1px 1px, var(--tlp-ui-white) -1px 1px, var(--tlp-ui-white) -1px -1px, var(--tlp-ui-white) 1px -1px, var(--tlp-ui-white) 2px 2px, var(--tlp-ui-white) -2px 2px, var(--tlp-ui-white) -2px -2px, var(--tlp-ui-white) 2px -2px, var(--tlp-ui-white) 3px 3px, var(--tlp-ui-white) -3px 3px, var(--tlp-ui-white) -3px -3px, var(--tlp-ui-white) 3px -3px;
     }
 }
@@ -184,7 +184,7 @@ $timeline-color: var(--tlp-main-color-lighter-90);
     opacity: 0.8;
 
     &.release-widget-pie-chart-ttm-legend-color-passed {
-        background-color: var(--tlp-ui-success);
+        background-color: var(--tlp-success-color);
     }
 
     &.release-widget-pie-chart-ttm-legend-color-blocked {

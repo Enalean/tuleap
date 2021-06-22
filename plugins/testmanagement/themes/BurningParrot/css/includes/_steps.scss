@@ -18,15 +18,15 @@
     }
 
     &.passed {
-        background: var(--tlp-ui-success-transparent-90);
+        background: var(--tlp-success-color-transparent-90);
 
         > .steps-step-description > .steps-step-expected {
             > div > .steps-step-expected-title {
-                color: var(--tlp-ui-success);
+                color: var(--tlp-success-color);
             }
 
             > .steps-step-expected-arrow {
-                fill: var(--tlp-ui-success);
+                fill: var(--tlp-success-color);
             }
         }
     }

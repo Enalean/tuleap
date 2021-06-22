@@ -123,8 +123,8 @@ $kanban-item-padding-height: 8px;
     &.card-created {
         transition: border-color 75ms ease-in-out, background-color 75ms ease-in-out;
         animation: pulse 500ms ease-in-out;
-        border-color: var(--tlp-ui-success);
-        background: var(--tlp-ui-success-transparent-90);
+        border-color: var(--tlp-success-color);
+        background: var(--tlp-success-color-transparent-90);
     }
 }
 

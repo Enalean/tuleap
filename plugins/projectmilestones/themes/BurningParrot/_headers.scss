@@ -136,7 +136,7 @@
 }
 
 .past-release > .release-remaining-value {
-    color: var(--tlp-ui-success);
+    color: var(--tlp-success-color);
 }
 
 .release-remaining-value-danger {
@@ -148,7 +148,7 @@
 }
 
 .release-remaining-value-success {
-    color: var(--tlp-ui-success);
+    color: var(--tlp-success-color);
 }
 
 .release-remaining-header {
@@ -168,7 +168,7 @@
 }
 
 .past-release > .release-remaining-icon {
-    color: var(--tlp-ui-success);
+    color: var(--tlp-success-color);
 }
 
 .release-remaining-text {
@@ -181,7 +181,7 @@
 }
 
 .past-release > .release-remaining-text {
-    color: var(--tlp-ui-success);
+    color: var(--tlp-success-color);
 }
 
 .release-remaining-progress {
@@ -206,7 +206,7 @@
 }
 
 .release-remaining-progress-value-success {
-    background: var(--tlp-ui-success);
+    background: var(--tlp-success-color);
 }
 
 .release-remaining-disabled {

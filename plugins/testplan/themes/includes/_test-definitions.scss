@@ -71,8 +71,8 @@
 
     &.test-plan-test-definition-is-just-refreshed {
         animation: pulse-test-definition 500ms ease-in-out;
-        border-color: var(--tlp-ui-success);
-        background: var(--tlp-ui-success-lighter-90);
+        border-color: var(--tlp-success-color);
+        background: var(--tlp-success-color-lighter-90);
     }
 }
 
@@ -133,7 +133,7 @@
 }
 
 .test-plan-test-definition-icon-status-passed {
-    color: var(--tlp-ui-success);
+    color: var(--tlp-success-color);
 }
 
 .test-plan-test-definition-icon-status-failed {

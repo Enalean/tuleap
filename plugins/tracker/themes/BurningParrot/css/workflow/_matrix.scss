@@ -73,7 +73,7 @@
             text-align: center;
 
             &.tracker-workflow-transition-action-updated {
-                background: var(--tlp-ui-success-transparent-90);
+                background: var(--tlp-success-color-transparent-90);
             }
         }
     }
@@ -140,7 +140,7 @@
 
     &.tracker-workflow-transition-action-updated {
         animation: bounce ease-in-out 500ms infinite alternate;
-        color: var(--tlp-ui-success);
+        color: var(--tlp-success-color);
     }
 }
 

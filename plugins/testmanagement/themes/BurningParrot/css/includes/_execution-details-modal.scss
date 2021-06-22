@@ -19,7 +19,7 @@
 
 .execution-details-modal {
     $status: (
-        "tlp-modal-success": var(--tlp-ui-success),
+        "tlp-modal-success": var(--tlp-success-color),
         "tlp-modal-danger": var(--tlp-ui-danger),
         "tlp-modal-info": var(--tlp-info-color),
         "notrun": var(--tlp-dimmed-color),

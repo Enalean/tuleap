@@ -47,8 +47,8 @@
         border-radius: 4px;
 
         &.good {
-            background: var(--tlp-ui-success-transparent-90);
-            color: var(--tlp-ui-success);
+            background: var(--tlp-success-color-transparent-90);
+            color: var(--tlp-success-color);
 
             > .password-strategy-bad {
                 display: none;
