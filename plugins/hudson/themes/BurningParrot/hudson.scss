@@ -79,7 +79,7 @@
 }
 
 .test-results-pie-legend-color-skipped {
-    background-color: var(--tlp-ui-warning);
+    background-color: var(--tlp-warning-color);
 }
 
 .test-results-pie-legend-color-failed {
@@ -106,11 +106,11 @@
 
 .test-results-pie-slice-skipped {
     > path {
-        fill: var(--tlp-ui-warning);
+        fill: var(--tlp-warning-color);
     }
 
     > text {
-        fill: var(--tlp-ui-warning-darker-10);
+        fill: var(--tlp-warning-color-darker-10);
     }
 }
 

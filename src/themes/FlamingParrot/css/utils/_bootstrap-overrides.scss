@@ -448,7 +448,7 @@ legend {
     }
 
     &.btn-warning {
-        @include btn(var(--tlp-ui-warning), var(--tlp-ui-warning-transparent-40), var(--tlp-ui-warning-darker-10), var(--tlp-ui-white));
+        @include btn(var(--tlp-warning-color), var(--tlp-warning-color-transparent-40), var(--tlp-warning-color-darker-10), var(--tlp-ui-white));
     }
 
     &.btn-info {
@@ -471,7 +471,7 @@ legend {
         }
 
         &.btn-warning {
-            @include btn-hover(var(--tlp-ui-warning-darker-05));
+            @include btn-hover(var(--tlp-warning-color-darker-05));
         }
 
         &.btn-info {

@@ -170,7 +170,7 @@
     }
 
     &.flag-warning {
-        color: var(--tlp-ui-warning);
+        color: var(--tlp-warning-color);
         font-size: 36px;
     }
 
@@ -264,7 +264,7 @@
 }
 
 .siteadmin-homepage-users-legend-color-restricted {
-    background-color: var(--tlp-ui-warning);
+    background-color: var(--tlp-warning-color);
 }
 
 .siteadmin-homepage-users-legend-color-deleted,
@@ -316,11 +316,11 @@
 
 .siteadmin-homepage-users-slice-restricted {
     > path {
-        fill: var(--tlp-ui-warning);
+        fill: var(--tlp-warning-color);
     }
 
     > text {
-        fill: var(--tlp-ui-warning-darker-10);
+        fill: var(--tlp-warning-color-darker-10);
     }
 }
 

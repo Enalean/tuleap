@@ -29,7 +29,7 @@ $main-color-dimmed-background: mix($tlp-background-color, $tlp-ui-white, 50);
     // colors
     --tlp-info-color: #{$tlp-info-color};
     --tlp-success-color: #{$tlp-success-color};
-    --tlp-ui-warning: #{$tlp-ui-warning};
+    --tlp-warning-color: #{$tlp-warning-color};
     --tlp-ui-danger: #{$tlp-ui-danger};
     --tlp-dimmed-color: #{$tlp-dimmed-color};
     --tlp-ui-white: #{$tlp-ui-white};
@@ -92,21 +92,21 @@ $main-color-dimmed-background: mix($tlp-background-color, $tlp-ui-white, 50);
     --tlp-info-color-transparent-85: #{transparentize($tlp-info-color, 0.85)};
     --tlp-info-color-transparent-90: #{transparentize($tlp-info-color, 0.9)};
 
-    --tlp-ui-warning-darker-05: #{darken($tlp-ui-warning, 5%)};
-    --tlp-ui-warning-darker-10: #{darken($tlp-ui-warning, 10%)};
-    --tlp-ui-warning-lighter-07: #{mix($tlp-ui-warning, $tlp-ui-white, 7%)};
-    --tlp-ui-warning-lighter-12: #{mix($tlp-ui-warning, $tlp-ui-white, 12%)};
-    --tlp-ui-warning-lighter-15: #{mix($tlp-ui-warning, $tlp-ui-white, 85%)};
-    --tlp-ui-warning-lighter-20: #{mix($tlp-ui-warning, $tlp-ui-white, 80%)};
-    --tlp-ui-warning-lighter-30: #{mix($tlp-ui-warning, $tlp-ui-white, 70%)};
-    --tlp-ui-warning-lighter-80: #{mix($tlp-ui-warning, $tlp-ui-white, 20%)};
-    --tlp-ui-warning-lighter-90: #{mix($tlp-ui-warning, $tlp-ui-white, 10%)};
-    --tlp-ui-warning-transparent-40: #{transparentize($tlp-ui-warning, 0.4)};
-    --tlp-ui-warning-transparent-50: #{transparentize($tlp-ui-warning, 0.5)};
-    --tlp-ui-warning-transparent-60: #{transparentize($tlp-ui-warning, 0.6)};
-    --tlp-ui-warning-transparent-60-darker-05: #{darken(transparentize($tlp-ui-warning, 0.6), 5%)};
-    --tlp-ui-warning-transparent-85: #{transparentize($tlp-ui-warning, 0.85)};
-    --tlp-ui-warning-transparent-90: #{transparentize($tlp-ui-warning, 0.9)};
+    --tlp-warning-color-darker-05: #{darken($tlp-warning-color, 5%)};
+    --tlp-warning-color-darker-10: #{darken($tlp-warning-color, 10%)};
+    --tlp-warning-color-lighter-07: #{mix($tlp-warning-color, $tlp-ui-white, 7%)};
+    --tlp-warning-color-lighter-12: #{mix($tlp-warning-color, $tlp-ui-white, 12%)};
+    --tlp-warning-color-lighter-15: #{mix($tlp-warning-color, $tlp-ui-white, 85%)};
+    --tlp-warning-color-lighter-20: #{mix($tlp-warning-color, $tlp-ui-white, 80%)};
+    --tlp-warning-color-lighter-30: #{mix($tlp-warning-color, $tlp-ui-white, 70%)};
+    --tlp-warning-color-lighter-80: #{mix($tlp-warning-color, $tlp-ui-white, 20%)};
+    --tlp-warning-color-lighter-90: #{mix($tlp-warning-color, $tlp-ui-white, 10%)};
+    --tlp-warning-color-transparent-40: #{transparentize($tlp-warning-color, 0.4)};
+    --tlp-warning-color-transparent-50: #{transparentize($tlp-warning-color, 0.5)};
+    --tlp-warning-color-transparent-60: #{transparentize($tlp-warning-color, 0.6)};
+    --tlp-warning-color-transparent-60-darker-05: #{darken(transparentize($tlp-warning-color, 0.6), 5%)};
+    --tlp-warning-color-transparent-85: #{transparentize($tlp-warning-color, 0.85)};
+    --tlp-warning-color-transparent-90: #{transparentize($tlp-warning-color, 0.9)};
 
     --tlp-ui-danger-darker-05: #{darken($tlp-ui-danger, 5%)};
     --tlp-ui-danger-darker-10: #{darken($tlp-ui-danger, 10%)};
@@ -170,9 +170,9 @@ $main-color-dimmed-background: mix($tlp-background-color, $tlp-ui-white, 50);
     --tlp-alert-success-color: #{darken($tlp-success-color, 20%)};
     --tlp-alert-success-border: 5px solid var(--tlp-success-color);
 
-    --tlp-alert-warning-background: #{desaturate(lighten(mix($tlp-ui-white, $tlp-ui-warning, 20%), 23%), 15%)};
-    --tlp-alert-warning-color: #{saturate(darken($tlp-ui-warning, 30%), 10%)};
-    --tlp-alert-warning-border: 5px solid var(--tlp-ui-warning);
+    --tlp-alert-warning-background: #{desaturate(lighten(mix($tlp-ui-white, $tlp-warning-color, 20%), 23%), 15%)};
+    --tlp-alert-warning-color: #{saturate(darken($tlp-warning-color, 30%), 10%)};
+    --tlp-alert-warning-border: 5px solid var(--tlp-warning-color);
 
     // Dark
     --tlp-ui-danger-on-dark-background: #{mix($tlp-ui-danger, $tlp-ui-white, 85%)};

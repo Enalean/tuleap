@@ -139,7 +139,7 @@ $tlp-popover-click-transition: 75ms ease-out;
 .tlp-popover-warning {
     > .tlp-popover-arrow,
     > .tlp-popover-header {
-        background: var(--tlp-ui-warning);
+        background: var(--tlp-warning-color);
     }
 }
 

@@ -59,8 +59,8 @@
 
         &.new-release-note-available {
             animation: pulse 300ms ease-in-out 1s 3 both;
-            border-color: var(--tlp-ui-warning);
-            background: var(--tlp-ui-warning);
+            border-color: var(--tlp-warning-color);
+            background: var(--tlp-warning-color);
             color: var(--tlp-ui-white);
 
             > .fa-star {
@@ -103,7 +103,7 @@
             }
 
             &.help-dropdown-link-highlight {
-                color: var(--tlp-ui-warning);
+                color: var(--tlp-warning-color);
             }
 
             > .review-link-icon {

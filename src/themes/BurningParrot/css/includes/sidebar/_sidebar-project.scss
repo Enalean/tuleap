@@ -114,7 +114,7 @@
 .project-sidebar-banner-button-icon {
     @extend %round-icon;
     transition: opacity ease-in-out 100ms;
-    background-color: var(--tlp-ui-warning);
+    background-color: var(--tlp-warning-color);
 
     .fa-bullhorn {
         padding: 6.5px;
@@ -127,7 +127,7 @@
 .project-sidebar-banner-button-label {
     margin: 0 0 0 var(--tlp-small-spacing);
     overflow: hidden;
-    color: var(--tlp-ui-warning);
+    color: var(--tlp-warning-color);
     font-size: 0.6rem;
     font-weight: 600;
     letter-spacing: 0.25px;
