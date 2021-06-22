@@ -84,6 +84,47 @@ final class ReportCriteriaDaoTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertEquals($expected, $duplicated_data);
     }
 
+    public function testItDuplicateAlphaNumValues(): void
+    {
+        $from_report_id      = 10;
+        $to_report_id        = 20;
+        $from_field_id       = 300;
+        $from_other_field_id = 301;
+        $to_field_id         = 400;
+        $to_other_field_id   = 401;
+        $rank                = 1;
+
+        $field_mapping[] = [
+            'values' => [],
+            'from' => $from_field_id,
+            'to' => $to_field_id
+        ];
+        $field_mapping[] = [
+            'values' => [],
+            'from' => $from_other_field_id,
+            'to' => $to_other_field_id
+        ];
+
+        $criteria_id = $this->create($from_report_id, $from_field_id, $rank, 0);
+        $this->insertAlphanumValue($criteria_id, "Stuff");
+        $other_criteria_id = $this->create($from_report_id, $from_other_field_id, $rank, 0);
+        $this->insertAlphanumValue($other_criteria_id, "Other stuff");
+
+        $this->dao->duplicate($from_report_id, $to_report_id, $field_mapping);
+
+        $duplicated_data = $this->getNewReportCriteriaAlphanumValues($to_field_id);
+        $expected        = [
+            ['value' => "Stuff"],
+        ];
+        $this->assertEquals($expected, $duplicated_data);
+
+        $duplicated_data = $this->getNewReportCriteriaAlphanumValues($to_other_field_id);
+        $expected        = [
+            ['value' => "Other stuff"],
+        ];
+        $this->assertEquals($expected, $duplicated_data);
+    }
+
     private function create(int $report_id, int $field_id, int $rank, int $is_advanced): int
     {
         return $this->db->insertReturnId('tracker_report_criteria', [
@@ -102,10 +143,27 @@ final class ReportCriteriaDaoTest extends \Tuleap\Test\PHPUnit\TestCase
         ]);
     }
 
+    private function insertAlphaNumValue(int $criteria_id, string $value): void
+    {
+        $this->db->insert('tracker_report_criteria_alphanum_value', [
+            'criteria_id' => $criteria_id,
+            'value' => $value,
+        ]);
+    }
+
+
     private function getNewReportCriteriaListValues(int $field_id): array
     {
         $sql = 'SELECT value FROM tracker_report_criteria AS criteria
                     INNER JOIN tracker_report_criteria_list_value AS list_values ON criteria.id = list_values.criteria_id WHERE field_id = ?';
+
+        return $this->db->run($sql, $field_id);
+    }
+
+    private function getNewReportCriteriaAlphanumValues(int $field_id): array
+    {
+        $sql = 'SELECT value FROM tracker_report_criteria AS criteria
+                    INNER JOIN tracker_report_criteria_alphanum_value AS alphanum_values ON criteria.id = alphanum_values.criteria_id WHERE field_id = ?';
 
         return $this->db->run($sql, $field_id);
     }
