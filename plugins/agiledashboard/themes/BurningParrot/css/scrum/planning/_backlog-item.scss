@@ -93,7 +93,7 @@
     padding: var(--tlp-small-spacing);
     border-right: 1px solid var(--tlp-ui-border-normal);
     border-left: 1px solid var(--tlp-ui-border-normal);
-    background: var(--tlp-theme-background-color-lighter-02);
+    background: var(--tlp-background-color-lighter-02);
 }
 
 .backlog-item-show-children-handle {
@@ -102,7 +102,7 @@
     border: 1px solid var(--tlp-ui-border-normal);
     border-top: 0;
     border-radius: 0 0 3px 3px;
-    background: var(--tlp-theme-background-color-lighter-02);
+    background: var(--tlp-background-color-lighter-02);
     cursor: pointer;
 
     &::before {
@@ -122,6 +122,6 @@
     }
 
     &:hover {
-        background: var(--tlp-theme-background-color-lighter-03);
+        background: var(--tlp-background-color-lighter-03);
     }
 }

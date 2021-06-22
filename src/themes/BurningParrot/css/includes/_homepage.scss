@@ -21,11 +21,11 @@ $homepage-small-screen-width: 850px;
 
 /* stylelint-disable-next-line selector-no-qualifying-type */
 body.homepage > #main-container {
-    background: linear-gradient(to bottom, var(--tlp-theme-background-color) 300px, var(--tlp-dark-color) 300px);
+    background: linear-gradient(to bottom, var(--tlp-background-color) 300px, var(--tlp-dark-color) 300px);
 
     /* stylelint-disable-next-line selector-no-qualifying-type */
     > main > #feedback {
-        background: var(--tlp-theme-background-color);
+        background: var(--tlp-background-color);
     }
 }
 
@@ -34,7 +34,7 @@ body.homepage > #main-container {
     position: relative;
     flex-direction: column;
     align-items: center;
-    background-image: linear-gradient(to bottom, var(--tlp-theme-background-color), var(--tlp-ui-white) 50%);
+    background-image: linear-gradient(to bottom, var(--tlp-background-color), var(--tlp-ui-white) 50%);
 
     @media screen and (max-width: $homepage-small-screen-width) {
         padding: 40px 20px;

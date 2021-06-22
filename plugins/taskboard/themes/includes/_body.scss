@@ -70,13 +70,13 @@
     }
 
     &:first-child {
-        background: var(--tlp-theme-background-color-lighter-50);
+        background: var(--tlp-background-color-lighter-50);
 
         &:hover,
         &:focus-within {
             > .taskboard-swimlane-toggle {
                 opacity: 1;
-                background: var(--tlp-theme-background-color-lighter-50);
+                background: var(--tlp-background-color-lighter-50);
             }
         }
     }

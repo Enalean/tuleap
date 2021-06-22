@@ -43,7 +43,7 @@
     display: flex;
     padding: 0;
     overflow-y: hidden;
-    background: var(--tlp-theme-background-color);
+    background: var(--tlp-background-color);
 
     &.edition-mode .tuleap-artifact-modal-followups {
         display: none;

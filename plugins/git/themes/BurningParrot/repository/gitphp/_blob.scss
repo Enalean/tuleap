@@ -89,7 +89,7 @@ $codemirror-like-line-numbers-color: #8c8c8c;
     align-items: flex-end;
     padding: 5px 0;
     border-right: 1px solid var(--tlp-ui-border-light);
-    background: var(--tlp-theme-background-color-lighter-50);
+    background: var(--tlp-background-color-lighter-50);
     line-height: 1.5;
     text-align: right;
     vertical-align: top;
@@ -158,7 +158,7 @@ $above-highlight-line: 2;
 .git-repository-blame-line {
     padding: 5px var(--tlp-small-spacing);
     border-right: 1px solid var(--tlp-ui-border-light);
-    background: var(--tlp-theme-background-color-lighter-50);
+    background: var(--tlp-background-color-lighter-50);
     text-align: left;
     vertical-align: top;
     white-space: nowrap;

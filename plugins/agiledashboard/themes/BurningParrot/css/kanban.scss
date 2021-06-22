@@ -153,7 +153,7 @@ $kanban-column-footer-height: 50px;
     transition: background 100ms;
     border-bottom: 1px solid var(--tlp-ui-border-normal);
     border-left: 1px solid var(--tlp-ui-border-normal);
-    background: var(--tlp-theme-background-color);
+    background: var(--tlp-background-color);
 
     &:hover,
     &:focus-within {

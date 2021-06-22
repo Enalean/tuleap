@@ -122,7 +122,7 @@
 
     .project-administration-content,
     .dashboard-widgets-container {
-        background: var(--tlp-theme-background-color);
+        background: var(--tlp-background-color);
     }
 
     .dashboard-project-header-members,
@@ -209,7 +209,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background: var(--tlp-theme-background-color);
+    background: var(--tlp-background-color);
     color: var(--tlp-ui-dimmed);
     font-size: 0.875rem;
 }
