@@ -17,8 +17,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 import * as tlp from "@tuleap/tlp-fetch";
-import { GitLabBranchCreationPossibleError, postGitlabBranch } from "./rest-querier";
-import { mockFetchError } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper";
+import {
+    getGitLabRepositoryBranchInformation,
+    GitLabBranchCreationPossibleError,
+    postGitlabBranch,
+} from "./rest-querier";
+import { mockFetchError, mockFetchSuccess } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper";
 
 jest.mock("@tuleap/tlp-fetch");
 
@@ -80,5 +84,15 @@ describe("postGitlabBranch", () => {
             error_type = (await result.error).error_type;
         }
         expect(error_type).toBe(GitLabBranchCreationPossibleError.UNKNOWN);
+    });
+
+    it("retrieves branch information of a GitLab integration", async () => {
+        const getSpy = jest.spyOn(tlp, "get");
+
+        mockFetchSuccess(getSpy);
+
+        await getGitLabRepositoryBranchInformation(12);
+
+        expect(getSpy).toHaveBeenCalledWith("/api/v1/gitlab_repositories/12/branches");
     });
 });

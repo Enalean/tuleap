@@ -5,6 +5,7 @@
     "license": "GPL-2.0-or-later",
     "private": true,
     "dependencies": {
+        "@tuleap/concurrency-limit-pool": "file:../../src/scripts/lib/concurrency-limit-pool",
         "@tuleap/tlp-fetch": "file:../../src/scripts/lib/tlp-fetch",
         "neverthrow": "^4.2.1",
         "vue": "^2.6.14",
