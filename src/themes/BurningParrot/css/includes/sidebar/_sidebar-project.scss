@@ -101,12 +101,8 @@
 
     &:hover,
     &:focus {
-        background: var(--tlp-dark-color-darker-20);
-
-        > .project-sidebar-banner-button-label,
-        > .project-sidebar-banner-button-icon {
-            opacity: 0.8;
-        }
+        background: var(--tlp-sidebar-action-color-hover);
+        background-blend-mode: overlay;
     }
 }
 
