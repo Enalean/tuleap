@@ -34,8 +34,14 @@
     background: var(--tlp-dark-color);
 }
 
-.sidebar-collapser-icon::before {
-    content: "\f053"; // fa-chevron-left
+.sidebar-collapser-icon {
+    font-size: 12px;
+    // Do not catch click on parent button
+    pointer-events: none;
+
+    &::before {
+        content: "\f053"; // fa-chevron-left
+    }
 }
 
 .sidebar-spacer {

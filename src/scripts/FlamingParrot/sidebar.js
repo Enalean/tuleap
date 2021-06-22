@@ -45,12 +45,6 @@ function setSidebarUserPreference(new_width) {
     $("body").removeClass("sidebar-expanded sidebar-collapsed").addClass(state);
 }
 
-function updateSidebarIcon(direction) {
-    $(".sidebar-collapse")
-        .removeClass("fa-chevron-left fa-chevron-right")
-        .addClass("fa-chevron-" + direction);
-}
-
 function updateSidebarServices(show_only_icon) {
     if (show_only_icon) {
         $(".sidebar-nav li a > span").hide();
@@ -63,20 +57,17 @@ function updateSidebarServices(show_only_icon) {
 
 function sidebarCollapseEvent(duration) {
     var current_size = getSidebarUserPreference();
-    var new_direction = "left";
     var show_only_icon = false;
     var new_size;
 
     if (current_size === width_expanded) {
         new_size = width_collapsed;
-        new_direction = "right";
         show_only_icon = true;
     } else {
         new_size = width_expanded;
     }
 
     setSidebarUserPreference(new_size);
-    updateSidebarIcon(new_direction, show_only_icon);
     updateSidebarServices(show_only_icon, duration);
 }
 
@@ -90,14 +81,12 @@ $(window).load(function () {
         });
 
         if (current_size === null || current_size === width_expanded) {
-            updateSidebarIcon("left");
             updateSidebarServices(false, 100);
         } else {
-            updateSidebarIcon("right");
             updateSidebarServices(true, 100);
         }
 
-        $(".sidebar-collapse").click(function () {
+        $("[data-sidebar-collapser]").click(function () {
             sidebarCollapseEvent(100);
         });
     }
