@@ -38,7 +38,7 @@ h6 {
 
     small {
         margin: 0 0 0 5px;
-        color: var(--tlp-ui-dimmed);
+        color: var(--tlp-dimmed-color);
     }
 }
 
@@ -66,7 +66,7 @@ h2 {
 }
 
 h3 {
-    color: var(--tlp-ui-dimmed);
+    color: var(--tlp-dimmed-color);
     font-size: 20px;
     font-weight: 600;
     text-transform: uppercase;
@@ -166,7 +166,7 @@ blockquote {
 }
 
 .tlp-text-muted {
-    color: var(--tlp-ui-dimmed);
+    color: var(--tlp-dimmed-color);
 }
 
 .tlp-text-info {

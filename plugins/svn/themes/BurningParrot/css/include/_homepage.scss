@@ -62,11 +62,11 @@
     top: var(--tlp-medium-spacing);
     right: var(--tlp-medium-spacing);
     transition: color ease-in-out 150ms;
-    color: var(--tlp-ui-dimmed-transparent-50);
+    color: var(--tlp-dimmed-color-transparent-50);
 
     &:hover,
     &:focus {
-        color: var(--tlp-ui-dimmed);
+        color: var(--tlp-dimmed-color);
 
         + .svn-homepage-repository-card {
             border-color: var(--tlp-main-color);

@@ -101,7 +101,7 @@ $tlp-switch-button-spinner-size: $tlp-switch-height - 2 * ($tlp-switch-button-pa
             width: $tlp-switch-button-spinner-size;
             height: $tlp-switch-button-spinner-size;
             animation: tlp-switch-loading-spin 2s infinite linear;
-            color: var(--tlp-ui-dimmed);
+            color: var(--tlp-dimmed-color);
         }
     }
 }

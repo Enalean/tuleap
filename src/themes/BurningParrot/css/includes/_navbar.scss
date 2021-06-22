@@ -62,7 +62,7 @@ header.pinned > .header-container {
 .nav-link {
     margin: 0 0 0 var(--tlp-large-spacing);
     transition: opacity ease-in-out 75ms;
-    color: var(--tlp-ui-dimmed);
+    color: var(--tlp-dimmed-color);
     font-size: 0.875rem;
     font-weight: 500;
 
@@ -131,7 +131,7 @@ header.pinned > .header-container {
 
 .nav-dropdown-item-title {
     padding: var(--tlp-medium-spacing) var(--tlp-medium-spacing) var(--tlp-small-spacing);
-    color: var(--tlp-ui-dimmed);
+    color: var(--tlp-dimmed-color);
     font-size: 0.65rem;
     font-weight: 600;
     letter-spacing: 0.5px;

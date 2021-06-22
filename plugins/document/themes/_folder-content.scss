@@ -34,7 +34,7 @@
 
 .document-tree-cell-owner,
 .document-tree-cell-updatedate {
-    color: var(--tlp-ui-dimmed);
+    color: var(--tlp-dimmed-color);
     font-size: 14px;
     white-space: nowrap;
 }
@@ -142,7 +142,7 @@
 
 .document-badge-avatar-username {
     &:not(:hover) {
-        color: var(--tlp-ui-dimmed);
+        color: var(--tlp-dimmed-color);
     }
 }
 
@@ -183,7 +183,7 @@
     position: relative;
     flex: 0 0 auto;
     margin: 0 5px 0 0;
-    color: var(--tlp-ui-dimmed);
+    color: var(--tlp-dimmed-color);
     cursor: pointer;
 
     &:hover,

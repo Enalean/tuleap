@@ -155,7 +155,7 @@ $width-bar-left-sprints: 16px;
     width: min-content;
     margin: 0;
     background: var(--tlp-ui-border-dark);
-    color: var(--tlp-ui-dimmed);
+    color: var(--tlp-dimmed-color);
 }
 
 .project-release-closed-sprint-badge::after {
@@ -166,7 +166,7 @@ $width-bar-left-sprints: 16px;
     left: -25px;
     width: 25px;
     height: 2px;
-    background: var(--tlp-ui-dimmed);
+    background: var(--tlp-dimmed-color);
 }
 
 .project-release-closed-sprint-badge::before {
@@ -178,7 +178,7 @@ $width-bar-left-sprints: 16px;
     width: 16px;
     height: 16px;
     border-radius: 50%;
-    background: var(--tlp-ui-dimmed);
+    background: var(--tlp-dimmed-color);
 }
 
 .can-close-sprint .open-badges-sprints:hover .project-release-closed-sprint-badge::before {

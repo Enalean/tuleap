@@ -46,7 +46,7 @@ $white-space-above-and-after-a-project-link: var(--tlp-small-spacing);
 .switch-to-modal-header-icon {
     margin: 0 6px 0 0;
     opacity: 0.7;
-    color: var(--tlp-ui-dimmed);
+    color: var(--tlp-dimmed-color);
     font-size: 0.875rem;
     line-height: 1rem;
 }
@@ -64,7 +64,7 @@ $white-space-above-and-after-a-project-link: var(--tlp-small-spacing);
     line-height: 1.1875rem;
 
     &::placeholder {
-        color: var(--tlp-ui-dimmed);
+        color: var(--tlp-dimmed-color);
     }
 
     &::-ms-clear,
@@ -90,7 +90,7 @@ $white-space-above-and-after-a-project-link: var(--tlp-small-spacing);
     border-radius: 4px;
     opacity: 0.75;
     background: none;
-    color: var(--tlp-ui-dimmed-on-dark-background);
+    color: var(--tlp-dimmed-color-on-dark-background);
     font-family: var(--tlp-font-family);
     font-size: 0.8125rem;
     font-weight: 500;
@@ -116,7 +116,7 @@ $white-space-above-and-after-a-project-link: var(--tlp-small-spacing);
 }
 
 .switch-to-modal-body-title {
-    color: var(--tlp-ui-dimmed);
+    color: var(--tlp-dimmed-color);
     font-size: 0.8125rem;
     font-weight: 600;
     line-height: 1rem;
@@ -178,14 +178,14 @@ $white-space-above-and-after-a-project-link: var(--tlp-small-spacing);
     transition: opacity 100ms ease-in-out;
     border-radius: 4px;
     opacity: 0;
-    color: var(--tlp-ui-dimmed-on-dark-background);
+    color: var(--tlp-dimmed-color-on-dark-background);
     font-size: 0.8125rem;
     cursor: pointer;
 
     &:hover,
     &:focus {
         background: rgba(0, 0, 0, 0.2);
-        color: var(--tlp-ui-dimmed-on-dark-background);
+        color: var(--tlp-dimmed-color-on-dark-background);
         text-decoration: none;
     }
 }
@@ -193,14 +193,14 @@ $white-space-above-and-after-a-project-link: var(--tlp-small-spacing);
 .switch-to-projects-softwaremap {
     padding: 6px 8px calc(var(--tlp-large-spacing) + 6px) 36px;
     opacity: 0.75;
-    color: var(--tlp-ui-dimmed-on-dark-background);
+    color: var(--tlp-dimmed-color-on-dark-background);
     font-size: 0.8125rem;
     font-weight: 500;
     line-height: 1rem;
 
     &:hover,
     &:focus {
-        color: var(--tlp-ui-dimmed-on-dark-background);
+        color: var(--tlp-dimmed-color-on-dark-background);
         text-decoration: underline;
     }
 }
@@ -249,7 +249,7 @@ $white-space-above-and-after-a-project-link: var(--tlp-small-spacing);
 .switch-to-projects-empty-text {
     margin: var(--tlp-medium-spacing) 0 var(--tlp-large-spacing);
     opacity: 0.75;
-    color: var(--tlp-ui-dimmed-on-dark-background);
+    color: var(--tlp-dimmed-color-on-dark-background);
     font-size: 0.8125rem;
     font-weight: 500;
     line-height: 1rem;
@@ -259,11 +259,11 @@ $white-space-above-and-after-a-project-link: var(--tlp-small-spacing);
     opacity: 0.5;
 
     .stroked {
-        stroke: var(--tlp-ui-dimmed-on-dark-background);
+        stroke: var(--tlp-dimmed-color-on-dark-background);
     }
 
     .filled {
-        fill: var(--tlp-ui-dimmed-on-dark-background);
+        fill: var(--tlp-dimmed-color-on-dark-background);
     }
 }
 
@@ -279,7 +279,7 @@ $white-space-above-and-after-a-project-link: var(--tlp-small-spacing);
 .switch-to-modal-no-matching-history,
 .switch-to-modal-no-matching-projects {
     opacity: 0.75;
-    color: var(--tlp-ui-dimmed-on-dark-background);
+    color: var(--tlp-dimmed-color-on-dark-background);
     font-size: 0.875rem;
 }
 

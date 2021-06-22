@@ -47,7 +47,7 @@
 
 .mailing-list-dropdown-trigger {
     transition: color 150ms ease-in-out;
-    color: var(--tlp-ui-dimmed);
+    color: var(--tlp-dimmed-color);
     cursor: pointer;
 
     &:focus,

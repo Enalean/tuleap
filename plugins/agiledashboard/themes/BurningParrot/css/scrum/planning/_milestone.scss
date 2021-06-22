@@ -36,7 +36,7 @@ $border-element-separator: 1px solid var(--project-color-border, var(--tlp-ui-wh
     transition: background 0.1s linear;
     border-bottom: $border-element-separator;
     background: $milestone-background;
-    color: var(--project-color, var(--tlp-ui-dimmed));
+    color: var(--project-color, var(--tlp-dimmed-color));
     cursor: pointer;
 
     &:hover {
@@ -51,7 +51,7 @@ $border-element-separator: 1px solid var(--project-color-border, var(--tlp-ui-wh
 
 .milestone-header-label {
     flex: 0 0 auto;
-    color: var(--project-color, var(--tlp-ui-dimmed));
+    color: var(--project-color, var(--tlp-dimmed-color));
 }
 
 .milestone-action-button {
@@ -72,7 +72,7 @@ $border-element-separator: 1px solid var(--project-color-border, var(--tlp-ui-wh
 }
 
 .milestone-header-dates {
-    color: var(--project-color, var(--tlp-ui-dimmed));
+    color: var(--project-color, var(--tlp-dimmed-color));
     font-size: 12px;
 }
 

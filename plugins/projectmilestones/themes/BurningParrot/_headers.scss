@@ -31,11 +31,11 @@
     > .project-release-date {
         @keyframes blinkText {
             from {
-                color: var(--tlp-ui-dimmed-lighter-70);
+                color: var(--tlp-dimmed-color-lighter-70);
             }
 
             to {
-                color: var(--tlp-ui-dimmed-lighter-95);
+                color: var(--tlp-dimmed-color-lighter-95);
             }
         }
         animation: blinkText 750ms linear infinite alternate;
@@ -44,11 +44,11 @@
     > .project-release-whats-hot-icon {
         @keyframes blinkIcon {
             from {
-                background: var(--tlp-ui-dimmed-lighter-70);
+                background: var(--tlp-dimmed-color-lighter-70);
             }
 
             to {
-                background: var(--tlp-ui-dimmed-lighter-95);
+                background: var(--tlp-dimmed-color-lighter-95);
             }
         }
         animation: blinkIcon 750ms linear infinite alternate;
@@ -107,7 +107,7 @@
 
 .project-release-date {
     display: inline-block;
-    color: var(--tlp-ui-dimmed);
+    color: var(--tlp-dimmed-color);
     font-size: 12px;
 }
 
@@ -144,7 +144,7 @@
 }
 
 .release-remaining-value-disabled {
-    color: var(--tlp-ui-dimmed);
+    color: var(--tlp-dimmed-color);
 }
 
 .release-remaining-value-success {
@@ -163,7 +163,7 @@
     align-self: center;
     margin: 0 5px 0 0;
     opacity: 0.9;
-    color: var(--tlp-ui-dimmed);
+    color: var(--tlp-dimmed-color);
     font-size: 12px;
 }
 
@@ -174,7 +174,7 @@
 .release-remaining-text {
     padding: 0 0 2px;
     overflow: hidden;
-    color: var(--tlp-ui-dimmed);
+    color: var(--tlp-dimmed-color);
     font-size: 12px;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -202,7 +202,7 @@
 }
 
 .release-remaining-progress-value-disabled {
-    background: var(--tlp-ui-dimmed);
+    background: var(--tlp-dimmed-color);
 }
 
 .release-remaining-progress-value-success {

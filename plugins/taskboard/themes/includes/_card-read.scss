@@ -165,7 +165,7 @@
 /* stylelint-disable-next-line selector-no-qualifying-type */
 a.taskboard-card-xref {
     margin: 0 4px 0 0;
-    color: var(--text-color, var(--tlp-ui-dimmed));
+    color: var(--text-color, var(--tlp-dimmed-color));
     font-size: 0.65rem;
 
     &:hover {

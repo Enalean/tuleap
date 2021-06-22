@@ -157,7 +157,7 @@ $tlp-form-element-select-small-background-size: 6px;
 }
 
 .tlp-property-empty {
-    color: var(--tlp-ui-dimmed);
+    color: var(--tlp-dimmed-color);
     font-style: italic;
 }
 
@@ -405,12 +405,12 @@ $tlp-form-element-select-small-background-size: 6px;
     }
 
     .list-picker-dropdown-option-value-disabled {
-        color: var(--tlp-ui-dimmed);
+        color: var(--tlp-dimmed-color);
     }
 
     .list-picker-group-label {
         padding: 6px $tlp-form-element-padding-horizontal;
-        color: var(--tlp-ui-dimmed);
+        color: var(--tlp-dimmed-color);
         font-size: $tlp-form-element-small-font-size;
         font-weight: 600;
         line-height: 30px;
@@ -419,7 +419,7 @@ $tlp-form-element-select-small-background-size: 6px;
 
     .list-picker-empty-dropdown-state {
         padding: $tlp-form-element-padding-horizontal;
-        color: var(--tlp-ui-dimmed);
+        color: var(--tlp-dimmed-color);
         font-size: $tlp-form-element-small-font-size;
         line-height: normal;
     }
@@ -666,7 +666,7 @@ $tlp-form-element-select-small-background-size: 6px;
                 //stylelint-disable-next-line selector-class-pattern
                 .select2-results__group {
                     padding: 6px $tlp-form-element-padding-horizontal;
-                    color: var(--tlp-ui-dimmed);
+                    color: var(--tlp-dimmed-color);
                     font-size: $tlp-form-element-small-font-size;
                     font-weight: 600;
                     line-height: 30px;
@@ -712,7 +712,7 @@ $tlp-form-element-select-small-background-size: 6px;
             }
 
             &[aria-disabled] {
-                color: var(--tlp-ui-dimmed);
+                color: var(--tlp-dimmed-color);
                 cursor: not-allowed;
             }
 
@@ -720,7 +720,7 @@ $tlp-form-element-select-small-background-size: 6px;
             &.select2-results__message,
             &.loading-results {
                 padding: $tlp-form-element-padding-horizontal;
-                color: var(--tlp-ui-dimmed);
+                color: var(--tlp-dimmed-color);
             }
         }
 

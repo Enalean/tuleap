@@ -151,7 +151,7 @@
         width: 24px;
         height: 24px;
         border-radius: 50%;
-        background: var(--tlp-ui-dimmed);
+        background: var(--tlp-dimmed-color);
 
         > .tuleap-svg {
             height: 12px;
@@ -286,7 +286,7 @@
     margin: 0 0 var(--tlp-small-spacing) 0;
     padding: var(--tlp-medium-spacing) var(--tlp-medium-spacing) 0;
     opacity: 0.6;
-    color: var(--tlp-ui-dimmed-lighter-95);
+    color: var(--tlp-dimmed-color-lighter-95);
     font-size: 0.65rem;
     font-weight: bold;
     letter-spacing: 0.25px;

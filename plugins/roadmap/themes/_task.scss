@@ -65,9 +65,9 @@
     height: roadmap-variables.$task-bar-height;
     padding: 1px;
     overflow: hidden;
-    border: 1px solid var(--tlp-ui-dimmed);
+    border: 1px solid var(--tlp-dimmed-color);
     border-radius: 3px;
-    background: var(--tlp-ui-dimmed);
+    background: var(--tlp-dimmed-color);
 
     &.roadmap-gantt-task-bar-with-progress-in-error {
         justify-content: center;

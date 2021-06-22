@@ -88,7 +88,7 @@
 }
 
 .test-plan-campaign-header-stats {
-    color: var(--tlp-ui-dimmed);
+    color: var(--tlp-dimmed-color);
     font-size: 14px;
 }
 
@@ -174,7 +174,7 @@
         flex: 0 0 auto;
 
         > .test-plan-campaign-progression-value {
-            color: var(--tlp-ui-dimmed);
+            color: var(--tlp-dimmed-color);
         }
 
         > .test-plan-campaign-progression-bar {

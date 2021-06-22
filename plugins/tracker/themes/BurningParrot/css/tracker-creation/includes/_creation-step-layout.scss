@@ -156,7 +156,7 @@
     display: flex;
     margin: calc(-1 * var(--tlp-small-spacing)) 0 var(--tlp-small-spacing);
     padding-left: 4px;
-    color: var(--tlp-ui-dimmed);
+    color: var(--tlp-dimmed-color);
     font-size: 13px;
     white-space: nowrap;
     cursor: pointer;
@@ -178,7 +178,7 @@
 }
 
 .tracker-creation-navigation-back-to-legacy {
-    color: var(--tlp-ui-dimmed);
+    color: var(--tlp-dimmed-color);
 }
 
 .tracker-creation-navigation-buttons {
@@ -193,7 +193,7 @@
 
     > .tracker-creation-previous-step-button {
         align-self: center;
-        color: var(--tlp-ui-dimmed);
+        color: var(--tlp-dimmed-color);
 
         &:hover {
             text-decoration: none;

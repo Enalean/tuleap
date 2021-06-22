@@ -38,7 +38,7 @@
     padding: 5px;
     overflow: hidden;
     border-radius: 6px 6px 0 0;
-    color: var(--tlp-ui-dimmed);
+    color: var(--tlp-dimmed-color);
     font-size: 0.7rem;
     font-weight: 600;
     line-height: 0.75rem;
@@ -49,7 +49,7 @@
     > a {
         flex: 1 1 auto;
         overflow: hidden;
-        color: var(--tlp-ui-dimmed);
+        color: var(--tlp-dimmed-color);
         text-overflow: ellipsis;
         white-space: nowrap;
     }

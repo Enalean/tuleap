@@ -33,7 +33,7 @@
     display: flex;
     margin: var(--tlp-small-spacing) 0;
     padding-left: 4px;
-    color: var(--tlp-ui-dimmed);
+    color: var(--tlp-dimmed-color);
     font-size: 13px;
     white-space: nowrap;
     cursor: pointer;
@@ -69,7 +69,7 @@
 }
 
 .project-information-input-privacy-list-option-description {
-    color: var(--tlp-ui-dimmed);
+    color: var(--tlp-dimmed-color);
     font-size: 13px;
     line-height: 20px;
 }

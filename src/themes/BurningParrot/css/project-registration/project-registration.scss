@@ -102,7 +102,7 @@ $title-margin-left: calc(#{$illustration-width} + #{$illustration-spacing});
 
 .project-registration-back-button {
     margin: 0 var(--tlp-medium-spacing) 0 0;
-    color: var(--tlp-ui-dimmed);
+    color: var(--tlp-dimmed-color);
     cursor: pointer;
 
     &:hover {

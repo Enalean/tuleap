@@ -73,20 +73,20 @@
 
     &.notrun > .tlp-pane-container {
         > .current-test-header {
-            background: var(--tlp-ui-dimmed);
+            background: var(--tlp-dimmed-color);
         }
 
         > .current-test-latest-result {
-            background: linear-gradient(0deg, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), var(--tlp-ui-dimmed);
+            background: linear-gradient(0deg, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), var(--tlp-dimmed-color);
         }
 
         > .current-test-automated-message {
-            color: var(--tlp-ui-dimmed);
+            color: var(--tlp-dimmed-color);
         }
 
         .current-test-latest-result {
             code {
-                color: var(--tlp-ui-dimmed);
+                color: var(--tlp-dimmed-color);
             }
         }
     }
@@ -253,7 +253,7 @@ execution-with-steps.current-test-content {
     justify-content: center;
     min-height: 100px;
     background: var(--tlp-main-color-dimmed-background);
-    color: var(--tlp-ui-dimmed);
+    color: var(--tlp-dimmed-color);
     font-size: 0.875rem;
     line-height: 1.375rem;
 }
@@ -311,8 +311,8 @@ execution-with-steps.current-test-content {
     font-size: 25px;
 
     &.tlp-button-secondary {
-        border-color: var(--tlp-ui-dimmed);
-        background: var(--tlp-ui-dimmed);
+        border-color: var(--tlp-dimmed-color);
+        background: var(--tlp-dimmed-color);
         color: var(--tlp-ui-white);
     }
 }
@@ -335,7 +335,7 @@ execution-with-steps.current-test-content {
 }
 
 .current-test-description-empty-state {
-    color: var(--tlp-ui-dimmed);
+    color: var(--tlp-dimmed-color);
     font-style: italic;
 }
 
