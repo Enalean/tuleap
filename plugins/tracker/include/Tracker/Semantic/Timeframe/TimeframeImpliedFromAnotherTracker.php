@@ -87,11 +87,10 @@ class TimeframeImpliedFromAnotherTracker implements IComputeTimeframes
                     $user,
                     $logger
                 );
-        } catch (
-            ArtifactHasTooManyLinksToArtifactsOfTargetTracker |
-            ArtifactHasNoLinkToArtifactOfTargetTracker $exception
-        ) {
+        } catch (ArtifactHasTooManyLinksToArtifactsOfTargetTracker $exception) {
             return TimePeriodWithoutWeekEnd::buildFromNothingWithErrorMessage($exception->getMessage());
+        } catch (ArtifactHasNoLinkToArtifactOfTargetTracker $exception) {
+            return TimePeriodWithoutWeekEnd::buildWithoutAnyDates();
         }
     }
 
@@ -105,11 +104,10 @@ class TimeframeImpliedFromAnotherTracker implements IComputeTimeframes
                     $user,
                     $logger
                 );
-        } catch (
-            ArtifactHasTooManyLinksToArtifactsOfTargetTracker |
-            ArtifactHasNoLinkToArtifactOfTargetTracker $exception
-        ) {
+        } catch (ArtifactHasTooManyLinksToArtifactsOfTargetTracker $exception) {
             return TimePeriodWithoutWeekEnd::buildFromNothingWithErrorMessage($exception->getMessage());
+        } catch (ArtifactHasNoLinkToArtifactOfTargetTracker $exception) {
+            return TimePeriodWithoutWeekEnd::buildWithoutAnyDates();
         }
     }
 
@@ -189,7 +187,7 @@ class TimeframeImpliedFromAnotherTracker implements IComputeTimeframes
         }
 
         if ($nb_links === 0) {
-            throw new ArtifactHasNoLinkToArtifactOfTargetTracker($artifact, $implied_from_tracker);
+            throw new ArtifactHasNoLinkToArtifactOfTargetTracker();
         }
 
         return $reversely_linked_artifacts[0];

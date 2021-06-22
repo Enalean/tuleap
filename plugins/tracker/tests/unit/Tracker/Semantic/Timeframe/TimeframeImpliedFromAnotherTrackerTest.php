@@ -168,7 +168,7 @@ class TimeframeImpliedFromAnotherTrackerTest extends \Tuleap\Test\PHPUnit\TestCa
         );
     }
 
-    public function testItReturnsAnEmptyTimePeriodWithAnErrorMessageForArtifactWhenThereIsNoArtifactLinkingIt(): void
+    public function testItReturnsAnEmptyTimePeriodWithAnEmptyErrorMessageForArtifactWhenThereIsNoArtifactLinkingIt(): void
     {
         $user     = $this->createMock(\PFUser::class);
         $artifact = $this->getMockedArtifact(73);
@@ -188,7 +188,7 @@ class TimeframeImpliedFromAnotherTrackerTest extends \Tuleap\Test\PHPUnit\TestCa
         self::assertNull($time_period->getDuration());
         self::assertNull($time_period->getEndDate());
         self::assertEquals(
-            'Unable to retrieve the time period: No artifact from tracker Releases links artifact #73',
+            '',
             $time_period->getErrorMessage()
         );
     }
@@ -249,7 +249,7 @@ class TimeframeImpliedFromAnotherTrackerTest extends \Tuleap\Test\PHPUnit\TestCa
         self::assertEquals(1623766810, $time_period->getEndDate());
     }
 
-    public function testItReturnsAnEmptyTimePeriodWithAnErrorMessageForArtifactRESTWhenThereAreNoArtifactReverseLinkingIt(): void
+    public function testItReturnsAnEmptyTimePeriodWithAnEmptyErrorMessageForArtifactRESTWhenThereAreNoArtifactReverseLinkingIt(): void
     {
         $user     = $this->createMock(\PFUser::class);
         $artifact = $this->getMockedArtifact(73);
@@ -268,7 +268,7 @@ class TimeframeImpliedFromAnotherTrackerTest extends \Tuleap\Test\PHPUnit\TestCa
         self::assertNull($time_period->getDuration());
         self::assertNull($time_period->getEndDate());
         self::assertEquals(
-            'Unable to retrieve the time period: No artifact from tracker Releases links artifact #73',
+            '',
             $time_period->getErrorMessage()
         );
     }
@@ -339,7 +339,6 @@ class TimeframeImpliedFromAnotherTrackerTest extends \Tuleap\Test\PHPUnit\TestCa
             ->will(self::returnValue([]));
 
         $this->expectException(\Tracker_FormElement_Chart_Field_Exception::class);
-        $this->expectExceptionMessage('Unable to retrieve the time period: No artifact from tracker Releases links artifact #73');
 
         $time_period = $this->timeframe->buildTimePeriodWithoutWeekendForArtifactChartRendering(
             $artifact,
