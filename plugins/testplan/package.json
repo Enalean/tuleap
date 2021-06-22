@@ -5,6 +5,7 @@
   "license": "GPL-2.0-or-later",
   "private": true,
   "dependencies": {
+    "@tuleap/concurrency-limit-pool": "file:../../src/scripts/lib/concurrency-limit-pool",
     "vue": "^2.6.14",
     "vue-gettext": "^2.1.12",
     "vuex": "^3.6.2",

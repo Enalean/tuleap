@@ -18,8 +18,8 @@
  */
 
 import { get } from "tlp";
-import { limitConcurrencyPool } from "./concurrency-limit-pool";
 import type { Artifact } from "./artifact";
+import { limitConcurrencyPool } from "@tuleap/concurrency-limit-pool";
 
 const MAX_CHUNK_SIZE_ARTIFACTS = 100;
 const MAX_CONCURRENT_REQUESTS_WHEN_RETRIEVING_ARTIFACT_CHUNKS = 5;
