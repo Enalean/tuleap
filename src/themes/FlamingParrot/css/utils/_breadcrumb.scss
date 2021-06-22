@@ -79,6 +79,10 @@ $switch-menu-item-hover-color: var(--tlp-main-color);
     color: $step-color;
     font-size: 0.875rem;
 
+    &:visited {
+        color: $step-color;
+    }
+
     &:hover {
         text-decoration: none;
     }
