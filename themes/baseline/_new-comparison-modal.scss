@@ -31,7 +31,7 @@
 
 .comparison-statistic-added-artifacts {
     @extend %statistic;
-    background-color: var(--tlp-ui-success);
+    background-color: var(--tlp-success-color);
 }
 
 .comparison-statistic-deleted-artifacts {
