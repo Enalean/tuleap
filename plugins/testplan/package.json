@@ -10,7 +10,7 @@
     "vue-gettext": "^2.1.12",
     "vuex": "^3.6.2",
     "vuex-class": "^0.3.2",
-    "xlsx": "^0.16.9"
+    "xlsx": "^0.17.0"
   },
   "devDependencies": {
     "@tuleap/tlp-fetch": "file://../../src/scripts/lib/tlp-fetch",
