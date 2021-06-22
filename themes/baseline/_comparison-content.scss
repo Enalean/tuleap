@@ -25,7 +25,7 @@ $artifact-body-padding: var(--tlp-medium-spacing);
 %comparison-removed {
     padding-right: var(--tlp-medium-spacing);
     padding-left: var(--tlp-medium-spacing);
-    background-color: var(--tlp-ui-danger);
+    background-color: var(--tlp-danger-color);
     color: var(--tlp-ui-white);
     text-decoration: line-through;
 }
@@ -79,16 +79,16 @@ $artifact-body-padding: var(--tlp-medium-spacing);
 
 .comparison-content-artifact-removed {
     &::before {
-        color: var(--tlp-ui-danger) !important;
+        color: var(--tlp-danger-color) !important;
     }
 
     .baseline-artifact-badge {
-        border-color: var(--tlp-ui-danger);
-        color: var(--tlp-ui-danger);
+        border-color: var(--tlp-danger-color);
+        color: var(--tlp-danger-color);
     }
 
     .baseline-artifact-title {
-        background-color: var(--tlp-ui-danger);
+        background-color: var(--tlp-danger-color);
         color: var(--tlp-ui-white);
         text-decoration: line-through;
     }
@@ -132,7 +132,7 @@ ins {
 }
 
 del {
-    background-color: var(--tlp-ui-danger);
+    background-color: var(--tlp-danger-color);
     color: var(--tlp-ui-white);
     text-decoration: line-through;
 }
