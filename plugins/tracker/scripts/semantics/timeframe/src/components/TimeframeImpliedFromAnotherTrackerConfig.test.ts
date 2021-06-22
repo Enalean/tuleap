@@ -23,7 +23,7 @@ import { createSemanticTimeframeAdminLocalVue } from "../helpers/local-vue-for-t
 import TimeframeImpliedFromAnotherTrackerConfig from "./TimeframeImpliedFromAnotherTrackerConfig.vue";
 
 describe("TimeframeImpliedFromAnotherTrackerConfig", () => {
-    it("should display the current configuration when the semantic timeframe is implied from another tracker", async () => {
+    it("should display the current configuration when the semantic timeframe is inherited from another tracker", async () => {
         const wrapper = shallowMount(TimeframeImpliedFromAnotherTrackerConfig, {
             localVue: await createSemanticTimeframeAdminLocalVue(),
             propsData: {
@@ -49,7 +49,7 @@ describe("TimeframeImpliedFromAnotherTrackerConfig", () => {
         expect(select_box.value).toEqual("150");
     });
 
-    it("should display an error message when the semantic cannot be implied because some trackers rely on the current tracker", async () => {
+    it("should display an error message when the semantic cannot be inherited because some trackers inherit from the current tracker", async () => {
         const wrapper = shallowMount(TimeframeImpliedFromAnotherTrackerConfig, {
             localVue: await createSemanticTimeframeAdminLocalVue(),
             propsData: {
@@ -68,7 +68,7 @@ describe("TimeframeImpliedFromAnotherTrackerConfig", () => {
         ).toBe(true);
     });
 
-    it("should display an error message when the semantic cannot be implied because the current tracker has no link field", async () => {
+    it("should display an error message when the semantic cannot be inherited because the current tracker has no link field", async () => {
         const wrapper = shallowMount(TimeframeImpliedFromAnotherTrackerConfig, {
             localVue: await createSemanticTimeframeAdminLocalVue(),
             propsData: {

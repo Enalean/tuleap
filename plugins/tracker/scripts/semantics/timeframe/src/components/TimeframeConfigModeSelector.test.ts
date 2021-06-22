@@ -44,7 +44,7 @@ describe("TimeframeConfigModeSelector", () => {
         return select_box;
     }
 
-    it("should display the implied mode when there is an implied_from_tracker_id", async () => {
+    it("should display the inherited mode when there is an implied_from_tracker_id", async () => {
         const wrapper = await getWrapper(true);
         const select_box = getTimeframeModeSelectBox(wrapper);
 

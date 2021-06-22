@@ -57,7 +57,7 @@ class TimeframeImpliedFromAnotherTracker implements IComputeTimeframes
     public function getConfigDescription(): string
     {
         return sprintf(
-            dgettext('tuleap-tracker', 'Timeframes will be based on %s linking artifacts of this tracker.'),
+            dgettext('tuleap-tracker', 'Timeframes will be inherited from %s linking artifacts of this tracker.'),
             $this->semantic_timeframe_implied_from_tracker->getTracker()->getName()
         );
     }

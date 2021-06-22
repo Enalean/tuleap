@@ -80,7 +80,7 @@ export default class TimeframeAdminSubmitButtons extends Vue {
     get cannot_reset_message(): string {
         if (this.has_other_trackers_implying_their_timeframes) {
             return this.$gettext(
-                "You cannot reset this semantic because some trackers imply their own semantic timeframe on this one."
+                "You cannot reset this semantic because some trackers inherit their own semantics timeframe from this one."
             );
         }
 
