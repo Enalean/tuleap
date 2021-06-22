@@ -273,9 +273,13 @@
     line-height: 1.3125rem;
     text-decoration: none;
 
+    &:visited {
+        color: var(--tlp-ui-white-transparent-20);
+    }
+
+    &:focus,
     &:hover {
         background: var(--tlp-dark-color-darker-20);
-        color: var(--tlp-ui-border-normal);
         text-decoration: none;
     }
 }
@@ -286,6 +290,10 @@
     background: var(--tlp-sidebar-action-color);
     background-blend-mode: overlay;
     color: var(--tlp-typo-default-text-color-on-dark-background);
+
+    &:visited {
+        color: var(--tlp-typo-default-text-color-on-dark-background);
+    }
 
     &:hover,
     &:focus {
@@ -404,6 +412,7 @@
 .project-sidebar-tools-section-label {
     margin: 0;
     padding: var(--tlp-medium-spacing) var(--tlp-medium-spacing) 0;
+    border: 0;
     opacity: 0.6;
     color: var(--tlp-ui-dimmed-lighter-95);
     font-size: 0.65rem;
