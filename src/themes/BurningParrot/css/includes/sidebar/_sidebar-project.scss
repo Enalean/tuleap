@@ -80,13 +80,14 @@
 .project-administration-link {
     @extend %round-icon;
     flex: 0 0 auto;
+    transition: color ease-in-out 150ms;
     background: var(--tlp-sidebar-action-color);
     background-blend-mode: overlay;
     color: var(--tlp-typo-default-text-color-on-dark-background);
 
     &:hover,
     &:focus {
-        color: var(--tlp-main-color);
+        color: var(--tlp-ui-white);
         text-decoration: none;
     }
 }
