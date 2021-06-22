@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export type { Shortcut, ShortcutsGroup } from "./type";
+export type { Shortcut, ShortcutsGroup, ShortcutHandleOptions } from "./type";
 
 export { addShortcutsGroup } from "./handle-shortcuts-group";
 export { addGlobalShortcutsGroup, removeShortcutsGroup } from "./handle-shortcuts-group";

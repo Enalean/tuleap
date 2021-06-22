@@ -18,6 +18,8 @@
  */
 
 import { CARD, SWIMLANE } from "../type";
+import { getFirstElement } from "./element-getter";
+import type { ShortcutHandleOptions } from "@tuleap/keyboard-shortcuts/types/type";
 
 export function editRemainingEffort(event: KeyboardEvent): void {
     if (!(event.target instanceof HTMLElement)) {
@@ -80,4 +82,31 @@ export function editCard(event: KeyboardEvent): void {
     if (child instanceof HTMLElement) {
         child.click();
     }
+}
+
+export function handleFocusFirstSwimlane(
+    doc: Document,
+    event: KeyboardEvent
+): ShortcutHandleOptions {
+    const first_swimlane = getFirstElement(doc, SWIMLANE);
+    if (first_swimlane instanceof HTMLElement) {
+        first_swimlane.focus();
+    }
+
+    const is_first_swimlane = first_swimlane === event.target;
+    return { preventDefault: !is_first_swimlane };
+}
+
+export function focusSwimlaneFirstCard(event: KeyboardEvent): void {
+    const swimlane = event.target;
+    if (!(swimlane instanceof HTMLElement) || swimlane.dataset.navigation !== SWIMLANE) {
+        return;
+    }
+
+    const first_swimlane_card = getFirstElement(swimlane, CARD);
+    if (!(first_swimlane_card instanceof HTMLElement)) {
+        throw new Error("Swimlane shoud have at least one card");
+    }
+
+    first_swimlane_card.focus();
 }
