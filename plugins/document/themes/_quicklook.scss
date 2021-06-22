@@ -48,7 +48,7 @@
 }
 
 .quick-look-pane-highlighted-forbidden {
-    @include quick-look-pane-highlighted(var(--tlp-ui-danger-transparent-15));
+    @include quick-look-pane-highlighted(var(--tlp-danger-color-transparent-15));
 }
 
 .document-preview-spinner {

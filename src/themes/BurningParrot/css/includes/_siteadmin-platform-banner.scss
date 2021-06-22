@@ -46,5 +46,5 @@
 }
 
 .siteadmin-platform-banner-importance-critical {
-    @include radio(var(--tlp-ui-danger));
+    @include radio(var(--tlp-danger-color));
 }

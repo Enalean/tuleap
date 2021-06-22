@@ -32,7 +32,7 @@
         opacity: 0.9;
 
         > .document-quick-look-dropzone-text {
-            color: var(--tlp-ui-danger);
+            color: var(--tlp-danger-color);
         }
     }
 }
@@ -81,7 +81,7 @@
     }
 
     > .fa-ban {
-        color: var(--tlp-ui-danger);
+        color: var(--tlp-danger-color);
         font-size: 80px;
     }
 }

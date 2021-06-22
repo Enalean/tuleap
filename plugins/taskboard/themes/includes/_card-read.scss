@@ -247,7 +247,7 @@ a.taskboard-card-xref {
 .taskboard-drop-not-accepted-overlay {
     display: none;
     flex-direction: column;
-    color: var(--tlp-ui-danger);
+    color: var(--tlp-danger-color);
     text-align: center;
 
     > .taskboard-drop-not-accepted-overlay-content {
@@ -264,5 +264,5 @@ a.taskboard-card-xref {
 .taskboard-drop-not-accepted {
     display: flex;
     justify-content: center;
-    background-color: var(--tlp-ui-danger-transparent-90);
+    background-color: var(--tlp-danger-color-transparent-90);
 }

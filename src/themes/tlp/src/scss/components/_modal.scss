@@ -56,11 +56,11 @@ $tlp-modal-transition: 100ms ease-out;
 
 .tlp-modal-danger {
     > .tlp-modal-header {
-        background: var(--tlp-ui-danger);
+        background: var(--tlp-danger-color);
     }
 
     .tlp-modal-subtitle {
-        color: var(--tlp-ui-danger);
+        color: var(--tlp-danger-color);
     }
 }
 

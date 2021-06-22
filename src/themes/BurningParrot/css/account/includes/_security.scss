@@ -56,8 +56,8 @@
         }
 
         &.bad {
-            background: var(--tlp-ui-danger-transparent-90);
-            color: var(--tlp-ui-danger);
+            background: var(--tlp-danger-color-transparent-90);
+            color: var(--tlp-danger-color);
 
             > .password-strategy-good {
                 display: none;

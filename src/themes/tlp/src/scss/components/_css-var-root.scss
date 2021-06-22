@@ -30,7 +30,7 @@ $main-color-dimmed-background: mix($tlp-background-color, $tlp-ui-white, 50);
     --tlp-info-color: #{$tlp-info-color};
     --tlp-success-color: #{$tlp-success-color};
     --tlp-warning-color: #{$tlp-warning-color};
-    --tlp-ui-danger: #{$tlp-ui-danger};
+    --tlp-danger-color: #{$tlp-danger-color};
     --tlp-dimmed-color: #{$tlp-dimmed-color};
     --tlp-ui-white: #{$tlp-ui-white};
     --tlp-main-color: #{$tlp-main-color};
@@ -108,18 +108,18 @@ $main-color-dimmed-background: mix($tlp-background-color, $tlp-ui-white, 50);
     --tlp-warning-color-transparent-85: #{transparentize($tlp-warning-color, 0.85)};
     --tlp-warning-color-transparent-90: #{transparentize($tlp-warning-color, 0.9)};
 
-    --tlp-ui-danger-darker-05: #{darken($tlp-ui-danger, 5%)};
-    --tlp-ui-danger-darker-10: #{darken($tlp-ui-danger, 10%)};
-    --tlp-ui-danger-lighter-20: #{mix($tlp-ui-danger, $tlp-ui-white, 80%)};
-    --tlp-ui-danger-lighter-30: #{mix($tlp-ui-danger, $tlp-ui-white, 70%)};
-    --tlp-ui-danger-lighter-40: #{mix($tlp-ui-danger, $tlp-ui-white, 60%)};
-    --tlp-ui-danger-lighter-80: #{mix($tlp-ui-danger, $tlp-ui-white, 20%)};
-    --tlp-ui-danger-lighter-90: #{mix($tlp-ui-danger, $tlp-ui-white, 10%)};
-    --tlp-ui-danger-transparent-15: #{transparentize($tlp-ui-danger, 0.15)};
-    --tlp-ui-danger-transparent-40: #{transparentize($tlp-ui-danger, 0.4)};
-    --tlp-ui-danger-transparent-50: #{transparentize($tlp-ui-danger, 0.5)};
-    --tlp-ui-danger-transparent-85: #{transparentize($tlp-ui-danger, 0.85)};
-    --tlp-ui-danger-transparent-90: #{transparentize($tlp-ui-danger, 0.9)};
+    --tlp-danger-color-darker-05: #{darken($tlp-danger-color, 5%)};
+    --tlp-danger-color-darker-10: #{darken($tlp-danger-color, 10%)};
+    --tlp-danger-color-lighter-20: #{mix($tlp-danger-color, $tlp-ui-white, 80%)};
+    --tlp-danger-color-lighter-30: #{mix($tlp-danger-color, $tlp-ui-white, 70%)};
+    --tlp-danger-color-lighter-40: #{mix($tlp-danger-color, $tlp-ui-white, 60%)};
+    --tlp-danger-color-lighter-80: #{mix($tlp-danger-color, $tlp-ui-white, 20%)};
+    --tlp-danger-color-lighter-90: #{mix($tlp-danger-color, $tlp-ui-white, 10%)};
+    --tlp-danger-color-transparent-15: #{transparentize($tlp-danger-color, 0.15)};
+    --tlp-danger-color-transparent-40: #{transparentize($tlp-danger-color, 0.4)};
+    --tlp-danger-color-transparent-50: #{transparentize($tlp-danger-color, 0.5)};
+    --tlp-danger-color-transparent-85: #{transparentize($tlp-danger-color, 0.85)};
+    --tlp-danger-color-transparent-90: #{transparentize($tlp-danger-color, 0.9)};
 
     --tlp-success-color-darker-05: #{darken($tlp-success-color, 5%)};
     --tlp-success-color-darker-10: #{darken($tlp-success-color, 10%)};
@@ -158,9 +158,9 @@ $main-color-dimmed-background: mix($tlp-background-color, $tlp-ui-white, 50);
     --tlp-label-color: #{darken($tlp-dimmed-color, 3.5%)};
 
     // Alerts
-    --tlp-alert-danger-background: #{desaturate(lighten(mix($tlp-ui-white, $tlp-ui-danger, 25%), 23%), 15%)};
-    --tlp-alert-danger-color: #{darken($tlp-ui-danger, 15%)};
-    --tlp-alert-danger-border: 5px solid var(--tlp-ui-danger);
+    --tlp-alert-danger-background: #{desaturate(lighten(mix($tlp-ui-white, $tlp-danger-color, 25%), 23%), 15%)};
+    --tlp-alert-danger-color: #{darken($tlp-danger-color, 15%)};
+    --tlp-alert-danger-border: 5px solid var(--tlp-danger-color);
 
     --tlp-alert-info-background: #{desaturate(lighten(mix($tlp-ui-white, $tlp-info-color, 25%), 23%), 15%)};
     --tlp-alert-info-color: #{darken($tlp-info-color, 30%)};
@@ -175,7 +175,7 @@ $main-color-dimmed-background: mix($tlp-background-color, $tlp-ui-white, 50);
     --tlp-alert-warning-border: 5px solid var(--tlp-warning-color);
 
     // Dark
-    --tlp-ui-danger-on-dark-background: #{mix($tlp-ui-danger, $tlp-ui-white, 85%)};
+    --tlp-danger-color-on-dark-background: #{mix($tlp-danger-color, $tlp-ui-white, 85%)};
     --tlp-dimmed-color-on-dark-background: #{$tlp-ui-border-dark};
     --tlp-main-color-on-dark-background: #{lighten($tlp-main-color, 20%)};
     --tlp-dark-color-transparent-30: #{transparentize($tlp-dark-color, 0.3)};
@@ -246,7 +246,7 @@ $main-color-dimmed-background: mix($tlp-background-color, $tlp-ui-white, 50);
     --tlp-button-shadow-hover: 0 1px 2px rgba(0, 0, 0, 0.08), 0 0 1px rgba(0, 0, 0, 0.08), 0 -1px 0 rgba(0, 0, 0, 0.03);
     --tlp-shadow-focus: 0 0 0 2px #{transparentize($tlp-main-color, 0.65)};
     --tlp-shadow-main-color: #{transparentize($tlp-main-color, 0.15)};
-    --tlp-shadow-danger-color: #{transparentize($tlp-ui-danger, 0.15)};
+    --tlp-shadow-danger-color: #{transparentize($tlp-danger-color, 0.15)};
 
     // radius
     --tlp-card-radius: #{$tlp-card-radius};

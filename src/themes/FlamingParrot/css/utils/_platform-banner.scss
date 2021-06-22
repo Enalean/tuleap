@@ -45,7 +45,7 @@ body.has-visible-project-banner .platform-banner {
     border-radius: 50%;
 
     &.btn-danger {
-        @include override-navbar-important-definitions(var(--tlp-ui-danger));
+        @include override-navbar-important-definitions(var(--tlp-danger-color));
     }
 
     &.btn-warning {

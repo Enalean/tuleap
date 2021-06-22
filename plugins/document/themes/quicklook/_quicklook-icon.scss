@@ -36,7 +36,7 @@
 .quick-look-pane-highlighted-forbidden .document-quick-look-icon-container {
     > .document-quick-look-dropzone-text {
         opacity: 0.85;
-        color: var(--tlp-ui-danger);
+        color: var(--tlp-danger-color);
     }
 
     > .document-quick-look-icon {
@@ -69,7 +69,7 @@
         top: -10px;
         transition: opacity ease-in-out 100ms;
         opacity: 0.85;
-        color: var(--tlp-ui-danger);
+        color: var(--tlp-danger-color);
         font-size: 100px;
     }
 }
