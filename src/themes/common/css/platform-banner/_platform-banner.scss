@@ -48,7 +48,7 @@ $illustration-left: 9px;
 }
 
 .platform-banner-importance-standard {
-    @include megaphone(var(--tlp-ui-info));
+    @include megaphone(var(--tlp-info-color));
 }
 
 .platform-banner-importance-warning {

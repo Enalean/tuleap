@@ -46,8 +46,8 @@
 
     &.appending-child {
         > .backlog-item-details {
-            border: 1px solid var(--tlp-ui-info);
-            background: var(--tlp-ui-info-transparent-90);
+            border: 1px solid var(--tlp-info-color);
+            background: var(--tlp-info-color-transparent-90);
         }
     }
 }
@@ -60,8 +60,8 @@
 
     &.selected {
         transition: border-color 75ms ease-in-out, background-color 75ms ease-in-out;
-        border-color: var(--tlp-ui-info);
-        background: var(--tlp-ui-info-transparent-90);
+        border-color: var(--tlp-info-color);
+        background: var(--tlp-info-color-transparent-90);
     }
 
     &.shaking {
