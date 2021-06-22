@@ -23,6 +23,7 @@ import {
     initVueGettext,
 } from "../../../../../src/scripts/tuleap/gettext/vue-gettext-init";
 import App from "./components/App.vue";
+import { getGitlabRepositoriesWithDefaultBranches } from "./fetch-gitlab-repositories-information";
 
 export async function init(create_branch_link: HTMLElement): Promise<void> {
     const user_locale = document.body.dataset.userLocale;
@@ -54,7 +55,9 @@ export async function init(create_branch_link: HTMLElement): Promise<void> {
     const AppComponent = Vue.extend(App);
     const app = new AppComponent({
         propsData: {
-            integrations: integrations_representations,
+            integrations: await getGitlabRepositoriesWithDefaultBranches(
+                integrations_representations
+            ),
             branch_name: create_branch_link.dataset.branchName,
             artifact_id,
         },

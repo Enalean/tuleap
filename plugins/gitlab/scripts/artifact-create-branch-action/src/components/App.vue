@@ -127,27 +127,16 @@
 </template>
 <script lang="ts">
 import Vue from "vue";
-import { Component, Prop } from "vue-property-decorator";
+import { Component, Prop, Watch } from "vue-property-decorator";
 import jquery from "jquery";
 import { GitLabBranchCreationPossibleError, postGitlabBranch } from "../api/rest-querier";
 import * as codendi from "codendi";
-
-interface GitlabIntegration {
-    description: string;
-    gitlab_repository_url: string;
-    gitlab_repository_id: number;
-    id: number;
-    last_push_date: string;
-    name: string;
-    is_webhook_configured: boolean;
-    allow_artifact_closure: boolean;
-    create_branch_prefix: string;
-}
+import type { GitlabIntegrationWithDefaultBranch } from "../fetch-gitlab-repositories-information";
 
 @Component
 export default class App extends Vue {
     @Prop({ required: true, type: Array })
-    private readonly integrations!: ReadonlyArray<GitlabIntegration>;
+    private readonly integrations!: ReadonlyArray<GitlabIntegrationWithDefaultBranch>;
 
     @Prop({ required: true, type: String })
     private readonly branch_name!: string;
@@ -155,18 +144,10 @@ export default class App extends Vue {
     @Prop({ required: true, type: Number })
     private readonly artifact_id!: number;
 
-    private selected_integration: GitlabIntegration | null = null;
+    private selected_integration: GitlabIntegrationWithDefaultBranch | null = null;
     private reference = "";
     private is_creating_branch = false;
     private error_message = "";
-
-    get branch_name_placeholder(): string {
-        let placeholder = this.branch_name;
-        if (this.selected_integration) {
-            placeholder = this.selected_integration.create_branch_prefix + this.branch_name;
-        }
-        return placeholder;
-    }
 
     mounted(): void {
         const jquery_element = jquery(this.$el);
@@ -176,6 +157,19 @@ export default class App extends Vue {
         });
         this.selected_integration = this.integrations[0];
         jquery_element.modal();
+    }
+
+    get branch_name_placeholder(): string {
+        let placeholder = this.branch_name;
+        if (this.selected_integration) {
+            placeholder = this.selected_integration.create_branch_prefix + this.branch_name;
+        }
+        return placeholder;
+    }
+
+    @Watch("selected_integration")
+    onSelectedIntegration(integration: GitlabIntegrationWithDefaultBranch | null): void {
+        this.reference = integration?.default_branch ?? "";
     }
 
     async onClickCreateBranch(): Promise<void> {
