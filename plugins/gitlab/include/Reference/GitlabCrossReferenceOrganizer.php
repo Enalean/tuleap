@@ -131,9 +131,12 @@ class GitlabCrossReferenceOrganizer
     ): void {
         $project = $this->project_manager->getProject($cross_reference_presenter->target_gid);
 
-        [$repository_name, $item_id] = GitlabReferenceExtractor::splitRepositoryNameAndReferencedItemId(
+        $reference_splitted_values = GitlabReferenceExtractor::splitRepositoryNameAndReferencedItemId(
             $cross_reference_presenter->target_value
         );
+
+        $repository_name = $reference_splitted_values->getRepositoryName();
+        $item_id         = $reference_splitted_values->getValue();
 
         if (! $repository_name || ! $item_id) {
             return;

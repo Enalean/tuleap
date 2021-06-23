@@ -21,31 +21,43 @@ declare(strict_types=1);
 
 namespace Tuleap\Gitlab\Reference;
 
+use Tuleap\Test\PHPUnit\TestCase;
 
-class GitlabReferenceExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
+class GitlabReferenceExtractorTest extends TestCase
 {
     public function testItReturnsANullRepositoryNameAndANullSha1WhenTheStringDoesNotContainAPath(): void
     {
-        [$repository_name, $sha1] = GitlabReferenceExtractor::splitRepositoryNameAndReferencedItemId("a_string_with_no_path");
-        self::assertEquals(null, $repository_name);
-        self::assertEquals(null, $sha1);
+        $splitted_value = GitlabReferenceExtractor::splitRepositoryNameAndReferencedItemId(
+            "a_string_with_no_path"
+        );
+        self::assertEquals(null, $splitted_value->getRepositoryName());
+        self::assertEquals(null, $splitted_value->getValue());
     }
 
     public function testItReturnsTheRepositoryNameAndTheCommitSha1(): void
     {
-        [$repository_name, $sha1] = GitlabReferenceExtractor::splitRepositoryNameAndReferencedItemId(
-            'john-snow/winter-is-coming/14a9b6c0c0c965977cf2af2199f93df82afcdea3'
+        $splitted_value = GitlabReferenceExtractor::splitRepositoryNameAndReferencedItemId(
+            'root/repo01/14a9b6c0c0c965977cf2af2199f93df82afcdea3'
         );
-        self::assertEquals('john-snow/winter-is-coming', $repository_name);
-        self::assertEquals('14a9b6c0c0c965977cf2af2199f93df82afcdea3', $sha1);
+        self::assertEquals('root/repo01', $splitted_value->getRepositoryName());
+        self::assertEquals('14a9b6c0c0c965977cf2af2199f93df82afcdea3', $splitted_value->getValue());
     }
 
     public function testItReturnsTheRepositoryNameAndTheMergeRequestId(): void
     {
-        [$repository_name, $id] = GitlabReferenceExtractor::splitRepositoryNameAndReferencedItemId(
-            'john-snow/winter-is-coming/25'
+        $splitted_value = GitlabReferenceExtractor::splitRepositoryNameAndReferencedItemId(
+            'root/repo01/25'
         );
-        self::assertEquals('john-snow/winter-is-coming', $repository_name);
-        self::assertEquals('25', $id);
+        self::assertEquals('root/repo01', $splitted_value->getRepositoryName());
+        self::assertEquals('25', $splitted_value->getValue());
+    }
+
+    public function testItReturnsTheRepositoryNameAndTheBranchName(): void
+    {
+        $splitted_value = GitlabReferenceExtractor::splitRepositoryNameAndReferencedItemId(
+            'root/repo01/dev/tuleap-25'
+        );
+        self::assertEquals('root/repo01', $splitted_value->getRepositoryName());
+        self::assertEquals('dev/tuleap-25', $splitted_value->getValue());
     }
 }

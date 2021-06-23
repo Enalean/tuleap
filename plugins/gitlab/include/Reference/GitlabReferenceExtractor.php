@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * Copyright (c) Enalean, 2020 - Present. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
@@ -23,20 +23,21 @@ namespace Tuleap\Gitlab\Reference;
 
 final class GitlabReferenceExtractor
 {
-    /**
-     * @psalm-return array{string|false|null, string|false|null}
-     */
-    public static function splitRepositoryNameAndReferencedItemId(string $value): array
+    public static function splitRepositoryNameAndReferencedItemId(string $value): GitlabReferenceSplittedValues
     {
-        $repository_name = null;
-        $reference       = null;
+        $regexp = "#(?P<repository_name>.+?/.+?)/(?P<reference>.+)#";
+        preg_match($regexp, $value, $matches);
 
-        $last_slash_position = strrpos($value, '/');
-        if ($last_slash_position !== false) {
-            $repository_name = substr($value, 0, $last_slash_position);
-            $reference       = substr($value, $last_slash_position + 1);
+        if (isset($matches['repository_name']) && isset($matches['reference'])) {
+            $repository_name = $matches['repository_name'];
+            $reference       = $matches['reference'];
+
+            return GitlabReferenceSplittedValues::buildFromReference(
+                $repository_name,
+                $reference
+            );
         }
 
-        return [$repository_name, $reference];
+        return GitlabReferenceSplittedValues::buildNotFoundReference();
     }
 }
