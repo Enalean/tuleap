@@ -79,6 +79,11 @@ ul.ServiceMenu li.current {
     font-size: 1.17em;
 }
 
+// Cancel .service-docman h2 rule in sidebar
+.service-docman .project-sidebar-tools-section-label {
+    font-size: 0.65rem;
+}
+
 .service-docman .docman-create-doctype {
     font-weight: bold;
 }
