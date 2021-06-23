@@ -54,7 +54,7 @@ final class BranchNameCreatorFromArtifactTest extends TestCase
         $artifact = $this->getArtifact('art title');
 
         $branch_name = $this->branch_name_creator_from_artifact->getBaseBranchName($artifact);
-        self::assertEquals('tuleap-123-art_title', $branch_name);
+        self::assertEquals('tuleap-123-art-title', $branch_name);
     }
 
     public function testBranchNameIsCreatedFromAnArtifactWithATitleAndAPrefix(): void
@@ -78,7 +78,7 @@ final class BranchNameCreatorFromArtifactTest extends TestCase
             ->willReturn("dev-");
 
         $branch_name = $this->branch_name_creator_from_artifact->getFullBranchName($artifact, $integration);
-        self::assertEquals('dev-tuleap-123-art_title', $branch_name);
+        self::assertEquals('dev-tuleap-123-art-title', $branch_name);
     }
 
     public function testBranchNameIsCreatedFromAnArtifactWithoutTitle(): void

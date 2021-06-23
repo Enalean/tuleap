@@ -157,7 +157,7 @@ final class CreateBranchButtonFetcherTest extends TestCase
         self::assertSame(
             [
                 'name' => 'branch-name',
-                'value' => 'tuleap-89-this_is_a_feature'
+                'value' => 'tuleap-89-this-is-a-feature'
             ],
             $button_action->getLinkPresenter()->data[2]
         );

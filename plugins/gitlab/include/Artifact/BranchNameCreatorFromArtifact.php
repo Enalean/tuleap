@@ -58,6 +58,6 @@ class BranchNameCreatorFromArtifact
             return '';
         }
 
-        return '-' . $this->slugify->slugify($artifact_title, '_');
+        return '-' . $this->slugify->slugify($artifact_title, '-');
     }
 }
