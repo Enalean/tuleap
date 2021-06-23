@@ -695,6 +695,8 @@ class RepositoryResource extends AuthenticatedResource
      * @param int    $id   Id of the git repository
      * @param string $ref  reference {@from path} {@required true}
      * @param string $path path of the file {@from path} {@required false}
+     * @param int $offset Position of the first element to display {@from path}{@min 0}
+     * @param int $limit  Number of elements displayed {@from path}{@min 1}{@max 50}
      *
      * @return array {@type Tuleap\Git\REST\v1\GitTreeRepresentation}
      *
@@ -705,19 +707,27 @@ class RepositoryResource extends AuthenticatedResource
      * @throws RestException 500
      *
      */
-    public function getTree(int $id, string $ref, string $path = ""): array
+    public function getTree(int $id, string $ref, string $path = "", int $offset = 0, int $limit = self::MAX_LIMIT): array
     {
-        Header::allowOptionsGet();
-
         $this->checkAccess();
         $tree_representation_factory = new GitTreeRepresentationFactory();
         try {
-            $repository = $this->getGitPHPProject($id);
-            return $tree_representation_factory->getGitTreeRepresentation(
+            $repository   = $this->getGitPHPProject($id);
+            $tree_content = $tree_representation_factory->getGitTreeRepresentation(
                 rtrim($path, DIRECTORY_SEPARATOR),
                 $ref,
                 $repository
             );
+            $result       = array_slice(
+                $tree_content,
+                $offset,
+                $limit
+            );
+
+            Header::allowOptionsGet();
+            Header::sendPaginationHeaders($limit, $offset, count($tree_content), self::MAX_LIMIT);
+
+            return $result;
         } catch (\GitRepositoryException | GitRepoRefNotFoundException $exception) {
             throw new RestException(404, $exception->getMessage());
         } catch (RepositoryNotExistingException $exception) {
