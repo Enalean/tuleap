@@ -699,10 +699,7 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
         $html .= '<label for="tracker_artifact_' . $this->id . '" title="' . $purifier->purify($this->description) .
             '" class="tracker_formelement_label">' . $purifier->purify($this->getLabel())  . $required . '</label>';
 
-        $html .= '<span class="auto-computed ' . $auto_computed_class . '">' . $this->getNoValueLabel() . ' (' .
-            dgettext('tuleap-tracker', 'autocomputed') . ')</span>';
-
-        $html .= '<div class="input-append add-field" data-field-id="' . $this->getId() . '">';
+        $html .= '<div class="input-append" data-field-id="' . $this->getId() . '">';
 
         $default_value_in_input = '';
         $is_autocomputed        = true;
@@ -713,11 +710,12 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
 
         $html .= $this->fetchComputedInputs($default_value_in_input, $is_autocomputed);
         $html .= $this->fetchBackToAutocomputedButton(false);
+        $html .= '</div>';
         $html .= $this->fetchComputedValueWithLabel(
             dgettext('tuleap-tracker', 'Empty')
         );
 
-        $html .= '</div></div></div>';
+        $html .= '</div></div>';
 
         return $html;
     }
