@@ -183,10 +183,14 @@ export default class App extends Vue {
             () => {
                 const success_message = this.$gettextInterpolate(
                     this.$gettext(
-                        'The branch %{ branch_name } has been successfully created on <a href="%{ repo_url }">%{ repo_name }</a>'
+                        'The branch <a href="%{ branch_url }">%{ branch_name }</a> has been successfully created on <a href="%{ repo_url }">%{ repo_name }</a>'
                     ),
                     {
-                        branch_name: this.branch_name,
+                        branch_name: this.branch_name_placeholder,
+                        branch_url:
+                            integration.gitlab_repository_url +
+                            "/-/tree/" +
+                            this.branch_name_placeholder, // The branch name is not escaped in the URL on purpose: GL expects it raw
                         repo_url: integration.gitlab_repository_url,
                         repo_name: integration.name,
                     }
