@@ -42,8 +42,11 @@ function createShortcut(shortcut: Shortcut): void {
             return;
         }
 
+        const shortcut_handle_options = shortcut.handle(event);
+        if (shortcut_handle_options?.preventDefault === false) {
+            return;
+        }
         event.preventDefault();
-        shortcut.handle(event);
     });
 }
 

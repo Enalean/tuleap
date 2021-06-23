@@ -22,6 +22,8 @@ import {
     toggleClosedItems,
     editCard,
     returnToParent,
+    handleFocusFirstSwimlane,
+    focusSwimlaneFirstCard,
 } from "./quick-access-shortcuts-helpers";
 import { CARD, SWIMLANE } from "../type";
 
@@ -176,11 +178,73 @@ describe("quick-access-shortcuts-handlers", () => {
         });
     });
 
+    describe("handleFocusFirstSwimlane", () => {
+        it("focuses the first SWIMLANE", () => {
+            handleFocusFirstSwimlane(doc, keyboard_event);
+
+            expect(swimlane_focus).toHaveBeenCalled();
+        });
+
+        it("does nothing if Taskboard is empty", () => {
+            swimlane.removeAttribute("data-navigation");
+            handleFocusFirstSwimlane(doc, keyboard_event);
+
+            expect(swimlane_focus).not.toHaveBeenCalled();
+        });
+
+        it("returns a ShortcutHandleOptions with preventDefault false if focus was already the first swimlane", () => {
+            Object.defineProperty(keyboard_event, "target", {
+                value: swimlane,
+            });
+            const shortcut_handle_options = handleFocusFirstSwimlane(doc, keyboard_event);
+
+            expect(shortcut_handle_options.preventDefault).toBe(false);
+        });
+
+        it("returns a ShortcutHandleOptions with preventDefault true if focus was not the first swimlane", () => {
+            const shortcut_handle_options = handleFocusFirstSwimlane(doc, keyboard_event);
+
+            expect(shortcut_handle_options.preventDefault).toBe(true);
+        });
+    });
+
+    describe("focusSwimlaneFirstCard", () => {
+        it("does nothing if KeyboardEvent target is not a SWIMLANE", () => {
+            focusSwimlaneFirstCard(keyboard_event);
+
+            expect(parent_card_focus).not.toHaveBeenCalled();
+            expect(card_focus).not.toHaveBeenCalled();
+        });
+
+        it("focuses the first CARD in the swimlane", () => {
+            Object.defineProperty(keyboard_event, "target", {
+                value: swimlane,
+            });
+            focusSwimlaneFirstCard(keyboard_event);
+
+            expect(parent_card_focus).toHaveBeenCalled();
+        });
+
+        it("throws an error if no CARD could not be found", () => {
+            card.removeAttribute("data-navigation");
+            parent_card.removeAttribute("data-navigation");
+
+            Object.defineProperty(keyboard_event, "target", {
+                value: swimlane,
+            });
+
+            expect(() => focusSwimlaneFirstCard(keyboard_event)).toThrow();
+            expect(parent_card_focus).not.toHaveBeenCalled();
+            expect(card_focus).not.toHaveBeenCalled();
+        });
+    });
+
     function setupDocument(doc: Document): void {
         edit_card_button = doc.createElement("button");
         edit_card_button.dataset.shortcut = "edit-card";
 
         parent_card = doc.createElement("div");
+        parent_card.dataset.navigation = CARD;
         parent_card.dataset.shortcut = "parent-card";
         parent_card.setAttribute("tabindex", "0");
 

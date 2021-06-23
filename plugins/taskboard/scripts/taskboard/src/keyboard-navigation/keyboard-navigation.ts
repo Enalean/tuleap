@@ -26,6 +26,8 @@ import { moveFocus } from "./move-focus";
 import {
     editCard,
     editRemainingEffort,
+    handleFocusFirstSwimlane,
+    focusSwimlaneFirstCard,
     returnToParent,
     toggleClosedItems,
 } from "./quick-access-shortcuts-helpers";
@@ -67,7 +69,7 @@ function createNavigationShortcutsGroup(
     const next: Shortcut = {
         keyboard_inputs: "k,down",
         displayed_inputs: "k,↓",
-        description: gettext_provider.$gettext("Move from one swimlane or card to the next one"),
+        description: gettext_provider.$gettext("Move to next swimlane or card"),
         handle: (): void => {
             moveFocus(doc, DOWN);
         },
@@ -76,9 +78,7 @@ function createNavigationShortcutsGroup(
     const previous: Shortcut = {
         keyboard_inputs: "j,up",
         displayed_inputs: "j,↑",
-        description: gettext_provider.$gettext(
-            "Move from one swimlane or card to the previous one"
-        ),
+        description: gettext_provider.$gettext("Move to previous swimlane or card"),
         handle: (): void => {
             moveFocus(doc, UP);
         },
@@ -87,7 +87,7 @@ function createNavigationShortcutsGroup(
     const right: Shortcut = {
         keyboard_inputs: "l,right",
         displayed_inputs: "l,→",
-        description: gettext_provider.$gettext("Move to the first card of right cell"),
+        description: gettext_provider.$gettext("Move to right cell"),
         handle: (): void => {
             moveFocus(doc, RIGHT);
         },
@@ -96,7 +96,7 @@ function createNavigationShortcutsGroup(
     const left: Shortcut = {
         keyboard_inputs: "h,left",
         displayed_inputs: "h,←",
-        description: gettext_provider.$gettext("Move to the first card of left cell"),
+        description: gettext_provider.$gettext("Move to left cell"),
         handle: (): void => {
             moveFocus(doc, LEFT);
         },
@@ -172,8 +172,28 @@ function createQuickAccessShortcutsGroup(
         handle: (event) => returnToParent(event),
     };
 
+    const focus_first_swimlane: Shortcut = {
+        keyboard_inputs: "ctrl+j,ctrl+up",
+        displayed_inputs: "Ctrl+j,Ctrl+↑",
+        description: gettext_provider.$gettext("Place focus on first swimlane"),
+        handle: (event) => handleFocusFirstSwimlane(doc, event),
+    };
+
+    const focus_first_swimlane_card: Shortcut = {
+        keyboard_inputs: "enter",
+        description: gettext_provider.$gettext("Place focus on the first swimlane card"),
+        handle: (event) => focusSwimlaneFirstCard(event),
+    };
+
     return {
         title: gettext_provider.$gettext("Quick access"),
-        shortcuts: [edit_card, edit_remaining_effort, toggle_closed_items, return_to_parent],
+        shortcuts: [
+            focus_first_swimlane,
+            edit_card,
+            edit_remaining_effort,
+            toggle_closed_items,
+            focus_first_swimlane_card,
+            return_to_parent,
+        ],
     };
 }
