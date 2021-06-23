@@ -45,48 +45,6 @@ function setSidebarUserPreference(new_width) {
     $("body").removeClass("sidebar-expanded sidebar-collapsed").addClass(state);
 }
 
-function updateSidebarWidth(new_width, duration) {
-    updateNavbarLogo(new_width);
-
-    $(".sidebar-nav").animate(
-        {
-            width: new_width,
-        },
-        duration
-    );
-    $(".sidebar-nav li a").css({
-        width: new_width,
-    });
-    $(".main").animate(
-        {
-            marginLeft: new_width,
-        },
-        duration
-    );
-
-    if ($(".content").css("position") === "absolute") {
-        $(".content").css("padding-left", new_width);
-    }
-
-    function emitSidebarSizeUpdated() {
-        $(".sidebar-nav").trigger("sidebarSizeUpdated", [new_width]);
-    }
-    window.setTimeout(emitSidebarSizeUpdated, 0);
-}
-
-function updateNavbarLogo(new_width) {
-    var logo = document.getElementById("logo");
-    if (!logo) {
-        return;
-    }
-
-    if (new_width === width_expanded) {
-        logo.classList.remove("collapsed");
-    } else {
-        logo.classList.add("collapsed");
-    }
-}
-
 function updateSidebarIcon(direction) {
     $(".sidebar-collapse")
         .removeClass("fa-chevron-left fa-chevron-right")
@@ -118,7 +76,6 @@ function sidebarCollapseEvent(duration) {
     }
 
     setSidebarUserPreference(new_size);
-    updateSidebarWidth(new_size, duration);
     updateSidebarIcon(new_direction, show_only_icon);
     updateSidebarServices(show_only_icon, duration);
 }

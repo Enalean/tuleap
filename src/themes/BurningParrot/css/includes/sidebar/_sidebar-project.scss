@@ -191,18 +191,19 @@
 
 .project-sidebar-nav-item {
     display: flex;
-    position: relative;
     align-items: center;
     height: global-variables.$navbar-height;
-    padding: 0 var(--tlp-medium-spacing);
-    border-left: 3px solid transparent;
+    margin: 0 var(--tlp-small-spacing);
+    padding: 0 var(--tlp-small-spacing);
+    border-radius: 6px;
     color: var(--tlp-ui-border-dark);
     font-size: 0.8125rem;
     text-decoration: none;
 
+    &.active,
     &:hover,
     &:focus {
-        background: var(--tlp-sidebar-action-color);
+        background: var(--tlp-sidebar-action-color-hover);
         background-blend-mode: overlay;
         text-decoration: none;
     }
@@ -210,25 +211,6 @@
     &:hover > .project-sidebar-nav-item-new-tab {
         transform: rotate(-45deg) translate(3px, 0);
         opacity: 1;
-    }
-
-    &.active {
-        border-left-color: var(--tlp-main-color);
-        background: var(--tlp-sidebar-action-color);
-        background-blend-mode: overlay;
-
-        &::before {
-            content: "";
-            position: absolute;
-            top: 50%;
-            right: 0;
-            width: 0;
-            height: 0;
-            transform: translateY(-50%);
-            border-width: 10px 10px 10px 0;
-            border-style: solid;
-            border-color: transparent var(--tlp-background-color) transparent transparent;
-        }
     }
 }
 

@@ -53,6 +53,7 @@
                 {{# is_project_defined }}
                     <li>
                         <a href="{{{ link }}}"
+                           class="project-sidebar-nav-item"
                            aria-label="{{ label }}"
                            {{# open_in_new_tab }}
                                 target="_blank"
@@ -69,7 +70,7 @@
                 {{/ is_project_defined }}
                 {{^ is_project_defined }}
                     <li {{# enabled }}class="active"{{/ enabled }}>
-                        <a id="{{ id }}" href="{{{ link }}}" aria-label="{{{ name }}}" title="{{{ name }}}">
+                        <a id="{{ id }}" href="{{{ link }}}" aria-label="{{{ name }}}" title="{{{ name }}}" class="project-sidebar-nav-item">
                             <i class="{{ icon }} project-sidebar-nav-item-icon"></i>
                             <span class="project-sidebar-nav-item-label">{{{ label }}}</span>
                         </a>
