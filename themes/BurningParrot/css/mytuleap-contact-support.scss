@@ -67,8 +67,8 @@
     }
 
     &.thank-you {
-        border-color: var(--tlp-ui-success);
-        background: var(--tlp-ui-success);
+        border-color: var(--tlp-success-color);
+        background: var(--tlp-success-color);
         color: var(--tlp-ui-white);
 
         > .thank-you-text {
