@@ -3,11 +3,11 @@
   "private": true,
   "dependencies": {
     "@tuleap/tlp-fetch": "file://../../src/scripts/lib/tlp-fetch",
-    "dompurify": "^2.2.7"
+    "dompurify": "^2.2.9"
   },
   "devDependencies": {
     "@types/bootstrap": "^4.5.0",
-    "@types/dompurify": "^2.2.1"
+    "@types/dompurify": "^2.2.2"
   },
   "config": {
     "bin": "../../node_modules/.bin"
