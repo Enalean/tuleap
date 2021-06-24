@@ -2863,6 +2863,10 @@ body.sidebar-expanded #tracker-settings > .submit-bar {
         display: none;
     }
 
+    > .input-append {
+        margin: 0;
+    }
+
     &.with-default-value {
         .auto-computed-for-submit {
             display: none;
