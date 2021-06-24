@@ -57,7 +57,7 @@ describe("OIDC flow", function () {
                 )}&client_secret=${encodeURIComponent(client_secret ?? "")}`,
                 followRedirect: false,
             }).then(function (resp) {
-                cy.visit(resp.headers.location);
+                cy.visit(String(resp.headers.location));
                 cy.get("[data-test=oauth2-authorize-request-submit-button]").click();
                 cy.contains("OK as ProjectAdministrator");
             });

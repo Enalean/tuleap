@@ -37,9 +37,6 @@ describe("Project Milestones Widget", function () {
                 "ProjectMilestones Widget Milestones"
             );
 
-            cy.intercept("GET", "/milestones").as("loadReleases");
-            cy.wait("@loadReleases", { timeout: 1000 });
-
             cy.get("[data-test=project-milestone-empty-state]").contains("Start Planning");
         });
     });
@@ -67,9 +64,6 @@ describe("Project Milestones Widget", function () {
                 "contain",
                 "ProjectMilestones Widget Milestones"
             );
-
-            cy.intercept("GET", "/milestones").as("loadReleases");
-            cy.wait("@loadReleases", { timeout: 1000 });
 
             cy.get("[data-test=project-milestone-empty-state]").contains("Start Planning");
         });

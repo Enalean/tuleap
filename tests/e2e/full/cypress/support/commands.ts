@@ -46,7 +46,8 @@ declare global {
                 file_type: string
             ): Chainable<JQuery<HTMLInputElement>>;
             visitServiceInCurrentProject(service_label: string): void;
-            getFromTuleapAPI(url: string): Chainable<Response>;
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            getFromTuleapAPI(url: string): Chainable<Response<any>>;
             postFromTuleapApi(url: string, payload: unknown): void;
             putFromTuleapApi(url: string, payload: unknown): void;
         }

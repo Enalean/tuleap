@@ -33,7 +33,7 @@ function getSummaryFieldId(tracker_id: string): Cypress.Chainable<string> {
             (field: TrackerField) => field.name === "summary"
         );
 
-        return summary_field.field_id;
+        return String(summary_field.field_id);
     });
 }
 

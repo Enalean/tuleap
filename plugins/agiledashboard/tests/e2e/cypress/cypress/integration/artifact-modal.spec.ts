@@ -357,15 +357,20 @@ function getArtifactLinkIdFromREST(): Cypress.Chainable<number> {
         .then((project_id: JQuery<HTMLElement>) => {
             return cy
                 .getFromTuleapAPI(`/api/projects/${project_id}/trackers`)
-                .then((response) => response.body[0].id);
+                .then((response) => parseInt(response.body[0].id, 10));
         })
         .then((tracker_id: number) => {
             return cy
                 .getFromTuleapAPI(`/api/trackers/${tracker_id}/artifacts`)
-                .then((response) =>
-                    response.body.find((artifact: Artifact) => artifact.title === "Linked Artifact")
+                .then(
+                    (response): Artifact =>
+                        response.body.find(
+                            (artifact: Artifact) => artifact.title === "Linked Artifact"
+                        )
                 )
-                .then((artifact: Artifact) => artifact.id);
+                .then((artifact: Artifact) => {
+                    return artifact.id;
+                });
         });
 }
 
