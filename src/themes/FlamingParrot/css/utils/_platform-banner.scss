@@ -53,6 +53,6 @@ body.has-visible-project-banner .platform-banner {
     }
 
     &.btn-info {
-        @include override-navbar-important-definitions(var(--tlp-ui-info));
+        @include override-navbar-important-definitions(var(--tlp-info-color));
     }
 }

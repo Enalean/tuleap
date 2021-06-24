@@ -274,7 +274,7 @@
 
 .siteadmin-homepage-users-legend-color-waiting,
 .siteadmin-homepage-projects-legend-color-pending {
-    background-color: var(--tlp-ui-info);
+    background-color: var(--tlp-info-color);
 }
 
 .siteadmin-homepage-users-slice-path,
@@ -338,10 +338,10 @@
 .siteadmin-homepage-users-slice-waiting,
 .siteadmin-homepage-projects-slice-pending {
     > path {
-        fill: var(--tlp-ui-info);
+        fill: var(--tlp-info-color);
     }
 
     > text {
-        fill: var(--tlp-ui-info-darker-10);
+        fill: var(--tlp-info-color-darker-10);
     }
 }

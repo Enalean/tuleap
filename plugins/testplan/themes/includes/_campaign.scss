@@ -162,11 +162,11 @@
         flex: 0 0 auto;
 
         > .test-plan-campaign-progression-value {
-            color: var(--tlp-ui-info);
+            color: var(--tlp-info-color);
         }
 
         > .test-plan-campaign-progression-bar {
-            background-image: linear-gradient(45deg, var(--tlp-ui-info), var(--tlp-ui-info-lighter-20));
+            background-image: linear-gradient(45deg, var(--tlp-info-color), var(--tlp-info-color-lighter-20));
         }
     }
 
@@ -191,8 +191,8 @@
 
 @keyframes blink-campaign {
     0% {
-        border-color: var(--tlp-ui-info);
-        background: var(--tlp-ui-info-transparent-90);
+        border-color: var(--tlp-info-color);
+        background: var(--tlp-info-color-transparent-90);
     }
 
     50% {
@@ -201,8 +201,8 @@
     }
 
     100% {
-        border-color: var(--tlp-ui-info);
-        background: var(--tlp-ui-info-transparent-90);
+        border-color: var(--tlp-info-color);
+        background: var(--tlp-info-color-transparent-90);
     }
 }
 

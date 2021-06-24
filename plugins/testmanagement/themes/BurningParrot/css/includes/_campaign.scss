@@ -109,11 +109,11 @@
             flex: 0 0 auto;
 
             > .test-campaign-progression-value {
-                color: var(--tlp-ui-info);
+                color: var(--tlp-info-color);
             }
 
             > .test-campaign-progression-bar {
-                background-image: linear-gradient(45deg, var(--tlp-ui-info), var(--tlp-ui-info-lighter-20));
+                background-image: linear-gradient(45deg, var(--tlp-info-color), var(--tlp-info-color-lighter-20));
             }
         }
 

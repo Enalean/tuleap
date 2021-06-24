@@ -53,20 +53,20 @@
 
     &.blocked > .tlp-pane-container {
         > .current-test-header {
-            background: var(--tlp-ui-info);
+            background: var(--tlp-info-color);
         }
 
         > .current-test-latest-result {
-            background: linear-gradient(0deg, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), var(--tlp-ui-info);
+            background: linear-gradient(0deg, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), var(--tlp-info-color);
         }
 
         > .current-test-automated-message {
-            color: var(--tlp-ui-info);
+            color: var(--tlp-info-color);
         }
 
         .current-test-latest-result {
             code {
-                color: var(--tlp-ui-info);
+                color: var(--tlp-info-color);
             }
         }
     }

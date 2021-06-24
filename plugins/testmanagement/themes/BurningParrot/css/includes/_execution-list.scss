@@ -166,7 +166,7 @@ $height-testmanagement-header: calc(var(--tlp-title-spacing) + var(--tlp-small-s
     > .tests-blocked {
         display: table-cell;
         padding: 2px;
-        background: var(--tlp-ui-info);
+        background: var(--tlp-info-color);
         color: var(--tlp-ui-white);
     }
 
@@ -200,7 +200,7 @@ $height-testmanagement-header: calc(var(--tlp-title-spacing) + var(--tlp-small-s
     }
 
     &.blocked {
-        color: var(--tlp-ui-info);
+        color: var(--tlp-info-color);
     }
 
     &.notrun {
@@ -370,9 +370,9 @@ $height-testmanagement-header: calc(var(--tlp-title-spacing) + var(--tlp-small-s
     }
 
     &.blocked {
-        border-left: 3px solid var(--tlp-ui-info);
-        background: var(--tlp-ui-info-transparent-90);
-        color: var(--tlp-ui-info);
+        border-left: 3px solid var(--tlp-info-color);
+        background: var(--tlp-info-color-transparent-90);
+        color: var(--tlp-info-color);
     }
 
     &.notrun {

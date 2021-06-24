@@ -86,11 +86,11 @@ $tlp-modal-transition: 100ms ease-out;
 
 .tlp-modal-info {
     > .tlp-modal-header {
-        background: var(--tlp-ui-info);
+        background: var(--tlp-info-color);
     }
 
     .tlp-modal-subtitle {
-        color: var(--tlp-ui-info);
+        color: var(--tlp-info-color);
     }
 }
 

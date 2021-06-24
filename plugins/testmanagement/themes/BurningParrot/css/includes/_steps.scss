@@ -46,15 +46,15 @@
     }
 
     &.blocked {
-        background: var(--tlp-ui-info-transparent-90);
+        background: var(--tlp-info-color-transparent-90);
 
         > .steps-step-description > .steps-step-expected {
             > div > .steps-step-expected-title {
-                color: var(--tlp-ui-info);
+                color: var(--tlp-info-color);
             }
 
             > .steps-step-expected-arrow {
-                fill: var(--tlp-ui-info);
+                fill: var(--tlp-info-color);
             }
         }
     }
@@ -133,7 +133,7 @@
 }
 
 .steps-step-action-block {
-    color: var(--tlp-ui-info);
+    color: var(--tlp-info-color);
 }
 
 .steps-step-action-notrun {

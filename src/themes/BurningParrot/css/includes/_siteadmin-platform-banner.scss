@@ -38,7 +38,7 @@
 }
 
 .siteadmin-platform-banner-importance-standard {
-    @include radio(var(--tlp-ui-info));
+    @include radio(var(--tlp-info-color));
 }
 
 .siteadmin-platform-banner-importance-warning {

@@ -452,7 +452,7 @@ legend {
     }
 
     &.btn-info {
-        @include btn(var(--tlp-ui-info), var(--tlp-ui-info-transparent-40), var(--tlp-ui-info-darker-10), var(--tlp-ui-white));
+        @include btn(var(--tlp-info-color), var(--tlp-info-color-transparent-40), var(--tlp-info-color-darker-10), var(--tlp-ui-white));
     }
 
     &:hover:not(:disabled):not(.disabled):not(.active) {
@@ -475,7 +475,7 @@ legend {
         }
 
         &.btn-info {
-            @include btn-hover(var(--tlp-ui-info-darker-05));
+            @include btn-hover(var(--tlp-info-color-darker-05));
         }
     }
 }

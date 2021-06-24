@@ -27,7 +27,7 @@ $main-color-dimmed-background: mix($tlp-background-color, $tlp-ui-white, 50);
     --tlp-font-family-mono: Menlo, Monaco, Consolas, "Courier New", monospace;
 
     // colors
-    --tlp-ui-info: #{$tlp-ui-info};
+    --tlp-info-color: #{$tlp-info-color};
     --tlp-ui-success: #{$tlp-ui-success};
     --tlp-ui-warning: #{$tlp-ui-warning};
     --tlp-ui-danger: #{$tlp-ui-danger};
@@ -78,19 +78,19 @@ $main-color-dimmed-background: mix($tlp-background-color, $tlp-ui-white, 50);
     --tlp-main-color-transparent-85: #{transparentize($tlp-main-color, 0.85)};
     --tlp-main-color-transparent-90: #{transparentize($tlp-main-color, 0.9)};
 
-    --tlp-ui-info-darker-05: #{darken($tlp-ui-info, 5%)};
-    --tlp-ui-info-darker-10: #{darken($tlp-ui-info, 10%)};
-    --tlp-ui-info-darker-30: #{darken($tlp-ui-info, 30%)};
-    --tlp-ui-info-lighter-15: #{mix($tlp-ui-info, $tlp-ui-white, 85%)};
-    --tlp-ui-info-lighter-20: #{mix($tlp-ui-info, $tlp-ui-white, 80%)};
-    --tlp-ui-info-lighter-30: #{mix($tlp-ui-info, $tlp-ui-white, 70%)};
-    --tlp-ui-info-lighter-35: #{mix($tlp-ui-info, $tlp-ui-white, 65%)};
-    --tlp-ui-info-lighter-90: #{mix($tlp-ui-info, $tlp-ui-white, 10%)};
-    --tlp-ui-info-transparent-40: #{transparentize($tlp-ui-info, 0.4)};
-    --tlp-ui-info-transparent-50: #{transparentize($tlp-ui-info, 0.5)};
-    --tlp-ui-info-transparent-80: #{transparentize($tlp-ui-info, 0.8)};
-    --tlp-ui-info-transparent-85: #{transparentize($tlp-ui-info, 0.85)};
-    --tlp-ui-info-transparent-90: #{transparentize($tlp-ui-info, 0.9)};
+    --tlp-info-color-darker-05: #{darken($tlp-info-color, 5%)};
+    --tlp-info-color-darker-10: #{darken($tlp-info-color, 10%)};
+    --tlp-info-color-darker-30: #{darken($tlp-info-color, 30%)};
+    --tlp-info-color-lighter-15: #{mix($tlp-info-color, $tlp-ui-white, 85%)};
+    --tlp-info-color-lighter-20: #{mix($tlp-info-color, $tlp-ui-white, 80%)};
+    --tlp-info-color-lighter-30: #{mix($tlp-info-color, $tlp-ui-white, 70%)};
+    --tlp-info-color-lighter-35: #{mix($tlp-info-color, $tlp-ui-white, 65%)};
+    --tlp-info-color-lighter-90: #{mix($tlp-info-color, $tlp-ui-white, 10%)};
+    --tlp-info-color-transparent-40: #{transparentize($tlp-info-color, 0.4)};
+    --tlp-info-color-transparent-50: #{transparentize($tlp-info-color, 0.5)};
+    --tlp-info-color-transparent-80: #{transparentize($tlp-info-color, 0.8)};
+    --tlp-info-color-transparent-85: #{transparentize($tlp-info-color, 0.85)};
+    --tlp-info-color-transparent-90: #{transparentize($tlp-info-color, 0.9)};
 
     --tlp-ui-warning-darker-05: #{darken($tlp-ui-warning, 5%)};
     --tlp-ui-warning-darker-10: #{darken($tlp-ui-warning, 10%)};
@@ -162,9 +162,9 @@ $main-color-dimmed-background: mix($tlp-background-color, $tlp-ui-white, 50);
     --tlp-alert-danger-color: #{darken($tlp-ui-danger, 15%)};
     --tlp-alert-danger-border: 5px solid var(--tlp-ui-danger);
 
-    --tlp-alert-info-background: #{desaturate(lighten(mix($tlp-ui-white, $tlp-ui-info, 25%), 23%), 15%)};
-    --tlp-alert-info-color: #{darken($tlp-ui-info, 30%)};
-    --tlp-alert-info-border: 5px solid var(--tlp-ui-info);
+    --tlp-alert-info-background: #{desaturate(lighten(mix($tlp-ui-white, $tlp-info-color, 25%), 23%), 15%)};
+    --tlp-alert-info-color: #{darken($tlp-info-color, 30%)};
+    --tlp-alert-info-border: 5px solid var(--tlp-info-color);
 
     --tlp-alert-success-background: #{desaturate(lighten(mix($tlp-ui-white, $tlp-ui-success, 25%), 26%), 15%)};
     --tlp-alert-success-color: #{darken($tlp-ui-success, 20%)};
