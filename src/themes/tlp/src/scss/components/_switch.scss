@@ -124,12 +124,12 @@ $tlp-switch-button-spinner-size: $tlp-switch-height - 2 * ($tlp-switch-button-pa
 
 .tlp-switch-checkbox:checked + .tlp-switch-button:not(.loading) {
     &::before {
-        background-color: var(--tlp-ui-success);
+        background-color: var(--tlp-success-color);
     }
 
     &::after {
         left: 25px;
-        color: var(--tlp-ui-success);
+        color: var(--tlp-success-color);
     }
 }
 

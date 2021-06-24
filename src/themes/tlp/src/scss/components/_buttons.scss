@@ -213,7 +213,7 @@ $tlp-button-secondary-box-shadow: rgba(0, 0, 0, 0.05);
 
 .tlp-button-success {
     @extend %tlp-button;
-    @include tlp-button-type(var(--tlp-ui-success), var(--tlp-ui-success-darker-05), var(--tlp-ui-success-darker-10), var(--tlp-ui-success-lighter-30), var(--tlp-ui-white-transparent-40), var(--tlp-ui-success-lighter-90), var(--tlp-ui-success-transparent-50));
+    @include tlp-button-type(var(--tlp-success-color), var(--tlp-success-color-darker-05), var(--tlp-success-color-darker-10), var(--tlp-success-color-lighter-30), var(--tlp-ui-white-transparent-40), var(--tlp-success-color-lighter-90), var(--tlp-success-color-transparent-50));
 }
 
 .tlp-button-warning {

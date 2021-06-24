@@ -152,7 +152,7 @@ $height-testmanagement-header: calc(var(--tlp-title-spacing) + var(--tlp-small-s
     > .tests-passed {
         display: table-cell;
         padding: 2px;
-        background: var(--tlp-ui-success);
+        background: var(--tlp-success-color);
         color: var(--tlp-ui-white);
     }
 
@@ -192,7 +192,7 @@ $height-testmanagement-header: calc(var(--tlp-title-spacing) + var(--tlp-small-s
 
 .test-status-icon {
     &.passed {
-        color: var(--tlp-ui-success);
+        color: var(--tlp-success-color);
     }
 
     &.failed {
@@ -358,9 +358,9 @@ $height-testmanagement-header: calc(var(--tlp-title-spacing) + var(--tlp-small-s
     cursor: pointer;
 
     &.passed {
-        border-left: 3px solid var(--tlp-ui-success);
-        background: var(--tlp-ui-success-transparent-90);
-        color: var(--tlp-ui-success);
+        border-left: 3px solid var(--tlp-success-color);
+        background: var(--tlp-success-color-transparent-90);
+        color: var(--tlp-success-color);
     }
 
     &.failed {

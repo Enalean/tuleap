@@ -90,13 +90,13 @@
         }
 
         + .tlp-button-success {
-            border-color: var(--tlp-ui-success-darker-10);
-            background: var(--tlp-ui-success-darker-10);
+            border-color: var(--tlp-success-color-darker-10);
+            background: var(--tlp-success-color-darker-10);
             box-shadow: $button-bar-checked-box-shadow;
 
             &.tlp-button-outline {
                 border: 1px solid var(--tlp-ui-white);
-                background: var(--tlp-ui-success-lighter-80);
+                background: var(--tlp-success-color-lighter-80);
             }
         }
 

@@ -13,20 +13,20 @@
 
     &.passed > .tlp-pane-container {
         > .current-test-header {
-            background: var(--tlp-ui-success);
+            background: var(--tlp-success-color);
         }
 
         > .current-test-latest-result {
-            background: linear-gradient(0deg, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), var(--tlp-ui-success);
+            background: linear-gradient(0deg, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), var(--tlp-success-color);
         }
 
         > .current-test-automated-message {
-            color: var(--tlp-ui-success);
+            color: var(--tlp-success-color);
         }
 
         .current-test-latest-result {
             code {
-                color: var(--tlp-ui-success);
+                color: var(--tlp-success-color);
             }
         }
     }

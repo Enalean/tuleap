@@ -60,8 +60,8 @@
 
     &.test-plan-campaign-is-just-refreshed {
         animation: pulse-campaign 500ms ease-in-out;
-        border-color: var(--tlp-ui-success);
-        background: var(--tlp-ui-success-lighter-90);
+        border-color: var(--tlp-success-color);
+        background: var(--tlp-success-color-lighter-90);
     }
 
     &:hover {
@@ -138,11 +138,11 @@
         flex: 1 1 auto;
 
         > .test-plan-campaign-progression-value {
-            color: var(--tlp-ui-success);
+            color: var(--tlp-success-color);
         }
 
         > .test-plan-campaign-progression-bar {
-            background-image: linear-gradient(45deg, var(--tlp-ui-success), var(--tlp-ui-success-lighter-20));
+            background-image: linear-gradient(45deg, var(--tlp-success-color), var(--tlp-success-color-lighter-20));
         }
     }
 

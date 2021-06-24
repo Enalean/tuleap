@@ -198,11 +198,11 @@
 
     &.taskboard-card-is-just-saved {
         animation: pulse-card 500ms ease-in-out;
-        border-color: var(--tlp-ui-success);
-        background: var(--tlp-ui-success-lighter-90);
+        border-color: var(--tlp-success-color);
+        background: var(--tlp-success-color-lighter-90);
 
         &.taskboard-card-editable:not(.taskboard-card-edit-mode) > .taskboard-card-edit-trigger {
-            @include pencil-background(var(--tlp-ui-success-lighter-90));
+            @include pencil-background(var(--tlp-success-color-lighter-90));
         }
     }
 }
