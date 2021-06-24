@@ -165,7 +165,7 @@
     margin: var(--tlp-small-spacing) 0;
 
     &.flag-error {
-        color: var(--tlp-ui-danger);
+        color: var(--tlp-danger-color);
         font-size: 50px;
     }
 
@@ -269,7 +269,7 @@
 
 .siteadmin-homepage-users-legend-color-deleted,
 .siteadmin-homepage-projects-legend-color-deleted {
-    background-color: var(--tlp-ui-danger);
+    background-color: var(--tlp-danger-color);
 }
 
 .siteadmin-homepage-users-legend-color-waiting,
@@ -327,11 +327,11 @@
 .siteadmin-homepage-users-slice-deleted,
 .siteadmin-homepage-projects-slice-deleted {
     > path {
-        fill: var(--tlp-ui-danger);
+        fill: var(--tlp-danger-color);
     }
 
     > text {
-        fill: var(--tlp-ui-danger-darker-10);
+        fill: var(--tlp-danger-color-darker-10);
     }
 }
 

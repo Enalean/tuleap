@@ -83,7 +83,7 @@
 }
 
 .test-results-pie-legend-color-failed {
-    background-color: var(--tlp-ui-danger);
+    background-color: var(--tlp-danger-color);
 }
 
 .test-results-pie-slice-path {
@@ -116,10 +116,10 @@
 
 .test-results-pie-slice-failed {
     > path {
-        fill: var(--tlp-ui-danger);
+        fill: var(--tlp-danger-color);
     }
 
     > text {
-        fill: var(--tlp-ui-danger-darker-10);
+        fill: var(--tlp-danger-color-darker-10);
     }
 }

@@ -220,14 +220,14 @@ $form-element-small-font-size: 0.8125rem;
 
 .list-picker-error {
     .list-picker-selection {
-        border-color: var(--tlp-ui-danger);
-        color: var(--tlp-ui-danger);
+        border-color: var(--tlp-danger-color);
+        color: var(--tlp-danger-color);
     }
 
     .list-picker-badge {
-        border-color: var(--tlp-ui-danger);
-        background-color: var(--tlp-ui-danger-transparent-90);
-        color: var(--tlp-ui-danger);
+        border-color: var(--tlp-danger-color);
+        background-color: var(--tlp-danger-color-transparent-90);
+        color: var(--tlp-danger-color);
     }
 }
 

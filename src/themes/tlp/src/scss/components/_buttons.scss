@@ -223,7 +223,7 @@ $tlp-button-secondary-box-shadow: rgba(0, 0, 0, 0.05);
 
 .tlp-button-danger {
     @extend %tlp-button;
-    @include tlp-button-type(var(--tlp-ui-danger), var(--tlp-ui-danger-darker-05), var(--tlp-ui-danger-darker-10), var(--tlp-ui-danger-lighter-30), var(--tlp-ui-white-transparent-40), var(--tlp-ui-danger-lighter-90), var(--tlp-ui-danger-transparent-50));
+    @include tlp-button-type(var(--tlp-danger-color), var(--tlp-danger-color-darker-05), var(--tlp-danger-color-darker-10), var(--tlp-danger-color-lighter-30), var(--tlp-ui-white-transparent-40), var(--tlp-danger-color-lighter-90), var(--tlp-danger-color-transparent-50));
 }
 
 /**

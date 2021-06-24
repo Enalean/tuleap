@@ -440,7 +440,7 @@ legend {
     }
 
     &.btn-danger {
-        @include btn(var(--tlp-ui-danger), var(--tlp-ui-danger-transparent-40), var(--tlp-ui-danger-darker-10), var(--tlp-ui-white));
+        @include btn(var(--tlp-danger-color), var(--tlp-danger-color-transparent-40), var(--tlp-danger-color-darker-10), var(--tlp-ui-white));
     }
 
     &.btn-success {
@@ -463,7 +463,7 @@ legend {
         }
 
         &.btn-danger {
-            @include btn-hover(var(--tlp-ui-danger-darker-05));
+            @include btn-hover(var(--tlp-danger-color-darker-05));
         }
 
         &.btn-success {
@@ -532,7 +532,7 @@ select.input-small {
     color: var(--tlp-ui-white);
 
     &.modal-header-error {
-        background: var(--tlp-ui-danger);
+        background: var(--tlp-danger-color);
     }
 
     i {

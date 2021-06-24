@@ -32,15 +32,15 @@
     }
 
     &.failed {
-        background: var(--tlp-ui-danger-transparent-90);
+        background: var(--tlp-danger-color-transparent-90);
 
         > .steps-step-description > .steps-step-expected {
             > div > .steps-step-expected-title {
-                color: var(--tlp-ui-danger);
+                color: var(--tlp-danger-color);
             }
 
             > .steps-step-expected-arrow {
-                fill: var(--tlp-ui-danger);
+                fill: var(--tlp-danger-color);
             }
         }
     }
@@ -129,7 +129,7 @@
 }
 
 .steps-step-action-fail {
-    color: var(--tlp-ui-danger);
+    color: var(--tlp-danger-color);
 }
 
 .steps-step-action-block {

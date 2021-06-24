@@ -153,18 +153,18 @@ $tlp-badge-padding: calc(5px - 1px * var(--tlp-is-condensed)) var(--tlp-small-sp
 .tlp-badge-danger {
     @extend %tlp-badge;
 
-    border: 1px solid var(--tlp-ui-danger);
-    background: var(--tlp-ui-danger);
+    border: 1px solid var(--tlp-danger-color);
+    background: var(--tlp-danger-color);
 
     &.tlp-badge-outline {
-        border: 1px solid var(--tlp-ui-danger-transparent-40);
-        background: var(--tlp-ui-danger-transparent-90);
-        color: var(--tlp-ui-danger);
+        border: 1px solid var(--tlp-danger-color-transparent-40);
+        background: var(--tlp-danger-color-transparent-90);
+        color: var(--tlp-danger-color);
 
         &.tlp-badge-on-dark-background {
-            border: 1px solid var(--tlp-ui-danger-on-dark-background);
-            background: var(--tlp-ui-danger-transparent-85);
-            color: var(--tlp-ui-danger-lighter-40);
+            border: 1px solid var(--tlp-danger-color-on-dark-background);
+            background: var(--tlp-danger-color-transparent-85);
+            color: var(--tlp-danger-color-lighter-40);
         }
     }
 }
