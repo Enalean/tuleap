@@ -25,8 +25,9 @@ namespace Tuleap\ProgramManagement\Adapter\Team;
 use Tuleap\DB\DataAccessObject;
 use Tuleap\ProgramManagement\Domain\Team\Creation\TeamCollection;
 use Tuleap\ProgramManagement\Domain\Team\Creation\TeamStore;
+use Tuleap\ProgramManagement\Domain\Team\VerifyIsTeam;
 
-final class TeamDao extends DataAccessObject implements TeamStore
+final class TeamDao extends DataAccessObject implements TeamStore, VerifyIsTeam
 {
     /**
      * @throws \Throwable
@@ -48,10 +49,10 @@ final class TeamDao extends DataAccessObject implements TeamStore
         });
     }
 
-    public function isATeam(int $team_project_id): bool
+    public function isATeam(int $project_id): bool
     {
         $sql = 'SELECT * FROM plugin_program_management_team_projects WHERE team_project_id = ?';
 
-        return $this->getDB()->exists($sql, $team_project_id);
+        return $this->getDB()->exists($sql, $project_id);
     }
 }

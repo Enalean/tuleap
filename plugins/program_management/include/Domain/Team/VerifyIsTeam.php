@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2020 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,9 +20,9 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Domain\Team\Creation;
+namespace Tuleap\ProgramManagement\Domain\Team;
 
-interface TeamStore
+interface VerifyIsTeam
 {
-    public function save(TeamCollection $team_collection): void;
+    public function isATeam(int $project_id): bool;
 }

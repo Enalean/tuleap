@@ -22,50 +22,44 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Workspace;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\ProgramManagement\Domain\Program\VerifyIsProgram;
 use Tuleap\ProgramManagement\Domain\Project;
-use Tuleap\ProgramManagement\Domain\Team\Creation\TeamStore;
+use Tuleap\ProgramManagement\Domain\Team\VerifyIsTeam;
 use Tuleap\ProgramManagement\Stub\VerifyIsProgramStub;
+use Tuleap\ProgramManagement\Stub\VerifyIsTeamStub;
 
 final class ComponentInvolvedVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|TeamStore
-     */
-    private $team_store;
+    private VerifyIsTeam $team_verifier;
     private VerifyIsProgram $program_verifier;
 
     protected function setUp(): void
     {
+        $this->team_verifier    = VerifyIsTeamStub::withValidTeam();
         $this->program_verifier = VerifyIsProgramStub::withValidProgram();
-        $this->team_store       = \Mockery::mock(TeamStore::class);
     }
 
     private function getVerifier(): ComponentInvolvedVerifier
     {
-        return new ComponentInvolvedVerifier($this->team_store, $this->program_verifier);
+        return new ComponentInvolvedVerifier($this->team_verifier, $this->program_verifier);
     }
 
     public function testNotConsideredAsInvolvedInAProgramWorkspaceWhenItIsNeitherATeamOrProgramProject(): void
     {
         $this->program_verifier = VerifyIsProgramStub::withNotValidProgram();
-        $this->team_store->shouldReceive('isATeam')->andReturn(false);
+        $this->team_verifier    = VerifyIsTeamStub::withNotValidTeam();
         self::assertFalse($this->getVerifier()->isInvolvedInAProgramWorkspace($this->buildProjectData()));
     }
 
     public function testIsConsideredAsInvolvedInAProgramWorkspaceWhenItIsATeamProject(): void
     {
         $this->program_verifier = VerifyIsProgramStub::withNotValidProgram();
-        $this->team_store->shouldReceive('isATeam')->andReturn(true);
         self::assertTrue($this->getVerifier()->isInvolvedInAProgramWorkspace($this->buildProjectData()));
     }
 
     public function testIsConsideredAsInvolvedInAProgramWorkspaceWhenItIsAProgramProject(): void
     {
-        $this->team_store->shouldReceive('isATeam')->andReturn(false);
+        $this->team_verifier = VerifyIsTeamStub::withNotValidTeam();
         self::assertTrue($this->getVerifier()->isInvolvedInAProgramWorkspace($this->buildProjectData()));
     }
 

@@ -22,57 +22,41 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Team\RootPlanning;
 
-use Mockery as M;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\AgileDashboard\Planning\RootPlanning\RootPlanningEditionEvent;
-use Tuleap\ProgramManagement\Domain\Team\Creation\TeamStore;
+use Tuleap\ProgramManagement\Stub\VerifyIsTeamStub;
 
 final class RootPlanningEditionHandlerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var RootPlanningEditionHandler
-     */
-    private $handler;
-    /**
-     * @var M\LegacyMockInterface|M\MockInterface|TeamStore
-     */
-    private $team_dao;
+    private VerifyIsTeamStub $team_verifier;
+    private RootPlanningEditionEvent $event;
 
     protected function setUp(): void
     {
-        $this->team_dao = M::mock(TeamStore::class);
-        $this->handler  = new RootPlanningEditionHandler($this->team_dao);
+        $this->event         = new RootPlanningEditionEvent(
+            new \Project(['group_id' => '110']),
+            new \Planning(50, 'Release Planning', 110, '', '')
+        );
+        $this->team_verifier = VerifyIsTeamStub::withValidTeam();
+    }
+
+    private function getHandler(): RootPlanningEditionHandler
+    {
+        return new RootPlanningEditionHandler($this->team_verifier);
     }
 
     public function testHandleProhibitsMilestoneTrackerUpdateForTeamProjects(): void
     {
-        $this->team_dao->shouldReceive('isATeam')
-            ->with(110)
-            ->andReturnTrue();
+        $this->getHandler()->handle($this->event);
 
-        $event = new RootPlanningEditionEvent(
-            new \Project(['group_id' => '110']),
-            new \Planning(50, 'Release Planning', 110, '', '')
-        );
-        $this->handler->handle($event);
-
-        $this->assertNotNull($event->getMilestoneTrackerModificationBan());
+        $this->assertNotNull($this->event->getMilestoneTrackerModificationBan());
     }
 
     public function testHandleAllowsMilestoneTrackerUpdateForAllOtherProjects(): void
     {
-        $this->team_dao->shouldReceive('isATeam')
-            ->with(112)
-            ->andReturnFalse();
+        $this->team_verifier = VerifyIsTeamStub::withNotValidTeam();
 
-        $event = new RootPlanningEditionEvent(
-            new \Project(['group_id' => '112']),
-            new \Planning(50, 'Release Planning', 112, '', '')
-        );
-        $this->handler->handle($event);
+        $this->getHandler()->handle($this->event);
 
-        $this->assertNull($event->getMilestoneTrackerModificationBan());
+        $this->assertNull($this->event->getMilestoneTrackerModificationBan());
     }
 }

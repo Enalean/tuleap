@@ -23,23 +23,20 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Domain\Team\RootPlanning;
 
 use Tuleap\AgileDashboard\Planning\RootPlanning\RootPlanningEditionEvent;
-use Tuleap\ProgramManagement\Domain\Team\Creation\TeamStore;
+use Tuleap\ProgramManagement\Domain\Team\VerifyIsTeam;
 
 final class RootPlanningEditionHandler
 {
-    /**
-     * @var TeamStore
-     */
-    private $team_store;
+    private VerifyIsTeam $team_verifier;
 
-    public function __construct(TeamStore $team_store)
+    public function __construct(VerifyIsTeam $team_verifier)
     {
-        $this->team_store = $team_store;
+        $this->team_verifier = $team_verifier;
     }
 
     public function handle(RootPlanningEditionEvent $event): void
     {
-        if ($this->team_store->isATeam((int) $event->getProject()->getID())) {
+        if ($this->team_verifier->isATeam((int) $event->getProject()->getID())) {
             $event->prohibitMilestoneTrackerModification(new MilestoneTrackerUpdateProhibited());
         }
     }
