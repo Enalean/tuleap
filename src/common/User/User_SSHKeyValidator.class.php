@@ -42,12 +42,12 @@ class User_SSHKeyValidator // phpcs:ignore PSR1.Classes.ClassDeclaration.Missing
 
             if ($this->isValid($key)) {
                 if (in_array($key, $valid_keys, true)) {
-                    $GLOBALS['Response']->addFeedback('warning', $GLOBALS['Language']->getText('account_editsshkeys', 'key_already_added', [$key]));
+                    $GLOBALS['Response']->addFeedback('warning', sprintf(_('Key %1$s already existing for user'), $key));
                 } else {
                     $valid_keys[] = $key;
                 }
             } else {
-                $GLOBALS['Response']->addFeedback('warning', $GLOBALS['Language']->getText('account_editsshkeys', 'invalid_key', [$key]));
+                $GLOBALS['Response']->addFeedback('warning', sprintf(_('Skip invalid key %1$s'), $key));
             }
         }
         return $valid_keys;

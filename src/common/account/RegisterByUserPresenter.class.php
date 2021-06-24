@@ -28,9 +28,9 @@ class Account_RegisterByUserPresenter extends Account_RegisterPresenter
     public function __construct(Account_RegisterPrefillValuesPresenter $prefill_values, $extra_plugin_field)
     {
         parent::__construct($prefill_values, $extra_plugin_field);
-        $this->title         = $GLOBALS['Language']->getText('account_register', 'title');
-        $this->submit        = $GLOBALS['Language']->getText('account_register', 'btn_register');
-        $this->mandatory     = $GLOBALS['Language']->getText('account_register', 'mandatory');
-        $this->new_password2 = $GLOBALS['Language']->getText('account_change_pw', 'new_password2');
+        $this->title         = _('Register');
+        $this->submit        = _('Register');
+        $this->mandatory     = _('All fields are mandatory.');
+        $this->new_password2 = _('Repeat password');
     }
 }

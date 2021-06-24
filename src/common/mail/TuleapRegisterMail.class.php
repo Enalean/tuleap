@@ -48,11 +48,11 @@ class TuleapRegisterMail
             $subject = $GLOBALS['Language']->getText('include_proj_email', 'account_register', ForgeConfig::get('sys_name'));
             include($GLOBALS['Language']->getContent('include/new_user_email'));
         } elseif ($presenter_role === "admin") {
-            $subject = $GLOBALS['Language']->getText('account_register', 'welcome_email_title', ForgeConfig::get('sys_name'));
+            $subject = sprintf(_('Welcome to %1$s!'), ForgeConfig::get('sys_name'));
             include($GLOBALS['Language']->getContent('account/new_account_email'));
         } elseif ($presenter_role === "admin-notification") {
             $redirect_url = $base_url . "/admin/approve_pending_users.php?page=pending";
-            $subject      = $GLOBALS['Language']->getText('account_register', 'mail_approval_subject', $login);
+            $subject      = sprintf(_('New User Registered: %1$s'), $login);
             $message      = $this->createNotificationMessageText($login, $redirect_url);
         } else {
             $subject = sprintf(_('Your account has been created on %s'), ForgeConfig::get('sys_name'));
@@ -130,13 +130,15 @@ class TuleapRegisterMail
      */
     private function createNotificationMessageText($login, $redirect_url)
     {
-        $message = $GLOBALS['Language']->getText('account_register', 'mail_approval_title') . "\n\n"
-           . $GLOBALS['Language']->getText('account_register', 'mail_approval_section_one', [ForgeConfig::get('sys_name')]) . " "
-           . $login . $GLOBALS['Language']->getText('account_register', 'mail_approval_section_after_login', [ForgeConfig::get('sys_name')]) . "\n\n"
-           . $GLOBALS['Language']->getText('account_register', 'mail_approval_section_two') . "\n\n"
+        $message = _('Account creation!') . "\n\n"
+           . sprintf(_('A new user has just registered on %1$s.
+
+User Name:'), ForgeConfig::get('sys_name')) . " "
+           . $login . _('.') . "\n\n"
+           . _('Please click on the following URL to approve the registration:') . "\n\n"
            . "<" . $redirect_url . ">\n\n"
-           . $GLOBALS['Language']->getText('account_register', 'mail_thanks') . "\n\n"
-           . $GLOBALS['Language']->getText('account_register', 'mail_signature', [ForgeConfig::get('sys_name')]) . "\n\n";
+           . _('Thanks!') . "\n\n"
+           . sprintf(_('- The team at %1$s.'), ForgeConfig::get('sys_name')) . "\n\n";
 
         return $message;
     }

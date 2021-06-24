@@ -33,12 +33,12 @@ class Account_RegisterByAdminPresenter extends Account_RegisterPresenter
     public function __construct(Account_RegisterAdminPrefillValuesPresenter $prefill_values, $extra_plugin_field)
     {
         parent::__construct($prefill_values, $extra_plugin_field);
-        $this->title                  = $GLOBALS['Language']->getText('account_register', 'title_admin');
-        $this->submit                 = $GLOBALS['Language']->getText('account_register', 'btn_activate');
-        $this->purpose_directions     = $GLOBALS['Language']->getText('account_register', 'purpose_directions_admin');
-        $this->restricted_user        = $GLOBALS['Language']->getText('account_register', 'restricted_user');
-        $this->send_email             = $GLOBALS['Language']->getText('account_register', 'send_email');
-        $this->expiry_date            = $GLOBALS['Language']->getText('account_register', 'expiry_date');
-        $this->expiry_date_directions = $GLOBALS['Language']->getText('account_register', 'expiry_date_directions');
+        $this->title                  = _('Create a new user');
+        $this->submit                 = _('Activate');
+        $this->purpose_directions     = _('You can add a comment on this user registration<br>');
+        $this->restricted_user        = _('Restricted user');
+        $this->send_email             = _('Send a welcome email to the user');
+        $this->expiry_date            = _('Expiration date');
+        $this->expiry_date_directions = _('<em><strong>Remark:</strong> The account will be suspended when the date is reached. Leave blank if you don\'t want an expiration date.</em>');
     }
 }

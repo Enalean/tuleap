@@ -46,12 +46,12 @@ class SpecificLoginPresenter
 
     public function help_subject() //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
-        return $GLOBALS['Language']->getText('account_login', 'help_subject', [ForgeConfig::get('sys_name')]);
+        return sprintf(_('Unable to login under %1$s'), ForgeConfig::get('sys_name'));
     }
 
     public function account_login_login_with_tuleap() //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
-        return $GLOBALS['Language']->getText('account_login', 'login_with_tuleap', [ForgeConfig::get('sys_name')]);
+        return _('Login');
     }
 
     public function login_intro() //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps

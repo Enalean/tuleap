@@ -72,7 +72,7 @@ class Presenter
 
     public function account_login_login_btn()
     {
-        return $GLOBALS['Language']->getText('account_login', 'login_btn');
+        return _('Login');
     }
 
     public function link_page_title()
