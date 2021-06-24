@@ -27,5 +27,5 @@ interface SearchLinkedProjects
     /**
      * @return \Project[]
      */
-    public function searchLinkedProjects(\Project $source_project, \PFUser $user): array;
+    public function searchLinkedProjects(\Project $source_project): array;
 }

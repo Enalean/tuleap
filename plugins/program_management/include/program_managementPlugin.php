@@ -97,6 +97,7 @@ use Tuleap\ProgramManagement\Domain\ProgramTracker;
 use Tuleap\ProgramManagement\Domain\Team\RootPlanning\RootPlanningEditionHandler;
 use Tuleap\ProgramManagement\Domain\Workspace\CollectLinkedProjectsHandler;
 use Tuleap\ProgramManagement\Domain\Workspace\ComponentInvolvedVerifier;
+use Tuleap\ProgramManagement\Domain\Workspace\ProgramsSearcher;
 use Tuleap\ProgramManagement\Domain\Workspace\TeamsSearcher;
 use Tuleap\ProgramManagement\EventRedirectAfterArtifactCreationOrUpdateHandler;
 use Tuleap\ProgramManagement\ProgramService;
@@ -648,17 +649,18 @@ final class program_managementPlugin extends Plugin
 
     public function collectLinkedProjects(CollectLinkedProjects $event): void
     {
-        $program_dao = new ProgramDao();
-        $handler     = new CollectLinkedProjectsHandler(
+        $program_dao       = new ProgramDao();
+        $team_dao          = new TeamDao();
+        $project_retriever = new ProjectManagerAdapter(ProjectManager::instance());
+        $handler           = new CollectLinkedProjectsHandler(
             $program_dao,
-            new TeamsSearcher(
-                $program_dao,
-                new ProjectManagerAdapter(ProjectManager::instance())
-            ),
+            new TeamsSearcher($program_dao, $project_retriever),
             new ProjectAccessChecker(
                 new RestrictedUserCanAccessProjectVerifier(),
                 \EventManager::instance()
             ),
+            $team_dao,
+            new ProgramsSearcher($team_dao, $project_retriever)
         );
         $handler->handle($event);
     }
