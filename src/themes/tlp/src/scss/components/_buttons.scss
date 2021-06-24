@@ -218,7 +218,7 @@ $tlp-button-secondary-box-shadow: rgba(0, 0, 0, 0.05);
 
 .tlp-button-warning {
     @extend %tlp-button;
-    @include tlp-button-type(var(--tlp-ui-warning), var(--tlp-ui-warning-darker-05), var(--tlp-ui-warning-darker-10), var(--tlp-ui-warning-lighter-30), var(--tlp-ui-white-transparent-40), var(--tlp-ui-warning-lighter-90), var(--tlp-ui-warning-transparent-50));
+    @include tlp-button-type(var(--tlp-warning-color), var(--tlp-warning-color-darker-05), var(--tlp-warning-color-darker-10), var(--tlp-warning-color-lighter-30), var(--tlp-ui-white-transparent-40), var(--tlp-warning-color-lighter-90), var(--tlp-warning-color-transparent-50));
 }
 
 .tlp-button-danger {

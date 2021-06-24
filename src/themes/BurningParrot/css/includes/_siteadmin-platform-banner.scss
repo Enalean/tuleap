@@ -42,7 +42,7 @@
 }
 
 .siteadmin-platform-banner-importance-warning {
-    @include radio(var(--tlp-ui-warning));
+    @include radio(var(--tlp-warning-color));
 }
 
 .siteadmin-platform-banner-importance-critical {

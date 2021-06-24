@@ -49,7 +49,7 @@ body.has-visible-project-banner .platform-banner {
     }
 
     &.btn-warning {
-        @include override-navbar-important-definitions(var(--tlp-ui-warning));
+        @include override-navbar-important-definitions(var(--tlp-warning-color));
     }
 
     &.btn-info {

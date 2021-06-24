@@ -52,7 +52,7 @@ $illustration-left: 9px;
 }
 
 .platform-banner-importance-warning {
-    @include megaphone(var(--tlp-ui-warning));
+    @include megaphone(var(--tlp-warning-color));
 }
 
 .platform-banner-importance-critical {

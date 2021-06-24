@@ -211,36 +211,36 @@ $kanban-column-footer-height: 50px;
     }
 
     &.wip-reached {
-        background: var(--tlp-ui-warning-lighter-07);
+        background: var(--tlp-warning-color-lighter-07);
 
         &.kanban-column-closed {
-            background: var(--tlp-ui-warning-lighter-07);
+            background: var(--tlp-warning-color-lighter-07);
 
             > .kanban-column-header {
-                background: var(--tlp-ui-warning-lighter-07);
+                background: var(--tlp-warning-color-lighter-07);
             }
 
             &:hover {
-                background: var(--tlp-ui-warning-lighter-12);
+                background: var(--tlp-warning-color-lighter-12);
 
                 // scss-lint:disable NestingDepth
                 > .kanban-column-header {
-                    background: var(--tlp-ui-warning-lighter-12);
+                    background: var(--tlp-warning-color-lighter-12);
                 }
             }
         }
 
         > .kanban-column-header {
             border-bottom-width: 2px;
-            border-top-color: var(--tlp-ui-warning);
-            border-bottom-color: var(--tlp-ui-warning);
+            border-top-color: var(--tlp-warning-color);
+            border-bottom-color: var(--tlp-warning-color);
 
             > .kanban-column-header-label,
             > column-wip-header > .kanban-column-header-wip > .kanban-column-header-wip-count,
             > .kanban-column-header-wip-warning,
             > .kanban-column-header-toggle,
             > .kanban-column-label {
-                color: var(--tlp-ui-warning);
+                color: var(--tlp-warning-color);
             }
         }
 
@@ -248,7 +248,7 @@ $kanban-column-footer-height: 50px;
             /* stylelint-disable-next-line selector-max-compound-selectors */
             &:hover > .ngsb-thumb,
             > .ngsb-thumb {
-                background: var(--tlp-ui-warning-transparent-60);
+                background: var(--tlp-warning-color-transparent-60);
             }
 
             &:active {
@@ -256,14 +256,14 @@ $kanban-column-footer-height: 50px;
 
                 /* stylelint-disable-next-line selector-max-compound-selectors */
                 > .ngsb-thumb {
-                    background: var(--tlp-ui-warning-transparent-60-darker-05);
+                    background: var(--tlp-warning-color-transparent-60-darker-05);
                 }
             }
         }
 
         > .kanban-column-label {
             opacity: 0.6;
-            color: var(--tlp-ui-warning);
+            color: var(--tlp-warning-color);
         }
 
         .kanban-column-header-wip-count {
