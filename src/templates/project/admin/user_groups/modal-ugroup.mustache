@@ -28,6 +28,7 @@
                     type="text"
                     class="tlp-input"
                     id="ugroup_name"
+                    data-test="ugroup_name"
                     name="ugroup_name"
                     placeholder="Developers"
                     pattern="^[a-zA-Z0-9_\-]+$"
@@ -68,7 +69,7 @@
         <button type="reset" class="tlp-button-primary tlp-button-outline tlp-modal-action" data-dismiss="modal">
             {{# gettext }}Cancel{{/ gettext }}
         </button>
-        <button type="submit" class="tlp-button-primary tlp-modal-action user-group-modal-button">
+        <button type="submit" class="tlp-button-primary tlp-modal-action user-group-modal-button" data-test="create-user-group">
             <i class="fa fa-plus tlp-button-icon"></i> {{# gettext }}Create user group{{/ gettext }}
         </button>
     </div>

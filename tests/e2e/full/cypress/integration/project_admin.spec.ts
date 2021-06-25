@@ -17,6 +17,94 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+context("Suspended users", function () {
+    const project_admin_group_id = 4;
+    before(() => {
+        cy.clearSessionCookie();
+        cy.platformAdminLogin();
+        cy.getProjectId("project-admin-test").as("project_id");
+    });
+
+    beforeEach(() => {
+        cy.preserveSessionCookies();
+    });
+
+    it("can be removed from administrator and members", function () {
+        cy.get("[data-test=platform-administration-link]").click();
+        cy.get("[data-test=global-admin-search-user]").type("suspendedUser{enter}");
+        cy.get("[data-test=user-status]").select("Suspended");
+        cy.get("[data-test=save-user]").click();
+
+        cy.userLogout();
+        cy.projectAdministratorLogin();
+        cy.visitProjectAdministration("project-admin-test");
+        cy.contains("Groups").click();
+        const project_id = this.project_id;
+        cy.visit(
+            "/project/admin/editugroup.php?group_id=" +
+                project_id +
+                "&ugroup_id=" +
+                project_admin_group_id
+        );
+        cy.contains("Suspended")
+            .should("have.attr", "data-user-id")
+            .as("user_id")
+            .then((user_id) => {
+                cy.get(`[data-test=remove-user-${user_id}]`).click();
+                cy.get("[data-test=remove-from-ugroup]").click();
+            });
+        cy.should("not.contain", "Suspended");
+
+        cy.contains("Members").click();
+        cy.contains("Suspended")
+            .should("have.attr", "data-user-id")
+            .as("user_id")
+            .then((user_id) => {
+                cy.get(`[data-test=remove-user-${user_id}]`).click();
+                cy.get("[data-test=remove-from-member]").click();
+            });
+        cy.should("not.contain", "Suspended");
+    });
+});
+
+context("Disk usage", function () {
+    before(() => {
+        cy.clearSessionCookie();
+    });
+
+    it("project admin can check diskusage", function () {
+        cy.projectAdministratorLogin();
+
+        cy.visitProjectAdministration("project-admin-test");
+        // need to force true because click on data does not display the submenu
+        cy.get("[data-test=statistics-disk-usage]").click({ force: true });
+        cy.get("[data-test=disk-usage-graph]").contains("Remaining space");
+        cy.get("[data-test=statistics-period]").contains("last months");
+        cy.get("[data-test=table-test]").contains("Service");
+        cy.get("[data-test=table-test]").contains("Size evolution");
+
+        cy.get("[data-test=last-year-statistics]").click();
+        cy.get("[data-test=statistics-period]").contains("last year");
+        cy.get("[data-test=table-test]").contains("Service");
+        cy.get("[data-test=table-test]").contains("Size evolution");
+
+        cy.getProjectId("project-admin-test").as("project_id");
+        cy.get("[data-test=dashboard-configuration-button]").click();
+        cy.get("[data-test=dashboard-add-widget-button]").click();
+        //need to force true cause the line is not visible in modal
+        cy.get("[data-test=plugin_statistics_projectstatistics]").click({ force: true });
+        cy.get("[data-test=dashboard-add-widget-button-submit]").click();
+        cy.contains("Total project size");
+    });
+
+    it("project member can see the statistics", function () {
+        cy.projectMemberLogin();
+        cy.getProjectId("project-admin-test").as("project_id");
+
+        cy.contains("Total project size");
+    });
+});
+
 describe("Project admin", function () {
     let project_id: string;
     const project_admin_group_id = 4;
@@ -83,7 +171,6 @@ describe("Project admin", function () {
             });
 
             project_id = this.project_id;
-            const project_admin_group_id = 4;
             cy.visit(
                 "/project/admin/editugroup.php?group_id=" +
                     project_id +
@@ -211,5 +298,87 @@ context("Restricted users", function () {
 
         // make platform accessible to anonymous again
         cy.updatePlatformVisibilityForAnonymous();
+    });
+});
+
+context("Membership management", function () {
+    before(() => {
+        cy.getProjectId("project-admin-test").as("project_id");
+    });
+
+    it("chosen users can manage members", function () {
+        cy.clearSessionCookie();
+        cy.projectAdministratorLogin();
+
+        const project_id = this.project_id;
+
+        cy.visitProjectAdministration("project-admin-test");
+        cy.contains("Groups").click();
+
+        cy.log("Add restricted group to project");
+        cy.get("[data-test=project-admin-ugroups-modal]").click();
+        cy.get("[data-test=ugroup_name]").type("restricted");
+        cy.get("[data-test=create-user-group]").click();
+
+        cy.get("[data-test=select-member-to-add-in-ugroup] + .select2-container").click();
+        // ignore rule for select2
+        // eslint-disable-next-line cypress/require-data-selectors
+        cy.get(".select2-search__field").type("RestrictedRegularUser{enter}");
+        // eslint-disable-next-line cypress/require-data-selectors
+        cy.get(".select2-result-user").click();
+        cy.get('[data-test="project-admin-submit-add-member"]').click();
+
+        // all membership pane is outside of viewport, need to force true evey action
+        cy.get("[data-test=membership-management]").check({ force: true });
+        cy.get("[data-test=save-delegated-permissions]").click({ force: true });
+        cy.userLogout();
+
+        cy.log("Restricted user can manage members");
+        cy.restrictedRegularUserLogin();
+        cy.visit(`/project/${project_id}/admin/members`);
+        cy.contains("Members");
+        cy.should("not.contain", "Data");
+
+        cy.get("[data-test=project-admin-members-add-user-select] + .select2-container").click();
+        // ignore rule for select2
+        // eslint-disable-next-line cypress/require-data-selectors
+        cy.get(".select2-search__field").type("RestrictedMember{enter}");
+        // eslint-disable-next-line cypress/require-data-selectors
+        cy.get(".select2-result-user").click();
+        cy.get('[data-test="project-admin-submit-add-member"]').click();
+
+        cy.contains("RestrictedMember (RestrictedMember)")
+            .should("have.attr", "data-user-id")
+            .as("user_id")
+            .then((user_id) => {
+                cy.get(`[data-test=remove-user-${user_id}]`).click();
+                cy.get(`[data-test=remove-from-member]`).click();
+            });
+
+        cy.log("Use project admin to remove restricted");
+        cy.userLogout();
+        cy.projectAdministratorLogin();
+
+        cy.visitProjectAdministration("project-admin-test");
+        cy.contains("Groups").click();
+
+        cy.get("[data-test=custom-groups]").should("not.contain", "RestrictedMember");
+        cy.userLogout();
+
+        cy.log("Remove restricted user permission");
+        cy.projectAdministratorLogin();
+        cy.visitProjectAdministration("project-admin-test");
+        cy.contains("Groups").click();
+        cy.get("[data-test=custom-groups]").contains("Details").click();
+        cy.get("[data-test=membership-management]").uncheck({ force: true });
+        cy.get("[data-test=save-delegated-permissions]").click({ force: true });
+
+        cy.visit("/");
+
+        cy.log("Restricted user can no longer access to member section");
+        cy.userLogout();
+        cy.restrictedRegularUserLogin();
+        cy.visit(`/project/${project_id}/admin/members`, { failOnStatusCode: false });
+        cy.contains("You don't have permission to access administration of this project.");
     });
 });

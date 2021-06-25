@@ -29,6 +29,7 @@ declare global {
             projectAdministratorLogin(): void;
             secondProjectAdministratorLogin(): void;
             projectMemberLogin(): void;
+            permissionDelegationLogin(): void;
             platformAdminLogin(): void;
             restrictedMemberLogin(): void;
             restrictedRegularUserLogin(): void;
@@ -90,6 +91,12 @@ Cypress.Commands.add("restrictedMemberLogin", () => {
 Cypress.Commands.add("restrictedRegularUserLogin", () => {
     cy.visit("/");
     cy.get("[data-test=form_loginname]").type("RestrictedRegularUser");
+    cy.get("[data-test=form_pw]").type("Correct Horse Battery Staple{enter}");
+});
+
+Cypress.Commands.add("permissionDelegationLogin", () => {
+    cy.visit("/");
+    cy.get("[data-test=form_loginname]").type("PermissionDelegation");
     cy.get("[data-test=form_pw]").type("Correct Horse Battery Staple{enter}");
 });
 
