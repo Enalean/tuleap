@@ -107,7 +107,7 @@ final class SetupMysqlCommand extends Command
             $statement_loader = new StatementLoader($db);
             $statement_loader->loadFromFile(__DIR__ . '/../../db/mysql/database_structure.sql');
             $statement_loader->loadFromFile(__DIR__ . '/../../db/mysql/database_initvalues.sql');
-            $statement_loader->loadFromFile('/usr/share/forgeupgrade/db/install-mysql.sql');
+            $statement_loader->loadFromFile(__DIR__ . '/../../forgeupgrade/db/install-mysql.sql');
 
             $tuleap_version = trim(file_get_contents(__DIR__ . '/../../../VERSION'));
             $db->run('INSERT INTO tuleap_installed_version VALUES (?)', $tuleap_version);

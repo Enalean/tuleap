@@ -6760,13 +6760,15 @@
     <MissingClosureReturnType occurrences="1">
       <code>static function ($node1, $node2) {</code>
     </MissingClosureReturnType>
-    <MissingParamType occurrences="96">
+    <MissingParamType occurrences="103">
       <code>$author</code>
       <code>$author</code>
       <code>$author</code>
       <code>$author</code>
+      <code>$autoRetry</code>
       <code>$changeLog</code>
       <code>$changeLog</code>
+      <code>$command</code>
       <code>$createDate</code>
       <code>$createDate</code>
       <code>$createDate</code>
@@ -6794,6 +6796,8 @@
       <code>$fileType</code>
       <code>$fileType</code>
       <code>$filename</code>
+      <code>$force</code>
+      <code>$importMessageMetadata</code>
       <code>$item</code>
       <code>$itemId</code>
       <code>$itemId</code>
@@ -6830,6 +6834,9 @@
       <code>$parentId</code>
       <code>$path</code>
       <code>$path</code>
+      <code>$project</code>
+      <code>$projectId</code>
+      <code>$reorder</code>
       <code>$rootPath</code>
       <code>$s</code>
       <code>$status</code>
@@ -6933,9 +6940,6 @@
     <TypeDoesNotContainType occurrences="1">
       <code>$errorMsg != ''</code>
     </TypeDoesNotContainType>
-    <UndefinedClass occurrences="1">
-      <code>Logger</code>
-    </UndefinedClass>
     <UndefinedDocblockClass occurrences="1">
       <code>The</code>
     </UndefinedDocblockClass>
@@ -18587,12 +18591,10 @@
     <MissingParamType occurrences="1">
       <code>$uri</code>
     </MissingParamType>
-    <MissingReturnType occurrences="5">
+    <MissingReturnType occurrences="3">
       <code>getPathInfo</code>
       <code>getQueryString</code>
-      <code>setIsFriendly</code>
       <code>setIsSmartHTTP</code>
-      <code>setIsStandard</code>
     </MissingReturnType>
   </file>
   <file src="plugins/git/include/Git/UserAccountManager.class.php">
@@ -53268,6 +53270,855 @@
     <MissingParamType occurrences="1">
       <code>$given_access_value</code>
     </MissingParamType>
+  </file>
+  <file src="src/common/ForgeUpgrade/lib/log4php/Logger.php">
+    <DuplicateArrayKey occurrences="8">
+      <code>'LoggerBasicPatternConverter' =&gt; '/helpers/LoggerBasicPatternConverter.php'</code>
+      <code>'LoggerCategoryPatternConverter' =&gt; '/helpers/LoggerCategoryPatternConverter.php'</code>
+      <code>'LoggerClassNamePatternConverter' =&gt; '/helpers/LoggerClassNamePatternConverter.php'</code>
+      <code>'LoggerDatePatternConverter' =&gt; '/helpers/LoggerDatePatternConverter.php'</code>
+      <code>'LoggerLiteralPatternConverter' =&gt; '/helpers/LoggerLiteralPatternConverter.php'</code>
+      <code>'LoggerLocationPatternConverter' =&gt; '/helpers/LoggerLocationPatternConverter.php'</code>
+      <code>'LoggerMDCPatternConverter' =&gt; '/helpers/LoggerMDCPatternConverter.php'</code>
+      <code>'LoggerNamedPatternConverter' =&gt; '/helpers/LoggerNamedPatternConverter.php'</code>
+    </DuplicateArrayKey>
+    <InvalidNullableReturnType occurrences="1">
+      <code>LoggerLevel</code>
+    </InvalidNullableReturnType>
+    <MissingParamType occurrences="6">
+      <code>$caller</code>
+      <code>$className</code>
+      <code>$level</code>
+      <code>$level</code>
+      <code>$message</code>
+      <code>$name</code>
+    </MissingParamType>
+    <MissingPropertyType occurrences="5">
+      <code>$_classes</code>
+      <code>$configurationClass</code>
+      <code>$configurationFile</code>
+      <code>$hierarchy</code>
+      <code>$initialized</code>
+    </MissingPropertyType>
+    <MissingReturnType occurrences="21">
+      <code>addAppender</code>
+      <code>assertLog</code>
+      <code>autoload</code>
+      <code>callAppenders</code>
+      <code>configure</code>
+      <code>debug</code>
+      <code>error</code>
+      <code>fatal</code>
+      <code>forcedLog</code>
+      <code>info</code>
+      <code>isAttached</code>
+      <code>isInitialized</code>
+      <code>log</code>
+      <code>logLevel</code>
+      <code>removeAllAppenders</code>
+      <code>removeAppender</code>
+      <code>setAdditivity</code>
+      <code>setLevel</code>
+      <code>setParent</code>
+      <code>shutdown</code>
+      <code>warn</code>
+    </MissingReturnType>
+    <NullableReturnStatement occurrences="1">
+      <code>null</code>
+    </NullableReturnStatement>
+    <PossiblyNullPropertyAssignmentValue occurrences="2">
+      <code>null</code>
+      <code>null</code>
+    </PossiblyNullPropertyAssignmentValue>
+    <RedundantCastGivenDocblockType occurrences="1">
+      <code>(bool) $additive</code>
+    </RedundantCastGivenDocblockType>
+    <UndefinedDocblockClass occurrences="3">
+      <code>$instance</code>
+      <code>the</code>
+      <code>the</code>
+    </UndefinedDocblockClass>
+  </file>
+  <file src="src/common/ForgeUpgrade/lib/log4php/LoggerAppender.php">
+    <MissingReturnType occurrences="9">
+      <code>activateOptions</code>
+      <code>addFilter</code>
+      <code>append</code>
+      <code>clearFilters</code>
+      <code>close</code>
+      <code>doAppend</code>
+      <code>setLayout</code>
+      <code>setName</code>
+      <code>setThreshold</code>
+    </MissingReturnType>
+    <NullArgument occurrences="1">
+      <code>null</code>
+    </NullArgument>
+    <PossiblyNullPropertyAssignmentValue occurrences="4">
+      <code>null</code>
+      <code>null</code>
+      <code>null</code>
+      <code>null</code>
+    </PossiblyNullPropertyAssignmentValue>
+    <UndefinedClass occurrences="1">
+      <code>$f</code>
+    </UndefinedClass>
+    <UndefinedDocblockClass occurrences="1">
+      <code>$f</code>
+    </UndefinedDocblockClass>
+  </file>
+  <file src="src/common/ForgeUpgrade/lib/log4php/LoggerAppenderPool.php">
+    <InvalidReturnStatement occurrences="1">
+      <code>self::$appenderPool[$name]</code>
+    </InvalidReturnStatement>
+    <MissingPropertyType occurrences="1">
+      <code>$appenderPool</code>
+    </MissingPropertyType>
+    <NullableReturnStatement occurrences="2">
+      <code>null</code>
+      <code>null</code>
+    </NullableReturnStatement>
+    <UndefinedDocblockClass occurrences="1">
+      <code>$appender</code>
+    </UndefinedDocblockClass>
+  </file>
+  <file src="src/common/ForgeUpgrade/lib/log4php/LoggerConfigurator.php">
+    <MissingReturnType occurrences="1">
+      <code>configure</code>
+    </MissingReturnType>
+  </file>
+  <file src="src/common/ForgeUpgrade/lib/log4php/LoggerFilter.php">
+    <InvalidReturnStatement occurrences="1">
+      <code>$this-&gt;next</code>
+    </InvalidReturnStatement>
+    <InvalidReturnType occurrences="1">
+      <code>the</code>
+    </InvalidReturnType>
+    <MissingParamType occurrences="1">
+      <code>$filter</code>
+    </MissingParamType>
+    <MissingReturnType occurrences="2">
+      <code>activateOptions</code>
+      <code>addNext</code>
+    </MissingReturnType>
+    <UndefinedDocblockClass occurrences="1">
+      <code>the</code>
+    </UndefinedDocblockClass>
+  </file>
+  <file src="src/common/ForgeUpgrade/lib/log4php/LoggerHierarchy.php">
+    <MismatchingDocblockParamType occurrences="1">
+      <code>object</code>
+    </MismatchingDocblockParamType>
+    <MissingPropertyType occurrences="5">
+      <code>$defaultFactory</code>
+      <code>$ht</code>
+      <code>$rendererMap</code>
+      <code>$root</code>
+      <code>$threshold</code>
+    </MissingPropertyType>
+    <MissingReturnType occurrences="4">
+      <code>clear</code>
+      <code>resetConfiguration</code>
+      <code>setThreshold</code>
+      <code>shutdown</code>
+    </MissingReturnType>
+  </file>
+  <file src="src/common/ForgeUpgrade/lib/log4php/LoggerLayout.php">
+    <InvalidDocblock occurrences="1">
+      <code>public function format(LoggerLoggingEvent $event)</code>
+    </InvalidDocblock>
+    <InvalidNullableReturnType occurrences="2">
+      <code>string</code>
+      <code>string</code>
+    </InvalidNullableReturnType>
+    <MissingReturnType occurrences="2">
+      <code>activateOptions</code>
+      <code>format</code>
+    </MissingReturnType>
+    <NullableReturnStatement occurrences="2">
+      <code>null</code>
+      <code>null</code>
+    </NullableReturnStatement>
+  </file>
+  <file src="src/common/ForgeUpgrade/lib/log4php/LoggerLevel.php">
+    <InvalidDocblockParamName occurrences="1">
+      <code>$default</code>
+    </InvalidDocblockParamName>
+    <InvalidNullableReturnType occurrences="1">
+      <code>bool</code>
+    </InvalidNullableReturnType>
+    <MissingParamType occurrences="1">
+      <code>$defaultLevel</code>
+    </MissingParamType>
+    <MissingPropertyType occurrences="1">
+      <code>$levelMap</code>
+    </MissingPropertyType>
+    <MissingReturnType occurrences="1">
+      <code>toLevel</code>
+    </MissingReturnType>
+  </file>
+  <file src="src/common/ForgeUpgrade/lib/log4php/LoggerLocationInfo.php">
+    <InvalidDocblockParamName occurrences="1">
+      <code>$caller</code>
+    </InvalidDocblockParamName>
+    <MissingParamType occurrences="1">
+      <code>$fqcn</code>
+    </MissingParamType>
+    <MissingReturnType occurrences="5">
+      <code>getClassName</code>
+      <code>getFileName</code>
+      <code>getFullInfo</code>
+      <code>getLineNumber</code>
+      <code>getMethodName</code>
+    </MissingReturnType>
+    <PossiblyNullPropertyAssignmentValue occurrences="5">
+      <code>null</code>
+      <code>null</code>
+      <code>null</code>
+      <code>null</code>
+      <code>null</code>
+    </PossiblyNullPropertyAssignmentValue>
+  </file>
+  <file src="src/common/ForgeUpgrade/lib/log4php/LoggerLoggingEvent.php">
+    <InvalidReturnStatement occurrences="1">
+      <code>number_format(($eventTime - $eventStartTime) * 1000, 0, '', '')</code>
+    </InvalidReturnStatement>
+    <InvalidReturnType occurrences="2">
+      <code>string</code>
+      <code>the</code>
+    </InvalidReturnType>
+    <MissingParamType occurrences="1">
+      <code>$key</code>
+    </MissingParamType>
+    <MissingPropertyType occurrences="2">
+      <code>$categoryName</code>
+      <code>$startTime</code>
+    </MissingPropertyType>
+    <PossiblyNullPropertyAssignmentValue occurrences="3">
+      <code>null</code>
+      <code>null</code>
+      <code>null</code>
+    </PossiblyNullPropertyAssignmentValue>
+    <RedundantCastGivenDocblockType occurrences="2">
+      <code>(float) $this-&gt;getTimeStamp()</code>
+      <code>(float) self::getStartTime()</code>
+    </RedundantCastGivenDocblockType>
+    <UndefinedDocblockClass occurrences="1">
+      <code>the</code>
+    </UndefinedDocblockClass>
+  </file>
+  <file src="src/common/ForgeUpgrade/lib/log4php/LoggerMDC.php">
+    <InvalidReturnType occurrences="1">
+      <code>string</code>
+    </InvalidReturnType>
+    <MissingReturnType occurrences="1">
+      <code>put</code>
+    </MissingReturnType>
+  </file>
+  <file src="src/common/ForgeUpgrade/lib/log4php/LoggerNDC.php">
+    <MissingReturnType occurrences="4">
+      <code>clear</code>
+      <code>push</code>
+      <code>remove</code>
+      <code>setMaxDepth</code>
+    </MissingReturnType>
+    <RedundantCastGivenDocblockType occurrences="2">
+      <code>(int) $maxDepth</code>
+      <code>(string) $message</code>
+    </RedundantCastGivenDocblockType>
+  </file>
+  <file src="src/common/ForgeUpgrade/lib/log4php/LoggerReflectionUtils.php">
+    <InvalidDocblockParamName occurrences="1">
+      <code>$classname</code>
+    </InvalidDocblockParamName>
+    <InvalidStringClass occurrences="1">
+      <code>new $class()</code>
+    </InvalidStringClass>
+    <LessSpecificReturnStatement occurrences="1">
+      <code>new $class()</code>
+    </LessSpecificReturnStatement>
+    <MissingParamType occurrences="1">
+      <code>$class</code>
+    </MissingParamType>
+    <MissingPropertyType occurrences="1">
+      <code>$obj</code>
+    </MissingPropertyType>
+    <MissingReturnType occurrences="5">
+      <code>activate</code>
+      <code>setProperties</code>
+      <code>setPropertiesByObject</code>
+      <code>setProperty</code>
+      <code>setter</code>
+    </MissingReturnType>
+    <MoreSpecificReturnType occurrences="1">
+      <code>an</code>
+    </MoreSpecificReturnType>
+    <NullableReturnStatement occurrences="1">
+      <code>null</code>
+    </NullableReturnStatement>
+    <UndefinedDocblockClass occurrences="1">
+      <code>an</code>
+    </UndefinedDocblockClass>
+  </file>
+  <file src="src/common/ForgeUpgrade/lib/log4php/LoggerRoot.php">
+    <MissingReturnType occurrences="1">
+      <code>setLevel</code>
+    </MissingReturnType>
+    <ParamNameMismatch occurrences="1">
+      <code>$parent</code>
+    </ParamNameMismatch>
+    <PossiblyInvalidArgument occurrences="1">
+      <code>$level</code>
+    </PossiblyInvalidArgument>
+  </file>
+  <file src="src/common/ForgeUpgrade/lib/log4php/appenders/LoggerAppenderConsole.php">
+    <MissingReturnType occurrences="4">
+      <code>activateOptions</code>
+      <code>append</code>
+      <code>close</code>
+      <code>setTarget</code>
+    </MissingReturnType>
+    <RedundantCast occurrences="1">
+      <code>(bool) is_resource($this-&gt;fp)</code>
+    </RedundantCast>
+  </file>
+  <file src="src/common/ForgeUpgrade/lib/log4php/appenders/LoggerAppenderPDO.php">
+    <ImplicitToStringCast occurrences="2">
+      <code>$e</code>
+      <code>$e</code>
+    </ImplicitToStringCast>
+    <InvalidPropertyAssignmentValue occurrences="2">
+      <code>LoggerOptionConverter::toBoolean($flag, true)</code>
+      <code>true</code>
+    </InvalidPropertyAssignmentValue>
+    <MissingParamType occurrences="8">
+      <code>$dsn</code>
+      <code>$flag</code>
+      <code>$password</code>
+      <code>$pattern</code>
+      <code>$sql</code>
+      <code>$sql</code>
+      <code>$table</code>
+      <code>$user</code>
+    </MissingParamType>
+    <MissingReturnType occurrences="10">
+      <code>append</code>
+      <code>close</code>
+      <code>setCreateTable</code>
+      <code>setDSN</code>
+      <code>setInsertPattern</code>
+      <code>setInsertSql</code>
+      <code>setPassword</code>
+      <code>setSql</code>
+      <code>setTable</code>
+      <code>setUser</code>
+    </MissingReturnType>
+    <PossiblyNullPropertyAssignmentValue occurrences="1">
+      <code>null</code>
+    </PossiblyNullPropertyAssignmentValue>
+    <UndefinedDocblockClass occurrences="1">
+      <code>a</code>
+    </UndefinedDocblockClass>
+    <UndefinedMethod occurrences="1">
+      <code>formatToArray</code>
+    </UndefinedMethod>
+  </file>
+  <file src="src/common/ForgeUpgrade/lib/log4php/configurators/LoggerConfiguratorBasic.php">
+    <MissingReturnType occurrences="1">
+      <code>configure</code>
+    </MissingReturnType>
+  </file>
+  <file src="src/common/ForgeUpgrade/lib/log4php/configurators/LoggerConfiguratorPhp.php">
+    <InvalidArgument occurrences="1">
+      <code>$layout</code>
+    </InvalidArgument>
+    <MissingParamType occurrences="1">
+      <code>$url</code>
+    </MissingParamType>
+    <MissingReturnType occurrences="2">
+      <code>configure</code>
+      <code>doConfigure</code>
+    </MissingReturnType>
+  </file>
+  <file src="src/common/ForgeUpgrade/lib/log4php/filters/LoggerFilterLevelMatch.php">
+    <InvalidScalarArgument occurrences="1">
+      <code>$acceptOnMatch</code>
+    </InvalidScalarArgument>
+    <MissingReturnType occurrences="2">
+      <code>setAcceptOnMatch</code>
+      <code>setLevelToMatch</code>
+    </MissingReturnType>
+    <NullArgument occurrences="1">
+      <code>null</code>
+    </NullArgument>
+  </file>
+  <file src="src/common/ForgeUpgrade/lib/log4php/filters/LoggerFilterLevelRange.php">
+    <InvalidScalarArgument occurrences="1">
+      <code>$acceptOnMatch</code>
+    </InvalidScalarArgument>
+    <MissingReturnType occurrences="3">
+      <code>setAcceptOnMatch</code>
+      <code>setLevelMax</code>
+      <code>setLevelMin</code>
+    </MissingReturnType>
+    <NullArgument occurrences="2">
+      <code>null</code>
+      <code>null</code>
+    </NullArgument>
+  </file>
+  <file src="src/common/ForgeUpgrade/lib/log4php/filters/LoggerFilterStringMatch.php">
+    <MissingReturnType occurrences="2">
+      <code>setAcceptOnMatch</code>
+      <code>setStringToMatch</code>
+    </MissingReturnType>
+    <PossiblyNullPropertyAssignmentValue occurrences="1">
+      <code>null</code>
+    </PossiblyNullPropertyAssignmentValue>
+    <RedundantCast occurrences="1">
+      <code>(bool) (strtolower($acceptOnMatch) == 'true')</code>
+    </RedundantCast>
+  </file>
+  <file src="src/common/ForgeUpgrade/lib/log4php/helpers/LoggerBasicPatternConverter.php">
+    <InvalidArgument occurrences="1">
+      <code>$formattingInfo</code>
+    </InvalidArgument>
+  </file>
+  <file src="src/common/ForgeUpgrade/lib/log4php/helpers/LoggerClassNamePatternConverter.php">
+    <InaccessibleProperty occurrences="1">
+      <code>$event-&gt;fqcn</code>
+    </InaccessibleProperty>
+  </file>
+  <file src="src/common/ForgeUpgrade/lib/log4php/helpers/LoggerDatePatternConverter.php">
+    <InvalidArgument occurrences="1">
+      <code>$formattingInfo</code>
+    </InvalidArgument>
+    <InvalidScalarArgument occurrences="1">
+      <code>$event-&gt;getTimeStamp()</code>
+    </InvalidScalarArgument>
+  </file>
+  <file src="src/common/ForgeUpgrade/lib/log4php/helpers/LoggerFormattingInfo.php">
+    <MissingPropertyType occurrences="3">
+      <code>$leftAlign</code>
+      <code>$max</code>
+      <code>$min</code>
+    </MissingPropertyType>
+    <MissingReturnType occurrences="2">
+      <code>dump</code>
+      <code>reset</code>
+    </MissingReturnType>
+  </file>
+  <file src="src/common/ForgeUpgrade/lib/log4php/helpers/LoggerLiteralPatternConverter.php">
+    <MissingReturnType occurrences="1">
+      <code>format</code>
+    </MissingReturnType>
+    <ParamNameMismatch occurrences="1">
+      <code>$event</code>
+    </ParamNameMismatch>
+  </file>
+  <file src="src/common/ForgeUpgrade/lib/log4php/helpers/LoggerLocationPatternConverter.php">
+    <InvalidArgument occurrences="1">
+      <code>$formattingInfo</code>
+    </InvalidArgument>
+  </file>
+  <file src="src/common/ForgeUpgrade/lib/log4php/helpers/LoggerMDCPatternConverter.php">
+    <InvalidArgument occurrences="1">
+      <code>$formattingInfo</code>
+    </InvalidArgument>
+  </file>
+  <file src="src/common/ForgeUpgrade/lib/log4php/helpers/LoggerNamedPatternConverter.php">
+    <InvalidArgument occurrences="1">
+      <code>$formattingInfo</code>
+    </InvalidArgument>
+    <InvalidReturnType occurrences="1">
+      <code>string</code>
+    </InvalidReturnType>
+  </file>
+  <file src="src/common/ForgeUpgrade/lib/log4php/helpers/LoggerOptionConverter.php">
+    <InvalidNullableReturnType occurrences="1">
+      <code>string</code>
+    </InvalidNullableReturnType>
+    <InvalidScalarArgument occurrences="1">
+      <code>1</code>
+    </InvalidScalarArgument>
+    <NullArgument occurrences="1">
+      <code>null</code>
+    </NullArgument>
+    <NullableReturnStatement occurrences="2">
+      <code>null</code>
+      <code>null</code>
+    </NullableReturnStatement>
+    <UndefinedConstant occurrences="1">
+      <code>self::START_LEN</code>
+    </UndefinedConstant>
+  </file>
+  <file src="src/common/ForgeUpgrade/lib/log4php/helpers/LoggerPatternConverter.php">
+    <MissingPropertyType occurrences="6">
+      <code>$fi-&gt;leftAlign</code>
+      <code>$fi-&gt;max</code>
+      <code>$fi-&gt;min</code>
+      <code>$leftAlign</code>
+      <code>$max</code>
+      <code>$min</code>
+    </MissingPropertyType>
+    <MissingReturnType occurrences="3">
+      <code>convert</code>
+      <code>format</code>
+      <code>spacePad</code>
+    </MissingReturnType>
+    <ParadoxicalCondition occurrences="1">
+      <code>empty($s)</code>
+    </ParadoxicalCondition>
+    <PossiblyNullPropertyAssignmentValue occurrences="1">
+      <code>null</code>
+    </PossiblyNullPropertyAssignmentValue>
+  </file>
+  <file src="src/common/ForgeUpgrade/lib/log4php/helpers/LoggerPatternParser.php">
+    <InvalidArgument occurrences="13">
+      <code>$this-&gt;formattingInfo</code>
+      <code>$this-&gt;formattingInfo</code>
+      <code>$this-&gt;formattingInfo</code>
+      <code>$this-&gt;formattingInfo</code>
+      <code>$this-&gt;formattingInfo</code>
+      <code>$this-&gt;formattingInfo</code>
+      <code>$this-&gt;formattingInfo</code>
+      <code>$this-&gt;formattingInfo</code>
+      <code>$this-&gt;formattingInfo</code>
+      <code>$this-&gt;formattingInfo</code>
+      <code>$this-&gt;formattingInfo</code>
+      <code>$this-&gt;formattingInfo</code>
+      <code>$this-&gt;formattingInfo</code>
+    </InvalidArgument>
+    <InvalidNullableReturnType occurrences="1">
+      <code>string</code>
+    </InvalidNullableReturnType>
+    <MissingParamType occurrences="2">
+      <code>$c</code>
+      <code>$pc</code>
+    </MissingParamType>
+    <MissingPropertyType occurrences="6">
+      <code>$currentLiteral</code>
+      <code>$i</code>
+      <code>$patternLength</code>
+      <code>$state</code>
+      <code>$this-&gt;formattingInfo-&gt;max</code>
+      <code>$this-&gt;formattingInfo-&gt;min</code>
+    </MissingPropertyType>
+    <MissingReturnType occurrences="4">
+      <code>addConverter</code>
+      <code>addToList</code>
+      <code>extractPrecisionOption</code>
+      <code>finalizeConverter</code>
+    </MissingReturnType>
+    <NullableReturnStatement occurrences="1">
+      <code>null</code>
+    </NullableReturnStatement>
+    <PossiblyNullPropertyAssignmentValue occurrences="2">
+      <code>null</code>
+      <code>null</code>
+    </PossiblyNullPropertyAssignmentValue>
+    <UndefinedClass occurrences="1">
+      <code>LoggerUserFieldPatternConverter</code>
+    </UndefinedClass>
+  </file>
+  <file src="src/common/ForgeUpgrade/lib/log4php/layouts/LoggerLayoutHtml.php">
+    <InvalidOperand occurrences="1">
+      <code>$event-&gt;getTime()</code>
+    </InvalidOperand>
+    <MissingParamType occurrences="2">
+      <code>$flag</code>
+      <code>$title</code>
+    </MissingParamType>
+    <MissingReturnType occurrences="3">
+      <code>getLocationInfo</code>
+      <code>setLocationInfo</code>
+      <code>setTitle</code>
+    </MissingReturnType>
+    <RedundantCast occurrences="1">
+      <code>(bool) (strtolower($flag) == 'true')</code>
+    </RedundantCast>
+  </file>
+  <file src="src/common/ForgeUpgrade/lib/log4php/layouts/LoggerLayoutPattern.php">
+    <InvalidDocblock occurrences="1">
+      <code>public function formatToArray(LoggerLoggingEvent $event)</code>
+    </InvalidDocblock>
+    <MissingParamType occurrences="2">
+      <code>$conversionPattern</code>
+      <code>$pattern</code>
+    </MissingParamType>
+    <MissingPropertyType occurrences="1">
+      <code>$timezone</code>
+    </MissingPropertyType>
+    <MissingReturnType occurrences="2">
+      <code>formatToArray</code>
+      <code>setConversionPattern</code>
+    </MissingReturnType>
+    <NullArgument occurrences="1">
+      <code>$sbuf</code>
+    </NullArgument>
+  </file>
+  <file src="src/common/ForgeUpgrade/lib/log4php/layouts/LoggerLayoutTTCC.php">
+    <MissingParamType occurrences="6">
+      <code>$categoryPrefixing</code>
+      <code>$contextPrinting</code>
+      <code>$dateFormat</code>
+      <code>$dateFormat</code>
+      <code>$microSecondsPrinting</code>
+      <code>$threadPrinting</code>
+    </MissingParamType>
+    <MissingPropertyType occurrences="4">
+      <code>$categoryPrefixing</code>
+      <code>$contextPrinting</code>
+      <code>$microSecondsPrinting</code>
+      <code>$threadPrinting</code>
+    </MissingPropertyType>
+    <MissingReturnType occurrences="6">
+      <code>ignoresThrowable</code>
+      <code>setCategoryPrefixing</code>
+      <code>setContextPrinting</code>
+      <code>setDateFormat</code>
+      <code>setMicroSecondsPrinting</code>
+      <code>setThreadPrinting</code>
+    </MissingReturnType>
+    <RedundantCast occurrences="2">
+      <code>(bool) (strtolower($microSecondsPrinting) == 'true')</code>
+      <code>(bool) (strtolower($threadPrinting) == 'true')</code>
+    </RedundantCast>
+    <RedundantCastGivenDocblockType occurrences="1">
+      <code>(float) $event-&gt;getTimeStamp()</code>
+    </RedundantCastGivenDocblockType>
+  </file>
+  <file src="src/common/ForgeUpgrade/lib/log4php/renderers/LoggerRendererMap.php">
+    <InvalidArgument occurrences="1">
+      <code>$renderer</code>
+    </InvalidArgument>
+    <InvalidMethodCall occurrences="1">
+      <code>render</code>
+    </InvalidMethodCall>
+    <InvalidPropertyAssignmentValue occurrences="1">
+      <code>new LoggerRendererDefault()</code>
+    </InvalidPropertyAssignmentValue>
+    <InvalidReturnStatement occurrences="2">
+      <code>$this-&gt;defaultRenderer</code>
+      <code>($o == null) ? null : $this-&gt;getByClassName(get_class($o))</code>
+    </InvalidReturnStatement>
+    <InvalidReturnType occurrences="1">
+      <code>string</code>
+    </InvalidReturnType>
+    <MissingReturnType occurrences="3">
+      <code>addRenderer</code>
+      <code>clear</code>
+      <code>put</code>
+    </MissingReturnType>
+    <NullableReturnStatement occurrences="3">
+      <code>($o == null) ? null : $this-&gt;getByClassName(get_class($o))</code>
+      <code>null</code>
+      <code>null</code>
+    </NullableReturnStatement>
+    <UndefinedDocblockClass occurrences="2">
+      <code>$renderer</code>
+      <code>LoggerDefaultRenderer</code>
+    </UndefinedDocblockClass>
+  </file>
+  <file src="src/common/ForgeUpgrade/src/BucketFilter.php">
+    <InvalidOperand occurrences="2">
+      <code>! (strpos($filePath, $path) !== false)</code>
+      <code>strpos($filePath, $path) !== false</code>
+    </InvalidOperand>
+    <InvalidReturnStatement occurrences="1">
+      <code>$match</code>
+    </InvalidReturnStatement>
+    <InvalidReturnType occurrences="1">
+      <code>bool</code>
+    </InvalidReturnType>
+    <MissingParamType occurrences="4">
+      <code>$path</code>
+      <code>$path</code>
+      <code>$paths</code>
+      <code>$paths</code>
+    </MissingParamType>
+    <MissingPropertyType occurrences="2">
+      <code>$excludePaths</code>
+      <code>$includePaths</code>
+    </MissingPropertyType>
+    <MissingReturnType occurrences="4">
+      <code>addExclude</code>
+      <code>addInclude</code>
+      <code>setExcludePaths</code>
+      <code>setIncludePaths</code>
+    </MissingReturnType>
+    <PossiblyInvalidOperand occurrences="3">
+      <code>$match</code>
+      <code>$match</code>
+      <code>$match</code>
+    </PossiblyInvalidOperand>
+  </file>
+  <file src="src/common/ForgeUpgrade/src/ForgeUpgrade.php">
+    <ArgumentTypeCoercion occurrences="1">
+      <code>$bucket</code>
+    </ArgumentTypeCoercion>
+    <InvalidDocblockParamName occurrences="1">
+      <code>$scriptPath</code>
+    </InvalidDocblockParamName>
+    <InvalidPropertyAssignmentValue occurrences="1">
+      <code>new ForgeUpgrade_Db($dbDriver-&gt;getPdo())</code>
+    </InvalidPropertyAssignmentValue>
+    <InvalidStaticInvocation occurrences="1">
+      <code>LoggerAppenderConsoleColor::chooseColor($level, $message)</code>
+    </InvalidStaticInvocation>
+    <LessSpecificReturnStatement occurrences="1">
+      <code>$bucket</code>
+    </LessSpecificReturnStatement>
+    <MissingParamType occurrences="8">
+      <code>$buckets</code>
+      <code>$buckets</code>
+      <code>$buckets</code>
+      <code>$buckets</code>
+      <code>$buckets</code>
+      <code>$buckets</code>
+      <code>$func</code>
+      <code>$info</code>
+    </MissingParamType>
+    <MissingReturnType occurrences="13">
+      <code>displayAlreadyAppliedForAllBuckets</code>
+      <code>displayAlreadyAppliedPerBucket</code>
+      <code>displayColoriedStatus</code>
+      <code>doAlreadyApplied</code>
+      <code>doCheckUpdate</code>
+      <code>doRecordOnly</code>
+      <code>doUpdate</code>
+      <code>findAllBucketsInPath</code>
+      <code>getBucketsToProceed</code>
+      <code>run</code>
+      <code>runPreUp</code>
+      <code>runUpBucket</code>
+      <code>setLogger</code>
+    </MissingReturnType>
+    <MoreSpecificReturnType occurrences="1">
+      <code>ForgeUpgrade_Bucket</code>
+    </MoreSpecificReturnType>
+    <NullableReturnStatement occurrences="1">
+      <code>$bucket</code>
+    </NullableReturnStatement>
+    <PossiblyNullPropertyAssignmentValue occurrences="1">
+      <code>null</code>
+    </PossiblyNullPropertyAssignmentValue>
+    <PossiblyUndefinedVariable occurrences="2">
+      <code>$bucket</code>
+      <code>$color</code>
+    </PossiblyUndefinedVariable>
+    <UndefinedDocblockClass occurrences="12">
+      <code>$this-&gt;db</code>
+      <code>$this-&gt;db</code>
+      <code>$this-&gt;db</code>
+      <code>$this-&gt;db</code>
+      <code>$this-&gt;db</code>
+      <code>$this-&gt;db</code>
+      <code>$this-&gt;db</code>
+      <code>$this-&gt;db</code>
+      <code>$this-&gt;db</code>
+      <code>$this-&gt;db</code>
+      <code>$this-&gt;db</code>
+      <code>ForgeUpgradeDb</code>
+    </UndefinedDocblockClass>
+    <UndefinedThisPropertyAssignment occurrences="1">
+      <code>$this-&gt;options</code>
+    </UndefinedThisPropertyAssignment>
+    <UndefinedThisPropertyFetch occurrences="6">
+      <code>$this-&gt;options</code>
+      <code>$this-&gt;options</code>
+      <code>$this-&gt;options</code>
+      <code>$this-&gt;options</code>
+      <code>$this-&gt;options</code>
+      <code>$this-&gt;options</code>
+    </UndefinedThisPropertyFetch>
+  </file>
+  <file src="src/common/ForgeUpgrade/src/LoggerAppenderConsoleColor.php">
+    <MissingReturnType occurrences="1">
+      <code>append</code>
+    </MissingReturnType>
+  </file>
+  <file src="src/common/ForgeUpgrade/src/bucket/Bucket.php">
+    <InvalidReturnType occurrences="1">
+      <code>Array</code>
+    </InvalidReturnType>
+    <MissingParamType occurrences="5">
+      <code>$api</code>
+      <code>$id</code>
+      <code>$key</code>
+      <code>$mode</code>
+      <code>$path</code>
+    </MissingParamType>
+    <MissingPropertyType occurrences="4">
+      <code>$api</code>
+      <code>$dryRun</code>
+      <code>$log</code>
+      <code>$path</code>
+    </MissingPropertyType>
+    <MissingReturnType occurrences="13">
+      <code>getApi</code>
+      <code>getDryRun</code>
+      <code>getId</code>
+      <code>getPath</code>
+      <code>postUp</code>
+      <code>preUp</code>
+      <code>setAllApi</code>
+      <code>setApi</code>
+      <code>setDryRun</code>
+      <code>setId</code>
+      <code>setLoggerParent</code>
+      <code>setPath</code>
+      <code>up</code>
+    </MissingReturnType>
+    <UndefinedMethod occurrences="1">
+      <code>dryRun</code>
+    </UndefinedMethod>
+    <UndefinedThisPropertyAssignment occurrences="1">
+      <code>$this-&gt;id</code>
+    </UndefinedThisPropertyAssignment>
+    <UndefinedThisPropertyFetch occurrences="1">
+      <code>$this-&gt;id</code>
+    </UndefinedThisPropertyFetch>
+  </file>
+  <file src="src/common/ForgeUpgrade/src/bucket/db/Db.php">
+    <MissingPropertyType occurrences="2">
+      <code>$dbh</code>
+      <code>$log</code>
+    </MissingPropertyType>
+    <MissingReturnType occurrences="6">
+      <code>addIndex</code>
+      <code>addPrimaryKey</code>
+      <code>alterTable</code>
+      <code>createTable</code>
+      <code>dropTable</code>
+      <code>setLoggerParent</code>
+    </MissingReturnType>
+  </file>
+  <file src="src/common/ForgeUpgrade/src/db/Db.php">
+    <MissingParamType occurrences="3">
+      <code>$status</code>
+      <code>$status</code>
+      <code>$status</code>
+    </MissingParamType>
+    <MissingReturnType occurrences="6">
+      <code>getAllBuckets</code>
+      <code>getBucketsDetailedLogs</code>
+      <code>getBucketsSummarizedLogs</code>
+      <code>logEnd</code>
+      <code>logStart</code>
+      <code>statusLabel</code>
+    </MissingReturnType>
+    <UndefinedThisPropertyAssignment occurrences="2">
+      <code>$this-&gt;t</code>
+      <code>$this-&gt;t</code>
+    </UndefinedThisPropertyAssignment>
+    <UndefinedThisPropertyFetch occurrences="6">
+      <code>$this-&gt;t</code>
+      <code>$this-&gt;t</code>
+      <code>$this-&gt;t</code>
+      <code>$this-&gt;t</code>
+      <code>$this-&gt;t</code>
+      <code>$this-&gt;t</code>
+    </UndefinedThisPropertyFetch>
   </file>
   <file src="src/common/Forum/MessageRetriever.php">
     <DeprecatedFunction occurrences="17">
