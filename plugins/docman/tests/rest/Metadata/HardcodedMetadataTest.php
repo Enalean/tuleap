@@ -25,7 +25,6 @@ namespace Tuleap\Docman\Test\rest\DocmanMandatoryMetadata;
 require_once __DIR__ . '/../../../vendor/autoload.php';
 
 use DateTimeZone;
-use Guzzle\Http\Client;
 use REST_TestDataBuilder;
 use Tuleap\Docman\Test\rest\DocmanDataBuilder;
 use Tuleap\Docman\Test\rest\Helper\DocmanHardcodedMetadataExecutionHelper;
@@ -82,12 +81,12 @@ class HardcodedMetadataTest extends DocmanHardcodedMetadataExecutionHelper
 
         $response = $this->getResponseByName(
             DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
-            $this->client->post('docman_folders/' . $folder_HM['id'] . "/folders", $headers, $query)
+            $this->request_factory->createRequest('POST', 'docman_folders/' . $folder_HM['id'] . "/folders")->withBody($this->stream_factory->createStream($query))
         );
 
         $this->assertEquals(201, $response->getStatusCode());
 
-        return $response->json()['id'];
+        return json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR)['id'];
     }
 
     /**
@@ -108,7 +107,7 @@ class HardcodedMetadataTest extends DocmanHardcodedMetadataExecutionHelper
         );
 
         $response = $this->getResponse(
-            $this->client->post('docman_folders/' . $folder_HM['id'] . "/folders", $headers, $query),
+            $this->request_factory->createRequest('POST', 'docman_folders/' . $folder_HM['id'] . "/folders")->withBody($this->stream_factory->createStream($query)),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
 
@@ -134,12 +133,12 @@ class HardcodedMetadataTest extends DocmanHardcodedMetadataExecutionHelper
 
         $response = $this->getResponseByName(
             DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
-            $this->client->post('docman_folders/' . $folder_HM['id'] . "/empties", $headers, $query)
+            $this->request_factory->createRequest('POST', 'docman_folders/' . $folder_HM['id'] . "/empties")->withBody($this->stream_factory->createStream($query))
         );
 
         $this->assertEquals(201, $response->getStatusCode());
 
-        return $response->json()['id'];
+        return json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR)['id'];
     }
 
     /**
@@ -160,7 +159,7 @@ class HardcodedMetadataTest extends DocmanHardcodedMetadataExecutionHelper
         );
 
         $response = $this->getResponse(
-            $this->client->post('docman_folders/' . $folder_HM['id'] . "/empties", $headers, $query),
+            $this->request_factory->createRequest('POST', 'docman_folders/' . $folder_HM['id'] . "/empties")->withBody($this->stream_factory->createStream($query)),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
 
@@ -188,12 +187,12 @@ class HardcodedMetadataTest extends DocmanHardcodedMetadataExecutionHelper
 
         $response = $this->getResponseByName(
             DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
-            $this->client->post('docman_folders/' . $folder_HM['id'] . "/embedded_files", $headers, $query)
+            $this->request_factory->createRequest('POST', 'docman_folders/' . $folder_HM['id'] . "/embedded_files")->withBody($this->stream_factory->createStream($query))
         );
 
         $this->assertEquals(201, $response->getStatusCode());
 
-        return $response->json()['id'];
+        return json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR)['id'];
     }
 
     /**
@@ -216,7 +215,7 @@ class HardcodedMetadataTest extends DocmanHardcodedMetadataExecutionHelper
         );
 
         $response = $this->getResponse(
-            $this->client->post('docman_folders/' . $folder_HM['id'] . "/embedded_files", $headers, $query),
+            $this->request_factory->createRequest('POST', 'docman_folders/' . $folder_HM['id'] . "/embedded_files")->withBody($this->stream_factory->createStream($query)),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
 
@@ -242,12 +241,12 @@ class HardcodedMetadataTest extends DocmanHardcodedMetadataExecutionHelper
 
         $response = $this->getResponseByName(
             DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
-            $this->client->post('docman_folders/' . $root_id . "/links", $headers, $query)
+            $this->request_factory->createRequest('POST', 'docman_folders/' . $root_id . "/links")->withBody($this->stream_factory->createStream($query))
         );
 
         $this->assertEquals(201, $response->getStatusCode());
 
-        return $response->json()['id'];
+        return json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR)['id'];
     }
 
     /**
@@ -268,7 +267,7 @@ class HardcodedMetadataTest extends DocmanHardcodedMetadataExecutionHelper
         );
 
         $response = $this->getResponse(
-            $this->client->post('docman_folders/' . $root_id . "/links", $headers, $query),
+            $this->request_factory->createRequest('POST', 'docman_folders/' . $root_id . "/links")->withBody($this->stream_factory->createStream($query)),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
 
@@ -294,12 +293,12 @@ class HardcodedMetadataTest extends DocmanHardcodedMetadataExecutionHelper
 
         $response = $this->getResponseByName(
             DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
-            $this->client->post('docman_folders/' . $root_id . "/wikis", $headers, $query)
+            $this->request_factory->createRequest('POST', 'docman_folders/' . $root_id . "/wikis")->withBody($this->stream_factory->createStream($query))
         );
 
         $this->assertEquals(201, $response->getStatusCode());
 
-        return $response->json()['id'];
+        return json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR)['id'];
     }
 
     /**
@@ -320,7 +319,7 @@ class HardcodedMetadataTest extends DocmanHardcodedMetadataExecutionHelper
         );
 
         $response = $this->getResponse(
-            $this->client->post('docman_folders/' . $root_id . "/wikis", $headers, $query),
+            $this->request_factory->createRequest('POST', 'docman_folders/' . $root_id . "/wikis")->withBody($this->stream_factory->createStream($query)),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
 
@@ -351,58 +350,50 @@ class HardcodedMetadataTest extends DocmanHardcodedMetadataExecutionHelper
 
         $response1 = $this->getResponseByName(
             DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
-            $this->client->post('docman_folders/' . $root_id . '/files', null, $query)
+            $this->request_factory->createRequest('POST', 'docman_folders/' . $root_id . '/files')->withBody($this->stream_factory->createStream($query))
         );
         $this->assertEquals(201, $response1->getStatusCode());
-        $this->assertNotEmpty($response1->json()['file_properties']['upload_href']);
+        $response1_json = json_decode($response1->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
+        $this->assertNotEmpty($response1_json['file_properties']['upload_href']);
 
         $response2 = $this->getResponseByName(
             DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
-            $this->client->post('docman_folders/' . $root_id . '/files', null, $query)
+            $this->request_factory->createRequest('POST', 'docman_folders/' . $root_id . '/files')->withBody($this->stream_factory->createStream($query))
         );
         $this->assertEquals(201, $response1->getStatusCode());
         $this->assertSame(
-            $response1->json()['file_properties']['upload_href'],
-            $response2->json()['file_properties']['upload_href']
+            $response1_json['file_properties']['upload_href'],
+            json_decode($response2->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR)['file_properties']['upload_href']
         );
 
-        $general_use_http_client = new Client(
-            str_replace('/api/v1', '', $this->client->getBaseUrl()),
-            $this->client->getConfig()
-        );
-        $general_use_http_client->setCurlMulti($this->client->getCurlMulti());
-        $general_use_http_client->setSslVerification(false, false, false);
         $file_content        = str_repeat('A', $file_size);
         $tus_response_upload = $this->getResponseByName(
             DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
-            $general_use_http_client->patch(
-                $response1->json()['file_properties']['upload_href'],
-                [
-                    'Tus-Resumable' => '1.0.0',
-                    'Content-Type'  => 'application/offset+octet-stream',
-                    'Upload-Offset' => '0'
-                ],
-                $file_content
-            )
+            $this->request_factory->createRequest('PATCH', $response1_json['file_properties']['upload_href'])
+                ->withHeader('Tus-Resumable', '1.0.0')
+                ->withHeader('Content-Type', 'application/offset+octet-stream')
+                ->withHeader('Upload-Offset', '0')
+                ->withBody($this->stream_factory->createStream($file_content))
         );
         $this->assertEquals(204, $tus_response_upload->getStatusCode());
-        $this->assertEquals([$file_size], $tus_response_upload->getHeader('Upload-Offset')->toArray());
+        $this->assertEquals([$file_size], $tus_response_upload->getHeader('Upload-Offset'));
 
         $file_item_response = $this->getResponseByName(
             DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
-            $this->client->get($response1->json()['uri'])
+            $this->request_factory->createRequest('GET', $response1_json['uri'])
         );
         $this->assertEquals(200, $file_item_response->getStatusCode());
-        $this->assertEquals('file', $file_item_response->json()['type']);
+        $file_item_response_json = json_decode($file_item_response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
+        $this->assertEquals('file', $file_item_response_json['type']);
 
         $file_content_response = $this->getResponseByName(
             DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
-            $general_use_http_client->get($file_item_response->json()['file_properties']['download_href'])
+            $this->request_factory->createRequest('GET', $file_item_response_json['file_properties']['download_href'])
         );
         $this->assertEquals(200, $file_content_response->getStatusCode());
         $this->assertEquals($file_content, $file_content_response->getBody());
 
-        return $file_item_response->json()['id'];
+        return $file_item_response_json['id'];
     }
 
     /**
@@ -423,11 +414,11 @@ class HardcodedMetadataTest extends DocmanHardcodedMetadataExecutionHelper
 
         $response = $this->getResponseByName(
             DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
-            $this->client->post('docman_folders/' . $root_id . "/files", $headers, $query)
+            $this->request_factory->createRequest('POST', 'docman_folders/' . $root_id . "/files")->withBody($this->stream_factory->createStream($query))
         );
 
         $this->assertEquals(400, $response->getStatusCode());
-        $this->assertStringContainsString("YYYY-MM-DD", $response->json()["error"]['i18n_error_message']);
+        $this->assertStringContainsString("YYYY-MM-DD", json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR)["error"]['i18n_error_message']);
     }
 
     /**
@@ -447,7 +438,7 @@ class HardcodedMetadataTest extends DocmanHardcodedMetadataExecutionHelper
         );
 
         $response = $this->getResponse(
-            $this->client->post('docman_folders/' . $root_id . "/files", $headers, $query),
+            $this->request_factory->createRequest('POST', 'docman_folders/' . $root_id . "/files")->withBody($this->stream_factory->createStream($query)),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
 
@@ -489,19 +480,19 @@ class HardcodedMetadataTest extends DocmanHardcodedMetadataExecutionHelper
 
         $updated_metadata_file_response = $this->getResponseByName(
             DocmanDataBuilder::ADMIN_USER_NAME,
-            $this->client->put('docman_files/' . $file_to_update_id . '/metadata', $headers, $put_resource)
+            $this->request_factory->createRequest('PUT', 'docman_files/' . $file_to_update_id . '/metadata')->withBody($this->stream_factory->createStream(json_encode($put_resource)))
         );
 
         $this->assertEquals(200, $updated_metadata_file_response->getStatusCode());
 
         $new_version_response = $this->getResponseByName(
             DocmanDataBuilder::ADMIN_USER_NAME,
-            $this->client->get('docman_items/' . $file_to_update_id)
+            $this->request_factory->createRequest('GET', 'docman_items/' . $file_to_update_id)
         );
 
         $this->assertEquals($new_version_response->getStatusCode(), 200);
 
-        $new_version = $new_version_response->json();
+        $new_version = json_decode($new_version_response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         $date_after_update           = \DateTimeImmutable::createFromFormat(
             \DateTime::ATOM,
@@ -538,13 +529,13 @@ class HardcodedMetadataTest extends DocmanHardcodedMetadataExecutionHelper
 
         $updated_metadata_file_response = $this->getResponseByName(
             DocmanDataBuilder::ADMIN_USER_NAME,
-            $this->client->put('docman_files/' . $file_to_update_id . '/metadata', $headers, $put_resource)
+            $this->request_factory->createRequest('PUT', 'docman_files/' . $file_to_update_id . '/metadata')->withBody($this->stream_factory->createStream(json_encode($put_resource)))
         );
 
         $this->assertEquals(400, $updated_metadata_file_response->getStatusCode());
         $this->assertStringContainsString(
             'format is incorrect',
-            $updated_metadata_file_response->json()['error']['i18n_error_message']
+            json_decode($updated_metadata_file_response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR)['error']['i18n_error_message']
         );
     }
 
@@ -576,7 +567,7 @@ class HardcodedMetadataTest extends DocmanHardcodedMetadataExecutionHelper
         ];
 
         $updated_metadata_file_response = $this->getResponse(
-            $this->client->put('docman_files/' . $file_to_update_id . '/metadata', $headers, $put_resource),
+            $this->request_factory->createRequest('PUT', 'docman_files/' . $file_to_update_id . '/metadata')->withBody($this->stream_factory->createStream(json_encode($put_resource))),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
 
@@ -598,17 +589,17 @@ class HardcodedMetadataTest extends DocmanHardcodedMetadataExecutionHelper
 
         $updated_metadata_file_response = $this->getResponseByName(
             DocmanDataBuilder::ADMIN_USER_NAME,
-            $this->client->put('docman_folders/' . $folder_to_update_id . '/metadata', null, $put_resource)
+            $this->request_factory->createRequest('PUT', 'docman_folders/' . $folder_to_update_id . '/metadata')->withBody($this->stream_factory->createStream(json_encode($put_resource)))
         );
 
         $this->assertEquals(200, $updated_metadata_file_response->getStatusCode());
 
         $response = $this->getResponse(
-            $this->client->get('docman_items/' . $folder_to_update_id . '/docman_items'),
+            $this->request_factory->createRequest('GET', 'docman_items/' . $folder_to_update_id . '/docman_items'),
             DocmanDataBuilder::ADMIN_USER_NAME
         );
 
-        $updated_content = $response->json();
+        $updated_content = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         $folder_updated = $this->findItemByTitle($updated_content, 'PUT HM FO');
         $status         = $this->findMetadataByName($folder_updated['metadata'], 'Status');
@@ -639,17 +630,17 @@ class HardcodedMetadataTest extends DocmanHardcodedMetadataExecutionHelper
 
         $updated_metadata_file_response = $this->getResponseByName(
             DocmanDataBuilder::ADMIN_USER_NAME,
-            $this->client->put('docman_folders/' . $folder_to_update_id . '/metadata', null, $put_resource)
+            $this->request_factory->createRequest('PUT', 'docman_folders/' . $folder_to_update_id . '/metadata')->withBody($this->stream_factory->createStream(json_encode($put_resource)))
         );
 
         $this->assertEquals(200, $updated_metadata_file_response->getStatusCode());
 
         $response = $this->getResponse(
-            $this->client->get('docman_items/' . $folder_to_update_id . '/docman_items'),
+            $this->request_factory->createRequest('GET', 'docman_items/' . $folder_to_update_id . '/docman_items'),
             DocmanDataBuilder::ADMIN_USER_NAME
         );
 
-        $updated_content = $response->json();
+        $updated_content = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         $folder_updated = $this->findItemByTitle($updated_content, 'PUT HM FO');
         $status         = $this->findMetadataByName($folder_updated['metadata'], 'Status');

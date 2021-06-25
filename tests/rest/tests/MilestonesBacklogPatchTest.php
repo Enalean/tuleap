@@ -72,7 +72,7 @@ class MilestonesBacklogPatchTest extends MilestoneBase //phpcs:ignore PSR1.Class
     public function testPatchBacklogForbiddenForRESTReadOnlyUserNotInvolvedInProject(): void
     {
         $response = $this->getResponse(
-            $this->client->patch($this->uri, null, null),
+            $this->request_factory->createRequest('PATCH', $this->uri),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
 
@@ -81,13 +81,21 @@ class MilestonesBacklogPatchTest extends MilestoneBase //phpcs:ignore PSR1.Class
 
     public function testPatchBacklogAfter()
     {
-        $response = $this->getResponse($this->client->patch($this->uri, null, json_encode([
-            'order' => [
-                'ids'         => [$this->story_mul['id'], $this->story_div['id']],
-                'direction'   => 'after',
-                'compared_to' => $this->story_add['id']
-            ]
-        ])));
+        $response = $this->getResponse(
+            $this->request_factory->createRequest('PATCH', $this->uri)->withBody(
+                $this->stream_factory->createStream(
+                    json_encode(
+                        [
+                            'order' => [
+                                'ids' => [$this->story_mul['id'], $this->story_div['id']],
+                                'direction' => 'after',
+                                'compared_to' => $this->story_add['id']
+                            ]
+                        ]
+                    )
+                )
+            )
+        );
         $this->assertEquals($response->getStatusCode(), 200);
 
         $this->assertEquals(
@@ -103,13 +111,22 @@ class MilestonesBacklogPatchTest extends MilestoneBase //phpcs:ignore PSR1.Class
 
     public function testPatchBacklogWithoutPermission()
     {
-        $response = $this->getResponseByName(REST_TestDataBuilder::TEST_USER_2_NAME, $this->client->patch($this->uri, null, json_encode([
-            'order' => [
-                'ids'         => [$this->story_div['id'], $this->story_mul['id']],
-                'direction'   => 'after',
-                'compared_to' => $this->story_add['id']
-            ]
-        ])));
+        $response = $this->getResponseByName(
+            REST_TestDataBuilder::TEST_USER_2_NAME,
+            $this->request_factory->createRequest('PATCH', $this->uri)->withBody(
+                $this->stream_factory->createStream(
+                    json_encode(
+                        [
+                            'order' => [
+                                'ids' => [$this->story_div['id'], $this->story_mul['id']],
+                                'direction' => 'after',
+                                'compared_to' => $this->story_add['id']
+                            ]
+                        ]
+                    )
+                )
+            )
+        );
         $this->assertEquals($response->getStatusCode(), 403);
 
         $this->assertEqualsCanonicalizing(
@@ -125,13 +142,21 @@ class MilestonesBacklogPatchTest extends MilestoneBase //phpcs:ignore PSR1.Class
 
     public function testPatchBacklogBefore()
     {
-        $response = $this->getResponse($this->client->patch($this->uri, null, json_encode([
-            'order' => [
-                'ids'         => [$this->story_mul['id'], $this->story_sub['id']],
-                'direction'   => 'before',
-                'compared_to' => $this->story_add['id']
-            ]
-        ])));
+        $response = $this->getResponse(
+            $this->request_factory->createRequest('PATCH', $this->uri)->withBody(
+                $this->stream_factory->createStream(
+                    json_encode(
+                        [
+                            'order' => [
+                                'ids' => [$this->story_mul['id'], $this->story_sub['id']],
+                                'direction' => 'before',
+                                'compared_to' => $this->story_add['id']
+                            ]
+                        ]
+                    )
+                )
+            )
+        );
         $this->assertEquals($response->getStatusCode(), 200);
 
         $this->assertEquals(
@@ -147,13 +172,21 @@ class MilestonesBacklogPatchTest extends MilestoneBase //phpcs:ignore PSR1.Class
 
     public function testPatchBacklogWithItemNotInBacklogRaiseErrors()
     {
-        $response = $this->getResponse($this->client->patch($this->uri, null, json_encode([
-            'order' => [
-                'ids'         => [$this->story_mul['id'], $this->story_sub['id']],
-                'direction'   => 'before',
-                'compared_to' => 1
-            ]
-        ])));
+        $response = $this->getResponse(
+            $this->request_factory->createRequest('PATCH', $this->uri)->withBody(
+                $this->stream_factory->createStream(
+                    json_encode(
+                        [
+                            'order' => [
+                                'ids' => [$this->story_mul['id'], $this->story_sub['id']],
+                                'direction' => 'before',
+                                'compared_to' => 1
+                            ]
+                        ]
+                    )
+                )
+            )
+        );
         $this->assertEquals(409, $response->getStatusCode());
     }
 
@@ -161,13 +194,21 @@ class MilestonesBacklogPatchTest extends MilestoneBase //phpcs:ignore PSR1.Class
     {
         $uri = 'milestones/' . $this->release['id'] . '/content';
 
-        $response = $this->getResponse($this->client->patch($uri, null, json_encode([
-            'order' => [
-                'ids'         => [$this->epic_basic['id'], $this->epic_log['id']],
-                'direction'   => 'before',
-                'compared_to' => $this->epic_fin['id']
-            ]
-        ])));
+        $response = $this->getResponse(
+            $this->request_factory->createRequest('PATCH', $uri)->withBody(
+                $this->stream_factory->createStream(
+                    json_encode(
+                        [
+                            'order' => [
+                                'ids' => [$this->epic_basic['id'], $this->epic_log['id']],
+                                'direction' => 'before',
+                                'compared_to' => $this->epic_fin['id']
+                            ]
+                        ]
+                    )
+                )
+            )
+        );
         $this->assertEquals($response->getStatusCode(), 200);
 
         $this->assertEquals(
@@ -186,13 +227,21 @@ class MilestonesBacklogPatchTest extends MilestoneBase //phpcs:ignore PSR1.Class
     {
         $uri = 'milestones/' . $this->release['id'] . '/content';
 
-        $response = $this->getResponse($this->client->patch($uri, null, json_encode([
-            'order' => [
-                'ids'         => [$this->epic_exp['id'], $this->epic_adv['id']],
-                'direction'   => 'after',
-                'compared_to' => $this->epic_log['id']
-            ]
-        ])));
+        $response = $this->getResponse(
+            $this->request_factory->createRequest('PATCH', $uri)->withBody(
+                $this->stream_factory->createStream(
+                    json_encode(
+                        [
+                            'order' => [
+                                'ids' => [$this->epic_exp['id'], $this->epic_adv['id']],
+                                'direction' => 'after',
+                                'compared_to' => $this->epic_log['id']
+                            ]
+                        ]
+                    )
+                )
+            )
+        );
         $this->assertEquals($response->getStatusCode(), 200);
 
         $this->assertEquals(
@@ -211,13 +260,22 @@ class MilestonesBacklogPatchTest extends MilestoneBase //phpcs:ignore PSR1.Class
     {
         $uri = 'milestones/' . $this->release['id'] . '/content';
 
-        $response = $this->getResponseByName(REST_TestDataBuilder::TEST_USER_2_NAME, $this->client->patch($uri, null, json_encode([
-            'order' => [
-                'ids'         => [$this->epic_adv['id'], $this->epic_exp['id']],
-                'direction'   => 'after',
-                'compared_to' => $this->epic_log['id']
-            ]
-        ])));
+        $response = $this->getResponseByName(
+            REST_TestDataBuilder::TEST_USER_2_NAME,
+            $this->request_factory->createRequest('PATCH', $uri)->withBody(
+                $this->stream_factory->createStream(
+                    json_encode(
+                        [
+                            'order' => [
+                                'ids' => [$this->epic_adv['id'], $this->epic_exp['id']],
+                                'direction' => 'after',
+                                'compared_to' => $this->epic_log['id']
+                            ]
+                        ]
+                    )
+                )
+            )
+        );
         $this->assertEquals($response->getStatusCode(), 403);
 
         $this->assertEquals(
@@ -239,18 +297,26 @@ class MilestonesBacklogPatchTest extends MilestoneBase //phpcs:ignore PSR1.Class
         $another_release_id  = $this->releases['Another release'];
         $another_release_uri = 'milestones/' . $another_release_id . '/content';
 
-        $response = $this->getResponse($this->client->patch($another_release_uri, null, json_encode([
-            'add' => [
-                [
-                    'id'          => $this->epic_log['id'],
-                    'remove_from' => $this->release['id'],
-                ],
-                [
-                    'id'          => $this->epic_adv['id'],
-                    'remove_from' => $this->release['id'],
-                ]
-            ],
-        ])));
+        $response = $this->getResponse(
+            $this->request_factory->createRequest('PATCH', $another_release_uri)->withBody(
+                $this->stream_factory->createStream(
+                    json_encode(
+                        [
+                            'add' => [
+                                [
+                                    'id' => $this->epic_log['id'],
+                                    'remove_from' => $this->release['id'],
+                                ],
+                                [
+                                    'id' => $this->epic_adv['id'],
+                                    'remove_from' => $this->release['id'],
+                                ]
+                            ],
+                        ]
+                    )
+                )
+            )
+        );
         $this->assertEquals($response->getStatusCode(), 200);
 
         $this->assertEquals(
@@ -275,18 +341,26 @@ class MilestonesBacklogPatchTest extends MilestoneBase //phpcs:ignore PSR1.Class
     {
         $uri = 'milestones/' . $this->release['id'] . '/content';
 
-        $response = $this->getResponse($this->client->patch($uri, null, json_encode([
-            'order'  => [
-                'ids'         => [$this->epic_fin['id'], $this->epic_sta['id']],
-                'direction'   => 'after',
-                'compared_to' => $this->epic_basic['id']
-            ],
-            'add' => [
-                [
-                    'id' => $this->epic_sta['id'],
-                ]
-            ],
-        ])));
+        $response = $this->getResponse(
+            $this->request_factory->createRequest('PATCH', $uri)->withBody(
+                $this->stream_factory->createStream(
+                    json_encode(
+                        [
+                            'order' => [
+                                'ids' => [$this->epic_fin['id'], $this->epic_sta['id']],
+                                'direction' => 'after',
+                                'compared_to' => $this->epic_basic['id']
+                            ],
+                            'add' => [
+                                [
+                                    'id' => $this->epic_sta['id'],
+                                ]
+                            ],
+                        ]
+                    )
+                )
+            )
+        );
         $this->assertEquals($response->getStatusCode(), 200);
 
         $this->assertEquals(
@@ -322,7 +396,7 @@ class MilestonesBacklogPatchTest extends MilestoneBase //phpcs:ignore PSR1.Class
             ],
         ]);
 
-        $response = $this->getResponse($this->client->patch($this->uri, null, $patch_body));
+        $response = $this->getResponse($this->request_factory->createRequest('PATCH', $this->uri)->withBody($this->stream_factory->createStream($patch_body)));
         $this->assertEquals(200, $response->getStatusCode());
 
         $this->assertEquals(
@@ -336,14 +410,15 @@ class MilestonesBacklogPatchTest extends MilestoneBase //phpcs:ignore PSR1.Class
             $this->getIdsOrderedByPriority($this->uri)
         );
 
-        $this->assertCount(0, $this->getResponse($this->client->get('milestones/' . $sprint_id . '/backlog'))->json());
+        $response = $this->getResponse($this->request_factory->createRequest('GET', 'milestones/' . $sprint_id . '/backlog'));
+        $this->assertCount(0, json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR));
     }
 
     private function getIdsOrderedByPriority($uri)
     {
-        $response     = $this->getResponse($this->client->get($uri));
+        $response     = $this->getResponse($this->request_factory->createRequest('GET', $uri));
         $actual_order = [];
-        foreach ($response->json() as $backlog_element) {
+        foreach (json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR) as $backlog_element) {
             $actual_order[] = $backlog_element['id'];
         }
         return $actual_order;

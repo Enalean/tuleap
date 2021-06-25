@@ -18,7 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-use Guzzle\Http\Message\Response;
 use Tuleap\REST\MilestoneBase;
 
 /**
@@ -28,23 +27,23 @@ class MilestonesCardwallTest extends MilestoneBase //phpcs:ignore PSR1.Classes.C
 {
     public function testOPTIONSCardwallOnSprintGivesOPTIONSandGET(): void
     {
-        $response = $this->getResponse($this->client->options('milestones/' . $this->sprint_artifact_ids[1] . '/cardwall'));
-        $this->assertEquals(['OPTIONS', 'GET'], $response->getHeader('Allow')->normalize()->toArray());
+        $response = $this->getResponse($this->request_factory->createRequest('OPTIONS', 'milestones/' . $this->sprint_artifact_ids[1] . '/cardwall'));
+        $this->assertEquals(['OPTIONS', 'GET'], explode(', ', $response->getHeaderLine('Allow')));
     }
 
     public function testOPTIONSCardwallWithRESTReadOnlyUser(): void
     {
         $response = $this->getResponse(
-            $this->client->options('milestones/' . $this->sprint_artifact_ids[1] . '/cardwall'),
+            $this->request_factory->createRequest('OPTIONS', 'milestones/' . $this->sprint_artifact_ids[1] . '/cardwall'),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
 
-        $this->assertEquals(['OPTIONS', 'GET'], $response->getHeader('Allow')->normalize()->toArray());
+        $this->assertEquals(['OPTIONS', 'GET'], explode(', ', $response->getHeaderLine('Allow')));
     }
 
     public function testGETCardwall(): void
     {
-        $response = $this->getResponse($this->client->get('milestones/' . $this->sprint_artifact_ids[1] . '/cardwall'));
+        $response = $this->getResponse($this->request_factory->createRequest('GET', 'milestones/' . $this->sprint_artifact_ids[1] . '/cardwall'));
 
         $this->assertCardwall($response);
     }
@@ -52,16 +51,16 @@ class MilestonesCardwallTest extends MilestoneBase //phpcs:ignore PSR1.Classes.C
     public function testGETCardwallWithRESTReadOnlyUser(): void
     {
         $response = $this->getResponse(
-            $this->client->get('milestones/' . $this->sprint_artifact_ids[1] . '/cardwall'),
+            $this->request_factory->createRequest('GET', 'milestones/' . $this->sprint_artifact_ids[1] . '/cardwall'),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
 
         $this->assertCardwall($response);
     }
 
-    private function assertCardwall(Response $response): void
+    private function assertCardwall(\Psr\Http\Message\ResponseInterface $response): void
     {
-        $cardwall = $response->json();
+        $cardwall = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertArrayHasKey('columns', $cardwall);
         $columns = $cardwall['columns'];

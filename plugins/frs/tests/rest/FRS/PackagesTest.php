@@ -20,7 +20,6 @@
 
 namespace Tuleap\FRS\Tests\REST\Packages;
 
-use Guzzle\Http\Message\Response;
 use REST_TestDataBuilder;
 use RestBase;
 
@@ -41,7 +40,7 @@ final class PackagesTest extends RestBase
 
     public function testPackagesIsInProjectResources(): void
     {
-        $response = $this->getResponse($this->client->get("projects/$this->project_id"));
+        $response = $this->getResponse($this->request_factory->createRequest('GET', "projects/$this->project_id"));
 
         $this->assertPackageIsInProject($response);
     }
@@ -49,16 +48,16 @@ final class PackagesTest extends RestBase
     public function testPackagesIsInProjectResourcesWithUserRESTReadOnlyAdmin(): void
     {
         $response = $this->getResponse(
-            $this->client->get("projects/$this->project_id"),
+            $this->request_factory->createRequest('GET', "projects/$this->project_id"),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
 
         $this->assertPackageIsInProject($response);
     }
 
-    private function assertPackageIsInProject(Response $response): void
+    private function assertPackageIsInProject(\Psr\Http\Message\ResponseInterface $response): void
     {
-        $project = $response->json();
+        $project = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertContains(
             [
@@ -71,23 +70,23 @@ final class PackagesTest extends RestBase
 
     public function testOPTIONS(): void
     {
-        $response = $this->getResponse($this->client->options('frs_packages'));
-        $this->assertEquals(['OPTIONS', 'POST'], $response->getHeader('Allow')->normalize()->toArray());
+        $response = $this->getResponse($this->request_factory->createRequest('OPTIONS', 'frs_packages'));
+        $this->assertEquals(['OPTIONS', 'POST'], explode(', ', $response->getHeaderLine('Allow')));
     }
 
     public function testOPTIONSWithUserRESTReadOnlyAdmin(): void
     {
         $response = $this->getResponse(
-            $this->client->options('frs_packages'),
+            $this->request_factory->createRequest('OPTIONS', 'frs_packages'),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
 
-        $this->assertEquals(['OPTIONS', 'POST'], $response->getHeader('Allow')->normalize()->toArray());
+        $this->assertEquals(['OPTIONS', 'POST'], explode(', ', $response->getHeaderLine('Allow')));
     }
 
     public function testGETPackage(): void
     {
-        $response = $this->getResponse($this->client->get('frs_packages/1'));
+        $response = $this->getResponse($this->request_factory->createRequest('GET', 'frs_packages/1'));
 
         $this->assertGETPackage($response);
     }
@@ -95,16 +94,16 @@ final class PackagesTest extends RestBase
     public function testGETPackageWithUserRESTReadOnlyAdmin(): void
     {
         $response = $this->getResponse(
-            $this->client->get('frs_packages/1'),
+            $this->request_factory->createRequest('GET', 'frs_packages/1'),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
 
         $this->assertGETPackage($response);
     }
 
-    private function assertGETPackage(Response $response): void
+    private function assertGETPackage(\Psr\Http\Message\ResponseInterface $response): void
     {
-        $package = $response->json();
+        $package = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertEquals(1, $package['id']);
         $this->assertEquals('package1', $package['label']);
@@ -115,7 +114,7 @@ final class PackagesTest extends RestBase
 
     public function testGETReleasePackage(): void
     {
-        $response = $this->getResponse($this->client->get('frs_packages/1/frs_release'));
+        $response = $this->getResponse($this->request_factory->createRequest('GET', 'frs_packages/1/frs_release'));
 
         $this->assertGETReleasePackage($response);
     }
@@ -123,16 +122,16 @@ final class PackagesTest extends RestBase
     public function testGETReleasePackageWithUserRESTReadOnlyAdmin(): void
     {
         $response = $this->getResponse(
-            $this->client->get('frs_packages/1/frs_release'),
+            $this->request_factory->createRequest('GET', 'frs_packages/1/frs_release'),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
 
         $this->assertGETReleasePackage($response);
     }
 
-    private function assertGETReleasePackage(Response $response): void
+    private function assertGETReleasePackage(\Psr\Http\Message\ResponseInterface $response): void
     {
-        $package = $response->json();
+        $package = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertEquals(1, $package["collection"][0]['id']);
         $this->assertEquals('release1', $package["collection"][0]['name']);
@@ -140,8 +139,8 @@ final class PackagesTest extends RestBase
 
     public function testGETPackageWithoutFRSAdminPermissions(): void
     {
-        $response = $this->getResponse($this->client->get('frs_packages/1'), REST_TestDataBuilder::TEST_USER_5_NAME);
-        $package  = $response->json();
+        $response = $this->getResponse($this->request_factory->createRequest('GET', 'frs_packages/1'), REST_TestDataBuilder::TEST_USER_5_NAME);
+        $package  = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertEquals($package['id'], 1);
         $this->assertNull($package['permissions_for_groups']);
@@ -154,8 +153,8 @@ final class PackagesTest extends RestBase
             'label' => 'New package'
         ]);
 
-        $response = $this->getResponse($this->client->post('frs_packages', null, $post_resource));
-        $package  = $response->json();
+        $response = $this->getResponse($this->request_factory->createRequest('POST', 'frs_packages')->withBody($this->stream_factory->createStream($post_resource)));
+        $package  = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertEquals($package['id'], 2);
         $this->assertEquals($package['label'], 'New package');
@@ -169,7 +168,7 @@ final class PackagesTest extends RestBase
         ]);
 
         $response = $this->getResponse(
-            $this->client->post('frs_packages', null, $post_resource),
+            $this->request_factory->createRequest('POST', 'frs_packages')->withBody($this->stream_factory->createStream($post_resource)),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
 

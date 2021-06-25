@@ -20,7 +20,6 @@
 
 namespace Tuleap\FRS\Tests\REST;
 
-use Guzzle\Http\Message\Response;
 use REST_TestDataBuilder;
 use RestBase;
 
@@ -31,16 +30,16 @@ final class ReleaseTest extends RestBase
     public function testReleaseIsInPackagesResourcesWithUserRESTReadOnlyAdmin(): void
     {
         $response = $this->getResponse(
-            $this->client->get("frs_packages/1"),
+            $this->request_factory->createRequest('GET', "frs_packages/1"),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
 
         $this->assertReleaseIsInPackage($response);
     }
 
-    private function assertReleaseIsInPackage(Response $response): void
+    private function assertReleaseIsInPackage(\Psr\Http\Message\ResponseInterface $response): void
     {
-        $package = $response->json();
+        $package = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertEquals(
             [
@@ -52,38 +51,38 @@ final class ReleaseTest extends RestBase
 
     public function testOPTIONS()
     {
-        $response = $this->getResponse($this->client->options('frs_release'));
-        $this->assertEquals(['OPTIONS', 'POST'], $response->getHeader('Allow')->normalize()->toArray());
+        $response = $this->getResponse($this->request_factory->createRequest('OPTIONS', 'frs_release'));
+        $this->assertEquals(['OPTIONS', 'POST'], explode(', ', $response->getHeaderLine('Allow')));
     }
 
     public function testOPTIONSWithUserRESTReadOnlyAdmin(): void
     {
         $response = $this->getResponse(
-            $this->client->options('frs_release'),
+            $this->request_factory->createRequest('OPTIONS', 'frs_release'),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
 
-        $this->assertEquals(['OPTIONS', 'POST'], $response->getHeader('Allow')->normalize()->toArray());
+        $this->assertEquals(['OPTIONS', 'POST'], explode(', ', $response->getHeaderLine('Allow')));
     }
 
     public function testOPTIONSRelease()
     {
-        $response = $this->getResponse($this->client->options('frs_release/1'));
-        $this->assertEquals(['OPTIONS', 'GET', 'PATCH'], $response->getHeader('Allow')->normalize()->toArray());
+        $response = $this->getResponse($this->request_factory->createRequest('OPTIONS', 'frs_release/1'));
+        $this->assertEquals(['OPTIONS', 'GET', 'PATCH'], explode(', ', $response->getHeaderLine('Allow')));
     }
 
     public function testOPTIONSReleaseWithUserRESTReadOnlyAdmin(): void
     {
         $response = $this->getResponse(
-            $this->client->options('frs_release/1'),
+            $this->request_factory->createRequest('OPTIONS', 'frs_release/1'),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
-        $this->assertEquals(['OPTIONS', 'GET', 'PATCH'], $response->getHeader('Allow')->normalize()->toArray());
+        $this->assertEquals(['OPTIONS', 'GET', 'PATCH'], explode(', ', $response->getHeaderLine('Allow')));
     }
 
     public function testGETRelease(): void
     {
-        $response = $this->getResponse($this->client->get('frs_release/1'));
+        $response = $this->getResponse($this->request_factory->createRequest('GET', 'frs_release/1'));
 
         $this->assertGETRelease($response);
     }
@@ -91,16 +90,16 @@ final class ReleaseTest extends RestBase
     public function testGETReleaseWithUserRESTReadOnlyAdmin(): void
     {
         $response = $this->getResponse(
-            $this->client->get('frs_release/1'),
+            $this->request_factory->createRequest('GET', 'frs_release/1'),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
 
         $this->assertGETRelease($response);
     }
 
-    private function assertGETRelease(Response $response): void
+    private function assertGETRelease(\Psr\Http\Message\ResponseInterface $response): void
     {
-        $release = $response->json();
+        $release = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertEquals($release['id'], 1);
         $this->assertEquals($release['name'], 'release1');
@@ -113,8 +112,8 @@ final class ReleaseTest extends RestBase
 
     public function testGetReleaseWithoutFRSAdminPermissions()
     {
-        $response = $this->getResponse($this->client->get('frs_release/1'), REST_TestDataBuilder::TEST_USER_5_NAME);
-        $package  = $response->json();
+        $response = $this->getResponse($this->request_factory->createRequest('GET', 'frs_release/1'), REST_TestDataBuilder::TEST_USER_5_NAME);
+        $package  = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertEquals($package['id'], 1);
         $this->assertNull($package['permissions_for_groups']);
@@ -122,8 +121,8 @@ final class ReleaseTest extends RestBase
 
     public function testPOSTRelease()
     {
-        $response = $this->getResponse($this->client->post('frs_release', null, $this->getPostResource()));
-        $release  = $response->json();
+        $response = $this->getResponse($this->request_factory->createRequest('POST', 'frs_release')->withBody($this->stream_factory->createStream($this->getPostResource())));
+        $release  = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertEquals(201, $response->getStatusCode());
         $this->assertEquals(2, $release['id']);
@@ -136,7 +135,7 @@ final class ReleaseTest extends RestBase
     public function testPOSTReleaseWithReadOnlyAdmin(): void
     {
         $response = $this->getResponse(
-            $this->client->post('frs_release', null, $this->getPostResource()),
+            $this->request_factory->createRequest('POST', 'frs_release')->withBody($this->stream_factory->createStream($this->getPostResource())),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
 
@@ -158,20 +157,20 @@ final class ReleaseTest extends RestBase
     {
         $resource_uri = 'frs_release/1';
 
-        $release = $this->getResponse($this->client->get($resource_uri))->json();
+        $release = json_decode($this->getResponse($this->request_factory->createRequest('GET', $resource_uri))->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         $this->assertEquals($release['name'], 'release1');
 
-        $response = $this->getResponse($this->client->patch($resource_uri, null, $this->getPatchResource()));
+        $response = $this->getResponse($this->request_factory->createRequest('PATCH', $resource_uri)->withBody($this->stream_factory->createStream($this->getPatchResource())));
         $this->assertEquals(200, $response->getStatusCode());
 
-        $release = $this->getResponse($this->client->get($resource_uri))->json();
+        $release = json_decode($this->getResponse($this->request_factory->createRequest('GET', $resource_uri))->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         $this->assertEquals($release['name'], 'Release 1.1');
     }
 
     public function testPATCHReleaseWithReadOnlyAdmin(): void
     {
         $response = $this->getResponse(
-            $this->client->patch('frs_release/1', null, $this->getPatchResource()),
+            $this->request_factory->createRequest('PATCH', 'frs_release/1')->withBody($this->stream_factory->createStream($this->getPatchResource())),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
 

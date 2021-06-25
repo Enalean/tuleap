@@ -67,12 +67,12 @@ final class ArtifactsTest extends BaseTest
         ];
 
         $response = $this->getResponse(
-            $this->client->post('artifacts', null, json_encode($payload))
+            $this->request_factory->createRequest('POST', 'artifacts')->withBody($this->stream_factory->createStream(json_encode($payload)))
         );
 
         self::assertEquals(201, $response->getStatusCode());
 
-        $artifact_id = $response->json()["id"];
+        $artifact_id = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR)["id"];
         $this->assertArtifactHasStepDefField($artifact_id);
     }
 
@@ -105,12 +105,12 @@ final class ArtifactsTest extends BaseTest
         ];
 
         $response = $this->getResponse(
-            $this->client->post('artifacts', null, json_encode($payload))
+            $this->request_factory->createRequest('POST', 'artifacts')->withBody($this->stream_factory->createStream(json_encode($payload)))
         );
 
         self::assertEquals(201, $response->getStatusCode());
 
-        $artifact_id = $response->json()["id"];
+        $artifact_id = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR)["id"];
         $this->assertArtifactHasStepDefField($artifact_id);
     }
 
@@ -130,8 +130,8 @@ final class ArtifactsTest extends BaseTest
 
     private function assertArtifactHasStepDefField(int $artifact_id): void
     {
-        $artifact_request = $this->client->get('artifacts/' . $artifact_id);
-        $artifact         = $this->getResponse($artifact_request)->json();
+        $artifact_request = $this->request_factory->createRequest('GET', 'artifacts/' . $artifact_id);
+        $artifact         = json_decode($this->getResponse($artifact_request)->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         $ttmstepdef = array_filter(
             $artifact['values'],

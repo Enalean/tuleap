@@ -42,7 +42,7 @@ class RepositoryTestNonRegressionTest extends TestBase
             ]
         );
 
-        $response = $this->getResponse($this->client->post('svn', null, $params));
+        $response = $this->getResponse($this->request_factory->createRequest('POST', 'svn')->withBody($this->stream_factory->createStream($params)));
         $this->assertEquals($response->getStatusCode(), 400);
     }
 
@@ -67,7 +67,7 @@ class RepositoryTestNonRegressionTest extends TestBase
             ]
         );
 
-        $response = $this->getResponse($this->client->post('svn', null, $params));
+        $response = $this->getResponse($this->request_factory->createRequest('POST', 'svn')->withBody($this->stream_factory->createStream($params)));
         $this->assertEquals($response->getStatusCode(), 400);
     }
 
@@ -89,7 +89,7 @@ class RepositoryTestNonRegressionTest extends TestBase
             ]
         );
 
-        $response = $this->getResponse($this->client->post('svn', null, $params));
+        $response = $this->getResponse($this->request_factory->createRequest('POST', 'svn')->withBody($this->stream_factory->createStream($params)));
         $this->assertEquals($response->getStatusCode(), 400);
     }
 
@@ -111,7 +111,7 @@ class RepositoryTestNonRegressionTest extends TestBase
             ]
         );
 
-        $response = $this->getResponse($this->client->post('svn', null, $params));
+        $response = $this->getResponse($this->request_factory->createRequest('POST', 'svn')->withBody($this->stream_factory->createStream($params)));
         $this->assertEquals($response->getStatusCode(), 400);
     }
 
@@ -136,7 +136,7 @@ class RepositoryTestNonRegressionTest extends TestBase
             ]
         );
 
-        $response = $this->getResponse($this->client->post('svn', null, $params));
+        $response = $this->getResponse($this->request_factory->createRequest('POST', 'svn')->withBody($this->stream_factory->createStream($params)));
         $this->assertEquals($response->getStatusCode(), 400);
     }
 
@@ -159,7 +159,7 @@ class RepositoryTestNonRegressionTest extends TestBase
             ]
         );
 
-        $response = $this->getResponse($this->client->post('svn', null, $params));
+        $response = $this->getResponse($this->request_factory->createRequest('POST', 'svn')->withBody($this->stream_factory->createStream($params)));
         $this->assertEquals($response->getStatusCode(), 400);
     }
 
@@ -193,7 +193,7 @@ class RepositoryTestNonRegressionTest extends TestBase
             ]
         );
 
-        $response = $this->getResponse($this->client->post('svn', null, $params));
+        $response = $this->getResponse($this->request_factory->createRequest('POST', 'svn')->withBody($this->stream_factory->createStream($params)));
         $this->assertEquals($response->getStatusCode(), 400);
     }
 
@@ -219,7 +219,7 @@ class RepositoryTestNonRegressionTest extends TestBase
             ]
         );
 
-        $response = $this->getResponse($this->client->post('svn', null, $params));
+        $response = $this->getResponse($this->request_factory->createRequest('POST', 'svn')->withBody($this->stream_factory->createStream($params)));
         $this->assertEquals(404, $response->getStatusCode());
     }
 
@@ -245,7 +245,7 @@ class RepositoryTestNonRegressionTest extends TestBase
             ]
         );
 
-        $response = $this->getResponse($this->client->post('svn', null, $params));
+        $response = $this->getResponse($this->request_factory->createRequest('POST', 'svn')->withBody($this->stream_factory->createStream($params)));
         $this->assertEquals($response->getStatusCode(), 400);
     }
 
@@ -271,7 +271,7 @@ class RepositoryTestNonRegressionTest extends TestBase
             ]
         );
 
-        $response = $this->getResponse($this->client->post('svn', null, $params));
+        $response = $this->getResponse($this->request_factory->createRequest('POST', 'svn')->withBody($this->stream_factory->createStream($params)));
         $this->assertEquals($response->getStatusCode(), 400);
     }
 
@@ -297,7 +297,7 @@ class RepositoryTestNonRegressionTest extends TestBase
             ]
         );
 
-        $response = $this->getResponse($this->client->post('svn', null, $params));
+        $response = $this->getResponse($this->request_factory->createRequest('POST', 'svn')->withBody($this->stream_factory->createStream($params)));
         $this->assertEquals($response->getStatusCode(), 201);
     }
 
@@ -330,9 +330,9 @@ class RepositoryTestNonRegressionTest extends TestBase
             ]
         );
 
-        $response = $this->getResponse($this->client->put('svn/1', null, $data));
+        $response = $this->getResponse($this->request_factory->createRequest('PUT', 'svn/1')->withBody($this->stream_factory->createStream($data)));
 
-        $repository = $response->json();
+        $repository = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertArrayHasKey('id', $repository);
         $this->assertEquals($repository['name'], 'repo01');
@@ -380,7 +380,7 @@ class RepositoryTestNonRegressionTest extends TestBase
             ]
         );
 
-        $response = $this->getResponse($this->client->post('svn', null, $params));
+        $response = $this->getResponse($this->request_factory->createRequest('POST', 'svn')->withBody($this->stream_factory->createStream($params)));
         $this->assertEquals($response->getStatusCode(), 400);
     }
 
@@ -408,7 +408,7 @@ class RepositoryTestNonRegressionTest extends TestBase
             ]
         );
 
-        $response = $this->getResponse($this->client->post('svn', null, $params));
+        $response = $this->getResponse($this->request_factory->createRequest('POST', 'svn')->withBody($this->stream_factory->createStream($params)));
         $this->assertEquals($response->getStatusCode(), 400);
     }
 
@@ -439,7 +439,7 @@ class RepositoryTestNonRegressionTest extends TestBase
             ]
         );
 
-        $response = $this->getResponse($this->client->post('svn', null, $params));
+        $response = $this->getResponse($this->request_factory->createRequest('POST', 'svn')->withBody($this->stream_factory->createStream($params)));
         $this->assertEquals($response->getStatusCode(), 400);
     }
 
@@ -461,7 +461,7 @@ class RepositoryTestNonRegressionTest extends TestBase
             ]
         );
 
-        $response = $this->getResponse($this->client->post('svn', null, $params));
+        $response = $this->getResponse($this->request_factory->createRequest('POST', 'svn')->withBody($this->stream_factory->createStream($params)));
         $this->assertEquals($response->getStatusCode(), 400);
     }
 
@@ -492,7 +492,7 @@ class RepositoryTestNonRegressionTest extends TestBase
             ]
         );
 
-        $response = $this->getResponse($this->client->post('svn', null, $params));
+        $response = $this->getResponse($this->request_factory->createRequest('POST', 'svn')->withBody($this->stream_factory->createStream($params)));
         $this->assertEquals($response->getStatusCode(), 400);
     }
 
@@ -519,7 +519,7 @@ class RepositoryTestNonRegressionTest extends TestBase
             ]
         );
 
-        $response = $this->getResponse($this->client->post('svn', null, $params));
+        $response = $this->getResponse($this->request_factory->createRequest('POST', 'svn')->withBody($this->stream_factory->createStream($params)));
         $this->assertEquals($response->getStatusCode(), 400);
     }
 
@@ -545,7 +545,7 @@ class RepositoryTestNonRegressionTest extends TestBase
             ]
         );
 
-        $response = $this->getResponse($this->client->post('svn', null, $params));
+        $response = $this->getResponse($this->request_factory->createRequest('POST', 'svn')->withBody($this->stream_factory->createStream($params)));
         $this->assertEquals($response->getStatusCode(), 400);
     }
 
@@ -571,7 +571,7 @@ class RepositoryTestNonRegressionTest extends TestBase
             ]
         );
 
-        $response = $this->getResponse($this->client->post('svn', null, $params));
+        $response = $this->getResponse($this->request_factory->createRequest('POST', 'svn')->withBody($this->stream_factory->createStream($params)));
         $this->assertEquals($response->getStatusCode(), 400);
     }
 }

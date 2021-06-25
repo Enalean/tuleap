@@ -37,10 +37,10 @@ class DocmanHardcodedMetadataExecutionHelper extends DocmanWithMetadataActivated
                 ]
             )
         );
-        $response = $this->getResponseByName(REST_TestDataBuilder::TEST_USER_1_NAME, $this->client->get("users?query=$search&limit=10"));
+        $response = $this->getResponseByName(REST_TestDataBuilder::TEST_USER_1_NAME, $this->request_factory->createRequest('GET', "users?query=$search&limit=10"));
         $this->assertEquals($response->getStatusCode(), 200);
 
-        $json = $response->json();
+        $json = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         $this->assertCount(1, $json);
 
         return $json[0]['id'];
@@ -50,25 +50,25 @@ class DocmanHardcodedMetadataExecutionHelper extends DocmanWithMetadataActivated
     public function testGetRootId(): int
     {
         $project_response = $this->getResponse(
-            $this->client->get('projects/' . urlencode((string) $this->project_id) . '/docman_service')
+            $this->request_factory->createRequest('GET', 'projects/' . urlencode((string) $this->project_id) . '/docman_service')
         );
 
         $this->assertSame(200, $project_response->getStatusCode());
 
-        $json_docman_service = $project_response->json();
+        $json_docman_service = json_decode($project_response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         return $json_docman_service['root_item']['id'];
     }
 
     public function testGetRootIdWithUserRESTReadOnlyAdmin(): int
     {
         $project_response = $this->getResponse(
-            $this->client->get('projects/' . urlencode((string) $this->project_id) . '/docman_service'),
+            $this->request_factory->createRequest('GET', 'projects/' . urlencode((string) $this->project_id) . '/docman_service'),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
 
         $this->assertSame(200, $project_response->getStatusCode());
 
-        $json_docman_service = $project_response->json();
+        $json_docman_service = json_decode($project_response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         return $json_docman_service['root_item']['id'];
     }
 
@@ -77,9 +77,9 @@ class DocmanHardcodedMetadataExecutionHelper extends DocmanWithMetadataActivated
     {
         $response = $this->getResponseByName(
             $user_name,
-            $this->client->get('docman_items/' . $root_id . '/docman_items')
+            $this->request_factory->createRequest('GET', 'docman_items/' . $root_id . '/docman_items')
         );
-        $folder   = $response->json();
+        $folder   = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         $this->assertEquals(200, $response->getStatusCode());
 
         return $folder;
@@ -92,17 +92,17 @@ class DocmanHardcodedMetadataExecutionHelper extends DocmanWithMetadataActivated
     ): array {
         $response = $this->getResponseByName(
             $user_name,
-            $this->client->get('docman_items/' . $folder_id . '/docman_items')
+            $this->request_factory->createRequest('GET', 'docman_items/' . $folder_id . '/docman_items')
         );
-        $folder   = $response->json();
+        $folder   = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         $folder_content = $this->findItemByTitle($folder, $folder_name);
         $new_folder_id  = $folder_content['id'];
         $response       = $this->getResponseByName(
             $user_name,
-            $this->client->get('docman_items/' . $new_folder_id . '/docman_items')
+            $this->request_factory->createRequest('GET', 'docman_items/' . $new_folder_id . '/docman_items')
         );
-        $item_folder    = $response->json();
+        $item_folder    = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         $this->assertEquals(200, $response->getStatusCode());
 
         return $item_folder;

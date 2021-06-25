@@ -18,8 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-use Guzzle\Http\Message\Response;
-
 /**
  * @group PlanningTests
  */
@@ -28,20 +26,20 @@ class PlanningTest extends RestBase //phpcs:ignore PSR1.Classes.ClassDeclaration
 
     public function testOptionsPlannings(): void
     {
-        $response = $this->getResponse($this->client->options('projects/' . $this->project_private_member_id . '/plannings'));
-        $this->assertEquals(['OPTIONS', 'GET'], $response->getHeader('Allow')->normalize()->toArray());
+        $response = $this->getResponse($this->request_factory->createRequest('OPTIONS', 'projects/' . $this->project_private_member_id . '/plannings'));
+        self::assertEqualsCanonicalizing(['OPTIONS', 'GET'], explode(', ', $response->getHeaderLine('Allow')));
     }
 
     public function testOptionsPlanningsWithRESTReadOnlyUser(): void
     {
-        $response = $this->getResponse($this->client->options('projects/' . $this->project_private_member_id . '/plannings'));
+        $response = $this->getResponse($this->request_factory->createRequest('OPTIONS', 'projects/' . $this->project_private_member_id . '/plannings'));
 
-        $this->assertEquals(['OPTIONS', 'GET'], $response->getHeader('Allow')->normalize()->toArray());
+        self::assertEqualsCanonicalizing(['OPTIONS', 'GET'], explode(', ', $response->getHeaderLine('Allow')));
     }
 
     public function testGetPlanningsContainsAReleasePlanning(): void
     {
-        $response = $this->getResponse($this->client->get('projects/' . $this->project_private_member_id . '/plannings'));
+        $response = $this->getResponse($this->request_factory->createRequest('GET', 'projects/' . $this->project_private_member_id . '/plannings'));
 
         $this->assertPlannigAndReleasePlanning($response);
     }
@@ -49,16 +47,16 @@ class PlanningTest extends RestBase //phpcs:ignore PSR1.Classes.ClassDeclaration
     public function testGetPlanningsContainsAReleasePlanningWithRESTReadOnlyUser(): void
     {
         $response = $this->getResponse(
-            $this->client->get('projects/' . $this->project_private_member_id . '/plannings'),
+            $this->request_factory->createRequest('GET', 'projects/' . $this->project_private_member_id . '/plannings'),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
 
         $this->assertPlannigAndReleasePlanning($response);
     }
 
-    private function assertPlannigAndReleasePlanning(Response $response): void
+    private function assertPlannigAndReleasePlanning(\Psr\Http\Message\ResponseInterface $response): void
     {
-        $plannings = $response->json();
+        $plannings = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertCount(2, $plannings);
 
@@ -81,9 +79,9 @@ class PlanningTest extends RestBase //phpcs:ignore PSR1.Classes.ClassDeclaration
 
     public function testReleasePlanningHasNoMilestone(): void
     {
-        $response = $this->getResponse($this->client->get($this->getMilestonesUri()));
+        $response = $this->getResponse($this->request_factory->createRequest('GET', $this->getMilestonesUri()));
 
-        $this->assertCount(1, $response->json());
+        $this->assertCount(1, json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR));
 
         $this->assertEquals($response->getStatusCode(), 200);
     }
@@ -91,11 +89,11 @@ class PlanningTest extends RestBase //phpcs:ignore PSR1.Classes.ClassDeclaration
     public function testReleasePlanningHasNoMilestoneWithRESTReadOnlyUser(): void
     {
         $response = $this->getResponse(
-            $this->client->get($this->getMilestonesUri()),
+            $this->request_factory->createRequest('GET', $this->getMilestonesUri()),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
 
-        $this->assertCount(1, $response->json());
+        $this->assertCount(1, json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR));
 
         $this->assertEquals($response->getStatusCode(), 200);
     }
@@ -105,10 +103,10 @@ class PlanningTest extends RestBase //phpcs:ignore PSR1.Classes.ClassDeclaration
      */
     public function testPlanningMilestonesArePaginatedCorrectly(): void
     {
-        $response = $this->getResponse($this->client->get($this->getMilestonesUri() . '?limit=0'));
+        $response = $this->getResponse($this->request_factory->createRequest('GET', $this->getMilestonesUri() . '?limit=0'));
 
-        $pagination_size  = (int) (string) $response->getHeader('X-PAGINATION-SIZE');
-        $pagination_limit = (int) (string) $response->getHeader('X-PAGINATION-LIMIT');
+        $pagination_size  = (int) $response->getHeaderLine('X-PAGINATION-SIZE');
+        $pagination_limit = (int) $response->getHeaderLine('X-PAGINATION-LIMIT');
 
         $this->assertEquals(0, $pagination_limit);
         $this->assertGreaterThanOrEqual(1, $pagination_size);
@@ -116,9 +114,11 @@ class PlanningTest extends RestBase //phpcs:ignore PSR1.Classes.ClassDeclaration
 
     private function getMilestonesUri(): string
     {
-        $response_plannings = $this->getResponse(
-            $this->client->get('projects/' . $this->project_private_member_id . '/plannings')
-        )->json();
+        $response = $this->getResponse(
+            $this->request_factory->createRequest('GET', 'projects/' . $this->project_private_member_id . '/plannings')
+        );
+
+        $response_plannings = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         return $response_plannings[0]['milestones_uri'];
     }

@@ -42,7 +42,8 @@ class TrackerBase extends RestBase
             return;
         }
 
-        $reports = $this->getResponse($this->client->get("trackers/$this->releases_tracker_id/tracker_reports"))->json();
+        $response = $this->getResponse($this->request_factory->createRequest('GET', "trackers/$this->releases_tracker_id/tracker_reports"));
+        $reports  = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         foreach ($reports as $report) {
             if ($report['label'] === 'Default') {

@@ -33,7 +33,7 @@ class ArtifactFilesTest extends \ArtifactFilesTest
      */
     public function testOptionsArtifactIdWithUser($file_id): void
     {
-        $request  = $this->client->options('artifact_temporary_files/' . $file_id);
+        $request  = $this->request_factory->createRequest('OPTIONS', 'artifact_temporary_files/' . $file_id);
         $response = $this->getResponseForReadOnlyUserAdmin($request);
         $this->assertEquals(200, $response->getStatusCode());
     }
@@ -43,12 +43,12 @@ class ArtifactFilesTest extends \ArtifactFilesTest
      */
     public function testArtifactAttachedFilesGetIdWithUser($file_id): void
     {
-        $request  = $this->client->get('artifact_files/' . $file_id);
+        $request  = $this->request_factory->createRequest('GET', 'artifact_files/' . $file_id);
         $response = $this->getResponseForReadOnlyUserAdmin($request);
 
         $this->assertEquals(200, $response->getStatusCode());
 
-        $json = $response->json();
+        $json = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         $data = $json['data'];
 
         $expected = base64_encode(base64_decode($this->first_file['content']) . $this->second_chunk);
@@ -62,10 +62,10 @@ class ArtifactFilesTest extends \ArtifactFilesTest
     public function testOptionsArtifactAttachedFilesIdUser($file_id): void
     {
         $response = $this->getResponseForReadOnlyUserAdmin(
-            $this->client->options('artifact_files/' . $file_id)
+            $this->request_factory->createRequest('OPTIONS', 'artifact_files/' . $file_id)
         );
 
         $this->assertEquals($response->getStatusCode(), 200);
-        $this->assertEquals(['OPTIONS', 'GET'], $response->getHeader('Allow')->normalize()->toArray());
+        self::assertEqualsCanonicalizing(['OPTIONS', 'GET'], explode(', ', $response->getHeaderLine('Allow')));
     }
 }

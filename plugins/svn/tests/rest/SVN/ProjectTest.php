@@ -20,7 +20,6 @@
 
 namespace Tuleap\SVN\REST;
 
-use Guzzle\Http\Message\Response;
 use REST_TestDataBuilder;
 
 require_once dirname(__FILE__) . '/../bootstrap.php';
@@ -32,9 +31,7 @@ class ProjectTest extends TestBase
 {
     public function testGETRepositories(): void
     {
-        $response = $this->getResponse($this->client->get(
-            'projects/' . $this->svn_project_id . '/svn'
-        ));
+        $response = $this->getResponse($this->request_factory->createRequest('GET', 'projects/' . $this->svn_project_id . '/svn'));
 
         $this->assertRepositories($response);
     }
@@ -42,20 +39,20 @@ class ProjectTest extends TestBase
     public function testGETRepositoriesWithRESTReadOnlyUser(): void
     {
         $response = $this->getResponse(
-            $this->client->get('projects/' . $this->svn_project_id . '/svn'),
+            $this->request_factory->createRequest('GET', 'projects/' . $this->svn_project_id . '/svn'),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
 
         $this->assertRepositories($response);
     }
 
-    private function assertRepositories(Response $response): void
+    private function assertRepositories(\Psr\Http\Message\ResponseInterface $response): void
     {
-        $repositories_response = $response->json();
+        $repositories_response = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         $repositories          = $repositories_response['repositories'];
 
         $this->assertCount(2, $repositories);
-        $this->assertEquals(2, (int) (string) $response->getHeader('X-Pagination-Size'));
+        $this->assertEquals(2, (int) $response->getHeaderLine('X-Pagination-Size'));
 
         $repository_01 = $repositories[0];
         $this->assertArrayHasKey('id', $repository_01);
@@ -76,15 +73,13 @@ class ProjectTest extends TestBase
             ]
         );
 
-        $response = $this->getResponse($this->client->get(
-            "projects/$this->svn_project_id/svn?$query"
-        ));
+        $response = $this->getResponse($this->request_factory->createRequest('GET', "projects/$this->svn_project_id/svn?$query"));
 
-        $repositories_response = $response->json();
+        $repositories_response = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         $repositories          = $repositories_response['repositories'];
 
         $this->assertCount(1, $repositories);
-        $this->assertEquals(1, (int) (string) $response->getHeader('X-Pagination-Size'));
+        $this->assertEquals(1, (int) $response->getHeaderLine('X-Pagination-Size'));
 
         $repository = $repositories[0];
         $this->assertArrayHasKey('id', $repository);
@@ -94,20 +89,18 @@ class ProjectTest extends TestBase
 
     public function testOPTIONS()
     {
-        $response = $this->getResponse($this->client->options(
-            'projects/' . $this->svn_project_id . '/svn'
-        ));
+        $response = $this->getResponse($this->request_factory->createRequest('OPTIONS', 'projects/' . $this->svn_project_id . '/svn'));
 
-        $this->assertEquals(['OPTIONS', 'GET'], $response->getHeader('Allow')->normalize()->toArray());
+        $this->assertEquals(['OPTIONS', 'GET'], explode(', ', $response->getHeaderLine('Allow')));
     }
 
     public function testOPTIONSWithRESTReadOnlyUser()
     {
         $response = $this->getResponse(
-            $this->client->options('projects/' . $this->svn_project_id . '/svn'),
+            $this->request_factory->createRequest('OPTIONS', 'projects/' . $this->svn_project_id . '/svn'),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
 
-        $this->assertEquals(['OPTIONS', 'GET'], $response->getHeader('Allow')->normalize()->toArray());
+        $this->assertEquals(['OPTIONS', 'GET'], explode(', ', $response->getHeaderLine('Allow')));
     }
 }

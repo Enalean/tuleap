@@ -20,16 +20,14 @@
 
 namespace Test\Rest;
 
-use Guzzle\Http\Client;
+use GuzzleHttp\Client;
+use GuzzleHttp\RequestOptions;
+use Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\ResponseInterface;
 
 class RequestWrapper
 {
-
-    public const MAX_RETRY = 3;
-    /**
-     * @var Client
-     */
-    private $client;
+    private Client $client;
 
     /**
      * @var Cache
@@ -42,12 +40,12 @@ class RequestWrapper
         $this->cache  = $cache;
     }
 
-    public function getResponseWithoutAuth($request)
+    public function getResponseWithoutAuth(RequestInterface $request): ResponseInterface
     {
-        return $request->send();
+        return $this->client->sendRequest($request);
     }
 
-    public function getResponseByName($name, $request): \Guzzle\Http\Message\Response
+    public function getResponseByName($name, RequestInterface $request): ResponseInterface
     {
         $token = $this->cache->getTokenForUser($name);
         if (! $token) {
@@ -55,16 +53,16 @@ class RequestWrapper
             $this->cache->setTokenForUser($name, $token);
         }
 
-        return $request
-            ->setHeader('X-Auth-Token', $token['token'])
-            ->setHeader('X-Auth-UserId', $token['user_id'])
-            ->send();
+        return $this->client->sendRequest(
+            $request
+                ->withHeader('X-Auth-Token', $token['token'])
+                ->withHeader('X-Auth-UserId', $token['user_id'])
+        );
     }
 
-    public function getResponseByBasicAuth($username, $password, $request)
+    public function getResponseByBasicAuth($username, $password, RequestInterface $request): ResponseInterface
     {
-        $request->setAuth($username, $password);
-        return $request->send();
+        return $this->client->send($request, [RequestOptions::AUTH => [$username, $password], RequestOptions::HTTP_ERRORS => false]);
     }
 
     private function getTokenForUser($username, $password)
@@ -76,18 +74,8 @@ class RequestWrapper
             ]
         );
 
-        // Retry is there because in some circumstances (PHP 5.6 first REST call) restler shits bricks
-        $retry = self::MAX_RETRY;
-        do {
-            if ($retry !== self::MAX_RETRY) {
-                $wait_for = self::MAX_RETRY - $retry;
-                sleep($wait_for);
-            }
-            $retry--;
-            // need to hardcode the v1 path here when running v2 tests in standalone
-            $response = $this->client->post('/api/v1/tokens', null, $payload)->send();
-        } while (substr($response->getBody(true), 0, 1) !== '{' && $retry > 0);
+        $response = $this->client->request('POST', 'tokens', ['body' => $payload]);
 
-        return $response->json();
+        return json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
     }
 }

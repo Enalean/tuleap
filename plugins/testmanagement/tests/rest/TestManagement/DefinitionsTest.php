@@ -34,8 +34,8 @@ final class DefinitionsTest extends BaseTest
     {
         $first_definition = $this->getFirstDefinition(TestManagementDataBuilder::USER_TESTER_NAME);
 
-        $definition_request = $this->client->get('testmanagement_definitions/' . $first_definition['id']);
-        $definition         = $this->getResponse($definition_request)->json();
+        $definition_request = $this->request_factory->createRequest('GET', 'testmanagement_definitions/' . $first_definition['id']);
+        $definition         = json_decode($this->getResponse($definition_request)->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertEquals($definition, $first_definition);
     }
@@ -44,11 +44,11 @@ final class DefinitionsTest extends BaseTest
     {
         $first_definition = $this->getFirstDefinition(REST_TestDataBuilder::TEST_BOT_USER_NAME);
 
-        $definition_request = $this->client->get('testmanagement_definitions/' . $first_definition['id']);
-        $definition         = $this->getResponse(
+        $definition_request = $this->request_factory->createRequest('GET', 'testmanagement_definitions/' . $first_definition['id']);
+        $definition         = json_decode($this->getResponse(
             $definition_request,
             REST_TestDataBuilder::TEST_BOT_USER_NAME
-        )->json();
+        )->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertEquals($definition, $first_definition);
     }
@@ -63,11 +63,11 @@ final class DefinitionsTest extends BaseTest
 
     private function getFirstExecution($campaign_id, string $user_name)
     {
-        $executions_request = $this->client->get('testmanagement_campaigns/' . $campaign_id . '/testmanagement_executions');
-        $executions         = $this->getResponse(
+        $executions_request = $this->request_factory->createRequest('GET', 'testmanagement_campaigns/' . $campaign_id . '/testmanagement_executions');
+        $executions         = json_decode($this->getResponse(
             $executions_request,
             $user_name
-        )->json();
+        )->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         return $executions[0];
     }

@@ -27,38 +27,38 @@ class MilestonesTest extends MilestoneBase //phpcs:ignore PSR1.Classes.ClassDecl
 {
     public function testOPTIONS(): void
     {
-        $response = $this->getResponse($this->client->options('milestones'));
-        $this->assertEquals(['OPTIONS'], $response->getHeader('Allow')->normalize()->toArray());
+        $response = $this->getResponse($this->request_factory->createRequest('OPTIONS', 'milestones'));
+        self::assertEqualsCanonicalizing(['OPTIONS'], explode(', ', $response->getHeaderLine('Allow')));
     }
 
     public function testOPTIONSMilestonesId(): void
     {
-        $response = $this->getResponse($this->client->options('milestones/' . $this->release_artifact_ids[1]));
-        $this->assertEquals(['OPTIONS', 'GET'], $response->getHeader('Allow')->normalize()->toArray());
+        $response = $this->getResponse($this->request_factory->createRequest('OPTIONS', 'milestones/' . $this->release_artifact_ids[1]));
+        self::assertEqualsCanonicalizing(['OPTIONS', 'GET'], explode(', ', $response->getHeaderLine('Allow')));
     }
 
     public function testOPTIONSWithRESTReadOnlyUser(): void
     {
         $response = $this->getResponse(
-            $this->client->options('milestones'),
+            $this->request_factory->createRequest('OPTIONS', 'milestones'),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
-        $this->assertEquals(['OPTIONS'], $response->getHeader('Allow')->normalize()->toArray());
+        self::assertEqualsCanonicalizing(['OPTIONS'], explode(', ', $response->getHeaderLine('Allow')));
 
         $response = $this->getResponse(
-            $this->client->options('milestones/' . $this->release_artifact_ids[1]),
+            $this->request_factory->createRequest('OPTIONS', 'milestones/' . $this->release_artifact_ids[1]),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
-        $this->assertEquals(['OPTIONS', 'GET'], $response->getHeader('Allow')->normalize()->toArray());
+        self::assertEqualsCanonicalizing(['OPTIONS', 'GET'], explode(', ', $response->getHeaderLine('Allow')));
     }
 
     public function testGETResourcesMilestones(): void
     {
-        $response = $this->getResponse($this->client->get('milestones/' . $this->release_artifact_ids[1]));
+        $response = $this->getResponse($this->request_factory->createRequest('GET', 'milestones/' . $this->release_artifact_ids[1]));
 
         $this->assertEquals(200, $response->getStatusCode());
 
-        $milestone = $response->json();
+        $milestone = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertGETResourcesMilestones($milestone);
         $this->assertGETResourcesBacklog($milestone);
@@ -69,13 +69,13 @@ class MilestonesTest extends MilestoneBase //phpcs:ignore PSR1.Classes.ClassDecl
     public function testGETResourcesMilestonesWithRESTReadOnlyUser(): void
     {
         $response = $this->getResponse(
-            $this->client->get('milestones/' . $this->release_artifact_ids[1]),
+            $this->request_factory->createRequest('GET', 'milestones/' . $this->release_artifact_ids[1]),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
 
         $this->assertEquals(200, $response->getStatusCode());
 
-        $milestone = $response->json();
+        $milestone = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertGETResourcesMilestones($milestone);
         $this->assertGETResourcesBacklog($milestone);
@@ -181,10 +181,10 @@ class MilestonesTest extends MilestoneBase //phpcs:ignore PSR1.Classes.ClassDecl
 
     public function testGETResourcesBurndown(): void
     {
-        $response = $this->getResponse($this->client->get('milestones/' . $this->sprint_artifact_ids[1]));
+        $response = $this->getResponse($this->request_factory->createRequest('GET', 'milestones/' . $this->sprint_artifact_ids[1]));
         $this->assertEquals(200, $response->getStatusCode());
 
-        $milestone = $response->json();
+        $milestone = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         $this->assertEquals(
             [
                 'uri' => 'milestones/' . $this->sprint_artifact_ids[1] . '/burndown',
@@ -195,10 +195,10 @@ class MilestonesTest extends MilestoneBase //phpcs:ignore PSR1.Classes.ClassDecl
 
     public function testGETResourcesCardwall(): void
     {
-        $response = $this->getResponse($this->client->get('milestones/' . $this->sprint_artifact_ids[1]));
+        $response = $this->getResponse($this->request_factory->createRequest('GET', 'milestones/' . $this->sprint_artifact_ids[1]));
         $this->assertEquals(200, $response->getStatusCode());
 
-        $milestone = $response->json();
+        $milestone = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         $this->assertEquals(
             [
                 'uri'    => 'milestones/' . $this->sprint_artifact_ids[1] . '/cardwall',

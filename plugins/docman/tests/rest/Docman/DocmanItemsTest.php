@@ -61,9 +61,9 @@ class DocmanItemsTest extends DocmanTestExecutionHelper
 
         $response       = $this->getResponseByName(
             REST_TestDataBuilder::ADMIN_USER_NAME,
-            $this->client->get('docman_items/' . $folder['id'] . '/docman_items')
+            $this->request_factory->createRequest('GET', 'docman_items/' . $folder['id'] . '/docman_items')
         );
-        $items_folder_2 = $response->json();
+        $items_folder_2 = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         $items = array_merge($items_folder_1, $items_folder_2);
 
@@ -100,9 +100,9 @@ class DocmanItemsTest extends DocmanTestExecutionHelper
 
         $response       = $this->getResponseByName(
             REST_TestDataBuilder::TEST_BOT_USER_NAME,
-            $this->client->get('docman_items/' . $folder['id'] . '/docman_items')
+            $this->request_factory->createRequest('GET', 'docman_items/' . $folder['id'] . '/docman_items')
         );
-        $items_folder_2 = $response->json();
+        $items_folder_2 = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         $items = array_merge($items_folder_1, $items_folder_2);
 
@@ -118,9 +118,9 @@ class DocmanItemsTest extends DocmanTestExecutionHelper
     {
         $response = $this->getResponseByName(
             DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
-            $this->client->get('docman_items/' . $root_id . '/docman_items')
+            $this->request_factory->createRequest('GET', 'docman_items/' . $root_id . '/docman_items')
         );
-        $folder   = $response->json();
+        $folder   = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         $allowed_folder = $this->findItemByTitle($folder, 'Folder');
         $this->assertNotNull($allowed_folder);
@@ -134,11 +134,11 @@ class DocmanItemsTest extends DocmanTestExecutionHelper
     public function testOPTIONSDocmanItemsId($root_id): void
     {
         $response = $this->getResponse(
-            $this->client->options('docman_items/' . $root_id . '/docman_items'),
+            $this->request_factory->createRequest('OPTIONS', 'docman_items/' . $root_id . '/docman_items'),
             DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME
         );
 
-        $this->assertEquals(['OPTIONS', 'GET', 'POST'], $response->getHeader('Allow')->normalize()->toArray());
+        $this->assertEquals(['OPTIONS', 'GET', 'POST'], explode(', ', $response->getHeaderLine('Allow')));
     }
 
     /**
@@ -147,11 +147,11 @@ class DocmanItemsTest extends DocmanTestExecutionHelper
     public function testOPTIONSId($root_id): void
     {
         $response = $this->getResponse(
-            $this->client->options('docman_items/' . $root_id),
+            $this->request_factory->createRequest('OPTIONS', 'docman_items/' . $root_id),
             DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME
         );
 
-        $this->assertEquals(['OPTIONS', 'GET'], $response->getHeader('Allow')->normalize()->toArray());
+        $this->assertEquals(['OPTIONS', 'GET'], explode(', ', $response->getHeaderLine('Allow')));
     }
 
     /**
@@ -160,18 +160,18 @@ class DocmanItemsTest extends DocmanTestExecutionHelper
     public function testAllOPTIONSDocmanItemsWithUserRESTReadOnlyAdmin($root_id): void
     {
         $response = $this->getResponse(
-            $this->client->options('docman_items/' . $root_id),
+            $this->request_factory->createRequest('OPTIONS', 'docman_items/' . $root_id),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
 
-        $this->assertEquals(['OPTIONS', 'GET'], $response->getHeader('Allow')->normalize()->toArray());
+        $this->assertEquals(['OPTIONS', 'GET'], explode(', ', $response->getHeaderLine('Allow')));
 
         $response = $this->getResponse(
-            $this->client->options('docman_items/' . $root_id . '/docman_items'),
+            $this->request_factory->createRequest('OPTIONS', 'docman_items/' . $root_id . '/docman_items'),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
 
-        $this->assertEquals(['OPTIONS', 'GET', 'POST'], $response->getHeader('Allow')->normalize()->toArray());
+        $this->assertEquals(['OPTIONS', 'GET', 'POST'], explode(', ', $response->getHeaderLine('Allow')));
     }
 
     /**
@@ -180,10 +180,10 @@ class DocmanItemsTest extends DocmanTestExecutionHelper
     public function testGetId($root_id): void
     {
         $response = $this->getResponse(
-            $this->client->get('docman_items/' . $root_id),
+            $this->request_factory->createRequest('GET', 'docman_items/' . $root_id),
             DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME
         );
-        $item     = $response->json();
+        $item     = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertEquals('Project Documentation', $item['title']);
         $this->assertEquals($root_id, $item['id']);
@@ -197,10 +197,10 @@ class DocmanItemsTest extends DocmanTestExecutionHelper
     public function testGetIdWithUserRESTReadOnlyAdmin($root_id): void
     {
         $response = $this->getResponse(
-            $this->client->get('docman_items/' . $root_id),
+            $this->request_factory->createRequest('GET', 'docman_items/' . $root_id),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
-        $item     = $response->json();
+        $item     = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertEquals('Project Documentation', $item['title']);
         $this->assertEquals($root_id, $item['id']);
@@ -216,13 +216,13 @@ class DocmanItemsTest extends DocmanTestExecutionHelper
         $root_folder        = $this->loadRootFolderContent($root_id);
         $folder_to_download = $this->findItemByTitle($root_folder, 'Download me as a zip');
 
-        $request  = $this->client->get('docman_items/' . $folder_to_download['id'] . '/?with_size=true');
+        $request  = $this->request_factory->createRequest('GET', 'docman_items/' . $folder_to_download['id'] . '/?with_size=true');
         $response = $this->getResponse(
             $request,
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
 
-        $folder = $response->json();
+        $folder = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertEquals(
             $folder['folder_properties'],
@@ -240,8 +240,8 @@ class DocmanItemsTest extends DocmanTestExecutionHelper
     {
         $embedded_2 = $this->findItemByTitle($items, 'GET EM');
 
-        $project_response = $this->getResponse($this->client->get('docman_items/' . $embedded_2['id'] . '/parents'));
-        $json_parents     = $project_response->json();
+        $project_response = $this->getResponse($this->request_factory->createRequest('GET', 'docman_items/' . $embedded_2['id'] . '/parents'));
+        $json_parents     = json_decode($project_response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         $this->assertEquals(count($json_parents), 3);
         $this->assertEquals($json_parents[0]['title'], 'Project Documentation');
         $this->assertEquals($json_parents[1]['title'], 'Folder');
@@ -256,11 +256,11 @@ class DocmanItemsTest extends DocmanTestExecutionHelper
         $embedded_2 = $this->findItemByTitle($items, 'GET EM');
 
         $project_response = $this->getResponse(
-            $this->client->get('docman_items/' . $embedded_2['id'] . '/parents'),
+            $this->request_factory->createRequest('GET', 'docman_items/' . $embedded_2['id'] . '/parents'),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
 
-        $json_parents = $project_response->json();
+        $json_parents = json_decode($project_response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         $this->assertEquals(count($json_parents), 3);
         $this->assertEquals($json_parents[0]['title'], 'Project Documentation');
         $this->assertEquals($json_parents[1]['title'], 'Folder');

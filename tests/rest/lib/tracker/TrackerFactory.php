@@ -20,12 +20,16 @@
 
 namespace Test\Rest\Tracker;
 
-use Guzzle\Http\Client;
+use Psr\Http\Message\RequestFactoryInterface;
+use Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 use Test\Rest\RequestWrapper;
 
 class TrackerFactory
 {
-    private $client;
+    private RequestFactoryInterface $request_factory;
+    private StreamFactoryInterface $stream_factory;
     private $project_trackers;
     private $user_name;
     /**
@@ -33,11 +37,12 @@ class TrackerFactory
 */
     private $rest_request;
 
-    public function __construct(Client $client, RequestWrapper $rest_request, $project_id, $default_user_name)
+    public function __construct(RequestFactoryInterface $request_factory, StreamFactoryInterface $stream_factory, RequestWrapper $rest_request, $project_id, $default_user_name)
     {
-        $this->client       = $client;
-        $this->rest_request = $rest_request;
-        $this->user_name    = $default_user_name;
+        $this->request_factory = $request_factory;
+        $this->stream_factory  = $stream_factory;
+        $this->rest_request    = $rest_request;
+        $this->user_name       = $default_user_name;
         $this->cacheProjectTrackers($project_id);
     }
 
@@ -48,7 +53,8 @@ class TrackerFactory
     public function getTrackerRest($tracker_name)
     {
         return new Tracker(
-            $this->client,
+            $this->request_factory,
+            $this->stream_factory,
             $this->rest_request,
             $this->project_trackers[$tracker_name],
             $this->user_name
@@ -57,13 +63,14 @@ class TrackerFactory
 
     private function cacheProjectTrackers($project_id)
     {
-        $project_trackers = $this->getResponse($this->client->get("projects/$project_id/trackers"))->json();
+        $response         = $this->getResponse($this->request_factory->createRequest('GET', "projects/$project_id/trackers"));
+        $project_trackers = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         foreach ($project_trackers as $tracker) {
             $this->project_trackers[strtolower($tracker['item_name'])] = $tracker;
         }
     }
 
-    private function getResponse($request)
+    private function getResponse(RequestInterface $request): ResponseInterface
     {
         return $this->rest_request->getResponseByName(
             $this->user_name,

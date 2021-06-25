@@ -18,8 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-use Guzzle\Http\Message\Response;
-
 /**
  * @group ArtifactsChangesets
  */
@@ -42,8 +40,8 @@ class ArtifactsChangesetsTest extends RestBase //phpcs:ignore PSR1.Classes.Class
      */
     public function testOptionsArtifactId()
     {
-        $response = $this->getResponse($this->client->options($this->artifact_resource['uri'] . '/changesets'));
-        $this->assertEquals(['OPTIONS', 'GET'], $response->getHeader('Allow')->normalize()->toArray());
+        $response = $this->getResponse($this->request_factory->createRequest('OPTIONS', $this->artifact_resource['uri'] . '/changesets'));
+        self::assertEqualsCanonicalizing(['OPTIONS', 'GET'], explode(', ', $response->getHeaderLine('Allow')));
     }
 
     /**
@@ -52,13 +50,13 @@ class ArtifactsChangesetsTest extends RestBase //phpcs:ignore PSR1.Classes.Class
     public function testOptionsArtifactIdWithUserRESTReadOnlyAdmin()
     {
         $response = $this->getResponse(
-            $this->client->options($this->artifact_resource['uri'] . '/changesets'),
+            $this->request_factory->createRequest('OPTIONS', $this->artifact_resource['uri'] . '/changesets'),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
 
-        $this->assertEquals(
+        self::assertEqualsCanonicalizing(
             ['OPTIONS', 'GET'],
-            $response->getHeader('Allow')->normalize()->toArray()
+            explode(', ', $response->getHeaderLine('Allow'))
         );
     }
 
@@ -67,7 +65,7 @@ class ArtifactsChangesetsTest extends RestBase //phpcs:ignore PSR1.Classes.Class
      */
     public function testGetChangesetsHasPagination()
     {
-        $response = $this->getResponse($this->client->get($this->artifact_resource['uri'] . '/changesets?offset=2&limit=10'));
+        $response = $this->getResponse($this->request_factory->createRequest('GET', $this->artifact_resource['uri'] . '/changesets?offset=2&limit=10'));
 
         $this->assertChangeset($response);
     }
@@ -78,7 +76,7 @@ class ArtifactsChangesetsTest extends RestBase //phpcs:ignore PSR1.Classes.Class
     public function testGetChangesetsHasPaginationWithUserRESTReadOnlyAdmin()
     {
         $response = $this->getResponse(
-            $this->client->get($this->artifact_resource['uri'] . '/changesets?offset=2&limit=10'),
+            $this->request_factory->createRequest('GET', $this->artifact_resource['uri'] . '/changesets?offset=2&limit=10'),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
 
@@ -86,14 +84,13 @@ class ArtifactsChangesetsTest extends RestBase //phpcs:ignore PSR1.Classes.Class
     }
 
     /**
-     * @param $response
      * @throws Exception
      */
-    private function assertChangeset(Response $response): void
+    private function assertChangeset(\Psr\Http\Message\ResponseInterface $response): void
     {
         $this->assertEquals(200, $response->getStatusCode());
 
-        $changesets = $response->json();
+        $changesets = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         $this->assertCount(1, $changesets);
         $this->assertEquals("Awesome changes", $changesets[0]['last_comment']['body']);
 
@@ -148,10 +145,10 @@ class ArtifactsChangesetsTest extends RestBase //phpcs:ignore PSR1.Classes.Class
             }
         }
 
-        $pagination_offset = $response->getHeader('X-PAGINATION-OFFSET')->normalize()->toArray();
-        $this->assertEquals($pagination_offset[0], 2);
+        $pagination_offset = $response->getHeaderLine('X-PAGINATION-OFFSET');
+        $this->assertEquals('2', $pagination_offset);
 
-        $pagination_size = $response->getHeader('X-PAGINATION-SIZE')->normalize()->toArray();
-        $this->assertEquals($pagination_size[0], 3);
+        $pagination_size = $response->getHeaderLine('X-PAGINATION-SIZE');
+        $this->assertEquals('3', $pagination_size);
     }
 }

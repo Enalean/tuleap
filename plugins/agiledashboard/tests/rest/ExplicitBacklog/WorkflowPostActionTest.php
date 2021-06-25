@@ -48,25 +48,19 @@ class WorkflowPostActionTest extends TestBase
 
         $response = $this->getResponseByName(
             REST_TestDataBuilder::TEST_USER_1_NAME,
-            $this->client->put(
-                "tracker_workflow_transitions/$transition_id/actions",
-                null,
-                $body
-            )
+            $this->request_factory->createRequest('PUT', "tracker_workflow_transitions/$transition_id/actions")->withBody($this->stream_factory->createStream($body))
         );
 
         $this->assertEquals(200, $response->getStatusCode());
 
         $response_get = $this->getResponseByName(
             REST_TestDataBuilder::TEST_USER_1_NAME,
-            $this->client->get(
-                "tracker_workflow_transitions/$transition_id/actions",
-            )
+            $this->request_factory->createRequest('GET', "tracker_workflow_transitions/$transition_id/actions")
         );
 
         $this->assertEquals(200, $response_get->getStatusCode());
 
-        $post_actions = $response_get->json();
+        $post_actions = json_decode($response_get->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         $this->assertEmpty($post_actions);
     }
 
@@ -88,11 +82,7 @@ class WorkflowPostActionTest extends TestBase
 
         $response = $this->getResponseByName(
             REST_TestDataBuilder::TEST_USER_1_NAME,
-            $this->client->put(
-                "tracker_workflow_transitions/$transition_id/actions",
-                null,
-                $body
-            )
+            $this->request_factory->createRequest('PUT', "tracker_workflow_transitions/$transition_id/actions")->withBody($this->stream_factory->createStream($body))
         );
 
         $this->assertEquals(200, $response->getStatusCode());
@@ -104,14 +94,12 @@ class WorkflowPostActionTest extends TestBase
     {
         $response_get = $this->getResponseByName(
             REST_TestDataBuilder::TEST_USER_1_NAME,
-            $this->client->get(
-                "tracker_workflow_transitions/$transition_id/actions",
-            )
+            $this->request_factory->createRequest('GET', "tracker_workflow_transitions/$transition_id/actions")
         );
 
         $this->assertEquals(200, $response_get->getStatusCode());
 
-        $post_actions = $response_get->json();
+        $post_actions = json_decode($response_get->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         $this->assertCount(1, $post_actions);
         $this->assertEquals('add_to_top_backlog', $post_actions[0]['type']);
     }

@@ -42,17 +42,17 @@ class TimetrackingReportTest extends TimetrackingBase
 
         $response = $this->getResponseByName(
             TimetrackingDataBuilder::USER_TESTER_NAME,
-            $this->client->get('timetracking_reports/1')
+            $this->request_factory->createRequest('GET', 'timetracking_reports/1')
         );
 
-        $this->assertEquals($response->json(), $report);
+        $this->assertEquals(json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR), $report);
     }
 
     public function testGetIdRaiseExeptionIfReportNotExist()
     {
         $response = $this->getResponseByName(
             TimetrackingDataBuilder::USER_TESTER_NAME,
-            $this->client->get('timetracking_reports/3')
+            $this->request_factory->createRequest('GET', 'timetracking_reports/3')
         );
 
         $this->assertEquals(404, $response->getStatusCode());
@@ -62,7 +62,7 @@ class TimetrackingReportTest extends TimetrackingBase
     {
         $response = $this->getResponseByName(
             TimetrackingDataBuilder::TEST_USER_4_NAME,
-            $this->client->get('timetracking_reports/1')
+            $this->request_factory->createRequest('GET', 'timetracking_reports/1')
         );
 
         $this->assertEquals(403, $response->getStatusCode());
@@ -74,15 +74,15 @@ class TimetrackingReportTest extends TimetrackingBase
 
         $this->getResponseByName(
             TimetrackingDataBuilder::USER_TESTER_NAME,
-            $this->client->put('timetracking_reports/1', null, $query)
+            $this->request_factory->createRequest('PUT', 'timetracking_reports/1')->withBody($this->stream_factory->createStream($query))
         );
 
         $response = $this->getResponseByName(
             TimetrackingDataBuilder::USER_TESTER_NAME,
-            $this->client->get('timetracking_reports/1')
+            $this->request_factory->createRequest('GET', 'timetracking_reports/1')
         );
 
-        $this->assertEquals($response->json()["trackers"][0]["id"], $this->tracker_timetracking);
+        $this->assertEquals(json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR)["trackers"][0]["id"], $this->tracker_timetracking);
     }
 
     public function testUpdateReportRaiseExeptionIfUserTryToUpdateToSomebodyElseReport()
@@ -91,7 +91,7 @@ class TimetrackingReportTest extends TimetrackingBase
 
         $response = $this->getResponseByName(
             TimetrackingDataBuilder::TEST_USER_4_NAME,
-            $this->client->put('timetracking_reports/1', null, $query)
+            $this->request_factory->createRequest('PUT', 'timetracking_reports/1')->withBody($this->stream_factory->createStream($query))
         );
 
         $this->assertEquals(403, $response->getStatusCode());
@@ -109,9 +109,9 @@ class TimetrackingReportTest extends TimetrackingBase
         $this->initUserId(TimetrackingDataBuilder::USER_TESTER_NAME);
         $response = $this->getResponseByName(
             TimetrackingDataBuilder::USER_TESTER_NAME,
-            $this->client->get("/api/v1/timetracking_reports/1/times?query=$query")
+            $this->request_factory->createRequest('GET', "/api/v1/timetracking_reports/1/times?query=$query")
         );
-        $result   = $response->json();
+        $result   = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         $total    = 0;
 
         foreach ($result as $tracker) {
@@ -133,9 +133,9 @@ class TimetrackingReportTest extends TimetrackingBase
         $this->initUserId(TimetrackingDataBuilder::USER_TESTER_NAME);
         $response = $this->getResponseByName(
             TimetrackingDataBuilder::USER_TESTER_NAME,
-            $this->client->get("/api/v1/timetracking_reports/1/times?query=$query")
+            $this->request_factory->createRequest('GET', "/api/v1/timetracking_reports/1/times?query=$query")
         );
-        $result   = $response->json();
+        $result   = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         $total    = 0;
 
         foreach ($result as $tracker) {
@@ -151,9 +151,9 @@ class TimetrackingReportTest extends TimetrackingBase
         $this->initUserId(TimetrackingDataBuilder::USER_TESTER_NAME);
         $response = $this->getResponseByName(
             TimetrackingDataBuilder::USER_TESTER_NAME,
-            $this->client->get("/api/v1/timetracking_reports/1/times")
+            $this->request_factory->createRequest('GET', "/api/v1/timetracking_reports/1/times")
         );
-        $result   = $response->json();
+        $result   = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         $total    = 0;
 
         foreach ($result as $tracker) {

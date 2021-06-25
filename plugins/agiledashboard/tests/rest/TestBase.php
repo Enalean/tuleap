@@ -83,10 +83,10 @@ class TestBase extends RestBase
 
         $response = $this->getResponseByName(
             REST_TestDataBuilder::ADMIN_USER_NAME,
-            $this->setup_client->get("trackers/$this->kanban_tracker_id/tracker_reports?$query")
+            $this->request_factory->createRequest('GET', "trackers/$this->kanban_tracker_id/tracker_reports?$query")
         );
 
-        $reports = $response->json();
+        $reports = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         return $reports[0]['id'];
     }

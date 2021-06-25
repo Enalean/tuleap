@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Tests\REST\Artifacts;
 
-use Guzzle\Http\Message\Response;
 use REST_TestDataBuilder;
 use Tuleap\Tracker\Tests\REST\TrackerBase;
 
@@ -45,12 +44,12 @@ final class LinkedArtifactsTest extends TrackerBase
         $artifact_id_3 = $this->createArtifact($tracker_id, $field_id, $artifact_id_1, $artifact_id_2);
 
         $response = $this->getResponse(
-            $this->client->get('artifacts/' . urlencode((string) $artifact_id_3) . '/linked_artifacts?direction=forward')
+            $this->request_factory->createRequest('GET', 'artifacts/' . urlencode((string) $artifact_id_3) . '/linked_artifacts?direction=forward')
         );
         $this->assertArtifactLinks($response, $artifact_id_1, $artifact_id_2);
 
         $response_with_read_only_user = $this->getResponse(
-            $this->client->get('artifacts/' . urlencode((string) $artifact_id_3) . '/linked_artifacts?direction=forward'),
+            $this->request_factory->createRequest('GET', 'artifacts/' . urlencode((string) $artifact_id_3) . '/linked_artifacts?direction=forward'),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
         $this->assertArtifactLinks($response_with_read_only_user, $artifact_id_1, $artifact_id_2);
@@ -77,28 +76,28 @@ final class LinkedArtifactsTest extends TrackerBase
         ];
 
         $response_with_read_only_user = $this->getResponse(
-            $this->client->post('artifacts', null, json_encode($payload)),
+            $this->request_factory->createRequest('POST', 'artifacts')->withBody($this->stream_factory->createStream(json_encode($payload))),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
 
         $this->assertEquals(403, $response_with_read_only_user->getStatusCode());
 
         $response = $this->getResponse(
-            $this->client->post('artifacts', null, json_encode($payload))
+            $this->request_factory->createRequest('POST', 'artifacts')->withBody($this->stream_factory->createStream(json_encode($payload)))
         );
 
         $this->assertEquals(201, $response->getStatusCode());
 
-        $json = $response->json();
+        $json = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         return $json['id'];
     }
 
-    private function assertArtifactLinks(Response $response, int $artifact_id_1, int $artifact_id_2): void
+    private function assertArtifactLinks(\Psr\Http\Message\ResponseInterface $response, int $artifact_id_1, int $artifact_id_2): void
     {
         $this->assertEquals(200, $response->getStatusCode());
 
-        $linked_artifacts_collection = $response->json();
+        $linked_artifacts_collection = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         $linked_artifacts_id = [];
         foreach ($linked_artifacts_collection['collection'] as $linked_artifact) {

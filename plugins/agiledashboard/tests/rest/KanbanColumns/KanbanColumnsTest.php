@@ -30,37 +30,33 @@ class KanbanColumnsTest extends TestBase
 
     public function testOPTIONSKanbanColumns()
     {
-        $response = $this->getResponse($this->client->options('kanban_columns'));
-        $this->assertEquals(['OPTIONS', 'PATCH', 'DELETE'], $response->getHeader('Allow')->normalize()->toArray());
+        $response = $this->getResponse($this->request_factory->createRequest('OPTIONS', 'kanban_columns'));
+        $this->assertEquals(['OPTIONS', 'PATCH', 'DELETE'], explode(', ', $response->getHeaderLine('Allow')));
     }
 
     public function testOPTIONSKanbanColumnsWithRESTReadOnlyUser()
     {
         $response = $this->getResponse(
-            $this->client->options('kanban_columns'),
+            $this->request_factory->createRequest('OPTIONS', 'kanban_columns'),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
 
-        $this->assertEquals(['OPTIONS', 'PATCH', 'DELETE'], $response->getHeader('Allow')->normalize()->toArray());
+        $this->assertEquals(['OPTIONS', 'PATCH', 'DELETE'], explode(', ', $response->getHeaderLine('Allow')));
     }
 
     public function testPATCHKanbanColumns()
     {
         $url = 'kanban_columns/' . REST_TestDataBuilder::KANBAN_ONGOING_COLUMN_ID . '?kanban_id=' . REST_TestDataBuilder::KANBAN_ID;
 
-        $response = $this->getResponse($this->client->patch(
-            $url,
-            null,
-            json_encode([
-                "wip_limit" => 200,
-                "label"     => "yummy"
-            ])
-        ));
+        $response = $this->getResponse($this->request_factory->createRequest('PATCH', $url)->withBody($this->stream_factory->createStream(json_encode([
+            "wip_limit" => 200,
+            "label"     => "yummy"
+        ]))));
 
         $this->assertEquals($response->getStatusCode(), 200);
 
-        $response = $this->getResponse($this->client->get('kanban/' . REST_TestDataBuilder::KANBAN_ID));
-        $kanban   = $response->json();
+        $response = $this->getResponse($this->request_factory->createRequest('GET', 'kanban/' . REST_TestDataBuilder::KANBAN_ID));
+        $kanban   = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertEquals($kanban['columns'][1]['limit'], 200);
         $this->assertEquals($kanban['columns'][1]['label'], "yummy");
@@ -71,14 +67,10 @@ class KanbanColumnsTest extends TestBase
         $url = 'kanban_columns/' . REST_TestDataBuilder::KANBAN_ONGOING_COLUMN_ID . '?kanban_id=' . REST_TestDataBuilder::KANBAN_ID;
 
         $response = $this->getResponse(
-            $this->client->patch(
-                $url,
-                null,
-                json_encode([
-                    "wip_limit" => 200,
-                    "label"     => "yummy"
-                ])
-            ),
+            $this->request_factory->createRequest('PATCH', $url)->withBody($this->stream_factory->createStream(json_encode([
+                "wip_limit" => 200,
+                "label"     => "yummy"
+            ]))),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
 
@@ -88,7 +80,7 @@ class KanbanColumnsTest extends TestBase
     public function testDELETEKanbanColumnsDeniedForRESTReadOnlyUserNotInvolvedInProject(): void
     {
         $url      = 'kanban_columns/' . REST_TestDataBuilder::KANBAN_OTHER_VALUE_COLUMN_ID . '?kanban_id=' . REST_TestDataBuilder::KANBAN_ID;
-        $response = $this->getResponse($this->client->delete($url), REST_TestDataBuilder::TEST_BOT_USER_NAME);
+        $response = $this->getResponse($this->request_factory->createRequest('DELETE', $url), REST_TestDataBuilder::TEST_BOT_USER_NAME);
 
         $this->assertEquals(403, $response->getStatusCode());
     }
@@ -97,7 +89,7 @@ class KanbanColumnsTest extends TestBase
     {
         $url = 'kanban_columns/' . REST_TestDataBuilder::KANBAN_OTHER_VALUE_COLUMN_ID . '?kanban_id=' . REST_TestDataBuilder::KANBAN_ID;
 
-        $response = $this->getResponse($this->client->delete($url));
+        $response = $this->getResponse($this->request_factory->createRequest('DELETE', $url));
         $this->assertEquals($response->getStatusCode(), 200);
     }
 }

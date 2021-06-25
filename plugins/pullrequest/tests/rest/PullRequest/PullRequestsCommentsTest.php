@@ -20,7 +20,6 @@
 
 namespace Tuleap\PullRequest;
 
-use Guzzle\Http\Message\Response;
 use REST_TestDataBuilder;
 use RestBase;
 
@@ -39,24 +38,24 @@ final class PullRequestsCommentsTest extends RestBase
 
     public function testOptions(): void
     {
-        $response = $this->getResponse($this->client->options('pull_requests/1/comments'));
+        $response = $this->getResponse($this->request_factory->createRequest('OPTIONS', 'pull_requests/1/comments'));
 
-        $this->assertEquals(['OPTIONS', 'GET', 'POST'], $response->getHeader('Allow')->normalize()->toArray());
+        $this->assertEquals(['OPTIONS', 'GET', 'POST'], explode(', ', $response->getHeaderLine('Allow')));
     }
 
     public function testOptionsWithReadOnlyAdmin(): void
     {
         $response = $this->getResponse(
-            $this->client->options('pull_requests/1/comments'),
+            $this->request_factory->createRequest('OPTIONS', 'pull_requests/1/comments'),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
 
-        $this->assertEquals(['OPTIONS', 'GET', 'POST'], $response->getHeader('Allow')->normalize()->toArray());
+        $this->assertEquals(['OPTIONS', 'GET', 'POST'], explode(', ', $response->getHeaderLine('Allow')));
     }
 
     public function testGetPullRequestComments(): void
     {
-        $response = $this->getResponse($this->client->get('pull_requests/1/comments'));
+        $response = $this->getResponse($this->request_factory->createRequest('GET', 'pull_requests/1/comments'));
 
         $this->assertGETPullRequestsComments($response);
     }
@@ -64,16 +63,16 @@ final class PullRequestsCommentsTest extends RestBase
     public function testGetPullRequestCommentsWithReadOnlyAdmin(): void
     {
         $response = $this->getResponse(
-            $this->client->get('pull_requests/1/comments'),
+            $this->request_factory->createRequest('GET', 'pull_requests/1/comments'),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
 
         $this->assertGETPullRequestsComments($response);
     }
 
-    private function assertGETPullRequestsComments(Response $response): void
+    private function assertGETPullRequestsComments(\Psr\Http\Message\ResponseInterface $response): void
     {
-        $pull_request_comments = $response->json();
+        $pull_request_comments = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertEquals(3, count($pull_request_comments));
         $this->assertEquals(1, $pull_request_comments[0]['id']);
@@ -86,37 +85,33 @@ final class PullRequestsCommentsTest extends RestBase
 
     public function testGetPullRequestCommentsThrows403IfUserCantSeeGitRepository(): void
     {
-        $response = $this->getResponseForNonMember($this->client->get('pull_requests/1/comments'));
+        $response = $this->getResponseForNonMember($this->request_factory->createRequest('GET', 'pull_requests/1/comments'));
 
         $this->assertEquals($response->getStatusCode(), 403);
     }
 
     public function testPostPullRequestComment(): void
     {
-        $response = $this->getResponse($this->client->post('pull_requests/1/comments', null, json_encode(
+        $response = $this->getResponse($this->request_factory->createRequest('POST', 'pull_requests/1/comments')->withBody($this->stream_factory->createStream(json_encode(
             [
                 'content' => 'Shot down in flames'
             ]
-        )));
+        ))));
 
         $this->assertEquals($response->getStatusCode(), 201);
 
-        $pull_request_comment = $response->json();
+        $pull_request_comment = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         $this->assertEquals('Shot down in flames', $pull_request_comment['content']);
     }
 
     public function testPostPullRequestCommentWithReadOnlyAdmin(): void
     {
         $response = $this->getResponse(
-            $this->client->post(
-                'pull_requests/1/comments',
-                null,
-                json_encode(
-                    [
-                        'content' => 'Shot down in flames'
-                    ]
-                )
-            ),
+            $this->request_factory->createRequest('POST', 'pull_requests/1/comments')->withBody($this->stream_factory->createStream(json_encode(
+                [
+                    'content' => 'Shot down in flames'
+                ]
+            ))),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
 

@@ -69,21 +69,21 @@ class ComputedFieldsDefaultValueTest extends TrackerBase
         ];
 
         $response = $this->getResponse(
-            $this->client->post('artifacts', null, json_encode($payload)),
+            $this->request_factory->createRequest('POST', 'artifacts')->withBody($this->stream_factory->createStream(json_encode($payload))),
             REST_TestDataBuilder::TEST_USER_3_NAME
         );
 
         $this->assertEquals(201, $response->getStatusCode());
 
-        $created_artifact     = $response->json();
+        $created_artifact     = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         $created_artifact_uri = $created_artifact['uri'];
 
         $get_response = $this->getResponse(
-            $this->client->get($created_artifact_uri)
+            $this->request_factory->createRequest('GET', $created_artifact_uri)
         );
 
         $computed_field_found = false;
-        $artifact             = $get_response->json();
+        $artifact             = json_decode($get_response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         foreach ($artifact['values'] as $field_value) {
             if ($field_value['type'] === 'computed') {
                 $computed_field_found = true;

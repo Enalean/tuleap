@@ -66,7 +66,7 @@ final class PrivateCommentReportQueryTest extends TrackerBase
             DataBuilder::PRIVATE_COMMENT_MEMBER_NAME
         );
 
-        $artifacts = $response->json();
+        $artifacts = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         $this->assertCount(0, $artifacts);
     }
 
@@ -76,14 +76,14 @@ final class PrivateCommentReportQueryTest extends TrackerBase
         $url   = "trackers/$this->private_comment_tracker_id/artifacts?expert_query=$query";
 
         return $this->getResponse(
-            $this->client->get($url),
+            $this->request_factory->createRequest('GET', $url),
             $user_name
         );
     }
 
-    private function assertArtifactIsFound(\Guzzle\Http\Message\Response $response): void
+    private function assertArtifactIsFound(\Psr\Http\Message\ResponseInterface $response): void
     {
-        $artifacts = $response->json();
+        $artifacts = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         $this->assertCount(1, $artifacts);
         $this->assertSame($this->private_comment_artifact_id, $artifacts[0]['id']);
     }

@@ -20,7 +20,6 @@
 
 namespace Tuleap\Gitlab\REST;
 
-use Guzzle\Http\Message\Response;
 
 require_once __DIR__ . '/../bootstrap.php';
 
@@ -29,33 +28,29 @@ class ProjectTest extends TestBase
     public function testOptionsProjectGitLabRepositories(): void
     {
         $response = $this->getResponse(
-            $this->client->options(
-                'projects/' . $this->gitlab_project_id . '/gitlab_repositories'
-            )
+            $this->request_factory->createRequest('OPTIONS', 'projects/' . $this->gitlab_project_id . '/gitlab_repositories')
         );
 
         self::assertSame(200, $response->getStatusCode());
-        self::assertEquals(['OPTIONS', 'GET'], $response->getHeader('Allow')->normalize()->toArray());
+        self::assertEquals(['OPTIONS', 'GET'], explode(', ', $response->getHeaderLine('Allow')));
     }
 
     public function testGetGitLabRepositories(): void
     {
         $response = $this->getResponse(
-            $this->client->get(
-                'projects/' . $this->gitlab_project_id . '/gitlab_repositories'
-            )
+            $this->request_factory->createRequest('GET', 'projects/' . $this->gitlab_project_id . '/gitlab_repositories')
         );
 
-        self::assertGETGitLabRepositories($response);
+        $this->assertGETGitLabRepositories($response);
     }
 
-    private function assertGETGitLabRepositories(Response $response): void
+    private function assertGETGitLabRepositories(\Psr\Http\Message\ResponseInterface $response): void
     {
         self::assertSame(200, $response->getStatusCode());
 
-        self::assertEquals(1, (int) (string) $response->getHeader('X-Pagination-Size'));
+        self::assertEquals(1, (int) $response->getHeaderLine('X-Pagination-Size'));
 
-        $gitlab_repositories = $response->json();
+        $gitlab_repositories = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         self::assertCount(1, $gitlab_repositories);
 
         $gitlab_repository = $gitlab_repositories[0];

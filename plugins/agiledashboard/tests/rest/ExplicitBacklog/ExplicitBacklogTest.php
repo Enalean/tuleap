@@ -42,11 +42,7 @@ class ExplicitBacklogTest extends TestBase
 
         $response_patch = $this->getResponseByName(
             \REST_TestDataBuilder::TEST_USER_1_NAME,
-            $this->client->patch(
-                'projects/' . urlencode((string) $this->explicit_backlog_project_id) . '/backlog',
-                null,
-                $patch_body
-            )
+            $this->request_factory->createRequest('PATCH', 'projects/' . urlencode((string) $this->explicit_backlog_project_id) . '/backlog')->withBody($this->stream_factory->createStream($patch_body))
         );
 
         $this->assertEquals(200, $response_patch->getStatusCode());
@@ -105,11 +101,7 @@ class ExplicitBacklogTest extends TestBase
         ]);
 
         $response_patch = $this->getResponse(
-            $this->client->patch(
-                'milestones/' . urlencode((string) $release_artifact_id) . '/content',
-                null,
-                $patch_body
-            )
+            $this->request_factory->createRequest('PATCH', 'milestones/' . urlencode((string) $release_artifact_id) . '/content')->withBody($this->stream_factory->createStream($patch_body))
         );
 
         $this->assertEquals(200, $response_patch->getStatusCode());
@@ -129,11 +121,7 @@ class ExplicitBacklogTest extends TestBase
         ]);
 
         $response_patch = $this->getResponse(
-            $this->client->patch(
-                'projects/' . urlencode((string) $this->explicit_backlog_project_id) . '/backlog',
-                null,
-                $patch_body
-            )
+            $this->request_factory->createRequest('PATCH', 'projects/' . urlencode((string) $this->explicit_backlog_project_id) . '/backlog')->withBody($this->stream_factory->createStream($patch_body))
         );
 
         $this->assertEquals(200, $response_patch->getStatusCode());
@@ -151,11 +139,7 @@ class ExplicitBacklogTest extends TestBase
         ]);
 
         $response_patch = $this->getResponse(
-            $this->client->patch(
-                'projects/' . urlencode((string) $this->explicit_backlog_project_id) . '/backlog',
-                null,
-                $patch_body
-            )
+            $this->request_factory->createRequest('PATCH', 'projects/' . urlencode((string) $this->explicit_backlog_project_id) . '/backlog')->withBody($this->stream_factory->createStream($patch_body))
         );
 
         $this->assertEquals(200, $response_patch->getStatusCode());
@@ -173,8 +157,8 @@ class ExplicitBacklogTest extends TestBase
 
     private function assertTopBacklogContainsTheFirstStory(): void
     {
-        $response          = $this->getResponse($this->client->get('projects/' . urlencode((string) $this->explicit_backlog_project_id) . '/backlog'));
-        $top_backlog_items = $response->json();
+        $response          = $this->getResponse($this->request_factory->createRequest('GET', 'projects/' . urlencode((string) $this->explicit_backlog_project_id) . '/backlog'));
+        $top_backlog_items = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertEquals(200, $response->getStatusCode());
 
@@ -184,8 +168,8 @@ class ExplicitBacklogTest extends TestBase
 
     private function assertTopBacklogIsEmpty(): void
     {
-        $response          = $this->getResponse($this->client->get('projects/' . urlencode((string) $this->explicit_backlog_project_id) . '/backlog'));
-        $top_backlog_items = $response->json();
+        $response          = $this->getResponse($this->request_factory->createRequest('GET', 'projects/' . urlencode((string) $this->explicit_backlog_project_id) . '/backlog'));
+        $top_backlog_items = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertEquals(200, $response->getStatusCode());
 
@@ -196,8 +180,8 @@ class ExplicitBacklogTest extends TestBase
     {
         $release_artifact_id = $this->getFirstReleaseArtifactId();
 
-        $response      = $this->getResponse($this->client->get('milestones/' . urlencode((string) $release_artifact_id) . '/content'));
-        $release_items = $response->json();
+        $response      = $this->getResponse($this->request_factory->createRequest('GET', 'milestones/' . urlencode((string) $release_artifact_id) . '/content'));
+        $release_items = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertEquals(200, $response->getStatusCode());
 
@@ -209,8 +193,8 @@ class ExplicitBacklogTest extends TestBase
     {
         $release_artifact_id = $this->getFirstReleaseArtifactId();
 
-        $response      = $this->getResponse($this->client->get('milestones/' . urlencode((string) $release_artifact_id) . '/content'));
-        $release_items = $response->json();
+        $response      = $this->getResponse($this->request_factory->createRequest('GET', 'milestones/' . urlencode((string) $release_artifact_id) . '/content'));
+        $release_items = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertEquals(200, $response->getStatusCode());
 

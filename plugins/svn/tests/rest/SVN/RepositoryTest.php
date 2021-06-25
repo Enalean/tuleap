@@ -20,7 +20,6 @@
 
 namespace Tuleap\SVN\REST;
 
-use Guzzle\Http\Message\Response;
 use REST_TestDataBuilder;
 
 require_once dirname(__FILE__) . '/../bootstrap.php';
@@ -37,7 +36,7 @@ class RepositoryTest extends TestBase
 
     public function testGETRepositoryForProjectAdmin()
     {
-        $response = $this->getResponse($this->client->get('svn/1'));
+        $response = $this->getResponse($this->request_factory->createRequest('GET', 'svn/1'));
 
         $this->assertRepositoryForAdmin($response);
     }
@@ -45,16 +44,16 @@ class RepositoryTest extends TestBase
     public function testGETRepositoryForRESTReadOnlyUser()
     {
         $response = $this->getResponse(
-            $this->client->get('svn/1'),
+            $this->request_factory->createRequest('GET', 'svn/1'),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
 
         $this->assertRepositoryForAdmin($response);
     }
 
-    private function assertRepositoryForAdmin(Response $response)
+    private function assertRepositoryForAdmin(\Psr\Http\Message\ResponseInterface $response)
     {
-        $repository = $response->json();
+        $repository = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertArrayHasKey('id', $repository);
         $this->assertEquals($repository['name'], 'repo01');
@@ -102,9 +101,9 @@ class RepositoryTest extends TestBase
 
     public function testGETRepositoryForProjectMember()
     {
-        $response = $this->getResponseWithProjectMember($this->client->get('svn/1'));
+        $response = $this->getResponseWithProjectMember($this->request_factory->createRequest('GET', 'svn/1'));
 
-        $repository = $response->json();
+        $repository = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertArrayHasKey('id', $repository);
         $this->assertEquals($repository['name'], 'repo01');
@@ -119,9 +118,7 @@ class RepositoryTest extends TestBase
     public function testDELETERepositoryForProjectAdmin()
     {
         $response = $this->getResponse(
-            $this->client->delete(
-                'svn/1'
-            )
+            $this->request_factory->createRequest('DELETE', 'svn/1')
         );
 
         $this->assertEquals($response->getStatusCode(), 202);
@@ -134,9 +131,7 @@ class RepositoryTest extends TestBase
     public function testDELETERepositoryForProjectMember()
     {
         $response = $this->getResponseWithProjectMember(
-            $this->client->delete(
-                'svn/1'
-            )
+            $this->request_factory->createRequest('DELETE', 'svn/1')
         );
         $this->assertEquals(403, $response->getStatusCode());
     }
@@ -148,7 +143,7 @@ class RepositoryTest extends TestBase
     public function testDELETERepositoryForRESTReadOnlyUserNotInvolvedInProject()
     {
         $response = $this->getResponse(
-            $this->client->delete('svn/1'),
+            $this->request_factory->createRequest('DELETE', 'svn/1'),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
 
@@ -165,7 +160,7 @@ class RepositoryTest extends TestBase
         );
 
         $response = $this->getResponse(
-            $this->client->post('svn', null, $params),
+            $this->request_factory->createRequest('POST', 'svn')->withBody($this->stream_factory->createStream($params)),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
 
@@ -181,8 +176,8 @@ class RepositoryTest extends TestBase
             ]
         );
 
-        $response   = $this->getResponse($this->client->post('svn', null, $params));
-        $repository = $response->json();
+        $response   = $this->getResponse($this->request_factory->createRequest('POST', 'svn')->withBody($this->stream_factory->createStream($params)));
+        $repository = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertArrayHasKey('id', $repository);
         $this->assertEquals($repository['name'], 'my_repository');
@@ -252,8 +247,8 @@ class RepositoryTest extends TestBase
             ]
         );
 
-        $response   = $this->getResponse($this->client->post('svn', null, $params));
-        $repository = $response->json();
+        $response   = $this->getResponse($this->request_factory->createRequest('POST', 'svn')->withBody($this->stream_factory->createStream($params)));
+        $repository = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertArrayHasKey('id', $repository);
         $this->assertEquals($repository['name'], 'my_repository_02');
@@ -304,7 +299,7 @@ class RepositoryTest extends TestBase
             ]
         );
 
-        $response = $this->getResponseWithProjectMember($this->client->post('svn', null, $params));
+        $response = $this->getResponseWithProjectMember($this->request_factory->createRequest('POST', 'svn')->withBody($this->stream_factory->createStream($params)));
         $this->assertEquals(403, $response->getStatusCode());
     }
 
@@ -320,7 +315,7 @@ class RepositoryTest extends TestBase
             ]
         );
 
-        $response = $this->getResponse($this->client->post('svn', null, $params));
+        $response = $this->getResponse($this->request_factory->createRequest('POST', 'svn')->withBody($this->stream_factory->createStream($params)));
         $this->assertEquals($response->getStatusCode(), 201);
     }
 
@@ -357,7 +352,7 @@ class RepositoryTest extends TestBase
         );
 
         $response = $this->getResponse(
-            $this->client->put('svn/1', null, $data),
+            $this->request_factory->createRequest('PUT', 'svn/1')->withBody($this->stream_factory->createStream($data)),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
 
@@ -396,9 +391,9 @@ class RepositoryTest extends TestBase
             ]
         );
 
-        $response = $this->getResponse($this->client->put('svn/1', null, $data));
+        $response = $this->getResponse($this->request_factory->createRequest('PUT', 'svn/1')->withBody($this->stream_factory->createStream($data)));
 
-        $repository = $response->json();
+        $repository = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertArrayHasKey('id', $repository);
         $this->assertEquals($repository['name'], 'repo01');
@@ -439,41 +434,41 @@ class RepositoryTest extends TestBase
 
     public function testOPTIONSId()
     {
-        $response = $this->getResponse($this->client->options('svn/1'));
+        $response = $this->getResponse($this->request_factory->createRequest('OPTIONS', 'svn/1'));
 
         $this->assertEquals(
             ['OPTIONS', 'GET', 'PUT', 'DELETE'],
-            $response->getHeader('Allow')->normalize()->toArray()
+            explode(', ', $response->getHeaderLine('Allow'))
         );
     }
 
     public function testOPTIONS()
     {
         $response = $this->getResponse(
-            $this->client->options('svn'),
+            $this->request_factory->createRequest('OPTIONS', 'svn'),
             REST_TestDataBuilder::TEST_USER_1_NAME
         );
 
-        $this->assertEquals(['OPTIONS', 'POST'], $response->getHeader('Allow')->normalize()->toArray());
+        $this->assertEquals(['OPTIONS', 'POST'], explode(', ', $response->getHeaderLine('Allow')));
     }
 
     public function testAllOptionsWithRESTReadOnlyUserNotInvolvedInProject()
     {
         $response = $this->getResponse(
-            $this->client->options('svn/1'),
+            $this->request_factory->createRequest('OPTIONS', 'svn/1'),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
 
         $this->assertEquals(
             ['OPTIONS', 'GET', 'PUT', 'DELETE'],
-            $response->getHeader('Allow')->normalize()->toArray()
+            explode(', ', $response->getHeaderLine('Allow'))
         );
 
         $response = $this->getResponse(
-            $this->client->options('svn'),
+            $this->request_factory->createRequest('OPTIONS', 'svn'),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
 
-        $this->assertEquals(['OPTIONS', 'POST'], $response->getHeader('Allow')->normalize()->toArray());
+        $this->assertEquals(['OPTIONS', 'POST'], explode(', ', $response->getHeaderLine('Allow')));
     }
 }

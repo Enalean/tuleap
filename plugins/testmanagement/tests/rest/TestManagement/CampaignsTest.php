@@ -34,8 +34,8 @@ final class CampaignsTest extends BaseTest
     {
         $expected_campaign = $this->valid_73_campaign;
 
-        $response = $this->getResponse($this->client->get('testmanagement_campaigns/' . $expected_campaign['id']));
-        $campaign = $response->json();
+        $response = $this->getResponse($this->request_factory->createRequest('GET', 'testmanagement_campaigns/' . $expected_campaign['id']));
+        $campaign = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertEquals($expected_campaign, $campaign);
     }
@@ -45,11 +45,11 @@ final class CampaignsTest extends BaseTest
         $expected_campaign = $this->valid_73_campaign;
 
         $response = $this->getResponse(
-            $this->client->get('testmanagement_campaigns/' . $expected_campaign['id']),
+            $this->request_factory->createRequest('GET', 'testmanagement_campaigns/' . $expected_campaign['id']),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
 
-        $campaign = $response->json();
+        $campaign = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertEquals($expected_campaign, $campaign);
     }
@@ -58,10 +58,10 @@ final class CampaignsTest extends BaseTest
     {
         $campaign = $this->valid_73_campaign;
 
-        $all_executions_request  = $this->client->get('testmanagement_campaigns/' . $campaign['id'] . '/testmanagement_executions');
+        $all_executions_request  = $this->request_factory->createRequest('GET', 'testmanagement_campaigns/' . $campaign['id'] . '/testmanagement_executions');
         $all_executions_response = $this->getResponse($all_executions_request);
 
-        $executions = $all_executions_response->json();
+        $executions = json_decode($all_executions_response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         $this->assertCount(3, $executions);
         $this->assertExecutionsContains($executions, 'Import default template');
         $this->assertExecutionsContains($executions, 'Create a repository');
@@ -72,14 +72,14 @@ final class CampaignsTest extends BaseTest
     {
         $campaign = $this->valid_73_campaign;
 
-        $all_executions_request = $this->client->get('testmanagement_campaigns/' . $campaign['id'] . '/testmanagement_executions');
+        $all_executions_request = $this->request_factory->createRequest('GET', 'testmanagement_campaigns/' . $campaign['id'] . '/testmanagement_executions');
 
         $all_executions_response = $this->getResponse(
             $all_executions_request,
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
 
-        $executions = $all_executions_response->json();
+        $executions = json_decode($all_executions_response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         $this->assertCount(3, $executions);
         $this->assertExecutionsContains($executions, 'Import default template');
         $this->assertExecutionsContains($executions, 'Create a repository');
@@ -102,15 +102,11 @@ final class CampaignsTest extends BaseTest
         $campaign = $this->valid_73_campaign;
 
         $response = $this->getResponse(
-            $this->client->patch(
-                'testmanagement_campaigns/' . $campaign['id'],
-                null,
-                json_encode(
-                    [
-                        'label' => 'Tuleap 9.18'
-                    ]
-                )
-            ),
+            $this->request_factory->createRequest('PATCH', 'testmanagement_campaigns/' . $campaign['id'])->withBody($this->stream_factory->createStream(json_encode(
+                [
+                    'label' => 'Tuleap 9.18'
+                ]
+            ))),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
 
@@ -122,21 +118,17 @@ final class CampaignsTest extends BaseTest
         $campaign = $this->valid_73_campaign;
 
         $response = $this->getResponse(
-            $this->client->patch(
-                'testmanagement_campaigns/' . $campaign['id'],
-                null,
-                json_encode(
-                    [
-                        'label' => 'Tuleap 9.18'
-                    ]
-                )
-            )
+            $this->request_factory->createRequest('PATCH', 'testmanagement_campaigns/' . $campaign['id'])->withBody($this->stream_factory->createStream(json_encode(
+                [
+                    'label' => 'Tuleap 9.18'
+                ]
+            )))
         );
         $this->assertEquals(200, $response->getStatusCode());
 
-        $updated_campaign = $this->getResponse(
-            $this->client->get('testmanagement_campaigns/' . $campaign['id'])
-        )->json();
+        $updated_campaign = json_decode($this->getResponse(
+            $this->request_factory->createRequest('GET', 'testmanagement_campaigns/' . $campaign['id'])
+        )->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         $this->assertEquals('Tuleap 9.18', $updated_campaign['label']);
 
         $this->revertCampaign($campaign);
@@ -147,21 +139,17 @@ final class CampaignsTest extends BaseTest
         $campaign = $this->valid_73_campaign;
 
         $response = $this->getResponse(
-            $this->client->patch(
-                'testmanagement_campaigns/' . $campaign['id'],
-                null,
-                json_encode(
-                    [
-                        'job_configuration' => ['url' => 'https://example.com', 'token' => 'so secret']
-                    ]
-                )
-            )
+            $this->request_factory->createRequest('PATCH', 'testmanagement_campaigns/' . $campaign['id'])->withBody($this->stream_factory->createStream(json_encode(
+                [
+                    'job_configuration' => ['url' => 'https://example.com', 'token' => 'so secret']
+                ]
+            )))
         );
         $this->assertEquals(200, $response->getStatusCode());
 
-        $updated_campaign = $this->getResponse(
-            $this->client->get('testmanagement_campaigns/' . $campaign['id'])
-        )->json();
+        $updated_campaign = json_decode($this->getResponse(
+            $this->request_factory->createRequest('GET', 'testmanagement_campaigns/' . $campaign['id'])
+        )->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         $this->assertEquals('https://example.com', $updated_campaign['job_configuration']['url']);
         $this->assertEquals('so secret', $updated_campaign['job_configuration']['token']);
 
@@ -178,16 +166,12 @@ final class CampaignsTest extends BaseTest
         ];
 
         $response = $this->getResponse(
-            $this->client->patch(
-                'testmanagement_campaigns/' . $campaign['id'],
-                null,
-                json_encode(
-                    [
-                        'job_configuration' => ['url' => 'https://example.com', 'token' => 'so secret'],
-                        'automated_tests_results' => $automated_tests_results
-                    ]
-                )
-            )
+            $this->request_factory->createRequest('PATCH', 'testmanagement_campaigns/' . $campaign['id'])->withBody($this->stream_factory->createStream(json_encode(
+                [
+                    'job_configuration' => ['url' => 'https://example.com', 'token' => 'so secret'],
+                    'automated_tests_results' => $automated_tests_results
+                ]
+            )))
         );
 
         $this->assertEquals(200, $response->getStatusCode());
@@ -205,16 +189,12 @@ final class CampaignsTest extends BaseTest
         ];
 
         $response = $this->getResponse(
-            $this->client->patch(
-                'testmanagement_campaigns/' . $campaign['id'],
-                null,
-                json_encode(
-                    [
-                        'job_configuration' => ['url' => 'https://example.com', 'token' => 'so secret'],
-                        'automated_tests_results' => $automated_tests_results
-                    ]
-                )
-            )
+            $this->request_factory->createRequest('PATCH', 'testmanagement_campaigns/' . $campaign['id'])->withBody($this->stream_factory->createStream(json_encode(
+                [
+                    'job_configuration' => ['url' => 'https://example.com', 'token' => 'so secret'],
+                    'automated_tests_results' => $automated_tests_results
+                ]
+            )))
         );
 
         $this->assertEquals(400, $response->getStatusCode());
@@ -225,15 +205,11 @@ final class CampaignsTest extends BaseTest
         $campaign = $this->valid_73_campaign;
 
         $response = $this->getResponse(
-            $this->client->patch(
-                'testmanagement_campaigns/' . $campaign['id'],
-                null,
-                json_encode(
-                    [
-                        'job_configuration' => ['url' => 'avadakedavra', 'token' => 'so secret']
-                    ]
-                )
-            )
+            $this->request_factory->createRequest('PATCH', 'testmanagement_campaigns/' . $campaign['id'])->withBody($this->stream_factory->createStream(json_encode(
+                [
+                    'job_configuration' => ['url' => 'avadakedavra', 'token' => 'so secret']
+                ]
+            )))
         );
 
         $this->assertEquals(400, $response->getStatusCode());
@@ -245,14 +221,10 @@ final class CampaignsTest extends BaseTest
         $def_id   = $this->getFirstExecution($campaign['id'], REST_TestDataBuilder::TEST_BOT_USER_NAME)['definition']["id"];
 
         $all_executions_response = $this->getResponse(
-            $this->client->patch(
-                'testmanagement_campaigns/' . $campaign['id'] . '/testmanagement_executions',
-                null,
-                json_encode(["definition_ids_to_add" => [$def_id], "execution_ids_to_remove" => []])
-            )
+            $this->request_factory->createRequest('PATCH', 'testmanagement_campaigns/' . $campaign['id'] . '/testmanagement_executions')->withBody($this->stream_factory->createStream(json_encode(["definition_ids_to_add" => [$def_id], "execution_ids_to_remove" => []])))
         );
 
-        $executions = $all_executions_response->json();
+        $executions = json_decode($all_executions_response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertCount(3, $executions);
         $this->assertExecutionsContains($executions, 'Import default template');
@@ -266,11 +238,7 @@ final class CampaignsTest extends BaseTest
         $this->assertFalse($campaign['is_open']);
 
         $response = $this->getResponse(
-            $this->client->patch(
-                'testmanagement_campaigns/' . $campaign['id'] . '/testmanagement_executions',
-                null,
-                json_encode(["definition_ids_to_add" => [], "execution_ids_to_remove" => []])
-            )
+            $this->request_factory->createRequest('PATCH', 'testmanagement_campaigns/' . $campaign['id'] . '/testmanagement_executions')->withBody($this->stream_factory->createStream(json_encode(["definition_ids_to_add" => [], "execution_ids_to_remove" => []])))
         );
 
         $this->assertEquals(400, $response->getStatusCode());
@@ -282,16 +250,12 @@ final class CampaignsTest extends BaseTest
         $this->assertFalse($campaign['is_open']);
 
         $response = $this->getResponse(
-            $this->client->patch(
-                'testmanagement_campaigns/' . $campaign['id'],
-                null,
-                json_encode(["change_status" => "open"])
-            )
+            $this->request_factory->createRequest('PATCH', 'testmanagement_campaigns/' . $campaign['id'])->withBody($this->stream_factory->createStream(json_encode(["change_status" => "open"])))
         );
 
         $this->assertEquals(200, $response->getStatusCode());
 
-        $updated_campaign = $response->json();
+        $updated_campaign = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         $this->assertTrue($updated_campaign['is_open']);
     }
 
@@ -304,49 +268,41 @@ final class CampaignsTest extends BaseTest
         $this->assertFalse($campaign['is_open']);
 
         $response = $this->getResponse(
-            $this->client->patch(
-                'testmanagement_campaigns/' . $campaign['id'],
-                null,
-                json_encode(["change_status" => "closed"])
-            )
+            $this->request_factory->createRequest('PATCH', 'testmanagement_campaigns/' . $campaign['id'])->withBody($this->stream_factory->createStream(json_encode(["change_status" => "closed"])))
         );
 
         $this->assertEquals(200, $response->getStatusCode());
 
-        $updated_campaign = $response->json();
+        $updated_campaign = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         $this->assertFalse($updated_campaign['is_open']);
     }
 
     private function revertCampaign(array $campaign)
     {
         $response = $this->getResponse(
-            $this->client->patch(
-                'testmanagement_campaigns/' . $campaign['id'],
-                null,
-                json_encode(
-                    [
-                        'label'             => $campaign['label'],
-                        'job_configuration' => $campaign['job_configuration']
-                    ]
-                )
-            )
+            $this->request_factory->createRequest('PATCH', 'testmanagement_campaigns/' . $campaign['id'])->withBody($this->stream_factory->createStream(json_encode(
+                [
+                    'label'             => $campaign['label'],
+                    'job_configuration' => $campaign['job_configuration']
+                ]
+            )))
         );
         $this->assertEquals($response->getStatusCode(), 200);
 
-        $updated_campaign = $this->getResponse(
-            $this->client->get('testmanagement_campaigns/' . $campaign['id'])
-        )->json();
+        $updated_campaign = json_decode($this->getResponse(
+            $this->request_factory->createRequest('GET', 'testmanagement_campaigns/' . $campaign['id'])
+        )->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         $this->assertEquals($campaign['label'], $updated_campaign['label']);
         $this->assertEquals($campaign['job_configuration'], $updated_campaign['job_configuration']);
     }
 
     private function getFirstExecution($campaign_id, string $user_name): array
     {
-        $executions_request = $this->client->get('testmanagement_campaigns/' . $campaign_id . '/testmanagement_executions');
-        $executions         = $this->getResponse(
+        $executions_request = $this->request_factory->createRequest('GET', 'testmanagement_campaigns/' . $campaign_id . '/testmanagement_executions');
+        $executions         = json_decode($this->getResponse(
             $executions_request,
             $user_name
-        )->json();
+        )->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         return $executions[0];
     }

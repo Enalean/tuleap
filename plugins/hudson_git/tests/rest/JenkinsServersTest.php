@@ -30,12 +30,12 @@ class JenkinsServersTest extends RestBase
     {
         $response = $this->getResponseByName(
             \REST_TestDataBuilder::ADMIN_USER_NAME,
-            $this->client->get('projects/' . $this->getProjectId(self::TEST_JENKINS_SERVERS_SHORTNAME)   . '/git_jenkins_servers')
+            $this->request_factory->createRequest('GET', 'projects/' . $this->getProjectId(self::TEST_JENKINS_SERVERS_SHORTNAME)   . '/git_jenkins_servers')
         );
 
         $this->assertEquals(200, $response->getStatusCode());
 
-        $collection = $response->json();
+        $collection = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         $servers    = $collection['git_jenkins_servers_representations'];
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertEquals(2, count($servers));

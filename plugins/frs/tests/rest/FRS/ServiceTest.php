@@ -43,38 +43,38 @@ final class ServiceTest extends RestBase
 
     public function testOPTIONS(): void
     {
-        $response = $this->getResponse($this->client->options(sprintf('projects/%d/frs_service', $this->project_id)));
-        $this->assertEquals(['OPTIONS', 'GET'], $response->getHeader('Allow')->normalize()->toArray());
+        $response = $this->getResponse($this->request_factory->createRequest('OPTIONS', sprintf('projects/%d/frs_service', $this->project_id)));
+        $this->assertEquals(['OPTIONS', 'GET'], explode(', ', $response->getHeaderLine('Allow')));
     }
 
     public function testServiceAsAdmin(): void
     {
-        $response = $this->getResponse($this->client->get(sprintf('projects/%d/frs_service', $this->project_id)));
-        $service  = $response->json();
+        $response = $this->getResponse($this->request_factory->createRequest('GET', sprintf('projects/%d/frs_service', $this->project_id)));
+        $service  = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertFrsService($service);
     }
 
     public function testServiceAsRandomUser(): void
     {
-        $response = $this->getResponse($this->client->get(sprintf('projects/%d/frs_service', $this->project_id)), REST_TestDataBuilder::TEST_USER_5_NAME);
-        $service  = $response->json();
+        $response = $this->getResponse($this->request_factory->createRequest('GET', sprintf('projects/%d/frs_service', $this->project_id)), REST_TestDataBuilder::TEST_USER_5_NAME);
+        $service  = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertNull($service['permissions_for_groups']);
     }
 
     public function testServiceAsReadOnlyUser(): void
     {
-        $response = $this->getResponse($this->client->get(sprintf('projects/%d/frs_service', $this->project_id)), REST_TestDataBuilder::TEST_BOT_USER_NAME);
-        $service  = $response->json();
+        $response = $this->getResponse($this->request_factory->createRequest('GET', sprintf('projects/%d/frs_service', $this->project_id)), REST_TestDataBuilder::TEST_BOT_USER_NAME);
+        $service  = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertFrsService($service);
     }
 
     public function testServiceIsInProjectResources(): void
     {
-        $response = $this->getResponse($this->client->get(sprintf('projects/%d', $this->project_id)));
-        $project  = $response->json();
+        $response = $this->getResponse($this->request_factory->createRequest('GET', sprintf('projects/%d', $this->project_id)));
+        $project  = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertContains(
             [

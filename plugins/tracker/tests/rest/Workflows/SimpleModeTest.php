@@ -91,11 +91,11 @@ class SimpleModeTest extends TrackerBase
         );
         $response = $this->getResponseByName(
             \REST_TestDataBuilder::ADMIN_USER_NAME,
-            $this->client->post('tracker_workflow_transitions', null, $body)
+            $this->request_factory->createRequest('POST', 'tracker_workflow_transitions')->withBody($this->stream_factory->createStream($body))
         );
 
         $this->assertEquals(201, $response->getStatusCode());
-        $transition_reference = $response->json();
+        $transition_reference = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         return $transition_reference['id'];
     }
 
@@ -108,10 +108,10 @@ class SimpleModeTest extends TrackerBase
         $date_field_id = $infos['date_field_id'];
         $response      = $this->getResponseByName(
             \REST_TestDataBuilder::ADMIN_USER_NAME,
-            $this->client->get("tracker_workflow_transitions/$transition_id")
+            $this->request_factory->createRequest('GET', "tracker_workflow_transitions/$transition_id")
         );
         $this->assertEquals(200, $response->getStatusCode());
-        $pre_conditions = $response->json();
+        $pre_conditions = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         $expected_ugroup = $this->tracker_workflows_project_id . '_3';
         $this->assertSame([$expected_ugroup], $pre_conditions['authorized_user_group_ids']);
@@ -126,10 +126,10 @@ class SimpleModeTest extends TrackerBase
     {
         $response = $this->getResponseByName(
             \REST_TestDataBuilder::ADMIN_USER_NAME,
-            $this->client->get("tracker_workflow_transitions/$transition_id/actions")
+            $this->request_factory->createRequest('GET', "tracker_workflow_transitions/$transition_id/actions")
         );
         $this->assertEquals(200, $response->getStatusCode());
-        $post_actions = $response->json();
+        $post_actions = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertCount(1, $post_actions);
         $this->assertSame('https://example.com/2', $post_actions[0]['job_url']);
@@ -158,7 +158,7 @@ class SimpleModeTest extends TrackerBase
 
         $response = $this->getResponseByName(
             \REST_TestDataBuilder::ADMIN_USER_NAME,
-            $this->client->patch("tracker_workflow_transitions/$transition_id", null, $body)
+            $this->request_factory->createRequest('PATCH', "tracker_workflow_transitions/$transition_id")->withBody($this->stream_factory->createStream($body))
         );
         $this->assertEquals(200, $response->getStatusCode());
 
@@ -171,10 +171,10 @@ class SimpleModeTest extends TrackerBase
         $sibling_transition_id = $sibling_transition['id'];
         $response              = $this->getResponseByName(
             \REST_TestDataBuilder::ADMIN_USER_NAME,
-            $this->client->get("tracker_workflow_transitions/$sibling_transition_id")
+            $this->request_factory->createRequest('GET', "tracker_workflow_transitions/$sibling_transition_id")
         );
         $this->assertEquals(200, $response->getStatusCode());
-        $sibling_pre_conditions = $response->json();
+        $sibling_pre_conditions = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertSame([$project_admins_ugroup], $sibling_pre_conditions['authorized_user_group_ids']);
         $this->assertTrue($sibling_pre_conditions['is_comment_required']);
@@ -217,7 +217,7 @@ class SimpleModeTest extends TrackerBase
         );
         $response = $this->getResponseByName(
             \REST_TestDataBuilder::ADMIN_USER_NAME,
-            $this->client->put("tracker_workflow_transitions/$transition_id/actions", null, $body)
+            $this->request_factory->createRequest('PUT', "tracker_workflow_transitions/$transition_id/actions")->withBody($this->stream_factory->createStream($body))
         );
         $this->assertEquals(200, $response->getStatusCode());
 
@@ -230,10 +230,10 @@ class SimpleModeTest extends TrackerBase
         $sibling_transition_id = $sibling_transition['id'];
         $response              = $this->getResponseByName(
             \REST_TestDataBuilder::ADMIN_USER_NAME,
-            $this->client->get("tracker_workflow_transitions/$sibling_transition_id/actions")
+            $this->request_factory->createRequest('GET', "tracker_workflow_transitions/$sibling_transition_id/actions")
         );
         $this->assertEquals(200, $response->getStatusCode());
-        $sibling_post_actions = $response->json();
+        $sibling_post_actions = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertCount(2, $sibling_post_actions);
         $date_post_action = $sibling_post_actions[0];
@@ -269,11 +269,7 @@ class SimpleModeTest extends TrackerBase
 
         $response = $this->getResponseByName(
             \REST_TestDataBuilder::ADMIN_USER_NAME,
-            $this->client->put(
-                "tracker_workflow_transitions/$transition_id/actions",
-                null,
-                $body
-            )
+            $this->request_factory->createRequest('PUT', "tracker_workflow_transitions/$transition_id/actions")->withBody($this->stream_factory->createStream($body))
         );
 
         $this->assertEquals($response->getStatusCode(), 200);
@@ -288,14 +284,12 @@ class SimpleModeTest extends TrackerBase
     {
         $response = $this->getResponseByName(
             \REST_TestDataBuilder::ADMIN_USER_NAME,
-            $this->client->get(
-                "tracker_workflow_transitions/$transition_id/actions"
-            )
+            $this->request_factory->createRequest('GET', "tracker_workflow_transitions/$transition_id/actions")
         );
 
         $this->assertEquals($response->getStatusCode(), 200);
 
-        $json_response = $response->json();
+        $json_response = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         $this->assertEquals('frozen_fields', $json_response[0]['type']);
 
         return $transition_id;
@@ -323,11 +317,7 @@ class SimpleModeTest extends TrackerBase
 
         $response = $this->getResponseByName(
             \REST_TestDataBuilder::ADMIN_USER_NAME,
-            $this->client->put(
-                "tracker_workflow_transitions/$transition_id/actions",
-                null,
-                $body
-            )
+            $this->request_factory->createRequest('PUT', "tracker_workflow_transitions/$transition_id/actions")->withBody($this->stream_factory->createStream($body))
         );
 
         $this->assertEquals($response->getStatusCode(), 400);
@@ -356,11 +346,7 @@ class SimpleModeTest extends TrackerBase
 
         $response = $this->getResponseByName(
             \REST_TestDataBuilder::ADMIN_USER_NAME,
-            $this->client->put(
-                "tracker_workflow_transitions/$transition_id/actions",
-                null,
-                $body
-            )
+            $this->request_factory->createRequest('PUT', "tracker_workflow_transitions/$transition_id/actions")->withBody($this->stream_factory->createStream($body))
         );
 
         $this->assertEquals($response->getStatusCode(), 400);
@@ -388,11 +374,7 @@ class SimpleModeTest extends TrackerBase
 
         $response = $this->getResponseByName(
             \REST_TestDataBuilder::ADMIN_USER_NAME,
-            $this->client->put(
-                "tracker_workflow_transitions/$transition_id/actions",
-                null,
-                $body
-            )
+            $this->request_factory->createRequest('PUT', "tracker_workflow_transitions/$transition_id/actions")->withBody($this->stream_factory->createStream($body))
         );
 
         $this->assertEquals($response->getStatusCode(), 200);
@@ -407,14 +389,12 @@ class SimpleModeTest extends TrackerBase
     {
         $response = $this->getResponseByName(
             \REST_TestDataBuilder::ADMIN_USER_NAME,
-            $this->client->get(
-                "tracker_workflow_transitions/$transition_id/actions"
-            )
+            $this->request_factory->createRequest('GET', "tracker_workflow_transitions/$transition_id/actions")
         );
 
         $this->assertEquals($response->getStatusCode(), 200);
 
-        $json_response = $response->json();
+        $json_response = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         $this->assertEquals('hidden_fieldsets', $json_response[0]['type']);
 
         return $transition_id;
@@ -438,11 +418,11 @@ class SimpleModeTest extends TrackerBase
 
         $response_transition = $this->getResponseByName(
             \REST_TestDataBuilder::ADMIN_USER_NAME,
-            $this->client->get("tracker_workflow_transitions/$transition_id")
+            $this->request_factory->createRequest('GET', "tracker_workflow_transitions/$transition_id")
         );
         $this->assertEquals(200, $response_transition->getStatusCode());
 
-        $transition_content = $response_transition->json();
+        $transition_content = json_decode($response_transition->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertEquals(
             $transition_content['authorized_user_group_ids']['0'],
@@ -453,11 +433,11 @@ class SimpleModeTest extends TrackerBase
 
         $response_actions = $this->getResponseByName(
             \REST_TestDataBuilder::ADMIN_USER_NAME,
-            $this->client->get("tracker_workflow_transitions/$transition_id/actions")
+            $this->request_factory->createRequest('GET', "tracker_workflow_transitions/$transition_id/actions")
         );
         $this->assertEquals(200, $response_actions->getStatusCode());
 
-        $transition_post_actions = $response_actions->json();
+        $transition_post_actions = json_decode($response_actions->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertCount(3, $transition_post_actions);
     }

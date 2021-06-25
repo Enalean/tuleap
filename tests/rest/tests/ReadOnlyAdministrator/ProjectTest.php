@@ -44,10 +44,11 @@ class ProjectTest extends ProjectBase
         ]);
 
         $response = $this->getResponse(
-            $this->client->post(
-                'projects',
-                null,
-                $post_resource
+            $this->request_factory->createRequest(
+                'POST',
+                'projects'
+            )->withBody(
+                $this->stream_factory->createStream($post_resource)
             )
         );
 
@@ -56,11 +57,11 @@ class ProjectTest extends ProjectBase
 
     public function testGET(): void
     {
-        $response = $this->getResponse($this->client->get('projects'));
+        $response = $this->getResponse($this->request_factory->createRequest('GET', 'projects'));
 
         $this->assertEquals(200, $response->getStatusCode());
 
-        $json_projects = $response->json();
+        $json_projects = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertTrue(
             $this->valuesArePresent(
@@ -190,8 +191,8 @@ class ProjectTest extends ProjectBase
 
     public function testThatAdminGetEvenPrivateProjectThatSheIsNotMemberOf(): void
     {
-        $response       = $this->getResponse($this->client->get('projects/'));
-        $admin_projects = $response->json();
+        $response       = $this->getResponse($this->request_factory->createRequest('GET', 'projects/'));
+        $admin_projects = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         foreach ($admin_projects as $project) {
             if ($project['id'] !== $this->project_private_id) {
@@ -201,7 +202,14 @@ class ProjectTest extends ProjectBase
             $this->assertFalse($project['is_member_of']);
 
             $project_members_uri = "user_groups/$this->project_private_id" . "_3/users";
-            $project_members     = $this->getResponse($this->client->get($project_members_uri))->json();
+            $project_members     = json_decode(
+                $this->getResponse(
+                    $this->request_factory->createRequest('GET', $project_members_uri)
+                )->getBody()->getContents(),
+                true,
+                512,
+                JSON_THROW_ON_ERROR
+            );
             foreach ($project_members as $member) {
                 $this->assertNotEquals('admin', $member['username']);
             }
@@ -213,41 +221,42 @@ class ProjectTest extends ProjectBase
 
     public function testGETMilestones(): void
     {
-        $response = $this->getResponse($this->client->get('projects/' . $this->project_private_member_id . '/milestones'));
+        $response = $this->getResponse($this->request_factory->createRequest('GET', 'projects/' . $this->project_private_member_id . '/milestones'));
 
         $this->assertEquals(200, $response->getStatusCode());
 
-        $milestones = $response->json();
+        $milestones = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         $this->assertCount(1, $milestones);
     }
 
     public function testGETTrackers(): void
     {
-        $response = $this->getResponse($this->client->get('projects/' . $this->project_private_member_id . '/trackers'));
+        $response = $this->getResponse($this->request_factory->createRequest('GET', 'projects/' . $this->project_private_member_id . '/trackers'));
 
         $this->assertEquals(200, $response->getStatusCode());
 
-        $trackers = $response->json();
+        $trackers = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         $this->assertCount(6, $trackers);
     }
 
     public function testGETBacklog(): void
     {
-        $response = $this->getResponse($this->client->get('projects/' . $this->project_private_member_id . '/backlog'));
+        $response = $this->getResponse($this->request_factory->createRequest('GET', 'projects/' . $this->project_private_member_id . '/backlog'));
 
         $this->assertEquals(200, $response->getStatusCode());
 
-        $backlog_items = $response->json();
+        $backlog_items = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         $this->assertCount(3, $backlog_items);
     }
 
     public function testPUTBacklog(): void
     {
         $response_put = $this->getResponse(
-            $this->client->put(
+            $this->request_factory->createRequest(
+                'PUT',
                 'projects/' . $this->project_private_member_id . '/backlog',
-                null,
-                '[' . $this->epic_artifact_ids[7] . ',' . $this->epic_artifact_ids[5] . ',' . $this->epic_artifact_ids[6] . ']'
+            )->withBody(
+                $this->stream_factory->createStream('[' . $this->epic_artifact_ids[7] . ',' . $this->epic_artifact_ids[5] . ',' . $this->epic_artifact_ids[6] . ']')
             )
         );
 
@@ -256,25 +265,25 @@ class ProjectTest extends ProjectBase
 
     public function testGETLabels(): void
     {
-        $response = $this->getResponse($this->client->get('projects/' . $this->project_private_member_id . '/labels'));
+        $response = $this->getResponse($this->request_factory->createRequest('GET', 'projects/' . $this->project_private_member_id . '/labels'));
 
         $this->assertEquals(200, $response->getStatusCode());
 
-        $this->assertEquals(['labels' => []], $response->json());
+        $this->assertEquals(['labels' => []], json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR));
     }
 
     public function testGETUserGroups(): void
     {
-        $response = $this->getResponse($this->client->get('projects/' . $this->project_private_member_id . '/user_groups'));
+        $response = $this->getResponse($this->request_factory->createRequest('GET', 'projects/' . $this->project_private_member_id . '/user_groups'));
 
         $this->assertEquals(200, $response->getStatusCode());
 
-        $this->assertTrue(count($response->json()) > 0);
+        $this->assertTrue(count(json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR)) > 0);
     }
 
     public function testGETWiki(): void
     {
-        $response = $this->getResponse($this->client->get('projects/' . $this->project_private_member_id . '/phpwiki'));
+        $response = $this->getResponse($this->request_factory->createRequest('GET', 'projects/' . $this->project_private_member_id . '/phpwiki'));
 
         $expected_result = [
             'pages' => [
@@ -291,7 +300,7 @@ class ProjectTest extends ProjectBase
             ]
         ];
 
-        $this->assertEquals($expected_result, $response->json());
+        $this->assertEquals($expected_result, json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR));
     }
 
     public function testPATCH(): void
@@ -300,45 +309,50 @@ class ProjectTest extends ProjectBase
             'status' => 'suspended'
         ]);
 
-        $response = $this->getResponse($this->client->patch('projects/' . $this->project_deleted_id, null, $patch_resource));
+        $response = $this->getResponse(
+            $this->request_factory->createRequest('PATCH', 'projects/' . $this->project_deleted_id)
+                ->withBody(
+                    $this->stream_factory->createStream($patch_resource)
+                )
+        );
 
         $this->assertEquals(403, $response->getStatusCode());
     }
 
     public function testAllOPTIONSProjects(): void
     {
-        $response = $this->getResponse($this->client->options('projects'));
+        $response = $this->getResponse($this->request_factory->createRequest('OPTIONS', 'projects'));
 
-        $this->assertEquals(['OPTIONS', 'GET', 'POST', 'PATCH'], $response->getHeader('Allow')->normalize()->toArray());
+        self::assertEqualsCanonicalizing(['OPTIONS', 'GET', 'POST', 'PATCH'], explode(', ', $response->getHeaderLine('Allow')));
 
-        $response = $this->getResponse($this->client->options('projects/' . $this->project_private_member_id));
+        $response = $this->getResponse($this->request_factory->createRequest('OPTIONS', 'projects/' . $this->project_private_member_id));
 
         $this->assertEquals(200, $response->getStatusCode());
-        $this->assertEquals(['OPTIONS', 'GET', 'POST', 'PATCH'], $response->getHeader('Allow')->normalize()->toArray());
+        self::assertEqualsCanonicalizing(['OPTIONS', 'GET', 'POST', 'PATCH'], explode(', ', $response->getHeaderLine('Allow')));
 
-        $response = $this->getResponse($this->client->options('projects/' . $this->project_private_member_id . '/milestones'));
+        $response = $this->getResponse($this->request_factory->createRequest('OPTIONS', 'projects/' . $this->project_private_member_id . '/milestones'));
 
-        $this->assertEquals(['OPTIONS', 'GET'], $response->getHeader('Allow')->normalize()->toArray());
+        self::assertEqualsCanonicalizing(['OPTIONS', 'GET'], explode(', ', $response->getHeaderLine('Allow')));
 
-        $response = $this->getResponse($this->client->options('projects/' . $this->project_private_member_id . '/trackers'));
+        $response = $this->getResponse($this->request_factory->createRequest('OPTIONS', 'projects/' . $this->project_private_member_id . '/trackers'));
 
-        $this->assertEquals(['OPTIONS', 'GET'], $response->getHeader('Allow')->normalize()->toArray());
+        self::assertEqualsCanonicalizing(['OPTIONS', 'GET'], explode(', ', $response->getHeaderLine('Allow')));
         $this->assertEquals(200, $response->getStatusCode());
 
-        $response = $this->getResponse($this->client->options('projects/' . $this->project_private_member_id . '/backlog'));
+        $response = $this->getResponse($this->request_factory->createRequest('OPTIONS', 'projects/' . $this->project_private_member_id . '/backlog'));
 
-        $this->assertEquals(['OPTIONS', 'GET', 'PUT', 'PATCH'], $response->getHeader('Allow')->normalize()->toArray());
+        self::assertEqualsCanonicalizing(['OPTIONS', 'GET', 'PUT', 'PATCH'], explode(', ', $response->getHeaderLine('Allow')));
 
-        $response = $this->getResponse($this->client->options('projects/' . $this->project_private_member_id . '/labels'));
+        $response = $this->getResponse($this->request_factory->createRequest('OPTIONS', 'projects/' . $this->project_private_member_id . '/labels'));
 
-        $this->assertEquals(['OPTIONS', 'GET'], $response->getHeader('Allow')->normalize()->toArray());
+        self::assertEqualsCanonicalizing(['OPTIONS', 'GET'], explode(', ', $response->getHeaderLine('Allow')));
 
-        $response = $this->getResponse($this->client->options('projects/' . $this->project_private_member_id . '/user_groups'));
+        $response = $this->getResponse($this->request_factory->createRequest('OPTIONS', 'projects/' . $this->project_private_member_id . '/user_groups'));
 
-        $this->assertEquals(['OPTIONS', 'GET'], $response->getHeader('Allow')->normalize()->toArray());
+        self::assertEqualsCanonicalizing(['OPTIONS', 'GET'], explode(', ', $response->getHeaderLine('Allow')));
 
-        $response = $this->getResponse($this->client->options('projects/' . $this->project_private_member_id . '/phpwiki'));
+        $response = $this->getResponse($this->request_factory->createRequest('OPTIONS', 'projects/' . $this->project_private_member_id . '/phpwiki'));
 
-        $this->assertEquals(['OPTIONS', 'GET'], $response->getHeader('Allow')->normalize()->toArray());
+        self::assertEqualsCanonicalizing(['OPTIONS', 'GET'], explode(', ', $response->getHeaderLine('Allow')));
     }
 }

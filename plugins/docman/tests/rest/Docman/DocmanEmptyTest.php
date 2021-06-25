@@ -24,7 +24,6 @@ namespace Tuleap\Docman\Test\rest\Docman;
 
 require_once __DIR__ . '/../../../vendor/autoload.php';
 
-use Guzzle\Http\Client;
 use REST_TestDataBuilder;
 use Tuleap\Docman\Test\rest\DocmanDataBuilder;
 use Tuleap\Docman\Test\rest\Helper\DocmanTestExecutionHelper;
@@ -66,11 +65,11 @@ class DocmanEmptyTest extends DocmanTestExecutionHelper
 
         $response = $this->getResponseByName(
             DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
-            $this->client->delete('docman_empty_documents/' . $item_to_delete_id)
+            $this->request_factory->createRequest('DELETE', 'docman_empty_documents/' . $item_to_delete_id)
         );
 
         $this->assertEquals(403, $response->getStatusCode());
-        $this->assertStringContainsString("allowed", $response->json()["error"]['i18n_error_message']);
+        $this->assertStringContainsString("allowed", json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR)["error"]['i18n_error_message']);
 
         $this->checkItemHasNotBeenDeleted($item_to_delete_id);
     }
@@ -85,12 +84,12 @@ class DocmanEmptyTest extends DocmanTestExecutionHelper
 
         $response = $this->getResponseByName(
             DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
-            $this->client->delete('docman_empty_documents/' . $item_to_delete_id)
+            $this->request_factory->createRequest('DELETE', 'docman_empty_documents/' . $item_to_delete_id)
         );
 
         $this->assertEquals(403, $response->getStatusCode());
 
-        $this->assertStringContainsString("allowed", $response->json()["error"]['i18n_error_message']);
+        $this->assertStringContainsString("allowed", json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR)["error"]['i18n_error_message']);
 
         $this->checkItemHasNotBeenDeleted($item_to_delete_id);
     }
@@ -105,7 +104,7 @@ class DocmanEmptyTest extends DocmanTestExecutionHelper
 
         $response = $this->getResponseByName(
             DocmanDataBuilder::ADMIN_USER_NAME,
-            $this->client->delete('docman_empty_documents/' . $item_to_delete_id)
+            $this->request_factory->createRequest('DELETE', 'docman_empty_documents/' . $item_to_delete_id)
         );
 
         $this->assertEquals(200, $response->getStatusCode());
@@ -123,7 +122,7 @@ class DocmanEmptyTest extends DocmanTestExecutionHelper
 
         $response = $this->getResponseByName(
             DocmanDataBuilder::ADMIN_USER_NAME,
-            $this->client->delete('docman_empty_documents/' . $item_to_delete_id)
+            $this->request_factory->createRequest('DELETE', 'docman_empty_documents/' . $item_to_delete_id)
         );
 
         $this->assertEquals(200, $response->getStatusCode());
@@ -141,17 +140,17 @@ class DocmanEmptyTest extends DocmanTestExecutionHelper
 
         $response = $this->getResponseByName(
             DocmanDataBuilder::ADMIN_USER_NAME,
-            $this->client->post('docman_empty_documents/' . $locked_document_id . "/lock")
+            $this->request_factory->createRequest('POST', 'docman_empty_documents/' . $locked_document_id . "/lock")
         );
 
         $this->assertEquals(201, $response->getStatusCode());
 
         $response = $this->getResponseByName(
             DocmanDataBuilder::ADMIN_USER_NAME,
-            $this->client->get('docman_items/' . $locked_document_id)
+            $this->request_factory->createRequest('GET', 'docman_items/' . $locked_document_id)
         );
 
-        $document = $response->json();
+        $document = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         $this->assertEquals($document['lock_info']["locked_by"]["username"], DocmanDataBuilder::ADMIN_USER_NAME);
     }
 
@@ -165,17 +164,17 @@ class DocmanEmptyTest extends DocmanTestExecutionHelper
 
         $response = $this->getResponseByName(
             DocmanDataBuilder::ADMIN_USER_NAME,
-            $this->client->delete('docman_empty_documents/' . $locked_document_id . "/lock")
+            $this->request_factory->createRequest('DELETE', 'docman_empty_documents/' . $locked_document_id . "/lock")
         );
 
         $this->assertEquals(200, $response->getStatusCode());
 
         $response = $this->getResponseByName(
             DocmanDataBuilder::ADMIN_USER_NAME,
-            $this->client->get('docman_items/' . $locked_document_id)
+            $this->request_factory->createRequest('GET', 'docman_items/' . $locked_document_id)
         );
 
-        $document = $response->json();
+        $document = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         $this->assertEquals($document['lock_info'], null);
     }
 
@@ -208,19 +207,19 @@ class DocmanEmptyTest extends DocmanTestExecutionHelper
 
         $updated_metadata_file_response = $this->getResponseByName(
             DocmanDataBuilder::ADMIN_USER_NAME,
-            $this->client->put('docman_empty_documents/' . $item_to_update_id . '/metadata', null, $put_resource)
+            $this->request_factory->createRequest('PUT', 'docman_empty_documents/' . $item_to_update_id . '/metadata')->withBody($this->stream_factory->createStream(json_encode($put_resource)))
         );
 
         $this->assertEquals(200, $updated_metadata_file_response->getStatusCode());
 
         $new_version_response = $this->getResponseByName(
             DocmanDataBuilder::ADMIN_USER_NAME,
-            $this->client->get('docman_items/' . $item_to_update_id)
+            $this->request_factory->createRequest('GET', 'docman_items/' . $item_to_update_id)
         );
 
         $this->assertEquals($new_version_response->getStatusCode(), 200);
 
-        $new_version = $new_version_response->json();
+        $new_version = json_decode($new_version_response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         $date_after_update          = \DateTimeImmutable::createFromFormat(
             \DateTime::ATOM,
@@ -240,11 +239,11 @@ class DocmanEmptyTest extends DocmanTestExecutionHelper
     public function testOptionsMetadata(int $id): void
     {
         $response = $this->getResponse(
-            $this->client->options('docman_wikis/' . $id . '/metadata'),
+            $this->request_factory->createRequest('OPTIONS', 'docman_wikis/' . $id . '/metadata'),
             REST_TestDataBuilder::ADMIN_USER_NAME
         );
 
-        $this->assertEquals(['OPTIONS', 'PUT'], $response->getHeader('Allow')->normalize()->toArray());
+        $this->assertEquals(['OPTIONS', 'PUT'], explode(', ', $response->getHeaderLine('Allow')));
         $this->assertEquals($response->getStatusCode(), 200);
     }
 
@@ -254,9 +253,9 @@ class DocmanEmptyTest extends DocmanTestExecutionHelper
      */
     public function testOptions(int $id): void
     {
-        $response = $this->getResponse($this->client->options('docman_empty_documents/' . $id), REST_TestDataBuilder::ADMIN_USER_NAME);
+        $response = $this->getResponse($this->request_factory->createRequest('OPTIONS', 'docman_empty_documents/' . $id), REST_TestDataBuilder::ADMIN_USER_NAME);
 
-        $this->assertEquals(['OPTIONS', 'PATCH', 'DELETE'], $response->getHeader('Allow')->normalize()->toArray());
+        $this->assertEquals(['OPTIONS', 'PATCH', 'DELETE'], explode(', ', $response->getHeaderLine('Allow')));
         $this->assertEquals($response->getStatusCode(), 200);
     }
 
@@ -265,9 +264,9 @@ class DocmanEmptyTest extends DocmanTestExecutionHelper
      */
     public function testOptionsLock(int $id): void
     {
-        $response = $this->getResponse($this->client->options('docman_empty_documents/' . $id . '/lock'), REST_TestDataBuilder::ADMIN_USER_NAME);
+        $response = $this->getResponse($this->request_factory->createRequest('OPTIONS', 'docman_empty_documents/' . $id . '/lock'), REST_TestDataBuilder::ADMIN_USER_NAME);
 
-        $this->assertEquals(['OPTIONS', 'POST', 'DELETE'], $response->getHeader('Allow')->normalize()->toArray());
+        $this->assertEquals(['OPTIONS', 'POST', 'DELETE'], explode(', ', $response->getHeaderLine('Allow')));
         $this->assertEquals($response->getStatusCode(), 200);
     }
 
@@ -278,44 +277,32 @@ class DocmanEmptyTest extends DocmanTestExecutionHelper
     {
         $response_empty_creation = $this->getResponseByName(
             DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
-            $this->client->post(
-                'docman_folders/' . urlencode((string) $root_id) . '/empties',
-                null,
-                json_encode(['title' => 'Empty document to cut'])
-            )
+            $this->request_factory->createRequest('POST', 'docman_folders/' . urlencode((string) $root_id) . '/empties')->withBody($this->stream_factory->createStream(json_encode(['title' => 'Empty document to cut'])))
         );
         $this->assertEquals(201, $response_empty_creation->getStatusCode());
-        $empty_doc_id = $response_empty_creation->json()['id'];
+        $empty_doc_id = json_decode($response_empty_creation->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR)['id'];
 
         $response_folder_creation = $this->getResponseByName(
             DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
-            $this->client->post(
-                'docman_folders/' . urlencode((string) $root_id) . '/folders',
-                null,
-                json_encode(['title' => 'Empty cut folder'])
-            )
+            $this->request_factory->createRequest('POST', 'docman_folders/' . urlencode((string) $root_id) . '/folders')->withBody($this->stream_factory->createStream(json_encode(['title' => 'Empty cut folder'])))
         );
         $this->assertEquals(201, $response_folder_creation->getStatusCode());
-        $folder_id = $response_folder_creation->json()['id'];
+        $folder_id = json_decode($response_folder_creation->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR)['id'];
 
         $move_response = $this->getResponseByName(
             DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
-            $this->client->patch(
-                'docman_empty_documents/' . urlencode((string) $empty_doc_id),
-                null,
-                json_encode(['move' => ['destination_folder_id' => $folder_id]])
-            )
+            $this->request_factory->createRequest('PATCH', 'docman_empty_documents/' . urlencode((string) $empty_doc_id))->withBody($this->stream_factory->createStream(json_encode(['move' => ['destination_folder_id' => $folder_id]])))
         );
         $this->assertEquals(200, $move_response->getStatusCode());
 
         $moved_item_response = $this->getResponse(
-            $this->client->get('docman_items/' . urlencode((string) $empty_doc_id)),
+            $this->request_factory->createRequest('GET', 'docman_items/' . urlencode((string) $empty_doc_id)),
             DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME
         );
-        $this->assertEquals($folder_id, $moved_item_response->json()['parent_id']);
+        $this->assertEquals($folder_id, json_decode($moved_item_response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR)['parent_id']);
 
         $this->getResponse(
-            $this->client->delete('docman_folders/' . urlencode((string) $folder_id)),
+            $this->request_factory->createRequest('DELETE', 'docman_folders/' . urlencode((string) $folder_id)),
             DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME
         );
     }
@@ -327,39 +314,31 @@ class DocmanEmptyTest extends DocmanTestExecutionHelper
     {
         $response_empty_creation = $this->getResponseByName(
             DocmanDataBuilder::ADMIN_USER_NAME,
-            $this->client->post(
-                'docman_folders/' . urlencode((string) $root_id) . '/empties',
-                null,
-                json_encode(['title' => 'Empty document for updating permissions'])
-            )
+            $this->request_factory->createRequest('POST', 'docman_folders/' . urlencode((string) $root_id) . '/empties')->withBody($this->stream_factory->createStream(json_encode(['title' => 'Empty document for updating permissions'])))
         );
         $this->assertEquals(201, $response_empty_creation->getStatusCode());
-        $empty_doc_id = $response_empty_creation->json()['id'];
+        $empty_doc_id = json_decode($response_empty_creation->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR)['id'];
 
         $project_members_identifier = $this->project_id . '_3';
         $permission_update_response = $this->getResponseByName(
             DocmanDataBuilder::ADMIN_USER_NAME,
-            $this->client->put(
-                'docman_empty_documents/' . urlencode((string) $empty_doc_id) . '/permissions',
-                null,
-                json_encode(['can_read' => [], 'can_write' => [], 'can_manage' => [['id' => $project_members_identifier]]])
-            )
+            $this->request_factory->createRequest('PUT', 'docman_empty_documents/' . urlencode((string) $empty_doc_id) . '/permissions')->withBody($this->stream_factory->createStream(json_encode(['can_read' => [], 'can_write' => [], 'can_manage' => [['id' => $project_members_identifier]]])))
         );
         $this->assertEquals(200, $permission_update_response->getStatusCode());
 
         $empty_doc_representation_response = $this->getResponseByName(
             DocmanDataBuilder::ADMIN_USER_NAME,
-            $this->client->get('docman_items/' . urlencode((string) $empty_doc_id))
+            $this->request_factory->createRequest('GET', 'docman_items/' . urlencode((string) $empty_doc_id))
         );
         $this->assertEquals(200, $permission_update_response->getStatusCode());
-        $permissions_for_groups_representation = $empty_doc_representation_response->json()['permissions_for_groups'];
+        $permissions_for_groups_representation = json_decode($empty_doc_representation_response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR)['permissions_for_groups'];
         $this->assertEmpty($permissions_for_groups_representation['can_read']);
         $this->assertEmpty($permissions_for_groups_representation['can_write']);
         $this->assertCount(1, $permissions_for_groups_representation['can_manage']);
         $this->assertEquals($project_members_identifier, $permissions_for_groups_representation['can_manage'][0]['id']);
 
         $this->getResponse(
-            $this->client->delete('docman_empty_document/' . urlencode((string) $empty_doc_id)),
+            $this->request_factory->createRequest('DELETE', 'docman_empty_document/' . urlencode((string) $empty_doc_id)),
             DocmanDataBuilder::ADMIN_USER_NAME
         );
     }
@@ -380,12 +359,12 @@ class DocmanEmptyTest extends DocmanTestExecutionHelper
 
         $response = $this->getResponseByName(
             DocmanDataBuilder::ADMIN_USER_NAME,
-            $this->client->post('docman_folders/' . $root_id . '/empties', $headers, $query)
+            $this->request_factory->createRequest('POST', 'docman_folders/' . $root_id . '/empties')->withBody($this->stream_factory->createStream($query))
         );
 
         $this->assertEquals(201, $response->getStatusCode());
 
-        $empty_to_update_id = $response->json()['id'];
+        $empty_to_update_id = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR)['id'];
 
         $new_content = json_encode(
             [
@@ -395,25 +374,25 @@ class DocmanEmptyTest extends DocmanTestExecutionHelper
 
         $response = $this->getResponseByName(
             DocmanDataBuilder::ADMIN_USER_NAME,
-            $this->client->post('docman_empty_documents/' . $empty_to_update_id . "/embedded_file", null, $new_content)
+            $this->request_factory->createRequest('POST', 'docman_empty_documents/' . $empty_to_update_id . "/embedded_file")->withBody($this->stream_factory->createStream($new_content))
         );
 
         $this->assertEquals(201, $response->getStatusCode());
 
         $updated_item_response = $this->getResponse(
-            $this->client->get('docman_items/' . urlencode((string) $empty_to_update_id)),
+            $this->request_factory->createRequest('GET', 'docman_items/' . urlencode((string) $empty_to_update_id)),
             DocmanDataBuilder::ADMIN_USER_NAME
         );
 
         $this->assertEquals(200, $updated_item_response->getStatusCode());
 
-        $updated_item = $updated_item_response->json();
+        $updated_item = json_decode($updated_item_response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         $this->assertEquals('embedded', $updated_item['type']);
         $this->assertEquals('youhououh content', $updated_item['embedded_file_properties']['content']);
 
         $response = $this->getResponseByName(
             DocmanDataBuilder::ADMIN_USER_NAME,
-            $this->client->delete('docman_embedded_files/' . $updated_item['id'])
+            $this->request_factory->createRequest('DELETE', 'docman_embedded_files/' . $updated_item['id'])
         );
 
         $this->assertEquals(200, $response->getStatusCode());
@@ -427,12 +406,12 @@ class DocmanEmptyTest extends DocmanTestExecutionHelper
     public function testOptionsEmbeddedFileVersion(int $id): void
     {
         $response = $this->getResponse(
-            $this->client->options('docman_empty_documents/' . $id . '/embedded_file'),
+            $this->request_factory->createRequest('OPTIONS', 'docman_empty_documents/' . $id . '/embedded_file'),
             REST_TestDataBuilder::ADMIN_USER_NAME
         );
 
         $this->assertEquals($response->getStatusCode(), 200);
-        $this->assertEquals(['OPTIONS', 'POST'], $response->getHeader('Allow')->normalize()->toArray());
+        $this->assertEquals(['OPTIONS', 'POST'], explode(', ', $response->getHeaderLine('Allow')));
     }
 
 
@@ -452,12 +431,12 @@ class DocmanEmptyTest extends DocmanTestExecutionHelper
 
         $response = $this->getResponseByName(
             DocmanDataBuilder::ADMIN_USER_NAME,
-            $this->client->post('docman_folders/' . $root_id . '/empties', $headers, $query)
+            $this->request_factory->createRequest('POST', 'docman_folders/' . $root_id . '/empties')->withBody($this->stream_factory->createStream($query))
         );
 
         $this->assertEquals(201, $response->getStatusCode());
 
-        $empty_to_update_id = $response->json()['id'];
+        $empty_to_update_id = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR)['id'];
 
         $file_size       = 10;
         $file_properties = json_encode(
@@ -469,49 +448,40 @@ class DocmanEmptyTest extends DocmanTestExecutionHelper
 
         $version_response = $this->getResponseByName(
             DocmanDataBuilder::ADMIN_USER_NAME,
-            $this->client->post('docman_empty_documents/' . urlencode((string) $empty_to_update_id) . "/file", null, $file_properties)
+            $this->request_factory->createRequest('POST', 'docman_empty_documents/' . urlencode((string) $empty_to_update_id) . "/file")->withBody($this->stream_factory->createStream($file_properties))
         );
 
         $this->assertEquals(201, $version_response->getStatusCode());
-        $this->assertNotNull($version_response->json()['upload_href']);
+        $version_response_json = json_decode($version_response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
+        $this->assertNotNull($version_response_json['upload_href']);
 
-        $general_use_http_client = new Client(
-            str_replace('/api/v1', '', $this->client->getBaseUrl()),
-            $this->client->getConfig()
-        );
-        $general_use_http_client->setCurlMulti($this->client->getCurlMulti());
-        $general_use_http_client->setSslVerification(false, false, false);
         $file_content = str_repeat('A', $file_size);
 
         $tus_response_upload = $this->getResponseByName(
             DocmanDataBuilder::ADMIN_USER_NAME,
-            $general_use_http_client->patch(
-                $version_response->json()['upload_href'],
-                [
-                    'Tus-Resumable' => '1.0.0',
-                    'Content-Type'  => 'application/offset+octet-stream',
-                    'Upload-Offset' => '0'
-                ],
-                $file_content
-            )
+            $this->request_factory->createRequest('PATCH', $version_response_json['upload_href'])
+                ->withHeader('Tus-Resumable', '1.0.0')
+                ->withHeader('Content-Type', 'application/offset+octet-stream')
+                ->withHeader('Upload-Offset', '0')
+                ->withBody($this->stream_factory->createStream($file_content))
         );
 
         $this->assertEquals(204, $tus_response_upload->getStatusCode());
-        $this->assertEquals([$file_size], $tus_response_upload->getHeader('Upload-Offset')->toArray());
+        $this->assertEquals([$file_size], $tus_response_upload->getHeader('Upload-Offset'));
 
         $updated_item_response = $this->getResponse(
-            $this->client->get('docman_items/' . urlencode((string) $empty_to_update_id)),
+            $this->request_factory->createRequest('GET', 'docman_items/' . urlencode((string) $empty_to_update_id)),
             DocmanDataBuilder::ADMIN_USER_NAME
         );
 
         $this->assertEquals(200, $updated_item_response->getStatusCode());
 
-        $updated_item = $updated_item_response->json();
+        $updated_item = json_decode($updated_item_response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         $this->assertEquals('file', $updated_item['type']);
 
         $response = $this->getResponseByName(
             DocmanDataBuilder::ADMIN_USER_NAME,
-            $this->client->delete('docman_files/' . $updated_item['id'])
+            $this->request_factory->createRequest('DELETE', 'docman_files/' . $updated_item['id'])
         );
 
         $this->assertEquals(200, $response->getStatusCode());
@@ -525,12 +495,12 @@ class DocmanEmptyTest extends DocmanTestExecutionHelper
     public function testOptionsFileVersion(int $id): void
     {
         $response = $this->getResponse(
-            $this->client->options('docman_empty_documents/' . $id . '/file'),
+            $this->request_factory->createRequest('OPTIONS', 'docman_empty_documents/' . $id . '/file'),
             REST_TestDataBuilder::ADMIN_USER_NAME
         );
 
         $this->assertEquals($response->getStatusCode(), 200);
-        $this->assertEquals(['OPTIONS', 'POST'], $response->getHeader('Allow')->normalize()->toArray());
+        $this->assertEquals(['OPTIONS', 'POST'], explode(', ', $response->getHeaderLine('Allow')));
     }
 
     /**
@@ -549,12 +519,12 @@ class DocmanEmptyTest extends DocmanTestExecutionHelper
 
         $response = $this->getResponseByName(
             DocmanDataBuilder::ADMIN_USER_NAME,
-            $this->client->post('docman_folders/' . $root_id . '/empties', $headers, $query)
+            $this->request_factory->createRequest('POST', 'docman_folders/' . $root_id . '/empties')->withBody($this->stream_factory->createStream($query))
         );
 
         $this->assertEquals(201, $response->getStatusCode());
 
-        $empty_to_update_id = $response->json()['id'];
+        $empty_to_update_id = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR)['id'];
 
         $new_link_url = json_encode(
             [
@@ -564,25 +534,25 @@ class DocmanEmptyTest extends DocmanTestExecutionHelper
 
         $response = $this->getResponseByName(
             DocmanDataBuilder::ADMIN_USER_NAME,
-            $this->client->post('docman_empty_documents/' . $empty_to_update_id . "/link", null, $new_link_url)
+            $this->request_factory->createRequest('POST', 'docman_empty_documents/' . $empty_to_update_id . "/link")->withBody($this->stream_factory->createStream($new_link_url))
         );
 
         $this->assertEquals(201, $response->getStatusCode());
 
         $updated_item_response = $this->getResponse(
-            $this->client->get('docman_items/' . urlencode((string) $empty_to_update_id)),
+            $this->request_factory->createRequest('GET', 'docman_items/' . urlencode((string) $empty_to_update_id)),
             DocmanDataBuilder::ADMIN_USER_NAME
         );
 
         $this->assertEquals(200, $updated_item_response->getStatusCode());
 
-        $updated_item = $updated_item_response->json();
+        $updated_item = json_decode($updated_item_response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         $this->assertEquals('link', $updated_item['type']);
         $this->assertEquals('https://example.test', $updated_item['link_properties']['link_url']);
 
         $response = $this->getResponseByName(
             DocmanDataBuilder::ADMIN_USER_NAME,
-            $this->client->delete('docman_links/' . urlencode((string) $updated_item['id']))
+            $this->request_factory->createRequest('DELETE', 'docman_links/' . urlencode((string) $updated_item['id']))
         );
 
         $this->assertEquals(200, $response->getStatusCode());
@@ -596,12 +566,12 @@ class DocmanEmptyTest extends DocmanTestExecutionHelper
     public function testOptionsLinkVersion(int $id): void
     {
         $response = $this->getResponse(
-            $this->client->options('docman_empty_documents/' . urlencode((string) $id) . '/link'),
+            $this->request_factory->createRequest('OPTIONS', 'docman_empty_documents/' . urlencode((string) $id) . '/link'),
             REST_TestDataBuilder::ADMIN_USER_NAME
         );
 
         $this->assertEquals($response->getStatusCode(), 200);
-        $this->assertEquals(['OPTIONS', 'POST'], $response->getHeader('Allow')->normalize()->toArray());
+        $this->assertEquals(['OPTIONS', 'POST'], explode(', ', $response->getHeaderLine('Allow')));
     }
 
     /**
@@ -610,46 +580,46 @@ class DocmanEmptyTest extends DocmanTestExecutionHelper
     public function testAllOptionsRouteForUserRESTReadOnlyAdmin(int $id): void
     {
         $response = $this->getResponse(
-            $this->client->options('docman_empty_documents/' . urlencode((string) $id)),
+            $this->request_factory->createRequest('OPTIONS', 'docman_empty_documents/' . urlencode((string) $id)),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
-        $this->assertEquals(['OPTIONS', 'PATCH', 'DELETE'], $response->getHeader('Allow')->normalize()->toArray());
+        $this->assertEquals(['OPTIONS', 'PATCH', 'DELETE'], explode(', ', $response->getHeaderLine('Allow')));
 
         $response = $this->getResponse(
-            $this->client->options('docman_empty_documents/' . urlencode((string) $id) . '/lock'),
+            $this->request_factory->createRequest('OPTIONS', 'docman_empty_documents/' . urlencode((string) $id) . '/lock'),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
-        $this->assertEquals(['OPTIONS', 'POST', 'DELETE'], $response->getHeader('Allow')->normalize()->toArray());
+        $this->assertEquals(['OPTIONS', 'POST', 'DELETE'], explode(', ', $response->getHeaderLine('Allow')));
 
         $response = $this->getResponse(
-            $this->client->options('docman_empty_documents/' . urlencode((string) $id) . '/embedded_file'),
+            $this->request_factory->createRequest('OPTIONS', 'docman_empty_documents/' . urlencode((string) $id) . '/embedded_file'),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
-        $this->assertEquals(['OPTIONS', 'POST'], $response->getHeader('Allow')->normalize()->toArray());
+        $this->assertEquals(['OPTIONS', 'POST'], explode(', ', $response->getHeaderLine('Allow')));
 
         $response = $this->getResponse(
-            $this->client->options('docman_empty_documents/' . urlencode((string) $id) . '/link'),
+            $this->request_factory->createRequest('OPTIONS', 'docman_empty_documents/' . urlencode((string) $id) . '/link'),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
-        $this->assertEquals(['OPTIONS', 'POST'], $response->getHeader('Allow')->normalize()->toArray());
+        $this->assertEquals(['OPTIONS', 'POST'], explode(', ', $response->getHeaderLine('Allow')));
 
         $response = $this->getResponse(
-            $this->client->options('docman_empty_documents/' . urlencode((string) $id) . '/file'),
+            $this->request_factory->createRequest('OPTIONS', 'docman_empty_documents/' . urlencode((string) $id) . '/file'),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
-        $this->assertEquals(['OPTIONS', 'POST'], $response->getHeader('Allow')->normalize()->toArray());
+        $this->assertEquals(['OPTIONS', 'POST'], explode(', ', $response->getHeaderLine('Allow')));
 
         $response = $this->getResponse(
-            $this->client->options('docman_empty_documents/' . urlencode((string) $id) . '/metadata'),
+            $this->request_factory->createRequest('OPTIONS', 'docman_empty_documents/' . urlencode((string) $id) . '/metadata'),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
-        $this->assertEquals(['OPTIONS', 'PUT'], $response->getHeader('Allow')->normalize()->toArray());
+        $this->assertEquals(['OPTIONS', 'PUT'], explode(', ', $response->getHeaderLine('Allow')));
 
         $response = $this->getResponse(
-            $this->client->options('docman_empty_documents/' . urlencode((string) $id) . '/permissions'),
+            $this->request_factory->createRequest('OPTIONS', 'docman_empty_documents/' . urlencode((string) $id) . '/permissions'),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
-        $this->assertEquals(['OPTIONS', 'POST'], $response->getHeader('Allow')->normalize()->toArray());
+        $this->assertEquals(['OPTIONS', 'POST'], explode(', ', $response->getHeaderLine('Allow')));
     }
 
     /**
@@ -658,11 +628,7 @@ class DocmanEmptyTest extends DocmanTestExecutionHelper
     public function patchMoveAnEmptyDocumentDeniedForUserRestReadOnlyAdmin(int $root_id): void
     {
         $response = $this->getResponse(
-            $this->client->post(
-                'docman_empty_documents/' . $root_id,
-                null,
-                ['move' => ['destination_folder_id' => $root_id]]
-            ),
+            $this->request_factory->createRequest('POST', 'docman_empty_documents/' . $root_id)->withBody($this->stream_factory->createStream(['move' => ['destination_folder_id' => $root_id]])),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
         $this->assertEquals(403, $response->getStatusCode());
@@ -675,9 +641,7 @@ class DocmanEmptyTest extends DocmanTestExecutionHelper
     {
         $empty_to_update_id = $this->createEmptyDocumentAndReturnId($root_id);
         $response           = $this->getResponse(
-            $this->client->delete(
-                'docman_empty_documents/' . $empty_to_update_id
-            ),
+            $this->request_factory->createRequest('DELETE', 'docman_empty_documents/' . $empty_to_update_id),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
         $this->assertEquals(403, $response->getStatusCode());
@@ -691,9 +655,7 @@ class DocmanEmptyTest extends DocmanTestExecutionHelper
     {
         $empty_to_update_id = $this->createEmptyDocumentAndReturnId($root_id);
         $response           = $this->getResponse(
-            $this->client->post(
-                'docman_empty_documents/' . $empty_to_update_id . '/lock'
-            ),
+            $this->request_factory->createRequest('POST', 'docman_empty_documents/' . $empty_to_update_id . '/lock'),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
         $this->assertEquals(403, $response->getStatusCode());
@@ -707,9 +669,7 @@ class DocmanEmptyTest extends DocmanTestExecutionHelper
     {
         $empty_to_update_id = $this->createEmptyDocumentAndReturnId($root_id);
         $response           = $this->getResponse(
-            $this->client->delete(
-                'docman_empty_documents/' . $empty_to_update_id . '/lock'
-            ),
+            $this->request_factory->createRequest('DELETE', 'docman_empty_documents/' . $empty_to_update_id . '/lock'),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
         $this->assertEquals(403, $response->getStatusCode());
@@ -725,11 +685,7 @@ class DocmanEmptyTest extends DocmanTestExecutionHelper
 
         $metadata = ['status' => 'none'];
         $response = $this->getResponse(
-            $this->client->put(
-                'docman_empty_documents/' . $empty_to_update_id . '/metadata',
-                null,
-                $metadata
-            ),
+            $this->request_factory->createRequest('PUT', 'docman_empty_documents/' . $empty_to_update_id . '/metadata')->withBody($this->stream_factory->createStream($metadata)),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
         $this->assertEquals(403, $response->getStatusCode());
@@ -745,11 +701,7 @@ class DocmanEmptyTest extends DocmanTestExecutionHelper
 
         $project_members_identifier = $this->project_id . '_3';
         $response                   = $this->getResponse(
-            $this->client->put(
-                'docman_empty_documents/' . $empty_to_update_id . '/permissions',
-                null,
-                json_encode(['can_read' => [], 'can_write' => [], 'can_manage' => [['id' => $project_members_identifier]]])
-            ),
+            $this->request_factory->createRequest('PUT', 'docman_empty_documents/' . $empty_to_update_id . '/permissions')->withBody($this->stream_factory->createStream(json_encode(['can_read' => [], 'can_write' => [], 'can_manage' => [['id' => $project_members_identifier]]]))),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
         $this->assertEquals(403, $response->getStatusCode());
@@ -769,7 +721,7 @@ class DocmanEmptyTest extends DocmanTestExecutionHelper
             ]
         );
         $response = $this->getResponse(
-            $this->client->post('docman_empty_documents/' . $empty_to_update_id . '/embedded_file', null, $content),
+            $this->request_factory->createRequest('POST', 'docman_empty_documents/' . $empty_to_update_id . '/embedded_file')->withBody($this->stream_factory->createStream($content)),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
         $this->assertEquals(403, $response->getStatusCode());
@@ -781,7 +733,7 @@ class DocmanEmptyTest extends DocmanTestExecutionHelper
             ]
         );
         $response        = $this->getResponse(
-            $this->client->post('docman_empty_documents/' . $empty_to_update_id . '/file', null, $file_properties),
+            $this->request_factory->createRequest('POST', 'docman_empty_documents/' . $empty_to_update_id . '/file')->withBody($this->stream_factory->createStream($file_properties)),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
         $this->assertEquals(403, $response->getStatusCode());
@@ -792,7 +744,7 @@ class DocmanEmptyTest extends DocmanTestExecutionHelper
             ]
         );
         $response = $this->getResponse(
-            $this->client->post('docman_empty_documents/' . $empty_to_update_id . '/link', null, $link_url),
+            $this->request_factory->createRequest('POST', 'docman_empty_documents/' . $empty_to_update_id . '/link')->withBody($this->stream_factory->createStream($link_url)),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
         $this->assertEquals(403, $response->getStatusCode());
@@ -811,12 +763,12 @@ class DocmanEmptyTest extends DocmanTestExecutionHelper
 
         $response = $this->getResponse(
             DocmanDataBuilder::ADMIN_USER_NAME,
-            $this->client->post('docman_folders/' . $root_id . '/empties', $headers, $query)
+            $this->request_factory->createRequest('POST', 'docman_folders/' . $root_id . '/empties')->withBody($this->stream_factory->createStream($query))
         );
 
         $this->assertEquals(201, $response->getStatusCode());
 
-        $empty_to_update_id = $response->json()['id'];
+        $empty_to_update_id = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR)['id'];
 
         return $empty_to_update_id;
     }
@@ -824,9 +776,7 @@ class DocmanEmptyTest extends DocmanTestExecutionHelper
     private function deleteCreatedEmptyDocument(int $empty_document_to_delete): void
     {
         $response = $this->getResponse(
-            $this->client->delete(
-                'docman_empty_documents/' . $empty_document_to_delete
-            ),
+            $this->request_factory->createRequest('DELETE', 'docman_empty_documents/' . $empty_document_to_delete),
             REST_TestDataBuilder::ADMIN_USER_NAME
         );
 

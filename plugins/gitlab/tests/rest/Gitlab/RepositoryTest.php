@@ -20,7 +20,6 @@
 
 namespace Tuleap\Gitlab\REST;
 
-use Guzzle\Http\Message\Response;
 
 require_once __DIR__ . '/../bootstrap.php';
 
@@ -29,18 +28,16 @@ class RepositoryTest extends TestBase
     public function testOptionsGitLabRepositories(): void
     {
         $response = $this->getResponse(
-            $this->client->options(
-                'gitlab_repositories/' . $this->gitlab_repository_id
-            )
+            $this->request_factory->createRequest('OPTIONS', 'gitlab_repositories/' . $this->gitlab_repository_id)
         );
 
         self::assertSame(200, $response->getStatusCode());
-        self::assertEquals(['OPTIONS', 'PATCH', 'DELETE'], $response->getHeader('Allow')->normalize()->toArray());
+        self::assertEquals(['OPTIONS', 'PATCH', 'DELETE'], explode(', ', $response->getHeaderLine('Allow')));
     }
 
     public function testPatchGitlabRepositoryIntegrationToAllowArtifactClosure(): void
     {
-        $gitlab_integration_before_patch = $this->getGitlabRepositoryIntegration()->json()[0];
+        $gitlab_integration_before_patch = json_decode($this->getGitlabRepositoryIntegration()->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR)[0];
         self::assertFalse($gitlab_integration_before_patch["allow_artifact_closure"]);
 
         $patch_body = json_encode(
@@ -50,21 +47,17 @@ class RepositoryTest extends TestBase
         );
 
         $response = $this->getResponse(
-            $this->client->patch(
-                'gitlab_repositories/' . $this->gitlab_repository_id,
-                null,
-                $patch_body
-            )
+            $this->request_factory->createRequest('PATCH', 'gitlab_repositories/' . $this->gitlab_repository_id)->withBody($this->stream_factory->createStream($patch_body))
         );
         self::assertSame(200, $response->getStatusCode());
 
-        $gitlab_integration_after_patch = $response->json();
+        $gitlab_integration_after_patch = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         self::assertTrue($gitlab_integration_after_patch["allow_artifact_closure"]);
     }
 
     public function testPatchGitlabRepositoryIntegrationToUpdateCreateBranchPrefix(): void
     {
-        $gitlab_integration_before_patch = $this->getGitlabRepositoryIntegration()->json()[0];
+        $gitlab_integration_before_patch = json_decode($this->getGitlabRepositoryIntegration()->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR)[0];
         self::assertSame("", $gitlab_integration_before_patch["create_branch_prefix"]);
 
         $patch_body = json_encode(
@@ -74,21 +67,17 @@ class RepositoryTest extends TestBase
         );
 
         $response = $this->getResponse(
-            $this->client->patch(
-                'gitlab_repositories/' . $this->gitlab_repository_id,
-                null,
-                $patch_body
-            )
+            $this->request_factory->createRequest('PATCH', 'gitlab_repositories/' . $this->gitlab_repository_id)->withBody($this->stream_factory->createStream($patch_body))
         );
         self::assertSame(200, $response->getStatusCode());
 
-        $gitlab_integration_after_patch = $response->json();
+        $gitlab_integration_after_patch = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         self::assertSame("dev-", $gitlab_integration_after_patch["create_branch_prefix"]);
     }
 
     public function testPatchGitlabRepositoryIntegrationToUpdateCreateBranchPrefixFailsIfPrefixIsNotValid(): void
     {
-        $gitlab_integration_before_patch = $this->getGitlabRepositoryIntegration()->json()[0];
+        $gitlab_integration_before_patch = json_decode($this->getGitlabRepositoryIntegration()->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR)[0];
 
         $patch_body = json_encode(
             [
@@ -97,11 +86,7 @@ class RepositoryTest extends TestBase
         );
 
         $response = $this->getResponse(
-            $this->client->patch(
-                'gitlab_repositories/' . $this->gitlab_repository_id,
-                null,
-                $patch_body
-            )
+            $this->request_factory->createRequest('PATCH', 'gitlab_repositories/' . $this->gitlab_repository_id)->withBody($this->stream_factory->createStream($patch_body))
         );
         self::assertSame(400, $response->getStatusCode());
     }
@@ -109,14 +94,12 @@ class RepositoryTest extends TestBase
     public function testDeleteGitLabRepositories(): void
     {
         $response = $this->getResponse(
-            $this->client->delete(
-                'gitlab_repositories/' . $this->gitlab_repository_id . '?project_id=' . $this->gitlab_project_id
-            )
+            $this->request_factory->createRequest('DELETE', 'gitlab_repositories/' . $this->gitlab_repository_id . '?project_id=' . $this->gitlab_project_id)
         );
 
         self::assertSame(204, $response->getStatusCode());
 
-        self::assertRepositoryDeleted();
+        $this->assertRepositoryDeleted();
     }
 
     private function assertRepositoryDeleted(): void
@@ -125,18 +108,16 @@ class RepositoryTest extends TestBase
 
         self::assertSame(200, $response->getStatusCode());
 
-        self::assertEquals(0, (int) (string) $response->getHeader('X-Pagination-Size'));
+        self::assertEquals(0, (int) $response->getHeaderLine('X-Pagination-Size'));
 
-        $gitlab_repositories = $response->json();
+        $gitlab_repositories = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         self::assertCount(0, $gitlab_repositories);
     }
 
-    private function getGitlabRepositoryIntegration(): Response
+    private function getGitlabRepositoryIntegration(): \Psr\Http\Message\ResponseInterface
     {
         return $this->getResponse(
-            $this->client->get(
-                'projects/' . $this->gitlab_project_id . '/gitlab_repositories'
-            )
+            $this->request_factory->createRequest('GET', 'projects/' . $this->gitlab_project_id . '/gitlab_repositories')
         );
     }
 }

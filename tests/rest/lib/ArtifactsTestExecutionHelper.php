@@ -24,7 +24,7 @@ declare(strict_types=1);
 namespace Test\Rest\Tracker;
 
 use Exception;
-use Guzzle\Http\Message\Response;
+use Psr\Http\Message\ResponseInterface;
 use Tuleap\REST\ArtifactBase;
 
 /**
@@ -112,23 +112,23 @@ class ArtifactsTestExecutionHelper extends ArtifactBase
 
     private function getArtifact($artifact_id): array
     {
-        $response = $this->getResponse($this->client->get('artifacts/' . $artifact_id));
+        $response = $this->getResponse($this->request_factory->createRequest('GET', 'artifacts/' . $artifact_id));
         if ($response->getStatusCode() !== 200) {
-            throw new Exception($response->json()['error']['message'], $response->getStatusCode());
+            throw new Exception(json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR)['error']['message'], $response->getStatusCode());
         }
-        $this->assertNotNull($response->getHeader('Last-Modified'));
-        $this->assertNotNull($response->getHeader('Etag'));
+        self::assertNotEmpty($response->getHeader('Last-Modified'));
+        self::assertNotEmpty($response->getHeader('Etag'));
 
-        return $response->json();
+        return json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
     }
 
     private function getTracker($tracker_id): array
     {
         return $this->tracker_representations[$tracker_id];
     }
-    protected function assertLinks(Response $response, $nature_is_child, $artifact_id, $nature_empty): void
+    protected function assertLinks(ResponseInterface $response, $nature_is_child, $artifact_id, $nature_empty): void
     {
-        $links = $response->json();
+        $links = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         $expected_link = [
             "natures" => [

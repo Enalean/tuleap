@@ -30,12 +30,12 @@ class TrackerWorkflowsTest extends TrackerBase
     {
         $response = $this->getResponseByName(
             \REST_TestDataBuilder::ADMIN_USER_NAME,
-            $this->client->get('trackers/' . $this->tracker_workflows_tracker_id)
+            $this->request_factory->createRequest('GET', 'trackers/' . $this->tracker_workflows_tracker_id)
         );
 
         $this->assertEquals(200, $response->getStatusCode());
 
-        $tracker = $response->json();
+        $tracker = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         $status_field_index = array_search('status_id', array_column($tracker['fields'], 'name'));
 
@@ -46,12 +46,12 @@ class TrackerWorkflowsTest extends TrackerBase
     {
         $response = $this->getResponseByName(
             \REST_TestDataBuilder::ADMIN_USER_NAME,
-            $this->client->get('trackers/' . $this->tracker_workflow_transitions_tracker_id)
+            $this->request_factory->createRequest('GET', 'trackers/' . $this->tracker_workflow_transitions_tracker_id)
         );
 
         $this->assertEquals(200, $response->getStatusCode());
 
-        $tracker = $response->json();
+        $tracker = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertIsString($tracker['workflow']['is_used']);
         $this->assertEquals("1", $tracker['workflow']['is_used']);
@@ -66,11 +66,7 @@ class TrackerWorkflowsTest extends TrackerBase
 
         $response = $this->getResponseByName(
             \REST_TestDataBuilder::TEST_USER_1_NAME,
-            $this->client->patch(
-                "trackers/" . $this->tracker_workflows_tracker_id . '?query=' . urlencode($query),
-                null,
-                null
-            )
+            $this->request_factory->createRequest('PATCH', "trackers/" . $this->tracker_workflows_tracker_id . '?query=' . urlencode($query))
         );
 
         $this->assertEquals(200, $response->getStatusCode());
@@ -85,7 +81,7 @@ class TrackerWorkflowsTest extends TrackerBase
 
         $response = $this->getResponseByName(
             \REST_TestDataBuilder::TEST_USER_2_NAME,
-            $this->client->patch("trackers/" . $this->tracker_workflows_tracker_id . '?query=' . urlencode($query), null, null)
+            $this->request_factory->createRequest('PATCH', "trackers/" . $this->tracker_workflows_tracker_id . '?query=' . urlencode($query))
         );
 
         $this->assertEquals(403, $response->getStatusCode());
@@ -101,7 +97,7 @@ class TrackerWorkflowsTest extends TrackerBase
 
         $response = $this->getResponseByName(
             \REST_TestDataBuilder::TEST_USER_1_NAME,
-            $this->client->patch("trackers/" . $this->tracker_workflows_tracker_id . '?query=' . urlencode($query), null, null)
+            $this->request_factory->createRequest('PATCH', "trackers/" . $this->tracker_workflows_tracker_id . '?query=' . urlencode($query))
         );
 
         $this->assertEquals(400, $response->getStatusCode());
@@ -116,7 +112,7 @@ class TrackerWorkflowsTest extends TrackerBase
 
         $response = $this->getResponseByName(
             \REST_TestDataBuilder::TEST_USER_1_NAME,
-            $this->client->patch("trackers/" . $this->tracker_workflows_tracker_id . '?query=' . urlencode($query), null, null)
+            $this->request_factory->createRequest('PATCH', "trackers/" . $this->tracker_workflows_tracker_id . '?query=' . urlencode($query))
         );
 
         $this->assertEquals(400, $response->getStatusCode());
@@ -130,9 +126,9 @@ class TrackerWorkflowsTest extends TrackerBase
         $query    = '{"workflow": {"set_transitions_rules": {"is_used": true}}}';
         $response = $this->getResponseByName(
             \REST_TestDataBuilder::TEST_USER_1_NAME,
-            $this->client->patch("trackers/" . $this->tracker_workflows_tracker_id . '?query=' . urlencode($query), null, null)
+            $this->request_factory->createRequest('PATCH', "trackers/" . $this->tracker_workflows_tracker_id . '?query=' . urlencode($query))
         );
-        $result   = $response->json();
+        $result   = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertEquals("1", $result['workflow']['is_used']);
     }
@@ -145,9 +141,9 @@ class TrackerWorkflowsTest extends TrackerBase
         $query    = '{"workflow": {"set_transitions_rules": {"is_used": false}}}';
         $response = $this->getResponseByName(
             \REST_TestDataBuilder::TEST_USER_1_NAME,
-            $this->client->patch("trackers/" . $this->tracker_workflows_tracker_id . '?query=' . urlencode($query), null, null)
+            $this->request_factory->createRequest('PATCH', "trackers/" . $this->tracker_workflows_tracker_id . '?query=' . urlencode($query))
         );
-        $result   = $response->json();
+        $result   = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertEquals("0", $result['workflow']['is_used']);
     }
@@ -161,13 +157,9 @@ class TrackerWorkflowsTest extends TrackerBase
         $query    = '{"workflow": {"delete_transitions_rules": true}}';
         $response = $this->getResponseByName(
             \REST_TestDataBuilder::TEST_USER_1_NAME,
-            $this->client->patch(
-                "trackers/" . $this->tracker_workflows_tracker_id . '?query=' . urlencode($query),
-                null,
-                null
-            )
+            $this->request_factory->createRequest('PATCH', "trackers/" . $this->tracker_workflows_tracker_id . '?query=' . urlencode($query))
         );
-        $result   = $response->json();
+        $result   = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertEquals(200, $response->getStatusCode());
 
@@ -184,11 +176,7 @@ class TrackerWorkflowsTest extends TrackerBase
         $query    = '{"workflow": {"delete_transitions_rules": true}}';
         $response = $this->getResponseByName(
             \REST_TestDataBuilder::TEST_USER_1_NAME,
-            $this->client->patch(
-                "trackers/" . $this->tracker_workflows_tracker_id . '?query=' . urlencode($query),
-                null,
-                null
-            )
+            $this->request_factory->createRequest('PATCH', "trackers/" . $this->tracker_workflows_tracker_id . '?query=' . urlencode($query))
         );
         $this->assertEquals(400, $response->getStatusCode());
     }

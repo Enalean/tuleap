@@ -34,8 +34,8 @@ class ProjectTest extends TrackerBase
             'limit' => 50, 'offset' => 0
         ]);
 
-        $response      = $this->getResponse($this->client->get($url), DataBuilder::USER_TESTER_NAME);
-        $json_projects = $response->json();
+        $response      = $this->getResponse($this->request_factory->createRequest('GET', $url), DataBuilder::USER_TESTER_NAME);
+        $json_projects = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertEquals($response->getStatusCode(), 200);
         $this->assertTrue(count($json_projects) > 1);
@@ -46,9 +46,9 @@ class ProjectTest extends TrackerBase
             'offset' => 0
         ]);
 
-        $response = $this->getResponse($this->client->get($url), DataBuilder::USER_TESTER_NAME);
+        $response = $this->getResponse($this->request_factory->createRequest('GET', $url), DataBuilder::USER_TESTER_NAME);
 
-        $json_projects = $response->json();
+        $json_projects = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertEquals($response->getStatusCode(), 200);
         $this->assertEquals(1, count($json_projects));
@@ -62,7 +62,7 @@ class ProjectTest extends TrackerBase
             'query' => '{"is_tracker_admin":false}',
         ]);
 
-        $response = $this->getResponse($this->client->get($url), DataBuilder::USER_TESTER_NAME);
+        $response = $this->getResponse($this->request_factory->createRequest('GET', $url), DataBuilder::USER_TESTER_NAME);
 
         $this->assertEquals($response->getStatusCode(), 400);
     }

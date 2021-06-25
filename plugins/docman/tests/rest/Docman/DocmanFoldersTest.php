@@ -24,7 +24,6 @@ namespace Tuleap\Docman\Test\rest\Docman;
 
 require_once __DIR__ . '/../../../vendor/autoload.php';
 
-use Guzzle\Http\Client;
 use REST_TestDataBuilder;
 use Tuleap\Docman\Test\rest\DocmanDataBuilder;
 use Tuleap\Docman\Test\rest\Helper\DocmanTestExecutionHelper;
@@ -95,10 +94,10 @@ class DocmanFoldersTest extends DocmanTestExecutionHelper
 
         $response = $this->getResponseByName(
             DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
-            $this->client->post('docman_folders/' . $folder_id . '/files', $headers, $query)
+            $this->request_factory->createRequest('POST', 'docman_folders/' . $folder_id . '/files')->withBody($this->stream_factory->createStream($query))
         );
         $this->assertEquals(400, $response->getStatusCode());
-        $this->assertStringContainsString("exists", $response->json()["error"]['message']);
+        $this->assertStringContainsString("exists", json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR)["error"]['message']);
     }
 
     /**
@@ -116,64 +115,56 @@ class DocmanFoldersTest extends DocmanTestExecutionHelper
 
         $post_response_with_rest_read_only_user = $this->getResponseByName(
             REST_TestDataBuilder::TEST_BOT_USER_NAME,
-            $this->client->post('docman_folders/' . $root_id . '/files', null, $query)
+            $this->request_factory->createRequest('POST', 'docman_folders/' . $root_id . '/files')->withBody($this->stream_factory->createStream($query))
         );
         $this->assertEquals(403, $post_response_with_rest_read_only_user->getStatusCode());
 
         $response1 = $this->getResponseByName(
             DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
-            $this->client->post('docman_folders/' . $root_id . '/files', null, $query)
+            $this->request_factory->createRequest('POST', 'docman_folders/' . $root_id . '/files')->withBody($this->stream_factory->createStream($query))
         );
         $this->assertEquals(201, $response1->getStatusCode());
-        $this->assertNotEmpty($response1->json()['file_properties']['upload_href']);
+        $response1_json = json_decode($response1->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
+        $this->assertNotEmpty($response1_json['file_properties']['upload_href']);
 
         $response2 = $this->getResponseByName(
             DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
-            $this->client->post('docman_folders/' . $root_id . '/files', null, $query)
+            $this->request_factory->createRequest('POST', 'docman_folders/' . $root_id . '/files')->withBody($this->stream_factory->createStream($query))
         );
         $this->assertEquals(201, $response1->getStatusCode());
         $this->assertSame(
-            $response1->json()['file_properties']['upload_href'],
-            $response2->json()['file_properties']['upload_href']
+            $response1_json['file_properties']['upload_href'],
+            json_decode($response2->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR)['file_properties']['upload_href']
         );
 
-        $general_use_http_client = new Client(
-            str_replace('/api/v1', '', $this->client->getBaseUrl()),
-            $this->client->getConfig()
-        );
-        $general_use_http_client->setCurlMulti($this->client->getCurlMulti());
-        $general_use_http_client->setSslVerification(false, false, false);
         $file_content        = str_repeat('A', $file_size);
         $tus_response_upload = $this->getResponseByName(
             DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
-            $general_use_http_client->patch(
-                $response1->json()['file_properties']['upload_href'],
-                [
-                    'Tus-Resumable' => '1.0.0',
-                    'Content-Type'  => 'application/offset+octet-stream',
-                    'Upload-Offset' => '0'
-                ],
-                $file_content
-            )
+            $this->request_factory->createRequest('PATCH', $response1_json['file_properties']['upload_href'])
+                ->withHeader('Tus-Resumable', '1.0.0')
+                ->withHeader('Content-Type', 'application/offset+octet-stream')
+                ->withHeader('Upload-Offset', '0')
+                ->withBody($this->stream_factory->createStream($file_content))
         );
         $this->assertEquals(204, $tus_response_upload->getStatusCode());
-        $this->assertEquals([$file_size], $tus_response_upload->getHeader('Upload-Offset')->toArray());
+        $this->assertEquals([$file_size], $tus_response_upload->getHeader('Upload-Offset'));
 
         $file_item_response = $this->getResponseByName(
             DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
-            $this->client->get($response1->json()['uri'])
+            $this->request_factory->createRequest('GET', $response1_json['uri'])
         );
         $this->assertEquals(200, $file_item_response->getStatusCode());
-        $this->assertEquals('file', $file_item_response->json()['type']);
+        $file_item_response_json = json_decode($file_item_response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
+        $this->assertEquals('file', $file_item_response_json['type']);
 
         $file_content_response = $this->getResponseByName(
             DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
-            $general_use_http_client->get($file_item_response->json()['file_properties']['download_href'])
+            $this->request_factory->createRequest('GET', $file_item_response_json['file_properties']['download_href'])
         );
         $this->assertEquals(200, $file_content_response->getStatusCode());
         $this->assertEquals($file_content, $file_content_response->getBody());
 
-        return $response1->json()['id'];
+        return $response1_json['id'];
     }
 
     /**
@@ -184,18 +175,14 @@ class DocmanFoldersTest extends DocmanTestExecutionHelper
     {
         $response = $this->getResponseByName(
             DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
-            $this->client->post(
-                'docman_folders/' . urlencode((string) $root_id) . '/files',
-                ['Content-Type' => 'application/json'],
-                json_encode(['copy' => ['item_id' => $file_document_id]])
-            )
+            $this->request_factory->createRequest('POST', 'docman_folders/' . urlencode((string) $root_id) . '/files')->withBody($this->stream_factory->createStream(json_encode(['copy' => ['item_id' => $file_document_id]])))
         );
 
         $this->assertEquals(201, $response->getStatusCode());
 
         $this->getResponseByName(
             DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
-            $this->client->delete('docman_files/' . urlencode((string) $response->json()['id']))
+            $this->request_factory->createRequest('DELETE', 'docman_files/' . urlencode((string) json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR)['id']))
         );
     }
 
@@ -206,11 +193,7 @@ class DocmanFoldersTest extends DocmanTestExecutionHelper
     public function testPostCopyFileDocumentWithUserRESTReadOnlyAdmin(int $root_id, int $file_document_id): void
     {
         $response = $this->getResponse(
-            $this->client->post(
-                'docman_folders/' . urlencode((string) $root_id) . '/files',
-                ['Content-Type' => 'application/json'],
-                json_encode(['copy' => ['item_id' => $file_document_id]])
-            ),
+            $this->request_factory->createRequest('POST', 'docman_folders/' . urlencode((string) $root_id) . '/files')->withBody($this->stream_factory->createStream(json_encode(['copy' => ['item_id' => $file_document_id]]))),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
 
@@ -231,17 +214,18 @@ class DocmanFoldersTest extends DocmanTestExecutionHelper
 
         $response1 = $this->getResponseByName(
             DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
-            $this->client->post('docman_folders/' . $root_id . '/files', null, $query)
+            $this->request_factory->createRequest('POST', 'docman_folders/' . $root_id . '/files')->withBody($this->stream_factory->createStream($query))
         );
         $this->assertEquals(201, $response1->getStatusCode());
-        $this->assertNull($response1->json()['file_properties']);
+        $response1_json = json_decode($response1->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
+        $this->assertNull($response1_json['file_properties']);
 
         $file_item_response = $this->getResponseByName(
             DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
-            $this->client->get($response1->json()['uri'])
+            $this->request_factory->createRequest('GET', $response1_json['uri'])
         );
         $this->assertEquals(200, $file_item_response->getStatusCode());
-        $this->assertEquals('file', $file_item_response->json()['type']);
+        $this->assertEquals('file', json_decode($file_item_response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR)['type']);
     }
 
     /**
@@ -257,7 +241,7 @@ class DocmanFoldersTest extends DocmanTestExecutionHelper
         );
 
         $response1 = $this->getResponse(
-            $this->client->post('docman_folders/' . $root_id . '/files', null, $query),
+            $this->request_factory->createRequest('POST', 'docman_folders/' . $root_id . '/files')->withBody($this->stream_factory->createStream($query)),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
 
@@ -279,10 +263,10 @@ class DocmanFoldersTest extends DocmanTestExecutionHelper
 
         $response = $this->getResponseByName(
             DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
-            $this->client->post('docman_folders/' . $root_id . '/files', $headers, $query)
+            $this->request_factory->createRequest('POST', 'docman_folders/' . $root_id . '/files')->withBody($this->stream_factory->createStream($query))
         );
         $this->assertEquals(400, $response->getStatusCode());
-        $this->assertStringContainsString("size", $response->json()["error"]['message']);
+        $this->assertStringContainsString("size", json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR)["error"]['message']);
     }
 
     /**
@@ -294,30 +278,22 @@ class DocmanFoldersTest extends DocmanTestExecutionHelper
 
         $response = $this->getResponseByName(
             DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
-            $this->client->post(
-                'docman_folders/' . $root_id . '/files',
-                null,
-                json_encode(
-                    [
-                        'title'           => $document_name,
-                        'file_properties' => ['file_name' => 'file', 'file_size' => 123]
-                    ]
-                )
-            )
+            $this->request_factory->createRequest('POST', 'docman_folders/' . $root_id . '/files')->withBody($this->stream_factory->createStream(json_encode(
+                [
+                    'title'           => $document_name,
+                    'file_properties' => ['file_name' => 'file', 'file_size' => 123]
+                ]
+            )))
         );
         $this->assertEquals(201, $response->getStatusCode());
 
         $response2 = $this->getResponse(
-            $this->client->post(
-                'docman_folders/' . $root_id . '/empties',
-                null,
-                json_encode(
-                    [
-                        'title'     => $document_name,
-                        'parent_id' => $root_id,
-                    ]
-                )
-            )
+            $this->request_factory->createRequest('POST', 'docman_folders/' . $root_id . '/empties')->withBody($this->stream_factory->createStream(json_encode(
+                [
+                    'title'     => $document_name,
+                    'parent_id' => $root_id,
+                ]
+            )))
         );
         $this->assertEquals(409, $response2->getStatusCode());
     }
@@ -331,45 +307,31 @@ class DocmanFoldersTest extends DocmanTestExecutionHelper
 
         $response_creation_file = $this->getResponseByName(
             DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
-            $this->client->post(
-                'docman_folders/' . $root_id . '/files',
-                null,
-                json_encode(
-                    [
-                        'title'           => $document_name,
-                        'file_properties' => ['file_name' => 'file', 'file_size' => 123]
-                    ]
-                )
-            )
+            $this->request_factory->createRequest('POST', 'docman_folders/' . $root_id . '/files')->withBody($this->stream_factory->createStream(json_encode(
+                [
+                    'title'           => $document_name,
+                    'file_properties' => ['file_name' => 'file', 'file_size' => 123]
+                ]
+            )))
         );
         $this->assertEquals(201, $response_creation_file->getStatusCode());
 
-        $tus_client = new Client(
-            str_replace('/api/v1', '', $this->client->getBaseUrl()),
-            $this->client->getConfig()
-        );
-        $tus_client->setCurlMulti($this->client->getCurlMulti());
-        $tus_client->setSslVerification(false, false, false);
         $tus_response_cancel = $this->getResponseByName(
             DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
-            $tus_client->delete(
-                $response_creation_file->json()['file_properties']['upload_href'],
-                ['Tus-Resumable' => '1.0.0']
-            )
+            $this->request_factory->createRequest(
+                'DELETE',
+                json_decode($response_creation_file->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR)['file_properties']['upload_href']
+            )->withHeader('Tus-Resumable', '1.0.0')
         );
         $this->assertEquals(204, $tus_response_cancel->getStatusCode());
 
         $response_creation_empty = $this->getResponse(
-            $this->client->post(
-                'docman_folders/' . $root_id . '/files',
-                null,
-                json_encode(
-                    [
-                        'title'           => $document_name,
-                        'file_properties' => ['file_name' => 'file', 'file_size' => 123]
-                    ]
-                )
-            )
+            $this->request_factory->createRequest('POST', 'docman_folders/' . $root_id . '/files')->withBody($this->stream_factory->createStream(json_encode(
+                [
+                    'title'           => $document_name,
+                    'file_properties' => ['file_name' => 'file', 'file_size' => 123]
+                ]
+            )))
         );
         $this->assertEquals(201, $response_creation_empty->getStatusCode());
     }
@@ -389,13 +351,14 @@ class DocmanFoldersTest extends DocmanTestExecutionHelper
 
         $response = $this->getResponseByName(
             DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
-            $this->client->post('docman_folders/' . $root_id . "/folders", $headers, $query)
+            $this->request_factory->createRequest('POST', 'docman_folders/' . $root_id . "/folders")->withBody($this->stream_factory->createStream($query))
         );
 
         $this->assertEquals(201, $response->getStatusCode());
-        $this->assertNull($response->json()['file_properties']);
+        $response_json = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
+        $this->assertNull($response_json['file_properties']);
 
-        return $response->json()['id'];
+        return $response_json['id'];
     }
 
     /**
@@ -412,7 +375,7 @@ class DocmanFoldersTest extends DocmanTestExecutionHelper
         );
 
         $response = $this->getResponse(
-            $this->client->post('docman_folders/' . $root_id . "/folders", $headers, $query),
+            $this->request_factory->createRequest('POST', 'docman_folders/' . $root_id . "/folders")->withBody($this->stream_factory->createStream($query)),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
 
@@ -426,80 +389,56 @@ class DocmanFoldersTest extends DocmanTestExecutionHelper
     {
         $response_folder_to_cut_with_rest_read_only_user = $this->getResponseByName(
             REST_TestDataBuilder::TEST_BOT_USER_NAME,
-            $this->client->post(
-                'docman_folders/' . urlencode((string) $root_id) . '/folders',
-                null,
-                json_encode(['title' => 'Folder to cut'])
-            )
+            $this->request_factory->createRequest('POST', 'docman_folders/' . urlencode((string) $root_id) . '/folders')->withBody($this->stream_factory->createStream(json_encode(['title' => 'Folder to cut'])))
         );
         $this->assertEquals(403, $response_folder_to_cut_with_rest_read_only_user->getStatusCode());
 
         $response_folder_to_cut = $this->getResponseByName(
             DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
-            $this->client->post(
-                'docman_folders/' . urlencode((string) $root_id) . '/folders',
-                null,
-                json_encode(['title' => 'Folder to cut'])
-            )
+            $this->request_factory->createRequest('POST', 'docman_folders/' . urlencode((string) $root_id) . '/folders')->withBody($this->stream_factory->createStream(json_encode(['title' => 'Folder to cut'])))
         );
         $this->assertEquals(201, $response_folder_to_cut->getStatusCode());
-        $folder_to_cut_id = $response_folder_to_cut->json()['id'];
+        $folder_to_cut_id = json_decode($response_folder_to_cut->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR)['id'];
 
         $response_folder_creation_with_rest_read_only_user = $this->getResponseByName(
             REST_TestDataBuilder::TEST_BOT_USER_NAME,
-            $this->client->post(
-                'docman_folders/' . urlencode((string) $root_id) . '/folders',
-                null,
-                json_encode(['title' => 'Folder cut folder'])
-            )
+            $this->request_factory->createRequest('POST', 'docman_folders/' . urlencode((string) $root_id) . '/folders')->withBody($this->stream_factory->createStream(json_encode(['title' => 'Folder cut folder'])))
         );
         $this->assertEquals(403, $response_folder_creation_with_rest_read_only_user->getStatusCode());
 
         $response_folder_destination_creation = $this->getResponseByName(
             DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
-            $this->client->post(
-                'docman_folders/' . urlencode((string) $root_id) . '/folders',
-                null,
-                json_encode(['title' => 'Folder cut folder'])
-            )
+            $this->request_factory->createRequest('POST', 'docman_folders/' . urlencode((string) $root_id) . '/folders')->withBody($this->stream_factory->createStream(json_encode(['title' => 'Folder cut folder'])))
         );
         $this->assertEquals(201, $response_folder_destination_creation->getStatusCode());
-        $folder_destination_id = $response_folder_destination_creation->json()['id'];
+        $folder_destination_id = json_decode($response_folder_destination_creation->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR)['id'];
 
         $move_response_with_rest_read_only_user = $this->getResponseByName(
             REST_TestDataBuilder::TEST_BOT_USER_NAME,
-            $this->client->patch(
-                'docman_folders/' . urlencode((string) $folder_to_cut_id),
-                null,
-                json_encode(['move' => ['destination_folder_id' => $folder_destination_id]])
-            )
+            $this->request_factory->createRequest('PATCH', 'docman_folders/' . urlencode((string) $folder_to_cut_id))->withBody($this->stream_factory->createStream(json_encode(['move' => ['destination_folder_id' => $folder_destination_id]])))
         );
         $this->assertEquals(403, $move_response_with_rest_read_only_user->getStatusCode());
 
         $move_response = $this->getResponseByName(
             DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
-            $this->client->patch(
-                'docman_folders/' . urlencode((string) $folder_to_cut_id),
-                null,
-                json_encode(['move' => ['destination_folder_id' => $folder_destination_id]])
-            )
+            $this->request_factory->createRequest('PATCH', 'docman_folders/' . urlencode((string) $folder_to_cut_id))->withBody($this->stream_factory->createStream(json_encode(['move' => ['destination_folder_id' => $folder_destination_id]])))
         );
         $this->assertEquals(200, $move_response->getStatusCode());
 
         $moved_item_response = $this->getResponse(
-            $this->client->get('docman_items/' . urlencode((string) $folder_to_cut_id)),
+            $this->request_factory->createRequest('GET', 'docman_items/' . urlencode((string) $folder_to_cut_id)),
             DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME
         );
-        $this->assertEquals($folder_destination_id, $moved_item_response->json()['parent_id']);
+        $this->assertEquals($folder_destination_id, json_decode($moved_item_response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR)['parent_id']);
 
         $delete_response_with_rest_read_only_user = $this->getResponse(
-            $this->client->delete('docman_folders/' . urlencode((string) $folder_destination_id)),
+            $this->request_factory->createRequest('DELETE', 'docman_folders/' . urlencode((string) $folder_destination_id)),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
         $this->assertEquals(403, $delete_response_with_rest_read_only_user->getStatusCode());
 
         $this->getResponse(
-            $this->client->delete('docman_folders/' . urlencode((string) $folder_destination_id)),
+            $this->request_factory->createRequest('DELETE', 'docman_folders/' . urlencode((string) $folder_destination_id)),
             DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME
         );
     }
@@ -512,18 +451,14 @@ class DocmanFoldersTest extends DocmanTestExecutionHelper
     {
         $response = $this->getResponseByName(
             DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
-            $this->client->post(
-                'docman_folders/' . urlencode((string) $root_id) . '/folders',
-                ['Content-Type' => 'application/json'],
-                json_encode(['copy' => ['item_id' => $folder_id]])
-            )
+            $this->request_factory->createRequest('POST', 'docman_folders/' . urlencode((string) $root_id) . '/folders')->withBody($this->stream_factory->createStream(json_encode(['copy' => ['item_id' => $folder_id]])))
         );
 
         $this->assertEquals(201, $response->getStatusCode());
 
         $this->getResponseByName(
             DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
-            $this->client->delete('docman_folders/' . urlencode((string) $response->json()['id']))
+            $this->request_factory->createRequest('DELETE', 'docman_folders/' . urlencode((string) json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR)['id']))
         );
     }
 
@@ -542,11 +477,11 @@ class DocmanFoldersTest extends DocmanTestExecutionHelper
 
         $response = $this->getResponseByName(
             DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
-            $this->client->post('docman_folders/' . $root_id . "/folders", $headers, $query)
+            $this->request_factory->createRequest('POST', 'docman_folders/' . $root_id . "/folders")->withBody($this->stream_factory->createStream($query))
         );
 
         $this->assertEquals(400, $response->getStatusCode());
-        $this->assertStringContainsString("exists", $response->json()["error"]['message']);
+        $this->assertStringContainsString("exists", json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR)["error"]['message']);
     }
 
     /**
@@ -556,11 +491,7 @@ class DocmanFoldersTest extends DocmanTestExecutionHelper
     public function testPostCopyFolderItemWithUserRESTReadOnlyAdminNotInvolvedInProject(int $root_id, int $folder_id): void
     {
         $response = $this->getResponse(
-            $this->client->post(
-                'docman_folders/' . urlencode((string) $root_id) . '/folders',
-                ['Content-Type' => 'application/json'],
-                json_encode(['copy' => ['item_id' => $folder_id]])
-            ),
+            $this->request_factory->createRequest('POST', 'docman_folders/' . urlencode((string) $root_id) . '/folders')->withBody($this->stream_factory->createStream(json_encode(['copy' => ['item_id' => $folder_id]]))),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
 
@@ -582,11 +513,11 @@ class DocmanFoldersTest extends DocmanTestExecutionHelper
 
         $response = $this->getResponseByName(
             DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
-            $this->client->post('docman_folders/' . $root_id . '/empties', $headers, $query)
+            $this->request_factory->createRequest('POST', 'docman_folders/' . $root_id . '/empties')->withBody($this->stream_factory->createStream($query))
         );
         $this->assertEquals(201, $response->getStatusCode());
 
-        return $response->json()['id'];
+        return json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR)['id'];
     }
 
     /**
@@ -597,18 +528,14 @@ class DocmanFoldersTest extends DocmanTestExecutionHelper
     {
         $response = $this->getResponseByName(
             DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
-            $this->client->post(
-                'docman_folders/' . urlencode((string) $root_id) . '/empties',
-                ['Content-Type' => 'application/json'],
-                json_encode(['copy' => ['item_id' => $empty_document_id]])
-            )
+            $this->request_factory->createRequest('POST', 'docman_folders/' . urlencode((string) $root_id) . '/empties')->withBody($this->stream_factory->createStream(json_encode(['copy' => ['item_id' => $empty_document_id]])))
         );
 
         $this->assertEquals(201, $response->getStatusCode());
 
         $this->getResponseByName(
             DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
-            $this->client->delete('docman_empty_documents/' . urlencode((string) $response->json()['id']))
+            $this->request_factory->createRequest('DELETE', 'docman_empty_documents/' . urlencode((string) json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR)['id']))
         );
     }
 
@@ -628,17 +555,16 @@ class DocmanFoldersTest extends DocmanTestExecutionHelper
 
         $response = $this->getResponseByName(
             DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
-            $this->client->post('docman_folders/' . $read_only_folder['id'] . '/empties', null, $query)
+            $this->request_factory->createRequest('POST', 'docman_folders/' . $read_only_folder['id'] . '/empties')->withBody($this->stream_factory->createStream($query))
         );
         $this->assertEquals(403, $response->getStatusCode());
-        $this->assertStringContainsString("allowed", $response->json()["error"]['i18n_error_message']);
+        $this->assertStringContainsString("allowed", json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR)["error"]['i18n_error_message']);
 
         $response_with_rest_read_only_user = $this->getResponse(
-            $this->client->post('docman_folders/' . $read_only_folder['id'] . '/empties', null, $query),
+            $this->request_factory->createRequest('POST', 'docman_folders/' . $read_only_folder['id'] . '/empties')->withBody($this->stream_factory->createStream($query)),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
         $this->assertEquals(403, $response_with_rest_read_only_user->getStatusCode());
-        $this->assertStringContainsString("allowed", $response->json()["error"]['i18n_error_message']);
     }
 
     /**
@@ -658,12 +584,12 @@ class DocmanFoldersTest extends DocmanTestExecutionHelper
 
         $response = $this->getResponseByName(
             DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
-            $this->client->post('docman_folders/' . $root_id . "/wikis", $headers, $query)
+            $this->request_factory->createRequest('POST', 'docman_folders/' . $root_id . "/wikis")->withBody($this->stream_factory->createStream($query))
         );
 
         $this->assertEquals(201, $response->getStatusCode());
 
-        return $response->json()['id'];
+        return json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR)['id'];
     }
 
     /**
@@ -682,7 +608,7 @@ class DocmanFoldersTest extends DocmanTestExecutionHelper
         );
 
         $response = $this->getResponse(
-            $this->client->post('docman_folders/' . $root_id . "/wikis", $headers, $query),
+            $this->request_factory->createRequest('POST', 'docman_folders/' . $root_id . "/wikis")->withBody($this->stream_factory->createStream($query)),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
 
@@ -697,18 +623,14 @@ class DocmanFoldersTest extends DocmanTestExecutionHelper
     {
         $response = $this->getResponseByName(
             DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
-            $this->client->post(
-                'docman_folders/' . urlencode((string) $root_id) . '/wikis',
-                ['Content-Type' => 'application/json'],
-                json_encode(['copy' => ['item_id' => $wiki_document_id]])
-            )
+            $this->request_factory->createRequest('POST', 'docman_folders/' . urlencode((string) $root_id) . '/wikis')->withBody($this->stream_factory->createStream(json_encode(['copy' => ['item_id' => $wiki_document_id]])))
         );
 
         $this->assertEquals(201, $response->getStatusCode());
 
         $this->getResponseByName(
             DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
-            $this->client->delete('docman_wikis/' . urlencode((string) $response->json()['id']))
+            $this->request_factory->createRequest('DELETE', 'docman_wikis/' . urlencode((string) json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR)['id']))
         );
     }
 
@@ -719,11 +641,7 @@ class DocmanFoldersTest extends DocmanTestExecutionHelper
     public function testPostCopyWikiDocumentDenidedForUserRESTReadOnlyAdminNotInvolvedInProject(int $root_id, int $wiki_document_id): void
     {
         $response = $this->getResponse(
-            $this->client->post(
-                'docman_folders/' . urlencode((string) $root_id) . '/wikis',
-                ['Content-Type' => 'application/json'],
-                json_encode(['copy' => ['item_id' => $wiki_document_id]])
-            ),
+            $this->request_factory->createRequest('POST', 'docman_folders/' . urlencode((string) $root_id) . '/wikis')->withBody($this->stream_factory->createStream(json_encode(['copy' => ['item_id' => $wiki_document_id]]))),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
 
@@ -747,12 +665,12 @@ class DocmanFoldersTest extends DocmanTestExecutionHelper
 
         $response = $this->getResponseByName(
             DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
-            $this->client->post('docman_folders/' . $root_id . '/embedded_files', $headers, $query)
+            $this->request_factory->createRequest('POST', 'docman_folders/' . $root_id . '/embedded_files')->withBody($this->stream_factory->createStream($query))
         );
 
         $this->assertEquals(201, $response->getStatusCode());
 
-        return $response->json()['id'];
+        return json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR)['id'];
     }
 
     /**
@@ -771,7 +689,7 @@ class DocmanFoldersTest extends DocmanTestExecutionHelper
         );
 
         $response = $this->getResponse(
-            $this->client->post('docman_folders/' . $root_id . '/embedded_files', $headers, $query),
+            $this->request_factory->createRequest('POST', 'docman_folders/' . $root_id . '/embedded_files')->withBody($this->stream_factory->createStream($query)),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
 
@@ -786,18 +704,14 @@ class DocmanFoldersTest extends DocmanTestExecutionHelper
     {
         $response = $this->getResponseByName(
             DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
-            $this->client->post(
-                'docman_folders/' . urlencode((string) $root_id) . '/embedded_files',
-                ['Content-Type' => 'application/json'],
-                json_encode(['copy' => ['item_id' => $embedded_document_id]])
-            )
+            $this->request_factory->createRequest('POST', 'docman_folders/' . urlencode((string) $root_id) . '/embedded_files')->withBody($this->stream_factory->createStream(json_encode(['copy' => ['item_id' => $embedded_document_id]])))
         );
 
         $this->assertEquals(201, $response->getStatusCode());
 
         $this->getResponseByName(
             DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
-            $this->client->delete('docman_embedded_files/' . urlencode((string) $response->json()['id']))
+            $this->request_factory->createRequest('DELETE', 'docman_embedded_files/' . urlencode((string) json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR)['id']))
         );
     }
 
@@ -808,11 +722,7 @@ class DocmanFoldersTest extends DocmanTestExecutionHelper
     public function testPostCopyEmbeddedDocumentDenidedForUserRESTReadOnlyAdminNotInvolvedInProject(int $root_id, int $embedded_document_id): void
     {
         $response = $this->getResponse(
-            $this->client->post(
-                'docman_folders/' . urlencode((string) $root_id) . '/embedded_files',
-                ['Content-Type' => 'application/json'],
-                json_encode(['copy' => ['item_id' => $embedded_document_id]])
-            ),
+            $this->request_factory->createRequest('POST', 'docman_folders/' . urlencode((string) $root_id) . '/embedded_files')->withBody($this->stream_factory->createStream(json_encode(['copy' => ['item_id' => $embedded_document_id]]))),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
 
@@ -836,12 +746,12 @@ class DocmanFoldersTest extends DocmanTestExecutionHelper
 
         $response = $this->getResponseByName(
             DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
-            $this->client->post('docman_folders/' . $root_id . "/links", $headers, $query)
+            $this->request_factory->createRequest('POST', 'docman_folders/' . $root_id . "/links")->withBody($this->stream_factory->createStream($query))
         );
 
         $this->assertEquals(201, $response->getStatusCode());
 
-        return $response->json()['id'];
+        return json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR)['id'];
     }
 
     /**
@@ -860,7 +770,7 @@ class DocmanFoldersTest extends DocmanTestExecutionHelper
         );
 
         $response = $this->getResponse(
-            $this->client->post('docman_folders/' . $root_id . "/links", $headers, $query),
+            $this->request_factory->createRequest('POST', 'docman_folders/' . $root_id . "/links")->withBody($this->stream_factory->createStream($query)),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
 
@@ -875,18 +785,14 @@ class DocmanFoldersTest extends DocmanTestExecutionHelper
     {
         $response = $this->getResponseByName(
             DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
-            $this->client->post(
-                'docman_folders/' . urlencode((string) $root_id) . '/links',
-                ['Content-Type' => 'application/json'],
-                json_encode(['copy' => ['item_id' => $link_document_id]])
-            )
+            $this->request_factory->createRequest('POST', 'docman_folders/' . urlencode((string) $root_id) . '/links')->withBody($this->stream_factory->createStream(json_encode(['copy' => ['item_id' => $link_document_id]])))
         );
 
         $this->assertEquals(201, $response->getStatusCode());
 
         $this->getResponseByName(
             DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
-            $this->client->delete('docman_links/' . urlencode((string) $response->json()['id']))
+            $this->request_factory->createRequest('DELETE', 'docman_links/' . urlencode((string) json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR)['id']))
         );
     }
 
@@ -897,11 +803,7 @@ class DocmanFoldersTest extends DocmanTestExecutionHelper
     public function testPostCopyLinkDocumentDenidedForUserRESTReadOnlyAdminNotInvolvedInProject(int $root_id, int $link_document_id): void
     {
         $response = $this->getResponse(
-            $this->client->post(
-                'docman_folders/' . urlencode((string) $root_id) . '/links',
-                ['Content-Type' => 'application/json'],
-                json_encode(['copy' => ['item_id' => $link_document_id]])
-            ),
+            $this->request_factory->createRequest('POST', 'docman_folders/' . urlencode((string) $root_id) . '/links')->withBody($this->stream_factory->createStream(json_encode(['copy' => ['item_id' => $link_document_id]]))),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
 
@@ -925,11 +827,11 @@ class DocmanFoldersTest extends DocmanTestExecutionHelper
 
         $response = $this->getResponseByName(
             DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
-            $this->client->post('docman_folders/' . $root_id . "/folders", $headers, $query)
+            $this->request_factory->createRequest('POST', 'docman_folders/' . $root_id . "/folders")->withBody($this->stream_factory->createStream($query))
         );
 
         $this->assertEquals(400, $response->getStatusCode());
-        $this->assertStringContainsString("Status", $response->json()["error"]['i18n_error_message']);
+        $this->assertStringContainsString("Status", json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR)["error"]['i18n_error_message']);
     }
 
     /**
@@ -949,11 +851,11 @@ class DocmanFoldersTest extends DocmanTestExecutionHelper
 
         $response = $this->getResponseByName(
             DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
-            $this->client->post('docman_folders/' . $root_id . "/files", $headers, $query)
+            $this->request_factory->createRequest('POST', 'docman_folders/' . $root_id . "/files")->withBody($this->stream_factory->createStream($query))
         );
 
         $this->assertEquals(400, $response->getStatusCode());
-        $this->assertStringContainsString("Status", $response->json()["error"]['i18n_error_message']);
+        $this->assertStringContainsString("Status", json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR)["error"]['i18n_error_message']);
     }
 
     /**
@@ -963,14 +865,10 @@ class DocmanFoldersTest extends DocmanTestExecutionHelper
     {
         $response_folder_updater_permissions = $this->getResponseByName(
             DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
-            $this->client->post(
-                'docman_folders/' . urlencode((string) $root_id) . '/folders',
-                null,
-                json_encode(['title' => 'Folder update permissions'])
-            )
+            $this->request_factory->createRequest('POST', 'docman_folders/' . urlencode((string) $root_id) . '/folders')->withBody($this->stream_factory->createStream(json_encode(['title' => 'Folder update permissions'])))
         );
         $this->assertEquals(201, $response_folder_updater_permissions->getStatusCode());
-        $folder_id = $response_folder_updater_permissions->json()['id'];
+        $folder_id = json_decode($response_folder_updater_permissions->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR)['id'];
 
         $project_members_identifier = $this->project_id . '_3';
         $permission_update_put_body = json_encode(
@@ -978,38 +876,30 @@ class DocmanFoldersTest extends DocmanTestExecutionHelper
         );
 
         $permission_update_response_with_rest_read_only_user = $this->getResponse(
-            $this->client->put(
-                'docman_folders/' . urlencode((string) $folder_id) . '/permissions',
-                null,
-                $permission_update_put_body
-            ),
+            $this->request_factory->createRequest('PUT', 'docman_folders/' . urlencode((string) $folder_id) . '/permissions')->withBody($this->stream_factory->createStream($permission_update_put_body)),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
         $this->assertEquals(403, $permission_update_response_with_rest_read_only_user->getStatusCode());
 
         $permission_update_response = $this->getResponseByName(
             DocmanDataBuilder::ADMIN_USER_NAME,
-            $this->client->put(
-                'docman_folders/' . urlencode((string) $folder_id) . '/permissions',
-                null,
-                $permission_update_put_body
-            )
+            $this->request_factory->createRequest('PUT', 'docman_folders/' . urlencode((string) $folder_id) . '/permissions')->withBody($this->stream_factory->createStream($permission_update_put_body))
         );
         $this->assertEquals(200, $permission_update_response->getStatusCode());
 
         $folder_representation_response = $this->getResponseByName(
             DocmanDataBuilder::ADMIN_USER_NAME,
-            $this->client->get('docman_items/' . urlencode((string) $folder_id))
+            $this->request_factory->createRequest('GET', 'docman_items/' . urlencode((string) $folder_id))
         );
         $this->assertEquals(200, $folder_representation_response->getStatusCode());
-        $permissions_for_groups_representation = $folder_representation_response->json()['permissions_for_groups'];
+        $permissions_for_groups_representation = json_decode($folder_representation_response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR)['permissions_for_groups'];
         $this->assertEmpty($permissions_for_groups_representation['can_read']);
         $this->assertEmpty($permissions_for_groups_representation['can_write']);
         $this->assertCount(1, $permissions_for_groups_representation['can_manage']);
         $this->assertEquals($project_members_identifier, $permissions_for_groups_representation['can_manage'][0]['id']);
 
         $this->getResponse(
-            $this->client->delete('docman_folders/' . urlencode((string) $folder_id)),
+            $this->request_factory->createRequest('DELETE', 'docman_folders/' . urlencode((string) $folder_id)),
             DocmanDataBuilder::ADMIN_USER_NAME
         );
     }
@@ -1021,61 +911,49 @@ class DocmanFoldersTest extends DocmanTestExecutionHelper
     {
         $response_folder_update_permissions = $this->getResponseByName(
             DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
-            $this->client->post(
-                'docman_folders/' . urlencode((string) $root_id) . '/folders',
-                null,
-                json_encode(['title' => 'Folder update permissions with child'])
-            )
+            $this->request_factory->createRequest('POST', 'docman_folders/' . urlencode((string) $root_id) . '/folders')->withBody($this->stream_factory->createStream(json_encode(['title' => 'Folder update permissions with child'])))
         );
         $this->assertEquals(201, $response_folder_update_permissions->getStatusCode());
-        $folder_id = $response_folder_update_permissions->json()['id'];
+        $folder_id = json_decode($response_folder_update_permissions->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR)['id'];
 
         $response_child_update_permissions = $this->getResponseByName(
             DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
-            $this->client->post(
-                'docman_folders/' . urlencode((string) $folder_id) . '/empties',
-                null,
-                json_encode(['title' => 'Child update permissions'])
-            )
+            $this->request_factory->createRequest('POST', 'docman_folders/' . urlencode((string) $folder_id) . '/empties')->withBody($this->stream_factory->createStream(json_encode(['title' => 'Child update permissions'])))
         );
         $this->assertEquals(201, $response_child_update_permissions->getStatusCode());
-        $child_id = $response_child_update_permissions->json()['id'];
+        $child_id = json_decode($response_child_update_permissions->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR)['id'];
 
         $project_members_identifier = $this->project_id . '_3';
         $permission_update_response = $this->getResponseByName(
             DocmanDataBuilder::ADMIN_USER_NAME,
-            $this->client->put(
-                'docman_folders/' . urlencode((string) $folder_id) . '/permissions',
-                null,
-                json_encode([
-                    'apply_permissions_on_children' => true,
-                    'can_read'                      => [],
-                    'can_write'                     => [],
-                    'can_manage'                    => [['id' => $project_members_identifier]]
-                ])
-            )
+            $this->request_factory->createRequest('PUT', 'docman_folders/' . urlencode((string) $folder_id) . '/permissions')->withBody($this->stream_factory->createStream(json_encode([
+                'apply_permissions_on_children' => true,
+                'can_read'                      => [],
+                'can_write'                     => [],
+                'can_manage'                    => [['id' => $project_members_identifier]]
+            ])))
         );
         $this->assertEquals(200, $permission_update_response->getStatusCode());
 
         $folder_representation_response = $this->getResponseByName(
             DocmanDataBuilder::ADMIN_USER_NAME,
-            $this->client->get('docman_items/' . urlencode((string) $folder_id))
+            $this->request_factory->createRequest('GET', 'docman_items/' . urlencode((string) $folder_id))
         );
         $this->assertEquals(200, $folder_representation_response->getStatusCode());
-        $permissions_for_groups_representation = $folder_representation_response->json()['permissions_for_groups'];
+        $permissions_for_groups_representation = json_decode($folder_representation_response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR)['permissions_for_groups'];
         $this->assertEmpty($permissions_for_groups_representation['can_read']);
         $this->assertEmpty($permissions_for_groups_representation['can_write']);
         $this->assertCount(1, $permissions_for_groups_representation['can_manage']);
         $this->assertEquals($project_members_identifier, $permissions_for_groups_representation['can_manage'][0]['id']);
         $child_representation_response = $this->getResponseByName(
             DocmanDataBuilder::ADMIN_USER_NAME,
-            $this->client->get('docman_items/' . urlencode((string) $child_id))
+            $this->request_factory->createRequest('GET', 'docman_items/' . urlencode((string) $child_id))
         );
         $this->assertEquals(200, $child_representation_response->getStatusCode());
-        $this->assertEquals($permissions_for_groups_representation, $child_representation_response->json()['permissions_for_groups']);
+        $this->assertEquals($permissions_for_groups_representation, json_decode($child_representation_response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR)['permissions_for_groups']);
 
         $this->getResponse(
-            $this->client->delete('docman_folders/' . urlencode((string) $folder_id)),
+            $this->request_factory->createRequest('DELETE', 'docman_folders/' . urlencode((string) $folder_id)),
             DocmanDataBuilder::ADMIN_USER_NAME
         );
     }
@@ -1087,11 +965,11 @@ class DocmanFoldersTest extends DocmanTestExecutionHelper
     {
         $response = $this->getResponseByName(
             DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
-            $this->client->delete('docman_folders/' . $root_id)
+            $this->request_factory->createRequest('DELETE', 'docman_folders/' . $root_id)
         );
 
         $this->assertEquals(400, $response->getStatusCode());
-        $this->assertStringContainsString("root folder", $response->json()["error"]['i18n_error_message']);
+        $this->assertStringContainsString("root folder", json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR)["error"]['i18n_error_message']);
 
         $this->checkItemHasNotBeenDeleted($root_id);
     }
@@ -1106,11 +984,11 @@ class DocmanFoldersTest extends DocmanTestExecutionHelper
 
         $response = $this->getResponseByName(
             DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
-            $this->client->delete('docman_folders/' . $file_to_delete_id)
+            $this->request_factory->createRequest('DELETE', 'docman_folders/' . $file_to_delete_id)
         );
 
         $this->assertEquals(403, $response->getStatusCode());
-        $this->assertStringContainsString("allowed", $response->json()["error"]['i18n_error_message']);
+        $this->assertStringContainsString("allowed", json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR)["error"]['i18n_error_message']);
 
         $this->checkItemHasNotBeenDeleted($file_to_delete_id);
     }
@@ -1124,7 +1002,7 @@ class DocmanFoldersTest extends DocmanTestExecutionHelper
         $file_to_delete_id = $file_to_delete['id'];
 
         $response = $this->getResponse(
-            $this->client->delete('docman_folders/' . $file_to_delete_id),
+            $this->request_factory->createRequest('DELETE', 'docman_folders/' . $file_to_delete_id),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
 
@@ -1143,7 +1021,7 @@ class DocmanFoldersTest extends DocmanTestExecutionHelper
 
         $response = $this->getResponseByName(
             DocmanDataBuilder::ADMIN_USER_NAME,
-            $this->client->delete('docman_folders/' . $file_to_delete_id)
+            $this->request_factory->createRequest('DELETE', 'docman_folders/' . $file_to_delete_id)
         );
 
         $this->assertEquals(200, $response->getStatusCode());

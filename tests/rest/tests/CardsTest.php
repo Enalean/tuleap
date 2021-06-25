@@ -27,8 +27,8 @@ class CardsTest extends CardsBase //phpcs:ignore PSR1.Classes.ClassDeclaration.M
 {
     public function testOPTIONSCards()
     {
-        $response = $this->getResponse($this->client->options('cards'));
-        $this->assertEquals(['OPTIONS'], $response->getHeader('Allow')->normalize()->toArray());
+        $response = $this->getResponse($this->request_factory->createRequest('OPTIONS', 'cards'));
+        self::assertEqualsCanonicalizing(['OPTIONS'], explode(', ', $response->getHeaderLine('Allow')));
     }
 
     public function testPUTCardsWithId()
@@ -38,22 +38,48 @@ class CardsTest extends CardsBase //phpcs:ignore PSR1.Classes.ClassDeclaration.M
         $test_column_id = 2;
 
         // Keep original values
+
         $original_card = $this->findCardInCardwall(
-            $this->getResponse($this->client->get('milestones/' . $this->sprint_artifact_ids[1] . '/cardwall'))->json(),
+            json_decode(
+                $this->getResponse(
+                    $this->request_factory->createRequest(
+                        'GET',
+                        'milestones/' . $this->sprint_artifact_ids[1] . '/cardwall'
+                    )
+                )->getBody()->getContents(),
+                true,
+                512,
+                JSON_THROW_ON_ERROR
+            ),
             $card_id
         );
 
-        $response_put = $this->getResponse($this->client->put("cards/$card_id", null, '
-            {
-                "label": "' . $test_label . '",
-                "column_id": ' . $test_column_id . ',
-                "values": []
-            }
-        '));
+        $response_put = $this->getResponse(
+            $this->request_factory->createRequest('PUT', "cards/$card_id")
+                ->withBody($this->stream_factory->createStream(
+                    '
+                            {
+                                "label": "' . $test_label . '",
+                                "column_id": ' . $test_column_id . ',
+                                "values": []
+                            }
+                        '
+                ))
+        );
         $this->assertEquals($response_put->getStatusCode(), 200);
 
         $card = $this->findCardInCardwall(
-            $this->getResponse($this->client->get('milestones/' . $this->sprint_artifact_ids[1] . '/cardwall'))->json(),
+            json_decode(
+                $this->getResponse(
+                    $this->request_factory->createRequest(
+                        'GET',
+                        'milestones/' . $this->sprint_artifact_ids[1] . '/cardwall'
+                    )
+                )->getBody()->getContents(),
+                true,
+                512,
+                JSON_THROW_ON_ERROR
+            ),
             $card_id
         );
 
@@ -61,28 +87,34 @@ class CardsTest extends CardsBase //phpcs:ignore PSR1.Classes.ClassDeclaration.M
         $this->assertEquals($card['column_id'], $test_column_id);
 
         // Restore original values
-        $this->getResponse($this->client->put("cards/$card_id", null, '
-            {
-                "label": "' . $original_card['label'] . '",
-                "column_id": ' . $original_card['column_id'] . ',
-                "values": []
-            }
-        '));
+        $this->getResponse(
+            $this->request_factory->createRequest('PUT', "cards/$card_id")
+                ->withBody($this->stream_factory->createStream('
+                    {
+                        "label": "' . $original_card['label'] . '",
+                        "column_id": ' . $original_card['column_id'] . ',
+                        "values": []
+                    }
+                '))
+        );
     }
 
     public function testPUTCardsForReadOnlyUser(): void
     {
         $card_id      = REST_TestDataBuilder::PLANNING_ID . '_' . $this->story_artifact_ids[1];
         $response_put = $this->getResponse(
-            $this->client->put(
-                "cards/$card_id",
-                null,
-                '
+            $this->request_factory->createRequest(
+                'PUT',
+                "cards/$card_id"
+            )->withBody(
+                $this->stream_factory->createStream(
+                    '
                 {
                     "label": "Ieatlaughingcow",
                     "column_id": 2,
                     "values": []
                 } '
+                )
             ),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
@@ -102,7 +134,7 @@ class CardsTest extends CardsBase //phpcs:ignore PSR1.Classes.ClassDeclaration.M
 
     public function testOPTIONSCardsWithId()
     {
-        $response = $this->getResponse($this->client->options('cards/' . $this->sprint_artifact_ids[1] . '_' . $this->story_artifact_ids[1]));
-        $this->assertEquals(['OPTIONS', 'PUT'], $response->getHeader('Allow')->normalize()->toArray());
+        $response = $this->getResponse($this->request_factory->createRequest('OPTIONS', 'cards/' . $this->sprint_artifact_ids[1] . '_' . $this->story_artifact_ids[1]));
+        self::assertEqualsCanonicalizing(['OPTIONS', 'PUT'], explode(', ', $response->getHeaderLine('Allow')));
     }
 }

@@ -21,7 +21,7 @@
 
 namespace Tuleap\SystemEvent\REST;
 
-use Guzzle\Http\Message\Response;
+use Psr\Http\Message\ResponseInterface;
 use RestBase;
 use REST_TestDataBuilder;
 
@@ -34,7 +34,7 @@ final class SystemEventTest extends RestBase
     public function testGET(): void
     {
         $response = $this->getResponse(
-            $this->client->get('system_event'),
+            $this->request_factory->createRequest('GET', 'system_event'),
             REST_TestDataBuilder::ADMIN_USER_NAME
         );
 
@@ -44,16 +44,16 @@ final class SystemEventTest extends RestBase
     public function testGETWithRESTReadOnlyUser(): void
     {
         $response = $this->getResponse(
-            $this->client->get('system_event'),
+            $this->request_factory->createRequest('GET', 'system_event'),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
 
         $this->assertGETSystemEvents($response);
     }
 
-    private function assertGETSystemEvents(Response $response): void
+    private function assertGETSystemEvents(ResponseInterface $response): void
     {
-        $response_json = $response->json();
+        $response_json = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         $system_event_01 = $response_json[0];
         $this->assertEquals($system_event_01['id'], 1);
@@ -64,22 +64,22 @@ final class SystemEventTest extends RestBase
     public function testOptions(): void
     {
         $response = $this->getResponse(
-            $this->client->options('system_event'),
+            $this->request_factory->createRequest('OPTIONS', 'system_event'),
             REST_TestDataBuilder::ADMIN_USER_NAME
         );
 
         $this->assertEquals(200, $response->getStatusCode());
-        $this->assertEquals(['OPTIONS', 'GET'], $response->getHeader('Allow')->normalize()->toArray());
+        self::assertEqualsCanonicalizing(['OPTIONS', 'GET'], explode(', ', $response->getHeaderLine('Allow')));
     }
 
     public function testOptionsWithRESTReadOnlyUser(): void
     {
         $response = $this->getResponse(
-            $this->client->options('system_event'),
+            $this->request_factory->createRequest('OPTIONS', 'system_event'),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
 
         $this->assertEquals(200, $response->getStatusCode());
-        $this->assertEquals(['OPTIONS', 'GET'], $response->getHeader('Allow')->normalize()->toArray());
+        self::assertEqualsCanonicalizing(['OPTIONS', 'GET'], explode(', ', $response->getHeaderLine('Allow')));
     }
 }

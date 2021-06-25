@@ -20,7 +20,6 @@
 
 namespace Tuleap\TestManagement;
 
-use Guzzle\Http\Message\Response;
 use REST_TestDataBuilder;
 
 /**
@@ -31,7 +30,7 @@ final class ProjectTest extends BaseTest
 
     public function testGetCampaigns(): void
     {
-        $response = $this->getResponse($this->client->get("projects/$this->project_id/testmanagement_campaigns"));
+        $response = $this->getResponse($this->request_factory->createRequest('GET', "projects/$this->project_id/testmanagement_campaigns"));
 
         $this->assertGETCampaings($response);
     }
@@ -39,16 +38,16 @@ final class ProjectTest extends BaseTest
     public function testGetCampaignsWithRESTReadOnlyUser(): void
     {
         $response = $this->getResponse(
-            $this->client->get("projects/$this->project_id/testmanagement_campaigns"),
+            $this->request_factory->createRequest('GET', "projects/$this->project_id/testmanagement_campaigns"),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
 
         $this->assertGETCampaings($response);
     }
 
-    private function assertGETCampaings(Response $response): void
+    private function assertGETCampaings(\Psr\Http\Message\ResponseInterface $response): void
     {
-        $campaigns = $response->json();
+        $campaigns = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertCount(3, $campaigns);
 
@@ -83,8 +82,8 @@ final class ProjectTest extends BaseTest
 
     public function testGetDefinitions(): void
     {
-        $response    = $this->getResponse($this->client->get("projects/$this->project_id/testmanagement_definitions"));
-        $definitions = $response->json();
+        $response    = $this->getResponse($this->request_factory->createRequest('GET', "projects/$this->project_id/testmanagement_definitions"));
+        $definitions = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertCount(6, $definitions);
     }
@@ -92,11 +91,11 @@ final class ProjectTest extends BaseTest
     public function testGetDefinitionsWithRESTReadOnlyUser(): void
     {
         $response = $this->getResponse(
-            $this->client->get("projects/$this->project_id/testmanagement_definitions"),
+            $this->request_factory->createRequest('GET', "projects/$this->project_id/testmanagement_definitions"),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
 
-        $definitions = $response->json();
+        $definitions = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertCount(6, $definitions);
     }

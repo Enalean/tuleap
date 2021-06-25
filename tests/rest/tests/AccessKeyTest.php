@@ -30,9 +30,9 @@ class AccessKeyTest extends RestBase
 
     public function testOptions(): void
     {
-        $response = $this->getResponse($this->client->options('access_keys'));
+        $response = $this->getResponse($this->request_factory->createRequest('OPTIONS', 'access_keys'));
 
-        $this->assertEquals(['OPTIONS', 'POST'], $response->getHeader('Allow')->normalize()->toArray());
+        self::assertEqualsCanonicalizing(['OPTIONS', 'POST'], explode(', ', $response->getHeaderLine('Allow')));
         $this->assertEquals(200, $response->getStatusCode());
     }
 
@@ -91,20 +91,21 @@ class AccessKeyTest extends RestBase
     {
         $access_key_identifier = $this->createAccessKey();
 
-        $request = $this->client->get('access_keys/self');
-        $request->setHeader('X-Auth-AccessKey', $access_key_identifier);
-        $response = $request->send();
+        $request  = $this->request_factory->createRequest('GET', 'access_keys/self')
+            ->withHeader('X-Auth-AccessKey', $access_key_identifier);
+        $response = $this->getResponseWithoutAuth($request);
 
         $this->assertEquals(200, $response->getStatusCode());
-        $access_key_self = $response->json();
+        $access_key_self = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         $response = $this->getResponse(
-            $this->client->get(
-                'access_keys/' . urlencode((string) $access_key_self['id'])
-            )
+            $this->request_factory->createRequest('GET', 'access_keys/' . urlencode((string) $access_key_self['id']))
         );
         $this->assertEquals(200, $response->getStatusCode());
-        $this->assertEquals($access_key_self, $response->json());
+        $this->assertEquals(
+            $access_key_self,
+            json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR)
+        );
 
         $this->revokeAccessKeys([$access_key_self]);
     }
@@ -120,10 +121,8 @@ class AccessKeyTest extends RestBase
         );
 
         $response = $this->getResponse(
-            $this->client->post(
-                'access_keys',
-                null,
-                $body_content
+            $this->request_factory->createRequest('POST', 'access_keys')->withBody(
+                $this->stream_factory->createStream($body_content)
             ),
             REST_TestDataBuilder::TEST_USER_1_NAME
         );
@@ -142,10 +141,8 @@ class AccessKeyTest extends RestBase
         );
 
         $response = $this->getResponse(
-            $this->client->post(
-                'access_keys',
-                null,
-                $body_content
+            $this->request_factory->createRequest('POST', 'access_keys')->withBody(
+                $this->stream_factory->createStream($body_content)
             ),
             REST_TestDataBuilder::TEST_USER_1_NAME
         );
@@ -171,16 +168,14 @@ class AccessKeyTest extends RestBase
         }
 
         $response = $this->getResponse(
-            $this->client->post(
-                'access_keys',
-                null,
-                $body_content
+            $this->request_factory->createRequest('POST', 'access_keys')->withBody(
+                $this->stream_factory->createStream($body_content)
             ),
             REST_TestDataBuilder::TEST_USER_1_NAME
         );
 
         $this->assertEquals(201, $response->getStatusCode());
-        $access_key = $response->json();
+        $access_key = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         $this->assertArrayHasKey('identifier', $access_key);
         return $access_key['identifier'];
     }
@@ -188,20 +183,18 @@ class AccessKeyTest extends RestBase
     private function getAccessKeys(): array
     {
         $response = $this->getResponse(
-            $this->client->get('users/' . $this->user_ids[REST_TestDataBuilder::TEST_USER_1_NAME] . '/access_keys'),
+            $this->request_factory->createRequest('GET', 'users/' . $this->user_ids[REST_TestDataBuilder::TEST_USER_1_NAME] . '/access_keys'),
             REST_TestDataBuilder::TEST_USER_1_NAME
         );
         $this->assertSame(200, $response->getStatusCode());
-        return $response->json();
+        return json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
     }
 
     private function revokeAccessKeys(array $access_keys): void
     {
         foreach ($access_keys as $access_key) {
             $response = $this->getResponse(
-                $this->client->delete(
-                    'access_keys/' . $access_key['id']
-                ),
+                $this->request_factory->createRequest('DELETE', 'access_keys/' . $access_key['id']),
                 REST_TestDataBuilder::TEST_USER_1_NAME
             );
             $this->assertEquals(200, $response->getStatusCode());
@@ -210,10 +203,9 @@ class AccessKeyTest extends RestBase
 
     private function isAuthenticationSuccessful($key_identifier): bool
     {
-        $request = $this->client->get('projects');
-        $request->setHeader('X-Auth-AccessKey', $key_identifier);
+        $request = ($this->request_factory->createRequest('GET', 'projects'))->withHeader('X-Auth-AccessKey', $key_identifier);
 
-        $response = $request->send();
+        $response = $this->getResponseWithoutAuth($request);
 
         if ($response->getStatusCode() === 401) {
             return false;

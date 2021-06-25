@@ -42,13 +42,17 @@ class Regressions_PutSoloCardTest extends RestBase
                 "values"    => []
             ]
         );
-        $response = $this->getResponse($this->client->put('cards/' . $planning_id . '_' . $stories['Story 1'], null, $put));
+        $response = $this->getResponse(
+            $this->request_factory->createRequest('PUT', 'cards/' . $planning_id . '_' . $stories['Story 1'])
+                ->withBody($this->stream_factory->createStream($put))
+        );
         $this->assertEquals($response->getStatusCode(), 200);
     }
 
     private function getSprintPlanningId()
     {
-        $project_plannings = $this->getResponse($this->client->get("projects/$this->project_private_member_id/plannings"))->json();
+        $response          = $this->getResponse($this->request_factory->createRequest('GET', "projects/$this->project_private_member_id/plannings"));
+        $project_plannings = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         foreach ($project_plannings as $planning) {
             if ($planning['label'] == 'Sprint Planning') {
                 return $planning['id'];

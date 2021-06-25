@@ -50,16 +50,12 @@ class DynamicCredentialsTest extends \RestBase
         $expiration_date = new \DateTimeImmutable('+30 minutes');
         $expiration      = $expiration_date->format(\DateTime::ATOM);
 
-        $response = $this->getResponseWithoutAuth($this->client->post(
-            'dynamic_credentials',
-            null,
-            json_encode([
-                'username'   => self::USERNAME . 'reject_me',
-                'password'   => self::PASSWORD,
-                'expiration' => $expiration,
-                'signature'  => $this->getSignatureForPostAction('wrong_username', self::PASSWORD, $expiration)
-            ])
-        ));
+        $response = $this->getResponseWithoutAuth($this->request_factory->createRequest('POST', 'dynamic_credentials')->withBody($this->stream_factory->createStream(json_encode([
+            'username'   => self::USERNAME . 'reject_me',
+            'password'   => self::PASSWORD,
+            'expiration' => $expiration,
+            'signature'  => $this->getSignatureForPostAction('wrong_username', self::PASSWORD, $expiration)
+        ]))));
 
         $this->assertEquals(403, $response->getStatusCode());
     }
@@ -74,7 +70,7 @@ class DynamicCredentialsTest extends \RestBase
         $uri      = 'dynamic_credentials/' . urlencode(self::USERNAME) . '?' . http_build_query([
                 'signature'  => $this->getSignatureForDeleteAction(self::USERNAME)
             ]);
-        $response = $this->getResponseWithoutAuth($this->client->delete($uri));
+        $response = $this->getResponseWithoutAuth($this->request_factory->createRequest('DELETE', $uri));
         $this->assertSame(200, $response->getStatusCode());
     }
 
@@ -83,7 +79,7 @@ class DynamicCredentialsTest extends \RestBase
         $uri      = 'dynamic_credentials/' . urlencode(self::USERNAME . 'reject_me') . '?'  . http_build_query([
                 'signature' => $this->getSignatureForDeleteAction('wrong_username')
             ]);
-        $response = $this->getResponseWithoutAuth($this->client->delete($uri));
+        $response = $this->getResponseWithoutAuth($this->request_factory->createRequest('DELETE', $uri));
 
         $this->assertEquals(403, $response->getStatusCode());
     }
@@ -93,7 +89,7 @@ class DynamicCredentialsTest extends \RestBase
         $uri      = 'dynamic_credentials/' . urlencode(self::USERNAME . 'donotexist') . '?' . http_build_query([
                 'signature'  => $this->getSignatureForDeleteAction(self::USERNAME . 'donotexist')
             ]);
-        $response = $this->getResponseWithoutAuth($this->client->delete($uri));
+        $response = $this->getResponseWithoutAuth($this->request_factory->createRequest('DELETE', $uri));
 
         $this->assertEquals(404, $response->getStatusCode());
     }
@@ -109,28 +105,20 @@ class DynamicCredentialsTest extends \RestBase
     private function createAccount(string $username, string $password, \DateTimeImmutable $expiration_date)
     {
         $expiration = $expiration_date->format(\DateTime::ATOM);
-        $this->getResponseWithoutAuth($this->client->post(
-            'dynamic_credentials',
-            null,
-            json_encode([
-                'username'   => $username,
-                'password'   => $password,
-                'expiration' => $expiration,
-                'signature'  => $this->getSignatureForPostAction($username, $password, $expiration)
-            ])
-        ));
+        $this->getResponseWithoutAuth($this->request_factory->createRequest('POST', 'dynamic_credentials')->withBody($this->stream_factory->createStream(json_encode([
+            'username'   => $username,
+            'password'   => $password,
+            'expiration' => $expiration,
+            'signature'  => $this->getSignatureForPostAction($username, $password, $expiration)
+        ]))));
     }
 
     private function login(string $username, string $password)
     {
-        return $this->getResponseWithoutAuth($this->client->post(
-            'tokens',
-            null,
-            json_encode([
-                'username' => $username,
-                'password' => $password
-            ])
-        ));
+        return $this->getResponseWithoutAuth($this->request_factory->createRequest('POST', 'tokens')->withBody($this->stream_factory->createStream(json_encode([
+            'username' => $username,
+            'password' => $password
+        ]))));
     }
 
     private function ensureLoginFail(string $username, string $password)

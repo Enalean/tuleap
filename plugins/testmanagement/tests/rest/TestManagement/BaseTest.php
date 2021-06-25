@@ -69,9 +69,9 @@ abstract class BaseTest extends RestBase
 
     private function getValid73Campaign()
     {
-        $all_campaigns_request  = $this->client->get("projects/$this->project_id/testmanagement_campaigns");
+        $all_campaigns_request  = $this->request_factory->createRequest('GET', "projects/$this->project_id/testmanagement_campaigns");
         $all_campaigns_response = $this->getResponse($all_campaigns_request);
-        $campaigns              = $all_campaigns_response->json();
+        $campaigns              = json_decode($all_campaigns_response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         $index_of_valid73_when_sorted_by_id = 0;
         $campaign                           = $campaigns[$index_of_valid73_when_sorted_by_id];
@@ -82,12 +82,10 @@ abstract class BaseTest extends RestBase
 
     private function getClosed71Campaign()
     {
-        $all_campaigns_request  = $this->client->get(
-            "projects/$this->project_id/testmanagement_campaigns?" .
-            http_build_query(['query' => '{"status":"closed"}'])
-        );
+        $all_campaigns_request  = $this->request_factory->createRequest('GET', "projects/$this->project_id/testmanagement_campaigns?" .
+        http_build_query(['query' => '{"status":"closed"}']));
         $all_campaigns_response = $this->getResponse($all_campaigns_request);
-        $campaigns              = $all_campaigns_response->json();
+        $campaigns              = json_decode($all_campaigns_response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         $index_of_valid71_when_sorted_by_id = 1;
         $campaign                           = $campaigns[$index_of_valid71_when_sorted_by_id];
