@@ -11,7 +11,7 @@ Use case, screen shots & more on [https://tuleap.org](https://www.tuleap.org/wha
 # How to use it?
 
 
-You should first [install it](https://www.tuleap.org/get-started), it can be either with [RHEL7 packages](https://docs.tuleap.org/installation-guide/full-installation.html)
+You should first [install it](https://docs.tuleap.org/install.html), it can be either with [RHEL7 packages](https://docs.tuleap.org/installation-guide/full-installation.html)
 or [docker image](https://docs.tuleap.org/installation-guide/docker-image.html) and then you can find on tuleap.org a
 bunch of [documentation](https://docs.tuleap.org/) and [tutorials](https://www.tuleap.org/resources/videos-tutorials).
 
