@@ -32,7 +32,7 @@
 }
 
 .tlp-card-inactive {
-    background: var(--tlp-main-color-dimmed-background-darker-01);
+    background: var(--tlp-fade-background-color-darker-01);
 }
 
 .tlp-card-selectable {
@@ -49,7 +49,7 @@
         text-decoration: none;
 
         &.tlp-card-inactive {
-            border-color: var(--tlp-main-color-dimmed-background-hover-border);
+            border-color: var(--tlp-fade-background-color-hover-border);
         }
     }
 }
@@ -100,11 +100,11 @@
     > .tlp-card-container > .tlp-card-inactive,
     > .tlp-card-inactive {
         border: 0;
-        background: var(--tlp-main-color-dimmed-background);
+        background: var(--tlp-fade-background-color);
 
         &:hover,
         &:focus {
-            background-color: var(--tlp-main-color-dimmed-background-hover-border);
+            background-color: var(--tlp-fade-background-color-hover-border);
         }
 
         + .tlp-card-inactive {

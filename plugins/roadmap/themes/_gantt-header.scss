@@ -72,7 +72,7 @@ $caret-width: 20px;
         cursor: pointer;
 
         &:hover {
-            background: var(--tlp-main-color-dimmed-background);
+            background: var(--tlp-fade-background-color);
         }
     }
 }
@@ -169,7 +169,7 @@ $caret-width: 20px;
 
     position: relative;
     padding: 0 var(--tlp-medium-spacing) 0 calc(var(--tlp-small-spacing) + #{$offset-to-align-border-with-parent-caret} + #{$border-width});
-    background: var(--tlp-main-color-dimmed-background);
+    background: var(--tlp-fade-background-color);
 
     &.roadmap-gantt-subtask-header-last-one {
         box-shadow: inset 0 -3px 0 var(--tlp-neutral-normal-color);

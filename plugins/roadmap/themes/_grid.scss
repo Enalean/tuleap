@@ -23,7 +23,7 @@
 
     &.even,
     &:nth-child(even) {
-        background: var(--tlp-main-color-dimmed-background);
+        background: var(--tlp-fade-background-color);
     }
 
     &.odd,
