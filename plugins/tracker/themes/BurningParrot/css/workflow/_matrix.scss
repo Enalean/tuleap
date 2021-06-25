@@ -95,7 +95,7 @@
     width: 16px;
     height: 16px;
     transform: translate(-50%, -50%);
-    color: var(--tlp-ui-border-dark);
+    color: var(--tlp-neutral-dark-color);
     font-size: 16px;
     cursor: not-allowed;
 }
@@ -114,7 +114,7 @@
         height: 4px;
         transform: translate(-50%, -50%);
         border-radius: 50%;
-        background: var(--tlp-ui-border-dark);
+        background: var(--tlp-neutral-dark-color);
     }
 }
 

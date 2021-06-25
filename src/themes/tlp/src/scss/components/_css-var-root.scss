@@ -176,7 +176,7 @@ $main-color-dimmed-background: mix($tlp-background-color, $tlp-ui-white, 50);
 
     // Dark
     --tlp-danger-color-on-dark-background: #{mix($tlp-danger-color, $tlp-ui-white, 85%)};
-    --tlp-dimmed-color-on-dark-background: #{$tlp-ui-border-dark};
+    --tlp-dimmed-color-on-dark-background: #{$tlp-neutral-dark-color};
     --tlp-main-color-on-dark-background: #{lighten($tlp-main-color, 20%)};
     --tlp-dark-color-transparent-30: #{transparentize($tlp-dark-color, 0.3)};
     --tlp-dark-color-transparent-50: #{transparentize($tlp-dark-color, 0.5)};
@@ -194,18 +194,18 @@ $main-color-dimmed-background: mix($tlp-background-color, $tlp-ui-white, 50);
     // borders
     --tlp-neutral-light-color: #{$tlp-neutral-light-color};
     --tlp-neutral-normal-color: #{$tlp-neutral-normal-color};
-    --tlp-ui-border-dark: #{$tlp-ui-border-dark};
+    --tlp-neutral-dark-color: #{$tlp-neutral-dark-color};
 
     --tlp-neutral-normal-color-lighter-40: #{mix($tlp-neutral-normal-color, $tlp-ui-white, 60%)};
     --tlp-neutral-normal-color-transparent-25: #{transparentize($tlp-neutral-normal-color, 0.25)};
     --tlp-neutral-normal-color-transparent-50: #{transparentize($tlp-neutral-normal-color, 0.5)};
 
-    --tlp-ui-border-dark-lighter-20: #{mix($tlp-ui-border-dark, $tlp-ui-white, 80%)};
-    --tlp-ui-border-dark-darker-05: #{darken($tlp-ui-border-dark, 5%)};
-    --tlp-ui-border-dark-darker-10: #{darken($tlp-ui-border-dark, 10%)};
-    --tlp-ui-border-dark-darker-20: #{darken($tlp-ui-border-dark, 20%)};
-    --tlp-ui-border-dark-transparent-20: #{transparentize($tlp-ui-border-dark, 0.2)};
-    --tlp-ui-border-dark-transparent-40: #{transparentize($tlp-ui-border-dark, 0.4)};
+    --tlp-neutral-dark-color-lighter-20: #{mix($tlp-neutral-dark-color, $tlp-ui-white, 80%)};
+    --tlp-neutral-dark-color-darker-05: #{darken($tlp-neutral-dark-color, 5%)};
+    --tlp-neutral-dark-color-darker-10: #{darken($tlp-neutral-dark-color, 10%)};
+    --tlp-neutral-dark-color-darker-20: #{darken($tlp-neutral-dark-color, 20%)};
+    --tlp-neutral-dark-color-transparent-20: #{transparentize($tlp-neutral-dark-color, 0.2)};
+    --tlp-neutral-dark-color-transparent-40: #{transparentize($tlp-neutral-dark-color, 0.4)};
 
     --tlp-neutral-light-color-darker-05: #{darken($tlp-neutral-light-color, 5%)};
     --tlp-neutral-light-color-darker-10: #{darken($tlp-neutral-light-color, 10%)};

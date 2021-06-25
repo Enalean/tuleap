@@ -440,14 +440,14 @@ kanban-column {
                 > .ngsb-thumb {
                     width: 6px;
                     border-radius: 3px;
-                    background: var(--tlp-ui-border-dark);
+                    background: var(--tlp-neutral-dark-color);
                 }
 
                 &:active {
                     background: none;
                     /* stylelint-disable-next-line max-nesting-depth */
                     > .ngsb-thumb {
-                        background: var(--tlp-ui-border-dark-darker-05);
+                        background: var(--tlp-neutral-dark-color-darker-05);
                     }
                 }
             }

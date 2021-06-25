@@ -26,7 +26,7 @@
     border: 0;
     border-radius: 4px;
     background: var(--tlp-dark-color);
-    color: var(--tlp-ui-border-dark);
+    color: var(--tlp-neutral-dark-color);
     font-size: 0.875rem;
     font-weight: normal;
     letter-spacing: normal;
@@ -68,7 +68,7 @@
         border-bottom-right-radius: navbar.$nav-dropdown-content-border-radius;
         border-bottom-left-radius: navbar.$nav-dropdown-content-border-radius;
         background: var(--tlp-dark-color);
-        color: var(--tlp-ui-border-dark);
+        color: var(--tlp-neutral-dark-color);
 
         .current-project-nav-flag-popover-separator {
             margin: var(--tlp-medium-spacing) calc(-1px * var(--tlp-medium-spacing));

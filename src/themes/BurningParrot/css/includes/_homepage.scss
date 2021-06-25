@@ -272,7 +272,7 @@ body.homepage > #main-container {
 
 .homepage-statistic-label {
     opacity: 0.6;
-    color: var(--tlp-ui-border-dark);
+    color: var(--tlp-neutral-dark-color);
     font-size: 12px;
     font-weight: 600;
     letter-spacing: 0.5px;
@@ -341,14 +341,14 @@ body.homepage > #main-container {
     display: flex;
     align-items: center;
     margin: 0 0 var(--tlp-small-spacing);
-    color: var(--tlp-ui-border-dark);
+    color: var(--tlp-neutral-dark-color);
     font-size: 13px;
 
     > .homepage-news-info-user {
         display: flex;
         align-items: center;
         margin: 0 10px 0 0;
-        color: var(--tlp-ui-border-dark);
+        color: var(--tlp-neutral-dark-color);
 
         > .tlp-avatar-mini {
             margin: 0 5px 0 0;
@@ -364,7 +364,7 @@ body.homepage > #main-container {
     }
 
     > .homepage-news-info-project {
-        color: var(--tlp-ui-border-dark);
+        color: var(--tlp-neutral-dark-color);
 
         > .fa-archive {
             margin: 0 5px 0 0;

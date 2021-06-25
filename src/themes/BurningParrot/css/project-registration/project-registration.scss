@@ -70,7 +70,7 @@ $title-margin-left: calc(#{$illustration-width} + #{$illustration-spacing});
 
 .project-registration-button-container {
     padding: var(--tlp-medium-spacing) 0 0;
-    border-top: 1px solid var(--tlp-ui-border-dark);
+    border-top: 1px solid var(--tlp-neutral-dark-color);
 
     > .project-registration-content {
         display: flex;

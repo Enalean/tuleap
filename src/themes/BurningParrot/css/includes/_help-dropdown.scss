@@ -94,7 +94,7 @@
         .help-dropdown-link {
             &.tlp-dropdown-menu-item {
                 background: var(--tlp-dark-color);
-                color: var(--tlp-ui-border-dark);
+                color: var(--tlp-neutral-dark-color);
                 font-size: 13px;
 
                 &:hover {
@@ -113,7 +113,7 @@
 
         .tlp-dropdown-menu-separator {
             opacity: 0.1;
-            background: var(--tlp-ui-border-dark);
+            background: var(--tlp-neutral-dark-color);
         }
 
         .tlp-dropdown-menu-item-alt {
@@ -125,7 +125,7 @@
             > a {
                 margin: 0 10px 0 0;
                 opacity: 0.6;
-                color: var(--tlp-ui-border-dark);
+                color: var(--tlp-neutral-dark-color);
             }
         }
     }

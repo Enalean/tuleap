@@ -136,7 +136,7 @@
     display: flex;
     align-items: center;
     margin: var(--tlp-small-spacing) var(--tlp-medium-spacing);
-    color: var(--tlp-ui-border-dark);
+    color: var(--tlp-neutral-dark-color);
     cursor: help;
 
     > .project-sidebar-project-flags-icon {
@@ -192,7 +192,7 @@
     margin: 0 var(--tlp-small-spacing);
     padding: 0 var(--tlp-small-spacing);
     border-radius: 6px;
-    color: var(--tlp-ui-border-dark);
+    color: var(--tlp-neutral-dark-color);
     font-size: 0.8125rem;
     text-decoration: none;
 
