@@ -19,7 +19,7 @@
 
 @use 'sass:color';
 
-$main-color-dimmed-background: mix($tlp-background-color, $tlp-ui-white, 50);
+$fade-background-color: mix($tlp-background-color, $tlp-ui-white, 50);
 
 :root {
     // Fonts
@@ -37,7 +37,7 @@ $main-color-dimmed-background: mix($tlp-background-color, $tlp-ui-white, 50);
     --tlp-dark-color: #{$tlp-dark-color};
     --tlp-background-color: #{$tlp-background-color};
     --tlp-main-color-hover-background: #{mix($tlp-main-color, $tlp-ui-white, 7)};
-    --tlp-main-color-dimmed-background: #{$main-color-dimmed-background};
+    --tlp-fade-background-color: #{$fade-background-color};
     --tlp-typo-default-text-color: #{$tlp-typo-default-text-color};
     --tlp-table-row-background-odd: #{$tlp-ui-white};
     --tlp-table-row-background-even: #{mix($tlp-background-color, $tlp-ui-white, 50%)};
@@ -53,9 +53,9 @@ $main-color-dimmed-background: mix($tlp-background-color, $tlp-ui-white, 50);
 
     --tlp-background-color-transparent-50: #{transparentize($tlp-background-color, 0.5)};
 
-    --tlp-main-color-dimmed-background-darker-01: #{darken($main-color-dimmed-background, 1%)};
-    --tlp-main-color-dimmed-background-hover-background: #{mix($tlp-background-color, $tlp-ui-white, 90)};
-    --tlp-main-color-dimmed-background-hover-border: #{mix($tlp-background-color, $tlp-ui-white, 90)};
+    --tlp-fade-background-color-darker-01: #{darken($fade-background-color, 1%)};
+    --tlp-fade-background-color-hover-background: #{mix($tlp-background-color, $tlp-ui-white, 90)};
+    --tlp-fade-background-color-hover-border: #{mix($tlp-background-color, $tlp-ui-white, 90)};
 
     --tlp-main-color-darker-03: #{darken($tlp-main-color, 3%)};
     --tlp-main-color-darker-05: #{darken($tlp-main-color, 5%)};
