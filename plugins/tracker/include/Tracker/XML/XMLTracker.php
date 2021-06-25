@@ -26,12 +26,14 @@ namespace Tuleap\Tracker\XML;
 use SimpleXMLElement;
 use Tracker;
 use Tuleap\Tracker\Artifact\XML\XMLArtifact;
+use Tuleap\Tracker\Creation\TrackerCreationDataChecker;
 use Tuleap\Tracker\FormElement\Container\XML\XMLContainer;
 use Tuleap\Tracker\FormElement\XML\XMLFormElement;
 use Tuleap\Tracker\FormElement\XML\XMLFormElementFlattenedCollection;
 use Tuleap\Tracker\Report\XML\XMLReport;
 use Tuleap\Tracker\Semantic\XML\XMLSemantic;
 use Tuleap\Tracker\TrackerColor;
+use Tuleap\Tracker\TrackerIsInvalidException;
 
 final class XMLTracker
 {
@@ -96,6 +98,7 @@ final class XMLTracker
 
     /**
      * @param string|IDGenerator $id
+     * @throws TrackerIsInvalidException
      */
     public function __construct($id, string $item_name)
     {
@@ -103,6 +106,9 @@ final class XMLTracker
             $this->id = sprintf('%s%d', Tracker::XML_ID_PREFIX, $id->getNextId());
         } else {
             $this->id = $id;
+        }
+        if (! TrackerCreationDataChecker::isShortNameValid($item_name)) {
+            throw TrackerIsInvalidException::shortnameIsInvalid($item_name);
         }
         $this->item_name = $item_name;
         $this->color     = TrackerColor::default();

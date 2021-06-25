@@ -25,6 +25,7 @@ namespace Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Snapshot;
 
 use PFUser;
 use Psr\Log\LoggerInterface;
+use Tracker_FormElementFactory;
 use Tuleap\Tracker\Creation\JiraImporter\Import\AlwaysThereFieldsExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Attachment\AttachmentCollection;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\ChangelogEntryItemsRepresentation;
@@ -225,7 +226,7 @@ class InitialSnapshotBuilder
                 }
 
                 $field_mapping = $current_snapshot_field->getFieldMapping();
-                if ($this->fieldListHasInitialValue($changed_field)) {
+                if ($this->fieldListHasInitialValue($field_mapping, $changed_field)) {
                     $bound_value       = $this->list_field_change_value_retriever->retrieveBoundValue($changed_field_from, $field_mapping);
                     $field_snapshots[] = new FieldSnapshot(
                         $field_mapping,
@@ -235,7 +236,15 @@ class InitialSnapshotBuilder
                     $this->logger->debug(" |_ List field " . $changed_field_id . " has an initial value");
                     continue;
                 }
-
+                if ($this->fieldDateHasInitialValue($field_mapping, $changed_field)) {
+                    $field_snapshots[] = new FieldSnapshot(
+                        $field_mapping,
+                        $changed_field_from,
+                        null
+                    );
+                    $this->logger->debug(" |_ Date field " . $changed_field_id . " has an initial value");
+                    continue;
+                }
                 if ($this->fieldTextHasInitialValue($changed_field)) {
                     $field_snapshots[] = new FieldSnapshot(
                         $field_mapping,
@@ -284,9 +293,28 @@ class InitialSnapshotBuilder
             $changed_field->getFromString() === null;
     }
 
-    private function fieldListHasInitialValue(ChangelogEntryItemsRepresentation $changed_field): bool
+    private function fieldListHasInitialValue(FieldMapping $field_mapping, ChangelogEntryItemsRepresentation $changed_field): bool
     {
-        return $changed_field->getFrom() !== null;
+        return in_array(
+            $field_mapping->getType(),
+            [
+                Tracker_FormElementFactory::FIELD_MULTI_SELECT_BOX_TYPE,
+                Tracker_FormElementFactory::FIELD_SELECT_BOX_TYPE,
+                Tracker_FormElementFactory::FIELD_RADIO_BUTTON_TYPE,
+            ]
+        ) &&
+        $changed_field->getFrom() !== null;
+    }
+
+    private function fieldDateHasInitialValue(FieldMapping $field_mapping, ChangelogEntryItemsRepresentation $changed_field): bool
+    {
+        return in_array(
+            $field_mapping->getType(),
+            [
+                Tracker_FormElementFactory::FIELD_DATE_TYPE,
+            ]
+        ) &&
+        $changed_field->getFrom() !== null;
     }
 
     private function fieldTextHasInitialValue(ChangelogEntryItemsRepresentation $changed_field): bool

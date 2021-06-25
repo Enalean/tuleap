@@ -222,14 +222,13 @@ class JiraXmlExporter
      */
     public static function build(
         JiraCredentials $jira_credentials,
+        ClientWrapper $wrapper,
         LoggerInterface $logger,
         JiraUserOnTuleapCache $jira_user_on_tuleap_cache
     ): self {
         $error_collector = new ErrorCollector();
 
         $cdata_factory = new XML_SimpleXMLCDATAFactory();
-
-        $wrapper = ClientWrapper::build($jira_credentials);
 
         $field_xml_exporter = new FieldXmlExporter(
             new XML_SimpleXMLCDATAFactory(),

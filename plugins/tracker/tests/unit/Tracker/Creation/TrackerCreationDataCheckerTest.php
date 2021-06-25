@@ -27,6 +27,7 @@ use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\Tracker\Creation\JiraImporter\PendingJiraImportDao;
 use Tuleap\Tracker\TrackerIsInvalidException;
+use function PHPUnit\Framework\assertEquals;
 
 final class TrackerCreationDataCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -380,5 +381,24 @@ final class TrackerCreationDataCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->checker->checkAndRetrieveTrackerTemplate(
             $template_id
         );
+    }
+
+    /**
+     * @dataProvider getShortNamesAndCorrespondingConversions
+     */
+    public function testItConvertsGivenStringToValidShortName(string $expected, string $wished): void
+    {
+        assertEquals($expected, TrackerCreationDataChecker::getShortNameWithValidFormat($wished));
+    }
+
+    public function getShortNamesAndCorrespondingConversions(): array
+    {
+        return [
+            ['bug', 'bug'],
+            ['sub_task', 'sub-task'],
+            ['tache', 'tâche'],
+            ['sous_tache', 'Sous-Tâche'],
+            ['une_tache', 'une.tache']
+        ];
     }
 }

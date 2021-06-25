@@ -53,12 +53,29 @@ class ClientWrapper implements JiraClient
      * @var string
      */
     private $base_url;
+    /**
+     * @var ?string
+     */
+    private $debug_directory;
+    /**
+     * @var ?string
+     */
+    private $log_file;
 
     public function __construct(ClientInterface $client, RequestFactoryInterface $factory, string $base_url)
     {
         $this->client   = $client;
         $this->factory  = $factory;
         $this->base_url = $base_url;
+    }
+
+    public function setDebugDirectory(string $debug_directory): void
+    {
+        $this->debug_directory = $debug_directory;
+        $this->log_file        = $this->debug_directory . '/manifest.log';
+        if (file_exists($this->log_file)) {
+            unlink($this->log_file);
+        }
     }
 
     public static function build(JiraCredentials $jira_credentials): self
@@ -79,17 +96,34 @@ class ClientWrapper implements JiraClient
      */
     public function getUrl(string $url): ?array
     {
-        $request = $this->factory->createRequest('GET', $this->base_url . $url);
+        $request_url         = $this->base_url . $url;
+        $response_debug_path = null;
+        $sha1                = null;
+
+        if ($this->debug_directory && $this->log_file) {
+            $sha1                = sha1($request_url);
+            $response_debug_path = $this->debug_directory . '/' . $sha1;
+            file_put_contents($this->log_file, $request_url . ' ' . $sha1, FILE_APPEND);
+        }
+        $request = $this->factory->createRequest('GET', $request_url);
 
         try {
             $response = $this->client->sendRequest($request);
-            if ((int) $response->getStatusCode() !== 200) {
-                throw JiraConnectionException::responseIsNotOk($request, $response);
+            if ($this->debug_directory && $sha1 && $this->log_file) {
+                file_put_contents($this->log_file, ' ' . $response->getStatusCode() . PHP_EOL, FILE_APPEND);
+            }
+            if ($response->getStatusCode() !== 200) {
+                throw JiraConnectionException::responseIsNotOk($request, $response, $response_debug_path);
             }
         } catch (ClientExceptionInterface $e) {
             throw JiraConnectionException::connectionToServerFailed((int) $e->getCode(), $e->getMessage(), $request);
         }
 
-        return json_decode($response->getBody()->getContents(), true, 512, JSON_OBJECT_AS_ARRAY & JSON_THROW_ON_ERROR);
+        $body_contents = $response->getBody()->getContents();
+        if ($response_debug_path) {
+            file_put_contents($response_debug_path, $body_contents);
+        }
+
+        return json_decode($body_contents, true, 512, JSON_OBJECT_AS_ARRAY & JSON_THROW_ON_ERROR);
     }
 }

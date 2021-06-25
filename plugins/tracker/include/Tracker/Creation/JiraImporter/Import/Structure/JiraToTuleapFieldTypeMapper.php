@@ -163,6 +163,7 @@ class JiraToTuleapFieldTypeMapper
                         null
                     );
                     break;
+                case 'duedate':
                 case 'com.atlassian.jira.plugin.system.customfieldtypes:datepicker':
                     $this->field_xml_exporter->exportField(
                         $containers_collection->getContainerByName(ContainersXMLCollectionBuilder::CUSTOM_FIELDSET_NAME),
@@ -352,7 +353,6 @@ class JiraToTuleapFieldTypeMapper
                 case 'security':
                 case 'lastViewed':
                 case 'com.atlassian.jira.toolkit:LastCommentDate':
-                case 'duedate':
                 case 'versions':
                 case 'com.pyxis.greenhopper.jira:gh-lexo-rank':
                 case 'aggregatetimeestimate':
@@ -392,6 +392,7 @@ class JiraToTuleapFieldTypeMapper
                 case 'com.atlassian.jira.toolkit:comments':
                 case 'com.pyxis.greenhopper.jira:gh-epic-label':
                 case 'com.pyxis.greenhopper.jira:gh-epic-status':
+                case 'issuerestriction':
                 case 'issuetype':
                     $this->logger->debug(" |_ Field " . $id . " (" . $jira_type . ") ignored ");
                     break;
