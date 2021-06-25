@@ -20,7 +20,7 @@
 .tlp-pane {
     display: flex;
     margin: 0 0 var(--tlp-medium-spacing);
-    border: 1px solid var(--tlp-ui-border-normal);
+    border: 1px solid var(--tlp-neutral-normal-color);
     border-radius: 3px;
     background: var(--tlp-ui-white);
 
@@ -41,7 +41,7 @@
     display: flex;
     flex: 1 1 auto;
     flex-direction: column;
-    border-right: 1px solid var(--tlp-ui-border-light);
+    border-right: 1px solid var(--tlp-neutral-light-color);
 
     &:first-child {
         width: 100%;
@@ -85,7 +85,7 @@
 
 .tlp-pane-section {
     padding: var(--tlp-medium-spacing);
-    border-bottom: 1px solid var(--tlp-ui-border-light);
+    border-bottom: 1px solid var(--tlp-neutral-light-color);
 
     &:last-child {
         border-bottom: 0;

@@ -67,8 +67,8 @@
         }
 
         + .tlp-button-secondary {
-            border-color: var(--tlp-ui-border-light-darker-10);
-            background: var(--tlp-ui-border-light-darker-10);
+            border-color: var(--tlp-neutral-light-color-darker-10);
+            background: var(--tlp-neutral-light-color-darker-10);
             box-shadow: $button-bar-checked-box-shadow;
 
             &.tlp-button-outline {

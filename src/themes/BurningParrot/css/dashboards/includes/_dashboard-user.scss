@@ -37,7 +37,7 @@ $dashboard-header-background: var(--tlp-dark-color-lighter-05);
         box-shadow: none;
 
         > .tlp-tab {
-            color: var(--tlp-ui-border-dark-transparent-20);
+            color: var(--tlp-neutral-dark-color-transparent-20);
 
             &:hover,
             &.tlp-tab-active {
@@ -46,7 +46,7 @@ $dashboard-header-background: var(--tlp-dark-color-lighter-05);
             }
 
             #dashboard-tabs-dropdown-trigger {
-                color: var(--tlp-ui-border-normal);
+                color: var(--tlp-neutral-normal-color);
 
                 &:hover {
                     color: var(--tlp-ui-white);

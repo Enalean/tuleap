@@ -151,8 +151,8 @@ $kanban-column-footer-height: 50px;
     flex-direction: column;
     align-items: center;
     transition: background 100ms;
-    border-bottom: 1px solid var(--tlp-ui-border-normal);
-    border-left: 1px solid var(--tlp-ui-border-normal);
+    border-bottom: 1px solid var(--tlp-neutral-normal-color);
+    border-left: 1px solid var(--tlp-neutral-normal-color);
     background: var(--tlp-background-color);
 
     &:hover,
@@ -164,7 +164,7 @@ $kanban-column-footer-height: 50px;
     }
 
     &.archive {
-        border-right: 1px solid var(--tlp-ui-border-normal);
+        border-right: 1px solid var(--tlp-neutral-normal-color);
     }
 
     &.kanban-column-open {
@@ -284,7 +284,7 @@ $kanban-column-footer-height: 50px;
     padding: 10px;
     transition: background 100ms;
     border-top: 2px solid var(--tlp-main-color);
-    border-bottom: 1px solid var(--tlp-ui-border-normal);
+    border-bottom: 1px solid var(--tlp-neutral-normal-color);
     background: var(--tlp-ui-white);
 }
 
@@ -440,14 +440,14 @@ kanban-column {
                 > .ngsb-thumb {
                     width: 6px;
                     border-radius: 3px;
-                    background: var(--tlp-ui-border-dark);
+                    background: var(--tlp-neutral-dark-color);
                 }
 
                 &:active {
                     background: none;
                     /* stylelint-disable-next-line max-nesting-depth */
                     > .ngsb-thumb {
-                        background: var(--tlp-ui-border-dark-darker-05);
+                        background: var(--tlp-neutral-dark-color-darker-05);
                     }
                 }
             }

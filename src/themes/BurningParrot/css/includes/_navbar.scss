@@ -140,7 +140,7 @@ header.pinned > .header-container {
 
 .nav-dropdown-item-divider {
     margin: var(--tlp-small-spacing) 0;
-    border-top: 1px solid var(--tlp-ui-border-normal);
+    border-top: 1px solid var(--tlp-neutral-normal-color);
 
     &:first-child {
         display: none;
@@ -181,7 +181,7 @@ header.pinned > .header-container {
     }
 
     > .username {
-        color: var(--tlp-ui-border-dark);
+        color: var(--tlp-neutral-dark-color);
         font-size: 0.75rem;
         font-weight: 400;
     }

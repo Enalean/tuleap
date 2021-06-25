@@ -181,24 +181,24 @@ $tlp-button-secondary-box-shadow: rgba(0, 0, 0, 0.05);
 
 .tlp-button-secondary {
     @extend %tlp-button;
-    border-color: var(--tlp-ui-border-light);
-    background: var(--tlp-ui-border-light);
+    border-color: var(--tlp-neutral-light-color);
+    background: var(--tlp-neutral-light-color);
     color: var(--tlp-dark-color);
 
     &:hover,
     &:focus {
-        border-color: var(--tlp-ui-border-light-darker-05);
-        background: var(--tlp-ui-border-light-darker-05);
+        border-color: var(--tlp-neutral-light-color-darker-05);
+        background: var(--tlp-neutral-light-color-darker-05);
     }
 
     &:active {
-        border-color: var(--tlp-ui-border-light-darker-10);
-        background: var(--tlp-ui-border-light-darker-10);
+        border-color: var(--tlp-neutral-light-color-darker-10);
+        background: var(--tlp-neutral-light-color-darker-10);
     }
 
     &:disabled,
     &.disabled {
-        @include tlp-button-disabled(var(--tlp-ui-border-light-lighter-30), var(--tlp-ui-border-light-transparent-40));
+        @include tlp-button-disabled(var(--tlp-neutral-light-color-lighter-30), var(--tlp-neutral-light-color-transparent-40));
     }
 
     &.tlp-button-outline {

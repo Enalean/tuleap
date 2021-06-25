@@ -40,10 +40,10 @@ $taskboard-header-height: 50px;
     min-width: 200px;
     height: $taskboard-header-height;
     padding: var(--tlp-small-spacing);
-    border-right: 1px solid var(--tlp-ui-border-normal);
-    border-bottom: 1px solid var(--tlp-ui-border-normal);
+    border-right: 1px solid var(--tlp-neutral-normal-color);
+    border-bottom: 1px solid var(--tlp-neutral-normal-color);
     background: var(--tlp-ui-white);
-    box-shadow: inset 0 2px 0 0 var(--primary-color, var(--tlp-ui-border-normal)), inset 0 -1px 0 var(--tlp-ui-border-normal);
+    box-shadow: inset 0 2px 0 0 var(--primary-color, var(--tlp-neutral-normal-color)), inset 0 -1px 0 var(--tlp-neutral-normal-color);
     color: var(--text-color, var(--tlp-dimmed-color));
     font-weight: 600;
     text-transform: uppercase;
@@ -147,7 +147,7 @@ $taskboard-header-height: 50px;
     display: inline-block;
     width: 15px;
     height: 15px;
-    border: 1px solid var(--tlp-ui-border-light);
+    border: 1px solid var(--tlp-neutral-light-color);
     vertical-align: middle;
 }
 

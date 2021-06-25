@@ -5,13 +5,13 @@
 .steps-maindescription {
     margin: var(--tlp-medium-spacing) 0 0;
     padding: 0 var(--tlp-medium-spacing) var(--tlp-medium-spacing);
-    border-bottom: 1px solid var(--tlp-ui-border-light);
+    border-bottom: 1px solid var(--tlp-neutral-light-color);
 }
 
 .steps-step {
     display: flex;
     align-items: baseline;
-    border-bottom: 1px solid var(--tlp-ui-border-light);
+    border-bottom: 1px solid var(--tlp-neutral-light-color);
 
     &:last-child {
         border-bottom: 0;

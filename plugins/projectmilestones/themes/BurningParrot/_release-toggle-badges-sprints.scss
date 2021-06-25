@@ -147,14 +147,14 @@ $width-bar-left-sprints: 16px;
     height: 1px;
     margin: var(--tlp-small-spacing) calc(-1 * var(--tlp-medium-spacing)) var(--tlp-medium-spacing) calc(-1 * var(--tlp-medium-spacing) - 6px);
     border: 0;
-    background: linear-gradient(to right, release-chart.$timeline-color, var(--tlp-ui-border-normal));
+    background: linear-gradient(to right, release-chart.$timeline-color, var(--tlp-neutral-normal-color));
 }
 
 .project-release-closed-sprint-badge {
     position: relative;
     width: min-content;
     margin: 0;
-    background: var(--tlp-ui-border-dark);
+    background: var(--tlp-neutral-dark-color);
     color: var(--tlp-dimmed-color);
 }
 

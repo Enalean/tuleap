@@ -130,12 +130,12 @@
 }
 
 .taskboard-cell-parent-card > .taskboard-card-parent {
-    border: 1px solid var(--tlp-ui-border-normal);
+    border: 1px solid var(--tlp-neutral-normal-color);
     box-shadow: none;
 }
 
 .taskboard-cell:first-child > .taskboard-cell-parent-card > .taskboard-card {
-    border: 1px solid var(--border-color, var(--tlp-ui-border-normal));
+    border: 1px solid var(--border-color, var(--tlp-neutral-normal-color));
     background: var(--secondary-color, var(--tlp-background-color));
 
     &.taskboard-card-collapsed {

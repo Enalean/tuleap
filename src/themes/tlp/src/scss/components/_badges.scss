@@ -74,8 +74,8 @@ $tlp-badge-padding: calc(5px - 1px * var(--tlp-is-condensed)) var(--tlp-small-sp
 .tlp-badge-secondary {
     @extend %tlp-badge;
 
-    border: 1px solid var(--tlp-ui-border-normal);
-    background: var(--tlp-ui-border-normal);
+    border: 1px solid var(--tlp-neutral-normal-color);
+    background: var(--tlp-neutral-normal-color);
     color: var(--tlp-dimmed-color-darker-10);
 
     &.tlp-badge-outline {

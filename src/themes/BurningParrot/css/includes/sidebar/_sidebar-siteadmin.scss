@@ -35,7 +35,7 @@
     display: flex;
     align-items: center;
     margin: 0 var(--tlp-medium-spacing) calc(var(--tlp-medium-spacing) / 2);
-    color: var(--tlp-ui-border-normal-transparent-50);
+    color: var(--tlp-neutral-normal-color-transparent-50);
     font-size: 14px;
     font-weight: 600;
     letter-spacing: 0.5px;
@@ -74,7 +74,7 @@
     white-space: nowrap;
 
     &:not(.tlp-text-warning) {
-        color: var(--tlp-ui-border-dark);
+        color: var(--tlp-neutral-dark-color);
     }
 
     &:hover {

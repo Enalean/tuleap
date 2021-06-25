@@ -97,7 +97,7 @@
 
 fieldset {
     margin: 0 0 var(--tlp-medium-spacing);
-    border: 1px solid var(--tlp-ui-border-normal);
+    border: 1px solid var(--tlp-neutral-normal-color);
     border-radius: 3px;
     background: var(--tlp-ui-white);
 }
@@ -110,7 +110,7 @@ fieldset {
     width: 35%;
     padding: var(--tlp-medium-spacing);
     overflow-y: auto;
-    border-left: 1px solid var(--tlp-ui-border-normal);
+    border-left: 1px solid var(--tlp-neutral-normal-color);
     background: var(--tlp-ui-white);
 
     &.invert-order {

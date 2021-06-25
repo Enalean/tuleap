@@ -65,7 +65,7 @@
     padding: var(--tlp-small-spacing);
     transition: background 100ms;
     border-radius: 4px;
-    color: var(--tlp-ui-border-normal);
+    color: var(--tlp-neutral-normal-color);
     font-size: 1.125rem;
     font-weight: 600;
     line-height: 1.3125rem;
@@ -136,7 +136,7 @@
     display: flex;
     align-items: center;
     margin: var(--tlp-small-spacing) var(--tlp-medium-spacing);
-    color: var(--tlp-ui-border-dark);
+    color: var(--tlp-neutral-dark-color);
     cursor: help;
 
     > .project-sidebar-project-flags-icon {
@@ -153,7 +153,7 @@
             height: 12px;
 
             > path {
-                fill: var(--tlp-ui-border-normal);
+                fill: var(--tlp-neutral-normal-color);
             }
         }
     }
@@ -192,7 +192,7 @@
     margin: 0 var(--tlp-small-spacing);
     padding: 0 var(--tlp-small-spacing);
     border-radius: 6px;
-    color: var(--tlp-ui-border-dark);
+    color: var(--tlp-neutral-dark-color);
     font-size: 0.8125rem;
     text-decoration: none;
 

@@ -22,7 +22,7 @@
 .tlp-card {
     margin: 0 0 var(--tlp-medium-spacing);
     padding: var(--tlp-medium-spacing);
-    border: 1px solid var(--tlp-ui-border-normal);
+    border: 1px solid var(--tlp-neutral-normal-color);
     border-radius: radius.$tlp-card-radius;
     background: var(--tlp-ui-white);
 
@@ -65,7 +65,7 @@
     }
 
     > .tlp-card-container {
-        border-bottom: 1px solid var(--tlp-ui-border-light);
+        border-bottom: 1px solid var(--tlp-neutral-light-color);
 
         &:last-child,
         > .tlp-card {
@@ -77,7 +77,7 @@
     > .tlp-card {
         margin: 0;
         border: 0;
-        border-bottom: 1px solid var(--tlp-ui-border-light);
+        border-bottom: 1px solid var(--tlp-neutral-light-color);
         border-radius: 0;
 
         &:last-child {
@@ -91,7 +91,7 @@
 
         &:hover,
         &:focus {
-            border-color: var(--tlp-ui-border-light);
+            border-color: var(--tlp-neutral-light-color);
             background-color: var(--tlp-main-color-hover-background);
             text-decoration: none;
         }
@@ -108,11 +108,11 @@
         }
 
         + .tlp-card-inactive {
-            border-top: 1px solid var(--tlp-ui-border-light-darker-05);
+            border-top: 1px solid var(--tlp-neutral-light-color-darker-05);
         }
 
         + .tlp-card:not(.tlp-card-inactive) {
-            border-top: 1px solid var(--tlp-ui-border-light);
+            border-top: 1px solid var(--tlp-neutral-light-color);
         }
     }
 }

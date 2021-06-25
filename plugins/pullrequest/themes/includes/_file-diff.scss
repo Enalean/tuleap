@@ -67,7 +67,7 @@
     /* stylelint-disable selector-class-pattern */
     .CodeMirror {
         height: 400px;
-        border: 1px solid var(--tlp-ui-border-normal);
+        border: 1px solid var(--tlp-neutral-normal-color);
         border-radius: 3px;
     }
 
@@ -136,7 +136,7 @@
 
 .pull-request-file-diff-placeholder-block {
     margin: 0 0 0 13px;
-    border-left: 3px solid var(--tlp-ui-border-normal);
+    border-left: 3px solid var(--tlp-neutral-normal-color);
 }
 
 .pull-request-new-inline-comment {

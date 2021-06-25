@@ -116,7 +116,7 @@
 }
 
 .empty-state-svg-container {
-    fill: var(--tlp-ui-border-light);
+    fill: var(--tlp-neutral-light-color);
 }
 
 .empty-state-button {
@@ -136,7 +136,7 @@
 #dashboard-add-widget-settings {
     flex: 1;
     padding: var(--tlp-medium-spacing);
-    border-left: 1px solid var(--tlp-ui-border-light);
+    border-left: 1px solid var(--tlp-neutral-light-color);
 }
 
 .dashboard-add-widget-settings-content {

@@ -38,7 +38,7 @@
         left: 9px;
         width: 2px;
         height: 100%;
-        background: var(--tlp-ui-border-normal);
+        background: var(--tlp-neutral-normal-color);
     }
 }
 
@@ -76,7 +76,7 @@
         left: 9px;
         width: 2px;
         height: 70%;
-        background-image: linear-gradient(to bottom, var(--tlp-ui-border-normal), var(--tlp-main-color));
+        background-image: linear-gradient(to bottom, var(--tlp-neutral-normal-color), var(--tlp-main-color));
     }
 
     > .document-metadata-recursion-option-arrow {

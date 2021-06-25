@@ -244,7 +244,7 @@ body.has-sidebar {
 
 .nav-dropdown-item-divider {
     margin: var(--tlp-small-spacing) 0;
-    border-top: 1px solid var(--tlp-ui-border-normal);
+    border-top: 1px solid var(--tlp-neutral-normal-color);
 
     &:first-child {
         display: none;
@@ -308,7 +308,7 @@ body.has-sidebar {
     }
 
     .user-infos-login-name {
-        color: var(--tlp-ui-border-dark);
+        color: var(--tlp-neutral-dark-color);
         font-size: 0.75rem;
         font-weight: 400;
         line-height: 1;

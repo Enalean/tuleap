@@ -24,7 +24,7 @@
     display: flex;
     justify-content: space-around;
     padding: var(--tlp-medium-spacing);
-    border-bottom: 1px solid var(--tlp-ui-border-normal);
+    border-bottom: 1px solid var(--tlp-neutral-normal-color);
     background: var(--tlp-background-color);
 }
 
@@ -35,7 +35,7 @@
     align-items: center;
     min-width: 96px;
     padding: var(--tlp-medium-spacing) var(--tlp-small-spacing);
-    border: 1px solid var(--tlp-ui-border-normal);
+    border: 1px solid var(--tlp-neutral-normal-color);
     border-radius: 3px;
     background: var(--tlp-ui-white);
     color: var(--tlp-dark-color);
@@ -98,7 +98,7 @@
         height: 0;
         border-width: 0 9px 10px;
         border-style: solid;
-        border-color: transparent transparent var(--tlp-ui-border-normal) transparent;
+        border-color: transparent transparent var(--tlp-neutral-normal-color) transparent;
     }
 
     &::after {

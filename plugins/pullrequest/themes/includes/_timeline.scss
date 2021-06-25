@@ -50,7 +50,7 @@
     display: flex;
     align-self: stretch;
     padding: var(--tlp-small-spacing);
-    border: 1px solid var(--tlp-ui-border-normal);
+    border: 1px solid var(--tlp-neutral-normal-color);
     border-radius: 4px;
     background: var(--tlp-ui-white);
 }
@@ -96,7 +96,7 @@
         position: relative;
         flex: 1;
         padding: var(--tlp-medium-spacing);
-        border: 1px solid var(--tlp-ui-border-normal);
+        border: 1px solid var(--tlp-neutral-normal-color);
         border-radius: 4px;
         background: var(--tlp-ui-white);
 
@@ -161,7 +161,7 @@
                 transform: translate(-100%, -50%);
                 border-width: 7px $arrow-width 7px 0;
                 border-style: solid;
-                border-color: transparent var(--tlp-ui-border-normal) transparent transparent;
+                border-color: transparent var(--tlp-neutral-normal-color) transparent transparent;
                 background: none;
             }
 
@@ -186,7 +186,7 @@
                 left: auto;
                 transform: translate(100%, -50%);
                 border-width: 7px 0 7px $arrow-width;
-                border-color: transparent transparent transparent var(--tlp-ui-border-normal);
+                border-color: transparent transparent transparent var(--tlp-neutral-normal-color);
             }
         }
 

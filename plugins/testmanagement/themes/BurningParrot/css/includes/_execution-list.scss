@@ -297,7 +297,7 @@ $height-testmanagement-header: calc(var(--tlp-title-spacing) + var(--tlp-small-s
         }
 
         &.filtered-status {
-            color: var(--tlp-ui-border-dark);
+            color: var(--tlp-neutral-dark-color);
         }
     }
 }
@@ -305,7 +305,7 @@ $height-testmanagement-header: calc(var(--tlp-title-spacing) + var(--tlp-small-s
 #filters-dropdown-menu {
     right: -18px;
     margin: 44px 0 0;
-    border-bottom: 1px solid var(--tlp-ui-border-normal);
+    border-bottom: 1px solid var(--tlp-neutral-normal-color);
     border-top-style: none;
     box-shadow: none;
 
@@ -324,7 +324,7 @@ $height-testmanagement-header: calc(var(--tlp-title-spacing) + var(--tlp-small-s
         &:last-child {
             margin: 0;
             padding: var(--tlp-medium-spacing) var(--tlp-medium-spacing) var(--tlp-small-spacing) var(--tlp-medium-spacing);
-            border-top: 1px solid var(--tlp-ui-border-light);
+            border-top: 1px solid var(--tlp-neutral-light-color);
         }
 
         > .tests-filter-option-title {
