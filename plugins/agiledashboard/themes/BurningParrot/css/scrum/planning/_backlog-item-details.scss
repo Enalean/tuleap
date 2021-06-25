@@ -28,7 +28,7 @@
     flex-direction: column;
     width: 100%;
     transition: border-color 75ms ease-in-out, background-color 75ms ease-in-out;
-    border: 1px solid var(--tlp-ui-border-normal);
+    border: 1px solid var(--tlp-neutral-normal-color);
     border-radius: 3px;
     background: var(--tlp-ui-white);
     cursor: move;
@@ -62,7 +62,7 @@
     }
 
     &.closed {
-        border-color: var(--tlp-ui-border-normal-transparent-50);
+        border-color: var(--tlp-neutral-normal-color-transparent-50);
         background: transparent;
 
         .backlog-item-details-id {
@@ -80,7 +80,7 @@
 
     @keyframes blink {
         0% {
-            border-color: var(--tlp-ui-border-normal);
+            border-color: var(--tlp-neutral-normal-color);
             background: var(--tlp-ui-white);
         }
 
@@ -90,7 +90,7 @@
         }
 
         100% {
-            border-color: var(--tlp-ui-border-normal);
+            border-color: var(--tlp-neutral-normal-color);
             background: var(--tlp-ui-white);
         }
     }
@@ -206,7 +206,7 @@
 }
 
 $backlog-item-details-parent-color: var(--project-color, var(--tlp-dimmed-color-darker-10));
-$backlog-item-details-parent-background: var(--project-color-background, var(--tlp-ui-border-normal));
+$backlog-item-details-parent-background: var(--project-color-background, var(--tlp-neutral-normal-color));
 
 .backlog-item-details-parent {
     display: flex;

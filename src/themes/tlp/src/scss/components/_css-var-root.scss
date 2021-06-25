@@ -189,16 +189,16 @@ $main-color-dimmed-background: mix($tlp-background-color, $tlp-ui-white, 50);
     --tlp-dark-color-lighter-05: #{color.scale($tlp-dark-color, $lightness: 5%)};
     --tlp-dark-color-lighter-10: #{color.scale($tlp-dark-color, $lightness: 10%)};
     --tlp-dark-color-lighter-90: #{color.scale($tlp-dark-color, $lightness: 90%)};
-    --tlp-typo-default-text-color-on-dark-background: #{$tlp-ui-border-normal};
+    --tlp-typo-default-text-color-on-dark-background: #{$tlp-neutral-normal-color};
 
     // borders
     --tlp-neutral-light-color: #{$tlp-neutral-light-color};
-    --tlp-ui-border-normal: #{$tlp-ui-border-normal};
+    --tlp-neutral-normal-color: #{$tlp-neutral-normal-color};
     --tlp-ui-border-dark: #{$tlp-ui-border-dark};
 
-    --tlp-ui-border-normal-lighter-40: #{mix($tlp-ui-border-normal, $tlp-ui-white, 60%)};
-    --tlp-ui-border-normal-transparent-25: #{transparentize($tlp-ui-border-normal, 0.25)};
-    --tlp-ui-border-normal-transparent-50: #{transparentize($tlp-ui-border-normal, 0.5)};
+    --tlp-neutral-normal-color-lighter-40: #{mix($tlp-neutral-normal-color, $tlp-ui-white, 60%)};
+    --tlp-neutral-normal-color-transparent-25: #{transparentize($tlp-neutral-normal-color, 0.25)};
+    --tlp-neutral-normal-color-transparent-50: #{transparentize($tlp-neutral-normal-color, 0.5)};
 
     --tlp-ui-border-dark-lighter-20: #{mix($tlp-ui-border-dark, $tlp-ui-white, 80%)};
     --tlp-ui-border-dark-darker-05: #{darken($tlp-ui-border-dark, 5%)};
@@ -229,7 +229,7 @@ $main-color-dimmed-background: mix($tlp-background-color, $tlp-ui-white, 50);
 
     // illustrations
     --tlp-illustration-color: #{mix($tlp-main-color, $tlp-ui-white, 53%)};
-    --tlp-illustration-grey: #{$tlp-ui-border-normal};
+    --tlp-illustration-grey: #{$tlp-neutral-normal-color};
     --tlp-illustration-yellow: #fbe484;
     --tlp-legacy-illustration-primary-color: #{$tlp-illustration-primary-color};
     --tlp-legacy-illustration-secondary-dark-color: #{$tlp-illustration-secondary-dark-color};

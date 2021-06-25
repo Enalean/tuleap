@@ -21,7 +21,7 @@ $milestone-background: var(--project-color-background-gradient-light, var(--tlp-
 
 .milestone {
     margin: 0 0 var(--tlp-small-spacing);
-    border: 1px solid var(--project-color-border, var(--tlp-ui-border-normal));
+    border: 1px solid var(--project-color-border, var(--tlp-neutral-normal-color));
     background: $milestone-background;
 }
 
@@ -129,7 +129,7 @@ $border-element-separator: 1px solid var(--project-color-border, var(--tlp-ui-wh
 .milestone-backlog-items {
     min-height: 70px;
     padding: var(--tlp-medium-spacing);
-    border: 1px solid var(--tlp-ui-border-normal);
+    border: 1px solid var(--tlp-neutral-normal-color);
     border-radius: 3px;
     background: var(--tlp-background-color-lighter-02);
 }

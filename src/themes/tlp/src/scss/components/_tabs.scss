@@ -29,14 +29,14 @@ $tlp-tabs-transition: 75ms ease-out;
     margin: 0 0 var(--tlp-medium-spacing);
     padding: 0 var(--tlp-medium-spacing);
     background: var(--tlp-ui-white);
-    box-shadow: inset 0 1px 0 var(--tlp-ui-border-normal), inset 0 -1px 0 var(--tlp-ui-border-normal);
+    box-shadow: inset 0 1px 0 var(--tlp-neutral-normal-color), inset 0 -1px 0 var(--tlp-neutral-normal-color);
 }
 
 .tlp-tabs-vertical {
     flex-direction: column;
     align-items: flex-start;
     padding: 0;
-    border: 1px solid var(--tlp-ui-border-normal);
+    border: 1px solid var(--tlp-neutral-normal-color);
     border-radius: 3px;
     box-shadow: none;
 }
@@ -44,7 +44,7 @@ $tlp-tabs-transition: 75ms ease-out;
 .tlp-pane > .tlp-pane-container > .tlp-tabs {
     margin: 0;
     padding: 0;
-    box-shadow: inset 0 -1px 0 var(--tlp-ui-border-normal);
+    box-shadow: inset 0 -1px 0 var(--tlp-neutral-normal-color);
 }
 
 .tlp-tab-menu {
@@ -58,7 +58,7 @@ $tlp-tabs-transition: 75ms ease-out;
     padding: var(--tlp-medium-spacing) / 2 0;
     transform: translateY(100%);
     transition: bottom $tlp-tabs-transition, opacity $tlp-tabs-transition, box-shadow $tlp-tabs-transition;
-    border: 1px solid var(--tlp-ui-border-normal);
+    border: 1px solid var(--tlp-neutral-normal-color);
     border-top: 0;
     border-bottom: 0;
     border-radius: 0 0 $tlp-tabs-radius $tlp-tabs-radius;
@@ -159,7 +159,7 @@ $tlp-tabs-transition: 75ms ease-out;
     width: 100%;
     padding: 16px var(--tlp-medium-spacing) 14px;
     transition: color $tlp-tabs-transition;
-    border-bottom: 1px solid var(--tlp-ui-border-normal);
+    border-bottom: 1px solid var(--tlp-neutral-normal-color);
 
     &::before {
         content: "";

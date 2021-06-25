@@ -21,7 +21,7 @@
     margin: 0 var(--tlp-small-spacing) var(--tlp-large-spacing) 0;
     border: 1px hidden;
     border-radius: 4px;
-    box-shadow: 0 3px 4px var(--tlp-ui-border-normal-transparent-25);
+    box-shadow: 0 3px 4px var(--tlp-neutral-normal-color-transparent-25);
 }
 
 .program-increment-title {
@@ -45,7 +45,7 @@
     top: 44px;
     align-items: center;
     transition: background 0.1s linear;
-    border: 1px solid var(--tlp-ui-border-normal);
+    border: 1px solid var(--tlp-neutral-normal-color);
     border-radius: 4px;
     background: var(--tlp-ui-white);
     cursor: pointer;
@@ -81,20 +81,20 @@
     display: flex;
     align-items: center;
     padding: var(--tlp-small-spacing) var(--tlp-medium-spacing);
-    border: 1px solid var(--tlp-ui-border-normal);
+    border: 1px solid var(--tlp-neutral-normal-color);
     border-top: 0;
     background: var(--tlp-ui-white);
 }
 
 .program-increment-content {
     position: relative;
-    border: 1px solid var(--tlp-ui-border-normal);
+    border: 1px solid var(--tlp-neutral-normal-color);
     border-top: 0;
     border-radius: 0 0 4px 4px;
     background: var(--tlp-ui-white-darker-02);
 
     &:last-child {
-        border-bottom: 1px solid var(--tlp-ui-border-normal);
+        border-bottom: 1px solid var(--tlp-neutral-normal-color);
     }
 }
 
