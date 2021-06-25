@@ -181,7 +181,7 @@ $switch-menu-item-hover-color: var(--tlp-main-color);
 .breadcrumb-dropdown-separator {
     display: block;
     margin: 10px 0;
-    border-top: 1px solid var(--tlp-ui-border-light);
+    border-top: 1px solid var(--tlp-neutral-light-color);
 
     &:first-child {
         display: none;
@@ -191,7 +191,7 @@ $switch-menu-item-hover-color: var(--tlp-main-color);
 .breadcrumb-dropdown-section-title {
     margin: 10px 0 0;
     padding: 20px 20px 10px;
-    border-top: 1px solid var(--tlp-ui-border-light);
+    border-top: 1px solid var(--tlp-neutral-light-color);
     color: #747474;
     font-size: 0.65rem;
     font-weight: 600;

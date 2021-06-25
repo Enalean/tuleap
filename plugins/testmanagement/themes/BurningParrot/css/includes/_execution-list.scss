@@ -324,7 +324,7 @@ $height-testmanagement-header: calc(var(--tlp-title-spacing) + var(--tlp-small-s
         &:last-child {
             margin: 0;
             padding: var(--tlp-medium-spacing) var(--tlp-medium-spacing) var(--tlp-small-spacing) var(--tlp-medium-spacing);
-            border-top: 1px solid var(--tlp-ui-border-light);
+            border-top: 1px solid var(--tlp-neutral-light-color);
         }
 
         > .tests-filter-option-title {

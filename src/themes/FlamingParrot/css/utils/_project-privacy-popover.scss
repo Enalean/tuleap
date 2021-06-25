@@ -55,7 +55,7 @@
         border-top-left-radius: navbar.$nav-dropdown-content-border-radius;
         border-top-right-radius: navbar.$nav-dropdown-content-border-radius;
         background-color: var(--tlp-dark-color-darker-05);
-        color: var(--tlp-ui-border-light);
+        color: var(--tlp-neutral-light-color);
         font-size: 1.125rem;
         font-weight: 600;
         letter-spacing: normal;
@@ -81,7 +81,7 @@
             margin: 0 0 var(--tlp-small-spacing);
             padding: 0;
             border: 0;
-            color: var(--tlp-ui-border-light);
+            color: var(--tlp-neutral-light-color);
             font-size: 1.125rem;
             font-weight: 600;
             line-height: 1.625rem;
@@ -110,7 +110,7 @@
             > .fas,
             > .fa {
                 top: 8px;
-                color: var(--tlp-ui-border-light);
+                color: var(--tlp-neutral-light-color);
                 font-size: 0.75rem;
             }
 
@@ -119,7 +119,7 @@
                 width: 12px;
 
                 > path {
-                    fill: var(--tlp-ui-border-light);
+                    fill: var(--tlp-neutral-light-color);
                 }
             }
 

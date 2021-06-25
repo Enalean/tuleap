@@ -139,7 +139,7 @@ $tlp-modal-transition: 100ms ease-out;
 
 .tlp-modal-feedback {
     padding: $tlp-modal-padding;
-    border-bottom: 1px solid var(--tlp-ui-border-light);
+    border-bottom: 1px solid var(--tlp-neutral-light-color);
     background: var(--tlp-ui-white);
 
     &:empty {
@@ -165,7 +165,7 @@ $tlp-modal-transition: 100ms ease-out;
     flex: 0 1 50%;
     padding: $tlp-modal-padding;
     overflow-y: auto;
-    border-right: 1px solid var(--tlp-ui-border-light);
+    border-right: 1px solid var(--tlp-neutral-light-color);
 
     &:last-child {
         border-right: 0;
@@ -177,7 +177,7 @@ $tlp-modal-transition: 100ms ease-out;
     justify-content: flex-end;
     min-height: calc(2 * #{$tlp-modal-padding} + #{buttons.$tlp-button-normal-height});
     padding: $tlp-modal-padding;
-    border-top: 1px solid var(--tlp-ui-border-light);
+    border-top: 1px solid var(--tlp-neutral-light-color);
     border-bottom-right-radius: $tlp-modal-radius;
     border-bottom-left-radius: $tlp-modal-radius;
     background: var(--tlp-ui-white);
@@ -234,8 +234,8 @@ $tlp-modal-transition: 100ms ease-out;
     height: 1px;
     margin: 0 calc(-1 * var(--tlp-medium-spacing)) var(--tlp-medium-spacing);
     border: 0;
-    background-color: var(--tlp-ui-border-light);
-    color: var(--tlp-ui-border-light);
+    background-color: var(--tlp-neutral-light-color);
+    color: var(--tlp-neutral-light-color);
 }
 
 .tlp-modal-title-icon {

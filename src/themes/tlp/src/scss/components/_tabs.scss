@@ -71,7 +71,7 @@ $tlp-tabs-transition: 75ms ease-out;
 .tlp-tab-menu-title {
     margin: calc(var(--tlp-medium-spacing) / 2) 0 0;
     padding: var(--tlp-medium-spacing) var(--tlp-medium-spacing) calc(var(--tlp-medium-spacing) / 2);
-    border-top: 1px solid var(--tlp-ui-border-light);
+    border-top: 1px solid var(--tlp-neutral-light-color);
     color: var(--tlp-dimmed-color);
     line-height: 20px;
 
@@ -92,14 +92,14 @@ $tlp-tabs-transition: 75ms ease-out;
     white-space: nowrap;
 
     &:hover {
-        background: var(--tlp-ui-border-light);
+        background: var(--tlp-neutral-light-color);
         text-decoration: none;
     }
 }
 
 .tlp-tab-menu-separator {
     width: 100%;
-    border-top: 1px solid var(--tlp-ui-border-light);
+    border-top: 1px solid var(--tlp-neutral-light-color);
 }
 
 .tlp-tab {

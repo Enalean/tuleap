@@ -123,7 +123,7 @@
 .siteadmin-homepage-statistics,
 .siteadmin-homepage-system-events {
     > .tlp-pane-container > .tlp-pane-section:last-child {
-        border-top: 1px solid var(--tlp-ui-border-light);
+        border-top: 1px solid var(--tlp-neutral-light-color);
     }
 }
 
@@ -138,7 +138,7 @@
     margin: 0;
 
     > .tlp-pane-container > .tlp-pane-section:last-child {
-        border-top: 1px solid var(--tlp-ui-border-light);
+        border-top: 1px solid var(--tlp-neutral-light-color);
     }
 }
 

@@ -50,7 +50,7 @@ $progress-bar-background-color: var(--tlp-ui-border-normal);
     display: flex;
     align-items: center;
     justify-content: space-between;
-    border-bottom: 1px solid var(--tlp-ui-border-light);
+    border-bottom: 1px solid var(--tlp-neutral-light-color);
 
     &.document-dragndrop-file-upload-error {
         border-bottom: 1px solid var(--tlp-danger-color-transparent-90);

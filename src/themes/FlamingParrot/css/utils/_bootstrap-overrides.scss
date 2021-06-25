@@ -433,7 +433,7 @@ legend {
 }
 
 .btn:not(.btn-link) {
-    @include btn(var(--tlp-ui-border-light), var(--tlp-ui-border-light-transparent-40), var(--tlp-ui-border-light-darker-10), var(--tlp-dark-color));
+    @include btn(var(--tlp-neutral-light-color), var(--tlp-neutral-light-color-transparent-40), var(--tlp-neutral-light-color-darker-10), var(--tlp-dark-color));
 
     &.btn-primary {
         @include btn(var(--tlp-main-color), var(--tlp-main-color-transparent-40), var(--tlp-main-color-darker-10), var(--tlp-ui-white));
@@ -456,7 +456,7 @@ legend {
     }
 
     &:hover:not(:disabled):not(.disabled):not(.active) {
-        @include btn-hover(var(--tlp-ui-border-light-darker-05));
+        @include btn-hover(var(--tlp-neutral-light-color-darker-05));
 
         &.btn-primary {
             @include btn-hover(var(--tlp-main-color-darker-05));
