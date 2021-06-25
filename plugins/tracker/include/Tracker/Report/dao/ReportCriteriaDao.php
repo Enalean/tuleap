@@ -21,6 +21,8 @@
 
 namespace Tuleap\Tracker\Report\dao;
 
+use Tracker_FormElement_Field_OpenList;
+
 final class ReportCriteriaDao extends \Tuleap\DB\DataAccessObject
 {
     public function duplicate(int $from_report_id, int $to_report_id, array $field_mapping): void
@@ -48,10 +50,28 @@ final class ReportCriteriaDao extends \Tuleap\DB\DataAccessObject
                     UNION SELECT value, 'alphanum' AS field_type
                     FROM tracker_report_criteria AS original_report
                         INNER JOIN tracker_report_criteria_alphanum_value on criteria_id = original_report.id
+                    WHERE original_report.field_id = ? AND original_report.report_id = ?
+                    UNION SELECT value, 'file' AS field_type
+                    FROM tracker_report_criteria AS original_report
+                        INNER JOIN tracker_report_criteria_file_value on criteria_id = original_report.id
+                    WHERE original_report.field_id = ? AND original_report.report_id = ?
+                    UNION SELECT value, 'openlist' AS field_type
+                    FROM tracker_report_criteria AS original_report
+                        INNER JOIN tracker_report_criteria_openlist_value on criteria_id = original_report.id
+                    WHERE original_report.field_id = ? AND original_report.report_id = ?
+                    UNION SELECT value, 'permissions' AS field_type
+                    FROM tracker_report_criteria AS original_report
+                        INNER JOIN tracker_report_criteria_permissionsonartifact_value on criteria_id = original_report.id
                     WHERE original_report.field_id = ? AND original_report.report_id = ?";
 
             $criterias = $this->getDB()->run(
                 $sql,
+                $mapping['from'],
+                $from_report_id,
+                $mapping['from'],
+                $from_report_id,
+                $mapping['from'],
+                $from_report_id,
                 $mapping['from'],
                 $from_report_id,
                 $mapping['from'],
@@ -74,6 +94,9 @@ final class ReportCriteriaDao extends \Tuleap\DB\DataAccessObject
 
             $this->insertListCriteria($data_to_insert);
             $this->insertAlphaNumCriteria($data_to_insert);
+            $this->insertFileCriteria($data_to_insert);
+            $this->insertOpenListCriteria($data_to_insert);
+            $this->insertPermissionsCriteria($data_to_insert);
         }
     }
 
@@ -91,6 +114,30 @@ final class ReportCriteriaDao extends \Tuleap\DB\DataAccessObject
         if (isset($data_to_insert['alphanum']) && count($data_to_insert['alphanum']) > 0) {
             $data_to_insert_without_duplicates = array_map("unserialize", array_unique(array_map("serialize", $data_to_insert['alphanum'])));
             $this->getDB()->insertMany('tracker_report_criteria_alphanum_value', $data_to_insert_without_duplicates);
+        }
+    }
+
+    private function insertOpenListCriteria(array $data_to_insert): void
+    {
+        if (isset($data_to_insert['openlist']) && count($data_to_insert['openlist']) > 0) {
+            $data_to_insert_without_duplicates = array_map("unserialize", array_unique(array_map("serialize", $data_to_insert['openlist'])));
+            $this->getDB()->insertMany('tracker_report_criteria_openlist_value', $data_to_insert_without_duplicates);
+        }
+    }
+
+    private function insertFileCriteria(array $data_to_insert): void
+    {
+        if (isset($data_to_insert['file']) && count($data_to_insert['file']) > 0) {
+            $data_to_insert_without_duplicates = array_map("unserialize", array_unique(array_map("serialize", $data_to_insert['file'])));
+            $this->getDB()->insertMany('tracker_report_criteria_file_value', $data_to_insert_without_duplicates);
+        }
+    }
+
+    private function insertPermissionsCriteria(array $data_to_insert): void
+    {
+        if (isset($data_to_insert['permissions']) && count($data_to_insert['permissions']) > 0) {
+            $data_to_insert_without_duplicates = array_map("unserialize", array_unique(array_map("serialize", $data_to_insert['permissions'])));
+            $this->getDB()->insertMany('tracker_report_criteria_permissionsonartifact_value', $data_to_insert_without_duplicates);
         }
     }
 
@@ -113,9 +160,35 @@ final class ReportCriteriaDao extends \Tuleap\DB\DataAccessObject
                     return $mapping['values'][$row['value']];
                 }
             case "alphanum":
+            case "file":
+            case "permissions":
                 return $row['value'];
+            case "openlist":
+                return $this->replaceStoredValuesByMapping($row['value'], $mapping);
         }
 
         throw new \LogicException($row['field_type'] . " can not return a value");
+    }
+
+    private function replaceStoredValuesByMapping(string $db_values, array $mapping): string
+    {
+        $bind_values      = explode(',', $db_values);
+        $converted_values = [];
+        foreach ($bind_values as $value) {
+            $value = trim($value);
+            if ($value) {
+                switch ($value[0]) {
+                    case Tracker_FormElement_Field_OpenList::BIND_PREFIX:
+                        $bindvalue_id       = (int) substr($value, 1);
+                        $converted_values[] = Tracker_FormElement_Field_OpenList::BIND_PREFIX . $mapping['values'][$bindvalue_id];
+                        break;
+                    default:
+                        $converted_values[] = $value;
+                        break;
+                }
+            }
+        }
+
+        return implode(',', $converted_values);
     }
 }

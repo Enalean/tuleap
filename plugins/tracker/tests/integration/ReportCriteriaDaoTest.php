@@ -125,6 +125,86 @@ final class ReportCriteriaDaoTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertEquals($expected, $duplicated_data);
     }
 
+    public function testItDuplicateFileValues(): void
+    {
+        $from_report_id = 10;
+        $to_report_id   = 20;
+        $from_field_id  = 111;
+        $to_field_id    = 222;
+        $rank           = 1;
+
+        $field_mapping[] = [
+            'values' => [],
+            'from' => $from_field_id,
+            'to' => $to_field_id
+        ];
+
+        $criteria_id = $this->create($from_report_id, $from_field_id, $rank, 0);
+        $this->insertFileValue($criteria_id, "file stuff");
+
+        $this->dao->duplicate($from_report_id, $to_report_id, $field_mapping);
+
+        $duplicated_data = $this->getNewReportCriteriaFileValues($to_field_id);
+        $expected        = [
+            ['value' => "file stuff"],
+        ];
+        $this->assertEquals($expected, $duplicated_data);
+    }
+
+    public function testItDuplicateOpenListValues(): void
+    {
+        $from_report_id = 10;
+        $to_report_id   = 20;
+        $from_field_id  = 333;
+        $to_field_id    = 444;
+        $rank           = 1;
+
+        $field_mapping[] = [
+            'values' => [
+                109 => 901,
+            ],
+            'from' => $from_field_id,
+            'to' => $to_field_id
+        ];
+
+        $criteria_id = $this->create($from_report_id, $from_field_id, $rank, 0);
+        $this->insertOpenListValue($criteria_id, "!random value,b109");
+
+        $this->dao->duplicate($from_report_id, $to_report_id, $field_mapping);
+
+        $duplicated_data = $this->getNewReportCriteriaOpenListValues($to_field_id);
+        $expected        = [
+            ['value' => "!random value,b901"],
+        ];
+        $this->assertEquals($expected, $duplicated_data);
+    }
+
+    public function testItDuplicatePermissionsValues(): void
+    {
+        $from_report_id = 10;
+        $to_report_id   = 20;
+        $from_field_id  = 555;
+        $to_field_id    = 666;
+        $rank           = 1;
+
+        $field_mapping[] = [
+            'values' => [],
+            'from' => $from_field_id,
+            'to' => $to_field_id
+        ];
+
+        $criteria_id = $this->create($from_report_id, $from_field_id, $rank, 0);
+        $this->insertPermissionValue($criteria_id, 3);
+
+        $this->dao->duplicate($from_report_id, $to_report_id, $field_mapping);
+
+        $duplicated_data = $this->getNewReportCriteriaPermissionsValues($to_field_id);
+        $expected        = [
+            ['value' => 3],
+        ];
+        $this->assertEquals($expected, $duplicated_data);
+    }
+
     private function create(int $report_id, int $field_id, int $rank, int $is_advanced): int
     {
         return $this->db->insertReturnId('tracker_report_criteria', [
@@ -151,6 +231,29 @@ final class ReportCriteriaDaoTest extends \Tuleap\Test\PHPUnit\TestCase
         ]);
     }
 
+    private function insertFileValue(int $criteria_id, string $value): void
+    {
+        $this->db->insert('tracker_report_criteria_file_value', [
+            'criteria_id' => $criteria_id,
+            'value' => $value,
+        ]);
+    }
+
+    private function insertOpenListValue(int $criteria_id, string $value): void
+    {
+        $this->db->insert('tracker_report_criteria_openlist_value', [
+            'criteria_id' => $criteria_id,
+            'value' => $value,
+        ]);
+    }
+
+    private function insertPermissionValue(int $criteria_id, string $value): void
+    {
+        $this->db->insert('tracker_report_criteria_permissionsonartifact_value', [
+            'criteria_id' => $criteria_id,
+            'value' => $value,
+        ]);
+    }
 
     private function getNewReportCriteriaListValues(int $field_id): array
     {
@@ -164,6 +267,30 @@ final class ReportCriteriaDaoTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $sql = 'SELECT value FROM tracker_report_criteria AS criteria
                     INNER JOIN tracker_report_criteria_alphanum_value AS alphanum_values ON criteria.id = alphanum_values.criteria_id WHERE field_id = ?';
+
+        return $this->db->run($sql, $field_id);
+    }
+
+    private function getNewReportCriteriaFileValues(int $field_id): array
+    {
+        $sql = 'SELECT value FROM tracker_report_criteria AS criteria
+                    INNER JOIN tracker_report_criteria_file_value AS file_values ON criteria.id = file_values.criteria_id WHERE field_id = ?';
+
+        return $this->db->run($sql, $field_id);
+    }
+
+    private function getNewReportCriteriaOpenListValues(int $field_id): array
+    {
+        $sql = 'SELECT value FROM tracker_report_criteria AS criteria
+                    INNER JOIN tracker_report_criteria_openlist_value AS open_values ON criteria.id = open_values.criteria_id WHERE field_id = ?';
+
+        return $this->db->run($sql, $field_id);
+    }
+
+    private function getNewReportCriteriaPermissionsValues(int $field_id): array
+    {
+        $sql = 'SELECT value FROM tracker_report_criteria AS criteria
+                    INNER JOIN tracker_report_criteria_permissionsonartifact_value AS permissions_values ON criteria.id = permissions_values.criteria_id WHERE field_id = ?';
 
         return $this->db->run($sql, $field_id);
     }
