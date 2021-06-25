@@ -228,7 +228,7 @@ $main-color-dimmed-background: mix($tlp-background-color, $tlp-ui-white, 50);
     --tlp-jumbo-spacing: #{$tlp-jumbo-spacing};
 
     // illustrations
-    --tlp-illustration-color: #{mix($tlp-main-color, $tlp-ui-white, 53%)};
+    --tlp-illustration-main-color: #{mix($tlp-main-color, $tlp-ui-white, 53%)};
     --tlp-illustration-grey: #{$tlp-neutral-normal-color};
     --tlp-illustration-yellow: #fbe484;
     --tlp-legacy-illustration-primary-color: #{$tlp-illustration-primary-color};
