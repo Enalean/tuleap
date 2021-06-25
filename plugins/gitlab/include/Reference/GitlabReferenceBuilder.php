@@ -31,18 +31,13 @@ use Tuleap\Gitlab\Repository\GitlabRepositoryIntegrationFactory;
 
 class GitlabReferenceBuilder
 {
-    /**
-     * @var ReferenceDao
-     */
-    private $reference_dao;
+    private ReferenceDao $reference_dao;
+    private GitlabRepositoryIntegrationFactory $repository_integration_factory;
 
-    /**
-     * @var GitlabRepositoryIntegrationFactory
-     */
-    private $repository_integration_factory;
-
-    public function __construct(ReferenceDao $reference_dao, GitlabRepositoryIntegrationFactory $repository_integration_factory)
-    {
+    public function __construct(
+        ReferenceDao $reference_dao,
+        GitlabRepositoryIntegrationFactory $repository_integration_factory
+    ) {
         $this->reference_dao                  = $reference_dao;
         $this->repository_integration_factory = $repository_integration_factory;
     }
@@ -63,7 +58,12 @@ class GitlabReferenceBuilder
             return null;
         }
 
-        list($repository_name, $item_id) = GitlabReferenceExtractor::splitRepositoryNameAndReferencedItemId($value);
+        $reference_splitted_values = GitlabReferenceExtractor::splitRepositoryNameAndReferencedItemId(
+            $value
+        );
+
+        $repository_name = $reference_splitted_values->getRepositoryName();
+        $item_id         = $reference_splitted_values->getValue();
 
         if (! $repository_name || ! $item_id) {
             return null;

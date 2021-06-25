@@ -160,12 +160,12 @@ final class GitlabCrossReferenceOrganizerTest extends \Tuleap\Test\PHPUnit\TestC
 
         $this->repository_integration_factory
             ->method('getIntegrationByNameInProject')
-            ->with($project, 'john-snow/winter-is-coming')
+            ->with($project, 'root/project01')
             ->willReturn(null);
 
         $a_ref = CrossReferencePresenterBuilder::get(1)
             ->withType('plugin_gitlab_commit')
-            ->withValue('john-snow/winter-is-coming/14a9b6c0c0c965977cf2af2199f93df82afcdea3')
+            ->withValue('root/project01/14a9b6c0c0c965977cf2af2199f93df82afcdea3')
             ->build();
 
         $by_nature_organizer = $this->createMock(CrossReferenceByNatureOrganizer::class);
@@ -201,7 +201,7 @@ final class GitlabCrossReferenceOrganizerTest extends \Tuleap\Test\PHPUnit\TestC
 
         $this->repository_integration_factory
             ->method('getIntegrationByNameInProject')
-            ->with($project, 'john-snow/winter-is-coming')
+            ->with($project, 'root/project01')
             ->willReturn($integration);
 
         $this->gitlab_commit_factory->method('getGitlabCommitInRepositoryWithSha1')
@@ -210,7 +210,7 @@ final class GitlabCrossReferenceOrganizerTest extends \Tuleap\Test\PHPUnit\TestC
 
         $a_ref = CrossReferencePresenterBuilder::get(1)
             ->withType('plugin_gitlab_commit')
-            ->withValue('john-snow/winter-is-coming/14a9b6c0c0c965977cf2af2199f93df82afcdea3')
+            ->withValue('root/project01/14a9b6c0c0c965977cf2af2199f93df82afcdea3')
             ->build();
 
         $by_nature_organizer = $this->createMock(CrossReferenceByNatureOrganizer::class);
@@ -231,42 +231,42 @@ final class GitlabCrossReferenceOrganizerTest extends \Tuleap\Test\PHPUnit\TestC
 
     public function testItOrganizesGitlabCommitCrossReferencesInTheirRespectiveRepositorySection(): void
     {
-        $user    = UserTestBuilder::aUser()->build();
-        $project = ProjectTestBuilder::aProject()->withUnixName('thenightwatch')->build();
+        $user = UserTestBuilder::aUser()->build();
 
-        $another_project = ProjectTestBuilder::aProject()->withUnixName('foodstocks')->build();
+        $project         = ProjectTestBuilder::aProject()->withUnixName('thenightwatch')->withId(101)->build();
+        $another_project = ProjectTestBuilder::aProject()->withUnixName('foodstocks')->withId(102)->build();
 
         $this->project_manager
             ->method('getProject')
-            ->willReturnMap([[1, $project], [2, $another_project]]);
+            ->willReturnMap([[101, $project], [102, $another_project]]);
 
         $integration = new GitlabRepositoryIntegration(
             1,
             2,
-            'winter-is-coming',
+            'root/project01',
             'Need more blankets, we are going to freeze our asses',
             'the_full_url',
             new DateTimeImmutable(),
-            Project::buildForTest(),
+            $project,
             false
         );
 
         $another_integration = new GitlabRepositoryIntegration(
             2,
             3,
-            'winter-is-coming',
+            'root/project02',
             'Need more hot chocolate, we crave sugar',
             'the_full_url',
             new DateTimeImmutable(),
-            Project::buildForTest(),
+            $another_project,
             false
         );
 
         $this->repository_integration_factory
             ->method('getIntegrationByNameInProject')
             ->willReturnMap([
-                [$project, 'john-snow/winter-is-coming', $integration],
-                [$another_project, 'samwell-tarly/winter-is-coming', $another_integration],
+                [$project, 'root/project01', $integration],
+                [$another_project, 'root/project02', $another_integration],
             ]);
 
         $john_snow_commit = new GitlabCommit(
@@ -295,14 +295,14 @@ final class GitlabCrossReferenceOrganizerTest extends \Tuleap\Test\PHPUnit\TestC
 
         $a_ref = CrossReferencePresenterBuilder::get(1)
             ->withType('plugin_gitlab_commit')
-            ->withValue('john-snow/winter-is-coming/14a9b6c0c0c965977cf2af2199f93df82afcdea3')
-            ->withProjectId(1)
+            ->withValue('root/project01/14a9b6c0c0c965977cf2af2199f93df82afcdea3')
+            ->withProjectId(101)
             ->build();
 
         $another_ref = CrossReferencePresenterBuilder::get(2)
             ->withType('plugin_gitlab_commit')
-            ->withValue('samwell-tarly/winter-is-coming/be35d127acb88876ee4fdbf02188d372dc61e98d')
-            ->withProjectId(2)
+            ->withValue('root/project02/be35d127acb88876ee4fdbf02188d372dc61e98d')
+            ->withProjectId(102)
             ->build();
 
         $this->gitlab_commit_cross_reference_enhancer->method('getCrossReferencePresenterWithCommitInformation')
@@ -319,48 +319,47 @@ final class GitlabCrossReferenceOrganizerTest extends \Tuleap\Test\PHPUnit\TestC
         $by_nature_organizer
             ->expects(self::exactly(2))
             ->method('moveCrossReferenceToSection')
-            ->withConsecutive([$a_ref, 'thenightwatch/winter-is-coming'], [$another_ref, 'foodstocks/winter-is-coming']);
+            ->withConsecutive([$a_ref, 'thenightwatch/root/project01'], [$another_ref, 'foodstocks/root/project02']);
 
         $this->organizer->organizeGitLabReferences($by_nature_organizer);
     }
 
     public function testItOrganizesGitlabMergeRequestCrossReferencesInTheirRespectiveRepositorySectionWithoutAuthor(): void
     {
-        $project = ProjectTestBuilder::aProject()->withUnixName('thenightwatch')->build();
-
-        $another_project = ProjectTestBuilder::aProject()->withUnixName('foodstocks')->build();
+        $project         = ProjectTestBuilder::aProject()->withUnixName('thenightwatch')->withId(101)->build();
+        $another_project = ProjectTestBuilder::aProject()->withUnixName('foodstocks')->withId(102)->build();
 
         $this->project_manager
             ->method('getProject')
-            ->willReturnMap([[1, $project], [2, $another_project]]);
+            ->willReturnMap([[101, $project], [102, $another_project]]);
 
         $integration = new GitlabRepositoryIntegration(
             1,
             2,
-            'winter-is-coming',
+            'root/project01',
             'Need more blankets, we are going to freeze our asses',
             'the_full_url',
             new DateTimeImmutable(),
-            Project::buildForTest(),
+            $project,
             false
         );
 
         $another_integration = new GitlabRepositoryIntegration(
             2,
             3,
-            'winter-is-coming',
+            'root/project02',
             'Need more hot chocolate, we crave sugar',
             'the_full_url',
             new DateTimeImmutable(),
-            Project::buildForTest(),
+            $another_project,
             false
         );
 
         $this->repository_integration_factory
             ->method('getIntegrationByNameInProject')
             ->willReturnMap([
-                [$project, 'john-snow/winter-is-coming', $integration],
-                [$another_project, 'samwell-tarly/winter-is-coming', $another_integration],
+                [$project, 'root/project01', $integration],
+                [$another_project, 'root/project02', $another_integration],
             ]);
 
         $john_snow_merge_request = new GitlabMergeRequest(
@@ -389,14 +388,14 @@ final class GitlabCrossReferenceOrganizerTest extends \Tuleap\Test\PHPUnit\TestC
 
         $a_ref = CrossReferencePresenterBuilder::get(1)
             ->withType('plugin_gitlab_mr')
-            ->withValue('john-snow/winter-is-coming/14')
-            ->withProjectId(1)
+            ->withValue('root/project01/14')
+            ->withProjectId(101)
             ->build();
 
         $another_ref = CrossReferencePresenterBuilder::get(2)
             ->withType('plugin_gitlab_mr')
-            ->withValue('samwell-tarly/winter-is-coming/26')
-            ->withProjectId(2)
+            ->withValue('root/project02/26')
+            ->withProjectId(102)
             ->build();
 
         $this->user_manager->expects(self::never())->method('getUserByEmail');
@@ -423,7 +422,7 @@ final class GitlabCrossReferenceOrganizerTest extends \Tuleap\Test\PHPUnit\TestC
                            && $xref->creation_metadata->created_by === null
                            && $xref->creation_metadata->created_on->date === '2009-02-14T00:31:30+01:00'
                     ) {
-                        return 'thenightwatch/winter-is-coming';
+                        return 'thenightwatch/root/project01';
                     }
 
                     if (
@@ -435,7 +434,7 @@ final class GitlabCrossReferenceOrganizerTest extends \Tuleap\Test\PHPUnit\TestC
                         && $xref->creation_metadata->created_by === null
                         && $xref->creation_metadata->created_on->date === '2009-02-14T00:31:30+01:00'
                     ) {
-                        return 'foodstocks/winter-is-coming';
+                        return 'foodstocks/root/project02';
                     }
 
                     throw new \RuntimeException('Unexpected xref');
@@ -467,7 +466,7 @@ final class GitlabCrossReferenceOrganizerTest extends \Tuleap\Test\PHPUnit\TestC
 
         $this->repository_integration_factory
             ->method('getIntegrationByNameInProject')
-            ->with($project, 'john-snow/winter-is-coming')
+            ->with($project, 'root/project01')
             ->willReturn($integration);
 
         $john_snow_merge_request = new GitlabMergeRequest(
@@ -486,7 +485,7 @@ final class GitlabCrossReferenceOrganizerTest extends \Tuleap\Test\PHPUnit\TestC
 
         $a_ref = CrossReferencePresenterBuilder::get(1)
             ->withType('plugin_gitlab_mr')
-            ->withValue('john-snow/winter-is-coming/14')
+            ->withValue('root/project01/14')
             ->withProjectId(1)
             ->build();
 
@@ -544,7 +543,7 @@ final class GitlabCrossReferenceOrganizerTest extends \Tuleap\Test\PHPUnit\TestC
 
         $this->repository_integration_factory
             ->method('getIntegrationByNameInProject')
-            ->with($project, 'john-snow/winter-is-coming')
+            ->with($project, 'root/project01')
             ->willReturn($integration);
 
         $john_snow_merge_request = new GitlabMergeRequest(
@@ -563,7 +562,7 @@ final class GitlabCrossReferenceOrganizerTest extends \Tuleap\Test\PHPUnit\TestC
 
         $a_ref = CrossReferencePresenterBuilder::get(1)
             ->withType('plugin_gitlab_mr')
-            ->withValue('john-snow/winter-is-coming/14')
+            ->withValue('root/project01/14')
             ->withProjectId(1)
             ->build();
 
@@ -614,7 +613,7 @@ final class GitlabCrossReferenceOrganizerTest extends \Tuleap\Test\PHPUnit\TestC
 
         $this->repository_integration_factory
             ->method('getIntegrationByNameInProject')
-            ->with($project, 'john-snow/winter-is-coming')
+            ->with($project, 'root/project01')
             ->willReturn($integration);
 
         $john_snow_merge_request = new GitlabMergeRequest(
@@ -633,7 +632,7 @@ final class GitlabCrossReferenceOrganizerTest extends \Tuleap\Test\PHPUnit\TestC
 
         $a_ref = CrossReferencePresenterBuilder::get(1)
             ->withType('plugin_gitlab_mr')
-            ->withValue('john-snow/winter-is-coming/14')
+            ->withValue('root/project01/14')
             ->withProjectId(1)
             ->build();
 
@@ -683,7 +682,7 @@ final class GitlabCrossReferenceOrganizerTest extends \Tuleap\Test\PHPUnit\TestC
 
         $this->repository_integration_factory
             ->method('getIntegrationByNameInProject')
-            ->with($project, 'john-snow/winter-is-coming')
+            ->with($project, 'root/project01')
             ->willReturn($integration);
 
         $gitlab_tag = new GitlabTag(
@@ -700,7 +699,7 @@ final class GitlabCrossReferenceOrganizerTest extends \Tuleap\Test\PHPUnit\TestC
 
         $a_ref = CrossReferencePresenterBuilder::get(1)
             ->withType('plugin_gitlab_tag')
-            ->withValue('john-snow/winter-is-coming/v1.0.2')
+            ->withValue('root/project01/v1.0.2')
             ->withProjectId(1)
             ->build();
 
@@ -737,7 +736,7 @@ final class GitlabCrossReferenceOrganizerTest extends \Tuleap\Test\PHPUnit\TestC
 
         $this->repository_integration_factory
             ->method('getIntegrationByNameInProject')
-            ->with($project, 'john-snow/winter-is-coming')
+            ->with($project, 'root/project01')
             ->willReturn($integration);
 
         $gitlab_branch = new GitlabBranch(
@@ -753,7 +752,7 @@ final class GitlabCrossReferenceOrganizerTest extends \Tuleap\Test\PHPUnit\TestC
 
         $a_ref = CrossReferencePresenterBuilder::get(1)
             ->withType('plugin_gitlab_branch')
-            ->withValue('john-snow/winter-is-coming/dev')
+            ->withValue('root/project01/dev')
             ->withProjectId(1)
             ->build();
 
