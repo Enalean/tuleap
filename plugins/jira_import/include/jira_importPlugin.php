@@ -30,6 +30,7 @@ use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\Creation\JiraImporter\Configuration\PlatformConfigurationRetriever;
 use Tuleap\Tracker\Creation\JiraImporter\JiraProjectBuilder;
 use Tuleap\Tracker\Creation\JiraImporter\JiraTrackerBuilder;
+use Tuleap\Tracker\Creation\JiraImporter\UserRole\UserRolesChecker;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureCreator;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenterFactory;
@@ -103,6 +104,7 @@ final class jira_importPlugin extends Plugin
                             EventManager::instance()
                         ),
                         ProjectManager::instance(),
+                        new UserRolesChecker()
                     )
                 );
             }
