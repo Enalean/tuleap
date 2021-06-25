@@ -64,6 +64,7 @@ final class BackendCVSTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->initial_codendi_log = ForgeConfig::get('codendi_log');
         ForgeConfig::set('codendi_log', $this->getTmpDir());
         mkdir(ForgeConfig::get('cvs_prefix') . '/' . 'toto');
+        ForgeConfig::set('codendi_bin_prefix', '/usr/lib/tuleap/bin');
     }
 
 

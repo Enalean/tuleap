@@ -198,7 +198,7 @@ final class GitDriverTest extends \Tuleap\Test\PHPUnit\TestCase
         clearstatcache();
         $stat = stat($srcPath);
         //system('/bin/ls -ld '.$srcPath);
-        $this->assertEquals(base_convert($stat['mode'], 10, 8), 42775);
+        $this->assertEquals(base_convert((string) $stat['mode'], 10, 8), 42775);
     }
 
     public function testSetRepositoryAccessPrivate(): void
@@ -214,7 +214,7 @@ final class GitDriverTest extends \Tuleap\Test\PHPUnit\TestCase
         clearstatcache();
         $stat = stat($srcPath);
         //system('/bin/ls -ld '.$srcPath);
-        $this->assertEquals(base_convert($stat['mode'], 10, 8), 42770);
+        $this->assertEquals(base_convert((string) $stat['mode'], 10, 8), 42770);
     }
 
     public function testForkRepoUnixPermissions(): void
@@ -231,14 +231,14 @@ final class GitDriverTest extends \Tuleap\Test\PHPUnit\TestCase
         clearstatcache();
         $stat = stat($dstPath . '/HEAD');
         //system('/bin/ls -ld '.$dstPath.'/HEAD');
-        $this->assertEquals(base_convert($stat['mode'], 10, 8), 100664, '/HEAD must be writable by group');
+        $this->assertEquals(base_convert((string) $stat['mode'], 10, 8), 100664, '/HEAD must be writable by group');
 
         $stat = stat($dstPath . '/refs');
         //system('/bin/ls -ld '.$dstPath.'/refs');
-        $this->assertEquals(base_convert($stat['mode'], 10, 8), 42775, '/refs must have setgid bit');
+        $this->assertEquals(base_convert((string) $stat['mode'], 10, 8), 42775, '/refs must have setgid bit');
 
         $stat = stat($dstPath . '/refs/heads');
-        $this->assertEquals(base_convert($stat['mode'], 10, 8), 42775, '/refs/heads must have setgid bit');
+        $this->assertEquals(base_convert((string) $stat['mode'], 10, 8), 42775, '/refs/heads must have setgid bit');
     }
 
     public function testActivateHook(): void
