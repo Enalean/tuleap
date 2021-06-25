@@ -167,6 +167,10 @@ case "$PHP_FPM" in
     echo "Deploy PHP FPM 7.4"
     /usr/bin/tuleap-cfg site-deploy --php-version=php74
     ;;
+    '/opt/remi/php80/root/usr/sbin/php-fpm')
+    echo "Deploy PHP FPM 80"
+    /usr/bin/tuleap-cfg site-deploy --php-version=php80
+    ;;
 esac
 tuleap_db_config
 seed_data

@@ -37,6 +37,7 @@ final class SiteDeployFPMCommand extends Command
     public const NAME            = 'site-deploy:fpm';
     public const OPT_PHP_VERSION = 'php-version';
     public const PHP74           = 'php74';
+    private const PHP80          = 'php80';
     public const OPT_FORCE       = 'force';
 
     private const OPT_DEVELOPMENT = 'development';
@@ -68,6 +69,8 @@ final class SiteDeployFPMCommand extends Command
 
         if ($php_version === self::PHP74) {
             $deploy = SiteDeployFPM::buildForPHP74($console_logger, ForgeConfig::get('sys_http_user'), $development);
+        } elseif ($php_version === self::PHP80) {
+            $deploy = SiteDeployFPM::buildForPHP80($console_logger, ForgeConfig::get('sys_http_user'), $development);
         } else {
             $output->write(
                 sprintf(

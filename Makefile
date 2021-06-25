@@ -131,7 +131,7 @@ generate-po: ## Generate translatable strings
 generate-mo: ## Compile translated strings into binary format
 	@tools/utils/generate-mo.sh `pwd`
 
-tests-rest: ## Run all REST tests. SETUP_ONLY=1 to disable auto run. PHP_VERSION to select the version of PHP to use (74). DB to select the database to use (mysql57, mariadb103)
+tests-rest: ## Run all REST tests. SETUP_ONLY=1 to disable auto run. PHP_VERSION to select the version of PHP to use (74,80). DB to select the database to use (mysql57, mariadb103)
 	$(eval PHP_VERSION ?= 74)
 	$(eval DB ?= mysql57)
 	$(eval SETUP_ONLY ?= 0)
