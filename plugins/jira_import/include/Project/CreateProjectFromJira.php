@@ -28,9 +28,11 @@ use ProjectCreationData;
 use ProjectCreator;
 use ProjectXMLImporter;
 use Psr\Log\LoggerInterface;
+use SimpleXMLElement;
 use Tuleap\JiraImport\JiraAgile\Board\Backlog\JiraBoardBacklogRetrieverFromAPI;
 use Tuleap\JiraImport\JiraAgile\Board\JiraBoardConfigurationRetrieverFromAPI;
 use Tuleap\JiraImport\JiraAgile\IssuesLinkedToEpicsRetriever;
+use Tuleap\JiraImport\JiraAgile\JiraBoard;
 use Tuleap\JiraImport\JiraAgile\JiraBoardsRetrieverFromAPI;
 use Tuleap\JiraImport\JiraAgile\JiraAgileImporter;
 use Tuleap\JiraImport\JiraAgile\JiraEpicIssuesRetrieverFromAPI;
@@ -194,7 +196,7 @@ final class CreateProjectFromJira
         string $shortname,
         string $fullname,
         string $jira_epic_issue_type
-    ): \SimpleXMLElement {
+    ): SimpleXMLElement {
         $jira_issue_types = $this->jira_tracker_builder->buildFromProjectKey($jira_client, $jira_project);
         if (count($jira_issue_types) === 0) {
             throw new \RuntimeException("There are no Jira issue types to import");
@@ -324,20 +326,22 @@ final class CreateProjectFromJira
             );
         }
 
-        return $this->addWidgetOnDashboard($xml_element);
+        return $this->addWidgetOnDashboard($xml_element, $board);
     }
 
     /**
      * @param string[] $widget_names
      */
-    private function addWidgetOnDashboard(\SimpleXMLElement $xml_element): \SimpleXMLElement
+    private function addWidgetOnDashboard(SimpleXMLElement $xml_element, ?JiraBoard $board): SimpleXMLElement
     {
         $xml_dashboard = $xml_element->addChild('dashboards')->addChild("dashboard");
         $xml_dashboard->addAttribute('name', 'Dashboard');
 
         $xml_dashboard_line     = $xml_dashboard->addChild("line");
         $xml_dashboard_column01 = $xml_dashboard_line->addChild("column");
-        $xml_dashboard_column01->addChild("widget")->addAttribute("name", DashboardProjectMilestones::NAME);
+        if ($board !== null) {
+            $xml_dashboard_column01->addChild("widget")->addAttribute("name", DashboardProjectMilestones::NAME);
+        }
         $xml_dashboard_column01->addChild("widget")->addAttribute("name", ProjectMembers::NAME);
         $xml_dashboard_column02 = $xml_dashboard_line->addChild("column");
         $xml_dashboard_column02->addChild("widget")->addAttribute("name", ProjectHeartbeat::NAME);
@@ -349,7 +353,7 @@ final class CreateProjectFromJira
      * @throws \Tuleap\Project\Registration\Template\InvalidTemplateException
      * @throws \Tuleap\Project\XML\Import\ImportNotValidException
      */
-    private function createProject(LoggerInterface $logger, \SimpleXMLElement $xml_element, ArchiveInterface $archive): Project
+    private function createProject(LoggerInterface $logger, SimpleXMLElement $xml_element, ArchiveInterface $archive): Project
     {
         $data = ProjectCreationData::buildFromXML(
             $xml_element,
