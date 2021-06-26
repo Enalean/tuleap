@@ -24,6 +24,7 @@ use Tuleap\CLI\CLICommandsCollector;
 use Tuleap\JiraImport\Project\ArtifactLinkType\ArtifactLinkTypeImporter;
 use Tuleap\JiraImport\Project\CreateProjectFromJira;
 use Tuleap\JiraImport\Project\CreateProjectFromJiraCommand;
+use Tuleap\JiraImport\Project\Dashboard\RoadmapDashboardCreator;
 use Tuleap\Project\Registration\Template\TemplateFactory;
 use Tuleap\Project\XML\XMLFileContentRetriever;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
@@ -67,7 +68,7 @@ final class jira_importPlugin extends Plugin
 
     public function getDependencies(): array
     {
-        return ['tracker', 'agiledashboard', 'cardwall'];
+        return ['tracker', 'agiledashboard', 'cardwall', 'roadmap'];
     }
 
     public function collectCLICommands(CLICommandsCollector $commands_collector): void
@@ -104,7 +105,8 @@ final class jira_importPlugin extends Plugin
                             EventManager::instance()
                         ),
                         ProjectManager::instance(),
-                        new UserRolesChecker()
+                        new UserRolesChecker(),
+                        new RoadmapDashboardCreator()
                     )
                 );
             }

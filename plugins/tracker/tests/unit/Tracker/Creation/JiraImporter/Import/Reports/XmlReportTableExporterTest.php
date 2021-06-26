@@ -31,6 +31,7 @@ final class XmlReportTableExporterTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $summary_field_mapping = new ScalarFieldMapping(
             'summary',
+            'Summary',
             'Fsummary',
             'summary',
             Tracker_FormElementFactory::FIELD_STRING_TYPE,
@@ -38,6 +39,7 @@ final class XmlReportTableExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $description_field_mapping = new ScalarFieldMapping(
             'description',
+            'Description',
             'Fdescription',
             'description',
             Tracker_FormElementFactory::FIELD_TEXT_TYPE,

@@ -64,8 +64,9 @@ class ListFieldChangeInitialValueRetrieverTest extends \Tuleap\Test\PHPUnit\Test
             "10005",
             new ListFieldMapping(
                 'status',
-                'Fstatus',
                 'Status',
+                'Fstatus',
+                'status',
                 'sb',
                 \Tracker_FormElement_Field_List_Bind_Static::TYPE,
                 [],
@@ -87,8 +88,9 @@ class ListFieldChangeInitialValueRetrieverTest extends \Tuleap\Test\PHPUnit\Test
             'e8a6c4d54',
             new ListFieldMapping(
                 'assignee',
-                'Fassignee',
                 'Assignee',
+                'Fassignee',
+                'assignee',
                 'sb',
                 \Tracker_FormElement_Field_List_Bind_Users::TYPE,
                 [],
@@ -115,8 +117,9 @@ class ListFieldChangeInitialValueRetrieverTest extends \Tuleap\Test\PHPUnit\Test
             'e8a6c4d54, a7e9f1b2c',
             new ListFieldMapping(
                 'multiuserpicker',
-                'Fmultiuserpicker',
                 'Multi userpicker',
+                'Fmultiuserpicker',
+                'multiuserpicker',
                 'msb',
                 \Tracker_FormElement_Field_List_Bind_Users::TYPE,
                 [],

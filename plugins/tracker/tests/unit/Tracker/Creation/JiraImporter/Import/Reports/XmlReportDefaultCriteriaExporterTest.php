@@ -39,6 +39,7 @@ final class XmlReportDefaultCriteriaExporterTest extends \Tuleap\Test\PHPUnit\Te
         ');
         $status_field_mapping = new ListFieldMapping(
             'status',
+            'Status',
             'Fstatus',
             'status',
             Tracker_FormElementFactory::FIELD_SELECT_BOX_TYPE,
@@ -48,6 +49,7 @@ final class XmlReportDefaultCriteriaExporterTest extends \Tuleap\Test\PHPUnit\Te
 
         $priority_field_mapping = new ListFieldMapping(
             'priority',
+            'Priority',
             'Fpriority',
             'priority',
             Tracker_FormElementFactory::FIELD_SELECT_BOX_TYPE,

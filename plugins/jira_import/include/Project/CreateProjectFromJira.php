@@ -40,6 +40,7 @@ use Tuleap\JiraImport\JiraAgile\JiraEpicRetrieverFromAPI;
 use Tuleap\JiraImport\JiraAgile\JiraSprintIssuesRetrieverFromAPI;
 use Tuleap\JiraImport\JiraAgile\JiraSprintRetrieverFromAPI;
 use Tuleap\JiraImport\Project\ArtifactLinkType\ArtifactLinkTypeImporter;
+use Tuleap\JiraImport\Project\Dashboard\RoadmapDashboardCreator;
 use Tuleap\Project\Registration\Template\EmptyTemplate;
 use Tuleap\Project\Registration\Template\TemplateFactory;
 use Tuleap\Project\SystemEventRunnerForProjectCreationFromXMLTemplate;
@@ -54,6 +55,7 @@ use Tuleap\Tracker\Creation\JiraImporter\Import\JiraXmlExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldAndValueIDGenerator;
 use Tuleap\Tracker\Creation\JiraImporter\Import\User\JiraTuleapUsersMapping;
 use Tuleap\Tracker\Creation\JiraImporter\Import\User\JiraUserOnTuleapCache;
+use Tuleap\Tracker\Creation\JiraImporter\IssueType;
 use Tuleap\Tracker\Creation\JiraImporter\JiraCredentials;
 use Tuleap\Tracker\Creation\JiraImporter\JiraTrackerBuilder;
 use Tuleap\Tracker\Creation\JiraImporter\UserRole\UserRolesChecker;
@@ -102,6 +104,7 @@ final class CreateProjectFromJira
     private $project_manager;
 
     private UserRolesChecker $user_roles_checker;
+    private RoadmapDashboardCreator $roadmap_dashboard_creator;
 
     public function __construct(
         UserManager $user_manager,
@@ -112,7 +115,8 @@ final class CreateProjectFromJira
         ArtifactLinkTypeImporter $artifact_link_type_importer,
         PlatformConfigurationRetriever $platform_configuration_collection_builder,
         \ProjectManager $project_manager,
-        UserRolesChecker $user_roles_checker
+        UserRolesChecker $user_roles_checker,
+        RoadmapDashboardCreator $roadmap_dashboard_creator
     ) {
         $this->user_manager                              = $user_manager;
         $this->user_finder                               = $user_finder;
@@ -123,6 +127,7 @@ final class CreateProjectFromJira
         $this->platform_configuration_collection_builder = $platform_configuration_collection_builder;
         $this->project_manager                           = $project_manager;
         $this->user_roles_checker                        = $user_roles_checker;
+        $this->roadmap_dashboard_creator                 = $roadmap_dashboard_creator;
     }
 
     public function create(
@@ -337,15 +342,27 @@ final class CreateProjectFromJira
             );
         }
 
-        return $this->addWidgetOnDashboard($xml_element, $board);
+        return $this->addWidgetOnDashboard(
+            $xml_element,
+            $board,
+            $jira_issue_types,
+            $jira_epic_issue_type,
+            $logger
+        );
     }
 
     /**
-     * @param string[] $widget_names
+     * @param IssueType[] $jira_issue_types
      */
-    private function addWidgetOnDashboard(SimpleXMLElement $xml_element, ?JiraBoard $board): SimpleXMLElement
-    {
-        $xml_dashboard = $xml_element->addChild('dashboards')->addChild("dashboard");
+    private function addWidgetOnDashboard(
+        \SimpleXMLElement $xml_element,
+        ?JiraBoard $board,
+        array $jira_issue_types,
+        string $jira_epic_issue_type,
+        LoggerInterface $logger
+    ): \SimpleXMLElement {
+        $xml_dashboards = $xml_element->addChild('dashboards');
+        $xml_dashboard  = $xml_dashboards->addChild("dashboard");
         $xml_dashboard->addAttribute('name', 'Dashboard');
 
         $xml_dashboard_line     = $xml_dashboard->addChild("line");
@@ -356,6 +373,14 @@ final class CreateProjectFromJira
         $xml_dashboard_column01->addChild("widget")->addAttribute("name", ProjectMembers::NAME);
         $xml_dashboard_column02 = $xml_dashboard_line->addChild("column");
         $xml_dashboard_column02->addChild("widget")->addAttribute("name", ProjectHeartbeat::NAME);
+
+        $this->roadmap_dashboard_creator->createRoadmapDashboard(
+            $xml_element,
+            $xml_dashboards,
+            $jira_issue_types,
+            $jira_epic_issue_type,
+            $logger
+        );
 
         return $xml_element;
     }

@@ -206,6 +206,7 @@ class ArtifactsXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
         $mapping_collection->addMapping(
             new ScalarFieldMapping(
                 'summary',
+                'Summary',
                 'Fsummary',
                 'summary',
                 Tracker_FormElementFactory::FIELD_STRING_TYPE,
@@ -214,8 +215,9 @@ class ArtifactsXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
         $mapping_collection->addMapping(
             new ScalarFieldMapping(
                 "jira_issue_url",
+                'Link to original issue',
                 "Fjira_issue_url",
-                "Link to original issue",
+                "jira_issue_url",
                 "string",
             ),
         );
@@ -323,6 +325,7 @@ class ArtifactsXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
         $mapping_collection->addMapping(
             new ScalarFieldMapping(
                 'summary',
+                'Summary',
                 'Fsummary',
                 'summary',
                 Tracker_FormElementFactory::FIELD_STRING_TYPE,
@@ -331,8 +334,9 @@ class ArtifactsXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
         $mapping_collection->addMapping(
             new ScalarFieldMapping(
                 "jira_issue_url",
-                "Fjira_issue_url",
                 "Link to original issue",
+                "Fjira_issue_url",
+                "jira_issue_url",
                 "string",
             ),
         );

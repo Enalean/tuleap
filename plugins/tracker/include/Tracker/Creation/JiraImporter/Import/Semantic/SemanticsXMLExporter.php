@@ -34,6 +34,7 @@ use Tuleap\Tracker\Creation\JiraImporter\Import\Values\StatusValuesCollection;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\XML\XMLBindValueReferenceById;
 use Tuleap\Tracker\FormElement\XML\XMLFormElementFlattenedCollection;
 use Tuleap\Tracker\Semantic\Status\Done\XML\XMLDoneSemantic;
+use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframe;
 
 class SemanticsXMLExporter
 {
@@ -48,6 +49,7 @@ class SemanticsXMLExporter
         $this->exportStatusSemantic($semantics_node, $field_mapping_collection, $status_values_collection);
         $this->exportDoneSemantic($semantics_node, $field_mapping_collection, $status_values_collection);
         $this->exportContributorSemantic($semantics_node, $field_mapping_collection);
+        $this->exportTimeframeSemantic($semantics_node, $field_mapping_collection);
     }
 
     private function exportTitleSemantic(SimpleXMLElement $semantics_node, FieldMappingCollection $field_mapping_collection): void
@@ -64,7 +66,7 @@ class SemanticsXMLExporter
         $semantic_node->addChild("label", dgettext('tuleap-tracker', 'Title'));
         $semantic_node->addChild("description", dgettext('tuleap-tracker', 'Define the title of an artifact'));
         $field_node = $semantic_node->addChild("field");
-        $field_node->addAttribute("REF", (string) $summary_field->getXMLId());
+        $field_node->addAttribute("REF", $summary_field->getXMLId());
     }
 
     private function exportDescriptionSemantic(SimpleXMLElement $semantics_node, FieldMappingCollection $field_mapping_collection): void
@@ -81,7 +83,7 @@ class SemanticsXMLExporter
         $semantic_node->addChild("label", dgettext('tuleap-tracker', 'Description'));
         $semantic_node->addChild("description", dgettext('tuleap-tracker', 'Define the description of an artifact'));
         $field_node = $semantic_node->addChild("field");
-        $field_node->addAttribute("REF", (string) $description_field->getXMLId());
+        $field_node->addAttribute("REF", $description_field->getXMLId());
     }
 
     private function exportStatusSemantic(
@@ -143,6 +145,32 @@ class SemanticsXMLExporter
         $semantic_node->addChild("label", dgettext('tuleap-tracker', 'Contributor/assignee'));
         $semantic_node->addChild("description", dgettext('tuleap-tracker', 'Define the contributor/assignee of an artifact'));
         $field_node = $semantic_node->addChild("field");
-        $field_node->addAttribute("REF", (string) $assignee_field->getXMLId());
+        $field_node->addAttribute("REF", $assignee_field->getXMLId());
+    }
+
+    private function exportTimeframeSemantic(SimpleXMLElement $semantics_node, FieldMappingCollection $field_mapping_collection): void
+    {
+        $start_date_field = null;
+        foreach ($field_mapping_collection->getAllMappings() as $mapping) {
+            if ($mapping->getJiraFieldLabel() === "Start date" && $mapping->getType() === "date") {
+                $start_date_field = $mapping;
+                break;
+            }
+        }
+
+        if ($start_date_field === null) {
+            return;
+        }
+
+        $due_date_field = $field_mapping_collection->getMappingFromJiraField("duedate");
+        if ($due_date_field === null) {
+            return;
+        }
+
+        $semantic_node = $semantics_node->addChild("semantic");
+        $semantic_node->addAttribute("type", SemanticTimeframe::NAME);
+
+        $semantic_node->addChild("start_date_field")->addAttribute("REF", $start_date_field->getXMLId());
+        $semantic_node->addChild("end_date_field")->addAttribute("REF", $due_date_field->getXMLId());
     }
 }

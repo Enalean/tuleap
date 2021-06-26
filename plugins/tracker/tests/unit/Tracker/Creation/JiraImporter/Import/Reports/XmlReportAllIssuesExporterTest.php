@@ -75,6 +75,7 @@ final class XmlReportAllIssuesExporterTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->summary_field_mapping = new ScalarFieldMapping(
             'summary',
+            'Summary',
             'Fsummary',
             'summary',
             Tracker_FormElementFactory::FIELD_STRING_TYPE,
@@ -82,6 +83,7 @@ final class XmlReportAllIssuesExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->description_field_mapping = new ScalarFieldMapping(
             'description',
+            'Description',
             'Fdescription',
             'description',
             Tracker_FormElementFactory::FIELD_TEXT_TYPE,
@@ -89,6 +91,7 @@ final class XmlReportAllIssuesExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->status_field_mapping = new ListFieldMapping(
             'status',
+            'Status',
             'Fstatus',
             'status',
             Tracker_FormElementFactory::FIELD_SELECT_BOX_TYPE,
@@ -98,6 +101,7 @@ final class XmlReportAllIssuesExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->priority_field_mapping = new ListFieldMapping(
             'priority',
+            'Priority',
             'Fpriority',
             'priority',
             Tracker_FormElementFactory::FIELD_SELECT_BOX_TYPE,
@@ -107,6 +111,7 @@ final class XmlReportAllIssuesExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->jira_issue_url_field_mapping = new ScalarFieldMapping(
             'jira_issue_url',
+            'Link to original issue',
             'Fjira_issue_url',
             'jira_issue_url',
             Tracker_FormElementFactory::FIELD_STRING_TYPE,
@@ -115,7 +120,6 @@ final class XmlReportAllIssuesExporterTest extends \Tuleap\Test\PHPUnit\TestCase
         $tracker_node       = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><trackers />');
         $this->reports_node = $tracker_node->addChild('reports');
 
-        $cdata_factory       = new \XML_SimpleXMLCDATAFactory();
         $this->report_export = new XmlReportAllIssuesExporter(
             new XmlReportDefaultCriteriaExporter(),
             new XmlReportTableExporter()
