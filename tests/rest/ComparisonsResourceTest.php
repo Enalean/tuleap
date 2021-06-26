@@ -25,7 +25,6 @@ namespace Tuleap\Baseline\Tests\REST;
 
 require_once __DIR__ . '/BaselineFixtureData.php';
 
-use Guzzle\Http\Message\Response;
 use RestBase;
 
 class ComparisonsResourceTest extends RestBase
@@ -51,21 +50,17 @@ class ComparisonsResourceTest extends RestBase
 
         $response = $this->getResponseByName(
             BaselineFixtureData::TEST_USER_NAME,
-            $this->client->post(
-                'baselines_comparisons',
-                null,
-                json_encode(
-                    [
-                        'name'                    => 'new comparison',
-                        'comment'                 => 'used fo tests',
-                        'base_baseline_id'        => $base_baseline['id'],
-                        'compared_to_baseline_id' => $compared_to_baseline['id']
-                    ]
-                )
-            )
+            $this->request_factory->createRequest('POST', 'baselines_comparisons')->withBody($this->stream_factory->createStream(json_encode(
+                [
+                    'name'                    => 'new comparison',
+                    'comment'                 => 'used fo tests',
+                    'base_baseline_id'        => $base_baseline['id'],
+                    'compared_to_baseline_id' => $compared_to_baseline['id']
+                ]
+            )))
         );
         $this->assertEquals(201, $response->getStatusCode());
-        $json_response = $response->json();
+        $json_response = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertNotNull($json_response['id']);
         $this->assertEquals('new comparison', $json_response['name']);
@@ -82,18 +77,14 @@ class ComparisonsResourceTest extends RestBase
         $compared_to_baseline = $this->createABaseline($this->an_artifact_id);
 
         $response = $this->getResponseForReadOnlyUserAdmin(
-            $this->client->post(
-                'baselines_comparisons',
-                null,
-                json_encode(
-                    [
-                        'name'                    => 'new comparison',
-                        'comment'                 => 'used fo tests',
-                        'base_baseline_id'        => $base_baseline['id'],
-                        'compared_to_baseline_id' => $compared_to_baseline['id']
-                    ]
-                )
-            )
+            $this->request_factory->createRequest('POST', 'baselines_comparisons')->withBody($this->stream_factory->createStream(json_encode(
+                [
+                    'name'                    => 'new comparison',
+                    'comment'                 => 'used fo tests',
+                    'base_baseline_id'        => $base_baseline['id'],
+                    'compared_to_baseline_id' => $compared_to_baseline['id']
+                ]
+            )))
         );
         $this->assertEquals(404, $response->getStatusCode());
     }
@@ -104,7 +95,7 @@ class ComparisonsResourceTest extends RestBase
 
         $response = $this->getResponseByName(
             BaselineFixtureData::TEST_USER_NAME,
-            $this->client->get('baselines_comparisons/' . $comparison['id'])
+            $this->request_factory->createRequest('GET', 'baselines_comparisons/' . $comparison['id'])
         );
 
         $this->assertGETBaselineComparison($comparison, $response);
@@ -115,17 +106,17 @@ class ComparisonsResourceTest extends RestBase
         $comparison = $this->createAComparison($this->an_artifact_id);
 
         $response = $this->getResponseForReadOnlyUserAdmin(
-            $this->client->get('baselines_comparisons/' . $comparison['id'])
+            $this->request_factory->createRequest('GET', 'baselines_comparisons/' . $comparison['id'])
         );
 
         $this->assertGETBaselineComparison($comparison, $response);
     }
 
-    private function assertGETBaselineComparison(array $comparison, Response $response): void
+    private function assertGETBaselineComparison(array $comparison, \Psr\Http\Message\ResponseInterface $response): void
     {
         $this->assertEquals(200, $response->getStatusCode());
 
-        $json_response = $response->json();
+        $json_response = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertEquals($comparison['id'], $json_response['id']);
         $this->assertEquals($comparison['name'], $json_response['name']);
@@ -142,14 +133,14 @@ class ComparisonsResourceTest extends RestBase
 
         $delete_response = $this->getResponseByName(
             BaselineFixtureData::TEST_USER_NAME,
-            $this->client->delete('baselines_comparisons/' . $comparison['id'])
+            $this->request_factory->createRequest('DELETE', 'baselines_comparisons/' . $comparison['id'])
         );
 
         $this->assertEquals(200, $delete_response->getStatusCode());
 
         $get_response = $this->getResponseByName(
             BaselineFixtureData::TEST_USER_NAME,
-            $this->client->get('baselines_comparisons/' . $comparison['id'])
+            $this->request_factory->createRequest('GET', 'baselines_comparisons/' . $comparison['id'])
         );
         $this->assertEquals(404, $get_response->getStatusCode());
     }
@@ -159,7 +150,7 @@ class ComparisonsResourceTest extends RestBase
         $comparison = $this->createAComparison($this->an_artifact_id);
 
         $delete_response = $this->getResponseForReadOnlyUserAdmin(
-            $this->client->delete('baselines_comparisons/' . $comparison['id'])
+            $this->request_factory->createRequest('DELETE', 'baselines_comparisons/' . $comparison['id'])
         );
 
         $this->assertEquals(404, $delete_response->getStatusCode());
@@ -174,7 +165,7 @@ class ComparisonsResourceTest extends RestBase
         $url        = 'projects/' . $project_id . '/baselines_comparisons?limit=2';
         $response   = $this->getResponseByName(
             BaselineFixtureData::TEST_USER_NAME,
-            $this->client->get($url)
+            $this->request_factory->createRequest('GET', $url)
         );
 
         $this->assertGETByProject($response);
@@ -188,17 +179,17 @@ class ComparisonsResourceTest extends RestBase
         $project_id = $this->project_ids[BaselineFixtureData::PROJECT_NAME];
         $url        = 'projects/' . $project_id . '/baselines_comparisons?limit=2';
         $response   = $this->getResponseForReadOnlyUserAdmin(
-            $this->client->get($url)
+            $this->request_factory->createRequest('GET', $url)
         );
 
         $this->assertGETByProject($response);
     }
 
-    private function assertGETByProject(Response $response): void
+    private function assertGETByProject(\Psr\Http\Message\ResponseInterface $response): void
     {
         $this->assertEquals(200, $response->getStatusCode());
 
-        $json_response = $response->json();
+        $json_response = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         $this->assertGreaterThanOrEqual(1, $json_response['total_count']);
 
         $comparisons_response = $json_response['comparisons'];
@@ -218,18 +209,14 @@ class ComparisonsResourceTest extends RestBase
     {
         $response = $this->getResponseByName(
             BaselineFixtureData::TEST_USER_NAME,
-            $this->client->post(
-                'baselines',
-                null,
-                json_encode(
-                    [
-                        'name'        => 'created baseline',
-                        'artifact_id' => $artifact_id
-                    ]
-                )
-            )
+            $this->request_factory->createRequest('POST', 'baselines')->withBody($this->stream_factory->createStream(json_encode(
+                [
+                    'name'        => 'created baseline',
+                    'artifact_id' => $artifact_id
+                ]
+            )))
         );
-        return $response->json();
+        return json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
     }
 
     private function createAComparison(int $artifact_id): array
@@ -239,18 +226,14 @@ class ComparisonsResourceTest extends RestBase
 
         $response = $this->getResponseByName(
             BaselineFixtureData::TEST_USER_NAME,
-            $this->client->post(
-                'baselines_comparisons',
-                null,
-                json_encode(
-                    [
-                        'name'                    => 'created comparison',
-                        'base_baseline_id'        => $base_baseline['id'],
-                        'compared_to_baseline_id' => $compared_to_baseline['id']
-                    ]
-                )
-            )
+            $this->request_factory->createRequest('POST', 'baselines_comparisons')->withBody($this->stream_factory->createStream(json_encode(
+                [
+                    'name'                    => 'created comparison',
+                    'base_baseline_id'        => $base_baseline['id'],
+                    'compared_to_baseline_id' => $compared_to_baseline['id']
+                ]
+            )))
         );
-        return $response->json();
+        return json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
     }
 }
