@@ -18,24 +18,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Guzzle\Http\Client;
+use Psr\Http\Client\ClientExceptionInterface;
+use Psr\Http\Message\RequestFactoryInterface;
+use Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 use Test\Rest\Cache;
 use Test\Rest\RequestWrapper;
 
 class RestBase extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
-    protected $base_url = 'https://localhost/api/v1';
-    private $setup_url  = 'https://localhost/api/v1';
-
-    /**
-     * @var Client
-     */
-    protected $client;
-
-    /**
-     * @var Client
-     */
-    protected $setup_client;
+    protected RequestFactoryInterface $request_factory;
+    protected StreamFactoryInterface $stream_factory;
 
     /**
      * @var RequestWrapper
@@ -85,33 +78,18 @@ class RestBase extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore PSR1.Classe
             return;
         }
 
+        $base_url = 'https://localhost/api/';
         if (isset($_ENV['TULEAP_HOST'])) {
-            $this->base_url  = $_ENV['TULEAP_HOST'] . '/api/v1';
-            $this->setup_url = $_ENV['TULEAP_HOST'] . '/api/v1';
+            $base_url = $_ENV['TULEAP_HOST'] . '/api/';
         }
 
         $this->cache = Cache::instance();
 
-        $this->client = new Client(
-            $this->base_url,
-            [
-                'request.options' => [
-                    'exceptions' => false,
-                ]
-            ]
-        );
-        $this->client->setSslVerification(false, false, false);
-        $this->setup_client = new Client($this->setup_url);
-        $this->setup_client->setCurlMulti($this->client->getCurlMulti());
-        $this->setup_client->setSslVerification(false, false, false);
+        $client                = new \GuzzleHttp\Client(['base_uri' => $base_url, 'verify' => false]);
+        $this->request_factory = new \Http\Factory\Guzzle\RequestFactory();
+        $this->stream_factory  = new \Http\Factory\Guzzle\StreamFactory();
 
-        $this->client->setDefaultOption('headers/Accept', 'application/json');
-        $this->client->setDefaultOption('headers/Content-Type', 'application/json');
-
-        $this->setup_client->setDefaultOption('headers/Accept', 'application/json');
-        $this->setup_client->setDefaultOption('headers/Content-Type', 'application/json');
-
-        $this->rest_request = new RequestWrapper($this->client, $this->cache);
+        $this->rest_request = new RequestWrapper($client, $this->cache);
 
         $this->initialized = true;
     }
@@ -165,7 +143,7 @@ class RestBase extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore PSR1.Classe
         );
     }
 
-    protected function getResponseForReadOnlyUserAdmin($request)
+    protected function getResponseForReadOnlyUserAdmin(RequestInterface $request)
     {
         return $this->getResponseByName(
             REST_TestDataBuilder::TEST_BOT_USER_NAME,
@@ -173,17 +151,17 @@ class RestBase extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore PSR1.Classe
         );
     }
 
-    protected function getResponseWithoutAuth($request)
+    protected function getResponseWithoutAuth(RequestInterface $request)
     {
         return $this->rest_request->getResponseWithoutAuth($request);
     }
 
-    protected function getResponseByName($name, $request)
+    protected function getResponseByName($name, RequestInterface $request)
     {
         return $this->rest_request->getResponseByName($name, $request);
     }
 
-    protected function getResponseByBasicAuth($username, $password, $request)
+    protected function getResponseByBasicAuth($username, $password, RequestInterface $request)
     {
         return $this->rest_request->getResponseByBasicAuth($username, $password, $request);
     }
@@ -254,11 +232,12 @@ class RestBase extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore PSR1.Classe
         do {
             $response = $this->getResponseByName(
                 REST_TestDataBuilder::ADMIN_USER_NAME,
-                $this->setup_client->get("projects/$project_id/trackers?$query")
+                $this->request_factory->createRequest('GET', "projects/$project_id/trackers?$query")
             );
 
-            $trackers          = $response->json();
-            $number_of_tracker = (int) (string) $response->getHeader('X-Pagination-Size');
+            $trackers = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
+
+            $number_of_tracker = (int) $response->getHeaderLine('X-Pagination-Size');
 
             $this->addTrackerIdFromRequestData($trackers, $tracker_ids);
             $this->addTrackerRepresentationFromRequestData($trackers, $tracker_representation);
@@ -361,10 +340,15 @@ class RestBase extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore PSR1.Classe
                 ['order' => 'asc']
             );
 
-            $artifacts = $this->getResponseByName(
-                REST_TestDataBuilder::ADMIN_USER_NAME,
-                $this->setup_client->get("trackers/$tracker_id/artifacts?$query")
-            )->json();
+            $artifacts = json_decode(
+                $this->getResponseByName(
+                    REST_TestDataBuilder::ADMIN_USER_NAME,
+                    $this->request_factory->createRequest('GET', "trackers/$tracker_id/artifacts?$query")
+                )->getBody()->getContents(),
+                true,
+                512,
+                JSON_THROW_ON_ERROR
+            );
 
             $this->cache->setArtifacts($tracker_id, $artifacts);
         }
@@ -392,15 +376,15 @@ class RestBase extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore PSR1.Classe
         try {
             $response = $this->getResponseByName(
                 REST_TestDataBuilder::ADMIN_USER_NAME,
-                $this->setup_client->get("projects/$project_id/user_groups")
+                $this->request_factory->createRequest('GET', "projects/$project_id/user_groups")
             );
 
-            $ugroups = $response->json();
+            $ugroups = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
             foreach ($ugroups as $ugroup) {
                 $this->user_groups_ids[$project_id][$ugroup['short_name']] = $ugroup['id'];
             }
             $this->cache->setUserGroupIds($this->user_groups_ids);
-        } catch (Guzzle\Http\Exception\ClientErrorResponseException $e) {
+        } catch (ClientExceptionInterface $e) {
         }
     }
 
@@ -422,12 +406,12 @@ class RestBase extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore PSR1.Classe
         do {
             $response = $this->getResponseByName(
                 REST_TestDataBuilder::ADMIN_USER_NAME,
-                $this->setup_client->get("projects/?$query")
+                $this->request_factory->createRequest('GET', "projects/?$query")
             );
 
-            $projects = $response->json();
+            $projects = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
-            $number_of_project = (int) (string) $response->getHeader('X-Pagination-Size');
+            $number_of_project = (int) $response->getHeaderLine('X-Pagination-Size');
 
             $this->addProjectIdFromRequestData($projects);
 
@@ -445,9 +429,9 @@ class RestBase extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore PSR1.Classe
 
         $response = $this->getResponseByName(
             TestDataBuilder::ADMIN_USER_NAME,
-            $this->setup_client->get("users/?query=$query")
+            $this->request_factory->createRequest('GET', "users/?query=$query")
         );
-        $user     = $response->json();
+        $user     = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->addUserIdFromRequestData($user[0]);
     }

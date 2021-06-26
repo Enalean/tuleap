@@ -40,10 +40,10 @@ final class UsersTest extends RestBase // phpcs:ignore
 
     public function testGetIdAsAnonymousHasMinimalInformation()
     {
-        $response = $this->client->get('users/' . $this->user_ids[REST_TestDataBuilder::TEST_USER_1_NAME])->send();
+        $response = $this->getResponseWithoutAuth($this->request_factory->createRequest('GET', 'users/' . $this->user_ids[REST_TestDataBuilder::TEST_USER_1_NAME]));
         $this->assertEquals($response->getStatusCode(), 200);
 
-        $json = $response->json();
+        $json = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         $this->assertEquals($this->user_ids[REST_TestDataBuilder::TEST_USER_1_NAME], $json['id']);
         $this->assertEquals('users/' . $this->user_ids[REST_TestDataBuilder::TEST_USER_1_NAME], $json['uri']);
         $this->assertEquals(REST_TestDataBuilder::TEST_USER_1_REALNAME, $json['real_name']);
@@ -56,7 +56,7 @@ final class UsersTest extends RestBase // phpcs:ignore
 
     public function testGETIdAsRegularUser(): void
     {
-        $response = $this->getResponseByName(REST_TestDataBuilder::TEST_USER_1_NAME, $this->client->get('users/' . $this->user_ids[REST_TestDataBuilder::TEST_USER_1_NAME]));
+        $response = $this->getResponseByName(REST_TestDataBuilder::TEST_USER_1_NAME, $this->request_factory->createRequest('GET', 'users/' . $this->user_ids[REST_TestDataBuilder::TEST_USER_1_NAME]));
 
         $this->assertGETId($response);
     }
@@ -64,7 +64,7 @@ final class UsersTest extends RestBase // phpcs:ignore
     public function testGETIdWithReadOnlyAdmin()
     {
         $response = $this->getResponse(
-            $this->client->get('users/' . $this->user_ids[REST_TestDataBuilder::TEST_USER_1_NAME]),
+            $this->request_factory->createRequest('GET', 'users/' . $this->user_ids[REST_TestDataBuilder::TEST_USER_1_NAME]),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
 
@@ -74,18 +74,18 @@ final class UsersTest extends RestBase // phpcs:ignore
     public function testGETIdWithSelfKeyword()
     {
         $response = $this->getResponse(
-            $this->client->get('users/self'),
+            $this->request_factory->createRequest('GET', 'users/self'),
             REST_TestDataBuilder::TEST_USER_1_NAME
         );
 
         $this->assertGETId($response);
     }
 
-    private function assertGETId(\Guzzle\Http\Message\Response $response): void
+    private function assertGETId(\Psr\Http\Message\ResponseInterface $response): void
     {
         $this->assertEquals(200, $response->getStatusCode());
 
-        $json = $response->json();
+        $json = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertEquals($this->user_ids[REST_TestDataBuilder::TEST_USER_1_NAME], $json['id']);
         $this->assertEquals('users/' . $this->user_ids[REST_TestDataBuilder::TEST_USER_1_NAME], $json['uri']);
@@ -98,7 +98,7 @@ final class UsersTest extends RestBase // phpcs:ignore
 
     public function testGETIdDoesNotWorkIfUserDoesNotExist()
     {
-        $response = $this->getResponseByName(REST_TestDataBuilder::TEST_USER_1_NAME, $this->client->get('users/1'));
+        $response = $this->getResponseByName(REST_TestDataBuilder::TEST_USER_1_NAME, $this->request_factory->createRequest('GET', 'users/1'));
         $this->assertEquals(404, $response->getStatusCode());
     }
 
@@ -114,10 +114,10 @@ final class UsersTest extends RestBase // phpcs:ignore
 
     private function assertGETMembershipBySelfReturnsUserGroupsForAnID(string $id): void
     {
-        $response = $this->getResponseByName(REST_TestDataBuilder::TEST_USER_2_NAME, $this->client->get('users/' . urlencode($id) . '/membership'));
+        $response = $this->getResponseByName(REST_TestDataBuilder::TEST_USER_2_NAME, $this->request_factory->createRequest('GET', 'users/' . urlencode($id) . '/membership'));
         $this->assertEquals(200, $response->getStatusCode());
 
-        $json = $response->json();
+        $json = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         $this->assertCount(3, $json);
         $this->assertContains('site_active', $json);
         $this->assertContains('private-member_project_members', $json);
@@ -126,10 +126,10 @@ final class UsersTest extends RestBase // phpcs:ignore
 
     public function testGETMembershipWithProjectScopeDoesNotReturnSiteActive(): void
     {
-        $response = $this->getResponseByName(REST_TestDataBuilder::TEST_USER_2_NAME, $this->client->get('users/self/membership?scope=project'));
+        $response = $this->getResponseByName(REST_TestDataBuilder::TEST_USER_2_NAME, $this->request_factory->createRequest('GET', 'users/self/membership?scope=project'));
         $this->assertEquals(200, $response->getStatusCode());
 
-        $json = $response->json();
+        $json = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         $this->assertCount(2, $json);
         $this->assertNotContains('site_active', $json);
         $this->assertContains('private-member_project_members', $json);
@@ -138,10 +138,10 @@ final class UsersTest extends RestBase // phpcs:ignore
 
     public function testGETMembershipWithProjectScopeAndIdFormatReturnsGroupsWithId(): void
     {
-        $response = $this->getResponseByName(REST_TestDataBuilder::TEST_USER_2_NAME, $this->client->get('users/self/membership?scope=project&format=id'));
+        $response = $this->getResponseByName(REST_TestDataBuilder::TEST_USER_2_NAME, $this->request_factory->createRequest('GET', 'users/self/membership?scope=project&format=id'));
         $this->assertEquals(200, $response->getStatusCode());
 
-        $json = $response->json();
+        $json = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         $this->assertCount(2, $json);
         $this->assertContains($this->project_private_member_id . "_3", $json);
         $this->assertContains('102', $json);
@@ -151,9 +151,9 @@ final class UsersTest extends RestBase // phpcs:ignore
     {
         $response = $this->getResponseByName(
             REST_TestDataBuilder::TEST_USER_2_NAME,
-            $this->client->get('users/self/membership?scope=project&format=full')
+            $this->request_factory->createRequest('GET', 'users/self/membership?scope=project&format=full')
         );
-        $json     = $response->json();
+        $json     = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         $expected_ugroup_id = $this->project_private_member_id . "_3";
         $this->assertEquals($expected_ugroup_id, $json[0]['id']);
@@ -186,7 +186,7 @@ final class UsersTest extends RestBase // phpcs:ignore
 
     public function testGETMembershipWithIdFormatWithoutProjectScopeShouldReturn400(): void
     {
-        $response = $this->getResponseByName(REST_TestDataBuilder::TEST_USER_2_NAME, $this->client->get('users/self/membership?format=id'));
+        $response = $this->getResponseByName(REST_TestDataBuilder::TEST_USER_2_NAME, $this->request_factory->createRequest('GET', 'users/self/membership?format=id'));
         $this->assertEquals(400, $response->getStatusCode());
     }
 
@@ -194,17 +194,17 @@ final class UsersTest extends RestBase // phpcs:ignore
     {
         $response = $this->getResponseByName(
             REST_TestDataBuilder::TEST_USER_1_NAME,
-            $this->client->get('users/' . $this->user_ids[REST_TestDataBuilder::TEST_USER_2_NAME] . '/membership')
+            $this->request_factory->createRequest('GET', 'users/' . $this->user_ids[REST_TestDataBuilder::TEST_USER_2_NAME] . '/membership')
         );
         $this->assertEquals(403, $response->getStatusCode());
     }
 
     public function testUserCanSeeGroupOfAnotherUserIfSheHasDelegatedPermissions()
     {
-        $response = $this->getResponseByName(REST_TestDataBuilder::TEST_USER_3_NAME, $this->client->get('users/' . $this->user_ids[REST_TestDataBuilder::TEST_USER_2_NAME] . '/membership'));
+        $response = $this->getResponseByName(REST_TestDataBuilder::TEST_USER_3_NAME, $this->request_factory->createRequest('GET', 'users/' . $this->user_ids[REST_TestDataBuilder::TEST_USER_2_NAME] . '/membership'));
         $this->assertEquals($response->getStatusCode(), 200);
 
-        $json = $response->json();
+        $json = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         $this->assertCount(3, $json);
         $this->assertContains('site_active', $json);
         $this->assertContains('private-member_project_members', $json);
@@ -223,12 +223,18 @@ final class UsersTest extends RestBase // phpcs:ignore
 
         $this->tuleap_config->setForgeToRestricted();
 
-        $response = $this->getResponseByName(REST_TestDataBuilder::ADMIN_USER_NAME, $this->client->patch('users/' . $this->user_ids[REST_TestDataBuilder::TEST_USER_2_NAME], null, $value));
+        $response = $this->getResponseByName(
+            REST_TestDataBuilder::ADMIN_USER_NAME,
+            $this->request_factory->createRequest(
+                'PATCH',
+                'users/' . $this->user_ids[REST_TestDataBuilder::TEST_USER_2_NAME]
+            )->withBody($this->stream_factory->createStream($value))
+        );
         $this->assertEquals($response->getStatusCode(), 200);
 
-        $response = $this->getResponseByName(REST_TestDataBuilder::ADMIN_USER_NAME, $this->client->get('users/' . $this->user_ids[REST_TestDataBuilder::TEST_USER_2_NAME]));
+        $response = $this->getResponseByName(REST_TestDataBuilder::ADMIN_USER_NAME, $this->request_factory->createRequest('GET', 'users/' . $this->user_ids[REST_TestDataBuilder::TEST_USER_2_NAME]));
         $this->assertEquals($response->getStatusCode(), 200);
-        $json = $response->json();
+        $json = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         $this->assertEquals($this->user_ids[REST_TestDataBuilder::TEST_USER_2_NAME], $json['id']);
         $this->assertEquals('users/' . $this->user_ids[REST_TestDataBuilder::TEST_USER_2_NAME], $json['uri']);
         $this->assertEquals("R", $json['status']);
@@ -240,7 +246,13 @@ final class UsersTest extends RestBase // phpcs:ignore
             ]
             ]
         );
-        $response = $this->getResponseByName(REST_TestDataBuilder::ADMIN_USER_NAME, $this->client->patch('users/' . $this->user_ids[REST_TestDataBuilder::TEST_USER_2_NAME], null, $value));
+        $response = $this->getResponseByName(
+            REST_TestDataBuilder::ADMIN_USER_NAME,
+            $this->request_factory->createRequest(
+                'PATCH',
+                'users/' . $this->user_ids[REST_TestDataBuilder::TEST_USER_2_NAME]
+            )->withBody($this->stream_factory->createStream($value))
+        );
         $this->assertEquals($response->getStatusCode(), 200);
     }
 
@@ -257,10 +269,13 @@ final class UsersTest extends RestBase // phpcs:ignore
 
         $response = $this->getResponseByName(
             REST_TestDataBuilder::ADMIN_USER_NAME,
-            $this->client->patch(
-                'users/' . $this->user_ids[REST_TestDataBuilder::TEST_USER_2_NAME],
-                null,
-                $value
+            $this->request_factory->createRequest(
+                'PATCH',
+                'users/' . $this->user_ids[REST_TestDataBuilder::TEST_USER_2_NAME]
+            )->withBody(
+                $this->stream_factory->createStream(
+                    $value
+                )
             )
         );
         $this->assertEquals($response->getStatusCode(), 400);
@@ -280,10 +295,13 @@ final class UsersTest extends RestBase // phpcs:ignore
 
         $response = $this->getResponseByName(
             REST_TestDataBuilder::ADMIN_USER_NAME,
-            $this->client->patch(
-                'users/' . $this->user_ids[REST_TestDataBuilder::ADMIN_USER_NAME],
-                null,
-                $value
+            $this->request_factory->createRequest(
+                'PATCH',
+                'users/' . $this->user_ids[REST_TestDataBuilder::ADMIN_USER_NAME]
+            )->withBody(
+                $this->stream_factory->createStream(
+                    $value
+                )
             )
         );
         $this->assertEquals($response->getStatusCode(), 400);
@@ -299,7 +317,10 @@ final class UsersTest extends RestBase // phpcs:ignore
             ]
         );
         $response = $this->getResponse(
-            $this->client->patch('users/' . $this->user_ids[REST_TestDataBuilder::TEST_USER_2_NAME], null, $value),
+            $this->request_factory->createRequest(
+                'PATCH',
+                'users/' . $this->user_ids[REST_TestDataBuilder::TEST_USER_2_NAME]
+            )->withBody($this->stream_factory->createStream($value)),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
 
@@ -308,22 +329,28 @@ final class UsersTest extends RestBase // phpcs:ignore
 
     public function testSiteAdminCanSeeGroupOfAnyUser(): void
     {
-        $response = $this->getResponseByName(REST_TestDataBuilder::ADMIN_USER_NAME, $this->client->get('users/' . $this->user_ids[REST_TestDataBuilder::TEST_USER_2_NAME] . '/membership'));
+        $response = $this->getResponseByName(
+            REST_TestDataBuilder::ADMIN_USER_NAME,
+            $this->request_factory->createRequest(
+                'GET',
+                'users/' . $this->user_ids[REST_TestDataBuilder::TEST_USER_2_NAME] . '/membership'
+            )
+        );
         $this->assertEquals($response->getStatusCode(), 200);
 
         $this->assertGETMembershipAsAdmin($response);
     }
 
-    private function assertGETMembershipAsAdmin(\Guzzle\Http\Message\Response $response): void
+    private function assertGETMembershipAsAdmin(\Psr\Http\Message\ResponseInterface $response): void
     {
-        $json = $response->json();
+        $json = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         $this->assertCount(3, $json);
     }
 
     public function testReadOnlySiteAdminCanSeeGroupOfAnyUser(): void
     {
         $response = $this->getResponse(
-            $this->client->get('users/' . $this->user_ids[REST_TestDataBuilder::TEST_USER_2_NAME] . '/membership'),
+            $this->request_factory->createRequest('GET', 'users/' . $this->user_ids[REST_TestDataBuilder::TEST_USER_2_NAME] . '/membership'),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
         $this->assertEquals(200, $response->getStatusCode());
@@ -337,10 +364,10 @@ final class UsersTest extends RestBase // phpcs:ignore
 
         $response = $this->getResponseByName(
             REST_TestDataBuilder::ADMIN_USER_NAME,
-            $this->client->get('users/' . $this->user_ids[REST_TestDataBuilder::TEST_USER_1_NAME] . '/membership')
+            $this->request_factory->createRequest('GET', 'users/' . $this->user_ids[REST_TestDataBuilder::TEST_USER_1_NAME] . '/membership')
         );
 
-        $ugroups = $response->json();
+        $ugroups = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         $this->assertContains('ug_' . REST_TestDataBuilder::STATIC_PRIVATE_MEMBER_UGROUP_DEVS_ID, $ugroups);
         $this->assertContains('ug_' . REST_TestDataBuilder::STATIC_PUBLIC_MEMBER_UGROUP_DEVS_ID, $ugroups);
         $this->assertContains('ug_' . REST_TestDataBuilder::STATIC_PUBLIC_INCL_RESTRICTED_UGROUP_DEVS_ID, $ugroups);
@@ -354,10 +381,10 @@ final class UsersTest extends RestBase // phpcs:ignore
 
         $response = $this->getResponseByName(
             REST_TestDataBuilder::ADMIN_USER_NAME,
-            $this->client->get('users/' . $this->user_ids[REST_TestDataBuilder::TEST_USER_RESTRICTED_1_NAME] . '/membership')
+            $this->request_factory->createRequest('GET', 'users/' . $this->user_ids[REST_TestDataBuilder::TEST_USER_RESTRICTED_1_NAME] . '/membership')
         );
 
-        $ugroups = $response->json();
+        $ugroups = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         $this->assertContains('ug_' . REST_TestDataBuilder::STATIC_PRIVATE_MEMBER_UGROUP_DEVS_ID, $ugroups);
         $this->assertContains('ug_' . REST_TestDataBuilder::STATIC_PUBLIC_MEMBER_UGROUP_DEVS_ID, $ugroups);
         $this->assertContains('ug_' . REST_TestDataBuilder::STATIC_PUBLIC_INCL_RESTRICTED_UGROUP_DEVS_ID, $ugroups);
@@ -371,11 +398,12 @@ final class UsersTest extends RestBase // phpcs:ignore
 
         $response = $this->getResponseByName(
             REST_TestDataBuilder::ADMIN_USER_NAME,
-            $this->client->get(
+            $this->request_factory->createRequest(
+                'GET',
                 'users/' . $this->user_ids[REST_TestDataBuilder::TEST_USER_RESTRICTED_2_NAME] . '/membership'
             )
         );
-        $ugroups  = $response->json();
+        $ugroups  = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         $this->assertContains(
             'ug_' . REST_TestDataBuilder::STATIC_PRIVATE_MEMBER_UGROUP_DEVS_ID,
             $ugroups,
@@ -391,11 +419,12 @@ final class UsersTest extends RestBase // phpcs:ignore
 
         $response = $this->getResponseByName(
             REST_TestDataBuilder::ADMIN_USER_NAME,
-            $this->client->get(
+            $this->request_factory->createRequest(
+                'GET',
                 'users/' . $this->user_ids[REST_TestDataBuilder::TEST_USER_RESTRICTED_2_NAME] . '/membership'
             )
         );
-        $ugroups  = $response->json();
+        $ugroups  = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         $this->assertNotContains(
             'ug_' . REST_TestDataBuilder::STATIC_PUBLIC_MEMBER_UGROUP_DEVS_ID,
             $ugroups,
@@ -411,11 +440,12 @@ final class UsersTest extends RestBase // phpcs:ignore
 
         $response = $this->getResponseByName(
             REST_TestDataBuilder::ADMIN_USER_NAME,
-            $this->client->get(
+            $this->request_factory->createRequest(
+                'GET',
                 'users/' . $this->user_ids[REST_TestDataBuilder::TEST_USER_RESTRICTED_2_NAME] . '/membership'
             )
         );
-        $ugroups  = $response->json();
+        $ugroups  = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         $this->assertContains(
             'ug_' . REST_TestDataBuilder::STATIC_PUBLIC_INCL_RESTRICTED_UGROUP_DEVS_ID,
             $ugroups,
@@ -431,9 +461,9 @@ final class UsersTest extends RestBase // phpcs:ignore
 
         $response = $this->getResponseByName(
             REST_TestDataBuilder::ADMIN_USER_NAME,
-            $this->client->get('users/' . $this->user_ids[REST_TestDataBuilder::TEST_USER_4_NAME] . '/membership')
+            $this->request_factory->createRequest('GET', 'users/' . $this->user_ids[REST_TestDataBuilder::TEST_USER_4_NAME] . '/membership')
         );
-        $ugroups  = $response->json();
+        $ugroups  = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         $this->assertNotContains('ug_' . REST_TestDataBuilder::STATIC_PRIVATE_MEMBER_UGROUP_DEVS_ID, $ugroups);
         $this->assertNotContains('ug_' . REST_TestDataBuilder::STATIC_PUBLIC_MEMBER_UGROUP_DEVS_ID, $ugroups);
         $this->assertNotContains('ug_' . REST_TestDataBuilder::STATIC_PUBLIC_INCL_RESTRICTED_UGROUP_DEVS_ID, $ugroups);
@@ -447,11 +477,12 @@ final class UsersTest extends RestBase // phpcs:ignore
 
         $response = $this->getResponseByName(
             REST_TestDataBuilder::ADMIN_USER_NAME,
-            $this->client->get(
+            $this->request_factory->createRequest(
+                'GET',
                 'users/' . $this->user_ids[REST_TestDataBuilder::TEST_USER_5_NAME] . '/membership'
             )
         );
-        $ugroups  = $response->json();
+        $ugroups  = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         $this->assertContains(
             'ug_' . REST_TestDataBuilder::STATIC_PRIVATE_MEMBER_UGROUP_DEVS_ID,
             $ugroups,
@@ -467,11 +498,12 @@ final class UsersTest extends RestBase // phpcs:ignore
 
         $response = $this->getResponseByName(
             REST_TestDataBuilder::ADMIN_USER_NAME,
-            $this->client->get(
+            $this->request_factory->createRequest(
+                'GET',
                 'users/' . $this->user_ids[REST_TestDataBuilder::TEST_USER_5_NAME] . '/membership'
             )
         );
-        $ugroups  = $response->json();
+        $ugroups  = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         $this->assertContains(
             'ug_' . REST_TestDataBuilder::STATIC_PUBLIC_MEMBER_UGROUP_DEVS_ID,
             $ugroups,
@@ -487,11 +519,12 @@ final class UsersTest extends RestBase // phpcs:ignore
 
         $response = $this->getResponseByName(
             REST_TestDataBuilder::ADMIN_USER_NAME,
-            $this->client->get(
+            $this->request_factory->createRequest(
+                'GET',
                 'users/' . $this->user_ids[REST_TestDataBuilder::TEST_USER_5_NAME] . '/membership'
             )
         );
-        $ugroups  = $response->json();
+        $ugroups  = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         $this->assertContains(
             'ug_' . REST_TestDataBuilder::STATIC_PUBLIC_INCL_RESTRICTED_UGROUP_DEVS_ID,
             $ugroups,
@@ -505,10 +538,10 @@ final class UsersTest extends RestBase // phpcs:ignore
     {
         $response = $this->getResponseByName(
             REST_TestDataBuilder::ADMIN_USER_NAME,
-            $this->client->get('users/' . $this->user_ids[REST_TestDataBuilder::TEST_USER_1_NAME] . '/membership')
+            $this->request_factory->createRequest('GET', 'users/' . $this->user_ids[REST_TestDataBuilder::TEST_USER_1_NAME] . '/membership')
         );
 
-        $ugroups = $response->json();
+        $ugroups = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         $this->assertContains('ug_' . REST_TestDataBuilder::STATIC_PRIVATE_MEMBER_UGROUP_DEVS_ID, $ugroups);
         $this->assertContains('ug_' . REST_TestDataBuilder::STATIC_PUBLIC_MEMBER_UGROUP_DEVS_ID, $ugroups);
     }
@@ -518,10 +551,10 @@ final class UsersTest extends RestBase // phpcs:ignore
     {
         $response = $this->getResponseByName(
             REST_TestDataBuilder::ADMIN_USER_NAME,
-            $this->client->get('users/' . $this->user_ids[REST_TestDataBuilder::TEST_USER_4_NAME] . '/membership')
+            $this->request_factory->createRequest('GET', 'users/' . $this->user_ids[REST_TestDataBuilder::TEST_USER_4_NAME] . '/membership')
         );
 
-        $ugroups = $response->json();
+        $ugroups = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         $this->assertNotContains('ug_' . REST_TestDataBuilder::STATIC_PRIVATE_MEMBER_UGROUP_DEVS_ID, $ugroups);
         $this->assertNotContains('ug_' . REST_TestDataBuilder::STATIC_PUBLIC_MEMBER_UGROUP_DEVS_ID, $ugroups);
     }
@@ -530,10 +563,10 @@ final class UsersTest extends RestBase // phpcs:ignore
     {
         $response = $this->getResponseByName(
             REST_TestDataBuilder::ADMIN_USER_NAME,
-            $this->client->get('users/' . $this->user_ids[REST_TestDataBuilder::TEST_USER_5_NAME] . '/membership')
+            $this->request_factory->createRequest('GET', 'users/' . $this->user_ids[REST_TestDataBuilder::TEST_USER_5_NAME] . '/membership')
         );
 
-        $ugroups = $response->json();
+        $ugroups = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         $this->assertContains(
             'ug_' . REST_TestDataBuilder::STATIC_PUBLIC_MEMBER_UGROUP_DEVS_ID,
             $ugroups,
@@ -545,11 +578,12 @@ final class UsersTest extends RestBase // phpcs:ignore
     {
         $response = $this->getResponseByName(
             REST_TestDataBuilder::ADMIN_USER_NAME,
-            $this->client->get(
+            $this->request_factory->createRequest(
+                'GET',
                 'users/' . $this->user_ids[REST_TestDataBuilder::TEST_USER_5_NAME] . '/membership'
             )
         );
-        $ugroups  = $response->json();
+        $ugroups  = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         $this->assertContains(
             'ug_' . REST_TestDataBuilder::STATIC_PRIVATE_MEMBER_UGROUP_DEVS_ID,
             $ugroups,
@@ -563,10 +597,10 @@ final class UsersTest extends RestBase // phpcs:ignore
 
         $response = $this->getResponseByName(
             REST_TestDataBuilder::ADMIN_USER_NAME,
-            $this->client->get('users/' . $this->user_ids[REST_TestDataBuilder::TEST_USER_1_NAME] . '/membership')
+            $this->request_factory->createRequest('GET', 'users/' . $this->user_ids[REST_TestDataBuilder::TEST_USER_1_NAME] . '/membership')
         );
 
-        $ugroups = $response->json();
+        $ugroups = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         $this->assertContains('ug_' . REST_TestDataBuilder::STATIC_PRIVATE_MEMBER_UGROUP_DEVS_ID, $ugroups);
         $this->assertContains('ug_' . REST_TestDataBuilder::STATIC_PUBLIC_MEMBER_UGROUP_DEVS_ID, $ugroups);
 
@@ -580,10 +614,10 @@ final class UsersTest extends RestBase // phpcs:ignore
 
         $response = $this->getResponseByName(
             REST_TestDataBuilder::ADMIN_USER_NAME,
-            $this->client->get('users/' . $this->user_ids[REST_TestDataBuilder::TEST_USER_4_NAME] . '/membership')
+            $this->request_factory->createRequest('GET', 'users/' . $this->user_ids[REST_TestDataBuilder::TEST_USER_4_NAME] . '/membership')
         );
 
-        $ugroups = $response->json();
+        $ugroups = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         $this->assertNotContains('ug_' . REST_TestDataBuilder::STATIC_PRIVATE_MEMBER_UGROUP_DEVS_ID, $ugroups);
         $this->assertNotContains('ug_' . REST_TestDataBuilder::STATIC_PUBLIC_MEMBER_UGROUP_DEVS_ID, $ugroups);
 
@@ -596,10 +630,10 @@ final class UsersTest extends RestBase // phpcs:ignore
 
         $response = $this->getResponseByName(
             REST_TestDataBuilder::ADMIN_USER_NAME,
-            $this->client->get('users/' . $this->user_ids[REST_TestDataBuilder::TEST_USER_5_NAME] . '/membership')
+            $this->request_factory->createRequest('GET', 'users/' . $this->user_ids[REST_TestDataBuilder::TEST_USER_5_NAME] . '/membership')
         );
 
-        $ugroups = $response->json();
+        $ugroups = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         $this->assertContains(
             'ug_' . REST_TestDataBuilder::STATIC_PUBLIC_MEMBER_UGROUP_DEVS_ID,
             $ugroups,
@@ -615,11 +649,12 @@ final class UsersTest extends RestBase // phpcs:ignore
 
         $response = $this->getResponseByName(
             REST_TestDataBuilder::ADMIN_USER_NAME,
-            $this->client->get(
+            $this->request_factory->createRequest(
+                'GET',
                 'users/' . $this->user_ids[REST_TestDataBuilder::TEST_USER_5_NAME] . '/membership'
             )
         );
-        $ugroups  = $response->json();
+        $ugroups  = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         $this->assertContains(
             'ug_' . REST_TestDataBuilder::STATIC_PRIVATE_MEMBER_UGROUP_DEVS_ID,
             $ugroups,
@@ -631,7 +666,7 @@ final class UsersTest extends RestBase // phpcs:ignore
 
     public function testGetUsersWithMatching(): void
     {
-        $response = $this->getResponseByName(REST_TestDataBuilder::TEST_USER_1_NAME, $this->client->get('users?query=rest_api_tester&limit=10'));
+        $response = $this->getResponseByName(REST_TestDataBuilder::TEST_USER_1_NAME, $this->request_factory->createRequest('GET', 'users?query=rest_api_tester&limit=10'));
         $this->assertEquals($response->getStatusCode(), 200);
 
         $this->assertGETUsersWithMatching($response);
@@ -640,7 +675,7 @@ final class UsersTest extends RestBase // phpcs:ignore
     public function testGetUsersWithMatchingAsReadOnlySiteAdmin(): void
     {
         $response = $this->getResponse(
-            $this->client->get('users?query=rest_api_tester&limit=10'),
+            $this->request_factory->createRequest('GET', 'users?query=rest_api_tester&limit=10'),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
         $this->assertEquals(200, $response->getStatusCode());
@@ -648,9 +683,9 @@ final class UsersTest extends RestBase // phpcs:ignore
         $this->assertGETUsersWithMatching($response);
     }
 
-    private function assertGETUsersWithMatching(\Guzzle\Http\Message\Response $response): void
+    private function assertGETUsersWithMatching(\Psr\Http\Message\ResponseInterface $response): void
     {
-        $json = $response->json();
+        $json = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         $this->assertCount(5, $json);
     }
 
@@ -664,10 +699,11 @@ final class UsersTest extends RestBase // phpcs:ignore
             )
         );
 
-        $response = $this->getResponseByName(REST_TestDataBuilder::TEST_USER_1_NAME, $this->client->get("users?query=$search&limit=10"));
+        $response = $this->getResponseByName(REST_TestDataBuilder::TEST_USER_1_NAME, $this->request_factory->createRequest('GET', "users?query=$search&limit=10"));
         self::assertEquals(200, $response->getStatusCode());
 
-        $json = $response->json();
+        $json = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
+
         self::assertCount(1, $json);
         self::assertEquals($this->user_ids[REST_TestDataBuilder::TEST_USER_1_NAME], $json[0]['id']);
     }
@@ -683,10 +719,10 @@ final class UsersTest extends RestBase // phpcs:ignore
             )
         );
 
-        $response = $this->getResponseByName(REST_TestDataBuilder::TEST_USER_1_NAME, $this->client->get("users?query=$search&limit=10"));
+        $response = $this->getResponseByName(REST_TestDataBuilder::TEST_USER_1_NAME, $this->request_factory->createRequest('GET', "users?query=$search&limit=10"));
         self::assertEquals(200, $response->getStatusCode());
 
-        $json = $response->json();
+        $json = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         self::assertCount(1, $json);
         self::assertEquals($this->user_ids[REST_TestDataBuilder::TEST_USER_1_NAME], $json[0]['id']);
     }
@@ -701,10 +737,10 @@ final class UsersTest extends RestBase // phpcs:ignore
             )
         );
 
-        $response = $this->getResponseByName(REST_TestDataBuilder::TEST_USER_1_NAME, $this->client->get("users?query=$search&limit=10"));
+        $response = $this->getResponseByName(REST_TestDataBuilder::TEST_USER_1_NAME, $this->request_factory->createRequest('GET', "users?query=$search&limit=10"));
         $this->assertEquals($response->getStatusCode(), 200);
 
-        $json = $response->json();
+        $json = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         $this->assertCount(0, $json);
     }
 
@@ -712,26 +748,26 @@ final class UsersTest extends RestBase // phpcs:ignore
     {
         $search = urlencode('{jeanclaude}');
 
-        $response = $this->getResponseByName(REST_TestDataBuilder::TEST_USER_1_NAME, $this->client->get("users?query=$search&limit=10"));
+        $response = $this->getResponseByName(REST_TestDataBuilder::TEST_USER_1_NAME, $this->request_factory->createRequest('GET', "users?query=$search&limit=10"));
         $this->assertEquals($response->getStatusCode(), 400);
     }
 
     public function testOptionsPreferences(): void
     {
-        $response = $this->getResponseByName(REST_TestDataBuilder::TEST_USER_1_NAME, $this->client->options('users/' . $this->user_ids[REST_TestDataBuilder::TEST_USER_1_NAME] . '/preferences'));
+        $response = $this->getResponseByName(REST_TestDataBuilder::TEST_USER_1_NAME, $this->request_factory->createRequest('OPTIONS', 'users/' . $this->user_ids[REST_TestDataBuilder::TEST_USER_1_NAME] . '/preferences'));
 
-        $this->assertEquals(['OPTIONS', 'GET', 'PATCH', 'DELETE'], $response->getHeader('Allow')->normalize()->toArray());
+        self::assertEqualsCanonicalizing(['OPTIONS', 'GET', 'PATCH', 'DELETE'], explode(', ', $response->getHeaderLine('Allow')));
         $this->assertEquals(200, $response->getStatusCode());
     }
 
     public function testOptionsPreferencesWithReadOnlySiteAdmin(): void
     {
         $response = $this->getResponse(
-            $this->client->options('users/' . $this->user_ids[REST_TestDataBuilder::TEST_USER_1_NAME] . '/preferences'),
+            $this->request_factory->createRequest('OPTIONS', 'users/' . $this->user_ids[REST_TestDataBuilder::TEST_USER_1_NAME] . '/preferences'),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
 
-        $this->assertEquals(['OPTIONS', 'GET', 'PATCH', 'DELETE'], $response->getHeader('Allow')->normalize()->toArray());
+        self::assertEqualsCanonicalizing(['OPTIONS', 'GET', 'PATCH', 'DELETE'], explode(', ', $response->getHeaderLine('Allow')));
         $this->assertEquals(200, $response->getStatusCode());
     }
 
@@ -744,7 +780,13 @@ final class UsersTest extends RestBase // phpcs:ignore
             ]
         );
 
-        $response = $this->getResponseByName(REST_TestDataBuilder::TEST_USER_1_NAME, $this->client->patch('users/' . $this->user_ids[REST_TestDataBuilder::TEST_USER_1_NAME] . '/preferences', null, $preference));
+        $response = $this->getResponseByName(
+            REST_TestDataBuilder::TEST_USER_1_NAME,
+            $this->request_factory->createRequest(
+                'PATCH',
+                'users/' . $this->user_ids[REST_TestDataBuilder::TEST_USER_1_NAME] . '/preferences'
+            )->withBody($this->stream_factory->createStream($preference))
+        );
         $this->assertEquals(200, $response->getStatusCode());
     }
 
@@ -758,9 +800,21 @@ final class UsersTest extends RestBase // phpcs:ignore
             JSON_THROW_ON_ERROR
         );
 
-        $response_1 = $this->getResponseByName(REST_TestDataBuilder::TEST_USER_1_NAME, $this->client->patch('users/' . $this->user_ids[REST_TestDataBuilder::TEST_USER_1_NAME] . '/preferences', null, $preference));
+        $response_1 = $this->getResponseByName(
+            REST_TestDataBuilder::TEST_USER_1_NAME,
+            $this->request_factory->createRequest(
+                'PATCH',
+                'users/' . $this->user_ids[REST_TestDataBuilder::TEST_USER_1_NAME] . '/preferences'
+            )->withBody($this->stream_factory->createStream($preference))
+        );
         $this->assertEquals(200, $response_1->getStatusCode());
-        $response_2 = $this->getResponseByName(REST_TestDataBuilder::TEST_USER_1_NAME, $this->client->patch('users/' . $this->user_ids[REST_TestDataBuilder::TEST_USER_1_NAME] . '/preferences', null, $preference));
+        $response_2 = $this->getResponseByName(
+            REST_TestDataBuilder::TEST_USER_1_NAME,
+            $this->request_factory->createRequest(
+                'PATCH',
+                'users/' . $this->user_ids[REST_TestDataBuilder::TEST_USER_1_NAME] . '/preferences'
+            )->withBody($this->stream_factory->createStream($preference))
+        );
         $this->assertEquals(200, $response_2->getStatusCode());
     }
 
@@ -775,7 +829,7 @@ final class UsersTest extends RestBase // phpcs:ignore
 
         $response = $this->getResponseByName(
             REST_TestDataBuilder::TEST_USER_1_NAME,
-            $this->client->patch('users/self/preferences', null, $preference)
+            $this->request_factory->createRequest('PATCH', 'users/self/preferences')->withBody($this->stream_factory->createStream($preference))
         );
 
         $this->assertEquals(200, $response->getStatusCode());
@@ -791,7 +845,10 @@ final class UsersTest extends RestBase // phpcs:ignore
         );
 
         $response = $this->getResponse(
-            $this->client->patch('users/' . $this->user_ids[REST_TestDataBuilder::TEST_USER_1_NAME] . '/preferences', null, $preference),
+            $this->request_factory->createRequest(
+                'PATCH',
+                'users/' . $this->user_ids[REST_TestDataBuilder::TEST_USER_1_NAME] . '/preferences'
+            )->withBody($this->stream_factory->createStream($preference)),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
 
@@ -807,7 +864,13 @@ final class UsersTest extends RestBase // phpcs:ignore
             ]
         );
 
-        $response = $this->getResponseByName(REST_TestDataBuilder::TEST_USER_1_NAME, $this->client->patch('users/' . $this->user_ids[REST_TestDataBuilder::TEST_USER_2_NAME] . '/preferences', null, $preference));
+        $response = $this->getResponseByName(
+            REST_TestDataBuilder::TEST_USER_1_NAME,
+            $this->request_factory->createRequest(
+                'PATCH',
+                'users/' . $this->user_ids[REST_TestDataBuilder::TEST_USER_2_NAME] . '/preferences'
+            )->withBody($this->stream_factory->createStream($preference))
+        );
         $this->assertEquals($response->getStatusCode(), 403);
     }
 
@@ -815,7 +878,7 @@ final class UsersTest extends RestBase // phpcs:ignore
     {
         $response = $this->getResponseByName(
             REST_TestDataBuilder::TEST_USER_1_NAME,
-            $this->client->get('users/' . $this->user_ids[REST_TestDataBuilder::TEST_USER_1_NAME] . '/preferences?key=my_preference')
+            $this->request_factory->createRequest('GET', 'users/' . $this->user_ids[REST_TestDataBuilder::TEST_USER_1_NAME] . '/preferences?key=my_preference')
         );
 
         $this->assertGETPreferences($response);
@@ -825,12 +888,12 @@ final class UsersTest extends RestBase // phpcs:ignore
     {
         $response = $this->getResponseByName(
             REST_TestDataBuilder::TEST_USER_1_NAME,
-            $this->client->get('users/' . $this->user_ids[REST_TestDataBuilder::TEST_USER_1_NAME] . '/preferences?key=my_preference_not_in_db')
+            $this->request_factory->createRequest('GET', 'users/' . $this->user_ids[REST_TestDataBuilder::TEST_USER_1_NAME] . '/preferences?key=my_preference_not_in_db')
         );
 
         $this->assertEquals(200, $response->getStatusCode());
 
-        $json = $response->json();
+        $json = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         $this->assertEquals('my_preference_not_in_db', $json['key']);
         $this->assertFalse($json['value']);
     }
@@ -839,7 +902,7 @@ final class UsersTest extends RestBase // phpcs:ignore
     {
         $response = $this->getResponseByName(
             REST_TestDataBuilder::TEST_USER_1_NAME,
-            $this->client->get('users/self/preferences?key=my_preference')
+            $this->request_factory->createRequest('GET', 'users/self/preferences?key=my_preference')
         );
 
         $this->assertGETPreferences($response);
@@ -848,18 +911,18 @@ final class UsersTest extends RestBase // phpcs:ignore
     public function testGETPreferencesWithReadOnlySiteAdmin(): void
     {
         $response = $this->getResponse(
-            $this->client->get('users/' . $this->user_ids[REST_TestDataBuilder::TEST_USER_1_NAME] . '/preferences?key=my_preference'),
+            $this->request_factory->createRequest('GET', 'users/' . $this->user_ids[REST_TestDataBuilder::TEST_USER_1_NAME] . '/preferences?key=my_preference'),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
 
         $this->assertEquals(403, $response->getStatusCode());
     }
 
-    private function assertGETPreferences(\Guzzle\Http\Message\Response $response): void
+    private function assertGETPreferences(\Psr\Http\Message\ResponseInterface $response): void
     {
         $this->assertEquals(200, $response->getStatusCode());
 
-        $json = $response->json();
+        $json = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         $this->assertEquals('my_preference', $json['key']);
         $this->assertEquals('my_preference_value', $json['value']);
     }
@@ -873,16 +936,34 @@ final class UsersTest extends RestBase // phpcs:ignore
             ]
         );
 
-        $response = $this->getResponseByName(REST_TestDataBuilder::TEST_USER_1_NAME, $this->client->patch('users/' . $this->user_ids[REST_TestDataBuilder::TEST_USER_1_NAME] . '/preferences', null, $preference));
+        $response = $this->getResponseByName(
+            REST_TestDataBuilder::TEST_USER_1_NAME,
+            $this->request_factory->createRequest(
+                'PATCH',
+                'users/' . $this->user_ids[REST_TestDataBuilder::TEST_USER_1_NAME] . '/preferences'
+            )->withBody($this->stream_factory->createStream($preference))
+        );
         $this->assertEquals($response->getStatusCode(), 200);
 
-        $response = $this->getResponseByName(REST_TestDataBuilder::TEST_USER_1_NAME, $this->client->delete('users/' . $this->user_ids[REST_TestDataBuilder::TEST_USER_1_NAME] . '/preferences?key=preference_to_be_deleted'));
+        $response = $this->getResponseByName(
+            REST_TestDataBuilder::TEST_USER_1_NAME,
+            $this->request_factory->createRequest(
+                'DELETE',
+                'users/' . $this->user_ids[REST_TestDataBuilder::TEST_USER_1_NAME] . '/preferences?key=preference_to_be_deleted'
+            )
+        );
         $this->assertEquals($response->getStatusCode(), 200);
 
-        $response = $this->getResponseByName(REST_TestDataBuilder::TEST_USER_1_NAME, $this->client->get('users/' . $this->user_ids[REST_TestDataBuilder::TEST_USER_1_NAME] . '/preferences?key=preference_to_be_deleted'));
+        $response = $this->getResponseByName(
+            REST_TestDataBuilder::TEST_USER_1_NAME,
+            $this->request_factory->createRequest(
+                'GET',
+                'users/' . $this->user_ids[REST_TestDataBuilder::TEST_USER_1_NAME] . '/preferences?key=preference_to_be_deleted'
+            )
+        );
         $this->assertEquals($response->getStatusCode(), 200);
 
-        $json = $response->json();
+        $json = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         $this->assertEquals('preference_to_be_deleted', $json['key']);
         $this->assertEquals(false, $json['value']);
     }
@@ -898,23 +979,25 @@ final class UsersTest extends RestBase // phpcs:ignore
 
         $response = $this->getResponseByName(
             REST_TestDataBuilder::TEST_USER_1_NAME,
-            $this->client->patch('users/self/preferences', null, $preference)
+            $this->request_factory->createRequest('PATCH', 'users/self/preferences')->withBody(
+                $this->stream_factory->createStream($preference)
+            )
         );
         $this->assertEquals(200, $response->getStatusCode());
 
         $response = $this->getResponseByName(
             REST_TestDataBuilder::TEST_USER_1_NAME,
-            $this->client->delete('users/self/preferences?key=preference_to_be_deleted')
+            $this->request_factory->createRequest('DELETE', 'users/self/preferences?key=preference_to_be_deleted')
         );
         $this->assertEquals(200, $response->getStatusCode());
 
         $response = $this->getResponseByName(
             REST_TestDataBuilder::TEST_USER_1_NAME,
-            $this->client->get('users/self/preferences?key=preference_to_be_deleted')
+            $this->request_factory->createRequest('GET', 'users/self/preferences?key=preference_to_be_deleted')
         );
         $this->assertEquals(200, $response->getStatusCode());
 
-        $json = $response->json();
+        $json = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         $this->assertEquals('preference_to_be_deleted', $json['key']);
         $this->assertEquals(false, $json['value']);
     }
@@ -928,11 +1011,17 @@ final class UsersTest extends RestBase // phpcs:ignore
             ]
         );
 
-        $response = $this->getResponseByName(REST_TestDataBuilder::TEST_USER_1_NAME, $this->client->patch('users/' . $this->user_ids[REST_TestDataBuilder::TEST_USER_1_NAME] . '/preferences', null, $preference));
+        $response = $this->getResponseByName(
+            REST_TestDataBuilder::TEST_USER_1_NAME,
+            $this->request_factory->createRequest(
+                'PATCH',
+                'users/' . $this->user_ids[REST_TestDataBuilder::TEST_USER_1_NAME] . '/preferences'
+            )->withBody($this->stream_factory->createStream($preference))
+        );
         $this->assertEquals(200, $response->getStatusCode());
 
         $response = $this->getResponse(
-            $this->client->delete('users/' . $this->user_ids[REST_TestDataBuilder::TEST_USER_1_NAME] . '/preferences?key=preference_to_be_deleted'),
+            $this->request_factory->createRequest('DELETE', 'users/' . $this->user_ids[REST_TestDataBuilder::TEST_USER_1_NAME] . '/preferences?key=preference_to_be_deleted'),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
 
@@ -943,7 +1032,7 @@ final class UsersTest extends RestBase // phpcs:ignore
     {
         $response = $this->getResponseByName(
             REST_TestDataBuilder::TEST_USER_1_NAME,
-            $this->client->get('users/' . $this->user_ids[REST_TestDataBuilder::TEST_USER_2_NAME] . '/preferences?key=my_preference')
+            $this->request_factory->createRequest('GET', 'users/' . $this->user_ids[REST_TestDataBuilder::TEST_USER_2_NAME] . '/preferences?key=my_preference')
         );
         $this->assertEquals(403, $response->getStatusCode());
     }
@@ -952,7 +1041,7 @@ final class UsersTest extends RestBase // phpcs:ignore
     {
         $response = $this->getResponseByName(
             REST_TestDataBuilder::TEST_USER_1_NAME,
-            $this->client->get('users/' . $this->user_ids[REST_TestDataBuilder::TEST_USER_2_NAME] . '/history')
+            $this->request_factory->createRequest('GET', 'users/' . $this->user_ids[REST_TestDataBuilder::TEST_USER_2_NAME] . '/history')
         );
         $this->assertEquals(403, $response->getStatusCode());
     }
@@ -960,7 +1049,7 @@ final class UsersTest extends RestBase // phpcs:ignore
     public function testGETHistoryWithReadOnlySiteAdmin(): void
     {
         $response = $this->getResponse(
-            $this->client->get('users/' . $this->user_ids[REST_TestDataBuilder::TEST_USER_2_NAME] . '/history'),
+            $this->request_factory->createRequest('GET', 'users/' . $this->user_ids[REST_TestDataBuilder::TEST_USER_2_NAME] . '/history'),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
 
@@ -971,7 +1060,10 @@ final class UsersTest extends RestBase // phpcs:ignore
     {
         $response = $this->getResponseByName(
             REST_TestDataBuilder::TEST_USER_1_NAME,
-            $this->client->put('users/' . $this->user_ids[REST_TestDataBuilder::TEST_USER_2_NAME] . '/history', null, json_encode([]))
+            $this->request_factory->createRequest(
+                'PUT',
+                'users/' . $this->user_ids[REST_TestDataBuilder::TEST_USER_2_NAME] . '/history'
+            )->withBody($this->stream_factory->createStream(json_encode([])))
         );
         $this->assertEquals(403, $response->getStatusCode());
     }
@@ -979,7 +1071,10 @@ final class UsersTest extends RestBase // phpcs:ignore
     public function testPUTHistoryWithReadOnlySiteAdmin(): void
     {
         $response = $this->getResponse(
-            $this->client->put('users/' . $this->user_ids[REST_TestDataBuilder::TEST_USER_2_NAME] . '/history', null, json_encode([])),
+            $this->request_factory->createRequest(
+                'PUT',
+                'users/' . $this->user_ids[REST_TestDataBuilder::TEST_USER_2_NAME] . '/history'
+            )->withBody($this->stream_factory->createStream(json_encode([]))),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
 
@@ -1001,7 +1096,7 @@ final class UsersTest extends RestBase // phpcs:ignore
 
         $response = $this->getResponseByName(
             REST_TestDataBuilder::TEST_USER_1_NAME,
-            $this->client->put('users/' . $this->user_ids[REST_TestDataBuilder::TEST_USER_2_NAME] . '/history', null, $history_entries)
+            $this->request_factory->createRequest('PUT', 'users/' . $this->user_ids[REST_TestDataBuilder::TEST_USER_2_NAME] . '/history')->withBody($this->stream_factory->createStream($history_entries))
         );
         $this->assertEquals(403, $response->getStatusCode());
     }
@@ -1009,7 +1104,7 @@ final class UsersTest extends RestBase // phpcs:ignore
     public function testGETAccessKeysWithReadOnlySiteAdmin(): void
     {
         $response = $this->getResponse(
-            $this->client->get('users/' . $this->user_ids[REST_TestDataBuilder::TEST_USER_2_NAME] . '/access_keys'),
+            $this->request_factory->createRequest('GET', 'users/' . $this->user_ids[REST_TestDataBuilder::TEST_USER_2_NAME] . '/access_keys'),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
 

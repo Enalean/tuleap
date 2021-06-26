@@ -76,7 +76,7 @@ class TQLTest extends RestBase
             $response = $this->performExpertQuery($query);
             $this->assertEquals($response->getStatusCode(), 200, $message);
 
-            $artifacts = $response->json();
+            $artifacts = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
             $this->assertCount(count($expectation), $artifacts, $message);
             foreach ($expectation as $index => $title) {
                 $this->assertEquals($title, $artifacts[$index]['title'], $message);
@@ -88,7 +88,7 @@ class TQLTest extends RestBase
     {
         $response = $this->performExpertQuery('summary="bug1');
         $this->assertEquals(400, $response->getStatusCode());
-        $body = $response->json();
+        $body = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         $this->assertStringContainsString(
             "Error during parsing expert query",
             $body['error']['message']
@@ -99,7 +99,7 @@ class TQLTest extends RestBase
     {
         $response = $this->performExpertQuery('status = "pouet"');
         $this->assertEquals(400, $response->getStatusCode());
-        $body = $response->json();
+        $body = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         $this->assertStringContainsString(
             "The value 'pouet' doesn't exist for the list field 'status'",
             $body['error']['message']
@@ -110,7 +110,7 @@ class TQLTest extends RestBase
     {
         $response = $this->performExpertQuery('due_date = "2017-01-10 12:12"');
         $this->assertEquals(400, $response->getStatusCode());
-        $body = $response->json();
+        $body = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         $this->assertStringContainsString(
             "The date field 'due_date' cannot be compared to the string value '2017-01-10 12:12'",
             $body['error']['message']
@@ -121,7 +121,7 @@ class TQLTest extends RestBase
     {
         $response = $this->performExpertQuery('test = "bug1"');
         $this->assertEquals(400, $response->getStatusCode());
-        $body = $response->json();
+        $body = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         $this->assertStringContainsString(
             "We cannot search on 'test', we don't know what it refers to",
             $body['error']['message']
@@ -132,7 +132,7 @@ class TQLTest extends RestBase
     {
         $project_id = $this->getProjectId(self::PROJECT_NAME);
 
-        $response = $this->getResponse($this->client->get("projects/$project_id/trackers"))->json();
+        $response = json_decode($this->getResponse($this->request_factory->createRequest('GET', "projects/$project_id/trackers"))->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         return $response[0]['id'];
     }
@@ -143,7 +143,7 @@ class TQLTest extends RestBase
         $url   = "trackers/$this->tracker_id/artifacts?expert_query=$query";
 
         return $this->getResponse(
-            $this->client->get($url)
+            $this->request_factory->createRequest('GET', $url)
         );
     }
 }

@@ -38,10 +38,10 @@ class CrossTrackerTestExpertQueryTest extends RestBase
             "expert_query" => ' @title != "" '
         ];
 
-        $response = $this->getResponse($this->client->put('cross_tracker_reports/1', null, $params));
+        $response = $this->getResponse($this->request_factory->createRequest('PUT', 'cross_tracker_reports/1')->withBody($this->stream_factory->createStream(json_encode($params))));
         $this->assertEquals($response->getStatusCode(), 201);
 
-        $cross_tracker_report = $response->json();
+        $cross_tracker_report = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertEquals(
             $cross_tracker_report["expert_query"],
@@ -61,10 +61,10 @@ class CrossTrackerTestExpertQueryTest extends RestBase
             "expert_query" => ' @title = "first" OR @title = "third" '
         ];
 
-        $response = $this->getResponse($this->client->put('cross_tracker_reports/1', null, $params));
+        $response = $this->getResponse($this->request_factory->createRequest('PUT', 'cross_tracker_reports/1')->withBody($this->stream_factory->createStream(json_encode($params))));
         $this->assertEquals($response->getStatusCode(), 201);
 
-        $cross_tracker_report = $response->json();
+        $cross_tracker_report = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertEquals(
             $cross_tracker_report["expert_query"],
@@ -87,10 +87,10 @@ class CrossTrackerTestExpertQueryTest extends RestBase
             "expert_query" => ' @description = "" '
         ];
 
-        $response = $this->getResponse($this->client->put('cross_tracker_reports/1', null, $params));
+        $response = $this->getResponse($this->request_factory->createRequest('PUT', 'cross_tracker_reports/1')->withBody($this->stream_factory->createStream(json_encode($params))));
         $this->assertEquals($response->getStatusCode(), 201);
 
-        $cross_tracker_report = $response->json();
+        $cross_tracker_report = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertEquals(
             $cross_tracker_report["expert_query"],
@@ -112,10 +112,10 @@ class CrossTrackerTestExpertQueryTest extends RestBase
             "expert_query" => ' @description = "" AND @title != "" '
         ];
 
-        $response = $this->getResponse($this->client->put('cross_tracker_reports/1', null, $params));
+        $response = $this->getResponse($this->request_factory->createRequest('PUT', 'cross_tracker_reports/1')->withBody($this->stream_factory->createStream(json_encode($params))));
         $this->assertEquals($response->getStatusCode(), 201);
 
-        $cross_tracker_report = $response->json();
+        $cross_tracker_report = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertEquals(
             $cross_tracker_report["expert_query"],
@@ -134,10 +134,10 @@ class CrossTrackerTestExpertQueryTest extends RestBase
             "expert_query" => ' @submitted_by = "rest_api_tester_1"'
         ];
 
-        $response = $this->getResponse($this->client->put('cross_tracker_reports/1', null, $params));
+        $response = $this->getResponse($this->request_factory->createRequest('PUT', 'cross_tracker_reports/1')->withBody($this->stream_factory->createStream(json_encode($params))));
         $this->assertEquals($response->getStatusCode(), 201);
 
-        $cross_tracker_report = $response->json();
+        $cross_tracker_report = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertEquals(
             $cross_tracker_report["expert_query"],
@@ -166,10 +166,10 @@ class CrossTrackerTestExpertQueryTest extends RestBase
             "expert_query" => ' @submitted_by != "rest_api_tester_1"'
         ];
 
-        $response = $this->getResponse($this->client->put('cross_tracker_reports/1', null, $params));
+        $response = $this->getResponse($this->request_factory->createRequest('PUT', 'cross_tracker_reports/1')->withBody($this->stream_factory->createStream(json_encode($params))));
         $this->assertEquals($response->getStatusCode(), 201);
 
-        $cross_tracker_report = $response->json();
+        $cross_tracker_report = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertEquals(
             $cross_tracker_report["expert_query"],
@@ -186,10 +186,10 @@ class CrossTrackerTestExpertQueryTest extends RestBase
             "expert_query" => ' @last_update_by = "rest_api_tester_1"'
         ];
 
-        $response = $this->getResponse($this->client->put('cross_tracker_reports/1', null, $params));
+        $response = $this->getResponse($this->request_factory->createRequest('PUT', 'cross_tracker_reports/1')->withBody($this->stream_factory->createStream(json_encode($params))));
         $this->assertEquals($response->getStatusCode(), 201);
 
-        $cross_tracker_report = $response->json();
+        $cross_tracker_report = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertEquals(
             $cross_tracker_report["expert_query"],
@@ -215,10 +215,10 @@ class CrossTrackerTestExpertQueryTest extends RestBase
             "expert_query" => ' @assigned_to = "rest_api_tester_1"'
         ];
 
-        $response = $this->getResponse($this->client->put('cross_tracker_reports/1', null, $params));
+        $response = $this->getResponse($this->request_factory->createRequest('PUT', 'cross_tracker_reports/1')->withBody($this->stream_factory->createStream(json_encode($params))));
         $this->assertEquals($response->getStatusCode(), 201);
 
-        $cross_tracker_report = $response->json();
+        $cross_tracker_report = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertEquals(
             $cross_tracker_report["expert_query"],
@@ -232,10 +232,10 @@ class CrossTrackerTestExpertQueryTest extends RestBase
 
     private function getMatchingArtifactsFromJson()
     {
-        $response = $this->getResponse($this->client->get('cross_tracker_reports/1/content?limit=50&offset=0'));
+        $response = $this->getResponse($this->request_factory->createRequest('GET', 'cross_tracker_reports/1/content?limit=50&offset=0'));
 
         $this->assertEquals($response->getStatusCode(), 200);
-        $cross_tracker_artifacts = $response->json();
+        $cross_tracker_artifacts = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         return $cross_tracker_artifacts['artifacts'];
     }

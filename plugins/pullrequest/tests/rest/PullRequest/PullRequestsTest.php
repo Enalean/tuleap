@@ -37,24 +37,24 @@ class PullRequestsTest extends RestBase
 
     public function testOPTIONS()
     {
-        $response = $this->getResponse($this->client->options('pull_requests/'));
+        $response = $this->getResponse($this->request_factory->createRequest('OPTIONS', 'pull_requests/'));
 
-        $this->assertEquals(['OPTIONS', 'GET', 'POST', 'PATCH'], $response->getHeader('Allow')->normalize()->toArray());
+        $this->assertEquals(['OPTIONS', 'GET', 'POST', 'PATCH'], explode(', ', $response->getHeaderLine('Allow')));
     }
 
     public function testOPTIONSWithReadOnlyAdmin()
     {
         $response = $this->getResponse(
-            $this->client->options('pull_requests/'),
+            $this->request_factory->createRequest('OPTIONS', 'pull_requests/'),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
 
-        $this->assertEquals(['OPTIONS', 'GET', 'POST', 'PATCH'], $response->getHeader('Allow')->normalize()->toArray());
+        $this->assertEquals(['OPTIONS', 'GET', 'POST', 'PATCH'], explode(', ', $response->getHeaderLine('Allow')));
     }
 
     public function testGetPullRequestThrows403IfUserCantSeeGitRepository()
     {
-        $response = $this->getResponseForNonMember($this->client->get('pull_requests/1'));
+        $response = $this->getResponseForNonMember($this->request_factory->createRequest('GET', 'pull_requests/1'));
 
         $this->assertEquals($response->getStatusCode(), 403);
     }
@@ -65,11 +65,7 @@ class PullRequestsTest extends RestBase
             'status' => 'whatever'
         ]);
 
-        $response = $this->getResponse($this->client->patch(
-            'pull_requests/1',
-            null,
-            $data
-        ));
+        $response = $this->getResponse($this->request_factory->createRequest('PATCH', 'pull_requests/1')->withBody($this->stream_factory->createStream($data)));
 
         $this->assertEquals(400, $response->getStatusCode());
     }

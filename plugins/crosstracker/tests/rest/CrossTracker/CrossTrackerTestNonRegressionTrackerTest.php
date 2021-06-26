@@ -26,7 +26,7 @@ class CrossTrackerTestNonRegressionTrackerTest extends RestBase
 {
     public function testItThrowsAnExceptionWhenReportIsNotFound()
     {
-        $response = $this->getResponse($this->client->get('cross_tracker_reports/100'));
+        $response = $this->getResponse($this->request_factory->createRequest('GET', 'cross_tracker_reports/100'));
 
         $this->assertEquals($response->getStatusCode(), 404);
     }
@@ -36,7 +36,7 @@ class CrossTrackerTestNonRegressionTrackerTest extends RestBase
         $params   = [
             "trackers_id" => [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
         ];
-        $response = $this->getResponse($this->client->put('cross_tracker_reports/1', null, $params));
+        $response = $this->getResponse($this->request_factory->createRequest('PUT', 'cross_tracker_reports/1')->withBody($this->stream_factory->createStream(json_encode($params))));
 
         $this->assertEquals($response->getStatusCode(), 400);
     }
@@ -46,7 +46,7 @@ class CrossTrackerTestNonRegressionTrackerTest extends RestBase
         $params   = [
             "trackers_id" => [1001]
         ];
-        $response = $this->getResponse($this->client->put('cross_tracker_reports/1', null, $params));
+        $response = $this->getResponse($this->request_factory->createRequest('PUT', 'cross_tracker_reports/1')->withBody($this->stream_factory->createStream(json_encode($params))));
 
         $this->assertEquals(400, $response->getStatusCode());
     }
@@ -56,7 +56,7 @@ class CrossTrackerTestNonRegressionTrackerTest extends RestBase
         $params   = [
             "trackers_id" => [$this->epic_tracker_id, $this->epic_tracker_id]
         ];
-        $response = $this->getResponse($this->client->put('cross_tracker_reports/1', null, $params));
+        $response = $this->getResponse($this->request_factory->createRequest('PUT', 'cross_tracker_reports/1')->withBody($this->stream_factory->createStream(json_encode($params))));
 
         $this->assertEquals($response->getStatusCode(), 400);
     }
@@ -66,7 +66,7 @@ class CrossTrackerTestNonRegressionTrackerTest extends RestBase
         $params   = [
             "trackers_id" => [$this->epic_tracker_id, $this->kanban_tracker_id]
         ];
-        $response = $this->getResponseForNonProjectMember($this->client->put('cross_tracker_reports/1', null, $params));
+        $response = $this->getResponseForNonProjectMember($this->request_factory->createRequest('PUT', 'cross_tracker_reports/1')->withBody($this->stream_factory->createStream(json_encode($params))));
 
         $this->assertEquals($response->getStatusCode(), 403);
     }
@@ -80,7 +80,7 @@ class CrossTrackerTestNonRegressionTrackerTest extends RestBase
         );
 
         $response = $this->getResponse(
-            $this->client->get('cross_tracker_reports/1/content?limit=50&offset=0&query=' . urlencode($query))
+            $this->request_factory->createRequest('GET', 'cross_tracker_reports/1/content?limit=50&offset=0&query=' . urlencode($query))
         );
 
         $this->assertEquals($response->getStatusCode(), 400);
@@ -95,7 +95,7 @@ class CrossTrackerTestNonRegressionTrackerTest extends RestBase
         );
 
         $response = $this->getResponse(
-            $this->client->get('cross_tracker_reports/1/content?limit=50&offset=0&query=' . urlencode($query))
+            $this->request_factory->createRequest('GET', 'cross_tracker_reports/1/content?limit=50&offset=0&query=' . urlencode($query))
         );
 
         $this->assertEquals($response->getStatusCode(), 400);
@@ -108,7 +108,7 @@ class CrossTrackerTestNonRegressionTrackerTest extends RestBase
         );
 
         $response = $this->getResponse(
-            $this->client->get('cross_tracker_reports/1/content?limit=50&offset=0&query=' . urlencode($query))
+            $this->request_factory->createRequest('GET', 'cross_tracker_reports/1/content?limit=50&offset=0&query=' . urlencode($query))
         );
 
         $this->assertEquals($response->getStatusCode(), 400);
@@ -116,14 +116,14 @@ class CrossTrackerTestNonRegressionTrackerTest extends RestBase
 
     public function testYouCantAccessPersonalReportOfAnOtherUser()
     {
-        $response = $this->getResponseForNonProjectMember($this->client->get('cross_tracker_reports/2'));
+        $response = $this->getResponseForNonProjectMember($this->request_factory->createRequest('GET', 'cross_tracker_reports/2'));
 
         $this->assertEquals($response->getStatusCode(), 403);
     }
 
     public function testYouCantAccessProjectReportOfProjectYouCantSee()
     {
-        $response = $this->getResponseForNonProjectMember($this->client->get('cross_tracker_reports/3'));
+        $response = $this->getResponseForNonProjectMember($this->request_factory->createRequest('GET', 'cross_tracker_reports/3'));
 
         $this->assertEquals($response->getStatusCode(), 403);
     }

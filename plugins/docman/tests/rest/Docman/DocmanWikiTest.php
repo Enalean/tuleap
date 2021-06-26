@@ -90,57 +90,41 @@ class DocmanWikiTest extends DocmanTestExecutionHelper
     {
         $response_wiki_creation = $this->getResponseByName(
             DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
-            $this->client->post(
-                'docman_folders/' . urlencode((string) $root_id) . '/wikis',
-                null,
-                json_encode([
-                    'title' => 'Link document to cut',
-                    'wiki_properties' => ['page_name' => 'AAAAA']
-                ])
-            )
+            $this->request_factory->createRequest('POST', 'docman_folders/' . urlencode((string) $root_id) . '/wikis')->withBody($this->stream_factory->createStream(json_encode([
+                'title' => 'Link document to cut',
+                'wiki_properties' => ['page_name' => 'AAAAA']
+            ])))
         );
         $this->assertEquals(201, $response_wiki_creation->getStatusCode());
-        $wiki_doc_id = $response_wiki_creation->json()['id'];
+        $wiki_doc_id = json_decode($response_wiki_creation->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR)['id'];
 
         $response_folder_creation = $this->getResponseByName(
             DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
-            $this->client->post(
-                'docman_folders/' . urlencode((string) $root_id) . '/folders',
-                null,
-                json_encode(['title' => 'Wiki cut folder'])
-            )
+            $this->request_factory->createRequest('POST', 'docman_folders/' . urlencode((string) $root_id) . '/folders')->withBody($this->stream_factory->createStream(json_encode(['title' => 'Wiki cut folder'])))
         );
         $this->assertEquals(201, $response_folder_creation->getStatusCode());
-        $folder_id = $response_folder_creation->json()['id'];
+        $folder_id = json_decode($response_folder_creation->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR)['id'];
 
         $move_response_with_rest_read_only_user = $this->getResponse(
-            $this->client->patch(
-                'docman_wikis/' . urlencode((string) $wiki_doc_id),
-                null,
-                json_encode(['move' => ['destination_folder_id' => $folder_id]])
-            ),
+            $this->request_factory->createRequest('PATCH', 'docman_wikis/' . urlencode((string) $wiki_doc_id))->withBody($this->stream_factory->createStream(json_encode(['move' => ['destination_folder_id' => $folder_id]]))),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
         $this->assertEquals(403, $move_response_with_rest_read_only_user->getStatusCode());
 
         $move_response = $this->getResponseByName(
             DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
-            $this->client->patch(
-                'docman_wikis/' . urlencode((string) $wiki_doc_id),
-                null,
-                json_encode(['move' => ['destination_folder_id' => $folder_id]])
-            )
+            $this->request_factory->createRequest('PATCH', 'docman_wikis/' . urlencode((string) $wiki_doc_id))->withBody($this->stream_factory->createStream(json_encode(['move' => ['destination_folder_id' => $folder_id]])))
         );
         $this->assertEquals(200, $move_response->getStatusCode());
 
         $moved_item_response = $this->getResponse(
-            $this->client->get('docman_items/' . urlencode((string) $wiki_doc_id)),
+            $this->request_factory->createRequest('GET', 'docman_items/' . urlencode((string) $wiki_doc_id)),
             DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME
         );
-        $this->assertEquals($folder_id, $moved_item_response->json()['parent_id']);
+        $this->assertEquals($folder_id, json_decode($moved_item_response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR)['parent_id']);
 
         $this->getResponse(
-            $this->client->delete('docman_folders/' . urlencode((string) $folder_id)),
+            $this->request_factory->createRequest('DELETE', 'docman_folders/' . urlencode((string) $folder_id)),
             DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME
         );
     }
@@ -155,11 +139,11 @@ class DocmanWikiTest extends DocmanTestExecutionHelper
 
         $response = $this->getResponseByName(
             DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
-            $this->client->delete('docman_wikis/' . $item_to_delete_id)
+            $this->request_factory->createRequest('DELETE', 'docman_wikis/' . $item_to_delete_id)
         );
 
         $this->assertEquals(403, $response->getStatusCode());
-        $this->assertStringContainsString("allowed", $response->json()["error"]['i18n_error_message']);
+        $this->assertStringContainsString("allowed", json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR)["error"]['i18n_error_message']);
 
         $this->checkItemHasNotBeenDeleted($item_to_delete_id);
     }
@@ -174,12 +158,12 @@ class DocmanWikiTest extends DocmanTestExecutionHelper
 
         $response = $this->getResponseByName(
             DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
-            $this->client->delete('docman_wikis/' . $item_to_delete_id)
+            $this->request_factory->createRequest('DELETE', 'docman_wikis/' . $item_to_delete_id)
         );
 
         $this->assertEquals(403, $response->getStatusCode());
 
-        $this->assertStringContainsString("allowed", $response->json()["error"]['i18n_error_message']);
+        $this->assertStringContainsString("allowed", json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR)["error"]['i18n_error_message']);
 
         $this->checkItemHasNotBeenDeleted($item_to_delete_id);
     }
@@ -194,7 +178,7 @@ class DocmanWikiTest extends DocmanTestExecutionHelper
 
         $response = $this->getResponseByName(
             DocmanDataBuilder::ADMIN_USER_NAME,
-            $this->client->delete('docman_wikis/' . $item_to_delete_id)
+            $this->request_factory->createRequest('DELETE', 'docman_wikis/' . $item_to_delete_id)
         );
 
         $this->assertEquals(200, $response->getStatusCode());
@@ -211,7 +195,7 @@ class DocmanWikiTest extends DocmanTestExecutionHelper
         $item_to_delete_id = $item_to_delete['id'];
 
         $response = $this->getResponse(
-            $this->client->delete('docman_wikis/' . $item_to_delete_id),
+            $this->request_factory->createRequest('DELETE', 'docman_wikis/' . $item_to_delete_id),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
 
@@ -230,7 +214,7 @@ class DocmanWikiTest extends DocmanTestExecutionHelper
 
         $response = $this->getResponseByName(
             DocmanDataBuilder::ADMIN_USER_NAME,
-            $this->client->delete('docman_wikis/' . $item_to_delete_id)
+            $this->request_factory->createRequest('DELETE', 'docman_wikis/' . $item_to_delete_id)
         );
 
         $this->assertEquals(200, $response->getStatusCode());
@@ -247,7 +231,7 @@ class DocmanWikiTest extends DocmanTestExecutionHelper
         $locked_document_id = $locked_document['id'];
 
         $response_with_rest_read_only_user = $this->getResponse(
-            $this->client->post('docman_wikis/' . $locked_document_id . "/lock"),
+            $this->request_factory->createRequest('POST', 'docman_wikis/' . $locked_document_id . "/lock"),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
 
@@ -255,17 +239,17 @@ class DocmanWikiTest extends DocmanTestExecutionHelper
 
         $response = $this->getResponseByName(
             DocmanDataBuilder::ADMIN_USER_NAME,
-            $this->client->post('docman_wikis/' . $locked_document_id . "/lock")
+            $this->request_factory->createRequest('POST', 'docman_wikis/' . $locked_document_id . "/lock")
         );
 
         $this->assertEquals(201, $response->getStatusCode());
 
         $response = $this->getResponseByName(
             DocmanDataBuilder::ADMIN_USER_NAME,
-            $this->client->get('docman_items/' . $locked_document_id)
+            $this->request_factory->createRequest('GET', 'docman_items/' . $locked_document_id)
         );
 
-        $document = $response->json();
+        $document = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         $this->assertEquals($document['lock_info']["locked_by"]["username"], DocmanDataBuilder::ADMIN_USER_NAME);
     }
 
@@ -278,7 +262,7 @@ class DocmanWikiTest extends DocmanTestExecutionHelper
         $locked_document_id = $locked_document['id'];
 
         $response_with_rest_read_only_user = $this->getResponse(
-            $this->client->delete('docman_wikis/' . $locked_document_id . "/lock"),
+            $this->request_factory->createRequest('DELETE', 'docman_wikis/' . $locked_document_id . "/lock"),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
 
@@ -286,17 +270,17 @@ class DocmanWikiTest extends DocmanTestExecutionHelper
 
         $response = $this->getResponseByName(
             DocmanDataBuilder::ADMIN_USER_NAME,
-            $this->client->delete('docman_wikis/' . $locked_document_id . "/lock")
+            $this->request_factory->createRequest('DELETE', 'docman_wikis/' . $locked_document_id . "/lock")
         );
 
         $this->assertEquals(200, $response->getStatusCode());
 
         $response = $this->getResponseByName(
             DocmanDataBuilder::ADMIN_USER_NAME,
-            $this->client->get('docman_items/' . $locked_document_id)
+            $this->request_factory->createRequest('GET', 'docman_items/' . $locked_document_id)
         );
 
-        $document = $response->json();
+        $document = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         $this->assertEquals($document['lock_info'], null);
     }
 
@@ -321,7 +305,7 @@ class DocmanWikiTest extends DocmanTestExecutionHelper
 
         $response = $this->getResponseByName(
             DocmanDataBuilder::ADMIN_USER_NAME,
-            $this->client->post('docman_wikis/' . $wiki['id'] . '/version', null, $put_resource)
+            $this->request_factory->createRequest('POST', 'docman_wikis/' . $wiki['id'] . '/version')->withBody($this->stream_factory->createStream($put_resource))
         );
         $this->assertEquals(403, $response->getStatusCode());
     }
@@ -341,7 +325,7 @@ class DocmanWikiTest extends DocmanTestExecutionHelper
         );
 
         $response1_with_rest_read_only_user = $this->getResponse(
-            $this->client->post('docman_folders/' . $root_id . '/wikis', null, $query),
+            $this->request_factory->createRequest('POST', 'docman_folders/' . $root_id . '/wikis')->withBody($this->stream_factory->createStream($query)),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
 
@@ -349,21 +333,23 @@ class DocmanWikiTest extends DocmanTestExecutionHelper
 
         $response1 = $this->getResponseByName(
             DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
-            $this->client->post('docman_folders/' . $root_id . '/wikis', null, $query)
+            $this->request_factory->createRequest('POST', 'docman_folders/' . $root_id . '/wikis')->withBody($this->stream_factory->createStream($query))
         );
 
         $this->assertEquals(201, $response1->getStatusCode());
+        $response1_json = json_decode($response1->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         $wiki_item_response = $this->getResponseByName(
             DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
-            $this->client->get($response1->json()['uri'])
+            $this->request_factory->createRequest('GET', $response1_json['uri'])
         );
         $this->assertEquals(200, $wiki_item_response->getStatusCode());
-        $this->assertEquals('wiki', $wiki_item_response->json()['type']);
-        $this->assertEquals('My new wiki', $wiki_item_response->json()['title']);
-        $this->assertEquals('', $wiki_item_response->json()['description']);
+        $wiki_item_response_json = json_decode($wiki_item_response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
+        $this->assertEquals('wiki', $wiki_item_response_json['type']);
+        $this->assertEquals('My new wiki', $wiki_item_response_json['title']);
+        $this->assertEquals('', $wiki_item_response_json['description']);
 
-        $wiki_id = $response1->json()['id'];
+        $wiki_id = $response1_json['id'];
 
         $put_resource = json_encode(
             [
@@ -373,7 +359,7 @@ class DocmanWikiTest extends DocmanTestExecutionHelper
         );
 
         $response_with_rest_read_only_user = $this->getResponse(
-            $this->client->post('docman_wikis/' . $wiki_id . '/version', null, $put_resource),
+            $this->request_factory->createRequest('POST', 'docman_wikis/' . $wiki_id . '/version')->withBody($this->stream_factory->createStream($put_resource)),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
 
@@ -381,18 +367,19 @@ class DocmanWikiTest extends DocmanTestExecutionHelper
 
         $response = $this->getResponseByName(
             DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
-            $this->client->post('docman_wikis/' . $wiki_id . '/version', null, $put_resource)
+            $this->request_factory->createRequest('POST', 'docman_wikis/' . $wiki_id . '/version')->withBody($this->stream_factory->createStream($put_resource))
         );
         $this->assertEquals(200, $response->getStatusCode());
 
         $response = $this->getResponse(
-            $this->client->get('docman_items/' . $wiki_id),
+            $this->request_factory->createRequest('GET', 'docman_items/' . $wiki_id),
             DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME
         );
         $this->assertEquals(200, $response->getStatusCode());
-        $this->assertEquals('wiki', $response->json()['type']);
-        $this->assertEquals(null, $response->json()['lock_info']);
-        $this->assertEquals('my updated page name', $response->json()['wiki_properties']['page_name']);
+        $response_json = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
+        $this->assertEquals('wiki', $response_json['type']);
+        $this->assertEquals(null, $response_json['lock_info']);
+        $this->assertEquals('my updated page name', $response_json['wiki_properties']['page_name']);
     }
 
     /**
@@ -423,7 +410,7 @@ class DocmanWikiTest extends DocmanTestExecutionHelper
         ];
 
         $updated_metadata_file_response_with_reast_read_only_user = $this->getResponse(
-            $this->client->put('docman_wikis/' . $item_to_update_id . '/metadata', null, $put_resource),
+            $this->request_factory->createRequest('PUT', 'docman_wikis/' . $item_to_update_id . '/metadata')->withBody($this->stream_factory->createStream(json_encode($put_resource))),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
 
@@ -431,19 +418,19 @@ class DocmanWikiTest extends DocmanTestExecutionHelper
 
         $updated_metadata_file_response = $this->getResponseByName(
             DocmanDataBuilder::ADMIN_USER_NAME,
-            $this->client->put('docman_wikis/' . $item_to_update_id . '/metadata', null, $put_resource)
+            $this->request_factory->createRequest('PUT', 'docman_wikis/' . $item_to_update_id . '/metadata')->withBody($this->stream_factory->createStream(json_encode($put_resource)))
         );
 
         $this->assertEquals(200, $updated_metadata_file_response->getStatusCode());
 
         $new_version_response = $this->getResponseByName(
             DocmanDataBuilder::ADMIN_USER_NAME,
-            $this->client->get('docman_items/' . $item_to_update_id)
+            $this->request_factory->createRequest('GET', 'docman_items/' . $item_to_update_id)
         );
 
         $this->assertEquals($new_version_response->getStatusCode(), 200);
 
-        $new_version = $new_version_response->json();
+        $new_version = json_decode($new_version_response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         $date_after_update          = \DateTimeImmutable::createFromFormat(
             \DateTime::ATOM,
@@ -463,11 +450,11 @@ class DocmanWikiTest extends DocmanTestExecutionHelper
     public function testOptionsMetadata(int $id): void
     {
         $response = $this->getResponse(
-            $this->client->options('docman_wikis/' . $id . '/metadata'),
+            $this->request_factory->createRequest('OPTIONS', 'docman_wikis/' . $id . '/metadata'),
             REST_TestDataBuilder::ADMIN_USER_NAME
         );
 
-        $this->assertEquals(['OPTIONS', 'PUT'], $response->getHeader('Allow')->normalize()->toArray());
+        $this->assertEquals(['OPTIONS', 'PUT'], explode(', ', $response->getHeaderLine('Allow')));
         $this->assertEquals($response->getStatusCode(), 200);
     }
 
@@ -477,9 +464,9 @@ class DocmanWikiTest extends DocmanTestExecutionHelper
      */
     public function testOptions(int $id): void
     {
-        $response = $this->getResponse($this->client->options('docman_wikis/' . $id), REST_TestDataBuilder::ADMIN_USER_NAME);
+        $response = $this->getResponse($this->request_factory->createRequest('OPTIONS', 'docman_wikis/' . $id), REST_TestDataBuilder::ADMIN_USER_NAME);
 
-        $this->assertEquals(['OPTIONS', 'PATCH', 'DELETE'], $response->getHeader('Allow')->normalize()->toArray());
+        $this->assertEquals(['OPTIONS', 'PATCH', 'DELETE'], explode(', ', $response->getHeaderLine('Allow')));
         $this->assertEquals($response->getStatusCode(), 200);
     }
 
@@ -488,9 +475,9 @@ class DocmanWikiTest extends DocmanTestExecutionHelper
      */
     public function testOptionsLock(int $id): void
     {
-        $response = $this->getResponse($this->client->options('docman_wikis/' . $id . '/lock'), REST_TestDataBuilder::ADMIN_USER_NAME);
+        $response = $this->getResponse($this->request_factory->createRequest('OPTIONS', 'docman_wikis/' . $id . '/lock'), REST_TestDataBuilder::ADMIN_USER_NAME);
 
-        $this->assertEquals(['OPTIONS', 'POST', 'DELETE'], $response->getHeader('Allow')->normalize()->toArray());
+        $this->assertEquals(['OPTIONS', 'POST', 'DELETE'], explode(', ', $response->getHeaderLine('Allow')));
         $this->assertEquals($response->getStatusCode(), 200);
     }
 
@@ -500,27 +487,27 @@ class DocmanWikiTest extends DocmanTestExecutionHelper
     public function testAllOptionsForRESTReadOnlyUser(int $id): void
     {
         $response = $this->getResponse(
-            $this->client->options('docman_wikis/' . $id . '/metadata'),
+            $this->request_factory->createRequest('OPTIONS', 'docman_wikis/' . $id . '/metadata'),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
 
-        $this->assertEquals(['OPTIONS', 'PUT'], $response->getHeader('Allow')->normalize()->toArray());
+        $this->assertEquals(['OPTIONS', 'PUT'], explode(', ', $response->getHeaderLine('Allow')));
         $this->assertEquals(200, $response->getStatusCode());
 
         $response = $this->getResponse(
-            $this->client->options('docman_wikis/' . $id),
+            $this->request_factory->createRequest('OPTIONS', 'docman_wikis/' . $id),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
 
-        $this->assertEquals(['OPTIONS', 'PATCH', 'DELETE'], $response->getHeader('Allow')->normalize()->toArray());
+        $this->assertEquals(['OPTIONS', 'PATCH', 'DELETE'], explode(', ', $response->getHeaderLine('Allow')));
         $this->assertEquals(200, $response->getStatusCode());
 
         $response = $this->getResponse(
-            $this->client->options('docman_wikis/' . $id . '/lock'),
+            $this->request_factory->createRequest('OPTIONS', 'docman_wikis/' . $id . '/lock'),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
 
-        $this->assertEquals(['OPTIONS', 'POST', 'DELETE'], $response->getHeader('Allow')->normalize()->toArray());
+        $this->assertEquals(['OPTIONS', 'POST', 'DELETE'], explode(', ', $response->getHeaderLine('Allow')));
         $this->assertEquals(200, $response->getStatusCode());
     }
 
@@ -537,11 +524,7 @@ class DocmanWikiTest extends DocmanTestExecutionHelper
         $project_members_identifier = $this->project_id . '_3';
 
         $response_with_rest_read_only_user = $this->getResponse(
-            $this->client->put(
-                'docman_wikis/' . urlencode((string) $wiki_doc_id) . '/permissions',
-                null,
-                json_encode(['can_read' => [], 'can_write' => [], 'can_manage' => [['id' => $project_members_identifier]]])
-            ),
+            $this->request_factory->createRequest('PUT', 'docman_wikis/' . urlencode((string) $wiki_doc_id) . '/permissions')->withBody($this->stream_factory->createStream(json_encode(['can_read' => [], 'can_write' => [], 'can_manage' => [['id' => $project_members_identifier]]]))),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
 
@@ -549,27 +532,23 @@ class DocmanWikiTest extends DocmanTestExecutionHelper
 
         $permission_update_response = $this->getResponseByName(
             DocmanDataBuilder::ADMIN_USER_NAME,
-            $this->client->put(
-                'docman_wikis/' . urlencode((string) $wiki_doc_id) . '/permissions',
-                null,
-                json_encode(['can_read' => [], 'can_write' => [], 'can_manage' => [['id' => $project_members_identifier]]])
-            )
+            $this->request_factory->createRequest('PUT', 'docman_wikis/' . urlencode((string) $wiki_doc_id) . '/permissions')->withBody($this->stream_factory->createStream(json_encode(['can_read' => [], 'can_write' => [], 'can_manage' => [['id' => $project_members_identifier]]])))
         );
         $this->assertEquals(200, $permission_update_response->getStatusCode());
 
         $wiki_doc_representation_response = $this->getResponseByName(
             DocmanDataBuilder::ADMIN_USER_NAME,
-            $this->client->get('docman_items/' . urlencode((string) $wiki_doc_id))
+            $this->request_factory->createRequest('GET', 'docman_items/' . urlencode((string) $wiki_doc_id))
         );
         $this->assertEquals(200, $permission_update_response->getStatusCode());
-        $permissions_for_groups_representation = $wiki_doc_representation_response->json()['permissions_for_groups'];
+        $permissions_for_groups_representation = json_decode($wiki_doc_representation_response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR)['permissions_for_groups'];
         $this->assertEmpty($permissions_for_groups_representation['can_read']);
         $this->assertEmpty($permissions_for_groups_representation['can_write']);
         $this->assertCount(1, $permissions_for_groups_representation['can_manage']);
         $this->assertEquals($project_members_identifier, $permissions_for_groups_representation['can_manage'][0]['id']);
 
         $this->getResponse(
-            $this->client->delete('docman_wikis/' . urlencode((string) $wiki_doc_id)),
+            $this->request_factory->createRequest('DELETE', 'docman_wikis/' . urlencode((string) $wiki_doc_id)),
             DocmanDataBuilder::ADMIN_USER_NAME
         );
     }
@@ -581,7 +560,7 @@ class DocmanWikiTest extends DocmanTestExecutionHelper
     private function createWikiAndReturnItsId(int $root_id, string $query)
     {
         $response_with_rest_read_only_user = $this->getResponse(
-            $this->client->post('docman_folders/' . $root_id . '/wikis', null, $query),
+            $this->request_factory->createRequest('POST', 'docman_folders/' . $root_id . '/wikis')->withBody($this->stream_factory->createStream($query)),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
 
@@ -589,18 +568,20 @@ class DocmanWikiTest extends DocmanTestExecutionHelper
 
         $response1 = $this->getResponseByName(
             DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
-            $this->client->post('docman_folders/' . $root_id . '/wikis', null, $query)
+            $this->request_factory->createRequest('POST', 'docman_folders/' . $root_id . '/wikis')->withBody($this->stream_factory->createStream($query))
         );
 
         $this->assertEquals(201, $response1->getStatusCode());
 
+        $response1_json = json_decode($response1->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
+
         $item_response = $this->getResponseByName(
             DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
-            $this->client->get($response1->json()['uri'])
+            $this->request_factory->createRequest('GET', $response1_json['uri'])
         );
         $this->assertEquals(200, $item_response->getStatusCode());
-        $this->assertEquals('wiki', $item_response->json()['type']);
+        $this->assertEquals('wiki', json_decode($item_response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR)['type']);
 
-        return $response1->json()['id'];
+        return $response1_json['id'];
     }
 }

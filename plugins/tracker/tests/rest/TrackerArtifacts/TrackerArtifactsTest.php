@@ -45,10 +45,10 @@ class TrackerArtifactsTest extends TrackerBase
 
         $response = $this->getResponseByName(
             REST_TestDataBuilder::TEST_USER_1_NAME,
-            $this->client->get('/api/v1/trackers/' . $this->tracker_artifacts_tracker_id . '/artifacts?limit=100&query=' . urlencode(json_encode($query)))
+            $this->request_factory->createRequest('GET', '/api/v1/trackers/' . $this->tracker_artifacts_tracker_id . '/artifacts?limit=100&query=' . urlencode(json_encode($query)))
         );
 
-        $artifacts = $response->json();
+        $artifacts = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertCount(1, $artifacts);
 
@@ -71,10 +71,10 @@ class TrackerArtifactsTest extends TrackerBase
 
         $response = $this->getResponseByName(
             REST_TestDataBuilder::TEST_USER_1_NAME,
-            $this->client->get('/api/v1/trackers/' . $this->tracker_artifacts_tracker_id . '/artifacts?limit=100&query=' . urlencode(json_encode($query)))
+            $this->request_factory->createRequest('GET', '/api/v1/trackers/' . $this->tracker_artifacts_tracker_id . '/artifacts?limit=100&query=' . urlencode(json_encode($query)))
         );
 
-        $artifacts = $response->json();
+        $artifacts = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertCount(1, $artifacts);
 
@@ -94,10 +94,10 @@ class TrackerArtifactsTest extends TrackerBase
 
         $response = $this->getResponseByName(
             REST_TestDataBuilder::TEST_USER_1_NAME,
-            $this->client->get('/api/v1/trackers/' . $this->tracker_artifacts_tracker_id . '/artifacts?limit=100&query=' . urlencode(json_encode($query)))
+            $this->request_factory->createRequest('GET', '/api/v1/trackers/' . $this->tracker_artifacts_tracker_id . '/artifacts?limit=100&query=' . urlencode(json_encode($query)))
         );
 
-        $artifacts = $response->json();
+        $artifacts = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertCount(0, $artifacts);
     }
@@ -116,10 +116,10 @@ class TrackerArtifactsTest extends TrackerBase
 
         $response = $this->getResponseByName(
             REST_TestDataBuilder::TEST_USER_1_NAME,
-            $this->client->get('/api/v1/trackers/' . $this->tracker_artifacts_tracker_id . '/artifacts?limit=100&query=' . urlencode(json_encode($query)))
+            $this->request_factory->createRequest('GET', '/api/v1/trackers/' . $this->tracker_artifacts_tracker_id . '/artifacts?limit=100&query=' . urlencode(json_encode($query)))
         );
 
-        $artifacts = $response->json();
+        $artifacts = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertCount(2, $artifacts);
 

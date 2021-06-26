@@ -20,8 +20,9 @@
 
 namespace Tracker;
 
+use Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\ResponseInterface;
 use SimpleXMLElement;
-use Guzzle\Http\Client;
 use Tuleap\Tracker\Tests\REST\TrackerBase;
 
 require_once __DIR__ . '/../bootstrap.php';
@@ -41,11 +42,6 @@ class ArtifactTest extends TrackerBase
     protected $release_name_field_id;
     protected $release_status_field_id;
     protected $release_status_current_value_id;
-
-    /**
-     * @var Client
-     */
-    private $xml_client;
 
     public function setUp(): void
     {
@@ -68,16 +64,15 @@ class ArtifactTest extends TrackerBase
         }
 
         $this->getReleaseTrackerInformation();
+    }
 
-        if ($this->xml_client === null) {
-            $this->xml_client = new Client($this->base_url);
-            $this->xml_client->setSslVerification(false, false, false);
-
-            $this->xml_client->setDefaultOption('headers/Accept', 'application/xml');
-            $this->xml_client->setDefaultOption('headers/Content-Type', 'application/xml; charset=UTF8');
-
-            $this->xml_client->setCurlMulti($this->client->getCurlMulti());
-        }
+    private function getXMLResponse(RequestInterface $request): ResponseInterface
+    {
+        return $this->getResponse(
+            $request
+                ->withHeader('Content-Type', 'application/xml; charset=UTF8')
+                ->withHeader('Accept', 'application/xml')
+        );
     }
 
     private function getReleaseTrackerInformation()
@@ -112,10 +107,10 @@ class ArtifactTest extends TrackerBase
 
     public function testGetArtifact()
     {
-        $response = $this->getResponse($this->xml_client->get('artifacts/' . $this->release_artifact_ids[1]));
+        $response = $this->getXMLResponse($this->request_factory->createRequest('GET', 'artifacts/' . $this->release_artifact_ids[1]));
         $this->assertEquals($response->getStatusCode(), 200);
 
-        $artifact_xml = $response->xml();
+        $artifact_xml = new SimpleXMLElement($response->getBody()->getContents());
 
         $this->assertEquals((int) $artifact_xml->id, $this->release_artifact_ids[1]);
         $this->assertEquals((int) $artifact_xml->project->id, $this->project_private_member_id);
@@ -128,10 +123,10 @@ class ArtifactTest extends TrackerBase
             $this->release_status_field_id . "</field_id><bind_value_ids><item>" .
             $this->release_status_current_value_id . "</item></bind_value_ids></item></values></request>";
 
-        $response = $this->getResponse($this->xml_client->post('artifacts', null, $xml));
+        $response = $this->getXMLResponse($this->request_factory->createRequest('POST', 'artifacts')->withBody($this->stream_factory->createStream($xml)));
 
         $this->assertEquals($response->getStatusCode(), 201);
-        $artifact_xml = $response->xml();
+        $artifact_xml = new SimpleXMLElement($response->getBody()->getContents());
 
         $artifact_id = (int) $artifact_xml->id;
         $this->assertGreaterThan(0, $artifact_id);
@@ -148,10 +143,10 @@ class ArtifactTest extends TrackerBase
         $xml       = "<request><tracker><id>$this->releases_tracker_id</id></tracker><values><item><field_id>" .
             $this->release_name_field_id . "</field_id><value>" . $new_value . "</value></item></values></request>";
 
-        $response = $this->getResponse($this->xml_client->put('artifacts/' . $artifact_id, null, $xml));
+        $response = $this->getXMLResponse($this->request_factory->createRequest('PUT', 'artifacts/' . $artifact_id)->withBody($this->stream_factory->createStream($xml)));
 
         $this->assertEquals($response->getStatusCode(), 200);
-        $artifact_xml = $this->getResponse($this->xml_client->get('artifacts/' . $artifact_id))->xml();
+        $artifact_xml = new SimpleXMLElement($this->getXMLResponse($this->request_factory->createRequest('GET', 'artifacts/' . $artifact_id))->getBody()->getContents());
 
         $this->assertEquals($new_value, (string) $artifact_xml->values->item[0]->value);
     }
@@ -160,10 +155,10 @@ class ArtifactTest extends TrackerBase
     {
         $xml = "<request><tracker><id>" . $this->tracker_id . "</id></tracker><values><item><field_id>" . $this->slogan_field_id . "</field_id><value>slogan</value></item><item><field_id>" . $this->desc_field_id . "</field_id><value>desc</value></item><item><field_id>" . $this->status_field_id . "</field_id><bind_value_ids><item>" . $this->status_value_id . "</item></bind_value_ids></item></values></request>";
 
-        $response = $this->getResponse($this->xml_client->post('artifacts', null, $xml));
+        $response = $this->getXMLResponse($this->request_factory->createRequest('POST', 'artifacts')->withBody($this->stream_factory->createStream($xml)));
 
         $this->assertEquals($response->getStatusCode(), 201);
-        $artifact_xml = $response->xml();
+        $artifact_xml = new SimpleXMLElement($response->getBody()->getContents());
 
         $artifact_id = (int) $artifact_xml->id;
         $this->assertGreaterThan(0, $artifact_id);
@@ -176,10 +171,10 @@ class ArtifactTest extends TrackerBase
      */
     public function testGetArtifactInXMLTracker($artifact_id)
     {
-        $response = $this->getResponse($this->xml_client->get('artifacts/' . $artifact_id));
+        $response = $this->getXMLResponse($this->request_factory->createRequest('GET', 'artifacts/' . $artifact_id));
         $this->assertEquals($response->getStatusCode(), 200);
 
-        $artifact_xml = $response->xml();
+        $artifact_xml = new SimpleXMLElement($response->getBody()->getContents());
 
         $this->assertEquals((int) $artifact_xml->id, $artifact_id);
         $this->assertEquals((int) $artifact_xml->project->id, $this->rest_xml_api_project_id);
@@ -195,10 +190,10 @@ class ArtifactTest extends TrackerBase
      */
     public function testGetArtifactInXMLTrackerWithValuesByField($artifact_id)
     {
-        $response = $this->getResponse($this->xml_client->get('artifacts/' . $artifact_id . '?values_format=by_field'));
+        $response = $this->getXMLResponse($this->request_factory->createRequest('GET', 'artifacts/' . $artifact_id . '?values_format=by_field'));
         $this->assertEquals($response->getStatusCode(), 200);
 
-        $artifact_xml = $response->xml();
+        $artifact_xml = new SimpleXMLElement($response->getBody()->getContents());
 
         $this->assertEquals((int) $artifact_xml->id, $artifact_id);
         $this->assertEquals((int) $artifact_xml->project->id, $this->rest_xml_api_project_id);
@@ -214,10 +209,10 @@ class ArtifactTest extends TrackerBase
      */
     public function testGetArtifactInXMLTrackerInBothFormat($artifact_id)
     {
-        $response = $this->getResponse($this->xml_client->get('artifacts/' . $artifact_id . '?values_format=all'));
+        $response = $this->getXMLResponse($this->request_factory->createRequest('GET', 'artifacts/' . $artifact_id . '?values_format=all'));
         $this->assertEquals($response->getStatusCode(), 200);
 
-        $artifact_xml = $response->xml();
+        $artifact_xml = new SimpleXMLElement($response->getBody()->getContents());
 
         $this->assertEquals((int) $artifact_xml->id, $artifact_id);
         $this->assertEquals((int) $artifact_xml->project->id, $this->rest_xml_api_project_id);
@@ -267,10 +262,10 @@ class ArtifactTest extends TrackerBase
     {
         $xml = "<request><tracker><id>" . $this->tracker_id . "</id></tracker><values_by_field><slogan><value>Sloganv2</value></slogan><epic_desc><value><content>Descv2</content><format>html</format></value></epic_desc></values_by_field></request>";
 
-        $response = $this->getResponse($this->xml_client->post('artifacts', null, $xml));
+        $response = $this->getXMLResponse($this->request_factory->createRequest('POST', 'artifacts')->withBody($this->stream_factory->createStream($xml)));
 
         $this->assertEquals($response->getStatusCode(), 201);
-        $artifact_xml = $response->xml();
+        $artifact_xml = new SimpleXMLElement($response->getBody()->getContents());
 
         $artifact_id = (int) $artifact_xml->id;
         $this->assertGreaterThan(0, $artifact_id);
@@ -283,10 +278,10 @@ class ArtifactTest extends TrackerBase
      */
     public function testGetArtifactCreatedWithValueByFieldInXMLTracker($artifact_id)
     {
-        $response = $this->getResponse($this->xml_client->get('artifacts/' . $artifact_id . '?values_format=by_field'));
+        $response = $this->getXMLResponse($this->request_factory->createRequest('GET', 'artifacts/' . $artifact_id . '?values_format=by_field'));
         $this->assertEquals(200, $response->getStatusCode());
 
-        $artifact_xml = $response->xml();
+        $artifact_xml = new SimpleXMLElement($response->getBody()->getContents());
 
         $this->assertEquals((int) $artifact_xml->id, $artifact_id);
         $this->assertEquals((int) $artifact_xml->project->id, $this->rest_xml_api_project_id);

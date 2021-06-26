@@ -33,21 +33,21 @@ class ArtifactsTest extends ArtifactsTestExecutionHelper
     public function testOptionsArtifactsWithUser(): void
     {
         $response = $this->getResponseForReadOnlyUserAdmin(
-            $this->client->options('artifacts')
+            $this->request_factory->createRequest('OPTIONS', 'artifacts')
         );
 
-        $this->assertEquals(
+        self::assertEqualsCanonicalizing(
             ['OPTIONS', 'GET', 'POST'],
-            $response->getHeader('Allow')->normalize()->toArray()
+            explode(', ', $response->getHeaderLine('Allow'))
         );
 
         $response = $this->getResponse(
-            $this->client->options('artifacts/9')
+            $this->request_factory->createRequest('OPTIONS', 'artifacts/9')
         );
 
-        $this->assertEquals(
+        self::assertEqualsCanonicalizing(
             ['OPTIONS', 'GET', 'PUT', 'DELETE', 'PATCH'],
-            $response->getHeader('Allow')->normalize()->toArray()
+            explode(', ', $response->getHeaderLine('Allow'))
         );
     }
 
@@ -59,7 +59,8 @@ class ArtifactsTest extends ArtifactsTestExecutionHelper
         $post_body = $this->buildPOSTBodyContent($summary_field_label, $summary_field_value);
 
         $response = $this->getResponseForReadOnlyUserAdmin(
-            $this->client->post('artifacts', null, $post_body)
+            $this->request_factory->createRequest('POST', 'artifacts')
+                ->withBody($this->stream_factory->createStream($post_body))
         );
 
         $this->assertEquals(403, $response->getStatusCode());
@@ -68,7 +69,7 @@ class ArtifactsTest extends ArtifactsTestExecutionHelper
     public function testGetSuspendedProjectArtifactForUser(): void
     {
         $response = $this->getResponseForReadOnlyUserAdmin(
-            $this->client->get('artifacts/' . $this->suspended_tracker_artifacts_ids[1])
+            $this->request_factory->createRequest('GET', 'artifacts/' . $this->suspended_tracker_artifacts_ids[1])
         );
 
         $this->assertEquals(200, $response->getStatusCode());
@@ -77,7 +78,7 @@ class ArtifactsTest extends ArtifactsTestExecutionHelper
     public function testGetArtifactWithUser(): void
     {
         $response = $this->getResponseForReadOnlyUserAdmin(
-            $this->client->get("artifacts/9")
+            $this->request_factory->createRequest('GET', "artifacts/9")
         );
 
         $this->assertEquals(200, $response->getStatusCode());
@@ -90,7 +91,7 @@ class ArtifactsTest extends ArtifactsTestExecutionHelper
         $artifact_id     = $this->level_one_artifact_ids[1];
 
         $response_with_read_only_user = $this->getResponseForReadOnlyUserAdmin(
-            $this->client->get("artifacts/$artifact_id/links")
+            $this->request_factory->createRequest('GET', "artifacts/$artifact_id/links")
         );
         $this->assertLinks($response_with_read_only_user, $nature_is_child, $artifact_id, $nature_empty);
     }

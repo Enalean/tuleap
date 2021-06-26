@@ -29,10 +29,10 @@ class SemanticTimeframeImportTest extends TrackerBase
     public function testImportSemanticTimeframe(): void
     {
         $response = $this->getResponse(
-            $this->client->get('trackers/' . $this->tracker_with_timeframe_semantic_id)
+            $this->request_factory->createRequest('GET', 'trackers/' . $this->tracker_with_timeframe_semantic_id)
         );
 
-        $tracker = $response->json();
+        $tracker = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertArrayHasKey('timeframe', $tracker['semantics']);
         $this->assertArrayHasKey('start_date_field_id', $tracker['semantics']['timeframe']);

@@ -30,7 +30,7 @@ class UserGroupTest extends RestBase // phpcs:ignore PSR1.Classes.ClassDeclarati
 
     public function testGETId(): void
     {
-        $response = $this->getResponse($this->client->get('user_groups/' . $this->project_private_member_id . '_' . REST_TestDataBuilder::STATIC_UGROUP_1_ID));
+        $response = $this->getResponse($this->request_factory->createRequest('GET', 'user_groups/' . $this->project_private_member_id . '_' . REST_TestDataBuilder::STATIC_UGROUP_1_ID));
 
         $this->assertGETId($response);
     }
@@ -38,7 +38,8 @@ class UserGroupTest extends RestBase // phpcs:ignore PSR1.Classes.ClassDeclarati
     public function testGETIdForReadOnlyUser(): void
     {
         $response = $this->getResponse(
-            $this->client->get(
+            $this->request_factory->createRequest(
+                'GET',
                 'user_groups/' . $this->project_private_member_id . '_' . REST_TestDataBuilder::STATIC_UGROUP_1_ID
             ),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
@@ -50,7 +51,7 @@ class UserGroupTest extends RestBase // phpcs:ignore PSR1.Classes.ClassDeclarati
     public function testGETIdDoesWorkIfUserIsProjectMemberButNotProjectAdmin(): void
     {
         $response = $this->getResponse(
-            $this->client->get('user_groups/' . REST_TestDataBuilder::STATIC_UGROUP_1_ID),
+            $this->request_factory->createRequest('GET', 'user_groups/' . REST_TestDataBuilder::STATIC_UGROUP_1_ID),
             REST_TestDataBuilder::TEST_USER_1_NAME
         );
         $this->assertGETId($response);
@@ -59,11 +60,11 @@ class UserGroupTest extends RestBase // phpcs:ignore PSR1.Classes.ClassDeclarati
     public function testGETIdDoesWorkIfUserIsNotProjectMember()
     {
         $response = $this->getResponse(
-            $this->client->get('user_groups/' . REST_TestDataBuilder::STATIC_UGROUP_2_ID),
+            $this->request_factory->createRequest('GET', 'user_groups/' . REST_TestDataBuilder::STATIC_UGROUP_2_ID),
             REST_TestDataBuilder::TEST_USER_2_NAME
         );
 
-        $json = $response->json();
+        $json = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertEquals($json['id'], (string) REST_TestDataBuilder::STATIC_UGROUP_2_ID);
         $this->assertEquals($json['uri'], 'user_groups/' . REST_TestDataBuilder::STATIC_UGROUP_2_ID);
@@ -77,35 +78,36 @@ class UserGroupTest extends RestBase // phpcs:ignore PSR1.Classes.ClassDeclarati
 
     public function testGETIdThrowsA404IfUserGroupIdDoesNotExist()
     {
-        $response = $this->getResponse($this->client->get("user_groups/$this->project_private_id" . "_999"));
+        $response = $this->getResponse($this->request_factory->createRequest('GET', "user_groups/$this->project_private_id" . "_999"));
         $this->assertEquals($response->getStatusCode(), 404);
     }
 
     public function testOptionsUsers()
     {
-        $response = $this->getResponse($this->client->get('user_groups/' . $this->project_private_member_id . '_' . REST_TestDataBuilder::STATIC_UGROUP_1_ID . '/users'));
+        $response = $this->getResponse($this->request_factory->createRequest('GET', 'user_groups/' . $this->project_private_member_id . '_' . REST_TestDataBuilder::STATIC_UGROUP_1_ID . '/users'));
 
-        $this->assertEquals(['OPTIONS', 'GET', 'PUT'], $response->getHeader('Allow')->normalize()->toArray());
+        self::assertEqualsCanonicalizing(['OPTIONS', 'GET', 'PUT'], explode(', ', $response->getHeaderLine('Allow')));
         $this->assertEquals($response->getStatusCode(), 200);
     }
 
     public function testOptionsUsersForReadUserOnly(): void
     {
         $response = $this->getResponse(
-            $this->client->get(
+            $this->request_factory->createRequest(
+                'GET',
                 'user_groups/' . $this->project_private_member_id . '_' . REST_TestDataBuilder::STATIC_UGROUP_1_ID . '/users'
             ),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
 
         $this->assertEquals(200, $response->getStatusCode());
-        $this->assertEquals(['OPTIONS', 'GET', 'PUT'], $response->getHeader('Allow')->normalize()->toArray());
+        self::assertEqualsCanonicalizing(['OPTIONS', 'GET', 'PUT'], explode(', ', $response->getHeaderLine('Allow')));
     }
 
     public function testGetUsersFromADynamicGroup(): void
     {
         $response = $this->getResponse(
-            $this->client->get('user_groups/' . $this->project_private_member_id . '_3/users')
+            $this->request_factory->createRequest('GET', 'user_groups/' . $this->project_private_member_id . '_3/users')
         );
         $this->assertGETUserGroupsIdUser($response);
     }
@@ -113,18 +115,18 @@ class UserGroupTest extends RestBase // phpcs:ignore PSR1.Classes.ClassDeclarati
     public function testGetUsersGroupsIdUserForReadOnlyUser(): void
     {
         $response = $this->getResponse(
-            $this->client->get('user_groups/' . $this->project_private_member_id . '_3/users'),
+            $this->request_factory->createRequest('GET', 'user_groups/' . $this->project_private_member_id . '_3/users'),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
         $this->assertGETUserGroupsIdUser($response);
     }
 
-    private function assertGETUserGroupsIdUser(\Guzzle\Http\Message\Response $response): void
+    private function assertGETUserGroupsIdUser(\Psr\Http\Message\ResponseInterface $response): void
     {
         $this->assertEquals(200, $response->getStatusCode());
 
         $this->assertEquals(
-            $response->json(),
+            json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR),
             [
                 [
                     'id'           => $this->user_ids[REST_TestDataBuilder::TEST_USER_RESTRICTED_1_NAME],
@@ -218,10 +220,10 @@ class UserGroupTest extends RestBase // phpcs:ignore PSR1.Classes.ClassDeclarati
 
     public function testGetUsersFromAStaticGroup()
     {
-        $response = $this->getResponse($this->client->get('user_groups/' . $this->project_private_member_id . '_' . REST_TestDataBuilder::STATIC_UGROUP_1_ID . '/users'));
+        $response = $this->getResponse($this->request_factory->createRequest('GET', 'user_groups/' . $this->project_private_member_id . '_' . REST_TestDataBuilder::STATIC_UGROUP_1_ID . '/users'));
 
         $this->assertEquals(
-            $response->json(),
+            json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR),
             [
                 [
                     'id'           => $this->user_ids[REST_TestDataBuilder::TEST_USER_1_NAME],
@@ -244,9 +246,9 @@ class UserGroupTest extends RestBase // phpcs:ignore PSR1.Classes.ClassDeclarati
 
     public function testGetMultipleUsersFromAStaticGroup()
     {
-        $response = $this->getResponse($this->client->get('user_groups/' . $this->project_private_member_id . '_' . REST_TestDataBuilder::STATIC_UGROUP_2_ID . '/users'));
+        $response = $this->getResponse($this->request_factory->createRequest('GET', 'user_groups/' . $this->project_private_member_id . '_' . REST_TestDataBuilder::STATIC_UGROUP_2_ID . '/users'));
         $this->assertEquals(
-            $response->json(),
+            json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR),
             [
                 [
                     'id'           => $this->user_ids[REST_TestDataBuilder::TEST_USER_1_NAME],
@@ -293,10 +295,13 @@ class UserGroupTest extends RestBase // phpcs:ignore PSR1.Classes.ClassDeclarati
         );
 
         $response = $this->getResponse(
-            $this->client->put(
-                'user_groups/' . $this->project_private_member_id . '_' . REST_TestDataBuilder::DYNAMIC_UGROUP_PROJECT_MEMBERS_ID . '/users',
-                null,
-                $put_resource
+            $this->request_factory->createRequest(
+                'PUT',
+                'user_groups/' . $this->project_private_member_id . '_' . REST_TestDataBuilder::DYNAMIC_UGROUP_PROJECT_MEMBERS_ID . '/users'
+            )->withBody(
+                $this->stream_factory->createStream(
+                    $put_resource
+                )
             ),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
@@ -316,22 +321,24 @@ class UserGroupTest extends RestBase // phpcs:ignore PSR1.Classes.ClassDeclarati
         ]);
 
         $response = $this->getResponse(
-            $this->client->put(
-                'user_groups/' . $this->project_private_member_id . '_' . REST_TestDataBuilder::DYNAMIC_UGROUP_PROJECT_MEMBERS_ID . '/users',
-                null,
-                $put_resource
+            $this->request_factory->createRequest(
+                'PUT',
+                'user_groups/' . $this->project_private_member_id . '_' . REST_TestDataBuilder::DYNAMIC_UGROUP_PROJECT_MEMBERS_ID . '/users'
+            )->withBody(
+                $this->stream_factory->createStream($put_resource)
             )
         );
 
         $this->assertEquals($response->getStatusCode(), 200);
 
         $response_get = $this->getResponse(
-            $this->client->get(
+            $this->request_factory->createRequest(
+                'GET',
                 'user_groups/' . $this->project_private_member_id . '_' . REST_TestDataBuilder::DYNAMIC_UGROUP_PROJECT_MEMBERS_ID . '/users'
             )
         );
 
-        $response_get_json = $response_get->json();
+        $response_get_json = json_decode($response_get->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertEquals(count($response_get_json), 2);
         $this->assertEquals($response_get_json[0]["id"], 102);
@@ -349,22 +356,34 @@ class UserGroupTest extends RestBase // phpcs:ignore PSR1.Classes.ClassDeclarati
             ['id' => $this->user_ids[REST_TestDataBuilder::TEST_USER_RESTRICTED_1_NAME]]
         ]);
 
-        $response_put = $this->getResponse($this->client->put(
-            'user_groups/' . $this->project_private_member_id . '_' . REST_TestDataBuilder::DYNAMIC_UGROUP_PROJECT_MEMBERS_ID . '/users',
-            null,
-            $put_resource
-        ));
+        $this->getResponse(
+            $this->request_factory->createRequest(
+                'PUT',
+                'user_groups/' . $this->project_private_member_id . '_' . REST_TestDataBuilder::DYNAMIC_UGROUP_PROJECT_MEMBERS_ID . '/users'
+            )->withBody(
+                $this->stream_factory->createStream(
+                    $put_resource
+                )
+            )
+        );
 
-        $response_put = $this->getResponse($this->client->put(
-            'user_groups/' . REST_TestDataBuilder::STATIC_PRIVATE_MEMBER_UGROUP_DEVS_ID . '/users',
-            null,
-            json_encode([
-                ['id' => $this->user_ids[REST_TestDataBuilder::TEST_USER_1_NAME]],
-                ['id' => $this->user_ids[REST_TestDataBuilder::TEST_USER_5_NAME]],
-                ['id' => $this->user_ids[REST_TestDataBuilder::TEST_USER_RESTRICTED_1_NAME]],
-                ['id' => $this->user_ids[REST_TestDataBuilder::TEST_USER_RESTRICTED_2_NAME]]
-            ])
-        ));
+        $this->getResponse(
+            $this->request_factory->createRequest(
+                'PUT',
+                'user_groups/' . REST_TestDataBuilder::STATIC_PRIVATE_MEMBER_UGROUP_DEVS_ID . '/users'
+            )->withBody(
+                $this->stream_factory->createStream(
+                    json_encode(
+                        [
+                            ['id' => $this->user_ids[REST_TestDataBuilder::TEST_USER_1_NAME]],
+                            ['id' => $this->user_ids[REST_TestDataBuilder::TEST_USER_5_NAME]],
+                            ['id' => $this->user_ids[REST_TestDataBuilder::TEST_USER_RESTRICTED_1_NAME]],
+                            ['id' => $this->user_ids[REST_TestDataBuilder::TEST_USER_RESTRICTED_2_NAME]]
+                        ]
+                    )
+                )
+            )
+        );
     }
 
     /**
@@ -376,28 +395,43 @@ class UserGroupTest extends RestBase // phpcs:ignore PSR1.Classes.ClassDeclarati
             ['id' => $this->user_ids[REST_TestDataBuilder::TEST_USER_1_NAME]],
             ['id' => $this->user_ids[REST_TestDataBuilder::TEST_USER_2_NAME]],
         ]);
-        $response     = $this->getResponse($this->client->put(
-            'user_groups/' . $this->project_private_member_id . '_' . REST_TestDataBuilder::DYNAMIC_UGROUP_PROJECT_ADMINS_ID . '/users',
-            null,
-            $put_resource
-        ));
+        $response     = $this->getResponse(
+            $this->request_factory->createRequest(
+                'PUT',
+                'user_groups/' . $this->project_private_member_id . '_' . REST_TestDataBuilder::DYNAMIC_UGROUP_PROJECT_ADMINS_ID . '/users',
+            )->withBody(
+                $this->stream_factory->createStream(
+                    $put_resource
+                )
+            )
+        );
         $this->assertEquals($response->getStatusCode(), 200);
 
-        $response_get_admins = $this->getResponse($this->client->get(
-            'user_groups/' . $this->project_private_member_id . '_' . REST_TestDataBuilder::DYNAMIC_UGROUP_PROJECT_ADMINS_ID . '/users'
-        ));
-        $admins_after_update = $response_get_admins->json();
+        $response_get_admins = $this->getResponse(
+            $this->request_factory->createRequest(
+                'GET',
+                'user_groups/' . $this->project_private_member_id . '_' . REST_TestDataBuilder::DYNAMIC_UGROUP_PROJECT_ADMINS_ID . '/users'
+            )
+        );
+        $admins_after_update = json_decode($response_get_admins->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         $this->assertCount(2, $admins_after_update);
         $this->assertEquals($admins_after_update[0]['id'], $this->user_ids[REST_TestDataBuilder::TEST_USER_1_NAME]);
         $this->assertEquals($admins_after_update[1]['id'], $this->user_ids[REST_TestDataBuilder::TEST_USER_2_NAME]);
 
-        $response = $this->getResponse($this->client->put(
-            'user_groups/' . $this->project_private_member_id . '_' . REST_TestDataBuilder::DYNAMIC_UGROUP_PROJECT_ADMINS_ID . '/users',
-            null,
-            json_encode([
-                ['id' => $this->user_ids[REST_TestDataBuilder::TEST_USER_1_NAME]],
-            ])
-        ));
+        $response = $this->getResponse(
+            $this->request_factory->createRequest(
+                'PUT',
+                'user_groups/' . $this->project_private_member_id . '_' . REST_TestDataBuilder::DYNAMIC_UGROUP_PROJECT_ADMINS_ID . '/users'
+            )->withBody(
+                $this->stream_factory->createStream(
+                    json_encode(
+                        [
+                            ['id' => $this->user_ids[REST_TestDataBuilder::TEST_USER_1_NAME]],
+                        ]
+                    )
+                )
+            )
+        );
         $this->assertEquals($response->getStatusCode(), 200);
     }
 
@@ -414,22 +448,26 @@ class UserGroupTest extends RestBase // phpcs:ignore PSR1.Classes.ClassDeclarati
         );
 
         $response = $this->getResponse(
-            $this->client->put(
-                'user_groups/' . $this->project_private_member_id . '_' . REST_TestDataBuilder::STATIC_UGROUP_2_ID . '/users',
-                null,
-                $put_resource
+            $this->request_factory->createRequest(
+                'PUT',
+                'user_groups/' . $this->project_private_member_id . '_' . REST_TestDataBuilder::STATIC_UGROUP_2_ID . '/users'
+            )->withBody(
+                $this->stream_factory->createStream(
+                    $put_resource
+                )
             )
         );
 
         $this->assertEquals($response->getStatusCode(), 200);
 
         $response_get = $this->getResponse(
-            $this->client->get(
+            $this->request_factory->createRequest(
+                'GET',
                 'user_groups/' . $this->project_private_member_id . '_' . REST_TestDataBuilder::STATIC_UGROUP_2_ID . '/users'
             )
         );
 
-        $response_get_json = $response_get->json();
+        $response_get_json = json_decode($response_get->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertEquals(count($response_get_json), 2);
         $this->assertEquals($response_get_json[0]["id"], 102);
@@ -447,22 +485,26 @@ class UserGroupTest extends RestBase // phpcs:ignore PSR1.Classes.ClassDeclarati
         ]);
 
         $response = $this->getResponse(
-            $this->client->put(
-                'user_groups/' . $this->project_private_member_id . '_' . REST_TestDataBuilder::STATIC_UGROUP_2_ID . '/users',
-                null,
-                $put_resource
+            $this->request_factory->createRequest(
+                'PUT',
+                'user_groups/' . $this->project_private_member_id . '_' . REST_TestDataBuilder::STATIC_UGROUP_2_ID . '/users'
+            )->withBody(
+                $this->stream_factory->createStream(
+                    $put_resource
+                )
             )
         );
 
         $this->assertEquals($response->getStatusCode(), 200);
 
         $response_get = $this->getResponse(
-            $this->client->get(
+            $this->request_factory->createRequest(
+                'GET',
                 'user_groups/' . $this->project_private_member_id . '_' . REST_TestDataBuilder::STATIC_UGROUP_2_ID . '/users'
             )
         );
 
-        $response_get_json = $response_get->json();
+        $response_get_json = json_decode($response_get->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertEquals(count($response_get_json), 2);
         $this->assertEquals($response_get_json[0]["id"], 103);
@@ -482,10 +524,13 @@ class UserGroupTest extends RestBase // phpcs:ignore PSR1.Classes.ClassDeclarati
         );
 
         $response = $this->getResponse(
-            $this->client->put(
-                'user_groups/' . $this->project_private_member_id . '_' . REST_TestDataBuilder::STATIC_UGROUP_2_ID . '/users',
-                null,
-                $put_resource
+            $this->request_factory->createRequest(
+                'PUT',
+                'user_groups/' . $this->project_private_member_id . '_' . REST_TestDataBuilder::STATIC_UGROUP_2_ID . '/users'
+            )->withBody(
+                $this->stream_factory->createStream(
+                    $put_resource
+                )
             )
         );
 
@@ -506,22 +551,26 @@ class UserGroupTest extends RestBase // phpcs:ignore PSR1.Classes.ClassDeclarati
         );
 
         $response = $this->getResponse(
-            $this->client->put(
-                'user_groups/' . $this->project_private_member_id . '_' . REST_TestDataBuilder::STATIC_UGROUP_2_ID . '/users',
-                null,
-                $put_resource
+            $this->request_factory->createRequest(
+                'PUT',
+                'user_groups/' . $this->project_private_member_id . '_' . REST_TestDataBuilder::STATIC_UGROUP_2_ID . '/users'
+            )->withBody(
+                $this->stream_factory->createStream(
+                    $put_resource
+                )
             )
         );
 
         $this->assertEquals($response->getStatusCode(), 200);
 
         $response_get = $this->getResponse(
-            $this->client->get(
+            $this->request_factory->createRequest(
+                'GET',
                 'user_groups/' . $this->project_private_member_id . '_' . REST_TestDataBuilder::STATIC_UGROUP_2_ID . '/users'
             )
         );
 
-        $response_get_json = $response_get->json();
+        $response_get_json = json_decode($response_get->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertEquals(count($response_get_json), 3);
         $this->assertEquals($response_get_json[0]["id"], 102);
@@ -543,10 +592,13 @@ class UserGroupTest extends RestBase // phpcs:ignore PSR1.Classes.ClassDeclarati
         );
 
         $response = $this->getResponse(
-            $this->client->put(
-                'user_groups/' . $this->project_private_member_id . '_' . REST_TestDataBuilder::STATIC_UGROUP_2_ID . '/users',
-                null,
-                $put_resource
+            $this->request_factory->createRequest(
+                'PUT',
+                'user_groups/' . $this->project_private_member_id . '_' . REST_TestDataBuilder::STATIC_UGROUP_2_ID . '/users'
+            )->withBody(
+                $this->stream_factory->createStream(
+                    $put_resource
+                )
             )
         );
 
@@ -567,10 +619,13 @@ class UserGroupTest extends RestBase // phpcs:ignore PSR1.Classes.ClassDeclarati
         );
 
         $response = $this->getResponse(
-            $this->client->put(
-                'user_groups/' . $this->project_private_member_id . '_' . REST_TestDataBuilder::STATIC_UGROUP_2_ID . '/users',
-                null,
-                $put_resource
+            $this->request_factory->createRequest(
+                'PUT',
+                'user_groups/' . $this->project_private_member_id . '_' . REST_TestDataBuilder::STATIC_UGROUP_2_ID . '/users'
+            )->withBody(
+                $this->stream_factory->createStream(
+                    $put_resource
+                )
             )
         );
 
@@ -589,10 +644,13 @@ class UserGroupTest extends RestBase // phpcs:ignore PSR1.Classes.ClassDeclarati
         );
 
         $response = $this->getResponseWithUser2(
-            $this->client->put(
-                'user_groups/' . $this->project_private_member_id . '_' . REST_TestDataBuilder::STATIC_UGROUP_2_ID . '/users',
-                null,
-                $put_resource
+            $this->request_factory->createRequest(
+                'PUT',
+                'user_groups/' . $this->project_private_member_id . '_' . REST_TestDataBuilder::STATIC_UGROUP_2_ID . '/users'
+            )->withBody(
+                $this->stream_factory->createStream(
+                    $put_resource
+                )
             )
         );
 
@@ -614,10 +672,13 @@ class UserGroupTest extends RestBase // phpcs:ignore PSR1.Classes.ClassDeclarati
         );
 
         $response = $this->getResponse(
-            $this->client->put(
-                'user_groups/' . $this->project_private_member_id . '_' . REST_TestDataBuilder::STATIC_UGROUP_2_ID . '/users',
-                null,
-                $put_resource
+            $this->request_factory->createRequest(
+                'PUT',
+                'user_groups/' . $this->project_private_member_id . '_' . REST_TestDataBuilder::STATIC_UGROUP_2_ID . '/users'
+            )->withBody(
+                $this->stream_factory->createStream(
+                    $put_resource
+                )
             )
         );
         $this->assertEquals(400, $response->getStatusCode());
@@ -625,9 +686,9 @@ class UserGroupTest extends RestBase // phpcs:ignore PSR1.Classes.ClassDeclarati
 
     public function testOptions()
     {
-        $response = $this->getResponse($this->client->options('user_groups'));
+        $response = $this->getResponse($this->request_factory->createRequest('OPTIONS', 'user_groups'));
 
-        $this->assertEquals(['OPTIONS', 'POST'], $response->getHeader('Allow')->normalize()->toArray());
+        self::assertEqualsCanonicalizing(['OPTIONS', 'POST'], explode(', ', $response->getHeaderLine('Allow')));
         $this->assertEquals($response->getStatusCode(), 200);
     }
 
@@ -641,7 +702,7 @@ class UserGroupTest extends RestBase // phpcs:ignore PSR1.Classes.ClassDeclarati
         );
 
         $response = $this->getResponse(
-            $this->client->post('user_groups', null, $post_resource),
+            $this->request_factory->createRequest('POST', 'user_groups')->withBody($this->stream_factory->createStream($post_resource)),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
 
@@ -657,11 +718,11 @@ class UserGroupTest extends RestBase // phpcs:ignore PSR1.Classes.ClassDeclarati
             ]
         );
 
-        $response = $this->getResponse($this->client->post('user_groups', null, $post_resource));
+        $response = $this->getResponse($this->request_factory->createRequest('POST', 'user_groups')->withBody($this->stream_factory->createStream($post_resource)));
 
         $this->assertEquals($response->getStatusCode(), 201);
 
-        $ugroup = $response->json();
+        $ugroup = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertTrue($ugroup['id'] > 0);
         $this->assertEquals($ugroup['short_name'], 'static_ugroup_rest_1');
@@ -670,11 +731,11 @@ class UserGroupTest extends RestBase // phpcs:ignore PSR1.Classes.ClassDeclarati
     public function testGetProjectUserGroups(): array
     {
         $project_id = urlencode($this->project_public_with_membership_id);
-        $response   = $this->getResponse($this->client->get("projects/$project_id/user_groups"));
+        $response   = $this->getResponse($this->request_factory->createRequest('GET', "projects/$project_id/user_groups"));
 
         $this->assertEquals(200, $response->getStatusCode());
 
-        $user_groups = $response->json();
+        $user_groups = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         return $user_groups;
     }
@@ -693,16 +754,16 @@ class UserGroupTest extends RestBase // phpcs:ignore PSR1.Classes.ClassDeclarati
         );
 
         $developpers_id = urlencode($developpers['id']);
-        $response_put   = $this->getResponse($this->client->put("user_groups/$developpers_id/users", null, $body));
+        $response_put   = $this->getResponse($this->request_factory->createRequest('PUT', "user_groups/$developpers_id/users")->withBody($this->stream_factory->createStream($body)));
 
         $this->assertEquals(200, $response_put->getStatusCode());
 
         $project_members_id = urlencode($this->project_public_with_membership_id . '_3');
-        $response_get       = $this->getResponse($this->client->get("user_groups/$project_members_id/users"));
+        $response_get       = $this->getResponse($this->request_factory->createRequest('GET', "user_groups/$project_members_id/users"));
 
         $this->assertEquals(200, $response_get->getStatusCode());
 
-        $members                  = $response_get->json();
+        $members                  = json_decode($response_get->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         $user_4_is_project_member = false;
         foreach ($members as $member) {
             if ($member["username"] === REST_TestDataBuilder::TEST_USER_4_NAME) {
@@ -739,12 +800,9 @@ class UserGroupTest extends RestBase // phpcs:ignore PSR1.Classes.ClassDeclarati
         );
     }
 
-    /**
-     * @param $response
-     */
-    private function assertGETId($response): void
+    private function assertGETId(\Psr\Http\Message\ResponseInterface $response): void
     {
-        $json = $response->json();
+        $json = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertEquals($json['id'], (string) REST_TestDataBuilder::STATIC_UGROUP_1_ID);
         $this->assertEquals($json['uri'], 'user_groups/' . REST_TestDataBuilder::STATIC_UGROUP_1_ID);

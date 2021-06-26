@@ -33,11 +33,11 @@ final class DocmanProjectServiceTest extends DocmanTestExecutionHelper
     public function testGetServiceRepresentationAsAdministrator(): void
     {
         $admin_response = $this->getResponse(
-            $this->client->get('projects/' . urlencode((string) $this->project_id) . '/docman_service'),
+            $this->request_factory->createRequest('GET', 'projects/' . urlencode((string) $this->project_id) . '/docman_service'),
             REST_TestDataBuilder::ADMIN_USER_NAME
         );
         $this->assertSame(200, $admin_response->getStatusCode());
-        $admin_result = $admin_response->json();
+        $admin_result = json_decode($admin_response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         $this->assertNotNull($admin_result['root_item']);
         $this->assertNotNull($admin_result['permissions_for_groups']);
     }
@@ -45,11 +45,11 @@ final class DocmanProjectServiceTest extends DocmanTestExecutionHelper
     public function testGetServiceRepresentationAsRegularDocmanUser(): void
     {
         $response = $this->getResponse(
-            $this->client->get('projects/' . urlencode((string) $this->project_id) . '/docman_service'),
+            $this->request_factory->createRequest('GET', 'projects/' . urlencode((string) $this->project_id) . '/docman_service'),
             DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME
         );
         $this->assertSame(200, $response->getStatusCode());
-        $result = $response->json();
+        $result = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         $this->assertNotNull($result['root_item']);
         $this->assertNull($result['permissions_for_groups']);
     }
@@ -57,12 +57,12 @@ final class DocmanProjectServiceTest extends DocmanTestExecutionHelper
     public function testGetServiceRepresentationAsRESTReadOnlyUser(): void
     {
         $response = $this->getResponse(
-            $this->client->get('projects/' . urlencode((string) $this->project_id) . '/docman_service'),
+            $this->request_factory->createRequest('GET', 'projects/' . urlencode((string) $this->project_id) . '/docman_service'),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
 
         $this->assertSame(200, $response->getStatusCode());
-        $result = $response->json();
+        $result = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         $this->assertNotNull($result['root_item']);
         $this->assertNotNull($result['permissions_for_groups']);
     }

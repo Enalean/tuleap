@@ -43,10 +43,10 @@ class ProjectFieldsTest extends RestBase
         ];
 
         $response = $this->getResponse(
-            $this->client->get('project_fields/'),
+            $this->request_factory->createRequest('GET', 'project_fields/'),
             REST_TestDataBuilder::TEST_USER_1_NAME
         );
 
-        $this->assertEquals($expected_result, $response->json());
+        $this->assertEquals($expected_result, json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR));
     }
 }

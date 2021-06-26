@@ -25,12 +25,10 @@ class ProjectOwnershipTest extends \RestBase
     public function testOptions()
     {
         $response = $this->getResponse(
-            $this->client->options(
-                'project_ownership/' . \REST_TestDataBuilder::ADMIN_PROJECT_ID
-            )
+            $this->request_factory->createRequest('OPTIONS', 'project_ownership/' . \REST_TestDataBuilder::ADMIN_PROJECT_ID)
         );
 
-        $this->assertEquals(['OPTIONS', 'GET', 'PUT'], $response->getHeader('Allow')->normalize()->toArray());
+        $this->assertEquals(['OPTIONS', 'GET', 'PUT'], explode(', ', $response->getHeaderLine('Allow')));
         $this->assertEquals($response->getStatusCode(), 200);
     }
 
@@ -43,20 +41,16 @@ class ProjectOwnershipTest extends \RestBase
     {
         $creation_response = $this->getResponseByName(
             \REST_TestDataBuilder::ADMIN_USER_NAME,
-            $this->client->post(
-                'projects',
-                null,
-                json_encode([
-                    'shortname'   => 'p' . bin2hex(random_bytes(6)),
-                    'description' => 'Test Project Certification Owner',
-                    'label'       => 'Test Project Certification Owner',
-                    'is_public'   => true,
-                    'template_id' => $this->project_private_id
-                ])
-            )
+            $this->request_factory->createRequest('POST', 'projects')->withBody($this->stream_factory->createStream(json_encode([
+                'shortname'   => 'p' . bin2hex(random_bytes(6)),
+                'description' => 'Test Project Certification Owner',
+                'label'       => 'Test Project Certification Owner',
+                'is_public'   => true,
+                'template_id' => $this->project_private_id
+            ])))
         );
         $this->assertSame(201, $creation_response->getStatusCode());
-        $new_project_id = $creation_response->json()['id'];
+        $new_project_id = json_decode($creation_response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR)['id'];
 
         $project_ownership_representation = $this->getProjectOwnershipRepresentation($new_project_id);
         $this->assertSame(
@@ -66,28 +60,20 @@ class ProjectOwnershipTest extends \RestBase
 
         $response_update_admins = $this->getResponseByName(
             \REST_TestDataBuilder::ADMIN_USER_NAME,
-            $this->client->put(
-                'user_groups/' . $new_project_id . '_' . \REST_TestDataBuilder::DYNAMIC_UGROUP_PROJECT_ADMINS_ID . '/users',
-                null,
-                json_encode([
-                    'user_references' => [
-                        ['username' => \REST_TestDataBuilder::ADMIN_USER_NAME],
-                        ['username' => \REST_TestDataBuilder::TEST_USER_1_NAME],
-                    ]
-                ])
-            )
+            $this->request_factory->createRequest('PUT', 'user_groups/' . $new_project_id . '_' . \REST_TestDataBuilder::DYNAMIC_UGROUP_PROJECT_ADMINS_ID . '/users')->withBody($this->stream_factory->createStream(json_encode([
+                'user_references' => [
+                    ['username' => \REST_TestDataBuilder::ADMIN_USER_NAME],
+                    ['username' => \REST_TestDataBuilder::TEST_USER_1_NAME],
+                ]
+            ])))
         );
         $this->assertSame(200, $response_update_admins->getStatusCode());
 
         $response_update_project_ownership = $this->getResponseByName(
             \REST_TestDataBuilder::ADMIN_USER_NAME,
-            $this->client->put(
-                'project_ownership/' . $new_project_id,
-                null,
-                json_encode([
-                    'project_owner' => ['username' => \REST_TestDataBuilder::TEST_USER_1_NAME],
-                ])
-            )
+            $this->request_factory->createRequest('PUT', 'project_ownership/' . $new_project_id)->withBody($this->stream_factory->createStream(json_encode([
+                'project_owner' => ['username' => \REST_TestDataBuilder::TEST_USER_1_NAME],
+            ])))
         );
         $this->assertSame(200, $response_update_project_ownership->getStatusCode());
 
@@ -101,11 +87,11 @@ class ProjectOwnershipTest extends \RestBase
     private function getProjectOwnershipRepresentation(int $project_id): array
     {
         $response = $this->getResponse(
-            $this->client->get('project_ownership/' . $project_id),
+            $this->request_factory->createRequest('GET', 'project_ownership/' . $project_id),
             \REST_TestDataBuilder::ADMIN_USER_NAME
         );
 
         $this->assertSame(200, $response->getStatusCode());
-        return $response->json();
+        return json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
     }
 }

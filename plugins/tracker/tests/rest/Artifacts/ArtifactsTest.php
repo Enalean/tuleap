@@ -24,7 +24,6 @@
 
 namespace Tuleap\Tracker\Tests\REST\Artifacts;
 
-use Guzzle\Http\Message\Response;
 use REST_TestDataBuilder;
 use Tuleap\Tracker\Tests\REST\TrackerBase;
 
@@ -37,7 +36,7 @@ final class ArtifactsTest extends TrackerBase
         $artifact_id = end($this->base_artifact_ids);
 
         $response = $this->getResponse(
-            $this->client->get("artifacts/$artifact_id", null, null)
+            $this->request_factory->createRequest('GET', "artifacts/$artifact_id")
         );
 
         $this->assertArtifactWithMinimalStructure($response);
@@ -48,7 +47,7 @@ final class ArtifactsTest extends TrackerBase
         $artifact_id = end($this->base_artifact_ids);
 
         $response = $this->getResponse(
-            $this->client->get("artifacts/$artifact_id?tracker_structure_format=complete", null, null)
+            $this->request_factory->createRequest('GET', "artifacts/$artifact_id?tracker_structure_format=complete")
         );
 
         $this->assertArtifactWithCompleteStructure($response);
@@ -59,7 +58,7 @@ final class ArtifactsTest extends TrackerBase
         $artifact_id = end($this->base_artifact_ids);
 
         $response = $this->getResponse(
-            $this->client->get("artifacts/$artifact_id", null, null),
+            $this->request_factory->createRequest('GET', "artifacts/$artifact_id"),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
 
@@ -71,25 +70,25 @@ final class ArtifactsTest extends TrackerBase
         $artifact_id = end($this->base_artifact_ids);
 
         $response = $this->getResponse(
-            $this->client->get("artifacts/$artifact_id?tracker_structure_format=complete", null, null),
+            $this->request_factory->createRequest('GET', "artifacts/$artifact_id?tracker_structure_format=complete"),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
 
         $this->assertArtifactWithCompleteStructure($response);
     }
 
-    private function assertArtifactWithMinimalStructure(Response $response): void
+    private function assertArtifactWithMinimalStructure(\Psr\Http\Message\ResponseInterface $response): void
     {
-        $json = $response->json();
+        $json = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertEquals($this->base_tracker_id, $json['tracker']['id']);
         $this->assertFalse(isset($json['tracker']['fields']));
     }
 
-    private function assertArtifactWithCompleteStructure(Response $response): void
+    private function assertArtifactWithCompleteStructure(\Psr\Http\Message\ResponseInterface $response): void
     {
-        $json = $response->json();
+        $json = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertEquals($this->base_tracker_id, $json['tracker']['id']);
@@ -117,12 +116,12 @@ final class ArtifactsTest extends TrackerBase
         ];
 
         $response = $this->getResponse(
-            $this->client->post('artifacts', null, json_encode($payload))
+            $this->request_factory->createRequest('POST', 'artifacts')->withBody($this->stream_factory->createStream(json_encode($payload)))
         );
 
         self::assertEquals(201, $response->getStatusCode());
 
-        $created_artifact_id = $response->json()["id"];
+        $created_artifact_id = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR)["id"];
 
         $this->assertSavedTextFieldFormatIsUserDefaultFormat($created_artifact_id);
 
@@ -151,7 +150,7 @@ final class ArtifactsTest extends TrackerBase
         ];
 
         $response = $this->getResponse(
-            $this->client->put('artifacts/' . $created_artifact_id, null, json_encode($payload))
+            $this->request_factory->createRequest('PUT', 'artifacts/' . $created_artifact_id)->withBody($this->stream_factory->createStream(json_encode($payload)))
         );
 
         self::assertEquals(200, $response->getStatusCode());
@@ -160,8 +159,8 @@ final class ArtifactsTest extends TrackerBase
 
     private function assertSavedTextFieldFormatIsUserDefaultFormat(int $concerned_artifact_id): void
     {
-        $artifact_request = $this->client->get('artifacts/' . $concerned_artifact_id);
-        $artifact         = $this->getResponse($artifact_request)->json();
+        $artifact_request = $this->request_factory->createRequest('GET', 'artifacts/' . $concerned_artifact_id);
+        $artifact         = json_decode($this->getResponse($artifact_request)->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         $description_field = array_filter(
             $artifact['values'],

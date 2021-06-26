@@ -20,7 +20,6 @@
 
 namespace Git;
 
-use Guzzle\Http\Message\Response;
 use Tuleap\Git\REST\TestBase;
 
 require_once __DIR__ . '/../bootstrap.php';
@@ -34,21 +33,19 @@ class ProjectTest extends TestBase
     public function testGetGitRepositories(): void
     {
         $response = $this->getResponse(
-            $this->client->get(
-                'projects/' . $this->git_project_id . '/git'
-            )
+            $this->request_factory->createRequest('GET', 'projects/' . $this->git_project_id . '/git')
         );
 
         $this->assertGETGitRepositories($response);
     }
 
-    private function assertGETGitRepositories(Response $response): void
+    private function assertGETGitRepositories(\Psr\Http\Message\ResponseInterface $response): void
     {
-        $repositories_response = $response->json();
+        $repositories_response = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         $repositories          = $repositories_response['repositories'];
 
         $this->assertCount(1, $repositories);
-        $this->assertEquals(1, (int) (string) $response->getHeader('X-Pagination-Size'));
+        $this->assertEquals(1, (int) $response->getHeaderLine('X-Pagination-Size'));
 
         $repository = $repositories[0];
         $this->assertArrayHasKey('id', $repository);
@@ -59,9 +56,7 @@ class ProjectTest extends TestBase
     public function testGetGitRepositoriesWithReadOnlyAdmin(): void
     {
         $response = $this->getResponse(
-            $this->client->get(
-                'projects/' . $this->git_project_id . '/git'
-            ),
+            $this->request_factory->createRequest('GET', 'projects/' . $this->git_project_id . '/git'),
             \REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
 
@@ -72,12 +67,10 @@ class ProjectTest extends TestBase
     {
         $query    = urlencode(json_encode(["scope" => "project"]));
         $response = $this->getResponse(
-            $this->client->get(
-                'projects/' . $this->git_project_id . '/git?query=' . $query
-            )
+            $this->request_factory->createRequest('GET', 'projects/' . $this->git_project_id . '/git?query=' . $query)
         );
 
-        $repositories_response = $response->json();
+        $repositories_response = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         $repositories          = $repositories_response['repositories'];
 
         $this->assertCount(1, $repositories);
@@ -87,12 +80,10 @@ class ProjectTest extends TestBase
     {
         $query    = urlencode(json_encode(["scope" => "individual"]));
         $response = $this->getResponse(
-            $this->client->get(
-                'projects/' . $this->git_project_id . '/git?query=' . $query
-            )
+            $this->request_factory->createRequest('GET', 'projects/' . $this->git_project_id . '/git?query=' . $query)
         );
 
-        $repositories_response = $response->json();
+        $repositories_response = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         $repositories          = $repositories_response['repositories'];
 
         $this->assertCount(0, $repositories);

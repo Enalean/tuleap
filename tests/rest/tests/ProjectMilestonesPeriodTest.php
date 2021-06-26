@@ -33,14 +33,15 @@ class ProjectMilestonesPeriodTest extends ProjectBase
     {
         $query    = urlencode(json_encode(["period" => "future"]));
         $response = $this->getResponse(
-            $this->client->get(
+            $this->request_factory->createRequest(
+                'GET',
                 'projects/' . $this->project_future_releases_id . '/milestones?query=' . $query
             )
         );
 
         $this->assertEquals($response->getStatusCode(), 200);
 
-        $milestones = $response->json();
+        $milestones = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         $this->assertCount(3, $milestones);
     }
 
@@ -48,14 +49,15 @@ class ProjectMilestonesPeriodTest extends ProjectBase
     {
         $query    = urlencode(json_encode(["period" => "current"]));
         $response = $this->getResponse(
-            $this->client->get(
+            $this->request_factory->createRequest(
+                'GET',
                 'projects/' . $this->project_future_releases_id . '/milestones?query=' . $query
             )
         );
 
         $this->assertEquals($response->getStatusCode(), 200);
 
-        $milestones = $response->json();
+        $milestones = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         $this->assertCount(4, $milestones);
         $this->assertEquals('open', $milestones[0]['semantic_status']);
         $this->assertEquals('open', $milestones[1]['semantic_status']);
@@ -67,7 +69,8 @@ class ProjectMilestonesPeriodTest extends ProjectBase
     {
         $query    = urlencode(json_encode(["period" => "current"]));
         $response = $this->getResponse(
-            $this->client->get(
+            $this->request_factory->createRequest(
+                'GET',
                 'projects/' . $this->project_future_releases_id . '/milestones?query=' . $query
             ),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
@@ -75,7 +78,7 @@ class ProjectMilestonesPeriodTest extends ProjectBase
 
         $this->assertEquals(200, $response->getStatusCode());
 
-        $milestones = $response->json();
+        $milestones = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         $this->assertCount(4, $milestones);
     }
 }

@@ -20,6 +20,7 @@
 
 namespace Tuleap\JWT\REST;
 
+use Psr\Http\Message\ResponseInterface;
 use REST_TestDataBuilder;
 use RestBase;
 
@@ -31,7 +32,7 @@ class JWTTest extends RestBase
 
     public function testGETJWT(): void
     {
-        $response = $this->getResponse($this->client->get('jwt/'));
+        $response = $this->getResponse($this->request_factory->createRequest('GET', 'jwt/'));
 
         $this->assertGETJWT($response);
     }
@@ -39,16 +40,17 @@ class JWTTest extends RestBase
     public function testGETJWTWithReadOnlyAdmin(): void
     {
         $response = $this->getResponse(
-            $this->client->get('jwt/'),
+            $this->request_factory->createRequest('GET', 'jwt/'),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
 
         $this->assertGETJWT($response);
     }
 
-    private function assertGETJWT(\Guzzle\Http\Message\Response $response): void
+    private function assertGETJWT(ResponseInterface $response): void
     {
         $this->assertEquals(200, $response->getStatusCode());
-        $this->assertTrue(isset($response->json()['token']));
+        $json = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
+        $this->assertTrue(isset($json['token']));
     }
 }

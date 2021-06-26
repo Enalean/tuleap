@@ -32,13 +32,13 @@ class PrivateCommentArtifactTest extends TrackerBase
     public function testProjectAdminCanSeePrivateComment(): void
     {
         $response = $this->getResponse(
-            $this->client->get('artifacts/' . urlencode((string) $this->private_comment_artifact_id) . '/changesets'),
+            $this->request_factory->createRequest('GET', 'artifacts/' . urlencode((string) $this->private_comment_artifact_id) . '/changesets'),
             DataBuilder::PRIVATE_COMMENT_PROJECT_ADMIN_NAME
         );
 
         $this->assertEquals(200, $response->getStatusCode());
 
-        $artifact_changesets = $response->json();
+        $artifact_changesets = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertCount(2, $artifact_changesets);
         $this->assertEquals('', $artifact_changesets[0]["last_comment"]['body']);
@@ -55,13 +55,13 @@ class PrivateCommentArtifactTest extends TrackerBase
     public function testTrackerAdminCanSeePrivateComment(): void
     {
         $response = $this->getResponse(
-            $this->client->get('artifacts/' . urlencode((string) $this->private_comment_artifact_id) . '/changesets'),
+            $this->request_factory->createRequest('GET', 'artifacts/' . urlencode((string) $this->private_comment_artifact_id) . '/changesets'),
             DataBuilder::PRIVATE_COMMENT_TRACKER_ADMIN_NAME
         );
 
         $this->assertEquals(200, $response->getStatusCode());
 
-        $artifact_changesets = $response->json();
+        $artifact_changesets = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertCount(2, $artifact_changesets);
         $this->assertEquals('', $artifact_changesets[0]["last_comment"]['body']);
@@ -78,13 +78,13 @@ class PrivateCommentArtifactTest extends TrackerBase
     public function testSiteAdminCanSeePrivateComment(): void
     {
         $response = $this->getResponse(
-            $this->client->get('artifacts/' . urlencode((string) $this->private_comment_artifact_id) . '/changesets'),
+            $this->request_factory->createRequest('GET', 'artifacts/' . urlencode((string) $this->private_comment_artifact_id) . '/changesets'),
             DataBuilder::ADMIN_USER_NAME
         );
 
         $this->assertEquals(200, $response->getStatusCode());
 
-        $artifact_changesets = $response->json();
+        $artifact_changesets = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertCount(2, $artifact_changesets);
         $this->assertEquals('', $artifact_changesets[0]["last_comment"]['body']);
@@ -101,13 +101,13 @@ class PrivateCommentArtifactTest extends TrackerBase
     public function testMembersOfUgroupCanSeeCommentAndOnlyItsUgroup(): void
     {
         $response = $this->getResponse(
-            $this->client->get('artifacts/' . urlencode((string) $this->private_comment_artifact_id) . '/changesets'),
+            $this->request_factory->createRequest('GET', 'artifacts/' . urlencode((string) $this->private_comment_artifact_id) . '/changesets'),
             DataBuilder::PRIVATE_COMMENT_JOHN_SNOW_NAME
         );
 
         $this->assertEquals(200, $response->getStatusCode());
 
-        $artifact_changesets = $response->json();
+        $artifact_changesets = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertCount(2, $artifact_changesets);
         $this->assertEquals('', $artifact_changesets[0]["last_comment"]['body']);
@@ -118,13 +118,13 @@ class PrivateCommentArtifactTest extends TrackerBase
         $this->assertEquals('ugroup_john_snow', $artifact_changesets[1]["last_comment"]['ugroups'][0]['key']);
 
         $response = $this->getResponse(
-            $this->client->get('artifacts/' . urlencode((string) $this->private_comment_artifact_id) . '/changesets'),
+            $this->request_factory->createRequest('GET', 'artifacts/' . urlencode((string) $this->private_comment_artifact_id) . '/changesets'),
             DataBuilder::PRIVATE_COMMENT_DAENERYS_NAME
         );
 
         $this->assertEquals(200, $response->getStatusCode());
 
-        $artifact_changesets = $response->json();
+        $artifact_changesets = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertCount(2, $artifact_changesets);
         $this->assertEquals('', $artifact_changesets[0]["last_comment"]['body']);
@@ -138,13 +138,13 @@ class PrivateCommentArtifactTest extends TrackerBase
     public function testMemberNotInUgroupCanNotSeePrivateComment(): void
     {
         $response = $this->getResponse(
-            $this->client->get('artifacts/' . urlencode((string) $this->private_comment_artifact_id) . '/changesets'),
+            $this->request_factory->createRequest('GET', 'artifacts/' . urlencode((string) $this->private_comment_artifact_id) . '/changesets'),
             DataBuilder::PRIVATE_COMMENT_MEMBER_NAME
         );
 
         $this->assertEquals(200, $response->getStatusCode());
 
-        $artifact_changesets = $response->json();
+        $artifact_changesets = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertCount(1, $artifact_changesets);
     }
@@ -152,13 +152,13 @@ class PrivateCommentArtifactTest extends TrackerBase
     public function testProjectAdminCanSeeAllChangesets(): void
     {
         $response = $this->getResponse(
-            $this->client->get('artifacts/' . urlencode((string) $this->private_comment_and_private_field_artifact_id) . '/changesets'),
+            $this->request_factory->createRequest('GET', 'artifacts/' . urlencode((string) $this->private_comment_and_private_field_artifact_id) . '/changesets'),
             DataBuilder::PRIVATE_COMMENT_PROJECT_ADMIN_NAME
         );
 
         $this->assertEquals(200, $response->getStatusCode());
 
-        $artifact_changesets = $response->json();
+        $artifact_changesets = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertCount(7, $artifact_changesets);
 
@@ -226,13 +226,13 @@ class PrivateCommentArtifactTest extends TrackerBase
     {
         $changeset_ids = [];
         $response      = $this->getResponse(
-            $this->client->get('artifacts/' . urlencode((string) $this->private_comment_and_private_field_artifact_id) . '/changesets'),
+            $this->request_factory->createRequest('GET', 'artifacts/' . urlencode((string) $this->private_comment_and_private_field_artifact_id) . '/changesets'),
             DataBuilder::PRIVATE_COMMENT_MEMBER_NAME
         );
 
         self::assertEquals(200, $response->getStatusCode());
 
-        $artifact_changesets = $response->json();
+        $artifact_changesets = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         self::assertCount(4, $artifact_changesets);
 
@@ -270,13 +270,13 @@ class PrivateCommentArtifactTest extends TrackerBase
     public function testReverseOrderMustReturnSameChangesets(array $changeset_ids): void
     {
         $response = $this->getResponse(
-            $this->client->get('artifacts/' . urlencode((string) $this->private_comment_and_private_field_artifact_id) . '/changesets?order=desc'),
+            $this->request_factory->createRequest('GET', 'artifacts/' . urlencode((string) $this->private_comment_and_private_field_artifact_id) . '/changesets?order=desc'),
             DataBuilder::PRIVATE_COMMENT_MEMBER_NAME
         );
 
         self::assertEquals(200, $response->getStatusCode());
 
-        $artifact_changesets = $response->json();
+        $artifact_changesets = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         self::assertCount(4, $artifact_changesets);
 

@@ -20,7 +20,6 @@
 
 namespace Tuleap\PullRequest;
 
-use Guzzle\Http\Message\Response;
 use REST_TestDataBuilder;
 use RestBase;
 
@@ -33,24 +32,24 @@ final class PullRequestsLabelsTest extends RestBase
 {
     public function testOPTIONS(): void
     {
-        $response = $this->getResponse($this->client->options('pull_requests/1/labels'));
+        $response = $this->getResponse($this->request_factory->createRequest('OPTIONS', 'pull_requests/1/labels'));
 
-        $this->assertEquals(['OPTIONS', 'GET', 'PATCH'], $response->getHeader('Allow')->normalize()->toArray());
+        $this->assertEquals(['OPTIONS', 'GET', 'PATCH'], explode(', ', $response->getHeaderLine('Allow')));
     }
 
     public function testOPTIONSWithReadOnlyAdmin(): void
     {
         $response = $this->getResponse(
-            $this->client->options('pull_requests/1/labels'),
+            $this->request_factory->createRequest('OPTIONS', 'pull_requests/1/labels'),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
 
-        $this->assertEquals(['OPTIONS', 'GET', 'PATCH'], $response->getHeader('Allow')->normalize()->toArray());
+        $this->assertEquals(['OPTIONS', 'GET', 'PATCH'], explode(', ', $response->getHeaderLine('Allow')));
     }
 
     public function testGETLabel(): void
     {
-        $response = $this->getResponse($this->client->get('pull_requests/1/labels'));
+        $response = $this->getResponse($this->request_factory->createRequest('GET', 'pull_requests/1/labels'));
 
         $this->assertGETLabel($response);
     }
@@ -58,16 +57,16 @@ final class PullRequestsLabelsTest extends RestBase
     public function testGETLabelWithReadOnlyAdmin(): void
     {
         $response = $this->getResponse(
-            $this->client->get('pull_requests/1/labels'),
+            $this->request_factory->createRequest('GET', 'pull_requests/1/labels'),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
 
         $this->assertGETLabel($response);
     }
 
-    private function assertGETLabel(Response $response): void
+    private function assertGETLabel(\Psr\Http\Message\ResponseInterface $response): void
     {
-        $content = $response->json();
+        $content = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertEquals([], $content['labels']);
     }
@@ -78,21 +77,17 @@ final class PullRequestsLabelsTest extends RestBase
     public function testPATCHAddUnknownLabel(): void
     {
         $response = $this->getResponse(
-            $this->client->patch(
-                'pull_requests/1/labels',
-                null,
-                json_encode(
-                    [
-                        'add' => [
-                            ['label' => 'Emergency Fix']
-                        ]
+            $this->request_factory->createRequest('PATCH', 'pull_requests/1/labels')->withBody($this->stream_factory->createStream(json_encode(
+                [
+                    'add' => [
+                        ['label' => 'Emergency Fix']
                     ]
-                )
-            )
+                ]
+            )))
         );
         $this->assertEquals($response->getStatusCode(), 200);
 
-        $response = $this->getResponse($this->client->get('pull_requests/1/labels'))->json();
+        $response = json_decode($this->getResponse($this->request_factory->createRequest('GET', 'pull_requests/1/labels'))->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         $this->assertCount(1, $response['labels']);
         $this->assertEquals('Emergency Fix', $response['labels'][0]['label']);
     }
@@ -103,17 +98,13 @@ final class PullRequestsLabelsTest extends RestBase
     public function testPATCHWithReadOnlyAdmin(): void
     {
         $response = $this->getResponse(
-            $this->client->patch(
-                'pull_requests/1/labels',
-                null,
-                json_encode(
-                    [
-                        'add' => [
-                            ['label' => 'Emergency Fix']
-                        ]
+            $this->request_factory->createRequest('PATCH', 'pull_requests/1/labels')->withBody($this->stream_factory->createStream(json_encode(
+                [
+                    'add' => [
+                        ['label' => 'Emergency Fix']
                     ]
-                )
-            ),
+                ]
+            ))),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
 
@@ -126,7 +117,7 @@ final class PullRequestsLabelsTest extends RestBase
     public function testNewLabelIsAddedToProject()
     {
         $project_id = $this->getProjectId('test-git');
-        $response   = $this->getResponse($this->client->get("projects/$project_id/labels"))->json();
+        $response   = json_decode($this->getResponse($this->request_factory->createRequest('GET', "projects/$project_id/labels"))->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         $this->assertCount(1, $response['labels']);
         $this->assertEquals('Emergency Fix', $response['labels'][0]['label']);
     }
@@ -136,7 +127,7 @@ final class PullRequestsLabelsTest extends RestBase
      */
     public function testPATCHRemoveLabel()
     {
-        $response  = $this->getResponse($this->client->get('pull_requests/1/labels'))->json();
+        $response  = json_decode($this->getResponse($this->request_factory->createRequest('GET', 'pull_requests/1/labels'))->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         $label_ids = array_map(
             function ($label) {
                 return ['id' => $label['id']];
@@ -144,14 +135,14 @@ final class PullRequestsLabelsTest extends RestBase
             $response['labels']
         );
 
-        $response = $this->getResponse($this->client->patch('pull_requests/1/labels', null, json_encode(
+        $response = $this->getResponse($this->request_factory->createRequest('PATCH', 'pull_requests/1/labels')->withBody($this->stream_factory->createStream(json_encode(
             [
                 'remove' => $label_ids
             ]
-        )));
+        ))));
         $this->assertEquals($response->getStatusCode(), 200);
 
-        $response = $this->getResponse($this->client->get('pull_requests/1/labels'))->json();
+        $response = json_decode($this->getResponse($this->request_factory->createRequest('GET', 'pull_requests/1/labels'))->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         $this->assertEquals([], $response['labels']);
     }
 
@@ -161,7 +152,7 @@ final class PullRequestsLabelsTest extends RestBase
     public function testRemovedLabelsAreNotRemovedInProject()
     {
         $project_id = $this->getProjectId('test-git');
-        $response   = $this->getResponse($this->client->get("projects/$project_id/labels"))->json();
+        $response   = json_decode($this->getResponse($this->request_factory->createRequest('GET', "projects/$project_id/labels"))->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         $this->assertCount(1, $response['labels']);
         $this->assertEquals('Emergency Fix', $response['labels'][0]['label']);
     }
@@ -172,19 +163,19 @@ final class PullRequestsLabelsTest extends RestBase
     public function testPATCHAddProjectLabel()
     {
         $project_id     = $this->getProjectId('test-git');
-        $response       = $this->getResponse($this->client->get("projects/$project_id/labels"))->json();
+        $response       = json_decode($this->getResponse($this->request_factory->createRequest('GET', "projects/$project_id/labels"))->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         $expected_label = $response['labels'][0];
 
-        $response = $this->getResponse($this->client->patch('pull_requests/1/labels', null, json_encode(
+        $response = $this->getResponse($this->request_factory->createRequest('PATCH', 'pull_requests/1/labels')->withBody($this->stream_factory->createStream(json_encode(
             [
                 'add' => [
                     ['id' => $expected_label['id']]
                 ]
             ]
-        )));
+        ))));
         $this->assertEquals($response->getStatusCode(), 200);
 
-        $response = $this->getResponse($this->client->get('pull_requests/1/labels'))->json();
+        $response = json_decode($this->getResponse($this->request_factory->createRequest('GET', 'pull_requests/1/labels'))->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         $this->assertCount(1, $response['labels']);
         $this->assertEquals('Emergency Fix', $response['labels'][0]['label']);
     }

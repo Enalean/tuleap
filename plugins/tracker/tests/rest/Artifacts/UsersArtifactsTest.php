@@ -33,7 +33,7 @@ final class UsersArtifactsTest extends TrackerBase
     public function testItCannotGetArtifactsFromRandomUser(): void
     {
         $response = $this->getResponse(
-            $this->client->get(sprintf('users/120/artifacts?query=%s&offset=0&limit=10', urlencode(json_encode(['assigned_to' => true])))),
+            $this->request_factory->createRequest('GET', sprintf('users/120/artifacts?query=%s&offset=0&limit=10', urlencode(json_encode(['assigned_to' => true])))),
             DataBuilder::MY_ARTIFACTS_USER_NAME
         );
         $this->assertEquals(403, $response->getStatusCode());
@@ -42,11 +42,11 @@ final class UsersArtifactsTest extends TrackerBase
     public function testItFetchesArtifactsSubmittedByUser(): void
     {
         $response = $this->getResponse(
-            $this->client->get(sprintf('users/self/artifacts?query=%s&offset=0&limit=10', urlencode(json_encode(['submitted_by' => true])))),
+            $this->request_factory->createRequest('GET', sprintf('users/self/artifacts?query=%s&offset=0&limit=10', urlencode(json_encode(['submitted_by' => true])))),
             DataBuilder::MY_ARTIFACTS_USER_NAME
         );
         $this->assertEquals(200, $response->getStatusCode());
-        $json = \json_decode($response->getBody(true), true);
+        $json = \json_decode($response->getBody()->getContents(), true);
         $this->assertCount(2, $json);
 
         $this->assertEqualsCanonicalizing(
@@ -58,11 +58,11 @@ final class UsersArtifactsTest extends TrackerBase
     public function testItFetchesArtifactsAssignedToUser(): void
     {
         $response = $this->getResponse(
-            $this->client->get(sprintf('users/self/artifacts?query=%s&offset=0&limit=10', urlencode(json_encode(['assigned_to' => true])))),
+            $this->request_factory->createRequest('GET', sprintf('users/self/artifacts?query=%s&offset=0&limit=10', urlencode(json_encode(['assigned_to' => true])))),
             DataBuilder::MY_ARTIFACTS_USER_NAME
         );
         $this->assertEquals(200, $response->getStatusCode());
-        $json = \json_decode($response->getBody(true), true);
+        $json = \json_decode($response->getBody()->getContents(), true);
         $this->assertCount(2, $json);
 
         $this->assertEqualsCanonicalizing(
@@ -74,11 +74,11 @@ final class UsersArtifactsTest extends TrackerBase
     public function testItFetchesArtifactsAssignedToOrSubmittedByUser(): void
     {
         $response = $this->getResponse(
-            $this->client->get(sprintf('users/self/artifacts?query=%s&offset=0&limit=10', urlencode(json_encode(['assigned_to' => true, 'submitted_by' => true])))),
+            $this->request_factory->createRequest('GET', sprintf('users/self/artifacts?query=%s&offset=0&limit=10', urlencode(json_encode(['assigned_to' => true, 'submitted_by' => true])))),
             DataBuilder::MY_ARTIFACTS_USER_NAME
         );
         $this->assertEquals(200, $response->getStatusCode());
-        $json = \json_decode($response->getBody(true), true);
+        $json = \json_decode($response->getBody()->getContents(), true);
         $this->assertCount(3, $json);
 
         $this->assertEqualsCanonicalizing(
@@ -90,11 +90,11 @@ final class UsersArtifactsTest extends TrackerBase
     public function testItFetchesPaginated(): void
     {
         $response = $this->getResponse(
-            $this->client->get(sprintf('users/self/artifacts?query=%s&offset=1&limit=1', urlencode(json_encode(['assigned_to' => true, 'submitted_by' => true])))),
+            $this->request_factory->createRequest('GET', sprintf('users/self/artifacts?query=%s&offset=1&limit=1', urlencode(json_encode(['assigned_to' => true, 'submitted_by' => true])))),
             DataBuilder::MY_ARTIFACTS_USER_NAME
         );
         $this->assertEquals(200, $response->getStatusCode());
-        $json = \json_decode($response->getBody(true), true);
+        $json = \json_decode($response->getBody()->getContents(), true);
         $this->assertCount(1, $json);
 
         $this->assertEqualsCanonicalizing(

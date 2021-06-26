@@ -23,13 +23,15 @@
  */
 class ArtifactsCreationWithWrongWorkflowTest extends RestBase
 {
+    private \Test\Rest\Tracker\TrackerFactory $tracker_test_helper;
 
     public function setUp(): void
     {
         parent::setUp();
 
         $this->tracker_test_helper = new Test\Rest\Tracker\TrackerFactory(
-            $this->client,
+            $this->request_factory,
+            $this->stream_factory,
             $this->rest_request,
             $this->project_pbi_id,
             REST_TestDataBuilder::TEST_USER_1_NAME

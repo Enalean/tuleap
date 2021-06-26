@@ -31,7 +31,10 @@ class Regressions_MilestonesContentTest extends RestBase
         $epics    = $this->getArtifactIdsIndexedByTitle('pbi-6348', 'epic');
         $products = $this->getArtifactIdsIndexedByTitle('pbi-6348', 'product');
 
-        $this->getResponse($this->client->put('milestones/' . $releases['1.0'] . '/content', null, json_encode([$epics['One Epic']])));
+        $this->getResponse(
+            $this->request_factory->createRequest('PUT', 'milestones/' . $releases['1.0'] . '/content')
+                ->withBody($this->stream_factory->createStream(json_encode([$epics['One Epic']])))
+        );
 
         $this->assertEquals($this->getMilestoneContentIds($releases['1.0']), [$epics['One Epic']]);
         $this->assertEquals($this->getMilestoneContentIds($products['Widget 2']), [$epics['One Epic'], $epics['Another Epic']]);
@@ -50,8 +53,10 @@ class Regressions_MilestonesContentTest extends RestBase
 
     private function getIds($route)
     {
-        $ids = [];
-        foreach ($this->getResponse($this->client->get($route))->json() as $item) {
+        $ids      = [];
+        $response = $this->getResponse($this->request_factory->createRequest('GET', $route));
+        $items    = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
+        foreach ($items as $item) {
             $ids[] = $item['id'];
         }
         return $ids;

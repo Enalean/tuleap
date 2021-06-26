@@ -27,10 +27,10 @@ class ArtifactsTest extends ArtifactBase
     public function testGETReleaseBurnup()
     {
         $response = $this->getResponse(
-            $this->client->get("artifacts/" . $this->burnup_artifact_ids[1])
+            $this->request_factory->createRequest('GET', "artifacts/" . $this->burnup_artifact_ids[1])
         );
 
-        $burnup = $response->json();
+        $burnup = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertEquals(200, $response->getStatusCode());
 

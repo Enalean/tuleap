@@ -20,7 +20,7 @@
 
 namespace Tuleap\REST;
 
-use Guzzle\Http\Message\Response;
+use Psr\Http\Message\ResponseInterface;
 use REST_TestDataBuilder;
 use RestBase;
 
@@ -29,35 +29,25 @@ use RestBase;
  */
 class ProjectBacklogV2Test extends RestBase
 {
-    protected $base_url = 'https://localhost/api/v2';
-
-    public function __construct()
-    {
-        parent::__construct();
-        if (isset($_ENV['TULEAP_HOST'])) {
-            $this->base_url = $_ENV['TULEAP_HOST'] . '/api/v2';
-        }
-    }
-
     public function testOPTIONSBacklog(): void
     {
-        $response = $this->getResponse($this->client->options("projects/$this->project_pbi_id/backlog"));
-        $this->assertEquals(['OPTIONS', 'GET'], $response->getHeader('Allow')->normalize()->toArray());
+        $response = $this->getResponse($this->request_factory->createRequest('OPTIONS', "v2/projects/$this->project_pbi_id/backlog"));
+        self::assertEqualsCanonicalizing(['OPTIONS', 'GET'], explode(', ', $response->getHeaderLine('Allow')));
     }
 
     public function testOPTIONSBacklogWithRESTReadOnlyUser(): void
     {
         $response = $this->getResponse(
-            $this->client->options("projects/$this->project_pbi_id/backlog"),
+            $this->request_factory->createRequest('OPTIONS', "v2/projects/$this->project_pbi_id/backlog"),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
 
-        $this->assertEquals(['OPTIONS', 'GET'], $response->getHeader('Allow')->normalize()->toArray());
+        self::assertEqualsCanonicalizing(['OPTIONS', 'GET'], explode(', ', $response->getHeaderLine('Allow')));
     }
 
     public function testGETProjectTopBacklogNoItems(): void
     {
-        $response = $this->getResponse($this->client->get("projects/$this->project_pbi_id/backlog?limit=0&offset=0"));
+        $response = $this->getResponse($this->request_factory->createRequest('GET', "v2/projects/$this->project_pbi_id/backlog?limit=0&offset=0"));
 
         $this->assertGETProjectBacklog($response);
     }
@@ -65,16 +55,16 @@ class ProjectBacklogV2Test extends RestBase
     public function testGETProjectTopBacklogNoItemsWithRESTReadOnlyUser(): void
     {
         $response = $this->getResponse(
-            $this->client->get("projects/$this->project_pbi_id/backlog?limit=0&offset=0"),
+            $this->request_factory->createRequest('GET', "v2/projects/$this->project_pbi_id/backlog?limit=0&offset=0"),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
 
         $this->assertGETProjectBacklog($response);
     }
 
-    private function assertGETProjectBacklog(Response $response): void
+    private function assertGETProjectBacklog(ResponseInterface $response): void
     {
-        $backlog = $response->json();
+        $backlog = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertEquals(200, $response->getStatusCode());
 
@@ -85,7 +75,7 @@ class ProjectBacklogV2Test extends RestBase
 
     public function testGETProjectTopBacklogNoPlannings(): void
     {
-        $response = $this->getResponse($this->client->get("projects/$this->project_public_id/backlog"));
+        $response = $this->getResponse($this->request_factory->createRequest('GET', "v2/projects/$this->project_public_id/backlog"));
 
         $this->assertEquals($response->getStatusCode(), 404);
     }

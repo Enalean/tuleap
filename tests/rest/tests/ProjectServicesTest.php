@@ -21,7 +21,7 @@ declare(strict_types=1);
 
 namespace Tuleap\REST;
 
-use Guzzle\Http\Message\Response;
+use Psr\Http\Message\ResponseInterface;
 use REST_TestDataBuilder;
 
 /**
@@ -33,7 +33,7 @@ class ProjectServicesTest extends ProjectBase
     {
         $url = "projects/$this->project_services_id/project_services";
 
-        $response = $this->getResponse($this->client->get($url));
+        $response = $this->getResponse($this->request_factory->createRequest('GET', $url));
         $this->assertEquals(200, $response->getStatusCode());
 
         $this->assertGETProjectServices($response);
@@ -44,7 +44,7 @@ class ProjectServicesTest extends ProjectBase
         $url = "projects/$this->project_services_id/project_services";
 
         $response = $this->getResponse(
-            $this->client->get($url),
+            $this->request_factory->createRequest('GET', $url),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
 
@@ -53,9 +53,9 @@ class ProjectServicesTest extends ProjectBase
         $this->assertGETProjectServices($response);
     }
 
-    private function assertGETProjectServices(Response $response): void
+    private function assertGETProjectServices(ResponseInterface $response): void
     {
-        $services = $response->json();
+        $services = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         $expected = [
             'admin' => ['is_enabled' => true],
@@ -90,7 +90,7 @@ class ProjectServicesTest extends ProjectBase
         $body                 = json_encode(['is_enabled' => $new_is_enabled_value]);
 
         $response = $this->getResponse(
-            $this->client->put($service['uri'], null, $body),
+            $this->request_factory->createRequest('PUT', $service['uri'])->withBody($this->stream_factory->createStream($body)),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
 
@@ -107,7 +107,11 @@ class ProjectServicesTest extends ProjectBase
         $new_is_enabled_value = ! $service['is_enabled'];
         $body                 = json_encode(['is_enabled' => $new_is_enabled_value]);
 
-        $response = $this->getResponse($this->client->put($service['uri'], null, $body));
+        $response = $this->getResponse(
+            $this->request_factory->createRequest('PUT', $service['uri'])->withBody(
+                $this->stream_factory->createStream($body)
+            )
+        );
         $this->assertEquals(200, $response->getStatusCode());
 
         $updated_service = $this->getService('file');
@@ -120,7 +124,11 @@ class ProjectServicesTest extends ProjectBase
 
         $body = json_encode(['is_enabled' => false]);
 
-        $response = $this->getResponse($this->client->put($service['uri'], null, $body));
+        $response = $this->getResponse(
+            $this->request_factory->createRequest('PUT', $service['uri'])->withBody(
+                $this->stream_factory->createStream($body)
+            )
+        );
         $this->assertEquals(400, $response->getStatusCode());
     }
 
@@ -130,10 +138,10 @@ class ProjectServicesTest extends ProjectBase
     private function getService(string $name): array
     {
         $url      = "projects/$this->project_services_id/project_services";
-        $response = $this->getResponse($this->client->get($url));
+        $response = $this->getResponse($this->request_factory->createRequest('GET', $url));
         $this->assertEquals(200, $response->getStatusCode());
 
-        $services = $response->json();
+        $services = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         foreach ($services as $service) {
             if ($service['name'] === $name) {
                 return $service;

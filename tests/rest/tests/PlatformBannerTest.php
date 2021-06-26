@@ -29,8 +29,8 @@ class PlatformBannerTest extends ProjectBase
 {
     public function testOptions(): void
     {
-        $response = $this->getResponse($this->client->options('banner'));
-        $this->assertEquals(['OPTIONS', 'GET', 'PUT', 'DELETE'], $response->getHeader('Allow')->normalize()->toArray());
+        $response = $this->getResponse($this->request_factory->createRequest('OPTIONS', 'banner'));
+        self::assertEqualsCanonicalizing(['OPTIONS', 'GET', 'PUT', 'DELETE'], explode(', ', $response->getHeaderLine('Allow')));
     }
 
     public function testPUTForRegularUser(): void
@@ -42,11 +42,8 @@ class PlatformBannerTest extends ProjectBase
 
         $response = $this->getResponseByName(
             REST_TestDataBuilder::TEST_USER_2_NAME,
-            $this->client->put(
-                'banner',
-                null,
-                $post_resource
-            ),
+            $this->request_factory->createRequest('PUT', 'banner')
+                ->withBody($this->stream_factory->createStream($post_resource))
         );
         $this->assertEquals(403, $response->getStatusCode());
     }
@@ -60,11 +57,8 @@ class PlatformBannerTest extends ProjectBase
 
         $response = $this->getResponseByName(
             REST_TestDataBuilder::ADMIN_USER_NAME,
-            $this->client->put(
-                'banner',
-                null,
-                $post_resource
-            ),
+            $this->request_factory->createRequest('PUT', 'banner')
+                ->withBody($this->stream_factory->createStream($post_resource))
         );
 
         $this->assertEquals(200, $response->getStatusCode());
@@ -79,11 +73,8 @@ class PlatformBannerTest extends ProjectBase
 
         $response = $this->getResponseByName(
             REST_TestDataBuilder::ADMIN_USER_NAME,
-            $this->client->put(
-                'banner',
-                null,
-                $payload
-            ),
+            $this->request_factory->createRequest('PUT', 'banner')
+                ->withBody($this->stream_factory->createStream($payload))
         );
 
         $this->assertEquals(400, $response->getStatusCode());
@@ -96,12 +87,12 @@ class PlatformBannerTest extends ProjectBase
     {
         $response = $this->getResponseByName(
             REST_TestDataBuilder::TEST_USER_2_NAME,
-            $this->client->get('banner'),
+            $this->request_factory->createRequest('GET', 'banner'),
         );
 
         $this->assertEquals(200, $response->getStatusCode());
 
-        $response_json = $response->json();
+        $response_json = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         $this->assertEquals('a banner message', $response_json['message']);
     }
 
@@ -112,7 +103,7 @@ class PlatformBannerTest extends ProjectBase
     {
         $response = $this->getResponseByName(
             REST_TestDataBuilder::TEST_USER_2_NAME,
-            $this->client->delete('banner'),
+            $this->request_factory->createRequest('DELETE', 'banner'),
         );
 
         $this->assertEquals(403, $response->getStatusCode());
@@ -125,7 +116,7 @@ class PlatformBannerTest extends ProjectBase
     {
         $response = $this->getResponseByName(
             REST_TestDataBuilder::ADMIN_USER_NAME,
-            $this->client->delete('banner')
+            $this->request_factory->createRequest('DELETE', 'banner')
         );
 
         $this->assertEquals(200, $response->getStatusCode());

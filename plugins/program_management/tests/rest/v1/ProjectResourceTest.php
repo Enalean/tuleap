@@ -29,11 +29,11 @@ class ProjectResourceTest extends \RestBase
     public function testOPTIONS(): void
     {
         $response = $this->getResponse(
-            $this->client->options('projects/' . $this->getProgramProjectId() . '/program_plan'),
+            $this->request_factory->createRequest('OPTIONS', 'projects/' . $this->getProgramProjectId() . '/program_plan'),
             REST_TestDataBuilder::TEST_USER_1_NAME
         );
         $this->assertEquals(200, $response->getStatusCode());
-        $this->assertEquals(['OPTIONS', 'PUT'], $response->getHeader('Allow')->normalize()->toArray());
+        $this->assertEquals(['OPTIONS', 'PUT'], explode(', ', $response->getHeaderLine('Allow')));
     }
 
     public function testPUTTeam(): void
@@ -44,7 +44,7 @@ class ProjectResourceTest extends \RestBase
         $team_definition = json_encode(["team_ids" => [$team_id]]);
 
         $response = $this->getResponse(
-            $this->client->put('projects/' . $program_id . '/program_teams', null, $team_definition),
+            $this->request_factory->createRequest('PUT', 'projects/' . $program_id . '/program_teams')->withBody($this->stream_factory->createStream($team_definition)),
             REST_TestDataBuilder::TEST_USER_1_NAME
         );
 
@@ -67,7 +67,7 @@ class ProjectResourceTest extends \RestBase
         );
 
         $response = $this->getResponse(
-            $this->client->put('projects/' . $project_id . '/program_plan', null, $plan_definition),
+            $this->request_factory->createRequest('PUT', 'projects/' . $project_id . '/program_plan')->withBody($this->stream_factory->createStream($plan_definition)),
             REST_TestDataBuilder::TEST_USER_1_NAME
         );
 
@@ -92,7 +92,7 @@ class ProjectResourceTest extends \RestBase
         );
 
         $response = $this->getResponse(
-            $this->client->put('projects/' . $project_id . '/program_plan', null, $plan_definition),
+            $this->request_factory->createRequest('PUT', 'projects/' . $project_id . '/program_plan')->withBody($this->stream_factory->createStream($plan_definition)),
             REST_TestDataBuilder::TEST_USER_1_NAME
         );
 
@@ -116,7 +116,7 @@ class ProjectResourceTest extends \RestBase
         );
 
         $response = $this->getResponse(
-            $this->client->put('projects/' . $project_id . '/program_plan', null, $plan_definition),
+            $this->request_factory->createRequest('PUT', 'projects/' . $project_id . '/program_plan')->withBody($this->stream_factory->createStream($plan_definition)),
             REST_TestDataBuilder::TEST_USER_1_NAME
         );
 
@@ -140,7 +140,7 @@ class ProjectResourceTest extends \RestBase
         );
 
         $response = $this->getResponse(
-            $this->client->put('projects/' . $project_id . '/program_plan', null, $plan_definition),
+            $this->request_factory->createRequest('PUT', 'projects/' . $project_id . '/program_plan')->withBody($this->stream_factory->createStream($plan_definition)),
             REST_TestDataBuilder::TEST_USER_1_NAME
         );
 
@@ -155,11 +155,11 @@ class ProjectResourceTest extends \RestBase
         $project_id = $this->getProgramProjectId();
 
         $response = $this->getResponse(
-            $this->client->get('projects/' . urlencode((string) $project_id) . '/program_increments')
+            $this->request_factory->createRequest('GET', 'projects/' . urlencode((string) $project_id) . '/program_increments')
         );
 
         self::assertEquals(200, $response->getStatusCode());
-        $program_increments = $response->json();
+        $program_increments = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         self::assertCount(2, $program_increments);
         self::assertEquals('Program Increment at the top', $program_increments[0]['title']);
         self::assertEquals('Planned', $program_increments[0]['status']);
@@ -266,17 +266,13 @@ class ProjectResourceTest extends \RestBase
         $this->checkGetFirstElementOfProgramIncrement($program_increment['id'], "id", (string) $featureA['id']);
 
         $response = $this->getResponse(
-            $this->client->patch(
-                'projects/' . urlencode((string) $project_id) . '/program_backlog',
-                null,
-                json_encode(
-                    $this->formatPatchTopBacklogParameters([$featureA['id']], [], true, null),
-                    JSON_THROW_ON_ERROR
-                )
-            )
+            $this->request_factory->createRequest('PATCH', 'projects/' . urlencode((string) $project_id) . '/program_backlog')->withBody($this->stream_factory->createStream(json_encode(
+                $this->formatPatchTopBacklogParameters([$featureA['id']], [], true, null),
+                JSON_THROW_ON_ERROR
+            )))
         );
         self::assertEquals(400, $response->getStatusCode());
-        self::assertStringContainsString("The feature with id#" . $featureA['id'] . " cannot be unplanned because some linked user stories are planned in Teams program.", $response->getMessage());
+        self::assertStringContainsString("The feature with id#" . $featureA['id'] . " cannot be unplanned because some linked user stories are planned in Teams program.", $response->getBody()->getContents());
 
         // Check program increment has still feature with planned US
         $this->checkGetFirstElementOfProgramIncrement($program_increment['id'], "id", (string) $featureA['id']);
@@ -351,11 +347,11 @@ class ProjectResourceTest extends \RestBase
         $project_id = $this->getProgramProjectId();
         $featureA   = $this->getArtifactWithArtifactLink('description', 'FeatureA', $project_id, 'features');
         $response   = $this->getResponse(
-            $this->client->get('program_backlog_items/' . urlencode((string) $featureA['id']) . '/children')
+            $this->request_factory->createRequest('GET', 'program_backlog_items/' . urlencode((string) $featureA['id']) . '/children')
         );
 
         self::assertEquals(200, $response->getStatusCode());
-        $program_increments = $response->json();
+        $program_increments = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         self::assertCount(1, $program_increments);
         self::assertEquals('US1', $program_increments[0]['title']);
     }
@@ -460,22 +456,22 @@ class ProjectResourceTest extends \RestBase
     private function checkGetEmptyProgramIncrementBacklog(int $program_id): void
     {
         $response = $this->getResponse(
-            $this->client->get('program_increment/' . urlencode((string) $program_id) . '/content')
+            $this->request_factory->createRequest('GET', 'program_increment/' . urlencode((string) $program_id) . '/content')
         );
 
         self::assertEquals(200, $response->getStatusCode());
-        $content = $response->json();
+        $content = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         self::assertEmpty($content);
     }
 
     private function checkGetFirstElementOfProgramIncrement(int $program_id, string $key, string $artifact_title): void
     {
         $response = $this->getResponse(
-            $this->client->get('program_increment/' . urlencode((string) $program_id) . '/content')
+            $this->request_factory->createRequest('GET', 'program_increment/' . urlencode((string) $program_id) . '/content')
         );
 
         self::assertEquals(200, $response->getStatusCode());
-        $content = $response->json();
+        $content = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         self::assertCount(1, $content);
         self::assertEquals($artifact_title, $content[0][$key]);
@@ -484,11 +480,11 @@ class ProjectResourceTest extends \RestBase
     private function checkGetElementNumberNOfProgramIncrement(int $program_id, int $number_feature, string $key, string $artifact_title): void
     {
         $response = $this->getResponse(
-            $this->client->get('program_increment/' . urlencode((string) $program_id) . '/content')
+            $this->request_factory->createRequest('GET', 'program_increment/' . urlencode((string) $program_id) . '/content')
         );
 
         self::assertEquals(200, $response->getStatusCode());
-        $content = $response->json();
+        $content = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         self::assertEquals($artifact_title, $content[$number_feature][$key]);
     }
@@ -496,12 +492,12 @@ class ProjectResourceTest extends \RestBase
     private function getBugIDWithSpecificSummary(string $summary, int $program_id): int
     {
         $response = $this->getResponse(
-            $this->client->get('trackers/' . urlencode((string) $this->tracker_ids[$program_id]['bug']) . '/artifacts?&expert_query=' . urlencode('summary="' . $summary . '"'))
+            $this->request_factory->createRequest('GET', 'trackers/' . urlencode((string) $this->tracker_ids[$program_id]['bug']) . '/artifacts?&expert_query=' . urlencode('summary="' . $summary . '"'))
         );
 
         self::assertEquals(200, $response->getStatusCode());
 
-        $artifacts = $response->json();
+        $artifacts = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         self::assertCount(1, $artifacts);
         self::assertTrue(isset($artifacts[0]['id']));
@@ -516,15 +512,13 @@ class ProjectResourceTest extends \RestBase
         string $tracker_name
     ): array {
         $response = $this->getResponse(
-            $this->client->get(
-                'trackers/' . urlencode((string) $this->tracker_ids[$project_id][$tracker_name]) .
-                '/artifacts/?&values=all&expert_query=' . urlencode($field_name . '="' . $field_value . '"')
-            )
+            $this->request_factory->createRequest('GET', 'trackers/' . urlencode((string) $this->tracker_ids[$project_id][$tracker_name]) .
+            '/artifacts/?&values=all&expert_query=' . urlencode($field_name . '="' . $field_value . '"'))
         );
 
         self::assertEquals(200, $response->getStatusCode());
 
-        $artifacts = $response->json();
+        $artifacts = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         self::assertCount(1, $artifacts);
         self::assertTrue(isset($artifacts[0]['id']));
@@ -541,12 +535,12 @@ class ProjectResourceTest extends \RestBase
     private function getTopBacklogContent(int $program_id): array
     {
         $response = $this->getResponse(
-            $this->client->get('projects/' . urlencode((string) $program_id) . '/program_backlog')
+            $this->request_factory->createRequest('GET', 'projects/' . urlencode((string) $program_id) . '/program_backlog')
         );
 
         self::assertEquals(200, $response->getStatusCode());
 
-        $top_backlog_elements    = $response->json();
+        $top_backlog_elements    = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         $top_backlog_element_ids = [];
 
         foreach ($top_backlog_elements as $top_backlog_element) {
@@ -570,14 +564,10 @@ class ProjectResourceTest extends \RestBase
         ?array $order = null
     ): void {
         $response = $this->getResponse(
-            $this->client->patch(
-                'projects/' . urlencode((string) $program_id) . '/program_backlog',
-                null,
-                json_encode(
-                    $this->formatPatchTopBacklogParameters($to_add, $to_remove, $remove_program_increment_link, $order),
-                    JSON_THROW_ON_ERROR
-                )
-            )
+            $this->request_factory->createRequest('PATCH', 'projects/' . urlencode((string) $program_id) . '/program_backlog')->withBody($this->stream_factory->createStream(json_encode(
+                $this->formatPatchTopBacklogParameters($to_add, $to_remove, $remove_program_increment_link, $order),
+                JSON_THROW_ON_ERROR
+            )))
         );
         self::assertEquals(200, $response->getStatusCode());
     }
@@ -592,11 +582,7 @@ class ProjectResourceTest extends \RestBase
             $feature_to_add = [['id' => $to_add]];
         }
         $response = $this->getResponse(
-            $this->client->patch(
-                'program_increment/' . urlencode((string) $program_increment_id) . '/content',
-                null,
-                json_encode(['add' => $feature_to_add, 'order' => $order], JSON_THROW_ON_ERROR)
-            )
+            $this->request_factory->createRequest('PATCH', 'program_increment/' . urlencode((string) $program_increment_id) . '/content')->withBody($this->stream_factory->createStream(json_encode(['add' => $feature_to_add, 'order' => $order], JSON_THROW_ON_ERROR)))
         );
         self::assertEquals(200, $response->getStatusCode());
     }
@@ -637,11 +623,7 @@ class ProjectResourceTest extends \RestBase
         ];
 
         $response = $this->getResponse(
-            $this->client->put(
-                'artifacts/' . urlencode((string) $artifact_id),
-                null,
-                json_encode($values, JSON_THROW_ON_ERROR)
-            )
+            $this->request_factory->createRequest('PUT', 'artifacts/' . urlencode((string) $artifact_id))->withBody($this->stream_factory->createStream(json_encode($values, JSON_THROW_ON_ERROR)))
         );
 
         self::assertEquals(200, $response->getStatusCode());
@@ -652,11 +634,7 @@ class ProjectResourceTest extends \RestBase
         $values = ["add"  => [["id" => $sprint_id]]];
 
         $response = $this->getResponse(
-            $this->client->patch(
-                'milestones/' . urlencode((string) $release_id) . '/milestones',
-                null,
-                json_encode($values, JSON_THROW_ON_ERROR)
-            )
+            $this->request_factory->createRequest('PATCH', 'milestones/' . urlencode((string) $release_id) . '/milestones')->withBody($this->stream_factory->createStream(json_encode($values, JSON_THROW_ON_ERROR)))
         );
 
         self::assertEquals(200, $response->getStatusCode());
@@ -703,12 +681,12 @@ class ProjectResourceTest extends \RestBase
     private function checkLinksArePresentInReleaseTopBacklog(int $mirror_id, array $user_story_linked): void
     {
         $response = $this->getResponse(
-            $this->client->get('milestones/' . urlencode((string) $mirror_id) . '/backlog?limit=50&offset=0')
+            $this->request_factory->createRequest('GET', 'milestones/' . urlencode((string) $mirror_id) . '/backlog?limit=50&offset=0')
         );
 
         self::assertEquals(200, $response->getStatusCode());
 
-        $planned_elmenents = $response->json();
+        $planned_elmenents = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         $planned_elements_id = [];
         foreach ($planned_elmenents as $element) {

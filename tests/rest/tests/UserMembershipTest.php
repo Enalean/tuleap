@@ -19,12 +19,10 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-use Guzzle\Http\Message\Response;
-
 /**
  * @group UserMembershipTests
  */
-final class UserMembershipsTest extends RestBase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
+final class UserMembershipTest extends RestBase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
 
     protected function getResponse($request, $user_name = REST_TestDataBuilder::TEST_USER_1_NAME)
@@ -35,7 +33,7 @@ final class UserMembershipsTest extends RestBase //phpcs:ignore PSR1.Classes.Cla
     public function testGET(): void
     {
         $response = $this->getResponse(
-            $this->client->get('users_memberships/?query=with_ssh_key&limit=3&offset=0'),
+            $this->request_factory->createRequest('GET', 'users_memberships/?query=with_ssh_key&limit=3&offset=0'),
             REST_TestDataBuilder::ADMIN_USER_NAME
         );
 
@@ -45,14 +43,14 @@ final class UserMembershipsTest extends RestBase //phpcs:ignore PSR1.Classes.Cla
     public function testGETWithRESTReadOnlyUser(): void
     {
         $response = $this->getResponse(
-            $this->client->get('users_memberships/?query=with_ssh_key&limit=3&offset=0'),
+            $this->request_factory->createRequest('GET', 'users_memberships/?query=with_ssh_key&limit=3&offset=0'),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
 
         $this->assertGET($response);
     }
 
-    private function assertGET(Response $response): void
+    private function assertGET(\Psr\Http\Message\ResponseInterface $response): void
     {
         $user2_groups = [
             "site_active",
@@ -62,7 +60,7 @@ final class UserMembershipsTest extends RestBase //phpcs:ignore PSR1.Classes.Cla
 
         $this->assertEquals(200, $response->getStatusCode());
 
-        $response_json = $response->json();
+        $response_json = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         $this->assertCount(1, $response_json);
         $this->assertEquals($user2_groups, $response_json[0]["user_groups"]);
     }
@@ -70,7 +68,7 @@ final class UserMembershipsTest extends RestBase //phpcs:ignore PSR1.Classes.Cla
     public function testOptions(): void
     {
         $response = $this->getResponse(
-            $this->client->options('users_memberships'),
+            $this->request_factory->createRequest('OPTIONS', 'users_memberships'),
             REST_TestDataBuilder::ADMIN_USER_NAME
         );
 
@@ -80,16 +78,16 @@ final class UserMembershipsTest extends RestBase //phpcs:ignore PSR1.Classes.Cla
     public function testOptionsWithRESTReadOnlyUser(): void
     {
         $response = $this->getResponse(
-            $this->client->options('users_memberships'),
+            $this->request_factory->createRequest('OPTIONS', 'users_memberships'),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
 
         $this->assertOPTIONS($response);
     }
 
-    private function assertOPTIONS(Response $response): void
+    private function assertOPTIONS(\Psr\Http\Message\ResponseInterface $response): void
     {
         $this->assertEquals(200, $response->getStatusCode());
-        $this->assertEquals(['OPTIONS', 'GET'], $response->getHeader('Allow')->normalize()->toArray());
+        self::assertEqualsCanonicalizing(['OPTIONS', 'GET'], explode(', ', $response->getHeaderLine('Allow')));
     }
 }

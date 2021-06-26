@@ -40,9 +40,9 @@ class InvitationsTest extends \RestBase
 
     public function testOptions(): void
     {
-        $response = $this->getResponse($this->client->options('invitations'));
+        $response = $this->getResponse($this->request_factory->createRequest('OPTIONS', 'invitations'));
 
-        $this->assertEquals(['OPTIONS', 'POST'], $response->getHeader('Allow')->normalize()->toArray());
+        self::assertEqualsCanonicalizing(['OPTIONS', 'POST'], explode(', ', $response->getHeaderLine('Allow')));
         $this->assertEquals(200, $response->getStatusCode());
     }
 
@@ -53,7 +53,10 @@ class InvitationsTest extends \RestBase
                 'emails' => ["john@example.com"],
             ],
         );
-        $response   = $this->getResponseWithoutAuth($this->client->post('invitations', null, $invitation));
+        $response   = $this->getResponseWithoutAuth(
+            $this->request_factory->createRequest('POST', 'invitations')
+                ->withBody($this->stream_factory->createStream($invitation))
+        );
 
         $this->assertEquals(401, $response->getStatusCode());
     }
@@ -67,7 +70,10 @@ class InvitationsTest extends \RestBase
                 'emails' => ["john@example.com"],
             ],
         );
-        $response   = $this->getResponse($this->client->post('invitations', null, $invitation));
+        $response   = $this->getResponse(
+            $this->request_factory->createRequest('POST', 'invitations')
+                ->withBody($this->stream_factory->createStream($invitation))
+        );
 
         $this->assertEquals(400, $response->getStatusCode());
     }
@@ -81,9 +87,12 @@ class InvitationsTest extends \RestBase
                 'emails' => ["john@example.com"],
             ],
         );
-        $response   = $this->getResponse($this->client->post('invitations', null, $invitation));
+        $response   = $this->getResponse(
+            $this->request_factory->createRequest('POST', 'invitations')
+                ->withBody($this->stream_factory->createStream($invitation))
+        );
 
-        $body = json_decode((string) $response->getBody());
+        $body = json_decode($response->getBody()->getContents(), false, 512, JSON_THROW_ON_ERROR);
         $this->assertEquals("An error occurred while trying to send invitation", $body->error->i18n_error_message);
         $this->assertEquals(500, $response->getStatusCode());
     }

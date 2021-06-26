@@ -27,26 +27,32 @@ class TokenTest extends RestBase
 
     public function testPostThrowExceptionIfUsernameDoesNotExist()
     {
-        $response = $this->getResponseWithoutAuth($this->client->post(
-            'tokens',
-            null,
-            json_encode([
-                "username" => 'I don\'t exists',
-                "password" => 'pwd'
-            ])
+        $response = $this->getResponseWithoutAuth($this->request_factory->createRequest(
+            'POST',
+            'tokens'
+        )->withBody(
+            $this->stream_factory->createStream(
+                json_encode([
+                    "username" => 'I don\'t exists',
+                    "password" => 'pwd'
+                ])
+            )
         ));
         $this->assertEquals(401, $response->getStatusCode());
     }
 
     public function testPostThrowExceptionIfUsernameAndPaswordDoesNotMatch()
     {
-        $response = $this->getResponseWithoutAuth($this->client->post(
-            'tokens',
-            null,
-            json_encode([
-                "username" => REST_TestDataBuilder::TEST_USER_1_LDAPID,
-                "password" => 'pwd'
-            ])
+        $response = $this->getResponseWithoutAuth($this->request_factory->createRequest(
+            'POST',
+            'tokens'
+        )->withBody(
+            $this->stream_factory->createStream(
+                json_encode([
+                    "username" => REST_TestDataBuilder::TEST_USER_1_LDAPID,
+                    "password" => 'pwd'
+                ])
+            )
         ));
         $this->assertEquals(401, $response->getStatusCode());
     }

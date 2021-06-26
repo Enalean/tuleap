@@ -26,35 +26,29 @@ class CreateTestEnvResourceTest extends \RestBase
 
     public function testOptions()
     {
-        $response = $this->getResponseWithoutAuth($this->client->options(
-            'create_test_env/'
-        ));
+        $response = $this->getResponseWithoutAuth($this->request_factory->createRequest('OPTIONS', 'create_test_env/'));
 
-        $this->assertEquals(['OPTIONS', 'POST'], $response->getHeader('Allow')->normalize()->toArray());
+        $this->assertEquals(['OPTIONS', 'POST'], explode(', ', $response->getHeaderLine('Allow')));
     }
 
     public function testCreateProject()
     {
-        $response = $this->getResponseWithoutAuth($this->client->post(
-            'create_test_env/',
-            null,
-            json_encode(
-                [
-                    'secret' => 'a78e62ee64d594d99a800e5489c052d98cce84a54bb571bccc29b0dcd7ef4441',
-                    'firstname' => 'John',
-                    'lastname' => 'Doe',
-                    'email' => 'jd@example.com',
-                    'password' => 'Welcome0',
-                    'login' => 'john-doe',
-                    'archive' => 'sample-project',
-                ],
-                true
-            )
-        ));
+        $response = $this->getResponseWithoutAuth($this->request_factory->createRequest('POST', 'create_test_env/')->withBody($this->stream_factory->createStream(json_encode(
+            [
+                'secret' => 'a78e62ee64d594d99a800e5489c052d98cce84a54bb571bccc29b0dcd7ef4441',
+                'firstname' => 'John',
+                'lastname' => 'Doe',
+                'email' => 'jd@example.com',
+                'password' => 'Welcome0',
+                'login' => 'john-doe',
+                'archive' => 'sample-project',
+            ],
+            true
+        ))));
 
         $this->assertEquals($response->getStatusCode(), 201);
 
-        $return = $response->json();
+        $return = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         $this->assertIsInt($return['id']);
         $this->assertEquals('test-for-john-doe', $return['project_shortname']);
         $this->assertEquals('https://localhost/projects/test-for-john-doe', $return['project_url']);
@@ -63,25 +57,21 @@ class CreateTestEnvResourceTest extends \RestBase
 
     public function testCreateProjectRefuseBadPassword()
     {
-        $response = $this->getResponseWithoutAuth($this->client->post(
-            'create_test_env/',
-            null,
-            json_encode(
-                [
-                    'secret'    => 'a78e62ee64d594d99a800e5489c052d98cce84a54bb571bccc29b0dcd7ef4441',
-                    'firstname' => 'John',
-                    'lastname'  => 'Doe',
-                    'email'     => 'jd@example.com',
-                    'password'  => 'azerty',
-                    'login'     => 'jdoe',
-                    'archive'   => 'foo',
-                ],
-                true
-            )
-        ));
+        $response = $this->getResponseWithoutAuth($this->request_factory->createRequest('POST', 'create_test_env/')->withBody($this->stream_factory->createStream(json_encode(
+            [
+                'secret'    => 'a78e62ee64d594d99a800e5489c052d98cce84a54bb571bccc29b0dcd7ef4441',
+                'firstname' => 'John',
+                'lastname'  => 'Doe',
+                'email'     => 'jd@example.com',
+                'password'  => 'azerty',
+                'login'     => 'jdoe',
+                'archive'   => 'foo',
+            ],
+            true
+        ))));
 
         $this->assertEquals(400, $response->getStatusCode());
-        $exception_json  = $response->json();
+        $exception_json  = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         $exception_class = $exception_json['error']['exception'];
         $this->assertEquals('Tuleap\\CreateTestEnv\\Exception\\InvalidPasswordException', $exception_class);
         $exception_msgs = $exception_json['error']['password_exceptions'];

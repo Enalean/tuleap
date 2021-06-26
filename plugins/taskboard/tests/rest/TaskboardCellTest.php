@@ -62,11 +62,7 @@ final class TaskboardCellTest extends \RestBase
         ];
 
         $response           = $this->getResponse(
-            $this->client->patch(
-                'taskboard_cells/' . $US2_swimlane_id . '/column/' . $todo_column_id,
-                null,
-                json_encode($patch_payload)
-            ),
+            $this->request_factory->createRequest('PATCH', 'taskboard_cells/' . $US2_swimlane_id . '/column/' . $todo_column_id)->withBody($this->stream_factory->createStream(json_encode($patch_payload))),
             $user_name
         );
         $actual_status_code = $response->getStatusCode();
@@ -76,11 +72,11 @@ final class TaskboardCellTest extends \RestBase
         }
         // Assert the order has changed
         $response = $this->getResponse(
-            $this->client->get('taskboard_cards/' . $US2_swimlane_id . '/children?milestone_id=' . self::$milestone_id),
+            $this->request_factory->createRequest('GET', 'taskboard_cards/' . $US2_swimlane_id . '/children?milestone_id=' . self::$milestone_id),
             $user_name
         );
         $this->assertEquals(200, $response->getStatusCode());
-        $cards = $response->json();
+        $cards = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         $this->assertEquals('Task2', $cards[0]['label']);
         $this->assertEquals('Task3', $cards[1]['label']);
         $this->assertEquals('Task1', $cards[2]['label']);
@@ -94,19 +90,15 @@ final class TaskboardCellTest extends \RestBase
             'add' => $US4_swimlane_id
         ];
         $response         = $this->getResponse(
-            $this->client->patch(
-                'taskboard_cells/' . $US4_swimlane_id . '/column/' . $review_column_id,
-                null,
-                json_encode($patch_payload)
-            ),
+            $this->request_factory->createRequest('PATCH', 'taskboard_cells/' . $US4_swimlane_id . '/column/' . $review_column_id)->withBody($this->stream_factory->createStream(json_encode($patch_payload))),
             REST_TestDataBuilder::TEST_USER_1_NAME
         );
 
         $this->assertEquals(200, $response->getStatusCode());
         // Assert the status has changed
-        $response = $this->getResponse($this->client->get('artifacts/' . $US4_swimlane_id));
+        $response = $this->getResponse($this->request_factory->createRequest('GET', 'artifacts/' . $US4_swimlane_id));
         $this->assertEquals(200, $response->getStatusCode());
-        $status_value = $this->searchStatusValue($response->json()["values"]);
+        $status_value = $this->searchStatusValue(json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR)["values"]);
         $this->assertSame('Review', $status_value);
     }
 
@@ -124,11 +116,7 @@ final class TaskboardCellTest extends \RestBase
             'compared_to' => $task4_id
         ];
         $response         = $this->getResponse(
-            $this->client->patch(
-                'taskboard_cells/' . $US2_swimlane_id . '/column/' . $review_column_id,
-                null,
-                json_encode($patch_payload)
-            )
+            $this->request_factory->createRequest('PATCH', 'taskboard_cells/' . $US2_swimlane_id . '/column/' . $review_column_id)->withBody($this->stream_factory->createStream(json_encode($patch_payload)))
         );
 
         $this->assertEquals(200, $response->getStatusCode());
@@ -151,11 +139,11 @@ final class TaskboardCellTest extends \RestBase
     private function getSwimlaneIds(): array
     {
         $response = $this->getResponse(
-            $this->client->get('taskboard/' . self::$milestone_id . '/cards'),
+            $this->request_factory->createRequest('GET', 'taskboard/' . self::$milestone_id . '/cards'),
             \TestDataBuilder::TEST_USER_1_NAME
         );
         $this->assertSame(200, $response->getStatusCode());
-        return $this->indexByLabel($response->json());
+        return $this->indexByLabel(json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR));
     }
 
     /**
@@ -164,11 +152,11 @@ final class TaskboardCellTest extends \RestBase
     private function getChildrenIdsOfSwimlane(int $swimlane_id): array
     {
         $response = $this->getResponse(
-            $this->client->get('taskboard_cards/' . $swimlane_id . '/children?milestone_id=' . self::$milestone_id),
+            $this->request_factory->createRequest('GET', 'taskboard_cards/' . $swimlane_id . '/children?milestone_id=' . self::$milestone_id),
             REST_TestDataBuilder::TEST_USER_1_NAME
         );
         $this->assertSame(200, $response->getStatusCode());
-        return $this->indexByLabel($response->json());
+        return $this->indexByLabel(json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR));
     }
 
     /**
@@ -177,11 +165,11 @@ final class TaskboardCellTest extends \RestBase
     private function getColumnIds(): array
     {
         $response = $this->getResponse(
-            $this->client->get('taskboard/' . self::$milestone_id . '/columns'),
+            $this->request_factory->createRequest('GET', 'taskboard/' . self::$milestone_id . '/columns'),
             \TestDataBuilder::TEST_USER_1_NAME
         );
         $this->assertSame(200, $response->getStatusCode());
-        return $this->indexByLabel($response->json());
+        return $this->indexByLabel(json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR));
     }
 
     private function indexByLabel(array $list): array
@@ -197,8 +185,8 @@ final class TaskboardCellTest extends \RestBase
     {
         $project_id = $this->getProjectId('taskboard');
 
-        $response   = $this->getResponse($this->client->get('projects/' . $project_id . '/milestones'));
-        $milestones = $response->json();
+        $response   = $this->getResponse($this->request_factory->createRequest('GET', 'projects/' . $project_id . '/milestones'));
+        $milestones = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertCount(1, $milestones);
 

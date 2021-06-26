@@ -42,8 +42,8 @@ class TaskboardTest extends RestBase
         if (! self::$milestone_id || ! self::$planning_id) {
             $project_id = $this->getProjectId('taskboard');
 
-            $response   = $this->getResponse($this->client->get('projects/' . $project_id . '/milestones'));
-            $milestones = $response->json();
+            $response   = $this->getResponse($this->request_factory->createRequest('GET', 'projects/' . $project_id . '/milestones'));
+            $milestones = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
             $this->assertCount(1, $milestones);
 
@@ -58,11 +58,11 @@ class TaskboardTest extends RestBase
     public function testOPTIONSCards(string $user_name): void
     {
         $response = $this->getResponse(
-            $this->client->options('taskboard/' . self::$milestone_id . '/cards'),
+            $this->request_factory->createRequest('OPTIONS', 'taskboard/' . self::$milestone_id . '/cards'),
             $user_name
         );
         $this->assertEquals(200, $response->getStatusCode());
-        $this->assertEquals(['OPTIONS', 'GET'], $response->getHeader('Allow')->normalize()->toArray());
+        $this->assertEquals(['OPTIONS', 'GET'], explode(', ', $response->getHeaderLine('Allow')));
     }
 
     /**
@@ -71,12 +71,12 @@ class TaskboardTest extends RestBase
     public function testGETCards(string $user_name): void
     {
         $response = $this->getResponse(
-            $this->client->get('taskboard/' . self::$milestone_id . '/cards'),
+            $this->request_factory->createRequest('GET', 'taskboard/' . self::$milestone_id . '/cards'),
             $user_name
         );
         $this->assertEquals(200, $response->getStatusCode());
 
-        $cards = $response->json();
+        $cards = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         $this->assertCount(6, $cards);
         foreach (['US1', 'US2', 'Us3', 'US4', 'US5', 'US6'] as $key => $label) {
             $this->assertNotEmpty($cards[$key]['id']);
@@ -120,7 +120,7 @@ class TaskboardTest extends RestBase
     public function testGETNoMilestone(string $user_name): void
     {
         $response = $this->getResponse(
-            $this->client->get('taskboard/0/cards'),
+            $this->request_factory->createRequest('GET', 'taskboard/0/cards'),
             $user_name
         );
         $this->assertEquals(404, $response->getStatusCode());
@@ -132,11 +132,11 @@ class TaskboardTest extends RestBase
     public function testOPTIONSColumns(string $user_name): void
     {
         $response = $this->getResponse(
-            $this->client->options('taskboard/' . self::$milestone_id . '/columns'),
+            $this->request_factory->createRequest('OPTIONS', 'taskboard/' . self::$milestone_id . '/columns'),
             $user_name
         );
         $this->assertEquals(200, $response->getStatusCode());
-        $this->assertEquals(['OPTIONS', 'GET'], $response->getHeader('Allow')->normalize()->toArray());
+        $this->assertEquals(['OPTIONS', 'GET'], explode(', ', $response->getHeaderLine('Allow')));
     }
 
     /**
@@ -145,12 +145,12 @@ class TaskboardTest extends RestBase
     public function testGETColumns(string $user_name): void
     {
         $response = $this->getResponse(
-            $this->client->get('taskboard/' . self::$milestone_id . '/columns'),
+            $this->request_factory->createRequest('GET', 'taskboard/' . self::$milestone_id . '/columns'),
             $user_name
         );
         $this->assertEquals(200, $response->getStatusCode());
 
-        $columns = $response->json();
+        $columns = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         $this->assertCount(4, $columns);
         foreach (['Todo', 'On Going', 'Review', 'Done'] as $key => $label) {
             $this->assertNotEmpty($columns[$key]['id']);
@@ -168,7 +168,7 @@ class TaskboardTest extends RestBase
     public function testGETColumnsThrows404WhenNoMilestone(string $user_name): void
     {
         $response = $this->getResponse(
-            $this->client->get('taskboard/0/columns'),
+            $this->request_factory->createRequest('GET', 'taskboard/0/columns'),
             $user_name
         );
         $this->assertEquals(404, $response->getStatusCode());

@@ -24,7 +24,6 @@
 
 namespace Tuleap\Tracker\Tests\REST\ArtifactsActions;
 
-use Guzzle\Http\Message\Response;
 use REST_TestDataBuilder;
 use Tuleap\Tracker\Tests\REST\TrackerBase;
 
@@ -45,7 +44,7 @@ class ArtifactsActionsTest extends TrackerBase
         );
 
         $response = $this->getResponse(
-            $this->client->patch("artifacts/$artifact_id", null, $body)
+            $this->request_factory->createRequest('PATCH', "artifacts/$artifact_id")->withBody($this->stream_factory->createStream($body))
         );
 
         $this->assertMoveDryRun($response);
@@ -64,28 +63,28 @@ class ArtifactsActionsTest extends TrackerBase
         );
 
         $response = $this->getResponse(
-            $this->client->patch("artifacts/$artifact_id", null, $body),
+            $this->request_factory->createRequest('PATCH', "artifacts/$artifact_id")->withBody($this->stream_factory->createStream($body)),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
 
         $this->assertEquals(403, $response->getStatusCode());
     }
 
-    private function assertMoveDryRun(Response $response)
+    private function assertMoveDryRun(\Psr\Http\Message\ResponseInterface $response)
     {
         $this->assertEquals(200, $response->getStatusCode());
 
         $this->assertEquals(
             "2",
-            $response->getHeader('x-ratelimit-limit')->toArray()[0]
+            $response->getHeader('x-ratelimit-limit')[0]
         );
 
         $this->assertEquals(
             "2",
-            $response->getHeader('x-ratelimit-remaining')->toArray()[0]
+            $response->getHeader('x-ratelimit-remaining')[0]
         );
 
-        $json = $response->json();
+        $json = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertArrayHasKey("dry_run", $json);
         $this->assertArrayHasKey("fields", $json['dry_run']);
@@ -137,7 +136,7 @@ class ArtifactsActionsTest extends TrackerBase
         );
 
         $response = $this->getResponse(
-            $this->client->patch("artifacts/$artifact_id", null, $body),
+            $this->request_factory->createRequest('PATCH', "artifacts/$artifact_id")->withBody($this->stream_factory->createStream($body)),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
 
@@ -159,38 +158,38 @@ class ArtifactsActionsTest extends TrackerBase
         );
 
         $response = $this->getResponse(
-            $this->client->patch("artifacts/$artifact_id", null, $body)
+            $this->request_factory->createRequest('PATCH', "artifacts/$artifact_id")->withBody($this->stream_factory->createStream($body))
         );
 
         $this->assertMoveArtifact($response, $artifact_id);
 
         $changeset_response = $this->getResponse(
-            $this->client->get("artifacts/$artifact_id/changesets?fields=comments&limit=10")
+            $this->request_factory->createRequest('GET', "artifacts/$artifact_id/changesets?fields=comments&limit=10")
         );
 
         $this->assertMoveChangeset($changeset_response);
     }
 
-    private function assertMoveArtifact(Response $response, $artifact_id)
+    private function assertMoveArtifact(\Psr\Http\Message\ResponseInterface $response, $artifact_id)
     {
         $this->assertEquals(200, $response->getStatusCode());
 
         $this->assertEquals(
             "2",
-            $response->getHeader('x-ratelimit-limit')->toArray()[0]
+            $response->getHeader('x-ratelimit-limit')[0]
         );
 
         $this->assertEquals(
             "1",
-            $response->getHeader('x-ratelimit-remaining')->toArray()[0]
+            $response->getHeader('x-ratelimit-remaining')[0]
         );
 
         $artifact_response = $this->getResponse(
-            $this->client->get("artifacts/$artifact_id?values_format=all")
+            $this->request_factory->createRequest('GET', "artifacts/$artifact_id?values_format=all")
         );
 
         $this->assertEquals($artifact_response->getStatusCode(), 200);
-        $artifact_json = $artifact_response->json();
+        $artifact_json = json_decode($artifact_response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertEquals(REST_TestDataBuilder::TEST_USER_2_NAME, $artifact_json['submitted_by_user']['username']);
         $this->assertEquals($artifact_json['tracker']['id'], $this->move_tracker_id);
@@ -202,10 +201,10 @@ class ArtifactsActionsTest extends TrackerBase
         $this->assertEquals($this->user_ids[REST_TestDataBuilder::TEST_USER_3_NAME], (int) $artifact_json['assignees'][0]["id"]);
     }
 
-    private function assertMoveChangeset(Response $changeset_response)
+    private function assertMoveChangeset(\Psr\Http\Message\ResponseInterface $changeset_response)
     {
         $this->assertEquals(200, $changeset_response->getStatusCode());
-        $changeset_json = $changeset_response->json();
+        $changeset_json = json_decode($changeset_response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertCount(5, $changeset_json);
         $this->assertEquals($changeset_json[0]['last_comment']['body'], "API 1 comment");
@@ -238,12 +237,12 @@ class ArtifactsActionsTest extends TrackerBase
         $this->assertEquals($response->getStatusCode(), 200);
 
         $this->assertEquals(
-            $response->getHeader('x-ratelimit-limit')->toArray()[0],
+            $response->getHeader('x-ratelimit-limit')[0],
             "2"
         );
 
         $this->assertEquals(
-            $response->getHeader('x-ratelimit-remaining')->toArray()[0],
+            $response->getHeader('x-ratelimit-remaining')[0],
             "0"
         );
     }
@@ -264,7 +263,7 @@ class ArtifactsActionsTest extends TrackerBase
         $url = "artifacts/$artifact_id";
 
         return $this->getResponse(
-            $this->client->delete($url),
+            $this->request_factory->createRequest('DELETE', $url),
             $user_name
         );
     }

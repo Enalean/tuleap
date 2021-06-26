@@ -20,7 +20,6 @@
 
 namespace Tuleap\ProjectOwnership\REST;
 
-use Guzzle\Http\Message\Response;
 
 class ProjectUserGroupTest extends \RestBase
 {
@@ -40,30 +39,26 @@ class ProjectUserGroupTest extends \RestBase
             [\REST_TestDataBuilder::TEST_USER_1_NAME]
         );
         $this->assertEquals(400, $response->getStatusCode());
-        $this->assertStringContainsString('project owner', $response->json()['error']['message']);
+        $this->assertStringContainsString('project owner', json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR)['error']['message']);
     }
 
     private function createProjectAs(string $user_name): int
     {
         $creation_response = $this->getResponseByName(
             $user_name,
-            $this->client->post(
-                'projects',
-                null,
-                json_encode([
-                    'shortname'   => 'p' . bin2hex(random_bytes(6)),
-                    'description' => 'proj_certif Owner Remove Project Admin',
-                    'label'       => 'proj_certif Owner Remove Project Admin',
-                    'is_public'   => true,
-                    'template_id' => $this->project_private_id
-                ])
-            )
+            $this->request_factory->createRequest('POST', 'projects')->withBody($this->stream_factory->createStream(json_encode([
+                'shortname'   => 'p' . bin2hex(random_bytes(6)),
+                'description' => 'proj_certif Owner Remove Project Admin',
+                'label'       => 'proj_certif Owner Remove Project Admin',
+                'is_public'   => true,
+                'template_id' => $this->project_private_id
+            ])))
         );
         $this->assertSame(201, $creation_response->getStatusCode());
-        return $creation_response->json()['id'];
+        return json_decode($creation_response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR)['id'];
     }
 
-    private function updateProjectAdmin(int $project_id, string $sender, array $project_admins): Response
+    private function updateProjectAdmin(int $project_id, string $sender, array $project_admins): \Psr\Http\Message\ResponseInterface
     {
         $user_references = [];
         foreach ($project_admins as $project_admin) {
@@ -71,13 +66,9 @@ class ProjectUserGroupTest extends \RestBase
         }
         return $this->getResponseByName(
             $sender,
-            $this->client->put(
-                'user_groups/' . $project_id . '_' . \REST_TestDataBuilder::DYNAMIC_UGROUP_PROJECT_ADMINS_ID . '/users',
-                null,
-                json_encode([
-                    'user_references' => $user_references
-                ])
-            )
+            $this->request_factory->createRequest('PUT', 'user_groups/' . $project_id . '_' . \REST_TestDataBuilder::DYNAMIC_UGROUP_PROJECT_ADMINS_ID . '/users')->withBody($this->stream_factory->createStream(json_encode([
+                'user_references' => $user_references
+            ])))
         );
     }
 }

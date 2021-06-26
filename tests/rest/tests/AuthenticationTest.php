@@ -27,14 +27,14 @@ class AuthenticationTest extends RestBase
 
     public function testOPTIONSIsReadableByAnonymous()
     {
-        $response = $this->client->options('projects')->send();
+        $response = $this->getResponseWithoutAuth($this->request_factory->createRequest('OPTIONS', 'projects'));
 
         $this->assertEquals($response->getStatusCode(), 200);
     }
 
     public function testPublicGETResourceIsReadableByAnonymous()
     {
-        $response = $this->client->get('projects')->send();
+        $response = $this->getResponseWithoutAuth($this->request_factory->createRequest('GET', 'projects'));
 
         $this->assertEquals(200, $response->getStatusCode());
     }
@@ -44,7 +44,7 @@ class AuthenticationTest extends RestBase
         $response = $this->getResponseByBasicAuth(
             REST_TestDataBuilder::TEST_USER_1_NAME,
             'wrong_password',
-            $this->client->get('projects')
+            $this->request_factory->createRequest('GET', 'projects')
         );
 
         $this->assertEquals(401, $response->getStatusCode());
@@ -52,11 +52,10 @@ class AuthenticationTest extends RestBase
 
     public function testGETWithTokenAndWrongCredentialsThrowsAnException()
     {
-        $request = $this->client->get('projects');
-        $request
-            ->setHeader('X-Auth-Token', 'wrong_token')
-            ->setHeader('X-Auth-UserId', $this->user_ids[REST_TestDataBuilder::TEST_USER_1_NAME]);
-        $response = $request->send();
+        $request  = $this->request_factory->createRequest('GET', 'projects')
+            ->withHeader('X-Auth-Token', 'wrong_token')
+            ->withHeader('X-Auth-UserId', $this->user_ids[REST_TestDataBuilder::TEST_USER_1_NAME]);
+        $response = $this->getResponseWithoutAuth($request);
         $this->assertEquals(401, $response->getStatusCode());
     }
 }

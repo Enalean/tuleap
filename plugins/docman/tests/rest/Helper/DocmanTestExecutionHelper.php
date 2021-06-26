@@ -41,10 +41,10 @@ class DocmanTestExecutionHelper extends DocmanBase
                 ]
             )
         );
-        $response = $this->getResponseByName(REST_TestDataBuilder::TEST_USER_1_NAME, $this->client->get("users?query=$search&limit=10"));
+        $response = $this->getResponseByName(REST_TestDataBuilder::TEST_USER_1_NAME, $this->request_factory->createRequest('GET', "users?query=$search&limit=10"));
         $this->assertEquals($response->getStatusCode(), 200);
 
-        $json = $response->json();
+        $json = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         $this->assertCount(1, $json);
 
         return $json[0]['id'];
@@ -53,25 +53,25 @@ class DocmanTestExecutionHelper extends DocmanBase
     public function testGetRootId(): int
     {
         $project_response = $this->getResponse(
-            $this->client->get('projects/' . urlencode((string) $this->project_id) . '/docman_service')
+            $this->request_factory->createRequest('GET', 'projects/' . urlencode((string) $this->project_id) . '/docman_service')
         );
 
         $this->assertSame(200, $project_response->getStatusCode());
 
-        $json_docman_service = $project_response->json();
+        $json_docman_service = json_decode($project_response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         return $json_docman_service['root_item']['id'];
     }
 
     public function testGetRootIdWithUserRESTReadOnlyAdmin(): int
     {
         $project_response = $this->getResponse(
-            $this->client->get('projects/' . urlencode((string) $this->project_id) . '/docman_service'),
+            $this->request_factory->createRequest('GET', 'projects/' . urlencode((string) $this->project_id) . '/docman_service'),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
 
         $this->assertSame(200, $project_response->getStatusCode());
 
-        $json_docman_service = $project_response->json();
+        $json_docman_service = json_decode($project_response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         return $json_docman_service['root_item']['id'];
     }
 
@@ -81,10 +81,10 @@ class DocmanTestExecutionHelper extends DocmanBase
     ): array {
         $response = $this->getResponseByName(
             $user_name,
-            $this->client->get('docman_items/' . $root_id . '/docman_items')
+            $this->request_factory->createRequest('GET', 'docman_items/' . $root_id . '/docman_items')
         );
 
-        $folder = $response->json();
+        $folder = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertEquals(200, $response->getStatusCode());
 
@@ -98,17 +98,17 @@ class DocmanTestExecutionHelper extends DocmanBase
     ): array {
         $response = $this->getResponseByName(
             $user_name,
-            $this->client->get('docman_items/' . $folder_id . '/docman_items')
+            $this->request_factory->createRequest('GET', 'docman_items/' . $folder_id . '/docman_items')
         );
-        $folder   = $response->json();
+        $folder   = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         $folder_content = $this->findItemByTitle($folder, $folder_name);
         $new_folder_id  = $folder_content['id'];
         $response       = $this->getResponseByName(
             $user_name,
-            $this->client->get('docman_items/' . $new_folder_id . '/docman_items')
+            $this->request_factory->createRequest('GET', 'docman_items/' . $new_folder_id . '/docman_items')
         );
-        $item_folder    = $response->json();
+        $item_folder    = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         $this->assertEquals(200, $response->getStatusCode());
 
         return $item_folder;
@@ -131,7 +131,7 @@ class DocmanTestExecutionHelper extends DocmanBase
     {
         $response = $this->getResponseByName(
             REST_TestDataBuilder::ADMIN_USER_NAME,
-            $this->client->get('docman_items/' . $file_to_delete_id)
+            $this->request_factory->createRequest('GET', 'docman_items/' . $file_to_delete_id)
         );
 
         $this->assertEquals(200, $response->getStatusCode());
@@ -141,7 +141,7 @@ class DocmanTestExecutionHelper extends DocmanBase
     {
         $response = $this->getResponseByName(
             REST_TestDataBuilder::ADMIN_USER_NAME,
-            $this->client->get('docman_items/' . $file_to_delete_id)
+            $this->request_factory->createRequest('GET', 'docman_items/' . $file_to_delete_id)
         );
 
         $this->assertEquals(404, $response->getStatusCode());
@@ -168,12 +168,12 @@ class DocmanTestExecutionHelper extends DocmanBase
 
         $response = $this->getResponseByName(
             DocmanDataBuilder::ADMIN_USER_NAME,
-            $this->client->get('docman_items/' . $file['id'])
+            $this->request_factory->createRequest('GET', 'docman_items/' . $file['id'])
         );
 
         $this->assertEquals(200, $response->getStatusCode());
 
-        return $response->json();
+        return json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
     }
 
     /**

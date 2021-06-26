@@ -18,7 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-use Guzzle\Http\Message\Response;
 use Tuleap\REST\MilestoneBase;
 
 /**
@@ -28,23 +27,23 @@ class MilestonesContentTest extends MilestoneBase //phpcs:ignore PSR1.Classes.Cl
 {
     public function testOPTIONSContent(): void
     {
-        $response = $this->getResponse($this->client->options('milestones/' . $this->release_artifact_ids[1] . '/content'));
-        $this->assertEquals(['OPTIONS', 'GET', 'PUT', 'PATCH'], $response->getHeader('Allow')->normalize()->toArray());
+        $response = $this->getResponse($this->request_factory->createRequest('OPTIONS', 'milestones/' . $this->release_artifact_ids[1] . '/content'));
+        self::assertEqualsCanonicalizing(['OPTIONS', 'GET', 'PUT', 'PATCH'], explode(', ', $response->getHeaderLine('Allow')));
     }
 
     public function testOPTIONSContentWithRESTReadOnlyUser(): void
     {
         $response = $this->getResponse(
-            $this->client->options('milestones/' . $this->release_artifact_ids[1] . '/content'),
+            $this->request_factory->createRequest('OPTIONS', 'milestones/' . $this->release_artifact_ids[1] . '/content'),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
 
-        $this->assertEquals(['OPTIONS', 'GET', 'PUT', 'PATCH'], $response->getHeader('Allow')->normalize()->toArray());
+        self::assertEqualsCanonicalizing(['OPTIONS', 'GET', 'PUT', 'PATCH'], explode(', ', $response->getHeaderLine('Allow')));
     }
 
     public function testGETContent(): void
     {
-        $response = $this->getResponse($this->client->get('milestones/' . $this->release_artifact_ids[1] . '/content'));
+        $response = $this->getResponse($this->request_factory->createRequest('GET', 'milestones/' . $this->release_artifact_ids[1] . '/content'));
 
         $this->assertGETContent($response);
     }
@@ -52,16 +51,16 @@ class MilestonesContentTest extends MilestoneBase //phpcs:ignore PSR1.Classes.Cl
     public function testGETContentWithRESTReadOnlyUser(): void
     {
         $response = $this->getResponse(
-            $this->client->get('milestones/' . $this->release_artifact_ids[1] . '/content'),
+            $this->request_factory->createRequest('GET', 'milestones/' . $this->release_artifact_ids[1] . '/content'),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
 
         $this->assertGETContent($response);
     }
 
-    private function assertGETContent(Response $response): void
+    private function assertGETContent(\Psr\Http\Message\ResponseInterface $response): void
     {
-        $content_items = $response->json();
+        $content_items = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertCount(4, $content_items);
 
@@ -103,19 +102,22 @@ class MilestonesContentTest extends MilestoneBase //phpcs:ignore PSR1.Classes.Cl
     public function testPUTContent(): void
     {
         $response_put = $this->getResponse(
-            $this->client->put(
-                'milestones/' . $this->release_artifact_ids[1] . '/content',
-                null,
-                '[' . $this->epic_artifact_ids[1] . ',' . $this->epic_artifact_ids[4] . ']'
+            $this->request_factory->createRequest(
+                'PUT',
+                'milestones/' . $this->release_artifact_ids[1] . '/content'
+            )->withBody(
+                $this->stream_factory->createStream(
+                    '[' . $this->epic_artifact_ids[1] . ',' . $this->epic_artifact_ids[4] . ']'
+                )
             )
         );
 
         $this->assertEquals($response_put->getStatusCode(), 200);
 
         $response_get  = $this->getResponse(
-            $this->client->get('milestones/' . $this->release_artifact_ids[1] . '/content')
+            $this->request_factory->createRequest('GET', 'milestones/' . $this->release_artifact_ids[1] . '/content')
         );
-        $backlog_items = $response_get->json();
+        $backlog_items = json_decode($response_get->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertCount(2, $backlog_items);
 
@@ -141,51 +143,76 @@ class MilestonesContentTest extends MilestoneBase //phpcs:ignore PSR1.Classes.Cl
      */
     public function testPUTContentWithSameValueAsPreviouslyReturns200(): void
     {
-        $response_put = $this->getResponse($this->client->put('milestones/' . $this->release_artifact_ids[1] . '/content', null, '[' . $this->epic_artifact_ids[1] . ',' . $this->epic_artifact_ids[4] . ']'));
+        $response_put = $this->getResponse(
+            $this->request_factory->createRequest(
+                'PUT',
+                'milestones/' . $this->release_artifact_ids[1] . '/content'
+            )->withBody(
+                $this->stream_factory->createStream(
+                    '[' . $this->epic_artifact_ids[1] . ',' . $this->epic_artifact_ids[4] . ']'
+                )
+            )
+        );
 
         $this->assertEquals($response_put->getStatusCode(), 200);
-        $this->assertEquals($response_put->getBody(true), '');
+        $this->assertEquals($response_put->getBody()->getContents(), '');
     }
 
     public function testPUTContentWithoutPermission(): void
     {
-        $response_put = $this->getResponseByName(REST_TestDataBuilder::TEST_USER_2_NAME, $this->client->put('milestones/' . $this->release_artifact_ids[1] . '/content', null, '[' . $this->epic_artifact_ids[4] . ',' . $this->epic_artifact_ids[1] . ']'));
+        $response_put = $this->getResponseByName(
+            REST_TestDataBuilder::TEST_USER_2_NAME,
+            $this->request_factory->createRequest(
+                'PUT',
+                'milestones/' . $this->release_artifact_ids[1] . '/content'
+            )->withBody(
+                $this->stream_factory->createStream(
+                    '[' . $this->epic_artifact_ids[4] . ',' . $this->epic_artifact_ids[1] . ']'
+                )
+            )
+        );
 
         $this->assertEquals($response_put->getStatusCode(), 403);
-        $this->assertArrayHasKey('error', $response_put->json());
+        $this->assertArrayHasKey('error', json_decode($response_put->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR));
     }
 
     public function testPUTContentWithRESTReadOnlyUserNotInvolvedInProject(): void
     {
         $response_put = $this->getResponse(
-            $this->client->put(
-                'milestones/' . $this->release_artifact_ids[1] . '/content',
-                null,
-                '[' . $this->epic_artifact_ids[4] . ',' . $this->epic_artifact_ids[1] . ']'
+            $this->request_factory->createRequest(
+                'PUT',
+                'milestones/' . $this->release_artifact_ids[1] . '/content'
+            )->withBody(
+                $this->stream_factory->createStream(
+                    '[' . $this->epic_artifact_ids[4] . ',' . $this->epic_artifact_ids[1] . ']'
+                )
             ),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
 
         $this->assertEquals(403, $response_put->getStatusCode());
-        $this->assertArrayHasKey('error', $response_put->json());
+        $this->assertArrayHasKey('error', json_decode($response_put->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR));
     }
 
     public function testPUTContentOnlyOneElement(): void
     {
         $response_put = $this->getResponse(
-            $this->client->put(
-                'milestones/' . $this->release_artifact_ids[1] . '/content',
-                null,
-                '[' . $this->epic_artifact_ids[4] . ']'
+            $this->request_factory->createRequest(
+                'PUT',
+                'milestones/' . $this->release_artifact_ids[1] . '/content'
+            )->withBody(
+                $this->stream_factory->createStream(
+                    '[' . $this->epic_artifact_ids[4] . ']'
+                )
             )
         );
 
         $this->assertEquals($response_put->getStatusCode(), 200);
 
         $response_get  = $this->getResponse(
-            $this->client->get('milestones/' . $this->release_artifact_ids[1] . '/content')
+            $this->request_factory->createRequest('GET', 'milestones/' . $this->release_artifact_ids[1] . '/content')
         );
-        $backlog_items = $response_get->json();
+        $backlog_items = json_decode($response_get->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertCount(1, $backlog_items);
 
@@ -198,10 +225,13 @@ class MilestonesContentTest extends MilestoneBase //phpcs:ignore PSR1.Classes.Cl
         $this->assertEquals($first_backlog_item['artifact']['tracker']['id'], $this->epic_tracker_id);
 
         $this->getResponse(
-            $this->client->put(
-                'milestones/' . $this->release_artifact_ids[1] . '/content',
-                null,
-                '[' . $this->epic_artifact_ids[1] . ',' . $this->epic_artifact_ids[4] . ']'
+            $this->request_factory->createRequest(
+                'PUT',
+                'milestones/' . $this->release_artifact_ids[1] . '/content'
+            )->withBody(
+                $this->stream_factory->createStream(
+                    '[' . $this->epic_artifact_ids[1] . ',' . $this->epic_artifact_ids[4] . ']'
+                )
             )
         );
     }

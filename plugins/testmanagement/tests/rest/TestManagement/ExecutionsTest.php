@@ -38,10 +38,10 @@ final class ExecutionsTest extends BaseTest
         $this->assertEquals($initial_value, $execution['status']);
 
         $response = $this->getResponse(
-            $this->client->put('testmanagement_executions/' . $execution['id'], null, json_encode([
+            $this->request_factory->createRequest('PUT', 'testmanagement_executions/' . $execution['id'])->withBody($this->stream_factory->createStream(json_encode([
                 'status' => $new_value,
                 'time'   => 0
-            ])),
+            ]))),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
         $this->assertEquals(404, $response->getStatusCode());
@@ -50,10 +50,10 @@ final class ExecutionsTest extends BaseTest
         $this->assertEquals($initial_value, $updated_execution['status']);
 
         $response2 = $this->getResponse(
-            $this->client->put('testmanagement_executions/' . $execution['id'], null, json_encode([
+            $this->request_factory->createRequest('PUT', 'testmanagement_executions/' . $execution['id'])->withBody($this->stream_factory->createStream(json_encode([
                 'status' => $initial_value,
                 'time'   => 0
-            ])),
+            ]))),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
 
@@ -68,20 +68,20 @@ final class ExecutionsTest extends BaseTest
         $execution = $this->getLastExecutionForValid73Campaign(TestManagementDataBuilder::USER_TESTER_NAME);
         $this->assertEquals($initial_value, $execution['status']);
 
-        $response = $this->getResponse($this->client->put('testmanagement_executions/' . $execution['id'], null, json_encode([
+        $response = $this->getResponse($this->request_factory->createRequest('PUT', 'testmanagement_executions/' . $execution['id'])->withBody($this->stream_factory->createStream(json_encode([
             'status' => $new_value,
             'time'   => 0
-        ])));
+        ]))));
 
         $this->assertEquals($response->getStatusCode(), 200);
 
         $updated_execution = $this->getLastExecutionForValid73Campaign(TestManagementDataBuilder::USER_TESTER_NAME);
         $this->assertEquals($new_value, $updated_execution['status']);
 
-        $this->getResponse($this->client->put('testmanagement_executions/' . $execution['id'], null, json_encode([
+        $this->getResponse($this->request_factory->createRequest('PUT', 'testmanagement_executions/' . $execution['id'])->withBody($this->stream_factory->createStream(json_encode([
             'status' => $initial_value,
             'time'   => 0
-        ])));
+        ]))));
     }
 
     public function testPutExecutionsReturnErrorIfWeAddFilesWithoutFileField(): void
@@ -92,11 +92,11 @@ final class ExecutionsTest extends BaseTest
         $execution = $this->getLastExecutionForValid73Campaign(TestManagementDataBuilder::USER_TESTER_NAME);
         $this->assertEquals($initial_value, $execution['status']);
 
-        $response = $this->getResponse($this->client->put('testmanagement_executions/' . $execution['id'], null, json_encode([
+        $response = $this->getResponse($this->request_factory->createRequest('PUT', 'testmanagement_executions/' . $execution['id'])->withBody($this->stream_factory->createStream(json_encode([
             'status' => $new_value,
             'time'   => 0,
             'uploaded_file_ids' => [12]
-        ])));
+        ]))));
 
         $this->assertEquals($response->getStatusCode(), 400);
     }
@@ -110,17 +110,13 @@ final class ExecutionsTest extends BaseTest
 
         $execution = $this->getLastExecutionForValid73Campaign(REST_TestDataBuilder::TEST_BOT_USER_NAME);
         $response  = $this->getResponse(
-            $this->client->patch(
-                'testmanagement_executions/' . $execution['id'] . '/issues',
-                null,
-                json_encode([
-                    'issue_id' => $issue_id,
-                    'comment'  => [
-                        'body'     => 'test result',
-                        'format'   => 'html'
-                    ]
-                ])
-            ),
+            $this->request_factory->createRequest('PATCH', 'testmanagement_executions/' . $execution['id'] . '/issues')->withBody($this->stream_factory->createStream(json_encode([
+                'issue_id' => $issue_id,
+                'comment'  => [
+                    'body'     => 'test result',
+                    'format'   => 'html'
+                ]
+            ]))),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
 
@@ -135,17 +131,13 @@ final class ExecutionsTest extends BaseTest
         $issue_id = $issue['id'];
 
         $execution = $this->getLastExecutionForValid73Campaign(TestManagementDataBuilder::USER_TESTER_NAME);
-        $response  = $this->getResponse($this->client->patch(
-            'testmanagement_executions/' . $execution['id'] . '/issues',
-            null,
-            json_encode([
-                'issue_id' => $issue_id,
-                'comment'  => [
-                    'body'     => 'test result',
-                    'format'   => 'html'
-                ]
-            ])
-        ));
+        $response  = $this->getResponse($this->request_factory->createRequest('PATCH', 'testmanagement_executions/' . $execution['id'] . '/issues')->withBody($this->stream_factory->createStream(json_encode([
+            'issue_id' => $issue_id,
+            'comment'  => [
+                'body'     => 'test result',
+                'format'   => 'html'
+            ]
+        ]))));
 
         $this->assertEquals($response->getStatusCode(), 200);
 
@@ -162,10 +154,10 @@ final class ExecutionsTest extends BaseTest
     {
         $campaign = $this->valid_73_campaign;
 
-        $all_executions_request  = $this->client->get('testmanagement_campaigns/' . $campaign['id'] . '/testmanagement_executions');
+        $all_executions_request  = $this->request_factory->createRequest('GET', 'testmanagement_campaigns/' . $campaign['id'] . '/testmanagement_executions');
         $all_executions_response = $this->getResponse($all_executions_request, $user_name);
 
-        $executions     = $all_executions_response->json();
+        $executions     = json_decode($all_executions_response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         $last_execution = end($executions);
         $this->assertEquals('Import default template', $last_execution['definition']['summary']);
 
@@ -175,16 +167,12 @@ final class ExecutionsTest extends BaseTest
     public function testPatchExecutionInClosedCampaignMustThrowAnError(): void
     {
         $execution = $this->getLastExecutionForClosedCampaign(TestManagementDataBuilder::USER_TESTER_NAME);
-        $response  = $this->getResponse($this->client->patch(
-            'testmanagement_executions/' . $execution['id'] . '/issues',
-            null,
-            json_encode([
-                'steps_results'  => [
-                    'step_id'  => '1',
-                    'status'   => 'notrun'
-                ]
-            ])
-        ));
+        $response  = $this->getResponse($this->request_factory->createRequest('PATCH', 'testmanagement_executions/' . $execution['id'] . '/issues')->withBody($this->stream_factory->createStream(json_encode([
+            'steps_results'  => [
+                'step_id'  => '1',
+                'status'   => 'notrun'
+            ]
+        ]))));
 
         $this->assertEquals(400, $response->getStatusCode());
     }
@@ -193,10 +181,10 @@ final class ExecutionsTest extends BaseTest
     {
         $campaign = $this->closed_71_campaign;
 
-        $all_executions_request  = $this->client->get('testmanagement_campaigns/' . $campaign['id'] . '/testmanagement_executions');
+        $all_executions_request  = $this->request_factory->createRequest('GET', 'testmanagement_campaigns/' . $campaign['id'] . '/testmanagement_executions');
         $all_executions_response = $this->getResponse($all_executions_request, $user_name);
 
-        $executions     = $all_executions_response->json();
+        $executions     = json_decode($all_executions_response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         $last_execution = end($executions);
 
         $this->assertEquals('Test in closed campaign', $last_execution['definition']['summary']);
@@ -206,10 +194,10 @@ final class ExecutionsTest extends BaseTest
 
     private function getLastArtifactFromTracker($tracker_id)
     {
-        $all_artifacts_request  = $this->client->get('trackers/' . $tracker_id . '/artifacts');
+        $all_artifacts_request  = $this->request_factory->createRequest('GET', 'trackers/' . $tracker_id . '/artifacts');
         $all_artifacts_response = $this->getResponse($all_artifacts_request);
 
-        $artifacts     = $all_artifacts_response->json();
+        $artifacts     = json_decode($all_artifacts_response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         $last_artifact = end($artifacts);
 
         return $last_artifact;
@@ -217,9 +205,9 @@ final class ExecutionsTest extends BaseTest
 
     private function getArtifactData($artifact_id, $optional_querypath = '')
     {
-        $artifact_request  = $this->client->get('artifacts/' . $artifact_id . $optional_querypath);
+        $artifact_request  = $this->request_factory->createRequest('GET', 'artifacts/' . $artifact_id . $optional_querypath);
         $artifact_response = $this->getResponse($artifact_request);
 
-        return $artifact_response->json();
+        return json_decode($artifact_response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
     }
 }

@@ -40,9 +40,9 @@ final class MilestonesTest extends TestBase
 
         $uri = 'projects/' . urlencode((string) $this->explicit_backlog_project_id) . '/milestones?' . http_build_query($query);
 
-        $response = $this->getResponse($this->client->get($uri));
+        $response = $this->getResponse($this->request_factory->createRequest('GET', $uri));
         $this->assertEquals(200, $response->getStatusCode());
-        $top_milestones = $response->json();
+        $top_milestones = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertCount(2, $top_milestones);
 
@@ -69,9 +69,9 @@ final class MilestonesTest extends TestBase
 
         $uri = 'milestones/' . urlencode((string) $this->getFirstReleaseArtifactId()) . '/milestones?' . http_build_query($query);
 
-        $response = $this->getResponse($this->client->get($uri));
+        $response = $this->getResponse($this->request_factory->createRequest('GET', $uri));
         $this->assertEquals(200, $response->getStatusCode());
-        $sub_milestones = $response->json();
+        $sub_milestones = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertCount(2, $sub_milestones);
 

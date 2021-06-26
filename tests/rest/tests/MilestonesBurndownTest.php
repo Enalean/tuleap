@@ -18,7 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-use Guzzle\Http\Message\Response;
 use Tuleap\REST\MilestoneBase;
 
 /**
@@ -29,24 +28,24 @@ class MilestoneBurndownTest extends MilestoneBase //phpcs:ignore PSR1.Classes.Cl
     public function testOPTIONSBurndown(): void
     {
         $response = $this->getResponse(
-            $this->client->options('milestones/' . $this->sprint_artifact_ids[1] . '/burndown')
+            $this->request_factory->createRequest('OPTIONS', 'milestones/' . $this->sprint_artifact_ids[1] . '/burndown')
         );
-        $this->assertEquals(['OPTIONS', 'GET'], $response->getHeader('Allow')->normalize()->toArray());
+        self::assertEqualsCanonicalizing(['OPTIONS', 'GET'], explode(', ', $response->getHeaderLine('Allow')));
     }
 
     public function testOPTIONSBurndownWithRESTReadOnlyUser(): void
     {
         $response = $this->getResponse(
-            $this->client->options('milestones/' . $this->sprint_artifact_ids[1] . '/burndown'),
+            $this->request_factory->createRequest('OPTIONS', 'milestones/' . $this->sprint_artifact_ids[1] . '/burndown'),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
 
-        $this->assertEquals(['OPTIONS', 'GET'], $response->getHeader('Allow')->normalize()->toArray());
+        self::assertEqualsCanonicalizing(['OPTIONS', 'GET'], explode(', ', $response->getHeaderLine('Allow')));
     }
 
     public function testGetBurndown(): void
     {
-        $response = $this->getResponse($this->client->get('milestones/' . $this->sprint_artifact_ids[1] . '/burndown'));
+        $response = $this->getResponse($this->request_factory->createRequest('GET', 'milestones/' . $this->sprint_artifact_ids[1] . '/burndown'));
 
         $this->assertGETBurndown($response);
     }
@@ -54,16 +53,16 @@ class MilestoneBurndownTest extends MilestoneBase //phpcs:ignore PSR1.Classes.Cl
     public function testGetBurndownWithRESTReadOnlyUser(): void
     {
         $response = $this->getResponse(
-            $this->client->get('milestones/' . $this->sprint_artifact_ids[1] . '/burndown'),
+            $this->request_factory->createRequest('GET', 'milestones/' . $this->sprint_artifact_ids[1] . '/burndown'),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
 
         $this->assertGETBurndown($response);
     }
 
-    private function assertGETBurndown(Response $response): void
+    private function assertGETBurndown(\Psr\Http\Message\ResponseInterface $response): void
     {
-        $burndown = $response->json();
+        $burndown = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertEquals(10, $burndown['duration']);
         $this->assertEquals(29, $burndown['capacity']);

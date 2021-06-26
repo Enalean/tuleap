@@ -27,21 +27,21 @@ class RoadmapResourceTest extends \RestBase
     public function testOPTIONS(): void
     {
         $response = $this->getResponse(
-            $this->client->options('roadmaps/1/tasks')
+            $this->request_factory->createRequest('OPTIONS', 'roadmaps/1/tasks')
         );
         self::assertEquals(200, $response->getStatusCode());
-        self::assertEquals(['OPTIONS', 'GET'], $response->getHeader('Allow')->normalize()->toArray());
+        self::assertEquals(['OPTIONS', 'GET'], explode(', ', $response->getHeaderLine('Allow')));
     }
 
     public function testGetTasks(): void
     {
         // The widget id is hardcoded because we do not have any REST route which can provide us the widget id
         $response = $this->getResponse(
-            $this->client->get('roadmaps/1/tasks'),
+            $this->request_factory->createRequest('GET', 'roadmaps/1/tasks'),
         );
 
         self::assertEquals(200, $response->getStatusCode());
-        $tasks = $response->json();
+        $tasks = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         self::assertCount(2, $tasks);
 
         $my_artifact = $tasks[0];
@@ -51,9 +51,9 @@ class RoadmapResourceTest extends \RestBase
         self::assertEquals('Another artifact', $other_artifact['title']);
         self::assertEquals(['' => [$my_artifact['id']]], $other_artifact['dependencies']);
 
-        $subtasks_response = $this->getResponse($this->client->get($other_artifact['subtasks_uri']));
+        $subtasks_response = $this->getResponse($this->request_factory->createRequest('GET', $other_artifact['subtasks_uri']));
 
         self::assertEquals(200, $subtasks_response->getStatusCode());
-        self::assertCount(0, $subtasks_response->json());
+        self::assertCount(0, json_decode($subtasks_response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR));
     }
 }

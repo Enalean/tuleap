@@ -32,10 +32,10 @@ final class BacklogItemTest extends \RestBase
         $campaign_id     = $this->getIDOfTheOnlyArtifactOfTheTracker('Validation Campaign');
 
         $response = $this->getResponse(
-            $this->client->get('backlog_items/' . urlencode((string) $backlog_item_id) . '/test_definitions?milestone_id=' . urlencode((string) $milestone_id))
+            $this->request_factory->createRequest('GET', 'backlog_items/' . urlencode((string) $backlog_item_id) . '/test_definitions?milestone_id=' . urlencode((string) $milestone_id))
         );
         $this->assertEquals(200, $response->getStatusCode());
-        $linked_test_definitions = $response->json();
+        $linked_test_definitions = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertCount(1, $linked_test_definitions);
 
@@ -53,9 +53,9 @@ final class BacklogItemTest extends \RestBase
     {
         $tracker_id = $this->getTestPlanTrackerID($tracker_label);
 
-        $response = $this->getResponse($this->client->get('trackers/' . urlencode((string) $tracker_id) . '/artifacts'));
+        $response = $this->getResponse($this->request_factory->createRequest('GET', 'trackers/' . urlencode((string) $tracker_id) . '/artifacts'));
         $this->assertEquals(200, $response->getStatusCode());
-        $artifacts = $response->json();
+        $artifacts = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         $this->assertCount(1, $artifacts);
 
         return $artifacts[0]['id'];
@@ -64,10 +64,10 @@ final class BacklogItemTest extends \RestBase
     private function getTestPlanTrackerID(string $tracker_label): int
     {
         $project_id = $this->getProjectId('testplan');
-        $response   = $this->getResponse($this->client->get('projects/' . urlencode((string) $project_id) . '/trackers?representation=minimal'));
+        $response   = $this->getResponse($this->request_factory->createRequest('GET', 'projects/' . urlencode((string) $project_id) . '/trackers?representation=minimal'));
         $this->assertEquals(200, $response->getStatusCode());
 
-        $trackers   = $response->json();
+        $trackers   = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         $tracker_id = null;
         foreach ($trackers as $tracker) {
             if ($tracker['label'] === $tracker_label) {

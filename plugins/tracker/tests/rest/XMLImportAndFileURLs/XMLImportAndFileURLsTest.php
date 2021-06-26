@@ -52,11 +52,11 @@ class XMLImportAndFileURLsTest extends TrackerBase
     private function getArtifact(): array
     {
         $response = $this->getResponse(
-            $this->client->get('trackers/' . $this->tracker_file_url_id . '/artifacts?values=all')
+            $this->request_factory->createRequest('GET', 'trackers/' . $this->tracker_file_url_id . '/artifacts?values=all')
         );
         $this->assertEquals(200, $response->getStatusCode());
 
-        $artifacts = $response->json();
+        $artifacts = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         $this->assertCount(1, $artifacts);
 
         return $artifacts[0];
@@ -116,11 +116,11 @@ class XMLImportAndFileURLsTest extends TrackerBase
     private function getComments(array $artifact): array
     {
         $response = $this->getResponse(
-            $this->client->get($artifact['changesets_uri'] . '?fields=comments')
+            $this->request_factory->createRequest('GET', $artifact['changesets_uri'] . '?fields=comments')
         );
         $this->assertEquals(200, $response->getStatusCode());
 
-        $changesets = $response->json();
+        $changesets = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         $this->assertCount(2, $changesets);
         return array_map(
             static function (array $changeset) {

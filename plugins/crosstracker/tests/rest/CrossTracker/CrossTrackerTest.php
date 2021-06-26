@@ -34,7 +34,7 @@ class CrossTrackerTest extends RestBase
 
     public function testGetId(): void
     {
-        $response = $this->getResponse($this->client->get('cross_tracker_reports/1'));
+        $response = $this->getResponse($this->request_factory->createRequest('GET', 'cross_tracker_reports/1'));
 
         $this->assertEquals($response->getStatusCode(), 200);
         $this->assertGetIdReport($response);
@@ -43,7 +43,7 @@ class CrossTrackerTest extends RestBase
     public function testGetIdForReadOnlyUser(): void
     {
         $response = $this->getResponse(
-            $this->client->get('cross_tracker_reports/1'),
+            $this->request_factory->createRequest('GET', 'cross_tracker_reports/1'),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
 
@@ -51,7 +51,7 @@ class CrossTrackerTest extends RestBase
         $this->assertGetIdReport($response);
     }
 
-    private function assertGetIdReport(\Guzzle\Http\Message\Response $response): void
+    private function assertGetIdReport(\Psr\Http\Message\ResponseInterface $response): void
     {
         $expected_cross_tracker = [
             "id"               => 1,
@@ -73,7 +73,7 @@ class CrossTrackerTest extends RestBase
         ];
 
         $this->assertEquals(
-            $response->json(),
+            json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR),
             $expected_cross_tracker
         );
     }
@@ -84,7 +84,7 @@ class CrossTrackerTest extends RestBase
             "trackers_id"  => [$this->epic_tracker_id],
             "expert_query" => ""
         ];
-        $response = $this->getResponse($this->client->put('cross_tracker_reports/1', null, $params));
+        $response = $this->getResponse($this->request_factory->createRequest('PUT', 'cross_tracker_reports/1')->withBody($this->stream_factory->createStream(json_encode($params))));
 
         $this->assertEquals($response->getStatusCode(), 201);
 
@@ -108,7 +108,7 @@ class CrossTrackerTest extends RestBase
         ];
 
         $this->assertEquals(
-            $response->json(),
+            json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR),
             $expected_cross_tracker
         );
     }
@@ -120,7 +120,7 @@ class CrossTrackerTest extends RestBase
             "expert_query" => ""
         ];
         $response = $this->getResponse(
-            $this->client->put('cross_tracker_reports/1', null, $params),
+            $this->request_factory->createRequest('PUT', 'cross_tracker_reports/1')->withBody($this->stream_factory->createStream(json_encode($params))),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
 
@@ -129,22 +129,22 @@ class CrossTrackerTest extends RestBase
 
     public function testGetContentId(): void
     {
-        $response = $this->getResponse($this->client->get('cross_tracker_reports/1/content?limit=50&offset=0'));
+        $response = $this->getResponse($this->request_factory->createRequest('GET', 'cross_tracker_reports/1/content?limit=50&offset=0'));
 
         $this->assertEquals($response->getStatusCode(), 200);
-        $cross_tracker_artifacts = $response->json();
+        $cross_tracker_artifacts = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         $this->assertGetReport($cross_tracker_artifacts);
     }
 
     public function testGetContentIdForReadOnlyUser(): void
     {
         $response = $this->getResponse(
-            $this->client->get('cross_tracker_reports/1/content?limit=50&offset=0'),
+            $this->request_factory->createRequest('GET', 'cross_tracker_reports/1/content?limit=50&offset=0'),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
 
         $this->assertEquals($response->getStatusCode(), 200);
-        $cross_tracker_artifacts = $response->json();
+        $cross_tracker_artifacts = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         $this->assertGetReport($cross_tracker_artifacts);
     }
 
@@ -157,21 +157,21 @@ class CrossTrackerTest extends RestBase
             ]
         );
         $response = $this->getResponse(
-            $this->client->get('cross_tracker_reports/1/content?limit=50&offset=0&query=' . urlencode($query))
+            $this->request_factory->createRequest('GET', 'cross_tracker_reports/1/content?limit=50&offset=0&query=' . urlencode($query))
         );
 
         $this->assertEquals($response->getStatusCode(), 200);
-        $cross_tracker_artifacts = $response->json();
+        $cross_tracker_artifacts = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         $this->assertGetReport($cross_tracker_artifacts);
     }
 
 
     public function testGetReportWithoutArtifacts()
     {
-        $response = $this->getResponse($this->client->get('cross_tracker_reports/2/content?limit=50&offset=0'));
+        $response = $this->getResponse($this->request_factory->createRequest('GET', 'cross_tracker_reports/2/content?limit=50&offset=0'));
 
         $this->assertEquals($response->getStatusCode(), 200);
-        $cross_tracker_artifacts = $response->json();
+        $cross_tracker_artifacts = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertEquals(
             $cross_tracker_artifacts['artifacts'],

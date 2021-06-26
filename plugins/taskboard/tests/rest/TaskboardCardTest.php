@@ -51,11 +51,11 @@ class TaskboardCardTest extends RestBase
     public function testOPTIONSChildren(string $user_name): void
     {
         $response = $this->getResponse(
-            $this->client->options('taskboard_cards/' . self::$user_story_6_id . '/children'),
+            $this->request_factory->createRequest('OPTIONS', 'taskboard_cards/' . self::$user_story_6_id . '/children'),
             $user_name
         );
         $this->assertEquals(200, $response->getStatusCode());
-        $this->assertEquals(['OPTIONS', 'GET'], $response->getHeader('Allow')->normalize()->toArray());
+        $this->assertEquals(['OPTIONS', 'GET'], explode(', ', $response->getHeaderLine('Allow')));
     }
 
     /**
@@ -64,12 +64,12 @@ class TaskboardCardTest extends RestBase
     public function testGETChildren(string $user_name): void
     {
         $response = $this->getResponse(
-            $this->client->get('taskboard_cards/' . self::$user_story_6_id . '/children?milestone_id=' . self::$milestone_id),
+            $this->request_factory->createRequest('GET', 'taskboard_cards/' . self::$user_story_6_id . '/children?milestone_id=' . self::$milestone_id),
             $user_name
         );
         $this->assertEquals(200, $response->getStatusCode());
 
-        $cards = $response->json();
+        $cards = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         $this->assertCount(1, $cards);
         $this->assertEquals('AA', $cards[0]['label']);
         $this->assertStringMatchesFormat('tasks #%i', $cards[0]['xref']);
@@ -81,7 +81,7 @@ class TaskboardCardTest extends RestBase
     public function testGETNoChildrenWhenNoMilestoneGiven(string $user_name): void
     {
         $response = $this->getResponse(
-            $this->client->get('taskboard_cards/' . self::$user_story_6_id . '/children'),
+            $this->request_factory->createRequest('GET', 'taskboard_cards/' . self::$user_story_6_id . '/children'),
             $user_name
         );
         $this->assertEquals(400, $response->getStatusCode());
@@ -93,7 +93,7 @@ class TaskboardCardTest extends RestBase
     public function testGETNoChildrenWhenWrongMilestoneGiven(string $user_name): void
     {
         $response = $this->getResponse(
-            $this->client->get('taskboard_cards/' . self::$user_story_6_id . '/children?milestone_id=0'),
+            $this->request_factory->createRequest('GET', 'taskboard_cards/' . self::$user_story_6_id . '/children?milestone_id=0'),
             $user_name
         );
         $this->assertEquals(404, $response->getStatusCode());
@@ -105,11 +105,11 @@ class TaskboardCardTest extends RestBase
     public function testOPTIONSId(string $user_name): void
     {
         $response = $this->getResponse(
-            $this->client->options('taskboard_cards/' . self::$user_story_6_id),
+            $this->request_factory->createRequest('OPTIONS', 'taskboard_cards/' . self::$user_story_6_id),
             $user_name
         );
         $this->assertEquals(200, $response->getStatusCode());
-        $this->assertEquals(['OPTIONS', 'GET', 'PATCH'], $response->getHeader('Allow')->normalize()->toArray());
+        $this->assertEquals(['OPTIONS', 'GET', 'PATCH'], explode(', ', $response->getHeaderLine('Allow')));
     }
 
     /**
@@ -118,20 +118,20 @@ class TaskboardCardTest extends RestBase
     public function testGetId(string $user_name): void
     {
         $response = $this->getResponse(
-            $this->client->get('taskboard_cards/' . self::$user_story_6_id . '?milestone_id=' . self::$milestone_id),
+            $this->request_factory->createRequest('GET', 'taskboard_cards/' . self::$user_story_6_id . '?milestone_id=' . self::$milestone_id),
             $user_name
         );
 
         $this->assertEquals(200, $response->getStatusCode());
 
-        $card = $response->json();
+        $card = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         $this->assertEquals('US6', $card['label']);
     }
 
     public function testGetIdFailsWhenNoMilestoneGiven(): void
     {
         $response = $this->getResponse(
-            $this->client->get('taskboard_cards/' . self::$user_story_6_id),
+            $this->request_factory->createRequest('GET', 'taskboard_cards/' . self::$user_story_6_id),
             REST_TestDataBuilder::TEST_USER_1_NAME
         );
         $this->assertEquals(400, $response->getStatusCode());
@@ -140,7 +140,7 @@ class TaskboardCardTest extends RestBase
     public function testGetIdFailsWhenWrongMilestoneGiven(): void
     {
         $response = $this->getResponse(
-            $this->client->get('taskboard_cards/' . self::$user_story_6_id . '?milestone_id=0'),
+            $this->request_factory->createRequest('GET', 'taskboard_cards/' . self::$user_story_6_id . '?milestone_id=0'),
             REST_TestDataBuilder::TEST_USER_1_NAME
         );
         $this->assertEquals(404, $response->getStatusCode());
@@ -158,8 +158,8 @@ class TaskboardCardTest extends RestBase
     {
         $project_id = $this->getProjectId('taskboard');
 
-        $response   = $this->getResponse($this->client->get('projects/' . $project_id . '/milestones'));
-        $milestones = $response->json();
+        $response   = $this->getResponse($this->request_factory->createRequest('GET', 'projects/' . $project_id . '/milestones'));
+        $milestones = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertCount(1, $milestones);
 
@@ -168,9 +168,9 @@ class TaskboardCardTest extends RestBase
 
     private function getUserStory6Id(): int
     {
-        $response = $this->getResponse($this->client->get('taskboard/' . self::$milestone_id . '/cards'));
+        $response = $this->getResponse($this->request_factory->createRequest('GET', 'taskboard/' . self::$milestone_id . '/cards'));
         $this->assertEquals(200, $response->getStatusCode());
-        $cards = $response->json();
+        $cards = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         foreach ($cards as $card) {
             if ($card['label'] === 'US6') {
                 return (int) $card['id'];
