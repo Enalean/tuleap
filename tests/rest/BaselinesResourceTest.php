@@ -24,7 +24,6 @@ namespace Tuleap\Baseline\Tests\REST;
 
 require_once __DIR__ . '/BaselineFixtureData.php';
 
-use Guzzle\Http\Message\Response;
 use RestBase;
 
 final class BaselinesResourceTest extends RestBase
@@ -47,20 +46,16 @@ final class BaselinesResourceTest extends RestBase
     {
         $response = $this->getResponseByName(
             BaselineFixtureData::TEST_USER_NAME,
-            $this->client->post(
-                'baselines',
-                null,
-                json_encode(
-                    [
-                        'name'          => 'new baseline',
-                        'artifact_id'   => $this->an_artifact_id,
-                        'snapshot_date' => '2019-03-21T11:47:04+02:00'
-                    ]
-                )
-            )
+            $this->request_factory->createRequest('POST', 'baselines')->withBody($this->stream_factory->createStream(json_encode(
+                [
+                    'name'          => 'new baseline',
+                    'artifact_id'   => $this->an_artifact_id,
+                    'snapshot_date' => '2019-03-21T11:47:04+02:00'
+                ]
+            )))
         );
         $this->assertEquals(201, $response->getStatusCode());
-        $json_response = $response->json();
+        $json_response = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertNotNull($json_response['id']);
         $this->assertEquals('new baseline', $json_response['name']);
@@ -71,17 +66,13 @@ final class BaselinesResourceTest extends RestBase
     public function testPOSTWithReadOnlyAdmin(): void
     {
         $response = $this->getResponseForReadOnlyUserAdmin(
-            $this->client->post(
-                'baselines',
-                null,
-                json_encode(
-                    [
-                        'name'          => 'new baseline',
-                        'artifact_id'   => $this->an_artifact_id,
-                        'snapshot_date' => '2019-03-21T11:47:04+02:00'
-                    ]
-                )
-            )
+            $this->request_factory->createRequest('POST', 'baselines')->withBody($this->stream_factory->createStream(json_encode(
+                [
+                    'name'          => 'new baseline',
+                    'artifact_id'   => $this->an_artifact_id,
+                    'snapshot_date' => '2019-03-21T11:47:04+02:00'
+                ]
+            )))
         );
         $this->assertEquals(404, $response->getStatusCode());
     }
@@ -91,7 +82,7 @@ final class BaselinesResourceTest extends RestBase
         $baseline = $this->createABaseline($this->an_artifact_id);
         $response = $this->getResponseByName(
             BaselineFixtureData::TEST_USER_NAME,
-            $this->client->get('baselines/' . $baseline['id'])
+            $this->request_factory->createRequest('GET', 'baselines/' . $baseline['id'])
         );
 
         $this->assertGETById($baseline, $response);
@@ -101,17 +92,17 @@ final class BaselinesResourceTest extends RestBase
     {
         $baseline = $this->createABaseline($this->an_artifact_id);
         $response = $this->getResponseForReadOnlyUserAdmin(
-            $this->client->get('baselines/' . $baseline['id'])
+            $this->request_factory->createRequest('GET', 'baselines/' . $baseline['id'])
         );
 
         $this->assertGETById($baseline, $response);
     }
 
-    private function assertGETById(array $baseline, Response $response): void
+    private function assertGETById(array $baseline, \Psr\Http\Message\ResponseInterface $response): void
     {
         $this->assertEquals(200, $response->getStatusCode());
 
-        $json_response = $response->json();
+        $json_response = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         $this->assertEquals($baseline['id'], $json_response['id']);
         $this->assertEquals($baseline['name'], $json_response['name']);
         $this->assertEquals($baseline['artifact_id'], $json_response['artifact_id']);
@@ -125,13 +116,13 @@ final class BaselinesResourceTest extends RestBase
 
         $delete_response = $this->getResponseByName(
             BaselineFixtureData::TEST_USER_NAME,
-            $this->client->delete('baselines/' . $baseline['id'])
+            $this->request_factory->createRequest('DELETE', 'baselines/' . $baseline['id'])
         );
         $this->assertEquals(200, $delete_response->getStatusCode());
 
         $get_response = $this->getResponseByName(
             BaselineFixtureData::TEST_USER_NAME,
-            $this->client->get('baselines/' . $baseline['id'])
+            $this->request_factory->createRequest('GET', 'baselines/' . $baseline['id'])
         );
         $this->assertEquals(404, $get_response->getStatusCode());
     }
@@ -141,7 +132,7 @@ final class BaselinesResourceTest extends RestBase
         $baseline = $this->createABaseline($this->an_artifact_id);
 
         $delete_response = $this->getResponseForReadOnlyUserAdmin(
-            $this->client->delete('baselines/' . $baseline['id'])
+            $this->request_factory->createRequest('DELETE', 'baselines/' . $baseline['id'])
         );
         $this->assertEquals(404, $delete_response->getStatusCode());
     }
@@ -155,7 +146,7 @@ final class BaselinesResourceTest extends RestBase
         $url        = 'projects/' . $project_id . '/baselines?limit=2';
         $response   = $this->getResponseByName(
             BaselineFixtureData::TEST_USER_NAME,
-            $this->client->get($url)
+            $this->request_factory->createRequest('GET', $url)
         );
 
         $this->assertGETByProject($response);
@@ -169,17 +160,17 @@ final class BaselinesResourceTest extends RestBase
         $project_id = $this->project_ids[BaselineFixtureData::PROJECT_NAME];
         $url        = 'projects/' . $project_id . '/baselines?limit=2';
         $response   = $this->getResponseForReadOnlyUserAdmin(
-            $this->client->get($url)
+            $this->request_factory->createRequest('GET', $url)
         );
 
         $this->assertGETByProject($response);
     }
 
-    private function assertGETByProject(Response $response): void
+    private function assertGETByProject(\Psr\Http\Message\ResponseInterface $response): void
     {
         $this->assertEquals(200, $response->getStatusCode());
 
-        $json_response = $response->json();
+        $json_response = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         $this->assertGreaterThanOrEqual(1, $json_response['total_count']);
 
         $baselines_response = $json_response['baselines'];
@@ -200,7 +191,7 @@ final class BaselinesResourceTest extends RestBase
 
         $response = $this->getResponseByName(
             BaselineFixtureData::TEST_USER_NAME,
-            $this->client->get('baselines/' . $baseline['id'] . '/artifacts')
+            $this->request_factory->createRequest('GET', 'baselines/' . $baseline['id'] . '/artifacts')
         );
 
         $this->assertGETBaselineArtifacts($response);
@@ -211,16 +202,16 @@ final class BaselinesResourceTest extends RestBase
         $baseline = $this->createABaseline($this->an_artifact_id);
 
         $response = $this->getResponseForReadOnlyUserAdmin(
-            $this->client->get('baselines/' . $baseline['id'] . '/artifacts')
+            $this->request_factory->createRequest('GET', 'baselines/' . $baseline['id'] . '/artifacts')
         );
 
         $this->assertGETBaselineArtifacts($response);
     }
 
-    private function assertGETBaselineArtifacts(Response $response): void
+    private function assertGETBaselineArtifacts(\Psr\Http\Message\ResponseInterface $response): void
     {
         $this->assertEquals(200, $response->getStatusCode());
-        $json_response = $response->json();
+        $json_response = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertNotNull($json_response['artifacts']);
         $this->assertGreaterThanOrEqual(0, count($json_response['artifacts']));
@@ -233,11 +224,11 @@ final class BaselinesResourceTest extends RestBase
         $url      = 'baselines/' . $baseline['id'] . '/artifacts?query=' . urlencode($query);
         $response = $this->getResponseByName(
             BaselineFixtureData::TEST_USER_NAME,
-            $this->client->get($url)
+            $this->request_factory->createRequest('GET', $url)
         );
 
         $this->assertEquals(200, $response->getStatusCode());
-        $json_response = $response->json();
+        $json_response = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertNotNull($json_response['artifacts']);
         $artifacts_response = $json_response['artifacts'];
@@ -253,17 +244,13 @@ final class BaselinesResourceTest extends RestBase
     {
         $response = $this->getResponseByName(
             BaselineFixtureData::TEST_USER_NAME,
-            $this->client->post(
-                'baselines',
-                null,
-                json_encode(
-                    [
-                        'name'        => 'created baseline',
-                        'artifact_id' => $artifact_id
-                    ]
-                )
-            )
+            $this->request_factory->createRequest('POST', 'baselines')->withBody($this->stream_factory->createStream(json_encode(
+                [
+                    'name'        => 'created baseline',
+                    'artifact_id' => $artifact_id
+                ]
+            )))
         );
-        return $response->json();
+        return json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
     }
 }
