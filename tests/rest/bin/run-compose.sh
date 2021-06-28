@@ -29,6 +29,7 @@ case "${1:-}" in
     *)
     echo "A PHP version must be provided as parameter. Allowed values are:"
     echo "* 74"
+    echo "* 80"
     exit 1
 esac
 
