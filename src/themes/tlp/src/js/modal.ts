@@ -52,6 +52,7 @@ export class Modal {
     private readonly shown_event: CustomEvent<{ target: Element }>;
     private readonly hidden_event: CustomEvent<{ target: Element }>;
     private readonly eventHandler: ModalEventHandler;
+    private previous_active_element: HTMLElement | null = null;
 
     constructor(doc: Document, element: Element, options: ModalOptions = { keyboard: true }) {
         const { keyboard = true, destroy_on_hide = false } = options;
@@ -82,6 +83,7 @@ export class Modal {
         this.element.classList.add(MODAL_SHOWN_CLASS_NAME);
         this.is_shown = true;
 
+        this.setPreviousActiveElement();
         this.bringFocusInsideModal();
         this.addBackdrop();
         this.dispatchEvent(this.shown_event);
@@ -126,6 +128,10 @@ export class Modal {
 
         this.dispatchEvent(this.hidden_event);
         this.doc.dispatchEvent(this.hidden_event);
+
+        if (this.previous_active_element) {
+            this.previous_active_element.focus();
+        }
     }
 
     addBackdrop(): void {
@@ -193,6 +199,45 @@ export class Modal {
     get close_elements(): Element[] {
         const children = this.element.querySelectorAll(DISMISS_SELECTOR);
         return [...children];
+    }
+
+    private setPreviousActiveElement(): void {
+        const active_element = this.doc.activeElement;
+        if (!(active_element instanceof HTMLElement)) {
+            return;
+        }
+
+        if (!this.isElementInDropdown(active_element)) {
+            this.previous_active_element = active_element;
+            return;
+        }
+
+        this.previous_active_element = this.getDropdownTrigger(active_element);
+    }
+
+    private isElementInDropdown(element: HTMLElement): boolean {
+        return element.classList.contains("tlp-dropdown-menu-item");
+    }
+
+    private getDropdownTrigger(dropdown_element: HTMLElement): HTMLElement {
+        const dropdown_menu = dropdown_element.closest("[data-dropdown=menu]");
+        if (!(dropdown_menu instanceof HTMLElement)) {
+            throw new Error("Dropdown element should be in a dropdown menu");
+        }
+
+        let dropdown_trigger = dropdown_menu.previousSibling;
+        while (
+            dropdown_trigger &&
+            (!(dropdown_trigger instanceof HTMLElement) ||
+                dropdown_trigger.getAttribute("data-dropdown") !== "trigger")
+        ) {
+            dropdown_trigger = dropdown_trigger.previousSibling;
+        }
+
+        if (!dropdown_trigger) {
+            throw new Error("Dropdown trigger should exist");
+        }
+        return dropdown_trigger;
     }
 }
 

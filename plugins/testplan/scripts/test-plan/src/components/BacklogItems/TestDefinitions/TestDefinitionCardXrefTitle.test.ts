@@ -58,10 +58,10 @@ describe("TestDefinitionCardXrefTitle", () => {
 
         expect(wrapper).toMatchInlineSnapshot(`
             <div class="test-plan-test-definition-xref-title">
-              <div class="tlp-dropdown"><a href="/plugins/tracker/?aid=123&amp;ttm_backlog_item_id=741&amp;ttm_milestone_id=11" class="test-plan-test-definition-xref">
+              <div class="tlp-dropdown"><a href="/plugins/tracker/?aid=123&amp;ttm_backlog_item_id=741&amp;ttm_milestone_id=11" class="test-plan-test-definition-xref" data-dropdown="trigger">
                   test_def #123
                   <i class="fa fa-caret-down"></i></a>
-                <div role="menu" class="tlp-dropdown-menu tlp-dropdown-menu-left"><a href="/plugins/tracker/?aid=123&amp;ttm_backlog_item_id=741&amp;ttm_milestone_id=11" role="menuitem" class="tlp-dropdown-menu-item"><i class="fas fa-fw fa-pencil-alt"></i>
+                <div role="menu" class="tlp-dropdown-menu tlp-dropdown-menu-left" data-dropdown="menu"><a href="/plugins/tracker/?aid=123&amp;ttm_backlog_item_id=741&amp;ttm_milestone_id=11" role="menuitem" class="tlp-dropdown-menu-item"><i class="fas fa-fw fa-pencil-alt"></i>
                     <translate-stub tag="span" translateparams="[object Object]">
                       Edit %{ item_type } #%{ item_id }
                     </translate-stub>

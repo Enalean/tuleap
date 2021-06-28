@@ -58,6 +58,7 @@ export class Dropdown {
     constructor(doc: Document, trigger: Element, options: DropdownOptions = { keyboard: true }) {
         this.doc = doc;
         this.trigger = trigger;
+        this.trigger.setAttribute("data-dropdown", "trigger");
 
         const { keyboard = true, dropdown_menu = this.getDropdownMenu() } = options;
         if (dropdown_menu === null) {
@@ -67,6 +68,7 @@ export class Dropdown {
             throw new Error("Dropdown menu must be an HTML element");
         }
         this.dropdown_menu = dropdown_menu;
+        this.dropdown_menu.setAttribute("data-dropdown", "menu");
         this.is_shown = false;
         this.keyboard = keyboard;
         this.shown_event = new CustomEvent(EVENT_TLP_DROPDOWN_SHOWN, {

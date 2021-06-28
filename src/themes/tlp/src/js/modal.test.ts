@@ -244,6 +244,53 @@ describe(`Modal`, () => {
         });
     });
 
+    describe(`setPreviousActiveElement()`, () => {
+        let modal: Modal;
+        beforeEach(() => {
+            document.body.innerHTML = "";
+
+            const form_element = document.createElement("input");
+            modal_element = doc.createElement("div");
+            modal_element.appendChild(form_element);
+            modal = createModal(document, modal_element);
+
+            document.body.append(modal_element);
+        });
+        afterEach(() => {
+            modal.destroy();
+        });
+
+        it("focuses the previous active element when modal closes", () => {
+            const button = document.createElement("button");
+            document.body.append(button);
+
+            button.focus();
+            modal.show();
+            modal.hide();
+
+            expect(document.activeElement).toBe(button);
+        });
+
+        it("focuses the trigger of the dropdown if previous active element was in dropdown", () => {
+            const dropdown_item = document.createElement("button");
+            dropdown_item.classList.add("tlp-dropdown-menu-item");
+            const dropdown_menu = document.createElement("div");
+            dropdown_menu.dataset.dropdown = "menu";
+            const dropdown_trigger = document.createElement("button");
+            dropdown_trigger.dataset.dropdown = "trigger";
+            const dropdown = document.createElement("div");
+            dropdown_menu.append(dropdown_item);
+            dropdown.append(dropdown_trigger, dropdown_menu);
+            document.body.append(dropdown);
+
+            dropdown_item.focus();
+            modal.show();
+            modal.hide();
+
+            expect(document.activeElement).toBe(dropdown_trigger);
+        });
+    });
+
     it(`when I click on the backdrop element, it will hide the modal`, () => {
         const modal = createModal(doc, modal_element);
         modal.show();
