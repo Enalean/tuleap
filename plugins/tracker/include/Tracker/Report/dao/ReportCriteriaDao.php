@@ -43,29 +43,35 @@ final class ReportCriteriaDao extends \Tuleap\DB\DataAccessObject
                     WHERE report_id = ? AND field_id = ?";
             $this->getDB()->run($sql, $mapping['to'], $to_report_id, $mapping['from']);
 
-            $sql = "SELECT value, 'list' AS field_type
+            $sql = "SELECT value, 'list' AS field_type, null AS op, null AS from_date, null as to_date
                     FROM tracker_report_criteria AS original_report
                              INNER JOIN tracker_report_criteria_list_value on criteria_id = original_report.id
                     WHERE original_report.field_id = ? AND original_report.report_id = ?
-                    UNION SELECT value, 'alphanum' AS field_type
+                    UNION SELECT value, 'alphanum' AS field_type, null AS op, null AS from_date, null as to_date
                     FROM tracker_report_criteria AS original_report
                         INNER JOIN tracker_report_criteria_alphanum_value on criteria_id = original_report.id
                     WHERE original_report.field_id = ? AND original_report.report_id = ?
-                    UNION SELECT value, 'file' AS field_type
+                    UNION SELECT value, 'file' AS field_type, null AS op, null AS from_date, null as to_date
                     FROM tracker_report_criteria AS original_report
                         INNER JOIN tracker_report_criteria_file_value on criteria_id = original_report.id
                     WHERE original_report.field_id = ? AND original_report.report_id = ?
-                    UNION SELECT value, 'openlist' AS field_type
+                    UNION SELECT value, 'openlist' AS field_type, null AS op, null AS from_date, null as to_date
                     FROM tracker_report_criteria AS original_report
                         INNER JOIN tracker_report_criteria_openlist_value on criteria_id = original_report.id
                     WHERE original_report.field_id = ? AND original_report.report_id = ?
-                    UNION SELECT value, 'permissions' AS field_type
+                    UNION SELECT value, 'permissions' AS field_type, null AS op, null AS from_date, null as to_date
                     FROM tracker_report_criteria AS original_report
                         INNER JOIN tracker_report_criteria_permissionsonartifact_value on criteria_id = original_report.id
+                    WHERE original_report.field_id = ? AND original_report.report_id = ?
+                    UNION SELECT null, 'date' AS field_type, op, from_date, to_date
+                    FROM tracker_report_criteria AS original_report
+                        INNER JOIN tracker_report_criteria_date_value on criteria_id = original_report.id
                     WHERE original_report.field_id = ? AND original_report.report_id = ?";
 
             $criterias = $this->getDB()->run(
                 $sql,
+                $mapping['from'],
+                $from_report_id,
                 $mapping['from'],
                 $from_report_id,
                 $mapping['from'],
@@ -83,13 +89,23 @@ final class ReportCriteriaDao extends \Tuleap\DB\DataAccessObject
 
             $data_to_insert = [];
             foreach ($criterias as $row) {
-                if ($row['value'] === null) {
-                    continue;
+                if ($row['field_type'] === "date") {
+                    $data_to_insert[$row['field_type']][] = [
+                        'criteria_id' => $report_criteria_id,
+                        'op'          => $row['op'],
+                        'from_date'   => $row['from_date'],
+                        'to_date'     => $row['to_date'],
+                    ];
+                } else {
+                    if ($row['value'] === null) {
+                        continue;
+                    }
+                    $value                                = $this->getValueFromRow($row, $mapping);
+                    $data_to_insert[$row['field_type']][] = [
+                        'criteria_id' => $report_criteria_id,
+                        'value' => $value
+                    ];
                 }
-
-                $value = $this->getValueFromRow($row, $mapping);
-
-                $data_to_insert[$row['field_type']][] = ['criteria_id' => $report_criteria_id, 'value' => $value];
             }
 
             $this->insertListCriteria($data_to_insert);
@@ -97,9 +113,9 @@ final class ReportCriteriaDao extends \Tuleap\DB\DataAccessObject
             $this->insertFileCriteria($data_to_insert);
             $this->insertOpenListCriteria($data_to_insert);
             $this->insertPermissionsCriteria($data_to_insert);
+            $this->insertDateCriteria($data_to_insert);
         }
     }
-
 
     private function insertListCriteria(array $data_to_insert): void
     {
@@ -138,6 +154,14 @@ final class ReportCriteriaDao extends \Tuleap\DB\DataAccessObject
         if (isset($data_to_insert['permissions']) && count($data_to_insert['permissions']) > 0) {
             $data_to_insert_without_duplicates = array_map("unserialize", array_unique(array_map("serialize", $data_to_insert['permissions'])));
             $this->getDB()->insertMany('tracker_report_criteria_permissionsonartifact_value', $data_to_insert_without_duplicates);
+        }
+    }
+
+    private function insertDateCriteria(array $data_to_insert): void
+    {
+        if (isset($data_to_insert['date']) && count($data_to_insert['date']) > 0) {
+            $data_to_insert_without_duplicates = array_map("unserialize", array_unique(array_map("serialize", $data_to_insert['date'])));
+            $this->getDB()->insertMany('tracker_report_criteria_date_value', $data_to_insert_without_duplicates);
         }
     }
 
