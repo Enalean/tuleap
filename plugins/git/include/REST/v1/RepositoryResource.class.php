@@ -744,7 +744,7 @@ class RepositoryResource extends AuthenticatedResource
      * @param string $ref          ref {@from path} {@required true}
      * @param string $path         path {@from path} {@required false}
      */
-    public function optionsGetTree(int $id, string $ref, string $path): void
+    public function optionsGetTree(int $id, string $ref, string $path = ""): void
     {
         Header::allowOptionsGet();
     }
