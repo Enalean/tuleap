@@ -27,8 +27,9 @@ use PFUser;
 use Project;
 use ProjectManager;
 use Tuleap\Project\REST\v1\ProjectPostRepresentation;
+use Tuleap\Test\PHPUnit\TestCase;
 
-final class TemplateFromProjectForCreationTest extends \Tuleap\Test\PHPUnit\TestCase
+final class TemplateFromProjectForCreationTest extends TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
@@ -61,19 +62,6 @@ final class TemplateFromProjectForCreationTest extends \Tuleap\Test\PHPUnit\Test
         );
 
         $this->assertEquals($expected_project, $template_from_project_for_creation->getProject());
-    }
-
-    public function testGetTemplateFromProjectForCreationFromSOAPServer(): void
-    {
-        $expected_project = $this->mockForSuccessfulValidation(123);
-
-        $template_from_project_for_creation = TemplateFromProjectForCreation::fromSOAPServer(
-            123,
-            $this->user,
-            $this->project_manager
-        );
-
-        $this->assertSame($expected_project, $template_from_project_for_creation->getProject());
     }
 
     private function mockForSuccessfulValidation(int $project_id): Project
