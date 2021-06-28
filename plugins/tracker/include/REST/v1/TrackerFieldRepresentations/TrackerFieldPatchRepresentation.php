@@ -27,7 +27,7 @@ class TrackerFieldPatchRepresentation
 {
 
     /**
-     * @var array {@type string}
+     * @var array | null {@type string}
      */
     public $new_values;
 }

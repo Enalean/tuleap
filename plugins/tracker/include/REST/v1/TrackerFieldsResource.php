@@ -114,7 +114,10 @@ class TrackerFieldsResource extends AuthenticatedResource
             throw new RestException(400, "Field values can be only add with static values.");
         }
 
-        $request['add'] = implode("\n", $patch->new_values);
+        $request = ['add' => null];
+        if ($patch->new_values !== null) {
+            $request['add'] = implode("\n", $patch->new_values);
+        }
         $field->getBind()->process($request, true);
 
         return Tracker_REST_FormElementRepresentation::build(

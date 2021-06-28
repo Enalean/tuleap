@@ -355,7 +355,7 @@ class FileFinder
             array_splice($this->_path, $i, 1);
         }
         array_unshift($this->_path, $dir);
-        @ini_set('include_path', implode($this->_path, $this->_get_ini_separator()));
+        @ini_set('include_path', implode($this->_get_ini_separator(), $this->_path));
     }
 
     // Return all the possible shortened locale specifiers for the given locale.
