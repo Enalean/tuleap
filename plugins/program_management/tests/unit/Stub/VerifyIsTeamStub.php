@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2020 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,9 +20,31 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Domain\Team\Creation;
+namespace Tuleap\ProgramManagement\Stub;
 
-interface TeamStore
+use Tuleap\ProgramManagement\Domain\Team\VerifyIsTeam;
+
+final class VerifyIsTeamStub implements VerifyIsTeam
 {
-    public function save(TeamCollection $team_collection): void;
+    private bool $is_valid;
+
+    private function __construct(bool $is_valid)
+    {
+        $this->is_valid = $is_valid;
+    }
+
+    public static function withValidTeam(): self
+    {
+        return new self(true);
+    }
+
+    public static function withNotValidTeam(): self
+    {
+        return new self(false);
+    }
+
+    public function isATeam(int $project_id): bool
+    {
+        return $this->is_valid;
+    }
 }
