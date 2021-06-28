@@ -109,8 +109,8 @@ $tlp-table-cell-padding: calc(var(--tlp-small-spacing) / 2) var(--tlp-small-spac
 
             &.tlp-table-cell-empty {
                 height: 100px;
-                background: var(--tlp-table-row-background-empty);
-                color: var(--tlp-main-color-transparent-70);
+                background: var(--tlp-table-row-background-odd);
+                color: var(--tlp-dimmed-color);
                 font-style: italic;
                 text-align: center;
                 vertical-align: middle;
