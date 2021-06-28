@@ -45,7 +45,7 @@ class CacheableMarkup extends XmlContent
         //   when no gzcompress is available.
     }
 
-    public function unpack($packed)
+    public static function unpack($packed)
     {
         if (! $packed) {
             return false;

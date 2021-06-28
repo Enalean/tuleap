@@ -377,10 +377,9 @@ class FileFinder
     /**
      * Try to figure out the appropriate value for $LANG.
      *
-     *@access private
      *@return string The value of $LANG.
      */
-    public function _get_lang()
+    public static function _get_lang()
     {
         if (! empty($GLOBALS['LANG'])) {
             return $GLOBALS['LANG'];
@@ -469,7 +468,7 @@ class LocalizedFileFinder extends FileFinder
         $include_path   = $this->_get_include_path();
         $path           = [];
 
-        $lang = $this->_get_lang();
+        $lang = self::_get_lang();
         assert(! empty($lang));
 
         if ($locales = $this->locale_versions($lang)) {
@@ -506,7 +505,7 @@ class LocalizedButtonFinder extends FileFinder
         $include_path   = $this->_get_include_path();
         $path           = [];
 
-        $lang = $this->_get_lang();
+        $lang = self::_get_lang();
         assert(! empty($lang));
         assert(! empty($WikiTheme));
 

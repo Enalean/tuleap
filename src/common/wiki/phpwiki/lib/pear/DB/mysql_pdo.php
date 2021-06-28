@@ -157,7 +157,7 @@ class DB_mysql_pdo extends DB_common // @codingStandardsIgnoreLine
                 $arr = array_change_key_case($arr, CASE_LOWER);
             }
         } else {
-            $arr = array_values($row);
+            $arr = array_values($row ?? []);
         }
         if (! $arr) {
             return null;
@@ -232,7 +232,7 @@ class DB_mysql_pdo extends DB_common // @codingStandardsIgnoreLine
         return $this->connection->escapeIdentifier($str);
     }
 
-    public function quote($str)
+    public function quote($str = null)
     {
         return $this->quoteSmart($str);
     }
