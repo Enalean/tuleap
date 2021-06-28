@@ -19,7 +19,7 @@
  */
 
 use Tuleap\BuildVersion\VersionPresenter;
-use Tuleap\Project\ProjectContextPresenter;
+use Tuleap\Project\Sidebar\ProjectContextPresenter;
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 class FlamingParrot_ContainerPresenter

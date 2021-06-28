@@ -49,6 +49,9 @@ use Tuleap\Project\Flags\ProjectFlagsBuilder;
 use Tuleap\Project\Flags\ProjectFlagsDao;
 use Tuleap\Project\ProjectPresentersBuilder;
 use Tuleap\Project\Registration\ProjectRegistrationUserPermissionChecker;
+use Tuleap\Project\Sidebar\CollectLinkedProjects;
+use Tuleap\Project\Sidebar\LinkedProjectsCollectionPresenter;
+use Tuleap\Project\Sidebar\ProjectContextPresenter;
 use Tuleap\Sanitizer\URISanitizer;
 use Tuleap\User\Account\RegistrationGuardEvent;
 use Tuleap\User\SwitchToPresenterBuilder;
@@ -390,6 +393,7 @@ class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDecla
 
             $project = ProjectManager::instance()->getProject($params['group']);
 
+            $event_manager       = $this->getEventManager();
             $sidebar             = $this->getProjectSidebar($params, $project);
             $project_name        = $project->getPublicName();
             $project_link        = $this->getProjectLink($project);
@@ -405,10 +409,14 @@ class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDecla
                 $current_user
             );
 
-            $project_context = \Tuleap\Project\ProjectContextPresenter::build(
+            $linked_projects_event = new CollectLinkedProjects($project, $current_user);
+            $event_manager->dispatch($linked_projects_event);
+
+            $project_context = ProjectContextPresenter::build(
                 $project,
                 \Tuleap\Project\ProjectPrivacyPresenter::fromProject($project),
                 $administration_link,
+                LinkedProjectsCollectionPresenter::fromEvent($linked_projects_event),
                 $this->project_flags_builder->buildProjectFlags($project),
                 $banner
             );

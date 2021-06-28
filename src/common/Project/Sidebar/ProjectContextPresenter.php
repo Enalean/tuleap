@@ -20,57 +20,38 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Project;
+namespace Tuleap\Project\Sidebar;
 
 use Codendi_HTMLPurifier;
 use Project;
 use Tuleap\Project\Admin\Access\ProjectAdministrationLinkPresenter;
 use Tuleap\Project\Banner\BannerDisplay;
 use Tuleap\Project\Flags\ProjectFlagPresenter;
+use Tuleap\Project\ProjectPrivacyPresenter;
 
 /**
  * @psalm-immutable
  */
-class ProjectContextPresenter
+final class ProjectContextPresenter
 {
-    /**
-     * @var int
-     */
-    public $project_id;
-    /**
-     * @var ProjectPrivacyPresenter
-     */
-    public $privacy;
+    public int $project_id;
+    public ProjectPrivacyPresenter $privacy;
     /**
      * @var ProjectFlagPresenter[]
      */
-    public $project_flags;
-    /**
-     * @var bool
-     */
-    public $has_project_banner;
-    /**
-     * @var bool
-     */
-    public $project_banner_is_visible;
-    /**
-     * @var string
-     */
-    public $purified_banner;
+    public array $project_flags;
+    public bool $has_project_banner;
+    public bool $project_banner_is_visible;
+    public string $purified_banner;
     /**
      * @var false|string
      */
     public $json_encoded_project_flags;
-    /**
-     * @var int
-     */
-    public $nb_project_flags;
-    /**
-     * @var bool
-     */
-    public $has_project_flags;
+    public int $nb_project_flags;
+    public bool $has_project_flags;
     public bool $has_administration_link;
     public string $administration_link;
+    public ?LinkedProjectsCollectionPresenter $linked_projects;
 
     /**
      * @param ProjectFlagPresenter[] $project_flags
@@ -79,11 +60,12 @@ class ProjectContextPresenter
         Project $project,
         ProjectPrivacyPresenter $privacy,
         ?ProjectAdministrationLinkPresenter $administration_link_presenter,
+        ?LinkedProjectsCollectionPresenter $linked_projects_presenter,
         array $project_flags,
         ?BannerDisplay $banner,
         string $purified_banner
     ) {
-        $this->project_id                 = $project->getID();
+        $this->project_id                 = (int) $project->getID();
         $this->privacy                    = $privacy;
         $this->project_flags              = $project_flags;
         $this->nb_project_flags           = count($project_flags);
@@ -94,16 +76,18 @@ class ProjectContextPresenter
         $this->administration_link        = $administration_link_presenter->uri ?? '';
         $this->purified_banner            = $purified_banner;
         $this->json_encoded_project_flags = json_encode($project_flags, JSON_THROW_ON_ERROR);
+        $this->linked_projects            = $linked_projects_presenter;
     }
 
     public static function build(
         Project $project,
         ProjectPrivacyPresenter $privacy,
         ?ProjectAdministrationLinkPresenter $administration_link,
+        ?LinkedProjectsCollectionPresenter $linked_projects_presenter,
         array $project_flags,
         ?BannerDisplay $banner
     ): self {
-        $purified_banner = "";
+        $purified_banner = '';
         if ($banner) {
             $purified_banner = Codendi_HTMLPurifier::instance()->purify(
                 $banner->getMessage(),
@@ -111,6 +95,14 @@ class ProjectContextPresenter
             );
         }
 
-        return new self($project, $privacy, $administration_link, $project_flags, $banner, $purified_banner);
+        return new self(
+            $project,
+            $privacy,
+            $administration_link,
+            $linked_projects_presenter,
+            $project_flags,
+            $banner,
+            $purified_banner
+        );
     }
 }

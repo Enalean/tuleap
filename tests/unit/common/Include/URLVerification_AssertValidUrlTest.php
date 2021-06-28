@@ -102,7 +102,7 @@ class URLVerification_AssertValidUrlTest extends \Tuleap\Test\PHPUnit\TestCase
         $project_manager     = Mockery::mock(ProjectManager::class);
         $project_manager->shouldReceive('getProject')->andReturn($project);
         $this->url_verification->shouldReceive('getProjectManager')->andReturn($project_manager);
-        $this->url_verification->shouldReceive('userCanAccessProject')->andThrow(new Project_AccessDeletedException($project));
+        $this->url_verification->shouldReceive('userCanAccessProject')->andThrow(new Project_AccessDeletedException());
 
         $this->url_verification->shouldReceive('exitError')->once();
         $this->url_verification->shouldReceive('displayRestrictedUserProjectError')->never();

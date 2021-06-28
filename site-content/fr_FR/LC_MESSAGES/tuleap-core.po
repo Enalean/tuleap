@@ -41,6 +41,11 @@ msgstr "%1$s message(s) détruit(s)"
 msgid "%1$s users will receive this email."
 msgstr "%1$s utilisateurs vont recevoir ce courrier électronique."
 
+msgid "%d Aggregated project"
+msgid_plural "%d Aggregated projects"
+msgstr[0] "%d Projet regroupé"
+msgstr[1] "%d Projets regroupés"
+
 #, php-format
 msgid "%d member"
 msgid_plural "%d members"

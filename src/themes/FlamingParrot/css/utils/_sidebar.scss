@@ -33,6 +33,17 @@
     border: 0;
 }
 
+%uppercase-title {
+    overflow: hidden;
+    font-size: 0.6rem;
+    font-weight: 600;
+    letter-spacing: 0.25px;
+    line-height: 12px;
+    text-overflow: ellipsis;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+
 /* stylelint-disable selector-class-pattern, selector-no-qualifying-type */
 .sidebar-nav {
     display: flex;
@@ -65,32 +76,16 @@
         min-height: 100%;
     }
 
-    li > a {
-        display: flex;
-        position: relative;
-        box-sizing: border-box;
-        align-items: center;
-        width: variables-common.$sidebar-width;
-        height: variables-common.$navbar-height;
-        padding: 0 var(--tlp-medium-spacing);
-        color: var(--tlp-typo-default-text-color-on-dark-background);
-        text-shadow: none;
-
-        > i {
-            -webkit-font-smoothing: antialiased;
-        }
-    }
-
-    .nav-list {
-        margin-bottom: var(--tlp-medium-spacing);
-    }
-
     .project-sidebar-nav-item {
-        width: inherit;
+        display: flex;
+        align-items: center;
+        height: variables-common.$navbar-height;
         margin: 0 calc(-1 * var(--tlp-small-spacing));
         padding: 0 var(--tlp-small-spacing);
         border-radius: 6px;
+        color: var(--tlp-typo-default-text-color-on-dark-background);
         font-weight: normal;
+        text-shadow: none;
     }
 
     .project-sidebar-nav-item:hover,
@@ -328,15 +323,9 @@
 }
 
 .project-sidebar-banner-button-label {
+    @extend %uppercase-title;
     margin: 0 0 0 var(--tlp-small-spacing);
-    overflow: hidden;
     color: var(--tlp-warning-color);
-    font-size: 0.6rem;
-    font-weight: 600;
-    letter-spacing: 0.25px;
-    text-overflow: ellipsis;
-    text-transform: uppercase;
-    white-space: nowrap;
 }
 
 .project-sidebar-project-flags {
@@ -392,42 +381,82 @@
 }
 
 .project-sidebar-project-flags-label {
+    @extend %uppercase-title;
     max-width: 185px;
-    overflow: hidden;
+}
+
+.project-sidebar-linked-projects {
+    display: flex;
+    flex-direction: column;
+    margin: var(--tlp-small-spacing) var(--tlp-medium-spacing);
+}
+
+.project-sidebar-linked-projects-icon {
+    @extend %round-icon;
+    background: var(--tlp-sidebar-action-color);
+    background-blend-mode: overlay;
+    color: var(--tlp-main-color-lighter-40);
     font-size: 0.6rem;
-    font-weight: 600;
-    letter-spacing: 0.2px;
-    line-height: 0.7rem;
-    text-overflow: ellipsis;
-    text-transform: uppercase;
-    white-space: nowrap;
+}
+
+.project-sidebar-linked-projects-label {
+    @extend %uppercase-title;
+    margin: 0 0 0 var(--tlp-small-spacing);
+    color: var(--tlp-ui-white-transparent-10);
+}
+
+.project-sidebar-linked-projects-list {
+    margin: 0 0 0 var(--tlp-x-large-spacing);
+    padding: 0 0 0 var(--tlp-small-spacing);
+    border-left: 1px solid var(--tlp-neutral-normal-color);
+    list-style: none;
+}
+
+.project-sidebar-linked-projects-item {
+    padding: 2px 0;
+}
+
+.project-sidebar-linked-projects-item-link {
+    color: var(--tlp-ui-white-transparent-40);
+    text-decoration: none;
+
+    &:hover,
+    &:focus {
+        color: var(--tlp-ui-white-transparent-30);
+        text-decoration: underline;
+    }
+}
+
+.project-sidebar-linked-projects-item-icon {
+    margin: 0 4px 0 0;
+    font-size: 11px;
 }
 
 .project-sidebar-tools-section-label {
+    @extend %uppercase-title;
     margin: 0 0 var(--tlp-small-spacing) 0;
     padding: var(--tlp-medium-spacing) var(--tlp-medium-spacing) 0;
     border: 0;
     opacity: 0.6;
     color: var(--tlp-dimmed-color-lighter-95);
-    font-size: 0.65rem;
-    letter-spacing: 0.25px;
-    line-height: 12px;
-    text-transform: uppercase;
 }
 
 body.sidebar-collapsed {
+    .project-sidebar-header {
+        align-items: center;
+    }
+
     .project-sidebar-banner-button {
         justify-content: center;
     }
 
-    .project-sidebar-header-name {
-        padding: var(--tlp-medium-spacing);
-    }
-
-    .project-title-container {
+    .project-title-container,
+    .project-sidebar-linked-projects-icon {
         align-self: center;
     }
 
+    .project-sidebar-linked-projects-list,
+    .project-sidebar-linked-projects-label,
     .project-sidebar-privacy-badge,
     .project-sidebar-title,
     .project-title-spacer,

@@ -31,7 +31,7 @@ use Project_AccessPrivateException;
 use Project_AccessProjectNotFoundException;
 use Project_AccessRestrictedException;
 
-class ProjectAccessChecker
+class ProjectAccessChecker implements CheckProjectAccess
 {
     /**
      * @var RestrictedUserCanAccessVerifier
@@ -76,7 +76,7 @@ class ProjectAccessChecker
                 throw new ProjectAccessSuspendedException();
             }
 
-            throw new Project_AccessDeletedException($project);
+            throw new Project_AccessDeletedException();
         }
 
         if ($user->isMember($project->getID())) {
