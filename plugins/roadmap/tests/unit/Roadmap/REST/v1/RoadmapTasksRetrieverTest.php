@@ -885,7 +885,8 @@ class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             ->with(
                 $artifacts,
                 Mockery::type(\DateTimeImmutable::class),
-                $this->user
+                $this->user,
+                Mockery::type(TrackersWithUnreadableStatusCollection::class)
             )
             ->once()
             ->andReturn([$task_201, $task_202, $task_203]);
@@ -1070,7 +1071,8 @@ class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             ->with(
                 $artifacts,
                 Mockery::type(\DateTimeImmutable::class),
-                $this->user
+                $this->user,
+                Mockery::type(TrackersWithUnreadableStatusCollection::class)
             )
             ->once()
             ->andReturn([$task_201, $task_202]);
@@ -1260,7 +1262,8 @@ class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             ->with(
                 $artifacts,
                 Mockery::type(\DateTimeImmutable::class),
-                $this->user
+                $this->user,
+                Mockery::type(TrackersWithUnreadableStatusCollection::class)
             )
             ->once()
             ->andReturn([$task_201, $task_203]);

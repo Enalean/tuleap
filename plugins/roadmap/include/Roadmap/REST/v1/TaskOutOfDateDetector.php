@@ -58,7 +58,8 @@ final class TaskOutOfDateDetector implements IDetectIfArtifactIsOutOfDate
     public function isArtifactOutOfDate(
         Artifact $artifact,
         DateTimeImmutable $now,
-        \PFUser $user
+        \PFUser $user,
+        TrackersWithUnreadableStatusCollection $trackers_with_unreadable_status_collection
     ): bool {
         $semantic_status    = $this->semantic_status_retriever->retrieveSemantic($artifact->getTracker());
         $semantic_timeframe = $this->semantic_timeframe_builder->getSemantic($artifact->getTracker());
@@ -68,7 +69,14 @@ final class TaskOutOfDateDetector implements IDetectIfArtifactIsOutOfDate
             return false;
         }
 
-        return $this->hasBeenClosedMoreThanOneYearAgo($artifact, $semantic_status, $status_field, $now)
+        return $this->hasBeenClosedMoreThanOneYearAgo(
+            $artifact,
+            $semantic_status,
+            $status_field,
+            $now,
+            $user,
+            $trackers_with_unreadable_status_collection
+        )
             || $this->isEndDateMoreThanOneYearAgo($semantic_timeframe, $artifact, $user, $now);
     }
 
@@ -76,8 +84,16 @@ final class TaskOutOfDateDetector implements IDetectIfArtifactIsOutOfDate
         Artifact $artifact,
         \Tracker_Semantic_Status $semantic_status,
         \Tracker_FormElement_Field_List $status_field,
-        DateTimeImmutable $now
+        DateTimeImmutable $now,
+        \PFUser $user,
+        TrackersWithUnreadableStatusCollection $trackers_with_unreadable_status_collection
     ): bool {
+        if (! $status_field->userCanRead($user)) {
+            $trackers_with_unreadable_status_collection->add($artifact->getTracker());
+
+            return true;
+        }
+
         $changesets = array_reverse($artifact->getChangesets());
         foreach ($changesets as $changeset) {
             if (! $changeset->canHoldValue()) {

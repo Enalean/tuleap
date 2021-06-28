@@ -132,10 +132,13 @@ final class RoadmapTasksRetriever
             $offset
         );
 
+        $trackers_with_unreadable_status_collection = new TrackersWithUnreadableStatusCollection($this->logger);
+
         $filtered_artifacts = $this->tasks_filter->filterOutOfDateArtifacts(
             $paginated_artifacts->getArtifacts(),
             new DateTimeImmutable(),
-            $user
+            $user,
+            $trackers_with_unreadable_status_collection,
         );
 
         $representations = [];
@@ -156,6 +159,8 @@ final class RoadmapTasksRetriever
 
             $representations[] = $representation_builders_by_tracker_id[$tracker_id]->buildRepresentation($artifact, $user);
         }
+
+        $trackers_with_unreadable_status_collection->informLoggerIfWeHaveTrackersWithUnreadableStatus();
 
         return new PaginatedCollectionOfTaskRepresentations($representations, $paginated_artifacts->getTotalSize());
     }

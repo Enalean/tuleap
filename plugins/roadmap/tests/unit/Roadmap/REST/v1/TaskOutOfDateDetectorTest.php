@@ -70,6 +70,8 @@ class TaskOutOfDateDetectorTest extends TestCase
      */
     private $timeframe_calculator;
 
+    private TrackersWithUnreadableStatusCollection $trackers_with_unreadable_status_collection;
+
     private const TODO_VALUE_ID     = 128;
     private const ON_GOING_VALUE_ID = 129;
     private const DONE_VALUE_ID     = 130;
@@ -108,6 +110,8 @@ class TaskOutOfDateDetectorTest extends TestCase
             $semantic_timeframe_builder,
             $this->logger
         );
+
+        $this->trackers_with_unreadable_status_collection = new TrackersWithUnreadableStatusCollection($this->logger);
     }
 
     public function testItReturnsFalseWhenTrackerHasNoStatusSemanticDefined(): void
@@ -118,7 +122,8 @@ class TaskOutOfDateDetectorTest extends TestCase
             $this->detector->isArtifactOutOfDate(
                 $this->artifact,
                 new \DateTimeImmutable(),
-                $this->user
+                $this->user,
+                $this->trackers_with_unreadable_status_collection,
             )
         );
     }
@@ -132,13 +137,20 @@ class TaskOutOfDateDetectorTest extends TestCase
             $this->detector->isArtifactOutOfDate(
                 $this->artifact,
                 new \DateTimeImmutable(),
-                $this->user
+                $this->user,
+                $this->trackers_with_unreadable_status_collection,
             )
         );
     }
 
     public function testItReturnsFalseForTasksClosedEarlierThanOneYearAgoWithNoEndDate(): void
     {
+        $this->status_field
+            ->shouldReceive('userCanRead')
+            ->with($this->user)
+            ->once()
+            ->andReturn(true);
+
         $this->semantic_status->shouldReceive('getField')->once()->andReturn($this->status_field);
         $this->semantic_status->shouldReceive('isOpen')->with($this->artifact)->once()->andReturn(false);
         $this->timeframe_calculator->shouldReceive('buildTimePeriodWithoutWeekendForArtifactForREST')
@@ -162,13 +174,20 @@ class TaskOutOfDateDetectorTest extends TestCase
             $this->detector->isArtifactOutOfDate(
                 $this->artifact,
                 new \DateTimeImmutable("2021-04-14 08:30"),
-                $this->user
+                $this->user,
+                $this->trackers_with_unreadable_status_collection,
             )
         );
     }
 
     public function testItReturnsTrueForTasksClosedLaterThanOneYearAgo(): void
     {
+        $this->status_field
+            ->shouldReceive('userCanRead')
+            ->with($this->user)
+            ->once()
+            ->andReturn(true);
+
         $this->semantic_status->shouldReceive('getField')->once()->andReturn($this->status_field);
         $this->semantic_status->shouldReceive('isOpen')->with($this->artifact)->once()->andReturn(false);
 
@@ -187,13 +206,20 @@ class TaskOutOfDateDetectorTest extends TestCase
             $this->detector->isArtifactOutOfDate(
                 $this->artifact,
                 new \DateTimeImmutable("2021-04-14 08:30"),
-                $this->user
+                $this->user,
+                $this->trackers_with_unreadable_status_collection,
             )
         );
     }
 
     public function testItReturnsFalseForTasksReOpenAndReClosedEarlierThanOneYearAgo(): void
     {
+        $this->status_field
+            ->shouldReceive('userCanRead')
+            ->with($this->user)
+            ->once()
+            ->andReturn(true);
+
         $this->semantic_status->shouldReceive('getField')->once()->andReturn($this->status_field);
         $this->semantic_status->shouldReceive('isOpen')->with($this->artifact)->once()->andReturn(false);
         $this->timeframe_calculator->shouldReceive('buildTimePeriodWithoutWeekendForArtifactForREST')
@@ -221,13 +247,20 @@ class TaskOutOfDateDetectorTest extends TestCase
             $this->detector->isArtifactOutOfDate(
                 $this->artifact,
                 new \DateTimeImmutable("2021-04-14 08:30"),
-                $this->user
+                $this->user,
+                $this->trackers_with_unreadable_status_collection,
             )
         );
     }
 
     public function testItReturnsTrueForTasksWithoutStatus(): void
     {
+        $this->status_field
+            ->shouldReceive('userCanRead')
+            ->with($this->user)
+            ->once()
+            ->andReturn(true);
+
         $this->semantic_status->shouldReceive('getField')->once()->andReturn($this->status_field);
         $this->semantic_status->shouldReceive('isOpen')->with($this->artifact)->once()->andReturn(false);
         $this->timeframe_calculator->shouldReceive('buildTimePeriodWithoutWeekendForArtifactForREST')
@@ -263,13 +296,79 @@ class TaskOutOfDateDetectorTest extends TestCase
             $this->detector->isArtifactOutOfDate(
                 $this->artifact,
                 new \DateTimeImmutable("2021-04-14 08:30"),
-                $this->user
+                $this->user,
+                $this->trackers_with_unreadable_status_collection,
             )
         );
     }
 
+    public function testItReturnsTrueForTasksWithUnreadableStatus(): void
+    {
+        $this->status_field
+            ->shouldReceive('userCanRead')
+            ->with($this->user)
+            ->once()
+            ->andReturn(false);
+
+        $this->semantic_status->shouldReceive('getField')->once()->andReturn($this->status_field);
+        $this->semantic_status->shouldReceive('isOpen')->with($this->artifact)->once()->andReturn(false);
+        $this->timeframe_calculator->shouldReceive('buildTimePeriodWithoutWeekendForArtifactForREST')
+            ->with($this->artifact, $this->user, $this->logger)
+            ->andReturn(
+                $this->getTimePeriodWithoutWeekend("2021-01-01", null)
+            );
+
+        $submitted_on = new \DateTimeImmutable("2021-04-13 15:30");
+        $changeset    = new Tracker_Artifact_Changeset(
+            1,
+            $this->artifact,
+            104,
+            $submitted_on->getTimestamp(),
+            ''
+        );
+
+        $this->artifact->setChangesets(
+            [
+                $this->buildChangeset(1, "2018-04-13 15:30", true, self::TODO_VALUE_ID),
+                $this->buildChangeset(2, "2018-04-13 16:30", true, self::ON_GOING_VALUE_ID),
+                $this->buildChangeset(3, "2018-04-13 17:30", true, self::ON_GOING_VALUE_ID)
+            ]
+        );
+
+        $changeset->setFieldValue(
+            $this->status_field,
+            new Tracker_Artifact_ChangesetValue_List(
+                365,
+                $changeset,
+                $this->status_field,
+                true,
+                []
+            )
+        );
+
+        $this->artifact->setChangesets([$changeset]);
+
+        self::assertTrue(
+            $this->detector->isArtifactOutOfDate(
+                $this->artifact,
+                new \DateTimeImmutable("2021-04-14 08:30"),
+                $this->user,
+                $this->trackers_with_unreadable_status_collection,
+            )
+        );
+
+        $this->logger->shouldReceive('info')->once();
+        $this->trackers_with_unreadable_status_collection->informLoggerIfWeHaveTrackersWithUnreadableStatus();
+    }
+
     public function testItReturnsTrueForClosedArtifactWhenChangesetCantBeFound(): void
     {
+        $this->status_field
+            ->shouldReceive('userCanRead')
+            ->with($this->user)
+            ->once()
+            ->andReturn(true);
+
         $this->semantic_status->shouldReceive('getField')->once()->andReturn($this->status_field);
         $this->semantic_status->shouldReceive('isOpen')->with($this->artifact)->once()->andReturn(false);
 
@@ -286,7 +385,8 @@ class TaskOutOfDateDetectorTest extends TestCase
             $this->detector->isArtifactOutOfDate(
                 $this->artifact,
                 new \DateTimeImmutable("2021-04-14 08:30"),
-                $this->user
+                $this->user,
+                $this->trackers_with_unreadable_status_collection,
             )
         );
     }
@@ -299,6 +399,12 @@ class TaskOutOfDateDetectorTest extends TestCase
         $end_string_date,
         $expected_out_of_date
     ): void {
+        $this->status_field
+            ->shouldReceive('userCanRead')
+            ->with($this->user)
+            ->once()
+            ->andReturn(true);
+
         $now_string_date = "2021-04-14";
 
         $this->timeframe_calculator->shouldReceive('buildTimePeriodWithoutWeekendForArtifactForREST')
@@ -324,6 +430,7 @@ class TaskOutOfDateDetectorTest extends TestCase
                 $this->artifact,
                 new \DateTimeImmutable($now_string_date),
                 $this->user,
+                $this->trackers_with_unreadable_status_collection,
             )
         );
     }
