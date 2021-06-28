@@ -28,6 +28,7 @@ use Tracker;
 use TrackerFactory;
 use TrackerXmlImport;
 use Tuleap\Project\MappingRegistry;
+use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDuplicator;
 
 final class TrackerCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -53,19 +54,22 @@ final class TrackerCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|TrackerXmlImport
      */
     private $tracker_xml_import;
+    private SemanticTimeframeDuplicator $semantic_timeframe_duplicator;
 
     protected function setUp(): void
     {
-        $this->tracker_xml_import    = Mockery::mock(TrackerXmlImport::class);
-        $this->tracker_factory       = Mockery::mock(TrackerFactory::class);
-        $this->xml_error_displayer   = Mockery::mock(TrackerCreatorXmlErrorDisplayer::class);
-        $this->creation_data_checker = Mockery::mock(TrackerCreationDataChecker::class);
+        $this->tracker_xml_import            = Mockery::mock(TrackerXmlImport::class);
+        $this->tracker_factory               = Mockery::mock(TrackerFactory::class);
+        $this->xml_error_displayer           = Mockery::mock(TrackerCreatorXmlErrorDisplayer::class);
+        $this->creation_data_checker         = Mockery::mock(TrackerCreationDataChecker::class);
+        $this->semantic_timeframe_duplicator = Mockery::mock(SemanticTimeframeDuplicator::class);
 
         $this->creator = new TrackerCreator(
             $this->tracker_xml_import,
             $this->tracker_factory,
             $this->xml_error_displayer,
             $this->creation_data_checker,
+            $this->semantic_timeframe_duplicator
         );
     }
 
@@ -98,13 +102,24 @@ final class TrackerCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItDuplicateExistingTracker(): void
     {
-        $project = Mockery::mock(\Project::class);
-        $project->shouldReceive('getId')->andReturn("110");
+        $from_project = Mockery::mock(\Project::class);
+        $from_project->shouldReceive('getID')->andReturn("110");
 
-        $tracker = Mockery::mock(Tracker::class);
+        $to_project = Mockery::mock(\Project::class);
+        $to_project->shouldReceive('getID')->andReturn("110");
+
+        $from_tracker = Mockery::mock(Tracker::class);
+        $from_tracker->shouldReceive('getProject')
+            ->once()
+            ->andReturn($from_project);
+        $from_tracker->shouldReceive('getId')->andReturn(101);
+
+        $to_tracker = Mockery::mock(Tracker::class);
+        $to_tracker->shouldReceive('getId')->andReturn(201);
+
         $this->tracker_factory->shouldReceive('create')->withArgs(
             [
-                $project->getId(),
+                $to_project->getId(),
                 Mockery::type(MappingRegistry::class),
                 "101",
                 "Tracker Name",
@@ -112,11 +127,20 @@ final class TrackerCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
                 "tracker-shortname",
                 "peggy-pink"
             ]
-        )->once()->andReturn(['tracker' => $tracker]);
+        )->once()->andReturn(['tracker' => $to_tracker, 'field_mapping' => ['F101' => 1001, 'F102' => 1002], 'report_mapping' => []]);
         $this->creation_data_checker->shouldReceive('checkAtTrackerDuplication')->once();
 
+        $this->tracker_factory->shouldReceive('getTrackerById')
+            ->once()
+            ->with(101)
+            ->andReturn($from_tracker);
+
+        $this->semantic_timeframe_duplicator->shouldReceive('duplicateInSameProject')
+            ->once()
+            ->with(101, 201, ['F101' => 1001, 'F102' => 1002]);
+
         $created_tracker = $this->creator->duplicateTracker(
-            $project,
+            $to_project,
             "Tracker Name",
             "",
             "tracker-shortname",
@@ -125,7 +149,7 @@ final class TrackerCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             Mockery::mock(\PFUser::class)
         );
 
-        $this->assertEquals($tracker, $created_tracker);
+        $this->assertEquals($to_tracker, $created_tracker);
     }
 
     public function testItThrowExceptionWhenTrackerDuplicationFails(): void
@@ -145,9 +169,63 @@ final class TrackerCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             ]
         )->once()->andReturn(false);
 
+        $this->semantic_timeframe_duplicator->shouldReceive('duplicateInSameProject')
+            ->never();
+
         $this->expectException(TrackerCreationHasFailedException::class);
         $this->creator->duplicateTracker(
             $project,
+            "Tracker Name",
+            "",
+            "tracker-shortname",
+            "peggy-pink",
+            "101",
+            Mockery::mock(\PFUser::class)
+        );
+    }
+
+    public function testItDoesNotDuplicateSemanticTimeframeWhenTemplateTrackerComesFromAnotherProject(): void
+    {
+        $from_project = Mockery::mock(\Project::class);
+        $from_project->shouldReceive('getId')->andReturn("110");
+
+        $to_project = Mockery::mock(\Project::class);
+        $to_project->shouldReceive('getID')->andReturn("111");
+
+        $from_tracker = Mockery::mock(Tracker::class);
+        $from_tracker->shouldReceive('getProject')
+            ->once()
+            ->andReturn($from_project);
+        $from_tracker->shouldReceive('getId')->andReturn(101);
+
+        $to_tracker = Mockery::mock(Tracker::class);
+        $to_tracker->shouldReceive('getId')->andReturn(201);
+
+        $this->tracker_factory->shouldReceive('create')->withArgs(
+            [
+                $to_project->getId(),
+                Mockery::type(MappingRegistry::class),
+                "101",
+                "Tracker Name",
+                "",
+                "tracker-shortname",
+                "peggy-pink"
+            ]
+        )->once()->andReturn(['tracker' => $to_tracker, 'field_mapping' => ['F101' => 1001, 'F102' => 1002], 'report_mapping' => []]);
+        $this->creation_data_checker->shouldReceive('checkAtTrackerDuplication')->once();
+
+        $this->tracker_factory->shouldReceive('getTrackerById')
+            ->with(101)
+            ->andReturn($from_tracker);
+
+        $this->tracker_factory->shouldReceive('getTrackerById')
+            ->with(201)
+            ->andReturn($to_tracker);
+
+        $this->semantic_timeframe_duplicator->shouldReceive('duplicateInSameProject')->never();
+
+        $created_tracker = $this->creator->duplicateTracker(
+            $to_project,
             "Tracker Name",
             "",
             "tracker-shortname",

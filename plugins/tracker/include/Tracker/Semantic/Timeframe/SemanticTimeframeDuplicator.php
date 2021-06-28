@@ -22,9 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Semantic\Timeframe;
 
-use Tuleap\Tracker\Semantic\IDuplicateSemantic;
-
-class SemanticTimeframeDuplicator implements IDuplicateSemantic
+class SemanticTimeframeDuplicator
 {
     /**
      * @var SemanticTimeframeDao
@@ -39,20 +37,33 @@ class SemanticTimeframeDuplicator implements IDuplicateSemantic
     /**
      * Duplicate the semantic from tracker source to tracker target
      */
-    public function duplicate(int $from_tracker_id, int $to_tracker_id, array $field_mapping): void
+    private function duplicate(int $from_tracker_id, int $to_tracker_id, array $field_mapping, ?array $trackers_mapping): void
     {
         $row = $this->dao->searchByTrackerId($from_tracker_id);
         if ($row === null) {
             return;
         }
 
-        $from_start_date_field_id    = $row['start_date_field_id'];
-        $from_duration_date_field_id = $row['duration_field_id'];
-        $from_end_date_field_id      = $row['end_date_field_id'];
+        $from_start_date_field_id     = $row['start_date_field_id'];
+        $from_duration_date_field_id  = $row['duration_field_id'];
+        $from_end_date_field_id       = $row['end_date_field_id'];
+        $from_implied_from_tracker_id = $row['implied_from_tracker_id'];
 
         $to_start_date_field_id = null;
         $to_duration_field_id   = null;
         $to_end_date_field_id   = null;
+
+        if ($from_implied_from_tracker_id !== null) {
+            if ($trackers_mapping === null) {
+                $to_implied_from_tracker_id = $from_implied_from_tracker_id;
+            } else {
+                $to_implied_from_tracker_id = $trackers_mapping[$from_implied_from_tracker_id] ?? null;
+            }
+
+            $this->dao->save($to_tracker_id, null, null, null, $to_implied_from_tracker_id);
+            return;
+        }
+
         foreach ($field_mapping as $mapping) {
             if ((int) $mapping['from'] === $from_start_date_field_id) {
                 $to_start_date_field_id = (int) $mapping['to'];
@@ -71,5 +82,17 @@ class SemanticTimeframeDuplicator implements IDuplicateSemantic
         }
 
         $this->dao->save($to_tracker_id, $to_start_date_field_id, $to_duration_field_id, $to_end_date_field_id, null);
+    }
+
+    public function duplicateSemanticTimeframeForAllTrackers(array $field_mapping, array $trackers_mapping): void
+    {
+        foreach ($trackers_mapping as $from_tracker_id => $to_tracker_id) {
+            $this->duplicate($from_tracker_id, $to_tracker_id, $field_mapping, $trackers_mapping);
+        }
+    }
+
+    public function duplicateInSameProject(int $from_tracker_id, int $to_tracker_id, array $field_mapping): void
+    {
+        $this->duplicate($from_tracker_id, $to_tracker_id, $field_mapping, null);
     }
 }

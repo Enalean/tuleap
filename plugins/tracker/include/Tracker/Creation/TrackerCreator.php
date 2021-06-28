@@ -32,6 +32,8 @@ use TrackerFromXmlException;
 use TrackerXmlImport;
 use Tuleap\Project\MappingRegistry;
 use Tuleap\Tracker\Creation\JiraImporter\PendingJiraImportDao;
+use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao;
+use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDuplicator;
 use Tuleap\Tracker\TrackerIsInvalidException;
 use UserManager;
 use XML_ParseException;
@@ -55,17 +57,20 @@ class TrackerCreator
      * @var TrackerCreationDataChecker
      */
     private $creation_data_checker;
+    private SemanticTimeframeDuplicator $semantic_timeframe_duplicator;
 
     public function __construct(
         TrackerXmlImport $tracker_xml_import,
         TrackerFactory $tracker_factory,
         TrackerCreatorXmlErrorDisplayer $xml_error_displayer,
-        TrackerCreationDataChecker $creation_data_checker
+        TrackerCreationDataChecker $creation_data_checker,
+        SemanticTimeframeDuplicator $semantic_timeframe_duplicator
     ) {
-        $this->tracker_xml_import    = $tracker_xml_import;
-        $this->tracker_factory       = $tracker_factory;
-        $this->xml_error_displayer   = $xml_error_displayer;
-        $this->creation_data_checker = $creation_data_checker;
+        $this->tracker_xml_import            = $tracker_xml_import;
+        $this->tracker_factory               = $tracker_factory;
+        $this->xml_error_displayer           = $xml_error_displayer;
+        $this->creation_data_checker         = $creation_data_checker;
+        $this->semantic_timeframe_duplicator = $semantic_timeframe_duplicator;
     }
 
     public static function build(): self
@@ -83,6 +88,9 @@ class TrackerCreator
                 new PendingJiraImportDao(),
                 TrackerFactory::instance()
             ),
+            new SemanticTimeframeDuplicator(
+                new SemanticTimeframeDao()
+            )
         );
     }
 
@@ -145,6 +153,29 @@ class TrackerCreator
             throw new TrackerCreationHasFailedException();
         }
 
+        $this->duplicateTimeframeSemantic((int) $atid_template, $duplicate['tracker'], $duplicate['field_mapping'], $project);
+
         return $duplicate['tracker'];
+    }
+
+    private function duplicateTimeframeSemantic(int $from_tracker_id, Tracker $to_tracker, array $field_mapping, Project $project): void
+    {
+        if ($this->isTheDuplicationDoneInTheSameProject($from_tracker_id, $project)) {
+            $this->semantic_timeframe_duplicator->duplicateInSameProject($from_tracker_id, $to_tracker->getId(), $field_mapping);
+        }
+    }
+
+    private function isTheDuplicationDoneInTheSameProject(int $from_tracker_id, Project $project): bool
+    {
+        $from_tracker = $this->tracker_factory->getTrackerById($from_tracker_id);
+
+        if ($from_tracker === null) {
+            return false;
+        }
+
+        $from_project_id = $from_tracker->getProject()->getID();
+        $to_project_id   = $project->getID();
+
+        return $from_project_id === $to_project_id;
     }
 }

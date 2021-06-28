@@ -52,27 +52,33 @@ class SemanticTimeframeDuplicatorTest extends \Tuleap\Test\PHPUnit\TestCase
             ->andReturn(null);
 
         $this->dao
+            ->shouldReceive('retrieveImpliedFromTrackerId')
+            ->never();
+
+        $this->dao
             ->shouldReceive('save')
             ->never();
 
-        $this->duplicator->duplicate(1, 2, []);
+        $this->duplicator->duplicateInSameProject(1, 2, []);
     }
 
-
-
-    public function testItDoesNotDuplicateIfThereIsNoDurationFieldAndNoEndDateFieldInConfig(): void
+    public function testItDoesNotDuplicateIfThereIsNoStartDateFieldAndNoImpliedFromTracker(): void
     {
         $this->dao
             ->shouldReceive('searchByTrackerId')
             ->with(1)
             ->once()
-            ->andReturn(['start_date_field_id' => 101, 'duration_field_id' => null, 'end_date_field_id' => null]);
+            ->andReturn(['start_date_field_id' => null, 'duration_field_id' => null, 'end_date_field_id' => null, 'implied_from_tracker_id' => null]);
+
+        $this->dao
+            ->shouldReceive('retrieveImpliedFromTrackerId')
+            ->never();
 
         $this->dao
             ->shouldReceive('save')
             ->never();
 
-        $this->duplicator->duplicate(1, 2, []);
+        $this->duplicator->duplicateInSameProject(1, 2, []);
     }
 
     public function testItDoesNotDuplicateIfThereIsNoStartDateFieldInMapping(): void
@@ -81,13 +87,17 @@ class SemanticTimeframeDuplicatorTest extends \Tuleap\Test\PHPUnit\TestCase
             ->shouldReceive('searchByTrackerId')
             ->with(1)
             ->once()
-            ->andReturn(['start_date_field_id' => 101, 'duration_field_id' => 102, 'end_date_field_id' => null]);
+            ->andReturn(['start_date_field_id' => 101, 'duration_field_id' => 102, 'end_date_field_id' => null, 'implied_from_tracker_id' => null]);
+
+        $this->dao
+            ->shouldReceive('retrieveImpliedFromTrackerId')
+            ->never();
 
         $this->dao
             ->shouldReceive('save')
             ->never();
 
-        $this->duplicator->duplicate(1, 2, [['from' => 102, 'to' => 1002]]);
+        $this->duplicator->duplicateInSameProject(1, 2, [['from' => 102, 'to' => 1002]]);
     }
 
     public function testItDoesNotDuplicateIfThereIsNoDurationFieldAndNoEndDateFieldInMapping(): void
@@ -96,13 +106,17 @@ class SemanticTimeframeDuplicatorTest extends \Tuleap\Test\PHPUnit\TestCase
             ->shouldReceive('searchByTrackerId')
             ->with(1)
             ->once()
-            ->andReturn(['start_date_field_id' => 101, 'duration_field_id' => 102, 'end_date_field_id' => 103]);
+            ->andReturn(['start_date_field_id' => 101, 'duration_field_id' => 102, 'end_date_field_id' => 103, 'implied_from_tracker_id' => null]);
+
+        $this->dao
+            ->shouldReceive('retrieveImpliedFromTrackerId')
+            ->never();
 
         $this->dao
             ->shouldReceive('save')
             ->never();
 
-        $this->duplicator->duplicate(1, 2, [['from' => 101, 'to' => 1001]]);
+        $this->duplicator->duplicateInSameProject(1, 2, [['from' => 101, 'to' => 1001]]);
     }
 
     public function testItDuplicatesAllTheThingsWithDurationField(): void
@@ -111,14 +125,18 @@ class SemanticTimeframeDuplicatorTest extends \Tuleap\Test\PHPUnit\TestCase
             ->shouldReceive('searchByTrackerId')
             ->with(1)
             ->once()
-            ->andReturn(['start_date_field_id' => 101, 'duration_field_id' => 102, 'end_date_field_id' => null]);
+            ->andReturn(['start_date_field_id' => 101, 'duration_field_id' => 102, 'end_date_field_id' => null, 'implied_from_tracker_id' => null]);
+
+        $this->dao
+            ->shouldReceive('retrieveImpliedFromTrackerId')
+            ->never();
 
         $this->dao
             ->shouldReceive('save')
             ->with(2, 1001, 1002, null, null)
             ->once();
 
-        $this->duplicator->duplicate(
+        $this->duplicator->duplicateInSameProject(
             1,
             2,
             [
@@ -134,19 +152,152 @@ class SemanticTimeframeDuplicatorTest extends \Tuleap\Test\PHPUnit\TestCase
             ->shouldReceive('searchByTrackerId')
             ->with(1)
             ->once()
-            ->andReturn(['start_date_field_id' => 101, 'duration_field_id' => null, 'end_date_field_id' => 103]);
+            ->andReturn(['start_date_field_id' => 101, 'duration_field_id' => null, 'end_date_field_id' => 103, 'implied_from_tracker_id' => null]);
+
+        $this->dao
+            ->shouldReceive('retrieveImpliedFromTrackerId')
+            ->never();
 
         $this->dao
             ->shouldReceive('save')
             ->with(2, 1001, null, 1003, null)
             ->once();
 
-        $this->duplicator->duplicate(
+        $this->duplicator->duplicateInSameProject(
             1,
             2,
             [
                 ['from' => 101, 'to' => 1001],
                 ['from' => 103, 'to' => 1003]
+            ]
+        );
+    }
+
+    /**
+     * @testWith
+     *           [null, null, null, 50]
+     *           [101, 103, 104, 50]
+     *           [101, null, null, 50]
+     *           [101, 103, null, 50]
+     *           [101, null, 104, 50]
+     *           [null, null, 104, 50]
+     *           [null, 103, null, 50]
+     */
+    public function testItDuplicatesAllTheThingsWithImpliedFromTrackerIdFromSameProjectEvenWhenOtherFieldsAreRetrieved(
+        ?int $from_start_date_field_id,
+        ?int $from_duration_field_id,
+        ?int $from_end_date_field_id,
+        ?int $from_implied_from_tracker_id
+    ): void {
+        $this->dao
+            ->shouldReceive('searchByTrackerId')
+            ->with(1)
+            ->once()
+            ->andReturn([
+                'start_date_field_id' => $from_start_date_field_id,
+                'duration_field_id' => $from_duration_field_id,
+                'end_date_field_id' => $from_end_date_field_id,
+                'implied_from_tracker_id' => $from_implied_from_tracker_id
+            ]);
+
+        $this->dao
+            ->shouldReceive('retrieveImpliedFromTrackerId')
+            ->with($from_implied_from_tracker_id, 201)
+            ->andReturn(500);
+
+        $this->dao
+            ->shouldReceive('save')
+            ->with(2, null, null, null, 50)
+            ->once();
+
+        $this->duplicator->duplicateInSameProject(
+            1,
+            2,
+            [
+                ['from' => $from_start_date_field_id, 'to' => null],
+                ['from' => $from_duration_field_id, 'to' => null],
+                ['from' => $from_end_date_field_id, 'to' => null]
+            ]
+        );
+    }
+
+    /**
+     * @testWith
+     *           [null, null, null, 50]
+     *           [101, 103, 104, 50]
+     *           [101, null, null, 50]
+     *           [101, 103, null, 50]
+     *           [101, null, 104, 50]
+     *           [null, null, 104, 50]
+     *           [null, 103, null, 50]
+     */
+    public function testItDuplicatesAllTheThingsWithImpliedFromTrackerIdWhenDuplicatingWholeProjectEvenWhenOtherFieldsAreRetrieved(
+        ?int $from_start_date_field_id,
+        ?int $from_duration_field_id,
+        ?int $from_end_date_field_id,
+        ?int $from_implied_from_tracker_id
+    ): void {
+        $this->dao->shouldReceive('searchByTrackerId')
+            ->with(50);
+
+        $this->dao
+            ->shouldReceive('searchByTrackerId')
+            ->with(60)
+            ->once()
+            ->andReturn([
+                'start_date_field_id' => $from_start_date_field_id,
+                'duration_field_id' => $from_duration_field_id,
+                'end_date_field_id' => $from_end_date_field_id,
+                'implied_from_tracker_id' => $from_implied_from_tracker_id
+            ]);
+
+        $this->dao
+            ->shouldReceive('save')
+            ->with(600, null, null, null, 500)
+            ->once();
+
+        $this->duplicator->duplicateSemanticTimeframeForAllTrackers(
+            [
+                ['from' => $from_start_date_field_id, 'to' => null],
+                ['from' => $from_duration_field_id, 'to' => null],
+                ['from' => $from_end_date_field_id, 'to' => null]
+            ],
+            [
+                50 => 500,
+                60 => 600
+            ]
+        );
+    }
+
+    public function testItDuplicatesEmptySemanticWhenDuplicatingWholeProjectWithImpliedFromTrackerIdNotFoundInTrackerMapping(): void
+    {
+        $this->dao->shouldReceive('searchByTrackerId')
+            ->with(50);
+
+        $this->dao
+            ->shouldReceive('searchByTrackerId')
+            ->with(60)
+            ->once()
+            ->andReturn([
+                'start_date_field_id' => 1,
+                'duration_field_id' => 2,
+                'end_date_field_id' => 3,
+                'implied_from_tracker_id' => 50
+            ]);
+
+        $this->dao
+            ->shouldReceive('save')
+            ->with(600, null, null, null, null)
+            ->once();
+
+        $this->duplicator->duplicateSemanticTimeframeForAllTrackers(
+            [
+                ['from' => 1, 'to' => null],
+                ['from' => 2, 'to' => null],
+                ['from' => 3, 'to' => null]
+            ],
+            [
+                60 => 600
             ]
         );
     }
