@@ -1,0 +1,3 @@
+php_value[session.save_handler] = files
+; Set session path to a directory owned by process user
+php_value[session.save_path]    = /var/tmp/tuleap_cache/php/session
