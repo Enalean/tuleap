@@ -207,8 +207,9 @@ class Docman_FilterFactory
             switch ($md->getType()) {
                 case PLUGIN_DOCMAN_METADATA_TYPE_TEXT:
                 case PLUGIN_DOCMAN_METADATA_TYPE_STRING:
-                    $filter = new Docman_FilterText($md);
-                    if (Docman_MetadataFactory::isRealMetadata($md->getLabel())) {
+                    $filter           = new Docman_FilterText($md);
+                    $metadata_factory = new Docman_MetadataFactory($md->getGroupId());
+                    if ($metadata_factory->isRealMetadata($md->getLabel())) {
                         $this->dynTextFields[] = $md->getLabel();
                     }
                     break;

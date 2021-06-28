@@ -103,6 +103,10 @@ case "$PHP_FPM" in
     echo "Deploy PHP FPM 7.4"
     /usr/share/tuleap/src/tuleap-cfg/tuleap-cfg.php site-deploy --php-version=php74
     ;;
+    '/opt/remi/php80/root/usr/sbin/php-fpm')
+    echo "Deploy PHP FPM 80"
+    /usr/share/tuleap/src/tuleap-cfg/tuleap-cfg.php site-deploy --php-version=php80
+    ;;
 esac
 "$PHP_FPM" --daemonize
 nginx

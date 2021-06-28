@@ -174,7 +174,7 @@ use Tuleap\Docman\View\DocmanViewURLBuilder;
         //List is part of SOAP api
         return in_array($view, array_merge(array_keys(self::getDefaultViews()), ['List']));
     }
-    /* static */ public function getViewForCurrentUser($group_id, $report = '')
+    public static function getViewForCurrentUser($group_id, $report = '')
     {
         if ($report != '') {
             $pref = $report;
