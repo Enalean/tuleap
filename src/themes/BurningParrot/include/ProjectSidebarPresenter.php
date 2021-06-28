@@ -26,6 +26,7 @@ use Tuleap\BuildVersion\VersionPresenter;
 use Tuleap\Project\Admin\Access\ProjectAdministrationLinkPresenter;
 use Tuleap\Project\Banner\BannerDisplay;
 use Tuleap\Project\ProjectPrivacyPresenter;
+use Tuleap\Project\Sidebar\LinkedProjectsCollectionPresenter;
 
 class ProjectSidebarPresenter
 {
@@ -73,6 +74,7 @@ class ProjectSidebarPresenter
      * @psalm-readonly
      */
     public string $administration_link;
+    public ?LinkedProjectsCollectionPresenter $linked_projects;
 
     public function __construct(
         PFUser $current_user,
@@ -82,7 +84,8 @@ class ProjectSidebarPresenter
         ?ProjectAdministrationLinkPresenter $administration_link_presenter,
         VersionPresenter $version,
         ?BannerDisplay $banner,
-        array $project_flags
+        array $project_flags,
+        ?LinkedProjectsCollectionPresenter $linked_projects_presenter
     ) {
         $this->sidebar                = $sidebar;
         $this->is_sidebar_collapsable = $current_user->isLoggedIn();
@@ -105,5 +108,6 @@ class ProjectSidebarPresenter
         $this->has_project_flags       = $this->nb_project_flags > 0;
         $this->has_administration_link = $administration_link_presenter !== null;
         $this->administration_link     = $administration_link_presenter->uri ?? '';
+        $this->linked_projects         = $linked_projects_presenter;
     }
 }

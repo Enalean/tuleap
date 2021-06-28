@@ -390,6 +390,9 @@ class BurningParrotTheme extends BaseLayout
             $this->user
         );
 
+        $linked_projects_event = new CollectLinkedProjects($project, $this->user);
+        $this->event_manager->dispatch($linked_projects_event);
+
         $project_sidebar_presenter = new ProjectSidebarPresenter(
             $this->user,
             $project,
@@ -399,6 +402,7 @@ class BurningParrotTheme extends BaseLayout
             $this->version,
             $this->getProjectBanner($project, $this->user),
             $this->project_flags_builder->buildProjectFlags($project),
+            LinkedProjectsCollectionPresenter::fromEvent($linked_projects_event)
         );
 
         return new SidebarPresenter(
