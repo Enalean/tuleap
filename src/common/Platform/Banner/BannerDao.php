@@ -39,7 +39,7 @@ class BannerDao extends DataAccessObject
     {
         $this->getDB()->tryFlatTransaction(
             static function (EasyDB $db) use ($message, $importance): void {
-                $db->run('TRUNCATE TABLE platform_banner');
+                $db->run('DELETE FROM platform_banner');
                 $db->run(
                     'INSERT INTO platform_banner(message, importance) VALUES (?, ?)',
                     $message,
@@ -54,7 +54,7 @@ class BannerDao extends DataAccessObject
     {
         $this->getDB()->tryFlatTransaction(
             static function (EasyDB $db): void {
-                $db->run('TRUNCATE TABLE platform_banner');
+                $db->run('DELETE FROM platform_banner');
                 self::removeUserBannerPreference($db);
             }
         );
