@@ -1,63 +1,63 @@
 <?php
-/**
- * Copyright (c) Enalean SAS, 2011-Present. All Rights Reserved.
- * Copyright (c) STMicroelectronics, 2010. All Rights Reserved.
+/*
+ * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
  *
- * Originally written by Manuel Vacelet
+ * This file is a part of Tuleap.
  *
- * ForgeUpgrade is free software; you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as published by
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * ForgeUpgrade is distributed in the hope that it will be useful,
+ * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public License
- * along with ForgeUpgrade. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
+
+namespace Tuleap\ForgeUpgrade;
+
+use Exception;
+use ForgeUpgrade_Bucket;
+use ForgeUpgrade_Bucket_Db;
+use ForgeUpgrade_BucketFilter;
+use ForgeUpgrade_Db;
+use ForgeUpgrade_Db_Driver_Abstract;
+use LoggerAppenderConsoleColor;
+use Psr\Log\LoggerInterface;
+use RecursiveDirectoryIterator;
+use RecursiveIteratorIterator;
+use SplFileInfo;
+use function count;
+use const PHP_EOL;
 
 /**
  * Centralize upgrade of the Forge
  */
 class ForgeUpgrade
 {
-    /**
-     * @var ForgeUpgrade_Db_Driver_Abstract
-     */
-    protected $dbDriver;
+    private ForgeUpgrade_Db_Driver_Abstract $dbDriver;
 
-    /**
-     * @var ForgeUpgradeDb
-     */
-    protected $db;
+    private ForgeUpgrade_Db $db;
 
-    /**
-     * Contains all bucket API
-     * @var Array
-     */
-    protected $bucketApi = [];
+    private array $bucketApi = [];
 
-    /**
-     * @var Logger
-     */
-    protected $log;
+    private LoggerInterface $logger;
 
-    /**
-     * @var array
-     */
-    protected $buckets = null;
+    private ?array $buckets = null;
 
-    /**
-     * Constructor
-     */
-    public function __construct(ForgeUpgrade_Db_Driver_Abstract $dbDriver)
+    private array $options;
+
+    public function __construct(ForgeUpgrade_Db_Driver_Abstract $dbDriver, LoggerInterface $logger)
     {
         $this->dbDriver                            = $dbDriver;
         $this->db                                  = new ForgeUpgrade_Db($dbDriver->getPdo());
-        $this->bucketApi['ForgeUpgrade_Bucket_Db'] = new ForgeUpgrade_Bucket_Db($dbDriver->getPdo());
+        $this->bucketApi['ForgeUpgrade_Bucket_Db'] = new ForgeUpgrade_Bucket_Db($dbDriver->getPdo(), $logger);
+        $this->logger                              = $logger;
     }
 
     /**
@@ -98,7 +98,7 @@ class ForgeUpgrade
     /**
      * Run all available migrations
      */
-    public function run($func)
+    public function run(string $func): void
     {
         // Commands without path
         switch ($func) {
@@ -109,8 +109,8 @@ class ForgeUpgrade
 
         // Commands that rely on path
         if (count($this->options['core']['path']) == 0) {
-            $this->log()->error('No migration path');
-            return false;
+            $this->logger->error('No migration path');
+            return;
         }
         $buckets = $this->getBucketsToProceed($this->options['core']['path']);
         if (count($buckets) > 0) {
@@ -132,42 +132,13 @@ class ForgeUpgrade
                     break;
             }
         } else {
-            $this->log()->info('System up-to-date');
+            $this->logger->info('System up-to-date');
         }
     }
 
-
-    /**
-     * Displays detailed bucket's logs for a given bucket Id
-     *
-     * @param int $bucketId
-     */
-    protected function displayAlreadyAppliedPerBucket($bucketId)
+    protected function displayColoriedStatus(array $info): string
     {
-        echo '';
-        $summary = $this->db->getBucketsSummarizedLogs($bucketId);
-        if ($summary) {
-            echo 'Start date' . "           " . 'Execution' . "  " . 'Status' . "  " . 'Id' . "  " . 'Script' . PHP_EOL;
-            $logs = $summary->fetchAll();
-            echo($this->displayColoriedStatus($logs[0]));
-        }
-
-        echo "Detailed logs execution for bucket " . $bucketId . PHP_EOL;
-        $details = $this->db->getBucketsDetailedLogs($bucketId);
-        if ($details) {
-            echo 'Start date' . "           " . 'Level' . "  " . 'Message' . PHP_EOL;
-            foreach ($details->fetchAll() as $row) {
-                $level   = $row['level'];
-                $message = $row['timestamp'] . "  " . $level . "  " . $row['message'] . PHP_EOL;
-                echo LoggerAppenderConsoleColor::chooseColor($level, $message);
-            }
-        }
-    }
-
-
-    protected function displayColoriedStatus($info)
-    {
-        $status = $this->db->statusLabel($info['status']);
+        $status = ForgeUpgrade_Db::statusLabel($info['status']);
         switch ($status) {
             case 'error':
             case 'failure':
@@ -183,59 +154,54 @@ class ForgeUpgrade
                 break;
 
             default:
+                $color = LoggerAppenderConsoleColor::NOCOLOR;
                 break;
         }
-        return $color . ($info['start_date'] . "  " . $info['execution_delay'] . "  " . ucfirst($status) . "  " . $info['id'] . "  " . $info['script'] . PHP_EOL . LoggerAppenderConsoleColor::NOCOLOR);
+        return $color . ($info['start_date'] . "  " . $info['execution_delay'] . "  " . ucfirst(
+            $status
+        ) . "  " . $info['id'] . "  " . $info['script'] . PHP_EOL . LoggerAppenderConsoleColor::NOCOLOR);
     }
 
     /**
      * Displays logs of all buckets already applied
      */
-    protected function displayAlreadyAppliedForAllBuckets()
+    protected function displayAlreadyAppliedForAllBuckets(): void
     {
-        $color = '';
         echo 'start date' . "           " . 'Execution' . "  " . 'Status' . "  " . 'Id' . "  " . 'Script' . PHP_EOL;
         foreach ($this->db->getAllBuckets() as $row) {
             echo $this->displayColoriedStatus($row);
         }
     }
 
-
     /**
-     * Displays detailed bucket's logs for a given bucket Id
-     * Or all buckets' logs according to the option "bucket" is filled or not
+     * Displays all buckets' logs according to the option "bucket" is filled or not
      */
-    protected function doAlreadyApplied()
+    protected function doAlreadyApplied(): void
     {
-        if ($this->options['core']['bucket']) {
-            $this->displayAlreadyAppliedPerBucket($this->options['core']['bucket']);
-        } else {
-            $this->displayAlreadyAppliedForAllBuckets();
-        }
+        $this->displayAlreadyAppliedForAllBuckets();
     }
 
-    protected function doRecordOnly($buckets)
+    protected function doRecordOnly(array $buckets): void
     {
         foreach ($buckets as $bucket) {
-            $this->log()->info("[doRecordOnly] " . get_class($bucket));
+            $this->logger->info("[doRecordOnly] " . get_class($bucket));
             $this->db->logStart($bucket);
             $this->db->logEnd($bucket, ForgeUpgrade_Db::STATUS_SKIP);
         }
     }
 
-    protected function doUpdate($buckets)
+    protected function doUpdate(array $buckets): void
     {
         if (! $this->options['core']['ignore_preup']) {
             if ($this->runPreUp($buckets)) {
                 $this->runUp($buckets);
             }
         } else {
-             $this->runUp($buckets);
+            $this->runUp($buckets);
         }
     }
 
-
-    protected function doCheckUpdate($buckets)
+    protected function doCheckUpdate(array $buckets): void
     {
         foreach ($buckets as $bucket) {
             echo $bucket->getPath() . PHP_EOL;
@@ -255,28 +221,28 @@ class ForgeUpgrade
      *
      * @todo: Add info on the number of buckets Success, Faild, Skipped
      */
-    public function runPreUp($buckets)
+    public function runPreUp(array $buckets): bool
     {
-        $this->log()->info("Process all pre up checks");
+        $this->logger->info("Process all pre up checks");
         $result = true;
         foreach ($buckets as $bucket) {
             $className = get_class($bucket);
             try {
                 if (! $bucket->dependsOn()) {
                     $bucket->preUp();
-                    $this->log()->info("OK: $className");
+                    $this->logger->info("OK: $className");
                 } else {
-                    $this->log()->info("SKIP: " . $className . " (depends on a migration not already applied)");
+                    $this->logger->info("SKIP: " . $className . " (depends on a migration not already applied)");
                 }
             } catch (Exception $e) {
-                $this->log()->error($className . ': ' . $e->getMessage());
+                $this->logger->error($className . ': ' . $e->getMessage());
                 $result = false;
             }
         }
         if ($result) {
-            $this->log()->info("PreUp checks OK");
+            $this->logger->info("PreUp checks OK");
         } else {
-            $this->log()->error("PreUp checks FAILD");
+            $this->logger->error("PreUp checks FAILD");
         }
 
         return $result;
@@ -284,20 +250,10 @@ class ForgeUpgrade
 
     /**
      * It executes the bucket and logs its status
-     *
-     * @param ForgeUpgrade_Bucket  $bucket
-     * @param Logger               $log
      */
-    public function runUpBucket($bucket, $log)
+    public function runUpBucket(ForgeUpgrade_Bucket $bucket, LoggerInterface $log): void
     {
         $this->db->logStart($bucket);
-
-        // Prepare a specific logger that will be used to store all
-        // Bucket traces into the database so the buckets and it's logs
-        // will be linked
-        $bucketAppender = $this->dbDriver->getBucketLoggerAppender($bucket);
-        $log->addAppender($bucketAppender);
-        $bucket->setLoggerParent($log);
 
         $log->info("Processing " . get_class($bucket));
 
@@ -313,7 +269,6 @@ class ForgeUpgrade
         $log->info("PostUp OK");
 
         $this->db->logEnd($bucket, ForgeUpgrade_Db::STATUS_SUCCESS);
-        $log->removeAppender($bucketAppender);
     }
 
     /**
@@ -321,56 +276,48 @@ class ForgeUpgrade
      *
      * If force option is set, all buckets will be run even if it fails
      * Else if not, buckets' execution will drop since one bucket fails
-     * @param String $scriptPath Path to the script to execute
-     *
-     * @return void
      */
-    protected function runUp($buckets)
+    protected function runUp(array $buckets): void
     {
-        $log = $this->log();
-        $log->info('Start running migrations...');
+        $this->logger->info('Start running migrations...');
 
-        // Keep original logger: $log will be modified in runUpBucket in order
-        // to store results in the database attached to the bucket.
-        $origLogger = clone $log;
         if (! $this->options['core']['force']) {
             try {
                 foreach ($buckets as $bucket) {
-                    $this->runUpBucket($bucket, $log);
+                    $this->runUpBucket($bucket, $this->logger);
                     unset($bucket);
                 }
             } catch (Exception $e) {
-                $log->error($e->getMessage());
-                $this->db->logEnd($bucket, ForgeUpgrade_Db::STATUS_FAILURE);
+                $this->logger->error($e->getMessage());
+                if (isset($bucket)) {
+                    $this->db->logEnd($bucket, ForgeUpgrade_Db::STATUS_FAILURE);
+                }
             }
         } else {
             foreach ($buckets as $bucket) {
                 try {
-                    $this->runUpBucket($bucket, $log);
+                    $this->runUpBucket($bucket, $this->logger);
                     unset($bucket);
                 } catch (Exception $e) {
-                    $log->error($e->getMessage());
+                    $this->logger->error($e->getMessage());
                     $this->db->logEnd($bucket, ForgeUpgrade_Db::STATUS_FAILURE);
                 }
             }
         }
-        $log = $origLogger;
     }
 
     /**
      * Return all the buckets not already applied
-     *
-     * @param array $dirPath
      */
-    protected function getBucketsToProceed(array $dirPath)
+    protected function getBucketsToProceed(array $dirPath): array
     {
-        if (! isset($this->buckets)) {
+        if ($this->buckets === null) {
             $this->buckets = $this->getAllBuckets($dirPath);
             $sth           = $this->db->getAllBuckets([ForgeUpgrade_Db::STATUS_SUCCESS, ForgeUpgrade_Db::STATUS_SKIP]);
             foreach ($sth as $row) {
                 $key = basename($row['script']);
                 if (isset($this->buckets[$key])) {
-                    $this->log()->debug("Remove (already applied): $key");
+                    $this->logger->debug("Remove (already applied): $key");
                     unset($this->buckets[$key]);
                 }
             }
@@ -381,13 +328,15 @@ class ForgeUpgrade
     /**
      * Find all migration files and sort them in time order
      *
-     * @return Array of SplFileInfo
+     * @param string[] $paths
+     *
+     * @return array<string, ForgeUpgrade_Bucket>
      */
-    protected function getAllBuckets(array $paths)
+    protected function getAllBuckets(array $paths): array
     {
         $buckets = [];
         foreach ($paths as $path) {
-            $this->log()->debug("Look for buckets in $path");
+            $this->logger->debug("Look for buckets in $path");
             $this->findAllBucketsInPath($path, $buckets);
         }
         ksort($buckets, SORT_STRING);
@@ -397,10 +346,9 @@ class ForgeUpgrade
     /**
      * Fill $buckets array with all available buckets in $path
      *
-     * @param String $path
-     * @param Array $buckets
+     * @param array<string, ForgeUpgrade_Bucket> $buckets
      */
-    protected function findAllBucketsInPath($path, &$buckets)
+    protected function findAllBucketsInPath(string $path, array &$buckets): void
     {
         if (is_dir($path)) {
             $iter = $this->getBucketFinderIterator($path);
@@ -414,12 +362,8 @@ class ForgeUpgrade
 
     /**
      * Build iterator to find buckets in a file hierarchy
-     *
-     * @param String $dirPath
-     *
-     * @return ForgeUpgrade_BucketFilter
      */
-    protected function getBucketFinderIterator($dirPath)
+    protected function getBucketFinderIterator(string $dirPath): ForgeUpgrade_BucketFilter
     {
         $iter = new RecursiveDirectoryIterator($dirPath);
         $iter = new RecursiveIteratorIterator($iter, RecursiveIteratorIterator::SELF_FIRST);
@@ -432,38 +376,33 @@ class ForgeUpgrade
     /**
      * Append a bucket in the bucket candidate list
      *
-     *
-     * @return void
+     * @param array<string, ForgeUpgrade_Bucket> $buckets
      */
-    protected function queueMigrationBucket(SplFileInfo $file, &$buckets)
+    protected function queueMigrationBucket(SplFileInfo $file, array &$buckets): void
     {
         if ($file->isFile()) {
             $object = $this->getBucketClass($file);
-            if ($object) {
-                $this->log()->debug("Valid bucket: $file");
+            if ($object instanceof ForgeUpgrade_Bucket) {
+                $this->logger->debug("Valid bucket: $file");
                 $buckets[basename($file->getPathname())] = $object;
             } else {
-                $this->log()->debug("Invalid bucket: $file");
+                $this->logger->debug("Invalid bucket: $file");
             }
         }
     }
 
     /**
      * Create a new bucket object defined in given file
-     *
-     * @param SplFileInfo $scriptPath Path to the bucket definition
-     *
-     * @return ForgeUpgrade_Bucket
      */
-    protected function getBucketClass(SplFileInfo $scriptPath)
+    protected function getBucketClass(SplFileInfo $scriptPath): ?ForgeUpgrade_Bucket
     {
         $bucket = null;
         $class  = $this->getClassName($scriptPath->getPathname());
         if (! class_exists($class)) {
             include $scriptPath->getPathname();
         }
-        if ($class != '' && class_exists($class)) {
-            $bucket = new $class();
+        if (is_subclass_of($class, ForgeUpgrade_Bucket::class)) {
+            $bucket = new $class($this->logger);
             $bucket->setPath($scriptPath->getPathname());
             $this->addBucketApis($bucket);
         }
@@ -472,11 +411,8 @@ class ForgeUpgrade
 
     /**
      * Add all available API to the given bucket
-     *
-     *
-     * @return void
      */
-    protected function addBucketApis(ForgeUpgrade_Bucket $bucket)
+    protected function addBucketApis(ForgeUpgrade_Bucket $bucket): void
     {
         $bucket->setAllApi($this->bucketApi);
     }
@@ -485,31 +421,9 @@ class ForgeUpgrade
      * Deduce the class name from the script name
      *
      * migrations/201004081445_add_tables_for_docman_watermarking.php -> b201004081445_add_tables_for_docman_watermarking
-     *
-     * @param String $scriptPath Path to the script to execute
-     *
-     * @return String
      */
-    protected function getClassName($scriptPath)
+    protected function getClassName(string $scriptPath): string
     {
         return 'b' . basename($scriptPath, '.php');
-    }
-
-    /**
-     * Wrapper for Logger
-     *
-     * @return Logger
-     */
-    protected function log()
-    {
-        if (! $this->log) {
-            $this->log = Logger::getLogger(self::class);
-        }
-        return $this->log;
-    }
-
-    public function setLogger(Logger $log)
-    {
-        $this->log = $log;
     }
 }

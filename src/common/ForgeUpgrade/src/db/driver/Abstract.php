@@ -19,9 +19,8 @@
  * along with ForgeUpgrade. If not, see <http://www.gnu.org/licenses/>.
  */
 
-abstract class ForgeUpgrade_Db_Driver_Abstract
+abstract class ForgeUpgrade_Db_Driver_Abstract // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 {
-
     /**
      * Setup the PDO object to be used for DB connexion
      *
@@ -30,13 +29,4 @@ abstract class ForgeUpgrade_Db_Driver_Abstract
      * @return PDO
      */
     abstract public function getPdo();
-
-    /**
-     * Return a PDO logger appender that will reference the given bucket id
-     *
-     * @param ForgeUpgrade_Bucket $bucket The bucket
-     *
-     * @return LoggerAppender
-     */
-    abstract public function getBucketLoggerAppender(ForgeUpgrade_Bucket $bucket);
 }

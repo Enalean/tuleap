@@ -19,13 +19,13 @@
  * along with ForgeUpgrade. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require 'Exception.php';
+use Psr\Log\LoggerInterface;
 
 /**
- * Wrap accesss to the DB and provide a set of convenient tools to write
+ * Wrap access to the DB and provide a set of convenient tools to write
  * DB upgrades
  */
-class ForgeUpgrade_Bucket_Db
+class ForgeUpgrade_Bucket_Db // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 {
     public $dbh;
 
@@ -36,10 +36,10 @@ class ForgeUpgrade_Bucket_Db
      *
      * @param PDO $dbh PDO database handler
      */
-    public function __construct(PDO $dbh)
+    public function __construct(PDO $dbh, LoggerInterface $logger)
     {
         $this->dbh = $dbh;
-        $this->log = Logger::getLogger(self::class);
+        $this->log = $logger;
     }
 
     /**
@@ -267,11 +267,5 @@ class ForgeUpgrade_Bucket_Db
         } else {
             $this->log->info($primaryKey . ' pk already exists');
         }
-    }
-
-
-    public function setLoggerParent(Logger $log)
-    {
-        $this->log->setParent($log);
     }
 }

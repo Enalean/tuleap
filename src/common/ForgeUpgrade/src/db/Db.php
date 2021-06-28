@@ -19,23 +19,18 @@
  * along with ForgeUpgrade. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class ForgeUpgrade_Db
+class ForgeUpgrade_Db // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 {
     public const STATUS_ERROR   = 0;
     public const STATUS_SUCCESS = 1;
     public const STATUS_FAILURE = 2;
     public const STATUS_SKIP    = 3;
 
-    /**
-     * @var PDO
-     */
-    protected $dbh;
+    private PDO $dbh;
 
     public function __construct(PDO $dbh)
     {
-        $this->dbh         = $dbh;
-        $this->t['bucket'] = 'forge_upgrade_bucket';
-        $this->t['log']    = 'forge_upgrade_log';
+        $this->dbh = $dbh;
     }
 
     public static function statusLabel($status)
@@ -49,7 +44,7 @@ class ForgeUpgrade_Db
 
     public function logStart(ForgeUpgrade_Bucket $bucket)
     {
-        $sth = $this->dbh->prepare('INSERT INTO ' . $this->t['bucket'] . ' (script, start_date) VALUES (?, NOW())');
+        $sth = $this->dbh->prepare('INSERT INTO forge_upgrade_bucket (script, start_date) VALUES (?, NOW())');
         if ($sth) {
             $sth->execute([$bucket->getPath()]);
             $bucket->setId($this->dbh->lastInsertId());
@@ -58,7 +53,7 @@ class ForgeUpgrade_Db
 
     public function logEnd(ForgeUpgrade_Bucket $bucket, $status)
     {
-        $sth = $this->dbh->prepare('UPDATE ' . $this->t['bucket'] . ' SET status = ?, end_date = NOW() WHERE id = ?');
+        $sth = $this->dbh->prepare('UPDATE forge_upgrade_bucket SET status = ?, end_date = NOW() WHERE id = ?');
         if ($sth) {
             return $sth->execute([$status, $bucket->getId()]);
         }
@@ -72,7 +67,7 @@ class ForgeUpgrade_Db
             $escapedStatus = array_map([$this->dbh, 'quote'], $status);
             $stmt          = ' WHERE status IN (' . implode(',', $escapedStatus) . ')';
         }
-        return $this->dbh->query('SELECT * , TIMEDIFF(end_date, start_date) AS execution_delay FROM ' . $this->t['bucket'] . $stmt . ' ORDER BY start_date ASC');
+        return $this->dbh->query('SELECT * , TIMEDIFF(end_date, start_date) AS execution_delay FROM forge_upgrade_bucket ' . $stmt . ' ORDER BY start_date ASC');
     }
 
 
@@ -81,24 +76,10 @@ class ForgeUpgrade_Db
      *
      * @param int $bucketId
      */
-
     public function getBucketsSummarizedLogs($bucketId)
     {
         return $this->dbh->query(' SELECT * , TIMEDIFF(end_date, start_date) AS execution_delay ' .
-                                 ' FROM ' . $this->t['bucket'] .
+                                 ' FROM forge_upgrade_bucket ' .
                                  ' WHERE id=' . $bucketId);
-    }
-
-    /**
-     * Returns detailed logs for a given bucket's execution
-     *
-     * @param int $bucketId
-     */
-
-    public function getBucketsDetailedLogs($bucketId)
-    {
-         return $this->dbh->query(' SELECT *  ' .
-                                  ' FROM  ' . $this->t['log'] .
-                                  ' WHERE bucket_id=' . $bucketId);
     }
 }

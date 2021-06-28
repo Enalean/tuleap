@@ -18,6 +18,10 @@
  * along with ForgeUpgrade. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\ForgeUpgrade\ForgeUpgrade;
+use Monolog\Logger;
+use Monolog\Handler\StreamHandler;
+
 require __DIR__ . '/../vendor/autoload.php';
 
 // An upgrade process shouldn't end because it takes too much time ot too
@@ -86,7 +90,11 @@ for ($i = 1; $i < $argc; $i++) {
 
     // --level
     if (preg_match('/--verbose=(.*)/', $argv[$i], $matches)) {
-        $options['core']['verbose'] = LoggerLevel::toLevel($matches[1], 'INFO');
+        if (in_array($matches[1], ['ALL', 'WARN', 'FATAL', 'OFF'])) {
+            echo "Error: `" . $matches[1] . "` level is no longer supported see usage with --help" . PHP_EOL;
+            exit(1);
+        }
+        $options['core']['verbose'] = Logger::toMonologLevel($matches[1]);
     }
 
     // --bucket
@@ -101,7 +109,7 @@ if ($func == 'help') {
 }
 
 if (! isset($options['core']['verbose'])) {
-    $options['core']['verbose'] = 'INFO';
+    $options['core']['verbose'] = Logger::INFO;
 }
 
 // Get the DB connexion
@@ -127,17 +135,11 @@ try {
     return -1;
 }
 
-// Special logger to display nice colors according to levels
-$logger = Logger::getRootLogger();
-$logger->removeAllAppenders();
-$appender = new LoggerAppenderConsoleColor('LoggerAppenderConsoleColor');
-$appender->setLayout(new LoggerLayoutSimple());
-$appender->setThreshold($options['core']['verbose']);
-$appender->activateOptions();
-$logger->addAppender($appender);
+$logger = new Logger('forgeupgrade');
+$logger->pushHandler(new StreamHandler(STDOUT, $options['core']['verbose']));
 
 // Go
-$upg = new ForgeUpgrade($dbDriver);
+$upg = new ForgeUpgrade($dbDriver, $logger);
 $upg->setOptions($options);
 $upg->run($func);
 
@@ -168,7 +170,7 @@ Options:
                            to the driver file for custom ones).
   --ignore-preup           Execute migration buckets whithout running "pre" checks
   --force                  Execute migration buckets even there are errors
-  --verbose=[level]        How verbose: ALL, DEBUG, INFO, WARN, ERROR, FATAL, OFF
+  --verbose=[level]        How verbose: DEBUG, INFO, WARNING, ERROR
                            Default: INFO
   --bucket=[bucket id]     Used with already-applied command, to display the detailed
                            log for this  bucket
