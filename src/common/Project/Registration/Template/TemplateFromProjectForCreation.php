@@ -83,20 +83,6 @@ class TemplateFromProjectForCreation
         return self::fromData($project_manager, $user_requesting_creation, $representation->template_id);
     }
 
-    /**
-     * @throws InsufficientPermissionToUseProjectAsTemplateException
-     * @throws ProjectIDTemplateNotProvidedException
-     * @throws ProjectTemplateIDInvalidException
-     * @throws ProjectTemplateNotActiveException
-     */
-    public static function fromSOAPServer(
-        int $project_id,
-        PFUser $user_requesting_creation,
-        ProjectManager $project_manager
-    ): self {
-        return self::fromData($project_manager, $user_requesting_creation, $project_id);
-    }
-
     public static function fromGlobalProjectAdminTemplate(): self
     {
         return new self(new Project(['group_id' => Project::ADMIN_PROJECT_ID, 'status' => Project::STATUS_SYSTEM]));
