@@ -33,6 +33,17 @@
     cursor: pointer;
 }
 
+%uppercase-title {
+    overflow: hidden;
+    font-size: 0.6rem;
+    font-weight: 600;
+    letter-spacing: 0.25px;
+    line-height: 12px;
+    text-overflow: ellipsis;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+
 .project-sidebar-header {
     display: flex;
     flex-direction: column;
@@ -125,15 +136,9 @@
 }
 
 .project-sidebar-banner-button-label {
+    @extend %uppercase-title;
     margin: 0 0 0 var(--tlp-small-spacing);
-    overflow: hidden;
     color: var(--tlp-warning-color);
-    font-size: 0.6rem;
-    font-weight: 600;
-    letter-spacing: 0.25px;
-    text-overflow: ellipsis;
-    text-transform: uppercase;
-    white-space: nowrap;
 }
 
 .project-sidebar-project-flags {
@@ -172,6 +177,7 @@
 }
 
 .project-sidebar-project-flags-label {
+    @extend %uppercase-title;
     max-width: 185px;
     overflow: hidden;
     font-size: 0.6rem;
@@ -253,16 +259,61 @@
     }
 }
 
+.project-sidebar-linked-projects {
+    display: flex;
+    flex-direction: column;
+    margin: var(--tlp-small-spacing) var(--tlp-medium-spacing);
+
+    > .project-sidebar-linked-projects-list {
+        margin: 0 0 0 var(--tlp-x-large-spacing);
+        padding: 0 0 0 var(--tlp-small-spacing);
+        border-left: 1px solid var(--tlp-neutral-normal-color);
+        list-style: none;
+    }
+}
+
+.project-sidebar-linked-projects-icon {
+    @extend %round-icon;
+    background: var(--tlp-sidebar-action-color);
+    background-blend-mode: overlay;
+    color: var(--tlp-main-color-lighter-40);
+    font-size: 0.6rem;
+}
+
+.project-sidebar-linked-projects-label {
+    @extend %uppercase-title;
+    margin: 0 0 0 var(--tlp-small-spacing);
+    color: var(--tlp-ui-white-transparent-10);
+}
+
+.project-sidebar-linked-projects-item {
+    padding: 2px 0;
+    font-size: 14px;
+    line-height: 20px;
+}
+
+.project-sidebar-linked-projects-item-link {
+    color: var(--tlp-ui-white-transparent-40);
+    text-decoration: none;
+
+    &:hover,
+    &:focus {
+        color: var(--tlp-ui-white-transparent-30);
+        text-decoration: underline;
+    }
+}
+
+.project-sidebar-linked-projects-item-icon {
+    margin: 0 4px 0 0;
+    font-size: 11px;
+}
+
 .project-sidebar-tools-section-label {
+    @extend %uppercase-title;
     margin: 0 0 var(--tlp-small-spacing) 0;
     padding: var(--tlp-medium-spacing) var(--tlp-medium-spacing) 0;
     opacity: 0.6;
     color: var(--tlp-dimmed-color-lighter-95);
-    font-size: 0.65rem;
-    font-weight: bold;
-    letter-spacing: 0.25px;
-    line-height: 12px;
-    text-transform: uppercase;
 }
 
 .project-sidebar-privacy-badge {
