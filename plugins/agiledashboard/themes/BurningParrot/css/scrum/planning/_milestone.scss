@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-$milestone-background: var(--project-color-background-gradient-light, var(--tlp-ui-white));
+$milestone-background: var(--project-color-background-gradient-light, var(--tlp-white-color));
 
 .milestone {
     margin: 0 0 var(--tlp-small-spacing);
@@ -25,7 +25,7 @@ $milestone-background: var(--project-color-background-gradient-light, var(--tlp-
     background: $milestone-background;
 }
 
-$border-element-separator: 1px solid var(--project-color-border, var(--tlp-ui-white-darker-02));
+$border-element-separator: 1px solid var(--project-color-border, var(--tlp-white-color-darker-02));
 
 .milestone-header {
     display: flex;
@@ -41,7 +41,7 @@ $border-element-separator: 1px solid var(--project-color-border, var(--tlp-ui-wh
 
     &:hover {
         transition: background 0.1s linear;
-        background: var(--project-color-background-gradient-light-hover, var(--tlp-ui-white-darker-02));
+        background: var(--project-color-background-gradient-light-hover, var(--tlp-white-color-darker-02));
     }
 }
 
@@ -85,7 +85,7 @@ $border-element-separator: 1px solid var(--project-color-border, var(--tlp-ui-wh
     align-items: center;
     padding: var(--tlp-small-spacing) var(--tlp-medium-spacing);
     border-bottom: $border-element-separator;
-    background: var(--project-color-background-gradient, var(--tlp-ui-white-darker-02));
+    background: var(--project-color-background-gradient, var(--tlp-white-color-darker-02));
 }
 
 .milestone-info-badge {
@@ -123,7 +123,7 @@ $border-element-separator: 1px solid var(--project-color-border, var(--tlp-ui-wh
 
 .milestone-content {
     position: relative;
-    background: var(--project-color-background-gradient, var(--tlp-ui-white));
+    background: var(--project-color-background-gradient, var(--tlp-white-color));
 }
 
 .milestone-backlog-items {

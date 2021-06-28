@@ -185,7 +185,7 @@
             .doc-color-code-#{$color-name}-primary {
                 @extend %size;
                 background-color: map-get($colors, "primary");
-                color: $tlp-ui-white;
+                color: $tlp-white-color;
             }
 
             .doc-color-code-#{$color-name}-secondary {

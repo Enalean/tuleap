@@ -57,7 +57,7 @@ $white-space-above-and-after-a-project-link: var(--tlp-small-spacing);
     border: 0;
     border-radius: 0;
     background: transparent;
-    color: var(--tlp-ui-white);
+    color: var(--tlp-white-color);
     font-family: var(--tlp-font-family);
     font-size: 1rem;
     font-weight: 500;
@@ -155,7 +155,7 @@ $white-space-above-and-after-a-project-link: var(--tlp-small-spacing);
         text-decoration: none;
 
         > .switch-to-projects-project-label {
-            color: var(--tlp-ui-white);
+            color: var(--tlp-white-color);
         }
     }
 }
@@ -336,7 +336,7 @@ $white-space-above-and-after-a-project-link: var(--tlp-small-spacing);
     &:focus,
     &:hover {
         background: rgba(0, 0, 0, 0.2);
-        color: var(--tlp-ui-white);
+        color: var(--tlp-white-color);
         text-decoration: none;
     }
 }

@@ -19,12 +19,12 @@
 
 $step-transition-duration: 75ms;
 
-$step-background: var(--tlp-ui-white);
+$step-background: var(--tlp-white-color);
 $step-color: var(--tlp-dark-color);
 $step-active-color: var(--tlp-main-color);
 $step-active-background: var(--tlp-main-color-transparent-90);
 
-$switch-menu-background: var(--tlp-ui-white);
+$switch-menu-background: var(--tlp-white-color);
 $switch-menu-item-color: var(--tlp-main-color);
 $switch-menu-item-hover-background: var(--tlp-main-color-transparent-90);
 $switch-menu-item-hover-color: var(--tlp-main-color);
@@ -206,7 +206,7 @@ $switch-menu-item-hover-color: var(--tlp-main-color);
     width: 24px;
     height: 24px;
     border-radius: 50%;
-    color: var(--tlp-ui-white);
+    color: var(--tlp-white-color);
     font-size: 0.7rem;
     cursor: help;
 

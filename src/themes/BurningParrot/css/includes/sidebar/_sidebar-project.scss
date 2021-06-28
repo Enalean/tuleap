@@ -95,7 +95,7 @@
     margin: 0 0 0 calc(-1 * var(--tlp-small-spacing));
     padding: var(--tlp-small-spacing);
     border-radius: 4px;
-    color: var(--tlp-ui-white);
+    color: var(--tlp-white-color);
     font-size: 1.125rem;
     font-weight: 600;
     line-height: 1.3125rem;
@@ -123,7 +123,7 @@
     &:focus,
     &:hover {
         @extend %background-action-hover;
-        color: var(--tlp-ui-white);
+        color: var(--tlp-white-color);
         text-decoration: none;
     }
 }
@@ -152,7 +152,7 @@
     .fa-bullhorn {
         position: relative;
         top: -1px;
-        color: var(--tlp-ui-white);
+        color: var(--tlp-white-color);
         font-size: 0.6rem;
         text-shadow: 0 0 1px rgba(0, 0, 0, 0.5);
     }
@@ -218,13 +218,13 @@
     &.active,
     &:focus {
         @extend %background-action;
-        color: var(--tlp-ui-white);
+        color: var(--tlp-white-color);
         text-decoration: none;
     }
 
     &:hover {
         @extend %background-action-hover;
-        color: var(--tlp-ui-white);
+        color: var(--tlp-white-color);
         text-decoration: none;
     }
 
@@ -356,7 +356,7 @@
 
     &:hover,
     &:focus {
-        color: var(--tlp-ui-white);
+        color: var(--tlp-white-color);
         text-decoration: none;
 
         > .project-sidebar-linked-projects-item-name {

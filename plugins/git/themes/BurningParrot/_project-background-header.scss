@@ -29,16 +29,16 @@
     }
 
     .git-repository-parent {
-        color: var(--tlp-ui-white);
+        color: var(--tlp-white-color);
 
         > a {
-            color: var(--tlp-ui-white);
+            color: var(--tlp-white-color);
             text-decoration: underline;
 
             &:focus,
             &:hover,
             &:active {
-                color: var(--tlp-ui-white-darker-10);
+                color: var(--tlp-white-color-darker-10);
             }
         }
     }

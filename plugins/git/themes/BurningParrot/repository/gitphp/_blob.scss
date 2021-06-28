@@ -61,7 +61,7 @@ $codemirror-like-line-numbers-color: #8c8c8c;
 
 #git-repository-blob-file-rendered {
     padding: var(--tlp-medium-spacing);
-    background: var(--tlp-ui-white);
+    background: var(--tlp-white-color);
 
     pre {
         overflow-x: auto;
@@ -72,7 +72,7 @@ $codemirror-like-line-numbers-color: #8c8c8c;
 #git-repository-blame-file {
     display: flex;
     width: 100%;
-    background: var(--tlp-ui-white);
+    background: var(--tlp-white-color);
     font-family: code-font-parameters.$code-font-family;
     line-height: 1.5;
 }
@@ -102,12 +102,12 @@ $codemirror-like-line-numbers-color: #8c8c8c;
 
     &:target {
         background: var(--tlp-main-color-transparent-50);
-        color: var(--tlp-ui-white);
+        color: var(--tlp-white-color);
     }
 
     &:hover {
         background: var(--tlp-main-color);
-        color: var(--tlp-ui-white);
+        color: var(--tlp-white-color);
         text-decoration: none;
     }
 }

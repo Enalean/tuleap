@@ -10,7 +10,7 @@ $dashboard-header-background: var(--tlp-dark-color-lighter-05);
         }
 
         .logo-svg-fill-default-text-color {
-            fill: var(--tlp-ui-white);
+            fill: var(--tlp-white-color);
         }
     }
 
@@ -42,14 +42,14 @@ $dashboard-header-background: var(--tlp-dark-color-lighter-05);
             &:hover,
             &.tlp-tab-active {
                 border-bottom-color: transparent;
-                color: var(--tlp-ui-white);
+                color: var(--tlp-white-color);
             }
 
             #dashboard-tabs-dropdown-trigger {
                 color: var(--tlp-neutral-normal-color);
 
                 &:hover {
-                    color: var(--tlp-ui-white);
+                    color: var(--tlp-white-color);
                 }
             }
         }
@@ -63,7 +63,7 @@ $dashboard-header-background: var(--tlp-dark-color-lighter-05);
 
 .dashboard-user-title {
     margin: 0;
-    color: var(--tlp-ui-white);
+    color: var(--tlp-white-color);
     font-size: 3rem;
     font-weight: 600;
 }

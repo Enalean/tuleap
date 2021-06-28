@@ -64,7 +64,7 @@ $tlp-popover-click-transition: 75ms ease-out;
 
 .tlp-popover-title {
     margin: 0;
-    color: var(--tlp-ui-white);
+    color: var(--tlp-white-color);
     font-size: 16px;
     line-height: 24px;
     text-transform: none;
@@ -73,7 +73,7 @@ $tlp-popover-click-transition: 75ms ease-out;
 .tlp-popover-body {
     z-index: 1;
     padding: var(--tlp-medium-spacing);
-    background: var(--tlp-ui-white);
+    background: var(--tlp-white-color);
     font-weight: normal;
     text-align: left;
 
@@ -96,7 +96,7 @@ $tlp-popover-click-transition: 75ms ease-out;
     border-top: 1px solid var(--tlp-neutral-light-color);
     border-bottom-right-radius: $tlp-popover-radius;
     border-bottom-left-radius: $tlp-popover-radius;
-    background: var(--tlp-ui-white);
+    background: var(--tlp-white-color);
 
     > button {
         margin: 0 0 0 var(--tlp-small-spacing);
@@ -153,7 +153,7 @@ $tlp-popover-click-transition: 75ms ease-out;
 .tlp-popover[data-popper-placement^="top"] {
     > .tlp-popover-arrow {
         bottom: -($tlp-popover-arrow-size / 2);
-        background: var(--tlp-ui-white);
+        background: var(--tlp-white-color);
     }
 
     &.tlp-popover-shown {
@@ -175,7 +175,7 @@ $tlp-popover-click-transition: 75ms ease-out;
     &[data-popper-placement="right"],
     &[data-popper-placement="right-end"] {
         > .tlp-popover-arrow {
-            background: var(--tlp-ui-white);
+            background: var(--tlp-white-color);
         }
     }
 
@@ -192,7 +192,7 @@ $tlp-popover-click-transition: 75ms ease-out;
     &[data-popper-placement="left"],
     &[data-popper-placement="left-end"] {
         > .tlp-popover-arrow {
-            background: var(--tlp-ui-white);
+            background: var(--tlp-white-color);
         }
     }
 

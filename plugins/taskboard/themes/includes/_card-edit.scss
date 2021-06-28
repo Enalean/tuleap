@@ -96,7 +96,7 @@
     $assignee-negative-margin: -3px;
 
     > .taskboard-card-edit-trigger {
-        @include pencil-background(var(--secondary-color, var(--tlp-ui-white)));
+        @include pencil-background(var(--secondary-color, var(--tlp-white-color)));
         display: flex;
         position: absolute;
         z-index: 10;
@@ -342,7 +342,7 @@
 
     50% {
         border-color: transparent;
-        background: var(--tlp-ui-white);
+        background: var(--tlp-white-color);
     }
 
     100% {

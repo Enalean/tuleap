@@ -26,12 +26,12 @@ $illustration-spacing: calc(2 * var(--tlp-large-spacing));
 $title-margin-left: calc(#{$illustration-width} + #{$illustration-spacing});
 
 .body-project-registration {
-    background: linear-gradient(180deg, var(--tlp-ui-white) 0, var(--tlp-ui-white) 70px, var(--tlp-background-color) 470px);
+    background: linear-gradient(180deg, var(--tlp-white-color) 0, var(--tlp-white-color) 70px, var(--tlp-background-color) 470px);
 }
 
 .project-registration {
     padding: var(--tlp-x-large-spacing) var(--tlp-x-large-spacing) 100px;
-    background: linear-gradient(180deg, var(--tlp-ui-white) 0, var(--tlp-background-color) 400px);
+    background: linear-gradient(180deg, var(--tlp-white-color) 0, var(--tlp-background-color) 400px);
 }
 
 .project-registration-content {
@@ -95,7 +95,7 @@ $title-margin-left: calc(#{$illustration-width} + #{$illustration-spacing});
         padding: var(--tlp-large-spacing);
         animation: footerAppear ease-out 150ms;
         border-top: 0;
-        background: var(--tlp-ui-white-transparent-10);
+        background: var(--tlp-white-color-transparent-10);
         box-shadow: 0 -1px 2px 0 rgba(0, 0, 0, 0.1);
     }
 }

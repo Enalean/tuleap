@@ -37,7 +37,7 @@
     padding: var(--tlp-medium-spacing) var(--tlp-small-spacing);
     border: 1px solid var(--tlp-neutral-normal-color);
     border-radius: 3px;
-    background: var(--tlp-ui-white);
+    background: var(--tlp-white-color);
     color: var(--tlp-dark-color);
     cursor: pointer;
 
@@ -53,7 +53,7 @@
     &.fa-file-pdf-o {
         position: relative;
         z-index: 1;
-        background: var(--tlp-ui-white);
+        background: var(--tlp-white-color);
         color: swatch-colors.$tlp-swatch-fiesta-red;
     }
 
@@ -109,7 +109,7 @@
         height: 0;
         border-width: 0 9px 10px;
         border-style: solid;
-        border-color: transparent transparent var(--tlp-ui-white) transparent;
+        border-color: transparent transparent var(--tlp-white-color) transparent;
     }
 }
 

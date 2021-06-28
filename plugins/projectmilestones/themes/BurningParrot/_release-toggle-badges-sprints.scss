@@ -56,7 +56,7 @@ $width-bar-left-sprints: 16px;
     height: 16px;
     border-radius: 50%;
     background: var(--tlp-main-color);
-    color: var(--tlp-ui-white);
+    color: var(--tlp-white-color);
     line-height: normal;
 
     &::before {
@@ -208,7 +208,7 @@ $width-bar-left-sprints: 16px;
     height: 16px;
     margin: calc(-1 * var(--tlp-medium-spacing)) 0;
     background: transparent;
-    color: var(--tlp-ui-white);
+    color: var(--tlp-white-color);
 
     &::before {
         content: "";

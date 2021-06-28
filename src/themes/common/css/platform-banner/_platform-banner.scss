@@ -74,21 +74,21 @@ $illustration-left: 9px;
 
 .platform-banner-message-container > p {
     margin: 0;
-    color: var(--tlp-ui-white);
+    color: var(--tlp-white-color);
     font-size: 0.875rem;
     font-weight: 500;
     line-height: 1.375rem;
     text-align: center;
 
     a {
-        color: var(--tlp-ui-white);
+        color: var(--tlp-white-color);
         text-decoration: underline;
     }
 }
 
 #platform-banner-close {
     display: table-cell;
-    color: var(--tlp-ui-white);
+    color: var(--tlp-white-color);
     cursor: pointer;
 
     &:hover {

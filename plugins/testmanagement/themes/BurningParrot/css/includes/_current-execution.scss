@@ -118,7 +118,7 @@
 
 .current-test-header-title {
     margin: 0;
-    color: var(--tlp-ui-white);
+    color: var(--tlp-white-color);
     font-size: 24px;
 }
 
@@ -179,12 +179,12 @@
         border-radius: 50%;
         background-color: transparent;
         box-shadow: none;
-        color: var(--tlp-ui-white);
+        color: var(--tlp-white-color);
         font-size: 20px;
 
         &:hover,
         &:focus {
-            background: var(--tlp-ui-white-transparent-80);
+            background: var(--tlp-white-color-transparent-80);
             box-shadow: var(--tlp-button-shadow-hover);
         }
     }
@@ -195,15 +195,15 @@
     flex: 0 0 auto;
     background-blend-mode: overlay, normal;
     mix-blend-mode: normal;
-    color: var(--tlp-ui-white);
+    color: var(--tlp-white-color);
 
     a {
-        color: var(--tlp-ui-white);
+        color: var(--tlp-white-color);
         text-decoration: underline;
     }
 
     code {
-        background: var(--tlp-ui-white-transparent-10);
+        background: var(--tlp-white-color-transparent-10);
     }
 }
 
@@ -212,11 +212,11 @@
 }
 
 .artifact-link-graph-dot {
-    fill: var(--tlp-ui-white);
+    fill: var(--tlp-white-color);
 }
 
 .artifact-link-graph-path {
-    stroke: var(--tlp-ui-white);
+    stroke: var(--tlp-white-color);
 }
 
 .current-test-content {
@@ -313,7 +313,7 @@ execution-with-steps.current-test-content {
     &.tlp-button-secondary {
         border-color: var(--tlp-dimmed-color);
         background: var(--tlp-dimmed-color);
-        color: var(--tlp-ui-white);
+        color: var(--tlp-white-color);
     }
 }
 
