@@ -20,32 +20,32 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Test\Stubs;
+namespace Tuleap\ProgramManagement\Stub;
 
-use Tuleap\Project\Sidebar\SearchLinkedProjects;
+use Tuleap\ProgramManagement\Domain\Team\SearchProgramsOfTeam;
 
-final class SearchLinkedProjectsStub implements SearchLinkedProjects
+final class SearchProgramsOfTeamStub implements SearchProgramsOfTeam
 {
     /**
-     * @var \Project[]
+     * @var int[]
      */
-    private array $projects;
+    private array $program_ids;
 
     /**
-     * @param \Project[]
+     * @param int[] $program_ids
      */
-    private function __construct(array $projects)
+    private function __construct(array $program_ids)
     {
-        $this->projects = $projects;
+        $this->program_ids = $program_ids;
     }
 
-    public static function withValidProjects(\Project ...$projects): self
+    public function searchProgramIdsOfTeam(int $project_id): array
     {
-        return new self($projects);
+        return $this->program_ids;
     }
 
-    public function searchLinkedProjects(\Project $source_project): array
+    public static function buildPrograms(int ...$ids): self
     {
-        return $this->projects;
+        return new self($ids);
     }
 }

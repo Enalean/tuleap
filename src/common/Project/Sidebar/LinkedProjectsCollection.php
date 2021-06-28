@@ -49,7 +49,7 @@ final class LinkedProjectsCollection
         \Project $source_project,
         \PFUser $user
     ): self {
-        $projects        = $searcher->searchLinkedProjects($source_project, $user);
+        $projects        = $searcher->searchLinkedProjects($source_project);
         $linked_projects = [];
         foreach ($projects as $project) {
             $linked_project = LinkedProject::fromProject($access_checker, $project, $user);

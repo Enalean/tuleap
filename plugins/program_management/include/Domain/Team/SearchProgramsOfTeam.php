@@ -20,32 +20,12 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Test\Stubs;
+namespace Tuleap\ProgramManagement\Domain\Team;
 
-use Tuleap\Project\Sidebar\SearchLinkedProjects;
-
-final class SearchLinkedProjectsStub implements SearchLinkedProjects
+interface SearchProgramsOfTeam
 {
     /**
-     * @var \Project[]
+     * @return int[]
      */
-    private array $projects;
-
-    /**
-     * @param \Project[]
-     */
-    private function __construct(array $projects)
-    {
-        $this->projects = $projects;
-    }
-
-    public static function withValidProjects(\Project ...$projects): self
-    {
-        return new self($projects);
-    }
-
-    public function searchLinkedProjects(\Project $source_project): array
-    {
-        return $this->projects;
-    }
+    public function searchProgramIdsOfTeam(int $project_id): array;
 }

@@ -46,6 +46,11 @@ msgid_plural "%d Aggregated projects"
 msgstr[0] "%d Projet regroupé"
 msgstr[1] "%d Projets regroupés"
 
+msgid "%d Parent project"
+msgid_plural "%d Parent projects"
+msgstr[0] "%d Projet parent"
+msgstr[1] "%d Projets parents"
+
 #, php-format
 msgid "%d member"
 msgid_plural "%d members"

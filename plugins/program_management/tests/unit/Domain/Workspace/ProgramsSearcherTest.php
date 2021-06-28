@@ -22,38 +22,38 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Workspace;
 
-use Tuleap\ProgramManagement\Domain\Program\SearchTeamsOfProgram;
+use Tuleap\ProgramManagement\Domain\Team\SearchProgramsOfTeam;
 use Tuleap\ProgramManagement\Stub\RetrieveProjectStub;
-use Tuleap\ProgramManagement\Stub\SearchTeamsOfProgramStub;
+use Tuleap\ProgramManagement\Stub\SearchProgramsOfTeamStub;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 
-final class TeamsSearcherTest extends TestCase
+final class ProgramsSearcherTest extends TestCase
 {
-    private SearchTeamsOfProgram $team_ids_searcher;
+    private SearchProgramsOfTeam $program_ids_searcher;
     private RetrieveProject $project_retriever;
 
     protected function setUp(): void
     {
-        $this->team_ids_searcher = SearchTeamsOfProgramStub::buildTeams(102, 103);
+        $this->program_ids_searcher = SearchProgramsOfTeamStub::buildPrograms(110, 111);
     }
 
-    private function getSearcher(): TeamsSearcher
+    private function getSearcher(): ProgramsSearcher
     {
-        return new TeamsSearcher($this->team_ids_searcher, $this->project_retriever);
+        return new ProgramsSearcher($this->program_ids_searcher, $this->project_retriever);
     }
 
-    public function testItReturnsTheTeamProjectsOfAProgram(): void
+    public function testItReturnsTheProgramProjectsOfATeam(): void
     {
-        $team_red  = ProjectTestBuilder::aProject()->withId(102)->build();
-        $team_blue = ProjectTestBuilder::aProject()->withId(103)->build();
+        $program_red  = ProjectTestBuilder::aProject()->withId(110)->build();
+        $program_blue = ProjectTestBuilder::aProject()->withId(111)->build();
 
-        $this->project_retriever = RetrieveProjectStub::withValidProjects($team_red, $team_blue);
+        $this->project_retriever = RetrieveProjectStub::withValidProjects($program_red, $program_blue);
 
-        $program = ProjectTestBuilder::aProject()->withId(101)->build();
-        $teams   = $this->getSearcher()->searchLinkedProjects($program);
-        self::assertCount(2, $teams);
-        self::assertContains($team_red, $teams);
-        self::assertContains($team_blue, $teams);
+        $team     = ProjectTestBuilder::aProject()->withId(123)->build();
+        $programs = $this->getSearcher()->searchLinkedProjects($team);
+        self::assertCount(2, $programs);
+        self::assertContains($program_red, $programs);
+        self::assertContains($program_blue, $programs);
     }
 }
