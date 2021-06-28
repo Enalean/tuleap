@@ -29,6 +29,10 @@
     border-radius: 50%;
 }
 
+%override-button-default {
+    border: 0;
+}
+
 /* stylelint-disable selector-class-pattern, selector-no-qualifying-type */
 .sidebar-nav {
     display: flex;
@@ -77,6 +81,10 @@
         }
     }
 
+    .nav-list {
+        margin-bottom: var(--tlp-medium-spacing);
+    }
+
     .project-sidebar-nav-item {
         width: inherit;
         margin: 0 calc(-1 * var(--tlp-small-spacing));
@@ -108,23 +116,29 @@
         transform: rotate(-45deg) translate(3px, 0);
         opacity: 1;
     }
+}
 
-    i.sidebar-collapse {
-        @extend %round-icon;
-        display: flex;
-        box-sizing: border-box;
-        flex: 0 0 auto;
-        margin: 20px auto;
-        background: var(--tlp-sidebar-action-color);
-        background-blend-mode: overlay;
-        color: var(--tlp-typo-default-text-color-on-dark-background);
-        font-size: 12px;
-        text-align: center;
-        cursor: pointer;
+.sidebar-collapse-button {
+    @extend %override-button-default;
+    @extend %round-icon;
+    display: flex;
+    box-sizing: border-box;
+    margin: 0 auto var(--tlp-medium-spacing);
+    background: var(--tlp-sidebar-action-color);
+    background-blend-mode: overlay;
+    color: var(--tlp-typo-default-text-color-on-dark-background);
 
-        &:hover {
-            background: var(--tlp-sidebar-action-color-hover);
-        }
+    &:hover,
+    &:focus {
+        background: var(--tlp-sidebar-action-color-hover);
+    }
+}
+
+.sidebar-collapser-icon {
+    font-size: 12px;
+
+    &::before {
+        content: "\f053"; // fa-chevron-left
     }
 }
 
@@ -287,10 +301,10 @@
 }
 
 .project-sidebar-banner-button {
+    @extend %override-button-default;
     display: flex;
     align-items: center;
     padding: var(--tlp-small-spacing) var(--tlp-medium-spacing);
-    border: 0;
     background: var(--tlp-dark-color);
 
     &:hover,
@@ -421,6 +435,10 @@ body.sidebar-collapsed {
     .project-sidebar-banner-button-label,
     .project-sidebar-project-flags {
         display: none;
+    }
+
+    .sidebar-collapser-icon::before {
+        content: "\f054"; // fa-chevron-right
     }
 }
 

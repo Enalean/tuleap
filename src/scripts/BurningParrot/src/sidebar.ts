@@ -22,7 +22,7 @@ import { post } from "tlp";
 export { init };
 
 function init(): void {
-    const sidebar_collapsers = document.querySelectorAll(".sidebar-collapser"),
+    const sidebar_collapsers = document.querySelectorAll("[data-sidebar-collapser]"),
         sidebar = document.querySelector(".sidebar");
 
     bindSidebarEvent();

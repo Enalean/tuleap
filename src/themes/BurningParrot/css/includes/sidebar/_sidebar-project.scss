@@ -19,6 +19,20 @@
 
 @use "../global-variables";
 
+%round-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+}
+
+%override-button-default {
+    border: 0;
+    cursor: pointer;
+}
+
 .project-sidebar-header {
     display: flex;
     flex-direction: column;
@@ -37,15 +51,6 @@
 
 .project-title-spacer {
     flex: 1 1 auto;
-}
-
-%round-icon {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 24px;
-    height: 24px;
-    border-radius: 50%;
 }
 
 .sidebar-dashboard-privacy-icon {
@@ -93,12 +98,11 @@
 }
 
 .project-sidebar-banner-button {
+    @extend %override-button-default;
     display: flex;
     align-items: center;
     padding: var(--tlp-small-spacing) var(--tlp-medium-spacing);
-    border: 0;
     background: var(--tlp-dark-color);
-    cursor: pointer;
 
     &:hover,
     &:focus {
@@ -233,29 +237,18 @@
     white-space: nowrap;
 }
 
-.project-sidebar-collapser-icon {
+.sidebar-collapse-button {
+    @extend %override-button-default;
     @extend %round-icon;
     display: flex;
-    z-index: 10001;
     margin: 0 auto var(--tlp-medium-spacing);
     transition: background 100ms;
     background: var(--tlp-sidebar-action-color);
     background-blend-mode: overlay;
     color: var(--tlp-typo-default-text-color-on-dark-background);
-    font-size: 12px;
-    cursor: pointer;
 
-    &.fa-chevron-left::before {
-        position: relative;
-        left: -1.5px;
-    }
-
-    &.fa-chevron-right::before {
-        position: relative;
-        left: 1px;
-    }
-
-    &:hover {
+    &:hover,
+    &:focus {
         background: var(--tlp-sidebar-action-color-hover);
     }
 }

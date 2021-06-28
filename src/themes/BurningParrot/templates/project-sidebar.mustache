@@ -77,9 +77,11 @@
 </nav>
 
 {{# is_sidebar_collapsable }}
-    <i class="sidebar-collapser project-sidebar-collapser-icon sidebar-collapser-icon fa"
-        title="Collapse sidebar"
-        data-user-preference-name="sidebar_state"
-        data-collapsed-class="sidebar-collapsed"
-    ></i>
+    <button type="button"
+            title="{{# gettext }}Open/close sidebar{{/ gettext}}"
+            class="sidebar-collapse-button"
+            data-sidebar-collapser
+            data-user-preference-name="sidebar_state"
+            data-collapsed-class="sidebar-collapsed"
+    ><i class="fas sidebar-collapser-icon"></i></button>
 {{/ is_sidebar_collapsable }}
