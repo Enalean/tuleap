@@ -126,7 +126,7 @@ class Docman_MetadataListOfValuesElementFactory
     public function getListByFieldId($id, $mdLabel, $onlyActive)
     {
         if ($mdLabel == 'status') {
-            $lst = $this->getStatusList();
+            $lst = self::getStatusList();
             return $lst;
         }
 
@@ -154,7 +154,7 @@ class Docman_MetadataListOfValuesElementFactory
         $e = null;
         switch ($mdLabel) {
             case 'status':
-                $ea = $this->getStatusList();
+                $ea = self::getStatusList();
                 $e  = $ea[$id];
                 break;
 
@@ -177,7 +177,7 @@ class Docman_MetadataListOfValuesElementFactory
         $ei = null;
         switch ($mdLabel) {
             case 'status':
-                $stElmtArray = $this->getStatusList();
+                $stElmtArray = self::getStatusList();
                 foreach ($stElmtArray as $elmt) {
                     if ($elmt->getName() == $name) {
                         $ea[] = $elmt;
@@ -312,7 +312,7 @@ class Docman_MetadataListOfValuesElementFactory
     /**
      * Return static list of status (hardcoded metadata with hardcoded values)
      */
-    public function getStatusList($status = null)
+    public static function getStatusList($status = null)
     {
         $ea = [];
 

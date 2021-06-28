@@ -293,7 +293,7 @@ class DB
      *
      * @access public
      */
-    public function isError($value)
+    public static function isError($value)
     {
         return is_a($value, 'DB_Error');
     }

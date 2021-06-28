@@ -140,7 +140,7 @@ class WikiDB_backend_PearDB_mysql extends WikiDB_backend_PearDB
     /**
      * Release all locks.
      */
-    public function _unlock_tables()
+    public function _unlock_tables($write_lock)
     {
         $this->_dbh->query("UNLOCK TABLES");
     }
