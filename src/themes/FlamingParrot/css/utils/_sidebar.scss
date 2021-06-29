@@ -54,7 +54,6 @@
     width: variables-common.$sidebar-width;
     max-width: variables-common.$sidebar-width;
     height: 100vh;
-    overflow: hidden;
     background: var(--tlp-dark-color);
     @media screen and (max-width: 880px) {
         padding: variables-common.$navbar-height 0 0;
@@ -385,6 +384,29 @@
     max-width: 185px;
 }
 
+.tlp-popover-shown.project-sidebar-linked-projects-popover {
+    display: none;
+}
+
+.project-sidebar-linked-projects-popover {
+    width: max-content;
+    margin-left: 14px;
+}
+
+.project-sidebar-linked-projects-popover-content {
+    background: var(--tlp-dark-color);
+}
+
+#project-sidebar-linked-projects-popover > .tlp-popover-arrow.project-sidebar-linked-projects-popover-arrow {
+    border-right-color: var(--tlp-dark-color-darker-05);
+    border-bottom-color: transparent;
+    background: var(--tlp-dark-color-darker-20);
+
+    &::before {
+        border-bottom-color: var(--tlp-dark-color-darker-05);
+    }
+}
+
 .project-sidebar-linked-projects {
     display: flex;
     flex-direction: column;
@@ -399,12 +421,14 @@
     font-size: 0.6rem;
 }
 
+.project-sidebar-linked-projects-label-popover,
 .project-sidebar-linked-projects-label {
     @extend %uppercase-title;
     margin: 0 0 0 var(--tlp-small-spacing);
     color: var(--tlp-ui-white-transparent-10);
 }
 
+.project-sidebar-linked-projects-list-popover,
 .project-sidebar-linked-projects-list {
     margin: 0 0 0 var(--tlp-x-large-spacing);
     padding: 0 0 0 var(--tlp-small-spacing);
@@ -457,6 +481,10 @@ body.sidebar-collapsed {
 
     .project-sidebar-header-name {
         padding: var(--tlp-medium-spacing);
+    }
+
+    .tlp-popover-shown.project-sidebar-linked-projects-popover {
+        display: flex;
     }
 
     .project-sidebar-linked-projects-list,
