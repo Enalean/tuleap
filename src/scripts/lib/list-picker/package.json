@@ -10,7 +10,7 @@
   "types": "types/index.d.ts",
   "style": "dist/style.css",
   "dependencies": {
-    "@juggle/resize-observer": "^3.3.0",
+    "@juggle/resize-observer": "^3.3.1",
     "@tuleap/gettext": "file://../gettext",
     "lit-html": "^1.4.1"
   },
