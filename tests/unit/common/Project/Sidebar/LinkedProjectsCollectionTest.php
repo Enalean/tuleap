@@ -158,4 +158,50 @@ final class LinkedProjectsCollectionTest extends TestCase
         self::assertTrue($collection->isEmpty());
         self::assertCount(0, $collection->getProjects());
     }
+
+    public function testMergeSortArrays(): void
+    {
+        $source_project = ProjectTestBuilder::aProject()->build();
+
+        $b_project        = ProjectTestBuilder::aProject()
+            ->withUnixName('b-project')
+            ->withPublicName('B Project')
+            ->build();
+        $searcher         = SearchLinkedProjectsStub::withValidProjects(
+            $b_project
+        );
+        $first_collection = LinkedProjectsCollection::fromSourceProject(
+            $searcher,
+            $this->access_checker,
+            $source_project,
+            $this->user
+        );
+
+        $a_project         = ProjectTestBuilder::aProject()
+            ->withUnixName('a-project')
+            ->withPublicName('a Project')
+            ->build();
+        $searcher          = SearchLinkedProjectsStub::withValidProjects(
+            $a_project
+        );
+        $second_collection = LinkedProjectsCollection::fromSourceProject(
+            $searcher,
+            $this->access_checker,
+            $source_project,
+            $this->user
+        );
+
+        $collection      = $second_collection->merge($first_collection);
+        $linked_projects = $collection->getProjects();
+
+        self::assertCount(2, $linked_projects);
+        self::assertEquals(
+            LinkedProject::fromProject($this->access_checker, $a_project, $this->user),
+            $linked_projects[0]
+        );
+        self::assertEquals(
+            LinkedProject::fromProject($this->access_checker, $b_project, $this->user),
+            $linked_projects[1]
+        );
+    }
 }
