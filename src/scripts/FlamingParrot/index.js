@@ -27,7 +27,7 @@ import { createPopover } from "@tuleap/tlp-popovers";
 import { init as initNavbarDropdown } from "../navbar-dropdowns/navbar-dropdown.ts";
 
 import "./sidebar.js";
-import "./project-flags.js";
+import "./project-flags.ts";
 import "./project-privacy.js";
 import "./help-dropdown.ts";
 import "../global-shortcuts/index.ts";
