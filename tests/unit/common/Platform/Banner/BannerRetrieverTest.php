@@ -76,7 +76,7 @@ final class BannerRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $expected_banner_message    = 'banner message';
         $expected_banner_importance = 'critical';
-        $this->banner_dao->shouldReceive('searchBannerWithVisibility')->andReturn(
+        $this->banner_dao->shouldReceive('searchNonExpiredBannerWithVisibility')->andReturn(
             [
                 'message'          => $expected_banner_message,
                 'importance'       => $expected_banner_importance,
@@ -86,7 +86,7 @@ final class BannerRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $user = Mockery::mock(PFUser::class);
         $user->shouldReceive('getId')->andReturn('1200');
 
-        $banner = $this->banner_retriever->getBannerForDisplayPurpose($user);
+        $banner = $this->banner_retriever->getBannerForDisplayPurpose($user, new \DateTimeImmutable('@10'));
 
         self::assertEquals($expected_banner_message, $banner->getMessage());
         self::assertEquals($expected_banner_importance, $banner->getImportance());
@@ -97,7 +97,7 @@ final class BannerRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $expected_banner_message    = 'banner message';
         $expected_banner_importance = 'critical';
-        $this->banner_dao->shouldReceive('searchBannerWithVisibility')->andReturn(
+        $this->banner_dao->shouldReceive('searchNonExpiredBannerWithVisibility')->andReturn(
             [
                 'message'          => $expected_banner_message,
                 'importance'       => $expected_banner_importance,
@@ -108,7 +108,7 @@ final class BannerRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $user = Mockery::mock(PFUser::class);
         $user->shouldReceive('getId')->andReturn('1200');
 
-        $banner = $this->banner_retriever->getBannerForDisplayPurpose($user);
+        $banner = $this->banner_retriever->getBannerForDisplayPurpose($user, new \DateTimeImmutable('@10'));
 
         self::assertEquals($expected_banner_message, $banner->getMessage());
         self::assertEquals($expected_banner_importance, $banner->getImportance());
@@ -117,12 +117,12 @@ final class BannerRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testCanCheckBannerVisibilityDoesNotExistForAProject(): void
     {
-        $this->banner_dao->shouldReceive('searchBannerWithVisibility')->andReturn(null);
+        $this->banner_dao->shouldReceive('searchNonExpiredBannerWithVisibility')->andReturn(null);
 
         $user = Mockery::mock(PFUser::class);
         $user->shouldReceive('getId')->andReturn('1200');
 
-        $banner = $this->banner_retriever->getBannerForDisplayPurpose($user);
+        $banner = $this->banner_retriever->getBannerForDisplayPurpose($user, new \DateTimeImmutable('@10'));
 
         self::assertNull($banner);
     }

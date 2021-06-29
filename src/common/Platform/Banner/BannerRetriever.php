@@ -49,9 +49,9 @@ class BannerRetriever
         return new Banner($row['message'], $row['importance'], $expiration_date);
     }
 
-    public function getBannerForDisplayPurpose(PFUser $user): ?BannerDisplay
+    public function getBannerForDisplayPurpose(PFUser $user, \DateTimeImmutable $current_time): ?BannerDisplay
     {
-        $banner_with_visibility_row = $this->banner_dao->searchBannerWithVisibility((int) $user->getId());
+        $banner_with_visibility_row = $this->banner_dao->searchNonExpiredBannerWithVisibility((int) $user->getId(), $current_time);
 
         if ($banner_with_visibility_row === null) {
             return null;
