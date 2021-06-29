@@ -1,0 +1,34 @@
+<h2 class="project-sidebar-tools-section-label">{{# gettext }}Tools{{/ gettext }}</h2>
+
+<nav class="project-sidebar-nav" data-test="project-sidebar" data-project-id="{{ project_id }}">
+    {{# sidebar }}
+        {{# is_project_defined }}
+            <a href="{{{ link }}}"
+               aria-label="{{ label }}"
+               class="project-sidebar-nav-item"
+                {{# open_in_new_tab }}
+               target="_blank"
+               rel="noopener noreferrer"
+                {{/ open_in_new_tab }}
+               title="{{ description }}"
+            >
+                <i class="{{ icon }} project-sidebar-nav-item-icon"></i>
+                <span class="project-sidebar-nav-item-label">{{ label }}</span>
+                {{# open_in_new_tab }}
+                    <i class="fa fa-arrow-right project-sidebar-nav-item-new-tab"></i>
+                {{/ open_in_new_tab }}
+            </a>
+        {{/ is_project_defined }}
+        {{^ is_project_defined }}
+            <a id="{{ id }}"
+               href="{{{ link }}}"
+               class="project-sidebar-nav-item {{# enabled }}active{{/ enabled }}"
+               aria-label="{{{ name }}}"
+               title="{{{ name }}}"
+            >
+                <i class="{{ icon }} project-sidebar-nav-item-icon"></i>
+                <span class="project-sidebar-nav-item-label">{{{ label }}}</span>
+            </a>
+        {{/ is_project_defined }}
+    {{/ sidebar }}
+</nav>
