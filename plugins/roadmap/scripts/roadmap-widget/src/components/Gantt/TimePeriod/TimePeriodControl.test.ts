@@ -20,6 +20,10 @@
 import { shallowMount } from "@vue/test-utils";
 import TimePeriodControl from "./TimePeriodControl.vue";
 import { createRoadmapLocalVue } from "../../../helpers/local-vue-for-test";
+import { createStoreMock } from "../../../../../../../../src/scripts/vue-components/store-wrapper-jest";
+import type { TasksState } from "../../../store/tasks/type";
+import type { RootState } from "../../../store/type";
+import type { TaskRow } from "../../../type";
 
 describe("TimePeriodControl", () => {
     it("Emits input event when the value is changed", async () => {
@@ -28,6 +32,16 @@ describe("TimePeriodControl", () => {
                 value: "month",
             },
             localVue: await createRoadmapLocalVue(),
+            mocks: {
+                $store: createStoreMock({
+                    state: {
+                        tasks: {} as TasksState,
+                    } as RootState,
+                    getters: {
+                        "tasks/rows": [{} as TaskRow],
+                    },
+                }),
+            },
         });
 
         const options = wrapper.find("[data-test=select-timescale]").findAll("option");
@@ -43,5 +57,31 @@ describe("TimePeriodControl", () => {
         expect(input_event[0][0]).toBe("quarter");
         expect(input_event[1][0]).toBe("month");
         expect(input_event[2][0]).toBe("week");
+    });
+
+    it("should mark the selectbox as disabled if there is no rows", async () => {
+        const wrapper = shallowMount(TimePeriodControl, {
+            propsData: {
+                value: "month",
+            },
+            localVue: await createRoadmapLocalVue(),
+            mocks: {
+                $store: createStoreMock({
+                    state: {
+                        tasks: {} as TasksState,
+                    } as RootState,
+                    getters: {
+                        "tasks/rows": [],
+                    },
+                }),
+            },
+        });
+
+        const select = wrapper.find("[data-test=select-timescale]").element;
+        if (!(select instanceof HTMLSelectElement)) {
+            throw Error("Unable to find select");
+        }
+
+        expect(select.disabled).toBe(true);
     });
 });

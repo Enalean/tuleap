@@ -28,7 +28,11 @@
             />
             <show-closed-control />
         </div>
-        <div class="roadmap-gantt">
+        <no-data-to-show-empty-state
+            v-if="rows.length === 0"
+            v-bind:should_invite_to_come_back="false"
+        />
+        <div class="roadmap-gantt" v-else>
             <template v-for="(row, index) in rows">
                 <subtask-message
                     v-if="isErrorRow(row) || isEmptySubtasksRow(row)"
@@ -176,6 +180,7 @@ import SubtaskMessage from "./Subtask/SubtaskMessage.vue";
 import SubtaskMessageHeader from "./Subtask/SubtaskMessageHeader.vue";
 import IterationsRibbon from "./Iteration/IterationsRibbon.vue";
 import ShowClosedControl from "./ShowClosedControl.vue";
+import NoDataToShowEmptyState from "../NoDataToShowEmptyState.vue";
 
 const tasks = namespace("tasks");
 const iterations = namespace("iterations");
@@ -183,6 +188,7 @@ const timeperiod = namespace("timeperiod");
 
 @Component({
     components: {
+        NoDataToShowEmptyState,
         ShowClosedControl,
         IterationsRibbon,
         SubtaskMessageHeader,
@@ -202,7 +208,7 @@ const timeperiod = namespace("timeperiod");
 })
 export default class GanttBoard extends Vue {
     override $refs!: {
-        time_period: TimePeriodHeader;
+        time_period: TimePeriodHeader | undefined;
     };
 
     @tasks.Getter
@@ -248,12 +254,25 @@ export default class GanttBoard extends Vue {
     mounted(): void {
         const ResizeObserverImplementation = window.ResizeObserver || ResizeObserverPolyfill;
         this.observer = new ResizeObserverImplementation(this.adjustAdditionalUnits);
-        this.observer.observe(this.$refs.time_period.$el);
+        if (this.$refs.time_period) {
+            this.observer.observe(this.$refs.time_period.$el);
+        }
     }
 
     beforeDestroy(): void {
         if (this.observer) {
             this.observer.disconnect();
+        }
+    }
+
+    @Watch("rows")
+    observeTimeperiod(): void {
+        if (!this.$refs.time_period) {
+            this.$nextTick(() => {
+                if (this.$refs.time_period && this.observer) {
+                    this.observer.observe(this.$refs.time_period.$el);
+                }
+            });
         }
     }
 
@@ -274,7 +293,9 @@ export default class GanttBoard extends Vue {
             return;
         }
 
-        const entry = entries.find((entry) => entry.target === this.$refs.time_period.$el);
+        const entry = entries.find(
+            (entry) => this.$refs.time_period && entry.target === this.$refs.time_period.$el
+        );
         if (!entry) {
             return;
         }
@@ -284,6 +305,10 @@ export default class GanttBoard extends Vue {
 
     @Watch("timescale")
     adjustAdditionalUnitsAfterTimescaleChang(): void {
+        if (!this.$refs.time_period) {
+            return;
+        }
+
         this.setAdditionalUnitsNumberAccordingToWidth(
             this.$refs.time_period.$el.getBoundingClientRect().width
         );

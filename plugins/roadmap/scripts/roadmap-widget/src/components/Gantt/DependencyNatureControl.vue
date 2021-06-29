@@ -55,8 +55,11 @@
 <script lang="ts">
 import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
+import { namespace } from "vuex-class";
 import { getUniqueId } from "../../helpers/uniq-id-generator";
-import type { NaturesLabels } from "../../type";
+import type { NaturesLabels, Row } from "../../type";
+
+const tasks = namespace("tasks");
 
 @Component
 export default class DependencyNatureControl extends Vue {
@@ -65,6 +68,9 @@ export default class DependencyNatureControl extends Vue {
 
     @Prop({ required: true })
     readonly available_natures!: NaturesLabels;
+
+    @tasks.Getter
+    readonly rows!: Row[];
 
     private readonly NONE_SPECIALVALUE = "-1";
 
@@ -77,7 +83,7 @@ export default class DependencyNatureControl extends Vue {
     }
 
     get disabled(): boolean {
-        return this.available_natures.size <= 0;
+        return this.rows.length <= 0 || this.available_natures.size <= 0;
     }
 
     get title(): string {

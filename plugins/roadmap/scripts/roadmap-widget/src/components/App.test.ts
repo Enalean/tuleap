@@ -24,7 +24,7 @@ import App from "./App.vue";
 import NoDataToShowEmptyState from "./NoDataToShowEmptyState.vue";
 import SomethingWentWrongEmptyState from "./SomethingWentWrongEmptyState.vue";
 import GanttBoard from "./Gantt/GanttBoard.vue";
-import type { Task, TaskRow } from "../type";
+import type { Task } from "../type";
 import LoadingState from "./LoadingState.vue";
 import type { RootState } from "../store/type";
 import { createStoreMock } from "../../../../../../src/scripts/vue-components/store-wrapper-jest";
@@ -47,9 +47,6 @@ describe("App", () => {
                         ...root,
                         tasks,
                     } as RootState,
-                    getters: {
-                        "tasks/rows": tasks.tasks.map((task): TaskRow => ({ task })),
-                    },
                 }),
             },
         });

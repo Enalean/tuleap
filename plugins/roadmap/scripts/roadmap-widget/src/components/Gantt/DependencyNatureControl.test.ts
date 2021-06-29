@@ -21,7 +21,11 @@ import type { Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import DependencyNatureControl from "./DependencyNatureControl.vue";
 import { createRoadmapLocalVue } from "../../helpers/local-vue-for-test";
+import type { TaskRow } from "../../type";
 import { NaturesLabels } from "../../type";
+import { createStoreMock } from "../../../../../../../src/scripts/vue-components/store-wrapper-jest";
+import type { TasksState } from "../../store/tasks/type";
+import type { RootState } from "../../store/type";
 
 function isSelected(wrapper: Wrapper<DependencyNatureControl>, nature: string): boolean {
     const option = wrapper.find(`[data-test=option-${nature}]`).element;
@@ -43,6 +47,16 @@ describe("DependencyNatureControl", () => {
                     ["depends_on", "Depends on"],
                 ]),
             },
+            mocks: {
+                $store: createStoreMock({
+                    state: {
+                        tasks: {} as TasksState,
+                    } as RootState,
+                    getters: {
+                        "tasks/rows": [{} as TaskRow],
+                    },
+                }),
+            },
         });
 
         expect(isSelected(wrapper, "none")).toBe(true);
@@ -59,6 +73,16 @@ describe("DependencyNatureControl", () => {
                     ["", "Linked to"],
                     ["depends_on", "Depends on"],
                 ]),
+            },
+            mocks: {
+                $store: createStoreMock({
+                    state: {
+                        tasks: {} as TasksState,
+                    } as RootState,
+                    getters: {
+                        "tasks/rows": [{} as TaskRow],
+                    },
+                }),
             },
         });
 
@@ -82,6 +106,45 @@ describe("DependencyNatureControl", () => {
             propsData: {
                 value: null,
                 available_natures: new NaturesLabels([]),
+            },
+            mocks: {
+                $store: createStoreMock({
+                    state: {
+                        tasks: {} as TasksState,
+                    } as RootState,
+                    getters: {
+                        "tasks/rows": [{} as TaskRow],
+                    },
+                }),
+            },
+        });
+
+        const select = wrapper.find("[data-test=select-links]").element;
+        if (!(select instanceof HTMLSelectElement)) {
+            throw new Error("Unable to find the select");
+        }
+        expect(select.disabled).toBe(true);
+    });
+
+    it("should mark the selectbox as disabled when there is no rows", async () => {
+        const wrapper = shallowMount(DependencyNatureControl, {
+            localVue: await createRoadmapLocalVue(),
+            propsData: {
+                value: null,
+                available_natures: new NaturesLabels([
+                    ["", "Linked to"],
+                    ["depends_on", "Depends on"],
+                ]),
+            },
+            mocks: {
+                $store: createStoreMock({
+                    state: {
+                        tasks: {} as TasksState,
+                    } as RootState,
+                    getters: {
+                        "tasks/rows": [],
+                    },
+                }),
             },
         });
 
