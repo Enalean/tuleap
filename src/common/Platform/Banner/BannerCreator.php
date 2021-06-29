@@ -27,10 +27,7 @@ namespace Tuleap\Platform\Banner;
  */
 class BannerCreator
 {
-    /**
-     * @var BannerDao
-     */
-    private $banner_dao;
+    private BannerDao $banner_dao;
 
     public function __construct(BannerDao $banner_dao)
     {
@@ -39,9 +36,14 @@ class BannerCreator
 
     /**
      * @psalm-param BannerImportance $importance
+     * @throws CannotCreateAnAlreadyExpiredBannerException
      */
-    public function addBanner(string $message, string $importance): void
+    public function addBanner(string $message, string $importance, ?\DateTimeImmutable $expiration_date, \DateTimeImmutable $current_time): void
     {
-        $this->banner_dao->addBanner($message, $importance);
+        if ($expiration_date !== null && $current_time >= $expiration_date) {
+            throw new CannotCreateAnAlreadyExpiredBannerException();
+        }
+
+        $this->banner_dao->addBanner($message, $importance, $expiration_date);
     }
 }

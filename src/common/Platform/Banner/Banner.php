@@ -41,14 +41,16 @@ class Banner
      * @psalm-var BannerImportance
      */
     private $importance;
+    private ?\DateTimeImmutable $expiration_date;
 
     /**
      * @psalm-param BannerImportance $importance
      */
-    public function __construct(string $message, string $importance)
+    public function __construct(string $message, string $importance, ?\DateTimeImmutable $expiration_date)
     {
-        $this->message    = $message;
-        $this->importance = $importance;
+        $this->message         = $message;
+        $this->importance      = $importance;
+        $this->expiration_date = $expiration_date;
     }
 
     public function getMessage(): string
@@ -62,5 +64,10 @@ class Banner
     public function getImportance(): string
     {
         return $this->importance;
+    }
+
+    public function getExpirationDate(): ?\DateTimeImmutable
+    {
+        return $this->expiration_date;
     }
 }

@@ -53,6 +53,7 @@ class PlatformBannerTest extends ProjectBase
         $post_resource = json_encode([
             'message' => 'a banner message',
             'importance'  => 'critical',
+            'expiration_date' => '2100-06-30T10:44:34+02:00'
         ]);
 
         $response = $this->getResponseByName(
@@ -94,6 +95,7 @@ class PlatformBannerTest extends ProjectBase
 
         $response_json = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         $this->assertEquals('a banner message', $response_json['message']);
+        $this->assertEquals('2100-06-30T09:44:34+01:00', $response_json['expiration_date']);
     }
 
     /**

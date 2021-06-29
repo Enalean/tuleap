@@ -1672,7 +1672,8 @@ CREATE TABLE project_banner (
 DROP TABLE IF EXISTS platform_banner;
 CREATE TABLE platform_banner (
     message text,
-    importance VARCHAR(8)
+    importance VARCHAR(8),
+    expiration_date INT(11) UNSIGNED DEFAULT NULL
 );
 
 DROP TABLE IF EXISTS release_note_link;

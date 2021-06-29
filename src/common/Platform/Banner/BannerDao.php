@@ -35,15 +35,20 @@ class BannerDao extends DataAccessObject
     /**
      * @psalm-param BannerImportance $importance
      */
-    public function addBanner(string $message, string $importance): void
+    public function addBanner(string $message, string $importance, ?\DateTimeImmutable $expiration_date): void
     {
         $this->getDB()->tryFlatTransaction(
-            static function (EasyDB $db) use ($message, $importance): void {
+            static function (EasyDB $db) use ($message, $importance, $expiration_date): void {
                 $db->run('DELETE FROM platform_banner');
+                $expiration_date_timestamp = null;
+                if ($expiration_date !== null) {
+                    $expiration_date_timestamp = $expiration_date->getTimestamp();
+                }
                 $db->run(
-                    'INSERT INTO platform_banner(message, importance) VALUES (?, ?)',
+                    'INSERT INTO platform_banner(message, importance, expiration_date) VALUES (?, ?, ?)',
                     $message,
-                    $importance
+                    $importance,
+                    $expiration_date_timestamp
                 );
                 self::removeUserBannerPreference($db);
             }
@@ -61,11 +66,11 @@ class BannerDao extends DataAccessObject
     }
 
     /**
-     * @psalm-return array{message: string, importance: BannerImportance}|null
+     * @psalm-return array{message: string, importance: BannerImportance, expiration_date: ?int}|null
      */
     public function searchBanner(): ?array
     {
-        $sql = "SELECT * FROM platform_banner";
+        $sql = "SELECT message, importance, expiration_date FROM platform_banner";
 
         return $this->getDB()->row($sql) ?: null;
     }

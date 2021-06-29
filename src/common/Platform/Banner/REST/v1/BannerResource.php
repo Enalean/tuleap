@@ -22,11 +22,13 @@ declare(strict_types=1);
 
 namespace Tuleap\Platform\Banner\REST\v1;
 
+use DateTimeImmutable;
 use Luracast\Restler\RestException;
 use Tuleap\Platform\Banner\BannerCreator;
 use Tuleap\Platform\Banner\BannerDao;
 use Tuleap\Platform\Banner\BannerRemover;
 use Tuleap\Platform\Banner\BannerRetriever;
+use Tuleap\Platform\Banner\CannotCreateAnAlreadyExpiredBannerException;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 
@@ -54,6 +56,14 @@ final class BannerResource extends AuthenticatedResource
      *   &nbsp;"importance": "critical"<br>
      *  }<br>
      * </pre>
+     * <br>
+     * <pre>
+     * {<br>
+     *   &nbsp;"message": "A message to be displayed on the platform",<br>
+     *   &nbsp;"importance": "critical"<br>
+     *   &nbsp;"expiration_date": "2100-06-30T09:44:34+01:00"<br>
+     *  }<br>
+     * </pre>
      *
      * @url PUT
      *
@@ -70,8 +80,21 @@ final class BannerResource extends AuthenticatedResource
             throw new RestException(400, 'Message cannot be empty');
         }
 
+        $expiration_date = null;
+        if ($banner->expiration_date !== null) {
+            $expiration_date = DateTimeImmutable::createFromFormat(\DateTimeInterface::ATOM, $banner->expiration_date);
+
+            if (! $expiration_date) {
+                throw new RestException(400, "Please provide a valid ISO-8601 date for expiration_date");
+            }
+        }
+
         $banner_creator = new BannerCreator(new BannerDao());
-        $banner_creator->addBanner($banner->message, $banner->importance);
+        try {
+            $banner_creator->addBanner($banner->message, $banner->importance, $expiration_date, new DateTimeImmutable());
+        } catch (CannotCreateAnAlreadyExpiredBannerException $exception) {
+            throw new RestException(400, 'The expiration date needs to be in the future or not set', [], $exception);
+        }
     }
 
     /**

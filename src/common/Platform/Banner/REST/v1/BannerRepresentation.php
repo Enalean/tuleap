@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Platform\Banner\REST\v1;
 
 use Tuleap\Platform\Banner\Banner;
+use Tuleap\REST\JsonCast;
 
 /**
  * @psalm-immutable
@@ -33,16 +34,23 @@ final class BannerRepresentation
     /**
      * @var string {@required true}
      */
-    public $message;
+    public string $message;
     /**
      * @var string {@required true} {@choice standard,warning,critical}
      * @psalm-var BannerImportance
      */
-    public $importance;
+    public string $importance;
+
+    /**
+     * @var string {@required false} Expiration date in ISO 8601 date format
+     * @psalm-var string|null
+     */
+    public ?string $expiration_date = null;
 
     public function __construct(Banner $banner)
     {
-        $this->message    = $banner->getMessage();
-        $this->importance = $banner->getImportance();
+        $this->message         = $banner->getMessage();
+        $this->importance      = $banner->getImportance();
+        $this->expiration_date = JsonCast::fromDateTimeToDate($banner->getExpirationDate());
     }
 }
