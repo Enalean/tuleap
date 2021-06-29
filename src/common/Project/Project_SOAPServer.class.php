@@ -20,7 +20,6 @@
 require_once __DIR__ . '/../../www/include/account.php';
 require_once __DIR__ .  '/../../www/include/utils_soap.php';
 
-use Tuleap\Project\Registration\ProjectRegistrationUserPermissionChecker;
 use Tuleap\Project\UserRemover;
 use Tuleap\Project\UserRemoverDao;
 
@@ -36,19 +35,9 @@ class Project_SOAPServer // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNa
     private $projectManager;
 
     /**
-     * @var ProjectCreator
-     */
-    private $projectCreator;
-
-    /**
      * @var UserManager
      */
     private $userManager;
-
-    /**
-     * @var SOAP_RequestLimitator
-     */
-    private $limitator;
 
     /**
      * @var GenericUserFactory
@@ -70,39 +59,24 @@ class Project_SOAPServer // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNa
     /** @var Project_Service_ServiceUsageManager */
     private $service_usage_manager;
 
-    /** @var User_ForgeUserGroupPermissionsManager */
-    private $forge_ugroup_permissions_manager;
-    /**
-     * @var ProjectRegistrationUserPermissionChecker
-     */
-    private $project_registration_user_permission_checker;
-
     public function __construct(
         ProjectManager $projectManager,
-        ProjectCreator $projectCreator,
         UserManager $userManager,
         GenericUserFactory $generic_user_factory,
-        SOAP_RequestLimitator $limitator,
         Project_CustomDescription_CustomDescriptionFactory $description_factory,
         Project_CustomDescription_CustomDescriptionValueManager $description_manager,
         Project_CustomDescription_CustomDescriptionValueFactory $description_value_factory,
         Project_Service_ServiceUsageFactory $service_usage_factory,
-        Project_Service_ServiceUsageManager $service_usage_manager,
-        User_ForgeUserGroupPermissionsManager $forge_ugroup_permissions_manager,
-        ProjectRegistrationUserPermissionChecker $project_registration_user_permission_checker
+        Project_Service_ServiceUsageManager $service_usage_manager
     ) {
-        $this->projectManager                               = $projectManager;
-        $this->projectCreator                               = $projectCreator;
-        $this->userManager                                  = $userManager;
-        $this->generic_user_factory                         = $generic_user_factory;
-        $this->limitator                                    = $limitator;
-        $this->description_factory                          = $description_factory;
-        $this->description_manager                          = $description_manager;
-        $this->description_value_factory                    = $description_value_factory;
-        $this->service_usage_factory                        = $service_usage_factory;
-        $this->service_usage_manager                        = $service_usage_manager;
-        $this->forge_ugroup_permissions_manager             = $forge_ugroup_permissions_manager;
-        $this->project_registration_user_permission_checker = $project_registration_user_permission_checker;
+        $this->projectManager            = $projectManager;
+        $this->userManager               = $userManager;
+        $this->generic_user_factory      = $generic_user_factory;
+        $this->description_factory       = $description_factory;
+        $this->description_manager       = $description_manager;
+        $this->description_value_factory = $description_value_factory;
+        $this->service_usage_factory     = $service_usage_factory;
+        $this->service_usage_manager     = $service_usage_manager;
     }
 
     /**

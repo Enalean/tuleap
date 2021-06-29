@@ -21,7 +21,6 @@
 
 require_once __DIR__ . '/../../include/pre.php';
 
-use Tuleap\Project\Registration\ProjectRegistrationUserPermissionChecker;
 
 // Check if we the server is in secure mode or not.
 $request  = HTTPRequest::instance();
@@ -39,17 +38,13 @@ if ($request->exist('wsdl')) {
     $wsdlGen = new SOAP_NusoapWSDL($serviceClass, 'TuleapProjectAPI', $uri);
     $wsdlGen->dumpWSDL();
 } else {
-    $userManager      = UserManager::instance();
-    $projectManager   = ProjectManager::instance();
-    $soapLimitFactory = new SOAP_RequestLimitatorFactory();
+    $userManager    = UserManager::instance();
+    $projectManager = ProjectManager::instance();
 
     $ugroup_dao = new UGroupDao();
 
-    $projectCreator = ProjectCreator::buildSelfRegularValidation();
-
     $generic_user_dao     = new GenericUserDao();
     $generic_user_factory = new GenericUserFactory($userManager, $projectManager, $generic_user_dao);
-    $limitator            = $soapLimitFactory->getLimitator();
 
     $custom_project_description_dao       = new Project_CustomDescription_CustomDescriptionDao();
     $custom_project_description_value_dao = new Project_CustomDescription_CustomDescriptionValueDao();
@@ -63,10 +58,6 @@ if ($request->exist('wsdl')) {
     $service_usage_factory = new Project_Service_ServiceUsageFactory($service_usage_dao);
     $service_usage_manager = new Project_Service_ServiceUsageManager($service_usage_dao);
 
-    $forge_ugroup_permissions_manager = new User_ForgeUserGroupPermissionsManager(
-        new User_ForgeUserGroupPermissionsDao()
-    );
-
     $server = new TuleapSOAPServer(
         $uri . '/?wsdl',
         ['cache_wsdl' => WSDL_CACHE_NONE]
@@ -74,19 +65,13 @@ if ($request->exist('wsdl')) {
     $server->setClass(
         $serviceClass,
         $projectManager,
-        $projectCreator,
         $userManager,
         $generic_user_factory,
-        $limitator,
         $custom_project_description_factory,
         $custom_project_description_manager,
         $custom_project_description_value_factory,
         $service_usage_factory,
         $service_usage_manager,
-        $forge_ugroup_permissions_manager,
-        new ProjectRegistrationUserPermissionChecker(
-            new ProjectDao()
-        )
     );
     XML_Security::enableExternalLoadOfEntities(
         function () use ($server) {

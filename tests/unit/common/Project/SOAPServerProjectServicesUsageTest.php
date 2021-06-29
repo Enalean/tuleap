@@ -18,17 +18,11 @@
  */
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use Tuleap\Project\Registration\ProjectRegistrationUserPermissionChecker;
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 class SOAPServerProjectServicesUsageTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
-
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|ProjectRegistrationUserPermissionChecker
-     */
-    private $permission_checker;
 
     /**
      * @var Project_SOAPServer
@@ -43,32 +37,23 @@ class SOAPServerProjectServicesUsageTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->project                   = \Mockery::spy(\Project::class)->shouldReceive('getId')->andReturns($this->group_id)->getMock();
         $this->session_key               = 'abcde123';
         $this->project_manager           = \Mockery::spy(\ProjectManager::class)->shouldReceive('getProject')->andReturns($this->project)->getMock();
-        $this->project_creator           = Mockery::mock(ProjectCreator::class);
         $this->user_manager              = Mockery::mock(UserManager::class);
         $this->generic_user_factory      = \Mockery::spy(\GenericUserFactory::class);
-        $this->limitator                 = Mockery::mock(SOAP_RequestLimitator::class);
         $this->description_factory       = \Mockery::spy(\Project_CustomDescription_CustomDescriptionFactory::class);
         $this->description_manager       = \Mockery::spy(\Project_CustomDescription_CustomDescriptionValueManager::class);
         $this->description_value_factory = \Mockery::spy(\Project_CustomDescription_CustomDescriptionValueFactory::class);
         $this->service_usage_factory     = \Mockery::spy(\Project_Service_ServiceUsageFactory::class);
         $this->service_usage_manager     = \Mockery::spy(\Project_Service_ServiceUsageManager::class);
-        $this->forge_ugroup_perm_manager = \Mockery::spy(\User_ForgeUserGroupPermissionsManager::class);
-        $this->permission_checker        = \Mockery::mock(ProjectRegistrationUserPermissionChecker::class);
-        $this->permission_checker->shouldReceive('checkUserCreateAProject')->byDefault();
 
         $this->server = new Project_SOAPServer(
             $this->project_manager,
-            $this->project_creator,
             $this->user_manager,
             $this->generic_user_factory,
-            $this->limitator,
             $this->description_factory,
             $this->description_manager,
             $this->description_value_factory,
             $this->service_usage_factory,
             $this->service_usage_manager,
-            $this->forge_ugroup_perm_manager,
-            $this->permission_checker,
         );
 
         $this->user       = \Mockery::spy(\PFUser::class)->shouldReceive('isLoggedIn')->andReturns(true)->getMock();
@@ -91,17 +76,13 @@ class SOAPServerProjectServicesUsageTest extends \Tuleap\Test\PHPUnit\TestCase
         $project_manager = \Mockery::spy(\ProjectManager::class)->shouldReceive('getProject')->andReturns(null)->getMock();
         $server          = new Project_SOAPServer(
             $project_manager,
-            $this->project_creator,
             $this->user_manager,
             $this->generic_user_factory,
-            $this->limitator,
             $this->description_factory,
             $this->description_manager,
             $this->description_value_factory,
             $this->service_usage_factory,
             $this->service_usage_manager,
-            $this->forge_ugroup_perm_manager,
-            $this->permission_checker,
         );
 
         $this->user_manager->shouldReceive('getCurrentUser')->with($this->session_key)->andReturns($this->user_admin);

@@ -18,7 +18,6 @@
  */
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use Tuleap\Project\Registration\ProjectRegistrationUserPermissionChecker;
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 class SOAPServerGenericUserTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -27,10 +26,6 @@ class SOAPServerGenericUserTest extends \Tuleap\Test\PHPUnit\TestCase
 
     /** @var Project_SOAPServer */
     private $server;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|ProjectRegistrationUserPermissionChecker
-     */
-    private $permission_checker;
 
     protected function setUp(): void
     {
@@ -52,33 +47,24 @@ class SOAPServerGenericUserTest extends \Tuleap\Test\PHPUnit\TestCase
         $project = Mockery::mock(Project::class);
 
         $project_manager            = \Mockery::spy(\ProjectManager::class)->shouldReceive('getProject')->with($this->group_id)->andReturns($project)->getMock();
-        $project_creator            = Mockery::mock(ProjectCreator::class);
         $this->generic_user_factory = \Mockery::spy(\GenericUserFactory::class);
-        $limitator                  = Mockery::mock(SOAP_RequestLimitator::class);
         $description_factory        = \Mockery::spy(\Project_CustomDescription_CustomDescriptionFactory::class);
         $description_manager        = \Mockery::spy(\Project_CustomDescription_CustomDescriptionValueManager::class);
         $description_value_factory  = \Mockery::spy(\Project_CustomDescription_CustomDescriptionValueFactory::class);
         $service_usage_factory      = \Mockery::spy(\Project_Service_ServiceUsageFactory::class);
         $service_usage_manager      = \Mockery::spy(\Project_Service_ServiceUsageManager::class);
-        $forge_ugroup_perm_manager  = \Mockery::spy(\User_ForgeUserGroupPermissionsManager::class);
-        $this->permission_checker   = \Mockery::mock(ProjectRegistrationUserPermissionChecker::class);
-        $this->permission_checker->shouldReceive('checkUserCreateAProject')->byDefault();
 
         $this->server = \Mockery::mock(
             \Project_SOAPServer::class,
             [
                 $project_manager,
-                $project_creator,
                 $user_manager,
                 $this->generic_user_factory,
-                $limitator,
                 $description_factory,
                 $description_manager,
                 $description_value_factory,
                 $service_usage_factory,
                 $service_usage_manager,
-                $forge_ugroup_perm_manager,
-                $this->permission_checker,
             ]
         )
             ->makePartial()
