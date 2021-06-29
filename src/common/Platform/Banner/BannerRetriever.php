@@ -44,7 +44,9 @@ class BannerRetriever
             return null;
         }
 
-        return new Banner($row['message'], $row['importance']);
+        $expiration_date = $row['expiration_date'] === null ? null : (new \DateTimeImmutable())->setTimestamp($row['expiration_date']);
+
+        return new Banner($row['message'], $row['importance'], $expiration_date);
     }
 
     public function getBannerForDisplayPurpose(PFUser $user): ?BannerDisplay

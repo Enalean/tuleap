@@ -22,21 +22,40 @@ declare(strict_types=1);
 
 namespace Tuleap\Platform\Banner;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
-class BannerCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
+final class BannerCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     public function testBannerIsCreated(): void
     {
-        $dao = \Mockery::mock(BannerDao::class);
-        $dao->shouldReceive('addBanner')
-            ->with("The message", "critical")
-            ->once();
+        $dao = $this->createMock(BannerDao::class);
+        $dao->expects(self::once())
+            ->method('addBanner')
+            ->with("The message", "critical", null);
 
         $banner_creator = new BannerCreator($dao);
 
-        $banner_creator->addBanner("The message", "critical");
+        $banner_creator->addBanner("The message", "critical", null, new \DateTimeImmutable('@1'));
+    }
+
+    public function testBannerWithAnExpirationDateIsCreated(): void
+    {
+        $expiration_date = new \DateTimeImmutable("@2");
+
+        $dao = $this->createMock(BannerDao::class);
+        $dao->expects(self::once())
+            ->method('addBanner')
+            ->with("The message", "critical", $expiration_date);
+
+        $banner_creator = new BannerCreator($dao);
+
+        $banner_creator->addBanner("The message", "critical", $expiration_date, new \DateTimeImmutable('@1'));
+    }
+
+    public function testBannerWithAnExpirationDateInThePastIsRejected(): void
+    {
+        $banner_creator = new BannerCreator($this->createStub(BannerDao::class));
+
+        $this->expectException(CannotCreateAnAlreadyExpiredBannerException::class);
+
+        $banner_creator->addBanner("The message", "critical", new \DateTimeImmutable('@2'), new \DateTimeImmutable('@10'));
     }
 }

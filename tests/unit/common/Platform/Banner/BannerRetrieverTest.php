@@ -47,12 +47,14 @@ final class BannerRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testBannerCanBeRetrievedWhenItExists(): void
     {
-        $expected_banner_message    = 'banner message';
-        $expected_banner_importance = 'critical';
+        $expected_banner_message         = 'banner message';
+        $expected_banner_importance      = 'critical';
+        $expected_banner_expiration_time = 1;
         $this->banner_dao->shouldReceive('searchBanner')->andReturn(
             [
-                'message'    => $expected_banner_message,
-                'importance' => $expected_banner_importance,
+                'message'         => $expected_banner_message,
+                'importance'      => $expected_banner_importance,
+                'expiration_date' => $expected_banner_expiration_time,
             ]
         );
 
@@ -60,6 +62,7 @@ final class BannerRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 
         self::assertEquals($expected_banner_message, $banner->getMessage());
         self::assertEquals($expected_banner_importance, $banner->getImportance());
+        self::assertEquals($expected_banner_expiration_time, $banner->getExpirationDate()->getTimestamp());
     }
 
     public function testBannerDoesNotExist(): void
