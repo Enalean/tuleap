@@ -73,12 +73,21 @@
         display: flex;
     }
 
+    .project-sidebar-project-flags {
+        justify-content: center;
+    }
+
+    .project-sidebar-project-flags-labels {
+        margin: 0;
+        padding: var(--tlp-small-spacing) 0;
+    }
+
     .project-sidebar-linked-projects-list,
     .project-sidebar-linked-projects-label,
     .project-sidebar-privacy-badge,
     .project-sidebar-tools-section-label,
     .project-sidebar-banner-button-label,
-    .project-sidebar-project-flags,
+    .project-sidebar-project-flags-label,
     .project-sidebar-nav-item-label,
     .sidebar-about-logo,
     .project-sidebar-title,
