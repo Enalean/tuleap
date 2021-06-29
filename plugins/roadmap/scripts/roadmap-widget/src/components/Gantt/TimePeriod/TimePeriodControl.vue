@@ -28,6 +28,7 @@
             v-bind:id="id"
             v-on:change="$emit('input', $event.target.value)"
             data-test="select-timescale"
+            v-bind:disabled="rows.length === 0"
         >
             <option value="week" v-bind:selected="this.value === 'week'" v-translate>Week</option>
             <option value="month" v-bind:selected="this.value === 'month'" v-translate>
@@ -44,12 +45,18 @@
 import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
 import { getUniqueId } from "../../../helpers/uniq-id-generator";
-import type { TimeScale } from "../../../type";
+import type { Row, TimeScale } from "../../../type";
+import { namespace } from "vuex-class";
+
+const tasks = namespace("tasks");
 
 @Component
 export default class TimePeriodControl extends Vue {
     @Prop({ required: true })
     readonly value!: TimeScale;
+
+    @tasks.Getter
+    readonly rows!: Row[];
 
     get id(): string {
         return getUniqueId("roadmap-gantt-timescale");

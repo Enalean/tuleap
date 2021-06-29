@@ -36,6 +36,7 @@ import BarPopover from "./Task/BarPopover.vue";
 import SubtaskMessageHeader from "./Subtask/SubtaskMessageHeader.vue";
 import type { IterationsState } from "../../store/iterations/type";
 import IterationsRibbon from "./Iteration/IterationsRibbon.vue";
+import NoDataToShowEmptyState from "../NoDataToShowEmptyState.vue";
 
 window.ResizeObserver =
     window.ResizeObserver ||
@@ -70,6 +71,38 @@ describe("GanttBoard", () => {
         window.ResizeObserver = windowResizeObserver;
     });
 
+    it("Displays an empty state if there is no rows", async () => {
+        const rows = [] as Row[];
+        const wrapper = shallowMount(GanttBoard, {
+            propsData: {
+                visible_natures: [],
+            },
+            mocks: {
+                $store: createStoreMock({
+                    state: getRootState(),
+                    getters: {
+                        "tasks/rows": rows,
+                        "tasks/tasks": [],
+                        "iterations/lvl1_iterations_to_display": [],
+                        "iterations/lvl2_iterations_to_display": [],
+                        "timeperiod/time_period": new TimePeriodMonth(
+                            new Date("2020-03-31T22:00:00.000Z"),
+                            new Date("2020-04-31T22:00:00.000Z"),
+                            "en-US"
+                        ),
+                    },
+                }),
+            },
+        });
+
+        expect(wrapper.findComponent(NoDataToShowEmptyState).exists()).toBe(true);
+
+        rows.push({ task: { id: 1, dependencies: {} } as Task });
+        await wrapper.vm.$nextTick();
+
+        expect(wrapper.findComponent(NoDataToShowEmptyState).exists()).toBe(false);
+    });
+
     it("Displays no iterations if there isn't any", () => {
         const wrapper = shallowMount(GanttBoard, {
             propsData: {
@@ -79,16 +112,22 @@ describe("GanttBoard", () => {
                 $store: createStoreMock({
                     state: getRootState(),
                     getters: {
-                        "tasks/rows": [],
+                        "tasks/rows": [{ task: { id: 1, dependencies: {} } as Task }],
                         "tasks/tasks": [],
                         "iterations/lvl1_iterations_to_display": [],
                         "iterations/lvl2_iterations_to_display": [],
+                        "timeperiod/time_period": new TimePeriodMonth(
+                            new Date("2020-03-31T22:00:00.000Z"),
+                            new Date("2020-04-31T22:00:00.000Z"),
+                            "en-US"
+                        ),
                     },
                 }),
             },
         });
 
         expect(wrapper.findAllComponents(IterationsRibbon).length).toBe(0);
+        expect(wrapper.findComponent(NoDataToShowEmptyState).exists()).toBe(false);
     });
 
     it("Displays level 1 iterations", () => {
@@ -100,10 +139,15 @@ describe("GanttBoard", () => {
                 $store: createStoreMock({
                     state: getRootState(),
                     getters: {
-                        "tasks/rows": [],
+                        "tasks/rows": [{ task: { id: 1, dependencies: {} } as Task }],
                         "tasks/tasks": [],
                         "iterations/lvl1_iterations_to_display": [{ id: 1 } as Iteration],
                         "iterations/lvl2_iterations_to_display": [],
+                        "timeperiod/time_period": new TimePeriodMonth(
+                            new Date("2020-03-31T22:00:00.000Z"),
+                            new Date("2020-04-31T22:00:00.000Z"),
+                            "en-US"
+                        ),
                     },
                 }),
             },
@@ -121,10 +165,15 @@ describe("GanttBoard", () => {
                 $store: createStoreMock({
                     state: getRootState(),
                     getters: {
-                        "tasks/rows": [],
+                        "tasks/rows": [{ task: { id: 1, dependencies: {} } as Task }],
                         "tasks/tasks": [],
                         "iterations/lvl1_iterations_to_display": [],
                         "iterations/lvl2_iterations_to_display": [{ id: 1 } as Iteration],
+                        "timeperiod/time_period": new TimePeriodMonth(
+                            new Date("2020-03-31T22:00:00.000Z"),
+                            new Date("2020-04-31T22:00:00.000Z"),
+                            "en-US"
+                        ),
                     },
                 }),
             },
@@ -142,10 +191,15 @@ describe("GanttBoard", () => {
                 $store: createStoreMock({
                     state: getRootState(),
                     getters: {
-                        "tasks/rows": [],
+                        "tasks/rows": [{ task: { id: 1, dependencies: {} } as Task }],
                         "tasks/tasks": [],
                         "iterations/lvl1_iterations_to_display": [{ id: 1 } as Iteration],
                         "iterations/lvl2_iterations_to_display": [{ id: 2 } as Iteration],
+                        "timeperiod/time_period": new TimePeriodMonth(
+                            new Date("2020-03-31T22:00:00.000Z"),
+                            new Date("2020-04-31T22:00:00.000Z"),
+                            "en-US"
+                        ),
                     },
                 }),
             },
@@ -445,6 +499,59 @@ describe("GanttBoard", () => {
         const time_period = wrapper.findComponent(TimePeriodHeader);
         expect(time_period.exists()).toBe(true);
         expect(observe).toHaveBeenCalledWith(time_period.element);
+    });
+
+    it(`Given there are only closed artifacts displayed in the gantt chart
+        When the user wants to show only open artifacts
+        Then the gantt chart does not display anymore the timeperiod, but an empty state instead,
+        And if the user wats to show back closed artifacts
+        Then the timperiod is displayed again
+        And the widget should make sure that it observes its resize`, async () => {
+        const observe = jest.fn();
+        const mockResizeObserver = jest.fn();
+        mockResizeObserver.mockReturnValue({
+            observe,
+        });
+        window.ResizeObserver = mockResizeObserver;
+
+        const rows = [{ task: { id: 1, dependencies: {} } as Task }] as Row[];
+        const wrapper = shallowMount(GanttBoard, {
+            propsData: {
+                visible_natures: [],
+            },
+            mocks: {
+                $store: createStoreMock({
+                    state: getRootState(),
+                    getters: {
+                        "tasks/rows": rows,
+                        "tasks/tasks": [],
+                        "iterations/lvl1_iterations_to_display": [],
+                        "iterations/lvl2_iterations_to_display": [],
+                        "timeperiod/time_period": new TimePeriodMonth(
+                            new Date("2020-03-31T22:00:00.000Z"),
+                            new Date("2020-04-31T22:00:00.000Z"),
+                            "en-US"
+                        ),
+                    },
+                }),
+            },
+        });
+
+        const time_period = wrapper.findComponent(TimePeriodHeader);
+        expect(time_period.exists()).toBe(true);
+        expect(wrapper.findComponent(NoDataToShowEmptyState).exists()).toBe(false);
+
+        // User hide closed elements
+        rows.pop();
+        await wrapper.vm.$nextTick();
+        expect(wrapper.findComponent(NoDataToShowEmptyState).exists()).toBe(true);
+
+        // User show closed elements
+        rows.push({ task: { id: 1, dependencies: {} } as Task });
+        await wrapper.vm.$nextTick();
+        expect(wrapper.findComponent(NoDataToShowEmptyState).exists()).toBe(false);
+
+        expect(observe).toHaveBeenNthCalledWith(2, time_period.element);
     });
 
     it("Fills the empty space of additional months if the user resize the viewport", async () => {

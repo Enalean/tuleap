@@ -45,6 +45,9 @@ msgstr "Ok, j'ai compris"
 msgid "Oops, something went wrong."
 msgstr "Oups, quelque chose ne va pas."
 
+msgid "Please come back later."
+msgstr "Veuillez revenir plus tard."
+
 msgid "Progress"
 msgstr "Progression"
 
@@ -63,8 +66,8 @@ msgstr "Afficher les éléments fermés"
 msgid "Start date"
 msgstr "Date de début"
 
-msgid "There is no data to show. Please come back later."
-msgstr "Il n'y a pas de données à afficher. Veuillez revenir plus tard."
+msgid "There is no data to show."
+msgstr "Il n'y a pas de données à afficher."
 
 msgid "Timescale"
 msgstr "Échelle"

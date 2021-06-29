@@ -41,16 +41,20 @@
                 fill="var(--tlp-illustration-yellow)"
             />
         </svg>
-        <p class="roadmap-empty-state-text" v-translate>
-            There is no data to show. Please come back later.
+        <p class="roadmap-empty-state-text">
+            <translate>There is no data to show.</translate>
+            <translate v-if="should_invite_to_come_back">Please come back later.</translate>
         </p>
     </div>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
-import { Component } from "vue-property-decorator";
+import { Component, Prop } from "vue-property-decorator";
 
 @Component
-export default class NoDataToShowEmptyState extends Vue {}
+export default class NoDataToShowEmptyState extends Vue {
+    @Prop({ required: false, default: true })
+    private readonly should_invite_to_come_back!: boolean;
+}
 </script>
