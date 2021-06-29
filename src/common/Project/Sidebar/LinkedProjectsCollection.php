@@ -68,7 +68,12 @@ final class LinkedProjectsCollection
 
     public function merge(LinkedProjectsCollection $other_collection): self
     {
-        return new self(array_merge($this->projects, $other_collection->projects));
+        $collection = array_merge($this->projects, $other_collection->projects);
+        usort($collection, function (LinkedProject $a, LinkedProject $b) {
+            return strnatcasecmp($a->public_name, $b->public_name);
+        });
+
+        return new self($collection);
     }
 
     /**
