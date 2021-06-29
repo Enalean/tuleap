@@ -45,7 +45,7 @@
 </template>
 <script>
 import { mapGetters } from "vuex";
-import store from "../store/index.js";
+import store from "../store/index";
 import GitRepositoryCreate from "./GitRepositoryCreate.vue";
 import FilterEmptyState from "./FilterEmptyState.vue";
 import GitBreadcrumbs from "./GitBreadcrumbs.vue";

@@ -1,4 +1,4 @@
-/*
+/**
  * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -24,29 +24,20 @@ import {
     REPOSITORIES_SORTED_BY_PATH,
     ANONYMOUS_USER_ID,
 } from "../constants";
-import { setDisplayMode, getAsyncRepositoryList, changeRepositories } from "./actions.js";
+import { setDisplayMode, getAsyncRepositoryList, changeRepositories } from "./actions";
 import * as repository_list_presenter from "../repository-list-presenter";
 import * as rest_querier from "../api/rest-querier";
+import type { ActionContext } from "vuex";
+import type { State } from "../type";
 
 describe("Store actions", () => {
     describe("setDisplayMode", () => {
-        let context,
-            setRepositoriesSortedByPathUserPreference,
-            deleteRepositoriesSortedByPathUserPreference;
+        let context: ActionContext<State, State>;
 
         beforeEach(() => {
             context = {
                 commit: jest.fn(),
-            };
-
-            setRepositoriesSortedByPathUserPreference = jest.spyOn(
-                rest_querier,
-                "setRepositoriesSortedByPathUserPreference"
-            );
-            deleteRepositoriesSortedByPathUserPreference = jest.spyOn(
-                rest_querier,
-                "deleteRepositoriesSortedByPathUserPreference"
-            );
+            } as unknown as ActionContext<State, State>;
         });
 
         it("commits the new mode", async () => {
@@ -68,6 +59,15 @@ describe("Store actions", () => {
 
             await setDisplayMode(context, new_mode);
 
+            const setRepositoriesSortedByPathUserPreference = jest.spyOn(
+                rest_querier,
+                "setRepositoriesSortedByPathUserPreference"
+            );
+            const deleteRepositoriesSortedByPathUserPreference = jest.spyOn(
+                rest_querier,
+                "deleteRepositoriesSortedByPathUserPreference"
+            );
+
             expect(setRepositoriesSortedByPathUserPreference).not.toHaveBeenCalled();
             expect(deleteRepositoriesSortedByPathUserPreference).not.toHaveBeenCalled();
         });
@@ -75,6 +75,15 @@ describe("Store actions", () => {
         it("saves user preferences if by path", async () => {
             const getUserId = jest.spyOn(repository_list_presenter, "getUserId");
             getUserId.mockReturnValue(101);
+
+            const setRepositoriesSortedByPathUserPreference = jest.spyOn(
+                rest_querier,
+                "setRepositoriesSortedByPathUserPreference"
+            );
+            const deleteRepositoriesSortedByPathUserPreference = jest.spyOn(
+                rest_querier,
+                "deleteRepositoriesSortedByPathUserPreference"
+            );
 
             mockFetchSuccess(setRepositoriesSortedByPathUserPreference);
 
@@ -90,6 +99,15 @@ describe("Store actions", () => {
             const getUserId = jest.spyOn(repository_list_presenter, "getUserId");
             getUserId.mockReturnValue(101);
 
+            const setRepositoriesSortedByPathUserPreference = jest.spyOn(
+                rest_querier,
+                "setRepositoriesSortedByPathUserPreference"
+            );
+            const deleteRepositoriesSortedByPathUserPreference = jest.spyOn(
+                rest_querier,
+                "deleteRepositoriesSortedByPathUserPreference"
+            );
+
             mockFetchSuccess(deleteRepositoriesSortedByPathUserPreference);
 
             const new_mode = REPOSITORIES_SORTED_BY_LAST_UPDATE;
@@ -104,7 +122,9 @@ describe("Store actions", () => {
     describe("changeRepositories", () => {
         const current_project_id = 100;
 
-        let getRepositoryList, getForkedRepositoryList, getProjectId;
+        let getRepositoryList: jest.SpyInstance,
+            getForkedRepositoryList: jest.SpyInstance,
+            getProjectId: jest.SpyInstance;
 
         beforeEach(() => {
             getRepositoryList = jest.spyOn(rest_querier, "getRepositoryList");
@@ -121,7 +141,7 @@ describe("Store actions", () => {
                 getters: {
                     areRepositoriesAlreadyLoadedForCurrentOwner: true,
                 },
-            };
+            } as unknown as ActionContext<State, State>;
 
             const new_owner_id = 101;
 
@@ -141,7 +161,7 @@ describe("Store actions", () => {
                     areRepositoriesAlreadyLoadedForCurrentOwner: false,
                     isFolderDisplayMode: false,
                 },
-            };
+            } as unknown as ActionContext<State, State>;
 
             mockFetchSuccess(getRepositoryList);
 
@@ -169,7 +189,7 @@ describe("Store actions", () => {
                 state: {
                     selected_owner_id,
                 },
-            };
+            } as unknown as ActionContext<State, State>;
 
             mockFetchSuccess(getForkedRepositoryList);
 
@@ -183,7 +203,7 @@ describe("Store actions", () => {
             expect(getRepositoryList).not.toHaveBeenCalled();
             expect(getForkedRepositoryList).toHaveBeenCalledWith(
                 current_project_id,
-                selected_owner_id,
+                String(selected_owner_id),
                 "push_date",
                 expect.any(Function)
             );
@@ -198,7 +218,7 @@ describe("Store actions", () => {
                     isGitlabUsed: true,
                 },
                 dispatch: jest.fn(),
-            };
+            } as unknown as ActionContext<State, State>;
             mockFetchSuccess(getRepositoryList);
 
             await changeRepositories(context, PROJECT_KEY);
@@ -222,25 +242,25 @@ describe("Store actions", () => {
     });
 
     describe("getAsyncRepositoryList", () => {
-        let commit, getRepositories;
-        beforeEach(() => {
-            commit = jest.fn();
-            getRepositories = jest.fn();
-        });
-
         it("When I want to load the project repositories, Then it should fetch them asynchronously and put them in the store.", async () => {
+            const context = { commit: jest.fn() } as unknown as ActionContext<State, State>;
+            const getRepositories = jest.fn();
+
             const repositories = [{ name: "VueX" }];
             getRepositories.mockImplementation((callback) => callback(repositories));
 
-            await getAsyncRepositoryList(commit, getRepositories);
+            await getAsyncRepositoryList(context, getRepositories);
 
-            expect(commit).toHaveBeenCalledWith("setIsLoadingInitial", true);
-            expect(commit).toHaveBeenCalledWith("setIsLoadingNext", true);
-            expect(commit).toHaveBeenCalledWith("pushRepositoriesForCurrentOwner", repositories);
+            expect(context.commit).toHaveBeenCalledWith("setIsLoadingInitial", true);
+            expect(context.commit).toHaveBeenCalledWith("setIsLoadingNext", true);
+            expect(context.commit).toHaveBeenCalledWith(
+                "pushRepositoriesForCurrentOwner",
+                repositories
+            );
 
-            expect(commit).toHaveBeenCalledWith("setIsLoadingInitial", false);
-            expect(commit).toHaveBeenCalledWith("setIsLoadingNext", false);
-            expect(commit).toHaveBeenCalledWith("setIsFirstLoadDone", true);
+            expect(context.commit).toHaveBeenCalledWith("setIsLoadingInitial", false);
+            expect(context.commit).toHaveBeenCalledWith("setIsLoadingNext", false);
+            expect(context.commit).toHaveBeenCalledWith("setIsFirstLoadDone", true);
         });
     });
 });

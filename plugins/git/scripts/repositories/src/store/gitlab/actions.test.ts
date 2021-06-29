@@ -28,16 +28,21 @@ import {
 } from "./actions";
 import type { ActionContext } from "plugins/document/node_modules/vuex/types";
 import type { GitlabState } from "./state";
-import type { GitLabCredentials, GitLabDataWithTokenPayload, GitLabRepository } from "../../type";
+import type {
+    GitLabCredentials,
+    GitLabDataWithTokenPayload,
+    GitLabRepository,
+    State,
+} from "../../type";
 import type { Modal } from "tlp";
 
 describe("action", () => {
     describe("getGitlabProjectList", () => {
-        let context: ActionContext<GitlabState, GitlabState>;
+        let context: ActionContext<GitlabState, State>;
         beforeEach(() => {
             context = {
                 commit: jest.fn(),
-            } as unknown as ActionContext<GitlabState, GitlabState>;
+            } as unknown as ActionContext<GitlabState, State>;
         });
 
         it("When api is called, Then url is formatted", async () => {
@@ -125,11 +130,11 @@ describe("action", () => {
     });
 
     describe("getGitlabRepositoryFromId", () => {
-        let context: ActionContext<GitlabState, GitlabState>;
+        let context: ActionContext<GitlabState, State>;
         beforeEach(() => {
             context = {
                 commit: jest.fn(),
-            } as unknown as ActionContext<GitlabState, GitlabState>;
+            } as unknown as ActionContext<GitlabState, State>;
         });
 
         it("When api is called, Then url is formatted", async () => {
@@ -188,10 +193,7 @@ describe("action", () => {
     });
 
     describe("updateBotApiTokenGitlab", () => {
-        const context: ActionContext<GitlabState, GitlabState> = {} as ActionContext<
-            GitlabState,
-            GitlabState
-        >;
+        const context: ActionContext<GitlabState, State> = {} as ActionContext<GitlabState, State>;
 
         it("When api is called, Then url is formatted", async () => {
             const patchGitlabRepository = jest.spyOn(gitlab_querier, "patchGitlabRepository");
@@ -248,10 +250,7 @@ describe("action", () => {
     });
 
     describe("showEditAccessTokenGitlabRepositoryModal", () => {
-        let context: ActionContext<GitlabState, GitlabState> = {} as ActionContext<
-            GitlabState,
-            GitlabState
-        >;
+        let context: ActionContext<GitlabState, State> = {} as ActionContext<GitlabState, State>;
         beforeEach(() => {
             const modal: Modal = { toggle: jest.fn() } as unknown as Modal;
             context = {
@@ -259,7 +258,7 @@ describe("action", () => {
                 state: {
                     edit_access_token_gitlab_repository_modal: modal,
                 } as GitlabState,
-            } as unknown as ActionContext<GitlabState, GitlabState>;
+            } as unknown as ActionContext<GitlabState, State>;
         });
 
         const repository = { id: 5 } as GitLabRepository;
@@ -280,10 +279,7 @@ describe("action", () => {
     });
 
     describe("showArtifactClosureModal", () => {
-        let context: ActionContext<GitlabState, GitlabState> = {} as ActionContext<
-            GitlabState,
-            GitlabState
-        >;
+        let context: ActionContext<GitlabState, State> = {} as ActionContext<GitlabState, State>;
         beforeEach(() => {
             const modal: Modal = { toggle: jest.fn() } as unknown as Modal;
             context = {
@@ -291,7 +287,7 @@ describe("action", () => {
                 state: {
                     artifact_closure_modal: modal,
                 } as GitlabState,
-            } as unknown as ActionContext<GitlabState, GitlabState>;
+            } as unknown as ActionContext<GitlabState, State>;
         });
 
         const repository = { id: 5 } as GitLabRepository;
@@ -307,10 +303,7 @@ describe("action", () => {
     });
 
     describe("showCreateBranchPrefixModal", () => {
-        let context: ActionContext<GitlabState, GitlabState> = {} as ActionContext<
-            GitlabState,
-            GitlabState
-        >;
+        let context: ActionContext<GitlabState, State> = {} as ActionContext<GitlabState, State>;
         beforeEach(() => {
             const modal: Modal = { toggle: jest.fn() } as unknown as Modal;
             context = {
@@ -318,7 +311,7 @@ describe("action", () => {
                 state: {
                     create_branch_prefix_modal: modal,
                 } as GitlabState,
-            } as unknown as ActionContext<GitlabState, GitlabState>;
+            } as unknown as ActionContext<GitlabState, State>;
         });
 
         const repository = { id: 5 } as GitLabRepository;
