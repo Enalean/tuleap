@@ -97,10 +97,10 @@ export function handleFocusFirstSwimlane(
     return { preventDefault: !is_first_swimlane };
 }
 
-export function focusSwimlaneFirstCard(event: KeyboardEvent): void {
+export function focusSwimlaneFirstCard(event: KeyboardEvent): ShortcutHandleOptions {
     const swimlane = event.target;
     if (!(swimlane instanceof HTMLElement) || swimlane.dataset.navigation !== SWIMLANE) {
-        return;
+        return { preventDefault: false };
     }
 
     const first_swimlane_card = getFirstElement(swimlane, CARD);
@@ -109,4 +109,5 @@ export function focusSwimlaneFirstCard(event: KeyboardEvent): void {
     }
 
     first_swimlane_card.focus();
+    return { preventDefault: true };
 }
