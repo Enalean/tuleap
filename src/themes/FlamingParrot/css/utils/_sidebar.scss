@@ -393,17 +393,16 @@
     margin-left: 14px;
 }
 
-.project-sidebar-linked-projects-popover-content {
-    background: var(--tlp-dark-color);
-}
+#project-sidebar-project-flags-popover,
+#project-sidebar-linked-projects-popover {
+    > .tlp-popover-body {
+        border-radius: 4px;
+        background: var(--tlp-dark-color);
+        color: var(--tlp-dimmed-color-on-dark-background);
+    }
 
-#project-sidebar-linked-projects-popover > .tlp-popover-arrow.project-sidebar-linked-projects-popover-arrow {
-    border-right-color: var(--tlp-dark-color-darker-05);
-    border-bottom-color: transparent;
-    background: var(--tlp-dark-color-darker-20);
-
-    &::before {
-        border-bottom-color: var(--tlp-dark-color-darker-05);
+    > .tlp-popover-arrow {
+        background: var(--tlp-dark-color-darker-20);
     }
 }
 
@@ -487,6 +486,15 @@ body.sidebar-collapsed {
         display: flex;
     }
 
+    .project-sidebar-project-flags {
+        justify-content: center;
+    }
+
+    .project-sidebar-project-flags-labels {
+        margin: 0;
+        padding: var(--tlp-small-spacing) 0;
+    }
+
     .project-sidebar-linked-projects-list,
     .project-sidebar-linked-projects-label,
     .project-sidebar-privacy-badge,
@@ -494,7 +502,7 @@ body.sidebar-collapsed {
     .project-title-spacer,
     .project-sidebar-tools-section-label,
     .project-sidebar-banner-button-label,
-    .project-sidebar-project-flags {
+    .project-sidebar-project-flags-label {
         display: none;
     }
 
@@ -514,5 +522,41 @@ body.sidebar-collapsed {
 
     &::-webkit-scrollbar-thumb {
         background-color: var(--tlp-dark-color-lighter-10);
+    }
+}
+
+#project-sidebar-project-flags-popover {
+    > .tlp-popover-body {
+        .current-project-nav-flag-popover-content-title {
+            margin: 0 0 var(--tlp-small-spacing);
+            font-size: 1.125rem;
+            font-weight: 600;
+            line-height: 1.625rem;
+
+            &:last-child {
+                margin: 0;
+            }
+        }
+
+        > .current-project-nav-flag-popover-flag {
+            position: relative;
+            margin: 0 0 var(--tlp-medium-spacing);
+            padding: 0 0 0 20px; // magic value independant of density so that it looks nice with svg flag
+
+            &:last-child {
+                margin: 0;
+            }
+
+            > .tuleap-svg-project-shield {
+                position: absolute;
+                top: 3px;
+                left: 0;
+                width: 12px;
+
+                > path {
+                    fill: var(--tlp-typo-default-text-color-on-dark-background);
+                }
+            }
+        }
     }
 }

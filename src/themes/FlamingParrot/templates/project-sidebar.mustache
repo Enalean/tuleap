@@ -32,9 +32,9 @@
             {{/ has_project_banner }}
             {{# has_project_flags }}
                 <div class="project-sidebar-project-flags"
-                      title="{{# project_flags }}{{ label }}{{/ project_flags }}"
-                      data-title="{{# ngettext }}Project flag | Project flags | {{ nb_project_flags }}{{/ngettext}}"
-                      data-project-flags="{{ json_encoded_project_flags }}"
+                     id="project-sidebar-project-flags"
+                     data-title="{{# ngettext }}Project flag | Project flags | {{ nb_project_flags }}{{/ngettext}}"
+                     data-project-flags="{{ json_encoded_project_flags }}"
                 >
                     <div class="project-sidebar-project-flags-icon">
                         {{# glyph }}project-shield{{/ glyph }}
@@ -45,6 +45,24 @@
                         {{/ project_flags }}
                     </span>
                 </div>
+                <section class="tlp-popover project-sidebar-project-flags-popover" id="project-sidebar-project-flags-popover">
+                    <div class="tlp-popover-arrow"></div>
+                    <div class="tlp-popover-body">
+                        {{# project_flags }}
+                            <div class="current-project-nav-flag-popover-flag">
+                                {{# glyph }}project-shield{{/ glyph }}
+                                <h2 class="current-project-nav-flag-popover-content-title">
+                                    {{ label }}
+                                </h2>
+                                {{# description }}
+                                    <p class="current-project-nav-flag-popover-content-description">
+                                        {{ description }}
+                                    </p>
+                                {{/ description }}
+                            </div>
+                        {{/ project_flags }}
+                    </div>
+                </section>
             {{/ has_project_flags }}
             {{# linked_projects }}
                 <div class="project-sidebar-linked-projects" id="project-sidebar-linked-projects">
@@ -67,8 +85,8 @@
                     </ul>
                 </div>
                 <section class="tlp-popover project-sidebar-linked-projects-popover" id="project-sidebar-linked-projects-popover">
-                    <div class="tlp-popover-arrow project-sidebar-linked-projects-popover-arrow"></div>
-                    <div class="tlp-popover-body project-sidebar-linked-projects-popover-content">
+                    <div class="tlp-popover-arrow"></div>
+                    <div class="tlp-popover-body">
                             <span class="project-sidebar-linked-projects-title">
                             {{# is_in_children_projects_context }}<i class="fas fa-fw fa-tlp-project-boxes project-sidebar-linked-projects-icon" aria-hidden="true"></i>{{/ is_in_children_projects_context }}
                             {{^ is_in_children_projects_context }}<i class="fas fa-fw fa-level-up-alt fa-flip-horizontal project-sidebar-linked-projects-icon" aria-hidden="true"></i>{{/ is_in_children_projects_context }}
