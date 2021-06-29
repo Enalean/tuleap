@@ -154,7 +154,7 @@ describe("FolderCellTitle", () => {
             ]);
             expect(store.dispatch).toHaveBeenCalledWith(
                 "preferencies/setUserPreferenciesForFolder",
-                [item.id, false]
+                { folder_id: item.id, should_be_closed: false }
             );
         });
 
@@ -176,7 +176,7 @@ describe("FolderCellTitle", () => {
             ]);
             expect(store.dispatch).toHaveBeenCalledWith(
                 "preferencies/setUserPreferenciesForFolder",
-                [item.id, true]
+                { folder_id: item.id, should_be_closed: true }
             );
         });
 
@@ -251,7 +251,7 @@ describe("FolderCellTitle", () => {
             ]);
             expect(store.dispatch).toHaveBeenCalledWith(
                 "preferencies/setUserPreferenciesForFolder",
-                [item.id, true]
+                { folder_id: item.id, should_be_closed: true }
             );
         });
     });

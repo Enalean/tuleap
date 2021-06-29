@@ -24,9 +24,14 @@ import {
     setUserPreferenciesForFolder,
     setUserPreferenciesForUI,
 } from "./preferencies-actions";
+import type { UserPreferenciesFolderSetPayload } from "./preferencies-actions";
+import type { Embedded, RootState } from "../../type";
+import type { PreferenciesState } from "./preferencies-default-state";
+import type { ActionContext } from "vuex";
 
 describe("setUserPreferenciesForFolder", () => {
-    let patchUserPreferenciesForFolderInProject, deleteUserPreferenciesForFolderInProject;
+    let patchUserPreferenciesForFolderInProject: jest.SpyInstance;
+    let deleteUserPreferenciesForFolderInProject: jest.SpyInstance;
 
     beforeEach(() => {
         patchUserPreferenciesForFolderInProject = jest
@@ -40,13 +45,15 @@ describe("setUserPreferenciesForFolder", () => {
     it("sets the user preference for the state of a given folder if its new state is 'open' (expanded)", async () => {
         const folder_id = 30;
         const should_be_closed = false;
-        const context = {
+        const context: ActionContext<PreferenciesState, RootState> = {
             rootState: {
                 configuration: { user_id: 102, project_id: 110 },
             },
-        };
+        } as unknown as ActionContext<PreferenciesState, RootState>;
 
-        await setUserPreferenciesForFolder(context, [folder_id, should_be_closed]);
+        const payload: UserPreferenciesFolderSetPayload = { folder_id, should_be_closed };
+
+        await setUserPreferenciesForFolder(context, payload);
 
         expect(patchUserPreferenciesForFolderInProject).toHaveBeenCalled();
         expect(deleteUserPreferenciesForFolderInProject).not.toHaveBeenCalled();
@@ -55,13 +62,14 @@ describe("setUserPreferenciesForFolder", () => {
     it("deletes the user preference for the state of a given folder if its new state is 'closed' (collapsed)", async () => {
         const folder_id = 30;
         const should_be_closed = true;
-        const context = {
+        const context: ActionContext<PreferenciesState, RootState> = {
             rootState: {
                 configuration: { user_id: 102, project_id: 110 },
             },
-        };
+        } as unknown as ActionContext<PreferenciesState, RootState>;
 
-        await setUserPreferenciesForFolder(context, [folder_id, should_be_closed]);
+        const payload: UserPreferenciesFolderSetPayload = { folder_id, should_be_closed };
+        await setUserPreferenciesForFolder(context, payload);
 
         expect(patchUserPreferenciesForFolderInProject).not.toHaveBeenCalled();
         expect(deleteUserPreferenciesForFolderInProject).toHaveBeenCalled();
@@ -70,11 +78,11 @@ describe("setUserPreferenciesForFolder", () => {
 
 describe("setUserPreferenciesForUI", () => {
     it("sets the user preference to old ui", async () => {
-        const context = {
+        const context: ActionContext<PreferenciesState, RootState> = {
             rootState: {
                 configuration: { user_id: 102, project_id: 110 },
             },
-        };
+        } as unknown as ActionContext<PreferenciesState, RootState>;
 
         const addUserLegacyUIPreferency = jest
             .spyOn(rest_querier, "addUserLegacyUIPreferency")
@@ -87,7 +95,7 @@ describe("setUserPreferenciesForUI", () => {
 });
 
 describe("displayEmbeddedInLargeMode", () => {
-    let context;
+    let context: ActionContext<PreferenciesState, RootState>;
 
     beforeEach(() => {
         context = {
@@ -95,7 +103,7 @@ describe("displayEmbeddedInLargeMode", () => {
                 configuration: { user_id: 102, project_id: 110 },
             },
             commit: jest.fn(),
-        };
+        } as unknown as ActionContext<PreferenciesState, RootState>;
 
         jest.spyOn(rest_querier, "removeUserPreferenceForEmbeddedDisplay").mockReturnValue(
             Promise.resolve()
@@ -106,7 +114,7 @@ describe("displayEmbeddedInLargeMode", () => {
         const item = {
             id: 123,
             title: "My embedded",
-        };
+        } as Embedded;
 
         await displayEmbeddedInLargeMode(context, item);
 
@@ -115,7 +123,7 @@ describe("displayEmbeddedInLargeMode", () => {
 });
 
 describe("displayEmbeddedInNarrowMode", () => {
-    let context;
+    let context: ActionContext<PreferenciesState, RootState>;
 
     beforeEach(() => {
         context = {
@@ -123,7 +131,7 @@ describe("displayEmbeddedInNarrowMode", () => {
                 configuration: { user_id: 102, project_id: 110 },
             },
             commit: jest.fn(),
-        };
+        } as unknown as ActionContext<PreferenciesState, RootState>;
 
         jest.spyOn(rest_querier, "setNarrowModeForEmbeddedDisplay").mockReturnValue(
             Promise.resolve()
@@ -134,7 +142,7 @@ describe("displayEmbeddedInNarrowMode", () => {
         const item = {
             id: 123,
             title: "My embedded",
-        };
+        } as Embedded;
 
         await displayEmbeddedInNarrowMode(context, item);
 
