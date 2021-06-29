@@ -205,6 +205,32 @@ final class ReportCriteriaDaoTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertEquals($expected, $duplicated_data);
     }
 
+    public function testItDuplicatesDateValues(): void
+    {
+        $from_report_id = 10;
+        $to_report_id   = 20;
+        $from_field_id  = 777;
+        $to_field_id    = 888;
+        $rank           = 1;
+
+        $field_mapping[] = [
+            'values' => [],
+            'from' => $from_field_id,
+            'to' => $to_field_id
+        ];
+
+        $criteria_id = $this->create($from_report_id, $from_field_id, $rank, 0);
+        $this->insertDateValue($criteria_id, 0, 1624202493, ">");
+
+        $this->dao->duplicate($from_report_id, $to_report_id, $field_mapping);
+
+        $duplicated_data = $this->getNewReportCriteriaDateValues($to_field_id);
+        $expected        = [
+            ['from_date' => 0, 'to_date' => 1624202493, 'op' => '>'],
+        ];
+        $this->assertEquals($expected, $duplicated_data);
+    }
+
     private function create(int $report_id, int $field_id, int $rank, int $is_advanced): int
     {
         return $this->db->insertReturnId('tracker_report_criteria', [
@@ -255,6 +281,14 @@ final class ReportCriteriaDaoTest extends \Tuleap\Test\PHPUnit\TestCase
         ]);
     }
 
+    private function insertDateValue(int $criteria_id, int $from_date, int $to_date, string $op): void
+    {
+        $this->db->insert(
+            'tracker_report_criteria_date_value',
+            ['criteria_id' => $criteria_id, 'op' => $op, 'from_date' => $from_date, 'to_date' => $to_date]
+        );
+    }
+
     private function getNewReportCriteriaListValues(int $field_id): array
     {
         $sql = 'SELECT value FROM tracker_report_criteria AS criteria
@@ -291,6 +325,14 @@ final class ReportCriteriaDaoTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $sql = 'SELECT value FROM tracker_report_criteria AS criteria
                     INNER JOIN tracker_report_criteria_permissionsonartifact_value AS permissions_values ON criteria.id = permissions_values.criteria_id WHERE field_id = ?';
+
+        return $this->db->run($sql, $field_id);
+    }
+
+    private function getNewReportCriteriaDateValues(int $field_id): array
+    {
+        $sql = 'SELECT from_date, to_date, op FROM tracker_report_criteria AS criteria
+                    INNER JOIN tracker_report_criteria_date_value AS date_values ON criteria.id = date_values.criteria_id WHERE field_id = ?';
 
         return $this->db->run($sql, $field_id);
     }
