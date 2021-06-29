@@ -46,20 +46,20 @@ try {
 } catch (ExpiredTokenException $ex) {
     $GLOBALS['Response']->addFeedback(
         Feedback::ERROR,
-        $GLOBALS['Language']->getText('account_lostlogin', 'expired_token')
+        _('The confirmation key is expired, please renew if needed your request for the retrieval of your lost password')
     );
     $GLOBALS['Response']->redirect('/account/lostpw.php');
 } catch (Exception $ex) {
     exit_error(
         $GLOBALS['Language']->getText('include_exit', 'error'),
-        $GLOBALS['Language']->getText('account_lostlogin', 'invalid_hash')
+        _('Invalid confirmation hash.')
     );
 }
 
 if ($user->getUserPw() === null) {
     exit_error(
         $GLOBALS['Language']->getText('include_exit', 'error'),
-        $GLOBALS['Language']->getText('account_lostlogin', 'invalid_hash')
+        _('Invalid confirmation hash.')
     );
 }
 
@@ -83,16 +83,16 @@ if (
 
 $purifier = Codendi_HTMLPurifier::instance();
 
-$HTML->header(['title' => $Language->getText('account_lostlogin', 'title')]);
+$HTML->header(['title' => _('Lost Password')]);
 ?>
-<p><b><?php echo $Language->getText('account_lostlogin', 'title'); ?></b>
-<P><?php echo $Language->getText('account_lostlogin', 'message', [$purifier->purify($user->getRealName(), CODENDI_PURIFIER_CONVERT_HTML)]); ?>.
+<p><b><?php echo _('Lost Password'); ?></b>
+<P><?php echo sprintf(_('Welcome, %1$s. You may now change your lost password.'), $purifier->purify($user->getRealName(), CODENDI_PURIFIER_CONVERT_HTML)); ?>.
 
 <form action="lostlogin.php" method="post">
 <input type="hidden" value="<?php echo $purifier->purify($user->getUserName()) ?>" autocomplete="username">
-<p><?php echo $Language->getText('account_lostlogin', 'newpasswd'); ?>:
+<p><?php echo _('New Password'); ?>:
 <br><input type="password" name="form_pw" autocomplete="new-password">
-<p><?php echo $Language->getText('account_lostlogin', 'newpasswd2'); ?>:
+<p><?php echo _('New Password (repeat)'); ?>:
 <br><input type="password" name="form_pw2" autocomplete="new-password">
 <input type="hidden" name="confirm_hash" value="<?php echo $purifier->purify($confirm_hash); ?>">
 <p><input type="submit" name="Update" value="<?php echo $Language->getText('global', 'btn_update'); ?>">

@@ -67,30 +67,30 @@ function register_valid(bool $is_password_needed, $mail_confirm_code, array &$er
     $vRealName = new Valid_RealNameFormat('form_realname');
     $vRealName->required();
     if (! $request->valid($vRealName)) {
-        $GLOBALS['Response']->addFeedback('error', $Language->getText('account_register', 'err_realname'));
-        $errors['form_realname'] = $Language->getText('account_register', 'err_realname');
+        $GLOBALS['Response']->addFeedback('error', _('Real name contains illegal characters.'));
+        $errors['form_realname'] = _('Real name contains illegal characters.');
         return 0;
     }
 
     if ($is_password_needed && ! $request->existAndNonEmpty('form_pw')) {
-        $GLOBALS['Response']->addFeedback('error', $Language->getText('account_register', 'err_nopasswd'));
-        $errors['form_pw'] = $Language->getText('account_register', 'err_nopasswd');
+        $GLOBALS['Response']->addFeedback('error', _('You must supply a password.'));
+        $errors['form_pw'] = _('You must supply a password.');
         return 0;
     }
     $tz = $request->get('timezone');
     if (! is_valid_timezone($tz)) {
-        $GLOBALS['Response']->addFeedback('error', $Language->getText('account_register', 'err_notz'));
-        $errors['timezone'] = $Language->getText('account_register', 'err_notz');
+        $GLOBALS['Response']->addFeedback('error', _('You must supply a timezone.'));
+        $errors['timezone'] = _('You must supply a timezone.');
         return 0;
     }
     if (! $request->existAndNonEmpty('form_register_purpose') && (ForgeConfig::getInt(User_UserStatusManager::CONFIG_USER_REGISTRATION_APPROVAL) === 1 && $request->get('page') != "admin_creation")) {
-        $GLOBALS['Response']->addFeedback('error', $Language->getText('account_register', 'err_nopurpose'));
-        $errors['form_register_purpose'] = $Language->getText('account_register', 'err_nopurpose');
+        $GLOBALS['Response']->addFeedback('error', _('You must explain the purpose of your registration.'));
+        $errors['form_register_purpose'] = _('You must explain the purpose of your registration.');
         return 0;
     }
     if (! validate_email($request->get('form_email'))) {
-        $GLOBALS['Response']->addFeedback('error', $Language->getText('account_register', 'err_email'));
-        $errors['form_email'] = $Language->getText('account_register', 'err_email');
+        $GLOBALS['Response']->addFeedback('error', _('Invalid Email Address'));
+        $errors['form_email'] = _('Invalid Email Address');
         return 0;
     }
 
@@ -99,8 +99,8 @@ function register_valid(bool $is_password_needed, $mail_confirm_code, array &$er
         $password              = new ConcealedString((string) $request->get('form_pw'));
         $password_confirmation = new ConcealedString((string) $request->get('form_pw2'));
         if ($request->get('page') !== "admin_creation" && ! $password->isIdenticalTo($password_confirmation)) {
-            $GLOBALS['Response']->addFeedback('error', $Language->getText('account_register', 'err_passwd'));
-            $errors['form_pw'] = $Language->getText('account_register', 'err_passwd');
+            $GLOBALS['Response']->addFeedback('error', _('Passwords do not match.'));
+            $errors['form_pw'] = _('Passwords do not match.');
             return 0;
         }
 
@@ -116,8 +116,8 @@ function register_valid(bool $is_password_needed, $mail_confirm_code, array &$er
 
     $expiry_date = 0;
     if ($request->exist('form_expiry') && $request->get('form_expiry') != '' && ! preg_match("/[0-9]{4}-[0-9]{1,2}-[0-9]{1,2}/", $request->get('form_expiry'))) {
-        $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('account_register', 'data_not_parsed'));
-        $errors['form_expiry'] = $Language->getText('account_register', 'data_not_parsed');
+        $GLOBALS['Response']->addFeedback('error', _('       Sorry - Expiration Date entry could not be parsed. It must be in YYYY-MM-DD format.'));
+        $errors['form_expiry'] = _('       Sorry - Expiration Date entry could not be parsed. It must be in YYYY-MM-DD format.');
         return 0;
     }
     $vDate = new Valid_String();
@@ -323,7 +323,7 @@ if ($request->isPost() && $request->exist('Register')) {
                 }
             }
         }
-        $thanks    = $Language->getText('account_register', 'msg_thanks');
+        $thanks    = _('Thank you for using Tuleap');
         $is_thanks = true;
 
         if (ForgeConfig::getInt(User_UserStatusManager::CONFIG_USER_REGISTRATION_APPROVAL) === 0 || $admin_creation) {
@@ -338,38 +338,29 @@ if ($request->isPost() && $request->exist('Register')) {
                 $email_presenter = $presenter->createMailAccountPresenter($user_name, $mail_confirm_code, "user", (string) $logo_retriever->getLegacyUrl());
             }
 
-            $title = $Language->getText('account_register', 'title_confirm');
+            $title = _('Your account is created, </br>it now needs to be activated.');
 
             if ($admin_creation) {
-                $title            = $Language->getText('account_register', 'title_confirm_admin');
-                $content          = $Language->getText(
-                    'account_register',
-                    'msg_confirm_admin',
-                    [
-                        $hp->purify($request->get('form_realname')),
-                        ForgeConfig::get('sys_name'),
-                        $hp->purify($request->get('form_loginname')),
-                        $hp->purify($request->get('form_pw'))
-                    ]
-                );
+                $title            = _('The user account was created.');
+                $content          = sprintf(_('Please note the login <span class="confirmation-user">%3$s</span> and password <span class="confirmation-user">%4$s</span>'), $hp->purify($request->get('form_realname')), ForgeConfig::get('sys_name'), $hp->purify($request->get('form_loginname')), $hp->purify($request->get('form_pw')));
                 $thanks           = '';
                 $is_thanks        = false;
                 $redirect_url     = '/admin';
-                $redirect_content = $Language->getText('account_register', 'msg_redirect_admin');
+                $redirect_content = _('Go to the admin page');
                 $displayed_image  = false;
             } else {
-                $content          = $Language->getText('account_register', 'msg_confirm', [ForgeConfig::get('sys_name'), $user_name]);
+                $content          = _('To do this click the confirm button in the email. <i class="fa fa-envelope-o"></i>');
                 $redirect_url     = '/';
-                $redirect_content = $Language->getText('account_register', 'msg_redirect');
+                $redirect_content = _('Go to the home page');
             }
         } else {
             // Registration requires approval
             // inform the user that approval is required
             $href_approval    = HTTPRequest::instance()->getServerUrl() . '/admin/approve_pending_users.php?page=pending';
-            $title            = $Language->getText('account_register', 'title_approval');
-            $content          = $Language->getText('account_register', 'msg_approval', [ForgeConfig::get('sys_name'), $user_name, $href_approval]);
+            $title            = _('Your account has been created,</br> it must be approved by an administrator.');
+            $content          = _('Once approved click the confirm button in this email.<i class="fa fa-envelope-o"></i>');
             $redirect_url     = '/';
-            $redirect_content = $Language->getText('account_register', 'msg_redirect');
+            $redirect_content = _('Go to the home page');
             $presenter        = new MailPresenterFactory();
             $email_presenter  = $presenter->createMailAccountPresenter($user_name, $mail_confirm_code, "user", (string) $logo_retriever->getLegacyUrl());
         }
@@ -409,7 +400,7 @@ $GLOBALS['Response']->addJavascriptAsset(
 );
 $GLOBALS['Response']->includeFooterJavascriptFile('/scripts/register.js');
 $GLOBALS['Response']->includeFooterJavascriptFile('/scripts/tuleap/timezone.js');
-$GLOBALS['Response']->header(['title' => $Language->getText('account_register', 'title'), 'body_class' => $body_class]);
+$GLOBALS['Response']->header(['title' => _('Register'), 'body_class' => $body_class]);
 
 
 if (! $confirmation_register || ! isset($presenter, $template)) {

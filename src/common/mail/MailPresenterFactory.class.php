@@ -166,14 +166,16 @@ class MailPresenterFactory
 
         $presenter = new MailRegisterByAdminNotificationPresenter(
             $attributes_presenter["logo_url"],
-            $GLOBALS['Language']->getText('account_register', 'mail_approval_title'),
-            $GLOBALS['Language']->getText('account_register', 'mail_approval_section_one', [ForgeConfig::get('sys_name')], $attributes_presenter["login"]),
-            $GLOBALS['Language']->getText('account_register', 'mail_approval_section_two'),
-            $GLOBALS['Language']->getText('account_register', 'mail_thanks'),
-            $GLOBALS['Language']->getText('account_register', 'mail_signature', [ForgeConfig::get('sys_name')]),
+            _('Account creation!'),
+            sprintf(_('A new user has just registered on %1$s.
+
+User Name:'), ForgeConfig::get('sys_name'), $attributes_presenter["login"]),
+            _('Please click on the following URL to approve the registration:'),
+            _('Thanks!'),
+            sprintf(_('- The team at %1$s.'), ForgeConfig::get('sys_name')),
             $attributes_presenter["color_logo"],
             $redirect_url,
-            $GLOBALS['Language']->getText('account_register', 'mail_approval_redirect_button'),
+            _('Confirm the account creation'),
             $attributes_presenter["color_button"],
             $attributes_presenter["login"],
             "."

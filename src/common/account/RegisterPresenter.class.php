@@ -42,14 +42,14 @@ class Account_RegisterPresenter
     public function __construct(Account_RegisterPrefillValuesPresenter $prefill_values, $extra_plugin_field)
     {
         $this->prefill_values         = $prefill_values;
-        $this->login                  = $GLOBALS['Language']->getText('account_register', 'login');
-        $this->email                  = $GLOBALS['Language']->getText('account_register', 'email');
-        $this->email_tooltip          = $GLOBALS['Language']->getText('account_register', 'email_tooltip');
-        $this->realname               = $GLOBALS['Language']->getText('account_register', 'realname');
-        $this->siteupdate             = $GLOBALS['Language']->getText('account_register', 'siteupdate');
-        $this->purpose                = $GLOBALS['Language']->getText('account_register', 'purpose');
-        $this->purpose_directions     = $GLOBALS['Language']->getText('account_register', 'purpose_directions');
-        $this->new_password           = $GLOBALS['Language']->getText('account_change_pw', 'new_password');
+        $this->login                  = _('Login Name');
+        $this->email                  = _('Email');
+        $this->email_tooltip          = _('We will send an email at this address to confirm your account.');
+        $this->realname               = _('Full name');
+        $this->siteupdate             = _('Receive Email about Site Updates <span class="label-help">Very low traffic, includes security notices. Highly Recommended.</span>');
+        $this->purpose                = _('Purpose');
+        $this->purpose_directions     = _('Please explain why you are applying for registration on this site<br>');
+        $this->new_password           = _('Password');
         $this->timezone_selector      = new Account_TimezoneSelectorPresenter(
             $this->prefill_values->form_timezone->value
         );

@@ -53,7 +53,7 @@ echo '<h1>' . $Language->getText('admin_generic_user', 'title') . '</h1>
       <p>' . $Language->getText('admin_generic_user', 'help') . '</p>
       <p>' . $Language->getText('admin_generic_user', 'help_update', [GenericUserFactory::CONFIG_KEY_SUFFIX]) . '</p>
       <p>
-        <label><b>' . $Language->getText('account_register', 'realname') . '</b>:</label><br />
+        <label><b>' . _('Full name') . '</b>:</label><br />
         ' . $fake_generic_user->getRealName() . '
       </p>
       <p>

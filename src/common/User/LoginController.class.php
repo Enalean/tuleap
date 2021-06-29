@@ -18,6 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 class User_LoginController extends MVC2_Controller
 {
 
@@ -57,9 +58,9 @@ class User_LoginController extends MVC2_Controller
 
             $user_manager->removeConfirmHash($confirm_hash);
 
-            $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('account_verify', 'account_confirm'));
+            $GLOBALS['Response']->addFeedback('info', _('Your account has been successfully confirmed.'));
         } else {
-            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('account_verify', 'err_hash'));
+            $GLOBALS['Response']->addFeedback('error', _('Invalid confirmation hash.'));
         }
     }
 }

@@ -99,12 +99,12 @@ class User_LoginPresenter
 
     public function not_a_member()//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
-        return $GLOBALS['Language']->getText('account_login', 'not_a_member');
+        return _('Not a member yet?');
     }
 
     public function create_account_label()//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
-        return $GLOBALS['Language']->getText('account_login', 'create_account_label');
+        return _('Create an account');
     }
 
     public function need_help()//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
@@ -114,7 +114,7 @@ class User_LoginPresenter
 
     public function help_subject()//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
-        return $GLOBALS['Language']->getText('account_login', 'help_subject', [ForgeConfig::get('sys_name')]);
+        return sprintf(_('Unable to login under %1$s'), ForgeConfig::get('sys_name'));
     }
 
     public function account_login_page_title()//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
@@ -134,17 +134,17 @@ class User_LoginPresenter
 
     public function account_login_login_btn()//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
-        return $GLOBALS['Language']->getText('account_login', 'login_btn');
+        return _('Login');
     }
 
     public function account_login_lost_pw()//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
-        return $GLOBALS['Language']->getText('account_login', 'lost_pw');
+        return _('Oops, I forgot my password');
     }
 
     public function account_login_login_with_tuleap()//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
-        return $GLOBALS['Language']->getText('account_login', 'login_with_tuleap', [ForgeConfig::get('sys_name')]);
+        return _('Login');
     }
 
     public function getReturnTo()

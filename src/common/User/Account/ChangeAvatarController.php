@@ -69,7 +69,7 @@ class ChangeAvatarController implements DispatchableWithRequest
             }
             $user->setHasCustomAvatar(false);
             $this->user_manager->updateDb($user);
-            $layout->addFeedback(Feedback::INFO, $GLOBALS['Language']->getText('account_change_avatar', 'success'));
+            $layout->addFeedback(Feedback::INFO, _('Avatar changed!'));
         } elseif (isset($_FILES['avatar'])) {
             if ($_FILES['avatar']['error']) {
                 $GLOBALS['Response']->addFeedback(
@@ -81,7 +81,7 @@ class ChangeAvatarController implements DispatchableWithRequest
             try {
                 $this->user_avatar_saver->saveAvatar($user, $_FILES['avatar']['tmp_name']);
 
-                $layout->addFeedback(Feedback::INFO, $GLOBALS['Language']->getText('account_change_avatar', 'success'));
+                $layout->addFeedback(Feedback::INFO, _('Avatar changed!'));
             } catch (ImageResizeException $exception) {
                 $layout->addFeedback(Feedback::ERROR, $exception->getMessage());
             }

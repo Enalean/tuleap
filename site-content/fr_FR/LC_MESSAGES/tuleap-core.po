@@ -12,6 +12,13 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Generator: Poedit 2.4.3\n"
 
+msgid ""
+"       Sorry - Expiration Date entry could not be parsed. It must be in YYYY-"
+"MM-DD format."
+msgstr ""
+"\tDésolé, le format de la date du d'expiration est incorrect. Il doit suivre "
+"le format AAAA-MM-JJ."
+
 msgid " New user"
 msgstr " Nouvel utilisateur"
 
@@ -32,6 +39,10 @@ msgstr "Le label \"%s\" label exist déjà. Merci de choisir un autre nom."
 
 msgid "## Some notes"
 msgstr "## Du contenu en markdown"
+
+#, php-format
+msgid "%1$s Password Verification"
+msgstr "Vérification du mot de passe de %1$s"
 
 #, php-format
 msgid "%1$s message(s) deleted"
@@ -131,8 +142,15 @@ msgstr ""
 "référence ? Cela supprimera le modèle de référence (%s) de TOUS les projets "
 "de ce serveur. Êtes-vous SUR de vouloir continuer ?"
 
+#, php-format
+msgid "- The team at %1$s."
+msgstr "- L'équipe %1$s."
+
 msgid "-- None --"
 msgstr "-- Aucun --"
+
+msgid "."
+msgstr "."
 
 msgid "5 days ago"
 msgstr "il y a 5 jours"
@@ -144,6 +162,37 @@ msgid ""
 msgstr ""
 "<A HREF=\"%1$s\"><u>Connectez-vous en premier</u></A><span class=\"highlight"
 "\"> pour poster un message</span>"
+
+msgid ""
+"<B>Confirmation mailed</B><P>An email has been sent to the address you have "
+"on file. Follow the instructions in the email to change your account "
+"password."
+msgstr ""
+"<B>Demande de confirmation envoyée</B><P>Un message électronique vient "
+"d'être envoyé à l'adresse e-mail de votre compte utilisateur. Suivez les "
+"instructions incluses dans ce message pour changer votre mot de passe."
+
+msgid ""
+"<B>Lost your password?</B><P>Hey... losing your password is serious "
+"business. It compromises the security of your account, your projects, and "
+"this site.<P>Clicking on the button below will email a URL to the email "
+"address we have on file for you. In this URL is a 128-bit confirmation hash "
+"key for your account. Visiting the URL will allow you to change your "
+"password online and login."
+msgstr ""
+"<B>Mot de passe perdu ?</B><P>Hé... la perte d'un mot de passe est à prendre "
+"au sérieux. Cela peut compromettre la sécurité de votre compte, de vos "
+"projets et du site.<P>En cliquant sur le bouton ci-dessous, un message "
+"électronique comportant un lien (URL). Dans ce lien se trouve une clé de "
+"confirmation unique à 128 bits. En visitant ce lien vous serez en mesure de "
+"changer mot de passe puis de vous connecter."
+
+msgid ""
+"<em><strong>Remark:</strong> The account will be suspended when the date is "
+"reached. Leave blank if you don't want an expiration date.</em>"
+msgstr ""
+"<em><strong>Remarque&nbsp;:</strong> Une fois cette date passée, le compte "
+"sera suspendu.</em>"
 
 #, php-format
 msgid ""
@@ -221,6 +270,16 @@ msgstr ""
 "Merci d'utiliser %1$s.\n"
 "\n"
 " -- L'équipe %1$s"
+
+#, php-format
+msgid ""
+"A new user has just registered on %1$s.\n"
+"\n"
+"User Name:"
+msgstr ""
+"Un nouveau compte utilisateur vient juste d'être créé sur %1$s.\n"
+"\n"
+"Nom de l'utilisateur :"
 
 msgid ""
 "A non available service cannot be enabled. To enable this service, switch it "
@@ -350,6 +409,9 @@ msgstr ""
 "Le compte %s est restreint et le project n'autorise pas les utilisateurs "
 "restreints. L'utilisateur n'a pas été ajouté."
 
+msgid "Account creation!"
+msgstr "Création de compte !"
+
 msgid "Account information"
 msgstr "Informations personnelles"
 
@@ -361,6 +423,9 @@ msgstr "Statut du compte utilisateur"
 
 msgid "Actions"
 msgstr "Actions"
+
+msgid "Activate"
+msgstr "Activer le compte"
 
 msgid "Activate synchronized project membership management"
 msgstr "Activer la gestion synchronisée de l'appartenance au projet"
@@ -445,6 +510,9 @@ msgstr "Administrateurs"
 
 msgid "Agile Enterprise Planning - Full ALM"
 msgstr "Agile Enterprise Planning - ALM complet"
+
+msgid "All fields are mandatory."
+msgstr "Tous les champs marqués sont obligatoires."
 
 msgid "All groups"
 msgstr "Tous les groupes"
@@ -603,6 +671,9 @@ msgstr "Extraire automatiquement ce mot-clé ?"
 
 msgid "Available?"
 msgstr "Disponible ?"
+
+msgid "Avatar changed!"
+msgstr "Avatar changé !"
 
 msgid "Back"
 msgstr "Retour"
@@ -910,6 +981,9 @@ msgstr "Configurer les services"
 msgid "Confirm"
 msgstr "Confirmer"
 
+msgid "Confirm the account creation"
+msgstr "Confirmez la création de compte"
+
 msgid "Congratulations!"
 msgstr "Félicitations !"
 
@@ -956,6 +1030,12 @@ msgstr "Créer un nouveau modèle de référence"
 
 msgid "Create a new reference pattern."
 msgstr "Créer un nouveau modèle de référence."
+
+msgid "Create a new user"
+msgstr "Créer un nouvel utilisateur"
+
+msgid "Create an account"
+msgstr "Créer un compte"
 
 msgid "Create from"
 msgstr "Créer à partir de"
@@ -1123,6 +1203,9 @@ msgstr "Détruire ?"
 
 msgid "Deleted"
 msgstr "Détruit"
+
+msgid "Deleted Account"
+msgstr "Compte utilisateur détruit"
 
 msgid "Deleted files"
 msgstr "Fichiers supprimés"
@@ -1355,6 +1438,9 @@ msgstr "Forums existants"
 msgid "Existing mailing lists"
 msgstr "Listes de diffusion existantes"
 
+msgid "Expiration date"
+msgstr "Date d'expiration"
+
 msgid "Expiration date is not well formed."
 msgstr "La date d'expiration n'est pas au bon format."
 
@@ -1439,6 +1525,9 @@ msgstr "Forums"
 msgid "Forums for '%1$s'"
 msgstr "Forums pour '%1$s'"
 
+msgid "Full name"
+msgstr "Nom Complet"
+
 msgid "General"
 msgstr "Général"
 
@@ -1477,6 +1566,12 @@ msgstr "Utilitaires globaux"
 
 msgid "Go to my home page"
 msgstr "Aller à ma page personnelle"
+
+msgid "Go to the admin page"
+msgstr "Aller sur la page d'administration"
+
+msgid "Go to the home page"
+msgstr "Aller sur la page d'accueil"
 
 msgid "Go up"
 msgstr "Niveau supérieur"
@@ -1649,11 +1744,17 @@ msgstr ""
 "par défaut figurant sur la <a href=\"%1$s\">page d'accueil de CVS</a>. "
 "(balises HTML autorisées)"
 
+msgid "Invalid Email Address"
+msgstr "Adresse e-mail invalide"
+
 msgid "Invalid List Name"
 msgstr "Nom de liste invalide"
 
 msgid "Invalid Short Name"
 msgstr "Nom court du projet invalide"
+
+msgid "Invalid confirmation hash."
+msgstr "Clé de confirmation invalide."
 
 #, php-format
 msgid "Invalid group name: %s. Please use only alphanumerical characters."
@@ -1731,6 +1832,10 @@ msgstr "Kanban"
 msgid "Key"
 msgstr "Clef"
 
+#, php-format
+msgid "Key %1$s already existing for user"
+msgstr "La clé %1$s est déja présente pour l'utilisateur"
+
 msgid "Keyboard shortcuts"
 msgstr "Raccourcis clavier"
 
@@ -1773,8 +1878,14 @@ msgstr "Langue"
 msgid "Last login failure"
 msgstr "Dernier échec de connexion"
 
+msgid "Last login failure:"
+msgstr "Dernier echec de connexion :"
+
 msgid "Last successful login"
 msgstr "Dernière connexion"
+
+msgid "Last successful login:"
+msgstr "Dernière connexion :"
 
 msgid "Last used by"
 msgstr "Utilisée pour la dernière fois par"
@@ -1838,8 +1949,20 @@ msgstr "Message de commit"
 msgid "Login"
 msgstr "Se connecter"
 
+msgid "Login Name"
+msgstr "Nom de login"
+
 msgid "Logout"
 msgstr "Se déconnecter"
+
+msgid "Lost Account Password"
+msgstr "Mot de passe perdu"
+
+msgid "Lost Password"
+msgstr "Mot de passe perdu"
+
+msgid "Lost Password Confirmation"
+msgstr "Confirmation de la perte du mot de passe"
 
 msgid "Low traffic, highly recommended."
 msgstr "Trafic faible, fortement recommandé."
@@ -2036,6 +2159,16 @@ msgstr "Jamais"
 msgid "New"
 msgstr "Nouveau"
 
+msgid "New Password"
+msgstr "Nouveau mot de passe"
+
+msgid "New Password (repeat)"
+msgstr "Nouveau mot de passe (confirmez)"
+
+#, php-format
+msgid "New User Registered: %1$s"
+msgstr "Création du nouveau compte : %1$s"
+
 msgid "New avatar"
 msgstr "Nouvel avatar"
 
@@ -2157,6 +2290,9 @@ msgstr "Personne"
 msgid "Not Found"
 msgstr "Introuvable"
 
+msgid "Not a member yet?"
+msgstr "Pas encore membre ?"
+
 msgid "Not categorized"
 msgstr "Non catégorisé"
 
@@ -2172,8 +2308,18 @@ msgstr "Rien n'a changé"
 msgid "Notifications"
 msgstr "Notifications"
 
+msgid "Number of login failure:"
+msgstr "Nombre de connexions échouées :"
+
 msgid "Ok, got it"
 msgstr "Ok, j'ai compris"
+
+msgid ""
+"Once approved click the confirm button in this email.<i class=\"fa fa-"
+"envelope-o\"></i>"
+msgstr ""
+"Une fois approuvé cliquez sur le bouton de confirmation présent dans l'email."
+"<i class=\"fa fa-envelope-o\"></i>"
 
 msgid "Once you add a forum, it cannot be modified or deleted!"
 msgstr "Une fois ajouté, un forum ne peut être ni modifié ni détruit !"
@@ -2183,6 +2329,9 @@ msgstr "Seuls les membres du projet peuvent accéder à son contenu."
 
 msgid "Ooops an error occured"
 msgstr "Ouuups une erreur est survenue"
+
+msgid "Oops, I forgot my password"
+msgstr "Oups, j'ai perdu mon mot de passe"
 
 msgid "Open user dropdown"
 msgstr "Ouvrir le menu utilisateur"
@@ -2220,6 +2369,9 @@ msgstr "Les permissions par page ne sont pas listées."
 msgid "Parent project"
 msgstr "Projet parent"
 
+msgid "Password"
+msgstr "Mot de passe"
+
 msgid "Password policy"
 msgstr "Politique des mots de passe"
 
@@ -2231,6 +2383,9 @@ msgstr "Le mot de passe a été mis à jour avec succès"
 
 msgid "Passwords do not match"
 msgstr "Les deux mots de passe soumis sont différents"
+
+msgid "Passwords do not match."
+msgstr "Les mots de passe ne sont pas identiques."
 
 msgid "Pending"
 msgstr "En attente"
@@ -2331,8 +2486,18 @@ msgstr "Merci de le catégoriser."
 msgid "Please choose a valid text file"
 msgstr "Veuillez choisir un fichier texte valide"
 
+msgid "Please click on the following URL to approve the registration:"
+msgstr ""
+"Veuillez cliquer sur le lien ci-dessous pour confirmer la création de ce "
+"compte :"
+
 msgid "Please confirm your action."
 msgstr "Merci de confirmer votre action."
+
+msgid "Please explain why you are applying for registration on this site<br>"
+msgstr ""
+"Veuillez expliquer la raison pour laquelle vous souhaitez créer un compte "
+"sur ce site<br>"
 
 msgid ""
 "Please make sure the users who will be imported are already registered and "
@@ -2346,6 +2511,14 @@ msgid ""
 msgstr ""
 "Veuillez noter que des permissions plus restrictives peuvent être apposées "
 "sur certains items."
+
+#, php-format
+msgid ""
+"Please note the login <span class=\"confirmation-user\">%3$s</span> and "
+"password <span class=\"confirmation-user\">%4$s</span>"
+msgstr ""
+"Veuillez noter son login <span class=\"confirmation-user\">%3$s</span> et "
+"son mot de passe <span class=\"confirmation-user\">%4$s</span>"
 
 msgid "Please select a file to upload"
 msgstr "Veuillez sélectionner un fichier à téléverser"
@@ -2404,6 +2577,9 @@ msgstr "Messages précédents"
 
 msgid "Previous successful login"
 msgstr "Connexion précédente"
+
+msgid "Previous successful login:"
+msgstr "Connexion précédente :"
 
 msgid "Private"
 msgstr "Privé"
@@ -2648,6 +2824,9 @@ msgstr "Public ?"
 msgid "Purple"
 msgstr "Violet"
 
+msgid "Purpose"
+msgstr "Motif"
+
 msgid "REST"
 msgstr "REST"
 
@@ -2681,6 +2860,9 @@ msgstr "Nom Complet (login)"
 msgid "Real name"
 msgstr "Nom complet"
 
+msgid "Real name contains illegal characters."
+msgstr "Le nom complet contient des caractères non autorisés."
+
 msgid "Real name is not valid"
 msgstr "Le nom complet n'est pas valide"
 
@@ -2689,6 +2871,14 @@ msgstr "Le nom complet a été mis à jour avec succès"
 
 msgid "Real name was not updated"
 msgstr "Le nom complet n'a pas été mis à jour"
+
+msgid ""
+"Receive Email about Site Updates <span class=\"label-help\">Very low "
+"traffic, includes security notices. Highly Recommended.</span>"
+msgstr ""
+"Recevoir du courrier électronique à propos des mises à jour du site <span "
+"class=\"label-help\">Faible trafic, informations relatives à la sécurité. "
+"Fortement recommandé.</span>"
 
 msgid "Receive additional community mailing"
 msgstr ""
@@ -2727,6 +2917,9 @@ msgstr ""
 
 msgid "References"
 msgstr "Références"
+
+msgid "Register"
+msgstr "Nouveau compte"
 
 msgid "Registered users"
 msgstr "Utilisateurs enregistrés"
@@ -2779,11 +2972,17 @@ msgstr "Lignes supprimées"
 msgid "Repeat new password"
 msgstr "Répétez le nouveau mot de passe"
 
+msgid "Repeat password"
+msgstr "Répétez le mot de passe"
+
 msgid "Replace the current logo"
 msgstr "Remplacer le logo actuellement utilisé"
 
 msgid "Repository History"
 msgstr "Historique du dépôt"
+
+msgid "Restricted user"
+msgstr "Utilisateur restreint"
 
 msgid "Restricted users are allowed in this project."
 msgstr "Les utilisateurs restreints sont autorisés dans ce projet."
@@ -2820,6 +3019,13 @@ msgstr "API SOAP"
 
 msgid "SSH key"
 msgstr "Clef SSH"
+
+msgid ""
+"SSH key(s) updated in database, will be propagated on filesystem in a few "
+"minutes, please be patient."
+msgstr ""
+"Le(s) clé(s) SSH ont été mise à jour dans la base de donnée. Elle seront "
+"propagées sur le système de fichiers dans quelques minutes."
 
 msgid "SSH keys"
 msgstr "Clefs SSH"
@@ -2898,6 +3104,12 @@ msgstr "Sélectionner"
 
 msgid "Semicolon"
 msgstr "Point virgule"
+
+msgid "Send Lost Password Hash"
+msgstr "Envoyer la clé pour le mot de passe perdu"
+
+msgid "Send a welcome email to the user"
+msgstr "Envoyer un mail de bienvenue à l'utilisateur"
 
 msgid "Send an email when the project visibility changes"
 msgstr "Envoyer un email lorsque la visibilité d'un projet change"
@@ -3004,11 +3216,41 @@ msgstr "News du site"
 msgid "Site news approval"
 msgstr "Approbation annonces site"
 
+#, php-format
+msgid "Skip invalid key %1$s"
+msgstr "Clé invalide ignorée : %1$s"
+
 msgid "Skip to main content"
 msgstr "Aller au contenu principal"
 
 msgid "Some mandatory categories are missing"
 msgstr "Des catégories sont manquantes"
+
+#, php-format
+msgid ""
+"Someone (presumably you) on the %1$s site requested a\n"
+"password change through email verification. If this was\n"
+"not you,ignore this message and nothing will happen.\n"
+"\n"
+"If you requested this verification, visit the following URL\n"
+"to change your password:\n"
+"\n"
+"%2$s\n"
+"\n"
+" -- The %1$s Team"
+msgstr ""
+"Quelqu'un (nous supposons qu'il s'agit de vous) sur le site %1$s a demandé "
+"le\n"
+"changement de mot de passe avec vérification par e-mail. Si vous n'avez\n"
+"pas fait cette demande, ignorez tout simplement ce message.\n"
+"\n"
+"Si vous êtes bien à l'origine de cette demande, veuillez visiter le lien ci-"
+"dessous\n"
+"pour changer votre mot de passe :\n"
+"\n"
+"%2$s\n"
+"\n"
+" -- L'équipe %1$s"
 
 msgid "Source code management"
 msgstr "Gestion de code source"
@@ -3140,6 +3382,12 @@ msgstr "Conditions"
 msgid "Text"
 msgstr "Texte"
 
+msgid "Thank you for using Tuleap"
+msgstr "Nous vous remercions d'utiliser Tuleap"
+
+msgid "Thanks!"
+msgstr "Merci !"
+
 msgid "That user does not exist."
 msgstr "Cet utilisateur n'existe pas"
 
@@ -3148,6 +3396,13 @@ msgstr "L'équipe %s."
 
 msgid "The chosen color is not allowed."
 msgstr "La couleur choisie n'est pas autorisée."
+
+msgid ""
+"The confirmation key is expired, please renew if needed your request for the "
+"retrieval of your lost password"
+msgstr ""
+"La clé de confirmation a expirée, veuillez si nécessaire faire une nouvelle "
+"demande de récupération de mot de passe"
 
 #, php-format
 msgid "The dashboard \"%s\" already exists."
@@ -3286,6 +3541,9 @@ msgstr ""
 
 msgid "The submitted language is not supported."
 msgstr "La langue requise n'est pas supportée."
+
+msgid "The user account was created."
+msgstr "Le compte utilisateur a été créé."
 
 msgid "The user will automatically be added as project member."
 msgstr "L'utilisateur sera ajouté automatiquement aux membres du projet."
@@ -3577,6 +3835,13 @@ msgstr ""
 "Pwned est utilisé."
 
 msgid ""
+"To do this click the confirm button in the email. <i class=\"fa fa-envelope-o"
+"\"></i>"
+msgstr ""
+"Pour cela cliquez sur le bouton de confirmation présent dans le mail.<i "
+"class=\"fa fa-envelope-o\"></i>"
+
+msgid ""
 "To proceed with the file download, click on '<b>I accept</b>'. If you do not "
 "want to download the file click on '<b>I decline</b>' and <a href=\"mailto:%s"
 "\"><b>contact us</b></a> if you need clarification or want to explain why "
@@ -3648,6 +3913,10 @@ msgstr "URL pointée par la référence"
 
 msgid "Unable to fetch the latest activities of the project"
 msgstr "Impossible de récupérer les dernières activités du projet"
+
+#, php-format
+msgid "Unable to login under %1$s"
+msgstr "Impossible de se connecter sur %1$s"
 
 #, php-format
 msgid "Unable to send email to user, please contact %s"
@@ -3884,6 +4153,10 @@ msgid "We recommend the latest version of Firefox, Chrome, or Edge."
 msgstr ""
 "Nous recommandons d'utiliser la dernière version de Firefox, Chrome, ou Edge."
 
+msgid "We will send an email at this address to confirm your account."
+msgstr ""
+"Nous allons envoyer un email à cette adresse afin de confirmer votre compte."
+
 msgid "Webhooks"
 msgstr "Webhooks"
 
@@ -3900,8 +4173,17 @@ msgstr "Message de bienvenue et informations générales pour les utilisateurs"
 msgid "Welcome to %1$s"
 msgstr "Bienvenue sur %1$s"
 
+#, php-format
+msgid "Welcome to %1$s!"
+msgstr "Bienvenue sur %1$s!"
+
 msgid "Welcome to your new project"
 msgstr "Bienvenue dans votre nouveau projet"
+
+#, php-format
+msgid "Welcome, %1$s. You may now change your lost password."
+msgstr ""
+"Bienvenue, %1$s. Vous pouvez changer votre mot de passe perdu maintenant."
 
 msgid "What is the purpose of your project?"
 msgstr "Quel est le but de ce projet?"
@@ -4140,6 +4422,11 @@ msgstr ""
 "Vous utilisez une version obsolète de %s. Vous pouvez rencontrer divers bugs "
 "si vous continuez."
 
+msgid "You can add a comment on this user registration<br>"
+msgstr ""
+"Vous pouvez ajouter un commentaire sur la création de ce compte "
+"utilisateur<br>"
+
 msgid "You can choose up to %s category"
 msgid_plural "You can choose up to %s categories"
 msgstr[0] "Vous pouvez choisir au plus %s catégorie"
@@ -4328,6 +4615,16 @@ msgid "You must be a project admin to edit this widget."
 msgstr ""
 "Vous devez être administrateur du projet pour pouvoir éditer ce widget."
 
+msgid "You must explain the purpose of your registration."
+msgstr ""
+"Vous devez indiquer la raison pour laquelle vous souhaitez créer un compte."
+
+msgid "You must supply a password."
+msgstr "Vous devez donner un mot de passe."
+
+msgid "You must supply a timezone."
+msgstr "Vous devez indiquer un fuseau horaire."
+
 msgid "You need to logout & login again for this to be taken into account"
 msgstr ""
 "Vous devez vous déconnecter et reconnecter pour que cette option soit prise "
@@ -4406,6 +4703,22 @@ msgstr ""
 msgid "Your account has been created on %s"
 msgstr "Votre compte a été créé sur %s"
 
+msgid ""
+"Your account has been created,</br> it must be approved by an administrator."
+msgstr ""
+"Votre compte a été crée, </br>il doit être approuvé par un administrateur."
+
+#, php-format
+msgid ""
+"Your account has been deleted. If you have questions regarding your "
+"deletion, please email <A HREF=\"mailto:%1$s\">%2$s</A>."
+msgstr ""
+"Votre compte utilisateur a été détruit. Si vous avez des questions à ce "
+"propos, merci d'envoyer un message à <A HREF=\"mailto:%1$s\">%2$s</A>."
+
+msgid "Your account has been successfully confirmed."
+msgstr "Votre compte a été confirmé avec succès."
+
 #, php-format
 msgid ""
 "Your account has been suspended. If you have questions regarding your "
@@ -4414,6 +4727,9 @@ msgstr ""
 "Votre compte utilisateur a été suspendu. Si vous avez des questions à ce "
 "sujet, veuillez envoyez un e-mail aux <a href=\"mailto:%s\">administrateurs "
 "du site</a>."
+
+msgid "Your account is created, </br>it now needs to be activated."
+msgstr "Votre compte est créé, </br> il ne reste plus qu'à l'activer."
 
 msgid "Your avatar"
 msgstr "Votre avatar"

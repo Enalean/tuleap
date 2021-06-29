@@ -59,11 +59,7 @@ class LoginController implements DispatchableWithRequestNoAuthz
         $presenter = $this->connector_presenter_builder->getLoginSpecificPageConnectorPresenter($return_to);
 
         $layout->header([
-            'title' => $GLOBALS['Language']->getText(
-                'account_login',
-                'page_title',
-                [ForgeConfig::get('sys_name')]
-            ),
+            'title' => sprintf(_('%1$s login'), ForgeConfig::get('sys_name')),
             'body_class' => ['login-page']
         ]);
         $renderer = TemplateRendererFactory::build()->getRenderer(OPENIDCONNECTCLIENT_TEMPLATE_DIR);

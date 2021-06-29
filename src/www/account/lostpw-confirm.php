@@ -50,16 +50,20 @@ if ($reset_token !== null) {
     $reset_token_formatter = new \Tuleap\User\Password\Reset\ResetTokenSerializer();
     $identifier            = $reset_token_formatter->getIdentifier($reset_token);
 
-    $message = stripcslashes($Language->getText(
-        'account_lostpw-confirm',
-        'mail_body',
-        [ForgeConfig::get('sys_name'),
-              $request->getServerUrl() . '/account/lostlogin.php?confirm_hash=' . urlencode($identifier)]
-    ));
+    $message = stripcslashes(sprintf(_('Someone (presumably you) on the %1$s site requested a
+password change through email verification. If this was
+not you,ignore this message and nothing will happen.
+
+If you requested this verification, visit the following URL
+to change your password:
+
+%2$s
+
+ -- The %1$s Team'), ForgeConfig::get('sys_name'), $request->getServerUrl() . '/account/lostlogin.php?confirm_hash=' . urlencode($identifier)));
 
     $mail = new Codendi_Mail();
     $mail->setTo($user->getEmail(), true);
-    $mail->setSubject($Language->getText('account_lostpw-confirm', 'mail_subject', [ForgeConfig::get('sys_name')]));
+    $mail->setSubject(sprintf(_('%1$s Password Verification'), ForgeConfig::get('sys_name')));
     $mail->setBodyText($message);
     $mail->setFrom(ForgeConfig::get('sys_noreply'));
     $mail_is_sent = $mail->send();
@@ -68,9 +72,9 @@ if ($reset_token !== null) {
     }
 }
 
-site_header(['title' => $Language->getText('account_lostpw-confirm', 'title')]);
+site_header(['title' => _('Lost Password Confirmation')]);
 if ($reset_token === null || $mail_is_sent) {
-    echo '<p>' . $Language->getText('account_lostpw-confirm', 'msg_confirm') . '</p>';
+    echo '<p>' . _('<B>Confirmation mailed</B><P>An email has been sent to the address you have on file. Follow the instructions in the email to change your account password.') . '</p>';
 }
 echo '<p><a href="/">[' . $Language->getText('global', 'back_home') . ']</a></p>';
 site_footer([]);

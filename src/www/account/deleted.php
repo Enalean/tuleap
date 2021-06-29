@@ -22,13 +22,13 @@
 require_once __DIR__ . '/../include/pre.php';
 
 
-$HTML->header(['title' => $Language->getText('account_deleted', 'title')]);
+$HTML->header(['title' => _('Deleted Account')]);
 list($host,$port) = explode(':', ForgeConfig::get('sys_default_domain'));
 ?>
 
-<P><B><?php echo $Language->getText('account_deleted', 'title'); ?></B>
+<P><B><?php echo _('Deleted Account'); ?></B>
 
-<P><?php echo $Language->getText('account_deleted', 'message', [ForgeConfig::get('sys_email_contact'), ForgeConfig::get('sys_email_contact')]); ?>
+<P><?php echo sprintf(_('Your account has been deleted. If you have questions regarding your deletion, please email <A HREF="mailto:%1$s">%2$s</A>.'), ForgeConfig::get('sys_email_contact'), ForgeConfig::get('sys_email_contact')); ?>
 
 <?php
 $HTML->footer([]);

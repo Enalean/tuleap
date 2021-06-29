@@ -216,7 +216,7 @@ class FlamingParrot_NavBarPresenter // phpcs:ignore PSR1.Classes.ClassDeclaratio
 
     public function account_options_text() //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
-        return $GLOBALS['Language']->getText('account_options', 'preferences');
+        return _('Preferences');
     }
 
     public function menu_home_text() //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps

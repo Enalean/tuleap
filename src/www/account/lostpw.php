@@ -26,18 +26,18 @@ require_once __DIR__ . '/../include/pre.php';
 $em = EventManager::instance();
 $em->processEvent('before_lostpw', []);
 
-$HTML->header(['title' => $Language->getText('account_lostpw', 'title')]);
+$HTML->header(['title' => _('Lost Account Password')]);
 
 ?>
 
-<h2><?php echo $Language->getText('account_lostpw', 'title'); ?></h2>
-<P><?php echo $Language->getText('account_lostpw', 'message'); ?></P>
+<h2><?php echo _('Lost Account Password'); ?></h2>
+<P><?php echo _('<B>Lost your password?</B><P>Hey... losing your password is serious business. It compromises the security of your account, your projects, and this site.<P>Clicking on the button below will email a URL to the email address we have on file for you. In this URL is a 128-bit confirmation hash key for your account. Visiting the URL will allow you to change your password online and login.'); ?></P>
 
 <FORM action="lostpw-confirm.php" method="post" class="form-inline">
 <P>
 Login Name:
 <INPUT type="text" name="form_loginname" autocomplete="username">
-<INPUT class="btn btn-primary" type="submit" name="Send Lost Password Hash" value="<?php echo $Language->getText('account_lostpw', 'send_hash'); ?>">
+<INPUT class="btn btn-primary" type="submit" name="Send Lost Password Hash" value="<?php echo _('Send Lost Password Hash'); ?>">
 </FORM>
 
 <P><A href="/">[<?php echo $Language->getText('global', 'back_home'); ?>]</A>

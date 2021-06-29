@@ -929,7 +929,7 @@ class UserManager implements \Tuleap\User\ProvideCurrentUser // phpcs:ignore PSR
         $user->setAuthorizedKeys(implode(PFUser::SSH_KEY_SEPARATOR, $keys));
 
         if ($this->updateDb($user)) {
-            $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('account_editsshkeys', 'update_filesystem'));
+            $GLOBALS['Response']->addFeedback('info', _('SSH key(s) updated in database, will be propagated on filesystem in a few minutes, please be patient.'));
 
             $event_parameters = [
                 'user_id'       => $user->getId(),

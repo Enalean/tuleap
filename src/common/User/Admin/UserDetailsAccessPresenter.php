@@ -145,18 +145,18 @@ class UserDetailsAccessPresenter
         $this->purified_last_pwd_update_ago = $this->getDate((int) $user->getLastPwdUpdate(), $user);
         $this->last_pwd_update              = date($GLOBALS['Language']->getText('system', 'datefmt'), (int) $user->getLastPwdUpdate());
 
-        $this->auth_attempt_last_success_label        = $GLOBALS['Language']->getText('account_options', 'auth_attempt_last_success');
+        $this->auth_attempt_last_success_label        = _('Last successful login:');
         $this->purified_auth_attempt_last_success_ago = $this->getDate((int) $user_info['last_auth_success'], $user);
         $this->auth_attempt_last_success              = date($GLOBALS['Language']->getText('system', 'datefmt'), (int) $user_info['last_auth_success']);
 
-        $this->auth_attempt_last_failure_label        = $GLOBALS['Language']->getText('account_options', 'auth_attempt_last_failure');
+        $this->auth_attempt_last_failure_label        = _('Last login failure:');
         $this->purified_auth_attempt_last_failure_ago = $this->getDate((int) $user_info['last_auth_failure'], $user);
         $this->auth_attempt_last_failure              = date($GLOBALS['Language']->getText('system', 'datefmt'), (int) $user_info['last_auth_failure']);
 
-        $this->auth_attempt_nb_failure_label = $GLOBALS['Language']->getText('account_options', 'auth_attempt_nb_failure');
+        $this->auth_attempt_nb_failure_label = _('Number of login failure:');
         $this->auth_attempt_nb_failure       = $user_info['nb_auth_failure'];
 
-        $this->auth_attempt_prev_success_label        = $GLOBALS['Language']->getText('account_options', 'auth_attempt_prev_success');
+        $this->auth_attempt_prev_success_label        = _('Previous successful login:');
         $this->purified_auth_attempt_prev_success_ago = $this->getDate((int) $user_info['last_auth_success'], $user);
         $this->auth_attempt_prev_success              = date($GLOBALS['Language']->getText('system', 'datefmt'), (int) $user_info['last_auth_success']);
 

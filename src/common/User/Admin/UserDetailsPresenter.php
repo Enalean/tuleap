@@ -136,9 +136,9 @@ class UserDetailsPresenter
         $this->unix_status_label  = $GLOBALS['Language']->getText('admin_usergroup', 'unix_status');
         $this->status_label       = $GLOBALS['Language']->getText('admin_usergroup', 'status');
         $this->email_label        = $GLOBALS['Language']->getText('admin_usergroup', 'email');
-        $this->name_label         = $GLOBALS['Language']->getText('account_options', 'realname');
-        $this->login_label        = $GLOBALS['Language']->getText('account_options', 'tuleap_login');
-        $this->password_label     = $GLOBALS['Language']->getText('account_login', 'password');
+        $this->name_label         = _('Real name');
+        $this->login_label        = _('Login');
+        $this->password_label     = _('Password');
         $this->expiry_date_label  = $GLOBALS['Language']->getText('admin_usergroup', 'expiry_date');
         $this->more_title         = $GLOBALS['Language']->getText('admin_usergroup', 'more_info');
         $this->update_information = $GLOBALS['Language']->getText('admin_usergroup', 'update_information');
