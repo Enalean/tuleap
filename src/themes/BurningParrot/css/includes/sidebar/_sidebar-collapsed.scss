@@ -69,6 +69,10 @@
         margin: var(--tlp-small-spacing) auto;
     }
 
+    .tlp-popover-shown.project-sidebar-linked-projects-popover {
+        display: flex;
+    }
+
     .project-sidebar-linked-projects-list,
     .project-sidebar-linked-projects-label,
     .project-sidebar-privacy-badge,
