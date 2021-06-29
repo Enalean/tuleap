@@ -33,7 +33,7 @@ use Tuleap\Project\Admin\Categories\ProjectCategoriesUpdater;
 use Tuleap\Project\Admin\DescriptionFields\FieldDoesNotExistException;
 use Tuleap\Project\Admin\DescriptionFields\FieldUpdator;
 use Tuleap\Project\Admin\DescriptionFields\MissingMandatoryFieldException;
-use Tuleap\Project\Registration\MaxNumberOfProjectReachedException;
+use Tuleap\Project\Registration\MaxNumberOfProjectReachedForPlatformException;
 use Tuleap\Project\Registration\ProjectRegistrationUserPermissionChecker;
 use Tuleap\Project\Registration\RegistrationForbiddenException;
 use Tuleap\Project\Registration\Template\InvalidTemplateException;
@@ -130,7 +130,6 @@ class RestProjectCreator
     public function create(PFUser $user, ProjectPostRepresentation $post_representation): Project
     {
         try {
-            $this->permission_checker->checkUserCreateAProject($user);
             $category_collection = $this->getCategoryCollection($post_representation);
             $this->categories_updater->checkCollectionConsistency($category_collection);
 
@@ -141,10 +140,10 @@ class RestProjectCreator
             $this->categories_updater->update($project, $category_collection);
             $this->fields_updater->updateFromArray($field_collection, $project);
             return $project;
-        } catch (MaxNumberOfProjectReachedException $exception) {
-            throw new RestException(429, 'Too many projects were created');
+        } catch (MaxNumberOfProjectReachedForPlatformException $exception) {
+            throw new RestException(429, $exception->getMessage());
         } catch (RegistrationForbiddenException $exception) {
-            throw new RestException(403, 'You are not allowed to create new projects');
+            throw new RestException(403, $exception->getMessage());
         } catch (ProjectCategoriesException $exception) {
             throw new RestException(400, $exception->getMessage());
         } catch (FieldDoesNotExistException $exception) {

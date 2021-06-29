@@ -25,6 +25,7 @@ declare(strict_types=1);
 use Mockery as M;
 use Tuleap\Project\Admin\Service\ProjectServiceActivator;
 use Tuleap\Project\DefaultProjectVisibilityRetriever;
+use Tuleap\Project\Registration\ProjectRegistrationChecker;
 use Tuleap\Project\UGroups\Membership\DynamicUGroups\ProjectMemberAdder;
 use Tuleap\Project\XML\XMLFileContentRetriever;
 use Tuleap\Test\Builders\UserTestBuilder;
@@ -104,6 +105,7 @@ class ProjectXMLImporterTest extends \Tuleap\Test\PHPUnit\TestCase
             Mockery::mock(EventManager::class),
             Mockery::mock(\Tuleap\Project\Admin\DescriptionFields\FieldUpdator::class),
             Mockery::mock(ProjectServiceActivator::class),
+            $this->createMock(ProjectRegistrationChecker::class),
             false
         );
 

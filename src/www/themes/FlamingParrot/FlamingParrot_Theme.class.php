@@ -48,6 +48,7 @@ use Tuleap\Project\Banner\BannerDisplay;
 use Tuleap\Project\Flags\ProjectFlagsBuilder;
 use Tuleap\Project\Flags\ProjectFlagsDao;
 use Tuleap\Project\ProjectPresentersBuilder;
+use Tuleap\Project\Registration\ProjectRegistrationChecker;
 use Tuleap\Project\Registration\ProjectRegistrationUserPermissionChecker;
 use Tuleap\Project\Sidebar\CollectLinkedProjects;
 use Tuleap\Project\Sidebar\LinkedProjectsCollectionPresenter;
@@ -304,12 +305,15 @@ class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDecla
         );
         $user_dashboard_retriever = new UserDashboardRetriever(new UserDashboardDao(new DashboardWidgetDao($widget_factory)));
 
-        $registration_user_permission_checker = new ProjectRegistrationUserPermissionChecker(
-            new ProjectDao()
+        $project_registration_checker = new ProjectRegistrationChecker(
+            new ProjectRegistrationUserPermissionChecker(
+                new ProjectDao()
+            )
         );
-        $new_dropdown_presenter_builder       = new NewDropdownPresenterBuilder(
+
+        $new_dropdown_presenter_builder = new NewDropdownPresenterBuilder(
             $event_manager,
-            $registration_user_permission_checker
+            $project_registration_checker
         );
 
         $switch_to_presenter_builder = new SwitchToPresenterBuilder(

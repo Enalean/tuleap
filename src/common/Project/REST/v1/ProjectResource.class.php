@@ -65,6 +65,7 @@ use Tuleap\Project\ProjectBackground\UserCanModifyProjectBackgroundPermission;
 use Tuleap\Project\ProjectCreationNotifier;
 use Tuleap\Project\ProjectDescriptionMandatoryException;
 use Tuleap\Project\ProjectStatusMapper;
+use Tuleap\Project\Registration\ProjectRegistrationChecker;
 use Tuleap\Project\Registration\ProjectRegistrationUserPermissionChecker;
 use Tuleap\Project\Registration\Template\InvalidTemplateException;
 use Tuleap\Project\Registration\Template\TemplateFactory;
@@ -177,18 +178,40 @@ class ProjectResource extends AuthenticatedResource
      * @status 201
      *
      * @param ProjectPostRepresentation $post_representation {@from body}
-     *
+     * @param bool $dry_run {@from query} {@required false}
      *
      * @return ProjectRepresentation
+     *
+     * @throws RestException 204
      * @throws RestException 400
      * @throws RestException 403
      * @throws RestException 429
      */
-    protected function post(ProjectPostRepresentation $post_representation)
+    protected function post(ProjectPostRepresentation $post_representation, bool $dry_run = false)
     {
+        $this->options();
         $this->checkAccess();
 
         $user = $this->user_manager->getCurrentUser();
+
+        if ($dry_run === true) {
+            $checker = new ProjectRegistrationChecker(
+                new ProjectRegistrationUserPermissionChecker(
+                    new \ProjectDao()
+                )
+            );
+
+            $errors_collection = $checker->collectPermissionErrorsForProjectRegistration($user);
+            if (count($errors_collection->getErrors()) > 0) {
+                throw new RestException(
+                    400,
+                    null,
+                    ['i18n_error_messages' => $errors_collection->getI18nErrorsMessages()]
+                );
+            }
+
+            throw new RestException(204);
+        }
 
         try {
             $project = $this->getRestProjectCreator()->create($user, $post_representation);

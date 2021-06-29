@@ -21,7 +21,7 @@
 namespace Tuleap\REST;
 
 use REST_TestDataBuilder;
-use function PHPUnit\Framework\assertEquals;
+use Test\Rest\TuleapConfig;
 
 /**
  * @group ProjectTests
@@ -35,6 +35,64 @@ class ProjectTest extends ProjectBase
             REST_TestDataBuilder::TEST_USER_1_PASS,
             $request
         );
+    }
+
+    public function testPOSTDryRunForRegularUserDisabledProjectCreation(): void
+    {
+        $tuleap_config = TuleapConfig::instance();
+        $tuleap_config->disableProjectCreation();
+
+        $post_resource = json_encode([
+            'label' => 'Test Request 9747 regular user',
+            'shortname'  => 'test9747-regular-user',
+            'description' => 'Test of Request 9747 for REST API Project Creation',
+            'is_public' => true,
+            'template_id' => 100
+        ]);
+
+        $response = $this->getResponseByName(
+            REST_TestDataBuilder::TEST_USER_2_NAME,
+            $this->request_factory->createRequest(
+                'POST',
+                'projects?dry_run=true'
+            )->withBody(
+                $this->stream_factory->createStream($post_resource)
+            )
+        );
+
+        self::assertEquals(400, $response->getStatusCode());
+
+        $errors_response = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
+
+        self::assertArrayHasKey('error', $errors_response);
+        self::assertArrayHasKey('i18n_error_messages', $errors_response['error']);
+        self::assertCount(1, $errors_response['error']['i18n_error_messages']);
+        self::assertSame("Only site administrators can create projects.", $errors_response['error']['i18n_error_messages'][0]);
+
+        $tuleap_config->enableProjectCreation();
+    }
+
+    public function testPOSTDryRunForRegularUser(): void
+    {
+        $post_resource = json_encode([
+            'label' => 'Test Request 9747 regular user',
+            'shortname'  => 'test9747-regular-user',
+            'description' => 'Test of Request 9747 for REST API Project Creation',
+            'is_public' => true,
+            'template_id' => 100
+        ]);
+
+        $response = $this->getResponseByName(
+            REST_TestDataBuilder::TEST_USER_2_NAME,
+            $this->request_factory->createRequest(
+                'POST',
+                'projects?dry_run=true'
+            )->withBody(
+                $this->stream_factory->createStream($post_resource)
+            )
+        );
+
+        self::assertEquals(204, $response->getStatusCode());
     }
 
     public function testPOSTForRegularUser()
@@ -56,7 +114,8 @@ class ProjectTest extends ProjectBase
                 $this->stream_factory->createStream($post_resource)
             )
         );
-        assertEquals(201, $response->getStatusCode());
+
+        self::assertEquals(201, $response->getStatusCode());
 
         $create_project_id = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR)['id'];
 
@@ -101,7 +160,8 @@ class ProjectTest extends ProjectBase
                 )
             )
         );
-        assertEquals(200, $response->getStatusCode());
+
+        self::assertEquals(200, $response->getStatusCode());
 
         $response = $this->getResponseByName(
             \TestDataBuilder::ADMIN_USER_NAME,
@@ -121,7 +181,8 @@ class ProjectTest extends ProjectBase
                 )
             )
         );
-        assertEquals(200, $response->getStatusCode());
+
+        self::assertEquals(200, $response->getStatusCode());
 
         $response = $this->getResponseByName(
             $original_project_admin,
@@ -143,7 +204,8 @@ class ProjectTest extends ProjectBase
                 )
             )
         );
-        assertEquals(200, $response->getStatusCode());
+
+        self::assertEquals(200, $response->getStatusCode());
 
         $response = $this->getResponseByName(
             \TestDataBuilder::TEST_USER_CATCH_ALL_PROJECT_ADMIN,
@@ -165,7 +227,8 @@ class ProjectTest extends ProjectBase
                 )
             )
         );
-        assertEquals(200, $response->getStatusCode());
+
+        self::assertEquals(200, $response->getStatusCode());
     }
 
     public function testPOSTForAdmin()
@@ -191,8 +254,8 @@ class ProjectTest extends ProjectBase
         );
 
         $project = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
-        $this->assertEquals(201, $response->getStatusCode());
-        $this->assertArrayHasKey("id", $project);
+        self::assertEquals(201, $response->getStatusCode());
+        self::assertArrayHasKey("id", $project);
 
         $this->removeAdminFromProjectMembers(
             $project['id'],
@@ -223,8 +286,8 @@ class ProjectTest extends ProjectBase
         );
 
         $project = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
-        $this->assertEquals(201, $response->getStatusCode());
-        $this->assertArrayHasKey("id", $project);
+        self::assertEquals(201, $response->getStatusCode());
+        self::assertArrayHasKey("id", $project);
     }
 
     public function testProjectCreationWithAnIncorrectProjectIDFails(): void
@@ -248,7 +311,7 @@ class ProjectTest extends ProjectBase
                 )
             )
         );
-        $this->assertEquals($response->getStatusCode(), 400);
+        self::assertEquals($response->getStatusCode(), 400);
     }
 
     public function testProjectCreationWithXMLTemplate(): void
@@ -272,9 +335,9 @@ class ProjectTest extends ProjectBase
                 )
             )
         );
-        $this->assertEquals($response->getStatusCode(), 201);
+        self::assertEquals($response->getStatusCode(), 201);
         $project = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
-        $this->assertEquals('Created from scrum XML template', $project['label']);
+        self::assertEquals('Created from scrum XML template', $project['label']);
     }
 
     public function testGET()
@@ -282,7 +345,7 @@ class ProjectTest extends ProjectBase
         $response      = $this->getResponse($this->request_factory->createRequest('GET', 'projects'));
         $json_projects = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
-        $this->assertTrue(
+        self::assertTrue(
             $this->valuesArePresent(
                 [
                     $this->project_private_member_id,
@@ -294,8 +357,8 @@ class ProjectTest extends ProjectBase
             )
         );
 
-        $this->assertArrayHasKey('resources', $json_projects[0]);
-        $this->assertContains(
+        self::assertArrayHasKey('resources', $json_projects[0]);
+        self::assertContains(
             [
                 'type' => 'trackers',
                 'uri' => 'projects/' . $this->project_private_member_id . '/trackers',
@@ -303,7 +366,7 @@ class ProjectTest extends ProjectBase
             $json_projects[0]['resources']
         );
 
-        $this->assertContains(
+        self::assertContains(
             [
                 'type' => 'backlog',
                 'uri' => 'projects/' . $this->project_private_member_id . '/backlog',
@@ -311,7 +374,7 @@ class ProjectTest extends ProjectBase
             $json_projects[0]['resources']
         );
 
-        $this->assertContains(
+        self::assertContains(
             [
                 'type' => 'milestones',
                 'uri' => 'projects/' . $this->project_private_member_id . '/milestones',
@@ -319,7 +382,7 @@ class ProjectTest extends ProjectBase
             $json_projects[0]['resources']
         );
 
-        $this->assertContains(
+        self::assertContains(
             [
                 'type' => 'plannings',
                 'uri' => 'projects/' . $this->project_private_member_id . '/plannings',
@@ -327,7 +390,7 @@ class ProjectTest extends ProjectBase
             $json_projects[0]['resources']
         );
 
-        $this->assertContains(
+        self::assertContains(
             [
                 'type' => 'user_groups',
                 'uri' => 'projects/' . $this->project_private_member_id . '/user_groups',
@@ -335,7 +398,7 @@ class ProjectTest extends ProjectBase
             $json_projects[0]['resources']
         );
 
-        $this->assertContains(
+        self::assertContains(
             [
                 'type' => 'labels',
                 'uri' => 'projects/' . $this->project_private_member_id . '/labels',
@@ -343,7 +406,7 @@ class ProjectTest extends ProjectBase
             $json_projects[0]['resources']
         );
 
-        $this->assertContains(
+        self::assertContains(
             [
                 'type' => 'project_services',
                 'uri' => 'projects/' . $this->project_private_member_id . '/project_services',
@@ -351,14 +414,14 @@ class ProjectTest extends ProjectBase
             $json_projects[0]['resources']
         );
 
-        $this->assertContains(
+        self::assertContains(
             [
                 'type' => 'docman_service',
                 'uri'  => 'projects/' . $this->project_private_member_id . '/docman_service',
             ],
             $json_projects[0]['resources']
         );
-        $this->assertContains(
+        self::assertContains(
             [
                 'type' => 'docman_metadata',
                 'uri'  => 'projects/' . $this->project_private_member_id . '/docman_metadata',
@@ -366,28 +429,28 @@ class ProjectTest extends ProjectBase
             $json_projects[0]['resources']
         );
 
-        $this->assertArrayHasKey('id', $json_projects[0]);
-        $this->assertEquals($this->project_private_member_id, $json_projects[0]['id']);
+        self::assertArrayHasKey('id', $json_projects[0]);
+        self::assertEquals($this->project_private_member_id, $json_projects[0]['id']);
 
-        $this->assertArrayHasKey('uri', $json_projects[0]);
-        $this->assertEquals('projects/' . $this->project_private_member_id, $json_projects[0]['uri']);
+        self::assertArrayHasKey('uri', $json_projects[0]);
+        self::assertEquals('projects/' . $this->project_private_member_id, $json_projects[0]['uri']);
 
-        $this->assertArrayHasKey('label', $json_projects[0]);
-        $this->assertEquals('Private member', $json_projects[0]['label']);
+        self::assertArrayHasKey('label', $json_projects[0]);
+        self::assertEquals('Private member', $json_projects[0]['label']);
 
-        $this->assertArrayHasKey('access', $json_projects[0]);
-        $this->assertEquals('private', $json_projects[0]['access']);
+        self::assertArrayHasKey('access', $json_projects[0]);
+        self::assertEquals('private', $json_projects[0]['access']);
 
-        $this->assertArrayHasKey('is_member_of', $json_projects[0]);
-        $this->assertTrue($json_projects[0]['is_member_of']);
+        self::assertArrayHasKey('is_member_of', $json_projects[0]);
+        self::assertTrue($json_projects[0]['is_member_of']);
 
-        $this->assertArrayHasKey('additional_informations', $json_projects[0]);
-        $this->assertEquals(
+        self::assertArrayHasKey('additional_informations', $json_projects[0]);
+        self::assertEquals(
             $this->releases_tracker_id,
             $json_projects[0]['additional_informations']['agiledashboard']['root_planning']['milestone_tracker']['id']
         );
 
-        $this->assertEquals($response->getStatusCode(), 200);
+        self::assertEquals($response->getStatusCode(), 200);
     }
 
     public function testGETByShortname()
@@ -395,11 +458,11 @@ class ProjectTest extends ProjectBase
         $response      = $this->getResponse($this->request_factory->createRequest('GET', 'projects?query=' . urlencode('{"shortname":"pbi-6348"}')));
         $json_projects = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
-        $this->assertArrayHasKey('id', $json_projects[0]);
-        $this->assertEquals($this->project_pbi_id, $json_projects[0]['id']);
-        $this->assertEquals(1, count($json_projects));
+        self::assertArrayHasKey('id', $json_projects[0]);
+        self::assertEquals($this->project_pbi_id, $json_projects[0]['id']);
+        self::assertEquals(1, count($json_projects));
 
-        $this->assertEquals($response->getStatusCode(), 200);
+        self::assertEquals($response->getStatusCode(), 200);
     }
 
     public function testGETByMembership()
@@ -410,9 +473,9 @@ class ProjectTest extends ProjectBase
         );
         $json_projects = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
-        $this->assertEquals(1, count($json_projects));
+        self::assertEquals(1, count($json_projects));
 
-        $this->assertEquals($response->getStatusCode(), 200);
+        self::assertEquals($response->getStatusCode(), 200);
     }
 
     public function testGETByAdministratorship(): void
@@ -423,16 +486,16 @@ class ProjectTest extends ProjectBase
         );
         $json_projects = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
-        $this->assertGreaterThan(5, count($json_projects));
+        self::assertGreaterThan(5, count($json_projects));
 
-        $this->assertEquals($response->getStatusCode(), 200);
+        self::assertEquals($response->getStatusCode(), 200);
     }
 
     public function testGETByNonMembershipShouldFail()
     {
         $response = $this->getResponse($this->request_factory->createRequest('GET', 'projects?query=' . urlencode('{"is_member_of":false}')));
 
-        $this->assertEquals($response->getStatusCode(), 400);
+        self::assertEquals($response->getStatusCode(), 400);
     }
 
     private function valuesArePresent(array $values, array $array)
@@ -460,9 +523,9 @@ class ProjectTest extends ProjectBase
         $response     = $this->getResponseByName(REST_TestDataBuilder::TEST_USER_1_NAME, $this->request_factory->createRequest('GET', "projects/$this->project_pbi_id"));
         $json_project = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
-        $this->assertArrayHasKey('shortname', $json_project);
+        self::assertArrayHasKey('shortname', $json_project);
 
-        $this->assertEquals($json_project['shortname'], REST_TestDataBuilder::PROJECT_PBI_SHORTNAME);
+        self::assertEquals($json_project['shortname'], REST_TestDataBuilder::PROJECT_PBI_SHORTNAME);
     }
 
     public function testThatAdminGetEvenPrivateProjectThatSheIsNotMemberOf()
@@ -475,7 +538,7 @@ class ProjectTest extends ProjectBase
                 continue;
             }
 
-            $this->assertFalse($project['is_member_of']);
+            self::assertFalse($project['is_member_of']);
 
             $project_members_uri = "user_groups/$this->project_private_id" . "_3/users";
             $project_members     = json_decode(
@@ -488,7 +551,7 @@ class ProjectTest extends ProjectBase
                 JSON_THROW_ON_ERROR
             );
             foreach ($project_members as $member) {
-                $this->assertNotEquals('admin', $member['username']);
+                self::assertNotEquals('admin', $member['username']);
             }
             return;
         }
@@ -502,8 +565,8 @@ class ProjectTest extends ProjectBase
 
         $json_project = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
-        $this->assertArrayHasKey('resources', $json_project);
-        $this->assertContains(
+        self::assertArrayHasKey('resources', $json_project);
+        self::assertContains(
             [
                 'type' => 'trackers',
                 'uri' => 'projects/' . $this->project_private_member_id . '/trackers',
@@ -511,7 +574,7 @@ class ProjectTest extends ProjectBase
             $json_project['resources']
         );
 
-        $this->assertContains(
+        self::assertContains(
             [
                 'type' => 'backlog',
                 'uri' => 'projects/' . $this->project_private_member_id . '/backlog',
@@ -519,7 +582,7 @@ class ProjectTest extends ProjectBase
             $json_project['resources']
         );
 
-        $this->assertContains(
+        self::assertContains(
             [
                 'type' => 'milestones',
                 'uri' => 'projects/' . $this->project_private_member_id . '/milestones',
@@ -527,7 +590,7 @@ class ProjectTest extends ProjectBase
             $json_project['resources']
         );
 
-        $this->assertContains(
+        self::assertContains(
             [
                 'type' => 'plannings',
                 'uri' => 'projects/' . $this->project_private_member_id . '/plannings',
@@ -535,7 +598,7 @@ class ProjectTest extends ProjectBase
             $json_project['resources']
         );
 
-        $this->assertContains(
+        self::assertContains(
             [
                 'type' => 'user_groups',
                 'uri' => 'projects/' . $this->project_private_member_id . '/user_groups',
@@ -543,7 +606,7 @@ class ProjectTest extends ProjectBase
             $json_project['resources']
         );
 
-        $this->assertContains(
+        self::assertContains(
             [
                 'type' => 'labels',
                 'uri' => 'projects/' . $this->project_private_member_id . '/labels',
@@ -551,19 +614,19 @@ class ProjectTest extends ProjectBase
             $json_project['resources']
         );
 
-        $this->assertArrayHasKey('id', $json_project);
-        $this->assertEquals($this->project_private_member_id, $json_project['id']);
+        self::assertArrayHasKey('id', $json_project);
+        self::assertEquals($this->project_private_member_id, $json_project['id']);
 
-        $this->assertArrayHasKey('uri', $json_project);
-        $this->assertEquals('projects/' . $this->project_private_member_id, $json_project['uri']);
+        self::assertArrayHasKey('uri', $json_project);
+        self::assertEquals('projects/' . $this->project_private_member_id, $json_project['uri']);
 
-        $this->assertArrayHasKey('label', $json_project);
-        $this->assertEquals('Private member', $json_project['label']);
+        self::assertArrayHasKey('label', $json_project);
+        self::assertEquals('Private member', $json_project['label']);
 
-        $this->assertArrayHasKey('description', $json_project);
-        $this->assertEquals("For test", $json_project['description']);
+        self::assertArrayHasKey('description', $json_project);
+        self::assertEquals("For test", $json_project['description']);
 
-        $this->assertEquals($response->getStatusCode(), 200);
+        self::assertEquals($response->getStatusCode(), 200);
     }
 
     public function testGETbyIdForAdminProjectReturnAdditionalField()
@@ -572,8 +635,8 @@ class ProjectTest extends ProjectBase
 
         $json_project = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
-        $this->assertArrayHasKey('additional_fields', $json_project);
-        $this->assertEquals([["name" => "Test Rest", "value" => "Admin test"]], $json_project['additional_fields']);
+        self::assertArrayHasKey('additional_fields', $json_project);
+        self::assertEquals([["name" => "Test Rest", "value" => "Admin test"]], $json_project['additional_fields']);
     }
 
 
@@ -583,8 +646,8 @@ class ProjectTest extends ProjectBase
 
         $json_project = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
-        $this->assertEquals($response->getStatusCode(), 200);
-        $this->assertEquals($json_project['status'], 'deleted');
+        self::assertEquals($response->getStatusCode(), 200);
+        self::assertEquals($json_project['status'], 'deleted');
     }
 
     public function testOPTIONSprojects()
@@ -598,8 +661,8 @@ class ProjectTest extends ProjectBase
     {
         $response = $this->getResponseByName(REST_TestDataBuilder::ADMIN_USER_NAME, $this->request_factory->createRequest('OPTIONS', 'projects/' . $this->project_private_member_id));
 
-        $this->assertEquals(['OPTIONS', 'GET', 'POST', 'PATCH'], explode(', ', $response->getHeaderLine('Allow')));
-        $this->assertEquals($response->getStatusCode(), 200);
+        self::assertEquals(['OPTIONS', 'GET', 'POST', 'PATCH'], explode(', ', $response->getHeaderLine('Allow')));
+        self::assertEquals($response->getStatusCode(), 200);
     }
 
     public function testOPTIONSbyIdForDelegatedRestProjectManager()
@@ -607,7 +670,7 @@ class ProjectTest extends ProjectBase
         $response = $this->getResponseByName(REST_TestDataBuilder::TEST_USER_DELEGATED_REST_PROJECT_MANAGER_NAME, $this->request_factory->createRequest('OPTIONS', 'projects/' . $this->project_deleted_id));
 
         self::assertEqualsCanonicalizing(['OPTIONS', 'GET', 'POST', 'PATCH'], explode(', ', $response->getHeaderLine('Allow')));
-        $this->assertEquals($response->getStatusCode(), 200);
+        self::assertEquals($response->getStatusCode(), 200);
     }
 
     public function testOPTIONSbyIdForProjectMember()
@@ -615,25 +678,25 @@ class ProjectTest extends ProjectBase
         $response = $this->getResponseByName(REST_TestDataBuilder::TEST_USER_1_NAME, $this->request_factory->createRequest('OPTIONS', 'projects/' . $this->project_private_member_id));
 
         self::assertEqualsCanonicalizing(['OPTIONS', 'GET', 'POST', 'PATCH'], explode(', ', $response->getHeaderLine('Allow')));
-        $this->assertEquals($response->getStatusCode(), 200);
+        self::assertEquals($response->getStatusCode(), 200);
     }
 
     public function testGETbyIdForForbiddenUser()
     {
         $response = $this->getResponseByName(REST_TestDataBuilder::TEST_USER_1_NAME, $this->request_factory->createRequest('GET', 'projects/' . REST_TestDataBuilder::ADMIN_PROJECT_ID));
-        $this->assertEquals($response->getStatusCode(), 403);
+        self::assertEquals($response->getStatusCode(), 403);
     }
 
     public function testGETBadRequest()
     {
         $response = $this->getResponseByName(REST_TestDataBuilder::ADMIN_USER_NAME, $this->request_factory->createRequest('GET', 'projects/abc'));
-        $this->assertEquals($response->getStatusCode(), 400);
+        self::assertEquals($response->getStatusCode(), 400);
     }
 
     public function testGETUnknownProject()
     {
         $response = $this->getResponseByName(REST_TestDataBuilder::ADMIN_USER_NAME, $this->request_factory->createRequest('GET', 'projects/1234567890'));
-        $this->assertEquals($response->getStatusCode(), 404);
+        self::assertEquals($response->getStatusCode(), 404);
     }
 
     public function testGETmilestones()
@@ -644,24 +707,24 @@ class ProjectTest extends ProjectBase
         );
 
         $milestones = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
-        $this->assertCount(1, $milestones);
+        self::assertCount(1, $milestones);
 
         $release_milestone = $milestones[0];
-        $this->assertArrayHasKey('id', $release_milestone);
-        $this->assertEquals($release_milestone['label'], "Release 1.0");
-        $this->assertEquals($release_milestone['project'], [
+        self::assertArrayHasKey('id', $release_milestone);
+        self::assertEquals($release_milestone['label'], "Release 1.0");
+        self::assertEquals($release_milestone['project'], [
             'id'    => $this->project_private_member_id,
             'uri'   => 'projects/' . $this->project_private_member_id,
             'label' => 'Private member'
         ]);
-        $this->assertArrayHasKey('id', $release_milestone['artifact']);
-        $this->assertArrayHasKey('uri', $release_milestone['artifact']);
-        $this->assertMatchesRegularExpression('%^artifacts/[0-9]+$%', $release_milestone['artifact']['uri']);
+        self::assertArrayHasKey('id', $release_milestone['artifact']);
+        self::assertArrayHasKey('uri', $release_milestone['artifact']);
+        self::assertMatchesRegularExpression('%^artifacts/[0-9]+$%', $release_milestone['artifact']['uri']);
 
-        $this->assertArrayHasKey('open', $release_milestone['status_count']);
-        $this->assertArrayHasKey('closed', $release_milestone['status_count']);
+        self::assertArrayHasKey('open', $release_milestone['status_count']);
+        self::assertArrayHasKey('closed', $release_milestone['status_count']);
 
-        $this->assertEquals($response->getStatusCode(), 200);
+        self::assertEquals($response->getStatusCode(), 200);
     }
 
     public function testGETmilestonesDoesNotContainStatusCountInSlimRepresentation()
@@ -672,13 +735,13 @@ class ProjectTest extends ProjectBase
         );
 
         $milestones = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
-        $this->assertCount(1, $milestones);
+        self::assertCount(1, $milestones);
 
         $release_milestone = $milestones[0];
-        $this->assertEquals($release_milestone['label'], "Release 1.0");
-        $this->assertEquals($release_milestone['status_count'], null);
+        self::assertEquals($release_milestone['label'], "Release 1.0");
+        self::assertEquals($release_milestone['status_count'], null);
 
-        $this->assertEquals($response->getStatusCode(), 200);
+        self::assertEquals($response->getStatusCode(), 200);
     }
 
 
@@ -694,7 +757,7 @@ class ProjectTest extends ProjectBase
         $response = $this->getResponseByName(REST_TestDataBuilder::ADMIN_USER_NAME, $this->request_factory->createRequest('OPTIONS', 'projects/' . $this->project_private_member_id . '/trackers'));
 
         self::assertEqualsCanonicalizing(['OPTIONS', 'GET'], explode(', ', $response->getHeaderLine('Allow')));
-        $this->assertEquals($response->getStatusCode(), 200);
+        self::assertEquals($response->getStatusCode(), 200);
     }
 
     public function testGETtrackers()
@@ -703,63 +766,63 @@ class ProjectTest extends ProjectBase
 
         $trackers = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
-        $this->assertCount(6, $trackers);
+        self::assertCount(6, $trackers);
 
         $epics_tracker = $trackers[0];
-        $this->assertArrayHasKey('id', $epics_tracker);
-        $this->assertEquals($epics_tracker['label'], "Epics");
-        $this->assertEquals($epics_tracker['project'], [
+        self::assertArrayHasKey('id', $epics_tracker);
+        self::assertEquals($epics_tracker['label'], "Epics");
+        self::assertEquals($epics_tracker['project'], [
             'id'    => $this->project_private_member_id,
             'uri'   => 'projects/' . $this->project_private_member_id,
             'label' => 'Private member'
         ]);
 
         $kanban_tracker = $trackers[1];
-        $this->assertArrayHasKey('id', $kanban_tracker);
-        $this->assertEquals($kanban_tracker['label'], "Kanban Tasks");
-        $this->assertEquals($kanban_tracker['project'], [
+        self::assertArrayHasKey('id', $kanban_tracker);
+        self::assertEquals($kanban_tracker['label'], "Kanban Tasks");
+        self::assertEquals($kanban_tracker['project'], [
             'id'    => $this->project_private_member_id,
             'uri'   => 'projects/' . $this->project_private_member_id,
             'label' => 'Private member'
         ]);
 
         $releases_tracker = $trackers[2];
-        $this->assertArrayHasKey('id', $releases_tracker);
-        $this->assertEquals($releases_tracker['label'], "Releases");
-        $this->assertEquals($releases_tracker['project'], [
+        self::assertArrayHasKey('id', $releases_tracker);
+        self::assertEquals($releases_tracker['label'], "Releases");
+        self::assertEquals($releases_tracker['project'], [
             'id'    => $this->project_private_member_id,
             'uri'   => 'projects/' . $this->project_private_member_id,
             'label' => 'Private member'
         ]);
 
         $sprints_tracker = $trackers[3];
-        $this->assertArrayHasKey('id', $sprints_tracker);
-        $this->assertEquals($sprints_tracker['label'], "Sprints");
-        $this->assertEquals($sprints_tracker['project'], [
+        self::assertArrayHasKey('id', $sprints_tracker);
+        self::assertEquals($sprints_tracker['label'], "Sprints");
+        self::assertEquals($sprints_tracker['project'], [
             'id'    => $this->project_private_member_id,
             'uri'   => 'projects/' . $this->project_private_member_id,
             'label' => 'Private member'
         ]);
 
         $tasks_tracker = $trackers[4];
-        $this->assertArrayHasKey('id', $tasks_tracker);
-        $this->assertEquals($tasks_tracker['label'], "Tasks");
-        $this->assertEquals($tasks_tracker['project'], [
+        self::assertArrayHasKey('id', $tasks_tracker);
+        self::assertEquals($tasks_tracker['label'], "Tasks");
+        self::assertEquals($tasks_tracker['project'], [
             'id'    => $this->project_private_member_id,
             'uri'   => 'projects/' . $this->project_private_member_id,
             'label' => 'Private member'
         ]);
 
         $userstories_tracker = $trackers[5];
-        $this->assertArrayHasKey('id', $userstories_tracker);
-        $this->assertEquals($userstories_tracker['label'], "User Stories");
-        $this->assertEquals($userstories_tracker['project'], [
+        self::assertArrayHasKey('id', $userstories_tracker);
+        self::assertEquals($userstories_tracker['label'], "User Stories");
+        self::assertEquals($userstories_tracker['project'], [
             'id'    => $this->project_private_member_id,
             'uri'   => 'projects/' . $this->project_private_member_id,
             'label' => 'Private member'
         ]);
 
-        $this->assertEquals($response->getStatusCode(), 200);
+        self::assertEquals($response->getStatusCode(), 200);
     }
 
     public function testOPTIONSbacklog()
@@ -778,31 +841,31 @@ class ProjectTest extends ProjectBase
 
         $backlog_items = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
-        $this->assertCount(3, $backlog_items);
+        self::assertCount(3, $backlog_items);
 
         $first_backlog_item = $backlog_items[0];
-        $this->assertArrayHasKey('id', $first_backlog_item);
-        $this->assertEquals($first_backlog_item['label'], "Epic pic");
-        $this->assertEquals($first_backlog_item['status'], "Open");
-        $this->assertEquals($first_backlog_item['artifact']['id'], $this->epic_artifact_ids[5]);
-        $this->assertEquals($first_backlog_item['artifact']['uri'], 'artifacts/' . $this->epic_artifact_ids[5]);
-        $this->assertEquals($first_backlog_item['artifact']['tracker']['id'], $this->epic_tracker_id);
+        self::assertArrayHasKey('id', $first_backlog_item);
+        self::assertEquals($first_backlog_item['label'], "Epic pic");
+        self::assertEquals($first_backlog_item['status'], "Open");
+        self::assertEquals($first_backlog_item['artifact']['id'], $this->epic_artifact_ids[5]);
+        self::assertEquals($first_backlog_item['artifact']['uri'], 'artifacts/' . $this->epic_artifact_ids[5]);
+        self::assertEquals($first_backlog_item['artifact']['tracker']['id'], $this->epic_tracker_id);
 
         $second_backlog_item = $backlog_items[1];
-        $this->assertArrayHasKey('id', $second_backlog_item);
-        $this->assertEquals($second_backlog_item['label'], "Epic c'est tout");
-        $this->assertEquals($second_backlog_item['status'], "Open");
-        $this->assertEquals($second_backlog_item['artifact']['id'], $this->epic_artifact_ids[6]);
-        $this->assertEquals($second_backlog_item['artifact']['uri'], 'artifacts/' . $this->epic_artifact_ids[6]);
-        $this->assertEquals($second_backlog_item['artifact']['tracker']['id'], $this->epic_tracker_id);
+        self::assertArrayHasKey('id', $second_backlog_item);
+        self::assertEquals($second_backlog_item['label'], "Epic c'est tout");
+        self::assertEquals($second_backlog_item['status'], "Open");
+        self::assertEquals($second_backlog_item['artifact']['id'], $this->epic_artifact_ids[6]);
+        self::assertEquals($second_backlog_item['artifact']['uri'], 'artifacts/' . $this->epic_artifact_ids[6]);
+        self::assertEquals($second_backlog_item['artifact']['tracker']['id'], $this->epic_tracker_id);
 
         $third_backlog_item = $backlog_items[2];
-        $this->assertArrayHasKey('id', $third_backlog_item);
-        $this->assertEquals($third_backlog_item['label'], "Epic epoc");
-        $this->assertEquals($third_backlog_item['status'], "Open");
-        $this->assertEquals($third_backlog_item['artifact']['id'], $this->epic_artifact_ids[7]);
-        $this->assertEquals($third_backlog_item['artifact']['uri'], 'artifacts/' . $this->epic_artifact_ids[7]);
-        $this->assertEquals($third_backlog_item['artifact']['tracker']['id'], $this->epic_tracker_id);
+        self::assertArrayHasKey('id', $third_backlog_item);
+        self::assertEquals($third_backlog_item['label'], "Epic epoc");
+        self::assertEquals($third_backlog_item['status'], "Open");
+        self::assertEquals($third_backlog_item['artifact']['id'], $this->epic_artifact_ids[7]);
+        self::assertEquals($third_backlog_item['artifact']['uri'], 'artifacts/' . $this->epic_artifact_ids[7]);
+        self::assertEquals($third_backlog_item['artifact']['tracker']['id'], $this->epic_tracker_id);
     }
 
     public function testPUTbacklogWithoutPermission()
@@ -819,7 +882,7 @@ class ProjectTest extends ProjectBase
             )
         );
 
-        $this->assertEquals($response_put->getStatusCode(), 403);
+        self::assertEquals($response_put->getStatusCode(), 403);
     }
 
     public function testPUTbacklog()
@@ -835,38 +898,38 @@ class ProjectTest extends ProjectBase
             )
         );
 
-        $this->assertEquals($response_put->getStatusCode(), 200);
+        self::assertEquals($response_put->getStatusCode(), 200);
 
         $response_get  = $this->getResponse(
             $this->request_factory->createRequest('GET', 'projects/' . $this->project_private_member_id . '/backlog')
         );
         $backlog_items = json_decode($response_get->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
-        $this->assertCount(3, $backlog_items);
+        self::assertCount(3, $backlog_items);
 
         $first_backlog_item = $backlog_items[0];
-        $this->assertArrayHasKey('id', $first_backlog_item);
-        $this->assertEquals($first_backlog_item['label'], "Epic epoc");
-        $this->assertEquals($first_backlog_item['status'], "Open");
-        $this->assertEquals($first_backlog_item['artifact']['id'], $this->epic_artifact_ids[7]);
-        $this->assertEquals($first_backlog_item['artifact']['uri'], 'artifacts/' . $this->epic_artifact_ids[7]);
-        $this->assertEquals($first_backlog_item['artifact']['tracker']['id'], $this->epic_tracker_id);
+        self::assertArrayHasKey('id', $first_backlog_item);
+        self::assertEquals($first_backlog_item['label'], "Epic epoc");
+        self::assertEquals($first_backlog_item['status'], "Open");
+        self::assertEquals($first_backlog_item['artifact']['id'], $this->epic_artifact_ids[7]);
+        self::assertEquals($first_backlog_item['artifact']['uri'], 'artifacts/' . $this->epic_artifact_ids[7]);
+        self::assertEquals($first_backlog_item['artifact']['tracker']['id'], $this->epic_tracker_id);
 
         $second_backlog_item = $backlog_items[1];
-        $this->assertArrayHasKey('id', $second_backlog_item);
-        $this->assertEquals($second_backlog_item['label'], "Epic pic");
-        $this->assertEquals($second_backlog_item['status'], "Open");
-        $this->assertEquals($second_backlog_item['artifact']['id'], $this->epic_artifact_ids[5]);
-        $this->assertEquals($second_backlog_item['artifact']['uri'], 'artifacts/' . $this->epic_artifact_ids[5]);
-        $this->assertEquals($second_backlog_item['artifact']['tracker']['id'], $this->epic_tracker_id);
+        self::assertArrayHasKey('id', $second_backlog_item);
+        self::assertEquals($second_backlog_item['label'], "Epic pic");
+        self::assertEquals($second_backlog_item['status'], "Open");
+        self::assertEquals($second_backlog_item['artifact']['id'], $this->epic_artifact_ids[5]);
+        self::assertEquals($second_backlog_item['artifact']['uri'], 'artifacts/' . $this->epic_artifact_ids[5]);
+        self::assertEquals($second_backlog_item['artifact']['tracker']['id'], $this->epic_tracker_id);
 
         $third_backlog_item = $backlog_items[2];
-        $this->assertArrayHasKey('id', $third_backlog_item);
-        $this->assertEquals($third_backlog_item['label'], "Epic c'est tout");
-        $this->assertEquals($third_backlog_item['status'], "Open");
-        $this->assertEquals($third_backlog_item['artifact']['id'], $this->epic_artifact_ids[6]);
-        $this->assertEquals($third_backlog_item['artifact']['uri'], 'artifacts/' . $this->epic_artifact_ids[6]);
-        $this->assertEquals($third_backlog_item['artifact']['tracker']['id'], $this->epic_tracker_id);
+        self::assertArrayHasKey('id', $third_backlog_item);
+        self::assertEquals($third_backlog_item['label'], "Epic c'est tout");
+        self::assertEquals($third_backlog_item['status'], "Open");
+        self::assertEquals($third_backlog_item['artifact']['id'], $this->epic_artifact_ids[6]);
+        self::assertEquals($third_backlog_item['artifact']['uri'], 'artifacts/' . $this->epic_artifact_ids[6]);
+        self::assertEquals($third_backlog_item['artifact']['tracker']['id'], $this->epic_tracker_id);
     }
 
     public function testPUTbacklogOnlyTwoItems()
@@ -882,38 +945,38 @@ class ProjectTest extends ProjectBase
             )
         );
 
-        $this->assertEquals($response_put->getStatusCode(), 200);
+        self::assertEquals($response_put->getStatusCode(), 200);
 
         $response_get  = $this->getResponse(
             $this->request_factory->createRequest('GET', 'projects/' . $this->project_private_member_id . '/backlog')
         );
         $backlog_items = json_decode($response_get->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
-        $this->assertCount(3, $backlog_items);
+        self::assertCount(3, $backlog_items);
 
         $first_backlog_item = $backlog_items[0];
-        $this->assertArrayHasKey('id', $first_backlog_item);
-        $this->assertEquals($first_backlog_item['label'], "Epic pic");
-        $this->assertEquals($first_backlog_item['status'], "Open");
-        $this->assertEquals($first_backlog_item['artifact']['id'], $this->epic_artifact_ids[5]);
-        $this->assertEquals($first_backlog_item['artifact']['uri'], 'artifacts/' . $this->epic_artifact_ids[5]);
-        $this->assertEquals($first_backlog_item['artifact']['tracker']['id'], $this->epic_tracker_id);
+        self::assertArrayHasKey('id', $first_backlog_item);
+        self::assertEquals($first_backlog_item['label'], "Epic pic");
+        self::assertEquals($first_backlog_item['status'], "Open");
+        self::assertEquals($first_backlog_item['artifact']['id'], $this->epic_artifact_ids[5]);
+        self::assertEquals($first_backlog_item['artifact']['uri'], 'artifacts/' . $this->epic_artifact_ids[5]);
+        self::assertEquals($first_backlog_item['artifact']['tracker']['id'], $this->epic_tracker_id);
 
         $second_backlog_item = $backlog_items[1];
-        $this->assertArrayHasKey('id', $second_backlog_item);
-        $this->assertEquals($second_backlog_item['label'], "Epic c'est tout");
-        $this->assertEquals($second_backlog_item['status'], "Open");
-        $this->assertEquals($second_backlog_item['artifact']['id'], $this->epic_artifact_ids[6]);
-        $this->assertEquals($second_backlog_item['artifact']['uri'], 'artifacts/' . $this->epic_artifact_ids[6]);
-        $this->assertEquals($second_backlog_item['artifact']['tracker']['id'], $this->epic_tracker_id);
+        self::assertArrayHasKey('id', $second_backlog_item);
+        self::assertEquals($second_backlog_item['label'], "Epic c'est tout");
+        self::assertEquals($second_backlog_item['status'], "Open");
+        self::assertEquals($second_backlog_item['artifact']['id'], $this->epic_artifact_ids[6]);
+        self::assertEquals($second_backlog_item['artifact']['uri'], 'artifacts/' . $this->epic_artifact_ids[6]);
+        self::assertEquals($second_backlog_item['artifact']['tracker']['id'], $this->epic_tracker_id);
 
         $third_backlog_item = $backlog_items[2];
-        $this->assertArrayHasKey('id', $third_backlog_item);
-        $this->assertEquals($third_backlog_item['label'], "Epic epoc");
-        $this->assertEquals($third_backlog_item['status'], "Open");
-        $this->assertEquals($third_backlog_item['artifact']['id'], $this->epic_artifact_ids[7]);
-        $this->assertEquals($third_backlog_item['artifact']['uri'], 'artifacts/' . $this->epic_artifact_ids[7]);
-        $this->assertEquals($third_backlog_item['artifact']['tracker']['id'], $this->epic_tracker_id);
+        self::assertArrayHasKey('id', $third_backlog_item);
+        self::assertEquals($third_backlog_item['label'], "Epic epoc");
+        self::assertEquals($third_backlog_item['status'], "Open");
+        self::assertEquals($third_backlog_item['artifact']['id'], $this->epic_artifact_ids[7]);
+        self::assertEquals($third_backlog_item['artifact']['uri'], 'artifacts/' . $this->epic_artifact_ids[7]);
+        self::assertEquals($third_backlog_item['artifact']['tracker']['id'], $this->epic_tracker_id);
     }
 
     public function testOPTIONSLabels()
@@ -927,7 +990,7 @@ class ProjectTest extends ProjectBase
     {
         $response = $this->getResponse($this->request_factory->createRequest('GET', 'projects/' . $this->project_private_member_id . '/labels'));
 
-        $this->assertEquals(['labels' => []], json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR));
+        self::assertEquals(['labels' => []], json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR));
     }
 
     public function testOPTIONSUserGroups()
@@ -1024,7 +1087,7 @@ class ProjectTest extends ProjectBase
                 'short_name' => REST_TestDataBuilder::STATIC_PRIVATE_MEMBER_UGROUP_DEVS_LABEL
             ]
         ];
-        $this->assertEquals($expected_result, json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR));
+        self::assertEquals($expected_result, json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR));
     }
 
     public function testGETUserGroupsWithSystemUserGroupsReturnsAnonymousAndRegisteredWhenAnonymousUsersCanAccessThePlatform()
@@ -1040,8 +1103,8 @@ class ProjectTest extends ProjectBase
         foreach ($json_response as $user_group) {
             $user_group_ids[] = $user_group['id'];
         }
-        $this->assertContains('1', $user_group_ids); // ProjectUgroup::ANONYMOUS
-        $this->assertContains('2', $user_group_ids); // ProjectUgroup::REGISTERED
+        self::assertContains('1', $user_group_ids); // ProjectUgroup::ANONYMOUS
+        self::assertContains('2', $user_group_ids); // ProjectUgroup::REGISTERED
     }
 
     public function testPATCHbacklogWithoutPermission()
@@ -1058,7 +1121,7 @@ class ProjectTest extends ProjectBase
             )
         );
 
-        $this->assertEquals($response_patch->getStatusCode(), 403);
+        self::assertEquals($response_patch->getStatusCode(), 403);
     }
 
     public function testPATCHbacklog()
@@ -1074,9 +1137,9 @@ class ProjectTest extends ProjectBase
         $first_item  = $backlog_items[0];
         $second_item = $backlog_items[1];
         $third_item  = $backlog_items[2];
-        $this->assertEquals($first_item['label'], "Epic pic");
-        $this->assertEquals($second_item['label'], "Epic c'est tout");
-        $this->assertEquals($third_item['label'], "Epic epoc");
+        self::assertEquals($first_item['label'], "Epic pic");
+        self::assertEquals($second_item['label'], "Epic c'est tout");
+        self::assertEquals($third_item['label'], "Epic epoc");
 
         $request_body = json_encode([
             'order' => [
@@ -1094,7 +1157,7 @@ class ProjectTest extends ProjectBase
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
 
-        $this->assertEquals(403, $response_patch_with_rest_read_only->getStatusCode());
+        self::assertEquals(403, $response_patch_with_rest_read_only->getStatusCode());
 
         $response_patch = $this->getResponse(
             $this->request_factory->createRequest(
@@ -1107,7 +1170,7 @@ class ProjectTest extends ProjectBase
             )
         );
 
-        $this->assertEquals(200, $response_patch->getStatusCode());
+        self::assertEquals(200, $response_patch->getStatusCode());
 
         // assert that the two items are in a different order
         $modified_backlog_items = json_decode(
@@ -1120,9 +1183,9 @@ class ProjectTest extends ProjectBase
         $first_modified  = $modified_backlog_items[0];
         $second_modified = $modified_backlog_items[1];
         $third_modified  = $modified_backlog_items[2];
-        $this->assertEquals($first_modified['label'], "Epic c'est tout");
-        $this->assertEquals($second_modified['label'], "Epic pic");
-        $this->assertEquals($third_modified['label'], "Epic epoc");
+        self::assertEquals($first_modified['label'], "Epic c'est tout");
+        self::assertEquals($second_modified['label'], "Epic pic");
+        self::assertEquals($third_modified['label'], "Epic epoc");
 
         // re-invert order of the two tasks
         $reinvert_patch = $this->getResponse(
@@ -1140,7 +1203,7 @@ class ProjectTest extends ProjectBase
                 )
             )
         );
-        $this->assertEquals(200, $reinvert_patch->getStatusCode());
+        self::assertEquals(200, $reinvert_patch->getStatusCode());
 
         // assert that the two tasks are in the order
         $reverted_backlog_items = json_decode(
@@ -1153,9 +1216,9 @@ class ProjectTest extends ProjectBase
         $first_item  = $reverted_backlog_items[0];
         $second_item = $reverted_backlog_items[1];
         $third_item  = $backlog_items[2];
-        $this->assertEquals($first_item['label'], "Epic pic");
-        $this->assertEquals($second_item['label'], "Epic c'est tout");
-        $this->assertEquals($third_item['label'], "Epic epoc");
+        self::assertEquals($first_item['label'], "Epic pic");
+        self::assertEquals($second_item['label'], "Epic c'est tout");
+        self::assertEquals($third_item['label'], "Epic epoc");
     }
 
     public function testPATCHbacklogMoveBackAndForthInTopBacklog()
@@ -1221,9 +1284,9 @@ class ProjectTest extends ProjectBase
                 )
             )
         );
-        $this->assertEquals(200, $response->getStatusCode());
+        self::assertEquals(200, $response->getStatusCode());
 
-        $this->assertEquals(
+        self::assertEquals(
             [
                 $first_item['id'],
                 $first_epic['id'],
@@ -1254,10 +1317,10 @@ class ProjectTest extends ProjectBase
                 )
             )
         );
-        $this->assertEquals(200, $response->getStatusCode());
+        self::assertEquals(200, $response->getStatusCode());
 
         // Assert Everything is equal to the beginning of the test
-        $this->assertEquals(
+        self::assertEquals(
             [
                 $first_item['id'],
                 $second_item['id'],
@@ -1266,7 +1329,7 @@ class ProjectTest extends ProjectBase
             $this->getIdsOrderedByPriority($uri)
         );
 
-        $this->assertEquals(
+        self::assertEquals(
             $this->getIds($release_content),
             $this->getIdsOrderedByPriority('milestones/' . $first_release['id'] . '/content')
         );
@@ -1310,7 +1373,7 @@ class ProjectTest extends ProjectBase
             ]
         ];
 
-        $this->assertEquals($expected_result, json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR));
+        self::assertEquals($expected_result, json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR));
     }
 
     public function testGETWikiWithGoodPagename()
@@ -1327,7 +1390,7 @@ class ProjectTest extends ProjectBase
             ]
         ];
 
-        $this->assertEquals($expected_result, json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR));
+        self::assertEquals($expected_result, json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR));
     }
 
     public function testGETWikiWithGoodPagenameAndASpace()
@@ -1344,7 +1407,7 @@ class ProjectTest extends ProjectBase
             ]
         ];
 
-        $this->assertEquals($expected_result, json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR));
+        self::assertEquals($expected_result, json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR));
     }
 
     public function testGETWikiWithGoodRelativePagename()
@@ -1366,7 +1429,7 @@ class ProjectTest extends ProjectBase
             ]
         ];
 
-        $this->assertEqualsCanonicalizing($expected_result, json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR));
+        self::assertEqualsCanonicalizing($expected_result, json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR));
     }
 
     public function testGETWikiWithNotExistingPagename()
@@ -1377,7 +1440,7 @@ class ProjectTest extends ProjectBase
             'pages' => []
         ];
 
-        $this->assertEquals($expected_result, json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR));
+        self::assertEquals($expected_result, json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR));
     }
 
     public function testGETWithBasicAuth()
@@ -1385,7 +1448,7 @@ class ProjectTest extends ProjectBase
         $response      = $this->getBasicAuthResponse($this->request_factory->createRequest('GET', 'projects'));
         $json_projects = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
-        $this->assertTrue(
+        self::assertTrue(
             $this->valuesArePresent(
                 [
                     $this->project_private_member_id,
@@ -1410,7 +1473,7 @@ class ProjectTest extends ProjectBase
                 $this->stream_factory->createStream($patch_resource)
             )
         );
-        $this->assertEquals(403, $response->getStatusCode());
+        self::assertEquals(403, $response->getStatusCode());
     }
 
     public function testPATCHWithAdmin()
@@ -1426,7 +1489,7 @@ class ProjectTest extends ProjectBase
             )
         );
 
-        $this->assertEquals($response->getStatusCode(), 200);
+        self::assertEquals($response->getStatusCode(), 200);
     }
 
     public function testPATCHWithRestProjectManager()
@@ -1442,7 +1505,7 @@ class ProjectTest extends ProjectBase
             )
         );
 
-        $this->assertEquals($response->getStatusCode(), 200);
+        self::assertEquals($response->getStatusCode(), 200);
     }
 
     public function testPATCHWithAdminWhenProjectIsDeleted()
@@ -1458,7 +1521,7 @@ class ProjectTest extends ProjectBase
             )
         );
 
-        $this->assertEquals($response->getStatusCode(), 403);
+        self::assertEquals($response->getStatusCode(), 403);
     }
 
     public function getSuspendedProjectTrackersWithRegularUser()
@@ -1478,7 +1541,7 @@ class ProjectTest extends ProjectBase
             $this->request_factory->createRequest('GET', 'projects/' . $this->project_suspended_id . '/trackers')
         );
 
-        $this->assertEquals($response->getStatusCode(), 200);
+        self::assertEquals($response->getStatusCode(), 200);
     }
 
     public function testPUTBanner(): void
@@ -1499,7 +1562,7 @@ class ProjectTest extends ProjectBase
             )
         );
 
-        $this->assertEquals(200, $response->getStatusCode());
+        self::assertEquals(200, $response->getStatusCode());
     }
 
     public function testPUTEmptyMessageBannerShouldReturn400(): void
@@ -1520,7 +1583,7 @@ class ProjectTest extends ProjectBase
             )
         );
 
-        $this->assertEquals(400, $response->getStatusCode());
+        self::assertEquals(400, $response->getStatusCode());
     }
 
     /**
@@ -1536,7 +1599,7 @@ class ProjectTest extends ProjectBase
             )
         );
 
-        $this->assertEquals(200, $response->getStatusCode());
+        self::assertEquals(200, $response->getStatusCode());
     }
 
     /**
@@ -1552,10 +1615,10 @@ class ProjectTest extends ProjectBase
             )
         );
 
-        $this->assertEquals(200, $response->getStatusCode());
+        self::assertEquals(200, $response->getStatusCode());
 
         $response_json = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
-        $this->assertEquals('a banner message', $response_json['message']);
+        self::assertEquals('a banner message', $response_json['message']);
     }
 
     public function testPUTHeaderBackground(): void

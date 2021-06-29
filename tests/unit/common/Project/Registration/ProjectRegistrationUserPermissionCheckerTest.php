@@ -32,7 +32,8 @@ use ProjectDao;
 use ProjectManager;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\Project\Registration\AnonymousNotAllowedException;
-use Tuleap\Project\Registration\MaxNumberOfProjectReachedException;
+use Tuleap\Project\Registration\MaxNumberOfProjectReachedForPlatformException;
+use Tuleap\Project\Registration\MaxNumberOfProjectReachedForUserException;
 use Tuleap\Project\Registration\ProjectRegistrationUserPermissionChecker;
 use Tuleap\Project\Registration\LimitedToSiteAdministratorsException;
 use Tuleap\Project\Registration\RestrictedUsersNotAllowedException;
@@ -103,7 +104,7 @@ class ProjectRegistrationUserPermissionCheckerTest extends \Tuleap\Test\PHPUnit\
 
         $this->project_dao->shouldReceive('countByStatus')->once()->with(Project::STATUS_PENDING)->andReturn('5');
 
-        $this->expectException(MaxNumberOfProjectReachedException::class);
+        $this->expectException(MaxNumberOfProjectReachedForPlatformException::class);
 
         $this->permission_checker->checkUserCreateAProject($this->user);
     }
@@ -127,7 +128,7 @@ class ProjectRegistrationUserPermissionCheckerTest extends \Tuleap\Test\PHPUnit\
 
         $this->project_dao->shouldReceive('countByStatusAndUser')->once()->with(110, Project::STATUS_PENDING)->andReturn(5);
 
-        $this->expectException(MaxNumberOfProjectReachedException::class);
+        $this->expectException(MaxNumberOfProjectReachedForUserException::class);
         $this->permission_checker->checkUserCreateAProject($this->user);
     }
 

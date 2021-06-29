@@ -44,6 +44,8 @@ use Tuleap\Project\MappingRegistry;
 use Tuleap\Project\ProjectDescriptionMandatoryException;
 use Tuleap\Project\ProjectDescriptionUsageRetriever;
 use Tuleap\Project\ProjectRegistrationDisabledException;
+use Tuleap\Project\Registration\ProjectRegistrationChecker;
+use Tuleap\Project\Registration\ProjectRegistrationUserPermissionChecker;
 use Tuleap\Project\Registration\RegisterProjectCreationEvent;
 use Tuleap\Project\Registration\Template\TemplateFromProjectForCreation;
 use Tuleap\Project\Service\ServiceLinkDataBuilder;
@@ -151,6 +153,8 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
      */
     private $project_service_activator;
 
+    private ProjectRegistrationChecker $registration_checker;
+
     public function __construct(
         ProjectManager $projectManager,
         ReferenceManager $reference_manager,
@@ -168,6 +172,7 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
         EventManager $event_manager,
         \Tuleap\Project\Admin\DescriptionFields\FieldUpdator $field_updator,
         ProjectServiceActivator $project_service_activator,
+        ProjectRegistrationChecker $registration_checker,
         $force_activation = false
     ) {
         $this->send_notifications                         = $send_notifications;
@@ -187,6 +192,7 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
         $this->event_manager                              = $event_manager;
         $this->field_updator                              = $field_updator;
         $this->project_service_activator                  = $project_service_activator;
+        $this->registration_checker                       = $registration_checker;
     }
 
     public static function buildSelfByPassValidation(): self
@@ -272,6 +278,11 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
                 new ServiceLinkDataBuilder(),
                 ReferenceManager::instance()
             ),
+            new ProjectRegistrationChecker(
+                new ProjectRegistrationUserPermissionChecker(
+                    new \ProjectDao()
+                )
+            ),
             $force_activation
         );
     }
@@ -297,33 +308,6 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
     }
 
     /**
-     * Create a new project
-     *
-     * $data['project']['form_unix_name']
-     * $data['project']['form_full_name']
-     * $data['project']['form_short_description']
-     * $data['project']['built_from_template']
-     * $data['project']['is_test']
-     * $data['project']['is_public']
-     * $data['project']["form_".$descfieldsinfos[$i]["group_desc_id"]]
-     * foreach($data['project']['trove'] as $root => $values);
-     * $data['project']['services'][$arr['service_id']]['is_used'];
-     * $data['project']['services'][$arr['service_id']]['server_id'];
-     *
-     * @param String $shortName, the unix name
-     * @param String $publicName, the full name
-     * @param Array $data
-     *
-     * @return Project
-     */
-    public function create($shortName, $publicName, TemplateFromProjectForCreation $template_from_project_for_creation, array $data)
-    {
-        $creationData = $this->getProjectCreationData($shortName, $publicName, $template_from_project_for_creation, $data);
-
-        return $this->build($creationData);
-    }
-
-    /**
      * @throws Project_Creation_Exception
      * @throws Project_InvalidFullName_Exception
      * @throws Project_InvalidShortName_Exception
@@ -338,9 +322,7 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
     ): Project {
         $creation_data = $this->getProjectCreationData($short_name, $public_name, $template_from_project_for_creation, $data);
 
-        $this->checkProjectCreationData($creation_data);
-
-        return $this->processProjectCreation($creation_data);
+        return $this->build($creation_data);
     }
 
     /**
@@ -377,16 +359,22 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
      * - Add the template as a project reference
      * - Copy Truncated email option
      * - Raise an event for plugin configuration
-     *
-     * @param  data ProjectCreationData
      */
-    protected function createProject(ProjectCreationData $data)
+    protected function createProject(ProjectCreationData $data): ?int
     {
         $admin_user = $this->user_manager->getCurrentUser();
 
+        $errors_collection = $this->registration_checker->collectPermissionErrorsForProjectRegistration(
+            $admin_user
+        );
+
+        foreach ($errors_collection->getErrors() as $error) {
+            throw $error;
+        }
+
         $group_id = $this->createGroupEntry($data);
         if ($group_id === false) {
-            return;
+            return null;
         }
 
         $this->field_updator->update($data, $group_id);

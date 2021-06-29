@@ -23,6 +23,15 @@ declare(strict_types=1);
 
 namespace Tuleap\Project\Registration;
 
-class MaxNumberOfProjectReachedException extends RegistrationForbiddenException
+class MaxNumberOfProjectReachedForPlatformException extends RegistrationForbiddenException
 {
+    public function __construct()
+    {
+        parent::__construct("Too many projects are waiting to be approved.");
+    }
+
+    public function getI18NMessage(): string
+    {
+        return dgettext("tuleap-core", "Too many projects are waiting to be approved.");
+    }
 }

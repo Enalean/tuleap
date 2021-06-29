@@ -623,6 +623,9 @@ msgstr[1] "Et %d autres groupes que vous ne pouvez pas administrer."
 msgid "Anonymous user"
 msgstr "Utilisateur anonyme"
 
+msgid "Anonymous users are not allowed."
+msgstr "Les utilisateurs anonymes ne sont pas autorisés."
+
 msgid "Anonymous users can access the platform"
 msgstr "Accès anonyme autorisé"
 
@@ -2327,6 +2330,9 @@ msgstr "Une fois ajouté, un forum ne peut être ni modifié ni détruit !"
 msgid "Only project members can access its content."
 msgstr "Seuls les membres du projet peuvent accéder à son contenu."
 
+msgid "Only site administrators can create projects."
+msgstr "Seuls les administrateurs de la plateforme peuvent créer des projets."
+
 msgid "Ooops an error occured"
 msgstr "Ouuups une erreur est survenue"
 
@@ -2992,6 +2998,9 @@ msgstr "Les utilisateurs restreints ne sont pas autorisés dans ce projet."
 
 msgid "Restricted users can create projects"
 msgstr "Les utilisateurs restreints peuvent créer des projets"
+
+msgid "Restricted users cannot create projects."
+msgstr "Les utilisateurs restreints ne peuvent pas créer de projets."
 
 msgid "Restricted users removal"
 msgstr "Suppression des utilisateurs restreints"
@@ -3868,6 +3877,12 @@ msgstr "Aujourd'hui"
 
 msgid "Token comment"
 msgstr "Commentaire du jeton"
+
+msgid "Too many projects are waiting to be approved."
+msgstr "Trop de projets sont en attente de validation."
+
+msgid "Too many projects for the user are waiting to be approved."
+msgstr "Trop de projets créés par l'utilisateur sont en attente de validation."
 
 msgid "Tools"
 msgstr "Outils"

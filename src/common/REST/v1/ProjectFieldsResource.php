@@ -79,11 +79,11 @@ class ProjectFieldsResource extends AuthenticatedResource
         try {
             $this->permission_checker->checkUserHasThePermissionToCreateProject($user);
         } catch (LimitedToSiteAdministratorsException $exception) {
-            throw new RestException(403, "You don't have the permission to create project");
+            throw new RestException(403, $exception->getMessage());
         } catch (AnonymousNotAllowedException $exception) {
-            throw new RestException(403, "Anonymous doesn't have the permission to create project");
+            throw new RestException(403, $exception->getMessage());
         } catch (RestrictedUsersNotAllowedException $exception) {
-            throw new RestException(403, "Restricted users doesn't have the permission to create project");
+            throw new RestException(403, $exception->getMessage());
         }
 
         $project_field_representations = [];

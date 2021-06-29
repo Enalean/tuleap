@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2021 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -23,15 +23,27 @@ declare(strict_types=1);
 
 namespace Tuleap\Project\Registration;
 
-class LimitedToSiteAdministratorsException extends RegistrationForbiddenException
+use PFUser;
+
+class ProjectRegistrationChecker
 {
-    public function __construct()
+    private ProjectRegistrationUserPermissionChecker $permission_checker;
+
+    public function __construct(ProjectRegistrationUserPermissionChecker $permission_checker)
     {
-        parent::__construct("Only site administrators can create projects.");
+        $this->permission_checker = $permission_checker;
     }
 
-    public function getI18NMessage(): string
+    public function collectPermissionErrorsForProjectRegistration(PFUser $user): ProjectRegistrationErrorsCollection
     {
-        return dgettext("tuleap-core", "Only site administrators can create projects.");
+        $errors_collection = new ProjectRegistrationErrorsCollection();
+
+        try {
+            $this->permission_checker->checkUserCreateAProject($user);
+        } catch (RegistrationForbiddenException $exception) {
+            $errors_collection->addError($exception);
+        }
+
+        return $errors_collection;
     }
 }

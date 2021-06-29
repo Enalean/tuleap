@@ -39,6 +39,8 @@ use Tuleap\GlobalSVNPollution;
 use Tuleap\Project\Admin\DescriptionFields\FieldUpdator;
 use Tuleap\Project\Admin\Service\ProjectServiceActivator;
 use Tuleap\Project\Label\LabelDao;
+use Tuleap\Project\Registration\ProjectRegistrationChecker;
+use Tuleap\Project\Registration\ProjectRegistrationErrorsCollection;
 use Tuleap\Project\Registration\Template\TemplateFromProjectForCreation;
 use Tuleap\Project\UGroups\SynchronizedProjectMembershipDuplicator;
 use UserManager;
@@ -101,6 +103,10 @@ final class ProjectCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Rule_ProjectName
      */
     private $rule_short_name;
+    /**
+     * @var \PHPUnit\Framework\MockObject\MockObject&ProjectRegistrationChecker
+     */
+    private $registration_checker;
 
     protected function setUp(): void
     {
@@ -119,6 +125,7 @@ final class ProjectCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->dashboard_duplicator                       = Mockery::mock(ProjectDashboardDuplicator::class);
         $this->field_updator                              = Mockery::mock(FieldUpdator::class);
         $this->service_updator                            = Mockery::mock(ProjectServiceActivator::class);
+        $this->registration_checker                       = $this->createMock(ProjectRegistrationChecker::class);
     }
 
     public function testMandatoryDescriptionNotSetRaiseException(): void
@@ -233,7 +240,14 @@ final class ProjectCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->creator->shouldReceive('autoActivateProject')->once();
 
-        $this->creator->create(
+        $this->registration_checker
+            ->expects(self::once())
+            ->method('collectPermissionErrorsForProjectRegistration')
+            ->willReturn(
+                new ProjectRegistrationErrorsCollection()
+            );
+
+        $this->creator->createFromRest(
             "test",
             "shortname",
             TemplateFromProjectForCreation::fromGlobalProjectAdminTemplate(),
@@ -284,6 +298,13 @@ final class ProjectCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->service_updator->shouldReceive('activateServicesFromTemplate')->once();
 
+        $this->registration_checker
+            ->expects(self::once())
+            ->method('collectPermissionErrorsForProjectRegistration')
+            ->willReturn(
+                new ProjectRegistrationErrorsCollection()
+            );
+
         $this->creator->shouldReceive('autoActivateProject')->never();
 
         $this->creator->createFromRest(
@@ -315,6 +336,7 @@ final class ProjectCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
                 $this->event_manager,
                 $this->field_updator,
                 $this->service_updator,
+                $this->registration_checker,
                 $force_activation
             ]
         )->makePartial()->shouldAllowMockingProtectedMethods();

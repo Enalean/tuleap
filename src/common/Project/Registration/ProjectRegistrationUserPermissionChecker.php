@@ -41,27 +41,23 @@ class ProjectRegistrationUserPermissionChecker
         $this->project_dao = $project_dao;
     }
 
+    /**
+     * @throws MaxNumberOfProjectReachedForPlatformException
+     * @throws LimitedToSiteAdministratorsException
+     * @throws AnonymousNotAllowedException
+     * @throws RestrictedUsersNotAllowedException
+     */
     public function checkUserCreateAProject(PFUser $user): void
     {
         $this->checkUserHasThePermissionToCreateProject($user);
 
         if ((int) ForgeConfig::get(ProjectManager::CONFIG_PROJECT_APPROVAL, 1) === 1) {
             if (! $this->numberOfProjectsWaitingForValidationBelowThreshold()) {
-                throw new MaxNumberOfProjectReachedException();
+                throw new MaxNumberOfProjectReachedForPlatformException();
             }
             if (! $this->numberOfProjectsWaitingForValidationPerUserBelowThreshold($user)) {
-                throw new MaxNumberOfProjectReachedException();
+                throw new MaxNumberOfProjectReachedForUserException();
             }
-        }
-    }
-
-    public function isUserAllowedToCreateProjects(PFUser $user): bool
-    {
-        try {
-            $this->checkUserCreateAProject($user);
-            return true;
-        } catch (RegistrationForbiddenException $exception) {
-            return false;
         }
     }
 
@@ -85,6 +81,11 @@ class ProjectRegistrationUserPermissionChecker
         return $current_per_user < $max_per_user;
     }
 
+    /**
+     * @throws LimitedToSiteAdministratorsException
+     * @throws AnonymousNotAllowedException
+     * @throws RestrictedUsersNotAllowedException
+     */
     public function checkUserHasThePermissionToCreateProject(PFUser $user): void
     {
         if (! ForgeConfig::get(ProjectManager::CONFIG_PROJECTS_CAN_BE_CREATED) && ! $user->isSuperUser()) {
