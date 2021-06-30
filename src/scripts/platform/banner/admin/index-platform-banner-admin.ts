@@ -41,6 +41,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         propsData: {
             message: vue_mount_point.dataset.bannerMessage || "",
             importance: vue_mount_point.dataset.bannerImportance || "standard",
+            expiration_date: vue_mount_point.dataset.bannerExpirationDate || "",
             location: window.location,
         },
     }).$mount(vue_mount_point);

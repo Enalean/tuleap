@@ -30,10 +30,15 @@
         <div v-else-if="has_banner_been_modified" class="tlp-alert-success" v-translate>
             The banner has been successfully modified
         </div>
+        <expired-banner-info-message
+            v-bind:message="message"
+            v-bind:expiration_date="expiration_date"
+        />
         <div>
             <banner-presenter
                 v-bind:message="message"
                 v-bind:importance="importance"
+                v-bind:expiration_date="expiration_date"
                 v-bind:loading="banner_presenter_is_loading"
                 v-on:delete-banner="deleteBanner"
                 v-on:save-banner="saveBanner(...arguments)"
@@ -48,11 +53,13 @@ import { Component, Prop } from "vue-property-decorator";
 import BannerPresenter from "./BannerPresenter.vue";
 import { deleteBannerForPlatform, saveBannerForPlatform } from "../api/rest-querier";
 import type { BannerState, Importance } from "../type";
+import ExpiredBannerInfoMessage from "./ExpiredBannerInfoMessage.vue";
 
 const LOCATION_HASH_SUCCESS = "#banner-change-success";
 
 @Component({
     components: {
+        ExpiredBannerInfoMessage,
         BannerPresenter,
     },
 })
@@ -62,6 +69,9 @@ export default class App extends Vue {
 
     @Prop({ required: true, type: String })
     readonly importance!: Importance;
+
+    @Prop({ required: true, type: String })
+    readonly expiration_date!: string;
 
     @Prop({ required: true })
     readonly location!: Location;
@@ -85,11 +95,19 @@ export default class App extends Vue {
             return;
         }
 
-        this.saveBannerMessage(bannerState.message, bannerState.importance);
+        this.saveBannerMessage(
+            bannerState.message,
+            bannerState.importance,
+            bannerState.expiration_date
+        );
     }
 
-    private saveBannerMessage(message: string, importance: Importance): void {
-        saveBannerForPlatform(message, importance)
+    private saveBannerMessage(
+        message: string,
+        importance: Importance,
+        expiration_date: string
+    ): void {
+        saveBannerForPlatform(message, importance, expiration_date)
             .then(() => {
                 this.refreshOnSuccessChange();
             })

@@ -30,6 +30,7 @@ describe("BannerPresenter", () => {
             propsData: {
                 message: banner_message,
                 importance: "critical",
+                expiration_date: "",
                 loading: false,
             },
         });
@@ -43,6 +44,7 @@ describe("BannerPresenter", () => {
             propsData: {
                 message: "",
                 importance: "critical",
+                expiration_date: "",
                 loading: false,
             },
         });
@@ -56,6 +58,7 @@ describe("BannerPresenter", () => {
             propsData: {
                 message: "some message",
                 importance: "critical",
+                expiration_date: "",
                 loading: false,
             },
         });
@@ -67,6 +70,7 @@ describe("BannerPresenter", () => {
         expect(emitSpy).toHaveBeenCalledWith("save-banner", {
             message: "some message",
             importance: "critical",
+            expiration_date: "",
             activated: false,
         });
     });
@@ -77,6 +81,7 @@ describe("BannerPresenter", () => {
             propsData: {
                 message: "some message",
                 importance: "critical",
+                expiration_date: "",
                 loading: true,
             },
         });
@@ -90,6 +95,7 @@ describe("BannerPresenter", () => {
             propsData: {
                 message: "somme message",
                 importance: "critical",
+                expiration_date: "",
                 loading: false,
             },
         });
@@ -107,6 +113,7 @@ describe("BannerPresenter", () => {
         expect(emitSpy).toHaveBeenCalledWith("save-banner", {
             message: updated_message,
             importance: updated_importance,
+            expiration_date: "",
             activated: true,
         });
     });
@@ -117,6 +124,7 @@ describe("BannerPresenter", () => {
             propsData: {
                 message: "some message",
                 importance: "critical",
+                expiration_date: "",
                 loading: false,
             },
         });

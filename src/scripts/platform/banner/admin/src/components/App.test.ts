@@ -30,6 +30,7 @@ describe("App", () => {
             propsData: {
                 message: "",
                 importance: "critical",
+                expiration_date: "",
                 location: window.location,
             },
         });
@@ -45,6 +46,7 @@ describe("App", () => {
             propsData: {
                 message: banner_message,
                 importance: "critical",
+                expiration_date: "",
                 location: window.location,
             },
         });
@@ -59,6 +61,7 @@ describe("App", () => {
             propsData: {
                 message: "",
                 importance: "critical",
+                expiration_date: "",
                 location: window.location,
             },
         });
@@ -75,6 +78,7 @@ describe("App", () => {
             propsData: {
                 message: "some message",
                 importance: "critical",
+                expiration_date: "",
                 location,
             },
         });
@@ -104,6 +108,7 @@ describe("App", () => {
             propsData: {
                 message: "some message",
                 importance: "critical",
+                expiration_date: "",
                 location: window.location,
             },
         });
@@ -129,6 +134,7 @@ describe("App", () => {
             propsData: {
                 message: "some message",
                 importance: "critical",
+                expiration_date: "",
                 location,
             },
         });
@@ -142,6 +148,7 @@ describe("App", () => {
         wrapper.findComponent(BannerPresenter).vm.$emit("save-banner", {
             message: "a new message",
             importance: "critical",
+            expiration_date: "",
             activated: true,
         });
 
@@ -159,6 +166,7 @@ describe("App", () => {
             propsData: {
                 message: "some message",
                 importance: "critical",
+                expiration_date: "",
                 location: window.location,
             },
         });
@@ -170,6 +178,7 @@ describe("App", () => {
         wrapper.findComponent(BannerPresenter).vm.$emit("save-banner", {
             message: "a new message",
             importance: "critical",
+            expiration_date: "",
             activated: true,
         });
         await wrapper.vm.$nextTick();

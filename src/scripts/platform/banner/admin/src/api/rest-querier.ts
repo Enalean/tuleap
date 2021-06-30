@@ -30,11 +30,19 @@ export async function deleteBannerForPlatform(): Promise<void> {
 
 export async function saveBannerForPlatform(
     new_message: string,
-    new_importance: Importance
+    new_importance: Importance,
+    new_expiration_date: string
 ): Promise<void> {
+    let expiration_date = null;
+
+    if (new_expiration_date !== "") {
+        expiration_date = new Date(new_expiration_date).toISOString().split(".")[0] + "Z";
+    }
+
     const body = JSON.stringify({
         message: new_message,
         importance: new_importance,
+        expiration_date,
     });
 
     await put(`/api/banner`, {

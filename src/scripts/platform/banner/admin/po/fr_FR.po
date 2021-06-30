@@ -24,6 +24,9 @@ msgstr "Choisissez un message pour la bannière"
 msgid "Critical"
 msgstr "Critique"
 
+msgid "Expiration date"
+msgstr "Date d'expiration"
+
 msgid "Importance"
 msgstr "Importance"
 
@@ -41,6 +44,14 @@ msgstr "Standard"
 
 msgid "The banner has been successfully modified"
 msgstr "La bannière a été modifiée avec succès"
+
+msgid ""
+"This banner is expired since %{ expiration_date } and, as such, not "
+"displayed on the\n"
+"    platform"
+msgstr ""
+"Cette bannière a expirée depuis le %{ expiration_date } et, de ce fait, "
+"n'est pas affichée sur la plateforme"
 
 msgid "Warning"
 msgstr "Avertissement"

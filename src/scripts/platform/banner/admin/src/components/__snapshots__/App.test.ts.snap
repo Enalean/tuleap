@@ -14,8 +14,14 @@ exports[`App Should display an error if banner deletion fails 1`] = `
     
   </div>
    
+  <expired-banner-info-message-stub
+    expiration_date=""
+    message="some message"
+  />
+   
   <div>
     <banner-presenter-stub
+      expiration_date=""
       importance="critical"
       message="some message"
     />
@@ -37,8 +43,14 @@ exports[`App Should display an error if banner update fails 1`] = `
     
   </div>
    
+  <expired-banner-info-message-stub
+    expiration_date=""
+    message="some message"
+  />
+   
   <div>
     <banner-presenter-stub
+      expiration_date=""
       importance="critical"
       message="some message"
     />
@@ -50,8 +62,14 @@ exports[`App displays message and remove button when banner is not empty 1`] = `
 <div>
   <!---->
    
+  <expired-banner-info-message-stub
+    expiration_date=""
+    message=<b>My banner content</b>
+  />
+   
   <div>
     <banner-presenter-stub
+      expiration_date=""
       importance="critical"
       message=<b>My banner content</b>
     />
@@ -63,8 +81,14 @@ exports[`App displays something when no banner is set 1`] = `
 <div>
   <!---->
    
+  <expired-banner-info-message-stub
+    expiration_date=""
+    message=""
+  />
+   
   <div>
     <banner-presenter-stub
+      expiration_date=""
       importance="critical"
       message=""
     />
@@ -86,8 +110,14 @@ exports[`App displays success message when the banner has been successfully modi
     
   </div>
    
+  <expired-banner-info-message-stub
+    expiration_date=""
+    message=""
+  />
+   
   <div>
     <banner-presenter-stub
+      expiration_date=""
       importance="critical"
       message=""
     />

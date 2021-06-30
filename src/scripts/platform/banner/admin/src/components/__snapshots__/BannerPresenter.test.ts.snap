@@ -93,6 +93,10 @@ exports[`BannerPresenter disables the whole form when on loading state 1`] = `
       </label>
     </div>
      
+    <expiration-date-banner-input-stub
+      value=""
+    />
+     
     <div
       class="tlp-form-element tlp-form-element-disabled"
     >
@@ -255,6 +259,10 @@ exports[`BannerPresenter displays a default message and an unchecked switch if b
       </label>
     </div>
      
+    <expiration-date-banner-input-stub
+      value=""
+    />
+     
     <div
       class="tlp-form-element"
     >
@@ -406,6 +414,10 @@ exports[`BannerPresenter displays the banner and a checked switch if banner is s
         </translate-stub>
       </label>
     </div>
+     
+    <expiration-date-banner-input-stub
+      value=""
+    />
      
     <div
       class="tlp-form-element"

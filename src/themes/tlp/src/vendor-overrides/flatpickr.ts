@@ -18,6 +18,7 @@
  */
 
 import flatpickr from "flatpickr";
+export type DatePickerInstance = flatpickr.Instance;
 
 flatpickr.defaultConfig.prevArrow = "<i class='fa fa-angle-left'></i>";
 flatpickr.defaultConfig.nextArrow = "<i class='fa fa-angle-right'></i>";
@@ -26,7 +27,7 @@ flatpickr.l10ns.default.firstDayOfWeek = 1;
 export function datePicker(
     element: HTMLInputElement,
     options?: flatpickr.Options.Options
-): flatpickr.Instance {
+): DatePickerInstance {
     if (isNaN(Date.parse(element.value))) {
         element.value = "";
     }
