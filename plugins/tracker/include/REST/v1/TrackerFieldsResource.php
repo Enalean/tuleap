@@ -91,7 +91,7 @@ class TrackerFieldsResource extends AuthenticatedResource
      * @throws RestException 403
      * @throws RestException 404
      */
-    protected function patch($id, $patch)
+    protected function patch(int $id, TrackerFieldPatchRepresentation $patch)
     {
         $this->checkAccess();
         $this->optionsId($id);
