@@ -78,13 +78,14 @@ class BannerDao extends DataAccessObject
     /**
      * @psalm-return array{message: string, importance: BannerImportance, preference_value: string|null}|null
      */
-    public function searchBannerWithVisibility(int $user_id): ?array
+    public function searchNonExpiredBannerWithVisibility(int $user_id, \DateTimeImmutable $current_time): ?array
     {
         $sql = 'SELECT message, importance, preference_value
                 FROM platform_banner
-                LEFT JOIN user_preferences ON (preference_name = ? AND user_id = ?)';
+                LEFT JOIN user_preferences ON (preference_name = ? AND user_id = ?)
+                WHERE platform_banner.expiration_date > ? OR platform_banner.expiration_date IS NULL';
 
-        return $this->getDB()->row($sql, self::USER_PREFERENCE_NAME, $user_id);
+        return $this->getDB()->row($sql, self::USER_PREFERENCE_NAME, $user_id, $current_time->getTimestamp());
     }
 
     private static function removeUserBannerPreference(EasyDB $db): void

@@ -374,7 +374,7 @@ abstract class BaseLayout extends Response
     final protected function getPlatformBanner(PFUser $current_user): ?\Tuleap\Platform\Banner\BannerDisplay
     {
         $banner_retriever = new \Tuleap\Platform\Banner\BannerRetriever(new \Tuleap\Platform\Banner\BannerDao());
-        $banner           = $banner_retriever->getBannerForDisplayPurpose($current_user);
+        $banner           = $banner_retriever->getBannerForDisplayPurpose($current_user, new \DateTimeImmutable());
         if ($banner === null) {
             return null;
         }
