@@ -33,6 +33,7 @@ final class RoadmapWidgetPresenter
     public string $visible_natures;
     public bool $should_load_lvl1_iterations;
     public bool $should_load_lvl2_iterations;
+    public string $default_timescale;
 
     /**
      * @param NaturePresenter[] $visible_natures
@@ -41,11 +42,13 @@ final class RoadmapWidgetPresenter
         int $roadmap_id,
         array $visible_natures,
         bool $should_load_lvl1_iterations,
-        bool $should_load_lvl2_iterations
+        bool $should_load_lvl2_iterations,
+        string $default_timescale
     ) {
         $this->roadmap_id                  = $roadmap_id;
         $this->visible_natures             = \json_encode(array_values($visible_natures), \JSON_THROW_ON_ERROR);
         $this->should_load_lvl1_iterations = $should_load_lvl1_iterations;
         $this->should_load_lvl2_iterations = $should_load_lvl2_iterations;
+        $this->default_timescale           = $default_timescale;
     }
 }

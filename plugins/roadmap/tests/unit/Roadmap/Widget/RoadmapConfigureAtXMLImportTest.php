@@ -134,6 +134,7 @@ final class RoadmapConfigureAtXMLImportTest extends \Tuleap\Test\PHPUnit\TestCas
                     <preference name="roadmap">
                       <value name="tracker_id">T754</value>
                       <value name="title">My Roadmap</value>
+                      <value name="default-timescale">week</value>
                     </preference>
                 </widget>'
             ),
@@ -142,7 +143,7 @@ final class RoadmapConfigureAtXMLImportTest extends \Tuleap\Test\PHPUnit\TestCas
         );
         $dao->shouldReceive('insertContent')
             ->once()
-            ->with(Mockery::any(), Mockery::any(), "My Roadmap", [1234], null, null);
+            ->with(Mockery::any(), Mockery::any(), "My Roadmap", [1234], "week", null, null);
 
         $configurator = new RoadmapConfigureAtXMLImport();
         $configurator->configure($event);
@@ -215,7 +216,7 @@ final class RoadmapConfigureAtXMLImportTest extends \Tuleap\Test\PHPUnit\TestCas
         );
         $dao->shouldReceive('insertContent')
             ->once()
-            ->with(Mockery::any(), Mockery::any(), "My Roadmap", [1234], 1235, null);
+            ->with(Mockery::any(), Mockery::any(), "My Roadmap", [1234], "month", 1235, null);
 
         $configurator = new RoadmapConfigureAtXMLImport();
         $configurator->configure($event);
@@ -288,7 +289,7 @@ final class RoadmapConfigureAtXMLImportTest extends \Tuleap\Test\PHPUnit\TestCas
         );
         $dao->shouldReceive('insertContent')
             ->once()
-            ->with(Mockery::any(), Mockery::any(), "My Roadmap", [1234], null, 1236);
+            ->with(Mockery::any(), Mockery::any(), "My Roadmap", [1234], "month", null, 1236);
 
         $configurator = new RoadmapConfigureAtXMLImport();
         $configurator->configure($event);
@@ -329,7 +330,7 @@ final class RoadmapConfigureAtXMLImportTest extends \Tuleap\Test\PHPUnit\TestCas
         );
         $dao->shouldReceive('insertContent')
             ->once()
-            ->with(Mockery::any(), Mockery::any(), "My Roadmap", [1234], 1235, 1236);
+            ->with(Mockery::any(), Mockery::any(), "My Roadmap", [1234], "month", 1235, 1236);
 
         $configurator = new RoadmapConfigureAtXMLImport();
         $configurator->configure($event);
@@ -374,7 +375,7 @@ final class RoadmapConfigureAtXMLImportTest extends \Tuleap\Test\PHPUnit\TestCas
         );
         $dao->shouldReceive('insertContent')
             ->once()
-            ->with(Mockery::any(), Mockery::any(), "My Roadmap", [1234, 1235, 1236], 1237, 1238);
+            ->with(Mockery::any(), Mockery::any(), "My Roadmap", [1234, 1235, 1236], "month", 1237, 1238);
 
         $configurator = new RoadmapConfigureAtXMLImport();
         $configurator->configure($event);

@@ -49,13 +49,14 @@ final class RoadmapConfigureAtXMLImport
     }
 
     /**
-     * @psalm-return array{roadmap: array{tracker_ids: string[], title: string, lvl1_iteration_tracker_id?: string, lvl2_iteration_tracker_id?: string}}
+     * @psalm-return array{roadmap: array{tracker_ids: string[], title: string, default_timescale: string, lvl1_iteration_tracker_id?: string, lvl2_iteration_tracker_id?: string}}
      */
     private function getParametersFromXML(\SimpleXMLElement $xml, MappingsRegistry $mapping_registry): array
     {
         $params = [
-            'tracker_ids' => $this->getReferencedTrackerIdsFromXML($xml, $mapping_registry),
-            'title'       => $this->getWidgetTitleFromXML($xml),
+            'tracker_ids'       => $this->getReferencedTrackerIdsFromXML($xml, $mapping_registry),
+            'title'             => $this->getWidgetTitleFromXML($xml),
+            'default_timescale' => $this->getDefaultTimescaleFromXML($xml),
         ];
 
         foreach (['lvl1_iteration_tracker_id', 'lvl2_iteration_tracker_id'] as $iteration_tracker_name) {
@@ -79,6 +80,13 @@ final class RoadmapConfigureAtXMLImport
         $title_nodes = $xml->xpath("preference/value[@name='title']");
 
         return count($title_nodes) > 0 ? (string) $title_nodes[0] : 'Roadmap';
+    }
+
+    private function getDefaultTimescaleFromXML(\SimpleXMLElement $xml): string
+    {
+        $timescale_nodes = $xml->xpath("preference/value[@name='default-timescale']");
+
+        return count($timescale_nodes) > 0 ? (string) $timescale_nodes[0] : RoadmapProjectWidget::DEFAULT_TIMESCALE_MONTH;
     }
 
     /**

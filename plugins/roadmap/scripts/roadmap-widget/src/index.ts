@@ -29,6 +29,7 @@ import { createStore } from "./store";
 import type { RootState } from "./store/type";
 import { toBCP47 } from "./helpers/locale-for-intl";
 import type { VueGettextProvider } from "./helpers/vue-gettext-provider";
+import type { TimeScale } from "./type";
 
 document.addEventListener("DOMContentLoaded", async () => {
     const all_vue_mount_points = document.querySelectorAll(".roadmap");
@@ -71,8 +72,22 @@ document.addEventListener("DOMContentLoaded", async () => {
             should_load_lvl2_iterations: Boolean(vue_mount_point.dataset.shouldLoadLvl2Iterations),
         } as RootState;
 
+        const default_timescale: TimeScale = ((
+            default_timescale: string | undefined
+        ): TimeScale => {
+            if (
+                default_timescale === "week" ||
+                default_timescale === "month" ||
+                default_timescale === "quarter"
+            ) {
+                return default_timescale;
+            }
+
+            return "month";
+        })(vue_mount_point.dataset.defaultTimescale);
+
         new AppComponent({
-            store: createStore(initial_root_state),
+            store: createStore(initial_root_state, default_timescale),
             propsData: {
                 roadmap_id,
                 visible_natures,

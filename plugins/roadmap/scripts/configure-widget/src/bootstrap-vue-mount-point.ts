@@ -45,11 +45,11 @@ export async function bootstrapVueMountPoint(
             title: String(mount_point.dataset.title),
             trackers:
                 typeof mount_point.dataset.trackers !== "undefined"
-                    ? JSON.parse(mount_point.dataset.trackers)
+                    ? JSON.parse(mount_point.dataset.trackers) || []
                     : [],
             selected_tracker_ids:
                 typeof mount_point.dataset.selectedTrackerIds !== "undefined"
-                    ? JSON.parse(mount_point.dataset.selectedTrackerIds)
+                    ? JSON.parse(mount_point.dataset.selectedTrackerIds) || []
                     : [],
             selected_lvl1_iteration_tracker_id:
                 Number.parseInt(mount_point.dataset.selectedLvl1IterationTrackerId || "0", 10) ||
@@ -57,6 +57,7 @@ export async function bootstrapVueMountPoint(
             selected_lvl2_iteration_tracker_id:
                 Number.parseInt(mount_point.dataset.selectedLvl2IterationTrackerId || "0", 10) ||
                 "",
+            selected_default_timescale: String(mount_point.dataset.defaultTimescale || "month"),
             is_in_creation,
         },
     }).$mount(mount_point);

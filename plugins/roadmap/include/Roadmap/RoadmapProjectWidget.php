@@ -39,8 +39,11 @@ final class RoadmapProjectWidget extends \Widget
 {
     public const ID = 'plugin_roadmap_project_widget';
 
+    public const DEFAULT_TIMESCALE_MONTH = 'month';
+
     private ?int $lvl1_iteration_tracker_id = null;
     private ?int $lvl2_iteration_tracker_id = null;
+    private string $default_timescale       = self::DEFAULT_TIMESCALE_MONTH;
 
     /**
      * @var ?int[]
@@ -105,6 +108,7 @@ final class RoadmapProjectWidget extends \Widget
                 (int) $this->content_id,
                 $this->lvl1_iteration_tracker_id,
                 $this->lvl2_iteration_tracker_id,
+                $this->default_timescale,
                 $this->getCurrentUser(),
             )
         );
@@ -154,6 +158,7 @@ final class RoadmapProjectWidget extends \Widget
                 $widget_id,
                 $this->getTitle(),
                 $this->tracker_ids,
+                $this->default_timescale,
                 $this->lvl1_iteration_tracker_id,
                 $this->lvl2_iteration_tracker_id,
                 $this->tracker_factory->getTrackersByGroupIdUserCanView(
@@ -172,6 +177,7 @@ final class RoadmapProjectWidget extends \Widget
                 self::ID,
                 $this->getTitle(),
                 null,
+                self::DEFAULT_TIMESCALE_MONTH,
                 null,
                 null,
                 $this->tracker_factory->getTrackersByGroupIdUserCanView(
@@ -226,6 +232,7 @@ final class RoadmapProjectWidget extends \Widget
                         static fn(int $tracker_id): int => $tracker_mapping[$tracker_id] ?? $tracker_id,
                         $this->dao->searchSelectedTrackers((int) $id) ?? [],
                     ),
+                    $data['default_timescale'],
                     $lvl1_iteration_tracker_id,
                     $lvl2_iteration_tracker_id,
                 );
@@ -245,6 +252,7 @@ final class RoadmapProjectWidget extends \Widget
         );
 
         if ($row) {
+            $this->default_timescale         = $this->getValidTimescale($row['default_timescale']);
             $this->lvl1_iteration_tracker_id = $row['lvl1_iteration_tracker_id'];
             $this->lvl2_iteration_tracker_id = $row['lvl2_iteration_tracker_id'];
             $this->title                     = $row['title'];
@@ -280,14 +288,26 @@ final class RoadmapProjectWidget extends \Widget
         $lvl1_iteration_tracker_id = isset($roadmap_parameters['lvl1_iteration_tracker_id']) ? (int) $roadmap_parameters['lvl1_iteration_tracker_id'] : null;
         $lvl2_iteration_tracker_id = isset($roadmap_parameters['lvl2_iteration_tracker_id']) ? (int) $roadmap_parameters['lvl2_iteration_tracker_id'] : null;
 
+        $default_timescale = $this->getValidTimescale($roadmap_parameters['default_timescale'] ?? null);
+
         return $this->dao->insertContent(
             (int) $this->owner_id,
             (string) $this->owner_type,
             $roadmap_parameters['title'],
             $tracker_ids,
+            $default_timescale,
             $lvl1_iteration_tracker_id,
             $lvl2_iteration_tracker_id,
         );
+    }
+
+    private function getValidTimescale(?string $timescale): string
+    {
+        if (! in_array($timescale, ['week', 'month', 'quarter'], true)) {
+            return self::DEFAULT_TIMESCALE_MONTH;
+        }
+
+        return $timescale;
     }
 
     public function updatePreferences(Codendi_Request $request): bool
@@ -319,12 +339,15 @@ final class RoadmapProjectWidget extends \Widget
         $lvl1_iteration_tracker_id = isset($roadmap_parameters['lvl1_iteration_tracker_id']) ? (int) $roadmap_parameters['lvl1_iteration_tracker_id'] : null;
         $lvl2_iteration_tracker_id = isset($roadmap_parameters['lvl2_iteration_tracker_id']) ? (int) $roadmap_parameters['lvl2_iteration_tracker_id'] : null;
 
+        $default_timescale = $this->getValidTimescale($roadmap_parameters['default_timescale'] ?? null);
+
         $this->dao->update(
             $id,
             (int) $this->owner_id,
             (string) $this->owner_type,
             $roadmap_parameters['title'],
             $tracker_ids,
+            $default_timescale,
             $lvl1_iteration_tracker_id,
             $lvl2_iteration_tracker_id,
         );

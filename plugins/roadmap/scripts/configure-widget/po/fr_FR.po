@@ -20,11 +20,20 @@ msgstr ""
 "Les artéfacts de l'outil de suivi sélectionné apparaîtront dans la partie "
 "supérieure de la feuille de route, en dessous des semestres/mois/semaines."
 
+msgid "Default timescale"
+msgstr "Échelle de temps par défaut"
+
 msgid "Level 2 is expected to be a sub-division of level 1."
 msgstr "Niveau 2 est supposé être une subdivision du niveau 1."
 
+msgid "Month"
+msgstr "Mois"
+
 msgid "Please choose a tracker"
 msgstr "Veuillez choisir un outil de suivi"
+
+msgid "Quarter"
+msgstr "Trimestre"
 
 msgid "Roadmap"
 msgstr "Feuille de route"
@@ -48,3 +57,6 @@ msgstr "Ruban de la plage de temps, niveau 2 (ex Sprint)"
 
 msgid "Title"
 msgstr "Titre"
+
+msgid "Week"
+msgstr "Semaine"

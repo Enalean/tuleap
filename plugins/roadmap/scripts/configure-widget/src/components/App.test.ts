@@ -39,6 +39,7 @@ describe("App", () => {
                 selected_lvl1_iteration_tracker_id: 1,
                 selected_lvl2_iteration_tracker_id: "",
                 is_in_creation: false,
+                selected_default_timescale: "week",
             },
         });
         await wrapper.vm.$nextTick();
@@ -71,6 +72,7 @@ describe("App", () => {
                 selected_lvl1_iteration_tracker_id: 1,
                 selected_lvl2_iteration_tracker_id: 2,
                 is_in_creation: false,
+                selected_default_timescale: "week",
             },
         });
         await wrapper.vm.$nextTick();
@@ -103,6 +105,7 @@ describe("App", () => {
                 selected_lvl1_iteration_tracker_id: 1,
                 selected_lvl2_iteration_tracker_id: 2,
                 is_in_creation: false,
+                selected_default_timescale: "week",
             },
         });
         await wrapper.vm.$nextTick();
@@ -135,6 +138,7 @@ describe("App", () => {
                 selected_lvl1_iteration_tracker_id: 1,
                 selected_lvl2_iteration_tracker_id: 2,
                 is_in_creation: false,
+                selected_default_timescale: "week",
             },
         });
         await wrapper.vm.$nextTick();
@@ -167,6 +171,7 @@ describe("App", () => {
                 selected_lvl1_iteration_tracker_id: 1,
                 selected_lvl2_iteration_tracker_id: 2,
                 is_in_creation: false,
+                selected_default_timescale: "week",
             },
         });
         await wrapper.vm.$nextTick();
@@ -199,6 +204,7 @@ describe("App", () => {
                 selected_lvl1_iteration_tracker_id: 1,
                 selected_lvl2_iteration_tracker_id: 2,
                 is_in_creation: false,
+                selected_default_timescale: "week",
             },
         });
         await wrapper.vm.$nextTick();
@@ -231,6 +237,7 @@ describe("App", () => {
                 selected_lvl1_iteration_tracker_id: 1,
                 selected_lvl2_iteration_tracker_id: 2,
                 is_in_creation: false,
+                selected_default_timescale: "week",
             },
         });
         await wrapper.vm.$nextTick();

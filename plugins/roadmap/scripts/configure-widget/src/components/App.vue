@@ -59,6 +59,22 @@
                 </option>
             </select>
         </div>
+        <div class="tlp-form-element">
+            <label class="tlp-label" v-bind:for="timescale_id">
+                <translate>Default timescale</translate>
+            </label>
+            <select
+                class="tlp-select tlp-select-small tlp-select-adjusted"
+                v-bind:id="timescale_id"
+                name="roadmap[default_timescale]"
+                data-test="timescale"
+                v-model="user_selected_default_timescale"
+            >
+                <option value="week" v-translate>Week</option>
+                <option value="month" v-translate>Month</option>
+                <option value="quarter" v-translate>Quarter</option>
+            </select>
+        </div>
         <hr class="roadmap-widget-configuration-separator" />
         <h2 class="tlp-modal-subtitle" v-bind:class="subtitle_class">Timeframe ribbons</h2>
         <translate tag="p">
@@ -134,6 +150,7 @@ import { Component, Prop, Ref, Watch } from "vue-property-decorator";
 import type { Tracker } from "../type";
 import type { ListPicker } from "@tuleap/list-picker";
 import { createListPicker } from "@tuleap/list-picker";
+import type { TimeScale } from "../../../roadmap-widget/src/type";
 
 @Component
 export default class App extends Vue {
@@ -154,6 +171,9 @@ export default class App extends Vue {
     private readonly selected_tracker_ids!: number[];
 
     @Prop({ required: true })
+    private readonly selected_default_timescale!: TimeScale;
+
+    @Prop({ required: true })
     private readonly selected_lvl1_iteration_tracker_id!: number | "";
 
     @Prop({ required: true })
@@ -168,10 +188,12 @@ export default class App extends Vue {
     private user_selected_tracker_ids: number[] = [];
     private user_selected_lvl1_iteration_tracker_id: number | "" = "";
     private user_selected_lvl2_iteration_tracker_id: number | "" = "";
+    private user_selected_default_timescale: TimeScale = "month";
     private list_picker: ListPicker | undefined = undefined;
 
     async mounted(): Promise<void> {
         this.user_selected_tracker_ids = this.selected_tracker_ids;
+        this.user_selected_default_timescale = this.selected_default_timescale;
         this.user_selected_lvl1_iteration_tracker_id = this.selected_lvl1_iteration_tracker_id;
         this.user_selected_lvl2_iteration_tracker_id = this.selected_lvl2_iteration_tracker_id;
         this.list_picker = await createListPicker(this.$refs.trackers_picker, {
@@ -198,6 +220,10 @@ export default class App extends Vue {
 
     get progress_of_id(): string {
         return "roadmap-tracker-" + this.widget_id;
+    }
+
+    get timescale_id(): string {
+        return "roadmap-timescale-" + this.widget_id;
     }
 
     get lvl1_id(): string {
