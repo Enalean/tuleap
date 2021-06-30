@@ -34,6 +34,7 @@ use Tuleap\Project\Admin\DescriptionFields\FieldDoesNotExistException;
 use Tuleap\Project\Admin\DescriptionFields\FieldUpdator;
 use Tuleap\Project\Admin\DescriptionFields\MissingMandatoryFieldException;
 use Tuleap\Project\Registration\MaxNumberOfProjectReachedForPlatformException;
+use Tuleap\Project\Registration\MaxNumberOfProjectReachedForUserException;
 use Tuleap\Project\Registration\ProjectRegistrationUserPermissionChecker;
 use Tuleap\Project\Registration\RegistrationForbiddenException;
 use Tuleap\Project\Registration\Template\InvalidTemplateException;
@@ -140,7 +141,7 @@ class RestProjectCreator
             $this->categories_updater->update($project, $category_collection);
             $this->fields_updater->updateFromArray($field_collection, $project);
             return $project;
-        } catch (MaxNumberOfProjectReachedForPlatformException $exception) {
+        } catch (MaxNumberOfProjectReachedForPlatformException | MaxNumberOfProjectReachedForUserException $exception) {
             throw new RestException(429, $exception->getMessage());
         } catch (RegistrationForbiddenException $exception) {
             throw new RestException(403, $exception->getMessage());
