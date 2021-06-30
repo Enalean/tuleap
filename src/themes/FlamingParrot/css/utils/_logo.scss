@@ -35,7 +35,9 @@
 }
 
 .sidebar-nav #logo {
-    background-color: var(--tlp-dark-color-darker-05);
+    height: 80px;
+    background-color: var(--tlp-dark-color);
+    background-position: var(--tlp-medium-spacing) center;
 }
 
 .logo-svg-link {
@@ -43,6 +45,11 @@
     align-items: center;
     height: variables-common.$navbar-height;
     margin: 0 0 0 var(--tlp-medium-spacing);
+
+    > .logo-svg-normal > svg {
+        width: auto;
+        max-height: 34px;
+    }
 }
 
 .logo-svg-fill-theme-color {
@@ -54,9 +61,17 @@
 }
 
 .sidebar-nav .logo-svg-link {
-    justify-content: center;
+    justify-content: flex-start;
     width: variables-common.$sidebar-width;
+    height: 80px;
+    min-height: 80px;
     margin: 0;
+    padding: 0 0 0 var(--tlp-medium-spacing);
+
+    > .logo-svg-normal > svg,
+    > .logo-svg-small > svg {
+        max-height: none;
+    }
 
     .logo-svg-fill-default-text-color {
         fill: var(--tlp-ui-white);
@@ -74,7 +89,9 @@
 // stylelint-disable selector-no-qualifying-type
 body.sidebar-collapsed {
     .logo-svg-link {
+        justify-content: center;
         width: variables-common.$sidebar-width-collapsed;
+        padding: 0;
     }
 
     .logo-svg-normal {

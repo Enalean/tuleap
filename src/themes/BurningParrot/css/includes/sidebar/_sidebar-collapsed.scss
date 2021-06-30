@@ -97,7 +97,11 @@
         display: none;
     }
 
-    .sidebar-collapser-icon::before {
-        content: "\f054"; // fa-chevron-right
+    .sidebar-collapser-icon {
+        left: 1px;
+
+        &::before {
+            content: "\f054"; // fa-chevron-right
+        }
     }
 }

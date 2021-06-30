@@ -199,6 +199,7 @@ $fade-background-color: mix($tlp-background-color, $tlp-ui-white, 50);
     --tlp-neutral-normal-color-lighter-40: #{mix($tlp-neutral-normal-color, $tlp-ui-white, 60%)};
     --tlp-neutral-normal-color-transparent-25: #{transparentize($tlp-neutral-normal-color, 0.25)};
     --tlp-neutral-normal-color-transparent-50: #{transparentize($tlp-neutral-normal-color, 0.5)};
+    --tlp-neutral-normal-color-transparent-80: #{transparentize($tlp-neutral-normal-color, 0.8)};
 
     --tlp-neutral-dark-color-lighter-20: #{mix($tlp-neutral-dark-color, $tlp-ui-white, 80%)};
     --tlp-neutral-dark-color-darker-05: #{darken($tlp-neutral-dark-color, 5%)};
@@ -252,6 +253,6 @@ $fade-background-color: mix($tlp-background-color, $tlp-ui-white, 50);
     --tlp-card-radius: #{$tlp-card-radius};
 
     // highlight darker button
-    --tlp-sidebar-action-color: rgba(255, 255, 255, 0.1);
-    --tlp-sidebar-action-color-hover: rgba(255, 255, 255, 0.3);
+    --tlp-sidebar-action-background: rgba(255, 255, 255, 0.25);
+    --tlp-sidebar-action-background-hover: rgba(255, 255, 255, 0.35);
 }

@@ -159,6 +159,11 @@ legend {
     transform: translateX(-100%);
 }
 
+.nav-list {
+    padding-right: var(--tlp-medium-spacing);
+    padding-left: var(--tlp-medium-spacing);
+}
+
 .nav-tabs {
     min-height: 44px;
     margin: var(--tlp-large-spacing) 0 var(--tlp-medium-spacing);
