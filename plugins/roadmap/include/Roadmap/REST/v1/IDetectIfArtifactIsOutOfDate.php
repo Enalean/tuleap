@@ -27,5 +27,10 @@ use Tuleap\Tracker\Artifact\Artifact;
 
 interface IDetectIfArtifactIsOutOfDate
 {
-    public function isArtifactOutOfDate(Artifact $artifact, DateTimeImmutable $now, \PFUser $user): bool;
+    public function isArtifactOutOfDate(
+        Artifact $artifact,
+        DateTimeImmutable $now,
+        \PFUser $user,
+        TrackersWithUnreadableStatusCollection $trackers_with_unreadable_status_collection
+    ): bool;
 }

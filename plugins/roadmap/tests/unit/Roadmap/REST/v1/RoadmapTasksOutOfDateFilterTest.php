@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Roadmap\REST\v1;
 
 use DateTimeImmutable;
+use Psr\Log\NullLogger;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
@@ -37,8 +38,12 @@ final class RoadmapTasksOutOfDateFilterTest extends \Tuleap\Test\PHPUnit\TestCas
 
         $filter = new RoadmapTasksOutOfDateFilter(
             new class implements IDetectIfArtifactIsOutOfDate {
-                public function isArtifactOutOfDate(Artifact $artifact, DateTimeImmutable $now, \PFUser $user): bool
-                {
+                public function isArtifactOutOfDate(
+                    Artifact $artifact,
+                    DateTimeImmutable $now,
+                    \PFUser $user,
+                    TrackersWithUnreadableStatusCollection $trackers_with_unreadable_status_collection
+                ): bool {
                     return $artifact->getId() === 2;
                 }
             }
@@ -51,6 +56,7 @@ final class RoadmapTasksOutOfDateFilterTest extends \Tuleap\Test\PHPUnit\TestCas
                     [$task_1, $task_2, $task_3],
                     new DateTimeImmutable(),
                     UserTestBuilder::aUser()->build(),
+                    new TrackersWithUnreadableStatusCollection(new NullLogger()),
                 )
             )
         );

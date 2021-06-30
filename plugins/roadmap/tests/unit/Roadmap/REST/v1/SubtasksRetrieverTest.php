@@ -24,6 +24,7 @@ namespace Tuleap\Roadmap\REST\v1;
 
 use DateTimeImmutable;
 use Luracast\Restler\RestException;
+use Psr\Log\NullLogger;
 use Tracker;
 use Tuleap\Project\REST\ProjectReference;
 use Tuleap\Test\Builders\UserTestBuilder;
@@ -96,7 +97,7 @@ final class SubtasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
                 $this->out_of_date_artifact_id = $out_of_date_artifact_id;
             }
 
-            public function isArtifactOutOfDate(Artifact $artifact, DateTimeImmutable $now, \PFUser $user): bool
+            public function isArtifactOutOfDate(Artifact $artifact, DateTimeImmutable $now, \PFUser $user, TrackersWithUnreadableStatusCollection $trackers_with_unreadable_status_collection): bool
             {
                 return $artifact->getId() === $this->out_of_date_artifact_id;
             }
@@ -107,6 +108,7 @@ final class SubtasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             $user_manager,
             $representation_builder_cache,
             $out_of_date_detector,
+            new NullLogger(),
         );
 
         $this->user = UserTestBuilder::aUser()->build();

@@ -23,37 +23,29 @@ declare(strict_types=1);
 namespace Tuleap\Roadmap\REST\v1;
 
 use Luracast\Restler\RestException;
+use Psr\Log\LoggerInterface;
 use Tuleap\REST\I18NRestException;
 
 final class SubtasksRetriever
 {
-    /**
-     * @var \Tracker_ArtifactFactory
-     */
-    private $artifact_factory;
-    /**
-     * @var \UserManager
-     */
-    private $user_manager;
-    /**
-     * @var ICacheTaskRepresentationBuilderForTracker
-     */
-    private $representation_builder_cache;
-    /**
-     * @var IDetectIfArtifactIsOutOfDate
-     */
-    private $out_of_date_detector;
+    private \Tracker_ArtifactFactory $artifact_factory;
+    private \UserManager $user_manager;
+    private ICacheTaskRepresentationBuilderForTracker $representation_builder_cache;
+    private IDetectIfArtifactIsOutOfDate $out_of_date_detector;
+    private LoggerInterface $logger;
 
     public function __construct(
         \Tracker_ArtifactFactory $artifact_factory,
         \UserManager $user_manager,
         ICacheTaskRepresentationBuilderForTracker $representation_builder_cache,
-        IDetectIfArtifactIsOutOfDate $out_of_date_detector
+        IDetectIfArtifactIsOutOfDate $out_of_date_detector,
+        LoggerInterface $logger
     ) {
         $this->artifact_factory             = $artifact_factory;
         $this->user_manager                 = $user_manager;
         $this->representation_builder_cache = $representation_builder_cache;
         $this->out_of_date_detector         = $out_of_date_detector;
+        $this->logger                       = $logger;
     }
 
     /**
@@ -75,6 +67,8 @@ final class SubtasksRetriever
 
         $now = new \DateTimeImmutable();
 
+        $trackers_with_unreadable_status_collection = new TrackersWithUnreadableStatusCollection($this->logger);
+
         $representations = [];
         foreach ($sliced_subtasks as $artifact) {
             $representation_builder = $this->representation_builder_cache
@@ -84,12 +78,21 @@ final class SubtasksRetriever
                 continue;
             }
 
-            if ($this->out_of_date_detector->isArtifactOutOfDate($artifact, $now, $user)) {
+            if (
+                $this->out_of_date_detector->isArtifactOutOfDate(
+                    $artifact,
+                    $now,
+                    $user,
+                    $trackers_with_unreadable_status_collection
+                )
+            ) {
                 continue;
             }
 
             $representations[] = $representation_builder->buildRepresentation($artifact, $user);
         }
+
+        $trackers_with_unreadable_status_collection->informLoggerIfWeHaveTrackersWithUnreadableStatus();
 
         return new PaginatedCollectionOfTaskRepresentations($representations, $total_size);
     }

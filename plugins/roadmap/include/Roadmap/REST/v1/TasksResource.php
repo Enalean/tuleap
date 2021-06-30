@@ -81,6 +81,7 @@ final class TasksResource
         $semantic_timeframe_builder = SemanticTimeframeBuilder::build();
 
         $progress_dao = new SemanticProgressDao();
+        $logger       = \BackendLogger::getDefaultLogger();
         $retriever    = new SubtasksRetriever(
             \Tracker_ArtifactFactory::instance(),
             UserManager::instance(),
@@ -98,13 +99,14 @@ final class TasksResource
                         )
                     )
                 ),
-                \BackendLogger::getDefaultLogger()
+                $logger
             ),
             new TaskOutOfDateDetector(
                 new SemanticStatusRetriever(),
                 $semantic_timeframe_builder,
-                \BackendLogger::getDefaultLogger(),
-            )
+                $logger,
+            ),
+            $logger,
         );
 
         $tasks = $retriever->getTasks($id, $limit, $offset);

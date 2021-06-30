@@ -45,10 +45,12 @@ class RoadmapTasksOutOfDateFilter
     public function filterOutOfDateArtifacts(
         array $artifacts,
         DateTimeImmutable $now,
-        \PFUser $user
+        \PFUser $user,
+        TrackersWithUnreadableStatusCollection $trackers_with_unreadable_status_collection
     ): array {
-        return array_filter($artifacts, function ($artifact) use ($user, $now) {
-            return ! $this->out_of_date_detector->isArtifactOutOfDate($artifact, $now, $user);
-        });
+        return array_filter(
+            $artifacts,
+            fn(Artifact $artifact): bool => ! $this->out_of_date_detector->isArtifactOutOfDate($artifact, $now, $user, $trackers_with_unreadable_status_collection)
+        );
     }
 }
