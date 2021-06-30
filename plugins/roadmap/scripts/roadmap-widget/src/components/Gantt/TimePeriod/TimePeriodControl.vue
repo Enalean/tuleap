@@ -19,7 +19,10 @@
   -->
 
 <template>
-    <div class="tlp-form-element roadmap-gantt-control">
+    <div
+        class="tlp-form-element roadmap-gantt-control"
+        v-bind:class="{ 'tlp-form-element-disabled': is_disabled }"
+    >
         <label class="tlp-label roadmap-gantt-control-label" v-bind:for="id" v-translate>
             Timescale
         </label>
@@ -28,13 +31,11 @@
             v-bind:id="id"
             v-on:change="$emit('input', $event.target.value)"
             data-test="select-timescale"
-            v-bind:disabled="rows.length === 0"
+            v-bind:disabled="is_disabled"
         >
-            <option value="week" v-bind:selected="this.value === 'week'" v-translate>Week</option>
-            <option value="month" v-bind:selected="this.value === 'month'" v-translate>
-                Month
-            </option>
-            <option value="quarter" v-bind:selected="this.value === 'quarter'" v-translate>
+            <option value="week" v-bind:selected="value === 'week'" v-translate>Week</option>
+            <option value="month" v-bind:selected="value === 'month'" v-translate>Month</option>
+            <option value="quarter" v-bind:selected="value === 'quarter'" v-translate>
                 Quarter
             </option>
         </select>
@@ -45,7 +46,7 @@
 import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
 import { getUniqueId } from "../../../helpers/uniq-id-generator";
-import type { Row, TimeScale } from "../../../type";
+import type { TimeScale } from "../../../type";
 import { namespace } from "vuex-class";
 
 const tasks = namespace("tasks");
@@ -56,10 +57,14 @@ export default class TimePeriodControl extends Vue {
     readonly value!: TimeScale;
 
     @tasks.Getter
-    readonly rows!: Row[];
+    private readonly has_at_least_one_row_shown!: boolean;
 
     get id(): string {
         return getUniqueId("roadmap-gantt-timescale");
+    }
+
+    get is_disabled(): boolean {
+        return !this.has_at_least_one_row_shown;
     }
 }
 </script>

@@ -19,7 +19,10 @@
   -->
 
 <template>
-    <div class="tlp-form-element roadmap-gantt-control">
+    <div
+        class="tlp-form-element roadmap-gantt-control"
+        v-bind:class="{ 'tlp-form-element-disabled': is_form_element_disabled }"
+    >
         <label class="tlp-label roadmap-gantt-control-label" v-bind:for="id" v-translate>
             Links
         </label>
@@ -28,7 +31,7 @@
             v-bind:id="id"
             v-on:change="onchange"
             data-test="select-links"
-            v-bind:disabled="disabled"
+            v-bind:disabled="is_select_disabled"
             v-bind:title="title"
         >
             <option
@@ -57,7 +60,7 @@ import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
 import { namespace } from "vuex-class";
 import { getUniqueId } from "../../helpers/uniq-id-generator";
-import type { NaturesLabels, Row } from "../../type";
+import type { NaturesLabels } from "../../type";
 
 const tasks = namespace("tasks");
 
@@ -70,7 +73,7 @@ export default class DependencyNatureControl extends Vue {
     readonly available_natures!: NaturesLabels;
 
     @tasks.Getter
-    readonly rows!: Row[];
+    private readonly has_at_least_one_row_shown!: boolean;
 
     private readonly NONE_SPECIALVALUE = "-1";
 
@@ -82,12 +85,16 @@ export default class DependencyNatureControl extends Vue {
         return Array.from(this.available_natures.keys()).sort((a, b) => a.localeCompare(b));
     }
 
-    get disabled(): boolean {
-        return this.rows.length <= 0 || this.available_natures.size <= 0;
+    get is_form_element_disabled(): boolean {
+        return !this.has_at_least_one_row_shown;
+    }
+
+    get is_select_disabled(): boolean {
+        return this.is_form_element_disabled || this.available_natures.size <= 0;
     }
 
     get title(): string {
-        return this.disabled
+        return this.is_select_disabled
             ? this.$gettext("Displayed artifacts don't have any links to each other.")
             : "";
     }

@@ -44,7 +44,7 @@ describe("DependencyArrow", () => {
                 task,
                 dependency,
                 dimensions_map: getDimensionsMap(
-                    tasks.map((task): TaskRow => ({ task })),
+                    tasks.map((task): TaskRow => ({ task, is_shown: true })),
                     time_period
                 ),
                 percentage,

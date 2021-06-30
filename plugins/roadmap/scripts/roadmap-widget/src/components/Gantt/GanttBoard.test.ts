@@ -19,7 +19,7 @@
 
 import { shallowMount } from "@vue/test-utils";
 import GanttBoard from "./GanttBoard.vue";
-import type { Iteration, Row, Task } from "../../type";
+import type { Iteration, Row, Task, TaskRow } from "../../type";
 import GanttTask from "./Task/GanttTask.vue";
 import TimePeriodHeader from "./TimePeriod/TimePeriodHeader.vue";
 import { TimePeriodMonth } from "../../helpers/time-period-month";
@@ -81,6 +81,7 @@ describe("GanttBoard", () => {
                 $store: createStoreMock({
                     state: getRootState(),
                     getters: {
+                        "tasks/has_at_least_one_row_shown": false,
                         "tasks/rows": rows,
                         "tasks/tasks": [],
                         "iterations/lvl1_iterations_to_display": [],
@@ -97,7 +98,8 @@ describe("GanttBoard", () => {
 
         expect(wrapper.findComponent(NoDataToShowEmptyState).exists()).toBe(true);
 
-        rows.push({ task: { id: 1, dependencies: {} } as Task });
+        rows.push({ task: { id: 1, dependencies: {} } as Task, is_shown: true });
+        wrapper.vm.$store.getters["tasks/has_at_least_one_row_shown"] = true;
         await wrapper.vm.$nextTick();
 
         expect(wrapper.findComponent(NoDataToShowEmptyState).exists()).toBe(false);
@@ -112,7 +114,10 @@ describe("GanttBoard", () => {
                 $store: createStoreMock({
                     state: getRootState(),
                     getters: {
-                        "tasks/rows": [{ task: { id: 1, dependencies: {} } as Task }],
+                        "tasks/has_at_least_one_row_shown": true,
+                        "tasks/rows": [
+                            { task: { id: 1, dependencies: {} }, is_shown: true } as TaskRow,
+                        ],
                         "tasks/tasks": [],
                         "iterations/lvl1_iterations_to_display": [],
                         "iterations/lvl2_iterations_to_display": [],
@@ -139,7 +144,10 @@ describe("GanttBoard", () => {
                 $store: createStoreMock({
                     state: getRootState(),
                     getters: {
-                        "tasks/rows": [{ task: { id: 1, dependencies: {} } as Task }],
+                        "tasks/has_at_least_one_row_shown": true,
+                        "tasks/rows": [
+                            { task: { id: 1, dependencies: {} }, is_shown: true } as TaskRow,
+                        ],
                         "tasks/tasks": [],
                         "iterations/lvl1_iterations_to_display": [{ id: 1 } as Iteration],
                         "iterations/lvl2_iterations_to_display": [],
@@ -165,7 +173,10 @@ describe("GanttBoard", () => {
                 $store: createStoreMock({
                     state: getRootState(),
                     getters: {
-                        "tasks/rows": [{ task: { id: 1, dependencies: {} } as Task }],
+                        "tasks/has_at_least_one_row_shown": true,
+                        "tasks/rows": [
+                            { task: { id: 1, dependencies: {} }, is_shown: true } as TaskRow,
+                        ],
                         "tasks/tasks": [],
                         "iterations/lvl1_iterations_to_display": [],
                         "iterations/lvl2_iterations_to_display": [{ id: 1 } as Iteration],
@@ -191,7 +202,10 @@ describe("GanttBoard", () => {
                 $store: createStoreMock({
                     state: getRootState(),
                     getters: {
-                        "tasks/rows": [{ task: { id: 1, dependencies: {} } as Task }],
+                        "tasks/has_at_least_one_row_shown": true,
+                        "tasks/rows": [
+                            { task: { id: 1, dependencies: {} }, is_shown: true } as TaskRow,
+                        ],
                         "tasks/tasks": [],
                         "iterations/lvl1_iterations_to_display": [{ id: 1 } as Iteration],
                         "iterations/lvl2_iterations_to_display": [{ id: 2 } as Iteration],
@@ -217,10 +231,11 @@ describe("GanttBoard", () => {
                 $store: createStoreMock({
                     state: getRootState(),
                     getters: {
+                        "tasks/has_at_least_one_row_shown": true,
                         "tasks/rows": [
-                            { task: { id: 1, dependencies: {} } as Task },
-                            { task: { id: 2, dependencies: {} } as Task },
-                            { task: { id: 3, dependencies: {} } as Task },
+                            { task: { id: 1, dependencies: {} }, is_shown: true } as TaskRow,
+                            { task: { id: 2, dependencies: {} }, is_shown: true } as TaskRow,
+                            { task: { id: 3, dependencies: {} }, is_shown: true } as TaskRow,
                         ],
                         "tasks/tasks": [
                             { id: 1, dependencies: {} } as Task,
@@ -251,14 +266,15 @@ describe("GanttBoard", () => {
                 $store: createStoreMock({
                     state: getRootState(),
                     getters: {
+                        "tasks/has_at_least_one_row_shown": true,
                         "tasks/rows": [
-                            { task: { id: 1, dependencies: {} } as Task },
+                            { task: { id: 1, dependencies: {} }, is_shown: true } as TaskRow,
                             {
                                 for_task: { id: 1, dependencies: {} } as Task,
                                 is_skeleton: true,
                                 is_last_one: true,
                             },
-                            { task: { id: 3, dependencies: {} } as Task },
+                            { task: { id: 3, dependencies: {} }, is_shown: true } as TaskRow,
                         ],
                         "tasks/tasks": [
                             { id: 1, dependencies: {} } as Task,
@@ -290,14 +306,15 @@ describe("GanttBoard", () => {
                 $store: createStoreMock({
                     state: getRootState(),
                     getters: {
+                        "tasks/has_at_least_one_row_shown": true,
                         "tasks/rows": [
-                            { task: { id: 1, dependencies: {} } as Task },
+                            { task: { id: 1, dependencies: {} }, is_shown: true } as TaskRow,
                             {
                                 parent: { id: 1, dependencies: {} } as Task,
                                 subtask: { id: 11, dependencies: {} } as Task,
                                 is_last_one: true,
                             },
-                            { task: { id: 3, dependencies: {} } as Task },
+                            { task: { id: 3, dependencies: {} }, is_shown: true } as TaskRow,
                         ] as Row[],
                         "tasks/tasks": [
                             { id: 1, dependencies: {} } as Task,
@@ -329,14 +346,15 @@ describe("GanttBoard", () => {
                 $store: createStoreMock({
                     state: getRootState(),
                     getters: {
+                        "tasks/has_at_least_one_row_shown": true,
                         "tasks/rows": [
-                            { task: { id: 1, dependencies: {} } as Task },
+                            { task: { id: 1, dependencies: {} }, is_shown: true } as TaskRow,
                             {
                                 parent: { id: 1, dependencies: {} } as Task,
                                 subtask: { id: 11, dependencies: {} } as Task,
                                 is_last_one: true,
                             },
-                            { task: { id: 3, dependencies: {} } as Task },
+                            { task: { id: 3, dependencies: {} }, is_shown: true } as TaskRow,
                             {
                                 parent: { id: 3, dependencies: {} } as Task,
                                 subtask: { id: 11, dependencies: {} } as Task,
@@ -382,13 +400,15 @@ describe("GanttBoard", () => {
                 $store: createStoreMock({
                     state: getRootState(),
                     getters: {
+                        "tasks/has_at_least_one_row_shown": true,
                         "tasks/rows": [
-                            { task: { id: 1, dependencies: {} } as Task },
+                            { task: { id: 1, dependencies: {} }, is_shown: true } as TaskRow,
                             {
                                 for_task: { id: 1, dependencies: {} } as Task,
                                 is_error: true,
+                                is_shown: true,
                             },
-                            { task: { id: 3, dependencies: {} } as Task },
+                            { task: { id: 3, dependencies: {} }, is_shown: true } as TaskRow,
                         ] as Row[],
                         "tasks/tasks": [
                             { id: 1, dependencies: {} } as Task,
@@ -420,13 +440,15 @@ describe("GanttBoard", () => {
                 $store: createStoreMock({
                     state: getRootState(),
                     getters: {
+                        "tasks/has_at_least_one_row_shown": true,
                         "tasks/rows": [
-                            { task: { id: 1, dependencies: {} } as Task },
+                            { task: { id: 1, dependencies: {} }, is_shown: true } as TaskRow,
                             {
                                 for_task: { id: 1, dependencies: {} } as Task,
                                 is_empty: true,
+                                is_shown: true,
                             },
-                            { task: { id: 3, dependencies: {} } as Task },
+                            { task: { id: 3, dependencies: {} }, is_shown: true } as TaskRow,
                         ] as Row[],
                         "tasks/tasks": [
                             { id: 1, dependencies: {} } as Task,
@@ -475,12 +497,15 @@ describe("GanttBoard", () => {
                 $store: createStoreMock({
                     state: getRootState(),
                     getters: {
+                        "tasks/has_at_least_one_row_shown": true,
                         "tasks/rows": [
                             {
                                 task: task_1,
+                                is_shown: true,
                             },
                             {
                                 task: task_2,
+                                is_shown: true,
                             },
                         ],
                         "tasks/tasks": [task_1, task_2],
@@ -514,7 +539,7 @@ describe("GanttBoard", () => {
         });
         window.ResizeObserver = mockResizeObserver;
 
-        const rows = [{ task: { id: 1, dependencies: {} } as Task }] as Row[];
+        const rows = [{ task: { id: 1, dependencies: {} }, is_shown: true } as TaskRow] as Row[];
         const wrapper = shallowMount(GanttBoard, {
             propsData: {
                 visible_natures: [],
@@ -523,6 +548,7 @@ describe("GanttBoard", () => {
                 $store: createStoreMock({
                     state: getRootState(),
                     getters: {
+                        "tasks/has_at_least_one_row_shown": true,
                         "tasks/rows": rows,
                         "tasks/tasks": [],
                         "iterations/lvl1_iterations_to_display": [],
@@ -543,11 +569,13 @@ describe("GanttBoard", () => {
 
         // User hide closed elements
         rows.pop();
+        wrapper.vm.$store.getters["tasks/has_at_least_one_row_shown"] = false;
         await wrapper.vm.$nextTick();
         expect(wrapper.findComponent(NoDataToShowEmptyState).exists()).toBe(true);
 
         // User show closed elements
-        rows.push({ task: { id: 1, dependencies: {} } as Task });
+        rows.push({ task: { id: 1, dependencies: {} } as Task, is_shown: true });
+        wrapper.vm.$store.getters["tasks/has_at_least_one_row_shown"] = true;
         await wrapper.vm.$nextTick();
         expect(wrapper.findComponent(NoDataToShowEmptyState).exists()).toBe(false);
 
@@ -580,12 +608,15 @@ describe("GanttBoard", () => {
                 $store: createStoreMock({
                     state: getRootState(),
                     getters: {
+                        "tasks/has_at_least_one_row_shown": true,
                         "tasks/rows": [
                             {
                                 task: task_1,
+                                is_shown: true,
                             },
                             {
                                 task: task_2,
+                                is_shown: true,
                             },
                         ],
                         "tasks/tasks": [task_1, task_2],
@@ -625,10 +656,11 @@ describe("GanttBoard", () => {
                 $store: createStoreMock({
                     state: getRootState(),
                     getters: {
+                        "tasks/has_at_least_one_row_shown": true,
                         "tasks/rows": [
-                            { task: { id: 1, dependencies: {} } as Task },
-                            { task: { id: 2, dependencies: {} } as Task },
-                            { task: { id: 3, dependencies: {} } as Task },
+                            { task: { id: 1, dependencies: {} }, is_shown: true } as TaskRow,
+                            { task: { id: 2, dependencies: {} }, is_shown: true } as TaskRow,
+                            { task: { id: 3, dependencies: {} }, is_shown: true } as TaskRow,
                         ],
                         "tasks/tasks": [
                             { id: 1, dependencies: {} } as Task,
@@ -660,10 +692,11 @@ describe("GanttBoard", () => {
                 $store: createStoreMock({
                     state: getRootState(),
                     getters: {
+                        "tasks/has_at_least_one_row_shown": true,
                         "tasks/rows": [
-                            { task: { id: 1, dependencies: {} } as Task },
-                            { task: { id: 2, dependencies: {} } as Task },
-                            { task: { id: 3, dependencies: {} } as Task },
+                            { task: { id: 1, dependencies: {} }, is_shown: true } as TaskRow,
+                            { task: { id: 2, dependencies: {} }, is_shown: true } as TaskRow,
+                            { task: { id: 3, dependencies: {} }, is_shown: true } as TaskRow,
                         ],
                         "tasks/tasks": [
                             { id: 1, dependencies: {} } as Task,

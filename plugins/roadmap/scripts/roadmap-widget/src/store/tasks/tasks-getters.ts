@@ -35,11 +35,7 @@ export const does_at_least_one_task_have_subtasks = (state: TasksState): boolean
 
 export const rows = (state: TasksState, getters: unknown, root_state: RootState): Row[] => {
     return state.tasks.reduce((rows: Row[], task): Row[] => {
-        if (!root_state.show_closed_elements && !task.is_open) {
-            return rows;
-        }
-
-        rows.push({ task: task });
+        rows.push({ task: task, is_shown: root_state.show_closed_elements || task.is_open });
         if (!task.is_expanded) {
             return rows;
         }
@@ -47,20 +43,33 @@ export const rows = (state: TasksState, getters: unknown, root_state: RootState)
         if (task.subtasks_loading_status === SUBTASKS_ARE_LOADING) {
             for (let i = 0; i < NB_SKELETONS_FOR_SUBTASKS; i++) {
                 const is_last_one = i === NB_SKELETONS_FOR_SUBTASKS - 1;
-                rows.push({ for_task: task, is_skeleton: true, is_last_one });
+                rows.push({
+                    for_task: task,
+                    is_skeleton: true,
+                    is_last_one,
+                    is_shown: root_state.show_closed_elements || task.is_open,
+                });
             }
 
             return rows;
         }
 
         if (task.subtasks_loading_status === SUBTASKS_ARE_IN_ERROR) {
-            rows.push({ for_task: task, is_error: true });
+            rows.push({
+                for_task: task,
+                is_error: true,
+                is_shown: root_state.show_closed_elements || task.is_open,
+            });
 
             return rows;
         }
 
         if (task.subtasks_loading_status === SUBTASKS_ARE_EMPTY) {
-            rows.push({ for_task: task, is_empty: true });
+            rows.push({
+                for_task: task,
+                is_empty: true,
+                is_shown: root_state.show_closed_elements || task.is_open,
+            });
 
             return rows;
         }
@@ -73,12 +82,21 @@ export const rows = (state: TasksState, getters: unknown, root_state: RootState)
             const nb_subtasks = subtasks_to_display.length;
             subtasks_to_display.forEach((subtask, index) => {
                 const is_last_one = index === nb_subtasks - 1;
-                rows.push({ subtask, parent: task, is_last_one });
+                rows.push({
+                    subtask,
+                    parent: task,
+                    is_last_one,
+                    is_shown: root_state.show_closed_elements || (task.is_open && subtask.is_open),
+                });
             });
         }
 
         return rows;
     }, []);
+};
+
+export const has_at_least_one_row_shown = (state: unknown, { rows }: { rows: Row[] }): boolean => {
+    return rows.some((row) => row.is_shown);
 };
 
 export const tasks = (state: unknown, { rows }: { rows: Row[] }): Task[] => {
