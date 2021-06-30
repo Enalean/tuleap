@@ -23,15 +23,15 @@ declare(strict_types=1);
 
 namespace Tuleap\Project\Registration;
 
-class LimitedToSiteAdministratorsException extends RegistrationForbiddenException
+class MaxNumberOfProjectReachedForUserException extends RegistrationForbiddenException
 {
     public function __construct()
     {
-        parent::__construct("Only site administrators can create projects.");
+        parent::__construct("Too many projects for the user are waiting to be approved.");
     }
 
     public function getI18NMessage(): string
     {
-        return dgettext("tuleap-core", "Only site administrators can create projects.");
+        return dgettext("tuleap-core", "Too many projects for the user are waiting to be approved.");
     }
 }

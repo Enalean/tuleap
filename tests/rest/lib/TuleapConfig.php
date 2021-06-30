@@ -69,6 +69,16 @@ class TuleapConfig
         $this->setConfig(self::FORGE_ACCESS, self::REGULAR);
     }
 
+    public function disableProjectCreation()
+    {
+        $this->setConfig('sys_use_project_registration', 0);
+    }
+
+    public function enableProjectCreation()
+    {
+        $this->setConfig('sys_use_project_registration', 1);
+    }
+
     public function enableInviteBuddies(): void
     {
         $this->setConfig('max_invitations_by_day', "10");

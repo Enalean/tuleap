@@ -40,7 +40,7 @@ use Tuleap\Project\Admin\Categories\CategoryCollection;
 use Tuleap\Project\Admin\Categories\MissingMandatoryCategoriesException;
 use Tuleap\Project\Admin\Categories\ProjectCategoriesUpdater;
 use Tuleap\Project\Admin\DescriptionFields\FieldUpdator;
-use Tuleap\Project\Registration\MaxNumberOfProjectReachedException;
+use Tuleap\Project\Registration\MaxNumberOfProjectReachedForPlatformException;
 use Tuleap\Project\Registration\ProjectRegistrationUserPermissionChecker;
 use Tuleap\Project\Registration\Template\InvalidXMLTemplateNameException;
 use Tuleap\Project\Registration\Template\ScrumTemplate;
@@ -149,7 +149,35 @@ class RestProjectCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testCreateThrowExceptionWhenUserCannotCreateProjects()
     {
-        $this->permissions_checker->shouldReceive('checkUserCreateAProject')->with($this->user)->andThrow(new MaxNumberOfProjectReachedException());
+        $this->project->template_id      = 100;
+        $this->project->shortname        = 'gpig';
+        $this->project->label            = 'Guinea Pig';
+        $this->project->description      = 'foo';
+        $this->project->is_public        = false;
+        $this->project->allow_restricted = false;
+        $this->project->categories       = [
+            CategoryPostRepresentation::build(14, 89),
+            CategoryPostRepresentation::build(18, 53)
+        ];
+
+        $template_project = M::mock(Project::class, ['isError' => false, 'isActive' => false, 'isTemplate' => true]);
+
+        $this->project_manager->shouldReceive('getProject')->with($this->project->template_id)->andReturn($template_project);
+
+        $verify_category_collection = static function (CategoryCollection $categories) {
+            [$category1, $category2] = $categories->getRootCategories();
+            $category1_child1        = $category1->getChildren()[0];
+            $category2_child1        = $category2->getChildren()[0];
+            return $category1->getId() === 14 && $category2->getId() === 18 &&
+                $category1_child1->getId() === 89 && $category2_child1->getId() === 53;
+        };
+
+        $this->categories_updater->shouldReceive('checkCollectionConsistency')->once()->with(M::on($verify_category_collection));
+
+        $this->project_creator->shouldReceive('createFromRest')->andThrow(new MaxNumberOfProjectReachedForPlatformException(
+            'messsage',
+            'i18n_message'
+        ));
 
         $this->expectException(RestException::class);
 
