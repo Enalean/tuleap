@@ -41,12 +41,13 @@ use Tuleap\Project\DescriptionFieldsDao;
 use Tuleap\Project\DescriptionFieldsFactory;
 use Tuleap\Project\Label\LabelDao;
 use Tuleap\Project\MappingRegistry;
-use Tuleap\Project\ProjectDescriptionMandatoryException;
-use Tuleap\Project\ProjectDescriptionUsageRetriever;
-use Tuleap\Project\ProjectRegistrationDisabledException;
+use Tuleap\Project\Registration\ProjectDescriptionMandatoryException;
+use Tuleap\Project\Registration\ProjectInvalidFullNameException;
+use Tuleap\Project\Registration\ProjectInvalidShortNameException;
 use Tuleap\Project\Registration\ProjectRegistrationChecker;
 use Tuleap\Project\Registration\ProjectRegistrationUserPermissionChecker;
 use Tuleap\Project\Registration\RegisterProjectCreationEvent;
+use Tuleap\Project\Registration\RegistrationForbiddenException;
 use Tuleap\Project\Registration\Template\TemplateFromProjectForCreation;
 use Tuleap\Project\Service\ServiceLinkDataBuilder;
 use Tuleap\Project\UgroupDuplicator;
@@ -104,16 +105,6 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
      */
     private $user_manager;
 
-    /**
-     * @var Rule_ProjectName
-     */
-    private $rule_short_name;
-
-    /**
-     * @var Rule_ProjectFullName
-     */
-    private $rule_full_name;
-
     private $send_notifications;
 
     /**
@@ -167,8 +158,6 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
         LabelDao $label_dao,
         DefaultProjectVisibilityRetriever $default_project_visibility_retriever,
         SynchronizedProjectMembershipDuplicator $synchronized_project_membership_duplicator,
-        Rule_ProjectName $rule_short_name,
-        Rule_ProjectFullName $rule_full_name,
         EventManager $event_manager,
         \Tuleap\Project\Admin\DescriptionFields\FieldUpdator $field_updator,
         ProjectServiceActivator $project_service_activator,
@@ -179,8 +168,6 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
         $this->force_activation                           = $force_activation;
         $this->reference_manager                          = $reference_manager;
         $this->user_manager                               = $user_manager;
-        $this->rule_short_name                            = $rule_short_name;
-        $this->rule_full_name                             = $rule_full_name;
         $this->project_manager                            = $projectManager;
         $this->frs_permissions_creator                    = $frs_permissions_creator;
         $this->ugroup_duplicator                          = $ugroup_duplicator;
@@ -262,8 +249,6 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
             new LabelDao(),
             new DefaultProjectVisibilityRetriever(),
             new SynchronizedProjectMembershipDuplicator(new SynchronizedProjectMembershipDao()),
-            new \Rule_ProjectName(),
-            new \Rule_ProjectFullName(),
             $event_manager,
             new \Tuleap\Project\Admin\DescriptionFields\FieldUpdator(
                 new DescriptionFieldsFactory(new DescriptionFieldsDao()),
@@ -281,48 +266,12 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
             new ProjectRegistrationChecker(
                 new ProjectRegistrationUserPermissionChecker(
                     new \ProjectDao()
-                )
+                ),
+                new \Rule_ProjectName(),
+                new \Rule_ProjectFullName(),
             ),
             $force_activation
         );
-    }
-
-    /**
-     * Build a new project
-     *
-     * @param ProjectCreationData $data project data
-     *
-     * @return Project created
-     * @throws \Tuleap\Project\Registration\Template\InvalidTemplateException
-     * @throws ProjectRegistrationDisabledException
-     * @throws Project_Creation_Exception
-     * @throws Project_InvalidFullName_Exception
-     * @throws Project_InvalidShortName_Exception
-     * @throws ProjectDescriptionMandatoryException
-     */
-    public function build(ProjectCreationData $data): Project
-    {
-        $this->checkProjectCreationData($data);
-
-        return $this->processProjectCreation($data);
-    }
-
-    /**
-     * @throws Project_Creation_Exception
-     * @throws Project_InvalidFullName_Exception
-     * @throws Project_InvalidShortName_Exception
-     * @throws \Tuleap\Project\Registration\Template\InvalidTemplateException
-     * @throws ProjectDescriptionMandatoryException
-     */
-    public function createFromRest(
-        $short_name,
-        $public_name,
-        TemplateFromProjectForCreation $template_from_project_for_creation,
-        array $data
-    ): Project {
-        $creation_data = $this->getProjectCreationData($short_name, $public_name, $template_from_project_for_creation, $data);
-
-        return $this->build($creation_data);
     }
 
     /**
@@ -359,13 +308,19 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
      * - Add the template as a project reference
      * - Copy Truncated email option
      * - Raise an event for plugin configuration
+     *
+     * @throws RegistrationForbiddenException
+     * @throws ProjectInvalidFullNameException
+     * @throws ProjectInvalidShortNameException
+     * @throws ProjectDescriptionMandatoryException
      */
     protected function createProject(ProjectCreationData $data): ?int
     {
         $admin_user = $this->user_manager->getCurrentUser();
 
-        $errors_collection = $this->registration_checker->collectPermissionErrorsForProjectRegistration(
-            $admin_user
+        $errors_collection = $this->registration_checker->collectAllErrorsForProjectRegistration(
+            $admin_user,
+            $data
         );
 
         foreach ($errors_collection->getErrors() as $error) {
@@ -805,33 +760,9 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
     }
 
     /**
-     *
-     * @throws Project_InvalidFullName_Exception
-     * @throws Project_InvalidShortName_Exception
-     * @throws ProjectDescriptionMandatoryException
-     */
-    private function checkProjectCreationData(ProjectCreationData $data): void
-    {
-        if (! $this->rule_short_name->isValid($data->getUnixName())) {
-            throw new Project_InvalidShortName_Exception($this->rule_short_name->getErrorMessage());
-        }
-
-        if (! $this->rule_full_name->isValid($data->getFullName())) {
-            throw new Project_InvalidFullName_Exception($this->rule_full_name->getErrorMessage());
-        }
-
-        $description = $data->getShortDescription();
-        if (($description === null || $description === '') && ProjectDescriptionUsageRetriever::isDescriptionMandatory()) {
-            throw new ProjectDescriptionMandatoryException();
-        }
-    }
-
-    /**
      * @throws Project_Creation_Exception
-     *
-     * protected for testing purpose
      */
-    protected function processProjectCreation(ProjectCreationData $data): Project
+    public function processProjectCreation(ProjectCreationData $data): Project
     {
         $id = $this->createProject($data);
         if (! $id) {

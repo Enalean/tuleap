@@ -17,10 +17,31 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-class Project_InvalidShortName_Exception extends Exception
+declare(strict_types=1);
+
+namespace Tuleap\Project\Registration;
+
+class ProjectInvalidShortNameException extends RegistrationErrorException
 {
-    public function __construct($message)
+    private string $details;
+
+    public function __construct(string $details)
     {
-        parent::__construct($message, 3102);
+        $this->details = $details;
+
+        parent::__construct(
+            sprintf(
+                "Project shortname is invalid. The reason is: %s",
+                $details
+            )
+        );
+    }
+
+    public function getI18NMessage(): string
+    {
+        return sprintf(
+            dgettext("tuleap-core", "Project shortname is invalid. The reason is: %s"),
+            $this->details
+        );
     }
 }

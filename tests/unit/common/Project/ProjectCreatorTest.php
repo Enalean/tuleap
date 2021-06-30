@@ -22,34 +22,33 @@ declare(strict_types=1);
 
 namespace Tuleap\Project;
 
-use ForgeConfig;
 use Mockery;
-use Project_InvalidFullName_Exception;
-use Project_InvalidShortName_Exception;
+use ProjectCreationData;
 use ProjectCreator;
 use ProjectManager;
+use Psr\Log\NullLogger;
 use ReferenceManager;
-use Rule_ProjectFullName;
-use Rule_ProjectName;
 use Tuleap\Dashboard\Project\ProjectDashboardDuplicator;
-use Tuleap\ForgeConfigSandbox;
 use Tuleap\FRS\FRSPermissionCreator;
 use Tuleap\FRS\LicenseAgreement\LicenseAgreementFactory;
 use Tuleap\GlobalSVNPollution;
 use Tuleap\Project\Admin\DescriptionFields\FieldUpdator;
 use Tuleap\Project\Admin\Service\ProjectServiceActivator;
 use Tuleap\Project\Label\LabelDao;
+use Tuleap\Project\Registration\ProjectDescriptionMandatoryException;
+use Tuleap\Project\Registration\ProjectInvalidFullNameException;
+use Tuleap\Project\Registration\ProjectInvalidShortNameException;
 use Tuleap\Project\Registration\ProjectRegistrationChecker;
 use Tuleap\Project\Registration\ProjectRegistrationErrorsCollection;
 use Tuleap\Project\Registration\Template\TemplateFromProjectForCreation;
 use Tuleap\Project\UGroups\SynchronizedProjectMembershipDuplicator;
+use Tuleap\Test\Builders\UserTestBuilder;
 use UserManager;
 
 final class ProjectCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
     use GlobalSVNPollution;
-    use ForgeConfigSandbox;
 
     /**
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ProjectManager
@@ -96,24 +95,14 @@ final class ProjectCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $event_manager;
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Rule_ProjectFullName
-     */
-    private $rule_project_full_name;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Rule_ProjectName
-     */
-    private $rule_short_name;
-    /**
      * @var \PHPUnit\Framework\MockObject\MockObject&ProjectRegistrationChecker
      */
     private $registration_checker;
 
     protected function setUp(): void
     {
-        $this->project_manager        = Mockery::mock(ProjectManager::class);
-        $this->user_manager           = Mockery::mock(UserManager::class);
-        $this->rule_short_name        = Mockery::mock(Rule_ProjectName::class);
-        $this->rule_project_full_name = Mockery::mock(Rule_ProjectFullName::class);
+        $this->project_manager = Mockery::mock(ProjectManager::class);
+        $this->user_manager    = Mockery::mock(UserManager::class);
 
         $this->event_manager                              = Mockery::mock(\EventManager::class);
         $this->reference_manager                          = Mockery::mock(ReferenceManager::class);
@@ -131,75 +120,102 @@ final class ProjectCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testMandatoryDescriptionNotSetRaiseException(): void
     {
         $this->buildProjectCreator(false);
-        $this->rule_short_name->shouldReceive('isValid')->once()->andReturnTrue();
-        $this->rule_project_full_name->shouldReceive('isValid')->once()->andReturnTrue();
 
-        $this->creator->shouldReceive('processProjectCreation')->never();
+        $this->user_manager->shouldReceive('getCurrentUser')->andReturn(
+            UserTestBuilder::aUser()->build()
+        );
+
+        $project_creation_data = new ProjectCreationData(
+            new DefaultProjectVisibilityRetriever(),
+            new NullLogger()
+        );
+
+        $errors_collection = new ProjectRegistrationErrorsCollection();
+        $errors_collection->addError(
+            new ProjectDescriptionMandatoryException()
+        );
+
+        $this->registration_checker
+            ->expects(self::once())
+            ->method('collectAllErrorsForProjectRegistration')
+            ->willReturn($errors_collection);
+
         $this->expectException(ProjectDescriptionMandatoryException::class);
-        $this->creator->createFromRest(
-            'shortname',
-            'public name',
-            TemplateFromProjectForCreation::fromGlobalProjectAdminTemplate(),
-            []
-        );
-    }
 
-    public function testNotMandatoryDescriptionIsValid(): void
-    {
-        $this->buildProjectCreator(false);
-        ForgeConfig::set('enable_not_mandatory_description', true);
-        ForgeConfig::set('sys_default_domain', 'example.com');
-
-        $this->rule_short_name->shouldReceive('isValid')->once()->andReturnTrue();
-        $this->rule_project_full_name->shouldReceive('isValid')->once()->andReturnTrue();
-
-        $this->creator->shouldReceive('processProjectCreation')->once();
-        $this->creator->createFromRest(
-            'shortname',
-            'public name',
-            TemplateFromProjectForCreation::fromGlobalProjectAdminTemplate(),
-            []
-        );
+        $this->creator->processProjectCreation($project_creation_data);
     }
 
     public function testInvalidShortNameShouldRaiseException(): void
     {
         $this->buildProjectCreator(false);
-        $this->rule_short_name->shouldReceive('isValid')->once()->andReturnFalse();
-        $this->rule_short_name->shouldReceive('getErrorMessage')->once();
 
-        $this->creator->shouldReceive('processProjectCreation')->never();
-        $this->expectException(Project_InvalidShortName_Exception::class);
-        $this->creator->createFromRest(
-            'shortname',
-            'public name',
-            TemplateFromProjectForCreation::fromGlobalProjectAdminTemplate(),
-            []
+        $this->user_manager->shouldReceive('getCurrentUser')->andReturn(
+            UserTestBuilder::aUser()->build()
         );
+
+        $project_creation_data = new ProjectCreationData(
+            new DefaultProjectVisibilityRetriever(),
+            new NullLogger()
+        );
+
+        $errors_collection = new ProjectRegistrationErrorsCollection();
+        $errors_collection->addError(
+            new ProjectInvalidShortNameException('')
+        );
+
+        $this->registration_checker
+            ->expects(self::once())
+            ->method('collectAllErrorsForProjectRegistration')
+            ->willReturn($errors_collection);
+
+        $this->expectException(ProjectInvalidShortNameException::class);
+
+        $this->creator->processProjectCreation($project_creation_data);
     }
 
     public function testInvalidFullNameShouldRaiseException(): void
     {
         $this->buildProjectCreator(false);
-        $this->rule_short_name->shouldReceive('isValid')->once()->andReturnTrue();
-        $this->rule_project_full_name->shouldReceive('isValid')->once()->andReturnFalse();
-        $this->rule_project_full_name->shouldReceive('getErrorMessage')->once();
 
-        $this->creator->shouldReceive('processProjectCreation')->never();
-        $this->expectException(Project_InvalidFullName_Exception::class);
-        $this->creator->createFromRest(
-            'shortname',
-            'public name',
-            TemplateFromProjectForCreation::fromGlobalProjectAdminTemplate(),
-            []
+        $this->user_manager->shouldReceive('getCurrentUser')->andReturn(
+            UserTestBuilder::aUser()->build()
         );
+
+        $project_creation_data = new ProjectCreationData(
+            new DefaultProjectVisibilityRetriever(),
+            new NullLogger()
+        );
+
+        $errors_collection = new ProjectRegistrationErrorsCollection();
+        $errors_collection->addError(
+            new ProjectInvalidFullNameException('')
+        );
+
+        $this->registration_checker
+            ->expects(self::once())
+            ->method('collectAllErrorsForProjectRegistration')
+            ->willReturn($errors_collection);
+
+        $this->expectException(ProjectInvalidFullNameException::class);
+
+        $this->creator->processProjectCreation($project_creation_data);
     }
 
     public function testItCreatesAProjectAndAutoActivateIt(): void
     {
         $this->buildProjectCreator(true);
-        ForgeConfig::set('enable_not_mandatory_description', true);
-        ForgeConfig::set('sys_default_domain', 'example.com');
+
+        $project_creation_data = ProjectCreationData::buildFromFormArray(
+            new DefaultProjectVisibilityRetriever(),
+            TemplateFromProjectForCreation::fromGlobalProjectAdminTemplate(),
+            []
+        );
+
+        $errors_collection = new ProjectRegistrationErrorsCollection();
+        $this->registration_checker
+            ->expects(self::once())
+            ->method('collectAllErrorsForProjectRegistration')
+            ->willReturn($errors_collection);
 
         $user = Mockery::mock(\PFUser::class);
         $this->user_manager->shouldReceive('getCurrentUser')->andReturn($user);
@@ -224,9 +240,6 @@ final class ProjectCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $project = Mockery::mock(\Project::class);
         $project->shouldReceive('isError')->andReturns(false);
         $this->project_manager->shouldReceive('getProject')->andReturn($project);
-
-        $this->rule_short_name->shouldReceive('isValid')->andReturn(true);
-        $this->rule_project_full_name->shouldReceive('isValid')->andReturn(true);
 
         $this->event_manager->shouldReceive('processEvent')->twice();
 
@@ -240,26 +253,24 @@ final class ProjectCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->creator->shouldReceive('autoActivateProject')->once();
 
-        $this->registration_checker
-            ->expects(self::once())
-            ->method('collectPermissionErrorsForProjectRegistration')
-            ->willReturn(
-                new ProjectRegistrationErrorsCollection()
-            );
-
-        $this->creator->createFromRest(
-            "test",
-            "shortname",
-            TemplateFromProjectForCreation::fromGlobalProjectAdminTemplate(),
-            []
-        );
+        $this->creator->processProjectCreation($project_creation_data);
     }
 
     public function testItCreatesAProjectWithoutAutoValidation(): void
     {
         $this->buildProjectCreator(false);
-        ForgeConfig::set('enable_not_mandatory_description', true);
-        ForgeConfig::set('sys_default_domain', 'example.com');
+
+        $project_creation_data = ProjectCreationData::buildFromFormArray(
+            new DefaultProjectVisibilityRetriever(),
+            TemplateFromProjectForCreation::fromGlobalProjectAdminTemplate(),
+            []
+        );
+
+        $errors_collection = new ProjectRegistrationErrorsCollection();
+        $this->registration_checker
+            ->expects(self::once())
+            ->method('collectAllErrorsForProjectRegistration')
+            ->willReturn($errors_collection);
 
         $user = Mockery::mock(\PFUser::class);
         $this->user_manager->shouldReceive('getCurrentUser')->andReturn($user);
@@ -285,9 +296,6 @@ final class ProjectCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $project->shouldReceive('isError')->andReturns(false);
         $this->project_manager->shouldReceive('getProject')->andReturn($project);
 
-        $this->rule_short_name->shouldReceive('isValid')->andReturn(true);
-        $this->rule_project_full_name->shouldReceive('isValid')->andReturn(true);
-
         $this->event_manager->shouldReceive('processEvent')->twice();
 
         $this->reference_manager->shouldReceive('addSystemReferencesWithoutService')->once();
@@ -298,21 +306,9 @@ final class ProjectCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->service_updator->shouldReceive('activateServicesFromTemplate')->once();
 
-        $this->registration_checker
-            ->expects(self::once())
-            ->method('collectPermissionErrorsForProjectRegistration')
-            ->willReturn(
-                new ProjectRegistrationErrorsCollection()
-            );
-
         $this->creator->shouldReceive('autoActivateProject')->never();
 
-        $this->creator->createFromRest(
-            'shortname',
-            'public name',
-            TemplateFromProjectForCreation::fromGlobalProjectAdminTemplate(),
-            []
-        );
+        $this->creator->processProjectCreation($project_creation_data);
     }
 
     private function buildProjectCreator(bool $force_activation): void
@@ -331,8 +327,6 @@ final class ProjectCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
                 $this->label_dao,
                 new DefaultProjectVisibilityRetriever(),
                 $this->synchronized_project_membership_duplicator,
-                $this->rule_short_name,
-                $this->rule_project_full_name,
                 $this->event_manager,
                 $this->field_updator,
                 $this->service_updator,

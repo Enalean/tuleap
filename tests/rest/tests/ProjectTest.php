@@ -28,6 +28,15 @@ use Test\Rest\TuleapConfig;
  */
 class ProjectTest extends ProjectBase
 {
+    /**
+     * @after
+     */
+    protected function resetProjectCreationConfiguration(): void
+    {
+        $tuleap_config = TuleapConfig::instance();
+        $tuleap_config->enableProjectCreation();
+    }
+
     private function getBasicAuthResponse($request)
     {
         return $this->getResponseByBasicAuth(
@@ -68,8 +77,6 @@ class ProjectTest extends ProjectBase
         self::assertArrayHasKey('i18n_error_messages', $errors_response['error']);
         self::assertCount(1, $errors_response['error']['i18n_error_messages']);
         self::assertSame("Only site administrators can create projects.", $errors_response['error']['i18n_error_messages'][0]);
-
-        $tuleap_config->enableProjectCreation();
     }
 
     public function testPOSTDryRunForRegularUser(): void
@@ -311,7 +318,7 @@ class ProjectTest extends ProjectBase
                 )
             )
         );
-        self::assertEquals($response->getStatusCode(), 400);
+        self::assertEquals(400, $response->getStatusCode());
     }
 
     public function testProjectCreationWithXMLTemplate(): void
@@ -335,7 +342,7 @@ class ProjectTest extends ProjectBase
                 )
             )
         );
-        self::assertEquals($response->getStatusCode(), 201);
+        self::assertEquals(201, $response->getStatusCode());
         $project = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         self::assertEquals('Created from scrum XML template', $project['label']);
     }
@@ -450,7 +457,7 @@ class ProjectTest extends ProjectBase
             $json_projects[0]['additional_informations']['agiledashboard']['root_planning']['milestone_tracker']['id']
         );
 
-        self::assertEquals($response->getStatusCode(), 200);
+        self::assertEquals(200, $response->getStatusCode());
     }
 
     public function testGETByShortname()
@@ -460,9 +467,9 @@ class ProjectTest extends ProjectBase
 
         self::assertArrayHasKey('id', $json_projects[0]);
         self::assertEquals($this->project_pbi_id, $json_projects[0]['id']);
-        self::assertEquals(1, count($json_projects));
+        self::assertCount(1, $json_projects);
 
-        self::assertEquals($response->getStatusCode(), 200);
+        self::assertEquals(200, $response->getStatusCode());
     }
 
     public function testGETByMembership()
@@ -473,9 +480,9 @@ class ProjectTest extends ProjectBase
         );
         $json_projects = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
-        self::assertEquals(1, count($json_projects));
+        self::assertCount(1, $json_projects);
 
-        self::assertEquals($response->getStatusCode(), 200);
+        self::assertEquals(200, $response->getStatusCode());
     }
 
     public function testGETByAdministratorship(): void
@@ -488,14 +495,14 @@ class ProjectTest extends ProjectBase
 
         self::assertGreaterThan(5, count($json_projects));
 
-        self::assertEquals($response->getStatusCode(), 200);
+        self::assertEquals(200, $response->getStatusCode());
     }
 
     public function testGETByNonMembershipShouldFail()
     {
         $response = $this->getResponse($this->request_factory->createRequest('GET', 'projects?query=' . urlencode('{"is_member_of":false}')));
 
-        self::assertEquals($response->getStatusCode(), 400);
+        self::assertEquals(400, $response->getStatusCode());
     }
 
     private function valuesArePresent(array $values, array $array)
@@ -626,7 +633,7 @@ class ProjectTest extends ProjectBase
         self::assertArrayHasKey('description', $json_project);
         self::assertEquals("For test", $json_project['description']);
 
-        self::assertEquals($response->getStatusCode(), 200);
+        self::assertEquals(200, $response->getStatusCode());
     }
 
     public function testGETbyIdForAdminProjectReturnAdditionalField()
@@ -646,7 +653,7 @@ class ProjectTest extends ProjectBase
 
         $json_project = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
-        self::assertEquals($response->getStatusCode(), 200);
+        self::assertEquals(200, $response->getStatusCode());
         self::assertEquals($json_project['status'], 'deleted');
     }
 
@@ -662,7 +669,7 @@ class ProjectTest extends ProjectBase
         $response = $this->getResponseByName(REST_TestDataBuilder::ADMIN_USER_NAME, $this->request_factory->createRequest('OPTIONS', 'projects/' . $this->project_private_member_id));
 
         self::assertEquals(['OPTIONS', 'GET', 'POST', 'PATCH'], explode(', ', $response->getHeaderLine('Allow')));
-        self::assertEquals($response->getStatusCode(), 200);
+        self::assertEquals(200, $response->getStatusCode());
     }
 
     public function testOPTIONSbyIdForDelegatedRestProjectManager()
@@ -670,7 +677,7 @@ class ProjectTest extends ProjectBase
         $response = $this->getResponseByName(REST_TestDataBuilder::TEST_USER_DELEGATED_REST_PROJECT_MANAGER_NAME, $this->request_factory->createRequest('OPTIONS', 'projects/' . $this->project_deleted_id));
 
         self::assertEqualsCanonicalizing(['OPTIONS', 'GET', 'POST', 'PATCH'], explode(', ', $response->getHeaderLine('Allow')));
-        self::assertEquals($response->getStatusCode(), 200);
+        self::assertEquals(200, $response->getStatusCode());
     }
 
     public function testOPTIONSbyIdForProjectMember()
@@ -678,25 +685,25 @@ class ProjectTest extends ProjectBase
         $response = $this->getResponseByName(REST_TestDataBuilder::TEST_USER_1_NAME, $this->request_factory->createRequest('OPTIONS', 'projects/' . $this->project_private_member_id));
 
         self::assertEqualsCanonicalizing(['OPTIONS', 'GET', 'POST', 'PATCH'], explode(', ', $response->getHeaderLine('Allow')));
-        self::assertEquals($response->getStatusCode(), 200);
+        self::assertEquals(200, $response->getStatusCode());
     }
 
     public function testGETbyIdForForbiddenUser()
     {
         $response = $this->getResponseByName(REST_TestDataBuilder::TEST_USER_1_NAME, $this->request_factory->createRequest('GET', 'projects/' . REST_TestDataBuilder::ADMIN_PROJECT_ID));
-        self::assertEquals($response->getStatusCode(), 403);
+        self::assertEquals(403, $response->getStatusCode());
     }
 
     public function testGETBadRequest()
     {
         $response = $this->getResponseByName(REST_TestDataBuilder::ADMIN_USER_NAME, $this->request_factory->createRequest('GET', 'projects/abc'));
-        self::assertEquals($response->getStatusCode(), 400);
+        self::assertEquals(400, $response->getStatusCode());
     }
 
     public function testGETUnknownProject()
     {
         $response = $this->getResponseByName(REST_TestDataBuilder::ADMIN_USER_NAME, $this->request_factory->createRequest('GET', 'projects/1234567890'));
-        self::assertEquals($response->getStatusCode(), 404);
+        self::assertEquals(404, $response->getStatusCode());
     }
 
     public function testGETmilestones()
@@ -724,7 +731,7 @@ class ProjectTest extends ProjectBase
         self::assertArrayHasKey('open', $release_milestone['status_count']);
         self::assertArrayHasKey('closed', $release_milestone['status_count']);
 
-        self::assertEquals($response->getStatusCode(), 200);
+        self::assertEquals(200, $response->getStatusCode());
     }
 
     public function testGETmilestonesDoesNotContainStatusCountInSlimRepresentation()
@@ -741,7 +748,7 @@ class ProjectTest extends ProjectBase
         self::assertEquals($release_milestone['label'], "Release 1.0");
         self::assertEquals($release_milestone['status_count'], null);
 
-        self::assertEquals($response->getStatusCode(), 200);
+        self::assertEquals(200, $response->getStatusCode());
     }
 
 
@@ -757,7 +764,7 @@ class ProjectTest extends ProjectBase
         $response = $this->getResponseByName(REST_TestDataBuilder::ADMIN_USER_NAME, $this->request_factory->createRequest('OPTIONS', 'projects/' . $this->project_private_member_id . '/trackers'));
 
         self::assertEqualsCanonicalizing(['OPTIONS', 'GET'], explode(', ', $response->getHeaderLine('Allow')));
-        self::assertEquals($response->getStatusCode(), 200);
+        self::assertEquals(200, $response->getStatusCode());
     }
 
     public function testGETtrackers()
@@ -822,7 +829,7 @@ class ProjectTest extends ProjectBase
             'label' => 'Private member'
         ]);
 
-        self::assertEquals($response->getStatusCode(), 200);
+        self::assertEquals(200, $response->getStatusCode());
     }
 
     public function testOPTIONSbacklog()
@@ -882,7 +889,7 @@ class ProjectTest extends ProjectBase
             )
         );
 
-        self::assertEquals($response_put->getStatusCode(), 403);
+        self::assertEquals(403, $response_put->getStatusCode());
     }
 
     public function testPUTbacklog()
@@ -898,7 +905,7 @@ class ProjectTest extends ProjectBase
             )
         );
 
-        self::assertEquals($response_put->getStatusCode(), 200);
+        self::assertEquals(200, $response_put->getStatusCode());
 
         $response_get  = $this->getResponse(
             $this->request_factory->createRequest('GET', 'projects/' . $this->project_private_member_id . '/backlog')
@@ -945,7 +952,7 @@ class ProjectTest extends ProjectBase
             )
         );
 
-        self::assertEquals($response_put->getStatusCode(), 200);
+        self::assertEquals(200, $response_put->getStatusCode());
 
         $response_get  = $this->getResponse(
             $this->request_factory->createRequest('GET', 'projects/' . $this->project_private_member_id . '/backlog')
@@ -1121,7 +1128,7 @@ class ProjectTest extends ProjectBase
             )
         );
 
-        self::assertEquals($response_patch->getStatusCode(), 403);
+        self::assertEquals(403, $response_patch->getStatusCode());
     }
 
     public function testPATCHbacklog()
@@ -1489,7 +1496,7 @@ class ProjectTest extends ProjectBase
             )
         );
 
-        self::assertEquals($response->getStatusCode(), 200);
+        self::assertEquals(200, $response->getStatusCode());
     }
 
     public function testPATCHWithRestProjectManager()
@@ -1505,7 +1512,7 @@ class ProjectTest extends ProjectBase
             )
         );
 
-        self::assertEquals($response->getStatusCode(), 200);
+        self::assertEquals(200, $response->getStatusCode());
     }
 
     public function testPATCHWithAdminWhenProjectIsDeleted()
@@ -1521,7 +1528,7 @@ class ProjectTest extends ProjectBase
             )
         );
 
-        self::assertEquals($response->getStatusCode(), 403);
+        self::assertEquals(403, $response->getStatusCode());
     }
 
     public function getSuspendedProjectTrackersWithRegularUser()
@@ -1541,7 +1548,7 @@ class ProjectTest extends ProjectBase
             $this->request_factory->createRequest('GET', 'projects/' . $this->project_suspended_id . '/trackers')
         );
 
-        self::assertEquals($response->getStatusCode(), 200);
+        self::assertEquals(200, $response->getStatusCode());
     }
 
     public function testPUTBanner(): void

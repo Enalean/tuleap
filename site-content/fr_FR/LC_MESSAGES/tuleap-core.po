@@ -2694,6 +2694,10 @@ msgstr "Marqueur de projet ?"
 msgid "Project flags are displayed in the navigation bar."
 msgstr "Les marqueurs de projet sont affichés dans la barre de navigation."
 
+#, php-format
+msgid "Project fullname is invalid. The reason is: %s"
+msgstr "Le nom complet de project n'est pas valide. La raison est : %s"
+
 msgid "Project hierarchy"
 msgstr "Hierarchie de projets"
 
@@ -2750,6 +2754,10 @@ msgstr "L'enregistrement de project est désactivé"
 
 msgid "Project settings"
 msgstr "Configuration des projets"
+
+#, php-format
+msgid "Project shortname is invalid. The reason is: %s"
+msgstr "Le nom court de projet n'est pas valide. La raison est : %s"
 
 msgid "Project templates"
 msgstr "Modèles de projet"
@@ -4787,6 +4795,9 @@ msgstr "Votre navigateur web n'est pas supporté"
 #, php-format
 msgid "[%s] Email change confirmation"
 msgstr "[%s] Confirmation de changement d'e-mail"
+
+msgid "`description` is required."
+msgstr "`description` est requis."
 
 msgid "activate"
 msgstr "activer"

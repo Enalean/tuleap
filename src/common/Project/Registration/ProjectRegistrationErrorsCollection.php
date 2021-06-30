@@ -26,12 +26,12 @@ namespace Tuleap\Project\Registration;
 class ProjectRegistrationErrorsCollection
 {
     /**
-     * @var RegistrationForbiddenException[]
+     * @var RegistrationErrorException[]
      */
     private array $errors = [];
 
     /**
-     * @return RegistrationForbiddenException[]
+     * @return RegistrationErrorException[]
      */
     public function getErrors(): array
     {
@@ -51,7 +51,7 @@ class ProjectRegistrationErrorsCollection
         return $messages;
     }
 
-    public function addError(RegistrationForbiddenException $error): void
+    public function addError(RegistrationErrorException $error): void
     {
         $this->errors[] = $error;
     }

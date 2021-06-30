@@ -21,14 +21,17 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Project;
+namespace Tuleap\Project\Registration;
 
-use Exception;
-
-class ProjectDescriptionMandatoryException extends Exception
+class ProjectDescriptionMandatoryException extends RegistrationErrorException
 {
     public function __construct()
     {
         parent::__construct('`description` is required.');
+    }
+
+    public function getI18NMessage(): string
+    {
+        return dgettext("tuleap-core", '`description` is required.');
     }
 }
