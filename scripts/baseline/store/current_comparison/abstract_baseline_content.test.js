@@ -59,7 +59,7 @@ describe("Compared baseline store:", () => {
                 expect(context.commit).toHaveBeenCalledWith("updateFirstLevelArtifacts", artifacts);
             });
             it("dispatches 'addArtifacts' with baseline artifacts", () => {
-                expect(context.dispatch).toHaveBeenCalledWith("addArtifacts", artifacts);
+                expect(context.dispatch).toHaveBeenCalledWith("addArtifacts", [artifacts, []]);
             });
         });
 
@@ -70,7 +70,9 @@ describe("Compared baseline store:", () => {
                     create("baseline_artifact", { linked_artifact_ids: [2, 3] }),
                 ];
 
-                const linked_artifacts = createList("baseline_artifact", 3);
+                const linked_artifacts = createList("baseline_artifact", 3, {
+                    linked_artifact_ids: [13],
+                });
 
                 beforeEach(() => {
                     getBaselineArtifactsByIds.mockImplementation((baseline_id, artifacts_id) => {
@@ -84,7 +86,7 @@ describe("Compared baseline store:", () => {
                     });
 
                     context.state.baseline_id = 1;
-                    return store.actions.addArtifacts(context, artifacts);
+                    return store.actions.addArtifacts(context, [artifacts, []]);
                 });
 
                 it("commit 'incrementLoadedDepthsCount'", () => {
@@ -96,7 +98,58 @@ describe("Compared baseline store:", () => {
                 });
 
                 it("dispatch 'addArtifacts' with linked artifacts", () => {
-                    expect(context.dispatch).toHaveBeenCalledWith("addArtifacts", linked_artifacts);
+                    expect(context.dispatch).toHaveBeenCalledWith("addArtifacts", [
+                        linked_artifacts,
+                        [3, 4, 1, 2],
+                    ]);
+                });
+            });
+
+            describe("when some linked artifacts, then it filter already searched artifact", () => {
+                const artifacts = [create("baseline_artifact", { linked_artifact_ids: [9] })];
+
+                const linked_artifact = [
+                    create("baseline_artifact", {
+                        id: 9,
+                        linked_artifact_ids: [8],
+                    }),
+                ];
+
+                const filtered_linked_artifact = [
+                    create("baseline_artifact", {
+                        id: 9,
+                        linked_artifact_ids: [],
+                    }),
+                ];
+
+                beforeEach(() => {
+                    getBaselineArtifactsByIds.mockImplementation((baseline_id, artifacts_id) => {
+                        if (
+                            baseline_id === 1 &&
+                            JSON.stringify([9]) === JSON.stringify(artifacts_id)
+                        ) {
+                            return Promise.resolve(linked_artifact);
+                        }
+                        throw new Error("Not expected args: " + baseline_id + " " + artifacts_id);
+                    });
+
+                    context.state.baseline_id = 1;
+                    return store.actions.addArtifacts(context, [artifacts, [8, 9, 10]]);
+                });
+
+                it("commit 'incrementLoadedDepthsCount'", () => {
+                    expect(context.commit).toHaveBeenCalledWith("incrementLoadedDepthsCount");
+                });
+
+                it("commit 'addArtifacts' with artifacts", () => {
+                    expect(context.commit).toHaveBeenCalledWith("addArtifacts", artifacts);
+                });
+
+                it("dispatch 'addArtifacts' with linked artifacts", () => {
+                    expect(context.dispatch).toHaveBeenCalledWith("addArtifacts", [
+                        filtered_linked_artifact,
+                        [8, 9, 10],
+                    ]);
                 });
             });
 
@@ -106,7 +159,7 @@ describe("Compared baseline store:", () => {
                         create("baseline_artifact", { linked_artifact_ids: [] }),
                         create("baseline_artifact", { linked_artifact_ids: [] }),
                     ];
-                    return store.actions.addArtifacts(context, artifacts);
+                    return store.actions.addArtifacts(context, [artifacts, []]);
                 });
                 it("does not dispatch 'addArtifacts'", () => {
                     expect(context.dispatch).not.toHaveBeenCalled();

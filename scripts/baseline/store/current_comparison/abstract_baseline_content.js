@@ -39,11 +39,17 @@ export default {
         async loadAllArtifacts({ commit, dispatch, state }) {
             const artifacts = await getBaselineArtifacts(state.baseline_id);
             commit("updateFirstLevelArtifacts", artifacts);
-            await dispatch("addArtifacts", artifacts);
+            await dispatch("addArtifacts", [artifacts, []]);
         },
 
-        async addArtifacts({ commit, dispatch, state }, artifacts) {
+        async addArtifacts({ commit, dispatch, state }, [artifacts, already_linked_artifact]) {
             commit("addArtifacts", artifacts);
+
+            artifacts.forEach((artifact) => {
+                if (!already_linked_artifact.includes(artifact.id)) {
+                    already_linked_artifact.push(artifact.id);
+                }
+            });
 
             commit("incrementLoadedDepthsCount");
             if (state.loaded_depths_count > ARTIFACTS_EXPLORATION_DEPTH_LIMIT) {
@@ -57,11 +63,25 @@ export default {
             if (linked_artifact_ids.length === 0) {
                 return;
             }
+
+            let new_already_linked_artifact = ArrayUtils.unique(
+                already_linked_artifact.concat(linked_artifact_ids)
+            );
+
             const linked_artifacts = await getBaselineArtifactsByIds(
                 state.baseline_id,
                 linked_artifact_ids
             );
-            await dispatch("addArtifacts", linked_artifacts);
+
+            linked_artifacts.forEach((artifact) => {
+                artifact.linked_artifact_ids.forEach((id, index) => {
+                    if (new_already_linked_artifact.includes(id)) {
+                        artifact.linked_artifact_ids.splice(index, 1);
+                    }
+                });
+            });
+
+            await dispatch("addArtifacts", [linked_artifacts, new_already_linked_artifact]);
         },
     },
 
@@ -79,7 +99,9 @@ export default {
             state.artifacts_where_depth_limit_reached = artifacts;
         },
         addArtifacts: (state, artifacts) => {
-            artifacts.forEach((artifact) => Vue.set(state.artifacts_by_id, artifact.id, artifact));
+            artifacts.forEach((artifact) => {
+                state.artifacts_by_id[artifact.id] = artifact;
+            });
         },
         incrementLoadedDepthsCount: (state) => state.loaded_depths_count++,
     },
