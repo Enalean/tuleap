@@ -82,6 +82,7 @@ use Tuleap\ProgramManagement\Adapter\Team\MirroredTimeboxes\MirroredTimeboxRetri
 use Tuleap\ProgramManagement\Adapter\Team\TeamDao;
 use Tuleap\ProgramManagement\Adapter\Workspace\ProjectManagerAdapter;
 use Tuleap\ProgramManagement\Adapter\Workspace\WorkspaceDAO;
+use Tuleap\ProgramManagement\DisplayAdminProgramManagementController;
 use Tuleap\ProgramManagement\DisplayProgramBacklogController;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\ArtifactCreatedHandler;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck\CanSubmitNewArtifactHandler;
@@ -100,6 +101,7 @@ use Tuleap\ProgramManagement\Domain\Workspace\ComponentInvolvedVerifier;
 use Tuleap\ProgramManagement\Domain\Workspace\ProgramsSearcher;
 use Tuleap\ProgramManagement\Domain\Workspace\TeamsSearcher;
 use Tuleap\ProgramManagement\EventRedirectAfterArtifactCreationOrUpdateHandler;
+use Tuleap\ProgramManagement\ProgramManagementBreadCrumbsBuilder;
 use Tuleap\ProgramManagement\ProgramService;
 use Tuleap\ProgramManagement\RedirectParameterInjector;
 use Tuleap\ProgramManagement\REST\ResourcesInjector;
@@ -241,6 +243,7 @@ final class program_managementPlugin extends Plugin
         $event->getRouteCollector()->addGroup(
             '/program_management',
             function (FastRoute\RouteCollector $r) {
+                $r->get('/admin/{project_name:[A-z0-9-]+}[/]', $this->getRouteHandler('routeGetAdminProgramManagement'));
                 $r->get('/{project_name:[A-z0-9-]+}[/]', $this->getRouteHandler('routeGetProgramManagement'));
             }
         );
@@ -260,6 +263,16 @@ final class program_managementPlugin extends Plugin
                 TrackerFactory::instance()
             ),
             $program_increments_dao
+        );
+    }
+
+    public function routeGetAdminProgramManagement(): DisplayAdminProgramManagementController
+    {
+        return new DisplayAdminProgramManagementController(
+            ProjectManager::instance(),
+            TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../templates/admin'),
+            $this->getProgramAdapter(),
+            new ProgramManagementBreadCrumbsBuilder()
         );
     }
 

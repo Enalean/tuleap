@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Breadcrumb Displays the breadcrumb state 1`] = `
+exports[`Breadcrumb When user is not program admin, Then breadcrumb does not contain administration link 1`] = `
 <div
   class="breadcrumb-container"
 >
@@ -28,6 +28,7 @@ exports[`Breadcrumb Displays the breadcrumb state 1`] = `
      
     <div
       class="breadcrumb-item"
+      data-test="breadcrumb-item-switchable"
     >
       <a
         class="breadcrumb-link"
@@ -37,6 +38,8 @@ exports[`Breadcrumb Displays the breadcrumb state 1`] = `
       >
         Program
       </a>
+       
+      <!---->
     </div>
   </nav>
 </div>

@@ -24,6 +24,7 @@ namespace Tuleap\ProgramManagement;
 
 use ForgeAccess;
 use ForgeConfig;
+use Tracker;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracker\RetrieveVisibleProgramIncrementTracker;
 use Tuleap\ProgramManagement\Domain\Program\Plan\BuildProgram;
@@ -121,7 +122,19 @@ final class DisplayProgramBacklogControllerTest extends \Tuleap\Test\PHPUnit\Tes
         $this->mockProject();
         $this->project_flags_builder->method('buildProjectFlags')->willReturn([]);
 
-        $request   = HTTPRequestBuilder::get()->withUser(UserTestBuilder::aUser()->build())->build();
+        $tracker = $this->createStub(Tracker::class);
+        $tracker->method('userCanSubmitArtifact')->willReturn(true);
+        $tracker->method('getId')->willReturn(10);
+
+        $this->program_increment_tracker_retriever = RetrieveVisibleProgramIncrementTrackerStub::withValidTracker(
+            $tracker
+        );
+
+        $user = $this->createMock(\PFUser::class);
+        $user->method('getPreference')->willReturn(false);
+        $user->method('isAdmin')->willReturn(true);
+
+        $request   = HTTPRequestBuilder::get()->withUser($user)->build();
         $variables = ['project_name' => 'test_project'];
 
         $this->template_renderer->expects(self::once())
