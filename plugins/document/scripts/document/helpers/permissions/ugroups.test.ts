@@ -19,22 +19,23 @@
 
 import * as rest_querier from "../../api/rest-querier";
 import { getProjectUserGroupsWithoutServiceSpecialUGroups } from "./ugroups";
+import type { UserGroup } from "../../type";
 
 describe("User groups", () => {
     it("filters special service user groups from the list", async () => {
         const getProjectUserGroupsSpy = jest.spyOn(rest_querier, "getProjectUserGroups");
 
-        const project_members_ugroup = {
+        const project_members_ugroup: UserGroup = {
             id: "102_3",
-        };
-        const project_special_service_ugroup = {
+        } as UserGroup;
+        const project_special_service_ugroup: UserGroup = {
             id: "102_17",
-        };
-        const project_static_ugroup = {
+        } as UserGroup;
+        const project_static_ugroup: UserGroup = {
             id: "130",
-        };
+        } as UserGroup;
 
-        getProjectUserGroupsSpy.mockReturnValue([
+        getProjectUserGroupsSpy.mockResolvedValue([
             project_members_ugroup,
             project_special_service_ugroup,
             project_static_ugroup,

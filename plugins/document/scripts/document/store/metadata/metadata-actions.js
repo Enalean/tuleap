@@ -26,7 +26,7 @@ import {
     putLinkMetadata,
     putWikiMetadata,
 } from "../../api/metadata-rest-querier";
-import { handleErrors, handleErrorsForModal } from "../actions-helpers/handle-errors";
+import { handleErrors } from "../actions-helpers/handle-errors";
 import { getCustomMetadata } from "../../helpers/metadata-helpers/custom-metadata-helper";
 import {
     TYPE_EMBEDDED,
@@ -39,6 +39,7 @@ import {
 import { getItem, getItemWithSize } from "../../api/rest-querier";
 import Vue from "vue";
 import { formatCustomMetadataForFolderUpdate } from "../../helpers/metadata-helpers/update-data-transformatter-helper";
+import { handleErrorsForModal } from "../error/error-actions";
 
 export const loadProjectMetadata = async (context, [global_context]) => {
     try {

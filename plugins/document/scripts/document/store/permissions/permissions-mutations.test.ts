@@ -18,10 +18,11 @@
  */
 
 import * as mutations from "./permissions-mutations";
+import type { PermissionsState } from "./permissions-default-state";
 
 describe("Store mutations", () => {
     it("store project user groups", () => {
-        const state = {
+        const state: PermissionsState = {
             project_ugroups: null,
         };
 

@@ -1,4 +1,4 @@
-/*
+/**
  * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -18,11 +18,12 @@
  */
 
 import { getProjectUserGroups } from "../../api/rest-querier";
+import type { UserGroup } from "../../type";
 
 const PROJECT_MEMBERS_ID = "3";
 const PROJECT_ADMINS_ID = "4";
 
-function isUGroupAServiceSpecialUGroup(project_id, ugroup) {
+function isUGroupAServiceSpecialUGroup(project_id: number, ugroup: UserGroup): boolean {
     return (
         ugroup.id.includes("_") &&
         ugroup.id !== `${project_id}_${PROJECT_MEMBERS_ID}` &&
@@ -30,10 +31,12 @@ function isUGroupAServiceSpecialUGroup(project_id, ugroup) {
     );
 }
 
-export async function getProjectUserGroupsWithoutServiceSpecialUGroups(project_id) {
+export async function getProjectUserGroupsWithoutServiceSpecialUGroups(
+    project_id: number
+): Promise<Array<UserGroup>> {
     const ugroups = await getProjectUserGroups(project_id);
 
-    const filtered_groups = [];
+    const filtered_groups: Array<UserGroup> = [];
 
     ugroups.forEach((ugroup) => {
         if (isUGroupAServiceSpecialUGroup(project_id, ugroup)) {

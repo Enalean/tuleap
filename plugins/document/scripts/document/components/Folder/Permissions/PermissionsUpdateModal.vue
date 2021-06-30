@@ -157,10 +157,10 @@ export default {
         async updatePermissions() {
             this.is_submitting_new_permissions = true;
             this.$store.commit("error/resetModalError");
-            await this.$store.dispatch("permissions/updatePermissions", [
-                this.item,
-                this.updated_permissions,
-            ]);
+            await this.$store.dispatch("permissions/updatePermissions", {
+                item: this.item,
+                updated_permissions: this.updated_permissions,
+            });
             this.is_submitting_new_permissions = false;
             if (this.has_modal_error === false) {
                 this.modal.hide();

@@ -27,45 +27,47 @@ import {
 } from "../../constants";
 import * as permissions_rest_querier from "../../api/permissions-rest-querier";
 import * as rest_querier from "../../api/rest-querier";
-import { mockFetchError } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper.js";
-import * as error_handler from "../actions-helpers/handle-errors";
 import * as permissions_groups from "../../helpers/permissions/ugroups";
 import { loadProjectUserGroupsIfNeeded, updatePermissions } from "./permissions-actions";
+import type { Empty, Folder, Item, RootState } from "../../type";
+import type { ActionContext } from "vuex";
+import type { PermissionsState } from "./permissions-default-state";
 
 describe("UpdatePermissions()", () => {
-    const permissions = {
+    const updated_permissions = {
+        apply_permissions_on_children: true,
         can_read: [],
         can_write: [],
         can_manage: [],
     };
 
-    let context;
+    let context: ActionContext<PermissionsState, RootState>;
 
     beforeEach(() => {
         context = {
             commit: jest.fn(),
             dispatch: jest.fn(),
             rootState: {
-                current_folder: { id: 999, type: TYPE_FOLDER },
-            },
-        };
+                current_folder: { id: 999, type: TYPE_FOLDER } as Folder,
+            } as RootState,
+        } as unknown as ActionContext<PermissionsState, RootState>;
     });
 
-    const testPermissionsUpdateSuccess = async (type) => {
+    const testPermissionsUpdateSuccess = async (type: string): Promise<void> => {
         const item = {
             id: 123,
             type: type,
-        };
+        } as Item;
 
-        jest.spyOn(rest_querier, "getItem").mockReturnValue(Promise.resolve(item));
+        jest.spyOn(rest_querier, "getItem").mockResolvedValue(item);
 
-        await updatePermissions(context, [item, permissions]);
+        await updatePermissions(context, { item, updated_permissions });
     };
 
     it("Can update file permissions", async () => {
         const putFilePermissions = jest
             .spyOn(permissions_rest_querier, "putFilePermissions")
-            .mockReturnValue(Promise.resolve());
+            .mockResolvedValue();
 
         await testPermissionsUpdateSuccess(TYPE_FILE);
 
@@ -90,7 +92,7 @@ describe("UpdatePermissions()", () => {
     it("Can update embedded file permissions", async () => {
         const putEmbeddedFilePermissions = jest
             .spyOn(permissions_rest_querier, "putEmbeddedFilePermissions")
-            .mockReturnValue(Promise.resolve());
+            .mockResolvedValue();
 
         await testPermissionsUpdateSuccess(TYPE_EMBEDDED);
 
@@ -115,7 +117,7 @@ describe("UpdatePermissions()", () => {
     it("Can update link permissions", async () => {
         const putLinkPermissions = jest
             .spyOn(permissions_rest_querier, "putLinkPermissions")
-            .mockReturnValue(Promise.resolve());
+            .mockResolvedValue();
 
         await testPermissionsUpdateSuccess(TYPE_LINK);
 
@@ -140,7 +142,7 @@ describe("UpdatePermissions()", () => {
     it("Can update wiki permissions", async () => {
         const putWikiPermissions = jest
             .spyOn(permissions_rest_querier, "putWikiPermissions")
-            .mockReturnValue(Promise.resolve());
+            .mockResolvedValue();
 
         await testPermissionsUpdateSuccess(TYPE_WIKI);
 
@@ -165,7 +167,7 @@ describe("UpdatePermissions()", () => {
     it("Can update empty document permissions", async () => {
         const putEmptyDocumentPermissions = jest
             .spyOn(permissions_rest_querier, "putEmptyDocumentPermissions")
-            .mockReturnValue(Promise.resolve());
+            .mockResolvedValue();
 
         await testPermissionsUpdateSuccess(TYPE_EMPTY);
 
@@ -190,7 +192,7 @@ describe("UpdatePermissions()", () => {
     it("Can update folder permissions", async () => {
         const putFolderPermissions = jest
             .spyOn(permissions_rest_querier, "putFolderPermissions")
-            .mockReturnValue(Promise.resolve());
+            .mockResolvedValue();
 
         await testPermissionsUpdateSuccess(TYPE_FOLDER);
 
@@ -215,14 +217,14 @@ describe("UpdatePermissions()", () => {
     it("Can update folder permissions when it is the current folder", async () => {
         const putFolderPermissions = jest
             .spyOn(permissions_rest_querier, "putFolderPermissions")
-            .mockReturnValue(Promise.resolve());
+            .mockResolvedValue();
 
-        const folder = { id: 123, type: TYPE_FOLDER };
+        const folder = { id: 123, type: TYPE_FOLDER } as Folder;
         context.rootState.current_folder = folder;
 
         jest.spyOn(rest_querier, "getItem").mockReturnValue(Promise.resolve(folder));
 
-        await updatePermissions(context, [folder, permissions]);
+        await updatePermissions(context, { item: folder, updated_permissions });
 
         expect(putFolderPermissions).toHaveBeenCalled();
         expect(context.dispatch).toHaveBeenCalledWith("loadFolder", folder.id, { root: true });
@@ -232,32 +234,30 @@ describe("UpdatePermissions()", () => {
     });
 
     it("Set an error in modal when is raised while updating permissions", async () => {
-        const putEmptyDocumentPermissions = jest.spyOn(
-            permissions_rest_querier,
-            "putEmptyDocumentPermissions"
-        );
-        mockFetchError(putEmptyDocumentPermissions, {
+        jest.spyOn(permissions_rest_querier, "putEmptyDocumentPermissions").mockRejectedValue({
             status: 500,
         });
-        const handleErrorsModal = jest.spyOn(error_handler, "handleErrorsForModal");
 
-        const getItem = jest.spyOn(rest_querier, "getItem").mockReturnValue(Promise.resolve());
+        const item = { id: 123, type: TYPE_EMPTY } as Empty;
+        const getItem = jest.spyOn(rest_querier, "getItem");
 
-        await updatePermissions(context, [{ id: 123, type: TYPE_EMPTY }, permissions]);
+        await updatePermissions(context, { item, updated_permissions });
 
         expect(getItem).not.toHaveBeenCalled();
-        expect(handleErrorsModal).toHaveBeenCalled();
     });
 });
 
 describe("loadProjectUserGroupsIfNeeded", () => {
-    let context;
+    let context: ActionContext<PermissionsState, RootState>;
 
     beforeEach(() => {
         context = {
             commit: jest.fn(),
-            state: {},
-        };
+            rootState: {
+                current_folder: null,
+                permissions: { project_ugroups: null } as PermissionsState,
+            } as RootState,
+        } as unknown as ActionContext<PermissionsState, RootState>;
     });
 
     it("Retrieve the project user groups when they are never been loaded", async () => {
@@ -270,9 +270,7 @@ describe("loadProjectUserGroupsIfNeeded", () => {
             Promise.resolve(project_ugroups)
         );
 
-        context.state.project_ugroups = null;
-
-        await loadProjectUserGroupsIfNeeded(context);
+        await loadProjectUserGroupsIfNeeded(context, 102);
 
         expect(getProjectUserGroupsWithoutServiceSpecialUGroupsSpy).toHaveBeenCalled();
         expect(context.commit).toHaveBeenCalledWith("setProjectUserGroups", project_ugroups);
@@ -284,9 +282,9 @@ describe("loadProjectUserGroupsIfNeeded", () => {
             "getProjectUserGroupsWithoutServiceSpecialUGroups"
         );
 
-        context.state.project_ugroups = [{ id: "102_3", label: "Project members" }];
+        context.rootState.permissions.project_ugroups = [{ id: "102_3", label: "Project members" }];
 
-        await loadProjectUserGroupsIfNeeded(context);
+        await loadProjectUserGroupsIfNeeded(context, 102);
 
         expect(getProjectUserGroupsWithoutServiceSpecialUGroupsSpy).not.toHaveBeenCalled();
     });

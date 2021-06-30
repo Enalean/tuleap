@@ -19,14 +19,17 @@
 
 import type { ConfigurationState } from "./store/configuration";
 import type { ErrorState } from "./store/error/module";
+import type { PermissionsState } from "./store/permissions/permissions-default-state";
 
 export interface State {
     is_loading_folder: boolean;
+    current_folder: Folder | null;
 }
 
 export interface RootState extends State {
     readonly configuration: ConfigurationState;
     error: ErrorState;
+    permissions: PermissionsState;
 }
 
 export type Direction = "BOTTOM" | "TOP" | "NEXT" | "PREVIOUS";
@@ -166,6 +169,7 @@ export interface User {
 }
 
 export interface Permissions {
+    apply_permissions_on_children: boolean;
     can_read: Array<Permission>;
     can_write: Array<Permission>;
     can_manage: Array<Permission>;
@@ -218,4 +222,5 @@ export interface WikiProperties {
 
 export interface UserGroup {
     id: string;
+    label: string;
 }

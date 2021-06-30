@@ -173,7 +173,7 @@ describe("PermissionsUpdateModal", () => {
     });
 
     it("Send update request when form is submitted", async () => {
-        const item_to_update = {
+        const item = {
             id: 104,
             title: "My item",
             permissions_for_groups: {
@@ -184,7 +184,7 @@ describe("PermissionsUpdateModal", () => {
         };
 
         store.state.permissions.project_ugroups = [];
-        const wrapper = factory({ item: item_to_update });
+        const wrapper = factory({ item });
 
         const expectedActionName = "permissions/updatePermissions";
         store.dispatch.mockImplementation(function (actionName) {
@@ -202,10 +202,10 @@ describe("PermissionsUpdateModal", () => {
             can_write: wrapper.vm.updated_permissions.can_write,
             can_manage: wrapper.vm.updated_permissions.can_manage,
         };
-        expect(store.dispatch).toHaveBeenCalledWith(expectedActionName, [
-            item_to_update,
-            permissions_to_update,
-        ]);
+        expect(store.dispatch).toHaveBeenCalledWith(expectedActionName, {
+            item: item,
+            updated_permissions: permissions_to_update,
+        });
         await wrapper.vm.$nextTick();
         expect(wrapper.vm.can_be_submitted).toBe(true);
     });
