@@ -41,6 +41,9 @@ use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\LinkedIssuesCollection;
 use Tuleap\Tracker\Creation\JiraImporter\Import\JiraXmlExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldAndValueIDGenerator;
 use Tuleap\Tracker\Creation\JiraImporter\Import\User\JiraUserOnTuleapCache;
+use Tuleap\Tracker\Creation\JiraImporter\UserRole\UserIsNotProjectAdminException;
+use Tuleap\Tracker\Creation\JiraImporter\UserRole\UserRolesChecker;
+use Tuleap\Tracker\Creation\JiraImporter\UserRole\UserRolesResponseNotWellFormedException;
 use Tuleap\Tracker\Creation\TrackerCreationDataChecker;
 use Tuleap\Tracker\Creation\TrackerCreationHasFailedException;
 use Tuleap\Tracker\TrackerColor;
@@ -82,13 +85,16 @@ class FromJiraTrackerCreator
      */
     private $platform_configuration_retriever;
 
+    private UserRolesChecker $user_roles_checker;
+
     public function __construct(
         TrackerXmlImport $tracker_xml_import,
         TrackerFactory $tracker_factory,
         TrackerCreationDataChecker $creation_data_checker,
         LoggerInterface $logger,
         JiraUserOnTuleapCache $jira_user_on_tuleap_cache,
-        PlatformConfigurationRetriever $platform_configuration_retriever
+        PlatformConfigurationRetriever $platform_configuration_retriever,
+        UserRolesChecker $user_roles_checker
     ) {
         $this->tracker_xml_import               = $tracker_xml_import;
         $this->tracker_factory                  = $tracker_factory;
@@ -96,6 +102,7 @@ class FromJiraTrackerCreator
         $this->logger                           = $logger;
         $this->jira_user_on_tuleap_cache        = $jira_user_on_tuleap_cache;
         $this->platform_configuration_retriever = $platform_configuration_retriever;
+        $this->user_roles_checker               = $user_roles_checker;
     }
 
     public static function build(JiraUserOnTuleapCache $jira_user_on_tuleap_cache): self
@@ -118,7 +125,8 @@ class FromJiraTrackerCreator
             $jira_user_on_tuleap_cache,
             new PlatformConfigurationRetriever(
                 EventManager::instance()
-            )
+            ),
+            new UserRolesChecker()
         );
     }
 
@@ -149,8 +157,6 @@ class FromJiraTrackerCreator
 
         $this->creation_data_checker->checkAtProjectCreation((int) $project->getID(), $name, $itemname);
 
-        $jira_exporter = $this->getJiraExporter($jira_credentials);
-
         $platform_configuration_collection = $this->platform_configuration_retriever->getJiraPlatformConfiguration(
             $jira_client,
             $this->logger
@@ -163,6 +169,17 @@ class FromJiraTrackerCreator
             throw new TrackerCreationHasFailedException('Cannot get issue type ' . $jira_issue_type_id);
         }
 
+        try {
+            $this->user_roles_checker->checkUserIsAdminOfJiraProject(
+                $jira_client,
+                $this->logger,
+                $jira_project_id
+            );
+        } catch (UserRolesResponseNotWellFormedException | UserIsNotProjectAdminException $exception) {
+            throw new TrackerCreationHasFailedException($exception->getMessage());
+        }
+
+
         $tracker_for_export = (new XMLTracker('T200', $itemname))
             ->withName($name)
             ->withDescription($description)
@@ -172,6 +189,7 @@ class FromJiraTrackerCreator
         $trackers_xml = $xml->addChild('trackers');
         $tracker_xml  = $tracker_for_export->export($trackers_xml);
 
+        $jira_exporter = $this->getJiraExporter($jira_credentials);
         $jira_exporter->exportJiraToXml(
             $platform_configuration_collection,
             $tracker_xml,

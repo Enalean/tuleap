@@ -56,6 +56,7 @@ use Tuleap\Tracker\Creation\JiraImporter\Import\User\JiraTuleapUsersMapping;
 use Tuleap\Tracker\Creation\JiraImporter\Import\User\JiraUserOnTuleapCache;
 use Tuleap\Tracker\Creation\JiraImporter\JiraCredentials;
 use Tuleap\Tracker\Creation\JiraImporter\JiraTrackerBuilder;
+use Tuleap\Tracker\Creation\JiraImporter\UserRole\UserRolesChecker;
 use Tuleap\Tracker\Creation\TrackerCreationDataChecker;
 use Tuleap\Tracker\XML\Importer\TrackerImporterUser;
 use Tuleap\Widget\ProjectHeartbeat;
@@ -100,6 +101,8 @@ final class CreateProjectFromJira
      */
     private $project_manager;
 
+    private UserRolesChecker $user_roles_checker;
+
     public function __construct(
         UserManager $user_manager,
         TemplateFactory $template_factory,
@@ -108,7 +111,8 @@ final class CreateProjectFromJira
         JiraTrackerBuilder $jira_tracker_builder,
         ArtifactLinkTypeImporter $artifact_link_type_importer,
         PlatformConfigurationRetriever $platform_configuration_collection_builder,
-        \ProjectManager $project_manager
+        \ProjectManager $project_manager,
+        UserRolesChecker $user_roles_checker
     ) {
         $this->user_manager                              = $user_manager;
         $this->user_finder                               = $user_finder;
@@ -118,6 +122,7 @@ final class CreateProjectFromJira
         $this->artifact_link_type_importer               = $artifact_link_type_importer;
         $this->platform_configuration_collection_builder = $platform_configuration_collection_builder;
         $this->project_manager                           = $project_manager;
+        $this->user_roles_checker                        = $user_roles_checker;
     }
 
     public function create(
@@ -197,6 +202,12 @@ final class CreateProjectFromJira
         string $fullname,
         string $jira_epic_issue_type
     ): SimpleXMLElement {
+        $this->user_roles_checker->checkUserIsAdminOfJiraProject(
+            $jira_client,
+            $logger,
+            $jira_project
+        );
+
         $jira_issue_types = $this->jira_tracker_builder->buildFromProjectKey($jira_client, $jira_project);
         if (count($jira_issue_types) === 0) {
             throw new \RuntimeException("There are no Jira issue types to import");
