@@ -89,7 +89,7 @@ pipeline {
                         }
                         stage('SOAP CentOS 7 PHP 8.0 MySQL 5.7') {
                             steps { script { actions.runSOAPTests('mysql57', '80') } }
-                            post { always { junit 'results/db/*/soap_tests.xml' } }
+                            post { always { junit 'results/soap/*/soap_tests.xml' } }
                         }
                     }
                 }
