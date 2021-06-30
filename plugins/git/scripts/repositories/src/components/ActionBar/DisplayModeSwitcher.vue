@@ -24,7 +24,7 @@
                 name="display-mode-switch"
                 id="git-repository-list-switch-last-update"
                 class="tlp-button-bar-checkbox"
-                v-bind:value="repositories_sorted_by_last_update"
+                v-bind:value="repositories_sorted_by_last_update()"
                 v-model="current_display_mode"
                 v-bind:disabled="isLoading"
             />
@@ -32,7 +32,7 @@
                 for="git-repository-list-switch-last-update"
                 class="tlp-button-primary tlp-button-outline"
                 v-bind:class="{ disabled: isLoading }"
-                v-bind:title="sort_by_last_update_title"
+                v-bind:title="$gettext('Sort repositories by their last update date')"
             >
                 <span class="fa-stack">
                     <i class="fas fa-long-arrow-alt-down"></i>
@@ -46,7 +46,7 @@
                 name="display-mode-switch"
                 id="git-repository-list-switch-path"
                 class="tlp-button-bar-checkbox"
-                v-bind:value="repositories_sorted_by_path"
+                v-bind:value="repositories_sorted_by_path()"
                 v-model="current_display_mode"
                 v-bind:disabled="isLoading"
             />
@@ -54,7 +54,7 @@
                 for="git-repository-list-switch-path"
                 class="tlp-button-primary tlp-button-outline git-repository-list-switch-path-label"
                 v-bind:class="{ disabled: isLoading }"
-                v-bind:title="sort_by_path_title"
+                v-bind:title="$gettext('Sort repositories alphabetically')"
                 data-test="git-repository-list-switch-path"
             >
                 <i class="fas fa-fw fa-sort-alpha-down"></i>
@@ -62,34 +62,36 @@
         </div>
     </div>
 </template>
-<script>
-import { mapGetters } from "vuex";
+<script lang="ts">
 import { REPOSITORIES_SORTED_BY_LAST_UPDATE, REPOSITORIES_SORTED_BY_PATH } from "../../constants";
+import { Component, Watch } from "vue-property-decorator";
+import Vue from "vue";
+import { Getter, State } from "vuex-class";
 
-export default {
-    name: "DisplayModeSwitcher",
-    computed: {
-        sort_by_last_update_title() {
-            return this.$gettext("Sort repositories by their last update date");
-        },
-        sort_by_path_title() {
-            return this.$gettext("Sort repositories alphabetically");
-        },
-        repositories_sorted_by_last_update() {
-            return REPOSITORIES_SORTED_BY_LAST_UPDATE;
-        },
-        repositories_sorted_by_path() {
-            return REPOSITORIES_SORTED_BY_PATH;
-        },
-        current_display_mode: {
-            get() {
-                return this.$store.state.display_mode;
-            },
-            set(value) {
-                return this.$store.dispatch("setDisplayMode", value);
-            },
-        },
-        ...mapGetters(["isLoading"]),
-    },
-};
+@Component
+export default class DisplayModeSwitcher extends Vue {
+    @Getter
+    readonly isLoading!: boolean;
+
+    @State
+    readonly display_mode!: string;
+
+    private current_display_mode: string | null = null;
+
+    mounted(): void {
+        this.current_display_mode = this.display_mode;
+    }
+
+    repositories_sorted_by_last_update(): string {
+        return REPOSITORIES_SORTED_BY_LAST_UPDATE;
+    }
+    repositories_sorted_by_path(): string {
+        return REPOSITORIES_SORTED_BY_PATH;
+    }
+
+    @Watch("current_display_mode")
+    public updateDisplayMode(value: string) {
+        this.$store.dispatch("setDisplayMode", value);
+    }
+}
 </script>

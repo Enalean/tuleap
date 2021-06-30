@@ -18,20 +18,20 @@
   -->
 
 <template>
-    <div v-if="are_there_personal_repositories" class="git-repository-actions-select-owners">
+    <div v-if="are_there_personal_repositories()" class="git-repository-actions-select-owners">
         <label class="tlp-label" for="git-repository-select-owner">
             <translate>Forks:</translate>
         </label>
         <select
             id="git-repository-select-owner"
             class="tlp-select tlp-select-adjusted"
-            v-model="selected_owner_id"
+            v-model="owner_id"
             v-bind:disabled="isLoading"
         >
-            <option v-bind:value="project_key">{{ project_repositories_label }}</option>
-            <optgroup v-bind:label="users_forks_label">
+            <option v-bind:value="project_key()" v-translate>Project repositories</option>
+            <optgroup v-bind:label="$gettext('Users forks')">
                 <option
-                    v-for="owner in sorted_repositories_owners"
+                    v-for="owner in sorted_repositories_owners()"
                     v-bind:key="owner.id"
                     v-bind:value="owner.id"
                 >
@@ -41,40 +41,43 @@
         </select>
     </div>
 </template>
-<script>
-import { mapGetters } from "vuex";
+<script lang="ts">
+import Vue from "vue";
+import type { RepositoryOwner } from "../../type";
+import { Getter, State } from "vuex-class";
+import { Component, Watch } from "vue-property-decorator";
 import { getRepositoriesOwners } from "../../repository-list-presenter";
 import { PROJECT_KEY } from "../../constants";
 
-export default {
-    name: "SelectOwner",
-    computed: {
-        project_repositories_label() {
-            return this.$gettext("Project repositories");
-        },
-        users_forks_label() {
-            return this.$gettext("Users forks");
-        },
-        are_there_personal_repositories() {
-            return getRepositoriesOwners().length > 0;
-        },
-        sorted_repositories_owners() {
-            return getRepositoriesOwners().sort(function (user_a, user_b) {
-                return user_a.display_name.localeCompare(user_b.display_name);
-            });
-        },
-        selected_owner_id: {
-            get() {
-                return this.$store.state.selected_owner_id;
-            },
-            set(value) {
-                this.$store.dispatch("changeRepositories", value);
-            },
-        },
-        project_key() {
-            return PROJECT_KEY;
-        },
-        ...mapGetters(["isLoading"]),
-    },
-};
+@Component
+export default class SelectOwner extends Vue {
+    @Getter
+    readonly isLoading!: boolean;
+
+    @State
+    readonly selected_owner_id!: string | number;
+
+    private owner_id: string | number | null = null;
+
+    are_there_personal_repositories(): boolean {
+        return getRepositoriesOwners().length > 0;
+    }
+    sorted_repositories_owners(): Array<RepositoryOwner> {
+        return getRepositoriesOwners().sort(function (user_a, user_b) {
+            return user_a.display_name.localeCompare(user_b.display_name);
+        });
+    }
+    project_key(): string {
+        return PROJECT_KEY;
+    }
+
+    mounted(): void {
+        this.owner_id = this.selected_owner_id;
+    }
+
+    @Watch("owner_id")
+    public updateSelectedOwnerId(value: string) {
+        this.$store.dispatch("changeRepositories", value);
+    }
+}
 </script>

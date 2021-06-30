@@ -21,27 +21,31 @@
     <input
         class="tlp-search"
         autocomplete="off"
-        v-bind:placeholder="filter_placeholder"
+        v-bind:placeholder="$gettext('Repository name')"
         type="search"
-        v-model="filter"
+        v-model="filter_value"
         size="30"
     />
 </template>
-<script>
-export default {
-    name: "ListFilter",
-    computed: {
-        filter_placeholder() {
-            return this.$gettext("Repository name");
-        },
-        filter: {
-            get() {
-                return this.$store.state.filter;
-            },
-            set(value) {
-                this.$store.commit("setFilter", value);
-            },
-        },
-    },
-};
+<script lang="ts">
+import { Component, Watch } from "vue-property-decorator";
+import Vue from "vue";
+import { State } from "vuex-class";
+
+@Component
+export default class ListFilter extends Vue {
+    @State
+    readonly filter!: string;
+
+    private filter_value: string | null = null;
+
+    mounted(): void {
+        this.filter_value = this.filter;
+    }
+
+    @Watch("filter_value")
+    public updateFilter(value: string) {
+        this.$store.commit("setFilter", value);
+    }
+}
 </script>
