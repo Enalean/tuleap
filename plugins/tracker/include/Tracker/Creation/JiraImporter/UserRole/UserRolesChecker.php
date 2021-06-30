@@ -29,8 +29,9 @@ use Tuleap\Tracker\Creation\JiraImporter\JiraClient;
 
 class UserRolesChecker
 {
-    private const NAME_KEY                = 'name';
-    private const ADMINISTRATOR_ROLE_NAME = 'Administrators';
+    private const NAME_KEY                 = 'name';
+    private const ADMINISTRATORS_ROLE_NAME = 'Administrators';
+    private const ADMINISTRATOR_ROLE_NAME  = 'Administrator';
 
     /**
      * @throws UserRolesResponseNotWellFormedException
@@ -59,7 +60,10 @@ class UserRolesChecker
                 throw new UserRolesResponseNotWellFormedException("User roles key `" . self::NAME_KEY . "` not found");
             }
 
-            if ($user_role[self::NAME_KEY] === self::ADMINISTRATOR_ROLE_NAME) {
+            if (
+                $user_role[self::NAME_KEY] === self::ADMINISTRATORS_ROLE_NAME ||
+                $user_role[self::NAME_KEY] === self::ADMINISTRATOR_ROLE_NAME
+            ) {
                 $logger->info("User is project administrator.");
                 return;
             }

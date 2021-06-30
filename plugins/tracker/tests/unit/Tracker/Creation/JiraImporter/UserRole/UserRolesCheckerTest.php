@@ -28,7 +28,7 @@ use Tuleap\Tracker\Creation\JiraImporter\JiraClient;
 
 final class UserRolesCheckerTest extends TestCase
 {
-    public function testItDoesNotThrowAnExceptionIfUserIsAdmin(): void
+    public function testItDoesNotThrowAnExceptionIfUserIsInAdminstrators(): void
     {
         $checker = new UserRolesChecker();
 
@@ -41,6 +41,33 @@ final class UserRolesCheckerTest extends TestCase
                     ],
                     [
                         "name" => "Administrators"
+                    ]
+                ];
+            }
+        };
+
+        $checker->checkUserIsAdminOfJiraProject(
+            $client,
+            new NullLogger(),
+            "proj01"
+        );
+
+        $this->addToAssertionCount(1);
+    }
+
+    public function testItDoesNotThrowAnExceptionIfUserIsInAdminstrator(): void
+    {
+        $checker = new UserRolesChecker();
+
+        $client = new class implements JiraClient {
+            public function getUrl(string $url): ?array
+            {
+                return [
+                    [
+                        "name" => "Member"
+                    ],
+                    [
+                        "name" => "Administrator"
                     ]
                 ];
             }
