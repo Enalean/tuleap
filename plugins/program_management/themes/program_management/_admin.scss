@@ -1,0 +1,65 @@
+/**
+ * Copyright (c) Enalean, 2021 - Present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+@use '@tuleap/list-picker';
+
+.program-management-teams-framed {
+    margin-top: var(--tlp-medium-spacing);
+}
+
+.program-management-subtitle-container {
+    display: flex;
+    align-items: baseline;
+    margin: 0 0 var(--tlp-medium-spacing) 0;
+}
+
+.program-management-subtitle {
+    margin: 0 var(--tlp-medium-spacing) 0 0;
+    color: var(--tlp-typo-default-text-color);
+    font-weight: 600;
+}
+
+.program-management-subtitle-details {
+    color: var(--tlp-dimmed-color);
+    font-weight: 600;
+}
+
+.program-management-no-teams-empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: var(--tlp-large-spacing) 0 var(--tlp-large-spacing) 0;
+}
+
+.program-management-no-teams-empty-state-label {
+    margin: var(--tlp-medium-spacing) 0 0 0;
+    color: var(--tlp-dimmed-color);
+    font-size: 1.25rem;
+}
+
+.program-management-form-choose-teams {
+    > .list-picker-component-wrapper {
+        width: 350px;
+        pointer-events: none;
+    }
+
+    &:hover {
+        cursor: not-allowed;
+    }
+}

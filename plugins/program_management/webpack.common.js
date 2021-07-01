@@ -23,6 +23,7 @@ const webpack_configurator = require("../../tools/utils/scripts/webpack-configur
 const entry_points = {
     program_management: "./scripts/program_management/index.ts",
     artifact_additional_action: "./scripts/artifact-additional-action/src/index.ts",
+    program_management_admin: "./scripts/admin/src/index.ts",
     "program-management-style": "./themes/program_management.scss",
 };
 
@@ -44,9 +45,8 @@ module.exports = [
             rules: [
                 ...webpack_configurator.configureTypescriptRules(),
                 {
-                    test: /\.po$/,
-                    include: /artifact-additional-action\/po\//,
-                    use: [{ loader: "json-loader" }, { loader: "po-gettext-loader" }],
+                    ...webpack_configurator.rule_po_files,
+                    exclude: /program_management\/po\//,
                 },
                 {
                     test: /\.po$/,

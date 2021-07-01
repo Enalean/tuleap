@@ -18,6 +18,19 @@ msgstr "Ajouter à la planification générale"
 msgid "Administration"
 msgstr "Administration"
 
+msgid ""
+"Aggregate others projects to have an overall view of your Program "
+"activities. These projects will be considered as Teams."
+msgstr ""
+"Regrouper d'autres projets pour avoir une vue d'ensemble des activités de "
+"votre Programme. Ces projets seront considérés comme des Équipes."
+
+msgid "Aggregate project"
+msgstr "Regrouper le projet"
+
+msgid "Aggregated Projects"
+msgstr "Projets regroupés"
+
 msgid "Can prioritize features"
 msgstr "Peut prioriser des fonctionnalités"
 
@@ -26,6 +39,9 @@ msgid ""
 msgstr ""
 "Permet la gestion de plusieurs projets, de synchroniser les équipes et les "
 "jalons"
+
+msgid "Good to know:"
+msgstr "Bon à savoir :"
 
 msgid "Granted groups"
 msgstr "Groupes autorisés"
@@ -42,6 +58,9 @@ msgid ""
 msgstr ""
 "La modification de l'outil de suivi de jalons de cette planification est "
 "interdite parce que ce projet fait partie du backlog d'un programme."
+
+msgid "No project have been aggregated yet."
+msgstr "Aucun projet n'a encore été regroupé."
 
 msgid "Permission"
 msgstr "Permission"
@@ -70,6 +89,9 @@ msgstr "Le service de gestion de programme est désactivé."
 
 msgid "Remove from top backlog"
 msgstr "Supprimer de la planification générale"
+
+msgid "Teams"
+msgstr "Équipes"
 
 msgid ""
 "The post action cannot be saved because this tracker is not a plannable "
@@ -104,6 +126,9 @@ msgid ""
 msgstr ""
 "Vous êtes en train de mettre à jour un incrément de programme. Veuillez "
 "noter que les releases correspondantes ne seront pas mises à jour."
+
+msgid "You must be administrator of the projects you want aggregate."
+msgstr "Vous devez être administrateur des projets que vous voulez regrouper."
 
 msgid ""
 "You need to be project administrator to access to program administration."
