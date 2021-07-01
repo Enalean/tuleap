@@ -84,6 +84,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     const program_increment_sub_label = vue_mount_point.dataset.programIncrementSubLabel;
 
+    const is_program_admin = Boolean(vue_mount_point.dataset.isProgramAdmin);
     const accessibility = Boolean(vue_mount_point.dataset.userWithAccessibilityMode);
     const can_create_program_increment = Boolean(vue_mount_point.dataset.canCreateProgramIncrement);
 
@@ -99,6 +100,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         tracker_program_increment_id: program_increment_tracker_id,
         tracker_program_increment_label: program_increment_label,
         tracker_program_increment_sub_label: program_increment_sub_label,
+        is_program_admin,
     };
 
     await initVueGettext(

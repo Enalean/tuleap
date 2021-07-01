@@ -30,8 +30,30 @@
                     {{ project_public_name }}
                 </a>
             </div>
-            <div class="breadcrumb-item">
+            <div
+                data-test="breadcrumb-item-switchable"
+                class="breadcrumb-item"
+                v-bind:class="{ 'breadcrumb-switchable': is_program_admin }"
+            >
                 <a v-bind:href="pluginUrl()" class="breadcrumb-link" v-translate>Program</a>
+                <div
+                    class="breadcrumb-switch-menu-container"
+                    v-if="is_program_admin"
+                    data-test="breadcrumb-item-administration"
+                >
+                    <nav class="breadcrumb-switch-menu">
+                        <span class="breadcrumb-dropdown-item">
+                            <a
+                                class="breadcrumb-dropdown-link"
+                                v-bind:href="pluginAdministrationUrl()"
+                                v-bind:title="$gettext('Administration')"
+                            >
+                                <i class="fa fa-cog fa-fw"></i>
+                                <translate>Administration</translate>
+                            </a>
+                        </span>
+                    </nav>
+                </div>
             </div>
         </nav>
     </div>
@@ -57,12 +79,19 @@ export default class Breadcrumb extends Vue {
     @Prop({ required: true })
     readonly project_flags!: Array<ProjectFlag>;
 
+    @Prop({ required: true })
+    readonly is_program_admin!: boolean;
+
     public projectUrl(): string {
         return `/projects/${this.project_short_name}`;
     }
 
     public pluginUrl(): string {
         return `/program_management/${encodeURIComponent(this.project_short_name)}`;
+    }
+
+    pluginAdministrationUrl(): string {
+        return `/program_management/admin/${encodeURIComponent(this.project_short_name)}`;
     }
 }
 </script>

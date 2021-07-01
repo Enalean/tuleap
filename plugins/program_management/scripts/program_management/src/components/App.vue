@@ -24,6 +24,7 @@
             v-bind:project_short_name="short_name"
             v-bind:project_privacy="privacy"
             v-bind:project_flags="flags"
+            v-bind:is_program_admin="is_program_admin"
         />
         <h1 class="program-management-title-header" v-translate>Backlog</h1>
         <div class="program-backlog" data-test="backlog-section">
@@ -99,6 +100,9 @@ export default class App extends Vue {
 
     @configuration.State
     readonly program_id!: number;
+
+    @configuration.State
+    readonly is_program_admin!: boolean;
 
     @Getter
     readonly hasAnElementMovedInsideIncrement!: boolean;

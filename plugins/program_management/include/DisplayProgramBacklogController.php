@@ -128,7 +128,8 @@ final class DisplayProgramBacklogController implements DispatchableWithRequest, 
                 $plan_configuration->canCreateProgramIncrement(),
                 $plan_configuration->getProgramIncrementTrackerId(),
                 $plan_configuration->getProgramIncrementLabel(),
-                $plan_configuration->getProgramIncrementSubLabel()
+                $plan_configuration->getProgramIncrementSubLabel(),
+                $user->isAdmin((int) $project->getId())
             )
         );
 

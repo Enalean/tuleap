@@ -25,18 +25,38 @@ import { createProgramManagementLocalVue } from "../helpers/local-vue-for-test";
 describe("Breadcrumb", () => {
     let component_options: ShallowMountOptions<Breadcrumb>;
 
-    it("Displays the breadcrumb state", async () => {
+    it("When user is not program admin, Then breadcrumb does not contain administration link", async () => {
         component_options = {
             propsData: {
                 project_public_name: "Public name",
                 project_short_name: "short-name",
                 project_privacy: {},
                 project_flags: [],
+                is_program_admin: false,
             },
             localVue: await createProgramManagementLocalVue(),
         };
 
         const wrapper = shallowMount(Breadcrumb, component_options);
         expect(wrapper.element).toMatchSnapshot();
+    });
+
+    it("When user is program admin, Then administration link is displayed", async () => {
+        component_options = {
+            propsData: {
+                project_public_name: "Public name",
+                project_short_name: "short-name",
+                project_privacy: {},
+                project_flags: [],
+                is_program_admin: true,
+            },
+            localVue: await createProgramManagementLocalVue(),
+        };
+
+        const wrapper = shallowMount(Breadcrumb, component_options);
+        expect(wrapper.find("[data-test=breadcrumb-item-switchable]").classes()).toContainEqual(
+            "breadcrumb-switchable"
+        );
+        expect(wrapper.find("[data-test=breadcrumb-item-administration]").exists()).toBeTruthy();
     });
 });

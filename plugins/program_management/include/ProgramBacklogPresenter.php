@@ -34,42 +34,16 @@ final class ProgramBacklogPresenter
      * @var mixed
      */
     public $project_name;
-    /**
-     * @var string
-     */
-    public $project_short_name;
-    /**
-     * @var string
-     */
-    public $project_privacy;
-    /**
-     * @var string
-     */
-    public $project_flags;
-    /**
-     * @var int|null
-     */
-    public $program_id;
-    /**
-     * @var bool
-     */
-    public $user_has_accessibility_mode;
-    /**
-     * @var bool
-     */
-    public $can_create_program_increment;
-    /**
-     * @var int
-     */
-    public $program_increment_tracker_id;
-    /**
-     * @var string
-     */
-    public $program_increment_label;
-    /**
-     * @var string
-     */
-    public $program_increment_sub_label;
+    public string $project_short_name;
+    public string $project_privacy;
+    public string $project_flags;
+    public ?int $program_id;
+    public bool $user_has_accessibility_mode;
+    public bool $can_create_program_increment;
+    public int $program_increment_tracker_id;
+    public string $program_increment_label;
+    public string $program_increment_sub_label;
+    public bool $is_program_admin;
 
     /**
      * @param ProjectFlagPresenter[] $project_flags
@@ -81,7 +55,8 @@ final class ProgramBacklogPresenter
         bool $can_create_program_increment,
         int $program_increment_tracker_id,
         ?string $program_increment_label,
-        ?string $program_increment_sub_label
+        ?string $program_increment_sub_label,
+        bool $is_program_admin
     ) {
         $this->project_name                 = $project->getPublicName();
         $this->project_short_name           = $project->getUnixNameLowerCase();
@@ -104,5 +79,7 @@ final class ProgramBacklogPresenter
         if ($program_increment_sub_label) {
             $this->program_increment_sub_label = $program_increment_sub_label;
         }
+
+        $this->is_program_admin = $is_program_admin;
     }
 }
