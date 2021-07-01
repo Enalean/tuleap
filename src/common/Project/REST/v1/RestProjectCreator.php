@@ -35,7 +35,6 @@ use Tuleap\Project\Admin\DescriptionFields\FieldUpdator;
 use Tuleap\Project\Admin\DescriptionFields\MissingMandatoryFieldException;
 use Tuleap\Project\Registration\MaxNumberOfProjectReachedForPlatformException;
 use Tuleap\Project\Registration\MaxNumberOfProjectReachedForUserException;
-use Tuleap\Project\Registration\ProjectRegistrationUserPermissionChecker;
 use Tuleap\Project\Registration\RegistrationForbiddenException;
 use Tuleap\Project\Registration\Template\InvalidTemplateException;
 use Tuleap\Project\Registration\Template\InvalidXMLTemplateNameException;
@@ -82,10 +81,6 @@ class RestProjectCreator
      */
     private $template_factory;
     /**
-     * @var ProjectRegistrationUserPermissionChecker
-     */
-    private $permission_checker;
-    /**
      * @var ProjectCategoriesUpdater
      */
     private $categories_updater;
@@ -103,7 +98,6 @@ class RestProjectCreator
         \XML_RNGValidator $validator,
         \ProjectXMLImporter $project_XML_importer,
         TemplateFactory $template_factory,
-        ProjectRegistrationUserPermissionChecker $permission_checker,
         ProjectCategoriesUpdater $categories_updater,
         FieldUpdator $fields_updater
     ) {
@@ -115,7 +109,6 @@ class RestProjectCreator
         $this->validator                  = $validator;
         $this->project_XML_importer       = $project_XML_importer;
         $this->template_factory           = $template_factory;
-        $this->permission_checker         = $permission_checker;
         $this->categories_updater         = $categories_updater;
         $this->fields_updater             = $fields_updater;
     }

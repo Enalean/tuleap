@@ -1212,9 +1212,6 @@ class ProjectResource extends AuthenticatedResource
                 ProjectCreator::buildSelfRegularValidation()
             ),
             TemplateFactory::build(),
-            new ProjectRegistrationUserPermissionChecker(
-                new \ProjectDao()
-            ),
             new ProjectCategoriesUpdater(
                 new \TroveCatFactory(
                     new \TroveCatDao(),
