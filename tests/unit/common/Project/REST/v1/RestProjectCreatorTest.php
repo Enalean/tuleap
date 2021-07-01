@@ -41,7 +41,6 @@ use Tuleap\Project\Admin\Categories\MissingMandatoryCategoriesException;
 use Tuleap\Project\Admin\Categories\ProjectCategoriesUpdater;
 use Tuleap\Project\Admin\DescriptionFields\FieldUpdator;
 use Tuleap\Project\Registration\MaxNumberOfProjectReachedForPlatformException;
-use Tuleap\Project\Registration\ProjectRegistrationUserPermissionChecker;
 use Tuleap\Project\Registration\Template\InvalidXMLTemplateNameException;
 use Tuleap\Project\Registration\Template\ScrumTemplate;
 use Tuleap\Project\Registration\Template\TemplateDao;
@@ -84,10 +83,6 @@ class RestProjectCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
     private $project_creator;
     private $project_XML_importer;
     /**
-     * @var M\LegacyMockInterface|M\MockInterface|ProjectRegistrationUserPermissionChecker
-     */
-    private $permissions_checker;
-    /**
      * @var M\LegacyMockInterface|M\MockInterface|TemplateDao
      */
     private $template_dao;
@@ -104,10 +99,8 @@ class RestProjectCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->project_creator      = M::mock(ProjectCreator::class);
         $this->service_manager      = M::mock(ServiceManager::class);
         $this->project_XML_importer = M::mock(ProjectXMLImporter::class);
-        $this->permissions_checker  = M::mock(ProjectRegistrationUserPermissionChecker::class);
-        $this->permissions_checker->shouldReceive('checkUserCreateAProject')->byDefault();
-        $this->template_dao       = M::mock(TemplateDao::class);
-        $this->categories_updater = M::mock(ProjectCategoriesUpdater::class);
+        $this->template_dao         = M::mock(TemplateDao::class);
+        $this->categories_updater   = M::mock(ProjectCategoriesUpdater::class);
         $this->categories_updater->shouldReceive('update')->byDefault();
         $this->categories_updater->shouldReceive('checkCollectionConsistency')->byDefault();
         $this->field_updator = \Mockery::mock(FieldUpdator::class);
@@ -137,7 +130,6 @@ class RestProjectCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
                 $this->template_dao,
                 M::mock(ProjectManager::class)
             ),
-            $this->permissions_checker,
             $this->categories_updater,
             $this->field_updator
         );
