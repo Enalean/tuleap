@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement;
 
 use Tuleap\ProgramManagement\Domain\Program\Admin\PotentialTeam\PotentialTeamPresenter;
+use Tuleap\ProgramManagement\Domain\Program\Admin\Team\TeamPresenter;
 
 /**
  * @psalm-immutable
@@ -33,12 +34,20 @@ final class ProgramAdminPresenter
      * @var PotentialTeamPresenter[]
      */
     public array $potential_teams;
+    /**
+     * @var TeamPresenter[]
+     */
+    public array $aggregated_teams;
+    public bool $has_aggregated_teams;
 
     /**
      * @param PotentialTeamPresenter[] $potential_teams
+     * @param TeamPresenter[] $aggregated_teams
      */
-    public function __construct(array $potential_teams)
+    public function __construct(array $potential_teams, array $aggregated_teams)
     {
-        $this->potential_teams = $potential_teams;
+        $this->potential_teams      = $potential_teams;
+        $this->aggregated_teams     = $aggregated_teams;
+        $this->has_aggregated_teams = count($aggregated_teams) > 0;
     }
 }

@@ -23,9 +23,12 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement;
 
 use Tuleap\GlobalLanguageMock;
+use Tuleap\ProgramManagement\Domain\BuildProject;
 use Tuleap\ProgramManagement\Domain\Program\Admin\PotentialTeam\PotentialTeam;
 use Tuleap\ProgramManagement\Stub\BuildPotentialTeamsStub;
 use Tuleap\ProgramManagement\Stub\BuildProgramStub;
+use Tuleap\ProgramManagement\Stub\BuildProjectStub;
+use Tuleap\ProgramManagement\Stub\SearchTeamsOfProgramStub;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Request\NotFoundException;
 use Tuleap\Test\Builders\HTTPRequestBuilder;
@@ -53,6 +56,8 @@ final class DisplayAdminProgramManagementControllerTest extends \Tuleap\Test\PHP
      */
     private array $variables;
     private BuildPotentialTeamsStub $build_potential_teams;
+    private SearchTeamsOfProgramStub $team_searcher;
+    private BuildProject $build_project;
 
     protected function setUp(): void
     {
@@ -63,6 +68,8 @@ final class DisplayAdminProgramManagementControllerTest extends \Tuleap\Test\PHP
         $this->template_renderer     = $this->createMock(\TemplateRenderer::class);
         $this->breadcrumbs_builder   = $this->createStub(ProgramManagementBreadCrumbsBuilder::class);
         $this->build_potential_teams = BuildPotentialTeamsStub::buildValidPotentialTeamsFromId(PotentialTeam::fromId(150, 'team'));
+        $this->team_searcher         = SearchTeamsOfProgramStub::buildTeams(150);
+        $this->build_project         = new BuildProjectStub();
     }
 
     public function testItReturnsNotFoundWhenProjectIsNotFoundFromVariables(): void
@@ -131,7 +138,9 @@ final class DisplayAdminProgramManagementControllerTest extends \Tuleap\Test\PHP
             $this->template_renderer,
             $this->build_program,
             $this->breadcrumbs_builder,
-            $this->build_potential_teams
+            $this->build_potential_teams,
+            $this->team_searcher,
+            $this->build_project
         );
     }
 

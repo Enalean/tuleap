@@ -20,26 +20,28 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Stub;
+namespace Tuleap\ProgramManagement\Domain\Program\Admin\Team;
 
-use Project;
-use Tuleap\ProgramManagement\Domain\BuildProject;
-use Tuleap\ProgramManagement\Domain\Project as ProgramManagementProject;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Team\TeamProjectsCollection;
 
-final class BuildProjectStub implements BuildProject
+/**
+ * @psalm-immutable
+ */
+final class TeamsPresenterBuilder
 {
-    public static function build(Project $project): ProgramManagementProject
+    /**
+     * @return TeamPresenter[]
+     */
+    public static function buildTeamsPresenter(TeamProjectsCollection $team_collection, \PFUser $user): array
     {
-        return new ProgramManagementProject(
-            (int) $project->getID(),
-            (string) $project->getUnixName(),
-            (string) $project->getPublicName(),
-            $project->getUrl()
-        );
-    }
+        $teams_presenter = [];
 
-    public function buildFromId(int $id): ProgramManagementProject
-    {
-        return new ProgramManagementProject($id, 'Project', 'project', '/project/project');
+        foreach ($team_collection->getTeamProjects() as $team) {
+            if ($user->isAdmin($team->getId())) {
+                $teams_presenter[] = new TeamPresenter($team);
+            }
+        }
+
+        return $teams_presenter;
     }
 }

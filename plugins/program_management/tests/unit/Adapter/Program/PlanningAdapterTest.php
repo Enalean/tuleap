@@ -94,7 +94,7 @@ final class PlanningAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->planning_factory->method('getRootPlanning')->willReturn($planning);
 
         $user            = UserTestBuilder::aUser()->build();
-        $wrapper_project = new Project($project_id, 'team_blue', 'Team Blue');
+        $wrapper_project = new Project($project_id, 'team_blue', 'Team Blue', '/team_blue');
         self::assertSame($tracker, $this->adapter->retrieveRootPlanningMilestoneTracker($wrapper_project, $user));
     }
 
@@ -110,7 +110,7 @@ final class PlanningAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->planning_factory->method('getChildrenPlanning')->willReturn(null);
 
         $user            = UserTestBuilder::aUser()->build();
-        $wrapper_project = new Project($project_id, 'team_blue', 'Team Blue');
+        $wrapper_project = new Project($project_id, 'team_blue', 'Team Blue', '/team_blue');
         $this->expectException(SecondPlanningNotFoundInProjectException::class);
         $this->adapter->retrieveSecondPlanningMilestoneTracker($wrapper_project, $user);
     }
@@ -129,7 +129,7 @@ final class PlanningAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->planning_factory->method('getChildrenPlanning')->willReturn($second_planning);
 
         $user            = UserTestBuilder::aUser()->build();
-        $wrapper_project = new Project($project_id, 'team_blue', 'Team Blue');
+        $wrapper_project = new Project($project_id, 'team_blue', 'Team Blue', '/team_blue');
         $this->expectException(PlanningHasNoMilestoneTrackerException::class);
         $this->adapter->retrieveSecondPlanningMilestoneTracker($wrapper_project, $user);
     }
@@ -147,7 +147,7 @@ final class PlanningAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->planning_factory->method('getChildrenPlanning')->willReturn($second_planning);
 
         $user            = UserTestBuilder::aUser()->build();
-        $wrapper_project = new Project($project_id, 'team_blue', 'Team Blue');
+        $wrapper_project = new Project($project_id, 'team_blue', 'Team Blue', '/team_blue');
         self::assertSame($second_tracker, $this->adapter->retrieveSecondPlanningMilestoneTracker($wrapper_project, $user));
     }
 }
