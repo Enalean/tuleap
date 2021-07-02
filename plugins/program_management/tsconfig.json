@@ -4,5 +4,9 @@
         "module": "esnext",
         "types": ["jest", "node"]
     },
-    "include": ["scripts/program_management/**/*"]
+    "include": [
+        "scripts/program_management/**/*",
+        "scripts/artifact-additional-action/**/*",
+        "scripts/admin/**/*"
+    ]
 }

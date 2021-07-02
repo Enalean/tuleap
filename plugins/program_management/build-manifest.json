@@ -10,6 +10,10 @@
         "artifact-additional-action": {
             "src": "scripts/artifact-additional-action/src",
             "po": "scripts/artifact-additional-action/po"
+        },
+        "program_management_admin": {
+            "src": "scripts/admin/src",
+            "po": "scripts/admin/po"
         }
     }
 }

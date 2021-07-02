@@ -97,6 +97,7 @@ final class DisplayAdminProgramManagementController implements DispatchableWithR
         );
 
         $this->includeHeaderAndNavigationBar($layout, $project);
+        $layout->includeFooterJavascriptFile($assets->getFileURL('program_management_admin.js'));
 
         $this->template_renderer->renderToPage('admin', []);
 
