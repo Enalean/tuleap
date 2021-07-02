@@ -1,5 +1,5 @@
-/*
- * Copyright (c) Enalean, 2020 - Present. All Rights Reserved.
+/**
+ * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
  *
  *  This file is a part of Tuleap.
  *
@@ -17,14 +17,19 @@
  *  along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export interface BannerState {
-    message: string;
-    importance: Importance;
-    expiration_date: string;
-    activated: boolean;
-}
+import { shallowMount } from "@vue/test-utils";
+import { createPlatformBannerAdminLocalVue } from "../helpers/local-vue-for-tests";
+import ExpirationDateBannerInput from "./ExpirationDateBannerInput.vue";
 
-export type Importance = "standard" | "warning" | "critical";
-export const STANDARD: Importance = "standard";
-export const WARNING: Importance = "warning";
-export const CRITICAL: Importance = "critical";
+describe("ExpirationDateBannerInput", () => {
+    it("can be mounted", async () => {
+        const wrapper = shallowMount(ExpirationDateBannerInput, {
+            localVue: await createPlatformBannerAdminLocalVue(),
+            propsData: {
+                value: "2021-06-30 15:30",
+            },
+        });
+
+        expect(wrapper).toMatchSnapshot();
+    });
+});

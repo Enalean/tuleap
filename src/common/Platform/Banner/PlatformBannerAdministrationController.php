@@ -66,6 +66,11 @@ final class PlatformBannerAdministrationController implements DispatchableWithRe
 
         $banner = $this->banner_retriever->getBanner();
 
+        $banner_expiration_date = '';
+        if ($banner !== null && $banner->getExpirationDate() !== null) {
+            $banner_expiration_date = $banner->getExpirationDate()->format('c');
+        }
+
         $this->admin_page_renderer->renderAPresenter(
             _('Platform banner'),
             __DIR__ . '/../../../templates/admin/banner/',
@@ -73,6 +78,7 @@ final class PlatformBannerAdministrationController implements DispatchableWithRe
             [
                 'message'    => $banner === null ? '' : $banner->getMessage(),
                 'importance' => $banner === null ? '' : $banner->getImportance(),
+                'expiration_date' => $banner_expiration_date,
             ]
         );
     }

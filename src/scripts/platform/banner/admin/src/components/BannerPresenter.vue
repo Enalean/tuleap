@@ -63,6 +63,8 @@
                 </label>
             </div>
 
+            <expiration-date-banner-input v-model="current_expiration_date" />
+
             <div class="tlp-form-element" v-bind:class="{ 'tlp-form-element-disabled': loading }">
                 <label class="tlp-label" for="description">
                     <translate>Message</translate>
@@ -100,8 +102,10 @@ import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
 import type { BannerState, Importance } from "../type";
 import "ckeditor4";
-
-@Component
+import ExpirationDateBannerInput from "./ExpirationDateBannerInput.vue";
+@Component({
+    components: { ExpirationDateBannerInput },
+})
 export default class BannerPresenter extends Vue {
     @Prop({ required: true, type: String })
     readonly message!: string;
@@ -109,12 +113,16 @@ export default class BannerPresenter extends Vue {
     @Prop({ required: true, type: String })
     readonly importance!: Importance;
 
+    @Prop({ required: true, type: String })
+    readonly expiration_date!: string;
+
     @Prop({ required: true, type: Boolean })
     readonly loading!: boolean;
 
     banner_is_activated: boolean = this.message !== "";
     current_message: string = this.message;
     current_importance: Importance = this.importance;
+    current_expiration_date: string = this.expiration_date;
     // eslint-disable-next-line no-undef
     editor: CKEDITOR.editor | null = null;
 
@@ -190,6 +198,7 @@ export default class BannerPresenter extends Vue {
         const banner_save_payload: BannerState = {
             message: this.current_message,
             importance: this.current_importance,
+            expiration_date: this.current_expiration_date,
             activated: this.banner_is_activated,
         };
 
