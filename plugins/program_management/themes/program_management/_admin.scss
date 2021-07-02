@@ -56,10 +56,5 @@
 .program-management-form-choose-teams {
     > .list-picker-component-wrapper {
         width: 350px;
-        pointer-events: none;
-    }
-
-    &:hover {
-        cursor: not-allowed;
     }
 }

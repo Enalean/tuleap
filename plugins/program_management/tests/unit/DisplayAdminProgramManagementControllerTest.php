@@ -23,6 +23,8 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement;
 
 use Tuleap\GlobalLanguageMock;
+use Tuleap\ProgramManagement\Domain\Program\Admin\PotentialTeam\PotentialTeam;
+use Tuleap\ProgramManagement\Stub\BuildPotentialTeamsStub;
 use Tuleap\ProgramManagement\Stub\BuildProgramStub;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Request\NotFoundException;
@@ -50,15 +52,17 @@ final class DisplayAdminProgramManagementControllerTest extends \Tuleap\Test\PHP
      * @var string[]
      */
     private array $variables;
+    private BuildPotentialTeamsStub $build_potential_teams;
 
     protected function setUp(): void
     {
         $this->variables = ['project_name' => 'not_found'];
 
-        $this->project_manager     = $this->createStub(\ProjectManager::class);
-        $this->build_program       = BuildProgramStub::stubValidProgram();
-        $this->template_renderer   = $this->createMock(\TemplateRenderer::class);
-        $this->breadcrumbs_builder = $this->createStub(ProgramManagementBreadCrumbsBuilder::class);
+        $this->project_manager       = $this->createStub(\ProjectManager::class);
+        $this->build_program         = BuildProgramStub::stubValidProgram();
+        $this->template_renderer     = $this->createMock(\TemplateRenderer::class);
+        $this->breadcrumbs_builder   = $this->createStub(ProgramManagementBreadCrumbsBuilder::class);
+        $this->build_potential_teams = BuildPotentialTeamsStub::buildValidPotentialTeamsFromId(PotentialTeam::fromId(150, 'team'));
     }
 
     public function testItReturnsNotFoundWhenProjectIsNotFoundFromVariables(): void
@@ -113,7 +117,7 @@ final class DisplayAdminProgramManagementControllerTest extends \Tuleap\Test\PHP
 
         $this->template_renderer->expects(self::once())
             ->method('renderToPage')
-            ->with('admin', []);
+            ->with('admin', self::isInstanceOf(ProgramAdminPresenter::class));
 
         $this->breadcrumbs_builder->expects(self::once())->method('build');
 
@@ -126,7 +130,8 @@ final class DisplayAdminProgramManagementControllerTest extends \Tuleap\Test\PHP
             $this->project_manager,
             $this->template_renderer,
             $this->build_program,
-            $this->breadcrumbs_builder
+            $this->breadcrumbs_builder,
+            $this->build_potential_teams
         );
     }
 
