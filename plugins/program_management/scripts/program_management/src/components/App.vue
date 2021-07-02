@@ -27,7 +27,7 @@
             v-bind:is_program_admin="is_program_admin"
         />
         <h1 class="program-management-title-header" v-translate>Backlog</h1>
-        <div class="program-backlog" data-test="backlog-section">
+        <div class="program-backlog" data-test="backlog-section" v-if="is_configured">
             <to-be-planned class="to-be-planned" />
             <div class="planning-divider">
                 <svg xmlns="http://www.w3.org/2000/svg" width="22" height="46">
@@ -39,6 +39,10 @@
                 </svg>
             </div>
             <program-increment-list class="program-increment" />
+        </div>
+        <div class="program-backlog-empty-state" v-else data-test="configuration-empty-state">
+            <configuration-empty-state />
+            <div class="program-management-no-teams-empty-state-label">{{ emptyStateLabel() }}</div>
         </div>
         <error-modal v-if="has_modal_error" />
     </div>
@@ -68,11 +72,18 @@ import {
 } from "../helpers/drag-drop";
 import { Action, State, namespace, Getter } from "vuex-class";
 import ErrorModal from "./Backlog/ErrorModal.vue";
+import ConfigurationEmptyState from "./ConfigurationEmptyState.vue";
 
 const configuration = namespace("configuration");
 
 @Component({
-    components: { ToBePlanned, ProgramIncrementList: ProgramIncrementList, Breadcrumb, ErrorModal },
+    components: {
+        ConfigurationEmptyState,
+        ToBePlanned,
+        ProgramIncrementList: ProgramIncrementList,
+        Breadcrumb,
+        ErrorModal,
+    },
 })
 export default class App extends Vue {
     private drek!: Drekkenov | undefined;
@@ -103,6 +114,9 @@ export default class App extends Vue {
 
     @configuration.State
     readonly is_program_admin!: boolean;
+
+    @configuration.State
+    readonly is_configured!: boolean;
 
     @Getter
     readonly hasAnElementMovedInsideIncrement!: boolean;
@@ -148,6 +162,12 @@ export default class App extends Vue {
             event.preventDefault();
             event.returnValue = false;
         }
+    }
+
+    emptyStateLabel(): string {
+        return this.$gettext(
+            "No project have been aggregated yet. Aggregation can be done in administration of service."
+        );
     }
 }
 </script>

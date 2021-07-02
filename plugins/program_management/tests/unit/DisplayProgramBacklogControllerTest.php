@@ -26,11 +26,14 @@ use ForgeAccess;
 use ForgeConfig;
 use Tracker;
 use Tuleap\ForgeConfigSandbox;
+use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramBacklogPresenter;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracker\RetrieveVisibleProgramIncrementTracker;
 use Tuleap\ProgramManagement\Domain\Program\Plan\BuildProgram;
+use Tuleap\ProgramManagement\Domain\Team\VerifyIsTeam;
 use Tuleap\ProgramManagement\Stub\BuildProgramStub;
 use Tuleap\ProgramManagement\Stub\RetrieveProgramIncrementLabelsStub;
 use Tuleap\ProgramManagement\Stub\RetrieveVisibleProgramIncrementTrackerStub;
+use Tuleap\ProgramManagement\Stub\VerifyIsTeamStub;
 use Tuleap\Project\Flags\ProjectFlagsBuilder;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Request\NotFoundException;
@@ -78,7 +81,7 @@ final class DisplayProgramBacklogControllerTest extends \Tuleap\Test\PHPUnit\Tes
         $variables = ['project_name' => 'not_found'];
 
         $this->expectException(NotFoundException::class);
-        $this->getController()->process(HTTPRequestBuilder::get()->build(), LayoutBuilder::build(), $variables);
+        $this->getController(VerifyIsTeamStub::withNotValidTeam())->process(HTTPRequestBuilder::get()->build(), LayoutBuilder::build(), $variables);
     }
 
     public function testItThrowsExceptionWhenServiceIsNotAvailable(): void
@@ -88,10 +91,10 @@ final class DisplayProgramBacklogControllerTest extends \Tuleap\Test\PHPUnit\Tes
         $variables = ['project_name' => 'test_project'];
 
         $this->expectException(NotFoundException::class);
-        $this->getController()->process(HTTPRequestBuilder::get()->build(), LayoutBuilder::build(), $variables);
+        $this->getController(VerifyIsTeamStub::withNotValidTeam())->process(HTTPRequestBuilder::get()->build(), LayoutBuilder::build(), $variables);
     }
 
-    public function testPreventsAccessWhenProjectIsNotAProgram(): void
+    public function testPreventsAccessWhenProjectIsATeam(): void
     {
         $this->mockProject();
         $this->build_program = BuildProgramStub::stubInvalidProgram();
@@ -100,7 +103,8 @@ final class DisplayProgramBacklogControllerTest extends \Tuleap\Test\PHPUnit\Tes
         $variables = ['project_name' => 'test_project'];
 
         $this->expectException(ForbiddenException::class);
-        $this->getController()->process($request, LayoutBuilder::build(), $variables);
+
+        $this->getController(VerifyIsTeamStub::withValidTeam())->process($request, LayoutBuilder::build(), $variables);
     }
 
     public function testPreventsAccessWhenProgramIncrementTrackerIsNotVisible(): void
@@ -112,7 +116,7 @@ final class DisplayProgramBacklogControllerTest extends \Tuleap\Test\PHPUnit\Tes
         $variables = ['project_name' => 'test_project'];
 
         $this->expectException(NotFoundException::class);
-        $this->getController()->process($request, LayoutBuilder::build(), $variables);
+        $this->getController(VerifyIsTeamStub::withNotValidTeam())->process($request, LayoutBuilder::build(), $variables);
     }
 
     public function testItDisplayProgramBacklog(): void
@@ -141,10 +145,10 @@ final class DisplayProgramBacklogControllerTest extends \Tuleap\Test\PHPUnit\Tes
             ->method('renderToPage')
             ->with('program-backlog', self::isInstanceOf(ProgramBacklogPresenter::class));
 
-        $this->getController()->process($request, LayoutBuilder::build(), $variables);
+        $this->getController(VerifyIsTeamStub::withNotValidTeam())->process($request, LayoutBuilder::build(), $variables);
     }
 
-    private function getController(): DisplayProgramBacklogController
+    private function getController(VerifyIsTeam $verify_is_team): DisplayProgramBacklogController
     {
         return new DisplayProgramBacklogController(
             $this->project_manager,
@@ -152,7 +156,8 @@ final class DisplayProgramBacklogControllerTest extends \Tuleap\Test\PHPUnit\Tes
             $this->build_program,
             $this->template_renderer,
             $this->program_increment_tracker_retriever,
-            RetrieveProgramIncrementLabelsStub::buildLabels('Program Increments', 'program_increment')
+            RetrieveProgramIncrementLabelsStub::buildLabels('Program Increments', 'program_increment'),
+            $verify_is_team
         );
     }
 

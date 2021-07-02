@@ -64,7 +64,15 @@ final class TeamProjectsCollection
         ProgramIdentifier $program
     ): self {
         $program_project_id = $program->getID();
-        $team_projects      = [];
+        return self::fromProjectId($teams_searcher, $project_data_adapter, $program_project_id);
+    }
+
+    public static function fromProjectId(
+        SearchTeamsOfProgram $teams_searcher,
+        BuildProject $project_data_adapter,
+        int $program_project_id
+    ): self {
+        $team_projects = [];
         foreach ($teams_searcher->searchTeamIdsOfProgram($program_project_id) as $team_id) {
             $team_projects[] = $project_data_adapter->buildFromId($team_id);
         }

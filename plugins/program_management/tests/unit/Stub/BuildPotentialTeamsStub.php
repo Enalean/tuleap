@@ -24,7 +24,6 @@ namespace Tuleap\ProgramManagement\Stub;
 
 use Tuleap\ProgramManagement\Domain\Program\Admin\PotentialTeam\BuildPotentialTeams;
 use Tuleap\ProgramManagement\Domain\Program\Admin\PotentialTeam\PotentialTeam;
-use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 
 class BuildPotentialTeamsStub implements BuildPotentialTeams
 {
@@ -44,7 +43,7 @@ class BuildPotentialTeamsStub implements BuildPotentialTeams
     /**
      * @return PotentialTeam[]
      */
-    public function buildPotentialTeams(ProgramIdentifier $program, \PFUser $user): array
+    public function buildPotentialTeams(int $project_id, \PFUser $user): array
     {
         return $this->potential_teams;
     }

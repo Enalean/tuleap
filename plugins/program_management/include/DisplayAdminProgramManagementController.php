@@ -31,12 +31,11 @@ use Tuleap\Layout\IncludeAssets;
 use Tuleap\ProgramManagement\Domain\BuildProject;
 use Tuleap\ProgramManagement\Domain\Program\Admin\PotentialTeam\BuildPotentialTeams;
 use Tuleap\ProgramManagement\Domain\Program\Admin\PotentialTeam\PotentialTeamsPresenterBuilder;
+use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramAdminPresenter;
 use Tuleap\ProgramManagement\Domain\Program\Admin\Team\TeamsPresenterBuilder;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Team\TeamProjectsCollection;
-use Tuleap\ProgramManagement\Domain\Program\Plan\BuildProgram;
-use Tuleap\ProgramManagement\Domain\Program\Plan\ProjectIsNotAProgramException;
-use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\SearchTeamsOfProgram;
+use Tuleap\ProgramManagement\Domain\Team\VerifyIsTeam;
 use Tuleap\Request\DispatchableWithBurningParrot;
 use Tuleap\Request\DispatchableWithProject;
 use Tuleap\Request\DispatchableWithRequest;
@@ -47,28 +46,28 @@ final class DisplayAdminProgramManagementController implements DispatchableWithR
 {
     private \ProjectManager $project_manager;
     private \TemplateRenderer $template_renderer;
-    private BuildProgram $build_program;
     private ProgramManagementBreadCrumbsBuilder $breadcrumbs_builder;
     private BuildPotentialTeams $potential_teams_builder;
     private SearchTeamsOfProgram $teams_searcher;
     private BuildProject $project_data_adapter;
+    private VerifyIsTeam $verify_is_team;
 
     public function __construct(
         \ProjectManager $project_manager,
         \TemplateRenderer $template_renderer,
-        BuildProgram $build_program,
         ProgramManagementBreadCrumbsBuilder $breadcrumbs_builder,
         BuildPotentialTeams $potential_teams_builder,
         SearchTeamsOfProgram $teams_searcher,
-        BuildProject $project_data_adapter
+        BuildProject $project_data_adapter,
+        VerifyIsTeam $verify_is_team
     ) {
         $this->project_manager         = $project_manager;
         $this->template_renderer       = $template_renderer;
-        $this->build_program           = $build_program;
         $this->breadcrumbs_builder     = $breadcrumbs_builder;
         $this->potential_teams_builder = $potential_teams_builder;
         $this->teams_searcher          = $teams_searcher;
         $this->project_data_adapter    = $project_data_adapter;
+        $this->verify_is_team          = $verify_is_team;
     }
 
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
@@ -76,16 +75,16 @@ final class DisplayAdminProgramManagementController implements DispatchableWithR
         $project = $this->getProject($variables);
 
         if (! $project->usesService(program_managementPlugin::SERVICE_SHORTNAME)) {
-            throw new NotFoundException(dgettext('tuleap-program_management', 'Program management service is disabled.'));
+            throw new NotFoundException(
+                dgettext('tuleap-program_management', 'Program management service is disabled.')
+            );
         }
 
-        try {
-            $program = ProgramIdentifier::fromId($this->build_program, (int) $project->getID(), $request->getCurrentUser());
-        } catch (ProjectIsNotAProgramException $exception) {
+        if ($this->verify_is_team->isATeam((int) $project->getID())) {
             throw new ForbiddenException(
                 dgettext(
-                    'tuleap-program_management',
-                    'The program management service can only be used in a project defined as a program.'
+                    "tuleap-program_management",
+                    "Project is defined as a Team project. It can not be used as a Program"
                 )
             );
         }
@@ -116,9 +115,15 @@ final class DisplayAdminProgramManagementController implements DispatchableWithR
         $this->template_renderer->renderToPage(
             'admin',
             new ProgramAdminPresenter(
-                PotentialTeamsPresenterBuilder::buildPotentialTeamsPresenter($this->potential_teams_builder->buildPotentialTeams($program, $user)),
+                PotentialTeamsPresenterBuilder::buildPotentialTeamsPresenter(
+                    $this->potential_teams_builder->buildPotentialTeams((int) $project->getID(), $user)
+                ),
                 TeamsPresenterBuilder::buildTeamsPresenter(
-                    TeamProjectsCollection::fromProgramIdentifier($this->teams_searcher, $this->project_data_adapter, $program),
+                    TeamProjectsCollection::fromProjectId(
+                        $this->teams_searcher,
+                        $this->project_data_adapter,
+                        (int) $project->getID()
+                    ),
                     $user
                 )
             )

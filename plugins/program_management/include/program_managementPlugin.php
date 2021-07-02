@@ -263,7 +263,8 @@ final class program_managementPlugin extends Plugin
                 $program_increments_dao,
                 TrackerFactory::instance()
             ),
-            $program_increments_dao
+            $program_increments_dao,
+            new TeamDao()
         );
     }
 
@@ -273,11 +274,11 @@ final class program_managementPlugin extends Plugin
         return new DisplayAdminProgramManagementController(
             $project_manager,
             TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../templates/admin'),
-            $this->getProgramAdapter(),
             new ProgramManagementBreadCrumbsBuilder(),
             new PotentialTeamsBuilder($project_manager, new ProgramDao()),
             new ProgramDao(),
-            new ProjectAdapter($project_manager)
+            new ProjectAdapter($project_manager),
+            new TeamDao()
         );
     }
 

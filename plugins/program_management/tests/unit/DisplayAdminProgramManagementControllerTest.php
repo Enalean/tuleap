@@ -25,10 +25,13 @@ namespace Tuleap\ProgramManagement;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\ProgramManagement\Domain\BuildProject;
 use Tuleap\ProgramManagement\Domain\Program\Admin\PotentialTeam\PotentialTeam;
+use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramAdminPresenter;
+use Tuleap\ProgramManagement\Domain\Team\VerifyIsTeam;
 use Tuleap\ProgramManagement\Stub\BuildPotentialTeamsStub;
 use Tuleap\ProgramManagement\Stub\BuildProgramStub;
 use Tuleap\ProgramManagement\Stub\BuildProjectStub;
 use Tuleap\ProgramManagement\Stub\SearchTeamsOfProgramStub;
+use Tuleap\ProgramManagement\Stub\VerifyIsTeamStub;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Request\NotFoundException;
 use Tuleap\Test\Builders\HTTPRequestBuilder;
@@ -64,7 +67,6 @@ final class DisplayAdminProgramManagementControllerTest extends \Tuleap\Test\PHP
         $this->variables = ['project_name' => 'not_found'];
 
         $this->project_manager       = $this->createStub(\ProjectManager::class);
-        $this->build_program         = BuildProgramStub::stubValidProgram();
         $this->template_renderer     = $this->createMock(\TemplateRenderer::class);
         $this->breadcrumbs_builder   = $this->createStub(ProgramManagementBreadCrumbsBuilder::class);
         $this->build_potential_teams = BuildPotentialTeamsStub::buildValidPotentialTeamsFromId(PotentialTeam::fromId(150, 'team'));
@@ -77,7 +79,7 @@ final class DisplayAdminProgramManagementControllerTest extends \Tuleap\Test\PHP
         $this->project_manager->method('getProjectByUnixName')->willReturn(null);
 
         $this->expectException(NotFoundException::class);
-        $this->getController()->process(HTTPRequestBuilder::get()->build(), LayoutBuilder::build(), $this->variables);
+        $this->getController(VerifyIsTeamStub::withNotValidTeam())->process(HTTPRequestBuilder::get()->build(), LayoutBuilder::build(), $this->variables);
     }
 
     public function testThrowAnErrorWhenServiceIsNotActivated(): void
@@ -85,18 +87,18 @@ final class DisplayAdminProgramManagementControllerTest extends \Tuleap\Test\PHP
         $this->mockProject(false);
 
         $this->expectException(NotFoundException::class);
-        $this->getController()->process(HTTPRequestBuilder::get()->build(), LayoutBuilder::build(), $this->variables);
+        $this->getController(VerifyIsTeamStub::withNotValidTeam())->process(HTTPRequestBuilder::get()->build(), LayoutBuilder::build(), $this->variables);
     }
 
-    public function testThrownAnErrorWhenProjectIsNotProgram(): void
+    public function testThrownAnErrorWhenProjectIsATeam(): void
     {
         $this->mockProject();
         $this->build_program = BuildProgramStub::stubInvalidProgram();
 
         $this->expectException(ForbiddenException::class);
-        $this->expectExceptionMessage('The program management service can only be used in a project defined as a program.');
+        $this->expectExceptionMessage('Project is defined as a Team project. It can not be used as a Program');
 
-        $this->getController()->process(HTTPRequestBuilder::get()->build(), LayoutBuilder::build(), $this->variables);
+        $this->getController(VerifyIsTeamStub::withValidTeam())->process(HTTPRequestBuilder::get()->build(), LayoutBuilder::build(), $this->variables);
     }
 
     public function testThrowAnErrorIfUserIsNotProjectAdmin(): void
@@ -110,7 +112,7 @@ final class DisplayAdminProgramManagementControllerTest extends \Tuleap\Test\PHP
         $this->expectException(ForbiddenException::class);
         $this->expectExceptionMessage('You need to be project administrator to access to program administration.');
 
-        $this->getController()->process($request, LayoutBuilder::build(), $this->variables);
+        $this->getController(VerifyIsTeamStub::withNotValidTeam())->process($request, LayoutBuilder::build(), $this->variables);
     }
 
     public function testItDisplayAdminProgram(): void
@@ -128,19 +130,19 @@ final class DisplayAdminProgramManagementControllerTest extends \Tuleap\Test\PHP
 
         $this->breadcrumbs_builder->expects(self::once())->method('build');
 
-        $this->getController()->process($request, LayoutBuilder::build(), $this->variables);
+        $this->getController(VerifyIsTeamStub::withNotValidTeam())->process($request, LayoutBuilder::build(), $this->variables);
     }
 
-    private function getController(): DisplayAdminProgramManagementController
+    private function getController(VerifyIsTeam $verify_is_team): DisplayAdminProgramManagementController
     {
         return new DisplayAdminProgramManagementController(
             $this->project_manager,
             $this->template_renderer,
-            $this->build_program,
             $this->breadcrumbs_builder,
             $this->build_potential_teams,
             $this->team_searcher,
-            $this->build_project
+            $this->build_project,
+            $verify_is_team
         );
     }
 

@@ -1,8 +1,8 @@
 <?php
 /**
- * Copyright (c) Enalean, 2021 - Present. All Rights Reserved.
+ * Copyright (c) Enalean 2021 -  Present. All Rights Reserved.
  *
- * This file is a part of Tuleap.
+ *  This file is a part of Tuleap.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,11 +16,12 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement;
+namespace Tuleap\ProgramManagement\Domain\Program\Admin;
 
 use Tuleap\Project\Flags\ProjectFlagPresenter;
 use Tuleap\Project\ProjectPrivacyPresenter;
@@ -44,6 +45,7 @@ final class ProgramBacklogPresenter
     public string $program_increment_label;
     public string $program_increment_sub_label;
     public bool $is_program_admin;
+    public bool $is_configured;
 
     /**
      * @param ProjectFlagPresenter[] $project_flags
@@ -52,10 +54,7 @@ final class ProgramBacklogPresenter
         \Project $project,
         array $project_flags,
         bool $user_has_accessibility_mode,
-        bool $can_create_program_increment,
-        int $program_increment_tracker_id,
-        ?string $program_increment_label,
-        ?string $program_increment_sub_label,
+        ProgramBacklogConfigurationPresenter $backlog_configuration,
         bool $is_program_admin
     ) {
         $this->project_name                 = $project->getPublicName();
@@ -67,19 +66,20 @@ final class ProgramBacklogPresenter
         $this->project_flags                = json_encode($project_flags, JSON_THROW_ON_ERROR);
         $this->program_id                   = (int) $project->getID();
         $this->user_has_accessibility_mode  = $user_has_accessibility_mode;
-        $this->can_create_program_increment = $can_create_program_increment;
-        $this->program_increment_tracker_id = $program_increment_tracker_id;
+        $this->can_create_program_increment = $backlog_configuration->can_create_program;
+        $this->program_increment_tracker_id = $backlog_configuration->program_increment_tracker_id;
         $this->program_increment_label      = dgettext('tuleap-program_management', "Program Increments");
         $this->program_increment_sub_label  = dgettext('tuleap-program_management', "program increment");
 
-        if ($program_increment_label) {
-            $this->program_increment_label = $program_increment_label;
+        if ($backlog_configuration->program_increment_label) {
+            $this->program_increment_label = $backlog_configuration->program_increment_label;
         }
 
-        if ($program_increment_sub_label) {
-            $this->program_increment_sub_label = $program_increment_sub_label;
+        if ($backlog_configuration->program_increment_sublabel) {
+            $this->program_increment_sub_label = $backlog_configuration->program_increment_sublabel;
         }
 
         $this->is_program_admin = $is_program_admin;
+        $this->is_configured    = $backlog_configuration->is_configured;
     }
 }

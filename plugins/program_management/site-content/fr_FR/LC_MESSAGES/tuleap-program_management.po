@@ -87,6 +87,11 @@ msgstr "Administration du Programme"
 msgid "Program management service is disabled."
 msgstr "Le service de gestion de programme est désactivé."
 
+msgid "Project is defined as a Team project. It can not be used as a Program"
+msgstr ""
+"Le project est défini en tant que projet Équipe. Il ne peut pas être utilisé "
+"en tant que Programme."
+
 msgid "Remove from top backlog"
 msgstr "Supprimer de la planification générale"
 
@@ -99,13 +104,6 @@ msgid ""
 msgstr ""
 "La post-action ne peut pas être enregistrée parce que cet outil de suivi "
 "n'est pas un outil de suivi planifiable d'un plan."
-
-msgid ""
-"The program management service can only be used in a project defined as a "
-"program."
-msgstr ""
-"Le service de gestion de programme peut seulement être utilisé dans un "
-"projet défini en tant que programme."
 
 msgid "Top backlog actions"
 msgstr "Actions liées à la planification générale"
