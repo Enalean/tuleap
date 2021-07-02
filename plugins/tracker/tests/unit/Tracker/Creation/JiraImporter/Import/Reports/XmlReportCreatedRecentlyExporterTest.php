@@ -80,6 +80,7 @@ final class XmlReportCreatedRecentlyExporterTest extends \Tuleap\Test\PHPUnit\Te
     {
         $this->summary_field_mapping = new ScalarFieldMapping(
             'summary',
+            'Summary',
             'Fsummary',
             'summary',
             Tracker_FormElementFactory::FIELD_STRING_TYPE,
@@ -87,6 +88,7 @@ final class XmlReportCreatedRecentlyExporterTest extends \Tuleap\Test\PHPUnit\Te
 
         $this->description_field_mapping = new ScalarFieldMapping(
             'description',
+            'Description',
             'Fdescription',
             'description',
             Tracker_FormElementFactory::FIELD_TEXT_TYPE,
@@ -94,6 +96,7 @@ final class XmlReportCreatedRecentlyExporterTest extends \Tuleap\Test\PHPUnit\Te
 
         $this->status_field_mapping = new ListFieldMapping(
             'status',
+            'Status',
             'Fstatus',
             'status',
             Tracker_FormElementFactory::FIELD_SELECT_BOX_TYPE,
@@ -103,6 +106,7 @@ final class XmlReportCreatedRecentlyExporterTest extends \Tuleap\Test\PHPUnit\Te
 
         $this->priority_field_mapping = new ListFieldMapping(
             'priority',
+            'Priority',
             'Fpriority',
             'priority',
             Tracker_FormElementFactory::FIELD_SELECT_BOX_TYPE,
@@ -112,6 +116,7 @@ final class XmlReportCreatedRecentlyExporterTest extends \Tuleap\Test\PHPUnit\Te
 
         $this->jira_issue_url_field_mapping = new ScalarFieldMapping(
             'jira_issue_url',
+            'Link to original issue',
             'Fjira_issue_url',
             'jira_issue_url',
             Tracker_FormElementFactory::FIELD_STRING_TYPE,
@@ -119,6 +124,7 @@ final class XmlReportCreatedRecentlyExporterTest extends \Tuleap\Test\PHPUnit\Te
 
         $this->created_field_mapping = new ScalarFieldMapping(
             'created',
+            'Created',
             'Fcreated',
             'created',
             Tracker_FormElementFactory::FIELD_DATE_TYPE,

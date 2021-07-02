@@ -436,7 +436,7 @@ class JiraXmlExporter
         $this->semantics_xml_exporter->exportSemantics(
             $node_tracker,
             $jira_field_mapping_collection,
-            $status_values_collection
+            $status_values_collection,
         );
 
         $node_tracker->addChild('rules');

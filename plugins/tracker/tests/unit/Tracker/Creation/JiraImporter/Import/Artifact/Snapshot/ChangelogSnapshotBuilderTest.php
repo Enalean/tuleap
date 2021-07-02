@@ -155,8 +155,9 @@ class ChangelogSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                 new FieldSnapshot(
                     new ScalarFieldMapping(
                         "description",
-                        "Fdescription",
                         "Description",
+                        "Fdescription",
+                        "description",
                         "text",
                     ),
                     "*aaaaaaaaa*",
@@ -165,8 +166,9 @@ class ChangelogSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                 new FieldSnapshot(
                     new ScalarFieldMapping(
                         "textfield",
-                        "Ftextfield",
                         "Text Field",
+                        "Ftextfield",
+                        "textfield",
                         "text",
                     ),
                     "*text area v2*",
@@ -175,8 +177,9 @@ class ChangelogSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                 new FieldSnapshot(
                     new ScalarFieldMapping(
                         "attachment",
+                        "Attachment",
                         "Fattachment",
-                        "Attachments",
+                        "attachments",
                         "file",
                     ),
                     [
@@ -189,8 +192,9 @@ class ChangelogSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                 new FieldSnapshot(
                     new ListFieldMapping(
                         'assignee',
-                        'Fassignee',
                         'Assignee',
+                        'Fassignee',
+                        'assignee',
                         'sb',
                         \Tracker_FormElement_Field_List_Bind_Users::TYPE,
                         [],
@@ -201,8 +205,9 @@ class ChangelogSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                 new FieldSnapshot(
                     new ListFieldMapping(
                         'homies',
-                        'Fhomies',
                         'Homies',
+                        'Fhomies',
+                        'homies',
                         'msb',
                         \Tracker_FormElement_Field_List_Bind_Users::TYPE,
                         [],
@@ -305,13 +310,15 @@ class ChangelogSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $collection->addMapping(
             new ScalarFieldMapping(
                 "customfield_10036",
-                "Fcustomfield_10036",
                 "Field 01",
+                "Fcustomfield_10036",
+                "customfield_10036",
                 "float",
             )
         );
         $collection->addMapping(
             new ListFieldMapping(
+                "status",
                 "status",
                 "Fstatus",
                 "status",
@@ -323,6 +330,7 @@ class ChangelogSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $collection->addMapping(
             new ListFieldMapping(
                 "customfield_10040",
+                "customfield_10040",
                 "Fcustomfield_10040",
                 "Field 02",
                 "msb",
@@ -333,32 +341,36 @@ class ChangelogSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $collection->addMapping(
             new ScalarFieldMapping(
                 "description",
-                "Fdescription",
                 "Description",
+                "Fdescription",
+                "description",
                 "text",
             )
         );
         $collection->addMapping(
             new ScalarFieldMapping(
                 "textfield",
-                "Ftextfield",
                 "Text Field",
+                "Ftextfield",
+                "textfield",
                 "text",
             )
         );
         $collection->addMapping(
             new ScalarFieldMapping(
                 "attachment",
+                "Attachment",
                 "Fattachment",
-                "Attachments",
+                "attachments",
                 "file",
             )
         );
         $collection->addMapping(
             new ListFieldMapping(
                 "assignee",
-                "Fassignee",
                 "Assignee",
+                "Fassignee",
+                "assignee",
                 "sb",
                 \Tracker_FormElement_Field_List_Bind_Users::TYPE,
                 [],
@@ -367,8 +379,9 @@ class ChangelogSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $collection->addMapping(
             new ListFieldMapping(
                 "homies",
-                "Fhomies",
                 "Homies",
+                "Fhomies",
+                "homies",
                 "msb",
                 \Tracker_FormElement_Field_List_Bind_Users::TYPE,
                 [],
@@ -377,8 +390,9 @@ class ChangelogSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $collection->addMapping(
             new ScalarFieldMapping(
                 "datepicker",
+                "Date Picker",
                 "Fdatepicker",
-                "Date picker",
+                "patepicker",
                 "date",
             ),
         );

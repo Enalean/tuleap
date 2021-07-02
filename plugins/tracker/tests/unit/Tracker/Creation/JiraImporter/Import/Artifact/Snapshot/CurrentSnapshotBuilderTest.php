@@ -145,16 +145,18 @@ class CurrentSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $collection->addMapping(
             new ScalarFieldMapping(
                 'summary',
-                'Fsummary',
                 'Summary',
+                'Fsummary',
+                'summary',
                 Tracker_FormElementFactory::FIELD_STRING_TYPE,
             )
         );
         $collection->addMapping(
             new ListFieldMapping(
                 'issuetype',
-                'Fissuetype',
                 'Issue Type',
+                'Fissuetype',
+                'issuetype',
                 Tracker_FormElementFactory::FIELD_SELECT_BOX_TYPE,
                 \Tracker_FormElement_Field_List_Bind_Static::TYPE,
                 [],
@@ -163,8 +165,9 @@ class CurrentSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $collection->addMapping(
             new ListFieldMapping(
                 'assignee',
-                'Fassignee',
                 'Assignee',
+                'Fassignee',
+                'assignee',
                 Tracker_FormElementFactory::FIELD_SELECT_BOX_TYPE,
                 \Tracker_FormElement_Field_List_Bind_Users::TYPE,
                 [],
@@ -173,8 +176,9 @@ class CurrentSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $collection->addMapping(
             new ListFieldMapping(
                 'homies',
-                'Fhomies',
                 'Homies',
+                'Fhomies',
+                'homies',
                 Tracker_FormElementFactory::FIELD_MULTI_SELECT_BOX_TYPE,
                 \Tracker_FormElement_Field_List_Bind_Users::TYPE,
                 [],
@@ -190,8 +194,9 @@ class CurrentSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $jira_field_mapping_collection->addMapping(
             new ScalarFieldMapping(
                 AlwaysThereFieldsExporter::JIRA_ISSUE_LINKS_NAME,
-                'F001',
                 'Links',
+                'F001',
+                AlwaysThereFieldsExporter::JIRA_ISSUE_LINKS_NAME,
                 Tracker_FormElementFactory::FIELD_ARTIFACT_LINKS,
             )
         );
@@ -244,8 +249,9 @@ class CurrentSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $jira_field_mapping_collection->addMapping(
             new ScalarFieldMapping(
                 AlwaysThereFieldsExporter::JIRA_ISSUE_LINKS_NAME,
-                'F001',
                 'Links',
+                'F001',
+                AlwaysThereFieldsExporter::JIRA_ISSUE_LINKS_NAME,
                 Tracker_FormElementFactory::FIELD_ARTIFACT_LINKS,
             )
         );

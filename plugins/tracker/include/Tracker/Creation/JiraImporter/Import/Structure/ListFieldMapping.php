@@ -58,17 +58,24 @@ class ListFieldMapping implements FieldMapping
      */
     private $bound_values;
 
-    /**
-     * @param JiraFieldAPIAllowedValueRepresentation[] $bound_values
-     */
-    public function __construct(string $jira_field_id, string $xml_id, string $field_name, string $type, string $bind_type, array $bound_values)
-    {
-        $this->jira_field_id = $jira_field_id;
-        $this->xml_id        = $xml_id;
-        $this->field_name    = $field_name;
-        $this->type          = $type;
-        $this->bind_type     = $bind_type;
-        $this->bound_values  = $bound_values;
+    private string $jira_field_label;
+
+    public function __construct(
+        string $jira_field_id,
+        string $jira_field_label,
+        string $xml_id,
+        string $field_name,
+        string $type,
+        string $bind_type,
+        array $bound_values
+    ) {
+        $this->jira_field_id    = $jira_field_id;
+        $this->jira_field_label = $jira_field_label;
+        $this->xml_id           = $xml_id;
+        $this->field_name       = $field_name;
+        $this->type             = $type;
+        $this->bind_type        = $bind_type;
+        $this->bound_values     = $bound_values;
     }
 
     public function getJiraFieldId(): string
@@ -112,5 +119,10 @@ class ListFieldMapping implements FieldMapping
             }
         }
         return null;
+    }
+
+    public function getJiraFieldLabel(): string
+    {
+        return $this->jira_field_label;
     }
 }

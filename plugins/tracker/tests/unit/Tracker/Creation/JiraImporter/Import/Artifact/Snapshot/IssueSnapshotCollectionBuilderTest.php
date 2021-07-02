@@ -319,8 +319,9 @@ class IssueSnapshotCollectionBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                 new FieldSnapshot(
                     new ScalarFieldMapping(
                         "description",
-                        "Fdescription",
                         "Description",
+                        "Fdescription",
+                        "description",
                         "text"
                     ),
                     'aaaaaaaa',
@@ -340,8 +341,9 @@ class IssueSnapshotCollectionBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                 new FieldSnapshot(
                     new ScalarFieldMapping(
                         "description",
-                        "Fdescription",
                         "Description",
+                        "Fdescription",
+                        "description",
                         "text",
                     ),
                     'aaaaaaaa',
@@ -350,8 +352,9 @@ class IssueSnapshotCollectionBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                 new FieldSnapshot(
                     new ScalarFieldMapping(
                         "customfield_10036",
-                        "Fcustomfield_10036",
                         "Field 01",
+                        "Fcustomfield_10036",
+                        "customfield_10036",
                         "float",
                     ),
                     '11',
@@ -371,8 +374,9 @@ class IssueSnapshotCollectionBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                 new FieldSnapshot(
                     new ScalarFieldMapping(
                         "description",
-                        "Fdescription",
                         "Description",
+                        "Fdescription",
+                        "description",
                         "text",
                     ),
                     'aaaaaaaa',
@@ -381,8 +385,9 @@ class IssueSnapshotCollectionBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                 new FieldSnapshot(
                     new ScalarFieldMapping(
                         "customfield_10036",
-                        "Fcustomfield_10036",
                         "Field 01",
+                        "Fcustomfield_10036",
+                        "customfield_10036",
                         "float",
                     ),
                     '9',
@@ -402,8 +407,9 @@ class IssueSnapshotCollectionBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                 new FieldSnapshot(
                     new ScalarFieldMapping(
                         "customfield_10036",
-                        "Fcustomfield_10036",
                         "Field 01",
+                        "Fcustomfield_10036",
+                        "customfield_10036",
                         "float",
                     ),
                     '9',
@@ -423,8 +429,9 @@ class IssueSnapshotCollectionBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                 new FieldSnapshot(
                     new ScalarFieldMapping(
                         "customfield_10036",
-                        "Fcustomfield_10036",
                         "Field 01",
+                        "Fcustomfield_10036",
+                        "customfield_10036",
                         "float",
                     ),
                     '11',

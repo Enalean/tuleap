@@ -110,6 +110,7 @@ class FieldXmlExporter
             $jira_field_mapping_collection->addMapping(
                 new ListFieldMapping(
                     $jira_field_id,
+                    $label,
                     $xml_id,
                     $formatted_name,
                     $type,
@@ -121,6 +122,7 @@ class FieldXmlExporter
             $jira_field_mapping_collection->addMapping(
                 new ScalarFieldMapping(
                     $jira_field_id,
+                    $label,
                     $xml_id,
                     $formatted_name,
                     $type,

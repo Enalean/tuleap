@@ -586,7 +586,8 @@ final class JiraToTuleapFieldTypeMapperTest extends \Tuleap\Test\PHPUnit\TestCas
 
     public function testStoryPointsFieldIsNotAddedTwiceWhenConfiguredOnTheCreationScreen(): void
     {
-        $story_points_jira_field_id = 'customfield_10014';
+        $story_points_jira_field_id    = 'customfield_10014';
+        $story_points_jira_field_label = 'Story points';
 
         $jira_field = new JiraFieldAPIRepresentation(
             $story_points_jira_field_id,
@@ -599,6 +600,7 @@ final class JiraToTuleapFieldTypeMapperTest extends \Tuleap\Test\PHPUnit\TestCas
         $collection = new FieldMappingCollection(new FieldAndValueIDGenerator());
         $collection->addMapping(new ScalarFieldMapping(
             $story_points_jira_field_id,
+            $story_points_jira_field_label,
             'F1234',
             'story_points',
             Tracker_FormElementFactory::FIELD_FLOAT_TYPE,

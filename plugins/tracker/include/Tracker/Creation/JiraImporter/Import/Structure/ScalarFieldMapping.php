@@ -49,12 +49,20 @@ class ScalarFieldMapping implements FieldMapping
      */
     private $type;
 
-    public function __construct(string $jira_field_id, string $xml_id, string $field_name, string $type)
-    {
-        $this->jira_field_id = $jira_field_id;
-        $this->xml_id        = $xml_id;
-        $this->field_name    = $field_name;
-        $this->type          = $type;
+    private string $jira_field_label;
+
+    public function __construct(
+        string $jira_field_id,
+        string $jira_field_label,
+        string $xml_id,
+        string $field_name,
+        string $type
+    ) {
+        $this->jira_field_id    = $jira_field_id;
+        $this->jira_field_label = $jira_field_label;
+        $this->xml_id           = $xml_id;
+        $this->field_name       = $field_name;
+        $this->type             = $type;
     }
 
     public function getJiraFieldId(): string
@@ -80,5 +88,10 @@ class ScalarFieldMapping implements FieldMapping
     public function getBindType(): ?string
     {
         return null;
+    }
+
+    public function getJiraFieldLabel(): string
+    {
+        return $this->jira_field_label;
     }
 }

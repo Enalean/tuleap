@@ -39,6 +39,7 @@ class PermissionsXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
         $mapping_collection->addMapping(
             new ScalarFieldMapping(
                 'summary',
+                'Summary',
                 'Fsummary',
                 'summary',
                 Tracker_FormElementFactory::FIELD_STRING_TYPE,
@@ -81,8 +82,9 @@ class PermissionsXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
         $mapping_collection->addMapping(
             new ScalarFieldMapping(
                 'artifact_id',
+                'Artifact id',
                 'Fartifact_id',
-                'Artifact Id',
+                'artifact_id',
                 Tracker_FormElementFactory::FIELD_ARTIFACT_ID_TYPE,
             )
         );
@@ -111,8 +113,9 @@ class PermissionsXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
         $mapping_collection->addMapping(
             new ScalarFieldMapping(
                 'jira_issue_url',
-                'Fjira_issue_url',
                 'Link to original issue',
+                'Fjira_issue_url',
+                'jira_issue_url',
                 Tracker_FormElementFactory::FIELD_STRING_TYPE,
             )
         );

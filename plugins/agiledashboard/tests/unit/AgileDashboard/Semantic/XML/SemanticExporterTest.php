@@ -46,10 +46,11 @@ final class SemanticExporterTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
-    public function testItDoesNotSetTheSemanticWhenPlatformDoesnotHaveStoryPointField(): void
+    public function testItDoesNotSetTheSemanticWhenPlatformDoesNotHaveStoryPointField(): void
     {
-        $jira_story_points_field_id = 'customfield_10004';
-        $xml_story_points_id        = 'F123';
+        $jira_story_points_field_id    = 'customfield_10004';
+        $jira_story_points_field_label = 'Story points';
+        $xml_story_points_id           = 'F123';
 
         $add = new SemanticsExporter();
 
@@ -57,6 +58,7 @@ final class SemanticExporterTest extends \Tuleap\Test\PHPUnit\TestCase
         $mapping->addMapping(
             new ScalarFieldMapping(
                 $jira_story_points_field_id,
+                $jira_story_points_field_label,
                 $xml_story_points_id,
                 'story_points',
                 \Tracker_FormElementFactory::FIELD_FLOAT_TYPE,
@@ -98,8 +100,9 @@ final class SemanticExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItSetsTheSemanticOnTheMappedField(): void
     {
-        $jira_story_points_field_id = 'customfield_10004';
-        $xml_story_points_id        = 'F123';
+        $jira_story_points_field_id    = 'customfield_10004';
+        $jira_story_points_field_label = 'Story points';
+        $xml_story_points_id           = 'F123';
 
         $add = new SemanticsExporter();
 
@@ -110,6 +113,7 @@ final class SemanticExporterTest extends \Tuleap\Test\PHPUnit\TestCase
         $mapping->addMapping(
             new ScalarFieldMapping(
                 $jira_story_points_field_id,
+                $jira_story_points_field_label,
                 $xml_story_points_id,
                 'story_points',
                 \Tracker_FormElementFactory::FIELD_FLOAT_TYPE,
