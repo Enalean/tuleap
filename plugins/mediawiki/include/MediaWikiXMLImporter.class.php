@@ -78,10 +78,6 @@ class MediaWikiXMLImporter
      * Populate the MediaWiki with the given pages.
      * Returns true in case of success, false otherwise.
      *
-     * @var ImportConfig
-     * @var Project
-     * @var SimpleXMLElement
-     * @var String
      * @return bool
      */
     public function import(ImportConfig $configuration, Project $project, PFUser $creator, SimpleXMLElement $xml_input, $extraction_path)

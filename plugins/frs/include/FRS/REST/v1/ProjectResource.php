@@ -71,7 +71,7 @@ class ProjectResource extends AuthenticatedResource
      * @param int $offset Position of the first element to display {@from path} {@min 0}
      *
      * @return array {@type \Tuleap\FRS\REST\v1\PackageMinimalRepresentation}
-     * @psalm-var PackageMinimalRepresentation[]
+     * @psalm-return PackageMinimalRepresentation[]
      *
      * @throws RestException 403
      * @throws RestException 404

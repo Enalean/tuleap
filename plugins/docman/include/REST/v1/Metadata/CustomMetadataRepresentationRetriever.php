@@ -87,7 +87,7 @@ class CustomMetadataRepresentationRetriever
     }
 
     /**
-     * @var PUTCustomMetadataRepresentation[] $metadata_representations
+     * @param PUTCustomMetadataRepresentation[]|null $metadata_representations
      *
      * @return MetadataToUpdate[]
      * @throws CustomMetadataException
@@ -99,9 +99,6 @@ class CustomMetadataRepresentationRetriever
         }
         $custom_metadata_list = [];
         foreach ($metadata_representations as $metadata_representation) {
-            /**
-             * @var PUTCustomMetadataRepresentation $metadata_representation
-             */
             $metadata = $this->factory->getMetadataFromLabel($metadata_representation->short_name);
             if (! $metadata) {
                 throw CustomMetadataException::metadataNotFound($metadata_representation->short_name);

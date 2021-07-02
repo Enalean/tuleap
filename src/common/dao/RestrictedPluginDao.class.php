@@ -31,11 +31,11 @@ class RestrictedPluginDao extends RestrictedResourceDao
         return 'plugin_id';
     }
 
-    public function isResourceRestricted($plugin_id)
+    public function isResourceRestricted($resource_id)
     {
-        $plugin_id = $this->da->escapeInt($plugin_id);
+        $resource_id = $this->da->escapeInt($resource_id);
 
-        $sql = "SELECT * FROM plugin WHERE id = $plugin_id";
+        $sql = "SELECT * FROM plugin WHERE id = $resource_id";
 
         $row = $this->retrieveFirstRow($sql);
 
@@ -46,36 +46,36 @@ class RestrictedPluginDao extends RestrictedResourceDao
         return false;
     }
 
-    public function setResourceRestricted($plugin_id)
+    public function setResourceRestricted($resource_id)
     {
-        $plugin_id = $this->da->escapeInt($plugin_id);
+        $resource_id = $this->da->escapeInt($resource_id);
 
-        $sql = "UPDATE plugin SET prj_restricted = 1 WHERE id = $plugin_id";
+        $sql = "UPDATE plugin SET prj_restricted = 1 WHERE id = $resource_id";
 
         return $this->update($sql);
     }
 
-    public function unsetResourceRestricted($plugin_id)
+    public function unsetResourceRestricted($resource_id)
     {
-        $plugin_id = $this->da->escapeInt($plugin_id);
+        $resource_id = $this->da->escapeInt($resource_id);
 
-        $sql = "UPDATE plugin SET prj_restricted = 0 WHERE id = $plugin_id";
+        $sql = "UPDATE plugin SET prj_restricted = 0 WHERE id = $resource_id";
 
         if ($this->update($sql)) {
-            return $this->revokeAllProjectsFromResource($plugin_id);
+            return $this->revokeAllProjectsFromResource($resource_id);
         }
 
         return false;
     }
 
-    public function searchAllowedProjectsOnResource($plugin_id)
+    public function searchAllowedProjectsOnResource($resource_id)
     {
-        $plugin_id = $this->da->escapeInt($plugin_id);
+        $resource_id = $this->da->escapeInt($resource_id);
 
         $sql = "SELECT *
                 FROM groups g
                 INNER JOIN project_plugin pp ON g.group_id = pp.project_id
-                WHERE pp.plugin_id = $plugin_id";
+                WHERE pp.plugin_id = $resource_id";
 
         return $this->retrieve($sql);
     }

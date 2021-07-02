@@ -86,7 +86,10 @@
         <UnusedProperty>
             <errorLevel type="suppress">
                 <file name="plugins/git/include/GitActions.class.php"/>
+                <file name="plugins/tracker/include/Tracker/FormElement/SystemEvent/SystemEvent_BURNDOWN_DAILY.php"/>
             </errorLevel>
         </UnusedProperty>
+        <UnusedReturnValue errorLevel="suppress" />
+        <PossiblyUnusedReturnValue errorLevel="suppress" />
     </issueHandlers>
 </psalm>

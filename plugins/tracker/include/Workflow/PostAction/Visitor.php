@@ -29,11 +29,11 @@ interface Visitor
 {
     public function visitCIBuild(Transition_PostAction_CIBuild $post_action);
 
-    public function visitDateField(\Transition_PostAction_Field_Date $param);
+    public function visitDateField(\Transition_PostAction_Field_Date $post_action);
 
-    public function visitIntField(\Transition_PostAction_Field_Int $param);
+    public function visitIntField(\Transition_PostAction_Field_Int $post_action);
 
-    public function visitFloatField(\Transition_PostAction_Field_Float $param);
+    public function visitFloatField(\Transition_PostAction_Field_Float $post_action);
 
     public function visitFrozenFields(FrozenFields $frozen_fields);
 

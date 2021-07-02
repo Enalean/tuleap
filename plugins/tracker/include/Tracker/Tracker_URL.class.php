@@ -83,11 +83,11 @@ class Tracker_URL extends URL
      *
      * @see src/common/include/URL::getGroupIdFromUrl()
      *
-     * @param Array $requestUri $SERVER['REQUEST_URI']
+     * @param Array $url $SERVER['REQUEST_URI']
      *
      * @return ?int
      */
-    public function getGroupIdFromUrl($requestUri)
+    public function getGroupIdFromUrl($url)
     {
         $request = HTTPRequest::instance();
         $user    = UserManager::instance()->getCurrentUser();

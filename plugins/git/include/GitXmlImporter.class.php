@@ -154,9 +154,6 @@ class GitXmlImporter
     /**
      * Import one or multiple git repositories.
      * Returns true in case of success, false otherwise.
-     * @var Project
-     * @var SimpleXMLElement
-     * @var String
      * @return bool
      */
     public function import(

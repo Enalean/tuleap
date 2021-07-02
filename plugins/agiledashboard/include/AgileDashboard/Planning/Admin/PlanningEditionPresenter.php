@@ -77,9 +77,9 @@ final class PlanningEditionPresenter
     public $milestone_tracker_modification_ban;
 
     /**
-     * @var \Planning_TrackerPresenter[]                       $available_backlog_trackers
-     * @var \Planning_TrackerPresenter[]                       $available_planning_trackers
-     * @var PlanningWarningPossibleMisconfigurationPresenter[] $warning_list
+     * @param \Planning_TrackerPresenter[]                       $available_backlog_trackers
+     * @param \Planning_TrackerPresenter[]                       $available_planning_trackers
+     * @param PlanningWarningPossibleMisconfigurationPresenter[] $warning_list
      */
     public function __construct(
         \Planning $planning,

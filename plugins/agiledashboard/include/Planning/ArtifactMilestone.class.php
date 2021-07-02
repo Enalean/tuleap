@@ -253,9 +253,9 @@ class Planning_ArtifactMilestone implements Planning_Milestone
         return array_shift($parent_milestones_values);
     }
 
-    public function setAncestors(array $parents)
+    public function setAncestors(array $ancestors)
     {
-        $this->parent_milestones = $parents;
+        $this->parent_milestones = $ancestors;
     }
 
     public function getStartDate()

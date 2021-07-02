@@ -70,8 +70,8 @@ class TreeNode_InjectSpanPaddingInTreeNodeVisitor extends TreeNode_GetStateVisit
     /**
      * Set states of a TreeNodein it's data
      *
-     * @var TreeNode $child the TreeNode to set
-     * @var array    $state states of spaces
+     * @param TreeNode $child the TreeNode to set
+     * @param array    $state states of spaces
      *
      * @see TreeNode_GetStateVisitor::setChildState()
      */

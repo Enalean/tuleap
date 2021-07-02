@@ -37,20 +37,11 @@ class SystemEvent_BURNDOWN_DAILY extends SystemEvent //phpcs:ignore Squiz.Classe
      */
     private $burndown_dao;
 
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
+    private LoggerInterface $logger;
 
-    /**
-     * @var  FieldCalculator
-     */
-    private $field_calculator;
+    private FieldCalculator $field_calculator;
 
-    /**
-     * @var ComputedFieldDaoCache
-     */
-    private $cache_dao;
+    private ComputedFieldDaoCache $cache_dao;
 
     /**
      * @var BurndownCacheDateRetriever
