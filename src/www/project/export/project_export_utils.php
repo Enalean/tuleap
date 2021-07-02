@@ -30,6 +30,7 @@ require_once __DIR__ . '/../../include/utils.php';
  * false-positives it is considered HTML is escaped.
  *
  * @psalm-taint-escape html
+ * @psalm-taint-escape has_quotes
  */
 function tocsv($string, $csv_separator)
 {

@@ -196,6 +196,9 @@ class WikiAttachment /* implements UGroupPermission */
      */
     public function setGid($id = 0)
     {
+        /**
+         * @psalm-taint-escape file
+         */
         $this->gid     = (int) $id;
         $this->basedir = ForgeConfig::get('sys_wiki_attachment_data_dir') . '/' . $this->gid;
     }

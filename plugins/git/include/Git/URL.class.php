@@ -57,12 +57,6 @@ class Git_URL implements \Tuleap\Git\HTTP\GitHTTPOperation
     /** @var string */
     private $uri;
 
-    /** @var bool **/
-    private $is_friendly = false;
-
-    /** @var bool **/
-    private $is_standard = false;
-
     /** @var ProjectManager **/
     private $project_manager;
 
@@ -90,11 +84,12 @@ class Git_URL implements \Tuleap\Git\HTTP\GitHTTPOperation
         $this->repository_factory = $repository_factory;
         $this->uri                = $uri;
 
-        $this->setIsFriendly();
-        if (! $this->is_friendly) {
-            $this->setIsStandard();
+        $is_friendly = $this->isFriendly();
+        $is_standard = false;
+        if (! $is_friendly) {
+            $is_standard = $this->isStandard();
         }
-        if (! $this->is_friendly && ! $this->is_standard) {
+        if (! $is_friendly && ! $is_standard) {
             $this->setIsSmartHTTP();
         }
     }
@@ -115,10 +110,10 @@ class Git_URL implements \Tuleap\Git\HTTP\GitHTTPOperation
         return isset($this->matches['parameters']) ? $this->matches['parameters'] : '';
     }
 
-    private function setIsFriendly()
+    private function isFriendly(): bool
     {
         if (! preg_match($this->friendly_url_pattern, $this->uri, $this->matches)) {
-            return;
+            return false;
         }
 
         $this->repository = $this->repository_factory->getByProjectNameAndPath(
@@ -126,24 +121,24 @@ class Git_URL implements \Tuleap\Git\HTTP\GitHTTPOperation
             $this->matches['path'] . '.git'
         );
         if (! $this->repository) {
-            return;
+            return false;
         }
 
-        $this->is_friendly = true;
+        return true;
     }
 
-    private function setIsStandard()
+    private function isStandard(): bool
     {
         if (! preg_match($this->standard_url_pattern, $this->uri, $this->matches)) {
-            return;
+            return false;
         }
 
         $this->repository = $this->getRepositoryFromStandardURL();
         if (! $this->repository) {
-            return;
+            return false;
         }
 
-        $this->is_standard = true;
+        return true;
     }
 
     private function setIsSmartHTTP()

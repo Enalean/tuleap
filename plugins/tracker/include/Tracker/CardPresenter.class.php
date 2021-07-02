@@ -32,37 +32,37 @@ interface Tracker_CardPresenter
     public function getId();
 
     /**
-     * @var string
+     * @return string|null
      */
     public function getTitle();
 
     /**
-     * @var array
+     * @return array
      */
     public function getFields();
 
     /**
-     * @var string
+     * @return string
      */
     public function getUrl();
 
     /**
-     * @var string
+     * @return string
      */
     public function getXRef();
 
     /**
-     * @var string
+     * @return string
      */
     public function getEditUrl();
 
     /**
-     * @var string
+     * @return int
      */
     public function getArtifactId();
 
     /**
-     * @var int
+     * @return int
      */
     public function getAncestorId();
 
@@ -72,17 +72,17 @@ interface Tracker_CardPresenter
     public function getArtifact();
 
     /**
-     * @var string
+     * @return string
      */
     public function getEditLabel();
 
     /**
-     * @var string
+     * @return string
      */
     public function getCssClasses();
 
     /**
-     * @var array of Tracker
+     * @return Tracker[]
      */
     public function allowedChildrenTypes();
 

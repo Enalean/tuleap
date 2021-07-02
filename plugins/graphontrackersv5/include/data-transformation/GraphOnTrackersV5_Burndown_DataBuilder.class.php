@@ -71,7 +71,7 @@ class GraphOnTrackersV5_Burndown_DataBuilder extends ChartDataBuilderV5
     /**
      * Autorized types for effort field type
      *
-     * @var array
+     * @param array $type
      */
     protected function isValidType($type)
     {

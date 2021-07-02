@@ -115,6 +115,7 @@ class Docman_PermissionsExport
         foreach ($this->getUgroups() as $id => $name) {
             /**
              * @psalm-taint-escape html
+             * @psalm-taint-escape has_quotes
              */
             $csv_line = $name . $sep;
             echo $csv_line;

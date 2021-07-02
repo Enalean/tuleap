@@ -73,13 +73,13 @@ class WebDAVFRSPackage extends \Sabre\DAV\FS\Directory
     /**
      * Returns the given release
      *
-     * @param String $releaseName
+     * @param String $name
      *
      * @return WebDAVFRSRelease
      */
-    public function getChild($releaseName)
+    public function getChild($name)
     {
-        $releaseName = $this->getUtils()->retrieveName($releaseName);
+        $releaseName = $this->getUtils()->retrieveName($name);
         $frs_release = $this->getFRSReleaseFromName($releaseName);
         if ($frs_release === null) {
             throw new \Sabre\DAV\Exception\NotFound($GLOBALS['Language']->getText('plugin_webdav_common', 'release_not_available'));

@@ -203,18 +203,18 @@ class DataBuilderV5
             }
         }
 
-        for ($i = 0; $i < count($result['field1']); $i++) {
-            $x = array_search($result['field1'][$i], $this->x_values);
+        foreach ($result['field1'] as $value) {
+            $x = array_search($value, $this->x_values);
             if ($x === false) {
-                $this->x_values[count($this->x_values)] = $result['field1'][$i];
+                $this->x_values[count($this->x_values)] = $value;
             }
         }
 
         if (! is_null($this->field_Y)) {
-            for ($i = 0; $i < count($result['field2']); $i++) {
-                $y = array_search($result['field2'][$i], $this->y_values);
+            foreach ($result['field2'] as $value) {
+                $y = array_search($value, $this->y_values);
                 if ($y === false) {
-                    $this->y_values[count($this->y_values)] = $result['field2'][$i];
+                    $this->y_values[count($this->y_values)] = $value;
                 }
             }
         }
@@ -231,8 +231,14 @@ class DataBuilderV5
         }
 
         for ($i = 0; $i < count($result['c']); $i++) {
+            if (! isset($result['field1'][$i])) {
+                continue;
+            }
             $x = array_search($result['field1'][$i], $this->x_values);
             if (! is_null($this->field_Y)) {
+                if (! isset($result['field2'][$i])) {
+                    continue;
+                }
                 $y = array_search($result['field2'][$i], $this->y_values);
                 if ($x !== false && $y !== false) {
                     $this->data[$x][$y] = $result['c'][$i];

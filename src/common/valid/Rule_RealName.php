@@ -23,9 +23,9 @@
 
 class Rule_RealName extends \Rule // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
-    public function isValid($string)
+    public function isValid($val)
     {
-        if ($this->containsBackslashCharacter($string) || $this->containsNonPrintingCharacter($string)) {
+        if ($this->containsBackslashCharacter($val) || $this->containsNonPrintingCharacter($val)) {
             return \false;
         }
         return \true;

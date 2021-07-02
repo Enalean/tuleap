@@ -98,9 +98,9 @@ class ProjectCrossTrackerSearch extends Widget
         return $content_id;
     }
 
-    public function destroy($content_id)
+    public function destroy($id)
     {
-        $this->getDao()->delete($content_id);
+        $this->getDao()->delete($id);
     }
 
     public function cloneContent(

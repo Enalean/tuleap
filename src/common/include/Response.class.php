@@ -140,6 +140,7 @@ class Response
         $this->setContentType('application/json');
         /**
          * @psalm-taint-escape html
+         * @psalm-taint-escape has_quotes
          */
         $json_content = json_encode($content, JSON_THROW_ON_ERROR);
         echo $json_content;

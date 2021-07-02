@@ -38,6 +38,8 @@
  */
 class Codendi_HtmlUnifiedDiffFormatter extends \Codendi_UnifiedDiffFormatter // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
+    private string $_html;
+
     public function __construct($context_lines = 4)
     {
         parent::__construct($context_lines);

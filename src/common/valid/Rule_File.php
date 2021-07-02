@@ -32,38 +32,38 @@ class Rule_File extends \Rule // phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
     /**
      * Check file upload validity
      *
-     * @param  string|array $file  One entry in $_FILES superarray (e.g. $_FILES['test'])
+     * @param  string|array $val  One entry in $_FILES superarray (e.g. $_FILES['test'])
      * @return bool Is file upload valid or not.
      */
-    public function isValid($file)
+    public function isValid($val)
     {
         $ok = \false;
-        if (\is_array($file)) {
-            switch ($file['error']) {
+        if (\is_array($val)) {
+            switch ($val['error']) {
                 case \UPLOAD_ERR_OK:
                     // all is OK
                     $ok = \true;
                     break;
                 case \UPLOAD_ERR_INI_SIZE:
                 case \UPLOAD_ERR_FORM_SIZE:
-                    $this->error = $GLOBALS['Language']->getText('rule_file', 'error_upload_size', $file['error']);
+                    $this->error = $GLOBALS['Language']->getText('rule_file', 'error_upload_size', $val['error']);
                     break;
                 case \UPLOAD_ERR_PARTIAL:
-                    $this->error = $GLOBALS['Language']->getText('rule_file', 'error_upload_partial', $file['error']);
+                    $this->error = $GLOBALS['Language']->getText('rule_file', 'error_upload_partial', $val['error']);
                     break;
                 case \UPLOAD_ERR_NO_FILE:
-                    $this->error = $GLOBALS['Language']->getText('rule_file', 'error_upload_nofile', $file['error']);
+                    $this->error = $GLOBALS['Language']->getText('rule_file', 'error_upload_nofile', $val['error']);
                     break;
                 default:
-                    $this->error = $GLOBALS['Language']->getText('rule_file', 'error_upload_unknown', $file['error']);
+                    $this->error = $GLOBALS['Language']->getText('rule_file', 'error_upload_unknown', $val['error']);
             }
-            if ($ok && $file['name'] == '') {
+            if ($ok && $val['name'] == '') {
                 $ok          = \false;
                 $this->error = $GLOBALS['Language']->getText('rule_file', 'error_upload');
             }
             if ($ok) {
                 // Re-check filesize (do not trust uploaded MAX_FILE_SIZE)
-                if (\filesize($file['tmp_name']) > $this->maxSize) {
+                if (\filesize($val['tmp_name']) > $this->maxSize) {
                     $ok          = \false;
                     $this->error = $GLOBALS['Language']->getText('rule_file', 'error_upload_size', 1);
                 }

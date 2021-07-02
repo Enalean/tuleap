@@ -272,6 +272,7 @@ class Codendi_HTMLPurifier
      *
      * @psalm-taint-specialize
      * @psalm-taint-escape html
+     * @psalm-taint-escape has_quotes
      */
     public function purify($html, $level = 0, $groupId = 0)
     {

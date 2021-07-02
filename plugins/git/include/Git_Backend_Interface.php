@@ -27,19 +27,17 @@ interface Git_Backend_Interface
      * Verify if the repository as already some content within
      *
      * @see    plugins/git/include/Git_Backend_Interface::isInitialized()
-     * @param  GitRepository $repository
      * @return bool
      */
-    public function isInitialized(GitRepository $respository);
+    public function isInitialized(GitRepository $repository);
 
     /**
      * Verify if the repository has been created
      *
      * @see    plugins/git/include/Git_Backend_Interface::isCreated()
-     * @param  GitRepository $repository
      * @return bool
      */
-    public function isCreated(GitRepository $respository);
+    public function isCreated(GitRepository $repository);
 
     /**
      * Return URL to access the respository for remote git commands

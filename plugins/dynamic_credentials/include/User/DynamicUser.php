@@ -60,7 +60,10 @@ class DynamicUser extends \PFUser
     {
     }
 
-    public function setUserName($username)
+    /**
+     * @param string $name
+     */
+    public function setUserName($name)
     {
     }
 

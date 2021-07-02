@@ -36,7 +36,7 @@
     * @return bool true if the password is valid
     *
     */
-    /* abstract */ public function validate($pwd)
+    /* abstract */ public function validate($password)
     {
         return false;
     }

@@ -70,7 +70,7 @@ class SetFieldValueRepresentation extends PostActionRepresentation
     }
 
     /**
-     * @var string $id Action identifier (unique among actions with same type and same field type)
+     * @param string $id Action identifier (unique among actions with same type and same field type)
      * @param int $field_id
      * @param int $value
      * @return SetFieldValueRepresentation
@@ -90,7 +90,7 @@ class SetFieldValueRepresentation extends PostActionRepresentation
     }
 
     /**
-     * @var string $id Action identifier (unique among actions with same type and same field type)
+     * @param string $id Action identifier (unique among actions with same type and same field type)
      * @param int $field_id
      * @param int $value
      * @return SetFieldValueRepresentation
@@ -106,7 +106,7 @@ class SetFieldValueRepresentation extends PostActionRepresentation
     }
 
     /**
-     * @var string $id Action identifier (unique among actions with same type and same field type)
+     * @param string $id Action identifier (unique among actions with same type and same field type)
      * @param int $field_id
      * @param float $value
      * @return SetFieldValueRepresentation

@@ -433,11 +433,11 @@ class Codendi_Mail implements Codendi_Mail_Interface
     }
 
     /**
-     * @param String $message
+     * @param String $body
      */
-    public function setBody($message)
+    public function setBody($body)
     {
-        $this->setBodyHtml($message);
+        $this->setBodyHtml($body);
     }
 
     /**

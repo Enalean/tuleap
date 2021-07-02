@@ -32,9 +32,6 @@ class ServiceAccessEvent implements Dispatchable
      */
     private $service_name;
 
-    /**
-     * @var string
-     */
     public function __construct($service_name)
     {
         $this->service_name = $service_name;

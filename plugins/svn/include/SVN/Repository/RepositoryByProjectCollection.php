@@ -43,7 +43,7 @@ class RepositoryByProjectCollection
     }
 
     /**
-     * @var Repository[] $repository_list
+     * @param Repository[] $repository_list
      */
     public static function build(Project $project, array $repository_list): self
     {
