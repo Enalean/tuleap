@@ -41,6 +41,7 @@ class RoadmapWidgetPresenterBuilder
         int $roadmap_id,
         ?int $lvl1_iteration_tracker_id,
         ?int $lvl2_iteration_tracker_id,
+        string $default_timescale,
         \PFUser $user
     ): RoadmapWidgetPresenter {
         $visible_natures = array_filter(
@@ -54,7 +55,8 @@ class RoadmapWidgetPresenterBuilder
             $roadmap_id,
             $visible_natures,
             $this->shouldLoadIterations($lvl1_iteration_tracker_id, $user),
-            $this->shouldLoadIterations($lvl2_iteration_tracker_id, $user)
+            $this->shouldLoadIterations($lvl2_iteration_tracker_id, $user),
+            $default_timescale
         );
     }
 

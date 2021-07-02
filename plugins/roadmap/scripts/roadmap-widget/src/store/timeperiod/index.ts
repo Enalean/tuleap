@@ -22,10 +22,11 @@ import type { TimeperiodState } from "./type";
 import type { Module } from "vuex";
 import * as mutations from "./timeperiod-mutations";
 import * as getters from "./timeperiod-getters";
+import type { TimeScale } from "../../type";
 
-export function createTimeperiodModule(): Module<TimeperiodState, RootState> {
+export function createTimeperiodModule(timescale: TimeScale): Module<TimeperiodState, RootState> {
     const state: TimeperiodState = {
-        timescale: "month",
+        timescale,
     };
 
     return {

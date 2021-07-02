@@ -88,7 +88,7 @@ final class RoadmapProjectWidgetTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->presenter_builder
             ->expects(self::once())
             ->method('getPresenter')
-            ->willReturn(new RoadmapWidgetPresenter(123, [], false, false));
+            ->willReturn(new RoadmapWidgetPresenter(123, [], false, false, "month"));
 
         $this->widget->getContent();
     }
@@ -145,6 +145,7 @@ final class RoadmapProjectWidgetTest extends \Tuleap\Test\PHPUnit\TestCase
                 'title'                     => 'Roadmap',
                 'lvl1_iteration_tracker_id' => 120,
                 'lvl2_iteration_tracker_id' => 130,
+                'default_timescale'         => 'week'
             ]);
         $this->dao
             ->shouldReceive('searchSelectedTrackers')
@@ -154,7 +155,7 @@ final class RoadmapProjectWidgetTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->dao
             ->shouldReceive('insertContent')
-            ->with(102, "g", 'Roadmap', [110], 120, 130)
+            ->with(102, "g", 'Roadmap', [110], 'week', 120, 130)
             ->once();
 
         $mapping_registry = new MappingRegistry([]);
@@ -179,6 +180,7 @@ final class RoadmapProjectWidgetTest extends \Tuleap\Test\PHPUnit\TestCase
                 'title'                     => 'Roadmap',
                 'lvl1_iteration_tracker_id' => 121,
                 'lvl2_iteration_tracker_id' => 131,
+                'default_timescale'         => 'week'
             ]);
         $this->dao
             ->shouldReceive('searchSelectedTrackers')
@@ -188,7 +190,7 @@ final class RoadmapProjectWidgetTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->dao
             ->shouldReceive('insertContent')
-            ->with(102, "g", 'Roadmap', [1110], 1210, 1310)
+            ->with(102, "g", 'Roadmap', [1110], 'week', 1210, 1310)
             ->once();
 
         $mapping_registry = new MappingRegistry([]);

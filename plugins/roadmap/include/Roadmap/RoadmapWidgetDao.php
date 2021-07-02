@@ -35,17 +35,19 @@ class RoadmapWidgetDao extends DataAccessObject
         string $owner_type,
         string $title,
         array $tracker_ids,
+        string $default_timescale,
         ?int $lvl1_iteration_tracker_id,
         ?int $lvl2_iteration_tracker_id
     ): int {
         return $this->getDB()->tryFlatTransaction(
-            function (EasyDB $db) use ($owner_id, $owner_type, $title, $tracker_ids, $lvl1_iteration_tracker_id, $lvl2_iteration_tracker_id): int {
+            function (EasyDB $db) use ($owner_id, $owner_type, $title, $tracker_ids, $default_timescale, $lvl1_iteration_tracker_id, $lvl2_iteration_tracker_id): int {
                 $new_id = (int) $db->insertReturnId(
                     'plugin_roadmap_widget',
                     [
                         'owner_id'                  => $owner_id,
                         'owner_type'                => $owner_type,
                         'title'                     => $title,
+                        'default_timescale'         => $default_timescale,
                         'lvl1_iteration_tracker_id' => $lvl1_iteration_tracker_id,
                         'lvl2_iteration_tracker_id' => $lvl2_iteration_tracker_id,
                     ]
@@ -71,8 +73,8 @@ class RoadmapWidgetDao extends DataAccessObject
     ): int {
         return $this->getDB()->tryFlatTransaction(
             function (EasyDB $db) use ($id, $destination_owner_id, $destination_owner_type): int {
-                $sql = 'INSERT INTO plugin_roadmap_widget (owner_id, owner_type, title, lvl1_iteration_tracker_id, lvl2_iteration_tracker_id)
-                        SELECT  ?, ?, title, lvl1_iteration_tracker_id, lvl2_iteration_tracker_id
+                $sql = 'INSERT INTO plugin_roadmap_widget (owner_id, owner_type, title, default_timescale, lvl1_iteration_tracker_id, lvl2_iteration_tracker_id)
+                        SELECT  ?, ?, title, default_timescale, lvl1_iteration_tracker_id, lvl2_iteration_tracker_id
                         FROM plugin_roadmap_widget
                         WHERE id = ?';
 
@@ -141,15 +143,17 @@ class RoadmapWidgetDao extends DataAccessObject
         string $owner_type,
         string $title,
         array $tracker_ids,
+        string $default_timescale,
         ?int $lvl1_iteration_tracker_id,
         ?int $lvl2_iteration_tracker_id
     ): void {
         $this->getDB()->tryFlatTransaction(
-            function (EasyDB $db) use ($id, $owner_id, $owner_type, $title, $tracker_ids, $lvl1_iteration_tracker_id, $lvl2_iteration_tracker_id) {
+            function (EasyDB $db) use ($id, $owner_id, $owner_type, $title, $tracker_ids, $default_timescale, $lvl1_iteration_tracker_id, $lvl2_iteration_tracker_id) {
                 $db->update(
                     'plugin_roadmap_widget',
                     [
                         'title'                     => $title,
+                        'default_timescale'         => $default_timescale,
                         'lvl1_iteration_tracker_id' => $lvl1_iteration_tracker_id,
                         'lvl2_iteration_tracker_id' => $lvl2_iteration_tracker_id,
                     ],

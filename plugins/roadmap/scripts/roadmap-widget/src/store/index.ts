@@ -25,8 +25,12 @@ import { createIterationsModule } from "./iterations";
 import { createTimeperiodModule } from "./timeperiod";
 import * as actions from "./root-actions";
 import * as mutations from "./root-mutations";
+import type { TimeScale } from "../type";
 
-export function createStore(initial_root_state: RootState): Store<RootState> {
+export function createStore(
+    initial_root_state: RootState,
+    default_timescale: TimeScale
+): Store<RootState> {
     const state: RootState = {
         ...initial_root_state,
         is_loading: true,
@@ -44,7 +48,7 @@ export function createStore(initial_root_state: RootState): Store<RootState> {
         modules: {
             tasks: createTaskModule(),
             iterations: createIterationsModule(),
-            timeperiod: createTimeperiodModule(),
+            timeperiod: createTimeperiodModule(default_timescale),
         },
     };
 
