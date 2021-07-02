@@ -28,6 +28,7 @@ use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Layout\ServiceUrlCollector;
+use Tuleap\ProgramManagement\Adapter\Program\Admin\PotentialTeam\PotentialTeamsBuilder;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation\CreateProgramIncrementsRunner;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation\PendingArtifactCreationDao;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation\TaskBuilder;
@@ -268,11 +269,13 @@ final class program_managementPlugin extends Plugin
 
     public function routeGetAdminProgramManagement(): DisplayAdminProgramManagementController
     {
+        $project_manager = ProjectManager::instance();
         return new DisplayAdminProgramManagementController(
-            ProjectManager::instance(),
+            $project_manager,
             TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../templates/admin'),
             $this->getProgramAdapter(),
-            new ProgramManagementBreadCrumbsBuilder()
+            new ProgramManagementBreadCrumbsBuilder(),
+            new PotentialTeamsBuilder($project_manager, new ProgramDao())
         );
     }
 

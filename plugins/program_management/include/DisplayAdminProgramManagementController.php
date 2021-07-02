@@ -28,6 +28,8 @@ use Project;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
 use Tuleap\Layout\IncludeAssets;
+use Tuleap\ProgramManagement\Domain\Program\Admin\PotentialTeam\BuildPotentialTeams;
+use Tuleap\ProgramManagement\Domain\Program\Admin\PotentialTeam\PotentialTeamsPresenterBuilder;
 use Tuleap\ProgramManagement\Domain\Program\Plan\BuildProgram;
 use Tuleap\ProgramManagement\Domain\Program\Plan\ProjectIsNotAProgramException;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
@@ -39,22 +41,24 @@ use Tuleap\Request\NotFoundException;
 
 final class DisplayAdminProgramManagementController implements DispatchableWithRequest, DispatchableWithProject, DispatchableWithBurningParrot
 {
-
     private \ProjectManager $project_manager;
     private \TemplateRenderer $template_renderer;
     private BuildProgram $build_program;
     private ProgramManagementBreadCrumbsBuilder $breadcrumbs_builder;
+    private BuildPotentialTeams $potential_teams_builder;
 
     public function __construct(
         \ProjectManager $project_manager,
         \TemplateRenderer $template_renderer,
         BuildProgram $build_program,
-        ProgramManagementBreadCrumbsBuilder $breadcrumbs_builder
+        ProgramManagementBreadCrumbsBuilder $breadcrumbs_builder,
+        BuildPotentialTeams $potential_teams_builder
     ) {
-        $this->project_manager     = $project_manager;
-        $this->template_renderer   = $template_renderer;
-        $this->build_program       = $build_program;
-        $this->breadcrumbs_builder = $breadcrumbs_builder;
+        $this->project_manager         = $project_manager;
+        $this->template_renderer       = $template_renderer;
+        $this->build_program           = $build_program;
+        $this->breadcrumbs_builder     = $breadcrumbs_builder;
+        $this->potential_teams_builder = $potential_teams_builder;
     }
 
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
@@ -66,7 +70,7 @@ final class DisplayAdminProgramManagementController implements DispatchableWithR
         }
 
         try {
-            ProgramIdentifier::fromId($this->build_program, (int) $project->getID(), $request->getCurrentUser());
+            $program = ProgramIdentifier::fromId($this->build_program, (int) $project->getID(), $request->getCurrentUser());
         } catch (ProjectIsNotAProgramException $exception) {
             throw new ForbiddenException(
                 dgettext(
@@ -99,7 +103,10 @@ final class DisplayAdminProgramManagementController implements DispatchableWithR
         $this->includeHeaderAndNavigationBar($layout, $project);
         $layout->includeFooterJavascriptFile($assets->getFileURL('program_management_admin.js'));
 
-        $this->template_renderer->renderToPage('admin', []);
+        $this->template_renderer->renderToPage(
+            'admin',
+            new ProgramAdminPresenter(PotentialTeamsPresenterBuilder::buildPotentialTeamsPresenter($this->potential_teams_builder->buildPotentialTeams($program, $user)))
+        );
 
         $layout->footer([]);
     }
