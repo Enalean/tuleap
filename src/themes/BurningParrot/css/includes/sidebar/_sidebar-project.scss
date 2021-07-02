@@ -35,13 +35,26 @@
 
 %uppercase-title {
     overflow: hidden;
-    font-size: 0.6rem;
+    font-family: var(--tlp-font-family);
+    font-size: 0.625rem;
     font-weight: 600;
     letter-spacing: 0.25px;
-    line-height: 12px;
+    line-height: normal;
     text-overflow: ellipsis;
     text-transform: uppercase;
     white-space: nowrap;
+}
+
+%background-action {
+    background-color: var(--tlp-dark-color);
+    background-image: linear-gradient(0, var(--tlp-sidebar-action-background), var(--tlp-sidebar-action-background));
+    background-blend-mode: overlay;
+}
+
+%background-action-hover {
+    background-color: var(--tlp-dark-color);
+    background-image: linear-gradient(0, var(--tlp-sidebar-action-background-hover), var(--tlp-sidebar-action-background-hover));
+    background-blend-mode: overlay;
 }
 
 .project-sidebar-header {
@@ -52,16 +65,18 @@
 .project-sidebar-header-name {
     display: flex;
     flex-direction: column;
-    padding: var(--tlp-medium-spacing) var(--tlp-medium-spacing) 0;
+    padding: 0 var(--tlp-medium-spacing);
 }
 
 .project-title-container {
     display: flex;
     align-items: center;
+    margin: 0 0 var(--tlp-small-spacing);
 }
 
 .project-title-spacer {
     flex: 1 1 auto;
+    min-width: var(--tlp-small-spacing);
 }
 
 .sidebar-dashboard-privacy-icon {
@@ -79,30 +94,35 @@
 .project-sidebar-title {
     margin: 0 0 0 calc(-1 * var(--tlp-small-spacing));
     padding: var(--tlp-small-spacing);
-    transition: background 100ms;
     border-radius: 4px;
-    color: var(--tlp-neutral-normal-color);
+    color: var(--tlp-ui-white);
     font-size: 1.125rem;
     font-weight: 600;
     line-height: 1.3125rem;
     text-decoration: none;
 
     &:hover {
-        background: var(--tlp-dark-color-darker-20);
+        @extend %background-action-hover;
         text-decoration: none;
     }
 }
 
 .project-administration-link {
     @extend %round-icon;
+    @extend %background-action;
     flex: 0 0 auto;
-    transition: color ease-in-out 150ms;
-    background: var(--tlp-sidebar-action-color);
-    background-blend-mode: overlay;
+    transition: color ease-in-out 100ms;
     color: var(--tlp-typo-default-text-color-on-dark-background);
+    font-size: 0.6875rem;
 
-    &:hover,
-    &:focus {
+    &:visited {
+        color: var(--tlp-neutral-normal-color);
+        text-decoration: none;
+    }
+
+    &:focus,
+    &:hover {
+        @extend %background-action-hover;
         color: var(--tlp-ui-white);
         text-decoration: none;
     }
@@ -112,23 +132,26 @@
     @extend %override-button-default;
     display: flex;
     align-items: center;
-    padding: var(--tlp-small-spacing) var(--tlp-medium-spacing);
+    margin: 0 var(--tlp-small-spacing);
+    padding: var(--tlp-small-spacing);
+    border-radius: 6px;
     background: var(--tlp-dark-color);
 
     &:hover,
     &:focus {
-        background: var(--tlp-sidebar-action-color-hover);
-        background-blend-mode: overlay;
+        @extend %background-action-hover;
     }
 }
 
 .project-sidebar-banner-button-icon {
     @extend %round-icon;
+    flex: 0 0 auto;
     transition: opacity ease-in-out 100ms;
     background-color: var(--tlp-warning-color);
 
     .fa-bullhorn {
-        padding: 6.5px;
+        position: relative;
+        top: -1px;
         color: var(--tlp-ui-white);
         font-size: 0.6rem;
         text-shadow: 0 0 1px rgba(0, 0, 0, 0.5);
@@ -145,24 +168,19 @@
     display: flex;
     align-items: center;
     margin: var(--tlp-small-spacing) var(--tlp-medium-spacing);
-    color: var(--tlp-neutral-dark-color);
+    color: var(--tlp-neutral-normal-color);
     cursor: help;
 
     > .project-sidebar-project-flags-icon {
-        display: inline-flex;
+        @extend %round-icon;
         flex: 0 0 auto;
-        align-items: center;
-        justify-content: center;
-        width: 24px;
-        height: 24px;
-        border-radius: 50%;
-        background: var(--tlp-dimmed-color);
+        background: var(--tlp-main-color-transparent-85);
 
         > .tuleap-svg {
             height: 12px;
 
             > path {
-                fill: var(--tlp-neutral-normal-color);
+                fill: var(--tlp-main-color-lighter-40);
             }
         }
     }
@@ -179,14 +197,6 @@
 .project-sidebar-project-flags-label {
     @extend %uppercase-title;
     max-width: 185px;
-    overflow: hidden;
-    font-size: 0.6rem;
-    font-weight: 600;
-    letter-spacing: 0.2px;
-    line-height: 0.7rem;
-    text-overflow: ellipsis;
-    text-transform: uppercase;
-    white-space: nowrap;
 }
 
 .project-sidebar-nav {
@@ -198,19 +208,23 @@
 .project-sidebar-nav-item {
     display: flex;
     align-items: center;
-    height: global-variables.$navbar-height;
-    margin: 0 var(--tlp-small-spacing);
+    height: global-variables.$sidebar-item-height;
+    margin: 0 var(--tlp-small-spacing) 5px;
     padding: 0 var(--tlp-small-spacing);
     border-radius: 6px;
-    color: var(--tlp-neutral-dark-color);
-    font-size: 0.8125rem;
+    color: var(--tlp-neutral-normal-color);
     text-decoration: none;
 
     &.active,
-    &:hover,
     &:focus {
-        background: var(--tlp-sidebar-action-color-hover);
-        background-blend-mode: overlay;
+        @extend %background-action;
+        color: var(--tlp-ui-white);
+        text-decoration: none;
+    }
+
+    &:hover {
+        @extend %background-action-hover;
+        color: var(--tlp-ui-white);
         text-decoration: none;
     }
 
@@ -231,14 +245,18 @@
 }
 
 .project-sidebar-nav-item-icon {
+    flex: 0 0 auto;
     margin: 0 var(--tlp-small-spacing) 0 0;
-    font-size: 0.875rem;
+    font-size: 0.9375rem;
 }
 
 .project-sidebar-nav-item-label {
     max-width: global-variables.$sidebar-expanded-width - 60px;
     overflow: hidden;
-    line-height: 20px;
+    font-size: 0.875rem;
+    font-weight: 400;
+    letter-spacing: 0.2px;
+    line-height: 1rem;
     text-overflow: ellipsis;
     white-space: nowrap;
 }
@@ -246,17 +264,31 @@
 .sidebar-collapse-button {
     @extend %override-button-default;
     @extend %round-icon;
+    @extend %background-action;
     display: flex;
     margin: 0 auto var(--tlp-medium-spacing);
-    transition: background 100ms;
-    background: var(--tlp-sidebar-action-color);
-    background-blend-mode: overlay;
-    color: var(--tlp-typo-default-text-color-on-dark-background);
+    color: var(--tlp-neutral-normal-color);
 
     &:hover,
     &:focus {
-        background: var(--tlp-sidebar-action-color-hover);
+        @extend %background-action-hover;
     }
+}
+
+.sidebar-collapser-icon {
+    position: relative;
+    top: -1px;
+    left: -1px;
+    font-size: 0.7rem;
+    pointer-events: none;
+
+    &::before {
+        content: "\f053"; // fa-chevron-left
+    }
+}
+
+.sidebar-spacer {
+    flex: 1 1 auto;
 }
 
 .project-sidebar-linked-projects {
@@ -268,54 +300,78 @@
     > .project-sidebar-linked-projects-list {
         margin: 0 0 0 var(--tlp-x-large-spacing);
         padding: 0 0 0 var(--tlp-small-spacing);
-        border-left: 1px solid var(--tlp-neutral-normal-color);
+        border-left: 1px solid var(--tlp-neutral-normal-color-transparent-80);
         list-style: none;
     }
 }
 
+.project-sidebar-linked-projects-title {
+    display: flex;
+    align-items: center;
+}
+
 .project-sidebar-linked-projects-icon {
     @extend %round-icon;
-    background: var(--tlp-sidebar-action-color);
-    background-blend-mode: overlay;
+    flex: 0 0 auto;
+    background: var(--tlp-main-color-transparent-85);
     color: var(--tlp-main-color-lighter-40);
-    font-size: 0.6rem;
+
+    > .fa-tlp-project-boxes {
+        position: relative;
+        left: -1px;
+        font-size: 0.6rem;
+    }
+
+    > .fa-level-up-alt {
+        position: relative;
+        top: -1px;
+        font-size: 0.6rem;
+    }
 }
 
 .project-sidebar-linked-projects-label-popover,
 .project-sidebar-linked-projects-label {
     @extend %uppercase-title;
     margin: 0 0 0 var(--tlp-small-spacing);
-    color: var(--tlp-ui-white-transparent-10);
+    color: var(--tlp-neutral-normal-color);
 }
 
 .project-sidebar-linked-projects-item {
     padding: 2px 0;
-    font-size: 14px;
-    line-height: 20px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    line-height: 1rem;
 }
 
 .project-sidebar-linked-projects-item-link {
-    color: var(--tlp-ui-white-transparent-40);
-    text-decoration: none;
+    display: flex;
+    align-items: baseline;
+    color: var(--tlp-neutral-dark-color);
 
     &:hover,
     &:focus {
-        color: var(--tlp-ui-white-transparent-30);
-        text-decoration: underline;
+        color: var(--tlp-ui-white);
+        text-decoration: none;
+
+        > .project-sidebar-linked-projects-item-name {
+            text-decoration: underline;
+        }
     }
 }
 
 .project-sidebar-linked-projects-item-icon {
+    position: relative;
+    top: -1px;
+    flex: 0 0 auto;
     margin: 0 4px 0 0;
-    font-size: 11px;
+    font-size: 0.5rem;
 }
 
 .project-sidebar-tools-section-label {
     @extend %uppercase-title;
     margin: 0 0 var(--tlp-small-spacing) 0;
     padding: var(--tlp-medium-spacing) var(--tlp-medium-spacing) 0;
-    opacity: 0.6;
-    color: var(--tlp-dimmed-color-lighter-95);
+    color: var(--tlp-neutral-dark-color-transparent-40);
 }
 
 .project-sidebar-privacy-badge {
@@ -324,13 +380,13 @@
     width: max-content;
     max-width: 100%;
     margin: 0 0 var(--tlp-small-spacing) 0;
-    padding: var(--tlp-small-spacing);
+    padding: 5px var(--tlp-small-spacing);
     border-radius: 4px;
     background: var(--tlp-main-color-transparent-85);
     color: var(--tlp-main-color-lighter-40);
     font-size: 0.75rem;
     font-weight: 600;
-    line-height: 14px;
+    line-height: 0.875rem;
     cursor: help;
 }
 

@@ -34,26 +34,13 @@
     background: var(--tlp-dark-color);
 }
 
-.sidebar-collapser-icon {
-    font-size: 12px;
-    // Do not catch click on parent button
-    pointer-events: none;
-
-    &::before {
-        content: "\f053"; // fa-chevron-left
-    }
-}
-
-.sidebar-spacer {
-    flex: 1 1 auto;
-}
-
 .sidebar-about {
     display: flex;
     flex: 0 0 auto;
-    flex-direction: column;
     align-items: center;
+    justify-content: space-around;
     margin: var(--tlp-medium-spacing) 0 var(--tlp-small-spacing);
+    padding: 0 var(--tlp-medium-spacing);
     cursor: pointer;
 
     &:hover {
@@ -70,23 +57,14 @@
         }
     }
 
-    &:last-child {
-        margin: var(--tlp-medium-spacing) 0;
-    }
-
     > .sidebar-about-logo,
     .sidebar-about-logo-without-product-name {
-        height: 25px;
+        height: 20px;
 
         > .tuleap-logo {
-            transition: fill 100ms;
+            transition: fill ease-in-out 100ms;
             fill: var(--tlp-theme-orange);
         }
-    }
-
-    > .sidebar-about-version {
-        margin: 7px 0 0;
-        text-align: center;
     }
 }
 
@@ -95,22 +73,22 @@
 }
 
 .sidebar-copyright {
-    align-self: center;
-    margin: 0 0 10px;
+    margin: 0 var(--tlp-medium-spacing) var(--tlp-small-spacing);
+    text-align: center;
 }
 
 .sidebar-about > .sidebar-about-version,
 .sidebar-copyright,
 .sidebar-copyright a {
-    transition: color 100ms;
-    color: var(--tlp-dimmed-color);
-    font-size: 13px;
-    line-height: 20px;
+    transition: color ease-in-out 100ms;
+    color: var(--tlp-neutral-dark-color-transparent-40);
+    font-size: 0.625rem;
+    line-height: 0.875rem;
 }
 
 .sidebar-about:hover > .sidebar-about-version,
 .sidebar-copyright a:hover {
-    color: var(--tlp-typo-default-text-color-on-dark-background);
+    color: var(--tlp-ui-white);
     text-decoration: none;
 }
 

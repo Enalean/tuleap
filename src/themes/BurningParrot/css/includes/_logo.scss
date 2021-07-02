@@ -28,7 +28,9 @@
 }
 
 .sidebar > #logo {
-    background-color: var(--tlp-dark-color-darker-20);
+    height: 80px;
+    background-color: var(--tlp-dark-color);
+    background-position: var(--tlp-medium-spacing) center;
 }
 
 .logo-svg-link {
@@ -36,6 +38,11 @@
     align-items: center;
     height: global-variables.$navbar-height;
     min-height: global-variables.$navbar-height;
+
+    > .logo-svg-normal > svg {
+        width: auto;
+        max-height: 34px;
+    }
 }
 
 /* stylelint-disable selector-no-qualifying-type */
@@ -53,9 +60,16 @@ header.pinned .logo-svg-link {
 }
 
 .sidebar > .logo-svg-link {
-    justify-content: center;
     width: global-variables.$sidebar-expanded-width;
+    height: 80px;
+    min-height: 80px;
     margin: 0;
+    padding: 0 0 0 var(--tlp-medium-spacing);
+
+    > .logo-svg-normal > svg,
+    > .logo-svg-small > svg {
+        max-height: none;
+    }
 
     .logo-svg-fill-default-text-color {
         fill: var(--tlp-ui-white);
@@ -72,7 +86,9 @@ header.pinned .logo-svg-link {
 
 .sidebar-collapsed {
     .logo-svg-link {
+        justify-content: center;
         width: global-variables.$sidebar-collapsed-width;
+        padding: 0;
     }
 
     .logo-svg-normal {
