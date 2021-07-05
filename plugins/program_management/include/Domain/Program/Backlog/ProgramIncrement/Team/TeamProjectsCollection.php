@@ -25,7 +25,7 @@ namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Team;
 use Tuleap\ProgramManagement\Domain\BuildProject;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\SearchTeamsOfProgram;
-use Tuleap\ProgramManagement\Domain\Project;
+use Tuleap\ProgramManagement\Domain\ProgramManagementProject;
 
 /**
  * @psalm-immutable
@@ -33,12 +33,12 @@ use Tuleap\ProgramManagement\Domain\Project;
 final class TeamProjectsCollection
 {
     /**
-     * @var Project[]
+     * @var ProgramManagementProject[]
      */
     private array $team_projects;
 
     /**
-     * @param Project[] $team_projects
+     * @param ProgramManagementProject[] $team_projects
      */
     private function __construct(array $team_projects)
     {
@@ -51,7 +51,7 @@ final class TeamProjectsCollection
     }
 
     /**
-     * @return Project[]
+     * @return ProgramManagementProject[]
      */
     public function getTeamProjects(): array
     {

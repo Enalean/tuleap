@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Domain;
 
 use Project;
-use Tuleap\ProgramManagement\Domain\Project as ProgramManagementProject;
 
 interface BuildProject
 {

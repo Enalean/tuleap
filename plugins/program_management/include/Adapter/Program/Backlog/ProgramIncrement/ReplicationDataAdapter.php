@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement;
 
-use Tuleap\ProgramManagement\Adapter\ProjectAdapter;
+use Tuleap\ProgramManagement\Adapter\ProgramManagementProjectAdapter;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\PendingArtifactCreationStore;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\PendingArtifactChangesetNotFoundException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\PendingArtifactNotFoundException;
@@ -99,7 +99,7 @@ final class ReplicationDataAdapter implements BuildReplicationData
     ): ReplicationData {
         $artifact_data = new Artifact((int) $source_artifact->getId(), (int) $source_artifact->getSubmittedOn());
         $tracker_data  = new ProgramTracker($source_artifact->getTracker());
-        $project_data  = ProjectAdapter::build($source_artifact->getTracker()->getProject());
+        $project_data  = ProgramManagementProjectAdapter::build($source_artifact->getTracker()->getProject());
 
         return new ReplicationData($tracker_data, $source_changeset, $user, $artifact_data, $project_data);
     }

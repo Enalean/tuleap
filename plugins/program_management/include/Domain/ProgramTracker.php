@@ -49,7 +49,7 @@ final class ProgramTracker
      */
     public static function buildMilestoneTrackerFromRootPlanning(
         RetrievePlanningMilestoneTracker $retriever,
-        Project $project,
+        ProgramManagementProject $project,
         \PFUser $user
     ): self {
         return new self($retriever->retrieveRootPlanningMilestoneTracker($project, $user));
@@ -61,7 +61,7 @@ final class ProgramTracker
      */
     public static function buildSecondPlanningMilestoneTracker(
         RetrievePlanningMilestoneTracker $retriever,
-        Project $project,
+        ProgramManagementProject $project,
         \PFUser $user
     ): self {
         return new self($retriever->retrieveSecondPlanningMilestoneTracker($project, $user));

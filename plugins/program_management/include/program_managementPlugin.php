@@ -76,7 +76,7 @@ use Tuleap\ProgramManagement\Adapter\Program\Plan\ProgramAdapter;
 use Tuleap\ProgramManagement\Adapter\Program\PlanningAdapter;
 use Tuleap\ProgramManagement\Adapter\Program\ProgramDao;
 use Tuleap\ProgramManagement\Adapter\Program\ProgramIncrementTracker\VisibleProgramIncrementTrackerRetriever;
-use Tuleap\ProgramManagement\Adapter\ProjectAdapter;
+use Tuleap\ProgramManagement\Adapter\ProgramManagementProjectAdapter;
 use Tuleap\ProgramManagement\Adapter\ProjectAdmin\PermissionPerGroupSectionBuilder;
 use Tuleap\ProgramManagement\Adapter\Team\MirroredTimeboxes\MirroredTimeboxesDao;
 use Tuleap\ProgramManagement\Adapter\Team\MirroredTimeboxes\MirroredTimeboxRetriever;
@@ -277,7 +277,7 @@ final class program_managementPlugin extends Plugin
             new ProgramManagementBreadCrumbsBuilder(),
             new PotentialTeamsBuilder($project_manager, new ProgramDao()),
             new ProgramDao(),
-            new ProjectAdapter($project_manager),
+            new ProgramManagementProjectAdapter($project_manager),
             new TeamDao()
         );
     }
@@ -393,7 +393,7 @@ final class program_managementPlugin extends Plugin
         PlanningAdministrationDelegation $planning_administration_delegation
     ): void {
         $component_involved_verifier = $this->getComponentInvolvedVerifier();
-        $project_data                = ProjectAdapter::build($planning_administration_delegation->getProject());
+        $project_data                = ProgramManagementProjectAdapter::build($planning_administration_delegation->getProject());
         if ($component_involved_verifier->isInvolvedInAProgramWorkspace($project_data)) {
             $planning_administration_delegation->enablePlanningAdministrationDelegation();
         }
@@ -689,9 +689,9 @@ final class program_managementPlugin extends Plugin
         return BackendLogger::getDefaultLogger("program_management_syslog");
     }
 
-    private function getProjectDataAdapter(): ProjectAdapter
+    private function getProgramManagementProjectAdapter(): ProgramManagementProjectAdapter
     {
-        return new ProjectAdapter(ProjectManager::instance());
+        return new ProgramManagementProjectAdapter(ProjectManager::instance());
     }
 
     private function getProgramIncrementRunner(): CreateProgramIncrementsRunner
@@ -833,7 +833,7 @@ final class program_managementPlugin extends Plugin
                 $logger
             ),
             new ProgramDao(),
-            $this->getProjectDataAdapter()
+            $this->getProgramManagementProjectAdapter()
         );
     }
 }

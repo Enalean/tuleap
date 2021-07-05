@@ -27,7 +27,7 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration\PlanningHasNoMiles
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\PlanningHasNoProgramIncrementException;
 use Tuleap\ProgramManagement\Domain\Program\PlanningConfiguration\SecondPlanningNotFoundInProjectException;
 use Tuleap\ProgramManagement\Domain\Program\PlanningConfiguration\TopPlanningNotFoundInProjectException;
-use Tuleap\ProgramManagement\Domain\Project;
+use Tuleap\ProgramManagement\Domain\ProgramManagementProject;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
@@ -94,7 +94,7 @@ final class PlanningAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->planning_factory->method('getRootPlanning')->willReturn($planning);
 
         $user            = UserTestBuilder::aUser()->build();
-        $wrapper_project = new Project($project_id, 'team_blue', 'Team Blue', '/team_blue');
+        $wrapper_project = new ProgramManagementProject($project_id, 'team_blue', 'Team Blue', '/team_blue');
         self::assertSame($tracker, $this->adapter->retrieveRootPlanningMilestoneTracker($wrapper_project, $user));
     }
 
@@ -110,7 +110,7 @@ final class PlanningAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->planning_factory->method('getChildrenPlanning')->willReturn(null);
 
         $user            = UserTestBuilder::aUser()->build();
-        $wrapper_project = new Project($project_id, 'team_blue', 'Team Blue', '/team_blue');
+        $wrapper_project = new ProgramManagementProject($project_id, 'team_blue', 'Team Blue', '/team_blue');
         $this->expectException(SecondPlanningNotFoundInProjectException::class);
         $this->adapter->retrieveSecondPlanningMilestoneTracker($wrapper_project, $user);
     }
@@ -129,7 +129,7 @@ final class PlanningAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->planning_factory->method('getChildrenPlanning')->willReturn($second_planning);
 
         $user            = UserTestBuilder::aUser()->build();
-        $wrapper_project = new Project($project_id, 'team_blue', 'Team Blue', '/team_blue');
+        $wrapper_project = new ProgramManagementProject($project_id, 'team_blue', 'Team Blue', '/team_blue');
         $this->expectException(PlanningHasNoMilestoneTrackerException::class);
         $this->adapter->retrieveSecondPlanningMilestoneTracker($wrapper_project, $user);
     }
@@ -147,7 +147,7 @@ final class PlanningAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->planning_factory->method('getChildrenPlanning')->willReturn($second_planning);
 
         $user            = UserTestBuilder::aUser()->build();
-        $wrapper_project = new Project($project_id, 'team_blue', 'Team Blue', '/team_blue');
+        $wrapper_project = new ProgramManagementProject($project_id, 'team_blue', 'Team Blue', '/team_blue');
         self::assertSame($second_tracker, $this->adapter->retrieveSecondPlanningMilestoneTracker($wrapper_project, $user));
     }
 }

@@ -24,7 +24,7 @@ namespace Tuleap\ProgramManagement\Domain\Program;
 
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\PlanningHasNoProgramIncrementException;
 use Tuleap\ProgramManagement\Domain\Program\PlanningConfiguration\TopPlanningNotFoundInProjectException;
-use Tuleap\ProgramManagement\Domain\Project;
+use Tuleap\ProgramManagement\Domain\ProgramManagementProject;
 
 interface BuildPlanning
 {
@@ -34,5 +34,5 @@ interface BuildPlanning
      */
     public function getRootPlanning(\PFUser $user, int $project_id): \Planning;
 
-    public function getProjectFromPlanning(\Planning $root_planning): Project;
+    public function getProjectFromPlanning(\Planning $root_planning): ProgramManagementProject;
 }

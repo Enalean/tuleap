@@ -24,7 +24,7 @@ namespace Tuleap\ProgramManagement\Stub;
 
 use Project;
 use Tuleap\ProgramManagement\Domain\BuildProject;
-use Tuleap\ProgramManagement\Domain\Project as ProgramManagementProject;
+use Tuleap\ProgramManagement\Domain\ProgramManagementProject;
 
 final class BuildProjectStub implements BuildProject
 {

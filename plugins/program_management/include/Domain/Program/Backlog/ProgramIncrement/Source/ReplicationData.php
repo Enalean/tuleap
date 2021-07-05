@@ -23,7 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source;
 
 use Tuleap\ProgramManagement\Domain\ProgramTracker;
-use Tuleap\ProgramManagement\Domain\Project;
+use Tuleap\ProgramManagement\Domain\ProgramManagementProject;
 
 /**
  * @psalm-immutable
@@ -47,7 +47,7 @@ class ReplicationData
      */
     private $artifact;
     /**
-     * @var Project
+     * @var ProgramManagementProject
      */
     private $project;
 
@@ -56,7 +56,7 @@ class ReplicationData
         \Tracker_Artifact_Changeset $changeset,
         \PFUser $user,
         Artifact $artifact,
-        Project $project
+        ProgramManagementProject $project
     ) {
         $this->tracker   = $tracker;
         $this->changeset = $changeset;
@@ -85,7 +85,7 @@ class ReplicationData
         return $this->artifact;
     }
 
-    public function getProject(): Project
+    public function getProject(): ProgramManagementProject
     {
         return $this->project;
     }
