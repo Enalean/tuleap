@@ -34,6 +34,7 @@ export interface ConfigurationState {
     readonly tracker_program_increment_label: string;
     readonly tracker_program_increment_sub_label: string;
     readonly is_program_admin: boolean;
+    readonly is_configured: boolean;
 }
 
 export function createConfigurationModule(

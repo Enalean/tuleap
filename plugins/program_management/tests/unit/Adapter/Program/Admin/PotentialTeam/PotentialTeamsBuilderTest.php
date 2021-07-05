@@ -22,8 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\Admin\PotentialTeam;
 
-use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
-use Tuleap\ProgramManagement\Stub\BuildProgramStub;
 use Tuleap\ProgramManagement\Stub\SearchTeamsOfProgramStub;
 use Tuleap\Test\Builders\UserTestBuilder;
 
@@ -34,7 +32,6 @@ final class PotentialTeamsBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $project_manager;
     private SearchTeamsOfProgramStub $teams_of_program_searcher;
-    private ProgramIdentifier $program;
     private \PFUser $user;
 
     protected function setUp(): void
@@ -42,11 +39,6 @@ final class PotentialTeamsBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->project_manager           = $this->createStub(\ProjectManager::class);
         $this->teams_of_program_searcher = SearchTeamsOfProgramStub::buildTeams(123);
         $this->user                      = UserTestBuilder::aUser()->build();
-        $this->program                   = ProgramIdentifier::fromId(
-            BuildProgramStub::stubValidProgram(),
-            100,
-            $this->user
-        );
     }
 
     public function testBuildEmptyTeamsIfNoAggregatedTeamsAndNoProjectUserIsAdminOf(): void
@@ -54,14 +46,14 @@ final class PotentialTeamsBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->teams_of_program_searcher = SearchTeamsOfProgramStub::buildTeams();
         $this->project_manager->method('getProjectsUserIsAdmin')->willReturn([]);
 
-        self::assertEmpty($this->getBuilder()->buildPotentialTeams($this->program, $this->user));
+        self::assertEmpty($this->getBuilder()->buildPotentialTeams(101, $this->user));
     }
 
     public function testBuildEmptyIfAggregatedTeamsEqualsProjectUserIsAdminOf(): void
     {
         $this->project_manager->method('getProjectsUserIsAdmin')->willReturn([new \Project(['group_id' => 123])]);
 
-        self::assertEmpty($this->getBuilder()->buildPotentialTeams($this->program, $this->user));
+        self::assertEmpty($this->getBuilder()->buildPotentialTeams(101, $this->user));
     }
 
     public function testBuildPotentialTeamWhenUserIsAdminOfProjectThatNotAggregatedTeam(): void
@@ -73,7 +65,7 @@ final class PotentialTeamsBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                 new \Project(['group_id' => 124, 'group_name' => 'potential_team'])
             ]);
 
-        $potential_teams = $this->getBuilder()->buildPotentialTeams($this->program, $this->user);
+        $potential_teams = $this->getBuilder()->buildPotentialTeams(101, $this->user);
         self::assertCount(1, $potential_teams);
         self::assertSame(124, $potential_teams[0]->id);
         self::assertSame('potential_team', $potential_teams[0]->public_name);
