@@ -36,7 +36,7 @@ final class ProgramTrackerTest extends TestCase
     public function testItBuildsMilestoneTrackerFromRootPlanning(): void
     {
         $retriever = RetrievePlanningMilestoneTrackerStub::withValidTrackerIds(101);
-        $project   = new Project(101, 'team_blue', 'Team Blue', '/team_blue');
+        $project   = new ProgramManagementProject(101, 'team_blue', 'Team Blue', '/team_blue');
         $user      = UserTestBuilder::aUser()->build();
 
         $tracker = ProgramTracker::buildMilestoneTrackerFromRootPlanning($retriever, $project, $user);
@@ -46,7 +46,7 @@ final class ProgramTrackerTest extends TestCase
     public function testItBuildsMilestoneTrackerFromSecondPlanning(): void
     {
         $retriever = RetrievePlanningMilestoneTrackerStub::withValidTrackerIds(76);
-        $project   = new Project(101, 'team_blue', 'Team Blue', '/team_blue');
+        $project   = new ProgramManagementProject(101, 'team_blue', 'Team Blue', '/team_blue');
         $user      = UserTestBuilder::aUser()->build();
 
         $tracker = ProgramTracker::buildSecondPlanningMilestoneTracker($retriever, $project, $user);
@@ -88,7 +88,7 @@ final class ProgramTrackerTest extends TestCase
     public function testItDelegatesPermissionCheckToWrappedTracker(): void
     {
         $user         = UserTestBuilder::aUser()->build();
-        $project      = new Project(101, 'team_blue', 'Team Blue', '/team_blue');
+        $project      = new ProgramManagementProject(101, 'team_blue', 'Team Blue', '/team_blue');
         $base_tracker = $this->createMock(\Tracker::class);
         $base_tracker->method('userCanSubmitArtifact')->with($user)->willReturn(true);
         $retriever = RetrievePlanningMilestoneTrackerStub::withValidTrackers($base_tracker);

@@ -26,7 +26,7 @@ use Psr\Log\Test\TestLogger;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\ReplicationDataAdapter;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\UserStoriesInMirroredProgramIncrementsPlanner;
 use Tuleap\ProgramManagement\Adapter\Program\PlanningAdapter;
-use Tuleap\ProgramManagement\Adapter\ProjectAdapter;
+use Tuleap\ProgramManagement\Adapter\ProgramManagementProjectAdapter;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\PendingArtifactCreationStore;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\ProgramIncrementsCreator;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\ArtifactLinkValue;
@@ -100,7 +100,7 @@ final class CreateProgramIncrementsTaskTest extends \Tuleap\Test\PHPUnit\TestCas
             $this->pending_artifact_creation_store,
             $this->user_stories_planner,
             $this->teams_searcher,
-            new ProjectAdapter($this->project_manager)
+            new ProgramManagementProjectAdapter($this->project_manager)
         );
     }
 

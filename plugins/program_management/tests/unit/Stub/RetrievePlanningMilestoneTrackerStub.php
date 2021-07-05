@@ -24,7 +24,7 @@ namespace Tuleap\ProgramManagement\Stub;
 
 use Tuleap\ProgramManagement\Domain\Program\PlanningConfiguration\SecondPlanningNotFoundInProjectException;
 use Tuleap\ProgramManagement\Domain\Program\PlanningConfiguration\TopPlanningNotFoundInProjectException;
-use Tuleap\ProgramManagement\Domain\Project;
+use Tuleap\ProgramManagement\Domain\ProgramManagementProject;
 use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\RetrievePlanningMilestoneTracker;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
@@ -51,7 +51,7 @@ final class RetrievePlanningMilestoneTrackerStub implements RetrievePlanningMile
         $this->has_no_planning = $has_no_planning;
     }
 
-    public function retrieveRootPlanningMilestoneTracker(Project $project, \PFUser $user): \Tracker
+    public function retrieveRootPlanningMilestoneTracker(ProgramManagementProject $project, \PFUser $user): \Tracker
     {
         if ($this->has_no_planning) {
             throw new TopPlanningNotFoundInProjectException($project->getId());
@@ -67,7 +67,7 @@ final class RetrievePlanningMilestoneTrackerStub implements RetrievePlanningMile
         throw new \LogicException('No milestone tracker configured');
     }
 
-    public function retrieveSecondPlanningMilestoneTracker(Project $project, \PFUser $user): \Tracker
+    public function retrieveSecondPlanningMilestoneTracker(ProgramManagementProject $project, \PFUser $user): \Tracker
     {
         if ($this->has_no_planning) {
             throw new SecondPlanningNotFoundInProjectException($project->getId());

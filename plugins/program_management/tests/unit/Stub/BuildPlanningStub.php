@@ -24,7 +24,7 @@ namespace Tuleap\ProgramManagement\Stub;
 
 use Tuleap\ProgramManagement\Domain\Program\BuildPlanning;
 use Tuleap\ProgramManagement\Domain\Program\PlanningConfiguration\TopPlanningNotFoundInProjectException;
-use Tuleap\ProgramManagement\Domain\Project;
+use Tuleap\ProgramManagement\Domain\ProgramManagementProject;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 class BuildPlanningStub implements BuildPlanning
@@ -47,9 +47,9 @@ class BuildPlanningStub implements BuildPlanning
         throw new TopPlanningNotFoundInProjectException($project_id);
     }
 
-    public function getProjectFromPlanning(\Planning $root_planning): Project
+    public function getProjectFromPlanning(\Planning $root_planning): ProgramManagementProject
     {
-        return new Project(101, 'my-project', 'My project', '/project');
+        return new ProgramManagementProject(101, 'my-project', 'My project', '/project');
     }
 
     public static function withValidRootPlanning(): self

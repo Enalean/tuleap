@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program;
 
-use Tuleap\ProgramManagement\Adapter\ProjectAdapter;
+use Tuleap\ProgramManagement\Adapter\ProgramManagementProjectAdapter;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration\PlanningHasNoMilestoneTrackerException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\PlanningHasNoProgramIncrementException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TrackerRetrievalException;
@@ -30,7 +30,7 @@ use Tuleap\ProgramManagement\Domain\Program\BuildPlanning;
 use Tuleap\ProgramManagement\Domain\Program\PlanningConfiguration\PlanningNotFoundException;
 use Tuleap\ProgramManagement\Domain\Program\PlanningConfiguration\SecondPlanningNotFoundInProjectException;
 use Tuleap\ProgramManagement\Domain\Program\PlanningConfiguration\TopPlanningNotFoundInProjectException;
-use Tuleap\ProgramManagement\Domain\Project;
+use Tuleap\ProgramManagement\Domain\ProgramManagementProject;
 use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\RetrievePlanningMilestoneTracker;
 
 final class PlanningAdapter implements BuildPlanning, RetrievePlanningMilestoneTracker
@@ -67,12 +67,12 @@ final class PlanningAdapter implements BuildPlanning, RetrievePlanningMilestoneT
         return $root_planning;
     }
 
-    public function getProjectFromPlanning(\Planning $root_planning): Project
+    public function getProjectFromPlanning(\Planning $root_planning): ProgramManagementProject
     {
-        return ProjectAdapter::build($root_planning->getPlanningTracker()->getProject());
+        return ProgramManagementProjectAdapter::build($root_planning->getPlanningTracker()->getProject());
     }
 
-    public function retrieveRootPlanningMilestoneTracker(Project $project, \PFUser $user): \Tracker
+    public function retrieveRootPlanningMilestoneTracker(ProgramManagementProject $project, \PFUser $user): \Tracker
     {
         $root_planning = $this->getRootPlanning($user, $project->getId());
         return $root_planning->getPlanningTracker();
@@ -82,7 +82,7 @@ final class PlanningAdapter implements BuildPlanning, RetrievePlanningMilestoneT
      * @throws PlanningNotFoundException
      * @throws TrackerRetrievalException
      */
-    public function retrieveSecondPlanningMilestoneTracker(Project $project, \PFUser $user): \Tracker
+    public function retrieveSecondPlanningMilestoneTracker(ProgramManagementProject $project, \PFUser $user): \Tracker
     {
         $root_planning = $this->planning_factory->getRootPlanning(
             $user,

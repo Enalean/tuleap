@@ -25,7 +25,7 @@ namespace Tuleap\ProgramManagement\Domain;
 /**
  * @psalm-immutable
  */
-final class Project
+final class ProgramManagementProject
 {
     private int $id;
     private string $name;

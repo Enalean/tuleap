@@ -52,7 +52,7 @@ use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\ArtifactsLinkedToPare
 use Tuleap\ProgramManagement\Adapter\Program\Feature\UserStoriesInMirroredProgramIncrementsPlanner;
 use Tuleap\ProgramManagement\Adapter\Program\PlanningAdapter;
 use Tuleap\ProgramManagement\Adapter\Program\ProgramDao;
-use Tuleap\ProgramManagement\Adapter\ProjectAdapter;
+use Tuleap\ProgramManagement\Adapter\ProgramManagementProjectAdapter;
 use Tuleap\ProgramManagement\Adapter\Team\MirroredTimeboxes\MirroredTimeboxesDao;
 use Tuleap\ProgramManagement\Adapter\Team\MirroredTimeboxes\MirroredTimeboxRetriever;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\ProgramIncrementsCreator;
@@ -125,7 +125,7 @@ class TaskBuilder
             new PendingArtifactCreationDao(),
             $user_stories_planner,
             $program_dao,
-            new ProjectAdapter(ProjectManager::instance())
+            new ProgramManagementProjectAdapter(ProjectManager::instance())
         );
     }
 }

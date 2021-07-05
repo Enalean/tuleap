@@ -23,7 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck;
 
 use ProjectManager;
-use Tuleap\ProgramManagement\Adapter\ProjectAdapter;
+use Tuleap\ProgramManagement\Adapter\ProgramManagementProjectAdapter;
 use Tuleap\ProgramManagement\Stub\BuildProgramStub;
 use Tuleap\ProgramManagement\Stub\SearchTeamsOfProgramStub;
 use Tuleap\Test\Builders\ProjectTestBuilder;
@@ -127,7 +127,7 @@ final class CanSubmitNewArtifactHandlerTest extends TestCase
             $this->program_increment_creator_checker,
             $this->iteration_creator_checker,
             SearchTeamsOfProgramStub::buildTeams(104),
-            new ProjectAdapter($this->project_manager)
+            new ProgramManagementProjectAdapter($this->project_manager)
         );
     }
 

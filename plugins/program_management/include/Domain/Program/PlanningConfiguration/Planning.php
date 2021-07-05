@@ -25,7 +25,7 @@ namespace Tuleap\ProgramManagement\Domain\Program\PlanningConfiguration;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\PlanningHasNoProgramIncrementException;
 use Tuleap\ProgramManagement\Domain\Program\BuildPlanning;
 use Tuleap\ProgramManagement\Domain\ProgramTracker;
-use Tuleap\ProgramManagement\Domain\Project;
+use Tuleap\ProgramManagement\Domain\ProgramManagementProject;
 
 /**
  * @psalm-immutable
@@ -50,7 +50,7 @@ final class Planning
      */
     private $backlog_tracker_ids = [];
     /**
-     * @var Project
+     * @var ProgramManagementProject
      */
     private $project_data;
 
@@ -59,7 +59,7 @@ final class Planning
         int $id,
         string $name,
         array $backlog_tracker_ids,
-        Project $project_data
+        ProgramManagementProject $project_data
     ) {
         $this->id                  = $id;
         $this->planning_tracker    = $planning_tracker;
@@ -88,7 +88,7 @@ final class Planning
         return $this->backlog_tracker_ids;
     }
 
-    public function getProjectData(): Project
+    public function getProjectData(): ProgramManagementProject
     {
         return $this->project_data;
     }

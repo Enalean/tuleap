@@ -23,9 +23,9 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Adapter;
 
 use Project;
-use Tuleap\ProgramManagement\Domain\Project as ProgramManagementProject;
+use Tuleap\ProgramManagement\Domain\ProgramManagementProject;
 
-final class ProjectDataAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
+final class ProgramManagementProjectAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItBuildsProjectData(): void
     {
@@ -35,7 +35,7 @@ final class ProjectDataAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $project_data = new ProgramManagementProject($project->getID(), $project->getUnixName(), $project->getPublicName(), $project->getUrl());
 
-        $adapter = new ProjectAdapter($project_manager);
+        $adapter = new ProgramManagementProjectAdapter($project_manager);
         $this->assertEquals($project_data, $adapter->buildFromId(101));
     }
 }

@@ -23,7 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Domain\Workspace;
 
 use Tuleap\ProgramManagement\Domain\Program\VerifyIsProgram;
-use Tuleap\ProgramManagement\Domain\Project;
+use Tuleap\ProgramManagement\Domain\ProgramManagementProject;
 use Tuleap\ProgramManagement\Domain\Team\VerifyIsTeam;
 
 final class ComponentInvolvedVerifier
@@ -39,7 +39,7 @@ final class ComponentInvolvedVerifier
         $this->program_verifier = $program_verifier;
     }
 
-    public function isInvolvedInAProgramWorkspace(Project $project_data): bool
+    public function isInvolvedInAProgramWorkspace(ProgramManagementProject $project_data): bool
     {
         return $this->team_verifier->isATeam($project_data->getId())
             || $this->program_verifier->isAProgram($project_data->getId());

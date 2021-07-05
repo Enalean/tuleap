@@ -23,7 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Domain\Workspace;
 
 use Tuleap\ProgramManagement\Domain\Program\VerifyIsProgram;
-use Tuleap\ProgramManagement\Domain\Project;
+use Tuleap\ProgramManagement\Domain\ProgramManagementProject;
 use Tuleap\ProgramManagement\Domain\Team\VerifyIsTeam;
 use Tuleap\ProgramManagement\Stub\VerifyIsProgramStub;
 use Tuleap\ProgramManagement\Stub\VerifyIsTeamStub;
@@ -63,8 +63,8 @@ final class ComponentInvolvedVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertTrue($this->getVerifier()->isInvolvedInAProgramWorkspace($this->buildProjectData()));
     }
 
-    private function buildProjectData(): Project
+    private function buildProjectData(): ProgramManagementProject
     {
-        return new Project(12, 'Name', 'Public name', '/project');
+        return new ProgramManagementProject(12, 'Name', 'Public name', '/project');
     }
 }
