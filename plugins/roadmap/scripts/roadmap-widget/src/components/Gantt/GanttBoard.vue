@@ -29,7 +29,7 @@
             <show-closed-control />
         </div>
         <no-data-to-show-empty-state
-            v-if="rows.length === 0"
+            v-if="should_display_empty_state"
             v-bind:should_invite_to_come_back="false"
         />
         <div class="roadmap-gantt" v-else>
@@ -49,6 +49,7 @@
                         v-bind:key="'header-task-' + row.task.id"
                         v-bind:task="row.task"
                         v-bind:popover_element_id="getIdForPopover(row.task)"
+                        v-show="row.is_shown"
                     />
                     <subtask-header
                         v-else-if="isSubtaskRow(row)"
@@ -57,17 +58,20 @@
                         v-bind:popover_element_id="
                             getIdForPopoverForSubtask(row.parent, row.subtask)
                         "
+                        v-show="row.is_shown"
                     />
                     <subtask-message-header
                         v-else-if="isErrorRow(row) || isEmptySubtasksRow(row)"
                         v-bind:key="'header-message-' + row.for_task.id + '-' + index"
                         v-bind:row="row"
                         v-bind:dimensions_map="dimensions_map"
+                        v-show="row.is_shown"
                     />
                     <subtask-skeleton-header
                         v-else
                         v-bind:key="'header-skeleton-' + row.for_task.id + '-' + index"
                         v-bind:skeleton="row"
+                        v-show="row.is_shown"
                     />
                 </template>
             </div>
@@ -98,6 +102,7 @@
                         v-bind:dimensions_map="dimensions_map"
                         v-bind:dependencies_nature_to_display="dependencies_nature_to_display"
                         v-bind:popover_element_id="getIdForPopover(row.task)"
+                        v-show="row.is_shown"
                     />
                     <gantt-task
                         v-else-if="isSubtaskRow(row)"
@@ -110,16 +115,19 @@
                         v-bind:popover_element_id="
                             getIdForPopoverForSubtask(row.parent, row.subtask)
                         "
+                        v-show="row.is_shown"
                     />
                     <div
                         v-else-if="isErrorRow(row) || isEmptySubtasksRow(row)"
                         v-bind:key="'body-message-' + row.for_task.id + '-' + index"
                         class="roadmap-gantt-task"
+                        v-show="row.is_shown"
                     ></div>
                     <subtask-skeleton-bar
                         v-else
                         v-bind:key="'body-skeleton-' + row.for_task.id + '-' + index"
                         v-bind:nb_additional_units="nb_additional_units"
+                        v-show="row.is_shown"
                     />
                 </template>
             </scrolling-area>
@@ -129,12 +137,14 @@
                     v-bind:key="'popover-' + row.task.id"
                     v-bind:task="row.task"
                     v-bind:id="getIdForPopover(row.task)"
+                    v-show="row.is_shown"
                 />
                 <bar-popover
                     v-if="isSubtaskRow(row)"
                     v-bind:key="'popover-' + row.parent.id + '-subtask-' + row.subtask.id"
                     v-bind:task="row.subtask"
                     v-bind:id="getIdForPopoverForSubtask(row.parent, row.subtask)"
+                    v-show="row.is_shown"
                 />
             </template>
         </div>
@@ -213,6 +223,9 @@ export default class GanttBoard extends Vue {
 
     @tasks.Getter
     readonly rows!: Row[];
+
+    @tasks.Getter
+    private readonly has_at_least_one_row_shown!: boolean;
 
     @tasks.Getter
     private readonly tasks!: Task[];
@@ -318,6 +331,10 @@ export default class GanttBoard extends Vue {
         const nb_visible_units = Math.ceil(width / Styles.TIME_UNIT_WIDTH_IN_PX);
 
         this.nb_additional_units = nb_visible_units - this.time_period.units.length - 1;
+    }
+
+    get should_display_empty_state(): boolean {
+        return !this.has_at_least_one_row_shown;
     }
 
     get dependencies(): TasksDependencies {

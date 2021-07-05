@@ -27,6 +27,9 @@
             <div class="tlp-form-element roadmap-gantt-control">
                 <span class="tlp-skeleton-text"></span>
             </div>
+            <div class="tlp-form-element roadmap-gantt-control">
+                <span class="tlp-skeleton-text"></span>
+            </div>
         </div>
         <div class="roadmap-gantt">
             <div class="roadmap-gantt-header">

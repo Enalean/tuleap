@@ -23,7 +23,6 @@ import { createRoadmapLocalVue } from "../../../helpers/local-vue-for-test";
 import { createStoreMock } from "../../../../../../../../src/scripts/vue-components/store-wrapper-jest";
 import type { TasksState } from "../../../store/tasks/type";
 import type { RootState } from "../../../store/type";
-import type { TaskRow } from "../../../type";
 
 describe("TimePeriodControl", () => {
     it("Emits input event when the value is changed", async () => {
@@ -38,7 +37,7 @@ describe("TimePeriodControl", () => {
                         tasks: {} as TasksState,
                     } as RootState,
                     getters: {
-                        "tasks/rows": [{} as TaskRow],
+                        "tasks/has_at_least_one_row_shown": true,
                     },
                 }),
             },
@@ -71,7 +70,7 @@ describe("TimePeriodControl", () => {
                         tasks: {} as TasksState,
                     } as RootState,
                     getters: {
-                        "tasks/rows": [],
+                        "tasks/has_at_least_one_row_shown": false,
                     },
                 }),
             },

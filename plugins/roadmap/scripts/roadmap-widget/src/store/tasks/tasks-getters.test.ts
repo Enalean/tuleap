@@ -93,9 +93,9 @@ describe("tasks-getters", () => {
             } as RootState;
 
             expect(getters.rows(state, undefined, root_state)).toStrictEqual([
-                { task: task_1 },
-                { task: task_2 },
-                { task: task_3 },
+                { task: task_1, is_shown: true },
+                { task: task_2, is_shown: true },
+                { task: task_3, is_shown: true },
             ] as Row[]);
         });
 
@@ -127,11 +127,11 @@ describe("tasks-getters", () => {
             } as RootState;
 
             expect(getters.rows(state, undefined, root_state)).toStrictEqual([
-                { task: task_1 },
-                { task: task_2 },
-                { for_task: task_2, is_skeleton: true, is_last_one: false },
-                { for_task: task_2, is_skeleton: true, is_last_one: true },
-                { task: task_3 },
+                { task: task_1, is_shown: true },
+                { task: task_2, is_shown: true },
+                { for_task: task_2, is_skeleton: true, is_last_one: false, is_shown: true },
+                { for_task: task_2, is_skeleton: true, is_last_one: true, is_shown: true },
+                { task: task_3, is_shown: true },
             ] as Row[]);
         });
 
@@ -163,9 +163,9 @@ describe("tasks-getters", () => {
             } as RootState;
 
             expect(getters.rows(state, undefined, root_state)).toStrictEqual([
-                { task: task_1 },
-                { task: task_2 },
-                { task: task_3 },
+                { task: task_1, is_shown: true },
+                { task: task_2, is_shown: true },
+                { task: task_3, is_shown: true },
             ] as Row[]);
         });
 
@@ -198,11 +198,11 @@ describe("tasks-getters", () => {
             } as RootState;
 
             expect(getters.rows(state, undefined, root_state)).toStrictEqual([
-                { task: task_1 },
-                { task: task_2 },
-                { parent: task_2, subtask: { id: 1241 }, is_last_one: false },
-                { parent: task_2, subtask: { id: 1242 }, is_last_one: true },
-                { task: task_3 },
+                { task: task_1, is_shown: true },
+                { task: task_2, is_shown: true },
+                { parent: task_2, subtask: { id: 1241 }, is_last_one: false, is_shown: true },
+                { parent: task_2, subtask: { id: 1242 }, is_last_one: true, is_shown: true },
+                { task: task_3, is_shown: true },
             ] as Row[]);
         });
 
@@ -234,10 +234,10 @@ describe("tasks-getters", () => {
             } as RootState;
 
             expect(getters.rows(state, undefined, root_state)).toStrictEqual([
-                { task: task_1 },
-                { task: task_2 },
-                { for_task: task_2, is_error: true },
-                { task: task_3 },
+                { task: task_1, is_shown: true },
+                { task: task_2, is_shown: true },
+                { for_task: task_2, is_error: true, is_shown: true },
+                { task: task_3, is_shown: true },
             ] as Row[]);
         });
 
@@ -269,10 +269,10 @@ describe("tasks-getters", () => {
             } as RootState;
 
             expect(getters.rows(state, undefined, root_state)).toStrictEqual([
-                { task: task_1 },
-                { task: task_2 },
-                { for_task: task_2, is_empty: true },
-                { task: task_3 },
+                { task: task_1, is_shown: true },
+                { task: task_2, is_shown: true },
+                { for_task: task_2, is_empty: true, is_shown: true },
+                { task: task_3, is_shown: true },
             ] as Row[]);
         });
     });
@@ -306,9 +306,9 @@ describe("tasks-getters", () => {
         } as RootState;
 
         expect(getters.rows(state, undefined, root_state)).toStrictEqual([
-            { task: task_1 },
-            { task: task_2 },
-            { task: task_3 },
+            { task: task_1, is_shown: true },
+            { task: task_2, is_shown: true },
+            { task: task_3, is_shown: true },
         ] as Row[]);
     });
 
@@ -344,8 +344,9 @@ describe("tasks-getters", () => {
         } as RootState;
 
         expect(getters.rows(state, undefined, root_state)).toStrictEqual([
-            { task: task_1 },
-            { task: task_3 },
+            { task: task_1, is_shown: true },
+            { task: task_2, is_shown: false },
+            { task: task_3, is_shown: true },
         ] as Row[]);
     });
 
@@ -384,16 +385,21 @@ describe("tasks-getters", () => {
         } as RootState;
 
         expect(getters.rows(state, undefined, root_state)).toStrictEqual([
-            { task: task_1 },
-            { task: task_2 },
-            { parent: task_2, subtask: { id: 1241, is_open: true }, is_last_one: true },
-            { task: task_3 },
+            { task: task_1, is_shown: true },
+            { task: task_2, is_shown: true },
+            {
+                parent: task_2,
+                subtask: { id: 1241, is_open: true },
+                is_last_one: true,
+                is_shown: true,
+            },
+            { task: task_3, is_shown: true },
         ] as Row[]);
     });
 
     describe("tasks", () => {
         it("extract task and subtasks from rows", () => {
-            const task_row: TaskRow = { task: { id: 123 } as Task };
+            const task_row: TaskRow = { task: { id: 123 } as Task, is_shown: true };
             const skeleton_row: SkeletonRow = { is_skeleton: true } as SkeletonRow;
             const empty_subtask_row: EmptySubtasksRow = { is_empty: true } as EmptySubtasksRow;
             const error_row: ErrorRow = { is_error: true } as ErrorRow;
@@ -414,6 +420,35 @@ describe("tasks-getters", () => {
             );
 
             expect(tasks).toStrictEqual([{ id: 123 }, { id: 234 }]);
+        });
+    });
+
+    describe("has_at_least_one_row_shown", () => {
+        it("should return false if no rows are displayed", () => {
+            expect(
+                getters.has_at_least_one_row_shown(
+                    {},
+                    {
+                        rows: [
+                            { task: { id: 123 } as Task, is_shown: false },
+                            { task: { id: 124 } as Task, is_shown: false },
+                        ],
+                    }
+                )
+            ).toBe(false);
+        });
+        it("should return true if at least one row is displayed", () => {
+            expect(
+                getters.has_at_least_one_row_shown(
+                    {},
+                    {
+                        rows: [
+                            { task: { id: 123 } as Task, is_shown: false },
+                            { task: { id: 124 } as Task, is_shown: true },
+                        ],
+                    }
+                )
+            ).toBe(true);
         });
     });
 });

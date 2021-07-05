@@ -19,7 +19,7 @@
   -->
 
 <template>
-    <section class="tlp-popover roadmap-gantt-task-popover" v-bind:class="popover_class">
+    <section class="tlp-popover roadmap-gantt-task-popover" v-bind:class="popover_class" v-once>
         <div class="tlp-popover-arrow roadmap-gantt-task-popover-arrow"></div>
         <div
             class="tlp-popover-header roadmap-gantt-task-popover-header"

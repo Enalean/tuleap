@@ -21,7 +21,6 @@ import type { Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import DependencyNatureControl from "./DependencyNatureControl.vue";
 import { createRoadmapLocalVue } from "../../helpers/local-vue-for-test";
-import type { TaskRow } from "../../type";
 import { NaturesLabels } from "../../type";
 import { createStoreMock } from "../../../../../../../src/scripts/vue-components/store-wrapper-jest";
 import type { TasksState } from "../../store/tasks/type";
@@ -53,7 +52,7 @@ describe("DependencyNatureControl", () => {
                         tasks: {} as TasksState,
                     } as RootState,
                     getters: {
-                        "tasks/rows": [{} as TaskRow],
+                        "tasks/has_at_least_one_row_shown": true,
                     },
                 }),
             },
@@ -80,7 +79,7 @@ describe("DependencyNatureControl", () => {
                         tasks: {} as TasksState,
                     } as RootState,
                     getters: {
-                        "tasks/rows": [{} as TaskRow],
+                        "tasks/has_at_least_one_row_shown": true,
                     },
                 }),
             },
@@ -113,7 +112,7 @@ describe("DependencyNatureControl", () => {
                         tasks: {} as TasksState,
                     } as RootState,
                     getters: {
-                        "tasks/rows": [{} as TaskRow],
+                        "tasks/has_at_least_one_row_shown": true,
                     },
                 }),
             },
@@ -142,7 +141,7 @@ describe("DependencyNatureControl", () => {
                         tasks: {} as TasksState,
                     } as RootState,
                     getters: {
-                        "tasks/rows": [],
+                        "tasks/has_at_least_one_row_shown": false,
                     },
                 }),
             },

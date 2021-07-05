@@ -79,28 +79,33 @@ export class NbUnitsPerYear extends Map<number, number> {}
 
 export interface TaskRow {
     readonly task: Task;
+    readonly is_shown: boolean;
 }
 
 export interface SkeletonRow {
     readonly for_task: Task;
     readonly is_skeleton: true;
     readonly is_last_one: boolean;
+    readonly is_shown: boolean;
 }
 
 export interface ErrorRow {
     readonly for_task: Task;
     readonly is_error: true;
+    readonly is_shown: boolean;
 }
 
 export interface EmptySubtasksRow {
     readonly for_task: Task;
     readonly is_empty: true;
+    readonly is_shown: boolean;
 }
 
 export interface SubtaskRow {
     readonly parent: Task;
     readonly subtask: Task;
     readonly is_last_one: boolean;
+    readonly is_shown: boolean;
 }
 
 export type Row = TaskRow | SkeletonRow | EmptySubtasksRow | ErrorRow | SubtaskRow;
