@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Project\Registration;
 
-use Mockery;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\Glyph\Glyph;
 use Tuleap\Glyph\GlyphFinder;
@@ -37,36 +36,29 @@ use Tuleap\XML\ProjectXMLMerger;
 
 final class ProjectRegistrationPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
     use ForgeConfigSandbox;
 
+    private ProjectRegistrationPresenterBuilder $builder;
+    private DefaultProjectVisibilityRetriever $default_project_visibility_retriever;
     /**
-     * @var ProjectRegistrationPresenterBuilder
+     * @var \PHPUnit\Framework\MockObject\MockObject&TemplateFactory
      */
-    private $builder;
+    private $template_factory;
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|DescriptionFieldsFactory
-     */
-    private $fields_factory;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|\TroveCatFactory
+     * @var \PHPUnit\Framework\MockObject\MockObject&\TroveCatFactory
      */
     private $trove_cat_factory;
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|DefaultProjectVisibilityRetriever
+     * @var \PHPUnit\Framework\MockObject\MockObject&DescriptionFieldsFactory
      */
-    private $default_project_visibility_retriever;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|TemplateFactory
-     */
-    private $template_factory;
+    private $fields_factory;
 
     protected function setUp(): void
     {
-        $this->template_factory                     = \Mockery::mock(TemplateFactory::class);
+        $this->template_factory                     = $this->createMock(TemplateFactory::class);
         $this->default_project_visibility_retriever = new DefaultProjectVisibilityRetriever();
-        $this->trove_cat_factory                    = Mockery::mock(\TroveCatFactory::class);
-        $this->fields_factory                       = \Mockery::mock(DescriptionFieldsFactory::class);
+        $this->trove_cat_factory                    = $this->createMock(\TroveCatFactory::class);
+        $this->fields_factory                       = $this->createMock(DescriptionFieldsFactory::class);
 
         $this->builder = new ProjectRegistrationPresenterBuilder(
             $this->template_factory,
@@ -78,20 +70,18 @@ final class ProjectRegistrationPresenterBuilderTest extends \Tuleap\Test\PHPUnit
 
     public function testItShouldBuildPresenter(): void
     {
-        $project = Mockery::mock(\Project::class);
-        $project->shouldReceive('getGroupId')->andReturn(101);
-        $project->shouldReceive('getDescription')->andReturn('My awesome project');
-        $project->shouldReceive('getPublicName')->andReturn('project-shortname');
+        $project = $this->createMock(\Project::class);
+        $project->method('getGroupId')->willReturn(101);
+        $project->method('getDescription')->willReturn('My awesome project');
+        $project->method('getPublicName')->willReturn('project-shortname');
 
-        $glyph_finder = Mockery::mock(GlyphFinder::class);
-        $glyph        = Mockery::mock(Glyph::class);
-        $glyph->shouldReceive('getInlineString')->andReturn('<svg>');
-        $glyph_finder->shouldReceive('get')->andReturn($glyph);
-
-        $this->template_factory->shouldReceive('getDefaultProjectTemplate')->andReturn(null);
+        $glyph_finder = $this->createMock(GlyphFinder::class);
+        $glyph        = $this->createMock(Glyph::class);
+        $glyph->method('getInlineString')->willReturn('<svg>');
+        $glyph_finder->method('get')->willReturn($glyph);
 
         $company_templates = [new CompanyTemplate($project, $glyph_finder)];
-        $this->template_factory->shouldReceive('getCompanyTemplateList')->andReturn(
+        $this->template_factory->method('getCompanyTemplateList')->willReturn(
             $company_templates
         );
 
@@ -104,38 +94,38 @@ final class ProjectRegistrationPresenterBuilderTest extends \Tuleap\Test\PHPUnit
                 'desc_required'    => 1
             ]
         ];
-        $this->fields_factory->shouldReceive('getAllDescriptionFields')->andReturn(
+        $this->fields_factory->method('getAllDescriptionFields')->willReturn(
             $fields
         );
 
-        $this->trove_cat_factory->shouldReceive(
+        $this->trove_cat_factory->method(
             'getMandatoryParentCategoriesUnderRootOnlyWhenCategoryHasChildren'
-        )->andReturn([]);
+        )->willReturn([]);
 
         $tuleap_templates = [
             new ScrumTemplate(
                 $glyph_finder,
-                Mockery::mock(ProjectXMLMerger::class),
-                Mockery::mock(ConsistencyChecker::class)
+                $this->createMock(ProjectXMLMerger::class),
+                $this->createMock(ConsistencyChecker::class)
             )
         ];
-        $this->template_factory->shouldReceive('getValidTemplates')->andReturn(
+        $this->template_factory->method('getValidTemplates')->willReturn(
             $tuleap_templates
         );
 
         $result = $this->builder->buildPresenter();
 
-        $this->assertEquals(
+        self::assertEquals(
             '[{"title":"project-shortname","description":"My awesome project","id":"101","glyph":"<svg>","is_built_in":false}]',
             $result->company_templates
         );
 
-        $this->assertEquals(
+        self::assertEquals(
             '[{"title":"Scrum","description":"Collect stories, plan releases, monitor sprints with a ready-to-use Scrum area","id":"scrum","glyph":"<svg>","is_built_in":true}]',
             $result->tuleap_templates
         );
 
-        $this->assertEquals(
+        self::assertEquals(
             '[{"group_desc_id":"1","desc_name":"Custom field","desc_type":"text","desc_description":"Custom description","desc_required":"1"}]',
             $result->field_list
         );

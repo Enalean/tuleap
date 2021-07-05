@@ -81,13 +81,12 @@ final class ProjectCreationDataPOSTProjectBuilderTest extends TestCase
 
     public function testItBuildsProjectCreationDataWithTemplateId(): void
     {
-        $post_representation = new ProjectPostRepresentation();
+        $post_representation = ProjectPostRepresentation::build(101);
 
         $post_representation->shortname         = 'shortname';
         $post_representation->label             = 'Project 01';
         $post_representation->description       = 'desc';
         $post_representation->is_public         = true;
-        $post_representation->template_id       = 101;
         $post_representation->xml_template_name = null;
 
         $this->project_manager
@@ -126,7 +125,7 @@ final class ProjectCreationDataPOSTProjectBuilderTest extends TestCase
 
     public function testItBuildsProjectCreationDataWithXMLTemplate(): void
     {
-        $post_representation = new ProjectPostRepresentation();
+        $post_representation = ProjectPostRepresentation::build(101);
 
         $post_representation->shortname         = 'shortname-xml';
         $post_representation->label             = 'Project 02';

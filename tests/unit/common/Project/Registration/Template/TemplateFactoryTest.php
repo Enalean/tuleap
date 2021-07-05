@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Project\Registration\Template;
 
-use Mockery as M;
 use org\bovigo\vfs\vfsStream;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\Glyph\GlyphFinder;
@@ -32,19 +31,15 @@ use Tuleap\XML\ProjectXMLMerger;
 
 class TemplateFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use M\Adapter\Phpunit\MockeryPHPUnitIntegration;
     use ForgeConfigSandbox;
 
+    private TemplateFactory $factory;
     /**
-     * @var TemplateFactory
-     */
-    private $factory;
-    /**
-     * @var M\LegacyMockInterface|M\MockInterface|ConsistencyChecker
+     * @var \PHPUnit\Framework\MockObject\MockObject&ConsistencyChecker
      */
     private $consistency_checker;
     /**
-     * @var M\LegacyMockInterface|M\MockInterface|\ProjectManager
+     * @var \PHPUnit\Framework\MockObject\MockObject&\ProjectManager
      */
     private $project_manager;
 
@@ -52,53 +47,61 @@ class TemplateFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         \ForgeConfig::set('codendi_cache_dir', vfsStream::setup('TemplateFactoryTest')->url());
 
-        $this->consistency_checker = M::mock(ConsistencyChecker::class);
-        $this->consistency_checker->shouldReceive('areAllServicesAvailable')->andReturnTrue()->byDefault();
-
-        $this->project_manager = M::mock(\ProjectManager::class);
+        $this->consistency_checker = $this->createMock(ConsistencyChecker::class);
+        $this->project_manager     = $this->createMock(\ProjectManager::class);
 
         $this->factory = new TemplateFactory(
             new GlyphFinder(new \EventManager()),
             new ProjectXMLMerger(),
             $this->consistency_checker,
-            M::mock(TemplateDao::class),
+            $this->createMock(TemplateDao::class),
             $this->project_manager
         );
     }
 
     public function testItReturnsTemplates(): void
     {
+        $this->consistency_checker->method('areAllServicesAvailable')->willReturn(true);
+
         $templates = $this->factory->getValidTemplates();
-        $this->assertCount(4, $templates);
-        $this->assertInstanceOf(AgileALMTemplate::class, $templates[0]);
-        $this->assertInstanceOf(ScrumTemplate::class, $templates[1]);
-        $this->assertInstanceOf(KanbanTemplate::class, $templates[2]);
-        $this->assertInstanceOf(IssuesTemplate::class, $templates[3]);
+        self::assertCount(4, $templates);
+        self::assertInstanceOf(AgileALMTemplate::class, $templates[0]);
+        self::assertInstanceOf(ScrumTemplate::class, $templates[1]);
+        self::assertInstanceOf(KanbanTemplate::class, $templates[2]);
+        self::assertInstanceOf(IssuesTemplate::class, $templates[3]);
     }
 
     public function testItReturnsScrumTemplate(): void
     {
+        $this->consistency_checker->method('areAllServicesAvailable')->willReturn(true);
+
         $template = $this->factory->getTemplate(ScrumTemplate::NAME);
-        $this->assertInstanceOf(ScrumTemplate::class, $template);
+        self::assertInstanceOf(ScrumTemplate::class, $template);
     }
 
     public function testItReturnsEmptyTemplate(): void
     {
+        $this->consistency_checker->method('areAllServicesAvailable')->willReturn(true);
+
         $template = $this->factory->getTemplate(EmptyTemplate::NAME);
-        $this->assertInstanceOf(EmptyTemplate::class, $template);
+        self::assertInstanceOf(EmptyTemplate::class, $template);
     }
 
     public function testItReturnsScrumTemplateXML(): void
     {
+        $this->consistency_checker->method('areAllServicesAvailable')->willReturn(true);
+
         $template = $this->factory->getTemplate(ScrumTemplate::NAME);
         $xml      = simplexml_load_string(file_get_contents($template->getXMLPath()));
-        $this->assertNotEmpty($xml->services);
-        $this->assertNotEmpty($xml->agiledashboard);
-        $this->assertNotEmpty($xml->trackers);
+        self::assertNotEmpty($xml->services);
+        self::assertNotEmpty($xml->agiledashboard);
+        self::assertNotEmpty($xml->trackers);
     }
 
     public function testItThrowsAnExceptionWhenTemplateDoesntExist(): void
     {
+        $this->consistency_checker->method('areAllServicesAvailable')->willReturn(true);
+
         $this->expectException(InvalidXMLTemplateNameException::class);
 
         $this->factory->getTemplate('stuff');
@@ -106,20 +109,20 @@ class TemplateFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItDoesntReturnEmptyTemplateWhenNoTemplatesAreAvailable(): void
     {
-        $this->consistency_checker->shouldReceive('areAllServicesAvailable')->andReturnFalse();
+        $this->consistency_checker->method('areAllServicesAvailable')->willReturn(false);
 
-        $glyph_finder   = new GlyphFinder(\Mockery::mock(\EventManager::class));
+        $glyph_finder   = new GlyphFinder($this->createMock(\EventManager::class));
         $empty_template = new EmptyTemplate($glyph_finder);
 
         $available_templates = $this->factory->getValidTemplates();
 
-        $this->assertEquals($empty_template->getId(), $available_templates[0]->getId());
-        $this->assertEquals($empty_template->getTitle(), $available_templates[0]->getTitle());
+        self::assertEquals($empty_template->getId(), $available_templates[0]->getId());
+        self::assertEquals($empty_template->getTitle(), $available_templates[0]->getTitle());
     }
 
     public function testItDoesntReturnTheTemplateThatIsNotAvailable(): void
     {
-        $this->consistency_checker->shouldReceive('areAllServicesAvailable')->andReturnFalse();
+        $this->consistency_checker->method('areAllServicesAvailable')->willReturn(false);
 
         $this->expectException(InvalidXMLTemplateNameException::class);
 
@@ -128,35 +131,35 @@ class TemplateFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItReturnsCompanyTemplateWhenTheTemplateIdIsNot100(): void
     {
-        $template100 = \Mockery::mock(\Project::class);
-        $template100->shouldReceive('getGroupId')->andReturn("100")->once();
-        $template100->shouldReceive('getUnixNameLowerCase')->never();
-        $template100->shouldReceive('getDescription')->never();
-        $template100->shouldReceive('getPublicName')->never();
+        $this->consistency_checker->method('areAllServicesAvailable')->willReturn(true);
 
+        $template100 = $this->createMock(\Project::class);
+        $template100->expects(self::once())->method('getGroupId')->willReturn("100");
+        $template100->expects(self::never())->method('getUnixNameLowerCase');
+        $template100->expects(self::never())->method('getDescription');
+        $template100->expects(self::never())->method('getPublicName');
 
-        $template110 = \Mockery::mock(\Project::class);
-        $template110->shouldReceive('getGroupId')->andReturn("110")->atLeast()->twice();
-        $template110->shouldReceive('getUnixNameLowerCase')->andReturn("hustler-company");
-        $template110->shouldReceive('getDescription')->andReturn("New Jack City");
-        $template110->shouldReceive('getPublicName')->andReturn("Hustler Company");
+        $template110 = $this->createMock(\Project::class);
+        $template110->expects(self::atLeast(2))->method('getGroupId')->willReturn("110");
+        $template110->method('getUnixNameLowerCase')->willReturn("hustler-company");
+        $template110->method('getDescription')->willReturn("New Jack City");
+        $template110->method('getPublicName')->willReturn("Hustler Company");
 
-        $template120 = \Mockery::mock(\Project::class);
-        $template120->shouldReceive('getGroupId')->andReturn("120")->atLeast()->twice();
-        $template120->shouldReceive('getUnixNameLowerCase')->andReturn("lyudi-invalidy-company");
-        $template120->shouldReceive('getDescription')->andReturn("All about us");
-        $template120->shouldReceive('getPublicName')->andReturn("Lyudi Invalidy Company");
+        $template120 = $this->createMock(\Project::class);
+        $template120->expects(self::atLeast(2))->method('getGroupId')->willReturn("120");
+        $template120->method('getUnixNameLowerCase')->willReturn("lyudi-invalidy-company");
+        $template120->method('getDescription')->willReturn("All about us");
+        $template120->method('getPublicName')->willReturn("Lyudi Invalidy Company");
 
         $site_templates = [$template100, $template110, $template120];
-        $this->project_manager->shouldReceive('getSiteTemplates')->andReturn($site_templates);
+        $this->project_manager->method('getSiteTemplates')->willReturn($site_templates);
 
-
-        $glyph_finder      = new GlyphFinder(\Mockery::mock(\EventManager::class));
+        $glyph_finder      = new GlyphFinder($this->createMock(\EventManager::class));
         $hustler_template  = new CompanyTemplate($template110, $glyph_finder);
         $invalidy_template = new CompanyTemplate($template120, $glyph_finder);
 
         $expected_company_templates = [$hustler_template, $invalidy_template];
 
-        $this->assertEquals($expected_company_templates, $this->factory->getCompanyTemplateList());
+        self::assertEquals($expected_company_templates, $this->factory->getCompanyTemplateList());
     }
 }

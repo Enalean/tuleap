@@ -23,6 +23,8 @@ declare(strict_types=1);
 
 namespace Tuleap\Project\REST\v1;
 
+use Tuleap\REST\JsonCast;
+
 /**
  * @psalm-immutable
  */
@@ -72,4 +74,16 @@ class ProjectPostRepresentation
      * @var array Custom fields to be set a project creation {@from body} {@required false} {@type \Tuleap\Project\REST\v1\FieldsPostRepresentation}
      */
     public $fields;
+
+    private function __construct(int $template_id)
+    {
+        $this->template_id = $template_id;
+    }
+
+    public static function build(int $template_id): self
+    {
+        return new self(
+            JsonCast::toInt($template_id),
+        );
+    }
 }
