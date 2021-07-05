@@ -29,32 +29,32 @@
     }
 
     > .tlp-popover-header {
-        padding: var(--tlp-medium-spacing);
+        padding: var(--tlp-medium-spacing) var(--tlp-medium-spacing) 0;
         background: var(--tlp-dark-color-darker-20);
 
         > .tlp-popover-title {
             color: var(--tlp-neutral-light-color);
-            font-size: 1.125rem;
-            line-height: 1.65rem;
+            font-size: 1rem;
+            line-height: 1.5rem;
         }
     }
 
     > .tlp-popover-body {
-        background: var(--tlp-dark-color);
+        background: var(--tlp-dark-color-darker-20);
         color: var(--tlp-dimmed-color-on-dark-background);
         font-size: 0.875rem;
 
         > .current-project-nav-flag-popover-separator {
             margin: var(--tlp-medium-spacing) calc(-1 * var(--tlp-medium-spacing));
-            border-top: 1px solid var(--tlp-dark-color-darker-20);
+            border-top: 1px solid var(--tlp-dark-color-lighter-10);
         }
 
         .current-project-nav-flag-popover-content-title {
-            margin: 0 0 var(--tlp-small-spacing);
-            color: var(--tlp-typo-default-text-color-on-dark-background);
-            font-size: 1.125rem;
+            margin: 0 0 4px;
+            color: var(--tlp-neutral-light-color);
+            font-size: 1rem;
             font-weight: 600;
-            line-height: 1.625rem;
+            line-height: 1.5rem;
 
             &:last-child {
                 margin: 0;
@@ -79,8 +79,8 @@
 
             > .fas,
             > .fa {
-                top: 8px;
-                color: var(--tlp-typo-default-text-color-on-dark-background);
+                top: 6px;
+                color: var(--tlp-neutral-light-color);
                 font-size: 0.75rem;
             }
 
@@ -89,13 +89,17 @@
                 width: 12px;
 
                 > path {
-                    fill: var(--tlp-typo-default-text-color-on-dark-background);
+                    fill: var(--tlp-neutral-light-color);
                 }
             }
         }
     }
 }
 
+#project-sidebar-project-flags-popover {
+    margin-left: 4px !important; //override inset popers
+}
+
 #project-sidebar-nav-title-popover {
-    margin-left: -7px;
+    margin-left: -12px !important; //override inset popers
 }

@@ -20,12 +20,12 @@
 @use 'navbar';
 @use 'variables-common';
 
-.current-project-nav-popover {
-    max-width: 600px;
+.popover.current-project-nav-popover {
+    width: 400px;
     padding: 0;
     border: 0;
     border-radius: 4px;
-    background: var(--tlp-dark-color);
+    background: var(--tlp-dark-color-darker-20);
     color: var(--tlp-neutral-dark-color);
     font-size: 0.875rem;
     font-weight: normal;
@@ -34,13 +34,15 @@
     text-transform: none;
 
     &.right > .arrow::after {
-        border-right-color: var(--tlp-dark-color-darker-05);
+        border-right-color: var(--tlp-dark-color-darker-20);
         border-bottom-color: transparent;
     }
 
-    > .arrow {
+    &.bottom > .arrow {
+        left: var(--tlp-x-large-spacing);
+
         &::after {
-            border-bottom-color: var(--tlp-dark-color-darker-05);
+            border-bottom-color: var(--tlp-dark-color-darker-20);
         }
 
         + .popover-content {
@@ -50,16 +52,16 @@
 
     > h3 {
         margin: 0;
-        padding: var(--tlp-medium-spacing);
+        padding: var(--tlp-medium-spacing) var(--tlp-medium-spacing) 0;
         border-bottom: 0;
         border-top-left-radius: navbar.$nav-dropdown-content-border-radius;
         border-top-right-radius: navbar.$nav-dropdown-content-border-radius;
-        background-color: var(--tlp-dark-color-darker-05);
+        background-color: var(--tlp-dark-color-darker-20);
         color: var(--tlp-neutral-light-color);
-        font-size: 1.125rem;
+        font-size: 1rem;
         font-weight: 600;
         letter-spacing: normal;
-        line-height: 1.65rem;
+        line-height: 1.5rem;
         cursor: initial;
     }
 
@@ -67,24 +69,24 @@
         padding: var(--tlp-medium-spacing);
         border-bottom-right-radius: navbar.$nav-dropdown-content-border-radius;
         border-bottom-left-radius: navbar.$nav-dropdown-content-border-radius;
-        background: var(--tlp-dark-color);
+        background: var(--tlp-dark-color-darker-20);
         color: var(--tlp-neutral-dark-color);
 
         .current-project-nav-flag-popover-separator {
-            margin: var(--tlp-medium-spacing) calc(-1px * var(--tlp-medium-spacing));
-            border-top: 1px solid var(--tlp-dark-color-darker-05);
+            margin: var(--tlp-medium-spacing) calc(-1 * var(--tlp-medium-spacing));
+            border-top: 1px solid var(--tlp-dark-color-lighter-10);
             border-bottom: 0;
             background: none;
         }
 
         .current-project-nav-flag-popover-content-title {
-            margin: 0 0 var(--tlp-small-spacing);
+            margin: 0 0 4px;
             padding: 0;
             border: 0;
             color: var(--tlp-neutral-light-color);
-            font-size: 1.125rem;
+            font-size: 1rem;
             font-weight: 600;
-            line-height: 1.625rem;
+            line-height: 1.5rem;
 
             &:last-child {
                 margin: 0;
@@ -109,7 +111,7 @@
 
             > .fas,
             > .fa {
-                top: 8px;
+                top: 6px;
                 color: var(--tlp-neutral-light-color);
                 font-size: 0.75rem;
             }
@@ -166,6 +168,8 @@
 }
 
 .project-sidebar-project-flags-popover {
+    left: calc(#{variables-common.$sidebar-width} - 2px) !important; //override inset popers
+
     > .arrow {
         top: calc(50% - var(--tlp-large-spacing));
     }

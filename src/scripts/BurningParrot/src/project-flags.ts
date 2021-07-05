@@ -31,14 +31,7 @@ export function init(): void {
         return;
     }
 
-    const anchor = project_flags_element.querySelector(".project-sidebar-project-flags-labels");
-
-    if (!anchor || !(anchor instanceof HTMLElement)) {
-        return;
-    }
-
     createPopover(project_flags_element, popover_content, {
-        anchor,
         placement: "right-start",
     });
 }
