@@ -231,6 +231,32 @@ final class ReportCriteriaDaoTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertEquals($expected, $duplicated_data);
     }
 
+    public function testItDuplicatesCommentValues(): void
+    {
+        $from_report_id = 10;
+        $to_report_id   = 20;
+        $from_field_id  = 900;
+        $to_field_id    = 999;
+        $rank           = 1;
+
+        $field_mapping[] = [
+            'values' => [],
+            'from' => $from_field_id,
+            'to' => $to_field_id
+        ];
+
+        $criteria_id = $this->create($from_report_id, $from_field_id, $rank, 0);
+        $this->insertCommentValue($criteria_id, "My custom comment");
+
+        $this->dao->duplicate($from_report_id, $to_report_id, $field_mapping);
+
+        $duplicated_data = $this->getNewReportCommentValues($criteria_id);
+        $expected        = [
+            ['comment' => "My custom comment"],
+        ];
+        $this->assertEquals($expected, $duplicated_data);
+    }
+
     private function create(int $report_id, int $field_id, int $rank, int $is_advanced): int
     {
         return $this->db->insertReturnId('tracker_report_criteria', [
@@ -289,6 +315,14 @@ final class ReportCriteriaDaoTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
+    private function insertCommentValue(int $criteria_id, string $comment): void
+    {
+        $this->db->insert(
+            'tracker_report_criteria_comment_value',
+            ['report_id' => $criteria_id, 'comment' => $comment]
+        );
+    }
+
     private function getNewReportCriteriaListValues(int $field_id): array
     {
         $sql = 'SELECT value FROM tracker_report_criteria AS criteria
@@ -335,5 +369,12 @@ final class ReportCriteriaDaoTest extends \Tuleap\Test\PHPUnit\TestCase
                     INNER JOIN tracker_report_criteria_date_value AS date_values ON criteria.id = date_values.criteria_id WHERE field_id = ?';
 
         return $this->db->run($sql, $field_id);
+    }
+
+    private function getNewReportCommentValues(int $report_id): array
+    {
+        $sql = 'SELECT comment FROM tracker_report_criteria_comment_value WHERE report_id = ?';
+
+        return $this->db->run($sql, $report_id);
     }
 }

@@ -27,94 +27,8 @@ final class ReportCriteriaDao extends \Tuleap\DB\DataAccessObject
 {
     public function duplicate(int $from_report_id, int $to_report_id, array $field_mapping): void
     {
-        foreach ($field_mapping as $mapping) {
-            $sql = "INSERT INTO tracker_report_criteria (report_id, field_id, rank, is_advanced)
-                SELECT ?, field_id, rank, is_advanced
-                FROM tracker_report_criteria
-                WHERE report_id = ? AND field_id = ?";
-            $this->getDB()->run($sql, $to_report_id, $from_report_id, $mapping['from']);
-
-            $report_criteria_id = (int) $this->getDB()->lastInsertId();
-            if ($report_criteria_id === 0) {
-                continue;
-            }
-
-            $sql = "UPDATE tracker_report_criteria SET field_id = ?
-                    WHERE report_id = ? AND field_id = ?";
-            $this->getDB()->run($sql, $mapping['to'], $to_report_id, $mapping['from']);
-
-            $sql = "SELECT value, 'list' AS field_type, null AS op, null AS from_date, null as to_date
-                    FROM tracker_report_criteria AS original_report
-                             INNER JOIN tracker_report_criteria_list_value on criteria_id = original_report.id
-                    WHERE original_report.field_id = ? AND original_report.report_id = ?
-                    UNION SELECT value, 'alphanum' AS field_type, null AS op, null AS from_date, null as to_date
-                    FROM tracker_report_criteria AS original_report
-                        INNER JOIN tracker_report_criteria_alphanum_value on criteria_id = original_report.id
-                    WHERE original_report.field_id = ? AND original_report.report_id = ?
-                    UNION SELECT value, 'file' AS field_type, null AS op, null AS from_date, null as to_date
-                    FROM tracker_report_criteria AS original_report
-                        INNER JOIN tracker_report_criteria_file_value on criteria_id = original_report.id
-                    WHERE original_report.field_id = ? AND original_report.report_id = ?
-                    UNION SELECT value, 'openlist' AS field_type, null AS op, null AS from_date, null as to_date
-                    FROM tracker_report_criteria AS original_report
-                        INNER JOIN tracker_report_criteria_openlist_value on criteria_id = original_report.id
-                    WHERE original_report.field_id = ? AND original_report.report_id = ?
-                    UNION SELECT value, 'permissions' AS field_type, null AS op, null AS from_date, null as to_date
-                    FROM tracker_report_criteria AS original_report
-                        INNER JOIN tracker_report_criteria_permissionsonartifact_value on criteria_id = original_report.id
-                    WHERE original_report.field_id = ? AND original_report.report_id = ?
-                    UNION SELECT null, 'date' AS field_type, op, from_date, to_date
-                    FROM tracker_report_criteria AS original_report
-                        INNER JOIN tracker_report_criteria_date_value on criteria_id = original_report.id
-                    WHERE original_report.field_id = ? AND original_report.report_id = ?";
-
-            $criterias = $this->getDB()->run(
-                $sql,
-                $mapping['from'],
-                $from_report_id,
-                $mapping['from'],
-                $from_report_id,
-                $mapping['from'],
-                $from_report_id,
-                $mapping['from'],
-                $from_report_id,
-                $mapping['from'],
-                $from_report_id,
-                $mapping['from'],
-                $from_report_id,
-            );
-            if (! $criterias) {
-                continue;
-            }
-
-            $data_to_insert = [];
-            foreach ($criterias as $row) {
-                if ($row['field_type'] === "date") {
-                    $data_to_insert[$row['field_type']][] = [
-                        'criteria_id' => $report_criteria_id,
-                        'op'          => $row['op'],
-                        'from_date'   => $row['from_date'],
-                        'to_date'     => $row['to_date'],
-                    ];
-                } else {
-                    if ($row['value'] === null) {
-                        continue;
-                    }
-                    $value                                = $this->getValueFromRow($row, $mapping);
-                    $data_to_insert[$row['field_type']][] = [
-                        'criteria_id' => $report_criteria_id,
-                        'value' => $value
-                    ];
-                }
-            }
-
-            $this->insertListCriteria($data_to_insert);
-            $this->insertAlphaNumCriteria($data_to_insert);
-            $this->insertFileCriteria($data_to_insert);
-            $this->insertOpenListCriteria($data_to_insert);
-            $this->insertPermissionsCriteria($data_to_insert);
-            $this->insertDateCriteria($data_to_insert);
-        }
+        $this->dusplicateComment($to_report_id, $from_report_id);
+        $this->duplicatedFields($field_mapping, $to_report_id, $from_report_id);
     }
 
     private function insertListCriteria(array $data_to_insert): void
@@ -214,5 +128,112 @@ final class ReportCriteriaDao extends \Tuleap\DB\DataAccessObject
         }
 
         return implode(',', $converted_values);
+    }
+
+    private function dusplicateComment(int $to_report_id, int $from_report_id): void
+    {
+        $sql = "INSERT INTO tracker_report_criteria_comment_value (report_id, comment)
+                    SELECT ?, comment
+                    FROM tracker_report_criteria_comment_value AS comment
+                    WHERE comment.report_id= ?";
+        $this->getDB()->run($sql, $to_report_id, $from_report_id);
+    }
+
+    private function duplicatedFields(array $field_mapping, int $to_report_id, int $from_report_id): void
+    {
+        foreach ($field_mapping as $mapping) {
+            $sql = "INSERT INTO tracker_report_criteria (report_id, field_id, rank, is_advanced)
+                SELECT ?, field_id, rank, is_advanced
+                FROM tracker_report_criteria
+                WHERE report_id = ? AND field_id = ?";
+            $this->getDB()->run($sql, $to_report_id, $from_report_id, $mapping['from']);
+
+            $report_criteria_id = (int) $this->getDB()->lastInsertId();
+            if ($report_criteria_id === 0) {
+                continue;
+            }
+
+            $sql = "UPDATE tracker_report_criteria SET field_id = ?
+                    WHERE report_id = ? AND field_id = ?";
+            $this->getDB()->run($sql, $mapping['to'], $to_report_id, $mapping['from']);
+
+            $sql = "SELECT value, 'list' AS field_type, null AS op, null AS from_date, null as to_date
+                    FROM tracker_report_criteria AS original_report
+                             INNER JOIN tracker_report_criteria_list_value on criteria_id = original_report.id
+                    WHERE original_report.field_id = ? AND original_report.report_id = ?
+                    UNION SELECT value, 'alphanum' AS field_type, null AS op, null AS from_date, null as to_date
+                    FROM tracker_report_criteria AS original_report
+                        INNER JOIN tracker_report_criteria_alphanum_value on criteria_id = original_report.id
+                    WHERE original_report.field_id = ? AND original_report.report_id = ?
+                    UNION SELECT value, 'file' AS field_type, null AS op, null AS from_date, null as to_date
+                    FROM tracker_report_criteria AS original_report
+                        INNER JOIN tracker_report_criteria_file_value on criteria_id = original_report.id
+                    WHERE original_report.field_id = ? AND original_report.report_id = ?
+                    UNION SELECT value, 'openlist' AS field_type, null AS op, null AS from_date, null as to_date
+                    FROM tracker_report_criteria AS original_report
+                        INNER JOIN tracker_report_criteria_openlist_value on criteria_id = original_report.id
+                    WHERE original_report.field_id = ? AND original_report.report_id = ?
+                    UNION SELECT value, 'permissions' AS field_type, null AS op, null AS from_date, null as to_date
+                    FROM tracker_report_criteria AS original_report
+                        INNER JOIN tracker_report_criteria_permissionsonartifact_value on criteria_id = original_report.id
+                    WHERE original_report.field_id = ? AND original_report.report_id = ?
+                    UNION SELECT null, 'date' AS field_type, op, from_date, to_date
+                    FROM tracker_report_criteria AS original_report
+                        INNER JOIN tracker_report_criteria_date_value on criteria_id = original_report.id
+                    WHERE original_report.field_id = ? AND original_report.report_id = ?";
+
+            $criterias = $this->getDB()->run(
+                $sql,
+                $mapping['from'],
+                $from_report_id,
+                $mapping['from'],
+                $from_report_id,
+                $mapping['from'],
+                $from_report_id,
+                $mapping['from'],
+                $from_report_id,
+                $mapping['from'],
+                $from_report_id,
+                $mapping['from'],
+                $from_report_id,
+            );
+            if (! $criterias) {
+                continue;
+            }
+
+            $data_to_insert = [];
+            foreach ($criterias as $row) {
+                if ($row['field_type'] === "date") {
+                    $data_to_insert[$row['field_type']][] = [
+                        'criteria_id' => $report_criteria_id,
+                        'op' => $row['op'],
+                        'from_date' => $row['from_date'],
+                        'to_date' => $row['to_date'],
+                    ];
+                }
+                if ($row['field_type'] === "comment") {
+                    $data_to_insert[$row['field_type']][] = [
+                        'report_id  ' => $report_criteria_id,
+                        'comment' => $row['value'],
+                    ];
+                } else {
+                    if ($row['value'] === null) {
+                        continue;
+                    }
+                    $value                                = $this->getValueFromRow($row, $mapping);
+                    $data_to_insert[$row['field_type']][] = [
+                        'criteria_id' => $report_criteria_id,
+                        'value' => $value
+                    ];
+                }
+            }
+
+            $this->insertListCriteria($data_to_insert);
+            $this->insertAlphaNumCriteria($data_to_insert);
+            $this->insertFileCriteria($data_to_insert);
+            $this->insertOpenListCriteria($data_to_insert);
+            $this->insertPermissionsCriteria($data_to_insert);
+            $this->insertDateCriteria($data_to_insert);
+        }
     }
 }
