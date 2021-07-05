@@ -28,6 +28,7 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Content\Links\Verify
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\BuildPlanning;
 use Tuleap\ProgramManagement\Domain\Program\PlanningConfiguration\Planning;
+use Tuleap\ProgramManagement\Domain\Program\PlanningConfiguration\TopPlanningNotFoundInProjectException;
 
 final class UserStoryLinkedToFeatureChecker implements VerifyLinkedUserStoryIsNotPlanned
 {
@@ -58,7 +59,11 @@ final class UserStoryLinkedToFeatureChecker implements VerifyLinkedUserStoryIsNo
     {
         $planned_user_stories = $this->stories_linked_to_feature_dao->getPlannedUserStory($feature->id);
         foreach ($planned_user_stories as $user_story) {
-            $planning = Planning::buildPlanning($this->planning_adapter, $user, $user_story['project_id']);
+            try {
+                $planning = Planning::buildPlanning($this->planning_adapter, $user, $user_story['project_id']);
+            } catch (TopPlanningNotFoundInProjectException $e) {
+                continue;
+            }
 
             $is_linked_to_a_sprint_in_mirrored_program_increments = $this->stories_linked_to_feature_dao->isLinkedToASprintInMirroredProgramIncrement(
                 $user_story['user_story_id'],
