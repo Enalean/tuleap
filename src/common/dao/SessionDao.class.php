@@ -55,6 +55,18 @@ class SessionDao extends \Tuleap\DB\DataAccessObject
         );
     }
 
+    /**
+     * @psalm-return array{"user_agent": string, nb: int}[]
+     */
+    public function countUserAgentsOfActiveSessions(int $current_time, int $session_lifetime): array
+    {
+        return $this->getDB()->run(
+            'SELECT user_agent, COUNT(id) AS nb FROM session WHERE time + ? > ? GROUP BY user_agent',
+            $session_lifetime,
+            $current_time
+        );
+    }
+
     public function deleteSessionById($id): void
     {
         $this->getDB()->run('DELETE FROM session WHERE id = ?', $id);

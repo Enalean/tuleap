@@ -92,7 +92,12 @@ final class DetectedBrowser
 
     public static function detectFromTuleapHTTPRequest(\HTTPRequest $request): self
     {
-        return new self($request->getFromServer('HTTP_USER_AGENT') ?: '');
+        return self::detectFromUserAgentString($request->getFromServer('HTTP_USER_AGENT') ?: '');
+    }
+
+    public static function detectFromUserAgentString(string $user_agent): self
+    {
+        return new self($user_agent);
     }
 
     public function isIE(): bool

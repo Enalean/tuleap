@@ -22,6 +22,7 @@
 use Tuleap\Admin\Homepage\NbUsersByStatusBuilder;
 use Tuleap\Admin\Homepage\UserCounterDao;
 use Tuleap\Admin\Homepage\UsersStatisticsPresenter;
+use Tuleap\BrowserDetection\BrowserUsageSessionsStatisticsRetriever;
 
 require_once __DIR__ . '/../include/pre.php';
 require_once __DIR__ . '/admin_utils.php';
@@ -171,7 +172,7 @@ if (isset($project_count[Project::STATUS_SUSPENDED])) {
 }
 
 $project_stats->setContent('
-    <section class="tlp-pane-section siteadmin-homepage-statistics-section-last siteadmin-homepage-statistics-section-graph">
+    <section class="tlp-pane-section siteadmin-homepage-statistics-section-graph">
         <div class="tlp-property">
             <div id="siteadmin-homepage-projects"
                  class="siteadmin-homepage-pie-chart"
@@ -184,6 +185,27 @@ $project_stats->setContent('
         <a href="/admin/grouplist.php" class="tlp-button-primary tlp-button-outline tlp-button-wide" title="' . _('View all projects') . '">' . _('View all projects') . '</a>
     </section>
 ');
+
+$session_browser_stats = new Widget_Static(_('Active sessions browser statistics'));
+$session_browser_stats->setIcon('fa-pie-chart');
+$session_browser_stats->setAdditionalClass('siteadmin-homepage-statistics');
+$browser_usage_session_statistics_retriever = new BrowserUsageSessionsStatisticsRetriever(new SessionDao());
+$statistics                                 = $browser_usage_session_statistics_retriever->getStatistics(new DateTimeImmutable());
+$session_browser_stats->setContent(
+    $renderer->renderToString(
+        'active-sessions-browsers-statistics',
+        [
+            'short_locale' => UserManager::instance()->getCurrentUser()->getShortLocale(),
+            'statistics' => json_encode(
+                [
+                    ['key' => 'really-outdated', 'label' => _('unsupported browsers'), 'count' => $statistics->number_sessions_using_really_outdated_browsers],
+                    ['key' => 'supported', 'label' => _('supported browsers'), 'count' => $statistics->number_sessions_using_supported_browsers],
+                ],
+                JSON_THROW_ON_ERROR
+            )
+        ]
+    )
+);
 
 if (ForgeConfig::getInt(User_UserStatusManager::CONFIG_USER_REGISTRATION_APPROVAL) === 1) {
     $pending_action = '<p class="siteadmin-homepage-no-validation">' . _('No users to validate') . '</p>';
@@ -282,6 +304,9 @@ echo '<div class="siteadmin-homepage-row">';
 $user_stats->display();
 
 $project_stats->display();
+
+$session_browser_stats->display();
+
 echo '</div>';
 
 echo '</div>';
