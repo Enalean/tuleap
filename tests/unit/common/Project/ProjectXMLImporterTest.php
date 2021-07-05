@@ -100,8 +100,6 @@ class ProjectXMLImporterTest extends \Tuleap\Test\PHPUnit\TestCase
             M::spy(\Tuleap\Project\Label\LabelDao::class),
             new DefaultProjectVisibilityRetriever(),
             M::spy(\Tuleap\Project\UGroups\SynchronizedProjectMembershipDuplicator::class),
-            new \Rule_ProjectName(),
-            new \Rule_ProjectFullName(),
             Mockery::mock(EventManager::class),
             Mockery::mock(\Tuleap\Project\Admin\DescriptionFields\FieldUpdator::class),
             Mockery::mock(ProjectServiceActivator::class),

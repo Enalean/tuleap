@@ -29,9 +29,11 @@ use Luracast\Restler\RestException;
 use Mockery as M;
 use org\bovigo\vfs\vfsStream;
 use Project;
+use ProjectCreationData;
 use ProjectCreator;
 use ProjectManager;
 use ProjectXMLImporter;
+use Psr\Log\NullLogger;
 use Service;
 use ServiceManager;
 use Tuleap\ForgeConfigSandbox;
@@ -40,12 +42,12 @@ use Tuleap\Project\Admin\Categories\CategoryCollection;
 use Tuleap\Project\Admin\Categories\MissingMandatoryCategoriesException;
 use Tuleap\Project\Admin\Categories\ProjectCategoriesUpdater;
 use Tuleap\Project\Admin\DescriptionFields\FieldUpdator;
+use Tuleap\Project\DefaultProjectVisibilityRetriever;
 use Tuleap\Project\Registration\MaxNumberOfProjectReachedForPlatformException;
 use Tuleap\Project\Registration\Template\InvalidXMLTemplateNameException;
 use Tuleap\Project\Registration\Template\ScrumTemplate;
 use Tuleap\Project\Registration\Template\TemplateDao;
 use Tuleap\Project\Registration\Template\TemplateFactory;
-use Tuleap\Project\Registration\Template\TemplateFromProjectForCreation;
 use Tuleap\Project\SystemEventRunnerForProjectCreationFromXMLTemplate;
 use Tuleap\Project\XML\ConsistencyChecker;
 use Tuleap\Project\XML\Import\ArchiveInterface;
@@ -79,7 +81,7 @@ class RestProjectCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
     private $project_manager;
     private $creator;
     private $user;
-    private $project;
+    private $project_post_representation;
     private $project_creator;
     private $project_XML_importer;
     /**
@@ -110,12 +112,7 @@ class RestProjectCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->event_manager = \Mockery::mock(\EventManager::class);
         $this->retriever     = \Mockery::mock(ServiceEnableForXmlImportRetriever::class);
         $this->creator       = new RestProjectCreator(
-            $this->project_manager,
             $this->project_creator,
-            new XMLFileContentRetriever(),
-            $this->service_manager,
-            M::spy(\Psr\Log\LoggerInterface::class),
-            new \XML_RNGValidator(),
             $this->project_XML_importer,
             new TemplateFactory(
                 new GlyphFinder(
@@ -136,25 +133,25 @@ class RestProjectCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->user = new \PFUser(['language_id' => 'en_US']);
         $this->project_manager->shouldReceive('userCanCreateProject')->with($this->user)->andReturnTrue()->byDefault();
-        $this->project = new ProjectPostRepresentation();
+        $this->project_post_representation = new ProjectPostRepresentation();
     }
 
     public function testCreateThrowExceptionWhenUserCannotCreateProjects()
     {
-        $this->project->template_id      = 100;
-        $this->project->shortname        = 'gpig';
-        $this->project->label            = 'Guinea Pig';
-        $this->project->description      = 'foo';
-        $this->project->is_public        = false;
-        $this->project->allow_restricted = false;
-        $this->project->categories       = [
+        $this->project_post_representation->template_id      = 100;
+        $this->project_post_representation->shortname        = 'gpig';
+        $this->project_post_representation->label            = 'Guinea Pig';
+        $this->project_post_representation->description      = 'foo';
+        $this->project_post_representation->is_public        = false;
+        $this->project_post_representation->allow_restricted = false;
+        $this->project_post_representation->categories       = [
             CategoryPostRepresentation::build(14, 89),
             CategoryPostRepresentation::build(18, 53)
         ];
 
         $template_project = M::mock(Project::class, ['isError' => false, 'isActive' => false, 'isTemplate' => true]);
 
-        $this->project_manager->shouldReceive('getProject')->with($this->project->template_id)->andReturn($template_project);
+        $this->project_manager->shouldReceive('getProject')->with($this->project_post_representation->template_id)->andReturn($template_project);
 
         $verify_category_collection = static function (CategoryCollection $categories) {
             [$category1, $category2] = $categories->getRootCategories();
@@ -166,86 +163,85 @@ class RestProjectCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->categories_updater->shouldReceive('checkCollectionConsistency')->once()->with(M::on($verify_category_collection));
 
-        $this->project_creator->shouldReceive('createFromRest')->andThrow(new MaxNumberOfProjectReachedForPlatformException(
-            'messsage',
-            'i18n_message'
-        ));
+        $this->project_creator->shouldReceive('processProjectCreation')->andThrow(
+            new MaxNumberOfProjectReachedForPlatformException()
+        );
 
         $this->expectException(RestException::class);
 
-        $this->creator->create($this->user, $this->project);
+        $this->creator->create(
+            $this->project_post_representation,
+            new ProjectCreationData(
+                new DefaultProjectVisibilityRetriever(),
+                new NullLogger()
+            )
+        );
     }
 
     public function testCreateThrowExceptionWhenNeitherTemplateIdNorTemplateNameIsProvided()
     {
         $this->expectException(InvalidXMLTemplateNameException::class);
 
-
-        $this->creator->create($this->user, $this->project);
+        $this->creator->create(
+            $this->project_post_representation,
+            new ProjectCreationData(
+                new DefaultProjectVisibilityRetriever(),
+                new NullLogger()
+            )
+        );
     }
 
     public function testCreateWithDefaultProjectTemplate()
     {
-        $this->project->template_id = 100;
-        $this->project->shortname   = 'gpig';
-        $this->project->label       = 'Guinea Pig';
-        $this->project->description = 'foo';
-        $this->project->is_public   = false;
+        $this->project_post_representation->template_id = 100;
+        $this->project_post_representation->shortname   = 'gpig';
+        $this->project_post_representation->label       = 'Guinea Pig';
+        $this->project_post_representation->description = 'foo';
+        $this->project_post_representation->is_public   = false;
+
+        $project_creation_data = new ProjectCreationData(
+            new DefaultProjectVisibilityRetriever(),
+            new NullLogger()
+        );
 
         $template_project = \Mockery::mock(Project::class);
         $template_project->shouldReceive('isError')->andReturnFalse();
         $template_project->shouldReceive('isActive')->andReturnFalse();
         $template_project->shouldReceive('isTemplate')->andReturnTrue();
-        $this->project_manager->shouldReceive('getProject')->with($this->project->template_id)->andReturn($template_project);
-        $this->project_creator->shouldReceive('createFromRest')->with(
-            'gpig',
-            'Guinea Pig',
-            \Mockery::on(static function (TemplateFromProjectForCreation $template_from_project_for_creation) use ($template_project) {
-                return $template_from_project_for_creation->getProject() === $template_project;
-            }),
-            [
-                'project' => [
-                    'form_short_description' => 'foo',
-                    'is_test' => false,
-                    'is_public' => false
-                ]
-            ],
-        );
+        $this->project_manager->shouldReceive('getProject')->with($this->project_post_representation->template_id)->andReturn($template_project);
+        $this->project_creator->shouldReceive('processProjectCreation')->with($project_creation_data);
 
-        $this->creator->create($this->user, $this->project);
+        $this->creator->create(
+            $this->project_post_representation,
+            $project_creation_data
+        );
     }
 
     public function testCreateWithDefaultProjectTemplateAndExcludeRestrictedUsers()
     {
-        $this->project->template_id      = 100;
-        $this->project->shortname        = 'gpig';
-        $this->project->label            = 'Guinea Pig';
-        $this->project->description      = 'foo';
-        $this->project->is_public        = false;
-        $this->project->allow_restricted = false;
+        $this->project_post_representation->template_id      = 100;
+        $this->project_post_representation->shortname        = 'gpig';
+        $this->project_post_representation->label            = 'Guinea Pig';
+        $this->project_post_representation->description      = 'foo';
+        $this->project_post_representation->is_public        = false;
+        $this->project_post_representation->allow_restricted = false;
+
+        $project_creation_data = new ProjectCreationData(
+            new DefaultProjectVisibilityRetriever(),
+            new NullLogger()
+        );
 
         $template_project = \Mockery::mock(Project::class);
         $template_project->shouldReceive('isError')->andReturnFalse();
         $template_project->shouldReceive('isActive')->andReturnFalse();
         $template_project->shouldReceive('isTemplate')->andReturnTrue();
-        $this->project_manager->shouldReceive('getProject')->with($this->project->template_id)->andReturn($template_project);
-        $this->project_creator->shouldReceive('createFromRest')->with(
-            'gpig',
-            'Guinea Pig',
-            \Mockery::on(static function (TemplateFromProjectForCreation $template_from_project_for_creation) use ($template_project) {
-                return $template_from_project_for_creation->getProject() === $template_project;
-            }),
-            [
-                'project' => [
-                    'form_short_description' => 'foo',
-                    'is_test' => false,
-                    'is_public' => false,
-                    'allow_restricted' => false,
-                ]
-            ],
-        );
+        $this->project_manager->shouldReceive('getProject')->with($this->project_post_representation->template_id)->andReturn($template_project);
+        $this->project_creator->shouldReceive('processProjectCreation')->with($project_creation_data);
 
-        $this->creator->create($this->user, $this->project);
+        $this->creator->create(
+            $this->project_post_representation,
+            $project_creation_data
+        );
     }
 
     public function testCreateFromXMLTemplate()
@@ -253,12 +249,17 @@ class RestProjectCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         ForgeConfig::set(ProjectManager::SYS_USER_CAN_CHOOSE_PROJECT_PRIVACY, 1);
         ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::RESTRICTED);
 
-        $this->project->xml_template_name = ScrumTemplate::NAME;
-        $this->project->shortname         = 'gpig';
-        $this->project->label             = 'Guinea Pig';
-        $this->project->description       = 'foo';
-        $this->project->is_public         = false;
-        $this->project->allow_restricted  = false;
+        $this->project_post_representation->xml_template_name = ScrumTemplate::NAME;
+        $this->project_post_representation->shortname         = 'gpig';
+        $this->project_post_representation->label             = 'Guinea Pig';
+        $this->project_post_representation->description       = 'foo';
+        $this->project_post_representation->is_public         = false;
+        $this->project_post_representation->allow_restricted  = false;
+
+        $project_creation_data = new ProjectCreationData(
+            new DefaultProjectVisibilityRetriever(),
+            new NullLogger()
+        );
 
         $services = [
             M::mock(Service::class, ['getShortName' => "summary", 'getId' => 12]),
@@ -293,37 +294,46 @@ class RestProjectCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
                 return realpath($archive->getExtractionPath()) === realpath(dirname((new ScrumTemplate(M::mock(GlyphFinder::class), new ProjectXMLMerger(), M::mock(ConsistencyChecker::class)))->getXMLPath()));
             }),
             \Hamcrest\Core\IsEqual::equalTo(new SystemEventRunnerForProjectCreationFromXMLTemplate()),
-            M::on(static function (\ProjectCreationData $data) {
-                return $data->getUnixName() === 'gpig' &&
-                    $data->getFullName() === 'Guinea Pig' &&
-                    $data->getShortDescription() === 'foo' &&
-                    $data->getAccess() === Project::ACCESS_PRIVATE_WO_RESTRICTED;
-            })
+            $project_creation_data
         )->andReturn($new_project);
 
         $this->template_dao->shouldReceive('saveTemplate')->with($new_project, ScrumTemplate::NAME)->once();
 
-        $this->assertSame($new_project, $this->creator->create($this->user, $this->project));
+        $this->assertSame(
+            $new_project,
+            $this->creator->create(
+                $this->project_post_representation,
+                $project_creation_data
+            )
+        );
     }
 
     public function testItCreatesWithSelectedCategories()
     {
-        $this->project->template_id      = 100;
-        $this->project->shortname        = 'gpig';
-        $this->project->label            = 'Guinea Pig';
-        $this->project->description      = 'foo';
-        $this->project->is_public        = false;
-        $this->project->allow_restricted = false;
-        $this->project->categories       = [
+        $this->project_post_representation->template_id      = 100;
+        $this->project_post_representation->shortname        = 'gpig';
+        $this->project_post_representation->label            = 'Guinea Pig';
+        $this->project_post_representation->description      = 'foo';
+        $this->project_post_representation->is_public        = false;
+        $this->project_post_representation->allow_restricted = false;
+        $this->project_post_representation->categories       = [
             CategoryPostRepresentation::build(14, 89),
             CategoryPostRepresentation::build(18, 53)
         ];
 
+        $project_creation_data = new ProjectCreationData(
+            new DefaultProjectVisibilityRetriever(),
+            new NullLogger()
+        );
+
         $template_project = M::mock(Project::class, ['isError' => false, 'isActive' => false, 'isTemplate' => true]);
         $new_project      = new \Project(['group_id' => 201]);
 
-        $this->project_manager->shouldReceive('getProject')->with($this->project->template_id)->andReturn($template_project);
-        $this->project_creator->shouldReceive('createFromRest')->with('gpig', 'Guinea Pig', M::andAnyOtherArgs())->once()->andReturn($new_project);
+        $this->project_manager->shouldReceive('getProject')->with($this->project_post_representation->template_id)->andReturn($template_project);
+        $this->project_creator->shouldReceive('processProjectCreation')
+            ->with($project_creation_data)
+            ->once()
+            ->andReturn($new_project);
 
         $verify_category_collection = static function (CategoryCollection $categories) {
             [$category1, $category2] = $categories->getRootCategories();
@@ -336,59 +346,74 @@ class RestProjectCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->categories_updater->shouldReceive('checkCollectionConsistency')->once()->with(M::on($verify_category_collection));
         $this->categories_updater->shouldReceive('update')->once()->with($new_project, M::on($verify_category_collection));
 
-        $this->creator->create($this->user, $this->project);
+        $this->creator->create(
+            $this->project_post_representation,
+            $project_creation_data
+        );
     }
 
 
     public function testItThrowsAnExceptionWhenMandatoryCategoryIsMissing()
     {
-        $this->project->template_id      = 100;
-        $this->project->shortname        = 'gpig';
-        $this->project->label            = 'Guinea Pig';
-        $this->project->description      = 'foo';
-        $this->project->is_public        = false;
-        $this->project->allow_restricted = false;
-        $this->project->categories       = [
+        $this->project_post_representation->template_id      = 100;
+        $this->project_post_representation->shortname        = 'gpig';
+        $this->project_post_representation->label            = 'Guinea Pig';
+        $this->project_post_representation->description      = 'foo';
+        $this->project_post_representation->is_public        = false;
+        $this->project_post_representation->allow_restricted = false;
+        $this->project_post_representation->categories       = [
             CategoryPostRepresentation::build(14, 89),
             CategoryPostRepresentation::build(18, 53)
         ];
 
         $template_project = M::mock(Project::class, ['isError' => false, 'isActive' => false, 'isTemplate' => true]);
 
-        $this->project_manager->shouldReceive('getProject')->with($this->project->template_id)->andReturn($template_project);
-        $this->project_creator->shouldNotReceive('createFromRest');
+        $this->project_manager->shouldReceive('getProject')->with($this->project_post_representation->template_id)->andReturn($template_project);
+        $this->project_creator->shouldNotReceive('processProjectCreation');
 
         $this->categories_updater->shouldReceive('checkCollectionConsistency')->once()->andThrow(new MissingMandatoryCategoriesException());
 
         $this->expectException(RestException::class);
         $this->expectExceptionCode(400);
 
-        $this->creator->create($this->user, $this->project);
+        $this->creator->create(
+            $this->project_post_representation,
+            new ProjectCreationData(
+                new DefaultProjectVisibilityRetriever(),
+                new NullLogger()
+            )
+        );
     }
 
     public function testItThrowsAnExceptionWhenFieldCollectionIsInvalid()
     {
-        $this->project->template_id      = 100;
-        $this->project->shortname        = 'gpig';
-        $this->project->label            = 'Guinea Pig';
-        $this->project->description      = 'foo';
-        $this->project->is_public        = false;
-        $this->project->allow_restricted = false;
-        $this->project->categories       = [
+        $this->project_post_representation->template_id      = 100;
+        $this->project_post_representation->shortname        = 'gpig';
+        $this->project_post_representation->label            = 'Guinea Pig';
+        $this->project_post_representation->description      = 'foo';
+        $this->project_post_representation->is_public        = false;
+        $this->project_post_representation->allow_restricted = false;
+        $this->project_post_representation->categories       = [
             CategoryPostRepresentation::build(14, 89),
             CategoryPostRepresentation::build(18, 53)
         ];
 
         $template_project = M::mock(Project::class, ['isError' => false, 'isActive' => false, 'isTemplate' => true]);
 
-        $this->project_manager->shouldReceive('getProject')->with($this->project->template_id)->andReturn($template_project);
-        $this->project_creator->shouldNotReceive('createFromRest');
+        $this->project_manager->shouldReceive('getProject')->with($this->project_post_representation->template_id)->andReturn($template_project);
+        $this->project_creator->shouldNotReceive('processProjectCreation');
 
         $this->categories_updater->shouldReceive('checkCollectionConsistency')->once()->andThrow(new MissingMandatoryCategoriesException());
 
         $this->expectException(RestException::class);
         $this->expectExceptionCode(400);
 
-        $this->creator->create($this->user, $this->project);
+        $this->creator->create(
+            $this->project_post_representation,
+            new ProjectCreationData(
+                new DefaultProjectVisibilityRetriever(),
+                new NullLogger()
+            )
+        );
     }
 }

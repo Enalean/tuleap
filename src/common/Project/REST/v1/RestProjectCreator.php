@@ -24,7 +24,6 @@ declare(strict_types=1);
 namespace Tuleap\Project\REST\v1;
 
 use Luracast\Restler\RestException;
-use PFUser;
 use Project;
 use ProjectCreationData;
 use Tuleap\Project\Admin\Categories\CategoryCollection;
@@ -35,43 +34,24 @@ use Tuleap\Project\Admin\DescriptionFields\FieldUpdator;
 use Tuleap\Project\Admin\DescriptionFields\MissingMandatoryFieldException;
 use Tuleap\Project\Registration\MaxNumberOfProjectReachedForPlatformException;
 use Tuleap\Project\Registration\MaxNumberOfProjectReachedForUserException;
+use Tuleap\Project\Registration\ProjectDescriptionMandatoryException;
+use Tuleap\Project\Registration\ProjectInvalidFullNameException;
+use Tuleap\Project\Registration\ProjectInvalidShortNameException;
 use Tuleap\Project\Registration\RegistrationForbiddenException;
 use Tuleap\Project\Registration\Template\InvalidTemplateException;
 use Tuleap\Project\Registration\Template\InvalidXMLTemplateNameException;
 use Tuleap\Project\Registration\Template\TemplateFactory;
-use Tuleap\Project\Registration\Template\TemplateFromProjectForCreation;
 use Tuleap\Project\SystemEventRunnerForProjectCreationFromXMLTemplate;
 use Tuleap\Project\XML\Import\DirectoryArchive;
 use Tuleap\Project\XML\Import\ImportConfig;
 use Tuleap\Project\XML\Import\ImportNotValidException;
-use Tuleap\Project\XML\XMLFileContentRetriever;
 
 class RestProjectCreator
 {
     /**
-     * @var \ProjectManager
-     */
-    private $project_manager;
-    /**
      * @var \ProjectCreator
      */
     private $project_creator;
-    /**
-     * @var XMLFileContentRetriever
-     */
-    private $XML_file_content_retriever;
-    /**
-     * @var \ServiceManager
-     */
-    private $service_manager;
-    /**
-     * @var \Psr\Log\LoggerInterface
-     */
-    private $logger;
-    /**
-     * @var \XML_RNGValidator
-     */
-    private $validator;
     /**
      * @var \ProjectXMLImporter
      */
@@ -90,39 +70,31 @@ class RestProjectCreator
     private $fields_updater;
 
     public function __construct(
-        \ProjectManager $project_manager,
         \ProjectCreator $project_creator,
-        XMLFileContentRetriever $XML_file_content_retriever,
-        \ServiceManager $service_manager,
-        \Psr\Log\LoggerInterface $logger,
-        \XML_RNGValidator $validator,
         \ProjectXMLImporter $project_XML_importer,
         TemplateFactory $template_factory,
         ProjectCategoriesUpdater $categories_updater,
         FieldUpdator $fields_updater
     ) {
-        $this->project_manager            = $project_manager;
-        $this->project_creator            = $project_creator;
-        $this->XML_file_content_retriever = $XML_file_content_retriever;
-        $this->service_manager            = $service_manager;
-        $this->logger                     = $logger;
-        $this->validator                  = $validator;
-        $this->project_XML_importer       = $project_XML_importer;
-        $this->template_factory           = $template_factory;
-        $this->categories_updater         = $categories_updater;
-        $this->fields_updater             = $fields_updater;
+        $this->project_creator      = $project_creator;
+        $this->project_XML_importer = $project_XML_importer;
+        $this->template_factory     = $template_factory;
+        $this->categories_updater   = $categories_updater;
+        $this->fields_updater       = $fields_updater;
     }
 
     /**
      * @throws RestException
      * @throws \Project_Creation_Exception
-     * @throws \Project_InvalidFullName_Exception
-     * @throws \Project_InvalidShortName_Exception
-     * @throws \Tuleap\Project\ProjectDescriptionMandatoryException
+     * @throws ProjectInvalidFullNameException
+     * @throws ProjectInvalidShortNameException
+     * @throws ProjectDescriptionMandatoryException
      * @throws InvalidTemplateException
      */
-    public function create(PFUser $user, ProjectPostRepresentation $post_representation): Project
-    {
+    public function create(
+        ProjectPostRepresentation $post_representation,
+        ProjectCreationData $creation_data
+    ): Project {
         try {
             $category_collection = $this->getCategoryCollection($post_representation);
             $this->categories_updater->checkCollectionConsistency($category_collection);
@@ -130,7 +102,7 @@ class RestProjectCreator
             $field_collection = $this->getFieldCollection($post_representation);
             $this->fields_updater->checkFieldConsistency($field_collection);
 
-            $project = $this->createProjectWithSelectedTemplate($user, $post_representation);
+            $project = $this->createProjectWithSelectedTemplate($post_representation, $creation_data);
             $this->categories_updater->update($project, $category_collection);
             $this->fields_updater->updateFromArray($field_collection, $project);
             return $project;
@@ -153,92 +125,38 @@ class RestProjectCreator
      * @throws ImportNotValidException
      * @throws InvalidTemplateException
      * @throws \Project_Creation_Exception
-     * @throws \Project_InvalidFullName_Exception
-     * @throws \Project_InvalidShortName_Exception
-     * @throws \Tuleap\Project\ProjectDescriptionMandatoryException
+     * @throws ProjectInvalidFullNameException
+     * @throws ProjectInvalidShortNameException
+     * @throws ProjectDescriptionMandatoryException
      */
-    public function createProjectWithSelectedTemplate(PFUser $user, ProjectPostRepresentation $post_representation): Project
-    {
+    private function createProjectWithSelectedTemplate(
+        ProjectPostRepresentation $post_representation,
+        ProjectCreationData $creation_data
+    ): Project {
         if ($post_representation->template_id !== null) {
-            return $this->createProjectFromTemplateId($post_representation, $user);
+            return $this->project_creator->processProjectCreation(
+                $creation_data
+            );
         }
 
         if ($post_representation->xml_template_name !== null) {
-            return $this->createProjectFromSystemTemplate($post_representation);
+            $template = $this->template_factory->getTemplate($post_representation->xml_template_name);
+            $xml_path = $template->getXMLPath();
+
+            $archive = new DirectoryArchive(dirname($xml_path));
+
+            return $this->template_factory->recordUsedTemplate(
+                $this->project_XML_importer->importWithProjectData(
+                    new ImportConfig(),
+                    $archive,
+                    new SystemEventRunnerForProjectCreationFromXMLTemplate(),
+                    $creation_data
+                ),
+                $template,
+            );
         }
 
         throw new InvalidXMLTemplateNameException();
-    }
-
-    /**
-     * @throws \Project_Creation_Exception
-     * @throws \Project_InvalidFullName_Exception
-     * @throws \Project_InvalidShortName_Exception
-     * @throws \Tuleap\Project\ProjectDescriptionMandatoryException
-     * @throws InvalidTemplateException
-     */
-    private function createProjectFromTemplateId(
-        ProjectPostRepresentation $post_representation,
-        PFUser $current_user
-    ): Project {
-        $data = [
-            'project' => [
-                'form_short_description' => $post_representation->description,
-                'is_test'                => false,
-                'is_public'              => $post_representation->is_public,
-            ]
-        ];
-
-        if ($post_representation->allow_restricted !== null) {
-            $data['project']['allow_restricted'] = $post_representation->allow_restricted;
-        }
-
-        return $this->project_creator->createFromRest(
-            $post_representation->shortname,
-            $post_representation->label,
-            TemplateFromProjectForCreation::fromRESTRepresentation($post_representation, $current_user, $this->project_manager),
-            $data
-        );
-    }
-
-    /**
-     * @throws InvalidTemplateException
-     * @throws ImportNotValidException
-     */
-    private function createProjectFromSystemTemplate(ProjectPostRepresentation $post_representation): Project
-    {
-        $template    = $this->template_factory->getTemplate($post_representation->xml_template_name);
-        $xml_path    = $template->getXMLPath();
-        $xml_element = $this->XML_file_content_retriever->getSimpleXMLElementFromFilePath($xml_path);
-
-        $data = ProjectCreationData::buildFromXML(
-            $xml_element,
-            $this->validator,
-            $this->service_manager,
-            $this->logger
-        );
-
-        $data->setUnixName($post_representation->shortname);
-        $data->setFullName($post_representation->label);
-        $data->setShortDescription($post_representation->description);
-        $data->setAccessFromProjectData(
-            [
-                'is_public'        => $post_representation->is_public,
-                'allow_restricted' => $post_representation->allow_restricted
-            ]
-        );
-
-        $archive = new DirectoryArchive(dirname($xml_path));
-
-        return $this->template_factory->recordUsedTemplate(
-            $this->project_XML_importer->importWithProjectData(
-                new ImportConfig(),
-                $archive,
-                new SystemEventRunnerForProjectCreationFromXMLTemplate(),
-                $data
-            ),
-            $template,
-        );
     }
 
     private function getCategoryCollection(ProjectPostRepresentation $project_post_representation): CategoryCollection

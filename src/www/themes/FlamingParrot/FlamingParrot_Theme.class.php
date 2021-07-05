@@ -308,7 +308,9 @@ class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDecla
         $project_registration_checker = new ProjectRegistrationChecker(
             new ProjectRegistrationUserPermissionChecker(
                 new ProjectDao()
-            )
+            ),
+            new \Rule_ProjectName(),
+            new \Rule_ProjectFullName(),
         );
 
         $new_dropdown_presenter_builder = new NewDropdownPresenterBuilder(

@@ -24,14 +24,56 @@ declare(strict_types=1);
 namespace Tuleap\Project\Registration;
 
 use PFUser;
+use ProjectCreationData;
+use Rule_ProjectFullName;
+use Rule_ProjectName;
+use Tuleap\Project\ProjectDescriptionUsageRetriever;
 
 class ProjectRegistrationChecker
 {
     private ProjectRegistrationUserPermissionChecker $permission_checker;
+    private Rule_ProjectName $rule_project_name;
+    private Rule_ProjectFullName $rule_project_full_name;
 
-    public function __construct(ProjectRegistrationUserPermissionChecker $permission_checker)
-    {
-        $this->permission_checker = $permission_checker;
+    public function __construct(
+        ProjectRegistrationUserPermissionChecker $permission_checker,
+        Rule_ProjectName $rule_project_name,
+        Rule_ProjectFullName $rule_project_full_name
+    ) {
+        $this->permission_checker     = $permission_checker;
+        $this->rule_project_name      = $rule_project_name;
+        $this->rule_project_full_name = $rule_project_full_name;
+    }
+
+    public function collectAllErrorsForProjectRegistration(
+        PFUser $user,
+        ProjectCreationData $project_creation_data
+    ): ProjectRegistrationErrorsCollection {
+        $errors_collection = $this->collectPermissionErrorsForProjectRegistration($user);
+        if (count($errors_collection->getErrors()) > 0) {
+            return $errors_collection;
+        }
+
+        if (! $this->rule_project_name->isValid($project_creation_data->getUnixName())) {
+            $errors_collection->addError(
+                new ProjectInvalidShortNameException($this->rule_project_name->getErrorMessage())
+            );
+        }
+
+        if (! $this->rule_project_full_name->isValid($project_creation_data->getFullName())) {
+            $errors_collection->addError(
+                new ProjectInvalidFullNameException($this->rule_project_full_name->getErrorMessage())
+            );
+        }
+
+        $description = $project_creation_data->getShortDescription();
+        if (($description === null || $description === '') && ProjectDescriptionUsageRetriever::isDescriptionMandatory()) {
+            $errors_collection->addError(
+                new ProjectDescriptionMandatoryException()
+            );
+        }
+
+        return $errors_collection;
     }
 
     public function collectPermissionErrorsForProjectRegistration(PFUser $user): ProjectRegistrationErrorsCollection

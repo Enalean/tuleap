@@ -221,12 +221,13 @@ class ProjectCreationData //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNa
         ?ServiceManager $service_manager = null,
         ?\Psr\Log\LoggerInterface $logger = null,
         ?DefaultProjectVisibilityRetriever $default_project_visibility_retriever = null,
-        ?ExternalFieldsExtractor $external_fields_extractor = null
+        ?ExternalFieldsExtractor $external_fields_extractor = null,
+        ?ProjectCreationDataServiceFromXmlInheritor $service_inheritor = null
     ) {
         $default_project_visibility_retriever = $default_project_visibility_retriever ?? new DefaultProjectVisibilityRetriever();
 
         $instance = new ProjectCreationData($default_project_visibility_retriever, $logger);
-        $instance->fromXML($xml, $xml_validator, $service_manager, $external_fields_extractor);
+        $instance->fromXML($xml, $xml_validator, $service_manager, $external_fields_extractor, $service_inheritor);
         return $instance;
     }
 

@@ -203,7 +203,9 @@ class BurningParrotTheme extends BaseLayout
             new ProjectRegistrationChecker(
                 new ProjectRegistrationUserPermissionChecker(
                     new \ProjectDao()
-                )
+                ),
+                new \Rule_ProjectName(),
+                new \Rule_ProjectFullName(),
             )
         );
 

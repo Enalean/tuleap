@@ -28,8 +28,6 @@ use MailPresenterFactory;
 use PaginatedWikiPagesFactory;
 use PFUser;
 use Project;
-use Project_InvalidFullName_Exception;
-use Project_InvalidShortName_Exception;
 use ProjectCreator;
 use ProjectManager;
 use ProjectUGroup;
@@ -62,9 +60,12 @@ use Tuleap\Project\ProjectBackground\ProjectBackgroundName;
 use Tuleap\Project\ProjectBackground\ProjectBackgroundPermissionsChecker;
 use Tuleap\Project\ProjectBackground\ProjectBackgroundUpdater;
 use Tuleap\Project\ProjectBackground\UserCanModifyProjectBackgroundPermission;
+use Tuleap\Project\ProjectCreationDataServiceFromXmlInheritor;
 use Tuleap\Project\ProjectCreationNotifier;
-use Tuleap\Project\ProjectDescriptionMandatoryException;
 use Tuleap\Project\ProjectStatusMapper;
+use Tuleap\Project\Registration\ProjectDescriptionMandatoryException;
+use Tuleap\Project\Registration\ProjectInvalidFullNameException;
+use Tuleap\Project\Registration\ProjectInvalidShortNameException;
 use Tuleap\Project\Registration\ProjectRegistrationChecker;
 use Tuleap\Project\Registration\ProjectRegistrationUserPermissionChecker;
 use Tuleap\Project\Registration\Template\InvalidTemplateException;
@@ -93,7 +94,6 @@ use User_ForgeUserGroupPermissionsManager;
 use UserManager;
 use Wiki;
 use WikiDao;
-use XML_RNGValidator;
 use XMLImportHelper;
 
 /**
@@ -194,14 +194,44 @@ class ProjectResource extends AuthenticatedResource
 
         $user = $this->user_manager->getCurrentUser();
 
+        $creation_data = null;
+        try {
+            $creation_data_post_project_builder = new ProjectCreationDataPOSTProjectBuilder(
+                $this->project_manager,
+                TemplateFactory::build(),
+                new XMLFileContentRetriever(),
+                ServiceManager::instance(),
+                new ProjectCreationDataServiceFromXmlInheritor(
+                    ServiceManager::instance(),
+                ),
+                $this->getBackendLogger()
+            );
+
+            $creation_data = $creation_data_post_project_builder->buildProjectCreationDataFromPOSTRepresentation(
+                $post_representation,
+                $user
+            );
+        } catch (InvalidTemplateException $exception) {
+            throw new RestException(400, $exception->getMessage());
+        }
+
+        if ($creation_data === null) {
+            throw new RestException(
+                400,
+                "Impossible to build Project data creation with the provided JSON content."
+            );
+        }
+
         if ($dry_run === true) {
             $checker = new ProjectRegistrationChecker(
                 new ProjectRegistrationUserPermissionChecker(
                     new \ProjectDao()
-                )
+                ),
+                new \Rule_ProjectName(),
+                new \Rule_ProjectFullName(),
             );
 
-            $errors_collection = $checker->collectPermissionErrorsForProjectRegistration($user);
+            $errors_collection = $checker->collectAllErrorsForProjectRegistration($user, $creation_data);
             if (count($errors_collection->getErrors()) > 0) {
                 throw new RestException(
                     400,
@@ -214,14 +244,12 @@ class ProjectResource extends AuthenticatedResource
         }
 
         try {
-            $project = $this->getRestProjectCreator()->create($user, $post_representation);
-        } catch (Project_InvalidShortName_Exception $exception) {
+            $project = $this->getRestProjectCreator()->create($post_representation, $creation_data);
+        } catch (ProjectInvalidShortNameException $exception) {
             throw new RestException(400, $exception->getMessage());
-        } catch (Project_InvalidFullName_Exception $exception) {
+        } catch (ProjectInvalidFullNameException $exception) {
             throw new RestException(400, $exception->getMessage());
         } catch (ProjectDescriptionMandatoryException $exception) {
-            throw new RestException(400, $exception->getMessage());
-        } catch (InvalidTemplateException $exception) {
             throw new RestException(400, $exception->getMessage());
         }
 
@@ -1201,12 +1229,7 @@ class ProjectResource extends AuthenticatedResource
     private function getRestProjectCreator(): RestProjectCreator
     {
         return new RestProjectCreator(
-            $this->project_manager,
             ProjectCreator::buildSelfRegularValidation(),
-            new XMLFileContentRetriever(),
-            ServiceManager::instance(),
-            $this->getBackendLogger(),
-            new XML_RNGValidator(),
             ProjectXMLImporter::build(
                 new XMLImportHelper(UserManager::instance()),
                 ProjectCreator::buildSelfRegularValidation()

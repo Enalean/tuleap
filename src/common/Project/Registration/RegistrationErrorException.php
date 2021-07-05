@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Project\Registration;
 
-abstract class RegistrationForbiddenException extends RegistrationErrorException
+abstract class RegistrationErrorException extends \RuntimeException
 {
+    abstract public function getI18NMessage(): string;
 }

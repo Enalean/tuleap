@@ -280,7 +280,7 @@ class ProjectXMLImporter //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNam
 
         $this->logger->info(sprintf('Create project %s', $project_creation_data->getUnixName()));
 
-        $project = $this->project_creator->build($project_creation_data);
+        $project = $this->project_creator->processProjectCreation($project_creation_data);
 
         $this->logger->info("Execute system events to finish creation of project {$project->getID()}, this can take a while...");
         $event_runner->runSystemEvents();
