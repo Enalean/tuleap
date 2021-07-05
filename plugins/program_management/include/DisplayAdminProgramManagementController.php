@@ -115,9 +115,8 @@ final class DisplayAdminProgramManagementController implements DispatchableWithR
         $this->template_renderer->renderToPage(
             'admin',
             new ProgramAdminPresenter(
-                PotentialTeamsPresenterBuilder::buildPotentialTeamsPresenter(
-                    $this->potential_teams_builder->buildPotentialTeams((int) $project->getID(), $user)
-                ),
+                (int) $project->getID(),
+                PotentialTeamsPresenterBuilder::buildPotentialTeamsPresenter($this->potential_teams_builder->buildPotentialTeams((int) $project->getID(), $user)),
                 TeamsPresenterBuilder::buildTeamsPresenter(
                     TeamProjectsCollection::fromProjectId(
                         $this->teams_searcher,

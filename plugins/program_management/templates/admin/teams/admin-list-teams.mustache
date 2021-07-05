@@ -8,6 +8,15 @@
                 <a class="tlp-card tlp-card-selectable program-management-card-teams" href="{{ url }}">
                     <i class="tlp-tab-icon fas fa-fw fa-archive" aria-hidden="true"></i>
                     {{ public_name }}
+                    <button
+                        type="button"
+                        class="tlp-button-danger tlp-button-small tlp-button-outline program-management-admin-remove-teams-open-modal-button"
+                        data-target-modal-id="program-management-delete-team-{{ id }}"
+                        data-team-id="{{ id }}"
+                    >
+                        <i class="far fa-trash-alt tlp-button-icon" aria-hidden="true"></i>
+                        {{# dgettext }}tuleap-program_management | Remove team from program {{/ dgettext }}
+                    </button>
                 </a>
             {{/ aggregated_teams }}
         </section>

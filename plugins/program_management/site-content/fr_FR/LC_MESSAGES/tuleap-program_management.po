@@ -34,6 +34,12 @@ msgstr "Projets regroupés"
 msgid "Can prioritize features"
 msgstr "Peut prioriser des fonctionnalités"
 
+msgid "Cancel"
+msgstr "Annuler"
+
+msgid "Close"
+msgstr "Fermer"
+
 msgid ""
 "Enables managing several related projects, synchronizing teams and milestones"
 msgstr ""
@@ -65,6 +71,9 @@ msgstr "Aucun projet n'a encore été regroupé."
 msgid "Permission"
 msgstr "Permission"
 
+msgid "Please confirm your action."
+msgstr "Merci de confirmer votre action."
+
 #, php-format
 msgid ""
 "Post action of type %s can only be defined for plannable tracker of a plan."
@@ -95,6 +104,12 @@ msgstr ""
 msgid "Remove from top backlog"
 msgstr "Supprimer de la planification générale"
 
+msgid "Remove team"
+msgstr "Enlever l'équipe"
+
+msgid "Remove team from program"
+msgstr "Enlever l'équipe du programme"
+
 msgid "Teams"
 msgstr "Équipes"
 
@@ -110,6 +125,10 @@ msgstr "Actions liées à la planification générale"
 
 msgid "Unchanged"
 msgstr "Inchangé"
+
+msgid "You are about to remove Team {{ public_name }} from this Program."
+msgstr ""
+"Vous êtes sur le point d'enlever l'Équipe {{ public_name }} de ce Programme."
 
 msgid ""
 "You are creating a new program increment, it will create associate release "
