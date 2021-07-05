@@ -159,12 +159,12 @@ class ActionsRunner
      * Manage notification for a changeset
      *
      */
-    public function executePostCreationActions(Tracker_Artifact_Changeset $changeset)
+    public function executePostCreationActions(Tracker_Artifact_Changeset $changeset, bool $send_notifications)
     {
         if ($this->worker_availability->canProcessAsyncTasks()) {
-            $this->queuePostCreationEvent($changeset);
+            $this->queuePostCreationEvent($changeset, $send_notifications);
         } else {
-            $this->processPostCreationActions($changeset);
+            $this->processPostCreationActions($changeset, $send_notifications);
         }
     }
 
@@ -172,14 +172,14 @@ class ActionsRunner
      * Process notification when executed in background (should not be called by front-end)
      *
      */
-    public function processAsyncPostCreationActions(Tracker_Artifact_Changeset $changeset)
+    public function processAsyncPostCreationActions(Tracker_Artifact_Changeset $changeset, bool $send_notifications)
     {
         $this->actions_runner_dao->addStartDate($changeset->getId());
-        $this->processPostCreationActions($changeset);
+        $this->processPostCreationActions($changeset, $send_notifications);
         $this->actions_runner_dao->addEndDate($changeset->getId());
     }
 
-    private function queuePostCreationEvent(Tracker_Artifact_Changeset $changeset)
+    private function queuePostCreationEvent(Tracker_Artifact_Changeset $changeset, bool $send_notifications)
     {
         try {
             $this->actions_runner_dao->addNewPostCreationEvent($changeset->getId());
@@ -189,19 +189,20 @@ class ActionsRunner
                 [
                     'artifact_id'  => (int) $changeset->getArtifact()->getId(),
                     'changeset_id' => (int) $changeset->getId(),
+                    'send_notifications' => $send_notifications
                 ]
             );
         } catch (Exception $exception) {
             $this->logger->error("Unable to queue notification for {$changeset->getId()}, fallback to online notif", ['exception' => $exception]);
-            $this->processPostCreationActions($changeset);
+            $this->processPostCreationActions($changeset, $send_notifications);
             $this->actions_runner_dao->addEndDate($changeset->getId());
         }
     }
 
-    private function processPostCreationActions(Tracker_Artifact_Changeset $changeset)
+    private function processPostCreationActions(Tracker_Artifact_Changeset $changeset, bool $send_notifications)
     {
         foreach ($this->post_creation_tasks as $notification_task) {
-            $notification_task->execute($changeset);
+            $notification_task->execute($changeset, $send_notifications);
         }
     }
 }

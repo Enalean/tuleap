@@ -117,7 +117,7 @@ class EmailNotificationTaskTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->config_notification_assigned_to,
             $this->custom_email_sender
         );
-        $mail_notification_task->execute($this->changeset);
+        $mail_notification_task->execute($this->changeset, true);
     }
 
     public function testNotifyStopped()
@@ -137,7 +137,27 @@ class EmailNotificationTaskTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->config_notification_assigned_to,
             $this->custom_email_sender
         );
-        $mail_notification_task->execute($this->changeset);
+        $mail_notification_task->execute($this->changeset, true);
+    }
+
+    public function testWithoutNotifications()
+    {
+        $this->tracker->shouldReceive('isNotificationStopped')->andReturns(false);
+
+        $mail_sender = \Mockery::mock(MailSender::class);
+        $mail_sender->shouldReceive('send')->never();
+
+        $mail_notification_task = new EmailNotificationTask(
+            $this->logger,
+            $this->user_helper,
+            \Mockery::mock(RecipientsManager::class),
+            $this->mail_gateway_recipient_factory,
+            $this->mail_gateway_config,
+            $mail_sender,
+            $this->config_notification_assigned_to,
+            $this->custom_email_sender
+        );
+        $mail_notification_task->execute($this->changeset, false);
     }
 
     public function testChangesetShouldUseUserLanguageInGetBody()

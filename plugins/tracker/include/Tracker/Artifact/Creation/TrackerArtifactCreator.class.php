@@ -192,16 +192,10 @@ class TrackerArtifactCreator
             return null;
         }
 
-        $changeset = new Tracker_Artifact_Changeset(
-            $changeset_id,
-            $artifact,
-            $artifact->getSubmittedBy(),
-            $artifact->getSubmittedOn(),
-            $user->getEmail()
-        );
+        $changeset = $this->createNewChangeset($changeset_id, $artifact, $user);
 
-        if ($send_notification) {
-            $changeset->executePostCreationActions();
+        if (! $tracker_import_config->isFromXml()) {
+            $changeset->executePostCreationActions($send_notification);
         }
 
         return $changeset;
@@ -332,5 +326,17 @@ class TrackerArtifactCreator
 
         $artifact->setTracker($tracker);
         return $artifact;
+    }
+
+    protected function createNewChangeset(int $changeset_id, Artifact $artifact, PFUser $user): Tracker_Artifact_Changeset
+    {
+        $changeset = new Tracker_Artifact_Changeset(
+            $changeset_id,
+            $artifact,
+            $artifact->getSubmittedBy(),
+            $artifact->getSubmittedOn(),
+            $user->getEmail()
+        );
+        return $changeset;
     }
 }

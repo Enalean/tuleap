@@ -97,6 +97,10 @@ final class Tracker_Artifact_Changeset_NewChangesetCreatorTest extends \Tuleap\T
         $this->fields_data = [];
         $this->submitter   = new PFUser(['user_id' => 74, 'language_id' => 'en']);
 
+        $new_changeset = Mockery::mock(Tracker_Artifact_Changeset::class);
+        $new_changeset->shouldReceive("getId")->andReturn(12);
+        $new_changeset->shouldReceive("executePostCreationActions")->andReturn(12);
+
         $this->changeset_dao = \Mockery::spy(\Tracker_Artifact_ChangesetDao::class);
         $changeset           = new Tracker_Artifact_Changeset_Null();
         $factory             = \Mockery::spy(\Tracker_FormElementFactory::class);
@@ -111,6 +115,7 @@ final class Tracker_Artifact_Changeset_NewChangesetCreatorTest extends \Tuleap\T
         $tracker->shouldReceive('getProject')->andReturn(new \Project(['group_id' => 101]));
         $this->artifact = Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $this->artifact->shouldReceive('getLastChangeset')->andReturn($changeset);
+        $this->artifact->shouldReceive('getChangeset')->andReturn($new_changeset);
         $this->artifact->shouldReceive('getWorkflow')->andReturn($this->workflow);
         $this->artifact->shouldReceive('getTracker')->andReturn($tracker);
 

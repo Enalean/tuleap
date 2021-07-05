@@ -93,10 +93,10 @@ final class EmailNotificationTask implements PostCreationTask
         $this->config_notification_custom_sender = $config_notification_custom_sender;
     }
 
-    public function execute(Tracker_Artifact_Changeset $changeset)
+    public function execute(Tracker_Artifact_Changeset $changeset, bool $send_notifications)
     {
         $tracker = $changeset->getTracker();
-        if ($tracker->isNotificationStopped()) {
+        if ($tracker->isNotificationStopped() || ! $send_notifications) {
             return;
         }
         $this->logger->debug('Start mail notification');

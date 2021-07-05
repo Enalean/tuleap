@@ -24,10 +24,12 @@ namespace Tuleap\Tracker\Artifact\Creation;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tracker;
+use Tracker_Artifact_Changeset;
 use Tracker_Artifact_Changeset_InitialChangesetCreator;
 use Tracker_Artifact_Changeset_InitialChangesetFieldsValidator;
 use Tracker_ArtifactDao;
 use Tracker_ArtifactFactory;
+use Tuleap\GlobalLanguageMock;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\RecentlyVisited\VisitRecorder;
@@ -38,6 +40,7 @@ use Tuleap\Tracker\TrackerColor;
 final class TrackerArtifactCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
+    use GlobalLanguageMock;
 
     /** @var \Tracker_Artifact_Changeset_InitialChangesetCreatorBase */
     private $changeset_creator;
@@ -80,6 +83,9 @@ final class TrackerArtifactCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->dao               = \Mockery::spy(Tracker_ArtifactDao::class);
         $this->visit_recorder    = \Mockery::spy(VisitRecorder::class);
 
+        $changeset = Mockery::mock(Tracker_Artifact_Changeset::class);
+        $changeset->shouldReceive("executePostCreationActions");
+
         $this->artifact_factory->setDao($this->dao);
 
         $this->tracker       = new Tracker(
@@ -102,14 +108,16 @@ final class TrackerArtifactCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->user          = new \PFUser(['user_id' => 101, 'language_id' => 'en_US']);
         $this->bare_artifact = new Artifact(0, 123, 101, 1234567890, 0);
 
-        $this->creator = new TrackerArtifactCreator(
+        $this->creator = Mockery::mock(TrackerArtifactCreator::class, [
             $this->artifact_factory,
             $this->fields_validator,
             $this->changeset_creator,
             $this->visit_recorder,
             new \Psr\Log\NullLogger(),
             new DBTransactionExecutorPassthrough()
-        );
+        ])->makePartial()->shouldAllowMockingProtectedMethods();
+
+        $this->creator->shouldReceive("createNewChangeset")->andReturn($changeset);
     }
 
     public function tearDown(): void
