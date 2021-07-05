@@ -27,13 +27,13 @@ use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Stub\BuildProgramStub;
 use Tuleap\ProgramManagement\Stub\BuildProjectStub;
 use Tuleap\ProgramManagement\Stub\SearchTeamsOfProgramStub;
+use Tuleap\Test\Builders\UserTestBuilder;
 
 final class TeamsPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    public function testBuildPresenterWithTeamThatUserIsAdminOf(): void
+    public function testBuildPresenterWithAllTeam(): void
     {
-        $user = $this->createStub(\PFUser::class);
-        $user->method('isAdmin')->willReturnOnConsecutiveCalls(true, false);
+        $user = UserTestBuilder::aUser()->build();
 
         $collection = TeamProjectsCollection::fromProgramIdentifier(
             SearchTeamsOfProgramStub::buildTeams(150, 666),
@@ -45,8 +45,9 @@ final class TeamsPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             )
         );
 
-        $teams_presenter = TeamsPresenterBuilder::buildTeamsPresenter($collection, $user);
-        self::assertCount(1, $teams_presenter);
+        $teams_presenter = TeamsPresenterBuilder::buildTeamsPresenter($collection);
+        self::assertCount(2, $teams_presenter);
         self::assertSame(150, $teams_presenter[0]->id);
+        self::assertSame(666, $teams_presenter[1]->id);
     }
 }

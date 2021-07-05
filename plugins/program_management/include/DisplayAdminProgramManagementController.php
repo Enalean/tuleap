@@ -123,8 +123,7 @@ final class DisplayAdminProgramManagementController implements DispatchableWithR
                         $this->teams_searcher,
                         $this->project_data_adapter,
                         (int) $project->getID()
-                    ),
-                    $user
+                    )
                 )
             )
         );
