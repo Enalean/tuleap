@@ -26,10 +26,29 @@ namespace Tuleap\Project\Registration;
 use PFUser;
 use ProjectCreationData;
 
-interface ProjectRegistrationChecker
+final class ProjectRegistrationCheckerAggregator implements ProjectRegistrationChecker
 {
+    /**
+     * @var ProjectRegistrationChecker[]
+     */
+    private array $checkers;
+
+    public function __construct(ProjectRegistrationChecker ...$checkers)
+    {
+        $this->checkers = $checkers;
+    }
+
     public function collectAllErrorsForProjectRegistration(
         PFUser $user,
         ProjectCreationData $project_creation_data
-    ): ProjectRegistrationErrorsCollection;
+    ): ProjectRegistrationErrorsCollection {
+        $errors_collection = new ProjectRegistrationErrorsCollection();
+        foreach ($this->checkers as $checker) {
+            foreach ($checker->collectAllErrorsForProjectRegistration($user, $project_creation_data)->getErrors() as $error) {
+                $errors_collection->addError($error);
+            }
+        }
+
+        return $errors_collection;
+    }
 }

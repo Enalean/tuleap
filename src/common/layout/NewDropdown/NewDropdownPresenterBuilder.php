@@ -25,25 +25,20 @@ namespace Tuleap\layout\NewDropdown;
 use PFUser;
 use Project;
 use Psr\EventDispatcher\EventDispatcherInterface;
+use Tuleap\Project\DefaultProjectVisibilityRetriever;
 use Tuleap\Project\Registration\ProjectRegistrationChecker;
 
 class NewDropdownPresenterBuilder
 {
-    /**
-     * @var EventDispatcherInterface
-     */
-    private $event_dispatcher;
-    /**
-     * @var ProjectRegistrationChecker
-     */
-    private $project_registration_checker;
+    private EventDispatcherInterface $event_dispatcher;
+    private ProjectRegistrationChecker $project_registration_permissions_checker;
 
     public function __construct(
         EventDispatcherInterface $event_dispatcher,
-        ProjectRegistrationChecker $project_registration_checker
+        ProjectRegistrationChecker $project_registration_permissions_checker
     ) {
-        $this->event_dispatcher             = $event_dispatcher;
-        $this->project_registration_checker = $project_registration_checker;
+        $this->event_dispatcher                         = $event_dispatcher;
+        $this->project_registration_permissions_checker = $project_registration_permissions_checker;
     }
 
     public function getPresenter(PFUser $current_user, ?Project $project, ?NewDropdownLinkSectionPresenter $current_context_section): NewDropdownPresenter
@@ -80,8 +75,11 @@ class NewDropdownPresenterBuilder
 
     private function appendGlobalSection(PFUser $current_user, array &$sections): void
     {
-        $project_registration_errors = $this->project_registration_checker->collectPermissionErrorsForProjectRegistration(
-            $current_user
+        $project_registration_errors = $this->project_registration_permissions_checker->collectAllErrorsForProjectRegistration(
+            $current_user,
+            new \ProjectCreationData(
+                new DefaultProjectVisibilityRetriever()
+            )
         );
 
         if (count($project_registration_errors->getErrors()) > 0) {

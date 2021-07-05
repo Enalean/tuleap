@@ -54,7 +54,7 @@ use Tuleap\Project\Flags\ProjectFlagsBuilder;
 use Tuleap\Project\Flags\ProjectFlagsDao;
 use Tuleap\Project\ProjectPresentersBuilder;
 use Tuleap\Project\ProjectPrivacyPresenter;
-use Tuleap\Project\Registration\ProjectRegistrationChecker;
+use Tuleap\Project\Registration\ProjectRegistrationPermissionsChecker;
 use Tuleap\Project\Registration\ProjectRegistrationUserPermissionChecker;
 use Tuleap\Project\Sidebar\CollectLinkedProjects;
 use Tuleap\Project\Sidebar\LinkedProjectsCollectionPresenter;
@@ -200,12 +200,10 @@ class BurningParrotTheme extends BaseLayout
 
         $new_dropdown_presenter_builder = new NewDropdownPresenterBuilder(
             $this->event_manager,
-            new ProjectRegistrationChecker(
+            new ProjectRegistrationPermissionsChecker(
                 new ProjectRegistrationUserPermissionChecker(
                     new \ProjectDao()
                 ),
-                new \Rule_ProjectName(),
-                new \Rule_ProjectFullName(),
             )
         );
 
