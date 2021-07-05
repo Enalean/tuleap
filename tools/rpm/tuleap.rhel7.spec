@@ -60,13 +60,18 @@ Requires: php80-php-pecl-zip
 Requires: rh-mysql57-mysql
 
 Requires: perl-DBI, perl-DBD-MySQL, perl-LDAP, sudo
-Requires: highlight, forgeupgrade >= 1.6, nginx, logrotate
+Requires: highlight, nginx, logrotate
 
 # Unit file
 Requires: systemd
 
+# ForgeUpgrade is now provided by Tuleap
+Obsoletes: forgeupgrade <= 999
+Provides: forgeupgrade
+
 %description
 Tuleap is a web based application that address all the aspects of product development.
+
 
 #
 ## Core component definitions
@@ -668,7 +673,7 @@ done
 %{__install} src/utils/systemd/tuleap-launch-plugin-job.timer $RPM_BUILD_ROOT/%{_unitdir}
 %{__install} src/utils/systemd/tuleap-launch-plugin-job.service $RPM_BUILD_ROOT/%{_unitdir}
 
-#Install system tmpfiles
+# Install system tmpfiles
 %{__install} -d $RPM_BUILD_ROOT/%{_tmpfilesdir}
 %{__install} src/utils/systemd/tmpfiles/tuleap.conf $RPM_BUILD_ROOT/%{_tmpfilesdir}
 %{__install} src/utils/systemd/tmpfiles/tuleap-cvs.conf $RPM_BUILD_ROOT/%{_tmpfilesdir}
@@ -693,6 +698,10 @@ done
 %{__install} src/utils/svn/pre-revprop-change.php $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}
 %{__install} src/utils/svn/post-revprop-change.php $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}
 %{__install} src/utils/fileforge.pl $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}/fileforge
+
+# ForgeUpgrade
+%{__install} -m 755 -d $RPM_BUILD_ROOT/usr/lib/forgeupgrade/bin
+%{__install} -m 755 src/forgeupgrade/forgeupgrade $RPM_BUILD_ROOT/usr/lib/forgeupgrade/bin
 
 # Special custom include script
 %{__install} src/etc/env.inc.php.dist $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}/env.inc.php
@@ -1128,6 +1137,11 @@ fi
 %attr(04755,root,root) %{APP_LIBBIN_DIR}/fileforge
 %attr(00644,root,root) /etc/logrotate.d/%{APP_NAME}_syslog
 %dir %attr(-,%{APP_USER},%{APP_USER}) %{APP_CACHE_DIR}
+
+# ForgeUpgrade
+%attr(00755,root,root) %dir /usr/lib/forgeupgrade/bin
+%attr(00755,root,root) /usr/lib/forgeupgrade/bin/forgeupgrade
+
 # Log dir
 %attr(755,%{APP_USER},%{APP_USER}) %dir %{APP_LOG_DIR}
 %attr(775,%{APP_USER},%{APP_USER}) %dir %{APP_LOG_DIR}/cvslog

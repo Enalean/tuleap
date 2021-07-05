@@ -18,8 +18,6 @@
  * along with ForgeUpgrade. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'src/db/driver/Abstract.php';
-
 class ForgeUpgrade_Db_Driver extends ForgeUpgrade_Db_Driver_Abstract
 {
     protected $pdo;
