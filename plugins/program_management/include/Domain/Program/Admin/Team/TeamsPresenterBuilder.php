@@ -32,14 +32,12 @@ final class TeamsPresenterBuilder
     /**
      * @return TeamPresenter[]
      */
-    public static function buildTeamsPresenter(TeamProjectsCollection $team_collection, \PFUser $user): array
+    public static function buildTeamsPresenter(TeamProjectsCollection $team_collection): array
     {
         $teams_presenter = [];
 
         foreach ($team_collection->getTeamProjects() as $team) {
-            if ($user->isAdmin($team->getId())) {
-                $teams_presenter[] = new TeamPresenter($team);
-            }
+            $teams_presenter[] = new TeamPresenter($team);
         }
 
         return $teams_presenter;
