@@ -127,6 +127,10 @@
       <description>Define the closed status that are considered Done</description>
       <closed_values/>
     </semantic>
+    <semantic type="progress">
+      <total_effort_field REF="F14339"/>
+      <remaining_effort_field REF="F14340"/>
+    </semantic>
     <semantic type="tooltip">
       <field REF="F14335"/>
       <field REF="F14338"/>

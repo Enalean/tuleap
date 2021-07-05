@@ -181,6 +181,13 @@
         <closed_value REF="V13863"/>
       </closed_values>
     </semantic>
+    <semantic type="timeframe">
+      <inherited_from_tracker id="T481"/>
+    </semantic>
+    <semantic type="progress">
+      <total_effort_field REF="F14460"/>
+      <remaining_effort_field REF="F14461"/>
+    </semantic>
     <semantic type="tooltip">
       <field REF="F14453"/>
       <field REF="F14463"/>
