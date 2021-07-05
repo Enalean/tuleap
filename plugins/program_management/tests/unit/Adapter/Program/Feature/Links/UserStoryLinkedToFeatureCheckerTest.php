@@ -66,7 +66,7 @@ final class UserStoryLinkedToFeatureCheckerTest extends \Tuleap\Test\PHPUnit\Tes
 
             public function getProjectFromPlanning(\Planning $root_planning): Project
             {
-                return new \Tuleap\ProgramManagement\Domain\Project(101, 'my-project', "My project");
+                return new \Tuleap\ProgramManagement\Domain\Project(101, 'my-project', "My project", '/my-project');
             }
         };
 

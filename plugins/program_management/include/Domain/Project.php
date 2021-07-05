@@ -25,26 +25,19 @@ namespace Tuleap\ProgramManagement\Domain;
 /**
  * @psalm-immutable
  */
-class Project
+final class Project
 {
-    /**
-     * @var int
-     */
-    private $id;
-    /**
-     * @var string
-     */
-    private $name;
-    /**
-     * @var string
-     */
-    private $public_name;
+    private int $id;
+    private string $name;
+    private string $public_name;
+    private string $url;
 
-    public function __construct(int $id, string $name, string $public_name)
+    public function __construct(int $id, string $name, string $public_name, string $url)
     {
         $this->id          = $id;
         $this->name        = $name;
         $this->public_name = $public_name;
+        $this->url         = $url;
     }
 
     public function getId(): int
@@ -60,5 +53,10 @@ class Project
     public function getPublicName(): string
     {
         return $this->public_name;
+    }
+
+    public function getUrl(): string
+    {
+        return $this->url;
     }
 }

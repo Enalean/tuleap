@@ -275,7 +275,9 @@ final class program_managementPlugin extends Plugin
             TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../templates/admin'),
             $this->getProgramAdapter(),
             new ProgramManagementBreadCrumbsBuilder(),
-            new PotentialTeamsBuilder($project_manager, new ProgramDao())
+            new PotentialTeamsBuilder($project_manager, new ProgramDao()),
+            new ProgramDao(),
+            new ProjectAdapter($project_manager)
         );
     }
 

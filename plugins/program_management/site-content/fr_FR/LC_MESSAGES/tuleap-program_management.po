@@ -28,7 +28,7 @@ msgstr ""
 msgid "Aggregate project"
 msgstr "Regrouper le projet"
 
-msgid "Aggregated Projects"
+msgid "Aggregated projects"
 msgstr "Projets regroupés"
 
 msgid "Can prioritize features"

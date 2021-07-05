@@ -58,3 +58,12 @@
         width: 350px;
     }
 }
+
+.program-management-teams-pane {
+    flex-direction: column;
+}
+
+.program-management-card-teams {
+    display: flex;
+    align-items: center;
+}

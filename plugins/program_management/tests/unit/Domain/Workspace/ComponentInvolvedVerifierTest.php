@@ -65,6 +65,6 @@ final class ComponentInvolvedVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
 
     private function buildProjectData(): Project
     {
-        return new Project(12, 'Name', 'Public name');
+        return new Project(12, 'Name', 'Public name', '/project');
     }
 }

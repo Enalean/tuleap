@@ -1,0 +1,23 @@
+<div class="tlp-pane-container">
+    {{# has_aggregated_teams }}
+        <div class="tlp-pane-header">
+            <h1 class="tlp-pane-title">{{# dgettext }}tuleap-program_management | Aggregated projects{{/ dgettext }}</h1>
+        </div>
+        <section class="tlp-pane-section-for-cards">
+            {{# aggregated_teams }}
+                <a class="tlp-card tlp-card-selectable program-management-card-teams" href="{{ url }}">
+                    <i class="tlp-tab-icon fas fa-fw fa-archive" aria-hidden="true"></i>
+                    {{ public_name }}
+                </a>
+            {{/ aggregated_teams }}
+        </section>
+    {{/ has_aggregated_teams }}
+    {{^ has_aggregated_teams }}
+        <div class="program-management-no-teams-empty-state">
+            {{> teams/svg-empty-state-tumbleweed }}
+            <div class="program-management-no-teams-empty-state-label">
+                {{# dgettext }}tuleap-program_management | No project have been aggregated yet.{{/dgettext}}
+            </div>
+        </div>
+    {{/ has_aggregated_teams }}
+</div>

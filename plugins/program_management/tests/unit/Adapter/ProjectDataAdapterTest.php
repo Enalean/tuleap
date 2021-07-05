@@ -22,21 +22,18 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Project;
 use Tuleap\ProgramManagement\Domain\Project as ProgramManagementProject;
 
 final class ProjectDataAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     public function testItBuildsProjectData(): void
     {
         $project         = new Project(['group_id' => 101, 'group_name' => 'Team 1', 'unix_group_name' => 'team_1']);
-        $project_manager = \Mockery::mock(\ProjectManager::class);
-        $project_manager->shouldReceive('getProject')->with(101)->andReturn($project)->once();
+        $project_manager = $this->createMock(\ProjectManager::class);
+        $project_manager->expects(self::once())->method('getProject')->with(101)->willReturn($project);
 
-        $project_data = new ProgramManagementProject($project->getID(), $project->getUnixName(), $project->getPublicName());
+        $project_data = new ProgramManagementProject($project->getID(), $project->getUnixName(), $project->getPublicName(), $project->getUrl());
 
         $adapter = new ProjectAdapter($project_manager);
         $this->assertEquals($project_data, $adapter->buildFromId(101));

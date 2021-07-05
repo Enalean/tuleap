@@ -20,26 +20,23 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Stub;
+namespace Tuleap\ProgramManagement\Domain\Program\Admin\Team;
 
-use Project;
-use Tuleap\ProgramManagement\Domain\BuildProject;
-use Tuleap\ProgramManagement\Domain\Project as ProgramManagementProject;
+use Tuleap\ProgramManagement\Domain\Project;
 
-final class BuildProjectStub implements BuildProject
+/**
+ * @psalm-immutable
+ */
+final class TeamPresenter
 {
-    public static function build(Project $project): ProgramManagementProject
-    {
-        return new ProgramManagementProject(
-            (int) $project->getID(),
-            (string) $project->getUnixName(),
-            (string) $project->getPublicName(),
-            $project->getUrl()
-        );
-    }
+    public int $id;
+    public string $public_name;
+    public string $url;
 
-    public function buildFromId(int $id): ProgramManagementProject
+    public function __construct(Project $team)
     {
-        return new ProgramManagementProject($id, 'Project', 'project', '/project/project');
+        $this->id          = $team->getId();
+        $this->public_name = $team->getPublicName();
+        $this->url         = $team->getUrl();
     }
 }

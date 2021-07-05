@@ -153,7 +153,7 @@ final class FeatureRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCa
         $planning->setPlanningTracker(TrackerTestBuilder::aTracker()->withId(20)->build());
         $this->build_planning->shouldReceive("getRootPlanning")->andReturn($planning);
 
-        $this->build_planning->shouldReceive("getProjectFromPlanning")->andReturn(new \Tuleap\ProgramManagement\Domain\Project(1, 'my-porject', "My project"));
+        $this->build_planning->shouldReceive("getProjectFromPlanning")->andReturn(new \Tuleap\ProgramManagement\Domain\Project(1, 'my-porject', "My project", '/project'));
 
         $expected = new FeatureRepresentation(
             1,

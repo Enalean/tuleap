@@ -40,7 +40,12 @@ final class ProjectAdapter implements BuildProject
 
     public static function build(Project $project): ProgramManagementProject
     {
-        return new ProgramManagementProject((int) $project->getID(), (string) $project->getUnixName(), (string) $project->getPublicName());
+        return new ProgramManagementProject(
+            (int) $project->getID(),
+            (string) $project->getUnixName(),
+            (string) $project->getPublicName(),
+            $project->getUrl()
+        );
     }
 
     public function buildFromId(int $id): ProgramManagementProject

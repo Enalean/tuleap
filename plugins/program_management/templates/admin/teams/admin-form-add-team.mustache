@@ -1,0 +1,20 @@
+<div class="tlp-pane-container">
+    <section class="tlp-pane-section">
+        <p>{{# dgettext }}tuleap-program_management | Aggregate others projects to have an overall view of your Program activities. These projects will be considered as Teams.{{/ dgettext }}</p>
+        <p>{{# dgettext }}tuleap-program_management | Good to know:{{/ dgettext }}</p>
+        <ul>
+            <li>{{# dgettext }}tuleap-program_management | You must be administrator of the projects you want aggregate.{{/ dgettext }}</li>
+        </ul>
+        <div class="tlp-form-element tlp-form-element-append tlp-form-element-disabled program-management-form-choose-teams">
+            <select class="tlp-select" id="program-management-choose-teams" name="list-value">
+                <option value=""></option>
+                {{# potential_teams }}
+                    <option value="{{ id }}">{{ public_name }}</option>
+                {{/ potential_teams }}
+            </select>
+            <button type="button" class="tlp-append tlp-button tlp-button-primary" disabled>
+                <i class="fas fa-plus tlp-button-icon" aria-hidden="true"></i>{{# dgettext }}tuleap-program_management | Aggregate project{{/ dgettext }}
+            </button>
+        </div>
+    </section>
+</div>
