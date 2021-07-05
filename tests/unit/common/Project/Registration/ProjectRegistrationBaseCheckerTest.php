@@ -33,15 +33,11 @@ use Tuleap\Project\DefaultProjectVisibilityRetriever;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 
-class ProjectRegistrationCheckerTest extends TestCase
+final class ProjectRegistrationBaseCheckerTest extends TestCase
 {
     use ForgeConfigSandbox;
 
     private ProjectRegistrationChecker $checker;
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&ProjectRegistrationUserPermissionChecker
-     */
-    private $permission_checker;
     /**
      * @var \PHPUnit\Framework\MockObject\MockObject&Rule_ProjectName
      */
@@ -55,71 +51,20 @@ class ProjectRegistrationCheckerTest extends TestCase
     {
         parent::setUp();
 
-        $this->permission_checker     = $this->createMock(ProjectRegistrationUserPermissionChecker::class);
         $this->rule_project_name      = $this->createMock(Rule_ProjectName::class);
         $this->rule_project_full_name = $this->createMock(Rule_ProjectFullName::class);
 
-        $this->checker = new ProjectRegistrationChecker(
-            $this->permission_checker,
+        $this->checker = new ProjectRegistrationBaseChecker(
             $this->rule_project_name,
             $this->rule_project_full_name
         );
     }
 
-    public function testItStopCollectingIfThereIsALeastAPermissionError(): void
-    {
-        $user = UserTestBuilder::aUser()->build();
-
-        $this->permission_checker
-            ->expects(self::once())
-            ->method('checkUserCreateAProject')
-            ->with($user)
-            ->willThrowException(
-                new class extends RegistrationForbiddenException
-                {
-                    public function getI18NMessage(): string
-                    {
-                        return '';
-                    }
-                }
-            );
-
-        $data = new ProjectCreationData(
-            new DefaultProjectVisibilityRetriever(),
-            new NullLogger()
-        );
-
-        $data->setUnixName("not:val_id");
-        $data->setFullName("Not vaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaalid");
-
-        $this->rule_project_name
-            ->expects(self::never())
-            ->method('isValid');
-
-        $this->rule_project_full_name
-            ->expects(self::never())
-            ->method('isValid');
-
-        $errors_collection = $this->checker->collectAllErrorsForProjectRegistration(
-            $user,
-            $data
-        );
-
-        self::assertNotEmpty($errors_collection->getErrors());
-        self::assertCount(1, $errors_collection->getErrors());
-        self::assertInstanceOf(RegistrationForbiddenException::class, $errors_collection->getErrors()[0]);
-    }
-
-    public function testItCollectsAllDataErrorsIfThereIsNoPermissionError(): void
+    public function testItCollectsAllDataErrors(): void
     {
         ForgeConfig::set("enable_not_mandatory_description", 0);
 
         $user = UserTestBuilder::aUser()->build();
-
-        $this->permission_checker
-            ->expects(self::once())
-            ->method('checkUserCreateAProject')
-            ->with($user);
 
         $data = new ProjectCreationData(
             new DefaultProjectVisibilityRetriever(),
@@ -165,11 +110,6 @@ class ProjectRegistrationCheckerTest extends TestCase
     {
         $user = UserTestBuilder::aUser()->build();
 
-        $this->permission_checker
-            ->expects(self::once())
-            ->method('checkUserCreateAProject')
-            ->with($user);
-
         $data = new ProjectCreationData(
             new DefaultProjectVisibilityRetriever(),
             new NullLogger()
@@ -192,49 +132,6 @@ class ProjectRegistrationCheckerTest extends TestCase
         $errors_collection = $this->checker->collectAllErrorsForProjectRegistration(
             $user,
             $data
-        );
-
-        self::assertEmpty($errors_collection->getErrors());
-    }
-
-    public function testItCollectsPermissionsErrors(): void
-    {
-        $user = UserTestBuilder::aUser()->build();
-
-        $this->permission_checker
-            ->expects(self::once())
-            ->method('checkUserCreateAProject')
-            ->with($user)
-            ->willThrowException(
-                new class extends RegistrationForbiddenException
-                {
-                    public function getI18NMessage(): string
-                    {
-                        return '';
-                    }
-                }
-            );
-
-        $errors_collection = $this->checker->collectPermissionErrorsForProjectRegistration(
-            $user
-        );
-
-        self::assertNotEmpty($errors_collection->getErrors());
-        self::assertCount(1, $errors_collection->getErrors());
-        self::assertInstanceOf(RegistrationForbiddenException::class, $errors_collection->getErrors()[0]);
-    }
-
-    public function testCollectionIsEmptyIfThereIsNoPermissionsErrors(): void
-    {
-        $user = UserTestBuilder::aUser()->build();
-
-        $this->permission_checker
-            ->expects(self::once())
-            ->method('checkUserCreateAProject')
-            ->with($user);
-
-        $errors_collection = $this->checker->collectPermissionErrorsForProjectRegistration(
-            $user
         );
 
         self::assertEmpty($errors_collection->getErrors());

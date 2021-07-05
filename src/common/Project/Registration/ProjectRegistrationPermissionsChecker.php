@@ -26,10 +26,27 @@ namespace Tuleap\Project\Registration;
 use PFUser;
 use ProjectCreationData;
 
-interface ProjectRegistrationChecker
+final class ProjectRegistrationPermissionsChecker implements ProjectRegistrationChecker
 {
+    private ProjectRegistrationUserPermissionChecker $permission_checker;
+
+    public function __construct(ProjectRegistrationUserPermissionChecker $permission_checker)
+    {
+        $this->permission_checker = $permission_checker;
+    }
+
     public function collectAllErrorsForProjectRegistration(
         PFUser $user,
         ProjectCreationData $project_creation_data
-    ): ProjectRegistrationErrorsCollection;
+    ): ProjectRegistrationErrorsCollection {
+        $errors_collection = new ProjectRegistrationErrorsCollection();
+
+        try {
+            $this->permission_checker->checkUserCreateAProject($user);
+        } catch (RegistrationForbiddenException $exception) {
+            $errors_collection->addError($exception);
+        }
+
+        return $errors_collection;
+    }
 }

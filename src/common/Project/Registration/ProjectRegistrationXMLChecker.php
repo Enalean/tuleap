@@ -26,10 +26,10 @@ namespace Tuleap\Project\Registration;
 use PFUser;
 use ProjectCreationData;
 
-interface ProjectRegistrationChecker
+final class ProjectRegistrationXMLChecker implements ProjectRegistrationChecker
 {
-    public function collectAllErrorsForProjectRegistration(
-        PFUser $user,
-        ProjectCreationData $project_creation_data
-    ): ProjectRegistrationErrorsCollection;
+    public function collectAllErrorsForProjectRegistration(PFUser $user, ProjectCreationData $project_creation_data): ProjectRegistrationErrorsCollection
+    {
+        return new ProjectRegistrationErrorsCollection();
+    }
 }

@@ -66,8 +66,12 @@ use Tuleap\Project\ProjectStatusMapper;
 use Tuleap\Project\Registration\ProjectDescriptionMandatoryException;
 use Tuleap\Project\Registration\ProjectInvalidFullNameException;
 use Tuleap\Project\Registration\ProjectInvalidShortNameException;
-use Tuleap\Project\Registration\ProjectRegistrationChecker;
+use Tuleap\Project\Registration\ProjectRegistrationCheckerAggregator;
+use Tuleap\Project\Registration\ProjectRegistrationCheckerBlockErrorSet;
+use Tuleap\Project\Registration\ProjectRegistrationPermissionsChecker;
+use Tuleap\Project\Registration\ProjectRegistrationRESTChecker;
 use Tuleap\Project\Registration\ProjectRegistrationUserPermissionChecker;
+use Tuleap\Project\Registration\ProjectRegistrationBaseChecker;
 use Tuleap\Project\Registration\Template\InvalidTemplateException;
 use Tuleap\Project\Registration\Template\TemplateFactory;
 use Tuleap\Project\REST\HeartbeatsRepresentation;
@@ -223,12 +227,19 @@ class ProjectResource extends AuthenticatedResource
         }
 
         if ($dry_run === true) {
-            $checker = new ProjectRegistrationChecker(
-                new ProjectRegistrationUserPermissionChecker(
-                    new \ProjectDao()
+            $checker = new ProjectRegistrationCheckerBlockErrorSet(
+                new ProjectRegistrationPermissionsChecker(
+                    new ProjectRegistrationUserPermissionChecker(
+                        new \ProjectDao()
+                    ),
                 ),
-                new \Rule_ProjectName(),
-                new \Rule_ProjectFullName(),
+                new ProjectRegistrationCheckerAggregator(
+                    new ProjectRegistrationBaseChecker(
+                        new \Rule_ProjectName(),
+                        new \Rule_ProjectFullName(),
+                    ),
+                    new ProjectRegistrationRESTChecker()
+                )
             );
 
             $errors_collection = $checker->collectAllErrorsForProjectRegistration($user, $creation_data);

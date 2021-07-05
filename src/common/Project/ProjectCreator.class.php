@@ -45,7 +45,13 @@ use Tuleap\Project\Registration\ProjectDescriptionMandatoryException;
 use Tuleap\Project\Registration\ProjectInvalidFullNameException;
 use Tuleap\Project\Registration\ProjectInvalidShortNameException;
 use Tuleap\Project\Registration\ProjectRegistrationChecker;
+use Tuleap\Project\Registration\ProjectRegistrationCheckerAggregator;
+use Tuleap\Project\Registration\ProjectRegistrationCheckerBlockErrorSet;
+use Tuleap\Project\Registration\ProjectRegistrationPermissionsChecker;
+use Tuleap\Project\Registration\ProjectRegistrationRESTChecker;
 use Tuleap\Project\Registration\ProjectRegistrationUserPermissionChecker;
+use Tuleap\Project\Registration\ProjectRegistrationBaseChecker;
+use Tuleap\Project\Registration\ProjectRegistrationXMLChecker;
 use Tuleap\Project\Registration\RegisterProjectCreationEvent;
 use Tuleap\Project\Registration\RegistrationForbiddenException;
 use Tuleap\Project\Registration\Template\TemplateFromProjectForCreation;
@@ -184,19 +190,23 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
 
     public static function buildSelfByPassValidation(): self
     {
-        return self::buildSelf(true, false);
+        return self::buildSelf(true, false, new ProjectRegistrationXMLChecker());
     }
 
     public static function buildSelfRegularValidation(): self
     {
         return self::buildSelf(
             (bool) ForgeConfig::get(\ProjectManager::CONFIG_PROJECT_APPROVAL, true) === false,
-            true
+            true,
+            new ProjectRegistrationRESTChecker()
         );
     }
 
-    private static function buildSelf(bool $force_activation, bool $send_notifications): self
-    {
+    private static function buildSelf(
+        bool $force_activation,
+        bool $send_notifications,
+        ProjectRegistrationChecker $registration_checker
+    ): self {
         $ugroup_dao        = new UGroupDao();
         $ugroup_user_dao   = new UGroupUserDao();
         $ugroup_manager    = new UGroupManager();
@@ -263,12 +273,19 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
                 new ServiceLinkDataBuilder(),
                 ReferenceManager::instance()
             ),
-            new ProjectRegistrationChecker(
-                new ProjectRegistrationUserPermissionChecker(
-                    new \ProjectDao()
+            new ProjectRegistrationCheckerBlockErrorSet(
+                new ProjectRegistrationPermissionsChecker(
+                    new ProjectRegistrationUserPermissionChecker(
+                        new \ProjectDao()
+                    ),
                 ),
-                new \Rule_ProjectName(),
-                new \Rule_ProjectFullName(),
+                new ProjectRegistrationCheckerAggregator(
+                    new ProjectRegistrationBaseChecker(
+                        new \Rule_ProjectName(),
+                        new \Rule_ProjectFullName(),
+                    ),
+                    $registration_checker
+                )
             ),
             $force_activation
         );

@@ -24,6 +24,8 @@ namespace Tuleap\layout\NewDropdown;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PFUser;
+use ProjectCreationData;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\Project\Registration\ProjectRegistrationChecker;
@@ -41,10 +43,6 @@ class NewDropdownPresenterBuilderTest extends TestCase
      */
     private $event_dispatcher;
     /**
-     * @var NewDropdownPresenterBuilder
-     */
-    private $builder;
-    /**
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|\PFUser
      */
     private $user;
@@ -52,17 +50,41 @@ class NewDropdownPresenterBuilderTest extends TestCase
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|\Project
      */
     private $project;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ProjectRegistrationChecker
-     */
-    private $project_registration;
+
+    private ProjectRegistrationChecker $project_registraton_checker_with_errors;
+    private ProjectRegistrationChecker $project_registraton_checker_without_errors;
 
     protected function setUp(): void
     {
-        $this->event_dispatcher     = Mockery::mock(EventDispatcherInterface::class);
-        $this->project_registration = Mockery::mock(ProjectRegistrationChecker::class);
+        $this->event_dispatcher = Mockery::mock(EventDispatcherInterface::class);
 
-        $this->builder = new NewDropdownPresenterBuilder($this->event_dispatcher, $this->project_registration);
+        $this->project_registraton_checker_with_errors = new class implements ProjectRegistrationChecker
+        {
+            public function collectAllErrorsForProjectRegistration(PFUser $user, ProjectCreationData $project_creation_data): ProjectRegistrationErrorsCollection
+            {
+                $errors_collection = new ProjectRegistrationErrorsCollection();
+                $errors_collection->addError(
+                    new class extends RegistrationForbiddenException
+                    {
+                        public function getI18NMessage(): string
+                        {
+                            return '';
+                        }
+                    }
+                );
+
+                return $errors_collection;
+            }
+        };
+
+        $this->project_registraton_checker_without_errors = new class implements ProjectRegistrationChecker
+        {
+            public function collectAllErrorsForProjectRegistration(PFUser $user, ProjectCreationData $project_creation_data): ProjectRegistrationErrorsCollection
+            {
+                $errors_collection = new ProjectRegistrationErrorsCollection();
+                return $errors_collection;
+            }
+        };
 
         $this->user    = Mockery::mock(\PFUser::class);
         $this->project = Mockery::mock(\Project::class)->shouldReceive(['getPublicName' => 'Smartoid'])->getMock();
@@ -72,35 +94,24 @@ class NewDropdownPresenterBuilderTest extends TestCase
 
     public function testNoSectionsWhenUserCannotCreateProject(): void
     {
-        $errors_collection = new ProjectRegistrationErrorsCollection();
-        $errors_collection->addError(
-            new class extends RegistrationForbiddenException
-            {
-                public function getI18NMessage(): string
-                {
-                    return '';
-                }
-            }
+        $builder = new NewDropdownPresenterBuilder(
+            $this->event_dispatcher,
+            $this->project_registraton_checker_with_errors
         );
 
-        $this->project_registration
-            ->shouldReceive('collectPermissionErrorsForProjectRegistration')
-            ->andReturn($errors_collection);
-
-        $presenter = $this->builder->getPresenter($this->user, null, null);
+        $presenter = $builder->getPresenter($this->user, null, null);
 
         self::assertFalse($presenter->has_sections);
     }
 
     public function testGlobalSectionWhenUserCanCreateProject(): void
     {
-        $this->project_registration
-            ->shouldReceive('collectPermissionErrorsForProjectRegistration')
-            ->andReturn(
-                new ProjectRegistrationErrorsCollection()
-            );
+        $builder = new NewDropdownPresenterBuilder(
+            $this->event_dispatcher,
+            $this->project_registraton_checker_without_errors
+        );
 
-        $presenter = $this->builder->getPresenter($this->user, null, null);
+        $presenter = $builder->getPresenter($this->user, null, null);
 
         self::assertTrue($presenter->has_sections);
         self::assertCount(1, $presenter->sections);
@@ -110,46 +121,26 @@ class NewDropdownPresenterBuilderTest extends TestCase
 
     public function testNoSectionsWhenUserCannotDoStuffInProject(): void
     {
-        $errors_collection = new ProjectRegistrationErrorsCollection();
-        $errors_collection->addError(
-            new class extends RegistrationForbiddenException
-            {
-                public function getI18NMessage(): string
-                {
-                    return '';
-                }
-            }
+        $builder = new NewDropdownPresenterBuilder(
+            $this->event_dispatcher,
+            $this->project_registraton_checker_with_errors
         );
-
-        $this->project_registration
-            ->shouldReceive('collectPermissionErrorsForProjectRegistration')
-            ->andReturn($errors_collection);
 
         $this->event_dispatcher
             ->shouldReceive('dispatch')
             ->andReturn(new NewDropdownProjectLinksCollector($this->user, $this->project, null));
 
-        $presenter = $this->builder->getPresenter($this->user, $this->project, null);
+        $presenter = $builder->getPresenter($this->user, $this->project, null);
 
         self::assertFalse($presenter->has_sections);
     }
 
     public function testProjectSectionWhenUserCanDoStuffInProject(): void
     {
-        $errors_collection = new ProjectRegistrationErrorsCollection();
-        $errors_collection->addError(
-            new class extends RegistrationForbiddenException
-            {
-                public function getI18NMessage(): string
-                {
-                    return '';
-                }
-            }
+        $builder = new NewDropdownPresenterBuilder(
+            $this->event_dispatcher,
+            $this->project_registraton_checker_with_errors
         );
-
-        $this->project_registration
-            ->shouldReceive('collectPermissionErrorsForProjectRegistration')
-            ->andReturn($errors_collection);
 
         $collector = new NewDropdownProjectLinksCollector($this->user, $this->project, null);
         $collector->addCurrentProjectLink(new NewDropdownLinkPresenter('/url', 'label', 'icon', []));
@@ -158,7 +149,7 @@ class NewDropdownPresenterBuilderTest extends TestCase
             ->shouldReceive('dispatch')
             ->andReturn($collector);
 
-        $presenter = $this->builder->getPresenter($this->user, $this->project, null);
+        $presenter = $builder->getPresenter($this->user, $this->project, null);
 
         self::assertTrue($presenter->has_sections);
         self::assertCount(1, $presenter->sections);
@@ -168,11 +159,10 @@ class NewDropdownPresenterBuilderTest extends TestCase
 
     public function testBothSectionsWhenUserCanDoStuffInProjectAndCanCreateProject(): void
     {
-        $this->project_registration
-            ->shouldReceive('collectPermissionErrorsForProjectRegistration')
-            ->andReturn(
-                new ProjectRegistrationErrorsCollection()
-            );
+        $builder = new NewDropdownPresenterBuilder(
+            $this->event_dispatcher,
+            $this->project_registraton_checker_without_errors
+        );
 
         $collector = new NewDropdownProjectLinksCollector($this->user, $this->project, null);
         $collector->addCurrentProjectLink(new NewDropdownLinkPresenter('/url', 'label', 'icon', []));
@@ -181,7 +171,7 @@ class NewDropdownPresenterBuilderTest extends TestCase
             ->shouldReceive('dispatch')
             ->andReturn($collector);
 
-        $presenter = $this->builder->getPresenter($this->user, $this->project, null);
+        $presenter = $builder->getPresenter($this->user, $this->project, null);
 
         self::assertTrue($presenter->has_sections);
         self::assertCount(2, $presenter->sections);
@@ -193,11 +183,10 @@ class NewDropdownPresenterBuilderTest extends TestCase
 
     public function testItAddsACurrentContextSection(): void
     {
-        $this->project_registration
-            ->shouldReceive('collectPermissionErrorsForProjectRegistration')
-            ->andReturn(
-                new ProjectRegistrationErrorsCollection()
-            );
+        $builder = new NewDropdownPresenterBuilder(
+            $this->event_dispatcher,
+            $this->project_registraton_checker_without_errors
+        );
 
         $collector = new NewDropdownProjectLinksCollector($this->user, $this->project, null);
         $collector->addCurrentProjectLink(new NewDropdownLinkPresenter('/url', 'label', 'icon', []));
@@ -209,7 +198,8 @@ class NewDropdownPresenterBuilderTest extends TestCase
         $current_context_section = new NewDropdownLinkSectionPresenter("Current context", [
             new \Tuleap\layout\NewDropdown\NewDropdownLinkPresenter('/path/to/submit/story', 'New story', 'fa-plus', [])
         ]);
-        $presenter               = $this->builder->getPresenter($this->user, $this->project, $current_context_section);
+
+        $presenter = $builder->getPresenter($this->user, $this->project, $current_context_section);
 
         self::assertTrue($presenter->has_sections);
         self::assertCount(3, $presenter->sections);
