@@ -58,7 +58,7 @@ function handleSidebarPrivacyPopover(): void {
         return;
     }
 
-    const project_sidebar_header = document.querySelector(".project-sidebar-header");
+    const project_sidebar_header = document.querySelector(".project-sidebar-header-name");
 
     if (!project_sidebar_header || !(project_sidebar_header instanceof HTMLElement)) {
         return;

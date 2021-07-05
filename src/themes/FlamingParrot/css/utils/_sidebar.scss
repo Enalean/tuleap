@@ -413,8 +413,9 @@ $spacing-between-nav-items: 5px;
 #project-sidebar-linked-projects-popover {
     > .tlp-popover-body {
         border-radius: 4px;
-        background: var(--tlp-dark-color);
+        background: var(--tlp-dark-color-darker-20);
         color: var(--tlp-dimmed-color-on-dark-background);
+        line-height: 1.5rem;
     }
 
     > .tlp-popover-arrow {
@@ -575,9 +576,10 @@ body.sidebar-collapsed {
     > .tlp-popover-body {
         .current-project-nav-flag-popover-content-title {
             margin: 0 0 var(--tlp-small-spacing);
-            font-size: 1.125rem;
+            color: var(--tlp-neutral-light-color);
+            font-size: 1rem;
             font-weight: 600;
-            line-height: 1.625rem;
+            line-height: 1.5rem;
 
             &:last-child {
                 margin: 0;
