@@ -244,19 +244,6 @@ class TrackerXmlImport
     }
 
     /**
-     *
-     * @return array Array of SimpleXmlElement with each tracker
-     */
-    protected function getAllXmlTrackers(SimpleXMLElement $xml_input)
-    {
-        $tracker_list = [];
-        foreach ($xml_input->trackers->tracker as $xml_tracker) {
-            $tracker_list[$this->getXmlTrackerAttribute($xml_tracker, 'id')] = $xml_tracker;
-        }
-        return $tracker_list;
-    }
-
-    /**
      * @return String | bool the attribute value in String, False if this attribute does not exist
      */
     private function getXmlTrackerAttribute(SimpleXMLElement $xml_tracker, string $attribute_name)
@@ -306,12 +293,12 @@ class TrackerXmlImport
         $changeset_id_mapping     = new ImportedChangesetMapping();
         $url_mapping              = new CreatedFileURLMapping();
 
-        $xml_trackers = $this->getAllXmlTrackers($xml_input);
+        $ordered_xml_trackers = $this->getAllXmlTrackersOrderedByPriority($xml_input);
 
-        foreach ($xml_trackers as $xml_tracker_id => $xml_tracker) {
-            $tracker_created                           = $this->instantiateTrackerFromXml($project, $xml_tracker, $configuration);
+        foreach ($ordered_xml_trackers as $xml_tracker_id => $ordered_xml_tracker) {
+            $tracker_created                           = $this->instantiateTrackerFromXml($project, $ordered_xml_tracker, $configuration, $created_trackers_mapping);
             $created_trackers_objects[$xml_tracker_id] = $tracker_created;
-            $created_trackers_mapping                  = $created_trackers_mapping + [$xml_tracker_id => $tracker_created->getId()];
+            $created_trackers_mapping                  = $created_trackers_mapping + [(string) $xml_tracker_id => $tracker_created->getId()];
             $registery->addReference($xml_tracker_id, $tracker_created->getId());
         }
 
@@ -322,7 +309,7 @@ class TrackerXmlImport
         $xml_field_values_mapping = new TrackerXmlFieldsMapping_FromAnotherPlatform($this->xml_fields_mapping);
 
         $created_artifacts = $this->importBareArtifacts(
-            $xml_trackers,
+            $ordered_xml_trackers,
             $created_trackers_objects,
             $extraction_path,
             $xml_field_values_mapping,
@@ -332,7 +319,7 @@ class TrackerXmlImport
         );
 
         $this->importChangesets(
-            $xml_trackers,
+            $ordered_xml_trackers,
             $created_trackers_objects,
             $extraction_path,
             $xml_field_values_mapping,
@@ -445,7 +432,7 @@ class TrackerXmlImport
 
         $this->rng_validator->validate($partial_element->trackers, __DIR__ . '/../resources/trackers.rng');
 
-        $xml_trackers = $this->getAllXmlTrackers($xml_input);
+        $xml_trackers = $this->getAllXmlTrackersOrderedByPriority($xml_input);
         $trackers     = [];
 
         foreach ($xml_trackers as $xml_tracker_id => $xml_tracker) {
@@ -458,7 +445,8 @@ class TrackerXmlImport
                 $name,
                 $description,
                 $item_name,
-                TrackerColor::default()->getName()
+                TrackerColor::default()->getName(),
+                []
             );
         }
 
@@ -566,7 +554,7 @@ class TrackerXmlImport
     private function importHierarchy(SimpleXMLElement $xml_input, array $created_trackers_list)
     {
         $all_hierarchies = [];
-        foreach ($this->getAllXmlTrackers($xml_input) as $xml_tracker) {
+        foreach ($this->getAllXmlTrackersOrderedByPriority($xml_input) as $xml_tracker) {
             $all_hierarchies = $this->buildTrackersHierarchy($all_hierarchies, $xml_tracker, $created_trackers_list);
         }
 
@@ -585,7 +573,8 @@ class TrackerXmlImport
     protected function instantiateTrackerFromXml(
         Project $project,
         SimpleXMLElement $xml_tracker,
-        ImportConfig $configuration
+        ImportConfig $configuration,
+        array $created_trackers_mapping
     ): Tracker {
         $tracker_existing = $this->getTrackerToReUse($project, $xml_tracker, $configuration);
         if ($tracker_existing !== null) {
@@ -603,7 +592,8 @@ class TrackerXmlImport
                 (string) $xml_tracker->name,
                 (string) $xml_tracker->description,
                 (string) $xml_tracker->item_name,
-                (string) $xml_tracker->color
+                (string) $xml_tracker->color,
+                $created_trackers_mapping
             );
         } catch (\Tuleap\Tracker\TrackerIsInvalidException $exception) {
             $this->feedback_collector->addErrors($exception->getTranslatedMessage());
@@ -688,7 +678,7 @@ class TrackerXmlImport
             $description = (string) $tracker_xml->description;
             $item_name   = (string) $tracker_xml->item_name;
 
-            return $this->createFromXML($tracker_xml, $project, $name, $description, $item_name, TrackerColor::default()->getName());
+            return $this->createFromXML($tracker_xml, $project, $name, $description, $item_name, TrackerColor::default()->getName(), []);
         } catch (\Tuleap\Tracker\TrackerIsInvalidException $exception) {
             $this->feedback_collector->addErrors($exception->getTranslatedMessage());
             $this->feedback_collector->displayErrors($this->logger);
@@ -725,7 +715,7 @@ class TrackerXmlImport
         $event = new CreateTrackerFromXMLEvent($project, $tracker_xml);
         $this->event_manager->processEvent($event);
 
-        return $this->createFromXML($tracker_xml, $project, $name, $description, $item_name, $color);
+        return $this->createFromXML($tracker_xml, $project, $name, $description, $item_name, $color, []);
     }
 
     /**
@@ -743,7 +733,8 @@ class TrackerXmlImport
         string $name,
         string $description,
         string $itemname,
-        ?string $color
+        ?string $color,
+        array $created_trackers_mapping
     ): Tracker {
         $tracker         = null;
         $partial_element = new SimpleXMLElement((string) $xml_element->asXML());
@@ -762,7 +753,8 @@ class TrackerXmlImport
             $name,
             $description,
             $itemname,
-            $color
+            $color,
+            $created_trackers_mapping
         );
         //Testing consistency of the imported tracker before updating database
         if ($tracker->testImport()) {
@@ -820,14 +812,15 @@ class TrackerXmlImport
         string $name,
         string $description,
         string $itemname,
-        ?string $color
+        ?string $color,
+        array $created_trackers_mapping
     ): Tracker {
         $row     = $this->setTrackerGeneralInformation($xml, $project, $name, $description, $itemname, $color);
         $tracker = $this->tracker_factory->getInstanceFromRow($row);
 
         $this->setCannedResponses($xml, $tracker);
         $this->setFormElementFields($xml, $tracker);
-        $this->setSemantics($xml, $tracker);
+        $this->setSemantics($xml, $tracker, $created_trackers_mapping);
 
         /*
          * Legacy compatibility
@@ -1049,7 +1042,7 @@ class TrackerXmlImport
     /**
      * protected for testing purpose
      */
-    protected function setSemantics(SimpleXMLElement $xml, Tracker $tracker): void
+    protected function setSemantics(SimpleXMLElement $xml, Tracker $tracker, array $created_trackers_mapping): void
     {
         if (! isset($xml->semantics)) {
             return;
@@ -1059,7 +1052,8 @@ class TrackerXmlImport
                 $xml_semantic,
                 $xml->semantics,
                 $this->xml_fields_mapping,
-                $tracker
+                $tracker,
+                $created_trackers_mapping
             );
 
             if ($semantic) {
@@ -1238,5 +1232,44 @@ class TrackerXmlImport
     protected function loadXmlFile(string $filepath)
     {
         return \simplexml_load_string(\file_get_contents($filepath));
+    }
+
+    /**
+     * protected for testing purpose
+     * @return array Array of SimpleXmlElement with each tracker
+     */
+    protected function getAllXmlTrackersOrderedByPriority(SimpleXMLElement $xml_input): array
+    {
+        $xml_trackers = [];
+        foreach ($xml_input->trackers->tracker as $xml_tracker) {
+            $xml_trackers[$this->getXmlTrackerAttribute($xml_tracker, 'id')] = $xml_tracker;
+        }
+
+        uasort($xml_trackers, function (SimpleXMLElement $xml_tracker_a, SimpleXMLElement $xml_tracker_b) {
+            $is_a_inherited_from_tracker = $this->hasTimeframeSemanticInheritedFromAnotherTracker($xml_tracker_a);
+            $is_b_inherited_from_tracker = $this->hasTimeframeSemanticInheritedFromAnotherTracker($xml_tracker_b);
+
+            if ($is_a_inherited_from_tracker === $is_b_inherited_from_tracker) {
+                return 0;
+            }
+
+            if ($is_a_inherited_from_tracker) {
+                return 1;
+            }
+            return -1;
+        });
+
+        return $xml_trackers;
+    }
+
+    private function hasTimeframeSemanticInheritedFromAnotherTracker(SimpleXMLElement $xml_tracker): bool
+    {
+        if (! $xml_tracker->semantics) {
+            return false;
+        }
+
+        $inherited_from_tracker_xml_element = $xml_tracker->semantics->xpath("./semantic[@type='timeframe']/inherited_from_tracker");
+
+        return $inherited_from_tracker_xml_element !== null && (is_array($inherited_from_tracker_xml_element) && count($inherited_from_tracker_xml_element) > 0);
     }
 }

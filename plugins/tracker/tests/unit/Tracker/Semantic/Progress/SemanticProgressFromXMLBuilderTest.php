@@ -60,7 +60,8 @@ class SemanticProgressFromXMLBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                 'F201' => \Mockery::mock(\Tracker_FormElement_Field_Numeric::class),
                 'F202' => \Mockery::mock(\Tracker_FormElement_Field_Numeric::class)
             ],
-            \Mockery::mock(\Tracker::class, ['getId' => 113])
+            \Mockery::mock(\Tracker::class, ['getId' => 113]),
+            []
         );
 
         $this->assertNotNull($semantic);
@@ -92,7 +93,8 @@ class SemanticProgressFromXMLBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                 'F201' => \Mockery::mock(\Tracker_FormElement_Field_Numeric::class),
                 'F202' => \Mockery::mock(\Tracker_FormElement_Field_Numeric::class)
             ],
-            \Mockery::mock(\Tracker::class, ['getId' => 113])
+            \Mockery::mock(\Tracker::class, ['getId' => 113]),
+            []
         );
 
         $this->assertNull($semantic);
@@ -118,7 +120,8 @@ class SemanticProgressFromXMLBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                 'F201' => \Mockery::mock(\Tracker_FormElement_Field_Numeric::class),
                 'F202' => \Mockery::mock(\Tracker_FormElement_Field_Numeric::class)
             ],
-            \Mockery::mock(\Tracker::class, ['getId' => 113])
+            \Mockery::mock(\Tracker::class, ['getId' => 113]),
+            []
         );
 
         $this->assertNull($semantic);
@@ -143,7 +146,8 @@ class SemanticProgressFromXMLBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             [
                 'F202' => \Mockery::mock(\Tracker_FormElement_Field_Numeric::class)
             ],
-            \Mockery::mock(\Tracker::class, ['getId' => 113])
+            \Mockery::mock(\Tracker::class, ['getId' => 113]),
+            []
         );
 
         $this->assertNull($semantic);
@@ -168,7 +172,8 @@ class SemanticProgressFromXMLBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             [
                 'F201' => \Mockery::mock(\Tracker_FormElement_Field_Numeric::class)
             ],
-            \Mockery::mock(\Tracker::class, ['getId' => 113])
+            \Mockery::mock(\Tracker::class, ['getId' => 113]),
+            []
         );
 
         $this->assertNull($semantic);
@@ -191,7 +196,8 @@ class SemanticProgressFromXMLBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             $xml,
             $all_semantics_xml,
             [],
-            $tracker
+            $tracker,
+            []
         );
 
         $this->assertNotNull($semantic);
@@ -219,7 +225,8 @@ class SemanticProgressFromXMLBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             $xml,
             $all_semantics_xml,
             [],
-            \Mockery::mock(\Tracker::class, ['getId' => 113])
+            \Mockery::mock(\Tracker::class, ['getId' => 113]),
+            []
         );
 
         $this->assertNull($semantic);

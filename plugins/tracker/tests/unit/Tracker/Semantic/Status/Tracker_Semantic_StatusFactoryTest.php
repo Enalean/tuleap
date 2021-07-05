@@ -67,7 +67,8 @@ class Tracker_Semantic_StatusFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
             $xml,
             $all_semantics_xml,
             $mapping,
-            $tracker
+            $tracker,
+            []
         );
 
         $this->assertEquals('status', $semantic_status->getShortName());

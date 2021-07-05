@@ -2371,18 +2371,37 @@
             <data type="IDREF" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"/>
           </attribute>
         </element>
-        <choice>
-          <element name="duration_field">
-            <attribute name="REF">
-              <data type="IDREF" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"/>
-            </attribute>
-          </element>
-          <element name="end_date_field">
-            <attribute name="REF">
-              <data type="IDREF" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"/>
-            </attribute>
-          </element>
-        </choice>
+        <element name="duration_field">
+          <attribute name="REF">
+            <data type="IDREF" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"/>
+          </attribute>
+        </element>
+      </group>
+      <group>
+        <attribute name="type">
+          <value datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">timeframe</value>
+        </attribute>
+        <element name="start_date_field">
+          <attribute name="REF">
+            <data type="IDREF" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"/>
+          </attribute>
+        </element>
+        <element name="end_date_field">
+          <attribute name="REF">
+            <data type="IDREF" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"/>
+          </attribute>
+        </element>
+      </group>
+      <group>
+        <attribute name="type">
+          <value datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">timeframe</value>
+        </attribute>
+        <element name="inherited_from_tracker">
+          <!-- This attribute cannot use IDREF because it is not possible to always assure the presence of the tracker involved within the XML document -->
+          <attribute name="id">
+            <data type="string" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"/>
+          </attribute>
+        </element>
       </group>
       <group>
         <attribute name="type">

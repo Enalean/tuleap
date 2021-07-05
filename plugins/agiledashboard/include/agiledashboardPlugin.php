@@ -913,7 +913,8 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
                 $xml,
                 $full_semantic_xml,
                 $xmlMapping,
-                $tracker
+                $tracker,
+                []
             );
         }
     }

@@ -58,7 +58,8 @@ class Tracker_Semantic_ContributorFactoryTest extends \Tuleap\Test\PHPUnit\TestC
             $xml,
             $all_semantics_xml,
             $mapping,
-            $tracker
+            $tracker,
+            []
         );
 
         $this->assertEquals('contributor', $semantic_contributor->getShortName());

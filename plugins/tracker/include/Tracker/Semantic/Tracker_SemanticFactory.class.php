@@ -20,6 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkFieldValueDao;
 use Tuleap\Tracker\Semantic\IBuildSemanticFromXML;
 use Tuleap\Tracker\Semantic\Progress\SemanticProgressDao;
 use Tuleap\Tracker\Semantic\Progress\SemanticProgressDuplicator;
@@ -30,6 +31,7 @@ use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneDao;
 use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneDuplicator;
 use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneFactory;
 use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneValueChecker;
+use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeFromXMLBuilder;
 
 class Tracker_SemanticFactory
@@ -59,7 +61,8 @@ class Tracker_SemanticFactory
         SimpleXMLElement $xml,
         SimpleXMLElement $full_semantic_xml,
         array $xml_mapping,
-        Tracker $tracker
+        Tracker $tracker,
+        array $created_trackers_mapping
     ): ?Tracker_Semantic {
         $attributes = $xml->attributes();
         $type       = $attributes['type'];
@@ -69,7 +72,7 @@ class Tracker_SemanticFactory
             return $this->getSemanticFromAnotherPlugin($xml, $full_semantic_xml, $xml_mapping, $tracker, $type);
         }
 
-        return $builder->getInstanceFromXML($xml, $full_semantic_xml, $xml_mapping, $tracker);
+        return $builder->getInstanceFromXML($xml, $full_semantic_xml, $xml_mapping, $tracker, $created_trackers_mapping);
     }
 
     private function getSemanticFromXMLBuilder(string $type): ?IBuildSemanticFromXML
@@ -99,7 +102,11 @@ class Tracker_SemanticFactory
         }
 
         if ($type === 'timeframe') {
-            return (new SemanticTimeframeFromXMLBuilder());
+            return (new SemanticTimeframeFromXMLBuilder(
+                new ArtifactLinkFieldValueDao(),
+                TrackerFactory::instance(),
+                SemanticTimeframeBuilder::build()
+            ));
         }
 
         if ($type === SemanticProgress::NAME) {

@@ -136,6 +136,11 @@ class TimeframeImpliedFromAnotherTracker implements IComputeTimeframes
 
     public function exportToXML(\SimpleXMLElement $root, array $xml_mapping): void
     {
+        $implied_from_tracker_id = $this->semantic_timeframe_implied_from_tracker->getTracker()->getId();
+
+        $semantic = $root->addChild('semantic');
+        $semantic->addAttribute('type', SemanticTimeframe::NAME);
+        $semantic->addChild('inherited_from_tracker')->addAttribute('id', \Tracker::XML_ID_PREFIX . $implied_from_tracker_id);
     }
 
     public function exportToREST(\PFUser $user): ?IRepresentSemanticTimeframe
@@ -152,7 +157,13 @@ class TimeframeImpliedFromAnotherTracker implements IComputeTimeframes
 
     public function save(\Tracker $tracker, SemanticTimeframeDao $dao): bool
     {
-        return false;
+        return $dao->save(
+            $tracker->getId(),
+            null,
+            null,
+            null,
+            $this->semantic_timeframe_implied_from_tracker->getTracker()->getId()
+        );
     }
 
     public function isFieldUsed(\Tracker_FormElement_Field $field): bool

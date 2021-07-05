@@ -150,6 +150,7 @@ final class TrackerXmlImportTest extends \Tuleap\Test\PHPUnit\TestCase
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ExternalFieldsExtractor
      */
     private $external_validator;
+    private TrackerCreationDataChecker $tracker_creation_data_checker;
 
     protected function setUp(): void
     {
@@ -170,6 +171,7 @@ final class TrackerXmlImportTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->artifact_links_usage_dao      = Mockery::spy(ArtifactLinksUsageDao::class);
         $this->feedback_collector            = Mockery::mock(TrackerXmlImportFeedbackCollector::class);
         $this->tracker_xml_saver             = Mockery::mock(TrackerXmlSaver::class);
+        $this->tracker_creation_data_checker = Mockery::mock(TrackerCreationDataChecker::class);
         $this->tracker_xml_importer          = Mockery::mock(
             TrackerXmlImport::class,
             [
@@ -194,7 +196,7 @@ final class TrackerXmlImportTest extends \Tuleap\Test\PHPUnit\TestCase
                 $this->mapping_from_existing_tracker,
                 $this->external_validator,
                 $this->feedback_collector,
-                Mockery::mock(TrackerCreationDataChecker::class),
+                $this->tracker_creation_data_checker,
                 $this->tracker_xml_saver
             ]
         )->makePartial()->shouldAllowMockingProtectedMethods();
@@ -392,7 +394,7 @@ final class TrackerXmlImportTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->tracker_xml_importer->shouldReceive('setFormElementFields')->once()->withArgs(
             [$xml, $tracker]
         );
-        $this->tracker_xml_importer->shouldReceive('setSemantics')->once()->withArgs([$xml, $tracker]);
+        $this->tracker_xml_importer->shouldReceive('setSemantics')->once()->withArgs([$xml, $tracker, null]);
         $this->tracker_xml_importer->shouldReceive('setLegacyDependencies')->once()->withArgs([$xml]);
         $this->tracker_xml_importer->shouldReceive('setRules')->once()->withArgs([$xml, $tracker]);
         $this->tracker_xml_importer->shouldReceive('setTrackerReports')->once()->withArgs(
@@ -412,7 +414,8 @@ final class TrackerXmlImportTest extends \Tuleap\Test\PHPUnit\TestCase
             "tracker name",
             "trcker description",
             "bugs",
-            "peggy-pink"
+            "peggy-pink",
+            []
         );
     }
 
@@ -459,7 +462,7 @@ final class TrackerXmlImportTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItReturnsEachSimpleXmlTrackerFromTheXmlInput(): void
     {
         $xml             = simplexml_load_string(file_get_contents(__DIR__ . '/_fixtures/TrackersList.xml'));
-        $trackers_result = $this->tracker_xml_importer->getAllXmlTrackers($xml);
+        $trackers_result = $this->tracker_xml_importer->getAllXmlTrackersOrderedByPriority($xml);
 
         $xml_tracker1 = new SimpleXMLElement(
             '<tracker id="T101" parent_id="0" instantiate_for_new_projects="1">
@@ -590,6 +593,8 @@ final class TrackerXmlImportTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->hierarchy_dao->shouldReceive('updateChildren')->with(2);
 
+        $this->external_validator->shouldReceive('extractExternalFieldsFromTracker');
+
         $result = $this->tracker_xml_importer->import(
             $this->configuration,
             $this->project,
@@ -626,6 +631,7 @@ final class TrackerXmlImportTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->mapping_from_existing_tracker->shouldReceive('getXmlFieldsMapping')->once()->andReturns([]);
 
         $this->hierarchy_dao->shouldReceive('updateChildren')->with(2);
+        $this->external_validator->shouldReceive('extractExternalFieldsFromTracker');
 
         $result = $this->tracker_xml_importer->import(
             $this->configuration,
@@ -659,6 +665,7 @@ final class TrackerXmlImportTest extends \Tuleap\Test\PHPUnit\TestCase
         ];
 
         $this->event_manager->shouldReceive('processEvent')->with(Mockery::type(ImportXMLProjectTrackerDone::class));
+        $this->external_validator->shouldReceive('extractExternalFieldsFromTracker');
 
         $this->tracker_xml_importer->import(
             $this->configuration,
@@ -683,6 +690,7 @@ final class TrackerXmlImportTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->mockTracker103();
 
         $this->hierarchy_dao->shouldReceive('updateChildren')->never();
+        $this->external_validator->shouldReceive('extractExternalFieldsFromTracker');
 
         $this->tracker_xml_importer->import(
             $this->configuration,
@@ -697,7 +705,6 @@ final class TrackerXmlImportTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItImportsArtifacts(): void
     {
         $xml = simplexml_load_string(file_get_contents(__DIR__ . '/_fixtures/TrackersList.xml'));
-
 
         $this->mockCreateAlwaysThereTrackers();
         $this->mockTracker103();
@@ -741,7 +748,7 @@ final class TrackerXmlImportTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->tracker_xml_importer->shouldReceive('setCannedResponses')->once()->withArgs([$xml, $tracker]);
         $this->tracker_form_element_factory->shouldReceive('getInstanceFromXML')->twice();
 
-        $this->tracker_xml_importer->shouldReceive('setSemantics')->once()->withArgs([$xml, $tracker]);
+        $this->tracker_xml_importer->shouldReceive('setSemantics')->once()->withArgs([$xml, $tracker, []]);
         $this->tracker_xml_importer->shouldReceive('setLegacyDependencies')->once()->withArgs([$xml]);
         $this->tracker_xml_importer->shouldReceive('setRules')->once()->withArgs([$xml, $tracker]);
         $this->tracker_xml_importer->shouldReceive('setTrackerReports')->once()->withArgs(
@@ -762,6 +769,7 @@ final class TrackerXmlImportTest extends \Tuleap\Test\PHPUnit\TestCase
             "trcker description",
             "bugs",
             'peggy-pink',
+            [],
             $feedback_collector,
             $this->user
         );
@@ -791,7 +799,7 @@ final class TrackerXmlImportTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->tracker_xml_importer->shouldReceive('setCannedResponses')->once()->withArgs([$xml, $tracker]);
         $this->tracker_form_element_factory->shouldReceive('getInstanceFromXML')->twice();
 
-        $this->tracker_xml_importer->shouldReceive('setSemantics')->once()->withArgs([$xml, $tracker]);
+        $this->tracker_xml_importer->shouldReceive('setSemantics')->once()->withArgs([$xml, $tracker, null]);
         $this->tracker_xml_importer->shouldReceive('setLegacyDependencies')->once()->withArgs([$xml]);
         $this->tracker_xml_importer->shouldReceive('setRules')->once()->withArgs([$xml, $tracker]);
         $this->tracker_xml_importer->shouldReceive('setTrackerReports')->once()->withArgs(
@@ -813,6 +821,7 @@ final class TrackerXmlImportTest extends \Tuleap\Test\PHPUnit\TestCase
             "trcker description",
             "bugs",
             'peggy-pink',
+            [],
             $feedback_collector,
             $this->user
         );
@@ -890,7 +899,7 @@ final class TrackerXmlImportTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $import_config->shouldReceive('getExtraConfiguration')->once()->andReturn([$extra_configuration]);
 
-        $instantiated_tracker = $this->tracker_xml_importer->instantiateTrackerFromXml($project, $xml, $import_config);
+        $instantiated_tracker = $this->tracker_xml_importer->instantiateTrackerFromXml($project, $xml, $import_config, []);
 
         $this->assertEquals($tracker, $instantiated_tracker);
     }
@@ -906,7 +915,7 @@ final class TrackerXmlImportTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->tracker_xml_importer->shouldReceive('updateFromXML')->once()->andReturn($tracker);
 
-        $instantiated_tracker = $this->tracker_xml_importer->instantiateTrackerFromXml($project, $xml, $import_config);
+        $instantiated_tracker = $this->tracker_xml_importer->instantiateTrackerFromXml($project, $xml, $import_config, []);
 
         $this->assertEquals($tracker, $instantiated_tracker);
     }
@@ -922,8 +931,7 @@ final class TrackerXmlImportTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->tracker_xml_importer->shouldReceive('createFromXML')->once()->andReturn($tracker);
 
-
-        $instantiated_tracker = $this->tracker_xml_importer->instantiateTrackerFromXml($project, $xml, $import_config);
+        $instantiated_tracker = $this->tracker_xml_importer->instantiateTrackerFromXml($project, $xml, $import_config, []);
 
         $this->assertEquals($tracker, $instantiated_tracker);
     }
@@ -945,7 +953,7 @@ final class TrackerXmlImportTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->expectException(TrackerFromXmlImportCannotBeCreatedException::class);
 
-        $this->tracker_xml_importer->instantiateTrackerFromXml($project, $xml, $import_config);
+        $this->tracker_xml_importer->instantiateTrackerFromXml($project, $xml, $import_config, []);
     }
 
     private function mockCreateAlwaysThereTrackers(): void
@@ -957,10 +965,10 @@ final class TrackerXmlImportTest extends \Tuleap\Test\PHPUnit\TestCase
         $tracker_102->shouldReceive('getId')->andReturn(555);
 
         $this->tracker_xml_importer->shouldReceive('createFromXML')
-            ->with(Mockery::type(SimpleXMLElement::class), $this->project, 'name10', 'desc12', 'item11', 'inca-silver')
+            ->with(Mockery::type(SimpleXMLElement::class), $this->project, 'name10', 'desc12', 'item11', 'inca-silver', [])
             ->once()->andReturns($tracker_101);
         $this->tracker_xml_importer->shouldReceive('createFromXML')
-            ->with(Mockery::type(SimpleXMLElement::class), $this->project, 'name20', 'desc22', 'item21', 'inca-silver')
+            ->with(Mockery::type(SimpleXMLElement::class), $this->project, 'name20', 'desc22', 'item21', 'inca-silver', ["T101" => 444])
             ->once()->andReturns($tracker_102);
     }
 
@@ -969,7 +977,7 @@ final class TrackerXmlImportTest extends \Tuleap\Test\PHPUnit\TestCase
         $tracker_103 = Mockery::mock(Tracker::class);
         $tracker_103->shouldReceive('getId')->andReturn(666);
         $this->tracker_xml_importer->shouldReceive('createFromXML')
-            ->with(Mockery::type(SimpleXMLElement::class), $this->project, 'name30', 'desc32', 'item31', 'inca-silver')
+            ->with(Mockery::type(SimpleXMLElement::class), $this->project, 'name30', 'desc32', 'item31', 'inca-silver', ["T101" => 444, "T102" => 555])
             ->once()->andReturns($tracker_103);
     }
 }

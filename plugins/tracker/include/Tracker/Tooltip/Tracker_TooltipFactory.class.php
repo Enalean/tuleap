@@ -62,7 +62,8 @@ class Tracker_TooltipFactory implements IBuildSemanticFromXML
         SimpleXMLElement $current_semantic_xml,
         SimpleXMLElement $all_semantics_xml,
         array $xml_mapping,
-        Tracker $tracker
+        Tracker $tracker,
+        array $tracker_mapping
     ): Tracker_Semantic {
         $row = [];
         foreach ($current_semantic_xml->field as $field) {
