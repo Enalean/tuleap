@@ -107,7 +107,14 @@ class Tracker_Hierarchy_HierarchicalTrackerFactory
     {
         $project_trackers = $this->getProjectTrackers($tracker->getProject());
         $ids_to_remove    = $this->dao->searchAncestorIds($tracker->getId());
-        $ids_to_remove[]  = $tracker->getId();
+
+        $i = 0;
+        while ($i < count($ids_to_remove)) {
+            $ids_to_remove = array_unique(array_merge($ids_to_remove, $this->dao->searchAncestorIds($ids_to_remove[$i])));
+            $i++;
+        }
+
+        $ids_to_remove[] = $tracker->getId();
 
         $project_trackers = $this->removeIdsFromTrackerList($project_trackers, $ids_to_remove);
 
