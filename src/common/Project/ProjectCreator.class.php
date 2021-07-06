@@ -54,7 +54,6 @@ use Tuleap\Project\Registration\ProjectRegistrationBaseChecker;
 use Tuleap\Project\Registration\ProjectRegistrationXMLChecker;
 use Tuleap\Project\Registration\RegisterProjectCreationEvent;
 use Tuleap\Project\Registration\RegistrationForbiddenException;
-use Tuleap\Project\Registration\Template\TemplateFromProjectForCreation;
 use Tuleap\Project\Service\ServiceLinkDataBuilder;
 use Tuleap\Project\UgroupDuplicator;
 use Tuleap\Project\UGroups\Membership\DynamicUGroups\ProjectMemberAdderWithoutStatusCheckAndNotifications;
@@ -787,22 +786,5 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
         }
 
         return $this->project_manager->getProject($id);
-    }
-
-    /**
-     * protected for testing purpose
-     */
-    protected function getProjectCreationData($short_name, $public_name, TemplateFromProjectForCreation $template_from_project_for_creation, array $data): ProjectCreationData
-    {
-        $creation_data = ProjectCreationData::buildFromFormArray(
-            $this->default_project_visibility_retriever,
-            $template_from_project_for_creation,
-            $data
-        );
-
-        $creation_data->setUnixName($short_name);
-        $creation_data->setFullName($public_name);
-
-        return $creation_data;
     }
 }
