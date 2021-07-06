@@ -23,13 +23,31 @@ declare(strict_types=1);
 
 namespace Tuleap\Project\Registration;
 
+use ForgeConfig;
 use PFUser;
 use ProjectCreationData;
+use ProjectManager;
+use Tuleap\Project\DefaultProjectVisibilityRetriever;
 
 final class ProjectRegistrationRESTChecker implements ProjectRegistrationChecker
 {
+    private DefaultProjectVisibilityRetriever $default_project_visibility_retriever;
+
+    public function __construct(DefaultProjectVisibilityRetriever $default_project_visibility_retriever)
+    {
+        $this->default_project_visibility_retriever = $default_project_visibility_retriever;
+    }
+
     public function collectAllErrorsForProjectRegistration(PFUser $user, ProjectCreationData $project_creation_data): ProjectRegistrationErrorsCollection
     {
-        return new ProjectRegistrationErrorsCollection();
+        $errors_collection = new ProjectRegistrationErrorsCollection();
+
+        $access             = $project_creation_data->getAccess();
+        $default_visibility = $this->default_project_visibility_retriever->getDefaultProjectVisibility();
+        if (ForgeConfig::getInt(ProjectManager::SYS_USER_CAN_CHOOSE_PROJECT_PRIVACY) === 0 && $access !== $default_visibility) {
+            $errors_collection->addError(new ProjectAccessLevelCannotBeChosenByUserException($default_visibility));
+        }
+
+        return $errors_collection;
     }
 }

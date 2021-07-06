@@ -198,7 +198,7 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
         return self::buildSelf(
             (bool) ForgeConfig::get(\ProjectManager::CONFIG_PROJECT_APPROVAL, true) === false,
             true,
-            new ProjectRegistrationRESTChecker()
+            new ProjectRegistrationRESTChecker(new DefaultProjectVisibilityRetriever())
         );
     }
 

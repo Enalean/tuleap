@@ -223,42 +223,6 @@ final class ProjectCreationDataTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertEquals(Project::ACCESS_PUBLIC, $project_data->getAccess());
     }
 
-    public function testItTakesPublicWhenSiteAdminDecidedToMakeAllProjectsPublicByDefault(): void
-    {
-        ForgeConfig::set(ProjectManager::SYS_USER_CAN_CHOOSE_PROJECT_PRIVACY, 0);
-        ForgeConfig::set('sys_is_project_public', 1);
-
-        $project_data = ProjectCreationData::buildFromFormArray(
-            $this->default_project_visibility_retriever,
-            TemplateFromProjectForCreation::fromGlobalProjectAdminTemplate(),
-            [
-                'project' => [
-                    'is_public' => '0',
-                ],
-            ]
-        );
-
-        $this->assertEquals(Project::ACCESS_PUBLIC, $project_data->getAccess());
-    }
-
-    public function testItTakesPrivateWhenSiteAdminDecidedToMakeAllProjectsPrivateByDefault(): void
-    {
-        ForgeConfig::set(ProjectManager::SYS_USER_CAN_CHOOSE_PROJECT_PRIVACY, 0);
-        ForgeConfig::set('sys_is_project_public', 0);
-
-        $project_data = ProjectCreationData::buildFromFormArray(
-            $this->default_project_visibility_retriever,
-            TemplateFromProjectForCreation::fromGlobalProjectAdminTemplate(),
-            [
-                'project' => [
-                    'is_public' => '1',
-                ],
-            ]
-        );
-
-        $this->assertEquals(Project::ACCESS_PRIVATE, $project_data->getAccess());
-    }
-
     public function testItTakesPlatformConfigWhenNoDataSent(): void
     {
         ForgeConfig::set(ProjectManager::SYS_USER_CAN_CHOOSE_PROJECT_PRIVACY, 1);
