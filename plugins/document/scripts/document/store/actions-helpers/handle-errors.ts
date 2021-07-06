@@ -21,7 +21,7 @@ import type { ActionContext } from "vuex";
 import type { ErrorState } from "../error/module";
 import type { Item } from "../../type";
 
-interface DocumentException {
+export interface DocumentException {
     response: Response;
 }
 
@@ -92,23 +92,6 @@ export async function handleErrorsForDocument(
         context.commit("error/setItemLoadingError", getErrorMessage(json));
     } catch (error) {
         context.commit("error/setItemLoadingError", message);
-    }
-}
-
-export async function handleErrorsForModal(
-    context: ActionContext<ErrorState, ErrorState>,
-    exception: DocumentException
-): Promise<void> {
-    const message = "Internal server error";
-    if (exception.response === undefined) {
-        context.commit("error/setModalError", message);
-        throw exception;
-    }
-    try {
-        const json = await exception.response.json();
-        context.commit("error/setModalError", getErrorMessage(json));
-    } catch (error) {
-        context.commit("error/setModalError", message);
     }
 }
 

@@ -34,39 +34,50 @@ import {
     putLinkPermissions,
     putWikiPermissions,
 } from "../../api/permissions-rest-querier";
+import type { ActionContext } from "vuex";
+import type { Item, Permissions, RootState } from "../../type";
+import type { PermissionsState } from "./permissions-default-state";
+import type { State } from "../../type";
 import { getItem } from "../../api/rest-querier";
-import { handleErrorsForModal } from "../actions-helpers/handle-errors";
-import { getProjectUserGroupsWithoutServiceSpecialUGroups } from "../../helpers/permissions/ugroups.js";
+import { getProjectUserGroupsWithoutServiceSpecialUGroups } from "../../helpers/permissions/ugroups";
 
-export const updatePermissions = async (context, [item, updated_permissions]) => {
+interface PermissionUpdatePayload {
+    item: Item;
+    updated_permissions: Permissions;
+}
+export const updatePermissions = async (
+    context: ActionContext<PermissionsState, State>,
+    payload: PermissionUpdatePayload
+): Promise<void> => {
     try {
-        switch (item.type) {
+        const item_id = payload.item.id;
+        switch (payload.item.type) {
             case TYPE_FILE:
-                await putFilePermissions(item.id, updated_permissions);
+                await putFilePermissions(item_id, payload.updated_permissions);
                 break;
             case TYPE_EMBEDDED:
-                await putEmbeddedFilePermissions(item.id, updated_permissions);
+                await putEmbeddedFilePermissions(item_id, payload.updated_permissions);
                 break;
             case TYPE_LINK:
-                await putLinkPermissions(item.id, updated_permissions);
+                await putLinkPermissions(item_id, payload.updated_permissions);
                 break;
             case TYPE_WIKI:
-                await putWikiPermissions(item.id, updated_permissions);
+                await putWikiPermissions(item_id, payload.updated_permissions);
                 break;
             case TYPE_EMPTY:
-                await putEmptyDocumentPermissions(item.id, updated_permissions);
+                await putEmptyDocumentPermissions(item_id, payload.updated_permissions);
                 break;
             case TYPE_FOLDER:
-                await putFolderPermissions(item.id, updated_permissions);
+                await putFolderPermissions(item_id, payload.updated_permissions);
                 break;
             default:
                 break;
         }
-        const updated_item = await getItem(item.id);
+        const updated_item = await getItem(item_id);
 
-        if (item.id === context.rootState.current_folder.id) {
+        if (context.rootState.current_folder && item_id === context.rootState.current_folder.id) {
             context.commit("replaceCurrentFolder", updated_item, { root: true });
-            await context.dispatch("loadFolder", item.id, { root: true });
+            await context.dispatch("loadFolder", item_id, { root: true });
         } else {
             Vue.set(updated_item, "updated", true);
             context.commit("removeItemFromFolderContent", updated_item, { root: true });
@@ -74,12 +85,15 @@ export const updatePermissions = async (context, [item, updated_permissions]) =>
             context.commit("updateCurrentItemForQuickLokDisplay", updated_item, { root: true });
         }
     } catch (exception) {
-        await handleErrorsForModal(context, exception);
+        await context.dispatch("error/handleErrorsForModal", exception, { root: true });
     }
 };
 
-export const loadProjectUserGroupsIfNeeded = async (context, project_id) => {
-    if (context.state.project_ugroups !== null) {
+export const loadProjectUserGroupsIfNeeded = async (
+    context: ActionContext<PermissionsState, RootState>,
+    project_id: number
+): Promise<void> => {
+    if (context.rootState.permissions.project_ugroups !== null) {
         return;
     }
 

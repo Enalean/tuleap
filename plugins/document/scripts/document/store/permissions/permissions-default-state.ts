@@ -1,5 +1,5 @@
-/*
- *  Copyright (c) Enalean, $today.year-Present. All Rights Reserved.
+/**
+ *  Copyright (c) Enalean, 2020-Present. All Rights Reserved.
  *
  *  This file is a part of Tuleap.
  *
@@ -16,9 +16,14 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+import type { UserGroup } from "../../type";
 
-export default () => {
-    return {
-        project_ugroups: null,
-    };
+export interface PermissionsState {
+    project_ugroups: Array<UserGroup> | null;
+}
+
+const state: PermissionsState = {
+    project_ugroups: null,
 };
+
+export default state;

@@ -17,13 +17,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import * as actions from "./permissions-actions.js";
-import * as mutations from "./permissions-mutations.js";
+import * as actions from "./permissions-actions";
+import * as mutations from "./permissions-mutations";
 import defaultState from "../permissions/permissions-default-state";
 
 export default {
     namespaced: true,
     actions,
     mutations,
-    state: defaultState(),
+    state: defaultState,
 };

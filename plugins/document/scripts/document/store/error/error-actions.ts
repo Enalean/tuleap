@@ -18,8 +18,11 @@
  */
 
 import type { ActionContext } from "vuex";
-import type { State } from "../../type";
+import type { RootState, State } from "../../type";
 import type { FetchWrapperError } from "@tuleap/tlp-fetch";
+import type { DocumentException } from "../actions-helpers/handle-errors";
+import { getErrorMessage } from "../actions-helpers/handle-errors";
+import type { ErrorState } from "./module";
 
 export async function handleGlobalModalError(
     context: ActionContext<State, State>,
@@ -30,5 +33,22 @@ export async function handleGlobalModalError(
         context.commit("setGlobalModalErrorMessage", error.code + " " + error.message);
     } catch (e) {
         context.commit("setGlobalModalErrorMessage", "");
+    }
+}
+
+export async function handleErrorsForModal(
+    context: ActionContext<ErrorState, RootState>,
+    exception: DocumentException
+): Promise<void> {
+    const message = "Internal server error";
+    if (exception.response === undefined) {
+        context.commit("error/setModalError", message);
+        throw exception;
+    }
+    try {
+        const json = await exception.response.json();
+        context.commit("error/setModalError", getErrorMessage(json));
+    } catch (error) {
+        context.commit("error/setModalError", message);
     }
 }

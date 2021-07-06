@@ -16,7 +16,12 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+import type { PermissionsState } from "./permissions-default-state";
+import type { UserGroup } from "../../type";
 
-export function setProjectUserGroups(state, project_ugroups) {
+export function setProjectUserGroups(
+    state: PermissionsState,
+    project_ugroups: Array<UserGroup>
+): void {
     state.project_ugroups = project_ugroups;
 }

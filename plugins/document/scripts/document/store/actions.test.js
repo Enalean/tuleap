@@ -52,6 +52,7 @@ import * as rest_querier from "../api/rest-querier";
 
 import * as upload_file from "./actions-helpers/upload-file.js";
 import * as error_handler from "./actions-helpers/handle-errors";
+import * as action_error_handler from "./error/error-actions";
 
 describe("Store actions", () => {
     let context;
@@ -1587,7 +1588,7 @@ describe("Store actions", () => {
                 .spyOn(rest_querier, "postNewEmbeddedFileVersionFromEmpty")
                 .mockReturnValue(Promise.resolve());
             postNewFileVersionFromEmpty = jest.spyOn(rest_querier, "postNewFileVersionFromEmpty");
-            handleErrorsForModal = jest.spyOn(error_handler, "handleErrorsForModal");
+            handleErrorsForModal = jest.spyOn(action_error_handler, "handleErrorsForModal");
         });
 
         it("should update the empty document to link document", async () => {

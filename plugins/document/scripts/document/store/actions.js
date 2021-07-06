@@ -50,7 +50,6 @@ import {
     handleErrors,
     handleErrorsForDeletionModal,
     handleErrorsForDocument,
-    handleErrorsForModal,
 } from "./actions-helpers/handle-errors";
 import { loadFolderContent } from "./actions-helpers/load-folder-content.js";
 import { loadAscendantHierarchy } from "./actions-helpers/load-ascendant-hierarchy.js";
@@ -72,6 +71,7 @@ import {
     USER_CANNOT_PROPAGATE_DELETION_TO_WIKI_SERVICE,
 } from "../constants";
 import { addNewFolder } from "../api/rest-querier";
+import { handleErrorsForModal } from "./error/error-actions";
 
 export const loadRootFolder = async (context) => {
     try {

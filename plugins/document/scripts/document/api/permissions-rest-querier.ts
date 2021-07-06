@@ -29,8 +29,8 @@ export {
     putFolderPermissions,
 };
 
-function putEmbeddedFilePermissions(id: number, permissions: Permissions): Promise<Response> {
-    return put(`/api/docman_embedded_files/${encodeURIComponent(id)}/permissions`, {
+async function putEmbeddedFilePermissions(id: number, permissions: Permissions): Promise<void> {
+    await put(`/api/docman_embedded_files/${encodeURIComponent(id)}/permissions`, {
         headers: {
             "Content-Type": "application/json",
         },
@@ -38,8 +38,8 @@ function putEmbeddedFilePermissions(id: number, permissions: Permissions): Promi
     });
 }
 
-function putFilePermissions(id: number, permissions: Permissions): Promise<Response> {
-    return put(`/api/docman_files/${encodeURIComponent(id)}/permissions`, {
+async function putFilePermissions(id: number, permissions: Permissions): Promise<void> {
+    await put(`/api/docman_files/${encodeURIComponent(id)}/permissions`, {
         headers: {
             "Content-Type": "application/json",
         },
@@ -47,8 +47,8 @@ function putFilePermissions(id: number, permissions: Permissions): Promise<Respo
     });
 }
 
-function putLinkPermissions(id: number, permissions: Permissions): Promise<Response> {
-    return put(`/api/docman_links/${encodeURIComponent(id)}/permissions`, {
+async function putLinkPermissions(id: number, permissions: Permissions): Promise<void> {
+    await put(`/api/docman_links/${encodeURIComponent(id)}/permissions`, {
         headers: {
             "Content-Type": "application/json",
         },
@@ -56,8 +56,8 @@ function putLinkPermissions(id: number, permissions: Permissions): Promise<Respo
     });
 }
 
-function putWikiPermissions(id: number, permissions: Permissions): Promise<Response> {
-    return put(`/api/docman_wikis/${encodeURIComponent(id)}/permissions`, {
+async function putWikiPermissions(id: number, permissions: Permissions): Promise<void> {
+    await put(`/api/docman_wikis/${encodeURIComponent(id)}/permissions`, {
         headers: {
             "Content-Type": "application/json",
         },
@@ -65,8 +65,8 @@ function putWikiPermissions(id: number, permissions: Permissions): Promise<Respo
     });
 }
 
-function putEmptyDocumentPermissions(id: number, permissions: Permissions): Promise<Response> {
-    return put(`/api/docman_empty_documents/${encodeURIComponent(id)}/permissions`, {
+async function putEmptyDocumentPermissions(id: number, permissions: Permissions): Promise<void> {
+    await put(`/api/docman_empty_documents/${encodeURIComponent(id)}/permissions`, {
         headers: {
             "Content-Type": "application/json",
         },
@@ -74,8 +74,8 @@ function putEmptyDocumentPermissions(id: number, permissions: Permissions): Prom
     });
 }
 
-function putFolderPermissions(id: number, permissions: Permissions): Promise<Response> {
-    return put(`/api/docman_folders/${encodeURIComponent(id)}/permissions`, {
+async function putFolderPermissions(id: number, permissions: Permissions): Promise<void> {
+    await put(`/api/docman_folders/${encodeURIComponent(id)}/permissions`, {
         headers: {
             "Content-Type": "application/json",
         },

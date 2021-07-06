@@ -34,6 +34,7 @@ jest.mock("tlp");
 describe("Update item permissions", () => {
     const item_id = 123;
     const permissions = {
+        apply_permissions_on_children: true,
         can_read: [],
         can_write: [],
         can_manage: [],
