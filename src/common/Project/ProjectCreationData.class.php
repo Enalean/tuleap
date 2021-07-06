@@ -193,18 +193,18 @@ class ProjectCreationData //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNa
             return $this->default_project_visibility_retriever->getDefaultProjectVisibility();
         }
 
-        $is_public                       = (string) $project['is_public'] === '1';
-        $are_restricted_enabled          = ForgeConfig::areRestrictedUsersAllowed();
-        $should_project_allow_restricted = isset($project['allow_restricted']) && $project['allow_restricted'];
+        $is_public                                      = (string) $project['is_public'] === '1';
+        $should_project_allow_restricted_explicitly_set = isset($project['allow_restricted']);
+        $should_project_allow_restricted                = $should_project_allow_restricted_explicitly_set && $project['allow_restricted'];
 
         if ($is_public) {
-            if ($are_restricted_enabled && $should_project_allow_restricted) {
+            if ($should_project_allow_restricted_explicitly_set && $should_project_allow_restricted) {
                 return Project::ACCESS_PUBLIC_UNRESTRICTED;
             }
             return Project::ACCESS_PUBLIC;
         }
 
-        if ($are_restricted_enabled && ! $should_project_allow_restricted) {
+        if ($should_project_allow_restricted_explicitly_set && ! $should_project_allow_restricted) {
             return Project::ACCESS_PRIVATE_WO_RESTRICTED;
         }
 
@@ -271,28 +271,11 @@ class ProjectCreationData //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNa
         ];
         $this->is_built_from_xml   = true;
 
-        switch ($attrs['access']) {
-            case 'unrestricted':
-                if (! ForgeConfig::areRestrictedUsersAllowed()) {
-                    throw new \Tuleap\Project\XML\Import\ImportNotValidException('Project access set to unrestricted but Restricted users not allowed on this platform');
-                }
-                $this->access = Project::ACCESS_PUBLIC_UNRESTRICTED;
-                break;
-            case 'private-wo-restr':
-                if (! ForgeConfig::areRestrictedUsersAllowed()) {
-                    throw new \Tuleap\Project\XML\Import\ImportNotValidException('Project access set to private-wo-restr but Restricted users not allowed on this platform');
-                }
-                $this->access = Project::ACCESS_PRIVATE_WO_RESTRICTED;
-                break;
-            case 'public':
-                $this->access = Project::ACCESS_PUBLIC;
-                break;
-            case 'private':
-                $this->access = Project::ACCESS_PRIVATE;
-                break;
-
-            default:
-                $this->access = $this->default_project_visibility_retriever->getDefaultProjectVisibility();
+        $requested_access_level = (string) $attrs['access'];
+        if (in_array($requested_access_level, [Project::ACCESS_PUBLIC_UNRESTRICTED, Project::ACCESS_PRIVATE_WO_RESTRICTED, Project::ACCESS_PUBLIC, Project::ACCESS_PRIVATE], true)) {
+            $this->access = $requested_access_level;
+        } else {
+            $this->access = $this->default_project_visibility_retriever->getDefaultProjectVisibility();
         }
 
         $this->data_services = $service_inheritor->markUsedServicesFromXML($xml, $this->built_from_template->getProject());
