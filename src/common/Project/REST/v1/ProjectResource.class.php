@@ -38,8 +38,7 @@ use TemplateRendererFactory;
 use Tuleap\Label\Label;
 use Tuleap\Label\PaginatedCollectionsOfLabelsBuilder;
 use Tuleap\Label\REST\LabelRepresentation;
-use Tuleap\Project\Admin\Categories\ProjectCategoriesUpdater;
-use Tuleap\Project\Admin\Categories\TroveSetNodeFacade;
+use Tuleap\Project\Admin\Categories\CategoryCollectionConsistencyChecker;
 use Tuleap\Project\Admin\DescriptionFields\FieldUpdator;
 use Tuleap\Project\Admin\ProjectDetails\ProjectDetailsDAO;
 use Tuleap\Project\Banner\BannerCreator;
@@ -239,7 +238,12 @@ class ProjectResource extends AuthenticatedResource
                         new \Rule_ProjectName(),
                         new \Rule_ProjectFullName(),
                     ),
-                    new ProjectRegistrationRESTChecker(new DefaultProjectVisibilityRetriever())
+                    new ProjectRegistrationRESTChecker(
+                        new DefaultProjectVisibilityRetriever(),
+                        new CategoryCollectionConsistencyChecker(
+                            new \TroveCatFactory(new \TroveCatDao())
+                        )
+                    )
                 )
             );
 
@@ -1247,13 +1251,6 @@ class ProjectResource extends AuthenticatedResource
                 ProjectCreator::buildSelfRegularValidation()
             ),
             TemplateFactory::build(),
-            new ProjectCategoriesUpdater(
-                new \TroveCatFactory(
-                    new \TroveCatDao(),
-                ),
-                new \ProjectHistoryDao(),
-                new TroveSetNodeFacade(),
-            ),
             new FieldUpdator(
                 new DescriptionFieldsFactory(new DescriptionFieldsDao()),
                 new ProjectDetailsDAO(),

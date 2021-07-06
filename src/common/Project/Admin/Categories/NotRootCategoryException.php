@@ -25,5 +25,25 @@ namespace Tuleap\Project\Admin\Categories;
 
 final class NotRootCategoryException extends ProjectCategoriesException
 {
+    private int $submitted_category_id;
 
+    public function __construct(int $submitted_category_id)
+    {
+        $this->submitted_category_id = $submitted_category_id;
+
+        parent::__construct(
+            sprintf(
+                'The category id %d is not a valid root category',
+                $submitted_category_id
+            )
+        );
+    }
+
+    public function getI18NMessage(): string
+    {
+        return sprintf(
+            dgettext("tuleap-core", 'The category id %d is not a valid root category'),
+            $this->submitted_category_id
+        );
+    }
 }

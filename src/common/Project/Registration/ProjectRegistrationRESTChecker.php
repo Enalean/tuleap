@@ -27,15 +27,21 @@ use ForgeConfig;
 use PFUser;
 use ProjectCreationData;
 use ProjectManager;
+use Tuleap\Project\Admin\Categories\CategoryCollectionConsistencyChecker;
+use Tuleap\Project\Admin\Categories\ProjectCategoriesException;
 use Tuleap\Project\DefaultProjectVisibilityRetriever;
 
 final class ProjectRegistrationRESTChecker implements ProjectRegistrationChecker
 {
     private DefaultProjectVisibilityRetriever $default_project_visibility_retriever;
+    private CategoryCollectionConsistencyChecker $category_collection_consistency_checker;
 
-    public function __construct(DefaultProjectVisibilityRetriever $default_project_visibility_retriever)
-    {
-        $this->default_project_visibility_retriever = $default_project_visibility_retriever;
+    public function __construct(
+        DefaultProjectVisibilityRetriever $default_project_visibility_retriever,
+        CategoryCollectionConsistencyChecker $category_collection_consistency_checker
+    ) {
+        $this->default_project_visibility_retriever    = $default_project_visibility_retriever;
+        $this->category_collection_consistency_checker = $category_collection_consistency_checker;
     }
 
     public function collectAllErrorsForProjectRegistration(PFUser $user, ProjectCreationData $project_creation_data): ProjectRegistrationErrorsCollection
@@ -46,6 +52,14 @@ final class ProjectRegistrationRESTChecker implements ProjectRegistrationChecker
         $default_visibility = $this->default_project_visibility_retriever->getDefaultProjectVisibility();
         if (ForgeConfig::getInt(ProjectManager::SYS_USER_CAN_CHOOSE_PROJECT_PRIVACY) === 0 && $access !== $default_visibility) {
             $errors_collection->addError(new ProjectAccessLevelCannotBeChosenByUserException($default_visibility));
+        }
+
+        try {
+            $this->category_collection_consistency_checker->checkCollectionConsistency(
+                $project_creation_data->getTroveData()
+            );
+        } catch (ProjectCategoriesException $exception) {
+            $errors_collection->addError($exception);
         }
 
         return $errors_collection;

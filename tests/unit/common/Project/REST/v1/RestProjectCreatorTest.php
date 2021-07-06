@@ -38,10 +38,8 @@ use Service;
 use ServiceManager;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\Glyph\GlyphFinder;
-use Tuleap\Project\Admin\Categories\CategoryCollection;
-use Tuleap\Project\Admin\Categories\MissingMandatoryCategoriesException;
-use Tuleap\Project\Admin\Categories\ProjectCategoriesUpdater;
 use Tuleap\Project\Admin\DescriptionFields\FieldUpdator;
+use Tuleap\Project\Admin\DescriptionFields\MissingMandatoryFieldException;
 use Tuleap\Project\DefaultProjectVisibilityRetriever;
 use Tuleap\Project\Registration\MaxNumberOfProjectReachedForPlatformException;
 use Tuleap\Project\Registration\Template\InvalidXMLTemplateNameException;
@@ -88,10 +86,6 @@ class RestProjectCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
      * @var M\LegacyMockInterface|M\MockInterface|TemplateDao
      */
     private $template_dao;
-    /**
-     * @var M\LegacyMockInterface|M\MockInterface|ProjectCategoriesUpdater
-     */
-    private $categories_updater;
 
     protected function setUp(): void
     {
@@ -102,10 +96,7 @@ class RestProjectCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->service_manager      = M::mock(ServiceManager::class);
         $this->project_XML_importer = M::mock(ProjectXMLImporter::class);
         $this->template_dao         = M::mock(TemplateDao::class);
-        $this->categories_updater   = M::mock(ProjectCategoriesUpdater::class);
-        $this->categories_updater->shouldReceive('update')->byDefault();
-        $this->categories_updater->shouldReceive('checkCollectionConsistency')->byDefault();
-        $this->field_updator = \Mockery::mock(FieldUpdator::class);
+        $this->field_updator        = \Mockery::mock(FieldUpdator::class);
         $this->field_updator->shouldReceive('updateFromArray')->byDefault();
         $this->field_updator->shouldReceive('checkFieldConsistency')->byDefault();
 
@@ -127,7 +118,6 @@ class RestProjectCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
                 $this->template_dao,
                 M::mock(ProjectManager::class)
             ),
-            $this->categories_updater,
             $this->field_updator
         );
 
@@ -152,16 +142,6 @@ class RestProjectCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $template_project = M::mock(Project::class, ['isError' => false, 'isActive' => false, 'isTemplate' => true]);
 
         $this->project_manager->shouldReceive('getProject')->with($this->project_post_representation->template_id)->andReturn($template_project);
-
-        $verify_category_collection = static function (CategoryCollection $categories) {
-            [$category1, $category2] = $categories->getRootCategories();
-            $category1_child1        = $category1->getChildren()[0];
-            $category2_child1        = $category2->getChildren()[0];
-            return $category1->getId() === 14 && $category2->getId() === 18 &&
-                $category1_child1->getId() === 89 && $category2_child1->getId() === 53;
-        };
-
-        $this->categories_updater->shouldReceive('checkCollectionConsistency')->once()->with(M::on($verify_category_collection));
 
         $this->project_creator->shouldReceive('processProjectCreation')->andThrow(
             new MaxNumberOfProjectReachedForPlatformException()
@@ -312,83 +292,6 @@ class RestProjectCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
-    public function testItCreatesWithSelectedCategories()
-    {
-        $this->project_post_representation->template_id      = 100;
-        $this->project_post_representation->shortname        = 'gpig';
-        $this->project_post_representation->label            = 'Guinea Pig';
-        $this->project_post_representation->description      = 'foo';
-        $this->project_post_representation->is_public        = false;
-        $this->project_post_representation->allow_restricted = false;
-        $this->project_post_representation->categories       = [
-            CategoryPostRepresentation::build(14, 89),
-            CategoryPostRepresentation::build(18, 53)
-        ];
-
-        $project_creation_data = new ProjectCreationData(
-            new DefaultProjectVisibilityRetriever(),
-            new NullLogger()
-        );
-
-        $template_project = M::mock(Project::class, ['isError' => false, 'isActive' => false, 'isTemplate' => true]);
-        $new_project      = new \Project(['group_id' => 201]);
-
-        $this->project_manager->shouldReceive('getProject')->with($this->project_post_representation->template_id)->andReturn($template_project);
-        $this->project_creator->shouldReceive('processProjectCreation')
-            ->with($project_creation_data)
-            ->once()
-            ->andReturn($new_project);
-
-        $verify_category_collection = static function (CategoryCollection $categories) {
-            [$category1, $category2] = $categories->getRootCategories();
-            $category1_child1        = $category1->getChildren()[0];
-            $category2_child1        = $category2->getChildren()[0];
-            return $category1->getId() === 14 && $category2->getId() === 18 &&
-                $category1_child1->getId() === 89 && $category2_child1->getId() === 53;
-        };
-
-        $this->categories_updater->shouldReceive('checkCollectionConsistency')->once()->with(M::on($verify_category_collection));
-        $this->categories_updater->shouldReceive('update')->once()->with($new_project, M::on($verify_category_collection));
-
-        $this->creator->create(
-            $this->project_post_representation,
-            $project_creation_data
-        );
-    }
-
-
-    public function testItThrowsAnExceptionWhenMandatoryCategoryIsMissing()
-    {
-        $this->project_post_representation->template_id      = 100;
-        $this->project_post_representation->shortname        = 'gpig';
-        $this->project_post_representation->label            = 'Guinea Pig';
-        $this->project_post_representation->description      = 'foo';
-        $this->project_post_representation->is_public        = false;
-        $this->project_post_representation->allow_restricted = false;
-        $this->project_post_representation->categories       = [
-            CategoryPostRepresentation::build(14, 89),
-            CategoryPostRepresentation::build(18, 53)
-        ];
-
-        $template_project = M::mock(Project::class, ['isError' => false, 'isActive' => false, 'isTemplate' => true]);
-
-        $this->project_manager->shouldReceive('getProject')->with($this->project_post_representation->template_id)->andReturn($template_project);
-        $this->project_creator->shouldNotReceive('processProjectCreation');
-
-        $this->categories_updater->shouldReceive('checkCollectionConsistency')->once()->andThrow(new MissingMandatoryCategoriesException());
-
-        $this->expectException(RestException::class);
-        $this->expectExceptionCode(400);
-
-        $this->creator->create(
-            $this->project_post_representation,
-            new ProjectCreationData(
-                new DefaultProjectVisibilityRetriever(),
-                new NullLogger()
-            )
-        );
-    }
-
     public function testItThrowsAnExceptionWhenFieldCollectionIsInvalid()
     {
         $this->project_post_representation->template_id      = 100;
@@ -407,7 +310,7 @@ class RestProjectCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->project_manager->shouldReceive('getProject')->with($this->project_post_representation->template_id)->andReturn($template_project);
         $this->project_creator->shouldNotReceive('processProjectCreation');
 
-        $this->categories_updater->shouldReceive('checkCollectionConsistency')->once()->andThrow(new MissingMandatoryCategoriesException());
+        $this->field_updator->shouldReceive('checkFieldConsistency')->once()->andThrow(new MissingMandatoryFieldException());
 
         $this->expectException(RestException::class);
         $this->expectExceptionCode(400);

@@ -35,6 +35,9 @@ use Tuleap\Dashboard\Widget\DashboardWidgetRetriever;
 use Tuleap\FRS\FRSPermissionCreator;
 use Tuleap\FRS\LicenseAgreement\LicenseAgreementDao;
 use Tuleap\FRS\LicenseAgreement\LicenseAgreementFactory;
+use Tuleap\Project\Admin\Categories\CategoryCollectionConsistencyChecker;
+use Tuleap\Project\Admin\Categories\ProjectCategoriesUpdater;
+use Tuleap\Project\Admin\Categories\TroveSetNodeFacade;
 use Tuleap\Project\Admin\Service\ProjectServiceActivator;
 use Tuleap\Project\DefaultProjectVisibilityRetriever;
 use Tuleap\Project\DescriptionFieldsDao;
@@ -150,6 +153,7 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
     private $project_service_activator;
 
     private ProjectRegistrationChecker $registration_checker;
+    private ProjectCategoriesUpdater $project_categories_updater;
 
     public function __construct(
         ProjectManager $projectManager,
@@ -167,6 +171,7 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
         \Tuleap\Project\Admin\DescriptionFields\FieldUpdator $field_updator,
         ProjectServiceActivator $project_service_activator,
         ProjectRegistrationChecker $registration_checker,
+        ProjectCategoriesUpdater $project_categories_updater,
         $force_activation = false
     ) {
         $this->send_notifications                         = $send_notifications;
@@ -185,6 +190,7 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
         $this->field_updator                              = $field_updator;
         $this->project_service_activator                  = $project_service_activator;
         $this->registration_checker                       = $registration_checker;
+        $this->project_categories_updater                 = $project_categories_updater;
     }
 
     public static function buildSelfByPassValidation(): self
@@ -197,7 +203,12 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
         return self::buildSelf(
             (bool) ForgeConfig::get(\ProjectManager::CONFIG_PROJECT_APPROVAL, true) === false,
             true,
-            new ProjectRegistrationRESTChecker(new DefaultProjectVisibilityRetriever())
+            new ProjectRegistrationRESTChecker(
+                new DefaultProjectVisibilityRetriever(),
+                new CategoryCollectionConsistencyChecker(
+                    new \TroveCatFactory(new \TroveCatDao())
+                )
+            )
         );
     }
 
@@ -286,6 +297,14 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
                     $registration_checker
                 )
             ),
+            new ProjectCategoriesUpdater(
+                new \TroveCatFactory(new TroveCatDao()),
+                new ProjectHistoryDao(),
+                new TroveSetNodeFacade(),
+                new CategoryCollectionConsistencyChecker(
+                    new \TroveCatFactory(new TroveCatDao())
+                )
+            ),
             $force_activation
         );
     }
@@ -349,7 +368,7 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
         }
 
         $this->field_updator->update($data, $group_id);
-        $this->setCategories($data, $group_id);
+        //$this->setCategories($data, $group_id);
         $this->initFileModule($group_id);
         $this->setProjectAdmin($group_id, $admin_user);
 
@@ -358,6 +377,8 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
         if ($group->isError()) {
             throw new Project_Creation_Exception('Creation of the project entry has failed');
         }
+
+        $this->project_categories_updater->update($group, $data->getTroveData());
 
         $this->fakeGroupIdIntoHTTPParams($group_id);
 
@@ -475,20 +496,6 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
         } else {
             $group_id = db_insertid($result);
             return $group_id;
-        }
-    }
-
-    /**
-     * insert descriptions, insert trove categories
-     * protected for testing purpose
-     */
-    protected function setCategories(ProjectCreationData $data, $group_id)
-    {
-        foreach ($data->getTroveData() as $root => $values) {
-            foreach ($values as $value) {
-                db_query("INSERT INTO trove_group_link (trove_cat_id,trove_cat_version,"
-                         . "group_id,trove_cat_root) VALUES (" . db_ei($value) . "," . time() . "," . db_ei($group_id) . "," . db_ei($root) . ")");
-            }
         }
     }
 

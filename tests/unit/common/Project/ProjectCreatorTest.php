@@ -32,6 +32,7 @@ use Tuleap\Dashboard\Project\ProjectDashboardDuplicator;
 use Tuleap\FRS\FRSPermissionCreator;
 use Tuleap\FRS\LicenseAgreement\LicenseAgreementFactory;
 use Tuleap\GlobalSVNPollution;
+use Tuleap\Project\Admin\Categories\ProjectCategoriesUpdater;
 use Tuleap\Project\Admin\DescriptionFields\FieldUpdator;
 use Tuleap\Project\Admin\Service\ProjectServiceActivator;
 use Tuleap\Project\Label\LabelDao;
@@ -98,6 +99,10 @@ final class ProjectCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
      * @var \PHPUnit\Framework\MockObject\MockObject&ProjectRegistrationChecker
      */
     private $registration_checker;
+    /**
+     * @var \PHPUnit\Framework\MockObject\MockObject&ProjectCategoriesUpdater
+     */
+    private $project_categories_updater;
 
     protected function setUp(): void
     {
@@ -115,6 +120,7 @@ final class ProjectCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->field_updator                              = Mockery::mock(FieldUpdator::class);
         $this->service_updator                            = Mockery::mock(ProjectServiceActivator::class);
         $this->registration_checker                       = $this->createMock(ProjectRegistrationChecker::class);
+        $this->project_categories_updater                 = $this->createMock(ProjectCategoriesUpdater::class);
     }
 
     public function testMandatoryDescriptionNotSetRaiseException(): void
@@ -221,7 +227,7 @@ final class ProjectCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->user_manager->shouldReceive('getCurrentUser')->andReturn($user);
 
         $this->creator->shouldReceive('createGroupEntry')->andReturn(101)->once();
-        $this->creator->shouldReceive('setCategories')->once();
+        $this->project_categories_updater->expects(self::once())->method('update');
         $this->creator->shouldReceive('initFileModule')->once();
         $this->creator->shouldReceive('setProjectAdmin')->once();
         $this->creator->shouldReceive('fakeGroupIdIntoHTTPParams')->once();
@@ -276,7 +282,7 @@ final class ProjectCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->user_manager->shouldReceive('getCurrentUser')->andReturn($user);
 
         $this->creator->shouldReceive('createGroupEntry')->andReturn(101)->once();
-        $this->creator->shouldReceive('setCategories')->once();
+        $this->project_categories_updater->expects(self::once())->method('update');
         $this->creator->shouldReceive('initFileModule')->once();
         $this->creator->shouldReceive('setProjectAdmin')->once();
         $this->creator->shouldReceive('fakeGroupIdIntoHTTPParams')->once();
@@ -331,6 +337,7 @@ final class ProjectCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
                 $this->field_updator,
                 $this->service_updator,
                 $this->registration_checker,
+                $this->project_categories_updater,
                 $force_activation
             ]
         )->makePartial()->shouldAllowMockingProtectedMethods();

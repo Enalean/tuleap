@@ -25,5 +25,29 @@ namespace Tuleap\Project\Admin\Categories;
 
 final class NbMaxValuesException extends ProjectCategoriesException
 {
+    private int $submitted_category_id;
+    private int $nb_max_values;
 
+    public function __construct(int $submitted_category_id, int $nb_max_values)
+    {
+        $this->submitted_category_id = $submitted_category_id;
+        $this->nb_max_values         = $nb_max_values;
+
+        parent::__construct(
+            sprintf(
+                'The category %d only allows %d values',
+                $submitted_category_id,
+                $nb_max_values
+            )
+        );
+    }
+
+    public function getI18NMessage(): string
+    {
+        return sprintf(
+            dgettext("tuleap-core", 'The category %d only allows %d values'),
+            $this->submitted_category_id,
+            $this->nb_max_values,
+        );
+    }
 }

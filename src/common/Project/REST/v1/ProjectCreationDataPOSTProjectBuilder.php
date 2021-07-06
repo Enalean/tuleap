@@ -27,6 +27,7 @@ use ProjectCreationData;
 use ProjectManager;
 use Psr\Log\LoggerInterface;
 use ServiceManager;
+use Tuleap\Project\Admin\Categories\CategoryCollection;
 use Tuleap\Project\DefaultProjectVisibilityRetriever;
 use Tuleap\Project\ProjectCreationDataServiceFromXmlInheritor;
 use Tuleap\Project\Registration\Template\InsufficientPermissionToUseProjectAsTemplateException;
@@ -79,6 +80,7 @@ class ProjectCreationDataPOSTProjectBuilder
                     'form_short_description' => $post_representation->description,
                     'is_test'                => false,
                     'is_public'              => $post_representation->is_public,
+                    'trove'                  => CategoryCollection::buildFromRESTProjectCreation($post_representation)
                 ]
             ];
 
@@ -125,6 +127,9 @@ class ProjectCreationDataPOSTProjectBuilder
                     'is_public'        => $post_representation->is_public,
                     'allow_restricted' => $post_representation->allow_restricted
                 ]
+            );
+            $creation_data->setTroveData(
+                CategoryCollection::buildFromRESTProjectCreation($post_representation)
             );
 
             return $creation_data;

@@ -17,6 +17,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+use Tuleap\Project\Admin\Categories\CategoryCollection;
 use Tuleap\Project\DefaultProjectVisibilityRetriever;
 use Tuleap\Project\ProjectCreationDataServiceFromXmlInheritor;
 use Tuleap\Project\Registration\Template\TemplateFromProjectForCreation;
@@ -45,7 +46,8 @@ class ProjectCreationData //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNa
      * @var TemplateFromProjectForCreation
      */
     private $built_from_template;
-    private $trove_data;
+
+    private CategoryCollection $trove_data;
     private $inherit_from_template = true;
     private $access;
 
@@ -58,6 +60,8 @@ class ProjectCreationData //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNa
         }
 
         $this->default_project_visibility_retriever = $default_project_visibility_retriever;
+
+        $this->trove_data = new CategoryCollection();
     }
 
     /**
@@ -123,7 +127,7 @@ class ProjectCreationData //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNa
         return $this->built_from_template;
     }
 
-    public function getTroveData()
+    public function getTroveData(): CategoryCollection
     {
         return $this->trove_data;
     }
@@ -182,7 +186,7 @@ class ProjectCreationData //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNa
         $this->built_from_template = $template_from_project_for_creation;
         $this->is_test             = isset($project['is_test'])                ? $project['is_test']                : null;
         $this->setAccessFromProjectData($project);
-        $this->trove_data    = isset($project['trove']) ? $project['trove'] : [];
+        $this->trove_data    = isset($project['trove']) ? $project['trove'] : new CategoryCollection();
         $this->data_services = isset($project['services'])               ? $project['services']               : [];
         $this->data_fields   = $project;
     }
@@ -264,7 +268,7 @@ class ProjectCreationData //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNa
         $this->short_description   = (string) $attrs['description'];
         $this->built_from_template = TemplateFromProjectForCreation::fromGlobalProjectAdminTemplate();
         $this->is_test             = (bool) false;
-        $this->trove_data          = [];
+        $this->trove_data          = new CategoryCollection();
         $this->data_services       = [];
         $this->data_fields         = [
             'form_101' => (string) $xml->$long_description_tagname
@@ -320,5 +324,10 @@ class ProjectCreationData //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNa
     public function getDataServices(): ?array
     {
         return $this->data_services;
+    }
+
+    public function setTroveData(CategoryCollection $trove_data): void
+    {
+        $this->trove_data = $trove_data;
     }
 }

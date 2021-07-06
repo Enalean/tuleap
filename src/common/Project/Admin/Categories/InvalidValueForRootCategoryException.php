@@ -25,5 +25,33 @@ namespace Tuleap\Project\Admin\Categories;
 
 final class InvalidValueForRootCategoryException extends ProjectCategoriesException
 {
+    private int $submitted_category_id;
+    private string $tree_full_name;
+    private int $tree_id;
 
+    public function __construct(int $submitted_category_id, string $tree_full_name, int $tree_id)
+    {
+        $this->submitted_category_id = $submitted_category_id;
+        $this->tree_full_name        = $tree_full_name;
+        $this->tree_id               = $tree_id;
+
+        parent::__construct(
+            sprintf(
+                '%d does not belong to %s (%d) category hierarchy',
+                $submitted_category_id,
+                $tree_full_name,
+                $tree_id
+            )
+        );
+    }
+
+    public function getI18NMessage(): string
+    {
+        return sprintf(
+            dgettext("tuleap-core", '%d does not belong to %s (%d) category hierarchy'),
+            $this->submitted_category_id,
+            $this->tree_full_name,
+            $this->tree_id,
+        );
+    }
 }

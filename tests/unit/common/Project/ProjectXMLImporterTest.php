@@ -23,6 +23,7 @@
 declare(strict_types=1);
 
 use Mockery as M;
+use Tuleap\Project\Admin\Categories\ProjectCategoriesUpdater;
 use Tuleap\Project\Admin\Service\ProjectServiceActivator;
 use Tuleap\Project\DefaultProjectVisibilityRetriever;
 use Tuleap\Project\Registration\ProjectRegistrationChecker;
@@ -104,6 +105,7 @@ class ProjectXMLImporterTest extends \Tuleap\Test\PHPUnit\TestCase
             Mockery::mock(\Tuleap\Project\Admin\DescriptionFields\FieldUpdator::class),
             Mockery::mock(ProjectServiceActivator::class),
             $this->createMock(ProjectRegistrationChecker::class),
+            $this->createMock(ProjectCategoriesUpdater::class),
             false
         );
 
