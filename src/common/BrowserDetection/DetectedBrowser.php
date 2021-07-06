@@ -61,7 +61,7 @@ final class DetectedBrowser
     // Everything older than current ESR (as of January 21 2021) is Really Old
     // Shall be updated when we start to see that Old Browsers pops up too often in support channel
     private const REALLY_OLD_FIREFOX_VERSION = 77;
-    private const REALLY_OLD_CHROME_VERSION  = 83;
+    private const REALLY_OLD_CHROME_VERSION  = 86;
 
     /**
      * @var string|null
