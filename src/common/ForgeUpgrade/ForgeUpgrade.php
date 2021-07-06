@@ -22,12 +22,8 @@
 namespace Tuleap\ForgeUpgrade;
 
 use Exception;
-use ForgeUpgrade_Bucket;
 use ForgeUpgrade_Bucket_Db;
-use ForgeUpgrade_BucketFilter;
-use ForgeUpgrade_Db;
-use ForgeUpgrade_Db_Driver_Abstract;
-use LoggerAppenderConsoleColor;
+use Tuleap\ForgeUpgrade\Driver\AbstractDriver;
 use Psr\Log\LoggerInterface;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
@@ -40,9 +36,9 @@ use const PHP_EOL;
  */
 class ForgeUpgrade
 {
-    private ForgeUpgrade_Db_Driver_Abstract $dbDriver;
+    private AbstractDriver $dbDriver;
 
-    private ForgeUpgrade_Db $db;
+    private ForgeUpgradeDb $db;
 
     private array $bucketApi = [];
 
@@ -52,10 +48,10 @@ class ForgeUpgrade
 
     private array $options;
 
-    public function __construct(ForgeUpgrade_Db_Driver_Abstract $dbDriver, LoggerInterface $logger)
+    public function __construct(AbstractDriver $dbDriver, LoggerInterface $logger)
     {
         $this->dbDriver                            = $dbDriver;
-        $this->db                                  = new ForgeUpgrade_Db($dbDriver->getPdo());
+        $this->db                                  = new ForgeUpgradeDb($dbDriver->getPdo());
         $this->bucketApi['ForgeUpgrade_Bucket_Db'] = new ForgeUpgrade_Bucket_Db($dbDriver->getPdo(), $logger);
         $this->logger                              = $logger;
     }
@@ -138,7 +134,7 @@ class ForgeUpgrade
 
     protected function displayColoriedStatus(array $info): string
     {
-        $status = ForgeUpgrade_Db::statusLabel($info['status']);
+        $status = ForgeUpgradeDb::statusLabel($info['status']);
         switch ($status) {
             case 'error':
             case 'failure':
@@ -186,7 +182,7 @@ class ForgeUpgrade
         foreach ($buckets as $bucket) {
             $this->logger->info("[doRecordOnly] " . get_class($bucket));
             $this->db->logStart($bucket);
-            $this->db->logEnd($bucket, ForgeUpgrade_Db::STATUS_SKIP);
+            $this->db->logEnd($bucket, ForgeUpgradeDb::STATUS_SKIP);
         }
     }
 
@@ -252,7 +248,7 @@ class ForgeUpgrade
     /**
      * It executes the bucket and logs its status
      */
-    public function runUpBucket(ForgeUpgrade_Bucket $bucket, LoggerInterface $log): void
+    public function runUpBucket(Bucket $bucket, LoggerInterface $log): void
     {
         $this->db->logStart($bucket);
 
@@ -269,7 +265,7 @@ class ForgeUpgrade
         $bucket->postUp();
         $log->info("PostUp OK");
 
-        $this->db->logEnd($bucket, ForgeUpgrade_Db::STATUS_SUCCESS);
+        $this->db->logEnd($bucket, ForgeUpgradeDb::STATUS_SUCCESS);
     }
 
     /**
@@ -292,7 +288,7 @@ class ForgeUpgrade
             } catch (Exception $e) {
                 $this->logger->error($e->getMessage());
                 if (isset($bucket)) {
-                    $this->db->logEnd($bucket, ForgeUpgrade_Db::STATUS_FAILURE);
+                    $this->db->logEnd($bucket, ForgeUpgradeDb::STATUS_FAILURE);
                 }
                 $has_encountered_failure = true;
             }
@@ -303,7 +299,7 @@ class ForgeUpgrade
                     unset($bucket);
                 } catch (Exception $e) {
                     $this->logger->error($e->getMessage());
-                    $this->db->logEnd($bucket, ForgeUpgrade_Db::STATUS_FAILURE);
+                    $this->db->logEnd($bucket, ForgeUpgradeDb::STATUS_FAILURE);
                     $has_encountered_failure = true;
                 }
             }
@@ -321,7 +317,7 @@ class ForgeUpgrade
     {
         if ($this->buckets === null) {
             $this->buckets = $this->getAllBuckets($dirPath);
-            $sth           = $this->db->getAllBuckets([ForgeUpgrade_Db::STATUS_SUCCESS, ForgeUpgrade_Db::STATUS_SKIP]);
+            $sth           = $this->db->getAllBuckets([ForgeUpgradeDb::STATUS_SUCCESS, ForgeUpgradeDb::STATUS_SKIP]);
             foreach ($sth as $row) {
                 $key = basename($row['script']);
                 if (isset($this->buckets[$key])) {
@@ -338,7 +334,7 @@ class ForgeUpgrade
      *
      * @param string[] $paths
      *
-     * @return array<string, ForgeUpgrade_Bucket>
+     * @return array<string, Bucket>
      */
     protected function getAllBuckets(array $paths): array
     {
@@ -354,7 +350,7 @@ class ForgeUpgrade
     /**
      * Fill $buckets array with all available buckets in $path
      *
-     * @param array<string, ForgeUpgrade_Bucket> $buckets
+     * @param array<string, Bucket> $buckets
      */
     protected function findAllBucketsInPath(string $path, array &$buckets): void
     {
@@ -371,11 +367,11 @@ class ForgeUpgrade
     /**
      * Build iterator to find buckets in a file hierarchy
      */
-    protected function getBucketFinderIterator(string $dirPath): ForgeUpgrade_BucketFilter
+    protected function getBucketFinderIterator(string $dirPath): BucketFilter
     {
         $iter = new RecursiveDirectoryIterator($dirPath);
         $iter = new RecursiveIteratorIterator($iter, RecursiveIteratorIterator::SELF_FIRST);
-        $iter = new ForgeUpgrade_BucketFilter($iter);
+        $iter = new BucketFilter($iter);
         $iter->setIncludePaths($this->options['core']['include_path']);
         $iter->setExcludePaths($this->options['core']['exclude_path']);
         return $iter;
@@ -384,13 +380,13 @@ class ForgeUpgrade
     /**
      * Append a bucket in the bucket candidate list
      *
-     * @param array<string, ForgeUpgrade_Bucket> $buckets
+     * @param array<string, Bucket> $buckets
      */
     protected function queueMigrationBucket(SplFileInfo $file, array &$buckets): void
     {
         if ($file->isFile()) {
             $object = $this->getBucketClass($file);
-            if ($object instanceof ForgeUpgrade_Bucket) {
+            if ($object instanceof Bucket) {
                 $this->logger->debug("Valid bucket: $file");
                 $buckets[basename($file->getPathname())] = $object;
             } else {
@@ -402,14 +398,14 @@ class ForgeUpgrade
     /**
      * Create a new bucket object defined in given file
      */
-    protected function getBucketClass(SplFileInfo $scriptPath): ?ForgeUpgrade_Bucket
+    protected function getBucketClass(SplFileInfo $scriptPath): ?Bucket
     {
         $bucket = null;
         $class  = $this->getClassName($scriptPath->getPathname());
         if (! class_exists($class)) {
             include $scriptPath->getPathname();
         }
-        if (is_subclass_of($class, ForgeUpgrade_Bucket::class)) {
+        if (is_subclass_of($class, Bucket::class)) {
             $bucket = new $class($this->logger);
             $bucket->setPath($scriptPath->getPathname());
             $this->addBucketApis($bucket);
@@ -420,7 +416,7 @@ class ForgeUpgrade
     /**
      * Add all available API to the given bucket
      */
-    protected function addBucketApis(ForgeUpgrade_Bucket $bucket): void
+    protected function addBucketApis(Bucket $bucket): void
     {
         $bucket->setAllApi($this->bucketApi);
     }

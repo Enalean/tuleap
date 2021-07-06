@@ -18,7 +18,9 @@
  * along with ForgeUpgrade. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class ForgeUpgrade_Db_Driver extends ForgeUpgrade_Db_Driver_Abstract
+use Tuleap\ForgeUpgrade\Driver\AbstractDriver;
+
+class ForgeUpgrade_Db_Driver extends AbstractDriver
 {
     protected $pdo;
     protected $dsn;
@@ -44,7 +46,7 @@ class ForgeUpgrade_Db_Driver extends ForgeUpgrade_Db_Driver_Abstract
                 $socket = '';
 
                 if (strpos($sys_dbhost, ':') !== false) {
-                    list($host, $details) = explode(':', $sys_dbhost);
+                    [$host, $details] = explode(':', $sys_dbhost);
                     if (is_numeric($details)) {
                         $port = ';port=' . $details;
                     } else {
@@ -86,10 +88,8 @@ class ForgeUpgrade_Db_Driver extends ForgeUpgrade_Db_Driver_Abstract
      * Setup the PDO object to be used for DB connexion
      *
      * The DB connexion will be used to store buckets execution log.
-     *
-     * @return PDO
      */
-    public function getPdo()
+    public function getPdo(): PDO
     {
         if (! $this->pdo) {
             $this->initOptions();

@@ -24,7 +24,6 @@ declare(strict_types=1);
 namespace Tuleap\ForgeUpgrade;
 
 use ArrayIterator;
-use ForgeUpgrade_BucketFilter;
 use SplFileInfo;
 
 final class BucketFilterTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -34,7 +33,7 @@ final class BucketFilterTest extends \Tuleap\Test\PHPUnit\TestCase
         $file = $this->createMock(SplFileInfo::class);
         $file->method('getPathname')->willReturn('201004231055_add_system_event_table.php');
 
-        $filter = new ForgeUpgrade_BucketFilter(new ArrayIterator([$file]));
+        $filter = new BucketFilter(new ArrayIterator([$file]));
         $filter->rewind();
         $this->assertTrue($filter->valid());
     }
@@ -44,7 +43,7 @@ final class BucketFilterTest extends \Tuleap\Test\PHPUnit\TestCase
         $file = $this->createMock(SplFileInfo::class);
         $file->method('getPathname')->willReturn('201004231055_add_system_event_table.pl');
 
-        $filter = new ForgeUpgrade_BucketFilter(new ArrayIterator([$file]));
+        $filter = new BucketFilter(new ArrayIterator([$file]));
         $filter->rewind();
         $this->assertFalse($filter->valid());
     }
@@ -54,7 +53,7 @@ final class BucketFilterTest extends \Tuleap\Test\PHPUnit\TestCase
         $file = $this->createMock(SplFileInfo::class);
         $file->method('getPathname')->willReturn('201004231055-add_system_event_table.php');
 
-        $filter = new ForgeUpgrade_BucketFilter(new ArrayIterator([$file]));
+        $filter = new BucketFilter(new ArrayIterator([$file]));
         $filter->rewind();
         $this->assertFalse($filter->valid());
     }
@@ -64,7 +63,7 @@ final class BucketFilterTest extends \Tuleap\Test\PHPUnit\TestCase
         $file = $this->createMock(SplFileInfo::class);
         $file->method('getPathname')->willReturn('/toto/src/db/updates/201004231055_add_system_event_table.php');
 
-        $filter = new ForgeUpgrade_BucketFilter(new ArrayIterator([$file]));
+        $filter = new BucketFilter(new ArrayIterator([$file]));
         $filter->addInclude('/db/updates/');
 
         $filter->rewind();
@@ -76,7 +75,7 @@ final class BucketFilterTest extends \Tuleap\Test\PHPUnit\TestCase
         $file = $this->createMock(SplFileInfo::class);
         $file->method('getPathname')->willReturn('/toto/src/etc/updates/201004231055_add_system_event_table.php');
 
-        $filter = new ForgeUpgrade_BucketFilter(new ArrayIterator([$file]));
+        $filter = new BucketFilter(new ArrayIterator([$file]));
         $filter->addInclude('/db/updates/');
 
         $filter->rewind();
@@ -88,7 +87,7 @@ final class BucketFilterTest extends \Tuleap\Test\PHPUnit\TestCase
         $file = $this->createMock(SplFileInfo::class);
         $file->method('getPathname')->willReturn('/toto/src/etc/updates/201004231055_add_system_event_table.php');
 
-        $filter = new ForgeUpgrade_BucketFilter(new ArrayIterator([$file]));
+        $filter = new BucketFilter(new ArrayIterator([$file]));
         $filter->addExclude('/etc/updates/');
 
         $filter->rewind();
@@ -100,7 +99,7 @@ final class BucketFilterTest extends \Tuleap\Test\PHPUnit\TestCase
         $file = $this->createMock(SplFileInfo::class);
         $file->method('getPathname')->willReturn('/toto/src/db/updates/201004231055_add_system_event_table.php');
 
-        $filter = new ForgeUpgrade_BucketFilter(new ArrayIterator([$file]));
+        $filter = new BucketFilter(new ArrayIterator([$file]));
         $filter->addExclude('/etc/updates/');
 
         $filter->rewind();

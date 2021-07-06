@@ -19,7 +19,11 @@
  * along with ForgeUpgrade. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class ForgeUpgrade_Db // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+namespace Tuleap\ForgeUpgrade;
+
+use PDO;
+
+class ForgeUpgradeDb
 {
     public const STATUS_ERROR   = 0;
     public const STATUS_SUCCESS = 1;
@@ -33,16 +37,21 @@ class ForgeUpgrade_Db // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNames
         $this->dbh = $dbh;
     }
 
-    public static function statusLabel($status)
+    /**
+     * @psalm-param self::STATUS_* $status
+     */
+    public static function statusLabel(int $status): string
     {
-        $labels = [self::STATUS_ERROR   => 'error',
-                        self::STATUS_SUCCESS => 'success',
-                        self::STATUS_FAILURE => 'failure',
-                        self::STATUS_SKIP    => 'skipped'];
+        $labels = [
+            self::STATUS_ERROR   => 'error',
+            self::STATUS_SUCCESS => 'success',
+            self::STATUS_FAILURE => 'failure',
+            self::STATUS_SKIP    => 'skipped'
+        ];
         return $labels[$status];
     }
 
-    public function logStart(ForgeUpgrade_Bucket $bucket)
+    public function logStart(Bucket $bucket): void
     {
         $sth = $this->dbh->prepare('INSERT INTO forge_upgrade_bucket (script, start_date) VALUES (?, NOW())');
         if ($sth) {
@@ -51,7 +60,10 @@ class ForgeUpgrade_Db // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNames
         }
     }
 
-    public function logEnd(ForgeUpgrade_Bucket $bucket, $status)
+    /**
+     * @psalm-param self::STATUS_* $status
+     */
+    public function logEnd(Bucket $bucket, int $status): bool
     {
         $sth = $this->dbh->prepare('UPDATE forge_upgrade_bucket SET status = ?, end_date = NOW() WHERE id = ?');
         if ($sth) {
@@ -60,26 +72,23 @@ class ForgeUpgrade_Db // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNames
         return false;
     }
 
+    /**
+     * @param bool|array $status
+     * @return array|\PDOStatement
+     */
     public function getAllBuckets($status = false)
     {
         $stmt = '';
-        if ($status != false) {
+        if (is_array($status)) {
             $escapedStatus = array_map([$this->dbh, 'quote'], $status);
             $stmt          = ' WHERE status IN (' . implode(',', $escapedStatus) . ')';
         }
-        return $this->dbh->query('SELECT * , TIMEDIFF(end_date, start_date) AS execution_delay FROM forge_upgrade_bucket ' . $stmt . ' ORDER BY start_date ASC');
-    }
-
-
-    /**
-     * Returns logs for a given bucket's execution
-     *
-     * @param int $bucketId
-     */
-    public function getBucketsSummarizedLogs($bucketId)
-    {
-        return $this->dbh->query(' SELECT * , TIMEDIFF(end_date, start_date) AS execution_delay ' .
-                                 ' FROM forge_upgrade_bucket ' .
-                                 ' WHERE id=' . $bucketId);
+        $result = $this->dbh->query(
+            'SELECT * , TIMEDIFF(end_date, start_date) AS execution_delay FROM forge_upgrade_bucket ' . $stmt . ' ORDER BY start_date ASC'
+        );
+        if ($result === false) {
+            return [];
+        }
+        return $result;
     }
 }

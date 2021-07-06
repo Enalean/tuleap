@@ -19,6 +19,14 @@
  * along with ForgeUpgrade. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class ForgeUpgrade_Bucket_Exception_ApiNotFound extends Exception
+namespace Tuleap\ForgeUpgrade\Driver;
+
+abstract class AbstractDriver
 {
+    /**
+     * Setup the PDO object to be used for DB connexion
+     *
+     * The DB connexion will be used to store buckets execution log.
+     */
+    abstract public function getPdo(): \PDO;
 }

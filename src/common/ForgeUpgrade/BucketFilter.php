@@ -19,33 +19,48 @@
  * along with ForgeUpgrade. If not, see <http://www.gnu.org/licenses/>.
  */
 
+namespace Tuleap\ForgeUpgrade;
+
+use FilterIterator;
+
 /**
  * Filter class that will be replaced by RegexIterator in php 5.2
  *
  * $regex = new RegexIterator($iter, '%^[0-9]+_(.*)\.php$%', RecursiveRegexIterator::GET_MATCH);
  */
-class ForgeUpgrade_BucketFilter extends FilterIterator
+class BucketFilter extends FilterIterator
 {
+    /**
+     * @var string[]
+     */
+    protected array $includePaths = [];
+    /**
+     * @var string[]
+     */
+    protected array $excludePaths = [];
 
-    protected $includePaths = [];
-    protected $excludePaths = [];
-
-    public function addExclude($path)
+    public function addExclude(string $path): void
     {
         $this->excludePaths[] = $path;
     }
 
-    public function addInclude($path)
+    public function addInclude(string $path): void
     {
         $this->includePaths[] = $path;
     }
 
-    public function setIncludePaths($paths)
+    /**
+     * @param string[] $paths
+     */
+    public function setIncludePaths(array $paths): void
     {
         $this->includePaths = $paths;
     }
 
-    public function setExcludePaths($paths)
+    /**
+     * @param string[] $paths
+     */
+    public function setExcludePaths(array $paths): void
     {
         $this->excludePaths = $paths;
     }
@@ -61,14 +76,13 @@ class ForgeUpgrade_BucketFilter extends FilterIterator
 
         $match = true;
         foreach ($this->includePaths as $path) {
-            $match &= (strpos($filePath, $path) !== false);
+            $match = $match && (strpos($filePath, $path) !== false);
         }
 
         foreach ($this->excludePaths as $path) {
-            $match &= ! (strpos($filePath, $path) !== false);
+            $match = $match && ! (strpos($filePath, $path) !== false);
         }
 
-        $match &= preg_match('%^[0-9]+_(.*)\.php$%', basename($filePath));
-        return $match;
+        return $match && preg_match('%^[0-9]+_(.*)\.php$%', basename($filePath));
     }
 }
