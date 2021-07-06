@@ -407,12 +407,76 @@ $spacing-between-nav-items: 5px;
 .project-sidebar-linked-projects-popover {
     width: max-content;
     margin-left: 14px;
+
+    .fa-tlp-project-boxes,
+    .project-sidebar-linked-projects-icon-parent {
+        margin: 0 var(--tlp-small-spacing) 0 0;
+        color: var(--tlp-neutral-light-color);
+        font-size: 0.7rem;
+    }
 }
 
-#project-sidebar-project-flags-popover,
-#project-sidebar-linked-projects-popover {
+#project-sidebar-project-flags-popover {
     > .tlp-popover-body {
         border-radius: 4px;
+        background: var(--tlp-dark-color-darker-20);
+        color: var(--tlp-dimmed-color-on-dark-background);
+        line-height: 1.5rem;
+
+        .current-project-nav-flag-popover-content-title {
+            margin: 0 0 var(--tlp-small-spacing);
+            color: var(--tlp-neutral-light-color);
+            font-size: 1rem;
+            font-weight: 600;
+            line-height: 1.5rem;
+
+            &:last-child {
+                margin: 0;
+            }
+        }
+
+        > .current-project-nav-flag-popover-flag {
+            position: relative;
+            margin: 0 0 var(--tlp-medium-spacing);
+            padding: 0 0 0 20px; // magic value independant of density so that it looks nice with svg flag
+
+            &:last-child {
+                margin: 0;
+            }
+
+            > .tuleap-svg-project-shield {
+                position: absolute;
+                top: 3px;
+                left: 0;
+                width: 12px;
+
+                > path {
+                    fill: var(--tlp-typo-default-text-color-on-dark-background);
+                }
+            }
+        }
+    }
+
+    > .tlp-popover-arrow {
+        background: var(--tlp-dark-color-darker-20);
+    }
+}
+
+#project-sidebar-linked-projects-popover {
+    > .tlp-popover-header {
+        padding: var(--tlp-medium-spacing) var(--tlp-medium-spacing) 0;
+        background: var(--tlp-dark-color-darker-20);
+        color: var(--tlp-neutral-light-color);
+
+        > .tlp-popover-title {
+            color: var(--tlp-neutral-light-color);
+            font-size: 1rem;
+            font-weight: 600;
+            line-height: 1.5rem;
+        }
+    }
+
+    > .tlp-popover-body {
         background: var(--tlp-dark-color-darker-20);
         color: var(--tlp-dimmed-color-on-dark-background);
         line-height: 1.5rem;
@@ -446,7 +510,7 @@ $spacing-between-nav-items: 5px;
         left: -1px;
     }
 
-    > .fa-level-up-alt {
+    > .project-sidebar-linked-projects-icon-parent {
         position: relative;
         top: -1px;
         font-size: 0.6rem;
@@ -460,9 +524,15 @@ $spacing-between-nav-items: 5px;
     color: var(--tlp-ui-white-transparent-10);
 }
 
-.project-sidebar-linked-projects-list-popover,
 .project-sidebar-linked-projects-list {
     margin: 0 0 0 var(--tlp-x-large-spacing);
+    padding: 0 0 0 var(--tlp-small-spacing);
+    border-left: 1px solid var(--tlp-neutral-normal-color-transparent-80);
+    list-style: none;
+}
+
+.project-sidebar-linked-projects-list-popover {
+    margin: 0 0 0 14px;
     padding: 0 0 0 var(--tlp-small-spacing);
     border-left: 1px solid var(--tlp-neutral-normal-color-transparent-80);
     list-style: none;
@@ -569,42 +639,5 @@ body.sidebar-collapsed {
 
     &::-webkit-scrollbar-thumb {
         background-color: var(--tlp-dark-color-lighter-10);
-    }
-}
-
-#project-sidebar-project-flags-popover {
-    > .tlp-popover-body {
-        .current-project-nav-flag-popover-content-title {
-            margin: 0 0 var(--tlp-small-spacing);
-            color: var(--tlp-neutral-light-color);
-            font-size: 1rem;
-            font-weight: 600;
-            line-height: 1.5rem;
-
-            &:last-child {
-                margin: 0;
-            }
-        }
-
-        > .current-project-nav-flag-popover-flag {
-            position: relative;
-            margin: 0 0 var(--tlp-medium-spacing);
-            padding: 0 0 0 20px; // magic value independant of density so that it looks nice with svg flag
-
-            &:last-child {
-                margin: 0;
-            }
-
-            > .tuleap-svg-project-shield {
-                position: absolute;
-                top: 3px;
-                left: 0;
-                width: 12px;
-
-                > path {
-                    fill: var(--tlp-typo-default-text-color-on-dark-background);
-                }
-            }
-        }
     }
 }

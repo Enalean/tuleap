@@ -296,13 +296,19 @@
     flex-direction: column;
     margin: var(--tlp-small-spacing) var(--tlp-medium-spacing);
 
-    .project-sidebar-linked-projects-list-popover,
     > .project-sidebar-linked-projects-list {
         margin: 0 0 0 var(--tlp-x-large-spacing);
         padding: 0 0 0 var(--tlp-small-spacing);
         border-left: 1px solid var(--tlp-neutral-normal-color-transparent-80);
         list-style: none;
     }
+}
+
+.project-sidebar-linked-projects-popover-content > .project-sidebar-linked-projects-list-popover {
+    margin: 0 0 0 14px;
+    padding: 0 0 0 var(--tlp-small-spacing);
+    border-left: 1px solid var(--tlp-neutral-normal-color-transparent-80);
+    list-style: none;
 }
 
 .project-sidebar-linked-projects-title {
@@ -322,7 +328,7 @@
         font-size: 0.6rem;
     }
 
-    > .fa-level-up-alt {
+    > .project-sidebar-linked-projects-icon-parent {
         position: relative;
         top: -1px;
         font-size: 0.6rem;
@@ -396,7 +402,14 @@
 
 .project-sidebar-linked-projects-popover {
     width: max-content;
-    margin-left: 14px;
+    margin-left: 1px !important; //override inset popers
+
+    .fa-tlp-project-boxes,
+    .project-sidebar-linked-projects-icon-parent {
+        margin: 0 var(--tlp-small-spacing) 0 0;
+        color: var(--tlp-neutral-light-color);
+        font-size: 0.7rem;
+    }
 }
 
 .project-sidebar-linked-projects-popover-content {
