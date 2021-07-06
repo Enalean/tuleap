@@ -115,6 +115,14 @@ export default class GanttTask extends Vue {
         ) {
             this.popover = createPopover(this.$refs.bar.$el, popover_element, {
                 placement: "right-start",
+                modifiers: [
+                    {
+                        name: "flip",
+                        options: {
+                            fallbackPlacements: ["left-start", "top"],
+                        },
+                    },
+                ],
             });
         }
     }
