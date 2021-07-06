@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Project\Registration\Template;
 
-use Mockery;
 use PFUser;
 use Project;
 use ProjectManager;
@@ -31,27 +30,24 @@ use Tuleap\Test\PHPUnit\TestCase;
 
 final class TemplateFromProjectForCreationTest extends TestCase
 {
-    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ProjectManager
+     * @var \PHPUnit\Framework\MockObject\MockObject&ProjectManager
      */
     private $project_manager;
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|PFUser
+     * @var PFUser&\PHPUnit\Framework\MockObject\MockObject
      */
     private $user;
 
     protected function setUp(): void
     {
-        $this->project_manager = Mockery::mock(ProjectManager::class);
-        $this->user            = Mockery::mock(PFUser::class);
+        $this->project_manager = $this->createMock(ProjectManager::class);
+        $this->user            = $this->createMock(PFUser::class);
     }
 
     public function testGetTemplateFromProjectForCreationFromRESTRepresentation(): void
     {
-        $representation              = new ProjectPostRepresentation();
-        $representation->template_id = 123;
+        $representation = ProjectPostRepresentation::build(123);
 
         $expected_project = $this->mockForSuccessfulValidation($representation->template_id);
 
@@ -61,37 +57,36 @@ final class TemplateFromProjectForCreationTest extends TestCase
             $this->project_manager
         );
 
-        $this->assertEquals($expected_project, $template_from_project_for_creation->getProject());
+        self::assertEquals($expected_project, $template_from_project_for_creation->getProject());
     }
 
     private function mockForSuccessfulValidation(int $project_id): Project
     {
-        $project = Mockery::mock(Project::class);
-        $project->shouldReceive('getID')->andReturn($project_id);
-        $project->shouldReceive('isError')->andReturn(false);
-        $project->shouldReceive('isActive')->andReturn(false);
-        $project->shouldReceive('isTemplate')->andReturn(true);
+        $project = $this->createMock(Project::class);
+        $project->method('getID')->willReturn($project_id);
+        $project->method('isError')->willReturn(false);
+        $project->method('isActive')->willReturn(false);
+        $project->method('isTemplate')->willReturn(true);
 
-        $this->project_manager->shouldReceive('getProject')->with($project_id)->andReturn($project);
+        $this->project_manager->method('getProject')->with($project_id)->willReturn($project);
 
         return $project;
     }
 
     public function testGetTemplateFromProjectForCreationFromGlobalProjectTemplate(): void
     {
-        $this->assertEquals(Project::ADMIN_PROJECT_ID, TemplateFromProjectForCreation::fromGlobalProjectAdminTemplate()->getProject()->getID());
+        self::assertEquals(Project::ADMIN_PROJECT_ID, TemplateFromProjectForCreation::fromGlobalProjectAdminTemplate()->getProject()->getID());
     }
 
     public function testGetTemplateFromProjectForCreationIsNotValidWhenProjectToUseAsTemplateDoesNotExist(): void
     {
-        $representation              = new ProjectPostRepresentation();
-        $representation->template_id = 404;
+        $representation = ProjectPostRepresentation::build(404);
 
-        $project = Mockery::mock(Project::class);
-        $project->shouldReceive('getID')->andReturn($representation->template_id);
-        $project->shouldReceive('isError')->andReturn(true);
+        $project = $this->createMock(Project::class);
+        $project->method('getID')->willReturn($representation->template_id);
+        $project->method('isError')->willReturn(true);
 
-        $this->project_manager->shouldReceive('getProject')->with($representation->template_id)->andReturn($project);
+        $this->project_manager->method('getProject')->with($representation->template_id)->willReturn($project);
 
         $this->expectException(ProjectTemplateIDInvalidException::class);
         TemplateFromProjectForCreation::fromRESTRepresentation(
@@ -103,16 +98,15 @@ final class TemplateFromProjectForCreationTest extends TestCase
 
     public function testGetTemplateFromProjectForCreationIsNotValidWhenProjectToUseAsTemplateIsNotActiveAndNotMarkedAsTemplate(): void
     {
-        $representation              = new ProjectPostRepresentation();
-        $representation->template_id = 124;
+        $representation = ProjectPostRepresentation::build(124);
 
-        $project = Mockery::mock(Project::class);
-        $project->shouldReceive('getID')->andReturn($representation->template_id);
-        $project->shouldReceive('isError')->andReturn(false);
-        $project->shouldReceive('isActive')->andReturn(false);
-        $project->shouldReceive('isTemplate')->andReturn(false);
+        $project = $this->createMock(Project::class);
+        $project->method('getID')->willReturn($representation->template_id);
+        $project->method('isError')->willReturn(false);
+        $project->method('isActive')->willReturn(false);
+        $project->method('isTemplate')->willReturn(false);
 
-        $this->project_manager->shouldReceive('getProject')->with($representation->template_id)->andReturn($project);
+        $this->project_manager->method('getProject')->with($representation->template_id)->willReturn($project);
 
         $this->expectException(ProjectTemplateNotActiveException::class);
         TemplateFromProjectForCreation::fromRESTRepresentation(
@@ -124,18 +118,17 @@ final class TemplateFromProjectForCreationTest extends TestCase
 
     public function testGetTemplateFromProjectForCreationIsNotValidWhenProjectToUseIsActiveButTheUserRequestingTheCreationIsNotOneOfTheProjectAdmins(): void
     {
-        $representation              = new ProjectPostRepresentation();
-        $representation->template_id = 125;
+        $representation = ProjectPostRepresentation::build(125);
 
-        $project = Mockery::mock(Project::class);
-        $project->shouldReceive('getID')->andReturn($representation->template_id);
-        $project->shouldReceive('isError')->andReturn(false);
-        $project->shouldReceive('isActive')->andReturn(true);
-        $project->shouldReceive('isTemplate')->andReturn(false);
+        $project = $this->createMock(Project::class);
+        $project->method('getID')->willReturn($representation->template_id);
+        $project->method('isError')->willReturn(false);
+        $project->method('isActive')->willReturn(true);
+        $project->method('isTemplate')->willReturn(false);
 
-        $this->project_manager->shouldReceive('getProject')->with($representation->template_id)->andReturn($project);
-        $this->user->shouldReceive('isAdmin')->with($representation->template_id)->andReturn(false);
-        $this->user->shouldReceive('getId')->andReturn(102);
+        $this->project_manager->method('getProject')->with($representation->template_id)->willReturn($project);
+        $this->user->method('isAdmin')->with($representation->template_id)->willReturn(false);
+        $this->user->method('getId')->willReturn(102);
 
         $this->expectException(InsufficientPermissionToUseProjectAsTemplateException::class);
         TemplateFromProjectForCreation::fromRESTRepresentation(

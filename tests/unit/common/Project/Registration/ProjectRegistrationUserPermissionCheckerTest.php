@@ -24,9 +24,6 @@ declare(strict_types=1);
 namespace phpunit\common\Project\Registration;
 
 use ForgeConfig;
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PFUser;
 use Project;
 use ProjectDao;
 use ProjectManager;
@@ -38,38 +35,38 @@ use Tuleap\Project\Registration\ProjectRegistrationUserPermissionChecker;
 use Tuleap\Project\Registration\LimitedToSiteAdministratorsException;
 use Tuleap\Project\Registration\RestrictedUsersNotAllowedException;
 
-class ProjectRegistrationUserPermissionCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
+final class ProjectRegistrationUserPermissionCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
     use ForgeConfigSandbox;
 
     /**
      * @var ProjectRegistrationUserPermissionChecker
      */
     private $permission_checker;
-
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|ProjectDao
+     * @var \PHPUnit\Framework\MockObject\MockObject&ProjectDao
      */
     private $project_dao;
+    /**
+     * @var \PFUser&\PHPUnit\Framework\MockObject\MockObject
+     */
     private $user;
 
     protected function setUp(): void
     {
-        $this->project_dao        = \Mockery::mock(ProjectDao::class);
+        $this->project_dao        = $this->createMock(ProjectDao::class);
         $this->permission_checker = new ProjectRegistrationUserPermissionChecker($this->project_dao);
 
-        $this->user = \Mockery::mock(\PFUser::class, ['getId' => '110']);
-        $this->user->shouldReceive('isAnonymous')->andReturnFalse()->byDefault();
-        $this->user->shouldReceive('isSuperUser')->andReturnFalse()->byDefault();
-        $this->user->shouldReceive('isRestricted')->andReturnFalse()->byDefault();
+        $this->user = $this->createMock(\PFUser::class);
+        $this->user->method('getId')->willReturn(110);
+        $this->user->method('isAnonymous')->willReturn(false);
+        $this->user->method('isSuperUser')->willReturn(false);
+        $this->user->method('isRestricted')->willReturn(false);
     }
 
     public function testItThrowsExceptionWhenPlatformDoesNotAllRegistrationAndUserIsNotGlobalAdmin(): void
     {
         ForgeConfig::set(ProjectManager::CONFIG_PROJECTS_CAN_BE_CREATED, '0');
-
-        $this->user->shouldReceive('isSuperUser')->once()->andReturnFalse();
 
         $this->expectException(LimitedToSiteAdministratorsException::class);
 
@@ -80,21 +77,25 @@ class ProjectRegistrationUserPermissionCheckerTest extends \Tuleap\Test\PHPUnit\
     {
         ForgeConfig::set(ProjectManager::CONFIG_PROJECTS_CAN_BE_CREATED, '1');
 
-        $this->user->shouldReceive('isAnonymous')->once()->andReturnTrue();
+        $anonymous_user = $this->createMock(\PFUser::class);
+        $anonymous_user->method('getId')->willReturn(101);
+        $anonymous_user->method('isAnonymous')->willReturn(true);
+        $anonymous_user->method('isSuperUser')->willReturn(false);
+        $anonymous_user->method('isRestricted')->willReturn(false);
 
         $this->expectException(AnonymousNotAllowedException::class);
 
-        $this->permission_checker->checkUserCreateAProject($this->user);
+        $this->permission_checker->checkUserCreateAProject($anonymous_user);
     }
-
 
     public function testUserCanCreateProjectWhenNoRestrictionsAreConfigured(): void
     {
         ForgeConfig::set(ProjectManager::CONFIG_PROJECTS_CAN_BE_CREATED, '1');
 
         $this->permission_checker->checkUserCreateAProject($this->user);
-    }
 
+        $this->addToAssertionCount(1);
+    }
 
     public function testUserCannotCreateProjectWhenMaxInQueue(): void
     {
@@ -102,7 +103,7 @@ class ProjectRegistrationUserPermissionCheckerTest extends \Tuleap\Test\PHPUnit\
         ForgeConfig::set(ProjectManager::CONFIG_PROJECT_APPROVAL, '1');
         ForgeConfig::set(ProjectManager::CONFIG_NB_PROJECTS_WAITING_FOR_VALIDATION, '5');
 
-        $this->project_dao->shouldReceive('countByStatus')->once()->with(Project::STATUS_PENDING)->andReturn('5');
+        $this->project_dao->expects(self::once())->method('countByStatus')->with(Project::STATUS_PENDING)->willReturn(5);
 
         $this->expectException(MaxNumberOfProjectReachedForPlatformException::class);
 
@@ -115,7 +116,7 @@ class ProjectRegistrationUserPermissionCheckerTest extends \Tuleap\Test\PHPUnit\
         ForgeConfig::set(ProjectManager::CONFIG_PROJECT_APPROVAL, '1');
         ForgeConfig::set(ProjectManager::CONFIG_NB_PROJECTS_WAITING_FOR_VALIDATION, '5');
 
-        $this->project_dao->shouldReceive('countByStatus')->once()->with(Project::STATUS_PENDING)->andReturn('4');
+        $this->project_dao->expects(self::once())->method('countByStatus')->with(Project::STATUS_PENDING)->willReturn(4);
 
         $this->permission_checker->checkUserCreateAProject($this->user);
     }
@@ -126,7 +127,7 @@ class ProjectRegistrationUserPermissionCheckerTest extends \Tuleap\Test\PHPUnit\
         ForgeConfig::set(ProjectManager::CONFIG_PROJECT_APPROVAL, '1');
         ForgeConfig::set(ProjectManager::CONFIG_NB_PROJECTS_WAITING_FOR_VALIDATION_PER_USER, '5');
 
-        $this->project_dao->shouldReceive('countByStatusAndUser')->once()->with(110, Project::STATUS_PENDING)->andReturn(5);
+        $this->project_dao->expects(self::once())->method('countByStatusAndUser')->with(110, Project::STATUS_PENDING)->willReturn(5);
 
         $this->expectException(MaxNumberOfProjectReachedForUserException::class);
         $this->permission_checker->checkUserCreateAProject($this->user);
@@ -138,7 +139,7 @@ class ProjectRegistrationUserPermissionCheckerTest extends \Tuleap\Test\PHPUnit\
         ForgeConfig::set(ProjectManager::CONFIG_PROJECT_APPROVAL, '1');
         ForgeConfig::set(ProjectManager::CONFIG_NB_PROJECTS_WAITING_FOR_VALIDATION_PER_USER, '5');
 
-        $this->project_dao->shouldReceive('countByStatusAndUser')->once()->with(110, Project::STATUS_PENDING)->andReturn(4);
+        $this->project_dao->expects(self::once())->method('countByStatusAndUser')->with(110, Project::STATUS_PENDING)->willReturn(4);
 
         $this->permission_checker->checkUserCreateAProject($this->user);
     }
@@ -148,9 +149,14 @@ class ProjectRegistrationUserPermissionCheckerTest extends \Tuleap\Test\PHPUnit\
         ForgeConfig::set(ProjectManager::CONFIG_PROJECTS_CAN_BE_CREATED, '1');
         ForgeConfig::set(ProjectManager::CONFIG_RESTRICTED_USERS_CAN_CREATE_PROJECTS, '0');
 
-        $restricted_user = Mockery::mock(PFUser::class, ['isSuperUser' => false, 'isAnonymous' => false, 'isRestricted' => true]);
+        $restricted_user = $this->createMock(\PFUser::class);
+        $restricted_user->method('getId')->willReturn(101);
+        $restricted_user->method('isAnonymous')->willReturn(false);
+        $restricted_user->method('isSuperUser')->willReturn(false);
+        $restricted_user->method('isRestricted')->willReturn(true);
 
         $this->expectException(RestrictedUsersNotAllowedException::class);
+
         $this->permission_checker->checkUserCreateAProject($restricted_user);
     }
 
@@ -159,16 +165,26 @@ class ProjectRegistrationUserPermissionCheckerTest extends \Tuleap\Test\PHPUnit\
         ForgeConfig::set(ProjectManager::CONFIG_PROJECTS_CAN_BE_CREATED, '1');
         ForgeConfig::set(ProjectManager::CONFIG_RESTRICTED_USERS_CAN_CREATE_PROJECTS, '1');
 
-        $restricted_user = Mockery::mock(PFUser::class, ['isSuperUser' => false, 'isAnonymous' => false, 'isRestricted' => true]);
+        $restricted_user = $this->createMock(\PFUser::class);
+        $restricted_user->method('getId')->willReturn(101);
+        $restricted_user->method('isAnonymous')->willReturn(false);
+        $restricted_user->method('isSuperUser')->willReturn(false);
+        $restricted_user->method('isRestricted')->willReturn(true);
 
         $this->permission_checker->checkUserCreateAProject($restricted_user);
+
+        $this->addToAssertionCount(1);
     }
 
     public function testUserCannotCreateProjectBecauseSheIsRestrictedAndThereIsNoConfigurationSet(): void
     {
         ForgeConfig::set(ProjectManager::CONFIG_PROJECTS_CAN_BE_CREATED, '1');
 
-        $restricted_user = Mockery::mock(PFUser::class, ['isSuperUser' => false, 'isAnonymous' => false, 'isRestricted' => true]);
+        $restricted_user = $this->createMock(\PFUser::class);
+        $restricted_user->method('getId')->willReturn(101);
+        $restricted_user->method('isAnonymous')->willReturn(false);
+        $restricted_user->method('isSuperUser')->willReturn(false);
+        $restricted_user->method('isRestricted')->willReturn(true);
 
         $this->expectException(RestrictedUsersNotAllowedException::class);
 

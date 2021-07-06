@@ -133,7 +133,7 @@ class RestProjectCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->user = new \PFUser(['language_id' => 'en_US']);
         $this->project_manager->shouldReceive('userCanCreateProject')->with($this->user)->andReturnTrue()->byDefault();
-        $this->project_post_representation = new ProjectPostRepresentation();
+        $this->project_post_representation = ProjectPostRepresentation::build(101);
     }
 
     public function testCreateThrowExceptionWhenUserCannotCreateProjects()
@@ -180,6 +180,9 @@ class RestProjectCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testCreateThrowExceptionWhenNeitherTemplateIdNorTemplateNameIsProvided()
     {
+        $this->project_post_representation->template_id       = null;
+        $this->project_post_representation->xml_template_name = null;
+
         $this->expectException(InvalidXMLTemplateNameException::class);
 
         $this->creator->create(
@@ -249,6 +252,7 @@ class RestProjectCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         ForgeConfig::set(ProjectManager::SYS_USER_CAN_CHOOSE_PROJECT_PRIVACY, 1);
         ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::RESTRICTED);
 
+        $this->project_post_representation->template_id       = null;
         $this->project_post_representation->xml_template_name = ScrumTemplate::NAME;
         $this->project_post_representation->shortname         = 'gpig';
         $this->project_post_representation->label             = 'Guinea Pig';
