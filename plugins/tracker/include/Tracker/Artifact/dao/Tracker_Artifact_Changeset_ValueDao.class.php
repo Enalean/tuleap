@@ -71,28 +71,20 @@ class Tracker_Artifact_Changeset_ValueDao extends DataAccessObject
 
     public function createFromLastChangesetByTrackerId($tracker_id, $field_id, $has_changed)
     {
-        $tracker_id        = $this->da->escapeInt($tracker_id);
-        $field_id          = $this->da->escapeInt($field_id);
-        $has_changed       = $has_changed ? 1 : 0;
-        $changesetValueDao = new Tracker_Artifact_ChangesetDao();
+        $tracker_id = $this->da->escapeInt($tracker_id);
+        $field_id   = $this->da->escapeInt($field_id);
 
-        $sql = " INSERT INTO $this->table_name(changeset_id, field_id, has_changed)
-                 SELECT C.id as changeset_id, $field_id, 1
-                 FROM tracker_changeset AS C
-                   INNER JOIN tracker_artifact AS A ON A.id = C.artifact_id
-                   INNER JOIN ( SELECT artifact_id, MAX(id) as max_id
-                                FROM tracker_changeset
-                                GROUP BY artifact_id ) AS C1 ON C.id = C1.max_id
-                 WHERE A.tracker_id = $tracker_id ";
+        $sql = "INSERT INTO tracker_changeset_value(changeset_id, field_id, has_changed)
+                SELECT A.last_changeset_id as changeset_id, $field_id, 1
+                FROM tracker_artifact AS A
+                WHERE A.tracker_id = $tracker_id";
         $this->update($sql);
-        $sql = " SELECT CV.id as cv
-                 FROM tracker_changeset AS C
-                   INNER JOIN tracker_artifact AS A ON A.id = C.artifact_id
-                   INNER JOIN ( SELECT artifact_id, MAX(id) as max_id
-                                FROM tracker_changeset
-                                GROUP BY artifact_id ) AS C1 ON C.id = C1.max_id
-                   INNER JOIN tracker_changeset_value AS CV ON C.id = CV.changeset_id
-                 WHERE A.tracker_id = $tracker_id AND CV.field_id = $field_id AND has_changed = 1";
+        $sql = "SELECT CV.id as cv
+                FROM tracker_changeset_value AS CV
+                    INNER JOIN tracker_artifact AS A ON (CV.changeset_id = A.last_changeset_id)
+                WHERE A.tracker_id = $tracker_id
+                      AND CV.field_id = $field_id
+                      AND has_changed = 1";
 
         $result = $this->retrieve($sql);
 
