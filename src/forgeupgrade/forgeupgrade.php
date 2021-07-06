@@ -18,6 +18,7 @@
  * along with ForgeUpgrade. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\DB\DBFactory;
 use Tuleap\ForgeUpgrade\ForgeUpgrade;
 use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
@@ -75,7 +76,8 @@ for ($i = 1; $i < $argc; $i++) {
 
     // --driver
     if (preg_match('/--dbdriver=(.*)/', $argv[$i], $matches)) {
-        $options['core']['dbdriver'] = $matches[1];
+        echo "Error --dbdriver option is no longer supported" . PHP_EOL;
+        exit(1);
     }
 
     //--ignore-preup
@@ -112,34 +114,16 @@ if (! isset($options['core']['verbose'])) {
     $options['core']['verbose'] = Logger::INFO;
 }
 
-// Get the DB connexion
-// First try the file
-if (is_file($options['core']['dbdriver'])) {
-    require $options['core']['dbdriver'];
-    //$className = $options['core']['dbdriver'];
-    $dbDriverName = basename($options['core']['dbdriver'], '.php');
-} else {
-    $dbDriverName = ucfirst(strtolower($options['core']['dbdriver']));
-    $filePath     = 'src/db/driver/' . $dbDriverName . '.php';
-    if (is_file($filePath)) {
-        require $filePath;
-        $dbDriverName = 'ForgeUpgrade_Db_Driver_' . $dbDriverName;
-    } else {
-        echo "Error: invalid --dbdriver" . PHP_EOL;
-    }
-}
-try {
-    $dbDriver = new $dbDriverName();
-} catch (PDOException $e) {
-    echo 'Connection faild: ' . $e->getMessage() . PHP_EOL;
-    return -1;
-}
-
 $logger = new Logger('forgeupgrade');
 $logger->pushHandler(new StreamHandler(STDOUT, $options['core']['verbose']));
 
 // Go
-$upg = new ForgeUpgrade($dbDriver, $logger);
+\ForgeConfig::loadLocalInc();
+\ForgeConfig::loadDatabaseInc();
+$upg = new ForgeUpgrade(
+    DBFactory::getMainTuleapDBConnection()->getDB()->getPdo(),
+    $logger
+);
 $upg->setOptions($options);
 $upg->run($func);
 
@@ -166,8 +150,6 @@ Options:
   --include=[/path]        Only consider paths that contains given pattern
   --exclude=[/path]        Don't consider paths that contains given pattern
 
-  --dbdriver=[name|/path]  The database driver to use (either a name or a path
-                           to the driver file for custom ones).
   --ignore-preup           Execute migration buckets whithout running "pre" checks
   --force                  Execute migration buckets even there are errors
   --verbose=[level]        How verbose: DEBUG, INFO, WARNING, ERROR
