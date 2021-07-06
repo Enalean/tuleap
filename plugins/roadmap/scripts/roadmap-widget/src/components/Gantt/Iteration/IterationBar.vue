@@ -68,10 +68,14 @@ export default class IterationBar extends Vue {
 
         const height =
             this.nb_ribbons_to_take_into_account * Styles.ITERATION_HEIGHT_IN_PX +
-            this.rows.length * Styles.TASK_HEIGHT_IN_PX -
+            this.nb_visible_rows * Styles.TASK_HEIGHT_IN_PX -
             Styles.MARGIN_BETWEEN_ITERATIONS_IN_PX;
 
         return `left: ${left}px; width: ${width}px; height: ${height}px;`;
+    }
+
+    get nb_visible_rows(): number {
+        return this.rows.filter((row) => row.is_shown).length;
     }
 
     get nb_ribbons_to_take_into_account(): number {
