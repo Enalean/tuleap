@@ -3545,6 +3545,14 @@ msgstr ""
 "Le projet %s n'est pas dans un état valide et ne peut pas être affiché dans "
 "la liste. Veuillez faire le nécessaire."
 
+#, php-format
+msgid ""
+"The project visibility cannot be chosen by the project administrator, only "
+"the access level \"%s\" can be used"
+msgstr ""
+"La visibilité du projet ne peut pas être choisie par l'administrateur de projet, seul "
+"le niveau d'accès \"%s\" peut être utilisé"
+
 msgid "The requested dashboard does not exist."
 msgstr "Le tableau de bord demandé n’existe pas."
 

@@ -189,10 +189,6 @@ class ProjectCreationData //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNa
 
     private function getAccessFromProjectArrayData(array $project)
     {
-        if ((int) ForgeConfig::get(ProjectManager::SYS_USER_CAN_CHOOSE_PROJECT_PRIVACY) === 0) {
-            return $this->default_project_visibility_retriever->getDefaultProjectVisibility();
-        }
-
         if (! isset($project['is_public'])) {
             return $this->default_project_visibility_retriever->getDefaultProjectVisibility();
         }

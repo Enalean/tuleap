@@ -27,11 +27,13 @@ class ProjectRegistrationErrorsCollection
 {
     /**
      * @var RegistrationErrorException[]
+     * @psalm-return list<RegistrationErrorException>
      */
     private array $errors = [];
 
     /**
      * @return RegistrationErrorException[]
+     * @psalm-return list<RegistrationErrorException>
      */
     public function getErrors(): array
     {
@@ -40,6 +42,7 @@ class ProjectRegistrationErrorsCollection
 
     /**
      * @return string[]
+     * @psalm-return list<string>
      */
     public function getI18nErrorsMessages(): array
     {

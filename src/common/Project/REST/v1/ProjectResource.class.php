@@ -47,6 +47,7 @@ use Tuleap\Project\Banner\BannerDao;
 use Tuleap\Project\Banner\BannerPermissionsChecker;
 use Tuleap\Project\Banner\BannerRemover;
 use Tuleap\Project\Banner\BannerRetriever;
+use Tuleap\Project\DefaultProjectVisibilityRetriever;
 use Tuleap\Project\DeletedProjectStatusChangeException;
 use Tuleap\Project\DescriptionFieldsDao;
 use Tuleap\Project\DescriptionFieldsFactory;
@@ -238,7 +239,7 @@ class ProjectResource extends AuthenticatedResource
                         new \Rule_ProjectName(),
                         new \Rule_ProjectFullName(),
                     ),
-                    new ProjectRegistrationRESTChecker()
+                    new ProjectRegistrationRESTChecker(new DefaultProjectVisibilityRetriever())
                 )
             );
 
