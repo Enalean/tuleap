@@ -17,16 +17,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { createListPicker } from "@tuleap/list-picker";
 import { getPOFileFromLocale, initGettext } from "@tuleap/core/scripts/tuleap/gettext/gettext-init";
+import { removeTeam } from "./remove-team";
+import { displayTeamsToAggregate } from "./display-teams-to-aggregate";
 
 document.addEventListener("DOMContentLoaded", async () => {
-    const list_teams = document.getElementById("program-management-choose-teams");
-
-    if (!list_teams || !(list_teams instanceof HTMLSelectElement)) {
-        throw new Error("No list to pick teams");
-    }
-
     const language = document.body.dataset.userLocale;
     if (language === undefined) {
         throw new Error("Not able to find the user language.");
@@ -42,9 +37,15 @@ document.addEventListener("DOMContentLoaded", async () => {
             )
     );
 
-    await createListPicker(list_teams, {
-        locale: document.body.dataset.userLocale,
-        placeholder: gettext_provider.gettext("Choose a project to aggregate"),
-        is_filterable: true,
-    });
+    const app = document.getElementById("program-management-administration");
+    if (!app) {
+        throw new Error("Program Management Administration does not exist");
+    }
+    const program_id = app.dataset.programId;
+    if (!program_id) {
+        throw new Error("Program id does not exist");
+    }
+
+    await displayTeamsToAggregate(gettext_provider, document);
+    removeTeam(Number.parseInt(program_id, 10));
 });

@@ -30,6 +30,7 @@ use Tuleap\ProgramManagement\Domain\Program\Admin\Team\TeamPresenter;
  */
 final class ProgramAdminPresenter
 {
+    public int $program_id;
     /**
      * @var PotentialTeamPresenter[]
      */
@@ -44,8 +45,12 @@ final class ProgramAdminPresenter
      * @param PotentialTeamPresenter[] $potential_teams
      * @param TeamPresenter[] $aggregated_teams
      */
-    public function __construct(array $potential_teams, array $aggregated_teams)
-    {
+    public function __construct(
+        int $program_id,
+        array $potential_teams,
+        array $aggregated_teams
+    ) {
+        $this->program_id           = $program_id;
         $this->potential_teams      = $potential_teams;
         $this->aggregated_teams     = $aggregated_teams;
         $this->has_aggregated_teams = count($aggregated_teams) > 0;
