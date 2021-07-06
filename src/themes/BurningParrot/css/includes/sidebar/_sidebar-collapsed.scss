@@ -57,8 +57,13 @@
         background: var(--tlp-main-color) url("/images/organization_logo_small.png") no-repeat center center;
     }
 
-    .project-sidebar-header-name {
-        padding: var(--tlp-medium-spacing);
+    .project-administration-link {
+        margin: var(--tlp-medium-spacing) 0;
+
+        > .project-administration-link-icon {
+            position: relative;
+            top: -1px;
+        }
     }
 
     .project-title-container {
@@ -103,5 +108,9 @@
         &::before {
             content: "\f054"; // fa-chevron-right
         }
+    }
+
+    .project-sidebar-nav {
+        margin: var(--tlp-medium-spacing) 0;
     }
 }

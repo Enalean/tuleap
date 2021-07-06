@@ -522,7 +522,16 @@ body.sidebar-collapsed {
     }
 
     .project-sidebar-header-name {
-        padding: var(--tlp-medium-spacing);
+        padding: 0;
+    }
+
+    .project-administration-link {
+        margin: var(--tlp-medium-spacing) 0;
+
+        > .project-administration-link-icon {
+            position: relative;
+            top: -1px;
+        }
     }
 
     .tlp-popover-shown.project-sidebar-linked-projects-popover {
@@ -555,6 +564,10 @@ body.sidebar-collapsed {
         &::before {
             content: "\f054"; // fa-chevron-right
         }
+    }
+
+    .nav-list {
+        margin: var(--tlp-medium-spacing) 0 0;
     }
 }
 
