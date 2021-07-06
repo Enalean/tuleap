@@ -47,7 +47,7 @@ export interface Repository {
     label: string;
     last_update_date: string;
     last_push_date: string;
-    additional_information: [];
+    additional_information: RepositoryAdditionalInformation;
     normalized_path?: string;
     path_without_project: string;
     uri: string;
@@ -66,6 +66,10 @@ export interface Repository {
     gitlab_data?: null | GitLabData;
     allow_artifact_closure: boolean;
     create_branch_prefix: string;
+}
+
+export interface RepositoryAdditionalInformation {
+    opened_pull_requests: string;
 }
 
 export interface FormattedGitLabRepository {

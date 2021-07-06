@@ -17,32 +17,37 @@
  * along with Tuleap. If not, see http://www.gnu.org/licenses/.
  */
 
-import { createStoreMock } from "../../../../../../src/scripts/vue-components/store-wrapper-jest.js";
-import { shallowMount } from "@vue/test-utils";
+import { createStoreMock } from "@tuleap/core/scripts/vue-components/store-wrapper-jest";
+import { createLocalVue, shallowMount } from "@vue/test-utils";
+import type { Wrapper } from "@vue/test-utils";
 import ActionBar from "./ActionBar.vue";
-import localVue from "../support/local-vue.js";
 import DropdownActionButton from "./DropdownActionButton.vue";
 import * as repo_list from "../repository-list-presenter";
+import GetTextPlugin from "vue-gettext";
+import type { State } from "../type";
+
+interface StoreOption {
+    state: State;
+    getters?: {
+        areExternalUsedServices?: boolean;
+        isCurrentRepositoryListEmpty?: boolean;
+        isInitialLoadingDoneWithoutError?: boolean;
+    };
+}
 
 describe("ActionBar", () => {
-    let store_options;
+    let localVue;
     beforeEach(() => {
         jest.spyOn(repo_list, "getUserIsAdmin").mockReturnValue(true);
-
-        store_options = {
-            state: {
-                used_service_name: [],
-                is_first_load_done: true,
-            },
-            getters: {
-                areExternalUsedServices: false,
-                isCurrentRepositoryListEmpty: false,
-                isInitialLoadingDoneWithoutError: true,
-            },
-        };
     });
 
-    function instantiateComponent() {
+    function instantiateComponent(store_options: StoreOption): Wrapper<ActionBar> {
+        localVue = createLocalVue();
+        localVue.use(GetTextPlugin, {
+            translations: {},
+            silent: true,
+        });
+
         const store = createStoreMock(store_options);
         return shallowMount(ActionBar, {
             mocks: { $store: store },
@@ -51,15 +56,31 @@ describe("ActionBar", () => {
     }
 
     it("When there is no used externals services, Then there is a button to create a repo", () => {
-        const wrapper = instantiateComponent();
+        const wrapper = instantiateComponent({
+            state: {
+                is_first_load_done: true,
+            } as unknown as State,
+            getters: {
+                areExternalUsedServices: false,
+                isCurrentRepositoryListEmpty: false,
+                isInitialLoadingDoneWithoutError: true,
+            },
+        });
         expect(wrapper.findComponent(DropdownActionButton).exists()).toBeFalsy();
         expect(wrapper.find("[data-test=create-repository-button]").exists()).toBeTruthy();
     });
 
     it("When GitLab is an external service, Then dropdown is displayed the action is displayed", () => {
-        store_options.getters.areExternalUsedServices = true;
-        store_options.state.used_service_name = ["gitlab"];
-        const wrapper = instantiateComponent();
+        const wrapper = instantiateComponent({
+            state: {
+                is_first_load_done: true,
+            } as unknown as State,
+            getters: {
+                areExternalUsedServices: true,
+                isCurrentRepositoryListEmpty: false,
+                isInitialLoadingDoneWithoutError: true,
+            },
+        });
         expect(wrapper.findComponent(DropdownActionButton).exists()).toBeTruthy();
         expect(wrapper.find("[data-test=create-repository-button]").exists()).toBeFalsy();
     });

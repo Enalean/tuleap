@@ -45,13 +45,6 @@ import {
 
 export type GitlabRepositoryCallback = (repositories: Repository[]) => void;
 
-export const showAddGitlabRepositoryModal = (context: ActionContext<GitlabState, State>): void => {
-    if (!context.state.add_gitlab_repository_modal) {
-        return;
-    }
-    context.state.add_gitlab_repository_modal.toggle();
-};
-
 export const showDeleteGitlabRepositoryModal = (
     context: ActionContext<GitlabState, State>,
     repository: GitLabRepository

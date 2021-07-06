@@ -19,8 +19,8 @@
 
 <template>
     <div class="git-repository-list-actions" v-if="is_first_load_done">
-        <div v-if="show_create_repository_button">
-            <dropdown-action-button v-if="areExternalUsedServices" />
+        <div v-if="showCreateRepositoryButton()">
+            <dropdown-action-button v-if="areExternalUsedServices" v-bind:is_empty_state="false" />
             <button
                 v-else
                 type="button"
@@ -43,38 +43,36 @@
         </template>
     </div>
 </template>
-<script>
-import { mapGetters, mapActions, mapState } from "vuex";
+<script lang="ts">
 import ListFilter from "./ActionBar/ListFilter.vue";
 import SelectOwner from "./ActionBar/SelectOwner.vue";
 import DisplayModeSwitcher from "./ActionBar/DisplayModeSwitcher.vue";
 import DropdownActionButton from "./DropdownActionButton.vue";
 import { getUserIsAdmin } from "../repository-list-presenter";
+import { Component } from "vue-property-decorator";
+import Vue from "vue";
+import { Action, Getter, State } from "vuex-class";
 
-export default {
-    name: "ActionBar",
-    components: {
-        DropdownActionButton,
-        SelectOwner,
-        ListFilter,
-        DisplayModeSwitcher,
-    },
-    computed: {
-        show_create_repository_button() {
-            return (
-                getUserIsAdmin() &&
-                !(this.isCurrentRepositoryListEmpty && this.isInitialLoadingDoneWithoutError)
-            );
-        },
-        ...mapGetters([
-            "isCurrentRepositoryListEmpty",
-            "isInitialLoadingDoneWithoutError",
-            "areExternalUsedServices",
-        ]),
-        ...mapState(["is_first_load_done"]),
-    },
-    methods: {
-        ...mapActions(["showAddRepositoryModal"]),
-    },
-};
+@Component({ components: { DropdownActionButton, SelectOwner, ListFilter, DisplayModeSwitcher } })
+export default class ActionBar extends Vue {
+    @Getter
+    readonly isCurrentRepositoryListEmpty!: boolean;
+    @Getter
+    readonly isInitialLoadingDoneWithoutError!: boolean;
+    @Getter
+    readonly areExternalUsedServices!: boolean;
+
+    @State
+    readonly is_first_load_done!: boolean | number;
+
+    @Action
+    private readonly showAddRepositoryModal!: () => void;
+
+    showCreateRepositoryButton(): boolean {
+        return (
+            getUserIsAdmin() &&
+            !(this.isCurrentRepositoryListEmpty && this.isInitialLoadingDoneWithoutError)
+        );
+    }
+}
 </script>

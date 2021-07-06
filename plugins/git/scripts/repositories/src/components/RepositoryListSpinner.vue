@@ -17,18 +17,23 @@
   - along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
   -->
 <template>
-    <div class="git-repository-list-loading" v-if="show_spinner"></div>
+    <div class="git-repository-list-loading" v-if="show_spinner()"></div>
 </template>
-<script>
-import { mapGetters } from "vuex";
+<script lang="ts">
+import Vue from "vue";
+import { Getter } from "vuex-class";
+import { Component } from "vue-property-decorator";
 
-export default {
-    name: "RepositoryListSpinner",
-    computed: {
-        show_spinner() {
-            return !this.hasError && this.isLoading;
-        },
-        ...mapGetters(["hasError", "isLoading"]),
-    },
-};
+@Component
+export default class RepositoryListSpinner extends Vue {
+    @Getter
+    readonly hasError!: boolean;
+
+    @Getter
+    readonly isLoading!: boolean;
+
+    show_spinner(): boolean {
+        return !this.hasError && this.isLoading;
+    }
+}
 </script>

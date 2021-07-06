@@ -20,32 +20,32 @@
 <template>
     <div class="breadcrumb-container">
         <breadcrumb-privacy
-            v-bind:project_flags="project_flags"
-            v-bind:privacy="privacy"
-            v-bind:project_public_name="project_public_name"
+            v-bind:project_flags="project_flags()"
+            v-bind:privacy="privacy()"
+            v-bind:project_public_name="project_public_name()"
         />
         <nav class="breadcrumb">
             <div class="breadcrumb-item breadcrumb-project">
-                <a v-bind:href="project_url" class="breadcrumb-link">
-                    {{ project_public_name }}
+                <a v-bind:href="project_url()" class="breadcrumb-link">
+                    {{ project_public_name() }}
                 </a>
             </div>
             <div class="breadcrumb-switchable breadcrumb-item">
                 <a
                     class="breadcrumb-link"
-                    v-bind:href="repository_list_url"
-                    v-bind:title="repositories_title"
+                    v-bind:href="repository_list_url()"
+                    v-bind:title="$gettext('Repository list')"
                 >
                     <i class="breadcrumb-link-icon fa fa-fw fa-tlp-versioning-git"></i>
                     <translate>Git repositories</translate>
                 </a>
                 <div class="breadcrumb-switch-menu-container">
                     <nav class="breadcrumb-switch-menu">
-                        <span class="breadcrumb-dropdown-item" v-if="is_admin">
+                        <span class="breadcrumb-dropdown-item" v-if="is_admin()">
                             <a
                                 class="breadcrumb-dropdown-link"
-                                v-bind:href="repository_admin_url"
-                                v-bind:title="administration_title"
+                                v-bind:href="repository_admin_url()"
+                                v-bind:title="$gettext('Administration')"
                             >
                                 <i class="fa fa-cog fa-fw"></i>
                                 <translate>Administration</translate>
@@ -54,8 +54,8 @@
                         <span class="breadcrumb-dropdown-item">
                             <a
                                 class="breadcrumb-dropdown-link"
-                                v-bind:href="repository_fork_url"
-                                v-bind:title="fork_title"
+                                v-bind:href="repository_fork_url()"
+                                v-bind:title="$gettext('Fork repositories')"
                             >
                                 <i class="fas fa-code-branch fa-fw"></i>
                                 <translate>Fork repositories</translate>
@@ -67,7 +67,9 @@
         </nav>
     </div>
 </template>
-<script>
+<script lang="ts">
+import Vue from "vue";
+import { Component } from "vue-property-decorator";
 import {
     getAdministrationUrl,
     getForkRepositoriesUrl,
@@ -79,44 +81,33 @@ import {
 } from "../breadcrumb-presenter";
 import { getUserIsAdmin } from "../repository-list-presenter";
 import { BreadcrumbPrivacy } from "@tuleap/vue-breadcrumb-privacy";
+import type { ProjectFlag, ProjectPrivacy } from "@tuleap/vue-breadcrumb-privacy";
 
-export default {
-    name: "GitBreadcrumbs",
-    components: { BreadcrumbPrivacy },
-    computed: {
-        repositories_title() {
-            return this.$gettext("Repository list");
-        },
-        administration_title() {
-            return this.$gettext("Administration");
-        },
-        fork_title() {
-            return this.$gettext("Fork repositories");
-        },
-        repository_list_url() {
-            return getRepositoryListUrl();
-        },
-        repository_admin_url() {
-            return getAdministrationUrl();
-        },
-        repository_fork_url() {
-            return getForkRepositoriesUrl();
-        },
-        is_admin() {
-            return getUserIsAdmin();
-        },
-        project_url() {
-            return getProjectUrl();
-        },
-        project_public_name() {
-            return getProjectPublicName();
-        },
-        privacy() {
-            return getPrivacy();
-        },
-        project_flags() {
-            return getProjectFlags();
-        },
-    },
-};
+@Component({ components: { BreadcrumbPrivacy } })
+export default class GitBreadcrumbs extends Vue {
+    repository_list_url(): string {
+        return getRepositoryListUrl();
+    }
+    repository_admin_url(): string {
+        return getAdministrationUrl();
+    }
+    repository_fork_url(): string {
+        return getForkRepositoriesUrl();
+    }
+    is_admin(): boolean {
+        return getUserIsAdmin();
+    }
+    project_url(): string {
+        return getProjectUrl();
+    }
+    project_public_name(): string {
+        return getProjectPublicName();
+    }
+    privacy(): ProjectPrivacy {
+        return getPrivacy();
+    }
+    project_flags(): Array<ProjectFlag> {
+        return getProjectFlags();
+    }
+}
 </script>

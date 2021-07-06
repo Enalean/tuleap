@@ -18,7 +18,7 @@
   -->
 
 <template>
-    <div class="empty-page" v-if="show_empty_state">
+    <div class="empty-page" v-if="show_empty_state()">
         <div class="empty-page-text">
             <svg
                 class="empty-page-icon git-repository-list-empty-image"
@@ -76,7 +76,7 @@
                 </g>
             </svg>
             <p class="empty-page-text" v-translate>There are no repositories in this project</p>
-            <div v-if="is_admin">
+            <div v-if="is_admin()">
                 <dropdown-action-button
                     v-if="areExternalUsedServices"
                     v-bind:is_empty_state="true"
@@ -95,29 +95,30 @@
         </div>
     </div>
 </template>
-<script>
-import { mapGetters, mapActions } from "vuex";
+<script lang="ts">
+import Vue from "vue";
+import { Component } from "vue-property-decorator";
+import { Action, Getter } from "vuex-class";
 import { getUserIsAdmin } from "../repository-list-presenter";
 import DropdownActionButton from "./DropdownActionButton.vue";
 
-export default {
-    name: "NoRepositoryEmptyState",
-    components: { DropdownActionButton },
-    computed: {
-        is_admin() {
-            return getUserIsAdmin();
-        },
-        show_empty_state() {
-            return this.isCurrentRepositoryListEmpty && this.isInitialLoadingDoneWithoutError;
-        },
-        ...mapGetters([
-            "isCurrentRepositoryListEmpty",
-            "isInitialLoadingDoneWithoutError",
-            "areExternalUsedServices",
-        ]),
-    },
-    methods: {
-        ...mapActions(["showAddRepositoryModal"]),
-    },
-};
+@Component({ components: { DropdownActionButton } })
+export default class NoRepositoryEmptyState extends Vue {
+    @Action
+    private readonly showAddRepositoryModal!: () => void;
+
+    @Getter
+    readonly isCurrentRepositoryListEmpty!: boolean;
+    @Getter
+    readonly isInitialLoadingDoneWithoutError!: boolean;
+    @Getter
+    readonly areExternalUsedServices!: boolean;
+
+    is_admin(): boolean {
+        return getUserIsAdmin();
+    }
+    show_empty_state(): boolean {
+        return this.isCurrentRepositoryListEmpty && this.isInitialLoadingDoneWithoutError;
+    }
+}
 </script>

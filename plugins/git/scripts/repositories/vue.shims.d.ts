@@ -1,5 +1,5 @@
-/*
- * Copyright (c) Enalean, 2018 - Present. All Rights Reserved.
+/**
+ * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -15,18 +15,9 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
- *
  */
 
-import { createLocalVue } from "@vue/test-utils";
-import Vuex from "vuex";
-import GettextPlugin from "vue-gettext";
-
-const localVue = createLocalVue();
-localVue.use(Vuex);
-localVue.use(GettextPlugin, {
-    translations: {},
-    silent: true,
-});
-
-export default localVue;
+declare module "*.vue" {
+    import Vue from "vue";
+    export default Vue;
+}

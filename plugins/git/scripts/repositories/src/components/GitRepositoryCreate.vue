@@ -23,7 +23,6 @@
         aria-labelledby="create-repository-modal-title"
         id="create-repository-modal"
         class="tlp-modal"
-        ref="create_modal"
         v-on:submit="createRepository"
         data-test="create-repository-modal-form"
     >
@@ -36,7 +35,7 @@
                 class="tlp-modal-close"
                 type="button"
                 data-dismiss="modal"
-                v-bind:aria-label="close_label"
+                v-bind:aria-label="$gettext('Close')"
             >
                 &times;
             </button>
@@ -61,10 +60,10 @@
                     id="repository_name"
                     required
                     v-model="repository_name"
-                    v-bind:placeholder="placeholder"
+                    v-bind:placeholder="$gettext('Repository name')"
                     pattern="[a-zA-Z0-9/_.-]{1,255}"
                     maxlength="255"
-                    v-bind:title="repository_pattern"
+                    v-bind:title="$gettext('Allowed characters: a-zA-Z0-9/_.-')"
                     data-test="create_repository_name"
                 />
                 <p class="tlp-text-info">
@@ -99,69 +98,58 @@
         </div>
     </form>
 </template>
-<script>
-import { postRepository } from "../api/rest-querier";
-import { getProjectId } from "../repository-list-presenter";
+<script lang="ts">
+import Vue from "vue";
+import { Component } from "vue-property-decorator";
 import { createModal } from "tlp";
+import type { Modal } from "tlp";
+import { getProjectId } from "../repository-list-presenter";
+import { postRepository } from "../api/rest-querier";
 
-export default {
-    name: "GitRepositoryCreate",
-    data() {
-        return {
-            error: "",
-            is_loading: false,
-            repository_name: "",
-        };
-    },
-    computed: {
-        placeholder() {
-            return this.$gettext("Repository name");
-        },
-        repository_pattern() {
-            return this.$gettext("Allowed characters: a-zA-Z0-9/_.-");
-        },
-        close_label() {
-            return this.$gettext("Close");
-        },
-    },
-    mounted() {
-        const create_modal = createModal(this.$refs.create_modal);
+@Component
+export default class GitRepositoryCreate extends Vue {
+    private modal: Modal | null = null;
+    private error = "";
+    private is_loading = false;
+    private repository_name = "";
 
-        create_modal.addEventListener("tlp-modal-hidden", this.reset);
+    mounted(): void {
+        this.modal = createModal(this.$el);
 
-        this.$store.commit("setAddRepositoryModal", create_modal);
-    },
-    methods: {
-        reset() {
-            this.repository_name = "";
-            this.error = "";
-        },
-        async createRepository(event) {
-            event.preventDefault();
-            this.is_loading = true;
-            this.error = "";
-            try {
-                const repository = await postRepository(getProjectId(), this.repository_name);
-                window.location.href = repository.html_url;
-            } catch (e) {
-                const { error } = await e.response.json();
-                const error_code = Number.parseInt(error.code, 10);
-                if (error_code === 400) {
-                    this.error = this.$gettext(
-                        'Repository name is not well formatted or is already used. Allowed characters: a-zA-Z0-9/_.- and max length is 255, no slashes at the beginning or the end, and repositories names must not finish with ".git".'
-                    );
-                } else if (error_code === 401) {
-                    this.error = this.$gettext(
-                        "You don't have permission to create Git repositories as you are not Git administrator."
-                    );
-                } else if (error_code === 404) {
-                    this.error = this.$gettext("Project not found");
-                } else {
-                    this.error = this.$gettext("An error occurred while creating the repository.");
-                }
-                this.is_loading = false;
+        this.modal.addEventListener("tlp-modal-hidden", this.reset);
+
+        this.$store.commit("setAddRepositoryModal", this.modal);
+    }
+
+    reset(): void {
+        this.repository_name = "";
+        this.error = "";
+    }
+    async createRepository(event: Event): Promise<void> {
+        event.preventDefault();
+        this.is_loading = true;
+        this.error = "";
+        try {
+            const repository = await postRepository(getProjectId(), this.repository_name);
+            window.location.href = repository.html_url;
+        } catch (e) {
+            const { error } = await e.response.json();
+            const error_code = Number.parseInt(error.code, 10);
+            if (error_code === 400) {
+                this.error = this.$gettext(
+                    'Repository name is not well formatted or is already used. Allowed characters: a-zA-Z0-9/_.- and max length is 255, no slashes at the beginning or the end, and repositories names must not finish with ".git".'
+                );
+            } else if (error_code === 401) {
+                this.error = this.$gettext(
+                    "You don't have permission to create Git repositories as you are not Git administrator."
+                );
+            } else if (error_code === 404) {
+                this.error = this.$gettext("Project not found");
+            } else {
+                this.error = this.$gettext("An error occurred while creating the repository.");
             }
-        },
-    },
-};
+            this.is_loading = false;
+        }
+    }
+}
 </script>

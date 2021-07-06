@@ -26,16 +26,21 @@
         />
     </div>
 </template>
-<script>
-import { mapGetters, mapState } from "vuex";
+<script lang="ts">
+import Vue from "vue";
+import { Component } from "vue-property-decorator";
+import { Getter, State } from "vuex-class";
 import GitRepository from "./GitRepository.vue";
+import type { Folder, FormattedGitLabRepository, Repository } from "../type";
 
-export default {
-    name: "RepositoryList",
-    components: { GitRepository },
-    computed: {
-        ...mapState(["is_loading_initial"]),
-        ...mapGetters(["getFilteredRepositoriesByLastUpdateDate"]),
-    },
-};
+@Component({ components: { GitRepository } })
+export default class RepositoryList extends Vue {
+    @State
+    readonly is_loading_initial!: boolean | number;
+
+    @Getter
+    readonly getFilteredRepositoriesByLastUpdateDate!: Array<
+        Repository | FormattedGitLabRepository | Folder
+    >;
+}
 </script>

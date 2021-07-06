@@ -19,7 +19,7 @@
 
 <template>
     <a
-        v-bind:href="pullrequest_url"
+        v-bind:href="pullrequest_url()"
         class="git-pullrequest-badge-link"
         v-if="numberPullRequest > 0"
     >
@@ -33,21 +33,23 @@
         </span>
     </a>
 </template>
-<script>
+<script lang="ts">
+import Vue from "vue";
+import { Component, Prop } from "vue-property-decorator";
 import { getProjectId } from "../repository-list-presenter";
 
-export default {
-    name: "PullRequestBadge",
-    props: {
-        numberPullRequest: Number,
-        repositoryId: Number,
-    },
-    computed: {
-        pullrequest_url() {
-            return `/plugins/git/?action=pull-requests&group_id=${getProjectId()}&repo_id=${
-                this.repositoryId
-            }#/dashboard`;
-        },
-    },
-};
+@Component
+export default class PullRequestBadge extends Vue {
+    @Prop({ required: true })
+    readonly numberPullRequest!: number;
+
+    @Prop({ required: true })
+    readonly repositoryId!: number;
+
+    pullrequest_url(): string {
+        return `/plugins/git/?action=pull-requests&group_id=${getProjectId()}&repo_id=${
+            this.repositoryId
+        }#/dashboard`;
+    }
+}
 </script>

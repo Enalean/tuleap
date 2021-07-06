@@ -19,27 +19,29 @@
 
 <template>
     <div v-if="hasError" class="tlp-alert-danger">
-        {{ message }}
+        {{ message() }}
     </div>
 </template>
-<script>
-import { mapGetters } from "vuex";
+<script lang="ts">
 import { ERROR_TYPE_NO_GIT, ERROR_TYPE_UNKNOWN_ERROR } from "../constants";
+import { Component } from "vue-property-decorator";
+import Vue from "vue";
+import { Getter } from "vuex-class";
 
-export default {
-    name: "ErrorMessage",
-    computed: {
-        message() {
-            switch (this.$store.state.error_message_type) {
-                case ERROR_TYPE_NO_GIT:
-                    return this.$gettext("Git plugin is not activated");
-                case ERROR_TYPE_UNKNOWN_ERROR:
-                    return this.$gettext("An error occurred during your last action.");
-                default:
-                    return "";
-            }
-        },
-        ...mapGetters(["hasError"]),
-    },
-};
+@Component
+export default class ErrorMessage extends Vue {
+    @Getter
+    readonly hasError!: boolean;
+
+    message(): string {
+        switch (this.$store.state.error_message_type) {
+            case ERROR_TYPE_NO_GIT:
+                return this.$gettext("Git plugin is not activated");
+            case ERROR_TYPE_UNKNOWN_ERROR:
+                return this.$gettext("An error occurred during your last action.");
+            default:
+                return "";
+        }
+    }
+}
 </script>

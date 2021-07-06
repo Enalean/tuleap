@@ -450,7 +450,6 @@ describe("Store getters", () => {
                     gitlab_repository_url: "https://example.com/MyPath/MyRepo",
                     gitlab_repository_id: 1,
                 },
-                additional_information: [],
             } as Repository;
 
             const state = {
