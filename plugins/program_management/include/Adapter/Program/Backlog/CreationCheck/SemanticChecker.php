@@ -56,17 +56,26 @@ final class SemanticChecker implements CheckSemantic
         SourceTrackerCollection $source_tracker_collection
     ): bool {
         $tracker_ids = $source_tracker_collection->getSourceTrackerIds();
+
+        $errors = [];
+
         if ($this->semantic_title_dao->getNbOfTrackerWithoutSemanticTitleDefined($tracker_ids) > 0) {
-            $this->logger->error("Semantic 'Title' is not well configured. Please check semantic of timebox tracker and mirrored timebox trackers.");
-            return false;
+            $errors[] = sprintf(
+                "Semantic 'Title' is not well configured. Please check semantic of trackers #%s.",
+                implode(", #", $tracker_ids)
+            );
         }
         if ($this->semantic_description_dao->getNbOfTrackerWithoutSemanticDescriptionDefined($tracker_ids) > 0) {
-            $this->logger->error("Semantic 'Description' is not well configured. Please check semantic of timebox tracker and mirrored timebox trackers.");
-            return false;
+            $errors[] = sprintf(
+                "Semantic 'Description' is not well configured. Please check semantic of trackers #%s.",
+                implode(", #", $tracker_ids)
+            );
         }
         if (! $this->areTimeFrameSemanticsAligned($tracker_ids)) {
-            $this->logger->error("Semantic 'Timeframe' is not well configured. Please check semantic of timebox tracker and mirrored timebox trackers.");
-            return false;
+            $errors[] = sprintf(
+                "Semantic 'Timeframe' is not well configured. Please check semantic of trackers #%s.",
+                implode(", #", $tracker_ids)
+            );
         }
         if (
             $this->semantic_status_checker->isStatusWellConfigured(
@@ -74,7 +83,15 @@ final class SemanticChecker implements CheckSemantic
                 $source_tracker_collection
             ) === false
         ) {
-            $this->logger->error("Semantic 'Status' is not well configured. Please check semantic of timebox tracker and mirrored timebox trackers.");
+            $errors[] = sprintf(
+                "Semantic 'Status' is not well configured. Please check semantic of trackers #%s.",
+                implode(", #", $tracker_ids)
+            );
+        }
+
+        if (count($errors) > 0) {
+            $this->logger->error(implode(PHP_EOL, $errors));
+
             return false;
         }
 
@@ -92,6 +109,7 @@ final class SemanticChecker implements CheckSemantic
         if (! $this->semantic_timeframe_dao->areTimeFrameSemanticsUsingSameTypeOfField($tracker_ids)) {
             return false;
         }
+
         return true;
     }
 }

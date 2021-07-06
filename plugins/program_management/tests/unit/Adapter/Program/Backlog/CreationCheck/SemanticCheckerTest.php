@@ -126,45 +126,26 @@ final class SemanticCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertFalse($this->logger->hasErrorRecords());
     }
 
-    public function testItReturnsFalseIfOneMilestoneTrackerDoesNotHaveTitleSemantic(): void
+    public function testItReturnsFalseIfSomethingIsIncorrect(): void
     {
         $this->title_dao->method('getNbOfTrackerWithoutSemanticTitleDefined')
             ->willReturn(1);
-
-        self::assertFalse(
-            $this->checker->areTrackerSemanticsWellConfigured($this->program_increment_tracker, $this->source_trackers)
-        );
-        self::assertTrue($this->logger->hasRecords('error'));
-    }
-
-    public function testItReturnsFalseIfOneMilestoneTrackerDoesNotHaveDescriptionSemantic(): void
-    {
-        $this->title_dao->method('getNbOfTrackerWithoutSemanticTitleDefined')
-            ->willReturn(0);
         $this->description_dao->method('getNbOfTrackerWithoutSemanticDescriptionDefined')
             ->willReturn(1);
-
-        self::assertFalse(
-            $this->checker->areTrackerSemanticsWellConfigured($this->program_increment_tracker, $this->source_trackers)
-        );
-        self::assertTrue($this->logger->hasErrorThatContains('Description'));
-    }
-
-    public function testItReturnsFalseIfOneMilestoneTrackerDoesNotHaveTimeFrameSemantic(): void
-    {
-        $this->title_dao->method('getNbOfTrackerWithoutSemanticTitleDefined')
-            ->willReturn(0);
-        $this->description_dao->method('getNbOfTrackerWithoutSemanticDescriptionDefined')
-            ->willReturn(0);
         $this->semantic_status_checker->method('isStatusWellConfigured')
-            ->willReturn(true);
+            ->willReturn(false);
         $this->timeframe_dao->method('getNbOfTrackersWithoutTimeFrameSemanticDefined')
             ->willReturn(1);
+        $this->timeframe_dao->method('areTimeFrameSemanticsUsingSameTypeOfField')
+            ->willReturn(true);
 
         self::assertFalse(
             $this->checker->areTrackerSemanticsWellConfigured($this->program_increment_tracker, $this->source_trackers)
         );
+        self::assertTrue($this->logger->hasErrorThatContains('Title'));
+        self::assertTrue($this->logger->hasErrorThatContains('Description'));
         self::assertTrue($this->logger->hasErrorThatContains('Timeframe'));
+        self::assertTrue($this->logger->hasErrorThatContains('Status'));
     }
 
     public function testItReturnsFalseIfTimeFrameSemanticsDontUseTheSameFieldType(): void
@@ -184,25 +165,5 @@ final class SemanticCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->checker->areTrackerSemanticsWellConfigured($this->program_increment_tracker, $this->source_trackers)
         );
         self::assertTrue($this->logger->hasErrorThatContains('Timeframe'));
-    }
-
-    public function testItReturnsFalseIfOneStatusSemanticIsNotWellConfigured(): void
-    {
-        $this->title_dao->method('getNbOfTrackerWithoutSemanticTitleDefined')
-            ->willReturn(0);
-        $this->description_dao->method('getNbOfTrackerWithoutSemanticDescriptionDefined')
-            ->willReturn(0);
-        $this->timeframe_dao->method('getNbOfTrackersWithoutTimeFrameSemanticDefined')
-            ->willReturn(0);
-        $this->timeframe_dao->method('areTimeFrameSemanticsUsingSameTypeOfField')
-            ->willReturn(true);
-        $this->semantic_status_checker->expects(self::once())
-            ->method('isStatusWellConfigured')
-            ->willReturn(false);
-
-        self::assertFalse(
-            $this->checker->areTrackerSemanticsWellConfigured($this->program_increment_tracker, $this->source_trackers)
-        );
-        self::assertTrue($this->logger->hasErrorThatContains('Status'));
     }
 }
