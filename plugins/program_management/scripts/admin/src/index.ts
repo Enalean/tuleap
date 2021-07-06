@@ -20,6 +20,7 @@
 import { getPOFileFromLocale, initGettext } from "@tuleap/core/scripts/tuleap/gettext/gettext-init";
 import { removeTeam } from "./remove-team";
 import { displayTeamsToAggregate } from "./display-teams-to-aggregate";
+import { addTeamInProgram } from "./add-team";
 
 document.addEventListener("DOMContentLoaded", async () => {
     const language = document.body.dataset.userLocale;
@@ -41,11 +42,13 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (!app) {
         throw new Error("Program Management Administration does not exist");
     }
-    const program_id = app.dataset.programId;
-    if (!program_id) {
+    const program_id_data = app.dataset.programId;
+    if (!program_id_data) {
         throw new Error("Program id does not exist");
     }
+    const program_id = Number.parseInt(program_id_data, 10);
 
     await displayTeamsToAggregate(gettext_provider, document);
-    removeTeam(Number.parseInt(program_id, 10));
+    removeTeam(program_id);
+    addTeamInProgram(program_id, document);
 });
