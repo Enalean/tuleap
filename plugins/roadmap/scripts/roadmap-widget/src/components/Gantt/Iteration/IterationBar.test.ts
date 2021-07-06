@@ -28,7 +28,7 @@ import type { IterationsState } from "../../../store/iterations/type";
 import type { TasksState } from "../../../store/tasks/type";
 
 describe("IterationBar", () => {
-    describe("should adjust the height of the iteration according to the number of rows so that we have borders of the iteration that take all the height", () => {
+    describe("should adjust the height of the iteration according to the number of visible rows so that we have borders of the iteration that take all the height", () => {
         it("when there is many rows", () => {
             const wrapper = shallowMount(IterationBar, {
                 propsData: {
@@ -52,7 +52,11 @@ describe("IterationBar", () => {
                                 new Date("2020-01-30T13:42:08+02:00"),
                                 "en-US"
                             ),
-                            "tasks/rows": [{} as Row, {} as Row],
+                            "tasks/rows": [
+                                { is_shown: true } as Row,
+                                { is_shown: false } as Row,
+                                { is_shown: true } as Row,
+                            ],
                         },
                     }),
                 },
@@ -61,7 +65,7 @@ describe("IterationBar", () => {
             expect(wrapper.element.style.height).toBe("106px");
         });
 
-        it("when there is many rows but the iteration is at level 1 and there is another level under", () => {
+        it("when there are many visible rows but the iteration is at level 1 and there is another level under", () => {
             const wrapper = shallowMount(IterationBar, {
                 propsData: {
                     iteration: {
@@ -86,7 +90,11 @@ describe("IterationBar", () => {
                                 new Date("2020-01-30T13:42:08+02:00"),
                                 "en-US"
                             ),
-                            "tasks/rows": [{} as Row, {} as Row],
+                            "tasks/rows": [
+                                { is_shown: true } as Row,
+                                { is_shown: false } as Row,
+                                { is_shown: true } as Row,
+                            ],
                         },
                     }),
                 },
