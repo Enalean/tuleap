@@ -216,7 +216,8 @@
 }
 
 #siteadmin-homepage-users,
-#siteadmin-homepage-projects {
+#siteadmin-homepage-projects,
+#siteadmin-homepage-browsers-stats {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
@@ -224,14 +225,16 @@
 }
 
 .siteadmin-homepage-users-legend,
-.siteadmin-homepage-projects-legend {
+.siteadmin-homepage-projects-legend,
+.siteadmin-homepage-browsers-stats-legend {
     display: flex;
     align-items: center;
     text-decoration: none;
 }
 
 .siteadmin-homepage-users-legend-text-span,
-.siteadmin-homepage-projects-legend-text-span {
+.siteadmin-homepage-projects-legend-text-span,
+.siteadmin-homepage-browsers-stats-legend-text-span {
     color: var(--tlp-dimmed-color);
     font-size: 12px;
     line-height: 18px;
@@ -239,12 +242,14 @@
 }
 
 .siteadmin-homepage-users-legend-selected,
-.siteadmin-homepage-projects-legend-selected {
+.siteadmin-homepage-projects-legend-selected,
+.siteadmin-homepage-browsers-stats-legend-selected {
     font-weight: 600;
 }
 
 .siteadmin-homepage-users-legend-color-span,
-.siteadmin-homepage-projects-legend-color-span {
+.siteadmin-homepage-projects-legend-color-span,
+.siteadmin-homepage-browsers-stats-legend-color-span {
     flex: 0 0 auto;
     width: 12px;
     height: 12px;
@@ -259,7 +264,8 @@
 }
 
 .siteadmin-homepage-users-legend-color-suspended,
-.siteadmin-homepage-projects-legend-color-suspended {
+.siteadmin-homepage-projects-legend-color-suspended,
+.siteadmin-homepage-browsers-stats-legend-color-supported {
     background-color: #cccccc;
 }
 
@@ -268,7 +274,8 @@
 }
 
 .siteadmin-homepage-users-legend-color-deleted,
-.siteadmin-homepage-projects-legend-color-deleted {
+.siteadmin-homepage-projects-legend-color-deleted,
+.siteadmin-homepage-browsers-stats-legend-color-really-outdated {
     background-color: var(--tlp-danger-color);
 }
 
@@ -304,7 +311,8 @@
 }
 
 .siteadmin-homepage-users-slice-suspended,
-.siteadmin-homepage-projects-slice-suspended {
+.siteadmin-homepage-projects-slice-suspended,
+.siteadmin-homepage-browsers-stats-slice-supported {
     > path {
         fill: #cccccc;
     }
@@ -325,7 +333,8 @@
 }
 
 .siteadmin-homepage-users-slice-deleted,
-.siteadmin-homepage-projects-slice-deleted {
+.siteadmin-homepage-projects-slice-deleted,
+.siteadmin-homepage-browsers-stats-slice-really-outdated {
     > path {
         fill: var(--tlp-danger-color);
     }

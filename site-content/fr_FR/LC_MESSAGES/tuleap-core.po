@@ -433,6 +433,9 @@ msgstr "Activer la gestion synchronisée de l'appartenance au projet"
 msgid "Active"
 msgstr "Actif"
 
+msgid "Active sessions browser statistics"
+msgstr "Statistiques navigateur sur les sessions actives"
+
 msgid "Add"
 msgstr "Ajouter"
 
@@ -4139,6 +4142,9 @@ msgstr "Voir les membres"
 msgid "View most recent logins"
 msgstr "Afficher les connections récentes"
 
+msgid "View recommended browsers"
+msgstr "Voir les navigateurs recommandés"
+
 msgid "Visibility"
 msgstr "Visibilité"
 
@@ -4894,11 +4900,17 @@ msgstr "trié par"
 msgid "successfully"
 msgstr "avec succès"
 
+msgid "supported browsers"
+msgstr "navigateurs supportés"
+
 msgid "suspended"
 msgstr "suspendu"
 
 msgid "system"
 msgstr "système"
+
+msgid "unsupported browsers"
+msgstr "navigateurs non supportés"
 
 msgid "view"
 msgstr "consulter"
