@@ -67,6 +67,23 @@ final class ProjectRegistrationBaseChecker implements ProjectRegistrationChecker
             );
         }
 
+        $this->verifyCompatibilityProjectVisibilityWithCurrentInstanceMode($project_creation_data, $errors_collection);
+
         return $errors_collection;
+    }
+
+    private function verifyCompatibilityProjectVisibilityWithCurrentInstanceMode(
+        ProjectCreationData $project_creation_data,
+        ProjectRegistrationErrorsCollection $errors_collection
+    ): void {
+        $are_restricted_enabled      = \ForgeConfig::areRestrictedUsersAllowed();
+        $selected_project_visibility = $project_creation_data->getAccess();
+
+        if (
+            ! $are_restricted_enabled &&
+            ($selected_project_visibility === \Project::ACCESS_PRIVATE_WO_RESTRICTED || $selected_project_visibility === \Project::ACCESS_PUBLIC_UNRESTRICTED)
+        ) {
+            $errors_collection->addError(new ProjectVisibilityNeedsRestrictedUsersException($selected_project_visibility));
+        }
     }
 }

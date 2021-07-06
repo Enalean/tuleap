@@ -60,9 +60,15 @@ final class ProjectRegistrationBaseCheckerTest extends TestCase
         );
     }
 
-    public function testItCollectsAllDataErrors(): void
+
+    /**
+     * @testWith [true, true]
+     *           [false, false]
+     */
+    public function testItCollectsAllDataErrors(bool $project_is_public, bool $project_allow_restricted): void
     {
         ForgeConfig::set("enable_not_mandatory_description", 0);
+        ForgeConfig::set(\ForgeAccess::CONFIG, \ForgeAccess::REGULAR);
 
         $user = UserTestBuilder::aUser()->build();
 
@@ -73,6 +79,7 @@ final class ProjectRegistrationBaseCheckerTest extends TestCase
 
         $data->setUnixName("not:val_id");
         $data->setFullName("Not vaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaalid");
+        $data->setAccessFromProjectData(['is_public' => $project_is_public, 'allow_restricted' => $project_allow_restricted]);
 
         $this->rule_project_name
             ->expects(self::once())
@@ -100,10 +107,11 @@ final class ProjectRegistrationBaseCheckerTest extends TestCase
         );
 
         self::assertNotEmpty($errors_collection->getErrors());
-        self::assertCount(3, $errors_collection->getErrors());
+        self::assertCount(4, $errors_collection->getErrors());
         self::assertInstanceOf(ProjectInvalidShortNameException::class, $errors_collection->getErrors()[0]);
         self::assertInstanceOf(ProjectInvalidFullNameException::class, $errors_collection->getErrors()[1]);
         self::assertInstanceOf(ProjectDescriptionMandatoryException::class, $errors_collection->getErrors()[2]);
+        self::assertInstanceOf(ProjectVisibilityNeedsRestrictedUsersException::class, $errors_collection->getErrors()[3]);
     }
 
     public function testItCollectionIsEmptyIfAllIsOK(): void

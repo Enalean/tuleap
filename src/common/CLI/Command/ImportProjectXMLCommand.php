@@ -29,6 +29,7 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use SystemEventProcessor_Factory;
 use Tuleap\CLI\ConsoleLogger;
+use Tuleap\Project\Registration\RegistrationErrorException;
 use Tuleap\Project\XML\Import;
 use Tuleap\Project\XML\Import\ImportConfig;
 use Tuleap\Project\XML\Import\ImportNotValidException;
@@ -211,7 +212,7 @@ class ImportProjectXMLCommand extends Command
             foreach ($exception->getErrors() as $parse_error) {
                 $broker_log->error('XML: ' . $parse_error . ' line:' . $exception->getSourceXMLForError($parse_error));
             }
-        } catch (ImportNotValidException $exception) {
+        } catch (ImportNotValidException | RegistrationErrorException $exception) {
             if ($exception->getMessage() !== '') {
                 $broker_log->error($exception->getMessage());
             } else {

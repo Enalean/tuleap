@@ -121,30 +121,6 @@ final class ProjectCreationDataTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertEquals(Project::ACCESS_PRIVATE_WO_RESTRICTED, $project_data->getAccess());
     }
 
-    public function testItThrowAnExceptionWithUnrestrictedProjectsOnNonRestrictedPlatform(): void
-    {
-        ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::ANONYMOUS);
-
-        $xml           = simplexml_load_string(file_get_contents(__DIR__ . '/_fixtures/ProjectCreationData/project_with_services.xml'));
-        $xml['access'] = 'unrestricted';
-
-        $this->expectException(Tuleap\Project\XML\Import\ImportNotValidException::class);
-
-        ProjectCreationData::buildFromXML($xml, $this->xml_rngvalidator, $this->service_manager);
-    }
-
-    public function testItThrowAnExceptionWithPrivateWoRestrictedProjectsOnNonRestrictedPlatform(): void
-    {
-        ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::ANONYMOUS);
-
-        $xml           = simplexml_load_string(file_get_contents(__DIR__ . '/_fixtures/ProjectCreationData/project_with_services.xml'));
-        $xml['access'] = 'private-wo-restr';
-
-        $this->expectException(Tuleap\Project\XML\Import\ImportNotValidException::class);
-
-        ProjectCreationData::buildFromXML($xml, $this->xml_rngvalidator, $this->service_manager);
-    }
-
     public function testItCreatesProjectWithDefaultPlatformAccessWhenDataNotInXML(): void
     {
         ForgeConfig::set('sys_is_project_public', 1);
@@ -189,12 +165,10 @@ final class ProjectCreationDataTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $web_payload = [
             'project' => [
-                'is_public'           => $is_public ? '1' : '0',
+                'is_public'        => $is_public ? '1' : '0',
+                'allow_restricted' => $allow_restricted ? '1' : '0',
             ],
         ];
-        if ($allow_restricted) {
-            $web_payload['project']['allow_restricted'] = '1';
-        }
 
         $project_data = ProjectCreationData::buildFromFormArray(
             $this->default_project_visibility_retriever,

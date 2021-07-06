@@ -37,6 +37,7 @@ use Tuleap\Project\Registration\MaxNumberOfProjectReachedForUserException;
 use Tuleap\Project\Registration\ProjectDescriptionMandatoryException;
 use Tuleap\Project\Registration\ProjectInvalidFullNameException;
 use Tuleap\Project\Registration\ProjectInvalidShortNameException;
+use Tuleap\Project\Registration\RegistrationErrorException;
 use Tuleap\Project\Registration\RegistrationForbiddenException;
 use Tuleap\Project\Registration\Template\InvalidTemplateException;
 use Tuleap\Project\Registration\Template\InvalidXMLTemplateNameException;
@@ -116,7 +117,7 @@ class RestProjectCreator
             throw new RestException(400, $exception->getMessage());
         } catch (MissingMandatoryFieldException $exception) {
             throw new RestException(400, $exception->getMessage());
-        } catch (ImportNotValidException $exception) {
+        } catch (ImportNotValidException | RegistrationErrorException $exception) {
             throw new RestException(400, $exception->getMessage());
         }
     }
