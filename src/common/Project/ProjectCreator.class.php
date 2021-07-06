@@ -125,10 +125,6 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
      */
     private $label_dao;
     /**
-     * @var DefaultProjectVisibilityRetriever
-     */
-    private $default_project_visibility_retriever;
-    /**
      * @var SynchronizedProjectMembershipDuplicator
      */
     private $synchronized_project_membership_duplicator;
@@ -161,7 +157,6 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
         \Tuleap\FRS\LicenseAgreement\LicenseAgreementFactory $frs_license_agreement_factory,
         ProjectDashboardDuplicator $dashboard_duplicator,
         LabelDao $label_dao,
-        DefaultProjectVisibilityRetriever $default_project_visibility_retriever,
         SynchronizedProjectMembershipDuplicator $synchronized_project_membership_duplicator,
         EventManager $event_manager,
         \Tuleap\Project\Admin\DescriptionFields\FieldUpdator $field_updator,
@@ -178,7 +173,6 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
         $this->ugroup_duplicator                          = $ugroup_duplicator;
         $this->dashboard_duplicator                       = $dashboard_duplicator;
         $this->label_dao                                  = $label_dao;
-        $this->default_project_visibility_retriever       = $default_project_visibility_retriever;
         $this->synchronized_project_membership_duplicator = $synchronized_project_membership_duplicator;
         $this->frs_license_agreement_factory              = $frs_license_agreement_factory;
         $this->event_manager                              = $event_manager;
@@ -256,7 +250,6 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
             new LicenseAgreementFactory(new LicenseAgreementDao()),
             $duplicator,
             new LabelDao(),
-            new DefaultProjectVisibilityRetriever(),
             new SynchronizedProjectMembershipDuplicator(new SynchronizedProjectMembershipDao()),
             $event_manager,
             new \Tuleap\Project\Admin\DescriptionFields\FieldUpdator(

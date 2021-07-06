@@ -325,7 +325,6 @@ final class ProjectCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
                 Mockery::mock(LicenseAgreementFactory::class),
                 $this->dashboard_duplicator,
                 $this->label_dao,
-                new DefaultProjectVisibilityRetriever(),
                 $this->synchronized_project_membership_duplicator,
                 $this->event_manager,
                 $this->field_updator,
