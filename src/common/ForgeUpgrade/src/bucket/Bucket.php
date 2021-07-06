@@ -19,27 +19,22 @@
  * along with ForgeUpgrade. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'UpgradeNotCompleteException.php';
-require_once 'ApiNotFoundException.php';
-require_once 'db/Db.php';
+use Psr\Log\LoggerInterface;
 
 /**
  * A bucket is a migration scenario
  */
-abstract class ForgeUpgrade_Bucket
+abstract class ForgeUpgrade_Bucket // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 {
-    protected $log;
+    protected LoggerInterface $log;
     protected $api;
 
-    protected $dryRun = true;
-    protected $path   = '';
+    protected bool $dryRun = true;
+    protected $path        = '';
 
-    /**
-     * Constructor
-     */
-    public function __construct()
+    final public function __construct(LoggerInterface $logger)
     {
-        $this->log = Logger::getLogger(self::class);
+        $this->log = $logger;
     }
 
     public function setAllApi(array $api)
@@ -135,12 +130,6 @@ abstract class ForgeUpgrade_Bucket
     public function getDryRun()
     {
         return $this->dryRun();
-    }
-
-    public function setLoggerParent(Logger $log)
-    {
-        $this->log->setParent($log);
-        //$this->db->setLoggerParent($this->log);
     }
 
     public function setPath($path)

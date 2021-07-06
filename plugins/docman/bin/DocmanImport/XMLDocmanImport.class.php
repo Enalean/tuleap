@@ -22,6 +22,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+use Psr\Log\LoggerInterface;
+
 class XMLDocmanImport
 {
 
@@ -99,9 +101,8 @@ class XMLDocmanImport
      * @param string $wsdl     WSDL location
      * @param string $login    Login
      * @param string $password Password
-     * @param Logger $logger   Logger
      */
-    public function __construct($command, $project, $projectId, $wsdl, $login, $password, $force, $reorder, $importMessageMetadata, $autoRetry, Logger $logger)
+    public function __construct($command, $project, $projectId, $wsdl, $login, $password, $force, $reorder, $importMessageMetadata, $autoRetry, LoggerInterface $logger)
     {
         $this->force                 = $force;
         $this->reorder               = $reorder;
@@ -788,7 +789,7 @@ class XMLDocmanImport
      */
     protected function recurseOnNode(SimpleXMLElement $node, $parentId)
     {
-        list(
+        [
              $title,
              $description,
              $status,
@@ -798,7 +799,7 @@ class XMLDocmanImport
              $updateDate,
              $metadata,
              $permissions
-        ) = $this->getItemInformation($node);
+        ] = $this->getItemInformation($node);
 
         $ordering = 'end';
 
@@ -808,13 +809,13 @@ class XMLDocmanImport
                 $itemId = false;
 
                 foreach ($node->xpath('versions/version') as $version) {
-                    list(
+                    [
                         $file,
                         $label,
                         $changelog,
                         $author,
                         $date
-                    ) = $this->getVersionInformation($version);
+                    ] = $this->getVersionInformation($version);
 
                     $fileName = (string) $version->filename;
                     $fileType = (string) $version->filetype;
@@ -836,13 +837,13 @@ class XMLDocmanImport
                 $iFiles = 0;
                 $itemId = false;
                 foreach ($node->xpath('versions/version') as $version) {
-                    list(
+                    [
                         $file,
                         $label,
                         $changelog,
                         $author,
                         $date
-                    ) = $this->getVersionInformation($version);
+                    ] = $this->getVersionInformation($version);
 
                     // If this is the initial version
                     if ($iFiles == 0) {

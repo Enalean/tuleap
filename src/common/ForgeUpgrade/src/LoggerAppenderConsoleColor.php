@@ -19,7 +19,7 @@
  * along with ForgeUpgrade. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class LoggerAppenderConsoleColor extends LoggerAppenderConsole
+class LoggerAppenderConsoleColor // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
 
     public const BLACK   = "\033[30m";
@@ -59,23 +59,5 @@ class LoggerAppenderConsoleColor extends LoggerAppenderConsole
             $message = $color . $message . self::NOCOLOR;
         }
         return $message;
-    }
-
-    /**
-     * Display coloried messages on console
-     *
-     * @return string
-     */
-    public function colorize(LoggerLoggingEvent $event)
-    {
-        return $this->chooseColor($event->getLevel()->toString(), $this->layout->format($event));
-    }
-
-
-    public function append(LoggerLoggingEvent $event)
-    {
-        if (is_resource($this->fp) && $this->layout !== null) {
-            return fwrite($this->fp, $this->colorize($event));
-        }
     }
 }

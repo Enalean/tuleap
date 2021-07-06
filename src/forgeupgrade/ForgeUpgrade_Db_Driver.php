@@ -115,27 +115,4 @@ class ForgeUpgrade_Db_Driver extends ForgeUpgrade_Db_Driver_Abstract
         }
         return $options;
     }
-
-    /**
-     * Return a PDO logger appender that will reference the given bucket id
-     *
-     * @param ForgeUpgrade_Bucket $bucket The bucket
-     *
-     * @return LoggerAppenderPDO
-     */
-    public function getBucketLoggerAppender(ForgeUpgrade_Bucket $bucket)
-    {
-        $this->initOptions();
-
-        $logger = new LoggerAppenderPDO();
-        $logger->setUser($this->user);
-        $logger->setPassword($this->password);
-        $logger->setDSN($this->dsn);
-        $logger->setTable('forge_upgrade_log');
-        $logger->setInsertSql('INSERT INTO forge_upgrade_log (id, bucket_id, timestamp, logger, level, message, thread, file, line) VALUES (NULL,' . $bucket->getId() . ',?,?,?,?,?,?,?)');
-        $logger->setInsertPattern('%d,%c,%p,%m,%t,%F,%L');
-        $logger->activateOptions();
-
-        return $logger;
-    }
 }
