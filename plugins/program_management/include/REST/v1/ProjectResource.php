@@ -67,6 +67,7 @@ use Tuleap\ProgramManagement\Domain\Program\Plan\PlanTrackerException;
 use Tuleap\ProgramManagement\Domain\Program\Plan\ProgramAccessException;
 use Tuleap\ProgramManagement\Domain\Program\Plan\ProjectIsNotAProgramException;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
+use Tuleap\ProgramManagement\Domain\Program\ProgramIsTeamException;
 use Tuleap\ProgramManagement\Domain\Program\ProgramTrackerException;
 use Tuleap\ProgramManagement\Domain\Team\Creation\TeamCreator;
 use Tuleap\ProgramManagement\Domain\Team\TeamException;
@@ -269,7 +270,7 @@ final class ProjectResource extends AuthenticatedResource
                 $id,
                 $representation->team_ids
             );
-        } catch (TeamException $e) {
+        } catch (TeamException | ProjectIsNotAProgramException | ProgramIsTeamException $e) {
             throw new RestException(400, $e->getMessage());
         } catch (ProgramAccessException $e) {
             throw new RestException(404, $e->getMessage());
