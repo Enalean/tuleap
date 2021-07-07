@@ -5,7 +5,7 @@
   "license": "GPL-2.0-or-later",
   "private": true,
   "dependencies": {
-    "mustache": "^4.1.0"
+    "mustache": "^4.2.0"
   },
   "devDependencies": {},
   "config": {

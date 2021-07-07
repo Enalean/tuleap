@@ -18,7 +18,7 @@
  */
 
 import { select2 } from "tlp";
-import { render } from "mustache";
+import mustache from "mustache";
 
 document.addEventListener("DOMContentLoaded", () => {
     const select_bot = document.getElementById("select_bot"),
@@ -62,10 +62,10 @@ document.addEventListener("DOMContentLoaded", () => {
                 const format_item =
                     '<img src="{{ src_image }}" class="tlp-avatar-mini"> {{ label }}';
 
-                return render(format_item, { src_image, label });
+                return mustache.render(format_item, { src_image, label });
             }
         }
 
-        return render("{{ text }}", { text: item.text });
+        return mustache.render("{{ text }}", { text: item.text });
     }
 });
