@@ -24,6 +24,8 @@ import type { DocumentException } from "../actions-helpers/handle-errors";
 import { getErrorMessage } from "../actions-helpers/handle-errors";
 import type { ErrorState } from "./module";
 
+const message = "Internal server error";
+
 export async function handleGlobalModalError(
     context: ActionContext<State, State>,
     rest_error: FetchWrapperError
@@ -40,7 +42,6 @@ export async function handleErrorsForModal(
     context: ActionContext<ErrorState, RootState>,
     exception: DocumentException
 ): Promise<void> {
-    const message = "Internal server error";
     if (exception.response === undefined) {
         context.commit("error/setModalError", message);
         throw exception;
@@ -50,5 +51,17 @@ export async function handleErrorsForModal(
         context.commit("error/setModalError", getErrorMessage(json));
     } catch (error) {
         context.commit("error/setModalError", message);
+    }
+}
+
+export async function handleErrorsForLock(
+    context: ActionContext<ErrorState, ErrorState>,
+    exception: DocumentException
+): Promise<void> {
+    try {
+        const json = await exception.response.json();
+        context.commit("error/setLockError", getErrorMessage(json));
+    } catch (error) {
+        context.commit("error/setLockError", message);
     }
 }
