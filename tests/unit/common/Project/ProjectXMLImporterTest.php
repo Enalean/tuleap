@@ -25,7 +25,6 @@ declare(strict_types=1);
 use Mockery as M;
 use Tuleap\Project\Admin\Categories\ProjectCategoriesUpdater;
 use Tuleap\Project\Admin\Service\ProjectServiceActivator;
-use Tuleap\Project\DefaultProjectVisibilityRetriever;
 use Tuleap\Project\Registration\ProjectRegistrationChecker;
 use Tuleap\Project\UGroups\Membership\DynamicUGroups\ProjectMemberAdder;
 use Tuleap\Project\XML\XMLFileContentRetriever;
@@ -99,7 +98,6 @@ class ProjectXMLImporterTest extends \Tuleap\Test\PHPUnit\TestCase
             M::spy(\Tuleap\FRS\LicenseAgreement\LicenseAgreementFactory::class),
             M::spy(\Tuleap\Dashboard\Project\ProjectDashboardDuplicator::class),
             M::spy(\Tuleap\Project\Label\LabelDao::class),
-            new DefaultProjectVisibilityRetriever(),
             M::spy(\Tuleap\Project\UGroups\SynchronizedProjectMembershipDuplicator::class),
             Mockery::mock(EventManager::class),
             Mockery::mock(\Tuleap\Project\Admin\DescriptionFields\FieldUpdator::class),
