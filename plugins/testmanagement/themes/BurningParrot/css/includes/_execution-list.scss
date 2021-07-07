@@ -153,28 +153,28 @@ $height-testmanagement-header: calc(var(--tlp-title-spacing) + var(--tlp-small-s
         display: table-cell;
         padding: 2px;
         background: var(--tlp-success-color);
-        color: var(--tlp-ui-white);
+        color: var(--tlp-white-color);
     }
 
     > .tests-failed {
         display: table-cell;
         padding: 2px;
         background: var(--tlp-danger-color);
-        color: var(--tlp-ui-white);
+        color: var(--tlp-white-color);
     }
 
     > .tests-blocked {
         display: table-cell;
         padding: 2px;
         background: var(--tlp-info-color);
-        color: var(--tlp-ui-white);
+        color: var(--tlp-white-color);
     }
 
     > .tests-notrun {
         display: table-cell;
         padding: 2px;
         background: var(--tlp-dimmed-color);
-        color: var(--tlp-ui-white);
+        color: var(--tlp-white-color);
     }
 }
 

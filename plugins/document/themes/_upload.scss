@@ -66,18 +66,18 @@ $progress-bar-background-color: var(--tlp-neutral-normal-color);
 .tlp-table > tbody > tr.document-tree-item-highlighted > td {
     border-bottom-color: var(--tlp-main-color-transparent-15);
     background: var(--tlp-main-color-transparent-15);
-    color: var(--tlp-ui-white);
+    color: var(--tlp-white-color);
 
     .document-folder-toggle {
         visibility: hidden;
     }
 
     .fa {
-        color: var(--tlp-ui-white);
+        color: var(--tlp-white-color);
     }
 
     .document-badge-avatar-username {
-        color: var(--tlp-ui-white);
+        color: var(--tlp-white-color);
     }
 }
 

@@ -33,11 +33,11 @@
                         &.select-item-label-color-#{$color-name} {
                             border-color: map-get($colors, "primary");
                             background: map-get($colors, "primary");
-                            color: var(--tlp-ui-white);
+                            color: var(--tlp-white-color);
 
                             > .select2-selection__choice__remove {
                                 &::before {
-                                    color: var(--tlp-ui-white);
+                                    color: var(--tlp-white-color);
                                 }
                             }
 
@@ -79,7 +79,7 @@
             @each $color-name, $colors in swatch-colors.$tlp-swatch-color-map {
                 &.select-item-label-color-#{$color-name} {
                     background: map-get($colors, "primary");
-                    color: var(--tlp-ui-white);
+                    color: var(--tlp-white-color);
                 }
             }
         }

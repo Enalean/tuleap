@@ -31,7 +31,7 @@ $profile-max-width: 720px;
         }
 
         .logo-svg-fill-default-text-color {
-            fill: var(--tlp-ui-white);
+            fill: var(--tlp-white-color);
         }
     }
 
@@ -59,7 +59,7 @@ $profile-max-width: 720px;
     padding: 0 var(--tlp-jumbo-spacing) var(--tlp-jumbo-spacing);
     border-bottom: 5px solid var(--tlp-main-color);
     background: $profile-header-background;
-    color: var(--tlp-ui-white);
+    color: var(--tlp-white-color);
 }
 
 .user-profile-basic-information {

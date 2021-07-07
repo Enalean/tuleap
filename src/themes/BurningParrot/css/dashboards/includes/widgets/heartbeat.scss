@@ -60,7 +60,7 @@ $timeline-color: var(--tlp-main-color-lighter-90);
         left: 10px;
         width: 4px;
         height: 100%;
-        background: linear-gradient(to top, var(--tlp-ui-white) 0, $timeline-color var(--tlp-medium-spacing), transparent var(--tlp-medium-spacing) + 1px), linear-gradient(to bottom, var(--tlp-ui-white) 0, $timeline-color var(--tlp-medium-spacing));
+        background: linear-gradient(to top, var(--tlp-white-color) 0, $timeline-color var(--tlp-medium-spacing), transparent var(--tlp-medium-spacing) + 1px), linear-gradient(to bottom, var(--tlp-white-color) 0, $timeline-color var(--tlp-medium-spacing));
     }
 }
 
@@ -110,7 +110,7 @@ $timeline-color: var(--tlp-main-color-lighter-90);
     background: var(--tlp-main-color);
 
     > .tuleap-svg {
-        fill: var(--tlp-ui-white);
+        fill: var(--tlp-white-color);
     }
 }
 

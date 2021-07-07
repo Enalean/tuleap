@@ -47,12 +47,12 @@
     transition: background 0.1s linear;
     border: 1px solid var(--tlp-neutral-normal-color);
     border-radius: 4px;
-    background: var(--tlp-ui-white);
+    background: var(--tlp-white-color);
     cursor: pointer;
 
     &:hover {
         transition: background 0.1s linear;
-        background: var(--tlp-ui-white-darker-02);
+        background: var(--tlp-white-color-darker-02);
     }
 
     &:not(:last-child) {
@@ -83,7 +83,7 @@
     padding: var(--tlp-small-spacing) var(--tlp-medium-spacing);
     border: 1px solid var(--tlp-neutral-normal-color);
     border-top: 0;
-    background: var(--tlp-ui-white);
+    background: var(--tlp-white-color);
 }
 
 .program-increment-content {
@@ -91,7 +91,7 @@
     border: 1px solid var(--tlp-neutral-normal-color);
     border-top: 0;
     border-radius: 0 0 4px 4px;
-    background: var(--tlp-ui-white-darker-02);
+    background: var(--tlp-white-color-darker-02);
 
     &:last-child {
         border-bottom: 1px solid var(--tlp-neutral-normal-color);

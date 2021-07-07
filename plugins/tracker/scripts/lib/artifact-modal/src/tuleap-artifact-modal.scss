@@ -99,7 +99,7 @@ fieldset {
     margin: 0 0 var(--tlp-medium-spacing);
     border: 1px solid var(--tlp-neutral-normal-color);
     border-radius: 3px;
-    background: var(--tlp-ui-white);
+    background: var(--tlp-white-color);
 }
 
 .tuleap-artifact-modal-followups {
@@ -111,7 +111,7 @@ fieldset {
     padding: var(--tlp-medium-spacing);
     overflow-y: auto;
     border-left: 1px solid var(--tlp-neutral-normal-color);
-    background: var(--tlp-ui-white);
+    background: var(--tlp-white-color);
 
     &.invert-order {
         > .tuleap-artifact-modal-followups-comments {

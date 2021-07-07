@@ -47,7 +47,7 @@
     background: var(--tlp-fade-background-color);
 
     &:not(:last-child) {
-        border-right: 1px solid var(--tlp-ui-white);
+        border-right: 1px solid var(--tlp-white-color);
     }
 }
 

@@ -91,12 +91,12 @@
     width: 50px;
     min-width: unset;
     min-height: 100px;
-    background: var(--tlp-ui-white);
+    background: var(--tlp-white-color);
     cursor: pointer;
 
     &.taskboard-cell-collapsed-hover,
     &:hover {
-        background: var(--tlp-ui-white-darker-02);
+        background: var(--tlp-white-color-darker-02);
     }
 
     &.taskboard-cell-collapsed-hover[data-drek-over] {

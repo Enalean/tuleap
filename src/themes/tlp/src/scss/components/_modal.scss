@@ -103,14 +103,14 @@ $tlp-modal-transition: 100ms ease-out;
     border-top-left-radius: $tlp-modal-radius;
     border-top-right-radius: $tlp-modal-radius;
     background: var(--tlp-main-color);
-    color: var(--tlp-ui-white);
+    color: var(--tlp-white-color);
 }
 
 .tlp-modal-close {
     padding: 0;
     border: 0;
     background-color: unset;
-    color: var(--tlp-ui-white);
+    color: var(--tlp-white-color);
     font-size: 24px;
     font-weight: 600;
     cursor: pointer;
@@ -126,7 +126,7 @@ $tlp-modal-transition: 100ms ease-out;
 
 .tlp-modal-title {
     margin: 0;
-    color: var(--tlp-ui-white);
+    color: var(--tlp-white-color);
     font-size: 24px;
     line-height: 28px;
 }
@@ -140,7 +140,7 @@ $tlp-modal-transition: 100ms ease-out;
 .tlp-modal-feedback {
     padding: $tlp-modal-padding;
     border-bottom: 1px solid var(--tlp-neutral-light-color);
-    background: var(--tlp-ui-white);
+    background: var(--tlp-white-color);
 
     &:empty {
         display: none;
@@ -152,7 +152,7 @@ $tlp-modal-transition: 100ms ease-out;
     max-height: 70vh;
     padding: $tlp-modal-padding;
     overflow-y: auto;
-    background: var(--tlp-ui-white);
+    background: var(--tlp-white-color);
 }
 
 .tlp-modal-body-with-sections {
@@ -180,7 +180,7 @@ $tlp-modal-transition: 100ms ease-out;
     border-top: 1px solid var(--tlp-neutral-light-color);
     border-bottom-right-radius: $tlp-modal-radius;
     border-bottom-left-radius: $tlp-modal-radius;
-    background: var(--tlp-ui-white);
+    background: var(--tlp-white-color);
 
     &.tlp-modal-footer-large {
         min-height: calc(2 * #{$tlp-modal-padding} + #{buttons.$tlp-button-large-height});

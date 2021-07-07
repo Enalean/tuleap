@@ -48,7 +48,7 @@ $form-element-small-font-size: 0.8125rem;
         }
 
         .list-picker-multiple-search-section-disabled > .list-picker-search-field {
-            background: var(--tlp-ui-white);
+            background: var(--tlp-white-color);
             cursor: not-allowed;
         }
     }
@@ -70,13 +70,13 @@ $form-element-small-font-size: 0.8125rem;
         align-items: center;
         border: 1px solid $form-element-border-color;
         border-radius: 4px;
-        background: var(--tlp-ui-white);
+        background: var(--tlp-white-color);
         font-size: 0.875rem;
 
         &.list-picker-single {
             height: $form-element-height;
             padding: 0 ($form-element-padding-horizontal * 2 + $form-element-select-background-size) 0 $form-element-padding-horizontal;
-            background: var(--tlp-ui-white) url("../images/list-picker-background.png") no-repeat;
+            background: var(--tlp-white-color) url("../images/list-picker-background.png") no-repeat;
             background-position: right $form-element-padding-horizontal center;
         }
 
@@ -84,7 +84,7 @@ $form-element-small-font-size: 0.8125rem;
             position: relative;
             min-height: $form-element-height;
             padding: 0 52px 5px 6px;
-            background: var(--tlp-ui-white) url("../images/list-picker-multi-background.svg") no-repeat;
+            background: var(--tlp-white-color) url("../images/list-picker-multi-background.svg") no-repeat;
             background-position: right 10px top 17px;
             background-size: 15px 5px;
         }
@@ -110,7 +110,7 @@ $form-element-small-font-size: 0.8125rem;
 .list-picker-dropdown-option-value {
     &.list-picker-item-highlighted {
         background-color: var(--tlp-main-color);
-        color: var(--tlp-ui-white);
+        color: var(--tlp-white-color);
     }
 
     &[aria-selected="true"]::before {
@@ -129,7 +129,7 @@ $form-element-small-font-size: 0.8125rem;
         color: var(--tlp-main-color);
 
         &.list-picker-item-highlighted {
-            color: var(--tlp-ui-white);
+            color: var(--tlp-white-color);
         }
     }
 }

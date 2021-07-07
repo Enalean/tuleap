@@ -99,7 +99,7 @@ header.pinned > .header-container {
     padding: var(--tlp-small-spacing) var(--tlp-medium-spacing);
     overflow: hidden;
     border: 0;
-    background: var(--tlp-ui-white);
+    background: var(--tlp-white-color);
     color: var(--tlp-typo-default-text-color);
     font-family: var(--tlp-font-family);
     font-size: 0.875rem;
@@ -174,7 +174,7 @@ header.pinned > .header-container {
         max-width: calc(#{$dropdown-width} - (var(--tlp-small-spacing) + 40px + var(--tlp-small-spacing) + var(--tlp-small-spacing)));
         margin: 0 0 4px;
         overflow: hidden;
-        color: var(--tlp-ui-white);
+        color: var(--tlp-white-color);
         font-size: 0.875rem;
         font-weight: 600;
         text-overflow: ellipsis;

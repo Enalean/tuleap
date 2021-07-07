@@ -30,7 +30,7 @@
     transition: border-color 75ms ease-in-out, background-color 75ms ease-in-out;
     border: 1px solid var(--tlp-neutral-normal-color);
     border-radius: 3px;
-    background: var(--tlp-ui-white);
+    background: var(--tlp-white-color);
     cursor: move;
 
     @each $color-name, $colors in swatch-colors.$tlp-swatch-color-map {
@@ -81,7 +81,7 @@
     @keyframes blink {
         0% {
             border-color: var(--tlp-neutral-normal-color);
-            background: var(--tlp-ui-white);
+            background: var(--tlp-white-color);
         }
 
         50% {
@@ -91,7 +91,7 @@
 
         100% {
             border-color: var(--tlp-neutral-normal-color);
-            background: var(--tlp-ui-white);
+            background: var(--tlp-white-color);
         }
     }
 

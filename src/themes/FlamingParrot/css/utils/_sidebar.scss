@@ -115,7 +115,7 @@ $spacing-between-nav-items: 5px;
     .active > .project-sidebar-nav-item:focus,
     .active > .project-sidebar-nav-item:hover {
         @extend %background-action-hover;
-        color: var(--tlp-ui-white);
+        color: var(--tlp-white-color);
     }
 }
 
@@ -131,7 +131,7 @@ $spacing-between-nav-items: 5px;
     &:hover,
     &:focus {
         @extend %background-action-hover;
-        color: var(--tlp-ui-white);
+        color: var(--tlp-white-color);
     }
 }
 
@@ -206,7 +206,7 @@ $spacing-between-nav-items: 5px;
 
 .sidebar-about:hover > .sidebar-about-version,
 .sidebar-copyright a:hover {
-    color: var(--tlp-ui-white);
+    color: var(--tlp-white-color-transparent-20);
     text-decoration: none;
 }
 
@@ -275,20 +275,20 @@ $spacing-between-nav-items: 5px;
     margin: 0 0 0 calc(-1 * var(--tlp-small-spacing));
     padding: var(--tlp-small-spacing);
     border-radius: 4px;
-    color: var(--tlp-ui-white);
+    color: var(--tlp-white-color);
     font-size: 1.125rem;
     font-weight: 600;
     line-height: 1.3125rem;
     text-decoration: none;
 
     &:visited {
-        color: var(--tlp-ui-white);
+        color: var(--tlp-white-color);
     }
 
     &:focus,
     &:hover {
         @extend %background-action-hover;
-        color: var(--tlp-ui-white);
+        color: var(--tlp-white-color);
         text-decoration: none;
     }
 }
@@ -309,7 +309,7 @@ $spacing-between-nav-items: 5px;
     &:focus,
     &:hover {
         @extend %background-action-hover;
-        color: var(--tlp-ui-white);
+        color: var(--tlp-white-color);
         text-decoration: none;
     }
 }
@@ -336,7 +336,7 @@ $spacing-between-nav-items: 5px;
     .fa-bullhorn {
         position: relative;
         top: -1px;
-        color: var(--tlp-ui-white);
+        color: var(--tlp-white-color);
         font-size: 0.6rem;
         text-shadow: 0 0 1px rgba(0, 0, 0, 0.5);
     }
@@ -521,7 +521,7 @@ $spacing-between-nav-items: 5px;
 .project-sidebar-linked-projects-label {
     @extend %uppercase-title;
     margin: 0 0 0 var(--tlp-small-spacing);
-    color: var(--tlp-ui-white-transparent-10);
+    color: var(--tlp-white-color-transparent-10);
 }
 
 .project-sidebar-linked-projects-list {
@@ -552,7 +552,7 @@ $spacing-between-nav-items: 5px;
 
     &:hover,
     &:focus {
-        color: var(--tlp-ui-white);
+        color: var(--tlp-white-color);
         text-decoration: none;
 
         > .project-sidebar-linked-projects-item-name {

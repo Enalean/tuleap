@@ -65,7 +65,7 @@ kbd {
     padding: 2px var(--tlp-small-spacing);
     border-radius: 4px;
     background: var(--tlp-dark-color);
-    color: var(--tlp-ui-white);
+    color: var(--tlp-white-color);
     font-family: -apple-system, BlinkMacSystemFont, Roboto, "Helvetica Neue", sans-serif;
     font-size: 0.875rem;
     line-height: 1.25rem;
@@ -169,7 +169,7 @@ legend {
     margin: var(--tlp-large-spacing) 0 var(--tlp-medium-spacing);
     padding: 0 var(--tlp-medium-spacing);
     border-bottom: 0;
-    background-color: var(--tlp-ui-white);
+    background-color: var(--tlp-white-color);
     box-shadow: inset 0 1px 0 #e3e5ed, inset 0 -1px 0 #e3e5ed;
     font-size: 0.75rem;
     font-weight: 500;
@@ -441,23 +441,23 @@ legend {
     @include btn(var(--tlp-neutral-light-color), var(--tlp-neutral-light-color-transparent-40), var(--tlp-neutral-light-color-darker-10), var(--tlp-dark-color));
 
     &.btn-primary {
-        @include btn(var(--tlp-main-color), var(--tlp-main-color-transparent-40), var(--tlp-main-color-darker-10), var(--tlp-ui-white));
+        @include btn(var(--tlp-main-color), var(--tlp-main-color-transparent-40), var(--tlp-main-color-darker-10), var(--tlp-white-color));
     }
 
     &.btn-danger {
-        @include btn(var(--tlp-danger-color), var(--tlp-danger-color-transparent-40), var(--tlp-danger-color-darker-10), var(--tlp-ui-white));
+        @include btn(var(--tlp-danger-color), var(--tlp-danger-color-transparent-40), var(--tlp-danger-color-darker-10), var(--tlp-white-color));
     }
 
     &.btn-success {
-        @include btn(var(--tlp-success-color), var(--tlp-success-color-transparent-40), var(--tlp-success-color-darker-10), var(--tlp-ui-white));
+        @include btn(var(--tlp-success-color), var(--tlp-success-color-transparent-40), var(--tlp-success-color-darker-10), var(--tlp-white-color));
     }
 
     &.btn-warning {
-        @include btn(var(--tlp-warning-color), var(--tlp-warning-color-transparent-40), var(--tlp-warning-color-darker-10), var(--tlp-ui-white));
+        @include btn(var(--tlp-warning-color), var(--tlp-warning-color-transparent-40), var(--tlp-warning-color-darker-10), var(--tlp-white-color));
     }
 
     &.btn-info {
-        @include btn(var(--tlp-info-color), var(--tlp-info-color-transparent-40), var(--tlp-info-color-darker-10), var(--tlp-ui-white));
+        @include btn(var(--tlp-info-color), var(--tlp-info-color-transparent-40), var(--tlp-info-color-darker-10), var(--tlp-white-color));
     }
 
     &:hover:not(:disabled):not(.disabled):not(.active) {
@@ -534,7 +534,7 @@ select.input-small {
     border-top-left-radius: 3px;
     border-top-right-radius: 3px;
     background: var(--tlp-main-color);
-    color: var(--tlp-ui-white);
+    color: var(--tlp-white-color);
 
     &.modal-header-error {
         background: var(--tlp-danger-color);
@@ -555,7 +555,7 @@ select.input-small {
 
     p {
         order: 2;
-        color: var(--tlp-ui-white);
+        color: var(--tlp-white-color);
     }
 
     > .close {
@@ -564,7 +564,7 @@ select.input-small {
         order: 3;
         margin-top: 0;
         opacity: 1;
-        color: var(--tlp-ui-white);
+        color: var(--tlp-white-color);
         font-family: inherit;
         font-size: 24px;
         font-style: normal;
@@ -577,7 +577,7 @@ select.input-small {
     padding: 20px;
     border-top: 1px solid #f3f3f3;
     border-radius: 0 0 3px 3px;
-    background-color: var(--tlp-ui-white);
+    background-color: var(--tlp-white-color);
     text-align: right;
 }
 
@@ -595,7 +595,7 @@ select.input-small {
     background-color: transparent;
 
     h4 {
-        color: var(--tlp-ui-white);
+        color: var(--tlp-white-color);
     }
 }
 
@@ -632,7 +632,7 @@ select.input-small {
         position: sticky;
         top: variables-common.$navbar-height;
         border-bottom: 0;
-        background: var(--tlp-ui-white);
+        background: var(--tlp-white-color);
         background-clip: padding-box;
         box-shadow: inset 0 -2px 0 0 var(--tlp-main-color);
     }

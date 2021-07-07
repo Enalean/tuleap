@@ -38,7 +38,7 @@ $tlp-dropdown-transition: 75ms ease-out;
     transition: opacity $tlp-dropdown-transition, transform $tlp-dropdown-transition, box-shadow $tlp-dropdown-transition;
     border-bottom: 0;
     border-radius: $tlp-dropdown-radius;
-    background: var(--tlp-ui-white);
+    background: var(--tlp-white-color);
     box-shadow: none;
     pointer-events: none;
 
@@ -61,7 +61,7 @@ $tlp-dropdown-transition: 75ms ease-out;
 
     &::after {
         bottom: 100%;
-        border-bottom-color: var(--tlp-ui-white);
+        border-bottom-color: var(--tlp-white-color);
     }
 
     &.tlp-dropdown-menu-on-icon {
@@ -80,7 +80,7 @@ $tlp-dropdown-transition: 75ms ease-out;
 
         &::after {
             top: 100%;
-            border-top-color: var(--tlp-ui-white);
+            border-top-color: var(--tlp-white-color);
             border-bottom-color: transparent;
         }
     }
@@ -151,7 +151,7 @@ $tlp-dropdown-transition: 75ms ease-out;
 .tlp-dropdown-menu-item {
     padding: var(--tlp-small-spacing) var(--tlp-medium-spacing);
     border: 0;
-    background: var(--tlp-ui-white);
+    background: var(--tlp-white-color);
     color: var(--tlp-main-color);
     font-family: var(--tlp-font-family);
     font-size: 0.8125rem;
@@ -264,7 +264,7 @@ $flatpickr-animation: 100ms ease-in-out showFlatPickr;
     justify-content: space-around;
     border-radius: $tlp-dropdown-radius $tlp-dropdown-radius 0 0;
     background: var(--tlp-main-color);
-    color: var(--tlp-ui-white);
+    color: var(--tlp-white-color);
 
     .flatpickr-prev-month,
     .flatpickr-next-month {
@@ -279,11 +279,11 @@ $flatpickr-animation: 100ms ease-in-out showFlatPickr;
         height: 25px;
         float: none;
         border-radius: 50%;
-        color: var(--tlp-ui-white);
+        color: var(--tlp-white-color);
         font-size: 16px;
 
         &:hover {
-            background: var(--tlp-ui-white);
+            background: var(--tlp-white-color);
             color: var(--tlp-main-color);
         }
 
@@ -306,7 +306,7 @@ $flatpickr-animation: 100ms ease-in-out showFlatPickr;
     span.cur-month {
         // stylelint-enable
         margin: 0;
-        color: var(--tlp-ui-white);
+        color: var(--tlp-white-color);
         font-weight: 600;
 
         &:hover {
@@ -326,7 +326,7 @@ $flatpickr-animation: 100ms ease-in-out showFlatPickr;
         input.cur-year {
             // stylelint-enable
             padding: 0 10px 0 0;
-            color: var(--tlp-ui-white);
+            color: var(--tlp-white-color);
             font-family: var(--tlp-font-family);
             font-size: 20px;
 
@@ -339,13 +339,13 @@ $flatpickr-animation: 100ms ease-in-out showFlatPickr;
 
 .flatpickr-weekdays {
     background: var(--tlp-main-color);
-    color: var(--tlp-ui-white);
+    color: var(--tlp-white-color);
 }
 
 //stylelint-disable-next-line selector-no-qualifying-type
 span.flatpickr-weekday {
     background: var(--tlp-main-color);
-    color: var(--tlp-ui-white-transparent-30);
+    color: var(--tlp-white-color-transparent-30);
     font-weight: 600;
 }
 
@@ -408,7 +408,7 @@ span.flatpickr-weekday {
         /* stylelint-enable */
         border-color: transparent;
         background: var(--tlp-main-color);
-        color: var(--tlp-ui-white);
+        color: var(--tlp-white-color);
         font-weight: 600;
 
         &:hover {
@@ -416,7 +416,7 @@ span.flatpickr-weekday {
             background: var(--tlp-main-color-transparent-20);
 
             &.today {
-                color: var(--tlp-ui-white);
+                color: var(--tlp-white-color);
             }
         }
     }

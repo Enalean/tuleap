@@ -21,7 +21,7 @@
     flex: 1 1 auto;
     padding: var(--tlp-medium-spacing);
     background-color: var(--tlp-background-color-lighter-50);
-    background-image: linear-gradient(to bottom, var(--tlp-ui-white), transparent 30%);
+    background-image: linear-gradient(to bottom, var(--tlp-white-color), transparent 30%);
 }
 
 #timeline {
@@ -52,7 +52,7 @@
     padding: var(--tlp-small-spacing);
     border: 1px solid var(--tlp-neutral-normal-color);
     border-radius: 4px;
-    background: var(--tlp-ui-white);
+    background: var(--tlp-white-color);
 }
 
 .pull-request-add-comment-area {
@@ -98,7 +98,7 @@
         padding: var(--tlp-medium-spacing);
         border: 1px solid var(--tlp-neutral-normal-color);
         border-radius: 4px;
-        background: var(--tlp-ui-white);
+        background: var(--tlp-white-color);
 
         &::before {
             content: "";
@@ -149,7 +149,7 @@
         > .pull-request-event-content {
             &::before {
                 z-index: 2;
-                border-color: transparent var(--tlp-ui-white) transparent transparent;
+                border-color: transparent var(--tlp-white-color) transparent transparent;
             }
 
             &::after {
@@ -178,7 +178,7 @@
         &.is-outdated,
         &.timeline-event {
             > .pull-request-event-content::before {
-                border-color: transparent transparent transparent var(--tlp-ui-white);
+                border-color: transparent transparent transparent var(--tlp-white-color);
             }
 
             > .pull-request-event-content::after {

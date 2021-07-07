@@ -61,7 +61,7 @@
             box-shadow: $button-bar-checked-box-shadow;
 
             &.tlp-button-outline {
-                border: 1px solid var(--tlp-ui-white);
+                border: 1px solid var(--tlp-white-color);
                 background: var(--tlp-main-color-lighter-80);
             }
         }
@@ -72,7 +72,7 @@
             box-shadow: $button-bar-checked-box-shadow;
 
             &.tlp-button-outline {
-                border: 1px solid var(--tlp-ui-white);
+                border: 1px solid var(--tlp-white-color);
                 background: var(--tlp-dark-color-lighter-90);
                 color: var(--tlp-dark-color);
             }
@@ -84,7 +84,7 @@
             box-shadow: $button-bar-checked-box-shadow;
 
             &.tlp-button-outline {
-                border: 1px solid var(--tlp-ui-white);
+                border: 1px solid var(--tlp-white-color);
                 background: var(--tlp-info-color-transparent-80);
             }
         }
@@ -95,7 +95,7 @@
             box-shadow: $button-bar-checked-box-shadow;
 
             &.tlp-button-outline {
-                border: 1px solid var(--tlp-ui-white);
+                border: 1px solid var(--tlp-white-color);
                 background: var(--tlp-success-color-lighter-80);
             }
         }
@@ -106,7 +106,7 @@
             box-shadow: $button-bar-checked-box-shadow;
 
             &.tlp-button-outline {
-                border: 1px solid var(--tlp-ui-white);
+                border: 1px solid var(--tlp-white-color);
                 background: var(--tlp-warning-color-lighter-80);
             }
         }
@@ -117,7 +117,7 @@
             box-shadow: $button-bar-checked-box-shadow;
 
             &.tlp-button-outline {
-                border: 1px solid var(--tlp-ui-white);
+                border: 1px solid var(--tlp-white-color);
                 background: var(--tlp-danger-color-lighter-80);
             }
         }

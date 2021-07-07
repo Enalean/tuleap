@@ -131,7 +131,7 @@ $kanban-column-footer-height: 50px;
     flex: 0 1 auto;
     width: 150px;
     margin: 0 0 0 var(--tlp-small-spacing);
-    background: var(--tlp-ui-white);
+    background: var(--tlp-white-color);
 }
 
 .kanban-filtered-info {
@@ -180,14 +180,14 @@ $kanban-column-footer-height: 50px;
         flex: 1 1 $kanban-column-closed-width;
         min-width: $kanban-column-closed-width;
         overflow: hidden;
-        background: var(--tlp-ui-white);
+        background: var(--tlp-white-color);
         cursor: pointer;
 
         &:hover {
-            background: var(--tlp-ui-white-darker-02);
+            background: var(--tlp-white-color-darker-02);
 
             > .kanban-column-header {
-                background: var(--tlp-ui-white-darker-02);
+                background: var(--tlp-white-color-darker-02);
             }
         }
 
@@ -285,7 +285,7 @@ $kanban-column-footer-height: 50px;
     transition: background 100ms;
     border-top: 2px solid var(--tlp-main-color);
     border-bottom: 1px solid var(--tlp-neutral-normal-color);
-    background: var(--tlp-ui-white);
+    background: var(--tlp-white-color);
 }
 
 .kanban-column-header-toggle {
@@ -376,7 +376,7 @@ kanban-column {
 .created-in-closed-column {
     @keyframes blink {
         0% {
-            background: var(--tlp-ui-white);
+            background: var(--tlp-white-color);
         }
 
         50% {
@@ -384,7 +384,7 @@ kanban-column {
         }
 
         100% {
-            background: var(--tlp-ui-white);
+            background: var(--tlp-white-color);
         }
     }
 

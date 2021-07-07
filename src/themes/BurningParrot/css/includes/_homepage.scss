@@ -34,7 +34,7 @@ body.homepage > #main-container {
     position: relative;
     flex-direction: column;
     align-items: center;
-    background-image: linear-gradient(to bottom, var(--tlp-background-color), var(--tlp-ui-white) 50%);
+    background-image: linear-gradient(to bottom, var(--tlp-background-color), var(--tlp-white-color) 50%);
 
     @media screen and (max-width: $homepage-small-screen-width) {
         padding: 40px 20px;
@@ -137,7 +137,7 @@ body.homepage > #main-container {
     padding: 30px 40px 40px;
     border: 1px solid var(--tlp-main-color);
     border-radius: 4px;
-    background: var(--tlp-ui-white);
+    background: var(--tlp-white-color);
     box-shadow: 0 8px 15px 0 transparentize(#000000, 0.95);
 }
 
@@ -209,7 +209,7 @@ body.homepage > #main-container {
 
 .homepage-background-light-circle {
     stroke: var(--tlp-main-color);
-    fill: var(--tlp-ui-white);
+    fill: var(--tlp-white-color);
 }
 
 .homepage-bottom-content {
@@ -253,7 +253,7 @@ body.homepage > #main-container {
     border: 1px solid var(--tlp-main-color);
     border-radius: 3px;
     background: var(--tlp-dark-color);
-    color: var(--tlp-ui-white);
+    color: var(--tlp-white-color);
 }
 
 .homepage-statistic-main {
@@ -331,7 +331,7 @@ body.homepage > #main-container {
 
 .homepage-news-title {
     margin: 0 0 7px;
-    color: var(--tlp-ui-white);
+    color: var(--tlp-white-color);
     font-size: 24px;
     line-height: 32px;
     text-transform: none;

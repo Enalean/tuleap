@@ -58,13 +58,13 @@
             padding: calc(var(--tlp-medium-spacing) - 2px) var(--tlp-large-spacing) var(--tlp-medium-spacing);
             border: 0;
             border-top: 2px solid transparent;
-            color: var(--tlp-ui-white);
+            color: var(--tlp-white-color);
 
             &:hover,
             &:focus,
             &.tlp-tab-active {
                 @include background.background-for-links();
-                border-top-color: var(--tlp-ui-white);
+                border-top-color: var(--tlp-white-color);
             }
 
             &:hover > .tlp-tab-menu,
@@ -88,35 +88,35 @@
     .breadcrumb-item:not(.breadcrumb-item-disabled):hover > .breadcrumb-link,
     .breadcrumb-item:not(.breadcrumb-item-disabled):focus-within > .breadcrumb-link {
         @include background.background-for-links();
-        color: var(--tlp-ui-white);
+        color: var(--tlp-white-color);
     }
 
     .breadcrumb-switchable:hover > .breadcrumb-link::after,
     .breadcrumb-switchable:focus-within > .breadcrumb-link::after {
-        color: var(--tlp-ui-white);
+        color: var(--tlp-white-color);
     }
 
     .breadcrumb-project-privacy-icon {
         &.fa-lock,
         &.fa-tlp-lock-plus-r {
-            background: var(--tlp-ui-white);
+            background: var(--tlp-white-color);
             color: var(--tlp-dark-color);
         }
 
         &.fa-lock-open,
         &.fa-tlp-unlock-plus-r {
             @include background.background-for-links();
-            color: var(--tlp-ui-white);
+            color: var(--tlp-white-color);
         }
     }
 
     .breadcrumb-project-privacy-icon-with-flags {
         @include background.background-for-links();
-        color: var(--tlp-ui-white);
+        color: var(--tlp-white-color);
 
         > .fas {
             background: none;
-            color: var(--tlp-ui-white);
+            color: var(--tlp-white-color);
         }
     }
 
@@ -127,8 +127,8 @@
 
     .dashboard-project-header-members,
     .dashboard-project-header-access {
-        border-color: var(--tlp-ui-white);
-        background: var(--tlp-ui-white-transparent-80);
+        border-color: var(--tlp-white-color);
+        background: var(--tlp-white-color-transparent-80);
     }
 }
 
@@ -196,7 +196,7 @@
     transition: opacity 300ms ease-in-out;
     opacity: 0;
     background: var(--tlp-dark-color-transparent-30);
-    color: var(--tlp-ui-white);
+    color: var(--tlp-white-color);
     font-size: 0.75rem;
 }
 
@@ -225,7 +225,7 @@
         padding: var(--tlp-large-spacing);
         animation: footerAppear ease-out 150ms;
         border-top: 0;
-        background: var(--tlp-ui-white-transparent-10);
+        background: var(--tlp-white-color-transparent-10);
         box-shadow: 0 -1px 2px 0 rgba(0, 0, 0, 0.1);
         text-align: center;
         @keyframes footerAppear {

@@ -60,34 +60,34 @@
 
     .breadcrumb-item:not(.breadcrumb-item-disabled):hover > .breadcrumb-link {
         @include background.background-for-links();
-        color: var(--tlp-ui-white);
+        color: var(--tlp-white-color);
     }
 
     .breadcrumb-switchable:hover > .breadcrumb-link::after {
-        color: var(--tlp-ui-white);
+        color: var(--tlp-white-color);
     }
 
     .breadcrumb-project-privacy-icon {
         &.fa-lock,
         &.fa-tlp-lock-plus-r {
-            background: var(--tlp-ui-white);
+            background: var(--tlp-white-color);
             color: var(--tlp-dark-color);
         }
 
         &.fa-lock-open,
         &.fa-tlp-unlock-plus-r {
             @include background.background-for-links();
-            color: var(--tlp-ui-white);
+            color: var(--tlp-white-color);
         }
     }
 
     .breadcrumb-project-privacy-icon-with-flags {
         @include background.background-for-links();
-        color: var(--tlp-ui-white);
+        color: var(--tlp-white-color);
 
         > .fas {
             background: none;
-            color: var(--tlp-ui-white);
+            color: var(--tlp-white-color);
         }
     }
 
@@ -109,42 +109,42 @@
                 padding: calc(var(--tlp-medium-spacing) - 2px) var(--tlp-large-spacing) var(--tlp-medium-spacing);
                 border: 0;
                 border-top: 2px solid transparent;
-                color: var(--tlp-ui-white);
+                color: var(--tlp-white-color);
 
                 &.active,
                 &:focus,
                 &:hover {
                     @include background.background-for-links();
                     border-bottom: 0;
-                    border-top-color: var(--tlp-ui-white);
+                    border-top-color: var(--tlp-white-color);
 
                     > .caret {
-                        border-top-color: var(--tlp-ui-white);
-                        border-bottom-color: var(--tlp-ui-white);
+                        border-top-color: var(--tlp-white-color);
+                        border-bottom-color: var(--tlp-white-color);
                     }
                 }
             }
 
             &.dropdown.open > a:hover > .caret {
-                border-top-color: var(--tlp-ui-white);
-                border-bottom-color: var(--tlp-ui-white);
+                border-top-color: var(--tlp-white-color);
+                border-bottom-color: var(--tlp-white-color);
             }
 
             &.active {
                 &.open {
-                    color: var(--tlp-ui-white);
+                    color: var(--tlp-white-color);
                 }
 
                 > a {
                     @include background.background-for-links();
                     border-bottom: 0;
-                    border-top-color: var(--tlp-ui-white);
+                    border-top-color: var(--tlp-white-color);
                 }
             }
 
             > .dropdown-toggle > .caret {
-                border-top-color: var(--tlp-ui-white);
-                border-bottom-color: var(--tlp-ui-white);
+                border-top-color: var(--tlp-white-color);
+                border-bottom-color: var(--tlp-white-color);
             }
         }
     }

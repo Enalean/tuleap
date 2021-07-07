@@ -19,7 +19,7 @@
 
 @mixin alternate-background() {
     border-bottom: 1px solid var(--tlp-neutral-normal-color);
-    background: var(--tlp-ui-white);
+    background: var(--tlp-white-color);
 
     &.even,
     &:nth-child(even) {
@@ -28,10 +28,10 @@
 
     &.odd,
     &.odd:nth-child(even) {
-        background: var(--tlp-ui-white);
+        background: var(--tlp-white-color);
     }
 
     &.even + .even {
-        border-left: 1px solid var(--tlp-ui-white);
+        border-left: 1px solid var(--tlp-white-color);
     }
 }

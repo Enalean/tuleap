@@ -37,11 +37,11 @@
 
 .project-banner > p {
     margin: 0;
-    color: var(--tlp-ui-white);
+    color: var(--tlp-white-color);
 }
 
 .project-banner > p > a {
-    color: var(--tlp-ui-white);
+    color: var(--tlp-white-color);
     text-decoration: underline;
 }
 
@@ -51,7 +51,7 @@
     left: -2px;
     align-self: baseline;
     margin-left: 20px;
-    color: var(--tlp-ui-white);
+    color: var(--tlp-white-color);
     cursor: pointer;
 
     &:hover {

@@ -75,7 +75,7 @@ $timeline-color: var(--tlp-main-color-lighter-90);
 }
 
 .release-chart-badge-value {
-    fill: var(--tlp-ui-white);
+    fill: var(--tlp-white-color);
     font-size: 13px;
     font-weight: 600;
 }
@@ -100,7 +100,7 @@ $timeline-color: var(--tlp-main-color-lighter-90);
 
 .release-widget-pie-chart-ttm-slice > path {
     stroke-width: 1.5px;
-    stroke: var(--tlp-ui-white);
+    stroke: var(--tlp-white-color);
 }
 
 .release-widget-pie-chart-ttm-slice-blocked {
@@ -110,7 +110,7 @@ $timeline-color: var(--tlp-main-color-lighter-90);
 
     > text {
         fill: var(--tlp-info-color);
-        text-shadow: var(--tlp-ui-white) 1px 1px, var(--tlp-ui-white) -1px 1px, var(--tlp-ui-white) -1px -1px, var(--tlp-ui-white) 1px -1px, var(--tlp-ui-white) 2px 2px, var(--tlp-ui-white) -2px 2px, var(--tlp-ui-white) -2px -2px, var(--tlp-ui-white) 2px -2px, var(--tlp-ui-white) 3px 3px, var(--tlp-ui-white) -3px 3px, var(--tlp-ui-white) -3px -3px, var(--tlp-ui-white) 3px -3px;
+        text-shadow: var(--tlp-white-color) 1px 1px, var(--tlp-white-color) -1px 1px, var(--tlp-white-color) -1px -1px, var(--tlp-white-color) 1px -1px, var(--tlp-white-color) 2px 2px, var(--tlp-white-color) -2px 2px, var(--tlp-white-color) -2px -2px, var(--tlp-white-color) 2px -2px, var(--tlp-white-color) 3px 3px, var(--tlp-white-color) -3px 3px, var(--tlp-white-color) -3px -3px, var(--tlp-white-color) 3px -3px;
     }
 }
 
@@ -121,7 +121,7 @@ $timeline-color: var(--tlp-main-color-lighter-90);
 
     > text {
         fill: var(--tlp-dimmed-color);
-        text-shadow: var(--tlp-ui-white) 1px 1px, var(--tlp-ui-white) -1px 1px, var(--tlp-ui-white) -1px -1px, var(--tlp-ui-white) 1px -1px, var(--tlp-ui-white) 2px 2px, var(--tlp-ui-white) -2px 2px, var(--tlp-ui-white) -2px -2px, var(--tlp-ui-white) 2px -2px, var(--tlp-ui-white) 3px 3px, var(--tlp-ui-white) -3px 3px, var(--tlp-ui-white) -3px -3px, var(--tlp-ui-white) 3px -3px;
+        text-shadow: var(--tlp-white-color) 1px 1px, var(--tlp-white-color) -1px 1px, var(--tlp-white-color) -1px -1px, var(--tlp-white-color) 1px -1px, var(--tlp-white-color) 2px 2px, var(--tlp-white-color) -2px 2px, var(--tlp-white-color) -2px -2px, var(--tlp-white-color) 2px -2px, var(--tlp-white-color) 3px 3px, var(--tlp-white-color) -3px 3px, var(--tlp-white-color) -3px -3px, var(--tlp-white-color) 3px -3px;
     }
 }
 
@@ -132,7 +132,7 @@ $timeline-color: var(--tlp-main-color-lighter-90);
 
     > text {
         fill: var(--tlp-success-color);
-        text-shadow: var(--tlp-ui-white) 1px 1px, var(--tlp-ui-white) -1px 1px, var(--tlp-ui-white) -1px -1px, var(--tlp-ui-white) 1px -1px, var(--tlp-ui-white) 2px 2px, var(--tlp-ui-white) -2px 2px, var(--tlp-ui-white) -2px -2px, var(--tlp-ui-white) 2px -2px, var(--tlp-ui-white) 3px 3px, var(--tlp-ui-white) -3px 3px, var(--tlp-ui-white) -3px -3px, var(--tlp-ui-white) 3px -3px;
+        text-shadow: var(--tlp-white-color) 1px 1px, var(--tlp-white-color) -1px 1px, var(--tlp-white-color) -1px -1px, var(--tlp-white-color) 1px -1px, var(--tlp-white-color) 2px 2px, var(--tlp-white-color) -2px 2px, var(--tlp-white-color) -2px -2px, var(--tlp-white-color) 2px -2px, var(--tlp-white-color) 3px 3px, var(--tlp-white-color) -3px 3px, var(--tlp-white-color) -3px -3px, var(--tlp-white-color) 3px -3px;
     }
 }
 
@@ -143,7 +143,7 @@ $timeline-color: var(--tlp-main-color-lighter-90);
 
     > text {
         fill: var(--tlp-danger-color);
-        text-shadow: var(--tlp-ui-white) 1px 1px, var(--tlp-ui-white) -1px 1px, var(--tlp-ui-white) -1px -1px, var(--tlp-ui-white) 1px -1px, var(--tlp-ui-white) 2px 2px, var(--tlp-ui-white) -2px 2px, var(--tlp-ui-white) -2px -2px, var(--tlp-ui-white) 2px -2px, var(--tlp-ui-white) 3px 3px, var(--tlp-ui-white) -3px 3px, var(--tlp-ui-white) -3px -3px, var(--tlp-ui-white) 3px -3px;
+        text-shadow: var(--tlp-white-color) 1px 1px, var(--tlp-white-color) -1px 1px, var(--tlp-white-color) -1px -1px, var(--tlp-white-color) 1px -1px, var(--tlp-white-color) 2px 2px, var(--tlp-white-color) -2px 2px, var(--tlp-white-color) -2px -2px, var(--tlp-white-color) 2px -2px, var(--tlp-white-color) 3px 3px, var(--tlp-white-color) -3px 3px, var(--tlp-white-color) -3px -3px, var(--tlp-white-color) 3px -3px;
     }
 }
 
