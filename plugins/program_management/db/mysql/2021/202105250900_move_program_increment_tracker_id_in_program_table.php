@@ -35,71 +35,91 @@ final class b202105250900_move_program_increment_tracker_id_in_program_table ext
 
     public function up(): void
     {
-        $this->db->dbh->beginTransaction();
-        $this->addProgramIncrementTrackerIdColumnInProgram();
-        $this->addProjectIdColumnInPlan();
-        $this->changePlanPrimaryKeyAndDropProgramIncrementTrackerId();
-        $this->db->dbh->commit();
+        $this->dropTemporaryTablesIfExists();
+        $this->createPluginProgramManagementPlan();
+        $this->createPluginProgramManagementProgram();
+        $this->cleanTemporaryTables();
     }
 
-    private function addProgramIncrementTrackerIdColumnInProgram(): void
+    private function dropTemporaryTablesIfExists(): void
     {
-        $this->db->alterTable(
-            'plugin_program_management_plan_config',
-            'tuleap',
-            'program_increment_tracker_id',
-            'ALTER TABLE plugin_program_management_program ADD COLUMN program_increment_tracker_id INT(11) NOT NULL'
-        );
+        $sql = 'DROP TABLE IF EXISTS plugin_program_management_plan_tmp';
+        $this->db->dbh->exec($sql);
 
-        $sql = 'INSERT INTO plugin_program_management_program (program_project_id, program_increment_tracker_id)
-                SELECT group_id, id
-                FROM tracker JOIN plugin_program_management_plan ON (tracker.id = plugin_program_management_plan.program_increment_tracker_id)
-                ON DUPLICATE KEY UPDATE program_increment_tracker_id=id';
-
-        $this->executeSql($sql);
+        $sql = 'DROP TABLE IF EXISTS plugin_program_management_program_tmp';
+        $this->db->dbh->exec($sql);
     }
 
-    private function addProjectIdColumnInPlan(): void
+    private function createPluginProgramManagementPlan(): void
     {
-        $this->db->alterTable(
-            'plugin_program_management_plan',
-            'tuleap',
-            'project_id',
-            'ALTER TABLE plugin_program_management_plan ADD COLUMN project_id INT(11) NOT NULL'
-        );
+        $sql = 'CREATE TABLE plugin_program_management_plan_tmp(
+                    project_id INT(11) NOT NULL,
+                    plannable_tracker_id INT(11) NOT NULL,
+                    PRIMARY KEY (project_id, plannable_tracker_id)
+                ) ENGINE=InnoDB';
 
-        $sql = 'INSERT INTO plugin_program_management_plan (program_increment_tracker_id, project_id, plannable_tracker_id)
-                SELECT id, group_id, plan.plannable_tracker_id
-                FROM tracker JOIN plugin_program_management_plan AS plan ON (tracker.id = plan.program_increment_tracker_id)
-                ON DUPLICATE KEY UPDATE program_increment_tracker_id=id, project_id=group_id, plannable_tracker_id=plan.plannable_tracker_id;';
+        $this->db->createTable('plugin_program_management_plan_tmp', $sql);
 
-        $this->executeSql($sql);
-    }
+        $sql = 'INSERT IGNORE INTO plugin_program_management_plan_tmp (project_id, plannable_tracker_id)
+                SELECT group_id, plan.plannable_tracker_id
+                FROM tracker JOIN plugin_program_management_plan AS plan ON (tracker.id = plan.program_increment_tracker_id);';
 
-    private function changePlanPrimaryKeyAndDropProgramIncrementTrackerId(): void
-    {
-        $sql = "ALTER TABLE plugin_program_management_plan DROP PRIMARY KEY;";
-        $this->executeSql($sql);
-
-        $sql = "ALTER TABLE plugin_program_management_plan ADD PRIMARY KEY (project_id, plannable_tracker_id);";
-        $this->executeSql($sql);
-
-        $sql = "ALTER TABLE plugin_program_management_plan DROP COLUMN program_increment_tracker_id;";
-        $this->executeSql($sql);
-    }
-
-    private function executeSql($sql): void
-    {
-        $result = $this->db->dbh->exec($sql);
-        if ($result === false) {
-            $error_message = implode(', ', $this->db->dbh->errorInfo());
-            $this->rollBackOnError($error_message);
+        $res = $this->db->dbh->exec($sql);
+        if ($res === false) {
+            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while inserting data in plugin_program_management_plan_tmp');
         }
     }
 
-    private function rollBackOnError(string $message): void
+    private function createPluginProgramManagementProgram(): void
     {
-        $this->db->dbh->rollBack();
-        throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete($message);
+        $sql = 'CREATE TABLE plugin_program_management_program_tmp(
+                    program_project_id INT(11) NOT NULL,
+                    program_increment_tracker_id INT(11) NOT NULL,
+                    iteration_tracker_id INT(11) DEFAULT NULL,
+                    iteration_label VARCHAR(255) DEFAULT NULL,
+                    iteration_sub_label VARCHAR(255) DEFAULT NULL,
+                    program_increment_label VARCHAR(255) DEFAULT NULL,
+                    program_increment_sub_label VARCHAR(255) DEFAULT NULL,
+                    PRIMARY KEY (program_project_id)
+                ) ENGINE=InnoDB';
+
+        $this->db->createTable('plugin_program_management_program_tmp', $sql);
+
+        $sql = 'INSERT IGNORE INTO plugin_program_management_program_tmp (
+                   program_project_id,
+                   program_increment_tracker_id,
+                   iteration_tracker_id,
+                   iteration_label,
+                   iteration_sub_label,
+                   program_increment_label,
+                   program_increment_sub_label
+                )
+                SELECT group_id, id, program.iteration_tracker_id, program.iteration_label, program.iteration_sub_label, label.label, label.sub_label
+                FROM tracker
+                    JOIN plugin_program_management_plan ON (tracker.id = plugin_program_management_plan.program_increment_tracker_id)
+                    JOIN plugin_program_management_label_program_increment as label ON (tracker.id = label.program_increment_tracker_id)
+                    JOIN plugin_program_management_program as program ON (tracker.group_id = program.program_project_id)';
+
+        $res = $this->db->dbh->exec($sql);
+        if ($res === false) {
+            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while inserting data in plugin_program_management_program_tmp');
+        }
+    }
+
+    private function cleanTemporaryTables(): void
+    {
+        $sql = 'RENAME TABLE plugin_program_management_program TO plugin_program_management_program_old,
+                             plugin_program_management_program_tmp TO plugin_program_management_program,
+                             plugin_program_management_plan TO plugin_program_management_plan_old,
+                             plugin_program_management_plan_tmp TO plugin_program_management_plan';
+
+        $res = $this->db->dbh->exec($sql);
+
+        if ($res === false) {
+            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occurred while renaming of plugin_program_management_program_tmp and plugin_program_management_plan_tmp');
+        }
+
+        $sql = 'DROP TABLE IF EXISTS plugin_program_management_label_program_increment';
+        $this->db->dbh->exec($sql);
     }
 }
