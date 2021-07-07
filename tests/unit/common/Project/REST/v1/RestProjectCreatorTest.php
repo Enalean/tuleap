@@ -38,8 +38,8 @@ use Service;
 use ServiceManager;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\Glyph\GlyphFinder;
-use Tuleap\Project\Admin\DescriptionFields\FieldUpdator;
 use Tuleap\Project\Admin\DescriptionFields\MissingMandatoryFieldException;
+use Tuleap\Project\Admin\DescriptionFields\ProjectRegistrationSubmittedFieldsCollectionConsistencyChecker;
 use Tuleap\Project\DefaultProjectVisibilityRetriever;
 use Tuleap\Project\Registration\MaxNumberOfProjectReachedForPlatformException;
 use Tuleap\Project\Registration\Template\InvalidXMLTemplateNameException;
@@ -72,10 +72,6 @@ class RestProjectCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $service_manager;
 
-    /**
-     * @var M\LegacyMockInterface|M\MockInterface|FieldUpdator
-     */
-    private $field_updator;
     private $project_manager;
     private $creator;
     private $user;
@@ -86,6 +82,10 @@ class RestProjectCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
      * @var M\LegacyMockInterface|M\MockInterface|TemplateDao
      */
     private $template_dao;
+    /**
+     * @var \PHPUnit\Framework\MockObject\MockObject&ProjectRegistrationSubmittedFieldsCollectionConsistencyChecker
+     */
+    private $fields_collection_consistency_checker;
 
     protected function setUp(): void
     {
@@ -96,9 +96,10 @@ class RestProjectCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->service_manager      = M::mock(ServiceManager::class);
         $this->project_XML_importer = M::mock(ProjectXMLImporter::class);
         $this->template_dao         = M::mock(TemplateDao::class);
-        $this->field_updator        = \Mockery::mock(FieldUpdator::class);
-        $this->field_updator->shouldReceive('updateFromArray')->byDefault();
-        $this->field_updator->shouldReceive('checkFieldConsistency')->byDefault();
+
+        $this->fields_collection_consistency_checker = $this->createMock(
+            ProjectRegistrationSubmittedFieldsCollectionConsistencyChecker::class
+        );
 
         $this->event_manager = \Mockery::mock(\EventManager::class);
         $this->retriever     = \Mockery::mock(ServiceEnableForXmlImportRetriever::class);
@@ -118,7 +119,7 @@ class RestProjectCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
                 $this->template_dao,
                 M::mock(ProjectManager::class)
             ),
-            $this->field_updator
+            $this->fields_collection_consistency_checker
         );
 
         $this->user = new \PFUser(['language_id' => 'en_US']);
@@ -126,8 +127,12 @@ class RestProjectCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->project_post_representation = ProjectPostRepresentation::build(101);
     }
 
-    public function testCreateThrowExceptionWhenUserCannotCreateProjects()
+    public function testCreateThrowExceptionWhenUserCannotCreateProjects(): void
     {
+        $this->fields_collection_consistency_checker
+            ->expects(self::once())
+            ->method('checkFieldConsistency');
+
         $this->project_post_representation->template_id      = 100;
         $this->project_post_representation->shortname        = 'gpig';
         $this->project_post_representation->label            = 'Guinea Pig';
@@ -158,8 +163,12 @@ class RestProjectCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
-    public function testCreateThrowExceptionWhenNeitherTemplateIdNorTemplateNameIsProvided()
+    public function testCreateThrowExceptionWhenNeitherTemplateIdNorTemplateNameIsProvided(): void
     {
+        $this->fields_collection_consistency_checker
+            ->expects(self::once())
+            ->method('checkFieldConsistency');
+
         $this->project_post_representation->template_id       = null;
         $this->project_post_representation->xml_template_name = null;
 
@@ -174,8 +183,12 @@ class RestProjectCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
-    public function testCreateWithDefaultProjectTemplate()
+    public function testCreateWithDefaultProjectTemplate(): void
     {
+        $this->fields_collection_consistency_checker
+            ->expects(self::once())
+            ->method('checkFieldConsistency');
+
         $this->project_post_representation->template_id = 100;
         $this->project_post_representation->shortname   = 'gpig';
         $this->project_post_representation->label       = 'Guinea Pig';
@@ -200,8 +213,12 @@ class RestProjectCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
-    public function testCreateWithDefaultProjectTemplateAndExcludeRestrictedUsers()
+    public function testCreateWithDefaultProjectTemplateAndExcludeRestrictedUsers(): void
     {
+        $this->fields_collection_consistency_checker
+            ->expects(self::once())
+            ->method('checkFieldConsistency');
+
         $this->project_post_representation->template_id      = 100;
         $this->project_post_representation->shortname        = 'gpig';
         $this->project_post_representation->label            = 'Guinea Pig';
@@ -227,8 +244,12 @@ class RestProjectCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
-    public function testCreateFromXMLTemplate()
+    public function testCreateFromXMLTemplate(): void
     {
+        $this->fields_collection_consistency_checker
+            ->expects(self::once())
+            ->method('checkFieldConsistency');
+
         ForgeConfig::set(ProjectManager::SYS_USER_CAN_CHOOSE_PROJECT_PRIVACY, 1);
         ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::RESTRICTED);
 
@@ -292,7 +313,7 @@ class RestProjectCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
-    public function testItThrowsAnExceptionWhenFieldCollectionIsInvalid()
+    public function testItThrowsAnExceptionWhenFieldCollectionIsInvalid(): void
     {
         $this->project_post_representation->template_id      = 100;
         $this->project_post_representation->shortname        = 'gpig';
@@ -310,7 +331,10 @@ class RestProjectCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->project_manager->shouldReceive('getProject')->with($this->project_post_representation->template_id)->andReturn($template_project);
         $this->project_creator->shouldNotReceive('processProjectCreation');
 
-        $this->field_updator->shouldReceive('checkFieldConsistency')->once()->andThrow(new MissingMandatoryFieldException());
+        $this->fields_collection_consistency_checker
+            ->expects(self::once())
+            ->method('checkFieldConsistency')
+            ->willThrowException(new MissingMandatoryFieldException('field'));
 
         $this->expectException(RestException::class);
         $this->expectExceptionCode(400);

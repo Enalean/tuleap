@@ -26,9 +26,8 @@ namespace Tuleap\common\Project\Admin\DescriptionFields;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use ProjectCreationData;
 use Psr\Log\LoggerInterface;
-use Tuleap\Project\Admin\DescriptionFields\FieldDoesNotExistException;
 use Tuleap\Project\Admin\DescriptionFields\FieldUpdator;
-use Tuleap\Project\Admin\DescriptionFields\MissingMandatoryFieldException;
+use Tuleap\Project\Admin\DescriptionFields\ProjectRegistrationSubmittedFieldsCollection;
 use Tuleap\Project\Admin\ProjectDetails\ProjectDetailsDAO;
 use Tuleap\Project\DefaultProjectVisibilityRetriever;
 use Tuleap\Project\DescriptionFieldsFactory;
@@ -75,12 +74,13 @@ final class FieldUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $project_data = ProjectCreationData::buildFromFormArray(
             $this->default_project_visibility_retriever,
             TemplateFromProjectForCreation::fromGlobalProjectAdminTemplate(),
-            [
-                'project' => [
-                    'form_1' => 'My field 1 content',
-                    'form_2' => 'Other content for field 2'
-                ],
-            ]
+            []
+        );
+        $project_data->setDataFields(
+            ProjectRegistrationSubmittedFieldsCollection::buildFromArray([
+                1 => 'My field 1 content',
+                2 => 'Other content for field 2',
+            ])
         );
 
         $this->field_factory->shouldReceive('getAllDescriptionFields')->andReturn(
@@ -105,11 +105,12 @@ final class FieldUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $project_data = ProjectCreationData::buildFromFormArray(
             $this->default_project_visibility_retriever,
             TemplateFromProjectForCreation::fromGlobalProjectAdminTemplate(),
-            [
-                'project' => [
-                    'form_1' => 'My field 1 content'
-                ],
-            ]
+            []
+        );
+        $project_data->setDataFields(
+            ProjectRegistrationSubmittedFieldsCollection::buildFromArray([
+                1 => 'My field 1 content',
+            ])
         );
 
         $this->field_factory->shouldReceive('getAllDescriptionFields')->andReturn(
@@ -125,95 +126,5 @@ final class FieldUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->logger->shouldReceive('debug')->once();
 
         $this->updater->update($project_data, $group_id);
-    }
-
-    public function testItUpdatesFieldFromArray(): void
-    {
-        $group_id = 101;
-        $project  = \Mockery::mock(\Project::class);
-        $project->shouldReceive('getID')->andReturn($group_id);
-        $fields = [
-            1 => 'My field 1 content',
-            2 => 'Other content for field 2'
-        ];
-
-        $this->field_factory->shouldReceive('getAllDescriptionFields')->andReturn(
-            [
-                ['group_desc_id' => 1],
-                ['group_desc_id' => 2],
-                ['group_desc_id' => 3],
-            ]
-        );
-
-        $this->dao->shouldReceive('createGroupDescription')->withArgs([$group_id, 1, 'My field 1 content'])->once()->andReturn(100);
-        $this->dao->shouldReceive('createGroupDescription')->withArgs([$group_id, 2, 'Other content for field 2'])->once()->andReturn(101);
-
-        $this->logger->shouldReceive('debug')->never();
-
-        $this->updater->updateFromArray($fields, $project);
-    }
-
-    public function testItLogsIfUpdateFromArrayFail(): void
-    {
-        $group_id = 101;
-        $project  = \Mockery::mock(\Project::class);
-        $project->shouldReceive('getID')->andReturn($group_id);
-        $fields = [1 => 'My field 1 content'];
-
-        $this->field_factory->shouldReceive('getAllDescriptionFields')->andReturn(
-            [
-                ['group_desc_id' => 1],
-                ['group_desc_id' => 2],
-                ['group_desc_id' => 3],
-            ]
-        );
-
-        $this->dao->shouldReceive('createGroupDescription')->withArgs([$group_id, 1, 'My field 1 content'])->once()->andReturn(false);
-
-        $this->logger->shouldReceive('debug')->once();
-
-        $this->updater->updateFromArray($fields, $project);
-    }
-
-    public function testExceptionIsThrownWhenSomeFieldsAreMissing(): void
-    {
-        $this->field_factory->shouldReceive('getAllDescriptionFields')->andReturn(
-            [
-                ['group_desc_id' => 1, 'desc_required' => true, 'desc_name' => "field_name"]
-            ]
-        );
-
-        $field_collection = [];
-
-        $this->expectException(MissingMandatoryFieldException::class);
-        $this->updater->checkFieldConsistency($field_collection);
-    }
-
-    public function testExceptionIsThrownWhenUserProvidesFieldsWhoDoesNotExists(): void
-    {
-        $this->field_factory->shouldReceive('getAllDescriptionFields')->andReturn(
-            [
-                ['group_desc_id' => 1, 'desc_required' => false, 'desc_name' => "field_name"]
-            ]
-        );
-
-        $field_collection[2] = 'test';
-
-        $this->expectException(FieldDoesNotExistException::class);
-        $this->updater->checkFieldConsistency($field_collection);
-    }
-
-    public function testFieldConsistencyIsValidWhenEverythingIsOk(): void
-    {
-        $this->field_factory->shouldReceive('getAllDescriptionFields')->andReturn(
-            [
-                ['group_desc_id' => 1, 'desc_required' => true, 'desc_name' => "field_name"],
-                ['group_desc_id' => 2, 'desc_required' => false, 'desc_name' => "other_field_name"]
-            ]
-        );
-
-        $field_collection[1] = 'test';
-
-        $this->updater->checkFieldConsistency($field_collection);
     }
 }

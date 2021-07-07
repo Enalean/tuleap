@@ -18,6 +18,7 @@
  */
 
 use Tuleap\Project\Admin\Categories\CategoryCollection;
+use Tuleap\Project\Admin\DescriptionFields\ProjectRegistrationSubmittedFieldsCollection;
 use Tuleap\Project\DefaultProjectVisibilityRetriever;
 use Tuleap\Project\ProjectCreationDataServiceFromXmlInheritor;
 use Tuleap\Project\Registration\Template\TemplateFromProjectForCreation;
@@ -36,7 +37,7 @@ class ProjectCreationData //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNa
      */
     private $default_project_visibility_retriever;
     private $data_services;
-    private $data_fields;
+    private ProjectRegistrationSubmittedFieldsCollection $data_fields;
     private $full_name;
     private $unix_name;
     private $is_test;
@@ -61,7 +62,8 @@ class ProjectCreationData //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNa
 
         $this->default_project_visibility_retriever = $default_project_visibility_retriever;
 
-        $this->trove_data = new CategoryCollection();
+        $this->trove_data  = new CategoryCollection();
+        $this->data_fields = ProjectRegistrationSubmittedFieldsCollection::buildFromArray([]);
     }
 
     /**
@@ -132,16 +134,15 @@ class ProjectCreationData //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNa
         return $this->trove_data;
     }
 
-    /**
-     * @param $group_desc_id int id of the description field to return
-     * @return ?string the value of the field requested, null if the field isnt set
-     */
-    public function getField($group_desc_id)
+    public function getFieldValue(int $group_desc_id): ?string
     {
-        if (! isset($this->data_fields['form_' . $group_desc_id])) {
-            return null;
+        foreach ($this->data_fields->getSubmittedFields() as $submitted_field) {
+            if ($submitted_field->getFieldId() === $group_desc_id) {
+                return $submitted_field->getFieldValue();
+            }
         }
-        return $this->data_fields['form_' . $group_desc_id];
+
+        return null;
     }
 
     /**
@@ -188,7 +189,6 @@ class ProjectCreationData //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNa
         $this->setAccessFromProjectData($project);
         $this->trove_data    = isset($project['trove']) ? $project['trove'] : new CategoryCollection();
         $this->data_services = isset($project['services'])               ? $project['services']               : [];
-        $this->data_fields   = $project;
     }
 
     private function getAccessFromProjectArrayData(array $project)
@@ -260,8 +260,6 @@ class ProjectCreationData //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNa
         $xml_validator->validate($partial_element, $rng_path);
         $this->logger->debug("RNG validated, feed the data");
 
-        $long_description_tagname = 'long-description';
-
         $attrs                     = $xml->attributes();
         $this->unix_name           = (string) $attrs['unix-name'];
         $this->full_name           = (string) $attrs['full-name'];
@@ -270,9 +268,6 @@ class ProjectCreationData //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNa
         $this->is_test             = (bool) false;
         $this->trove_data          = new CategoryCollection();
         $this->data_services       = [];
-        $this->data_fields         = [
-            'form_101' => (string) $xml->$long_description_tagname
-        ];
         $this->is_built_from_xml   = true;
 
         $requested_access_level = (string) $attrs['access'];
@@ -329,5 +324,15 @@ class ProjectCreationData //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNa
     public function setTroveData(CategoryCollection $trove_data): void
     {
         $this->trove_data = $trove_data;
+    }
+
+    public function setDataFields(ProjectRegistrationSubmittedFieldsCollection $data_fields): void
+    {
+        $this->data_fields = $data_fields;
+    }
+
+    public function getDataFields(): ProjectRegistrationSubmittedFieldsCollection
+    {
+        return $this->data_fields;
     }
 }

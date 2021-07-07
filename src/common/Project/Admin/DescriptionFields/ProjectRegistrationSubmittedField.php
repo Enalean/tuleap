@@ -1,8 +1,8 @@
 <?php
 /**
- * Copyright (c) Enalean, 2019 - present. All Rights Reserved.
+ * Copyright (c) Enalean, 2021 - present. All Rights Reserved.
  *
- *  This file is a part of Tuleap.
+ * This file is a part of Tuleap.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,29 +23,27 @@ declare(strict_types=1);
 
 namespace Tuleap\Project\Admin\DescriptionFields;
 
-use Tuleap\Project\Registration\RegistrationErrorException;
-
-class MissingMandatoryFieldException extends RegistrationErrorException
+/**
+ * @psalm-immutable
+ */
+final class ProjectRegistrationSubmittedField
 {
-    private string $mandatory_fields;
+    private int $field_id;
+    private string $field_value;
 
-    public function __construct(string $mandatory_fields)
+    public function __construct(int $field_id, string $field_value)
     {
-        $this->mandatory_fields = $mandatory_fields;
-
-        parent::__construct(
-            sprintf(
-                'Mandatory field where missing: %s',
-                $mandatory_fields
-            )
-        );
+        $this->field_id    = $field_id;
+        $this->field_value = $field_value;
     }
 
-    public function getI18NMessage(): string
+    public function getFieldId(): int
     {
-        return sprintf(
-            dgettext('tuleap-core', 'Mandatory field where missing: %s'),
-            $this->mandatory_fields
-        );
+        return $this->field_id;
+    }
+
+    public function getFieldValue(): string
+    {
+        return $this->field_value;
     }
 }

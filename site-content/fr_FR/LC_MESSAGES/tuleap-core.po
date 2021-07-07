@@ -2014,6 +2014,10 @@ msgstr "Gestion des modèles de référence système"
 msgid "Mandatory categories where missing: %s"
 msgstr "Les catégories obligatoires sont manquantes : %s"
 
+#, php-format
+msgid "Mandatory field where missing: %s"
+msgstr "Des champs obligatoires sont manquants : %s"
+
 msgid "Mass emailing"
 msgstr "Envoi d'emails en masse"
 
@@ -3250,6 +3254,10 @@ msgstr "Clé invalide ignorée : %1$s"
 
 msgid "Skip to main content"
 msgstr "Aller au contenu principal"
+
+#, php-format
+msgid "Some fields does not exists: %s"
+msgstr "Des champs n'existent pas : %s"
 
 msgid "Some mandatory categories are missing"
 msgstr "Des catégories sont manquantes"

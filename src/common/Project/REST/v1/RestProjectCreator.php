@@ -28,8 +28,8 @@ use Project;
 use ProjectCreationData;
 use Tuleap\Project\Admin\Categories\ProjectCategoriesException;
 use Tuleap\Project\Admin\DescriptionFields\FieldDoesNotExistException;
-use Tuleap\Project\Admin\DescriptionFields\FieldUpdator;
 use Tuleap\Project\Admin\DescriptionFields\MissingMandatoryFieldException;
+use Tuleap\Project\Admin\DescriptionFields\ProjectRegistrationSubmittedFieldsCollectionConsistencyChecker;
 use Tuleap\Project\Registration\MaxNumberOfProjectReachedForPlatformException;
 use Tuleap\Project\Registration\MaxNumberOfProjectReachedForUserException;
 use Tuleap\Project\Registration\ProjectDescriptionMandatoryException;
@@ -59,21 +59,19 @@ class RestProjectCreator
      * @var TemplateFactory
      */
     private $template_factory;
-    /**
-     * @var FieldUpdator
-     */
-    private $fields_updater;
+
+    private ProjectRegistrationSubmittedFieldsCollectionConsistencyChecker $fields_collection_consistency_checker;
 
     public function __construct(
         \ProjectCreator $project_creator,
         \ProjectXMLImporter $project_XML_importer,
         TemplateFactory $template_factory,
-        FieldUpdator $fields_updater
+        ProjectRegistrationSubmittedFieldsCollectionConsistencyChecker $fields_collection_consistency_checker
     ) {
-        $this->project_creator      = $project_creator;
-        $this->project_XML_importer = $project_XML_importer;
-        $this->template_factory     = $template_factory;
-        $this->fields_updater       = $fields_updater;
+        $this->project_creator                       = $project_creator;
+        $this->project_XML_importer                  = $project_XML_importer;
+        $this->template_factory                      = $template_factory;
+        $this->fields_collection_consistency_checker = $fields_collection_consistency_checker;
     }
 
     /**
@@ -89,12 +87,11 @@ class RestProjectCreator
         ProjectCreationData $creation_data
     ): Project {
         try {
-            $field_collection = $this->getFieldCollection($post_representation);
-            $this->fields_updater->checkFieldConsistency($field_collection);
+            $this->fields_collection_consistency_checker->checkFieldConsistency(
+                $creation_data->getDataFields()
+            );
 
-            $project = $this->createProjectWithSelectedTemplate($post_representation, $creation_data);
-            $this->fields_updater->updateFromArray($field_collection, $project);
-            return $project;
+            return $this->createProjectWithSelectedTemplate($post_representation, $creation_data);
         } catch (MaxNumberOfProjectReachedForPlatformException | MaxNumberOfProjectReachedForUserException $exception) {
             throw new RestException(429, $exception->getMessage());
         } catch (RegistrationForbiddenException $exception) {
@@ -146,18 +143,5 @@ class RestProjectCreator
         }
 
         throw new InvalidXMLTemplateNameException();
-    }
-
-    private function getFieldCollection(ProjectPostRepresentation $post_representation): array
-    {
-        $fields = [];
-
-        if ($post_representation->fields !== null) {
-            foreach ($post_representation->fields as $field_representation) {
-                $fields[$field_representation->field_id] = $field_representation->value;
-            }
-        }
-
-        return $fields;
     }
 }

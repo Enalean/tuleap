@@ -29,6 +29,7 @@ use Psr\Log\NullLogger;
 use ServiceManager;
 use SimpleXMLElement;
 use Tuleap\Glyph\Glyph;
+use Tuleap\Project\DescriptionFieldsFactory;
 use Tuleap\Project\ProjectCreationDataServiceFromXmlInheritor;
 use Tuleap\Project\Registration\Template\TemplateFactory;
 use Tuleap\Project\XML\XMLFileContentRetriever;
@@ -58,6 +59,10 @@ final class ProjectCreationDataPOSTProjectBuilderTest extends TestCase
      * @var \PHPUnit\Framework\MockObject\MockObject&ProjectCreationDataServiceFromXmlInheritor
      */
     private $from_xml_inheritor;
+    /**
+     * @var \PHPUnit\Framework\MockObject\MockObject&DescriptionFieldsFactory
+     */
+    private $description_fields_factory;
 
     protected function setUp(): void
     {
@@ -68,6 +73,7 @@ final class ProjectCreationDataPOSTProjectBuilderTest extends TestCase
         $this->xml_file_content_retriever = $this->createMock(XMLFileContentRetriever::class);
         $this->service_manager            = $this->createMock(ServiceManager::class);
         $this->from_xml_inheritor         = $this->createMock(ProjectCreationDataServiceFromXmlInheritor::class);
+        $this->description_fields_factory = $this->createMock(DescriptionFieldsFactory::class);
 
         $this->builder = new ProjectCreationDataPOSTProjectBuilder(
             $this->project_manager,
@@ -75,6 +81,7 @@ final class ProjectCreationDataPOSTProjectBuilderTest extends TestCase
             $this->xml_file_content_retriever,
             $this->service_manager,
             $this->from_xml_inheritor,
+            $this->description_fields_factory,
             new NullLogger()
         );
     }
@@ -197,6 +204,11 @@ final class ProjectCreationDataPOSTProjectBuilderTest extends TestCase
             ->expects(self::once())
             ->method('markUsedServicesFromXML');
 
+        $this->description_fields_factory
+            ->expects(self::once())
+            ->method('isLegacyLongDescriptionFieldExisting')
+            ->willReturn(false);
+
         $creation_data = $this->builder->buildProjectCreationDataFromPOSTRepresentation(
             $post_representation,
             $user
@@ -210,5 +222,104 @@ final class ProjectCreationDataPOSTProjectBuilderTest extends TestCase
         self::assertNull($creation_data->isTemplate());
         self::assertFalse($creation_data->isTest());
         self::assertTrue($creation_data->isIsBuiltFromXml());
+        self::assertEmpty($creation_data->getDataFields()->getSubmittedFields());
+    }
+
+    public function testItBuildsProjectCreationDataWithXMLTemplateWithLegacyLongDescription(): void
+    {
+        $post_representation = ProjectPostRepresentation::build(101);
+
+        $post_representation->shortname         = 'shortname-xml';
+        $post_representation->label             = 'Project 02';
+        $post_representation->description       = 'desc xml';
+        $post_representation->is_public         = true;
+        $post_representation->template_id       = null;
+        $post_representation->xml_template_name = 'template';
+
+        $user = UserTestBuilder::aUser()->build();
+
+        $this->template_factory
+            ->expects(self::once())
+            ->method('getTemplate')
+            ->with('template')
+            ->willReturn(
+                new class implements \Tuleap\Project\Registration\Template\TuleapTemplate
+                {
+                    public function getId(): string
+                    {
+                        return 'xmltemplate';
+                    }
+
+                    public function getTitle(): string
+                    {
+                        return 'XML Template';
+                    }
+
+                    public function getDescription(): string
+                    {
+                        return 'XML Template desc';
+                    }
+
+                    public function getGlyph(): Glyph
+                    {
+                        return new Glyph('');
+                    }
+
+                    public function isBuiltIn(): bool
+                    {
+                        return false;
+                    }
+
+                    public function getXMLPath(): string
+                    {
+                        return 'path/to/xml/template';
+                    }
+
+                    public function isAvailable(): bool
+                    {
+                        return true;
+                    }
+                }
+            );
+
+        $xml_content = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?>
+            <project unix-name="test-create-project" full-name="Test Create Project" description="" access="public">
+                <long-description>Description long</long-description>
+                <services/>
+            </project>
+        ');
+
+        $this->xml_file_content_retriever
+            ->expects(self::once())
+            ->method('getSimpleXMLElementFromFilePath')
+            ->with('path/to/xml/template')
+            ->willReturn($xml_content);
+
+        $this->from_xml_inheritor
+            ->expects(self::once())
+            ->method('markUsedServicesFromXML');
+
+        $this->description_fields_factory
+            ->expects(self::once())
+            ->method('isLegacyLongDescriptionFieldExisting')
+            ->willReturn(true);
+
+        $creation_data = $this->builder->buildProjectCreationDataFromPOSTRepresentation(
+            $post_representation,
+            $user
+        );
+
+        self::assertNotNull($creation_data);
+        self::assertEquals('Project 02', $creation_data->getFullName());
+        self::assertEquals('shortname-xml', $creation_data->getUnixName());
+        self::assertEquals('desc xml', $creation_data->getShortDescription());
+        self::assertEquals('public', $creation_data->getAccess());
+        self::assertNull($creation_data->isTemplate());
+        self::assertFalse($creation_data->isTest());
+        self::assertTrue($creation_data->isIsBuiltFromXml());
+        self::assertNotEmpty($creation_data->getDataFields()->getSubmittedFields());
+        self::assertCount(1, $creation_data->getDataFields()->getSubmittedFields());
+        self::assertSame(101, $creation_data->getDataFields()->getSubmittedFields()[0]->getFieldId());
+        self::assertSame('Description long', $creation_data->getDataFields()->getSubmittedFields()[0]->getFieldValue());
     }
 }

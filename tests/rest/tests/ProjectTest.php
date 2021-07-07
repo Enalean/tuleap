@@ -377,6 +377,7 @@ class ProjectTest extends ProjectBase
                 )
             )
         );
+
         self::assertEquals(201, $response->getStatusCode());
         $project = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         self::assertEquals('Created from scrum XML template', $project['label']);
