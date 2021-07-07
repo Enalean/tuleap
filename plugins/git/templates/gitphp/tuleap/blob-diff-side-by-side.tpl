@@ -36,7 +36,7 @@
                         </label>
                     </div>
                     <div class="tlp-button-bar-item">
-                        <a href="{$SCRIPT_NAME}?a=blobdiff&amp;h={$blob->GetHash()|urlencode}&amp;hp={$blobparent->GetHash()|urlencode}&amp;hb={$commit->GetHash()|urlencode}&amp;f={$file|urlencode}"
+                        <a href="?a=blobdiff&amp;h={$blob->GetHash()|urlencode}&amp;hp={$blobparent->GetHash()|urlencode}&amp;hb={$commit->GetHash()|urlencode}&amp;f={$file|urlencode}"
                            class="tlp-button-primary tlp-button-outline tlp-button-small"
                         >
                             <i class="far fa-file tlp-button-icon"></i> {t domain="gitphp"}Inline diff{/t}

@@ -23,11 +23,11 @@
     {assign var=blobcommit value=$blob->GetCommit()}
     {assign var=blobtree value=$blobcommit->GetTree()}
 
-    <a href="{$SCRIPT_NAME}?a=tree&amp;hb={$blobcommit->GetHash()|urlencode}">{$project->GetProject()|escape}</a>/<!--
-    -->{foreach from=$pathtree item=pathtreepiece}<!--
-        --><a href="{$SCRIPT_NAME}?a=tree&amp;hb={$blobcommit->GetHash()|urlencode}&amp;f={$pathtreepiece->path|urlencode}">{$pathtreepiece->name|escape}</a>/<!--
-    -->{/foreach}<!--
+    <a href="?a=tree&amp;hb={$blobcommit->GetHash()|urlencode}">{$project->GetProject()|escape}</a>/<!--
+    -->{if isset($pathtree)}{foreach from=$pathtree item=pathtreepiece}<!--
+        --><a href="?a=tree&amp;hb={$blobcommit->GetHash()|urlencode}&amp;f={$pathtreepiece->path|urlencode}">{$pathtreepiece->name|escape}</a>/<!--
+    -->{/foreach}{/if}<!--
     -->{if $blob->isBlob()}<!--
-        --><a href="{$SCRIPT_NAME}?a=blob&amp;hb={$blobcommit->GetHash()|urlencode}&amp;f={$blob->GetPath()|urlencode}">{$blob->GetName()|escape}</a>
+        --><a href="?a=blob&amp;hb={$blobcommit->GetHash()|urlencode}&amp;f={$blob->GetPath()|urlencode}">{$blob->GetName()|escape}</a>
     {/if}
 </h1>

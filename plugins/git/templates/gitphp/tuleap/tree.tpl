@@ -27,12 +27,12 @@
                             <i class="tlp-pane-title-icon far fa-copy"></i>
                             {assign var=treecommit value=$tree->GetCommit()}
                             {assign var=treecommittree value=$treecommit->GetTree()}
-                            <a href="{$SCRIPT_NAME}?a=tree&amp;hb={$treecommit->GetHash()|urlencode}&amp;h={$treecommittree->GetHash()|urlencode}">{$project->GetProject()|escape}</a>/<!--
+                            <a href="?a=tree&amp;hb={$treecommit->GetHash()|urlencode}&amp;h={$treecommittree->GetHash()|urlencode}">{$project->GetProject()|escape}</a>/<!--
                                 -->{foreach from=$tree->GetPathTree() item=pathtreepiece}<!--
-                                --><a href="{$SCRIPT_NAME}?a=tree&amp;hb={$treecommit->GetHash()|urlencode}&amp;h={$pathtreepiece->GetHash()|urlencode}&amp;f={$pathtreepiece->GetPath()|urlencode}">{$pathtreepiece->GetName()|escape}</a><!--
+                                --><a href="?a=tree&amp;hb={$treecommit->GetHash()|urlencode}&amp;h={$pathtreepiece->GetHash()|urlencode}&amp;f={$pathtreepiece->GetPath()|urlencode}">{$pathtreepiece->GetName()|escape}</a><!--
                                 -->/<!--
                             -->{/foreach}<!--
-                            --><a href="{$SCRIPT_NAME}?a=tree&amp;hb={$treecommit->GetHash()|urlencode}&amp;h={$tree->GetHash()|urlencode}&amp;f={$tree->GetPath()|urlencode}">{$tree->GetName()|escape}</a>/
+                            --><a href="?a=tree&amp;hb={$treecommit->GetHash()|urlencode}&amp;h={$tree->GetHash()|urlencode}&amp;f={$tree->GetPath()|urlencode}">{$tree->GetName()|escape}</a>/
                         </h1>
                     {else}
                         <h1 class="tlp-pane-title">
@@ -54,13 +54,13 @@
                                 <tr>
                                     {if $treeitem->isBlob() }
                                         <td>
-                                            <a href="{$SCRIPT_NAME}?a=blob&amp;hb={$commit->GetHash()|urlencode}&amp;h={$treeitem->GetHash()|urlencode}&amp;f={$treeitem->GetFullPath()|urlencode}">
+                                            <a href="?a=blob&amp;hb={$commit->GetHash()|urlencode}&amp;h={$treeitem->GetHash()|urlencode}&amp;f={$treeitem->GetFullPath()|urlencode}">
                                                 <i class="far fa-file-alt fa-fw git-repository-tree-icon"></i>{$treeitem->GetName()|escape}
                                             </a>
                                         </td>
                                     {elseif $treeitem->isTree() }
                                         <td>
-                                            <a href="{$SCRIPT_NAME}?a=tree&amp;hb={$commit->GetHash()|urlencode}&amp;f={$treeitem->GetFullPath()|urlencode}">
+                                            <a href="?a=tree&amp;hb={$commit->GetHash()|urlencode}&amp;f={$treeitem->GetFullPath()|urlencode}">
                                                 <i class="fa fa-folder fa-fw git-repository-tree-icon"></i>{$treeitem->GetName()|escape}
                                             </a>
                                         </td>
@@ -78,7 +78,7 @@
         </div>
     </section>
 
-    {if $readme_content}
+    {if isset($readme_content)}
         <section class="tlp-pane git-repository-readme">
             <div class="tlp-pane-container">
                 <div class="tlp-pane-header">

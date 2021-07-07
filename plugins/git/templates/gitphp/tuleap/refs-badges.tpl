@@ -18,10 +18,10 @@
  *}
 
 {foreach from=$commit->GetHeads() item=commithead}
-    <a href="{$SCRIPT_NAME}?a=shortlog&amp;h=refs/heads/{$commithead->GetName()|urlencode}" class="tlp-badge-primary tlp-badge-outline">{$commithead->GetName()|escape}</a>
+    <a href="?a=shortlog&amp;h=refs/heads/{$commithead->GetName()|urlencode}" class="tlp-badge-primary tlp-badge-outline">{$commithead->GetName()|escape}</a>
 {/foreach}
 {foreach from=$commit->GetTags() item=committag}
-    <a href="{$SCRIPT_NAME}?a=tag&amp;h={$committag->GetName()|urlencode}"
+    <a href="?a=tag&amp;h={$committag->GetName()|urlencode}"
        class="tlp-badge-primary {if !$committag->LightTag()}tagTip{/if}"
     >
         {$committag->GetName()|escape}

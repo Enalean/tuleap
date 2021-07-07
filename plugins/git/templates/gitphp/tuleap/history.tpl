@@ -33,11 +33,11 @@
             {/foreach}
 
 
-            {if $hasmorerevs || $page > 0}
+            {if (isset($hasmorerevs) && $hasmorerevs) || $page > 0}
                 {if $commit}
                     <div class="tlp-pagination git-repository-shortlog-pagination">
                         {if $page > 0}
-                            <a href="{$SCRIPT_NAME}?a=history&amp;hb={$hashbase|urlencode}&amp;pg={$page-1|urlencode}&amp;h={$commit->GetHash()|urlencode}&amp;f={$blob->GetPath()|urlencode}"
+                            <a href="?a=history&amp;hb={$hashbase|urlencode}&amp;pg={$page-1|urlencode}&amp;h={$commit->GetHash()|urlencode}&amp;f={$blob->GetPath()|urlencode}"
                                class="tlp-button-primary tlp-button-outline tlp-button-small tlp-pagination-button"
                                title="{t domain="gitphp"}Previous{/t}"
                             >
@@ -52,8 +52,8 @@
                                 <i class="fa fa-angle-left"></i>
                             </button>
                         {/if}
-                        {if $hasmorerevs }
-                            <a href="{$SCRIPT_NAME}?a=history&amp;hb={$hashbase|urlencode}&amp;pg={$page+1|urlencode}&amp;h={$commit->GetHash()|urlencode}&amp;f={$blob->GetPath()|urlencode}"
+                        {if (isset($hasmorerevs) && $hasmorerevs) }
+                            <a href="?a=history&amp;hb={$hashbase|urlencode}&amp;pg={$page+1|urlencode}&amp;h={$commit->GetHash()|urlencode}&amp;f={$blob->GetPath()|urlencode}"
                                class="tlp-button-primary tlp-button-outline tlp-button-small tlp-pagination-button"
                                title="{t domain="gitphp"}Next{/t}"
                             >

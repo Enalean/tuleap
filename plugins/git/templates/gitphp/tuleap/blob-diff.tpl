@@ -31,7 +31,7 @@
             <div class="git-repository-blob-header-actions">
                 <div class="tlp-button-bar">
                     <div class="tlp-button-bar-item">
-                        <a href="{$SCRIPT_NAME}?a=blobdiff&amp;h={$blob->GetHash()|urlencode}&amp;hp={$blobparent->GetHash()|urlencode}&amp;hb={$commit->GetHash()|urlencode}&amp;f={$file|urlencode}&amp;o=sidebyside"
+                        <a href="?a=blobdiff&amp;h={$blob->GetHash()|urlencode}&amp;hp={$blobparent->GetHash()|urlencode}&amp;hb={$commit->GetHash()|urlencode}&amp;f={$file|urlencode}&amp;o=sidebyside"
                            class="tlp-button-primary tlp-button-outline tlp-button-small"
                         >
                             <i class="far fa-copy tlp-button-icon"></i> {t domain="gitphp"}Side by side diff{/t}

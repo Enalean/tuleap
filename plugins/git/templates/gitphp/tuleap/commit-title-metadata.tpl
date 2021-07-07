@@ -33,13 +33,13 @@
         {include file='tuleap/refs-badges.tpl' commit=$commit}
     </h2>
     <div class="git-repository-commit-header-actions">
-        <a href="{$SCRIPT_NAME}?a=commitdiff_plain&amp;h={$commit->GetHash()|escape}&amp;noheader=1"
+        <a href="?a=commitdiff_plain&amp;h={$commit->GetHash()|escape}&amp;noheader=1"
            class="tlp-button-primary tlp-button-outline tlp-button-small git-repository-commit-action"
            title="{t domain="gitphp"}Download commit as plain text file{/t}"
         >
             {t domain="gitphp"}Download{/t}
         </a>
-        <a href="{$SCRIPT_NAME}?a=tree&amp;hb={$commit->GetHash()|escape}"
+        <a href="?a=tree&amp;hb={$commit->GetHash()|escape}"
            class="tlp-button-primary tlp-button-outline tlp-button-small git-repository-commit-action"
            title="{t domain="gitphp"}Browse repository at this commit{/t}"
         >
@@ -126,7 +126,7 @@
                     <div class="tlp-property">
                         <label class="tlp-label">{t domain="gitphp"}Parent{/t}</label>
                         {foreach from=$commit->GetParents() item=parent}
-                            <a href="{$SCRIPT_NAME}?a=commit&amp;h={$parent->GetHash()|urlencode}">{$parent->GetHash()|escape}</a>
+                            <a href="?a=commit&amp;h={$parent->GetHash()|urlencode}">{$parent->GetHash()|escape}</a>
                         {/foreach}
                     </div>
                 {/if}
@@ -136,7 +136,7 @@
                         <ul>
                             {foreach from=$commit->GetParents() item=parent}
                                 <li>
-                                    <a href="{$SCRIPT_NAME}?a=commit&amp;h={$parent->GetHash()|urlencode}">{$parent->GetHash()|escape}</a>
+                                    <a href="?a=commit&amp;h={$parent->GetHash()|urlencode}">{$parent->GetHash()|escape}</a>
                                 </li>
                             {/foreach}
                         </ul>
