@@ -25,70 +25,14 @@ final class b202105260845_move_program_increment_label_in_program_table extends 
 {
     public function description(): string
     {
-        return 'Move label and sub-label of Program Increment in plugin_program_management_program table';
+        return 'Moved to 202105250900_move_program_increment_tracker_id_in_program_table.php';
     }
     public function preUp(): void
     {
         $this->db = $this->getApi('ForgeUpgrade_Bucket_Db');
     }
-    public function up(): void
-    {
-        $this->db->dbh->beginTransaction();
-        $this->addProgramIncrementLabel();
-        $this->addProgramIncrementSubLabel();
-        $this->moveLabelsInProgramTable();
-        $this->deleteLabelsTable();
-        $this->db->dbh->commit();
-    }
 
-    private function addProgramIncrementLabel(): void
+    public function up()
     {
-        $this->db->alterTable(
-            'plugin_program_management_program',
-            'tuleap',
-            'program_increment_label',
-            'ALTER TABLE plugin_program_management_program ADD COLUMN program_increment_label VARCHAR(255) DEFAULT NULL'
-        );
-    }
-
-    private function addProgramIncrementSubLabel(): void
-    {
-        $this->db->alterTable(
-            'plugin_program_management_program',
-            'tuleap',
-            'program_increment_sub_label',
-            'ALTER TABLE plugin_program_management_program ADD COLUMN program_increment_sub_label VARCHAR(255) DEFAULT NULL'
-        );
-    }
-
-    private function moveLabelsInProgramTable(): void
-    {
-        $sql = 'INSERT INTO plugin_program_management_program (program_project_id, program_increment_label, program_increment_sub_label)
-                SELECT program.program_project_id, label, sub_label
-                FROM plugin_program_management_program AS program JOIN plugin_program_management_label_program_increment AS label on (program.program_increment_tracker_id = label.program_increment_tracker_id)
-                ON DUPLICATE KEY UPDATE program_increment_label=label, program_increment_sub_label=sub_label';
-
-        $this->executeSql($sql);
-    }
-
-    private function deleteLabelsTable(): void
-    {
-        $sql = 'DROP TABLE IF EXISTS plugin_program_management_label_program_increment;';
-        $this->executeSql($sql);
-    }
-
-    private function executeSql($sql): void
-    {
-        $result = $this->db->dbh->exec($sql);
-        if ($result === false) {
-            $error_message = implode(', ', $this->db->dbh->errorInfo());
-            $this->rollBackOnError($error_message);
-        }
-    }
-
-    private function rollBackOnError(string $message): void
-    {
-        $this->db->dbh->rollBack();
-        throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete($message);
     }
 }
