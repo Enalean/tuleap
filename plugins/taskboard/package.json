@@ -9,7 +9,7 @@
     "@tuleap/keyboard-shortcuts": "file:../../src/scripts/lib/keyboard-shortcuts",
     "dompurify": "^2.2.9",
     "fscreen": "^1.2.0",
-    "mustache": "^4.1.0",
+    "mustache": "^4.2.0",
     "p-retry": "^4.5.0",
     "vue": "^2.6.14",
     "vue-dompurify-html": "^2.3.0",

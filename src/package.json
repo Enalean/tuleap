@@ -32,7 +32,7 @@
     "marked": "^2.0.3",
     "mermaid": "^8.10.2",
     "moment": "^2.29.1",
-    "mustache": "^4.1.0",
+    "mustache": "^4.2.0",
     "node-gettext": "^3.0.0",
     "panzoom": "^9.4.1",
     "prismjs": "^1.23.0",
