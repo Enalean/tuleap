@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Admin;
 
+use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ErrorPresenter;
 use Tuleap\ProgramManagement\Domain\Program\Admin\PotentialTeam\PotentialTeamPresenter;
 use Tuleap\ProgramManagement\Domain\Program\Admin\Team\TeamPresenter;
 
@@ -39,20 +40,26 @@ final class ProgramAdminPresenter
      * @var TeamPresenter[]
      */
     public array $aggregated_teams;
+    /**
+     * @var ErrorPresenter[]
+     */
+    public array $errors;
     public bool $has_aggregated_teams;
+    public bool $has_errors;
 
     /**
      * @param PotentialTeamPresenter[] $potential_teams
-     * @param TeamPresenter[] $aggregated_teams
+     * @param TeamPresenter[]          $aggregated_teams
+     * @param ErrorPresenter[]         $errors
      */
-    public function __construct(
-        int $program_id,
-        array $potential_teams,
-        array $aggregated_teams
-    ) {
+
+    public function __construct(int $program_id, array $potential_teams, array $aggregated_teams, array $errors)
+    {
         $this->program_id           = $program_id;
         $this->potential_teams      = $potential_teams;
         $this->aggregated_teams     = $aggregated_teams;
         $this->has_aggregated_teams = count($aggregated_teams) > 0;
+        $this->errors               = $errors;
+        $this->has_errors           = count($errors) > 0;
     }
 }

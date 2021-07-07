@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck;
 
 use Psr\Log\Test\TestLogger;
+use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ConfigurationErrorsCollector;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Team\TeamProjectsCollection;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracker\RetrieveVisibleProgramIncrementTracker;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracker\VerifyIsProgramIncrementTracker;
@@ -91,7 +92,8 @@ final class ProgramIncrementCreatorCheckerTest extends \Tuleap\Test\PHPUnit\Test
                     SearchTeamsOfProgramStub::buildTeams(104),
                     new BuildProjectStub(),
                     ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 100, UserTestBuilder::aUser()->build())
-                )
+                ),
+                new ConfigurationErrorsCollector(true)
             )
         );
     }
@@ -110,7 +112,8 @@ final class ProgramIncrementCreatorCheckerTest extends \Tuleap\Test\PHPUnit\Test
                     SearchTeamsOfProgramStub::buildTeams(),
                     new BuildProjectStub(),
                     ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 100, UserTestBuilder::aUser()->build())
-                )
+                ),
+                new ConfigurationErrorsCollector(true)
             )
         );
     }
@@ -128,7 +131,8 @@ final class ProgramIncrementCreatorCheckerTest extends \Tuleap\Test\PHPUnit\Test
                     SearchTeamsOfProgramStub::buildTeams(104),
                     new BuildProjectStub(),
                     ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 100, UserTestBuilder::aUser()->build())
-                )
+                ),
+                new ConfigurationErrorsCollector(true)
             )
         );
     }
@@ -146,7 +150,8 @@ final class ProgramIncrementCreatorCheckerTest extends \Tuleap\Test\PHPUnit\Test
                     SearchTeamsOfProgramStub::buildTeams(),
                     new BuildProjectStub(),
                     ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 100, UserTestBuilder::aUser()->build())
-                )
+                ),
+                new ConfigurationErrorsCollector(true)
             )
         );
     }
@@ -165,7 +170,8 @@ final class ProgramIncrementCreatorCheckerTest extends \Tuleap\Test\PHPUnit\Test
                     SearchTeamsOfProgramStub::buildTeams(104),
                     new BuildProjectStub(),
                     ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 100, UserTestBuilder::aUser()->build())
-                )
+                ),
+                new ConfigurationErrorsCollector(true)
             )
         );
     }
@@ -182,7 +188,8 @@ final class ProgramIncrementCreatorCheckerTest extends \Tuleap\Test\PHPUnit\Test
                 SearchTeamsOfProgramStub::buildTeams(104),
                 new BuildProjectStub(),
                 ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 100, UserTestBuilder::aUser()->build())
-            )
+            ),
+            new ConfigurationErrorsCollector(true)
         ));
     }
 

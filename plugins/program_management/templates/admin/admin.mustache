@@ -1,3 +1,13 @@
 <h1 class="program-management-title-header" id="program-management-administration" data-program-id="{{ program_id }}">{{# dgettext }}tuleap-program_management | Program administration{{/ dgettext }}</h1>
 
+{{# has_errors }}
+    <div class="tlp-alert-warning program-management-configuration-incorrect">
+        {{# dgettext }}tuleap-program_management | Configuration is incorrect, you won't be able to create new program increments.{{/ dgettext }}
+        {{# dgettext }}tuleap-program_management | The following points are incorrect:{{/ dgettext }}
+        <ul>
+            {{# errors }}<li>{{{ purified_error_message }}}</li>{{/ errors }}
+        </ul>
+    </div>
+{{/ has_errors }}
+
 {{> teams/admin-aggregated-teams}}

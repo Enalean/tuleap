@@ -24,6 +24,7 @@ namespace Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck;
 
 use PFUser;
 use Psr\Log\LoggerInterface;
+use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ConfigurationErrorsCollector;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\FieldSynchronizationException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFieldFromProgramAndTeamTrackersCollectionBuilder;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Source\SourceTrackerCollection;
@@ -56,13 +57,14 @@ class TimeboxCreatorChecker
         ProgramTracker $tracker_data,
         SourceTrackerCollection $program_and_milestone_trackers,
         TrackerCollection $team_trackers,
-        PFUser $user
+        PFUser $user,
+        ConfigurationErrorsCollector $configuration_errors
     ): bool {
         $this->logger->debug(
             'Checking if milestone can be created in planning of project'
         );
 
-        if (! $this->semantic_checker->areTrackerSemanticsWellConfigured($tracker_data, $program_and_milestone_trackers)) {
+        if (! $this->semantic_checker->areTrackerSemanticsWellConfigured($tracker_data, $program_and_milestone_trackers, $configuration_errors)) {
             $this->logger->error('Semantics are not well configured.');
 
             return false;

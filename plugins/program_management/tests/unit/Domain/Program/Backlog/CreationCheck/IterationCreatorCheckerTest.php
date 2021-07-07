@@ -25,6 +25,7 @@ namespace Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck;
 use PFUser;
 use Psr\Log\Test\TestLogger;
 use Tracker;
+use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ConfigurationErrorsCollector;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Team\TeamProjectsCollection;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\ProgramTracker;
@@ -89,7 +90,8 @@ final class IterationCreatorCheckerTest extends TestCase
                     SearchTeamsOfProgramStub::buildTeams(),
                     new BuildProjectStub(),
                     ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 100, UserTestBuilder::aUser()->build())
-                )
+                ),
+                new ConfigurationErrorsCollector(true)
             )
         );
         self::assertFalse($this->logger->hasDebugRecords());
@@ -106,7 +108,8 @@ final class IterationCreatorCheckerTest extends TestCase
                     SearchTeamsOfProgramStub::buildTeams(),
                     new BuildProjectStub(),
                     ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 100, UserTestBuilder::aUser()->build())
-                )
+                ),
+                new ConfigurationErrorsCollector(true)
             )
         );
     }
@@ -124,7 +127,8 @@ final class IterationCreatorCheckerTest extends TestCase
                     SearchTeamsOfProgramStub::buildTeams(104),
                     new BuildProjectStub(),
                     ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 100, UserTestBuilder::aUser()->build())
-                )
+                ),
+                new ConfigurationErrorsCollector(true)
             )
         );
 
@@ -144,7 +148,8 @@ final class IterationCreatorCheckerTest extends TestCase
                     SearchTeamsOfProgramStub::buildTeams(104),
                     new BuildProjectStub(),
                     ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 100, UserTestBuilder::aUser()->build())
-                )
+                ),
+                new ConfigurationErrorsCollector(true)
             )
         );
     }
@@ -162,7 +167,8 @@ final class IterationCreatorCheckerTest extends TestCase
                     SearchTeamsOfProgramStub::buildTeams(104),
                     new BuildProjectStub(),
                     ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 100, UserTestBuilder::aUser()->build())
-                )
+                ),
+                new ConfigurationErrorsCollector(true)
             )
         );
     }
@@ -180,7 +186,8 @@ final class IterationCreatorCheckerTest extends TestCase
                     SearchTeamsOfProgramStub::buildTeams(104),
                     new BuildProjectStub(),
                     ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 100, UserTestBuilder::aUser()->build())
-                )
+                ),
+                new ConfigurationErrorsCollector(true)
             )
         );
     }

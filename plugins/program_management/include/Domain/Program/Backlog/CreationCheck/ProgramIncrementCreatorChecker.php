@@ -24,6 +24,7 @@ namespace Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck;
 
 use PFUser;
 use Psr\Log\LoggerInterface;
+use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ConfigurationErrorsCollector;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Source\SourceTrackerCollection;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracker\RetrieveVisibleProgramIncrementTracker;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracker\VerifyIsProgramIncrementTracker;
@@ -62,7 +63,8 @@ class ProgramIncrementCreatorChecker
         PFUser $user,
         ProgramTracker $tracker,
         ProgramIdentifier $program,
-        TeamProjectsCollection $team_projects_collection
+        TeamProjectsCollection $team_projects_collection,
+        ConfigurationErrorsCollector $errors_collector
     ): bool {
         if (! $this->verify_is_program_increment->isProgramIncrementTracker($tracker->getTrackerId())) {
             return true;
@@ -103,7 +105,8 @@ class ProgramIncrementCreatorChecker
             $tracker,
             $program_and_team_trackers,
             $team_trackers,
-            $user
+            $user,
+            $errors_collector
         );
     }
 }

@@ -29,11 +29,15 @@ use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\ProgramManagement\Domain\BuildProject;
+use Tuleap\ProgramManagement\Adapter\Program\Admin\Configuration\ConfigurationChecker;
 use Tuleap\ProgramManagement\Domain\Program\Admin\PotentialTeam\BuildPotentialTeams;
 use Tuleap\ProgramManagement\Domain\Program\Admin\PotentialTeam\PotentialTeamsPresenterBuilder;
 use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramAdminPresenter;
 use Tuleap\ProgramManagement\Domain\Program\Admin\Team\TeamsPresenterBuilder;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\IterationTracker\RetrieveVisibleIterationTracker;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Team\TeamProjectsCollection;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracker\RetrieveVisibleProgramIncrementTracker;
+use Tuleap\ProgramManagement\Domain\Program\Plan\BuildProgram;
 use Tuleap\ProgramManagement\Domain\Program\SearchTeamsOfProgram;
 use Tuleap\ProgramManagement\Domain\Team\VerifyIsTeam;
 use Tuleap\Request\DispatchableWithBurningParrot;
@@ -51,6 +55,10 @@ final class DisplayAdminProgramManagementController implements DispatchableWithR
     private SearchTeamsOfProgram $teams_searcher;
     private BuildProject $project_data_adapter;
     private VerifyIsTeam $verify_is_team;
+    private BuildProgram $build_program;
+    private RetrieveVisibleProgramIncrementTracker $program_increment_tracker_retriever;
+    private \EventManager $event_manager;
+    private RetrieveVisibleIterationTracker $iteration_tracker_retriever;
 
     public function __construct(
         \ProjectManager $project_manager,
@@ -59,15 +67,23 @@ final class DisplayAdminProgramManagementController implements DispatchableWithR
         BuildPotentialTeams $potential_teams_builder,
         SearchTeamsOfProgram $teams_searcher,
         BuildProject $project_data_adapter,
-        VerifyIsTeam $verify_is_team
+        VerifyIsTeam $verify_is_team,
+        BuildProgram $build_program,
+        RetrieveVisibleProgramIncrementTracker $program_increment_tracker_retriever,
+        \EventManager $event_manager,
+        RetrieveVisibleIterationTracker $iteration_tracker_retriever
     ) {
-        $this->project_manager         = $project_manager;
-        $this->template_renderer       = $template_renderer;
-        $this->breadcrumbs_builder     = $breadcrumbs_builder;
-        $this->potential_teams_builder = $potential_teams_builder;
-        $this->teams_searcher          = $teams_searcher;
-        $this->project_data_adapter    = $project_data_adapter;
-        $this->verify_is_team          = $verify_is_team;
+        $this->project_manager                     = $project_manager;
+        $this->template_renderer                   = $template_renderer;
+        $this->breadcrumbs_builder                 = $breadcrumbs_builder;
+        $this->potential_teams_builder             = $potential_teams_builder;
+        $this->teams_searcher                      = $teams_searcher;
+        $this->project_data_adapter                = $project_data_adapter;
+        $this->verify_is_team                      = $verify_is_team;
+        $this->build_program                       = $build_program;
+        $this->program_increment_tracker_retriever = $program_increment_tracker_retriever;
+        $this->event_manager                       = $event_manager;
+        $this->iteration_tracker_retriever         = $iteration_tracker_retriever;
     }
 
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
@@ -100,6 +116,21 @@ final class DisplayAdminProgramManagementController implements DispatchableWithR
             );
         }
 
+        try {
+            $error_presenters = ConfigurationChecker::buildErrorsPresenter(
+                $this->build_program,
+                $this->program_increment_tracker_retriever,
+                $this->iteration_tracker_retriever,
+                $this->event_manager,
+                (int) $project->getID(),
+                $user
+            );
+        } catch (Domain\Program\Plan\ProgramAccessException $e) {
+            throw new \LogicException(
+                'You need to be project administrator to access to program administration.'
+            );
+        }
+
         \Tuleap\Project\ServiceInstrumentation::increment('program_management');
 
         $assets = $this->getAssets();
@@ -116,14 +147,17 @@ final class DisplayAdminProgramManagementController implements DispatchableWithR
             'admin',
             new ProgramAdminPresenter(
                 (int) $project->getID(),
-                PotentialTeamsPresenterBuilder::buildPotentialTeamsPresenter($this->potential_teams_builder->buildPotentialTeams((int) $project->getID(), $user)),
+                PotentialTeamsPresenterBuilder::buildPotentialTeamsPresenter(
+                    $this->potential_teams_builder->buildPotentialTeams((int) $project->getID(), $user)
+                ),
                 TeamsPresenterBuilder::buildTeamsPresenter(
                     TeamProjectsCollection::fromProjectId(
                         $this->teams_searcher,
                         $this->project_data_adapter,
                         (int) $project->getID()
                     )
-                )
+                ),
+                $error_presenters
             )
         );
 

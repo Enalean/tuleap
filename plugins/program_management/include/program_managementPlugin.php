@@ -85,6 +85,7 @@ use Tuleap\ProgramManagement\Adapter\Workspace\ProjectManagerAdapter;
 use Tuleap\ProgramManagement\Adapter\Workspace\WorkspaceDAO;
 use Tuleap\ProgramManagement\DisplayAdminProgramManagementController;
 use Tuleap\ProgramManagement\DisplayProgramBacklogController;
+use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ConfigurationErrorsCollector;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\ArtifactCreatedHandler;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck\CanSubmitNewArtifactHandler;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck\IterationCreatorChecker;
@@ -162,7 +163,10 @@ final class program_managementPlugin extends Plugin
         $this->addHook(RootPlanningEditionEvent::NAME);
         $this->addHook(NaturePresenterFactory::EVENT_GET_ARTIFACTLINK_NATURES, 'getArtifactLinkNatures');
         $this->addHook(NaturePresenterFactory::EVENT_GET_NATURE_PRESENTER, 'getNaturePresenter');
-        $this->addHook(Tracker_Artifact_XMLImport_XMLImportFieldStrategyArtifactLink::TRACKER_ADD_SYSTEM_NATURES, 'trackerAddSystemNatures');
+        $this->addHook(
+            Tracker_Artifact_XMLImport_XMLImportFieldStrategyArtifactLink::TRACKER_ADD_SYSTEM_NATURES,
+            'trackerAddSystemNatures'
+        );
         $this->addHook(CanSubmitNewArtifact::NAME);
         $this->addHook(ArtifactCreated::NAME);
         $this->addHook(ArtifactUpdated::NAME);
@@ -231,11 +235,15 @@ final class program_managementPlugin extends Plugin
                 new PluginDescriptor(
                     dgettext('tuleap-program_management', 'Program Management'),
                     '',
-                    dgettext('tuleap-program_management', 'Enables managing several related projects, synchronizing teams and milestones')
+                    dgettext(
+                        'tuleap-program_management',
+                        'Enables managing several related projects, synchronizing teams and milestones'
+                    )
                 )
             );
             $this->pluginInfo = $pluginInfo;
         }
+
         return $this->pluginInfo;
     }
 
@@ -244,7 +252,10 @@ final class program_managementPlugin extends Plugin
         $event->getRouteCollector()->addGroup(
             '/program_management',
             function (FastRoute\RouteCollector $r) {
-                $r->get('/admin/{project_name:[A-z0-9-]+}[/]', $this->getRouteHandler('routeGetAdminProgramManagement'));
+                $r->get(
+                    '/admin/{project_name:[A-z0-9-]+}[/]',
+                    $this->getRouteHandler('routeGetAdminProgramManagement')
+                );
                 $r->get('/{project_name:[A-z0-9-]+}[/]', $this->getRouteHandler('routeGetProgramManagement'));
             }
         );
@@ -259,10 +270,7 @@ final class program_managementPlugin extends Plugin
             new \Tuleap\Project\Flags\ProjectFlagsBuilder(new \Tuleap\Project\Flags\ProjectFlagsDao()),
             $this->getProgramAdapter(),
             TemplateRendererFactory::build()->getRenderer(__DIR__ . "/../templates"),
-            new VisibleProgramIncrementTrackerRetriever(
-                $program_increments_dao,
-                TrackerFactory::instance()
-            ),
+            $this->getVisibleProgramIncrementTrackerRetriever(),
             $program_increments_dao,
             new TeamDao()
         );
@@ -271,6 +279,7 @@ final class program_managementPlugin extends Plugin
     public function routeGetAdminProgramManagement(): DisplayAdminProgramManagementController
     {
         $project_manager = ProjectManager::instance();
+
         return new DisplayAdminProgramManagementController(
             $project_manager,
             TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../templates/admin'),
@@ -278,7 +287,11 @@ final class program_managementPlugin extends Plugin
             new PotentialTeamsBuilder($project_manager, new ProgramDao()),
             new ProgramDao(),
             new ProgramManagementProjectAdapter($project_manager),
-            new TeamDao()
+            new TeamDao(),
+            $this->getProgramAdapter(),
+            $this->getVisibleProgramIncrementTrackerRetriever(),
+            EventManager::instance(),
+            $this->getVisibleIterationTrackerRetriever(),
         );
     }
 
@@ -316,8 +329,12 @@ final class program_managementPlugin extends Plugin
 
     public function canSubmitNewArtifact(CanSubmitNewArtifact $can_submit_new_artifact): void
     {
-        $handler = $this->getCanSubmitNewArtifactHandler();
-        $handler->handle($can_submit_new_artifact);
+        $handler          = $this->getCanSubmitNewArtifactHandler();
+        $errors_collector = new ConfigurationErrorsCollector($can_submit_new_artifact->shouldCollectAllIssues());
+        $handler->handle($can_submit_new_artifact, $errors_collector);
+        if ($errors_collector->hasError()) {
+            $can_submit_new_artifact->addErrorMessage($errors_collector->getErrorMessages());
+        }
     }
 
     public function workerEvent(WorkerEvent $event): void
@@ -393,7 +410,9 @@ final class program_managementPlugin extends Plugin
         PlanningAdministrationDelegation $planning_administration_delegation
     ): void {
         $component_involved_verifier = $this->getComponentInvolvedVerifier();
-        $project_data                = ProgramManagementProjectAdapter::build($planning_administration_delegation->getProject());
+        $project_data                = ProgramManagementProjectAdapter::build(
+            $planning_administration_delegation->getProject()
+        );
         if ($component_involved_verifier->isInvolvedInAProgramWorkspace($project_data)) {
             $planning_administration_delegation->enablePlanningAdministrationDelegation();
         }
@@ -416,7 +435,10 @@ final class program_managementPlugin extends Plugin
 
     public function externalParentCollector(OriginalProjectCollector $original_project_collector): void
     {
-        $source_analyser = new SourceArtifactNatureAnalyzer(new MirroredTimeboxesDao(), Tracker_ArtifactFactory::instance());
+        $source_analyser = new SourceArtifactNatureAnalyzer(
+            new MirroredTimeboxesDao(),
+            Tracker_ArtifactFactory::instance()
+        );
         $artifact        = $original_project_collector->getOriginalArtifact();
         $user            = $original_project_collector->getUser();
 
@@ -456,6 +478,7 @@ final class program_managementPlugin extends Plugin
 
         if ($redirect_program_increment_value === "update") {
             $redirect->injectAndInformUserAboutUpdatingProgramItem($event->getRedirect(), $GLOBALS['Response']);
+
             return;
         }
 
@@ -485,7 +508,11 @@ final class program_managementPlugin extends Plugin
         $artifact = $event->getArtifact();
         $tracker  = $artifact->getTracker();
         $action   = $action_builder->buildTopBacklogActionBuilder(
-            new TopBacklogActionActifactSourceInformation($artifact->getId(), $tracker->getId(), (int) $tracker->getGroupId()),
+            new TopBacklogActionActifactSourceInformation(
+                $artifact->getId(),
+                $tracker->getId(),
+                (int) $tracker->getGroupId()
+            ),
             $event->getUser()
         );
 
@@ -563,8 +590,13 @@ final class program_managementPlugin extends Plugin
         );
         $artifact_factory       = Tracker_ArtifactFactory::instance();
         $priority_manager       = \Tracker_Artifact_PriorityManager::build();
+
         return new ProcessTopBacklogChange(
-            new PrioritizeFeaturesPermissionVerifier(ProjectManager::instance(), $project_access_checker, new CanPrioritizeFeaturesDAO()),
+            new PrioritizeFeaturesPermissionVerifier(
+                ProjectManager::instance(),
+                $project_access_checker,
+                new CanPrioritizeFeaturesDAO()
+            ),
             new ArtifactsExplicitTopBacklogDAO(),
             new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection()),
             new FeaturesRankOrderer($priority_manager),
@@ -800,7 +832,6 @@ final class program_managementPlugin extends Plugin
                 new \Tracker_Semantic_DescriptionDao(),
                 $timeframe_dao,
                 new StatusSemanticChecker(new Tracker_Semantic_StatusDao(), $semantic_status_factory),
-                $logger
             ),
             new RequiredFieldChecker($logger),
             new WorkflowChecker(
@@ -811,30 +842,42 @@ final class program_managementPlugin extends Plugin
             ),
             $logger
         );
+
         return new CanSubmitNewArtifactHandler(
             $this->getProgramAdapter(),
             new ProgramIncrementCreatorChecker(
                 $checker,
                 $program_increments_dao,
                 $planning_adapter,
-                new VisibleProgramIncrementTrackerRetriever(
-                    $program_increments_dao,
-                    $tracker_factory
-                ),
+                $this->getVisibleProgramIncrementTrackerRetriever(),
                 $logger
             ),
             new IterationCreatorChecker(
                 $planning_adapter,
                 $iteration_dao,
-                new VisibleIterationTrackerRetriever(
-                    $iteration_dao,
-                    $tracker_factory
-                ),
+                $this->getVisibleIterationTrackerRetriever(),
                 $checker,
                 $logger
             ),
             new ProgramDao(),
             $this->getProgramManagementProjectAdapter()
+        );
+    }
+
+    private function getVisibleProgramIncrementTrackerRetriever(): VisibleProgramIncrementTrackerRetriever
+    {
+        return new VisibleProgramIncrementTrackerRetriever(
+            new ProgramIncrementsDAO(),
+            TrackerFactory::instance()
+        );
+    }
+
+
+    private function getVisibleIterationTrackerRetriever(): VisibleIterationTrackerRetriever
+    {
+        return new VisibleIterationTrackerRetriever(
+            new IterationsDAO(),
+            \TrackerFactory::instance()
         );
     }
 }

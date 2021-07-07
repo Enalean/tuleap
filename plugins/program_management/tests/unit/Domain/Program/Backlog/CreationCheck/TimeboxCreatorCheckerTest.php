@@ -28,6 +28,7 @@ use Tracker_FormElement_Field_ArtifactLink;
 use Tracker_FormElement_Field_Date;
 use Tracker_FormElement_Field_Selectbox;
 use Tracker_FormElement_Field_Text;
+use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ConfigurationErrorsCollector;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\BuildSynchronizedFields;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\Field;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\FieldRetrievalException;
@@ -112,7 +113,8 @@ final class TimeboxCreatorCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
                 $this->program_increment_tracker,
                 $program_and_team_trackers,
                 $team_trackers,
-                $this->user
+                $this->user,
+                new ConfigurationErrorsCollector(true)
             )
         );
     }
@@ -130,7 +132,8 @@ final class TimeboxCreatorCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
                 $this->program_increment_tracker,
                 $program_and_team_trackers,
                 $team_trackers,
-                $this->user
+                $this->user,
+                new ConfigurationErrorsCollector(true)
             )
         );
     }
@@ -148,7 +151,8 @@ final class TimeboxCreatorCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
                 $this->program_increment_tracker,
                 $program_and_team_trackers,
                 $team_trackers,
-                $this->user
+                $this->user,
+                new ConfigurationErrorsCollector(true)
             )
         );
     }
@@ -168,7 +172,8 @@ final class TimeboxCreatorCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
                 $this->program_increment_tracker,
                 $program_and_team_trackers,
                 $team_trackers,
-                $this->user
+                $this->user,
+                new ConfigurationErrorsCollector(true)
             )
         );
     }
@@ -187,7 +192,8 @@ final class TimeboxCreatorCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
                 $this->program_increment_tracker,
                 $program_and_team_trackers,
                 $team_trackers,
-                $this->user
+                $this->user,
+                new ConfigurationErrorsCollector(true)
             )
         );
     }
@@ -211,7 +217,8 @@ final class TimeboxCreatorCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
                 $this->program_increment_tracker,
                 $program_and_team_trackers,
                 $team_trackers,
-                $this->user
+                $this->user,
+                new ConfigurationErrorsCollector(true)
             )
         );
     }
@@ -237,7 +244,8 @@ final class TimeboxCreatorCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
                 $this->program_increment_tracker,
                 $program_and_team_trackers,
                 $team_trackers,
-                $this->user
+                $this->user,
+                new ConfigurationErrorsCollector(true)
             )
         );
     }

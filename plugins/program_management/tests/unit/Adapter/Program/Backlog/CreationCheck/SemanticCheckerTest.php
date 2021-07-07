@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\CreationCheck;
 
-use Psr\Log\Test\TestLogger;
+use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ConfigurationErrorsCollector;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck\CheckStatus;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Team\TeamProjectsCollection;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Source\SourceTrackerCollection;
@@ -57,7 +57,6 @@ final class SemanticCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
      * @var \PHPUnit\Framework\MockObject\MockObject|CheckStatus
      */
     private $semantic_status_checker;
-    private TestLogger $logger;
     private ProgramTracker $program_increment_tracker;
     private \PFUser $user;
     private TrackerCollection $trackers;
@@ -88,13 +87,11 @@ final class SemanticCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->description_dao         = $this->createMock(\Tracker_Semantic_DescriptionDao::class);
         $this->timeframe_dao           = $this->createMock(SemanticTimeframeDao::class);
         $this->semantic_status_checker = $this->createMock(CheckStatus::class);
-        $this->logger                  = new TestLogger();
         $this->checker                 = new SemanticChecker(
             $this->title_dao,
             $this->description_dao,
             $this->timeframe_dao,
-            $this->semantic_status_checker,
-            $this->logger
+            $this->semantic_status_checker
         );
     }
 
@@ -120,10 +117,15 @@ final class SemanticCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->with([1, 1024, 2048])
             ->willReturn(true);
 
+        $configuration_errors = new ConfigurationErrorsCollector(false);
         self::assertTrue(
-            $this->checker->areTrackerSemanticsWellConfigured($this->program_increment_tracker, $this->source_trackers)
+            $this->checker->areTrackerSemanticsWellConfigured(
+                $this->program_increment_tracker,
+                $this->source_trackers,
+                $configuration_errors
+            )
         );
-        self::assertFalse($this->logger->hasErrorRecords());
+        self::assertCount(0, $configuration_errors->getErrorMessages());
     }
 
     public function testItReturnsFalseIfSomethingIsIncorrect(): void
@@ -139,13 +141,48 @@ final class SemanticCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->timeframe_dao->method('areTimeFrameSemanticsUsingSameTypeOfField')
             ->willReturn(true);
 
+        $configuration_errors = new ConfigurationErrorsCollector(true);
         self::assertFalse(
-            $this->checker->areTrackerSemanticsWellConfigured($this->program_increment_tracker, $this->source_trackers)
+            $this->checker->areTrackerSemanticsWellConfigured(
+                $this->program_increment_tracker,
+                $this->source_trackers,
+                $configuration_errors
+            )
         );
-        self::assertTrue($this->logger->hasErrorThatContains('Title'));
-        self::assertTrue($this->logger->hasErrorThatContains('Description'));
-        self::assertTrue($this->logger->hasErrorThatContains('Timeframe'));
-        self::assertTrue($this->logger->hasErrorThatContains('Status'));
+
+        $collected_errors = $configuration_errors->getErrorMessages();
+        self::assertCount(4, $collected_errors);
+        self::assertStringContainsString("Title", $collected_errors[0]);
+        self::assertStringContainsString("Description", $collected_errors[1]);
+        self::assertStringContainsString("Timeframe", $collected_errors[2]);
+        self::assertStringContainsString("Status", $collected_errors[3]);
+    }
+
+    public function testItStopsAtFirstErrorFound(): void
+    {
+        $this->title_dao->method('getNbOfTrackerWithoutSemanticTitleDefined')
+            ->willReturn(1);
+        $this->description_dao->method('getNbOfTrackerWithoutSemanticDescriptionDefined')
+            ->willReturn(1);
+        $this->semantic_status_checker->method('isStatusWellConfigured')
+            ->willReturn(false);
+        $this->timeframe_dao->method('getNbOfTrackersWithoutTimeFrameSemanticDefined')
+            ->willReturn(1);
+        $this->timeframe_dao->method('areTimeFrameSemanticsUsingSameTypeOfField')
+            ->willReturn(true);
+
+        $configuration_errors = new ConfigurationErrorsCollector(false);
+        self::assertFalse(
+            $this->checker->areTrackerSemanticsWellConfigured(
+                $this->program_increment_tracker,
+                $this->source_trackers,
+                $configuration_errors
+            )
+        );
+
+        $collected_errors = $configuration_errors->getErrorMessages();
+        self::assertCount(1, $collected_errors);
+        self::assertStringContainsString("Title", $collected_errors[0]);
     }
 
     public function testItReturnsFalseIfTimeFrameSemanticsDontUseTheSameFieldType(): void
@@ -161,9 +198,16 @@ final class SemanticCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->timeframe_dao->method('areTimeFrameSemanticsUsingSameTypeOfField')
             ->willReturn(false);
 
+        $configuration_errors = new ConfigurationErrorsCollector(true);
         self::assertFalse(
-            $this->checker->areTrackerSemanticsWellConfigured($this->program_increment_tracker, $this->source_trackers)
+            $this->checker->areTrackerSemanticsWellConfigured(
+                $this->program_increment_tracker,
+                $this->source_trackers,
+                $configuration_errors
+            )
         );
-        self::assertTrue($this->logger->hasErrorThatContains('Timeframe'));
+        $collected_errors = $configuration_errors->getErrorMessages();
+        self::assertCount(1, $collected_errors);
+        self::assertStringContainsString("Timeframe", $collected_errors[0]);
     }
 }

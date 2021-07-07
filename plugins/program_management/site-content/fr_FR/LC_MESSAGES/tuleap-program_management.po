@@ -40,6 +40,13 @@ msgstr "Annuler"
 msgid "Close"
 msgstr "Fermer"
 
+msgid ""
+"Configuration is incorrect, you won't be able to create new program "
+"increments."
+msgstr ""
+"La configuration est incorrecte, vous ne pourrez pas créer d'incréments de "
+"programme."
+
 #, php-format
 msgid "Could not add feature #%d to program increment #%d"
 msgstr ""
@@ -58,6 +65,9 @@ msgid "Could not remove feature #%d from all program increments"
 msgstr ""
 "La fonctionnalité #%d n'a pas pu être enlevée de tous les incréments de "
 "programme"
+
+msgid "Description"
+msgstr "Description"
 
 msgid ""
 "Enables managing several related projects, synchronizing teams and milestones"
@@ -184,6 +194,16 @@ msgstr "Enlever l'équipe"
 msgid "Remove team from program"
 msgstr "Enlever l'équipe du programme"
 
+#, php-format
+msgid ""
+"Semantic '%s' is not well configured. Please check semantic of trackers %s."
+msgstr ""
+"La sémantique '%s' n'est pas bien configurée. Merci de vérifier la "
+"sémantique des outils de suivi %s."
+
+msgid "Status"
+msgstr "Statut"
+
 msgid "Teams"
 msgstr "Équipes"
 
@@ -195,6 +215,9 @@ msgstr ""
 "La fonctionnalité avec l'id #%d ne peut pas être déplanifié car elle est "
 "liée à  des user stories planifiées dans les projets Équipes."
 
+msgid "The following points are incorrect:"
+msgstr "Les points suivants sont incorrects :"
+
 msgid ""
 "The post action cannot be saved because this tracker is not a plannable "
 "tracker of a plan."
@@ -205,6 +228,12 @@ msgstr ""
 #, php-format
 msgid "The user group %s does not exist in the Program"
 msgstr "Le groupe  utilisateur %s  n'existe pas dans le Programme"
+
+msgid "Timeframe"
+msgstr "Plage de temps"
+
+msgid "Title"
+msgstr "Titre"
 
 msgid "Top backlog actions"
 msgstr "Actions liées à la planification générale"
