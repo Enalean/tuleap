@@ -22,7 +22,7 @@
     display: flex;
     flex-wrap: wrap;
     justify-content: start;
-    color: var(--tlp-ui-white);
+    color: var(--tlp-white-color);
 }
 
 %statistic {
@@ -40,7 +40,7 @@
 .statistic-label {
     margin-top: auto;
     margin-bottom: auto;
-    color: var(--tlp-ui-white);
+    color: var(--tlp-white-color);
 }
 
 .statistic-label-title {

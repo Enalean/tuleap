@@ -26,7 +26,7 @@ $artifact-body-padding: var(--tlp-medium-spacing);
     padding-right: var(--tlp-medium-spacing);
     padding-left: var(--tlp-medium-spacing);
     background-color: var(--tlp-danger-color);
-    color: var(--tlp-ui-white);
+    color: var(--tlp-white-color);
     text-decoration: line-through;
 }
 
@@ -34,7 +34,7 @@ $artifact-body-padding: var(--tlp-medium-spacing);
     padding-right: var(--tlp-medium-spacing);
     padding-left: var(--tlp-medium-spacing);
     background-color: var(--tlp-success-color);
-    color: var(--tlp-ui-white);
+    color: var(--tlp-white-color);
 }
 
 .comparison-content-artifact-ol {
@@ -73,7 +73,7 @@ $artifact-body-padding: var(--tlp-medium-spacing);
 
     .baseline-artifact-title {
         background-color: var(--tlp-success-color);
-        color: var(--tlp-ui-white);
+        color: var(--tlp-white-color);
     }
 }
 
@@ -89,7 +89,7 @@ $artifact-body-padding: var(--tlp-medium-spacing);
 
     .baseline-artifact-title {
         background-color: var(--tlp-danger-color);
-        color: var(--tlp-ui-white);
+        color: var(--tlp-white-color);
         text-decoration: line-through;
     }
 }
@@ -128,11 +128,11 @@ $artifact-body-padding: var(--tlp-medium-spacing);
 
 ins {
     background-color: var(--tlp-success-color);
-    color: var(--tlp-ui-white);
+    color: var(--tlp-white-color);
 }
 
 del {
     background-color: var(--tlp-danger-color);
-    color: var(--tlp-ui-white);
+    color: var(--tlp-white-color);
     text-decoration: line-through;
 }
