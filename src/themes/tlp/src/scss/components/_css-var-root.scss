@@ -41,7 +41,9 @@ $fade-background-color: mix($tlp-background-color, $tlp-white-color, 50);
     --tlp-typo-default-text-color: #{$tlp-typo-default-text-color};
     --tlp-table-row-background-odd: #{$tlp-white-color};
     --tlp-table-row-background-even: #{mix($tlp-background-color, $tlp-white-color, 50%)};
-    --tlp-table-row-background-empty: #fcfcfc;
+    --tlp-backdrop-color: #{transparentize(#000000, 0.5)};
+    --tlp-theme-orange: #{$tlp-theme-orange};
+    --tlp-label-color: #{darken($tlp-dimmed-color, 3.5%)};
 
     --tlp-background-color-lighter-02: #{lighten($tlp-background-color, 2%)};
     --tlp-background-color-lighter-03: #{lighten($tlp-background-color, 3%)};
@@ -149,13 +151,6 @@ $fade-background-color: mix($tlp-background-color, $tlp-white-color, 50);
     --tlp-white-color-transparent-30: #{transparentize($tlp-white-color, 0.3)};
     --tlp-white-color-transparent-40: #{transparentize($tlp-white-color, 0.4)};
     --tlp-white-color-transparent-80: #{transparentize($tlp-white-color, 0.8)};
-
-    --tlp-backdrop-color: #{transparentize(#000000, 0.5)};
-
-    --tlp-theme-orange: #{$tlp-theme-orange};
-    --tlp-theme-orange-lighter-05: #{lighten($tlp-theme-orange, 5%)};
-
-    --tlp-label-color: #{darken($tlp-dimmed-color, 3.5%)};
 
     // Alerts
     --tlp-alert-danger-background: #{desaturate(lighten(mix($tlp-white-color, $tlp-danger-color, 25%), 23%), 15%)};

@@ -163,11 +163,6 @@ $spacing-between-nav-items: 5px;
 
     &:hover {
         text-decoration: none;
-
-        > .sidebar-about-logo > .tuleap-logo,
-        > .sidebar-about-logo-without-product-name > .tuleap-logo {
-            fill: var(--tlp-theme-orange-lighter-05);
-        }
     }
 
     > .sidebar-about-logo,

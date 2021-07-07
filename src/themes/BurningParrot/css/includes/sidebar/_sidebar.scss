@@ -45,16 +45,6 @@
 
     &:hover {
         text-decoration: none;
-
-        > .sidebar-about-logo > .tuleap-logo,
-        > .sidebar-about-logo-without-product-name > .tuleap-logo {
-            fill: var(--tlp-theme-orange-lighter-05);
-        }
-
-        > .sidebar-about-version {
-            color: var(--tlp-main-color-lighter-90);
-            text-decoration: none;
-        }
     }
 
     > .sidebar-about-logo,
