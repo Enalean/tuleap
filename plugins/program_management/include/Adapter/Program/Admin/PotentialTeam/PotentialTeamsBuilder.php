@@ -48,7 +48,7 @@ final class PotentialTeamsBuilder implements BuildPotentialTeams
         $potentially_teams = [];
 
         foreach ($projects_user_is_admin as $project_user_is_admin) {
-            if (! \in_array((int) $project_user_is_admin->getID(), $aggregated_teams_id, true)) {
+            if ($project_id !== (int) $project_user_is_admin->getID() && ! \in_array((int) $project_user_is_admin->getID(), $aggregated_teams_id, true)) {
                 $potentially_teams[] = PotentialTeam::fromId((int) $project_user_is_admin->getID(), $project_user_is_admin->getPublicName());
             }
         }
