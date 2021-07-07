@@ -24,4 +24,22 @@ namespace Tuleap\ProgramManagement\Domain\Program;
 
 final class ProgramNotFoundException extends \Exception
 {
+    private string $i18n_message;
+
+    public function __construct(int $id)
+    {
+        parent::__construct("Could not find the program of program increment #$id");
+        $this->i18n_message = sprintf(
+            dgettext(
+                'tuleap-program_management',
+                'Could not find the program of program increment #%d'
+            ),
+            $id
+        );
+    }
+
+    public function getI18NExceptionMessage(): string
+    {
+        return $this->i18n_message;
+    }
 }

@@ -24,8 +24,16 @@ namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Conte
 
 final class AddOrOrderMustBeSetException extends \Exception
 {
+    private string $i18n_message;
+
     public function __construct()
     {
-        parent::__construct("`add` and `order` must not both be null");
+        parent::__construct('`add` and `order` must not both be null');
+        $this->i18n_message = dgettext('tuleap-program_management', '`add` and `order` must not both be null');
+    }
+
+    public function getI18NExceptionMessage(): string
+    {
+        return $this->i18n_message;
     }
 }

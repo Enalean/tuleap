@@ -24,8 +24,16 @@ namespace Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Links;
 
 final class FeatureNotAccessException extends \Exception
 {
+    private string $i18n_message;
+
     public function __construct()
     {
-        parent::__construct("You can not see this feature.");
+        parent::__construct('You can not see this feature.');
+        $this->i18n_message = dgettext('tuleap-program_management', 'You can not see this feature.');
+    }
+
+    public function getI18NExceptionMessage(): string
+    {
+        return $this->i18n_message;
     }
 }

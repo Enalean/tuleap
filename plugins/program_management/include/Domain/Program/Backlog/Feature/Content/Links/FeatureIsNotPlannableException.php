@@ -24,8 +24,22 @@ namespace Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Content\Links;
 
 final class FeatureIsNotPlannableException extends \Exception
 {
+    private string $i18n_message;
+
     public function __construct(int $id)
     {
         parent::__construct("Tracker id #$id is not a plannable tracker");
+        $this->i18n_message = sprintf(
+            dgettext(
+                'tuleap-program_management',
+                'Tracker id #%d is not a plannable tracker'
+            ),
+            $id
+        );
+    }
+
+    public function getI18NExceptionMessage(): string
+    {
+        return $this->i18n_message;
     }
 }

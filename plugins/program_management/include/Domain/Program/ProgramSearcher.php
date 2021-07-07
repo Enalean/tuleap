@@ -52,9 +52,7 @@ final class ProgramSearcher
     {
         $potential_program_id = $this->search_program->searchProgramOfProgramIncrement($program_increment_id);
         if ($potential_program_id === null) {
-            throw new ProgramNotFoundException(
-                "Could not find the program of program increment #$program_increment_id"
-            );
+            throw new ProgramNotFoundException($program_increment_id);
         }
         return ProgramIdentifier::fromId($this->build_program, $potential_program_id, $user);
     }
