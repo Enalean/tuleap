@@ -95,7 +95,8 @@ class ProgramDataBuilder extends REST_TestDataBuilder
         $program_adapter = new ProgramAdapter(
             $this->project_manager,
             new ProjectAccessChecker(new RestrictedUserCanAccessProjectVerifier(), \EventManager::instance()),
-            new ProgramDao()
+            new ProgramDao(),
+            new TeamDao()
         );
 
         $this->replication_data_adapter = new ReplicationDataAdapter(

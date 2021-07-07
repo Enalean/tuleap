@@ -144,6 +144,12 @@ msgstr "Le service de gestion de programme est désactivé."
 
 #, php-format
 msgid ""
+"Project #%d can not be defined as a Team because it is already a Program"
+msgstr ""
+"Le projet #%d ne peut pas être une Équipe parce qu'il est déjà un Programme"
+
+#, php-format
+msgid ""
 "Project #%d cannot be a Team because it is not in the explicit backlog mode"
 msgstr ""
 "Le projet #%d ne peut pas être une Équipe parce qu'il n'utilise pas la "

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2020 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2021 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,23 +22,24 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Plan;
 
-interface BuildProgram
+final class ProgramIsATeamException extends \Exception
 {
-    /**
-     * @throws ProjectIsNotAProgramException
-     * @throws ProgramAccessException
-     */
-    public function ensureProgramIsAProject(int $project_id, \PFUser $user): void;
+    private string $i18n_message;
 
-    /**
-     * @throws ProgramAccessException
-     * @throws ProjectIsNotAProgramException
-     */
-    public function ensureProgramIsAProjectForManagement(int $id, \PFUser $user): void;
+    public function __construct(int $program_id)
+    {
+        parent::__construct(sprintf('Project #%d can not be defined as a Team because it is already a Program', $program_id));
+        $this->i18n_message = sprintf(
+            dgettext(
+                'tuleap-program_management',
+                'Project #%d can not be defined as a Team because it is already a Program'
+            ),
+            $program_id
+        );
+    }
 
-    /**
-     * @throws ProgramAccessException
-     * @throws ProgramIsATeamException
-     */
-    public function ensureProgramIsProjectAndUserIsAdminOf(int $id, \PFUser $user): void;
+    public function getI18NExceptionMessage(): string
+    {
+        return $this->i18n_message;
+    }
 }

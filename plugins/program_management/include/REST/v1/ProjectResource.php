@@ -65,6 +65,7 @@ use Tuleap\ProgramManagement\Domain\Program\Plan\PlanIterationChange;
 use Tuleap\ProgramManagement\Domain\Program\Plan\PlanProgramIncrementChange;
 use Tuleap\ProgramManagement\Domain\Program\Plan\PlanTrackerException;
 use Tuleap\ProgramManagement\Domain\Program\Plan\ProgramAccessException;
+use Tuleap\ProgramManagement\Domain\Program\Plan\ProgramIsATeamException;
 use Tuleap\ProgramManagement\Domain\Program\Plan\ProjectIsNotAProgramException;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIsTeamException;
@@ -121,7 +122,8 @@ final class ProjectResource extends AuthenticatedResource
                 new RestrictedUserCanAccessProjectVerifier(),
                 \EventManager::instance()
             ),
-            $program_dao
+            $program_dao,
+            new TeamDao()
         );
         $this->plan_creator   = new PlanCreator(
             $build_program,
@@ -275,6 +277,8 @@ final class ProjectResource extends AuthenticatedResource
             throw new I18NRestException(400, $e->getI18NExceptionMessage());
         } catch (ProgramAccessException $e) {
             throw new I18NRestException(404, $e->getI18NExceptionMessage());
+        } catch (ProgramIsATeamException $e) {
+            throw new I18NRestException(403, $e->getI18NExceptionMessage());
         }
     }
 
@@ -377,7 +381,7 @@ final class ProjectResource extends AuthenticatedResource
         );
 
         $project_manager     = \ProjectManager::instance();
-        $program_adapter     = new ProgramAdapter($project_manager, $project_access_checker, new ProgramDao());
+        $program_adapter     = new ProgramAdapter($project_manager, $project_access_checker, new ProgramDao(), new TeamDao());
         $artifact_factory    = \Tracker_ArtifactFactory::instance();
         $priority_manager    = \Tracker_Artifact_PriorityManager::build();
         $top_backlog_updater = new ProcessTopBacklogChange(
