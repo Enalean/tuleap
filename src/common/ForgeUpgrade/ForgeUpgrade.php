@@ -243,6 +243,7 @@ class ForgeUpgrade
             $this->logger->info("PreUp checks OK");
         } else {
             $this->logger->error("PreUp checks FAILD");
+            exit(1);
         }
 
         return $result;
@@ -280,6 +281,7 @@ class ForgeUpgrade
     protected function runUp(array $buckets): void
     {
         $this->logger->info('Start running migrations...');
+        $has_encountered_failure = false;
 
         if (! $this->options['core']['force']) {
             try {
@@ -292,6 +294,7 @@ class ForgeUpgrade
                 if (isset($bucket)) {
                     $this->db->logEnd($bucket, ForgeUpgrade_Db::STATUS_FAILURE);
                 }
+                $has_encountered_failure = true;
             }
         } else {
             foreach ($buckets as $bucket) {
@@ -301,8 +304,13 @@ class ForgeUpgrade
                 } catch (Exception $e) {
                     $this->logger->error($e->getMessage());
                     $this->db->logEnd($bucket, ForgeUpgrade_Db::STATUS_FAILURE);
+                    $has_encountered_failure = true;
                 }
             }
+        }
+
+        if ($has_encountered_failure) {
+            exit(1);
         }
     }
 
