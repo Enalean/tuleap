@@ -53,6 +53,10 @@ class ProjectCategoriesUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
      * @var Mockery\MockInterface|ProjectHistoryDao
      */
     private $history_dao;
+    /**
+     * @var \PHPUnit\Framework\MockObject\MockObject&CategoryCollectionConsistencyChecker
+     */
+    private $category_collection_consistency_checker;
 
     /** @before */
     public function instantiateMocks(): void
@@ -86,7 +90,14 @@ class ProjectCategoriesUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->factory->shouldReceive('getMandatoryParentCategoriesUnderRootOnlyWhenCategoryHasChildren')->andReturn([])->byDefault();
 
-        $this->updater = new ProjectCategoriesUpdater($this->factory, $this->history_dao, $this->set_node_facade);
+        $this->category_collection_consistency_checker = $this->createMock(CategoryCollectionConsistencyChecker::class);
+
+        $this->updater = new ProjectCategoriesUpdater(
+            $this->factory,
+            $this->history_dao,
+            $this->set_node_facade,
+            $this->category_collection_consistency_checker
+        );
     }
 
     private function getTrove($id): TroveCat
@@ -96,6 +107,10 @@ class ProjectCategoriesUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testAddEntryInProjectHistory(): void
     {
+        $this->category_collection_consistency_checker
+            ->expects(self::once())
+            ->method('checkCollectionConsistency');
+
         $this->history_dao
             ->shouldReceive('groupAddHistory')
             ->once()
@@ -109,6 +124,10 @@ class ProjectCategoriesUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItUpdatesCategoriesValues(): void
     {
+        $this->category_collection_consistency_checker
+            ->expects(self::once())
+            ->method('checkCollectionConsistency');
+
         $this->history_dao->shouldReceive('groupAddHistory');
 
         $this->factory->shouldReceive('removeProjectTopCategoryValue')->with($this->project, 2)->once();
@@ -120,30 +139,12 @@ class ProjectCategoriesUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->updater->update($this->project, CategoryCollection::buildFromWebPayload([1 => ['', '11', '12'], 2 => ['', '21']]));
     }
 
-    public function testItRespectsNbMaxValues(): void
-    {
-        $this->history_dao->shouldNotReceive('groupAddHistory');
-        $this->factory->shouldNotReceive('removeProjectTopCategoryValue');
-        $this->factory->shouldNotReceive('setNode');
-
-        $this->expectException(NbMaxValuesException::class);
-
-        $this->updater->update($this->project, CategoryCollection::buildFromWebPayload([1 => ['', '11', '12', '13', '14'], 2 => ['', '21', '22']]));
-    }
-
-    public function testItIgnoresSubmittedCategoryIfItIsNotInTopLevelOnes(): void
-    {
-        $this->history_dao->shouldNotReceive('groupAddHistory');
-        $this->factory->shouldNotReceive('removeProjectTopCategoryValue');
-        $this->factory->shouldNotReceive('setNode');
-
-        $this->expectException(NotRootCategoryException::class);
-
-        $this->updater->update($this->project, CategoryCollection::buildFromWebPayload([3 => ['', '31']]));
-    }
-
     public function testItIgnoresSubmittedCategoryIfValueIsNotAnArray(): void
     {
+        $this->category_collection_consistency_checker
+            ->expects(self::once())
+            ->method('checkCollectionConsistency');
+
         $this->history_dao->shouldNotReceive('groupAddHistory');
         $this->factory->shouldNotReceive('removeProjectTopCategoryValue');
         $this->set_node_facade->shouldNotReceive('setNode');
@@ -151,74 +152,27 @@ class ProjectCategoriesUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->updater->update($this->project, CategoryCollection::buildFromWebPayload([1 => '23']));
     }
 
-    public function testItEnsuresThatMandatoryCategoriesAreSet(): void
+    public function testItDoesNothingIfCollectionIsNotOK(): void
     {
+        $this->category_collection_consistency_checker
+            ->expects(self::once())
+            ->method('checkCollectionConsistency')
+            ->willThrowException(
+                new class extends ProjectCategoriesException
+                {
+                    public function getI18NMessage(): string
+                    {
+                        return '';
+                    }
+                }
+            );
+
         $this->history_dao->shouldNotReceive('groupAddHistory');
         $this->factory->shouldNotReceive('removeProjectTopCategoryValue');
         $this->set_node_facade->shouldNotReceive('setNode');
 
-        $this->factory->shouldReceive('getMandatoryParentCategoriesUnderRootOnlyWhenCategoryHasChildren')->andReturn([
-           new TroveCat(1, '', ''),
-           new TroveCat(2, '', ''),
-        ]);
+        $this->expectException(ProjectCategoriesException::class);
 
-        $this->expectException(MissingMandatoryCategoriesException::class);
-
-        $this->updater->update($this->project, CategoryCollection::buildFromWebPayload([1 => ['', '11', '12'], 2 => ['']]));
-    }
-
-    public function testCheckEnsuresThatMandatoryCategoriesAreSet(): void
-    {
-        $this->factory->shouldReceive('getMandatoryParentCategoriesUnderRootOnlyWhenCategoryHasChildren')->andReturn([
-            new TroveCat(1, '', ''),
-            new TroveCat(2, '', ''),
-        ]);
-
-        $this->expectException(MissingMandatoryCategoriesException::class);
-
-        $this->updater->checkCollectionConsistency(CategoryCollection::buildFromWebPayload([1 => ['', '11', '12'], 2 => ['']]));
-    }
-
-    public function testCheckEnsuresThatSubmittedCategoryBelongsToTheHierarchy(): void
-    {
-        $this->history_dao->shouldNotReceive('groupAddHistory');
-        $this->factory->shouldNotReceive('removeProjectTopCategoryValue');
-        $this->set_node_facade->shouldNotReceive('setNode');
-
-        $this->expectException(InvalidValueForRootCategoryException::class);
-
-        $this->updater->checkCollectionConsistency(CategoryCollection::buildFromWebPayload([1 => ['', '21']]));
-    }
-
-    public function testCheckEnsuresThatSubmittedCategoryBelongsToTheHierarchyRecursively(): void
-    {
-        $this->history_dao->shouldReceive('groupAddHistory');
-
-        $this->factory->shouldReceive('removeProjectTopCategoryValue')->with($this->project, 4)->once();
-        $this->set_node_facade->shouldReceive('setNode')->with($this->project, 411, 4)->once();
-
-        $this->updater->update($this->project, CategoryCollection::buildFromWebPayload([4 => ['', '411']]));
-    }
-
-    public function testCheckEnsuresThatAllSubmittedCategoryBelongsToTheHierarchy(): void
-    {
-        $this->history_dao->shouldNotReceive('groupAddHistory');
-        $this->factory->shouldNotReceive('removeProjectTopCategoryValue');
-        $this->set_node_facade->shouldNotReceive('setNode');
-
-        $this->expectException(InvalidValueForRootCategoryException::class);
-
-        $this->updater->checkCollectionConsistency(CategoryCollection::buildFromWebPayload([4 => ['', '411', '21']]));
-    }
-
-    public function testCheckEnsuresThanSubmittedValueIdIsDifferentThanCategoryId(): void
-    {
-        $this->history_dao->shouldNotReceive('groupAddHistory');
-        $this->factory->shouldNotReceive('removeProjectTopCategoryValue');
-        $this->set_node_facade->shouldNotReceive('setNode');
-
-        $this->expectException(InvalidValueForRootCategoryException::class);
-
-        $this->updater->checkCollectionConsistency(CategoryCollection::buildFromWebPayload([4 => [4]]));
+        $this->updater->update($this->project, CategoryCollection::buildFromWebPayload([1 => ['', '11']]));
     }
 }

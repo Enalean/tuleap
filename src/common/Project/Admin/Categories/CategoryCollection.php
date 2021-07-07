@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace Tuleap\Project\Admin\Categories;
 
 use TroveCat;
+use Tuleap\Project\REST\v1\ProjectPostRepresentation;
 
 final class CategoryCollection
 {
@@ -64,6 +65,20 @@ final class CategoryCollection
             }
         }
         return new self(...$root_categories);
+    }
+
+    public static function buildFromRESTProjectCreation(ProjectPostRepresentation $project_post_representation): self
+    {
+        $categories = [];
+        if ($project_post_representation->categories !== null) {
+            foreach ($project_post_representation->categories as $category_representation) {
+                $category = new TroveCat($category_representation->category_id, '', '');
+                $category->addChildren(new TroveCat($category_representation->value_id, '', ''));
+                $categories[] = $category;
+            }
+        }
+
+        return new self(...$categories);
     }
 
     /**

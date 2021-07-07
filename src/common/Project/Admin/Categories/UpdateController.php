@@ -66,7 +66,10 @@ class UpdateController implements DispatchableWithRequest
             new ProjectCategoriesUpdater(
                 new \TroveCatFactory(new TroveCatDao()),
                 new ProjectHistoryDao(),
-                new TroveSetNodeFacade()
+                new TroveSetNodeFacade(),
+                new CategoryCollectionConsistencyChecker(
+                    new \TroveCatFactory(new TroveCatDao())
+                )
             )
         );
     }

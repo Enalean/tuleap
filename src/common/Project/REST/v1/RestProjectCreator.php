@@ -26,9 +26,7 @@ namespace Tuleap\Project\REST\v1;
 use Luracast\Restler\RestException;
 use Project;
 use ProjectCreationData;
-use Tuleap\Project\Admin\Categories\CategoryCollection;
 use Tuleap\Project\Admin\Categories\ProjectCategoriesException;
-use Tuleap\Project\Admin\Categories\ProjectCategoriesUpdater;
 use Tuleap\Project\Admin\DescriptionFields\FieldDoesNotExistException;
 use Tuleap\Project\Admin\DescriptionFields\FieldUpdator;
 use Tuleap\Project\Admin\DescriptionFields\MissingMandatoryFieldException;
@@ -62,10 +60,6 @@ class RestProjectCreator
      */
     private $template_factory;
     /**
-     * @var ProjectCategoriesUpdater
-     */
-    private $categories_updater;
-    /**
      * @var FieldUpdator
      */
     private $fields_updater;
@@ -74,13 +68,11 @@ class RestProjectCreator
         \ProjectCreator $project_creator,
         \ProjectXMLImporter $project_XML_importer,
         TemplateFactory $template_factory,
-        ProjectCategoriesUpdater $categories_updater,
         FieldUpdator $fields_updater
     ) {
         $this->project_creator      = $project_creator;
         $this->project_XML_importer = $project_XML_importer;
         $this->template_factory     = $template_factory;
-        $this->categories_updater   = $categories_updater;
         $this->fields_updater       = $fields_updater;
     }
 
@@ -97,14 +89,10 @@ class RestProjectCreator
         ProjectCreationData $creation_data
     ): Project {
         try {
-            $category_collection = $this->getCategoryCollection($post_representation);
-            $this->categories_updater->checkCollectionConsistency($category_collection);
-
             $field_collection = $this->getFieldCollection($post_representation);
             $this->fields_updater->checkFieldConsistency($field_collection);
 
             $project = $this->createProjectWithSelectedTemplate($post_representation, $creation_data);
-            $this->categories_updater->update($project, $category_collection);
             $this->fields_updater->updateFromArray($field_collection, $project);
             return $project;
         } catch (MaxNumberOfProjectReachedForPlatformException | MaxNumberOfProjectReachedForUserException $exception) {
@@ -158,19 +146,6 @@ class RestProjectCreator
         }
 
         throw new InvalidXMLTemplateNameException();
-    }
-
-    private function getCategoryCollection(ProjectPostRepresentation $project_post_representation): CategoryCollection
-    {
-        $categories = [];
-        if ($project_post_representation->categories !== null) {
-            foreach ($project_post_representation->categories as $category_representation) {
-                $category = new \TroveCat($category_representation->category_id, '', '');
-                $category->addChildren(new \TroveCat($category_representation->value_id, '', ''));
-                $categories[] = $category;
-            }
-        }
-        return new CategoryCollection(...$categories);
     }
 
     private function getFieldCollection(ProjectPostRepresentation $post_representation): array

@@ -25,6 +25,8 @@ namespace Tuleap\Project\Registration;
 use ProjectCreationData;
 use Psr\Log\NullLogger;
 use Tuleap\ForgeConfigSandbox;
+use Tuleap\Project\Admin\Categories\CategoryCollectionConsistencyChecker;
+use Tuleap\Project\Admin\Categories\ProjectCategoriesException;
 use Tuleap\Project\DefaultProjectVisibilityRetriever;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
@@ -34,10 +36,19 @@ final class ProjectRegistrationRESTCheckerTest extends TestCase
     use ForgeConfigSandbox;
 
     private ProjectRegistrationRESTChecker $checker;
+    /**
+     * @var \PHPUnit\Framework\MockObject\MockObject&CategoryCollectionConsistencyChecker
+     */
+    private $category_collection_consistency_checker;
 
     protected function setUp(): void
     {
-        $this->checker = new ProjectRegistrationRESTChecker(new DefaultProjectVisibilityRetriever());
+        $this->category_collection_consistency_checker = $this->createMock(CategoryCollectionConsistencyChecker::class);
+
+        $this->checker = new ProjectRegistrationRESTChecker(
+            new DefaultProjectVisibilityRetriever(),
+            $this->category_collection_consistency_checker
+        );
     }
 
     public function testValidatesWithoutErrorsWhenEverythingIsFine(): void
@@ -48,6 +59,10 @@ final class ProjectRegistrationRESTCheckerTest extends TestCase
         );
 
         \ForgeConfig::set(\ProjectManager::SYS_USER_CAN_CHOOSE_PROJECT_PRIVACY, 1);
+
+        $this->category_collection_consistency_checker
+            ->expects(self::once())
+            ->method('checkCollectionConsistency');
 
         $errors = $this->checker->collectAllErrorsForProjectRegistration(UserTestBuilder::aUser()->build(), $data);
         self::assertEmpty($errors->getErrors());
@@ -64,6 +79,10 @@ final class ProjectRegistrationRESTCheckerTest extends TestCase
         \ForgeConfig::set(\ProjectManager::SYS_USER_CAN_CHOOSE_PROJECT_PRIVACY, 0);
         \ForgeConfig::set(DefaultProjectVisibilityRetriever::CONFIG_SETTING_NAME, \Project::ACCESS_PRIVATE);
 
+        $this->category_collection_consistency_checker
+            ->expects(self::once())
+            ->method('checkCollectionConsistency');
+
         $errors = $this->checker->collectAllErrorsForProjectRegistration(UserTestBuilder::aUser()->build(), $data);
         self::assertInstanceOf(ProjectAccessLevelCannotBeChosenByUserException::class, $errors->getErrors()[0]);
     }
@@ -79,7 +98,39 @@ final class ProjectRegistrationRESTCheckerTest extends TestCase
         \ForgeConfig::set(\ProjectManager::SYS_USER_CAN_CHOOSE_PROJECT_PRIVACY, 0);
         \ForgeConfig::set(DefaultProjectVisibilityRetriever::CONFIG_SETTING_NAME, \Project::ACCESS_PRIVATE);
 
+        $this->category_collection_consistency_checker
+            ->expects(self::once())
+            ->method('checkCollectionConsistency');
+
         $errors = $this->checker->collectAllErrorsForProjectRegistration(UserTestBuilder::aUser()->build(), $data);
         self::assertEmpty($errors->getErrors());
+    }
+
+    public function testItCollectsCategoryError(): void
+    {
+        $data = new ProjectCreationData(
+            new DefaultProjectVisibilityRetriever(),
+            new NullLogger()
+        );
+
+        \ForgeConfig::set(\ProjectManager::SYS_USER_CAN_CHOOSE_PROJECT_PRIVACY, 1);
+
+        $this->category_collection_consistency_checker
+            ->expects(self::once())
+            ->method('checkCollectionConsistency')
+            ->willThrowException(
+                new class extends ProjectCategoriesException
+                {
+                    public function getI18NMessage(): string
+                    {
+                        return '';
+                    }
+                }
+            );
+
+        $errors = $this->checker->collectAllErrorsForProjectRegistration(UserTestBuilder::aUser()->build(), $data);
+
+        self::assertNotEmpty($errors->getErrors());
+        self::assertCount(1, $errors->getErrors());
     }
 }

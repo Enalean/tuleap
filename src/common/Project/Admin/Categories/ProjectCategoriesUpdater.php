@@ -30,83 +30,31 @@ use TroveCatFactory;
 
 class ProjectCategoriesUpdater
 {
-    /**
-     * @var TroveCatFactory
-     */
-    private $factory;
-    /**
-     * @var ProjectHistoryDao
-     */
-    private $history_dao;
-    /**
-     * @var TroveSetNodeFacade
-     */
-    private $set_node_facade;
+    private TroveCatFactory $factory;
+    private ProjectHistoryDao $history_dao;
+    private TroveSetNodeFacade $set_node_facade;
+    private CategoryCollectionConsistencyChecker $category_collection_consistency_checker;
 
-    public function __construct(TroveCatFactory $factory, ProjectHistoryDao $history_dao, TroveSetNodeFacade $set_node_facade)
-    {
-        $this->factory         = $factory;
-        $this->history_dao     = $history_dao;
-        $this->set_node_facade = $set_node_facade;
+    public function __construct(
+        TroveCatFactory $factory,
+        ProjectHistoryDao $history_dao,
+        TroveSetNodeFacade $set_node_facade,
+        CategoryCollectionConsistencyChecker $category_collection_consistency_checker
+    ) {
+        $this->factory                                 = $factory;
+        $this->history_dao                             = $history_dao;
+        $this->set_node_facade                         = $set_node_facade;
+        $this->category_collection_consistency_checker = $category_collection_consistency_checker;
     }
 
     /**
-     * @throws MissingMandatoryCategoriesException
-     */
-    public function checkCollectionConsistency(CategoryCollection $submitted_categories): void
-    {
-        $top_categories_nb_max_values = [];
-        foreach ($this->factory->getTopCategoriesWithNbMaxCategories() as $row) {
-            $top_categories_nb_max_values[(int) $row['trove_cat_id']] = (int) $row['nb_max_values'];
-        }
-
-        $mandatory_categories = [];
-        foreach ($this->factory->getMandatoryParentCategoriesUnderRootOnlyWhenCategoryHasChildren() as $category) {
-            $mandatory_categories[$category->getId()] = $category;
-        }
-
-        $reference_categories = $this->factory->getTree();
-
-        foreach ($submitted_categories->getRootCategories() as $submitted_category) {
-            if (! isset($top_categories_nb_max_values[$submitted_category->getId()])) {
-                throw new NotRootCategoryException(sprintf('The category id %d is not a valid root category', $submitted_category->getId()));
-            }
-
-            if (count($submitted_category->getChildren()) > $top_categories_nb_max_values[$submitted_category->getId()]) {
-                throw new NbMaxValuesException(sprintf('The category %d only allows %d values', $submitted_category->getId(), $top_categories_nb_max_values[$submitted_category->getId()]));
-            }
-
-            $this->findInCategoryTree($reference_categories, $submitted_category);
-
-            if (isset($mandatory_categories[$submitted_category->getId()])) {
-                unset($mandatory_categories[$submitted_category->getId()]);
-            }
-        }
-
-        if (count($mandatory_categories) !== 0) {
-            throw new MissingMandatoryCategoriesException(
-                sprintf(
-                    'Mandatory categories where missing: %s',
-                    implode(
-                        ', ',
-                        array_map(
-                            static function (TroveCat $category) {
-                                return sprintf('%s (%d)', $category->getFullname(), $category->getId());
-                            },
-                            array_values($mandatory_categories)
-                        )
-                    )
-                )
-            );
-        }
-    }
-
-    /**
+     * @throws NotRootCategoryException
+     * @throws NbMaxValuesException
      * @throws MissingMandatoryCategoriesException
      */
     public function update(Project $project, CategoryCollection $submitted_categories): void
     {
-        $this->checkCollectionConsistency($submitted_categories);
+        $this->category_collection_consistency_checker->checkCollectionConsistency($submitted_categories);
 
         foreach ($submitted_categories->getRootCategories() as $category) {
             $this->doUpdate($project, $category);
@@ -120,51 +68,6 @@ class ProjectCategoriesUpdater
         $this->factory->removeProjectTopCategoryValue($project, $root_category->getId());
         foreach ($root_category->getChildren() as $selected_category) {
             $this->set_node_facade->setNode($project, $selected_category->getId(), $root_category->getId());
-        }
-    }
-
-    /**
-     * @param TroveCat[] $tree
-     * @param TroveCat  $category
-     */
-    private function findInCategoryTree(array $tree, TroveCat $submitted_category)
-    {
-        foreach ($submitted_category->getChildren() as $selected_category) {
-            $this->checkThatCategoryIdIsDifferentThanValueId($tree, $submitted_category, $selected_category);
-
-            if (! $this->findTroveInTree($tree[$submitted_category->getId()], $selected_category)) {
-                throw new InvalidValueForRootCategoryException(sprintf('%d does not belong to %s (%d) category hierarchy', $selected_category->getId(), $tree[$submitted_category->getId()]->getFullname(), $tree[$submitted_category->getId()]->getId()));
-            }
-        }
-    }
-
-    private function findTroveInTree(TroveCat $tree, TroveCat $category): bool
-    {
-        if ((int) $tree->getId() === (int) $category->getId()) {
-            return true;
-        }
-        foreach ($tree->getChildren() as $children) {
-            if ($this->findTroveInTree($children, $category)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private function checkThatCategoryIdIsDifferentThanValueId(
-        array $tree,
-        TroveCat $submitted_category,
-        TroveCat $selected_category
-    ): void {
-        if ((int) $submitted_category->getId() === (int) $selected_category->getId()) {
-            throw new InvalidValueForRootCategoryException(
-                sprintf(
-                    '%d does not belong to %s (%d) category hierarchy',
-                    $selected_category->getId(),
-                    $tree[$submitted_category->getId()]->getFullname(),
-                    $tree[$submitted_category->getId()]->getId()
-                )
-            );
         }
     }
 }

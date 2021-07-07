@@ -63,6 +63,10 @@ msgstr[0] "%d Projet parent"
 msgstr[1] "%d Projets parents"
 
 #, php-format
+msgid "%d does not belong to %s (%d) category hierarchy"
+msgstr "%d n'appartient pas à la hiérarchie de la catégorie %s (%d)"
+
+#, php-format
 msgid "%d member"
 msgid_plural "%d members"
 msgstr[0] "%d membre"
@@ -2006,6 +2010,10 @@ msgstr "Gestion des modèles de référence projet"
 msgid "Manage system reference patterns"
 msgstr "Gestion des modèles de référence système"
 
+#, php-format
+msgid "Mandatory categories where missing: %s"
+msgstr "Les catégories obligatoires sont manquantes : %s"
+
 msgid "Mass emailing"
 msgstr "Envoi d'emails en masse"
 
@@ -3413,6 +3421,14 @@ msgstr "Cet utilisateur n'existe pas"
 
 msgid "The %s team."
 msgstr "L'équipe %s."
+
+#, php-format
+msgid "The category %d only allows %d values"
+msgstr "La catégorie %d autorise seulement %d valeurs"
+
+#, php-format
+msgid "The category id %d is not a valid root category"
+msgstr "L'id de catégorie %s n'est pas une catégorie racine valide"
 
 msgid "The chosen color is not allowed."
 msgstr "La couleur choisie n'est pas autorisée."

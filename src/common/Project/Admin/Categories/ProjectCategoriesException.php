@@ -23,7 +23,8 @@ declare(strict_types=1);
 
 namespace Tuleap\Project\Admin\Categories;
 
-abstract class ProjectCategoriesException extends \RuntimeException
-{
+use Tuleap\Project\Registration\RegistrationErrorException;
 
+abstract class ProjectCategoriesException extends RegistrationErrorException
+{
 }
