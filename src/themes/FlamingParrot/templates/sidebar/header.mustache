@@ -73,7 +73,7 @@
                         {{/ is_in_children_projects_context }}
                         {{^ is_in_children_projects_context }}
                             <span class="project-sidebar-linked-projects-icon">
-                                <i class="fas fa-fw fa-level-up-alt fa-flip-horizontal" aria-hidden="true"></i>
+                                <i class="fas fa-fw fa-level-up-alt fa-flip-horizontal project-sidebar-linked-projects-icon-parent" aria-hidden="true"></i>
                             </span>
                         {{/ is_in_children_projects_context }}
                         <span class="project-sidebar-linked-projects-label">
@@ -94,15 +94,15 @@
         </div>
         <section class="tlp-popover project-sidebar-linked-projects-popover" id="project-sidebar-linked-projects-popover">
             <div class="tlp-popover-arrow"></div>
+            <div class="tlp-popover-header">
+                {{# is_in_children_projects_context }}<i class="fas fa-fw fa-tlp-project-boxes" aria-hidden="true"></i>{{/ is_in_children_projects_context }}
+                {{^ is_in_children_projects_context }}<i class="fas fa-fw fa-level-up-alt fa-flip-horizontal project-sidebar-linked-projects-icon-parent" aria-hidden="true"></i>{{/ is_in_children_projects_context }}
+                <h1 class="tlp-popover-title">
+                    {{# is_in_children_projects_context }}{{# ngettext }}%d Aggregated project | %d Aggregated projects | {{ nb_of_linked_projects }}{{/ ngettext }}{{/ is_in_children_projects_context }}
+                    {{^ is_in_children_projects_context }}{{# ngettext }}%d Parent project | %d Parent projects | {{ nb_of_linked_projects }}{{/ ngettext }}{{/ is_in_children_projects_context }}
+                </h1>
+            </div>
             <div class="tlp-popover-body">
-                            <span class="project-sidebar-linked-projects-title">
-                            {{# is_in_children_projects_context }}<i class="fas fa-fw fa-tlp-project-boxes project-sidebar-linked-projects-icon" aria-hidden="true"></i>{{/ is_in_children_projects_context }}
-                                {{^ is_in_children_projects_context }}<i class="fas fa-fw fa-level-up-alt fa-flip-horizontal project-sidebar-linked-projects-icon" aria-hidden="true"></i>{{/ is_in_children_projects_context }}
-                                <span class="project-sidebar-linked-projects-label-popover">
-                                {{# is_in_children_projects_context }}{{# ngettext }}%d Aggregated project | %d Aggregated projects | {{ nb_of_linked_projects }}{{/ ngettext }}{{/ is_in_children_projects_context }}
-                                    {{^ is_in_children_projects_context }}{{# ngettext }}%d Parent project | %d Parent projects | {{ nb_of_linked_projects }}{{/ ngettext }}{{/ is_in_children_projects_context }}
-                                </span>
-                            </span>
                 <ul class="project-sidebar-linked-projects-list-popover">
                     {{# projects }}
                         <li class="project-sidebar-linked-projects-item">

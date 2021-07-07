@@ -31,5 +31,5 @@ export function init(): void {
         return;
     }
 
-    createPopover(linked_projects_element, popover_element, { placement: "right" });
+    createPopover(linked_projects_element, popover_element, { placement: "right-start" });
 }
