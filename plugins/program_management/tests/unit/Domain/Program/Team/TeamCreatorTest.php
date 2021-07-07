@@ -22,42 +22,66 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Team\Creation;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use Tuleap\ProgramManagement\Domain\Program\ProgramIsTeamException;
 use Tuleap\ProgramManagement\Domain\Program\ToBeCreatedProgram;
 use Tuleap\ProgramManagement\Stub\BuildProgramStub;
 use Tuleap\Test\Builders\UserTestBuilder;
 
 final class TeamCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
+    private BuildProgramStub $program_adapter;
+    /**
+     * @var \PHPUnit\Framework\MockObject\MockObject|BuildTeam
+     */
+    private $team_adapter;
+    /**
+     * @var \PHPUnit\Framework\MockObject\MockObject|TeamStore
+     */
+    private $team_dao;
+    private int $project_id;
+    private int $team_project_id;
+    private \PFUser $user;
+
+    protected function setUp(): void
+    {
+        $this->program_adapter = BuildProgramStub::stubValidToBeCreatedProgram();
+        $this->team_adapter    = $this->createMock(BuildTeam::class);
+        $this->team_dao        = $this->createMock(TeamStore::class);
+
+        $this->project_id      = 101;
+        $this->team_project_id = 2;
+        $this->user            = UserTestBuilder::aUser()->build();
+    }
 
     public function testItCreatesAPlan(): void
     {
-        $program_adapter = BuildProgramStub::stubValidToBeCreatedProgram();
-        $team_adapter    = \Mockery::mock(BuildTeam::class);
-        $team_adapter->shouldReceive('checkProjectIsATeam')->once();
+        $this->team_adapter->expects(self::once())->method('checkProjectIsATeam');
 
-        $project_id      = 101;
-        $team_project_id = 2;
+        $program    = ToBeCreatedProgram::fromId($this->program_adapter, $this->project_id, $this->user);
+        $collection = new TeamCollection([Team::build($this->team_adapter, $this->team_project_id, $this->user)], $program);
+        $this->team_adapter
+            ->expects(self::once())
+            ->method('buildTeamProject')
+            ->willReturnCallback(
+                function (array $team_ids, ToBeCreatedProgram $to_be_created_program, \PFUser $user) use ($program, $collection): TeamCollection {
+                    if ($to_be_created_program->getId() !== $program->getId()) {
+                        throw new \RuntimeException('program id #' . $program->getId() . ' is not same to ' . $to_be_created_program->getId());
+                    }
+                    return $collection;
+                }
+            );
 
-        $user = UserTestBuilder::aUser()->build();
+        $this->team_dao->expects(self::once())->method('save')->with($collection);
 
-        $program    = ToBeCreatedProgram::fromId($program_adapter, $project_id, $user);
-        $collection = new TeamCollection([Team::build($team_adapter, $team_project_id, $user)], $program);
-        $team_adapter->shouldReceive('buildTeamProject')
-            ->with(
-                [$team_project_id],
-                \Mockery::on(function (ToBeCreatedProgram $to_be_created_program) use ($program) {
-                    return $to_be_created_program->getId() === $program->getId();
-                }),
-                $user
-            )->once()
-            ->andReturn($collection);
+        $team_adapter = new TeamCreator($this->program_adapter, $this->team_adapter, $this->team_dao);
+        $team_adapter->create($this->user, $this->project_id, [$this->team_project_id]);
+    }
 
-        $team_dao = \Mockery::mock(TeamStore::class);
-        $team_dao->shouldReceive('save')->with($collection)->once();
+    public function testThrowExceptionWhenTeamIdsContainProgram(): void
+    {
+        $this->expectException(ProgramIsTeamException::class);
 
-        $team_adapter = new TeamCreator($program_adapter, $team_adapter, $team_dao);
-        $team_adapter->create($user, $project_id, [$team_project_id]);
+        $team_adapter = new TeamCreator($this->program_adapter, $this->team_adapter, $this->team_dao);
+        $team_adapter->create($this->user, $this->project_id, [$this->team_project_id, $this->project_id]);
     }
 }
