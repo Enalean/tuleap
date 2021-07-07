@@ -22,20 +22,27 @@ namespace Tuleap\Project;
 
 class DescriptionFieldsFactory
 {
-
-    /**
-     * @var DescriptionFieldsDao
-     */
-    private $dao;
+    private DescriptionFieldsDao $dao;
 
     public function __construct(DescriptionFieldsDao $dao)
     {
         $this->dao = $dao;
     }
 
+    /**
+     * @psalm-return list<array{group_desc_id: int, desc_required: int, desc_name: string, desc_description: string, desc_rank: int, desc_type: string}>
+     */
     public function getAllDescriptionFields(): array
     {
         return $this->dao->searchAll();
+    }
+
+    public function isLegacyLongDescriptionFieldExisting(): bool
+    {
+        return $this->dao->isFieldExisting(
+            101,
+            'project_desc_name:full_desc'
+        );
     }
 
     public function getPaginatedDescriptionFields(int $limit, int $offset): array

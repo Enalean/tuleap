@@ -23,7 +23,29 @@ declare(strict_types=1);
 
 namespace Tuleap\Project\Admin\DescriptionFields;
 
-class FieldDoesNotExistException extends \Exception
-{
+use Tuleap\Project\Registration\RegistrationErrorException;
 
+class FieldDoesNotExistException extends RegistrationErrorException
+{
+    private string $non_existing_field;
+
+    public function __construct(string $non_existing_field)
+    {
+        $this->non_existing_field = $non_existing_field;
+
+        parent::__construct(
+            sprintf(
+                'Some fields does not exists: %s',
+                $non_existing_field
+            )
+        );
+    }
+
+    public function getI18NMessage(): string
+    {
+        return sprintf(
+            dgettext('tuleap-core', 'Some fields does not exists: %s'),
+            $this->non_existing_field
+        );
+    }
 }

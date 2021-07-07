@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Project\Admin\DescriptionFields;
 
-use Project;
 use ProjectCreationData;
 use Psr\Log\LoggerInterface;
 use Tuleap\Project\Admin\ProjectDetails\ProjectDetailsDAO;
@@ -60,21 +59,8 @@ class FieldUpdator
 
         foreach ($description_fields as $field) {
             $field_id    = $field["group_desc_id"];
-            $desc_id_val = $data->getField($field_id);
-            $this->storeFieldValue($group_id, $desc_id_val, (int) $field_id);
-        }
-    }
-
-    public function updateFromArray(array $submitted_fields, Project $project): void
-    {
-        $description_fields = $this->fields_factory->getAllDescriptionFields();
-
-        foreach ($description_fields as $field) {
-            $field_id = $field["group_desc_id"];
-            if (isset($submitted_fields[$field_id])) {
-                $submitted_value = $submitted_fields[$field_id];
-                $this->storeFieldValue((int) $project->getID(), $submitted_value, (int) $field_id);
-            }
+            $desc_id_val = $data->getFieldValue($field_id);
+            $this->storeFieldValue($group_id, $desc_id_val, $field_id);
         }
     }
 
@@ -87,59 +73,6 @@ class FieldUpdator
                     sprintf("Impossible to create field %s with value %s", $field_id, $submitted_value)
                 );
             }
-        }
-    }
-
-    /**
-     * @throws FieldDoesNotExistException
-     * @throws MissingMandatoryFieldException
-     */
-    public function checkFieldConsistency(array $field_collection): void
-    {
-        $mandatory_fields = [];
-        $optional_field   = [];
-        foreach ($this->fields_factory->getAllDescriptionFields() as $field) {
-            $field_id = $field['group_desc_id'];
-            if ($field['desc_required']) {
-                $mandatory_fields[$field_id] = $field['desc_name'];
-            } else {
-                $optional_field[$field_id] = $field['desc_name'];
-            }
-        }
-
-        $non_existing_field = [];
-        foreach ($field_collection as $field_id => $field_value) {
-            if (isset($mandatory_fields[$field_id])) {
-                unset($mandatory_fields[$field_id]);
-            } elseif (isset($optional_field[$field_id])) {
-                unset($optional_field[$field_id]);
-            } else {
-                $non_existing_field[$field_id] = $field_id;
-            }
-        }
-
-        if (count($mandatory_fields) !== 0) {
-            throw new MissingMandatoryFieldException(
-                sprintf(
-                    'Mandatory field where missing: %s',
-                    implode(
-                        ', ',
-                        array_values($mandatory_fields)
-                    )
-                )
-            );
-        }
-
-        if (count($non_existing_field) !== 0) {
-            throw new FieldDoesNotExistException(
-                sprintf(
-                    'Some fields does not exists: %s',
-                    implode(
-                        ', ',
-                        array_values($non_existing_field)
-                    )
-                )
-            );
         }
     }
 }

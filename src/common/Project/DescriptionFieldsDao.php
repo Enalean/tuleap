@@ -25,11 +25,26 @@ use Tuleap\DB\DataAccessObject;
 
 class DescriptionFieldsDao extends DataAccessObject
 {
+    /**
+     * @psalm-return list<array{group_desc_id: int, desc_required: int, desc_name: string, desc_description: string, desc_rank: int, desc_type: string}>
+     */
     public function searchAll(): array
     {
         $sql = "SELECT * FROM group_desc ORDER BY desc_rank";
 
         return $this->getDB()->run($sql);
+    }
+
+    public function isFieldExisting(int $field_id, string $field_name): bool
+    {
+        $sql = "SELECT NULL
+                FROM group_desc
+                WHERE group_desc_id = ?
+                    AND desc_name = ?";
+
+        $rows = $this->getDB()->run($sql, $field_id, $field_name);
+
+        return count($rows) > 0;
     }
 
     public function searchFieldsWithPagination(int $limit, int $offset): array

@@ -361,7 +361,6 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
         }
 
         $this->field_updator->update($data, $group_id);
-        //$this->setCategories($data, $group_id);
         $this->initFileModule($group_id);
         $this->setProjectAdmin($group_id, $admin_user);
 

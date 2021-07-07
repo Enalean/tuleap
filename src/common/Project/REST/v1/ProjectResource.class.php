@@ -39,8 +39,7 @@ use Tuleap\Label\Label;
 use Tuleap\Label\PaginatedCollectionsOfLabelsBuilder;
 use Tuleap\Label\REST\LabelRepresentation;
 use Tuleap\Project\Admin\Categories\CategoryCollectionConsistencyChecker;
-use Tuleap\Project\Admin\DescriptionFields\FieldUpdator;
-use Tuleap\Project\Admin\ProjectDetails\ProjectDetailsDAO;
+use Tuleap\Project\Admin\DescriptionFields\ProjectRegistrationSubmittedFieldsCollectionConsistencyChecker;
 use Tuleap\Project\Banner\BannerCreator;
 use Tuleap\Project\Banner\BannerDao;
 use Tuleap\Project\Banner\BannerPermissionsChecker;
@@ -207,6 +206,9 @@ class ProjectResource extends AuthenticatedResource
                 ServiceManager::instance(),
                 new ProjectCreationDataServiceFromXmlInheritor(
                     ServiceManager::instance(),
+                ),
+                new DescriptionFieldsFactory(
+                    new DescriptionFieldsDao()
                 ),
                 $this->getBackendLogger()
             );
@@ -1251,10 +1253,8 @@ class ProjectResource extends AuthenticatedResource
                 ProjectCreator::buildSelfRegularValidation()
             ),
             TemplateFactory::build(),
-            new FieldUpdator(
-                new DescriptionFieldsFactory(new DescriptionFieldsDao()),
-                new ProjectDetailsDAO(),
-                ProjectXMLImporter::getLogger(),
+            new ProjectRegistrationSubmittedFieldsCollectionConsistencyChecker(
+                new DescriptionFieldsFactory(new DescriptionFieldsDao())
             )
         );
     }
