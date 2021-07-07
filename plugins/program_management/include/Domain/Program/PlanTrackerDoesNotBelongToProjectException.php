@@ -24,8 +24,23 @@ namespace Tuleap\ProgramManagement\Domain\Program;
 
 final class PlanTrackerDoesNotBelongToProjectException extends \Exception implements ProgramTrackerException
 {
+    private string $i18n_message;
+
     public function __construct(int $tracker_id, int $project_id)
     {
-        parent::__construct("tracker #$tracker_id does not belong to project #$project_id ");
+        parent::__construct("Tracker #$tracker_id does not belong to project #$project_id");
+        $this->i18n_message = sprintf(
+            dgettext(
+                'tuleap-program_management',
+                'Tracker #%d does not belong to project #%d'
+            ),
+            $tracker_id,
+            $project_id
+        );
+    }
+
+    public function getI18NExceptionMessage(): string
+    {
+        return $this->i18n_message;
     }
 }

@@ -24,4 +24,23 @@ namespace Tuleap\ProgramManagement\Domain\Program\Plan;
 
 class ProgramAccessException extends \Exception
 {
+    private string $i18n_message;
+
+    public function __construct(int $program_id, \PFUser $user)
+    {
+        parent::__construct(sprintf('User %s can not access to Program #%d', $user->getRealName(), $program_id));
+        $this->i18n_message = sprintf(
+            dgettext(
+                'tuleap-program_management',
+                'User %s can not access to Program #%d'
+            ),
+            $user->getRealName(),
+            $program_id
+        );
+    }
+
+    public function getI18NExceptionMessage(): string
+    {
+        return $this->i18n_message;
+    }
 }

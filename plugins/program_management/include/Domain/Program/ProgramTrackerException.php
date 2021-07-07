@@ -24,4 +24,5 @@ namespace Tuleap\ProgramManagement\Domain\Program;
 
 interface ProgramTrackerException extends \Throwable
 {
+    public function getI18NExceptionMessage(): string;
 }

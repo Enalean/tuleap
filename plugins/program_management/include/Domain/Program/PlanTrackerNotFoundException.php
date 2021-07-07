@@ -24,8 +24,22 @@ namespace Tuleap\ProgramManagement\Domain\Program;
 
 final class PlanTrackerNotFoundException extends \Exception implements ProgramTrackerException
 {
+    private string $i18n_message;
+
     public function __construct(int $tracker_id)
     {
-        parent::__construct("tracker #$tracker_id not found");
+        parent::__construct("Tracker #$tracker_id is not found");
+        $this->i18n_message = sprintf(
+            dgettext(
+                'tuleap-program_management',
+                'Tracker #%d is not found'
+            ),
+            $tracker_id
+        );
+    }
+
+    public function getI18NExceptionMessage(): string
+    {
+        return $this->i18n_message;
     }
 }

@@ -26,8 +26,22 @@ use Tuleap\ProgramManagement\Domain\Program\Plan\PlanTrackerException;
 
 final class ProgramIsTeamException extends \Exception implements PlanTrackerException
 {
+    private string $i18n_message;
+
     public function __construct(int $program_id)
     {
         parent::__construct(sprintf('Program %d can not be a Program and a Team in the same time', $program_id));
+        $this->i18n_message = sprintf(
+            dgettext(
+                'tuleap-program_management',
+                'Program %d can not be a Program and a Team in the same time'
+            ),
+            $program_id
+        );
+    }
+
+    public function getI18NExceptionMessage(): string
+    {
+        return $this->i18n_message;
     }
 }

@@ -75,6 +75,7 @@ final class ProgramAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $user = \Mockery::mock(\PFUser::class);
         $user->shouldReceive('isAdmin')->with($project_id)->andReturnFalse();
+        $user->shouldReceive('getRealName')->andReturn('John');
 
         $this->expectException(ProgramAccessException::class);
         $this->getAdapter()->ensureProgramIsAProjectForManagement($project_id, $user);
@@ -112,6 +113,7 @@ final class ProgramAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $user = \Mockery::mock(\PFUser::class);
         $user->shouldReceive('isAdmin')->with($project_id)->andReturnFalse();
+        $user->shouldReceive('getRealName')->andReturn('John');
 
         $this->expectException(ProgramAccessException::class);
         $this->getAdapter()->ensureProgramIsProjectAndUserIsAdminOf($project_id, $user);
@@ -146,9 +148,10 @@ final class ProgramAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testThrowErrorWhenUserCannotAccessToProjectForManagement(): void
     {
         $project_id = 101;
+        $user       = UserTestBuilder::aUser()->build();
         $project    = new \Project(['group_id' => $project_id, 'status' => 'A', 'access' => 'public']);
         $this->project_manager->shouldReceive('getProject')->with($project_id)->andReturn($project);
-        $this->project_access_checker->shouldReceive('checkUserCanAccessProject')->andThrow(ProgramAccessException::class);
+        $this->project_access_checker->shouldReceive('checkUserCanAccessProject')->andThrow(new ProgramAccessException(101, $user));
         $this->expectException(ProgramAccessException::class);
 
         $this->getAdapter()->ensureProgramIsAProjectForManagement($project_id, UserTestBuilder::aUser()->build());
@@ -163,6 +166,7 @@ final class ProgramAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $user = \Mockery::mock(\PFUser::class);
         $user->shouldReceive('isAdmin')->with($project_id)->andReturn(false);
+        $user->shouldReceive('getRealName')->andReturn('John');
 
         $this->expectException(ProgramAccessException::class);
 

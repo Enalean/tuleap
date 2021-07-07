@@ -24,8 +24,16 @@ namespace Tuleap\ProgramManagement\Domain\Team;
 
 final class AtLeastOneTeamShouldBeDefinedException extends \Exception implements TeamException
 {
+    private string $i18n_message;
+
     public function __construct()
     {
-        parent::__construct("You should define at least one team project.");
+        parent::__construct('You should define at least one Team project.');
+        $this->i18n_message = dgettext('tuleap-program_management', 'You should define at least one Team project.');
+    }
+
+    public function getI18NExceptionMessage(): string
+    {
+        return $this->i18n_message;
     }
 }

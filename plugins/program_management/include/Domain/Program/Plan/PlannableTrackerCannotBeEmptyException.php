@@ -24,8 +24,16 @@ namespace Tuleap\ProgramManagement\Domain\Program\Plan;
 
 final class PlannableTrackerCannotBeEmptyException extends \Exception implements PlanTrackerException
 {
+    private string $i18n_message;
+
     public function __construct()
     {
-        parent::__construct("Plannable tracker id cannot be empty");
+        parent::__construct('Plannable tracker id cannot be empty');
+        $this->i18n_message = dgettext('tuleap-program_management', 'Plannable tracker id cannot be empty');
+    }
+
+    public function getI18NExceptionMessage(): string
+    {
+        return $this->i18n_message;
     }
 }

@@ -24,8 +24,17 @@ namespace Tuleap\ProgramManagement\Domain\Program\Plan;
 
 final class IterationCannotBePlannedException extends \Exception implements CannotPlanIntoItselfException
 {
+
+    private string $i18n_message;
+
     public function __construct()
     {
-        parent::__construct("Iteration tracker id must not be contained into plannable tracker ids");
+        parent::__construct('Iteration tracker id must not be contained into plannable tracker ids');
+        $this->i18n_message = dgettext('tuleap-program_management', 'Iteration tracker id must not be contained into plannable tracker ids');
+    }
+
+    public function getI18NExceptionMessage(): string
+    {
+        return $this->i18n_message;
     }
 }

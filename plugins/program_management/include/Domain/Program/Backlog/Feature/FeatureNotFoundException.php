@@ -24,8 +24,22 @@ namespace Tuleap\ProgramManagement\Domain\Program\Backlog\Feature;
 
 final class FeatureNotFoundException extends \RuntimeException implements FeatureException
 {
+    private string $i18n_message;
+
     public function __construct(int $potential_feature_id_to_add)
     {
         parent::__construct(sprintf('Could not find feature with id #%d', $potential_feature_id_to_add));
+        $this->i18n_message = sprintf(
+            dgettext(
+                'tuleap-program_management',
+                'Could not find feature with id #%d'
+            ),
+            $potential_feature_id_to_add
+        );
+    }
+
+    public function getI18NExceptionMessage(): string
+    {
+        return $this->i18n_message;
     }
 }

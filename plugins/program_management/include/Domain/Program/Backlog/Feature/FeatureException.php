@@ -24,4 +24,5 @@ namespace Tuleap\ProgramManagement\Domain\Program\Backlog\Feature;
 
 interface FeatureException extends \Throwable
 {
+    public function getI18NExceptionMessage(): string;
 }

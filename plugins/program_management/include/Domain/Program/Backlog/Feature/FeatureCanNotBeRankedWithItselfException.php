@@ -24,8 +24,16 @@ namespace Tuleap\ProgramManagement\Domain\Program\Backlog\Feature;
 
 final class FeatureCanNotBeRankedWithItselfException extends \RuntimeException implements FeatureException
 {
+    private string $i18n_message;
+
     public function __construct(\Throwable $previous)
     {
-        parent::__construct("Feature cannot be ranked with itself", 0, $previous);
+        parent::__construct('Feature cannot be ranked with itself', 0, $previous);
+        $this->i18n_message = dgettext('tuleap-program_management', 'Feature cannot be ranked with itself');
+    }
+
+    public function getI18NExceptionMessage(): string
+    {
+        return $this->i18n_message;
     }
 }

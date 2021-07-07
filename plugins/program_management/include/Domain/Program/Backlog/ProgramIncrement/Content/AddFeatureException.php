@@ -26,6 +26,8 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureException;
 
 final class AddFeatureException extends \RuntimeException implements FeatureException
 {
+    private string $i18n_message;
+
     public function __construct(int $feature_id, int $program_increment_id, \Throwable $previous)
     {
         parent::__construct(
@@ -33,5 +35,18 @@ final class AddFeatureException extends \RuntimeException implements FeatureExce
             0,
             $previous
         );
+        $this->i18n_message = sprintf(
+            dgettext(
+                'tuleap-program_management',
+                'Could not add feature #%d to program increment #%d'
+            ),
+            $feature_id,
+            $program_increment_id
+        );
+    }
+
+    public function getI18NExceptionMessage(): string
+    {
+        return $this->i18n_message;
     }
 }

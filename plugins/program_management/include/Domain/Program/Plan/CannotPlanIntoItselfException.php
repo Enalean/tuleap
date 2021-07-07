@@ -24,4 +24,5 @@ namespace Tuleap\ProgramManagement\Domain\Program\Plan;
 
 interface CannotPlanIntoItselfException extends \Throwable
 {
+    public function getI18NExceptionMessage(): string;
 }

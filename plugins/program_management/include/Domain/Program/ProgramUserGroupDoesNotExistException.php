@@ -24,8 +24,22 @@ use Tuleap\ProgramManagement\Domain\Program\Plan\InvalidProgramUserGroup;
 
 final class ProgramUserGroupDoesNotExistException extends \RuntimeException implements InvalidProgramUserGroup
 {
+    private string $i18n_message;
+
     public function __construct(string $raw_user_group_id)
     {
-        parent::__construct(sprintf("The user group %s does not exist in the program", $raw_user_group_id));
+        parent::__construct(sprintf('The user group %s does not exist in the Program', $raw_user_group_id));
+        $this->i18n_message = sprintf(
+            dgettext(
+                'tuleap-program_management',
+                'The user group %s does not exist in the Program'
+            ),
+            $raw_user_group_id
+        );
+    }
+
+    public function getI18NExceptionMessage(): string
+    {
+        return $this->i18n_message;
     }
 }

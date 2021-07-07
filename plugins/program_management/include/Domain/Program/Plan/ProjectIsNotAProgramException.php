@@ -24,8 +24,22 @@ namespace Tuleap\ProgramManagement\Domain\Program\Plan;
 
 final class ProjectIsNotAProgramException extends \Exception implements PlanTrackerException
 {
+    private string $i18n_message;
+
     public function __construct(int $id)
     {
-        parent::__construct("You can only define plan from program projet, project #$id is not a program project.");
+        parent::__construct("You can only define plan from Program project, project #$id is not a Program project.");
+        $this->i18n_message = sprintf(
+            dgettext(
+                'tuleap-program_management',
+                'You can only define plan from Program project, project #%d is not a Program project.'
+            ),
+            $id
+        );
+    }
+
+    public function getI18NExceptionMessage(): string
+    {
+        return $this->i18n_message;
     }
 }

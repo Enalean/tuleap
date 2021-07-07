@@ -82,7 +82,7 @@ final class ProgramAdapter implements BuildProgram
     {
         $this->ensureUserCanAccessToProject($id, $user);
         if (! $user->isAdmin($id)) {
-            throw new ProgramAccessException();
+            throw new ProgramAccessException($id, $user);
         }
     }
 
@@ -95,7 +95,7 @@ final class ProgramAdapter implements BuildProgram
         try {
             $this->project_access_checker->checkUserCanAccessProject($user, $project);
         } catch (Project_AccessException $exception) {
-            throw new ProgramAccessException();
+            throw new ProgramAccessException($id, $user);
         }
     }
 }
