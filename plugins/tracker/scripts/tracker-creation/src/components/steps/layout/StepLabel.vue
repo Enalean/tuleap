@@ -19,7 +19,6 @@
 
 <template>
     <div class="tracker-creation-step-info-label">
-        <span class="tracker-creation-step-number tlp-badge-primary">{{ stepNumber }}</span>
         <span class="tracker-creation-step-label">{{ stepLabel }}</span>
     </div>
 </template>
@@ -29,9 +28,6 @@ import { Component, Prop } from "vue-property-decorator";
 
 @Component
 export default class StepLabel extends Vue {
-    @Prop({ required: true })
-    readonly stepNumber!: string;
-
     @Prop({ required: true })
     readonly stepLabel!: string;
 }

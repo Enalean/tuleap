@@ -9,17 +9,11 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 2.0.6\n"
+"X-Generator: Poedit 2.3\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 msgid "%s templates"
 msgstr "Modèles de %s"
-
-msgid "1"
-msgstr "1"
-
-msgid "2"
-msgstr "2"
 
 msgid "API Token"
 msgstr "Jeton d'API"
@@ -103,6 +97,9 @@ msgstr "Donnez à votre outil de suivi quelques infos de base"
 
 msgid "I want to migrate a tracker v3"
 msgstr "Je veux migrer un outil de suivi v3"
+
+msgid "Information"
+msgstr "Information"
 
 msgid "Issue type"
 msgstr "Type de ticket"

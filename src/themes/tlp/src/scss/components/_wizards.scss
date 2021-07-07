@@ -1,0 +1,155 @@
+/**
+ * Copyright (c) Enalean, 2016-Present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+.tlp-wizard {
+    display: flex;
+    align-items: center;
+    margin: 0 0 var(--tlp-small-spacing);
+    font-size: 0.75rem;
+    font-weight: 600;
+    line-height: 0.875rem;
+    text-transform: uppercase;
+}
+
+@mixin circle() {
+    content: "";
+    display: block;
+    position: absolute;
+    top: 2px;
+    box-sizing: border-box;
+    width: 10px;
+    height: 10px;
+    border: 1px solid var(--tlp-dimmed-color);
+    border-radius: 50%;
+}
+
+@mixin dash() {
+    content: "";
+    display: block;
+    position: absolute;
+    top: 6px;
+    box-sizing: border-box;
+    height: 1px;
+}
+
+.tlp-wizard-step-previous,
+.tlp-wizard-step-current,
+.tlp-wizard-step-next {
+    display: flex;
+    position: relative;
+    align-items: center;
+    margin: 0 4px 0 0;
+    padding: 0 0 0 50px;
+    color: var(--tlp-dimmed-color);
+
+    &::before {
+        @include circle;
+        left: 32px;
+    }
+
+    &::after {
+        @include dash;
+        left: 0;
+        width: 46px;
+        background: linear-gradient(90deg, var(--tlp-dimmed-color) 0, var(--tlp-dimmed-color) 33px, transparent 33px, transparent 41px, var(--tlp-dimmed-color) 41px);
+    }
+
+    &:first-child {
+        padding: 0 0 0 18px;
+
+        &::before {
+            @include circle;
+            left: 0;
+        }
+
+        &::after {
+            @include dash;
+            left: 9px;
+            width: 4px;
+            background: var(--tlp-dimmed-color);
+        }
+    }
+
+    &:last-child {
+        margin: 0;
+    }
+}
+
+.tlp-wizard-step-previous,
+.tlp-wizard-step-current {
+    color: var(--tlp-main-color);
+
+    &::before {
+        border-color: var(--tlp-main-color);
+    }
+
+    &::after {
+        background: linear-gradient(90deg, var(--tlp-main-color) 0, var(--tlp-main-color) 33px, transparent 33px, transparent 41px, var(--tlp-main-color) 41px);
+    }
+
+    &:first-child {
+        &::before {
+            border-color: var(--tlp-main-color);
+        }
+
+        &::after {
+            background: var(--tlp-main-color);
+        }
+    }
+}
+
+.tlp-wizard-step-current {
+    &::before {
+        background: radial-gradient(circle, var(--tlp-main-color) 0, var(--tlp-main-color) 2px, transparent 3px);
+    }
+}
+
+// stylelint-disable-next-line selector-no-qualifying-type
+a.tlp-wizard-step-previous:hover {
+    &::before {
+        border-width: 2px;
+    }
+
+    &::after {
+        height: 2px;
+    }
+}
+
+// stylelint-disable-next-line selector-no-qualifying-type
+a.tlp-wizard-step-current:hover {
+    &::before {
+        border-width: 2px;
+        background: radial-gradient(circle, var(--tlp-main-color) 0, var(--tlp-main-color) 1px, transparent 2px);
+    }
+
+    &::after {
+        height: 2px;
+    }
+}
+
+// stylelint-disable-next-line selector-no-qualifying-type
+a.tlp-wizard-step-next:hover {
+    &::before {
+        border-width: 2px;
+    }
+
+    &::after {
+        height: 2px;
+    }
+}

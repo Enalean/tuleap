@@ -30,10 +30,19 @@
                     <project-information-svg />
                     <div class="register-new-project-list register-new-project-information">
                         <h1 class="project-registration-title" v-translate>Start a new project</h1>
+
+                        <nav class="tlp-wizard">
+                            <router-link
+                                v-bind:to="{ name: 'template' }"
+                                class="tlp-wizard-step-previous"
+                                v-translate
+                            >
+                                Template
+                            </router-link>
+                            <span class="tlp-wizard-step-current" v-translate>Information</span>
+                        </nav>
+
                         <h2>
-                            <span class="tlp-badge-primary register-new-project-section-badge">
-                                2
-                            </span>
                             <span v-translate>Project information</span>
                         </h2>
                         <div

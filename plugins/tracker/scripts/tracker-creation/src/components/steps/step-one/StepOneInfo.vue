@@ -19,10 +19,12 @@
 
 <template>
     <div>
-        <step-label
-            v-bind:step-number="$gettext('1')"
-            v-bind:step-label="$gettext('Choose a starting point')"
-        />
+        <nav class="tlp-wizard">
+            <span class="tlp-wizard-step-current" v-translate>Template</span>
+            <span class="tlp-wizard-step-next" v-translate>Information</span>
+        </nav>
+
+        <step-label v-bind:step-label="$gettext('Choose a starting point')" />
         <p v-translate>
             The tracker template you will select provides preconfigured fields, permissions,
             workflow...

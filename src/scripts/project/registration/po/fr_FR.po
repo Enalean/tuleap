@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 2.0.6\n"
+"X-Generator: Poedit 2.3\n"
 
 msgid "%s templates"
 msgstr "Modèles de projet %s"
@@ -49,6 +49,9 @@ msgstr "Aller à ma page personnelle"
 
 msgid "I agree to the <a href=\"/tos/tos.php\">policy agreement</a>"
 msgstr "J'accepte les <a href=\"/tos/tos.php\">conditions d'utilisation</a>"
+
+msgid "Information"
+msgstr "Information"
 
 msgid "Must start with a letter, without spaces nor punctuation."
 msgstr "Doit commencer par une lettre, sans espace ni ponctuation."
@@ -151,6 +154,9 @@ msgstr "Démarrer un nouveau projet"
 
 msgid "Start my project"
 msgstr "Créer mon projet"
+
+msgid "Template"
+msgstr "Modèle"
 
 msgid ""
 "The project template you will select provides pre-configured tools. Don’t "
