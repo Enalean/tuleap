@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Domain\Team\Creation;
 
 use Tuleap\ProgramManagement\Domain\Program\ToBeCreatedProgram;
-use Tuleap\ProgramManagement\Domain\Team\AtLeastOneTeamShouldBeDefinedException;
 use Tuleap\ProgramManagement\Domain\Team\ProjectIsAProgramException;
 use Tuleap\ProgramManagement\Domain\Team\TeamAccessException;
 use Tuleap\ProgramManagement\Domain\Team\TeamMustHaveExplicitBacklogEnabledException;
@@ -31,7 +30,6 @@ use Tuleap\ProgramManagement\Domain\Team\TeamMustHaveExplicitBacklogEnabledExcep
 interface BuildTeam
 {
     /**
-     * @throws AtLeastOneTeamShouldBeDefinedException
      * @throws ProjectIsAProgramException
      * @throws TeamAccessException
      * @throws TeamMustHaveExplicitBacklogEnabledException

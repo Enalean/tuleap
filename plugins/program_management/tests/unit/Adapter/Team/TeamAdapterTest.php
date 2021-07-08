@@ -28,7 +28,6 @@ use Tuleap\AgileDashboard\ExplicitBacklog\ExplicitBacklogDao;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\ProgramManagement\Domain\Program\ToBeCreatedProgram;
 use Tuleap\ProgramManagement\Domain\Program\VerifyIsProgram;
-use Tuleap\ProgramManagement\Domain\Team\AtLeastOneTeamShouldBeDefinedException;
 use Tuleap\ProgramManagement\Domain\Team\Creation\Team;
 use Tuleap\ProgramManagement\Domain\Team\Creation\TeamCollection;
 use Tuleap\ProgramManagement\Domain\Team\ProjectIsAProgramException;
@@ -101,13 +100,14 @@ final class TeamAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->getAdapter()->buildTeamProject([$team_id], $program, $user);
     }
 
-    public function testItThrowExceptionWhenNoTeamIsFound(): void
+    public function testGetEmptyTeamWhenNoTeamIsFound(): void
     {
         $program = ToBeCreatedProgram::fromId(BuildProgramStub::stubValidToBeCreatedProgram(), 101, UserTestBuilder::aUser()->build());
         $user    = \Mockery::mock(\PFUser::class);
 
-        $this->expectException(AtLeastOneTeamShouldBeDefinedException::class);
-        $this->getAdapter()->buildTeamProject([], $program, $user);
+        $team_collection = $this->getAdapter()->buildTeamProject([], $program, $user);
+
+        self::assertCount(0, $team_collection->getTeamIds());
     }
 
     public function testThrowsExceptionWhenTeamProjectDoesNotHaveTheExplicitBacklogModeEnabled(): void

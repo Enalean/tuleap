@@ -41,6 +41,10 @@ final class TeamDao extends DataAccessObject implements TeamStore, VerifyIsTeam,
             $program_id = $team_collection->getProgram()->getId();
             $this->getDB()->run($sql, $program_id);
 
+            if (count($team_collection->getTeamIds()) === 0) {
+                return;
+            }
+
             $insert = [];
             foreach ($team_collection->getTeamIds() as $plannable_tracker_id) {
                 $insert[] = ['program_project_id' => $program_id, 'team_project_id' => $plannable_tracker_id];
