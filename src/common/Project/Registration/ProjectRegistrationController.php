@@ -76,7 +76,7 @@ final class ProjectRegistrationController implements DispatchableWithRequest, Di
         $layout->includeFooterJavascriptFile($this->assets->getFileURL('project/project-registration.js'));
         $layout->addCssAsset(new CssAssetWithoutVariantDeclinaisons($this->assets, 'project-registration-style'));
 
-        $layout->header(["title" => _("Project Registration"), "body_class" => ["body-project-registration"]]);
+        $layout->header(["title" => _("Project Registration")]);
 
         $this->template_renderer_factory
             ->getRenderer(__DIR__ . '/../../../templates/project/registration/')
