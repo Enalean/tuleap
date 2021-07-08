@@ -24,8 +24,22 @@ namespace Tuleap\ProgramManagement\Domain\Program\Backlog\Feature;
 
 final class FeatureHasPlannedUserStoryException extends \RuntimeException implements FeatureException
 {
+    private string $i18n_message;
+
     public function __construct(int $feature_id)
     {
-        parent::__construct("The feature with id#$feature_id cannot be unplanned because some linked user stories are planned in Teams program.");
+        parent::__construct("The feature with id #$feature_id cannot be unplanned because some linked user stories are planned in Teams project.");
+        $this->i18n_message = sprintf(
+            dgettext(
+                'tuleap-program_management',
+                'The feature with id #%d cannot be unplanned because some linked user stories are planned in Teams project.'
+            ),
+            $feature_id
+        );
+    }
+
+    public function getI18NExceptionMessage(): string
+    {
+        return $this->i18n_message;
     }
 }

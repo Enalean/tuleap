@@ -76,6 +76,7 @@ use Tuleap\Project\REST\UserGroupRetriever;
 use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
+use Tuleap\REST\I18NRestException;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkUpdater;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkUpdaterDataFormater;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDecoratorRetriever;
@@ -242,10 +243,10 @@ final class ProjectResource extends AuthenticatedResource
                 $plan_iteration_change
             );
             $this->plan_creator->create($plan_change);
-        } catch (ProjectIsNotAProgramException | CannotPlanIntoItselfException | PlanTrackerException | ProgramTrackerException | InvalidProgramUserGroup $e) {
-            throw new RestException(400, $e->getMessage());
+        } catch (CannotPlanIntoItselfException | PlanTrackerException | ProgramTrackerException | InvalidProgramUserGroup $e) {
+            throw new I18NRestException(400, $e->getI18NExceptionMessage());
         } catch (ProgramAccessException $e) {
-            throw new RestException(404, $e->getMessage());
+            throw new I18NRestException(404, $e->getI18NExceptionMessage());
         }
     }
 
@@ -271,9 +272,9 @@ final class ProjectResource extends AuthenticatedResource
                 $representation->team_ids
             );
         } catch (TeamException | ProjectIsNotAProgramException | ProgramIsTeamException $e) {
-            throw new RestException(400, $e->getMessage());
+            throw new I18NRestException(400, $e->getI18NExceptionMessage());
         } catch (ProgramAccessException $e) {
-            throw new RestException(404, $e->getMessage());
+            throw new I18NRestException(404, $e->getI18NExceptionMessage());
         }
     }
 
@@ -303,10 +304,10 @@ final class ProjectResource extends AuthenticatedResource
             Header::sendPaginationHeaders($limit, $offset, count($elements), self::MAX_LIMIT);
 
             return array_slice($elements, $offset, $limit);
-        } catch (\Tuleap\ProgramManagement\Domain\Program\Plan\ProgramAccessException $e) {
-            throw new RestException(404, $e->getMessage());
-        } catch (\Tuleap\ProgramManagement\Domain\Program\Plan\ProjectIsNotAProgramException $e) {
-            throw new RestException(400, $e->getMessage());
+        } catch (ProgramAccessException $e) {
+            throw new I18NRestException(404, $e->getI18NExceptionMessage());
+        } catch (ProjectIsNotAProgramException $e) {
+            throw new I18NRestException(400, $e->getI18NExceptionMessage());
         }
     }
 
@@ -409,11 +410,11 @@ final class ProjectResource extends AuthenticatedResource
                 $user
             );
         } catch (ProgramAccessException | CannotManipulateTopBacklog $e) {
-            throw new RestException(404, $e->getMessage());
+            throw new I18NRestException(404, $e->getI18NExceptionMessage());
         } catch (ProjectIsNotAProgramException $e) {
-            throw new RestException(403, $e->getMessage());
+            throw new I18NRestException(403, $e->getI18NExceptionMessage());
         } catch (FeatureException $e) {
-            throw new RestException(400, $e->getMessage());
+            throw new I18NRestException(400, $e->getI18NExceptionMessage());
         }
     }
 
@@ -457,10 +458,10 @@ final class ProjectResource extends AuthenticatedResource
         $user = $this->user_manager->getCurrentUser();
         try {
             $program_increments = $this->program_increments_builder->buildOpenProgramIncrements($id, $user);
-        } catch (\Tuleap\ProgramManagement\Domain\Program\Plan\ProgramAccessException $e) {
-            throw new RestException(404, $e->getMessage());
-        } catch (\Tuleap\ProgramManagement\Domain\Program\Plan\ProjectIsNotAProgramException $e) {
-            throw new RestException(400, $e->getMessage());
+        } catch (ProgramAccessException $e) {
+            throw new I18NRestException(404, $e->getI18NExceptionMessage());
+        } catch (ProjectIsNotAProgramException $e) {
+            throw new RestException(400, $e->getI18NExceptionMessage());
         }
 
         Header::sendPaginationHeaders($limit, $offset, count($program_increments), self::MAX_LIMIT);

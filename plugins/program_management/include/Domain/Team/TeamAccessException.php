@@ -24,8 +24,22 @@ namespace Tuleap\ProgramManagement\Domain\Team;
 
 final class TeamAccessException extends \Exception implements TeamException
 {
+    private string $i18n_message;
+
     public function __construct(int $id)
     {
-        parent::__construct("You must be project administrator of project #$id to define it as team.");
+        parent::__construct("You must be project administrator of project #$id to define it as Team.");
+        $this->i18n_message = sprintf(
+            dgettext(
+                'tuleap-program_management',
+                'You must be project administrator of project #%d  to define it as Team.'
+            ),
+            $id
+        );
+    }
+
+    public function getI18NExceptionMessage(): string
+    {
+        return $this->i18n_message;
     }
 }

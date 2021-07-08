@@ -24,8 +24,22 @@ namespace Tuleap\ProgramManagement\Domain\Team;
 
 final class ProjectIsAProgramException extends \Exception implements TeamException
 {
+    private string $i18n_message;
+
     public function __construct(int $id)
     {
-        parent::__construct("Project #$id is defined as a program project. It can not be used as team.");
+        parent::__construct("Project #$id is defined as a Program project. It can not be used as Team.");
+        $this->i18n_message = sprintf(
+            dgettext(
+                'tuleap-program_management',
+                'Project #%d is defined as a Program project. It can not be used as Team.'
+            ),
+            $id
+        );
+    }
+
+    public function getI18NExceptionMessage(): string
+    {
+        return $this->i18n_message;
     }
 }

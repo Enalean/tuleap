@@ -24,6 +24,14 @@ import {
     setButtonToDisabledWithSpinner,
 } from "./helper/button-to-add-team-helper";
 
+interface ErrorRest {
+    error: {
+        code: number;
+        message: string;
+        i18n_error_message?: string;
+    };
+}
+
 export function addTeamInProgram(program_id: number, doc: Document): void {
     const button_to_add = doc.getElementById("program-management-add-team-button");
 
@@ -56,8 +64,12 @@ export function addTeamInProgram(program_id: number, doc: Document): void {
         } catch (e) {
             e.response
                 .json()
-                .then(({ error }: { error: { code: number; message: string } }) => {
-                    setRestErrorMessage(doc, error.code + " " + error.message);
+                .then(({ error }: ErrorRest) => {
+                    let error_message = error.message;
+                    if (error.i18n_error_message) {
+                        error_message = error.i18n_error_message;
+                    }
+                    setRestErrorMessage(doc, error.code + " " + error_message);
                 })
                 .catch(() => setRestErrorMessage(doc, "404 Error"));
         } finally {

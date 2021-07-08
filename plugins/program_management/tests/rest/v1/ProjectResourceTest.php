@@ -272,7 +272,7 @@ class ProjectResourceTest extends \RestBase
             )))
         );
         self::assertEquals(400, $response->getStatusCode());
-        self::assertStringContainsString("The feature with id#" . $featureA['id'] . " cannot be unplanned because some linked user stories are planned in Teams program.", $response->getBody()->getContents());
+        self::assertStringContainsString('The feature with id #' . $featureA['id'] . ' cannot be unplanned because some linked user stories are planned in Teams project.', $response->getBody()->getContents());
 
         // Check program increment has still feature with planned US
         $this->checkGetFirstElementOfProgramIncrement($program_increment['id'], "id", (string) $featureA['id']);

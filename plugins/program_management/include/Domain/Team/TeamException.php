@@ -24,4 +24,5 @@ namespace Tuleap\ProgramManagement\Domain\Team;
 
 interface TeamException extends \Throwable
 {
+    public function getI18NExceptionMessage(): string;
 }

@@ -40,17 +40,50 @@ msgstr "Annuler"
 msgid "Close"
 msgstr "Fermer"
 
+#, php-format
+msgid "Could not add feature #%d to program increment #%d"
+msgstr ""
+"La fonctionnalité #%d n'a pas pu être ajoutée à l'incrément de programme #%d"
+
+#, php-format
+msgid "Could not find feature with id #%d"
+msgstr "La fonctionnalité avec l'id #%d n'a pas pu être trouvée"
+
+#, php-format
+msgid "Could not remove feature #%d from all program increments"
+msgstr ""
+"La fonctionnalité #%d n'a pas pu être enlevée de tous les incréments de "
+"programme"
+
 msgid ""
 "Enables managing several related projects, synchronizing teams and milestones"
 msgstr ""
 "Permet la gestion de plusieurs projets, de synchroniser les équipes et les "
 "jalons"
 
+#, php-format
+msgid "Feature #%d cannot be planned in program increment #%d"
+msgstr ""
+"La fonctionnalité #%d ne peut pas être planifiée dans l'incrément de "
+"programme #%d"
+
+#, php-format
+msgid "Feature #%d does not exist in program increment #%d"
+msgstr "La fonctionnalité #%d n'existe pas dans l'incrément de programme #%d"
+
+msgid "Feature cannot be ranked with itself"
+msgstr "La fonctionnalité ne peut pas être réordonnée avec elle-même"
+
 msgid "Good to know:"
 msgstr "Bon à savoir :"
 
 msgid "Granted groups"
 msgstr "Groupes autorisés"
+
+msgid "Iteration tracker id must not be contained into plannable tracker ids"
+msgstr ""
+"Les ids des trackers planifiables ne doivent pas contenir l'id de l'outils "
+"de suivi d'itération"
 
 msgid "Mirror of"
 msgstr "Réplique de"
@@ -71,6 +104,9 @@ msgstr "Aucun projet n'a encore été regroupé."
 msgid "Permission"
 msgstr "Permission"
 
+msgid "Plannable tracker id cannot be empty"
+msgstr "L'id de l'outils de suivi panifiable ne doit pas être vide"
+
 msgid "Please confirm your action."
 msgstr "Merci de confirmer votre action."
 
@@ -84,6 +120,10 @@ msgstr ""
 msgid "Program"
 msgstr "Programme"
 
+#, php-format
+msgid "Program %d can not be a Program and a Team in the same time"
+msgstr "Le Programme %d ne peut pas être à la fois un Programme et une Équipe"
+
 msgid "Program Increments"
 msgstr "Incréments de Programme"
 
@@ -93,12 +133,32 @@ msgstr "Gestion de Programme"
 msgid "Program administration"
 msgstr "Administration du Programme"
 
+msgid ""
+"Program increment tracker id must not be contained into plannable tracker ids"
+msgstr ""
+"Les ids des trackers planifiables ne doivent pas contenir l'id de l'outils "
+"de suivi d'incrément de programme"
+
 msgid "Program management service is disabled."
 msgstr "Le service de gestion de programme est désactivé."
 
+#, php-format
+msgid ""
+"Project #%d cannot be a Team because it is not in the explicit backlog mode"
+msgstr ""
+"Le projet #%d ne peut pas être une Équipe parce qu'il n'utilise pas la "
+"planification générale explicite"
+
+#, php-format
+msgid ""
+"Project #%d is defined as a Program project. It can not be used as Team."
+msgstr ""
+"Le projet #%d est défini en tant que projet Programme. Il ne peut pas être "
+"utilisé en tant qu'Équipe."
+
 msgid "Project is defined as a Team project. It can not be used as a Program"
 msgstr ""
-"Le project est défini en tant que projet Équipe. Il ne peut pas être utilisé "
+"Le projet est défini en tant que projet Équipe. Il ne peut pas être utilisé "
 "en tant que Programme."
 
 msgid "Remove from top backlog"
@@ -113,6 +173,14 @@ msgstr "Enlever l'équipe du programme"
 msgid "Teams"
 msgstr "Équipes"
 
+#, php-format
+msgid ""
+"The feature with id #%d cannot be unplanned because some linked user stories "
+"are planned in Teams project."
+msgstr ""
+"La fonctionnalité avec l'id #%d ne peut pas être déplanifié car elle est liée "
+"à  des user stories planifiées dans les projets Équipes."
+
 msgid ""
 "The post action cannot be saved because this tracker is not a plannable "
 "tracker of a plan."
@@ -120,11 +188,33 @@ msgstr ""
 "La post-action ne peut pas être enregistrée parce que cet outil de suivi "
 "n'est pas un outil de suivi planifiable d'un plan."
 
+#, php-format
+msgid "The user group %s does not exist in the Program"
+msgstr "Le groupe  utilisateur %s  n'existe pas dans le Programme"
+
 msgid "Top backlog actions"
 msgstr "Actions liées à la planification générale"
 
+#, php-format
+msgid "Tracker #%d does not belong to project #%d"
+msgstr "L'outils de suivi #%d n'existe pas dans le projet #%d"
+
+#, php-format
+msgid "Tracker #%d is not found"
+msgstr "L'outils de suivi %d n'a pas été trouvé"
+
 msgid "Unchanged"
 msgstr "Inchangé"
+
+#, php-format
+msgid "User #%d cannot manipulate the top backlog of the Program #%d"
+msgstr ""
+"L'utilisateur #%d ne peut pas manipuler la planification générale du "
+"Programme #%d"
+
+#, php-format
+msgid "User %s can not access to Program #%d"
+msgstr "L'utilisateur %s ne peut pas accéder au Programme #%d"
 
 msgid "You are about to remove Team {{ public_name }} from this Program."
 msgstr ""
@@ -144,14 +234,31 @@ msgstr ""
 "Vous êtes en train de mettre à jour un incrément de programme. Veuillez "
 "noter que les releases correspondantes ne seront pas mises à jour."
 
+#, php-format
+msgid ""
+"You can only define plan from Program project, project #%d is not a Program "
+"project."
+msgstr ""
+"Vous pouvez uniquement définir un plan à partir d'un projet Programme, le "
+"projet #%d n'est pas un projet Programme."
+
 msgid "You must be administrator of the projects you want aggregate."
 msgstr "Vous devez être administrateur des projets que vous voulez regrouper."
+
+#, php-format
+msgid "You must be project administrator of project #%d  to define it as Team."
+msgstr ""
+"Vous devez être administrateur du projet #%d pour le définir en tant "
+"qu'Équipe."
 
 msgid ""
 "You need to be project administrator to access to program administration."
 msgstr ""
 "Vous devez être administrateur du projet pour accéder à l'administration du "
 "programme."
+
+msgid "You should define at least one Team project."
+msgstr "Vous devez définir au moins un projet Équipe."
 
 msgid "program increment"
 msgstr "incrément de programme"

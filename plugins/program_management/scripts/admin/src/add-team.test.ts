@@ -109,7 +109,38 @@ describe("AddTeam", () => {
             await expect(manage_team).toHaveBeenCalledWith({ program_id: 125, team_ids: [140] });
             expect(reset_rest_error).toHaveBeenCalled();
             await expect(set_button_to_disabled).toHaveBeenCalled();
-            await expect(set_rest_error_message).toHaveBeenCalled();
+            await expect(set_rest_error_message).toHaveBeenCalledWith(doc, "400 Team not found");
+            expect(reset_button).toHaveBeenCalled();
+        });
+
+        it("Given rest error with i18n message, Then it's displayed", async () => {
+            const doc = getDocumentWithButton(button_to_add_team);
+
+            manage_team.mockImplementation(() =>
+                Promise.reject({
+                    response: {
+                        json: (): Promise<{ error: { code: number; message: string } }> =>
+                            Promise.resolve({
+                                error: {
+                                    code: 400,
+                                    message: "Team not found",
+                                    i18n_error_message: "L'Équipe n'est pas trouvée",
+                                },
+                            }),
+                    },
+                })
+            );
+
+            addTeamInProgram(125, doc);
+            button_to_add_team.click();
+
+            await expect(manage_team).toHaveBeenCalledWith({ program_id: 125, team_ids: [140] });
+            expect(reset_rest_error).toHaveBeenCalled();
+            await expect(set_button_to_disabled).toHaveBeenCalled();
+            await expect(set_rest_error_message).toHaveBeenCalledWith(
+                doc,
+                "400 L'Équipe n'est pas trouvée"
+            );
             expect(reset_button).toHaveBeenCalled();
         });
     });

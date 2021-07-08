@@ -26,14 +26,29 @@ use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 
 final class CannotManipulateTopBacklog extends \RuntimeException
 {
+    private string $i18n_message;
+
     public function __construct(ProgramIdentifier $program, \PFUser $user)
     {
         parent::__construct(
             sprintf(
-                'User #%d cannot manipulate the top backlog of the program #%d',
+                'User #%d cannot manipulate the top backlog of the Program #%d',
                 $user->getId(),
                 $program->getId()
             )
         );
+        $this->i18n_message = sprintf(
+            dgettext(
+                'tuleap-program_management',
+                'User #%d cannot manipulate the top backlog of the Program #%d',
+            ),
+            $user->getId(),
+            $program->getId()
+        );
+    }
+
+    public function getI18NExceptionMessage(): string
+    {
+        return $this->i18n_message;
     }
 }

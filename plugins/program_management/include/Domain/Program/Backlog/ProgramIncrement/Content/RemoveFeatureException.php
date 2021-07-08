@@ -26,6 +26,8 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureException;
 
 final class RemoveFeatureException extends \RuntimeException implements FeatureException
 {
+    private string $i18n_message;
+
     public function __construct(int $feature_id, \Throwable $previous)
     {
         parent::__construct(
@@ -33,5 +35,17 @@ final class RemoveFeatureException extends \RuntimeException implements FeatureE
             0,
             $previous
         );
+        $this->i18n_message = sprintf(
+            dgettext(
+                'tuleap-program_management',
+                'Could not remove feature #%d from all program increments'
+            ),
+            $feature_id
+        );
+    }
+
+    public function getI18NExceptionMessage(): string
+    {
+        return $this->i18n_message;
     }
 }
