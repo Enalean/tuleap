@@ -18,7 +18,7 @@
  */
 
 import { recursiveGet, patch, select2 } from "tlp";
-import { render } from "mustache";
+import mustache from "mustache";
 
 export async function create(
     container,
@@ -107,13 +107,13 @@ function formatLabel(label, li_element) {
         const bullet_class = label.is_outline ? "far fa-circle" : "fa fa-circle";
         li_element.classList.add(`select-item-label-color-${label.color}`);
 
-        return render(
+        return mustache.render(
             '<span class="select-item-label-title"><i class="select-item-label-bullet {{ bullet_class }}"></i>{{ label }}</span>',
             { bullet_class: bullet_class, label: label.text }
         );
     }
 
-    return render('<span class="select-item-label-title">{{ label }}</span>', {
+    return mustache.render('<span class="select-item-label-title">{{ label }}</span>', {
         label: label.text,
     });
 }
@@ -128,7 +128,7 @@ function formatLabelSelected(label, li_elements) {
     if (is_outline) {
         li_element.classList.add("select-item-label-outline");
     }
-    return render("<span>{{ label }}</span>", { label: label.text });
+    return mustache.render("<span>{{ label }}</span>", { label: label.text });
 }
 
 function getColor(label) {

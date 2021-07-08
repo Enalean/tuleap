@@ -18,7 +18,7 @@
  */
 
 import { get } from "tlp";
-import { render } from "mustache";
+import mustache from "mustache";
 import { sanitize } from "dompurify";
 import moment from "moment";
 import { loadTooltips } from "@tuleap/tooltip";
@@ -73,7 +73,10 @@ function displayActivities(widget_content: HTMLElement, entries: Entry[]): void 
         throw new Error("No template defined in projectheartbeat");
     }
 
-    const rendered_activities = render(template, getGroupedEntries(widget_content, entries));
+    const rendered_activities = mustache.render(
+        template,
+        getGroupedEntries(widget_content, entries)
+    );
     insertRenderedActivitiesInDOM(rendered_activities, activities);
 
     loadTooltips();

@@ -64,7 +64,7 @@ import type { DataFormat, GroupedDataFormat, LoadingData, Options, Select2Plugin
 import { select2 } from "tlp";
 import type { VisibilityForVisibilitySelector } from "./type";
 import { sanitize } from "dompurify";
-import { render } from "mustache";
+import mustache from "mustache";
 import { Component } from "vue-property-decorator";
 import EventBus from "../../../helpers/event-bus";
 import $ from "jquery";
@@ -127,7 +127,7 @@ export default class ProjectInformationInputPrivacyList extends Vue {
             return "";
         }
 
-        return render(
+        return mustache.render(
             `<div>
                 <span class="project-information-input-privacy-list-option-label">{{ label }}</span>
                 <p class="project-information-input-privacy-list-option-description">{{ description }}</p>

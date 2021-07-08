@@ -22,7 +22,7 @@
  */
 
 import { post } from "tlp";
-import { render } from "mustache";
+import mustache from "mustache";
 import { getPOFileFromLocale, initGettext } from "../../../../tuleap/gettext/gettext-init";
 import import_preview_template from "./project-admin-member-import-preview.mustache";
 import import_spinner from "./members-import-spinner.mustache";
@@ -206,7 +206,7 @@ function renderImportPreview(import_result: ResultImport): void {
 
     preview_section.insertAdjacentHTML(
         "beforeend",
-        render(import_preview_template, {
+        mustache.render(import_preview_template, {
             import_warnings,
             parsed_users: import_result.users,
             empty_preview: gettext_provider.gettext("There isn't any new user to import"),
@@ -226,7 +226,7 @@ function startSpinner(element: HTMLElement): void {
     }
     element.insertAdjacentHTML(
         "afterbegin",
-        render(import_spinner, {
+        mustache.render(import_spinner, {
             loading: gettext_provider.gettext("Preview loading..."),
         })
     );

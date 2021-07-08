@@ -127,7 +127,7 @@ module.exports = {
             "error",
             {
                 escape: {
-                    methods: ["sanitize", "render", "getPOFileFromLocale"],
+                    methods: ["sanitize", "render", "getPOFileFromLocale", "mustache.render"],
                 },
             },
         ],

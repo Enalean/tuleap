@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { render } from "mustache";
+import mustache from "mustache";
 import { sanitize } from "dompurify";
 import { get } from "jquery";
 import { createModal } from "tlp";
@@ -147,7 +147,7 @@ function loadDynamicallyWidgetsContent(modal, modal_content, url) {
             });
 
             if (container) {
-                container.outerHTML = sanitize(render(widgets_categories_template, data));
+                container.outerHTML = sanitize(mustache.render(widgets_categories_template, data));
                 initializeWidgets(table, data);
             }
         })
@@ -196,7 +196,7 @@ function displayWidgetSettings(table, widget_element, data_widgets) {
 
     const settings = document.getElementById("dashboard-add-widget-settings");
 
-    settings.innerHTML = sanitize(render(widget_settings_template, widget_data));
+    settings.innerHTML = sanitize(mustache.render(widget_settings_template, widget_data));
     document.dispatchEvent(
         new CustomEvent("dashboard-add-widget-settings-loaded", {
             detail: { target: settings },
