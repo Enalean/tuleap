@@ -24,6 +24,7 @@ namespace Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck;
 
 use PFUser;
 use Psr\Log\LoggerInterface;
+use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ConfigurationErrorsCollector;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration\VerifyIsIterationTracker;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\IterationTracker\RetrieveVisibleIterationTracker;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Team\TeamProjectsCollection;
@@ -61,7 +62,8 @@ class IterationCreatorChecker
         PFUser $user,
         ProgramTracker $tracker,
         ProgramIdentifier $program,
-        TeamProjectsCollection $team_projects_collection
+        TeamProjectsCollection $team_projects_collection,
+        ConfigurationErrorsCollector $errors_collector
     ): bool {
         if (! $this->verify_is_iteration->isIterationTracker($tracker->getTrackerId())) {
             return true;
@@ -107,7 +109,8 @@ class IterationCreatorChecker
             $tracker,
             $iteration_and_team_trackers,
             $team_trackers,
-            $user
+            $user,
+            $errors_collector
         );
     }
 }

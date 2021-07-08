@@ -34,7 +34,7 @@ final class CanSubmitNewArtifactTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $user                = UserTestBuilder::aUser()->build();
         $tracker             = \Mockery::mock(\Tracker::class);
-        $can_submit_artifact = new CanSubmitNewArtifact($user, $tracker);
+        $can_submit_artifact = new CanSubmitNewArtifact($user, $tracker, false);
 
         $this->assertSame($user, $can_submit_artifact->getUser());
         $this->assertSame($tracker, $can_submit_artifact->getTracker());

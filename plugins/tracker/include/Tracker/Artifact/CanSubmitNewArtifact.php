@@ -32,24 +32,25 @@ final class CanSubmitNewArtifact implements Dispatchable
     public const NAME = 'canSubmitNewArtifact';
 
     /**
-     * @var PFUser
      * @psalm-readonly
      */
-    private $user;
+    private PFUser $user;
     /**
-     * @var Tracker
      * @psalm-readonly
      */
-    private $tracker;
+    private Tracker $tracker;
+    private bool $can_submit_new_artifact = true;
     /**
-     * @var bool
+     * @var string[]
      */
-    private $can_submit_new_artifact = true;
+    private array $error_messages = [];
+    private bool $should_collect_all_issues;
 
-    public function __construct(PFUser $user, Tracker $tracker)
+    public function __construct(PFUser $user, Tracker $tracker, bool $should_collect_all_issues)
     {
-        $this->user    = $user;
-        $this->tracker = $tracker;
+        $this->user                      = $user;
+        $this->tracker                   = $tracker;
+        $this->should_collect_all_issues = $should_collect_all_issues;
     }
 
     public function getUser(): PFUser
@@ -70,5 +71,23 @@ final class CanSubmitNewArtifact implements Dispatchable
     public function disableArtifactSubmission(): void
     {
         $this->can_submit_new_artifact = false;
+    }
+
+    /**
+     * @param string[] $error_message
+     */
+    public function addErrorMessage(array $error_message): void
+    {
+        $this->error_messages = $error_message;
+    }
+
+    public function getErrorMessages(): array
+    {
+        return $this->error_messages;
+    }
+
+    public function shouldCollectAllIssues(): bool
+    {
+        return $this->should_collect_all_issues;
     }
 }

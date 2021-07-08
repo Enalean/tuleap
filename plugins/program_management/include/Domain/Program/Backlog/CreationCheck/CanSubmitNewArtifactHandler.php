@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck;
 
 use Tuleap\ProgramManagement\Domain\BuildProject;
+use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ConfigurationErrorsCollector;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Team\TeamProjectsCollection;
 use Tuleap\ProgramManagement\Domain\Program\Plan\BuildProgram;
 use Tuleap\ProgramManagement\Domain\Program\Plan\ProgramAccessException;
@@ -54,7 +55,7 @@ final class CanSubmitNewArtifactHandler
         $this->project_builder                   = $project_builder;
     }
 
-    public function handle(CanSubmitNewArtifact $event): void
+    public function handle(CanSubmitNewArtifact $event, ConfigurationErrorsCollector $errors_collector): void
     {
         $tracker      = $event->getTracker();
         $user         = $event->getUser();
@@ -73,12 +74,22 @@ final class CanSubmitNewArtifactHandler
             $program
         );
 
-        if (! $this->program_increment_creator_checker->canCreateAProgramIncrement($user, $tracker_data, $program, $team_projects_collection)) {
+        if (
+            ! $this->program_increment_creator_checker->canCreateAProgramIncrement(
+                $user,
+                $tracker_data,
+                $program,
+                $team_projects_collection,
+                $errors_collector
+            )
+        ) {
             $event->disableArtifactSubmission();
-            return;
+            if (! $errors_collector->shouldCollectAllIssues()) {
+                return;
+            }
         }
 
-        if (! $this->iteration_creator_checker->canCreateAnIteration($user, $tracker_data, $program, $team_projects_collection)) {
+        if (! $this->iteration_creator_checker->canCreateAnIteration($user, $tracker_data, $program, $team_projects_collection, $errors_collector)) {
             $event->disableArtifactSubmission();
         }
     }

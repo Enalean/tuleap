@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck;
 
+use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ConfigurationErrorsCollector;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Source\SourceTrackerCollection;
 use Tuleap\ProgramManagement\Domain\ProgramTracker;
 
@@ -29,6 +30,7 @@ interface CheckSemantic
 {
     public function areTrackerSemanticsWellConfigured(
         ProgramTracker $tracker,
-        SourceTrackerCollection $source_tracker_collection
+        SourceTrackerCollection $source_tracker_collection,
+        ConfigurationErrorsCollector $configuration_errors
     ): bool;
 }

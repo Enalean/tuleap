@@ -24,6 +24,7 @@ namespace Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck;
 
 use ProjectManager;
 use Tuleap\ProgramManagement\Adapter\ProgramManagementProjectAdapter;
+use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ConfigurationErrorsCollector;
 use Tuleap\ProgramManagement\Stub\BuildProgramStub;
 use Tuleap\ProgramManagement\Stub\SearchTeamsOfProgramStub;
 use Tuleap\Test\Builders\ProjectTestBuilder;
@@ -62,13 +63,13 @@ final class CanSubmitNewArtifactHandlerTest extends TestCase
         $tracker = TrackerTestBuilder::aTracker()->withId(98)
             ->withProject(ProjectTestBuilder::aProject()->withId(101)->build())
             ->build();
-        $event   = new CanSubmitNewArtifact($user, $tracker);
+        $event   = new CanSubmitNewArtifact($user, $tracker, false);
 
         $this->program_increment_creator_checker->method('canCreateAProgramIncrement')->willReturn(false);
 
         $this->mockProjectTeam();
 
-        $this->getHandler()->handle($event);
+        $this->getHandler()->handle($event, new ConfigurationErrorsCollector(false));
         self::assertFalse($event->canSubmitNewArtifact());
     }
 
@@ -78,14 +79,31 @@ final class CanSubmitNewArtifactHandlerTest extends TestCase
         $tracker = TrackerTestBuilder::aTracker()->withId(98)
             ->withProject(ProjectTestBuilder::aProject()->withId(101)->build())
             ->build();
-        $event   = new CanSubmitNewArtifact($user, $tracker);
+        $event   = new CanSubmitNewArtifact($user, $tracker, true);
 
         $this->program_increment_creator_checker->method('canCreateAProgramIncrement')->willReturn(true);
         $this->iteration_creator_checker->method('canCreateAnIteration')->willReturn(false);
 
         $this->mockProjectTeam();
 
-        $this->getHandler()->handle($event);
+        $this->getHandler()->handle($event, new ConfigurationErrorsCollector(true));
+        self::assertFalse($event->canSubmitNewArtifact());
+    }
+
+    public function testItCollectsAllIssues(): void
+    {
+        $user    = UserTestBuilder::aUser()->build();
+        $tracker = TrackerTestBuilder::aTracker()->withId(98)
+            ->withProject(ProjectTestBuilder::aProject()->withId(101)->build())
+            ->build();
+        $event   = new CanSubmitNewArtifact($user, $tracker, true);
+
+        $this->program_increment_creator_checker->method('canCreateAProgramIncrement')->willReturn(false);
+        $this->iteration_creator_checker->method('canCreateAnIteration')->willReturn(false);
+
+        $this->mockProjectTeam();
+
+        $this->getHandler()->handle($event, new ConfigurationErrorsCollector(true));
         self::assertFalse($event->canSubmitNewArtifact());
     }
 
@@ -95,14 +113,14 @@ final class CanSubmitNewArtifactHandlerTest extends TestCase
         $tracker = TrackerTestBuilder::aTracker()->withId(98)
             ->withProject(ProjectTestBuilder::aProject()->withId(101)->build())
             ->build();
-        $event   = new CanSubmitNewArtifact($user, $tracker);
+        $event   = new CanSubmitNewArtifact($user, $tracker, false);
 
         $this->program_increment_creator_checker->method('canCreateAProgramIncrement')->willReturn(true);
         $this->iteration_creator_checker->method('canCreateAnIteration')->willReturn(true);
 
         $this->mockProjectTeam();
 
-        $this->getHandler()->handle($event);
+        $this->getHandler()->handle($event, new ConfigurationErrorsCollector(true));
         self::assertTrue($event->canSubmitNewArtifact());
     }
 
@@ -114,9 +132,9 @@ final class CanSubmitNewArtifactHandlerTest extends TestCase
         $tracker = TrackerTestBuilder::aTracker()->withId(98)
             ->withProject(ProjectTestBuilder::aProject()->withId(101)->build())
             ->build();
-        $event   = new CanSubmitNewArtifact($user, $tracker);
+        $event   = new CanSubmitNewArtifact($user, $tracker, false);
 
-        $this->getHandler()->handle($event);
+        $this->getHandler()->handle($event, new ConfigurationErrorsCollector(true));
         self::assertTrue($event->canSubmitNewArtifact());
     }
 

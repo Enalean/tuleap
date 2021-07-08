@@ -19,6 +19,10 @@
 
 @use '@tuleap/list-picker';
 
+.program-management-configuration-incorrect {
+    margin: var(--tlp-medium-spacing) var(--tlp-medium-spacing) 0 var(--tlp-medium-spacing);
+}
+
 .program-management-teams-framed {
     margin-top: var(--tlp-medium-spacing);
 }

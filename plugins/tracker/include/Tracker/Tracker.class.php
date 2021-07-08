@@ -1981,7 +1981,7 @@ class Tracker implements Tracker_Dispatchable_Interface
         }
 
         if ($can_submit) {
-            return EventManager::instance()->dispatch(new CanSubmitNewArtifact($user, $this))->canSubmitNewArtifact();
+            return EventManager::instance()->dispatch(new CanSubmitNewArtifact($user, $this, false))->canSubmitNewArtifact();
         }
 
         return false;

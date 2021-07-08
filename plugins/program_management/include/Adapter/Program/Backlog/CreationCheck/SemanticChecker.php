@@ -22,11 +22,12 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\CreationCheck;
 
-use Psr\Log\LoggerInterface;
+use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ConfigurationErrorsCollector;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck\CheckSemantic;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck\CheckStatus;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Source\SourceTrackerCollection;
 use Tuleap\ProgramManagement\Domain\ProgramTracker;
+use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframe;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao;
 
 final class SemanticChecker implements CheckSemantic
@@ -35,47 +36,63 @@ final class SemanticChecker implements CheckSemantic
     private \Tracker_Semantic_DescriptionDao $semantic_description_dao;
     private SemanticTimeframeDao $semantic_timeframe_dao;
     private CheckStatus $semantic_status_checker;
-    private LoggerInterface $logger;
 
     public function __construct(
         \Tracker_Semantic_TitleDao $semantic_title_dao,
         \Tracker_Semantic_DescriptionDao $semantic_description_dao,
         SemanticTimeframeDao $semantic_timeframe_dao,
-        CheckStatus $semantic_status_checker,
-        LoggerInterface $logger
+        CheckStatus $semantic_status_checker
     ) {
         $this->semantic_title_dao       = $semantic_title_dao;
         $this->semantic_description_dao = $semantic_description_dao;
         $this->semantic_timeframe_dao   = $semantic_timeframe_dao;
         $this->semantic_status_checker  = $semantic_status_checker;
-        $this->logger                   = $logger;
     }
 
     public function areTrackerSemanticsWellConfigured(
         ProgramTracker $tracker,
-        SourceTrackerCollection $source_tracker_collection
+        SourceTrackerCollection $source_tracker_collection,
+        ConfigurationErrorsCollector $configuration_errors
     ): bool {
         $tracker_ids = $source_tracker_collection->getSourceTrackerIds();
 
-        $errors = [];
+        $has_error = false;
 
         if ($this->semantic_title_dao->getNbOfTrackerWithoutSemanticTitleDefined($tracker_ids) > 0) {
-            $errors[] = sprintf(
-                "Semantic 'Title' is not well configured. Please check semantic of trackers #%s.",
-                implode(", #", $tracker_ids)
+            $this->buildSemanticError(
+                $configuration_errors,
+                $tracker_ids,
+                dgettext('tuleap-program_management', 'Title'),
+                \Tracker_Semantic_Title::NAME
             );
+            $has_error = true;
+            if (! $configuration_errors->shouldCollectAllIssues()) {
+                return false;
+            }
         }
         if ($this->semantic_description_dao->getNbOfTrackerWithoutSemanticDescriptionDefined($tracker_ids) > 0) {
-            $errors[] = sprintf(
-                "Semantic 'Description' is not well configured. Please check semantic of trackers #%s.",
-                implode(", #", $tracker_ids)
+            $this->buildSemanticError(
+                $configuration_errors,
+                $tracker_ids,
+                dgettext('tuleap-program_management', 'Description'),
+                \Tracker_Semantic_Description::NAME
             );
+            $has_error = true;
+            if (! $configuration_errors->shouldCollectAllIssues()) {
+                return false;
+            }
         }
         if (! $this->areTimeFrameSemanticsAligned($tracker_ids)) {
-            $errors[] = sprintf(
-                "Semantic 'Timeframe' is not well configured. Please check semantic of trackers #%s.",
-                implode(", #", $tracker_ids)
+            $this->buildSemanticError(
+                $configuration_errors,
+                $tracker_ids,
+                dgettext('tuleap-program_management', 'Timeframe'),
+                SemanticTimeframe::NAME
             );
+            $has_error = true;
+            if (! $configuration_errors->shouldCollectAllIssues()) {
+                return false;
+            }
         }
         if (
             $this->semantic_status_checker->isStatusWellConfigured(
@@ -83,19 +100,19 @@ final class SemanticChecker implements CheckSemantic
                 $source_tracker_collection
             ) === false
         ) {
-            $errors[] = sprintf(
-                "Semantic 'Status' is not well configured. Please check semantic of trackers #%s.",
-                implode(", #", $tracker_ids)
+            $this->buildSemanticError(
+                $configuration_errors,
+                $tracker_ids,
+                dgettext('tuleap-program_management', 'Status'),
+                \Tracker_Semantic_Status::NAME
             );
+            $has_error = true;
+            if (! $configuration_errors->shouldCollectAllIssues()) {
+                return false;
+            }
         }
 
-        if (count($errors) > 0) {
-            $this->logger->error(implode(PHP_EOL, $errors));
-
-            return false;
-        }
-
-        return true;
+        return ! $has_error;
     }
 
     /**
@@ -111,5 +128,30 @@ final class SemanticChecker implements CheckSemantic
         }
 
         return true;
+    }
+
+    private function buildSemanticError(
+        ConfigurationErrorsCollector $configuration_errors,
+        array $tracker_ids,
+        string $semantic_name,
+        string $semantic_shortname
+    ): void {
+        $tracker_urls = [];
+        foreach ($tracker_ids as $id) {
+            $url            = '/plugins/tracker/?' . http_build_query(
+                ['tracker' => $id, 'func' => 'admin-semantic', 'semantic' => $semantic_shortname]
+            );
+            $tracker_urls[] = sprintf("<a href='%s'>#%d</a>", $url, $id);
+        }
+        $error = sprintf(
+            dgettext(
+                'tuleap-program_management',
+                "Semantic '%s' is not well configured. Please check semantic of trackers %s."
+            ),
+            $semantic_name,
+            implode(", ", $tracker_urls)
+        );
+
+        $configuration_errors->addError($error);
     }
 }
