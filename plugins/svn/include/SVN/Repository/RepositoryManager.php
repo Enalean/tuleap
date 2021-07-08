@@ -222,7 +222,7 @@ class RepositoryManager
         }
 
         $core_svnroot_path = realpath($core_svnroot);
-        if (strpos($path, $core_svnroot_path) !== 0) {
+        if ($core_svnroot_path === false || strpos($path, $core_svnroot_path) !== 0) {
             return false;
         }
 
