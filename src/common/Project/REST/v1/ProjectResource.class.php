@@ -175,7 +175,66 @@ class ProjectResource extends AuthenticatedResource
     /**
      * Creates a new Project
      *
-     * Creates a new project in Tuleap. doesn't support custom fields nor project categories.
+     * Creates a new project in Tuleap.
+     * <br>
+     * <br>
+     * Here is an example of JSON content to ask for a project creation with a Tuleap project template:
+     * <br>
+     * <pre>
+     * {<br>
+     * &nbsp; "shortname": "project-shortname",<br>
+     * &nbsp; "description": "Project Description",<br>
+     * &nbsp; "label": "Project Label",<br>
+     * &nbsp; "is_public": true,<br>
+     * &nbsp; "allow_restricted": true,<br>
+     * &nbsp; "template_id": 100,<br>
+     * &nbsp; "categories":[<br>
+     * &nbsp;&nbsp; {<br>
+     * &nbsp;&nbsp;&nbsp; "category_id": 4,<br>
+     * &nbsp;&nbsp;&nbsp; "value_id": 5<br>
+     * &nbsp;&nbsp; }<br>
+     * &nbsp;],<br>
+     * &nbsp; "fields": [<br>
+     * &nbsp;&nbsp; {<br>
+     * &nbsp;&nbsp;&nbsp; "field_id": 1,<br>
+     * &nbsp;&nbsp;&nbsp; "value": "Project custom field value"<br>
+     * &nbsp;&nbsp; }<br>
+     * &nbsp;]<br>
+     * }<br>
+     * </pre>
+     *
+     * Here is an example of JSON content to ask for a project creation with an XML template:
+     * <br>
+     * <pre>
+     * {<br>
+     * &nbsp; "shortname": "project-shortname",<br>
+     * &nbsp; "description": "Project Description",<br>
+     * &nbsp; "label": "Project Label",<br>
+     * &nbsp; "is_public": true,<br>
+     * &nbsp; "allow_restricted": true,<br>
+     * &nbsp; "xml_template_name": "empty",<br>
+     * &nbsp; "categories":[<br>
+     * &nbsp;&nbsp; {<br>
+     * &nbsp;&nbsp;&nbsp; "category_id": 4,<br>
+     * &nbsp;&nbsp;&nbsp; "value_id": 5<br>
+     * &nbsp;&nbsp; }<br>
+     * &nbsp;],<br>
+     * &nbsp; "fields": [<br>
+     * &nbsp;&nbsp; {<br>
+     * &nbsp;&nbsp;&nbsp; "field_id": 1,<br>
+     * &nbsp;&nbsp;&nbsp; "value": "Project custom field value"<br>
+     * &nbsp;&nbsp; }<br>
+     * &nbsp;]<br>
+     * }<br>
+     * </pre>
+     *
+     * If both template_id and xml_template_name are provided, only template_id will be taken into account.
+     * <br>
+     * <br>
+     *
+     * To see if your project creation data are correctly set, you can use the ?dry_run=true option.
+     * <br>
+     * All errors (if found) will be returned at once.
      *
      * @url    POST
      * @status 201
