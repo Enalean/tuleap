@@ -29,19 +29,23 @@ use ProjectCreationData;
 use ProjectManager;
 use Tuleap\Project\Admin\Categories\CategoryCollectionConsistencyChecker;
 use Tuleap\Project\Admin\Categories\ProjectCategoriesException;
+use Tuleap\Project\Admin\DescriptionFields\ProjectRegistrationSubmittedFieldsCollectionConsistencyChecker;
 use Tuleap\Project\DefaultProjectVisibilityRetriever;
 
 final class ProjectRegistrationRESTChecker implements ProjectRegistrationChecker
 {
     private DefaultProjectVisibilityRetriever $default_project_visibility_retriever;
     private CategoryCollectionConsistencyChecker $category_collection_consistency_checker;
+    private ProjectRegistrationSubmittedFieldsCollectionConsistencyChecker $submitted_fields_collection_consistency_checker;
 
     public function __construct(
         DefaultProjectVisibilityRetriever $default_project_visibility_retriever,
-        CategoryCollectionConsistencyChecker $category_collection_consistency_checker
+        CategoryCollectionConsistencyChecker $category_collection_consistency_checker,
+        ProjectRegistrationSubmittedFieldsCollectionConsistencyChecker $submitted_fields_collection_consistency_checker
     ) {
-        $this->default_project_visibility_retriever    = $default_project_visibility_retriever;
-        $this->category_collection_consistency_checker = $category_collection_consistency_checker;
+        $this->default_project_visibility_retriever            = $default_project_visibility_retriever;
+        $this->category_collection_consistency_checker         = $category_collection_consistency_checker;
+        $this->submitted_fields_collection_consistency_checker = $submitted_fields_collection_consistency_checker;
     }
 
     public function collectAllErrorsForProjectRegistration(PFUser $user, ProjectCreationData $project_creation_data): ProjectRegistrationErrorsCollection
@@ -61,6 +65,11 @@ final class ProjectRegistrationRESTChecker implements ProjectRegistrationChecker
         } catch (ProjectCategoriesException $exception) {
             $errors_collection->addError($exception);
         }
+
+        $this->submitted_fields_collection_consistency_checker->checkFieldConsistency(
+            $project_creation_data->getDataFields(),
+            $errors_collection
+        );
 
         return $errors_collection;
     }

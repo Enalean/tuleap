@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace Tuleap\Project\Admin\DescriptionFields;
 
 use Tuleap\Project\DescriptionFieldsFactory;
+use Tuleap\Project\Registration\ProjectRegistrationErrorsCollection;
 
 class ProjectRegistrationSubmittedFieldsCollectionConsistencyChecker
 {
@@ -34,12 +35,10 @@ class ProjectRegistrationSubmittedFieldsCollectionConsistencyChecker
         $this->fields_factory = $fields_factory;
     }
 
-    /**
-     * @throws FieldDoesNotExistException
-     * @throws MissingMandatoryFieldException
-     */
-    public function checkFieldConsistency(ProjectRegistrationSubmittedFieldsCollection $field_collection): void
-    {
+    public function checkFieldConsistency(
+        ProjectRegistrationSubmittedFieldsCollection $field_collection,
+        ProjectRegistrationErrorsCollection $errors_collection
+    ): void {
         $mandatory_fields = [];
         $optional_field   = [];
         foreach ($this->fields_factory->getAllDescriptionFields() as $field) {
@@ -65,11 +64,15 @@ class ProjectRegistrationSubmittedFieldsCollectionConsistencyChecker
         }
 
         if (count($mandatory_fields) !== 0) {
-            throw new MissingMandatoryFieldException($mandatory_fields);
+            $errors_collection->addError(
+                new MissingMandatoryFieldException($mandatory_fields)
+            );
         }
 
         if (count($non_existing_field) !== 0) {
-            throw new FieldDoesNotExistException($non_existing_field);
+            $errors_collection->addError(
+                new FieldDoesNotExistException($non_existing_field)
+            );
         }
     }
 }

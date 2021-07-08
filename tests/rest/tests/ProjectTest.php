@@ -93,6 +93,12 @@ class ProjectTest extends ProjectBase
                     'value_id' => 21
                 ]
             ],
+            'fields' => [
+                [
+                    'field_id' => 100002,
+                    'value'    => "field value",
+                ]
+            ]
         ]);
 
         $response = $this->getResponseByName(
@@ -111,7 +117,7 @@ class ProjectTest extends ProjectBase
 
         self::assertArrayHasKey('error', $errors_response);
         self::assertArrayHasKey('i18n_error_messages', $errors_response['error']);
-        self::assertCount(3, $errors_response['error']['i18n_error_messages']);
+        self::assertCount(4, $errors_response['error']['i18n_error_messages']);
     }
 
     public function testPOSTDryRunForRegularUser(): void

@@ -29,7 +29,6 @@ use ProjectCreationData;
 use Tuleap\Project\Admin\Categories\ProjectCategoriesException;
 use Tuleap\Project\Admin\DescriptionFields\FieldDoesNotExistException;
 use Tuleap\Project\Admin\DescriptionFields\MissingMandatoryFieldException;
-use Tuleap\Project\Admin\DescriptionFields\ProjectRegistrationSubmittedFieldsCollectionConsistencyChecker;
 use Tuleap\Project\Registration\MaxNumberOfProjectReachedForPlatformException;
 use Tuleap\Project\Registration\MaxNumberOfProjectReachedForUserException;
 use Tuleap\Project\Registration\ProjectDescriptionMandatoryException;
@@ -60,18 +59,14 @@ class RestProjectCreator
      */
     private $template_factory;
 
-    private ProjectRegistrationSubmittedFieldsCollectionConsistencyChecker $fields_collection_consistency_checker;
-
     public function __construct(
         \ProjectCreator $project_creator,
         \ProjectXMLImporter $project_XML_importer,
-        TemplateFactory $template_factory,
-        ProjectRegistrationSubmittedFieldsCollectionConsistencyChecker $fields_collection_consistency_checker
+        TemplateFactory $template_factory
     ) {
-        $this->project_creator                       = $project_creator;
-        $this->project_XML_importer                  = $project_XML_importer;
-        $this->template_factory                      = $template_factory;
-        $this->fields_collection_consistency_checker = $fields_collection_consistency_checker;
+        $this->project_creator      = $project_creator;
+        $this->project_XML_importer = $project_XML_importer;
+        $this->template_factory     = $template_factory;
     }
 
     /**
@@ -87,10 +82,6 @@ class RestProjectCreator
         ProjectCreationData $creation_data
     ): Project {
         try {
-            $this->fields_collection_consistency_checker->checkFieldConsistency(
-                $creation_data->getDataFields()
-            );
-
             return $this->createProjectWithSelectedTemplate($post_representation, $creation_data);
         } catch (MaxNumberOfProjectReachedForPlatformException | MaxNumberOfProjectReachedForUserException $exception) {
             throw new RestException(429, $exception->getMessage());

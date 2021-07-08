@@ -38,6 +38,7 @@ use Tuleap\FRS\LicenseAgreement\LicenseAgreementFactory;
 use Tuleap\Project\Admin\Categories\CategoryCollectionConsistencyChecker;
 use Tuleap\Project\Admin\Categories\ProjectCategoriesUpdater;
 use Tuleap\Project\Admin\Categories\TroveSetNodeFacade;
+use Tuleap\Project\Admin\DescriptionFields\ProjectRegistrationSubmittedFieldsCollectionConsistencyChecker;
 use Tuleap\Project\Admin\Service\ProjectServiceActivator;
 use Tuleap\Project\DefaultProjectVisibilityRetriever;
 use Tuleap\Project\DescriptionFieldsDao;
@@ -201,6 +202,11 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
                 new DefaultProjectVisibilityRetriever(),
                 new CategoryCollectionConsistencyChecker(
                     new \TroveCatFactory(new \TroveCatDao())
+                ),
+                new ProjectRegistrationSubmittedFieldsCollectionConsistencyChecker(
+                    new DescriptionFieldsFactory(
+                        new DescriptionFieldsDao()
+                    )
                 )
             )
         );
