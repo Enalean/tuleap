@@ -38,7 +38,7 @@ import type {
 import { select2 } from "tlp";
 import $ from "jquery";
 import { sanitize } from "dompurify";
-import { render } from "mustache";
+import mustache from "mustache";
 import type { UserForPeoplePicker } from "./type";
 
 @Component
@@ -101,7 +101,7 @@ export default class PeoplePicker extends Vue {
             return "";
         }
 
-        return render(
+        return mustache.render(
             `<div class="select2-result-user">
                 <div class="tlp-avatar-mini select2-result-user__avatar">
                     <img src="{{ avatar_url }}">
@@ -123,7 +123,7 @@ export default class PeoplePicker extends Vue {
             return user.text;
         }
 
-        return render(
+        return mustache.render(
             `<div class="tlp-avatar-mini">
                 <img src="{{ avatar_url }}">
             </div>

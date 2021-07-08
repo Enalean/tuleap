@@ -20,7 +20,7 @@
 import type { DataFormat, GroupedDataFormat, IdTextPair, LoadingData } from "tlp";
 import { select2 } from "tlp";
 import { sanitize } from "dompurify";
-import { render } from "mustache";
+import mustache from "mustache";
 import $ from "jquery";
 
 initThemeColorSelector();
@@ -39,7 +39,7 @@ function initThemeColorSelector(): void {
         data: colors,
         escapeMarkup: sanitize,
         templateResult(result: LoadingData | DataFormat | GroupedDataFormat): string {
-            return render(
+            return mustache.render(
                 `<i class="fa fa-circle user-preferences-color-selector-selection-{{ id }}" aria-hidden="true"></i>
                     {{ text }}
                 </div>`,
@@ -49,7 +49,7 @@ function initThemeColorSelector(): void {
         templateSelection(
             result: IdTextPair | LoadingData | DataFormat | GroupedDataFormat
         ): string {
-            return render(
+            return mustache.render(
                 `<i class="fa fa-circle user-preferences-color-selector-selection-{{ id }}" aria-hidden="true"></i>
                     {{ text }}
                 </div>`,

@@ -18,7 +18,7 @@
  */
 
 import $ from "jquery";
-import { render } from "mustache";
+import mustache from "mustache";
 
 document.addEventListener("DOMContentLoaded", () => {
     handleBreadcrumbPrivacyPopover();
@@ -35,7 +35,7 @@ function handleBreadcrumbPrivacyPopover() {
     const shield_icon_html = svg ? new XMLSerializer().serializeToString(svg) : "";
     const project_flags = JSON.parse(project_privacy_element.dataset.projectFlags);
 
-    const template = render(
+    const template = mustache.render(
         `<div class="popover current-project-nav-popover current-project-nav-popover-privacy">
                 <div class="arrow"></div>
                 <h3>{{ title }}</h3>
@@ -49,7 +49,7 @@ function handleBreadcrumbPrivacyPopover() {
         }
     );
 
-    const content = render(
+    const content = mustache.render(
         `{{# has_project_flags }}
             <div class="current-project-nav-flag-popover-flag">
                 <i class="fas {{ privacy_icon}}"></i>
@@ -101,7 +101,7 @@ function handleSidebarPrivacyPopover() {
         return;
     }
 
-    const template = render(
+    const template = mustache.render(
         `<div class="popover current-project-nav-popover current-project-sidebar-popover-privacy">
             <div class="arrow"></div>
             <h3>{{ title }}</h3>
@@ -110,7 +110,7 @@ function handleSidebarPrivacyPopover() {
         { title: project_privacy_trigger.dataset.title }
     );
 
-    const content = render(
+    const content = mustache.render(
         `<p class="privacy-description">
             {{ content }}
         </p>`,

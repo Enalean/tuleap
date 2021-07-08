@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { render } from "mustache";
+import mustache from "mustache";
 import { sprintf } from "sprintf-js";
 import preview_template from "./preview.mustache";
 import { autocomplete_groups_for_select2 } from "../autocomplete-for-select2.js";
@@ -72,7 +72,7 @@ export async function initLdapBindingPreview(options, callback) {
 
         preview.insertAdjacentHTML(
             "beforeEnd",
-            render(
+            mustache.render(
                 preview_template,
                 getPresenter(
                     users_to_add,

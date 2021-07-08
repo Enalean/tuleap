@@ -39,7 +39,7 @@
 import Vue from "vue";
 import { Component, Ref, Watch } from "vue-property-decorator";
 import { State } from "vuex-class";
-import { render } from "mustache";
+import mustache from "mustache";
 import { sanitize } from "dompurify";
 import $ from "jquery";
 import type { DataFormat, GroupedDataFormat, LoadingData, Select2Plugin } from "tlp";
@@ -99,7 +99,7 @@ export default class FieldTrackerColor extends Vue {
             return "";
         }
 
-        return render("<span class={{ id }}></span>", result);
+        return mustache.render("<span class={{ id }}></span>", result);
     }
 
     hasTrackerAValidColor(): boolean {
