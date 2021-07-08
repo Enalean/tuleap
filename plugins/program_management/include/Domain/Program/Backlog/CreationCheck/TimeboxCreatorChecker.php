@@ -90,7 +90,8 @@ class TimeboxCreatorChecker
         if (
             ! $this->required_field_checker->areRequiredFieldsOfTeamTrackersLimitedToTheSynchronizedFields(
                 $team_trackers,
-                $synchronized_fields_data_collection
+                $synchronized_fields_data_collection,
+                $configuration_errors
             )
         ) {
             $this->logger->debug('A team tracker has a required fields outside the synchronized fields.');

@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\CreationCheck;
 
 use Psr\Log\NullLogger;
+use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ConfigurationErrorsCollector;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\Field;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFieldFromProgramAndTeamTrackers;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFieldFromProgramAndTeamTrackersCollection;
@@ -42,7 +43,7 @@ final class RequiredFieldCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     protected function setUp(): void
     {
-        $this->checker = new RequiredFieldChecker(new NullLogger());
+        $this->checker = new RequiredFieldChecker();
     }
 
     public function testAllowsCreationWhenOnlySynchronizedFieldsAreRequired(): void
@@ -82,11 +83,14 @@ final class RequiredFieldCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         );
         $collection         = new SynchronizedFieldFromProgramAndTeamTrackersCollection(new NullLogger());
         $collection->add($synchronized_field);
+        $errors_collector         = new ConfigurationErrorsCollector(false);
         $no_other_required_fields = $this->checker->areRequiredFieldsOfTeamTrackersLimitedToTheSynchronizedFields(
             $trackers,
-            $collection
+            $collection,
+            $errors_collector
         );
         self::assertTrue($no_other_required_fields);
+        self::assertCount(0, $errors_collector->getErrorMessages());
     }
 
     public function testDisallowsCreationWhenAnyFieldIsRequiredAndNotSynchronized(): void
@@ -100,14 +104,17 @@ final class RequiredFieldCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         $required_title = $this->createMock(\Tracker_FormElement_Field_Text::class);
         $required_title->method('isRequired')->willReturn(true);
         $required_title->method('getId')->willReturn(789);
+        $required_title->method('getTrackerId')->willReturn(412);
         $required_artifact_link = $this->createMock(\Tracker_FormElement_Field_ArtifactLink::class);
         $required_artifact_link->method('isRequired')->willReturn(true);
-        $required_artifact_link->method('getId')->willReturn(789);
+        $required_artifact_link->method('getId')->willReturn(790);
+        $required_artifact_link->method('getTrackerId')->willReturn(412);
 
         $other_required_field = $this->createMock(\Tracker_FormElement_Field_String::class);
         $other_required_field->method('isRequired')->willReturn(true);
         $other_required_field->method('getId')->willReturn('987');
         $other_required_field->method('getLabel')->willReturn('some_label');
+        $other_required_field->method('getTrackerId')->willReturn(412);
 
         $tracker = $this->createMock(\Tracker::class);
         $tracker->method('getId')->willReturn(412);
@@ -126,11 +133,14 @@ final class RequiredFieldCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         $user      = UserTestBuilder::aUser()->build();
         $trackers  = TrackerCollection::buildRootPlanningMilestoneTrackers($retriever, $teams, $user);
 
+        $errors_collector         = new ConfigurationErrorsCollector(true);
         $no_other_required_fields = $this->checker->areRequiredFieldsOfTeamTrackersLimitedToTheSynchronizedFields(
             $trackers,
-            $collection
+            $collection,
+            $errors_collector
         );
         self::assertFalse($no_other_required_fields);
+        self::assertCount(1, $errors_collector->getErrorMessages());
     }
 
     private function buildSynchronizedFieldDataFromProgramAndTeamTrackers(

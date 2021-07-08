@@ -833,7 +833,7 @@ final class program_managementPlugin extends Plugin
                 $timeframe_dao,
                 new StatusSemanticChecker(new Tracker_Semantic_StatusDao(), $semantic_status_factory),
             ),
-            new RequiredFieldChecker($logger),
+            new RequiredFieldChecker(),
             new WorkflowChecker(
                 new Workflow_Dao(),
                 new Tracker_Rule_Date_Dao(),

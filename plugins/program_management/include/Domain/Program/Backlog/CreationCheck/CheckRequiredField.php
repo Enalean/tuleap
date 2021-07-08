@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck;
 
+use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ConfigurationErrorsCollector;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFieldFromProgramAndTeamTrackersCollection;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TrackerCollection;
 
@@ -29,6 +30,7 @@ interface CheckRequiredField
 {
     public function areRequiredFieldsOfTeamTrackersLimitedToTheSynchronizedFields(
         TrackerCollection $trackers,
-        SynchronizedFieldFromProgramAndTeamTrackersCollection $field_collection
+        SynchronizedFieldFromProgramAndTeamTrackersCollection $field_collection,
+        ConfigurationErrorsCollector $errors_collector
     ): bool;
 }
