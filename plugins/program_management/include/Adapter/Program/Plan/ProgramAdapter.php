@@ -25,8 +25,10 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Plan;
 use Project_AccessException;
 use Tuleap\ProgramManagement\Domain\Program\Plan\BuildProgram;
 use Tuleap\ProgramManagement\Domain\Program\Plan\ProgramAccessException;
+use Tuleap\ProgramManagement\Domain\Program\Plan\ProgramIsATeamException;
 use Tuleap\ProgramManagement\Domain\Program\Plan\ProjectIsNotAProgramException;
 use Tuleap\ProgramManagement\Domain\Program\VerifyIsProgram;
+use Tuleap\ProgramManagement\Domain\Team\VerifyIsTeam;
 use Tuleap\Project\ProjectAccessChecker;
 
 final class ProgramAdapter implements BuildProgram
@@ -34,15 +36,18 @@ final class ProgramAdapter implements BuildProgram
     private \ProjectManager $project_manager;
     private VerifyIsProgram $program_verifier;
     private ProjectAccessChecker $project_access_checker;
+    private VerifyIsTeam $team_verifier;
 
     public function __construct(
         \ProjectManager $project_manager,
         ProjectAccessChecker $project_access_checker,
-        VerifyIsProgram $program_verifier
+        VerifyIsProgram $program_verifier,
+        VerifyIsTeam $team_verifier
     ) {
         $this->project_manager        = $project_manager;
         $this->project_access_checker = $project_access_checker;
         $this->program_verifier       = $program_verifier;
+        $this->team_verifier          = $team_verifier;
     }
 
     /**
@@ -69,10 +74,22 @@ final class ProgramAdapter implements BuildProgram
 
     /**
      * @throws ProgramAccessException
+     * @throws ProgramIsATeamException
      */
     public function ensureProgramIsProjectAndUserIsAdminOf(int $id, \PFUser $user): void
     {
         $this->ensureUserIsAdminOfProject($id, $user);
+        $this->ensureProgramIsNotATeam($id);
+    }
+
+    /**
+     * @throws ProgramIsATeamException
+     */
+    private function ensureProgramIsNotATeam(int $id): void
+    {
+        if ($this->team_verifier->isATeam($id)) {
+            throw new ProgramIsATeamException($id);
+        }
     }
 
     /**

@@ -24,6 +24,7 @@ namespace Tuleap\ProgramManagement\Domain\Program;
 
 use Tuleap\ProgramManagement\Domain\Program\Plan\ProgramAccessException;
 use Tuleap\ProgramManagement\Domain\Program\Plan\BuildProgram;
+use Tuleap\ProgramManagement\Domain\Program\Plan\ProgramIsATeamException;
 
 /**
  * @psalm-immutable
@@ -47,6 +48,7 @@ final class ToBeCreatedProgram
 
     /**
      * @throws ProgramAccessException
+     * @throws ProgramIsATeamException
      */
     public static function fromId(BuildProgram $build_program, int $id, \PFUser $user): self
     {

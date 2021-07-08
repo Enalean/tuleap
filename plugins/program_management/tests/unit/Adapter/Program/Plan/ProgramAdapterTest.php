@@ -26,9 +26,11 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Project_AccessException;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\ProgramManagement\Domain\Program\Plan\ProgramAccessException;
+use Tuleap\ProgramManagement\Domain\Program\Plan\ProgramIsATeamException;
 use Tuleap\ProgramManagement\Domain\Program\Plan\ProjectIsNotAProgramException;
 use Tuleap\ProgramManagement\Domain\Program\VerifyIsProgram;
 use Tuleap\ProgramManagement\Stub\VerifyIsProgramStub;
+use Tuleap\ProgramManagement\Stub\VerifyIsTeamStub;
 use Tuleap\Project\ProjectAccessChecker;
 use Tuleap\Test\Builders\UserTestBuilder;
 
@@ -46,12 +48,14 @@ final class ProgramAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $project_access_checker;
     private VerifyIsProgram $program_verifier;
+    private VerifyIsTeamStub $team_verifier;
 
     protected function setUp(): void
     {
         $this->project_manager        = \Mockery::mock(\ProjectManager::class);
         $this->project_access_checker = \Mockery::mock(ProjectAccessChecker::class);
         $this->program_verifier       = VerifyIsProgramStub::withValidProgram();
+        $this->team_verifier          = VerifyIsTeamStub::withNotValidTeam();
     }
 
     public function testThrowsAnErrorWhenUserCannotAccessTheProject(): void
@@ -202,8 +206,25 @@ final class ProgramAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->getAdapter()->ensureProgramIsAProjectForManagement($project_id, $user);
     }
 
+    public function testThrowErrorWhenProgramIsATeam(): void
+    {
+        $this->team_verifier = VerifyIsTeamStub::withValidTeam();
+
+        $project_id = 101;
+        $project    = new \Project(['group_id' => $project_id, 'status' => 'A', 'access' => 'public']);
+        $this->project_manager->shouldReceive('getProject')->with($project_id)->andReturn($project);
+        $this->project_access_checker->shouldReceive('checkUserCanAccessProject');
+
+        $user = \Mockery::mock(\PFUser::class);
+        $user->shouldReceive('isAdmin')->with($project_id)->andReturn(true);
+
+        $this->expectException(ProgramIsATeamException::class);
+
+        $this->getAdapter()->ensureProgramIsProjectAndUserIsAdminOf($project_id, $user);
+    }
+
     private function getAdapter(): ProgramAdapter
     {
-        return new ProgramAdapter($this->project_manager, $this->project_access_checker, $this->program_verifier);
+        return new ProgramAdapter($this->project_manager, $this->project_access_checker, $this->program_verifier, $this->team_verifier);
     }
 }

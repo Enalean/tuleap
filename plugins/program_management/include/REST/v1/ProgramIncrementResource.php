@@ -47,6 +47,7 @@ use Tuleap\ProgramManagement\Adapter\Program\Plan\PrioritizeFeaturesPermissionVe
 use Tuleap\ProgramManagement\Adapter\Program\Plan\ProgramAdapter;
 use Tuleap\ProgramManagement\Adapter\Program\PlanningAdapter;
 use Tuleap\ProgramManagement\Adapter\Program\ProgramDao;
+use Tuleap\ProgramManagement\Adapter\Team\TeamDao;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Content\RetrieveFeatureContent;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\NotAllowedToPrioritizeException;
@@ -232,7 +233,8 @@ final class ProgramIncrementResource extends AuthenticatedResource
             new ProgramAdapter(
                 ProjectManager::instance(),
                 new ProjectAccessChecker(new RestrictedUserCanAccessProjectVerifier(), \EventManager::instance()),
-                new ProgramDao()
+                new ProgramDao(),
+                new TeamDao()
             )
         );
     }

@@ -474,7 +474,7 @@ final class program_managementPlugin extends Plugin
             '/assets/program_management'
         );
         $action_builder         = new ArtifactTopBacklogActionBuilder(
-            new ProgramAdapter($project_manager, $project_access_checker, new ProgramDao()),
+            new ProgramAdapter($project_manager, $project_access_checker, new ProgramDao(), new TeamDao()),
             new PrioritizeFeaturesPermissionVerifier($project_manager, $project_access_checker, new CanPrioritizeFeaturesDAO()),
             new PlanDao(),
             new ArtifactsExplicitTopBacklogDAO(),
@@ -502,7 +502,7 @@ final class program_managementPlugin extends Plugin
             \EventManager::instance()
         );
         $action_builder         = new MassChangeTopBacklogActionBuilder(
-            new ProgramAdapter($project_manager, $project_access_checker, new ProgramDao()),
+            new ProgramAdapter($project_manager, $project_access_checker, new ProgramDao(), new TeamDao()),
             new PrioritizeFeaturesPermissionVerifier($project_manager, $project_access_checker, new CanPrioritizeFeaturesDAO()),
             new PlanDao(),
             TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../templates')
@@ -742,7 +742,8 @@ final class program_managementPlugin extends Plugin
                 new RestrictedUserCanAccessProjectVerifier(),
                 \EventManager::instance()
             ),
-            new ProgramDao()
+            new ProgramDao(),
+            new TeamDao()
         );
     }
 
