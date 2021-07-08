@@ -64,6 +64,7 @@ use Tuleap\Project\ProjectAccessChecker;
 use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
+use Tuleap\REST\I18NRestException;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkUpdater;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkUpdaterDataFormater;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDecoratorRetriever;
@@ -126,10 +127,8 @@ final class ProgramIncrementResource extends AuthenticatedResource
             Header::sendPaginationHeaders($limit, $offset, count($elements), self::MAX_LIMIT);
 
             return array_slice($elements, $offset, $limit);
-        } catch (ProgramIncrementNotFoundException | ProgramNotFoundException $e) {
-            throw new RestException(404, $e->getMessage());
-        } catch (PlanTrackerException | ProgramTrackerException $e) {
-            throw new RestException(404, $e->getMessage());
+        } catch (ProgramIncrementNotFoundException | ProgramNotFoundException | PlanTrackerException | ProgramTrackerException $e) {
+            throw new I18NRestException(404, $e->getI18NExceptionMessage());
         }
     }
 
@@ -208,11 +207,11 @@ final class ProgramIncrementResource extends AuthenticatedResource
                 ContentChange::fromRESTRepresentation($potential_feature_id_to_add, $patch_representation->order)
             );
         } catch (ProgramTrackerException | ProgramIncrementNotFoundException | ProgramNotFoundException $e) {
-            throw new RestException(404, $e->getMessage());
+            throw new I18NRestException(404, $e->getI18NExceptionMessage());
         } catch (NotAllowedToPrioritizeException $e) {
-            throw new RestException(403, $e->getMessage());
+            throw new I18NRestException(403, $e->getI18NExceptionMessage());
         } catch (FeatureException | AddOrOrderMustBeSetException $e) {
-            throw new RestException(400, $e->getMessage());
+            throw new I18NRestException(400, $e->getI18NExceptionMessage());
         }
     }
 

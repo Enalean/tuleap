@@ -24,8 +24,22 @@ namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement;
 
 final class ProgramIncrementNotFoundException extends \Exception
 {
+    private string $i18n_message;
+
     public function __construct(int $id)
     {
-        parent::__construct("Program increment artifact #$id could not be found");
+        parent::__construct("Program Increment artifact #$id could not be found");
+        $this->i18n_message = sprintf(
+            dgettext(
+                'tuleap-program_management',
+                'Program Increment artifact #%d could not be found'
+            ),
+            $id
+        );
+    }
+
+    public function getI18NExceptionMessage(): string
+    {
+        return $this->i18n_message;
     }
 }

@@ -24,6 +24,8 @@ namespace Tuleap\ProgramManagement\Domain\Program\Backlog;
 
 final class NotAllowedToPrioritizeException extends \Exception
 {
+    private string $i18n_message;
+
     public function __construct(int $user_id, int $program_increment_id)
     {
         parent::__construct(
@@ -33,5 +35,18 @@ final class NotAllowedToPrioritizeException extends \Exception
                 $program_increment_id
             )
         );
+        $this->i18n_message = sprintf(
+            dgettext(
+                'tuleap-program_management',
+                'User #%d does not have permission to prioritize features in the program increment #%d'
+            ),
+            $user_id,
+            $program_increment_id
+        );
+    }
+
+    public function getI18NExceptionMessage(): string
+    {
+        return $this->i18n_message;
     }
 }

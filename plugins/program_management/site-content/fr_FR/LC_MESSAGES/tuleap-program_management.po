@@ -50,6 +50,10 @@ msgid "Could not find feature with id #%d"
 msgstr "La fonctionnalité avec l'id #%d n'a pas pu être trouvée"
 
 #, php-format
+msgid "Could not find the program of program increment #%d"
+msgstr "Le Programme de l'incrément de programme #%d n'a pas été trouvé"
+
+#, php-format
 msgid "Could not remove feature #%d from all program increments"
 msgstr ""
 "La fonctionnalité #%d n'a pas pu être enlevée de tous les incréments de "
@@ -124,6 +128,16 @@ msgstr "Programme"
 msgid "Program %d can not be a Program and a Team in the same time"
 msgstr "Le Programme %d ne peut pas être à la fois un Programme et une Équipe"
 
+#, php-format
+msgid "Program Increment artifact #%d could not be found"
+msgstr "L'artefact Incrément de Programme #%d n'a pas été trouvé"
+
+msgid ""
+"Program Increment tracker id must not be contained into plannable tracker ids"
+msgstr ""
+"Les ids des trackers planifiables ne doivent pas contenir l'id de l'outils "
+"de suivi d'Incrément de Programme"
+
 msgid "Program Increments"
 msgstr "Incréments de Programme"
 
@@ -132,12 +146,6 @@ msgstr "Gestion de Programme"
 
 msgid "Program administration"
 msgstr "Administration du Programme"
-
-msgid ""
-"Program increment tracker id must not be contained into plannable tracker ids"
-msgstr ""
-"Les ids des trackers planifiables ne doivent pas contenir l'id de l'outils "
-"de suivi d'incrément de programme"
 
 msgid "Program management service is disabled."
 msgstr "Le service de gestion de programme est désactivé."
@@ -209,6 +217,11 @@ msgstr "L'outils de suivi #%d n'existe pas dans le projet #%d"
 msgid "Tracker #%d is not found"
 msgstr "L'outils de suivi %d n'a pas été trouvé"
 
+#, php-format
+msgid "Tracker id #%d is not a plannable tracker"
+msgstr ""
+"L'outils de suivi avec l'id #%d n'est pas un outils de suivi planifiable"
+
 msgid "Unchanged"
 msgstr "Inchangé"
 
@@ -217,6 +230,14 @@ msgid "User #%d cannot manipulate the top backlog of the Program #%d"
 msgstr ""
 "L'utilisateur #%d ne peut pas manipuler la planification générale du "
 "Programme #%d"
+
+#, php-format
+msgid ""
+"User #%d does not have permission to prioritize features in the program "
+"increment #%d"
+msgstr ""
+"L'utilisateur #%d n'a pas les permissions pour prioriser des fonctionnalités "
+"dans le l'incrément de programme #%d"
 
 #, php-format
 msgid "User %s can not access to Program #%d"
@@ -239,6 +260,9 @@ msgid ""
 msgstr ""
 "Vous êtes en train de mettre à jour un incrément de programme. Veuillez "
 "noter que les releases correspondantes ne seront pas mises à jour."
+
+msgid "You can not see this feature."
+msgstr "Vous ne pouvez pas voir cette fonctionnalité."
 
 #, php-format
 msgid ""
@@ -265,6 +289,9 @@ msgstr ""
 
 msgid "You should define at least one Team project."
 msgstr "Vous devez définir au moins un projet Équipe."
+
+msgid "`add` and `order` must not both be null"
+msgstr "`add` et `order` ne peuvent être null en même temps"
 
 msgid "program increment"
 msgstr "incrément de programme"

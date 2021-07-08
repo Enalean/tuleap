@@ -33,6 +33,7 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Content\Links\Featur
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Links\FeatureNotAccessException;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
+use Tuleap\REST\I18NRestException;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDecoratorRetriever;
 
 final class ProgramBacklogItemsResource extends AuthenticatedResource
@@ -86,9 +87,9 @@ final class ProgramBacklogItemsResource extends AuthenticatedResource
 
             return array_slice($children, $offset, $limit);
         } catch (FeatureIsNotPlannableException $e) {
-            throw new RestException(400, $e->getMessage());
+            throw new I18NRestException(400, $e->getI18NExceptionMessage());
         } catch (FeatureNotAccessException $e) {
-            throw new RestException(404, $e->getMessage());
+            throw new I18NRestException(404, $e->getI18NExceptionMessage());
         }
     }
 
