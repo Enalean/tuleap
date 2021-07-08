@@ -27,16 +27,19 @@ use Tuleap\Project\Registration\RegistrationErrorException;
 
 class MissingMandatoryFieldException extends RegistrationErrorException
 {
-    private string $mandatory_fields;
+    private array $mandatory_fields;
 
-    public function __construct(string $mandatory_fields)
+    public function __construct(array $mandatory_fields)
     {
         $this->mandatory_fields = $mandatory_fields;
 
         parent::__construct(
             sprintf(
                 'Mandatory field where missing: %s',
-                $mandatory_fields
+                implode(
+                    ', ',
+                    array_values($mandatory_fields)
+                )
             )
         );
     }
@@ -45,7 +48,10 @@ class MissingMandatoryFieldException extends RegistrationErrorException
     {
         return sprintf(
             dgettext('tuleap-core', 'Mandatory field where missing: %s'),
-            $this->mandatory_fields
+            implode(
+                ', ',
+                array_values($this->mandatory_fields)
+            )
         );
     }
 }

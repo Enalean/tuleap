@@ -27,16 +27,19 @@ use Tuleap\Project\Registration\RegistrationErrorException;
 
 class FieldDoesNotExistException extends RegistrationErrorException
 {
-    private string $non_existing_field;
+    private array $non_existing_field;
 
-    public function __construct(string $non_existing_field)
+    public function __construct(array $non_existing_field)
     {
         $this->non_existing_field = $non_existing_field;
 
         parent::__construct(
             sprintf(
                 'Some fields does not exists: %s',
-                $non_existing_field
+                implode(
+                    ', ',
+                    array_values($non_existing_field)
+                )
             )
         );
     }
@@ -45,7 +48,10 @@ class FieldDoesNotExistException extends RegistrationErrorException
     {
         return sprintf(
             dgettext('tuleap-core', 'Some fields does not exists: %s'),
-            $this->non_existing_field
+            implode(
+                ', ',
+                array_values($this->non_existing_field)
+            )
         );
     }
 }
