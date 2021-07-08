@@ -244,6 +244,11 @@ class ProjectResource extends AuthenticatedResource
                         new DefaultProjectVisibilityRetriever(),
                         new CategoryCollectionConsistencyChecker(
                             new \TroveCatFactory(new \TroveCatDao())
+                        ),
+                        new ProjectRegistrationSubmittedFieldsCollectionConsistencyChecker(
+                            new DescriptionFieldsFactory(
+                                new DescriptionFieldsDao()
+                            )
                         )
                     )
                 )
@@ -1252,10 +1257,7 @@ class ProjectResource extends AuthenticatedResource
                 new XMLImportHelper(UserManager::instance()),
                 ProjectCreator::buildSelfRegularValidation()
             ),
-            TemplateFactory::build(),
-            new ProjectRegistrationSubmittedFieldsCollectionConsistencyChecker(
-                new DescriptionFieldsFactory(new DescriptionFieldsDao())
-            )
+            TemplateFactory::build()
         );
     }
 

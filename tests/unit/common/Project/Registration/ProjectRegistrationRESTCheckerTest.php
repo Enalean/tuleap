@@ -27,7 +27,10 @@ use Psr\Log\NullLogger;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\Project\Admin\Categories\CategoryCollectionConsistencyChecker;
 use Tuleap\Project\Admin\Categories\ProjectCategoriesException;
+use Tuleap\Project\Admin\DescriptionFields\ProjectRegistrationSubmittedFieldsCollection;
+use Tuleap\Project\Admin\DescriptionFields\ProjectRegistrationSubmittedFieldsCollectionConsistencyChecker;
 use Tuleap\Project\DefaultProjectVisibilityRetriever;
+use Tuleap\Project\DescriptionFieldsFactory;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 
@@ -40,14 +43,20 @@ final class ProjectRegistrationRESTCheckerTest extends TestCase
      * @var \PHPUnit\Framework\MockObject\MockObject&CategoryCollectionConsistencyChecker
      */
     private $category_collection_consistency_checker;
+    /**
+     * @var \PHPUnit\Framework\MockObject\MockObject&ProjectRegistrationSubmittedFieldsCollectionConsistencyChecker
+     */
+    private $submitted_fields_collection_consistency_checker;
 
     protected function setUp(): void
     {
-        $this->category_collection_consistency_checker = $this->createMock(CategoryCollectionConsistencyChecker::class);
+        $this->category_collection_consistency_checker         = $this->createMock(CategoryCollectionConsistencyChecker::class);
+        $this->submitted_fields_collection_consistency_checker = $this->createMock(ProjectRegistrationSubmittedFieldsCollectionConsistencyChecker::class);
 
         $this->checker = new ProjectRegistrationRESTChecker(
             new DefaultProjectVisibilityRetriever(),
-            $this->category_collection_consistency_checker
+            $this->category_collection_consistency_checker,
+            $this->submitted_fields_collection_consistency_checker
         );
     }
 
@@ -63,6 +72,10 @@ final class ProjectRegistrationRESTCheckerTest extends TestCase
         $this->category_collection_consistency_checker
             ->expects(self::once())
             ->method('checkCollectionConsistency');
+
+        $this->submitted_fields_collection_consistency_checker
+            ->expects(self::once())
+            ->method('checkFieldConsistency');
 
         $errors = $this->checker->collectAllErrorsForProjectRegistration(UserTestBuilder::aUser()->build(), $data);
         self::assertEmpty($errors->getErrors());
@@ -83,6 +96,10 @@ final class ProjectRegistrationRESTCheckerTest extends TestCase
             ->expects(self::once())
             ->method('checkCollectionConsistency');
 
+        $this->submitted_fields_collection_consistency_checker
+            ->expects(self::once())
+            ->method('checkFieldConsistency');
+
         $errors = $this->checker->collectAllErrorsForProjectRegistration(UserTestBuilder::aUser()->build(), $data);
         self::assertInstanceOf(ProjectAccessLevelCannotBeChosenByUserException::class, $errors->getErrors()[0]);
     }
@@ -101,6 +118,10 @@ final class ProjectRegistrationRESTCheckerTest extends TestCase
         $this->category_collection_consistency_checker
             ->expects(self::once())
             ->method('checkCollectionConsistency');
+
+        $this->submitted_fields_collection_consistency_checker
+            ->expects(self::once())
+            ->method('checkFieldConsistency');
 
         $errors = $this->checker->collectAllErrorsForProjectRegistration(UserTestBuilder::aUser()->build(), $data);
         self::assertEmpty($errors->getErrors());
@@ -128,9 +149,109 @@ final class ProjectRegistrationRESTCheckerTest extends TestCase
                 }
             );
 
+        $this->submitted_fields_collection_consistency_checker
+            ->expects(self::once())
+            ->method('checkFieldConsistency');
+
         $errors = $this->checker->collectAllErrorsForProjectRegistration(UserTestBuilder::aUser()->build(), $data);
 
         self::assertNotEmpty($errors->getErrors());
         self::assertCount(1, $errors->getErrors());
+    }
+
+    public function testItCollectsFieldsError(): void
+    {
+        $data = new ProjectCreationData(
+            new DefaultProjectVisibilityRetriever(),
+            new NullLogger()
+        );
+
+        \ForgeConfig::set(\ProjectManager::SYS_USER_CAN_CHOOSE_PROJECT_PRIVACY, 1);
+
+        $this->category_collection_consistency_checker
+            ->expects(self::once())
+            ->method('checkCollectionConsistency');
+
+        $submitted_fields_collection_consistency_checker = new class ($this->createMock(DescriptionFieldsFactory::class)) extends ProjectRegistrationSubmittedFieldsCollectionConsistencyChecker
+        {
+            public function checkFieldConsistency(
+                ProjectRegistrationSubmittedFieldsCollection $field_collection,
+                ProjectRegistrationErrorsCollection $errors_collection
+            ): void {
+                $errors_collection->addError(
+                    new class extends RegistrationErrorException
+                    {
+                        public function getI18NMessage(): string
+                        {
+                            return '';
+                        }
+                    }
+                );
+            }
+        };
+
+        $checker = new ProjectRegistrationRESTChecker(
+            new DefaultProjectVisibilityRetriever(),
+            $this->category_collection_consistency_checker,
+            $submitted_fields_collection_consistency_checker
+        );
+
+        $errors = $checker->collectAllErrorsForProjectRegistration(UserTestBuilder::aUser()->build(), $data);
+
+        self::assertCount(1, $errors->getErrors());
+    }
+
+    public function testItCollectsAllErrors(): void
+    {
+        $data = new ProjectCreationData(
+            new DefaultProjectVisibilityRetriever(),
+            new NullLogger()
+        );
+
+        $data->setAccessFromProjectData(['is_public' => true]);
+
+        \ForgeConfig::set(\ProjectManager::SYS_USER_CAN_CHOOSE_PROJECT_PRIVACY, 0);
+        \ForgeConfig::set(DefaultProjectVisibilityRetriever::CONFIG_SETTING_NAME, \Project::ACCESS_PRIVATE);
+
+        $this->category_collection_consistency_checker
+            ->expects(self::once())
+            ->method('checkCollectionConsistency')
+            ->willThrowException(
+                new class extends ProjectCategoriesException
+                {
+                    public function getI18NMessage(): string
+                    {
+                        return '';
+                    }
+                }
+            );
+
+        $submitted_fields_collection_consistency_checker = new class ($this->createMock(DescriptionFieldsFactory::class)) extends ProjectRegistrationSubmittedFieldsCollectionConsistencyChecker
+        {
+            public function checkFieldConsistency(
+                ProjectRegistrationSubmittedFieldsCollection $field_collection,
+                ProjectRegistrationErrorsCollection $errors_collection
+            ): void {
+                $errors_collection->addError(
+                    new class extends RegistrationErrorException
+                    {
+                        public function getI18NMessage(): string
+                        {
+                            return '';
+                        }
+                    }
+                );
+            }
+        };
+
+        $checker = new ProjectRegistrationRESTChecker(
+            new DefaultProjectVisibilityRetriever(),
+            $this->category_collection_consistency_checker,
+            $submitted_fields_collection_consistency_checker
+        );
+
+        $errors = $checker->collectAllErrorsForProjectRegistration(UserTestBuilder::aUser()->build(), $data);
+
+        self::assertCount(3, $errors->getErrors());
     }
 }

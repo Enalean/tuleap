@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace Tuleap\Project\Admin\DescriptionFields;
 
 use Tuleap\Project\DescriptionFieldsFactory;
+use Tuleap\Project\Registration\ProjectRegistrationErrorsCollection;
 use Tuleap\Test\PHPUnit\TestCase;
 
 final class ProjectRegistrationSubmittedFieldsCollectionConsistencyCheckerTest extends TestCase
@@ -45,7 +46,7 @@ final class ProjectRegistrationSubmittedFieldsCollectionConsistencyCheckerTest e
         );
     }
 
-    public function testExceptionIsThrownWhenSomeFieldsAreMissing(): void
+    public function testExceptionIsAddedToCollectionWhenSomeFieldsAreMissing(): void
     {
         $this->fields_factory->method('getAllDescriptionFields')->willReturn(
             [
@@ -53,14 +54,19 @@ final class ProjectRegistrationSubmittedFieldsCollectionConsistencyCheckerTest e
             ]
         );
 
-        $field_collection = ProjectRegistrationSubmittedFieldsCollection::buildFromArray([]);
+        $field_collection  = ProjectRegistrationSubmittedFieldsCollection::buildFromArray([]);
+        $errors_collection = new ProjectRegistrationErrorsCollection();
 
-        $this->expectException(MissingMandatoryFieldException::class);
+        $this->checker->checkFieldConsistency(
+            $field_collection,
+            $errors_collection
+        );
 
-        $this->checker->checkFieldConsistency($field_collection);
+        self::assertCount(1, $errors_collection->getErrors());
+        self::assertInstanceOf(MissingMandatoryFieldException::class, $errors_collection->getErrors()[0]);
     }
 
-    public function testExceptionIsThrownWhenUserProvidesFieldsWhoDoesNotExists(): void
+    public function testExceptionIsAddedToCollectionWhenUserProvidesFieldsWhoDoesNotExists(): void
     {
         $this->fields_factory->method('getAllDescriptionFields')->willReturn(
             [
@@ -72,8 +78,36 @@ final class ProjectRegistrationSubmittedFieldsCollectionConsistencyCheckerTest e
             2 => 'test'
         ]);
 
-        $this->expectException(FieldDoesNotExistException::class);
-        $this->checker->checkFieldConsistency($field_collection);
+        $errors_collection = new ProjectRegistrationErrorsCollection();
+
+        $this->checker->checkFieldConsistency($field_collection, $errors_collection);
+
+        self::assertCount(1, $errors_collection->getErrors());
+        self::assertInstanceOf(FieldDoesNotExistException::class, $errors_collection->getErrors()[0]);
+    }
+
+    public function testBothExceptionsAreAddedToCollectionWhenSomeFieldsAreMissingAndOtherFieldsDoNotExist(): void
+    {
+        $this->fields_factory->method('getAllDescriptionFields')->willReturn(
+            [
+                ['group_desc_id' => 1, 'desc_required' => true, 'desc_name' => "field_name"]
+            ]
+        );
+
+        $field_collection = ProjectRegistrationSubmittedFieldsCollection::buildFromArray([
+            2 => 'test'
+        ]);
+
+        $errors_collection = new ProjectRegistrationErrorsCollection();
+
+        $this->checker->checkFieldConsistency(
+            $field_collection,
+            $errors_collection
+        );
+
+        self::assertCount(2, $errors_collection->getErrors());
+        self::assertInstanceOf(MissingMandatoryFieldException::class, $errors_collection->getErrors()[0]);
+        self::assertInstanceOf(FieldDoesNotExistException::class, $errors_collection->getErrors()[1]);
     }
 
     public function testFieldConsistencyIsValidWhenEverythingIsOk(): void
@@ -89,9 +123,10 @@ final class ProjectRegistrationSubmittedFieldsCollectionConsistencyCheckerTest e
             1 => 'test'
         ]);
 
-        $this->checker->checkFieldConsistency($field_collection);
+        $errors_collection = new ProjectRegistrationErrorsCollection();
 
-        //Expect no exception
-        $this->expectNotToPerformAssertions();
+        $this->checker->checkFieldConsistency($field_collection, $errors_collection);
+
+        self::assertEmpty($errors_collection->getErrors());
     }
 }
