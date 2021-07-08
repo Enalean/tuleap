@@ -170,6 +170,11 @@ msgstr ""
 "Le projet #%d est défini en tant que projet Programme. Il ne peut pas être "
 "utilisé en tant qu'Équipe."
 
+#, php-format
+msgid "Project #%d is not a Program. Please use a project defined as a Program"
+msgstr ""
+"Le projet #%d n'est pas un projet Programme. Merci d'utiliser un projet défini en tant que Programme"
+
 msgid "Project is defined as a Team project. It can not be used as a Program"
 msgstr ""
 "Le projet est défini en tant que projet Équipe. Il ne peut pas être utilisé "
@@ -263,14 +268,6 @@ msgstr ""
 
 msgid "You can not see this feature."
 msgstr "Vous ne pouvez pas voir cette fonctionnalité."
-
-#, php-format
-msgid ""
-"You can only define plan from Program project, project #%d is not a Program "
-"project."
-msgstr ""
-"Vous pouvez uniquement définir un plan à partir d'un projet Programme, le "
-"projet #%d n'est pas un projet Programme."
 
 msgid "You must be administrator of the projects you want aggregate."
 msgstr "Vous devez être administrateur des projets que vous voulez regrouper."

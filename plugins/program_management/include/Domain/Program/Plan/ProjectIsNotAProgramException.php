@@ -28,11 +28,11 @@ final class ProjectIsNotAProgramException extends \Exception implements PlanTrac
 
     public function __construct(int $id)
     {
-        parent::__construct("You can only define plan from Program project, project #$id is not a Program project.");
+        parent::__construct("Project #$id is not a Program project. Please use a Program");
         $this->i18n_message = sprintf(
             dgettext(
                 'tuleap-program_management',
-                'You can only define plan from Program project, project #%d is not a Program project.'
+                'Project #%d is not a Program. Please use a project defined as a Program'
             ),
             $id
         );
