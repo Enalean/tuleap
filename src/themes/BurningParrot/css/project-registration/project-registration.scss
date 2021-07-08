@@ -25,13 +25,8 @@ $illustration-width: 319px;
 $illustration-spacing: calc(2 * var(--tlp-large-spacing));
 $title-margin-left: calc(#{$illustration-width} + #{$illustration-spacing});
 
-.body-project-registration {
-    background: linear-gradient(180deg, var(--tlp-white-color) 0, var(--tlp-white-color) 70px, var(--tlp-background-color) 470px);
-}
-
 .project-registration {
     padding: var(--tlp-x-large-spacing) var(--tlp-x-large-spacing) 100px;
-    background: linear-gradient(180deg, var(--tlp-white-color) 0, var(--tlp-background-color) 400px);
 }
 
 .project-registration-content {
