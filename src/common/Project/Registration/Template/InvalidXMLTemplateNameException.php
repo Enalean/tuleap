@@ -29,4 +29,9 @@ final class InvalidXMLTemplateNameException extends \RuntimeException implements
     {
         parent::__construct('The xml template name provided is not valid');
     }
+
+    public function getI18NMessage(): string
+    {
+        return _('The xml template name provided is not valid');
+    }
 }

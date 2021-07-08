@@ -28,6 +28,11 @@ final class ProjectIDTemplateNotProvidedException extends Project_Creation_Excep
 {
     public function __construct()
     {
-        parent::__construct('No project ID as been provided for the template');
+        parent::__construct('No project ID has been provided for the template');
+    }
+
+    public function getI18NMessage(): string
+    {
+        return _('No project ID has been provided for the template');
     }
 }

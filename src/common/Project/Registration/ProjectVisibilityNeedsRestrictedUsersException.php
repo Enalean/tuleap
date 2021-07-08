@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Project\Registration;
 
-final class ProjectVisibilityNeedsRestrictedUsersException extends RegistrationErrorException
+final class ProjectVisibilityNeedsRestrictedUsersException extends \RuntimeException implements RegistrationErrorException
 {
     /**
      * @psalm-var \Project::ACCESS_PRIVATE_WO_RESTRICTED|\Project::ACCESS_PUBLIC_UNRESTRICTED

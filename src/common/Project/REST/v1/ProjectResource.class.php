@@ -82,6 +82,7 @@ use Tuleap\REST\Event\ProjectGetSvn;
 use Tuleap\REST\Event\ProjectOptionsSvn;
 use Tuleap\REST\Header;
 use Tuleap\REST\I18NRestException;
+use Tuleap\REST\I18NRestMultipleMessagesException;
 use Tuleap\REST\JsonDecoder;
 use Tuleap\REST\ProjectAuthorization;
 use Tuleap\REST\ResourcesInjector;
@@ -218,6 +219,9 @@ class ProjectResource extends AuthenticatedResource
                 $user
             );
         } catch (InvalidTemplateException $exception) {
+            if ($dry_run) {
+                throw new I18NRestMultipleMessagesException(400, [$exception->getI18NMessage()]);
+            }
             throw new RestException(400, $exception->getMessage());
         }
 
@@ -256,11 +260,7 @@ class ProjectResource extends AuthenticatedResource
 
             $errors_collection = $checker->collectAllErrorsForProjectRegistration($user, $creation_data);
             if (count($errors_collection->getErrors()) > 0) {
-                throw new RestException(
-                    400,
-                    null,
-                    ['i18n_error_messages' => $errors_collection->getI18nErrorsMessages()]
-                );
+                throw new I18NRestMultipleMessagesException(400, $errors_collection->getI18nErrorsMessages());
             }
 
             throw new RestException(204);

@@ -21,7 +21,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Project\Registration;
 
-class ProjectInvalidShortNameException extends RegistrationErrorException
+final class ProjectInvalidShortNameException extends \RuntimeException implements RegistrationErrorException
 {
     private string $details;
 

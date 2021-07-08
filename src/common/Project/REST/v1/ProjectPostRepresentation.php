@@ -56,7 +56,7 @@ class ProjectPostRepresentation
     public $allow_restricted;
 
     /**
-     * @var int Template for this project. {@from body} {@required false}
+     * @var int Template for this project. {@from body} {@required false} {@min 1}
      */
     public $template_id;
 

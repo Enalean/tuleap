@@ -28,8 +28,18 @@ use Project_Creation_Exception;
 
 final class InsufficientPermissionToUseProjectAsTemplateException extends Project_Creation_Exception implements InvalidTemplateException
 {
+    private Project $project;
+    private PFUser $user;
+
     public function __construct(Project $project, PFUser $user)
     {
         parent::__construct(sprintf('User #%d is not administrator of project #%d', $user->getId(), $project->getID()));
+        $this->project = $project;
+        $this->user    = $user;
+    }
+
+    public function getI18NMessage(): string
+    {
+        return _(sprintf(_('User #%d is not administrator of project #%d'), $this->user->getId(), $this->project->getID()));
     }
 }

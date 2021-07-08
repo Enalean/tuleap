@@ -23,7 +23,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Project\Registration;
 
-class ProjectDescriptionMandatoryException extends RegistrationErrorException
+final class ProjectDescriptionMandatoryException extends \RuntimeException implements RegistrationErrorException
 {
     public function __construct()
     {

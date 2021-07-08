@@ -40,7 +40,6 @@ use Tuleap\ForgeConfigSandbox;
 use Tuleap\Glyph\GlyphFinder;
 use Tuleap\Project\DefaultProjectVisibilityRetriever;
 use Tuleap\Project\Registration\MaxNumberOfProjectReachedForPlatformException;
-use Tuleap\Project\Registration\Template\InvalidXMLTemplateNameException;
 use Tuleap\Project\Registration\Template\ScrumTemplate;
 use Tuleap\Project\Registration\Template\TemplateDao;
 use Tuleap\Project\Registration\Template\TemplateFactory;
@@ -52,7 +51,7 @@ use Tuleap\Project\XML\ServiceEnableForXmlImportRetriever;
 use Tuleap\Project\XML\XMLFileContentRetriever;
 use Tuleap\XML\ProjectXMLMerger;
 
-class RestProjectCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
+final class RestProjectCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use M\Adapter\Phpunit\MockeryPHPUnitIntegration;
     use ForgeConfigSandbox;
@@ -153,7 +152,7 @@ class RestProjectCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->project_post_representation->template_id       = null;
         $this->project_post_representation->xml_template_name = null;
 
-        $this->expectException(InvalidXMLTemplateNameException::class);
+        $this->expectException(RestException::class);
 
         $this->creator->create(
             $this->project_post_representation,

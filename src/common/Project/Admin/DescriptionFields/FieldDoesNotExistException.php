@@ -25,7 +25,7 @@ namespace Tuleap\Project\Admin\DescriptionFields;
 
 use Tuleap\Project\Registration\RegistrationErrorException;
 
-class FieldDoesNotExistException extends RegistrationErrorException
+final class FieldDoesNotExistException extends \RuntimeException implements RegistrationErrorException
 {
     private array $non_existing_field;
 
