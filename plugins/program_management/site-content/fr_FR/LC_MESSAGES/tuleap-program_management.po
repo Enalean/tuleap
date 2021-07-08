@@ -183,7 +183,8 @@ msgstr ""
 #, php-format
 msgid "Project #%d is not a Program. Please use a project defined as a Program"
 msgstr ""
-"Le projet #%d n'est pas un projet Programme. Merci d'utiliser un projet défini en tant que Programme"
+"Le projet #%d n'est pas un projet Programme. Merci d'utiliser un projet "
+"défini en tant que Programme"
 
 msgid "Project is defined as a Team project. It can not be used as a Program"
 msgstr ""
@@ -276,6 +277,24 @@ msgstr ""
 #, php-format
 msgid "User %s can not access to Program #%d"
 msgstr "L'utilisateur %s ne peut pas accéder au Programme #%d"
+
+#, php-format
+msgid "User can not submit artifact in Team tracker #%d"
+msgstr ""
+"L'utilisateur ne peut pas soumettre d'artéfact dans l'outil de suivi de "
+"l'Équipe #%d"
+
+#, php-format
+msgid "User can not submit the field <a href='%s'>#%d</a> (%s) of tracker #%d"
+msgstr ""
+"L'utilisateur ne peut pas soumettre le champ <a href='%s'>#%d</a> (%s) de "
+"l'outil de suivi #%d"
+
+#, php-format
+msgid "User can not update the field <a href='%s'>#%d</a> (%s) of tracker #%d"
+msgstr ""
+"L'utilisateur ne peut pas mettre à jour le champ <a href='%s'>#%d</a> (%s) "
+"de l'outil de suivi #%d"
 
 msgid "You are about to remove Team {{ public_name }} from this Program."
 msgstr ""

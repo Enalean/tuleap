@@ -23,21 +23,19 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields;
 
 use Psr\Log\LoggerInterface;
+use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ConfigurationErrorsCollector;
 
 final class SynchronizedFieldFromProgramAndTeamTrackersCollection
 {
     /**
      * @var array<int, true>
      */
-    private $synchronized_fields_ids = [];
+    private array $synchronized_fields_ids = [];
     /**
      * @var Field[]
      */
-    private $synchronized_fields = [];
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
+    private array $synchronized_fields = [];
+    private LoggerInterface $logger;
 
     public function __construct(LoggerInterface $logger)
     {
@@ -47,34 +45,73 @@ final class SynchronizedFieldFromProgramAndTeamTrackersCollection
     /**
      * @psalm-readonly
      */
-    public function canUserSubmitAndUpdateAllFields(\PFUser $user): bool
+    public function canUserSubmitAndUpdateAllFields(\PFUser $user, ConfigurationErrorsCollector $errors_collector): bool
     {
+        $can_submit = true;
         foreach ($this->synchronized_fields as $synchronized_field) {
             if (! $synchronized_field->userCanSubmit($user)) {
-                $this->logger->debug(
+                $url = '/plugins/tracker/permissions/fields-by-field/' .
+                    urlencode((string) $synchronized_field->getFullField()->getTrackerId()) . '?' . http_build_query(
+                        ['selected_id' => $synchronized_field->getId()]
+                    );
+                $errors_collector->addError(
                     sprintf(
-                        "User can not submit the field #%d (%s) of tracker #%d",
+                        dgettext(
+                            'tuleap-program_management',
+                            "User can not submit the field <a href='%s'>#%d</a> (%s) of tracker #%d"
+                        ),
+                        $url,
                         $synchronized_field->getId(),
                         $synchronized_field->getFullField()->getLabel(),
                         $synchronized_field->getFullField()->getTrackerId()
                     )
                 );
-                return false;
+                $can_submit = false;
+                if (! $errors_collector->shouldCollectAllIssues()) {
+                    $this->logger->debug(
+                        sprintf(
+                            "User can not submit the field #%d of tracker #%d",
+                            $synchronized_field->getId(),
+                            $synchronized_field->getFullField()->getTrackerId()
+                        )
+                    );
+
+                    return $can_submit;
+                }
             }
             if (! $synchronized_field->userCanUpdate($user)) {
-                $this->logger->debug(
+                $url = '/plugins/tracker/permissions/fields-by-field/' .
+                    urlencode((string) $synchronized_field->getFullField()->getTrackerId()) . '?' . http_build_query(
+                        ['selected_id' => $synchronized_field->getId()]
+                    );
+                $errors_collector->addError(
                     sprintf(
-                        "User can not update the field #%d (%s) of tracker #%d",
+                        dgettext(
+                            'tuleap-program_management',
+                            "User can not update the field <a href='%s'>#%d</a> (%s) of tracker #%d"
+                        ),
+                        $url,
                         $synchronized_field->getId(),
                         $synchronized_field->getFullField()->getLabel(),
                         $synchronized_field->getFullField()->getTrackerId()
                     )
                 );
-                return false;
+                $can_submit = false;
+                if (! $errors_collector->shouldCollectAllIssues()) {
+                    $this->logger->debug(
+                        sprintf(
+                            "User can not update the field #%d of tracker #%d",
+                            $synchronized_field->getId(),
+                            $synchronized_field->getFullField()->getTrackerId()
+                        )
+                    );
+
+                    return $can_submit;
+                }
             }
         }
 
-        return true;
+        return $can_submit;
     }
 
     /**
@@ -100,6 +137,7 @@ final class SynchronizedFieldFromProgramAndTeamTrackersCollection
             $this->synchronized_fields,
             $synchronized_field_data->getSynchronizedFieldsData()->getAllFields()
         );
-        $this->synchronized_fields_ids = $this->synchronized_fields_ids + $synchronized_field_data->getSynchronizedFieldDataIds();
+        $this->synchronized_fields_ids = $this->synchronized_fields_ids + $synchronized_field_data->getSynchronizedFieldDataIds(
+        );
     }
 }

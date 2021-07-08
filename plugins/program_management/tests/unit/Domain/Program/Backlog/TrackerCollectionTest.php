@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog;
 
+use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ConfigurationErrorsCollector;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Team\TeamProjectsCollection;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Stub\BuildProgramStub;
@@ -77,7 +78,7 @@ final class TrackerCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
         $user      = UserTestBuilder::aUser()->build();
 
         $collection = TrackerCollection::buildRootPlanningMilestoneTrackers($retriever, $teams, $user);
-        self::assertTrue($collection->canUserSubmitAnArtifactInAllTrackers($user));
+        self::assertTrue($collection->canUserSubmitAnArtifactInAllTrackers($user, new ConfigurationErrorsCollector(false)));
 
         $trackers = $collection->getTrackers();
         self::assertEquals($first_tracker, $trackers[0]->getFullTracker());
@@ -105,7 +106,7 @@ final class TrackerCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
         $user      = UserTestBuilder::aUser()->build();
 
         $collection = TrackerCollection::buildSecondPlanningMilestoneTracker($retriever, $teams, $user);
-        self::assertTrue($collection->canUserSubmitAnArtifactInAllTrackers($user));
+        self::assertTrue($collection->canUserSubmitAnArtifactInAllTrackers($user, new ConfigurationErrorsCollector(false)));
 
         $trackers = $collection->getTrackers();
         self::assertEquals($first_tracker, $trackers[0]->getFullTracker());
@@ -123,11 +124,12 @@ final class TrackerCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
         $first_tracker->method('userCanSubmitArtifact')->willReturn(true);
         $second_tracker = $this->createMock(\Tracker::class);
         $second_tracker->method('userCanSubmitArtifact')->willReturn(false);
+        $second_tracker->method('getId')->willReturn(1);
         $retriever = RetrievePlanningMilestoneTrackerStub::withValidTrackers($first_tracker, $second_tracker);
         $user      = UserTestBuilder::aUser()->build();
 
         $collection = TrackerCollection::buildRootPlanningMilestoneTrackers($retriever, $teams, $user);
-        self::assertFalse($collection->canUserSubmitAnArtifactInAllTrackers($user));
+        self::assertFalse($collection->canUserSubmitAnArtifactInAllTrackers($user, new ConfigurationErrorsCollector(false)));
     }
 
     public function testReturnsFalseWhenUserCanNotSubmitAnArtifactInAllSecondPlanningTrackers(): void
@@ -141,10 +143,55 @@ final class TrackerCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
         $first_tracker->method('userCanSubmitArtifact')->willReturn(true);
         $second_tracker = $this->createMock(\Tracker::class);
         $second_tracker->method('userCanSubmitArtifact')->willReturn(false);
+        $second_tracker->method('getId')->willReturn(1);
         $retriever = RetrievePlanningMilestoneTrackerStub::withValidTrackers($first_tracker, $second_tracker);
         $user      = UserTestBuilder::aUser()->build();
 
         $collection = TrackerCollection::buildSecondPlanningMilestoneTracker($retriever, $teams, $user);
-        self::assertFalse($collection->canUserSubmitAnArtifactInAllTrackers($user));
+        self::assertFalse($collection->canUserSubmitAnArtifactInAllTrackers($user, new ConfigurationErrorsCollector(false)));
+    }
+
+    public function testCollectsAllInvalidTrackers(): void
+    {
+        $teams         = TeamProjectsCollection::fromProgramIdentifier(
+            SearchTeamsOfProgramStub::buildTeams(103, 104),
+            new BuildProjectStub(),
+            ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 100, UserTestBuilder::aUser()->build())
+        );
+        $first_tracker = $this->createMock(\Tracker::class);
+        $first_tracker->method('userCanSubmitArtifact')->willReturn(false);
+        $first_tracker->method('getId')->willReturn(1);
+        $second_tracker = $this->createMock(\Tracker::class);
+        $second_tracker->method('userCanSubmitArtifact')->willReturn(false);
+        $second_tracker->method('getId')->willReturn(2);
+        $retriever = RetrievePlanningMilestoneTrackerStub::withValidTrackers($first_tracker, $second_tracker);
+        $user      = UserTestBuilder::aUser()->build();
+
+        $collection           = TrackerCollection::buildSecondPlanningMilestoneTracker($retriever, $teams, $user);
+        $configuration_errors = new ConfigurationErrorsCollector(true);
+        self::assertFalse($collection->canUserSubmitAnArtifactInAllTrackers($user, $configuration_errors));
+        self::assertCount(2, $configuration_errors->getErrorMessages());
+    }
+
+    public function testCollectsTheFirstError(): void
+    {
+        $teams         = TeamProjectsCollection::fromProgramIdentifier(
+            SearchTeamsOfProgramStub::buildTeams(103, 104),
+            new BuildProjectStub(),
+            ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 100, UserTestBuilder::aUser()->build())
+        );
+        $first_tracker = $this->createMock(\Tracker::class);
+        $first_tracker->method('userCanSubmitArtifact')->willReturn(false);
+        $first_tracker->method('getId')->willReturn(1);
+        $second_tracker = $this->createMock(\Tracker::class);
+        $second_tracker->method('userCanSubmitArtifact')->willReturn(false);
+        $second_tracker->method('getId')->willReturn(2);
+        $retriever = RetrievePlanningMilestoneTrackerStub::withValidTrackers($first_tracker, $second_tracker);
+        $user      = UserTestBuilder::aUser()->build();
+
+        $collection           = TrackerCollection::buildSecondPlanningMilestoneTracker($retriever, $teams, $user);
+        $configuration_errors = new ConfigurationErrorsCollector(false);
+        self::assertFalse($collection->canUserSubmitAnArtifactInAllTrackers($user, $configuration_errors));
+        self::assertCount(1, $configuration_errors->getErrorMessages());
     }
 }

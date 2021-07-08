@@ -70,7 +70,7 @@ class TimeboxCreatorChecker
             return false;
         }
 
-        if (! $team_trackers->canUserSubmitAnArtifactInAllTrackers($user)) {
+        if (! $team_trackers->canUserSubmitAnArtifactInAllTrackers($user, $configuration_errors)) {
             $this->logger->debug('User cannot submit an artifact in all team trackers.');
 
             return false;
@@ -82,7 +82,7 @@ class TimeboxCreatorChecker
             $this->logger->error('Cannot retrieve all the synchronized fields', ['exception' => $exception]);
             return false;
         }
-        if (! $synchronized_fields_data_collection->canUserSubmitAndUpdateAllFields($user)) {
+        if (! $synchronized_fields_data_collection->canUserSubmitAndUpdateAllFields($user, $configuration_errors)) {
             $this->logger->debug('User cannot submit and update all needed fields in all trackers.');
             return false;
         }
