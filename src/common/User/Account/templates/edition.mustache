@@ -29,6 +29,15 @@
                             <label class="tlp-label tlp-radio">
                                 <input type="radio"
                                        name="user_text_default_format"
+                                       data-test="user-prefs-tracker-default-format-text"
+                                       value="text"
+                                       {{# user_text_default_format_text }}checked{{/ user_text_default_format_text }}>
+                                {{# gettext }}Text{{/ gettext }}
+                            </label>
+
+                            <label class="tlp-label tlp-radio">
+                                <input type="radio"
+                                       name="user_text_default_format"
                                        data-test="user-prefs-tracker-default-format-commonmark"
                                        value="commonmark"
                                        {{# user_text_default_format_commonmark }}checked{{/ user_text_default_format_commonmark }}>

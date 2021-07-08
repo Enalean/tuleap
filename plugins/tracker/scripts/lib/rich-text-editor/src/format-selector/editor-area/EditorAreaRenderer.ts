@@ -120,15 +120,12 @@ export class EditorAreaRenderer {
     }
 
     private createSelectbox(state: EditorAreaStateInterface): TemplateResult {
-        const options = state.isInitialFormatText()
-            ? [TEXT_FORMAT_TEXT, TEXT_FORMAT_HTML, TEXT_FORMAT_COMMONMARK]
-            : [TEXT_FORMAT_HTML, TEXT_FORMAT_COMMONMARK];
         return createSelect(
             {
                 id: SELECTBOX_ID_PREFIX + state.selectbox_id,
                 name: getFormatSelectboxName(state),
                 is_disabled: !state.isInEditMode(),
-                options,
+                options: [TEXT_FORMAT_TEXT, TEXT_FORMAT_HTML, TEXT_FORMAT_COMMONMARK],
                 selected_value: state.current_format,
                 formatChangedCallback: (new_value) => {
                     state.changeFormat(new_value);

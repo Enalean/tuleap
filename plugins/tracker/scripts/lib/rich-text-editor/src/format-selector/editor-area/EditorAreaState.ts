@@ -18,10 +18,7 @@
  */
 
 import type { TextFieldFormat } from "../../../../../constants/fields-constants";
-import {
-    TEXT_FORMAT_COMMONMARK,
-    TEXT_FORMAT_TEXT,
-} from "../../../../../constants/fields-constants";
+import { TEXT_FORMAT_COMMONMARK } from "../../../../../constants/fields-constants";
 import type { FormatSelectorPresenter } from "../FormatSelectorInterface";
 import { postMarkdown } from "../../api/tuleap-api";
 import type { EditorAreaStateInterface } from "./EditorAreaStateInterface";
@@ -45,7 +42,6 @@ export class EditorAreaState implements EditorAreaStateInterface {
     public readonly selectbox_name?: string;
     private readonly editor: TextEditorInterface;
     private readonly project_id: string;
-    private readonly initial_format: TextFieldFormat;
 
     constructor(
         public readonly mount_point: HTMLDivElement,
@@ -55,17 +51,12 @@ export class EditorAreaState implements EditorAreaStateInterface {
         this.selectbox_id = presenter.id;
         this.selectbox_name = presenter.name;
         this.current_format = presenter.selected_value;
-        this.initial_format = presenter.selected_value;
         this.editor = presenter.editor;
         this.project_id = readProjectId(textarea);
     }
 
     public isCurrentFormatCommonMark(): boolean {
         return this.current_format === TEXT_FORMAT_COMMONMARK;
-    }
-
-    public isInitialFormatText(): boolean {
-        return this.initial_format === TEXT_FORMAT_TEXT;
     }
 
     public changeFormat(new_format: TextFieldFormat): void {

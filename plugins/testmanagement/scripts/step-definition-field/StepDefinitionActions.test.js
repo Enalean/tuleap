@@ -80,7 +80,6 @@ describe(`StepDefinitionActions`, () => {
             (value) => {
                 const wrapper = factory({
                     value,
-                    initial_step_format: value,
                 });
                 expect(
                     wrapper.find("[data-test=ttm-definition-step-description-format-" + value + "]")
@@ -113,22 +112,5 @@ describe(`StepDefinitionActions`, () => {
                 ).toBe(true);
             }
         );
-    });
-    describe("Format selector displaying", () => {
-        it.each([[TEXT_FORMAT_COMMONMARK], [TEXT_FORMAT_HTML]])(
-            `removes the 'text' format when the step was not already written with the 'text' format`,
-            (initial_step_format) => {
-                const wrapper = factory({ initial_step_format });
-                expect(
-                    wrapper.find("[data-test=ttm-definition-step-description-format-text]").exists()
-                ).toBe(false);
-            }
-        );
-        it(`let the user to select the 'text' format if the step was already written in 'text' format`, () => {
-            const wrapper = factory({ initial_step_format: TEXT_FORMAT_TEXT });
-            expect(
-                wrapper.find("[data-test=ttm-definition-step-description-format-text]").exists()
-            ).toBe(true);
-        });
     });
 });

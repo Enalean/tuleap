@@ -279,7 +279,7 @@ class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDecla
     private function addBodyClassDependingUserPreference(PFUser $user, array &$body_class)
     {
         $edition_default_format = $user->getPreference(PFUser::EDITION_DEFAULT_FORMAT);
-        if ($edition_default_format && $edition_default_format === 'html') {
+        if ($edition_default_format && ($edition_default_format === 'html' || $edition_default_format === 'text')) {
             $body_class[] = 'default_format_' . $edition_default_format;
         }
     }

@@ -132,6 +132,22 @@ final class Tracker_FormElement_Field_TextTest extends \Tuleap\Test\PHPUnit\Test
         );
     }
 
+    public function testTheFormatIsTextWhenTheUserHasTextFormatPreference(): void
+    {
+        $this->text_field->shouldReceive('getProperty')->with('default_value')
+                         ->andReturns(Mockery::any());
+        $this->user->shouldReceive('getPreference')->andReturn('text');
+
+        $this->assertTrue($this->text_field->hasDefaultValue());
+        $this->assertEquals(
+            [
+                'content' => Mockery::any(),
+                'format'  => 'text'
+            ],
+            $this->text_field->getDefaultValue()
+        );
+    }
+
     public function testGetChangesetValue(): void
     {
         $result = ['id' => 123, 'field_id' => 1, 'value' => 'My Text', 'body_format' => 'text'];

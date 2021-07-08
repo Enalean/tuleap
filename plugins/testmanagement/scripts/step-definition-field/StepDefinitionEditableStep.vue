@@ -30,7 +30,6 @@
             v-bind:format_select_id="format_select_id"
             v-bind:is_in_preview_mode="is_in_preview_mode"
             v-bind:is_preview_loading="is_preview_loading"
-            v-bind:initial_step_format="step.initial_format"
             v-on:input="toggleRTE"
             v-on:interpret-content-event="togglePreview"
         >
@@ -141,7 +140,10 @@ export default {
         StepDeletionActionButtonMarkAsDeleted,
     },
     props: {
-        step: Object,
+        step: {
+            type: Object,
+            default: () => ({}),
+        },
     },
     data() {
         return {

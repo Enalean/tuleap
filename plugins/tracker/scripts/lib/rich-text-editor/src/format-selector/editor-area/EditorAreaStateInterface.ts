@@ -29,7 +29,6 @@ export interface EditorAreaStateInterface {
 
     isInEditMode(): boolean;
     isCurrentFormatCommonMark(): boolean;
-    isInitialFormatText(): boolean;
     switchToPreviewMode(): void;
     switchToEditMode(): void;
     changeFormat(new_format: TextFieldFormat): void;
