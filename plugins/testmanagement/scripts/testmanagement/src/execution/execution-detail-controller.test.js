@@ -161,6 +161,7 @@ describe("ExecutionDetailController -", () => {
             time: "",
             results: "psychoanalyzer rupture solidish",
         };
+        const event = { target: {} };
 
         beforeEach(() => {
             jest.spyOn(SharedPropertiesService, "getCurrentUser").mockReturnValue(user);
@@ -177,7 +178,7 @@ describe("ExecutionDetailController -", () => {
             it("Then the status will be saved to 'passed'", () => {
                 execution.uploaded_files = [];
 
-                $scope.pass(execution);
+                $scope.pass(event, execution);
                 $scope.$apply();
 
                 expect(ExecutionRestService.putTestExecution).toHaveBeenCalledWith(
@@ -199,7 +200,7 @@ describe("ExecutionDetailController -", () => {
                 ExecutionRestService.putTestExecution.mockReturnValue($q.reject(error));
                 jest.spyOn(ExecutionService, "displayErrorMessage").mockImplementation(() => {});
 
-                $scope.pass(execution);
+                $scope.pass(event, execution);
                 $scope.$apply();
 
                 expect(ExecutionService.displayErrorMessage).toHaveBeenCalledWith(
@@ -211,7 +212,7 @@ describe("ExecutionDetailController -", () => {
 
         describe("fail()", () => {
             it("Then the status will be saved to 'failed'", () => {
-                $scope.fail(execution);
+                $scope.fail(event, execution);
                 $scope.$apply();
 
                 expect(ExecutionRestService.putTestExecution).toHaveBeenCalledWith(
@@ -226,7 +227,7 @@ describe("ExecutionDetailController -", () => {
 
         describe("block()", () => {
             it("Then the status will be saved to 'blocked'", () => {
-                $scope.block(execution);
+                $scope.block(event, execution);
                 $scope.$apply();
 
                 expect(ExecutionRestService.putTestExecution).toHaveBeenCalledWith(
@@ -249,7 +250,7 @@ describe("ExecutionDetailController -", () => {
                     },
                 ];
 
-                $scope.notrun(execution);
+                $scope.notrun(event, execution);
                 $scope.$apply();
 
                 expect(ExecutionRestService.putTestExecution).toHaveBeenCalledWith(
@@ -274,7 +275,7 @@ describe("ExecutionDetailController -", () => {
                     },
                 ];
 
-                $scope.notrun(execution);
+                $scope.notrun(event, execution);
                 $scope.$apply();
 
                 expect(ExecutionRestService.putTestExecution).toHaveBeenCalledWith(

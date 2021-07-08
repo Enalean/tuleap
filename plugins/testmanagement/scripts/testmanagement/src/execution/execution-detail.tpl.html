@@ -175,7 +175,7 @@
                                 data-test="mark-test-as-passed"
                                 class="current-test-result tlp-button-large tlp-button-success"
                                 title="{{ 'Passed' | translate }}"
-                                ng-click="pass(execution)"
+                                ng-click="pass($event, execution)"
                                 data-shortcut-passed
                                 ng-disabled="execution.saving">
                             <i class="fa fa-fw fa-check-circle"></i>
@@ -183,7 +183,8 @@
                         <button id="test-result-failed" type="button"
                                 data-test="mark-test-as-failed"
                                 class="current-test-result tlp-button-large tlp-button-danger"
-                                title="{{ 'Failed' | translate }}" ng-click="fail(execution)"
+                                title="{{ 'Failed' | translate }}"
+                                ng-click="fail($event, execution)"
                                 ng-disabled="execution.saving">
                             <i class="fa fa-fw fa-times-circle"></i>
                         </button>
@@ -191,7 +192,7 @@
                                 data-test="mark-test-as-blocked"
                                 class="current-test-result tlp-button-large tlp-button-info"
                                 title="{{ 'Blocked' | translate }}"
-                                ng-click="block(execution)"
+                                ng-click="block($event, execution)"
                                 data-shortcut-blocked
                                 ng-disabled="execution.saving">
                             <i class="fa fa-fw fa-exclamation-circle"></i>
@@ -200,7 +201,7 @@
                                 data-test="mark-test-as-notrun"
                                 class="current-test-result tlp-button-large tlp-button-secondary"
                                 title="{{ 'Not run' | translate }}"
-                                ng-click="notrun(execution)"
+                                ng-click="notrun($event, execution)"
                                 data-shortcut-not-run
                                 ng-disabled="execution.saving">
                             <i class="fa fa-fw fa-question-circle"></i>

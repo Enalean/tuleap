@@ -315,6 +315,10 @@ execution-with-steps.current-test-content {
         background: var(--tlp-dimmed-color);
         color: var(--tlp-white-color);
     }
+
+    &:focus {
+        box-shadow: 0 0 0 2px var(--tlp-main-color);
+    }
 }
 
 .linked-issues-dropdown-content-badge {
