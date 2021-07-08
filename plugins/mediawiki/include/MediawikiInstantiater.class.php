@@ -206,37 +206,30 @@ class MediaWikiInstantiater
             return;
         }
 
-        $this->logger->info('Using database: ' . $database);
         $mediawiki_db_connection = \Tuleap\DB\DBFactory::getDBConnection($database);
-        $mediawiki_db_connection->getDB()->tryFlatTransaction(function () use ($mediawiki_db_connection, $database, $mediawiki_path) {
-            try {
-                $this->logger->info('Updating mediawiki database.');
-                $table_file = $mediawiki_path . '/maintenance/tables.sql';
-                if (! file_exists($table_file)) {
-                    throw new Exception('Error: Couldn\'t find Mediawiki Database Creation File ' . $table_file);
-                }
-
-                $this->dao->startTransaction();
-
-                $this->logger->info('Creating tables from tables.sql');
-                $table_prefix = $this->dao->getTablePrefixForCreation($this->project);
-                $add_tables   = $this->createTablesFromFile($mediawiki_db_connection->getDB(), $table_file, $table_prefix);
-                if (! $add_tables) {
-                    throw new Exception('Error: Mediawiki Database Creation Failed');
-                }
-
-                $this->logger->info('Updating list of mediawiki databases (' . $database . ')');
-                $update = $this->dao->addDatabase($database, $this->project_id);
-                if (! $update) {
-                    throw new Exception('Error: Mediawiki Database list update failed: ' . db_error());
-                }
-            } catch (Exception $e) {
-                $this->dao->rollBack();
-                $this->logger->error($e->getMessage());
+        $this->logger->info('Using database: ' . $database);
+        try {
+            $this->logger->info('Updating mediawiki database.');
+            $table_file = $mediawiki_path . '/maintenance/tables.sql';
+            if (! file_exists($table_file)) {
+                throw new Exception('Error: Couldn\'t find Mediawiki Database Creation File ' . $table_file);
             }
-        });
 
-        $this->dao->commit();
+            $this->logger->info('Creating tables from tables.sql');
+            $table_prefix = $this->dao->getTablePrefixForCreation($this->project);
+            $add_tables   = $this->createTablesFromFile($mediawiki_db_connection->getDB(), $table_file, $table_prefix);
+            if (! $add_tables) {
+                throw new Exception('Error: Mediawiki Database Creation Failed');
+            }
+
+            $this->logger->info('Updating list of mediawiki databases (' . $database . ')');
+            $update = $this->dao->addDatabase($database, $this->project_id);
+            if (! $update) {
+                throw new Exception('Error: Mediawiki Database list update failed: ' . db_error());
+            }
+        } catch (Exception $e) {
+            $this->logger->error($e->getMessage());
+        }
     }
 
     /**
