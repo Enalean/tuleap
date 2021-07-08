@@ -28,7 +28,6 @@ use Tuleap\ProgramManagement\Domain\Program\Plan\ProgramIsATeamException;
 use Tuleap\ProgramManagement\Domain\Program\Plan\ProjectIsNotAProgramException;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIsTeamException;
 use Tuleap\ProgramManagement\Domain\Program\ToBeCreatedProgram;
-use Tuleap\ProgramManagement\Domain\Team\AtLeastOneTeamShouldBeDefinedException;
 use Tuleap\ProgramManagement\Domain\Team\ProjectIsAProgramException;
 use Tuleap\ProgramManagement\Domain\Team\TeamAccessException;
 
@@ -57,7 +56,6 @@ final class TeamCreator implements CreateTeam
     /**
      * @throws ProgramAccessException
      * @throws ProjectIsNotAProgramException
-     * @throws AtLeastOneTeamShouldBeDefinedException
      * @throws ProjectIsAProgramException
      * @throws TeamAccessException
      * @throws ProgramIsTeamException

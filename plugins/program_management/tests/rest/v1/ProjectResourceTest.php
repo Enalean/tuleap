@@ -36,6 +36,19 @@ class ProjectResourceTest extends \RestBase
         $this->assertEquals(['OPTIONS', 'PUT'], explode(', ', $response->getHeaderLine('Allow')));
     }
 
+    public function testPUTEmptyTeam(): void
+    {
+        $program_id = $this->getProgramProjectId();
+
+        $team_definition = json_encode(["team_ids" => []]);
+
+        $response = $this->getResponse(
+            $this->request_factory->createRequest('PUT', 'projects/' . $program_id . '/program_teams')->withBody($this->stream_factory->createStream($team_definition))
+        );
+
+        $this->assertEquals(200, $response->getStatusCode());
+    }
+
     public function testPUTTeam(): void
     {
         $program_id = $this->getProgramProjectId();

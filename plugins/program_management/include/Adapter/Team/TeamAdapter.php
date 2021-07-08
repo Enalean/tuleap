@@ -26,7 +26,6 @@ use Luracast\Restler\RestException;
 use Tuleap\AgileDashboard\ExplicitBacklog\ExplicitBacklogDao;
 use Tuleap\ProgramManagement\Domain\Program\ToBeCreatedProgram;
 use Tuleap\ProgramManagement\Domain\Program\VerifyIsProgram;
-use Tuleap\ProgramManagement\Domain\Team\AtLeastOneTeamShouldBeDefinedException;
 use Tuleap\ProgramManagement\Domain\Team\Creation\BuildTeam;
 use Tuleap\ProgramManagement\Domain\Team\Creation\Team;
 use Tuleap\ProgramManagement\Domain\Team\Creation\TeamCollection;
@@ -52,7 +51,6 @@ final class TeamAdapter implements BuildTeam
     }
 
     /**
-     * @throws AtLeastOneTeamShouldBeDefinedException
      * @throws ProjectIsAProgramException
      * @throws TeamAccessException
      * @throws TeamMustHaveExplicitBacklogEnabledException
@@ -62,10 +60,6 @@ final class TeamAdapter implements BuildTeam
         $team_list = [];
         foreach ($team_ids as $team_id) {
             $team_list[] = Team::build($this, $team_id, $user);
-        }
-
-        if (empty($team_list)) {
-            throw new AtLeastOneTeamShouldBeDefinedException();
         }
 
         return new TeamCollection($team_list, $program);
