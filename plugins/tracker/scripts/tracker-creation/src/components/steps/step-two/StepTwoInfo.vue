@@ -18,10 +18,20 @@
   -->
 
 <template>
-    <step-label
-        v-bind:step-number="$gettext('2')"
-        v-bind:step-label="$gettext('Give your tracker some basic info')"
-    />
+    <div>
+        <nav class="tlp-wizard">
+            <router-link
+                v-bind:to="{ name: 'step-1' }"
+                class="tlp-wizard-step-previous"
+                v-translate
+            >
+                Template
+            </router-link>
+            <span class="tlp-wizard-step-current" v-translate>Information</span>
+        </nav>
+
+        <step-label v-bind:step-label="$gettext('Give your tracker some basic info')" />
+    </div>
 </template>
 <script lang="ts">
 import Vue from "vue";
