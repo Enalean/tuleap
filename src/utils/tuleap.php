@@ -26,6 +26,7 @@ use Tuleap\CLI\Command\ConfigGetCommand;
 use Tuleap\CLI\Command\ConfigListCommand;
 use Tuleap\CLI\Command\ConfigSetCommand;
 use Tuleap\CLI\Command\DailyJobCommand;
+use Tuleap\CLI\Command\HealthCheckCommand;
 use Tuleap\CLI\Command\ImportProjectXMLCommand;
 use Tuleap\CLI\Command\LaunchEveryMinuteJobCommand;
 use Tuleap\CLI\Command\ProcessSystemEventsCommand;
@@ -193,6 +194,13 @@ $CLI_command_collector->addCommand(
                 new LocaleSwitcher()
             )
         );
+    }
+);
+
+$CLI_command_collector->addCommand(
+    HealthCheckCommand::NAME,
+    static function (): HealthCheckCommand {
+        return new HealthCheckCommand(\Tuleap\Http\HTTPFactoryBuilder::requestFactory());
     }
 );
 

@@ -95,4 +95,6 @@ ENV TLP_SYSTEMCTL=docker-centos7
 
 COPY --from=0 / /
 
+HEALTHCHECK --start-period=2m --timeout=5s CMD /usr/bin/tuleap healthcheck
+
 ENTRYPOINT [ "/usr/share/tuleap/plugins/tee_container/bin/tee-container.php", "run" ]
