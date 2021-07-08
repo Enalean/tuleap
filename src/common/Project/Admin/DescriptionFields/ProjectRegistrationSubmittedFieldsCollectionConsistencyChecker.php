@@ -65,21 +65,11 @@ class ProjectRegistrationSubmittedFieldsCollectionConsistencyChecker
         }
 
         if (count($mandatory_fields) !== 0) {
-            throw new MissingMandatoryFieldException(
-                implode(
-                    ', ',
-                    array_values($mandatory_fields)
-                )
-            );
+            throw new MissingMandatoryFieldException($mandatory_fields);
         }
 
         if (count($non_existing_field) !== 0) {
-            throw new FieldDoesNotExistException(
-                implode(
-                    ', ',
-                    array_values($non_existing_field)
-                )
-            );
+            throw new FieldDoesNotExistException($non_existing_field);
         }
     }
 }

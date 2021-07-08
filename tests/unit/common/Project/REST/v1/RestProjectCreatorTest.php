@@ -334,7 +334,7 @@ class RestProjectCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->fields_collection_consistency_checker
             ->expects(self::once())
             ->method('checkFieldConsistency')
-            ->willThrowException(new MissingMandatoryFieldException('field'));
+            ->willThrowException(new MissingMandatoryFieldException(['field']));
 
         $this->expectException(RestException::class);
         $this->expectExceptionCode(400);
