@@ -301,24 +301,28 @@ function ExecutionDetailCtrl(
         return typeof ExecutionService.executions[execution_id] !== "undefined";
     }
 
-    function pass(execution) {
-        setNewStatus(execution, PASSED_STATUS);
+    function pass(event, execution) {
+        setNewStatus(event, execution, PASSED_STATUS);
     }
 
-    function fail(execution) {
-        setNewStatus(execution, FAILED_STATUS);
+    function fail(event, execution) {
+        setNewStatus(event, execution, FAILED_STATUS);
     }
 
-    function block(execution) {
-        setNewStatus(execution, BLOCKED_STATUS);
+    function block(event, execution) {
+        setNewStatus(event, execution, BLOCKED_STATUS);
     }
 
-    function notrun(execution) {
-        setNewStatus(execution, NOT_RUN_STATUS);
+    function notrun(event, execution) {
+        setNewStatus(event, execution, NOT_RUN_STATUS);
     }
 
-    function setNewStatus(execution, new_status) {
+    function setNewStatus(event, execution, new_status) {
         execution.saving = true;
+        if (event.target instanceof HTMLElement) {
+            // Firefox does not blur disabled buttons, which triggers a bug that disables keydowns and thus keyboard shortcuts (https://bugzilla.mozilla.org/show_bug.cgi?id=706773)
+            event.target.blur();
+        }
 
         let uploaded_file_ids = ExecutionService.getUsedUploadedFilesIds(execution);
 

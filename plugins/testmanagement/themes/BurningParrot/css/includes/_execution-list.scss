@@ -385,6 +385,10 @@ $height-testmanagement-header: calc(var(--tlp-title-spacing) + var(--tlp-small-s
     &:focus {
         background: var(--tlp-main-color-transparent-90);
         text-decoration: none;
+
+        .tests-list-test-title {
+            text-decoration: underline;
+        }
     }
 
     > .tlp-avatar-small {
