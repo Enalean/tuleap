@@ -27,8 +27,16 @@ use Project_Creation_Exception;
 
 final class ProjectTemplateNotActiveException extends Project_Creation_Exception implements InvalidTemplateException
 {
+    private Project $project;
+
     public function __construct(Project $project)
     {
         parent::__construct('Project #' . $project->getID() . ' is not active and is not a template');
+        $this->project = $project;
+    }
+
+    public function getI18NMessage(): string
+    {
+        return sprintf(_('Project #%d is not active and is not a template'), $this->project->getID());
     }
 }

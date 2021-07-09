@@ -48,7 +48,7 @@ final class ProjectRegistrationCheckerAggregatorTest extends TestCase
             {
                 $errors = new ProjectRegistrationErrorsCollection();
                 $errors->addError(
-                    new class extends RegistrationErrorException {
+                    new class extends \Exception implements RegistrationErrorException {
                         public function getI18NMessage(): string
                         {
                             return '';
@@ -65,7 +65,7 @@ final class ProjectRegistrationCheckerAggregatorTest extends TestCase
             {
                 $errors = new ProjectRegistrationErrorsCollection();
                 $errors->addError(
-                    new class extends RegistrationErrorException {
+                    new class extends \Exception implements RegistrationErrorException {
                         public function getI18NMessage(): string
                         {
                             return '';

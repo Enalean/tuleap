@@ -25,6 +25,6 @@ namespace Tuleap\Project\Admin\Categories;
 
 use Tuleap\Project\Registration\RegistrationErrorException;
 
-abstract class ProjectCategoriesException extends RegistrationErrorException
+abstract class ProjectCategoriesException extends \RuntimeException implements RegistrationErrorException
 {
 }

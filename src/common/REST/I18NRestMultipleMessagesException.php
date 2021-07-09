@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,22 +20,22 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Project\Registration\Template;
+namespace Tuleap\REST;
 
-use Project_Creation_Exception;
+use Luracast\Restler\RestException;
 
-final class ProjectTemplateIDInvalidException extends Project_Creation_Exception implements InvalidTemplateException
+final class I18NRestMultipleMessagesException extends RestException
 {
-    private int $invalid_template_id;
-
-    public function __construct(int $invalid_template_id)
+    /**
+     * @param string[] $i18n_messages
+     * @psalm-param list<string> $i18n_messages
+     */
+    public function __construct(int $http_status_code, array $i18n_messages)
     {
-        parent::__construct('Template #' . $invalid_template_id . ' is not valid');
-        $this->invalid_template_id = $invalid_template_id;
-    }
-
-    public function getI18NMessage(): string
-    {
-        return sprintf(_('Template #%d is not valid'), $this->invalid_template_id);
+        parent::__construct(
+            $http_status_code,
+            null,
+            ['i18n_error_messages' => $i18n_messages]
+        );
     }
 }

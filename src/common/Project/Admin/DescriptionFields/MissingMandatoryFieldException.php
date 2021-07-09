@@ -25,7 +25,7 @@ namespace Tuleap\Project\Admin\DescriptionFields;
 
 use Tuleap\Project\Registration\RegistrationErrorException;
 
-class MissingMandatoryFieldException extends RegistrationErrorException
+final class MissingMandatoryFieldException extends \RuntimeException implements RegistrationErrorException
 {
     private array $mandatory_fields;
 

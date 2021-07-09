@@ -179,7 +179,7 @@ final class ProjectRegistrationRESTCheckerTest extends TestCase
                 ProjectRegistrationErrorsCollection $errors_collection
             ): void {
                 $errors_collection->addError(
-                    new class extends RegistrationErrorException
+                    new class extends \Exception implements RegistrationErrorException
                     {
                         public function getI18NMessage(): string
                         {
@@ -233,7 +233,7 @@ final class ProjectRegistrationRESTCheckerTest extends TestCase
                 ProjectRegistrationErrorsCollection $errors_collection
             ): void {
                 $errors_collection->addError(
-                    new class extends RegistrationErrorException
+                    new class extends \Exception implements RegistrationErrorException
                     {
                         public function getI18NMessage(): string
                         {

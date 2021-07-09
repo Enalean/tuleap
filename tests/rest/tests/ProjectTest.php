@@ -120,6 +120,38 @@ class ProjectTest extends ProjectBase
         self::assertCount(4, $errors_response['error']['i18n_error_messages']);
     }
 
+    public function testPOSTDryRunForRegularUserWithInvalidTemplateID(): void
+    {
+        $post_resource = json_encode(
+            [
+                'label' => 'Label',
+                'shortname' => 'short_name',
+                'description' => '',
+                'is_public' => true,
+                'template_id' => 1
+            ],
+            JSON_THROW_ON_ERROR
+        );
+
+        $response = $this->getResponseByName(
+            REST_TestDataBuilder::TEST_USER_2_NAME,
+            $this->request_factory->createRequest(
+                'POST',
+                'projects?dry_run=true'
+            )->withBody(
+                $this->stream_factory->createStream($post_resource)
+            )
+        );
+
+        self::assertEquals(400, $response->getStatusCode());
+
+        $errors_response = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
+
+        self::assertArrayHasKey('error', $errors_response);
+        self::assertArrayHasKey('i18n_error_messages', $errors_response['error']);
+        self::assertCount(1, $errors_response['error']['i18n_error_messages']);
+    }
+
     public function testPOSTDryRunForRegularUser(): void
     {
         $post_resource = json_encode([

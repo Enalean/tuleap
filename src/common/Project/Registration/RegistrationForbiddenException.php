@@ -23,6 +23,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Project\Registration;
 
-abstract class RegistrationForbiddenException extends RegistrationErrorException
+abstract class RegistrationForbiddenException extends \RuntimeException implements RegistrationErrorException
 {
 }

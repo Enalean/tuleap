@@ -2289,6 +2289,9 @@ msgstr "Il n'y a aucun label correspondant"
 msgid "No one monitoring"
 msgstr "Forum non surveillé"
 
+msgid "No project ID has been provided for the template"
+msgstr "Aucun ID de projet a été fourni pour servir de modèle"
+
 msgid "No project trove categories"
 msgstr "Aucune catégorie de projet"
 
@@ -2622,6 +2625,10 @@ msgstr "Processeurs"
 
 msgid "Project"
 msgstr "Projet"
+
+#, php-format
+msgid "Project #%d is not active and is not a template"
+msgstr "Le project #%d n'est pas actif et n'est pas un modèle"
 
 msgid "Project (read only)"
 msgstr "Projet (lecture seule)"
@@ -3406,6 +3413,10 @@ msgstr "Modèle de référence système détruit"
 msgid "Tab"
 msgstr "Tabulation"
 
+#, php-format
+msgid "Template #%d is not valid"
+msgstr "Le modèle #%d n'est pas valide"
+
 msgid "Template used by project"
 msgstr "Modèle utilisé par ce projet"
 
@@ -3616,6 +3627,9 @@ msgstr "Le widget est déjà utilisé"
 
 msgid "The widget is disabled in project dashboard."
 msgstr "Le widget est désactivé dans les tableaux de bord de projet."
+
+msgid "The xml template name provided is not valid"
+msgstr "Le nom du modèle xml fourni n'est pas valide"
 
 msgid "The {{tuleap_server_name}} team."
 msgstr "L'équipe de {{tuleap_server_name}}."
@@ -4059,6 +4073,10 @@ msgstr "Utilisée en tant que marqueur de projet"
 
 msgid "Use default avatar"
 msgstr "Utiliser l'avatar par défaut"
+
+#, php-format
+msgid "User #%d is not administrator of project #%d"
+msgstr "L'utilisateur #%d n'est pas administrateur du projet #%d"
 
 #, php-format
 msgid "User '%s' does not exist"

@@ -23,8 +23,9 @@ declare(strict_types=1);
 namespace Tuleap\Project\Registration\Template;
 
 use Throwable;
+use Tuleap\Project\Registration\RegistrationErrorException;
 
-interface InvalidTemplateException extends Throwable
+interface InvalidTemplateException extends Throwable, RegistrationErrorException
 {
 
 }

@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Project\Registration;
 
-final class ProjectAccessLevelCannotBeChosenByUserException extends RegistrationErrorException
+final class ProjectAccessLevelCannotBeChosenByUserException extends \RuntimeException implements RegistrationErrorException
 {
     /**
      * @psalm-readonly
