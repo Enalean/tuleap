@@ -88,6 +88,14 @@ msgstr "La fonctionnalité #%d n'existe pas dans l'incrément de programme #%d"
 msgid "Feature cannot be ranked with itself"
 msgstr "La fonctionnalité ne peut pas être réordonnée avec elle-même"
 
+#, php-format
+msgid ""
+"Field <a href='%s'>#%d</a> (%s) of tracker #%d is required but cannot be "
+"synchronized"
+msgstr ""
+"Le champ <a href='%s'>#%d</a> (%s) de l'outil de suivi #%d est requis mais ne peut pas être "
+"synchronisé"
+
 msgid "Good to know:"
 msgstr "Bon à savoir :"
 
