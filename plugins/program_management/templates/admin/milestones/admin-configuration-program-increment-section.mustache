@@ -4,13 +4,16 @@
             <h1 class="tlp-pane-title">{{# dgettext }}tuleap-program_management | Program Increments{{/ dgettext }}</h1>
         </div>
         <section class="tlp-pane-section">
-            <div class="tlp-form-element tlp-form-element-disabled">
+            <div class="tlp-form-element">
                 <label class="tlp-label" for="admin-configuration-program-increment-tracker">
                     {{# dgettext }}tuleap-program_management | Source tracker for Program Increments{{/ dgettext }}
                     <i class="fas fa-asterisk" aria-hidden="true"></i>
                 </label>
-                <select id="admin-configuration-program-increment-tracker" name="list-value" disabled>
+                <select id="admin-configuration-program-increment-tracker" name="list-value">
                     <option value=""></option>
+                    {{# potential_program_increments }}
+                        <option value="{{ id }}" {{# is_selected }}selected{{/ is_selected }}>{{ label }}</option>
+                    {{/ potential_program_increments}}
                 </select>
             </div>
             <div class="tlp-form-element tlp-form-element-disabled">

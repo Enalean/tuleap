@@ -28,11 +28,12 @@ use Project;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
 use Tuleap\Layout\IncludeAssets;
-use Tuleap\ProgramManagement\Domain\BuildProject;
 use Tuleap\ProgramManagement\Adapter\Program\Admin\Configuration\ConfigurationChecker;
+use Tuleap\ProgramManagement\Domain\BuildProject;
 use Tuleap\ProgramManagement\Domain\Program\Admin\PotentialTeam\BuildPotentialTeams;
 use Tuleap\ProgramManagement\Domain\Program\Admin\PotentialTeam\PotentialTeamsPresenterBuilder;
 use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramAdminPresenter;
+use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramIncrementTrackerConfiguration\BuildPotentialProgramIncrementTrackerConfigurationPresenters;
 use Tuleap\ProgramManagement\Domain\Program\Admin\Team\TeamsPresenterBuilder;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\IterationTracker\RetrieveVisibleIterationTracker;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Team\TeamProjectsCollection;
@@ -59,6 +60,7 @@ final class DisplayAdminProgramManagementController implements DispatchableWithR
     private RetrieveVisibleProgramIncrementTracker $program_increment_tracker_retriever;
     private \EventManager $event_manager;
     private RetrieveVisibleIterationTracker $iteration_tracker_retriever;
+    private BuildPotentialProgramIncrementTrackerConfigurationPresenters $program_increment_presenters_builder;
 
     public function __construct(
         \ProjectManager $project_manager,
@@ -71,19 +73,21 @@ final class DisplayAdminProgramManagementController implements DispatchableWithR
         BuildProgram $build_program,
         RetrieveVisibleProgramIncrementTracker $program_increment_tracker_retriever,
         \EventManager $event_manager,
-        RetrieveVisibleIterationTracker $iteration_tracker_retriever
+        RetrieveVisibleIterationTracker $iteration_tracker_retriever,
+        BuildPotentialProgramIncrementTrackerConfigurationPresenters $program_increment_presenters_builder
     ) {
-        $this->project_manager                     = $project_manager;
-        $this->template_renderer                   = $template_renderer;
-        $this->breadcrumbs_builder                 = $breadcrumbs_builder;
-        $this->potential_teams_builder             = $potential_teams_builder;
-        $this->teams_searcher                      = $teams_searcher;
-        $this->project_data_adapter                = $project_data_adapter;
-        $this->verify_is_team                      = $verify_is_team;
-        $this->build_program                       = $build_program;
-        $this->program_increment_tracker_retriever = $program_increment_tracker_retriever;
-        $this->event_manager                       = $event_manager;
-        $this->iteration_tracker_retriever         = $iteration_tracker_retriever;
+        $this->project_manager                      = $project_manager;
+        $this->template_renderer                    = $template_renderer;
+        $this->breadcrumbs_builder                  = $breadcrumbs_builder;
+        $this->potential_teams_builder              = $potential_teams_builder;
+        $this->teams_searcher                       = $teams_searcher;
+        $this->project_data_adapter                 = $project_data_adapter;
+        $this->verify_is_team                       = $verify_is_team;
+        $this->build_program                        = $build_program;
+        $this->program_increment_tracker_retriever  = $program_increment_tracker_retriever;
+        $this->event_manager                        = $event_manager;
+        $this->iteration_tracker_retriever          = $iteration_tracker_retriever;
+        $this->program_increment_presenters_builder = $program_increment_presenters_builder;
     }
 
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
@@ -157,7 +161,8 @@ final class DisplayAdminProgramManagementController implements DispatchableWithR
                         (int) $project->getID()
                     )
                 ),
-                $error_presenters
+                $error_presenters,
+                $this->program_increment_presenters_builder->buildPotentialProgramIncrementTrackerPresenters((int) $project->getID())
             )
         );
 

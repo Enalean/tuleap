@@ -28,6 +28,7 @@ use Tuleap\ProgramManagement\Domain\Program\Admin\PotentialTeam\PotentialTeam;
 use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramAdminPresenter;
 use Tuleap\ProgramManagement\Domain\Program\Plan\BuildProgram;
 use Tuleap\ProgramManagement\Domain\Team\VerifyIsTeam;
+use Tuleap\ProgramManagement\Stub\BuildPotentialProgramIncrementTrackerConfigurationPresentersStub;
 use Tuleap\ProgramManagement\Stub\BuildPotentialTeamsStub;
 use Tuleap\ProgramManagement\Stub\BuildProgramStub;
 use Tuleap\ProgramManagement\Stub\BuildProjectStub;
@@ -69,18 +70,20 @@ final class DisplayAdminProgramManagementControllerTest extends \Tuleap\Test\PHP
      * @var \EventManager|\PHPUnit\Framework\MockObject\MockObject
      */
     private $event_manager;
+    private BuildPotentialProgramIncrementTrackerConfigurationPresentersStub $program_increment_tracker_builder;
 
     protected function setUp(): void
     {
         $this->variables = ['project_name' => 'not_found'];
 
-        $this->project_manager       = $this->createStub(\ProjectManager::class);
-        $this->template_renderer     = $this->createMock(\TemplateRenderer::class);
-        $this->breadcrumbs_builder   = $this->createStub(ProgramManagementBreadCrumbsBuilder::class);
-        $this->build_potential_teams = BuildPotentialTeamsStub::buildValidPotentialTeamsFromId(PotentialTeam::fromId(150, 'team'));
-        $this->team_searcher         = SearchTeamsOfProgramStub::buildTeams(150);
-        $this->build_project         = new BuildProjectStub();
-        $this->event_manager         = $this->createMock(\EventManager::class);
+        $this->project_manager                   = $this->createStub(\ProjectManager::class);
+        $this->template_renderer                 = $this->createMock(\TemplateRenderer::class);
+        $this->breadcrumbs_builder               = $this->createStub(ProgramManagementBreadCrumbsBuilder::class);
+        $this->build_potential_teams             = BuildPotentialTeamsStub::buildValidPotentialTeamsFromId(PotentialTeam::fromId(150, 'team'));
+        $this->team_searcher                     = SearchTeamsOfProgramStub::buildTeams(150);
+        $this->build_project                     = new BuildProjectStub();
+        $this->event_manager                     = $this->createMock(\EventManager::class);
+        $this->program_increment_tracker_builder = BuildPotentialProgramIncrementTrackerConfigurationPresentersStub::buildWithValidProgramTrackers();
     }
 
     public function testItReturnsNotFoundWhenProjectIsNotFoundFromVariables(): void
@@ -177,6 +180,7 @@ final class DisplayAdminProgramManagementControllerTest extends \Tuleap\Test\PHP
             RetrieveVisibleProgramIncrementTrackerStub::withValidTracker(TrackerTestBuilder::aTracker()->build()),
             $this->event_manager,
             RetrieveVisibleIterationTrackerStub::withValidTracker(TrackerTestBuilder::aTracker()->build()),
+            $this->program_increment_tracker_builder
         );
     }
 

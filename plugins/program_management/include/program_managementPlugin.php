@@ -29,6 +29,7 @@ use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Layout\ServiceUrlCollector;
 use Tuleap\ProgramManagement\Adapter\Program\Admin\PotentialTeam\PotentialTeamsBuilder;
+use Tuleap\ProgramManagement\Adapter\Program\Admin\ProgramIncrementTrackerConfiguration\PotentialProgramIncrementTrackerConfigurationPresentersBuilder;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation\CreateProgramIncrementsRunner;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation\PendingArtifactCreationDao;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation\TaskBuilder;
@@ -292,6 +293,7 @@ final class program_managementPlugin extends Plugin
             $this->getVisibleProgramIncrementTrackerRetriever(),
             EventManager::instance(),
             $this->getVisibleIterationTrackerRetriever(),
+            new PotentialProgramIncrementTrackerConfigurationPresentersBuilder(TrackerFactory::instance(), new ProgramIncrementsDAO())
         );
     }
 
