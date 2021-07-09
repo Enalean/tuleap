@@ -27,14 +27,8 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\Source\SourceTrackerCollecti
 
 class SynchronizedFieldFromProgramAndTeamTrackersCollectionBuilder
 {
-    /**
-     * @var BuildSynchronizedFields
-     */
-    private $fields_adapter;
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
+    private BuildSynchronizedFields $fields_adapter;
+    private LoggerInterface $logger;
 
     public function __construct(
         BuildSynchronizedFields $fields_adapter,

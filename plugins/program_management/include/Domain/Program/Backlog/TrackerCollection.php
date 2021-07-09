@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog;
 
+use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ConfigurationErrorsCollector;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\PlanningHasNoProgramIncrementException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Team\TeamProjectsCollection;
 use Tuleap\ProgramManagement\Domain\Program\PlanningConfiguration\PlanningNotFoundException;
@@ -101,13 +102,25 @@ final class TrackerCollection
         return $this->mirrored_timebox_trackers;
     }
 
-    public function canUserSubmitAnArtifactInAllTrackers(\PFUser $user): bool
+    public function canUserSubmitAnArtifactInAllTrackers(\PFUser $user, ConfigurationErrorsCollector $configuration_errors): bool
     {
+        $can_submit = true;
         foreach ($this->mirrored_timebox_trackers as $milestone_tracker) {
             if (! $milestone_tracker->userCanSubmitArtifact($user)) {
-                return false;
+                $error = sprintf(
+                    dgettext(
+                        'tuleap-program_management',
+                        "User can not submit artifact in Team tracker #%d"
+                    ),
+                    $milestone_tracker->getTrackerId()
+                );
+                $configuration_errors->addError($error);
+                $can_submit = false;
+                if (! $configuration_errors->shouldCollectAllIssues()) {
+                    return $can_submit;
+                }
             }
         }
-        return true;
+        return $can_submit;
     }
 }

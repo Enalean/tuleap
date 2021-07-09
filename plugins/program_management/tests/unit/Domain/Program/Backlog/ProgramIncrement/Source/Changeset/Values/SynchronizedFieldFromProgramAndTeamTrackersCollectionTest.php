@@ -22,19 +22,18 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields;
 
-use Mockery;
 use Mockery as M;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Mockery\MockInterface;
-use Psr\Log\LoggerInterface;
-use Psr\Log\NullLogger;
+use Psr\Log\Test\TestLogger;
 use Tracker_FormElement_Field_ArtifactLink;
 use Tracker_FormElement_Field_Date;
 use Tracker_FormElement_Field_Selectbox;
 use Tracker_FormElement_Field_Text;
+use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ConfigurationErrorsCollector;
 use Tuleap\Test\Builders\UserTestBuilder;
 
-final class SynchronizedFieldDataFromProgramAndTeamTrackersCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
+final class SynchronizedFieldFromProgramAndTeamTrackersCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 
@@ -44,9 +43,9 @@ final class SynchronizedFieldDataFromProgramAndTeamTrackersCollectionTest extend
 
         $synchronized_field_data = $this->buildSynchronizedFieldDataFromProgramAndTeamTrackers(true, true);
 
-        $collection = new SynchronizedFieldFromProgramAndTeamTrackersCollection(new NullLogger());
+        $collection = new SynchronizedFieldFromProgramAndTeamTrackersCollection(new TestLogger());
         $collection->add($synchronized_field_data);
-        $this->assertTrue($collection->canUserSubmitAndUpdateAllFields($user));
+        $this->assertTrue($collection->canUserSubmitAndUpdateAllFields($user, new ConfigurationErrorsCollector(false)));
     }
 
     public function testItReturnsFalseWhenUserCantSubmitOneField(): void
@@ -54,12 +53,15 @@ final class SynchronizedFieldDataFromProgramAndTeamTrackersCollectionTest extend
         $user = UserTestBuilder::aUser()->build();
 
         $synchronized_field_data = $this->buildSynchronizedFieldDataFromProgramAndTeamTrackers(false, true);
-        $logger                  = M::mock(LoggerInterface::class);
-        $logger->shouldReceive('debug')->with('User can not submit the field #1 (Link) of tracker #49')->once();
 
+        $logger     = new TestLogger();
         $collection = new SynchronizedFieldFromProgramAndTeamTrackersCollection($logger);
         $collection->add($synchronized_field_data);
-        $this->assertFalse($collection->canUserSubmitAndUpdateAllFields($user));
+        $errors_collector = new ConfigurationErrorsCollector(true);
+        $this->assertFalse($collection->canUserSubmitAndUpdateAllFields($user, $errors_collector));
+        self::assertCount(1, $errors_collector->getErrorMessages());
+        self::assertStringContainsString("User can not submit the field", $errors_collector->getErrorMessages()[0]);
+        self::assertFalse($logger->hasDebugRecords());
     }
 
     public function testItReturnsFalseWhenUserCantUpdateOneField(): void
@@ -68,12 +70,44 @@ final class SynchronizedFieldDataFromProgramAndTeamTrackersCollectionTest extend
 
         $synchronized_field_data = $this->buildSynchronizedFieldDataFromProgramAndTeamTrackers(true, false);
 
-        $logger = M::mock(LoggerInterface::class);
-        $logger->shouldReceive('debug')->with('User can not update the field #1 (Link) of tracker #49')->once();
-
+        $logger     = new TestLogger();
         $collection = new SynchronizedFieldFromProgramAndTeamTrackersCollection($logger);
         $collection->add($synchronized_field_data);
-        $this->assertFalse($collection->canUserSubmitAndUpdateAllFields($user));
+        $errors_collector = new ConfigurationErrorsCollector(true);
+        $this->assertFalse($collection->canUserSubmitAndUpdateAllFields($user, $errors_collector));
+        self::assertCount(1, $errors_collector->getErrorMessages());
+        self::assertStringContainsString("User can not update the field", $errors_collector->getErrorMessages()[0]);
+        self::assertFalse($logger->hasDebugRecords());
+    }
+
+    public function testItLogsErrorsForSubmission(): void
+    {
+        $user = UserTestBuilder::aUser()->build();
+
+        $synchronized_field_data = $this->buildSynchronizedFieldDataFromProgramAndTeamTrackers(false, true);
+
+        $logger     = new TestLogger();
+        $collection = new SynchronizedFieldFromProgramAndTeamTrackersCollection($logger);
+        $collection->add($synchronized_field_data);
+        $errors_collector = new ConfigurationErrorsCollector(false);
+        $this->assertFalse($collection->canUserSubmitAndUpdateAllFields($user, $errors_collector));
+        self::assertCount(1, $errors_collector->getErrorMessages());
+        self::assertTrue($logger->hasDebugRecords());
+    }
+
+    public function testItLogsErrorsForUpdate(): void
+    {
+        $user = UserTestBuilder::aUser()->build();
+
+        $synchronized_field_data = $this->buildSynchronizedFieldDataFromProgramAndTeamTrackers(true, false);
+
+        $logger     = new TestLogger();
+        $collection = new SynchronizedFieldFromProgramAndTeamTrackersCollection($logger);
+        $collection->add($synchronized_field_data);
+        $errors_collector = new ConfigurationErrorsCollector(false);
+        $this->assertFalse($collection->canUserSubmitAndUpdateAllFields($user, $errors_collector));
+        self::assertCount(1, $errors_collector->getErrorMessages());
+        self::assertTrue($logger->hasDebugRecords());
     }
 
     public function testCanDetermineIfAFieldIsSynchronized(): void
@@ -83,7 +117,7 @@ final class SynchronizedFieldDataFromProgramAndTeamTrackersCollectionTest extend
 
         $synchronized_field_data = $this->buildSynchronizedFieldDataFromProgramAndTeamTrackers(true, true);
 
-        $collection = new SynchronizedFieldFromProgramAndTeamTrackersCollection(new NullLogger());
+        $collection = new SynchronizedFieldFromProgramAndTeamTrackersCollection(new TestLogger());
         $collection->add($synchronized_field_data);
         $this->assertTrue($collection->isFieldSynchronized($field));
 
@@ -96,36 +130,36 @@ final class SynchronizedFieldDataFromProgramAndTeamTrackersCollectionTest extend
     {
         $synchronized_field_data = $this->buildSynchronizedFieldDataFromProgramAndTeamTrackers(true, true);
 
-        $collection = new SynchronizedFieldFromProgramAndTeamTrackersCollection(new NullLogger());
+        $collection = new SynchronizedFieldFromProgramAndTeamTrackersCollection(new TestLogger());
         $collection->add($synchronized_field_data);
         $this->assertEquals([1, 2, 3, 4, 5, 6], $collection->getSynchronizedFieldIDs());
     }
 
     private function buildSynchronizedFieldDataFromProgramAndTeamTrackers(bool $submitable, bool $updatable): SynchronizedFieldFromProgramAndTeamTrackers
     {
-        $artifact_link = Mockery::mock(Tracker_FormElement_Field_ArtifactLink::class);
+        $artifact_link = M::mock(Tracker_FormElement_Field_ArtifactLink::class);
         $artifact_link->shouldReceive('getLabel')->andReturn('Link');
         $artifact_link->shouldReceive('getTrackerId')->andReturn('49');
         $this->mockField($artifact_link, 1, $submitable, $updatable);
         $artifact_link_field_data = new Field($artifact_link);
 
-        $title_field = Mockery::mock(\Tracker_FormElement_Field_Text::class);
+        $title_field = M::mock(\Tracker_FormElement_Field_Text::class);
         $this->mockField($title_field, 2, true, true);
         $title_field_data = new Field($title_field);
 
-        $description_field = Mockery::mock(Tracker_FormElement_Field_Text::class);
+        $description_field = M::mock(Tracker_FormElement_Field_Text::class);
         $this->mockField($description_field, 3, true, true);
         $description_field_data = new Field($description_field);
 
-        $status_field = Mockery::mock(Tracker_FormElement_Field_Selectbox::class);
+        $status_field = M::mock(Tracker_FormElement_Field_Selectbox::class);
         $this->mockField($status_field, 4, true, true);
         $status_field_data = new Field($status_field);
 
-        $field_start_date = Mockery::mock(Tracker_FormElement_Field_Date::class);
+        $field_start_date = M::mock(Tracker_FormElement_Field_Date::class);
         $this->mockField($field_start_date, 5, true, true);
         $start_date_field_data = new Field($field_start_date);
 
-        $field_end_date = Mockery::mock(Tracker_FormElement_Field_Date::class);
+        $field_end_date = M::mock(Tracker_FormElement_Field_Date::class);
         $this->mockField($field_end_date, 6, true, true);
         $end_date_field_data = new Field($field_end_date);
 
