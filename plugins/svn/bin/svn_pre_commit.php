@@ -98,7 +98,7 @@ try {
 
     exit(0);
 } catch (Exception $exception) {
-    $logger->error($repository_path . ': ' . $exception->getMessage());
+    $logger->error($repository_path . ': ' . $exception->getMessage(), ['exception' => $exception]);
     fwrite(STDERR, $exception->getMessage());
     exit(1);
 }
