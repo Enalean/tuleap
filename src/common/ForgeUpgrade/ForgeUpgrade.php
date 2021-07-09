@@ -204,7 +204,11 @@ class ForgeUpgrade
                 echo "\t$line\n";
             }
         }
-        echo count($buckets) . " migrations pending\n";
+        $nb_buckets = count($buckets);
+        echo $nb_buckets . " migrations pending\n";
+        if ($nb_buckets > 0) {
+            exit(1);
+        }
     }
 
     /**
