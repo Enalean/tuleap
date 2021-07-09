@@ -93,8 +93,32 @@ msgid ""
 "Field <a href='%s'>#%d</a> (%s) of tracker #%d is required but cannot be "
 "synchronized"
 msgstr ""
-"Le champ <a href='%s'>#%d</a> (%s) de l'outil de suivi #%d est requis mais ne peut pas être "
-"synchronisé"
+"Le champ <a href='%s'>#%d</a> (%s) de l'outil de suivi #%d est requis mais "
+"ne peut pas être synchronisé"
+
+#, php-format
+msgid ""
+"Following trackers %s are using a synchronized field in a workflow date rule "
+"(global rules)"
+msgstr ""
+"Les outils de suivi suivants %s utilisent un champ synchronisé avec un workflow sur "
+"les dates (règles globales) "
+
+#, php-format
+msgid ""
+"Following trackers %s are using a synchronized field in a workflow list rule "
+"(field dependencies)"
+msgstr ""
+"Les outils de suivi suivants %s utilisent un champ synchronisé avec un workflow sur "
+"une liste (dépendences de champs)"
+
+#, php-format
+msgid ""
+"Following trackers %s are using a synchronized field in a workflow "
+"transition rule"
+msgstr ""
+"Les outils de suivi suivants %s utilisent un champ synchronisé avec des règles de "
+"transition de workflow"
 
 msgid "Good to know:"
 msgstr "Bon à savoir :"

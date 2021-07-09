@@ -22,125 +22,172 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\CreationCheck;
 
-use Psr\Log\LoggerInterface;
+use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ConfigurationErrorsCollector;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck\CheckWorkflow;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFieldFromProgramAndTeamTrackersCollection;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TrackerCollection;
 
 final class WorkflowChecker implements CheckWorkflow
 {
-    /**
-     * @var \Workflow_Dao
-     */
-    private $workflow_dao;
-    /**
-     * @var \Tracker_Rule_Date_Dao
-     */
-    private $tracker_rule_date_dao;
-    /**
-     * @var \Tracker_Rule_List_Dao
-     */
-    private $tracker_rule_list_dao;
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
+    private \Workflow_Dao $workflow_dao;
+    private \Tracker_Rule_Date_Dao $tracker_rule_date_dao;
+    private \Tracker_Rule_List_Dao $tracker_rule_list_dao;
 
     public function __construct(
         \Workflow_Dao $workflow_dao,
         \Tracker_Rule_Date_Dao $tracker_rule_date_dao,
-        \Tracker_Rule_List_Dao $tracker_rule_list_dao,
-        LoggerInterface $logger
+        \Tracker_Rule_List_Dao $tracker_rule_list_dao
     ) {
         $this->workflow_dao          = $workflow_dao;
         $this->tracker_rule_date_dao = $tracker_rule_date_dao;
         $this->tracker_rule_list_dao = $tracker_rule_list_dao;
-        $this->logger                = $logger;
     }
 
     public function areWorkflowsNotUsedWithSynchronizedFieldsInTeamTrackers(
         TrackerCollection $trackers,
-        SynchronizedFieldFromProgramAndTeamTrackersCollection $field_collection
+        SynchronizedFieldFromProgramAndTeamTrackersCollection $field_collection,
+        ConfigurationErrorsCollector $errors_collector
     ): bool {
-        return $this->areTransitionRulesNotUsedWithSynchronizedFieldsInTeamTrackers(
+        $workflow_used = $this->areTransitionRulesNotUsedWithSynchronizedFieldsInTeamTrackers(
             $trackers,
-            $field_collection
-        ) && $this->areDateRulesNotUsedWithSynchronizedFieldsInTeamTrackers(
-            $trackers,
-            $field_collection
-        ) && $this->areListRulesNotUsedWithSynchronizedFieldsInTeamTrackers(
-            $trackers,
-            $field_collection
+            $field_collection,
+            $errors_collector
         );
+        if (! $errors_collector->shouldCollectAllIssues() && ! $workflow_used) {
+            return false;
+        }
+        $date_transition_used = $this->areDateRulesNotUsedWithSynchronizedFieldsInTeamTrackers(
+            $trackers,
+            $field_collection,
+            $errors_collector
+        );
+        if (! $errors_collector->shouldCollectAllIssues() && ! $date_transition_used) {
+            return false;
+        }
+
+        $list_transition_used = $this->areListRulesNotUsedWithSynchronizedFieldsInTeamTrackers(
+            $trackers,
+            $field_collection,
+            $errors_collector
+        );
+
+        return $workflow_used && $date_transition_used && $list_transition_used;
     }
 
     private function areTransitionRulesNotUsedWithSynchronizedFieldsInTeamTrackers(
         TrackerCollection $trackers,
-        SynchronizedFieldFromProgramAndTeamTrackersCollection $field_collection
+        SynchronizedFieldFromProgramAndTeamTrackersCollection $field_collection,
+        ConfigurationErrorsCollector $errors_collector
     ): bool {
         $workflow_transition_rules = $this->workflow_dao->searchWorkflowsByFieldIDsAndTrackerIDs(
             $trackers->getTrackerIds(),
             $field_collection->getSynchronizedFieldIDs()
         );
 
+        $is_valid = true;
         if (count($workflow_transition_rules) > 0) {
-            $tracker_ids_with_transition_rules_on_synchronized_fields = [];
+            $tracker_ids = [];
             foreach ($workflow_transition_rules as $workflow_transition_rule) {
-                $tracker_ids_with_transition_rules_on_synchronized_fields[] = $workflow_transition_rule['tracker_id'];
+                $url = '/plugins/tracker/workflow/' .
+                    urlencode((string) $workflow_transition_rule['tracker_id']) . '/transitions';
+
+                $tracker_ids[] = sprintf(
+                    "<a href='%s'>#%d</a>",
+                    $url,
+                    $workflow_transition_rule['tracker_id']
+                );
             }
-            $this->logger->debug(
+            $errors_collector->addError(
                 sprintf(
-                    "Following tracker # are using a synchronized field in a workflow transition rule: %s",
-                    implode(', ', $tracker_ids_with_transition_rules_on_synchronized_fields)
+                    dgettext('tuleap-program_management', "Following trackers %s are using a synchronized field in a workflow transition rule"),
+                    implode(', ', $tracker_ids)
                 )
             );
-            return false;
+            $is_valid = false;
+            if (! $errors_collector->shouldCollectAllIssues()) {
+                return $is_valid;
+            }
         }
 
-        return true;
+        return $is_valid;
     }
 
     private function areDateRulesNotUsedWithSynchronizedFieldsInTeamTrackers(
         TrackerCollection $trackers,
-        SynchronizedFieldFromProgramAndTeamTrackersCollection $field_collection
+        SynchronizedFieldFromProgramAndTeamTrackersCollection $field_collection,
+        ConfigurationErrorsCollector $errors_collector
     ): bool {
         $tracker_ids_with_date_rules = $this->tracker_rule_date_dao->searchTrackersWithRulesByFieldIDsAndTrackerIDs(
             $trackers->getTrackerIds(),
             $field_collection->getSynchronizedFieldIDs()
         );
 
+        $is_valid = true;
         if (count($tracker_ids_with_date_rules) > 0) {
-            $this->logger->debug(
+            $tracker_ids = [];
+            foreach ($tracker_ids_with_date_rules as $workflow_transition_rule) {
+                $url = '/plugins/tracker/?' . http_build_query(
+                    [
+                            'tracker' => $workflow_transition_rule,
+                            'func'    => 'admin-workflow'
+                        ]
+                );
+
+                $tracker_ids[] = sprintf("<a href='%s'>#%d</a>", $url, $workflow_transition_rule);
+            }
+            $errors_collector->addError(
                 sprintf(
-                    "Following tracker # are using a synchronized field in a workflow date rule (global rules): %s",
-                    implode(', ', $tracker_ids_with_date_rules)
+                    dgettext('tuleap-program_management', "Following trackers %s are using a synchronized field in a workflow date rule (global rules)"),
+                    implode(
+                        ', ',
+                        $tracker_ids
+                    )
                 )
             );
-            return false;
+            $is_valid = false;
+            if (! $errors_collector->shouldCollectAllIssues()) {
+                return $is_valid;
+            }
         }
 
-        return true;
+        return $is_valid;
     }
 
     private function areListRulesNotUsedWithSynchronizedFieldsInTeamTrackers(
         TrackerCollection $trackers,
-        SynchronizedFieldFromProgramAndTeamTrackersCollection $field_collection
+        SynchronizedFieldFromProgramAndTeamTrackersCollection $field_collection,
+        ConfigurationErrorsCollector $errors_collector
     ): bool {
         $tracker_ids_with_list_rules = $this->tracker_rule_list_dao->searchTrackersWithRulesByFieldIDsAndTrackerIDs(
             $trackers->getTrackerIds(),
             $field_collection->getSynchronizedFieldIDs()
         );
 
+        $is_valid = true;
         if (count($tracker_ids_with_list_rules) > 0) {
-            $this->logger->debug(
+            $tracker_ids = [];
+            foreach ($tracker_ids_with_list_rules as $workflow_transition_rule) {
+                $url = '/plugins/tracker/?' . http_build_query(
+                    [
+                            'tracker' => $workflow_transition_rule,
+                            'func'    => 'admin-dependencies'
+                        ]
+                );
+
+                $tracker_ids[] = sprintf("<a href='%s'>#%d</a>", $url, $workflow_transition_rule);
+            }
+            $errors_collector->addError(
                 sprintf(
-                    "Following tracker # are using a synchronized field in a workflow list rule (field dependencies): %s",
-                    implode(', ', $tracker_ids_with_list_rules)
+                    dgettext('tuleap-program_management', "Following trackers %s are using a synchronized field in a workflow list rule (field dependencies)"),
+                    implode(', ', $tracker_ids)
                 )
             );
-            return false;
+            $is_valid = false;
+            if (! $errors_collector->shouldCollectAllIssues()) {
+                return $is_valid;
+            }
         }
 
-        return true;
+        return $is_valid;
     }
 }

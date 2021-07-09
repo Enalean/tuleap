@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\CreationCheck;
 
 use Psr\Log\NullLogger;
+use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ConfigurationErrorsCollector;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\Field;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFieldFromProgramAndTeamTrackers;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFieldFromProgramAndTeamTrackersCollection;
@@ -60,8 +61,7 @@ final class WorkflowCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->checker       = new WorkflowChecker(
             $this->workflow_dao,
             $this->rule_date_dao,
-            $this->rule_list_dao,
-            new NullLogger()
+            $this->rule_list_dao
         );
     }
 
@@ -87,7 +87,8 @@ final class WorkflowCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertTrue(
             $this->checker->areWorkflowsNotUsedWithSynchronizedFieldsInTeamTrackers(
                 $trackers,
-                new SynchronizedFieldFromProgramAndTeamTrackersCollection(new NullLogger())
+                new SynchronizedFieldFromProgramAndTeamTrackersCollection(new NullLogger()),
+                new ConfigurationErrorsCollector(true)
             )
         );
     }
@@ -114,7 +115,8 @@ final class WorkflowCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertFalse(
             $this->checker->areWorkflowsNotUsedWithSynchronizedFieldsInTeamTrackers(
                 $trackers,
-                new SynchronizedFieldFromProgramAndTeamTrackersCollection(new NullLogger())
+                new SynchronizedFieldFromProgramAndTeamTrackersCollection(new NullLogger()),
+                new ConfigurationErrorsCollector(false)
             )
         );
     }
@@ -140,7 +142,8 @@ final class WorkflowCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertFalse(
             $this->checker->areWorkflowsNotUsedWithSynchronizedFieldsInTeamTrackers(
                 $trackers,
-                new SynchronizedFieldFromProgramAndTeamTrackersCollection(new NullLogger())
+                new SynchronizedFieldFromProgramAndTeamTrackersCollection(new NullLogger()),
+                new ConfigurationErrorsCollector(false)
             )
         );
     }
@@ -167,9 +170,45 @@ final class WorkflowCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertFalse(
             $this->checker->areWorkflowsNotUsedWithSynchronizedFieldsInTeamTrackers(
                 $trackers,
-                new SynchronizedFieldFromProgramAndTeamTrackersCollection(new NullLogger())
+                new SynchronizedFieldFromProgramAndTeamTrackersCollection(new NullLogger()),
+                new ConfigurationErrorsCollector(true)
             )
         );
+    }
+
+    public function testCollectsAllErrors(): void
+    {
+        $this->workflow_dao->method('searchWorkflowsByFieldIDsAndTrackerIDs')->willReturn(
+            [['tracker_id' => 758, 'field_id' => 963]]
+        );
+        $this->rule_date_dao->method('searchTrackersWithRulesByFieldIDsAndTrackerIDs')->willReturn([123]);
+        $this->rule_list_dao->method('searchTrackersWithRulesByFieldIDsAndTrackerIDs')->willReturn([758]);
+
+        $teams     = TeamProjectsCollection::fromProgramIdentifier(
+            SearchTeamsOfProgramStub::buildTeams(147),
+            new BuildProjectStub(),
+            ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 100, UserTestBuilder::aUser()->build())
+        );
+        $retriever = RetrievePlanningMilestoneTrackerStub::withValidTrackerIds(758);
+        $user      = UserTestBuilder::aUser()->build();
+        $trackers  = TrackerCollection::buildRootPlanningMilestoneTrackers($retriever, $teams, $user);
+
+        $synchronized_fields = $this->buildSynchronizedFieldsCollectionFromProgramAndTeam();
+        $collection          = new SynchronizedFieldFromProgramAndTeamTrackersCollection(new NullLogger());
+        $collection->add($synchronized_fields);
+
+        $errors_collector = new ConfigurationErrorsCollector(true);
+        self::assertFalse(
+            $this->checker->areWorkflowsNotUsedWithSynchronizedFieldsInTeamTrackers(
+                $trackers,
+                new SynchronizedFieldFromProgramAndTeamTrackersCollection(new NullLogger()),
+                $errors_collector
+            )
+        );
+        self::assertCount(3, $errors_collector->getErrorMessages());
+        self::assertStringContainsString('transition', $errors_collector->getErrorMessages()[0]);
+        self::assertStringContainsString('date', $errors_collector->getErrorMessages()[1]);
+        self::assertStringContainsString('list', $errors_collector->getErrorMessages()[2]);
     }
 
     private function buildSynchronizedFieldsCollectionFromProgramAndTeam(): SynchronizedFieldFromProgramAndTeamTrackers
