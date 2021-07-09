@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck;
 
 use PFUser;
-use Psr\Log\LoggerInterface;
 use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ConfigurationErrorsCollector;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\FieldSynchronizationException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFieldFromProgramAndTeamTrackersCollectionBuilder;
@@ -37,20 +36,17 @@ class TimeboxCreatorChecker
     private CheckSemantic $semantic_checker;
     private CheckRequiredField $required_field_checker;
     private CheckWorkflow $workflow_checker;
-    private LoggerInterface $logger;
 
     public function __construct(
         SynchronizedFieldFromProgramAndTeamTrackersCollectionBuilder $field_collection_builder,
         CheckSemantic $semantic_checker,
         CheckRequiredField $required_field_checker,
-        CheckWorkflow $workflow_checker,
-        LoggerInterface $logger
+        CheckWorkflow $workflow_checker
     ) {
         $this->field_collection_builder = $field_collection_builder;
         $this->semantic_checker         = $semantic_checker;
         $this->required_field_checker   = $required_field_checker;
         $this->workflow_checker         = $workflow_checker;
-        $this->logger                   = $logger;
     }
 
     public function canTimeboxBeCreated(
@@ -60,56 +56,64 @@ class TimeboxCreatorChecker
         PFUser $user,
         ConfigurationErrorsCollector $configuration_errors
     ): bool {
-        $this->logger->debug(
-            'Checking if milestone can be created in planning of project'
-        );
-
+        $can_be_created = true;
         if (! $this->semantic_checker->areTrackerSemanticsWellConfigured($tracker_data, $program_and_milestone_trackers, $configuration_errors)) {
-            $this->logger->error('Semantics are not well configured.');
-
-            return false;
+            $can_be_created = false;
+            if (! $configuration_errors->shouldCollectAllIssues()) {
+                return $can_be_created;
+            }
         }
 
         if (! $team_trackers->canUserSubmitAnArtifactInAllTrackers($user, $configuration_errors)) {
-            $this->logger->debug('User cannot submit an artifact in all team trackers.');
-
-            return false;
+            $can_be_created = false;
+            if (! $configuration_errors->shouldCollectAllIssues()) {
+                return $can_be_created;
+            }
         }
 
         try {
             $synchronized_fields_data_collection = $this->field_collection_builder->buildFromSourceTrackers($program_and_milestone_trackers);
+
+            if (! $synchronized_fields_data_collection->canUserSubmitAndUpdateAllFields($user, $configuration_errors)) {
+                $can_be_created = false;
+                if (! $configuration_errors->shouldCollectAllIssues()) {
+                    return $can_be_created;
+                }
+            }
+
+            if (
+                ! $this->required_field_checker->areRequiredFieldsOfTeamTrackersLimitedToTheSynchronizedFields(
+                    $team_trackers,
+                    $synchronized_fields_data_collection,
+                    $configuration_errors
+                )
+            ) {
+                $can_be_created = false;
+                if (! $configuration_errors->shouldCollectAllIssues()) {
+                    return $can_be_created;
+                }
+            }
+
+            if (
+                ! $this->workflow_checker->areWorkflowsNotUsedWithSynchronizedFieldsInTeamTrackers(
+                    $team_trackers,
+                    $synchronized_fields_data_collection,
+                    $configuration_errors
+                )
+            ) {
+                $can_be_created = false;
+                if (! $configuration_errors->shouldCollectAllIssues()) {
+                    return $can_be_created;
+                }
+            }
         } catch (FieldSynchronizationException $exception) {
-            $this->logger->error('Cannot retrieve all the synchronized fields', ['exception' => $exception]);
-            return false;
-        }
-        if (! $synchronized_fields_data_collection->canUserSubmitAndUpdateAllFields($user, $configuration_errors)) {
-            $this->logger->debug('User cannot submit and update all needed fields in all trackers.');
-            return false;
-        }
-
-        if (
-            ! $this->required_field_checker->areRequiredFieldsOfTeamTrackersLimitedToTheSynchronizedFields(
-                $team_trackers,
-                $synchronized_fields_data_collection,
-                $configuration_errors
-            )
-        ) {
-            $this->logger->debug('A team tracker has a required fields outside the synchronized fields.');
-            return false;
+            $can_be_created = false;
+            $configuration_errors->addError($exception->getI18NExceptionMessage());
+            if (! $configuration_errors->shouldCollectAllIssues()) {
+                return $can_be_created;
+            }
         }
 
-        if (
-            ! $this->workflow_checker->areWorkflowsNotUsedWithSynchronizedFieldsInTeamTrackers(
-                $team_trackers,
-                $synchronized_fields_data_collection,
-                $configuration_errors
-            )
-        ) {
-            $this->logger->debug('A team tracker is using one of the synchronized fields in a workflow rule.');
-            return false;
-        }
-
-        $this->logger->debug('User can create a milestone in the project.');
-        return true;
+        return $can_be_created;
     }
 }

@@ -71,7 +71,7 @@ class IterationCreatorChecker
 
         $this->logger->debug(
             sprintf(
-                'Checking if Iteration can be created in second planning of project #%s by user %s (#%s)',
+                'Checking if Iteration can be created in second planning of program #%s by user %s (#%s)',
                 $program->getId(),
                 $user->getName(),
                 $user->getId()
@@ -105,12 +105,25 @@ class IterationCreatorChecker
             return true;
         }
 
-        return $this->timebox_creator_checker->canTimeboxBeCreated(
+        $can_timebox_be_created = $this->timebox_creator_checker->canTimeboxBeCreated(
             $tracker,
             $iteration_and_team_trackers,
             $team_trackers,
             $user,
             $errors_collector
         );
+
+        if (! $can_timebox_be_created) {
+            $this->logger->error(
+                sprintf(
+                    'Iteration cannot be created in program #%s by user %s (#%s)',
+                    $program->getId(),
+                    $user->getName(),
+                    $user->getId()
+                )
+            );
+        }
+
+        return $can_timebox_be_created;
     }
 }

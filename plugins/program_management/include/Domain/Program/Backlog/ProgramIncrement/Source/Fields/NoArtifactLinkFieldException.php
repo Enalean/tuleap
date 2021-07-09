@@ -24,8 +24,23 @@ namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Sourc
 
 final class NoArtifactLinkFieldException extends \RuntimeException implements FieldSynchronizationException
 {
+    private string $i18n_message;
+
     public function __construct(int $tracker_id)
     {
         parent::__construct("Tracker with id $tracker_id has no artifact link field");
+        $this->i18n_message = sprintf(
+            dgettext(
+                'tuleap-program_management',
+                "Tracker with id <a href='%s'>#%d</a> has no artifact link field"
+            ),
+            "/plugins/tracker/?tracker=" . urlencode((string) $tracker_id) . "&func=admin-formElements",
+            $tracker_id
+        );
+    }
+
+    public function getI18NExceptionMessage(): string
+    {
+        return $this->i18n_message;
     }
 }

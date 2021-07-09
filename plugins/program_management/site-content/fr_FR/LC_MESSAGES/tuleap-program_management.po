@@ -76,6 +76,22 @@ msgstr ""
 "jalons"
 
 #, php-format
+msgid ""
+"Expected tracker with id #%d to have a %s field associated to its TimeFrame "
+"semantic, but this field was not found"
+msgstr ""
+"L'outils de suivi <a href=\"%s\">%d</a> devrait avoir un champs associé à sa "
+"sémantique plage de temps,mais le champ n'a pas été trouvé"
+
+#, php-format
+msgid ""
+"Expected tracker with id <a href=\"%s\">%d</a> to have a field associated to "
+"its %s semantic, but this field was not found"
+msgstr ""
+"L'outils de suivi <a href=\"%s\">%d</a> devrait avoir un champs associé à sa "
+"sémantique %s,mais le champ n'a pas été trouvé"
+
+#, php-format
 msgid "Feature #%d cannot be planned in program increment #%d"
 msgstr ""
 "La fonctionnalité #%d ne peut pas être planifiée dans l'incrément de "
@@ -101,24 +117,24 @@ msgid ""
 "Following trackers %s are using a synchronized field in a workflow date rule "
 "(global rules)"
 msgstr ""
-"Les outils de suivi suivants %s utilisent un champ synchronisé avec un workflow sur "
-"les dates (règles globales) "
+"Les outils de suivi suivants %s utilisent un champ synchronisé avec un "
+"workflow sur les dates (règles globales) "
 
 #, php-format
 msgid ""
 "Following trackers %s are using a synchronized field in a workflow list rule "
 "(field dependencies)"
 msgstr ""
-"Les outils de suivi suivants %s utilisent un champ synchronisé avec un workflow sur "
-"une liste (dépendences de champs)"
+"Les outils de suivi suivants %s utilisent un champ synchronisé avec un "
+"workflow sur une liste (dépendences de champs)"
 
 #, php-format
 msgid ""
 "Following trackers %s are using a synchronized field in a workflow "
 "transition rule"
 msgstr ""
-"Les outils de suivi suivants %s utilisent un champ synchronisé avec des règles de "
-"transition de workflow"
+"Les outils de suivi suivants %s utilisent un champ synchronisé avec des "
+"règles de transition de workflow"
 
 msgid "Good to know:"
 msgstr "Bon à savoir :"
@@ -146,6 +162,14 @@ msgid ""
 msgstr ""
 "La modification de l'outil de suivi de jalons de cette planification est "
 "interdite parce que ce projet fait partie du backlog d'un programme."
+
+#, php-format
+msgid ""
+"No matching value found for value %s in field <a href=\"%s\">#%d</a> of "
+"tracker #%d by duck typing."
+msgstr ""
+"Aucune valeur trouvé pour %s dans le champs <a href=\"%s\">#%d</a> de "
+"l'outil de suivi #%d par duck typing."
 
 msgid "No project have been aggregated yet."
 msgstr "Aucun projet n'a encore été regroupé."
@@ -273,6 +297,14 @@ msgstr ""
 "n'est pas un outil de suivi planifiable d'un plan."
 
 #, php-format
+msgid ""
+"The title field with id <a href='%s'>#%d</a> in tracker #%d has an incorrect "
+"type, it must be a string type"
+msgstr ""
+"Le champ titre avec l'identifiant <a href='%s'>#%d</a> dans l'outil de suici "
+"#%d a un type incorrect, il doit être de type chaîne de caractère"
+
+#, php-format
 msgid "The user group %s does not exist in the Program"
 msgstr "Le groupe  utilisateur %s  n'existe pas dans le Programme"
 
@@ -297,6 +329,12 @@ msgstr "L'outils de suivi %d n'a pas été trouvé"
 msgid "Tracker id #%d is not a plannable tracker"
 msgstr ""
 "L'outils de suivi avec l'id #%d n'est pas un outils de suivi planifiable"
+
+#, php-format
+msgid "Tracker with id <a href='%s'>#%d</a> has no artifact link field"
+msgstr ""
+"L'outil de suivi avec l'id <a href='%s'>#%d</a> (%s) n'a pas de champ de lien "
+"d'artéfacts"
 
 msgid "Unchanged"
 msgstr "Inchangé"
@@ -339,10 +377,13 @@ msgstr ""
 
 msgid "Which tracker's artifacts can be planned in Program increments?"
 msgstr ""
-"Quels outils de suivi peuvent être planifiés dans les Incréments de Programme ?"
+"Quels outils de suivi peuvent être planifiés dans les Incréments de "
+"Programme ?"
 
 msgid "Who can prioritize and plan items into Program Increments?"
-msgstr "Qui peut prioriser et planifier des éléments dans les Incréments de Programme ?"
+msgstr ""
+"Qui peut prioriser et planifier des éléments dans les Incréments de "
+"Programme ?"
 
 msgid "You are about to remove Team {{ public_name }} from this Program."
 msgstr ""

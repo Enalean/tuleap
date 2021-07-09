@@ -24,4 +24,5 @@ namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Sourc
 
 interface FieldSynchronizationException extends \Throwable
 {
+    public function getI18NExceptionMessage(): string;
 }

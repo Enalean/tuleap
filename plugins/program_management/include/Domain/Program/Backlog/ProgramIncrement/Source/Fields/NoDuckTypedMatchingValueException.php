@@ -24,6 +24,8 @@ namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Sourc
 
 final class NoDuckTypedMatchingValueException extends \RuntimeException implements FieldSynchronizationException
 {
+    private string $i18n_message;
+
     public function __construct(string $source_value_label, int $team_status_field_id, int $tracker_id)
     {
         parent::__construct(
@@ -34,5 +36,23 @@ final class NoDuckTypedMatchingValueException extends \RuntimeException implemen
                 $tracker_id
             )
         );
+
+        $this->i18n_message = sprintf(
+            dgettext(
+                'tuleap-program_management',
+                'No matching value found for value %s in field <a href="%s">#%d</a> of tracker #%d by duck typing.'
+            ),
+            $source_value_label,
+            "/plugins/tracker/" . http_build_query(
+                ['tracker' => $tracker_id, "func" => "admin-formElement-update", "formElement" => $team_status_field_id]
+            ),
+            $team_status_field_id,
+            $tracker_id
+        );
+    }
+
+    public function getI18NExceptionMessage(): string
+    {
+        return $this->i18n_message;
     }
 }

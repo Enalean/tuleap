@@ -24,10 +24,26 @@ namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Sourc
 
 class FieldRetrievalException extends \RuntimeException implements FieldSynchronizationException
 {
+    private string $i18n_message;
+
     public function __construct(int $tracker_id, string $semantic_type)
     {
         parent::__construct(
             "Expected tracker with id $tracker_id to have a field associated to its $semantic_type semantic, but this field was not found"
         );
+        $this->i18n_message = sprintf(
+            dgettext(
+                'tuleap-program_management',
+                'Expected tracker with id <a href="%s">%d</a> to have a field associated to its %s semantic, but this field was not found'
+            ),
+            "/plugins/tracker/?tracker=" . urlencode((string) $tracker_id) . "&func=admin-semantic",
+            $tracker_id,
+            $semantic_type
+        );
+    }
+
+    public function getI18NExceptionMessage(): string
+    {
+        return $this->i18n_message;
     }
 }

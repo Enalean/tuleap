@@ -24,10 +24,29 @@ namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Sourc
 
 final class TitleFieldHasIncorrectTypeException extends \RuntimeException implements FieldSynchronizationException
 {
+    private string $i18n_message;
+
     public function __construct(int $tracker_id, int $field_id)
     {
         parent::__construct(
             "The title field with id $field_id in tracker $tracker_id has an incorrect type, it must be a string type"
         );
+
+        $this->i18n_message = sprintf(
+            dgettext(
+                'tuleap-program_management',
+                "The title field with id <a href='%s'>#%d</a> in tracker #%d has an incorrect type, it must be a string type"
+            ),
+            "/plugins/tracker/?" . http_build_query(
+                ['tracker' => $tracker_id, "func" => "admin-semantic", "semantic" => \Tracker_Semantic_Title::NAME]
+            ),
+            $field_id,
+            $tracker_id
+        );
+    }
+
+    public function getI18NExceptionMessage(): string
+    {
+        return $this->i18n_message;
     }
 }

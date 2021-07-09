@@ -72,7 +72,7 @@ class ProgramIncrementCreatorChecker
 
         $this->logger->debug(
             sprintf(
-                'Checking if Program Increment can be created in top planning of project #%s by user %s (#%s)',
+                'Checking if Program Increment can be created in top planning of program #%s by user %s (#%s)',
                 $program->getId(),
                 $user->getName(),
                 $user->getId()
@@ -101,12 +101,25 @@ class ProgramIncrementCreatorChecker
             return false;
         }
 
-        return $this->timebox_creator_checker->canTimeboxBeCreated(
+        $can_timebox_be_created =  $this->timebox_creator_checker->canTimeboxBeCreated(
             $tracker,
             $program_and_team_trackers,
             $team_trackers,
             $user,
             $errors_collector
         );
+
+        if (! $can_timebox_be_created) {
+            $this->logger->error(
+                sprintf(
+                    'Program increment cannot be created in program #%s by user %s (#%s)',
+                    $program->getId(),
+                    $user->getName(),
+                    $user->getId()
+                )
+            );
+        }
+
+        return $can_timebox_be_created;
     }
 }
