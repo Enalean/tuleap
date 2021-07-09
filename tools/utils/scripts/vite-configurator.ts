@@ -23,7 +23,7 @@ export { createPOGettextPlugin } from "./rollup-plugin-po-gettext";
 import { esbuild_target } from "./browserslist_config";
 
 type OverloadedBuildOptions = Omit<BuildOptions, "brotliSize" | "minify" | "target">;
-type OverloadedServerOptions = Omit<ServerOptions, "fsServe">;
+type OverloadedServerOptions = Omit<ServerOptions, "fs">;
 type UserConfigWithoutBuildAndServer = Omit<UserConfig, "build" | "server">;
 type OverloadedUserConfig = UserConfigWithoutBuildAndServer & { build?: OverloadedBuildOptions } & {
     server?: OverloadedServerOptions;
@@ -39,8 +39,8 @@ export function defineConfig(config: OverloadedUserConfig): UserConfigExport {
             target: esbuild_target,
         },
         server: {
-            fsServe: {
-                root: __dirname + "/../../../",
+            fs: {
+                allow: [__dirname + "/../../../"],
                 strict: true,
             },
         },
