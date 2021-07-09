@@ -29,7 +29,6 @@ describe("ProjectInformationInputPrivacyList", () => {
         it("Should select the 'Public' by default", async () => {
             const configuration_state: ConfigurationState = {
                 project_default_visibility: "public",
-                can_user_choose_project_visibility: true,
             } as ConfigurationState;
 
             const wrapper = shallowMount(ProjectInformationInputPrivacyList, {
@@ -54,7 +53,6 @@ describe("ProjectInformationInputPrivacyList", () => {
             const configuration_state: ConfigurationState = {
                 project_default_visibility: "unrestricted",
                 are_restricted_users_allowed: true,
-                can_user_choose_project_visibility: true,
             } as ConfigurationState;
 
             const wrapper = shallowMount(ProjectInformationInputPrivacyList, {
@@ -77,7 +75,6 @@ describe("ProjectInformationInputPrivacyList", () => {
         it("Should select the 'Private' by default", async () => {
             const configuration_state: ConfigurationState = {
                 project_default_visibility: "private",
-                can_user_choose_project_visibility: true,
             } as ConfigurationState;
 
             const wrapper = shallowMount(ProjectInformationInputPrivacyList, {
@@ -100,7 +97,6 @@ describe("ProjectInformationInputPrivacyList", () => {
             const configuration_state: ConfigurationState = {
                 project_default_visibility: "private",
                 are_restricted_users_allowed: true,
-                can_user_choose_project_visibility: true,
             } as ConfigurationState;
 
             const wrapper = shallowMount(ProjectInformationInputPrivacyList, {
@@ -126,7 +122,6 @@ describe("ProjectInformationInputPrivacyList", () => {
             const configuration_state: ConfigurationState = {
                 project_default_visibility: "private",
                 are_restricted_users_allowed: false,
-                can_user_choose_project_visibility: true,
             } as ConfigurationState;
 
             const wrapper = shallowMount(ProjectInformationInputPrivacyList, {
@@ -149,7 +144,6 @@ describe("ProjectInformationInputPrivacyList", () => {
             const configuration_state: ConfigurationState = {
                 project_default_visibility: "private",
                 are_restricted_users_allowed: true,
-                can_user_choose_project_visibility: true,
             } as ConfigurationState;
 
             const wrapper = shallowMount(ProjectInformationInputPrivacyList, {
