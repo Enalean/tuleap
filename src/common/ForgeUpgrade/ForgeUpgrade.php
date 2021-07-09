@@ -23,7 +23,7 @@ namespace Tuleap\ForgeUpgrade;
 
 use Exception;
 use ForgeUpgrade_Bucket_Db;
-use Tuleap\ForgeUpgrade\Driver\AbstractDriver;
+use PDO;
 use Psr\Log\LoggerInterface;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
@@ -36,7 +36,6 @@ use const PHP_EOL;
  */
 class ForgeUpgrade
 {
-    private AbstractDriver $dbDriver;
 
     private ForgeUpgradeDb $db;
 
@@ -48,11 +47,10 @@ class ForgeUpgrade
 
     private array $options;
 
-    public function __construct(AbstractDriver $dbDriver, LoggerInterface $logger)
+    public function __construct(PDO $pdo, LoggerInterface $logger)
     {
-        $this->dbDriver                            = $dbDriver;
-        $this->db                                  = new ForgeUpgradeDb($dbDriver->getPdo());
-        $this->bucketApi['ForgeUpgrade_Bucket_Db'] = new ForgeUpgrade_Bucket_Db($dbDriver->getPdo(), $logger);
+        $this->db                                  = new ForgeUpgradeDb($pdo);
+        $this->bucketApi['ForgeUpgrade_Bucket_Db'] = new ForgeUpgrade_Bucket_Db($pdo, $logger);
         $this->logger                              = $logger;
     }
 
