@@ -1,0 +1,119 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`DisplayModeSwitcher displays folders sorted by date 1`] = `
+<div
+  class="tlp-button-bar git-repository-list-actions-display-switch"
+>
+  <div
+    class="tlp-button-bar-item"
+  >
+    <input
+      class="tlp-button-bar-checkbox"
+      id="git-repository-list-switch-last-update"
+      name="display-mode-switch"
+      type="radio"
+      value="last_update"
+    />
+     
+    <label
+      class="tlp-button-primary tlp-button-outline"
+      for="git-repository-list-switch-last-update"
+      title="Sort repositories by their last update date"
+    >
+      <span
+        class="fa-stack"
+      >
+        <i
+          class="fas fa-long-arrow-alt-down"
+        />
+         
+        <i
+          class="fas fa-calendar-alt"
+        />
+      </span>
+    </label>
+  </div>
+   
+  <div
+    class="tlp-button-bar-item"
+  >
+    <input
+      class="tlp-button-bar-checkbox"
+      id="git-repository-list-switch-path"
+      name="display-mode-switch"
+      type="radio"
+      value="path"
+    />
+     
+    <label
+      class="tlp-button-primary tlp-button-outline git-repository-list-switch-path-label"
+      data-test="git-repository-list-switch-path"
+      for="git-repository-list-switch-path"
+      title="Sort repositories alphabetically"
+    >
+      <i
+        class="fas fa-fw fa-sort-alpha-down"
+      />
+    </label>
+  </div>
+</div>
+`;
+
+exports[`DisplayModeSwitcher displays folders sorted by path 1`] = `
+<div
+  class="tlp-button-bar git-repository-list-actions-display-switch"
+>
+  <div
+    class="tlp-button-bar-item"
+  >
+    <input
+      class="tlp-button-bar-checkbox"
+      id="git-repository-list-switch-last-update"
+      name="display-mode-switch"
+      type="radio"
+      value="last_update"
+    />
+     
+    <label
+      class="tlp-button-primary tlp-button-outline"
+      for="git-repository-list-switch-last-update"
+      title="Sort repositories by their last update date"
+    >
+      <span
+        class="fa-stack"
+      >
+        <i
+          class="fas fa-long-arrow-alt-down"
+        />
+         
+        <i
+          class="fas fa-calendar-alt"
+        />
+      </span>
+    </label>
+  </div>
+   
+  <div
+    class="tlp-button-bar-item"
+  >
+    <input
+      class="tlp-button-bar-checkbox"
+      id="git-repository-list-switch-path"
+      name="display-mode-switch"
+      type="radio"
+      value="path"
+    />
+     
+    <label
+      class="tlp-button-primary tlp-button-outline git-repository-list-switch-path-label"
+      data-test="git-repository-list-switch-path"
+      for="git-repository-list-switch-path"
+      title="Sort repositories alphabetically"
+    >
+      <i
+        class="fas fa-fw fa-sort-alpha-down"
+      />
+    </label>
+  </div>
+</div>
+`;

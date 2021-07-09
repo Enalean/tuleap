@@ -24,7 +24,8 @@
             ref="jenkins_server_badge"
         >
             <translate
-                v-bind:translate-n="countJenkinsServers"
+                v-bind:translate-params="{ countJenkinsServers: servers.length }"
+                v-bind:translate-n="servers.length"
                 translate-plural="%{ countJenkinsServers } Jenkins servers setup"
             >
                 %{ countJenkinsServers } Jenkins server setup
@@ -54,24 +55,33 @@
     </div>
 </template>
 
-<script>
+<script lang="ts">
 import { createPopover } from "tlp";
+import { Component, Prop } from "vue-property-decorator";
+import Vue from "vue";
 
-export default {
-    name: "JenkinsServer",
-    props: {
-        servers: Array,
-    },
-    computed: {
-        countJenkinsServers() {
-            return this.servers.length;
-        },
-    },
-    mounted() {
-        createPopover(this.$refs.jenkins_server_badge, this.$refs.jenkins_server_popover, {
+interface ServerJenkins {
+    id: number;
+    url: string;
+}
+@Component
+export default class JenkinsServer extends Vue {
+    @Prop({ required: true })
+    readonly servers!: ServerJenkins[];
+
+    mounted(): void {
+        const badge = this.$refs.jenkins_server_badge;
+        if (!(badge instanceof HTMLElement)) {
+            throw new Error("Badge element is not found in DOM");
+        }
+        const popover = this.$refs.jenkins_server_popover;
+        if (!(popover instanceof HTMLElement)) {
+            throw new Error("Popover element is not found in DOM");
+        }
+        createPopover(badge, popover, {
             placement: "right",
             trigger: "click",
         });
-    },
-};
+    }
+}
 </script>

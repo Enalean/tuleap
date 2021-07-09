@@ -143,6 +143,7 @@ export interface GitLabRepository {
 }
 
 export interface RepositoryOwner {
+    id: number;
     display_name: string;
 }
 
