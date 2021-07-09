@@ -39,9 +39,7 @@
                     you can always modify your project workspace after it has been created.
                 </p>
 
-                <company-templates-list />
-                <tuleap-template-list />
-                <advanced-template-list />
+                <template-selection />
                 <template-footer />
             </div>
         </div>
@@ -51,19 +49,15 @@
 <script lang="ts">
 import Vue from "vue";
 import { Component } from "vue-property-decorator";
-import TuleapTemplateList from "./Tuleap/TuleapTemplateList.vue";
 import NewProjectBoxes from "./NewProjectBoxesSvg.vue";
 import TemplateFooter from "./TemplateFooter.vue";
-import CompanyTemplatesList from "./Company/CompanyTemplateList.vue";
-import AdvancedTemplateList from "./Advanced/AdvancedTemplateList.vue";
+import TemplateSelection from "./TemplateSelection.vue";
 
 @Component({
     components: {
-        AdvancedTemplateList,
-        CompanyTemplatesList,
-        TemplateFooter,
         NewProjectBoxes,
-        TuleapTemplateList,
+        TemplateSelection,
+        TemplateFooter,
     },
 })
 export default class ProjectList extends Vue {}

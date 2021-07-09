@@ -21,17 +21,16 @@ $card-border-margin: 150px;
 
 .project-registration-default-templates-section {
     display: flex;
-    flex-wrap: wrap;
+    flex-direction: column;
 }
 
 .project-registration-template-card {
     display: flex;
-    width: calc(50% - var(--tlp-small-spacing));
     min-height: 120px;
-    margin: 0 var(--tlp-small-spacing) var(--tlp-medium-spacing) 0;
+    margin: var(--tlp-medium-spacing) 0 0;
 
-    &:nth-child(even) {
-        margin: 0 0 var(--tlp-medium-spacing) var(--tlp-small-spacing);
+    &:first-child {
+        margin: 0;
     }
 }
 
@@ -112,24 +111,4 @@ $card-border-margin: 150px;
 
 .user-project-list-select {
     margin: 0 0 var(--tlp-small-spacing);
-}
-
-@media screen and (max-width: 1200px) {
-    .project-registration-default-templates-section {
-        display: flex;
-        flex-direction: column;
-    }
-
-    .project-registration-template-card {
-        width: 100%;
-        margin: 0 0 var(--tlp-medium-spacing);
-
-        &:nth-child(even) {
-            margin: 0 0 var(--tlp-medium-spacing);
-        }
-
-        &:last-child {
-            margin: 0;
-        }
-    }
 }

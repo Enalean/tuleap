@@ -10,10 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 2.3\n"
-
-msgid "%s templates"
-msgstr "Modèles de projet %s"
+"X-Generator: Poedit 2.4.3\n"
 
 msgid ""
 "<b>You will receive an email</b> when the administrator has validated it."
@@ -167,9 +164,6 @@ msgstr ""
 "Le template de projet que vous allez sélectionner va instancier quelques "
 "services. Ne vous inquiétez pas, vous pourrez toujours modifier votre espace "
 "projet, une fois que celui-ci aura été créé."
-
-msgid "Tuleap templates"
-msgstr "Modèles de projet Tuleap"
 
 msgid "Visibility"
 msgstr "Visibilité"

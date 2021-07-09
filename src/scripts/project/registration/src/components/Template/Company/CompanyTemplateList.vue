@@ -20,10 +20,6 @@
 
 <template>
     <div class="project-registration-templates" v-if="company_templates.length > 0">
-        <h3 data-test="project-registration-company-template-title">
-            {{ platform_template_name }}
-        </h3>
-
         <section class="project-registration-default-templates-section">
             <template-card
                 v-for="template of company_templates"
@@ -39,7 +35,6 @@ import Vue from "vue";
 import { Component } from "vue-property-decorator";
 import TemplateCard from "../TemplateCard.vue";
 import type { TemplateData } from "../../../type";
-import { sprintf } from "sprintf-js";
 import { namespace } from "vuex-class";
 const configuration = namespace("configuration");
 
@@ -49,15 +44,5 @@ const configuration = namespace("configuration");
 export default class TuleapCompanyTemplateList extends Vue {
     @configuration.State
     company_templates!: TemplateData[];
-
-    @configuration.State
-    company_name!: string;
-
-    get platform_template_name(): string {
-        if (this.company_name === "Tuleap") {
-            return this.$gettext("Custom templates");
-        }
-        return sprintf(this.$gettext("%s templates"), this.company_name);
-    }
 }
 </script>

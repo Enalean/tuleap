@@ -23,25 +23,21 @@ import { shallowMount } from "@vue/test-utils";
 import { createProjectRegistrationLocalVue } from "../../helpers/local-vue-for-tests";
 import ProjectList from "./AllProjectTemplates.vue";
 import NewProjectBoxes from "./NewProjectBoxesSvg.vue";
-import TuleapTemplateList from "./Tuleap/TuleapTemplateList.vue";
+import TemplateSelection from "./TemplateSelection.vue";
 import TemplateFooter from "./TemplateFooter.vue";
-import CompanyTemplateList from "./Company/CompanyTemplateList.vue";
-import AdvancedTemplateList from "./Advanced/AdvancedTemplateList.vue";
 
-describe("ProjectList", () => {
+describe("AllProjectTemplates", () => {
     let factory: Wrapper<ProjectList>;
     beforeEach(async () => {
         factory = shallowMount(ProjectList, {
             localVue: await createProjectRegistrationLocalVue(),
         });
     });
-    it("Spawns the ProjectTemplates component", () => {
+    it("Spawns the AllProjectTemplates component", () => {
         const wrapper = factory;
 
         expect(wrapper.findComponent(NewProjectBoxes).exists()).toBe(true);
-        expect(wrapper.findComponent(TuleapTemplateList).exists()).toBe(true);
+        expect(wrapper.findComponent(TemplateSelection).exists()).toBe(true);
         expect(wrapper.findComponent(TemplateFooter).exists()).toBe(true);
-        expect(wrapper.findComponent(CompanyTemplateList).exists()).toBe(true);
-        expect(wrapper.findComponent(AdvancedTemplateList).exists()).toBe(true);
     });
 });

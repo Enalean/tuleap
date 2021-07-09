@@ -20,8 +20,6 @@
 
 <template>
     <div class="project-registration-templates" v-if="tuleap_templates.length > 0">
-        <h3 v-translate>Tuleap templates</h3>
-
         <section
             class="project-registration-default-templates-section"
             data-test="tuleap-templates-section"
