@@ -19,23 +19,21 @@
  * along with ForgeUpgrade. If not, see <http://www.gnu.org/licenses/>.
  */
 
+namespace Tuleap\ForgeUpgrade\Bucket;
+
+use PDO;
 use Psr\Log\LoggerInterface;
 
 /**
  * Wrap access to the DB and provide a set of convenient tools to write
  * DB upgrades
  */
-class ForgeUpgrade_Bucket_Db // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+class BucketDb
 {
-    public $dbh;
+    public PDO $dbh;
 
-    protected $log;
+    protected LoggerInterface $log;
 
-    /**
-     * Constructor
-     *
-     * @param PDO $dbh PDO database handler
-     */
     public function __construct(PDO $dbh, LoggerInterface $logger)
     {
         $this->dbh = $dbh;
@@ -44,88 +42,57 @@ class ForgeUpgrade_Bucket_Db // phpcs:ignore PSR1.Classes.ClassDeclaration.Missi
 
     /**
      * Return true if the given table name already exists into the database
-     *
-     * @param String $tableName Table name
-     *
-     * @return bool
      */
-    public function tableNameExists($tableName)
+    public function tableNameExists(string $tableName): bool
     {
         $sql = 'SHOW TABLES LIKE ' . $this->dbh->quote($tableName);
         $res = $this->dbh->query($sql);
-        if ($res && $res->fetch() !== false) {
-            return true;
-        } else {
-            return false;
-        }
+
+        return $res && $res->fetch() !== false;
     }
 
     /**
      * Return true if the given column name already exists into the database
-     *
-     * @param String $tableName  Table name
-     * @param String $columnName Column name
-     *
-     * @return bool
      */
-    public function columnNameExists($tableName, $columnName)
+    public function columnNameExists(string $tableName, string $columnName): bool
     {
         $sql = "SHOW COLUMNS FROM `$tableName` LIKE " . $this->dbh->quote($columnName);
 
         $res = $this->dbh->query($sql);
-        if ($res && $res->fetch() !== false) {
-            return true;
-        } else {
-            return false;
-        }
+
+        return $res && $res->fetch() !== false;
     }
 
     /**
      * Return true if the given index name on the table already exists into the database
-     *
-     * @param String $tableName Table name
-     * @param String $index     Index
-     *
-     * @return bool
      */
-    public function indexNameExists($tableName, $index)
+    public function indexNameExists(string $tableName, string $index): bool
     {
         $sql = "SHOW INDEX FROM `$tableName` WHERE Key_name LIKE " . $this->dbh->quote($index);
+
         $res = $this->dbh->query($sql);
-        if ($res && $res->fetch() !== false) {
-            return true;
-        } else {
-            return false;
-        }
+
+        return $res && $res->fetch() !== false;
     }
 
     /**
      * Return true if a primary key already exists on this table
-     *
-     * @param String $tableName      Table name
-     *
-     * @return bool
      */
-    public function primaryKeyExists($tableName)
+    public function primaryKeyExists(string $tableName): bool
     {
         $sql = "SHOW INDEXES FROM `$tableName` WHERE Key_name = 'PRIMARY'";
+
         $res = $this->dbh->query($sql);
-        if ($res && $res->fetch() !== false) {
-            return true;
-        } else {
-            return false;
-        }
+
+        return $res && $res->fetch() !== false;
     }
 
     /**
-     * Create new table
-     *
      * Create new table if not already exists and report errors.
      *
-     * @param String             $tableName Table name
-     * @param String             $sql       The create table statement
+     * @throws BucketDbException
      */
-    public function createTable($tableName, $sql)
+    public function createTable(string $tableName, string $sql): void
     {
         $this->log->info('Add table ' . $tableName);
         if (! $this->tableNameExists($tableName)) {
@@ -134,7 +101,7 @@ class ForgeUpgrade_Bucket_Db // phpcs:ignore PSR1.Classes.ClassDeclaration.Missi
                 $info = $this->dbh->errorInfo();
                 $msg  = 'An error occured adding table ' . $tableName . ': ' . $info[2] . ' (' . $info[1] . ' - ' . $info[0] . ')';
                 $this->log->error($msg);
-                throw new ForgeUpgrade_Bucket_Db_Exception($msg);
+                throw new BucketDbException($msg);
             }
             $this->log->info($tableName . ' successfully added');
         } else {
@@ -143,14 +110,11 @@ class ForgeUpgrade_Bucket_Db // phpcs:ignore PSR1.Classes.ClassDeclaration.Missi
     }
 
     /**
-     * Delete table
-     *
      * Delete table if exists and report errors.
      *
-     * @param String             $tableName Table name
-     * @param String             $sql       The delete table statement (optionnal)
+     * @throws BucketDbException
      */
-    public function dropTable($tableName, $sql = '')
+    public function dropTable(string $tableName, string $sql = ''): void
     {
         $this->log->info('Delete table ' . $tableName);
         if ($this->tableNameExists($tableName)) {
@@ -162,7 +126,7 @@ class ForgeUpgrade_Bucket_Db // phpcs:ignore PSR1.Classes.ClassDeclaration.Missi
                 $info = $this->dbh->errorInfo();
                 $msg  = 'An error occured deleting table ' . $tableName . ': ' . $info[2] . ' (' . $info[1] . ' - ' . $info[0] . ')';
                 $this->log->error($msg);
-                throw new ForgeUpgrade_Bucket_Db_Exception($msg);
+                throw new BucketDbException($msg);
             }
             $this->log->info($tableName . ' successfully deleted');
         } else {
@@ -171,24 +135,20 @@ class ForgeUpgrade_Bucket_Db // phpcs:ignore PSR1.Classes.ClassDeclaration.Missi
     }
 
     /**
-     * Add index
-     *
      * Alter table to add index and report errors.
      *
-     * @param String             $tableName Table name
-     * @param String             $index     The index
-     * @param String             $sql       The add index statement
+     * @throws BucketDbException
      */
-    public function addIndex($tableName, $index, $sql)
+    public function addIndex(string $tableName, string $index, string $sql): void
     {
         $this->log->info('Add index ' . $tableName);
         if (! $this->indexNameExists($tableName, $index)) {
             $res = $this->dbh->exec($sql);
             if ($res === false) {
                 $info = $this->dbh->errorInfo();
-                $msg  = 'An error occured adding index to ' . $tableName . ': ' . $info[2] . ' (' . $info[1] . ' - ' . $info[0] . ')';
+                $msg  = 'An error occurred adding index to ' . $tableName . ': ' . $info[2] . ' (' . $info[1] . ' - ' . $info[0] . ')';
                 $this->log->error($msg);
-                throw new ForgeUpgrade_Bucket_Db_Exception($msg);
+                throw new BucketDbException($msg);
             }
             $this->log->info($index . ' successfully added index');
         } else {
@@ -197,36 +157,25 @@ class ForgeUpgrade_Bucket_Db // phpcs:ignore PSR1.Classes.ClassDeclaration.Missi
     }
 
     /**
-     * Return true if given table has a given propertie
-     *
-     * @param String $tableName   Table name
-     * @param String $schema      Schema
-     * @param String $property    Field
-     *
-     * @return bool
+     * Return true if given table has a given property
      */
-    public function propertyExists($tableName, $schema, $property)
+    public function propertyExists(string $tableName, string $schema, string $property): bool
     {
-        $sql = 'SELECT table_name FROM ' . $schema . ' WHERE ' . $property . ' AND table_name LIKE ' . $this->dbh->quote($tableName);
+        $sql = 'SELECT table_name FROM ' . $schema . ' WHERE ' . $property . ' AND table_name LIKE ' . $this->dbh->quote(
+            $tableName
+        );
+
         $res = $this->dbh->query($sql);
-        if ($res && $res->fetch() !== false) {
-            return true;
-        } else {
-            return false;
-        }
+
+        return $res && $res->fetch() !== false;
     }
 
     /**
-     * Alter table
-     *
      * Alter table to modify field value and report errors.
      *
-     * @param String             $tableName   Table name
-     * @param String             $schema      Schema
-     * @param String             $property    Field
-     * @param String             $sql         The alter table statement
+     * @throws BucketDbException
      */
-    public function alterTable($tableName, $schema, $property, $sql)
+    public function alterTable(string $tableName, string $schema, string $property, string $sql): void
     {
         $this->log->info('Alter table ' . $tableName);
         if (! $this->propertyExists($tableName, $schema, $property)) {
@@ -235,7 +184,7 @@ class ForgeUpgrade_Bucket_Db // phpcs:ignore PSR1.Classes.ClassDeclaration.Missi
                 $info = $this->dbh->errorInfo();
                 $msg  = 'An error occured while altering ' . $tableName . ': ' . $info[2] . ' (' . $info[1] . ' - ' . $info[0] . ')';
                 $this->log->error($msg);
-                throw new ForgeUpgrade_Bucket_Db_Exception($msg);
+                throw new BucketDbException($msg);
             }
             $this->log->info($tableName . ' successfully altered table');
         } else {
@@ -244,15 +193,11 @@ class ForgeUpgrade_Bucket_Db // phpcs:ignore PSR1.Classes.ClassDeclaration.Missi
     }
 
     /**
-     * Add primary key
-     *
      * Alter table to add primary key and report errors.
      *
-     * @param String             $tableName      Table name
-     * @param String             $primaryKey     The primary key
-     * @param String             $sql            The add pk statement
+     * @throws BucketDbException
      */
-    public function addPrimaryKey($tableName, $primaryKey, $sql)
+    public function addPrimaryKey(string $tableName, string $primaryKey, string $sql): void
     {
         $this->log->info('Add primary key ' . $tableName);
         if (! $this->primaryKeyExists($tableName)) {
@@ -261,7 +206,7 @@ class ForgeUpgrade_Bucket_Db // phpcs:ignore PSR1.Classes.ClassDeclaration.Missi
                 $info = $this->dbh->errorInfo();
                 $msg  = 'An error occured adding primary key to ' . $tableName . ': ' . $info[2] . ' (' . $info[1] . ' - ' . $info[0] . ')';
                 $this->log->error($msg);
-                throw new ForgeUpgrade_Bucket_Db_Exception($msg);
+                throw new BucketDbException($msg);
             }
             $this->log->info($primaryKey . ' successfully added pk');
         } else {

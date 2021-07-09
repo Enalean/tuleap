@@ -19,6 +19,10 @@
  * along with ForgeUpgrade. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class ForgeUpgrade_Bucket_Exception_UpgradeNotComplete extends Exception
+declare(strict_types=1);
+
+namespace Tuleap\ForgeUpgrade\Bucket;
+
+class BucketApiNotFoundException extends \Exception
 {
 }

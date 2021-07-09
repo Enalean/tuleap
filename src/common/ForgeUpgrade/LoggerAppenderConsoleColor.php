@@ -19,7 +19,9 @@
  * along with ForgeUpgrade. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class LoggerAppenderConsoleColor // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
+namespace Tuleap\ForgeUpgrade;
+
+class LoggerAppenderConsoleColor
 {
 
     public const BLACK   = "\033[30m";

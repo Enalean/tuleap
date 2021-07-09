@@ -1,74 +1,83 @@
 <?php
-/**
- * Copyright (c) Enalean SAS, 2011-Present. All Rights Reserved.
- * Copyright (c) STMicroelectronics, 2010. All Rights Reserved.
+/*
+ * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
  *
- * Originally written by Manuel Vacelet
+ * This file is a part of Tuleap.
  *
- * ForgeUpgrade is free software; you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as published by
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * ForgeUpgrade is distributed in the hope that it will be useful,
+ * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public License
- * along with ForgeUpgrade. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
+declare(strict_types=1);
+
+namespace Tuleap\ForgeUpgrade;
+
+use Tuleap\ForgeUpgrade\Bucket\BucketApiNotFoundException;
 use Psr\Log\LoggerInterface;
+use Tuleap\ForgeUpgrade\Bucket\BucketDb;
 
 /**
  * A bucket is a migration scenario
  */
-abstract class ForgeUpgrade_Bucket // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+abstract class Bucket // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 {
     protected LoggerInterface $log;
-    protected $api;
 
-    protected bool $dryRun = true;
-    protected $path        = '';
+    /** @var array<string, BucketDb> */
+    protected array $api;
+
+    protected string $path = '';
+    private string $id;
 
     final public function __construct(LoggerInterface $logger)
     {
         $this->log = $logger;
     }
 
-    public function setAllApi(array $api)
+    public function setAllApi(array $api): void
     {
         $this->api = $api;
     }
 
-    public function setApi($api)
+    public function setApi(BucketDb $api): void
     {
         $this->api[get_class($api)] = $api;
     }
 
-    public function getApi($key)
+    public function getApi(string $key): BucketDb
     {
         if (isset($this->api[$key])) {
             return $this->api[$key];
         }
-        throw new ForgeUpgrade_Bucket_Exception_ApiNotFound('API "' . $key . '" not found');
+        throw new BucketApiNotFoundException('API "' . $key . '" not found');
     }
 
     /**
      * Return a string with the description of the upgrade
      *
-     * @return String
+     * @return string
      */
     abstract public function description();
 
     /**
      * Allow to define a dependency list
      *
-     * @return Array
+     * @return array
      */
     public function dependsOn()
     {
+        return [];
     }
 
     /**
@@ -92,6 +101,8 @@ abstract class ForgeUpgrade_Bucket // phpcs:ignore PSR1.Classes.ClassDeclaration
      *    - this field is not present in the existing table
      *    - you doesn't create the field in 'up'
      * -> This should throw an exception
+     *
+     * @return void
      */
     public function preUp()
     {
@@ -99,6 +110,8 @@ abstract class ForgeUpgrade_Bucket // phpcs:ignore PSR1.Classes.ClassDeclaration
 
     /**
      * Perform the upgrade
+     *
+     * @return void
      */
     abstract public function up();
 
@@ -112,42 +125,29 @@ abstract class ForgeUpgrade_Bucket // phpcs:ignore PSR1.Classes.ClassDeclaration
      * time)
      *
      * If an error is detected, this method should throw an Exception
+     *
+     * @return void
      */
     public function postUp()
     {
     }
 
-
-
-
-
-
-    public function setDryRun($mode)
-    {
-        $this->dryRun = ($mode === true);
-    }
-
-    public function getDryRun()
-    {
-        return $this->dryRun();
-    }
-
-    public function setPath($path)
+    public function setPath(string $path): void
     {
         $this->path = $path;
     }
 
-    public function getPath()
+    public function getPath(): string
     {
         return $this->path;
     }
 
-    public function setId($id)
+    public function setId(string $id): void
     {
         $this->id = $id;
     }
 
-    public function getId()
+    public function getId(): string
     {
         return $this->id;
     }
