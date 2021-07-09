@@ -58,19 +58,6 @@ export async function handleErrors(
     }
 }
 
-export async function handleErrorsForLock(
-    context: ActionContext<ErrorState, ErrorState>,
-    exception: DocumentException
-): Promise<void> {
-    try {
-        const json = await exception.response.json();
-        context.commit("error/setLockError", getErrorMessage(json));
-    } catch (error) {
-        context.commit("error/setLockError", "Internal server error");
-        throw exception;
-    }
-}
-
 export async function handleErrorsForDocument(
     context: ActionContext<ErrorState, ErrorState>,
     exception: DocumentException

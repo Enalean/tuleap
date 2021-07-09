@@ -17,8 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import * as mutations from "./lock-mutations.js";
-import * as actions from "./lock-actions.js";
+import * as mutations from "./lock-mutations";
+import * as actions from "./lock-actions";
 
 export default {
     namespaced: true,

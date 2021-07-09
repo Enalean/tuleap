@@ -22,17 +22,22 @@ import * as rest_querier from "../../api/rest-querier";
 import { TYPE_EMBEDDED, TYPE_FILE } from "../../constants";
 import { mockFetchError } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper";
 import { lockDocument, unlockDocument } from "./lock-actions";
+import type { ActionContext } from "vuex";
+import type { Embedded, ItemFile, State } from "../../type";
 
 describe("lock", () => {
-    let postLockFile, getItem, context;
+    let postLockFile: jest.SpyInstance;
+    let getItem: jest.SpyInstance;
+    let context: ActionContext<State, State>;
 
     beforeEach(() => {
-        context = { commit: jest.fn() };
+        context = { commit: jest.fn(), dispatch: jest.fn() } as unknown as ActionContext<
+            State,
+            State
+        >;
 
-        postLockFile = jest
-            .spyOn(lock_rest_querier, "postLockFile")
-            .mockReturnValue(Promise.resolve());
-        jest.spyOn(lock_rest_querier, "postLockEmbedded").mockReturnValue(Promise.resolve());
+        postLockFile = jest.spyOn(lock_rest_querier, "postLockFile").mockResolvedValue();
+        jest.spyOn(lock_rest_querier, "postLockEmbedded").mockResolvedValue();
         getItem = jest.spyOn(rest_querier, "getItem");
     });
 
@@ -41,25 +46,24 @@ describe("lock", () => {
             id: 123,
             title: "My file",
             type: TYPE_FILE,
-        };
+        } as ItemFile;
 
-        getItem.mockReturnValue(
-            Promise.resolve({
-                id: 123,
-                title: "My file",
-                type: TYPE_FILE,
-                lock_info: {
-                    user_id: 123,
-                },
-            })
-        );
+        const updated_item = {
+            id: 123,
+            title: "My file",
+            type: TYPE_FILE,
+            lock_info: {
+                user_id: 123,
+            },
+        };
+        getItem.mockReturnValue(Promise.resolve(updated_item));
 
         await lockDocument(context, item_to_lock);
 
-        expect(context.commit).toHaveBeenCalledWith("replaceLockInfoWithNewVersion", [
-            item_to_lock,
-            { user_id: 123 },
-        ]);
+        expect(context.commit).toHaveBeenCalledWith("replaceLockInfoWithNewVersion", {
+            item: item_to_lock,
+            lock_info: updated_item.lock_info,
+        });
     });
 
     it("should raise a translated exception when user can't lock a document", async () => {
@@ -67,7 +71,7 @@ describe("lock", () => {
             id: 123,
             title: "My file",
             type: TYPE_FILE,
-        };
+        } as ItemFile;
 
         mockFetchError(postLockFile, {
             status: 400,
@@ -80,22 +84,11 @@ describe("lock", () => {
 
         await lockDocument(context, item_to_lock);
 
-        expect(context.commit).toHaveBeenCalledWith("error/setLockError", "Item is already locked");
-    });
-
-    it("should raise a generic error message when no information is given when user can't lock a document", async () => {
-        const item_to_lock = {
-            id: 123,
-            title: "My file",
-            type: TYPE_FILE,
-        };
-
-        mockFetchError(postLockFile, {
-            status: 400,
-        });
-
-        await expect(lockDocument(context, item_to_lock)).rejects.toBeDefined();
-        expect(context.commit).toHaveBeenCalledWith("error/setLockError", "Internal server error");
+        expect(context.dispatch).toHaveBeenCalledWith(
+            "error/handleErrorsForLock",
+            expect.any(Object),
+            { root: true }
+        );
     });
 
     it("should lock an embedded file and then update its information", async () => {
@@ -103,7 +96,7 @@ describe("lock", () => {
             id: 123,
             title: "My file",
             type: TYPE_EMBEDDED,
-        };
+        } as Embedded;
 
         getItem.mockReturnValue(
             Promise.resolve({
@@ -118,21 +111,25 @@ describe("lock", () => {
 
         await lockDocument(context, item_to_lock);
 
-        expect(context.commit).toHaveBeenCalledWith("replaceLockInfoWithNewVersion", [
-            item_to_lock,
-            { user_id: 123 },
-        ]);
+        expect(context.commit).toHaveBeenCalledWith("replaceLockInfoWithNewVersion", {
+            item: item_to_lock,
+            lock_info: { user_id: 123 },
+        });
     });
 });
 
 describe("unlock", () => {
-    let getItem, context;
+    let getItem: jest.SpyInstance;
+    let context: ActionContext<State, State>;
 
     beforeEach(() => {
-        context = { commit: jest.fn() };
+        context = { commit: jest.fn(), dispatch: jest.fn() } as unknown as ActionContext<
+            State,
+            State
+        >;
 
-        jest.spyOn(lock_rest_querier, "deleteLockFile").mockReturnValue(Promise.resolve());
-        jest.spyOn(lock_rest_querier, "deleteLockEmbedded").mockReturnValue(Promise.resolve());
+        jest.spyOn(lock_rest_querier, "deleteLockFile").mockResolvedValue();
+        jest.spyOn(lock_rest_querier, "deleteLockEmbedded").mockResolvedValue();
         getItem = jest.spyOn(rest_querier, "getItem");
     });
 
@@ -141,25 +138,24 @@ describe("unlock", () => {
             id: 123,
             title: "My file",
             type: TYPE_FILE,
-        };
+        } as ItemFile;
 
-        getItem.mockReturnValue(
-            Promise.resolve({
-                id: 123,
-                title: "My file",
-                type: TYPE_FILE,
-                lock_info: {
-                    user_id: 123,
-                },
-            })
-        );
+        const updated_item = {
+            id: 123,
+            title: "My file",
+            type: TYPE_FILE,
+            lock_info: {
+                user_id: 123,
+            },
+        };
+        getItem.mockReturnValue(Promise.resolve(updated_item));
 
         await unlockDocument(context, item_to_lock);
 
-        expect(context.commit).toHaveBeenCalledWith("replaceLockInfoWithNewVersion", [
-            item_to_lock,
-            { user_id: 123 },
-        ]);
+        expect(context.commit).toHaveBeenCalledWith("replaceLockInfoWithNewVersion", {
+            item: item_to_lock,
+            lock_info: updated_item.lock_info,
+        });
     });
 
     it("should unlock an embedded file and then update its information", async () => {
@@ -167,24 +163,23 @@ describe("unlock", () => {
             id: 123,
             title: "My file",
             type: TYPE_EMBEDDED,
-        };
+        } as Embedded;
 
-        getItem.mockReturnValue(
-            Promise.resolve({
-                id: 123,
-                title: "My embedded",
-                type: TYPE_EMBEDDED,
-                lock_info: {
-                    user_id: 123,
-                },
-            })
-        );
+        const updated_item = {
+            id: 123,
+            title: "My embedded",
+            type: TYPE_EMBEDDED,
+            lock_info: {
+                user_id: 123,
+            },
+        };
+        getItem.mockReturnValue(Promise.resolve(updated_item));
 
         await unlockDocument(context, item_to_lock);
 
-        expect(context.commit).toHaveBeenCalledWith("replaceLockInfoWithNewVersion", [
-            item_to_lock,
-            { user_id: 123 },
-        ]);
+        expect(context.commit).toHaveBeenCalledWith("replaceLockInfoWithNewVersion", {
+            item: item_to_lock,
+            lock_info: updated_item.lock_info,
+        });
     });
 });

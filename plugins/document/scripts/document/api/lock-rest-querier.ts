@@ -33,82 +33,82 @@ export {
     deleteLockEmpty,
 };
 
-function postLockFile(item: ItemFile): Promise<Response> {
+async function postLockFile(item: ItemFile): Promise<void> {
     const headers = {
         "content-type": "application/json",
     };
 
     const escaped_item_id = encodeURIComponent(item.id);
 
-    return post(`/api/docman_files/${escaped_item_id}/lock`, { headers });
+    await post(`/api/docman_files/${escaped_item_id}/lock`, { headers });
 }
 
-function deleteLockFile(item: ItemFile): Promise<Response> {
+async function deleteLockFile(item: ItemFile): Promise<void> {
     const escaped_item_id = encodeURIComponent(item.id);
 
-    return del(`/api/docman_files/${escaped_item_id}/lock`);
+    await del(`/api/docman_files/${escaped_item_id}/lock`);
 }
 
-function postLockEmbedded(item: Embedded): Promise<Response> {
+async function postLockEmbedded(item: Embedded): Promise<void> {
     const headers = {
         "content-type": "application/json",
     };
 
     const escaped_item_id = encodeURIComponent(item.id);
 
-    return post(`/api/docman_embedded_files/${escaped_item_id}/lock`, { headers });
+    await post(`/api/docman_embedded_files/${escaped_item_id}/lock`, { headers });
 }
 
-function deleteLockEmbedded(item: Embedded): Promise<Response> {
+async function deleteLockEmbedded(item: Embedded): Promise<void> {
     const escaped_item_id = encodeURIComponent(item.id);
 
-    return del(`/api/docman_embedded_files/${escaped_item_id}/lock`);
+    await del(`/api/docman_embedded_files/${escaped_item_id}/lock`);
 }
 
-function postLockWiki(item: Wiki): Promise<Response> {
+async function postLockWiki(item: Wiki): Promise<void> {
     const headers = {
         "content-type": "application/json",
     };
 
     const escaped_item_id = encodeURIComponent(item.id);
 
-    return post(`/api/docman_wikis/${escaped_item_id}/lock`, { headers });
+    await post(`/api/docman_wikis/${escaped_item_id}/lock`, { headers });
 }
 
-function deleteLockWiki(item: Wiki): Promise<Response> {
+async function deleteLockWiki(item: Wiki): Promise<void> {
     const escaped_item_id = encodeURIComponent(item.id);
 
-    return del(`/api/docman_wikis/${escaped_item_id}/lock`);
+    await del(`/api/docman_wikis/${escaped_item_id}/lock`);
 }
 
-function postLockLink(item: Link): Promise<Response> {
+async function postLockLink(item: Link): Promise<void> {
     const headers = {
         "content-type": "application/json",
     };
 
     const escaped_item_id = encodeURIComponent(item.id);
 
-    return post(`/api/docman_links/${escaped_item_id}/lock`, { headers });
+    await post(`/api/docman_links/${escaped_item_id}/lock`, { headers });
 }
 
-function deleteLockLink(item: Link): Promise<Response> {
+async function deleteLockLink(item: Link): Promise<void> {
     const escaped_item_id = encodeURIComponent(item.id);
 
-    return del(`/api/docman_links/${escaped_item_id}/lock`);
+    await del(`/api/docman_links/${escaped_item_id}/lock`);
 }
 
-function postLockEmpty(item: Empty): Promise<Response> {
+async function postLockEmpty(item: Empty): Promise<void> {
     const headers = {
         "content-type": "application/json",
     };
 
     const escaped_item_id = encodeURIComponent(item.id);
 
-    return post(`/api/docman_empty_documents/${escaped_item_id}/lock`, { headers });
+    await post(`/api/docman_empty_documents/${escaped_item_id}/lock`, { headers });
 }
 
-function deleteLockEmpty(item: Empty): Promise<Response> {
+async function deleteLockEmpty(item: Empty): Promise<void> {
     const escaped_item_id = encodeURIComponent(item.id);
 
-    return del(`/api/docman_empty_documents/${escaped_item_id}/lock`);
+    await del(`/api/docman_empty_documents/${escaped_item_id}/lock`);
 }

@@ -17,6 +17,12 @@
  *  along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export function replaceLockInfoWithNewVersion(state, [existing_item, lock_info]) {
-    existing_item.lock_info = lock_info;
+import type { Item, LockInfo, State } from "../../type";
+
+interface payloadReplaceLockInfo {
+    item: Item;
+    lock_info: LockInfo;
+}
+export function replaceLockInfoWithNewVersion(state: State, payload: payloadReplaceLockInfo): void {
+    payload.item.lock_info = payload.lock_info;
 }
