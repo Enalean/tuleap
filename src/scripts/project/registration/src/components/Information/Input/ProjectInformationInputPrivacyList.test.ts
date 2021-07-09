@@ -76,7 +76,7 @@ describe("ProjectInformationInputPrivacyList", () => {
 
         it("Should select the 'Private' by default", async () => {
             const configuration_state: ConfigurationState = {
-                project_default_visibility: "private-wo-restr",
+                project_default_visibility: "private",
                 can_user_choose_project_visibility: true,
             } as ConfigurationState;
 
@@ -91,9 +91,9 @@ describe("ProjectInformationInputPrivacyList", () => {
                 },
             });
 
-            expect(
-                (wrapper.get("[data-test=private-wo-restr]").element as HTMLOptionElement).selected
-            ).toBe(true);
+            expect((wrapper.get("[data-test=private]").element as HTMLOptionElement).selected).toBe(
+                true
+            );
         });
 
         it("Should select the 'Private incl. restricted' by default", async () => {
@@ -140,8 +140,8 @@ describe("ProjectInformationInputPrivacyList", () => {
                 },
             });
             expect(wrapper.find("[data-test=unrestricted]").exists()).toBe(false);
-            expect(wrapper.find("[data-test=private]").exists()).toBe(false);
-            expect(wrapper.find("[data-test=private-wo-restr]").exists()).toBe(true);
+            expect(wrapper.find("[data-test=private]").exists()).toBe(true);
+            expect(wrapper.find("[data-test=private-wo-restr]").exists()).toBe(false);
             expect(wrapper.find("[data-test=public]").exists()).toBe(true);
         });
 

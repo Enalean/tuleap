@@ -39,21 +39,21 @@
             Public
         </option>
         <option
-            v-if="are_restricted_users_allowed"
             value="private"
             v-bind:selected="is_private_selected"
             data-test="private"
             v-translate
         >
-            Private incl. restricted
+            Private
         </option>
         <option
             value="private-wo-restr"
+            v-if="are_restricted_users_allowed"
             v-bind:selected="is_private_without_restricted_selected"
             data-test="private-wo-restr"
             v-translate
         >
-            Private
+            Private without restricted
         </option>
     </select>
 </template>
@@ -90,7 +90,7 @@ export default class ProjectInformationInputPrivacyList extends Vue {
 
     select2_visibility_select: Select2Plugin | null = null;
 
-    selected_visibility = ACCESS_PRIVATE_WO_RESTRICTED;
+    selected_visibility = ACCESS_PRIVATE;
 
     mounted(): void {
         this.selected_visibility = this.project_default_visibility;
@@ -166,16 +166,16 @@ export default class ProjectInformationInputPrivacyList extends Vue {
                     "Project content is available to all authenticated users. Please note that more restrictive permissions might exist on some items."
                 );
             case ACCESS_PRIVATE:
-                return this.$gettext(
-                    "Only project members can access project content. Restricted users are allowed in this project."
-                );
-            case ACCESS_PRIVATE_WO_RESTRICTED:
                 if (this.are_restricted_users_allowed) {
                     return this.$gettext(
-                        "Only project members can access project content. Restricted users are NOT allowed in this project."
+                        "Only project members can access project content. Restricted users can be added to the project."
                     );
                 }
                 return this.$gettext("Only project members can access project content.");
+            case ACCESS_PRIVATE_WO_RESTRICTED:
+                return this.$gettext(
+                    "Only project members can access project content. Restricted users can NOT be added in this project."
+                );
             default:
                 throw new Error("Unable to retrieve the selected visibility type");
         }
