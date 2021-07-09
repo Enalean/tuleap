@@ -165,27 +165,18 @@ class ForgeUpgradeConfig
         }
     }
 
-    public function isSystemUpToDate()
+    public function isSystemUpToDate(): bool
     {
-        $output = $this->execute(self::COMMAND_CHECK_UPDATE);
-
-        if ($this->checkForgeUpgradeReturn($output)) {
-            return true;
-        }
-        return false;
+        return $this->execute(self::COMMAND_CHECK_UPDATE);
     }
 
-    private function checkForgeUpgradeReturn(array $output)
+    private function execute(string $cmd): bool
     {
-        $string = implode('', $output);
-        if (strpos($string, 'INFO - System up-to-date') !== false) {
-            return true;
+        try {
+            $this->command->exec(self::FORGEUPGRADE_PATH . ' --config=' . escapeshellarg($this->filePath) . ' ' . escapeshellarg($cmd));
+        } catch (System_Command_CommandException $exception) {
+            return false;
         }
-        return false;
-    }
-
-    private function execute($cmd)
-    {
-        return $this->command->exec(self::FORGEUPGRADE_PATH . ' --config=' . escapeshellarg($this->filePath) . ' ' . escapeshellarg($cmd));
+        return true;
     }
 }

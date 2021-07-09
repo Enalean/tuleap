@@ -125,32 +125,25 @@ class ForgeUpgradeConfigTest extends \PHPUnit\Framework\TestCase // phpcs:ignore
         $this->forgeupgrade_config->isSystemUpToDate();
     }
 
-    public function testItReturnsTrueWhenForgeUpgradeTellsThatSystemIsUpToDate()
+    public function testItReturnsTrueWhenForgeUpgradeTellsThatSystemIsUpToDate(): void
     {
         $this->command             = \Mockery::spy(\System_Command::class);
-        $this->config_file         = dirname(__FILE__) . '/_fixtures/forgeupgrade-config-docman.ini';
+        $this->config_file         = __DIR__ . '/_fixtures/forgeupgrade-config-docman.ini';
         $this->forgeupgrade_config = new ForgeUpgradeConfig($this->command, $this->config_file);
 
-        $this->command->shouldReceive('exec')->andReturns([
-            '[32mINFO - System up-to-date',
-            '[0m',
-        ]);
+        $this->command->shouldReceive('exec');
 
-        $this->assertTrue($this->forgeupgrade_config->isSystemUpToDate());
+        self::assertTrue($this->forgeupgrade_config->isSystemUpToDate());
     }
 
-    public function testItReturnsFalseWhenForgeUpgradeTellsThereArePendingBuckets()
+    public function testItReturnsFalseWhenForgeUpgradeTellsThereArePendingBuckets(): void
     {
         $this->command             = \Mockery::spy(\System_Command::class);
-        $this->config_file         = dirname(__FILE__) . '/_fixtures/forgeupgrade-config-docman.ini';
+        $this->config_file         = __DIR__ . '/_fixtures/forgeupgrade-config-docman.ini';
         $this->forgeupgrade_config = new ForgeUpgradeConfig($this->command, $this->config_file);
 
-        $this->command->shouldReceive('exec')->andReturns([
-            '/usr/share/tuleap/plugins/tracker/db/mysql/updates/2015/201510131648_add_emailgateway_column_to_tracker.php',
-            'Add enable_emailgateway column to tracker table',
-            '1 migrations pending',
-        ]);
+        $this->command->shouldReceive('exec')->andThrow(new System_Command_CommandException('command', ['output'], 1));
 
-        $this->assertFalse($this->forgeupgrade_config->isSystemUpToDate());
+        self::assertFalse($this->forgeupgrade_config->isSystemUpToDate());
     }
 }
