@@ -101,7 +101,8 @@ class TimeboxCreatorChecker
         if (
             ! $this->workflow_checker->areWorkflowsNotUsedWithSynchronizedFieldsInTeamTrackers(
                 $team_trackers,
-                $synchronized_fields_data_collection
+                $synchronized_fields_data_collection,
+                $configuration_errors
             )
         ) {
             $this->logger->debug('A team tracker is using one of the synchronized fields in a workflow rule.');

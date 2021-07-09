@@ -837,8 +837,7 @@ final class program_managementPlugin extends Plugin
             new WorkflowChecker(
                 new Workflow_Dao(),
                 new Tracker_Rule_Date_Dao(),
-                new Tracker_Rule_List_Dao(),
-                $logger
+                new Tracker_Rule_List_Dao()
             ),
             $logger
         );
