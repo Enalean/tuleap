@@ -18,8 +18,8 @@
  */
 
 import { openAllTargetModalsOnClick } from "@tuleap/core/scripts/tuleap/modals/modal-opener";
-import { extractAggregatedTeamIds } from "./helper/aggregated-team-ids-extractor";
-import { handleTeamRemove } from "./helper/button-to-remove-team-handler";
+import { extractAggregatedTeamIds } from "../helper/aggregated-team-ids-extractor";
+import { handleTeamRemove } from "../helper/button-to-remove-team-handler";
 
 export function removeTeam(program_id: number): void {
     openAllTargetModalsOnClick(

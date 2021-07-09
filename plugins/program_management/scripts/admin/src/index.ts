@@ -18,9 +18,10 @@
  */
 
 import { getPOFileFromLocale, initGettext } from "@tuleap/core/scripts/tuleap/gettext/gettext-init";
-import { removeTeam } from "./remove-team";
-import { displayTeamsToAggregate } from "./display-teams-to-aggregate";
-import { addTeamInProgram } from "./add-team";
+import { removeTeam } from "./teams/remove-team";
+import { displayTeamsToAggregate } from "./teams/display-teams-to-aggregate";
+import { addTeamInProgram } from "./teams/add-team";
+import { initListPickersMilestoneSection } from "./milestones/init-list-pickers-milestone-section";
 
 document.addEventListener("DOMContentLoaded", async () => {
     const language = document.body.dataset.userLocale;
@@ -51,4 +52,5 @@ document.addEventListener("DOMContentLoaded", async () => {
     await displayTeamsToAggregate(gettext_provider, document);
     removeTeam(program_id);
     addTeamInProgram(program_id, document);
+    await initListPickersMilestoneSection(document, gettext_provider);
 });

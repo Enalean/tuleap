@@ -18,15 +18,15 @@
  */
 
 import { addTeamInProgram } from "./add-team";
-import * as api from "./api/manage-team";
-import * as restErrorHelper from "./helper/rest-error-helper";
-import * as buttonAddTeamHelper from "./helper/button-to-add-team-helper";
+import * as api from "../api/manage-team";
+import * as restErrorHelper from "../helper/rest-error-helper";
+import * as buttonAddTeamHelper from "../helper/button-to-add-team-helper";
 
 const createDocument = (): Document => document.implementation.createHTMLDocument();
 
-jest.mock("./api/manage-team");
-jest.mock("./helper/rest-error-helper");
-jest.mock("./helper/button-to-add-team-helper");
+jest.mock("../api/manage-team");
+jest.mock("../helper/rest-error-helper");
+jest.mock("../helper/button-to-add-team-helper");
 describe("AddTeam", () => {
     describe("addTeamInProgram", () => {
         let manage_team: jest.SpyInstance,

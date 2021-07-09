@@ -107,6 +107,9 @@ msgstr ""
 "Les ids des trackers planifiables ne doivent pas contenir l'id de l'outils "
 "de suivi d'itération"
 
+msgid "Milestones"
+msgstr "Jalons"
+
 msgid "Mirror of"
 msgstr "Réplique de"
 
@@ -158,6 +161,9 @@ msgstr ""
 
 msgid "Program Increments"
 msgstr "Incréments de Programme"
+
+msgid "Program Increments, Iterations"
+msgstr "Incréments de Programme, Itérations"
 
 msgid "Program Management"
 msgstr "Gestion de Programme"
@@ -214,6 +220,9 @@ msgid ""
 msgstr ""
 "La sémantique '%s' n'est pas bien configurée. Merci de vérifier la "
 "sémantique des outils de suivi %s."
+
+msgid "Source tracker for Program Increments"
+msgstr "Outil de suivi source pour les Incréments de Programme"
 
 msgid "Status"
 msgstr "Statut"
@@ -303,6 +312,13 @@ msgid "User can not update the field <a href='%s'>#%d</a> (%s) of tracker #%d"
 msgstr ""
 "L'utilisateur ne peut pas mettre à jour le champ <a href='%s'>#%d</a> (%s) "
 "de l'outil de suivi #%d"
+
+msgid "Which tracker's artifacts can be planned in Program increments?"
+msgstr ""
+"Quels outils de suivi peuvent être planifiés dans les Incréments de Programme ?"
+
+msgid "Who can prioritize and plan items into Program Increments?"
+msgstr "Qui peut prioriser et planifier des éléments dans les Incréments de Programme ?"
 
 msgid "You are about to remove Team {{ public_name }} from this Program."
 msgstr ""
