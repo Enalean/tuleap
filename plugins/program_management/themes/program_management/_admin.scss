@@ -23,7 +23,7 @@
     margin: var(--tlp-medium-spacing) var(--tlp-medium-spacing) 0 var(--tlp-medium-spacing);
 }
 
-.program-management-teams-framed {
+.program-management-admin-framed {
     margin-top: var(--tlp-medium-spacing);
 }
 
@@ -44,14 +44,14 @@
     font-weight: 600;
 }
 
-.program-management-no-teams-empty-state {
+.program-management-empty-state {
     display: flex;
     flex-direction: column;
     align-items: center;
     margin: var(--tlp-large-spacing) 0 var(--tlp-large-spacing) 0;
 }
 
-.program-management-no-teams-empty-state-label {
+.program-management-empty-state-label {
     margin: var(--tlp-medium-spacing) 0 0 0;
     color: var(--tlp-dimmed-color);
     font-size: 1.25rem;
@@ -63,7 +63,7 @@
     }
 }
 
-.program-management-teams-pane {
+.program-management-admin-pane {
     flex-direction: column;
 }
 

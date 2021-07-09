@@ -16,13 +16,13 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-import { extractAggregatedTeamIds } from "./helper/aggregated-team-ids-extractor";
-import { manageTeamOfProgram } from "./api/manage-team";
-import { resetRestErrorAlert, setRestErrorMessage } from "./helper/rest-error-helper";
+import { extractAggregatedTeamIds } from "../helper/aggregated-team-ids-extractor";
+import { manageTeamOfProgram } from "../api/manage-team";
+import { resetRestErrorAlert, setRestErrorMessage } from "../helper/rest-error-helper";
 import {
     resetButtonToAddTeam,
     setButtonToDisabledWithSpinner,
-} from "./helper/button-to-add-team-helper";
+} from "../helper/button-to-add-team-helper";
 
 interface ErrorRest {
     error: {

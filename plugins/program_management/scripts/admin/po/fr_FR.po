@@ -12,3 +12,12 @@ msgstr ""
 
 msgid "Choose a project to aggregate"
 msgstr "Choisissez un projet à regrouper"
+
+msgid "Choose a source tracker for Program Increments"
+msgstr "Choisissez un outil de suivi source pour les Incréments de Programme"
+
+msgid "Choose which trackers can be planned"
+msgstr "Choisissez quels outils de suivi peuvent être planifiés"
+
+msgid "Choose who can prioritize and plan items"
+msgstr "Choisissez qui peut prioriser et planifier des éléments"

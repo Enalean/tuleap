@@ -1,0 +1,34 @@
+<section class="tlp-pane program-management-admin-pane">
+    <div class="tlp-pane-container">
+        <div class="tlp-pane-header">
+            <h1 class="tlp-pane-title">{{# dgettext }}tuleap-program_management | Program Increments{{/ dgettext }}</h1>
+        </div>
+        <section class="tlp-pane-section">
+            <div class="tlp-form-element tlp-form-element-disabled">
+                <label class="tlp-label" for="admin-configuration-program-increment-tracker">
+                    {{# dgettext }}tuleap-program_management | Source tracker for Program Increments{{/ dgettext }}
+                    <i class="fas fa-asterisk" aria-hidden="true"></i>
+                </label>
+                <select id="admin-configuration-program-increment-tracker" name="list-value" disabled>
+                    <option value=""></option>
+                </select>
+            </div>
+            <div class="tlp-form-element tlp-form-element-disabled">
+                <label class="tlp-label" for="admin-configuration-plannable-trackers">
+                    {{# dgettext }}tuleap-program_management | Which tracker's artifacts can be planned in Program increments?{{/ dgettext }}
+                    <i class="fas fa-asterisk" aria-hidden="true"></i>
+                </label>
+                <select id="admin-configuration-plannable-trackers" name="list-value" multiple disabled>
+                </select>
+            </div>
+            <div class="tlp-form-element tlp-form-element-disabled">
+                <label class="tlp-label" for="admin-configuration-permission-prioritize">
+                    {{# dgettext }}tuleap-program_management | Who can prioritize and plan items into Program Increments?{{/ dgettext }}
+                    <i class="fas fa-asterisk" aria-hidden="true"></i>
+                </label>
+                <select id="admin-configuration-permission-prioritize" name="list-value" multiple disabled>
+                </select>
+            </div>
+        </section>
+    </div>
+</section>

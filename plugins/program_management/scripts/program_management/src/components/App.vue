@@ -42,7 +42,7 @@
         </div>
         <div class="program-backlog-empty-state" v-else data-test="configuration-empty-state">
             <configuration-empty-state />
-            <div class="program-management-no-teams-empty-state-label">{{ emptyStateLabel() }}</div>
+            <div class="program-management-empty-state-label">{{ emptyStateLabel() }}</div>
         </div>
         <error-modal v-if="has_modal_error" />
     </div>
