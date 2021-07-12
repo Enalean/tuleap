@@ -158,6 +158,7 @@ class BucketDb
 
     /**
      * Return true if given table has a given property
+     * @deprecated
      */
     public function propertyExists(string $tableName, string $schema, string $property): bool
     {
@@ -174,22 +175,14 @@ class BucketDb
      * Alter table to modify field value and report errors.
      *
      * @throws BucketDbException
+     *
+     * @deprecated
      */
     public function alterTable(string $tableName, string $schema, string $property, string $sql): void
     {
         $this->log->info('Alter table ' . $tableName);
-        if (! $this->propertyExists($tableName, $schema, $property)) {
-            $res = $this->dbh->exec($sql);
-            if ($res === false) {
-                $info = $this->dbh->errorInfo();
-                $msg  = 'An error occured while altering ' . $tableName . ': ' . $info[2] . ' (' . $info[1] . ' - ' . $info[0] . ')';
-                $this->log->error($msg);
-                throw new BucketDbException($msg);
-            }
-            $this->log->info($tableName . ' successfully altered table');
-        } else {
-            $this->log->info($tableName . ' already modified');
-        }
+        $this->dbh->exec($sql);
+        $this->log->info($tableName . ' successfully altered table');
     }
 
     /**

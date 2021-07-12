@@ -35,11 +35,9 @@ class b202106301558_add_default_timescale extends ForgeUpgrade_Bucket
 
     public function up(): void
     {
-        $this->db->alterTable(
-            'plugin_roadmap_widget',
-            'tuleap',
-            'default_timescale',
-            'ALTER TABLE plugin_roadmap_widget ADD COLUMN default_timescale VARCHAR(255) NOT NULL DEFAULT "month"'
-        );
+        if ($this->db->columnNameExists('plugin_roadmap_widget', 'default_timescale')) {
+            return;
+        }
+        $this->db->dbh->exec('ALTER TABLE plugin_roadmap_widget ADD COLUMN default_timescale VARCHAR(255) NOT NULL DEFAULT "month"');
     }
 }
