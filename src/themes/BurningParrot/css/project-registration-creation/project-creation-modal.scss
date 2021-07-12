@@ -19,24 +19,25 @@
  */
 
 #project-creation-success-modal {
-    width: 750px;
     transition: opacity 100ms ease-out, transform 200ms ease-out, box-shadow 100ms ease-out;
 
     &.tlp-modal-shown {
-        transform: translateY(50%);
+        transform: translateY(30%);
     }
 }
 
 .project-creation-success-modal-container {
     display: flex;
+    flex-direction: column;
     align-items: center;
-    padding: 50px;
+    padding: 40px 0;
     border-radius: 4px;
 }
 
 .project-creation-success-modal-illustration {
     flex: 0 1 auto;
     max-width: 50%;
+    margin: 0 0 var(--tlp-jumbo-spacing) 0;
 
     > svg {
         width: 100%;
@@ -45,7 +46,6 @@
 
 .project-creation-success-modal-content {
     flex: 1 1 auto;
-    margin: 0 0 0 50px;
     text-align: center;
 }
 
@@ -68,12 +68,12 @@
 @keyframes moveStars {
     from {
         transform: scale(1);
-        opacity: 0.5;
+        opacity: 0.7;
     }
 
     to {
         transform: scale(1.2);
-        opacity: 0.3;
+        opacity: 1;
     }
 }
 
