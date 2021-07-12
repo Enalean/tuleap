@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\Admin\PotentialTeam;
 
+use Tuleap\ProgramManagement\Stub\AllProgramSearcherStub;
 use Tuleap\ProgramManagement\Stub\SearchTeamsOfProgramStub;
 use Tuleap\Test\Builders\UserTestBuilder;
 
@@ -33,11 +34,13 @@ final class PotentialTeamsBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
     private $project_manager;
     private SearchTeamsOfProgramStub $teams_of_program_searcher;
     private \PFUser $user;
+    private AllProgramSearcherStub $all_program_searcher;
 
     protected function setUp(): void
     {
         $this->project_manager           = $this->createStub(\ProjectManager::class);
         $this->teams_of_program_searcher = SearchTeamsOfProgramStub::buildTeams(123);
+        $this->all_program_searcher      = AllProgramSearcherStub::buildPrograms(126);
         $this->user                      = UserTestBuilder::aUser()->build();
     }
 
@@ -63,7 +66,8 @@ final class PotentialTeamsBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             ->willReturn([
                 new \Project(['group_id' => '123', 'group_name' => 'is_team']),
                 new \Project(['group_id' => '124', 'group_name' => 'potential_team']),
-                new \Project(['group_id' => '125', 'group_name' => 'program']),
+                new \Project(['group_id' => '125', 'group_name' => 'a_project']),
+                new \Project(['group_id' => '126', 'group_name' => 'program']),
             ]);
 
         $potential_teams = $this->getBuilder()->buildPotentialTeams(125, $this->user);
@@ -76,7 +80,8 @@ final class PotentialTeamsBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         return new PotentialTeamsBuilder(
             $this->project_manager,
-            $this->teams_of_program_searcher
+            $this->teams_of_program_searcher,
+            $this->all_program_searcher
         );
     }
 }

@@ -23,12 +23,13 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Adapter\Program;
 
 use Tuleap\DB\DataAccessObject;
+use Tuleap\ProgramManagement\Domain\Program\AllProgramSearcher;
 use Tuleap\ProgramManagement\Domain\Program\ProgramStore;
 use Tuleap\ProgramManagement\Domain\Program\SearchProgram;
 use Tuleap\ProgramManagement\Domain\Program\SearchTeamsOfProgram;
 use Tuleap\ProgramManagement\Domain\Program\VerifyIsProgram;
 
-final class ProgramDao extends DataAccessObject implements ProgramStore, SearchProgram, SearchTeamsOfProgram, VerifyIsProgram
+final class ProgramDao extends DataAccessObject implements ProgramStore, SearchProgram, SearchTeamsOfProgram, VerifyIsProgram, AllProgramSearcher
 {
     public function isAProgram(int $project_id): bool
     {
@@ -37,6 +38,18 @@ final class ProgramDao extends DataAccessObject implements ProgramStore, SearchP
                 WHERE program_project_id = ?';
 
         return $this->getDB()->exists($sql, $project_id);
+    }
+
+    /**
+     * @return int[]
+     */
+    public function getAllPrograms(): array
+    {
+        $sql = 'SELECT program_project_id
+                FROM plugin_program_management_team_projects';
+
+        $rows = $this->getDB()->q($sql);
+        return array_map(static fn(array $row): int => $row['program_project_id'], $rows);
     }
 
     public function searchTeamIdsOfProgram(int $project_id): array
