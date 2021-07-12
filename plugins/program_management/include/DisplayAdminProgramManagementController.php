@@ -35,14 +35,18 @@ use Tuleap\ProgramManagement\Domain\Program\Admin\PlannableTrackersConfiguration
 use Tuleap\ProgramManagement\Domain\Program\Admin\PotentialTeam\BuildPotentialTeams;
 use Tuleap\ProgramManagement\Domain\Program\Admin\PotentialTeam\PotentialTeamsPresenterBuilder;
 use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramAdminPresenter;
+use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramCannotBeATeamException;
+use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramInConfigurationIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramIncrementTrackerConfiguration\BuildPotentialProgramIncrementTrackerConfigurationPresenters;
 use Tuleap\ProgramManagement\Domain\Program\Admin\Team\TeamsPresenterBuilder;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\IterationTracker\RetrieveVisibleIterationTracker;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Team\TeamProjectsCollection;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracker\RetrieveVisibleProgramIncrementTracker;
 use Tuleap\ProgramManagement\Domain\Program\Plan\BuildProgram;
+use Tuleap\ProgramManagement\Domain\Program\Plan\ProgramAccessException;
 use Tuleap\ProgramManagement\Domain\Program\SearchTeamsOfProgram;
 use Tuleap\ProgramManagement\Domain\Team\VerifyIsTeam;
+use Tuleap\ProgramManagement\Domain\Workspace\VerifyProjectPermission;
 use Tuleap\Request\DispatchableWithBurningParrot;
 use Tuleap\Request\DispatchableWithProject;
 use Tuleap\Request\DispatchableWithRequest;
@@ -64,7 +68,8 @@ final class DisplayAdminProgramManagementController implements DispatchableWithR
     private RetrieveVisibleIterationTracker $iteration_tracker_retriever;
     private BuildPotentialProgramIncrementTrackerConfigurationPresenters $program_increment_presenters_builder;
     private BuildPotentialPlannableTrackersConfigurationPresenters $plannable_tracker_presenters_builder;
-    private BuildProjectUGroupCanPrioritizeItemsPresenters $urgoups_can_prioritize_builder;
+    private BuildProjectUGroupCanPrioritizeItemsPresenters $ugroups_can_prioritize_builder;
+    private VerifyProjectPermission $permission_verifier;
 
     public function __construct(
         \ProjectManager $project_manager,
@@ -80,7 +85,8 @@ final class DisplayAdminProgramManagementController implements DispatchableWithR
         RetrieveVisibleIterationTracker $iteration_tracker_retriever,
         BuildPotentialProgramIncrementTrackerConfigurationPresenters $program_increment_presenters_builder,
         BuildPotentialPlannableTrackersConfigurationPresenters $plannable_tracker_presenters_builder,
-        BuildProjectUGroupCanPrioritizeItemsPresenters $urgoups_can_prioritize_builder
+        BuildProjectUGroupCanPrioritizeItemsPresenters $ugroups_can_prioritize_builder,
+        VerifyProjectPermission $permission_verifier
     ) {
         $this->project_manager                      = $project_manager;
         $this->template_renderer                    = $template_renderer;
@@ -95,7 +101,8 @@ final class DisplayAdminProgramManagementController implements DispatchableWithR
         $this->iteration_tracker_retriever          = $iteration_tracker_retriever;
         $this->program_increment_presenters_builder = $program_increment_presenters_builder;
         $this->plannable_tracker_presenters_builder = $plannable_tracker_presenters_builder;
-        $this->urgoups_can_prioritize_builder       = $urgoups_can_prioritize_builder;
+        $this->ugroups_can_prioritize_builder       = $ugroups_can_prioritize_builder;
+        $this->permission_verifier                  = $permission_verifier;
     }
 
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
@@ -109,18 +116,17 @@ final class DisplayAdminProgramManagementController implements DispatchableWithR
             );
         }
 
-        if ($this->verify_is_team->isATeam($project_id)) {
-            throw new ForbiddenException(
-                dgettext(
-                    "tuleap-program_management",
-                    "Project is defined as a Team project. It can not be used as a Program"
-                )
-            );
-        }
-
         $user = $request->getCurrentUser();
-
-        if (! $user->isAdmin($project_id)) {
+        try {
+            $program_id = ProgramInConfigurationIdentifier::fromProject(
+                $this->verify_is_team,
+                $this->permission_verifier,
+                $user,
+                $project
+            );
+        } catch (ProgramCannotBeATeamException $e) {
+            throw new ForbiddenException($e->getI18nMessage());
+        } catch (ProgramAccessException $e) {
             throw new ForbiddenException(
                 dgettext(
                     'tuleap-program_management',
@@ -164,16 +170,16 @@ final class DisplayAdminProgramManagementController implements DispatchableWithR
                     $this->potential_teams_builder->buildPotentialTeams($project_id, $user)
                 ),
                 TeamsPresenterBuilder::buildTeamsPresenter(
-                    TeamProjectsCollection::fromProjectId(
+                    TeamProjectsCollection::fromProgramInConfigurationIdentifier(
                         $this->teams_searcher,
                         $this->project_data_adapter,
-                        $project_id
+                        $program_id
                     )
                 ),
                 $error_presenters,
                 $this->program_increment_presenters_builder->buildPotentialProgramIncrementTrackerPresenters($project_id),
                 $this->plannable_tracker_presenters_builder->buildPotentialPlannableTrackerPresenters($project_id),
-                $this->urgoups_can_prioritize_builder->buildProjectUgroupCanPrioritizeItemsPresenters($project_id)
+                $this->ugroups_can_prioritize_builder->buildProjectUgroupCanPrioritizeItemsPresenters($project_id)
             )
         );
 

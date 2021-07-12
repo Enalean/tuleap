@@ -23,11 +23,13 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Team;
 
 use Tuleap\ProgramManagement\Domain\BuildProject;
+use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramInConfigurationIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\SearchTeamsOfProgram;
 use Tuleap\ProgramManagement\Domain\ProgramManagementProject;
 
 /**
+ * I am a collection of Team Projects. I can be empty.
  * @psalm-immutable
  */
 final class TeamProjectsCollection
@@ -60,21 +62,28 @@ final class TeamProjectsCollection
 
     public static function fromProgramIdentifier(
         SearchTeamsOfProgram $teams_searcher,
-        BuildProject $project_data_adapter,
+        BuildProject $project_builder,
         ProgramIdentifier $program
     ): self {
-        $program_project_id = $program->getID();
-        return self::fromProjectId($teams_searcher, $project_data_adapter, $program_project_id);
+        return self::buildFromProjectId($teams_searcher, $project_builder, $program->getId());
     }
 
-    public static function fromProjectId(
+    public static function fromProgramInConfigurationIdentifier(
         SearchTeamsOfProgram $teams_searcher,
-        BuildProject $project_data_adapter,
+        BuildProject $project_builder,
+        ProgramInConfigurationIdentifier $program
+    ): self {
+        return self::buildFromProjectId($teams_searcher, $project_builder, $program->id);
+    }
+
+    private static function buildFromProjectId(
+        SearchTeamsOfProgram $teams_searcher,
+        BuildProject $project_builder,
         int $program_project_id
     ): self {
         $team_projects = [];
         foreach ($teams_searcher->searchTeamIdsOfProgram($program_project_id) as $team_id) {
-            $team_projects[] = $project_data_adapter->buildFromId($team_id);
+            $team_projects[] = $project_builder->buildFromId($team_id);
         }
 
         return new self($team_projects);

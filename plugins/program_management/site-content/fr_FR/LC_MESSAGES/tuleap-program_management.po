@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: \n"
 "PO-Revision-Date: \n"
-"Last-Translator: Benjamin Bouillot <benjamin.bouillot@enalean.com>\n"
+"Last-Translator: Joris MASSON <joris.masson@enalean.com>\n"
 "Language-Team: \n"
 "Language: fr_FR\n"
 "MIME-Version: 1.0\n"
@@ -241,6 +241,13 @@ msgid ""
 msgstr ""
 "Le projet #%d est défini en tant que projet Programme. Il ne peut pas être "
 "utilisé en tant qu'Équipe."
+
+#, php-format
+msgid ""
+"Project #%d is defined as a Team project. It cannot be used as a Program"
+msgstr ""
+"Le projet #%d est défini en tant que projet Équipe. Il ne peut pas être "
+"utilisé en tant que Programme"
 
 #, php-format
 msgid "Project #%d is not a Program. Please use a project defined as a Program"
