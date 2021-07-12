@@ -30,7 +30,6 @@ use ServiceManager;
 use Tuleap\Project\Admin\Categories\CategoryCollection;
 use Tuleap\Project\Admin\DescriptionFields\ProjectRegistrationSubmittedFieldsCollection;
 use Tuleap\Project\DefaultProjectVisibilityRetriever;
-use Tuleap\Project\DescriptionFieldsFactory;
 use Tuleap\Project\ProjectCreationDataServiceFromXmlInheritor;
 use Tuleap\Project\Registration\Template\InsufficientPermissionToUseProjectAsTemplateException;
 use Tuleap\Project\Registration\Template\ProjectIDTemplateNotProvidedException;
@@ -49,7 +48,6 @@ class ProjectCreationDataPOSTProjectBuilder
     private XMLFileContentRetriever $xml_file_content_retriever;
     private ServiceManager $service_manager;
     private ProjectCreationDataServiceFromXmlInheritor $from_xml_inheritor;
-    private DescriptionFieldsFactory $description_fields_factory;
 
     public function __construct(
         ProjectManager $project_manager,
@@ -57,7 +55,6 @@ class ProjectCreationDataPOSTProjectBuilder
         XMLFileContentRetriever $xml_file_content_retriever,
         ServiceManager $service_manager,
         ProjectCreationDataServiceFromXmlInheritor $from_xml_inheritor,
-        DescriptionFieldsFactory $description_fields_factory,
         LoggerInterface $logger
     ) {
         $this->project_manager            = $project_manager;
@@ -65,7 +62,6 @@ class ProjectCreationDataPOSTProjectBuilder
         $this->xml_file_content_retriever = $xml_file_content_retriever;
         $this->service_manager            = $service_manager;
         $this->from_xml_inheritor         = $from_xml_inheritor;
-        $this->description_fields_factory = $description_fields_factory;
         $this->logger                     = $logger;
     }
 
@@ -140,14 +136,9 @@ class ProjectCreationDataPOSTProjectBuilder
                 CategoryCollection::buildFromRESTProjectCreation($post_representation)
             );
 
-            if ($this->description_fields_factory->isLegacyLongDescriptionFieldExisting()) {
-                $long_description_tagname = 'long-description';
-                $creation_data->setDataFields(
-                    ProjectRegistrationSubmittedFieldsCollection::buildFromArray([
-                        101 => (string) $xml_element->$long_description_tagname
-                    ])
-                );
-            }
+            $creation_data->setDataFields(
+                ProjectRegistrationSubmittedFieldsCollection::buildFromRESTProjectCreation($post_representation)
+            );
 
             return $creation_data;
         }
