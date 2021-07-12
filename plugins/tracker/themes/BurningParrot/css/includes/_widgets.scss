@@ -37,7 +37,7 @@ ul.tracker-widget-artifacts-list {
 }
 
 .empty-artifacts-cover {
-    fill: var(--tlp-illustration-grey);
+    fill: var(--tlp-illustration-grey-on-background);
 }
 
 .empty-artifacts-icon {
@@ -45,5 +45,5 @@ ul.tracker-widget-artifacts-list {
 }
 
 .empty-artifacts-sheet-border {
-    stroke: var(--tlp-illustration-grey);
+    stroke: var(--tlp-illustration-grey-on-background);
 }

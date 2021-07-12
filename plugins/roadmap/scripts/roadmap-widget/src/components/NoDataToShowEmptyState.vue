@@ -27,7 +27,13 @@
             xmlns="http://www.w3.org/2000/svg"
             class="roadmap-empty-state-illustration"
         >
-            <circle opacity=".3" cx="68.5" cy="53" r="53" fill="var(--tlp-illustration-grey)" />
+            <circle
+                opacity=".3"
+                cx="68.5"
+                cy="53"
+                r="53"
+                fill="var(--tlp-illustration-grey-on-background)"
+            />
             <path
                 fill-rule="evenodd"
                 clip-rule="evenodd"
