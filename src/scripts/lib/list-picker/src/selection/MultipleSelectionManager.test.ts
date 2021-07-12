@@ -156,6 +156,15 @@ describe("MultipleSelectionManager", () => {
             expectChangeEventToHaveBeenFiredOnSourceSelectBox(source_select_box, 1);
         });
 
+        it("when item is disabled, then it does not displayed", () => {
+            item_1.target_option.setAttribute("disabled", "disabled");
+            const item_none = item_map_manager.findListPickerItemInItemMap("list-picker-item-100");
+
+            manager.initSelection();
+            manager.processSelection(item_1.element);
+            expect(isItemSelected(item_none)).toBe(false);
+        });
+
         it("selects items", () => {
             const colored_item = item_map_manager.findListPickerItemInItemMap(
                 "list-picker-item-value_colored"

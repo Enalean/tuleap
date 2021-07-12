@@ -19,6 +19,7 @@
 
 import { createListPicker } from "@tuleap/list-picker";
 import type { GetText } from "@tuleap/core/scripts/tuleap/gettext/gettext-init";
+import { disabledPlannableTrackers } from "../helper/disabled-plannable-tracker-helper";
 
 export async function initListPickersMilestoneSection(
     doc: Document,
@@ -61,6 +62,15 @@ export async function initListPickersMilestoneSection(
         locale: doc.body.dataset.userLocale,
         placeholder: gettext_provider.gettext("Choose who can prioritize and plan items"),
         is_filterable: true,
+    });
+
+    disabledPlannableTrackers(doc, program_increment_tracker_element);
+
+    program_increment_tracker_element.addEventListener("change", (e) => {
+        if (!(e.target instanceof HTMLSelectElement)) {
+            throw new Error("Target element is not HTMLSelectElement");
+        }
+        disabledPlannableTrackers(doc, e.target);
     });
 }
 
