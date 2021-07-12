@@ -25,7 +25,7 @@
             <i class="fa fa-asterisk" />
         </label>
         <select
-            class="tlp-select"
+            class="tlp-select tlp-select-large"
             id="trovecat"
             name="trovecat"
             required
