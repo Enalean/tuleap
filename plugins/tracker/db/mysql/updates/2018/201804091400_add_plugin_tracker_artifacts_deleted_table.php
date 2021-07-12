@@ -50,7 +50,7 @@ class b201804091400_add_plugin_tracker_artifacts_deleted_table  extends ForgeUpg
     public function postUp()
     {
         if (! $this->db->tableNameExists('plugin_tracker_deleted_artifacts')) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('plugin_tracker_deleted_artifacts table is missing');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('plugin_tracker_deleted_artifacts table is missing');
         }
     }
 }

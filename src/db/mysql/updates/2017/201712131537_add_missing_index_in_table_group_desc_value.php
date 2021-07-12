@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201712131537_add_missing_index_in_table_group_desc_value extends ForgeUpgrade_Bucket
+class b201712131537_add_missing_index_in_table_group_desc_value extends \Tuleap\ForgeUpgrade\Bucket
 {
     public function description()
     {
@@ -40,7 +40,7 @@ class b201712131537_add_missing_index_in_table_group_desc_value extends ForgeUpg
     public function postUp()
     {
         if (! $this->indexNameExists('group_desc_value', 'idx')) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete(
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException(
                 'The index on group_id is missing in table group_desc_value'
             );
         }

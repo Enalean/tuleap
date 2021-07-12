@@ -21,7 +21,7 @@
 declare(strict_types=1);
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
-class b202106161205_multiple_trackers_in_roadmap extends ForgeUpgrade_Bucket
+class b202106161205_multiple_trackers_in_roadmap extends \Tuleap\ForgeUpgrade\Bucket
 {
     public function description(): string
     {
@@ -56,7 +56,7 @@ class b202106161205_multiple_trackers_in_roadmap extends ForgeUpgrade_Bucket
     {
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete($message . implode(', ', $this->db->dbh->errorInfo()));
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException($message . implode(', ', $this->db->dbh->errorInfo()));
         }
     }
 }

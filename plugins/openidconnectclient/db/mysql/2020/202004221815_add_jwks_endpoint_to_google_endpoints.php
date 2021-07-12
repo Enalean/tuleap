@@ -21,7 +21,7 @@
 declare(strict_types=1);
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
-final class b202004221815_add_jwks_endpoint_to_google_endpoints extends ForgeUpgrade_Bucket
+final class b202004221815_add_jwks_endpoint_to_google_endpoints extends \Tuleap\ForgeUpgrade\Bucket
 {
     public function description(): string
     {
@@ -40,7 +40,7 @@ final class b202004221815_add_jwks_endpoint_to_google_endpoints extends ForgeUpg
                 WHERE authorization_endpoint="https://accounts.google.com/o/oauth2/v2/auth" AND token_endpoint="https://oauth2.googleapis.com/token"
                     AND user_info_endpoint="https://www.googleapis.com/oauth2/v3/userinfo"';
         if ($this->db->dbh->exec($sql) === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete(
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException(
                 'An error occurred while adding the JWKS to the Google provides entries'
             );
         }

@@ -39,7 +39,7 @@ class b201806061457_migrate_project_approval_forgeconfig extends ForgeUpgrade_Bu
 
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('Unable to set config value in DB.');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('Unable to set config value in DB.');
         }
     }
 

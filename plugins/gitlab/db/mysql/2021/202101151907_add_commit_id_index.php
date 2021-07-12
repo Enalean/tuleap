@@ -21,7 +21,7 @@
 declare(strict_types=1);
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
-final class b202101151907_add_commit_id_index extends ForgeUpgrade_Bucket
+final class b202101151907_add_commit_id_index extends \Tuleap\ForgeUpgrade\Bucket
 {
     public function description(): string
     {

@@ -19,7 +19,7 @@
 /**
  * Add a table to store UGroup permissions that are valid for all the forge
  */
-class b201403061540_add_forge_permissions_table extends ForgeUpgrade_Bucket
+class b201403061540_add_forge_permissions_table extends \Tuleap\ForgeUpgrade\Bucket
 {
     public function description()
     {
@@ -42,7 +42,7 @@ class b201403061540_add_forge_permissions_table extends ForgeUpgrade_Bucket
         if (! $this->db->tableNameExists('ugroup_forge_permission')) {
             $res = $this->db->dbh->exec($sql);
             if ($res === false) {
-                throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while adding table ugroup_forge_permission');
+                throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occured while adding table ugroup_forge_permission');
             }
         }
 
@@ -51,7 +51,7 @@ class b201403061540_add_forge_permissions_table extends ForgeUpgrade_Bucket
 
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while updating column group_id in TABLE ugroup');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occured while updating column group_id in TABLE ugroup');
         }
     }
 }

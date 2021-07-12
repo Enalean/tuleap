@@ -21,7 +21,7 @@
 declare(strict_types=1);
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
-final class b202003131445_add_app_id_column_oauth2_auth_code extends ForgeUpgrade_Bucket
+final class b202003131445_add_app_id_column_oauth2_auth_code extends \Tuleap\ForgeUpgrade\Bucket
 {
     public function description(): string
     {
@@ -38,14 +38,14 @@ final class b202003131445_add_app_id_column_oauth2_auth_code extends ForgeUpgrad
         $sql = 'DELETE FROM plugin_oauth2_authorization_code';
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('Unable to clear the plugin_oauth2_authorization_code table');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('Unable to clear the plugin_oauth2_authorization_code table');
         }
 
         if (! $this->db->columnNameExists('plugin_oauth2_authorization_code', 'app_id')) {
             $sql = 'ALTER TABLE plugin_oauth2_authorization_code ADD COLUMN app_id INT(11) NOT NULL, ADD INDEX idx_app_id (app_id)';
             $res = $this->db->dbh->exec($sql);
             if ($res === false) {
-                throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('Unable to add app_id column on the plugin_oauth2_authorization_code table');
+                throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('Unable to add app_id column on the plugin_oauth2_authorization_code table');
             }
         }
     }

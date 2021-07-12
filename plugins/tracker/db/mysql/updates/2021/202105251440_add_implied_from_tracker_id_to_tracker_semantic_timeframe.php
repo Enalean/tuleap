@@ -21,7 +21,7 @@
 declare(strict_types=1);
 
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
-class b202105251440_add_implied_from_tracker_id_to_tracker_semantic_timeframe extends ForgeUpgrade_Bucket
+class b202105251440_add_implied_from_tracker_id_to_tracker_semantic_timeframe extends \Tuleap\ForgeUpgrade\Bucket
 {
     public function description(): string
     {
@@ -47,7 +47,7 @@ class b202105251440_add_implied_from_tracker_id_to_tracker_semantic_timeframe ex
         );
 
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occurred while updating the table tracker_semantic_timeframe');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occurred while updating the table tracker_semantic_timeframe');
         }
     }
 }

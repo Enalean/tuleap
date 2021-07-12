@@ -16,7 +16,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201407081125_add_missing_column_in_tour_usage_statistics extends ForgeUpgrade_Bucket
+class b201407081125_add_missing_column_in_tour_usage_statistics extends \Tuleap\ForgeUpgrade\Bucket
 {
     public function description()
     {
@@ -35,7 +35,7 @@ class b201407081125_add_missing_column_in_tour_usage_statistics extends ForgeUpg
         $res = $this->db->dbh->exec($sql);
 
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while altering tour_usage_statistics table.');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occured while altering tour_usage_statistics table.');
         }
     }
 }

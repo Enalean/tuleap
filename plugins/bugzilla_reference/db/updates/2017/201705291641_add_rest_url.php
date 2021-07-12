@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201705291641_add_rest_url extends ForgeUpgrade_Bucket
+class b201705291641_add_rest_url extends \Tuleap\ForgeUpgrade\Bucket
 {
     public function description()
     {
@@ -39,7 +39,7 @@ EOT;
 
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete(
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException(
                 'An error occurred while adding REST URL column ' . implode(', ', $this->db->dbh->errorInfo())
             );
         }

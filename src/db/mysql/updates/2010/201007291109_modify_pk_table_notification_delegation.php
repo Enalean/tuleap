@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201007291109_modify_pk_table_notification_delegation extends ForgeUpgrade_Bucket
+class b201007291109_modify_pk_table_notification_delegation extends \Tuleap\ForgeUpgrade\Bucket
 {
 
     public function description()
@@ -43,7 +43,7 @@ EOT;
     public function postUp()
     {
         if (! $this->db->primaryKeyExists('groups_notif_delegation')) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('Primary key on groups_notif_delegation table is missing');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('Primary key on groups_notif_delegation table is missing');
         }
     }
 }

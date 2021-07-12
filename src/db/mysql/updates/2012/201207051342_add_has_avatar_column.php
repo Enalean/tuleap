@@ -16,7 +16,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201207051342_add_has_avatar_column extends ForgeUpgrade_Bucket
+class b201207051342_add_has_avatar_column extends \Tuleap\ForgeUpgrade\Bucket
 {
     public function description()
     {
@@ -36,7 +36,7 @@ EOT;
         if ($this->db->tableNameExists('user')) {
             $res = $this->db->dbh->exec($sql);
             if ($res === false) {
-                throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while adding column has_avatar to table user');
+                throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occured while adding column has_avatar to table user');
             }
         }
     }
@@ -44,7 +44,7 @@ EOT;
     public function postUp()
     {
         if (! $this->db->columnNameExists('user', 'has_avatar')) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('Column has_avatar not created in user');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('Column has_avatar not created in user');
         }
     }
 }

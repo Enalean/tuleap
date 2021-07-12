@@ -19,7 +19,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-class b201202101244_shared_field_default_is_0 extends ForgeUpgrade_Bucket
+class b201202101244_shared_field_default_is_0 extends \Tuleap\ForgeUpgrade\Bucket
 {
 
     public function description()
@@ -45,12 +45,12 @@ EOT;
         $sql = "ALTER TABLE tracker_field ALTER COLUMN original_field_id SET DEFAULT '0'";
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while altering column original_field_id in tracker_field table: ' . implode(', ', $this->db->dbh->errorInfo()));
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occured while altering column original_field_id in tracker_field table: ' . implode(', ', $this->db->dbh->errorInfo()));
         }
         $sql = 'UPDATE tracker_field SET original_field_id = 0 WHERE original_field_id = id';
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while initializing original_field_id with some data: ' . implode(', ', $this->db->dbh->errorInfo()));
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occured while initializing original_field_id with some data: ' . implode(', ', $this->db->dbh->errorInfo()));
         }
     }
 
@@ -59,12 +59,12 @@ EOT;
         $sql = "ALTER TABLE tracker_field_list_bind_static_value ALTER COLUMN original_value_id SET DEFAULT '0'";
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while altering column original_value_id in tracker_field_list_bind_static_value table: ' . implode(', ', $this->db->dbh->errorInfo()));
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occured while altering column original_value_id in tracker_field_list_bind_static_value table: ' . implode(', ', $this->db->dbh->errorInfo()));
         }
         $sql = 'UPDATE tracker_field_list_bind_static_value SET original_value_id = 0 WHERE original_value_id = id';
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while initializing original_value_id with some data: ' . implode(', ', $this->db->dbh->errorInfo()));
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occured while initializing original_value_id with some data: ' . implode(', ', $this->db->dbh->errorInfo()));
         }
     }
 }

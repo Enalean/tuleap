@@ -38,7 +38,7 @@ class b201812271615_move_max_file_size_in_forgeconfig extends ForgeUpgrade_Bucke
 
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete(
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException(
                 'An error occured while moving max file size into forgeconfig'
             );
         }

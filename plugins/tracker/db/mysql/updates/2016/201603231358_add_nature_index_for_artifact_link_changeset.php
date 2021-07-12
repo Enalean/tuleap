@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201603231358_add_nature_index_for_artifact_link_changeset extends ForgeUpgrade_Bucket
+class b201603231358_add_nature_index_for_artifact_link_changeset extends \Tuleap\ForgeUpgrade\Bucket
 {
 
     public function description()
@@ -38,7 +38,7 @@ class b201603231358_add_nature_index_for_artifact_link_changeset extends ForgeUp
         $res = $this->db->dbh->exec($sql);
 
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while adding index nature');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occured while adding index nature');
         }
 
         $sql = "ALTER table tracker_changeset_value_artifactlink ADD
@@ -47,7 +47,7 @@ class b201603231358_add_nature_index_for_artifact_link_changeset extends ForgeUp
         $res = $this->db->dbh->exec($sql);
 
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while adding index nature');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occured while adding index nature');
         }
     }
 }

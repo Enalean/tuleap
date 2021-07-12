@@ -48,7 +48,7 @@ class b202001131436_add_tracker_workflow_add_top_backlog_table extends ForgeUpgr
     public function postUp()
     {
         if (! $this->db->tableNameExists('plugin_agiledashboard_tracker_workflow_action_add_top_backlog')) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete(
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException(
                 'the table plugin_agiledashboard_tracker_workflow_action_add_top_backlog is missing'
             );
         }

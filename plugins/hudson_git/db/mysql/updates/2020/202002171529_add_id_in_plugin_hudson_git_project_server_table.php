@@ -66,6 +66,6 @@ class b202002171529_add_id_in_plugin_hudson_git_project_server_table extends For
     private function rollBackOnError($message): void
     {
         $this->db->dbh->rollBack();
-        throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete($message);
+        throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException($message);
     }
 }

@@ -16,7 +16,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201510011056_add_index_on_service_table extends ForgeUpgrade_Bucket
+class b201510011056_add_index_on_service_table extends \Tuleap\ForgeUpgrade\Bucket
 {
 
     public function description()

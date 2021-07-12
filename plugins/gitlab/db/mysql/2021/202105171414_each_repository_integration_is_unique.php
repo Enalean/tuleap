@@ -21,7 +21,7 @@
 declare(strict_types=1);
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
-class b202105171414_each_repository_integration_is_unique extends ForgeUpgrade_Bucket
+class b202105171414_each_repository_integration_is_unique extends \Tuleap\ForgeUpgrade\Bucket
 {
     public function description(): string
     {
@@ -375,6 +375,6 @@ class b202105171414_each_repository_integration_is_unique extends ForgeUpgrade_B
     private function rollBackOnError(string $message): void
     {
         $this->db->dbh->rollBack();
-        throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete($message);
+        throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException($message);
     }
 }

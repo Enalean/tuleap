@@ -50,7 +50,7 @@ class b201805021100_add_kanban_widget_config_table extends ForgeUpgrade_Bucket /
     public function postUp()
     {
         if (! $this->db->tableNameExists('plugin_agiledashboard_kanban_widget_config')) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete(
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException(
                 'the table plugin_agiledashboard_kanban_widget_config is missing'
             );
         }

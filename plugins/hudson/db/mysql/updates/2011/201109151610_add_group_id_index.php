@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201109151610_add_group_id_index extends ForgeUpgrade_Bucket
+class b201109151610_add_group_id_index extends \Tuleap\ForgeUpgrade\Bucket
 {
 
     public function description()

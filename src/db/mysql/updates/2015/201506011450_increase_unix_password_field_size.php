@@ -19,7 +19,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-class b201506011450_increase_unix_password_field_size extends ForgeUpgrade_Bucket
+class b201506011450_increase_unix_password_field_size extends \Tuleap\ForgeUpgrade\Bucket
 {
     public function description()
     {
@@ -36,7 +36,7 @@ class b201506011450_increase_unix_password_field_size extends ForgeUpgrade_Bucke
         $sql = 'ALTER TABLE user MODIFY COLUMN unix_pw VARCHAR(255)';
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while adding the new user password field in user table.');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occured while adding the new user password field in user table.');
         }
     }
 }

@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201212141151_add_git_read_permission_all_users extends ForgeUpgrade_Bucket
+class b201212141151_add_git_read_permission_all_users extends \Tuleap\ForgeUpgrade\Bucket
 {
 
     public function description()
@@ -40,7 +40,7 @@ EOT;
                     VALUES ('PLUGIN_GIT_READ', 1, 0)";
             $res = $this->db->dbh->exec($sql);
             if ($res !== 1) {
-                throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while adding permission types into permissions_values');
+                throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occured while adding permission types into permissions_values');
             }
         }
     }
@@ -48,7 +48,7 @@ EOT;
     public function postUp()
     {
         if ($this->permissionTypesMissing()) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('Git read permission to anonymous users for gitolite is missing');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('Git read permission to anonymous users for gitolite is missing');
         }
     }
 

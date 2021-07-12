@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201008200802_reduce_load_on_user_table extends ForgeUpgrade_Bucket
+class b201008200802_reduce_load_on_user_table extends \Tuleap\ForgeUpgrade\Bucket
 {
     public function description()
     {
@@ -53,7 +53,7 @@ EOT;
         if ($this->db->tableNameExists('user') && $this->db->tableNameExists('user_access')) {
             $res = $this->db->dbh->exec($sql);
             if ($res === false) {
-                throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured copying from  table user to table user_access');
+                throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occured copying from  table user to table user_access');
             }
         }
 
@@ -61,7 +61,7 @@ EOT;
         if ($this->db->tableNameExists('user') && $this->db->columnNameExists('user', 'last_access_date')) {
             $res = $this->db->dbh->exec($sql);
             if ($res === false) {
-                throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while deleting last_access_date column from user table');
+                throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occured while deleting last_access_date column from user table');
             }
         }
 
@@ -69,7 +69,7 @@ EOT;
         if ($this->db->tableNameExists('user') && $this->db->columnNameExists('user', 'prev_auth_success')) {
             $res = $this->db->dbh->exec($sql);
             if ($res === false) {
-                throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while deleting prev_auth_success column from user table');
+                throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occured while deleting prev_auth_success column from user table');
             }
         }
 
@@ -77,7 +77,7 @@ EOT;
         if ($this->db->tableNameExists('user') && $this->db->columnNameExists('user', 'last_auth_success')) {
             $res = $this->db->dbh->exec($sql);
             if ($res === false) {
-                throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while deleting last_auth_success column from user table');
+                throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occured while deleting last_auth_success column from user table');
             }
         }
 
@@ -85,7 +85,7 @@ EOT;
         if ($this->db->tableNameExists('user') && $this->db->columnNameExists('user', 'last_auth_failure')) {
             $res = $this->db->dbh->exec($sql);
             if ($res === false) {
-                throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while deleting last_auth_failure column from user table');
+                throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occured while deleting last_auth_failure column from user table');
             }
         }
 
@@ -93,7 +93,7 @@ EOT;
         if ($this->db->tableNameExists('user') && $this->db->columnNameExists('user', 'nb_auth_failure')) {
             $res = $this->db->dbh->exec($sql);
             if ($res === false) {
-                throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while deleting nb_auth_failure column from user table');
+                throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occured while deleting nb_auth_failure column from user table');
             }
         }
     }
@@ -101,22 +101,22 @@ EOT;
     public function postUp()
     {
         if (! $this->db->tableNameExists('user_access')) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('user_access table is missing');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('user_access table is missing');
         }
         if ($this->db->columnNameExists('user', 'last_access_date')) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('last_access_date column is not deleted from user table');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('last_access_date column is not deleted from user table');
         }
         if ($this->db->columnNameExists('user', 'prev_auth_success')) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('prev_auth_success column is not deleted from user table');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('prev_auth_success column is not deleted from user table');
         }
         if ($this->db->columnNameExists('user', 'last_auth_success')) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('last_auth_success column is not deleted from user table');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('last_auth_success column is not deleted from user table');
         }
         if ($this->db->columnNameExists('user', 'last_auth_failure')) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('last_auth_failure column is not deleted from user table');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('last_auth_failure column is not deleted from user table');
         }
         if ($this->db->columnNameExists('user', 'nb_auth_failure')) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('nb_auth_failure column is not deleted from user table');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('nb_auth_failure column is not deleted from user table');
         }
     }
 }

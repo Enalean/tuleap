@@ -49,7 +49,7 @@ EOT;
     public function postUp()
     {
         if (! $this->db->tableNameExists('plugin_pullrequest_timeline_event')) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('plugin_pullrequest_timeline_event');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('plugin_pullrequest_timeline_event');
         }
     }
 }

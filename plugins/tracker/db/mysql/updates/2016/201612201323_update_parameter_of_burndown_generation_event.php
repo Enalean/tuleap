@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201612201323_update_parameter_of_burndown_generation_event extends ForgeUpgrade_Bucket
+class b201612201323_update_parameter_of_burndown_generation_event extends \Tuleap\ForgeUpgrade\Bucket
 {
     public function description()
     {
@@ -40,7 +40,7 @@ class b201612201323_update_parameter_of_burndown_generation_event extends ForgeU
         $res = $this->db->dbh->exec($sql);
 
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occurred while removing wrong cache values');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occurred while removing wrong cache values');
         }
     }
 }

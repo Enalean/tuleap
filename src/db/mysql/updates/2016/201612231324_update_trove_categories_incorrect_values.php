@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201612231324_update_trove_categories_incorrect_values extends ForgeUpgrade_Bucket
+class b201612231324_update_trove_categories_incorrect_values extends \Tuleap\ForgeUpgrade\Bucket
 {
     public function description()
     {
@@ -97,7 +97,7 @@ class b201612231324_update_trove_categories_incorrect_values extends ForgeUpgrad
             }
 
             if (! $statement->execute([$parent_trove_cat_id])) {
-                throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete(
+                throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException(
                     'Could not retrieve information on trove categories hierarchy'
                 );
             }
@@ -117,6 +117,6 @@ class b201612231324_update_trove_categories_incorrect_values extends ForgeUpgrad
     private function rollBackOnError($message)
     {
         $this->db->dbh->rollBack();
-        throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete($message);
+        throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException($message);
     }
 }

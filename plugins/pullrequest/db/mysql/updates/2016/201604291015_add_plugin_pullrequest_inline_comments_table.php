@@ -52,7 +52,7 @@ EOT;
     public function postUp()
     {
         if (! $this->db->tableNameExists('plugin_pullrequest_inline_comments')) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('plugin_pullrequest_inline_comments table is missing');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('plugin_pullrequest_inline_comments table is missing');
         }
     }
 }

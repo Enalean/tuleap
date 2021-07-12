@@ -16,7 +16,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201607221530_cleanup_csrf_token_from_userprefs extends ForgeUpgrade_Bucket
+class b201607221530_cleanup_csrf_token_from_userprefs extends \Tuleap\ForgeUpgrade\Bucket
 {
 
     public function description()
@@ -35,7 +35,7 @@ class b201607221530_cleanup_csrf_token_from_userprefs extends ForgeUpgrade_Bucke
 
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occurred while cleaning up the CSRF tokens from the user preferences tables.');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occurred while cleaning up the CSRF tokens from the user preferences tables.');
         }
     }
 }

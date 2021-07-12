@@ -38,7 +38,7 @@ class b201904010950_remove_json_plugin_hooks_cache extends ForgeUpgrade_Bucket /
 
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete(
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException(
                 'An error occurred while forgeconfig setting about plugin hooks cache.'
             );
         }

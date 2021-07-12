@@ -22,7 +22,7 @@
 declare(strict_types=1);
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
-final class b202103111534_update_user_preference_format_text_to_commonmark extends ForgeUpgrade_Bucket
+final class b202103111534_update_user_preference_format_text_to_commonmark extends \Tuleap\ForgeUpgrade\Bucket
 {
     public function description(): string
     {
@@ -39,7 +39,7 @@ final class b202103111534_update_user_preference_format_text_to_commonmark exten
         $sql = "UPDATE user_preferences SET preference_value='commonmark' WHERE preference_name='user_edition_default_format' AND preference_value='text'";
         $res = $this->db->dbh->query($sql);
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete(
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException(
                 'An error occured while updating user_preferences.preference_value column: ' . implode(', ', $this->db->dbh->errorInfo())
             );
         }

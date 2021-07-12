@@ -20,7 +20,7 @@
 declare(strict_types=1);
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
-final class b202006161036_add_reference_group_for_project extends ForgeUpgrade_Bucket
+final class b202006161036_add_reference_group_for_project extends \Tuleap\ForgeUpgrade\Bucket
 {
     public function description(): string
     {
@@ -58,7 +58,7 @@ final class b202006161036_add_reference_group_for_project extends ForgeUpgrade_B
         $pdo_statement = $this->db->dbh->prepare($sql);
 
         if ($pdo_statement->execute([$reference_id]) === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete(
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException(
                 'Error while retrieving groups with broken git references.'
             );
         }
@@ -76,7 +76,7 @@ final class b202006161036_add_reference_group_for_project extends ForgeUpgrade_B
         $result = $this->db->dbh->query($sql)->fetch()[0];
 
         if ($result === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete(
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException(
                 'Error while retrieving git reference.'
             );
         }
@@ -90,7 +90,7 @@ final class b202006161036_add_reference_group_for_project extends ForgeUpgrade_B
         $pdo_statement = $this->db->dbh->prepare($sql);
 
         if (! $pdo_statement) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete("Error while preparing insert request");
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException("Error while preparing insert request");
         }
 
         $this->db->dbh->beginTransaction();
@@ -103,13 +103,13 @@ final class b202006161036_add_reference_group_for_project extends ForgeUpgrade_B
         }
 
         if (! $this->db->dbh->commit()) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('Error while committing.');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('Error while committing.');
         }
     }
 
     private function rollBackOnError($message): void
     {
         $this->db->dbh->rollBack();
-        throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete($message);
+        throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException($message);
     }
 }

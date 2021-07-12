@@ -21,7 +21,7 @@
 declare(strict_types=1);
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
-final class b202101271212_add_merge_request_created_at_date extends ForgeUpgrade_Bucket
+final class b202101271212_add_merge_request_created_at_date extends \Tuleap\ForgeUpgrade\Bucket
 {
     public function description(): string
     {

@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201606010939_add_git_default_permission_values extends ForgeUpgrade_Bucket
+class b201606010939_add_git_default_permission_values extends \Tuleap\ForgeUpgrade\Bucket
 {
 
     public function description()
@@ -54,7 +54,7 @@ EOT;
     {
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete($message . implode(', ', $this->db->dbh->errorInfo()));
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException($message . implode(', ', $this->db->dbh->errorInfo()));
         }
     }
 }

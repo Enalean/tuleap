@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201803091459_add_jenkins_configuration_to_campaign extends ForgeUpgrade_Bucket
+class b201803091459_add_jenkins_configuration_to_campaign extends \Tuleap\ForgeUpgrade\Bucket
 {
     public function description()
     {
@@ -41,7 +41,7 @@ class b201803091459_add_jenkins_configuration_to_campaign extends ForgeUpgrade_B
 
         if ($result === false) {
             $error_message = implode(', ', $this->db->dbh->errorInfo());
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete($error_message);
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException($error_message);
         }
     }
 }

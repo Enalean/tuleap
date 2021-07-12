@@ -19,7 +19,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-class b201112160838_delete_user_id extends ForgeUpgrade_Bucket
+class b201112160838_delete_user_id extends \Tuleap\ForgeUpgrade\Bucket
 {
 
     /**
@@ -54,7 +54,7 @@ EOT;
         $sql = "UPDATE plugin_git SET repository_scope = 'I' WHERE user_id IS NOT NULL";
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while updating the column repository_scope to the table plugin_git');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occured while updating the column repository_scope to the table plugin_git');
         }
 
         $sql = 'ALTER TABLE plugin_git 
@@ -62,7 +62,7 @@ EOT;
 
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while removing the column user_id to the table plugin_git');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occured while removing the column user_id to the table plugin_git');
         }
     }
 
@@ -74,7 +74,7 @@ EOT;
     public function postUp()
     {
         if ($this->db->columnNameExists('plugin_git', 'user_id')) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('Column user_id in table plugin_git is still existing');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('Column user_id in table plugin_git is still existing');
         }
     }
 }

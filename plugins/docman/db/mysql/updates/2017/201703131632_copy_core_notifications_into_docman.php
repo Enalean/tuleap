@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201703131632_copy_core_notifications_into_docman extends ForgeUpgrade_Bucket
+class b201703131632_copy_core_notifications_into_docman extends \Tuleap\ForgeUpgrade\Bucket
 {
 
     public function description()
@@ -40,7 +40,7 @@ class b201703131632_copy_core_notifications_into_docman extends ForgeUpgrade_Buc
     public function postUp()
     {
         if (! $this->db->tableNameExists('plugin_docman_notifications')) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('plugin_docman_notifications table is missing');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('plugin_docman_notifications table is missing');
         }
     }
 
@@ -64,7 +64,7 @@ class b201703131632_copy_core_notifications_into_docman extends ForgeUpgrade_Buc
 
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while copying table. ' . implode(', ', $this->db->dbh->errorInfo()));
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occured while copying table. ' . implode(', ', $this->db->dbh->errorInfo()));
         }
     }
 }

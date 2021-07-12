@@ -21,7 +21,7 @@
 declare(strict_types=1);
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
-final class b202012221028_add_branch_column extends ForgeUpgrade_Bucket
+final class b202012221028_add_branch_column extends \Tuleap\ForgeUpgrade\Bucket
 {
     public function description(): string
     {

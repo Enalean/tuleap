@@ -21,7 +21,7 @@
 declare(strict_types=1);
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
-final class b202106291030_add_expiration_date_platform_banner extends ForgeUpgrade_Bucket
+final class b202106291030_add_expiration_date_platform_banner extends \Tuleap\ForgeUpgrade\Bucket
 {
     public function description(): string
     {
@@ -43,7 +43,7 @@ final class b202106291030_add_expiration_date_platform_banner extends ForgeUpgra
                 ADD COLUMN expiration_date INT(11) UNSIGNED DEFAULT NULL';
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('Unable to add expiration_date column on the platform_banner table');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('Unable to add expiration_date column on the platform_banner table');
         }
     }
 }

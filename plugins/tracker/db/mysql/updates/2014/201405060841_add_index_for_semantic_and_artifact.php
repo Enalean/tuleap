@@ -16,7 +16,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201405060841_add_index_for_semantic_and_artifact extends ForgeUpgrade_Bucket
+class b201405060841_add_index_for_semantic_and_artifact extends \Tuleap\ForgeUpgrade\Bucket
 {
 
     public function description()
@@ -38,7 +38,7 @@ class b201405060841_add_index_for_semantic_and_artifact extends ForgeUpgrade_Buc
                 $info = $this->db->dbh->errorInfo();
                 $msg  = 'An error occured adding index to tracker_semantic_status: ' . $info[2] . ' (' . $info[1] . ' - ' . $info[0] . ')';
                 $this->log->error($msg);
-                throw new ForgeUpgrade_Bucket_Db_Exception($msg);
+                throw new \Tuleap\ForgeUpgrade\Bucket\BucketDbException($msg);
             }
         }
 
@@ -49,7 +49,7 @@ class b201405060841_add_index_for_semantic_and_artifact extends ForgeUpgrade_Buc
                 $info = $this->db->dbh->errorInfo();
                 $msg  = 'An error occured adding index to tracker_artifact: ' . $info[2] . ' (' . $info[1] . ' - ' . $info[0] . ')';
                 $this->log->error($msg);
-                throw new ForgeUpgrade_Bucket_Db_Exception($msg);
+                throw new \Tuleap\ForgeUpgrade\Bucket\BucketDbException($msg);
             }
         }
     }

@@ -45,7 +45,7 @@ class b201910241530_remove_callmeback_configuration_table extends ForgeUpgrade_B
         $result = $this->db->dbh->exec($sql);
 
         if ($result === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('Remove call me back tables failed');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('Remove call me back tables failed');
         }
     }
 }

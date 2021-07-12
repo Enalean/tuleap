@@ -39,7 +39,7 @@ class b201910191514_purge_logs_for_delete_webhooks extends ForgeUpgrade_Bucket /
         $res = $this->db->dbh->exec($sql);
 
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('Error while purging logs for already removed Git webhooks .');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('Error while purging logs for already removed Git webhooks .');
         }
     }
 }

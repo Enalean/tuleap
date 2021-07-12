@@ -20,7 +20,7 @@
  */
 
 
-class b201302271529_add_cumulative_flow_chart_table extends ForgeUpgrade_Bucket
+class b201302271529_add_cumulative_flow_chart_table extends \Tuleap\ForgeUpgrade\Bucket
 {
 
     public function description()
@@ -47,7 +47,7 @@ EOT;
 )";
             $res = $this->db->dbh->exec($sql);
             if ($res === false) {
-                throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while adding table plugin_graphontrackersv5_cumulative_flow_chart: ' . implode(', ', $this->db->dbh->errorInfo()));
+                throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occured while adding table plugin_graphontrackersv5_cumulative_flow_chart: ' . implode(', ', $this->db->dbh->errorInfo()));
             }
         }
     }

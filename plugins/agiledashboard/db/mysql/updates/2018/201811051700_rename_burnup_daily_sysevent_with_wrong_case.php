@@ -40,7 +40,7 @@ class b201811051700_rename_burnup_daily_sysevent_with_wrong_case extends ForgeUp
             'Tuleap\\Agiledashboard\\FormElement\\SystemEvent\\SystemEvent_BURNUP_DAILY'
         ]);
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete(
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException(
                 'An error occurred while renaming the Burnup Daily system events'
             );
         }

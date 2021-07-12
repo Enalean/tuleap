@@ -16,7 +16,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201604071310_replace_primary_key_in_table_columns extends ForgeUpgrade_Bucket
+class b201604071310_replace_primary_key_in_table_columns extends \Tuleap\ForgeUpgrade\Bucket
 {
 
     public function description()
@@ -37,7 +37,7 @@ class b201604071310_replace_primary_key_in_table_columns extends ForgeUpgrade_Bu
         ";
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while replacing primary key in table columns: ' . implode(', ', $this->db->dbh->errorInfo()));
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occured while replacing primary key in table columns: ' . implode(', ', $this->db->dbh->errorInfo()));
         }
     }
 }

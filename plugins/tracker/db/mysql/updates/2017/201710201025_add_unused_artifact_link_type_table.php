@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201710201025_add_unused_artifact_link_type_table extends ForgeUpgrade_Bucket
+class b201710201025_add_unused_artifact_link_type_table extends \Tuleap\ForgeUpgrade\Bucket
 {
     public function description()
     {
@@ -44,7 +44,7 @@ class b201710201025_add_unused_artifact_link_type_table extends ForgeUpgrade_Buc
     public function postUp()
     {
         if (! $this->db->tableNameExists('plugin_tracker_projects_unused_artifactlink_types')) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete(
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException(
                 'the table plugin_tracker_projects_unused_artifactlink_types is missing'
             );
         }

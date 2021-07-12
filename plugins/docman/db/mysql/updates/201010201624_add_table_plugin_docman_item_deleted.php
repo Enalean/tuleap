@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201010201624_add_table_plugin_docman_item_deleted extends ForgeUpgrade_Bucket
+class b201010201624_add_table_plugin_docman_item_deleted extends \Tuleap\ForgeUpgrade\Bucket
 {
 
     public function description()
@@ -70,7 +70,7 @@ EOT;
         if ($this->db->tableNameExists('plugin_docman_item') && $this->db->tableNameExists('plugin_docman_item_deleted')) {
             $res = $this->db->dbh->exec($sql);
             if ($res === false) {
-                throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured copying from  table plugin_docman_item to plugin_docman_item_deleted');
+                throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occured copying from  table plugin_docman_item to plugin_docman_item_deleted');
             }
         }
     }

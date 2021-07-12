@@ -21,7 +21,7 @@
 declare(strict_types=1);
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
-final class b202009281130_remove_special_user_mappings extends ForgeUpgrade_Bucket
+final class b202009281130_remove_special_user_mappings extends \Tuleap\ForgeUpgrade\Bucket
 {
     public function description(): string
     {
@@ -37,7 +37,7 @@ final class b202009281130_remove_special_user_mappings extends ForgeUpgrade_Buck
     {
         $sql = 'DELETE FROM plugin_openidconnectclient_user_mapping WHERE user_id < 100';
         if ($this->db->dbh->exec($sql) === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete(
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException(
                 'An error occurred while removing OIDC mappings involving special users'
             );
         }

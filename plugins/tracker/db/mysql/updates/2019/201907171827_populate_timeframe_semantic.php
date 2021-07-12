@@ -45,7 +45,7 @@ class b201907171827_populate_timeframe_semantic extends ForgeUpgrade_Bucket //ph
         ";
 
         if ($this->db->dbh->exec($sql) === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occurred while populating tracker_semantic_timeframe table');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occurred while populating tracker_semantic_timeframe table');
         }
     }
 }

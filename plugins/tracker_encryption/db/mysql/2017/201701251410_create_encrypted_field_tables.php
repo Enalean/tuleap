@@ -16,7 +16,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201701251410_create_encrypted_field_tables extends ForgeUpgrade_Bucket
+class b201701251410_create_encrypted_field_tables extends \Tuleap\ForgeUpgrade\Bucket
 {
     public function description()
     {
@@ -50,7 +50,7 @@ class b201701251410_create_encrypted_field_tables extends ForgeUpgrade_Bucket
 
         $this->db->dbh->exec($sql);
         if (! $this->db->tableNameExists('tracker_changeset_value_encrypted')) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete(
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException(
                 'An error occured while creating encrypted field tables'
             );
         }
@@ -68,7 +68,7 @@ class b201701251410_create_encrypted_field_tables extends ForgeUpgrade_Bucket
                 WHERE formElement_type = 'Encrypted'";
 
         if ($this->db->dbh->exec($sql) === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete(
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException(
                 'An error occured while migrating data'
             );
         }
@@ -84,7 +84,7 @@ class b201701251410_create_encrypted_field_tables extends ForgeUpgrade_Bucket
                     WHERE formElement_type = 'Encrypted'";
 
         if ($this->db->dbh->exec($sql) === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete(
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException(
                 'An error occured while removing old data'
             );
         }

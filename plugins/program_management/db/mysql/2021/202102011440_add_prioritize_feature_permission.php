@@ -21,7 +21,7 @@
 declare(strict_types=1);
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
-final class b202102011440_add_prioritize_feature_permission extends ForgeUpgrade_Bucket
+final class b202102011440_add_prioritize_feature_permission extends \Tuleap\ForgeUpgrade\Bucket
 {
     public function description(): string
     {
@@ -48,7 +48,7 @@ final class b202102011440_add_prioritize_feature_permission extends ForgeUpgrade
             FROM plugin_scaled_agile_plan';
         $res                       = $this->db->dbh->exec($sql_prefill_existing_plan);
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete(
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException(
                 'Could not allow project administrators to prioritize features inside existing plans'
             );
         }

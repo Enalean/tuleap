@@ -19,7 +19,7 @@
 /**
  * Replace version date column values by timestamp
  */
-class b201405071644_replace_version_date_column_values_by_timestamp extends ForgeUpgrade_Bucket
+class b201405071644_replace_version_date_column_values_by_timestamp extends \Tuleap\ForgeUpgrade\Bucket
 {
     public function description()
     {
@@ -39,7 +39,7 @@ class b201405071644_replace_version_date_column_values_by_timestamp extends Forg
         $res = $this->db->dbh->exec($sql);
 
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while replacing version date column values by timestamp.');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occured while replacing version date column values by timestamp.');
         }
     }
 }

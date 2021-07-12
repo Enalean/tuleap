@@ -19,7 +19,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-class b201205041624_add_titles_column extends ForgeUpgrade_Bucket
+class b201205041624_add_titles_column extends \Tuleap\ForgeUpgrade\Bucket
 {
 
     public function description()
@@ -43,7 +43,7 @@ EOT;
 
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while adding column backlog_title or plan_title to plugin_agiledashboard_planning: ' . implode(', ', $this->db->dbh->errorInfo()));
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occured while adding column backlog_title or plan_title to plugin_agiledashboard_planning: ' . implode(', ', $this->db->dbh->errorInfo()));
         }
 
         $sql = "UPDATE plugin_agiledashboard_planning SET backlog_title = 'Release Backlog', plan_title = 'Sprint Plan'";

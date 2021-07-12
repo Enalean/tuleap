@@ -123,6 +123,6 @@ class b202003021509_add_and_populate_polling_url_tables extends ForgeUpgrade_Buc
     private function rollBackOnError($message): void
     {
         $this->db->dbh->rollBack();
-        throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete($message);
+        throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException($message);
     }
 }

@@ -19,7 +19,7 @@
 /**
  * Modify groups table to use svn accessfile history id
  */
-class b201405051133_modify_groups_table_to_use_svn_accessfile_history_id extends ForgeUpgrade_Bucket
+class b201405051133_modify_groups_table_to_use_svn_accessfile_history_id extends \Tuleap\ForgeUpgrade\Bucket
 {
     public function description()
     {
@@ -44,7 +44,7 @@ class b201405051133_modify_groups_table_to_use_svn_accessfile_history_id extends
 
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while altering groups table.');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occured while altering groups table.');
         }
     }
 
@@ -56,7 +56,7 @@ class b201405051133_modify_groups_table_to_use_svn_accessfile_history_id extends
 
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while setting groups svn_access file value.');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occured while setting groups svn_access file value.');
         }
     }
 }

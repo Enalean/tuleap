@@ -21,7 +21,7 @@
 declare(strict_types=1);
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
-class b202105061544_add_git_tag_reference extends ForgeUpgrade_Bucket
+class b202105061544_add_git_tag_reference extends \Tuleap\ForgeUpgrade\Bucket
 {
     public function description(): string
     {

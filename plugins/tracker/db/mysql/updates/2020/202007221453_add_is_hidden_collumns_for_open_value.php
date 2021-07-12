@@ -19,7 +19,7 @@
  */
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
-class b202007221453_add_is_hidden_collumns_for_open_value extends ForgeUpgrade_Bucket
+class b202007221453_add_is_hidden_collumns_for_open_value extends \Tuleap\ForgeUpgrade\Bucket
 {
     public function description()
     {

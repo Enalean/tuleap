@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201603171433_add_icon_color_columns extends ForgeUpgrade_Bucket
+class b201603171433_add_icon_color_columns extends \Tuleap\ForgeUpgrade\Bucket
 {
 
     public function description()
@@ -40,18 +40,18 @@ class b201603171433_add_icon_color_columns extends ForgeUpgrade_Bucket
         $res = $this->db->dbh->exec($sql);
 
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occurred while adding icon and color columns ' . implode(', ', $this->db->dbh->errorInfo()));
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occurred while adding icon and color columns ' . implode(', ', $this->db->dbh->errorInfo()));
         }
     }
 
     public function postUp()
     {
         if (! $this->db->columnNameExists('plugin_openidconnectclient_provider', 'icon')) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occurred while adding icon column to the plugin_openidconnectclient_provider table');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occurred while adding icon column to the plugin_openidconnectclient_provider table');
         }
 
         if (! $this->db->columnNameExists('plugin_openidconnectclient_provider', 'color')) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occurred while adding color column to the plugin_openidconnectclient_provider table');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occurred while adding color column to the plugin_openidconnectclient_provider table');
         }
     }
 }

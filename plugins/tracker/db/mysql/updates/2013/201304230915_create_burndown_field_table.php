@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201304230915_create_burndown_field_table extends ForgeUpgrade_Bucket
+class b201304230915_create_burndown_field_table extends \Tuleap\ForgeUpgrade\Bucket
 {
 
     public function description()
@@ -48,7 +48,7 @@ class b201304230915_create_burndown_field_table extends ForgeUpgrade_Bucket
     {
         $res = $this->db->dbh->query($sql);
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while populating tracker_field_burndown: ' . implode(', ', $this->db->dbh->errorInfo()));
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occured while populating tracker_field_burndown: ' . implode(', ', $this->db->dbh->errorInfo()));
         }
     }
 

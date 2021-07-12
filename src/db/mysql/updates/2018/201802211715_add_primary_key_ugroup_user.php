@@ -58,7 +58,7 @@ class b201802211715_add_primary_key_ugroup_user extends ForgeUpgrade_Bucket // @
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
             $this->removeTemporaryUgroupUserTable();
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete(
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException(
                 'An error occurred while inserting data in new ugroup_user table'
             );
         }
@@ -75,7 +75,7 @@ class b201802211715_add_primary_key_ugroup_user extends ForgeUpgrade_Bucket // @
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
             $this->removeTemporaryUgroupUserTable();
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete(
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException(
                 'An error occurred while moving cleaned table ugroup_user in place'
             );
         }

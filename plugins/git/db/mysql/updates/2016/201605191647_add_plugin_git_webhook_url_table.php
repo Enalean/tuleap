@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201605191647_add_plugin_git_webhook_url_table extends ForgeUpgrade_Bucket
+class b201605191647_add_plugin_git_webhook_url_table extends \Tuleap\ForgeUpgrade\Bucket
 {
 
     public function description()
@@ -48,7 +48,7 @@ EOT;
     public function postUp()
     {
         if (! $this->db->tableNameExists('plugin_git_webhook_url')) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('plugin_git_webhook_url table is missing');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('plugin_git_webhook_url table is missing');
         }
     }
 }

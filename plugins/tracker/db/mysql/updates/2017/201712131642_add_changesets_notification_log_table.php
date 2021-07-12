@@ -19,7 +19,7 @@
  */
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
-class b201712131642_add_changesets_notification_log_table extends ForgeUpgrade_Bucket
+class b201712131642_add_changesets_notification_log_table extends \Tuleap\ForgeUpgrade\Bucket
 {
     public function description()
     {
@@ -47,7 +47,7 @@ class b201712131642_add_changesets_notification_log_table extends ForgeUpgrade_B
     public function postUp()
     {
         if (! $this->db->tableNameExists('tracker_email_notification_log')) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('tracker_email_notification_log table is missing');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('tracker_email_notification_log table is missing');
         }
     }
 }

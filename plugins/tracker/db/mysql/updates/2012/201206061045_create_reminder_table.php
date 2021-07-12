@@ -16,7 +16,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201206061045_create_reminder_table extends ForgeUpgrade_Bucket
+class b201206061045_create_reminder_table extends \Tuleap\ForgeUpgrade\Bucket
 {
 
     /**

@@ -21,7 +21,7 @@
 declare(strict_types=1);
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
-final class b202004221800_add_acceptable_jwks_endpoint_column extends ForgeUpgrade_Bucket
+final class b202004221800_add_acceptable_jwks_endpoint_column extends \Tuleap\ForgeUpgrade\Bucket
 {
     public function description(): string
     {
@@ -42,7 +42,7 @@ final class b202004221800_add_acceptable_jwks_endpoint_column extends ForgeUpgra
         $sql = 'ALTER TABLE plugin_openidconnectclient_provider_generic
                 ADD COLUMN jwks_endpoint TEXT NOT NULL';
         if ($this->db->dbh->exec($sql) === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete(
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException(
                 'An error occurred while adding column jwks_endpoint to the plugin_openidconnectclient_provider_generic table'
             );
         }

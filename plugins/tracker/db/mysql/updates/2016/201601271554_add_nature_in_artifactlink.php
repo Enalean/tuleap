@@ -16,7 +16,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201601271554_add_nature_in_artifactlink extends ForgeUpgrade_Bucket
+class b201601271554_add_nature_in_artifactlink extends \Tuleap\ForgeUpgrade\Bucket
 {
 
     public function description()
@@ -34,14 +34,14 @@ class b201601271554_add_nature_in_artifactlink extends ForgeUpgrade_Bucket
         $sql = "ALTER TABLE tracker_changeset_value_artifactlink ADD COLUMN nature VARCHAR(255) NULL";
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while adding nature column in artifact link: ' . implode(', ', $this->db->dbh->errorInfo()));
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occured while adding nature column in artifact link: ' . implode(', ', $this->db->dbh->errorInfo()));
         }
     }
 
     public function postUp()
     {
         if (! $this->db->columnNameExists('tracker_changeset_value_artifactlink', 'nature')) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while adding nature column in artifact link');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occured while adding nature column in artifact link');
         }
     }
 }

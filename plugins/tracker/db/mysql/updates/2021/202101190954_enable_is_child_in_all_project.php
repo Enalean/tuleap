@@ -21,7 +21,7 @@
 declare(strict_types=1);
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
-final class b202101190954_enable_is_child_in_all_project extends ForgeUpgrade_Bucket
+final class b202101190954_enable_is_child_in_all_project extends \Tuleap\ForgeUpgrade\Bucket
 {
     public function description(): string
     {
@@ -37,7 +37,7 @@ final class b202101190954_enable_is_child_in_all_project extends ForgeUpgrade_Bu
     {
         $sql = "DELETE FROM plugin_tracker_projects_unused_artifactlink_types WHERE type_shortname = '_is_child'";
         if ($this->db->dbh->exec($sql) === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete(
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException(
                 'An error occurred while enabling artifact link type _is_child in all projects.'
             );
         }

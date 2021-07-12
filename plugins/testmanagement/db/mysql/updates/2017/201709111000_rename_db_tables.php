@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201709111000_rename_db_tables extends ForgeUpgrade_Bucket
+class b201709111000_rename_db_tables extends \Tuleap\ForgeUpgrade\Bucket
 {
     public function description()
     {

@@ -19,7 +19,7 @@
  *
  */
 
-class b201709121141_delete_project_classification_widget extends ForgeUpgrade_Bucket
+class b201709121141_delete_project_classification_widget extends \Tuleap\ForgeUpgrade\Bucket
 {
     public function description()
     {

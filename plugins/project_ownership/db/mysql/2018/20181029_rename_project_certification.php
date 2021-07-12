@@ -40,7 +40,7 @@ class b20181029_rename_project_certification extends ForgeUpgrade_Bucket // phpc
     {
         $res = $this->db->dbh->exec('UPDATE plugin SET name = "project_ownership" WHERE name = "project_certification"');
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete(
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException(
                 'An error occurred while updating the name of the project certification plugin'
             );
         }
@@ -53,7 +53,7 @@ class b20181029_rename_project_certification extends ForgeUpgrade_Bucket // phpc
         }
         $res = $this->db->dbh->exec('ALTER TABLE plugin_project_certification_project_owner RENAME plugin_project_ownership_project_owner');
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete(
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException(
                 'An error occurred while renaming the table plugin_project_ownership_project_owner'
             );
         }

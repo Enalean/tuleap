@@ -21,7 +21,7 @@
 declare(strict_types=1);
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
-final class b202101071404_create_plugin_gitlab_bot_api_token_table extends ForgeUpgrade_Bucket
+final class b202101071404_create_plugin_gitlab_bot_api_token_table extends \Tuleap\ForgeUpgrade\Bucket
 {
     public function description(): string
     {
@@ -45,7 +45,7 @@ final class b202101071404_create_plugin_gitlab_bot_api_token_table extends Forge
         $this->db->createTable('plugin_gitlab_bot_api_token', $sql);
 
         if (! $this->db->tableNameExists('plugin_gitlab_bot_api_token')) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete("Table plugin_gitlab_bot_api_token has not been created in database");
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException("Table plugin_gitlab_bot_api_token has not been created in database");
         }
     }
 }

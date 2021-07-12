@@ -21,7 +21,7 @@
 declare(strict_types=1);
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
-final class b202106151430_add_merge_request_info_source_branch extends ForgeUpgrade_Bucket
+final class b202106151430_add_merge_request_info_source_branch extends \Tuleap\ForgeUpgrade\Bucket
 {
     public function description(): string
     {
@@ -37,7 +37,7 @@ final class b202106151430_add_merge_request_info_source_branch extends ForgeUpgr
     {
         $db_name = $this->db->dbh->query('SELECT DATABASE()')->fetchColumn();
         if (! is_string($db_name)) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('Cannot detect current database');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('Cannot detect current database');
         }
         $this->db->alterTable(
             'plugin_gitlab_repository_integration_merge_request_info',

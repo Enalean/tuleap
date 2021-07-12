@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201711301606_add_kanban_tracker_reports_table extends ForgeUpgrade_Bucket
+class b201711301606_add_kanban_tracker_reports_table extends \Tuleap\ForgeUpgrade\Bucket
 {
     public function description()
     {
@@ -45,7 +45,7 @@ class b201711301606_add_kanban_tracker_reports_table extends ForgeUpgrade_Bucket
     public function postUp()
     {
         if (! $this->db->tableNameExists('plugin_agiledashboard_kanban_tracker_reports')) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete(
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException(
                 'the table plugin_agiledashboard_kanban_tracker_reports is missing'
             );
         }

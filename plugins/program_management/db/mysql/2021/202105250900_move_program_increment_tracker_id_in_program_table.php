@@ -21,7 +21,7 @@
 declare(strict_types=1);
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
-final class b202105250900_move_program_increment_tracker_id_in_program_table extends ForgeUpgrade_Bucket
+final class b202105250900_move_program_increment_tracker_id_in_program_table extends \Tuleap\ForgeUpgrade\Bucket
 {
     public function description(): string
     {
@@ -66,7 +66,7 @@ final class b202105250900_move_program_increment_tracker_id_in_program_table ext
 
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while inserting data in plugin_program_management_plan_tmp');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occured while inserting data in plugin_program_management_plan_tmp');
         }
     }
 
@@ -102,7 +102,7 @@ final class b202105250900_move_program_increment_tracker_id_in_program_table ext
 
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while inserting data in plugin_program_management_program_tmp');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occured while inserting data in plugin_program_management_program_tmp');
         }
     }
 
@@ -116,7 +116,7 @@ final class b202105250900_move_program_increment_tracker_id_in_program_table ext
         $res = $this->db->dbh->exec($sql);
 
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occurred while renaming of plugin_program_management_program_tmp and plugin_program_management_plan_tmp');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occurred while renaming of plugin_program_management_program_tmp and plugin_program_management_plan_tmp');
         }
 
         $sql = 'DROP TABLE IF EXISTS plugin_program_management_label_program_increment';

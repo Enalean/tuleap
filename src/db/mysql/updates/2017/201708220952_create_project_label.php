@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201708220952_create_project_label extends ForgeUpgrade_Bucket
+class b201708220952_create_project_label extends \Tuleap\ForgeUpgrade\Bucket
 {
     public function description()
     {
@@ -45,7 +45,7 @@ class b201708220952_create_project_label extends ForgeUpgrade_Bucket
     public function postUp()
     {
         if (! $this->db->tableNameExists('project_label')) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('project_label table is missing');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('project_label table is missing');
         }
     }
 }

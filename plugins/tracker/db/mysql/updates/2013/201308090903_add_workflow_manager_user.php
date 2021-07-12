@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201308090903_add_workflow_manager_user extends ForgeUpgrade_Bucket
+class b201308090903_add_workflow_manager_user extends \Tuleap\ForgeUpgrade\Bucket
 {
 
     public function description()
@@ -74,7 +74,7 @@ class b201308090903_add_workflow_manager_user extends ForgeUpgrade_Bucket
         $result = $this->db->dbh->exec($sql);
         if ($result === false) {
             $error_message = implode(', ', $this->db->dbh->errorInfo());
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete($error_message);
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException($error_message);
         }
     }
 }

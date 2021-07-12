@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201712251617_purge_removed_types_in_usage_table extends ForgeUpgrade_Bucket
+class b201712251617_purge_removed_types_in_usage_table extends \Tuleap\ForgeUpgrade\Bucket
 {
     public function description()
     {

@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201207171819_add_freestyle_on_top_field extends ForgeUpgrade_Bucket
+class b201207171819_add_freestyle_on_top_field extends \Tuleap\ForgeUpgrade\Bucket
 {
 
     public function description()
@@ -39,7 +39,7 @@ EOT;
                 ADD COLUMN use_freestyle_columns tinyint(4) default 0 AFTER tracker_id";
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while adding column use_freestyle_columns to plugin_cardwall_on_top: ' . implode(', ', $this->db->dbh->errorInfo()));
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occured while adding column use_freestyle_columns to plugin_cardwall_on_top: ' . implode(', ', $this->db->dbh->errorInfo()));
         }
     }
 

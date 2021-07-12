@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201711301015_add_forum_admin_in_permission_table extends ForgeUpgrade_Bucket
+class b201711301015_add_forum_admin_in_permission_table extends \Tuleap\ForgeUpgrade\Bucket
 {
     public function description()
     {

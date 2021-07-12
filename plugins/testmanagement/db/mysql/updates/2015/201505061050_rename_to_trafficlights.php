@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-class b201505061050_rename_to_trafficlights extends ForgeUpgrade_Bucket
+class b201505061050_rename_to_trafficlights extends \Tuleap\ForgeUpgrade\Bucket
 {
 
     public function description()
@@ -54,7 +54,7 @@ EOT;
         $this->db->createTable('plugin_trafficlights', $sql);
 
         if (! $this->db->tableNameExists('plugin_trafficlights')) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('plugin_trafficlights table is missing');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('plugin_trafficlights table is missing');
         }
     }
 
@@ -67,7 +67,7 @@ EOT;
         $res = $this->db->dbh->exec($sql);
 
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while feeding plugin_trafficlights table ');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occured while feeding plugin_trafficlights table ');
         }
     }
 
@@ -77,7 +77,7 @@ EOT;
         $res = $this->db->dbh->exec($sql);
 
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while deleting plugin_testing');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occured while deleting plugin_testing');
         }
     }
 
@@ -95,7 +95,7 @@ EOT;
         $res = $this->db->dbh->exec($sql);
 
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while updating service');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occured while updating service');
         }
     }
 
@@ -113,7 +113,7 @@ EOT;
         $res = $this->db->dbh->exec($sql);
 
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while updating service');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occured while updating service');
         }
     }
 
@@ -126,7 +126,7 @@ EOT;
         $res = $this->db->dbh->exec($sql);
 
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while updating plugin');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occured while updating plugin');
         }
     }
 }

@@ -16,7 +16,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201311191506_add_gerrit_config_template_table extends ForgeUpgrade_Bucket
+class b201311191506_add_gerrit_config_template_table extends \Tuleap\ForgeUpgrade\Bucket
 {
 
     /**

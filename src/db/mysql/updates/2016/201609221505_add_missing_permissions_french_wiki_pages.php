@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201609221505_add_missing_permissions_french_wiki_pages extends ForgeUpgrade_Bucket
+class b201609221505_add_missing_permissions_french_wiki_pages extends \Tuleap\ForgeUpgrade\Bucket
 {
     public function description()
     {
@@ -48,7 +48,7 @@ class b201609221505_add_missing_permissions_french_wiki_pages extends ForgeUpgra
         $result = $this->db->dbh->exec($sql);
 
         if ($result === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('Missing permissions on french wiki pages have not been applied');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('Missing permissions on french wiki pages have not been applied');
         }
     }
 }

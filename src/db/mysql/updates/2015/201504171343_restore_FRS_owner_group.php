@@ -19,7 +19,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-class b201504171343_restore_FRS_owner_group extends ForgeUpgrade_Bucket
+class b201504171343_restore_FRS_owner_group extends \Tuleap\ForgeUpgrade\Bucket
 {
 
     public function description()

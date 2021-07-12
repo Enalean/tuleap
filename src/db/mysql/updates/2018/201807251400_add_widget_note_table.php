@@ -44,7 +44,7 @@ class b201807251400_add_widget_note_table extends ForgeUpgrade_Bucket // @coding
 
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('Unable to create table for ProjectNote widget');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('Unable to create table for ProjectNote widget');
         }
     }
 }

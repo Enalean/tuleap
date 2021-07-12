@@ -16,7 +16,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b20150922_alter_mediawiki_admin_options_table extends ForgeUpgrade_Bucket
+class b20150922_alter_mediawiki_admin_options_table extends \Tuleap\ForgeUpgrade\Bucket
 {
 
     /**
@@ -57,7 +57,7 @@ EOT;
     {
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete($message . implode(', ', $this->db->dbh->errorInfo()));
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException($message . implode(', ', $this->db->dbh->errorInfo()));
         }
     }
 }

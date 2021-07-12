@@ -20,7 +20,7 @@
 
 declare(strict_types=1);
 
-class b202101211448_add_jira_issue_type_id_column extends ForgeUpgrade_Bucket //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+class b202101211448_add_jira_issue_type_id_column extends \Tuleap\ForgeUpgrade\Bucket //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
     public function description()
     {
@@ -38,7 +38,7 @@ class b202101211448_add_jira_issue_type_id_column extends ForgeUpgrade_Bucket //
                 ADD COLUMN jira_issue_type_id TEXT NOT NULL AFTER jira_issue_type_name';
 
         if ($this->db->dbh->exec($sql) === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete(
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException(
                 'An error occurred while enabling artifact link type _is_child in all projects.'
             );
         }

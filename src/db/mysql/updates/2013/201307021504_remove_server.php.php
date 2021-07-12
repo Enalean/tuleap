@@ -19,7 +19,7 @@
 /**
  * Add generic_user table
  */
-class b201307021504_remove_server extends ForgeUpgrade_Bucket
+class b201307021504_remove_server extends \Tuleap\ForgeUpgrade\Bucket
 {
     public function description()
     {
@@ -39,7 +39,7 @@ EOT;
             $sql = "DROP TABLE server";
             $res = $this->db->dbh->exec($sql);
             if ($res === false) {
-                throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while removing table server');
+                throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occured while removing table server');
             }
         }
     }
@@ -47,7 +47,7 @@ EOT;
     public function postUp()
     {
         if ($this->db->tableNameExists('server')) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('Table server not deleted');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('Table server not deleted');
         }
     }
 }

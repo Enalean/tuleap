@@ -22,7 +22,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b20170731211_add_kanban_widget_table extends ForgeUpgrade_Bucket
+class b20170731211_add_kanban_widget_table extends \Tuleap\ForgeUpgrade\Bucket
 {
 
     public function description()
@@ -51,7 +51,7 @@ class b20170731211_add_kanban_widget_table extends ForgeUpgrade_Bucket
     public function postUp()
     {
         if (! $this->db->tableNameExists('plugin_agiledashboard_kanban_widget')) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete(
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException(
                 'plugin_agiledashboard_kanban_widget table is missing'
             );
         }

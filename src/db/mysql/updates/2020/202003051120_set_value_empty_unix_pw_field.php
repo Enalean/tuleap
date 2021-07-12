@@ -21,7 +21,7 @@
 declare(strict_types=1);
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
-final class b202003051120_set_value_empty_unix_pw_field extends ForgeUpgrade_Bucket
+final class b202003051120_set_value_empty_unix_pw_field extends \Tuleap\ForgeUpgrade\Bucket
 {
     public function description(): string
     {
@@ -38,13 +38,13 @@ final class b202003051120_set_value_empty_unix_pw_field extends ForgeUpgrade_Buc
         $sql = 'UPDATE user SET unix_pw = "no_passwd" WHERE unix_pw = ""';
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('Unable to clear to set values on empty unix_pw field');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('Unable to clear to set values on empty unix_pw field');
         }
 
         $sql = 'ALTER TABLE user ALTER COLUMN unix_pw SET DEFAULT "no_passwd"';
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('Unable to change the default value of the unix_pw column on the user table');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('Unable to change the default value of the unix_pw column on the user table');
         }
     }
 }

@@ -19,7 +19,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-class b201507152200_increase_session_ip_field_size extends ForgeUpgrade_Bucket
+class b201507152200_increase_session_ip_field_size extends \Tuleap\ForgeUpgrade\Bucket
 {
     public function description()
     {
@@ -36,7 +36,7 @@ class b201507152200_increase_session_ip_field_size extends ForgeUpgrade_Bucket
         $sql = 'ALTER TABLE session MODIFY COLUMN ip_addr VARCHAR(45) NOT NULL';
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occurred while modifying the ip_addr field in session table.');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occurred while modifying the ip_addr field in session table.');
         }
     }
 }

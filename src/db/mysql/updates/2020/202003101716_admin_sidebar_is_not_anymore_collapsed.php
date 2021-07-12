@@ -21,7 +21,7 @@
 declare(strict_types=1);
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
-final class b202003101716_admin_sidebar_is_not_anymore_collapsed extends ForgeUpgrade_Bucket
+final class b202003101716_admin_sidebar_is_not_anymore_collapsed extends \Tuleap\ForgeUpgrade\Bucket
 {
     public function description(): string
     {
@@ -38,7 +38,7 @@ final class b202003101716_admin_sidebar_is_not_anymore_collapsed extends ForgeUp
         $sql = "DELETE FROM user_preferences WHERE preference_name = 'admin_sidebar_state'";
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('Unable to remove admin_sidebar_state preferences.');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('Unable to remove admin_sidebar_state preferences.');
         }
     }
 }

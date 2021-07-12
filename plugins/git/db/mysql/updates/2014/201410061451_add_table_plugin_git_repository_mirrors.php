@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-class b201410061451_add_table_plugin_git_repository_mirrors extends ForgeUpgrade_Bucket
+class b201410061451_add_table_plugin_git_repository_mirrors extends \Tuleap\ForgeUpgrade\Bucket
 {
 
     public function description()
@@ -49,7 +49,7 @@ EOT;
         $this->db->createTable('plugin_git_repository_mirrors', $sql);
 
         if (! $this->db->tableNameExists('plugin_git_repository_mirrors')) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('plugin_git_repository_mirrors table is missing');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('plugin_git_repository_mirrors table is missing');
         }
     }
 
@@ -58,14 +58,14 @@ EOT;
         $sql = "INSERT INTO plugin_git_repository_mirrors (repository_id, mirror_id) SELECT r.repository_id, m.id  FROM plugin_git r, plugin_git_mirrors m WHERE r.repository_is_mirrored=1";
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while populating plugin_git_repository_mirrors table.');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occured while populating plugin_git_repository_mirrors table.');
         }
 
         $sql = "ALTER TABLE plugin_git DROP COLUMN repository_is_mirrored";
 
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while removing repository_is_mirrored column from plugin_git table.');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occured while removing repository_is_mirrored column from plugin_git table.');
         }
     }
 }

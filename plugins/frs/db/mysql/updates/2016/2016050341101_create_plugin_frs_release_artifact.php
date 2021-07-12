@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b2016050341101_create_plugin_frs_release_artifact extends ForgeUpgrade_Bucket
+class b2016050341101_create_plugin_frs_release_artifact extends \Tuleap\ForgeUpgrade\Bucket
 {
 
     public function description()
@@ -41,7 +41,7 @@ class b2016050341101_create_plugin_frs_release_artifact extends ForgeUpgrade_Buc
         $res = $this->db->dbh->exec($sql);
 
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while creating the table plugin_frs_release_artifact');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occured while creating the table plugin_frs_release_artifact');
         }
     }
 }

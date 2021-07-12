@@ -55,7 +55,7 @@ class b201806202247_remove_dark_variants extends ForgeUpgrade_Bucket // @codingS
 
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('Unable to remove Dark* theme variants from user preferences.');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('Unable to remove Dark* theme variants from user preferences.');
         }
     }
 }

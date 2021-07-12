@@ -44,7 +44,7 @@ class b201803211554_create_velocity_semantic_table extends ForgeUpgrade_Bucket /
     public function postUp()
     {
         if (! $this->db->tableNameExists('plugin_velocity_semantic_field')) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('plugin_velocity_semantic_field table is missing');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('plugin_velocity_semantic_field table is missing');
         }
     }
 }

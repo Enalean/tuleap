@@ -44,7 +44,7 @@ class b201907180930_update_broken_history extends ForgeUpgrade_Bucket // phpcs:i
             $pdo_statement = $this->db->dbh->prepare($sql);
 
             if (! $pdo_statement->execute([$legacy_status, $string_status])) {
-                throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete(
+                throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException(
                     sprintf('can not update old status field for value %s', $string_status)
                 );
             }
@@ -53,7 +53,7 @@ class b201907180930_update_broken_history extends ForgeUpgrade_Bucket // phpcs:i
             $pdo_statement = $this->db->dbh->prepare($sql);
 
             if (! $pdo_statement->execute([$legacy_status, $string_status])) {
-                throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete(
+                throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException(
                     sprintf('can not update new status field for value %s', $string_status)
                 );
             }

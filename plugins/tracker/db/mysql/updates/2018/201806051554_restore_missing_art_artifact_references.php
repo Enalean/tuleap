@@ -83,6 +83,6 @@ class b201806051554_restore_missing_art_artifact_references  extends ForgeUpgrad
     private function rollBackOnError($message)
     {
         $this->db->dbh->rollBack();
-        throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete($message);
+        throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException($message);
     }
 }

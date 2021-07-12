@@ -16,7 +16,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201505131103_project_admin_can_choose_visibility extends ForgeUpgrade_Bucket
+class b201505131103_project_admin_can_choose_visibility extends \Tuleap\ForgeUpgrade\Bucket
 {
     public function description()
     {
@@ -33,7 +33,7 @@ class b201505131103_project_admin_can_choose_visibility extends ForgeUpgrade_Buc
         $sql = "REPLACE INTO forgeconfig (name, value) VALUES ('project_admin_can_choose_visibility', '1')";
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while populating forgeconfig table.');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occured while populating forgeconfig table.');
         }
     }
 }

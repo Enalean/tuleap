@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201103281122_add_wiki_attachment_delete_mechanism extends ForgeUpgrade_Bucket
+class b201103281122_add_wiki_attachment_delete_mechanism extends \Tuleap\ForgeUpgrade\Bucket
 {
 
     public function description()
@@ -39,7 +39,7 @@ EOT;
         if ($this->db->tableNameExists('wiki_attachment')) {
             $res = $this->db->dbh->exec($sql);
             if ($res === false) {
-                throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while adding column filesystem_name to table wiki_attachment');
+                throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occured while adding column filesystem_name to table wiki_attachment');
             }
         }
 
@@ -47,7 +47,7 @@ EOT;
         if ($this->db->tableNameExists('wiki_attachment')) {
             $res = $this->db->dbh->exec($sql);
             if ($res === false) {
-                throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while adding column delete_date to table wiki_attachment');
+                throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occured while adding column delete_date to table wiki_attachment');
             }
         }
 
@@ -68,15 +68,15 @@ EOT;
     public function postUp()
     {
         if (! $this->db->columnNameExists('wiki_attachment', 'filesystem_name')) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('Column filesystem_name not created in wiki_attachment');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('Column filesystem_name not created in wiki_attachment');
         }
 
         if (! $this->db->columnNameExists('wiki_attachment', 'delete_date')) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('delete_date not created in wiki_attachment');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('delete_date not created in wiki_attachment');
         }
 
         if (! $this->db->tableNameExists('wiki_attachment_deleted')) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('wiki_attachment_deleted table is missing');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('wiki_attachment_deleted table is missing');
         }
     }
 }

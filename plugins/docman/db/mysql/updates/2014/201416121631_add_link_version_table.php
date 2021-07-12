@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201416121631_add_link_version_table extends ForgeUpgrade_Bucket
+class b201416121631_add_link_version_table extends \Tuleap\ForgeUpgrade\Bucket
 {
 
     public function description()
@@ -60,7 +60,7 @@ EOT;
     public function postUp()
     {
         if (! $this->db->tableNameExists('plugin_docman_link_version')) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('plugin_docman_link_version table is missing');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('plugin_docman_link_version table is missing');
         }
     }
 }

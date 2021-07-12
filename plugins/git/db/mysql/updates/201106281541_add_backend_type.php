@@ -19,7 +19,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-class b201106281541_add_backend_type extends ForgeUpgrade_Bucket
+class b201106281541_add_backend_type extends \Tuleap\ForgeUpgrade\Bucket
 {
 
     public function description()
@@ -41,7 +41,7 @@ EOT;
                " ADD `repository_backend_type` varchar(16) DEFAULT 'gitshell'";
             $res = $this->db->dbh->exec($sql);
             if ($res === false) {
-                throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while adding the column repository_events_mailing_prefix to the table plugin_git');
+                throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occured while adding the column repository_events_mailing_prefix to the table plugin_git');
             }
         }
     }
@@ -49,7 +49,7 @@ EOT;
     public function postUp()
     {
         if (! $this->db->columnNameExists('plugin_git', 'repository_backend_type')) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('Column repository_backend_type in table plugin_git is missing');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('Column repository_backend_type in table plugin_git is missing');
         }
     }
 }

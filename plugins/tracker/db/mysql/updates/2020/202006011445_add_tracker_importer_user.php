@@ -19,7 +19,7 @@
  */
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
-class b202006011445_add_tracker_importer_user extends ForgeUpgrade_Bucket
+class b202006011445_add_tracker_importer_user extends \Tuleap\ForgeUpgrade\Bucket
 {
 
     public function description()
@@ -71,7 +71,7 @@ class b202006011445_add_tracker_importer_user extends ForgeUpgrade_Bucket
         $result = $this->db->dbh->exec($sql);
         if ($result === false) {
             $error_message = implode(', ', $this->db->dbh->errorInfo());
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete($error_message);
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException($error_message);
         }
     }
 }

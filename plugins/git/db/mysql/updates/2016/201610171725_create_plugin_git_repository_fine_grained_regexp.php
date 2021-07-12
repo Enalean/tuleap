@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-class b201610171725_create_plugin_git_repository_fine_grained_regexp extends ForgeUpgrade_Bucket
+class b201610171725_create_plugin_git_repository_fine_grained_regexp extends \Tuleap\ForgeUpgrade\Bucket
 {
 
     public function description()
@@ -44,7 +44,7 @@ EOT;
     public function postUp()
     {
         if (! $this->db->tableNameExists('plugin_git_repository_fine_grained_regexp_enabled')) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete(
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException(
                 'plugin_git_repository_fine_grained_regexp_enabled table is missing'
             );
         }

@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201701061020_add_missing_index_full_history extends ForgeUpgrade_Bucket
+class b201701061020_add_missing_index_full_history extends \Tuleap\ForgeUpgrade\Bucket
 {
 
     public function description()
@@ -44,7 +44,7 @@ class b201701061020_add_missing_index_full_history extends ForgeUpgrade_Bucket
     {
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete($message . implode(', ', $this->db->dbh->errorInfo()));
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException($message . implode(', ', $this->db->dbh->errorInfo()));
         }
     }
 }

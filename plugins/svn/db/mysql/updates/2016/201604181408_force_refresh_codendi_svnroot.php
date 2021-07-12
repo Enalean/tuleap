@@ -16,7 +16,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201604181408_force_refresh_codendi_svnroot extends ForgeUpgrade_Bucket
+class b201604181408_force_refresh_codendi_svnroot extends \Tuleap\ForgeUpgrade\Bucket
 {
 
     public function description()

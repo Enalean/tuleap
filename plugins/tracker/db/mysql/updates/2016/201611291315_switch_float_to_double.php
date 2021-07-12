@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201611291315_switch_float_to_double extends ForgeUpgrade_Bucket
+class b201611291315_switch_float_to_double extends \Tuleap\ForgeUpgrade\Bucket
 {
 
     public function description()
@@ -47,7 +47,7 @@ class b201611291315_switch_float_to_double extends ForgeUpgrade_Bucket
         $res = $this->db->dbh->exec($sql);
 
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete(
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException(
                 "An error occured while converting float column '$column' to double in $table"
             );
         }

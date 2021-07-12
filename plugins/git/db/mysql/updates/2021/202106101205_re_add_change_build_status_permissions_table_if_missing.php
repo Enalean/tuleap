@@ -20,7 +20,7 @@
 declare(strict_types=1);
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
-class b202106101205_re_add_change_build_status_permissions_table_if_missing extends \ForgeUpgrade_Bucket
+class b202106101205_re_add_change_build_status_permissions_table_if_missing extends \Tuleap\ForgeUpgrade\Bucket
 {
     public function description(): string
     {

@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201706301720_remove_docman_v1 extends ForgeUpgrade_Bucket
+class b201706301720_remove_docman_v1 extends \Tuleap\ForgeUpgrade\Bucket
 {
     public function description()
     {
@@ -35,7 +35,7 @@ class b201706301720_remove_docman_v1 extends ForgeUpgrade_Bucket
         $sql = 'DELETE FROM service WHERE link LIKE "/docman/?group_id=%"';
 
         if (! $this->db->dbh->query($sql)) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete(
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException(
                 'The documentation manager v1 services have not been properly removed'
             );
         }

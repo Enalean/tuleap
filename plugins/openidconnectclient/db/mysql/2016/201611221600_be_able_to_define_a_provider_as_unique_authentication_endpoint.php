@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201611221600_be_able_to_define_a_provider_as_unique_authentication_endpoint extends ForgeUpgrade_Bucket
+class b201611221600_be_able_to_define_a_provider_as_unique_authentication_endpoint extends \Tuleap\ForgeUpgrade\Bucket
 {
     public function description()
     {
@@ -38,7 +38,7 @@ class b201611221600_be_able_to_define_a_provider_as_unique_authentication_endpoi
         $res = $this->db->dbh->exec($sql);
 
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete(
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException(
                 'An error occurred while adding column unique_authentication_endpoint to the plugin_openidconnectclient_provider table'
             );
         }

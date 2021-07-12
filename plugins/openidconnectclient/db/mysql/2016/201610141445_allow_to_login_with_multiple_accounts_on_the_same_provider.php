@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201610141445_allow_to_login_with_multiple_accounts_on_the_same_provider extends ForgeUpgrade_Bucket
+class b201610141445_allow_to_login_with_multiple_accounts_on_the_same_provider extends \Tuleap\ForgeUpgrade\Bucket
 {
     public function description()
     {
@@ -40,7 +40,7 @@ class b201610141445_allow_to_login_with_multiple_accounts_on_the_same_provider e
         $res = $this->db->dbh->exec($sql);
 
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete(
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException(
                 'An error occurred while adding column id to the plugin_openidconnectclient_user_mapping table'
             );
         }
@@ -49,7 +49,7 @@ class b201610141445_allow_to_login_with_multiple_accounts_on_the_same_provider e
     public function postUp()
     {
         if (! $this->db->columnNameExists('plugin_openidconnectclient_user_mapping', 'id')) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete(
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException(
                 'An error occurred while adding id column to the plugin_openidconnectclient_user_mapping table'
             );
         }

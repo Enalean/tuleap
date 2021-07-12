@@ -16,7 +16,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201603231523_hook_commit_message_can_change extends ForgeUpgrade_Bucket
+class b201603231523_hook_commit_message_can_change extends \Tuleap\ForgeUpgrade\Bucket
 {
 
     public function description()
@@ -36,7 +36,7 @@ class b201603231523_hook_commit_message_can_change extends ForgeUpgrade_Bucket
 
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occurred while creating the commit_message_can_change column for the plugin_svn_hook_config table.');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occurred while creating the commit_message_can_change column for the plugin_svn_hook_config table.');
         }
     }
 }

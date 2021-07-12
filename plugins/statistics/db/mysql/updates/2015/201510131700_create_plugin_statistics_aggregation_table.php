@@ -22,7 +22,7 @@
 * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
 */
 
-class b201510131700_create_plugin_statistics_aggregation_table extends ForgeUpgrade_Bucket
+class b201510131700_create_plugin_statistics_aggregation_table extends \Tuleap\ForgeUpgrade\Bucket
 {
 
     public function description()
@@ -54,7 +54,7 @@ EOT;
     public function postUp()
     {
         if (! $this->db->tableNameExists('plugin_statistics_aggregator')) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('plugin_statistics_aggregator table is missing');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('plugin_statistics_aggregator table is missing');
         }
     }
 }

@@ -16,7 +16,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201512091100_create_tracker_notification_assigned_to_table extends ForgeUpgrade_Bucket
+class b201512091100_create_tracker_notification_assigned_to_table extends \Tuleap\ForgeUpgrade\Bucket
 {
 
     public function description()

@@ -19,7 +19,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-class b201401221648_ftpgroups_view_concat extends ForgeUpgrade_Bucket
+class b201401221648_ftpgroups_view_concat extends \Tuleap\ForgeUpgrade\Bucket
 {
 
     /**
@@ -84,7 +84,7 @@ EOT;
             );";
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('Cannot update view');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('Cannot update view');
         }
     }
 }

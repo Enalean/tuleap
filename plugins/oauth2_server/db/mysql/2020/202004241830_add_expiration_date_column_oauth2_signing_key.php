@@ -21,7 +21,7 @@
 declare(strict_types=1);
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
-final class b202004241830_add_expiration_date_column_oauth2_signing_key extends ForgeUpgrade_Bucket
+final class b202004241830_add_expiration_date_column_oauth2_signing_key extends \Tuleap\ForgeUpgrade\Bucket
 {
     public function description(): string
     {
@@ -43,7 +43,7 @@ final class b202004241830_add_expiration_date_column_oauth2_signing_key extends 
                 ADD COLUMN expiration_date INT(11) UNSIGNED NOT NULL, DROP COLUMN enforce_one_row_table, ADD INDEX idx_expiration_date (expiration_date)';
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('Unable to add expiration_date column on the plugin_oauth2_oidc_signing_key table');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('Unable to add expiration_date column on the plugin_oauth2_oidc_signing_key table');
         }
     }
 }

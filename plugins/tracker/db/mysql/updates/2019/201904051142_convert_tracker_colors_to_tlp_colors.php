@@ -40,7 +40,7 @@ class b201904051142_convert_tracker_colors_to_tlp_colors extends ForgeUpgrade_Bu
         ';
 
         if ($this->db->dbh->exec($sql) === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occurred while coverting the tracker colors.');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occurred while coverting the tracker colors.');
         }
     }
 }

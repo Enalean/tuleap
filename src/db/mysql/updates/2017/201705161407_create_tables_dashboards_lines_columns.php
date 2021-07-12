@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201705161407_create_tables_dashboards_lines_columns extends ForgeUpgrade_Bucket
+class b201705161407_create_tables_dashboards_lines_columns extends \Tuleap\ForgeUpgrade\Bucket
 {
     public function description()
     {
@@ -45,7 +45,7 @@ class b201705161407_create_tables_dashboards_lines_columns extends ForgeUpgrade_
     public function postUp()
     {
         if (! $this->db->tableNameExists('dashboards_lines_columns')) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('dashboards_lines_columns table is missing');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('dashboards_lines_columns table is missing');
         }
     }
 }

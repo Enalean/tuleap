@@ -34,14 +34,14 @@ class b201806111045_add_status_to_pr_ref_table extends ForgeUpgrade_Bucket // ph
     {
         $sql = 'ALTER TABLE plugin_pullrequest_git_reference ADD COLUMN status INT(11) NOT NULL DEFAULT 0';
         if (! $this->db->dbh->query($sql)) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete(
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException(
                 'Not able to add the column status to the plugin_pullrequest_git_reference table'
             );
         }
 
         $sql = 'ALTER TABLE plugin_pullrequest_git_reference ALTER COLUMN status DROP DEFAULT';
         if (! $this->db->dbh->query($sql)) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete(
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException(
                 'Not able to remove the default value of the column status in the plugin_pullrequest_git_reference table'
             );
         }

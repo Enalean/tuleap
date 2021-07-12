@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201609131045_update_session_management extends ForgeUpgrade_Bucket
+class b201609131045_update_session_management extends \Tuleap\ForgeUpgrade\Bucket
 {
     public function description()
     {
@@ -35,7 +35,7 @@ class b201609131045_update_session_management extends ForgeUpgrade_Bucket
         $sql_drop_session_table = 'DROP TABLE IF EXISTS session';
         $res                    = $this->db->dbh->exec($sql_drop_session_table);
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occurred while dropping the table session');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occurred while dropping the table session');
         }
 
         $sql_recreate_table = 'CREATE TABLE session (
@@ -49,14 +49,14 @@ class b201609131045_update_session_management extends ForgeUpgrade_Bucket
                               ) ENGINE=InnoDB';
         $res                = $this->db->dbh->exec($sql_recreate_table);
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occurred while creating the table session');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occurred while creating the table session');
         }
     }
 
     public function postUp()
     {
         if (! $this->db->tableNameExists('session')) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('session table is missing');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('session table is missing');
         }
     }
 }

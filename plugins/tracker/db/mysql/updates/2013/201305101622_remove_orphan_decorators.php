@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201305101622_remove_orphan_decorators extends ForgeUpgrade_Bucket
+class b201305101622_remove_orphan_decorators extends \Tuleap\ForgeUpgrade\Bucket
 {
 
     public function description()
@@ -44,7 +44,7 @@ class b201305101622_remove_orphan_decorators extends ForgeUpgrade_Bucket
 
         if ($result === false) {
             $error_message = implode(', ', $this->db->dbh->errorInfo());
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete($error_message);
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException($error_message);
         }
     }
 }

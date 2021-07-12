@@ -16,7 +16,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201509020939_drop_priority_plugin_hook extends ForgeUpgrade_Bucket
+class b201509020939_drop_priority_plugin_hook extends \Tuleap\ForgeUpgrade\Bucket
 {
 
     public function description()
@@ -34,7 +34,7 @@ class b201509020939_drop_priority_plugin_hook extends ForgeUpgrade_Bucket
         $sql = 'DROP TABLE priority_plugin_hook';
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occurred while modifying the groups table.');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occurred while modifying the groups table.');
         }
     }
 }

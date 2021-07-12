@@ -73,7 +73,7 @@ WHERE tracker_workflow.is_used = 0 AND
       OR tracker_workflow_transition_postactions_field_int.id IS NOT NULL)';
 
         if ($this->db->dbh->exec($sql) === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('En error occured while marking the non active workflows with actions as legacy');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('En error occured while marking the non active workflows with actions as legacy');
         }
     }
 }

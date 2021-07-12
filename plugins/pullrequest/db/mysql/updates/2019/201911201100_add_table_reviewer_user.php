@@ -19,7 +19,7 @@
  */
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
-final class b201911201100_add_table_reviewer_user extends ForgeUpgrade_Bucket
+final class b201911201100_add_table_reviewer_user extends \Tuleap\ForgeUpgrade\Bucket
 {
     public function description(): string
     {

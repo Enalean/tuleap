@@ -19,7 +19,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-class b201107071731_add_permission_type extends ForgeUpgrade_Bucket
+class b201107071731_add_permission_type extends \Tuleap\ForgeUpgrade\Bucket
 {
 
     public function description()
@@ -49,7 +49,7 @@ EOT;
                            ('PLUGIN_GIT_WPLUS', 4, 0);";
             $res = $this->db->dbh->exec($sql);
             if ($res !== 9) {
-                throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while adding permission types into permissions_values');
+                throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occured while adding permission types into permissions_values');
             }
         }
     }
@@ -57,7 +57,7 @@ EOT;
     public function postUp()
     {
         if ($this->permissionTypesMissing()) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('Permission types for gitolite are missing');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('Permission types for gitolite are missing');
         }
     }
 

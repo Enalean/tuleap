@@ -19,7 +19,7 @@
 /**
  * Add generic_user table
  */
-class b201306171145_add_generic_user_table extends ForgeUpgrade_Bucket
+class b201306171145_add_generic_user_table extends \Tuleap\ForgeUpgrade\Bucket
 {
     public function description()
     {
@@ -42,7 +42,7 @@ EOT;
         if (! $this->db->tableNameExists('generic_user')) {
             $res = $this->db->dbh->exec($sql);
             if ($res === false) {
-                throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while adding table generic_user');
+                throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occured while adding table generic_user');
             }
         }
     }
@@ -50,7 +50,7 @@ EOT;
     public function postUp()
     {
         if (! $this->db->tableNameExists('generic_user')) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('Table generic_user not created');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('Table generic_user not created');
         }
     }
 }

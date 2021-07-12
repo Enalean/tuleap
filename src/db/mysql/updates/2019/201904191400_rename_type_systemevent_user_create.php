@@ -21,7 +21,7 @@
 declare(strict_types=1);
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
-final class b201904191400_rename_type_systemevent_user_create extends ForgeUpgrade_Bucket
+final class b201904191400_rename_type_systemevent_user_create extends \Tuleap\ForgeUpgrade\Bucket
 {
     public function description(): string
     {
@@ -39,7 +39,7 @@ final class b201904191400_rename_type_systemevent_user_create extends ForgeUpgra
 
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete(
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException(
                 'An error occurred while renaming the type of the system event ACTIVE_USER_STATUS_CHANGE'
             );
         }

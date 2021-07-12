@@ -16,7 +16,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201704041614_add_index_to_display_attachments extends ForgeUpgrade_Bucket
+class b201704041614_add_index_to_display_attachments extends \Tuleap\ForgeUpgrade\Bucket
 {
     public function description()
     {
@@ -63,7 +63,7 @@ class b201704041614_add_index_to_display_attachments extends ForgeUpgrade_Bucket
                 $info = $this->db->dbh->errorInfo();
                 $msg  = 'An error occured adding index to ' . $table_name . ': ' . $info[2] . ' (' . $info[1] . ' - ' . $info[0] . ')';
                 $this->log->error($msg);
-                throw new ForgeUpgrade_Bucket_Db_Exception($msg);
+                throw new \Tuleap\ForgeUpgrade\Bucket\BucketDbException($msg);
             }
             $this->log->info($index . ' successfully added index');
         } else {

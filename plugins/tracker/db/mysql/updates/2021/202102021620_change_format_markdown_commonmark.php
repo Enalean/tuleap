@@ -21,7 +21,7 @@
 declare(strict_types=1);
 
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
-final class b202102021620_change_format_markdown_commonmark extends ForgeUpgrade_Bucket
+final class b202102021620_change_format_markdown_commonmark extends \Tuleap\ForgeUpgrade\Bucket
 {
     public function description(): string
     {
@@ -37,14 +37,14 @@ final class b202102021620_change_format_markdown_commonmark extends ForgeUpgrade
     {
         $sql_comment = 'UPDATE tracker_changeset_comment SET body_format = "commonmark" WHERE body_format = "markdown"';
         if ($this->db->dbh->exec($sql_comment) === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete(
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException(
                 'An error occurred while changing the body format of the changeset comments'
             );
         }
 
         $sql_text_fields = 'UPDATE tracker_changeset_value_text SET body_format = "commonmark" WHERE body_format = "markdown"';
         if ($this->db->dbh->exec($sql_text_fields) === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete(
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException(
                 'An error occurred while changing the body format of the text fields'
             );
         }

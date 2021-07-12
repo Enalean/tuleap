@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201804171521_fill_execution_table extends ForgeUpgrade_Bucket
+class b201804171521_fill_execution_table extends \Tuleap\ForgeUpgrade\Bucket
 {
     public function description()
     {

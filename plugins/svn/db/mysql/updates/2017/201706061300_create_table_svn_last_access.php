@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201706061300_create_table_svn_last_access extends ForgeUpgrade_Bucket
+class b201706061300_create_table_svn_last_access extends \Tuleap\ForgeUpgrade\Bucket
 {
     public function description()
     {
@@ -43,7 +43,7 @@ class b201706061300_create_table_svn_last_access extends ForgeUpgrade_Bucket
     public function postUp()
     {
         if (! $this->db->tableNameExists('plugin_svn_last_access')) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('plugin_svn_last_access table is missing');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('plugin_svn_last_access table is missing');
         }
     }
 }

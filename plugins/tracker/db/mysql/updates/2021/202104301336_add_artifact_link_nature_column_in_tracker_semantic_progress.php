@@ -21,7 +21,7 @@
 declare(strict_types=1);
 
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
-class b202104301336_add_artifact_link_nature_column_in_tracker_semantic_progress extends ForgeUpgrade_Bucket
+class b202104301336_add_artifact_link_nature_column_in_tracker_semantic_progress extends \Tuleap\ForgeUpgrade\Bucket
 {
     public function description(): string
     {

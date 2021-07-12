@@ -16,7 +16,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201410301650_add_commit_to_tag_denied_in_groups extends ForgeUpgrade_Bucket
+class b201410301650_add_commit_to_tag_denied_in_groups extends \Tuleap\ForgeUpgrade\Bucket
 {
     public function description()
     {
@@ -36,7 +36,7 @@ EOT;
         if ($this->db->tableNameExists('groups')) {
             $res = $this->db->dbh->exec($sql);
             if ($res === false) {
-                throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while adding column svn_commit_to_tag_denied to table groups');
+                throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occured while adding column svn_commit_to_tag_denied to table groups');
             }
         }
     }
@@ -44,7 +44,7 @@ EOT;
     public function postUp()
     {
         if (! $this->db->columnNameExists('groups', 'svn_commit_to_tag_denied')) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('Column svn_commit_to_tag_denied not created in system_event');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('Column svn_commit_to_tag_denied not created in system_event');
         }
     }
 }

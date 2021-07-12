@@ -50,7 +50,7 @@ class b202002241506_add_plugin_hudson_git_project_server_job_table extends Forge
     public function postUp()
     {
         if (! $this->db->tableNameExists('plugin_hudson_git_project_server_job')) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete(
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException(
                 'the table plugin_hudson_git_project_server_job is missing'
             );
         }

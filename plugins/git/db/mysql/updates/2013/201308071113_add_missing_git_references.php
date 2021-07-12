@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201308071113_add_missing_git_references extends ForgeUpgrade_Bucket
+class b201308071113_add_missing_git_references extends \Tuleap\ForgeUpgrade\Bucket
 {
 
     /**
@@ -63,7 +63,7 @@ EOT;
 
         if ($result === false) {
             $error_message = implode(', ', $this->db->dbh->errorInfo());
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete($error_message);
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException($error_message);
         }
     }
 }

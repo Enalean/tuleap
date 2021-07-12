@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201702211530_create_global_parameters_table extends ForgeUpgrade_Bucket
+class b201702211530_create_global_parameters_table extends \Tuleap\ForgeUpgrade\Bucket
 {
     public function description()
     {
@@ -43,7 +43,7 @@ class b201702211530_create_global_parameters_table extends ForgeUpgrade_Bucket
     public function postUp()
     {
         if (! $this->db->tableNameExists('plugin_git_global_parameters')) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('plugin_git_global_parameters table is missing');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('plugin_git_global_parameters table is missing');
         }
     }
 }

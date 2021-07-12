@@ -39,7 +39,7 @@ class b201905061047_add_widget_title extends ForgeUpgrade_Bucket // @codingStand
         $sql = "ALTER TABLE plugin_timetracking_overview_widget ADD widget_title VARCHAR(255) NOT NULL";
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('Adding column did not work.');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('Adding column did not work.');
         }
 
         $this->db->dbh->beginTransaction();
@@ -76,6 +76,6 @@ class b201905061047_add_widget_title extends ForgeUpgrade_Bucket // @codingStand
     private function rollBackOnError($message)
     {
         $this->db->dbh->rollBack();
-        throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete($message);
+        throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException($message);
     }
 }

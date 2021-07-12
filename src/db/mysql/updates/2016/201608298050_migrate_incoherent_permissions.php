@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201608298050_migrate_incoherent_permissions extends ForgeUpgrade_Bucket
+class b201608298050_migrate_incoherent_permissions extends \Tuleap\ForgeUpgrade\Bucket
 {
     public function description()
     {
@@ -43,7 +43,7 @@ class b201608298050_migrate_incoherent_permissions extends ForgeUpgrade_Bucket
                 AND permissions.ugroup_id = $permission_anonyme";
 
         if (! $this->db->dbh->query($sql)) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete("Error while migrating incoherent permissions");
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException("Error while migrating incoherent permissions");
         }
     }
 }

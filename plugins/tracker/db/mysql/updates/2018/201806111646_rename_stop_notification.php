@@ -36,7 +36,7 @@ class b201806111646_rename_stop_notification extends ForgeUpgrade_Bucket // @cod
                   CHANGE COLUMN stop_notification notifications_level INT( 11 ) NOT NULL default '0'";
 
         if ($this->db->dbh->exec($sql) === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('tracker update failed');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('tracker update failed');
         }
     }
 }

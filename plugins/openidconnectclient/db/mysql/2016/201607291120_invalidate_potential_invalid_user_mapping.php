@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201607291120_invalidate_potential_invalid_user_mapping extends ForgeUpgrade_Bucket
+class b201607291120_invalidate_potential_invalid_user_mapping extends \Tuleap\ForgeUpgrade\Bucket
 {
     public function description()
     {
@@ -37,7 +37,7 @@ class b201607291120_invalidate_potential_invalid_user_mapping extends ForgeUpgra
         $res = $this->db->dbh->exec($sql);
 
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete(
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException(
                 'An error occurred while invalidating potentially wrong OpenID Connect user mappings'
             );
         }

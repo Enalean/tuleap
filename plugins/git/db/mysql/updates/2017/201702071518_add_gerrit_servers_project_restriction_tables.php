@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201702071518_add_gerrit_servers_project_restriction_tables extends ForgeUpgrade_Bucket
+class b201702071518_add_gerrit_servers_project_restriction_tables extends \Tuleap\ForgeUpgrade\Bucket
 {
 
     public function description()
@@ -51,11 +51,11 @@ class b201702071518_add_gerrit_servers_project_restriction_tables extends ForgeU
     public function postUp()
     {
         if (! $this->db->tableNameExists('plugin_git_restricted_gerrit_servers')) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('plugin_git_restricted_gerrit_servers table is missing');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('plugin_git_restricted_gerrit_servers table is missing');
         }
 
         if (! $this->db->tableNameExists('plugin_git_restricted_gerrit_servers_allowed_projects')) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('plugin_git_restricted_gerrit_servers_allowed_projects table is missing');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('plugin_git_restricted_gerrit_servers_allowed_projects table is missing');
         }
     }
 }

@@ -20,7 +20,7 @@
 
 declare(strict_types=1);
 
-class b202001291605_remove_required_from_issue_tracker extends ForgeUpgrade_Bucket
+class b202001291605_remove_required_from_issue_tracker extends \Tuleap\ForgeUpgrade\Bucket
 {
     public function description(): string
     {

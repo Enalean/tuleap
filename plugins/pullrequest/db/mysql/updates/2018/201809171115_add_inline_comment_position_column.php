@@ -39,7 +39,7 @@ class b201809171115_add_inline_comment_position_column extends ForgeUpgrade_Buck
     public function postUp()
     {
         if (! $this->db->columnNameExists('plugin_pullrequest_inline_comments', 'position')) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('position column is missing for plugin_pullrequest_inline_comments table.');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('position column is missing for plugin_pullrequest_inline_comments table.');
         }
     }
 }

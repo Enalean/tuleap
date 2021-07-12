@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201601141739_add_plugin_git_default_project_mirrors_table extends ForgeUpgrade_Bucket
+class b201601141739_add_plugin_git_default_project_mirrors_table extends \Tuleap\ForgeUpgrade\Bucket
 {
 
     public function description()
@@ -47,7 +47,7 @@ EOT;
     public function postUp()
     {
         if (! $this->db->tableNameExists('plugin_git_default_project_mirrors')) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('plugin_git_default_project_mirrors table is missing');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('plugin_git_default_project_mirrors table is missing');
         }
     }
 }

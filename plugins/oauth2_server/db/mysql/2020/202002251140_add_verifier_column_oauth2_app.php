@@ -21,7 +21,7 @@
 declare(strict_types=1);
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
-final class b202002251140_add_verifier_column_oauth2_app extends ForgeUpgrade_Bucket
+final class b202002251140_add_verifier_column_oauth2_app extends \Tuleap\ForgeUpgrade\Bucket
 {
     public function description(): string
     {
@@ -38,14 +38,14 @@ final class b202002251140_add_verifier_column_oauth2_app extends ForgeUpgrade_Bu
         $sql = 'DELETE FROM plugin_oauth2_server_app';
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('Unable to clear the plugin_oauth2_server_app table');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('Unable to clear the plugin_oauth2_server_app table');
         }
 
         if (! $this->db->columnNameExists('plugin_oauth2_server_app', 'verifier')) {
             $sql = 'ALTER TABLE plugin_oauth2_server_app ADD COLUMN verifier VARCHAR(255) NOT NULL';
             $res = $this->db->dbh->exec($sql);
             if ($res === false) {
-                throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('Unable to add verifier column on the plugin_oauth2_server_app table');
+                throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('Unable to add verifier column on the plugin_oauth2_server_app table');
             }
         }
     }

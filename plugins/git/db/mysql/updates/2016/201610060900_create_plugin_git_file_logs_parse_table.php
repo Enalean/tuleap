@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-class b201610060900_create_plugin_git_file_logs_parse_table extends ForgeUpgrade_Bucket
+class b201610060900_create_plugin_git_file_logs_parse_table extends \Tuleap\ForgeUpgrade\Bucket
 {
     public function description()
     {
@@ -37,7 +37,7 @@ class b201610060900_create_plugin_git_file_logs_parse_table extends ForgeUpgrade
 
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete(
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException(
                 'An error occurred while creating the plugin_git_file_logs_parse table.'
             );
         }

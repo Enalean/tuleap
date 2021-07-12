@@ -34,7 +34,7 @@ class b20180618_add_mediawiki_math_extension extends ForgeUpgrade_Bucket // @cod
     {
         $res = $this->db->dbh->exec('ALTER TABLE plugin_mediawiki_extension ADD COLUMN extension_math TINYINT(1) NOT NULL DEFAULT 0');
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete(
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException(
                 'An error occurred while adding the column math_extension to the plugin_mediawiki_extension table'
             );
         }

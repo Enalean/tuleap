@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201705110903_create_table_project_dashboards extends ForgeUpgrade_Bucket
+class b201705110903_create_table_project_dashboards extends \Tuleap\ForgeUpgrade\Bucket
 {
     public function description()
     {
@@ -45,7 +45,7 @@ class b201705110903_create_table_project_dashboards extends ForgeUpgrade_Bucket
     public function postUp()
     {
         if (! $this->db->tableNameExists('project_dashboards')) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('project_dashboards table is missing');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('project_dashboards table is missing');
         }
     }
 }

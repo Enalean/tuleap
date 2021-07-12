@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201801081147_add_project_membership_delegation extends ForgeUpgrade_Bucket
+class b201801081147_add_project_membership_delegation extends \Tuleap\ForgeUpgrade\Bucket
 {
     public function description()
     {
@@ -42,7 +42,7 @@ class b201801081147_add_project_membership_delegation extends ForgeUpgrade_Bucke
     public function postUp()
     {
         if (! $this->db->tableNameExists('project_membership_delegation')) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('project_membership_delegation table is missing');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('project_membership_delegation table is missing');
         }
     }
 }

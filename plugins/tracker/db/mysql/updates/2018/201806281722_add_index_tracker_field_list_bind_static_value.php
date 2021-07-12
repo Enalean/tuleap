@@ -37,7 +37,7 @@ class b201806281722_add_index_tracker_field_list_bind_static_value extends Forge
             $sql = "ALTER TABLE tracker_field_list_bind_static_value ADD INDEX idx_original_value_id (original_value_id, id)";
 
             if ($this->db->dbh->exec($sql) === false) {
-                throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('tracker update failed');
+                throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('tracker update failed');
             }
         }
     }

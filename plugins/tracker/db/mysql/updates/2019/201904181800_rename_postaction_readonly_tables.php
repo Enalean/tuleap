@@ -42,7 +42,7 @@ class b201904181800_rename_postaction_readonly_tables extends ForgeUpgrade_Bucke
         $exec_result = $this->db->dbh->exec($sql);
 
         if ($exec_result === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('Failed renaming plugin_tracker_workflow_transition_postactions_read_only to plugin_tracker_workflow_postactions_frozen_fields');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('Failed renaming plugin_tracker_workflow_transition_postactions_read_only to plugin_tracker_workflow_postactions_frozen_fields');
         }
     }
 
@@ -52,7 +52,7 @@ class b201904181800_rename_postaction_readonly_tables extends ForgeUpgrade_Bucke
         $exec_result = $this->db->dbh->exec($sql);
 
         if ($exec_result === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('Failed renaming plugin_tracker_workflow_transition_postactions_read_only_fields to plugin_tracker_workflow_postactions_frozen_fields_value');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('Failed renaming plugin_tracker_workflow_transition_postactions_read_only_fields to plugin_tracker_workflow_postactions_frozen_fields_value');
         }
     }
 }

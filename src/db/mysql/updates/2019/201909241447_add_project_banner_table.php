@@ -42,7 +42,7 @@ class b201909241447_add_project_banner_table extends ForgeUpgrade_Bucket // @cod
         $res = $this->db->dbh->exec($sql);
 
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('Unable to create table for project banner');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('Unable to create table for project banner');
         }
     }
 }

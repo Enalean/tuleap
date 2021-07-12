@@ -38,7 +38,7 @@ class b201902211717_delete_comment_not_empty_conditions_from_new_transitions ext
                 WHERE tracker_workflow_transition.from_id = 0';
 
         if ($this->db->dbh->exec($sql) === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occurred while removing the pre conditions.');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occurred while removing the pre conditions.');
         }
     }
 }

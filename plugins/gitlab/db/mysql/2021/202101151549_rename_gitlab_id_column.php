@@ -21,7 +21,7 @@
 declare(strict_types=1);
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
-final class b202101151549_rename_gitlab_id_column extends ForgeUpgrade_Bucket
+final class b202101151549_rename_gitlab_id_column extends \Tuleap\ForgeUpgrade\Bucket
 {
     public function description(): string
     {
@@ -46,7 +46,7 @@ final class b202101151549_rename_gitlab_id_column extends ForgeUpgrade_Bucket
 
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete(
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException(
                 'An error occurred while renaming gitlab_id column into plugin_gitlab_repository'
             );
         }
@@ -58,7 +58,7 @@ final class b202101151549_rename_gitlab_id_column extends ForgeUpgrade_Bucket
 
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete(
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException(
                 'An error occurred while renaming gitlab_repository_id column into plugin_gitlab_commit_info'
             );
         }
@@ -70,7 +70,7 @@ final class b202101151549_rename_gitlab_id_column extends ForgeUpgrade_Bucket
 
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete(
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException(
                 'An error occurred while renaming gitlab_repository_id column into plugin_gitlab_bot_api_token'
             );
         }

@@ -42,7 +42,7 @@ class b201710271043_purge_pullrequest_table_when_repositories_not_found extends 
                   OR repository_destination.repository_deletion_date != "0000-00-00 00:00:00"';
 
         if (! $this->db->dbh->query($sql)) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete(
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException(
                 'The purge of pullrequest not linked to existing repositories have failed'
             );
         }

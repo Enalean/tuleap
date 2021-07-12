@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-class b201411061153_add_name_to_table_plugin_git_mirrors extends ForgeUpgrade_Bucket
+class b201411061153_add_name_to_table_plugin_git_mirrors extends \Tuleap\ForgeUpgrade\Bucket
 {
 
     public function description()
@@ -40,7 +40,7 @@ EOT;
 
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while adding column name in plugin_git_mirrors table.');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occured while adding column name in plugin_git_mirrors table.');
         }
 
         $sql2 = "UPDATE plugin_git_mirrors AS target
@@ -50,7 +50,7 @@ EOT;
         $res2 = $this->db->dbh->exec($sql2);
 
         if ($res2 === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while adding default value to column name in plugin_git_mirrors table.');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occured while adding default value to column name in plugin_git_mirrors table.');
         }
     }
 }

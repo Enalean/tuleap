@@ -22,7 +22,7 @@
 * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
 */
 
-class b201411281005_create_plugin_agiledashboard_configuration_table extends ForgeUpgrade_Bucket
+class b201411281005_create_plugin_agiledashboard_configuration_table extends \Tuleap\ForgeUpgrade\Bucket
 {
 
     public function description()
@@ -57,25 +57,25 @@ EOT;
 
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while adding values in table plugin_agiledashboard_configuration: ' . implode(', ', $this->db->dbh->errorInfo()));
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occured while adding values in table plugin_agiledashboard_configuration: ' . implode(', ', $this->db->dbh->errorInfo()));
         }
 
         $sql = "DROP TABLE plugin_agiledashboard_kanban";
 
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while dropping table plugin_agiledashboard_kanban: ' . implode(', ', $this->db->dbh->errorInfo()));
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occured while dropping table plugin_agiledashboard_kanban: ' . implode(', ', $this->db->dbh->errorInfo()));
         }
     }
 
     public function postUp()
     {
         if (! $this->db->tableNameExists('plugin_agiledashboard_configuration')) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('plugin_agiledashboard_configuration table is missing');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('plugin_agiledashboard_configuration table is missing');
         }
 
         if ($this->db->tableNameExists('plugin_agiledashboard_kanban')) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('plugin_agiledashboard_kanban table is still here');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('plugin_agiledashboard_kanban table is still here');
         }
     }
 }

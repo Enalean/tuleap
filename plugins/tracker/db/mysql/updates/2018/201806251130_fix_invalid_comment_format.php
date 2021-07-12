@@ -35,7 +35,7 @@ class b201806251130_fix_invalid_comment_format extends ForgeUpgrade_Bucket // @c
         $sql = 'UPDATE tracker_changeset_comment SET body_format = "text" WHERE body_format != "text" AND body_format != "html"';
 
         if ($this->db->dbh->exec($sql) === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('tracker update failed');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('tracker update failed');
         }
     }
 }

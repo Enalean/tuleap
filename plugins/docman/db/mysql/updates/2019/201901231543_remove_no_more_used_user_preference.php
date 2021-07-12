@@ -37,7 +37,7 @@ class b201901231543_remove_no_more_used_user_preference extends ForgeUpgrade_Buc
         $result = $this->db->dbh->exec($sql);
 
         if ($result === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('Can not delete the legacy ui preference');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('Can not delete the legacy ui preference');
         }
     }
 }

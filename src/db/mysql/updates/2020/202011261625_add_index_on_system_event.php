@@ -19,7 +19,7 @@
  */
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
-final class b202011261625_add_index_on_system_event extends ForgeUpgrade_Bucket
+final class b202011261625_add_index_on_system_event extends \Tuleap\ForgeUpgrade\Bucket
 {
     public function description(): string
     {

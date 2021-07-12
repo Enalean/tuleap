@@ -21,7 +21,7 @@
 declare(strict_types=1);
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
-final class b202010301145_remove_feature_flag_project_background extends ForgeUpgrade_Bucket
+final class b202010301145_remove_feature_flag_project_background extends \Tuleap\ForgeUpgrade\Bucket
 {
     public function description(): string
     {
@@ -38,7 +38,7 @@ final class b202010301145_remove_feature_flag_project_background extends ForgeUp
         $sql = 'DELETE FROM forgeconfig WHERE name = "feature_flag_project_background"';
         $res = $this->db->dbh->query($sql);
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occurred while removing the project background feature flag');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occurred while removing the project background feature flag');
         }
     }
 }

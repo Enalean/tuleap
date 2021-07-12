@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201704031658_create_svn_notif_group_table extends ForgeUpgrade_Bucket
+class b201704031658_create_svn_notif_group_table extends \Tuleap\ForgeUpgrade\Bucket
 {
 
     public function description()
@@ -45,7 +45,7 @@ class b201704031658_create_svn_notif_group_table extends ForgeUpgrade_Bucket
     public function postUp()
     {
         if (! $this->db->tableNameExists('plugin_svn_notification_ugroups')) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('plugin_svn_notification_ugroups table is missing');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('plugin_svn_notification_ugroups table is missing');
         }
     }
 }

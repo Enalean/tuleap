@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201009280731_add_table_groups_notif_delegation_message extends ForgeUpgrade_Bucket
+class b201009280731_add_table_groups_notif_delegation_message extends \Tuleap\ForgeUpgrade\Bucket
 {
 
     public function description()

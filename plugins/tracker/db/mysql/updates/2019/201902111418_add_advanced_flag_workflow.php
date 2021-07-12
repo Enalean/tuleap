@@ -41,7 +41,7 @@ class b201902111418_add_advanced_flag_workflow extends ForgeUpgrade_Bucket //php
         $sql = 'ALTER TABLE tracker_workflow ADD COLUMN is_advanced tinyint(1) NOT NULL';
 
         if ($this->db->dbh->exec($sql) === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occurred while adding the is_advanced column');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occurred while adding the is_advanced column');
         }
     }
 
@@ -51,7 +51,7 @@ class b201902111418_add_advanced_flag_workflow extends ForgeUpgrade_Bucket //php
                 SET is_advanced = 1';
 
         if ($this->db->dbh->exec($sql) === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occurred while marking all the workflows as advanced');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occurred while marking all the workflows as advanced');
         }
     }
 }

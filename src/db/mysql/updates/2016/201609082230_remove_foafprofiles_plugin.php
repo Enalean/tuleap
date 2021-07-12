@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201609082230_remove_foafprofiles_plugin extends ForgeUpgrade_Bucket
+class b201609082230_remove_foafprofiles_plugin extends \Tuleap\ForgeUpgrade\Bucket
 {
     public function description()
     {
@@ -35,7 +35,7 @@ class b201609082230_remove_foafprofiles_plugin extends ForgeUpgrade_Bucket
         $sql = "DELETE FROM plugin WHERE name = 'foafprofiles'";
 
         if (! $this->db->dbh->query($sql)) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete(
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException(
                 'The plugin foafprofiles has not been properly uninstalled'
             );
         }

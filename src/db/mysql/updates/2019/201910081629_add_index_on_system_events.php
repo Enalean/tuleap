@@ -40,7 +40,7 @@ class b201910081629_add_index_on_system_events extends ForgeUpgrade_Bucket // @c
         $res = $this->db->dbh->exec($sql);
 
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('Unable to add index on status in system_event table');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('Unable to add index on status in system_event table');
         }
     }
 }

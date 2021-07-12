@@ -21,7 +21,7 @@
 declare(strict_types=1);
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
-final class b202102100900_rename_plugin extends ForgeUpgrade_Bucket
+final class b202102100900_rename_plugin extends \Tuleap\ForgeUpgrade\Bucket
 {
     public function description(): string
     {
@@ -44,7 +44,7 @@ final class b202102100900_rename_plugin extends ForgeUpgrade_Bucket
     {
         $res = $this->db->dbh->exec('UPDATE plugin SET name = "program_management" WHERE name = "scaled_agile"');
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete(
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException(
                 'An error occurred while updating the name of the program management plugin'
             );
         }
@@ -54,7 +54,7 @@ final class b202102100900_rename_plugin extends ForgeUpgrade_Bucket
     {
         $res = $this->db->dbh->exec('UPDATE service SET short_name = "plugin_program_management", label = "plugin_program_management:service_lbl_key", description = "plugin_program_management:service_desc_key" WHERE short_name = "plugin_scaled_agile"');
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete(
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException(
                 'An error occurred while updating the program management services'
             );
         }
@@ -76,7 +76,7 @@ final class b202102100900_rename_plugin extends ForgeUpgrade_Bucket
         }
         $res = $this->db->dbh->exec(sprintf('ALTER TABLE `%s` RENAME `%s`', $old_name, $new_name));
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete(
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException(
                 'An error occurred while renaming ' . $new_name
             );
         }

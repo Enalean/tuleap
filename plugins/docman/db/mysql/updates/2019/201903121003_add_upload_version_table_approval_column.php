@@ -39,7 +39,7 @@ class b201903121003_add_upload_version_table_approval_column extends ForgeUpgrad
 
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete(
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException(
                 'An error occurred while modifying the plugin_docman_new_version_upload table.'
             );
         }

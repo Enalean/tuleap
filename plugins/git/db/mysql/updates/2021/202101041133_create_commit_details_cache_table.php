@@ -21,7 +21,7 @@
 declare(strict_types=1);
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
-final class b202101041133_create_commit_details_cache_table extends ForgeUpgrade_Bucket
+final class b202101041133_create_commit_details_cache_table extends \Tuleap\ForgeUpgrade\Bucket
 {
     public function description(): string
     {

@@ -21,7 +21,7 @@
 declare(strict_types=1);
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
-final class b202101261555_add_is_email_already_send_for_invalid_token_column extends ForgeUpgrade_Bucket
+final class b202101261555_add_is_email_already_send_for_invalid_token_column extends \Tuleap\ForgeUpgrade\Bucket
 {
     public function description(): string
     {

@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201308261539_add_cardfields_semantic_table extends ForgeUpgrade_Bucket
+class b201308261539_add_cardfields_semantic_table extends \Tuleap\ForgeUpgrade\Bucket
 {
 
     public function description()

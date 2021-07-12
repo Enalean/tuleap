@@ -43,7 +43,7 @@ class b201802051707_add_report_comment_table extends ForgeUpgrade_Bucket // @cod
     public function postUp()
     {
         if (! $this->db->tableNameExists('tracker_report_criteria_comment_value')) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('tracker_report_criteria_comment_value table is missing');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('tracker_report_criteria_comment_value table is missing');
         }
     }
 }

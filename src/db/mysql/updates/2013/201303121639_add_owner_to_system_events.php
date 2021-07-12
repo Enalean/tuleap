@@ -16,7 +16,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201303121639_add_owner_to_system_events extends ForgeUpgrade_Bucket
+class b201303121639_add_owner_to_system_events extends \Tuleap\ForgeUpgrade\Bucket
 {
     public function description()
     {
@@ -36,7 +36,7 @@ EOT;
         if ($this->db->tableNameExists('system_event')) {
             $res = $this->db->dbh->exec($sql);
             if ($res === false) {
-                throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while adding column owner to table system_event');
+                throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occured while adding column owner to table system_event');
             }
         }
     }
@@ -44,7 +44,7 @@ EOT;
     public function postUp()
     {
         if (! $this->db->columnNameExists('system_event', 'owner')) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('Column owner not created in system_event');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('Column owner not created in system_event');
         }
     }
 }

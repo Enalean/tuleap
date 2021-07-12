@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201610121840_remove_fusionforgecompat_plugin extends ForgeUpgrade_Bucket
+class b201610121840_remove_fusionforgecompat_plugin extends \Tuleap\ForgeUpgrade\Bucket
 {
     public function description()
     {
@@ -35,7 +35,7 @@ class b201610121840_remove_fusionforgecompat_plugin extends ForgeUpgrade_Bucket
         $sql = "DELETE FROM plugin WHERE name = 'fusionforge_compat'";
 
         if (! $this->db->dbh->query($sql)) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete(
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException(
                 'The plugin fusionforge_compat has not been properly uninstalled'
             );
         }

@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201403211644_update_default_acl extends ForgeUpgrade_Bucket
+class b201403211644_update_default_acl extends \Tuleap\ForgeUpgrade\Bucket
 {
 
     public const TULEAP_SECURE_FTP_CONFIG_FILE_CENTOS5  = '/etc/codendi/plugins/proftpd/etc/config.inc';
@@ -66,7 +66,7 @@ EOT;
         }
 
         $this->log->warn('Config file for Proftpd not found');
-        throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete(
+        throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException(
             'Config file ' . self::TULEAP_SECURE_FTP_CONFIG_FILE_CENTOS5 . ' or ' .
             self::TULEAP_SECURE_FTP_CONFIG_FILE_OTHER_OS . ' does not exist. Exiting upgrade.'
         );

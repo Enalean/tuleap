@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201705291443_use_api_credential_for_bugzilla_server extends ForgeUpgrade_Bucket
+class b201705291443_use_api_credential_for_bugzilla_server extends \Tuleap\ForgeUpgrade\Bucket
 {
     public function description()
     {
@@ -40,7 +40,7 @@ EOT;
 
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete(
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException(
                 'An error occurred while changing credentials for bugzilla authentication: ' .
                 implode(
                     ', ',

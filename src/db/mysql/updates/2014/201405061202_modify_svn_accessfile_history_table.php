@@ -19,7 +19,7 @@
 /**
  * Modify svn accessfile history table
  */
-class b201405061202_modify_svn_accessfile_history_table extends ForgeUpgrade_Bucket
+class b201405061202_modify_svn_accessfile_history_table extends \Tuleap\ForgeUpgrade\Bucket
 {
     public function description()
     {
@@ -44,7 +44,7 @@ class b201405061202_modify_svn_accessfile_history_table extends ForgeUpgrade_Buc
 
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while adding index svn_accessfile_history table.');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occured while adding index svn_accessfile_history table.');
         }
     }
 
@@ -55,7 +55,7 @@ class b201405061202_modify_svn_accessfile_history_table extends ForgeUpgrade_Buc
 
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while dropping sha1_content column.');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occured while dropping sha1_content column.');
         }
     }
 }

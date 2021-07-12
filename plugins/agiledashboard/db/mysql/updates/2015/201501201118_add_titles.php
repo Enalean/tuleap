@@ -22,7 +22,7 @@
 * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
 */
 
-class b201501201118_add_titles extends ForgeUpgrade_Bucket
+class b201501201118_add_titles extends \Tuleap\ForgeUpgrade\Bucket
 {
 
     public function description()
@@ -46,7 +46,7 @@ EOT;
         $res = $this->db->dbh->exec($sql);
 
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while adding titles in table plugin_agiledashboard_configuration: ' . implode(', ', $this->db->dbh->errorInfo()));
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occured while adding titles in table plugin_agiledashboard_configuration: ' . implode(', ', $this->db->dbh->errorInfo()));
         }
     }
 }
