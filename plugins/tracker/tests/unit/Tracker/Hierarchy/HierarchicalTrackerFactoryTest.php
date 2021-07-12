@@ -63,6 +63,7 @@ final class HierarchicalTrackerFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $dao = Mockery::mock(HierarchyDAO::class);
         $dao->shouldReceive('searchAncestorIds')->with(1)->andReturn([4])->once();
+        $dao->shouldReceive('searchAncestorIds')->with(5)->andReturn([])->once();
 
         $project_id           = 100;
         $project              = new \Project(['group_id' => $project_id]);
@@ -71,17 +72,21 @@ final class HierarchicalTrackerFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $possible_child_1 = $this->getTrackerWithIdNameAndProject(2, 'Name', $project);
         $possible_child_2 = $this->getTrackerWithIdNameAndProject(3, 'Name', $project);
-        $ancestor         = $this->getTrackerWithIdNameAndProject(4, 'Name', $project);
+        $ancestor_1       = $this->getTrackerWithIdNameAndProject(4, 'Name', $project);
+        $ancestor_2       = $this->getTrackerWithIdNameAndProject(5, 'Name', $project);
 
         $project_trackers = [
             1 => $tracker,
             2 => $possible_child_1,
             3 => $possible_child_2,
-            4 => $ancestor
+            4 => $ancestor_1,
+            5 => $ancestor_2
         ];
 
         $tracker_factory = \Mockery::spy(\TrackerFactory::class);
         $tracker_factory->shouldReceive('getTrackersByGroupId')->with($project_id)->andReturns($project_trackers);
+
+        $dao->shouldReceive("searchAncestorIds")->with(4)->andReturn([5]);
 
         $factory = new Tracker_Hierarchy_HierarchicalTrackerFactory($tracker_factory, $dao);
 
