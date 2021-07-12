@@ -20,10 +20,6 @@
 
 <template>
     <div class="project-registration-templates">
-        <h3 data-test="project-registration-company-template-title" v-translate>
-            For advanced users
-        </h3>
-
         <section
             class="project-registration-default-templates-section"
             data-test="project-load-user-project-list"

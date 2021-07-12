@@ -53,12 +53,6 @@ describe("CompanyTemplateList", () => {
                 },
             });
         });
-
-        it(`display nothing when company hasn't defined any templates`, () => {
-            expect(
-                wrapper.find("[data-test=project-registration-company-template-title]").exists()
-            ).toBe(false);
-        });
     });
 
     describe("has several project templates -", () => {
@@ -102,26 +96,6 @@ describe("CompanyTemplateList", () => {
         it(`spawns the component and sub component`, () => {
             expect(wrapper.findComponent(TemplateCardContent).exists()).toBe(true);
             expect(wrapper.findAllComponents(TemplateCardContent)).toHaveLength(2);
-        });
-
-        it(`displays the company name if the platform name is not Tuleap`, async () => {
-            wrapper.vm.$store.state.configuration.company_name = "Nichya company";
-            await wrapper.vm.$nextTick();
-            expect(
-                wrapper
-                    .get("[data-test=project-registration-company-template-title]")
-                    .element.innerHTML.trim()
-            ).toEqual("Nichya company templates");
-        });
-
-        it(`displays 'Custom templates' if the platform name is Tuleap`, async () => {
-            wrapper.vm.$store.state.configuration.company_name = "Tuleap";
-            await wrapper.vm.$nextTick();
-            expect(
-                wrapper
-                    .get("[data-test=project-registration-company-template-title]")
-                    .element.innerHTML.trim()
-            ).toEqual("Custom templates");
         });
     });
 });
