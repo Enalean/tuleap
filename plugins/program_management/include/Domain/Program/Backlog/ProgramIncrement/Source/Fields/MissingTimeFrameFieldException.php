@@ -24,10 +24,26 @@ namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Sourc
 
 final class MissingTimeFrameFieldException extends \RuntimeException implements FieldSynchronizationException
 {
+    private string $i18n_message;
+
     public function __construct(int $tracker_id, string $field_kind)
     {
         parent::__construct(
             "Expected tracker with id $tracker_id to have a $field_kind field associated to its TimeFrame semantic, but this field was not found"
         );
+
+        $this->i18n_message = sprintf(
+            dgettext(
+                'tuleap-program_management',
+                "Expected tracker with id #%d to have a %s field associated to its TimeFrame semantic, but this field was not found"
+            ),
+            $tracker_id,
+            $field_kind
+        );
+    }
+
+    public function getI18NExceptionMessage(): string
+    {
+        return $this->i18n_message;
     }
 }
