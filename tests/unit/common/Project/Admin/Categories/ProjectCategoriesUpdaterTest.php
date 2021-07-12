@@ -53,10 +53,6 @@ class ProjectCategoriesUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
      * @var Mockery\MockInterface|ProjectHistoryDao
      */
     private $history_dao;
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&CategoryCollectionConsistencyChecker
-     */
-    private $category_collection_consistency_checker;
 
     /** @before */
     public function instantiateMocks(): void
@@ -90,13 +86,10 @@ class ProjectCategoriesUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->factory->shouldReceive('getMandatoryParentCategoriesUnderRootOnlyWhenCategoryHasChildren')->andReturn([])->byDefault();
 
-        $this->category_collection_consistency_checker = $this->createMock(CategoryCollectionConsistencyChecker::class);
-
         $this->updater = new ProjectCategoriesUpdater(
             $this->factory,
             $this->history_dao,
-            $this->set_node_facade,
-            $this->category_collection_consistency_checker
+            $this->set_node_facade
         );
     }
 
@@ -107,10 +100,6 @@ class ProjectCategoriesUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testAddEntryInProjectHistory(): void
     {
-        $this->category_collection_consistency_checker
-            ->expects(self::once())
-            ->method('checkCollectionConsistency');
-
         $this->history_dao
             ->shouldReceive('groupAddHistory')
             ->once()
@@ -124,10 +113,6 @@ class ProjectCategoriesUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItUpdatesCategoriesValues(): void
     {
-        $this->category_collection_consistency_checker
-            ->expects(self::once())
-            ->method('checkCollectionConsistency');
-
         $this->history_dao->shouldReceive('groupAddHistory');
 
         $this->factory->shouldReceive('removeProjectTopCategoryValue')->with($this->project, 2)->once();
@@ -141,38 +126,10 @@ class ProjectCategoriesUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItIgnoresSubmittedCategoryIfValueIsNotAnArray(): void
     {
-        $this->category_collection_consistency_checker
-            ->expects(self::once())
-            ->method('checkCollectionConsistency');
-
         $this->history_dao->shouldNotReceive('groupAddHistory');
         $this->factory->shouldNotReceive('removeProjectTopCategoryValue');
         $this->set_node_facade->shouldNotReceive('setNode');
 
         $this->updater->update($this->project, CategoryCollection::buildFromWebPayload([1 => '23']));
-    }
-
-    public function testItDoesNothingIfCollectionIsNotOK(): void
-    {
-        $this->category_collection_consistency_checker
-            ->expects(self::once())
-            ->method('checkCollectionConsistency')
-            ->willThrowException(
-                new class extends ProjectCategoriesException
-                {
-                    public function getI18NMessage(): string
-                    {
-                        return '';
-                    }
-                }
-            );
-
-        $this->history_dao->shouldNotReceive('groupAddHistory');
-        $this->factory->shouldNotReceive('removeProjectTopCategoryValue');
-        $this->set_node_facade->shouldNotReceive('setNode');
-
-        $this->expectException(ProjectCategoriesException::class);
-
-        $this->updater->update($this->project, CategoryCollection::buildFromWebPayload([1 => ['', '11']]));
     }
 }

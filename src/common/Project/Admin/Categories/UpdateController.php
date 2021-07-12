@@ -35,27 +35,19 @@ use Tuleap\Request\ProjectRetriever;
 
 class UpdateController implements DispatchableWithRequest
 {
-    /**
-     * @var ProjectRetriever
-     */
-    private $project_retriever;
-    /**
-     * @var ProjectAdministratorChecker
-     */
-    private $administrator_checker;
-    /**
-     * @var ProjectCategoriesUpdater
-     */
-    private $updater;
+    private ProjectRetriever $project_retriever;
+    private ProjectAdministratorChecker $administrator_checker;
+    private UpdateCategoriesProcessor $update_processor;
+
 
     public function __construct(
         ProjectRetriever $project_retriever,
         ProjectAdministratorChecker $administrator_checker,
-        ProjectCategoriesUpdater $updater
+        UpdateCategoriesProcessor $update_processor
     ) {
         $this->project_retriever     = $project_retriever;
         $this->administrator_checker = $administrator_checker;
-        $this->updater               = $updater;
+        $this->update_processor      = $update_processor;
     }
 
     public static function buildSelf(): self
@@ -63,12 +55,14 @@ class UpdateController implements DispatchableWithRequest
         return new self(
             ProjectRetriever::buildSelf(),
             new ProjectAdministratorChecker(),
-            new ProjectCategoriesUpdater(
-                new \TroveCatFactory(new TroveCatDao()),
-                new ProjectHistoryDao(),
-                new TroveSetNodeFacade(),
+            new UpdateCategoriesProcessor(
                 new CategoryCollectionConsistencyChecker(
                     new \TroveCatFactory(new TroveCatDao())
+                ),
+                new ProjectCategoriesUpdater(
+                    new \TroveCatFactory(new TroveCatDao()),
+                    new ProjectHistoryDao(),
+                    new TroveSetNodeFacade()
                 )
             )
         );
@@ -91,11 +85,15 @@ class UpdateController implements DispatchableWithRequest
             return;
         }
 
-        $csrf = new \CSRFSynchronizerToken($redirect_url);
-        $csrf->check();
+        $csrf                 = new \CSRFSynchronizerToken($redirect_url);
+        $submitted_categories = CategoryCollection::buildFromWebPayload($categories);
 
         try {
-            $this->updater->update($project, CategoryCollection::buildFromWebPayload($categories));
+            $this->update_processor->processUpdate(
+                $project,
+                $csrf,
+                $submitted_categories
+            );
             $layout->addFeedback(Feedback::INFO, gettext("Categories successfully updated."));
         } catch (MissingMandatoryCategoriesException $exception) {
             $layout->addFeedback(Feedback::ERROR, _('Some mandatory categories are missing'));

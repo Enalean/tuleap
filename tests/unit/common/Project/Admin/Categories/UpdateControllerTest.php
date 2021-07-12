@@ -32,7 +32,7 @@ use Tuleap\Layout\BaseLayout;
 use Tuleap\Project\Admin\Routing\ProjectAdministratorChecker;
 use Tuleap\Request\ProjectRetriever;
 
-class UpdateControllerTest extends \Tuleap\Test\PHPUnit\TestCase
+final class UpdateControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 
@@ -61,13 +61,14 @@ class UpdateControllerTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $project;
     /**
-     * @var Mockery\MockInterface|ProjectCategoriesUpdater
-     */
-    private $updater;
-    /**
      * @var Mockery\MockInterface|BaseLayout
      */
     private $layout;
+
+    /**
+     * @var \PHPUnit\Framework\MockObject\MockObject&UpdateCategoriesProcessor
+     */
+    private $update_processor;
 
     /** @before */
     public function instantiateMocks(): void
@@ -77,7 +78,7 @@ class UpdateControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->project_admin         = Mockery::mock(PFUser::class);
         $this->project_retriever     = Mockery::mock(ProjectRetriever::class);
         $this->administrator_checker = Mockery::mock(ProjectAdministratorChecker::class);
-        $this->updater               = Mockery::mock(ProjectCategoriesUpdater::class);
+        $this->update_processor      = $this->createMock(UpdateCategoriesProcessor::class);
         $this->project               = Mockery::mock(Project::class);
 
         $this->project->shouldReceive('getID')->andReturn(42);
@@ -92,7 +93,7 @@ class UpdateControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->controller = new UpdateController(
             $this->project_retriever,
             $this->administrator_checker,
-            $this->updater
+            $this->update_processor,
         );
     }
 
