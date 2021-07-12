@@ -58,11 +58,7 @@ describe("Project admin", function () {
             cy.get("[data-test=project-registration-next-button").click();
 
             cy.get("[data-test=new-project-name]").type("private project");
-            // force is due to select2 usage
-            // eslint-disable-next-line cypress/no-force
-            cy.get("[data-test=register-new-project-information-list]").select("Private", {
-                force: true,
-            });
+            cy.get("[data-test=register-new-project-information-list]").select("Private");
             cy.get("[data-test=approve_tos]").check();
 
             cy.get("[data-test=project-registration-next-button]").click();

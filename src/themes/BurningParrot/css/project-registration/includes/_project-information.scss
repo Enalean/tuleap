@@ -17,6 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+@use "@tuleap/list-picker";
+
 .register-new-project-list.register-new-project-information {
     width: 600px;
 }
@@ -45,7 +47,7 @@
 }
 
 .project-information-name,
-#project-information-input-privacy-list-label {
+.project-information-privacy {
     width: 400px;
 }
 
@@ -63,28 +65,27 @@
 }
 
 .project-information-input-privacy-list-option-label {
-    display: block;
-    margin: 0 0 5px;
     font-size: 16px;
 }
 
 .project-information-input-privacy-list-option-description {
-    color: var(--tlp-dimmed-color);
-    font-size: 13px;
-    line-height: 20px;
+    display: none;
 }
 
-#select2-project-information-input-privacy-list-label-results {
-    max-height: 256px;
-
-    /* stylelint-disable */
-    > .select2-results__option[aria-selected=true]::before {
-        top: 11px;
+.list-picker-dropdown {
+    .project-information-input-privacy-list-option-label {
+        display: block;
+        margin: 0 0 5px;
     }
-    /* stylelint-enable */
+
+    .project-information-input-privacy-list-option-description {
+        display: block;
+        color: var(--tlp-dimmed-color);
+        font-size: 13px;
+        line-height: 20px;
+    }
 }
 
-/* stylelint-disable-next-line selector-class-pattern */
-.select2-results__option--highlighted .project-information-input-privacy-list-option-description {
+.list-picker-item-highlighted .project-information-input-privacy-list-option-description {
     color: var(--tlp-white-color);
 }

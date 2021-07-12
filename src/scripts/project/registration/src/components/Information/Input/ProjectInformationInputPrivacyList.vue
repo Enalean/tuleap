@@ -21,10 +21,11 @@
 <template>
     <select
         id="project-information-input-privacy-list-label"
-        class="tlp-select tlp-select-large"
+        class="tlp-select"
         name="privacy"
         data-test="project-information-input-privacy-list"
         v-model="selected_visibility"
+        required
     >
         <option
             v-if="are_restricted_users_allowed"
@@ -60,14 +61,10 @@
 
 <script lang="ts">
 import Vue from "vue";
-import type { DataFormat, GroupedDataFormat, LoadingData, Options, Select2Plugin } from "tlp";
-import { select2 } from "tlp";
-import type { VisibilityForVisibilitySelector } from "./type";
-import { sanitize } from "dompurify";
-import mustache from "mustache";
-import { Component } from "vue-property-decorator";
+import type { ListPicker } from "@tuleap/list-picker";
+import { createListPicker } from "@tuleap/list-picker";
+import { Component, Watch } from "vue-property-decorator";
 import EventBus from "../../../helpers/event-bus";
-import $ from "jquery";
 import {
     ACCESS_PRIVATE,
     ACCESS_PRIVATE_WO_RESTRICTED,
@@ -85,58 +82,33 @@ export default class ProjectInformationInputPrivacyList extends Vue {
     @configuration.State
     are_restricted_users_allowed!: boolean;
 
-    @configuration.State
-    can_user_choose_project_visibility!: boolean;
-
-    select2_visibility_select: Select2Plugin | null = null;
+    private list_picker_instance: ListPicker | null = null;
 
     selected_visibility = ACCESS_PRIVATE;
 
-    mounted(): void {
+    async mounted(): Promise<void> {
         this.selected_visibility = this.project_default_visibility;
 
-        const configuration: Options = {
-            minimumResultsForSearch: Infinity,
-            templateResult: this.formatVisibilityOption,
-            escapeMarkup: sanitize,
-        };
-
-        setTimeout(() => {
-            if (!this.can_user_choose_project_visibility) {
-                return;
-            }
-
-            this.select2_visibility_select = select2(this.$el, configuration);
-
-            $(this.$el).on("change", () => {
-                this.updateProjectVisibility();
-            });
-        }, 10);
-    }
-
-    destroyed(): void {
-        if (this.select2_visibility_select !== null) {
-            $(this.$el).off().select2("destroy");
-        }
-    }
-
-    formatVisibilityOption(
-        visibility: DataFormat | GroupedDataFormat | LoadingData | VisibilityForVisibilitySelector
-    ): string {
-        if (!("element" in visibility && visibility.element !== undefined)) {
-            return "";
+        if (!(this.$el instanceof HTMLSelectElement)) {
+            throw new Error("Element is supposed to be a select element");
         }
 
-        return mustache.render(
-            `<div>
-                <span class="project-information-input-privacy-list-option-label">{{ label }}</span>
-                <p class="project-information-input-privacy-list-option-description">{{ description }}</p>
-            </div>`,
-            {
-                label: visibility.text,
-                description: this.translatedVisibilityDetails(visibility.element.value),
-            }
-        );
+        this.list_picker_instance = await createListPicker(this.$el, {
+            items_template_formatter: (html_processor, value_id, item_label) => {
+                const description = this.translatedVisibilityDetails(value_id);
+                const template = html_processor`<div>
+                    <span class="project-information-input-privacy-list-option-label">${item_label}</span>
+                    <p class="project-information-input-privacy-list-option-description">${description}</p>
+                </div>`;
+                return Promise.resolve(template);
+            },
+        });
+    }
+
+    destroy(): void {
+        if (this.list_picker_instance !== null) {
+            this.list_picker_instance.destroy();
+        }
     }
 
     get is_public_included_restricted_selected(): boolean {
@@ -181,8 +153,8 @@ export default class ProjectInformationInputPrivacyList extends Vue {
         }
     }
 
-    updateProjectVisibility(): void {
-        const visibility: string | number | string[] | undefined = $(this.$el).val();
+    @Watch("selected_visibility")
+    updateProjectVisibility(visibility: string): void {
         EventBus.$emit("update-project-visibility", { new_visibility: visibility });
     }
 }

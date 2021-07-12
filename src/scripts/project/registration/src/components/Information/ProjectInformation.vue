@@ -58,7 +58,10 @@
 
                         <project-name v-model="name_properties" />
 
-                        <div class="tlp-form-element" v-if="can_user_choose_project_visibility">
+                        <div
+                            class="tlp-form-element project-information-privacy"
+                            v-if="can_user_choose_project_visibility"
+                        >
                             <label
                                 class="tlp-label"
                                 for="project-information-input-privacy-list-label"
