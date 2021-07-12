@@ -24,10 +24,16 @@ export async function initListPickersMilestoneSection(
     doc: Document,
     gettext_provider: GetText
 ): Promise<void> {
-    const program_increment_tracker_element = getHTMLSelectElementFromId(
-        doc,
+    const program_increment_tracker_element = doc.getElementById(
         "admin-configuration-program-increment-tracker"
     );
+
+    if (
+        !program_increment_tracker_element ||
+        !(program_increment_tracker_element instanceof HTMLSelectElement)
+    ) {
+        return;
+    }
 
     const plannable_trackers_element = getHTMLSelectElementFromId(
         doc,
