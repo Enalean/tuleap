@@ -1,3 +1,2 @@
 [core]
-dbdriver="/usr/share/tuleap/src/forgeupgrade/ForgeUpgrade_Db_Driver.php"
 path[]="/usr/share/tuleap/src/db/mysql/updates"
