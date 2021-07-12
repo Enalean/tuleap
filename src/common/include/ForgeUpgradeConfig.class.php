@@ -94,7 +94,7 @@ class ForgeUpgradeConfig
      */
     public function recordOnlyPath($path)
     {
-        $this->command->exec(self::FORGEUPGRADE_PATH . ' --dbdriver=' . escapeshellarg($this->config['core']['dbdriver']) . ' --path=' . escapeshellarg($path) . ' record-only');
+        $this->command->exec(self::FORGEUPGRADE_PATH . ' --path=' . escapeshellarg($path) . ' record-only');
     }
 
     /**

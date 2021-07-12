@@ -109,7 +109,7 @@ class ForgeUpgradeConfigTest extends \PHPUnit\Framework\TestCase // phpcs:ignore
     {
         $this->command             = \Mockery::spy(\System_Command::class);
         $this->forgeupgrade_config = new ForgeUpgradeConfig($this->command, dirname(__FILE__) . '/_fixtures/forgeupgrade-config-docman.ini');
-        $this->command->shouldReceive('exec')->with("/usr/lib/forgeupgrade/bin/forgeupgrade --dbdriver='/usr/share/tuleap/src/forgeupgrade/ForgeUpgrade_Db_Driver_Codendi.php' --path='/usr/share/tuleap/plugins/agiledashboard' record-only")->once();
+        $this->command->shouldReceive('exec')->with("/usr/lib/forgeupgrade/bin/forgeupgrade --path='/usr/share/tuleap/plugins/agiledashboard' record-only")->once();
 
         $this->forgeupgrade_config->recordOnlyPath('/usr/share/tuleap/plugins/agiledashboard');
     }
