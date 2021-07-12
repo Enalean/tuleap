@@ -30,12 +30,11 @@ describe("initListPickersMilestoneSection", () => {
         },
     } as GetText;
 
-    it("When program increment tracker selector does not exist, Then error is thrown", async () => {
-        await expect(() =>
-            initListPickersMilestoneSection(createDocument(), gettext)
-        ).rejects.toThrowError(
-            "admin-configuration-program-increment-tracker element does not exist"
-        );
+    it("When program increment tracker selector does not exist, Then nothing is done", () => {
+        const create_list_picker = jest.spyOn(listPicker, "createListPicker");
+        initListPickersMilestoneSection(createDocument(), gettext);
+
+        expect(create_list_picker).not.toHaveBeenCalled();
     });
 
     it("When plannable trackers selector does not exist, Then error is thrown", async () => {
