@@ -30,8 +30,11 @@ use Tuleap\FRS\FRSPermissionCreator;
 use Tuleap\FRS\FRSPermissionDao;
 use Tuleap\FRS\UploadedLinksDao;
 use Tuleap\FRS\UploadedLinksUpdater;
+use Tuleap\Project\Admin\DescriptionFields\ProjectRegistrationSubmittedFieldsCollection;
 use Tuleap\Project\Admin\ProjectUGroup\CannotCreateUGroupException;
 use Tuleap\Project\Admin\ProjectUGroup\ProjectImportCleanupUserCreatorFromAdministrators;
+use Tuleap\Project\DescriptionFieldsDao;
+use Tuleap\Project\DescriptionFieldsFactory;
 use Tuleap\Project\Event\ProjectXMLImportPreChecksEvent;
 use Tuleap\Project\SystemEventRunnerInterface;
 use Tuleap\Project\UGroups\Membership\DynamicUGroups\ProjectMemberAdder;
@@ -104,6 +107,8 @@ class ProjectXMLImporter //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNam
      */
     private $XML_file_content_retriever;
 
+    private DescriptionFieldsFactory $description_fields_factory;
+
     public function __construct(
         EventManager $event_manager,
         ProjectManager $project_manager,
@@ -120,7 +125,8 @@ class ProjectXMLImporter //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNam
         UploadedLinksUpdater $uploaded_links_updater,
         ProjectDashboardXMLImporter $dashboard_importer,
         SynchronizedProjectMembershipDao $synchronized_project_membership_dao,
-        XMLFileContentRetriever $XML_file_content_retriever
+        XMLFileContentRetriever $XML_file_content_retriever,
+        DescriptionFieldsFactory $description_fields_factory
     ) {
         $this->event_manager                       = $event_manager;
         $this->project_manager                     = $project_manager;
@@ -138,6 +144,7 @@ class ProjectXMLImporter //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNam
         $this->dashboard_importer                  = $dashboard_importer;
         $this->synchronized_project_membership_dao = $synchronized_project_membership_dao;
         $this->XML_file_content_retriever          = $XML_file_content_retriever;
+        $this->description_fields_factory          = $description_fields_factory;
     }
 
     public static function build(\User\XML\Import\IFindUserFromXMLReference $user_finder, ProjectCreator $project_creator, ?\Psr\Log\LoggerInterface $logger = null): self
@@ -198,7 +205,10 @@ class ProjectXMLImporter //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNam
                 new DisabledProjectWidgetsChecker(new DisabledProjectWidgetsDao())
             ),
             $synchronized_project_membership_dao,
-            new XMLFileContentRetriever()
+            new XMLFileContentRetriever(),
+            new DescriptionFieldsFactory(
+                new DescriptionFieldsDao()
+            ),
         );
     }
 
@@ -257,19 +267,30 @@ class ProjectXMLImporter //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNam
             $xml['unix-name'] = $project_name_override;
         }
 
-        $data = ProjectCreationData::buildFromXML(
+        $project_creation_data = ProjectCreationData::buildFromXML(
             $xml,
             $this->xml_validator,
             ServiceManager::instance(),
             $this->logger
         );
+
         if ($is_template) {
             $this->logger->info("The project will be a template");
-            $data->setIsTemplate();
+            $project_creation_data->setIsTemplate();
         }
+
+        if ($this->description_fields_factory->isLegacyLongDescriptionFieldExisting()) {
+            $long_description_tagname = 'long-description';
+            $project_creation_data->setDataFields(
+                ProjectRegistrationSubmittedFieldsCollection::buildFromArray([
+                    101 => (string) $xml->$long_description_tagname
+                ])
+            );
+        }
+
         $this->logger->debug("ProjectMetadata extracted from XML, now create in DB");
 
-        return $data;
+        return $project_creation_data;
     }
 
     private function createProject(

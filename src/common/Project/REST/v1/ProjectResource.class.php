@@ -267,9 +267,6 @@ class ProjectResource extends AuthenticatedResource
                 new ProjectCreationDataServiceFromXmlInheritor(
                     ServiceManager::instance(),
                 ),
-                new DescriptionFieldsFactory(
-                    new DescriptionFieldsDao()
-                ),
                 $this->getBackendLogger()
             );
 

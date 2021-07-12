@@ -25,6 +25,7 @@ declare(strict_types=1);
 use Mockery as M;
 use Tuleap\Project\Admin\Categories\ProjectCategoriesUpdater;
 use Tuleap\Project\Admin\Service\ProjectServiceActivator;
+use Tuleap\Project\DescriptionFieldsFactory;
 use Tuleap\Project\Registration\ProjectRegistrationChecker;
 use Tuleap\Project\UGroups\Membership\DynamicUGroups\ProjectMemberAdder;
 use Tuleap\Project\XML\XMLFileContentRetriever;
@@ -32,7 +33,7 @@ use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\XML\MappingsRegistry;
 use Tuleap\Project\XML\Import;
 
-class ProjectXMLImporterTest extends \Tuleap\Test\PHPUnit\TestCase
+final class ProjectXMLImporterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use M\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
@@ -123,13 +124,14 @@ class ProjectXMLImporterTest extends \Tuleap\Test\PHPUnit\TestCase
             M::spy(\Tuleap\FRS\UploadedLinksUpdater::class),
             M::spy(\Tuleap\Dashboard\Project\ProjectDashboardXMLImporter::class),
             $this->sync_members,
-            new XMLFileContentRetriever()
+            new XMLFileContentRetriever(),
+            $this->createMock(DescriptionFieldsFactory::class)
         );
 
         $this->configuration = new Import\ImportConfig();
     }
 
-    public function testItAsksToPluginToImportInformationsFromTheGivenXml()
+    public function testItAsksToPluginToImportInformationsFromTheGivenXml(): void
     {
         $this->project_manager->shouldReceive('getValidProjectByShortNameOrId')->andReturns($this->project);
 
@@ -146,14 +148,14 @@ class ProjectXMLImporterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->xml_importer->import($this->configuration, 369, $this->xml_file_path);
     }
 
-    public function testItAsksProjectManagerForTheProject()
+    public function testItAsksProjectManagerForTheProject(): void
     {
         $this->project_manager->shouldReceive('getValidProjectByShortNameOrId')->with(122)->once()->andReturns($this->project);
 
         $this->xml_importer->import($this->configuration, 122, $this->xml_file_path);
     }
 
-    public function testItStopsIfNoProjectIsFound()
+    public function testItStopsIfNoProjectIsFound(): void
     {
         $this->project_manager->shouldReceive('getValidProjectByShortNameOrId')->andThrow(new Project_NotFoundException());
         $this->expectException('Project_NotFoundException');
@@ -161,7 +163,7 @@ class ProjectXMLImporterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->xml_importer->import($this->configuration, 122, $this->xml_file_path);
     }
 
-    public function testItImportsProjectDataWithUgroups()
+    public function testItImportsProjectDataWithUgroups(): void
     {
         $this->project_manager->shouldReceive('getValidProjectByShortNameOrId')->andReturns($this->project);
         $this->ugroup_manager->shouldReceive('getUGroupByName')->andReturns(false);
@@ -195,7 +197,7 @@ class ProjectXMLImporterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->xml_importer->import($this->configuration, 122, $this->xml_file_path_with_ugroups);
     }
 
-    public function testItDoesNotImportsExistingUgroups()
+    public function testItDoesNotImportsExistingUgroups(): void
     {
         $this->project_manager->shouldReceive('getValidProjectByShortNameOrId')->andReturns($this->project);
         $this->ugroup_manager->shouldReceive('getUGroupByName')->with($this->project, 'ug01')->andReturns(false);
@@ -227,7 +229,7 @@ class ProjectXMLImporterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->xml_importer->import($this->configuration, 122, $this->xml_file_path_with_ugroups);
     }
 
-    public function testItImportsUGroups()
+    public function testItImportsUGroups(): void
     {
         $this->project_manager->shouldReceive('getValidProjectByShortNameOrId')->andReturns($this->project);
 
@@ -246,7 +248,7 @@ class ProjectXMLImporterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->xml_importer->import($this->configuration, 122, __DIR__ . '/_fixtures/ProjectXMLImporter/fake_project_with_ugroups_synchronized.xml');
     }
 
-    public function testItDoesNotStopIfUserIsAlreadyProjectMember()
+    public function testItDoesNotStopIfUserIsAlreadyProjectMember(): void
     {
         $user = M::spy(
             \PFUser::class,
