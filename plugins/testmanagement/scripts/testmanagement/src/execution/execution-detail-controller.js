@@ -246,7 +246,7 @@ function ExecutionDetailCtrl(
         function callback(artifact_id) {
             var executions = ExecutionService.getExecutionsByDefinitionId(artifact_id);
             ExecutionService.updateExecutionToUseLatestVersionOfDefinition($scope.execution.id);
-            notrun($scope.execution);
+            notrun($event, $scope.execution);
             theTestHasJustBeenUpdated();
 
             return DefinitionService.getDefinitionById(artifact_id).then(function (definition) {
