@@ -97,15 +97,10 @@ final class SemanticChecker implements CheckSemantic
         if (
             $this->semantic_status_checker->isStatusWellConfigured(
                 $tracker,
-                $source_tracker_collection
+                $source_tracker_collection,
+                $configuration_errors
             ) === false
         ) {
-            $this->buildSemanticError(
-                $configuration_errors,
-                $tracker_ids,
-                dgettext('tuleap-program_management', 'Status'),
-                \Tracker_Semantic_Status::NAME
-            );
             $has_error = true;
             if (! $configuration_errors->shouldCollectAllIssues()) {
                 return false;

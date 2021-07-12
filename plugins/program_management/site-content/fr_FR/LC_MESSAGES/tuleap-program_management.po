@@ -269,11 +269,23 @@ msgstr ""
 "La sémantique '%s' n'est pas bien configurée. Merci de vérifier la "
 "sémantique des outils de suivi %s."
 
+#, php-format
+msgid ""
+"Semantic 'status' is not linked to a field in program tracker <a href='%s'>#"
+"%d</a>"
+msgstr ""
+"La sémantique 'statut' est liée à aucun champs dans l'outil de suivi du "
+"programme <a href='%s'>#%d</a>"
+
+#, php-format
+msgid ""
+"Some tracker does not have status semantic defined, please check trackers %s"
+msgstr ""
+"Certains outils de suivi n'ont pas de semantique statut définie, merci de "
+"vérifier les outils de suivi %s"
+
 msgid "Source tracker for Program Increments"
 msgstr "Outil de suivi source pour les Incréments de Programme"
-
-msgid "Status"
-msgstr "Statut"
 
 msgid "Teams"
 msgstr "Équipes"
@@ -333,8 +345,8 @@ msgstr ""
 #, php-format
 msgid "Tracker with id <a href='%s'>#%d</a> has no artifact link field"
 msgstr ""
-"L'outil de suivi avec l'id <a href='%s'>#%d</a> (%s) n'a pas de champ de lien "
-"d'artéfacts"
+"L'outil de suivi avec l'id <a href='%s'>#%d</a> (%s) n'a pas de champ de "
+"lien d'artéfacts"
 
 msgid "Unchanged"
 msgstr "Inchangé"
@@ -374,6 +386,12 @@ msgid "User can not update the field <a href='%s'>#%d</a> (%s) of tracker #%d"
 msgstr ""
 "L'utilisateur ne peut pas mettre à jour le champ <a href='%s'>#%d</a> (%s) "
 "de l'outil de suivi #%d"
+
+#, php-format
+msgid "Values \"%s\" are not found in every tracker, please check tracker %s"
+msgstr ""
+"Les valeurs \"%s\" n'ont pas été trouvées dans tous les outils de suivi, "
+"merci de vérifier les otuils de suivi %s"
 
 msgid "Which tracker's artifacts can be planned in Program increments?"
 msgstr ""

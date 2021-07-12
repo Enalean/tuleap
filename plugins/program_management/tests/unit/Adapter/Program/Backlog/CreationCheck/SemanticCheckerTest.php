@@ -151,11 +151,10 @@ final class SemanticCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $collected_errors = $configuration_errors->getErrorMessages();
-        self::assertCount(4, $collected_errors);
+        self::assertCount(3, $collected_errors);
         self::assertStringContainsString("Title", $collected_errors[0]);
         self::assertStringContainsString("Description", $collected_errors[1]);
         self::assertStringContainsString("Timeframe", $collected_errors[2]);
-        self::assertStringContainsString("Status", $collected_errors[3]);
     }
 
     public function testItStopsAtFirstErrorFound(): void
