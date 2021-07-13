@@ -20,13 +20,13 @@
 import { addTeamInProgram } from "./add-team";
 import * as api from "../api/manage-team";
 import * as restErrorHelper from "../helper/rest-error-helper";
-import * as buttonAddTeamHelper from "../helper/button-to-add-team-helper";
+import * as buttonAddTeamHelper from "../helper/button-helper";
 
 const createDocument = (): Document => document.implementation.createHTMLDocument();
 
 jest.mock("../api/manage-team");
 jest.mock("../helper/rest-error-helper");
-jest.mock("../helper/button-to-add-team-helper");
+jest.mock("../helper/button-helper");
 describe("AddTeam", () => {
     describe("addTeamInProgram", () => {
         let manage_team: jest.SpyInstance,
@@ -109,7 +109,11 @@ describe("AddTeam", () => {
             await expect(manage_team).toHaveBeenCalledWith({ program_id: 125, team_ids: [140] });
             expect(reset_rest_error).toHaveBeenCalled();
             await expect(set_button_to_disabled).toHaveBeenCalled();
-            await expect(set_rest_error_message).toHaveBeenCalledWith(doc, "400 Team not found");
+            await expect(set_rest_error_message).toHaveBeenCalledWith(
+                doc,
+                "program-management-add-team-error-rest",
+                "400 Team not found"
+            );
             expect(reset_button).toHaveBeenCalled();
         });
 
@@ -139,6 +143,7 @@ describe("AddTeam", () => {
             await expect(set_button_to_disabled).toHaveBeenCalled();
             await expect(set_rest_error_message).toHaveBeenCalledWith(
                 doc,
+                "program-management-add-team-error-rest",
                 "400 L'Équipe n'est pas trouvée"
             );
             expect(reset_button).toHaveBeenCalled();

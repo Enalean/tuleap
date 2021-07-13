@@ -21,20 +21,31 @@ export function setButtonToDisabledWithSpinner(button: HTMLButtonElement): void 
     button.disabled = true;
     const icon_node = button.firstElementChild;
     if (!icon_node || icon_node.tagName !== "I") {
-        throw new Error("Icon on button to add team does not exist");
+        throw new Error("Icon on button does not exist");
     }
 
     icon_node.classList.remove("fas", "fa-plus");
+    icon_node.classList.remove("fa", "fa-save");
     icon_node.classList.add("fa", "fa-spin", "fa-circle-o-notch");
 }
 
 export function resetButtonToAddTeam(button: HTMLButtonElement): void {
+    const icon_node = resetButton(button);
+    icon_node.classList.add("fas", "fa-plus");
+}
+
+export function resetButtonToSaveConfiguration(button: HTMLButtonElement): void {
+    const icon_node = resetButton(button);
+    icon_node.classList.add("fa", "fa-save");
+}
+
+function resetButton(button: HTMLButtonElement): Element {
     button.disabled = false;
     const icon_node = button.firstElementChild;
-    if (!icon_node) {
-        throw new Error("Icon on button to add team does not exist");
+    if (!icon_node || icon_node.tagName !== "I") {
+        throw new Error("Icon on button does not exist");
     }
 
     icon_node.classList.remove("fa", "fa-spin", "fa-circle-o-notch");
-    icon_node.classList.add("fas", "fa-plus");
+    return icon_node;
 }

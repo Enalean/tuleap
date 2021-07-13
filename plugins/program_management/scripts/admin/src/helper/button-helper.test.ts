@@ -17,14 +17,18 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { resetButtonToAddTeam, setButtonToDisabledWithSpinner } from "./button-to-add-team-helper";
+import {
+    resetButtonToAddTeam,
+    resetButtonToSaveConfiguration,
+    setButtonToDisabledWithSpinner,
+} from "./button-helper";
 
-describe("ButtonToAddTeamHelper", () => {
+describe("ButtonHelper", () => {
     describe("setButtonToDisabledWithSpinner", () => {
         it("Error is thrown When icon element does not exist", () => {
             const button = document.createElement("button");
             expect(() => setButtonToDisabledWithSpinner(button)).toThrowError(
-                "Icon on button to add team does not exist"
+                "Icon on button does not exist"
             );
         });
         it("When icon is set Then icon class is changed to have spinner", () => {
@@ -43,7 +47,7 @@ describe("ButtonToAddTeamHelper", () => {
         it("Error is thrown When icon element does not exist", () => {
             const button = document.createElement("button");
             expect(() => resetButtonToAddTeam(button)).toThrowError(
-                "Icon on button to add team does not exist"
+                "Icon on button does not exist"
             );
         });
         it("When icon is a spinner Then icon class is changed to have plus", () => {
@@ -55,6 +59,24 @@ describe("ButtonToAddTeamHelper", () => {
             resetButtonToAddTeam(button);
             expect(icon.classList).toContain("fas");
             expect(icon.classList).toContain("fa-plus");
+        });
+    });
+    describe("resetButtonToSaveConfiguration", () => {
+        it("Error is thrown When icon element does not exist", () => {
+            const button = document.createElement("button");
+            expect(() => resetButtonToSaveConfiguration(button)).toThrowError(
+                "Icon on button does not exist"
+            );
+        });
+        it("When icon is a spinner Then icon class is changed to have plus", () => {
+            const button = document.createElement("button");
+            const icon = document.createElement("i");
+            icon.classList.add("fa", "fa-spin", "fa-circle-o-notch");
+            button.appendChild(icon);
+
+            resetButtonToSaveConfiguration(button);
+            expect(icon.classList).toContain("fa");
+            expect(icon.classList).toContain("fa-save");
         });
     });
 });

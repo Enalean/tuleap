@@ -17,20 +17,21 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export function resetRestErrorAlert(doc: Document, element_id: string): void {
-    const alert = doc.getElementById(element_id);
-    if (!alert) {
-        throw new Error("Rest Error Alert with id " + element_id + " does not exist");
-    }
-    alert.textContent = "";
-    alert.classList.add("program-management-error-rest-not-show");
-}
+import { put } from "@tuleap/tlp-fetch";
+import type { ProgramConfiguration } from "../type";
 
-export function setRestErrorMessage(doc: Document, element_id: string, message: string): void {
-    const alert = doc.getElementById(element_id);
-    if (!alert) {
-        throw new Error("Rest Error Alert with id " + element_id + " does not exist");
-    }
-    alert.textContent = message;
-    alert.classList.remove("program-management-error-rest-not-show");
+export function saveConfiguration(configuration: ProgramConfiguration): Promise<Response> {
+    return put(
+        "/api/v1/projects/" + encodeURIComponent(configuration.program_id) + "/program_plan",
+        {
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                program_increment_tracker_id: configuration.program_increment_tracker_id,
+                plannable_tracker_ids: configuration.plannable_tracker_ids,
+                permissions: configuration.permissions,
+            }),
+        }
+    );
 }

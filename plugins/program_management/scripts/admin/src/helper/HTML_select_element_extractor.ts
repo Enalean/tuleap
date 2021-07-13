@@ -17,20 +17,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export function resetRestErrorAlert(doc: Document, element_id: string): void {
-    const alert = doc.getElementById(element_id);
-    if (!alert) {
-        throw new Error("Rest Error Alert with id " + element_id + " does not exist");
-    }
-    alert.textContent = "";
-    alert.classList.add("program-management-error-rest-not-show");
-}
+export function getHTMLSelectElementFromId(doc: Document, id: string): HTMLSelectElement {
+    const select_element = doc.getElementById(id);
 
-export function setRestErrorMessage(doc: Document, element_id: string, message: string): void {
-    const alert = doc.getElementById(element_id);
-    if (!alert) {
-        throw new Error("Rest Error Alert with id " + element_id + " does not exist");
+    if (!select_element || !(select_element instanceof HTMLSelectElement)) {
+        throw new Error(id + " element does not exist");
     }
-    alert.textContent = message;
-    alert.classList.remove("program-management-error-rest-not-show");
+
+    return select_element;
 }
