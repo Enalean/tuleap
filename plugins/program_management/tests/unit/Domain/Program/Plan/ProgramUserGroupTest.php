@@ -22,56 +22,45 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Plan;
 
-use Luracast\Restler\RestException;
-use Tuleap\ProgramManagement\Domain\Program\ProgramForManagement;
-use Tuleap\ProgramManagement\Stub\BuildProgramStub;
+use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramForAdministrationIdentifier;
+use Tuleap\ProgramManagement\Domain\Program\ProgramUserGroupDoesNotExistException;
+use Tuleap\ProgramManagement\Stub\RetrieveProgramUserGroupStub;
+use Tuleap\ProgramManagement\Stub\VerifyIsTeamStub;
+use Tuleap\ProgramManagement\Stub\VerifyProjectPermissionStub;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
-use function PHPUnit\Framework\assertTrue;
 
-class ProgramUserGroupTest extends \Tuleap\Test\PHPUnit\TestCase
+final class ProgramUserGroupTest extends \Tuleap\Test\PHPUnit\TestCase
 {
+    private ProgramForAdministrationIdentifier $program;
+
+    protected function setUp(): void
+    {
+        $this->program = ProgramForAdministrationIdentifier::fromProject(
+            VerifyIsTeamStub::withNotValidTeam(),
+            VerifyProjectPermissionStub::withAdministrator(),
+            UserTestBuilder::aUser()->build(),
+            ProjectTestBuilder::aProject()->withId(101)->build()
+        );
+    }
+
     public function testRejectIfUgroupDoesNotExist(): void
     {
-        $program = ProgramForManagement::fromId(BuildProgramStub::stubValidProgramForManagement(), 101, UserTestBuilder::aUser()->build());
-
-        $this->expectException(RestException::class);
-        ProgramUserGroup::buildProgramUserGroup($this->getStubBuildProgramUserGroup(false), "123", $program);
+        $this->expectException(ProgramUserGroupDoesNotExistException::class);
+        ProgramUserGroup::buildProgramUserGroup(
+            RetrieveProgramUserGroupStub::withNotValidUserGroup(),
+            "123",
+            $this->program
+        );
     }
 
     public function testItBuildAProgramUserGroup(): void
     {
-        $program = ProgramForManagement::fromId(BuildProgramStub::stubValidProgramForManagement(), 101, UserTestBuilder::aUser()->build());
-
-        $group = ProgramUserGroup::buildProgramUserGroup($this->getStubBuildProgramUserGroup(), "123", $program);
-        self::assertEquals($program, $group->getProgram());
+        $group = ProgramUserGroup::buildProgramUserGroup(
+            RetrieveProgramUserGroupStub::withValidUserGroups(123),
+            "123",
+            $this->program
+        );
         self::assertEquals(123, $group->getId());
-    }
-
-    private function getStubBuildProgramUserGroup(bool $return_project = true): BuildProgramUserGroup
-    {
-        return new class ($return_project) implements BuildProgramUserGroup {
-            /* @var bool */
-            private $return_project;
-
-            public function __construct(bool $return_project)
-            {
-                $this->return_project = $return_project;
-            }
-
-            public function buildProgramUserGroups(ProgramForManagement $program, array $raw_user_group_ids): array
-            {
-                throw new \Exception("Should not passed here");
-            }
-
-            public function getProjectUserGroupId(string $raw_user_group_id, ProgramForManagement $program): int
-            {
-                assertTrue($raw_user_group_id === "123");
-                if (! $this->return_project) {
-                    throw new RestException(404, "not found");
-                }
-
-                return 123;
-            }
-        };
     }
 }

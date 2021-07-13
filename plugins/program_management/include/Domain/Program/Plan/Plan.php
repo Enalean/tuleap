@@ -22,6 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Plan;
 
+use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramUserGroupCollection;
+
 /**
  * @psalm-immutable
  */
@@ -35,10 +37,7 @@ final class Plan
      * @var ProgramPlannableTracker[]
      */
     private $plannable_trackers;
-    /**
-     * @var non-empty-list<ProgramUserGroup>
-     */
-    private $can_prioritize;
+    private ProgramUserGroupCollection $can_prioritize;
     /**
      * @var string|null
      */
@@ -58,13 +57,12 @@ final class Plan
 
     /**
      * @param ProgramPlannableTracker[] $plannable_trackers
-     * @param non-empty-list<ProgramUserGroup> $can_prioritize
      */
     public function __construct(
         ProgramIncrementTracker $program_increment_tracker,
         int $project_id,
         array $plannable_trackers,
-        array $can_prioritize,
+        ProgramUserGroupCollection $can_prioritize,
         ?string $custom_label,
         ?string $custom_sub_label,
         ?IterationTracker $iteration_tracker
@@ -101,7 +99,7 @@ final class Plan
      */
     public function getCanPrioritize(): array
     {
-        return $this->can_prioritize;
+        return $this->can_prioritize->getUserGroups();
     }
 
     public function getCustomLabel(): ?string

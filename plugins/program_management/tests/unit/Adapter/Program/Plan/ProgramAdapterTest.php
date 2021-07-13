@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Adapter\Program\Plan;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use Project_AccessException;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\ProgramManagement\Domain\Program\Plan\ProgramAccessException;
 use Tuleap\ProgramManagement\Domain\Program\Plan\ProgramIsATeamException;
@@ -56,33 +55,6 @@ final class ProgramAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->project_access_checker = \Mockery::mock(ProjectAccessChecker::class);
         $this->program_verifier       = VerifyIsProgramStub::withValidProgram();
         $this->team_verifier          = VerifyIsTeamStub::withNotValidTeam();
-    }
-
-    public function testThrowsAnErrorWhenUserCannotAccessTheProject(): void
-    {
-        $project = new \Project(['group_id' => 102, 'status' => 'A', 'access' => 'public']);
-        $this->project_manager->shouldReceive('getProject')->andReturn($project);
-        $this->project_access_checker->shouldReceive('checkUserCanAccessProject')->andThrow(
-            \Mockery::mock(Project_AccessException::class)
-        );
-
-        $this->expectException(ProgramAccessException::class);
-        $this->getAdapter()->ensureProgramIsAProjectForManagement(102, UserTestBuilder::aUser()->build());
-    }
-
-    public function testItThrowsErrorWhenUserIsNotProjectAdminButRequestAProgramForManagementOperations(): void
-    {
-        $project_id = 101;
-        $project    = new \Project(['group_id' => $project_id, 'status' => 'A', 'access' => 'public']);
-        $this->project_manager->shouldReceive('getProject')->with($project_id)->andReturn($project);
-        $this->project_access_checker->shouldReceive('checkUserCanAccessProject');
-
-        $user = \Mockery::mock(\PFUser::class);
-        $user->shouldReceive('isAdmin')->with($project_id)->andReturnFalse();
-        $user->shouldReceive('getRealName')->andReturn('John');
-
-        $this->expectException(ProgramAccessException::class);
-        $this->getAdapter()->ensureProgramIsAProjectForManagement($project_id, $user);
     }
 
     public function testItThrowsErrorWhenProjectIsNotAProgram(): void
@@ -134,76 +106,6 @@ final class ProgramAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
         $user->shouldReceive('isAdmin')->with($project_id)->andReturnTrue();
 
         $this->getAdapter()->ensureProgramIsProjectAndUserIsAdminOf($project_id, $user);
-    }
-
-    public function testItSucceedWhenProgramIsAProjectForManagement(): void
-    {
-        $project_id = 101;
-        $project    = new \Project(['group_id' => $project_id, 'status' => 'A', 'access' => 'public']);
-        $this->project_manager->shouldReceive('getProject')->with($project_id)->andReturn($project);
-        $this->project_access_checker->shouldReceive('checkUserCanAccessProject');
-
-        $user = \Mockery::mock(\PFUser::class);
-        $user->shouldReceive('isAdmin')->with($project_id)->andReturn(true);
-
-        $this->getAdapter()->ensureProgramIsAProjectForManagement($project_id, $user);
-    }
-
-    public function testThrowErrorWhenUserCannotAccessToProjectForManagement(): void
-    {
-        $project_id = 101;
-        $user       = UserTestBuilder::aUser()->build();
-        $project    = new \Project(['group_id' => $project_id, 'status' => 'A', 'access' => 'public']);
-        $this->project_manager->shouldReceive('getProject')->with($project_id)->andReturn($project);
-        $this->project_access_checker->shouldReceive('checkUserCanAccessProject')->andThrow(new ProgramAccessException(101, $user));
-        $this->expectException(ProgramAccessException::class);
-
-        $this->getAdapter()->ensureProgramIsAProjectForManagement($project_id, UserTestBuilder::aUser()->build());
-    }
-
-    public function testThrowErrorWhenUserIsNotAdminOfProjectForManagement(): void
-    {
-        $project_id = 101;
-        $project    = new \Project(['group_id' => $project_id, 'status' => 'A', 'access' => 'public']);
-        $this->project_manager->shouldReceive('getProject')->with($project_id)->andReturn($project);
-        $this->project_access_checker->shouldReceive('checkUserCanAccessProject');
-
-        $user = \Mockery::mock(\PFUser::class);
-        $user->shouldReceive('isAdmin')->with($project_id)->andReturn(false);
-        $user->shouldReceive('getRealName')->andReturn('John');
-
-        $this->expectException(ProgramAccessException::class);
-
-        $this->getAdapter()->ensureProgramIsAProjectForManagement($project_id, $user);
-    }
-
-    public function testThrowErrorWhenProgramIsNotAProjectForManagement(): void
-    {
-        $project_id = 101;
-        $project    = new \Project(['group_id' => $project_id, 'status' => 'A', 'access' => 'public']);
-        $this->project_manager->shouldReceive('getProject')->with($project_id)->andReturn($project);
-        $this->project_access_checker->shouldReceive('checkUserCanAccessProject');
-        $this->program_verifier = VerifyIsProgramStub::withNotValidProgram();
-
-        $user = \Mockery::mock(\PFUser::class);
-        $user->shouldReceive('isAdmin')->with($project_id)->andReturn(true);
-
-        $this->expectException(ProjectIsNotAProgramException::class);
-
-        $this->getAdapter()->ensureProgramIsAProjectForManagement($project_id, $user);
-    }
-
-    public function testSucceedWhenProgramIsAProjectForManagement(): void
-    {
-        $project_id = 101;
-        $project    = new \Project(['group_id' => $project_id, 'status' => 'A', 'access' => 'public']);
-        $this->project_manager->shouldReceive('getProject')->with($project_id)->andReturn($project);
-        $this->project_access_checker->shouldReceive('checkUserCanAccessProject');
-
-        $user = \Mockery::mock(\PFUser::class);
-        $user->shouldReceive('isAdmin')->with($project_id)->andReturn(true);
-
-        $this->getAdapter()->ensureProgramIsAProjectForManagement($project_id, $user);
     }
 
     public function testThrowErrorWhenProgramIsATeam(): void

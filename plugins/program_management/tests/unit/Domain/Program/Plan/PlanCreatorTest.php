@@ -22,29 +22,43 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Plan;
 
-use Tuleap\ProgramManagement\Domain\Program\ProgramForManagement;
-use Tuleap\ProgramManagement\Stub\BuildProgramStub;
 use Tuleap\ProgramManagement\Stub\BuildTrackerStub;
+use Tuleap\ProgramManagement\Stub\RetrieveProgramUserGroupStub;
+use Tuleap\ProgramManagement\Stub\RetrieveProjectStub;
+use Tuleap\ProgramManagement\Stub\VerifyIsTeamStub;
+use Tuleap\ProgramManagement\Stub\VerifyProjectPermissionStub;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 
 final class PlanCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
+    private BuildTrackerStub $tracker_builder;
+    private RetrieveProgramUserGroupStub $ugroup_retriever;
+    /**
+     * @var \PHPUnit\Framework\MockObject\MockObject|PlanStore
+     */
+    private $plan_store;
+    private \Project $project;
+    private RetrieveProjectStub $project_retriever;
+
+    protected function setUp(): void
+    {
+        $this->tracker_builder   = BuildTrackerStub::buildTrackerIsValidAndGetPlannableTrackerList();
+        $this->ugroup_retriever  = RetrieveProgramUserGroupStub::withValidUserGroups(4);
+        $this->plan_store        = $this->createMock(PlanStore::class);
+        $this->project           = ProjectTestBuilder::aProject()->withId(102)->build();
+        $this->project_retriever = RetrieveProjectStub::withValidProjects($this->project);
+    }
+
     public function testItCreatesAPlan(): void
     {
-        $program_adapter = BuildProgramStub::stubValidProgramForManagement();
-        $tracker_adapter = BuildTrackerStub::buildTrackerIsValidAndGetPlannableTrackerList();
-        $build_ugroups   = $this->createMock(BuildProgramUserGroup::class);
-
         $project_id           = 102;
         $plannable_tracker_id = 2;
 
         $user = UserTestBuilder::aUser()->build();
 
-        $program = ProgramForManagement::fromId($program_adapter, $project_id, $user);
-        $build_ugroups->method('buildProgramUserGroups')->willReturn([$program]);
-
-        $plan_dao = $this->createMock(PlanStore::class);
-        $plan_dao->expects(self::once())->method('save')->with(self::isInstanceOf(Plan::class));
+        $this->plan_store = $this->createMock(PlanStore::class);
+        $this->plan_store->expects(self::once())->method('save')->with(self::isInstanceOf(Plan::class));
         $plan_program_increment_change = new PlanProgramIncrementChange(1, 'Program Increments', 'program increment');
         $iteration_representation      = new PlanIterationChange(150, null, null);
         $plan_change                   = PlanChange::fromProgramIncrementAndRaw(
@@ -56,7 +70,18 @@ final class PlanCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             $iteration_representation
         );
 
-        $plan_adapter = new PlanCreator($program_adapter, $tracker_adapter, $build_ugroups, $plan_dao);
-        $plan_adapter->create($plan_change);
+        $this->getCreator()->create($plan_change);
+    }
+
+    private function getCreator(): PlanCreator
+    {
+        return new PlanCreator(
+            $this->tracker_builder,
+            $this->ugroup_retriever,
+            $this->plan_store,
+            $this->project_retriever,
+            VerifyIsTeamStub::withNotValidTeam(),
+            VerifyProjectPermissionStub::withAdministrator()
+        );
     }
 }

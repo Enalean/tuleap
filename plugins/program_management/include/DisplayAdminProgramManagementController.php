@@ -125,7 +125,7 @@ final class DisplayAdminProgramManagementController implements DispatchableWithR
                 $project
             );
         } catch (ProgramCannotBeATeamException $e) {
-            throw new ForbiddenException($e->getI18nMessage());
+            throw new ForbiddenException($e->getI18NExceptionMessage());
         } catch (ProgramAccessException $e) {
             throw new ForbiddenException(
                 dgettext(
