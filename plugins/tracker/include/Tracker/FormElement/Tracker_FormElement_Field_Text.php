@@ -197,6 +197,10 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum
             return Tracker_Artifact_ChangesetValue_Text::COMMONMARK_CONTENT;
         }
 
+        if ($user_preference === Tracker_Artifact_ChangesetValue_Text::TEXT_CONTENT) {
+            return Tracker_Artifact_ChangesetValue_Text::TEXT_CONTENT;
+        }
+
         return Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT;
     }
 

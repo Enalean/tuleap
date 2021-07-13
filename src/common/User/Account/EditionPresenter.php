@@ -41,6 +41,10 @@ final class EditionPresenter
     /**
      * @var bool
      */
+    public $user_text_default_format_text;
+    /**
+     * @var bool
+     */
     public $user_text_default_format_commonmark;
     /**
      * @var bool
@@ -85,6 +89,7 @@ final class EditionPresenter
         }
 
         $this->user_text_default_format_html       = $text_default_format === PFUser::PREFERENCE_EDITION_HTML;
+        $this->user_text_default_format_text       = $text_default_format === PFUser::PREFERENCE_EDITION_TEXT;
         $this->user_text_default_format_commonmark = $text_default_format === PFUser::PREFERENCE_EDITION_COMMONMARK;
 
         $this->user_csv_separator_comma     = $csv_separator === PFUser::PREFERENCE_CSV_COMMA;

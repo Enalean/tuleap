@@ -18,17 +18,28 @@
  */
 
 import type { TextFieldFormat } from "../../../../constants/fields-constants";
-import { TEXT_FORMAT_COMMONMARK, TEXT_FORMAT_HTML } from "../../../../constants/fields-constants";
+import {
+    TEXT_FORMAT_COMMONMARK,
+    TEXT_FORMAT_HTML,
+    TEXT_FORMAT_TEXT,
+} from "../../../../constants/fields-constants";
 
 export const HTML_FORMAT_CLASSNAME = "default_format_html";
+export const TEXT_FORMAT_CLASSNAME = "default_format_text";
 
 export class FlamingParrotDocumentAdapter {
     constructor(private readonly doc: Document) {}
 
     public getDefaultFormat(): TextFieldFormat {
-        return this.doc.body.classList.contains(HTML_FORMAT_CLASSNAME)
-            ? TEXT_FORMAT_HTML
-            : TEXT_FORMAT_COMMONMARK;
+        if (this.doc.body.classList.contains(HTML_FORMAT_CLASSNAME)) {
+            return TEXT_FORMAT_HTML;
+        }
+
+        if (this.doc.body.classList.contains(TEXT_FORMAT_CLASSNAME)) {
+            return TEXT_FORMAT_TEXT;
+        }
+
+        return TEXT_FORMAT_COMMONMARK;
     }
 
     public createAndInsertMountPoint(textarea: HTMLTextAreaElement): HTMLDivElement {

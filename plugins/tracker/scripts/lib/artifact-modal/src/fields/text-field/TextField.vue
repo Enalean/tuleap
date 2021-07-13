@@ -34,7 +34,6 @@
             v-bind:value="format"
             v-bind:is_in_preview_mode="is_in_preview_mode"
             v-bind:is_preview_loading="is_preview_loading"
-            v-bind:is_text_format_option_enabled="is_text_format_option_enabled"
             v-on:interpret-content-event="togglePreview"
         />
         <rich-text-editor
@@ -62,7 +61,6 @@
 import RichTextEditor from "../../common/RichTextEditor.vue";
 import FormatSelector from "../../common/FormatSelector.vue";
 import { isDisabled } from "../disabled-field-detector.js";
-import { TEXT_FORMAT_TEXT } from "../../../../../constants/fields-constants";
 import { textfield_mixin } from "../../common/textfield-mixin.js";
 
 export default {
@@ -70,12 +68,10 @@ export default {
     components: { FormatSelector, RichTextEditor },
     mixins: [textfield_mixin],
     props: {
-        field: Object,
-    },
-    data() {
-        return {
-            initial_text_field_format: undefined,
-        };
+        field: {
+            type: Object,
+            default: () => ({}),
+        },
     },
     computed: {
         disabled() {
@@ -94,9 +90,6 @@ export default {
         },
         is_required_and_empty() {
             return this.field.required && this.content === "";
-        },
-        is_text_format_option_enabled() {
-            return this.initial_text_field_format === TEXT_FORMAT_TEXT;
         },
     },
     mounted() {
