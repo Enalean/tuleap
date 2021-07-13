@@ -62,6 +62,8 @@ class ServicesPresenterBuilder
     {
         $service_link         = $this->getServiceLink($service, $project);
         $is_link_customizable = $service_link === null;
+
+        $service_disabled_collector = $this->isServiceDisabledByPlugin($service, $project);
         return new ServiceJSONPresenter(
             $service->getId(),
             $service->getShortName(),
@@ -75,7 +77,8 @@ class ServicesPresenterBuilder
             $service->isOpenedInNewTab(),
             $service->getRank(),
             $service->getScope() !== Service::SCOPE_SYSTEM,
-            $is_link_customizable
+            $is_link_customizable,
+            $service_disabled_collector->getReason()
         );
     }
 
@@ -105,12 +108,20 @@ class ServicesPresenterBuilder
         return false;
     }
 
-    private function getServiceLink(Service $service, Project $project)
+    private function getServiceLink(Service $service, Project $project): ?string
     {
         $service_url_collector = new ServiceUrlCollector($project, $service->getShortName());
 
         $this->event_manager->processEvent($service_url_collector);
 
         return $service_url_collector->getUrl();
+    }
+
+    private function isServiceDisabledByPlugin(Service $service, Project $project): ServiceDisabledCollector
+    {
+        $service_collector = new ServiceDisabledCollector($project, $service->getShortName());
+        $this->event_manager->processEvent($service_collector);
+
+        return $service_collector;
     }
 }
