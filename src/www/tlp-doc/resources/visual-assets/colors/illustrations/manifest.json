@@ -1,4 +1,4 @@
 {
   "label": "Illustrations",
-  "shortcode": "$tlp-illustration-[name]"
+  "shortcode": "--tlp-illustration-[name]"
 }

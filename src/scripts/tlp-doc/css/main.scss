@@ -82,22 +82,6 @@ $nav-margin: 30px;
         background-color: $tlp-danger-color;
     }
 
-    .doc-color-illustration-primary-color {
-        background-color: $tlp-illustration-primary-color;
-    }
-
-    .doc-color-illustration-secondary-light-color {
-        background-color: $tlp-illustration-secondary-light-color;
-    }
-
-    .doc-color-illustration-secondary-dark-color {
-        background-color: $tlp-illustration-secondary-dark-color;
-    }
-
-    .doc-color-illustration-tertiary-color {
-        background-color: $tlp-illustration-tertiary-color;
-    }
-
     .example {
         .tlp-centered {
             border: 1px solid $main-color;
@@ -171,35 +155,6 @@ $nav-margin: 30px;
                 color: transparentize($tlp-dimmed-color, 0.2);
             }
         }
-    }
-
-    .doc-colors-illustration-helper-modal-body {
-        display: flex;
-        padding: 0;
-    }
-
-    .doc-colors-illustration-helper-modal-target,
-    .doc-colors-illustration-helper-modal-source {
-        width: 50%;
-        margin: 0;
-        padding: 20px;
-    }
-
-    .doc-colors-illustration-helper-modal-source {
-        border-right: 1px solid $tlp-neutral-normal-color;
-    }
-
-    .doc-colors-illustration-helper-modal-preview {
-        border-top: 1px solid $tlp-neutral-normal-color;
-    }
-
-    #doc-colors-illustration-helper-modal-preview-block {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 20px;
-        border-radius: 3px;
-        background: $tlp-background-color;
     }
 
     #illustration-helper-target {

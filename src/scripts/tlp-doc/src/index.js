@@ -19,4 +19,3 @@
 
 import "./editors.js";
 import "./main.js";
-import "./illustration-helper.js";
