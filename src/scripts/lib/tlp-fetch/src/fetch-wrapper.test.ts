@@ -209,6 +209,12 @@ describe(`fetch-wrapper`, () => {
                 ]);
             });
         });
+
+        it(`rejects call when no request can be sent`, async () => {
+            await expect(wrapper.recursiveGet(url, {}, 0)).rejects.toThrowError(
+                /At least one request/
+            );
+        });
     });
 
     describe.each([

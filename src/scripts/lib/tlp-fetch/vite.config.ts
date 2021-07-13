@@ -26,5 +26,13 @@ export default defineConfig({
             entry: path.resolve(__dirname, "src/fetch-wrapper.ts"),
             name: "TlpFetch",
         },
+        rollupOptions: {
+            external: ["@tuleap/concurrency-limit-pool"],
+            output: {
+                globals: {
+                    "@tuleap/concurrency-limit-pool": "concurrency-limit-pool",
+                },
+            },
+        },
     },
 });

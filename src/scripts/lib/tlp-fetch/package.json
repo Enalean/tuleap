@@ -14,7 +14,9 @@
       "require": "./dist/tlp-fetch.umd.js"
     }
   },
-  "dependencies": {},
+  "dependencies": {
+    "@tuleap/concurrency-limit-pool": "file:../concurrency-limit-pool"
+  },
   "devDependencies": {},
   "config": {
     "bin": "../../../../node_modules/.bin"
@@ -26,6 +28,7 @@
     "watch": "$npm_package_config_bin/run-p watch:*",
     "watch:vite": "$npm_package_config_bin/vite build --watch --mode development --minify false",
     "watch:types": "rm -rf types/ && $npm_package_config_bin/tsc -w --preserveWatchOutput",
-    "test": "$npm_package_config_bin/jest"
+    "test": "$npm_package_config_bin/jest",
+    "postshrinkwrap": "php ../../../../tools/utils/scripts/clean-lockfile-from-local-tuleap-dep.php \"$(pwd)\""
   }
 }
