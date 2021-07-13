@@ -22,38 +22,55 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\Admin\ProgramIncrementTrackerConfiguration;
 
+use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramForAdministrationIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\ProgramTracker;
 use Tuleap\ProgramManagement\Stub\BuildProgramStub;
 use Tuleap\ProgramManagement\Stub\RetrieveVisibleProgramIncrementTrackerStub;
+use Tuleap\ProgramManagement\Stub\VerifyIsTeamStub;
+use Tuleap\ProgramManagement\Stub\VerifyProjectPermissionStub;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
-class PotentialProgramIncrementTrackerConfigurationPresentersBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
+final class PotentialProgramIncrementTrackerConfigurationPresentersBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**
      * @var \PHPUnit\Framework\MockObject\MockObject|\TrackerFactory
      */
     private $tracker_factory;
+    private \PFUser $user;
+    private ProgramForAdministrationIdentifier $program;
 
     protected function setUp(): void
     {
         $this->tracker_factory = $this->createMock(\TrackerFactory::class);
-        $this->tracker_factory->method('getTrackersByGroupId')->willReturn([
-            TrackerTestBuilder::aTracker()->withId(300)->withName('program increment tracker')->build(),
-            TrackerTestBuilder::aTracker()->withId(500)->withName('feature tracker')->build(),
-        ]);
+        $this->tracker_factory->method('getTrackersByGroupId')->willReturn(
+            [
+                TrackerTestBuilder::aTracker()->withId(300)->withName('program increment tracker')->build(),
+                TrackerTestBuilder::aTracker()->withId(500)->withName('feature tracker')->build(),
+            ]
+        );
+        $this->user    = UserTestBuilder::aUser()->build();
+        $this->program = ProgramForAdministrationIdentifier::fromProject(
+            VerifyIsTeamStub::withNotValidTeam(),
+            VerifyProjectPermissionStub::withAdministrator(),
+            $this->user,
+            ProjectTestBuilder::aProject()->withId(101)->build()
+        );
     }
 
     public function testBuildTrackerPresentersWithCheckedTrackerIfExist(): void
     {
         $builder    = new PotentialProgramIncrementTrackerConfigurationPresentersBuilder($this->tracker_factory);
         $presenters = $builder->buildPotentialProgramIncrementTrackerPresenters(
-            100,
+            $this->program,
             ProgramTracker::buildProgramIncrementTrackerFromProgram(
-                RetrieveVisibleProgramIncrementTrackerStub::withValidTracker(TrackerTestBuilder::aTracker()->withId(300)->build()),
-                ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 100, UserTestBuilder::aUser()->build()),
-                UserTestBuilder::aUser()->build()
+                RetrieveVisibleProgramIncrementTrackerStub::withValidTracker(
+                    TrackerTestBuilder::aTracker()->withId(300)->build()
+                ),
+                ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 101, $this->user),
+                $this->user
             )
         );
 
@@ -67,7 +84,7 @@ class PotentialProgramIncrementTrackerConfigurationPresentersBuilderTest extends
     public function testBuildTrackerPresentersWithoutCheckedTracker(): void
     {
         $builder    = new PotentialProgramIncrementTrackerConfigurationPresentersBuilder($this->tracker_factory);
-        $presenters = $builder->buildPotentialProgramIncrementTrackerPresenters(100, null);
+        $presenters = $builder->buildPotentialProgramIncrementTrackerPresenters($this->program, null);
 
         self::assertCount(2, $presenters);
         self::assertSame(300, $presenters[0]->id);

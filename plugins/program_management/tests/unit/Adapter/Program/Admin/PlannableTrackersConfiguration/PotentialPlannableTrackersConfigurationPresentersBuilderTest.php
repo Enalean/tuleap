@@ -22,7 +22,12 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\Admin\PlannableTrackersConfiguration;
 
+use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramForAdministrationIdentifier;
 use Tuleap\ProgramManagement\Stub\RetrievePlannableTrackersStub;
+use Tuleap\ProgramManagement\Stub\VerifyIsTeamStub;
+use Tuleap\ProgramManagement\Stub\VerifyProjectPermissionStub;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
@@ -32,14 +37,23 @@ final class PotentialPlannableTrackersConfigurationPresentersBuilderTest extends
      * @var \PHPUnit\Framework\MockObject\MockObject|\TrackerFactory
      */
     private $tracker_factory;
+    private ProgramForAdministrationIdentifier $program;
 
     protected function setUp(): void
     {
         $this->tracker_factory = $this->createMock(\TrackerFactory::class);
-        $this->tracker_factory->method('getTrackersByGroupId')->willReturn([
-            TrackerTestBuilder::aTracker()->withId(300)->withName('program increment tracker')->build(),
-            TrackerTestBuilder::aTracker()->withId(500)->withName('feature tracker')->build(),
-        ]);
+        $this->tracker_factory->method('getTrackersByGroupId')->willReturn(
+            [
+                TrackerTestBuilder::aTracker()->withId(300)->withName('program increment tracker')->build(),
+                TrackerTestBuilder::aTracker()->withId(500)->withName('feature tracker')->build(),
+            ]
+        );
+        $this->program = ProgramForAdministrationIdentifier::fromProject(
+            VerifyIsTeamStub::withNotValidTeam(),
+            VerifyProjectPermissionStub::withAdministrator(),
+            UserTestBuilder::aUser()->build(),
+            ProjectTestBuilder::aProject()->withId(101)->build()
+        );
     }
 
     public function testBuildTrackerPresentersWithCheckedTrackerIfExist(): void
@@ -50,7 +64,7 @@ final class PotentialPlannableTrackersConfigurationPresentersBuilderTest extends
             $this->tracker_factory,
             $retriever
         );
-        $presenters = $builder->buildPotentialPlannableTrackerPresenters(100);
+        $presenters = $builder->buildPotentialPlannableTrackerPresenters($this->program);
 
         self::assertCount(2, $presenters);
         self::assertSame(300, $presenters[0]->id);
@@ -64,7 +78,7 @@ final class PotentialPlannableTrackersConfigurationPresentersBuilderTest extends
         $retriever = RetrievePlannableTrackersStub::buildIds();
 
         $builder    = new PotentialPlannableTrackersConfigurationPresentersBuilder($this->tracker_factory, $retriever);
-        $presenters = $builder->buildPotentialPlannableTrackerPresenters(100);
+        $presenters = $builder->buildPotentialPlannableTrackerPresenters($this->program);
 
         self::assertCount(2, $presenters);
         self::assertSame(300, $presenters[0]->id);

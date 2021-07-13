@@ -24,6 +24,7 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Admin\CanPrioritizeItems;
 
 use ProjectUGroup;
 use Tuleap\ProgramManagement\Domain\Program\Admin\CanPrioritizeItems\BuildProjectUGroupCanPrioritizeItemsPresenters;
+use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramForAdministrationIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramSelectOptionConfigurationPresenter;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Content\RetrieveProjectUgroupsCanPrioritizeItems;
 use Tuleap\Project\REST\UserGroupRepresentation;
@@ -47,17 +48,17 @@ final class ProjectUGroupCanPrioritizeItemsPresentersBuilder implements BuildPro
     /**
      * @return ProgramSelectOptionConfigurationPresenter[]
      */
-    public function buildProjectUgroupCanPrioritizeItemsPresenters(int $program_id): array
+    public function buildProjectUgroupCanPrioritizeItemsPresenters(ProgramForAdministrationIdentifier $program): array
     {
-        $project                 = $this->project_manager->getProject($program_id);
+        $project                 = $this->project_manager->getProject($program->id);
         $ugroups                 = $this->ugroup_manager->getUGroups($project, ProjectUGroup::SYSTEM_USER_GROUPS);
-        $can_prioritize_features = $this->can_prioritize_items_retriever->searchUserGroupIDsWhoCanPrioritizeFeaturesByProjectID($program_id);
+        $can_prioritize_features = $this->can_prioritize_items_retriever->searchUserGroupIDsWhoCanPrioritizeFeaturesByProjectID($program->id);
         $presenters              = [];
 
         foreach ($ugroups as $ugroup) {
             $id = $ugroup->getId();
             if (! $ugroup->isStatic()) {
-                $id = UserGroupRepresentation::getRESTIdForProject($program_id, $ugroup->getId());
+                $id = UserGroupRepresentation::getRESTIdForProject($program->id, $ugroup->getId());
             }
             $presenters[] = new ProgramSelectOptionConfigurationPresenter(
                 $id,

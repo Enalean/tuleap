@@ -24,6 +24,7 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Admin\PotentialTeam;
 
 use Tuleap\ProgramManagement\Domain\Program\Admin\PotentialTeam\BuildPotentialTeams;
 use Tuleap\ProgramManagement\Domain\Program\Admin\PotentialTeam\PotentialTeam;
+use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramForAdministrationIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\AllProgramSearcher;
 use Tuleap\ProgramManagement\Domain\Program\SearchTeamsOfProgram;
 
@@ -46,19 +47,19 @@ final class PotentialTeamsBuilder implements BuildPotentialTeams
     /**
      * @return PotentialTeam[]
      */
-    public function buildPotentialTeams(int $project_id, \PFUser $user): array
+    public function buildPotentialTeams(ProgramForAdministrationIdentifier $program, \PFUser $user): array
     {
-        $aggregated_teams_id    = $this->teams_of_program_searcher->searchTeamIdsOfProgram($project_id);
-        $exiting_programs_id    = $this->all_program_searcher->getAllPrograms();
+        $aggregated_teams_id    = $this->teams_of_program_searcher->searchTeamIdsOfProgram($program->id);
+        $existing_programs_id   = $this->all_program_searcher->getAllPrograms();
         $projects_user_is_admin = $this->project_manager->getProjectsUserIsAdmin($user);
 
         $potentially_teams = [];
 
         foreach ($projects_user_is_admin as $project_user_is_admin) {
             if (
-                $project_id !== (int) $project_user_is_admin->getID()
+                $program->id !== (int) $project_user_is_admin->getID()
                 && ! \in_array((int) $project_user_is_admin->getID(), $aggregated_teams_id, true)
-                && ! \in_array((int) $project_user_is_admin->getID(), $exiting_programs_id, true)
+                && ! \in_array((int) $project_user_is_admin->getID(), $existing_programs_id, true)
             ) {
                 $potentially_teams[] = PotentialTeam::fromId(
                     (int) $project_user_is_admin->getID(),

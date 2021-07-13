@@ -22,8 +22,12 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\Admin\CanPrioritizeItems;
 
-use Project;
+use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramForAdministrationIdentifier;
 use Tuleap\ProgramManagement\Stub\RetrieveProjectUgroupsCanPrioritizeItemsStub;
+use Tuleap\ProgramManagement\Stub\VerifyIsTeamStub;
+use Tuleap\ProgramManagement\Stub\VerifyProjectPermissionStub;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\Builders\UserTestBuilder;
 
 final class ProjectUGroupCanPrioritizeItemsPresentersBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -35,12 +39,20 @@ final class ProjectUGroupCanPrioritizeItemsPresentersBuilderTest extends \Tuleap
      * @var \PHPUnit\Framework\MockObject\Stub|\UGroupManager
      */
     private $ugroup_manager;
+    private ProgramForAdministrationIdentifier $program;
 
     protected function setUp(): void
     {
         $this->project_manager = $this->createStub(\ProjectManager::class);
         $this->ugroup_manager  = $this->createStub(\UGroupManager::class);
-        $this->project_manager->method('getProject')->willReturn(Project::buildForTest());
+        $project               = ProjectTestBuilder::aProject()->withId(101)->build();
+        $this->project_manager->method('getProject')->willReturn($project);
+        $this->program = ProgramForAdministrationIdentifier::fromProject(
+            VerifyIsTeamStub::withNotValidTeam(),
+            VerifyProjectPermissionStub::withAdministrator(),
+            UserTestBuilder::aUser()->build(),
+            $project
+        );
     }
 
 
@@ -57,10 +69,10 @@ final class ProjectUGroupCanPrioritizeItemsPresentersBuilderTest extends \Tuleap
             RetrieveProjectUgroupsCanPrioritizeItemsStub::buildWithIds(3)
         );
 
-        $presenters = $builder->buildProjectUgroupCanPrioritizeItemsPresenters(100);
+        $presenters = $builder->buildProjectUgroupCanPrioritizeItemsPresenters($this->program);
 
         self::assertCount(2, $presenters);
-        self::assertSame('100_3', $presenters[0]->id);
+        self::assertSame('101_3', $presenters[0]->id);
         self::assertTrue($presenters[0]->is_selected);
         self::assertSame(105, $presenters[1]->id);
         self::assertFalse($presenters[1]->is_selected);

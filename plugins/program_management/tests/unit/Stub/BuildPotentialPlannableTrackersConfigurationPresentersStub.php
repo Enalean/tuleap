@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Stub;
 
 use Tuleap\ProgramManagement\Domain\Program\Admin\PlannableTrackersConfiguration\BuildPotentialPlannableTrackersConfigurationPresenters;
+use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramForAdministrationIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramSelectOptionConfigurationPresenter;
 
 final class BuildPotentialPlannableTrackersConfigurationPresentersStub implements BuildPotentialPlannableTrackersConfigurationPresenters
@@ -43,7 +44,7 @@ final class BuildPotentialPlannableTrackersConfigurationPresentersStub implement
     /**
      * @return ProgramSelectOptionConfigurationPresenter[]
      */
-    public function buildPotentialPlannableTrackerPresenters(int $program_id): array
+    public function buildPotentialPlannableTrackerPresenters(ProgramForAdministrationIdentifier $program): array
     {
         $presenters = [];
         foreach ($this->ids as $id) {

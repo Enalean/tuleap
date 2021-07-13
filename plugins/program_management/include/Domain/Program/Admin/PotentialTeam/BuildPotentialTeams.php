@@ -22,11 +22,12 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Admin\PotentialTeam;
 
+use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramForAdministrationIdentifier;
 
 interface BuildPotentialTeams
 {
     /**
      * @return PotentialTeam[]
      */
-    public function buildPotentialTeams(int $project_id, \PFUser $user): array;
+    public function buildPotentialTeams(ProgramForAdministrationIdentifier $program, \PFUser $user): array;
 }
