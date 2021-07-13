@@ -22,28 +22,41 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Stub;
 
-use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramIncrementTrackerConfiguration\BuildPotentialProgramIncrementTrackerConfigurationPresenters;
+use Tuleap\ProgramManagement\Domain\Program\Admin\CanPrioritizeItems\BuildProjectUGroupCanPrioritizeItemsPresenters;
 use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramSelectOptionConfigurationPresenter;
 
-final class BuildPotentialProgramIncrementTrackerConfigurationPresentersStub implements BuildPotentialProgramIncrementTrackerConfigurationPresenters
+final class BuildProjectUGroupCanPrioritizeItemsPresentersStub implements BuildProjectUGroupCanPrioritizeItemsPresenters
 {
-    private array $presenters;
+    /**
+     * @var int|string[]
+     */
+    private array $ids;
 
-    private function __construct(array $presenters)
+    /**
+     * @param int|string[] $ids
+     */
+    private function __construct(array $ids)
     {
-        $this->presenters = $presenters;
+        $this->ids = $ids;
     }
 
     /**
      * @return ProgramSelectOptionConfigurationPresenter[]
      */
-    public function buildPotentialProgramIncrementTrackerPresenters(int $program_id): array
+    public function buildProjectUgroupCanPrioritizeItemsPresenters(int $program_id): array
     {
-        return $this->presenters;
+        $presenters = [];
+        foreach ($this->ids as $id) {
+            $presenters[] = new ProgramSelectOptionConfigurationPresenter($id, 'ugroups', false);
+        }
+        return $presenters;
     }
 
-    public static function buildWithValidProgramTrackers(ProgramSelectOptionConfigurationPresenter ...$presenters): self
+    /**
+     * @param int|string ...$ids
+     */
+    public static function buildWithIds(...$ids): self
     {
-        return new self($presenters);
+        return new self($ids);
     }
 }

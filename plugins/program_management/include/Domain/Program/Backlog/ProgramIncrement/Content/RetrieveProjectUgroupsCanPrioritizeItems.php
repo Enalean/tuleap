@@ -20,14 +20,12 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Domain\Program\Admin\ProgramIncrementTrackerConfiguration;
+namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Content;
 
-use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramSelectOptionConfigurationPresenter;
-
-interface BuildPotentialProgramIncrementTrackerConfigurationPresenters
+interface RetrieveProjectUgroupsCanPrioritizeItems
 {
     /**
-     * @return ProgramSelectOptionConfigurationPresenter[]
+     * @return int[]
      */
-    public function buildPotentialProgramIncrementTrackerPresenters(int $program_id): array;
+    public function searchUserGroupIDsWhoCanPrioritizeFeaturesByProjectID(int $project_id): array;
 }

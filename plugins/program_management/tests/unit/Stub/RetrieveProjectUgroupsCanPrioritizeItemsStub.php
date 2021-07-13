@@ -22,28 +22,33 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Stub;
 
-use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramIncrementTrackerConfiguration\BuildPotentialProgramIncrementTrackerConfigurationPresenters;
-use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramSelectOptionConfigurationPresenter;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Content\RetrieveProjectUgroupsCanPrioritizeItems;
 
-final class BuildPotentialProgramIncrementTrackerConfigurationPresentersStub implements BuildPotentialProgramIncrementTrackerConfigurationPresenters
+final class RetrieveProjectUgroupsCanPrioritizeItemsStub implements RetrieveProjectUgroupsCanPrioritizeItems
 {
-    private array $presenters;
+    /**
+     * @var int[]
+     */
+    private array $ids;
 
-    private function __construct(array $presenters)
+    /**
+     * @param int[] $ids
+     */
+    private function __construct(array $ids)
     {
-        $this->presenters = $presenters;
+        $this->ids = $ids;
     }
 
     /**
-     * @return ProgramSelectOptionConfigurationPresenter[]
+     * @return int[]
      */
-    public function buildPotentialProgramIncrementTrackerPresenters(int $program_id): array
+    public function searchUserGroupIDsWhoCanPrioritizeFeaturesByProjectID(int $project_id): array
     {
-        return $this->presenters;
+        return $this->ids;
     }
 
-    public static function buildWithValidProgramTrackers(ProgramSelectOptionConfigurationPresenter ...$presenters): self
+    public static function buildWithIds(int ...$ids): self
     {
-        return new self($presenters);
+        return new self($ids);
     }
 }

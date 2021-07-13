@@ -28,6 +28,7 @@ use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Layout\ServiceUrlCollector;
+use Tuleap\ProgramManagement\Adapter\Program\Admin\CanPrioritizeItems\ProjectUGroupCanPrioritizeItemsPresentersBuilder;
 use Tuleap\ProgramManagement\Adapter\Program\Admin\PlannableTrackersConfiguration\PotentialPlannableTrackersConfigurationPresentersBuilder;
 use Tuleap\ProgramManagement\Adapter\Program\Admin\PotentialTeam\PotentialTeamsBuilder;
 use Tuleap\ProgramManagement\Adapter\Program\Admin\ProgramIncrementTrackerConfiguration\PotentialProgramIncrementTrackerConfigurationPresentersBuilder;
@@ -296,6 +297,7 @@ final class program_managementPlugin extends Plugin
             $this->getVisibleIterationTrackerRetriever(),
             new PotentialProgramIncrementTrackerConfigurationPresentersBuilder(TrackerFactory::instance(), new ProgramIncrementsDAO()),
             new PotentialPlannableTrackersConfigurationPresentersBuilder(TrackerFactory::instance(), new PlanDao()),
+            new ProjectUGroupCanPrioritizeItemsPresentersBuilder(new UGroupManager(), ProjectManager::instance(), new CanPrioritizeFeaturesDAO())
         );
     }
 

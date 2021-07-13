@@ -47,20 +47,25 @@ final class ProgramAdminPresenter
     public bool $has_aggregated_teams;
     public bool $has_errors;
     /**
-     * @var ProgramTrackerConfigurationPresenter[]
+     * @var ProgramSelectOptionConfigurationPresenter[]
      */
     public array $potential_program_increments;
     /**
-     * @var ProgramTrackerConfigurationPresenter[]
+     * @var ProgramSelectOptionConfigurationPresenter[]
      */
     public array $potential_plannable_trackers;
+    /**
+     * @var ProgramSelectOptionConfigurationPresenter[]
+     */
+    public array $ugroups_can_prioritize;
 
     /**
      * @param PotentialTeamPresenter[]              $potential_teams
      * @param TeamPresenter[]                       $aggregated_teams
      * @param ErrorPresenter[]                      $errors
-     * @param ProgramTrackerConfigurationPresenter[] $potential_program_increments
-     * @param ProgramTrackerConfigurationPresenter[] $potential_plannable_trackers
+     * @param ProgramSelectOptionConfigurationPresenter[] $potential_program_increments
+     * @param ProgramSelectOptionConfigurationPresenter[] $potential_plannable_trackers
+     * @param ProgramSelectOptionConfigurationPresenter[] $ugroups_can_prioritize
      */
 
     public function __construct(
@@ -69,7 +74,8 @@ final class ProgramAdminPresenter
         array $aggregated_teams,
         array $errors,
         array $potential_program_increments,
-        array $potential_plannable_trackers
+        array $potential_plannable_trackers,
+        array $ugroups_can_prioritize
     ) {
         $this->program_id                   = $program_id;
         $this->potential_teams              = $potential_teams;
@@ -79,5 +85,6 @@ final class ProgramAdminPresenter
         $this->has_errors                   = count($errors) > 0;
         $this->potential_program_increments = $potential_program_increments;
         $this->potential_plannable_trackers = $potential_plannable_trackers;
+        $this->ugroups_can_prioritize       = $ugroups_can_prioritize;
     }
 }
