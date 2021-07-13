@@ -45,7 +45,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { Component, Prop } from "vue-property-decorator";
+import { Component, Prop, Ref } from "vue-property-decorator";
 import { autoFocusAutoSelect } from "../../../../../../../helpers/autofocus-autoselect";
 
 const LINE_HEIGHT_IN_PX = 18;
@@ -59,18 +59,14 @@ export default class LabelEditor extends Vue {
     @Prop({ required: false, default: false })
     readonly readonly!: boolean;
 
+    @Ref() textarea!: HTMLTextAreaElement;
+    @Ref() mirror!: HTMLTextAreaElement;
+
     rows = 1;
-    mirror!: HTMLTextAreaElement;
 
     mounted(): void {
-        const textarea = this.$refs.textarea;
-        if (!(textarea instanceof HTMLTextAreaElement)) {
-            throw new Error("Did not get the expected textarea element, is the ref valid?");
-        }
-
         setTimeout(this.computeRows, 10);
-
-        autoFocusAutoSelect(textarea);
+        autoFocusAutoSelect(this.textarea);
     }
 
     enter(event: KeyboardEvent): void {
@@ -84,12 +80,8 @@ export default class LabelEditor extends Vue {
     }
 
     computeRows(): void {
-        const mirror = this.$refs.mirror;
-        if (!(mirror instanceof HTMLElement)) {
-            throw new Error("The mirror refs is not an HTMLElement");
-        }
         this.rows = Math.ceil(
-            (mirror.scrollHeight - TOP_AND_BOTTOM_PADDING_IN_PX) / LINE_HEIGHT_IN_PX
+            (this.mirror.scrollHeight - TOP_AND_BOTTOM_PADDING_IN_PX) / LINE_HEIGHT_IN_PX
         );
     }
 }

@@ -48,7 +48,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { Component, Prop } from "vue-property-decorator";
+import { Component, Prop, Ref } from "vue-property-decorator";
 import { createPopover } from "tlp";
 import { State } from "vuex-class";
 
@@ -60,11 +60,12 @@ export default class TaskBoardHeaderCell extends Vue {
     @State
     readonly admin_url!: string;
 
+    @Ref() trigger!: HTMLElement;
+    @Ref() container!: HTMLElement;
+
     mounted(): void {
-        const trigger = this.$refs.trigger;
-        const container = this.$refs.container;
-        if (trigger instanceof HTMLElement && container instanceof HTMLElement) {
-            createPopover(trigger, container);
+        if (this.trigger && this.container) {
+            createPopover(this.trigger, this.container);
         }
     }
 

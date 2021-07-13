@@ -37,7 +37,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { Component, Prop, Watch } from "vue-property-decorator";
+import { Component, Prop, Ref, Watch } from "vue-property-decorator";
 
 @Component
 export default class AddButton extends Vue {
@@ -46,6 +46,8 @@ export default class AddButton extends Vue {
 
     @Prop({ required: true })
     readonly is_in_add_mode!: boolean;
+
+    @Ref() readonly addButton!: HTMLElement;
 
     @Watch("is_in_add_mode")
     onIsInAddModeChanged(is_in_add_mode: boolean): void {
@@ -68,11 +70,7 @@ export default class AddButton extends Vue {
 
     focusAddButton(): void {
         this.$nextTick(() => {
-            const add_button = this.$refs.addButton;
-            if (!(add_button instanceof HTMLElement)) {
-                throw new Error("Did not get the add button, is the ref valid?");
-            }
-            add_button.focus();
+            this.addButton.focus();
         });
     }
 }

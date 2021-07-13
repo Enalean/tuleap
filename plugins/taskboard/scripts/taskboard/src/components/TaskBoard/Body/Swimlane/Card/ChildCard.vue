@@ -41,7 +41,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { Component, Prop } from "vue-property-decorator";
+import { Component, Prop, Ref } from "vue-property-decorator";
 import { State } from "vuex-class";
 import BaseCard from "./BaseCard.vue";
 import type { Card } from "../../../../../type";
@@ -57,12 +57,10 @@ export default class ChildCard extends Vue {
     @Prop({ required: true })
     readonly card!: Card;
 
+    @Ref() readonly childCard!: HTMLElement;
+
     focusCard(): void {
-        const card = this.$refs.childCard;
-        if (!(card instanceof HTMLElement)) {
-            throw new Error("Did not get the expected child card element, is the ref valid?");
-        }
-        card.focus();
+        this.childCard.focus();
     }
 }
 </script>

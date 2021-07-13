@@ -33,7 +33,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { Component, Prop } from "vue-property-decorator";
+import { Component, Prop, Ref } from "vue-property-decorator";
 import type { Card } from "../../../../../type";
 import ParentCard from "./ParentCard.vue";
 import ParentCardRemainingEffort from "./ParentCardRemainingEffort.vue";
@@ -46,12 +46,10 @@ export default class CardWithRemainingEffort extends Vue {
     @Prop({ required: true })
     readonly card!: Card;
 
+    @Ref() readonly cardWithRemainingEffort!: HTMLElement;
+
     focusCard(): void {
-        const card = this.$refs.cardWithRemainingEffort;
-        if (!(card instanceof HTMLElement)) {
-            throw new Error("Did not get the expected card element, is the ref valid?");
-        }
-        card.focus();
+        this.cardWithRemainingEffort.focus();
     }
 }
 </script>
