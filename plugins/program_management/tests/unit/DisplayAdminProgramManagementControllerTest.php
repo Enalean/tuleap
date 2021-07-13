@@ -28,6 +28,7 @@ use Tuleap\ProgramManagement\Domain\Program\Admin\PotentialTeam\PotentialTeam;
 use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramAdminPresenter;
 use Tuleap\ProgramManagement\Domain\Program\Plan\BuildProgram;
 use Tuleap\ProgramManagement\Domain\Team\VerifyIsTeam;
+use Tuleap\ProgramManagement\Stub\BuildPotentialPlannableTrackersConfigurationPresentersStub;
 use Tuleap\ProgramManagement\Stub\BuildPotentialProgramIncrementTrackerConfigurationPresentersStub;
 use Tuleap\ProgramManagement\Stub\BuildPotentialTeamsStub;
 use Tuleap\ProgramManagement\Stub\BuildProgramStub;
@@ -71,6 +72,7 @@ final class DisplayAdminProgramManagementControllerTest extends \Tuleap\Test\PHP
      */
     private $event_manager;
     private BuildPotentialProgramIncrementTrackerConfigurationPresentersStub $program_increment_tracker_builder;
+    private BuildPotentialPlannableTrackersConfigurationPresentersStub $iteration_tracker_builder;
 
     protected function setUp(): void
     {
@@ -84,6 +86,7 @@ final class DisplayAdminProgramManagementControllerTest extends \Tuleap\Test\PHP
         $this->build_project                     = new BuildProjectStub();
         $this->event_manager                     = $this->createMock(\EventManager::class);
         $this->program_increment_tracker_builder = BuildPotentialProgramIncrementTrackerConfigurationPresentersStub::buildWithValidProgramTrackers();
+        $this->iteration_tracker_builder         = BuildPotentialPlannableTrackersConfigurationPresentersStub::buildPresentersFromIds();
     }
 
     public function testItReturnsNotFoundWhenProjectIsNotFoundFromVariables(): void
@@ -180,7 +183,8 @@ final class DisplayAdminProgramManagementControllerTest extends \Tuleap\Test\PHP
             RetrieveVisibleProgramIncrementTrackerStub::withValidTracker(TrackerTestBuilder::aTracker()->build()),
             $this->event_manager,
             RetrieveVisibleIterationTrackerStub::withValidTracker(TrackerTestBuilder::aTracker()->build()),
-            $this->program_increment_tracker_builder
+            $this->program_increment_tracker_builder,
+            $this->iteration_tracker_builder
         );
     }
 

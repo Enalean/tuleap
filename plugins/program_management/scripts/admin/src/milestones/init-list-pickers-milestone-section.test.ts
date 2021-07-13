@@ -20,9 +20,11 @@
 import type { GetText } from "@tuleap/core/scripts/tuleap/gettext/gettext-init";
 import { initListPickersMilestoneSection } from "./init-list-pickers-milestone-section";
 import * as listPicker from "@tuleap/list-picker";
+import * as disabledPlannableTrackerHelper from "../helper/disabled-plannable-tracker-helper";
 
 const createDocument = (): Document => document.implementation.createHTMLDocument();
 
+jest.mock("../helper/disabled-plannable-tracker-helper");
 describe("initListPickersMilestoneSection", () => {
     const gettext: GetText = {
         gettext: (msgid: string) => {
@@ -82,6 +84,10 @@ describe("initListPickersMilestoneSection", () => {
         doc.body.appendChild(permissions_selector);
 
         const create_list_picker = jest.spyOn(listPicker, "createListPicker");
+        const disabledPlannableTrackers = jest.spyOn(
+            disabledPlannableTrackerHelper,
+            "disabledPlannableTrackers"
+        );
 
         await initListPickersMilestoneSection(doc, gettext);
         expect(create_list_picker).toHaveBeenNthCalledWith(1, pi_selector, {
@@ -99,5 +105,6 @@ describe("initListPickersMilestoneSection", () => {
             locale: "en-EN",
             placeholder: "Choose who can prioritize and plan items",
         });
+        expect(disabledPlannableTrackers).toHaveBeenCalledWith(doc, pi_selector);
     });
 });

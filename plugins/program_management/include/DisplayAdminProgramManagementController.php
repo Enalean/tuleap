@@ -30,6 +30,7 @@ use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\ProgramManagement\Adapter\Program\Admin\Configuration\ConfigurationChecker;
 use Tuleap\ProgramManagement\Domain\BuildProject;
+use Tuleap\ProgramManagement\Domain\Program\Admin\PlannableTrackersConfiguration\BuildPotentialPlannableTrackersConfigurationPresenters;
 use Tuleap\ProgramManagement\Domain\Program\Admin\PotentialTeam\BuildPotentialTeams;
 use Tuleap\ProgramManagement\Domain\Program\Admin\PotentialTeam\PotentialTeamsPresenterBuilder;
 use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramAdminPresenter;
@@ -61,6 +62,7 @@ final class DisplayAdminProgramManagementController implements DispatchableWithR
     private \EventManager $event_manager;
     private RetrieveVisibleIterationTracker $iteration_tracker_retriever;
     private BuildPotentialProgramIncrementTrackerConfigurationPresenters $program_increment_presenters_builder;
+    private BuildPotentialPlannableTrackersConfigurationPresenters $plannable_tracker_presenters_builder;
 
     public function __construct(
         \ProjectManager $project_manager,
@@ -74,7 +76,8 @@ final class DisplayAdminProgramManagementController implements DispatchableWithR
         RetrieveVisibleProgramIncrementTracker $program_increment_tracker_retriever,
         \EventManager $event_manager,
         RetrieveVisibleIterationTracker $iteration_tracker_retriever,
-        BuildPotentialProgramIncrementTrackerConfigurationPresenters $program_increment_presenters_builder
+        BuildPotentialProgramIncrementTrackerConfigurationPresenters $program_increment_presenters_builder,
+        BuildPotentialPlannableTrackersConfigurationPresenters $plannable_tracker_presenters_builder
     ) {
         $this->project_manager                      = $project_manager;
         $this->template_renderer                    = $template_renderer;
@@ -88,11 +91,13 @@ final class DisplayAdminProgramManagementController implements DispatchableWithR
         $this->event_manager                        = $event_manager;
         $this->iteration_tracker_retriever          = $iteration_tracker_retriever;
         $this->program_increment_presenters_builder = $program_increment_presenters_builder;
+        $this->plannable_tracker_presenters_builder = $plannable_tracker_presenters_builder;
     }
 
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
-        $project = $this->getProject($variables);
+        $project    = $this->getProject($variables);
+        $project_id = (int) $project->getID();
 
         if (! $project->usesService(program_managementPlugin::SERVICE_SHORTNAME)) {
             throw new NotFoundException(
@@ -100,7 +105,7 @@ final class DisplayAdminProgramManagementController implements DispatchableWithR
             );
         }
 
-        if ($this->verify_is_team->isATeam((int) $project->getID())) {
+        if ($this->verify_is_team->isATeam($project_id)) {
             throw new ForbiddenException(
                 dgettext(
                     "tuleap-program_management",
@@ -111,7 +116,7 @@ final class DisplayAdminProgramManagementController implements DispatchableWithR
 
         $user = $request->getCurrentUser();
 
-        if (! $user->isAdmin((int) $project->getID())) {
+        if (! $user->isAdmin($project_id)) {
             throw new ForbiddenException(
                 dgettext(
                     'tuleap-program_management',
@@ -126,7 +131,7 @@ final class DisplayAdminProgramManagementController implements DispatchableWithR
                 $this->program_increment_tracker_retriever,
                 $this->iteration_tracker_retriever,
                 $this->event_manager,
-                (int) $project->getID(),
+                $project_id,
                 $user
             );
         } catch (Domain\Program\Plan\ProgramAccessException $e) {
@@ -150,19 +155,20 @@ final class DisplayAdminProgramManagementController implements DispatchableWithR
         $this->template_renderer->renderToPage(
             'admin',
             new ProgramAdminPresenter(
-                (int) $project->getID(),
+                $project_id,
                 PotentialTeamsPresenterBuilder::buildPotentialTeamsPresenter(
-                    $this->potential_teams_builder->buildPotentialTeams((int) $project->getID(), $user)
+                    $this->potential_teams_builder->buildPotentialTeams($project_id, $user)
                 ),
                 TeamsPresenterBuilder::buildTeamsPresenter(
                     TeamProjectsCollection::fromProjectId(
                         $this->teams_searcher,
                         $this->project_data_adapter,
-                        (int) $project->getID()
+                        $project_id
                     )
                 ),
                 $error_presenters,
-                $this->program_increment_presenters_builder->buildPotentialProgramIncrementTrackerPresenters((int) $project->getID())
+                $this->program_increment_presenters_builder->buildPotentialProgramIncrementTrackerPresenters($project_id),
+                $this->plannable_tracker_presenters_builder->buildPotentialPlannableTrackerPresenters($project_id)
             )
         );
 

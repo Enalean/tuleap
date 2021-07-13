@@ -26,9 +26,10 @@ use Tuleap\DB\DataAccessObject;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Content\VerifyCanBePlannedInProgramIncrement;
 use Tuleap\ProgramManagement\Domain\Program\Plan\Plan;
 use Tuleap\ProgramManagement\Domain\Program\Plan\PlanStore;
+use Tuleap\ProgramManagement\Domain\Program\Plan\RetrievePlannableTrackers;
 use Tuleap\ProgramManagement\Domain\ProgramTracker;
 
-final class PlanDao extends DataAccessObject implements PlanStore, VerifyCanBePlannedInProgramIncrement
+final class PlanDao extends DataAccessObject implements PlanStore, VerifyCanBePlannedInProgramIncrement, RetrievePlannableTrackers
 {
     /**
      * @throws \Throwable
@@ -138,6 +139,17 @@ final class PlanDao extends DataAccessObject implements PlanStore, VerifyCanBePl
         $sql = 'SELECT count(*) FROM plugin_program_management_plan WHERE plannable_tracker_id = ?';
 
         return $this->getDB()->exists($sql, $plannable_tracker_id);
+    }
+
+    /**
+     * @return int[]
+     */
+    public function getPlannableTrackersOfProgram(int $program_id): array
+    {
+        $sql = 'SELECT plannable_tracker_id FROM plugin_program_management_plan WHERE project_id = ?';
+
+        $rows = $this->getDB()->q($sql, $program_id);
+        return array_map(static fn(array $row): int => $row['plannable_tracker_id'], $rows);
     }
 
     public function isPartOfAPlan(ProgramTracker $tracker_data): bool

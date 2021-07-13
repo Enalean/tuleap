@@ -50,12 +50,17 @@ final class ProgramAdminPresenter
      * @var ProgramTrackerConfigurationPresenter[]
      */
     public array $potential_program_increments;
+    /**
+     * @var ProgramTrackerConfigurationPresenter[]
+     */
+    public array $potential_plannable_trackers;
 
     /**
      * @param PotentialTeamPresenter[]              $potential_teams
      * @param TeamPresenter[]                       $aggregated_teams
      * @param ErrorPresenter[]                      $errors
      * @param ProgramTrackerConfigurationPresenter[] $potential_program_increments
+     * @param ProgramTrackerConfigurationPresenter[] $potential_plannable_trackers
      */
 
     public function __construct(
@@ -63,7 +68,8 @@ final class ProgramAdminPresenter
         array $potential_teams,
         array $aggregated_teams,
         array $errors,
-        array $potential_program_increments
+        array $potential_program_increments,
+        array $potential_plannable_trackers
     ) {
         $this->program_id                   = $program_id;
         $this->potential_teams              = $potential_teams;
@@ -72,5 +78,6 @@ final class ProgramAdminPresenter
         $this->errors                       = $errors;
         $this->has_errors                   = count($errors) > 0;
         $this->potential_program_increments = $potential_program_increments;
+        $this->potential_plannable_trackers = $potential_plannable_trackers;
     }
 }

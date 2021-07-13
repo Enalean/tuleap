@@ -89,6 +89,21 @@ describe("ListOptionsChangesObserver", () => {
         expect(event_manager.attachItemListEvent).toHaveBeenCalled();
     });
 
+    it("should refresh the list-picker when attribute disabled on children is added", async () => {
+        await new Promise<void>((done) => {
+            appendSimpleOptionsToSourceSelectBox(source_select_box);
+            list_options_changes_observer.startWatchingChangesInSelectOptions();
+
+            source_select_box.options[0].disabled = true;
+            done();
+        });
+
+        await expect(items_map_manager.refreshItemsMap).toHaveBeenCalled();
+        expect(dropdown_content_renderer.renderAfterDependenciesUpdate).toHaveBeenCalled();
+        expect(selection_manager.resetAfterDependenciesUpdate).toHaveBeenCalled();
+        expect(event_manager.attachItemListEvent).toHaveBeenCalled();
+    });
+
     it("should not react otherwise", async () => {
         await new Promise<void>((done) => {
             appendSimpleOptionsToSourceSelectBox(source_select_box);

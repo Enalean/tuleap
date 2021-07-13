@@ -53,6 +53,9 @@ export class MultipleSelectionManager implements SelectionManager {
 
         let item_id = item.dataset.itemId;
         let list_item = this.items_map_manager.findListPickerItemInItemMap(item_id);
+        if (list_item.is_disabled) {
+            return;
+        }
         if (list_item.is_selected) {
             this.removeListItemFromSelection(list_item);
             this.togglePlaceholder();

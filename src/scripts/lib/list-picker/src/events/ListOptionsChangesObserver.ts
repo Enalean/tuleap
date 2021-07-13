@@ -39,6 +39,7 @@ export class ListOptionsChangesObserver {
         this.observer.observe(this.source_select_box, {
             childList: true,
             subtree: true,
+            attributes: true,
         });
     }
 
@@ -48,8 +49,7 @@ export class ListOptionsChangesObserver {
 
     private refreshListPickerOnOptionsChanges(): (mutations: Array<MutationRecord>) => void {
         return async (mutations: Array<MutationRecord>): Promise<void> => {
-            const children_mutation = mutations.find((mutation) => mutation.type === "childList");
-            if (!children_mutation) {
+            if (!this.isChildrenMutation(mutations)) {
                 return;
             }
 
@@ -58,5 +58,16 @@ export class ListOptionsChangesObserver {
             this.selection_manager.resetAfterDependenciesUpdate();
             this.event_manager.attachItemListEvent();
         };
+    }
+
+    private isChildrenMutation(mutations: Array<MutationRecord>): boolean {
+        return (
+            mutations.find((mutation) => {
+                return (
+                    mutation.type === "childList" ||
+                    (mutation.type === "attributes" && mutation.attributeName === "disabled")
+                );
+            }) !== undefined
+        );
     }
 }
