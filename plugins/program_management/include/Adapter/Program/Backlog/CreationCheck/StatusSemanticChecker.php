@@ -24,21 +24,15 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\CreationCheck;
 
 use Tracker_Semantic_StatusDao;
 use Tracker_Semantic_StatusFactory;
+use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ConfigurationErrorsCollector;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck\CheckStatus;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Source\SourceTrackerCollection;
 use Tuleap\ProgramManagement\Domain\ProgramTracker;
 
 final class StatusSemanticChecker implements CheckStatus
 {
-    /**
-     * @var Tracker_Semantic_StatusDao
-     */
-    private $semantic_status_dao;
-
-    /**
-     * @var Tracker_Semantic_StatusFactory
-     */
-    private $semantic_status_factory;
+    private Tracker_Semantic_StatusDao $semantic_status_dao;
+    private Tracker_Semantic_StatusFactory $semantic_status_factory;
 
     public function __construct(
         Tracker_Semantic_StatusDao $semantic_status_dao,
@@ -50,13 +44,27 @@ final class StatusSemanticChecker implements CheckStatus
 
     public function isStatusWellConfigured(
         ProgramTracker $tracker,
-        SourceTrackerCollection $source_tracker_collection
+        SourceTrackerCollection $source_tracker_collection,
+        ConfigurationErrorsCollector $configuration_errors
     ): bool {
         $program_tracker_status_semantic = $this->semantic_status_factory->getByTracker(
             $tracker->getFullTracker()
         );
 
         if ($program_tracker_status_semantic->getField() === null) {
+            $url   = '/plugins/tracker/?' . http_build_query(
+                ['tracker' => $tracker->getTrackerId(), 'func' => 'admin-semantic', 'semantic' => "status"]
+            );
+            $error = sprintf(
+                dgettext(
+                    'tuleap-program_management',
+                    "Semantic 'status' is not linked to a field in program tracker <a href='%s'>#%d</a>"
+                ),
+                $url,
+                $tracker->getTrackerId()
+            );
+
+            $configuration_errors->addError($error);
             return false;
         }
 
@@ -64,6 +72,14 @@ final class StatusSemanticChecker implements CheckStatus
             $source_tracker_collection->getSourceTrackerIds()
         );
         if ($nb_of_trackers_without_status > 0) {
+            $error = sprintf(
+                dgettext(
+                    'tuleap-program_management',
+                    "Some tracker does not have status semantic defined, please check trackers %s"
+                ),
+                implode(', ', $this->getTrackersLinks($source_tracker_collection))
+            );
+            $configuration_errors->addError($error);
             return false;
         }
 
@@ -71,11 +87,34 @@ final class StatusSemanticChecker implements CheckStatus
 
         foreach ($source_tracker_collection->getSourceTrackers() as $source_tracker) {
             $status_semantic = $this->semantic_status_factory->getByTracker($source_tracker->getFullTracker());
-            if (count(array_diff($program_open_values_labels, $status_semantic->getOpenLabels())) > 0) {
+            $array_diff      = array_diff($program_open_values_labels, $status_semantic->getOpenLabels());
+            if (count($array_diff) > 0) {
+                $error = sprintf(
+                    dgettext(
+                        'tuleap-program_management',
+                        'Values "%s" are not found in every tracker, please check tracker %s'
+                    ),
+                    implode(', ', $array_diff),
+                    implode(', ', $this->getTrackersLinks($source_tracker_collection))
+                );
+                $configuration_errors->addError($error);
                 return false;
             }
         }
 
         return true;
+    }
+
+    private function getTrackersLinks(SourceTrackerCollection $source_tracker_collection): array
+    {
+        $tracker_urls = [];
+        foreach ($source_tracker_collection->getSourceTrackerIds() as $id) {
+            $url            = '/plugins/tracker/?' . http_build_query(
+                ['tracker' => $id, 'func' => 'admin-semantic', 'semantic' => "status"]
+            );
+            $tracker_urls[] = sprintf("<a href='%s'>#%d</a>", $url, $id);
+        }
+
+        return $tracker_urls;
     }
 }

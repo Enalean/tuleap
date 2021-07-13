@@ -27,6 +27,7 @@ use Tracker_FormElement_Field_List;
 use Tracker_Semantic_Status;
 use Tracker_Semantic_StatusDao;
 use Tracker_Semantic_StatusFactory;
+use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ConfigurationErrorsCollector;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Team\TeamProjectsCollection;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Source\SourceTrackerCollection;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TrackerCollection;
@@ -139,12 +140,16 @@ final class StatusSemanticCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
                 $tracker_02_semantic_status
             );
 
+        $configuration_errors = new ConfigurationErrorsCollector(true);
         self::assertTrue(
             $this->checker->isStatusWellConfigured(
                 $this->program_increment_tracker,
-                $this->source_trackers
+                $this->source_trackers,
+                $configuration_errors
             )
         );
+
+        self::assertCount(0, $configuration_errors->getErrorMessages());
     }
 
     public function testItReturnsFalseIfProgramTrackerDoesNotHaveStatusSemantic(): void
@@ -157,12 +162,15 @@ final class StatusSemanticCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         $top_planning_tracker_semantic_status->method('getField')
             ->willReturn(null);
 
+        $configuration_errors = new ConfigurationErrorsCollector(true);
         self::assertFalse(
             $this->checker->isStatusWellConfigured(
                 $this->program_increment_tracker,
-                $this->source_trackers
+                $this->source_trackers,
+                $configuration_errors
             )
         );
+        self::assertStringContainsString("Semantic 'status' is not linked to a field in program tracker", $configuration_errors->getErrorMessages()[0]);
     }
 
     public function testItReturnsFalseIfSomeTeamTrackersDoNotHaveSemanticStatusDefined(): void
@@ -180,12 +188,15 @@ final class StatusSemanticCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->with([1, 123, 124])
             ->willReturn(1);
 
+        $configuration_errors = new ConfigurationErrorsCollector(true);
         self::assertFalse(
             $this->checker->isStatusWellConfigured(
                 $this->program_increment_tracker,
-                $this->source_trackers
+                $this->source_trackers,
+                $configuration_errors
             )
         );
+        self::assertStringContainsString("Some tracker does not have status semantic defined", $configuration_errors->getErrorMessages()[0]);
     }
 
     public function testItReturnsFalseIfSomeTeamStatusSemanticDoesNotContainTheProgramOpenValue(): void
@@ -213,11 +224,14 @@ final class StatusSemanticCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->method('getOpenLabels')
             ->willReturn(['open']);
 
+        $configuration_errors = new ConfigurationErrorsCollector(true);
         self::assertFalse(
             $this->checker->isStatusWellConfigured(
                 $this->program_increment_tracker,
-                $this->source_trackers
+                $this->source_trackers,
+                $configuration_errors
             )
         );
+        self::assertStringContainsString('Values "review" are not found in every tracker', $configuration_errors->getErrorMessages()[0]);
     }
 }
