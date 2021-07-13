@@ -30,6 +30,7 @@ use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\ProgramManagement\Adapter\Program\Admin\Configuration\ConfigurationChecker;
 use Tuleap\ProgramManagement\Domain\BuildProject;
+use Tuleap\ProgramManagement\Domain\Program\Admin\CanPrioritizeItems\BuildProjectUGroupCanPrioritizeItemsPresenters;
 use Tuleap\ProgramManagement\Domain\Program\Admin\PlannableTrackersConfiguration\BuildPotentialPlannableTrackersConfigurationPresenters;
 use Tuleap\ProgramManagement\Domain\Program\Admin\PotentialTeam\BuildPotentialTeams;
 use Tuleap\ProgramManagement\Domain\Program\Admin\PotentialTeam\PotentialTeamsPresenterBuilder;
@@ -63,6 +64,7 @@ final class DisplayAdminProgramManagementController implements DispatchableWithR
     private RetrieveVisibleIterationTracker $iteration_tracker_retriever;
     private BuildPotentialProgramIncrementTrackerConfigurationPresenters $program_increment_presenters_builder;
     private BuildPotentialPlannableTrackersConfigurationPresenters $plannable_tracker_presenters_builder;
+    private BuildProjectUGroupCanPrioritizeItemsPresenters $urgoups_can_prioritize_builder;
 
     public function __construct(
         \ProjectManager $project_manager,
@@ -77,7 +79,8 @@ final class DisplayAdminProgramManagementController implements DispatchableWithR
         \EventManager $event_manager,
         RetrieveVisibleIterationTracker $iteration_tracker_retriever,
         BuildPotentialProgramIncrementTrackerConfigurationPresenters $program_increment_presenters_builder,
-        BuildPotentialPlannableTrackersConfigurationPresenters $plannable_tracker_presenters_builder
+        BuildPotentialPlannableTrackersConfigurationPresenters $plannable_tracker_presenters_builder,
+        BuildProjectUGroupCanPrioritizeItemsPresenters $urgoups_can_prioritize_builder
     ) {
         $this->project_manager                      = $project_manager;
         $this->template_renderer                    = $template_renderer;
@@ -92,6 +95,7 @@ final class DisplayAdminProgramManagementController implements DispatchableWithR
         $this->iteration_tracker_retriever          = $iteration_tracker_retriever;
         $this->program_increment_presenters_builder = $program_increment_presenters_builder;
         $this->plannable_tracker_presenters_builder = $plannable_tracker_presenters_builder;
+        $this->urgoups_can_prioritize_builder       = $urgoups_can_prioritize_builder;
     }
 
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
@@ -168,7 +172,8 @@ final class DisplayAdminProgramManagementController implements DispatchableWithR
                 ),
                 $error_presenters,
                 $this->program_increment_presenters_builder->buildPotentialProgramIncrementTrackerPresenters($project_id),
-                $this->plannable_tracker_presenters_builder->buildPotentialPlannableTrackerPresenters($project_id)
+                $this->plannable_tracker_presenters_builder->buildPotentialPlannableTrackerPresenters($project_id),
+                $this->urgoups_can_prioritize_builder->buildProjectUgroupCanPrioritizeItemsPresenters($project_id)
             )
         );
 

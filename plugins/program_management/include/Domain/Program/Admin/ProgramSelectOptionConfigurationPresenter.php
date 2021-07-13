@@ -25,13 +25,19 @@ namespace Tuleap\ProgramManagement\Domain\Program\Admin;
 /**
  * @psalm-immutable
  */
-final class ProgramTrackerConfigurationPresenter
+final class ProgramSelectOptionConfigurationPresenter
 {
-    public int $id;
+    /**
+     * @var int|string
+     */
+    public $id;
     public string $label;
     public bool $is_selected;
 
-    public function __construct(int $id, string $label, bool $is_selected)
+    /**
+     * @param int|string $id
+     */
+    public function __construct($id, string $label, bool $is_selected)
     {
         $this->id          = $id;
         $this->label       = $label;

@@ -28,12 +28,15 @@
                     {{/ potential_plannable_trackers}}
                 </select>
             </div>
-            <div class="tlp-form-element tlp-form-element-disabled">
+            <div class="tlp-form-element">
                 <label class="tlp-label" for="admin-configuration-permission-prioritize">
                     {{# dgettext }}tuleap-program_management | Who can prioritize and plan items into Program Increments?{{/ dgettext }}
                     <i class="fas fa-asterisk" aria-hidden="true"></i>
                 </label>
-                <select id="admin-configuration-permission-prioritize" name="list-value" multiple disabled>
+                <select id="admin-configuration-permission-prioritize" name="list-value" multiple>
+                    {{# ugroups_can_prioritize }}
+                        <option value="{{ id }}" {{# is_selected }}selected{{/ is_selected }}>{{ label }}</option>
+                    {{/ ugroups_can_prioritize}}
                 </select>
             </div>
         </section>

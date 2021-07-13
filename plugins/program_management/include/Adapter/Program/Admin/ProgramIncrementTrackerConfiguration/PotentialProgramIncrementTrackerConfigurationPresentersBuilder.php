@@ -23,7 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Adapter\Program\Admin\ProgramIncrementTrackerConfiguration;
 
 use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramIncrementTrackerConfiguration\BuildPotentialProgramIncrementTrackerConfigurationPresenters;
-use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramTrackerConfigurationPresenter;
+use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramSelectOptionConfigurationPresenter;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracker\RetrieveProgramIncrementTracker;
 
 final class PotentialProgramIncrementTrackerConfigurationPresentersBuilder implements BuildPotentialProgramIncrementTrackerConfigurationPresenters
@@ -40,7 +40,7 @@ final class PotentialProgramIncrementTrackerConfigurationPresentersBuilder imple
     }
 
     /**
-     * @return ProgramTrackerConfigurationPresenter[]
+     * @return ProgramSelectOptionConfigurationPresenter[]
      */
     public function buildPotentialProgramIncrementTrackerPresenters(int $program_id): array
     {
@@ -52,7 +52,7 @@ final class PotentialProgramIncrementTrackerConfigurationPresentersBuilder imple
         foreach ($all_trackers as $potential_tracker) {
             $selected = $potential_tracker->getId() === $program_increment_tracker_id;
 
-            $potential_tracker_presenters[] = new ProgramTrackerConfigurationPresenter(
+            $potential_tracker_presenters[] = new ProgramSelectOptionConfigurationPresenter(
                 $potential_tracker->getId(),
                 $potential_tracker->getName(),
                 $selected
