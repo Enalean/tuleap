@@ -14,5 +14,6 @@
     <service shortname="plugin_baseline" enabled="0"/>
     <service shortname="plugin_mediawiki" enabled="0"/>
     <service shortname="plugin_testmanagement" enabled="0"/>
+    <service shortname="plugin_program_management" enabled="0"/>
   </services>
 </project>
