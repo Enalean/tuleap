@@ -33,18 +33,15 @@ class ProjectCategoriesUpdater
     private TroveCatFactory $factory;
     private ProjectHistoryDao $history_dao;
     private TroveSetNodeFacade $set_node_facade;
-    private CategoryCollectionConsistencyChecker $category_collection_consistency_checker;
 
     public function __construct(
         TroveCatFactory $factory,
         ProjectHistoryDao $history_dao,
-        TroveSetNodeFacade $set_node_facade,
-        CategoryCollectionConsistencyChecker $category_collection_consistency_checker
+        TroveSetNodeFacade $set_node_facade
     ) {
-        $this->factory                                 = $factory;
-        $this->history_dao                             = $history_dao;
-        $this->set_node_facade                         = $set_node_facade;
-        $this->category_collection_consistency_checker = $category_collection_consistency_checker;
+        $this->factory         = $factory;
+        $this->history_dao     = $history_dao;
+        $this->set_node_facade = $set_node_facade;
     }
 
     /**
@@ -54,8 +51,6 @@ class ProjectCategoriesUpdater
      */
     public function update(Project $project, CategoryCollection $submitted_categories): void
     {
-        $this->category_collection_consistency_checker->checkCollectionConsistency($submitted_categories);
-
         foreach ($submitted_categories->getRootCategories() as $category) {
             $this->doUpdate($project, $category);
         }
