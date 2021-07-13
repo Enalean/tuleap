@@ -300,9 +300,6 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
                 new \TroveCatFactory(new TroveCatDao()),
                 new ProjectHistoryDao(),
                 new TroveSetNodeFacade(),
-                new CategoryCollectionConsistencyChecker(
-                    new \TroveCatFactory(new TroveCatDao())
-                )
             ),
             $force_activation
         );
