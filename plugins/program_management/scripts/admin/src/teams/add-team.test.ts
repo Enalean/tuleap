@@ -64,14 +64,7 @@ describe("AddTeam", () => {
         });
 
         it("Given no selected team id, Then api is not called on click", () => {
-            const doc = createDocument();
-            const button_to_add_team = document.createElement("button");
-            button_to_add_team.id = "program-management-add-team-button";
-            doc.body.appendChild(button_to_add_team);
-
-            const select = document.createElement("select");
-            select.id = "program-management-choose-teams";
-            doc.body.appendChild(select);
+            const doc = getDocumentWithButton(button_to_add_team, 0);
 
             addTeamInProgram(125, doc);
             button_to_add_team.click();
@@ -80,7 +73,7 @@ describe("AddTeam", () => {
         });
 
         it("Given a valid selected team id, Then api is called on click", async () => {
-            const doc = getDocumentWithButton(button_to_add_team);
+            const doc = getDocumentWithButton(button_to_add_team, 2);
 
             addTeamInProgram(125, doc);
             button_to_add_team.click();
@@ -92,7 +85,7 @@ describe("AddTeam", () => {
         });
 
         it("Given rest error from API, Then error is displayed", async () => {
-            const doc = getDocumentWithButton(button_to_add_team);
+            const doc = getDocumentWithButton(button_to_add_team, 2);
 
             manage_team.mockImplementation(() =>
                 Promise.reject({
@@ -118,7 +111,7 @@ describe("AddTeam", () => {
         });
 
         it("Given rest error with i18n message, Then it's displayed", async () => {
-            const doc = getDocumentWithButton(button_to_add_team);
+            const doc = getDocumentWithButton(button_to_add_team, 2);
 
             manage_team.mockImplementation(() =>
                 Promise.reject({
@@ -151,16 +144,17 @@ describe("AddTeam", () => {
     });
 });
 
-function getDocumentWithButton(button: HTMLButtonElement): Document {
+function getDocumentWithButton(button: HTMLButtonElement, selected_index: number): Document {
     const doc = createDocument();
     doc.body.appendChild(button);
 
     const select = document.createElement("select");
     select.id = "program-management-choose-teams";
     doc.body.appendChild(select);
+    select.options.add(new Option("", ""));
     select.options.add(new Option("first team", "666"));
     select.options.add(new Option("second team", "140"));
-    select.selectedIndex = 1;
+    select.selectedIndex = selected_index;
 
     return doc;
 }
