@@ -22,42 +22,70 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Team;
 
+use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramInConfigurationIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Stub\BuildProgramStub;
 use Tuleap\ProgramManagement\Stub\BuildProjectStub;
 use Tuleap\ProgramManagement\Stub\SearchTeamsOfProgramStub;
+use Tuleap\ProgramManagement\Stub\VerifyIsTeamStub;
+use Tuleap\ProgramManagement\Stub\VerifyProjectPermissionStub;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 
 final class TeamProjectsCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    public function testGetTeamProjectsReturnsProjects(): void
+    private SearchTeamsOfProgramStub $search_teams;
+    private BuildProjectStub $project_builder;
+    private ProgramIdentifier $program;
+
+    protected function setUp(): void
+    {
+        $this->search_teams    = SearchTeamsOfProgramStub::buildTeams(103, 125);
+        $this->project_builder = new BuildProjectStub();
+        $this->program         = ProgramIdentifier::fromId(
+            BuildProgramStub::stubValidProgram(),
+            100,
+            UserTestBuilder::aUser()->build()
+        );
+    }
+
+    public function testItBuildsFromProgramIdentifier(): void
     {
         $collection = TeamProjectsCollection::fromProgramIdentifier(
-            SearchTeamsOfProgramStub::buildTeams(103, 125),
-            new BuildProjectStub(),
-            ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 100, UserTestBuilder::aUser()->build())
+            $this->search_teams,
+            $this->project_builder,
+            $this->program
         );
         self::assertSame(103, $collection->getTeamProjects()[0]->getId());
         self::assertSame(125, $collection->getTeamProjects()[1]->getId());
+        self::assertFalse($collection->isEmpty());
+    }
+
+    public function testItBuildsFromProgramInConfigurationIdentifier(): void
+    {
+        $program    = ProgramInConfigurationIdentifier::fromProject(
+            VerifyIsTeamStub::withNotValidTeam(),
+            VerifyProjectPermissionStub::withAdministrator(),
+            UserTestBuilder::aUser()->build(),
+            ProjectTestBuilder::aProject()->withId(101)->build()
+        );
+        $collection = TeamProjectsCollection::fromProgramInConfigurationIdentifier(
+            $this->search_teams,
+            $this->project_builder,
+            $program
+        );
+        self::assertSame(103, $collection->getTeamProjects()[0]->getId());
+        self::assertSame(125, $collection->getTeamProjects()[1]->getId());
+        self::assertFalse($collection->isEmpty());
     }
 
     public function testIsEmptyReturnsTrue(): void
     {
         $collection = TeamProjectsCollection::fromProgramIdentifier(
             SearchTeamsOfProgramStub::buildTeams(),
-            new BuildProjectStub(),
-            ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 100, UserTestBuilder::aUser()->build())
+            $this->project_builder,
+            $this->program
         );
         self::assertTrue($collection->isEmpty());
-    }
-
-    public function testIsEmptyReturnsFalse()
-    {
-        $collection = TeamProjectsCollection::fromProgramIdentifier(
-            SearchTeamsOfProgramStub::buildTeams(101, 102),
-            new BuildProjectStub(),
-            ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 100, UserTestBuilder::aUser()->build())
-        );
-        self::assertFalse($collection->isEmpty());
     }
 }

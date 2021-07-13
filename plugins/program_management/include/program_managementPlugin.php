@@ -85,6 +85,7 @@ use Tuleap\ProgramManagement\Adapter\Team\MirroredTimeboxes\MirroredTimeboxesDao
 use Tuleap\ProgramManagement\Adapter\Team\MirroredTimeboxes\MirroredTimeboxRetriever;
 use Tuleap\ProgramManagement\Adapter\Team\TeamDao;
 use Tuleap\ProgramManagement\Adapter\Workspace\ProjectManagerAdapter;
+use Tuleap\ProgramManagement\Adapter\Workspace\ProjectPermissionVerifier;
 use Tuleap\ProgramManagement\Adapter\Workspace\WorkspaceDAO;
 use Tuleap\ProgramManagement\DisplayAdminProgramManagementController;
 use Tuleap\ProgramManagement\DisplayProgramBacklogController;
@@ -282,13 +283,14 @@ final class program_managementPlugin extends Plugin
     public function routeGetAdminProgramManagement(): DisplayAdminProgramManagementController
     {
         $project_manager = ProjectManager::instance();
+        $program_dao     = new ProgramDao();
 
         return new DisplayAdminProgramManagementController(
             $project_manager,
             TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../templates/admin'),
             new ProgramManagementBreadCrumbsBuilder(),
-            new PotentialTeamsBuilder($project_manager, new ProgramDao(), new ProgramDao()),
-            new ProgramDao(),
+            new PotentialTeamsBuilder($project_manager, $program_dao, $program_dao),
+            $program_dao,
             new ProgramManagementProjectAdapter($project_manager),
             new TeamDao(),
             $this->getProgramAdapter(),
@@ -297,7 +299,8 @@ final class program_managementPlugin extends Plugin
             $this->getVisibleIterationTrackerRetriever(),
             new PotentialProgramIncrementTrackerConfigurationPresentersBuilder(TrackerFactory::instance(), new ProgramIncrementsDAO()),
             new PotentialPlannableTrackersConfigurationPresentersBuilder(TrackerFactory::instance(), new PlanDao()),
-            new ProjectUGroupCanPrioritizeItemsPresentersBuilder(new UGroupManager(), ProjectManager::instance(), new CanPrioritizeFeaturesDAO())
+            new ProjectUGroupCanPrioritizeItemsPresentersBuilder(new UGroupManager(), $project_manager, new CanPrioritizeFeaturesDAO()),
+            new ProjectPermissionVerifier()
         );
     }
 

@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program;
 
+use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramInConfigurationIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\ReplicationData;
 use Tuleap\ProgramManagement\Domain\Program\Plan\BuildProgram;
 use Tuleap\ProgramManagement\Domain\Program\Plan\ProgramAccessException;
@@ -30,7 +31,9 @@ use Tuleap\ProgramManagement\Domain\Program\Plan\ProjectIsNotAProgramException;
 /**
  * A program is a Tuleap Project that hosts Program Increments and Iterations and synchronizes them with Teams.
  * This represents its project ID number.
+ * I have at least one Team. For a Program not yet configured, see ProgramInConfigurationIdentifier
  * @psalm-immutable
+ * @see ProgramInConfigurationIdentifier
  */
 final class ProgramIdentifier
 {
