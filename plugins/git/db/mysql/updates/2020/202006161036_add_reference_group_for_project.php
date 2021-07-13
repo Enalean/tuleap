@@ -66,7 +66,7 @@ final class b202006161036_add_reference_group_for_project extends ForgeUpgrade_B
         return $pdo_statement->fetchAll();
     }
 
-    private function getGitReference(): string
+    private function getGitReference(): int
     {
         $sql = "SELECT id
                 FROM reference
