@@ -21,7 +21,7 @@
 declare(strict_types=1);
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
-final class b202001071800_add_acceptable_tenant_column extends ForgeUpgrade_Bucket
+final class b202001071800_add_acceptable_tenant_column extends \Tuleap\ForgeUpgrade\Bucket
 {
     public function description(): string
     {
@@ -42,7 +42,7 @@ final class b202001071800_add_acceptable_tenant_column extends ForgeUpgrade_Buck
         $sql = 'ALTER TABLE plugin_openidconnectclient_provider_azure_ad
                 ADD COLUMN acceptable_tenant_auth_identifier VARCHAR(32) NOT NULL DEFAULT "tenant_specific"';
         if ($this->db->dbh->exec($sql) === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete(
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException(
                 'An error occurred while adding column acceptable_tenant_auth_identifier to the plugin_openidconnectclient_provider_azure_ad table'
             );
         }
@@ -50,7 +50,7 @@ final class b202001071800_add_acceptable_tenant_column extends ForgeUpgrade_Buck
         $sql = 'ALTER TABLE plugin_openidconnectclient_provider_azure_ad
                 ALTER acceptable_tenant_auth_identifier DROP DEFAULT';
         if ($this->db->dbh->exec($sql) === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete(
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException(
                 'An error occurred while removing the default value of the column acceptable_tenant_auth_identifier of the plugin_openidconnectclient_provider_azure_ad table'
             );
         }

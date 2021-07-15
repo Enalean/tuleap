@@ -43,7 +43,7 @@ class b20180913_update_google_endpoints extends ForgeUpgrade_Bucket // phpcs:ign
             WHERE user_info_endpoint="https://www.googleapis.com/oauth2/v2/userinfo"') !== false;
 
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete(
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException(
                 'An error occurred while updating Google OpenID Connect endpoints'
             );
         }

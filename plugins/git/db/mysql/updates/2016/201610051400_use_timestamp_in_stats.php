@@ -16,7 +16,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201610051400_use_timestamp_in_stats extends ForgeUpgrade_Bucket
+class b201610051400_use_timestamp_in_stats extends \Tuleap\ForgeUpgrade\Bucket
 {
 
     public function description()
@@ -39,14 +39,14 @@ class b201610051400_use_timestamp_in_stats extends ForgeUpgrade_Bucket
 
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occurred while altering the plugin_git_full_history table.');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occurred while altering the plugin_git_full_history table.');
         }
 
         $sql = "UPDATE plugin_git_full_history SET time = UNIX_TIMESTAMP(time)";
 
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occurred while converting dates to timestamp.');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occurred while converting dates to timestamp.');
         }
     }
 }

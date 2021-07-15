@@ -40,7 +40,7 @@ class b201909131116_add_inactive_acounts_notification_delay extends ForgeUpgrade
     public function postUp()
     {
         if (! $this->db->tableNameExists('forgeconfig')) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('forgeconfig table is missing');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('forgeconfig table is missing');
         }
     }
 }

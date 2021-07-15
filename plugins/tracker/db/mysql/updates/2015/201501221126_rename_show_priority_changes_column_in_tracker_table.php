@@ -16,7 +16,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201501221126_rename_show_priority_changes_column_in_tracker_table extends ForgeUpgrade_Bucket
+class b201501221126_rename_show_priority_changes_column_in_tracker_table extends \Tuleap\ForgeUpgrade\Bucket
 {
 
     public function description()
@@ -34,14 +34,14 @@ class b201501221126_rename_show_priority_changes_column_in_tracker_table extends
         $sql = "ALTER TABLE tracker CHANGE show_priority_changes log_priority_changes TINYINT(1) NULL";
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while renaming column show_priority_changes in tracker table: ' . implode(', ', $this->db->dbh->errorInfo()));
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occured while renaming column show_priority_changes in tracker table: ' . implode(', ', $this->db->dbh->errorInfo()));
         }
     }
 
     public function postUp()
     {
         if (! $this->db->columnNameExists('tracker', 'log_priority_changes')) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while renaming show_priority_changes column in tracker table');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occured while renaming show_priority_changes column in tracker table');
         }
     }
 }

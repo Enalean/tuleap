@@ -65,13 +65,13 @@ class b202003021632_add_branch_source_tables extends ForgeUpgrade_Bucket // @cod
     public function postUp()
     {
         if (! $this->db->tableNameExists('plugin_hudson_git_job_branch_source')) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete(
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException(
                 'the table plugin_hudson_git_job_branch_source is missing'
             );
         }
 
         if (! $this->db->tableNameExists('plugin_hudson_git_project_server_job_branch_source')) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete(
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException(
                 'the table plugin_hudson_git_project_server_job_branch_source is missing'
             );
         }

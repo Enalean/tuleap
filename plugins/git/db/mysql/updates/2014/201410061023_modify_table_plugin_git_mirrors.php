@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-class b201410061023_modify_table_plugin_git_mirrors extends ForgeUpgrade_Bucket
+class b201410061023_modify_table_plugin_git_mirrors extends \Tuleap\ForgeUpgrade\Bucket
 {
 
     public function description()
@@ -40,7 +40,7 @@ EOT;
 
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while dropping ssh_key column in plugin_git_mirrors table.');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occured while dropping ssh_key column in plugin_git_mirrors table.');
         }
     }
 }

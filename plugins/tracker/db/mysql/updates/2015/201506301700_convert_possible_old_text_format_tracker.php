@@ -16,7 +16,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201506301700_convert_possible_old_text_format_tracker extends ForgeUpgrade_Bucket
+class b201506301700_convert_possible_old_text_format_tracker extends \Tuleap\ForgeUpgrade\Bucket
 {
 
     public function description()
@@ -40,7 +40,7 @@ class b201506301700_convert_possible_old_text_format_tracker extends ForgeUpgrad
         $sql = 'UPDATE tracker SET name = REPLACE(REPLACE(name, "&gt;", ">"), "&lt;", "<"), description = REPLACE(REPLACE(description, "&gt;", ">"), "&lt;", "<")';
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while converting data in the tracker table');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occured while converting data in the tracker table');
         }
     }
 
@@ -49,7 +49,7 @@ class b201506301700_convert_possible_old_text_format_tracker extends ForgeUpgrad
         $sql = 'UPDATE tracker_field SET label = REPLACE(REPLACE(label, "&gt;", ">"), "&lt;", "<")';
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while converting data in the tracker_field table');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occured while converting data in the tracker_field table');
         }
     }
 }

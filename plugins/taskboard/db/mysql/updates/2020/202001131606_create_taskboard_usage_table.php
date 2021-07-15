@@ -21,7 +21,7 @@
 declare(strict_types=1);
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
-class b202001131606_create_taskboard_usage_table extends ForgeUpgrade_Bucket
+class b202001131606_create_taskboard_usage_table extends \Tuleap\ForgeUpgrade\Bucket
 {
     public function description(): string
     {

@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201701231415_update_public_forum_in_private_projects extends ForgeUpgrade_Bucket
+class b201701231415_update_public_forum_in_private_projects extends \Tuleap\ForgeUpgrade\Bucket
 {
     public function description()
     {
@@ -50,6 +50,6 @@ class b201701231415_update_public_forum_in_private_projects extends ForgeUpgrade
     private function rollBackOnError($message)
     {
         $this->db->dbh->rollBack();
-        throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete($message);
+        throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException($message);
     }
 }

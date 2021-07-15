@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-class b20150421_add_hostname_info_to_mirror extends ForgeUpgrade_Bucket
+class b20150421_add_hostname_info_to_mirror extends \Tuleap\ForgeUpgrade\Bucket
 {
 
     public function description()
@@ -40,14 +40,14 @@ EOT;
         $res = $this->db->dbh->exec($sql);
 
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while adding the column hostname to the table plugin_git_mirrors');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occured while adding the column hostname to the table plugin_git_mirrors');
         }
     }
 
     public function postUp()
     {
         if (! $this->db->columnNameExists('plugin_git_mirrors', 'hostname')) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('Column hostname in table plugin_git_mirrors is missing');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('Column hostname in table plugin_git_mirrors is missing');
         }
     }
 }

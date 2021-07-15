@@ -21,7 +21,7 @@
 declare(strict_types=1);
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
-class b202002241621_add_sys_suspend_send_account_suspension_email extends ForgeUpgrade_Bucket
+class b202002241621_add_sys_suspend_send_account_suspension_email extends \Tuleap\ForgeUpgrade\Bucket
 {
     public function description(): string
     {
@@ -40,7 +40,7 @@ class b202002241621_add_sys_suspend_send_account_suspension_email extends ForgeU
         $res = $this->db->dbh->exec($sql);
 
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete(
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException(
                 'Unable to add the sys_suspend_send_account_suspension_email variable to enable/disable sending the user suspension email'
             );
         }

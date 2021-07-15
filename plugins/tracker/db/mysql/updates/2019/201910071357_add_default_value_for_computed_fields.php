@@ -36,7 +36,7 @@ class b201910071357_add_default_value_for_computed_fields extends ForgeUpgrade_B
 
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete(
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException(
                 'An error occurred while modifying the tracker_field_computed table.'
             );
         }

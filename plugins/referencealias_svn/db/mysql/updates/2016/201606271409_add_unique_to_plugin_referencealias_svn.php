@@ -19,7 +19,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-class b201606271409_add_unique_to_plugin_referencealias_svn extends ForgeUpgrade_Bucket
+class b201606271409_add_unique_to_plugin_referencealias_svn extends \Tuleap\ForgeUpgrade\Bucket
 {
 
     /**
@@ -54,7 +54,7 @@ EOT;
         $sql = "ALTER IGNORE TABLE plugin_referencealias_svn ADD UNIQUE (source)";
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('Cannot update view');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('Cannot update view');
         }
     }
 }

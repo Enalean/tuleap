@@ -16,7 +16,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201611031112_add_svn_cache_parameter_table extends ForgeUpgrade_Bucket
+class b201611031112_add_svn_cache_parameter_table extends \Tuleap\ForgeUpgrade\Bucket
 {
 
     public function description()
@@ -45,7 +45,7 @@ class b201611031112_add_svn_cache_parameter_table extends ForgeUpgrade_Bucket
 
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete(
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException(
                 'An error occurred while adding svn_cache_parameter table.'
             );
         }
@@ -56,7 +56,7 @@ class b201611031112_add_svn_cache_parameter_table extends ForgeUpgrade_Bucket
         $sql = "INSERT IGNORE INTO svn_cache_parameter VALUES ('maximum_credentials' , '10'), ('lifetime', '5')";
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete(
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException(
                 'An error occurred while inserting the default parameters of the SVN cache.'
             );
         }
@@ -72,7 +72,7 @@ class b201611031112_add_svn_cache_parameter_table extends ForgeUpgrade_Bucket
             $return_code
         );
         if ($return_code !== 0) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete(
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException(
                 'An error occurred while updating the SVNRoot file with the new default SVN cache parameters.'
             );
         }

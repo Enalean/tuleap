@@ -19,7 +19,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-class b201203191812_add_planning_tables extends ForgeUpgrade_Bucket
+class b201203191812_add_planning_tables extends \Tuleap\ForgeUpgrade\Bucket
 {
 
     public function description()

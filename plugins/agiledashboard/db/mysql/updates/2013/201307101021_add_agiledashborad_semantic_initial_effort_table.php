@@ -21,7 +21,7 @@
 * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
 */
 
-class b201307101021_add_agiledashborad_semantic_initial_effort_table extends ForgeUpgrade_Bucket
+class b201307101021_add_agiledashborad_semantic_initial_effort_table extends \Tuleap\ForgeUpgrade\Bucket
 {
 
     public function description()
@@ -49,7 +49,7 @@ EOT;
     public function postUp()
     {
         if (! $this->db->tableNameExists('plugin_agiledashboard_semantic_initial_effort')) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('plugin_agiledashboard_semantic_initial_effort table is missing');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('plugin_agiledashboard_semantic_initial_effort table is missing');
         }
     }
 }

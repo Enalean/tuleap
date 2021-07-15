@@ -16,7 +16,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201209131359_add_ugroup_binding_column extends ForgeUpgrade_Bucket
+class b201209131359_add_ugroup_binding_column extends \Tuleap\ForgeUpgrade\Bucket
 {
     public function description()
     {
@@ -36,7 +36,7 @@ EOT;
         if ($this->db->tableNameExists('ugroup')) {
             $res = $this->db->dbh->exec($sql);
             if ($res === false) {
-                throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while adding column source_id to table ugroup');
+                throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occured while adding column source_id to table ugroup');
             }
         }
     }
@@ -44,7 +44,7 @@ EOT;
     public function postUp()
     {
         if (! $this->db->columnNameExists('ugroup', 'source_id')) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('Column source_id not created in ugroup');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('Column source_id not created in ugroup');
         }
     }
 }

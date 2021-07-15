@@ -21,7 +21,7 @@
 declare(strict_types=1);
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
-final class b202004091420_add_oidc_nonce_column_oauth2_authorization_code extends ForgeUpgrade_Bucket
+final class b202004091420_add_oidc_nonce_column_oauth2_authorization_code extends \Tuleap\ForgeUpgrade\Bucket
 {
     public function description(): string
     {
@@ -39,7 +39,7 @@ final class b202004091420_add_oidc_nonce_column_oauth2_authorization_code extend
             $sql = 'ALTER TABLE plugin_oauth2_authorization_code ADD COLUMN oidc_nonce TEXT';
             $res = $this->db->dbh->exec($sql);
             if ($res === false) {
-                throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('Unable to add oidc_nonce column on the plugin_oauth2_authorization_code table');
+                throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('Unable to add oidc_nonce column on the plugin_oauth2_authorization_code table');
             }
         }
     }

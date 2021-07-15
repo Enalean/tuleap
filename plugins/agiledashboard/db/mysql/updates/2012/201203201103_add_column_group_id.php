@@ -19,7 +19,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-class b201203201103_add_column_group_id extends ForgeUpgrade_Bucket
+class b201203201103_add_column_group_id extends \Tuleap\ForgeUpgrade\Bucket
 {
 
     public function description()
@@ -40,7 +40,7 @@ EOT;
                 ADD COLUMN group_id INT( 11 ) UNSIGNED NOT NULL AFTER name";
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while adding column group_id to plugin_agiledashboard_planning: ' . implode(', ', $this->db->dbh->errorInfo()));
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occured while adding column group_id to plugin_agiledashboard_planning: ' . implode(', ', $this->db->dbh->errorInfo()));
         }
     }
 

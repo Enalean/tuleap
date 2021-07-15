@@ -19,7 +19,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-class b201112130946_add_user_id extends ForgeUpgrade_Bucket
+class b201112130946_add_user_id extends \Tuleap\ForgeUpgrade\Bucket
 {
 
     /**
@@ -54,7 +54,7 @@ EOT;
         $sql = 'ALTER TABLE plugin_git ADD user_id INT(11) NULL';
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while adding the column user_id to the table plugin_git');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occured while adding the column user_id to the table plugin_git');
         }
     }
 
@@ -66,7 +66,7 @@ EOT;
     public function postUp()
     {
         if (! $this->db->columnNameExists('plugin_git', 'user_id')) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('Column user_id in table plugin_git is missing');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('Column user_id in table plugin_git is missing');
         }
     }
 }

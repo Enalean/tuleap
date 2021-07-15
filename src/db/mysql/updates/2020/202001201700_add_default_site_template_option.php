@@ -21,7 +21,7 @@
 declare(strict_types=1);
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
-final class b202001201700_add_default_site_template_option extends ForgeUpgrade_Bucket
+final class b202001201700_add_default_site_template_option extends \Tuleap\ForgeUpgrade\Bucket
 {
     public function description(): string
     {
@@ -40,7 +40,7 @@ final class b202001201700_add_default_site_template_option extends ForgeUpgrade_
         $res = $this->db->dbh->exec($sql);
 
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('Unable to add default site template option');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('Unable to add default site template option');
         }
     }
 }

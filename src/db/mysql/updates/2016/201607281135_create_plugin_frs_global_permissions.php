@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201607281135_create_plugin_frs_global_permissions extends ForgeUpgrade_Bucket
+class b201607281135_create_plugin_frs_global_permissions extends \Tuleap\ForgeUpgrade\Bucket
 {
 
     public function description()
@@ -42,7 +42,7 @@ class b201607281135_create_plugin_frs_global_permissions extends ForgeUpgrade_Bu
         $res = $this->db->dbh->exec($sql);
 
         if (! $this->db->tableNameExists('frs_global_permissions')) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete(
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException(
                 'frs_global_permissions'
             );
         }

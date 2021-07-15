@@ -16,7 +16,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201510011503_fill_Mediawiki_version_table extends ForgeUpgrade_Bucket
+class b201510011503_fill_Mediawiki_version_table extends \Tuleap\ForgeUpgrade\Bucket
 {
 
     public const MW_123_VERSION = '1.23';
@@ -96,7 +96,7 @@ EOT;
     {
         $res = $this->db->dbh->query($sql);
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete($message . implode(', ', $this->db->dbh->errorInfo()));
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException($message . implode(', ', $this->db->dbh->errorInfo()));
         }
 
         return $res;
@@ -106,7 +106,7 @@ EOT;
     {
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete($message . implode(', ', $this->db->dbh->errorInfo()));
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException($message . implode(', ', $this->db->dbh->errorInfo()));
         }
 
         return $res;

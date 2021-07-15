@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201701311615_feedback_supports_new_session_identifier extends ForgeUpgrade_Bucket
+class b201701311615_feedback_supports_new_session_identifier extends \Tuleap\ForgeUpgrade\Bucket
 {
     public function description()
     {
@@ -35,7 +35,7 @@ class b201701311615_feedback_supports_new_session_identifier extends ForgeUpgrad
         $sql_drop_session_table = 'DROP TABLE IF EXISTS feedback';
         $res                    = $this->db->dbh->exec($sql_drop_session_table);
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occurred while dropping the table feedback');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occurred while dropping the table feedback');
         }
 
         $sql_recreate_table = 'CREATE TABLE feedback (
@@ -46,14 +46,14 @@ class b201701311615_feedback_supports_new_session_identifier extends ForgeUpgrad
                                ) ENGINE=InnoDB';
         $res                = $this->db->dbh->exec($sql_recreate_table);
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occurred while creating the table session');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occurred while creating the table session');
         }
     }
 
     public function postUp()
     {
         if (! $this->db->tableNameExists('feedback')) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('feedback table is missing');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('feedback table is missing');
         }
     }
 }

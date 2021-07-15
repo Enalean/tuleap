@@ -16,7 +16,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201703091758_add_table_global_notification_users extends ForgeUpgrade_Bucket
+class b201703091758_add_table_global_notification_users extends \Tuleap\ForgeUpgrade\Bucket
 {
     public function description()
     {
@@ -42,7 +42,7 @@ class b201703091758_add_table_global_notification_users extends ForgeUpgrade_Buc
     public function postUp()
     {
         if (! $this->db->tableNameExists('tracker_global_notification_users')) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('tracker_global_notification_users table is missing');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('tracker_global_notification_users table is missing');
         }
     }
 }

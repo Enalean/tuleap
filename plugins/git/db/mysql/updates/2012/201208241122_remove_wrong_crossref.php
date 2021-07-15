@@ -16,7 +16,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201208241122_remove_wrong_crossref extends ForgeUpgrade_Bucket
+class b201208241122_remove_wrong_crossref extends \Tuleap\ForgeUpgrade\Bucket
 {
 
     /**
@@ -53,7 +53,7 @@ EOT;
                   AND source_id LIKE "/%"';
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while dropping wrong git cross references: ' . implode(', ', $this->db->dbh->errorInfo()));
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occured while dropping wrong git cross references: ' . implode(', ', $this->db->dbh->errorInfo()));
         }
     }
 }

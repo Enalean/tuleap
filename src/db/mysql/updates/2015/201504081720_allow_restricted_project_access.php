@@ -19,7 +19,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-class b201504081720_allow_restricted_project_access extends ForgeUpgrade_Bucket
+class b201504081720_allow_restricted_project_access extends \Tuleap\ForgeUpgrade\Bucket
 {
     public function description()
     {
@@ -37,21 +37,21 @@ class b201504081720_allow_restricted_project_access extends ForgeUpgrade_Bucket
                 ADD COLUMN access VARCHAR(16) NOT NULL DEFAULT 'private' AFTER is_public";
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while adding column access in table groups');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occured while adding column access in table groups');
         }
 
         $sql = "UPDATE groups
                 SET access = 'private' WHERE is_public = 0";
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while updating column access with private projects');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occured while updating column access with private projects');
         }
 
         $sql = "UPDATE groups
                 SET access = 'public' WHERE is_public = 1";
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while updating column access with public projects');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occured while updating column access with public projects');
         }
 
         $sql = "ALTER TABLE groups
@@ -60,7 +60,7 @@ class b201504081720_allow_restricted_project_access extends ForgeUpgrade_Bucket
                 ADD KEY idx_groups_access (access)";
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while droping column is_public in table groups');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occured while droping column is_public in table groups');
         }
     }
 }

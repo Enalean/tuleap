@@ -21,7 +21,7 @@
 declare(strict_types=1);
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
-final class b202003111600_add_already_used_column_oauth2_auth_code extends ForgeUpgrade_Bucket
+final class b202003111600_add_already_used_column_oauth2_auth_code extends \Tuleap\ForgeUpgrade\Bucket
 {
     public function description(): string
     {
@@ -38,14 +38,14 @@ final class b202003111600_add_already_used_column_oauth2_auth_code extends Forge
         $sql = 'DELETE FROM plugin_oauth2_authorization_code';
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('Unable to clear the plugin_oauth2_authorization_code table');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('Unable to clear the plugin_oauth2_authorization_code table');
         }
 
         if (! $this->db->columnNameExists('plugin_oauth2_authorization_code', 'has_already_been_used')) {
             $sql = 'ALTER TABLE plugin_oauth2_authorization_code ADD COLUMN has_already_been_used BOOLEAN NOT NULL';
             $res = $this->db->dbh->exec($sql);
             if ($res === false) {
-                throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('Unable to add has_already_been_used column on the plugin_oauth2_authorization_code table');
+                throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('Unable to add has_already_been_used column on the plugin_oauth2_authorization_code table');
             }
         }
     }

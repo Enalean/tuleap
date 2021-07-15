@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201010191436_add_table_frs_file_deleted extends ForgeUpgrade_Bucket
+class b201010191436_add_table_frs_file_deleted extends \Tuleap\ForgeUpgrade\Bucket
 {
 
     public function description()

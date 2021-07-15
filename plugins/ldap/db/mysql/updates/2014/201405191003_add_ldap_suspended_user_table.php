@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201405191003_add_ldap_suspended_user_table extends ForgeUpgrade_Bucket
+class b201405191003_add_ldap_suspended_user_table extends \Tuleap\ForgeUpgrade\Bucket
 {
 
     /**
@@ -57,7 +57,7 @@ EOT;
         ";
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while adding the table plugin_ldap_suspended_user');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occured while adding the table plugin_ldap_suspended_user');
         }
     }
 
@@ -69,7 +69,7 @@ EOT;
     public function postUp()
     {
         if (! $this->db->tableNameExists('plugin_ldap_suspended_user')) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('The table plugin_ldap_suspended_user still not created');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('The table plugin_ldap_suspended_user still not created');
         }
     }
 }

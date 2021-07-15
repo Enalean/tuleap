@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201709271530_add_column_is_deleted_frs_links extends ForgeUpgrade_Bucket
+class b201709271530_add_column_is_deleted_frs_links extends \Tuleap\ForgeUpgrade\Bucket
 {
     public function description()
     {
@@ -35,7 +35,7 @@ class b201709271530_add_column_is_deleted_frs_links extends ForgeUpgrade_Bucket
         $sql = 'ALTER TABLE frs_uploaded_links ADD COLUMN is_deleted BOOLEAN DEFAULT FALSE';
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete(
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException(
                 'An error occurred while adding is_deleted column in frs_uploaded_links table: ' . implode(', ', $this->db->dbh->errorInfo())
             );
         }
@@ -44,7 +44,7 @@ class b201709271530_add_column_is_deleted_frs_links extends ForgeUpgrade_Bucket
     public function postUp()
     {
         if (! $this->db->columnNameExists('frs_uploaded_links', 'is_deleted')) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete(
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException(
                 'An error occurred while adding is_deleted column in frs_uploaded_links table'
             );
         }

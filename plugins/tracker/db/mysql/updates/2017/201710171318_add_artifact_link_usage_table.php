@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201710171318_add_artifact_link_usage_table extends ForgeUpgrade_Bucket
+class b201710171318_add_artifact_link_usage_table extends \Tuleap\ForgeUpgrade\Bucket
 {
     public function description()
     {
@@ -45,7 +45,7 @@ class b201710171318_add_artifact_link_usage_table extends ForgeUpgrade_Bucket
         $this->db->createTable('plugin_tracker_projects_use_artifactlink_types', $sql);
 
         if (! $this->db->tableNameExists('plugin_tracker_projects_use_artifactlink_types')) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('the table plugin_tracker_projects_use_artifactlink_types is missing');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('the table plugin_tracker_projects_use_artifactlink_types is missing');
         }
     }
 
@@ -60,7 +60,7 @@ class b201710171318_add_artifact_link_usage_table extends ForgeUpgrade_Bucket
 
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete(
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException(
                 'An error occurred while adding data into plugin_tracker_projects_use_artifactlink_types'
             );
         }

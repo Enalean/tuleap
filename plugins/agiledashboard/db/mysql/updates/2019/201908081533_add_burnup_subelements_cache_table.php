@@ -48,7 +48,7 @@ class b201908081533_add_burnup_subelements_cache_table extends ForgeUpgrade_Buck
     public function postUp()
     {
         if (! $this->db->tableNameExists('plugin_agiledashboard_tracker_field_burnup_cache_subelements')) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete(
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException(
                 'the table plugin_agiledashboard_tracker_field_burnup_cache_subelements is missing'
             );
         }

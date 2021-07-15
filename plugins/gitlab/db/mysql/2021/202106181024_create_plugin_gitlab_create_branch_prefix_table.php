@@ -21,7 +21,7 @@
 declare(strict_types=1);
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
-final class b202106181024_create_plugin_gitlab_create_branch_prefix_table extends ForgeUpgrade_Bucket
+final class b202106181024_create_plugin_gitlab_create_branch_prefix_table extends \Tuleap\ForgeUpgrade\Bucket
 {
     public function description(): string
     {

@@ -19,7 +19,7 @@
 /**
  * Rename Experimental to FlamingParrot
  */
-class b201404281427_rename_experimental_to_flamingparrot extends ForgeUpgrade_Bucket
+class b201404281427_rename_experimental_to_flamingparrot extends \Tuleap\ForgeUpgrade\Bucket
 {
     public function description()
     {
@@ -37,7 +37,7 @@ class b201404281427_rename_experimental_to_flamingparrot extends ForgeUpgrade_Bu
 
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while renaming Experimental to FlamingParrot.');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occured while renaming Experimental to FlamingParrot.');
         }
     }
 }

@@ -41,7 +41,7 @@ class b201904301737_remove_user_preference_expand_collapse_folder extends ForgeU
         $result = $this->db->dbh->exec($sql);
 
         if ($result === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('Can not delete the expand/collapse user preference');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('Can not delete the expand/collapse user preference');
         }
     }
 }

@@ -16,7 +16,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201203071642_change_service_shortname extends ForgeUpgrade_Bucket
+class b201203071642_change_service_shortname extends \Tuleap\ForgeUpgrade\Bucket
 {
 
     public function description()
@@ -46,7 +46,7 @@ EOT;
         $sql = "UPDATE service SET short_name = 'plugin_git' WHERE short_name = 'git'";
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while updating service short name: ' . implode(', ', $this->db->dbh->errorInfo()));
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occured while updating service short name: ' . implode(', ', $this->db->dbh->errorInfo()));
         }
     }
 }

@@ -22,7 +22,7 @@
 * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
 */
 
-class b201502061635_add_planning_priority_change_permission extends ForgeUpgrade_Bucket
+class b201502061635_add_planning_priority_change_permission extends \Tuleap\ForgeUpgrade\Bucket
 {
 
     public function description()
@@ -45,14 +45,14 @@ class b201502061635_add_planning_priority_change_permission extends ForgeUpgrade
         $res = $this->db->dbh->exec($sql);
 
         if (! $res) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while adding permission types into permissions_values');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occured while adding permission types into permissions_values');
         }
     }
 
     public function postUp()
     {
         if ($this->permissionTypesMissing()) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('Permission types for agiledashboard planning are missing');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('Permission types for agiledashboard planning are missing');
         }
     }
 

@@ -21,7 +21,7 @@
 declare(strict_types=1);
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
-class b202101290900_add_author_data_merge_request_columns extends ForgeUpgrade_Bucket
+class b202101290900_add_author_data_merge_request_columns extends \Tuleap\ForgeUpgrade\Bucket
 {
     public function description(): string
     {

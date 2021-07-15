@@ -16,7 +16,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201206211511_add_body_format_column extends ForgeUpgrade_Bucket
+class b201206211511_add_body_format_column extends \Tuleap\ForgeUpgrade\Bucket
 {
 
     public function description()
@@ -38,7 +38,7 @@ EOT;
                     ADD COLUMN body_format varchar(16) NOT NULL default 'text' AFTER body";
             $res = $this->db->dbh->exec($sql);
             if ($res === false) {
-                throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while adding column body_format to tracker_changeset_comment table: ' . implode(', ', $this->db->dbh->errorInfo()));
+                throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occured while adding column body_format to tracker_changeset_comment table: ' . implode(', ', $this->db->dbh->errorInfo()));
             }
         }
     }

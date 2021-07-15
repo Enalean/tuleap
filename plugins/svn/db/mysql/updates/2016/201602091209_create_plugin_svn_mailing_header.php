@@ -16,7 +16,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201602091209_create_plugin_svn_mailing_header extends ForgeUpgrade_Bucket
+class b201602091209_create_plugin_svn_mailing_header extends \Tuleap\ForgeUpgrade\Bucket
 {
 
     public function description()
@@ -39,7 +39,7 @@ class b201602091209_create_plugin_svn_mailing_header extends ForgeUpgrade_Bucket
 
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occurred while creating the plugin_svn_mailing_header table for SVN plugin.');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occurred while creating the plugin_svn_mailing_header table for SVN plugin.');
         }
     }
 }

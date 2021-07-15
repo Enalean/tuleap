@@ -16,7 +16,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201701091557_update_default_limit_in_report_config extends ForgeUpgrade_Bucket
+class b201701091557_update_default_limit_in_report_config extends \Tuleap\ForgeUpgrade\Bucket
 {
     public function description()
     {
@@ -42,7 +42,7 @@ class b201701091557_update_default_limit_in_report_config extends ForgeUpgrade_B
 
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete(
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException(
                 'An error occured while updating table tracker_report_config.'
             );
         }

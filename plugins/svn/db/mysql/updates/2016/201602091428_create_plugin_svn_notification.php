@@ -16,7 +16,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201602091428_create_plugin_svn_notification extends ForgeUpgrade_Bucket
+class b201602091428_create_plugin_svn_notification extends \Tuleap\ForgeUpgrade\Bucket
 {
 
     public function description()
@@ -40,7 +40,7 @@ class b201602091428_create_plugin_svn_notification extends ForgeUpgrade_Bucket
 
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occurred while creating the plugin_svn_notification table for SVN plugin.');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occurred while creating the plugin_svn_notification table for SVN plugin.');
         }
     }
 }

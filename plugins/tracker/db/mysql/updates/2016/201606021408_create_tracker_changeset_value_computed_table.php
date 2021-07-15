@@ -16,7 +16,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201606021408_create_tracker_changeset_value_computed_table extends ForgeUpgrade_Bucket
+class b201606021408_create_tracker_changeset_value_computed_table extends \Tuleap\ForgeUpgrade\Bucket
 {
 
     public function description()
@@ -38,14 +38,14 @@ class b201606021408_create_tracker_changeset_value_computed_table extends ForgeU
                 ) ENGINE=InnoDB";
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while creating tracker_changeset_value_computedfield_manual_value: ' . implode(', ', $this->db->dbh->errorInfo()));
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occured while creating tracker_changeset_value_computedfield_manual_value: ' . implode(', ', $this->db->dbh->errorInfo()));
         }
     }
 
     public function postUp()
     {
         if (! $this->db->tableNameExists('tracker_changeset_value_computedfield_manual_value')) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('Table tracker_changeset_value_computedfield_manual_value not created');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('Table tracker_changeset_value_computedfield_manual_value not created');
         }
     }
 }

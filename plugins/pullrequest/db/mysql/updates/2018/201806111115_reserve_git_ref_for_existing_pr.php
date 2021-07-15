@@ -43,7 +43,7 @@ class b201806111115_reserve_git_ref_for_existing_pr extends ForgeUpgrade_Bucket 
             $reference_id = $this->getNextAvailableReferenceIdForRepository($row['repo_dest_id']);
             if (! $this->reserveReference($row['id'], $row['repo_dest_id'], $reference_id) || ! $this->db->dbh->commit()) {
                 $this->db->dbh->rollBack();
-                throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete(
+                throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException(
                     'Not able to reserve a Git reference for pull request #' . $row['id']
                 );
             }

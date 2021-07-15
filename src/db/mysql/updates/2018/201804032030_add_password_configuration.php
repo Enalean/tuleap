@@ -42,7 +42,7 @@ class b201804032030_add_password_configuration extends ForgeUpgrade_Bucket // @c
     public function postUp()
     {
         if (! $this->db->tableNameExists('password_configuration')) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('password_configuration table is missing');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('password_configuration table is missing');
         }
     }
 }

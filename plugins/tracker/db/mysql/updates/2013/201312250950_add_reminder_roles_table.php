@@ -16,7 +16,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201312250950_add_reminder_roles_table extends ForgeUpgrade_Bucket
+class b201312250950_add_reminder_roles_table extends \Tuleap\ForgeUpgrade\Bucket
 {
 
     public function description()
@@ -39,7 +39,7 @@ class b201312250950_add_reminder_roles_table extends ForgeUpgrade_Bucket
 
         if ($result === false) {
             $error_message = implode(', ', $this->db->dbh->errorInfo());
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete($error_message);
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException($error_message);
         }
 
         //Remove the NOT NULL Constraint on ugroups column
@@ -49,14 +49,14 @@ class b201312250950_add_reminder_roles_table extends ForgeUpgrade_Bucket
 
         if ($result === false) {
             $error_message = implode(', ', $this->db->dbh->errorInfo());
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete($error_message);
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException($error_message);
         }
 
         //Retrieve the index name since it is unnamed
         $sql = "SELECT CONSTRAINT_NAME FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE  WHERE TABLE_NAME ='tracker_reminder' and column_name in('tracker_id', 'field_id') group by CONSTRAINT_NAME;";
         $res = $this->db->dbh->query($sql);
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while fetching the constraint name: ' . implode(', ', $this->db->dbh->errorInfo()));
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occured while fetching the constraint name: ' . implode(', ', $this->db->dbh->errorInfo()));
         }
         $row   = $res->fetch();
         $index = $row['CONSTRAINT_NAME'];
@@ -65,7 +65,7 @@ class b201312250950_add_reminder_roles_table extends ForgeUpgrade_Bucket
         $result = $this->db->dbh->exec($sql);
         if ($result === false) {
                 $error_message = implode(', ', $this->db->dbh->errorInfo());
-                throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete($error_message);
+                throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException($error_message);
         }
     }
 

@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201607061503_add_replication_password_for_git_remote_server extends ForgeUpgrade_Bucket
+class b201607061503_add_replication_password_for_git_remote_server extends \Tuleap\ForgeUpgrade\Bucket
 {
 
     public function description()
@@ -44,7 +44,7 @@ EOT;
             $sql = 'ALTER TABLE plugin_git_remote_servers ADD replication_password TEXT';
             $res = $this->db->dbh->exec($sql);
             if ($res === false) {
-                throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occurred while adding the column replication_password to the table plugin_git_remote_servers');
+                throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occurred while adding the column replication_password to the table plugin_git_remote_servers');
             }
         }
     }
@@ -57,7 +57,7 @@ EOT;
     public function postUp()
     {
         if (! $this->db->columnNameExists('plugin_git_remote_servers', 'replication_password')) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('Column replication_password in table plugin_git_remote_servers is missing');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('Column replication_password in table plugin_git_remote_servers is missing');
         }
     }
 }

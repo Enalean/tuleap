@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201705231141_store_widget_is_minimized extends ForgeUpgrade_Bucket
+class b201705231141_store_widget_is_minimized extends \Tuleap\ForgeUpgrade\Bucket
 {
     public function description()
     {
@@ -37,7 +37,7 @@ class b201705231141_store_widget_is_minimized extends ForgeUpgrade_Bucket
         ";
 
         if ($this->db->dbh->exec($sql) === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete(
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException(
                 'An error occurred while updating dashboards_lines_columns_widgets'
             );
         }

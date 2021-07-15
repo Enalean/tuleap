@@ -59,7 +59,7 @@ class b201812061206_add_index_to_sort_git_repo_alphabetically extends ForgeUpgra
                 $info = $this->db->dbh->errorInfo();
                 $msg  = 'An error occured adding index to ' . $table . ': ' . $info[2] . ' (' . $info[1] . ' - ' . $info[0] . ')';
                 $this->log->error($msg);
-                throw new ForgeUpgrade_Bucket_Db_Exception($msg);
+                throw new \Tuleap\ForgeUpgrade\Bucket\BucketDbException($msg);
             }
             $this->log->info("$index successfully removed");
         } else {

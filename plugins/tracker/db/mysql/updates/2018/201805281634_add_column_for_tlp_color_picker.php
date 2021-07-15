@@ -40,7 +40,7 @@ class b201805281634_add_column_for_tlp_color_picker  extends ForgeUpgrade_Bucket
                   ';
 
         if ($this->db->dbh->exec($sql) === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('tracker_field_list_bind_decorator update failed');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('tracker_field_list_bind_decorator update failed');
         }
     }
 }

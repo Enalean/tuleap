@@ -41,7 +41,7 @@ class b201805171738_update_wrong_pk_forgeconfig extends ForgeUpgrade_Bucket // @
     public function postUp()
     {
         if (! $this->indexNameExists('forgeconfig', 'PRIMARY')) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete(
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException(
                 'PRIMARY KEY on forgeconfig is missing'
             );
         }

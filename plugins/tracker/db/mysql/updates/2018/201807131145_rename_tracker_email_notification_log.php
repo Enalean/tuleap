@@ -39,7 +39,7 @@ class b201807131145_rename_tracker_email_notification_log extends ForgeUpgrade_B
         $res = $this->db->dbh->query('ALTER TABLE tracker_email_notification_log RENAME tracker_post_creation_event_log');
 
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('Renaming of the table tracker_email_notification_log failed');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('Renaming of the table tracker_email_notification_log failed');
         }
     }
 }

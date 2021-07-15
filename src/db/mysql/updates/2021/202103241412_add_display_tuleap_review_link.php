@@ -21,7 +21,7 @@
 declare(strict_types=1);
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
-final class b202103241412_add_display_tuleap_review_link extends ForgeUpgrade_Bucket
+final class b202103241412_add_display_tuleap_review_link extends \Tuleap\ForgeUpgrade\Bucket
 {
     public function description(): string
     {
@@ -40,7 +40,7 @@ final class b202103241412_add_display_tuleap_review_link extends ForgeUpgrade_Bu
         $res = $this->db->dbh->exec($sql);
 
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('Unable to add display_tuleap_review_link option');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('Unable to add display_tuleap_review_link option');
         }
     }
 }

@@ -16,7 +16,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b20140514_add_index_for_last_changeset_id_tracker_id extends ForgeUpgrade_Bucket
+class b20140514_add_index_for_last_changeset_id_tracker_id extends \Tuleap\ForgeUpgrade\Bucket
 {
 
     public function description()
@@ -38,7 +38,7 @@ class b20140514_add_index_for_last_changeset_id_tracker_id extends ForgeUpgrade_
                 $info = $this->db->dbh->errorInfo();
                 $msg  = 'An error occured adding index idx_changeset_tracker to tracker_artifact: ' . $info[2] . ' (' . $info[1] . ' - ' . $info[0] . ')';
                 $this->log->error($msg);
-                throw new ForgeUpgrade_Bucket_Db_Exception($msg);
+                throw new \Tuleap\ForgeUpgrade\Bucket\BucketDbException($msg);
             }
         }
     }

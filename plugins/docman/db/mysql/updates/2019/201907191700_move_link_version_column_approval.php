@@ -21,7 +21,7 @@
 declare(strict_types=1);
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
-final class b201907191700_move_link_version_column_approval extends ForgeUpgrade_Bucket
+final class b201907191700_move_link_version_column_approval extends \Tuleap\ForgeUpgrade\Bucket
 {
     public function description(): string
     {
@@ -39,7 +39,7 @@ final class b201907191700_move_link_version_column_approval extends ForgeUpgrade
             $res = $this->db->dbh->exec('ALTER TABLE plugin_docman_approval ADD COLUMN link_version_id INT(11) UNSIGNED NULL DEFAULT NULL');
 
             if ($res === false) {
-                throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete(
+                throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException(
                     'An error occurred while adding the column link_version_id to the plugin_docman_approval table'
                 );
             }
@@ -49,7 +49,7 @@ final class b201907191700_move_link_version_column_approval extends ForgeUpgrade
             $res = $this->db->dbh->exec('ALTER TABLE plugin_docman_approval ADD COLUMN might_be_corrupted BOOL DEFAULT FALSE');
 
             if ($res === false) {
-                throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete(
+                throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException(
                     'An error occurred while adding the column might_be_corrupted to the plugin_docman_approval table'
                 );
             }
@@ -64,7 +64,7 @@ final class b201907191700_move_link_version_column_approval extends ForgeUpgrade
         $this->db->dbh->beginTransaction();
         $res_table_rows = $this->db->dbh->query('SELECT table_id, version_id FROM plugin_docman_approval WHERE version_id IS NOT NULL');
         if ($res_table_rows === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete(
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException(
                 'Failed to retrieve all the versions used in the approval table'
             );
         }
@@ -85,7 +85,7 @@ final class b201907191700_move_link_version_column_approval extends ForgeUpgrade
     {
         $statement = $this->db->dbh->prepare('SELECT id FROM plugin_docman_link_version WHERE id = ?');
         if ($statement->execute([$link_version_id]) === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete(
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException(
                 'Failure encountered while checking existence of link version #' . $link_version_id
             );
         }
@@ -97,7 +97,7 @@ final class b201907191700_move_link_version_column_approval extends ForgeUpgrade
     {
         $statement = $this->db->dbh->prepare('SELECT id FROM plugin_docman_version WHERE id = ?');
         if ($statement->execute([$file_version_id]) === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete(
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException(
                 'Failure encountered while checking existence of file/embedded file version #' . $file_version_id
             );
         }
@@ -111,7 +111,7 @@ final class b201907191700_move_link_version_column_approval extends ForgeUpgrade
             'UPDATE plugin_docman_approval SET link_version_id = version_id, version_id = NULL WHERE table_id = ?'
         );
         if ($statement->execute([$table_id]) === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete(
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException(
                 'Failure encountered while updating table #' . $table_id . ' to fix the link version'
             );
         }
@@ -123,7 +123,7 @@ final class b201907191700_move_link_version_column_approval extends ForgeUpgrade
             'UPDATE plugin_docman_approval SET might_be_corrupted = TRUE WHERE table_id = ?'
         );
         if ($statement->execute([$table_id]) === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete(
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException(
                 'Failure encountered while marking table #' . $table_id . ' has corrupted'
             );
         }

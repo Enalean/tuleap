@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201708231717_add_table_cross_tracker_report extends ForgeUpgrade_Bucket
+class b201708231717_add_table_cross_tracker_report extends \Tuleap\ForgeUpgrade\Bucket
 {
     public function description()
     {
@@ -58,7 +58,7 @@ class b201708231717_add_table_cross_tracker_report extends ForgeUpgrade_Bucket
             ! $this->db->tableNameExists('plugin_tracker_cross_tracker_report')
             || ! $this->db->tableNameExists('plugin_tracker_cross_tracker_report_tracker')
         ) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('a table is missing');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('a table is missing');
         }
     }
 }

@@ -19,7 +19,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-class b201204051134_add_index_on_sementic_title_and_artifact extends ForgeUpgrade_Bucket
+class b201204051134_add_index_on_sementic_title_and_artifact extends \Tuleap\ForgeUpgrade\Bucket
 {
 
     public function description()
@@ -51,7 +51,7 @@ EOT;
         if ($res === false) {
             $error_detail  = implode(', ', $this->db->dbh->errorInfo());
             $error_message = "An error occured while $msg: $error_detail";
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete($error_message);
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException($error_message);
         }
     }
 }

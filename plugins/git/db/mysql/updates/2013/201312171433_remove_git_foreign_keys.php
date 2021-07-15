@@ -19,7 +19,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-class b201312171433_remove_git_foreign_keys extends ForgeUpgrade_Bucket
+class b201312171433_remove_git_foreign_keys extends \Tuleap\ForgeUpgrade\Bucket
 {
 
     /**
@@ -54,14 +54,14 @@ EOT;
         $sql = "ALTER TABLE plugin_git DROP FOREIGN KEY remote_server_idx";
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while dropping FK remote_server_idx from table plugin_git');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occured while dropping FK remote_server_idx from table plugin_git');
         }
 
         $sql = 'ALTER TABLE plugin_git_remote_ugroups DROP FOREIGN KEY remote_server_idx';
 
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while dropping FK remote_server_idx from table plugin_git_remote_ugroups');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occured while dropping FK remote_server_idx from table plugin_git_remote_ugroups');
         }
     }
 }

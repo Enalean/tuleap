@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201702151712_create_table_to_notify_user extends ForgeUpgrade_Bucket
+class b201702151712_create_table_to_notify_user extends \Tuleap\ForgeUpgrade\Bucket
 {
 
     public function description()
@@ -45,7 +45,7 @@ class b201702151712_create_table_to_notify_user extends ForgeUpgrade_Bucket
     public function postUp()
     {
         if (! $this->db->tableNameExists('plugin_git_post_receive_notification_user')) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('plugin_git_post_receive_notification_user table is missing');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('plugin_git_post_receive_notification_user table is missing');
         }
     }
 }

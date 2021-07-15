@@ -19,7 +19,7 @@
  *
  */
 
-class b201908061120_add_service_custom_icon_and_new_tab extends ForgeUpgrade_Bucket // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+class b201908061120_add_service_custom_icon_and_new_tab extends \Tuleap\ForgeUpgrade\Bucket // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 {
     public function description()
     {
@@ -39,7 +39,7 @@ class b201908061120_add_service_custom_icon_and_new_tab extends ForgeUpgrade_Buc
 
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occurred while modifying the service table.');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occurred while modifying the service table.');
         }
     }
 }

@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201401240954_add_git_perms_admin_values extends ForgeUpgrade_Bucket
+class b201401240954_add_git_perms_admin_values extends \Tuleap\ForgeUpgrade\Bucket
 {
 
     /**
@@ -61,7 +61,7 @@ EOT;
 
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while adding PLUGIN_GIT_ADMIN rights in table permissions_values');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occured while adding PLUGIN_GIT_ADMIN rights in table permissions_values');
         }
     }
 
@@ -74,7 +74,7 @@ EOT;
 
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while adding PLUGIN_GIT_ADMIN rights in table permissions_values');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occured while adding PLUGIN_GIT_ADMIN rights in table permissions_values');
         }
     }
 }

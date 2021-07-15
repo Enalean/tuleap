@@ -40,7 +40,7 @@ class b201804051645_add_missing_index_in_table_ugroup extends ForgeUpgrade_Bucke
     public function postUp()
     {
         if (! $this->indexNameExists('ugroup', 'idx_ugroup_project_id')) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete(
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException(
                 'The index on group_id is missing in table ugroup'
             );
         }

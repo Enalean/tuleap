@@ -19,7 +19,7 @@
 /**
  * Add svn accessfile history table with first version for each project
  */
-class b201405051118_add_svn_accessfile_history_table_with_first_version extends ForgeUpgrade_Bucket
+class b201405051118_add_svn_accessfile_history_table_with_first_version extends \Tuleap\ForgeUpgrade\Bucket
 {
     public function description()
     {
@@ -51,7 +51,7 @@ class b201405051118_add_svn_accessfile_history_table_with_first_version extends 
 
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while creating svn accessfile history table.');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occured while creating svn accessfile history table.');
         }
     }
 
@@ -63,7 +63,7 @@ class b201405051118_add_svn_accessfile_history_table_with_first_version extends 
 
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while adding version in svn accessfile history table.');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occured while adding version in svn accessfile history table.');
         }
     }
 }

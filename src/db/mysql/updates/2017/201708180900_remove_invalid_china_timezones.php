@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201708180900_remove_invalid_china_timezones extends ForgeUpgrade_Bucket
+class b201708180900_remove_invalid_china_timezones extends \Tuleap\ForgeUpgrade\Bucket
 {
     public function description()
     {
@@ -35,7 +35,7 @@ class b201708180900_remove_invalid_china_timezones extends ForgeUpgrade_Bucket
         $sql = 'UPDATE user SET timezone="Asia/Shanghai" WHERE timezone="China/Beijing" OR timezone="China/Shanghai"';
 
         if (! $this->db->dbh->query($sql)) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete(
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException(
                 'The migration of invalid China timezones has not been successfully done'
             );
         }

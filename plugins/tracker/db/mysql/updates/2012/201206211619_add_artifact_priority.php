@@ -19,7 +19,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-class b201206211619_add_artifact_priority extends ForgeUpgrade_Bucket
+class b201206211619_add_artifact_priority extends \Tuleap\ForgeUpgrade\Bucket
 {
 
     public function description()

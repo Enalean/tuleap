@@ -21,7 +21,7 @@
 declare(strict_types=1);
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
-final class b201911271350_add_tables_reviewer_changes extends ForgeUpgrade_Bucket
+final class b201911271350_add_tables_reviewer_changes extends \Tuleap\ForgeUpgrade\Bucket
 {
     public function description(): string
     {
@@ -64,7 +64,7 @@ final class b201911271350_add_tables_reviewer_changes extends ForgeUpgrade_Bucke
     private function migrateExistingReviewers(): void
     {
         if ($this->db->dbh->beginTransaction() === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete(
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException(
                 'Not able to start the migration of the reviewers storage'
             );
         }
@@ -73,7 +73,7 @@ final class b201911271350_add_tables_reviewer_changes extends ForgeUpgrade_Bucke
             SELECT DISTINCT pull_request_id, 100, UNIX_TIMESTAMP() FROM plugin_pullrequest_reviewer_user';
         if ($this->db->dbh->exec($sql_create_change) === false) {
             $this->db->dbh->rollBack();
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete(
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException(
                 'Can not create reviewer changes'
             );
         }
@@ -86,14 +86,14 @@ final class b201911271350_add_tables_reviewer_changes extends ForgeUpgrade_Bucke
         ';
         if ($this->db->dbh->exec($sql_create_change_user) === false) {
             $this->db->dbh->rollBack();
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete(
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException(
                 'Can not migrate reviewer users to the new data model'
             );
         }
 
         if ($this->db->dbh->commit() === false) {
             $this->db->dbh->rollBack();
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete(
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException(
                 'Can not commit migration of the reviewers'
             );
         }

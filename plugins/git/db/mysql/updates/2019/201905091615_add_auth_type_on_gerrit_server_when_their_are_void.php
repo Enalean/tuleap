@@ -38,7 +38,7 @@ class b201905091615_add_auth_type_on_gerrit_server_when_their_are_void extends F
         $res = $this->db->dbh->exec($sql);
 
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('Add an authentification type when it is void did not work.');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('Add an authentification type when it is void did not work.');
         }
     }
 }

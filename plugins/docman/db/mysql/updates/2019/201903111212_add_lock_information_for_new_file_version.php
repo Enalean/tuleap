@@ -38,7 +38,7 @@ class b201903111212_add_lock_information_for_new_file_version extends ForgeUpgra
 
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occurred while modifying the plugin_docman_new_version_upload table.');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occurred while modifying the plugin_docman_new_version_upload table.');
         }
     }
 }

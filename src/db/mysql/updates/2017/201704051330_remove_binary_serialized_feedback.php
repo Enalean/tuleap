@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201704051330_remove_binary_serialized_feedback extends ForgeUpgrade_Bucket
+class b201704051330_remove_binary_serialized_feedback extends \Tuleap\ForgeUpgrade\Bucket
 {
     public function description()
     {
@@ -37,7 +37,7 @@ class b201704051330_remove_binary_serialized_feedback extends ForgeUpgrade_Bucke
         $has_been_truncated = $this->db->dbh->exec($sql);
 
         if ($has_been_truncated === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete(
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException(
                 'An error occurred while removing the binary serialized feedbacks'
             );
         }

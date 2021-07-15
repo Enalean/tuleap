@@ -16,7 +16,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201503061743_add_homepage extends ForgeUpgrade_Bucket
+class b201503061743_add_homepage extends \Tuleap\ForgeUpgrade\Bucket
 {
     public function description()
     {
@@ -41,7 +41,7 @@ class b201503061743_add_homepage extends ForgeUpgrade_Bucket
         )";
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while adding homepage table.');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occured while adding homepage table.');
         }
     }
 
@@ -50,7 +50,7 @@ class b201503061743_add_homepage extends ForgeUpgrade_Bucket
         $sql = "INSERT INTO homepage (use_standard_homepage) VALUES (0)";
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while populating homepage table.');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occured while populating homepage table.');
         }
     }
 }

@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-class b201708101140_add_issue_tracker_to_trafficlights extends ForgeUpgrade_Bucket
+class b201708101140_add_issue_tracker_to_trafficlights extends \Tuleap\ForgeUpgrade\Bucket
 {
 
     public function description()
@@ -35,14 +35,14 @@ class b201708101140_add_issue_tracker_to_trafficlights extends ForgeUpgrade_Buck
         $sql = "ALTER TABLE plugin_trafficlights ADD COLUMN issue_tracker_id INT(11) NOT NULL";
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while adding issue_tracker_id column in table columns: ' . implode(', ', $this->db->dbh->errorInfo()));
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occured while adding issue_tracker_id column in table columns: ' . implode(', ', $this->db->dbh->errorInfo()));
         }
     }
 
     public function postUp()
     {
         if (! $this->db->columnNameExists('plugin_trafficlights', 'issue_tracker_id')) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while adding issue tracker id in table columns');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occured while adding issue tracker id in table columns');
         }
     }
 }

@@ -19,7 +19,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-class b201312231005_remove_not_null_http_port_remote_gerrit_servers extends ForgeUpgrade_Bucket
+class b201312231005_remove_not_null_http_port_remote_gerrit_servers extends \Tuleap\ForgeUpgrade\Bucket
 {
 
     /**
@@ -55,7 +55,7 @@ EOT;
         $res = $this->db->dbh->exec($sql);
 
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while modifying http_port column from table plugin_git_remote_servers');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occured while modifying http_port column from table plugin_git_remote_servers');
         }
     }
 }

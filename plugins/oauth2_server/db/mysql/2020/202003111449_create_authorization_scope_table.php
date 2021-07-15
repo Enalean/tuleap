@@ -21,7 +21,7 @@
 declare(strict_types=1);
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
-final class b202003111449_create_authorization_scope_table extends ForgeUpgrade_Bucket
+final class b202003111449_create_authorization_scope_table extends \Tuleap\ForgeUpgrade\Bucket
 {
     public function description(): string
     {

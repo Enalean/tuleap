@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201012240808_add_table_frs_log extends ForgeUpgrade_Bucket
+class b201012240808_add_table_frs_log extends \Tuleap\ForgeUpgrade\Bucket
 {
 
     public function description()

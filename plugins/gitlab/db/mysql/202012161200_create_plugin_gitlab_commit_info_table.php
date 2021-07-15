@@ -21,7 +21,7 @@
 declare(strict_types=1);
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
-final class b202012161200_create_plugin_gitlab_commit_info_table extends ForgeUpgrade_Bucket
+final class b202012161200_create_plugin_gitlab_commit_info_table extends \Tuleap\ForgeUpgrade\Bucket
 {
     public function description(): string
     {
@@ -50,7 +50,7 @@ final class b202012161200_create_plugin_gitlab_commit_info_table extends ForgeUp
         $this->db->createTable('plugin_gitlab_commit_info', $sql);
 
         if (! $this->db->tableNameExists('plugin_gitlab_commit_info')) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete("Table plugin_gitlab_commit_info has not been created in database");
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException("Table plugin_gitlab_commit_info has not been created in database");
         }
     }
 }

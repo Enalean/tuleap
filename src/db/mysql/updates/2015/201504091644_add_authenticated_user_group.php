@@ -19,7 +19,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-class b201504091644_add_authenticated_user_group extends ForgeUpgrade_Bucket
+class b201504091644_add_authenticated_user_group extends \Tuleap\ForgeUpgrade\Bucket
 {
     public function description()
     {
@@ -37,7 +37,7 @@ class b201504091644_add_authenticated_user_group extends ForgeUpgrade_Bucket
                     VALUES (5, 'ugroup_authenticated_users_name_key', 'ugroup_authenticated_users_desc_key', 100);";
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while adding authenticated user group in table ugroup');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occured while adding authenticated user group in table ugroup');
         }
     }
 }

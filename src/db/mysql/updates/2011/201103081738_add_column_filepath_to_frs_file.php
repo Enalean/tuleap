@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201103081738_add_column_filepath_to_frs_file extends ForgeUpgrade_Bucket
+class b201103081738_add_column_filepath_to_frs_file extends \Tuleap\ForgeUpgrade\Bucket
 {
 
     public function description()
@@ -39,7 +39,7 @@ EOT;
         if ($this->db->tableNameExists('frs_file')) {
             $res = $this->db->dbh->exec($sql);
             if ($res === false) {
-                throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while adding column filepath to table frs_file');
+                throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occured while adding column filepath to table frs_file');
             }
         }
 
@@ -47,7 +47,7 @@ EOT;
         if ($this->db->tableNameExists('frs_file_deleted')) {
             $res = $this->db->dbh->exec($sql);
             if ($res === false) {
-                throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while adding column filepath to table frs_file_delete');
+                throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occured while adding column filepath to table frs_file_delete');
             }
         }
     }
@@ -55,11 +55,11 @@ EOT;
     public function postUp()
     {
         if (! $this->db->columnNameExists('frs_file', 'filepath')) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('filepath not created in frs_file');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('filepath not created in frs_file');
         }
 
         if (! $this->db->columnNameExists('frs_file_deleted', 'filepath')) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('filepath not created in frs_file_deleted');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('filepath not created in frs_file_deleted');
         }
     }
 }

@@ -36,7 +36,7 @@ class b201801221530_remove_unusable_session extends ForgeUpgrade_Bucket // @codi
 
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete(
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException(
                 'An error occurred while cleaning the sessions table.'
             );
         }

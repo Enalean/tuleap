@@ -21,7 +21,7 @@
 declare(strict_types=1);
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
-final class b202010011135_add_created_user_id_on_invitations_table extends ForgeUpgrade_Bucket
+final class b202010011135_add_created_user_id_on_invitations_table extends \Tuleap\ForgeUpgrade\Bucket
 {
     public function description(): string
     {
@@ -38,7 +38,7 @@ final class b202010011135_add_created_user_id_on_invitations_table extends Forge
         $sql = "ALTER TABLE invitations ADD COLUMN created_user_id INT(11) NULL";
         $res = $this->db->dbh->query($sql);
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while adding created_user_id column: ' . implode(', ', $this->db->dbh->errorInfo()));
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occured while adding created_user_id column: ' . implode(', ', $this->db->dbh->errorInfo()));
         }
 
         $sql = "ALTER TABLE invitations ADD INDEX idx_created(created_user_id, status, to_email(20))";

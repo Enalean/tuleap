@@ -20,7 +20,7 @@
 
 
 
-class b201709280900_mark_cleartext_api_key extends ForgeUpgrade_Bucket
+class b201709280900_mark_cleartext_api_key extends \Tuleap\ForgeUpgrade\Bucket
 {
     public function description()
     {
@@ -44,7 +44,7 @@ class b201709280900_mark_cleartext_api_key extends ForgeUpgrade_Bucket
             $sql = 'ALTER TABLE plugin_bugzilla_reference ADD COLUMN has_api_key_always_been_encrypted TINYINT(1) NOT NULL DEFAULT 1';
             $res = $this->db->dbh->exec($sql);
             if ($res === false) {
-                throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete(
+                throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException(
                     'An error occurred while adding is_api_key_always_been_encrypted column in plugin_bugzilla_reference table'
                 );
             }
@@ -56,7 +56,7 @@ class b201709280900_mark_cleartext_api_key extends ForgeUpgrade_Bucket
         $sql = 'UPDATE plugin_bugzilla_reference SET has_api_key_always_been_encrypted = 0 WHERE api_key != ""';
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete(
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException(
                 'An error occurred while marking cleartext Bugzilla API keys'
             );
         }

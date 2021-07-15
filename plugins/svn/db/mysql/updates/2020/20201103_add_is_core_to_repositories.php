@@ -21,7 +21,7 @@
 declare(strict_types=1);
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
-final class b20201103_add_is_core_to_repositories extends ForgeUpgrade_Bucket
+final class b20201103_add_is_core_to_repositories extends \Tuleap\ForgeUpgrade\Bucket
 {
     public function description(): string
     {
@@ -43,7 +43,7 @@ final class b20201103_add_is_core_to_repositories extends ForgeUpgrade_Bucket
 
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('Could add `is_core` to `plugin_svn_repositories`');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('Could add `is_core` to `plugin_svn_repositories`');
         }
     }
 }

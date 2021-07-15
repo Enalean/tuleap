@@ -36,14 +36,14 @@ final class b201912041000_color_icon_not_null extends ForgeUpgrade_Bucket // php
     {
         $icon_update_res = $this->db->dbh->query("UPDATE plugin_openidconnectclient_provider SET icon = '' WHERE icon IS NULL");
         if ($icon_update_res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete(
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException(
                 'Cannot update null icon in plugin_openidconnectclient_provider table'
             );
         }
 
         $color_update_res = $this->db->dbh->query("UPDATE plugin_openidconnectclient_provider SET color = '' WHERE color IS NULL");
         if ($color_update_res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete(
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException(
                 'Cannot update null icon in plugin_openidconnectclient_provider table'
             );
         }
@@ -54,7 +54,7 @@ final class b201912041000_color_icon_not_null extends ForgeUpgrade_Bucket // php
         $res = $this->db->dbh->query($sql);
 
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete(
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException(
                 'Cannot add NOT NULL constraint on icon and color columns'
             );
         }

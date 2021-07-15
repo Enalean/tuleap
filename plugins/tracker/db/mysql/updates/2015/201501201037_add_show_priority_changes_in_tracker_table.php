@@ -16,7 +16,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201501201037_add_show_priority_changes_in_tracker_table extends ForgeUpgrade_Bucket
+class b201501201037_add_show_priority_changes_in_tracker_table extends \Tuleap\ForgeUpgrade\Bucket
 {
 
     public function description()
@@ -35,14 +35,14 @@ class b201501201037_add_show_priority_changes_in_tracker_table extends ForgeUpgr
         $res = $this->db->dbh->exec($sql);
 
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while adding column show_priority_changes to tracker: ' . implode(', ', $this->db->dbh->errorInfo()));
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occured while adding column show_priority_changes to tracker: ' . implode(', ', $this->db->dbh->errorInfo()));
         }
     }
 
     public function postUp()
     {
         if (! $this->db->columnNameExists('tracker', 'show_priority_changes')) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while adding column show_priority_changes to tracker');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occured while adding column show_priority_changes to tracker');
         }
     }
 }

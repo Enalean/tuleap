@@ -21,7 +21,7 @@
 declare(strict_types=1);
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
-final class b201905061130_convert_pr_build_status_to_commit_status extends ForgeUpgrade_Bucket
+final class b201905061130_convert_pr_build_status_to_commit_status extends \Tuleap\ForgeUpgrade\Bucket
 {
     public function description()
     {
@@ -36,7 +36,7 @@ final class b201905061130_convert_pr_build_status_to_commit_status extends Forge
     public function up()
     {
         if ($this->db->dbh->beginTransaction() === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete(
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException(
                 'Not able to start the migration from pull request build statuses to commit statuses'
             );
         }
@@ -44,7 +44,7 @@ final class b201905061130_convert_pr_build_status_to_commit_status extends Forge
                 SELECT repository_id, sha1_src, last_build_date, 0 FROM plugin_pullrequest_review WHERE last_build_status = "S"';
         if ($this->db->dbh->exec($sql) === false) {
             $this->db->dbh->rollBack();
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete(
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException(
                 'Not able to migrate to pull request build statuses as commit statuses'
             );
         }
@@ -53,13 +53,13 @@ final class b201905061130_convert_pr_build_status_to_commit_status extends Forge
                 SELECT repository_id, sha1_src, last_build_date, 1 FROM plugin_pullrequest_review WHERE last_build_status = "F"';
         if ($this->db->dbh->exec($sql) === false) {
             $this->db->dbh->rollBack();
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete(
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException(
                 'Not able to migrate to pull request build statuses as commit statuses'
             );
         }
 
         if (! $this->db->dbh->commit()) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete(
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException(
                 'Not able to commit the transaction for the migration from pull request build statuses to commit statuses'
             );
         }

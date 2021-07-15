@@ -21,7 +21,7 @@
 declare(strict_types=1);
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
-class b201907040905_add_project_ugroup_synchronized_membership extends ForgeUpgrade_Bucket
+class b201907040905_add_project_ugroup_synchronized_membership extends \Tuleap\ForgeUpgrade\Bucket
 {
     public function description()
     {
@@ -41,7 +41,7 @@ class b201907040905_add_project_ugroup_synchronized_membership extends ForgeUpgr
             ) ENGINE=InnoDB';
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('Unable to create Project Ugroup Synchronized Membership table');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('Unable to create Project Ugroup Synchronized Membership table');
         }
     }
 }

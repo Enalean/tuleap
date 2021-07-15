@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201606061643_add_repository_fine_grained_table extends ForgeUpgrade_Bucket
+class b201606061643_add_repository_fine_grained_table extends \Tuleap\ForgeUpgrade\Bucket
 {
 
     public function description()
@@ -48,7 +48,7 @@ EOT;
     public function postUp()
     {
         if (! $this->db->tableNameExists('plugin_git_repository_fine_grained_permissions')) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete(
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException(
                 'plugin_git_repository_fine_grained_permissions table is missing'
             );
         }

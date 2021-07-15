@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201704121621_modify_autoincrement_key_in_notif extends ForgeUpgrade_Bucket
+class b201704121621_modify_autoincrement_key_in_notif extends \Tuleap\ForgeUpgrade\Bucket
 {
 
     public function description()
@@ -39,7 +39,7 @@ class b201704121621_modify_autoincrement_key_in_notif extends ForgeUpgrade_Bucke
 
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete(
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException(
                 'An error occurred while adding autoincrement key in plugin_svn_notification: '
                 . implode(', ', $this->db->dbh->errorInfo())
             );

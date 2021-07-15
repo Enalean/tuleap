@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201712180948_add_burnup_cache_table extends ForgeUpgrade_Bucket
+class b201712180948_add_burnup_cache_table extends \Tuleap\ForgeUpgrade\Bucket
 {
     public function description()
     {
@@ -45,7 +45,7 @@ class b201712180948_add_burnup_cache_table extends ForgeUpgrade_Bucket
     public function postUp()
     {
         if (! $this->db->tableNameExists('plugin_agiledashboard_tracker_field_burnup_cache')) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete(
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException(
                 'the table agiledashboard_tracker_field_burnup_cache is missing'
             );
         }

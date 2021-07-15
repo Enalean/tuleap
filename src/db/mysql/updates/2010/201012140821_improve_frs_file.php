@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201012140821_improve_frs_file extends ForgeUpgrade_Bucket
+class b201012140821_improve_frs_file extends \Tuleap\ForgeUpgrade\Bucket
 {
 
     public function description()
@@ -39,7 +39,7 @@ EOT;
         if ($this->db->tableNameExists('frs_file')) {
             $res = $this->db->dbh->exec($sql);
             if ($res === false) {
-                throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while adding column computed_md5 to table frs_file');
+                throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occured while adding column computed_md5 to table frs_file');
             }
         }
 
@@ -47,7 +47,7 @@ EOT;
         if ($this->db->tableNameExists('frs_file')) {
             $res = $this->db->dbh->exec($sql);
             if ($res === false) {
-                throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while adding column computed_md5 to table frs_file_delete');
+                throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occured while adding column computed_md5 to table frs_file_delete');
             }
         }
 
@@ -55,7 +55,7 @@ EOT;
         if ($this->db->tableNameExists('frs_file')) {
             $res = $this->db->dbh->exec($sql);
             if ($res === false) {
-                throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while adding column reference_md5 to table frs_file');
+                throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occured while adding column reference_md5 to table frs_file');
             }
         }
 
@@ -63,7 +63,7 @@ EOT;
         if ($this->db->tableNameExists('frs_file')) {
             $res = $this->db->dbh->exec($sql);
             if ($res === false) {
-                throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while adding column reference_md5 to table frs_file_delete');
+                throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occured while adding column reference_md5 to table frs_file_delete');
             }
         }
 
@@ -71,7 +71,7 @@ EOT;
         if ($this->db->tableNameExists('frs_file')) {
             $res = $this->db->dbh->exec($sql);
             if ($res === false) {
-                throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while adding column user_id to table frs_file');
+                throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occured while adding column user_id to table frs_file');
             }
         }
 
@@ -79,7 +79,7 @@ EOT;
         if ($this->db->tableNameExists('frs_file')) {
             $res = $this->db->dbh->exec($sql);
             if ($res === false) {
-                throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while adding column user_id to table frs_file_delete');
+                throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occured while adding column user_id to table frs_file_delete');
             }
         }
     }
@@ -87,27 +87,27 @@ EOT;
     public function postUp()
     {
         if (! $this->db->columnNameExists('frs_file', 'computed_md5')) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('computed_md5 not created in frs_file');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('computed_md5 not created in frs_file');
         }
 
         if (! $this->db->columnNameExists('frs_file_deleted', 'computed_md5')) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('computed_md5 not created in frs_file_deleted');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('computed_md5 not created in frs_file_deleted');
         }
 
         if (! $this->db->columnNameExists('frs_file', 'reference_md5')) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('reference_md5 not created in frs_file');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('reference_md5 not created in frs_file');
         }
 
         if (! $this->db->columnNameExists('frs_file_deleted', 'reference_md5')) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('reference_md5 not created in frs_file_deleted');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('reference_md5 not created in frs_file_deleted');
         }
 
         if (! $this->db->columnNameExists('frs_file', 'user_id')) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('user_id not created in frs_file');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('user_id not created in frs_file');
         }
 
         if (! $this->db->columnNameExists('frs_file_deleted', 'user_id')) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('user_id not created in frs_file_deleted');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('user_id not created in frs_file_deleted');
         }
     }
 }

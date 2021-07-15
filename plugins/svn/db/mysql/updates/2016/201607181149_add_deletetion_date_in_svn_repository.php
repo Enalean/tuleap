@@ -16,7 +16,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201607181149_add_deletetion_date_in_svn_repository extends ForgeUpgrade_Bucket
+class b201607181149_add_deletetion_date_in_svn_repository extends \Tuleap\ForgeUpgrade\Bucket
 {
 
     public function description()
@@ -37,7 +37,7 @@ class b201607181149_add_deletetion_date_in_svn_repository extends ForgeUpgrade_B
 
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occurred while adding deletion date to svn repository.');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occurred while adding deletion date to svn repository.');
         }
     }
 }

@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b20170207_remove_snippet_reference extends ForgeUpgrade_Bucket
+class b20170207_remove_snippet_reference extends \Tuleap\ForgeUpgrade\Bucket
 {
     public function description()
     {
@@ -41,7 +41,7 @@ class b20170207_remove_snippet_reference extends ForgeUpgrade_Bucket
         $sql = 'DELETE FROM reference WHERE id = 70';
 
         if (! $this->db->dbh->query($sql)) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete(
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException(
                 'The snippet reference has not been properly removed'
             );
         }
@@ -52,7 +52,7 @@ class b20170207_remove_snippet_reference extends ForgeUpgrade_Bucket
         $sql = 'DELETE FROM cross_references WHERE source_type = "snippet" OR target_type = "snippet"';
 
         if (! $this->db->dbh->query($sql)) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete(
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException(
                 'The snippet cross-references has not been properly removed'
             );
         }

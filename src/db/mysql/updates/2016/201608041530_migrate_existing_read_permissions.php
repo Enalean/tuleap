@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201608041530_migrate_existing_read_permissions extends ForgeUpgrade_Bucket
+class b201608041530_migrate_existing_read_permissions extends \Tuleap\ForgeUpgrade\Bucket
 {
     public function description()
     {

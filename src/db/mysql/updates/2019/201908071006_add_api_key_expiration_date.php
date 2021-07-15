@@ -36,7 +36,7 @@ class b201908071006_add_api_key_expiration_date extends ForgeUpgrade_Bucket // p
 
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occurred while modifying the user_access_key table.');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occurred while modifying the user_access_key table.');
         }
     }
 }

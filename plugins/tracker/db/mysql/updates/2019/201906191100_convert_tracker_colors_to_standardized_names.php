@@ -21,7 +21,7 @@
 declare(strict_types=1);
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
-final class b201906191100_convert_tracker_colors_to_standardized_names extends ForgeUpgrade_Bucket
+final class b201906191100_convert_tracker_colors_to_standardized_names extends \Tuleap\ForgeUpgrade\Bucket
 {
     public function description(): string
     {
@@ -37,12 +37,12 @@ final class b201906191100_convert_tracker_colors_to_standardized_names extends F
     {
         $sql = 'ALTER TABLE tracker ALTER color SET DEFAULT "inca-silver"';
         if ($this->db->dbh->exec($sql) === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occurred while changing the default tracker color to inca-silver');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occurred while changing the default tracker color to inca-silver');
         }
 
         $sql = 'UPDATE tracker SET color = REPLACE(color, "_",  "-")';
         if ($this->db->dbh->exec($sql) === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occurred while converting the tracker colors');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occurred while converting the tracker colors');
         }
 
         $sql = "UPDATE tracker SET color = 'inca-silver' WHERE color NOT IN (
@@ -72,7 +72,7 @@ final class b201906191100_convert_tracker_colors_to_standardized_names extends F
                     'flamingo-pink'
             )";
         if ($this->db->dbh->exec($sql) === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occurred while updating the invalid tracker color names');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occurred while updating the invalid tracker color names');
         }
     }
 }

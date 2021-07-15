@@ -19,7 +19,7 @@
 /**
  * Add rest_authentication_token table
  */
-class b201310171433_add_rest_authentication_token_table extends ForgeUpgrade_Bucket
+class b201310171433_add_rest_authentication_token_table extends \Tuleap\ForgeUpgrade\Bucket
 {
     public function description()
     {
@@ -46,7 +46,7 @@ EOT;
         if (! $this->db->tableNameExists('rest_authentication_token')) {
             $res = $this->db->dbh->exec($sql);
             if ($res === false) {
-                throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while adding table rest_authentication_token');
+                throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occured while adding table rest_authentication_token');
             }
         }
     }
@@ -54,7 +54,7 @@ EOT;
     public function postUp()
     {
         if (! $this->db->tableNameExists('rest_authentication_token')) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('Table rest_authentication_token not created');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('Table rest_authentication_token not created');
         }
     }
 }

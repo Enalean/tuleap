@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201103031250_add_group_id_index_on_diskusage_group_table extends ForgeUpgrade_Bucket
+class b201103031250_add_group_id_index_on_diskusage_group_table extends \Tuleap\ForgeUpgrade\Bucket
 {
 
     public function description()

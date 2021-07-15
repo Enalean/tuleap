@@ -22,7 +22,7 @@
 * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
 */
 
-class b201502261627_add_plugin_agiledashboard_kanban_configuration_column_table extends ForgeUpgrade_Bucket
+class b201502261627_add_plugin_agiledashboard_kanban_configuration_column_table extends \Tuleap\ForgeUpgrade\Bucket
 {
 
     public function description()
@@ -49,7 +49,7 @@ class b201502261627_add_plugin_agiledashboard_kanban_configuration_column_table 
     public function postUp()
     {
         if (! $this->db->tableNameExists('plugin_agiledashboard_kanban_configuration_column')) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('plugin_agiledashboard_kanban_configuration_column table is missing');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('plugin_agiledashboard_kanban_configuration_column table is missing');
         }
     }
 }

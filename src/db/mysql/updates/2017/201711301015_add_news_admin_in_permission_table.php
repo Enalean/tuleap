@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201711301015_add_news_admin_in_permission_table extends ForgeUpgrade_Bucket
+class b201711301015_add_news_admin_in_permission_table extends \Tuleap\ForgeUpgrade\Bucket
 {
     public function description()
     {
@@ -36,7 +36,7 @@ class b201711301015_add_news_admin_in_permission_table extends ForgeUpgrade_Buck
                 VALUES (17, 'ugroup_news_admin_name_key', 'ugroup_news_admin_desc_key', 100)";
 
         if ($this->db->dbh->exec($sql) === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete(
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException(
                 'An error occured while adding new prmissions'
             );
         }

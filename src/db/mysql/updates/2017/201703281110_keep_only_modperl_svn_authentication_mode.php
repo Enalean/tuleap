@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201703281110_keep_only_modperl_svn_authentication_mode extends ForgeUpgrade_Bucket
+class b201703281110_keep_only_modperl_svn_authentication_mode extends \Tuleap\ForgeUpgrade\Bucket
 {
     public function description()
     {
@@ -42,7 +42,7 @@ class b201703281110_keep_only_modperl_svn_authentication_mode extends ForgeUpgra
 
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occurred while removing svn_token_usage table.');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occurred while removing svn_token_usage table.');
         }
     }
 
@@ -56,7 +56,7 @@ class b201703281110_keep_only_modperl_svn_authentication_mode extends ForgeUpgra
             $return_code
         );
         if ($return_code !== 0) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete(
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException(
                 'An error occurred while updating the SVNRoot file to take into account changes in SVN authentication mode.'
             );
         }

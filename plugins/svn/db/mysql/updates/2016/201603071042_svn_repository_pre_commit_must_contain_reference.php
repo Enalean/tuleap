@@ -16,7 +16,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201603071042_svn_repository_pre_commit_must_contain_reference extends ForgeUpgrade_Bucket
+class b201603071042_svn_repository_pre_commit_must_contain_reference extends \Tuleap\ForgeUpgrade\Bucket
 {
 
     public function description()
@@ -35,7 +35,7 @@ class b201603071042_svn_repository_pre_commit_must_contain_reference extends For
 
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occurred while ' . $this->description());
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occurred while ' . $this->description());
         }
     }
 }

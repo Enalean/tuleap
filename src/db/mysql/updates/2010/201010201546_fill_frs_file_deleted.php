@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201010201546_fill_frs_file_deleted extends ForgeUpgrade_Bucket
+class b201010201546_fill_frs_file_deleted extends \Tuleap\ForgeUpgrade\Bucket
 {
 
     public function description()
@@ -52,7 +52,7 @@ EOT;
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
             $err = $this->db->dbh->errorInfo();
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while filling frs_file_deleted with deleted frs_files: ' . $err[2] . ' (' . $err[0] . ', ' . $err[1] . ')');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occured while filling frs_file_deleted with deleted frs_files: ' . $err[2] . ' (' . $err[0] . ', ' . $err[1] . ')');
         }
     }
 }

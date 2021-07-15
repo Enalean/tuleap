@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-class b201503051029_add_restricted_mirrors extends ForgeUpgrade_Bucket
+class b201503051029_add_restricted_mirrors extends \Tuleap\ForgeUpgrade\Bucket
 {
 
     public function description()
@@ -57,7 +57,7 @@ EOT;
         $this->db->createTable($name, $sql);
 
         if (! $this->db->tableNameExists($name)) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete($name . ' table is missing');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException($name . ' table is missing');
         }
     }
 }

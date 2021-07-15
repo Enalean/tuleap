@@ -21,7 +21,7 @@
 declare(strict_types=1);
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
-final class b202003181545_add_use_pkce_column_oauth2_server_app extends ForgeUpgrade_Bucket
+final class b202003181545_add_use_pkce_column_oauth2_server_app extends \Tuleap\ForgeUpgrade\Bucket
 {
     public function description(): string
     {
@@ -39,12 +39,12 @@ final class b202003181545_add_use_pkce_column_oauth2_server_app extends ForgeUpg
             $sql = 'ALTER TABLE plugin_oauth2_server_app ADD COLUMN use_pkce BOOLEAN NOT NULL DEFAULT FALSE';
             $res = $this->db->dbh->exec($sql);
             if ($res === false) {
-                throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('Unable to add use_pkce column on the plugin_oauth2_server_app table');
+                throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('Unable to add use_pkce column on the plugin_oauth2_server_app table');
             }
         }
         $res = $this->db->dbh->exec('ALTER TABLE plugin_oauth2_server_app ALTER COLUMN use_pkce DROP DEFAULT');
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('Unable to drop default value of the use_pkce column on the plugin_oauth2_server_app table');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('Unable to drop default value of the use_pkce column on the plugin_oauth2_server_app table');
         }
     }
 }

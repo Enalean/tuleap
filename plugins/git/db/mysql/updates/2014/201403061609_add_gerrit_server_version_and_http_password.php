@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201403061609_add_gerrit_server_version_and_http_password extends ForgeUpgrade_Bucket
+class b201403061609_add_gerrit_server_version_and_http_password extends \Tuleap\ForgeUpgrade\Bucket
 {
 
     /**
@@ -56,7 +56,7 @@ EOT;
 
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while adding gerrit_version or http_password columns in plugin_git_remote_servers table.');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occured while adding gerrit_version or http_password columns in plugin_git_remote_servers table.');
         }
     }
 }

@@ -21,7 +21,7 @@
 declare(strict_types=1);
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
-final class b202007151800_move_to_tuleap_ssh_key_management extends ForgeUpgrade_Bucket
+final class b202007151800_move_to_tuleap_ssh_key_management extends \Tuleap\ForgeUpgrade\Bucket
 {
     public function description(): string
     {
@@ -41,7 +41,7 @@ final class b202007151800_move_to_tuleap_ssh_key_management extends ForgeUpgrade
         $res = $this->db->dbh->exec($sql);
 
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('Could not enable SSH key management by Tuleap');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('Could not enable SSH key management by Tuleap');
         }
     }
 }

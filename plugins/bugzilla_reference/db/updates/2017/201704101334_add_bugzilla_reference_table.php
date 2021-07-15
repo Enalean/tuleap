@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201704101334_add_bugzilla_reference_table extends ForgeUpgrade_Bucket
+class b201704101334_add_bugzilla_reference_table extends \Tuleap\ForgeUpgrade\Bucket
 {
 
     public function description()

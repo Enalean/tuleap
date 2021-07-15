@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201207271519_add_ldap_ugroup_synchro_policy_and_bind_option_columns extends ForgeUpgrade_Bucket
+class b201207271519_add_ldap_ugroup_synchro_policy_and_bind_option_columns extends \Tuleap\ForgeUpgrade\Bucket
 {
 
     /**
@@ -53,13 +53,13 @@ EOT;
         $sql = "ALTER TABLE plugin_ldap_ugroup ADD COLUMN synchro_policy VARCHAR(255) NOT NULL default 'never' AFTER ldap_group_dn";
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while adding the column synchro_policy to the table plugin_ldap_ugroup');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occured while adding the column synchro_policy to the table plugin_ldap_ugroup');
         }
 
         $sql = "ALTER TABLE plugin_ldap_ugroup ADD COLUMN bind_option varchar(255) NOT NULL default 'bind' AFTER synchro_policy";
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while adding the column bind_option  to the table plugin_ldap_ugroup');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occured while adding the column bind_option  to the table plugin_ldap_ugroup');
         }
     }
 
@@ -71,10 +71,10 @@ EOT;
     public function postUp()
     {
         if (! $this->db->columnNameExists('plugin_ldap_ugroup', 'synchro_policy')) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('The column synchro_policy in table plugin_ldap_ugroup still not created');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('The column synchro_policy in table plugin_ldap_ugroup still not created');
         }
         if (! $this->db->columnNameExists('plugin_ldap_ugroup', 'bind_option')) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('The column bind_option in table plugin_ldap_ugroup still not created');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('The column bind_option in table plugin_ldap_ugroup still not created');
         }
     }
 }

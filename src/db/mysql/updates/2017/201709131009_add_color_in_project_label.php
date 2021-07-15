@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201709131009_add_color_in_project_label extends ForgeUpgrade_Bucket
+class b201709131009_add_color_in_project_label extends \Tuleap\ForgeUpgrade\Bucket
 {
     public function description()
     {
@@ -37,7 +37,7 @@ class b201709131009_add_color_in_project_label extends ForgeUpgrade_Bucket
                 ADD color VARCHAR(255) NOT NULL DEFAULT 'chrome-silver'";
 
         if ($this->db->dbh->exec($sql) === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete(
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException(
                 'An error occurred while updating project_label table'
             );
         }

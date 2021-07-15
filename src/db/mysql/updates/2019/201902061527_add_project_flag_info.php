@@ -36,7 +36,7 @@ class b201902061527_add_project_flag_info extends ForgeUpgrade_Bucket // phpcs:i
 
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occurred while modifying the trove_cat table.');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occurred while modifying the trove_cat table.');
         }
     }
 }

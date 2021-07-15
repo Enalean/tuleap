@@ -21,7 +21,7 @@
 declare(strict_types=1);
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
-final class b202105260845_move_program_increment_label_in_program_table extends ForgeUpgrade_Bucket
+final class b202105260845_move_program_increment_label_in_program_table extends \Tuleap\ForgeUpgrade\Bucket
 {
     public function description(): string
     {

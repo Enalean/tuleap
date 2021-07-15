@@ -21,7 +21,7 @@
 declare(strict_types=1);
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
-final class b202104301405_add_unique_in_plugin_gitlab_tag_info_table extends ForgeUpgrade_Bucket
+final class b202104301405_add_unique_in_plugin_gitlab_tag_info_table extends \Tuleap\ForgeUpgrade\Bucket
 {
     public function description(): string
     {
@@ -39,7 +39,7 @@ final class b202104301405_add_unique_in_plugin_gitlab_tag_info_table extends For
         $result = $this->db->dbh->exec($sql);
 
         if ($result === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('Could not alter plugin_gitlab_tag_info table');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('Could not alter plugin_gitlab_tag_info table');
         }
     }
 }

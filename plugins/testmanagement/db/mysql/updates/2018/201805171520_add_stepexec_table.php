@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201805171520_add_stepexec_table extends ForgeUpgrade_Bucket
+class b201805171520_add_stepexec_table extends \Tuleap\ForgeUpgrade\Bucket
 {
     public function description()
     {
@@ -42,7 +42,7 @@ class b201805171520_add_stepexec_table extends ForgeUpgrade_Bucket
 
         if ($result === false) {
             $error_message = implode(', ', $this->db->dbh->errorInfo());
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete($error_message);
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException($error_message);
         }
     }
 }

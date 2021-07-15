@@ -22,7 +22,6 @@
 namespace Tuleap\ForgeUpgrade;
 
 use Exception;
-use ForgeUpgrade_Bucket_Db;
 use PDO;
 use Psr\Log\LoggerInterface;
 use RecursiveDirectoryIterator;
@@ -39,7 +38,7 @@ final class ForgeUpgrade
 
     private ForgeUpgradeDb $db;
 
-    private ForgeUpgrade_Bucket_Db $bucketApi;
+    private \Tuleap\ForgeUpgrade\Bucket\BucketDb $bucketApi;
 
     private LoggerInterface $logger;
 
@@ -50,7 +49,7 @@ final class ForgeUpgrade
     public function __construct(PDO $pdo, LoggerInterface $logger)
     {
         $this->db        = new ForgeUpgradeDb($pdo);
-        $this->bucketApi = new ForgeUpgrade_Bucket_Db($pdo, $logger);
+        $this->bucketApi = new \Tuleap\ForgeUpgrade\Bucket\BucketDb($pdo, $logger);
         $this->logger    = $logger;
     }
 

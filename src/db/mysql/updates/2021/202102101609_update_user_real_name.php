@@ -21,7 +21,7 @@
 declare(strict_types=1);
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
-final class b202102101609_update_user_real_name extends ForgeUpgrade_Bucket
+final class b202102101609_update_user_real_name extends \Tuleap\ForgeUpgrade\Bucket
 {
     public function description(): string
     {
@@ -38,7 +38,7 @@ final class b202102101609_update_user_real_name extends ForgeUpgrade_Bucket
         $sql = "ALTER TABLE user CHANGE COLUMN realname realname text NOT NULL default ''";
         $res = $this->db->dbh->query($sql);
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while updating user.realname column: ' . implode(', ', $this->db->dbh->errorInfo()));
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occured while updating user.realname column: ' . implode(', ', $this->db->dbh->errorInfo()));
         }
     }
 }

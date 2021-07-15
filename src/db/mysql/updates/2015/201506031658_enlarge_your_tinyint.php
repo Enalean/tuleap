@@ -16,7 +16,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201506031658_enlarge_your_tinyint extends ForgeUpgrade_Bucket
+class b201506031658_enlarge_your_tinyint extends \Tuleap\ForgeUpgrade\Bucket
 {
 
     public function description()
@@ -35,7 +35,7 @@ class b201506031658_enlarge_your_tinyint extends ForgeUpgrade_Bucket
                 MODIFY svn_commit_to_tag_denied INT(1) NOT NULL DEFAULT 0";
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while enlarging svn_commit_to_tag_denied.');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occured while enlarging svn_commit_to_tag_denied.');
         }
     }
 }

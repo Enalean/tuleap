@@ -21,7 +21,7 @@
 declare(strict_types=1);
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
-class b202106301558_add_default_timescale extends ForgeUpgrade_Bucket
+class b202106301558_add_default_timescale extends \Tuleap\ForgeUpgrade\Bucket
 {
     public function description(): string
     {

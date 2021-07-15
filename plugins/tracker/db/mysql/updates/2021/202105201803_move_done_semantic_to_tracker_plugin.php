@@ -21,7 +21,7 @@
 declare(strict_types=1);
 
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
-class b202105201803_move_done_semantic_to_tracker_plugin extends ForgeUpgrade_Bucket
+class b202105201803_move_done_semantic_to_tracker_plugin extends \Tuleap\ForgeUpgrade\Bucket
 {
     public function description(): string
     {
@@ -54,7 +54,7 @@ class b202105201803_move_done_semantic_to_tracker_plugin extends ForgeUpgrade_Bu
             ';
 
             if ($this->db->dbh->exec($sql_insert) === false) {
-                throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete(
+                throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException(
                     'An error occurred while moving the done semantic data'
                 );
             }

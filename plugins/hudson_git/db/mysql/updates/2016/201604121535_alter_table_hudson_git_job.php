@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201604121535_alter_table_hudson_git_job extends ForgeUpgrade_Bucket
+class b201604121535_alter_table_hudson_git_job extends \Tuleap\ForgeUpgrade\Bucket
 {
 
     public function description()
@@ -38,7 +38,7 @@ class b201604121535_alter_table_hudson_git_job extends ForgeUpgrade_Bucket
         $res = $this->db->dbh->exec($sql);
 
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while updating the table plugin_hudson_git_job');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occured while updating the table plugin_hudson_git_job');
         }
     }
 }

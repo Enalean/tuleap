@@ -19,7 +19,7 @@
  *
  */
 
-class b201709181057_add_frs_uploaded_links_table extends ForgeUpgrade_Bucket
+class b201709181057_add_frs_uploaded_links_table extends \Tuleap\ForgeUpgrade\Bucket
 {
     public function description()
     {
@@ -49,7 +49,7 @@ class b201709181057_add_frs_uploaded_links_table extends ForgeUpgrade_Bucket
     public function postUp()
     {
         if (! $this->db->tableNameExists('frs_uploaded_links')) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('project_label table is missing');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('project_label table is missing');
         }
     }
 }

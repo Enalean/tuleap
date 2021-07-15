@@ -36,14 +36,14 @@ class b201805281435_add_description_format extends ForgeUpgrade_Bucket // @codin
                 ADD COLUMN description_format VARCHAR(10) NOT NULL DEFAULT 'text'";
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while adding description_format column in table columns: ' . implode(', ', $this->db->dbh->errorInfo()));
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occured while adding description_format column in table columns: ' . implode(', ', $this->db->dbh->errorInfo()));
         }
     }
 
     public function postUp()
     {
         if (! $this->db->columnNameExists('plugin_testmanagement_changeset_value_stepdef', 'description_format')) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while adding issue description_format in table columns');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occured while adding issue description_format in table columns');
         }
     }
 }

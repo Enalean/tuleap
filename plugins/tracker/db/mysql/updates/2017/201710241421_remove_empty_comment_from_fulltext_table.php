@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201710241421_remove_empty_comment_from_fulltext_table extends ForgeUpgrade_Bucket
+class b201710241421_remove_empty_comment_from_fulltext_table extends \Tuleap\ForgeUpgrade\Bucket
 {
     public function description()
     {

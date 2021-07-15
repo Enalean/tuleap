@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201706091011_migrate_old_dashboard extends ForgeUpgrade_Bucket
+class b201706091011_migrate_old_dashboard extends \Tuleap\ForgeUpgrade\Bucket
 {
     public const DASHBOARD_NAME         = 'Dashboard';
     public const OLD_USER_OWNER_TYPE    = 'u';
@@ -277,6 +277,6 @@ class b201706091011_migrate_old_dashboard extends ForgeUpgrade_Bucket
     private function rollBackOnError($message)
     {
         $this->db->dbh->rollBack();
-        throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete($message);
+        throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException($message);
     }
 }

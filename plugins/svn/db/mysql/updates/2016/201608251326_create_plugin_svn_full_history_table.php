@@ -16,7 +16,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201608251326_create_plugin_svn_full_history_table extends ForgeUpgrade_Bucket
+class b201608251326_create_plugin_svn_full_history_table extends \Tuleap\ForgeUpgrade\Bucket
 {
 
     public function description()
@@ -43,7 +43,7 @@ class b201608251326_create_plugin_svn_full_history_table extends ForgeUpgrade_Bu
 
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occurred while creating the plugin_svn_full_history table for SVN plugin.');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occurred while creating the plugin_svn_full_history table for SVN plugin.');
         }
     }
 }

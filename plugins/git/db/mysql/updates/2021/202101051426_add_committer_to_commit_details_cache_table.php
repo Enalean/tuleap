@@ -21,7 +21,7 @@
 declare(strict_types=1);
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
-final class b202101051426_add_committer_to_commit_details_cache_table extends ForgeUpgrade_Bucket
+final class b202101051426_add_committer_to_commit_details_cache_table extends \Tuleap\ForgeUpgrade\Bucket
 {
     public function description(): string
     {
@@ -36,7 +36,7 @@ final class b202101051426_add_committer_to_commit_details_cache_table extends Fo
     public function up(): void
     {
         if ($this->db->dbh->exec("TRUNCATE TABLE plugin_git_commit_details_cache") === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occurred while emptying plugin_git_commit_details_cache');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occurred while emptying plugin_git_commit_details_cache');
         }
 
         $sql = "ALTER TABLE plugin_git_commit_details_cache
@@ -45,7 +45,7 @@ final class b202101051426_add_committer_to_commit_details_cache_table extends Fo
                 ADD COLUMN committer_epoch INT(11) NOT NULL";
 
         if ($this->db->dbh->exec($sql) === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occurred while adding committer info to the table plugin_git_commit_details_cache');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occurred while adding committer info to the table plugin_git_commit_details_cache');
         }
     }
 }

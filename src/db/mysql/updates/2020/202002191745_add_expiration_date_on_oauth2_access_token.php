@@ -21,7 +21,7 @@
 declare(strict_types=1);
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
-final class b202002191745_add_expiration_date_on_oauth2_access_token extends ForgeUpgrade_Bucket
+final class b202002191745_add_expiration_date_on_oauth2_access_token extends \Tuleap\ForgeUpgrade\Bucket
 {
     public function description(): string
     {
@@ -38,14 +38,14 @@ final class b202002191745_add_expiration_date_on_oauth2_access_token extends For
         $sql = 'DELETE oauth2_access_token.*, oauth2_access_token_scope.* FROM oauth2_access_token, oauth2_access_token_scope';
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('Unable to clear the oauth2_access_token and oauth2_access_token_scope tables');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('Unable to clear the oauth2_access_token and oauth2_access_token_scope tables');
         }
 
         if (! $this->db->columnNameExists('oauth2_access_token', 'expiration_date')) {
             $sql = 'ALTER TABLE oauth2_access_token ADD COLUMN expiration_date INT(11) UNSIGNED NOT NULL, ADD INDEX idx_expiration_date(expiration_date)';
             $res = $this->db->dbh->exec($sql);
             if ($res === false) {
-                throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('Unable to add expiration_date on the oauth2_access_token table');
+                throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('Unable to add expiration_date on the oauth2_access_token table');
             }
         }
 
@@ -53,7 +53,7 @@ final class b202002191745_add_expiration_date_on_oauth2_access_token extends For
             $sql = 'ALTER TABLE oauth2_access_token ADD INDEX idx_expiration_date(expiration_date)';
             $res = $this->db->dbh->exec($sql);
             if ($res === false) {
-                throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('Unable to add an index for expiration_date on the oauth2_access_token table');
+                throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('Unable to add an index for expiration_date on the oauth2_access_token table');
             }
         }
     }

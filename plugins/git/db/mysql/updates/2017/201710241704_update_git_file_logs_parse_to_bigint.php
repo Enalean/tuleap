@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201710241704_update_git_file_logs_parse_to_bigint extends ForgeUpgrade_Bucket
+class b201710241704_update_git_file_logs_parse_to_bigint extends \Tuleap\ForgeUpgrade\Bucket
 {
     public function description()
     {
@@ -37,7 +37,7 @@ class b201710241704_update_git_file_logs_parse_to_bigint extends ForgeUpgrade_Bu
 
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occurred while altering the plugin_git_file_log_parse table.');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occurred while altering the plugin_git_file_log_parse table.');
         }
     }
 }

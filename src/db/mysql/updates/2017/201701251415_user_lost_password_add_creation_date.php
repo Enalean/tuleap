@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201701251415_user_lost_password_add_creation_date extends ForgeUpgrade_Bucket
+class b201701251415_user_lost_password_add_creation_date extends \Tuleap\ForgeUpgrade\Bucket
 {
     public function description()
     {
@@ -36,7 +36,7 @@ class b201701251415_user_lost_password_add_creation_date extends ForgeUpgrade_Bu
 
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete(
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException(
                 'An error occurred while adding the column creation_date to the user_lost_password table.'
             );
         }

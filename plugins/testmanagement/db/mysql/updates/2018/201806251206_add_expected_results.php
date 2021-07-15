@@ -41,12 +41,12 @@ class b201806251206_add_expected_results extends ForgeUpgrade_Bucket // @codingS
     public function postUp()
     {
         if (! $this->db->columnNameExists('plugin_testmanagement_changeset_value_stepdef', 'expected_results')) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete(
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException(
                 'An error occured while adding issue expected_results in table columns'
             );
         }
         if (! $this->db->columnNameExists('plugin_testmanagement_changeset_value_stepdef', 'expected_results_format')) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete(
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException(
                 'An error occured while adding issue expected_results_format in table columns'
             );
         }

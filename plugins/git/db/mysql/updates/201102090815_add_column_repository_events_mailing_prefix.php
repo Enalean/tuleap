@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201102090815_add_column_repository_events_mailing_prefix extends ForgeUpgrade_Bucket
+class b201102090815_add_column_repository_events_mailing_prefix extends \Tuleap\ForgeUpgrade\Bucket
 {
 
     public function description()
@@ -39,14 +39,14 @@ EOT;
                " ADD `repository_events_mailing_prefix` varchar(64) DEFAULT '[SCM]'";
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while adding the column repository_events_mailing_prefix to the table plugin_git');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occured while adding the column repository_events_mailing_prefix to the table plugin_git');
         }
     }
 
     public function postUp()
     {
         if (! $this->db->columnNameExists('plugin_git', 'repository_events_mailing_prefix')) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('Column repository_events_mailing_prefix in table plugin_git is missing');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('Column repository_events_mailing_prefix in table plugin_git is missing');
         }
     }
 }

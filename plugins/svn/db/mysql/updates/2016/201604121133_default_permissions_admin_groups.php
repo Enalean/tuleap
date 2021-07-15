@@ -16,7 +16,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201604121133_default_permissions_admin_groups extends ForgeUpgrade_Bucket
+class b201604121133_default_permissions_admin_groups extends \Tuleap\ForgeUpgrade\Bucket
 {
 
     public function description()
@@ -36,7 +36,7 @@ class b201604121133_default_permissions_admin_groups extends ForgeUpgrade_Bucket
 
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occurred while adding default permissions for admin groups in svn plugin.');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occurred while adding default permissions for admin groups in svn plugin.');
         }
     }
 }

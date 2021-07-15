@@ -16,7 +16,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201305161743_remove_unique_from_svn_checkins extends ForgeUpgrade_Bucket
+class b201305161743_remove_unique_from_svn_checkins extends \Tuleap\ForgeUpgrade\Bucket
 {
     public function description()
     {
@@ -36,7 +36,7 @@ EOT;
         if ($this->db->tableNameExists('svn_checkins')) {
             $res = $this->db->dbh->exec($sql);
             if ($res === false) {
-                throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while removing key uniq_checkins_idx from table svn_checkins');
+                throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occured while removing key uniq_checkins_idx from table svn_checkins');
             }
         }
 
@@ -44,7 +44,7 @@ EOT;
         if ($this->db->tableNameExists('svn_checkins')) {
             $res = $this->db->dbh->exec($sql2);
             if ($res === false) {
-                throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while adding non-unique key uniq_checkins_idx to table svn_checkins');
+                throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occured while adding non-unique key uniq_checkins_idx to table svn_checkins');
             }
         }
     }

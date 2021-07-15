@@ -42,7 +42,7 @@ class b201806251409_create_tracker_webhook_url_table extends ForgeUpgrade_Bucket
         $result = $this->db->createTable('plugin_tracker_webhook_url', $sql);
 
         if ($result === false || ! $this->db->tableNameExists('plugin_tracker_webhook_url')) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('Creation of table plugin_tracker_webhook_url failed');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('Creation of table plugin_tracker_webhook_url failed');
         }
     }
 }

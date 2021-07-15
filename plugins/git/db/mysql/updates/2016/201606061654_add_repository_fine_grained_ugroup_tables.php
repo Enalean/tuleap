@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201606061654_add_repository_fine_grained_ugroup_tables extends ForgeUpgrade_Bucket
+class b201606061654_add_repository_fine_grained_ugroup_tables extends \Tuleap\ForgeUpgrade\Bucket
 {
 
     public function description()
@@ -58,7 +58,7 @@ EOT;
             ! $this->db->tableNameExists('plugin_git_repository_fine_grained_permissions_writers') ||
             ! $this->db->tableNameExists('plugin_git_repository_fine_grained_permissions_rewinders')
         ) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete(
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException(
                 'plugin_git_repository_fine_grained_permissions_writers' .
                 ' or plugin_git_repository_fine_grained_permissions_rewinders table is missing'
             );

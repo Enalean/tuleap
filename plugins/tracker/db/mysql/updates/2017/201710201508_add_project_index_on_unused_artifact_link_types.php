@@ -19,7 +19,7 @@
  */
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
-class b201710201508_add_project_index_on_unused_artifact_link_types extends ForgeUpgrade_Bucket
+class b201710201508_add_project_index_on_unused_artifact_link_types extends \Tuleap\ForgeUpgrade\Bucket
 {
     public function description()
     {

@@ -44,12 +44,12 @@ class b20181221_share_docman_item_id_between_tables extends ForgeUpgrade_Bucket 
 
         $res = $this->db->dbh->exec('INSERT INTO plugin_docman_item_id (id) SELECT item_id FROM plugin_docman_item');
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occurred while copying item ID to the ID table');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occurred while copying item ID to the ID table');
         }
 
         $res = $this->db->dbh->exec('ALTER TABLE plugin_docman_item CHANGE item_id item_id INT(11) UNSIGNED NOT NULL');
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occurred while removing the AUTOINCREMENT attribute from plugin_docman_item');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occurred while removing the AUTOINCREMENT attribute from plugin_docman_item');
         }
 
         $sql = 'CREATE TABLE plugin_docman_new_document_upload (

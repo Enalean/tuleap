@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201011230835_add_column_format_to_artifact_history extends ForgeUpgrade_Bucket
+class b201011230835_add_column_format_to_artifact_history extends \Tuleap\ForgeUpgrade\Bucket
 {
 
     public function description()
@@ -40,14 +40,14 @@ EOT;
                ' ADD format tinyint NOT NULL default 0';
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while adding the column format to the table artifact_history');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occured while adding the column format to the table artifact_history');
         }
     }
 
     public function postUp()
     {
         if (! $this->db->columnNameExists('artifact_history', 'format')) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('Column format in table artifact_history is missing');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('Column format in table artifact_history is missing');
         }
     }
 }

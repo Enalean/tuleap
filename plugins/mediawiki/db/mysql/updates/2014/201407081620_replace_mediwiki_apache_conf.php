@@ -16,7 +16,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201407081620_replace_mediwiki_apache_conf extends ForgeUpgrade_Bucket
+class b201407081620_replace_mediwiki_apache_conf extends \Tuleap\ForgeUpgrade\Bucket
 {
 
     /**

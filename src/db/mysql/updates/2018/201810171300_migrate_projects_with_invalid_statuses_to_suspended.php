@@ -37,7 +37,7 @@ class b201810171300_migrate_projects_with_invalid_statuses_to_suspended extends 
         $res = $this->db->dbh->exec($sql);
 
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('Unable to migrate incomplete projects to suspended.');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('Unable to migrate incomplete projects to suspended.');
         }
     }
 }

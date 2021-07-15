@@ -21,7 +21,7 @@
 declare(strict_types=1);
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
-class b202002061639_clean_project_name_and_description extends ForgeUpgrade_Bucket
+class b202002061639_clean_project_name_and_description extends \Tuleap\ForgeUpgrade\Bucket
 {
     public function description(): string
     {
@@ -68,7 +68,7 @@ class b202002061639_clean_project_name_and_description extends ForgeUpgrade_Buck
 
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('Unable to clean projects name and description');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('Unable to clean projects name and description');
         }
     }
 }

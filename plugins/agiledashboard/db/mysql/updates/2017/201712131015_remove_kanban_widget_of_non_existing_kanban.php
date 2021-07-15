@@ -39,7 +39,7 @@ class b201712131015_remove_kanban_widget_of_non_existing_kanban extends ForgeUpg
 
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete(
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException(
                 'An error occurred while cleaning plugin_agiledashboard_kanban_widget table of non existing kanban'
             );
         }

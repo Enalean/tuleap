@@ -16,7 +16,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201410081156_add_burndown_table extends ForgeUpgrade_Bucket
+class b201410081156_add_burndown_table extends \Tuleap\ForgeUpgrade\Bucket
 {
 
     public function description()

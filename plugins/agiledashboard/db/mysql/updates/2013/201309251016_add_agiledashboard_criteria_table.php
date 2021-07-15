@@ -21,7 +21,7 @@
 * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
 */
 
-class b201309251016_add_agiledashboard_criteria_table extends ForgeUpgrade_Bucket
+class b201309251016_add_agiledashboard_criteria_table extends \Tuleap\ForgeUpgrade\Bucket
 {
 
     public function description()
@@ -48,7 +48,7 @@ EOT;
     public function postUp()
     {
         if (! $this->db->tableNameExists('plugin_agiledashboard_criteria')) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('plugin_agiledashboard_criteria table is missing');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('plugin_agiledashboard_criteria table is missing');
         }
     }
 }

@@ -16,7 +16,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201412041555_add_tracker_field_computed_cache_table extends ForgeUpgrade_Bucket
+class b201412041555_add_tracker_field_computed_cache_table extends \Tuleap\ForgeUpgrade\Bucket
 {
 
     public function description()

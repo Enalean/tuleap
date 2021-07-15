@@ -22,7 +22,7 @@
 * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
 */
 
-class b201504081124_create_plugin_statistics_configuration_table extends ForgeUpgrade_Bucket
+class b201504081124_create_plugin_statistics_configuration_table extends \Tuleap\ForgeUpgrade\Bucket
 {
 
     public function description()
@@ -49,14 +49,14 @@ EOT;
 
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while adding a value in table plugin_statistics_configuration: ' . implode(', ', $this->db->dbh->errorInfo()));
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occured while adding a value in table plugin_statistics_configuration: ' . implode(', ', $this->db->dbh->errorInfo()));
         }
     }
 
     public function postUp()
     {
         if (! $this->db->tableNameExists('plugin_statistics_configuration')) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('plugin_statistics_configuration table is missing');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('plugin_statistics_configuration table is missing');
         }
     }
 }

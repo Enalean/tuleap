@@ -19,7 +19,7 @@
  */
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
-class b201703301111_create_table_plugin_git_log_read extends ForgeUpgrade_Bucket
+class b201703301111_create_table_plugin_git_log_read extends \Tuleap\ForgeUpgrade\Bucket
 {
 
     public function description()
@@ -50,7 +50,7 @@ class b201703301111_create_table_plugin_git_log_read extends ForgeUpgrade_Bucket
     {
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete($message . implode(', ', $this->db->dbh->errorInfo()));
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException($message . implode(', ', $this->db->dbh->errorInfo()));
         }
     }
 }

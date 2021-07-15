@@ -21,7 +21,7 @@
 
 declare(strict_types=1);
 
-class b202004201424_create_changeset_from_xml extends ForgeUpgrade_Bucket //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+class b202004201424_create_changeset_from_xml extends \Tuleap\ForgeUpgrade\Bucket //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
     public function description(): string
     {

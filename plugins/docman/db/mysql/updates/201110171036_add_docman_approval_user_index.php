@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201110171036_add_docman_approval_user_index extends ForgeUpgrade_Bucket
+class b201110171036_add_docman_approval_user_index extends \Tuleap\ForgeUpgrade\Bucket
 {
 
     public function description()

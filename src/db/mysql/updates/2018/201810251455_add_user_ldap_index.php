@@ -39,7 +39,7 @@ class b201810251455_add_user_ldap_index extends ForgeUpgrade_Bucket // phpcs:ign
             $res = $this->db->dbh->exec($sql);
 
             if ($res === false) {
-                throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('Unable to add ldap_id index on table user');
+                throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('Unable to add ldap_id index on table user');
             }
         }
     }
@@ -47,7 +47,7 @@ class b201810251455_add_user_ldap_index extends ForgeUpgrade_Bucket // phpcs:ign
     public function postUp()
     {
         if (! $this->indexNameExists('user', 'idx_ldap_id')) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete(
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException(
                 'idx_ldap_id on user is missing'
             );
         }

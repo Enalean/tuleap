@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201603251450_add_index_on_nature_column extends ForgeUpgrade_Bucket
+class b201603251450_add_index_on_nature_column extends \Tuleap\ForgeUpgrade\Bucket
 {
 
     public function description()
@@ -41,7 +41,7 @@ class b201603251450_add_index_on_nature_column extends ForgeUpgrade_Bucket
             $info = $this->db->dbh->errorInfo();
             $msg  = 'An error occured adding index idx_nature to tracker_changeset_value_artifactlink: ' . $info[2] . ' (' . $info[1] . ' - ' . $info[0] . ')';
             $this->log->error($msg);
-            throw new ForgeUpgrade_Bucket_Db_Exception($msg);
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketDbException($msg);
         }
     }
 }

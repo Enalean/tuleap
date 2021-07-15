@@ -19,7 +19,7 @@
  */
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
-class b201704051759_add_index_on_tracker_changeset_value_artifactlink extends ForgeUpgrade_Bucket
+class b201704051759_add_index_on_tracker_changeset_value_artifactlink extends \Tuleap\ForgeUpgrade\Bucket
 {
     public function description()
     {
@@ -63,7 +63,7 @@ class b201704051759_add_index_on_tracker_changeset_value_artifactlink extends Fo
                 $info = $this->db->dbh->errorInfo();
                 $msg  = 'An error occured adding index to ' . $table_name . ': ' . $info[2] . ' (' . $info[1] . ' - ' . $info[0] . ')';
                 $this->log->error($msg);
-                throw new ForgeUpgrade_Bucket_Db_Exception($msg);
+                throw new \Tuleap\ForgeUpgrade\Bucket\BucketDbException($msg);
             }
             $this->log->info($index . ' successfully added index');
         } else {

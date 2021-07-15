@@ -21,6 +21,8 @@
 
 /**
  * Shim to keep compat with legacy code without namespace
+ *
+ * @deprecated
  */
 class ForgeUpgrade_Bucket_Exception_UpgradeNotComplete extends Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 {

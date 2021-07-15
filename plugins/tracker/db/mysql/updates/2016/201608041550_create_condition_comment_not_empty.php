@@ -16,7 +16,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201608041550_create_condition_comment_not_empty extends ForgeUpgrade_Bucket
+class b201608041550_create_condition_comment_not_empty extends \Tuleap\ForgeUpgrade\Bucket
 {
 
     public function description()
@@ -37,14 +37,14 @@ class b201608041550_create_condition_comment_not_empty extends ForgeUpgrade_Buck
                 ) ENGINE=InnoDB";
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while creating tracker_workflow_transition_condition_comment_notempty: ' . implode(', ', $this->db->dbh->errorInfo()));
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occured while creating tracker_workflow_transition_condition_comment_notempty: ' . implode(', ', $this->db->dbh->errorInfo()));
         }
     }
 
     public function postUp()
     {
         if (! $this->db->tableNameExists('tracker_workflow_transition_condition_comment_notempty')) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('Table tracker_workflow_transition_condition_comment_notempty not created');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('Table tracker_workflow_transition_condition_comment_notempty not created');
         }
     }
 }

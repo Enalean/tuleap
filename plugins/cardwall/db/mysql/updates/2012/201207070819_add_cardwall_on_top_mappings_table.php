@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201207070819_add_cardwall_on_top_mappings_table extends ForgeUpgrade_Bucket
+class b201207070819_add_cardwall_on_top_mappings_table extends \Tuleap\ForgeUpgrade\Bucket
 {
 
     public function description()

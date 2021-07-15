@@ -21,7 +21,7 @@
 declare(strict_types=1);
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
-final class b202003291710_add_project_id_index_oauth2_server_app_table extends ForgeUpgrade_Bucket
+final class b202003291710_add_project_id_index_oauth2_server_app_table extends \Tuleap\ForgeUpgrade\Bucket
 {
     public function description(): string
     {

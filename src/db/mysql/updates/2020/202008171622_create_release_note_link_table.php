@@ -21,7 +21,7 @@
 declare(strict_types=1);
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
-final class b202008171622_create_release_note_link_table extends ForgeUpgrade_Bucket
+final class b202008171622_create_release_note_link_table extends \Tuleap\ForgeUpgrade\Bucket
 {
     public function description(): string
     {

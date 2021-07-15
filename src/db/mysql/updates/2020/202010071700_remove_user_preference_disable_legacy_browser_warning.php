@@ -21,7 +21,7 @@
 declare(strict_types=1);
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
-final class b202010071700_remove_user_preference_disable_legacy_browser_warning extends ForgeUpgrade_Bucket
+final class b202010071700_remove_user_preference_disable_legacy_browser_warning extends \Tuleap\ForgeUpgrade\Bucket
 {
     public function description(): string
     {
@@ -38,7 +38,7 @@ final class b202010071700_remove_user_preference_disable_legacy_browser_warning 
         $sql = 'DELETE FROM user_preferences WHERE preference_name = "disable_ie_warning"';
         $res = $this->db->dbh->query($sql);
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occurred while removing the user preference disable_ie_warning');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occurred while removing the user preference disable_ie_warning');
         }
     }
 }

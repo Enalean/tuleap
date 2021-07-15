@@ -21,7 +21,7 @@
 declare(strict_types=1);
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
-final class b201912301515_add_table_user_access_key_scope extends ForgeUpgrade_Bucket
+final class b201912301515_add_table_user_access_key_scope extends \Tuleap\ForgeUpgrade\Bucket
 {
     public function description(): string
     {
@@ -51,7 +51,7 @@ final class b201912301515_add_table_user_access_key_scope extends ForgeUpgrade_B
         $res = $this->db->dbh->exec($sql);
 
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('Unable to set scope rest:write on existing access keys');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('Unable to set scope rest:write on existing access keys');
         }
     }
 }

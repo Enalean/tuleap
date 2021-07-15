@@ -16,7 +16,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201408121036_add_artifact_unsubscribe_table extends ForgeUpgrade_Bucket
+class b201408121036_add_artifact_unsubscribe_table extends \Tuleap\ForgeUpgrade\Bucket
 {
 
     public function description()

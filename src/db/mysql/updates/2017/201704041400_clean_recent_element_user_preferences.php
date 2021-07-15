@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201704041400_clean_recent_element_user_preferences extends ForgeUpgrade_Bucket
+class b201704041400_clean_recent_element_user_preferences extends \Tuleap\ForgeUpgrade\Bucket
 {
     public function description()
     {
@@ -36,7 +36,7 @@ class b201704041400_clean_recent_element_user_preferences extends ForgeUpgrade_B
 
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete(
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException(
                 'An error occurred while the user_preferences table from the recent elements'
             );
         }

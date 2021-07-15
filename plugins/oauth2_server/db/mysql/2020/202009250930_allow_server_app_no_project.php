@@ -21,7 +21,7 @@
 declare(strict_types=1);
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
-final class b202009250930_allow_server_app_no_project extends ForgeUpgrade_Bucket
+final class b202009250930_allow_server_app_no_project extends \Tuleap\ForgeUpgrade\Bucket
 {
     public function description(): string
     {
@@ -39,7 +39,7 @@ final class b202009250930_allow_server_app_no_project extends ForgeUpgrade_Bucke
                 MODIFY COLUMN project_id INT(11)';
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('Unable to remove NOT NULL constraint on the project_id column of the plugin_oauth2_server_app table');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('Unable to remove NOT NULL constraint on the project_id column of the plugin_oauth2_server_app table');
         }
     }
 }

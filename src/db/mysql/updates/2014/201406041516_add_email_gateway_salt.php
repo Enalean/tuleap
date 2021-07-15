@@ -19,7 +19,7 @@
 /**
  * Replace version date column values by timestamp
  */
-class b201406041516_add_email_gateway_salt extends ForgeUpgrade_Bucket
+class b201406041516_add_email_gateway_salt extends \Tuleap\ForgeUpgrade\Bucket
 {
     public function description()
     {
@@ -48,7 +48,7 @@ class b201406041516_add_email_gateway_salt extends ForgeUpgrade_Bucket
         $res = $this->db->dbh->exec($sql);
 
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while creating table email_gateway_salt.');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occured while creating table email_gateway_salt.');
         }
     }
 
@@ -64,7 +64,7 @@ class b201406041516_add_email_gateway_salt extends ForgeUpgrade_Bucket
         $res = $this->db->dbh->exec($sql);
 
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while saving email_gateway_salt.');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occured while saving email_gateway_salt.');
         }
     }
 }

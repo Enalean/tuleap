@@ -61,6 +61,6 @@ class b201812111541_add_max_size_table extends ForgeUpgrade_Bucket // phpcs:igno
     private function rollBackOnError($message)
     {
         $this->db->dbh->rollBack();
-        throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete($message);
+        throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException($message);
     }
 }

@@ -48,7 +48,7 @@ class b202002131613_add_plugin_hudson_git_project_server_table extends ForgeUpgr
     public function postUp()
     {
         if (! $this->db->tableNameExists('plugin_hudson_git_project_server')) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete(
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException(
                 'the table plugin_hudson_git_project_server is missing'
             );
         }

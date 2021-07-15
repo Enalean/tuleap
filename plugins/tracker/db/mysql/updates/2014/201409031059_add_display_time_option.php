@@ -16,7 +16,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201409031059_add_display_time_option extends ForgeUpgrade_Bucket
+class b201409031059_add_display_time_option extends \Tuleap\ForgeUpgrade\Bucket
 {
 
     public function description()
@@ -34,7 +34,7 @@ class b201409031059_add_display_time_option extends ForgeUpgrade_Bucket
         $sql = "ALTER TABLE tracker_field_date ADD COLUMN display_time TINYINT DEFAULT 0";
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while adding column display_time to tracker_field_date: ' . implode(', ', $this->db->dbh->errorInfo()));
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occured while adding column display_time to tracker_field_date: ' . implode(', ', $this->db->dbh->errorInfo()));
         }
     }
 

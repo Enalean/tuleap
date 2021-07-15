@@ -16,7 +16,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201605161710_reset_folders_owner_and_group extends ForgeUpgrade_Bucket
+class b201605161710_reset_folders_owner_and_group extends \Tuleap\ForgeUpgrade\Bucket
 {
 
     public function description()

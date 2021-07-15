@@ -19,7 +19,7 @@
 /**
  *Add anonymous column in filemodule_monitor table.
  */
-class b201208241130_add_anonymous_in_filemodule_monitor extends ForgeUpgrade_Bucket
+class b201208241130_add_anonymous_in_filemodule_monitor extends \Tuleap\ForgeUpgrade\Bucket
 {
 
     /**
@@ -55,7 +55,7 @@ EOT;
         if ($this->db->tableNameExists('filemodule_monitor')) {
             $res = $this->db->dbh->exec($sql);
             if ($res === false) {
-                throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while adding column anonymous to table filemodule_monitor');
+                throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occured while adding column anonymous to table filemodule_monitor');
             }
         }
     }
@@ -68,7 +68,7 @@ EOT;
     public function postUp()
     {
         if (! $this->db->columnNameExists('filemodule_monitor', 'anonymous')) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('Column anonymous not created in filemodule_monitor');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('Column anonymous not created in filemodule_monitor');
         }
     }
 }

@@ -19,7 +19,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-class b201203081704_set_child_id_as_primary_key_in_tracker_hierarchy extends ForgeUpgrade_Bucket
+class b201203081704_set_child_id_as_primary_key_in_tracker_hierarchy extends \Tuleap\ForgeUpgrade\Bucket
 {
 
     public function description()
@@ -46,7 +46,7 @@ EOT;
             $error_detail  = implode(', ', $this->db->dbh->errorInfo());
             $error_message = 'An error occured while changing primary key to `child_id` on `tracker_hierarchy`: ' . $error_detail;
 
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete($error_message);
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException($error_message);
         }
     }
 }

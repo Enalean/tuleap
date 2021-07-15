@@ -16,7 +16,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201503061743_add_homepage_headline extends ForgeUpgrade_Bucket
+class b201503061743_add_homepage_headline extends \Tuleap\ForgeUpgrade\Bucket
 {
     public function description()
     {
@@ -42,7 +42,7 @@ class b201503061743_add_homepage_headline extends ForgeUpgrade_Bucket
         )";
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while adding homepage_headline table.');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occured while adding homepage_headline table.');
         }
     }
 
@@ -55,7 +55,7 @@ It enables you to plan, track, code and collaborate on software projects. '),
 Venez planifier, suivre, développer & collaborer sur vos projets logiciels.');";
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while populating homepage_headline table.');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occured while populating homepage_headline table.');
         }
     }
 }

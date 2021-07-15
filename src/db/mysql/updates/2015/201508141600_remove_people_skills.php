@@ -19,7 +19,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-class b201508141600_remove_people_skills extends ForgeUpgrade_Bucket
+class b201508141600_remove_people_skills extends \Tuleap\ForgeUpgrade\Bucket
 {
 
     public function description()
@@ -43,7 +43,7 @@ class b201508141600_remove_people_skills extends ForgeUpgrade_Bucket
         $sql = 'DROP TABLE people_skill, people_skill_inventory, people_skill_level, people_skill_year';
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occurred while deleting people skills tables.');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occurred while deleting people skills tables.');
         }
     }
 
@@ -52,7 +52,7 @@ class b201508141600_remove_people_skills extends ForgeUpgrade_Bucket
         $sql = 'ALTER TABLE user DROP COLUMN people_view_skills, DROP COLUMN people_resume';
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occurred while editing user table for removing people skills informations.');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occurred while editing user table for removing people skills informations.');
         }
     }
 }

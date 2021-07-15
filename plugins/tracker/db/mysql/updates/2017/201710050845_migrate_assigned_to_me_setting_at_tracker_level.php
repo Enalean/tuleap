@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201710050845_migrate_assigned_to_me_setting_at_tracker_level extends ForgeUpgrade_Bucket
+class b201710050845_migrate_assigned_to_me_setting_at_tracker_level extends \Tuleap\ForgeUpgrade\Bucket
 {
     public function description()
     {
@@ -56,7 +56,7 @@ class b201710050845_migrate_assigned_to_me_setting_at_tracker_level extends Forg
 
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete(
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException(
                 'An error occurred while migrating setting assigned to me to tracker level'
             );
         }

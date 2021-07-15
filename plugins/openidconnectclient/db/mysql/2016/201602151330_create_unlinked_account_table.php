@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201602151330_create_unlinked_account_table extends ForgeUpgrade_Bucket
+class b201602151330_create_unlinked_account_table extends \Tuleap\ForgeUpgrade\Bucket
 {
     public function description()
     {
@@ -41,7 +41,7 @@ class b201602151330_create_unlinked_account_table extends ForgeUpgrade_Bucket
 
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete(
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException(
                 'An error occurred while creating the plugin_openidconnectclient_unlinked_account table for OpenID Connect Client plugin'
             );
         }

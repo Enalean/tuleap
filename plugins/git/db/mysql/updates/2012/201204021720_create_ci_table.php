@@ -16,7 +16,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201204021720_create_ci_table extends ForgeUpgrade_Bucket
+class b201204021720_create_ci_table extends \Tuleap\ForgeUpgrade\Bucket
 {
 
     /**

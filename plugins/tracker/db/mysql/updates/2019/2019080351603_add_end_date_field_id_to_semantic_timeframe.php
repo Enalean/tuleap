@@ -35,7 +35,7 @@ class b2019080351603_add_end_date_field_id_to_semantic_timeframe extends ForgeUp
         $sql = 'ALTER TABLE tracker_semantic_timeframe ADD COLUMN end_date_field_id int(11) NULL';
 
         if ($this->db->dbh->exec($sql) === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occurred while adding the end_date_field_id column to the tracker_semantic_timeframe table');
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occurred while adding the end_date_field_id column to the tracker_semantic_timeframe table');
         }
     }
 }

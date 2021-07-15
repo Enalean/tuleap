@@ -66,6 +66,6 @@ class b201910151454_create_modal_new_layout_table extends ForgeUpgrade_Bucket //
     private function rollBackOnError($message): void
     {
         $this->db->dbh->rollBack();
-        throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete($message);
+        throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException($message);
     }
 }

@@ -20,7 +20,7 @@
 
 declare(strict_types=1);
 
-class b202012071055_enable_list_picker_in_tracker extends ForgeUpgrade_Bucket //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+class b202012071055_enable_list_picker_in_tracker extends \Tuleap\ForgeUpgrade\Bucket //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
     public function description(): string
     {
@@ -43,7 +43,7 @@ class b202012071055_enable_list_picker_in_tracker extends ForgeUpgrade_Bucket //
         $result = $this->db->dbh->exec($sql);
         if ($result === false) {
             $error_message = implode(', ', $this->db->dbh->errorInfo());
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete($error_message);
+            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException($error_message);
         }
     }
 }
