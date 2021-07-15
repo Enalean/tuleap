@@ -753,8 +753,8 @@ class Tracker_ArtifactDao extends DataAccessObject
                     LEFT JOIN (
                         tracker_artifact as submile
                         INNER JOIN tracker_field AS f2 ON (f2.tracker_id = submile.tracker_id AND f2.formElement_type = 'art_link' AND f2.use_it = 1)
-                        INNER JOIN tracker_changeset_value AS cv2 ON (cv2.changeset_id = submile.last_changeset_id AND cv2.field_id = f2.id)
-                        INNER JOIN tracker_changeset_value_artifactlink AS artlink2 ON (artlink2.changeset_value_id = cv2.id)
+                        INNER JOIN tracker_changeset_value AS excluded_cv ON (excluded_cv.changeset_id = submile.last_changeset_id AND excluded_cv.field_id = f2.id)
+                        INNER JOIN tracker_changeset_value_artifactlink AS artlink2 ON (artlink2.changeset_value_id = excluded_cv.id)
                     ) ON (linked_art.id = artlink2.artifact_id AND submile.id IN ($excluded_linked_ids))";
 
             $submile_null = "AND submile.id IS NULL";
@@ -824,8 +824,8 @@ class Tracker_ArtifactDao extends DataAccessObject
                     LEFT JOIN (
                         tracker_artifact as submile
                         INNER JOIN tracker_field AS f2 ON (f2.tracker_id = submile.tracker_id AND f2.formElement_type = 'art_link' AND f2.use_it = 1)
-                        INNER JOIN tracker_changeset_value AS cv2 ON (cv2.changeset_id = submile.last_changeset_id AND cv2.field_id = f2.id)
-                        INNER JOIN tracker_changeset_value_artifactlink AS artlink2 ON (artlink2.changeset_value_id = cv2.id)
+                        INNER JOIN tracker_changeset_value AS excluded_cv ON (excluded_cv.changeset_id = submile.last_changeset_id AND excluded_cv.field_id = f2.id)
+                        INNER JOIN tracker_changeset_value_artifactlink AS artlink2 ON (artlink2.changeset_value_id = excluded_cv.id)
                     ) ON (linked_art.id = artlink2.artifact_id $exclude)
                         -- only those with open status
                     INNER JOIN tracker AS T ON (linked_art.tracker_id = T.id)
@@ -865,8 +865,8 @@ class Tracker_ArtifactDao extends DataAccessObject
             $exclude = 'LEFT JOIN (
                         tracker_artifact as submile
                         INNER JOIN tracker_field AS f2 ON (f2.tracker_id = submile.tracker_id AND f2.formElement_type = \'art_link\' AND f2.use_it = 1)
-                        INNER JOIN tracker_changeset_value AS cv2 ON (cv2.changeset_id = submile.last_changeset_id AND cv2.field_id = f2.id)
-                        INNER JOIN tracker_changeset_value_artifactlink AS artlink2 ON (artlink2.changeset_value_id = cv2.id)
+                        INNER JOIN tracker_changeset_value AS excluded_cv ON (excluded_cv.changeset_id = submile.last_changeset_id AND excluded_cv.field_id = f2.id)
+                        INNER JOIN tracker_changeset_value_artifactlink AS artlink2 ON (artlink2.changeset_value_id = excluded_cv.id)
                     ) ON (linked_art.id = artlink2.artifact_id AND submile.id IN (' . $this->da->escapeIntImplode($excluded_linked_ids) . '))';
 
             $exclude_where = "AND submile.id IS NULL";
@@ -1043,8 +1043,8 @@ class Tracker_ArtifactDao extends DataAccessObject
                     LEFT JOIN (
                         tracker_artifact as submile
                         INNER JOIN tracker_field AS f2 ON (f2.tracker_id = submile.tracker_id AND f2.formElement_type = 'art_link' AND f2.use_it = 1)
-                        INNER JOIN tracker_changeset_value AS cv2 ON (cv2.changeset_id = submile.last_changeset_id AND cv2.field_id = f2.id)
-                        INNER JOIN tracker_changeset_value_artifactlink AS artlink2 ON (artlink2.changeset_value_id = cv2.id)
+                        INNER JOIN tracker_changeset_value AS excluded_cv ON (excluded_cv.changeset_id = submile.last_changeset_id AND excluded_cv.field_id = f2.id)
+                        INNER JOIN tracker_changeset_value_artifactlink AS artlink2 ON (artlink2.changeset_value_id = excluded_cv.id)
                     ) ON (linked_art.id = artlink2.artifact_id AND submile.id IN ($excluded_linked_ids))";
 
             $submile_null = "AND submile.id IS NULL";
@@ -1179,8 +1179,8 @@ class Tracker_ArtifactDao extends DataAccessObject
                     LEFT JOIN (
                         tracker_artifact as submile
                         INNER JOIN tracker_field AS f2 ON (f2.tracker_id = submile.tracker_id AND f2.formElement_type = 'art_link' AND f2.use_it = 1)
-                        INNER JOIN tracker_changeset_value AS cv2 ON (cv2.changeset_id = submile.last_changeset_id AND cv2.field_id = f2.id)
-                        INNER JOIN tracker_changeset_value_artifactlink AS artlink2 ON (artlink2.changeset_value_id = cv2.id)
+                        INNER JOIN tracker_changeset_value AS excluded_cv ON (excluded_cv.changeset_id = submile.last_changeset_id AND excluded_cv.field_id = f2.id)
+                        INNER JOIN tracker_changeset_value_artifactlink AS artlink2 ON (artlink2.changeset_value_id = excluded_cv.id)
                     ) ON (linked_art.id = artlink2.artifact_id $exclude)
                         -- only those with open status
                     INNER JOIN tracker AS T ON (linked_art.tracker_id = T.id)
