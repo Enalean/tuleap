@@ -119,6 +119,29 @@ final class DisplayProgramBacklogControllerTest extends \Tuleap\Test\PHPUnit\Tes
         $this->getController(VerifyIsTeamStub::withNotValidTeam())->process($request, LayoutBuilder::build(), $variables);
     }
 
+    public function testItDisplayProgramBacklogWhenProgramIncrementHasNoTracker(): void
+    {
+        ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::REGULAR);
+
+        $this->mockProject();
+        $this->project_flags_builder->method('buildProjectFlags')->willReturn([]);
+
+        $this->program_increment_tracker_retriever = RetrieveVisibleProgramIncrementTrackerStub::withNoProgramIncrementTracker();
+
+        $user = $this->createMock(\PFUser::class);
+        $user->method('getPreference')->willReturn(false);
+        $user->method('isAdmin')->willReturn(true);
+
+        $request   = HTTPRequestBuilder::get()->withUser($user)->build();
+        $variables = ['project_name' => 'test_project'];
+
+        $this->template_renderer->expects(self::once())
+            ->method('renderToPage')
+            ->with('program-backlog', self::isInstanceOf(ProgramBacklogPresenter::class));
+
+        $this->getController(VerifyIsTeamStub::withNotValidTeam())->process($request, LayoutBuilder::build(), $variables);
+    }
+
     public function testItDisplayProgramBacklog(): void
     {
         ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::REGULAR);
