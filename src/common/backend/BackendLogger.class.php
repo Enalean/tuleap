@@ -83,6 +83,9 @@ class BackendLogger extends \Psr\Log\AbstractLogger implements LoggerInterface
         return str_replace(['.log', '_syslog'], '', $name);
     }
 
+    /**
+     * @psalm-return "debug"|"info"|"warning"|"error"
+     */
     private static function getPSR3LoggerLevel(): string
     {
         $level = ForgeConfig::get('sys_logger_level');
