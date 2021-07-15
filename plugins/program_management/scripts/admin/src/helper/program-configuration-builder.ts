@@ -33,6 +33,14 @@ export function buildProgramConfiguration(doc: Document, program_id: number): Pr
         ),
         permissions: { can_prioritize_features: extractOptionsFromPermissions(doc) },
         plannable_tracker_ids: extractOptionsFromPlannableTrackers(doc),
+        program_increment_label: extractInputLabel(
+            doc,
+            "admin-configuration-program-increment-label-section"
+        ),
+        program_increment_sub_label: extractInputLabel(
+            doc,
+            "admin-configuration-program-increment-sub-label-section"
+        ),
     };
 }
 
@@ -61,4 +69,14 @@ function extractOptionsFromPermissions(doc: Document): string[] {
     }
 
     return value;
+}
+
+function extractInputLabel(doc: Document, element_id: string): string {
+    const program_increment_label = doc.getElementById(element_id);
+
+    if (!program_increment_label || !(program_increment_label instanceof HTMLInputElement)) {
+        throw new Error("No " + element_id + " input");
+    }
+
+    return program_increment_label.value;
 }

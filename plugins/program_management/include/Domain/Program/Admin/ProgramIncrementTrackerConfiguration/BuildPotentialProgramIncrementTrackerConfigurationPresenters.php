@@ -23,11 +23,12 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Domain\Program\Admin\ProgramIncrementTrackerConfiguration;
 
 use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramSelectOptionConfigurationPresenter;
+use Tuleap\ProgramManagement\Domain\ProgramTracker;
 
 interface BuildPotentialProgramIncrementTrackerConfigurationPresenters
 {
     /**
      * @return ProgramSelectOptionConfigurationPresenter[]
      */
-    public function buildPotentialProgramIncrementTrackerPresenters(int $program_id): array;
+    public function buildPotentialProgramIncrementTrackerPresenters(int $program_id, ?ProgramTracker $program_increment_tracker): array;
 }

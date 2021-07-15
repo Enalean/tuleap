@@ -41,10 +41,17 @@ use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramIncrementTrackerConfigu
 use Tuleap\ProgramManagement\Domain\Program\Admin\Team\TeamsPresenterBuilder;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\IterationTracker\RetrieveVisibleIterationTracker;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Team\TeamProjectsCollection;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracker\ProgramIncrementLabels;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracker\RetrieveProgramIncrementLabels;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracker\RetrieveVisibleProgramIncrementTracker;
 use Tuleap\ProgramManagement\Domain\Program\Plan\BuildProgram;
 use Tuleap\ProgramManagement\Domain\Program\Plan\ProgramAccessException;
+use Tuleap\ProgramManagement\Domain\Program\Plan\ProgramHasNoProgramIncrementTrackerException;
+use Tuleap\ProgramManagement\Domain\Program\Plan\ProjectIsNotAProgramException;
+use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
+use Tuleap\ProgramManagement\Domain\Program\ProgramTrackerNotFoundException;
 use Tuleap\ProgramManagement\Domain\Program\SearchTeamsOfProgram;
+use Tuleap\ProgramManagement\Domain\ProgramTracker;
 use Tuleap\ProgramManagement\Domain\Team\VerifyIsTeam;
 use Tuleap\ProgramManagement\Domain\Workspace\VerifyProjectPermission;
 use Tuleap\Request\DispatchableWithBurningParrot;
@@ -70,6 +77,7 @@ final class DisplayAdminProgramManagementController implements DispatchableWithR
     private BuildPotentialPlannableTrackersConfigurationPresenters $plannable_tracker_presenters_builder;
     private BuildProjectUGroupCanPrioritizeItemsPresenters $ugroups_can_prioritize_builder;
     private VerifyProjectPermission $permission_verifier;
+    private RetrieveProgramIncrementLabels $program_increment_labels_retriever;
 
     public function __construct(
         \ProjectManager $project_manager,
@@ -86,7 +94,8 @@ final class DisplayAdminProgramManagementController implements DispatchableWithR
         BuildPotentialProgramIncrementTrackerConfigurationPresenters $program_increment_presenters_builder,
         BuildPotentialPlannableTrackersConfigurationPresenters $plannable_tracker_presenters_builder,
         BuildProjectUGroupCanPrioritizeItemsPresenters $ugroups_can_prioritize_builder,
-        VerifyProjectPermission $permission_verifier
+        VerifyProjectPermission $permission_verifier,
+        RetrieveProgramIncrementLabels $program_increment_labels_retriever
     ) {
         $this->project_manager                      = $project_manager;
         $this->template_renderer                    = $template_renderer;
@@ -103,6 +112,7 @@ final class DisplayAdminProgramManagementController implements DispatchableWithR
         $this->plannable_tracker_presenters_builder = $plannable_tracker_presenters_builder;
         $this->ugroups_can_prioritize_builder       = $ugroups_can_prioritize_builder;
         $this->permission_verifier                  = $permission_verifier;
+        $this->program_increment_labels_retriever   = $program_increment_labels_retriever;
     }
 
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
@@ -162,6 +172,21 @@ final class DisplayAdminProgramManagementController implements DispatchableWithR
         $this->includeHeaderAndNavigationBar($layout, $project);
         $layout->includeFooterJavascriptFile($assets->getFileURL('program_management_admin.js'));
 
+        try {
+            $program_increment_tracker = ProgramTracker::buildProgramIncrementTrackerFromProgram(
+                $this->program_increment_tracker_retriever,
+                ProgramIdentifier::fromId($this->build_program, $project_id, $user),
+                $user
+            );
+        } catch (ProgramAccessException | ProgramHasNoProgramIncrementTrackerException | ProjectIsNotAProgramException | ProgramTrackerNotFoundException $e) {
+            $program_increment_tracker = null;
+        }
+
+        $program_increment_labels = ProgramIncrementLabels::fromProgramIncrementTracker(
+            $this->program_increment_labels_retriever,
+            $program_increment_tracker
+        );
+
         $this->template_renderer->renderToPage(
             'admin',
             new ProgramAdminPresenter(
@@ -177,9 +202,11 @@ final class DisplayAdminProgramManagementController implements DispatchableWithR
                     )
                 ),
                 $error_presenters,
-                $this->program_increment_presenters_builder->buildPotentialProgramIncrementTrackerPresenters($project_id),
+                $this->program_increment_presenters_builder->buildPotentialProgramIncrementTrackerPresenters($project_id, $program_increment_tracker),
                 $this->plannable_tracker_presenters_builder->buildPotentialPlannableTrackerPresenters($project_id),
-                $this->ugroups_can_prioritize_builder->buildProjectUgroupCanPrioritizeItemsPresenters($project_id)
+                $this->ugroups_can_prioritize_builder->buildProjectUgroupCanPrioritizeItemsPresenters($project_id),
+                $program_increment_labels->label,
+                $program_increment_labels->sub_label,
             )
         );
 

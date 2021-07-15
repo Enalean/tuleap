@@ -39,6 +39,34 @@
                     {{/ ugroups_can_prioritize}}
                 </select>
             </div>
+            <div class="tlp-form-element">
+                <label class="tlp-label" for="admin-configuration-program-increment-label-section">
+                    {{# dgettext }}tuleap-program_management | Custom name for the Program Increments section{{/ dgettext }}
+                </label>
+                <input
+                    type="text"
+                    class="tlp-input"
+                    id="admin-configuration-program-increment-label-section"
+                    name="username"
+                    {{# program_increment_label }}value="{{ . }}"{{/ program_increment_label }}
+                    placeholder="{{# dgettext }}tuleap-program_management | Program Increments{{/ dgettext }}"
+                >
+                <p class="tlp-text-info">{{# dgettext }}tuleap-program_management | Plural. Leave it blank to keep default label "Program Increments".{{/ dgettext }}</p>
+            </div>
+            <div class="tlp-form-element">
+                <label class="tlp-label" for="admin-configuration-program-increment-sub-label-section">
+                    {{# dgettext }}tuleap-program_management | Custom name for a milestone of type of Program Increment{{/ dgettext }}
+                </label>
+                <input
+                    type="text"
+                    class="tlp-input"
+                    id="admin-configuration-program-increment-sub-label-section"
+                    name="username"
+                    {{# program_increment_sub_label }}value="{{ . }}"{{/ program_increment_sub_label }}
+                    placeholder="{{# dgettext }}tuleap-program_management | program increment{{/ dgettext }}"
+                >
+                <p class="tlp-text-info">{{# dgettext }}tuleap-program_management | Singular and lowercase. Leave it blank to keep default label "program increment".{{/ dgettext }}</p>
+            </div>
             <button
                 type="button"
                 class="tlp-button-primary program-management-admin-button-save-configuration"

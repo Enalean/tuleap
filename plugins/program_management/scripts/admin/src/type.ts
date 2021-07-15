@@ -29,6 +29,8 @@ export interface ProgramConfiguration {
     permissions: {
         can_prioritize_features: string[];
     };
+    program_increment_label?: string;
+    program_increment_sub_label?: string;
 }
 
 export interface ErrorRest {
