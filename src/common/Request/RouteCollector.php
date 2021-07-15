@@ -386,7 +386,7 @@ class RouteCollector
         return DisplaySecurityController::buildSelf();
     }
 
-    public function postAccountSecuritySession(): DispatchableWithRequest
+    public static function postAccountSecuritySession(): DispatchableWithRequest
     {
         return new UpdateSessionPreferencesController(
             DisplaySecurityController::getCSRFToken(),
@@ -394,12 +394,12 @@ class RouteCollector
         );
     }
 
-    public function postAccountSecurityPassword(): DispatchableWithRequest
+    public static function postAccountSecurityPassword(): DispatchableWithRequest
     {
         return UpdatePasswordController::buildSelf();
     }
 
-    public function getWellKnownUrlChangePassword(): UserWellKnownChangePasswordController
+    public static function getWellKnownUrlChangePassword(): UserWellKnownChangePasswordController
     {
         return new UserWellKnownChangePasswordController(
             \UserManager::instance(),
@@ -724,12 +724,12 @@ class RouteCollector
         );
     }
 
-    public function getLegacyController(string $path)
+    public static function getLegacyController(string $path)
     {
         return new LegacyRoutesController($path);
     }
 
-    public function getAdminDatesDisplay(): RelativeDatesDisplayController
+    public static function getAdminDatesDisplay(): RelativeDatesDisplayController
     {
         return new RelativeDatesDisplayController(
             new AdminPageRenderer(),
@@ -737,7 +737,7 @@ class RouteCollector
         );
     }
 
-    public function postAdminDatesDisplay(): RelativeDatesDisplaySaveController
+    public static function postAdminDatesDisplay(): RelativeDatesDisplaySaveController
     {
         return new RelativeDatesDisplaySaveController(
             RelativeDatesDisplayController::buildCSRFToken(),
@@ -747,17 +747,17 @@ class RouteCollector
         );
     }
 
-    public function getAdminInvitationsController(): InviteBuddyAdminController
+    public static function getAdminInvitationsController(): InviteBuddyAdminController
     {
         return InviteBuddyAdminController::buildSelf();
     }
 
-    public function getAdminInvitationsUpdateController(): InviteBuddyAdminUpdateController
+    public static function getAdminInvitationsUpdateController(): InviteBuddyAdminUpdateController
     {
         return InviteBuddyAdminUpdateController::buildSelf();
     }
 
-    public function getCSPViolationReportToController(): CSPViolationReportToController
+    public static function getCSPViolationReportToController(): CSPViolationReportToController
     {
         return new CSPViolationReportToController(
             new SapiEmitter(),
@@ -767,7 +767,7 @@ class RouteCollector
         );
     }
 
-    public function getMailingListsAdministration(): MailingListAdministrationController
+    public static function getMailingListsAdministration(): MailingListAdministrationController
     {
         return new MailingListAdministrationController(
             new ProjectRetriever(\ProjectManager::instance()),
@@ -778,7 +778,7 @@ class RouteCollector
         );
     }
 
-    public function getMailingListsCreationController(): MailingListCreationController
+    public static function getMailingListsCreationController(): MailingListCreationController
     {
         return new MailingListCreationController(
             new ProjectRetriever(\ProjectManager::instance()),
@@ -792,7 +792,7 @@ class RouteCollector
         );
     }
 
-    public function getMailingListsDoCreateController(): MailingListDoCreateController
+    public static function getMailingListsDoCreateController(): MailingListDoCreateController
     {
         return new MailingListDoCreateController(
             new ProjectRetriever(\ProjectManager::instance()),
@@ -803,7 +803,7 @@ class RouteCollector
         );
     }
 
-    public function getMailingListUpdateController(): MailingListUpdateController
+    public static function getMailingListUpdateController(): MailingListUpdateController
     {
         return new MailingListUpdateController(
             new ProjectRetriever(\ProjectManager::instance()),
@@ -812,7 +812,7 @@ class RouteCollector
         );
     }
 
-    public function getMailingListDeleteController(): MailingListDeleteController
+    public static function getMailingListDeleteController(): MailingListDeleteController
     {
         return new MailingListDeleteController(
             new ProjectRetriever(\ProjectManager::instance()),
@@ -822,7 +822,7 @@ class RouteCollector
         );
     }
 
-    public function getMailingListsHomepageController(): MailingListHomepageController
+    public static function getMailingListsHomepageController(): MailingListHomepageController
     {
         return new MailingListHomepageController(
             TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../../templates/lists'),
@@ -832,7 +832,7 @@ class RouteCollector
         );
     }
 
-    public function getReferencesController(): ReferenceAdministrationBrowseController
+    public static function getReferencesController(): ReferenceAdministrationBrowseController
     {
         return new ReferenceAdministrationBrowseController(
             \ProjectManager::instance(),
@@ -849,7 +849,7 @@ class RouteCollector
         );
     }
 
-    public function getInterpretedCommonmark(): CommonMarkInterpreterController
+    public static function getInterpretedCommonmark(): CommonMarkInterpreterController
     {
         return new CommonMarkInterpreterController(
             HTTPFactoryBuilder::responseFactory(),
