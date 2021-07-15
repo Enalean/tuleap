@@ -23,12 +23,12 @@
         {include file='tuleap/blob-header.tpl'}
 
         <section class="git-repository-blob-body">
-            {if $datatag}
+            {if isset($datatag)}
                 {* We're trying to display an image *}
                 <div class="git-repository-blob-image">
                     <img src="data:{$mime};base64,{$data}" />
                 </div>
-            {elseif $is_binaryfile}
+            {elseif isset($is_binaryfile) && $is_binaryfile}
                 <div class="empty-pane git-repository-blob-empty-pane">
                     {include file='tuleap/blob-binary-file-svg.tpl'}
                     <div class="empty-page-text-with-small-text">
@@ -38,7 +38,7 @@
                         </div>
                     </div>
                 </div>
-            {elseif $is_file_in_special_format}
+            {elseif isset($is_file_in_special_format) && $is_file_in_special_format}
                 <div class="empty-pane git-repository-blob-empty-pane">
                     {include file='tuleap/blob-binary-lfs-file-svg.tpl'}
                     <div class="empty-page-text-with-small-text">
@@ -50,12 +50,12 @@
                 </div>
             {else}
                 {* Just plain display *}
-                {if $rendered_file}
+                {if isset($rendered_file)}
                 <div id="git-repository-blob-file-rendered">
                     {$rendered_file}
                 </div>
                 {/if}
-                {if $bloblines}
+                {if isset($bloblines)}
                 <div id="git-repository-blob-file">
                     <div class="git-repository-blob-file-linenumbers">{foreach from=$bloblines item=line name=bloblines}
 <a href="#L{$smarty.foreach.bloblines.iteration}"

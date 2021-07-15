@@ -28,19 +28,21 @@
                     <tr>
                         <td class="git-repository-blame-line">
                             {foreach from=$blob->GetData(true) item=blobline name=blob}
-                                {assign var=blamecommit value=$blame[$smarty.foreach.blob.iteration]}
-                                {if $blamecommit}
-                                    {if $opened}</div>{/if}
-                                    <div class="git-repository-blame-cell">
-                                        {assign var=opened value=true}
-                                        <a href="{$SCRIPT_NAME}?a=commit&amp;h={$blamecommit->GetHash()|urlencode}"
-                                            title="{$blamecommit->GetTitle()|htmlspecialchars}"
-                                        >{$blamecommit->GetAuthorEpoch()|date_format:"%Y-%m-%d"}</a>
-                                        <span title="{$blamecommit->GetAuthor()|escape}">{$blamecommit->GetAuthorName()|escape}</span>
+                                {if isset($blame[$smarty.foreach.blob.iteration])}
+                                    {assign var=blamecommit value=$blame[$smarty.foreach.blob.iteration]}
+                                    {if $blamecommit}
+                                        {if isset($opened) && $opened}</div>{/if}
+                                        <div class="git-repository-blame-cell">
+                                            {assign var=opened value=true}
+                                            <a href="?a=commit&amp;h={$blamecommit->GetHash()|urlencode}"
+                                                title="{$blamecommit->GetTitle()|htmlspecialchars}"
+                                            >{$blamecommit->GetAuthorEpoch()|date_format:"%Y-%m-%d"}</a>
+                                            <span title="{$blamecommit->GetAuthor()|escape}">{$blamecommit->GetAuthorName()|escape}</span>
+                                    {/if}
                                 {/if}
                                 <br/>
                             {/foreach}
-                            {if $opened}</div>{/if}
+                            {if isset($opened) && $opened}</div>{/if}
                         </td>
                         <td class="git-repository-blame-linenumbers">
                             <div class="git-repository-blob-file-linenumbers">

@@ -22,10 +22,10 @@
     {include file='tuleap/blob-header-title.tpl'}
 
     <div class="git-repository-blob-header-actions">
-        <a {if $special_download_url}
-               href="{$SCRIPT_NAME}/{$special_download_url|urlencode}"
+        <a {if isset($special_download_url) && $special_download_url}
+               href="/{$special_download_url|urlencode}"
            {else}
-               href="{$SCRIPT_NAME}?a=blob_plain&amp;h={$blob->GetHash()|urlencode}&amp;f={$blob->GetPath()|urlencode}&amp;noheader=1"
+               href="?a=blob_plain&amp;h={$blob->GetHash()|urlencode}&amp;f={$blob->GetPath()|urlencode}&amp;noheader=1"
            {/if}
            class="tlp-button-primary tlp-button-outline tlp-button-small git-repository-blob-header-plain"
            title="{t domain="gitphp"}Download file{/t}"
@@ -33,15 +33,15 @@
             {t domain="gitphp"}Download{/t}
         </a>
         {if $blob->GetPath()}
-            {if $datatag || $is_binaryfile || $is_file_in_special_format}
-                <a href="{$SCRIPT_NAME}?a=history&amp;hb={$commit->GetHash()|urlencode}&amp;h={$commit->GetHash()|urlencode}&amp;f={$blob->GetPath()|urlencode}"
+            {if isset($datatag) || (isset($is_binaryfile) && $is_binaryfile) || (isset($is_file_in_special_format) && $is_file_in_special_format)}
+                <a href="?a=history&amp;hb={$commit->GetHash()|urlencode}&amp;h={$commit->GetHash()|urlencode}&amp;f={$blob->GetPath()|urlencode}"
                    class="tlp-button-primary tlp-button-outline tlp-button-small git-repository-blob-header-history-datatag"
                 >
                     {t domain="gitphp"}History{/t}
                 </a>
             {else}
                 <div class="tlp-button-bar git-repository-blob-header-actions-bar">
-                    {if $can_be_rendered}
+                    {if isset($can_be_rendered) && $can_be_rendered}
                         {if $rendered_file}
                             <div class="tlp-button-bar-item">
                                 <a href="?a=blob&amp;hb={$commit->GetHash()|urlencode}&amp;h={$blob->GetHash()|urlencode}&amp;f={$blob->GetPath()|urlencode}&amp;show_source=1"
@@ -61,14 +61,14 @@
                         {/if}
                     {/if}
                     <div class="tlp-button-bar-item">
-                        <a href="{$SCRIPT_NAME}?a=blame&amp;f={$blob->GetPath()|urlencode}&amp;hb={$commit->GetHash()|urlencode}"
+                        <a href="?a=blame&amp;f={$blob->GetPath()|urlencode}&amp;hb={$commit->GetHash()|urlencode}"
                            class="tlp-button-primary tlp-button-outline tlp-button-small"
                         >
                             {t domain="gitphp"}Blame{/t}
                         </a>
                     </div>
                     <div class="tlp-button-bar-item">
-                        <a href="{$SCRIPT_NAME}?a=history&amp;hb={$commit->GetHash()|urlencode}&amp;h={$commit->GetHash()|urlencode}&amp;f={$blob->GetPath()|urlencode}"
+                        <a href="?a=history&amp;hb={$commit->GetHash()|urlencode}&amp;h={$commit->GetHash()|urlencode}&amp;f={$blob->GetPath()|urlencode}"
                             class="tlp-button-primary tlp-button-outline tlp-button-small"
                         >
                             {t domain="gitphp"}History{/t}

@@ -85,7 +85,7 @@
                     >
                         <i class="fas fa-long-arrow-alt-right tlp-button-icon"></i> {t domain="gitphp"}Go to diff{/t}
                     </a>
-                    <a href="{$SCRIPT_NAME}?a=blob&amp;h={$diffline->GetToHash()|urlencode}&amp;hb={$commit->GetHash()|urlencode}&amp;f={$diffline->GetToFile()}"
+                    <a href="?a=blob&amp;h={$diffline->GetToHash()|urlencode}&amp;hb={$commit->GetHash()|urlencode}&amp;f={$diffline->GetToFile()}"
                        class="tlp-table-cell-actions-button tlp-button-primary tlp-button-outline tlp-button-small"
                     >
                         <i class="far fa-file-alt tlp-button-icon"></i> {t}View file{/t}

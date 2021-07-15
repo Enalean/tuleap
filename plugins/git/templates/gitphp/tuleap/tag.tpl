@@ -85,11 +85,11 @@
                             </label>
                             <div>
                                 {if $objtype == 'commit'}
-                                    <a href="{$SCRIPT_NAME}?a=commit&amp;h={$object->GetHash()|urlencode}">{$object->GetHash()|escape}</a>
+                                    <a href="?a=commit&amp;h={$object->GetHash()|urlencode}">{$object->GetHash()|escape}</a>
                                 {elseif $objtype == 'tag'}
-                                    <a href="{$SCRIPT_NAME}?a=tag&amp;h={$object->GetName()|urlencode}">{$object->GetHash()|escape}</a>
+                                    <a href="?a=tag&amp;h={$object->GetName()|urlencode}">{$object->GetHash()|escape}</a>
                                 {elseif $objtype == 'blob'}
-                                    <a href="{$SCRIPT_NAME}?a=blob&amp;h={$object->GetHash()|urlencode}">{$object->GetHash()|escape}</a>
+                                    <a href="?a=blob&amp;h={$object->GetHash()|urlencode}">{$object->GetHash()|escape}</a>
                                 {/if}
                             </div>
                         </div>
