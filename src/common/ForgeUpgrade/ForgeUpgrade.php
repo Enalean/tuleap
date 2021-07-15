@@ -33,15 +33,17 @@ use const PHP_EOL;
 /**
  * Centralize upgrade of the Forge
  */
-final class ForgeUpgrade
+class ForgeUpgrade
 {
-
     private ForgeUpgradeDb $db;
 
     private \Tuleap\ForgeUpgrade\Bucket\BucketDb $bucketApi;
 
     private LoggerInterface $logger;
 
+    /**
+     * @var array<string, Bucket>|null
+     */
     private ?array $buckets = null;
 
     private array $options;
@@ -57,28 +59,9 @@ final class ForgeUpgrade
      * Set all options of forge upgrade
      *
      * If an option is not set, fill with default
-     *
-     * @param Array $options
-     *
-     * @return void
      */
-    public function setOptions(array $options)
+    public function setOptions(array $options): void
     {
-        if (! isset($options['core']['path'])) {
-            $options['core']['path'] = [];
-        }
-        if (! isset($options['core']['include_path'])) {
-            $options['core']['include_path'] = [];
-        }
-        if (! isset($options['core']['exclude_path'])) {
-            $options['core']['exclude_path'] = [];
-        }
-        if (! isset($options['core']['dbdriver'])) {
-            $options['core']['dbdriver'] = null;
-        }
-        if (! isset($options['core']['ignore_preup'])) {
-            $options['core']['ignore_preup'] = false;
-        }
         if (! isset($options['core']['force'])) {
             $options['core']['force'] = false;
         }
@@ -100,18 +83,9 @@ final class ForgeUpgrade
                 return;
         }
 
-        // Commands that rely on path
-        if (count($this->options['core']['path']) == 0) {
-            $this->logger->error('No migration path');
-            return;
-        }
-        $buckets = $this->getBucketsToProceed($this->options['core']['path']);
+        $buckets = $this->getBucketsToProceed($this->getBucketPaths());
         if (count($buckets) > 0) {
             switch ($func) {
-                case 'record-only':
-                    $this->doRecordOnly($buckets);
-                    break;
-
                 case 'update':
                     $this->doUpdate($buckets);
                     break;
@@ -119,14 +93,15 @@ final class ForgeUpgrade
                 case 'check-update':
                     $this->doCheckUpdate($buckets);
                     break;
-
-                case 'run-pre':
-                    $this->runPreUp($buckets);
-                    break;
             }
         } else {
             $this->logger->info('System up-to-date');
         }
+    }
+
+    public function isSystemUpToDate(): bool
+    {
+        return count($this->getBucketsToProceed($this->getBucketPaths())) === 0;
     }
 
     private function displayColoriedStatus(array $info): string
@@ -174,6 +149,30 @@ final class ForgeUpgrade
         $this->displayAlreadyAppliedForAllBuckets();
     }
 
+    public function recordOnlyCore(): void
+    {
+        $this->doRecordOnly(
+            $this->getBucketsToProceed(
+                [$this->getCoreBucketPath()]
+            )
+        );
+    }
+
+    public function recordOnlyPlugin(string $plugin_path): void
+    {
+        if (! is_dir($plugin_path)) {
+            throw new \RuntimeException("$plugin_path is not a directory, cannot record-only buckets");
+        }
+        $this->doRecordOnly(
+            $this->getBucketsToProceed(
+                [$plugin_path]
+            )
+        );
+    }
+
+    /**
+     * @psalm-param array<string, Bucket> $buckets
+     */
     private function doRecordOnly(array $buckets): void
     {
         foreach ($buckets as $bucket) {
@@ -185,11 +184,7 @@ final class ForgeUpgrade
 
     private function doUpdate(array $buckets): void
     {
-        if (! $this->options['core']['ignore_preup']) {
-            if ($this->runPreUp($buckets)) {
-                $this->runUp($buckets);
-            }
-        } else {
+        if ($this->runPreUp($buckets)) {
             $this->runUp($buckets);
         }
     }
@@ -218,7 +213,7 @@ final class ForgeUpgrade
      *
      * @todo: Add info on the number of buckets Success, Faild, Skipped
      */
-    public function runPreUp(array $buckets): bool
+    private function runPreUp(array $buckets): bool
     {
         $this->logger->info("Process all pre up checks");
         $result = true;
@@ -255,10 +250,8 @@ final class ForgeUpgrade
 
         $log->info("Processing " . get_class($bucket));
 
-        if (! $this->options['core']['ignore_preup']) {
-            $bucket->preUp();
-            $log->info("PreUp OK");
-        }
+        $bucket->preUp();
+        $log->info("PreUp OK");
 
         $bucket->up();
         $log->info("Up OK");
@@ -313,11 +306,13 @@ final class ForgeUpgrade
 
     /**
      * Return all the buckets not already applied
+     *
+     * @psalm-return array<string, Bucket>
      */
-    private function getBucketsToProceed(array $dirPath): array
+    private function getBucketsToProceed(array $paths): array
     {
         if ($this->buckets === null) {
-            $this->buckets = $this->getAllBuckets($dirPath);
+            $this->buckets = $this->getAllBuckets($paths);
             $sth           = $this->db->getAllBuckets([ForgeUpgradeDb::STATUS_SUCCESS, ForgeUpgradeDb::STATUS_SKIP]);
             foreach ($sth as $row) {
                 $key = basename($row['script']);
@@ -372,10 +367,7 @@ final class ForgeUpgrade
     {
         $iter = new RecursiveDirectoryIterator($dirPath);
         $iter = new RecursiveIteratorIterator($iter, RecursiveIteratorIterator::SELF_FIRST);
-        $iter = new BucketFilter($iter);
-        $iter->setIncludePaths($this->options['core']['include_path']);
-        $iter->setExcludePaths($this->options['core']['exclude_path']);
-        return $iter;
+        return new BucketFilter($iter);
     }
 
     /**
@@ -422,5 +414,24 @@ final class ForgeUpgrade
     private function getClassName(string $scriptPath): string
     {
         return 'b' . basename($scriptPath, '.php');
+    }
+
+    private function getBucketPaths(): array
+    {
+        $paths = [
+            $this->getCoreBucketPath(),
+        ];
+        foreach ($this->db->getActivePlugins() as $rows) {
+            $plugin_db_path = dirname(__DIR__, 3) . '/plugins/' . $rows['name'] . '/db';
+            if (is_dir($plugin_db_path)) {
+                $paths[] = $plugin_db_path;
+            }
+        }
+        return $paths;
+    }
+
+    private function getCoreBucketPath(): string
+    {
+        return dirname(__DIR__, 2) . '/db/mysql/updates';
     }
 }

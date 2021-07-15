@@ -45,9 +45,11 @@ use PluginManager;
 use PluginResourceRestrictor;
 use Project;
 use ProjectManager;
+use Psr\Log\NullLogger;
 use SimpleXMLElement;
 use SiteCache;
 use System_Command;
+use Tuleap\ForgeUpgrade\ForgeUpgrade;
 use Tuleap\Git\Gitolite\GitoliteAccessURLGenerator;
 use Tuleap\Git\Permissions\FineGrainedPermission;
 use Tuleap\TemporaryTestDirectory;
@@ -199,7 +201,7 @@ final class GitXmlImporterTest extends \Tuleap\Test\PHPUnit\TestCase
         $plugin_manager = new PluginManager(
             $plugin_factory,
             new SiteCache($this->logger),
-            new ForgeUpgradeConfig(new System_Command()),
+            new ForgeUpgradeConfig(new ForgeUpgrade($this->createMock(\PDO::class), new NullLogger())),
             \Tuleap\Markdown\CommonMarkInterpreter::build(\Codendi_HTMLPurifier::instance())
         );
 

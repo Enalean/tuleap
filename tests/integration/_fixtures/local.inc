@@ -142,9 +142,6 @@ $alias_file      = "/etc/aliases.codendi";
 // Comma separated paths where Tuleap can find plugins
 $sys_extra_plugin_path = '';
 
-// ForgeUpgrade config file
-$forgeupgrade_file = "/etc/tuleap/forgeupgrade/config.ini";
-
 // How much to add to the database unix_uid to get the actual unix uid
 // NOTE: if you change the default value, you need to update /etc/libnss-mysql.cfg
 $unix_uid_add	= "20000";

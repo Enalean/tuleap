@@ -22,128 +22,43 @@
 
 class ForgeUpgradeConfigTest extends \PHPUnit\Framework\TestCase // phpcs:ignore
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-    use \Tuleap\TemporaryTestDirectory;
-
-    private $fixtures;
-    private $command;
-    /**
-     * @var string
-     */
-    private $config_file;
-    /**
-     * @var ForgeUpgradeConfig
-     */
-    private $forgeupgrade_config;
-
-    public function setUp(): void
+    public function testItRecordsOnlyThePathOfThePlugin(): void
     {
-        parent::setUp();
-        $this->fixtures = $this->getTmpDir();
-        $source         = escapeshellarg(__DIR__ . '/_fixtures');
-        $destination    = escapeshellarg($this->fixtures);
-        exec("cp -a $source/* $destination/");
-        $this->command = \Mockery::spy(\System_Command::class);
-    }
+        $forge_upgrade = $this->createMock(\Tuleap\ForgeUpgrade\ForgeUpgrade::class);
+        $forge_upgrade->expects($this->once())->method('recordOnlyPlugin')->with('/usr/share/tuleap/plugins/agiledashboard');
 
-    public function testPluginPathIsInConfig()
-    {
-        $fuc = new ForgeUpgradeConfig($this->command, $this->fixtures . '/forgeupgrade-config-docman.ini');
-        $this->assertTrue($fuc->existsInPath('/usr/share/tuleap/plugins/docman'));
-        $this->assertFalse($fuc->existsInPath('/usr/share/tuleap/plugins/git'));
-    }
+        $forgeupgrade_config = new ForgeUpgradeConfig($forge_upgrade);
 
-    public function testAddPathInFile()
-    {
-        copy($this->fixtures . '/forgeupgrade-config-docman.ini', $this->fixtures . '/forgeupgrade-addpath.ini');
-
-        $fuc = new ForgeUpgradeConfig($this->command, $this->fixtures . '/forgeupgrade-addpath.ini');
-        $this->assertFalse($fuc->existsInPath('/usr/share/tuleap/plugins/git'));
-
-        $fuc->addPath('/usr/share/tuleap/plugins/git');
-        $this->assertTrue($fuc->existsInPath('/usr/share/tuleap/plugins/git'));
-
-        // Verify by loading it again
-        $fuc2 = new ForgeUpgradeConfig($this->command, $this->fixtures . '/forgeupgrade-addpath.ini');
-        $this->assertTrue($fuc2->existsInPath('/usr/share/tuleap/plugins/git'));
-
-        unlink($this->fixtures . '/forgeupgrade-addpath.ini');
-    }
-
-    public function testRemovePathAtTheEndOfFile()
-    {
-        copy($this->fixtures . '/forgeupgrade-config-docman.ini', $this->fixtures . '/forgeupgrade-addpath.ini');
-
-        $fuc = new ForgeUpgradeConfig($this->command, $this->fixtures . '/forgeupgrade-addpath.ini');
-        $this->assertTrue($fuc->existsInPath('/usr/share/tuleap/plugins/docman'));
-
-        $fuc->removePath('/usr/share/tuleap/plugins/docman');
-        $this->assertFalse($fuc->existsInPath('/usr/share/tuleap/plugins/docman'));
-
-        // Verify by loading it again
-        $fuc2 = new ForgeUpgradeConfig($this->command, $this->fixtures . '/forgeupgrade-addpath.ini');
-        $this->assertFalse($fuc2->existsInPath('/usr/share/tuleap/plugins/docman'));
-
-        unlink($this->fixtures . '/forgeupgrade-addpath.ini');
-    }
-
-    public function testRemovePathInTheMiddleOfFile()
-    {
-        $configFile = $this->fixtures . '/forgeupgrade-addpath.ini';
-        copy($this->fixtures . '/forgeupgrade-config-docman.ini', $configFile);
-
-        $fuc = new ForgeUpgradeConfig($this->command, $configFile);
-        $this->assertTrue($fuc->existsInPath('/usr/share/tuleap/plugins/webdav'));
-
-        $fuc->removePath('/usr/share/tuleap/plugins/webdav');
-        $this->assertFalse($fuc->existsInPath('/usr/share/tuleap/plugins/webdav'));
-
-        // Verify by loading it again
-        $fuc2 = new ForgeUpgradeConfig($this->command, $configFile);
-        $this->assertFalse($fuc2->existsInPath('/usr/share/tuleap/plugins/webdav'));
-
-        unlink($configFile);
-    }
-
-    public function testItRecordsOnlyThePathOfThePlugin()
-    {
-        $this->command             = \Mockery::spy(\System_Command::class);
-        $this->forgeupgrade_config = new ForgeUpgradeConfig($this->command, dirname(__FILE__) . '/_fixtures/forgeupgrade-config-docman.ini');
-        $this->command->shouldReceive('exec')->with("/usr/lib/forgeupgrade/bin/forgeupgrade --path='/usr/share/tuleap/plugins/agiledashboard' record-only")->once();
-
-        $this->forgeupgrade_config->recordOnlyPath('/usr/share/tuleap/plugins/agiledashboard');
+        $forgeupgrade_config->recordOnlyPath('/usr/share/tuleap/plugins/agiledashboard');
     }
 
     public function testItCallsForgeUpgrade()
     {
-        $this->command             = \Mockery::spy(\System_Command::class);
-        $this->config_file         = dirname(__FILE__) . '/_fixtures/forgeupgrade-config-docman.ini';
-        $this->forgeupgrade_config = new ForgeUpgradeConfig($this->command, $this->config_file);
+        $forge_upgrade = $this->createMock(\Tuleap\ForgeUpgrade\ForgeUpgrade::class);
+        $forge_upgrade->expects($this->once())->method('isSystemUpToDate');
 
-        $this->command->shouldReceive('exec')->with("/usr/lib/forgeupgrade/bin/forgeupgrade --config='{$this->config_file}' 'check-update'")->once()->andReturns([]);
+        $forgeupgrade_config = new ForgeUpgradeConfig($forge_upgrade);
 
-        $this->forgeupgrade_config->isSystemUpToDate();
+        $forgeupgrade_config->isSystemUpToDate();
     }
 
     public function testItReturnsTrueWhenForgeUpgradeTellsThatSystemIsUpToDate(): void
     {
-        $this->command             = \Mockery::spy(\System_Command::class);
-        $this->config_file         = __DIR__ . '/_fixtures/forgeupgrade-config-docman.ini';
-        $this->forgeupgrade_config = new ForgeUpgradeConfig($this->command, $this->config_file);
+        $forge_upgrade = $this->createMock(\Tuleap\ForgeUpgrade\ForgeUpgrade::class);
+        $forge_upgrade->method('isSystemUpToDate')->willReturn(true);
 
-        $this->command->shouldReceive('exec');
+        $forgeupgrade_config = new ForgeUpgradeConfig($forge_upgrade);
 
-        self::assertTrue($this->forgeupgrade_config->isSystemUpToDate());
+        self::assertTrue($forgeupgrade_config->isSystemUpToDate());
     }
 
     public function testItReturnsFalseWhenForgeUpgradeTellsThereArePendingBuckets(): void
     {
-        $this->command             = \Mockery::spy(\System_Command::class);
-        $this->config_file         = __DIR__ . '/_fixtures/forgeupgrade-config-docman.ini';
-        $this->forgeupgrade_config = new ForgeUpgradeConfig($this->command, $this->config_file);
+        $forge_upgrade = $this->createMock(\Tuleap\ForgeUpgrade\ForgeUpgrade::class);
+        $forge_upgrade->method('isSystemUpToDate')->willReturn(false);
 
-        $this->command->shouldReceive('exec')->andThrow(new System_Command_CommandException('command', ['output'], 1));
+        $forgeupgrade_config = new ForgeUpgradeConfig($forge_upgrade);
 
-        self::assertFalse($this->forgeupgrade_config->isSystemUpToDate());
+        self::assertFalse($forgeupgrade_config->isSystemUpToDate());
     }
 }

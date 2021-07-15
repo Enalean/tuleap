@@ -32,6 +32,7 @@ $application->add(new \TuleapCfg\Command\SystemControlCommand(new ProcessFactory
 $application->add(new \TuleapCfg\Command\StartCommunityEditionContainerCommand(new ProcessFactory()));
 $application->add(new \TuleapCfg\Command\SetupMysqlCommand());
 $application->add(new \TuleapCfg\Command\SetupMysqlInitCommand(new \TuleapCfg\Command\SetupMysql\ConnectionManager()));
+$application->add(new \TuleapCfg\Command\SetupForgeUpgradeCommand());
 $application->add(new \TuleapCfg\Command\SiteDeploy\SiteDeployCommand());
 $application->add(new \TuleapCfg\Command\SiteDeploy\Images\SiteDeployImagesCommand());
 $application->add(new \TuleapCfg\Command\SiteDeploy\FPM\SiteDeployFPMCommand());

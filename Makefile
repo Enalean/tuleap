@@ -305,7 +305,7 @@ show-ips: ## Display ips of all running services
 	done
 
 dev-forgeupgrade: ## Run forgeupgrade in Docker Compose environment
-	@$(DOCKER_COMPOSE) exec web /usr/lib/forgeupgrade/bin/forgeupgrade --config=/etc/tuleap/forgeupgrade/config.ini update
+	@$(DOCKER_COMPOSE) exec web /usr/lib/forgeupgrade/bin/forgeupgrade update
 
 dev-clear-cache: ## Clear caches in Docker Compose environment
 	@$(DOCKER_COMPOSE) exec web /usr/share/tuleap/src/utils/tuleap --clear-caches

@@ -31,58 +31,12 @@ use FilterIterator;
 class BucketFilter extends FilterIterator
 {
     /**
-     * @var string[]
-     */
-    protected array $includePaths = [];
-    /**
-     * @var string[]
-     */
-    protected array $excludePaths = [];
-
-    public function addExclude(string $path): void
-    {
-        $this->excludePaths[] = $path;
-    }
-
-    public function addInclude(string $path): void
-    {
-        $this->includePaths[] = $path;
-    }
-
-    /**
-     * @param string[] $paths
-     */
-    public function setIncludePaths(array $paths): void
-    {
-        $this->includePaths = $paths;
-    }
-
-    /**
-     * @param string[] $paths
-     */
-    public function setExcludePaths(array $paths): void
-    {
-        $this->excludePaths = $paths;
-    }
-
-    /**
      * Match php upgrade scripts
-     *
-     * @return bool
      */
-    public function accept()
+    public function accept(): bool
     {
         $filePath = parent::current()->getPathname();
 
-        $match = true;
-        foreach ($this->includePaths as $path) {
-            $match = $match && (strpos($filePath, $path) !== false);
-        }
-
-        foreach ($this->excludePaths as $path) {
-            $match = $match && ! (strpos($filePath, $path) !== false);
-        }
-
-        return $match && preg_match('%^[0-9]+_(.*)\.php$%', basename($filePath));
+        return preg_match('%^[0-9]+_(.*)\.php$%', basename($filePath)) > 0;
     }
 }

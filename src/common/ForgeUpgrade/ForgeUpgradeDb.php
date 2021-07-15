@@ -22,6 +22,8 @@
 namespace Tuleap\ForgeUpgrade;
 
 use PDO;
+use PDOStatement;
+use RuntimeException;
 
 class ForgeUpgradeDb
 {
@@ -74,7 +76,7 @@ class ForgeUpgradeDb
 
     /**
      * @param bool|array $status
-     * @return array|\PDOStatement
+     * @return array|PDOStatement
      */
     public function getAllBuckets($status = false)
     {
@@ -88,6 +90,15 @@ class ForgeUpgradeDb
         );
         if ($result === false) {
             return [];
+        }
+        return $result;
+    }
+
+    public function getActivePlugins(): PDOStatement
+    {
+        $result = $this->dbh->query('SELECT name FROM plugin WHERE available = 1');
+        if ($result === false) {
+            throw new RuntimeException('Impossible to get the list of active plugins');
         }
         return $result;
     }

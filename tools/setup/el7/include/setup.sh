@@ -1,12 +1,3 @@
-_setupForgeupgrade() {
-    # Only needed for short term tests as futur test containers will have this created out of rpms
-    if [ ! -d "${tuleap_dir}/forgeupgrade" ]; then
-        ${install} --group=${tuleap_unix_user} --owner=${tuleap_unix_user} --mode=0750 -d "${tuleap_dir}/forgeupgrade"
-    fi
-    ${install} --group=${tuleap_unix_user} --owner=${tuleap_unix_user} \
-        --mode=0640 "${forgeupgrade_dist}" "${forgeupgrade_conf}"
-}
-
 _setupMysqlPassword() {
     # ${1}: mysql user
     # ${2}: mysql password
