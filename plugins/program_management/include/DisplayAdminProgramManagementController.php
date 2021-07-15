@@ -36,7 +36,7 @@ use Tuleap\ProgramManagement\Domain\Program\Admin\PotentialTeam\BuildPotentialTe
 use Tuleap\ProgramManagement\Domain\Program\Admin\PotentialTeam\PotentialTeamsPresenterBuilder;
 use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramAdminPresenter;
 use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramCannotBeATeamException;
-use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramInConfigurationIdentifier;
+use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramForAdministrationIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramIncrementTrackerConfiguration\BuildPotentialProgramIncrementTrackerConfigurationPresenters;
 use Tuleap\ProgramManagement\Domain\Program\Admin\Team\TeamsPresenterBuilder;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\IterationTracker\RetrieveVisibleIterationTracker;
@@ -118,7 +118,7 @@ final class DisplayAdminProgramManagementController implements DispatchableWithR
 
         $user = $request->getCurrentUser();
         try {
-            $program_id = ProgramInConfigurationIdentifier::fromProject(
+            $program_id = ProgramForAdministrationIdentifier::fromProject(
                 $this->verify_is_team,
                 $this->permission_verifier,
                 $user,
@@ -170,7 +170,7 @@ final class DisplayAdminProgramManagementController implements DispatchableWithR
                     $this->potential_teams_builder->buildPotentialTeams($project_id, $user)
                 ),
                 TeamsPresenterBuilder::buildTeamsPresenter(
-                    TeamProjectsCollection::fromProgramInConfigurationIdentifier(
+                    TeamProjectsCollection::fromProgramForAdministration(
                         $this->teams_searcher,
                         $this->project_data_adapter,
                         $program_id

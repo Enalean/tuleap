@@ -23,14 +23,14 @@ declare(strict_types=1);
 namespace unit\Domain\Program\Admin;
 
 use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramCannotBeATeamException;
-use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramInConfigurationIdentifier;
+use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramForAdministrationIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Plan\ProgramAccessException;
 use Tuleap\ProgramManagement\Stub\VerifyIsTeamStub;
 use Tuleap\ProgramManagement\Stub\VerifyProjectPermissionStub;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 
-final class ProgramInConfigurationIdentifierTest extends \Tuleap\Test\PHPUnit\TestCase
+final class ProgramForAdministrationIdentifierTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private \Project $project;
     private \PFUser $user;
@@ -47,7 +47,7 @@ final class ProgramInConfigurationIdentifierTest extends \Tuleap\Test\PHPUnit\Te
 
     public function testItBuildsFromAProject(): void
     {
-        $program = ProgramInConfigurationIdentifier::fromProject(
+        $program = ProgramForAdministrationIdentifier::fromProject(
             $this->team_verifier,
             $this->permission_verifier,
             $this->user,
@@ -61,7 +61,7 @@ final class ProgramInConfigurationIdentifierTest extends \Tuleap\Test\PHPUnit\Te
         $this->team_verifier = VerifyIsTeamStub::withValidTeam();
 
         $this->expectException(ProgramCannotBeATeamException::class);
-        ProgramInConfigurationIdentifier::fromProject(
+        ProgramForAdministrationIdentifier::fromProject(
             $this->team_verifier,
             $this->permission_verifier,
             $this->user,
@@ -74,7 +74,7 @@ final class ProgramInConfigurationIdentifierTest extends \Tuleap\Test\PHPUnit\Te
         $this->permission_verifier = VerifyProjectPermissionStub::withNotAdministrator();
 
         $this->expectException(ProgramAccessException::class);
-        ProgramInConfigurationIdentifier::fromProject(
+        ProgramForAdministrationIdentifier::fromProject(
             $this->team_verifier,
             $this->permission_verifier,
             $this->user,
