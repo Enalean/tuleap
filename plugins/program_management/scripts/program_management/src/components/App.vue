@@ -166,7 +166,7 @@ export default class App extends Vue {
 
     emptyStateLabel(): string {
         return this.$gettext(
-            "No project have been aggregated yet. Aggregation can be done in administration of service."
+            "Program configuration is incomplete. That can be done in administration of service."
         );
     }
 }

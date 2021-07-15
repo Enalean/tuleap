@@ -34,13 +34,6 @@ msgstr ""
 msgid "New %{ program_increment_sub_label }"
 msgstr "Ajouter un(e) %{ program_increment_sub_label }"
 
-msgid ""
-"No project have been aggregated yet. Aggregation can be done in "
-"administration of service."
-msgstr ""
-"Aucun projet n'a encore été regroupé. Le regroupement peut être effectué "
-"dans l'administration du service."
-
 msgid "Oops, an error occurred!"
 msgstr "Oups, une erreur s'est produite !"
 
@@ -49,6 +42,13 @@ msgstr "Oups, il y a eu un problème"
 
 msgid "Program"
 msgstr "Programme"
+
+msgid ""
+"Program configuration is incomplete. That can be done in administration of "
+"service."
+msgstr ""
+"La configuration du projet est incomplète. Elle peut être effectuée "
+"dans l'administration du service."
 
 msgid "Reload the page"
 msgstr "Recharger la page"

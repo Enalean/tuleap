@@ -101,7 +101,7 @@ final class DisplayProgramBacklogController implements DispatchableWithRequest, 
         $user = $request->getCurrentUser();
         try {
             $configuration = $this->buildConfigurationForExistingProgram($project, $request, $user);
-        } catch (ProjectIsNotAProgramException $exception) {
+        } catch (ProjectIsNotAProgramException | Domain\Program\Plan\ProgramHasNoProgramIncrementTrackerException $exception) {
             $configuration = $this->buildConfigurationForPotentialProgram();
         } catch (ProgramTrackerNotFoundException $e) {
             throw new NotFoundException();
