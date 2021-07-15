@@ -23,19 +23,15 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Adapter\Program;
 
 use Luracast\Restler\RestException;
-use Tuleap\ProgramManagement\Domain\Program\Plan\BuildProgramUserGroup;
+use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramForAdministrationIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Plan\InvalidProgramUserGroup;
-use Tuleap\ProgramManagement\Domain\Program\Plan\ProgramUserGroup;
-use Tuleap\ProgramManagement\Domain\Program\ProgramForManagement;
+use Tuleap\ProgramManagement\Domain\Program\Plan\RetrieveProgramUserGroup;
 use Tuleap\ProgramManagement\Domain\Program\ProgramUserGroupDoesNotExistException;
 use Tuleap\Project\REST\UserGroupRetriever;
 
-final class ProgramUserGroupBuildAdapter implements BuildProgramUserGroup
+final class ProgramUserGroupRetriever implements RetrieveProgramUserGroup
 {
-    /**
-     * @var UserGroupRetriever
-     */
-    private $user_group_retriever;
+    private UserGroupRetriever $user_group_retriever;
 
     public function __construct(UserGroupRetriever $user_group_retriever)
     {
@@ -43,25 +39,9 @@ final class ProgramUserGroupBuildAdapter implements BuildProgramUserGroup
     }
 
     /**
-     * @param non-empty-list<string> $raw_user_group_ids
-     * @return non-empty-list<ProgramUserGroup>
      * @throws InvalidProgramUserGroup
      */
-    public function buildProgramUserGroups(ProgramForManagement $program, array $raw_user_group_ids): array
-    {
-        $program_user_groups = [];
-
-        foreach ($raw_user_group_ids as $raw_user_group_id) {
-            $program_user_groups[] = ProgramUserGroup::buildProgramUserGroup($this, $raw_user_group_id, $program);
-        }
-
-        return $program_user_groups;
-    }
-
-    /**
-     * @throws InvalidProgramUserGroup
-     */
-    public function getProjectUserGroupId(string $raw_user_group_id, ProgramForManagement $program): int
+    public function getProjectUserGroupId(string $raw_user_group_id, ProgramForAdministrationIdentifier $program): int
     {
         try {
             $project_user_group = $this->user_group_retriever->getExistingUserGroup($raw_user_group_id);

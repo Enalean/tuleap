@@ -31,7 +31,7 @@ use Tuleap\ProgramManagement\Domain\Program\Plan\ProjectIsNotAProgramException;
 /**
  * A program is a Tuleap Project that hosts Program Increments and Iterations and synchronizes them with Teams.
  * This represents its project ID number.
- * I have at least one Team. For a Program not yet configured, see ProgramInConfigurationIdentifier
+ * I have at least one Team. For a Program not yet configured, see ProgramForAdministrationIdentifier
  * @psalm-immutable
  * @see ProgramForAdministrationIdentifier
  */

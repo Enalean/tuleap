@@ -64,16 +64,6 @@ final class ProgramAdapter implements BuildProgram
 
     /**
      * @throws ProgramAccessException
-     * @throws ProjectIsNotAProgramException
-     */
-    public function ensureProgramIsAProjectForManagement(int $id, \PFUser $user): void
-    {
-        $this->ensureUserIsAdminOfProject($id, $user);
-        $this->ensureProgramIsAProject($id, $user);
-    }
-
-    /**
-     * @throws ProgramAccessException
      * @throws ProgramIsATeamException
      */
     public function ensureProgramIsProjectAndUserIsAdminOf(int $id, \PFUser $user): void

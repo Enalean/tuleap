@@ -29,45 +29,37 @@ use Tuleap\ProgramManagement\Domain\Program\Plan\ProjectIsNotAProgramException;
 final class BuildProgramStub implements BuildProgram
 {
     private bool $is_a_program;
-    private bool $is_valid_program_for_management;
     private bool $is_valid_to_be_created_program;
     private bool $is_access_allowed;
 
     private function __construct(
         bool $is_a_program,
-        bool $is_valid_program_for_management,
         bool $is_valid_to_be_created_program,
         bool $is_access_allowed
     ) {
-        $this->is_a_program                    = $is_a_program;
-        $this->is_valid_program_for_management = $is_valid_program_for_management;
-        $this->is_valid_to_be_created_program  = $is_valid_to_be_created_program;
-        $this->is_access_allowed               = $is_access_allowed;
+        $this->is_a_program                   = $is_a_program;
+        $this->is_valid_to_be_created_program = $is_valid_to_be_created_program;
+        $this->is_access_allowed              = $is_access_allowed;
     }
 
     public static function stubValidProgram(): self
     {
-        return new self(true, false, false, true);
+        return new self(true, false, true);
     }
 
     public static function stubInvalidProgram(): self
     {
-        return new self(false, false, false, true);
+        return new self(false, false, true);
     }
 
     public static function stubInvalidProgramAccess(): self
     {
-        return new self(true, false, false, false);
-    }
-
-    public static function stubValidProgramForManagement(): self
-    {
-        return new self(true, true, false, true);
+        return new self(true, false, false);
     }
 
     public static function stubValidToBeCreatedProgram(): self
     {
-        return new self(true, false, true, true);
+        return new self(true, true, true);
     }
 
     public function ensureProgramIsAProject(int $project_id, \PFUser $user): void
@@ -79,14 +71,6 @@ final class BuildProgramStub implements BuildProgram
         if (! $this->is_access_allowed) {
             throw new ProgramAccessException($project_id, $user);
         }
-    }
-
-    public function ensureProgramIsAProjectForManagement(int $id, \PFUser $user): void
-    {
-        if ($this->is_valid_program_for_management) {
-            return;
-        }
-        throw new \LogicException("Not implemented");
     }
 
     public function ensureProgramIsProjectAndUserIsAdminOf(int $id, \PFUser $user): void

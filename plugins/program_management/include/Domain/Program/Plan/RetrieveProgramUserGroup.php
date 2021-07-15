@@ -20,34 +20,14 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Domain\Program;
+namespace Tuleap\ProgramManagement\Domain\Program\Plan;
 
-use Tuleap\ProgramManagement\Domain\Program\Plan\BuildProgram;
-use Tuleap\ProgramManagement\Domain\Program\Plan\ProgramAccessException;
-use Tuleap\ProgramManagement\Domain\Program\Plan\ProjectIsNotAProgramException;
+use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramForAdministrationIdentifier;
 
-/**
- * @psalm-immutable
- */
-final class ProgramForManagement
+interface RetrieveProgramUserGroup
 {
     /**
-     * @var int
+     * @throws InvalidProgramUserGroup
      */
-    public $id;
-
-    private function __construct(int $id)
-    {
-        $this->id = $id;
-    }
-
-    /**
-     * @throws ProgramAccessException
-     * @throws ProjectIsNotAProgramException
-     */
-    public static function fromId(BuildProgram $build_program, int $id, \PFUser $user): self
-    {
-        $build_program->ensureProgramIsAProjectForManagement($id, $user);
-        return new self($id);
-    }
+    public function getProjectUserGroupId(string $raw_user_group_id, ProgramForAdministrationIdentifier $program): int;
 }

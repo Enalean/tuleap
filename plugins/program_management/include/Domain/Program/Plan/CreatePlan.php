@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Plan;
 
+use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramCannotBeATeamException;
 use Tuleap\ProgramManagement\Domain\Program\ProgramTrackerException;
 
 interface CreatePlan
@@ -29,9 +30,9 @@ interface CreatePlan
     /**
      * @throws PlanTrackerException
      * @throws ProgramAccessException
-     * @throws ProjectIsNotAProgramException
      * @throws ProgramTrackerException
      * @throws InvalidProgramUserGroup
+     * @throws ProgramCannotBeATeamException
      */
     public function create(PlanChange $plan_change): void;
 }

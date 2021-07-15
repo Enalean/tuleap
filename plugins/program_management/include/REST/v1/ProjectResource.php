@@ -47,10 +47,13 @@ use Tuleap\ProgramManagement\Adapter\Program\Plan\PrioritizeFeaturesPermissionVe
 use Tuleap\ProgramManagement\Adapter\Program\Plan\ProgramAdapter;
 use Tuleap\ProgramManagement\Adapter\Program\PlanningAdapter;
 use Tuleap\ProgramManagement\Adapter\Program\ProgramDao;
-use Tuleap\ProgramManagement\Adapter\Program\ProgramUserGroupBuildAdapter;
+use Tuleap\ProgramManagement\Adapter\Program\ProgramUserGroupRetriever;
 use Tuleap\ProgramManagement\Adapter\Program\Tracker\ProgramTrackerAdapter;
 use Tuleap\ProgramManagement\Adapter\Team\TeamAdapter;
 use Tuleap\ProgramManagement\Adapter\Team\TeamDao;
+use Tuleap\ProgramManagement\Adapter\Workspace\ProjectManagerAdapter;
+use Tuleap\ProgramManagement\Adapter\Workspace\ProjectPermissionVerifier;
+use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramCannotBeATeamException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\RetrieveFeatures;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementBuilder;
@@ -112,6 +115,7 @@ final class ProjectResource extends AuthenticatedResource
     {
         $this->user_manager   = \UserManager::instance();
         $plan_dao             = new PlanDao();
+        $team_dao             = new TeamDao();
         $tracker_adapter      = new ProgramTrackerAdapter(\TrackerFactory::instance());
         $project_manager      = \ProjectManager::instance();
         $program_dao          = new ProgramDao();
@@ -123,17 +127,18 @@ final class ProjectResource extends AuthenticatedResource
                 \EventManager::instance()
             ),
             $program_dao,
-            new TeamDao()
+            $team_dao
         );
         $this->plan_creator   = new PlanCreator(
-            $build_program,
             $tracker_adapter,
-            new ProgramUserGroupBuildAdapter(new UserGroupRetriever(new \UGroupManager())),
-            $plan_dao
+            new ProgramUserGroupRetriever(new UserGroupRetriever(new \UGroupManager())),
+            $plan_dao,
+            new ProjectManagerAdapter($project_manager),
+            $team_dao,
+            new ProjectPermissionVerifier()
         );
 
         $team_adapter       = new TeamAdapter($project_manager, $program_dao, $explicit_backlog_dao);
-        $team_dao           = new TeamDao();
         $this->team_creator = new TeamCreator($build_program, $team_adapter, $team_dao);
 
         $artifact_factory                 = \Tracker_ArtifactFactory::instance();
@@ -247,7 +252,7 @@ final class ProjectResource extends AuthenticatedResource
             $this->plan_creator->create($plan_change);
         } catch (CannotPlanIntoItselfException | PlanTrackerException | ProgramTrackerException | InvalidProgramUserGroup $e) {
             throw new I18NRestException(400, $e->getI18NExceptionMessage());
-        } catch (ProgramAccessException $e) {
+        } catch (ProgramCannotBeATeamException | ProgramAccessException $e) {
             throw new I18NRestException(404, $e->getI18NExceptionMessage());
         }
     }

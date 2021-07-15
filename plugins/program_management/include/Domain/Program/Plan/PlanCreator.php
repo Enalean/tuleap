@@ -22,71 +22,72 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Plan;
 
-use Tuleap\ProgramManagement\Domain\Program\ProgramForManagement;
+use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramForAdministrationIdentifier;
+use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramUserGroupCollection;
+use Tuleap\ProgramManagement\Domain\Team\VerifyIsTeam;
+use Tuleap\ProgramManagement\Domain\Workspace\RetrieveProject;
+use Tuleap\ProgramManagement\Domain\Workspace\VerifyProjectPermission;
 
 final class PlanCreator implements CreatePlan
 {
-    /**
-     * @var BuildProgram
-     */
-    private $program_build;
-    /**
-     * @var BuildTracker
-     */
-    private $build_tracker;
-    /**
-     * @var PlanStore
-     */
-    private $plan_store;
-    /**
-     * @var BuildProgramUserGroup
-     */
-    private $build_program_user_group;
+    private BuildTracker $build_tracker;
+    private PlanStore $plan_store;
+    private RetrieveProgramUserGroup $ugroup_retriever;
+    private RetrieveProject $project_retriever;
+    private VerifyIsTeam $team_verifier;
+    private VerifyProjectPermission $permission_verifier;
 
     public function __construct(
-        BuildProgram $program_build,
         BuildTracker $build_tracker,
-        BuildProgramUserGroup $build_program_user_group,
-        PlanStore $plan_store
+        RetrieveProgramUserGroup $ugroup_retriever,
+        PlanStore $plan_store,
+        RetrieveProject $project_retriever,
+        VerifyIsTeam $team_verifier,
+        VerifyProjectPermission $permission_verifier
     ) {
-        $this->program_build            = $program_build;
-        $this->build_tracker            = $build_tracker;
-        $this->build_program_user_group = $build_program_user_group;
-        $this->plan_store               = $plan_store;
+        $this->build_tracker       = $build_tracker;
+        $this->ugroup_retriever    = $ugroup_retriever;
+        $this->plan_store          = $plan_store;
+        $this->project_retriever   = $project_retriever;
+        $this->team_verifier       = $team_verifier;
+        $this->permission_verifier = $permission_verifier;
     }
 
     public function create(PlanChange $plan_change): void
     {
-        $program_project   = ProgramForManagement::fromId(
-            $this->program_build,
-            $plan_change->project_id,
-            $plan_change->user
+        $project           = $this->project_retriever->getProjectWithId($plan_change->project_id);
+        $program           = ProgramForAdministrationIdentifier::fromProject(
+            $this->team_verifier,
+            $this->permission_verifier,
+            $plan_change->user,
+            $project
         );
         $program_tracker   = ProgramIncrementTracker::buildProgramIncrementTracker(
             $this->build_tracker,
             $plan_change->program_increment_change->tracker_id,
-            $program_project->id
+            $program->id
         );
         $iteration_tracker = null;
         if ($plan_change->iteration) {
             $iteration_tracker = IterationTracker::fromPlanIterationChange(
                 $this->build_tracker,
                 $plan_change->iteration,
-                $program_project->id
+                $program->id
             );
         }
         $plannable_tracker_ids      = $this->build_tracker->buildPlannableTrackerList(
             $plan_change->tracker_ids_that_can_be_planned,
-            $program_project->id
+            $program->id
         );
-        $can_prioritize_user_groups = $this->build_program_user_group->buildProgramUserGroups(
-            $program_project,
+        $can_prioritize_user_groups = ProgramUserGroupCollection::fromRawIdentifiers(
+            $this->ugroup_retriever,
+            $program,
             $plan_change->can_possibly_prioritize_ugroups
         );
 
         $plan = new Plan(
             $program_tracker,
-            $program_project->id,
+            $program->id,
             $plannable_tracker_ids,
             $can_prioritize_user_groups,
             $plan_change->program_increment_change->label,

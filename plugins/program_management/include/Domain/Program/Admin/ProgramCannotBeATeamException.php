@@ -40,7 +40,7 @@ final class ProgramCannotBeATeamException extends \Exception
         );
     }
 
-    public function getI18nMessage(): string
+    public function getI18NExceptionMessage(): string
     {
         return $this->i18n_message;
     }

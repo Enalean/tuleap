@@ -22,43 +22,30 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Plan;
 
-use Tuleap\ProgramManagement\Domain\Program\ProgramForManagement;
+use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramForAdministrationIdentifier;
 
 /**
  * @psalm-immutable
  */
 final class ProgramUserGroup
 {
-    /**
-     * @var ProgramForManagement
-     */
-    private $program;
-    /**
-     * @var int
-     */
-    private $id;
+    private int $id;
 
-    private function __construct(ProgramForManagement $program, int $id)
+    private function __construct(int $id)
     {
-        $this->program = $program;
-        $this->id      = $id;
+        $this->id = $id;
     }
 
     /**
      * @throws InvalidProgramUserGroup
      */
     public static function buildProgramUserGroup(
-        BuildProgramUserGroup $group_build_adapter,
+        RetrieveProgramUserGroup $ugroup_retriever,
         string $raw_user_group_id,
-        ProgramForManagement $program
+        ProgramForAdministrationIdentifier $program
     ): self {
-        $user_group_id = $group_build_adapter->getProjectUserGroupId($raw_user_group_id, $program);
-        return new self($program, $user_group_id);
-    }
-
-    public function getProgram(): ProgramForManagement
-    {
-        return $this->program;
+        $user_group_id = $ugroup_retriever->getProjectUserGroupId($raw_user_group_id, $program);
+        return new self($user_group_id);
     }
 
     public function getId(): int

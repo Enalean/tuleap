@@ -32,12 +32,6 @@ interface BuildProgram
 
     /**
      * @throws ProgramAccessException
-     * @throws ProjectIsNotAProgramException
-     */
-    public function ensureProgramIsAProjectForManagement(int $id, \PFUser $user): void;
-
-    /**
-     * @throws ProgramAccessException
      * @throws ProgramIsATeamException
      */
     public function ensureProgramIsProjectAndUserIsAdminOf(int $id, \PFUser $user): void;
