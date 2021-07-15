@@ -297,10 +297,11 @@ final class program_managementPlugin extends Plugin
             $this->getVisibleProgramIncrementTrackerRetriever(),
             EventManager::instance(),
             $this->getVisibleIterationTrackerRetriever(),
-            new PotentialProgramIncrementTrackerConfigurationPresentersBuilder(TrackerFactory::instance(), new ProgramIncrementsDAO()),
+            new PotentialProgramIncrementTrackerConfigurationPresentersBuilder(TrackerFactory::instance()),
             new PotentialPlannableTrackersConfigurationPresentersBuilder(TrackerFactory::instance(), new PlanDao()),
             new ProjectUGroupCanPrioritizeItemsPresentersBuilder(new UGroupManager(), $project_manager, new CanPrioritizeFeaturesDAO()),
-            new ProjectPermissionVerifier()
+            new ProjectPermissionVerifier(),
+            new ProgramIncrementsDAO()
         );
     }
 

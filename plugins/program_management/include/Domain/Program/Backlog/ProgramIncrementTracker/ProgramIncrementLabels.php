@@ -40,8 +40,11 @@ final class ProgramIncrementLabels
 
     public static function fromProgramIncrementTracker(
         RetrieveProgramIncrementLabels $label_retriever,
-        ProgramTracker $tracker
+        ?ProgramTracker $tracker
     ): self {
+        if (! $tracker) {
+            return new self(null, null);
+        }
         $labels = $label_retriever->getProgramIncrementLabels($tracker->getTrackerId());
         if ($labels === null) {
             return new self(null, null);

@@ -21,6 +21,11 @@ import { buildProgramConfiguration } from "./program-configuration-builder";
 
 describe("program-configuration-builder", function () {
     describe("buildProgramConfiguration", function () {
+        it("should throw error when no input label", () => {
+            expect(() =>
+                buildProgramConfiguration(createDocumentWithSelectorWithoutLabels(), 100)
+            ).toThrow("No admin-configuration-program-increment-label-section input");
+        });
         it("should return configuration with selected value", function () {
             const configuration = buildProgramConfiguration(
                 createDocumentWithSelectorWithoutEmptyField(),
@@ -31,11 +36,28 @@ describe("program-configuration-builder", function () {
             expect(configuration.plannable_tracker_ids).toEqual([9, 10]);
             expect(configuration.program_increment_tracker_id).toEqual(8);
             expect(configuration.permissions.can_prioritize_features).toEqual(["100_3", "150"]);
+            expect(configuration.program_increment_label).toEqual("PI");
+            expect(configuration.program_increment_sub_label).toEqual("");
         });
     });
 });
 
 function createDocumentWithSelectorWithoutEmptyField(): Document {
+    const doc = createDocumentWithSelectorWithoutLabels();
+
+    const program_increment_label = document.createElement("input");
+    program_increment_label.id = "admin-configuration-program-increment-label-section";
+    program_increment_label.value = "PI";
+    const program_increment_sub_label = document.createElement("input");
+    program_increment_sub_label.id = "admin-configuration-program-increment-sub-label-section";
+
+    doc.body.appendChild(program_increment_label);
+    doc.body.appendChild(program_increment_sub_label);
+
+    return doc;
+}
+
+function createDocumentWithSelectorWithoutLabels(): Document {
     const doc = document.implementation.createHTMLDocument();
 
     const select_pi = document.createElement("select");

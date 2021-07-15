@@ -24,6 +24,7 @@ namespace Tuleap\ProgramManagement\Stub;
 
 use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramIncrementTrackerConfiguration\BuildPotentialProgramIncrementTrackerConfigurationPresenters;
 use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramSelectOptionConfigurationPresenter;
+use Tuleap\ProgramManagement\Domain\ProgramTracker;
 
 final class BuildPotentialProgramIncrementTrackerConfigurationPresentersStub implements BuildPotentialProgramIncrementTrackerConfigurationPresenters
 {
@@ -37,7 +38,7 @@ final class BuildPotentialProgramIncrementTrackerConfigurationPresentersStub imp
     /**
      * @return ProgramSelectOptionConfigurationPresenter[]
      */
-    public function buildPotentialProgramIncrementTrackerPresenters(int $program_id): array
+    public function buildPotentialProgramIncrementTrackerPresenters(int $program_id, ?ProgramTracker $program_increment_tracker): array
     {
         return $this->presenters;
     }

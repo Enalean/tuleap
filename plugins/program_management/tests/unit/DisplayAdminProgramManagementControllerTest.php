@@ -32,6 +32,7 @@ use Tuleap\ProgramManagement\Stub\BuildPotentialTeamsStub;
 use Tuleap\ProgramManagement\Stub\BuildProgramStub;
 use Tuleap\ProgramManagement\Stub\BuildProjectStub;
 use Tuleap\ProgramManagement\Stub\BuildProjectUGroupCanPrioritizeItemsPresentersStub;
+use Tuleap\ProgramManagement\Stub\RetrieveProgramIncrementLabelsStub;
 use Tuleap\ProgramManagement\Stub\RetrieveVisibleIterationTrackerStub;
 use Tuleap\ProgramManagement\Stub\RetrieveVisibleProgramIncrementTrackerStub;
 use Tuleap\ProgramManagement\Stub\SearchTeamsOfProgramStub;
@@ -179,7 +180,8 @@ final class DisplayAdminProgramManagementControllerTest extends \Tuleap\Test\PHP
             $this->program_increment_tracker_builder,
             $this->iteration_tracker_builder,
             BuildProjectUGroupCanPrioritizeItemsPresentersStub::buildWithIds('102_3'),
-            $this->permission_verifier
+            $this->permission_verifier,
+            RetrieveProgramIncrementLabelsStub::buildLabels(null, null)
         );
     }
 

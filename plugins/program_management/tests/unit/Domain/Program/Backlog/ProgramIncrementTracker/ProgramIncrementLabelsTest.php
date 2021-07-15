@@ -40,7 +40,7 @@ final class ProgramIncrementLabelsTest extends TestCase
     /**
      * @dataProvider dataProviderLabels
      */
-    public function testItBuildsLabels(?string $label, ?string $sub_label): void
+    public function testItBuildsLabelsFromProgramIncrementTracker(?string $label, ?string $sub_label): void
     {
         $tracker                   = TrackerTestBuilder::aTracker()->withId(87)->build();
         $program_increment_tracker = new ProgramTracker($tracker);
@@ -50,5 +50,15 @@ final class ProgramIncrementLabelsTest extends TestCase
         );
         self::assertSame($label, $labels->label);
         self::assertSame($sub_label, $labels->sub_label);
+    }
+
+    public function testItBuildNullLabelsWhenProgramTrackerIsNull(): void
+    {
+        $labels = ProgramIncrementLabels::fromProgramIncrementTracker(
+            RetrieveProgramIncrementLabelsStub::buildLabels('PI', 'pi'),
+            null
+        );
+        self::assertNull($labels->label);
+        self::assertNull($labels->sub_label);
     }
 }

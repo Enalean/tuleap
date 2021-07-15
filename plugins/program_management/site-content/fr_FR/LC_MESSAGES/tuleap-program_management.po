@@ -66,6 +66,12 @@ msgstr ""
 "La fonctionnalité #%d n'a pas pu être enlevée de tous les incréments de "
 "programme"
 
+msgid "Custom name for a milestone of type of Program Increment"
+msgstr "Nom personnalisé pour un jalon de type Incrément de Programme"
+
+msgid "Custom name for the Program Increments section"
+msgstr "Nom personnalisé pour la section Incréments de Programme"
+
 msgid "Description"
 msgstr "Description"
 
@@ -183,6 +189,9 @@ msgstr "L'id de l'outils de suivi panifiable ne doit pas être vide"
 msgid "Please confirm your action."
 msgstr "Merci de confirmer votre action."
 
+msgid "Plural. Leave it blank to keep default label \"Program Increments\"."
+msgstr "Au pluriel. Laisser vide pour garder le label par défaut \"Program Increments\"."
+
 #, php-format
 msgid ""
 "Post action of type %s can only be defined for plannable tracker of a plan."
@@ -286,6 +295,11 @@ msgid ""
 msgstr ""
 "La sémantique 'statut' est liée à aucun champ dans l'outil de suivi du "
 "programme <a href='%s'>#%d</a>"
+
+msgid ""
+"Singular and lowercase. Leave it blank to keep default label \"program "
+"increment\"."
+msgstr "Au singuler et en minuscule. Laisser vide pour garder le label par défaut \"program increment\"."
 
 #, php-format
 msgid ""

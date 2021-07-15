@@ -31,6 +31,8 @@ export function saveConfiguration(configuration: ProgramConfiguration): Promise<
                 program_increment_tracker_id: configuration.program_increment_tracker_id,
                 plannable_tracker_ids: configuration.plannable_tracker_ids,
                 permissions: configuration.permissions,
+                program_increment_label: configuration.program_increment_label,
+                program_increment_sub_label: configuration.program_increment_sub_label,
             }),
         }
     );

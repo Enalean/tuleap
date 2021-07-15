@@ -22,7 +22,11 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\Admin\ProgramIncrementTrackerConfiguration;
 
-use Tuleap\ProgramManagement\Stub\RetrieveProgramIncrementTrackerStub;
+use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
+use Tuleap\ProgramManagement\Domain\ProgramTracker;
+use Tuleap\ProgramManagement\Stub\BuildProgramStub;
+use Tuleap\ProgramManagement\Stub\RetrieveVisibleProgramIncrementTrackerStub;
+use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 class PotentialProgramIncrementTrackerConfigurationPresentersBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -43,10 +47,15 @@ class PotentialProgramIncrementTrackerConfigurationPresentersBuilderTest extends
 
     public function testBuildTrackerPresentersWithCheckedTrackerIfExist(): void
     {
-        $retriever = RetrieveProgramIncrementTrackerStub::buildValidTrackerId(300);
-
-        $builder    = new PotentialProgramIncrementTrackerConfigurationPresentersBuilder($this->tracker_factory, $retriever);
-        $presenters = $builder->buildPotentialProgramIncrementTrackerPresenters(100);
+        $builder    = new PotentialProgramIncrementTrackerConfigurationPresentersBuilder($this->tracker_factory);
+        $presenters = $builder->buildPotentialProgramIncrementTrackerPresenters(
+            100,
+            ProgramTracker::buildProgramIncrementTrackerFromProgram(
+                RetrieveVisibleProgramIncrementTrackerStub::withValidTracker(TrackerTestBuilder::aTracker()->withId(300)->build()),
+                ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 100, UserTestBuilder::aUser()->build()),
+                UserTestBuilder::aUser()->build()
+            )
+        );
 
         self::assertCount(2, $presenters);
         self::assertSame(300, $presenters[0]->id);
@@ -57,10 +66,8 @@ class PotentialProgramIncrementTrackerConfigurationPresentersBuilderTest extends
 
     public function testBuildTrackerPresentersWithoutCheckedTracker(): void
     {
-        $retriever = RetrieveProgramIncrementTrackerStub::buildNoProgramIncrementTracker();
-
-        $builder    = new PotentialProgramIncrementTrackerConfigurationPresentersBuilder($this->tracker_factory, $retriever);
-        $presenters = $builder->buildPotentialProgramIncrementTrackerPresenters(100);
+        $builder    = new PotentialProgramIncrementTrackerConfigurationPresentersBuilder($this->tracker_factory);
+        $presenters = $builder->buildPotentialProgramIncrementTrackerPresenters(100, null);
 
         self::assertCount(2, $presenters);
         self::assertSame(300, $presenters[0]->id);

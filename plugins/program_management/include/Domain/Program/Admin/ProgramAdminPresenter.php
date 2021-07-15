@@ -58,6 +58,8 @@ final class ProgramAdminPresenter
      * @var ProgramSelectOptionConfigurationPresenter[]
      */
     public array $ugroups_can_prioritize;
+    public ?string $program_increment_label;
+    public ?string $program_increment_sub_label;
 
     /**
      * @param PotentialTeamPresenter[]              $potential_teams
@@ -75,7 +77,9 @@ final class ProgramAdminPresenter
         array $errors,
         array $potential_program_increments,
         array $potential_plannable_trackers,
-        array $ugroups_can_prioritize
+        array $ugroups_can_prioritize,
+        ?string $program_increment_label,
+        ?string $program_increment_sub_label
     ) {
         $this->program_id                   = $program_id;
         $this->potential_teams              = $potential_teams;
@@ -86,5 +90,7 @@ final class ProgramAdminPresenter
         $this->potential_program_increments = $potential_program_increments;
         $this->potential_plannable_trackers = $potential_plannable_trackers;
         $this->ugroups_can_prioritize       = $ugroups_can_prioritize;
+        $this->program_increment_label      = $program_increment_label;
+        $this->program_increment_sub_label  = $program_increment_sub_label;
     }
 }
