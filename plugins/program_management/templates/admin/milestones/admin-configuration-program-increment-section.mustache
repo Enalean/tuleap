@@ -4,6 +4,7 @@
             <h1 class="tlp-pane-title">{{# dgettext }}tuleap-program_management | Program Increments{{/ dgettext }}</h1>
         </div>
         <section class="tlp-pane-section">
+            <div class="tlp-alert-danger program-management-error-rest-not-show" id="program-management-save-configuration-error-rest"></div>
             <div class="tlp-form-element">
                 <label class="tlp-label" for="admin-configuration-program-increment-tracker">
                     {{# dgettext }}tuleap-program_management | Source tracker for Program Increments{{/ dgettext }}
@@ -22,7 +23,6 @@
                     <i class="fas fa-asterisk" aria-hidden="true"></i>
                 </label>
                 <select id="admin-configuration-plannable-trackers" name="list-value" multiple>
-                    <option value=""></option>
                     {{# potential_plannable_trackers }}
                         <option value="{{ id }}" {{# is_selected }}selected{{/ is_selected }}>{{ label }}</option>
                     {{/ potential_plannable_trackers}}
@@ -39,6 +39,14 @@
                     {{/ ugroups_can_prioritize}}
                 </select>
             </div>
+            <button
+                type="button"
+                class="tlp-button-primary program-management-admin-button-save-configuration"
+                id="program-management-admin-button-save-configuration"
+            >
+                <i class="fa fa-save tlp-button-icon" aria-hidden="true"></i>
+                {{# dgettext }}tuleap-program_management | Save configuration{{/ dgettext }}
+            </button>
         </section>
     </div>
 </section>

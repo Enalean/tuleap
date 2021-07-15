@@ -269,6 +269,9 @@ msgstr "Enlever l'équipe"
 msgid "Remove team from program"
 msgstr "Enlever l'équipe du programme"
 
+msgid "Save configuration"
+msgstr "Sauvegarder la configuration"
+
 #, php-format
 msgid ""
 "Semantic '%s' is not well configured. Please check semantic of trackers %s."

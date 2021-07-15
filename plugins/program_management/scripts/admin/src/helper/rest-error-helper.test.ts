@@ -24,8 +24,8 @@ const createDocument = (): Document => document.implementation.createHTMLDocumen
 describe("RestErrorHelper", () => {
     describe("resetRestErrorAlert", () => {
         it("Error is thrown When alert element does not exist", () => {
-            expect(() => resetRestErrorAlert(createDocument())).toThrowError(
-                "Rest Error Alert does not exist"
+            expect(() => resetRestErrorAlert(createDocument(), "bad-id")).toThrowError(
+                "Rest Error Alert with id bad-id does not exist"
             );
         });
         it("Text error is reset and hide When alert element exist", () => {
@@ -34,32 +34,28 @@ describe("RestErrorHelper", () => {
             alert_element.textContent = "Error";
 
             const doc = getDocumentWithAlertElement(alert_element);
-            resetRestErrorAlert(doc);
+            resetRestErrorAlert(doc, "program-management-add-team-error-rest");
 
             expect(alert_element.textContent).toEqual("");
-            expect(alert_element.classList).toContain(
-                "program-management-add-team-error-rest-not-show"
-            );
+            expect(alert_element.classList).toContain("program-management-error-rest-not-show");
         });
     });
     describe("setRestErrorMessage", () => {
         it("Error is thrown When alert element does not exist", () => {
-            expect(() => setRestErrorMessage(createDocument(), "error")).toThrowError(
-                "Rest Error Alert does not exist"
+            expect(() => setRestErrorMessage(createDocument(), "bad-id", "error")).toThrowError(
+                "Rest Error Alert with id bad-id does not exist"
             );
         });
         it("Text error is set and shown When alert element exist", () => {
             const alert_element = document.createElement("div");
             alert_element.id = "program-management-add-team-error-rest";
-            alert_element.classList.add("program-management-add-team-error-rest-not-show");
+            alert_element.classList.add("program-management-error-rest-not-show");
 
             const doc = getDocumentWithAlertElement(alert_element);
-            setRestErrorMessage(doc, "error");
+            setRestErrorMessage(doc, "program-management-add-team-error-rest", "error");
 
             expect(alert_element.textContent).toEqual("error");
-            expect(alert_element.classList).not.toContain(
-                "program-management-add-team-error-rest-not-show"
-            );
+            expect(alert_element.classList).not.toContain("program-management-error-rest-not-show");
         });
     });
 });

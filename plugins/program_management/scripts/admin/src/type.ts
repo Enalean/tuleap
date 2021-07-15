@@ -21,3 +21,20 @@ export interface ManageTeamIdsOfProgram {
     program_id: number;
     team_ids: number[];
 }
+
+export interface ProgramConfiguration {
+    program_id: number;
+    program_increment_tracker_id: number;
+    plannable_tracker_ids: number[];
+    permissions: {
+        can_prioritize_features: string[];
+    };
+}
+
+export interface ErrorRest {
+    error: {
+        code: number;
+        message: string;
+        i18n_error_message?: string;
+    };
+}

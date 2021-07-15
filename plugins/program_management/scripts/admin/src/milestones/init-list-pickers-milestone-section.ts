@@ -20,6 +20,7 @@
 import { createListPicker } from "@tuleap/list-picker";
 import type { GetText } from "@tuleap/core/scripts/tuleap/gettext/gettext-init";
 import { disabledPlannableTrackers } from "../helper/disabled-plannable-tracker-helper";
+import { getHTMLSelectElementFromId } from "../helper/HTML_select_element_extractor";
 
 export async function initListPickersMilestoneSection(
     doc: Document,
@@ -72,14 +73,4 @@ export async function initListPickersMilestoneSection(
         }
         disabledPlannableTrackers(doc, e.target);
     });
-}
-
-function getHTMLSelectElementFromId(doc: Document, id: string): HTMLSelectElement {
-    const select_element = doc.getElementById(id);
-
-    if (!select_element || !(select_element instanceof HTMLSelectElement)) {
-        throw new Error(id + " element does not exist");
-    }
-
-    return select_element;
 }
