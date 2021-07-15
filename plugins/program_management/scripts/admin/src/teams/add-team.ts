@@ -33,7 +33,6 @@ export function addTeamInProgram(program_id: number, doc: Document): void {
 
     button_to_add.addEventListener("click", async () => {
         resetRestErrorAlert(doc, "program-management-add-team-error-rest");
-        setButtonToDisabledWithSpinner(button_to_add);
 
         const select = doc.getElementById("program-management-choose-teams");
         if (!select || !(select instanceof HTMLSelectElement)) {
@@ -41,10 +40,11 @@ export function addTeamInProgram(program_id: number, doc: Document): void {
         }
 
         const team_id_to_add = select.options[select.selectedIndex];
-        if (!team_id_to_add) {
+        if (!team_id_to_add.value) {
             return;
         }
 
+        setButtonToDisabledWithSpinner(button_to_add);
         try {
             await manageTeamOfProgram({
                 program_id,
