@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program;
 
-use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramInConfigurationIdentifier;
+use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramForAdministrationIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\ReplicationData;
 use Tuleap\ProgramManagement\Domain\Program\Plan\BuildProgram;
 use Tuleap\ProgramManagement\Domain\Program\Plan\ProgramAccessException;
@@ -33,7 +33,7 @@ use Tuleap\ProgramManagement\Domain\Program\Plan\ProjectIsNotAProgramException;
  * This represents its project ID number.
  * I have at least one Team. For a Program not yet configured, see ProgramInConfigurationIdentifier
  * @psalm-immutable
- * @see ProgramInConfigurationIdentifier
+ * @see ProgramForAdministrationIdentifier
  */
 final class ProgramIdentifier
 {

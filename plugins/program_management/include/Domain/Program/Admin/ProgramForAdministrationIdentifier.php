@@ -34,7 +34,7 @@ use Tuleap\ProgramManagement\Domain\Workspace\VerifyProjectPermission;
  * @psalm-immutable
  * @see ProgramIdentifier
  */
-final class ProgramInConfigurationIdentifier
+final class ProgramForAdministrationIdentifier
 {
     public int $id;
 

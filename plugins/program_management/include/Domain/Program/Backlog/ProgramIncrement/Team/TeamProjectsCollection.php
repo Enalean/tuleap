@@ -23,7 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Team;
 
 use Tuleap\ProgramManagement\Domain\BuildProject;
-use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramInConfigurationIdentifier;
+use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramForAdministrationIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\SearchTeamsOfProgram;
 use Tuleap\ProgramManagement\Domain\ProgramManagementProject;
@@ -68,10 +68,10 @@ final class TeamProjectsCollection
         return self::buildFromProjectId($teams_searcher, $project_builder, $program->getId());
     }
 
-    public static function fromProgramInConfigurationIdentifier(
+    public static function fromProgramForAdministration(
         SearchTeamsOfProgram $teams_searcher,
         BuildProject $project_builder,
-        ProgramInConfigurationIdentifier $program
+        ProgramForAdministrationIdentifier $program
     ): self {
         return self::buildFromProjectId($teams_searcher, $project_builder, $program->id);
     }
