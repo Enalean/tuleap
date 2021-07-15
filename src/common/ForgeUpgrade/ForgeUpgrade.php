@@ -34,12 +34,12 @@ use const PHP_EOL;
 /**
  * Centralize upgrade of the Forge
  */
-class ForgeUpgrade
+final class ForgeUpgrade
 {
 
     private ForgeUpgradeDb $db;
 
-    private array $bucketApi = [];
+    private ForgeUpgrade_Bucket_Db $bucketApi;
 
     private LoggerInterface $logger;
 
@@ -49,9 +49,9 @@ class ForgeUpgrade
 
     public function __construct(PDO $pdo, LoggerInterface $logger)
     {
-        $this->db                                  = new ForgeUpgradeDb($pdo);
-        $this->bucketApi['ForgeUpgrade_Bucket_Db'] = new ForgeUpgrade_Bucket_Db($pdo, $logger);
-        $this->logger                              = $logger;
+        $this->db        = new ForgeUpgradeDb($pdo);
+        $this->bucketApi = new ForgeUpgrade_Bucket_Db($pdo, $logger);
+        $this->logger    = $logger;
     }
 
     /**
@@ -130,7 +130,7 @@ class ForgeUpgrade
         }
     }
 
-    protected function displayColoriedStatus(array $info): string
+    private function displayColoriedStatus(array $info): string
     {
         $status = ForgeUpgradeDb::statusLabel($info['status']);
         switch ($status) {
@@ -159,7 +159,7 @@ class ForgeUpgrade
     /**
      * Displays logs of all buckets already applied
      */
-    protected function displayAlreadyAppliedForAllBuckets(): void
+    private function displayAlreadyAppliedForAllBuckets(): void
     {
         echo 'start date' . "           " . 'Execution' . "  " . 'Status' . "  " . 'Id' . "  " . 'Script' . PHP_EOL;
         foreach ($this->db->getAllBuckets() as $row) {
@@ -170,12 +170,12 @@ class ForgeUpgrade
     /**
      * Displays all buckets' logs according to the option "bucket" is filled or not
      */
-    protected function doAlreadyApplied(): void
+    private function doAlreadyApplied(): void
     {
         $this->displayAlreadyAppliedForAllBuckets();
     }
 
-    protected function doRecordOnly(array $buckets): void
+    private function doRecordOnly(array $buckets): void
     {
         foreach ($buckets as $bucket) {
             $this->logger->info("[doRecordOnly] " . get_class($bucket));
@@ -184,7 +184,7 @@ class ForgeUpgrade
         }
     }
 
-    protected function doUpdate(array $buckets): void
+    private function doUpdate(array $buckets): void
     {
         if (! $this->options['core']['ignore_preup']) {
             if ($this->runPreUp($buckets)) {
@@ -195,7 +195,7 @@ class ForgeUpgrade
         }
     }
 
-    protected function doCheckUpdate(array $buckets): void
+    private function doCheckUpdate(array $buckets): void
     {
         foreach ($buckets as $bucket) {
             echo $bucket->getPath() . PHP_EOL;
@@ -276,7 +276,7 @@ class ForgeUpgrade
      * If force option is set, all buckets will be run even if it fails
      * Else if not, buckets' execution will drop since one bucket fails
      */
-    protected function runUp(array $buckets): void
+    private function runUp(array $buckets): void
     {
         $this->logger->info('Start running migrations...');
         $has_encountered_failure = false;
@@ -315,7 +315,7 @@ class ForgeUpgrade
     /**
      * Return all the buckets not already applied
      */
-    protected function getBucketsToProceed(array $dirPath): array
+    private function getBucketsToProceed(array $dirPath): array
     {
         if ($this->buckets === null) {
             $this->buckets = $this->getAllBuckets($dirPath);
@@ -338,7 +338,7 @@ class ForgeUpgrade
      *
      * @return array<string, Bucket>
      */
-    protected function getAllBuckets(array $paths): array
+    private function getAllBuckets(array $paths): array
     {
         $buckets = [];
         foreach ($paths as $path) {
@@ -354,7 +354,7 @@ class ForgeUpgrade
      *
      * @param array<string, Bucket> $buckets
      */
-    protected function findAllBucketsInPath(string $path, array &$buckets): void
+    private function findAllBucketsInPath(string $path, array &$buckets): void
     {
         if (is_dir($path)) {
             $iter = $this->getBucketFinderIterator($path);
@@ -369,7 +369,7 @@ class ForgeUpgrade
     /**
      * Build iterator to find buckets in a file hierarchy
      */
-    protected function getBucketFinderIterator(string $dirPath): BucketFilter
+    private function getBucketFinderIterator(string $dirPath): BucketFilter
     {
         $iter = new RecursiveDirectoryIterator($dirPath);
         $iter = new RecursiveIteratorIterator($iter, RecursiveIteratorIterator::SELF_FIRST);
@@ -384,7 +384,7 @@ class ForgeUpgrade
      *
      * @param array<string, Bucket> $buckets
      */
-    protected function queueMigrationBucket(SplFileInfo $file, array &$buckets): void
+    private function queueMigrationBucket(SplFileInfo $file, array &$buckets): void
     {
         if ($file->isFile()) {
             $object = $this->getBucketClass($file);
@@ -400,7 +400,7 @@ class ForgeUpgrade
     /**
      * Create a new bucket object defined in given file
      */
-    protected function getBucketClass(SplFileInfo $scriptPath): ?Bucket
+    private function getBucketClass(SplFileInfo $scriptPath): ?Bucket
     {
         $bucket = null;
         $class  = $this->getClassName($scriptPath->getPathname());
@@ -408,19 +408,11 @@ class ForgeUpgrade
             include $scriptPath->getPathname();
         }
         if (is_subclass_of($class, Bucket::class)) {
-            $bucket = new $class($this->logger);
+            $bucket = new $class($this->logger, $this->bucketApi);
+            assert($bucket instanceof Bucket);
             $bucket->setPath($scriptPath->getPathname());
-            $this->addBucketApis($bucket);
         }
         return $bucket;
-    }
-
-    /**
-     * Add all available API to the given bucket
-     */
-    protected function addBucketApis(Bucket $bucket): void
-    {
-        $bucket->setAllApi($this->bucketApi);
     }
 
     /**
@@ -428,7 +420,7 @@ class ForgeUpgrade
      *
      * migrations/201004081445_add_tables_for_docman_watermarking.php -> b201004081445_add_tables_for_docman_watermarking
      */
-    protected function getClassName(string $scriptPath): string
+    private function getClassName(string $scriptPath): string
     {
         return 'b' . basename($scriptPath, '.php');
     }
