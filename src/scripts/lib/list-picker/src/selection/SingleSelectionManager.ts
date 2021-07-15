@@ -31,7 +31,8 @@ export class SingleSelectionManager implements SelectionManager {
         private readonly selection_element: Element,
         private readonly placeholder_element: Element,
         private readonly dropdown_manager: DropdownManager,
-        private readonly items_map_manager: ItemsMapManager
+        private readonly items_map_manager: ItemsMapManager,
+        private readonly keep_none_value: boolean = false
     ) {
         this.selection_state = null;
     }
@@ -100,6 +101,9 @@ export class SingleSelectionManager implements SelectionManager {
         }
 
         if (this.selection_state === null) {
+            if (this.keep_none_value) {
+                return;
+            }
             this.processSelection(available_items[0].element);
             return;
         }

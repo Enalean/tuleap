@@ -99,7 +99,8 @@ export async function createListPicker(
             selection_element,
             placeholder_element,
             dropdown_manager,
-            items_map_manager
+            items_map_manager,
+            options?.keep_none_value ?? false
         );
     }
 

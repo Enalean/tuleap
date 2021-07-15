@@ -30,6 +30,7 @@ describe("SingleSelectionManager", () => {
     let source_select_box: HTMLSelectElement,
         selection_container: Element,
         placeholder: Element,
+        dropdown: Element,
         manager: SingleSelectionManager,
         items_map_manager: ItemsMapManager,
         dropdown_manager: DropdownManager,
@@ -51,12 +52,13 @@ describe("SingleSelectionManager", () => {
 
         selection_container = selection_element;
         placeholder = placeholder_element;
+        dropdown = dropdown_element;
 
         items_map_manager = new ItemsMapManager(new ListItemMapBuilder(source_select_box));
         dropdown_manager = { openListPicker: jest.fn() } as unknown as DropdownManager;
         manager = new SingleSelectionManager(
             source_select_box,
-            dropdown_element,
+            dropdown,
             selection_container,
             placeholder,
             dropdown_manager,
@@ -235,6 +237,28 @@ describe("SingleSelectionManager", () => {
             expect(first_item.element.getAttribute("aria-selected")).toEqual("true");
             expect(first_item.target_option.getAttribute("selected")).toEqual("selected");
             expect(selection_container.contains(placeholder)).toBe(false);
+        });
+
+        it("when no item has been selected and keep_none_value option is true, then it should display the placeholder", async () => {
+            manager = new SingleSelectionManager(
+                source_select_box,
+                dropdown,
+                selection_container,
+                placeholder,
+                dropdown_manager,
+                items_map_manager,
+                true
+            );
+
+            source_select_box.innerHTML = "";
+            const new_option_0 = document.createElement("option");
+            new_option_0.value = "new option 0";
+            source_select_box.appendChild(new_option_0);
+
+            await items_map_manager.refreshItemsMap();
+            manager.resetAfterDependenciesUpdate();
+
+            expect(selection_container.contains(placeholder)).toBe(true);
         });
 
         it("when an item has been selected, and is still available in the new options, then it should keep it selected", async () => {

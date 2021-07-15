@@ -33,6 +33,7 @@ export interface ListPickerOptions {
         value_id: string,
         item_label: string
     ) => Promise<TemplateResult>;
+    keep_none_value?: boolean;
 }
 
 export type ListPickerItemMap = Map<string, ListPickerItem>;
