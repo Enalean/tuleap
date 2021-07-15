@@ -34,33 +34,28 @@ abstract class Bucket // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNames
 {
     protected LoggerInterface $log;
 
-    /** @var array<string, BucketDb> */
-    protected array $api;
+    protected BucketDb $api;
 
     protected string $path = '';
     private string $id;
 
-    final public function __construct(LoggerInterface $logger)
+    final public function __construct(LoggerInterface $logger, BucketDb $api)
     {
         $this->log = $logger;
-    }
-
-    public function setAllApi(array $api): void
-    {
         $this->api = $api;
     }
 
-    public function setApi(BucketDb $api): void
-    {
-        $this->api[get_class($api)] = $api;
-    }
-
+    /**
+     * @deprecated Use $this->api directly instead
+     * @throws BucketApiNotFoundException
+     */
     public function getApi(string $key): BucketDb
     {
-        if (isset($this->api[$key])) {
-            return $this->api[$key];
+        if (! is_subclass_of($key, BucketDb::class)) {
+            throw new BucketApiNotFoundException('API "' . $key . '" not found');
         }
-        throw new BucketApiNotFoundException('API "' . $key . '" not found');
+
+        return $this->api;
     }
 
     /**
