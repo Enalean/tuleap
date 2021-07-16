@@ -101,6 +101,8 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Natu
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TimeboxArtifactLinkType;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\TopBacklogChangeProcessor;
 use Tuleap\ProgramManagement\Domain\ProgramTracker;
+use Tuleap\ProgramManagement\Domain\Service\ProjectServiceBeforeActivationHandler;
+use Tuleap\ProgramManagement\Domain\Service\ServiceDisabledCollectorHandler;
 use Tuleap\ProgramManagement\Domain\Team\RootPlanning\RootPlanningEditionHandler;
 use Tuleap\ProgramManagement\Domain\Workspace\CollectLinkedProjectsHandler;
 use Tuleap\ProgramManagement\Domain\Workspace\ComponentInvolvedVerifier;
@@ -113,8 +115,10 @@ use Tuleap\ProgramManagement\RedirectParameterInjector;
 use Tuleap\ProgramManagement\REST\ResourcesInjector;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupPaneCollector;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupUGroupFormatter;
+use Tuleap\Project\Event\ProjectServiceBeforeActivation;
 use Tuleap\Project\ProjectAccessChecker;
 use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
+use Tuleap\Project\Service\ServiceDisabledCollector;
 use Tuleap\Project\Sidebar\CollectLinkedProjects;
 use Tuleap\Queue\QueueFactory;
 use Tuleap\Queue\WorkerEvent;
@@ -203,6 +207,8 @@ final class program_managementPlugin extends Plugin
         $this->addHook(WorkflowDeletionEvent::NAME);
         $this->addHook(TransitionDeletionEvent::NAME);
         $this->addHook(CollectLinkedProjects::NAME);
+        $this->addHook(ServiceDisabledCollector::NAME);
+        $this->addHook(ProjectServiceBeforeActivation::NAME);
 
         return parent::getHooksAndCallbacks();
     }
@@ -764,6 +770,18 @@ final class program_managementPlugin extends Plugin
         );
 
         $permission_per_group_section_builder->collectSections($event);
+    }
+
+    public function serviceDisabledCollector(ServiceDisabledCollector $collector): void
+    {
+        $handler = new ServiceDisabledCollectorHandler(new TeamDao());
+        $handler->handle($collector, $this->getServiceShortname());
+    }
+
+    public function projectServiceBeforeActivation(ProjectServiceBeforeActivation $event): void
+    {
+        $handler = new ProjectServiceBeforeActivationHandler(new TeamDao());
+        $handler->handle($event, $this->getServiceShortname());
     }
 
     private function getComponentInvolvedVerifier(): ComponentInvolvedVerifier

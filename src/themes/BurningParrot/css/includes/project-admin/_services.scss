@@ -24,20 +24,9 @@
 }
 
 .project-admin-services-modals-top-fields {
-    display: flex;
-
-    > .tlp-form-element,
-    > .tlp-property {
-        margin: 0 var(--tlp-x-large-spacing) var(--tlp-medium-spacing) 0;
-
-        &:first-child {
-            width: 50%;
-        }
-
-        &:last-child {
-            margin: 0 0 var(--tlp-medium-spacing);
-        }
-    }
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0 var(--tlp-x-large-spacing);
 }
 
 .project-admin-services-modal-preview {

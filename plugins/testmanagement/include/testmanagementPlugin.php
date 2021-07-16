@@ -594,15 +594,15 @@ class testmanagementPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDecla
         }
     }
 
-    public function project_service_before_activation(ProjectServiceBeforeActivation $event): void // phpcs:ignore PSR1.Methods.CamelCapsMethodName
+    public function projectServiceBeforeActivation(ProjectServiceBeforeActivation $event): void
     {
-        $service_short_name = $event->getServiceShortname();
-        $project            = $event->getProject();
+        $service_short_name = $this->getServiceShortname();
 
-        if ($service_short_name !== $this->getServiceShortname()) {
+        if (! $event->isForService($this->getServiceShortname())) {
             return;
         }
 
+        $project = $event->getProject();
         $event->pluginSetAValue();
 
         $dao                          = new ArtifactLinksUsageDao();

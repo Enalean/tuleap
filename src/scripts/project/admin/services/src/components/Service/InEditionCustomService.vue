@@ -25,9 +25,8 @@
             <service-is-used
                 id="project-service-edit-modal-enabled"
                 v-bind:value="service.is_used"
+                v-bind:disabled-reason="service.is_disabled_reason"
             />
-        </div>
-        <div class="project-admin-services-modals-top-fields">
             <icon-selector
                 id="project-service-edit-modal-icon"
                 v-model="service.icon_name"

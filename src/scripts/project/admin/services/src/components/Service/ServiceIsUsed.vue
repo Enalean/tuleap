@@ -28,6 +28,7 @@
                 name="is_used"
                 value="1"
                 v-bind:checked="props.value"
+                v-bind:disabled="props.disabledReason !== ''"
             />
             <label
                 class="tlp-switch-button"
@@ -35,6 +36,9 @@
                 aria-hidden
                 data-test="service-is-used"
             ></label>
+        </div>
+        <div v-if="props.disabledReason !== ''" class="tlp-text-info">
+            {{ props.disabledReason }}
         </div>
     </div>
 </template>

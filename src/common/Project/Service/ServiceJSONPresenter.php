@@ -24,32 +24,20 @@ namespace Tuleap\Project\Service;
 
 final class ServiceJSONPresenter
 {
-    /** @var int */
-    public $id;
-    /** @var string */
-    public $short_name;
-    /** @var string */
-    public $label;
-    /** @var string */
-    public $icon_name;
-    /** @var string */
-    public $link;
-    /** @var string */
-    public $description;
-    /** @var bool */
-    public $is_active;
-    /** @var bool */
-    public $is_used;
-    /** @var bool */
-    public $is_in_iframe;
-    /** @var bool */
-    public $is_in_new_tab;
-    /** @var int */
-    public $rank;
-    /** @var bool */
-    public $is_project_scope;
-    /** @var bool */
-    public $is_link_customizable;
+    public int $id;
+    public string $short_name;
+    public string $label;
+    public string $icon_name;
+    public string $link;
+    public string $description;
+    public bool $is_active;
+    public bool $is_used;
+    public bool $is_in_iframe;
+    public bool $is_in_new_tab;
+    public int $rank;
+    public bool $is_project_scope;
+    public bool $is_link_customizable;
+    public string $is_disabled_reason;
 
     public function __construct(
         int $id,
@@ -64,7 +52,8 @@ final class ServiceJSONPresenter
         bool $is_in_new_tab,
         int $rank,
         bool $is_project_scope,
-        bool $is_link_customizable
+        bool $is_link_customizable,
+        string $is_disabled_reason
     ) {
         $this->id                   = $id;
         $this->short_name           = $short_name;
@@ -79,5 +68,7 @@ final class ServiceJSONPresenter
         $this->rank                 = $rank;
         $this->is_project_scope     = $is_project_scope;
         $this->is_link_customizable = $is_link_customizable;
+        $this->is_link_customizable = $is_link_customizable;
+        $this->is_disabled_reason   = $is_disabled_reason;
     }
 }

@@ -28,9 +28,8 @@
                 v-if="can_update_is_used"
                 id="project-service-edit-modal-enabled"
                 v-bind:value="service.is_used"
+                v-bind:disabled-reason="service.is_disabled_reason"
             />
-        </div>
-        <div class="project-admin-services-modals-top-fields">
             <read-only-service-icon v-bind:value="service.icon_name" />
             <service-is-active
                 id="project-service-edit-modal-active"

@@ -27,88 +27,59 @@ class ProjectServiceBeforeActivation implements Dispatchable
 {
     public const NAME = 'project_service_before_activation';
 
-    /**
-     * @var Project
-     */
-    private $project;
+    private Project $project;
+    private string $service_short_name;
+    private bool $plugin_set_a_value       = false;
+    private string $warning_message        = '';
+    private bool $service_can_be_activated = false;
 
-    /**
-     * @var string
-     */
-    private $service_short_name;
-
-    /**
-     * @var bool
-     */
-    private $plugin_set_a_value = false;
-
-    /**
-     * @var string
-     */
-    private $warning_message = '';
-
-    /**
-     * @var bool
-     */
-    private $service_can_be_activated = false;
-
-    public function __construct(Project $project, $service_short_name)
+    public function __construct(Project $project, string $service_short_name)
     {
         $this->project            = $project;
         $this->service_short_name = $service_short_name;
     }
 
-    /**
-     * @return Project
-     */
-    public function getProject()
+    public function getProject(): Project
     {
         return $this->project;
     }
 
-    /**
-     * @return string
-     */
-    public function getServiceShortname()
+    public function getServiceShortname(): string
     {
         return $this->service_short_name;
     }
 
-    /**
-     * @return bool
-     */
-    public function doesPluginSetAValue()
+    public function isForService(string $service): bool
+    {
+        return $this->service_short_name === $service;
+    }
+
+    public function doesPluginSetAValue(): bool
     {
         return $this->plugin_set_a_value;
     }
 
-    /**
-     * @return bool
-     */
-    public function canServiceBeActivated()
+    public function canServiceBeActivated(): bool
     {
         return $this->service_can_be_activated;
     }
 
-    /**
-     * @return string
-     */
-    public function getWarningMessage()
+    public function getWarningMessage(): string
     {
         return $this->warning_message;
     }
 
-    public function pluginSetAValue()
+    public function pluginSetAValue(): void
     {
         $this->plugin_set_a_value = true;
     }
 
-    public function serviceCanBeActivated()
+    public function serviceCanBeActivated(): void
     {
         $this->service_can_be_activated = true;
     }
 
-    public function setWarningMessage($message)
+    public function setWarningMessage(string $message): void
     {
         $this->warning_message = $message;
     }
