@@ -24,15 +24,18 @@ namespace Tuleap\ProgramManagement;
 
 use Tuleap\GlobalLanguageMock;
 use Tuleap\ProgramManagement\Domain\BuildProject;
+use Tuleap\ProgramManagement\Domain\Program\Admin\PlannableTrackersConfiguration\PotentialPlannableTrackersConfigurationPresentersBuilder;
 use Tuleap\ProgramManagement\Domain\Program\Admin\PotentialTeam\PotentialTeam;
 use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramAdminPresenter;
-use Tuleap\ProgramManagement\Stub\BuildPotentialPlannableTrackersConfigurationPresentersStub;
-use Tuleap\ProgramManagement\Stub\BuildPotentialProgramIncrementTrackerConfigurationPresentersStub;
+use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramIncrementTrackerConfiguration\PotentialProgramIncrementTrackerConfigurationPresentersBuilder;
+use Tuleap\ProgramManagement\Domain\TrackerReference;
 use Tuleap\ProgramManagement\Stub\BuildPotentialTeamsStub;
 use Tuleap\ProgramManagement\Stub\BuildProgramStub;
 use Tuleap\ProgramManagement\Stub\BuildProjectStub;
 use Tuleap\ProgramManagement\Stub\BuildProjectUGroupCanPrioritizeItemsPresentersStub;
+use Tuleap\ProgramManagement\Stub\RetrievePlannableTrackersStub;
 use Tuleap\ProgramManagement\Stub\RetrieveProgramIncrementLabelsStub;
+use Tuleap\ProgramManagement\Stub\RetrieveTrackerFromProgramStub;
 use Tuleap\ProgramManagement\Stub\RetrieveVisibleIterationTrackerStub;
 use Tuleap\ProgramManagement\Stub\RetrieveVisibleProgramIncrementTrackerStub;
 use Tuleap\ProgramManagement\Stub\SearchTeamsOfProgramStub;
@@ -73,10 +76,10 @@ final class DisplayAdminProgramManagementControllerTest extends \Tuleap\Test\PHP
      * @var \EventManager|\PHPUnit\Framework\MockObject\MockObject
      */
     private $event_manager;
-    private BuildPotentialProgramIncrementTrackerConfigurationPresentersStub $program_increment_tracker_builder;
+    private PotentialProgramIncrementTrackerConfigurationPresentersBuilder $program_increment_tracker_builder;
     private VerifyIsTeamStub $team_verifier;
     private VerifyProjectPermissionStub $permission_verifier;
-    private BuildPotentialPlannableTrackersConfigurationPresentersStub $iteration_tracker_builder;
+    private PotentialPlannableTrackersConfigurationPresentersBuilder $plannable_tracker_builder;
     private \HTTPRequest $request;
 
     protected function setUp(): void
@@ -94,8 +97,8 @@ final class DisplayAdminProgramManagementControllerTest extends \Tuleap\Test\PHP
         $this->team_searcher                     = SearchTeamsOfProgramStub::buildTeams(150);
         $this->build_project                     = new BuildProjectStub();
         $this->event_manager                     = $this->createMock(\EventManager::class);
-        $this->program_increment_tracker_builder = BuildPotentialProgramIncrementTrackerConfigurationPresentersStub::buildWithValidProgramTrackers();
-        $this->iteration_tracker_builder         = BuildPotentialPlannableTrackersConfigurationPresentersStub::buildPresentersFromIds();
+        $this->program_increment_tracker_builder = new PotentialProgramIncrementTrackerConfigurationPresentersBuilder();
+        $this->plannable_tracker_builder         = new PotentialPlannableTrackersConfigurationPresentersBuilder(RetrievePlannableTrackersStub::buildIds());
         $this->build_program                     = BuildProgramStub::stubValidProgram();
         $this->team_verifier                     = VerifyIsTeamStub::withNotValidTeam();
         $this->permission_verifier               = VerifyProjectPermissionStub::withAdministrator();
@@ -178,10 +181,13 @@ final class DisplayAdminProgramManagementControllerTest extends \Tuleap\Test\PHP
             $this->event_manager,
             RetrieveVisibleIterationTrackerStub::withValidTracker(TrackerTestBuilder::aTracker()->build()),
             $this->program_increment_tracker_builder,
-            $this->iteration_tracker_builder,
+            $this->plannable_tracker_builder,
             BuildProjectUGroupCanPrioritizeItemsPresentersStub::buildWithIds('102_3'),
             $this->permission_verifier,
-            RetrieveProgramIncrementLabelsStub::buildLabels(null, null)
+            RetrieveProgramIncrementLabelsStub::buildLabels(null, null),
+            RetrieveTrackerFromProgramStub::fromTrackerReference(
+                TrackerReference::fromTracker(TrackerTestBuilder::aTracker()->withId(80)->withName('Sprint')->build()),
+            ),
         );
     }
 

@@ -22,39 +22,35 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Stub;
 
-use Tuleap\ProgramManagement\Domain\Program\Admin\PlannableTrackersConfiguration\BuildPotentialPlannableTrackersConfigurationPresenters;
 use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramForAdministrationIdentifier;
-use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramSelectOptionConfigurationPresenter;
+use Tuleap\ProgramManagement\Domain\TrackerReference;
+use Tuleap\ProgramManagement\Domain\Workspace\RetrieveTrackerFromProgram;
 
-final class BuildPotentialPlannableTrackersConfigurationPresentersStub implements BuildPotentialPlannableTrackersConfigurationPresenters
+final class RetrieveTrackerFromProgramStub implements RetrieveTrackerFromProgram
 {
     /**
-     * @var int[]
+     * @var TrackerReference[]
      */
-    private array $ids;
+    private array $trackers;
 
     /**
-     * @param int[] $ids
+     * @param TrackerReference[] $trackers
      */
-    private function __construct(array $ids)
+    private function __construct(array $trackers)
     {
-        $this->ids = $ids;
+        $this->trackers = $trackers;
     }
 
     /**
-     * @return ProgramSelectOptionConfigurationPresenter[]
+     * @return TrackerReference[]
      */
-    public function buildPotentialPlannableTrackerPresenters(ProgramForAdministrationIdentifier $program): array
+    public function retrieveAllTrackersFromProgramId(ProgramForAdministrationIdentifier $program): array
     {
-        $presenters = [];
-        foreach ($this->ids as $id) {
-            $presenters[] = new ProgramSelectOptionConfigurationPresenter($id, 'tracker', false);
-        }
-        return $presenters;
+        return $this->trackers;
     }
 
-    public static function buildPresentersFromIds(int ...$ids): self
+    public static function fromTrackerReference(TrackerReference ...$trackers): self
     {
-        return new self($ids);
+        return new self($trackers);
     }
 }

@@ -20,15 +20,15 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Domain\Program\Admin\PlannableTrackersConfiguration;
+namespace Tuleap\ProgramManagement\Domain\Workspace;
 
 use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramForAdministrationIdentifier;
-use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramSelectOptionConfigurationPresenter;
+use Tuleap\ProgramManagement\Domain\TrackerReference;
 
-interface BuildPotentialPlannableTrackersConfigurationPresenters
+interface RetrieveTrackerFromProgram
 {
     /**
-     * @return ProgramSelectOptionConfigurationPresenter[]
+     * @return TrackerReference[]
      */
-    public function buildPotentialPlannableTrackerPresenters(ProgramForAdministrationIdentifier $program): array;
+    public function retrieveAllTrackersFromProgramId(ProgramForAdministrationIdentifier $program): array;
 }

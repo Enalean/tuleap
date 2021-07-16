@@ -20,37 +20,31 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Adapter\Program\Admin\ProgramIncrementTrackerConfiguration;
+namespace Tuleap\ProgramManagement\Domain\Program\Admin\ProgramIncrementTrackerConfiguration;
 
+use Tuleap\ProgramManagement\Domain\Program\Admin\PotentialTrackerCollection;
 use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramForAdministrationIdentifier;
-use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramIncrementTrackerConfiguration\BuildPotentialProgramIncrementTrackerConfigurationPresenters;
 use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramSelectOptionConfigurationPresenter;
 use Tuleap\ProgramManagement\Domain\ProgramTracker;
 
-final class PotentialProgramIncrementTrackerConfigurationPresentersBuilder implements BuildPotentialProgramIncrementTrackerConfigurationPresenters
+final class PotentialProgramIncrementTrackerConfigurationPresentersBuilder
 {
-    private \TrackerFactory $tracker_factory;
-
-    public function __construct(\TrackerFactory $tracker_factory)
-    {
-        $this->tracker_factory = $tracker_factory;
-    }
-
     /**
      * @return ProgramSelectOptionConfigurationPresenter[]
      */
-    public function buildPotentialProgramIncrementTrackerPresenters(ProgramForAdministrationIdentifier $program, ?ProgramTracker $program_increment_tracker): array
-    {
-        $all_trackers = $this->tracker_factory->getTrackersByGroupId($program->id);
-
+    public function buildPotentialProgramIncrementTrackerPresenters(
+        ProgramForAdministrationIdentifier $program,
+        ?ProgramTracker $program_increment_tracker,
+        PotentialTrackerCollection $all_potential_trackers
+    ): array {
         $potential_tracker_presenters = [];
 
-        foreach ($all_trackers as $potential_tracker) {
-            $selected = $program_increment_tracker && $potential_tracker->getId() === $program_increment_tracker->getTrackerId();
+        foreach ($all_potential_trackers->trackers_reference as $potential_tracker) {
+            $selected = $program_increment_tracker && $potential_tracker->id === $program_increment_tracker->getTrackerId();
 
             $potential_tracker_presenters[] = new ProgramSelectOptionConfigurationPresenter(
-                $potential_tracker->getId(),
-                $potential_tracker->getName(),
+                $potential_tracker->id,
+                $potential_tracker->label,
                 $selected
             );
         }
