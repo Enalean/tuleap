@@ -14,6 +14,9 @@ msgstr ""
 msgid "Choose a project to aggregate"
 msgstr "Choisissez un projet à regrouper"
 
+msgid "Choose a source tracker for Iterations"
+msgstr "Choisissez un outil de suivi source pour les Itérations"
+
 msgid "Choose a source tracker for Program Increments"
 msgstr "Choisissez un outil de suivi source pour les Incréments de Programme"
 

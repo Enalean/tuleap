@@ -105,6 +105,14 @@ describe("SingleSelectionManager", () => {
             expectChangeEventToHaveBeenFiredOnSourceSelectBox(source_select_box, 0);
         });
 
+        it("reset current value with placeholder if item is disabled", () => {
+            item_1.is_disabled = true;
+            manager.processSelection(item_1.element);
+            const selected_value = selection_container.querySelector(".list-picker-selected-value");
+            expect(selection_container.contains(placeholder)).toBe(true);
+            expect(selected_value).toBeNull();
+        });
+
         it("replaces the placeholder with the currently selected value and toggles the selected attributes on the <select> options", () => {
             manager.processSelection(item_1.element);
 

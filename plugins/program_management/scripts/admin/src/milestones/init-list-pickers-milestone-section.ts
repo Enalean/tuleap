@@ -21,10 +21,12 @@ import { createListPicker } from "@tuleap/list-picker";
 import type { GetText } from "@tuleap/core/scripts/tuleap/gettext/gettext-init";
 import { disabledPlannableTrackers } from "../helper/disabled-plannable-tracker-helper";
 import { getHTMLSelectElementFromId } from "../helper/HTML_select_element_extractor";
+import { disabledIterationTrackersFromProgramIncrementAndPlannableTrackers } from "../helper/disabled-iteration-tracker-helper";
 
 export async function initListPickersMilestoneSection(
     doc: Document,
-    gettext_provider: GetText
+    gettext_provider: GetText,
+    use_iteration: boolean
 ): Promise<void> {
     const program_increment_tracker_element = doc.getElementById(
         "admin-configuration-program-increment-tracker"
@@ -67,10 +69,68 @@ export async function initListPickersMilestoneSection(
 
     disabledPlannableTrackers(doc, program_increment_tracker_element);
 
-    program_increment_tracker_element.addEventListener("change", (e) => {
-        if (!(e.target instanceof HTMLSelectElement)) {
+    program_increment_tracker_element.addEventListener("change", (event) => {
+        if (!(event.target instanceof HTMLSelectElement)) {
             throw new Error("Target element is not HTMLSelectElement");
         }
-        disabledPlannableTrackers(doc, e.target);
+
+        disabledPlannableTrackers(doc, event.target);
+    });
+
+    if (use_iteration) {
+        await setIterationSection(
+            doc,
+            program_increment_tracker_element,
+            plannable_trackers_element,
+            gettext_provider
+        );
+    }
+}
+
+async function setIterationSection(
+    doc: Document,
+    program_increment_tracker_element: HTMLSelectElement,
+    plannable_trackers_element: HTMLSelectElement,
+    gettext_provider: GetText
+): Promise<void> {
+    const iteration_trackers_element = getHTMLSelectElementFromId(
+        doc,
+        "admin-configuration-iteration-tracker"
+    );
+
+    await createListPicker(iteration_trackers_element, {
+        locale: doc.body.dataset.userLocale,
+        placeholder: gettext_provider.gettext("Choose a source tracker for Iterations"),
+        is_filterable: true,
+    });
+
+    disabledIterationTrackersFromProgramIncrementAndPlannableTrackers(
+        doc,
+        program_increment_tracker_element.value,
+        [...plannable_trackers_element.selectedOptions].map((option) => option.value)
+    );
+
+    program_increment_tracker_element.addEventListener("change", (event) => {
+        if (!(event.target instanceof HTMLSelectElement)) {
+            throw new Error("Target element is not HTMLSelectElement");
+        }
+
+        disabledIterationTrackersFromProgramIncrementAndPlannableTrackers(
+            doc,
+            event.target.value,
+            [...plannable_trackers_element.selectedOptions].map((option) => option.value)
+        );
+    });
+
+    plannable_trackers_element.addEventListener("change", (event) => {
+        if (!(event.target instanceof HTMLSelectElement)) {
+            throw new Error("Target element is not HTMLSelectElement");
+        }
+
+        disabledIterationTrackersFromProgramIncrementAndPlannableTrackers(
+            doc,
+            program_increment_tracker_element.value,
+            [...event.target.selectedOptions].map((option) => option.value)
+        );
     });
 }

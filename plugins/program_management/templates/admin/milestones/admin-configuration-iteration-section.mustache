@@ -1,0 +1,18 @@
+<div class="tlp-pane-container">
+    <div class="tlp-pane-header">
+        <h1 class="tlp-pane-title">{{# dgettext }}tuleap-program_management | Iterations{{/ dgettext }}</h1>
+    </div>
+    <section class="tlp-pane-section">
+        <div class="tlp-form-element">
+            <label class="tlp-label" for="admin-configuration-iteration-tracker">
+                {{# dgettext }}tuleap-program_management | Source tracker for Iterations{{/ dgettext }}
+            </label>
+            <select id="admin-configuration-iteration-tracker" name="list-value">
+                <option value=""></option>
+                {{# potential_iterations }}
+                    <option value="{{ id }}" {{# is_selected }}selected{{/ is_selected }}>{{ label }}</option>
+                {{/ potential_iterations }}
+            </select>
+        </div>
+    </section>
+</div>

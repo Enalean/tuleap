@@ -24,6 +24,7 @@ namespace Tuleap\ProgramManagement;
 
 use Tuleap\GlobalLanguageMock;
 use Tuleap\ProgramManagement\Domain\BuildProject;
+use Tuleap\ProgramManagement\Domain\Program\Admin\IterationTrackerConfiguration\PotentialIterationTrackerConfigurationPresentersBuilder;
 use Tuleap\ProgramManagement\Domain\Program\Admin\PlannableTrackersConfiguration\PotentialPlannableTrackersConfigurationPresentersBuilder;
 use Tuleap\ProgramManagement\Domain\Program\Admin\PotentialTeam\PotentialTeam;
 use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramAdminPresenter;
@@ -33,6 +34,7 @@ use Tuleap\ProgramManagement\Stub\BuildPotentialTeamsStub;
 use Tuleap\ProgramManagement\Stub\BuildProgramStub;
 use Tuleap\ProgramManagement\Stub\BuildProjectStub;
 use Tuleap\ProgramManagement\Stub\BuildProjectUGroupCanPrioritizeItemsPresentersStub;
+use Tuleap\ProgramManagement\Stub\RetrieveIterationTrackerStub;
 use Tuleap\ProgramManagement\Stub\RetrievePlannableTrackersStub;
 use Tuleap\ProgramManagement\Stub\RetrieveProgramIncrementLabelsStub;
 use Tuleap\ProgramManagement\Stub\RetrieveTrackerFromProgramStub;
@@ -188,6 +190,7 @@ final class DisplayAdminProgramManagementControllerTest extends \Tuleap\Test\PHP
             RetrieveTrackerFromProgramStub::fromTrackerReference(
                 TrackerReference::fromTracker(TrackerTestBuilder::aTracker()->withId(80)->withName('Sprint')->build()),
             ),
+            new PotentialIterationTrackerConfigurationPresentersBuilder(RetrieveIterationTrackerStub::buildValidTrackerId(10))
         );
     }
 

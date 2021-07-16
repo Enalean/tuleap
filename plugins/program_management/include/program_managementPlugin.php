@@ -24,6 +24,7 @@ use Tuleap\AgileDashboard\BlockScrumAccess;
 use Tuleap\AgileDashboard\Planning\PlanningAdministrationDelegation;
 use Tuleap\AgileDashboard\Planning\RootPlanning\RootPlanningEditionEvent;
 use Tuleap\AgileDashboard\REST\v1\Milestone\OriginalProjectCollector;
+use Tuleap\CLI\Events\GetWhitelistedKeys;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Layout\IncludeAssets;
@@ -89,6 +90,7 @@ use Tuleap\ProgramManagement\Adapter\Workspace\WorkspaceDAO;
 use Tuleap\ProgramManagement\DisplayAdminProgramManagementController;
 use Tuleap\ProgramManagement\DisplayProgramBacklogController;
 use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ConfigurationErrorsCollector;
+use Tuleap\ProgramManagement\Domain\Program\Admin\IterationTrackerConfiguration\PotentialIterationTrackerConfigurationPresentersBuilder;
 use Tuleap\ProgramManagement\Domain\Program\Admin\PlannableTrackersConfiguration\PotentialPlannableTrackersConfigurationPresentersBuilder;
 use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramIncrementTrackerConfiguration\PotentialProgramIncrementTrackerConfigurationPresentersBuilder;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\ArtifactCreatedHandler;
@@ -210,6 +212,7 @@ final class program_managementPlugin extends Plugin
         $this->addHook(CollectLinkedProjects::NAME);
         $this->addHook(ServiceDisabledCollector::NAME);
         $this->addHook(ProjectServiceBeforeActivation::NAME);
+        $this->addHook(GetWhitelistedKeys::NAME);
 
         return parent::getHooksAndCallbacks();
     }
@@ -227,6 +230,11 @@ final class program_managementPlugin extends Plugin
     public function getServiceShortname(): string
     {
         return self::SERVICE_SHORTNAME;
+    }
+
+    public function getWhitelistedKeys(GetWhitelistedKeys $event): void
+    {
+        $event->addConfigClass(DisplayAdminProgramManagementController::class);
     }
 
     public function serviceUrlCollector(ServiceUrlCollector $collector): void
@@ -309,7 +317,8 @@ final class program_managementPlugin extends Plugin
             new ProjectUGroupCanPrioritizeItemsPresentersBuilder(new UGroupManager(), $project_manager, new CanPrioritizeFeaturesDAO()),
             new ProjectPermissionVerifier(),
             new ProgramIncrementsDAO(),
-            new TrackerFactoryAdapter(TrackerFactory::instance())
+            new TrackerFactoryAdapter(TrackerFactory::instance()),
+            new PotentialIterationTrackerConfigurationPresentersBuilder(new IterationsDAO())
         );
     }
 

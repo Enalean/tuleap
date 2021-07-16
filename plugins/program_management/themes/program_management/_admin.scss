@@ -82,5 +82,9 @@
 
 .program-management-admin-button-save-configuration {
     display: flex;
-    margin: 0 auto;
+    margin: 0 auto var(--tlp-medium-spacing) auto;
+}
+
+.admin-configuration-container-milestone {
+    border-bottom: 1px solid var(--tlp-neutral-normal-color);
 }

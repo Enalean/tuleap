@@ -86,8 +86,9 @@ msgid ""
 "Expected tracker with id <a href=\"%s\">#%d</a> to have a %s field "
 "associated to its TimeFrame semantic, but this field was not found"
 msgstr ""
-"L'outils de suivi avec l'identifiant <a href=\"%s\">#%d</a> devrait avoir un champ de type %s associé à sa "
-"sémantique plage de temps, mais le champ n'a pas été trouvé"
+"L'outils de suivi avec l'identifiant <a href=\"%s\">#%d</a> devrait avoir un "
+"champ de type %s associé à sa sémantique plage de temps, mais le champ n'a "
+"pas été trouvé"
 
 #, php-format
 msgid ""
@@ -153,6 +154,9 @@ msgstr ""
 "Les ids des trackers planifiables ne doivent pas contenir l'id de l'outils "
 "de suivi d'itération"
 
+msgid "Iterations"
+msgstr "Itérations"
+
 msgid "Milestones"
 msgstr "Jalons"
 
@@ -174,8 +178,8 @@ msgid ""
 "No matching value found for value %s in field <a href=\"%s\">#%d</a> of "
 "tracker #%d by duck typing."
 msgstr ""
-"Aucune valeur trouvé pour %s dans le champ <a href=\"%s\">#%d</a> de "
-"l'outil de suivi #%d par duck typing."
+"Aucune valeur trouvé pour %s dans le champ <a href=\"%s\">#%d</a> de l'outil "
+"de suivi #%d par duck typing."
 
 msgid "No project have been aggregated yet."
 msgstr "Aucun projet n'a encore été regroupé."
@@ -190,7 +194,9 @@ msgid "Please confirm your action."
 msgstr "Merci de confirmer votre action."
 
 msgid "Plural. Leave it blank to keep default label \"Program Increments\"."
-msgstr "Au pluriel. Laisser vide pour garder le label par défaut \"Program Increments\"."
+msgstr ""
+"Au pluriel. Laisser vide pour garder le label par défaut \"Program Increments"
+"\"."
 
 #, php-format
 msgid ""
@@ -231,7 +237,6 @@ msgstr "Administration du Programme"
 msgid "Program management service is disabled."
 msgstr "Le service de gestion de programme est désactivé."
 
-#,
 msgid "Program service cannot be enabled for Team projects."
 msgstr "Le service Programme ne peut pas être activé pour les projets Équipe."
 
@@ -303,7 +308,9 @@ msgstr ""
 msgid ""
 "Singular and lowercase. Leave it blank to keep default label \"program "
 "increment\"."
-msgstr "Au singuler et en minuscule. Laisser vide pour garder le label par défaut \"program increment\"."
+msgstr ""
+"Au singuler et en minuscule. Laisser vide pour garder le label par défaut "
+"\"program increment\"."
 
 #, php-format
 msgid ""
@@ -311,6 +318,9 @@ msgid ""
 msgstr ""
 "Certains outils de suivi n'ont pas de semantique statut définie, merci de "
 "vérifier les outils de suivi %s"
+
+msgid "Source tracker for Iterations"
+msgstr "Outil de suivi source pour les Itérations"
 
 msgid "Source tracker for Program Increments"
 msgstr "Outil de suivi source pour les Incréments de Programme"

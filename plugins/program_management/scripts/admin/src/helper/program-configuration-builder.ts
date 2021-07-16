@@ -19,7 +19,11 @@
 import type { ProgramConfiguration } from "../type";
 import { getHTMLSelectElementFromId } from "./HTML_select_element_extractor";
 
-export function buildProgramConfiguration(doc: Document, program_id: number): ProgramConfiguration {
+export function buildProgramConfiguration(
+    doc: Document,
+    program_id: number,
+    use_iteration: boolean
+): ProgramConfiguration {
     const program_increment_tracker_element = getHTMLSelectElementFromId(
         doc,
         "admin-configuration-program-increment-tracker"
@@ -41,6 +45,7 @@ export function buildProgramConfiguration(doc: Document, program_id: number): Pr
             doc,
             "admin-configuration-program-increment-sub-label-section"
         ),
+        iteration: use_iteration ? extractIterationConfigurationObject(doc) : null,
     };
 }
 
@@ -79,4 +84,17 @@ function extractInputLabel(doc: Document, element_id: string): string {
     }
 
     return program_increment_label.value;
+}
+
+function extractIterationConfigurationObject(
+    doc: Document
+): null | { iteration_tracker_id: number } {
+    const iteration_tracker_element = getHTMLSelectElementFromId(
+        doc,
+        "admin-configuration-iteration-tracker"
+    );
+    if (iteration_tracker_element.value === "") {
+        return null;
+    }
+    return { iteration_tracker_id: Number.parseInt(iteration_tracker_element.value, 10) };
 }
