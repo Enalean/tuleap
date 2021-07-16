@@ -201,7 +201,7 @@ class Router
             $this->visit_recorder,
             $this->project_flags_builder
         );
-        $this->renderAction($controller, 'index', $request, true);
+        $this->renderAction($controller, 'index', $request, true, [], ['reduce-help-button']);
     }
 
     /**
@@ -211,6 +211,7 @@ class Router
      * @param string          $action_name The controller action name (e.g. index, show...).
      * @param Codendi_Request $request     The request
      * @param array           $args        Arguments to pass to the controller action method.
+     * @param array           $extra_classes      Extra body classes
      *
      */
     private function renderAction(
@@ -218,11 +219,12 @@ class Router
         $action_name,
         Codendi_Request $request,
         bool $without_project_in_breadcrumb,
-        array $args = []
+        array $args = [],
+        array $extra_classes = []
     ): void {
         $content = $this->executeAction($controller, $action_name, $args);
 
-        $this->displayHeader($controller, $request, $this->getHeaderTitle($action_name), $without_project_in_breadcrumb);
+        $this->displayHeader($controller, $request, $this->getHeaderTitle($action_name), $without_project_in_breadcrumb, $extra_classes);
         echo $content;
         $this->displayFooter($request);
     }
@@ -288,12 +290,14 @@ class Router
      * @param mixed           $controller The controller instance
      * @param Codendi_Request $request    The request
      * @param string          $title      The page title
+     * @param array           $extra_classes      Extra body classes
      */
     private function displayHeader(
         $controller,
         Codendi_Request $request,
         $title,
-        bool $without_project_in_breadcrumb
+        bool $without_project_in_breadcrumb,
+        array $extra_classes = []
     ): void {
         $service = $this->getService($request);
 
@@ -305,7 +309,7 @@ class Router
             $title,
             $breadcrumbs->getCrumbs($project),
             $toolbar,
-            ['body_class' => ['testmanagement'], 'without-project-in-breadcrumbs' => $without_project_in_breadcrumb]
+            ['body_class' => array_merge(['testmanagement'], $extra_classes), 'without-project-in-breadcrumbs' => $without_project_in_breadcrumb]
         );
     }
 

@@ -186,6 +186,7 @@ class ProjectDashboardController
                 'title'                          => $title,
                 'group'                          => $project->getID(),
                 'toptab'                         => 'summary',
+                'body_class'                     => ['reduce-help-button'],
                 'without-project-in-breadcrumbs' => true,
             ]
         );

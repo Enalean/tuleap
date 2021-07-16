@@ -132,7 +132,7 @@ class UserDashboardController
         $purifier = Codendi_HTMLPurifier::instance();
         $GLOBALS['Response']->header([
             'title' => $purifier->purify($title),
-            'body_class' => ['body-user-dashboard']
+            'body_class' => ['body-user-dashboard', 'reduce-help-button']
         ]);
         $renderer = TemplateRendererFactory::build()->getRenderer(
             ForgeConfig::get('tuleap_dir') . '/src/templates/dashboard'

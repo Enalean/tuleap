@@ -351,7 +351,7 @@ class AgileDashboardRouter
                 break;
             case 'showKanban':
                 $header_options  = [
-                    'body_class'                 => ['agiledashboard_kanban', 'agiledashboard-body'],
+                    'body_class'                 => ['agiledashboard_kanban', 'reduce-help-button', 'agiledashboard-body'],
                     Layout::INCLUDE_FAT_COMBINED => false,
                 ];
                 $current_section = $this->current_context_section_for_kanban_provider->getSectionByKanbanId(
