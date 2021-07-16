@@ -23,17 +23,19 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Service;
 
+use Tuleap\AgileDashboard\Stub\RetrievePlanningStub;
 use Tuleap\ProgramManagement\Stub\VerifyIsTeamStub;
 use Tuleap\Project\Service\ServiceDisabledCollector;
+use Tuleap\Test\Builders\UserTestBuilder;
 
 final class ServiceDisabledCollectorHandlerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItDoesNothingForOtherPlugins(): void
     {
         $checker = VerifyIsTeamStub::withValidTeam();
-        $handler = new ServiceDisabledCollectorHandler($checker);
+        $handler = new ServiceDisabledCollectorHandler($checker, RetrievePlanningStub::stubNoPlannings());
 
-        $event = new ServiceDisabledCollector(new \Project(['group_id' => 101]), \program_managementPlugin::SERVICE_SHORTNAME);
+        $event = new ServiceDisabledCollector(new \Project(['group_id' => 101]), \program_managementPlugin::SERVICE_SHORTNAME, UserTestBuilder::aUser()->build());
         $handler->handle($event, 'other_plugin');
 
         self::assertEmpty($event->getReason());
@@ -42,20 +44,31 @@ final class ServiceDisabledCollectorHandlerTest extends \Tuleap\Test\PHPUnit\Tes
     public function testItDoesNothingWhenServiceShouldNotBeDisabled(): void
     {
         $checker = VerifyIsTeamStub::withNotValidTeam();
-        $handler = new ServiceDisabledCollectorHandler($checker);
+        $handler = new ServiceDisabledCollectorHandler($checker, RetrievePlanningStub::stubNoPlannings());
 
-        $event = new ServiceDisabledCollector(new \Project(['group_id' => 101]), \program_managementPlugin::SERVICE_SHORTNAME);
+        $event = new ServiceDisabledCollector(new \Project(['group_id' => 101]), \program_managementPlugin::SERVICE_SHORTNAME, UserTestBuilder::aUser()->build());
         $handler->handle($event, \program_managementPlugin::SERVICE_SHORTNAME);
 
         self::assertEmpty($event->getReason());
     }
 
-    public function testItDisableServiceForPlugin(): void
+    public function testItDisableServiceForTeam(): void
     {
         $checker = VerifyIsTeamStub::withValidTeam();
-        $handler = new ServiceDisabledCollectorHandler($checker);
+        $handler = new ServiceDisabledCollectorHandler($checker, RetrievePlanningStub::stubNoPlannings());
 
-        $event = new ServiceDisabledCollector(new \Project(['group_id' => 101]), \program_managementPlugin::SERVICE_SHORTNAME);
+        $event = new ServiceDisabledCollector(new \Project(['group_id' => 101]), \program_managementPlugin::SERVICE_SHORTNAME, UserTestBuilder::aUser()->build());
+        $handler->handle($event, \program_managementPlugin::SERVICE_SHORTNAME);
+
+        self::assertNotEmpty($event->getReason());
+    }
+
+    public function testItDisableServiceWhenScrumIsEnabled(): void
+    {
+        $checker = VerifyIsTeamStub::withNotValidTeam();
+        $handler = new ServiceDisabledCollectorHandler($checker, RetrievePlanningStub::stubAllPlannings());
+
+        $event = new ServiceDisabledCollector(new \Project(['group_id' => 101]), \program_managementPlugin::SERVICE_SHORTNAME, UserTestBuilder::aUser()->build());
         $handler->handle($event, \program_managementPlugin::SERVICE_SHORTNAME);
 
         self::assertNotEmpty($event->getReason());

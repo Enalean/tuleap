@@ -51,19 +51,19 @@ class ServicesPresenterBuilder
 
             $service_presenters[] = new ServicePresenter(
                 $service,
-                $this->buildJSONPresenter($service, $project)
+                $this->buildJSONPresenter($service, $project, $user)
             );
         }
 
         return new ServicesPresenter($project, $csrf, $service_presenters);
     }
 
-    private function buildJSONPresenter(Service $service, Project $project): ServiceJSONPresenter
+    private function buildJSONPresenter(Service $service, Project $project, PFUser $user): ServiceJSONPresenter
     {
         $service_link         = $this->getServiceLink($service, $project);
         $is_link_customizable = $service_link === null;
 
-        $service_disabled_collector = $this->isServiceDisabledByPlugin($service, $project);
+        $service_disabled_collector = $this->isServiceDisabledByPlugin($service, $project, $user);
         return new ServiceJSONPresenter(
             $service->getId(),
             $service->getShortName(),
@@ -117,9 +117,9 @@ class ServicesPresenterBuilder
         return $service_url_collector->getUrl();
     }
 
-    private function isServiceDisabledByPlugin(Service $service, Project $project): ServiceDisabledCollector
+    private function isServiceDisabledByPlugin(Service $service, Project $project, PFUser $user): ServiceDisabledCollector
     {
-        $service_collector = new ServiceDisabledCollector($project, $service->getShortName());
+        $service_collector = new ServiceDisabledCollector($project, $service->getShortName(), $user);
         $this->event_manager->processEvent($service_collector);
 
         return $service_collector;

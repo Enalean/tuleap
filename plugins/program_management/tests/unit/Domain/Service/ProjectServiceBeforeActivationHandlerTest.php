@@ -23,17 +23,23 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Service;
 
+use Tuleap\AgileDashboard\Stub\RetrievePlanningStub;
 use Tuleap\ProgramManagement\Stub\VerifyIsTeamStub;
 use Tuleap\Project\Event\ProjectServiceBeforeActivation;
+use Tuleap\Test\Builders\UserTestBuilder;
 
 final class ProjectServiceBeforeActivationHandlerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItDoesNothingForOtherPlugins(): void
     {
         $checker = VerifyIsTeamStub::withValidTeam();
-        $handler = new ProjectServiceBeforeActivationHandler($checker);
+        $handler = new ProjectServiceBeforeActivationHandler($checker, RetrievePlanningStub::stubAllPlannings());
 
-        $event = new ProjectServiceBeforeActivation(new \Project(['group_id' => 101]), \program_managementPlugin::SERVICE_SHORTNAME);
+        $event = new ProjectServiceBeforeActivation(
+            new \Project(['group_id' => 101]),
+            \program_managementPlugin::SERVICE_SHORTNAME,
+            UserTestBuilder::aUser()->build()
+        );
         $handler->handle($event, 'other_plugin');
 
         self::assertEmpty($event->getWarningMessage());
@@ -43,21 +49,29 @@ final class ProjectServiceBeforeActivationHandlerTest extends \Tuleap\Test\PHPUn
     public function testItDoesNothingWhenServiceShouldNotBeDisabled(): void
     {
         $checker = VerifyIsTeamStub::withNotValidTeam();
-        $handler = new ProjectServiceBeforeActivationHandler($checker);
+        $handler = new ProjectServiceBeforeActivationHandler($checker, RetrievePlanningStub::stubNoPlannings());
 
-        $event = new ProjectServiceBeforeActivation(new \Project(['group_id' => 101]), \program_managementPlugin::SERVICE_SHORTNAME);
+        $event = new ProjectServiceBeforeActivation(
+            new \Project(['group_id' => 101]),
+            \program_managementPlugin::SERVICE_SHORTNAME,
+            UserTestBuilder::aUser()->build()
+        );
         $handler->handle($event, \program_managementPlugin::SERVICE_SHORTNAME);
 
         self::assertEmpty($event->getWarningMessage());
         self::assertFalse($event->doesPluginSetAValue());
     }
 
-    public function testItDisableServiceForPlugin(): void
+    public function testItDisableServiceWhenScrumIsEnabled(): void
     {
         $checker = VerifyIsTeamStub::withValidTeam();
-        $handler = new ProjectServiceBeforeActivationHandler($checker);
+        $handler = new ProjectServiceBeforeActivationHandler($checker, RetrievePlanningStub::stubAllPlannings());
 
-        $event = new ProjectServiceBeforeActivation(new \Project(['group_id' => 101]), \program_managementPlugin::SERVICE_SHORTNAME);
+        $event = new ProjectServiceBeforeActivation(
+            new \Project(['group_id' => 101]),
+            \program_managementPlugin::SERVICE_SHORTNAME,
+            UserTestBuilder::aUser()->build()
+        );
         $handler->handle($event, \program_managementPlugin::SERVICE_SHORTNAME);
 
         self::assertNotEmpty($event->getWarningMessage());

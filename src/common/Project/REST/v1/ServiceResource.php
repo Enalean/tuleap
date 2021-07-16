@@ -101,7 +101,7 @@ class ServiceResource extends AuthenticatedResource
         $service = $this->getService($id, $user);
         $this->sendAllowHeaders();
         try {
-            $this->checkServiceCanBeUpdated($body, $service);
+            $this->checkServiceCanBeUpdated($body, $service, $user);
             $this->service_updator->updateService(
                 $service->getProject(),
                 $this->getServicePOSTDataFromBody($service, $body),
@@ -167,9 +167,9 @@ class ServiceResource extends AuthenticatedResource
     /**
      * @throws I18NRestException
      */
-    private function checkServiceCanBeUpdated(ServiceRepresentation $body, Service $service): void
+    private function checkServiceCanBeUpdated(ServiceRepresentation $body, Service $service, PFUser $user): void
     {
-        $this->service_manager->checkServiceCanBeUpdated($service->getProject(), $service->getShortName(), $body->is_enabled);
+        $this->service_manager->checkServiceCanBeUpdated($service->getProject(), $service->getShortName(), $body->is_enabled, $user);
         if ($body->is_enabled && ! $service->isActive()) {
             throw new I18NRestException(400, _('Inactive service cannot be enabled.'));
         }

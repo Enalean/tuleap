@@ -89,6 +89,8 @@ use Tuleap\ProgramManagement\Adapter\Workspace\TrackerFactoryAdapter;
 use Tuleap\ProgramManagement\Adapter\Workspace\WorkspaceDAO;
 use Tuleap\ProgramManagement\DisplayAdminProgramManagementController;
 use Tuleap\ProgramManagement\DisplayProgramBacklogController;
+use Tuleap\ProgramManagement\Domain\Service\ProjectServiceBeforeActivationHandler;
+use Tuleap\ProgramManagement\Domain\Service\ServiceDisabledCollectorHandler;
 use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ConfigurationErrorsCollector;
 use Tuleap\ProgramManagement\Domain\Program\Admin\IterationTrackerConfiguration\PotentialIterationTrackerConfigurationPresentersBuilder;
 use Tuleap\ProgramManagement\Domain\Program\Admin\PlannableTrackersConfiguration\PotentialPlannableTrackersConfigurationPresentersBuilder;
@@ -104,8 +106,6 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Natu
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TimeboxArtifactLinkType;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\TopBacklogChangeProcessor;
 use Tuleap\ProgramManagement\Domain\ProgramTracker;
-use Tuleap\ProgramManagement\Domain\Service\ProjectServiceBeforeActivationHandler;
-use Tuleap\ProgramManagement\Domain\Service\ServiceDisabledCollectorHandler;
 use Tuleap\ProgramManagement\Domain\Team\RootPlanning\RootPlanningEditionHandler;
 use Tuleap\ProgramManagement\Domain\Workspace\CollectLinkedProjectsHandler;
 use Tuleap\ProgramManagement\Domain\Workspace\ComponentInvolvedVerifier;
@@ -785,13 +785,14 @@ final class program_managementPlugin extends Plugin
 
     public function serviceDisabledCollector(ServiceDisabledCollector $collector): void
     {
-        $handler = new ServiceDisabledCollectorHandler(new TeamDao());
+        $handler = new ServiceDisabledCollectorHandler(new TeamDao(), PlanningFactory::build());
         $handler->handle($collector, $this->getServiceShortname());
     }
 
     public function projectServiceBeforeActivation(ProjectServiceBeforeActivation $event): void
     {
-        $handler = new ProjectServiceBeforeActivationHandler(new TeamDao());
+        $handler = new ProjectServiceBeforeActivationHandler(new TeamDao(), PlanningFactory::build());
+
         $handler->handle($event, $this->getServiceShortname());
     }
 

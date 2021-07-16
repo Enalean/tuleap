@@ -37,11 +37,16 @@ final class ServiceDisabledCollector implements Dispatchable
      * @psalm-readonly
      */
     private string $service_shortname;
+    /**
+     * @psalm-readonly
+     */
+    private \PFUser $user;
 
-    public function __construct(Project $project, string $shortname)
+    public function __construct(Project $project, string $shortname, \PFUser $user)
     {
         $this->project           = $project;
         $this->service_shortname = $shortname;
+        $this->user              = $user;
     }
 
     public function getReason(): string
@@ -62,5 +67,10 @@ final class ServiceDisabledCollector implements Dispatchable
     public function setIsDisabled(string $reason): void
     {
         $this->disabled_reason = $reason;
+    }
+
+    public function getUser(): \PFUser
+    {
+        return $this->user;
     }
 }
