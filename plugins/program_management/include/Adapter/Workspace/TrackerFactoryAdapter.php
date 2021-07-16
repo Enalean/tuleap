@@ -20,16 +20,33 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Domain\Program\Admin\ProgramIncrementTrackerConfiguration;
+namespace Tuleap\ProgramManagement\Adapter\Workspace;
 
 use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramForAdministrationIdentifier;
-use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramSelectOptionConfigurationPresenter;
-use Tuleap\ProgramManagement\Domain\ProgramTracker;
+use Tuleap\ProgramManagement\Domain\TrackerReference;
+use Tuleap\ProgramManagement\Domain\Workspace\RetrieveTrackerFromProgram;
 
-interface BuildPotentialProgramIncrementTrackerConfigurationPresenters
+final class TrackerFactoryAdapter implements RetrieveTrackerFromProgram
 {
+    private \TrackerFactory $tracker_factory;
+
+    public function __construct(\TrackerFactory $tracker_factory)
+    {
+        $this->tracker_factory = $tracker_factory;
+    }
+
     /**
-     * @return ProgramSelectOptionConfigurationPresenter[]
+     * @return TrackerReference[]
      */
-    public function buildPotentialProgramIncrementTrackerPresenters(ProgramForAdministrationIdentifier $program, ?ProgramTracker $program_increment_tracker): array;
+    public function retrieveAllTrackersFromProgramId(ProgramForAdministrationIdentifier $program): array
+    {
+        $trackers           = $this->tracker_factory->getTrackersByGroupId($program->id);
+        $tracker_references = [];
+
+        foreach ($trackers as $tracker) {
+            $tracker_references[] = TrackerReference::fromTracker($tracker);
+        }
+
+        return $tracker_references;
+    }
 }

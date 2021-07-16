@@ -31,13 +31,14 @@ use Tuleap\Layout\IncludeAssets;
 use Tuleap\ProgramManagement\Adapter\Program\Admin\Configuration\ConfigurationChecker;
 use Tuleap\ProgramManagement\Domain\BuildProject;
 use Tuleap\ProgramManagement\Domain\Program\Admin\CanPrioritizeItems\BuildProjectUGroupCanPrioritizeItemsPresenters;
-use Tuleap\ProgramManagement\Domain\Program\Admin\PlannableTrackersConfiguration\BuildPotentialPlannableTrackersConfigurationPresenters;
+use Tuleap\ProgramManagement\Domain\Program\Admin\PlannableTrackersConfiguration\PotentialPlannableTrackersConfigurationPresentersBuilder;
 use Tuleap\ProgramManagement\Domain\Program\Admin\PotentialTeam\BuildPotentialTeams;
 use Tuleap\ProgramManagement\Domain\Program\Admin\PotentialTeam\PotentialTeamsPresenterBuilder;
+use Tuleap\ProgramManagement\Domain\Program\Admin\PotentialTrackerCollection;
 use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramAdminPresenter;
 use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramCannotBeATeamException;
 use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramForAdministrationIdentifier;
-use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramIncrementTrackerConfiguration\BuildPotentialProgramIncrementTrackerConfigurationPresenters;
+use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramIncrementTrackerConfiguration\PotentialProgramIncrementTrackerConfigurationPresentersBuilder;
 use Tuleap\ProgramManagement\Domain\Program\Admin\Team\TeamsPresenterBuilder;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\IterationTracker\RetrieveVisibleIterationTracker;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Team\TeamProjectsCollection;
@@ -53,6 +54,7 @@ use Tuleap\ProgramManagement\Domain\Program\ProgramTrackerNotFoundException;
 use Tuleap\ProgramManagement\Domain\Program\SearchTeamsOfProgram;
 use Tuleap\ProgramManagement\Domain\ProgramTracker;
 use Tuleap\ProgramManagement\Domain\Team\VerifyIsTeam;
+use Tuleap\ProgramManagement\Domain\Workspace\RetrieveTrackerFromProgram;
 use Tuleap\ProgramManagement\Domain\Workspace\VerifyProjectPermission;
 use Tuleap\Request\DispatchableWithBurningParrot;
 use Tuleap\Request\DispatchableWithProject;
@@ -73,11 +75,12 @@ final class DisplayAdminProgramManagementController implements DispatchableWithR
     private RetrieveVisibleProgramIncrementTracker $program_increment_tracker_retriever;
     private \EventManager $event_manager;
     private RetrieveVisibleIterationTracker $iteration_tracker_retriever;
-    private BuildPotentialProgramIncrementTrackerConfigurationPresenters $program_increment_presenters_builder;
-    private BuildPotentialPlannableTrackersConfigurationPresenters $plannable_tracker_presenters_builder;
+    private PotentialProgramIncrementTrackerConfigurationPresentersBuilder $program_increment_presenters_builder;
+    private PotentialPlannableTrackersConfigurationPresentersBuilder $plannable_tracker_presenters_builder;
     private BuildProjectUGroupCanPrioritizeItemsPresenters $ugroups_can_prioritize_builder;
     private VerifyProjectPermission $permission_verifier;
     private RetrieveProgramIncrementLabels $program_increment_labels_retriever;
+    private RetrieveTrackerFromProgram $retrieve_tracker_from_program;
 
     public function __construct(
         \ProjectManager $project_manager,
@@ -91,11 +94,12 @@ final class DisplayAdminProgramManagementController implements DispatchableWithR
         RetrieveVisibleProgramIncrementTracker $program_increment_tracker_retriever,
         \EventManager $event_manager,
         RetrieveVisibleIterationTracker $iteration_tracker_retriever,
-        BuildPotentialProgramIncrementTrackerConfigurationPresenters $program_increment_presenters_builder,
-        BuildPotentialPlannableTrackersConfigurationPresenters $plannable_tracker_presenters_builder,
+        PotentialProgramIncrementTrackerConfigurationPresentersBuilder $program_increment_presenters_builder,
+        PotentialPlannableTrackersConfigurationPresentersBuilder $plannable_tracker_presenters_builder,
         BuildProjectUGroupCanPrioritizeItemsPresenters $ugroups_can_prioritize_builder,
         VerifyProjectPermission $permission_verifier,
-        RetrieveProgramIncrementLabels $program_increment_labels_retriever
+        RetrieveProgramIncrementLabels $program_increment_labels_retriever,
+        RetrieveTrackerFromProgram $retrieve_tracker_from_program
     ) {
         $this->project_manager                      = $project_manager;
         $this->template_renderer                    = $template_renderer;
@@ -113,6 +117,7 @@ final class DisplayAdminProgramManagementController implements DispatchableWithR
         $this->ugroups_can_prioritize_builder       = $ugroups_can_prioritize_builder;
         $this->permission_verifier                  = $permission_verifier;
         $this->program_increment_labels_retriever   = $program_increment_labels_retriever;
+        $this->retrieve_tracker_from_program        = $retrieve_tracker_from_program;
     }
 
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
@@ -186,6 +191,8 @@ final class DisplayAdminProgramManagementController implements DispatchableWithR
             $program_increment_tracker
         );
 
+        $all_potential_trackers = PotentialTrackerCollection::fromProgram($this->retrieve_tracker_from_program, $program);
+
         $this->template_renderer->renderToPage(
             'admin',
             new ProgramAdminPresenter(
@@ -201,8 +208,12 @@ final class DisplayAdminProgramManagementController implements DispatchableWithR
                     )
                 ),
                 $error_presenters,
-                $this->program_increment_presenters_builder->buildPotentialProgramIncrementTrackerPresenters($program, $program_increment_tracker),
-                $this->plannable_tracker_presenters_builder->buildPotentialPlannableTrackerPresenters($program),
+                $this->program_increment_presenters_builder->buildPotentialProgramIncrementTrackerPresenters(
+                    $program,
+                    $program_increment_tracker,
+                    $all_potential_trackers
+                ),
+                $this->plannable_tracker_presenters_builder->buildPotentialPlannableTrackerPresenters($program, $all_potential_trackers),
                 $this->ugroups_can_prioritize_builder->buildProjectUgroupCanPrioritizeItemsPresenters($program),
                 $program_increment_labels->label,
                 $program_increment_labels->sub_label,
