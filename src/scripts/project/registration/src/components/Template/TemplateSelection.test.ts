@@ -25,21 +25,24 @@ import TemplateSelection from "./TemplateSelection.vue";
 import type { ConfigurationState } from "../../store/configuration";
 import { createStoreMock } from "../../../../../vue-components/store-wrapper-jest";
 import type { RootState } from "../../store/type";
-import type { TemplateData } from "../../type";
+import type { ExternalTemplateData, TemplateData } from "../../type";
 import TuleapTemplateList from "./Tuleap/TuleapTemplateList.vue";
 import TuleapCompanyTemplateList from "./Company/CompanyTemplateList.vue";
 import AdvancedTemplateList from "./Advanced/AdvancedTemplateList.vue";
+import CategorisedExternalTemplatesList from "./CategorisedExternalTemplates/CategorisedExternalTemplatesList.vue";
 
 describe("TemplateSelection", () => {
     async function getWrapper(
         tuleap_templates: TemplateData[],
         company_templates: TemplateData[],
+        external_templates: ExternalTemplateData[],
         company_name: string
     ): Promise<Wrapper<TemplateSelection>> {
         const configuration_state: ConfigurationState = {
             tuleap_templates,
             company_templates,
             company_name,
+            external_templates,
         } as ConfigurationState;
 
         return shallowMount(TemplateSelection, {
@@ -56,6 +59,7 @@ describe("TemplateSelection", () => {
 
     let tuleap_templates: TemplateData[] = [];
     let company_templates: TemplateData[] = [];
+    let external_templates: ExternalTemplateData[];
 
     beforeEach(() => {
         tuleap_templates = [
@@ -77,11 +81,41 @@ describe("TemplateSelection", () => {
                 is_built_in: false,
             },
         ];
+
+        external_templates = [
+            {
+                id: "program",
+                title: "SAFe - Program",
+                description: "SAFe - Program",
+                glyph: "<svg>SAFe</svg>",
+                is_built_in: true,
+                template_category: {
+                    shortname: "SAFe",
+                    label: "Program/Teams",
+                },
+            },
+            {
+                id: "dummy",
+                title: "Dummy",
+                description: "Dummy templates",
+                glyph: "<svg>Dummy</svg>",
+                is_built_in: true,
+                template_category: {
+                    shortname: "dummies",
+                    label: "Dummies",
+                },
+            },
+        ];
     });
 
     describe("Company templates", () => {
         it(`displays the company name if the platform name is not Tuleap`, async () => {
-            const wrapper = await getWrapper(tuleap_templates, company_templates, "ACME");
+            const wrapper = await getWrapper(
+                tuleap_templates,
+                company_templates,
+                external_templates,
+                "ACME"
+            );
             await wrapper.vm.$nextTick();
             expect(
                 wrapper
@@ -91,7 +125,12 @@ describe("TemplateSelection", () => {
         });
 
         it(`displays 'Custom templates' if the platform name is Tuleap`, async () => {
-            const wrapper = await getWrapper(tuleap_templates, company_templates, "Tuleap");
+            const wrapper = await getWrapper(
+                tuleap_templates,
+                company_templates,
+                external_templates,
+                "Tuleap"
+            );
             await wrapper.vm.$nextTick();
             expect(
                 wrapper
@@ -101,7 +140,7 @@ describe("TemplateSelection", () => {
         });
 
         it("should not display the tab containing the company templates when there are no company templates", async () => {
-            const wrapper = await getWrapper(tuleap_templates, [], "ACME");
+            const wrapper = await getWrapper(tuleap_templates, [], external_templates, "ACME");
             await wrapper.vm.$nextTick();
             expect(
                 wrapper.find("[data-test=project-registration-acme-templates-tab]").exists()
@@ -113,7 +152,12 @@ describe("TemplateSelection", () => {
 
     describe("templates categories default display", () => {
         it("should display the Tuleap category by default if there are tuleap templates", async () => {
-            const wrapper = await getWrapper(tuleap_templates, company_templates, "ACME");
+            const wrapper = await getWrapper(
+                tuleap_templates,
+                company_templates,
+                external_templates,
+                "ACME"
+            );
             await wrapper.vm.$nextTick();
             expect(
                 wrapper
@@ -124,8 +168,20 @@ describe("TemplateSelection", () => {
             expect(wrapper.findComponent(TuleapTemplateList).isVisible()).toBe(true);
         });
 
-        it("should display the ACME category by default if there are no tuleap templates and company templates", async () => {
-            const wrapper = await getWrapper([], company_templates, "ACME");
+        it("should display the first external template category by default if there are no tuleap templates", async () => {
+            const wrapper = await getWrapper([], company_templates, external_templates, "ACME");
+            await wrapper.vm.$nextTick();
+            expect(
+                wrapper
+                    .get("[data-test=project-registration-SAFe-templates-tab]")
+                    .element.classList.contains("active")
+            ).toBe(true);
+
+            expect(wrapper.findComponent(CategorisedExternalTemplatesList).isVisible()).toBe(true);
+        });
+
+        it("should display the ACME category by default if there are no tuleap/external templates", async () => {
+            const wrapper = await getWrapper([], company_templates, [], "ACME");
             await wrapper.vm.$nextTick();
             expect(
                 wrapper
@@ -136,8 +192,8 @@ describe("TemplateSelection", () => {
             expect(wrapper.findComponent(TuleapCompanyTemplateList).isVisible()).toBe(true);
         });
 
-        it("should display the advanced category by default if there are no tuleap templates nor company templates", async () => {
-            const wrapper = await getWrapper([], [], "ACME");
+        it("should display the advanced category by default if there are no tuleap/external/company templates", async () => {
+            const wrapper = await getWrapper([], [], [], "ACME");
             await wrapper.vm.$nextTick();
             expect(
                 wrapper
@@ -150,7 +206,12 @@ describe("TemplateSelection", () => {
     });
 
     it("should toggle the right templates categories", async () => {
-        const wrapper = await getWrapper(tuleap_templates, company_templates, "ACME");
+        const wrapper = await getWrapper(
+            tuleap_templates,
+            company_templates,
+            external_templates,
+            "ACME"
+        );
         const tab_tuleap_templates = wrapper.get(
             "[data-test=project-registration-tuleap-templates-tab]"
         );
@@ -160,6 +221,26 @@ describe("TemplateSelection", () => {
         const tab_advanced_templates = wrapper.get(
             "[data-test=project-registration-advanced-templates-tab]"
         );
+        const tab_safe_templates = wrapper.get(
+            "[data-test=project-registration-SAFe-templates-tab]"
+        );
+        const tab_dummy_templates = wrapper.get(
+            "[data-test=project-registration-dummies-templates-tab]"
+        );
+
+        tab_safe_templates.trigger("click");
+
+        await wrapper.vm.$nextTick();
+
+        expect(wrapper.findComponent(TuleapCompanyTemplateList).isVisible()).toBe(false);
+        expect(wrapper.findComponent(TuleapTemplateList).isVisible()).toBe(false);
+        expect(wrapper.findComponent(AdvancedTemplateList).isVisible()).toBe(false);
+        expect(wrapper.findAllComponents(CategorisedExternalTemplatesList).at(0).isVisible()).toBe(
+            true
+        );
+        expect(wrapper.findAllComponents(CategorisedExternalTemplatesList).at(1).isVisible()).toBe(
+            false
+        );
 
         tab_acme_templates.trigger("click");
 
@@ -168,6 +249,26 @@ describe("TemplateSelection", () => {
         expect(wrapper.findComponent(TuleapCompanyTemplateList).isVisible()).toBe(true);
         expect(wrapper.findComponent(TuleapTemplateList).isVisible()).toBe(false);
         expect(wrapper.findComponent(AdvancedTemplateList).isVisible()).toBe(false);
+        expect(wrapper.findAllComponents(CategorisedExternalTemplatesList).at(0).isVisible()).toBe(
+            false
+        );
+        expect(wrapper.findAllComponents(CategorisedExternalTemplatesList).at(1).isVisible()).toBe(
+            false
+        );
+
+        tab_dummy_templates.trigger("click");
+
+        await wrapper.vm.$nextTick();
+
+        expect(wrapper.findComponent(TuleapCompanyTemplateList).isVisible()).toBe(false);
+        expect(wrapper.findComponent(TuleapTemplateList).isVisible()).toBe(false);
+        expect(wrapper.findComponent(AdvancedTemplateList).isVisible()).toBe(false);
+        expect(wrapper.findAllComponents(CategorisedExternalTemplatesList).at(0).isVisible()).toBe(
+            false
+        );
+        expect(wrapper.findAllComponents(CategorisedExternalTemplatesList).at(1).isVisible()).toBe(
+            true
+        );
 
         tab_advanced_templates.trigger("click");
 
@@ -176,6 +277,12 @@ describe("TemplateSelection", () => {
         expect(wrapper.findComponent(TuleapCompanyTemplateList).isVisible()).toBe(false);
         expect(wrapper.findComponent(TuleapTemplateList).isVisible()).toBe(false);
         expect(wrapper.findComponent(AdvancedTemplateList).isVisible()).toBe(true);
+        expect(wrapper.findAllComponents(CategorisedExternalTemplatesList).at(0).isVisible()).toBe(
+            false
+        );
+        expect(wrapper.findAllComponents(CategorisedExternalTemplatesList).at(1).isVisible()).toBe(
+            false
+        );
 
         tab_tuleap_templates.trigger("click");
 
@@ -184,5 +291,11 @@ describe("TemplateSelection", () => {
         expect(wrapper.findComponent(TuleapCompanyTemplateList).isVisible()).toBe(false);
         expect(wrapper.findComponent(TuleapTemplateList).isVisible()).toBe(true);
         expect(wrapper.findComponent(AdvancedTemplateList).isVisible()).toBe(false);
+        expect(wrapper.findAllComponents(CategorisedExternalTemplatesList).at(0).isVisible()).toBe(
+            false
+        );
+        expect(wrapper.findAllComponents(CategorisedExternalTemplatesList).at(1).isVisible()).toBe(
+            false
+        );
     });
 });

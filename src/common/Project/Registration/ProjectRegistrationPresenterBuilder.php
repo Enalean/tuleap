@@ -26,7 +26,9 @@ namespace Tuleap\Project\Registration;
 use Tuleap\Project\Admin\DescriptionFields\DescriptionFieldLabelBuilder;
 use Tuleap\Project\DefaultProjectVisibilityRetriever;
 use Tuleap\Project\DescriptionFieldsFactory;
+use Tuleap\Project\Registration\Template\CategorisedTemplate;
 use Tuleap\Project\Registration\Template\CompanyTemplate;
+use Tuleap\Project\Registration\Template\CategorisedTemplatePresenter;
 use Tuleap\Project\Registration\Template\ProjectTemplate;
 use Tuleap\Project\Registration\Template\TemplateFactory;
 use Tuleap\Project\Registration\Template\TemplatePresenter;
@@ -83,16 +85,19 @@ class ProjectRegistrationPresenterBuilder
             ];
         }
 
+        $categorised_external_templates = $this->template_factory->getCategorisedExternalTemplates();
         return new ProjectRegistrationPresenter(
             $this->default_project_visibility_retriever->getDefaultProjectVisibility(),
             $this->trove_cat_factory->getMandatoryParentCategoriesUnderRootOnlyWhenCategoryHasChildren(),
             $formatted_field,
             $company_templates,
-            ...array_map(
-                static function (ProjectTemplate $project_template) {
-                    return new TemplatePresenter($project_template);
-                },
+            array_map(
+                static fn (ProjectTemplate $project_template) => new TemplatePresenter($project_template),
                 $this->template_factory->getValidTemplates()
+            ),
+            array_map(
+                static fn(CategorisedTemplate $external_template) => new CategorisedTemplatePresenter($external_template),
+                $categorised_external_templates
             )
         );
     }

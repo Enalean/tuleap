@@ -63,10 +63,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     const project_default_visibility = String(vue_mount_point.dataset.projectDefaultVisibility);
     const tuleap_templates: TemplateData[] = JSON.parse(tuleap_templates_json);
 
-    const selected_tuleap_template = null;
-    const selected_company_template = null;
-    const error = null;
-    const is_creating_project = false;
     const is_project_approval_required = Boolean(vue_mount_point.dataset.projectsMustBeApproved);
     const is_description_required = Boolean(vue_mount_point.dataset.isDescriptionMandatory);
     const can_user_choose_project_visibility = Boolean(
@@ -81,8 +77,15 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     const company_name = String(vue_mount_point.dataset.companyName);
 
+    let external_templates = [];
+    const external_templates_json = vue_mount_point.dataset.externalTemplates;
+    if (external_templates_json) {
+        external_templates = JSON.parse(external_templates_json);
+    }
+
     const configuration_state: ConfigurationState = {
         tuleap_templates,
+        external_templates,
         are_restricted_users_allowed,
         project_default_visibility,
         is_project_approval_required,
@@ -95,10 +98,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     };
 
     const root_state: RootState = {
-        selected_tuleap_template,
-        selected_company_template,
-        error,
-        is_creating_project,
+        selected_tuleap_template: null,
+        selected_company_template: null,
+        error: null,
+        is_creating_project: false,
         configuration: configuration_state,
     };
 

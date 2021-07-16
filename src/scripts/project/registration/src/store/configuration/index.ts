@@ -19,6 +19,7 @@
 import type { FieldData, TemplateData, TroveCatData } from "../../type";
 import type { Module } from "vuex";
 import type { RootState } from "../type";
+import type { ExternalTemplateData } from "../../type";
 
 export interface ConfigurationState {
     readonly are_restricted_users_allowed: boolean;
@@ -29,6 +30,7 @@ export interface ConfigurationState {
     readonly project_fields: Array<FieldData>;
     readonly company_templates: TemplateData[];
     readonly tuleap_templates: TemplateData[];
+    readonly external_templates: ExternalTemplateData[];
     readonly company_name: string;
     readonly can_user_choose_project_visibility: boolean;
 }

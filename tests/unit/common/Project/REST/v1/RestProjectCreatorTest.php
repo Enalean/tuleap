@@ -40,6 +40,7 @@ use Tuleap\ForgeConfigSandbox;
 use Tuleap\Glyph\GlyphFinder;
 use Tuleap\Project\DefaultProjectVisibilityRetriever;
 use Tuleap\Project\Registration\MaxNumberOfProjectReachedForPlatformException;
+use Tuleap\Project\Registration\Template\Events\CollectCategorisedExternalTemplatesEvent;
 use Tuleap\Project\Registration\Template\ScrumTemplate;
 use Tuleap\Project\Registration\Template\TemplateDao;
 use Tuleap\Project\Registration\Template\TemplateFactory;
@@ -106,7 +107,9 @@ final class RestProjectCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
                     $this->retriever
                 ),
                 $this->template_dao,
-                M::mock(ProjectManager::class)
+                M::mock(ProjectManager::class),
+                new \EventManager(),
+                new CollectCategorisedExternalTemplatesEvent()
             )
         );
 

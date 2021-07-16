@@ -28,6 +28,9 @@ use Tuleap\CLI\Events\GetWhitelistedKeys;
 use Tuleap\Dashboard\Project\DisplayCreatedProjectModalPresenter;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
+use Tuleap\Glyph\GlyphFinder;
+use Tuleap\Glyph\GlyphLocation;
+use Tuleap\Glyph\GlyphLocationsCollector;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Layout\ServiceUrlCollector;
 use Tuleap\ProgramManagement\Adapter\Program\Admin\CanPrioritizeItems\ProjectUGroupCanPrioritizeItemsPresentersBuilder;
@@ -117,13 +120,18 @@ use Tuleap\ProgramManagement\ProgramManagementBreadCrumbsBuilder;
 use Tuleap\ProgramManagement\ProgramService;
 use Tuleap\ProgramManagement\RedirectParameterInjector;
 use Tuleap\ProgramManagement\REST\ResourcesInjector;
+use Tuleap\ProgramManagement\Templates\ProgramTemplate;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupPaneCollector;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupUGroupFormatter;
 use Tuleap\Project\Event\ProjectServiceBeforeActivation;
 use Tuleap\Project\ProjectAccessChecker;
+use Tuleap\Project\Registration\Template\Events\CollectCategorisedExternalTemplatesEvent;
 use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
 use Tuleap\Project\Service\ServiceDisabledCollector;
 use Tuleap\Project\Sidebar\CollectLinkedProjects;
+use Tuleap\Project\XML\ConsistencyChecker;
+use Tuleap\Project\XML\ServiceEnableForXmlImportRetriever;
+use Tuleap\Project\XML\XMLFileContentRetriever;
 use Tuleap\Queue\QueueFactory;
 use Tuleap\Queue\WorkerEvent;
 use Tuleap\Request\CollectRoutesEvent;
@@ -215,6 +223,9 @@ final class program_managementPlugin extends Plugin
         $this->addHook(ProjectServiceBeforeActivation::NAME);
         $this->addHook(GetWhitelistedKeys::NAME);
         $this->addHook(DisplayCreatedProjectModalPresenter::NAME);
+        $this->addHook(CollectCategorisedExternalTemplatesEvent::NAME);
+        $this->addHook(ServiceEnableForXmlImportRetriever::NAME);
+        $this->addHook(\Tuleap\Glyph\GlyphLocationsCollector::NAME);
 
         return parent::getHooksAndCallbacks();
     }
@@ -932,5 +943,33 @@ final class program_managementPlugin extends Plugin
                 '/program_management/admin/' . $presenter->getProject()->getUnixNameLowerCase()
             );
         }
+    }
+
+    public function serviceEnableForXmlImportRetriever(ServiceEnableForXmlImportRetriever $event): void
+    {
+        $event->addServiceIfPluginIsNotRestricted($this, $this->getServiceShortname());
+    }
+
+    public function collectCategorisedExternalTemplatesEvent(CollectCategorisedExternalTemplatesEvent $event): void
+    {
+        $event_manager = EventManager::instance();
+        $event->addCategorisedTemplate(
+            new ProgramTemplate(
+                new GlyphFinder($event_manager),
+                new ConsistencyChecker(
+                    new XMLFileContentRetriever(),
+                    $event_manager,
+                    new ServiceEnableForXmlImportRetriever(\PluginFactory::instance())
+                )
+            )
+        );
+    }
+
+    public function collectGlyphLocations(GlyphLocationsCollector $glyph_locations_collector): void
+    {
+        $glyph_locations_collector->addLocation(
+            'tuleap-program-management',
+            new GlyphLocation(__DIR__ . '/../glyphs')
+        );
     }
 }

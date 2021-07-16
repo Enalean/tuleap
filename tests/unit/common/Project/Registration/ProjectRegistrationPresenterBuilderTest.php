@@ -28,8 +28,10 @@ use Tuleap\Glyph\Glyph;
 use Tuleap\Glyph\GlyphFinder;
 use Tuleap\Project\DefaultProjectVisibilityRetriever;
 use Tuleap\Project\DescriptionFieldsFactory;
+use Tuleap\Project\Registration\Template\CategorisedTemplate;
 use Tuleap\Project\Registration\Template\CompanyTemplate;
 use Tuleap\Project\Registration\Template\ScrumTemplate;
+use Tuleap\Project\Registration\Template\TemplateCategory;
 use Tuleap\Project\Registration\Template\TemplateFactory;
 use Tuleap\Project\XML\ConsistencyChecker;
 use Tuleap\XML\ProjectXMLMerger;
@@ -84,6 +86,55 @@ final class ProjectRegistrationPresenterBuilderTest extends \Tuleap\Test\PHPUnit
         $this->template_factory->method('getCompanyTemplateList')->willReturn(
             $company_templates
         );
+        $this->template_factory->method('getCategorisedExternalTemplates')->willReturn(
+            [
+                new class implements CategorisedTemplate {
+
+                    public function getTemplateCategory(): TemplateCategory
+                    {
+                        return new class implements TemplateCategory {
+                            public string $shortname = 'some-category';
+                            public string $label     = 'Some category';
+                        };
+                    }
+
+                    public function getId(): string
+                    {
+                        return 'external_template';
+                    }
+
+                    public function getTitle(): string
+                    {
+                        return 'External template';
+                    }
+
+                    public function getDescription(): string
+                    {
+                        return 'It is a template, it is external';
+                    }
+
+                    public function getGlyph(): Glyph
+                    {
+                        return new Glyph('');
+                    }
+
+                    public function isBuiltIn(): bool
+                    {
+                        return true;
+                    }
+
+                    public function getXMLPath(): string
+                    {
+                        return 'path/to/xml';
+                    }
+
+                    public function isAvailable(): bool
+                    {
+                        return true;
+                    }
+                }
+            ]
+        );
 
         $fields = [
             [
@@ -123,6 +174,11 @@ final class ProjectRegistrationPresenterBuilderTest extends \Tuleap\Test\PHPUnit
         self::assertEquals(
             '[{"title":"Scrum","description":"Collect stories, plan releases, monitor sprints with a ready-to-use Scrum area","id":"scrum","glyph":"<svg>","is_built_in":true}]',
             $result->tuleap_templates
+        );
+
+        self::assertEquals(
+            '[{"template_category":{"shortname":"some-category","label":"Some category"},"title":"External template","description":"It is a template, it is external","id":"external_template","glyph":"","is_built_in":true}]',
+            $result->external_templates
         );
 
         self::assertEquals(

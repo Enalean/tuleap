@@ -26,7 +26,6 @@ namespace Tuleap\Project\Registration;
 use ForgeConfig;
 use ProjectManager;
 use Tuleap\Project\ProjectDescriptionUsageRetriever;
-use Tuleap\Project\Registration\Template\TemplatePresenter;
 
 class ProjectRegistrationPresenter
 {
@@ -80,13 +79,19 @@ class ProjectRegistrationPresenter
      * @psalm-readonly
      */
     public $can_user_choose_privacy;
+    /**
+     * @var string
+     * @psalm-readonly
+     */
+    public $external_templates;
 
     public function __construct(
         string $project_default_visibility,
         array $trove_categories,
         array $field_list,
         array $company_templates,
-        TemplatePresenter ...$tuleap_templates
+        array $tuleap_templates,
+        array $external_templates
     ) {
         $this->tuleap_templates             = json_encode($tuleap_templates);
         $this->are_restricted_users_allowed = (bool) ForgeConfig::areRestrictedUsersAllowed();
@@ -103,5 +108,6 @@ class ProjectRegistrationPresenter
         $this->can_user_choose_privacy      = (bool) ForgeConfig::get(
             ProjectManager::SYS_USER_CAN_CHOOSE_PROJECT_PRIVACY
         );
+        $this->external_templates           = json_encode($external_templates);
     }
 }
