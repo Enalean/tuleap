@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Team;
 
+use ParagonIE\EasyDB\EasyStatement;
 use Tuleap\DB\DataAccessObject;
 use Tuleap\ProgramManagement\Domain\Team\Creation\TeamCollection;
 use Tuleap\ProgramManagement\Domain\Team\Creation\TeamStore;
@@ -51,6 +52,12 @@ final class TeamDao extends DataAccessObject implements TeamStore, VerifyIsTeam,
             }
 
             $this->getDB()->insertMany('plugin_program_management_team_projects', $insert);
+
+            $in_statement = EasyStatement::open()->in('group_id IN (?*)', $team_collection->getTeamIds());
+            $sql          = "UPDATE service SET is_used = 0 WHERE short_name= ? AND $in_statement";
+
+            $parameters = array_merge([\program_managementPlugin::SERVICE_SHORTNAME], $in_statement->values());
+            $this->getDB()->safeQuery($sql, $parameters);
         });
     }
 
