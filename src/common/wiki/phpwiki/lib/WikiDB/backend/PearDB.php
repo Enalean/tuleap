@@ -116,7 +116,7 @@ class WikiDB_backend_PearDB extends WikiDB_backend
             "SELECT $page_tbl.id as id"
                                     . " FROM $nonempty_tbl, $page_tbl"
                                     . " WHERE $nonempty_tbl.id=$page_tbl.id"
-                                    . "   AND pagename='%s'"
+                                    . "   AND CONVERT(CAST(pagename as BINARY) USING utf8mb4)='%s'"
                                     . "   AND $page_tbl.group_id=%d",
             $dbh->escapeSimple($pagename),
             GROUP_ID
@@ -1086,7 +1086,7 @@ class WikiDB_backend_PearDB extends WikiDB_backend
     /**
      * Actually unlock the required tables.
      */
-    public function _unlock_tables($write_lock)
+    public function _unlock_tables()
     {
         trigger_error("virtual", E_USER_ERROR);
     }

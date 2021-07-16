@@ -40,9 +40,9 @@ rcs_id('$Id: RssParser.php,v 1.11 2005/04/10 10:24:58 rurban Exp $');
  *     http://ws.audioscrobbler.com/rdf/ for example
  */
 
-require_once('lib/XmlParser.php');
+require_once('lib/XmlParserPHPWiki.php');
 
-class RSSParser extends XmlParser
+class RSSParser extends XmlParserPHPWiki
 {
 
     public $title       = "";

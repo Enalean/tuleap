@@ -79,10 +79,6 @@ class WikiAttachment /* implements UGroupPermission */
 
     public $revisionCounter;
 
-    /**
-     * @access public
-     * @param  int $gid Project identifier
-     */
     public function __construct($gid = 0)
     {
         $this->setGid($gid);
@@ -105,16 +101,11 @@ class WikiAttachment /* implements UGroupPermission */
     /**
      * @access public
      */
-    public function getAttachmentIterator($gid = null)
+    public static function getAttachmentIterator(int $gid)
     {
         $waArray = [];
-        if ($gid !== null) {
-            $gid = (int) $gid;
-        } else {
-            $gid = $this->gid;
-        }
 
-        $dao = self::getDao();
+        $dao = (new self($gid))->getDao();
         $dar = $dao->getList($gid);
 
         while ($row = $dar->getRow()) {
@@ -127,14 +118,8 @@ class WikiAttachment /* implements UGroupPermission */
         return new ArrayIterator($waArray);
     }
 
-    public function getListWithCounter($gid = null, $uid = null, $limit = null)
+    public static function getListWithCounter(?int $gid = null, $uid = null, $limit = null)
     {
-        if ($gid !== null) {
-            $gid = (int) $gid;
-        } else {
-            $gid = $this->gid;
-        }
-
         $uid = (int) $uid;
 
         $offset = 0;
@@ -157,7 +142,7 @@ class WikiAttachment /* implements UGroupPermission */
             }
         }
 
-        $dao = self::getDao();
+        $dao = (new self($gid))->getDao();
         $dar = $dao->getListWithCounterOrderedByRevDate($gid);
 
         $i       = 0;
@@ -611,7 +596,7 @@ class WikiAttachment /* implements UGroupPermission */
         } else {
             $groupId = $this->gid;
         }
-        $wai = $this->getAttachmentIterator($groupId);
+        $wai = self::getAttachmentIterator($groupId);
         $wai->rewind();
         while ($wai->valid()) {
             $wa = $wai->current();

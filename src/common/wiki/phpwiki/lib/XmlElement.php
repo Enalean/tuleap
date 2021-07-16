@@ -108,12 +108,12 @@ class XmlContent
                 } elseif (method_exists($item, 'asXML')) {
                     echo $item->asXML();
                 } elseif (method_exists($item, 'asString')) {
-                    echo $this->_quote($item->asString());
+                    echo self::_quote($item->asString());
                 } else {
                     printf("==Object(%s)==", get_class($item));
                 }
             } else {
-                echo $this->_quote((string) $item);
+                echo self::_quote((string) $item);
             }
         }
     }
@@ -126,12 +126,12 @@ class XmlContent
                 if (method_exists($item, 'asXML')) {
                     $xml .= $item->asXML();
                 } elseif (method_exists($item, 'asString')) {
-                    $xml .= $this->_quote($item->asString());
+                    $xml .= self::_quote($item->asString());
                 } else {
                     $xml .= sprintf("==Object(%s)==", get_class($item));
                 }
             } else {
-                $xml .= $this->_quote((string) $item);
+                $xml .= self::_quote((string) $item);
             }
         }
         return $xml;
@@ -174,7 +174,7 @@ class XmlContent
         return true;
     }
 
-    public function _quote($string)
+    public static function _quote($string)
     {
         if (! $string) {
             return $string;
@@ -373,7 +373,7 @@ class XmlElement extends XmlContent
                 }
                 $val = $attr;
             }
-            $qval   = str_replace("\"", '&quot;', $this->_quote((string) $val));
+            $qval   = str_replace("\"", '&quot;', self::_quote((string) $val));
             $start .= " $attr=\"$qval\"";
         }
         $start .= ">";

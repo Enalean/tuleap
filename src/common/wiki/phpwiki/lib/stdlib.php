@@ -151,6 +151,9 @@ function MangleXmlIdentifier($str)
 function WikiURL($pagename, $args = '', $get_abs_url = false)
 {
     $anchor = false;
+    if ($args === '') {
+        $args = [];
+    }
 
     if (is_object($pagename)) {
         if (isa($pagename, 'WikiDB_Page')) {

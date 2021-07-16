@@ -374,7 +374,7 @@ class WikiPlugin__WikiTranslation extends WikiPlugin
             case 'pages':
                 // not all pages, only the pgsrc pages
                 if (! is_array($exclude)) {
-                    $exclude = $pagelist->explodePageList(
+                    $exclude = PageList::explodePageList(
                         $exclude,
                         false,
                         $sortby,

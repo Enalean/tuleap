@@ -71,7 +71,7 @@ class WikiAttachmentRevision
         }
     }
 
-    public function &getDao()
+    public static function &getDao()
     {
         static $_codendi_wikiattachmentrevisiondao_instance;
 
@@ -84,7 +84,7 @@ class WikiAttachmentRevision
 
     public function dbFetch()
     {
-        $dao = $this->getDao();
+        $dao = self::getDao();
         $dar = $dao->getRevision($this->attachmentId, $this->revision);
 
         if ($dar->rowCount() > 1) {
@@ -112,7 +112,7 @@ class WikiAttachmentRevision
 
         /** @todo: add lock */
 
-        $waIter         = $this->getRevisionIterator();
+        $waIter         = self::getRevisionIterator($this->gid, $this->attachmentId);
         $this->revision = $waIter->count();
 
         if (! move_uploaded_file($userfile_tmpname, $file_dir . '/' . $this->revision)) {
@@ -138,7 +138,7 @@ class WikiAttachmentRevision
 
     public function dbadd()
     {
-        $dao = $this->getDao();
+        $dao = self::getDao();
         $res = $dao->create(
             $this->attachmentId,
             $this->owner_id,
@@ -199,7 +199,7 @@ class WikiAttachmentRevision
 
     public function log($userId)
     {
-        $dao = $this->getDao();
+        $dao = self::getDao();
         $dao->log(
             $this->attachmentId,
             $this->id,
@@ -336,16 +336,9 @@ class WikiAttachmentRevision
     /**
      * @access public static
      */
-    public function getRevisionIterator($gid = null, $id = null)
+    public static function getRevisionIterator(int $gid, int $id)
     {
         $warArray = [];
-        if ($id !== null) {
-            $id  = (int) $id;
-            $gid = (int) $gid;
-        } else {
-            $gid = $this->gid;
-            $id  = $this->attachmentId;
-        }
 
         $dao = self::getDao();
         $dar = $dao->getAllRevisions($id);

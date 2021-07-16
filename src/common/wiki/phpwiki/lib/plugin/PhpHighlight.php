@@ -133,7 +133,7 @@ class WikiPlugin_PhpHighlight extends WikiPlugin
         return new RawXml($str);
     }
 
-    public function handle_plugin_args_cruft(&$argstr, &$args)
+    public function handle_plugin_args_cruft($argstr, $args)
     {
         $this->source = $argstr;
     }

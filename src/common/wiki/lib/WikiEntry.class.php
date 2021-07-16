@@ -161,14 +161,8 @@ class WikiEntry
     /**
      * Return an iterator on WikiEntries
      */
-    public function getEntryIterator($gid = null)
+    public static function getEntryIterator(int $gid)
     {
-        if ($gid !== null) {
-            $gid = (int) $gid;
-        } else {
-            $gid = $this->gid;
-        }
-
         //@todo: transfer to a DAO
         $qry = ' SELECT * FROM wiki_group_list'
             . ' WHERE group_id=' . db_ei($gid)

@@ -913,7 +913,7 @@ class WikiPlugin_RecentChanges extends WikiPlugin
                      ];
     }
 
-    public function getArgs($argstr, $request, $defaults = false)
+    public function getArgs($argstr, $request = false, $defaults = false)
     {
         if (! $defaults) {
             $defaults = $this->getDefaultArguments();

@@ -81,7 +81,7 @@ class PageType
      * @param string $pagetype  Name of the page type.
      * @return PageType  An object which is a subclass of PageType.
      */
-    public function GetPageType($name = false)
+    public static function GetPageType($name = false)
     {
         if (! $name) {
             $name = 'wikitext';

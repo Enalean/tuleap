@@ -421,7 +421,7 @@ class WikiPage
     /**
      * @return string[] List of pagename
      */
-    public function getAllAdminPages()
+    public static function getAllAdminPages()
     {
         $admin_pages_db_escaped = [];
         foreach (self::getDefaultPages() as $admin_page) {
@@ -471,7 +471,7 @@ class WikiPage
     /**
      * @return string[] List of pagename
      */
-    public function getAllUserPages()
+    public static function getAllUserPages()
     {
         $allPages = [];
         $dao      = new WikiPageDao();
@@ -494,7 +494,7 @@ class WikiPage
 
     private function getIndexablePageFromAllUserPages(array &$indexable_pages)
     {
-        $all_internal_pages = array_merge($this->getAllUserPages(), $this->wrapper->getProjectEmptyLinks());
+        $all_internal_pages = array_merge(self::getAllUserPages(), $this->wrapper->getProjectEmptyLinks());
 
         foreach ($all_internal_pages as $internal_page_name) {
             $wiki_page = new WikiPage(self::$gid, $internal_page_name);
