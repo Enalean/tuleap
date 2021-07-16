@@ -31,8 +31,9 @@ ini_set('max_execution_time', 0);
 ini_set('memory_limit', -1);
 
 // Parameters
-$func    = 'help';
-$options = [];
+$func      = 'help';
+$verbosity = Logger::INFO;
+$force     = false;
 for ($i = 1; $i < $argc; $i++) {
     // Commands
     switch ($argv[$i]) {
@@ -83,7 +84,7 @@ for ($i = 1; $i < $argc; $i++) {
 
     //--force
     if (preg_match('/--force/', $argv[$i], $matches)) {
-        $options['core']['force'] = true;
+        $force = true;
     }
 
     // --level
@@ -92,12 +93,13 @@ for ($i = 1; $i < $argc; $i++) {
             echo "Error: `" . $matches[1] . "` level is no longer supported see usage with --help" . PHP_EOL;
             exit(1);
         }
-        $options['core']['verbose'] = Logger::toMonologLevel($matches[1]);
+        $verbosity = Logger::toMonologLevel($matches[1]);
     }
 
     // --bucket
     if (preg_match('/--bucket=(.*)/', $argv[$i], $matches)) {
-        $options['core']['bucket'] = $matches[1];
+        echo "Error --bucket option is no longer supported" . PHP_EOL;
+        exit(1);
     }
 }
 
@@ -106,12 +108,8 @@ if ($func == 'help') {
     exit;
 }
 
-if (! isset($options['core']['verbose'])) {
-    $options['core']['verbose'] = Logger::INFO;
-}
-
 $logger = new Logger('forgeupgrade');
-$logger->pushHandler(new StreamHandler(STDOUT, $options['core']['verbose']));
+$logger->pushHandler(new StreamHandler(STDOUT, $verbosity));
 
 // Go
 \ForgeConfig::loadLocalInc();
@@ -120,7 +118,7 @@ $upg = new ForgeUpgrade(
     DBFactory::getMainTuleapDBConnection()->getDB()->getPdo(),
     $logger
 );
-$upg->setOptions($options);
+$upg->setForce($force);
 $upg->run($func);
 
 // Function definitions
@@ -141,31 +139,5 @@ Options:
   --force                  Execute migration buckets even there are errors
   --verbose=[level]        How verbose: DEBUG, INFO, WARNING, ERROR
                            Default: INFO
-  --bucket=[bucket id]     Used with already-applied command, to display the detailed
-                           log for this  bucket
-
 EOT;
-}
-
-/**
- * Surround a string by a char if not present
- *
- * @param String $str  String to surround
- * @param String $char Char to add
- *
- * @return String
- */
-function surroundBy($str, $char)
-{
-    if (strpos($str, $char) === false) {
-        $str = $char . $str . $char;
-    } else {
-        if (strpos($str, $char) !== 0) {
-            $str = $char . $str;
-        }
-        if (strrpos($str, $char) !== (strlen($str) - 1)) {
-            $str = $str . $char;
-        }
-    }
-    return $str;
 }

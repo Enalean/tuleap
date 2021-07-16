@@ -39,4 +39,5 @@ $application->add(new \TuleapCfg\Command\SiteDeploy\FPM\SiteDeployFPMCommand());
 $application->add(new \TuleapCfg\Command\SiteDeploy\Gitolite3\SiteDeployGitolite3Command());
 $application->add(new \TuleapCfg\Command\SiteDeploy\Nginx\SiteDeployNginxCommand());
 $application->add(new \TuleapCfg\Command\SiteDeploy\Apache\SiteDeployApacheCommand());
+$application->add(new \TuleapCfg\Command\SiteDeploy\ForgeUpgrade\SiteDeployForgeUpgradeCommand());
 $application->run();

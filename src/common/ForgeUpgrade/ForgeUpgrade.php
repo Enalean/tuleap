@@ -46,7 +46,7 @@ class ForgeUpgrade
      */
     private ?array $buckets = null;
 
-    private array $options;
+    private bool $force = false;
 
     public function __construct(PDO $pdo, LoggerInterface $logger)
     {
@@ -55,20 +55,9 @@ class ForgeUpgrade
         $this->logger    = $logger;
     }
 
-    /**
-     * Set all options of forge upgrade
-     *
-     * If an option is not set, fill with default
-     */
-    public function setOptions(array $options): void
+    public function setForce(bool $force): void
     {
-        if (! isset($options['core']['force'])) {
-            $options['core']['force'] = false;
-        }
-        if (! isset($options['core']['bucket'])) {
-            $options['core']['bucket'] = null;
-        }
-        $this->options = $options;
+        $this->force = $force;
     }
 
     /**
@@ -94,6 +83,16 @@ class ForgeUpgrade
                     $this->doCheckUpdate($buckets);
                     break;
             }
+        } else {
+            $this->logger->info('System up-to-date');
+        }
+    }
+
+    public function runUpdate(): void
+    {
+        $buckets = $this->getBucketsToProceed($this->getBucketPaths());
+        if (count($buckets) > 0) {
+            $this->doUpdate($buckets);
         } else {
             $this->logger->info('System up-to-date');
         }
@@ -273,7 +272,7 @@ class ForgeUpgrade
         $this->logger->info('Start running migrations...');
         $has_encountered_failure = false;
 
-        if (! $this->options['core']['force']) {
+        if (! $this->force) {
             try {
                 foreach ($buckets as $bucket) {
                     $this->runUpBucket($bucket, $this->logger);

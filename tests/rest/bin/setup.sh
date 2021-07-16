@@ -78,6 +78,8 @@ setup_database() {
             $setup_script "$MYSQL" "$MYSQL_DBNAME"
         fi
     done
+
+    /usr/share/tuleap/src/tuleap-cfg/tuleap-cfg.php setup:forgeupgrade
 }
 
 tuleap_db_config() {

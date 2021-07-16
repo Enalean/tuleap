@@ -78,6 +78,8 @@ setup_database() {
     $MYSQLROOT -e "DELETE FROM tuleap.password_configuration"
     $MYSQLROOT -e "INSERT INTO tuleap.password_configuration values (0)"
 
+    /usr/share/tuleap/src/tuleap-cfg/tuleap-cfg.php setup:forgeupgrade
+
     enable_plugins
 
     $MYSQLROOT $MYSQL_DBNAME < "/usr/share/tuleap/tests/e2e/full/tuleap/cypress_database_init_values.sql"

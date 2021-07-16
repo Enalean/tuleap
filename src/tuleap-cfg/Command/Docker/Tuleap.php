@@ -27,6 +27,8 @@ use ForgeConfig;
 use Psr\Log\LogLevel;
 use Symfony\Component\Console\Logger\ConsoleLogger;
 use Symfony\Component\Console\Output\OutputInterface;
+use Tuleap\DB\DBFactory;
+use Tuleap\ForgeUpgrade\ForgeUpgrade;
 use Tuleap\System\ServiceControl;
 use TuleapCfg\Command\Configure\ConfigureApache;
 use TuleapCfg\Command\ProcessFactory;
@@ -107,15 +109,17 @@ final class Tuleap
     private function update(OutputInterface $output): string
     {
         $tuleap_fqdn = $this->regenerateConfigurations($output);
-        $this->runForgeUpgrade($output);
         $this->queueSystemCheck($output);
         return $tuleap_fqdn;
     }
 
     private function regenerateConfigurations(OutputInterface $output): string
     {
-        $logger      = new ConsoleLogger($output, [LogLevel::INFO => OutputInterface::VERBOSITY_NORMAL]);
-        $server_name = $this->getServerFQDNFromConfiguration();
+        $logger = new ConsoleLogger($output, [LogLevel::INFO => OutputInterface::VERBOSITY_NORMAL]);
+        ForgeConfig::store();
+
+        ForgeConfig::loadLocalInc();
+        $server_name = ForgeConfig::get('sys_default_domain', null);
         if (! $server_name) {
             throw new \RuntimeException('No `sys_default_domain` defined, abort');
         }
@@ -134,10 +138,9 @@ final class Tuleap
         );
         $site_deploy_nginx->configure();
 
-        ForgeConfig::loadLocalInc();
         $output->writeln('<info>Regenerate configuration for fpm</info>');
         $site_deploy_fpm = SiteDeployFPM::buildForPHP74(
-            new ConsoleLogger($output, [LogLevel::INFO => OutputInterface::VERBOSITY_NORMAL]),
+            $logger,
             'codendiadm',
             false
         );
@@ -151,27 +154,23 @@ final class Tuleap
         $configure_apache = new ConfigureApache('/');
         $configure_apache->configure();
 
-        return $server_name;
-    }
 
-    private function runForgeUpgrade(OutputInterface $output): void
-    {
         $output->writeln('<info>Run forgeupgrade</info>');
-        $this->process_factory->getProcessWithoutTimeout(['/usr/lib/forgeupgrade/bin/forgeupgrade', '--config=/etc/tuleap/forgeupgrade/config.ini', 'update'])->mustRun();
+        ForgeConfig::loadDatabaseInc();
+        $forge_upgrade = new ForgeUpgrade(
+            DBFactory::getMainTuleapDBConnection()->getDB()->getPdo(),
+            $logger,
+        );
+        $forge_upgrade->runUpdate();
+
+        ForgeConfig::restore();
+
+        return $server_name;
     }
 
     private function queueSystemCheck(OutputInterface $output): void
     {
         $output->writeln('<info>Queue a system check</info>');
         $this->process_factory->getProcess(['/usr/bin/tuleap', 'queue-system-check'])->mustRun();
-    }
-
-    private function getServerFQDNFromConfiguration(): ?string
-    {
-        ForgeConfig::store();
-        ForgeConfig::loadLocalInc();
-        $fqdn = ForgeConfig::get('sys_default_domain', null);
-        ForgeConfig::restore();
-        return $fqdn;
     }
 }

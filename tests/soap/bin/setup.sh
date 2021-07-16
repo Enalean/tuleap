@@ -74,6 +74,8 @@ setup_database() {
 
     $MYSQLROOT $MYSQL_DBNAME < "/usr/share/tuleap/src/db/mysql/trackerv3structure.sql"
     $MYSQLROOT $MYSQL_DBNAME < "/usr/share/tuleap/src/db/mysql/trackerv3values.sql"
+
+    /usr/share/tuleap/src/tuleap-cfg/tuleap-cfg.php setup:forgeupgrade
 }
 
 load_project() {
