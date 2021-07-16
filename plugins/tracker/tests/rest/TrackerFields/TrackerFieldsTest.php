@@ -142,7 +142,7 @@ class TrackerFieldsTest extends TrackerBase
 
         $query['file_size'] = 456;
         $response3          = $this->getResponse($this->request_factory->createRequest('POST', "tracker_fields/$field_id/files")->withBody($this->stream_factory->createStream(json_encode($query))));
-        $this->assertEquals(409, $response3->getStatusCode());
+        $this->assertEquals(201, $response3->getStatusCode());
 
         $tus_response_upload = $this->getResponse(
             $this->request_factory->createRequest('PATCH', $response1_json['upload_href'])

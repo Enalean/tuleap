@@ -23,7 +23,6 @@ namespace Tuleap\Tracker\FormElement\Field\File\Upload;
 
 use DateInterval;
 use DateTimeImmutable;
-use LogicException;
 use PFUser;
 use Tracker_FormElement_Field_File;
 use Tuleap\DB\DBTransactionExecutor;
@@ -108,21 +107,15 @@ final class FileToUploadCreator
             $name,
             $current_time->getTimestamp()
         );
-        if (count($rows) > 1) {
-            throw new LogicException(
-                'A identical file is being created multiple times by an ongoing upload, this is not expected'
-            );
-        }
-        if (count($rows) === 1) {
-            $row = $rows[0];
-            if ((int) $row['submitted_by'] !== (int) $user->getId()) {
+
+        foreach ($rows as $row) {
+            if ((int) $row['submitted_by'] !== (int) $user->getId() && $file_size === (int) $row['filesize']) {
                 throw new UploadCreationConflictException();
             }
-            if ($file_size !== (int) $row['filesize']) {
-                throw new UploadCreationFileMismatchException();
-            }
 
-            return (int) $row['id'];
+            if ($file_size === (int) $row['filesize']) {
+                return (int) $row['id'];
+            }
         }
 
         return null;

@@ -22,7 +22,6 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\FormElement\Field\File\Upload;
 
 use DateTimeImmutable;
-use LogicException;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Mockery\MockInterface;
@@ -124,75 +123,6 @@ class FileToUploadCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertSame('/uploads/tracker/file/12', $document_to_upload->getUploadHref());
     }
 
-    public function testANewItemIsNotCreatedIfManyUploadsAreOngoingWithTheSameFileWhichShouldNeverHappen()
-    {
-        $current_time = new DateTimeImmutable();
-
-        $this->dao->shouldReceive('searchFileOngoingUploadByFieldIdNameAndExpirationDate')->andReturn(
-            [
-                ['id' => 12, 'submitted_by' => 102, 'filesize' => 123],
-                ['id' => 13, 'submitted_by' => 102, 'filesize' => 123]
-            ]
-        );
-
-        $this->dao->shouldReceive('saveFileOngoingUpload')->never();
-
-        $this->expectException(LogicException::class);
-
-        $this->creator->create(
-            $this->field,
-            $this->user,
-            $current_time,
-            'filename.txt',
-            123,
-            'text/plain'
-        );
-    }
-
-    public function testCreationIsRejectedWhenAnotherUserIsCreatingTheDocument()
-    {
-        $current_time = new DateTimeImmutable();
-
-        $this->dao->shouldReceive('searchFileOngoingUploadByFieldIdNameAndExpirationDate')->andReturn(
-            [
-                ['submitted_by' => 103]
-            ]
-        );
-
-        $this->expectException(UploadCreationConflictException::class);
-
-        $this->creator->create(
-            $this->field,
-            $this->user,
-            $current_time,
-            'filename.txt',
-            123,
-            'text/plain'
-        );
-    }
-
-    public function testCreationIsRejectedWhenTheUserIsAlreadyCreatingTheDocumentWithAnotherFile()
-    {
-        $current_time = new DateTimeImmutable();
-
-        $this->dao->shouldReceive('searchFileOngoingUploadByFieldIdNameAndExpirationDate')->andReturn(
-            [
-                ['submitted_by' => 102, 'filesize' => 123456]
-            ]
-        );
-
-        $this->expectException(UploadCreationFileMismatchException::class);
-
-        $this->creator->create(
-            $this->field,
-            $this->user,
-            $current_time,
-            'filename.txt',
-            789,
-            'text/plain'
-        );
-    }
-
     public function testCreationIsRejectedIfTheFileIsBiggerThanTheConfigurationLimit()
     {
         $current_time = new DateTimeImmutable();
@@ -205,6 +135,25 @@ class FileToUploadCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             $current_time,
             'filename.txt',
             2000,
+            'text/plain'
+        );
+    }
+
+    public function testCreationIsRejectedWhenAnotherUserIsCreatingTheDocument()
+    {
+        $current_time = new DateTimeImmutable();
+        $this->dao->shouldReceive('searchFileOngoingUploadByFieldIdNameAndExpirationDate')->andReturn(
+            [
+                ['submitted_by' => 103, 'filesize' => 123]
+            ]
+        );
+        $this->expectException(UploadCreationConflictException::class);
+        $this->creator->create(
+            $this->field,
+            $this->user,
+            $current_time,
+            'filename.txt',
+            123,
             'text/plain'
         );
     }
