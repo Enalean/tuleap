@@ -56,7 +56,7 @@ class StandUpNotificationBuilder
     public function buildNotificationText(HTTPRequest $http_request, PFUser $user, Project $project)
     {
         $last_plannings_for_presenter = [];
-        $last_plannings               = $this->planning_factory->getLastLevelPlannings($user, $project->getID());
+        $last_plannings               = $this->planning_factory->getLastLevelPlannings($user, (int)$project->getID());
         $project_name                 = $project->getPublicName();
         $last_planning_name           = '';
 
