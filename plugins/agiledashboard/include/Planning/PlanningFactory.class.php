@@ -19,23 +19,13 @@
  */
 
 use Tuleap\AgileDashboard\Planning\PlanningDao;
+use Tuleap\AgileDashboard\Planning\RetrievePlannings;
 
-class PlanningFactory
+class PlanningFactory implements RetrievePlannings
 {
-    /**
-     * @var PlanningDao
-     */
-    private $dao;
-
-    /**
-     * @var TrackerFactory
-     */
-    private $tracker_factory;
-
-    /**
-     * @var PlanningPermissionsManager
-     */
-    private $planning_permissions_manager;
+    private PlanningDao $dao;
+    private TrackerFactory $tracker_factory;
+    private PlanningPermissionsManager $planning_permissions_manager;
 
     public function __construct(
         PlanningDao $dao,
@@ -219,9 +209,9 @@ class PlanningFactory
      * are not parents themselves
      * @return Planning[]
      */
-    public function getLastLevelPlannings(PFUser $user, $group_id)
+    public function getLastLevelPlannings(PFUser $user, int $project_id): array
     {
-        $plannings = $this->getPlannings($user, $group_id);
+        $plannings = $this->getPlannings($user, $project_id);
 
         if ($plannings) {
             $last_level_tracker_ids = $this->getLastLevelPlanningTrackersIds($plannings);
@@ -240,9 +230,9 @@ class PlanningFactory
      * Get all plannings that are not bottom plannings
      * @return Planning[]
      */
-    public function getNonLastLevelPlannings(PFUser $user, $group_id)
+    public function getNonLastLevelPlannings(PFUser $user, int $project_id): array
     {
-        $plannings = $this->getPlannings($user, $group_id);
+        $plannings = $this->getPlannings($user, $project_id);
 
         if ($plannings) {
             $last_lavel_tracker_ids = $this->getLastLevelPlanningTrackersIds($plannings);

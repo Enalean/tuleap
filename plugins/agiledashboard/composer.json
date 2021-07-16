@@ -5,5 +5,10 @@
       "Tuleap\\AgileDashboard\\": ["include/", "include/AgileDashboard/"]
     },
     "classmap": ["include/"]
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Tuleap\\AgileDashboard\\": "tests/unit/"
+    }
   }
 }

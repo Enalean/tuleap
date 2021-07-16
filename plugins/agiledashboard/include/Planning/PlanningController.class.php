@@ -28,6 +28,7 @@ use Tuleap\AgileDashboard\Planning\Admin\AdditionalPlanningConfigurationWarnings
 use Tuleap\AgileDashboard\Planning\Admin\PlanningEditionPresenterBuilder;
 use Tuleap\AgileDashboard\Planning\Admin\PlanningWarningPossibleMisconfigurationPresenter;
 use Tuleap\AgileDashboard\Planning\Admin\UpdateRequestValidator;
+use Tuleap\AgileDashboard\Planning\Configuration\ScrumConfiguration;
 use Tuleap\AgileDashboard\Planning\PlanningAdministrationDelegation;
 use Tuleap\AgileDashboard\Planning\PlanningUpdater;
 use Tuleap\AgileDashboard\Planning\Presenters\AlternativeBoardLinkEvent;
@@ -53,96 +54,30 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
     public const FUTURE_PERIOD                 = 'future';
     public const NUMBER_PAST_MILESTONES_SHOWN  = 10;
 
-    /** @var PlanningFactory */
-    private $planning_factory;
-
-    /** @var Planning_MilestoneFactory */
-    private $milestone_factory;
-
-    /** @var ProjectManager */
-    private $project_manager;
-
-    /** @var AgileDashboard_XMLFullStructureExporter */
-    private $xml_exporter;
-
-    /** @var string */
-    private $plugin_path;
-
-    /** @var AgileDashboard_KanbanManager */
-    private $kanban_manager;
-
-    /** @var AgileDashboard_ConfigurationManager */
-    private $config_manager;
-
-    /** @var AgileDashboard_KanbanFactory */
-    private $kanban_factory;
-
-    /** @var PlanningPermissionsManager */
-    private $planning_permissions_manager;
-
-    /**
-     * @var ScrumForMonoMilestoneChecker
-     */
-    private $scrum_mono_milestone_checker;
-
-    /**
-     * @var ScrumPlanningFilter
-     */
-    private $scrum_planning_filter;
-
-    /**
-     * @var Tracker_FormElementFactory
-     */
-    private $tracker_form_element_factory;
-    /**
-     * @var Project
-     */
-    private $project;
-    /**
-     * @var AgileDashboardCrumbBuilder
-     */
-    private $service_crumb_builder;
-
-    /** @var AdministrationCrumbBuilder */
-    private $admin_crumb_builder;
-
-    /**
-     * @var SemanticTimeframeBuilder
-     */
-    private $semantic_timeframe_builder;
-    /**
-     * @var DBTransactionExecutor
-     */
-    private $transaction_executor;
-
-    /**
-     * @var ArtifactsInExplicitBacklogDao
-     */
-    private $artifacts_in_explicit_backlog_dao;
-    /**
-     * @var PlanningUpdater
-     */
-    private $planning_updater;
-    /**
-     * @var EventManager
-     */
-    private $event_manager;
-    /**
-     * @var Planning_RequestValidator
-     */
-    private $planning_request_validator;
-    /**
-     * @var UpdateIsAllowedChecker
-     */
-    private $root_planning_update_checker;
-    /**
-     * @var PlanningEditionPresenterBuilder
-     */
-    private $planning_edition_presenter_builder;
-    /**
-     * @var UpdateRequestValidator
-     */
-    private $update_request_validator;
+    private PlanningFactory $planning_factory;
+    private Planning_MilestoneFactory $milestone_factory;
+    private ProjectManager $project_manager;
+    private AgileDashboard_XMLFullStructureExporter $xml_exporter;
+    private string $plugin_path;
+    private AgileDashboard_KanbanManager $kanban_manager;
+    private AgileDashboard_ConfigurationManager $config_manager;
+    private AgileDashboard_KanbanFactory $kanban_factory;
+    private PlanningPermissionsManager $planning_permissions_manager;
+    private ScrumForMonoMilestoneChecker $scrum_mono_milestone_checker;
+    private ScrumPlanningFilter $scrum_planning_filter;
+    private Tracker_FormElementFactory $tracker_form_element_factory;
+    private Project $project;
+    private AgileDashboardCrumbBuilder $service_crumb_builder;
+    private AdministrationCrumbBuilder $admin_crumb_builder;
+    private SemanticTimeframeBuilder $semantic_timeframe_builder;
+    private DBTransactionExecutor $transaction_executor;
+    private ArtifactsInExplicitBacklogDao $artifacts_in_explicit_backlog_dao;
+    private PlanningUpdater $planning_updater;
+    private EventManager $event_manager;
+    private Planning_RequestValidator $planning_request_validator;
+    private UpdateIsAllowedChecker $root_planning_update_checker;
+    private PlanningEditionPresenterBuilder $planning_edition_presenter_builder;
+    private UpdateRequestValidator $update_request_validator;
 
     public function __construct(
         Codendi_Request $request,
@@ -204,17 +139,13 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
         return $this->showHome();
     }
 
-    private function showHome()
+    private function showHome(): string
     {
-        $user           = $this->request->getCurrentUser();
-        $plannings      = $this->planning_factory->getNonLastLevelPlannings(
-            $user,
-            $this->group_id
-        );
-        $last_plannings = $this->planning_factory->getLastLevelPlannings($user, $this->group_id);
+        $user          = $this->request->getCurrentUser();
+        $configuration = ScrumConfiguration::fromProjectId($this->planning_factory, $this->group_id, $user);
 
         $kanban_is_activated = $this->config_manager->kanbanIsActivatedForProject($this->group_id);
-        $scrum_is_configured = ! empty($plannings) || ! empty($last_plannings);
+        $scrum_is_configured = $configuration->isNotEmpty();
 
         if (! $scrum_is_configured && ! $kanban_is_activated) {
             return $this->showEmptyHome();
@@ -223,9 +154,9 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
         $this->redirectToTopBacklogPlanningInMonoMilestoneWhenKanbanIsDisabled();
 
         $presenter = new Planning_Presenter_HomePresenter(
-            $this->getMilestoneAccessPresenters($plannings),
+            $this->getMilestoneAccessPresenters($configuration->getPlannings()),
             $this->group_id,
-            $this->getLastLevelMilestonesPresenters($last_plannings, $user),
+            $this->getLastLevelMilestonesPresenters($configuration->getLastPlannings(), $user),
             $this->request->get('period'),
             $this->getProjectFromRequest()->getPublicName(),
             $kanban_is_activated,
