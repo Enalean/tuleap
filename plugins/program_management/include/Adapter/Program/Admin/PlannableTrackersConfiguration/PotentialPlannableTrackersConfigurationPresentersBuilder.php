@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Adapter\Program\Admin\PlannableTrackersConfiguration;
 
 use Tuleap\ProgramManagement\Domain\Program\Admin\PlannableTrackersConfiguration\BuildPotentialPlannableTrackersConfigurationPresenters;
+use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramForAdministrationIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramSelectOptionConfigurationPresenter;
 use Tuleap\ProgramManagement\Domain\Program\Plan\RetrievePlannableTrackers;
 
@@ -42,10 +43,10 @@ final class PotentialPlannableTrackersConfigurationPresentersBuilder implements 
     /**
      * @return ProgramSelectOptionConfigurationPresenter[]
      */
-    public function buildPotentialPlannableTrackerPresenters(int $program_id): array
+    public function buildPotentialPlannableTrackerPresenters(ProgramForAdministrationIdentifier $program): array
     {
-        $all_trackers          = $this->tracker_factory->getTrackersByGroupId($program_id);
-        $plannable_tracker_ids = $this->plannable_trackers_retriever->getPlannableTrackersOfProgram($program_id);
+        $all_trackers          = $this->tracker_factory->getTrackersByGroupId($program->id);
+        $plannable_tracker_ids = $this->plannable_trackers_retriever->getPlannableTrackersOfProgram($program->id);
 
         $potential_tracker_presenters = [];
 

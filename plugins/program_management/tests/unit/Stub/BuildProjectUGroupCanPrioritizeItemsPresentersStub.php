@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Stub;
 
 use Tuleap\ProgramManagement\Domain\Program\Admin\CanPrioritizeItems\BuildProjectUGroupCanPrioritizeItemsPresenters;
+use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramForAdministrationIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramSelectOptionConfigurationPresenter;
 
 final class BuildProjectUGroupCanPrioritizeItemsPresentersStub implements BuildProjectUGroupCanPrioritizeItemsPresenters
@@ -43,7 +44,7 @@ final class BuildProjectUGroupCanPrioritizeItemsPresentersStub implements BuildP
     /**
      * @return ProgramSelectOptionConfigurationPresenter[]
      */
-    public function buildProjectUgroupCanPrioritizeItemsPresenters(int $program_id): array
+    public function buildProjectUgroupCanPrioritizeItemsPresenters(ProgramForAdministrationIdentifier $program): array
     {
         $presenters = [];
         foreach ($this->ids as $id) {

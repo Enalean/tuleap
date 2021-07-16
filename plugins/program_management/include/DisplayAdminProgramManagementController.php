@@ -117,8 +117,7 @@ final class DisplayAdminProgramManagementController implements DispatchableWithR
 
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
-        $project    = $this->getProject($variables);
-        $project_id = (int) $project->getID();
+        $project = $this->getProject($variables);
 
         if (! $project->usesService(program_managementPlugin::SERVICE_SHORTNAME)) {
             throw new NotFoundException(
@@ -128,7 +127,7 @@ final class DisplayAdminProgramManagementController implements DispatchableWithR
 
         $user = $request->getCurrentUser();
         try {
-            $program_id = ProgramForAdministrationIdentifier::fromProject(
+            $program = ProgramForAdministrationIdentifier::fromProject(
                 $this->verify_is_team,
                 $this->permission_verifier,
                 $user,
@@ -151,7 +150,7 @@ final class DisplayAdminProgramManagementController implements DispatchableWithR
                 $this->program_increment_tracker_retriever,
                 $this->iteration_tracker_retriever,
                 $this->event_manager,
-                $project_id,
+                $program,
                 $user
             );
         } catch (Domain\Program\Plan\ProgramAccessException $e) {
@@ -175,7 +174,7 @@ final class DisplayAdminProgramManagementController implements DispatchableWithR
         try {
             $program_increment_tracker = ProgramTracker::buildProgramIncrementTrackerFromProgram(
                 $this->program_increment_tracker_retriever,
-                ProgramIdentifier::fromId($this->build_program, $project_id, $user),
+                ProgramIdentifier::fromId($this->build_program, $program->id, $user),
                 $user
             );
         } catch (ProgramAccessException | ProgramHasNoProgramIncrementTrackerException | ProjectIsNotAProgramException | ProgramTrackerNotFoundException $e) {
@@ -190,21 +189,21 @@ final class DisplayAdminProgramManagementController implements DispatchableWithR
         $this->template_renderer->renderToPage(
             'admin',
             new ProgramAdminPresenter(
-                $project_id,
+                $program,
                 PotentialTeamsPresenterBuilder::buildPotentialTeamsPresenter(
-                    $this->potential_teams_builder->buildPotentialTeams($project_id, $user)
+                    $this->potential_teams_builder->buildPotentialTeams($program, $user)
                 ),
                 TeamsPresenterBuilder::buildTeamsPresenter(
                     TeamProjectsCollection::fromProgramForAdministration(
                         $this->teams_searcher,
                         $this->project_data_adapter,
-                        $program_id
+                        $program
                     )
                 ),
                 $error_presenters,
-                $this->program_increment_presenters_builder->buildPotentialProgramIncrementTrackerPresenters($project_id, $program_increment_tracker),
-                $this->plannable_tracker_presenters_builder->buildPotentialPlannableTrackerPresenters($project_id),
-                $this->ugroups_can_prioritize_builder->buildProjectUgroupCanPrioritizeItemsPresenters($project_id),
+                $this->program_increment_presenters_builder->buildPotentialProgramIncrementTrackerPresenters($program, $program_increment_tracker),
+                $this->plannable_tracker_presenters_builder->buildPotentialPlannableTrackerPresenters($program),
+                $this->ugroups_can_prioritize_builder->buildProjectUgroupCanPrioritizeItemsPresenters($program),
                 $program_increment_labels->label,
                 $program_increment_labels->sub_label,
             )

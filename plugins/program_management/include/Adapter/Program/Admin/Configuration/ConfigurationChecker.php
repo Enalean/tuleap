@@ -23,6 +23,7 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Admin\Configuration;
 
 use PFUser;
 use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ErrorPresenter;
+use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramForAdministrationIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\IterationTracker\RetrieveVisibleIterationTracker;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracker\RetrieveVisibleProgramIncrementTracker;
 use Tuleap\ProgramManagement\Domain\Program\Plan\BuildProgram;
@@ -45,11 +46,11 @@ class ConfigurationChecker
         RetrieveVisibleProgramIncrementTracker $program_increment_tracker_retriever,
         RetrieveVisibleIterationTracker $iteration_tracker_retriever,
         \EventManager $event_manager,
-        int $program_id,
+        ProgramForAdministrationIdentifier $program_id,
         PFUser $user
     ): array {
         try {
-            $program = ProgramIdentifier::fromId($build_program, $program_id, $user);
+            $program = ProgramIdentifier::fromId($build_program, $program_id->id, $user);
         } catch (ProjectIsNotAProgramException $e) {
             return [];
         }

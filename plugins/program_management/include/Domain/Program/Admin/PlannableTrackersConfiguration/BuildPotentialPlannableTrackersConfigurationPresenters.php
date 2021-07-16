@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Admin\PlannableTrackersConfiguration;
 
+use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramForAdministrationIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramSelectOptionConfigurationPresenter;
 
 interface BuildPotentialPlannableTrackersConfigurationPresenters
@@ -29,5 +30,5 @@ interface BuildPotentialPlannableTrackersConfigurationPresenters
     /**
      * @return ProgramSelectOptionConfigurationPresenter[]
      */
-    public function buildPotentialPlannableTrackerPresenters(int $program_id): array;
+    public function buildPotentialPlannableTrackerPresenters(ProgramForAdministrationIdentifier $program): array;
 }

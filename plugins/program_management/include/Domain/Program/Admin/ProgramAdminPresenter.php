@@ -62,16 +62,16 @@ final class ProgramAdminPresenter
     public ?string $program_increment_sub_label;
 
     /**
-     * @param PotentialTeamPresenter[]              $potential_teams
-     * @param TeamPresenter[]                       $aggregated_teams
-     * @param ErrorPresenter[]                      $errors
+     * @param PotentialTeamPresenter[]                    $potential_teams
+     * @param TeamPresenter[]                             $aggregated_teams
+     * @param ErrorPresenter[]                            $errors
      * @param ProgramSelectOptionConfigurationPresenter[] $potential_program_increments
      * @param ProgramSelectOptionConfigurationPresenter[] $potential_plannable_trackers
      * @param ProgramSelectOptionConfigurationPresenter[] $ugroups_can_prioritize
      */
 
     public function __construct(
-        int $program_id,
+        ProgramForAdministrationIdentifier $program,
         array $potential_teams,
         array $aggregated_teams,
         array $errors,
@@ -81,7 +81,7 @@ final class ProgramAdminPresenter
         ?string $program_increment_label,
         ?string $program_increment_sub_label
     ) {
-        $this->program_id                   = $program_id;
+        $this->program_id                   = $program->id;
         $this->potential_teams              = $potential_teams;
         $this->aggregated_teams             = $aggregated_teams;
         $this->has_aggregated_teams         = count($aggregated_teams) > 0;

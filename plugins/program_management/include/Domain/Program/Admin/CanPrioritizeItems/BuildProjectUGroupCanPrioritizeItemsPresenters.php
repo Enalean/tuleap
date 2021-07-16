@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Admin\CanPrioritizeItems;
 
+use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramForAdministrationIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramSelectOptionConfigurationPresenter;
 
 interface BuildProjectUGroupCanPrioritizeItemsPresenters
@@ -29,5 +30,5 @@ interface BuildProjectUGroupCanPrioritizeItemsPresenters
     /**
      * @return ProgramSelectOptionConfigurationPresenter[]
      */
-    public function buildProjectUgroupCanPrioritizeItemsPresenters(int $program_id): array;
+    public function buildProjectUgroupCanPrioritizeItemsPresenters(ProgramForAdministrationIdentifier $program): array;
 }
