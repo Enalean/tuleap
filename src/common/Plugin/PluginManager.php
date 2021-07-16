@@ -73,7 +73,10 @@ class PluginManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
                 PluginFactory::instance(),
                 new SiteCache(),
                 new ForgeUpgradeConfig(
-                    new System_Command()
+                    new \Tuleap\ForgeUpgrade\ForgeUpgrade(
+                        \Tuleap\DB\DBFactory::getMainTuleapDBConnection()->getDB()->getPdo(),
+                        new \Psr\Log\NullLogger(),
+                    )
                 ),
                 CommonMarkInterpreter::build(Codendi_HTMLPurifier::instance())
             );
@@ -203,7 +206,6 @@ class PluginManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
         $name = $this->plugin_factory->getNameForPlugin($plugin);
         $this->executeSqlStatements('uninstall', $name);
         $plugin->uninstall();
-        $this->uninstallForgeUpgrade($name);
         $this->site_cache->invalidatePluginBasedCaches();
         return $this->plugin_factory->removePlugin($plugin);
     }
@@ -270,27 +272,8 @@ class PluginManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
     protected function configureForgeUpgrade($name)
     {
         try {
-            $plugin_path = ForgeConfig::get('sys_pluginsroot') . $name;
-            $this->forgeupgrade_config->loadDefaults();
-            $this->forgeupgrade_config->addPath(ForgeConfig::get('sys_pluginsroot') . $name);
+            $plugin_path = ForgeConfig::get('sys_pluginsroot') . $name . '/db';
             $this->forgeupgrade_config->recordOnlyPath($plugin_path);
-        } catch (Exception $e) {
-            $GLOBALS['Response']->addFeedback('warning', "ForgeUpgrade configuration update failed: " . $e->getMessage());
-        }
-    }
-
-    /**
-     * Remove plugin from ForgeUpgrade configuration
-     *
-     * Keep migration scripts in DB, it doesn't matter.
-     *
-     * @param String $name Plugin's name
-     */
-    protected function uninstallForgeUpgrade($name)
-    {
-        try {
-            $this->forgeupgrade_config->loadDefaults();
-            $this->forgeupgrade_config->removePath(ForgeConfig::get('sys_pluginsroot') . $name);
         } catch (Exception $e) {
             $GLOBALS['Response']->addFeedback('warning', "ForgeUpgrade configuration update failed: " . $e->getMessage());
         }

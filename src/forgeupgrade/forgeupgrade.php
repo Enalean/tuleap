@@ -37,10 +37,8 @@ for ($i = 1; $i < $argc; $i++) {
     // Commands
     switch ($argv[$i]) {
         case 'help':
-        case 'record-only':
         case 'update':
         case 'check-update':
-        case 'run-pre':
         case 'already-applied':
             $func = $argv[$i];
             break;
@@ -50,28 +48,25 @@ for ($i = 1; $i < $argc; $i++) {
 
     // --config
     if (preg_match('/--config=(.*)/', $argv[$i], $matches)) {
-        if (is_file($matches[1])) {
-            $options = parse_ini_file($matches[1], true);
-        }
+        fwrite(STDERR, "Warning, --config is obsolete, you should no longer use it " . PHP_EOL);
     }
 
     // --path
     if (preg_match('/--path=(.*)/', $argv[$i], $matches)) {
-        if (is_dir($matches[1]) || is_file($matches[1])) {
-            $options['core']['path'][] = $matches[1];
-        } else {
-            echo 'Error "' . $matches[1] . '" is not a valid directory' . PHP_EOL;
-        }
+        echo "Error --path option is no longer supported" . PHP_EOL;
+        exit(1);
     }
 
     // --include
     if (preg_match('/--include=(.*)/', $argv[$i], $matches)) {
-        $options['core']['include_path'][] = surroundBy($matches[1], '/');
+        echo "Error --include option is no longer supported" . PHP_EOL;
+        exit(1);
     }
 
     // --exclude
     if (preg_match('/--exclude=(.*)/', $argv[$i], $matches)) {
-        $options['core']['exclude_path'][] = surroundBy($matches[1], '/');
+        echo "Error --exclude option is no longer supported" . PHP_EOL;
+        exit(1);
     }
 
     // --driver
@@ -82,7 +77,8 @@ for ($i = 1; $i < $argc; $i++) {
 
     //--ignore-preup
     if (preg_match('/--ignore-preup/', $argv[$i], $matches)) {
-        $options['core']['ignore_preup'] = true;
+        echo "Error --ignore-preup option is no longer supported" . PHP_EOL;
+        exit(1);
     }
 
     //--force
@@ -139,18 +135,9 @@ Usage: forgeupgrade.php [options] command
 Commands:
 already-applied  List all applied buckets
 check-update     List all available migration buckets not already applied (pending)
-run-pre          Run pending migration buckets "pre" checks
 update           Execute pending migration buckets
-record-only      Record all available buckets as executed in the database without
-                 actually executing them
 
 Options:
-  --config=[/path]         Path to ForgeUpgrade config file (you can define all options in a config.ini file)
-  --path=[/path]           Path where to find migration buckets [default: current dir]
-  --include=[/path]        Only consider paths that contains given pattern
-  --exclude=[/path]        Don't consider paths that contains given pattern
-
-  --ignore-preup           Execute migration buckets whithout running "pre" checks
   --force                  Execute migration buckets even there are errors
   --verbose=[level]        How verbose: DEBUG, INFO, WARNING, ERROR
                            Default: INFO

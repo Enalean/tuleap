@@ -267,7 +267,12 @@ if (ForgeConfig::get(\ProjectManager::CONFIG_PROJECT_APPROVAL) == 1) {
 
 $site_admin_warnings = new \Tuleap\Admin\SiteAdminWarnings(
     EventManager::instance(),
-    new ForgeUpgradeConfig(new System_Command()),
+    new ForgeUpgradeConfig(
+        new \Tuleap\ForgeUpgrade\ForgeUpgrade(
+            \Tuleap\DB\DBFactory::getMainTuleapDBConnection()->getDB()->getPdo(),
+            new \Psr\Log\NullLogger(),
+        )
+    ),
 );
 
 // Start output

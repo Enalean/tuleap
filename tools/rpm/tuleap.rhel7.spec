@@ -640,7 +640,6 @@ done
 %{__install} -d $RPM_BUILD_ROOT/etc/%{APP_NAME}/conf
 %{__install} -d $RPM_BUILD_ROOT/etc/%{APP_NAME}/plugins
 %{__install} -d $RPM_BUILD_ROOT/etc/%{APP_NAME}/plugins/pluginsadministration
-%{__install} -d $RPM_BUILD_ROOT/etc/%{APP_NAME}/forgeupgrade
 
 # Data dir
 %{__install} -m 755 -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}
@@ -1104,7 +1103,6 @@ fi
 %attr(00750,codendiadm,codendiadm) /etc/%{APP_NAME}/conf
 %attr(00750,codendiadm,codendiadm) /etc/%{APP_NAME}/plugins
 %attr(00750,codendiadm,codendiadm) /etc/%{APP_NAME}/plugins/pluginsadministration
-%attr(00750,codendiadm,codendiadm) /etc/%{APP_NAME}/forgeupgrade
 
 # Data dir
 %dir %attr(755,%{APP_USER},%{APP_USER}) %{APP_DATA_DIR}

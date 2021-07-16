@@ -25,20 +25,13 @@ namespace Tuleap\Admin;
 
 use Event;
 use EventManager;
-use ForgeConfig;
 use ForgeUpgradeConfig;
 use Tuleap\Admin\Homepage\NbUsersByStatus;
 
 final class SiteAdminWarnings
 {
-    /**
-     * @var EventManager
-     */
-    private $event_manager;
-    /**
-     * @var ForgeUpgradeConfig
-     */
-    private $forge_upgrade_config;
+    private EventManager $event_manager;
+    private ForgeUpgradeConfig $forge_upgrade_config;
 
     public function __construct(EventManager $event_manager, ForgeUpgradeConfig $forge_upgrade_config)
     {
@@ -57,11 +50,8 @@ final class SiteAdminWarnings
             ]
         );
 
-        if (! ForgeConfig::get('disable_forge_upgrade_warnings')) {
-            $this->forge_upgrade_config->loadDefaults();
-            if (! $this->forge_upgrade_config->isSystemUpToDate()) {
-                $warnings[] = '<div class="tlp-alert-warning alert alert-warning alert-block">' . _('<h4>ForgeUpgrade was not run!</h4><p>It seems that someone upgraded Tuleap RPMs without running forgeupgrade command. Please check <a href="/doc/en/installation-guide/update.html">upgrade documentation</a>.</p>') . '</div>';
-            }
+        if (! $this->forge_upgrade_config->isSystemUpToDate()) {
+            $warnings[] = '<div class="tlp-alert-warning alert alert-warning alert-block">' . _('<h4>ForgeUpgrade was not run!</h4><p>It seems that someone upgraded Tuleap RPMs without running forgeupgrade command. Please check <a href="/doc/en/installation-guide/update.html">upgrade documentation</a>.</p>') . '</div>';
         }
 
         return implode('', $warnings);

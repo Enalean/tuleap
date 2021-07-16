@@ -154,8 +154,7 @@ final class PluginManagerTest extends \Tuleap\Test\PHPUnit\TestCase
         ]);
 
         $forgeupgrade_config = \Mockery::spy(\ForgeUpgradeConfig::class);
-        $forgeupgrade_config->shouldReceive('addPath')->with(ForgeConfig::get('sys_pluginsroot') . 'New_Plugin')->once();
-        $forgeupgrade_config->shouldReceive('recordOnlyPath')->with(ForgeConfig::get('sys_pluginsroot') . 'New_Plugin')->once();
+        $forgeupgrade_config->shouldReceive('recordOnlyPath')->with(ForgeConfig::get('sys_pluginsroot') . 'New_Plugin/db')->once();
 
         //The plugins manager
         $pm = new PluginManager(

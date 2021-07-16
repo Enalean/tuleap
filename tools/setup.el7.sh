@@ -112,16 +112,20 @@ if [ ${tuleap_installed:-false} = "false" ] || \
     chown root:codendiadm "${tuleap_conf}/${local_inc}"
     chmod 00640 "${tuleap_conf}/${local_inc}"
 
-    _setupForgeupgrade
-    sudo -u "${tuleap_unix_user}" /usr/bin/tuleap plugin:install tracker 2> >(_logCatcher)
     _infoMessage "Register buckets in forgeupgrade"
-    "${php}" "${forgeupgrade_dir}/forgeupgrade.php" --config="${forgeupgrade_conf}" "record-only" 2> >(_logCatcher)
+    ${tuleapcfg} setup:forgeupgrade 2> >(_logCatcher)
 
+    _infoMessage "Install and activate tracker plugin"
+    sudo -u "${tuleap_unix_user}" /usr/bin/tuleap plugin:install tracker 2> >(_logCatcher)
+
+    _infoMessage "Configure timers"
     ${tuleapcfg} systemctl enable "${timers[@]}"
     ${tuleapcfg} systemctl start "${timers[@]}"
 
+    _infoMessage "Force redeploy of site configuration"
     ${tuleapcfg} site-deploy --force
 
+    _infoMessage "Start services"
     ${tuleapcfg} systemctl restart "nginx" "tuleap"
     ${tuleapcfg} systemctl enable "nginx"
     _endMessage

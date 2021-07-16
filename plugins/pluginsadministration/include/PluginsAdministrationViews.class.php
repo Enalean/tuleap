@@ -258,20 +258,11 @@ class PluginsAdministrationViews extends Views
         if (! $this->_plugins) {
             $this->_plugins = [];
 
-            $plugin_manager = $this->plugin_manager;
-            try {
-                $forgeUpgradeConfig = new ForgeUpgradeConfig(new System_Command());
-                $forgeUpgradeConfig->loadDefaults();
-                $noFUConfig = [];
-            } catch (Exception $e) {
-                $GLOBALS['Response']->addFeedback('warning', $e->getMessage());
-            }
-
-            $plugins = $plugin_manager->getAllPlugins();
+            $plugins = $this->plugin_manager->getAllPlugins();
             foreach ($plugins as $plugin) {
                 $plug_info  = $plugin->getPluginInfo();
                 $descriptor = $plug_info->getPluginDescriptor();
-                $available  = $plugin_manager->isPluginAvailable($plugin);
+                $available  = $this->plugin_manager->isPluginAvailable($plugin);
                 $name       = $descriptor->getFullName();
                 if (strlen(trim($name)) === 0) {
                     $name = get_class($plugin);
@@ -288,19 +279,6 @@ class PluginsAdministrationViews extends Views
                     'scope'         => $plugin->getScope(),
                     'dont_touch'    => $dont_touch,
                     'dont_restrict' => $dont_restrict];
-
-                if (isset($noFUConfig, $forgeUpgradeConfig) && ! $forgeUpgradeConfig->existsInPath($plugin->getFilesystemPath())) {
-                    $noFUConfig[] = ['name' => $name, 'plugin' => $plugin];
-                }
-            }
-
-            // ForgeUpgrade configuration warning
-            if (isset($noFUConfig) && count($noFUConfig) && ForgeConfig::exists('forgeupgrade_file')) {
-                $txt = 'Some plugins are not referenced in ForgeUpgrade configuration, please add the following in <code>' . ForgeConfig::get('forgeupgrade_file') . '.</code><br/>';
-                foreach ($noFUConfig as $plugInfo) {
-                    $txt .= '<code>path[]="' . $plugInfo['plugin']->getFilesystemPath() . '"</code><br/>';
-                }
-                $GLOBALS['Response']->addFeedback('warning', $txt, CODENDI_PURIFIER_DISABLED);
             }
         }
     }
