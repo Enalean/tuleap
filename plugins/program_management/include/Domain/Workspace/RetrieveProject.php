@@ -25,4 +25,11 @@ namespace Tuleap\ProgramManagement\Domain\Workspace;
 interface RetrieveProject
 {
     public function getProjectWithId(int $project_id): \Project;
+
+    /**
+     * @return \Project[]
+     */
+    public function getProjectsUserIsAdmin(\PFUser $user): array;
+
+    public function getProjectByUnixName(string $project_name): ?\Project;
 }

@@ -22,22 +22,23 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement;
 
+use Project;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\ProgramManagement\Domain\BuildProject;
 use Tuleap\ProgramManagement\Domain\Program\Admin\IterationTrackerConfiguration\PotentialIterationTrackerConfigurationPresentersBuilder;
 use Tuleap\ProgramManagement\Domain\Program\Admin\PlannableTrackersConfiguration\PotentialPlannableTrackersConfigurationPresentersBuilder;
-use Tuleap\ProgramManagement\Domain\Program\Admin\PotentialTeam\PotentialTeam;
 use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramAdminPresenter;
 use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramIncrementTrackerConfiguration\PotentialProgramIncrementTrackerConfigurationPresentersBuilder;
 use Tuleap\ProgramManagement\Domain\TrackerReference;
-use Tuleap\ProgramManagement\Stub\BuildPotentialTeamsStub;
+use Tuleap\ProgramManagement\Domain\Workspace\RetrieveProject;
+use Tuleap\ProgramManagement\Stub\AllProgramSearcherStub;
 use Tuleap\ProgramManagement\Stub\BuildProgramStub;
 use Tuleap\ProgramManagement\Stub\BuildProjectStub;
 use Tuleap\ProgramManagement\Stub\BuildProjectUGroupCanPrioritizeItemsPresentersStub;
-use Tuleap\ProgramManagement\Stub\RetrieveIterationTrackerStub;
 use Tuleap\ProgramManagement\Stub\RetrievePlannableTrackersStub;
 use Tuleap\ProgramManagement\Stub\RetrieveIterationLabelsStub;
 use Tuleap\ProgramManagement\Stub\RetrieveProgramIncrementLabelsStub;
+use Tuleap\ProgramManagement\Stub\RetrieveProjectStub;
 use Tuleap\ProgramManagement\Stub\RetrieveTrackerFromProgramStub;
 use Tuleap\ProgramManagement\Stub\RetrieveVisibleIterationTrackerStub;
 use Tuleap\ProgramManagement\Stub\RetrieveVisibleProgramIncrementTrackerStub;
@@ -55,10 +56,6 @@ final class DisplayAdminProgramManagementControllerTest extends \Tuleap\Test\PHP
 {
     use GlobalLanguageMock;
 
-    /**
-     * @var \PHPUnit\Framework\MockObject\Stub|\ProjectManager
-     */
-    private $project_manager;
     private BuildProgramStub $build_program;
     /**
      * @var \PHPUnit\Framework\MockObject\MockObject|\TemplateRenderer
@@ -72,7 +69,6 @@ final class DisplayAdminProgramManagementControllerTest extends \Tuleap\Test\PHP
      * @var string[]
      */
     private array $variables;
-    private BuildPotentialTeamsStub $build_potential_teams;
     private SearchTeamsOfProgramStub $team_searcher;
     private BuildProject $build_project;
     /**
@@ -91,12 +87,8 @@ final class DisplayAdminProgramManagementControllerTest extends \Tuleap\Test\PHP
 
         $user                                    = UserTestBuilder::aUser()->withRealName('Test User')->build();
         $this->request                           = HTTPRequestBuilder::get()->withUser($user)->build();
-        $this->project_manager                   = $this->createStub(\ProjectManager::class);
         $this->template_renderer                 = $this->createMock(\TemplateRenderer::class);
         $this->breadcrumbs_builder               = $this->createStub(ProgramManagementBreadCrumbsBuilder::class);
-        $this->build_potential_teams             = BuildPotentialTeamsStub::buildValidPotentialTeamsFromId(
-            PotentialTeam::fromId(150, 'team')
-        );
         $this->team_searcher                     = SearchTeamsOfProgramStub::buildTeams(150);
         $this->build_project                     = new BuildProjectStub();
         $this->event_manager                     = $this->createMock(\EventManager::class);
@@ -109,56 +101,51 @@ final class DisplayAdminProgramManagementControllerTest extends \Tuleap\Test\PHP
 
     public function testItReturnsNotFoundWhenProjectIsNotFoundFromVariables(): void
     {
-        $this->project_manager->method('getProjectByUnixName')->willReturn(null);
-
         $this->expectException(NotFoundException::class);
-        $this->getController()->process($this->request, LayoutBuilder::build(), $this->variables);
+        $this->getController(RetrieveProjectStub::withValidProjects())->process($this->request, LayoutBuilder::build(), $this->variables);
     }
 
     public function testThrowAnErrorWhenServiceIsNotActivated(): void
     {
-        $this->mockProject(false);
-
         $this->expectException(NotFoundException::class);
-        $this->getController()->process($this->request, LayoutBuilder::build(), $this->variables);
+        $this->getController(RetrieveProjectStub::withValidProjects($this->mockProject(false)))
+            ->process($this->request, LayoutBuilder::build(), $this->variables);
     }
 
     public function testThrownAnErrorWhenProjectIsATeam(): void
     {
-        $this->mockProject();
         $this->team_verifier = VerifyIsTeamStub::withValidTeam();
         $this->build_program = BuildProgramStub::stubInvalidProgram();
 
         $this->expectException(ForbiddenException::class);
 
-        $this->getController()->process($this->request, LayoutBuilder::build(), $this->variables);
+        $this->getController(RetrieveProjectStub::withValidProjects($this->mockProject()))
+            ->process($this->request, LayoutBuilder::build(), $this->variables);
     }
 
     public function testThrowAnErrorIfUserIsNotProjectAdmin(): void
     {
-        $this->mockProject();
         $this->permission_verifier = VerifyProjectPermissionStub::withNotAdministrator();
 
         $this->expectException(ForbiddenException::class);
         $this->expectExceptionMessage('You need to be project administrator to access to program administration.');
 
-        $this->getController()->process($this->request, LayoutBuilder::build(), $this->variables);
+        $this->getController(RetrieveProjectStub::withValidProjects($this->mockProject()))
+            ->process($this->request, LayoutBuilder::build(), $this->variables);
     }
 
     public function testThrowAnErrorIfUserCanNotAccessToProgram(): void
     {
-        $this->mockProject();
         $this->build_program = BuildProgramStub::stubInvalidProgramAccess();
 
         $this->expectException(\LogicException::class);
 
-        $this->getController()->process($this->request, LayoutBuilder::build(), $this->variables);
+        $this->getController(RetrieveProjectStub::withValidProjects($this->mockProject()))
+            ->process($this->request, LayoutBuilder::build(), $this->variables);
     }
 
     public function testItDisplayAdminProgram(): void
     {
-        $this->mockProject();
-
         $this->template_renderer->expects(self::once())
             ->method('renderToPage')
             ->with('admin', self::isInstanceOf(ProgramAdminPresenter::class));
@@ -166,16 +153,16 @@ final class DisplayAdminProgramManagementControllerTest extends \Tuleap\Test\PHP
         $this->breadcrumbs_builder->expects(self::once())->method('build');
         $this->event_manager->expects(self::atLeast(2))->method('dispatch');
 
-        $this->getController()->process($this->request, LayoutBuilder::build(), $this->variables);
+        $this->getController(RetrieveProjectStub::withValidProjects($this->mockProject()))
+            ->process($this->request, LayoutBuilder::build(), $this->variables);
     }
 
-    private function getController(): DisplayAdminProgramManagementController
+    private function getController(RetrieveProject $retrieve_project): DisplayAdminProgramManagementController
     {
         return new DisplayAdminProgramManagementController(
-            $this->project_manager,
+            $retrieve_project,
             $this->template_renderer,
             $this->breadcrumbs_builder,
-            $this->build_potential_teams,
             $this->team_searcher,
             $this->build_project,
             $this->team_verifier,
@@ -191,12 +178,13 @@ final class DisplayAdminProgramManagementControllerTest extends \Tuleap\Test\PHP
             RetrieveTrackerFromProgramStub::fromTrackerReference(
                 TrackerReference::fromTracker(TrackerTestBuilder::aTracker()->withId(80)->withName('Sprint')->build()),
             ),
-            new PotentialIterationTrackerConfigurationPresentersBuilder(RetrieveIterationTrackerStub::buildValidTrackerId(10)),
-            RetrieveIterationLabelsStub::buildLabels(null, null)
+            new PotentialIterationTrackerConfigurationPresentersBuilder(),
+            RetrieveIterationLabelsStub::buildLabels(null, null),
+            AllProgramSearcherStub::buildPrograms()
         );
     }
 
-    private function mockProject(bool $is_service_active = true): void
+    private function mockProject(bool $is_service_active = true): Project
     {
         $project = $this->createMock(\Project::class);
         $project->method('getID')->willReturn(102);
@@ -204,6 +192,7 @@ final class DisplayAdminProgramManagementControllerTest extends \Tuleap\Test\PHP
             ->method('usesService')
             ->with(\program_managementPlugin::SERVICE_SHORTNAME)
             ->willReturn($is_service_active);
-        $this->project_manager->method('getProjectByUnixName')->willReturn($project);
+
+        return $project;
     }
 }

@@ -33,7 +33,7 @@ use Tuleap\ProgramManagement\Domain\BuildProject;
 use Tuleap\ProgramManagement\Domain\Program\Admin\CanPrioritizeItems\BuildProjectUGroupCanPrioritizeItemsPresenters;
 use Tuleap\ProgramManagement\Domain\Program\Admin\IterationTrackerConfiguration\PotentialIterationTrackerConfigurationPresentersBuilder;
 use Tuleap\ProgramManagement\Domain\Program\Admin\PlannableTrackersConfiguration\PotentialPlannableTrackersConfigurationPresentersBuilder;
-use Tuleap\ProgramManagement\Domain\Program\Admin\PotentialTeam\BuildPotentialTeams;
+use Tuleap\ProgramManagement\Domain\Program\Admin\PotentialTeam\PotentialTeamsCollection;
 use Tuleap\ProgramManagement\Domain\Program\Admin\PotentialTeam\PotentialTeamsPresenterBuilder;
 use Tuleap\ProgramManagement\Domain\Program\Admin\PotentialTrackerCollection;
 use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramAdminPresenter;
@@ -43,6 +43,7 @@ use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramIncrementTrackerConfigu
 use Tuleap\ProgramManagement\Domain\Program\Admin\Team\TeamsPresenterBuilder;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\IterationTracker\IterationLabels;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\IterationTracker\RetrieveIterationLabels;
+use Tuleap\ProgramManagement\Domain\Program\AllProgramSearcher;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\IterationTracker\RetrieveVisibleIterationTracker;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Team\TeamProjectsCollection;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracker\ProgramIncrementLabels;
@@ -57,6 +58,7 @@ use Tuleap\ProgramManagement\Domain\Program\ProgramTrackerNotFoundException;
 use Tuleap\ProgramManagement\Domain\Program\SearchTeamsOfProgram;
 use Tuleap\ProgramManagement\Domain\ProgramTracker;
 use Tuleap\ProgramManagement\Domain\Team\VerifyIsTeam;
+use Tuleap\ProgramManagement\Domain\Workspace\RetrieveProject;
 use Tuleap\ProgramManagement\Domain\Workspace\RetrieveTrackerFromProgram;
 use Tuleap\ProgramManagement\Domain\Workspace\VerifyProjectPermission;
 use Tuleap\Request\DispatchableWithBurningParrot;
@@ -74,10 +76,9 @@ final class DisplayAdminProgramManagementController implements DispatchableWithR
      */
     public const FEATURE_FLAG_KEY = 'program_management_display_iteration';
 
-    private \ProjectManager $project_manager;
+    private RetrieveProject $project_manager;
     private \TemplateRenderer $template_renderer;
     private ProgramManagementBreadCrumbsBuilder $breadcrumbs_builder;
-    private BuildPotentialTeams $potential_teams_builder;
     private SearchTeamsOfProgram $teams_searcher;
     private BuildProject $project_data_adapter;
     private VerifyIsTeam $verify_is_team;
@@ -93,12 +94,12 @@ final class DisplayAdminProgramManagementController implements DispatchableWithR
     private RetrieveTrackerFromProgram $retrieve_tracker_from_program;
     private PotentialIterationTrackerConfigurationPresentersBuilder $iteration_presenters_builder;
     private RetrieveIterationLabels $iteration_labels_retriever;
+    private AllProgramSearcher $all_program_searcher;
 
     public function __construct(
-        \ProjectManager $project_manager,
+        RetrieveProject $project_manager,
         \TemplateRenderer $template_renderer,
         ProgramManagementBreadCrumbsBuilder $breadcrumbs_builder,
-        BuildPotentialTeams $potential_teams_builder,
         SearchTeamsOfProgram $teams_searcher,
         BuildProject $project_data_adapter,
         VerifyIsTeam $verify_is_team,
@@ -113,12 +114,12 @@ final class DisplayAdminProgramManagementController implements DispatchableWithR
         RetrieveProgramIncrementLabels $program_increment_labels_retriever,
         RetrieveTrackerFromProgram $retrieve_tracker_from_program,
         PotentialIterationTrackerConfigurationPresentersBuilder $iteration_presenters_builder,
-        RetrieveIterationLabels $iteration_labels_retriever
+        RetrieveIterationLabels $iteration_labels_retriever,
+        AllProgramSearcher $all_program_searcher
     ) {
         $this->project_manager                      = $project_manager;
         $this->template_renderer                    = $template_renderer;
         $this->breadcrumbs_builder                  = $breadcrumbs_builder;
-        $this->potential_teams_builder              = $potential_teams_builder;
         $this->teams_searcher                       = $teams_searcher;
         $this->project_data_adapter                 = $project_data_adapter;
         $this->verify_is_team                       = $verify_is_team;
@@ -134,6 +135,7 @@ final class DisplayAdminProgramManagementController implements DispatchableWithR
         $this->retrieve_tracker_from_program        = $retrieve_tracker_from_program;
         $this->iteration_presenters_builder         = $iteration_presenters_builder;
         $this->iteration_labels_retriever           = $iteration_labels_retriever;
+        $this->all_program_searcher                 = $all_program_searcher;
     }
 
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
@@ -229,7 +231,13 @@ final class DisplayAdminProgramManagementController implements DispatchableWithR
             new ProgramAdminPresenter(
                 $program,
                 PotentialTeamsPresenterBuilder::buildPotentialTeamsPresenter(
-                    $this->potential_teams_builder->buildPotentialTeams($program, $user)
+                    PotentialTeamsCollection::buildPotentialTeams(
+                        $this->project_manager,
+                        $this->teams_searcher,
+                        $this->all_program_searcher,
+                        $program,
+                        $user
+                    )->getPotentialTeams()
                 ),
                 TeamsPresenterBuilder::buildTeamsPresenter(
                     TeamProjectsCollection::fromProgramForAdministration(
