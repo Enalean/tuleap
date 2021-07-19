@@ -10,11 +10,13 @@
     "@tuleap/drag-and-drop": "file://../../src/scripts/lib/drag-and-drop",
     "@tuleap/tlp-fetch": "file:../../src/scripts/lib/tlp-fetch",
     "@tuleap/vue-breadcrumb-privacy": "file:../../src/scripts/lib/vue-breadcrumb-privacy",
+    "sprintf-js": "^1.1.2",
     "vue": "^2.6.14",
     "vuex": "^3.6.2"
   },
   "devDependencies": {
     "@tuleap/list-picker": "file://../../src/scripts/lib/list-picker",
+    "@types/sprintf-js": "^1.1.2",
     "@vue/test-utils": "^1.2.1",
     "vue-class-component": "^7.2.6",
     "vue-property-decorator": "^9.1.2",
