@@ -39,8 +39,6 @@ class Docman_View_Admin_Metadata extends Docman_View_Extra
     {
         $content = '';
 
-        $mdFactory = new Docman_MetadataFactory($groupId);
-
         $content .= '<h3>' . dgettext('tuleap-docman', 'Available properties') . '</h3>' . "\n";
 
         $content .= dgettext('tuleap-docman', '<p>Define what properties are available in your document manager. Each property can be edited during document submission and updated in the document properties panel.</p><p><strong>Permissions:</strong> The same permissions are applied on a document and its properties.</p>') . "\n";
@@ -57,7 +55,7 @@ class Docman_View_Admin_Metadata extends Docman_View_Extra
             $md = $mdIter->current();
 
             $canDelete = false;
-            if ($mdFactory->isRealMetadata($md->getLabel())) {
+            if (Docman_MetadataFactory::isRealMetadata($md->getLabel())) {
                 $canDelete = true;
             }
 

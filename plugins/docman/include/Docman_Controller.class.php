@@ -310,7 +310,6 @@ class Docman_Controller extends Controler
     public function setMetadataValuesFromUserInput(&$item, $itemArray, $metadataArray)
     {
         $mdvFactory = new Docman_MetadataValueFactory($this->groupId);
-        $mdFactory  = new Docman_MetadataFactory($this->groupId);
 
         $mdIter = $item->getMetadataIterator();
         $mdIter->rewind();
@@ -324,7 +323,7 @@ class Docman_Controller extends Controler
                 $mdvFactory->validateInput($md, $val);
                 $md->setValue($val);
                 // Take care to update hardcoded values too.
-                if ($mdFactory->isHardCodedMetadata($md->getLabel())) {
+                if (Docman_MetadataFactory::isHardCodedMetadata($md->getLabel())) {
                     $item->updateHardCodedMetadata($md);
                 }
             }
@@ -637,7 +636,7 @@ class Docman_Controller extends Controler
                 $mdFactory = $this->_getMetadataFactory($this->_viewParams['group_id']);
                 if ($mdFactory->isValidLabel($_label)) {
                     $this->_viewParams['default_url_params'] = ['action'  => 'admin_md_details', 'md' => $_label];
-                    if ($mdFactory->isHardCodedMetadata($_label) || $this->validateUpdateMetadata($_name, $_label)) {
+                    if (Docman_MetadataFactory::isHardCodedMetadata($_label) || $this->validateUpdateMetadata($_name, $_label)) {
                         $this->action = $view;
                     }
                 } else {
@@ -663,12 +662,11 @@ class Docman_Controller extends Controler
                 $_mdLabel = $this->request->get('md');
 
                 // Valid
-                $logmsg    = '';
-                $mdFactory = new Docman_MetadataFactory($this->_viewParams['group_id']);
-                $md        = null;
-                $vld       = $this->validateMetadata($_mdLabel, $md);
+                $logmsg = '';
+                $md     = null;
+                $vld    = $this->validateMetadata($_mdLabel, $md);
                 if ($vld) {
-                    if (! $mdFactory->isHardCodedMetadata($md->getLabel())) {
+                    if (! Docman_MetadataFactory::isHardCodedMetadata($md->getLabel())) {
                         $valid = true;
                     } else {
                         $logmsg = dgettext('tuleap-docman', 'You are not allowed to delete system properties.');

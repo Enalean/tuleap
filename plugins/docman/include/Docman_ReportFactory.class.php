@@ -54,7 +54,7 @@ class Docman_ReportFactory
         //}
         if ($reportId > 0) {
             // todo Verify validity of the info
-            $dao = $this->getDao();
+            $dao = self::getDao();
             $dar = $dao->searchById($reportId);
             if ($dar && ! $dar->isError() && $dar->rowCount() == 1) {
                 $noDbReport = false;
@@ -243,7 +243,7 @@ class Docman_ReportFactory
     public function getReportById($id)
     {
         $report = null;
-        $dao    = $this->getDao();
+        $dao    = self::getDao();
         $dar    = $dao->searchById($id);
         if ($dar && ! $dar->isError() && $dar->rowCount() == 1) {
             $report = new Docman_Report();
@@ -255,7 +255,7 @@ class Docman_ReportFactory
     public function getProjectReportsForGroup()
     {
         $ra  = [];
-        $dao = $this->getDao();
+        $dao = self::getDao();
         $dar = $dao->searchProjectReportByGroupId($this->groupId);
         $i   = 0;
         while ($dar->valid()) {
@@ -271,7 +271,7 @@ class Docman_ReportFactory
     public function getPersonalReportsForUser($user)
     {
         $ra  = [];
-        $dao = $this->getDao();
+        $dao = self::getDao();
         $dar = $dao->searchPersonalReportByUserId($this->groupId, $user->getId());
         $i   = 0;
         while ($dar->valid()) {
@@ -294,7 +294,7 @@ class Docman_ReportFactory
     {
         $itemArray   = [];
         $itemFactory = new Docman_ItemFactory($this->groupId);
-        $dao         = $this->getDao();
+        $dao         = self::getDao();
         foreach ($dao->searchItemsInReports($this->groupId, $reportId) as $row) {
             $itemArray[] = $itemFactory->getItemFromRow($row);
         }
@@ -322,13 +322,13 @@ class Docman_ReportFactory
 
     public function updateReportSettings($report)
     {
-        $dao = $this->getDao();
+        $dao = self::getDao();
         return $dao->updateReport($report->getId(), $report->getName(), $report->getTitle(), $report->getItemId(), $report->getAdvancedSearch(), $report->getScope(), $report->getDescription(), $report->getImage());
     }
 
     public function createReport($report)
     {
-        $dao = $this->getDao();
+        $dao = self::getDao();
         $res = $dao->verifyQueryUnicity($report->getName(), $report->getGroupId(), $report->getUserId(), $report->getScope());
         if ($res) {
             // report
@@ -347,7 +347,7 @@ class Docman_ReportFactory
 
     public function deleteReport($report)
     {
-        $dao           = $this->getDao();
+        $dao           = self::getDao();
         $filterFactory = new Docman_FilterFactory($this->groupId);
         if ($filterFactory->truncateFilters($report)) {
             return $dao->deleteById($report->getId());
@@ -421,7 +421,7 @@ class Docman_ReportFactory
     }
 
     // Object accessor
-    public function &getDao()
+    public static function &getDao()
     {
         $dao = new Docman_ReportDao(CodendiDataAccess::instance());
         return $dao;

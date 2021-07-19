@@ -395,12 +395,12 @@ class Docman_MetadataFactory
         }
     }
 
-    public function isHardCodedMetadata($label)
+    public static function isHardCodedMetadata($label)
     {
         return in_array($label, self::HARDCODED_METADATA_LABELS);
     }
 
-    public function isRealMetadata($label)
+    public static function isRealMetadata($label)
     {
         if (preg_match('/^field_([0-9]+)$/', $label)) {
             return true;
@@ -446,7 +446,7 @@ class Docman_MetadataFactory
 
     public function update($md)
     {
-        if ($this->isRealMetadata($md->getLabel())) {
+        if (self::isRealMetadata($md->getLabel())) {
             return $this->updateRealMetadata($md);
         } else {
             return $this->updateHardCodedMetadata($md);

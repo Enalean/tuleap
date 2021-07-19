@@ -108,8 +108,7 @@ class Docman_XMLExportVisitor implements ItemVisitor
 
     protected function getNodeForMetadata(Docman_Metadata $metadata)
     {
-        $metaDataFactory = new Docman_MetadataFactory($metadata->getGroupId());
-        if ($metaDataFactory->isRealMetadata($metadata->getLabel())) {
+        if (Docman_MetadataFactory::isRealMetadata($metadata->getLabel())) {
             $node = $this->doc->createElement('property');
             $node->setAttribute('title', $metadata->getName());
             if ($metadata->getValue() instanceof ArrayIterator) {

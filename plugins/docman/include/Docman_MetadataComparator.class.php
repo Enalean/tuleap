@@ -224,7 +224,7 @@ class Docman_MetadataComparator
             // Compute the differences between the 2 projects
             $dstMdStatus = 'missing';
             $dstMdLabel  = '';
-            if ($srcMdFactory->isRealMetadata($srcMd->getLabel())) {
+            if (Docman_MetadataFactory::isRealMetadata($srcMd->getLabel())) {
                 if (isset($mdMap['md'][$srcMd->getId()])) {
                     $dstMdLabel = $srcMdFactory->getLabelFromId($mdMap['md'][$srcMd->getId()]);
                 }
