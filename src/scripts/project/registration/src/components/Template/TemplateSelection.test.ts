@@ -151,37 +151,13 @@ describe("TemplateSelection", () => {
     });
 
     describe("templates categories default display", () => {
-        it("should display the Tuleap category by default if there are tuleap templates", async () => {
+        it("should display the ACME category by default if there are ACME templates", async () => {
             const wrapper = await getWrapper(
                 tuleap_templates,
                 company_templates,
                 external_templates,
                 "ACME"
             );
-            await wrapper.vm.$nextTick();
-            expect(
-                wrapper
-                    .get("[data-test=project-registration-tuleap-templates-tab]")
-                    .element.classList.contains("active")
-            ).toBe(true);
-
-            expect(wrapper.findComponent(TuleapTemplateList).isVisible()).toBe(true);
-        });
-
-        it("should display the first external template category by default if there are no tuleap templates", async () => {
-            const wrapper = await getWrapper([], company_templates, external_templates, "ACME");
-            await wrapper.vm.$nextTick();
-            expect(
-                wrapper
-                    .get("[data-test=project-registration-SAFe-templates-tab]")
-                    .element.classList.contains("active")
-            ).toBe(true);
-
-            expect(wrapper.findComponent(CategorisedExternalTemplatesList).isVisible()).toBe(true);
-        });
-
-        it("should display the ACME category by default if there are no tuleap/external templates", async () => {
-            const wrapper = await getWrapper([], company_templates, [], "ACME");
             await wrapper.vm.$nextTick();
             expect(
                 wrapper
@@ -192,7 +168,31 @@ describe("TemplateSelection", () => {
             expect(wrapper.findComponent(TuleapCompanyTemplateList).isVisible()).toBe(true);
         });
 
-        it("should display the advanced category by default if there are no tuleap/external/company templates", async () => {
+        it("should display the Tuleap category by default if there are no ACME templates", async () => {
+            const wrapper = await getWrapper(tuleap_templates, [], external_templates, "ACME");
+            await wrapper.vm.$nextTick();
+            expect(
+                wrapper
+                    .get("[data-test=project-registration-tuleap-templates-tab]")
+                    .element.classList.contains("active")
+            ).toBe(true);
+
+            expect(wrapper.findComponent(TuleapTemplateList).isVisible()).toBe(true);
+        });
+
+        it("should display the first external template category by default if there are no tuleap/ACME templates", async () => {
+            const wrapper = await getWrapper([], [], external_templates, "ACME");
+            await wrapper.vm.$nextTick();
+            expect(
+                wrapper
+                    .get("[data-test=project-registration-SAFe-templates-tab]")
+                    .element.classList.contains("active")
+            ).toBe(true);
+
+            expect(wrapper.findComponent(CategorisedExternalTemplatesList).isVisible()).toBe(true);
+        });
+
+        it("should display the advanced category by default if there are no ACME/Tuleap/External templates", async () => {
             const wrapper = await getWrapper([], [], [], "ACME");
             await wrapper.vm.$nextTick();
             expect(

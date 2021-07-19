@@ -21,6 +21,14 @@
     <div class="project-registration-template-selection">
         <div class="project-registration-template-selection-tabs">
             <div
+                v-if="company_templates.length > 0"
+                v-on:click="setSelectedTemplateCategory(CATEGORY_ACME)"
+                v-bind:class="getTabsClasses(CATEGORY_ACME)"
+                data-test="project-registration-acme-templates-tab"
+            >
+                {{ platform_template_name }}
+            </div>
+            <div
                 v-if="tuleap_templates.length > 0"
                 v-on:click="setSelectedTemplateCategory(CATEGORY_TULEAP)"
                 v-bind:class="getTabsClasses(CATEGORY_TULEAP)"
@@ -36,14 +44,6 @@
                 v-bind:data-test="'project-registration-' + category.shortname + '-templates-tab'"
             >
                 {{ category.label }}
-            </div>
-            <div
-                v-if="company_templates.length > 0"
-                v-on:click="setSelectedTemplateCategory(CATEGORY_ACME)"
-                v-bind:class="getTabsClasses(CATEGORY_ACME)"
-                data-test="project-registration-acme-templates-tab"
-            >
-                {{ platform_template_name }}
             </div>
             <div
                 v-on:click="setSelectedTemplateCategory(CATEGORY_ADVANCED)"
@@ -122,6 +122,11 @@ export default class TemplateSelection extends Vue {
             ]);
         });
 
+        if (this.company_templates.length > 0) {
+            this.selected_template_category = this.CATEGORY_ACME;
+            return;
+        }
+
         if (this.tuleap_templates.length > 0) {
             this.selected_template_category = this.CATEGORY_TULEAP;
             return;
@@ -132,11 +137,6 @@ export default class TemplateSelection extends Vue {
             .next().value;
         if (first_external_template_category) {
             this.selected_template_category = first_external_template_category;
-            return;
-        }
-
-        if (this.company_templates.length > 0) {
-            this.selected_template_category = this.CATEGORY_ACME;
             return;
         }
 
