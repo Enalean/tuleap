@@ -140,9 +140,16 @@ class ProjectDashboardController
         $dashboard_id       = $request->get('dashboard_id');
         $project_dashboards = $this->retriever->getAllProjectDashboards($this->project);
 
-        $should_display_project_created_modal = $request->get("should-display-created-project-modal");
+        $display_project_created_modal_presenter = $this->event_manager->dispatch(
+            new DisplayCreatedProjectModalPresenter(
+                $request->get("should-display-created-project-modal"),
+                $project,
+                $request->get('xml_template_name')
+            )
+        );
+        \assert($display_project_created_modal_presenter instanceof DisplayCreatedProjectModalPresenter);
 
-        if ($should_display_project_created_modal) {
+        if ($display_project_created_modal_presenter->should_display_created_project_modal) {
             $this->layout->includeFooterJavascriptFile(
                 $this->javascript_assets->getFileURL('project/project-registration-creation.js')
             );
@@ -202,7 +209,7 @@ class ProjectDashboardController
                 ),
                 $project_dashboards_presenter,
                 $this->canUpdateDashboards($user, $project),
-                $should_display_project_created_modal
+                $display_project_created_modal_presenter
             )
         );
         $GLOBALS['Response']->footer([]);

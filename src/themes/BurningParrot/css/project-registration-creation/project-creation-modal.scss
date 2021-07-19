@@ -65,6 +65,10 @@
     font-weight: 600;
 }
 
+.project-creation-success-modal-custom-primary-action-button {
+    margin: 0 0 0 var(--tlp-medium-spacing);
+}
+
 @keyframes moveStars {
     from {
         transform: scale(1);

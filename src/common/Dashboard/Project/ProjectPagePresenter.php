@@ -34,10 +34,7 @@ class ProjectPagePresenter extends PagePresenter
      */
     public $dashboards;
     public $has_dashboard;
-    /**
-     * @var bool
-     */
-    public $should_display_project_created_modal;
+    public DisplayCreatedProjectModalPresenter $display_project_created_modal_presenter;
 
     public function __construct(
         CSRFSynchronizerToken $csrf,
@@ -45,14 +42,15 @@ class ProjectPagePresenter extends PagePresenter
         ProjectPresenter $project_presenter,
         array $dashboards,
         $can_update_dashboards,
-        bool $should_display_project_created_modal
+        DisplayCreatedProjectModalPresenter $display_project_created_modal_presenter
     ) {
         parent::__construct($csrf, $url);
 
-        $this->project_presenter                    = $project_presenter;
-        $this->dashboards                           = $dashboards;
-        $this->has_dashboard                        = count($dashboards) > 0;
-        $this->can_update_dashboards                = $can_update_dashboards;
-        $this->should_display_project_created_modal = $should_display_project_created_modal;
+        $this->project_presenter     = $project_presenter;
+        $this->dashboards            = $dashboards;
+        $this->has_dashboard         = count($dashboards) > 0;
+        $this->can_update_dashboards = $can_update_dashboards;
+
+        $this->display_project_created_modal_presenter = $display_project_created_modal_presenter;
     }
 }

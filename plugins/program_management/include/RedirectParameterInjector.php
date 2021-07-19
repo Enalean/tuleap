@@ -56,7 +56,7 @@ class RedirectParameterInjector
 
     private function injectAndInformUserAboutProgramItemWillBeCreatedIntoTeams(\Response $response): void
     {
-        $feedback_message = dgettext('tuleap-program_management', 'You are creating a new program increment, it will create associate release increment in team projects');
+        $feedback_message = dgettext('tuleap-program_management', 'You are creating a new program increment, it will create associate release increment in team projects.');
 
         $response->addFeedback(
             \Feedback::INFO,
