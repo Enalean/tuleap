@@ -1,8 +1,8 @@
 <?php
 /**
- * Copyright (c) Enalean, 2021 - Present. All Rights Reserved.
+ * Copyright (c) Enalean 2021 -  Present. All Rights Reserved.
  *
- * This file is a part of Tuleap.
+ *  This file is a part of Tuleap.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,33 +16,32 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Adapter\Program\Admin\CanPrioritizeItems;
+namespace Tuleap\ProgramManagement\Domain\Program\Admin\CanPrioritizeItems;
 
-use ProjectUGroup;
-use Tuleap\ProgramManagement\Domain\Program\Admin\CanPrioritizeItems\BuildProjectUGroupCanPrioritizeItemsPresenters;
 use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramForAdministrationIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramSelectOptionConfigurationPresenter;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Content\RetrieveProjectUgroupsCanPrioritizeItems;
-use Tuleap\Project\REST\UserGroupRepresentation;
+use Tuleap\ProgramManagement\Domain\Workspace\RetrieveUGroups;
 
 final class ProjectUGroupCanPrioritizeItemsPresentersBuilder implements BuildProjectUGroupCanPrioritizeItemsPresenters
 {
-    private \UGroupManager $ugroup_manager;
-    private \ProjectManager $project_manager;
     private RetrieveProjectUgroupsCanPrioritizeItems $can_prioritize_items_retriever;
+    private RetrieveUGroups $retrieve_u_groups;
+    private BuildUGroupRepresentation $ugroup_representation_builder;
 
     public function __construct(
-        \UGroupManager $ugroup_manager,
-        \ProjectManager $project_manager,
-        RetrieveProjectUgroupsCanPrioritizeItems $can_prioritize_items_retriever
+        RetrieveUGroups $retrieve_u_groups,
+        RetrieveProjectUgroupsCanPrioritizeItems $can_prioritize_items_retriever,
+        BuildUGroupRepresentation $ugroup_representation_builder
     ) {
-        $this->ugroup_manager                 = $ugroup_manager;
-        $this->project_manager                = $project_manager;
+        $this->retrieve_u_groups              = $retrieve_u_groups;
         $this->can_prioritize_items_retriever = $can_prioritize_items_retriever;
+        $this->ugroup_representation_builder  = $ugroup_representation_builder;
     }
 
     /**
@@ -50,15 +49,16 @@ final class ProjectUGroupCanPrioritizeItemsPresentersBuilder implements BuildPro
      */
     public function buildProjectUgroupCanPrioritizeItemsPresenters(ProgramForAdministrationIdentifier $program): array
     {
-        $project                 = $this->project_manager->getProject($program->id);
-        $ugroups                 = $this->ugroup_manager->getUGroups($project, ProjectUGroup::SYSTEM_USER_GROUPS);
-        $can_prioritize_features = $this->can_prioritize_items_retriever->searchUserGroupIDsWhoCanPrioritizeFeaturesByProjectID($program->id);
+        $ugroups                 = $this->retrieve_u_groups->getUgroupsFromProjectId($program->id);
+        $can_prioritize_features = $this->can_prioritize_items_retriever->searchUserGroupIDsWhoCanPrioritizeFeaturesByProjectID(
+            $program->id
+        );
         $presenters              = [];
 
         foreach ($ugroups as $ugroup) {
             $id = $ugroup->getId();
             if (! $ugroup->isStatic()) {
-                $id = UserGroupRepresentation::getRESTIdForProject($program->id, $ugroup->getId());
+                $id = $this->ugroup_representation_builder->getUGroupRepresentation($program->id, $ugroup->getId());
             }
             $presenters[] = new ProgramSelectOptionConfigurationPresenter(
                 $id,
