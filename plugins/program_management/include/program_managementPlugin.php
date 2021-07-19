@@ -57,8 +57,8 @@ use Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\MassChangeTopBac
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\MassChangeTopBacklogSourceInformation;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\PlannedFeatureDAO;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\ProcessTopBacklogChange;
-use Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\TopBacklogActionActifactSourceInformation;
-use Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\TopBacklogActionMassChangeSourceInformation;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\TopBacklogActionArtifactSourceInformation;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\TopBacklogActionMassChangeSourceInformation;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\Workflow\AddToTopBacklogPostAction;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\Workflow\AddToTopBacklogPostActionDAO;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\Workflow\AddToTopBacklogPostActionFactory;
@@ -535,7 +535,7 @@ final class program_managementPlugin extends Plugin
         $artifact = $event->getArtifact();
         $tracker  = $artifact->getTracker();
         $action   = $action_builder->buildTopBacklogActionBuilder(
-            new TopBacklogActionActifactSourceInformation(
+            new TopBacklogActionArtifactSourceInformation(
                 $artifact->getId(),
                 $tracker->getId(),
                 (int) $tracker->getGroupId()

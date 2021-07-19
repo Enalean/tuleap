@@ -26,6 +26,7 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\Layout\JavascriptAsset;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\PrioritizeFeaturesPermissionVerifier;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\TopBacklogActionArtifactSourceInformation;
 use Tuleap\ProgramManagement\Domain\Program\Plan\BuildProgram;
 use Tuleap\ProgramManagement\Domain\Program\Plan\PlanStore;
 use Tuleap\ProgramManagement\Stub\BuildProgramStub;
@@ -69,7 +70,7 @@ final class ArtifactTopBacklogActionBuilderTest extends \Tuleap\Test\PHPUnit\Tes
     public function testBuildsActionForAnUnplannedArtifact(): void
     {
         $user                = UserTestBuilder::aUser()->build();
-        $source_information  = new TopBacklogActionActifactSourceInformation(888, 140, 102);
+        $source_information  = new TopBacklogActionArtifactSourceInformation(888, 140, 102);
         $this->build_program = BuildProgramStub::stubValidProgram();
         $this->prioritize_features_permission_verifier->shouldReceive('canUserPrioritizeFeatures')->andReturn(true);
         $this->artifacts_explicit_top_backlog_dao->shouldReceive('isInTheExplicitTopBacklog')->andReturn(false);
@@ -82,7 +83,7 @@ final class ArtifactTopBacklogActionBuilderTest extends \Tuleap\Test\PHPUnit\Tes
     public function testBuildsActionForAnArtifactInTheTopBacklog(): void
     {
         $user                = UserTestBuilder::aUser()->build();
-        $source_information  = new TopBacklogActionActifactSourceInformation(999, 140, 102);
+        $source_information  = new TopBacklogActionArtifactSourceInformation(999, 140, 102);
         $this->build_program = BuildProgramStub::stubValidProgram();
         $this->prioritize_features_permission_verifier->shouldReceive('canUserPrioritizeFeatures')->andReturn(true);
         $this->artifacts_explicit_top_backlog_dao->shouldReceive('isInTheExplicitTopBacklog')->andReturn(true);
@@ -92,7 +93,7 @@ final class ArtifactTopBacklogActionBuilderTest extends \Tuleap\Test\PHPUnit\Tes
 
     public function testNoActionIsBuiltForArtifactsThatAreNotInAProgramProject(): void
     {
-        $source_information  = new TopBacklogActionActifactSourceInformation(400, 140, 102);
+        $source_information  = new TopBacklogActionArtifactSourceInformation(400, 140, 102);
         $this->build_program = BuildProgramStub::stubInvalidProgram();
         self::assertNull($this->getBuilder()->buildTopBacklogActionBuilder($source_information, UserTestBuilder::aUser()->build()));
     }
@@ -100,7 +101,7 @@ final class ArtifactTopBacklogActionBuilderTest extends \Tuleap\Test\PHPUnit\Tes
     public function testNoActionIsBuiltForUsersThatCannotPrioritizeFeatures(): void
     {
         $user                = UserTestBuilder::aUser()->build();
-        $source_information  = new TopBacklogActionActifactSourceInformation(401, 140, 102);
+        $source_information  = new TopBacklogActionArtifactSourceInformation(401, 140, 102);
         $this->build_program = BuildProgramStub::stubValidProgram();
         $this->prioritize_features_permission_verifier->shouldReceive('canUserPrioritizeFeatures')->andReturn(false);
 
@@ -110,7 +111,7 @@ final class ArtifactTopBacklogActionBuilderTest extends \Tuleap\Test\PHPUnit\Tes
     public function testNoActionIsBuiltForArtifactsThatAreNotPlannable(): void
     {
         $user                = UserTestBuilder::aUser()->build();
-        $source_information  = new TopBacklogActionActifactSourceInformation(2, 140, 102);
+        $source_information  = new TopBacklogActionArtifactSourceInformation(2, 140, 102);
         $this->build_program = BuildProgramStub::stubValidProgram();
         $this->prioritize_features_permission_verifier->shouldReceive('canUserPrioritizeFeatures')->andReturn(true);
         $this->artifacts_explicit_top_backlog_dao->shouldReceive('isInTheExplicitTopBacklog')->andReturn(false);
@@ -122,7 +123,7 @@ final class ArtifactTopBacklogActionBuilderTest extends \Tuleap\Test\PHPUnit\Tes
     public function testNoActionIsBuiltForArtifactsThatArePlannedInAProgramIncrement(): void
     {
         $user                = UserTestBuilder::aUser()->build();
-        $source_information  = new TopBacklogActionActifactSourceInformation(3, 140, 102);
+        $source_information  = new TopBacklogActionArtifactSourceInformation(3, 140, 102);
         $this->build_program = BuildProgramStub::stubValidProgram();
         $this->prioritize_features_permission_verifier->shouldReceive('canUserPrioritizeFeatures')->andReturn(true);
         $this->artifacts_explicit_top_backlog_dao->shouldReceive('isInTheExplicitTopBacklog')->andReturn(false);
