@@ -21,7 +21,7 @@
 
 declare(strict_types=1);
 
-namespace TuleapCfg\Command;
+namespace TuleapCfg\Command\SiteDeploy\ForgeUpgrade;
 
 use Psr\Log\LogLevel;
 use Symfony\Component\Console\Command\Command;
@@ -31,24 +31,25 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Tuleap\DB\DBFactory;
 use Tuleap\ForgeUpgrade\ForgeUpgrade;
 
-final class SetupForgeUpgradeCommand extends Command
+final class SiteDeployForgeUpgradeCommand extends Command
 {
+    public const NAME = 'site-deploy:forgeupgrade';
+
     public function __construct()
     {
-        parent::__construct('setup:forgeupgrade');
+        parent::__construct(self::NAME);
     }
 
     protected function configure(): void
     {
-        $this
-            ->setDescription('Initialise forgeupgrade. Record existing migration buckets')
-            ->setHidden(true); // This command is hidden ATM because we don't want to keep the backward compat if the setup evolves latter on
+        $this->setDescription('Execute database migrations');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         \ForgeConfig::loadLocalInc();
         \ForgeConfig::loadDatabaseInc();
+
         $forge_upgrade = new ForgeUpgrade(
             DBFactory::getMainTuleapDBConnection()->getDB()->getPdo(),
             new ConsoleLogger(
@@ -58,7 +59,7 @@ final class SetupForgeUpgradeCommand extends Command
                 ],
             ),
         );
-        $forge_upgrade->recordOnlyCore();
+        $forge_upgrade->runUpdate();
         return 0;
     }
 }
