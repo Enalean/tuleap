@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-import { getHTMLSelectElementFromId } from "./HTML_select_element_extractor";
+import { getHTMLSelectElementFromId } from "./HTML_element_extractor";
 import { resetErrorOnSelectField, setErrorMessageOnSelectField } from "./form-field-error-helper";
 import type { GetText } from "@tuleap/core/scripts/tuleap/gettext/gettext-init";
 

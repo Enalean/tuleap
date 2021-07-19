@@ -16,11 +16,11 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-import { getHTMLSelectElementFromId } from "./HTML_select_element_extractor";
+import { getHTMLInputElementFromId, getHTMLSelectElementFromId } from "./HTML_element_extractor";
 
 const createDocument = (): Document => document.implementation.createHTMLDocument();
 
-describe("HTML_select_element_extractor", () => {
+describe("HTML_element_extractor", () => {
     describe("getHTMLSelectElementFromId", () => {
         it("should throw error when element does not exist", () => {
             expect(() => getHTMLSelectElementFromId(createDocument(), "bad-id")).toThrow(
@@ -44,6 +44,31 @@ describe("HTML_select_element_extractor", () => {
             doc.body.appendChild(select);
 
             expect(getHTMLSelectElementFromId(doc, "id-selector")).toEqual(select);
+        });
+    });
+    describe("getHTMLInputElementFromId", () => {
+        it("should throw error when element does not exist", () => {
+            expect(() => getHTMLInputElementFromId(createDocument(), "bad-id")).toThrow(
+                "No bad-id input element"
+            );
+        });
+        it("should throw error when element is not select element", () => {
+            const doc = createDocument();
+            const div = document.createElement("div");
+            div.id = "id-input";
+            doc.body.appendChild(div);
+
+            expect(() => getHTMLInputElementFromId(doc, "id-input")).toThrow(
+                "No id-input input element"
+            );
+        });
+        it("whould return select element when it exists", () => {
+            const doc = createDocument();
+            const select = document.createElement("input");
+            select.id = "id-input";
+            doc.body.appendChild(select);
+
+            expect(getHTMLInputElementFromId(doc, "id-input")).toEqual(select);
         });
     });
 });

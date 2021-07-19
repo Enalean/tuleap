@@ -36,6 +36,7 @@ use Tuleap\ProgramManagement\Stub\BuildProjectStub;
 use Tuleap\ProgramManagement\Stub\BuildProjectUGroupCanPrioritizeItemsPresentersStub;
 use Tuleap\ProgramManagement\Stub\RetrieveIterationTrackerStub;
 use Tuleap\ProgramManagement\Stub\RetrievePlannableTrackersStub;
+use Tuleap\ProgramManagement\Stub\RetrieveIterationLabelsStub;
 use Tuleap\ProgramManagement\Stub\RetrieveProgramIncrementLabelsStub;
 use Tuleap\ProgramManagement\Stub\RetrieveTrackerFromProgramStub;
 use Tuleap\ProgramManagement\Stub\RetrieveVisibleIterationTrackerStub;
@@ -190,7 +191,8 @@ final class DisplayAdminProgramManagementControllerTest extends \Tuleap\Test\PHP
             RetrieveTrackerFromProgramStub::fromTrackerReference(
                 TrackerReference::fromTracker(TrackerTestBuilder::aTracker()->withId(80)->withName('Sprint')->build()),
             ),
-            new PotentialIterationTrackerConfigurationPresentersBuilder(RetrieveIterationTrackerStub::buildValidTrackerId(10))
+            new PotentialIterationTrackerConfigurationPresentersBuilder(RetrieveIterationTrackerStub::buildValidTrackerId(10)),
+            RetrieveIterationLabelsStub::buildLabels(null, null)
         );
     }
 

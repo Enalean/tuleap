@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 import type { ProgramConfiguration } from "../type";
-import { getHTMLSelectElementFromId } from "./HTML_select_element_extractor";
+import { getHTMLInputElementFromId, getHTMLSelectElementFromId } from "./HTML_element_extractor";
 
 export function buildProgramConfiguration(
     doc: Document,
@@ -37,14 +37,14 @@ export function buildProgramConfiguration(
         ),
         permissions: { can_prioritize_features: extractOptionsFromPermissions(doc) },
         plannable_tracker_ids: extractOptionsFromPlannableTrackers(doc),
-        program_increment_label: extractInputLabel(
+        program_increment_label: getHTMLInputElementFromId(
             doc,
             "admin-configuration-program-increment-label-section"
-        ),
-        program_increment_sub_label: extractInputLabel(
+        ).value,
+        program_increment_sub_label: getHTMLInputElementFromId(
             doc,
             "admin-configuration-program-increment-sub-label-section"
-        ),
+        ).value,
         iteration: use_iteration ? extractIterationConfigurationObject(doc) : null,
     };
 }
@@ -76,19 +76,9 @@ function extractOptionsFromPermissions(doc: Document): string[] {
     return value;
 }
 
-function extractInputLabel(doc: Document, element_id: string): string {
-    const program_increment_label = doc.getElementById(element_id);
-
-    if (!program_increment_label || !(program_increment_label instanceof HTMLInputElement)) {
-        throw new Error("No " + element_id + " input");
-    }
-
-    return program_increment_label.value;
-}
-
 function extractIterationConfigurationObject(
     doc: Document
-): null | { iteration_tracker_id: number } {
+): null | { iteration_tracker_id: number; iteration_label?: string; iteration_sub_label?: string } {
     const iteration_tracker_element = getHTMLSelectElementFromId(
         doc,
         "admin-configuration-iteration-tracker"
@@ -96,5 +86,16 @@ function extractIterationConfigurationObject(
     if (iteration_tracker_element.value === "") {
         return null;
     }
-    return { iteration_tracker_id: Number.parseInt(iteration_tracker_element.value, 10) };
+
+    return {
+        iteration_tracker_id: Number.parseInt(iteration_tracker_element.value, 10),
+        iteration_label: getHTMLInputElementFromId(
+            doc,
+            "admin-configuration-iteration-label-section"
+        ).value,
+        iteration_sub_label: getHTMLInputElementFromId(
+            doc,
+            "admin-configuration-iteration-sub-label-section"
+        ).value,
+    };
 }

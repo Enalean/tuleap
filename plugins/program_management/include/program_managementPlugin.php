@@ -318,7 +318,8 @@ final class program_managementPlugin extends Plugin
             new ProjectPermissionVerifier(),
             new ProgramIncrementsDAO(),
             new TrackerFactoryAdapter(TrackerFactory::instance()),
-            new PotentialIterationTrackerConfigurationPresentersBuilder(new IterationsDAO())
+            new PotentialIterationTrackerConfigurationPresentersBuilder(),
+            new IterationsDAO()
         );
     }
 

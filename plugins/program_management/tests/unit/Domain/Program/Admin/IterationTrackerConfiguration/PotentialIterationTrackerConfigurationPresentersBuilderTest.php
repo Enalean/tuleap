@@ -22,14 +22,16 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Admin\IterationTrackerConfiguration;
 
-use Project;
 use Tuleap\ProgramManagement\Domain\Program\Admin\PotentialTrackerCollection;
 use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramForAdministrationIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramSelectOptionConfigurationPresenter;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\IterationTracker\RetrieveIterationTracker;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\IterationTracker\RetrieveVisibleIterationTracker;
 use Tuleap\ProgramManagement\Domain\TrackerReference;
-use Tuleap\ProgramManagement\Stub\RetrieveIterationTrackerStub;
 use Tuleap\ProgramManagement\Stub\RetrieveTrackerFromProgramStub;
+use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
+use Tuleap\ProgramManagement\Domain\ProgramTracker;
+use Tuleap\ProgramManagement\Stub\BuildProgramStub;
+use Tuleap\ProgramManagement\Stub\RetrieveVisibleIterationTrackerStub;
 use Tuleap\ProgramManagement\Stub\VerifyIsTeamStub;
 use Tuleap\ProgramManagement\Stub\VerifyProjectPermissionStub;
 use Tuleap\Test\Builders\UserTestBuilder;
@@ -39,7 +41,7 @@ final class PotentialIterationTrackerConfigurationPresentersBuilderTest extends 
 {
     public function testBuildTrackerPresentersWithCheckedTrackerIfExist(): void
     {
-        $presenters = $this->getPresenters(RetrieveIterationTrackerStub::buildValidTrackerId(300));
+        $presenters = $this->getPresenters(RetrieveVisibleIterationTrackerStub::withValidTracker(TrackerTestBuilder::aTracker()->withId(300)->build()));
 
         self::assertCount(2, $presenters);
         self::assertSame(300, $presenters[0]->id);
@@ -48,9 +50,9 @@ final class PotentialIterationTrackerConfigurationPresentersBuilderTest extends 
         self::assertFalse($presenters[1]->is_selected);
     }
 
-    public function testBuildTrackerPresentersWithoutCheckedTracker(): void
+    public function testBuildTrackerPresentersWhenNoIterationTracker(): void
     {
-        $presenters = $this->getPresenters(RetrieveIterationTrackerStub::buildNoIterationTracker());
+        $presenters = $this->getPresenters(RetrieveVisibleIterationTrackerStub::withNotVisibleIterationTracker());
 
         self::assertCount(2, $presenters);
         self::assertSame(300, $presenters[0]->id);
@@ -62,16 +64,10 @@ final class PotentialIterationTrackerConfigurationPresentersBuilderTest extends 
     /**
      * @return ProgramSelectOptionConfigurationPresenter[]
      */
-    private function getPresenters(RetrieveIterationTracker $retriever): array
+    private function getPresenters(RetrieveVisibleIterationTracker $retriever): array
     {
-        $builder = new PotentialIterationTrackerConfigurationPresentersBuilder($retriever);
+        $builder = new PotentialIterationTrackerConfigurationPresentersBuilder();
         return $builder->buildPotentialIterationConfigurationPresenters(
-            ProgramForAdministrationIdentifier::fromProject(
-                VerifyIsTeamStub::withNotValidTeam(),
-                VerifyProjectPermissionStub::withAdministrator(),
-                UserTestBuilder::aUser()->build(),
-                Project::buildForTest()
-            ),
             PotentialTrackerCollection::fromProgram(
                 RetrieveTrackerFromProgramStub::fromTrackerReference(
                     TrackerReference::fromTracker(TrackerTestBuilder::aTracker()->withId(300)->withName('program increment tracker')->build()),
@@ -83,7 +79,12 @@ final class PotentialIterationTrackerConfigurationPresentersBuilderTest extends 
                     UserTestBuilder::aUser()->build(),
                     \Project::buildForTest()
                 )
-            )
+            ),
+            ProgramTracker::buildIterationTrackerFromProgram(
+                $retriever,
+                ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 101, UserTestBuilder::aUser()->build()),
+                UserTestBuilder::aUser()->build()
+            ),
         );
     }
 }

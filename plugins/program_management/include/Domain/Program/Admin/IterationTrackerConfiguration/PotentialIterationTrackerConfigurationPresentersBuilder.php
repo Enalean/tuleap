@@ -23,31 +23,22 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Domain\Program\Admin\IterationTrackerConfiguration;
 
 use Tuleap\ProgramManagement\Domain\Program\Admin\PotentialTrackerCollection;
-use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramForAdministrationIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramSelectOptionConfigurationPresenter;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\IterationTracker\RetrieveIterationTracker;
+use Tuleap\ProgramManagement\Domain\ProgramTracker;
 
 final class PotentialIterationTrackerConfigurationPresentersBuilder
 {
-    private RetrieveIterationTracker $iteration_tracker_retriever;
-
-    public function __construct(RetrieveIterationTracker $program_increment_tracker_retriever)
-    {
-        $this->iteration_tracker_retriever = $program_increment_tracker_retriever;
-    }
-
     /**
      * @return ProgramSelectOptionConfigurationPresenter[]
      */
     public function buildPotentialIterationConfigurationPresenters(
-        ProgramForAdministrationIdentifier $program_id,
-        PotentialTrackerCollection $all_potential_trackers
+        PotentialTrackerCollection $all_potential_trackers,
+        ?ProgramTracker $iteration_tracker
     ): array {
-        $iteration_tracker_id         = $this->iteration_tracker_retriever->getIterationTrackerId($program_id->id);
         $potential_tracker_presenters = [];
 
         foreach ($all_potential_trackers->trackers_reference as $potential_tracker) {
-            $selected                       = $potential_tracker->id === $iteration_tracker_id;
+            $selected                       = $iteration_tracker && $potential_tracker->id === $iteration_tracker->getTrackerId();
             $potential_tracker_presenters[] = new ProgramSelectOptionConfigurationPresenter(
                 $potential_tracker->id,
                 $potential_tracker->label,

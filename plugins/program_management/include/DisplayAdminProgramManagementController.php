@@ -41,6 +41,8 @@ use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramCannotBeATeamException;
 use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramForAdministrationIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramIncrementTrackerConfiguration\PotentialProgramIncrementTrackerConfigurationPresentersBuilder;
 use Tuleap\ProgramManagement\Domain\Program\Admin\Team\TeamsPresenterBuilder;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\IterationTracker\IterationLabels;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\IterationTracker\RetrieveIterationLabels;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\IterationTracker\RetrieveVisibleIterationTracker;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Team\TeamProjectsCollection;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracker\ProgramIncrementLabels;
@@ -90,6 +92,7 @@ final class DisplayAdminProgramManagementController implements DispatchableWithR
     private RetrieveProgramIncrementLabels $program_increment_labels_retriever;
     private RetrieveTrackerFromProgram $retrieve_tracker_from_program;
     private PotentialIterationTrackerConfigurationPresentersBuilder $iteration_presenters_builder;
+    private RetrieveIterationLabels $iteration_labels_retriever;
 
     public function __construct(
         \ProjectManager $project_manager,
@@ -109,7 +112,8 @@ final class DisplayAdminProgramManagementController implements DispatchableWithR
         VerifyProjectPermission $permission_verifier,
         RetrieveProgramIncrementLabels $program_increment_labels_retriever,
         RetrieveTrackerFromProgram $retrieve_tracker_from_program,
-        PotentialIterationTrackerConfigurationPresentersBuilder $iteration_presenters_builder
+        PotentialIterationTrackerConfigurationPresentersBuilder $iteration_presenters_builder,
+        RetrieveIterationLabels $iteration_labels_retriever
     ) {
         $this->project_manager                      = $project_manager;
         $this->template_renderer                    = $template_renderer;
@@ -129,6 +133,7 @@ final class DisplayAdminProgramManagementController implements DispatchableWithR
         $this->program_increment_labels_retriever   = $program_increment_labels_retriever;
         $this->retrieve_tracker_from_program        = $retrieve_tracker_from_program;
         $this->iteration_presenters_builder         = $iteration_presenters_builder;
+        $this->iteration_labels_retriever           = $iteration_labels_retriever;
     }
 
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
@@ -197,9 +202,24 @@ final class DisplayAdminProgramManagementController implements DispatchableWithR
             $program_increment_tracker = null;
         }
 
+        try {
+            $iteration_tracker = ProgramTracker::buildIterationTrackerFromProgram(
+                $this->iteration_tracker_retriever,
+                ProgramIdentifier::fromId($this->build_program, $program->id, $user),
+                $user
+            );
+        } catch (ProgramAccessException | ProjectIsNotAProgramException | ProgramTrackerNotFoundException $e) {
+            $iteration_tracker = null;
+        }
+
         $program_increment_labels = ProgramIncrementLabels::fromProgramIncrementTracker(
             $this->program_increment_labels_retriever,
             $program_increment_tracker
+        );
+
+        $iteration_labels = IterationLabels::fromIterationTracker(
+            $this->iteration_labels_retriever,
+            $iteration_tracker
         );
 
         $all_potential_trackers = PotentialTrackerCollection::fromProgram($this->retrieve_tracker_from_program, $program);
@@ -228,8 +248,10 @@ final class DisplayAdminProgramManagementController implements DispatchableWithR
                 $this->ugroups_can_prioritize_builder->buildProjectUgroupCanPrioritizeItemsPresenters($program),
                 $program_increment_labels->label,
                 $program_increment_labels->sub_label,
-                $this->iteration_presenters_builder->buildPotentialIterationConfigurationPresenters($program, $all_potential_trackers),
-                (bool) \ForgeConfig::getFeatureFlag(self::FEATURE_FLAG_KEY)
+                $this->iteration_presenters_builder->buildPotentialIterationConfigurationPresenters($all_potential_trackers, $iteration_tracker),
+                (bool) \ForgeConfig::getFeatureFlag(self::FEATURE_FLAG_KEY),
+                $iteration_labels->label,
+                $iteration_labels->sub_label
             )
         );
 

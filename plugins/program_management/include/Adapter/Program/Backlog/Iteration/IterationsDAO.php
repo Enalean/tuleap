@@ -24,9 +24,10 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\Iteration;
 
 use Tuleap\DB\DataAccessObject;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration\VerifyIsIterationTracker;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\IterationTracker\RetrieveIterationLabels;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\IterationTracker\RetrieveIterationTracker;
 
-final class IterationsDAO extends DataAccessObject implements VerifyIsIterationTracker, RetrieveIterationTracker
+final class IterationsDAO extends DataAccessObject implements VerifyIsIterationTracker, RetrieveIterationTracker, RetrieveIterationLabels
 {
     public function isIterationTracker(int $tracker_id): bool
     {
@@ -48,5 +49,14 @@ final class IterationsDAO extends DataAccessObject implements VerifyIsIterationT
         }
 
         return $tracker_id;
+    }
+
+    /**
+     * @psalm-return null|array{iteration_label: ?string, iteration_sub_label: ?string}
+     */
+    public function getIterationLabels(int $iteration_tracker_id): ?array
+    {
+        $sql = 'SELECT iteration_label, iteration_sub_label FROM plugin_program_management_program WHERE iteration_tracker_id = ?';
+        return $this->getDB()->row($sql, $iteration_tracker_id);
     }
 }
