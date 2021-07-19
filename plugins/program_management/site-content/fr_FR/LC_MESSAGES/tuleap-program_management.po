@@ -309,7 +309,7 @@ msgid ""
 "Singular and lowercase. Leave it blank to keep default label \"program "
 "increment\"."
 msgstr ""
-"Au singuler et en minuscule. Laisser vide pour garder le label par défaut "
+"Au singulier et en minuscule. Laisser vide pour garder le label par défaut "
 "\"program increment\"."
 
 #, php-format
