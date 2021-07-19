@@ -187,6 +187,7 @@ describe("initListPickersMilestoneSection", () => {
             is_filterable: true,
             locale: "en-EN",
             placeholder: "Choose a source tracker for Iterations",
+            keep_none_value: true,
         });
         expect(disabled_plannable_trackers).toHaveBeenCalledWith(doc, pi_selector);
         expect(disabled_iteration_tracker).toHaveBeenCalledWith(doc, "", []);

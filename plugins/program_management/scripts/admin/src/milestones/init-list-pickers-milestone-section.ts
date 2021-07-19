@@ -102,6 +102,7 @@ async function setIterationSection(
         locale: doc.body.dataset.userLocale,
         placeholder: gettext_provider.gettext("Choose a source tracker for Iterations"),
         is_filterable: true,
+        keep_none_value: true,
     });
 
     disabledIterationTrackersFromProgramIncrementAndPlannableTrackers(
