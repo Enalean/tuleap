@@ -31,6 +31,11 @@ export interface ProgramConfiguration {
     };
     program_increment_label?: string;
     program_increment_sub_label?: string;
+    iteration: null | {
+        iteration_tracker_id: number;
+        iteration_label?: string;
+        iteration_sub_label?: string;
+    };
 }
 
 export interface ErrorRest {

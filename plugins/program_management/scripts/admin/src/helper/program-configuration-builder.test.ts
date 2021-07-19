@@ -23,13 +23,23 @@ describe("program-configuration-builder", function () {
     describe("buildProgramConfiguration", function () {
         it("should throw error when no input label", () => {
             expect(() =>
-                buildProgramConfiguration(createDocumentWithSelectorWithoutLabels(), 100)
+                buildProgramConfiguration(createDocumentWithSelectorWithoutLabels(), 100, false)
             ).toThrow("No admin-configuration-program-increment-label-section input");
         });
-        it("should return configuration with selected value", function () {
+        it("should throw error when no iteration selector and feature flag is true", () => {
+            expect(() =>
+                buildProgramConfiguration(
+                    createDocumentWithSelectorWithoutIterationSelector(),
+                    100,
+                    true
+                )
+            ).toThrow("admin-configuration-iteration-tracker element does not exist");
+        });
+        it("should not throw error when no iteration selector and feature flag is false", () => {
             const configuration = buildProgramConfiguration(
-                createDocumentWithSelectorWithoutEmptyField(),
-                100
+                createDocumentWithSelectorWithoutIterationSelector(),
+                100,
+                false
             );
 
             expect(configuration.program_id).toEqual(100);
@@ -37,12 +47,52 @@ describe("program-configuration-builder", function () {
             expect(configuration.program_increment_tracker_id).toEqual(8);
             expect(configuration.permissions.can_prioritize_features).toEqual(["100_3", "150"]);
             expect(configuration.program_increment_label).toEqual("PI");
+            expect(configuration.iteration).toBeNull();
+        });
+        it("should return configuration with selected value and not empty iteration object", function () {
+            const configuration = buildProgramConfiguration(
+                createDocumentWithSelectorWithoutEmptyField("8"),
+                100,
+                true
+            );
+
+            expect(configuration.program_id).toEqual(100);
+            expect(configuration.plannable_tracker_ids).toEqual([9, 10]);
+            expect(configuration.program_increment_tracker_id).toEqual(8);
+            expect(configuration.permissions.can_prioritize_features).toEqual(["100_3", "150"]);
+            expect(configuration.program_increment_label).toEqual("PI");
+            expect(configuration.iteration?.iteration_tracker_id).toEqual(8);
+        });
+        it("should return configuration with empty iteration object when no tracker iteration was selected", function () {
+            const configuration = buildProgramConfiguration(
+                createDocumentWithSelectorWithoutEmptyField(""),
+                100,
+                true
+            );
+            expect(configuration.program_id).toEqual(100);
+            expect(configuration.plannable_tracker_ids).toEqual([9, 10]);
+            expect(configuration.program_increment_tracker_id).toEqual(8);
+            expect(configuration.permissions.can_prioritize_features).toEqual(["100_3", "150"]);
+            expect(configuration.program_increment_label).toEqual("PI");
             expect(configuration.program_increment_sub_label).toEqual("");
+            expect(configuration.iteration).toBeNull();
         });
     });
 });
 
-function createDocumentWithSelectorWithoutEmptyField(): Document {
+function createDocumentWithSelectorWithoutEmptyField(iteration_tracker_id: string): Document {
+    const doc = createDocumentWithSelectorWithoutIterationSelector();
+
+    const iteration_selector = document.createElement("select");
+    iteration_selector.id = "admin-configuration-iteration-tracker";
+    iteration_selector.add(new Option("Sprint", iteration_tracker_id, false, true));
+
+    doc.body.appendChild(iteration_selector);
+
+    return doc;
+}
+
+function createDocumentWithSelectorWithoutIterationSelector(): Document {
     const doc = createDocumentWithSelectorWithoutLabels();
 
     const program_increment_label = document.createElement("input");

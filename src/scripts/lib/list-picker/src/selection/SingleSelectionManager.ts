@@ -47,6 +47,11 @@ export class SingleSelectionManager implements SelectionManager {
             return;
         }
 
+        if (list_item.is_disabled) {
+            this.replaceCurrentValueWithPlaceholder(list_item, true);
+            return;
+        }
+
         if (this.selection_element.contains(this.placeholder_element)) {
             this.replacePlaceholderWithCurrentSelection(list_item, this.placeholder_element);
             return;

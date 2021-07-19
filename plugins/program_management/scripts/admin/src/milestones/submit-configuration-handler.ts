@@ -31,7 +31,8 @@ import { buildProgramConfiguration } from "../helper/program-configuration-build
 export function submitConfigurationHandler(
     doc: Document,
     gettext_provider: GetText,
-    program_id: number
+    program_id: number,
+    use_iteration: boolean
 ): void {
     const button_configuration = document.getElementById(
         "program-management-admin-button-save-configuration"
@@ -51,7 +52,7 @@ export function submitConfigurationHandler(
         }
 
         try {
-            await saveConfiguration(buildProgramConfiguration(doc, program_id));
+            await saveConfiguration(buildProgramConfiguration(doc, program_id, use_iteration));
             window.location.reload();
         } catch (e) {
             e.response

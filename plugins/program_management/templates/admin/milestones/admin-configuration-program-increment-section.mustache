@@ -1,80 +1,70 @@
-<section class="tlp-pane program-management-admin-pane">
-    <div class="tlp-pane-container">
-        <div class="tlp-pane-header">
-            <h1 class="tlp-pane-title">{{# dgettext }}tuleap-program_management | Program Increments{{/ dgettext }}</h1>
-        </div>
-        <section class="tlp-pane-section">
-            <div class="tlp-alert-danger program-management-error-rest-not-show" id="program-management-save-configuration-error-rest"></div>
-            <div class="tlp-form-element">
-                <label class="tlp-label" for="admin-configuration-program-increment-tracker">
-                    {{# dgettext }}tuleap-program_management | Source tracker for Program Increments{{/ dgettext }}
-                    <i class="fas fa-asterisk" aria-hidden="true"></i>
-                </label>
-                <select id="admin-configuration-program-increment-tracker" name="list-value">
-                    <option value=""></option>
-                    {{# potential_program_increments }}
-                        <option value="{{ id }}" {{# is_selected }}selected{{/ is_selected }}>{{ label }}</option>
-                    {{/ potential_program_increments}}
-                </select>
-            </div>
-            <div class="tlp-form-element">
-                <label class="tlp-label" for="admin-configuration-plannable-trackers">
-                    {{# dgettext }}tuleap-program_management | Which tracker's artifacts can be planned in Program increments?{{/ dgettext }}
-                    <i class="fas fa-asterisk" aria-hidden="true"></i>
-                </label>
-                <select id="admin-configuration-plannable-trackers" name="list-value" multiple>
-                    {{# potential_plannable_trackers }}
-                        <option value="{{ id }}" {{# is_selected }}selected{{/ is_selected }}>{{ label }}</option>
-                    {{/ potential_plannable_trackers}}
-                </select>
-            </div>
-            <div class="tlp-form-element">
-                <label class="tlp-label" for="admin-configuration-permission-prioritize">
-                    {{# dgettext }}tuleap-program_management | Who can prioritize and plan items into Program Increments?{{/ dgettext }}
-                    <i class="fas fa-asterisk" aria-hidden="true"></i>
-                </label>
-                <select id="admin-configuration-permission-prioritize" name="list-value" multiple>
-                    {{# ugroups_can_prioritize }}
-                        <option value="{{ id }}" {{# is_selected }}selected{{/ is_selected }}>{{ label }}</option>
-                    {{/ ugroups_can_prioritize}}
-                </select>
-            </div>
-            <div class="tlp-form-element">
-                <label class="tlp-label" for="admin-configuration-program-increment-label-section">
-                    {{# dgettext }}tuleap-program_management | Custom name for the Program Increments section{{/ dgettext }}
-                </label>
-                <input
-                    type="text"
-                    class="tlp-input"
-                    id="admin-configuration-program-increment-label-section"
-                    name="username"
-                    {{# program_increment_label }}value="{{ . }}"{{/ program_increment_label }}
-                    placeholder="{{# dgettext }}tuleap-program_management | Program Increments{{/ dgettext }}"
-                >
-                <p class="tlp-text-info">{{# dgettext }}tuleap-program_management | Plural. Leave it blank to keep default label "Program Increments".{{/ dgettext }}</p>
-            </div>
-            <div class="tlp-form-element">
-                <label class="tlp-label" for="admin-configuration-program-increment-sub-label-section">
-                    {{# dgettext }}tuleap-program_management | Custom name for a milestone of type of Program Increment{{/ dgettext }}
-                </label>
-                <input
-                    type="text"
-                    class="tlp-input"
-                    id="admin-configuration-program-increment-sub-label-section"
-                    name="username"
-                    {{# program_increment_sub_label }}value="{{ . }}"{{/ program_increment_sub_label }}
-                    placeholder="{{# dgettext }}tuleap-program_management | program increment{{/ dgettext }}"
-                >
-                <p class="tlp-text-info">{{# dgettext }}tuleap-program_management | Singular and lowercase. Leave it blank to keep default label "program increment".{{/ dgettext }}</p>
-            </div>
-            <button
-                type="button"
-                class="tlp-button-primary program-management-admin-button-save-configuration"
-                id="program-management-admin-button-save-configuration"
-            >
-                <i class="fa fa-save tlp-button-icon" aria-hidden="true"></i>
-                {{# dgettext }}tuleap-program_management | Save configuration{{/ dgettext }}
-            </button>
-        </section>
+<div class="tlp-pane-container {{# display_iteration_section }}admin-configuration-container-milestone{{/ display_iteration_section }}">
+    <div class="tlp-pane-header">
+        <h1 class="tlp-pane-title">{{# dgettext }}tuleap-program_management | Program Increments{{/ dgettext }}</h1>
     </div>
-</section>
+    <section class="tlp-pane-section">
+        <div class="tlp-alert-danger program-management-error-rest-not-show" id="program-management-save-configuration-error-rest"></div>
+        <div class="tlp-form-element">
+            <label class="tlp-label" for="admin-configuration-program-increment-tracker">
+                {{# dgettext }}tuleap-program_management | Source tracker for Program Increments{{/ dgettext }}
+                <i class="fas fa-asterisk" aria-hidden="true"></i>
+            </label>
+            <select id="admin-configuration-program-increment-tracker" name="list-value">
+                <option value=""></option>
+                {{# potential_program_increments }}
+                    <option value="{{ id }}" {{# is_selected }}selected{{/ is_selected }}>{{ label }}</option>
+                {{/ potential_program_increments}}
+            </select>
+        </div>
+        <div class="tlp-form-element">
+            <label class="tlp-label" for="admin-configuration-plannable-trackers">
+                {{# dgettext }}tuleap-program_management | Which tracker's artifacts can be planned in Program increments?{{/ dgettext }}
+                <i class="fas fa-asterisk" aria-hidden="true"></i>
+            </label>
+            <select id="admin-configuration-plannable-trackers" name="list-value" multiple>
+                {{# potential_plannable_trackers }}
+                    <option value="{{ id }}" {{# is_selected }}selected{{/ is_selected }}>{{ label }}</option>
+                {{/ potential_plannable_trackers}}
+            </select>
+        </div>
+        <div class="tlp-form-element">
+            <label class="tlp-label" for="admin-configuration-permission-prioritize">
+                {{# dgettext }}tuleap-program_management | Who can prioritize and plan items into Program Increments?{{/ dgettext }}
+                <i class="fas fa-asterisk" aria-hidden="true"></i>
+            </label>
+            <select id="admin-configuration-permission-prioritize" name="list-value" multiple>
+                {{# ugroups_can_prioritize }}
+                    <option value="{{ id }}" {{# is_selected }}selected{{/ is_selected }}>{{ label }}</option>
+                {{/ ugroups_can_prioritize}}
+            </select>
+        </div>
+        <div class="tlp-form-element">
+            <label class="tlp-label" for="admin-configuration-program-increment-label-section">
+                {{# dgettext }}tuleap-program_management | Custom name for the Program Increments section{{/ dgettext }}
+            </label>
+            <input
+                type="text"
+                class="tlp-input"
+                id="admin-configuration-program-increment-label-section"
+                name="username"
+                {{# program_increment_label }}value="{{ . }}"{{/ program_increment_label }}
+                placeholder="{{# dgettext }}tuleap-program_management | Program Increments{{/ dgettext }}"
+            >
+            <p class="tlp-text-info">{{# dgettext }}tuleap-program_management | Plural. Leave it blank to keep default label "Program Increments".{{/ dgettext }}</p>
+        </div>
+        <div class="tlp-form-element">
+            <label class="tlp-label" for="admin-configuration-program-increment-sub-label-section">
+                {{# dgettext }}tuleap-program_management | Custom name for a milestone of type of Program Increment{{/ dgettext }}
+            </label>
+            <input
+                type="text"
+                class="tlp-input"
+                id="admin-configuration-program-increment-sub-label-section"
+                name="username"
+                {{# program_increment_sub_label }}value="{{ . }}"{{/ program_increment_sub_label }}
+                placeholder="{{# dgettext }}tuleap-program_management | program increment{{/ dgettext }}"
+            >
+            <p class="tlp-text-info">{{# dgettext }}tuleap-program_management | Singular and lowercase. Leave it blank to keep default label "program increment".{{/ dgettext }}</p>
+        </div>
+    </section>
+</div>

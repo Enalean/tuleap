@@ -33,6 +33,7 @@ export function saveConfiguration(configuration: ProgramConfiguration): Promise<
                 permissions: configuration.permissions,
                 program_increment_label: configuration.program_increment_label,
                 program_increment_sub_label: configuration.program_increment_sub_label,
+                iteration: configuration.iteration,
             }),
         }
     );

@@ -31,6 +31,7 @@ use Tuleap\Layout\IncludeAssets;
 use Tuleap\ProgramManagement\Adapter\Program\Admin\Configuration\ConfigurationChecker;
 use Tuleap\ProgramManagement\Domain\BuildProject;
 use Tuleap\ProgramManagement\Domain\Program\Admin\CanPrioritizeItems\BuildProjectUGroupCanPrioritizeItemsPresenters;
+use Tuleap\ProgramManagement\Domain\Program\Admin\IterationTrackerConfiguration\PotentialIterationTrackerConfigurationPresentersBuilder;
 use Tuleap\ProgramManagement\Domain\Program\Admin\PlannableTrackersConfiguration\PotentialPlannableTrackersConfigurationPresentersBuilder;
 use Tuleap\ProgramManagement\Domain\Program\Admin\PotentialTeam\BuildPotentialTeams;
 use Tuleap\ProgramManagement\Domain\Program\Admin\PotentialTeam\PotentialTeamsPresenterBuilder;
@@ -64,6 +65,13 @@ use Tuleap\Request\NotFoundException;
 
 final class DisplayAdminProgramManagementController implements DispatchableWithRequest, DispatchableWithProject, DispatchableWithBurningParrot
 {
+    /**
+     * Display iteration section in program administration
+     *
+     * @tlp-config-feature-flag-key
+     */
+    public const FEATURE_FLAG_KEY = 'program_management_display_iteration';
+
     private \ProjectManager $project_manager;
     private \TemplateRenderer $template_renderer;
     private ProgramManagementBreadCrumbsBuilder $breadcrumbs_builder;
@@ -81,6 +89,7 @@ final class DisplayAdminProgramManagementController implements DispatchableWithR
     private VerifyProjectPermission $permission_verifier;
     private RetrieveProgramIncrementLabels $program_increment_labels_retriever;
     private RetrieveTrackerFromProgram $retrieve_tracker_from_program;
+    private PotentialIterationTrackerConfigurationPresentersBuilder $iteration_presenters_builder;
 
     public function __construct(
         \ProjectManager $project_manager,
@@ -99,7 +108,8 @@ final class DisplayAdminProgramManagementController implements DispatchableWithR
         BuildProjectUGroupCanPrioritizeItemsPresenters $ugroups_can_prioritize_builder,
         VerifyProjectPermission $permission_verifier,
         RetrieveProgramIncrementLabels $program_increment_labels_retriever,
-        RetrieveTrackerFromProgram $retrieve_tracker_from_program
+        RetrieveTrackerFromProgram $retrieve_tracker_from_program,
+        PotentialIterationTrackerConfigurationPresentersBuilder $iteration_presenters_builder
     ) {
         $this->project_manager                      = $project_manager;
         $this->template_renderer                    = $template_renderer;
@@ -118,6 +128,7 @@ final class DisplayAdminProgramManagementController implements DispatchableWithR
         $this->permission_verifier                  = $permission_verifier;
         $this->program_increment_labels_retriever   = $program_increment_labels_retriever;
         $this->retrieve_tracker_from_program        = $retrieve_tracker_from_program;
+        $this->iteration_presenters_builder         = $iteration_presenters_builder;
     }
 
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
@@ -217,6 +228,8 @@ final class DisplayAdminProgramManagementController implements DispatchableWithR
                 $this->ugroups_can_prioritize_builder->buildProjectUgroupCanPrioritizeItemsPresenters($program),
                 $program_increment_labels->label,
                 $program_increment_labels->sub_label,
+                $this->iteration_presenters_builder->buildPotentialIterationConfigurationPresenters($program, $all_potential_trackers),
+                (bool) \ForgeConfig::getFeatureFlag(self::FEATURE_FLAG_KEY)
             )
         );
 

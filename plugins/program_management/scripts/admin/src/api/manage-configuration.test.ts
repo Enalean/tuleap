@@ -30,13 +30,16 @@ describe("manageConfiguration", () => {
                 plannable_tracker_ids: [8, 9],
                 program_increment_tracker_id: 50,
                 program_id: 105,
+                iteration: {
+                    iteration_tracker_id: 125,
+                },
             };
             const put = jest.spyOn(tlp, "put");
 
             saveConfiguration(configuration);
 
             expect(put).toHaveBeenCalledWith("/api/v1/projects/105/program_plan", {
-                body: '{"program_increment_tracker_id":50,"plannable_tracker_ids":[8,9],"permissions":{"can_prioritize_features":["105_3"]}}',
+                body: '{"program_increment_tracker_id":50,"plannable_tracker_ids":[8,9],"permissions":{"can_prioritize_features":["105_3"]},"iteration":{"iteration_tracker_id":125}}',
                 headers: { "Content-Type": "application/json" },
             });
         });

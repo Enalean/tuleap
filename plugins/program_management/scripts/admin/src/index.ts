@@ -50,9 +50,15 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
     const program_id = Number.parseInt(program_id_data, 10);
 
+    const use_iteration_data = app.dataset.useIteration;
+    if (use_iteration_data === undefined) {
+        throw new Error("Use Iteration does not exist");
+    }
+    const use_iteration = Boolean(use_iteration_data);
+
     await displayTeamsToAggregate(gettext_provider, document);
     removeTeam(program_id);
     addTeamInProgram(program_id, document);
-    await initListPickersMilestoneSection(document, gettext_provider);
-    submitConfigurationHandler(document, gettext_provider, program_id);
+    await initListPickersMilestoneSection(document, gettext_provider, use_iteration);
+    submitConfigurationHandler(document, gettext_provider, program_id, use_iteration);
 });
