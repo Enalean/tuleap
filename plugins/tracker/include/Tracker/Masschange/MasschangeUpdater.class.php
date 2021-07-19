@@ -95,7 +95,7 @@ class MasschangeUpdater
     public function updateArtifacts(PFUser $user, Codendi_Request $request): void
     {
         if ($this->tracker->userIsAdmin($user)) {
-            $masschange_aids = $request->get('masschange_aids');
+            $masschange_aids = array_map('intval', $request->get('masschange_aids'));
             if (empty($masschange_aids)) {
                 $GLOBALS['Response']->addFeedback(
                     'error',
