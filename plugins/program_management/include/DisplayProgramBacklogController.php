@@ -95,7 +95,7 @@ final class DisplayProgramBacklogController implements DispatchableWithRequest, 
         }
 
         if ($this->verify_is_team->isATeam((int) $project->getID())) {
-            throw new ForbiddenException(dgettext("tuleap-program_management", "Project is defined as a Team project. It can not be used as a Program"));
+            throw new ForbiddenException(dgettext("tuleap-program_management", "Project is defined as a Team project. It can not be used as a Program."));
         }
 
         $user = $request->getCurrentUser();

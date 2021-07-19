@@ -25,6 +25,7 @@ use Tuleap\AgileDashboard\Planning\PlanningAdministrationDelegation;
 use Tuleap\AgileDashboard\Planning\RootPlanning\RootPlanningEditionEvent;
 use Tuleap\AgileDashboard\REST\v1\Milestone\OriginalProjectCollector;
 use Tuleap\CLI\Events\GetWhitelistedKeys;
+use Tuleap\Dashboard\Project\DisplayCreatedProjectModalPresenter;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Layout\IncludeAssets;
@@ -213,6 +214,7 @@ final class program_managementPlugin extends Plugin
         $this->addHook(ServiceDisabledCollector::NAME);
         $this->addHook(ProjectServiceBeforeActivation::NAME);
         $this->addHook(GetWhitelistedKeys::NAME);
+        $this->addHook(DisplayCreatedProjectModalPresenter::NAME);
 
         return parent::getHooksAndCallbacks();
     }
@@ -916,5 +918,18 @@ final class program_managementPlugin extends Plugin
             new IterationsDAO(),
             \TrackerFactory::instance()
         );
+    }
+
+    public function displayCreatedProjectModal(DisplayCreatedProjectModalPresenter $presenter): void
+    {
+        if (
+            $presenter->should_display_created_project_modal &&
+            $presenter->getXmlTemplateName() === 'program_management_program'
+        ) {
+            $presenter->setCustomPrimaryAction(
+                dgettext('tuleap-program_management', 'Configure the teams'),
+                '/program_management/admin/' . $presenter->getProject()->getUnixNameLowerCase()
+            );
+        }
     }
 }

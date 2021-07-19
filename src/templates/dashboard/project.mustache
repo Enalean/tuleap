@@ -110,6 +110,8 @@
     {{/ dashboards }}
 {{/ can_update_dashboards }}
 
-{{# should_display_project_created_modal }}
-    {{>  ../project/registration/creation/project-dashboard-creation-success-modal }}
-{{/should_display_project_created_modal}}
+{{# display_project_created_modal_presenter }}
+    {{# should_display_created_project_modal }}
+        {{>  ../project/registration/creation/project-dashboard-creation-success-modal }}
+    {{/ should_display_created_project_modal }}
+{{/ display_project_created_modal_presenter }}

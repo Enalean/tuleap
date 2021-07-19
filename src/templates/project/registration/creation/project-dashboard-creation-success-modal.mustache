@@ -1,25 +1,43 @@
-{{# project_presenter }}
-    <div id="project-creation-success-modal"
-         class="tlp-modal tlp-modal-success"
-         role="dialog"
-         aria-labelledby="project-creation-success-modal">
-        <div class="tlp-modal-body project-creation-success-modal-container">
-            <div class="project-creation-success-modal-illustration">
-                {{> ../project/registration/creation/project-dashboard-creation-modal-svg }}
-            </div>
-            <div class="project-creation-success-modal-content">
-                <h2 class="project-creation-success-modal-content-title">{{#gettext}}Congratulations!{{/gettext}} </h2>
-                <p class="project-creation-success-modal-content-welcome">
-                    {{#gettext}}Welcome to your new project {{/gettext}}
+<div id="project-creation-success-modal"
+     class="tlp-modal tlp-modal-success"
+     role="dialog"
+     aria-labelledby="project-creation-success-modal">
+    <div class="tlp-modal-body project-creation-success-modal-container">
+        <div class="project-creation-success-modal-illustration">
+            {{> ../project/registration/creation/project-dashboard-creation-modal-svg }}
+        </div>
+        <div class="project-creation-success-modal-content">
+            <h2 class="project-creation-success-modal-content-title">{{#gettext}}Congratulations!{{/gettext}} </h2>
+            <p class="project-creation-success-modal-content-welcome">
+                {{#gettext}}Welcome to your new project {{/gettext}}
+                {{# project_presenter }}
                     <span class="project-creation-success-modal-content-welcome-project-name">{{name}}</span>
-                </p>
-                <button type="button" class="tlp-button-success tlp-button-large tlp-modal-action" data-dismiss="modal" data-test="start-working">
+                {{/project_presenter}}
+            </p>
+            <div>
+                <button
+                    type="button"
+                    class="tlp-button-success tlp-button-large {{# has_custom_primary_action }}tlp-button-outline{{/ has_custom_primary_action }}"
+                    data-dismiss="modal"
+                    data-test="start-working"
+                >
                     {{#gettext}} Start working {{/gettext}}
-                    <i class="fas fa-long-arrow-alt-right tlp-button-icon-right"
-                       aria-hidden="true">
-                    </i>
+                    {{^ has_custom_primary_action }}
+                        <i class="fas fa-long-arrow-alt-right tlp-button-icon-right" aria-hidden="true"></i>
+                    {{/ has_custom_primary_action }}
                 </button>
+                {{# has_custom_primary_action }}
+                    {{# custom_primary_action }}
+                        <a
+                            href="{{ href }}"
+                            class="tlp-button-success tlp-button-large project-creation-success-modal-custom-primary-action-button"
+                        >
+                            {{ label }}
+                            <i class="fas fa-long-arrow-alt-right tlp-button-icon-right" aria-hidden="true"></i>
+                        </a>
+                    {{/ custom_primary_action }}
+                {{/ has_custom_primary_action }}
             </div>
         </div>
     </div>
-{{/project_presenter}}
+</div>
