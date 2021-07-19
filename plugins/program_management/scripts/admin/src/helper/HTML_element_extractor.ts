@@ -26,3 +26,13 @@ export function getHTMLSelectElementFromId(doc: Document, id: string): HTMLSelec
 
     return select_element;
 }
+
+export function getHTMLInputElementFromId(doc: Document, element_id: string): HTMLInputElement {
+    const input_element = doc.getElementById(element_id);
+
+    if (!input_element || !(input_element instanceof HTMLInputElement)) {
+        throw new Error("No " + element_id + " input element");
+    }
+
+    return input_element;
+}

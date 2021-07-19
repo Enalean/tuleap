@@ -14,5 +14,33 @@
                 {{/ potential_iterations }}
             </select>
         </div>
+        <div class="tlp-form-element">
+            <label class="tlp-label" for="admin-configuration-iteration-label-section">
+                {{# dgettext }}tuleap-program_management | Custom name for the Iterations section{{/ dgettext }}
+            </label>
+            <input
+                type="text"
+                class="tlp-input"
+                id="admin-configuration-iteration-label-section"
+                name="username"
+                {{# iteration_label }}value="{{ . }}"{{/ iteration_label }}
+                placeholder="{{# dgettext }}tuleap-program_management | Iterations{{/ dgettext }}"
+            >
+            <p class="tlp-text-info">{{# dgettext }}tuleap-program_management | Plural. Leave it blank to keep default label "Iterations".{{/ dgettext }}</p>
+        </div>
+        <div class="tlp-form-element">
+            <label class="tlp-label" for="admin-configuration-iteration-sub-label-section">
+                {{# dgettext }}tuleap-program_management | Custom name for a milestone of type of Iteration{{/ dgettext }}
+            </label>
+            <input
+                type="text"
+                class="tlp-input"
+                id="admin-configuration-iteration-sub-label-section"
+                name="username"
+                {{# iteration_sub_label }}value="{{ . }}"{{/ iteration_sub_label }}
+                placeholder="{{# dgettext }}tuleap-program_management | iteration{{/ dgettext }}"
+            >
+            <p class="tlp-text-info">{{# dgettext }}tuleap-program_management | Singular and lowercase. Leave it blank to keep default label "iteration".{{/ dgettext }}</p>
+        </div>
     </section>
 </div>

@@ -69,8 +69,14 @@ msgstr ""
 "La fonctionnalité #%d n'a pas pu être enlevée de tous les incréments de "
 "programme"
 
+msgid "Custom name for a milestone of type of Iteration"
+msgstr "Nom personnalisé pour un jalon de type Itération"
+
 msgid "Custom name for a milestone of type of Program Increment"
 msgstr "Nom personnalisé pour un jalon de type Incrément de Programme"
+
+msgid "Custom name for the Iterations section"
+msgstr "Nom personnalisé pour la section Itération"
 
 msgid "Custom name for the Program Increments section"
 msgstr "Nom personnalisé pour la section Incréments de Programme"
@@ -196,6 +202,11 @@ msgstr "L'id de l'outils de suivi panifiable ne doit pas être vide"
 msgid "Please confirm your action."
 msgstr "Merci de confirmer votre action."
 
+msgid "Plural. Leave it blank to keep default label \"Iterations\"."
+msgstr ""
+"Au pluriel. Laisser vide pour garder le label par défaut \"Itérations"
+"\"."
+
 msgid "Plural. Leave it blank to keep default label \"Program Increments\"."
 msgstr ""
 "Au pluriel. Laisser vide pour garder le label par défaut \"Program Increments"
@@ -314,6 +325,12 @@ msgid ""
 msgstr ""
 "La sémantique 'statut' est liée à aucun champ dans l'outil de suivi du "
 "programme <a href='%s'>#%d</a>"
+
+msgid ""
+"Singular and lowercase. Leave it blank to keep default label \"iteration\"."
+msgstr ""
+"Au singulier et en minuscule. Laisser vide pour garder le label par défaut "
+"\"itération\"."
 
 msgid ""
 "Singular and lowercase. Leave it blank to keep default label \"program "
@@ -489,6 +506,9 @@ msgstr ""
 
 msgid "`add` and `order` must not both be null"
 msgstr "`add` et `order` ne peuvent être null en même temps"
+
+msgid "iteration"
+msgstr "itération"
 
 msgid "program increment"
 msgstr "incrément de programme"

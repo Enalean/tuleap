@@ -65,6 +65,8 @@ final class ProgramAdminPresenter
      */
     public array $potential_iterations;
     public bool $display_iteration_section;
+    public ?string $iteration_label;
+    public ?string $iteration_sub_label;
 
     /**
      * @param PotentialTeamPresenter[]                    $potential_teams
@@ -86,7 +88,9 @@ final class ProgramAdminPresenter
         ?string $program_increment_label,
         ?string $program_increment_sub_label,
         array $potential_iterations,
-        bool $display_iteration_section
+        bool $display_iteration_section,
+        ?string $iteration_label,
+        ?string $iteration_sub_label
     ) {
         $this->program_id                   = $program->id;
         $this->potential_teams              = $potential_teams;
@@ -101,5 +105,7 @@ final class ProgramAdminPresenter
         $this->program_increment_sub_label  = $program_increment_sub_label;
         $this->potential_iterations         = $potential_iterations;
         $this->display_iteration_section    = $display_iteration_section;
+        $this->iteration_label              = $iteration_label;
+        $this->iteration_sub_label          = $iteration_sub_label;
     }
 }

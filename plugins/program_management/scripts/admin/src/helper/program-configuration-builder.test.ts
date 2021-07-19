@@ -62,6 +62,8 @@ describe("program-configuration-builder", function () {
             expect(configuration.permissions.can_prioritize_features).toEqual(["100_3", "150"]);
             expect(configuration.program_increment_label).toEqual("PI");
             expect(configuration.iteration?.iteration_tracker_id).toEqual(8);
+            expect(configuration.iteration?.iteration_label).toEqual("An Iteration");
+            expect(configuration.iteration?.iteration_sub_label).toEqual("");
         });
         it("should return configuration with empty iteration object when no tracker iteration was selected", function () {
             const configuration = buildProgramConfiguration(
@@ -87,7 +89,15 @@ function createDocumentWithSelectorWithoutEmptyField(iteration_tracker_id: strin
     iteration_selector.id = "admin-configuration-iteration-tracker";
     iteration_selector.add(new Option("Sprint", iteration_tracker_id, false, true));
 
+    const iteration_label = document.createElement("input");
+    iteration_label.id = "admin-configuration-iteration-label-section";
+    iteration_label.value = "An Iteration";
+    const iteration_sub_label = document.createElement("input");
+    iteration_sub_label.id = "admin-configuration-iteration-sub-label-section";
+
     doc.body.appendChild(iteration_selector);
+    doc.body.appendChild(iteration_label);
+    doc.body.appendChild(iteration_sub_label);
 
     return doc;
 }
