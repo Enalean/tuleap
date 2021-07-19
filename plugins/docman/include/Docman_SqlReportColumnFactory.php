@@ -23,7 +23,7 @@
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 class Docman_SqlReportColumnFactory
 {
-    public function &getFromColumn($c)
+    public static function &getFromColumn($c)
     {
         $obj = \null;
         switch (\strtolower(\get_class($c))) {

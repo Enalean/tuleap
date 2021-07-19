@@ -256,7 +256,7 @@ class Docman_CloneItemsVisitor implements ItemVisitor
         while ($oldMdIter->valid()) {
             $oldMd = $oldMdIter->current();
 
-            if ($oldMdFactory->isRealMetadata($oldMd->getLabel())) {
+            if (Docman_MetadataFactory::isRealMetadata($oldMd->getLabel())) {
                 $oldValue = $oldMdFactory->getMetadataValue($item, $oldMd);
 
                 if (isset($metadataMapping['md'][$oldMd->getId()])) {

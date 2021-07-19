@@ -207,9 +207,8 @@ class Docman_FilterFactory
             switch ($md->getType()) {
                 case PLUGIN_DOCMAN_METADATA_TYPE_TEXT:
                 case PLUGIN_DOCMAN_METADATA_TYPE_STRING:
-                    $filter           = new Docman_FilterText($md);
-                    $metadata_factory = new Docman_MetadataFactory($md->getGroupId());
-                    if ($metadata_factory->isRealMetadata($md->getLabel())) {
+                    $filter = new Docman_FilterText($md);
+                    if (Docman_MetadataFactory::isRealMetadata($md->getLabel())) {
                         $this->dynTextFields[] = $md->getLabel();
                     }
                     break;
@@ -336,7 +335,7 @@ class Docman_FilterFactory
         $dstMdFactory = new Docman_MetadataFactory($dstReport->getGroupId());
 
         $newLabel = null;
-        if ($dstMdFactory->isRealMetadata($srcFilter->md->getLabel())) {
+        if (Docman_MetadataFactory::isRealMetadata($srcFilter->md->getLabel())) {
             // Check if there is a corresponding MD in the dst project
             // Should never happens in case of initial template clone
             // but main exists with 'clone this report' function

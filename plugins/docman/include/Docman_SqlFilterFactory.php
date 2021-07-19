@@ -26,7 +26,7 @@ class Docman_SqlFilterFactory
     public function __construct()
     {
     }
-    public function getFromFilter($filter)
+    public static function getFromFilter($filter)
     {
         $f = \null;
         if (\is_a($filter, 'Docman_FilterDateAdvanced')) {

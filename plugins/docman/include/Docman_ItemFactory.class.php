@@ -641,7 +641,7 @@ class Docman_ItemFactory
                             $ci->rewind();
                             while ($ci->valid()) {
                                 $c = $ci->current();
-                                if ($c->md !== null && $mdFactory->isRealMetadata($c->md->getLabel())) {
+                                if ($c->md !== null && Docman_MetadataFactory::isRealMetadata($c->md->getLabel())) {
                                     $mdFactory->addMetadataValueToItem($itemArray[$row['item_id']], $c->md);
                                 }
                                 $ci->next();

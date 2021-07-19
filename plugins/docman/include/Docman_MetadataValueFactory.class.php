@@ -159,7 +159,7 @@ class Docman_MetadataValueFactory
     public function massUpdate($srcItemId, $mdLabel, $itemIdArray)
     {
         $mdFactory = new Docman_MetadataFactory($this->groupId);
-        if ($mdFactory->isRealMetadata($mdLabel)) {
+        if (Docman_MetadataFactory::isRealMetadata($mdLabel)) {
             $md  = $mdFactory->getFromLabel($mdLabel);
             $dao = $this->getDao();
             $dao->massUpdate($srcItemId, $md->getId(), $md->getType(), $itemIdArray);
