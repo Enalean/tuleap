@@ -25,6 +25,7 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\PrioritizeFeaturesPermissionVerifier;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\TopBacklogActionMassChangeSourceInformation;
 use Tuleap\ProgramManagement\Domain\Program\Plan\BuildProgram;
 use Tuleap\ProgramManagement\Domain\Program\Plan\PlanStore;
 use Tuleap\ProgramManagement\Stub\BuildProgramStub;
@@ -34,10 +35,8 @@ final class MassChangeTopBacklogActionBuilderTest extends \Tuleap\Test\PHPUnit\T
 {
     use MockeryPHPUnitIntegration;
 
-    /**
-     * @var BuildProgram
-     */
-    private $build_program;
+
+    private BuildProgram $build_program;
     /**
      * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|PrioritizeFeaturesPermissionVerifier
      */
@@ -46,10 +45,7 @@ final class MassChangeTopBacklogActionBuilderTest extends \Tuleap\Test\PHPUnit\T
      * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|PlanStore
      */
     private $plan_store;
-    /**
-     * @var MassChangeTopBacklogActionBuilder
-     */
-    private $action_builder;
+    private MassChangeTopBacklogActionBuilder $action_builder;
 
     protected function setUp(): void
     {

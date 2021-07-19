@@ -27,6 +27,7 @@ use PFUser;
 use Tuleap\Layout\JavascriptAsset;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\PrioritizeFeaturesPermissionVerifier;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\NotAllowedToPrioritizeException;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\TopBacklogActionArtifactSourceInformation;
 use Tuleap\ProgramManagement\Domain\Program\Plan\BuildProgram;
 use Tuleap\ProgramManagement\Domain\Program\Plan\PlanStore;
 use Tuleap\ProgramManagement\Domain\Program\Plan\ProgramAccessException;
@@ -36,32 +37,15 @@ use Tuleap\ProgramManagement\Domain\UserCanPrioritize;
 use Tuleap\Tracker\Artifact\ActionButtons\AdditionalButtonAction;
 use Tuleap\Tracker\Artifact\ActionButtons\AdditionalButtonLinkPresenter;
 
-class ArtifactTopBacklogActionBuilder
+final class ArtifactTopBacklogActionBuilder
 {
-    /**
-     * @var BuildProgram
-     */
-    private $build_program;
-    /**
-     * @var PrioritizeFeaturesPermissionVerifier
-     */
-    private $prioritize_features_permission_verifier;
-    /**
-     * @var PlanStore
-     */
-    private $plan_store;
-    /**
-     * @var ArtifactsExplicitTopBacklogDAO
-     */
-    private $artifacts_explicit_top_backlog_dao;
-    /**
-     * @var PlannedFeatureDAO
-     */
-    private $planned_feature_dao;
-    /**
-     * @var JavascriptAsset
-     */
-    private $asset;
+
+    private BuildProgram $build_program;
+    private PrioritizeFeaturesPermissionVerifier $prioritize_features_permission_verifier;
+    private PlanStore $plan_store;
+    private ArtifactsExplicitTopBacklogDAO $artifacts_explicit_top_backlog_dao;
+    private PlannedFeatureDAO $planned_feature_dao;
+    private JavascriptAsset $asset;
 
     public function __construct(
         BuildProgram $build_program,
@@ -79,7 +63,7 @@ class ArtifactTopBacklogActionBuilder
         $this->asset                                   = $asset;
     }
 
-    public function buildTopBacklogActionBuilder(TopBacklogActionActifactSourceInformation $source_information, PFUser $user): ?AdditionalButtonAction
+    public function buildTopBacklogActionBuilder(TopBacklogActionArtifactSourceInformation $source_information, PFUser $user): ?AdditionalButtonAction
     {
         try {
             $program = ProgramIdentifier::fromId($this->build_program, $source_information->project_id, $user);

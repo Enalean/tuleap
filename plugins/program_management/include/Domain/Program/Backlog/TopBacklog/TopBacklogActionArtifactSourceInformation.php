@@ -1,8 +1,8 @@
 <?php
 /**
- * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
+ * Copyright (c) Enalean 2021 -  Present. All Rights Reserved.
  *
- * This file is a part of Tuleap.
+ *  This file is a part of Tuleap.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,29 +16,26 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog;
+namespace Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog;
 
 /**
  * @psalm-immutable
  */
-final class TopBacklogActionMassChangeSourceInformation
+final class TopBacklogActionArtifactSourceInformation
 {
-    /**
-     * @var int
-     */
-    public $tracker_id;
-    /**
-     * @var int
-     */
-    public $project_id;
+    public int $artifact_id;
+    public int $tracker_id;
+    public int $project_id;
 
-    public function __construct(int $tracker_id, int $project_id)
+    public function __construct(int $artifact_id, int $tracker_id, int $project_id)
     {
-        $this->tracker_id = $tracker_id;
-        $this->project_id = $project_id;
+        $this->artifact_id = $artifact_id;
+        $this->tracker_id  = $tracker_id;
+        $this->project_id  = $project_id;
     }
 }
