@@ -31,7 +31,6 @@ use Tuleap\Layout\IncludeAssets;
 use Tuleap\ProgramManagement\Adapter\Program\Admin\Configuration\ConfigurationChecker;
 use Tuleap\ProgramManagement\Domain\BuildProject;
 use Tuleap\ProgramManagement\Domain\Program\Admin\CanPrioritizeItems\BuildProjectUGroupCanPrioritizeItemsPresenters;
-use Tuleap\ProgramManagement\Domain\Program\Admin\IterationTrackerConfiguration\PotentialIterationTrackerConfigurationPresentersBuilder;
 use Tuleap\ProgramManagement\Domain\Program\Admin\PlannableTrackersConfiguration\PotentialPlannableTrackersConfigurationPresentersBuilder;
 use Tuleap\ProgramManagement\Domain\Program\Admin\PotentialTeam\PotentialTeamsCollection;
 use Tuleap\ProgramManagement\Domain\Program\Admin\PotentialTeam\PotentialTeamsPresenterBuilder;
@@ -39,8 +38,8 @@ use Tuleap\ProgramManagement\Domain\Program\Admin\PotentialTrackerCollection;
 use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramAdminPresenter;
 use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramCannotBeATeamException;
 use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramForAdministrationIdentifier;
-use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramIncrementTrackerConfiguration\PotentialProgramIncrementTrackerConfigurationPresentersBuilder;
 use Tuleap\ProgramManagement\Domain\Program\Admin\Team\TeamsPresenterBuilder;
+use Tuleap\ProgramManagement\Domain\Program\Admin\TimeboxTrackerConfiguration\PotentialTimeboxTrackerConfigurationPresenterCollection;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\IterationTracker\IterationLabels;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\IterationTracker\RetrieveIterationLabels;
 use Tuleap\ProgramManagement\Domain\Program\AllProgramSearcher;
@@ -86,13 +85,11 @@ final class DisplayAdminProgramManagementController implements DispatchableWithR
     private RetrieveVisibleProgramIncrementTracker $program_increment_tracker_retriever;
     private \EventManager $event_manager;
     private RetrieveVisibleIterationTracker $iteration_tracker_retriever;
-    private PotentialProgramIncrementTrackerConfigurationPresentersBuilder $program_increment_presenters_builder;
     private PotentialPlannableTrackersConfigurationPresentersBuilder $plannable_tracker_presenters_builder;
     private BuildProjectUGroupCanPrioritizeItemsPresenters $ugroups_can_prioritize_builder;
     private VerifyProjectPermission $permission_verifier;
     private RetrieveProgramIncrementLabels $program_increment_labels_retriever;
     private RetrieveTrackerFromProgram $retrieve_tracker_from_program;
-    private PotentialIterationTrackerConfigurationPresentersBuilder $iteration_presenters_builder;
     private RetrieveIterationLabels $iteration_labels_retriever;
     private AllProgramSearcher $all_program_searcher;
 
@@ -107,13 +104,11 @@ final class DisplayAdminProgramManagementController implements DispatchableWithR
         RetrieveVisibleProgramIncrementTracker $program_increment_tracker_retriever,
         \EventManager $event_manager,
         RetrieveVisibleIterationTracker $iteration_tracker_retriever,
-        PotentialProgramIncrementTrackerConfigurationPresentersBuilder $program_increment_presenters_builder,
         PotentialPlannableTrackersConfigurationPresentersBuilder $plannable_tracker_presenters_builder,
         BuildProjectUGroupCanPrioritizeItemsPresenters $ugroups_can_prioritize_builder,
         VerifyProjectPermission $permission_verifier,
         RetrieveProgramIncrementLabels $program_increment_labels_retriever,
         RetrieveTrackerFromProgram $retrieve_tracker_from_program,
-        PotentialIterationTrackerConfigurationPresentersBuilder $iteration_presenters_builder,
         RetrieveIterationLabels $iteration_labels_retriever,
         AllProgramSearcher $all_program_searcher
     ) {
@@ -127,13 +122,11 @@ final class DisplayAdminProgramManagementController implements DispatchableWithR
         $this->program_increment_tracker_retriever  = $program_increment_tracker_retriever;
         $this->event_manager                        = $event_manager;
         $this->iteration_tracker_retriever          = $iteration_tracker_retriever;
-        $this->program_increment_presenters_builder = $program_increment_presenters_builder;
         $this->plannable_tracker_presenters_builder = $plannable_tracker_presenters_builder;
         $this->ugroups_can_prioritize_builder       = $ugroups_can_prioritize_builder;
         $this->permission_verifier                  = $permission_verifier;
         $this->program_increment_labels_retriever   = $program_increment_labels_retriever;
         $this->retrieve_tracker_from_program        = $retrieve_tracker_from_program;
-        $this->iteration_presenters_builder         = $iteration_presenters_builder;
         $this->iteration_labels_retriever           = $iteration_labels_retriever;
         $this->all_program_searcher                 = $all_program_searcher;
     }
@@ -247,16 +240,18 @@ final class DisplayAdminProgramManagementController implements DispatchableWithR
                     )
                 ),
                 $error_presenters,
-                $this->program_increment_presenters_builder->buildPotentialProgramIncrementTrackerPresenters(
-                    $program,
-                    $program_increment_tracker,
-                    $all_potential_trackers
-                ),
+                PotentialTimeboxTrackerConfigurationPresenterCollection::fromTimeboxTracker(
+                    $all_potential_trackers,
+                    $program_increment_tracker
+                )->presenters,
                 $this->plannable_tracker_presenters_builder->buildPotentialPlannableTrackerPresenters($program, $all_potential_trackers),
                 $this->ugroups_can_prioritize_builder->buildProjectUgroupCanPrioritizeItemsPresenters($program),
                 $program_increment_labels->label,
                 $program_increment_labels->sub_label,
-                $this->iteration_presenters_builder->buildPotentialIterationConfigurationPresenters($all_potential_trackers, $iteration_tracker),
+                PotentialTimeboxTrackerConfigurationPresenterCollection::fromTimeboxTracker(
+                    $all_potential_trackers,
+                    $iteration_tracker
+                )->presenters,
                 (bool) \ForgeConfig::getFeatureFlag(self::FEATURE_FLAG_KEY),
                 $iteration_labels->label,
                 $iteration_labels->sub_label
