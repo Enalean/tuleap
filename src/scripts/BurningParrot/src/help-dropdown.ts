@@ -18,15 +18,15 @@
  */
 
 import type { Modal, Dropdown } from "tlp";
-import { createDropdown, createModal, patch } from "tlp";
-import { manageUserPreferences } from "../../user/user-patch-release-note-preference";
+import { createDropdown, createModal, post } from "tlp";
+import { actionsOnHelpMenuOpened } from "../../user/actions-help-menu-opened";
 
 export function initHelpDropdown(): void {
     const help_button = document.getElementById("help");
     if (help_button) {
         const help_dropdown: Dropdown = createDropdown(help_button);
-        help_dropdown.addEventListener("tlp-dropdown-shown", function () {
-            manageUserPreferences(help_button, patch);
+        help_dropdown.addEventListener("tlp-dropdown-shown", async function (): Promise<void> {
+            await actionsOnHelpMenuOpened(help_button, post);
         });
     }
 

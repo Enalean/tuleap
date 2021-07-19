@@ -78,10 +78,12 @@ use Tuleap\FRS\LicenseAgreement\Admin\EditLicenseAgreementController;
 use Tuleap\FRS\LicenseAgreement\Admin\ListLicenseAgreementsController;
 use Tuleap\FRS\LicenseAgreement\Admin\SaveLicenseAgreementController;
 use Tuleap\FRS\LicenseAgreement\Admin\SetDefaultLicenseAgreementController;
+use Tuleap\HelpDropdown\HelpMenuOpenedController;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Http\Response\BinaryFileResponseBuilder;
 use Tuleap\Http\Response\JSONResponseBuilder;
 use Tuleap\Http\Server\SessionWriteCloseMiddleware;
+use Tuleap\Instrument\Prometheus\Prometheus;
 use Tuleap\InviteBuddy\Admin\InviteBuddyAdminController;
 use Tuleap\InviteBuddy\Admin\InviteBuddyAdminUpdateController;
 use Tuleap\Layout\SiteHomepageController;
@@ -863,6 +865,16 @@ class RouteCollector
         );
     }
 
+    public static function postHelpMenuOpened(): HelpMenuOpenedController
+    {
+        return new HelpMenuOpenedController(
+            \UserManager::instance(),
+            Prometheus::instance(),
+            HTTPFactoryBuilder::responseFactory(),
+            new SapiEmitter()
+        );
+    }
+
     private function getLegacyControllerHandler(string $path): array
     {
         return [
@@ -883,6 +895,7 @@ class RouteCollector
         $r->post('/make_links.php', $this->getLegacyControllerHandler(__DIR__ . '/../../core/make_links.php'));
         $r->post('/sparklines.php', $this->getLegacyControllerHandler(__DIR__ . '/../../core/sparklines.php'));
         $r->get('/toggler.php', $this->getLegacyControllerHandler(__DIR__ . '/../../core/toggler.php'));
+        $r->post('/help_menu_opened', [self::class, 'postHelpMenuOpened']);
 
         $r->addGroup('/project/{id:\d+}/admin', function (FastRoute\RouteCollector $r) {
             $r->get('/categories', [self::class, 'getProjectAdminIndexCategories']);
