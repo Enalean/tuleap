@@ -95,10 +95,11 @@ class EditController implements DispatchableWithRequest
      * @throws ForbiddenException
      * @throws \Tuleap\Request\NotFoundException
      */
-    public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
+    public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
         $project = $this->project_retriever->getProjectFromId($variables['id']);
-        $this->administrator_checker->checkUserIsProjectAdministrator($request->getCurrentUser(), $project);
+        $user    = $request->getCurrentUser();
+        $this->administrator_checker->checkUserIsProjectAdministrator($user, $project);
 
         $this->csrf_token->check(IndexController::getUrl($project));
 
@@ -107,9 +108,9 @@ class EditController implements DispatchableWithRequest
 
             $this->checkId($project, $layout, $service_data);
             $this->checkServiceIsAllowedForProject($project, $layout, $service_data);
-            $this->checkServiceCanBeUpdated($project, $service_data);
+            $this->checkServiceCanBeUpdated($project, $service_data, $user);
 
-            $this->service_updator->updateService($project, $service_data, $request->getCurrentUser());
+            $this->service_updator->updateService($project, $service_data, $user);
             $layout->addFeedback(
                 Feedback::INFO,
                 $GLOBALS['Language']->getText('project_admin_servicebar', 's_update_success')
@@ -166,7 +167,7 @@ class EditController implements DispatchableWithRequest
     /**
      * @throws ServiceCannotBeUpdatedException
      */
-    private function checkServiceCanBeUpdated(Project $project, ServicePOSTData $service_data): void
+    private function checkServiceCanBeUpdated(Project $project, ServicePOSTData $service_data, \PFUser $user): void
     {
         if (! $service_data->isSystemService()) {
             return;
@@ -175,7 +176,8 @@ class EditController implements DispatchableWithRequest
         $this->service_manager->checkServiceCanBeUpdated(
             $project,
             $service_data->getShortName(),
-            $service_data->isUsed()
+            $service_data->isUsed(),
+            $user
         );
     }
 }

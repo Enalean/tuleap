@@ -32,11 +32,13 @@ class ProjectServiceBeforeActivation implements Dispatchable
     private bool $plugin_set_a_value       = false;
     private string $warning_message        = '';
     private bool $service_can_be_activated = false;
+    private \PFUser $user;
 
-    public function __construct(Project $project, string $service_short_name)
+    public function __construct(Project $project, string $service_short_name, \PFUser $user)
     {
         $this->project            = $project;
         $this->service_short_name = $service_short_name;
+        $this->user               = $user;
     }
 
     public function getProject(): Project
@@ -82,5 +84,10 @@ class ProjectServiceBeforeActivation implements Dispatchable
     public function setWarningMessage(string $message): void
     {
         $this->warning_message = $message;
+    }
+
+    public function getUser(): \PFUser
+    {
+        return $this->user;
     }
 }

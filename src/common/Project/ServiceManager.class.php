@@ -174,7 +174,7 @@ class ServiceManager //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
     /**
      * @throws ServiceCannotBeUpdatedException
      */
-    public function checkServiceCanBeUpdated(Project $project, $short_name, $is_used)
+    public function checkServiceCanBeUpdated(Project $project, string $short_name, bool $is_used, PFUser $user): void
     {
         if ($short_name === 'admin' && ! $is_used) {
             throw new ServiceCannotBeUpdatedException(_('Admin service cannot be disabled.'));
@@ -184,7 +184,7 @@ class ServiceManager //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
             return;
         }
 
-        $event = new ProjectServiceBeforeActivation($project, $short_name);
+        $event = new ProjectServiceBeforeActivation($project, $short_name, $user);
         EventManager::instance()->processEvent($event);
 
         if ($event->doesPluginSetAValue() && ! $event->canServiceBeActivated()) {

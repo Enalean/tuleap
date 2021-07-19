@@ -240,6 +240,13 @@ msgstr "Le service de gestion de programme est désactivé."
 msgid "Program service cannot be enabled for Team projects."
 msgstr "Le service Programme ne peut pas être activé pour les projets Équipe."
 
+msgid ""
+"Program service cannot be enabled when project have a Scrum configuration in "
+"AgileDashboard service."
+msgstr ""
+"Le service Programme ne peut pas être activé quand le projet utilise une "
+"configuration Scrum dans le service des tableaux de bord Agile."
+
 #, php-format
 msgid ""
 "Project #%d can not be defined as a Team because it is already a Program"
