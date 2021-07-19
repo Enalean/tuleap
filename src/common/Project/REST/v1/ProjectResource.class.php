@@ -71,7 +71,9 @@ use Tuleap\Project\Registration\ProjectRegistrationPermissionsChecker;
 use Tuleap\Project\Registration\ProjectRegistrationRESTChecker;
 use Tuleap\Project\Registration\ProjectRegistrationUserPermissionChecker;
 use Tuleap\Project\Registration\ProjectRegistrationBaseChecker;
+use Tuleap\Project\Registration\Template\Events\CollectAuthorizedXMLTemplateNamesEvent;
 use Tuleap\Project\Registration\Template\InvalidTemplateException;
+use Tuleap\Project\Registration\Template\InvalidXMLTemplateNameException;
 use Tuleap\Project\Registration\Template\TemplateFactory;
 use Tuleap\Project\REST\HeartbeatsRepresentation;
 use Tuleap\Project\REST\ProjectRepresentation;
@@ -269,6 +271,8 @@ class ProjectResource extends AuthenticatedResource
                 ),
                 $this->getBackendLogger()
             );
+
+            $this->checkXMLTemplateName($post_representation);
 
             $creation_data = $creation_data_post_project_builder->buildProjectCreationDataFromPOSTRepresentation(
                 $post_representation,
@@ -1339,5 +1343,22 @@ class ProjectResource extends AuthenticatedResource
         }
 
         return $project_field_representations;
+    }
+
+    /**
+     * @throws InvalidTemplateException
+     */
+    protected function checkXMLTemplateName(ProjectPostRepresentation $post_representation): void
+    {
+        if (! $post_representation->xml_template_name) {
+            return;
+        }
+
+        $event = new CollectAuthorizedXMLTemplateNamesEvent();
+        $this->event_manager->dispatch($event);
+
+        if (! array_search($post_representation->xml_template_name, $event->getAuthorizedTemplateNames())) {
+            throw new InvalidXMLTemplateNameException();
+        }
     }
 }
