@@ -29,7 +29,9 @@ use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Layout\ServiceUrlCollector;
-use Tuleap\ProgramManagement\Adapter\Program\Admin\CanPrioritizeItems\ProjectUGroupCanPrioritizeItemsPresentersBuilder;
+use Tuleap\ProgramManagement\Adapter\Program\Admin\CanPrioritizeItems\UGroupRepresentationBuilder;
+use Tuleap\ProgramManagement\Adapter\Workspace\UGroupManagerAdapter;
+use Tuleap\ProgramManagement\Domain\Program\Admin\CanPrioritizeItems\ProjectUGroupCanPrioritizeItemsPresentersBuilder;
 use Tuleap\ProgramManagement\Adapter\Program\Admin\PotentialTeam\PotentialTeamsBuilder;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation\CreateProgramIncrementsRunner;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation\PendingArtifactCreationDao;
@@ -314,7 +316,11 @@ final class program_managementPlugin extends Plugin
             $this->getVisibleIterationTrackerRetriever(),
             new PotentialProgramIncrementTrackerConfigurationPresentersBuilder(),
             new PotentialPlannableTrackersConfigurationPresentersBuilder(new PlanDao()),
-            new ProjectUGroupCanPrioritizeItemsPresentersBuilder(new UGroupManager(), $project_manager, new CanPrioritizeFeaturesDAO()),
+            new ProjectUGroupCanPrioritizeItemsPresentersBuilder(
+                new UGroupManagerAdapter($project_manager, new UGroupManager()),
+                new CanPrioritizeFeaturesDAO(),
+                new UGroupRepresentationBuilder()
+            ),
             new ProjectPermissionVerifier(),
             new ProgramIncrementsDAO(),
             new TrackerFactoryAdapter(TrackerFactory::instance()),

@@ -20,10 +20,12 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Adapter\Program\Admin\CanPrioritizeItems;
+namespace Tuleap\ProgramManagement\Domain\Program\Admin\CanPrioritizeItems;
 
+use Tuleap\ProgramManagement\Adapter\Program\Admin\CanPrioritizeItems\UGroupRepresentationBuilder;
 use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramForAdministrationIdentifier;
 use Tuleap\ProgramManagement\Stub\RetrieveProjectUgroupsCanPrioritizeItemsStub;
+use Tuleap\ProgramManagement\Stub\RetrieveUGroupsStub;
 use Tuleap\ProgramManagement\Stub\VerifyIsTeamStub;
 use Tuleap\ProgramManagement\Stub\VerifyProjectPermissionStub;
 use Tuleap\Test\Builders\ProjectTestBuilder;
@@ -31,22 +33,11 @@ use Tuleap\Test\Builders\UserTestBuilder;
 
 final class ProjectUGroupCanPrioritizeItemsPresentersBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    /**
-     * @var \PHPUnit\Framework\MockObject\Stub|\ProjectManager
-     */
-    private $project_manager;
-    /**
-     * @var \PHPUnit\Framework\MockObject\Stub|\UGroupManager
-     */
-    private $ugroup_manager;
     private ProgramForAdministrationIdentifier $program;
 
     protected function setUp(): void
     {
-        $this->project_manager = $this->createStub(\ProjectManager::class);
-        $this->ugroup_manager  = $this->createStub(\UGroupManager::class);
-        $project               = ProjectTestBuilder::aProject()->withId(101)->build();
-        $this->project_manager->method('getProject')->willReturn($project);
+        $project       = ProjectTestBuilder::aProject()->withId(101)->build();
         $this->program = ProgramForAdministrationIdentifier::fromProject(
             VerifyIsTeamStub::withNotValidTeam(),
             VerifyProjectPermissionStub::withAdministrator(),
@@ -58,15 +49,12 @@ final class ProjectUGroupCanPrioritizeItemsPresentersBuilderTest extends \Tuleap
 
     public function testBuildPresenterWithDynamicAndStaticProjectUGroup(): void
     {
-        $ugroup_3 = new \ProjectUGroup(['ugroup_id' => 3]);
-        $ugroup_4 = new \ProjectUGroup(['ugroup_id' => 105]);
-
-        $this->ugroup_manager->method('getUGroups')->willReturn([$ugroup_3, $ugroup_4]);
+        $ugroup_manager = new RetrieveUGroupsStub();
 
         $builder = new ProjectUGroupCanPrioritizeItemsPresentersBuilder(
-            $this->ugroup_manager,
-            $this->project_manager,
-            RetrieveProjectUgroupsCanPrioritizeItemsStub::buildWithIds(3)
+            $ugroup_manager,
+            RetrieveProjectUgroupsCanPrioritizeItemsStub::buildWithIds(3),
+            new UGroupRepresentationBuilder()
         );
 
         $presenters = $builder->buildProjectUgroupCanPrioritizeItemsPresenters($this->program);
