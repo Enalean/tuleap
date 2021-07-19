@@ -22,15 +22,18 @@ import type { GetText } from "@tuleap/core/scripts/tuleap/gettext/gettext-init";
 import { disabledPlannableTrackers } from "../helper/disabled-plannable-tracker-helper";
 import { getHTMLSelectElementFromId } from "../helper/HTML_element_extractor";
 import { disabledIterationTrackersFromProgramIncrementAndPlannableTrackers } from "../helper/disabled-iteration-tracker-helper";
+import { ITERATION_SELECT_ID } from "../helper/init-preview-labels-helper";
+
+export const PROGRAM_INCREMENT_TRACKER_ID = "admin-configuration-program-increment-tracker";
+export const PLANNABLE_TRACKERS_ID = "admin-configuration-plannable-trackers";
+export const PERMISSION_PRIORITIZE_ID = "admin-configuration-permission-prioritize";
 
 export async function initListPickersMilestoneSection(
     doc: Document,
     gettext_provider: GetText,
     use_iteration: boolean
 ): Promise<void> {
-    const program_increment_tracker_element = doc.getElementById(
-        "admin-configuration-program-increment-tracker"
-    );
+    const program_increment_tracker_element = doc.getElementById(PROGRAM_INCREMENT_TRACKER_ID);
 
     if (
         !program_increment_tracker_element ||
@@ -39,15 +42,9 @@ export async function initListPickersMilestoneSection(
         return;
     }
 
-    const plannable_trackers_element = getHTMLSelectElementFromId(
-        doc,
-        "admin-configuration-plannable-trackers"
-    );
+    const plannable_trackers_element = getHTMLSelectElementFromId(doc, PLANNABLE_TRACKERS_ID);
 
-    const permission_prioritize_element = getHTMLSelectElementFromId(
-        doc,
-        "admin-configuration-permission-prioritize"
-    );
+    const permission_prioritize_element = getHTMLSelectElementFromId(doc, PERMISSION_PRIORITIZE_ID);
 
     await createListPicker(program_increment_tracker_element, {
         locale: doc.body.dataset.userLocale,
@@ -93,10 +90,7 @@ async function setIterationSection(
     plannable_trackers_element: HTMLSelectElement,
     gettext_provider: GetText
 ): Promise<void> {
-    const iteration_trackers_element = getHTMLSelectElementFromId(
-        doc,
-        "admin-configuration-iteration-tracker"
-    );
+    const iteration_trackers_element = getHTMLSelectElementFromId(doc, ITERATION_SELECT_ID);
 
     await createListPicker(iteration_trackers_element, {
         locale: doc.body.dataset.userLocale,

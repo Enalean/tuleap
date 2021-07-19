@@ -28,6 +28,8 @@ import {
 } from "../helper/button-helper";
 import { buildProgramConfiguration } from "../helper/program-configuration-builder";
 
+const DISPLAY_ERROR_REST_ID = "program-management-save-configuration-error-rest";
+
 export function submitConfigurationHandler(
     doc: Document,
     gettext_provider: GetText,
@@ -42,7 +44,7 @@ export function submitConfigurationHandler(
     }
 
     button_configuration.addEventListener("click", async () => {
-        resetRestErrorAlert(doc, "program-management-save-configuration-error-rest");
+        resetRestErrorAlert(doc, DISPLAY_ERROR_REST_ID);
         setButtonToDisabledWithSpinner(button_configuration);
 
         const are_filled = checkAllFieldAreFilledAndSetErrorMessage(doc, gettext_provider);
@@ -64,17 +66,11 @@ export function submitConfigurationHandler(
                     }
                     setRestErrorMessage(
                         doc,
-                        "program-management-save-configuration-error-rest",
+                        DISPLAY_ERROR_REST_ID,
                         error.code + " " + error_message
                     );
                 })
-                .catch(() =>
-                    setRestErrorMessage(
-                        doc,
-                        "program-management-save-configuration-error-rest",
-                        "404 Error"
-                    )
-                );
+                .catch(() => setRestErrorMessage(doc, DISPLAY_ERROR_REST_ID, "404 Error"));
         } finally {
             resetButtonToSaveConfiguration(button_configuration);
         }

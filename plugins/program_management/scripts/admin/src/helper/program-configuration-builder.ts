@@ -18,6 +18,18 @@
  */
 import type { ProgramConfiguration } from "../type";
 import { getHTMLInputElementFromId, getHTMLSelectElementFromId } from "./HTML_element_extractor";
+import {
+    PERMISSION_PRIORITIZE_ID,
+    PLANNABLE_TRACKERS_ID,
+    PROGRAM_INCREMENT_TRACKER_ID,
+} from "../milestones/init-list-pickers-milestone-section";
+import {
+    ITERATION_SELECT_ID,
+    ITERATIONS_LABEL_ID,
+    ITERATIONS_SUB_LABEL_ID,
+    PROGRAM_INCREMENT_LABEL_ID,
+    PROGRAM_INCREMENT_SUB_LABEL_ID,
+} from "./init-preview-labels-helper";
 
 export function buildProgramConfiguration(
     doc: Document,
@@ -26,7 +38,7 @@ export function buildProgramConfiguration(
 ): ProgramConfiguration {
     const program_increment_tracker_element = getHTMLSelectElementFromId(
         doc,
-        "admin-configuration-program-increment-tracker"
+        PROGRAM_INCREMENT_TRACKER_ID
     );
 
     return {
@@ -37,23 +49,15 @@ export function buildProgramConfiguration(
         ),
         permissions: { can_prioritize_features: extractOptionsFromPermissions(doc) },
         plannable_tracker_ids: extractOptionsFromPlannableTrackers(doc),
-        program_increment_label: getHTMLInputElementFromId(
-            doc,
-            "admin-configuration-program-increment-label-section"
-        ).value,
-        program_increment_sub_label: getHTMLInputElementFromId(
-            doc,
-            "admin-configuration-program-increment-sub-label-section"
-        ).value,
+        program_increment_label: getHTMLInputElementFromId(doc, PROGRAM_INCREMENT_LABEL_ID).value,
+        program_increment_sub_label: getHTMLInputElementFromId(doc, PROGRAM_INCREMENT_SUB_LABEL_ID)
+            .value,
         iteration: use_iteration ? extractIterationConfigurationObject(doc) : null,
     };
 }
 
 function extractOptionsFromPlannableTrackers(doc: Document): number[] {
-    const plannable_trackers_element = getHTMLSelectElementFromId(
-        doc,
-        "admin-configuration-plannable-trackers"
-    );
+    const plannable_trackers_element = getHTMLSelectElementFromId(doc, PLANNABLE_TRACKERS_ID);
 
     const value = [];
     for (const selectedOption of plannable_trackers_element.selectedOptions) {
@@ -63,10 +67,7 @@ function extractOptionsFromPlannableTrackers(doc: Document): number[] {
 }
 
 function extractOptionsFromPermissions(doc: Document): string[] {
-    const permission_prioritize_element = getHTMLSelectElementFromId(
-        doc,
-        "admin-configuration-permission-prioritize"
-    );
+    const permission_prioritize_element = getHTMLSelectElementFromId(doc, PERMISSION_PRIORITIZE_ID);
 
     const value = [];
     for (const selectedOption of permission_prioritize_element.selectedOptions) {
@@ -79,23 +80,14 @@ function extractOptionsFromPermissions(doc: Document): string[] {
 function extractIterationConfigurationObject(
     doc: Document
 ): null | { iteration_tracker_id: number; iteration_label?: string; iteration_sub_label?: string } {
-    const iteration_tracker_element = getHTMLSelectElementFromId(
-        doc,
-        "admin-configuration-iteration-tracker"
-    );
+    const iteration_tracker_element = getHTMLSelectElementFromId(doc, ITERATION_SELECT_ID);
     if (iteration_tracker_element.value === "") {
         return null;
     }
 
     return {
         iteration_tracker_id: Number.parseInt(iteration_tracker_element.value, 10),
-        iteration_label: getHTMLInputElementFromId(
-            doc,
-            "admin-configuration-iteration-label-section"
-        ).value,
-        iteration_sub_label: getHTMLInputElementFromId(
-            doc,
-            "admin-configuration-iteration-sub-label-section"
-        ).value,
+        iteration_label: getHTMLInputElementFromId(doc, ITERATIONS_LABEL_ID).value,
+        iteration_sub_label: getHTMLInputElementFromId(doc, ITERATIONS_SUB_LABEL_ID).value,
     };
 }

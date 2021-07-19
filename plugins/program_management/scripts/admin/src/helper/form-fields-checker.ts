@@ -19,6 +19,10 @@
 import { getHTMLSelectElementFromId } from "./HTML_element_extractor";
 import { resetErrorOnSelectField, setErrorMessageOnSelectField } from "./form-field-error-helper";
 import type { GetText } from "@tuleap/core/scripts/tuleap/gettext/gettext-init";
+import {
+    PERMISSION_PRIORITIZE_ID,
+    PLANNABLE_TRACKERS_ID,
+} from "../milestones/init-list-pickers-milestone-section";
 
 export function checkAllFieldAreFilledAndSetErrorMessage(
     doc: Document,
@@ -29,15 +33,8 @@ export function checkAllFieldAreFilledAndSetErrorMessage(
         "admin-configuration-program-increment-tracker"
     );
 
-    const plannable_trackers_element = getHTMLSelectElementFromId(
-        doc,
-        "admin-configuration-plannable-trackers"
-    );
-
-    const permission_prioritize_element = getHTMLSelectElementFromId(
-        doc,
-        "admin-configuration-permission-prioritize"
-    );
+    const plannable_trackers_element = getHTMLSelectElementFromId(doc, PLANNABLE_TRACKERS_ID);
+    const permission_prioritize_element = getHTMLSelectElementFromId(doc, PERMISSION_PRIORITIZE_ID);
 
     resetErrorOnSelectField(program_increment_tracker_element);
     resetErrorOnSelectField(plannable_trackers_element);
