@@ -187,8 +187,7 @@ final class Tracker_Artifact_ChangesetTest extends \Tuleap\Test\PHPUnit\TestCase
         $field = \Mockery::spy(\Tracker_FormElement_Field_Date::class);
         $value = \Mockery::spy(\Tracker_Artifact_ChangesetValue_Date::class);
 
-        $dar = TestHelper::arrayToDar(['changeset_id' => 1, 'field_id' => 2, 'id' => 3, 'has_changed' => 0]);
-        $this->dao->shouldReceive('searchByFieldId')->once()->andReturns($dar);
+        $this->dao->shouldReceive('searchByFieldId')->once()->andReturns(['changeset_id' => 1, 'field_id' => 2, 'id' => 3, 'has_changed' => 0]);
 
         $field->shouldReceive('getId')->andReturns(2);
         $field->shouldReceive('getChangesetValue')->once()->andReturns($value);
@@ -217,11 +216,10 @@ final class Tracker_Artifact_ChangesetTest extends \Tuleap\Test\PHPUnit\TestCase
         $previous_changeset->shouldReceive('getValue')->never()->with($field2);
         $artifact->shouldReceive('getPreviousChangeset')->once()->with(66)->andReturns($previous_changeset);
 
-        $dar = TestHelper::arrayToDar(
+        $this->dao->shouldReceive('searchById')->once()->andReturns([
             ['changeset_id' => 66, 'field_id' => 1, 'id' => 11, 'has_changed' => 1],
             ['changeset_id' => 66, 'field_id' => 2, 'id' => 21, 'has_changed' => 0]
-        );
-        $this->dao->shouldReceive('searchById')->once()->andReturns($dar);
+        ]);
 
         $fact->shouldReceive('getFieldById')->with(1)->andReturns($field1);
         $fact->shouldReceive('getFieldById')->with(2)->andReturns($field2);
@@ -298,7 +296,7 @@ final class Tracker_Artifact_ChangesetTest extends \Tuleap\Test\PHPUnit\TestCase
         $changeset->shouldReceive('getValueDao')->andReturns($value_dao);
 
         $value_dao->shouldReceive('searchById')->with($changeset_id)->andReturns(
-            \TestHelper::arrayToDar(['id' => 1025, 'field_id' => 125], ['id' => 1026, 'field_id' => 126])
+            [['id' => 1025, 'field_id' => 125], ['id' => 1026, 'field_id' => 126]]
         );
 
         $formelement_factory = \Mockery::spy(\Tracker_FormElementFactory::class);
