@@ -642,7 +642,7 @@ class PageList
         $this->_options['sortby'] = $this->sortby($this->_options['sortby'], 'init');
         if ($exclude) {
             if (is_string($exclude) and ! is_array($exclude)) {
-                $exclude = $this->explodePageList(
+                $exclude = self::explodePageList(
                     $exclude,
                     false,
                     $this->_options['sortby'],
@@ -658,7 +658,7 @@ class PageList
     // 1: info, 2: exclude, 3: hash of options
     // Here we declare which options are supported, so that
     // the calling plugin may simply merge this with its own default arguments
-    public function supportedArgs()
+    public static function supportedArgs()
     {
         return [// Currently supported options:
                      /* what columns, what pages */
@@ -960,7 +960,7 @@ class PageList
     }
 
     // echo implode(":",explodeList("Test*",array("xx","Test1","Test2")));
-    public function explodePageList(
+    public static function explodePageList(
         $input,
         $include_empty = false,
         $sortby = false,

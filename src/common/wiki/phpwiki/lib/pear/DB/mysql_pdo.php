@@ -136,7 +136,7 @@ class DB_mysql_pdo extends DB_common // @codingStandardsIgnoreLine
 
     private function raiseCompatError(PDOException $ex)
     {
-        $this->raiseError($ex->getCode(), null, null, null, $ex->getMessage());
+        $this->raiseError($ex->getMessage(), $ex->getCode());
     }
 
     public function nextResult($result)

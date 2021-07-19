@@ -104,7 +104,7 @@ class WikiGroup
      * @param object $request The global WikiRequest object.
      * @return object Subclass of WikiGroup selected via GROUP_METHOD.
      */
-    public function getGroup($not_current = false)
+    public static function getGroup($not_current = false)
     {
         return new GroupNone($not_current);
     }

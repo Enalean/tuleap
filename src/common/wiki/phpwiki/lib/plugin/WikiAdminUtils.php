@@ -311,7 +311,7 @@ require_once("lib/PageList.php");
 
 class _PageList_Column_email extends _PageList_Column
 {
-    public function _getValue(&$prefs, $dummy)
+    public function _getValue($prefs, &$dummy)
     {
         return $prefs->get('email');
     }
@@ -319,7 +319,7 @@ class _PageList_Column_email extends _PageList_Column
 
 class _PageList_Column_emailVerified extends _PageList_Column
 {
-    public function _getValue(&$prefs, $status)
+    public function _getValue($prefs, &$status)
     {
         $name  = $prefs->get('userid');
         $input = HTML::input(['type' => 'checkbox',

@@ -1476,7 +1476,7 @@ class WikiDB_Page
      */
     public function _coerce_to_version($version_or_pagerevision)
     {
-        if (method_exists($version_or_pagerevision, "getContent")) {
+        if (! is_int($version_or_pagerevision) && method_exists($version_or_pagerevision, "getContent")) {
             $version = $version_or_pagerevision->getVersion();
         } else {
             $version = (int) $version_or_pagerevision;

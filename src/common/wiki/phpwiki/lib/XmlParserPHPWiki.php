@@ -48,7 +48,7 @@ rcs_id('$Id: XmlParser.php,v 1.6 2004/11/03 16:34:11 rurban Exp $');
  *   have to copy the root to a global.
  *
  */
-class XmlParser
+class XmlParserPHPWiki
 {
 
     public $_parser;

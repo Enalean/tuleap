@@ -597,7 +597,7 @@ class Request_SessionVars
 */
 class Request_UploadedFile
 {
-    public function getUploadedFile($postname)
+    public static function getUploadedFile($postname)
     {
         // Against php5 with !ini_get('register-long-arrays'). See Bug #1180115
         if (! isset($_FILES[$postname])) {

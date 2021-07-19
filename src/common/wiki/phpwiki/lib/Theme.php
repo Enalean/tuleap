@@ -1436,7 +1436,7 @@ class ImageButton extends Button
      */
     public function __construct($text, $url, $class, $img_url, $img_attr = false)
     {
-        parent::__construct('a', ['href' => $url]);
+        parent::__construct('a', $url);
         if ($class) {
             $this->setAttr('class', $class);
         }

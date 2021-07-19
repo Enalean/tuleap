@@ -466,12 +466,14 @@ class DB_common extends PEAR
      * @access public
      * @see PEAR_Error
      */
-    public function raiseError(
+    public function &raiseError(
+        $message = null,
         $code = DB_ERROR,
         $mode = null,
         $options = null,
         $userinfo = null,
-        $nativecode = null
+        $error_class = null,
+        $skipmsg = false
     ) {
         // The error is yet a DB error object
         if (is_object($code)) {
@@ -487,10 +489,6 @@ class DB_common extends PEAR
 
         if ($userinfo === null) {
             $userinfo = $this->last_query;
-        }
-
-        if ($nativecode) {
-            $userinfo .= ' [nativecode=' . trim($nativecode) . ']';
         }
 
         $tmp = PEAR::raiseError(
@@ -883,7 +881,7 @@ class DB_common extends PEAR
     public function buildManipSQL($table, $table_fields, $mode, $where = false)
     {
         if (count($table_fields) == 0) {
-            $this->raiseError(DB_ERROR_NEED_MORE_DATA);
+            $this->raiseError(null, DB_ERROR_NEED_MORE_DATA);
         }
         $first = true;
         switch ($mode) {
@@ -917,7 +915,7 @@ class DB_common extends PEAR
                 }
                 return $sql;
             default:
-                $this->raiseError(DB_ERROR_SYNTAX);
+                $this->raiseError(null, DB_ERROR_SYNTAX);
         }
     }
 
@@ -995,7 +993,7 @@ class DB_common extends PEAR
 
         if (count($this->prepare_types[$stmt]) != count($data)) {
             $this->last_query = $this->prepared_queries[$stmt];
-            return $this->raiseError(DB_ERROR_MISMATCH);
+            return $this->raiseError(null, DB_ERROR_MISMATCH);
         }
 
         $realquery = $this->prepare_tokens[$stmt][0];
@@ -1007,7 +1005,7 @@ class DB_common extends PEAR
             } elseif ($this->prepare_types[$stmt][$i] == DB_PARAM_OPAQUE) {
                 $fp = @fopen($value, 'rb');
                 if (! $fp) {
-                    return $this->raiseError(DB_ERROR_ACCESS_VIOLATION);
+                    return $this->raiseError(null, DB_ERROR_ACCESS_VIOLATION);
                 }
                 $realquery .= $this->quoteSmart(fread($fp, filesize($value)));
                 fclose($fp);
@@ -1480,7 +1478,7 @@ class DB_common extends PEAR
         $cols = $res->numCols();
 
         if ($cols < 2) {
-            $tmp = $this->raiseError(DB_ERROR_TRUNCATED);
+            $tmp = $this->raiseError(null, DB_ERROR_TRUNCATED);
             return $tmp;
         }
 
@@ -1614,7 +1612,7 @@ class DB_common extends PEAR
         $res->free();
 
         if (DB::isError($row)) {
-            $tmp = $this->raiseError($row);
+            $tmp = $this->raiseError(null, $row);
             return $tmp;
         }
         return $results;
@@ -1632,7 +1630,7 @@ class DB_common extends PEAR
      */
     public function commit()
     {
-        return $this->raiseError(DB_ERROR_NOT_CAPABLE);
+        return $this->raiseError(null, DB_ERROR_NOT_CAPABLE);
     }
 
     // }}}
@@ -1647,7 +1645,7 @@ class DB_common extends PEAR
      */
     public function rollback()
     {
-        return $this->raiseError(DB_ERROR_NOT_CAPABLE);
+        return $this->raiseError(null, DB_ERROR_NOT_CAPABLE);
     }
 
     // }}}
@@ -1664,7 +1662,7 @@ class DB_common extends PEAR
      */
     public function numRows($result)
     {
-        return $this->raiseError(DB_ERROR_NOT_CAPABLE);
+        return $this->raiseError(null, DB_ERROR_NOT_CAPABLE);
     }
 
     // }}}
@@ -1679,7 +1677,7 @@ class DB_common extends PEAR
      */
     public function affectedRows()
     {
-        return $this->raiseError(DB_ERROR_NOT_CAPABLE);
+        return $this->raiseError(null, DB_ERROR_NOT_CAPABLE);
     }
 
     // }}}
@@ -1694,7 +1692,7 @@ class DB_common extends PEAR
      */
     public function errorNative()
     {
-        return $this->raiseError(DB_ERROR_NOT_CAPABLE);
+        return $this->raiseError(null, DB_ERROR_NOT_CAPABLE);
     }
 
     // }}}
@@ -1740,7 +1738,7 @@ class DB_common extends PEAR
      */
     public function nextId($seq_name, $ondemand = true)
     {
-        return $this->raiseError(DB_ERROR_NOT_CAPABLE);
+        return $this->raiseError(null, DB_ERROR_NOT_CAPABLE);
     }
 
     // }}}
@@ -1767,7 +1765,7 @@ class DB_common extends PEAR
      */
     public function createSequence($seq_name)
     {
-        return $this->raiseError(DB_ERROR_NOT_CAPABLE);
+        return $this->raiseError(null, DB_ERROR_NOT_CAPABLE);
     }
 
     // }}}
@@ -1786,7 +1784,7 @@ class DB_common extends PEAR
      */
     public function dropSequence($seq_name)
     {
-        return $this->raiseError(DB_ERROR_NOT_CAPABLE);
+        return $this->raiseError(null, DB_ERROR_NOT_CAPABLE);
     }
 
     // }}}
@@ -1818,7 +1816,7 @@ class DB_common extends PEAR
     {
         $sql = $this->getSpecialQuery($type);
         if ($sql === null) {                                // No support
-            return $this->raiseError(DB_ERROR_UNSUPPORTED);
+            return $this->raiseError(null, DB_ERROR_UNSUPPORTED);
         } elseif (is_int($sql) || DB::isError($sql)) {      // Previous error
             return $this->raiseError($sql);
         } elseif (is_array($sql)) {                         // Already the result
@@ -1841,7 +1839,7 @@ class DB_common extends PEAR
      */
     public function getSpecialQuery($type)
     {
-        return $this->raiseError(DB_ERROR_UNSUPPORTED);
+        return $this->raiseError(null, DB_ERROR_UNSUPPORTED);
     }
 
     // }}}

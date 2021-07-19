@@ -39,9 +39,9 @@ rcs_id('$Id: HtmlParser.php,v 1.3 2004/12/26 17:10:44 rurban Exp $');
  */
 
 // RssParser contains the XML (expat) and url-grabber methods
-require_once('lib/XmlParser.php');
+require_once('lib/XmlParserPHPWiki.php');
 
-class HtmlParser extends XmlParser
+class HtmlParser extends XmlParserPHPWiki
 {
     public $dialect;
     public $_handlers;
