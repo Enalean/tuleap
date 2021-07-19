@@ -73,8 +73,11 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
         $values   = [];
         $artifact = Tracker_ArtifactFactory::instance()->getArtifactById($artifact_id);
         if ($artifact->useArtifactPermissions()) {
-            $dao                = new Tracker_Artifact_Changeset_ValueDao();
-            $row                = $dao->searchByFieldId($changeset_id, $this->id)->getRow();
+            $dao = new Tracker_Artifact_Changeset_ValueDao();
+            $row = $dao->searchByFieldId($changeset_id, $this->id);
+            if ($row === null) {
+                return '';
+            }
             $changeset_value_id = $row['id'];
 
             foreach ($this->getValueDao()->searchByChangesetValueId($changeset_value_id) as $value) {

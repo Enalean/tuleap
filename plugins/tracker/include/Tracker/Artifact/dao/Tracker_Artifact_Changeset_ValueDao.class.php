@@ -19,93 +19,81 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Tracker_Artifact_Changeset_ValueDao extends DataAccessObject
+class Tracker_Artifact_Changeset_ValueDao extends \Tuleap\DB\DataAccessObject
 {
-    public function __construct()
+    /**
+     * @psalm-return array{id: int, field_id: int, has_changed:0|1}[]
+     */
+    public function searchById($id): array
     {
-        parent::__construct();
-        $this->table_name = 'tracker_changeset_value';
+        return $this->getDB()->run(
+            'SELECT id, field_id, has_changed FROM tracker_changeset_value WHERE changeset_id = ?',
+            $id
+        );
     }
 
-    public function searchById($id)
+    /**
+     * @psalm-return array{id: int, has_changed:0|1}|null
+     */
+    public function searchByFieldId($changeset_id, $field_id): ?array
     {
-        $id  = $this->da->escapeInt($id);
-        $sql = "SELECT * FROM $this->table_name
-                WHERE changeset_id = $id";
-        return $this->retrieve($sql);
+        return $this->getDB()->row(
+            'SELECT id, has_changed FROM tracker_changeset_value WHERE changeset_id = ? AND field_id = ?',
+            $changeset_id,
+            $field_id
+        );
     }
 
-    public function searchByFieldId($changeset_id, $field_id)
+    /**
+     * @psalm-return array<int, array{id: int, changeset_id: int, field_id: int, has_changed:0|1}>
+     */
+    public function searchByArtifactId($artifact_id): array
     {
-        $changeset_id = $this->da->escapeInt($changeset_id);
-        $field_id     = $this->da->escapeInt($field_id);
-        $sql          = "SELECT * FROM $this->table_name
-                WHERE changeset_id = $changeset_id
-                    AND field_id = $field_id";
-        return $this->retrieve($sql);
-    }
-
-    public function searchByArtifactId($artifact_id)
-    {
-        $artifact_id = $this->da->escapeInt($artifact_id);
-        $sql         = "SELECT changeset_value.*
+        return $this->getDB()->safeQuery(
+            'SELECT changeset_value.changeset_id, changeset_value.id, changeset_value.changeset_id, changeset_value.field_id, changeset_value.has_changed
                 FROM tracker_changeset_value AS changeset_value
                 JOIN tracker_changeset AS changeset ON (changeset.id = changeset_value.changeset_id)
-                WHERE changeset.artifact_id = $artifact_id";
-        $results     = [];
-        foreach ($this->retrieve($sql) as $row) {
-            $results[$row['changeset_id']][] = $row;
-        }
-        return $results;
+                WHERE changeset.artifact_id = ?',
+            [$artifact_id],
+            \PDO::FETCH_UNIQUE | \PDO::FETCH_ASSOC
+        );
     }
 
-    public function save($changeset_id, $field_id, $has_changed)
+    public function save($changeset_id, $field_id, $has_changed): int
     {
-        $changeset_id = $this->da->escapeInt($changeset_id);
-        $field_id     = $this->da->escapeInt($field_id);
-        $has_changed  = $has_changed ? 1 : 0;
-        $sql          = "INSERT INTO $this->table_name(changeset_id, field_id, has_changed)
-                VALUES ($changeset_id, $field_id, $has_changed)";
-        return $this->updateAndGetLastId($sql);
+        $this->getDB()->run(
+            'INSERT INTO tracker_changeset_value(changeset_id, field_id, has_changed) VALUES (?,?,?)',
+            $changeset_id,
+            $field_id,
+            $has_changed ? 1 : 0
+        );
+        return (int) $this->getDB()->lastInsertId();
     }
 
+    /**
+     * @psalm-return list<int>
+     */
     public function createFromLastChangesetByTrackerId($tracker_id, $field_id, $has_changed)
     {
-        $tracker_id = $this->da->escapeInt($tracker_id);
-        $field_id   = $this->da->escapeInt($field_id);
-
-        $sql = "INSERT INTO tracker_changeset_value(changeset_id, field_id, has_changed)
+        $this->getDB()->run(
+            'INSERT INTO tracker_changeset_value(changeset_id, field_id, has_changed)
                 SELECT A.last_changeset_id as changeset_id, $field_id, 1
                 FROM tracker_artifact AS A
-                WHERE A.tracker_id = $tracker_id";
-        $this->update($sql);
-        $sql = "SELECT CV.id as cv
+                WHERE A.tracker_id = ?',
+            $tracker_id
+        );
+
+        return $this->getDB()->column(
+            'SELECT CV.id as cv
                 FROM tracker_changeset_value AS CV
-                    INNER JOIN tracker_artifact AS A ON (CV.changeset_id = A.last_changeset_id)
-                WHERE A.tracker_id = $tracker_id
-                      AND CV.field_id = $field_id
-                      AND has_changed = 1";
-
-        $result = $this->retrieve($sql);
-
-        if (! $result) {
-            return false;
-        }
-
-        $changesetValueIds = [];
-        foreach ($result as $row) {
-            $changesetValueIds[] = $row['cv'];
-        }
-
-        return $changesetValueIds;
+                INNER JOIN tracker_artifact AS A ON (CV.changeset_id = A.last_changeset_id)
+                WHERE A.tracker_id = ? AND CV.field_id = ? AND has_changed = 1',
+            [$tracker_id, $field_id]
+        );
     }
 
-    public function delete($changeset_id)
+    public function delete($changeset_id): void
     {
-        $changeset_id = $this->da->escapeInt($changeset_id);
-        $sql          = "DELETE
-                FROM $this->table_name
-                WHERE changeset_id = $changeset_id";
-        return $this->update($sql);
+        $this->getDB()->run('DELETE FROM tracker_changeset_value WHERE changeset_id = ?', $changeset_id);
     }
 }

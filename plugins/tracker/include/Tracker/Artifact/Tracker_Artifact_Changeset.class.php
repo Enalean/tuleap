@@ -90,10 +90,9 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item
 
     private function getChangesetValueFromDB(Tracker_FormElement_Field $field)
     {
-        $dar = $this->getValueDao()->searchByFieldId($this->id, $field->getId());
-        if ($dar && count($dar)) {
-            $row = $dar->getRow();
-            return $field->getChangesetValue($this, $row['id'], $row['has_changed']);
+        $row = $this->getValueDao()->searchByFieldId($this->id, $field->getId());
+        if ($row !== null) {
+            return $field->getChangesetValue($this, $row['id'], (bool) $row['has_changed']);
         }
         return null;
     }
@@ -157,7 +156,7 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item
         $factory      = $this->getFormElementFactory();
         foreach ($this->getValueDao()->searchById($this->id) as $row) {
             if ($field = $factory->getFieldById($row['field_id'])) {
-                $this->values[$field->getId()] = $field->getChangesetValue($this, $row['id'], $row['has_changed']);
+                $this->values[$field->getId()] = $field->getChangesetValue($this, $row['id'], (bool) $row['has_changed']);
             }
         }
     }
