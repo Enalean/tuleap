@@ -225,8 +225,8 @@ $fade-background-color: mix($tlp-background-color, $tlp-white-color, 50);
 
     // illustrations
     --tlp-illustration-main-color: #{mix($tlp-main-color, $tlp-white-color, 53%)};
-    --tlp-illustration-grey-on-background: #edeef7;
-    --tlp-illustration-grey-on-white: #{mix(#f3f4fa, $tlp-white-color)};
+    --tlp-illustration-grey-on-background: #{$tlp-illustration-grey-on-background};
+    --tlp-illustration-grey-on-white: #{$tlp-illustration-grey-on-white};
     --tlp-illustration-yellow: #fbe484;
     --tlp-illustration-red: #faaaa5;
     --tlp-legacy-illustration-primary-color: #{$tlp-illustration-primary-color};
