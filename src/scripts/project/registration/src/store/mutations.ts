@@ -33,6 +33,11 @@ export default {
         }
     },
 
+    resetSelectedTemplate(state: State): void {
+        state.selected_tuleap_template = null;
+        state.selected_company_template = null;
+    },
+
     resetProjectCreationError(state: State): void {
         state.error = null;
     },

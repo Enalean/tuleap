@@ -150,6 +150,7 @@ export default class TemplateSelection extends Vue {
     }
 
     setSelectedTemplateCategory(template_category: string): void {
+        this.$store.commit("resetSelectedTemplate");
         this.$store.commit("setSelectedTemplateCategory", template_category);
     }
 

@@ -282,6 +282,7 @@ describe("TemplateSelection", () => {
         );
 
         tab_safe_templates.trigger("click");
+        expect(wrapper.vm.$store.commit).toHaveBeenCalledWith("resetSelectedTemplate");
         expect(wrapper.vm.$store.commit).toHaveBeenCalledWith(
             "setSelectedTemplateCategory",
             "SAFe"
@@ -301,6 +302,7 @@ describe("TemplateSelection", () => {
         );
 
         tab_acme_templates.trigger("click");
+        expect(wrapper.vm.$store.commit).toHaveBeenCalledWith("resetSelectedTemplate");
         expect(wrapper.vm.$store.commit).toHaveBeenCalledWith(
             "setSelectedTemplateCategory",
             "ACME"
@@ -320,6 +322,7 @@ describe("TemplateSelection", () => {
         );
 
         tab_dummy_templates.trigger("click");
+        expect(wrapper.vm.$store.commit).toHaveBeenCalledWith("resetSelectedTemplate");
         expect(wrapper.vm.$store.commit).toHaveBeenCalledWith(
             "setSelectedTemplateCategory",
             "dummies"
@@ -339,6 +342,7 @@ describe("TemplateSelection", () => {
         );
 
         tab_advanced_templates.trigger("click");
+        expect(wrapper.vm.$store.commit).toHaveBeenCalledWith("resetSelectedTemplate");
         expect(wrapper.vm.$store.commit).toHaveBeenCalledWith(
             "setSelectedTemplateCategory",
             "Advanced"
@@ -358,6 +362,7 @@ describe("TemplateSelection", () => {
         );
 
         tab_tuleap_templates.trigger("click");
+        expect(wrapper.vm.$store.commit).toHaveBeenCalledWith("resetSelectedTemplate");
         expect(wrapper.vm.$store.commit).toHaveBeenCalledWith(
             "setSelectedTemplateCategory",
             "Tuleap"
