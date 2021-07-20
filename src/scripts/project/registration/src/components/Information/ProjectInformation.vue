@@ -25,7 +25,11 @@
         </div>
 
         <div class="project-registration-content">
-            <form v-on:submit.prevent="createProject" data-test="project-registration-form">
+            <form
+                v-on:submit.prevent="createProject"
+                class="project-registration-form"
+                data-test="project-registration-form"
+            >
                 <div class="register-new-project-section">
                     <project-information-svg />
                     <div class="register-new-project-list register-new-project-information">
