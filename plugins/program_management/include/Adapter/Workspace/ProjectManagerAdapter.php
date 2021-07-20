@@ -37,4 +37,14 @@ final class ProjectManagerAdapter implements RetrieveProject
     {
         return $this->project_manager->getProject($project_id);
     }
+
+    public function getProjectsUserIsAdmin(\PFUser $user): array
+    {
+        return $this->project_manager->getProjectsUserIsAdmin($user);
+    }
+
+    public function getProjectByUnixName(string $project_name): ?\Project
+    {
+        return $this->project_manager->getProjectByUnixName($project_name);
+    }
 }

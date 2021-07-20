@@ -33,7 +33,6 @@ use Tuleap\Layout\ServiceUrlCollector;
 use Tuleap\ProgramManagement\Adapter\Program\Admin\CanPrioritizeItems\UGroupRepresentationBuilder;
 use Tuleap\ProgramManagement\Adapter\Workspace\UGroupManagerAdapter;
 use Tuleap\ProgramManagement\Domain\Program\Admin\CanPrioritizeItems\ProjectUGroupCanPrioritizeItemsPresentersBuilder;
-use Tuleap\ProgramManagement\Adapter\Program\Admin\PotentialTeam\PotentialTeamsBuilder;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation\CreateProgramIncrementsRunner;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation\PendingArtifactCreationDao;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation\TaskBuilder;
@@ -305,10 +304,9 @@ final class program_managementPlugin extends Plugin
         $program_dao     = new ProgramDao();
 
         return new DisplayAdminProgramManagementController(
-            $project_manager,
+            new ProjectManagerAdapter($project_manager),
             TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../templates/admin'),
             new ProgramManagementBreadCrumbsBuilder(),
-            new PotentialTeamsBuilder($project_manager, $program_dao, $program_dao),
             $program_dao,
             new ProgramManagementProjectAdapter($project_manager),
             new TeamDao(),
@@ -327,7 +325,8 @@ final class program_managementPlugin extends Plugin
             new ProgramIncrementsDAO(),
             new TrackerFactoryAdapter(TrackerFactory::instance()),
             new PotentialIterationTrackerConfigurationPresentersBuilder(),
-            new IterationsDAO()
+            new IterationsDAO(),
+            $program_dao
         );
     }
 

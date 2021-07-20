@@ -20,10 +20,11 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Adapter\Program\Admin\PotentialTeam;
+namespace Tuleap\ProgramManagement\Domain\Program\Admin\PotentialTeam;
 
 use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramForAdministrationIdentifier;
 use Tuleap\ProgramManagement\Stub\AllProgramSearcherStub;
+use Tuleap\ProgramManagement\Stub\RetrieveProjectStub;
 use Tuleap\ProgramManagement\Stub\SearchTeamsOfProgramStub;
 use Tuleap\ProgramManagement\Stub\VerifyIsTeamStub;
 use Tuleap\ProgramManagement\Stub\VerifyProjectPermissionStub;
@@ -32,10 +33,6 @@ use Tuleap\Test\Builders\UserTestBuilder;
 
 final class PotentialTeamsBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    /**
-     * @var \PHPUnit\Framework\MockObject\Stub|\ProjectManager
-     */
-    private $project_manager;
     private SearchTeamsOfProgramStub $teams_of_program_searcher;
     private \PFUser $user;
     private AllProgramSearcherStub $all_program_searcher;
@@ -43,7 +40,6 @@ final class PotentialTeamsBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     protected function setUp(): void
     {
-        $this->project_manager           = $this->createStub(\ProjectManager::class);
         $this->teams_of_program_searcher = SearchTeamsOfProgramStub::buildTeams(123);
         $this->all_program_searcher      = AllProgramSearcherStub::buildPrograms(126);
         $this->user                      = UserTestBuilder::aUser()->build();
@@ -58,50 +54,54 @@ final class PotentialTeamsBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testBuildEmptyTeamsIfNoAggregatedTeamsAndNoProjectUserIsAdminOf(): void
     {
         $this->teams_of_program_searcher = SearchTeamsOfProgramStub::buildTeams();
-        $this->project_manager->method('getProjectsUserIsAdmin')->willReturn([]);
-
-        self::assertEmpty($this->getBuilder()->buildPotentialTeams($this->program, $this->user));
+        self::assertEmpty(
+            PotentialTeamsCollection::buildPotentialTeams(
+                RetrieveProjectStub::withValidProjects(),
+                $this->teams_of_program_searcher,
+                $this->all_program_searcher,
+                $this->program,
+                $this->user
+            )->getPotentialTeams()
+        );
     }
 
     public function testBuildEmptyIfAggregatedTeamsEqualsProjectUserIsAdminOf(): void
     {
-        $this->project_manager->method('getProjectsUserIsAdmin')->willReturn([new \Project(['group_id' => 123])]);
-
-        self::assertEmpty($this->getBuilder()->buildPotentialTeams($this->program, $this->user));
+        self::assertEmpty(
+            PotentialTeamsCollection::buildPotentialTeams(
+                RetrieveProjectStub::withValidProjects(new \Project(['group_id' => 123])),
+                $this->teams_of_program_searcher,
+                $this->all_program_searcher,
+                $this->program,
+                $this->user
+            )->getPotentialTeams()
+        );
     }
 
     public function testBuildPotentialTeamWhenUserIsAdminOfPotentialTeamThatNotAggregatedTeamAndPotentialTeamIsNotProgram(): void
     {
         $program_project = new \Project(['group_id' => '125', 'group_name' => 'a_project']);
-        $this->project_manager
-            ->method('getProjectsUserIsAdmin')
-            ->willReturn(
-                [
-                    new \Project(['group_id' => '123', 'group_name' => 'is_team']),
-                    new \Project(['group_id' => '124', 'group_name' => 'potential_team']),
-                    $program_project,
-                    new \Project(['group_id' => '126', 'group_name' => 'program']),
-                ]
-            );
-        $this->program = ProgramForAdministrationIdentifier::fromProject(
-            VerifyIsTeamStub::withNotValidTeam(),
-            VerifyProjectPermissionStub::withAdministrator(),
-            $this->user,
-            $program_project
-        );
 
-        $potential_teams = $this->getBuilder()->buildPotentialTeams($this->program, $this->user);
-        self::assertCount(1, $potential_teams);
-        self::assertSame(124, $potential_teams[0]->id);
-        self::assertSame('potential_team', $potential_teams[0]->public_name);
-    }
-
-    private function getBuilder(): PotentialTeamsBuilder
-    {
-        return new PotentialTeamsBuilder(
-            $this->project_manager,
+        $potential_teams = PotentialTeamsCollection::buildPotentialTeams(
+            RetrieveProjectStub::withValidProjects(
+                new \Project(['group_id' => '123', 'group_name' => 'is_team']),
+                new \Project(['group_id' => '124', 'group_name' => 'potential_team']),
+                $program_project,
+                new \Project(['group_id' => '126', 'group_name' => 'program']),
+            ),
             $this->teams_of_program_searcher,
-            $this->all_program_searcher
+            $this->all_program_searcher,
+            ProgramForAdministrationIdentifier::fromProject(
+                VerifyIsTeamStub::withNotValidTeam(),
+                VerifyProjectPermissionStub::withAdministrator(),
+                $this->user,
+                $program_project
+            ),
+            $this->user
         );
+
+        self::assertCount(1, $potential_teams->getPotentialTeams());
+        self::assertSame(124, $potential_teams->getPotentialTeams()[0]->id);
+        self::assertSame('potential_team', $potential_teams->getPotentialTeams()[0]->public_name);
     }
 }

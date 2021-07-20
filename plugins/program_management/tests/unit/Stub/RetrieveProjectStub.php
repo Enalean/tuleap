@@ -44,6 +44,11 @@ final class RetrieveProjectStub implements RetrieveProject
         return new self($projects);
     }
 
+    public static function withoutProjects(): self
+    {
+        return new self([]);
+    }
+
     public function getProjectWithId(int $project_id): \Project
     {
         if (count($this->projects) > 0) {
@@ -51,5 +56,19 @@ final class RetrieveProjectStub implements RetrieveProject
         }
 
         throw new \LogicException('No project configured');
+    }
+
+    public function getProjectsUserIsAdmin(\PFUser $user): array
+    {
+        return $this->projects;
+    }
+
+    public function getProjectByUnixName(string $project_name): ?\Project
+    {
+        if (count($this->projects) > 0) {
+            return array_shift($this->projects);
+        }
+
+        return null;
     }
 }
