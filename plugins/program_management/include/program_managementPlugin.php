@@ -120,10 +120,12 @@ use Tuleap\ProgramManagement\ProgramService;
 use Tuleap\ProgramManagement\RedirectParameterInjector;
 use Tuleap\ProgramManagement\REST\ResourcesInjector;
 use Tuleap\ProgramManagement\Templates\ProgramTemplate;
+use Tuleap\ProgramManagement\Templates\TeamTemplate;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupPaneCollector;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupUGroupFormatter;
 use Tuleap\Project\Event\ProjectServiceBeforeActivation;
 use Tuleap\Project\ProjectAccessChecker;
+use Tuleap\Project\Registration\Template\Events\CollectAuthorizedXMLTemplateNamesEvent;
 use Tuleap\Project\Registration\Template\Events\CollectCategorisedExternalTemplatesEvent;
 use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
 use Tuleap\Project\Service\ServiceDisabledCollector;
@@ -223,6 +225,7 @@ final class program_managementPlugin extends Plugin
         $this->addHook(GetWhitelistedKeys::NAME);
         $this->addHook(DisplayCreatedProjectModalPresenter::NAME);
         $this->addHook(CollectCategorisedExternalTemplatesEvent::NAME);
+        $this->addHook(CollectAuthorizedXMLTemplateNamesEvent::NAME);
         $this->addHook(ServiceEnableForXmlImportRetriever::NAME);
         $this->addHook(\Tuleap\Glyph\GlyphLocationsCollector::NAME);
 
@@ -954,15 +957,23 @@ final class program_managementPlugin extends Plugin
 
     public function collectCategorisedExternalTemplatesEvent(CollectCategorisedExternalTemplatesEvent $event): void
     {
-        $event_manager = EventManager::instance();
+        $event_manager       = EventManager::instance();
+        $glyph_finder        = new GlyphFinder($event_manager);
+        $consistency_checker = new ConsistencyChecker(
+            new XMLFileContentRetriever(),
+            $event_manager,
+            new ServiceEnableForXmlImportRetriever(\PluginFactory::instance())
+        );
         $event->addCategorisedTemplate(
             new ProgramTemplate(
-                new GlyphFinder($event_manager),
-                new ConsistencyChecker(
-                    new XMLFileContentRetriever(),
-                    $event_manager,
-                    new ServiceEnableForXmlImportRetriever(\PluginFactory::instance())
-                )
+                $glyph_finder,
+                $consistency_checker
+            )
+        );
+        $event->addCategorisedTemplate(
+            new TeamTemplate(
+                $glyph_finder,
+                $consistency_checker
             )
         );
     }
@@ -973,5 +984,11 @@ final class program_managementPlugin extends Plugin
             'tuleap-program-management',
             new GlyphLocation(__DIR__ . '/../glyphs')
         );
+    }
+
+    public function collectAuthorizedXMLTemplateNamesEvent(CollectAuthorizedXMLTemplateNamesEvent $event): void
+    {
+        $event->addAuthorizedTemplateName(ProgramTemplate::NAME);
+        $event->addAuthorizedTemplateName(TeamTemplate::NAME);
     }
 }
