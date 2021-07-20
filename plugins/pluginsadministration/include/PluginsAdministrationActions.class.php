@@ -78,17 +78,21 @@ class PluginsAdministrationActions extends Actions
         $request = HTTPRequest::instance();
         $name    = $request->get('name');
         if ($name) {
-            $plugin = $this->plugin_manager->installPlugin($name);
+            try {
+                $plugin = $this->plugin_manager->installPlugin($name);
 
-            if ($plugin) {
-                $GLOBALS['Response']->addFeedback('info', dgettext('tuleap-pluginsadministration', 'The plugin has been successfully installed'));
+                if ($plugin) {
+                    $GLOBALS['Response']->addFeedback('info', dgettext('tuleap-pluginsadministration', 'The plugin has been successfully installed'));
 
-                $post_install = $this->plugin_manager->getPostInstall($name);
-                if ($post_install) {
-                    $GLOBALS['Response']->addFeedback('info', '<pre>' . $post_install . '</pre>', CODENDI_PURIFIER_DISABLED);
+                    $post_install = $this->plugin_manager->getPostInstall($name);
+                    if ($post_install) {
+                        $GLOBALS['Response']->addFeedback('info', '<pre>' . $post_install . '</pre>', CODENDI_PURIFIER_DISABLED);
+                    }
+
+                    $GLOBALS['Response']->redirect('/plugins/pluginsadministration/?view=properties&plugin_id=' . $plugin->getId());
                 }
-
-                $GLOBALS['Response']->redirect('/plugins/pluginsadministration/?view=properties&plugin_id=' . $plugin->getId());
+            } catch (Exception $exception) {
+                $GLOBALS['Response']->addFeeback(Feedback::ERROR, sprintf(dgettext('tuleap-pluginsadministration', 'Plugin installation failed: %1s'), $exception->getMessage()));
             }
         }
 

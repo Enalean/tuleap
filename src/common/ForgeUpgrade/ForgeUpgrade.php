@@ -41,11 +41,6 @@ class ForgeUpgrade
 
     private LoggerInterface $logger;
 
-    /**
-     * @var array<string, Bucket>|null
-     */
-    private ?array $buckets = null;
-
     private bool $force = false;
 
     public function __construct(PDO $pdo, LoggerInterface $logger)
@@ -310,18 +305,16 @@ class ForgeUpgrade
      */
     private function getBucketsToProceed(array $paths): array
     {
-        if ($this->buckets === null) {
-            $this->buckets = $this->getAllBuckets($paths);
-            $sth           = $this->db->getAllBuckets([ForgeUpgradeDb::STATUS_SUCCESS, ForgeUpgradeDb::STATUS_SKIP]);
-            foreach ($sth as $row) {
-                $key = basename($row['script']);
-                if (isset($this->buckets[$key])) {
-                    $this->logger->debug("Remove (already applied): $key");
-                    unset($this->buckets[$key]);
-                }
+        $buckets = $this->getAllBuckets($paths);
+        $sth     = $this->db->getAllBuckets([ForgeUpgradeDb::STATUS_SUCCESS, ForgeUpgradeDb::STATUS_SKIP]);
+        foreach ($sth as $row) {
+            $key = basename($row['script']);
+            if (isset($buckets[$key])) {
+                $this->logger->debug("Remove (already applied): $key");
+                unset($buckets[$key]);
             }
         }
-        return $this->buckets;
+        return $buckets;
     }
 
     /**
