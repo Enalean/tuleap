@@ -43,11 +43,6 @@
               <name><![CDATA[attachment]]></name>
               <label><![CDATA[Attachments]]></label>
             </formElement>
-            <formElement type="date" ID="F910844" rank="8" id="910844" tracker_id="36280" parent_id="791351">
-              <name><![CDATA[due_date]]></name>
-              <label><![CDATA[Due date]]></label>
-              <properties display_time="0"/>
-            </formElement>
           </formElements>
         </formElement>
         <formElement type="fieldset" ID="F791357" rank="790" id="791357" tracker_id="36280" parent_id="0" required="1">
@@ -65,11 +60,6 @@
                 <formElement type="computed" ID="F793436" rank="3" id="793436" tracker_id="36280" parent_id="791358">
                   <name><![CDATA[remaining_effort]]></name>
                   <label><![CDATA[Remaining Effort]]></label>
-                </formElement>
-                <formElement type="date" ID="F910843" rank="4" id="910843" tracker_id="36280" parent_id="791358">
-                  <name><![CDATA[start_date]]></name>
-                  <label><![CDATA[Start date]]></label>
-                  <properties display_time="0"/>
                 </formElement>
               </formElements>
             </formElement>
@@ -193,8 +183,7 @@
           </closed_values>
         </semantic>
         <semantic type="timeframe">
-          <start_date_field REF="F910843"/>
-          <end_date_field REF="F910844"/>
+          <inherited_from_tracker id="T36277"/>
         </semantic>
         <semantic type="progress">
           <total_effort_field REF="F793435"/>
@@ -480,11 +469,6 @@
                 <from_id REF="V235275"/>
               </transition>
             </transitions>
-            <postactions>
-              <postaction_field_date valuetype="2">
-                <field_id REF="F910843"/>
-              </postaction_field_date>
-            </postactions>
             <conditions>
               <condition type="perms">
                 <permissions>
@@ -636,18 +620,12 @@
         <permission scope="field" REF="F791356" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
         <permission scope="field" REF="F791356" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
         <permission scope="field" REF="F791356" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
-        <permission scope="field" REF="F910844" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
-        <permission scope="field" REF="F910844" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
-        <permission scope="field" REF="F910844" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
         <permission scope="field" REF="F793435" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
         <permission scope="field" REF="F793435" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
         <permission scope="field" REF="F793435" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
         <permission scope="field" REF="F793436" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
         <permission scope="field" REF="F793436" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
         <permission scope="field" REF="F793436" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
-        <permission scope="field" REF="F910843" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
-        <permission scope="field" REF="F910843" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
-        <permission scope="field" REF="F910843" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
         <permission scope="field" REF="F791362" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
         <permission scope="field" REF="F791362" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
         <permission scope="field" REF="F791362" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
