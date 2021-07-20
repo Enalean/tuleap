@@ -516,7 +516,7 @@ class WikiServiceAdminViews extends WikiViews
 
             print '
              <tr>
-	       <td><a href="/wiki/uploads/' . $purifier->purify(urlencode($this->gid)) . '/' . $purifier->purify(urlencode($wa->getFilename())) . '/' . $purifier->purify(urlencode($war->getRevision() + 1)) . '">' . $purifier->purify(urlencode($war->getRevision() + 1)) . '</a></td>
+	       <td><a href="/wiki/uploads/' . $purifier->purify(urlencode((string) $this->gid)) . '/' . $purifier->purify(urlencode($wa->getFilename())) . '/' . $purifier->purify(urlencode($war->getRevision() + 1)) . '">' . $purifier->purify(urlencode($war->getRevision() + 1)) . '</a></td>
 	       <td>' . $purifier->purify(strftime("%e %b %Y %H:%M", $war->getDate())) . '</td>
                <td><a href="/users/' . $purifier->purify(urlencode(user_getname($war->getOwnerId()))) . '/">' . $purifier->purify(user_getname($war->getOwnerId())) . '</td>
 	       <td>' . $purifier->purify($war->getSize()) . '</td>
