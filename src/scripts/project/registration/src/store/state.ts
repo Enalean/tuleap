@@ -22,6 +22,8 @@ import type { State } from "./type";
 const state: State = {
     selected_tuleap_template: null,
     selected_company_template: null,
+    selected_template_category: null,
+    projects_user_is_admin_of: [],
     error: null,
     is_creating_project: false,
 };

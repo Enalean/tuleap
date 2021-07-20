@@ -24,6 +24,7 @@
             type="radio"
             v-bind:id="'project-registration-tuleap-template-' + template.id"
             v-bind:value="template.id"
+            v-bind:checked="is_checked"
             class="project-registration-selected-template"
             name="selected-template"
             data-test="project-registration-radio"
@@ -55,6 +56,7 @@
 <script lang="ts">
 import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
+import { Getter } from "vuex-class";
 import type { TemplateData } from "../../type";
 
 @Component({})
@@ -62,8 +64,15 @@ export default class TemplateCard extends Vue {
     @Prop({ required: true })
     readonly template!: TemplateData;
 
+    @Getter
+    is_currently_selected_template!: (template: TemplateData) => boolean;
+
     storeSelectedTemplate(): void {
         this.$store.dispatch("setSelectedTemplate", this.template);
+    }
+
+    get is_checked(): boolean {
+        return this.is_currently_selected_template(this.template);
     }
 }
 </script>

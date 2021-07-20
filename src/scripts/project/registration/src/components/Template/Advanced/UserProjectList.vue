@@ -55,7 +55,16 @@ export default class UserProjectList extends Vue {
     @Prop({ required: true })
     readonly projectList!: Array<TemplateData>;
 
-    selected_project = "";
+    @Prop({ required: true })
+    readonly selectedCompanyTemplate!: null | TemplateData;
+
+    private selected_project: TemplateData | string = "";
+
+    mounted(): void {
+        if (this.selectedCompanyTemplate !== null) {
+            this.selected_project = this.selectedCompanyTemplate;
+        }
+    }
 
     storeSelectedTemplate(): void {
         this.$store.dispatch("setSelectedTemplate", this.selected_project);

@@ -19,8 +19,23 @@
  */
 
 import type { State } from "./type";
+import type { TemplateData } from "../type";
 
 export const is_template_selected = (state: State): boolean =>
     state.selected_tuleap_template !== null || state.selected_company_template !== null;
+
+export const is_currently_selected_template =
+    (state: State) =>
+    (template: TemplateData): boolean => {
+        if (state.selected_company_template !== null) {
+            return state.selected_company_template.id === template.id;
+        }
+
+        if (state.selected_tuleap_template !== null) {
+            return state.selected_tuleap_template.id === template.id;
+        }
+
+        return false;
+    };
 
 export const has_error = (state: State): boolean => state.error !== null;

@@ -24,6 +24,8 @@ import type { ConfigurationState } from "./configuration";
 export interface State {
     selected_tuleap_template: TemplateData | null;
     selected_company_template: TemplateData | null;
+    selected_template_category: string | null;
+    projects_user_is_admin_of: TemplateData[];
     error: string | null;
     is_creating_project: boolean;
 }
@@ -32,6 +34,8 @@ export interface StoreOptions {
     state: {
         tuleap_templates: TemplateData[];
         selected_template: TemplateData | null;
+        selected_template_category: string | null;
+        projects_user_is_admin_of: TemplateData[];
         error: string | null;
         is_creating_project: boolean;
         project_default_visibility: string;

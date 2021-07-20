@@ -28,8 +28,10 @@
                 <input
                     type="radio"
                     v-bind:id="'project-registration-tuleap-template-other-user-project'"
+                    v-bind:checked="is_checked"
                     class="project-registration-selected-template"
                     name="selected-template"
+                    data-test="selected-template-input"
                 />
 
                 <label
@@ -69,7 +71,8 @@
                         </div>
                         <user-project-list
                             v-else
-                            v-bind:project-list="project_list"
+                            v-bind:project-list="projects_user_is_admin_of"
+                            v-bind:selected-company-template="selected_company_template"
                             data-test="user-project-list"
                         />
                     </div>
@@ -81,10 +84,10 @@
 
 <script lang="ts">
 import Vue from "vue";
-import UserProjectList from "./UserProjectList.vue";
 import { Component } from "vue-property-decorator";
+import { State } from "vuex-class";
+import UserProjectList from "./UserProjectList.vue";
 import SvgTemplate from "./SvgTemplate.vue";
-import { getProjectUserIsAdminOf } from "../../../api/rest-querier";
 import type { TemplateData } from "../../../type";
 import TemplateCard from "../TemplateCard.vue";
 
@@ -96,13 +99,24 @@ import TemplateCard from "../TemplateCard.vue";
     },
 })
 export default class AdvancedTemplateList extends Vue {
-    should_choose_a_project = false;
-    is_loading_project_list = false;
-    has_error = false;
-    project_list: TemplateData[] = [];
+    private should_choose_a_project = false;
+    private is_loading_project_list = false;
+    private has_error = false;
+
+    @State
+    selected_company_template!: null | TemplateData;
+
+    @State
+    projects_user_is_admin_of!: TemplateData[];
+
+    mounted(): void {
+        if (this.projects_user_is_admin_of.length > 0) {
+            this.should_choose_a_project = this.is_checked;
+        }
+    }
 
     async loadUserProjects(): Promise<void> {
-        if (this.project_list.length > 0) {
+        if (this.projects_user_is_admin_of.length > 0) {
             this.is_loading_project_list = false;
             this.should_choose_a_project = true;
             return;
@@ -111,7 +125,7 @@ export default class AdvancedTemplateList extends Vue {
         this.has_error = false;
         this.is_loading_project_list = true;
         try {
-            this.project_list = await getProjectUserIsAdminOf();
+            await this.$store.dispatch("loadUserProjects");
         } catch (error) {
             this.has_error = true;
             throw error;
@@ -119,6 +133,14 @@ export default class AdvancedTemplateList extends Vue {
             this.is_loading_project_list = false;
             this.should_choose_a_project = true;
         }
+    }
+
+    get is_checked(): boolean {
+        return (
+            this.projects_user_is_admin_of.findIndex(
+                (project) => project.id === this.selected_company_template?.id
+            ) !== -1
+        );
     }
 }
 </script>

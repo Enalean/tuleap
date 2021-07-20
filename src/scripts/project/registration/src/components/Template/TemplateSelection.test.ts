@@ -36,7 +36,8 @@ describe("TemplateSelection", () => {
         tuleap_templates: TemplateData[],
         company_templates: TemplateData[],
         external_templates: ExternalTemplateData[],
-        company_name: string
+        company_name: string,
+        selected_template_category: null | string = null
     ): Promise<Wrapper<TemplateSelection>> {
         const configuration_state: ConfigurationState = {
             tuleap_templates,
@@ -51,6 +52,7 @@ describe("TemplateSelection", () => {
                 $store: createStoreMock({
                     state: {
                         configuration: configuration_state,
+                        selected_template_category,
                     } as RootState,
                 }),
             },
@@ -151,6 +153,27 @@ describe("TemplateSelection", () => {
     });
 
     describe("templates categories default display", () => {
+        it("should display the previously selected category when there is one", async () => {
+            const wrapper = await getWrapper(
+                tuleap_templates,
+                company_templates,
+                external_templates,
+                "ACME",
+                "Tuleap"
+            );
+
+            expect(wrapper.vm.$store.commit).not.toHaveBeenCalled();
+
+            await wrapper.vm.$nextTick();
+            expect(
+                wrapper
+                    .get("[data-test=project-registration-tuleap-templates-tab]")
+                    .element.classList.contains("active")
+            ).toBe(true);
+
+            expect(wrapper.findComponent(TuleapTemplateList).isVisible()).toBe(true);
+        });
+
         it("should display the ACME category by default if there are ACME templates", async () => {
             const wrapper = await getWrapper(
                 tuleap_templates,
@@ -158,6 +181,13 @@ describe("TemplateSelection", () => {
                 external_templates,
                 "ACME"
             );
+
+            expect(wrapper.vm.$store.commit).toHaveBeenCalledWith(
+                "setSelectedTemplateCategory",
+                "ACME"
+            );
+            wrapper.vm.$store.state.selected_template_category = "ACME";
+
             await wrapper.vm.$nextTick();
             expect(
                 wrapper
@@ -170,6 +200,13 @@ describe("TemplateSelection", () => {
 
         it("should display the Tuleap category by default if there are no ACME templates", async () => {
             const wrapper = await getWrapper(tuleap_templates, [], external_templates, "ACME");
+
+            expect(wrapper.vm.$store.commit).toHaveBeenCalledWith(
+                "setSelectedTemplateCategory",
+                "Tuleap"
+            );
+            wrapper.vm.$store.state.selected_template_category = "Tuleap";
+
             await wrapper.vm.$nextTick();
             expect(
                 wrapper
@@ -182,6 +219,13 @@ describe("TemplateSelection", () => {
 
         it("should display the first external template category by default if there are no tuleap/ACME templates", async () => {
             const wrapper = await getWrapper([], [], external_templates, "ACME");
+
+            expect(wrapper.vm.$store.commit).toHaveBeenCalledWith(
+                "setSelectedTemplateCategory",
+                "SAFe"
+            );
+            wrapper.vm.$store.state.selected_template_category = "SAFe";
+
             await wrapper.vm.$nextTick();
             expect(
                 wrapper
@@ -194,6 +238,13 @@ describe("TemplateSelection", () => {
 
         it("should display the advanced category by default if there are no ACME/Tuleap/External templates", async () => {
             const wrapper = await getWrapper([], [], [], "ACME");
+
+            expect(wrapper.vm.$store.commit).toHaveBeenCalledWith(
+                "setSelectedTemplateCategory",
+                "Advanced"
+            );
+            wrapper.vm.$store.state.selected_template_category = "Advanced";
+
             await wrapper.vm.$nextTick();
             expect(
                 wrapper
@@ -229,6 +280,11 @@ describe("TemplateSelection", () => {
         );
 
         tab_safe_templates.trigger("click");
+        expect(wrapper.vm.$store.commit).toHaveBeenCalledWith(
+            "setSelectedTemplateCategory",
+            "SAFe"
+        );
+        wrapper.vm.$store.state.selected_template_category = "SAFe";
 
         await wrapper.vm.$nextTick();
 
@@ -243,6 +299,11 @@ describe("TemplateSelection", () => {
         );
 
         tab_acme_templates.trigger("click");
+        expect(wrapper.vm.$store.commit).toHaveBeenCalledWith(
+            "setSelectedTemplateCategory",
+            "ACME"
+        );
+        wrapper.vm.$store.state.selected_template_category = "ACME";
 
         await wrapper.vm.$nextTick();
 
@@ -257,6 +318,11 @@ describe("TemplateSelection", () => {
         );
 
         tab_dummy_templates.trigger("click");
+        expect(wrapper.vm.$store.commit).toHaveBeenCalledWith(
+            "setSelectedTemplateCategory",
+            "dummies"
+        );
+        wrapper.vm.$store.state.selected_template_category = "dummies";
 
         await wrapper.vm.$nextTick();
 
@@ -271,6 +337,11 @@ describe("TemplateSelection", () => {
         );
 
         tab_advanced_templates.trigger("click");
+        expect(wrapper.vm.$store.commit).toHaveBeenCalledWith(
+            "setSelectedTemplateCategory",
+            "Advanced"
+        );
+        wrapper.vm.$store.state.selected_template_category = "Advanced";
 
         await wrapper.vm.$nextTick();
 
@@ -285,6 +356,11 @@ describe("TemplateSelection", () => {
         );
 
         tab_tuleap_templates.trigger("click");
+        expect(wrapper.vm.$store.commit).toHaveBeenCalledWith(
+            "setSelectedTemplateCategory",
+            "Tuleap"
+        );
+        wrapper.vm.$store.state.selected_template_category = "Tuleap";
 
         await wrapper.vm.$nextTick();
 

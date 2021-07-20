@@ -24,7 +24,7 @@
             <div>
                 <router-link
                     to="/new"
-                    v-on:click.native="resetSelectedTemplate"
+                    v-on:click.native="resetProjectCreationError"
                     class="project-registration-back-button"
                     data-test="project-registration-back-button"
                 >
@@ -75,8 +75,8 @@ export default class ProjectInformationFooter extends Vue {
         return "fa tlp-button-icon-right fa-spin fa-circle-o-notch";
     }
 
-    resetSelectedTemplate(): void {
-        this.$store.commit("resetSelectedTemplate");
+    resetProjectCreationError(): void {
+        this.$store.commit("resetProjectCreationError");
     }
 }
 </script>

@@ -33,9 +33,7 @@ export default {
         }
     },
 
-    resetSelectedTemplate(state: State): void {
-        state.selected_tuleap_template = null;
-        state.selected_company_template = null;
+    resetProjectCreationError(state: State): void {
         state.error = null;
     },
 
@@ -56,5 +54,16 @@ export default {
 
     resetError(state: State): void {
         state.error = null;
+    },
+
+    setSelectedTemplateCategory(state: State, selected_template_category: string): void {
+        state.selected_template_category = selected_template_category;
+    },
+
+    setAvailableProjectsUserIsAdminOf(
+        state: State,
+        projects_user_is_admin_of: TemplateData[]
+    ): void {
+        state.projects_user_is_admin_of = projects_user_is_admin_of;
     },
 };

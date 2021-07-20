@@ -69,7 +69,7 @@
 <script lang="ts">
 import Vue from "vue";
 import { Component } from "vue-property-decorator";
-import { namespace } from "vuex-class";
+import { namespace, State } from "vuex-class";
 import AdvancedTemplateList from "./Advanced/AdvancedTemplateList.vue";
 import CompanyTemplatesList from "./Company/CompanyTemplateList.vue";
 import TuleapTemplateList from "./Tuleap/TuleapTemplateList.vue";
@@ -91,7 +91,6 @@ export default class TemplateSelection extends Vue {
     private readonly CATEGORY_ACME = "ACME";
     private readonly CATEGORY_ADVANCED = "Advanced";
 
-    private selected_template_category = "";
     private external_templates_categories: ExternalTemplateCategory[] = [];
     private categorised_external_templates_map = new Map<string, ExternalTemplateData[]>();
 
@@ -106,6 +105,9 @@ export default class TemplateSelection extends Vue {
 
     @configuration.State
     external_templates!: ExternalTemplateData[];
+
+    @State
+    selected_template_category!: string | null;
 
     mounted(): void {
         this.external_templates.forEach((template) => {
@@ -122,13 +124,17 @@ export default class TemplateSelection extends Vue {
             ]);
         });
 
+        if (this.selected_template_category !== null) {
+            return;
+        }
+
         if (this.company_templates.length > 0) {
-            this.selected_template_category = this.CATEGORY_ACME;
+            this.setSelectedTemplateCategory(this.CATEGORY_ACME);
             return;
         }
 
         if (this.tuleap_templates.length > 0) {
-            this.selected_template_category = this.CATEGORY_TULEAP;
+            this.setSelectedTemplateCategory(this.CATEGORY_TULEAP);
             return;
         }
 
@@ -136,15 +142,15 @@ export default class TemplateSelection extends Vue {
             .keys()
             .next().value;
         if (first_external_template_category) {
-            this.selected_template_category = first_external_template_category;
+            this.setSelectedTemplateCategory(first_external_template_category);
             return;
         }
 
-        this.selected_template_category = this.CATEGORY_ADVANCED;
+        this.setSelectedTemplateCategory(this.CATEGORY_ADVANCED);
     }
 
     setSelectedTemplateCategory(template_category: string): void {
-        this.selected_template_category = template_category;
+        this.$store.commit("setSelectedTemplateCategory", template_category);
     }
 
     isTemplateCategorySelected(template_category: string): boolean {

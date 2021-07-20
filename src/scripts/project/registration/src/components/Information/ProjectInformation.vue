@@ -34,6 +34,7 @@
                         <nav class="tlp-wizard">
                             <router-link
                                 v-bind:to="{ name: 'template' }"
+                                v-on:click.native="resetProjectCreationError"
                                 class="tlp-wizard-step-previous"
                                 v-translate
                             >
@@ -318,6 +319,10 @@ export default class ProjectInformation extends Vue {
         project_properties.is_public = is_public_project;
         project_properties.allow_restricted = is_restricted_allowed_for_the_project;
         return project_properties;
+    }
+
+    resetProjectCreationError(): void {
+        this.$store.commit("resetProjectCreationError");
     }
 }
 </script>
