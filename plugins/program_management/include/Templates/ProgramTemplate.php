@@ -49,11 +49,16 @@ class ProgramTemplate implements CategorisedTemplate
 
     public function __construct(GlyphFinder $glyph_finder, ConsistencyChecker $consistency_checker)
     {
-        $this->title               = dgettext('tuleap-program_management', 'Essential SAFe(R) - ART and Program Management');
-        $this->description         = dgettext(
-            'tuleap-program_management',
-            'This Tuleap template helps align several teams to a shared business and technology mission applying the principles of the Essential Scaled Agile Framework(R). You can manage SAFe Agile Release Train (ART) and Program Increments (PI), Program Backlog, Program Kanban, Roadmap and ART artifacts as Features, Enablers, or Program Epics. This template has to be used with the Tuleap template "Essential SAFe(R) - Scrum Team"'
+        $this->title       = AsciiRegisteredToUnicodeConvertor::convertSafeRegisteredBecauseOurGettextExtractionIsClumsy(
+            dgettext('tuleap-program_management', 'Essential SAFe(R) - ART and Program Management')
         );
+        $this->description = AsciiRegisteredToUnicodeConvertor::convertSafeRegisteredBecauseOurGettextExtractionIsClumsy(
+            dgettext(
+                'tuleap-program_management',
+                'This Tuleap template helps align several teams to a shared business and technology mission applying the principles of the Essential Scaled Agile Framework(R). You can manage SAFe Agile Release Train (ART) and Program Increments (PI), Program Backlog, Program Kanban, Roadmap and ART artifacts as Features, Enablers, or Program Epics. This template has to be used with the Tuleap template "Essential SAFe(R) - Scrum Team"'
+            )
+        );
+
         $this->glyph_finder        = $glyph_finder;
         $this->consistency_checker = $consistency_checker;
         $this->template_category   = TemplateCategorySAFe::build();
@@ -102,6 +107,7 @@ class ProgramTemplate implements CategorisedTemplate
                 throw new \RuntimeException("Can not copy TTM file for tuleap template import");
             }
         }
+
         return $this->xml_path;
     }
 
@@ -110,6 +116,7 @@ class ProgramTemplate implements CategorisedTemplate
         if ($this->available === null) {
             $this->available = $this->consistency_checker->areAllServicesAvailable($this->getXMLPath());
         }
+
         return $this->available;
     }
 

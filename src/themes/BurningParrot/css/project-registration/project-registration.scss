@@ -131,6 +131,10 @@ $template-category-inactive-tab-right-margin: calc(var(--tlp-medium-spacing) + #
         white-space: nowrap;
         cursor: pointer;
 
+        &.templates-category-tab-with-mixed-case {
+            text-transform: none;
+        }
+
         &.active {
             padding: var(--tlp-medium-spacing);
             border-right: $template-category-active-tab-right-border-width solid var(--tlp-main-color);
