@@ -31,7 +31,7 @@ class URL
         preg_match('`^(([^:/?#]+):)?(//([^/?#]*))?([^?#]*)(\?([^#]*))?(#(.*))?`i', $url, $components);
         return $components;
     }
-    /* static */ public function getHost($url)
+    public function getHost($url)
     {
         $components = self::parse($url);
         return $components[4];

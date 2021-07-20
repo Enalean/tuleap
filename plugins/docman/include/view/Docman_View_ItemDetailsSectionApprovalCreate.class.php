@@ -106,7 +106,7 @@ class Docman_View_ItemDetailsSectionApprovalCreate extends Docman_View_ItemDetai
             if ($this->table->getVersionNumber() < $lastDocumentVersion) {
                 $html .= '<h3>' . dgettext('tuleap-docman', 'Create a new approval table') . '</h3>';
                 $html .= '<p>' . sprintf(dgettext('tuleap-docman', '<big><strong>Warning:</strong></big> this table is linked to an old version of the document (version %1$s). The last document version is %2$s, you can either:'), $this->table->getVersionNumber(), $lastDocumentVersion) . '</p>';
-                $html .= $this->displayImportLastTable(true);
+                $html .= self::displayImportLastTable(true);
             }
         }
         return $html;
@@ -395,7 +395,7 @@ class Docman_View_ItemDetailsSectionApprovalCreate extends Docman_View_ItemDetai
         return $html;
     }
 
-    /*static*/public function displayImportLastTable($onTableUpdate = false)
+    public static function displayImportLastTable($onTableUpdate = false)
     {
         $html = '';
 
@@ -462,7 +462,7 @@ class Docman_View_ItemDetailsSectionApprovalCreate extends Docman_View_ItemDetai
                 $html    .= '<input type="hidden" name="action" value="approval_update" />';
                 $html    .= '<h3>' . dgettext('tuleap-docman', 'Import an old approval table') . '</h3>';
                 $html    .= dgettext('tuleap-docman', 'There is an approval table on the previous version of the document. You can either:') . '<br />';
-                $html    .= $this->displayImportLastTable();
+                $html    .= self::displayImportLastTable();
             }
         }
 

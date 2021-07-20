@@ -63,7 +63,7 @@ class Docman_Token
             }
         }
     }
-    /* static */ public function retrieveUrl($token)
+    public static function retrieveUrl($token)
     {
         $url     = null;
         $um      = UserManager::instance();
