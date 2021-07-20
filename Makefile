@@ -312,7 +312,14 @@ dev-clear-cache: ## Clear caches in Docker Compose environment
 
 start: ## Start Tuleap web with php 7.4 & nginx on CentOS7
 	@echo "Start Tuleap in PHP 7.4 on CentOS 7"
-	@$(DOCKER_COMPOSE) up --build -d reverse-proxy
+	@$(MAKE) --no-print-directory start-rp
+
+start-php80: ## Start Tuleap web with PHP 8.0 & nginx on CentOS7
+	@$(MAKE) --no-print-directory DOCKER_COMPOSE_FLAGS="-f docker-compose-php80.yml" start-rp
+
+start-rp:
+	$(eval DOCKER_COMPOSE_FLAGS ?= )
+	$(DOCKER_COMPOSE) $(DOCKER_COMPOSE_FLAGS) up --build -d reverse-proxy
 	@echo "Update tuleap-web.tuleap-aio-dev.docker in /etc/hosts with: $(call get_ip_addr,reverse-proxy)"
 
 start-ldap-admin: ## Start ldap administration ui
