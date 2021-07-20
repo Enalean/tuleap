@@ -23,12 +23,12 @@ import { displayTeamsToAggregate } from "./teams/display-teams-to-aggregate";
 import { addTeamInProgram } from "./teams/add-team";
 import { initListPickersMilestoneSection } from "./milestones/init-list-pickers-milestone-section";
 import { submitConfigurationHandler } from "./milestones/submit-configuration-handler";
-import { TimeboxLabel } from "./dom/TimeboxLabel";
+import { initPreviewTrackerLabels } from "./helper/init-preview-labels-helper";
 import { DocumentAdapter } from "./dom/DocumentAdapter";
-import { initPreview } from "./milestones/preview-actualizer";
 
-const PROGRAM_INCREMENT_LABEL_ID = "admin-configuration-program-increment-label-section";
-const PROGRAM_INCREMENT_SUB_LABEL_ID = "admin-configuration-program-increment-sub-label-section";
+export const PROGRAM_INCREMENT_LABEL_ID = "admin-configuration-program-increment-label-section";
+export const PROGRAM_INCREMENT_SUB_LABEL_ID =
+    "admin-configuration-program-increment-sub-label-section";
 
 document.addEventListener("DOMContentLoaded", async () => {
     const language = document.body.dataset.userLocale;
@@ -62,17 +62,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
     const use_iteration = Boolean(use_iteration_data);
 
-    const retriever = new DocumentAdapter(document);
-    const program_increment_label = TimeboxLabel.fromId(retriever, PROGRAM_INCREMENT_LABEL_ID);
-    const program_increment_sub_label = TimeboxLabel.fromId(
-        retriever,
-        PROGRAM_INCREMENT_SUB_LABEL_ID
-    );
-
     await displayTeamsToAggregate(gettext_provider, document);
     removeTeam(program_id);
     addTeamInProgram(program_id, document);
     await initListPickersMilestoneSection(document, gettext_provider, use_iteration);
     submitConfigurationHandler(document, gettext_provider, program_id, use_iteration);
-    initPreview(retriever, gettext_provider, program_increment_label, program_increment_sub_label);
+    initPreviewTrackerLabels(document, gettext_provider, new DocumentAdapter(document));
 });
