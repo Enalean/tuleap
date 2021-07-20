@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Adapter\Workspace;
 
 use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramForAdministrationIdentifier;
+use Tuleap\ProgramManagement\Domain\ProgramTracker;
 use Tuleap\ProgramManagement\Stub\VerifyIsTeamStub;
 use Tuleap\ProgramManagement\Stub\VerifyProjectPermissionStub;
 use Tuleap\Test\Builders\UserTestBuilder;
@@ -55,5 +56,28 @@ final class TrackerFactoryAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertSame('Sprint', $trackers_reference[0]->label);
         self::assertSame(30, $trackers_reference[1]->id);
         self::assertSame('Feature', $trackers_reference[1]->label);
+    }
+
+    public function testReturnNullWhenNoTracker(): void
+    {
+        $tracker_factory = $this->createStub(\TrackerFactory::class);
+        $tracker_factory->method('getTrackerById')->willReturn(null);
+
+        $adapter = new TrackerFactoryAdapter($tracker_factory);
+
+        self::assertNull($adapter->getTrackerById(85));
+    }
+
+    public function testReturnProgramTracker(): void
+    {
+        $tracker_factory = $this->createStub(\TrackerFactory::class);
+        $tracker_factory->method('getTrackerById')->willReturn(TrackerTestBuilder::aTracker()->withId(85)->build());
+
+        $adapter = new TrackerFactoryAdapter($tracker_factory);
+
+        $tracker = $adapter->getTrackerById(85);
+
+        self::assertInstanceOf(ProgramTracker::class, $tracker);
+        self::assertSame(85, $tracker->getTrackerId());
     }
 }

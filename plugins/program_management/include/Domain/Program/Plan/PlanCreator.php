@@ -26,11 +26,12 @@ use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramForAdministrationIdenti
 use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramUserGroupCollection;
 use Tuleap\ProgramManagement\Domain\Team\VerifyIsTeam;
 use Tuleap\ProgramManagement\Domain\Workspace\RetrieveProject;
+use Tuleap\ProgramManagement\Domain\Workspace\RetrieveTracker;
 use Tuleap\ProgramManagement\Domain\Workspace\VerifyProjectPermission;
 
 final class PlanCreator implements CreatePlan
 {
-    private BuildTracker $build_tracker;
+    private RetrieveTracker $tracker_retriever;
     private PlanStore $plan_store;
     private RetrieveProgramUserGroup $ugroup_retriever;
     private RetrieveProject $project_retriever;
@@ -38,14 +39,14 @@ final class PlanCreator implements CreatePlan
     private VerifyProjectPermission $permission_verifier;
 
     public function __construct(
-        BuildTracker $build_tracker,
+        RetrieveTracker $tracker_retriever,
         RetrieveProgramUserGroup $ugroup_retriever,
         PlanStore $plan_store,
         RetrieveProject $project_retriever,
         VerifyIsTeam $team_verifier,
         VerifyProjectPermission $permission_verifier
     ) {
-        $this->build_tracker       = $build_tracker;
+        $this->tracker_retriever   = $tracker_retriever;
         $this->ugroup_retriever    = $ugroup_retriever;
         $this->plan_store          = $plan_store;
         $this->project_retriever   = $project_retriever;
@@ -63,23 +64,24 @@ final class PlanCreator implements CreatePlan
             $project
         );
         $program_tracker   = ProgramIncrementTracker::buildProgramIncrementTracker(
-            $this->build_tracker,
+            $this->tracker_retriever,
             $plan_change->program_increment_change->tracker_id,
-            $program->id
+            $program
         );
         $iteration_tracker = null;
         if ($plan_change->iteration) {
             $iteration_tracker = IterationTracker::fromPlanIterationChange(
-                $this->build_tracker,
+                $this->tracker_retriever,
                 $plan_change->iteration,
-                $program->id
+                $program
             );
         }
-        $plannable_tracker_ids      = $this->build_tracker->buildPlannableTrackerList(
+        $plannable_tracker_collection = ProgramPlannableTrackerCollection::fromIds(
+            $this->tracker_retriever,
             $plan_change->tracker_ids_that_can_be_planned,
-            $program->id
+            $program
         );
-        $can_prioritize_user_groups = ProgramUserGroupCollection::fromRawIdentifiers(
+        $can_prioritize_user_groups   = ProgramUserGroupCollection::fromRawIdentifiers(
             $this->ugroup_retriever,
             $program,
             $plan_change->can_possibly_prioritize_ugroups
@@ -88,7 +90,7 @@ final class PlanCreator implements CreatePlan
         $plan = new Plan(
             $program_tracker,
             $program->id,
-            $plannable_tracker_ids,
+            $plannable_tracker_collection->trackers,
             $can_prioritize_user_groups,
             $plan_change->program_increment_change->label,
             $plan_change->program_increment_change->sub_label,

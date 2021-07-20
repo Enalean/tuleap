@@ -29,37 +29,40 @@ use Tuleap\ProgramManagement\Domain\Workspace\RetrieveTracker;
 /**
  * @psalm-immutable
  */
-final class IterationTracker
+final class ProgramPlannableTrackerCollection
 {
-    public int $id;
-    public ?string $label;
-    public ?string $sub_label;
+    /**
+     * @var ProgramPlannableTracker[]
+     */
+    public array $trackers;
 
-    private function __construct(int $id, ?string $label, ?string $sub_label)
+    /**
+     * @param ProgramPlannableTracker[] $trackers
+     */
+    private function __construct(array $trackers)
     {
-        $this->id        = $id;
-        $this->label     = $label;
-        $this->sub_label = $sub_label;
+        $this->trackers = $trackers;
     }
 
     /**
+     * @param int[] $plannable_trackers_id
+     * @throws PlannableTrackerCannotBeEmptyException
      * @throws ProgramTrackerException
      */
-    public static function fromPlanIterationChange(
+    public static function fromIds(
         RetrieveTracker $tracker_retriever,
-        PlanIterationChange $iteration_representation,
+        array $plannable_trackers_id,
         ProgramForAdministrationIdentifier $program
     ): self {
-        TrackerIsValidChecker::checkTrackerIsValid(
-            $tracker_retriever,
-            $iteration_representation->tracker_id,
-            $program->id
-        );
+        $trackers = [];
+        foreach ($plannable_trackers_id as $tracker_id) {
+            $trackers[] = ProgramPlannableTracker::build($tracker_retriever, $tracker_id, $program);
+        }
 
-        return new self(
-            $iteration_representation->tracker_id,
-            $iteration_representation->label,
-            $iteration_representation->sub_label
-        );
+        if (empty($trackers)) {
+            throw new PlannableTrackerCannotBeEmptyException();
+        }
+
+        return new self($trackers);
     }
 }

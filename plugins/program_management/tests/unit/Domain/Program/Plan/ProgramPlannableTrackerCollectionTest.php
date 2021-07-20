@@ -15,7 +15,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Tuleap. If not, see http://www.gnu.org/licenses/.
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
 declare(strict_types=1);
@@ -23,36 +23,42 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Domain\Program\Plan;
 
 use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramForAdministrationIdentifier;
-use Tuleap\ProgramManagement\Domain\Program\PlanTrackerNotFoundException;
 use Tuleap\ProgramManagement\Stub\RetrieveTrackerStub;
 use Tuleap\ProgramManagement\Stub\VerifyIsTeamStub;
 use Tuleap\ProgramManagement\Stub\VerifyProjectPermissionStub;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
 
-class ProgramIncrementTrackerTest extends \Tuleap\Test\PHPUnit\TestCase
+final class ProgramPlannableTrackerCollectionTest extends TestCase
 {
     private ProgramForAdministrationIdentifier $program;
+    private int $project_id;
 
     protected function setUp(): void
     {
-        $this->program = ProgramForAdministrationIdentifier::fromProject(
+        $this->project_id = 101;
+        $this->program    = ProgramForAdministrationIdentifier::fromProject(
             VerifyIsTeamStub::withNotValidTeam(),
             VerifyProjectPermissionStub::withAdministrator(),
             UserTestBuilder::aUser()->build(),
-            ProjectTestBuilder::aProject()->withId(101)->build()
+            ProjectTestBuilder::aProject()->withId($this->project_id)->build()
         );
     }
 
-    public function testItThrowsAnExceptionWhenTrackerIsNotFound(): void
+    public function testItThrowsAnExceptionWhenTrackerListIsEmpty(): void
     {
-        $this->expectException(PlanTrackerNotFoundException::class);
-        ProgramIncrementTracker::buildProgramIncrementTracker(RetrieveTrackerStub::buildNullTracker(), 1, $this->program);
+        $this->expectException(PlannableTrackerCannotBeEmptyException::class);
+        ProgramPlannableTrackerCollection::fromIds(RetrieveTrackerStub::buildValidTrackerWithProjectId($this->project_id), [], $this->program);
     }
 
-    public function testItBuildAProgramIncrement(): void
+    public function testItBuildPlannableTrackers(): void
     {
-        $tracker = ProgramIncrementTracker::buildProgramIncrementTracker(RetrieveTrackerStub::buildValidTrackerWithProjectId(101), 1, $this->program);
-        self::assertEquals(1, $tracker->getId());
+        $tracker_id = 1;
+
+        $retriever = RetrieveTrackerStub::buildValidTrackerWithProjectId($this->project_id);
+
+        $expected = [ProgramPlannableTracker::build($retriever, $tracker_id, $this->program)];
+        self::assertEquals($expected, ProgramPlannableTrackerCollection::fromIds($retriever, [$tracker_id], $this->program)->trackers);
     }
 }

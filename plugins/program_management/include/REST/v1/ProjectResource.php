@@ -48,11 +48,11 @@ use Tuleap\ProgramManagement\Adapter\Program\Plan\ProgramAdapter;
 use Tuleap\ProgramManagement\Adapter\Program\PlanningAdapter;
 use Tuleap\ProgramManagement\Adapter\Program\ProgramDao;
 use Tuleap\ProgramManagement\Adapter\Program\ProgramUserGroupRetriever;
-use Tuleap\ProgramManagement\Adapter\Program\Tracker\ProgramTrackerAdapter;
 use Tuleap\ProgramManagement\Adapter\Team\TeamAdapter;
 use Tuleap\ProgramManagement\Adapter\Team\TeamDao;
 use Tuleap\ProgramManagement\Adapter\Workspace\ProjectManagerAdapter;
 use Tuleap\ProgramManagement\Adapter\Workspace\ProjectPermissionVerifier;
+use Tuleap\ProgramManagement\Adapter\Workspace\TrackerFactoryAdapter;
 use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramCannotBeATeamException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\RetrieveFeatures;
@@ -116,7 +116,6 @@ final class ProjectResource extends AuthenticatedResource
         $this->user_manager   = \UserManager::instance();
         $plan_dao             = new PlanDao();
         $team_dao             = new TeamDao();
-        $tracker_adapter      = new ProgramTrackerAdapter(\TrackerFactory::instance());
         $project_manager      = \ProjectManager::instance();
         $program_dao          = new ProgramDao();
         $explicit_backlog_dao = new ExplicitBacklogDao();
@@ -130,7 +129,7 @@ final class ProjectResource extends AuthenticatedResource
             $team_dao
         );
         $this->plan_creator   = new PlanCreator(
-            $tracker_adapter,
+            new TrackerFactoryAdapter(\TrackerFactory::instance()),
             new ProgramUserGroupRetriever(new UserGroupRetriever(new \UGroupManager())),
             $plan_dao,
             new ProjectManagerAdapter($project_manager),

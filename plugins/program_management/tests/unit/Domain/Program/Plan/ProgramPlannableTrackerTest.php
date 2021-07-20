@@ -22,20 +22,37 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Plan;
 
+use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramForAdministrationIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\PlanTrackerNotFoundException;
-use Tuleap\ProgramManagement\Stub\BuildTrackerStub;
+use Tuleap\ProgramManagement\Stub\RetrieveTrackerStub;
+use Tuleap\ProgramManagement\Stub\VerifyIsTeamStub;
+use Tuleap\ProgramManagement\Stub\VerifyProjectPermissionStub;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\Builders\UserTestBuilder;
 
 final class ProgramPlannableTrackerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
+    private ProgramForAdministrationIdentifier $program;
+
+    protected function setUp(): void
+    {
+        $this->program = ProgramForAdministrationIdentifier::fromProject(
+            VerifyIsTeamStub::withNotValidTeam(),
+            VerifyProjectPermissionStub::withAdministrator(),
+            UserTestBuilder::aUser()->build(),
+            ProjectTestBuilder::aProject()->withId(101)->build()
+        );
+    }
+
     public function testItThrowsAnExceptionWhenTrackerIsNotValid(): void
     {
         $this->expectException(PlanTrackerNotFoundException::class);
-        ProgramPlannableTracker::build(BuildTrackerStub::buildTrackerNotValid(), 1, 101);
+        ProgramPlannableTracker::build(RetrieveTrackerStub::buildNullTracker(), 1, $this->program);
     }
 
     public function testItBuildAProgramIncrement(): void
     {
-        $tracker = ProgramPlannableTracker::build(BuildTrackerStub::buildValidTracker(), 1, 101);
+        $tracker = ProgramPlannableTracker::build(RetrieveTrackerStub::buildValidTrackerWithProjectId(101), 1, $this->program);
         self::assertEquals(1, $tracker->getId());
     }
 }

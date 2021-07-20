@@ -22,34 +22,63 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Plan;
 
+use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramForAdministrationIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\PlanTrackerNotFoundException;
-use Tuleap\ProgramManagement\Stub\BuildTrackerStub;
+use Tuleap\ProgramManagement\Stub\RetrieveTrackerStub;
+use Tuleap\ProgramManagement\Stub\VerifyIsTeamStub;
+use Tuleap\ProgramManagement\Stub\VerifyProjectPermissionStub;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\Builders\UserTestBuilder;
 
 final class IterationTrackerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
+    private ProgramForAdministrationIdentifier $program;
+
+    protected function setUp(): void
+    {
+        $this->program = ProgramForAdministrationIdentifier::fromProject(
+            VerifyIsTeamStub::withNotValidTeam(),
+            VerifyProjectPermissionStub::withAdministrator(),
+            UserTestBuilder::aUser()->build(),
+            ProjectTestBuilder::aProject()->withId(101)->build()
+        );
+    }
+
     public function testItThrowsAnExceptionWhenTrackerIsNotFound(): void
     {
         $iteration_representation = new PlanIterationChange(1, null, null);
 
         $this->expectException(PlanTrackerNotFoundException::class);
-        IterationTracker::fromPlanIterationChange(BuildTrackerStub::buildTrackerNotValid(), $iteration_representation, 101);
+        IterationTracker::fromPlanIterationChange(
+            RetrieveTrackerStub::buildNullTracker(),
+            $iteration_representation,
+            $this->program
+        );
     }
 
     public function testItBuildAProgramIncrement(): void
     {
-        $iteration_representation = new PlanIterationChange(1, "Iterations", "iteration");
+        $iteration_representation = new PlanIterationChange(1, 'Iterations', 'iteration');
 
-        $tracker = IterationTracker::fromPlanIterationChange(BuildTrackerStub::buildValidTracker(), $iteration_representation, 101);
+        $tracker = IterationTracker::fromPlanIterationChange(
+            RetrieveTrackerStub::buildValidTrackerWithProjectId(101),
+            $iteration_representation,
+            $this->program
+        );
         self::assertEquals(1, $tracker->id);
-        self::assertEquals("Iterations", $tracker->label);
-        self::assertEquals("iteration", $tracker->sub_label);
+        self::assertEquals('Iterations', $tracker->label);
+        self::assertEquals('iteration', $tracker->sub_label);
     }
 
     public function testItBuildAProgramIncrementWithoutLabels(): void
     {
         $iteration_representation = new PlanIterationChange(1, null, null);
 
-        $tracker = IterationTracker::fromPlanIterationChange(BuildTrackerStub::buildValidTracker(), $iteration_representation, 101);
+        $tracker = IterationTracker::fromPlanIterationChange(
+            RetrieveTrackerStub::buildValidTrackerWithProjectId(101),
+            $iteration_representation,
+            $this->program
+        );
         self::assertEquals(1, $tracker->id);
         self::assertNull($tracker->label);
         self::assertNull($tracker->sub_label);
