@@ -25,7 +25,7 @@ import * as drekkenov from "@tuleap/drag-and-drop";
 import { createStoreMock } from "@tuleap/core/scripts/vue-components/store-wrapper-jest";
 
 describe("App", () => {
-    async function createWrapper(is_configured: boolean): Promise<Wrapper<App>> {
+    async function createWrapper(is_configured: boolean, is_admin: boolean): Promise<Wrapper<App>> {
         return shallowMount(App, {
             mocks: {
                 $store: createStoreMock({
@@ -34,6 +34,7 @@ describe("App", () => {
                         configuration: {
                             can_create_program_increment: true,
                             is_configured: is_configured,
+                            is_admin: is_admin,
                         },
                     },
                 }),
@@ -43,21 +44,31 @@ describe("App", () => {
     }
 
     it("Displays the backlog section", async () => {
-        const wrapper = await createWrapper(true);
+        const wrapper = await createWrapper(true, false);
         expect(wrapper.find("[data-test=backlog-section]").exists()).toBe(true);
         expect(wrapper.find("[data-test=configuration-empty-state]").exists()).toBe(false);
     });
 
     it("Displays an empty state when project has no linked team yet", async () => {
-        const wrapper = await createWrapper(false);
+        const wrapper = await createWrapper(false, false);
         expect(wrapper.find("[data-test=backlog-section]").exists()).toBe(false);
         expect(wrapper.find("[data-test=configuration-empty-state]").exists()).toBe(true);
+        expect(wrapper.find("[data-test=administrator-empty-state]").exists()).toBe(false);
+        expect(wrapper.find("[data-test=regular-user-empty-state]").exists()).toBe(true);
+    });
+
+    it("Displays an empty state for administrator when project has no linked team yet", async () => {
+        const wrapper = await createWrapper(false, true);
+        expect(wrapper.find("[data-test=backlog-section]").exists()).toBe(false);
+        expect(wrapper.find("[data-test=configuration-empty-state]").exists()).toBe(true);
+        expect(wrapper.find("[data-test=administrator-empty-state]").exists()).toBe(false);
+        expect(wrapper.find("[data-test=regular-user-empty-state]").exists()).toBe(true);
     });
 
     describe(`mounted()`, () => {
         it(`will create a "drek"`, async () => {
             const init = jest.spyOn(drekkenov, "init");
-            await createWrapper(true);
+            await createWrapper(true, false);
 
             expect(init).toHaveBeenCalled();
         });
@@ -69,7 +80,7 @@ describe("App", () => {
                 destroy: jest.fn(),
             };
             jest.spyOn(drekkenov, "init").mockImplementation(() => mock_drek);
-            const wrapper = await createWrapper(true);
+            const wrapper = await createWrapper(true, false);
             wrapper.destroy();
 
             expect(mock_drek.destroy).toHaveBeenCalled();

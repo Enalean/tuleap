@@ -25,6 +25,7 @@ import {
 } from "@tuleap/core/scripts/tuleap/gettext/vue-gettext-init";
 import { createStore } from "./src/store";
 import type { ConfigurationState } from "./src/store/configuration";
+import VueDOMPurifyHTML from "vue-dompurify-html";
 
 document.addEventListener("DOMContentLoaded", async () => {
     const vue_mount_point = document.getElementById("program-management-app");
@@ -38,6 +39,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     Vue.config.language = locale;
+    Vue.use(VueDOMPurifyHTML);
 
     if (!vue_mount_point.dataset.projectName) {
         throw new Error("Missing projectName dataset");
