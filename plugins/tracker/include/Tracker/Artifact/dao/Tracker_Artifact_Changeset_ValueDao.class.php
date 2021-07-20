@@ -45,7 +45,7 @@ class Tracker_Artifact_Changeset_ValueDao extends \Tuleap\DB\DataAccessObject
     }
 
     /**
-     * @psalm-return array<int, array{id: int, changeset_id: int, field_id: int, has_changed:0|1}>
+     * @psalm-return array<int, list<array{id: int, changeset_id: int, field_id: int, has_changed:0|1}>>
      */
     public function searchByArtifactId($artifact_id): array
     {
@@ -55,7 +55,7 @@ class Tracker_Artifact_Changeset_ValueDao extends \Tuleap\DB\DataAccessObject
                 JOIN tracker_changeset AS changeset ON (changeset.id = changeset_value.changeset_id)
                 WHERE changeset.artifact_id = ?',
             [$artifact_id],
-            \PDO::FETCH_UNIQUE | \PDO::FETCH_ASSOC
+            \PDO::FETCH_GROUP | \PDO::FETCH_ASSOC
         );
     }
 
