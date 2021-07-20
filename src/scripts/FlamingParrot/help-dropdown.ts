@@ -19,15 +19,15 @@
 
 import type { Dropdown } from "../../themes/tlp/src/js/dropdowns";
 import { createDropdown } from "../../themes/tlp/src/js/dropdowns";
-import { manageUserPreferences } from "../user/user-patch-release-note-preference";
-import { patch } from "@tuleap/tlp-fetch";
+import { post } from "@tuleap/tlp-fetch";
+import { actionsOnHelpMenuOpened } from "../user/actions-help-menu-opened";
 
 document.addEventListener("DOMContentLoaded", () => {
     const help_button = document.getElementById("help");
     if (help_button) {
         const help_dropdown: Dropdown = createDropdown(document, help_button);
-        help_dropdown.addEventListener("tlp-dropdown-shown", function () {
-            manageUserPreferences(help_button, patch);
+        help_dropdown.addEventListener("tlp-dropdown-shown", async function (): Promise<void> {
+            await actionsOnHelpMenuOpened(help_button, post);
         });
     }
 
