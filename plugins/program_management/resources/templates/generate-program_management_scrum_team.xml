@@ -16,7 +16,6 @@
     <service shortname="plugin_baseline" enabled="0"/>
   </services>
   <trackers use-natures="true">
-    <include-template-tracker path="../../../../tools/utils/setup_templates/generate-templates/trackers/activity.xml"/>
     <include-template-tracker path="../../../../tools/utils/setup_templates/generate-templates/trackers/bug.xml"/>
     <tracker id="T36341" parent_id="0" instantiate_for_new_projects="1" notifications_level="1">
       <name><![CDATA[Epics]]></name>
@@ -221,13 +220,13 @@
       <cannedResponses/>
       <formElements>
         <formElement type="string" ID="F792694" rank="41" id="792694" tracker_id="36343" parent_id="0" required="1">
-          <name><![CDATA[sprint_name]]></name>
-          <label><![CDATA[Sprint Name]]></label>
+          <name><![CDATA[iteration_name]]></name>
+          <label><![CDATA[Iteration Name]]></label>
           <properties size="30"/>
         </formElement>
         <formElement type="fieldset" ID="F792695" rank="876" id="792695" tracker_id="36343" parent_id="0">
-          <name><![CDATA[sprint_details]]></name>
-          <label><![CDATA[Sprint details]]></label>
+          <name><![CDATA[iteration_details]]></name>
+          <label><![CDATA[Iteration details]]></label>
           <formElements>
             <formElement type="column" ID="F792696" rank="0" id="792696" tracker_id="36343" parent_id="792695">
               <name><![CDATA[column_general_1]]></name>
@@ -276,7 +275,7 @@
                 <formElement type="computed" ID="F792702" rank="3" id="792702" tracker_id="36343" parent_id="792700">
                   <name><![CDATA[remaining_effort]]></name>
                   <label><![CDATA[Total Remaining Effort]]></label>
-                  <description><![CDATA[Sum of the remaining efforts of sprint's artifacts]]></description>
+                  <description><![CDATA[Sum of the remaining efforts of iteration's artifacts]]></description>
                 </formElement>
                 <formElement type="float" ID="F792703" rank="4" id="792703" tracker_id="36343" parent_id="792700">
                   <name><![CDATA[velocity]]></name>
@@ -1733,11 +1732,6 @@
                   <label><![CDATA[Remaining Effort]]></label>
                   <properties size="5"/>
                 </formElement>
-                <formElement type="int" ID="F910846" rank="3" id="910846" tracker_id="36345" parent_id="792742">
-                  <name><![CDATA[duration]]></name>
-                  <label><![CDATA[Duration]]></label>
-                  <properties size="5" default_value="5"/>
-                </formElement>
               </formElements>
             </formElement>
             <formElement type="column" ID="F792745" rank="2" id="792745" tracker_id="36345" parent_id="792741">
@@ -1768,11 +1762,6 @@
                       <value REF="V235687"/>
                     </default_values>
                   </bind>
-                </formElement>
-                <formElement type="date" ID="F910845" rank="1" id="910845" tracker_id="36345" parent_id="792745">
-                  <name><![CDATA[start_date]]></name>
-                  <label><![CDATA[Start date]]></label>
-                  <properties default_value="today" display_time="0"/>
                 </formElement>
               </formElements>
             </formElement>
@@ -1882,6 +1871,9 @@
           <label><![CDATA[Initial Effort]]></label>
           <description><![CDATA[Define the initial effort of an artifact.]]></description>
           <field REF="F792743"/>
+        </semantic>
+        <semantic type="timeframe">
+          <inherited_from_tracker id="T36343"/>
         </semantic>
       </semantics>
       <rules>
@@ -2054,14 +2046,8 @@
         <permission scope="field" REF="F792744" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
         <permission scope="field" REF="F792744" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
         <permission scope="field" REF="F792744" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
-        <permission scope="field" REF="F910846" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
-        <permission scope="field" REF="F910846" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
-        <permission scope="field" REF="F910846" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
         <permission scope="field" REF="F792746" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
         <permission scope="field" REF="F792746" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
-        <permission scope="field" REF="F910845" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
-        <permission scope="field" REF="F910845" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
-        <permission scope="field" REF="F910845" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
         <permission scope="field" REF="F792748" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
         <permission scope="field" REF="F792748" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
         <permission scope="field" REF="F792748" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
@@ -2122,7 +2108,7 @@
           <backlog>T37020</backlog>
         </backlogs>
       </planning>
-      <planning name="Iteration Planning" plan_title="Sprint Plan" planning_tracker_id="T36343" backlog_title="Epic Backlog">
+      <planning name="Iteration Planning" plan_title="Iteration Plan" planning_tracker_id="T36343" backlog_title="Epic Backlog">
         <backlogs>
           <backlog>T478</backlog>
           <backlog>T36345</backlog>
@@ -2131,9 +2117,6 @@
       </planning>
     </plannings>
     <kanban_list title="Kanban">
-      <kanban tracker_id="T425" name="Activities" ID="K01">
-        <column wip="1" REF="V13416"/>
-      </kanban>
       <kanban tracker_id="T36345" name="User Stories" ID="K4039"/>
     </kanban_list>
   </agiledashboard>
