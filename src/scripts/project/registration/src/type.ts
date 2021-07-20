@@ -61,6 +61,7 @@ export interface ExternalTemplateData extends TemplateData {
 export interface ExternalTemplateCategory {
     shortname: string;
     label: string;
+    should_case_of_label_be_respected: boolean;
 }
 
 export interface ProjectProperties {

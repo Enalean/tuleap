@@ -49,11 +49,16 @@ class TeamTemplate implements CategorisedTemplate
 
     public function __construct(GlyphFinder $glyph_finder, ConsistencyChecker $consistency_checker)
     {
-        $this->title               = dgettext('tuleap-program_management', 'Essential SAFe(R) - Scrum Team');
-        $this->description         = dgettext(
-            'tuleap-program_management',
-            'This Tuleap template helps cross-functional group of people to define, build, test, and deliver an increment of value in a short time box. This is a ready-to-use environment based on Scrum approach, linked with the above Agile Release Train and Program Increments. Scrum Master, Product Owner and other agile teammates can manage Team Events, Backlog and Team Artifacts, as Stories, Tasks and Tests. This template has to be used with the Tuleap template "Essential SAFe(R) - ART and Program Management"'
+        $this->title       = AsciiRegisteredToUnicodeConvertor::convertSafeRegisteredBecauseOurGettextExtractionIsClumsy(
+            dgettext('tuleap-program_management', 'Essential SAFe(R) - Scrum Team')
         );
+        $this->description = AsciiRegisteredToUnicodeConvertor::convertSafeRegisteredBecauseOurGettextExtractionIsClumsy(
+            dgettext(
+                'tuleap-program_management',
+                'This Tuleap template helps cross-functional group of people to define, build, test, and deliver an increment of value in a short time box. This is a ready-to-use environment based on Scrum approach, linked with the above Agile Release Train and Program Increments. Scrum Master, Product Owner and other agile teammates can manage Team Events, Backlog and Team Artifacts, as Stories, Tasks and Tests. This template has to be used with the Tuleap template "Essential SAFe(R) - ART and Program Management"'
+            )
+        );
+
         $this->glyph_finder        = $glyph_finder;
         $this->consistency_checker = $consistency_checker;
         $this->template_category   = TemplateCategorySAFe::build();
@@ -102,6 +107,7 @@ class TeamTemplate implements CategorisedTemplate
                 throw new \RuntimeException("Can not copy TTM file for tuleap template import");
             }
         }
+
         return $this->xml_path;
     }
 
@@ -110,6 +116,7 @@ class TeamTemplate implements CategorisedTemplate
         if ($this->available === null) {
             $this->available = $this->consistency_checker->areAllServicesAvailable($this->getXMLPath());
         }
+
         return $this->available;
     }
 

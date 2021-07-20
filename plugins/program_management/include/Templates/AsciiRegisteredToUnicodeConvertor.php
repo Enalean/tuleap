@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2021 - present. All Rights Reserved.
+ * Copyright (c) Enalean, 2021 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,32 +22,17 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Templates;
 
-use Tuleap\Project\Registration\Template\TemplateCategory;
-
 /**
  * @psalm-immutable
  */
-final class TemplateCategorySAFe implements TemplateCategory
+final class AsciiRegisteredToUnicodeConvertor
 {
-    public string $shortname;
-    public string $label;
-    public bool $should_case_of_label_be_respected;
-
-    private function __construct(string $shortname, string $label)
+    public static function convertSafeRegisteredBecauseOurGettextExtractionIsClumsy(string $str): string
     {
-        $this->shortname = $shortname;
-        $this->label     = $label;
-
-        $this->should_case_of_label_be_respected = true;
-    }
-
-    public static function build(): self
-    {
-        return new self(
-            'SAFe',
-            AsciiRegisteredToUnicodeConvertor::convertSafeRegisteredBecauseOurGettextExtractionIsClumsy(
-                dgettext('tuleap-program_management', 'SAFe(R)')
-            )
+        return str_replace(
+            ['SAFe(R)', 'Scaled Agile Framework(R)'],
+            ['SAFe®', 'Scaled Agile Framework®'],
+            $str
         );
     }
 }

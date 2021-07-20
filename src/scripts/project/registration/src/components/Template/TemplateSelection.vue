@@ -40,7 +40,7 @@
                 v-for="category in external_templates_categories"
                 v-bind:key="'tab-' + category.shortname"
                 v-on:click="setSelectedTemplateCategory(category.shortname)"
-                v-bind:class="getTabsClasses(category.shortname)"
+                v-bind:class="getExternalCategoryClasses(category)"
                 v-bind:data-test="'project-registration-' + category.shortname + '-templates-tab'"
             >
                 {{ category.label }}
@@ -157,6 +157,16 @@ export default class TemplateSelection extends Vue {
         }
 
         return "templates-category-tab";
+    }
+
+    getExternalCategoryClasses(category: ExternalTemplateCategory): string {
+        return (
+            this.getTabsClasses(category.shortname) +
+            " " +
+            (category.should_case_of_label_be_respected
+                ? "templates-category-tab-with-mixed-case"
+                : "")
+        );
     }
 
     get platform_template_name(): string {

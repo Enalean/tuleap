@@ -92,6 +92,7 @@ describe("TemplateSelection", () => {
                 template_category: {
                     shortname: "SAFe",
                     label: "Program/Teams",
+                    should_case_of_label_be_respected: true,
                 },
             },
             {
@@ -103,6 +104,7 @@ describe("TemplateSelection", () => {
                 template_category: {
                     shortname: "dummies",
                     label: "Dummies",
+                    should_case_of_label_be_respected: true,
                 },
             },
         ];
