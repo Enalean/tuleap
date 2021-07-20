@@ -80,6 +80,18 @@ describe("UserProjectList", () => {
         expect(wrapper.vm.$data.selected_project).toBe(project_a);
     });
 
+    it("Should reset the selection when the currently selected template has been reset", async () => {
+        wrapper = shallowMount(UserProjectList, {
+            localVue: await createProjectRegistrationLocalVue(),
+            propsData: { projectList: project_list, selectedCompanyTemplate: project_a },
+            mocks: { $store: store },
+        });
+
+        wrapper.vm.$data.selected_project = null;
+
+        expect(wrapper.vm.$data.selected_project).toBe(null);
+    });
+
     it(`user can select a project`, async () => {
         wrapper = shallowMount(UserProjectList, {
             localVue: await createProjectRegistrationLocalVue(),

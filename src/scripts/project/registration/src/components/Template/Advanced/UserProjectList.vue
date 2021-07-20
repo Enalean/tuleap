@@ -46,7 +46,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop } from "vue-property-decorator";
+import { Component, Prop, Watch } from "vue-property-decorator";
 import Vue from "vue";
 import type { TemplateData } from "../../../type";
 
@@ -57,6 +57,13 @@ export default class UserProjectList extends Vue {
 
     @Prop({ required: true })
     readonly selectedCompanyTemplate!: null | TemplateData;
+
+    @Watch("selectedCompanyTemplate")
+    observeSelectedCompanyTemplate(): void {
+        if (this.selectedCompanyTemplate === null) {
+            this.selected_project = "";
+        }
+    }
 
     private selected_project: TemplateData | string = "";
 
