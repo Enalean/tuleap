@@ -35,7 +35,7 @@
     box-sizing: border-box;
     width: 10px;
     height: 10px;
-    border: 1px solid var(--tlp-dimmed-color);
+    border: 2px solid var(--tlp-dimmed-color);
     border-radius: 50%;
 }
 
@@ -45,7 +45,7 @@
     position: absolute;
     top: 6px;
     box-sizing: border-box;
-    height: 1px;
+    height: 2px;
 }
 
 .tlp-wizard-step-previous,
@@ -116,7 +116,7 @@
 
 .tlp-wizard-step-current {
     &::before {
-        background: radial-gradient(circle, var(--tlp-main-color) 0, var(--tlp-main-color) 2px, transparent 3px);
+        background: radial-gradient(circle, var(--tlp-main-color) 0, var(--tlp-main-color) 1px, transparent 2px);
     }
 }
 

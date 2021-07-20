@@ -22,14 +22,14 @@
 @use './includes/services';
 
 $illustration-width: 319px;
-$illustration-spacing: calc(2 * var(--tlp-large-spacing));
+$illustration-spacing: calc(2 * var(--tlp-jumbo-spacing));
 $title-margin-left: calc(#{$illustration-width} + #{$illustration-spacing});
 $template-category-active-tab-right-border-width: 3px;
 $template-category-inactive-tab-right-border-width: 1px;
 $template-category-inactive-tab-right-margin: calc(var(--tlp-medium-spacing) + #{$template-category-active-tab-right-border-width} - #{$template-category-inactive-tab-right-border-width});
 
 .project-registration {
-    padding: var(--tlp-x-large-spacing) var(--tlp-x-large-spacing) 100px;
+    padding: var(--tlp-medium-spacing) var(--tlp-medium-spacing) 100px;
 }
 
 .project-registration-content {
@@ -41,7 +41,7 @@ $template-category-inactive-tab-right-margin: calc(var(--tlp-medium-spacing) + #
 
 .register-new-project-boxes {
     min-width: $illustration-width;
-    margin: 70px 0 0;
+    margin: $illustration-spacing 0 0;
 }
 
 .register-new-project-section {
@@ -64,7 +64,7 @@ $template-category-inactive-tab-right-margin: calc(var(--tlp-medium-spacing) + #
 
 .project-registration-button-container {
     padding: var(--tlp-medium-spacing) 0 0;
-    border-top: 1px solid var(--tlp-neutral-dark-color);
+    border-top: 1px solid var(--tlp-neutral-dark-color-transparent-50);
 
     > .project-registration-content {
         display: flex;
@@ -124,7 +124,7 @@ $template-category-inactive-tab-right-margin: calc(var(--tlp-medium-spacing) + #
 
     > .templates-category-tab {
         padding: var(--tlp-medium-spacing) $template-category-inactive-tab-right-margin var(--tlp-medium-spacing) var(--tlp-medium-spacing);
-        border-right: $template-category-inactive-tab-right-border-width solid var(--tlp-dark-color-transparent-50);
+        border-right: $template-category-inactive-tab-right-border-width solid var(--tlp-neutral-dark-color-transparent-50);
         color: var(--tlp-dimmed-color);
         font-weight: 600;
         text-transform: uppercase;
@@ -140,20 +140,38 @@ $template-category-inactive-tab-right-margin: calc(var(--tlp-medium-spacing) + #
 }
 
 @media screen and (max-width: 1000px) {
+    .project-registration-content {
+        justify-content: stretch;
+    }
+
+    .project-registration-form {
+        width: 100%;
+    }
+
     .register-new-project-section {
         flex-direction: column;
         margin: 0;
     }
 
     .project-registration-title {
-        margin: var(--tlp-large-spacing) 0 var(--tlp-medium-spacing);
+        margin: 0 0 var(--tlp-medium-spacing);
     }
 
     .register-new-project-boxes {
-        margin: var(--tlp-medium-spacing) 0 0;
+        display: none;
+        margin: 0 0 var(--tlp-x-large-spacing);
+
+        > svg {
+            width: auto;
+            height: calc(2 * var(--tlp-jumbo-spacing));
+        }
     }
 
     .register-new-project-list {
         margin: 0;
+
+        &.register-new-project-information {
+            width: 100%;
+        }
     }
 }
