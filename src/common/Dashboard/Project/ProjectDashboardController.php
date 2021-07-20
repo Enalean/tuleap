@@ -144,7 +144,7 @@ class ProjectDashboardController
             new DisplayCreatedProjectModalPresenter(
                 $request->get("should-display-created-project-modal"),
                 $project,
-                $request->get('xml_template_name')
+                $request->get('xml-template-name')
             )
         );
         \assert($display_project_created_modal_presenter instanceof DisplayCreatedProjectModalPresenter);
