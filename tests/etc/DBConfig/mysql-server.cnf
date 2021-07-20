@@ -20,6 +20,7 @@ datadir                             = /tmp
 tmpdir                              = /tmp
 skip_external_locking
 bind_address                        = 0.0.0.0
+lower_case_table_names              = 1
 
 sql-mode="NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION"
 
