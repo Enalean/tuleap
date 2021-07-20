@@ -42,7 +42,21 @@
         </div>
         <div class="program-backlog-empty-state" v-else data-test="configuration-empty-state">
             <configuration-empty-state />
-            <div class="program-management-empty-state-label">{{ emptyStateLabel() }}</div>
+            <div
+                class="program-management-empty-state-label"
+                v-if="is_program_admin"
+                data-test="administrator-empty-state"
+            >
+                <p v-dompurify-html="getAdminEmptyState()"></p>
+            </div>
+            <div
+                class="program-management-empty-state-label"
+                v-else
+                data-test="regular-user-empty-state"
+                v-translate
+            >
+                Program configuration is incomplete. That can be done in administration of service.
+            </div>
         </div>
         <error-modal v-if="has_modal_error" />
     </div>
@@ -73,6 +87,7 @@ import {
 import { Action, State, namespace, Getter } from "vuex-class";
 import ErrorModal from "./Backlog/ErrorModal.vue";
 import ConfigurationEmptyState from "./ConfigurationEmptyState.vue";
+import { sprintf } from "sprintf-js";
 
 const configuration = namespace("configuration");
 
@@ -164,9 +179,13 @@ export default class App extends Vue {
         }
     }
 
-    emptyStateLabel(): string {
-        return this.$gettext(
-            "Program configuration is incomplete. That can be done in administration of service."
+    getAdminEmptyState(): string {
+        const url = `/program_management/admin/${this.short_name}`;
+        return sprintf(
+            this.$gettext(
+                "Program configuration is incomplete. That can be done in <a href='%s'>administration</a> of service."
+            ),
+            url
         );
     }
 }
