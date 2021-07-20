@@ -135,10 +135,10 @@ final class PluginManagerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testInstallPlugin(): void
     {
         $root = \org\bovigo\vfs\vfsStream::setup()->url();
-        ForgeConfig::set('sys_pluginsroot', $root . '/usr/share/tuleap/plugins');
-        ForgeConfig::set('sys_custompluginsroot', $root . '/etc/tuleap/plugins');
+        ForgeConfig::set('sys_pluginsroot', $root . '/usr/share/tuleap/plugins/');
+        ForgeConfig::set('sys_custompluginsroot', $root . '/etc/tuleap/plugins/');
 
-        mkdir($root . '/usr/share/tuleap/plugins', 0755, true);
+        mkdir($root . '/usr/share/tuleap/plugins/New_Plugin/db', 0755, true);
         mkdir($root . '/etc/tuleap/plugins', 0755, true);
 
         //The plugins

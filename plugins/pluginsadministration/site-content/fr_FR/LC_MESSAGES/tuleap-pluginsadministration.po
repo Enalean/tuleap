@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 2.0.6\n"
+"X-Generator: Poedit 3.0\n"
 
 #, php-format
 msgid "%1$s is now available."
@@ -136,6 +136,10 @@ msgstr "Le plugin \"%1$s\" a été désinstallé."
 #, php-format
 msgid "Plugin \"%1$s\" have not been uninstalled."
 msgstr "Le plugin \"%1$s\" n'a pas été désinstallé."
+
+#, php-format
+msgid "Plugin installation failed: %1s"
+msgstr "L'installation du plugin a échoué: %1s"
 
 msgid "Plugin properties have been successfully updated"
 msgstr "Les propriétés du plugin ont été mises à jour avec succès"

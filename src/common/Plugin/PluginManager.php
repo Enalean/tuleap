@@ -63,10 +63,7 @@ class PluginManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
         $this->commonmark_content_interpretor = $commonmark_content_interpretor;
     }
 
-    /**
-     * @return PluginManager
-     */
-    public static function instance()
+    public static function instance(): PluginManager
     {
         if (! self::$instance) {
             self::$instance = new self(
@@ -264,19 +261,16 @@ class PluginManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
     /**
      * Initialize ForgeUpgrade configuration for given plugin
      *
-     * Add in configuration and record existing migration scripts as 'skipped'
+     * Record existing migration scripts as 'skipped'
      * because the 'install.sql' script is up-to-date with latest DB modif.
-     *
-     * @param String $name Plugin's name
      */
-    protected function configureForgeUpgrade($name)
+    private function configureForgeUpgrade(string $name): void
     {
-        try {
-            $plugin_path = ForgeConfig::get('sys_pluginsroot') . $name . '/db';
-            $this->forgeupgrade_config->recordOnlyPath($plugin_path);
-        } catch (Exception $e) {
-            $GLOBALS['Response']->addFeedback('warning', "ForgeUpgrade configuration update failed: " . $e->getMessage());
+        $plugin_path = ForgeConfig::get('sys_pluginsroot') . $name . '/db';
+        if (! is_dir($plugin_path)) {
+            return;
         }
+        $this->forgeupgrade_config->recordOnlyPath($plugin_path);
     }
 
     private function createEtc(string $name): void
