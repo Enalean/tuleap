@@ -26,10 +26,6 @@ import { submitConfigurationHandler } from "./milestones/submit-configuration-ha
 import { initPreviewTrackerLabels } from "./helper/init-preview-labels-helper";
 import { DocumentAdapter } from "./dom/DocumentAdapter";
 
-export const PROGRAM_INCREMENT_LABEL_ID = "admin-configuration-program-increment-label-section";
-export const PROGRAM_INCREMENT_SUB_LABEL_ID =
-    "admin-configuration-program-increment-sub-label-section";
-
 document.addEventListener("DOMContentLoaded", async () => {
     const language = document.body.dataset.userLocale;
     if (language === undefined) {
@@ -67,5 +63,5 @@ document.addEventListener("DOMContentLoaded", async () => {
     addTeamInProgram(program_id, document);
     await initListPickersMilestoneSection(document, gettext_provider, use_iteration);
     submitConfigurationHandler(document, gettext_provider, program_id, use_iteration);
-    initPreviewTrackerLabels(document, gettext_provider, new DocumentAdapter(document));
+    initPreviewTrackerLabels(new DocumentAdapter(document), gettext_provider);
 });

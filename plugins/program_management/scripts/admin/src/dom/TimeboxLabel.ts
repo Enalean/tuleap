@@ -20,8 +20,11 @@
 import type { RetrieveElement } from "./RetrieveElement";
 
 export type InputCallback = (value: string) => void;
+type Handler = () => void;
 
 export class TimeboxLabel {
+    private handlers: Handler[] = [];
+
     private constructor(private readonly input: HTMLInputElement) {}
 
     get value(): string {
@@ -29,9 +32,16 @@ export class TimeboxLabel {
     }
 
     addInputListener(callback: InputCallback): void {
-        this.input.addEventListener("input", () => {
-            callback(this.value);
-        });
+        const handler = (): void => callback(this.value);
+        this.handlers.push(handler);
+        this.input.addEventListener("input", handler);
+    }
+
+    removeInputListeners(): void {
+        for (const handler of this.handlers) {
+            this.input.removeEventListener("input", handler);
+        }
+        this.handlers = [];
     }
 
     static fromId(retriever: RetrieveElement, id: string): TimeboxLabel {

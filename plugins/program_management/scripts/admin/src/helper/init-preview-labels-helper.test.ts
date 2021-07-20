@@ -19,41 +19,19 @@
 
 import { initPreviewTrackerLabels } from "./init-preview-labels-helper";
 import type { GettextProvider } from "../GettextProvider";
-import * as previewActualizer from "../milestones/preview-actualizer";
-import { RetrieveElementStub } from "../dom/RetrieveElementStub";
+import { DocumentAdapter } from "../dom/DocumentAdapter";
 
 const createDocument = (): Document => document.implementation.createHTMLDocument();
 
-jest.mock("../milestones/preview-actualizer");
 describe("init-preview-labels-helper", () => {
     describe("initPreviewTrackerLabels", () => {
         const gettext_provider: GettextProvider = { gettext: (s) => s };
         it("Do not init preview when program increment label element does not exist", function () {
             const doc = createDocument();
-            const init_preview = jest.spyOn(previewActualizer, "initPreview");
 
-            initPreviewTrackerLabels(doc, gettext_provider, RetrieveElementStub.withElements());
-            expect(init_preview).not.toHaveBeenCalled();
-        });
-        it("Init preview is called when program increment label element exists", function () {
-            const doc = createDocument();
-            const init_preview = jest.spyOn(previewActualizer, "initPreview");
-
-            const program_increment_label = document.createElement("input");
-            program_increment_label.id = "admin-configuration-program-increment-label-section";
-            const program_increment_sub_label = document.createElement("input");
-
-            doc.body.appendChild(program_increment_label);
-
-            initPreviewTrackerLabels(
-                doc,
-                gettext_provider,
-                RetrieveElementStub.withElements(
-                    program_increment_label,
-                    program_increment_sub_label
-                )
-            );
-            expect(init_preview).toHaveBeenCalled();
+            expect(() =>
+                initPreviewTrackerLabels(new DocumentAdapter(doc), gettext_provider)
+            ).not.toThrow();
         });
     });
 });

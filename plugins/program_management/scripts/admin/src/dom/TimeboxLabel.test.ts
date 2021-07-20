@@ -29,22 +29,34 @@ describe(`TimeboxLabel`, () => {
     it(`gets the input's value`, () => {
         const input = doc.createElement("input");
         input.value = "lactonize";
-        const retriever = RetrieveElementStub.withElements(input);
 
-        const label = TimeboxLabel.fromId(retriever, "some_id");
+        const label = TimeboxLabel.fromId(RetrieveElementStub.withElements(input), "some_id");
         expect(label.value).toEqual("lactonize");
     });
 
     it(`adds an event listener on "input" and calls the callback with the input's value`, () => {
         const input = doc.createElement("input");
         input.value = "Sicyonic";
-        const retriever = RetrieveElementStub.withElements(input);
 
-        const label = TimeboxLabel.fromId(retriever, "some_id");
+        const label = TimeboxLabel.fromId(RetrieveElementStub.withElements(input), "some_id");
         const callback = jest.fn();
         label.addInputListener(callback);
 
         input.dispatchEvent(new InputEvent("input"));
         expect(callback).toHaveBeenCalledWith("Sicyonic");
+    });
+
+    it(`removes all input listeners`, () => {
+        const input = doc.createElement("input");
+        input.value = "sophiologic";
+
+        const label = TimeboxLabel.fromId(RetrieveElementStub.withElements(input), "some_id");
+        const callback = jest.fn();
+        expect(callback).not.toBeCalled();
+        label.addInputListener(callback);
+        label.addInputListener(callback);
+        label.removeInputListeners();
+
+        input.dispatchEvent(new InputEvent("input"));
     });
 });
