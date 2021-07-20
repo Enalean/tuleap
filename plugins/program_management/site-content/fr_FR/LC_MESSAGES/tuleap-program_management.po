@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 2.3\n"
+"X-Generator: Poedit 2.4.3\n"
 
 msgid "Add to top backlog"
 msgstr "Ajouter à la planification générale"
@@ -89,6 +89,9 @@ msgid ""
 msgstr ""
 "Permet la gestion de plusieurs projets, de synchroniser les équipes et les "
 "jalons"
+
+msgid "Essential SAFe(R) - ART and Program Management"
+msgstr "Essential SAFe(R) - ART et Gestion de Programme"
 
 #, php-format
 msgid ""
@@ -308,6 +311,9 @@ msgstr "Enlever l'équipe"
 msgid "Remove team from program"
 msgstr "Enlever l'équipe du programme"
 
+msgid "SAFe"
+msgstr "SAFe"
+
 msgid "Save configuration"
 msgstr "Sauvegarder la configuration"
 
@@ -384,6 +390,22 @@ msgstr ""
 #, php-format
 msgid "The user group %s does not exist in the Program"
 msgstr "Le groupe  utilisateur %s  n'existe pas dans le Programme"
+
+msgid ""
+"This Tuleap template helps align several teams to a shared business and "
+"technology mission applying the principles of the Essential Scaled Agile "
+"Framework(R). You can manage SAFe Agile Release Train (ART) and Program "
+"Increments (PI), Program Backlog, Program Kanban, Roadmap and ART artifacts "
+"as Features, Enablers, or Program Epics. This template has to be used with "
+"the Tuleap template \"Essential SAFe(R) - Scrum Team\""
+msgstr ""
+"Ce modèle Tuleap permet d'aligner plusieurs équipes sur une mission "
+"commerciale et technologique partagée en appliquant les principes de "
+"l'Essential Scaled Agile Framework(R). Vous pouvez gérer SAFe Agile Release "
+"Train (ART) et Program Increments (PI), Program Backlog, Program Kanban, "
+"Roadmap et ART artéfacts en tant que Features, Enablers ou Program Epics. Ce "
+"modèle doit être utilisé avec le modèle Tuleap \"Essential SAFe(R) - Équipe "
+"Scrum\""
 
 msgid "Timeframe"
 msgstr "Plage de temps"

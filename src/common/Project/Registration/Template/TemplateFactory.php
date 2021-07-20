@@ -25,6 +25,7 @@ namespace Tuleap\Project\Registration\Template;
 
 use ProjectManager;
 use Tuleap\Glyph\GlyphFinder;
+use Tuleap\Project\Registration\Template\Events\CollectCategorisedExternalTemplatesEvent;
 use Tuleap\Project\XML\ConsistencyChecker;
 use Tuleap\Project\XML\ServiceEnableForXmlImportRetriever;
 use Tuleap\Project\XML\XMLFileContentRetriever;
@@ -36,6 +37,11 @@ class TemplateFactory
      * @var array<string,TuleapTemplate>
      */
     private $templates;
+
+    /**
+     * @var array<string, TuleapTemplate>
+     */
+    private $external_templates;
     /**
      * @var TemplateDao
      */
@@ -49,12 +55,17 @@ class TemplateFactory
      */
     private $glyph_finder;
 
+    private \EventManager $event_manager;
+    private CollectCategorisedExternalTemplatesEvent $categorised_external_templates_event;
+
     public function __construct(
         GlyphFinder $glyph_finder,
         ProjectXMLMerger $project_xml_merger,
         ConsistencyChecker $consistency_checker,
         TemplateDao $template_dao,
-        ProjectManager $project_manager
+        ProjectManager $project_manager,
+        \EventManager $event_manager,
+        CollectCategorisedExternalTemplatesEvent $categorised_external_templates_event
     ) {
         $this->template_dao    = $template_dao;
         $this->templates       = [
@@ -66,22 +77,29 @@ class TemplateFactory
         ];
         $this->project_manager = $project_manager;
         $this->glyph_finder    = $glyph_finder;
+        $this->event_manager   = $event_manager;
+
+        $this->categorised_external_templates_event = $categorised_external_templates_event;
+        $this->external_templates                   = $this->getExternalTemplatesByName();
     }
 
     public static function build(): self
     {
+        $event_manager = \EventManager::instance();
         return new self(
             new GlyphFinder(
-                \EventManager::instance()
+                $event_manager
             ),
             new ProjectXMLMerger(),
             new ConsistencyChecker(
                 new XMLFileContentRetriever(),
-                \EventManager::instance(),
+                $event_manager,
                 new ServiceEnableForXmlImportRetriever(\PluginFactory::instance())
             ),
             new TemplateDao(),
-            \ProjectManager::instance()
+            \ProjectManager::instance(),
+            $event_manager,
+            new CollectCategorisedExternalTemplatesEvent()
         );
     }
 
@@ -112,10 +130,15 @@ class TemplateFactory
         if ($name === EmptyTemplate::NAME && isset($this->templates[$name])) {
             return $this->templates[EmptyTemplate::NAME];
         }
-        if (! isset($this->templates[$name]) || ! $this->templates[$name]->isAvailable()) {
-            throw new InvalidXMLTemplateNameException();
+
+        if (isset($this->templates[$name]) && $this->templates[$name]->isAvailable()) {
+            return $this->templates[$name];
         }
-        return $this->templates[$name];
+
+        if (isset($this->external_templates[$name]) && $this->external_templates[$name]->isAvailable()) {
+            return $this->external_templates[$name];
+        }
+        throw new InvalidXMLTemplateNameException();
     }
 
     public function recordUsedTemplate(\Project $project, ProjectTemplate $template): \Project
@@ -152,5 +175,30 @@ class TemplateFactory
             $company_templates[] = new CompanyTemplate($project_template, $this->glyph_finder);
         }
         return $company_templates;
+    }
+
+    public function getCategorisedExternalTemplates(): array
+    {
+        $categorised_templates = [];
+        foreach ($this->external_templates as $template) {
+            if ($template->isAvailable()) {
+                $categorised_templates[] = $template;
+            }
+        }
+
+        return $categorised_templates;
+    }
+
+    private function getExternalTemplatesByName(): array
+    {
+        $this->event_manager->dispatch($this->categorised_external_templates_event);
+        $external_templates = $this->categorised_external_templates_event->getCategorisedTemplates();
+        $templates_by_name  = [];
+
+        foreach ($external_templates as $template) {
+            $templates_by_name[$template->getId()] = $template;
+        }
+
+        return $templates_by_name;
     }
 }

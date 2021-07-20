@@ -54,6 +54,15 @@ export interface TemplateData {
     is_built_in: boolean;
 }
 
+export interface ExternalTemplateData extends TemplateData {
+    template_category: ExternalTemplateCategory;
+}
+
+export interface ExternalTemplateCategory {
+    shortname: string;
+    label: string;
+}
+
 export interface ProjectProperties {
     shortname: string;
     label: string;

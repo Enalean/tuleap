@@ -29,6 +29,15 @@
                 Tuleap
             </div>
             <div
+                v-for="category in external_templates_categories"
+                v-bind:key="'tab-' + category.shortname"
+                v-on:click="setSelectedTemplateCategory(category.shortname)"
+                v-bind:class="getTabsClasses(category.shortname)"
+                v-bind:data-test="'project-registration-' + category.shortname + '-templates-tab'"
+            >
+                {{ category.label }}
+            </div>
+            <div
                 v-if="company_templates.length > 0"
                 v-on:click="setSelectedTemplateCategory(CATEGORY_ACME)"
                 v-bind:class="getTabsClasses(CATEGORY_ACME)"
@@ -48,6 +57,12 @@
         <tuleap-template-list v-show="isTemplateCategorySelected(CATEGORY_TULEAP)" />
         <company-templates-list v-show="isTemplateCategorySelected(CATEGORY_ACME)" />
         <advanced-template-list v-show="isTemplateCategorySelected(CATEGORY_ADVANCED)" />
+        <categorised-external-templates-list
+            v-for="category_name in categorised_external_templates_map.keys()"
+            v-bind:key="category_name"
+            v-show="isTemplateCategorySelected(category_name)"
+            v-bind:templates="categorised_external_templates_map.get(category_name)"
+        />
     </div>
 </template>
 
@@ -58,7 +73,8 @@ import { namespace } from "vuex-class";
 import AdvancedTemplateList from "./Advanced/AdvancedTemplateList.vue";
 import CompanyTemplatesList from "./Company/CompanyTemplateList.vue";
 import TuleapTemplateList from "./Tuleap/TuleapTemplateList.vue";
-import type { TemplateData } from "../../type";
+import CategorisedExternalTemplatesList from "./CategorisedExternalTemplates/CategorisedExternalTemplatesList.vue";
+import type { ExternalTemplateCategory, ExternalTemplateData, TemplateData } from "../../type";
 
 const configuration = namespace("configuration");
 
@@ -67,6 +83,7 @@ const configuration = namespace("configuration");
         AdvancedTemplateList,
         CompanyTemplatesList,
         TuleapTemplateList,
+        CategorisedExternalTemplatesList,
     },
 })
 export default class TemplateSelection extends Vue {
@@ -75,6 +92,8 @@ export default class TemplateSelection extends Vue {
     private readonly CATEGORY_ADVANCED = "Advanced";
 
     private selected_template_category = "";
+    private external_templates_categories: ExternalTemplateCategory[] = [];
+    private categorised_external_templates_map = new Map<string, ExternalTemplateData[]>();
 
     @configuration.State
     company_name!: string;
@@ -85,16 +104,39 @@ export default class TemplateSelection extends Vue {
     @configuration.State
     company_templates!: TemplateData[];
 
+    @configuration.State
+    external_templates!: ExternalTemplateData[];
+
     mounted(): void {
+        this.external_templates.forEach((template) => {
+            const category_templates = this.categorised_external_templates_map.get(
+                template.template_category.shortname
+            );
+            if (category_templates) {
+                category_templates.push(template);
+                return;
+            }
+            this.external_templates_categories.push(template.template_category);
+            this.categorised_external_templates_map.set(template.template_category.shortname, [
+                template,
+            ]);
+        });
+
         if (this.tuleap_templates.length > 0) {
             this.selected_template_category = this.CATEGORY_TULEAP;
+            return;
+        }
 
+        const first_external_template_category = this.categorised_external_templates_map
+            .keys()
+            .next().value;
+        if (first_external_template_category) {
+            this.selected_template_category = first_external_template_category;
             return;
         }
 
         if (this.company_templates.length > 0) {
             this.selected_template_category = this.CATEGORY_ACME;
-
             return;
         }
 
