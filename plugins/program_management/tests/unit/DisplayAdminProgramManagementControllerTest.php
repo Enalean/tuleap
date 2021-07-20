@@ -25,10 +25,8 @@ namespace Tuleap\ProgramManagement;
 use Project;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\ProgramManagement\Domain\BuildProject;
-use Tuleap\ProgramManagement\Domain\Program\Admin\IterationTrackerConfiguration\PotentialIterationTrackerConfigurationPresentersBuilder;
 use Tuleap\ProgramManagement\Domain\Program\Admin\PlannableTrackersConfiguration\PotentialPlannableTrackersConfigurationPresentersBuilder;
 use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramAdminPresenter;
-use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramIncrementTrackerConfiguration\PotentialProgramIncrementTrackerConfigurationPresentersBuilder;
 use Tuleap\ProgramManagement\Domain\TrackerReference;
 use Tuleap\ProgramManagement\Domain\Workspace\RetrieveProject;
 use Tuleap\ProgramManagement\Stub\AllProgramSearcherStub;
@@ -75,7 +73,6 @@ final class DisplayAdminProgramManagementControllerTest extends \Tuleap\Test\PHP
      * @var \EventManager|\PHPUnit\Framework\MockObject\MockObject
      */
     private $event_manager;
-    private PotentialProgramIncrementTrackerConfigurationPresentersBuilder $program_increment_tracker_builder;
     private VerifyIsTeamStub $team_verifier;
     private VerifyProjectPermissionStub $permission_verifier;
     private PotentialPlannableTrackersConfigurationPresentersBuilder $plannable_tracker_builder;
@@ -85,18 +82,17 @@ final class DisplayAdminProgramManagementControllerTest extends \Tuleap\Test\PHP
     {
         $this->variables = ['project_name' => 'not_found'];
 
-        $user                                    = UserTestBuilder::aUser()->withRealName('Test User')->build();
-        $this->request                           = HTTPRequestBuilder::get()->withUser($user)->build();
-        $this->template_renderer                 = $this->createMock(\TemplateRenderer::class);
-        $this->breadcrumbs_builder               = $this->createStub(ProgramManagementBreadCrumbsBuilder::class);
-        $this->team_searcher                     = SearchTeamsOfProgramStub::buildTeams(150);
-        $this->build_project                     = new BuildProjectStub();
-        $this->event_manager                     = $this->createMock(\EventManager::class);
-        $this->program_increment_tracker_builder = new PotentialProgramIncrementTrackerConfigurationPresentersBuilder();
-        $this->plannable_tracker_builder         = new PotentialPlannableTrackersConfigurationPresentersBuilder(RetrievePlannableTrackersStub::buildIds());
-        $this->build_program                     = BuildProgramStub::stubValidProgram();
-        $this->team_verifier                     = VerifyIsTeamStub::withNotValidTeam();
-        $this->permission_verifier               = VerifyProjectPermissionStub::withAdministrator();
+        $user                            = UserTestBuilder::aUser()->withRealName('Test User')->build();
+        $this->request                   = HTTPRequestBuilder::get()->withUser($user)->build();
+        $this->template_renderer         = $this->createMock(\TemplateRenderer::class);
+        $this->breadcrumbs_builder       = $this->createStub(ProgramManagementBreadCrumbsBuilder::class);
+        $this->team_searcher             = SearchTeamsOfProgramStub::buildTeams(150);
+        $this->build_project             = new BuildProjectStub();
+        $this->event_manager             = $this->createMock(\EventManager::class);
+        $this->plannable_tracker_builder = new PotentialPlannableTrackersConfigurationPresentersBuilder(RetrievePlannableTrackersStub::buildIds());
+        $this->build_program             = BuildProgramStub::stubValidProgram();
+        $this->team_verifier             = VerifyIsTeamStub::withNotValidTeam();
+        $this->permission_verifier       = VerifyProjectPermissionStub::withAdministrator();
     }
 
     public function testItReturnsNotFoundWhenProjectIsNotFoundFromVariables(): void
@@ -170,7 +166,6 @@ final class DisplayAdminProgramManagementControllerTest extends \Tuleap\Test\PHP
             RetrieveVisibleProgramIncrementTrackerStub::withValidTracker(TrackerTestBuilder::aTracker()->build()),
             $this->event_manager,
             RetrieveVisibleIterationTrackerStub::withValidTracker(TrackerTestBuilder::aTracker()->build()),
-            $this->program_increment_tracker_builder,
             $this->plannable_tracker_builder,
             BuildProjectUGroupCanPrioritizeItemsPresentersStub::buildWithIds('102_3'),
             $this->permission_verifier,
@@ -178,7 +173,6 @@ final class DisplayAdminProgramManagementControllerTest extends \Tuleap\Test\PHP
             RetrieveTrackerFromProgramStub::fromTrackerReference(
                 TrackerReference::fromTracker(TrackerTestBuilder::aTracker()->withId(80)->withName('Sprint')->build()),
             ),
-            new PotentialIterationTrackerConfigurationPresentersBuilder(),
             RetrieveIterationLabelsStub::buildLabels(null, null),
             AllProgramSearcherStub::buildPrograms()
         );

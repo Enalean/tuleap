@@ -20,28 +20,50 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Domain\Program\Admin\IterationTrackerConfiguration;
+namespace Tuleap\ProgramManagement\Domain\Program\Admin\TimeboxTrackerConfiguration;
 
 use Tuleap\ProgramManagement\Domain\Program\Admin\PotentialTrackerCollection;
 use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramForAdministrationIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramSelectOptionConfigurationPresenter;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\IterationTracker\RetrieveVisibleIterationTracker;
-use Tuleap\ProgramManagement\Domain\TrackerReference;
-use Tuleap\ProgramManagement\Stub\RetrieveTrackerFromProgramStub;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\ProgramTracker;
+use Tuleap\ProgramManagement\Domain\TrackerReference;
 use Tuleap\ProgramManagement\Stub\BuildProgramStub;
-use Tuleap\ProgramManagement\Stub\RetrieveVisibleIterationTrackerStub;
+use Tuleap\ProgramManagement\Stub\RetrieveTrackerFromProgramStub;
+use Tuleap\ProgramManagement\Stub\RetrieveVisibleProgramIncrementTrackerStub;
 use Tuleap\ProgramManagement\Stub\VerifyIsTeamStub;
 use Tuleap\ProgramManagement\Stub\VerifyProjectPermissionStub;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
-final class PotentialIterationTrackerConfigurationPresentersBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
+final class PotentialTimeboxTrackerConfigurationPresenterCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
 {
+    private \PFUser $user;
+    private ProgramForAdministrationIdentifier $program;
+
+    protected function setUp(): void
+    {
+        $this->user    = UserTestBuilder::aUser()->build();
+        $this->program = ProgramForAdministrationIdentifier::fromProject(
+            VerifyIsTeamStub::withNotValidTeam(),
+            VerifyProjectPermissionStub::withAdministrator(),
+            $this->user,
+            ProjectTestBuilder::aProject()->withId(101)->build()
+        );
+    }
+
     public function testBuildTrackerPresentersWithCheckedTrackerIfExist(): void
     {
-        $presenters = $this->getPresenters(RetrieveVisibleIterationTrackerStub::withValidTracker(TrackerTestBuilder::aTracker()->withId(300)->build()));
+        $presenters = $this->getPresenters(
+            ProgramTracker::buildProgramIncrementTrackerFromProgram(
+                RetrieveVisibleProgramIncrementTrackerStub::withValidTracker(
+                    TrackerTestBuilder::aTracker()->withId(300)->build()
+                ),
+                ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 101, $this->user),
+                $this->user
+            )
+        );
 
         self::assertCount(2, $presenters);
         self::assertSame(300, $presenters[0]->id);
@@ -50,9 +72,9 @@ final class PotentialIterationTrackerConfigurationPresentersBuilderTest extends 
         self::assertFalse($presenters[1]->is_selected);
     }
 
-    public function testBuildTrackerPresentersWhenNoIterationTracker(): void
+    public function testBuildTrackerPresentersWithoutCheckedTracker(): void
     {
-        $presenters = $this->getPresenters(RetrieveVisibleIterationTrackerStub::withNotVisibleIterationTracker());
+        $presenters = $this->getPresenters(null);
 
         self::assertCount(2, $presenters);
         self::assertSame(300, $presenters[0]->id);
@@ -64,27 +86,17 @@ final class PotentialIterationTrackerConfigurationPresentersBuilderTest extends 
     /**
      * @return ProgramSelectOptionConfigurationPresenter[]
      */
-    private function getPresenters(RetrieveVisibleIterationTracker $retriever): array
+    private function getPresenters(?ProgramTracker $program_tracker): array
     {
-        $builder = new PotentialIterationTrackerConfigurationPresentersBuilder();
-        return $builder->buildPotentialIterationConfigurationPresenters(
+        return PotentialTimeboxTrackerConfigurationPresenterCollection::fromTimeboxTracker(
             PotentialTrackerCollection::fromProgram(
                 RetrieveTrackerFromProgramStub::fromTrackerReference(
                     TrackerReference::fromTracker(TrackerTestBuilder::aTracker()->withId(300)->withName('program increment tracker')->build()),
                     TrackerReference::fromTracker(TrackerTestBuilder::aTracker()->withId(500)->withName('feature tracker')->build()),
                 ),
-                ProgramForAdministrationIdentifier::fromProject(
-                    VerifyIsTeamStub::withNotValidTeam(),
-                    VerifyProjectPermissionStub::withAdministrator(),
-                    UserTestBuilder::aUser()->build(),
-                    \Project::buildForTest()
-                )
+                $this->program
             ),
-            ProgramTracker::buildIterationTrackerFromProgram(
-                $retriever,
-                ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 101, UserTestBuilder::aUser()->build()),
-                UserTestBuilder::aUser()->build()
-            ),
-        );
+            $program_tracker
+        )->presenters;
     }
 }

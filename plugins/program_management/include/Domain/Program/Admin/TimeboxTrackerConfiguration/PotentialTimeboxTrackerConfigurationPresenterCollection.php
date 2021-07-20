@@ -20,25 +20,38 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Domain\Program\Admin\IterationTrackerConfiguration;
+namespace Tuleap\ProgramManagement\Domain\Program\Admin\TimeboxTrackerConfiguration;
 
 use Tuleap\ProgramManagement\Domain\Program\Admin\PotentialTrackerCollection;
 use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramSelectOptionConfigurationPresenter;
 use Tuleap\ProgramManagement\Domain\ProgramTracker;
 
-final class PotentialIterationTrackerConfigurationPresentersBuilder
+/**
+ * @psalm-immutable
+ */
+final class PotentialTimeboxTrackerConfigurationPresenterCollection
 {
     /**
-     * @return ProgramSelectOptionConfigurationPresenter[]
+     * @var ProgramSelectOptionConfigurationPresenter[]
      */
-    public function buildPotentialIterationConfigurationPresenters(
+    public array $presenters;
+
+    /**
+     * @param ProgramSelectOptionConfigurationPresenter[] $presenters
+     */
+    private function __construct(array $presenters)
+    {
+        $this->presenters = $presenters;
+    }
+
+    public static function fromTimeboxTracker(
         PotentialTrackerCollection $all_potential_trackers,
-        ?ProgramTracker $iteration_tracker
-    ): array {
+        ?ProgramTracker $timebox_tracker
+    ): self {
         $potential_tracker_presenters = [];
 
         foreach ($all_potential_trackers->trackers_reference as $potential_tracker) {
-            $selected                       = $iteration_tracker && $potential_tracker->id === $iteration_tracker->getTrackerId();
+            $selected                       = $timebox_tracker && $potential_tracker->id === $timebox_tracker->getTrackerId();
             $potential_tracker_presenters[] = new ProgramSelectOptionConfigurationPresenter(
                 $potential_tracker->id,
                 $potential_tracker->label,
@@ -46,6 +59,6 @@ final class PotentialIterationTrackerConfigurationPresentersBuilder
             );
         }
 
-        return $potential_tracker_presenters;
+        return new self($potential_tracker_presenters);
     }
 }

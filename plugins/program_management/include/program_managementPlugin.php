@@ -97,9 +97,7 @@ use Tuleap\ProgramManagement\DisplayProgramBacklogController;
 use Tuleap\ProgramManagement\Domain\Service\ProjectServiceBeforeActivationHandler;
 use Tuleap\ProgramManagement\Domain\Service\ServiceDisabledCollectorHandler;
 use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ConfigurationErrorsCollector;
-use Tuleap\ProgramManagement\Domain\Program\Admin\IterationTrackerConfiguration\PotentialIterationTrackerConfigurationPresentersBuilder;
 use Tuleap\ProgramManagement\Domain\Program\Admin\PlannableTrackersConfiguration\PotentialPlannableTrackersConfigurationPresentersBuilder;
-use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramIncrementTrackerConfiguration\PotentialProgramIncrementTrackerConfigurationPresentersBuilder;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\ArtifactCreatedHandler;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck\CanSubmitNewArtifactHandler;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck\IterationCreatorChecker;
@@ -325,7 +323,6 @@ final class program_managementPlugin extends Plugin
             $this->getVisibleProgramIncrementTrackerRetriever(),
             EventManager::instance(),
             $this->getVisibleIterationTrackerRetriever(),
-            new PotentialProgramIncrementTrackerConfigurationPresentersBuilder(),
             new PotentialPlannableTrackersConfigurationPresentersBuilder(new PlanDao()),
             new ProjectUGroupCanPrioritizeItemsPresentersBuilder(
                 new UGroupManagerAdapter($project_manager, new UGroupManager()),
@@ -335,7 +332,6 @@ final class program_managementPlugin extends Plugin
             new ProjectPermissionVerifier(),
             new ProgramIncrementsDAO(),
             new TrackerFactoryAdapter(TrackerFactory::instance()),
-            new PotentialIterationTrackerConfigurationPresentersBuilder(),
             new IterationsDAO(),
             $program_dao
         );
