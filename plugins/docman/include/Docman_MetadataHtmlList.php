@@ -26,10 +26,7 @@
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 class Docman_MetadataHtmlList extends \Docman_MetadataHtml
 {
-    /**
-     * static
-     */
-    public function _getElementName($e, $hideNone = \false)
+    public static function _getElementName($e, $hideNone = \false)
     {
         $hp   = \Codendi_HTMLPurifier::instance();
         $name = '';
@@ -68,7 +65,7 @@ class Docman_MetadataHtmlList extends \Docman_MetadataHtml
             if (! $first) {
                 $html .= '<br>';
             }
-            $html .= $this->_getElementName($e, $hideNone);
+            $html .= self::_getElementName($e, $hideNone);
             $first = \false;
             $vIter->next();
         }
@@ -113,7 +110,7 @@ class Docman_MetadataHtmlList extends \Docman_MetadataHtml
             if (\in_array($e->getId(), $selectedElements)) {
                 $selected = ' selected="selected"';
             }
-            $html .= '<option value="' . $e->getId() . '"' . $selected . '>' . $this->_getElementName($e) . '</option>' . "\n";
+            $html .= '<option value="' . $e->getId() . '"' . $selected . '>' . self::_getElementName($e) . '</option>' . "\n";
             $vIter->next();
         }
         $html .= '</select>' . "\n";

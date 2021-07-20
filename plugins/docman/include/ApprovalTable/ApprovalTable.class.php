@@ -167,10 +167,10 @@ abstract class Docman_ApprovalTable
         if (isset($row['notification_occurence'])) {
             $this->notificationOccurence = $row['notification_occurence'];
         }
-        $this->approvalState = $this->computeApprovalState($row);
+        $this->approvalState = self::computeApprovalState($row);
     }
 
-    /*static*/ public function computeApprovalState($row)
+    public static function computeApprovalState($row)
     {
         $approvalState = null;
         if (isset($row['nb_reviewers']) && isset($row['rejected']) && isset($row['nb_approved']) && isset($row['nb_declined'])) {

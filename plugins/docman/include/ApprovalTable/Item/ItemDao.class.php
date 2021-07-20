@@ -42,7 +42,7 @@ class Docman_ApprovalTableItemDao extends DataAccessObject
         return false;
     }
 
-    /*static*/ public function getTableStatusFields($table = 'app_u')
+    public static function getTableStatusFields($table = 'app_u')
     {
         $fields = 'COUNT(' . $table . '.reviewer_id) AS nb_reviewers, ' .
             'COUNT(IF(' . $table . '.state = ' . PLUGIN_DOCMAN_APPROVAL_STATE_REJECTED . ',1,NULL)) AS rejected, ' .
@@ -51,14 +51,14 @@ class Docman_ApprovalTableItemDao extends DataAccessObject
         return $fields;
     }
 
-    /*static*/ public function getTableStatusJoin($tableUser = 'app_u', $tableApproval = 'app')
+    public static function getTableStatusJoin($tableUser = 'app_u', $tableApproval = 'app')
     {
         $join = 'plugin_docman_approval_user ' . $tableUser
             . ' ON (' . $tableUser . '.table_id = ' . $tableApproval . '.table_id) ';
         return $join;
     }
 
-    /*static*/ public function getTableStatusGroupBy($table = 'app_u')
+    public static function getTableStatusGroupBy($table = 'app_u')
     {
         $groupBy = $table . '.table_id ';
         return $groupBy;
@@ -68,9 +68,9 @@ class Docman_ApprovalTableItemDao extends DataAccessObject
     {
         $groupBy = '';
         if ($status) {
-            $fields .= ',' . $this->getTableStatusFields();
-            $join   .= ' LEFT JOIN ' . $this->getTableStatusJoin();
-            $groupBy = ' GROUP BY ' . $this->getTableStatusGroupBy();
+            $fields .= ',' . self::getTableStatusFields();
+            $join   .= ' LEFT JOIN ' . self::getTableStatusJoin();
+            $groupBy = ' GROUP BY ' . self::getTableStatusGroupBy();
         }
 
         $sql = ' SELECT ' . $fields .

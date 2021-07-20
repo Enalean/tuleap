@@ -101,7 +101,7 @@ class Docman_ApprovalTableReviewerFactory
     public function appendReviewerList()
     {
         if ($this->table !== null) {
-            $dao = $this->_getDao();
+            $dao = self::_getDao();
             $dar = $dao->getReviewerList($this->table->getId());
             $dar->rewind();
             while ($dar->valid()) {
@@ -144,7 +144,7 @@ class Docman_ApprovalTableReviewerFactory
     public function getReviewer($userId)
     {
         $reviewer = null;
-        $dao      = $this->_getDao();
+        $dao      = self::_getDao();
         $dar      = $dao->getReviewerById($this->table->getId(), $userId);
         if ($dar && ! $dar->isError() && $dar->rowCount() == 1) {
             $row                                      = $dar->current();
@@ -163,7 +163,7 @@ class Docman_ApprovalTableReviewerFactory
         if ($this->reviewerCache === null) {
             $this->reviewerCache = [];
 
-            $dao = $this->_getDao();
+            $dao = self::_getDao();
             foreach ($dao->getReviewerList($this->table->getId()) as $row) {
                 $this->reviewerCache[$row['reviewer_id']] = true;
 
@@ -181,7 +181,7 @@ class Docman_ApprovalTableReviewerFactory
     public function isReviewer($userId)
     {
         if ($this->reviewerCache === null) {
-            $dao = $this->_getDao();
+            $dao = self::_getDao();
             $dar = $dao->getReviewerList($this->table->getId());
             $dar->rewind();
             while ($dar->valid()) {
@@ -208,7 +208,7 @@ class Docman_ApprovalTableReviewerFactory
         $user = $um->getUserById($userId);
         if ($dPm->userCanRead($user, $this->item->getId())) {
             if (! $this->isReviewer($user->getId())) {
-                $dao   = $this->_getDao();
+                $dao   = self::_getDao();
                 $added = $dao->addUser($this->table->getId(), $user->getId());
                 if ($added) {
                     $this->reviewerCache[$user->getId()] = true;
@@ -264,7 +264,7 @@ class Docman_ApprovalTableReviewerFactory
         $nbUserAdded = 0;
         $nbMembers   = 0;
 
-        $dao = $this->_getDao();
+        $dao = self::_getDao();
         $dar = $dao->getUgroupMembers($ugroupId, $this->item->getGroupId());
         if ($dar && ! $dar->isError()) {
             $dar->rewind();
@@ -289,7 +289,7 @@ class Docman_ApprovalTableReviewerFactory
      */
     public function updateUser($userId, $rank)
     {
-        $dao = $this->_getDao();
+        $dao = self::_getDao();
         return $dao->updateUser($this->table->getId(), $userId, $rank);
     }
 
@@ -298,7 +298,7 @@ class Docman_ApprovalTableReviewerFactory
      */
     public function delUser($userId)
     {
-        $dao     = $this->_getDao();
+        $dao     = self::_getDao();
         $deleted = $dao->delUser($this->table->getId(), $userId);
         if ($deleted) {
             if (isset($this->reviewerCache[$userId])) {
@@ -314,7 +314,7 @@ class Docman_ApprovalTableReviewerFactory
      */
     public function deleteTable()
     {
-        $dao = $this->_getDao();
+        $dao = self::_getDao();
         return $dao->truncateTable($this->table->getId());
     }
 
@@ -323,7 +323,7 @@ class Docman_ApprovalTableReviewerFactory
      */
     public function updateReview($review)
     {
-        $dao     = $this->_getDao();
+        $dao     = self::_getDao();
         $updated = $dao->updateReview(
             $this->table->getId(),
             $review->getId(),
@@ -343,20 +343,20 @@ class Docman_ApprovalTableReviewerFactory
 
     public function newTableCopy($newTableId)
     {
-        $dao = $this->_getDao();
+        $dao = self::_getDao();
         return $dao->copyReviews($this->table->getId(), $newTableId);
     }
 
     public function newTableReset($newTableId)
     {
-        $dao = $this->_getDao();
+        $dao = self::_getDao();
         return $dao->copyReviewers($this->table->getId(), $newTableId);
     }
 
     /**
      * Return all the review where the user doesn't commit himself yet.
      */
-    /*static*/ public function getAllPendingReviewsForUser($userId)
+    public static function getAllPendingReviewsForUser($userId)
     {
         $reviewsArray = [];
         $dao          = self::_getDao();
@@ -380,7 +380,7 @@ class Docman_ApprovalTableReviewerFactory
      * Return all the approval table not deleted and not closed where the user
      * is the table owner.
      */
-    /*static*/ public function getAllApprovalTableForUser($userId)
+    public static function getAllApprovalTableForUser($userId)
     {
         $reviewsArray = [];
         $dao          = self::_getDao();
@@ -446,7 +446,7 @@ class Docman_ApprovalTableReviewerFactory
     }
 
     // Class accessor
-    public function _getDao()
+    public static function _getDao()
     {
         $dao = new Docman_ApprovalTableReviewerDao(CodendiDataAccess::instance());
         return $dao;
