@@ -72,28 +72,14 @@ describe("mutation", () => {
             expect(state.selected_tuleap_template).toBeNull();
         });
     });
-    describe("resetSelectedTemplate() -", () => {
-        it("reset the selected templates", () => {
+    describe("resetProjectCreationError() -", () => {
+        it("reset the project creation error", () => {
             const state = {
-                selected_tuleap_template: {
-                    title: "scrum template",
-                    description: "scrum desc",
-                    id: "scrum",
-                    glyph: "<svg></svg>",
-                    is_built_in: true,
-                } as TemplateData,
-                selected_company_template: {
-                    title: "Whole lot company",
-                    description: "I have got whole lot",
-                    id: "10",
-                    glyph: "<svg></svg>",
-                    is_built_in: false,
-                } as TemplateData,
+                error: "It does not work :(",
             } as State;
 
-            mutations.resetSelectedTemplate(state);
-            expect(state.selected_tuleap_template).toBeNull();
-            expect(state.selected_company_template).toBeNull();
+            mutations.resetProjectCreationError(state);
+            expect(state.error).toBeNull();
         });
     });
 });

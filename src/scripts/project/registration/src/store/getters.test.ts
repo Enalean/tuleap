@@ -20,6 +20,7 @@
 import * as getters from "./getters";
 import type { State } from "./type";
 import type { TemplateData } from "../type";
+import { is_currently_selected_template } from "./getters";
 
 describe("getters", () => {
     describe("is_template_selected", () => {
@@ -70,6 +71,32 @@ describe("getters", () => {
                 error: "Ho snap!",
             } as State;
             expect(getters.has_error(state)).toBe(true);
+        });
+    });
+
+    describe("is_currently_selected_template", () => {
+        let state: State, scrum_template: TemplateData;
+
+        beforeEach(() => {
+            state = {
+                selected_company_template: null,
+                selected_tuleap_template: null,
+            } as State;
+
+            scrum_template = { id: "scrum" } as TemplateData;
+        });
+        it("should return false when no templates are selected", () => {
+            expect(is_currently_selected_template(state)(scrum_template)).toBe(false);
+        });
+
+        it("should return true when the provided company template is currently selected", () => {
+            state.selected_company_template = scrum_template;
+            expect(is_currently_selected_template(state)(scrum_template)).toBe(true);
+        });
+
+        it("should return true when the provided tuleap template is currently selected", () => {
+            state.selected_tuleap_template = scrum_template;
+            expect(is_currently_selected_template(state)(scrum_template)).toBe(true);
         });
     });
 });

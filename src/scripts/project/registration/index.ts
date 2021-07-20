@@ -100,6 +100,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     const root_state: RootState = {
         selected_tuleap_template: null,
         selected_company_template: null,
+        selected_template_category: null,
+        projects_user_is_admin_of: [],
         error: null,
         is_creating_project: false,
         configuration: configuration_state,

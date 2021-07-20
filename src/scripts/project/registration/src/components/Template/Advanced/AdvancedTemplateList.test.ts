@@ -23,29 +23,52 @@ import AdvancedTemplateList from "./AdvancedTemplateList.vue";
 import type { Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import type { TemplateData } from "../../../type";
-import * as rest_querier from "../../../api/rest-querier";
-import { mockFetchSuccess } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper";
-import type { State } from "../../../store/type";
 import { createStoreMock } from "../../../../../../vue-components/store-wrapper-jest";
-import type { Store } from "vuex-mock-store";
+import UserProjectList from "./UserProjectList.vue";
 
 describe("AdvancedTemplateList", () => {
-    let wrapper: Wrapper<AdvancedTemplateList>;
-    let state: State;
-    let store: Store;
+    let projects_user_is_admin_of: TemplateData[], alm2: TemplateData;
+
+    async function getWrapper(
+        selected_company_template: null | TemplateData = null,
+        projects_user_is_admin_of: TemplateData[] = []
+    ): Promise<Wrapper<AdvancedTemplateList>> {
+        return shallowMount(AdvancedTemplateList, {
+            localVue: await createProjectRegistrationLocalVue(),
+            mocks: {
+                $store: createStoreMock({
+                    state: {
+                        selected_company_template,
+                        projects_user_is_admin_of,
+                    },
+                }),
+            },
+        });
+    }
 
     beforeEach(() => {
-        const store_options = {
-            state,
+        alm2 = {
+            title: "alm - 2",
+            description: "ALM",
+            id: "alm2",
+            glyph: "<svg></svg>",
+            is_built_in: false,
         };
-        store = createStoreMock(store_options);
+
+        projects_user_is_admin_of = [
+            {
+                title: "alm - 1",
+                description: "ALM",
+                id: "alm1",
+                glyph: "<svg></svg>",
+                is_built_in: false,
+            },
+            alm2,
+        ];
     });
 
     it("Display the description by default", async () => {
-        wrapper = shallowMount(AdvancedTemplateList, {
-            localVue: await createProjectRegistrationLocalVue(),
-            mocks: { $store: store },
-        });
+        const wrapper = await getWrapper();
 
         expect(wrapper.find("[data-test=user-project-description]").exists()).toBeTruthy();
         expect(wrapper.find("[data-test=user-project-spinner]").exists()).toBeFalsy();
@@ -54,10 +77,7 @@ describe("AdvancedTemplateList", () => {
     });
 
     it(`Display spinner when project list is loading`, async () => {
-        wrapper = shallowMount(AdvancedTemplateList, {
-            localVue: await createProjectRegistrationLocalVue(),
-            mocks: { $store: store },
-        });
+        const wrapper = await getWrapper();
 
         wrapper.vm.$data.is_loading_project_list = true;
         await wrapper.vm.$nextTick();
@@ -69,10 +89,7 @@ describe("AdvancedTemplateList", () => {
     });
 
     it(`Does not display spinner if an error happened`, async () => {
-        wrapper = shallowMount(AdvancedTemplateList, {
-            localVue: await createProjectRegistrationLocalVue(),
-            mocks: { $store: store },
-        });
+        const wrapper = await getWrapper();
 
         wrapper.vm.$data.is_loading_project_list = true;
         wrapper.vm.$data.has_error = true;
@@ -85,10 +102,7 @@ describe("AdvancedTemplateList", () => {
     });
 
     it(`Display error if something went wrong`, async () => {
-        wrapper = shallowMount(AdvancedTemplateList, {
-            localVue: await createProjectRegistrationLocalVue(),
-            mocks: { $store: store },
-        });
+        const wrapper = await getWrapper();
 
         wrapper.vm.$data.has_error = true;
         await wrapper.vm.$nextTick();
@@ -99,20 +113,14 @@ describe("AdvancedTemplateList", () => {
         expect(wrapper.find("[data-test=user-project-list]").exists()).toBeFalsy();
     });
 
-    it(`Load and display the project list if user had already loaded it`, async () => {
-        const is_user_admin_of = jest.spyOn(rest_querier, "getProjectUserIsAdminOf");
-        mockFetchSuccess(is_user_admin_of, { return_json: {} });
-
-        wrapper = shallowMount(AdvancedTemplateList, {
-            localVue: await createProjectRegistrationLocalVue(),
-            mocks: { $store: store },
-        });
+    it(`Displays the project list if user has already loaded it`, async () => {
+        const wrapper = await getWrapper(null, projects_user_is_admin_of);
 
         wrapper.get("[data-test=project-registration-card-label").trigger("click");
         await wrapper.vm.$nextTick();
         await wrapper.vm.$nextTick();
 
-        expect(is_user_admin_of).toHaveBeenCalled();
+        expect(wrapper.vm.$store.dispatch).not.toHaveBeenCalledWith("loadUserProjects");
 
         expect(wrapper.find("[data-test=user-project-description]").exists()).toBeFalsy();
         expect(wrapper.find("[data-test=user-project-spinner]").exists()).toBeFalsy();
@@ -120,23 +128,25 @@ describe("AdvancedTemplateList", () => {
         expect(wrapper.find("[data-test=user-project-list]").exists()).toBeTruthy();
     });
 
-    it(`Does not load twice the project list`, async () => {
-        wrapper = shallowMount(AdvancedTemplateList, {
-            localVue: await createProjectRegistrationLocalVue(),
-            mocks: { $store: store },
-        });
+    it(`Loads the project list if user has not loaded it yet`, async () => {
+        const wrapper = await getWrapper();
 
-        const project: TemplateData = {
-            title: "My B project",
-            description: "",
-            id: "102",
-            glyph: "",
-            is_built_in: false,
-        };
+        wrapper.get("[data-test=project-registration-card-label").trigger("click");
+        await wrapper.vm.$nextTick();
+        await wrapper.vm.$nextTick();
 
-        wrapper.vm.$data.project_list = [project];
+        expect(wrapper.vm.$store.dispatch).toHaveBeenCalledWith("loadUserProjects");
+    });
 
-        const is_user_admin_of = jest.spyOn(rest_querier, "getProjectUserIsAdminOf");
-        expect(is_user_admin_of).not.toHaveBeenCalled();
+    it("should display the card as checked and the current selection if a project has been selected previously", async () => {
+        const wrapper = await getWrapper(alm2, projects_user_is_admin_of);
+        const input = wrapper.find("[data-test=selected-template-input]").element;
+
+        if (!(input instanceof HTMLInputElement)) {
+            throw new Error("[data-test=selected-template-input] is not a HTMLInputElement");
+        }
+
+        expect(input.checked).toBe(true);
+        expect(wrapper.getComponent(UserProjectList).exists()).toBe(true);
     });
 });

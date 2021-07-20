@@ -63,17 +63,27 @@ describe("UserProjectList", () => {
     it("Spawns the UserProjectList component", async () => {
         wrapper = shallowMount(UserProjectList, {
             localVue: await createProjectRegistrationLocalVue(),
-            propsData: { projectList: project_list },
+            propsData: { projectList: project_list, selectedCompanyTemplate: null },
             mocks: { $store: store },
         });
 
         expect(wrapper).toMatchSnapshot();
     });
 
+    it("Should select the previously selected project by default when one has been previously selected", async () => {
+        wrapper = shallowMount(UserProjectList, {
+            localVue: await createProjectRegistrationLocalVue(),
+            propsData: { projectList: project_list, selectedCompanyTemplate: project_a },
+            mocks: { $store: store },
+        });
+
+        expect(wrapper.vm.$data.selected_project).toBe(project_a);
+    });
+
     it(`user can select a project`, async () => {
         wrapper = shallowMount(UserProjectList, {
             localVue: await createProjectRegistrationLocalVue(),
-            propsData: { projectList: project_list },
+            propsData: { projectList: project_list, selectedCompanyTemplate: null },
             mocks: { $store: store },
         });
 
@@ -89,7 +99,7 @@ describe("UserProjectList", () => {
     it(`displays a message when user is not administrator of any project`, async () => {
         wrapper = shallowMount(UserProjectList, {
             localVue: await createProjectRegistrationLocalVue(),
-            propsData: { projectList: [] },
+            propsData: { projectList: [], selectedCompanyTemplate: null },
             mocks: { $store: store },
         });
 
