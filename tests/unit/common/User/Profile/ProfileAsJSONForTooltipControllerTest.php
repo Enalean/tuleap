@@ -22,29 +22,27 @@ declare(strict_types=1);
 
 namespace Tuleap\User\Profile;
 
-use Http\Factory\Guzzle\ResponseFactory;
-use Http\Factory\Guzzle\StreamFactory;
 use Laminas\HttpHandlerRunner\Emitter\EmitterInterface;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\StreamFactoryInterface;
 use TemplateRenderer;
 use TemplateRendererFactory;
+use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Http\Response\JSONResponseBuilder;
 
-class ProfileAsJSONForTooltipControllerTest extends \Tuleap\Test\PHPUnit\TestCase
+final class ProfileAsJSONForTooltipControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 
     public function testItDoesNotLeakUserInfoIfCurrentUserIsAnonymous(): void
     {
-        $response_factory = new ResponseFactory();
+        $response_factory = HTTPFactoryBuilder::responseFactory();
         $emitter          = Mockery::mock(EmitterInterface::class);
         $controller       = new ProfileAsJSONForTooltipController(
             new JSONResponseBuilder(
                 $response_factory,
-                Mockery::mock(StreamFactoryInterface::class),
+                HTTPFactoryBuilder::streamFactory(),
             ),
             $emitter,
             $response_factory,
@@ -70,13 +68,13 @@ class ProfileAsJSONForTooltipControllerTest extends \Tuleap\Test\PHPUnit\TestCas
 
     public function testItSendTooltipInformationAsJson(): void
     {
-        $response_factory          = new ResponseFactory();
+        $response_factory          = HTTPFactoryBuilder::responseFactory();
         $emitter                   = Mockery::mock(EmitterInterface::class);
         $template_renderer_factory = Mockery::mock(TemplateRendererFactory::class);
         $controller                = new ProfileAsJSONForTooltipController(
             new JSONResponseBuilder(
                 $response_factory,
-                new StreamFactory(),
+                HTTPFactoryBuilder::streamFactory(),
             ),
             $emitter,
             $response_factory,

@@ -86,8 +86,8 @@ class RestBase extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore PSR1.Classe
         $this->cache = Cache::instance();
 
         $client                = new \GuzzleHttp\Client(['base_uri' => $base_url, 'verify' => false]);
-        $this->request_factory = new \Http\Factory\Guzzle\RequestFactory();
-        $this->stream_factory  = new \Http\Factory\Guzzle\StreamFactory();
+        $this->request_factory = new \GuzzleHttp\Psr7\HttpFactory();
+        $this->stream_factory  = new \GuzzleHttp\Psr7\HttpFactory();
 
         $this->rest_request = new RequestWrapper($client, $this->cache);
 
