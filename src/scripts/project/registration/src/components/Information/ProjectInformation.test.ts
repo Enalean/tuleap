@@ -195,9 +195,10 @@ describe("ProjectInformation -", () => {
             await factory.vm.$nextTick();
 
             expect(redirect_to_url).toHaveBeenCalledWith(
-                "/projects/this-is-a-test/?should-display-created-project-modal=true"
+                "/projects/this-is-a-test/?should-display-created-project-modal=true&xml-template-name=scrum"
             );
         });
+
         it(`create the new private project`, async () => {
             const redirect_to_url = jest
                 .spyOn(location_helper, "redirectToUrl")
@@ -231,7 +232,7 @@ describe("ProjectInformation -", () => {
             await factory.vm.$nextTick();
 
             expect(redirect_to_url).toHaveBeenCalledWith(
-                "/projects/this-is-a-test/?should-display-created-project-modal=true"
+                "/projects/this-is-a-test/?should-display-created-project-modal=true&xml-template-name=scrum"
             );
         });
 
@@ -267,7 +268,7 @@ describe("ProjectInformation -", () => {
             await factory.vm.$nextTick();
 
             expect(redirect_to_url).toHaveBeenCalledWith(
-                "/projects/this-is-a-test/?should-display-created-project-modal=true"
+                "/projects/this-is-a-test/?should-display-created-project-modal=true&xml-template-name=scrum"
             );
         });
 
@@ -303,7 +304,7 @@ describe("ProjectInformation -", () => {
             await factory.vm.$nextTick();
 
             expect(redirect_to_url).toHaveBeenCalledWith(
-                "/projects/this-is-a-test/?should-display-created-project-modal=true"
+                "/projects/this-is-a-test/?should-display-created-project-modal=true&xml-template-name=scrum"
             );
         });
 
@@ -339,7 +340,7 @@ describe("ProjectInformation -", () => {
             await factory.vm.$nextTick();
 
             expect(redirect_to_url).toHaveBeenCalledWith(
-                "/projects/this-is-a-test/?should-display-created-project-modal=true"
+                "/projects/this-is-a-test/?should-display-created-project-modal=true&xml-template-name=scrum"
             );
         });
 
@@ -421,7 +422,7 @@ describe("ProjectInformation -", () => {
             await factory.vm.$nextTick();
 
             expect(redirect_to_url).toHaveBeenCalledWith(
-                "/projects/this-is-a-test/?should-display-created-project-modal=true"
+                "/projects/this-is-a-test/?should-display-created-project-modal=true&xml-template-name=scrum"
             );
         });
 
@@ -457,7 +458,7 @@ describe("ProjectInformation -", () => {
             await factory.vm.$nextTick();
 
             expect(redirect_to_url).toHaveBeenCalledWith(
-                "/projects/this-is-a-test/?should-display-created-project-modal=true"
+                "/projects/this-is-a-test/?should-display-created-project-modal=true&xml-template-name=scrum"
             );
         });
     });
@@ -545,7 +546,9 @@ describe("ProjectInformation -", () => {
         });
     });
     describe("Build the project properties object -", () => {
-        it("Build the properties according to the scrum built in template", async () => {
+        it(`Build the properties according to the scrum built in template
+            and redirect user on the project dashboard
+            with the name of the xml_template_name so that the success modal can be customised`, async () => {
             const redirect_to_url = jest
                 .spyOn(location_helper, "redirectToUrl")
                 .mockImplementation();
@@ -604,7 +607,7 @@ describe("ProjectInformation -", () => {
             await factory.vm.$nextTick();
 
             expect(redirect_to_url).toHaveBeenCalledWith(
-                "/projects/this-is-a-test/?should-display-created-project-modal=true"
+                "/projects/this-is-a-test/?should-display-created-project-modal=true&xml-template-name=scrum"
             );
         });
 

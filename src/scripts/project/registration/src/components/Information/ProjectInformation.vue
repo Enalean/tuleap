@@ -250,10 +250,17 @@ export default class ProjectInformation extends Vue {
         await this.$store.dispatch("createProject", project_properties);
 
         if (!this.is_project_approval_required) {
+            const params = new URLSearchParams();
+            params.set("should-display-created-project-modal", "true");
+            if (project_properties.xml_template_name) {
+                params.set("xml-template-name", project_properties.xml_template_name);
+            }
+
             redirectToUrl(
                 "/projects/" +
                     encodeURIComponent(this.name_properties.slugified_name) +
-                    "/?should-display-created-project-modal=true"
+                    "/?" +
+                    params
             );
         } else {
             this.$router.push("approval");
