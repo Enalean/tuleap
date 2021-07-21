@@ -31,10 +31,17 @@
  */
 class WebDAV_DocmanController extends Docman_Controller
 {
+    private PFUser $current_user;
 
-    public function __construct(DocmanPlugin $plugin, WebDAV_Request $request)
+    public function __construct(DocmanPlugin $plugin, WebDAV_Request $request, PFUser $current_user)
     {
         parent::__construct($plugin, $plugin->getPluginPath(), $plugin->getThemePath(), $request);
+        $this->current_user = $current_user;
+    }
+
+    public function getUser(): PFUser
+    {
+        return $this->current_user;
     }
 
     public function actionsManagement()

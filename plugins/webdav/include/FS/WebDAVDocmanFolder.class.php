@@ -192,7 +192,7 @@ class WebDAVDocmanFolder extends \Sabre\DAV\FS\Directory
             $params['item']['parent_id'] = $this->item->getId();
             $params['item']['title']     = $name;
 
-            $this->utils->processDocmanRequest(new WebDAV_Request($params));
+            $this->utils->processDocmanRequest(new WebDAV_Request($params), $this->user);
         } else {
             throw new \Sabre\DAV\Exception\Forbidden($GLOBALS['Language']->getText('plugin_webdav_common', 'folder_denied_create'));
         }
@@ -232,7 +232,7 @@ class WebDAVDocmanFolder extends \Sabre\DAV\FS\Directory
                 $params['item']['parent_id'] = $this->item->getId();
                 $params['item']['title']     = $name;
 
-                $this->utils->processDocmanRequest(new WebDAV_Request($params));
+                $this->utils->processDocmanRequest(new WebDAV_Request($params), $this->user);
             } else {
                 throw new \Sabre\DAV\Exception\RequestedRangeNotSatisfiable($GLOBALS['Language']->getText('plugin_webdav_download', 'error_file_size'));
             }
@@ -282,7 +282,7 @@ class WebDAVDocmanFolder extends \Sabre\DAV\FS\Directory
             $params['item']['id']    = $this->item->getId();
             $params['item']['title'] = $name;
 
-            $this->utils->processDocmanRequest(new WebDAV_Request($params));
+            $this->utils->processDocmanRequest(new WebDAV_Request($params), $this->user);
         } else {
             throw new \Sabre\DAV\Exception\MethodNotAllowed($GLOBALS['Language']->getText('plugin_webdav_common', 'folder_denied_rename'));
         }
@@ -297,7 +297,7 @@ class WebDAVDocmanFolder extends \Sabre\DAV\FS\Directory
             $params['group_id'] = $this->project->getGroupId();
             $params['confirm']  = true;
             $params['id']       = $this->item->getId();
-            $this->utils->processDocmanRequest(new WebDAV_Request($params));
+            $this->utils->processDocmanRequest(new WebDAV_Request($params), $this->user);
         } else {
             throw new \Sabre\DAV\Exception\Forbidden($GLOBALS['Language']->getText('plugin_webdav_common', 'file_denied_delete'));
         }
