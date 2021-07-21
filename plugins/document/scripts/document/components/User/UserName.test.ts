@@ -19,39 +19,41 @@
  */
 
 import { shallowMount } from "@vue/test-utils";
-import localVue from "../../helpers/local-vue.js";
 import UserName from "./UserName.vue";
+import { createDocumentLocalVue } from "../../helpers/local-vue-for-test";
 
 describe("UserName", () => {
-    let user_name_factory;
-    beforeEach(() => {
-        user_name_factory = (user = {}) => {
-            return shallowMount(UserName, {
-                localVue,
-                context: {
-                    props: { user: user },
-                },
-            });
-        };
-    });
-
     it(`Given user is connected
         When we display the user name
-        Then we should be able to click on its name`, () => {
-        const wrapper = user_name_factory({
-            id: 1,
-            is_anonymous: false,
+        Then we should be able to click on its name`, async () => {
+        const wrapper = shallowMount(UserName, {
+            localVue: await createDocumentLocalVue(),
+            context: {
+                props: {
+                    user: {
+                        id: 1,
+                        is_anonymous: false,
+                    },
+                },
+            },
         });
 
         expect(wrapper.find("[data-test=document-user-profile-link]").exists()).toBeTruthy();
     });
 
-    it(`Given user is annonymous
+    it(`Given user is anonymous
         When we display the user name
-        Then we should not be able to click on its name`, () => {
-        const wrapper = user_name_factory({
-            id: 1,
-            is_anonymous: true,
+        Then we should not be able to click on its name`, async () => {
+        const wrapper = shallowMount(UserName, {
+            localVue: await createDocumentLocalVue(),
+            context: {
+                props: {
+                    user: {
+                        id: 1,
+                        is_anonymous: true,
+                    },
+                },
+            },
         });
 
         expect(wrapper.find("[data-test=document-user-profile-link]").exists()).toBeFalsy();

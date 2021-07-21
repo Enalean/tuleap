@@ -24,20 +24,21 @@
                 v-bind:src="user.avatar_url"
                 v-if="user.has_avatar"
                 data-test="document-user-avatar"
+                v-bind:alt="$gettext('User avatar')"
             />
         </div>
         <user-name v-bind:user="user" />
     </div>
 </template>
 
-<script>
+<script lang="ts">
+import { Component, Prop, Vue } from "vue-property-decorator";
 import UserName from "./UserName.vue";
+import type { User } from "../../type";
 
-export default {
-    name: "UserBadge",
-    components: { UserName },
-    props: {
-        user: Object,
-    },
-};
+@Component({ components: { UserName } })
+export default class UserBadge extends Vue {
+    @Prop({ required: true })
+    private readonly user!: User;
+}
 </script>

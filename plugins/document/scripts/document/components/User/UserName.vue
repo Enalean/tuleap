@@ -32,3 +32,11 @@
         <span v-else class="document-badge-avatar-username">{{ props.user.display_name }}</span>
     </span>
 </template>
+
+<script lang="ts">
+import Vue from "vue";
+import { Component } from "vue-property-decorator";
+
+@Component
+export default class UserName extends Vue {}
+</script>
