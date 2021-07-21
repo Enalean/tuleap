@@ -84,13 +84,13 @@ final class ServerBuilder
         // Base URI is the path used to access to WebDAV server
         $server->setBaseUri($base_uri);
 
-        // The lock manager is reponsible for making sure users don't overwrite each others changes.
+        // The lock manager is responsible for making sure users don't overwrite each others changes.
         // The locks repository is where temporary data related to locks is stored.
         $locks_path = ForgeConfig::get('codendi_cache_dir') . '/plugins/webdav/locks';
-        if (! is_dir($locks_path)) {
-            mkdir($locks_path, 0750, true);
+        if (! is_dir($locks_path) && ! mkdir($locks_path, 0750, true) && ! is_dir($locks_path)) {
+            throw new \RuntimeException(sprintf('Directory "%s" was not created', $locks_path));
         }
-        $lockBackend = new \Sabre\DAV\Locks\Backend\File($locks_path);
+        $lockBackend = new \Sabre\DAV\Locks\Backend\File($locks_path . '/locks_storage');
         $lockPlugin  = new Plugin($lockBackend);
         $server->addPlugin($lockPlugin);
 
