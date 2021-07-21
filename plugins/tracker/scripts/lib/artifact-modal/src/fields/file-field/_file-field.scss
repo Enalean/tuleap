@@ -42,7 +42,7 @@
     width: 90px;
     height: 90px;
     margin: 0 var(--tlp-medium-spacing) 0 0;
-    border-radius: 3px;
+    border-radius: var(--tlp-medium-radius);
     background-image: url("./assets/artifact_attachment_default.png");
     background-repeat: no-repeat;
     background-position: center;
@@ -55,7 +55,7 @@
     justify-content: center;
     transition: opacity 100ms;
     border: 1px solid var(--tlp-main-color);
-    border-radius: 3px;
+    border-radius: var(--tlp-medium-radius);
     opacity: 0;
     background: var(--tlp-main-color-transparent-80);
     font-size: 30px;

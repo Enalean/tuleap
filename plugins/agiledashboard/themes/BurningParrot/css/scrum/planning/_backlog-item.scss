@@ -101,7 +101,7 @@
     height: 13px;
     border: 1px solid var(--tlp-neutral-normal-color);
     border-top: 0;
-    border-radius: 0 0 3px 3px;
+    border-radius: 0 0 var(--tlp-medium-radius) var(--tlp-medium-radius);
     background: var(--tlp-background-color-lighter-02);
     cursor: pointer;
 

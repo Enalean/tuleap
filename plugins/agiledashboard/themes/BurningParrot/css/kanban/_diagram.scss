@@ -103,7 +103,7 @@
     position: absolute;
     padding: 1px;
     border: 1px solid rgba(0, 0, 0, 0.5);
-    border-radius: 4px;
+    border-radius: var(--tlp-medium-radius);
     background-color: #303030;
     color: #ffffff;
     font: 13px Arial;

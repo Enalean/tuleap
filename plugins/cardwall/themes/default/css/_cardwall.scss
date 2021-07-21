@@ -70,7 +70,7 @@
 
 .card {
     border: 1px solid #cacaca;
-    border-radius: 5px;
+    border-radius: var(--tlp-medium-radius);
     background: #ffffbb;
     box-shadow: 0 1px 0 0 rgba(217, 217, 217, 0.5);
     cursor: move;
@@ -78,14 +78,14 @@
 
 .cardwall_board .nodrag .card {
     height: 100%;
-    border-top-right-radius: 5px;
-    border-bottom-right-radius: 5px;
+    border-top-right-radius: var(--tlp-medium-radius);
+    border-bottom-right-radius: var(--tlp-medium-radius);
     box-shadow: none;
     cursor: auto;
 
     > .card-container {
-        border-top-right-radius: 3px;
-        border-bottom-right-radius: 3px;
+        border-top-right-radius: var(--tlp-medium-radius);
+        border-bottom-right-radius: var(--tlp-medium-radius);
     }
 }
 
@@ -147,7 +147,7 @@
     transition: border linear 0.2s, box-shadow linear 0.2s;
     border: 1px solid #cccccc;
 
-    border-radius: 4px;
+    border-radius: var(--tlp-medium-radius);
     background-color: #ffffff;
 
     box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
@@ -546,7 +546,7 @@ body.fullscreen {
     margin: 0 0 10px;
     overflow: hidden;
     border: 1px solid #e3e5ed;
-    border-radius: 3px;
+    border-radius: var(--tlp-medium-radius);
     background: #ffffff;
 }
 
@@ -557,8 +557,8 @@ body.fullscreen {
 .card-preview-type {
     flex: 0 0 auto;
     width: 4px;
-    border-top-left-radius: 2px;
-    border-bottom-left-radius: 2px;
+    border-top-left-radius: var(--tlp-medium-radius);
+    border-bottom-left-radius: var(--tlp-medium-radius);
     background: #5d5d5d;
 }
 

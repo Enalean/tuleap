@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-$tlp-dropdown-radius: 4px;
+$tlp-dropdown-radius: var(--tlp-large-radius);
 $tlp-dropdown-arrow-size: 10px;
 $tlp-dropdown-transition: 75ms ease-out;
 

@@ -115,7 +115,7 @@
 
 .steps-step-action-pass {
     width: 60px;
-    border-radius: 3px 0 0 3px;
+    border-radius: var(--tlp-medium-radius) 0 0 var(--tlp-medium-radius);
 }
 
 .steps-step-action-dropdown-trigger {

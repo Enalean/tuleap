@@ -68,7 +68,7 @@
     .CodeMirror {
         height: 400px;
         border: 1px solid var(--tlp-neutral-normal-color);
-        border-radius: 3px;
+        border-radius: var(--tlp-medium-radius);
     }
 
     .CodeMirror-gutters {
@@ -106,7 +106,7 @@
 .pull-request-file-diff-not-displayable-file {
     padding: 100px;
     border: 1px solid #dddddd;
-    border-radius: 3px;
+    border-radius: var(--tlp-medium-radius);
     color: #cccccc;
     line-height: 40px;
     text-align: center;
@@ -156,7 +156,7 @@
     flex: 1 1 auto;
     padding: 7px;
     border: 1px solid var(--tlp-main-color);
-    border-radius: 3px;
+    border-radius: var(--tlp-medium-radius);
     background: var(--tlp-white-color);
 }
 

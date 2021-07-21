@@ -25,28 +25,28 @@ $tlp-button-normal-line-height: 1.5rem;
 $tlp-button-normal-font-size: 0.875rem;
 $tlp-button-normal-font-weight: 500;
 $tlp-button-normal-padding: 0 var(--tlp-medium-spacing);
-$tlp-button-normal-radius: 4px;
+$tlp-button-normal-radius: var(--tlp-medium-radius);
 
 $tlp-button-large-height: 48px;
 $tlp-button-large-line-height: 1.5rem;
 $tlp-button-large-font-size: 1.25rem;
 $tlp-button-large-font-weight: 500;
 $tlp-button-large-padding: 0 var(--tlp-large-spacing);
-$tlp-button-large-radius: 4px;
+$tlp-button-large-radius: var(--tlp-medium-radius);
 
 $tlp-button-small-height: 32px;
 $tlp-button-small-line-height: 1.5rem;
 $tlp-button-small-font-size: 0.75rem;
 $tlp-button-small-font-weight: 500;
 $tlp-button-small-padding: 0 var(--tlp-medium-spacing);
-$tlp-button-small-radius: 3px;
+$tlp-button-small-radius: var(--tlp-small-radius);
 
 $tlp-button-mini-height: 24px;
 $tlp-button-mini-line-height: 1.15rem;
 $tlp-button-mini-font-size: 0.75rem;
 $tlp-button-mini-font-weight: 500;
 $tlp-button-mini-padding: 0 var(--tlp-small-spacing);
-$tlp-button-mini-radius: 3px;
+$tlp-button-mini-radius: var(--tlp-small-radius);
 
 $tlp-button-outline-hover-color: #fafafa;
 

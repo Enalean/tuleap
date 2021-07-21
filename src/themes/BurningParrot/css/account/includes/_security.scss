@@ -44,7 +44,7 @@
 
     > .robustness {
         flex: 1 1 auto;
-        border-radius: 4px;
+        border-radius: var(--tlp-medium-radius);
 
         &.good {
             background: var(--tlp-success-color-transparent-90);

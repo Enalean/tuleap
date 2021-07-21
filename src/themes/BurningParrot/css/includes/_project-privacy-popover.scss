@@ -25,7 +25,7 @@
         background: var(--tlp-dark-color-darker-20);
 
         + .tlp-popover-body {
-            border-radius: 4px;
+            border-radius: var(--tlp-large-radius);
         }
     }
 

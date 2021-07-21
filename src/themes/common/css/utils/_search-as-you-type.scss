@@ -2,7 +2,7 @@
 .searchAsYouType {
     border: 1px solid #cccccc;
     border: 1px solid rgba(0, 0, 0, 0.2); /* stylelint-disable-line declaration-block-no-duplicate-properties */
-    border-radius: 3px;
+    border-radius: var(--tlp-medium-radius);
     background: #ffffff;
     box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
 

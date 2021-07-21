@@ -38,7 +38,7 @@
     margin: 0 0 var(--tlp-small-spacing);
     padding: var(--tlp-small-spacing) var(--tlp-small-spacing) var(--tlp-small-spacing) calc(var(--tlp-small-spacing) + 2px);
     border: 1px solid var(--border-color, transparent);
-    border-radius: 3px;
+    border-radius: var(--tlp-medium-radius);
     background: var(--secondary-color, var(--tlp-white-color));
     box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.1), 0 -1px 0 rgba(0, 0, 0, 0.03);
 
@@ -81,7 +81,7 @@
         box-shadow: none;
 
         &::before {
-            border-radius: 3px;
+            border-radius: var(--tlp-medium-radius);
         }
 
         &:focus {
@@ -97,7 +97,7 @@
         left: -1px;
         width: 4px;
         height: calc(100% + 2px);
-        border-radius: 3px 0 0 3px;
+        border-radius: var(--tlp-medium-radius) 0 0 var(--tlp-medium-radius);
         background: var(--card-color);
     }
 }

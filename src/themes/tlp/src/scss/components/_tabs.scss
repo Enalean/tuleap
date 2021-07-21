@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-$tlp-tabs-radius: 3px;
+$tlp-tabs-radius: var(--tlp-large-radius);
 $tlp-tabs-shadow: 0 4px 15px rgba(0, 0, 0, 0.175);
 $tlp-tabs-transition: 75ms ease-out;
 
@@ -37,7 +37,7 @@ $tlp-tabs-transition: 75ms ease-out;
     align-items: flex-start;
     padding: 0;
     border: 1px solid var(--tlp-neutral-normal-color);
-    border-radius: 3px;
+    border-radius: var(--tlp-large-radius);
     box-shadow: none;
 }
 
@@ -199,14 +199,14 @@ $tlp-tabs-transition: 75ms ease-out;
     }
 
     &:first-child::before {
-        border-top-left-radius: 3px;
+        border-top-left-radius: var(--tlp-large-radius);
     }
 
     &:last-child {
         border-bottom: 0;
 
         &::before {
-            border-bottom-left-radius: 3px;
+            border-bottom-left-radius: var(--tlp-large-radius);
         }
     }
 }

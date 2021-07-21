@@ -71,7 +71,7 @@ $switch-menu-item-hover-color: var(--tlp-main-color);
 .breadcrumb-link {
     position: relative;
     padding: 4px 6px;
-    border-radius: 4px;
+    border-radius: var(--tlp-medium-radius);
     color: $step-color;
     font-size: 0.875rem;
 
@@ -130,7 +130,7 @@ $switch-menu-item-hover-color: var(--tlp-main-color);
 }
 
 .breadcrumb-switch-menu {
-    border-radius: 4px;
+    border-radius: var(--tlp-medium-radius);
     background: $switch-menu-background;
     box-shadow: var(--tlp-dropdown-shadow);
 }
@@ -142,15 +142,15 @@ $switch-menu-item-hover-color: var(--tlp-main-color);
     }
 
     &:nth-child(2) > .breadcrumb-dropdown-link {
-        border-radius: 4px 4px 0 0;
+        border-radius: var(--tlp-medium-radius) var(--tlp-medium-radius) 0 0;
     }
 
     &:last-child > .breadcrumb-dropdown-link {
-        border-radius: 0 0 4px 4px;
+        border-radius: 0 0 var(--tlp-medium-radius) var(--tlp-medium-radius);
     }
 
     &:nth-child(2):last-child > .breadcrumb-dropdown-link {
-        border-radius: 4px;
+        border-radius: var(--tlp-medium-radius);
     }
 }
 
@@ -227,7 +227,7 @@ $switch-menu-item-hover-color: var(--tlp-main-color);
     align-items: center;
     margin: 0 var(--tlp-small-spacing) 0 0;
     padding: 4px;
-    border-radius: 4px;
+    border-radius: var(--tlp-medium-radius);
     cursor: help;
 
     &[data-privacy-icon="fa-lock"],

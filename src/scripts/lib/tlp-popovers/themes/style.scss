@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-$tlp-popover-radius: 4px;
+$tlp-popover-radius: var(--tlp-large-radius);
 $tlp-popover-arrow-size: 10px;
 $tlp-popover-shadow: var(--tlp-dropdown-shadow);
 $tlp-popover-hover-transition-show: 75ms ease-out 500ms;

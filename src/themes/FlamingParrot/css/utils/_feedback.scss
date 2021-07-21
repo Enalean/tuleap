@@ -5,7 +5,7 @@
 .feedback_debug {
     margin: 10px 0;
     padding: 20px;
-    border-radius: 3px;
+    border-radius: var(--tlp-medium-radius);
     list-style: none;
 
     h4 {

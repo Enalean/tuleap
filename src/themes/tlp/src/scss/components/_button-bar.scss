@@ -22,7 +22,6 @@
 .tlp-button-bar {
     display: flex;
     transition: box-shadow buttons.$tlp-button-box-shadow-timing ease-in-out;
-    border-radius: 2px;
 
     &:focus-within {
         box-shadow: var(--tlp-shadow-focus);

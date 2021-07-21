@@ -37,7 +37,7 @@
     height: roadmap-variables.$iteration-height;
     padding: 5px;
     overflow: hidden;
-    border-radius: 6px 6px 0 0;
+    border-radius: var(--tlp-large-radius) var(--tlp-large-radius) 0 0;
     color: var(--tlp-dimmed-color);
     font-size: 0.7rem;
     font-weight: 600;

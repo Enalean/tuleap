@@ -36,7 +36,7 @@
     min-width: 96px;
     padding: var(--tlp-medium-spacing) var(--tlp-small-spacing);
     border: 1px solid var(--tlp-neutral-normal-color);
-    border-radius: 3px;
+    border-radius: var(--tlp-medium-radius);
     background: var(--tlp-white-color);
     color: var(--tlp-dark-color);
     cursor: pointer;

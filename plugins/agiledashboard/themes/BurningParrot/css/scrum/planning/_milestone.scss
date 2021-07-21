@@ -35,6 +35,7 @@ $border-element-separator: 1px solid var(--project-color-border, var(--tlp-white
     align-items: center;
     transition: background 0.1s linear;
     border-bottom: $border-element-separator;
+    border-radius: var(--tlp-large-radius);
     background: $milestone-background;
     color: var(--project-color, var(--tlp-dimmed-color));
     cursor: pointer;
@@ -123,6 +124,7 @@ $border-element-separator: 1px solid var(--project-color-border, var(--tlp-white
 
 .milestone-content {
     position: relative;
+    border-radius: 0 0 var(--tlp-large-radius) var(--tlp-large-radius);
     background: var(--project-color-background-gradient, var(--tlp-white-color));
 }
 
@@ -130,7 +132,7 @@ $border-element-separator: 1px solid var(--project-color-border, var(--tlp-white
     min-height: 70px;
     padding: var(--tlp-medium-spacing);
     border: 1px solid var(--tlp-neutral-normal-color);
-    border-radius: 3px;
+    border-radius: var(--tlp-medium-radius);
     background: var(--tlp-background-color-lighter-02);
 }
 

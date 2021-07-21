@@ -273,14 +273,14 @@ execution-with-steps.current-test-content {
     overflow: auto;
     transition: border-color ease-out 150ms;
     border: 1px solid var(--tlp-neutral-normal-color);
-    border-radius: 3px;
+    border-radius: var(--tlp-medium-radius);
 
     // stylelint-disable selector-class-pattern
     &:focus,
     &.cke_focus {
         // stylelint-enable
         min-height: 64px; // magic value to display 2 line of text (padding + 2 line-height of <p>)
-        border-radius: 0 3px 3px;
+        border-radius: 0 var(--tlp-medium-radius) var(--tlp-medium-radius);
         border-color: var(--tlp-main-color);
     }
 

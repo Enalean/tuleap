@@ -81,8 +81,8 @@ body.agiledashboard_homepage .main .content {
             text-align: center;
 
             &:first-child {
-                border-top-left-radius: 3px;
-                border-bottom-left-radius: 3px;
+                border-top-left-radius: var(--tlp-medium-radius);
+                border-bottom-left-radius: var(--tlp-medium-radius);
             }
 
             &:nth-child(2) {
@@ -91,8 +91,8 @@ body.agiledashboard_homepage .main .content {
             }
 
             &:last-child {
-                border-top-right-radius: 3px;
-                border-bottom-right-radius: 3px;
+                border-top-right-radius: var(--tlp-medium-radius);
+                border-bottom-right-radius: var(--tlp-medium-radius);
             }
 
             &:hover {
@@ -200,7 +200,7 @@ body.agiledashboard_homepage .main .content {
 
         float: left;
         border: 1px solid $border-color;
-        border-radius: 3px;
+        border-radius: var(--tlp-large-radius);
 
         .header {
             border-bottom: 1px solid $border-color;

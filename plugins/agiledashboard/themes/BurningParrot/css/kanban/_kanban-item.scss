@@ -131,7 +131,7 @@ $kanban-item-padding-height: 8px;
 kanban-item {
     display: flex;
     position: relative;
-    border-radius: 4px;
+    border-radius: var(--tlp-medium-radius);
     background: var(--tlp-white-color);
     box-shadow: 0 4px 4px -3px var(--tlp-dark-color-transparent-90);
     cursor: move;
@@ -155,8 +155,8 @@ kanban-item {
     flex: 0 0 auto;
     border-left-width: 4px;
     border-left-style: solid;
-    border-top-left-radius: 2px;
-    border-bottom-left-radius: 2px;
+    border-top-left-radius: var(--tlp-medium-radius);
+    border-bottom-left-radius: var(--tlp-medium-radius);
 }
 
 .kanban-item-content {
