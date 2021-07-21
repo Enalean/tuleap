@@ -77,9 +77,10 @@ class Tracker_Artifact_Changeset_ValueDao extends \Tuleap\DB\DataAccessObject
     {
         $this->getDB()->run(
             'INSERT INTO tracker_changeset_value(changeset_id, field_id, has_changed)
-                SELECT A.last_changeset_id as changeset_id, $field_id, 1
+                SELECT A.last_changeset_id as changeset_id, ?, 1
                 FROM tracker_artifact AS A
                 WHERE A.tracker_id = ?',
+            $field_id,
             $tracker_id
         );
 
