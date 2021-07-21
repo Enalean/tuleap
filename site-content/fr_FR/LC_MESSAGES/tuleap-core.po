@@ -2298,6 +2298,9 @@ msgstr "Aucune catégorie de projet"
 msgid "No projects to validate"
 msgstr "Aucun projet à valider"
 
+msgid "No template information have been provided to create the project"
+msgstr "Aucune information de template a été fournie pour créer le projet"
+
 msgid "No users to validate"
 msgstr "Aucun utilisateur à valider"
 
@@ -3442,6 +3445,10 @@ msgid "The %s team."
 msgstr "L'équipe %s."
 
 #, php-format
+msgid "The XML template \"%s\" provided is not valid"
+msgstr "Le name modèle XML \"%s\" n'est pas valide"
+
+#, php-format
 msgid "The category %d only allows %d values"
 msgstr "La catégorie %d autorise seulement %d valeurs"
 
@@ -3627,9 +3634,6 @@ msgstr "Le widget est déjà utilisé"
 
 msgid "The widget is disabled in project dashboard."
 msgstr "Le widget est désactivé dans les tableaux de bord de projet."
-
-msgid "The xml template name provided is not valid"
-msgstr "Le nom du modèle xml fourni n'est pas valide"
 
 msgid "The {{tuleap_server_name}} team."
 msgstr "L'équipe de {{tuleap_server_name}}."

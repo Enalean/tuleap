@@ -26,11 +26,10 @@ namespace Tuleap\Project\Registration\Template;
 use org\bovigo\vfs\vfsStream;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\Glyph\GlyphFinder;
-use Tuleap\Project\Registration\Template\Events\CollectCategorisedExternalTemplatesEvent;
 use Tuleap\Project\XML\ConsistencyChecker;
 use Tuleap\XML\ProjectXMLMerger;
 
-class TemplateFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
+final class TemplateFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use ForgeConfigSandbox;
 
@@ -58,7 +57,6 @@ class TemplateFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->createMock(TemplateDao::class),
             $this->project_manager,
             new \EventManager(),
-            new CollectCategorisedExternalTemplatesEvent()
         );
     }
 

@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace Tuleap\Project\Registration\Template;
 
 use ProjectManager;
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Tuleap\Glyph\GlyphFinder;
 use Tuleap\Project\Registration\Template\Events\CollectCategorisedExternalTemplatesEvent;
 use Tuleap\Project\XML\ConsistencyChecker;
@@ -55,17 +56,13 @@ class TemplateFactory
      */
     private $glyph_finder;
 
-    private \EventManager $event_manager;
-    private CollectCategorisedExternalTemplatesEvent $categorised_external_templates_event;
-
     public function __construct(
         GlyphFinder $glyph_finder,
         ProjectXMLMerger $project_xml_merger,
         ConsistencyChecker $consistency_checker,
         TemplateDao $template_dao,
         ProjectManager $project_manager,
-        \EventManager $event_manager,
-        CollectCategorisedExternalTemplatesEvent $categorised_external_templates_event
+        EventDispatcherInterface $event_dispatcher
     ) {
         $this->template_dao    = $template_dao;
         $this->templates       = [
@@ -77,10 +74,8 @@ class TemplateFactory
         ];
         $this->project_manager = $project_manager;
         $this->glyph_finder    = $glyph_finder;
-        $this->event_manager   = $event_manager;
 
-        $this->categorised_external_templates_event = $categorised_external_templates_event;
-        $this->external_templates                   = $this->getExternalTemplatesByName();
+        $this->external_templates = self::getExternalTemplatesByName($event_dispatcher);
     }
 
     public static function build(): self
@@ -98,8 +93,7 @@ class TemplateFactory
             ),
             new TemplateDao(),
             \ProjectManager::instance(),
-            $event_manager,
-            new CollectCategorisedExternalTemplatesEvent()
+            $event_manager
         );
     }
 
@@ -138,7 +132,7 @@ class TemplateFactory
         if (isset($this->external_templates[$name]) && $this->external_templates[$name]->isAvailable()) {
             return $this->external_templates[$name];
         }
-        throw new InvalidXMLTemplateNameException();
+        throw new InvalidXMLTemplateNameException($name);
     }
 
     public function recordUsedTemplate(\Project $project, ProjectTemplate $template): \Project
@@ -189,10 +183,10 @@ class TemplateFactory
         return $categorised_templates;
     }
 
-    private function getExternalTemplatesByName(): array
+    private static function getExternalTemplatesByName(EventDispatcherInterface $event_dispatcher): array
     {
-        $this->event_manager->dispatch($this->categorised_external_templates_event);
-        $external_templates = $this->categorised_external_templates_event->getCategorisedTemplates();
+        $event              = $event_dispatcher->dispatch(new CollectCategorisedExternalTemplatesEvent());
+        $external_templates = $event->getCategorisedTemplates();
         $templates_by_name  = [];
 
         foreach ($external_templates as $template) {

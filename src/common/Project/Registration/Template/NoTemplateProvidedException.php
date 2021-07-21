@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2019 - present. All Rights Reserved.
+ * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
  *
  *  This file is a part of Tuleap.
  *
@@ -23,21 +23,15 @@ declare(strict_types=1);
 
 namespace Tuleap\Project\Registration\Template;
 
-final class InvalidXMLTemplateNameException extends \RuntimeException implements InvalidTemplateException
+final class NoTemplateProvidedException extends \RuntimeException implements InvalidTemplateException
 {
-    /**
-     * @psalm-readonly
-     */
-    private string $name;
-
-    public function __construct(string $name)
+    public function __construct()
     {
-        parent::__construct(sprintf('The XML template "%s" provided is not valid', $name));
-        $this->name = $name;
+        parent::__construct('No template information have been provided to create the project');
     }
 
     public function getI18NMessage(): string
     {
-        return sprintf(_('The XML template "%s" provided is not valid'), $this->name);
+        return _('No template information have been provided to create the project');
     }
 }

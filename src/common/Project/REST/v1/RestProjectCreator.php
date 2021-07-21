@@ -37,7 +37,7 @@ use Tuleap\Project\Registration\ProjectInvalidShortNameException;
 use Tuleap\Project\Registration\RegistrationErrorException;
 use Tuleap\Project\Registration\RegistrationForbiddenException;
 use Tuleap\Project\Registration\Template\InvalidTemplateException;
-use Tuleap\Project\Registration\Template\InvalidXMLTemplateNameException;
+use Tuleap\Project\Registration\Template\NoTemplateProvidedException;
 use Tuleap\Project\Registration\Template\TemplateFactory;
 use Tuleap\Project\SystemEventRunnerForProjectCreationFromXMLTemplate;
 use Tuleap\Project\XML\Import\DirectoryArchive;
@@ -133,6 +133,6 @@ class RestProjectCreator
             );
         }
 
-        throw new InvalidXMLTemplateNameException();
+        throw new NoTemplateProvidedException();
     }
 }
