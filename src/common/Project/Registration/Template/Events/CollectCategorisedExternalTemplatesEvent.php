@@ -26,7 +26,7 @@ use Tuleap\Event\Dispatchable;
 use Tuleap\Project\Registration\Template\CategorisedTemplate;
 use Tuleap\Project\Registration\Template\ProjectTemplate;
 
-class CollectCategorisedExternalTemplatesEvent implements Dispatchable
+final class CollectCategorisedExternalTemplatesEvent implements Dispatchable
 {
     public const NAME = 'collectCategorisedExternalTemplatesEvent';
 

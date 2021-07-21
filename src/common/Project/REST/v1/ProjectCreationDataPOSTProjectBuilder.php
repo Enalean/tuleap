@@ -34,7 +34,6 @@ use Tuleap\Project\ProjectCreationDataServiceFromXmlInheritor;
 use Tuleap\Project\Registration\Template\InsufficientPermissionToUseProjectAsTemplateException;
 use Tuleap\Project\Registration\Template\ProjectIDTemplateNotProvidedException;
 use Tuleap\Project\Registration\Template\ProjectTemplateIDInvalidException;
-use Tuleap\Project\Registration\Template\ProjectTemplateNotActiveException;
 use Tuleap\Project\Registration\Template\TemplateFactory;
 use Tuleap\Project\Registration\Template\TemplateFromProjectForCreation;
 use Tuleap\Project\XML\XMLFileContentRetriever;
@@ -69,7 +68,7 @@ class ProjectCreationDataPOSTProjectBuilder
      * @throws InsufficientPermissionToUseProjectAsTemplateException
      * @throws ProjectIDTemplateNotProvidedException
      * @throws ProjectTemplateIDInvalidException
-     * @throws ProjectTemplateNotActiveException
+     * @throws \Tuleap\Project\Registration\Template\InvalidTemplateException
      */
     public function buildProjectCreationDataFromPOSTRepresentation(
         ProjectPostRepresentation $post_representation,
