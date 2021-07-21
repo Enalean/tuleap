@@ -25,17 +25,18 @@ namespace Tuleap\ProgramManagement\Domain;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\NotAllowedToPrioritizeException;
 use Tuleap\ProgramManagement\Domain\Program\Plan\VerifyPrioritizeFeaturesPermission;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
+use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 
-class UserCanPrioritize
+final class UserCanPrioritize
 {
     /**
-     * @var \PFUser
+     * @psalm-readonly
      */
-    private $user;
+    private \PFUser $user;
     /**
-     * @var int
+     * @psalm-readonly
      */
-    private $id;
+    private int $id;
 
     private function __construct(\PFUser $user)
     {
@@ -58,7 +59,7 @@ class UserCanPrioritize
      */
     public static function fromUser(VerifyPrioritizeFeaturesPermission $permission, \PFUser $user, ProgramIdentifier $program): self
     {
-        if (! $permission->canUserPrioritizeFeatures($program, $user)) {
+        if (! $permission->canUserPrioritizeFeatures($program, UserIdentifier::fromPFUser($user))) {
             throw new NotAllowedToPrioritizeException((int) $user->getId(), $program->getId());
         }
         return new self($user);

@@ -22,84 +22,92 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\Plan;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use Project_AccessException;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Content\RetrieveProjectUgroupsCanPrioritizeItems;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
+use Tuleap\ProgramManagement\Domain\Workspace\RetrieveProject;
+use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\ProgramManagement\Stub\BuildProgramStub;
-use Tuleap\Project\ProjectAccessChecker;
+use Tuleap\ProgramManagement\Stub\RetrieveProjectStub;
+use Tuleap\ProgramManagement\Stub\RetrieveProjectUgroupsCanPrioritizeItemsStub;
+use Tuleap\ProgramManagement\Stub\RetrieveUserStub;
 use Tuleap\Test\Builders\ProjectTestBuilder;
-use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\Stubs\CheckProjectAccessStub;
 
 final class PrioritizeFeaturesPermissionVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
+    private PrioritizeFeaturesPermissionVerifier $verifier;
+    private RetrieveProject $retrieve_project;
+    private RetrieveProjectUgroupsCanPrioritizeItems $retrieve_ugroups;
+    private ProgramIdentifier $program_identifier;
+    private UserIdentifier $user_identifier;
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|ProjectAccessChecker
+     * @var \PFUser|\PHPUnit\Framework\MockObject\MockObject
      */
-    private $project_access_checker;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|CanPrioritizeFeaturesDAO
-     */
-    private $dao;
-    /**
-     * @var PrioritizeFeaturesPermissionVerifier
-     */
-    private $verifier;
+    private $user;
 
     protected function setUp(): void
     {
-        $project_manager = \Mockery::mock(\ProjectManager::class);
-        $project_manager->shouldReceive('getProject')->andReturn(ProjectTestBuilder::aProject()->build());
-
-        $this->project_access_checker = \Mockery::mock(ProjectAccessChecker::class);
-        $this->dao                    = \Mockery::mock(CanPrioritizeFeaturesDAO::class);
-
-        $this->verifier = new PrioritizeFeaturesPermissionVerifier(
-            $project_manager,
-            $this->project_access_checker,
-            $this->dao
-        );
+        $this->retrieve_project = RetrieveProjectStub::withValidProjects(ProjectTestBuilder::aProject()->build());
+        $this->retrieve_ugroups = RetrieveProjectUgroupsCanPrioritizeItemsStub::buildWithIds(4);
+        $this->user             = $this->createMock(\PFUser::class);
+        $this->user->method('getId')->willReturn(101);
+        $this->program_identifier = ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 102, $this->user);
+        $this->user_identifier    = UserIdentifier::fromPFUser($this->user);
     }
 
     public function testUsersCanPrioritizeFeaturesWhenTheyAreInTheAppropriateUserGroup(): void
     {
-        $this->project_access_checker->shouldReceive('checkUserCanAccessProject');
-        $this->dao->shouldReceive('searchUserGroupIDsWhoCanPrioritizeFeaturesByProjectID')->andReturn([4]);
+        $this->verifier = new PrioritizeFeaturesPermissionVerifier(
+            $this->retrieve_project,
+            CheckProjectAccessStub::withValidAccess(),
+            $this->retrieve_ugroups,
+            RetrieveUserStub::buildMockedMemberOfUGroupUser($this->user)
+        );
 
-        $user = \Mockery::mock(\PFUser::class);
-        $user->shouldReceive('isAdmin')->andReturn(false);
-        $user->shouldReceive('isMemberOfUGroup')->andReturn(true);
-
-        self::assertTrue($this->verifier->canUserPrioritizeFeatures(ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 102, $user), $user));
+        self::assertTrue(
+            $this->verifier->canUserPrioritizeFeatures($this->program_identifier, $this->user_identifier)
+        );
     }
 
     public function testUsersCanPrioritizeFeaturesWhenTheyAreProjectAdmin(): void
     {
-        $this->project_access_checker->shouldReceive('checkUserCanAccessProject');
+        $this->verifier = new PrioritizeFeaturesPermissionVerifier(
+            $this->retrieve_project,
+            CheckProjectAccessStub::withValidAccess(),
+            $this->retrieve_ugroups,
+            RetrieveUserStub::buildMockedAdminUser($this->user)
+        );
 
-        $user = \Mockery::mock(\PFUser::class);
-        $user->shouldReceive('isAdmin')->andReturn(true);
-
-        self::assertTrue($this->verifier->canUserPrioritizeFeatures(ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 102, $user), $user));
+        self::assertTrue(
+            $this->verifier->canUserPrioritizeFeatures($this->program_identifier, $this->user_identifier)
+        );
     }
 
     public function testUsersCannotPrioritizeFeaturesWhenTheyCanAccessTheProjectButAreNotPartOfTheAuthorizedUserGroups(): void
     {
-        $this->project_access_checker->shouldReceive('checkUserCanAccessProject');
-        $this->dao->shouldReceive('searchUserGroupIDsWhoCanPrioritizeFeaturesByProjectID')->andReturn([4]);
+        $this->verifier = new PrioritizeFeaturesPermissionVerifier(
+            $this->retrieve_project,
+            CheckProjectAccessStub::withValidAccess(),
+            $this->retrieve_ugroups,
+            RetrieveUserStub::buildMockedRegularUser($this->createMock(\PFUser::class))
+        );
 
-        $user = \Mockery::mock(\PFUser::class);
-        $user->shouldReceive('isAdmin')->andReturn(false);
-        $user->shouldReceive('isMemberOfUGroup')->andReturn(false);
-
-        self::assertFalse($this->verifier->canUserPrioritizeFeatures(ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 102, $user), $user));
+        self::assertFalse(
+            $this->verifier->canUserPrioritizeFeatures($this->program_identifier, $this->user_identifier)
+        );
     }
 
     public function testUsersCannotPrioritizeFeaturesWhenTheyCannotAccessTheProject(): void
     {
-        $this->project_access_checker->shouldReceive('checkUserCanAccessProject')->andThrow(\Mockery::mock(Project_AccessException::class));
+        $this->verifier = new PrioritizeFeaturesPermissionVerifier(
+            $this->retrieve_project,
+            CheckProjectAccessStub::withNotValidProject(),
+            $this->retrieve_ugroups,
+            RetrieveUserStub::buildMockedRegularUser($this->createMock(\PFUser::class))
+        );
 
-        self::assertFalse($this->verifier->canUserPrioritizeFeatures(ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 102, UserTestBuilder::aUser()->build()), UserTestBuilder::aUser()->build()));
+        self::assertFalse(
+            $this->verifier->canUserPrioritizeFeatures($this->program_identifier, $this->user_identifier)
+        );
     }
 }

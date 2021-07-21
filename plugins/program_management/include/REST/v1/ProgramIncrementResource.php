@@ -48,7 +48,8 @@ use Tuleap\ProgramManagement\Adapter\Program\Plan\ProgramAdapter;
 use Tuleap\ProgramManagement\Adapter\Program\PlanningAdapter;
 use Tuleap\ProgramManagement\Adapter\Program\ProgramDao;
 use Tuleap\ProgramManagement\Adapter\Team\TeamDao;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Content\RetrieveFeatureContent;
+use Tuleap\ProgramManagement\Adapter\Workspace\ProjectManagerAdapter;
+use Tuleap\ProgramManagement\Adapter\Workspace\UserManagerAdapter;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\NotAllowedToPrioritizeException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Content\AddOrOrderMustBeSetException;
@@ -74,14 +75,8 @@ final class ProgramIncrementResource extends AuthenticatedResource
     private const MAX_LIMIT = 50;
     public const  ROUTE     = 'program_increment';
 
-    /**
-     * @var RetrieveFeatureContent
-     */
-    public $program_increment_content_retriever;
-    /**
-     * @var \UserManager
-     */
-    private $user_manager;
+    public FeatureContentRetriever $program_increment_content_retriever;
+    private \UserManager $user_manager;
 
     public function __construct()
     {
@@ -173,12 +168,13 @@ final class ProgramIncrementResource extends AuthenticatedResource
         $plan_dao               = new PlanDao();
         $modifier               = new ContentModifier(
             new PrioritizeFeaturesPermissionVerifier(
-                \ProjectManager::instance(),
+                new ProjectManagerAdapter(\ProjectManager::instance()),
                 new ProjectAccessChecker(
                     new RestrictedUserCanAccessProjectVerifier(),
                     \EventManager::instance()
                 ),
-                new CanPrioritizeFeaturesDAO()
+                new CanPrioritizeFeaturesDAO(),
+                new UserManagerAdapter($this->user_manager)
             ),
             new ProgramIncrementChecker($artifact_factory, $program_increments_dao),
             $this->getProgramSearcher(),
