@@ -26,7 +26,7 @@ $dimmed-white-over-dark-background: transparentize(#ffffff, 0.2);
     z-index: 100051;
     margin: 16px 0 0;
     padding: 16px;
-    border-radius: 4px;
+    border-radius: var(--tlp-large-radius);
     background-color: var(--tlp-dark-color);
     box-shadow: 0 20px 30px var(--tlp-dark-color-transparent-85), 0 5px 10px var(--tlp-dark-color-transparent-85);
     color: var(--tlp-white-color);
@@ -67,7 +67,7 @@ $dimmed-white-over-dark-background: transparentize(#ffffff, 0.2);
     }
 
     img {
-        border-radius: 3px;
+        border-radius: var(--tlp-medium-radius);
     }
 
     .cross-ref-tooltip-collection {
@@ -110,14 +110,14 @@ $dimmed-white-over-dark-background: transparentize(#ffffff, 0.2);
     display: flex;
     align-items: center;
     padding: 16px;
-    border-top-left-radius: 4px;
-    border-top-right-radius: 4px;
+    border-top-left-radius: var(--tlp-large-radius);
+    border-top-right-radius: var(--tlp-large-radius);
     background: var(--tlp-dark-color-darker-10);
     font-size: 16px;
     line-height: 20px;
 
     &:last-child {
-        border-radius: 4px;
+        border-radius: var(--tlp-large-radius);
     }
 }
 

@@ -26,7 +26,7 @@
 .select2-container--open.select2-container--tlp-select2 > .select2-dropdown.tracker-color-results {
     height: 250px;
     border: 0;
-    border-radius: 0 3px 3px;
+    border-radius: 0 var(--tlp-medium-radius) var(--tlp-medium-radius);
 
     /* stylelint-disable selector-class-pattern,selector-no-qualifying-type*/
     .select2-results__option[aria-selected="true"]::before,
@@ -38,7 +38,7 @@
 
     &.select2-dropdown--above #select2-tracker-creation-field-color-results {
         margin-top: 1px;
-        border-radius: 3px 3px 3px 0;
+        border-radius: var(--tlp-medium-radius) var(--tlp-medium-radius) var(--tlp-medium-radius) 0;
     }
 }
 
@@ -46,7 +46,7 @@
     min-width: 110px;
     margin-top: -1px;
     border: 1px solid var(--tlp-main-color);
-    border-radius: 0 3px 3px;
+    border-radius: 0 var(--tlp-medium-radius) var(--tlp-medium-radius);
 }
 
 #select2-tracker-creation-field-color-container {

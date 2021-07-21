@@ -88,7 +88,7 @@ $url-base: "../images/account-confirmation/account-registration-feedback-backgro
 
 #account-confirmation-redirect {
     a {
-        border-radius: 4px;
+        border-radius: var(--tlp-medium-radius);
         border-color: var(--tlp-main-color) var(--tlp-main-color) #002a80;
         background-color: var(--tlp-main-color);
         background-image: linear-gradient(to bottom, var(--tlp-main-color), var(--tlp-main-color));

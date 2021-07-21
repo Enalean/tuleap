@@ -31,7 +31,7 @@ body.login-page {
     margin: 100px 0 0;
     padding: 30px;
     border: 1px solid #ededed;
-    border-radius: 4px;
+    border-radius: var(--tlp-large-radius);
     background: #ffffff;
 
     &::after {

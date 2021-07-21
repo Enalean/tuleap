@@ -76,7 +76,7 @@ body.openid-connect-link {
             > .provider-button-preview {
                 padding: 20px;
                 border: 1px solid #ededed;
-                border-radius: 4px;
+                border-radius: var(--tlp-medium-radius);
                 background: #f3f3f3;
                 text-align: center;
 
@@ -114,7 +114,7 @@ body.openid-connect-link {
             width: 370px;
             margin: 0 30px 30px 0;
             border: 1px solid #ededed;
-            border-radius: 4px;
+            border-radius: var(--tlp-medium-radius);
 
             > .provider-background-icon {
                 position: absolute;
@@ -315,8 +315,8 @@ body.openid-connect-link {
         > span {
             height: 100%;
             margin-right: 19px;
-            border-top-left-radius: 3px;
-            border-bottom-left-radius: 3px;
+            border-top-left-radius: var(--tlp-medium-radius);
+            border-bottom-left-radius: var(--tlp-medium-radius);
 
             > span {
                 display: block;

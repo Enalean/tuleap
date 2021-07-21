@@ -136,7 +136,7 @@ body.homepage > #main-container {
     width: 380px;
     padding: 30px 40px 40px;
     border: 1px solid var(--tlp-main-color);
-    border-radius: 4px;
+    border-radius: var(--tlp-large-radius);
     background: var(--tlp-white-color);
     box-shadow: 0 8px 15px 0 transparentize(#000000, 0.95);
 }
@@ -251,7 +251,7 @@ body.homepage > #main-container {
     padding: 30px;
     overflow: hidden;
     border: 1px solid var(--tlp-main-color);
-    border-radius: 3px;
+    border-radius: var(--tlp-large-radius);
     background: var(--tlp-dark-color);
     color: var(--tlp-white-color);
 }

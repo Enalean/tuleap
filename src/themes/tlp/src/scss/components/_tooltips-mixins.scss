@@ -19,7 +19,7 @@
 
 $tlp-tooltip-background: var(--tlp-dark-color);
 $tlp-tooltip-arrow-size: 5px;
-$tlp-tooltip-border-radius: 4px;
+$tlp-tooltip-border-radius: var(--tlp-large-radius);
 $tlp-tooltip-margin: 5px;
 
 @mixin tlp-tooltip-top() {

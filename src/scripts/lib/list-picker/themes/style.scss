@@ -40,11 +40,11 @@
     position: absolute;
     z-index: 1000;
     flex-direction: column;
-    border-radius: 0 0 4px 4px;
+    border-radius: 0 0 var(--tlp-medium-radius) var(--tlp-medium-radius);
     background-color: #ffffff;
 
     &.list-picker-dropdown-above {
-        border-radius: 4px 4px 0 0;
+        border-radius: var(--tlp-medium-radius) var(--tlp-medium-radius) 0 0;
     }
 
     &.list-picker-dropdown-over-modal {

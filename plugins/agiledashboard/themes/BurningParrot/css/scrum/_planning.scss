@@ -101,7 +101,7 @@
     align-items: center;
     margin-bottom: var(--tlp-medium-spacing);
     padding: var(--tlp-small-spacing);
-    border-radius: 4px;
+    border-radius: var(--tlp-medium-radius);
     background: var(--project-color, var(--tlp-dimmed-color));
     color: var(--tlp-white-color);
 }

@@ -29,7 +29,7 @@
     width: 100%;
     transition: border-color 75ms ease-in-out, background-color 75ms ease-in-out;
     border: 1px solid var(--tlp-neutral-normal-color);
-    border-radius: 3px;
+    border-radius: var(--tlp-medium-radius);
     background: var(--tlp-white-color);
     cursor: move;
 
@@ -138,8 +138,8 @@
     height: 100%;
     border-left-width: 4px;
     border-left-style: solid;
-    border-top-left-radius: 2px;
-    border-bottom-left-radius: 2px;
+    border-top-left-radius: var(--tlp-medium-radius);
+    border-bottom-left-radius: var(--tlp-medium-radius);
 
     @each $color-name, $colors in swatch-colors.$tlp-swatch-color-map {
         &.#{$color-name} {
@@ -219,7 +219,7 @@ $backlog-item-details-parent-background: var(--project-color-background, var(--t
     padding: 3px 5px;
     transition: transform 100ms ease-in-out 500ms;
     border: 1px hidden;
-    border-radius: 3px;
+    border-radius: var(--tlp-small-radius);
     background: $backlog-item-details-parent-background;
     fill: $backlog-item-details-parent-color;
     color: $backlog-item-details-parent-color;

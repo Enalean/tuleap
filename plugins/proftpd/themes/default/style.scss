@@ -25,7 +25,7 @@ div.sftp_directory_listing {
     $header-text-color: #686868;
     $hover-background-color: #e6f2f9;
     $hover-border-color: #d1e7f3;
-    $header-hover-radius: 3px;
+    $header-hover-radius: var(--tlp-medium-radius);
 
     /* stylelint-disable-next-line selector-no-qualifying-type */
     .nav {

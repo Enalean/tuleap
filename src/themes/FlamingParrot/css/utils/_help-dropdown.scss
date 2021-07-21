@@ -47,7 +47,7 @@
     transition: opacity 75ms ease-out;
     border: 1px solid #e3e5ed;
     border-bottom: 0;
-    border-radius: 3px;
+    border-radius: var(--tlp-large-radius);
     opacity: 0;
     background: var(--tlp-dark-color);
     font-size: 13px;

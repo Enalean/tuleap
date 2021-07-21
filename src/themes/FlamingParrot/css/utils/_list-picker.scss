@@ -54,13 +54,13 @@ $form-element-small-font-size: 0.8125rem;
     }
 
     &.list-picker-with-open-dropdown .list-picker-selection {
-        border-radius: 4px 4px 0 0;
+        border-radius: var(--tlp-medium-radius) var(--tlp-medium-radius) 0 0;
         border-color: var(--tlp-main-color);
     }
 
     &.list-picker-with-open-dropdown {
         &.list-picker-with-dropdown-above .list-picker-selection {
-            border-radius: 0 0 4px 4px;
+            border-radius: 0 0 var(--tlp-medium-radius) var(--tlp-medium-radius);
         }
     }
 
@@ -69,7 +69,7 @@ $form-element-small-font-size: 0.8125rem;
         box-sizing: border-box;
         align-items: center;
         border: 1px solid $form-element-border-color;
-        border-radius: 4px;
+        border-radius: var(--tlp-medium-radius);
         background: var(--tlp-white-color);
         font-size: 0.875rem;
 

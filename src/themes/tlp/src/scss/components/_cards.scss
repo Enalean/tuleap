@@ -17,13 +17,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@use '../variables/radius';
-
 .tlp-card {
     margin: 0 0 var(--tlp-medium-spacing);
     padding: var(--tlp-medium-spacing);
     border: 1px solid var(--tlp-neutral-normal-color);
-    border-radius: radius.$tlp-card-radius;
+    border-radius: var(--tlp-large-radius);
     background: var(--tlp-white-color);
 
     &:last-child {
@@ -80,8 +78,17 @@
         border-bottom: 1px solid var(--tlp-neutral-light-color);
         border-radius: 0;
 
+        &:first-child {
+            border-radius: var(--tlp-large-radius) var(--tlp-large-radius) 0 0;
+        }
+
         &:last-child {
             border: 0;
+            border-radius: 0 0 var(--tlp-large-radius) var(--tlp-large-radius);
+        }
+
+        &:only-child {
+            border-radius: var(--tlp-large-radius);
         }
     }
 

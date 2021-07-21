@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-$border-radius: 3px;
+$border-radius: var(--tlp-medium-radius);
 
 // stylelint-disable selector-class-pattern
 .cke_chrome,

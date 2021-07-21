@@ -103,7 +103,7 @@ tlp-mermaid-diagram {
         height: 100%;
         padding: var(--tlp-medium-spacing);
         overflow: hidden;
-        border-radius: 4px;
+        border-radius: var(--tlp-medium-radius);
         background: var(--tlp-white-color);
         cursor: all-scroll;
     }

@@ -70,7 +70,7 @@ $timeline-color: var(--tlp-main-color-lighter-90);
     z-index: 2;
     margin: var(--tlp-medium-spacing) 0;
     padding: 5px;
-    border-radius: 3px;
+    border-radius: var(--tlp-small-radius);
     background: $timeline-color;
     color: var(--tlp-main-color);
     font-size: 10px;

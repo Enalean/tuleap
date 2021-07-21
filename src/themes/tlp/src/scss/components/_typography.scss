@@ -197,7 +197,7 @@ blockquote {
 kbd {
     display: inline-block;
     padding: 2px var(--tlp-small-spacing);
-    border-radius: 4px;
+    border-radius: var(--tlp-medium-radius);
     background: var(--tlp-dark-color);
     color: var(--tlp-white-color);
     font-family: var(--tlp-font-family-mono);
@@ -215,7 +215,7 @@ code {
     @extend %tlp-code;
 
     padding: 3px;
-    border-radius: 4px;
+    border-radius: var(--tlp-medium-radius);
 }
 
 pre {

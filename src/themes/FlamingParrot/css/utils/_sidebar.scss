@@ -96,7 +96,7 @@ $spacing-between-nav-items: 5px;
         height: variables-common.$sidebar-item-height;
         margin: 0 calc(-1 * var(--tlp-small-spacing)) $spacing-between-nav-items;
         padding: 0 var(--tlp-small-spacing);
-        border-radius: 6px;
+        border-radius: var(--tlp-large-radius);
         color: var(--tlp-neutral-normal-color);
         text-shadow: none;
 
@@ -269,7 +269,7 @@ $spacing-between-nav-items: 5px;
 .project-sidebar-title {
     margin: 0 0 0 calc(-1 * var(--tlp-small-spacing));
     padding: var(--tlp-small-spacing);
-    border-radius: 4px;
+    border-radius: var(--tlp-large-radius);
     color: var(--tlp-white-color);
     font-size: 1.125rem;
     font-weight: 600;
@@ -315,7 +315,7 @@ $spacing-between-nav-items: 5px;
     align-items: center;
     margin: 0 var(--tlp-small-spacing);
     padding: var(--tlp-small-spacing);
-    border-radius: 6px;
+    border-radius: var(--tlp-large-radius);
     background: var(--tlp-dark-color);
 
     &:hover,
@@ -373,7 +373,7 @@ $spacing-between-nav-items: 5px;
     max-width: 100%;
     margin: 0 0 var(--tlp-small-spacing) 0;
     padding: 5px var(--tlp-small-spacing);
-    border-radius: 4px;
+    border-radius: var(--tlp-medium-radius);
     background: var(--tlp-main-color-transparent-85);
     color: var(--tlp-main-color-lighter-40);
     font-size: 0.75rem;
@@ -413,7 +413,7 @@ $spacing-between-nav-items: 5px;
 
 #project-sidebar-project-flags-popover {
     > .tlp-popover-body {
-        border-radius: 4px;
+        border-radius: var(--tlp-large-radius);
         background: var(--tlp-dark-color-darker-20);
         color: var(--tlp-dimmed-color-on-dark-background);
         line-height: 1.5rem;

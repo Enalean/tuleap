@@ -63,7 +63,7 @@ input[type="file"] {
 kbd {
     display: inline-block;
     padding: 2px var(--tlp-small-spacing);
-    border-radius: 4px;
+    border-radius: var(--tlp-medium-radius);
     background: var(--tlp-dark-color);
     color: var(--tlp-white-color);
     font-family: -apple-system, BlinkMacSystemFont, Roboto, "Helvetica Neue", sans-serif;
@@ -77,7 +77,7 @@ kbd {
     padding: 20px;
     border: 0;
     border-left: var(--tlp-alert-warning-border);
-    border-radius: 3px;
+    border-radius: var(--tlp-medium-radius);
     background: var(--tlp-alert-warning-background);
     color: var(--tlp-alert-warning-color);
     list-style: none;
@@ -488,7 +488,7 @@ legend {
 .input-prepend,
 .input-append {
     display: inline-flex;
-    border-radius: 3px;
+    border-radius: var(--tlp-medium-radius);
 
     .btn {
         // @bdauton approved this crappy thing
@@ -531,8 +531,8 @@ select.input-small {
     padding-top: 0;
     padding-bottom: 0;
     border-bottom: 0;
-    border-top-left-radius: 3px;
-    border-top-right-radius: 3px;
+    border-top-left-radius: var(--tlp-x-large-radius);
+    border-top-right-radius: var(--tlp-x-large-radius);
     background: var(--tlp-main-color);
     color: var(--tlp-white-color);
 
@@ -576,7 +576,7 @@ select.input-small {
 .modal-footer {
     padding: 20px;
     border-top: 1px solid #f3f3f3;
-    border-radius: 0 0 3px 3px;
+    border-radius: 0 0 var(--tlp-x-large-radius) var(--tlp-x-large-radius);
     background-color: var(--tlp-white-color);
     text-align: right;
 }

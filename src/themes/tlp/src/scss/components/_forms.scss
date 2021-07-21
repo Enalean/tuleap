@@ -28,7 +28,7 @@ $tlp-form-element-small-padding-horizontal: var(--tlp-small-spacing);
 $tlp-form-element-large-font-size: 1rem;
 $tlp-form-element-large-height: 48px;
 $tlp-form-element-large-padding-horizontal: var(--tlp-medium-spacing);
-$tlp-form-element-border-radius: 4px;
+$tlp-form-element-border-radius: var(--tlp-medium-radius);
 $tlp-form-element-border-color: var(--tlp-neutral-dark-color-darker-05);
 $tlp-form-element-background: var(--tlp-white-color);
 $tlp-form-element-border-transition-duration: 150ms;

@@ -27,13 +27,13 @@
 
     &.gu-transit {
         margin: 10px;
-        border-radius: 3px;
+        border-radius: var(--tlp-medium-radius);
         opacity: 0.5;
     }
 
     &.gu-mirror {
         position: absolute;
-        border-radius: 3px;
+        border-radius: var(--tlp-medium-radius);
         box-shadow: 0 7px 30px 0 rgba(0, 0, 0, 0.2);
     }
 

@@ -41,8 +41,8 @@
     box-sizing: border-box;
     padding: calc(var(--tlp-medium-spacing) + 1px) var(--tlp-medium-spacing) calc(var(--tlp-medium-spacing) + 1px) var(--tlp-large-spacing);
     border-bottom: 1px solid rgba(104, 122, 124, 0.2);
-    border-top-left-radius: 6px;
-    border-top-right-radius: 6px;
+    border-top-left-radius: var(--tlp-x-large-radius);
+    border-top-right-radius: var(--tlp-x-large-radius);
     background: linear-gradient(0deg, rgba(0, 0, 0, 0.07), rgba(0, 0, 0, 0.07)), var(--tlp-dark-color);
     background-blend-mode: overlay;
 }
@@ -67,7 +67,7 @@
 .switch-to-projects-softwaremap-empty-state {
     height: auto;
     padding: 0 var(--tlp-medium-spacing);
-    border-radius: 4px;
+    border-radius: var(--tlp-large-radius);
     background: var(--tlp-background-color);
     color: var(--tlp-dark-color);
     font-size: 0.875rem;

@@ -24,7 +24,7 @@
     width: 400px;
     padding: 0;
     border: 0;
-    border-radius: 4px;
+    border-radius: var(--tlp-large-radius);
     background: var(--tlp-dark-color-darker-20);
     color: var(--tlp-neutral-dark-color);
     font-size: 0.875rem;

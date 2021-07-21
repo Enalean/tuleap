@@ -37,7 +37,7 @@
     z-index: 2;
     margin: 0 0 var(--tlp-medium-spacing);
     padding: 5px;
-    border-radius: 3px;
+    border-radius: var(--tlp-small-radius);
     background: release-chart.$timeline-color;
     color: var(--tlp-main-color);
     font-size: 10px;

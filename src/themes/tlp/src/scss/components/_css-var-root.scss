@@ -248,7 +248,10 @@ $fade-background-color: mix($tlp-background-color, $tlp-white-color, 50);
     --tlp-shadow-danger-color: #{transparentize($tlp-danger-color, 0.15)};
 
     // radius
-    --tlp-card-radius: #{$tlp-card-radius};
+    --tlp-small-radius: 3px;
+    --tlp-medium-radius: 4px;
+    --tlp-large-radius: 6px;
+    --tlp-x-large-radius: 8px;
 
     // highlight darker button
     --tlp-sidebar-action-background: rgba(255, 255, 255, 0.25);

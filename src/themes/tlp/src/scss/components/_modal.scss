@@ -20,7 +20,7 @@
 @use 'buttons';
 
 $tlp-modal-padding: var(--tlp-medium-spacing);
-$tlp-modal-radius: 3px;
+$tlp-modal-radius: var(--tlp-x-large-radius);
 $tlp-modal-shadow: 0 10px 36px rgba(0, 0, 0, 0.2);
 $tlp-modal-transition: 100ms ease-out;
 

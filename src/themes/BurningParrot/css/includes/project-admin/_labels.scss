@@ -22,7 +22,7 @@
 %color-area {
     display: block;
     height: 25px;
-    border-radius: 3px;
+    border-radius: var(--tlp-small-radius);
 
     @each $color-name, $colors in common-colors.$tlp-swatch-color-map {
         &.#{$color-name} {

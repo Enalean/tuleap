@@ -22,6 +22,6 @@
     margin: 0 0 var(--tlp-medium-spacing);
     padding: var(--tlp-medium-spacing);
     overflow-y: auto;
-    border-radius: 2px;
+    border-radius: var(--tlp-medium-radius);
     box-shadow: 0 0 1px 1px var(--tlp-neutral-normal-color);
 }

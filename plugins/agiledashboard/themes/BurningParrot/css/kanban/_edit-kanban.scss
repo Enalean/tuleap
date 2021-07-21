@@ -99,7 +99,7 @@
     display: flex;
     justify-content: space-between;
     padding: 3px 3px 3px 0;
-    border-radius: 3px;
+    border-radius: var(--tlp-medium-radius);
 
     &.draggable:not(.editing) {
         cursor: move;
@@ -119,7 +119,7 @@
 
     &.gu-mirror {
         z-index: 100051 !important;
-        border-radius: 3px;
+        border-radius: var(--tlp-medium-radius);
         opacity: 1;
         background-color: #ffffff;
         box-shadow: 0 1px 5px rgba(0, 0, 0, 0.3);

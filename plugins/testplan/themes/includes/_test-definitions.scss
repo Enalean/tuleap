@@ -27,8 +27,8 @@
     padding: var(--tlp-small-spacing);
     border: 1px solid var(--tlp-neutral-normal-color);
     border-top: 0;
-    border-bottom-right-radius: 3px;
-    border-bottom-left-radius: 3px;
+    border-bottom-right-radius: var(--tlp-large-radius);
+    border-bottom-left-radius: var(--tlp-large-radius);
     background: var(--tlp-fade-background-color);
 }
 
@@ -64,6 +64,7 @@
     margin: 0 0 var(--tlp-small-spacing);
     padding: var(--tlp-small-spacing);
     transition: border-color 75ms ease-in-out, background-color 75ms ease-in-out;
+    border-radius: var(--tlp-medium-radius);
 
     &:last-of-type {
         margin: 0;
@@ -99,7 +100,7 @@
 .test-plan-test-definition-category {
     align-self: center;
     padding: 1px 6px;
-    border-radius: 3px;
+    border-radius: var(--tlp-small-radius);
     background: var(--tlp-main-color-hover-background);
     color: var(--tlp-main-color);
     font-size: 12px;

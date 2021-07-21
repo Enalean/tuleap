@@ -27,7 +27,7 @@ $white-space-above-and-after-a-project-link: var(--tlp-small-spacing);
     min-width: 700px;
     max-width: 1200px;
     overflow: hidden;
-    border-radius: 6px;
+    border-radius: var(--tlp-x-large-radius);
 }
 
 .switch-to-modal-header {
@@ -87,7 +87,7 @@ $white-space-above-and-after-a-project-link: var(--tlp-small-spacing);
     padding: $white-space-above-and-after-a-project-link var(--tlp-small-spacing);
     transition: opacity 100ms ease-in-out, background 100ms ease-in-out;
     border: 0;
-    border-radius: 4px;
+    border-radius: var(--tlp-large-radius);
     opacity: 0.75;
     background: none;
     color: var(--tlp-dimmed-color-on-dark-background);
@@ -145,7 +145,7 @@ $white-space-above-and-after-a-project-link: var(--tlp-small-spacing);
 
 .switch-to-projects-project-link {
     padding: $white-space-above-and-after-a-project-link var(--tlp-small-spacing);
-    border-radius: 4px;
+    border-radius: var(--tlp-large-radius);
     color: var(--tlp-typo-default-text-color-on-dark-background);
 
     &:hover,
@@ -176,7 +176,7 @@ $white-space-above-and-after-a-project-link: var(--tlp-small-spacing);
     margin: 0 0 0 4px;
     padding: $white-space-above-and-after-a-project-link var(--tlp-small-spacing);
     transition: opacity 100ms ease-in-out;
-    border-radius: 4px;
+    border-radius: var(--tlp-large-radius);
     opacity: 0;
     color: var(--tlp-dimmed-color-on-dark-background);
     font-size: 0.8125rem;
@@ -328,7 +328,7 @@ $white-space-above-and-after-a-project-link: var(--tlp-small-spacing);
     min-width: 0;
     padding: $white-space-above-and-after-a-project-link var(--tlp-small-spacing);
     overflow: hidden;
-    border-radius: 4px;
+    border-radius: var(--tlp-large-radius);
     color: var(--tlp-typo-default-text-color-on-dark-background);
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -366,7 +366,7 @@ $white-space-above-and-after-a-project-link: var(--tlp-small-spacing);
 
 .switch-to-recent-items-entry-quick-links-link {
     padding: $white-space-above-and-after-a-project-link var(--tlp-small-spacing);
-    border-radius: 4px;
+    border-radius: var(--tlp-large-radius);
     color: var(--tlp-typo-default-text-color-on-dark-background);
     font-size: 0.8125rem;
 
