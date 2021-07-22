@@ -16,22 +16,18 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+export default init;
 
-import { get } from "tlp";
-import { sanitize } from "dompurify";
-import { init as togglerInit } from "../tuleap/toggler.js";
-import { loadTooltips } from "@tuleap/tooltip";
+function init(): void {
+    const minimize_buttons = document.querySelectorAll(".dashboard-widget-icons-minimize");
 
-export default async function init() {
-    const widgets = document.querySelectorAll(".dashboard-widget-asynchronous");
-
-    for (const widget of widgets) {
-        const response = await get(widget.dataset.ajaxUrl);
-        const html = await response.text();
-
-        widget.innerHTML = sanitize(html);
-        widget.classList.remove("dashboard-widget-asynchronous-loading");
-        loadTooltips();
-        togglerInit(widget);
-    }
+    [].forEach.call(minimize_buttons, function (button: HTMLButtonElement) {
+        button.addEventListener("click", function () {
+            const form = button.parentNode;
+            if (!(form instanceof HTMLFormElement)) {
+                throw new Error("form of button does not exist");
+            }
+            form.submit();
+        });
+    });
 }
