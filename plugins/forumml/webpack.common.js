@@ -22,6 +22,7 @@ const webpack_configurator = require("../../tools/utils/scripts/webpack-configur
 
 const entry = {
     "new-thread": "./scripts/new-thread.ts",
+    thread: "./scripts/thread.ts",
     style: "./themes/css/style.scss",
     "forumml-style": "./themes/BurningParrot/css/forumml.scss",
 };

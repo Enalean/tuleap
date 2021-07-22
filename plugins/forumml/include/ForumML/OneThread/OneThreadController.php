@@ -98,6 +98,7 @@ class OneThreadController implements DispatchableWithBurningParrot, Dispatchable
         }
 
         $layout->addCssAsset(new CssAssetWithoutVariantDeclinaisons($this->include_assets, 'forumml-style'));
+        $layout->includeFooterJavascriptFile($this->include_assets->getFileURL('thread.js'));
         $layout->includeFooterJavascriptFile(RelativeDatesAssetsRetriever::retrieveAssetsUrl());
 
         $service = $list_info->getService();

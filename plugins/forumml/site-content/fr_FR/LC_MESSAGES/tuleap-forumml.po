@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 2.0.6\n"
+"X-Generator: Poedit 2.3\n"
 
 msgid "%s replies"
 msgstr "%s réponses"
@@ -66,6 +66,9 @@ msgstr "Message"
 
 msgid "Missing 'date' and/or 'filename' parameters."
 msgstr "Les paramètres 'date' et/ou 'filename' sont manquants."
+
+msgid "Monospaced font"
+msgstr "Police à chasse fixe"
 
 msgid "Permalink"
 msgstr "Lien permanent"
