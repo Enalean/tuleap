@@ -22,6 +22,10 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Plan;
 
+use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramForAdministrationIdentifier;
+use Tuleap\ProgramManagement\Domain\Program\ProgramTrackerException;
+use Tuleap\ProgramManagement\Domain\Workspace\RetrieveTracker;
+
 /**
  * @psalm-immutable
  */
@@ -38,14 +42,18 @@ final class ProgramPlannableTracker
     }
 
     /**
-     * @throws \Tuleap\ProgramManagement\Domain\Program\ProgramTrackerException
+     * @throws ProgramTrackerException
      */
     public static function build(
-        BuildTracker $build_tracker,
+        RetrieveTracker $tracker_retriever,
         int $tracker_id,
-        int $project_id
+        ProgramForAdministrationIdentifier $program
     ): self {
-        $build_tracker->checkTrackerIsValid($tracker_id, $project_id);
+        TrackerIsValidChecker::checkTrackerIsValid(
+            $tracker_retriever,
+            $tracker_id,
+            $program->id
+        );
 
         return new self($tracker_id);
     }

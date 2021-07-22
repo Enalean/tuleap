@@ -23,10 +23,12 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Adapter\Workspace;
 
 use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramForAdministrationIdentifier;
+use Tuleap\ProgramManagement\Domain\ProgramTracker;
 use Tuleap\ProgramManagement\Domain\TrackerReference;
+use Tuleap\ProgramManagement\Domain\Workspace\RetrieveTracker;
 use Tuleap\ProgramManagement\Domain\Workspace\RetrieveTrackerFromProgram;
 
-final class TrackerFactoryAdapter implements RetrieveTrackerFromProgram
+final class TrackerFactoryAdapter implements RetrieveTrackerFromProgram, RetrieveTracker
 {
     private \TrackerFactory $tracker_factory;
 
@@ -48,5 +50,14 @@ final class TrackerFactoryAdapter implements RetrieveTrackerFromProgram
         }
 
         return $tracker_references;
+    }
+
+    public function getTrackerById(int $tracker_id): ?ProgramTracker
+    {
+        $tracker = $this->tracker_factory->getTrackerById($tracker_id);
+        if (! $tracker) {
+            return null;
+        }
+        return new ProgramTracker($tracker);
     }
 }

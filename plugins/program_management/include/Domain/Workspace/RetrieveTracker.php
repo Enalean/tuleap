@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2020 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2021 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,21 +20,11 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Domain\Program\Plan;
+namespace Tuleap\ProgramManagement\Domain\Workspace;
 
-use Tuleap\ProgramManagement\Domain\Program\ProgramTrackerException;
+use Tuleap\ProgramManagement\Domain\ProgramTracker;
 
-interface BuildTracker
+interface RetrieveTracker
 {
-    /**
-     * @return array<ProgramPlannableTracker>
-     * @throws ProgramTrackerException
-     * @throws PlannableTrackerCannotBeEmptyException
-     */
-    public function buildPlannableTrackerList(array $plannable_trackers_id, int $project_id): array;
-
-    /**
-     * @throws ProgramTrackerException
-     */
-    public function checkTrackerIsValid(int $tracker_id, int $project_id): void;
+    public function getTrackerById(int $tracker_id): ?ProgramTracker;
 }

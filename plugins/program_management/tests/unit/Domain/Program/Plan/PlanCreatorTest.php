@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Plan;
 
-use Tuleap\ProgramManagement\Stub\BuildTrackerStub;
+use Tuleap\ProgramManagement\Stub\RetrieveTrackerStub;
 use Tuleap\ProgramManagement\Stub\RetrieveProgramUserGroupStub;
 use Tuleap\ProgramManagement\Stub\RetrieveProjectStub;
 use Tuleap\ProgramManagement\Stub\VerifyIsTeamStub;
@@ -32,27 +32,26 @@ use Tuleap\Test\Builders\UserTestBuilder;
 
 final class PlanCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private BuildTrackerStub $tracker_builder;
+    private RetrieveTrackerStub $tracker_builder;
     private RetrieveProgramUserGroupStub $ugroup_retriever;
     /**
      * @var \PHPUnit\Framework\MockObject\MockObject|PlanStore
      */
     private $plan_store;
-    private \Project $project;
     private RetrieveProjectStub $project_retriever;
+    private int $project_id;
 
     protected function setUp(): void
     {
-        $this->tracker_builder   = BuildTrackerStub::buildTrackerIsValidAndGetPlannableTrackerList();
+        $this->project_id        = 102;
+        $this->tracker_builder   = RetrieveTrackerStub::buildValidTrackerWithProjectId($this->project_id);
         $this->ugroup_retriever  = RetrieveProgramUserGroupStub::withValidUserGroups(4);
         $this->plan_store        = $this->createMock(PlanStore::class);
-        $this->project           = ProjectTestBuilder::aProject()->withId(102)->build();
-        $this->project_retriever = RetrieveProjectStub::withValidProjects($this->project);
+        $this->project_retriever = RetrieveProjectStub::withValidProjects(ProjectTestBuilder::aProject()->withId(102)->build());
     }
 
     public function testItCreatesAPlan(): void
     {
-        $project_id           = 102;
         $plannable_tracker_id = 2;
 
         $user = UserTestBuilder::aUser()->build();
@@ -64,7 +63,7 @@ final class PlanCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $plan_change                   = PlanChange::fromProgramIncrementAndRaw(
             $plan_program_increment_change,
             $user,
-            $project_id,
+            $this->project_id,
             [$plannable_tracker_id],
             ['102_4'],
             $iteration_representation
