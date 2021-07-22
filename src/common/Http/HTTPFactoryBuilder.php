@@ -22,10 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Http;
 
-use Http\Factory\Guzzle\RequestFactory;
-use Http\Factory\Guzzle\ResponseFactory;
-use Http\Factory\Guzzle\StreamFactory;
-use Http\Factory\Guzzle\UriFactory;
+use GuzzleHttp\Psr7\HttpFactory;
 use Psr\Http\Message\RequestFactoryInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\StreamFactoryInterface;
@@ -35,21 +32,26 @@ final class HTTPFactoryBuilder
 {
     public static function requestFactory(): RequestFactoryInterface
     {
-        return new RequestFactory();
+        return self::buildFactory();
     }
 
     public static function responseFactory(): ResponseFactoryInterface
     {
-        return new ResponseFactory();
+        return self::buildFactory();
     }
 
     public static function streamFactory(): StreamFactoryInterface
     {
-        return new StreamFactory();
+        return self::buildFactory();
     }
 
     public static function URIFactory(): UriFactoryInterface
     {
-        return new UriFactory();
+        return self::buildFactory();
+    }
+
+    private static function buildFactory(): HttpFactory
+    {
+        return new HttpFactory();
     }
 }
