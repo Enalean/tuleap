@@ -19,41 +19,45 @@
 
 <template>
     <div class="project-registration-template-selection">
-        <div class="project-registration-template-selection-tabs">
-            <div
+        <nav class="project-registration-template-selection-tabs tlp-tabs tlp-tabs-vertical">
+            <a
                 v-if="company_templates.length > 0"
-                v-on:click="setSelectedTemplateCategory(CATEGORY_ACME)"
+                v-on:click.prevent="setSelectedTemplateCategory(CATEGORY_ACME)"
                 v-bind:class="getTabsClasses(CATEGORY_ACME)"
                 data-test="project-registration-acme-templates-tab"
+                v-bind:href="'#' + CATEGORY_ACME"
             >
                 {{ platform_template_name }}
-            </div>
-            <div
+            </a>
+            <a
                 v-if="tuleap_templates.length > 0"
-                v-on:click="setSelectedTemplateCategory(CATEGORY_TULEAP)"
+                v-on:click.prevent="setSelectedTemplateCategory(CATEGORY_TULEAP)"
                 v-bind:class="getTabsClasses(CATEGORY_TULEAP)"
                 data-test="project-registration-tuleap-templates-tab"
+                v-bind:href="'#' + CATEGORY_TULEAP"
             >
                 Tuleap
-            </div>
-            <div
+            </a>
+            <a
                 v-for="category in external_templates_categories"
                 v-bind:key="'tab-' + category.shortname"
-                v-on:click="setSelectedTemplateCategory(category.shortname)"
+                v-on:click.prevent="setSelectedTemplateCategory(category.shortname)"
                 v-bind:class="getExternalCategoryClasses(category)"
                 v-bind:data-test="'project-registration-' + category.shortname + '-templates-tab'"
+                v-bind:href="'#' + category.shortname"
             >
                 {{ category.label }}
-            </div>
-            <div
-                v-on:click="setSelectedTemplateCategory(CATEGORY_ADVANCED)"
+            </a>
+            <a
+                v-on:click.prevent="setSelectedTemplateCategory(CATEGORY_ADVANCED)"
                 v-bind:class="getTabsClasses(CATEGORY_ADVANCED)"
                 data-test="project-registration-advanced-templates-tab"
+                v-bind:href="'#' + CATEGORY_ADVANCED"
                 v-translate
             >
                 For advanced users
-            </div>
-        </div>
+            </a>
+        </nav>
         <tuleap-template-list v-show="isTemplateCategorySelected(CATEGORY_TULEAP)" />
         <company-templates-list v-show="isTemplateCategorySelected(CATEGORY_ACME)" />
         <advanced-template-list v-show="isTemplateCategorySelected(CATEGORY_ADVANCED)" />
@@ -158,22 +162,24 @@ export default class TemplateSelection extends Vue {
         return this.selected_template_category === template_category;
     }
 
-    getTabsClasses(template_category: string): string {
+    getTabsClasses(template_category: string): string[] {
+        const classes = ["tlp-tab"];
+
         if (this.isTemplateCategorySelected(template_category)) {
-            return "templates-category-tab active";
+            classes.push("tlp-tab-active");
         }
 
-        return "templates-category-tab";
+        return classes;
     }
 
-    getExternalCategoryClasses(category: ExternalTemplateCategory): string {
-        return (
-            this.getTabsClasses(category.shortname) +
-            " " +
-            (category.should_case_of_label_be_respected
-                ? "templates-category-tab-with-mixed-case"
-                : "")
-        );
+    getExternalCategoryClasses(category: ExternalTemplateCategory): string[] {
+        const classes = this.getTabsClasses(category.shortname);
+
+        if (category.should_case_of_label_be_respected) {
+            classes.push("templates-category-tab-with-mixed-case");
+        }
+
+        return classes;
     }
 
     get platform_template_name(): string {

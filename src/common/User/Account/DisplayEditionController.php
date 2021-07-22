@@ -29,7 +29,6 @@ use Psr\EventDispatcher\EventDispatcherInterface;
 use TemplateRenderer;
 use TemplateRendererFactory;
 use Tuleap\Layout\BaseLayout;
-use Tuleap\Layout\JavascriptAsset;
 use Tuleap\Request\DispatchableWithBurningParrot;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\ForbiddenException;
@@ -70,13 +69,6 @@ final class DisplayEditionController implements DispatchableWithRequest, Dispatc
         if ($user->isAnonymous()) {
             throw new ForbiddenException();
         }
-
-        $layout->addJavascriptAsset(
-            new JavascriptAsset(
-                new \Tuleap\Layout\IncludeCoreAssets(),
-                'account/preferences-nav.js'
-            )
-        );
 
         $tabs = $this->dispatcher->dispatch(new AccountTabPresenterCollection($user, self::URL));
         assert($tabs instanceof AccountTabPresenterCollection);

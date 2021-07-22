@@ -44,7 +44,11 @@ final class AccountTabsBuilder
     {
         if ($this->hasRemoteAvailable() || $this->hasServerForUser($collection->getUser())) {
             $collection->add(
-                new AccountTabPresenter(dgettext('tuleap-git', 'Gerrit'), AccountGerritController::URL, 'fa-tlp-gerrit', $collection->getCurrentHref())
+                new AccountTabPresenter(
+                    dgettext('tuleap-git', 'Gerrit'),
+                    AccountGerritController::URL,
+                    $collection->getCurrentHref()
+                )
             );
         }
     }

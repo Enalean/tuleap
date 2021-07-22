@@ -30,6 +30,10 @@ final class AccountTabsBuilder
 {
     public function addTabs(AccountTabPresenterCollection $collection): void
     {
-        $collection->add(new AccountTabPresenter(dgettext('tuleap-openidconnectclient', 'OpenID Connect providers'), OIDCProvidersController::URL, 'fa-openid', $collection->getCurrentHref()));
+        $collection->add(new AccountTabPresenter(
+            dgettext('tuleap-openidconnectclient', 'OpenID Connect providers'),
+            OIDCProvidersController::URL,
+            $collection->getCurrentHref()
+        ));
     }
 }
