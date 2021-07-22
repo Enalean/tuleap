@@ -227,7 +227,7 @@ class Artifact
      */
     public function getID()
     {
-        return $this->data_array['artifact_id'];
+        return $this->data_array['artifact_id'] ?? 0;
     }
 
     /**
@@ -236,7 +236,7 @@ class Artifact
      */
     public function useArtifactPermissions()
     {
-        return $this->data_array['use_artifact_permissions'];
+        return $this->data_array['use_artifact_permissions'] ?? false;
     }
 
     /**

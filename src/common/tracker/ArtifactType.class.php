@@ -361,7 +361,7 @@ class ArtifactType
      */
     public function getName()
     {
-        return $this->data_array['name'];
+        return $this->data_array['name'] ?? '';
     }
 
     /**

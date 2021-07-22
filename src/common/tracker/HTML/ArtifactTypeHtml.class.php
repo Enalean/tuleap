@@ -1995,7 +1995,7 @@ EOS;
                 }
             }
             $description = '';
-            switch ($this->arr_roles[$i]['description_msg']) {
+            switch ($this->arr_roles[$i]['description_msg'] ?? null) {
                 case 'role_SUBMITTER_desc':
                     $description = $Language->getText('tracker_common_types', 'role_SUBMITTER_desc');
                     break;
