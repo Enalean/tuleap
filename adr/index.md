@@ -9,6 +9,7 @@ This log lists the architectural decisions for Tuleap. You will find bellow the 
 * [ADR-0003](0003-favor-phpunit-mock-over-mockery.md) - Favor PHPUnit mock system over Mockery
 * [ADR-0004](0004-tuleap-community-edition-docker-image.md) - Tuleap Community Edition docker image
 * [ADR-0005](0005-forgeupgrade.md) - Database migrations with ForgeUpgrade
+* [ADR-0006](0006-sign-docker-images.md) - Docker images signatures / Verify Docker images authenticity
 
 <!-- adrlogstop -->
 
