@@ -28,17 +28,8 @@
             {{ dynamic_rank }}
         </div>
         <div v-show="!is_dragging" class="ttm-definition-step-description">
-            <step-definition-marked-as-deleted
-                v-show="is_marked_as_deleted"
-                v-bind:step="step"
-                v-on:unmark-deletion="unmarkDeletion"
-            />
-            <step-definition-editable-step
-                v-show="!is_marked_as_deleted"
-                v-bind:step="step"
-                v-on:mark-as-deleted="markAsDeleted"
-                v-on:remove-deleted-steps-on-form-submission="removeDeletedStepsOnFormSubmission"
-            />
+            <step-definition-marked-as-deleted v-if="step.is_deleted" v-bind:step="step" />
+            <step-definition-editable-step v-if="!step.is_deleted" v-bind:step="step" />
         </div>
     </div>
 </template>
@@ -57,38 +48,17 @@ export default {
         StepDefinitionDraggableComponent,
     },
     props: {
-        step: Object,
-        dynamic_rank: Number,
-    },
-    data() {
-        return {
-            is_marked_as_deleted: false,
-        };
+        step: {
+            type: Object,
+            required: true,
+        },
+        dynamic_rank: {
+            type: Number,
+            required: true,
+        },
     },
     computed: {
         ...mapState(["is_dragging"]),
-    },
-    methods: {
-        markAsDeleted() {
-            if (this.step.raw_description.length === 0) {
-                this.$store.commit("deleteStep", this.step);
-            } else {
-                this.is_marked_as_deleted = true;
-            }
-        },
-        unmarkDeletion() {
-            this.is_marked_as_deleted = false;
-        },
-        addStep(index) {
-            this.$store.commit("addStep", index);
-        },
-        removeDeletedStepsOnFormSubmission(description_form) {
-            description_form.addEventListener("submit", () => {
-                if (this.is_marked_as_deleted) {
-                    this.$store.commit("deleteStep", this.step);
-                }
-            });
-        },
     },
 };
 </script>

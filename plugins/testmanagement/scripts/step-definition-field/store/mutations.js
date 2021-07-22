@@ -24,7 +24,7 @@ export function initStepField(
     [steps, field_id, empty_step, upload_url, upload_field_name, upload_max_size]
 ) {
     state.steps = steps.map((step) => {
-        return { ...step, uuid: uuid() };
+        return { ...step, uuid: uuid(), is_deleted: false };
     });
     state.field_id = field_id;
     state.empty_step = empty_step;
@@ -33,10 +33,10 @@ export function initStepField(
     state.upload_max_size = upload_max_size;
 }
 
-export function deleteStep(state, step) {
+export function setStepDeleted(state, [step, is_deleted]) {
     const index = state.steps.indexOf(step);
     if (index > -1) {
-        state.steps.splice(index, 1);
+        state.steps[index].is_deleted = is_deleted;
     }
 }
 
@@ -58,6 +58,7 @@ export function toggleIsDragging(state) {
 export function addStep(state, index) {
     const step = Object.assign({}, state.empty_step);
     step.uuid = uuid();
+    step.is_deleted = false;
 
     state.steps.splice(index, 0, step);
 }

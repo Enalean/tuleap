@@ -19,6 +19,12 @@
 
 <template>
     <div ref="dragula_container">
+        <input
+            v-if="hasNoStepRemaining"
+            type="hidden"
+            v-bind:name="'artifact[' + field_id + '][no_steps]'"
+            value="1"
+        />
         <template v-for="(step, index) in steps">
             <div class="ttm-definition-step-draggable" v-bind:key="'add-button-' + step.uuid">
                 <step-definition-entry
@@ -45,7 +51,12 @@ export default {
     name: "StepDefinitionDragContainer",
     components: { StepDefinitionEntry },
     computed: {
-        ...mapState(["steps", "is_dragging"]),
+        ...mapState(["steps", "is_dragging", "field_id"]),
+        hasNoStepRemaining() {
+            return (
+                this.steps.filter((step) => step.is_deleted === true).length === this.steps.length
+            );
+        },
     },
     watch: {
         is_dragging(new_value) {
