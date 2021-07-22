@@ -54,9 +54,6 @@ describe(`Tracker Workflow`, () => {
         it(`can create and configure a workflow`, function () {
             /* Create the workflow */
             cy.get("[data-test=tracker-workflow-first-configuration]").within(() => {
-                // With default view port, tabs are flickering and cause a shift of y button position
-                // cypress no longer click on our button, but on regular DOM element
-                cy.viewport(1024, 768);
                 cy.get("[data-test=list-fields]").select(STATUS_FIELD_LABEL);
                 cy.get("[data-test=create-workflow]").click();
             });

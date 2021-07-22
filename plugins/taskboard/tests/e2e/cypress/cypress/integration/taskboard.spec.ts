@@ -19,20 +19,15 @@
 
 import type { Card, ColumnDefinition } from "../../../../../scripts/taskboard/src/type";
 
-function getReleaseIdFromREST(): Cypress.Chainable<Response> {
-    return cy
-        .getProjectId("taskboard-project")
-        .then((project_id: JQuery<HTMLElement>) =>
-            cy.getFromTuleapAPI(`/api/projects/${project_id}/milestones?fields=slim`)
-        )
-        .then((response) => response.body[0].id);
-}
-
 describe(`Taskboard`, function () {
     before(function () {
         cy.clearSessionCookie();
         cy.projectMemberLogin();
-        getReleaseIdFromREST()
+        cy.getProjectId("taskboard-project")
+            .then((project_id: JQuery<HTMLElement>) =>
+                cy.getFromTuleapAPI(`/api/projects/${project_id}/milestones?fields=slim`)
+            )
+            .then((response) => response.body[0].id)
             .as("release_id")
             .then(function () {
                 cy.visit(`/taskboard/taskboard-project/${this.release_id}`);
@@ -99,7 +94,8 @@ describe(`Taskboard`, function () {
         });
 
         it(`hides the swimlanes and cards that are "Done"`, function () {
-            cy.get("[data-test=hide-closed-items]").click();
+            // need to force click because buttons are out of viewport
+            cy.get("[data-test=hide-closed-items]").click({ force: true });
             cy.get("[data-card-id]").then(($body) => {
                 expect($body).not.to.contain("Elastic Notorious");
                 expect($body).not.to.contain("Grim Crayon");
@@ -108,7 +104,8 @@ describe(`Taskboard`, function () {
         });
 
         it(`show the swimlanes and cards that are "Done"`, function () {
-            cy.get("[data-test=show-closed-items]").click();
+            // need to force click because buttons are out of viewport
+            cy.get("[data-test=show-closed-items]").click({ force: true });
             cy.get("[data-card-id]").then(($body) => {
                 expect($body).to.contain("Elastic Notorious");
                 expect($body).to.contain("Grim Crayon");
