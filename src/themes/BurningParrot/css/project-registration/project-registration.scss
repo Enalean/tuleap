@@ -114,33 +114,11 @@ $template-category-inactive-tab-right-margin: calc(var(--tlp-medium-spacing) + #
 }
 
 .project-registration-template-selection-tabs {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    height: 100%;
     margin: 0 var(--tlp-medium-spacing) 0 0;
-    font-size: 0.75rem;
-    line-height: 0.875rem;
+}
 
-    > .templates-category-tab {
-        padding: var(--tlp-medium-spacing) $template-category-inactive-tab-right-margin var(--tlp-medium-spacing) var(--tlp-medium-spacing);
-        border-right: $template-category-inactive-tab-right-border-width solid var(--tlp-neutral-dark-color-transparent-50);
-        color: var(--tlp-dimmed-color);
-        font-weight: 600;
-        text-transform: uppercase;
-        white-space: nowrap;
-        cursor: pointer;
-
-        &.templates-category-tab-with-mixed-case {
-            text-transform: none;
-        }
-
-        &.active {
-            padding: var(--tlp-medium-spacing);
-            border-right: $template-category-active-tab-right-border-width solid var(--tlp-main-color);
-            color: var(--tlp-main-color);
-        }
-    }
+.templates-category-tab-with-mixed-case {
+    text-transform: none;
 }
 
 @media screen and (max-width: 1000px) {

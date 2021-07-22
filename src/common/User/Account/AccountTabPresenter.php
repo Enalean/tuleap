@@ -37,19 +37,14 @@ final class AccountTabPresenter
      */
     public $href;
     /**
-     * @var string
-     */
-    public $icon;
-    /**
      * @var bool
      */
     public $is_active;
 
-    public function __construct(string $label, string $href, string $icon, string $current_href)
+    public function __construct(string $label, string $href, string $current_href)
     {
         $this->label     = $label;
         $this->href      = $href;
-        $this->icon      = $icon;
         $this->is_active = ($href === $current_href);
     }
 }

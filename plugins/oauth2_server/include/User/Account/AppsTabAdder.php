@@ -33,7 +33,6 @@ final class AppsTabAdder
             new AccountTabPresenter(
                 dgettext('tuleap-oauth2_server', 'OAuth2 Apps'),
                 AccountAppsController::URL,
-                'fa-cubes',
                 $collection->getCurrentHref()
             )
         );

@@ -44,12 +44,12 @@ class AccountTabPresenterCollection implements Dispatchable, \Iterator
     public function __construct(PFUser $user, string $current_href)
     {
         $this->all_tabs     = [
-            new AccountTabPresenter(_('Account'), DisplayAccountInformationController::URL, 'fa-address-card-o', $current_href),
-            new AccountTabPresenter(_('Security'), DisplaySecurityController::URL, 'fa-lock', $current_href),
-            new AccountTabPresenter(_('Notifications'), DisplayNotificationsController::URL, 'fa-bell-o', $current_href),
-            new AccountTabPresenter(_('Keys & tokens'), DisplayKeysTokensController::URL, 'fa-key', $current_href),
-            new AccountTabPresenter(_('Appearance & language'), DisplayAppearanceController::URL, 'fa-paint-brush', $current_href),
-            new AccountTabPresenter(_('Edition & CSV'), DisplayEditionController::URL, 'fa-pencil', $current_href),
+            new AccountTabPresenter(_('Account'), DisplayAccountInformationController::URL, $current_href),
+            new AccountTabPresenter(_('Security'), DisplaySecurityController::URL, $current_href),
+            new AccountTabPresenter(_('Notifications'), DisplayNotificationsController::URL, $current_href),
+            new AccountTabPresenter(_('Keys & tokens'), DisplayKeysTokensController::URL, $current_href),
+            new AccountTabPresenter(_('Appearance & language'), DisplayAppearanceController::URL, $current_href),
+            new AccountTabPresenter(_('Edition & CSV'), DisplayEditionController::URL, $current_href),
         ];
         $this->current_href = $current_href;
         $this->user         = $user;

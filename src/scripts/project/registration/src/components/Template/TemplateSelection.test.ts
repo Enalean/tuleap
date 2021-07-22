@@ -170,7 +170,7 @@ describe("TemplateSelection", () => {
             expect(
                 wrapper
                     .get("[data-test=project-registration-tuleap-templates-tab]")
-                    .element.classList.contains("active")
+                    .element.classList.contains("tlp-tab-active")
             ).toBe(true);
 
             expect(wrapper.findComponent(TuleapTemplateList).isVisible()).toBe(true);
@@ -194,7 +194,7 @@ describe("TemplateSelection", () => {
             expect(
                 wrapper
                     .get("[data-test=project-registration-acme-templates-tab]")
-                    .element.classList.contains("active")
+                    .element.classList.contains("tlp-tab-active")
             ).toBe(true);
 
             expect(wrapper.findComponent(TuleapCompanyTemplateList).isVisible()).toBe(true);
@@ -213,7 +213,7 @@ describe("TemplateSelection", () => {
             expect(
                 wrapper
                     .get("[data-test=project-registration-tuleap-templates-tab]")
-                    .element.classList.contains("active")
+                    .element.classList.contains("tlp-tab-active")
             ).toBe(true);
 
             expect(wrapper.findComponent(TuleapTemplateList).isVisible()).toBe(true);
@@ -232,7 +232,7 @@ describe("TemplateSelection", () => {
             expect(
                 wrapper
                     .get("[data-test=project-registration-SAFe-templates-tab]")
-                    .element.classList.contains("active")
+                    .element.classList.contains("tlp-tab-active")
             ).toBe(true);
 
             expect(wrapper.findComponent(CategorisedExternalTemplatesList).isVisible()).toBe(true);
@@ -251,7 +251,7 @@ describe("TemplateSelection", () => {
             expect(
                 wrapper
                     .get("[data-test=project-registration-advanced-templates-tab]")
-                    .element.classList.contains("active")
+                    .element.classList.contains("tlp-tab-active")
             ).toBe(true);
 
             expect(wrapper.findComponent(AdvancedTemplateList).isVisible()).toBe(true);
