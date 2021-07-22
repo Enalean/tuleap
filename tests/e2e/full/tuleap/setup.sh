@@ -114,6 +114,7 @@ enable_plugins() {
         projectmilestones  \
         testmanagement  \
         testplan  \
+        program_management  \
         frs
 }
 

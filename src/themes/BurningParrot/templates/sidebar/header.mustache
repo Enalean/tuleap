@@ -59,7 +59,7 @@
                     {{^ is_in_children_projects_context }}{{# ngettext }}%d Parent project | %d Parent projects | {{ nb_of_linked_projects }}{{/ ngettext }}{{/ is_in_children_projects_context }}
                 </span>
             </span>
-            <ul class="project-sidebar-linked-projects-list">
+            <ul class="project-sidebar-linked-projects-list" data-test="nav-bar-linked-projects">
                 {{# projects }}
                     <li class="project-sidebar-linked-projects-item">
                         <a href="{{ uri }}" class="project-sidebar-linked-projects-item-link">
