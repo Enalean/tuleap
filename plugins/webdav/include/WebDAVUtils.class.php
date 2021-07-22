@@ -306,7 +306,7 @@ class WebDAVUtils
      * Use Docman MVC model to perform webdav actions
      *
      */
-    public function processDocmanRequest(WebDAV_Request $request)
+    public function processDocmanRequest(WebDAV_Request $request, PFUser $current_user): void
     {
         if (! $this->docmanPlugin) {
             $pluginMgr          = PluginManager::instance();
@@ -316,7 +316,7 @@ class WebDAVUtils
             }
         }
         $GLOBALS['Response'] = new WebDAV_Response();
-        $controller          = new WebDAV_DocmanController($this->docmanPlugin, $request);
+        $controller          = new WebDAV_DocmanController($this->docmanPlugin, $request, $current_user);
         $controller->process();
 
         if ($GLOBALS['Response']->feedbackHasErrors()) {

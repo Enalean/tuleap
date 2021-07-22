@@ -140,7 +140,7 @@ class WebDAVDocmanFile extends \Sabre\DAV\File
             $params['group_id'] = $this->project->getID();
             $params['confirm']  = true;
             $params['id']       = $this->item->getId();
-            $this->utils->processDocmanRequest(new WebDAV_Request($params));
+            $this->utils->processDocmanRequest(new WebDAV_Request($params), $this->user);
         } else {
             throw new \Sabre\DAV\Exception\Forbidden($GLOBALS['Language']->getText('plugin_webdav_common', 'file_denied_delete'));
         }
@@ -176,7 +176,7 @@ class WebDAVDocmanFile extends \Sabre\DAV\File
                 $params['upload_content'] = $data;
             }
             if (strlen($params['upload_content']) <= $this->getMaxFileSize()) {
-                $this->utils->processDocmanRequest(new WebDAV_Request($params));
+                $this->utils->processDocmanRequest(new WebDAV_Request($params), $this->user);
             } else {
                 throw new \Sabre\DAV\Exception\RequestedRangeNotSatisfiable($GLOBALS['Language']->getText('plugin_webdav_download', 'error_file_size'));
             }
@@ -222,7 +222,7 @@ class WebDAVDocmanFile extends \Sabre\DAV\File
                 $params['item']['id']    = $this->item->getId();
                 $params['item']['title'] = $name;
 
-                $this->utils->processDocmanRequest(new WebDAV_Request($params));
+                $this->utils->processDocmanRequest(new WebDAV_Request($params), $this->user);
             } catch (Exception $e) {
                 throw new \Sabre\DAV\Exception\MethodNotAllowed($e->getMessage());
             }

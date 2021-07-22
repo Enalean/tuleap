@@ -38,7 +38,7 @@ class Docman_Controller extends Controler
      * @var HTTPRequest
      */
     public $request;
-    public $user;
+    private ?PFUser $user;
     public $groupId;
     public $themePath;
     public $plugin;
@@ -207,10 +207,7 @@ class Docman_Controller extends Controler
         return Docman_PermissionsManager::instance($this->getGroupId());
     }
 
-    /**
-     * @return PFUser
-     */
-    public function getUser()
+    public function getUser(): PFUser
     {
         if ($this->user === null) {
             $um         = UserManager::instance();
