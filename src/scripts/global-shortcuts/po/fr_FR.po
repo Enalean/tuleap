@@ -12,8 +12,14 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Generator: Poedit 2.2.4\n"
 
+msgid "Focus first sidebar service"
+msgstr "Placer le focus sur le premier service de la barre latérale"
+
 msgid "Global shortcuts"
 msgstr "Raccourcis globaux"
+
+msgid "Go to %s"
+msgstr "Accéder à %s"
 
 msgid "Go to personal dashboard"
 msgstr "Aller au dashboard personnel"
@@ -26,3 +32,6 @@ msgstr "Ouvre la fenêtre \"Basculer vers…\""
 
 msgid "Open this window"
 msgstr "Ouvre cette fenêtre"
+
+msgid "Services quick access"
+msgstr "Accès rapide aux services"
