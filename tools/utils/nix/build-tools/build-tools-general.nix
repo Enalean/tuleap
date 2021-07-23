@@ -12,4 +12,5 @@
     pkgs.coreutils
     pkgs.gzip
     pkgs.cpio
+    pkgs.cosign
 ]
