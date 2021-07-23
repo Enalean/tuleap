@@ -106,7 +106,7 @@ describe("quick-access-shortcuts-handlers", () => {
     });
 
     describe("returnToParent", () => {
-        it("does nothing if KeyboardEvent target is not an HTMLElement", () => {
+        it("does nothing if KeyboardEvent target is not an HTMLElement or not in taskboard", () => {
             returnToParent(keyboard_event);
 
             expect(swimlane_focus).not.toHaveBeenCalled();
@@ -129,17 +129,6 @@ describe("quick-access-shortcuts-handlers", () => {
             returnToParent(keyboard_event);
 
             expect(parent_card_focus).toHaveBeenCalled();
-        });
-
-        it("throws an error if SWIMLANE could not be found", () => {
-            swimlane.removeAttribute("data-navigation");
-            Object.defineProperty(keyboard_event, "target", {
-                value: card,
-            });
-
-            expect(() => returnToParent(keyboard_event)).toThrow();
-            expect(swimlane_focus).not.toHaveBeenCalled();
-            expect(card_focus).not.toHaveBeenCalled();
         });
 
         it("focuses the card if active element is inside that card", () => {
@@ -198,13 +187,7 @@ describe("quick-access-shortcuts-handlers", () => {
             });
             const shortcut_handle_options = handleFocusFirstSwimlane(doc, keyboard_event);
 
-            expect(shortcut_handle_options.preventDefault).toBe(false);
-        });
-
-        it("returns a ShortcutHandleOptions with preventDefault true if focus was not the first swimlane", () => {
-            const shortcut_handle_options = handleFocusFirstSwimlane(doc, keyboard_event);
-
-            expect(shortcut_handle_options.preventDefault).toBe(true);
+            expect(shortcut_handle_options).toEqual({ preventDefault: false });
         });
     });
 

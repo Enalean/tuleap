@@ -19,22 +19,26 @@
 
 import { CARD, SWIMLANE } from "../type";
 import { getFirstElement } from "./element-getter";
-import type { ShortcutHandleOptions } from "@tuleap/keyboard-shortcuts/types/type";
+import type { ShortcutHandleOptions } from "@tuleap/keyboard-shortcuts";
 
-export function editRemainingEffort(event: KeyboardEvent): void {
+export const DO_NOT_PREVENT_DEFAULT: ShortcutHandleOptions = { preventDefault: false };
+
+export function editRemainingEffort(event: KeyboardEvent): ShortcutHandleOptions | void {
     if (!(event.target instanceof HTMLElement)) {
-        return;
+        return DO_NOT_PREVENT_DEFAULT;
     }
 
     const parent_swimlane = event.target.closest(`[data-navigation=${SWIMLANE}]`);
     if (!parent_swimlane) {
-        return;
+        return DO_NOT_PREVENT_DEFAULT;
     }
 
     const remaining_effort = parent_swimlane.querySelector(`[data-shortcut=edit-remaining-effort]`);
-    if (remaining_effort instanceof HTMLElement) {
-        remaining_effort.click();
+    if (!(remaining_effort instanceof HTMLElement)) {
+        return DO_NOT_PREVENT_DEFAULT;
     }
+
+    remaining_effort.click();
 }
 
 export function toggleClosedItems(doc: Document): void {
@@ -45,62 +49,67 @@ export function toggleClosedItems(doc: Document): void {
     toggle_button.click();
 }
 
-export function returnToParent(event: KeyboardEvent): void {
+export function returnToParent(event: KeyboardEvent): ShortcutHandleOptions | void {
     const active_element = event.target;
     if (!(active_element instanceof HTMLElement)) {
-        return;
+        return DO_NOT_PREVENT_DEFAULT;
     }
 
     const parent_swimlane = active_element.closest(`[data-navigation=${SWIMLANE}]`);
     if (!(parent_swimlane instanceof HTMLElement)) {
-        throw new Error("Active element should have a SWIMLANE parent");
+        return DO_NOT_PREVENT_DEFAULT;
     }
 
     const parent_card = parent_swimlane.querySelector("[data-shortcut=parent-card]");
 
     if (active_element === parent_card) {
-        parent_swimlane.focus();
-        return;
+        return parent_swimlane.focus();
     }
 
     if (active_element.dataset.navigation && parent_card instanceof HTMLElement) {
-        parent_card.focus();
-        return;
+        return parent_card.focus();
     }
 
     const card = active_element.closest(`[data-navigation=${CARD}]`);
     if (card instanceof HTMLElement) {
-        card.focus();
+        return card.focus();
     }
+
+    return DO_NOT_PREVENT_DEFAULT;
 }
 
-export function editCard(event: KeyboardEvent): void {
+export function editCard(event: KeyboardEvent): ShortcutHandleOptions | void {
     if (!(event.target instanceof HTMLElement) || !(event.target.dataset.navigation === CARD)) {
-        return;
+        return DO_NOT_PREVENT_DEFAULT;
     }
+
     const child = event.target.querySelector(`[data-shortcut=edit-card]`);
     if (child instanceof HTMLElement) {
-        child.click();
+        return child.click();
     }
+
+    return DO_NOT_PREVENT_DEFAULT;
 }
 
 export function handleFocusFirstSwimlane(
     doc: Document,
     event: KeyboardEvent
-): ShortcutHandleOptions {
+): ShortcutHandleOptions | void {
     const first_swimlane = getFirstElement(doc, SWIMLANE);
     if (first_swimlane instanceof HTMLElement) {
         first_swimlane.focus();
     }
 
     const is_first_swimlane = first_swimlane === event.target;
-    return { preventDefault: !is_first_swimlane };
+    if (is_first_swimlane) {
+        return DO_NOT_PREVENT_DEFAULT;
+    }
 }
 
-export function focusSwimlaneFirstCard(event: KeyboardEvent): ShortcutHandleOptions {
+export function focusSwimlaneFirstCard(event: KeyboardEvent): ShortcutHandleOptions | void {
     const swimlane = event.target;
     if (!(swimlane instanceof HTMLElement) || swimlane.dataset.navigation !== SWIMLANE) {
-        return { preventDefault: false };
+        return DO_NOT_PREVENT_DEFAULT;
     }
 
     const first_swimlane_card = getFirstElement(swimlane, CARD);
@@ -108,6 +117,5 @@ export function focusSwimlaneFirstCard(event: KeyboardEvent): ShortcutHandleOpti
         throw new Error("Swimlane shoud have at least one card");
     }
 
-    first_swimlane_card.focus();
-    return { preventDefault: true };
+    return first_swimlane_card.focus();
 }
