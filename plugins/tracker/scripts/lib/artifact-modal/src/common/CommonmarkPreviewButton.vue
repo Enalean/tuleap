@@ -41,7 +41,7 @@
 </template>
 
 <script>
-import { getEditButtonLabel, getPreviewButtonLabel } from "../gettext-catalog.js";
+import { getEditButtonLabel, getPreviewButtonLabel } from "../gettext-catalog";
 
 export default {
     name: "CommonmarkPreviewButton",

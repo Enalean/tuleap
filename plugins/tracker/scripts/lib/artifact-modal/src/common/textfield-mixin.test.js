@@ -20,7 +20,7 @@
 
 import { textfield_mixin } from "./textfield-mixin.js";
 import * as tuleap_api from "../api/tuleap-api";
-import { setCatalog } from "../gettext-catalog.js";
+import { setCatalog } from "../gettext-catalog";
 import { shallowMount } from "@vue/test-utils";
 import localVue from "../helpers/local-vue.js";
 

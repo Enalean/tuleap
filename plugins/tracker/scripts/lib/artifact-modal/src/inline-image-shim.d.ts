@@ -17,14 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-const base_config = require("../../../../../tests/jest/jest.base.config.js");
-
-module.exports = {
-    ...base_config,
-    displayName: "tracker/artifact-modal",
-    moduleNameMapper: {
-        ...base_config.moduleNameMapper,
-        "^.+\\.html$": "identity-obj-proxy",
-        "^.+\\.png$": "identity-obj-proxy",
-    },
-};
+declare module "*.png" {
+    const base64Image: string;
+    export default base64Image;
+}

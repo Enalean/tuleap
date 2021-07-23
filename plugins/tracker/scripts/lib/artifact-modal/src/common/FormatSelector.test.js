@@ -17,12 +17,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { define } from "hybrids";
 import localVue from "../helpers/local-vue.js";
 import { shallowMount } from "@vue/test-utils";
 import FormatSelector from "./FormatSelector.vue";
-import CommonmarkSyntaxHelper from "./CommonmarkSyntaxHelper.vue";
 import { setCatalog } from "../gettext-catalog";
 import CommonmarkPreviewButton from "./CommonmarkPreviewButton.vue";
+import { CommonmarkSyntaxHelper } from "./CommonmarkSyntaxHelper";
 
 function getInstance(props = {}) {
     return shallowMount(FormatSelector, {
@@ -36,6 +37,10 @@ function getInstance(props = {}) {
 }
 
 describe(`FormatSelector`, () => {
+    beforeAll(() => {
+        define(CommonmarkSyntaxHelper);
+    });
+
     beforeEach(() => {
         setCatalog({ getString: () => "" });
     });
@@ -105,14 +110,14 @@ describe(`FormatSelector`, () => {
             (format) => {
                 const value = format;
                 const wrapper = getInstance({ value });
-                expect(wrapper.findComponent(CommonmarkSyntaxHelper).exists()).toBeFalsy();
-                expect(wrapper.findComponent(CommonmarkSyntaxHelper).exists()).toBeFalsy();
+                expect(wrapper.find(CommonmarkSyntaxHelper.tag).exists()).toBeFalsy();
+                expect(wrapper.findComponent(CommonmarkPreviewButton).exists()).toBeFalsy();
             }
         );
         it(`displays the CommonMark related buttons if the chosen format is 'Markdown'`, () => {
             const value = "commonmark";
             const wrapper = getInstance({ value });
-            expect(wrapper.findComponent(CommonmarkSyntaxHelper).exists()).toBeTruthy();
+            expect(wrapper.find(CommonmarkSyntaxHelper.tag).exists()).toBeTruthy();
             expect(wrapper.findComponent(CommonmarkPreviewButton).exists()).toBeTruthy();
         });
     });

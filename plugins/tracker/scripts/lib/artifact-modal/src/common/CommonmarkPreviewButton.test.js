@@ -21,7 +21,7 @@
 import { shallowMount } from "@vue/test-utils";
 import CommonmarkPreviewButton from "./CommonmarkPreviewButton.vue";
 import localVue from "../helpers/local-vue.js";
-import { setCatalog } from "../gettext-catalog.js";
+import { setCatalog } from "../gettext-catalog";
 
 describe("CommonmarkPreviewButton", () => {
     it.each([
