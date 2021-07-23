@@ -183,7 +183,7 @@ export default class App extends Vue {
         const url = `/program_management/admin/${this.short_name}`;
         return sprintf(
             this.$gettext(
-                "Program configuration is incomplete. That can be done in <a href='%s'>administration</a> of service."
+                "Program configuration is incomplete. That can be done in <a href='%s' data-test='program-go-to-administration'>administration</a> of service."
             ),
             url
         );

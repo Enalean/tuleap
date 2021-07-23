@@ -1,0 +1,7 @@
+{
+    "extends": "../../../../../tests/e2e/full/cypress/tsconfig.json",
+    "include": [
+        "../../../../../tests/e2e/full/cypress/support/**/*.ts",
+        "**/*.ts"
+    ]
+}
