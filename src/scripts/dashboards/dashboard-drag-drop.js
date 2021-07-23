@@ -19,8 +19,8 @@
 
 import dragula from "dragula";
 import { ajax } from "jquery";
-import { applyAutomaticLayout } from "./dashboard-layout.js";
-import { addLayoutDropdown } from "./dashboard-dropdowns.js";
+import { applyAutomaticLayout } from "./dashboard-layout";
+import { addLayoutDropdown } from "./dashboard-dropdowns";
 
 export default init;
 

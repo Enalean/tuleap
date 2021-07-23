@@ -18,7 +18,7 @@
  */
 
 import modalInit from "./dashboard-modals";
-import dropdownInit from "./dashboard-dropdowns.js";
+import dropdownInit from "./dashboard-dropdowns";
 import asyncWidgetInit from "./dashboard-async-widget";
 import minimizeInit from "./dashboard-minimize";
 import dragDropInit from "./dashboard-drag-drop.js";
