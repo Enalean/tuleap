@@ -16,14 +16,15 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
+import { init as togglerInit } from "../tuleap/toggler";
+
 export default init;
 
-function init() {
-    var minimize_buttons = document.querySelectorAll(".dashboard-widget-icons-minimize");
-
-    [].forEach.call(minimize_buttons, function (button) {
-        button.addEventListener("click", function () {
-            button.parentNode.submit();
-        });
-    });
+function init(): void {
+    const container = document.querySelector(".dashboard-widgets-container");
+    if (!container) {
+        throw new Error("dashboard-widgets-container element does not exist");
+    }
+    togglerInit(container, false, false);
 }

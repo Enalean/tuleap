@@ -17,20 +17,28 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import modalInit from "./dashboard-modals";
-import dropdownInit from "./dashboard-dropdowns.js";
-import asyncWidgetInit from "./dashboard-async-widget";
-import minimizeInit from "./dashboard-minimize";
-import dragDropInit from "./dashboard-drag-drop.js";
-import loadTogglers from "./dashboard-load-togglers";
+import { get } from "tlp";
+import { sanitize } from "dompurify";
+import { init as togglerInit } from "../tuleap/toggler";
 import { loadTooltips } from "@tuleap/tooltip";
 
-document.addEventListener("DOMContentLoaded", async function () {
-    modalInit();
-    dropdownInit();
-    dragDropInit();
-    await asyncWidgetInit();
-    minimizeInit();
-    loadTogglers();
-    loadTooltips();
-});
+export default async function init(): Promise<void> {
+    const widgets = document.querySelectorAll(".dashboard-widget-asynchronous");
+
+    for (const widget of widgets) {
+        if (!(widget instanceof HTMLElement)) {
+            continue;
+        }
+        const url = widget.dataset.ajaxUrl;
+        if (!url) {
+            throw new Error("No ajaxUrl on data of widget");
+        }
+        const response = await get(url);
+        const html = await response.text();
+
+        widget.innerHTML = sanitize(html);
+        widget.classList.remove("dashboard-widget-asynchronous-loading");
+        loadTooltips();
+        togglerInit(widget, false, false);
+    }
+}

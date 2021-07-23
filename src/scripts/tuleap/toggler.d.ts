@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2017 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2021 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,10 +17,4 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { init as togglerInit } from "../tuleap/toggler.js";
-
-export default init;
-
-function init() {
-    togglerInit(document.querySelector(".dashboard-widgets-container"));
-}
+export const init: (element: Element, force_display: boolean, force_ajax: boolean) => void;
