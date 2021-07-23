@@ -1,4 +1,4 @@
-/*
+/**
  * Copyright (c) Enalean, 2019 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -19,29 +19,21 @@
 
 import { shallowMount } from "@vue/test-utils";
 import UserBadge from "./UserBadge.vue";
-
-import localVue from "../../helpers/local-vue.js";
+import { createDocumentLocalVue } from "../../helpers/local-vue-for-test";
 
 describe("UserBadge", () => {
-    let user_badge_factory;
-    beforeEach(() => {
-        user_badge_factory = (props = {}) => {
-            return shallowMount(UserBadge, {
-                localVue,
-                propsData: { ...props },
-            });
-        };
-    });
-
     it(`Given user has avatar
         When we display the user badge
-        Then its avatar is displayed`, () => {
-        const wrapper = user_badge_factory({
-            user: {
-                id: 1,
-                has_avatar: true,
-                user_url: "https://example.com/avatar",
-                is_anonymous: false,
+        Then its avatar is displayed`, async () => {
+        const wrapper = shallowMount(UserBadge, {
+            localVue: await createDocumentLocalVue(),
+            propsData: {
+                user: {
+                    id: 1,
+                    has_avatar: true,
+                    user_url: "https://example.com/avatar",
+                    is_anonymous: false,
+                },
             },
         });
 
@@ -50,13 +42,16 @@ describe("UserBadge", () => {
 
     it(`Given user hasn't an avatar
         When we display the user badge
-        Then whe should not display it`, () => {
-        const wrapper = user_badge_factory({
-            user: {
-                id: 1,
-                has_avatar: false,
-                user_url: "https://example.com/avatar",
-                is_anonymous: false,
+        Then whe should not display it`, async () => {
+        const wrapper = shallowMount(UserBadge, {
+            localVue: await createDocumentLocalVue(),
+            propsData: {
+                user: {
+                    id: 1,
+                    has_avatar: false,
+                    user_url: "https://example.com/avatar",
+                    is_anonymous: false,
+                },
             },
         });
 

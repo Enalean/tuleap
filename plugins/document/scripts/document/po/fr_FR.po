@@ -629,6 +629,9 @@ msgstr "Erreur de téléversement"
 msgid "Uploading documents"
 msgstr "Documents en cours de téléversement"
 
+msgid "User avatar"
+msgstr "Avatar de l'utilisateur"
+
 msgid "Validity"
 msgstr "Validité"
 
