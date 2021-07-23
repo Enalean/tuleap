@@ -39,6 +39,10 @@ final class ProjectXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
     private $user;
     private $options;
     private $archive;
+    /**
+     * @var mixed|\PHPUnit\Framework\MockObject\MockObject|\Tuleap\Dashboard\Project\DashboardXMLExporter
+     */
+    private $dashboard_exporter;
 
     protected function setUp(): void
     {
@@ -48,11 +52,14 @@ final class ProjectXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
         $user_xml_exporter    = new UserXMLExporter(M::spy(UserManager::class), M::spy(UserXMLExportedCollection::class));
         $this->project        = M::spy(Project::class, ['getPublicName' => 'Project01']);
 
+        $this->dashboard_exporter = $this->createMock(\Tuleap\Dashboard\Project\DashboardXMLExporter::class);
+
         $this->xml_exporter = new ProjectXMLExporter(
             $this->event_manager,
             $this->ugroup_manager,
             $xml_validator,
             $user_xml_exporter,
+            $this->dashboard_exporter,
             M::mock(SynchronizedProjectMembershipDetector::class, ['isSynchronizedWithProjectMembers' => false]),
             M::spy(\Psr\Log\LoggerInterface::class)
         );
@@ -118,6 +125,7 @@ final class ProjectXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->project->shouldReceive('getServices')->andReturns([]);
         $this->event_manager->shouldReceive('processEvent')->once();
+        $this->dashboard_exporter->method('exportDashboards');
 
         $xml       = $this->xml_exporter->export($this->project, $this->options, $this->user, $this->archive, $this->export_dir);
         $xml_objet = simplexml_load_string($xml);
@@ -183,6 +191,9 @@ final class ProjectXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->event_manager->shouldReceive('processEvent')->once();
 
+        $this->dashboard_exporter->method('exportDashboards');
+
+
         $xml       = $this->xml_exporter->export($this->project, $this->options, $this->user, $this->archive, $this->export_dir);
         $xml_objet = simplexml_load_string($xml);
 
@@ -235,6 +246,9 @@ final class ProjectXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->ugroup_manager->shouldReceive('getProjectAdminsUGroup')->with($this->project)->andReturns($project_ugroup_dynamic);
         $this->ugroup_manager->shouldReceive('getProjectMembersUGroup')->with($this->project)->andReturns($project_ugroup_dynamic);
         $this->ugroup_manager->shouldReceive('getStaticUGroups')->andReturns([]);
+
+
+        $this->dashboard_exporter->method('exportDashboards');
 
         $xml       = $this->xml_exporter->export($this->project, $this->options, $this->user, $this->archive, $this->export_dir);
         $xml_objet = simplexml_load_string($xml);

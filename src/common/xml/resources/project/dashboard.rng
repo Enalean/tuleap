@@ -6,7 +6,7 @@
         <attribute name="name">
           <data type="string"/>
         </attribute>
-        <oneOrMore>
+        <zeroOrMore>
           <element name="line">
             <optional>
               <attribute name="layout">
@@ -50,7 +50,7 @@
               </element>
             </oneOrMore>
           </element>
-        </oneOrMore>
+        </zeroOrMore>
       </element>
     </oneOrMore>
   </define>

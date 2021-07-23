@@ -551,7 +551,7 @@
         <attribute name="name">
           <data type="string" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"/>
         </attribute>
-        <oneOrMore>
+        <zeroOrMore>
           <element name="line">
             <optional>
               <attribute name="layout">
@@ -595,7 +595,7 @@
               </element>
             </oneOrMore>
           </element>
-        </oneOrMore>
+        </zeroOrMore>
       </element>
     </oneOrMore>
   </define>

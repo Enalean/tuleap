@@ -21,9 +21,14 @@
 
 require_once __DIR__ . '/../www/include/pre.php';
 
+use Tuleap\Dashboard\Project\DashboardXMLExporter;
+use Tuleap\Dashboard\Project\ProjectDashboardDao;
+use Tuleap\Dashboard\Project\ProjectDashboardRetriever;
+use Tuleap\Dashboard\Widget\DashboardWidgetDao;
 use Tuleap\Project\UGroups\SynchronizedProjectMembershipDao;
 use Tuleap\Project\UGroups\SynchronizedProjectMembershipDetector;
 use Tuleap\Project\XML\Export;
+use Tuleap\Widget\WidgetFactory;
 
 $posix_user = posix_getpwuid(posix_geteuid());
 $sys_user   = $posix_user['name'];
@@ -124,6 +129,20 @@ try {
         new UGroupManager(),
         $rng_validator,
         new UserXMLExporter(UserManager::instance(), $users_collection),
+        new DashboardXMLExporter(
+            new ProjectDashboardRetriever(
+                new ProjectDashboardDao(
+                    new DashboardWidgetDao(
+                        new WidgetFactory(
+                            UserManager::instance(),
+                            new User_ForgeUserGroupPermissionsManager(new User_ForgeUserGroupPermissionsDao()),
+                            EventManager::instance(),
+                        )
+                    )
+                )
+            ),
+            ProjectXMLExporter::getLogger()
+        ),
         new SynchronizedProjectMembershipDetector(new SynchronizedProjectMembershipDao()),
         ProjectXMLExporter::getLogger(),
     );
