@@ -34,7 +34,7 @@
     &.gu-mirror {
         position: absolute;
         border-radius: var(--tlp-medium-radius);
-        box-shadow: 0 7px 30px 0 rgba(0, 0, 0, 0.2);
+        box-shadow: var(--tlp-flyover-shadow);
     }
 
     &:hover {

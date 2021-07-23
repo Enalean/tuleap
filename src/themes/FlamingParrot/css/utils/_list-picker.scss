@@ -98,12 +98,12 @@ $form-element-small-font-size: 0.8125rem;
     border-right: 1px solid var(--tlp-main-color);
     border-bottom: 1px solid var(--tlp-main-color);
     border-left: 1px solid var(--tlp-main-color);
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
+    box-shadow: var(--tlp-flyover-shadow);
 
     &.list-picker-dropdown-above {
         border-top: 1px solid var(--tlp-main-color);
         border-bottom: unset;
-        box-shadow: 0 0 12px rgba(0, 0, 0, 0.175);
+        box-shadow: var(--tlp-flyover-shadow-above);
     }
 }
 

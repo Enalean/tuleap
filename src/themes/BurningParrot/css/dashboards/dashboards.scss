@@ -71,7 +71,7 @@
             border-right: 0;
             border-bottom: 0;
             border-left: 0;
-            box-shadow: 0 7px 30px 0 rgba(0, 0, 0, 0.2);
+            box-shadow: var(--tlp-flyover-shadow);
         }
     }
 
@@ -280,7 +280,7 @@ body.gu-unselectable {
         border-bottom: 0;
         border-left: 0;
         opacity: 1;
-        box-shadow: 0 7px 30px 0 rgba(0, 0, 0, 0.2);
+        box-shadow: var(--tlp-flyover-shadow);
     }
 }
 

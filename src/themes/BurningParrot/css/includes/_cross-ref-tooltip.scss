@@ -26,7 +26,7 @@
     padding: var(--tlp-medium-spacing);
     border-radius: var(--tlp-large-radius);
     background-color: var(--tlp-dark-color);
-    box-shadow: 0 20px 30px var(--tlp-dark-color-transparent-85), 0 5px 10px var(--tlp-dark-color-transparent-85);
+    box-shadow: var(--tlp-flyover-shadow);
     color: var(--tlp-white-color);
     font-size: 12px;
     font-weight: 600;

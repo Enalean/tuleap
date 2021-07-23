@@ -331,7 +331,7 @@ legend {
 
 @mixin btn($background-color, $background-color-disabled, $background-color-active, $color) {
     padding: 9px var(--tlp-medium-spacing); // match TLP buttons
-    border-color: $background-color;
+    border-color: $background-color !important;
     outline: none;
     background: $background-color !important;
     color: $color;
@@ -339,7 +339,7 @@ legend {
     text-shadow: none;
 
     &:not(.btn-link) {
-        box-shadow: 0 1px 1px rgba(0, 0, 0, 0.12);
+        box-shadow: var(--tlp-button-shadow);
     }
 
     &.btn-large {
@@ -370,14 +370,14 @@ legend {
 
     &:disabled,
     &.disabled {
-        border-color: transparent;
+        border-color: transparent !important;
         background: $background-color-disabled !important;
         box-shadow: none;
         cursor: not-allowed;
     }
 
     &.active:not(.disabled):not(:disabled) {
-        border-color: $background-color-active;
+        border-color: $background-color-active !important;
         background: $background-color-active !important;
     }
 
@@ -388,9 +388,9 @@ legend {
 
 @mixin btn-hover($color) {
     transition: box-shadow 75ms ease-in-out, background 75ms ease-in-out, border-color 75ms ease-in-out;
-    border-color: $color;
-    background: $color;
-    box-shadow: none;
+    border-color: $color !important;
+    background: $color !important;
+    box-shadow: var(--tlp-button-shadow-hover);
 }
 
 @mixin dropdown-menu($color) {
@@ -514,7 +514,7 @@ select.input-small {
     z-index: 2006;
     overflow: hidden;
     border: 1px solid transparent;
-    box-shadow: 0 10px 36px rgba(0, 0, 0, 0.2);
+    box-shadow: var(--tlp-flyover-shadow);
     font-size: 14px;
 
     form {

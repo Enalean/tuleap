@@ -19,7 +19,6 @@
 
 $tlp-popover-radius: var(--tlp-large-radius);
 $tlp-popover-arrow-size: 10px;
-$tlp-popover-shadow: var(--tlp-dropdown-shadow);
 $tlp-popover-hover-transition-show: 75ms ease-out 500ms;
 $tlp-popover-hover-transition-hide: 75ms ease-out 250ms;
 $tlp-popover-click-transition: 75ms ease-out;
@@ -39,7 +38,7 @@ $tlp-popover-click-transition: 75ms ease-out;
         display: flex;
         transform: translateY(0);
         transition: opacity $tlp-popover-hover-transition-show, transform $tlp-popover-hover-transition-show, box-shadow $tlp-popover-hover-transition-show;
-        box-shadow: $tlp-popover-shadow;
+        box-shadow: var(--tlp-flyover-shadow);
         pointer-events: auto;
     }
 

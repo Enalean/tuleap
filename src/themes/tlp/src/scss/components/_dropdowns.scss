@@ -103,7 +103,7 @@ $tlp-dropdown-transition: 75ms ease-out;
     &.tlp-dropdown-shown {
         visibility: visible;
         transform: translateY(0);
-        box-shadow: var(--tlp-dropdown-shadow);
+        box-shadow: var(--tlp-flyover-shadow);
         pointer-events: auto;
 
         &.tlp-dropdown-menu-top {
@@ -117,7 +117,8 @@ $tlp-dropdown-transition: 75ms ease-out;
         > .tlp-tabs {
             margin: 0 0 var(--tlp-small-spacing);
             padding: 0;
-            box-shadow: inset 0 -1px 0 #e3e5ed;
+            background: none;
+            box-shadow: inset 0 -1px 0 var(--tlp-neutral-light-color);
         }
     }
 
@@ -233,7 +234,7 @@ $flatpickr-animation: 100ms ease-in-out showFlatPickr;
     100% {
         transform: translateY(0);
         opacity: 1;
-        box-shadow: var(--tlp-dropdown-shadow);
+        box-shadow: var(--tlp-flyover-shadow);
     }
 }
 
@@ -241,7 +242,7 @@ $flatpickr-animation: 100ms ease-in-out showFlatPickr;
     animation: $flatpickr-animation;
     border: 0;
     border-radius: $tlp-dropdown-radius;
-    box-shadow: var(--tlp-dropdown-shadow);
+    box-shadow: var(--tlp-flyover-shadow);
     font-family: var(--tlp-font-family);
 
     &::before {
