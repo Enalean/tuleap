@@ -53,6 +53,11 @@ describe(`Taskboard`, function () {
         });
 
         it(`adds a card in a swimlane`, function () {
+            // Wait for the swimlane to be loaded and displayed
+            cy.get("[data-test=card-with-remaining-effort]").contains("Quality Sunshine");
+            // Wait for children to be loaded and displayed
+            cy.get("[data-test=child-card]").contains("Golden Wrench");
+
             const on_going_column = this.taskboard_columns.find(
                 (column: ColumnDefinition) => column.label === "On Going"
             );
@@ -64,11 +69,12 @@ describe(`Taskboard`, function () {
             ).within(() => {
                 cy.get("[data-test=add-in-place-form]")
                     .should("be.hidden")
-                    .invoke("show")
-                    .then(() => cy.get("[data-test=add-in-place-button]"))
-                    .click()
-                    .then(() => cy.get("[data-test=label-editor]"))
-                    .type("Discarded Epsilon{enter}");
+                    .invoke("css", "opacity", "100")
+                    .within(() => {
+                        cy.get("[data-test=add-in-place-button]").click();
+                        cy.get("[data-test=label-editor]").type("Discarded Epsilon{enter}");
+                    });
+
                 cy.get("[data-card-id]").contains("Discarded Epsilon");
             });
         });
