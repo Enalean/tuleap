@@ -1,0 +1,11 @@
+{
+  "name": "tuleap/plugin-document_generation",
+  "autoload": {
+    "psr-4": {
+      "Tuleap\\DocumentGeneration\\": "include/"
+    }
+  },
+  "config": {
+    "sort-packages": true
+  }
+}
