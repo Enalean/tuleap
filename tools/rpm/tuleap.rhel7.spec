@@ -494,6 +494,13 @@ Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, tuleap-plugin-tracker, tule
 %description plugin-program_management
 %{summary}.
 
+%package plugin-document_generation
+Summary: Document Generation
+Group: Development/Tools
+Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, tuleap-plugin-tracker
+%description plugin-document_generation
+%{summary}.
+
 %endif
 
 %if %{with experimental}
@@ -581,6 +588,7 @@ done
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/testmanagement
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/testplan
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/oauth2_server
+%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/document_generation
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/www/assets/projectmilestones
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/www/assets/label
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/www/assets/crosstracker
@@ -1495,6 +1503,10 @@ fi
 %{APP_DIR}/src/www/assets/program_management
 %attr(00644,root,root) /etc/logrotate.d/%{APP_NAME}_program_management
 %config(noreplace) /etc/logrotate.d/%{APP_NAME}_program_management
+
+%files plugin-document_generation
+%defattr(-,root,root,-)
+%{APP_DIR}/plugins/document_generation
 
 %endif
 
