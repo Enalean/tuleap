@@ -23,39 +23,38 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Adapter\Program\Plan;
 
 use Project_AccessException;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Content\RetrieveProjectUgroupsCanPrioritizeItems;
 use Tuleap\ProgramManagement\Domain\Program\Plan\VerifyPrioritizeFeaturesPermission;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
-use Tuleap\Project\ProjectAccessChecker;
+use Tuleap\ProgramManagement\Domain\Workspace\RetrieveProject;
+use Tuleap\ProgramManagement\Domain\Workspace\RetrieveUser;
+use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
+use Tuleap\Project\CheckProjectAccess;
 
 class PrioritizeFeaturesPermissionVerifier implements VerifyPrioritizeFeaturesPermission
 {
-    /**
-     * @var CanPrioritizeFeaturesDAO
-     */
-    private $can_prioritize_features_dao;
-    /**
-     * @var \ProjectManager
-     */
-    private $project_manager;
-    /**
-     * @var ProjectAccessChecker
-     */
-    private $project_access_checker;
+    private RetrieveProjectUgroupsCanPrioritizeItems $can_prioritize_features_dao;
+    private RetrieveProject $project_manager;
+    private CheckProjectAccess $project_access_checker;
+    private RetrieveUser $user_manager;
 
     public function __construct(
-        \ProjectManager $project_manager,
-        ProjectAccessChecker $project_access_checker,
-        CanPrioritizeFeaturesDAO $can_prioritize_features_dao
+        RetrieveProject $project_manager,
+        CheckProjectAccess $project_access_checker,
+        RetrieveProjectUgroupsCanPrioritizeItems $can_prioritize_features_dao,
+        RetrieveUser $user_manager
     ) {
         $this->project_manager             = $project_manager;
         $this->project_access_checker      = $project_access_checker;
         $this->can_prioritize_features_dao = $can_prioritize_features_dao;
+        $this->user_manager                = $user_manager;
     }
 
-    public function canUserPrioritizeFeatures(ProgramIdentifier $program, \PFUser $user): bool
+    public function canUserPrioritizeFeatures(ProgramIdentifier $program, UserIdentifier $user_identifier): bool
     {
+        $user       = $this->user_manager->getUserWithId($user_identifier);
         $program_id = $program->getId();
-        $project    = $this->project_manager->getProject($program_id);
+        $project    = $this->project_manager->getProjectWithId($program_id);
         try {
             $this->project_access_checker->checkUserCanAccessProject($user, $project);
         } catch (Project_AccessException $exception) {

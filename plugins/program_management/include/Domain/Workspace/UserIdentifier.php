@@ -1,8 +1,8 @@
 <?php
 /**
- * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
+ * Copyright (c) Enalean 2021 -  Present. All Rights Reserved.
  *
- * This file is a part of Tuleap.
+ *  This file is a part of Tuleap.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,14 +16,28 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
-namespace Tuleap\ProgramManagement\Domain\Program\Plan;
+declare(strict_types=1);
 
-use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
-use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 
-interface VerifyPrioritizeFeaturesPermission
+namespace Tuleap\ProgramManagement\Domain\Workspace;
+
+/**
+ * @psalm-immutable
+ */
+final class UserIdentifier
 {
-    public function canUserPrioritizeFeatures(ProgramIdentifier $program, UserIdentifier $user_identifier): bool;
+    public int $user_id;
+
+    private function __construct(int $user_id)
+    {
+        $this->user_id = $user_id;
+    }
+
+    public static function fromPFUser(\PFUser $user): self
+    {
+        return new self((int) $user->getId());
+    }
 }

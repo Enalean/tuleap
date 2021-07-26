@@ -53,6 +53,7 @@ use Tuleap\ProgramManagement\Adapter\Team\TeamDao;
 use Tuleap\ProgramManagement\Adapter\Workspace\ProjectManagerAdapter;
 use Tuleap\ProgramManagement\Adapter\Workspace\ProjectPermissionVerifier;
 use Tuleap\ProgramManagement\Adapter\Workspace\TrackerFactoryAdapter;
+use Tuleap\ProgramManagement\Adapter\Workspace\UserManagerAdapter;
 use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramCannotBeATeamException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\RetrieveFeatures;
@@ -73,6 +74,7 @@ use Tuleap\ProgramManagement\Domain\Program\Plan\ProjectIsNotAProgramException;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIsTeamException;
 use Tuleap\ProgramManagement\Domain\Program\ProgramTrackerException;
+use Tuleap\ProgramManagement\Domain\Team\Creation\CreateTeam;
 use Tuleap\ProgramManagement\Domain\Team\Creation\TeamCreator;
 use Tuleap\ProgramManagement\Domain\Team\TeamException;
 use Tuleap\Project\ProjectAccessChecker;
@@ -90,26 +92,11 @@ final class ProjectResource extends AuthenticatedResource
 {
     private const MAX_LIMIT = 50;
 
-    /**
-     * @var RetrieveFeatures
-     */
-    private $features_retriever;
-    /**
-     * @var TeamCreator
-     */
-    private $team_creator;
-    /**
-     * @var CreatePlan
-     */
-    private $plan_creator;
-    /**
-     * @var \UserManager
-     */
-    private $user_manager;
-    /**
-     * @var ProgramIncrementBuilder
-     */
-    private $program_increments_builder;
+    private RetrieveFeatures $features_retriever;
+    private CreateTeam $team_creator;
+    private CreatePlan $plan_creator;
+    private \UserManager $user_manager;
+    private ProgramIncrementBuilder $program_increments_builder;
 
     public function __construct()
     {
@@ -150,7 +137,11 @@ final class ProjectResource extends AuthenticatedResource
                 $form_element_factory,
                 new BackgroundColorRetriever(new BackgroundColorBuilder(new BindDecoratorRetriever())),
                 new VerifyIsVisibleFeatureAdapter($artifact_factory),
-                new UserStoryLinkedToFeatureChecker(new ArtifactsLinkedToParentDao(), new PlanningAdapter(\PlanningFactory::build()), $artifact_factory)
+                new UserStoryLinkedToFeatureChecker(
+                    new ArtifactsLinkedToParentDao(),
+                    new PlanningAdapter(\PlanningFactory::build()),
+                    $artifact_factory
+                )
             )
         );
         $this->program_increments_builder = new ProgramIncrementBuilder(
@@ -360,7 +351,7 @@ final class ProjectResource extends AuthenticatedResource
      *
      * @url PATCH {id}/program_backlog
      *
-     * @param int $id ID of the program
+     * @param int                        $id ID of the program
      * @param BacklogPatchRepresentation $backlog_patch_representation {@from body}
      *
      * @throws RestException 401
@@ -385,14 +376,20 @@ final class ProjectResource extends AuthenticatedResource
         );
 
         $project_manager     = \ProjectManager::instance();
-        $program_adapter     = new ProgramAdapter($project_manager, $project_access_checker, new ProgramDao(), new TeamDao());
+        $program_adapter     = new ProgramAdapter(
+            $project_manager,
+            $project_access_checker,
+            new ProgramDao(),
+            new TeamDao()
+        );
         $artifact_factory    = \Tracker_ArtifactFactory::instance();
         $priority_manager    = \Tracker_Artifact_PriorityManager::build();
         $top_backlog_updater = new ProcessTopBacklogChange(
             new PrioritizeFeaturesPermissionVerifier(
-                $project_manager,
+                new ProjectManagerAdapter($project_manager),
                 $project_access_checker,
-                new CanPrioritizeFeaturesDAO()
+                new CanPrioritizeFeaturesDAO(),
+                new UserManagerAdapter($this->user_manager)
             ),
             new ArtifactsExplicitTopBacklogDAO(),
             new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection()),
@@ -414,7 +411,12 @@ final class ProjectResource extends AuthenticatedResource
             $program = ProgramIdentifier::fromId($program_adapter, $id, $user);
             $top_backlog_updater->processTopBacklogChangeForAProgram(
                 $program,
-                new TopBacklogChange($feature_ids_to_add, $feature_ids_to_remove, $backlog_patch_representation->remove_from_program_increment_to_add_to_the_backlog, $backlog_patch_representation->order),
+                new TopBacklogChange(
+                    $feature_ids_to_add,
+                    $feature_ids_to_remove,
+                    $backlog_patch_representation->remove_from_program_increment_to_add_to_the_backlog,
+                    $backlog_patch_representation->order
+                ),
                 $user
             );
         } catch (ProgramAccessException | CannotManipulateTopBacklog $e) {
@@ -478,6 +480,7 @@ final class ProjectResource extends AuthenticatedResource
         foreach (array_slice($program_increments, $offset, $limit) as $program_increment) {
             $representations[] = ProgramIncrementRepresentation::fromProgramIncrement($program_increment);
         }
+
         return $representations;
     }
 }

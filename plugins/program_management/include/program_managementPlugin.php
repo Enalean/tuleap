@@ -541,7 +541,12 @@ final class program_managementPlugin extends Plugin
         );
         $action_builder         = new ArtifactTopBacklogActionBuilder(
             new ProgramAdapter($project_manager, $project_access_checker, new ProgramDao(), new TeamDao()),
-            new PrioritizeFeaturesPermissionVerifier($project_manager, $project_access_checker, new CanPrioritizeFeaturesDAO()),
+            new PrioritizeFeaturesPermissionVerifier(
+                new ProjectManagerAdapter($project_manager),
+                $project_access_checker,
+                new CanPrioritizeFeaturesDAO(),
+                new \Tuleap\ProgramManagement\Adapter\Workspace\UserManagerAdapter(UserManager::instance())
+            ),
             new PlanDao(),
             new ArtifactsExplicitTopBacklogDAO(),
             new PlannedFeatureDAO(),
@@ -573,7 +578,12 @@ final class program_managementPlugin extends Plugin
         );
         $action_builder         = new MassChangeTopBacklogActionBuilder(
             new ProgramAdapter($project_manager, $project_access_checker, new ProgramDao(), new TeamDao()),
-            new PrioritizeFeaturesPermissionVerifier($project_manager, $project_access_checker, new CanPrioritizeFeaturesDAO()),
+            new PrioritizeFeaturesPermissionVerifier(
+                new ProjectManagerAdapter($project_manager),
+                $project_access_checker,
+                new CanPrioritizeFeaturesDAO(),
+                new \Tuleap\ProgramManagement\Adapter\Workspace\UserManagerAdapter(UserManager::instance())
+            ),
             new PlanDao(),
             TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../templates')
         );
@@ -627,18 +637,18 @@ final class program_managementPlugin extends Plugin
 
     private function getTopBacklogChangeProcessor(): TopBacklogChangeProcessor
     {
-        $project_access_checker = new ProjectAccessChecker(
-            new RestrictedUserCanAccessProjectVerifier(),
-            \EventManager::instance()
-        );
-        $artifact_factory       = Tracker_ArtifactFactory::instance();
-        $priority_manager       = \Tracker_Artifact_PriorityManager::build();
+        $artifact_factory = Tracker_ArtifactFactory::instance();
+        $priority_manager = \Tracker_Artifact_PriorityManager::build();
 
         return new ProcessTopBacklogChange(
             new PrioritizeFeaturesPermissionVerifier(
-                ProjectManager::instance(),
-                $project_access_checker,
-                new CanPrioritizeFeaturesDAO()
+                new ProjectManagerAdapter(ProjectManager::instance()),
+                new ProjectAccessChecker(
+                    new RestrictedUserCanAccessProjectVerifier(),
+                    \EventManager::instance()
+                ),
+                new CanPrioritizeFeaturesDAO(),
+                new \Tuleap\ProgramManagement\Adapter\Workspace\UserManagerAdapter(UserManager::instance())
             ),
             new ArtifactsExplicitTopBacklogDAO(),
             new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection()),
