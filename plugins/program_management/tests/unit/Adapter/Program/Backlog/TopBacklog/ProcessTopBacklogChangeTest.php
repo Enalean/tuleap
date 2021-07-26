@@ -27,16 +27,17 @@ use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Content\Fe
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\ProgramIncrementsDAO;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\Rank\FeaturesRankOrderer;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\VerifyIsVisibleFeatureAdapter;
-use Tuleap\ProgramManagement\Adapter\Program\Plan\PrioritizeFeaturesPermissionVerifier;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureHasPlannedUserStoryException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureNotFoundException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\CannotManipulateTopBacklog;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\TopBacklogChange;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\TopBacklogStore;
+use Tuleap\ProgramManagement\Domain\Program\Plan\PrioritizeFeaturesPermissionVerifier;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\REST\v1\FeatureElementToOrderInvolvedInChangeRepresentation;
 use Tuleap\ProgramManagement\Stub\BuildProgramStub;
 use Tuleap\ProgramManagement\Stub\VerifyLinkedUserStoryIsNotPlannedStub;
+use Tuleap\ProgramManagement\Stub\VerifyPrioritizeFeaturesPermissionStub;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 use Tuleap\Tracker\Artifact\Artifact;
@@ -63,10 +64,7 @@ final class ProcessTopBacklogChangeTest extends \Tuleap\Test\PHPUnit\TestCase
      * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|TopBacklogStore
      */
     private $dao;
-    /**
-     * @var ProcessTopBacklogChange
-     */
-    private $process_top_backlog_change;
+    private ProcessTopBacklogChange $process_top_backlog_change;
     /**
      * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|ArtifactLinkUpdater
      */
@@ -79,14 +77,13 @@ final class ProcessTopBacklogChangeTest extends \Tuleap\Test\PHPUnit\TestCase
     protected function setUp(): void
     {
         $this->artifact_factory      = \Mockery::mock(\Tracker_ArtifactFactory::class);
-        $this->permissions_verifier  = \Mockery::mock(PrioritizeFeaturesPermissionVerifier::class);
         $this->dao                   = \Mockery::mock(TopBacklogStore::class);
         $this->artifact_link_updater = \Mockery::mock(ArtifactLinkUpdater::class);
         $this->program_increment_dao = \Mockery::mock(ProgramIncrementsDAO::class);
         $this->feature_orderer       = \Mockery::mock(FeaturesRankOrderer::class);
 
         $this->process_top_backlog_change = new ProcessTopBacklogChange(
-            $this->permissions_verifier,
+            VerifyPrioritizeFeaturesPermissionStub::canPrioritize(),
             $this->dao,
             new DBTransactionExecutorPassthrough(),
             $this->feature_orderer,
@@ -98,7 +95,6 @@ final class ProcessTopBacklogChangeTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testAddAThrowExceptionWhenFeatureCannotBeViewByUser(): void
     {
-        $this->permissions_verifier->shouldReceive('canUserPrioritizeFeatures')->andReturn(true);
         $user = UserTestBuilder::aUser()->build();
 
         $tracker      = TrackerTestBuilder::aTracker()->withId(69)->withProject(new \Project(['group_id' => 102, 'group_name' => "My project"]))->build();
@@ -119,7 +115,6 @@ final class ProcessTopBacklogChangeTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testRemoveWhenFeatureCannotBeViewByUserThenNothingHappens(): void
     {
-        $this->permissions_verifier->shouldReceive('canUserPrioritizeFeatures')->andReturn(true);
         $user = UserTestBuilder::aUser()->build();
 
         $tracker      = TrackerTestBuilder::aTracker()->withId(69)->withProject(new \Project(['group_id' => 102, 'group_name' => "My project"]))->build();
@@ -139,7 +134,6 @@ final class ProcessTopBacklogChangeTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testAddAndRemoveThrowExceptionWhenFeatureThatAreNotPartOfTheRequestedProgram(): void
     {
-        $this->permissions_verifier->shouldReceive('canUserPrioritizeFeatures')->andReturn(true);
         $user = UserTestBuilder::aUser()->build();
 
         $tracker  = TrackerTestBuilder::aTracker()->withId(69)->withProject(new \Project(['group_id' => 666, 'group_name' => "My project"]))->build();
@@ -157,7 +151,6 @@ final class ProcessTopBacklogChangeTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testAddFeatureInTopBacklogAndRemoveLinkToProgramIncrement(): void
     {
-        $this->permissions_verifier->shouldReceive('canUserPrioritizeFeatures')->andReturn(true)->once();
         $user = UserTestBuilder::aUser()->build();
 
         $tracker = TrackerTestBuilder::aTracker()->withId(69)->withProject(new \Project(['group_id' => 102, 'group_name' => "My project"]))->build();
@@ -181,7 +174,7 @@ final class ProcessTopBacklogChangeTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testDontAddFeatureInBacklogIfUserStoriesAreLinkedAndThrowException(): void
     {
         $this->process_top_backlog_change = new ProcessTopBacklogChange(
-            $this->permissions_verifier,
+            VerifyPrioritizeFeaturesPermissionStub::canPrioritize(),
             $this->dao,
             new DBTransactionExecutorPassthrough(),
             $this->feature_orderer,
@@ -190,7 +183,6 @@ final class ProcessTopBacklogChangeTest extends \Tuleap\Test\PHPUnit\TestCase
             new FeatureRemovalProcessor($this->program_increment_dao, $this->artifact_factory, $this->artifact_link_updater)
         );
 
-        $this->permissions_verifier->shouldReceive('canUserPrioritizeFeatures')->andReturn(true)->once();
         $user = UserTestBuilder::aUser()->build();
 
         $tracker = TrackerTestBuilder::aTracker()->withId(69)->withProject(new \Project(['group_id' => 102, 'group_name' => "My project"]))->build();
@@ -214,8 +206,16 @@ final class ProcessTopBacklogChangeTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testUserThatCannotPrioritizeFeaturesCannotAskForATopBacklogChange(): void
     {
-        $this->permissions_verifier->shouldReceive('canUserPrioritizeFeatures')->andReturn(false);
-        $user = UserTestBuilder::aUser()->build();
+        $this->process_top_backlog_change = new ProcessTopBacklogChange(
+            VerifyPrioritizeFeaturesPermissionStub::cannotPrioritize(),
+            $this->dao,
+            new DBTransactionExecutorPassthrough(),
+            $this->feature_orderer,
+            VerifyLinkedUserStoryIsNotPlannedStub::buildNotLinkedStories(),
+            new VerifyIsVisibleFeatureAdapter($this->artifact_factory),
+            new FeatureRemovalProcessor($this->program_increment_dao, $this->artifact_factory, $this->artifact_link_updater),
+        );
+        $user                             = UserTestBuilder::aUser()->build();
         $this->dao->shouldNotReceive('removeArtifactsFromExplicitTopBacklog');
 
         $this->expectException(CannotManipulateTopBacklog::class);
@@ -228,7 +228,6 @@ final class ProcessTopBacklogChangeTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testUserCanReorderTheBacklog(): void
     {
-        $this->permissions_verifier->shouldReceive('canUserPrioritizeFeatures')->andReturn(true);
         $user = UserTestBuilder::aUser()->build();
 
         $artifact = \Mockery::mock(Artifact::class);

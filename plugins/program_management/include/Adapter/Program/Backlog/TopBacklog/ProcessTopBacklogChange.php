@@ -24,7 +24,6 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog;
 
 use Tuleap\DB\DBTransactionExecutor;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Content\FeatureRemovalProcessor;
-use Tuleap\ProgramManagement\Adapter\Program\Plan\PrioritizeFeaturesPermissionVerifier;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Content\Links\VerifyLinkedUserStoryIsNotPlanned;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureHasPlannedUserStoryException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureIdentifier;
@@ -38,42 +37,23 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\CannotManipulateT
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\TopBacklogChange;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\TopBacklogChangeProcessor;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\TopBacklogStore;
+use Tuleap\ProgramManagement\Domain\Program\Plan\VerifyPrioritizeFeaturesPermission;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\UserCanPrioritize;
 
 final class ProcessTopBacklogChange implements TopBacklogChangeProcessor
 {
-    /**
-     * @var TopBacklogStore
-     */
-    private $top_backlog_store;
-    /**
-     * @var PrioritizeFeaturesPermissionVerifier
-     */
-    private $prioritize_features_permission_verifier;
-    /**
-     * @var DBTransactionExecutor
-     */
-    private $db_transaction_executor;
-    /**
-     * @var OrderFeatureRank
-     */
-    private $features_rank_orderer;
-    /**
-     * @var VerifyLinkedUserStoryIsNotPlanned
-     */
-    private $story_verifier;
-    /**
-     * @var VerifyIsVisibleFeature
-     */
-    private $visible_feature_verifier;
-    /**
-     * @var FeatureRemovalProcessor
-     */
-    private $feature_removal_processor;
+
+    private TopBacklogStore $top_backlog_store;
+    private VerifyPrioritizeFeaturesPermission $prioritize_features_permission_verifier;
+    private DBTransactionExecutor $db_transaction_executor;
+    private OrderFeatureRank $features_rank_orderer;
+    private VerifyLinkedUserStoryIsNotPlanned $story_verifier;
+    private VerifyIsVisibleFeature $visible_feature_verifier;
+    private FeatureRemovalProcessor $feature_removal_processor;
 
     public function __construct(
-        PrioritizeFeaturesPermissionVerifier $prioritize_features_permission_verifier,
+        VerifyPrioritizeFeaturesPermission $prioritize_features_permission_verifier,
         TopBacklogStore $top_backlog_store,
         DBTransactionExecutor $db_transaction_executor,
         OrderFeatureRank $features_rank_orderer,

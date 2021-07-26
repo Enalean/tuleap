@@ -42,38 +42,14 @@ use Tuleap\ProgramManagement\REST\v1\FeatureElementToOrderInvolvedInChangeRepres
 
 final class ContentModifier implements ModifyContent
 {
-    /**
-     * @var VerifyPrioritizeFeaturesPermission
-     */
-    private $permission_verifier;
-    /**
-     * @var CheckProgramIncrement
-     */
-    private $program_increment_checker;
-    /**
-     * @var ProgramSearcher
-     */
-    private $program_searcher;
-    /**
-     * @var VerifyIsVisibleFeature
-     */
-    private $visible_verifier;
-    /**
-     * @var VerifyCanBePlannedInProgramIncrement
-     */
-    private $can_be_planned_verifier;
-    /**
-     * @var OrderFeatureRank
-     */
-    private $features_rank_orderer;
-    /**
-     * @var CheckFeatureIsPlannedInProgramIncrement
-     */
-    private $check_feature_is_planned_in_PI;
-    /**
-     * @var FeaturePlanner
-     */
-    private $feature_planner;
+    private VerifyPrioritizeFeaturesPermission $permission_verifier;
+    private CheckProgramIncrement $program_increment_checker;
+    private ProgramSearcher $program_searcher;
+    private VerifyIsVisibleFeature $visible_verifier;
+    private VerifyCanBePlannedInProgramIncrement $can_be_planned_verifier;
+    private OrderFeatureRank $features_rank_orderer;
+    private CheckFeatureIsPlannedInProgramIncrement $check_feature_is_planned_in_PI;
+    private FeaturePlanner $feature_planner;
 
     public function __construct(
         VerifyPrioritizeFeaturesPermission $permission_verifier,

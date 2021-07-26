@@ -25,26 +25,26 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog;
 
 use PFUser;
 use TemplateRenderer;
-use Tuleap\ProgramManagement\Adapter\Program\Plan\PrioritizeFeaturesPermissionVerifier;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\NotAllowedToPrioritizeException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\TopBacklogActionMassChangeSourceInformation;
 use Tuleap\ProgramManagement\Domain\Program\Plan\BuildProgram;
 use Tuleap\ProgramManagement\Domain\Program\Plan\PlanStore;
 use Tuleap\ProgramManagement\Domain\Program\Plan\ProgramAccessException;
 use Tuleap\ProgramManagement\Domain\Program\Plan\ProjectIsNotAProgramException;
+use Tuleap\ProgramManagement\Domain\Program\Plan\VerifyPrioritizeFeaturesPermission;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\UserCanPrioritize;
 
 final class MassChangeTopBacklogActionBuilder
 {
     private BuildProgram $build_program;
-    private PrioritizeFeaturesPermissionVerifier $prioritize_features_permission_verifier;
+    private VerifyPrioritizeFeaturesPermission $prioritize_features_permission_verifier;
     private PlanStore $plan_store;
     private TemplateRenderer $template_renderer;
 
     public function __construct(
         BuildProgram $build_program,
-        PrioritizeFeaturesPermissionVerifier $prioritize_features_permission_verifier,
+        VerifyPrioritizeFeaturesPermission $prioritize_features_permission_verifier,
         PlanStore $plan_store,
         TemplateRenderer $template_renderer
     ) {

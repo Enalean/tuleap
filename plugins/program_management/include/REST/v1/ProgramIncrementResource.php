@@ -43,7 +43,6 @@ use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\UserStoryLinkedToFeat
 use Tuleap\ProgramManagement\Adapter\Program\Feature\VerifyIsVisibleFeatureAdapter;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\CanPrioritizeFeaturesDAO;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\PlanDao;
-use Tuleap\ProgramManagement\Adapter\Program\Plan\PrioritizeFeaturesPermissionVerifier;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\ProgramAdapter;
 use Tuleap\ProgramManagement\Adapter\Program\PlanningAdapter;
 use Tuleap\ProgramManagement\Adapter\Program\ProgramDao;
@@ -58,6 +57,7 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Content\Con
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Content\FeaturePlanner;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementNotFoundException;
 use Tuleap\ProgramManagement\Domain\Program\Plan\PlanTrackerException;
+use Tuleap\ProgramManagement\Domain\Program\Plan\PrioritizeFeaturesPermissionVerifier;
 use Tuleap\ProgramManagement\Domain\Program\ProgramNotFoundException;
 use Tuleap\ProgramManagement\Domain\Program\ProgramSearcher;
 use Tuleap\ProgramManagement\Domain\Program\ProgramTrackerException;

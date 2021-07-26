@@ -33,18 +33,9 @@ use Tuleap\ProgramManagement\Domain\UserCanPrioritize;
  */
 final class FeatureAddition
 {
-    /**
-     * @var FeatureIdentifier
-     */
-    public $feature;
-    /**
-     * @var UserCanPrioritize
-     */
-    public $user;
-    /**
-     * @var ProgramIncrementIdentifier
-     */
-    public $program_increment;
+    public FeatureIdentifier $feature;
+    public UserCanPrioritize $user;
+    public ProgramIncrementIdentifier $program_increment;
 
     private function __construct(
         FeatureIdentifier $feature,
