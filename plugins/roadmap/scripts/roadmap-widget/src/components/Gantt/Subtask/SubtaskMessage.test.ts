@@ -42,7 +42,7 @@ describe("SubtaskMessage", () => {
             },
         });
 
-        expect(wrapper.element.style.top).toBe("322px");
+        expect((wrapper.element as HTMLElement).style.top).toBe("322px");
     });
 
     describe("empty subtasks", () => {

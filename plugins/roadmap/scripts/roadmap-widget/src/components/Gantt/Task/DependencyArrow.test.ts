@@ -168,15 +168,15 @@ describe("DependencyArrow", () => {
 
         const wrapper = mountComponent(task_1, task_2, [task_1, task_2], "42%", false, false);
 
-        expect(wrapper.element.style.left).toBe("33px");
-        expect(wrapper.element.style.width).toBe("34px");
+        expect((wrapper.element as HTMLElement).style.left).toBe("33px");
+        expect((wrapper.element as HTMLElement).style.width).toBe("34px");
         expect(wrapper.find("[data-test=path]").classes()).not.toContain(
             "roadmap-gantt-task-dependency-line-ends-after-start"
         );
 
         await wrapper.setProps({ is_text_displayed_outside_bar: true });
-        expect(wrapper.element.style.left).toBe("33px");
-        expect(wrapper.element.style.width).toBe("64px");
+        expect((wrapper.element as HTMLElement).style.left).toBe("33px");
+        expect((wrapper.element as HTMLElement).style.width).toBe("64px");
         expect(wrapper.find("[data-test=path]").classes()).not.toContain(
             "roadmap-gantt-task-dependency-line-ends-after-start"
         );
@@ -197,15 +197,15 @@ describe("DependencyArrow", () => {
 
         const wrapper = mountComponent(task_1, task_2, [task_1, task_2], "42%", false, true);
 
-        expect(wrapper.element.style.left).toBe("33px");
-        expect(wrapper.element.style.width).toBe("56px");
+        expect((wrapper.element as HTMLElement).style.left).toBe("33px");
+        expect((wrapper.element as HTMLElement).style.width).toBe("56px");
         expect(wrapper.find("[data-test=path]").classes()).not.toContain(
             "roadmap-gantt-task-dependency-line-ends-after-start"
         );
 
         await wrapper.setProps({ is_text_displayed_outside_bar: true });
-        expect(wrapper.element.style.left).toBe("33px");
-        expect(wrapper.element.style.width).toBe("56px");
+        expect((wrapper.element as HTMLElement).style.left).toBe("33px");
+        expect((wrapper.element as HTMLElement).style.width).toBe("56px");
         expect(wrapper.find("[data-test=path]").classes()).not.toContain(
             "roadmap-gantt-task-dependency-line-ends-after-start"
         );

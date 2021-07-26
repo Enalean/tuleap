@@ -69,7 +69,8 @@ describe("ProgramIncrementFeatureList", () => {
         expect(wrapper.find("[data-test=to-be-planned-elements]").exists()).toBe(false);
         expect(wrapper.find("[data-test=to-be-planned-error]").exists()).toBe(false);
         expect(
-            wrapper.get("[data-test=program-increment-feature-list]").element.dataset.canPlan
+            (wrapper.get("[data-test=program-increment-feature-list]").element as HTMLElement)
+                .dataset.canPlan
         ).toBe("true");
     });
 
@@ -116,7 +117,8 @@ describe("ProgramIncrementFeatureList", () => {
         expect(wrapper.find("[data-test=to-be-planned-elements]").exists()).toBe(false);
         expect(wrapper.find("[data-test=to-be-planned-error]").exists()).toBe(true);
         expect(
-            wrapper.get("[data-test=program-increment-feature-list]").element.dataset.canPlan
+            (wrapper.get("[data-test=program-increment-feature-list]").element as HTMLElement)
+                .dataset.canPlan
         ).toBe("true");
     });
 
@@ -182,7 +184,8 @@ describe("ProgramIncrementFeatureList", () => {
         expect(wrapper.find("[data-test=to-be-planned-elements]").exists()).toBe(true);
         expect(wrapper.find("[data-test=to-be-planned-error]").exists()).toBe(false);
         expect(
-            wrapper.get("[data-test=program-increment-feature-list]").element.dataset.canPlan
+            (wrapper.get("[data-test=program-increment-feature-list]").element as HTMLElement)
+                .dataset.canPlan
         ).toBe("true");
     });
 
@@ -294,7 +297,8 @@ describe("ProgramIncrementFeatureList", () => {
         jest.spyOn(store, "dispatch").mockResolvedValue([]);
 
         expect(
-            wrapper.get("[data-test=program-increment-feature-list]").element.dataset.canPlan
+            (wrapper.get("[data-test=program-increment-feature-list]").element as HTMLElement)
+                .dataset.canPlan
         ).toBe(undefined);
     });
 });
