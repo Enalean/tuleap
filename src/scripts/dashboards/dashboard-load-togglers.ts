@@ -24,7 +24,7 @@ export default init;
 function init(): void {
     const container = document.querySelector(".dashboard-widgets-container");
     if (!container) {
-        throw new Error("dashboard-widgets-container element does not exist");
+        return;
     }
     togglerInit(container, false, false);
 }
