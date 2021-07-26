@@ -2109,6 +2109,9 @@ msgstr "Non, je ne veux pas le supprimer"
 msgid "Non authorized dependency.Please, select other fields."
 msgstr "Dépendance non autorisée. Veuillez choisir d'autres champs."
 
+msgid "None"
+msgstr "Aucun"
+
 msgid ""
 "None of the reports for this tracker are public, please ensure that at least "
 "one report is public! Tracker access should be managed via the permission "
