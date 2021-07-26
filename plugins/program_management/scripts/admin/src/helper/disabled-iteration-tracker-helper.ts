@@ -17,12 +17,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { ITERATION_SELECT_ID } from "./init-preview-labels-helper";
+
 export function disabledIterationTrackersFromProgramIncrementAndPlannableTrackers(
     doc: Document,
     program_increment_value: string,
     plannable_trackers_values: string[]
 ): void {
-    const iteration_tracker_element = doc.getElementById("admin-configuration-iteration-tracker");
+    const iteration_tracker_element = doc.getElementById(ITERATION_SELECT_ID);
 
     if (!(iteration_tracker_element instanceof HTMLSelectElement)) {
         throw new Error("Iteration tracker element does not exist");

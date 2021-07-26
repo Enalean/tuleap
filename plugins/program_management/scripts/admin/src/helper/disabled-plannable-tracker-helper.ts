@@ -16,9 +16,10 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+import { PLANNABLE_TRACKERS_ID } from "../milestones/init-list-pickers-milestone-section";
 
 export function disabledPlannableTrackers(doc: Document, selector: HTMLSelectElement): void {
-    const plannable_trackers_element = doc.getElementById("admin-configuration-plannable-trackers");
+    const plannable_trackers_element = doc.getElementById(PLANNABLE_TRACKERS_ID);
 
     if (!plannable_trackers_element || !(plannable_trackers_element instanceof HTMLSelectElement)) {
         throw new Error("Plannable trackers element does not exist");

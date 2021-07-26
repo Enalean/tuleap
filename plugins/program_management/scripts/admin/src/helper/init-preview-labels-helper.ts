@@ -25,13 +25,14 @@ import { ElementAdapter } from "../dom/ElementAdapter";
 import { TrackerSelector } from "../dom/TrackerSelector";
 import { IterationActivator } from "../milestones/IterationActivator";
 
-const PROGRAM_INCREMENT_LABEL_ID = "admin-configuration-program-increment-label-section";
-const PROGRAM_INCREMENT_SUB_LABEL_ID = "admin-configuration-program-increment-sub-label-section";
+export const PROGRAM_INCREMENT_LABEL_ID = "admin-configuration-program-increment-label-section";
+export const PROGRAM_INCREMENT_SUB_LABEL_ID =
+    "admin-configuration-program-increment-sub-label-section";
 const PROGRAM_INCREMENTS_ILLUSTRATION_ID =
     "program-management-admin-program-increments-illustration";
-const ITERATIONS_LABEL_ID = "admin-configuration-iteration-label-section";
-const ITERATIONS_SUB_LABEL_ID = "admin-configuration-iteration-sub-label-section";
-const ITERATION_SELECT_ID = "admin-configuration-iteration-tracker";
+export const ITERATIONS_LABEL_ID = "admin-configuration-iteration-label-section";
+export const ITERATIONS_SUB_LABEL_ID = "admin-configuration-iteration-sub-label-section";
+export const ITERATION_SELECT_ID = "admin-configuration-iteration-tracker";
 const ITERATION_ILLUSTRATION_ID = "program-management-admin-iterations-illustration";
 
 export function initPreviewTrackerLabels(

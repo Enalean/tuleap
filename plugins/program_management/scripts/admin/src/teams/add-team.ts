@@ -22,6 +22,8 @@ import { resetRestErrorAlert, setRestErrorMessage } from "../helper/rest-error-h
 import { resetButtonToAddTeam, setButtonToDisabledWithSpinner } from "../helper/button-helper";
 import type { ErrorRest } from "../type";
 
+const DISPLAY_ERROR_REST_ID = "program-management-add-team-error-rest";
+
 export function addTeamInProgram(program_id: number, doc: Document): void {
     const button_to_add = doc.getElementById("program-management-add-team-button");
 
@@ -32,7 +34,7 @@ export function addTeamInProgram(program_id: number, doc: Document): void {
     const aggregated_teams = extractAggregatedTeamIds(doc);
 
     button_to_add.addEventListener("click", async () => {
-        resetRestErrorAlert(doc, "program-management-add-team-error-rest");
+        resetRestErrorAlert(doc, DISPLAY_ERROR_REST_ID);
 
         const select = doc.getElementById("program-management-choose-teams");
         if (!select || !(select instanceof HTMLSelectElement)) {
@@ -61,13 +63,11 @@ export function addTeamInProgram(program_id: number, doc: Document): void {
                     }
                     setRestErrorMessage(
                         doc,
-                        "program-management-add-team-error-rest",
+                        DISPLAY_ERROR_REST_ID,
                         error.code + " " + error_message
                     );
                 })
-                .catch(() =>
-                    setRestErrorMessage(doc, "program-management-add-team-error-rest", "404 Error")
-                );
+                .catch(() => setRestErrorMessage(doc, DISPLAY_ERROR_REST_ID, "404 Error"));
         } finally {
             resetButtonToAddTeam(button_to_add);
         }
