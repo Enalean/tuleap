@@ -6,3 +6,6 @@ msgstr "Génération de document"
 
 msgid "Export Tuleap tracker reports as documents."
 msgstr "Exporter les rapports des outils de suivi en documents."
+
+msgid "Generate document"
+msgstr "Générer un document"

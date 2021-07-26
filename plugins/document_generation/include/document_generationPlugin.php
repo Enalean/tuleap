@@ -20,6 +20,8 @@
 
 declare(strict_types=1);
 
+use Tuleap\Tracker\Report\Renderer\Table\GetExportOptionsMenuItemsEvent;
+
 require_once __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__ . '/../../tracker/include/trackerPlugin.php';
 
@@ -32,6 +34,7 @@ class document_generationPlugin extends Plugin
         $this->setScope(self::SCOPE_PROJECT);
         bindtextdomain('tuleap-document_generation', __DIR__ . '/../site-content');
     }
+
     public function getPluginInfo(): PluginInfo
     {
         if (! $this->pluginInfo) {
@@ -39,8 +42,34 @@ class document_generationPlugin extends Plugin
         }
         return $this->pluginInfo;
     }
+
     public function getDependencies(): array
     {
         return ['tracker'];
+    }
+
+    public function getHooksAndCallbacks(): Collection
+    {
+        $this->addHook(GetExportOptionsMenuItemsEvent::NAME);
+
+        return parent::getHooksAndCallbacks();
+    }
+
+    public function getExportOptionsMenuItems(GetExportOptionsMenuItemsEvent $event): void
+    {
+        $current_user = UserManager::instance()->getCurrentUser();
+        if ($current_user->isAnonymous()) {
+            return;
+        }
+
+        if (! $this->_getPluginManager()->isPluginAllowedForProject($this, $event->getReport()->getTracker()->getProject())) {
+            return;
+        }
+
+        $event->addExportItem(
+            '<li>' .
+            '<a id="tracker-report-action-generate-document" href="#">' . dgettext('tuleap-document_generation', 'Generate document') . '</a>' .
+            '</li>'
+        );
     }
 }
