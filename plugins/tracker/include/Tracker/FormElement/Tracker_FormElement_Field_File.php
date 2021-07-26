@@ -310,7 +310,7 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field
             $uh    = UserHelper::instance();
             $added = [];
             foreach ($values as $fileinfo) {
-                $query_link            = $this->getFileHTMLUrl($fileinfo);
+                $query_link            = $hp->purify($this->getFileHTMLUrl($fileinfo));
                 $sanitized_description = $hp->purify($fileinfo->getDescription(), CODENDI_PURIFIER_CONVERT_HTML);
 
                 $link_show = '<a href="' . $query_link . '"' .
@@ -326,7 +326,7 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field
                 if ($submitter_needed) {
                     $add .= '<div class="tracker_artifact_attachment_submitter">' . 'By ' . $uh->getLinkOnUserFromUserId($fileinfo->getSubmittedBy()) . '</div>';
                 }
-                $add .= '<div class="tracker_artifact_attachment_size">(' . $fileinfo->getHumanReadableFilesize() . ')</div>';
+                $add .= '<div class="tracker_artifact_attachment_size">(' . $hp->purify($fileinfo->getHumanReadableFilesize()) . ')</div>';
                 $add .= '<div>';
                 $add .= $link_show . '<i class="fa fa-eye"></i></a>';
                 $add .= '<a href="' . $query_link . '" download><i class="fa fa-download"></i></a>';
@@ -334,7 +334,7 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field
                 $add .= '</div>';
 
                 if ($fileinfo->isImage()) {
-                    $query_add = $this->getFileHTMLPreviewUrl($fileinfo);
+                    $query_add = $hp->purify($this->getFileHTMLPreviewUrl($fileinfo));
 
                     $add .= '<div class="tracker_artifact_preview_attachment image">';
                     $add .= '<div style="background-image: url(\'' . $query_add . '\')"></div>';
@@ -508,13 +508,13 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field
             $hp    = Codendi_HTMLPurifier::instance();
             $added = [];
             foreach ($values as $fileinfo) {
-                $query_link            = $this->getFileHTMLUrl($fileinfo);
+                $query_link            = $hp->purify($this->getFileHTMLUrl($fileinfo));
                 $sanitized_description = $hp->purify($fileinfo->getDescription(), CODENDI_PURIFIER_CONVERT_HTML);
                 $link_show             = '<a href="' . $url . $query_link . '"
                                  title="' . $sanitized_description . '">';
 
                 $info  = $link_show . $hp->purify($fileinfo->getFilename(), CODENDI_PURIFIER_CONVERT_HTML) . '</a>';
-                $info .= ' (' . $fileinfo->getHumanReadableFilesize() . ')';
+                $info .= ' (' . $hp->purify($fileinfo->getHumanReadableFilesize()) . ')';
 
                 $add     = '<div class="tracker_artifact_attachment">';
                 $add    .= '<table><tr><td>';
@@ -660,7 +660,7 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field
 
                     if ($file_info->isImage()) {
                         $query = $this->getFileHTMLPreviewUrl($file_info);
-                        $add  .= '<img src="' . $query . '"
+                        $add  .= '<img src="' . $hp->purify($query) . '"
                                       alt="' .  $hp->purify($file_info->getDescription(), CODENDI_PURIFIER_CONVERT_HTML)  . '"
                                  >';
                     } elseif ($file_info->getDescription()) {
