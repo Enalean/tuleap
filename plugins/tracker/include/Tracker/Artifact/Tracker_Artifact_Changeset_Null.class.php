@@ -53,6 +53,14 @@ class Tracker_Artifact_Changeset_Null extends Tracker_Artifact_Changeset
     }
 
     /**
+     * @return Tracker_Artifact_ChangesetValue[]
+     */
+    public function getChangesetValuesHasChanged(): array
+    {
+        return [];
+    }
+
+    /**
      * Return the changeset values of this changeset
      *
      * @return array of Tracker_Artifact_ChangesetValue, or empty array if not found

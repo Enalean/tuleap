@@ -259,6 +259,14 @@ class Tracker_Artifact_PriorityHistoryChange extends Tracker_Artifact_Followup_I
         return null;
     }
 
+    /**
+     * @return Tracker_Artifact_ChangesetValue[]
+     */
+    public function getChangesetValuesHasChanged(): array
+    {
+        return [];
+    }
+
     public function canHoldValue()
     {
         return false;

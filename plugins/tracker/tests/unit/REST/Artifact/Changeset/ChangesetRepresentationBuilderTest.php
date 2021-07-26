@@ -229,6 +229,7 @@ final class ChangesetRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\Test
         $value->shouldReceive('getField')->andReturn($string_field);
         $value->shouldReceive('hasChanged')->andReturnTrue();
         $changeset->shouldReceive('getValues')->andReturn([$value]);
+        $changeset->shouldReceive('getChangesetValuesHasChanged')->andReturn([$value]);
 
         return $changeset;
     }

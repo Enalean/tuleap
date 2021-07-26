@@ -188,13 +188,39 @@ final class Tracker_Artifact_ChangesetTest extends \Tuleap\Test\PHPUnit\TestCase
         $value = \Mockery::spy(\Tracker_Artifact_ChangesetValue_Date::class);
 
         $this->dao->shouldReceive('searchByFieldId')->once()->andReturns(['changeset_id' => 1, 'field_id' => 2, 'id' => 3, 'has_changed' => 0]);
-
         $field->shouldReceive('getId')->andReturns(2);
         $field->shouldReceive('getChangesetValue')->once()->andReturns($value);
 
         $this->changeset->shouldReceive('getValueDao')->once()->andReturns($this->dao);
 
         $this->assertInstanceOf(Tracker_Artifact_ChangesetValue_Date::class, $this->changeset->getValue($field));
+    }
+
+    public function testGetChangesetValuesHasChanged(): void
+    {
+        $field   = $this->createMock(\Tracker_FormElement_Field_Date::class);
+        $value   = $this->createMock(\Tracker_Artifact_ChangesetValue_Date::class);
+        $factory = $this->createMock(Tracker_FormElementFactory::class);
+
+        $this->dao
+            ->shouldReceive('getAllChangedValueFromChangesetId')
+            ->once()
+            ->andReturns([
+                ['field_id' => 2, 'id' => 3],
+                ['field_id' => 666, 'id' => 666],
+            ]);
+        $field->method('getId')->willReturn(2);
+        $field->expects($this->once())->method('getChangesetValue')->willReturn($value);
+
+        $factory->method('getFieldById')->willReturnOnConsecutiveCalls($field, null);
+
+        $this->changeset->shouldReceive('getId')->once()->andReturns(12);
+        $this->changeset->shouldReceive('getValueDao')->once()->andReturns($this->dao);
+        $this->changeset->shouldReceive('getFormElementFactory')->andReturn($factory);
+
+        $changesets = $this->changeset->getChangesetValuesHasChanged();
+        $this->assertCount(1, $changesets);
+        $this->assertInstanceOf(Tracker_Artifact_ChangesetValue_Date::class, $changesets[0]);
     }
 
     public function testDiffToPrevious(): void

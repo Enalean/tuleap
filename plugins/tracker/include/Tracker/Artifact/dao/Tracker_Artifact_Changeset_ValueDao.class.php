@@ -32,6 +32,14 @@ class Tracker_Artifact_Changeset_ValueDao extends \Tuleap\DB\DataAccessObject
         );
     }
 
+    public function getAllChangedValueFromChangesetId(int $id): array
+    {
+        return $this->getDB()->run(
+            'SELECT id, field_id FROM tracker_changeset_value WHERE changeset_id = ? AND has_changed = 1',
+            $id
+        );
+    }
+
     /**
      * @psalm-return array{id: int, has_changed:0|1}|null
      */
