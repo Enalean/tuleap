@@ -17,6 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { limitConcurrencyPool } from "@tuleap/concurrency-limit-pool";
+
 type AutoEncodedParameter = [string, string | number | boolean];
 interface AutoEncodedParameters {
     [key: string]: string | number | boolean;
@@ -87,8 +89,12 @@ function defaultGetCollectionCallback<Y>(json: Y): Array<Y> {
 
 export async function recursiveGet<Y, T>(
     url: string,
-    init: RequestInit & RecursiveGetInit<Y, T> = {}
+    init: RequestInit & RecursiveGetInit<Y, T> = {},
+    max_parallel_requests = 6
 ): Promise<Array<T>> {
+    if (max_parallel_requests < 1) {
+        throw new Error("At least one request needs to be sent to retrieve data");
+    }
     const { params = {}, getCollectionCallback = defaultGetCollectionCallback } = init;
 
     const { limit = 100, offset = 0 } = params;
@@ -110,7 +116,9 @@ export async function recursiveGet<Y, T>(
     }
     const total = Number.parseInt(pagination_size, 10);
 
-    const parallel_calls = [...getAdditionalOffsets(offset, limit, total)].map(
+    const all_responses = await limitConcurrencyPool(
+        max_parallel_requests,
+        [...getAdditionalOffsets(offset, limit, total)],
         async (new_offset) => {
             const new_init = {
                 ...init,
@@ -126,7 +134,7 @@ export async function recursiveGet<Y, T>(
             return getCollectionCallback(json);
         }
     );
-    const all_responses = await Promise.all(parallel_calls);
+
     return all_responses.reduce((accumulator, response) => accumulator.concat(response), results);
 }
 
