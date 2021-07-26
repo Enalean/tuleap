@@ -20,7 +20,7 @@
 import type { RetrieveElement } from "./RetrieveElement";
 
 export class RetrieveElementStub implements RetrieveElement {
-    private constructor(private readonly elements: HTMLElement[]) {}
+    private constructor(private readonly elements: Element[]) {}
 
     getInputById(): HTMLInputElement {
         if (this.elements.length > 0) {
@@ -35,7 +35,28 @@ export class RetrieveElementStub implements RetrieveElement {
         throw new Error("No elements left to return in the stub");
     }
 
-    static withElements(...elements: HTMLElement[]): RetrieveElementStub {
+    getSelectById(): HTMLSelectElement {
+        if (this.elements.length > 0) {
+            const element = this.elements.shift();
+            if (!(element instanceof HTMLSelectElement)) {
+                throw new Error(
+                    "Expected the stub to be prepared with an HTMLSelectElement but it was not"
+                );
+            }
+            return element;
+        }
+        throw new Error("no elements left to return in the stub");
+    }
+
+    getElementById(): Element {
+        const element = this.elements.shift();
+        if (!element) {
+            throw new Error("no elements left to return in the stub");
+        }
+        return element;
+    }
+
+    static withElements(...elements: Element[]): RetrieveElementStub {
         return new RetrieveElementStub(elements);
     }
 }

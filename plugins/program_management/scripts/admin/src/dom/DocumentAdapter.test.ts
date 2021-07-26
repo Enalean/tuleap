@@ -18,9 +18,10 @@
  */
 
 import { DocumentAdapter } from "./DocumentAdapter";
+import type { RetrieveElement } from "./RetrieveElement";
 
 describe(`DocumentAdapter`, () => {
-    let doc: Document, adapter: DocumentAdapter;
+    let doc: Document, adapter: RetrieveElement;
     beforeEach(() => {
         doc = document.implementation.createHTMLDocument();
         adapter = new DocumentAdapter(doc);
@@ -40,31 +41,31 @@ describe(`DocumentAdapter`, () => {
         });
     });
 
-    describe(`getNodeBySelector`, () => {
-        it(`throws when node with given selector cannot be found`, () => {
-            expect(() => adapter.getNodeBySelector("[data-unknown]")).toThrow();
+    describe(`getSelectById`, () => {
+        it(`throws when given ID cannot be found`, () => {
+            expect(() => adapter.getSelectById("unknown")).toThrow();
         });
 
-        it(`returns node matching given selector`, () => {
-            const element = doc.createElement("div");
-            element.dataset.selector = "";
-            doc.body.append(element);
+        it(`returns select element with given ID`, () => {
+            const select = doc.createElement("select");
+            select.id = "some_id";
+            doc.body.append(select);
 
-            expect(adapter.getNodeBySelector("[data-selector]")).toBe(element);
+            expect(adapter.getSelectById("some_id")).toBe(select);
         });
     });
 
-    describe(`getAllNodesBySelector`, () => {
-        it(`returns all nodes matching given selector`, () => {
-            const first_element = doc.createElement("div");
-            first_element.dataset.selector = "";
-            const second_element = doc.createElement("div");
-            second_element.dataset.selector = "";
-            doc.body.append(first_element, second_element);
+    describe(`getElementById`, () => {
+        it(`throws when given ID cannot be found`, () => {
+            expect(() => adapter.getElementById("unknown")).toThrow();
+        });
 
-            const results = adapter.getAllNodesBySelector("[data-selector]");
-            expect(results).toContain(first_element);
-            expect(results).toContain(second_element);
+        it(`returns element with given ID`, () => {
+            const svg = doc.createElement("svg");
+            svg.id = "illustration";
+            doc.body.append(svg);
+
+            expect(adapter.getElementById("illustration")).toBe(svg);
         });
     });
 });

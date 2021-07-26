@@ -20,7 +20,7 @@
 import { TimeboxLabel } from "./TimeboxLabel";
 import { RetrieveElementStub } from "./RetrieveElementStub";
 import { ReactiveLabelCollection } from "./ReactiveLabelCollection";
-import { RetrieveNodeStub } from "./RetrieveNodeStub";
+import { RetrieveContainedNodeStub } from "./RetrieveContainedNodeStub";
 
 const svg_namespace = "http://www.w3.org/2000/svg";
 
@@ -39,7 +39,7 @@ describe(`ReactiveLabelCollection`, () => {
         const first_node = doc.createElementNS(svg_namespace, "tspan");
         const second_node = doc.createElementNS(svg_namespace, "tspan");
         const collection = ReactiveLabelCollection.fromSelectorAndTimeboxLabel(
-            RetrieveNodeStub.withNodes(first_node, second_node),
+            RetrieveContainedNodeStub.withNodes(first_node, second_node),
             "some_selector",
             label_input
         );
@@ -55,7 +55,7 @@ describe(`ReactiveLabelCollection`, () => {
             const first_node = doc.createElementNS(svg_namespace, "tspan");
             const second_node = doc.createElementNS(svg_namespace, "tspan");
             const collection = ReactiveLabelCollection.fromSelectorAndTimeboxLabel(
-                RetrieveNodeStub.withNodes(first_node, second_node),
+                RetrieveContainedNodeStub.withNodes(first_node, second_node),
                 "some_selector",
                 label_input
             );
@@ -71,7 +71,7 @@ describe(`ReactiveLabelCollection`, () => {
             const first_node = doc.createElementNS(svg_namespace, "tspan");
             const second_node = doc.createElementNS(svg_namespace, "tspan");
             const collection = ReactiveLabelCollection.fromSelectorAndTimeboxLabel(
-                RetrieveNodeStub.withNodes(first_node, second_node),
+                RetrieveContainedNodeStub.withNodes(first_node, second_node),
                 "some_selector",
                 label_input
             );

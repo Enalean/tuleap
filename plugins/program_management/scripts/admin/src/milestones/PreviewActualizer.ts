@@ -21,7 +21,7 @@ import { sprintf } from "sprintf-js";
 import type { GettextProvider } from "../GettextProvider";
 import { ReactiveLabel } from "../dom/ReactiveLabel";
 import { ReactiveLabelCollection } from "../dom/ReactiveLabelCollection";
-import type { RetrieveNode } from "../dom/RetrieveNode";
+import type { RetrieveContainedNode } from "../dom/RetrieveContainedNode";
 import type { TimeboxLabel } from "../dom/TimeboxLabel";
 
 const LABEL_SELECTOR = "[data-timebox-label]";
@@ -38,9 +38,9 @@ export class PreviewActualizer {
         private readonly default_sub_label_value: string
     ) {}
 
-    static fromTimeboxLabels(
+    static fromContainerAndTimeboxLabels(
         gettext_provider: GettextProvider,
-        retriever: RetrieveNode,
+        retriever: RetrieveContainedNode,
         label_input: TimeboxLabel,
         sub_label_input: TimeboxLabel,
         default_label_value: string,

@@ -18,7 +18,7 @@
  */
 
 import type { TimeboxLabel } from "./TimeboxLabel";
-import type { RetrieveNode } from "./RetrieveNode";
+import type { RetrieveContainedNode } from "./RetrieveContainedNode";
 
 export type LabelTextCallback = (text: string, label_index: number, length: number) => string;
 
@@ -29,7 +29,7 @@ export class ReactiveLabelCollection {
     ) {}
 
     static fromSelectorAndTimeboxLabel(
-        retriever: RetrieveNode,
+        retriever: RetrieveContainedNode,
         selector: string,
         label_input: TimeboxLabel
     ): ReactiveLabelCollection {

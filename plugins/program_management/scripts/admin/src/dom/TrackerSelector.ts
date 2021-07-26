@@ -17,8 +17,24 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export interface RetrieveElement {
-    getInputById(id: string): HTMLInputElement;
-    getSelectById(id: string): HTMLSelectElement;
-    getElementById(id: string): Element;
+import type { RetrieveElement } from "./RetrieveElement";
+
+export type ChangeCallback = (has_selection: boolean) => void;
+
+export class TrackerSelector {
+    private constructor(private readonly select: HTMLSelectElement) {}
+
+    hasSelection(): boolean {
+        return this.select.selectedIndex > 0;
+    }
+
+    addChangeListener(callback: ChangeCallback): void {
+        this.select.addEventListener("change", () => {
+            callback(this.hasSelection());
+        });
+    }
+
+    static fromId(retriever: RetrieveElement, id: string): TrackerSelector {
+        return new TrackerSelector(retriever.getSelectById(id));
+    }
 }

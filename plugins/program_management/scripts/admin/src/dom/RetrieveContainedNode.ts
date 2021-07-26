@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export interface RetrieveNode {
+export interface RetrieveContainedNode {
     getNodeBySelector(selector: string): Node;
     getAllNodesBySelector(selector: string): Node[];
 }

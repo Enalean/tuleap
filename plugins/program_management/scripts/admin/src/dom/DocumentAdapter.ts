@@ -18,9 +18,8 @@
  */
 
 import type { RetrieveElement } from "./RetrieveElement";
-import type { RetrieveNode } from "./RetrieveNode";
 
-export class DocumentAdapter implements RetrieveElement, RetrieveNode {
+export class DocumentAdapter implements RetrieveElement {
     constructor(private readonly doc: Document) {}
 
     getInputById(id: string): HTMLInputElement {
@@ -31,15 +30,19 @@ export class DocumentAdapter implements RetrieveElement, RetrieveNode {
         return element;
     }
 
-    getNodeBySelector(selector: string): Node {
-        const node = this.doc.querySelector(selector);
-        if (!node) {
-            throw new Error(`Could not find node by selector ${selector}`);
+    getSelectById(id: string): HTMLSelectElement {
+        const element = this.doc.getElementById(id);
+        if (!(element instanceof HTMLSelectElement)) {
+            throw new Error(`Could not find element with id #${id}`);
         }
-        return node;
+        return element;
     }
 
-    getAllNodesBySelector(selector: string): Node[] {
-        return Array.from(this.doc.querySelectorAll(selector));
+    getElementById(id: string): Element {
+        const element = this.doc.getElementById(id);
+        if (!element) {
+            throw new Error(`Could not find element with id #${id}`);
+        }
+        return element;
     }
 }

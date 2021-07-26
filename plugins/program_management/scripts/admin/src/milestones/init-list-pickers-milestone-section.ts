@@ -22,10 +22,6 @@ import type { GetText } from "@tuleap/core/scripts/tuleap/gettext/gettext-init";
 import { disabledPlannableTrackers } from "../helper/disabled-plannable-tracker-helper";
 import { getHTMLSelectElementFromId } from "../helper/HTML_element_extractor";
 import { disabledIterationTrackersFromProgramIncrementAndPlannableTrackers } from "../helper/disabled-iteration-tracker-helper";
-import {
-    disableInputLabelIterationWhenNoSelectedIterationTracker,
-    enableInputLabelIterationWhenAnIterationTrackerIsSelected,
-} from "../helper/iteration-labels-input-helper";
 
 export async function initListPickersMilestoneSection(
     doc: Document,
@@ -137,22 +133,5 @@ async function setIterationSection(
             program_increment_tracker_element.value,
             [...event.target.selectedOptions].map((option) => option.value)
         );
-    });
-
-    if (iteration_trackers_element.selectedIndex === 0) {
-        disableInputLabelIterationWhenNoSelectedIterationTracker(doc);
-    }
-
-    iteration_trackers_element.addEventListener("change", (event) => {
-        if (!(event.target instanceof HTMLSelectElement)) {
-            throw new Error("Target element is not HTMLSelectElement");
-        }
-
-        if (event.target.selectedIndex === -1) {
-            disableInputLabelIterationWhenNoSelectedIterationTracker(doc);
-            return;
-        }
-
-        enableInputLabelIterationWhenAnIterationTrackerIsSelected(doc);
     });
 }

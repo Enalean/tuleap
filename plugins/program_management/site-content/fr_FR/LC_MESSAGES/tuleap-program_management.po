@@ -439,6 +439,9 @@ msgstr "Titre"
 msgid "To be planned"
 msgstr "À planifier"
 
+msgid "To be planned by Teams"
+msgstr "À planifier par les Équipes"
+
 msgid "Top backlog actions"
 msgstr "Actions liées à la planification générale"
 
