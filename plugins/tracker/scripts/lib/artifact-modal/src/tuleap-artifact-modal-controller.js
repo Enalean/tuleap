@@ -103,6 +103,7 @@ function ArtifactModalController(
         setupTooltips,
         submit,
         setFieldValue,
+        setFieldValueForCustomElement,
         addToFilesAddedByTextField,
         setFollowupComment,
         toggleFieldset,
@@ -325,6 +326,11 @@ function ArtifactModalController(
         return (value) => {
             self.values[field_id].value = value;
         };
+    }
+
+    function setFieldValueForCustomElement(event) {
+        const { field_id, value } = event.detail;
+        self.values[field_id].value = value;
     }
 
     function addToFilesAddedByTextField(field_id, uploaded_file) {

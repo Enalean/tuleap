@@ -25,6 +25,7 @@ import {
     formatExistingValue as formatForOpenListField,
 } from "../fields/open-list-field/open-list-field-initializer.js";
 import { formatExistingValue as formatForTextFieldValue } from "../fields/text-field/text-field-value-formatter.js";
+import { cleanValue as defaultForIntField } from "../fields/int-field/int-field-value-formatter";
 
 /**
  * For every field in the tracker, creates a field object with the value from the given artifact
@@ -149,10 +150,10 @@ function getDefaultValue(field) {
                 default_value && default_value.length > 0 ? default_value : [100];
             break;
         case "int":
-            value_obj.value = field.default_value ? parseInt(field.default_value, 10) : null;
+            value_obj.value = defaultForIntField(field.default_value);
             break;
         case "float":
-            value_obj.value = field.default_value ? parseFloat(field.default_value, 10) : null;
+            value_obj.value = field.default_value ? parseFloat(field.default_value, 10) : "";
             break;
         case "text":
             value_obj.value = {
@@ -165,6 +166,8 @@ function getDefaultValue(field) {
             }
             break;
         case "string":
+            value_obj.value = field.default_value;
+            break;
         case "date":
             value_obj.value = field.default_value ? field.default_value : null;
             break;

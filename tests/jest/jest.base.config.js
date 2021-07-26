@@ -27,6 +27,7 @@ const esModules = [
     "d3",
     "lit-html",
     "internmap",
+    "hybrids",
 ].join("|");
 
 module.exports = {
