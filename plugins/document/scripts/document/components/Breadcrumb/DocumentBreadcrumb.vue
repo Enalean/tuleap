@@ -30,22 +30,22 @@
                     {{ project_public_name }}
                 </a>
             </div>
-            <div v-bind:class="get_breadcrumb_class">
+            <div v-bind:class="getBreadcrumbClass()">
                 <router-link
                     v-bind:to="{ name: 'root_folder' }"
                     class="breadcrumb-link"
-                    v-bind:title="document_tree_title"
+                    v-bind:title="`${$gettext('Project documentation')}`"
                 >
                     <i class="breadcrumb-link-icon far fa-folderpen"></i>
                     <translate>Documents</translate>
                 </router-link>
                 <div class="breadcrumb-switch-menu-container">
-                    <nav class="breadcrumb-switch-menu" v-if="is_admin">
+                    <nav class="breadcrumb-switch-menu" v-if="isAdmin()">
                         <span class="breadcrumb-dropdown-item">
                             <a
                                 class="breadcrumb-dropdown-link"
-                                v-bind:href="document_administration_url"
-                                v-bind:title="document_administration_title"
+                                v-bind:href="documentAdministrationUrl()"
+                                v-bind:title="`${$gettext('Administration')}`"
                                 data-test="breadcrumb-administrator-link"
                             >
                                 <i class="fa fa-cog fa-fw"></i>
@@ -58,15 +58,23 @@
 
             <span
                 class="breadcrumb-item breadcrumb-item-disabled"
-                v-if="is_ellipsis_displayed"
+                v-if="isEllipsisDisplayed()"
                 data-test="breadcrumb-ellipsis"
             >
-                <span class="breadcrumb-link" v-bind:title="ellipsis_title">...</span>
+                <span
+                    class="breadcrumb-link"
+                    v-bind:title="`${$gettext(
+                        'Parent folders are not displayed to not clutter the interface'
+                    )}`"
+                >
+                    ...
+                </span>
             </span>
             <document-breadcrumb-element
-                v-for="parent in current_folder_ascendant_hierarchy_to_display"
+                v-for="parent in currentFolderAscendantHierarchyToDisplay()"
                 v-bind:key="parent.id"
                 v-bind:item="parent"
+                v-bind:data-test="`breadcrumb-element-${parent.id}`"
             />
             <span
                 class="breadcrumb-item"
@@ -78,7 +86,7 @@
                 </a>
             </span>
             <document-breadcrumb-document
-                v-if="is_current_document_displayed"
+                v-if="isCurrentDocumentDisplayed()"
                 v-bind:current_document="currently_previewed_item"
                 v-bind:parent_folder="current_folder"
                 data-test="breadcrumb-current-document"
@@ -87,72 +95,80 @@
     </div>
 </template>
 
-<script>
-import { mapState } from "vuex";
+<script lang="ts">
+import { Component, Vue } from "vue-property-decorator";
+import { namespace, State } from "vuex-class";
+import type { Folder, Item } from "../../type";
 import DocumentBreadcrumbElement from "./DocumentBreadcrumbElement.vue";
 import DocumentBreadcrumbDocument from "./DocumentBreadcrumbDocument.vue";
 import { BreadcrumbPrivacy } from "@tuleap/vue-breadcrumb-privacy";
+import type { ProjectFlag, ProjectPrivacy } from "@tuleap/vue-breadcrumb-privacy";
 
-export default {
-    name: "DocumentBreadcrumb",
+const configuration = namespace("configuration");
+
+@Component({
     components: { DocumentBreadcrumbElement, DocumentBreadcrumbDocument, BreadcrumbPrivacy },
-    data() {
-        return {
-            max_nb_to_display: 5,
-        };
-    },
-    computed: {
-        ...mapState([
-            "current_folder_ascendant_hierarchy",
-            "is_loading_ascendant_hierarchy",
-            "currently_previewed_item",
-            "current_folder",
-        ]),
-        ...mapState("configuration", [
-            "project_url",
-            "privacy",
-            "project_flags",
-            "project_id",
-            "project_public_name",
-            "user_is_admin",
-        ]),
-        document_tree_title() {
-            return this.$gettext("Project documentation");
-        },
-        document_administration_url() {
-            return "/plugins/docman/?group_id=" + this.project_id + "&action=admin";
-        },
-        document_administration_title() {
-            return this.$gettext("Administration");
-        },
-        is_admin() {
-            return this.user_is_admin;
-        },
-        get_breadcrumb_class() {
-            if (this.user_is_admin === true) {
-                return "breadcrumb-switchable breadcrumb-item";
-            }
+})
+export default class DocumentBreadcrumb extends Vue {
+    @State
+    readonly current_folder_ascendant_hierarchy!: Array<Folder>;
 
-            return "breadcrumb-item";
-        },
-        is_ellipsis_displayed() {
-            if (this.is_loading_ascendant_hierarchy) {
-                return false;
-            }
+    @State
+    readonly is_loading_ascendant_hierarchy!: boolean;
 
-            return this.current_folder_ascendant_hierarchy.length > this.max_nb_to_display;
-        },
-        ellipsis_title() {
-            return this.$gettext("Parent folders are not displayed to not clutter the interface");
-        },
-        current_folder_ascendant_hierarchy_to_display() {
-            return this.current_folder_ascendant_hierarchy
-                .filter((parent) => parent.parent_id !== 0)
-                .slice(-this.max_nb_to_display);
-        },
-        is_current_document_displayed() {
-            return this.currently_previewed_item !== null && this.current_folder !== null;
-        },
-    },
-};
+    @State
+    readonly currently_previewed_item!: Item;
+
+    @State
+    readonly current_folder!: Folder;
+
+    @configuration.State
+    readonly project_url!: string;
+
+    @configuration.State
+    readonly privacy!: ProjectPrivacy;
+
+    @configuration.State
+    readonly project_flags!: Array<ProjectFlag>;
+
+    @configuration.State
+    readonly project_id!: number;
+
+    @configuration.State
+    readonly project_public_name!: string;
+
+    @configuration.State
+    readonly user_is_admin!: boolean;
+
+    private max_nb_to_display = 5;
+
+    documentAdministrationUrl(): string {
+        return "/plugins/docman/?group_id=" + this.project_id + "&action=admin";
+    }
+    isAdmin(): boolean {
+        return this.user_is_admin;
+    }
+    getBreadcrumbClass(): string {
+        if (this.isAdmin()) {
+            return "breadcrumb-switchable breadcrumb-item";
+        }
+
+        return "breadcrumb-item";
+    }
+    isEllipsisDisplayed(): boolean {
+        if (this.is_loading_ascendant_hierarchy) {
+            return false;
+        }
+
+        return this.current_folder_ascendant_hierarchy.length > this.max_nb_to_display;
+    }
+    currentFolderAscendantHierarchyToDisplay(): Array<Item> {
+        return this.current_folder_ascendant_hierarchy
+            .filter((parent) => parent.parent_id !== 0)
+            .slice(-this.max_nb_to_display);
+    }
+    isCurrentDocumentDisplayed(): boolean {
+        return this.currently_previewed_item !== null && this.current_folder !== null;
+    }
+}
 </script>
