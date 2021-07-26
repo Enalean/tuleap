@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export interface RetrieveElement {
-    getInputById(id: string): HTMLInputElement;
+export interface RetrieveNode {
+    getNodeBySelector(selector: string): Node;
+    getAllNodesBySelector(selector: string): Node[];
 }

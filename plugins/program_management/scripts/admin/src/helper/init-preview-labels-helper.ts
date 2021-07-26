@@ -19,29 +19,36 @@
 
 import type { GettextProvider } from "../GettextProvider";
 import { TimeboxLabel } from "../dom/TimeboxLabel";
-import { initPreview } from "../milestones/preview-actualizer";
-import { PROGRAM_INCREMENT_LABEL_ID, PROGRAM_INCREMENT_SUB_LABEL_ID } from "../index";
 import type { RetrieveElement } from "../dom/RetrieveElement";
+import { PreviewActualizer } from "../milestones/PreviewActualizer";
+import type { RetrieveNode } from "../dom/RetrieveNode";
+
+const PROGRAM_INCREMENT_LABEL_ID = "admin-configuration-program-increment-label-section";
+const PROGRAM_INCREMENT_SUB_LABEL_ID = "admin-configuration-program-increment-sub-label-section";
 
 export function initPreviewTrackerLabels(
-    doc: Document,
-    gettext_provider: GettextProvider,
-    retriever: RetrieveElement
+    retriever: RetrieveElement & RetrieveNode,
+    gettext_provider: GettextProvider
 ): void {
-    const program_increment_label_element = doc.getElementById(PROGRAM_INCREMENT_LABEL_ID);
-
-    if (
-        !program_increment_label_element ||
-        !(program_increment_label_element instanceof HTMLInputElement)
-    ) {
+    let program_increment_label: TimeboxLabel;
+    try {
+        program_increment_label = TimeboxLabel.fromId(retriever, PROGRAM_INCREMENT_LABEL_ID);
+    } catch (e) {
+        // There is no program increment label element when Teams have not yet been configured
         return;
     }
-
-    const program_increment_label = TimeboxLabel.fromId(retriever, PROGRAM_INCREMENT_LABEL_ID);
     const program_increment_sub_label = TimeboxLabel.fromId(
         retriever,
         PROGRAM_INCREMENT_SUB_LABEL_ID
     );
+    const program_increments_actualizer = PreviewActualizer.fromTimeboxLabels(
+        gettext_provider,
+        retriever,
+        program_increment_label,
+        program_increment_sub_label,
+        gettext_provider.gettext("Program Increments"),
+        gettext_provider.gettext("program increment")
+    );
 
-    initPreview(retriever, gettext_provider, program_increment_label, program_increment_sub_label);
+    program_increments_actualizer.initTimeboxPreview();
 }

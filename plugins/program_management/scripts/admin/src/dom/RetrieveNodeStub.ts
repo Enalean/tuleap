@@ -17,29 +17,24 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { RetrieveElement } from "./RetrieveElement";
 import type { RetrieveNode } from "./RetrieveNode";
 
-export class DocumentAdapter implements RetrieveElement, RetrieveNode {
-    constructor(private readonly doc: Document) {}
+export class RetrieveNodeStub implements RetrieveNode {
+    private constructor(private readonly nodes: Node[]) {}
 
-    getInputById(id: string): HTMLInputElement {
-        const element = this.doc.getElementById(id);
-        if (!(element instanceof HTMLInputElement)) {
-            throw new Error(`Could not find element with id #${id}`);
-        }
-        return element;
-    }
-
-    getNodeBySelector(selector: string): Node {
-        const node = this.doc.querySelector(selector);
+    getNodeBySelector(): Node {
+        const node = this.nodes.shift();
         if (!node) {
-            throw new Error(`Could not find node by selector ${selector}`);
+            throw new Error("no nodes left to return in the stub");
         }
         return node;
     }
 
-    getAllNodesBySelector(selector: string): Node[] {
-        return Array.from(this.doc.querySelectorAll(selector));
+    getAllNodesBySelector(): Node[] {
+        return this.nodes;
+    }
+
+    static withNodes(...nodes: Node[]): RetrieveNodeStub {
+        return new RetrieveNodeStub(nodes);
     }
 }

@@ -40,25 +40,29 @@ describe(`DocumentAdapter`, () => {
         });
     });
 
-    describe(`querySelector`, () => {
-        it(`proxies to Document`, () => {
+    describe(`getNodeBySelector`, () => {
+        it(`throws when node with given selector cannot be found`, () => {
+            expect(() => adapter.getNodeBySelector("[data-unknown]")).toThrow();
+        });
+
+        it(`returns node matching given selector`, () => {
             const element = doc.createElement("div");
             element.dataset.selector = "";
             doc.body.append(element);
 
-            expect(adapter.querySelector("[data-selector]")).toBe(element);
+            expect(adapter.getNodeBySelector("[data-selector]")).toBe(element);
         });
     });
 
-    describe(`querySelectorAll`, () => {
-        it(`proxies to Document`, () => {
+    describe(`getAllNodesBySelector`, () => {
+        it(`returns all nodes matching given selector`, () => {
             const first_element = doc.createElement("div");
             first_element.dataset.selector = "";
             const second_element = doc.createElement("div");
             second_element.dataset.selector = "";
             doc.body.append(first_element, second_element);
 
-            const results = adapter.querySelectorAll("[data-selector]");
+            const results = adapter.getAllNodesBySelector("[data-selector]");
             expect(results).toContain(first_element);
             expect(results).toContain(second_element);
         });

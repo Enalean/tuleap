@@ -22,8 +22,7 @@ import type { RetrieveElement } from "./RetrieveElement";
 export class RetrieveElementStub implements RetrieveElement {
     private constructor(private readonly elements: HTMLElement[]) {}
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    getInputById(id: string): HTMLInputElement {
+    getInputById(): HTMLInputElement {
         if (this.elements.length > 0) {
             const element = this.elements.shift();
             if (!(element instanceof HTMLInputElement)) {
@@ -34,19 +33,6 @@ export class RetrieveElementStub implements RetrieveElement {
             return element;
         }
         throw new Error("No elements left to return in the stub");
-    }
-
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    querySelector(selector: string): HTMLElement | null {
-        if (this.elements.length > 0) {
-            return this.elements.shift() ?? null;
-        }
-        throw new Error("No elements left to return in the stub");
-    }
-
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    querySelectorAll(selector: string): HTMLElement[] {
-        return this.elements;
     }
 
     static withElements(...elements: HTMLElement[]): RetrieveElementStub {

@@ -82,17 +82,11 @@
 
 .program-management-admin-timebox-section {
     display: grid;
-    grid-template-areas: "form illustration";
     grid-template-columns: auto min-content;
 }
 
-.program-management-admin-timebox-form {
-    grid-area: form;
-}
-
 .program-management-admin-timebox-illustration {
-    grid-area: illustration;
-    padding: var(--tlp-jumbo-spacing);
+    margin: var(--tlp-jumbo-spacing);
 }
 
 .program-management-admin-illustration-text-caps {
