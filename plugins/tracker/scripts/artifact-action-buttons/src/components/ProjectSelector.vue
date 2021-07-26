@@ -64,8 +64,8 @@ export default {
             },
         },
     },
-    async created() {
-        await this.$store.dispatch("loadTrackerList", getProjectId());
+    created() {
+        this.$store.commit("saveSelectedProjectId", getProjectId());
     },
     async mounted() {
         if (isListPickerEnabled()) {
