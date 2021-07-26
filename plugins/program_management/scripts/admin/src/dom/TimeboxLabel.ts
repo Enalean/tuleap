@@ -22,6 +22,8 @@ import type { RetrieveElement } from "./RetrieveElement";
 export type InputCallback = (value: string) => void;
 type Handler = () => void;
 
+const DISABLED_CLASSNAME = "tlp-form-element-disabled";
+
 export class TimeboxLabel {
     private handlers: Handler[] = [];
 
@@ -29,6 +31,16 @@ export class TimeboxLabel {
 
     get value(): string {
         return this.input.value;
+    }
+
+    disable(): void {
+        this.input.parentElement?.classList.add(DISABLED_CLASSNAME);
+        this.input.disabled = true;
+    }
+
+    enable(): void {
+        this.input.parentElement?.classList.remove(DISABLED_CLASSNAME);
+        this.input.disabled = false;
     }
 
     addInputListener(callback: InputCallback): void {

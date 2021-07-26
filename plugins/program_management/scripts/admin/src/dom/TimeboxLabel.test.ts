@@ -34,6 +34,33 @@ describe(`TimeboxLabel`, () => {
         expect(label.value).toEqual("lactonize");
     });
 
+    it(`disables the input and sets a class on its parent div`, () => {
+        const input = doc.createElement("input");
+        const form_element = doc.createElement("div");
+        form_element.classList.add("tlp-form-element");
+        form_element.append(input);
+
+        const label = TimeboxLabel.fromId(RetrieveElementStub.withElements(input), "some_id");
+        label.disable();
+
+        expect(form_element.classList.contains("tlp-form-element-disabled")).toBe(true);
+        expect(input.disabled).toBe(true);
+    });
+
+    it(`enables the input and removes a class on its parent div`, () => {
+        const input = doc.createElement("input");
+        input.disabled = true;
+        const form_element = doc.createElement("div");
+        form_element.classList.add("tlp-form-element", "tlp-form-element-disabled");
+        form_element.append(input);
+
+        const label = TimeboxLabel.fromId(RetrieveElementStub.withElements(input), "some_id");
+        label.enable();
+
+        expect(form_element.classList.contains("tlp-form-element-disabled")).toBe(false);
+        expect(input.disabled).toBe(false);
+    });
+
     it(`adds an event listener on "input" and calls the callback with the input's value`, () => {
         const input = doc.createElement("input");
         input.value = "Sicyonic";

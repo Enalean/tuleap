@@ -20,11 +20,11 @@
 import { RetrieveElementStub } from "../dom/RetrieveElementStub";
 import { TimeboxLabel } from "../dom/TimeboxLabel";
 import { PreviewActualizer } from "./PreviewActualizer";
-import { RetrieveNodeStub } from "../dom/RetrieveNodeStub";
+import { RetrieveContainedNodeStub } from "../dom/RetrieveContainedNodeStub";
 
 describe(`PreviewActualizer`, () => {
     let doc: Document,
-        retriever: RetrieveNodeStub,
+        retriever: RetrieveContainedNodeStub,
         label_input_element: HTMLInputElement,
         sub_label_input_element: HTMLInputElement;
     beforeEach(() => {
@@ -35,7 +35,7 @@ describe(`PreviewActualizer`, () => {
 
     it(`changes the illustration's label when the label input is changed`, () => {
         const timebox_label_element = doc.createElement("span");
-        retriever = RetrieveNodeStub.withNodes(
+        retriever = RetrieveContainedNodeStub.withNodes(
             timebox_label_element,
             doc.createElement("span"),
             doc.createElement("span"),
@@ -52,7 +52,7 @@ describe(`PreviewActualizer`, () => {
         const new_label_element = doc.createElement("span");
         const first_example_element = doc.createElement("span");
         const second_example_element = doc.createElement("span");
-        retriever = RetrieveNodeStub.withNodes(
+        retriever = RetrieveContainedNodeStub.withNodes(
             doc.createElement("span"),
             new_label_element,
             first_example_element,
@@ -72,7 +72,7 @@ describe(`PreviewActualizer`, () => {
         const new_label_element = doc.createElement("span");
         const first_example_element = doc.createElement("span");
         const second_example_element = doc.createElement("span");
-        retriever = RetrieveNodeStub.withNodes(
+        retriever = RetrieveContainedNodeStub.withNodes(
             timebox_label_element,
             new_label_element,
             first_example_element,
@@ -93,7 +93,7 @@ describe(`PreviewActualizer`, () => {
         const new_label_element = doc.createElement("span");
         const first_example_element = doc.createElement("span");
         const second_example_element = doc.createElement("span");
-        retriever = RetrieveNodeStub.withNodes(
+        retriever = RetrieveContainedNodeStub.withNodes(
             timebox_label_element,
             new_label_element,
             first_example_element,
@@ -128,7 +128,7 @@ describe(`PreviewActualizer`, () => {
             RetrieveElementStub.withElements(sub_label_input_element),
             "some_id"
         );
-        return PreviewActualizer.fromTimeboxLabels(
+        return PreviewActualizer.fromContainerAndTimeboxLabels(
             gettext_stub,
             retriever,
             label_input,

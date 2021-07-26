@@ -20,7 +20,7 @@
 import { TimeboxLabel } from "./TimeboxLabel";
 import { RetrieveElementStub } from "./RetrieveElementStub";
 import { ReactiveLabel } from "./ReactiveLabel";
-import { RetrieveNodeStub } from "./RetrieveNodeStub";
+import { RetrieveContainedNodeStub } from "./RetrieveContainedNodeStub";
 
 const svg_namespace = "http://www.w3.org/2000/svg";
 
@@ -38,7 +38,7 @@ describe(`ReactiveLabel`, () => {
     it(`applies the given callback to the input value and changes its node's text content`, () => {
         const node = doc.createElementNS(svg_namespace, "tspan");
         const reactive_label = ReactiveLabel.fromSelectorAndTimeboxLabel(
-            RetrieveNodeStub.withNodes(node),
+            RetrieveContainedNodeStub.withNodes(node),
             "some_selector",
             label_input
         );
@@ -52,7 +52,7 @@ describe(`ReactiveLabel`, () => {
         it(`applies the given callback to the input value and changes its node's text content`, () => {
             const node = doc.createElementNS(svg_namespace, "tspan");
             const reactive_label = ReactiveLabel.fromSelectorAndTimeboxLabel(
-                RetrieveNodeStub.withNodes(node),
+                RetrieveContainedNodeStub.withNodes(node),
                 "some_selector",
                 label_input
             );
@@ -66,7 +66,7 @@ describe(`ReactiveLabel`, () => {
         it(`does not react when told to stop reacting`, () => {
             const node = doc.createElementNS(svg_namespace, "tspan");
             const reactive_label = ReactiveLabel.fromSelectorAndTimeboxLabel(
-                RetrieveNodeStub.withNodes(node),
+                RetrieveContainedNodeStub.withNodes(node),
                 "some_selector",
                 label_input
             );

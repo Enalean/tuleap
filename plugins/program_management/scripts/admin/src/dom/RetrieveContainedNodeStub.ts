@@ -17,8 +17,24 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export interface RetrieveElement {
-    getInputById(id: string): HTMLInputElement;
-    getSelectById(id: string): HTMLSelectElement;
-    getElementById(id: string): Element;
+import type { RetrieveContainedNode } from "./RetrieveContainedNode";
+
+export class RetrieveContainedNodeStub implements RetrieveContainedNode {
+    private constructor(private readonly nodes: Node[]) {}
+
+    getNodeBySelector(): Node {
+        const node = this.nodes.shift();
+        if (!node) {
+            throw new Error("no nodes left to return in the stub");
+        }
+        return node;
+    }
+
+    getAllNodesBySelector(): Node[] {
+        return this.nodes;
+    }
+
+    static withNodes(...nodes: Node[]): RetrieveContainedNodeStub {
+        return new RetrieveContainedNodeStub(nodes);
+    }
 }

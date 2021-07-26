@@ -26,6 +26,9 @@ msgstr "Choisissez quels outils de suivi peuvent être planifiés"
 msgid "Choose who can prioritize and plan items"
 msgstr "Choisissez qui peut prioriser et planifier des éléments"
 
+msgid "Iterations"
+msgstr "Itérations"
+
 msgid "New %s"
 msgstr "Ajouter un(e) %s"
 
@@ -50,6 +53,9 @@ msgid ""
 msgstr ""
 "Ce champ est obligatoire, merci de choisir un ou plusieurs outil de suivi "
 "dans la liste."
+
+msgid "iteration"
+msgstr "itération"
 
 msgid "program increment"
 msgstr "incrément de programme"

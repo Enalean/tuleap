@@ -63,5 +63,5 @@ document.addEventListener("DOMContentLoaded", async () => {
     addTeamInProgram(program_id, document);
     await initListPickersMilestoneSection(document, gettext_provider, use_iteration);
     submitConfigurationHandler(document, gettext_provider, program_id, use_iteration);
-    initPreviewTrackerLabels(new DocumentAdapter(document), gettext_provider);
+    initPreviewTrackerLabels(new DocumentAdapter(document), gettext_provider, use_iteration);
 });
