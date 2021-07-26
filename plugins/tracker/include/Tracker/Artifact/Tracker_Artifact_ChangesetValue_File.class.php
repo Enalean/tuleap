@@ -242,7 +242,8 @@ class Tracker_Artifact_ChangesetValue_File extends Tracker_Artifact_ChangesetVal
                 $removed[] = $fi->getFilename();
             }
             if ($removed = implode(', ', $removed)) {
-                $result .= $removed . ' ' . dgettext('tuleap-tracker', 'removed');
+                $purifier = Codendi_HTMLPurifier::instance();
+                $result  .= $purifier->purify($removed) . ' ' . dgettext('tuleap-tracker', 'removed');
             }
 
             $added = $this->fetchAddedFiles(array_diff($this->files, $changeset_value->getFiles()), $format, $is_for_mail);
