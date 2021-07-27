@@ -76,7 +76,6 @@ describe("API querier", () => {
                 params: {
                     query: '{"is_tracker_admin":"true"}',
                     limit: 50,
-                    offset: 0,
                 },
             });
         });

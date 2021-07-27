@@ -40,7 +40,6 @@ function getTrackerList(project_id) {
                 is_tracker_admin: "true",
             }),
             limit: 50,
-            offset: 0,
         },
     });
 }

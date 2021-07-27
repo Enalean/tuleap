@@ -25,6 +25,9 @@ export default {
     resetProjectLoading(state) {
         state.is_loading_initial = false;
     },
+    saveSelectedProjectId(state, project_id) {
+        state.selected_project_id = project_id;
+    },
     loadingTrackersAfterProjectSelected(state, project_id) {
         state.are_trackers_loading = true;
         state.selected_project_id = project_id;
