@@ -601,6 +601,7 @@ done
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/www/assets/timetracking
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/www/assets/velocity
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/www/assets/oauth2_server
+%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/www/assets/document_generation
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/jira_import
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/program_management
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/www/assets/program_management
@@ -1507,6 +1508,7 @@ fi
 %files plugin-document_generation
 %defattr(-,root,root,-)
 %{APP_DIR}/plugins/document_generation
+%{APP_DIR}/src/www/assets/document_generation
 
 %endif
 

@@ -564,6 +564,10 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
         $my_items['export'] .= '</div>';
         $my_items['export'] .= $event->getAdditionalContentThatGoesOutsideOfTheMenu();
 
+        foreach ($event->getJavascriptAssets() as $javascript_asset) {
+            $GLOBALS['HTML']->includeFooterJavascriptFile($javascript_asset->getFileURL());
+        }
+
         return $my_items + parent::getOptionsMenuItems($current_user);
     }
 

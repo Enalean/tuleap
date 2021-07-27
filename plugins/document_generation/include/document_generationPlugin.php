@@ -20,6 +20,8 @@
 
 declare(strict_types=1);
 
+use Tuleap\Layout\IncludeAssets;
+use Tuleap\Layout\JavascriptAsset;
 use Tuleap\Tracker\Report\Renderer\Table\GetExportOptionsMenuItemsEvent;
 
 require_once __DIR__ . '/../vendor/autoload.php';
@@ -66,10 +68,26 @@ class document_generationPlugin extends Plugin
             return;
         }
 
+        $report_id = $event->getReport()->getId();
+
         $event->addExportItem(
             '<li>' .
-            '<a id="tracker-report-action-generate-document" href="#">' . dgettext('tuleap-document_generation', 'Generate document') . '</a>' .
+            '<a id="tracker-report-action-generate-document" href="#" data-report-id="' . $report_id . '">' .
+            dgettext('tuleap-document_generation', 'Generate document') .
+            '</a>' .
             '</li>'
         );
+
+        $document_generation_asset = new IncludeAssets(
+            __DIR__ . '/../../../src/www/assets/document_generation',
+            '/assets/document_generation'
+        );
+
+        $javascript_asset = new JavascriptAsset(
+            $document_generation_asset,
+            "tracker-report-action.js"
+        );
+
+        $event->addJavascriptAssets($javascript_asset);
     }
 }
