@@ -22,18 +22,22 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog;
 
+use Psr\Log\Test\TestLogger;
+use Tuleap\ProgramManagement\Adapter\Events\ArtifactUpdatedProxy;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\PlanUserStoriesInMirroredProgramIncrements;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\RemovePlannedFeaturesFromTopBacklog;
 use Tuleap\ProgramManagement\Stub\VerifyIsProgramIncrementTrackerStub;
+use Tuleap\ProgramManagement\Stub\VerifyIterationsFeatureActiveStub;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\Event\ArtifactUpdated;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class ArtifactUpdatedHandlerTest extends TestCase
 {
-    private ArtifactUpdated $event;
+    private ArtifactUpdatedProxy $event;
     private VerifyIsProgramIncrementTrackerStub $program_increment_verifier;
     /**
      * @var \PHPUnit\Framework\MockObject\MockObject|PlanUserStoriesInMirroredProgramIncrements
@@ -43,18 +47,26 @@ final class ArtifactUpdatedHandlerTest extends TestCase
      * @var \PHPUnit\Framework\MockObject\MockObject|RemovePlannedFeaturesFromTopBacklog
      */
     private $feature_remover;
+    private VerifyIterationsFeatureActiveStub $feature_flag_verifier;
+    private TestLogger $logger;
 
     protected function setUp(): void
     {
-        $this->event = new ArtifactUpdated(
-            ArtifactTestBuilder::anArtifact(87)->build(),
-            UserTestBuilder::aUser()->build(),
-            ProjectTestBuilder::aProject()->build(),
+        $tracker     = TrackerTestBuilder::aTracker()->withId(93)->build();
+        $artifact    = ArtifactTestBuilder::anArtifact(87)->inTracker($tracker)->build();
+        $this->event = ArtifactUpdatedProxy::fromArtifactUpdated(
+            new ArtifactUpdated(
+                $artifact,
+                UserTestBuilder::aUser()->build(),
+                ProjectTestBuilder::aProject()->build(),
+            )
         );
 
         $this->program_increment_verifier = VerifyIsProgramIncrementTrackerStub::buildValidProgramIncrement();
         $this->user_stories_planner       = $this->createMock(PlanUserStoriesInMirroredProgramIncrements::class);
         $this->feature_remover            = $this->createMock(RemovePlannedFeaturesFromTopBacklog::class);
+        $this->feature_flag_verifier      = VerifyIterationsFeatureActiveStub::withActiveFeature();
+        $this->logger                     = new TestLogger();
     }
 
     private function getHandler(): ArtifactUpdatedHandler
@@ -63,22 +75,40 @@ final class ArtifactUpdatedHandlerTest extends TestCase
             $this->program_increment_verifier,
             $this->user_stories_planner,
             $this->feature_remover,
+            $this->feature_flag_verifier,
+            $this->logger,
         );
     }
 
-    public function testItCleansUpTopBacklogAndPlansUserStories(): void
+    public function testItCleansUpTopBacklogAndPlansUserStoriesAndCreatesIterationMirrors(): void
     {
         $this->user_stories_planner->expects(self::once())->method('plan');
         $this->feature_remover->expects(self::once())->method('removeFeaturesPlannedInAProgramIncrementFromTopBacklog');
+
         $this->getHandler()->handle($this->event);
+
+        self::assertTrue($this->logger->hasDebug('Program increment artifact has been updated'));
     }
 
-    public function testItDoesNotPlanUserStoriesWhenEventArtifactIsNotProgramIncrement(): void
+    public function testItOnlyCleansUpTopBacklogWhenArtifactIsNotAProgramIncrement(): void
     {
         $this->program_increment_verifier = VerifyIsProgramIncrementTrackerStub::buildNotProgramIncrement();
-
         $this->user_stories_planner->expects(self::never())->method('plan');
         $this->feature_remover->expects(self::once())->method('removeFeaturesPlannedInAProgramIncrementFromTopBacklog');
+
         $this->getHandler()->handle($this->event);
+
+        self::assertFalse($this->logger->hasDebugRecords());
+    }
+
+    public function testItDoesNotCreateIterationMirrorsWhenIterationsAreDisabled(): void
+    {
+        $this->feature_flag_verifier = VerifyIterationsFeatureActiveStub::withDisabledFeature();
+        $this->feature_remover->expects(self::once())->method('removeFeaturesPlannedInAProgramIncrementFromTopBacklog');
+        $this->user_stories_planner->method('plan');
+
+        $this->getHandler()->handle($this->event);
+
+        self::assertFalse($this->logger->hasDebugRecords());
     }
 }

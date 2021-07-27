@@ -33,6 +33,8 @@ use Tuleap\Glyph\GlyphLocation;
 use Tuleap\Glyph\GlyphLocationsCollector;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Layout\ServiceUrlCollector;
+use Tuleap\ProgramManagement\Adapter\Events\ArtifactUpdatedProxy;
+use Tuleap\ProgramManagement\Adapter\FeatureFlag\ForgeConfigAdapter;
 use Tuleap\ProgramManagement\Adapter\Program\Admin\CanPrioritizeItems\UGroupRepresentationBuilder;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation\CreateProgramIncrementsRunner;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation\PendingArtifactCreationDao;
@@ -90,6 +92,7 @@ use Tuleap\ProgramManagement\Adapter\Workspace\UGroupManagerAdapter;
 use Tuleap\ProgramManagement\Adapter\Workspace\WorkspaceDAO;
 use Tuleap\ProgramManagement\DisplayAdminProgramManagementController;
 use Tuleap\ProgramManagement\DisplayProgramBacklogController;
+use Tuleap\ProgramManagement\Domain\FeatureFlag\VerifyIterationsFeatureActive;
 use Tuleap\ProgramManagement\Domain\Program\Admin\CanPrioritizeItems\ProjectUGroupCanPrioritizeItemsPresentersBuilder;
 use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ConfigurationErrorsCollector;
 use Tuleap\ProgramManagement\Domain\Program\Admin\PlannableTrackersConfiguration\PotentialPlannableTrackersConfigurationPresentersBuilder;
@@ -247,7 +250,7 @@ final class program_managementPlugin extends Plugin
 
     public function getWhitelistedKeys(GetWhitelistedKeys $event): void
     {
-        $event->addConfigClass(DisplayAdminProgramManagementController::class);
+        $event->addConfigClass(VerifyIterationsFeatureActive::class);
     }
 
     public function serviceUrlCollector(ServiceUrlCollector $collector): void
@@ -334,7 +337,8 @@ final class program_managementPlugin extends Plugin
             new ProgramIncrementsDAO(),
             new TrackerFactoryAdapter(TrackerFactory::instance()),
             new IterationsDAO(),
-            $program_dao
+            $program_dao,
+            new ForgeConfigAdapter()
         );
     }
 
@@ -402,8 +406,9 @@ final class program_managementPlugin extends Plugin
     public function trackerArtifactUpdated(ArtifactUpdated $event): void
     {
         $artifact_factory = Tracker_ArtifactFactory::instance();
+        $logger           = $this->getLogger();
 
-        $handler = new ArtifactUpdatedHandler(
+        $handler     = new ArtifactUpdatedHandler(
             new ProgramIncrementsDAO(),
             new UserStoriesInMirroredProgramIncrementsPlanner(
                 new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection()),
@@ -411,11 +416,14 @@ final class program_managementPlugin extends Plugin
                 $artifact_factory,
                 new MirroredTimeboxRetriever(new MirroredTimeboxesDao()),
                 new ContentDao(),
-                $this->getLogger()
+                $logger
             ),
-            new ArtifactsExplicitTopBacklogDAO()
+            new ArtifactsExplicitTopBacklogDAO(),
+            new ForgeConfigAdapter(),
+            $logger
         );
-        $handler->handle($event);
+        $event_proxy = ArtifactUpdatedProxy::fromArtifactUpdated($event);
+        $handler->handle($event_proxy);
     }
 
     public function trackerArtifactDeleted(ArtifactDeleted $artifact_deleted): void

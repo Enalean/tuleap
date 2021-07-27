@@ -22,22 +22,64 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement;
 
+use Tuleap\ProgramManagement\Adapter\Events\ArtifactUpdatedProxy;
 use Tuleap\ProgramManagement\Stub\CheckProgramIncrementStub;
+use Tuleap\ProgramManagement\Stub\VerifyIsProgramIncrementTrackerStub;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Tracker\Artifact\Event\ArtifactUpdated;
+use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class ProgramIncrementIdentifierTest extends \Tuleap\Test\PHPUnit\TestCase
 {
+    private \PFUser $user;
+
+    protected function setUp(): void
+    {
+        $this->user = UserTestBuilder::aUser()->build();
+    }
+
     public function testItThrowsAnExceptionWhenTrackerIsNotValid(): void
     {
-        $user = UserTestBuilder::aUser()->build();
         $this->expectException(ProgramIncrementNotFoundException::class);
-        ProgramIncrementIdentifier::fromId(CheckProgramIncrementStub::buildOtherArtifactChecker(), 1, $user);
+        ProgramIncrementIdentifier::fromId(CheckProgramIncrementStub::buildOtherArtifactChecker(), 1, $this->user);
     }
 
     public function testItBuildAProgramIncrement(): void
     {
-        $user    = UserTestBuilder::aUser()->build();
-        $tracker = ProgramIncrementIdentifier::fromId(CheckProgramIncrementStub::buildProgramIncrementChecker(), 1, $user);
-        self::assertEquals(1, $tracker->getId());
+        $program_increment = ProgramIncrementIdentifier::fromId(
+            CheckProgramIncrementStub::buildProgramIncrementChecker(),
+            1,
+            $this->user
+        );
+        self::assertEquals(1, $program_increment->getId());
+    }
+
+    public function testItReturnsNullWhenArtifactUpdatedIsNotAProgramIncrement(): void
+    {
+        self::assertNull(
+            ProgramIncrementIdentifier::fromArtifactUpdated(
+                VerifyIsProgramIncrementTrackerStub::buildNotProgramIncrement(),
+                $this->buildArtifactUpdated()
+            )
+        );
+    }
+
+    public function testItReturnsAProgramIncrementFromArtifactUpdated(): void
+    {
+        $program_increment = ProgramIncrementIdentifier::fromArtifactUpdated(
+            VerifyIsProgramIncrementTrackerStub::buildValidProgramIncrement(),
+            $this->buildArtifactUpdated()
+        );
+        self::assertSame(96, $program_increment->getId());
+    }
+
+    private function buildArtifactUpdated(): ArtifactUpdatedProxy
+    {
+        $tracker  = TrackerTestBuilder::aTracker()->withId(127)->build();
+        $artifact = ArtifactTestBuilder::anArtifact(96)->inTracker($tracker)->build();
+        $event    = new ArtifactUpdated($artifact, $this->user, ProjectTestBuilder::aProject()->build());
+        return ArtifactUpdatedProxy::fromArtifactUpdated($event);
     }
 }

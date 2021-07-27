@@ -22,15 +22,16 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement;
 
+use Tuleap\ProgramManagement\Adapter\Events\ArtifactUpdatedProxy;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracker\VerifyIsProgramIncrementTracker;
+
 /**
+ * I am the ID (identifier) of an Artifact from the Program Increment tracker.
  * @psalm-immutable
  */
 final class ProgramIncrementIdentifier
 {
-    /**
-     * @var int
-     */
-    private $id;
+    private int $id;
 
     private function __construct(int $id)
     {
@@ -53,5 +54,15 @@ final class ProgramIncrementIdentifier
         $check_program_increment->checkIsAProgramIncrement($program_increment_id, $user);
 
         return new self($program_increment_id);
+    }
+
+    public static function fromArtifactUpdated(
+        VerifyIsProgramIncrementTracker $program_increment_verifier,
+        ArtifactUpdatedProxy $artifact_updated
+    ): ?self {
+        if (! $program_increment_verifier->isProgramIncrementTracker($artifact_updated->tracker_id)) {
+            return null;
+        }
+        return new self($artifact_updated->artifact_id);
     }
 }

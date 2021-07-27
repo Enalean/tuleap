@@ -30,6 +30,7 @@ use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\ProgramManagement\Adapter\Program\Admin\Configuration\ConfigurationChecker;
 use Tuleap\ProgramManagement\Domain\BuildProject;
+use Tuleap\ProgramManagement\Domain\FeatureFlag\VerifyIterationsFeatureActive;
 use Tuleap\ProgramManagement\Domain\Program\Admin\CanPrioritizeItems\BuildProjectUGroupCanPrioritizeItemsPresenters;
 use Tuleap\ProgramManagement\Domain\Program\Admin\PlannableTrackersConfiguration\PotentialPlannableTrackersConfigurationPresentersBuilder;
 use Tuleap\ProgramManagement\Domain\Program\Admin\PotentialTeam\PotentialTeamsCollection;
@@ -68,13 +69,6 @@ use Tuleap\Request\NotFoundException;
 
 final class DisplayAdminProgramManagementController implements DispatchableWithRequest, DispatchableWithProject, DispatchableWithBurningParrot
 {
-    /**
-     * Display iteration section in program administration
-     *
-     * @tlp-config-feature-flag-key
-     */
-    public const FEATURE_FLAG_KEY = 'program_management_display_iteration';
-
     private RetrieveProject $project_manager;
     private \TemplateRenderer $template_renderer;
     private ProgramManagementBreadCrumbsBuilder $breadcrumbs_builder;
@@ -92,6 +86,7 @@ final class DisplayAdminProgramManagementController implements DispatchableWithR
     private RetrieveTrackerFromProgram $retrieve_tracker_from_program;
     private RetrieveIterationLabels $iteration_labels_retriever;
     private AllProgramSearcher $all_program_searcher;
+    private VerifyIterationsFeatureActive $feature_flag_verifier;
 
     public function __construct(
         RetrieveProject $project_manager,
@@ -110,7 +105,8 @@ final class DisplayAdminProgramManagementController implements DispatchableWithR
         RetrieveProgramIncrementLabels $program_increment_labels_retriever,
         RetrieveTrackerFromProgram $retrieve_tracker_from_program,
         RetrieveIterationLabels $iteration_labels_retriever,
-        AllProgramSearcher $all_program_searcher
+        AllProgramSearcher $all_program_searcher,
+        VerifyIterationsFeatureActive $feature_flag_verifier
     ) {
         $this->project_manager                      = $project_manager;
         $this->template_renderer                    = $template_renderer;
@@ -129,6 +125,7 @@ final class DisplayAdminProgramManagementController implements DispatchableWithR
         $this->retrieve_tracker_from_program        = $retrieve_tracker_from_program;
         $this->iteration_labels_retriever           = $iteration_labels_retriever;
         $this->all_program_searcher                 = $all_program_searcher;
+        $this->feature_flag_verifier                = $feature_flag_verifier;
     }
 
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
@@ -252,7 +249,7 @@ final class DisplayAdminProgramManagementController implements DispatchableWithR
                     $all_potential_trackers,
                     $iteration_tracker
                 )->presenters,
-                (bool) \ForgeConfig::getFeatureFlag(self::FEATURE_FLAG_KEY),
+                $this->feature_flag_verifier->isIterationsFeatureActive(),
                 $iteration_labels->label,
                 $iteration_labels->sub_label
             )
