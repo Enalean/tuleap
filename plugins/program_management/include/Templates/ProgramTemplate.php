@@ -55,7 +55,7 @@ class ProgramTemplate implements CategorisedTemplate
         $this->description = AsciiRegisteredToUnicodeConvertor::convertSafeRegisteredBecauseOurGettextExtractionIsClumsy(
             dgettext(
                 'tuleap-program_management',
-                'This Tuleap template helps align several teams to a shared business and technology mission applying the principles of the Essential Scaled Agile Framework(R). You can manage SAFe Agile Release Train (ART) and Program Increments (PI), Program Backlog, Program Kanban, Roadmap and ART artifacts as Features, Enablers, or Program Epics. This template has to be used with the Tuleap template "Essential SAFe(R) - Scrum Team"'
+                'This Tuleap template helps align several teams to a shared business and technology mission applying the principles of the Essential Scaled Agile Framework(R). You can manage SAFe Agile Release Train (ART) and Program Increments (PI), Program Backlog, Program Kanban, Roadmap and ART artifacts as Features, or Enablers. This template has to be used with the Tuleap template "Essential SAFe(R) - Scrum Team"'
             )
         );
 
