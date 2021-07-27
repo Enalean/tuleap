@@ -17,18 +17,24 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export interface ArtifactReportResponse {
-    values: Array<ArtifactReportResponseFieldValue>;
-}
+import type { ArtifactFieldValue, ArtifactReportResponse } from "../type";
 
-interface ArtifactReportResponseFieldValue {
-    field_id: number;
-    type: string;
-    label: string;
-    value: number;
-}
+export function createArtifactValuesCollection(
+    report_artifacts: ArtifactReportResponse[]
+): Array<ArtifactFieldValue> {
+    const artifact_data = [];
+    for (const artifact of report_artifacts) {
+        const fields_content = [];
+        for (const value of artifact.values) {
+            if (value.type === "aid") {
+                fields_content.push({
+                    field_name: value.label,
+                    field_value: value.value,
+                });
+            }
+        }
+        artifact_data.push(...fields_content);
+    }
 
-export interface ArtifactFieldValue {
-    field_name: string;
-    field_value: number;
+    return artifact_data;
 }
