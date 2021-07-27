@@ -97,6 +97,11 @@
     margin: 0 auto var(--tlp-medium-spacing) auto;
 }
 
+.program-management-admin-form {
+    display: flex;
+    flex-direction: column;
+}
+
 .admin-configuration-container-milestone {
     border-bottom: 1px solid var(--tlp-neutral-normal-color);
 }
