@@ -21,6 +21,7 @@
 namespace Tuleap\Tracker\Report\Renderer\Table;
 
 use Tuleap\Event\Dispatchable;
+use Tuleap\Layout\JavascriptAsset;
 
 class GetExportOptionsMenuItemsEvent implements Dispatchable
 {
@@ -41,6 +42,10 @@ class GetExportOptionsMenuItemsEvent implements Dispatchable
      * @var string
      */
     private $additional_content;
+    /**
+     * @var JavascriptAsset[]
+     */
+    private array $javascript_assets = [];
 
     public function __construct(\Tracker_Report_Renderer_Table $renderer_table)
     {
@@ -87,5 +92,18 @@ class GetExportOptionsMenuItemsEvent implements Dispatchable
     public function getAdditionalContentThatGoesOutsideOfTheMenu()
     {
         return $this->additional_content;
+    }
+
+    /**
+     * @return JavascriptAsset[]
+     */
+    public function getJavascriptAssets(): array
+    {
+        return $this->javascript_assets;
+    }
+
+    public function addJavascriptAssets(JavascriptAsset $javascript_asset): void
+    {
+        $this->javascript_assets[] = $javascript_asset;
     }
 }
