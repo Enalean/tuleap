@@ -72,7 +72,7 @@
                 <label for="document-approval-table-status" class="tlp-label" v-translate>
                     Approval table status
                 </label>
-                <approval-table-badge
+                <approval-badge
                     id="document-approval-table-status"
                     v-bind:item="item"
                     v-bind:is-in-folder-content-row="false"
@@ -102,14 +102,14 @@ import { formatDateUsingPreferredUserFormat } from "../../../helpers/date-format
 import UserBadge from "../../User/UserBadge.vue";
 import { TYPE_FILE, TYPE_FOLDER } from "../../../constants";
 import QuickLookDocumentAdditionalMetadataList from "./QuickLookDocumentAdditionalMetadataList.vue";
-import ApprovalTableBadge from "../ApprovalTables/ApprovalTableBadge.vue";
+import ApprovalBadge from "../ApprovalTables/ApprovalBadge.vue";
 import {
     relativeDatePlacement,
     relativeDatePreference,
 } from "@tuleap/core/scripts/tuleap/custom-elements/relative-date/relative-date-helper";
 
 export default {
-    components: { ApprovalTableBadge, QuickLookDocumentAdditionalMetadataList, UserBadge },
+    components: { ApprovalBadge, QuickLookDocumentAdditionalMetadataList, UserBadge },
     props: {
         item: Object,
     },
