@@ -110,5 +110,62 @@
     "slevomat/coding-standard": "^6.0",
     "squizlabs/php_codesniffer": "^3.4",
     "vimeo/psalm": "^4.0"
+  },
+  "tuleap": {
+    "preload": {
+      "include": [
+        "/common",
+        "/vendor/paragonie",
+        "/vendor/graylog2",
+        "/vendor/monolog",
+        "/vendor/tuleap",
+        "/vendor/nikic",
+        "/vendor/league",
+        "/vendor/psr",
+        "/vendor/mustache",
+        "/vendor/symfony/var-exporter",
+        "/vendor/ezyang",
+        "/vendor/guzzlehttp",
+        "/vendor/luracast",
+        "/vendor/container-interop",
+        "/vendor/laminas/laminas-zendframework-bridge",
+        "/vendor/laminas/laminas-stdlib",
+        "/vendor/laminas/laminas-servicemanager",
+        "/vendor/laminas/laminas-httphandlerrunner",
+        "/vendor/laminas/laminas-eventmanager",
+        "/vendor/laminas/laminas-cache"
+      ],
+      "exclude": [
+        "/common/chart",
+        "/common/CLI",
+        "/common/ConcurrentVersionsSystem",
+        "/common/Config/InvalidConfigKeyException.php",
+        "/common/Cron",
+        "/common/docmanv1",
+        "/common/Forum",
+        "/common/FRS",
+        "/common/html",
+        "/common/Jenkins",
+        "/common/mail",
+        "/common/mailing_list",
+        "/common/MailingList",
+        "/common/Queue/TaskWorker/TaskWorkerProcessCommand.php",
+        "/common/News",
+        "/common/Plugin/PluginInstallCommand.php",
+        "/common/User/Profile/ForceRegenerationDefaultAvatarCommand.php",
+        "/common/Reference/ReferenceOpenGraph.php",
+        "/common/Reference/ReferenceGetTooltipChainOpenGraph.php",
+        "/common/RSS",
+        "/common/soap",
+        "/common/tracker",
+        "/common/wiki",
+        "/vendor/monolog/monolog/src/Monolog/Test",
+        "/vendor/monolog/monolog/src/Monolog/Handler",
+        "/vendor/psr/log/Psr/Log/Test",
+        "/vendor/league/commonmark/src/Input",
+        "/vendor/laminas/laminas-stdlib/src/ConsoleHelper.php",
+        "/vendor/league/commonmark/src/Extension/TableOfContents/TableOfContents.php"
+      ]
+    }
   }
 }

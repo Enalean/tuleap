@@ -7,5 +7,12 @@
   },
   "config": {
     "sort-packages": true
+  },
+  "tuleap": {
+    "preload": {
+      "include": [
+        "/include"
+      ]
+    }
   }
 }
