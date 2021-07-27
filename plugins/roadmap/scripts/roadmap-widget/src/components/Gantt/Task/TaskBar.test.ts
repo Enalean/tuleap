@@ -48,10 +48,10 @@ describe("TaskBar", () => {
         });
 
         const progress_bar = wrapper.find("[data-test=progress]");
-        expect(progress_bar.element.style.width).toBe("40%");
+        expect((progress_bar.element as HTMLElement).style.width).toBe("40%");
 
         await wrapper.setProps({ task: { ...task, progress: 0.7 } });
-        expect(progress_bar.element.style.width).toBe("70%");
+        expect((progress_bar.element as HTMLElement).style.width).toBe("70%");
     });
 
     it("should display a full progress bar when the task does not have any progress", () => {

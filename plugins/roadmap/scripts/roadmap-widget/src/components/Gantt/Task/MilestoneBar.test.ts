@@ -34,7 +34,7 @@ describe("MilestoneBar", () => {
             },
         });
 
-        expect(wrapper.element.style.left).toBe("123px");
+        expect((wrapper.element as HTMLElement).style.left).toBe("123px");
         expect(wrapper.element.children[0].tagName.toLowerCase()).toBe("svg");
     });
 });

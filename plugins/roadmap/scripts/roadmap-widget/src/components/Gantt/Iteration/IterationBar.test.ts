@@ -62,7 +62,7 @@ describe("IterationBar", () => {
                 },
             });
 
-            expect(wrapper.element.style.height).toBe("106px");
+            expect((wrapper.element as HTMLElement).style.height).toBe("106px");
         });
 
         it("when there are many visible rows but the iteration is at level 1 and there is another level under", () => {
@@ -100,7 +100,7 @@ describe("IterationBar", () => {
                 },
             });
 
-            expect(wrapper.element.style.height).toBe("130px");
+            expect((wrapper.element as HTMLElement).style.height).toBe("130px");
         });
     });
 });

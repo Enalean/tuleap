@@ -56,7 +56,7 @@ describe("TodayIndicator", () => {
         }).format(now);
 
         expect(wrapper.classes()).toContain("roadmap-gantt-today");
-        expect(wrapper.element.title).toBe(`Today: ${expected_today_date}`);
-        expect(wrapper.element.style.left).toBe("146px");
+        expect((wrapper.element as HTMLElement).title).toBe(`Today: ${expected_today_date}`);
+        expect((wrapper.element as HTMLElement).style.left).toBe("146px");
     });
 });
