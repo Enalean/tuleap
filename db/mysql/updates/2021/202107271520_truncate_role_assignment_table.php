@@ -21,23 +21,15 @@
 declare(strict_types=1);
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
-final class b202106071630_truncate_role_assignment_table extends ForgeUpgrade_Bucket
+final class b202107271520_truncate_role_assignment_table extends \Tuleap\ForgeUpgrade\Bucket
 {
     public function description(): string
     {
         return 'Truncate plugin_baseline_role_assignment table';
     }
 
-    public function preUp(): void
-    {
-        $this->db = $this->getApi('ForgeUpgrade_Bucket_Db');
-    }
-
     public function up(): void
     {
-        $result = $this->db->dbh->exec('TRUNCATE TABLE plugin_baseline_role_assignment');
-        if ($result === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occurred while truncating plugin_baseline_role_assignment');
-        }
+        $this->api->dbh->exec('TRUNCATE TABLE plugin_baseline_role_assignment');
     }
 }
