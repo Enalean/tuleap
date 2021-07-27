@@ -20,18 +20,17 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Adapter\Program\Plan;
+namespace Tuleap\ProgramManagement\Domain\Program\Plan;
 
 use Project_AccessException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Content\RetrieveProjectUgroupsCanPrioritizeItems;
-use Tuleap\ProgramManagement\Domain\Program\Plan\VerifyPrioritizeFeaturesPermission;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\Workspace\RetrieveProject;
 use Tuleap\ProgramManagement\Domain\Workspace\RetrieveUser;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\Project\CheckProjectAccess;
 
-class PrioritizeFeaturesPermissionVerifier implements VerifyPrioritizeFeaturesPermission
+final class PrioritizeFeaturesPermissionVerifier implements VerifyPrioritizeFeaturesPermission
 {
     private RetrieveProjectUgroupsCanPrioritizeItems $can_prioritize_features_dao;
     private RetrieveProject $project_manager;

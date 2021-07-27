@@ -26,7 +26,7 @@ use Tuleap\ProgramManagement\Domain\Program\Plan\VerifyPrioritizeFeaturesPermiss
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 
-final class VerifyPrioritizeFeaturePermissionStub implements VerifyPrioritizeFeaturesPermission
+final class VerifyPrioritizeFeaturesPermissionStub implements VerifyPrioritizeFeaturesPermission
 {
     private bool $is_authorized;
 

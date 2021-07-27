@@ -31,7 +31,7 @@ use Tuleap\ProgramManagement\Stub\BuildProgramStub;
 use Tuleap\ProgramManagement\Stub\CheckProgramIncrementStub;
 use Tuleap\ProgramManagement\Stub\VerifyCanBePlannedInProgramIncrementStub;
 use Tuleap\ProgramManagement\Stub\VerifyIsVisibleFeatureStub;
-use Tuleap\ProgramManagement\Stub\VerifyPrioritizeFeaturePermissionStub;
+use Tuleap\ProgramManagement\Stub\VerifyPrioritizeFeaturesPermissionStub;
 use Tuleap\Test\Builders\UserTestBuilder;
 
 final class FeatureAdditionTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -48,7 +48,7 @@ final class FeatureAdditionTest extends \Tuleap\Test\PHPUnit\TestCase
             VerifyCanBePlannedInProgramIncrementStub::buildNotPlannableVerifier(),
             $feature,
             $program_increment,
-            UserCanPrioritize::fromUser(VerifyPrioritizeFeaturePermissionStub::canPrioritize(), $user, $program)
+            UserCanPrioritize::fromUser(VerifyPrioritizeFeaturesPermissionStub::canPrioritize(), $user, $program)
         );
     }
 
@@ -58,7 +58,7 @@ final class FeatureAdditionTest extends \Tuleap\Test\PHPUnit\TestCase
         $program_increment   = ProgramIncrementIdentifier::fromId(CheckProgramIncrementStub::buildProgramIncrementChecker(), 89, $user);
         $program             = ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 110, $user);
         $feature             = FeatureIdentifier::fromId(VerifyIsVisibleFeatureStub::buildVisibleFeature(), 741, $user, $program);
-        $user_can_prioritize = UserCanPrioritize::fromUser(VerifyPrioritizeFeaturePermissionStub::canPrioritize(), $user, $program);
+        $user_can_prioritize = UserCanPrioritize::fromUser(VerifyPrioritizeFeaturesPermissionStub::canPrioritize(), $user, $program);
         $payload             = FeatureAddition::fromFeature(
             VerifyCanBePlannedInProgramIncrementStub::buildCanBePlannedVerifier(),
             $feature,

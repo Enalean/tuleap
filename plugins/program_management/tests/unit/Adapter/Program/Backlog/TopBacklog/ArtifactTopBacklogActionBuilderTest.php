@@ -25,11 +25,12 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\Layout\JavascriptAsset;
-use Tuleap\ProgramManagement\Adapter\Program\Plan\PrioritizeFeaturesPermissionVerifier;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\TopBacklogActionArtifactSourceInformation;
 use Tuleap\ProgramManagement\Domain\Program\Plan\BuildProgram;
 use Tuleap\ProgramManagement\Domain\Program\Plan\PlanStore;
+use Tuleap\ProgramManagement\Domain\Program\Plan\VerifyPrioritizeFeaturesPermission;
 use Tuleap\ProgramManagement\Stub\BuildProgramStub;
+use Tuleap\ProgramManagement\Stub\VerifyPrioritizeFeaturesPermissionStub;
 use Tuleap\Test\Builders\IncludeAssetsBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 
@@ -37,14 +38,7 @@ final class ArtifactTopBacklogActionBuilderTest extends \Tuleap\Test\PHPUnit\Tes
 {
     use MockeryPHPUnitIntegration;
 
-    /**
-     * @var BuildProgram
-     */
-    private $build_program;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|PrioritizeFeaturesPermissionVerifier
-     */
-    private $prioritize_features_permission_verifier;
+    private BuildProgram $build_program;
     /**
      * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|PlanStore
      */
@@ -60,11 +54,10 @@ final class ArtifactTopBacklogActionBuilderTest extends \Tuleap\Test\PHPUnit\Tes
 
     protected function setUp(): void
     {
-        $this->build_program                           = BuildProgramStub::stubValidProgram();
-        $this->prioritize_features_permission_verifier = \Mockery::mock(PrioritizeFeaturesPermissionVerifier::class);
-        $this->plan_store                              = \Mockery::mock(PlanStore::class);
-        $this->artifacts_explicit_top_backlog_dao      = \Mockery::mock(ArtifactsExplicitTopBacklogDAO::class);
-        $this->planned_feature_dao                     = \Mockery::mock(PlannedFeatureDAO::class);
+        $this->build_program                      = BuildProgramStub::stubValidProgram();
+        $this->plan_store                         = \Mockery::mock(PlanStore::class);
+        $this->artifacts_explicit_top_backlog_dao = \Mockery::mock(ArtifactsExplicitTopBacklogDAO::class);
+        $this->planned_feature_dao                = \Mockery::mock(PlannedFeatureDAO::class);
     }
 
     public function testBuildsActionForAnUnplannedArtifact(): void
@@ -72,12 +65,11 @@ final class ArtifactTopBacklogActionBuilderTest extends \Tuleap\Test\PHPUnit\Tes
         $user                = UserTestBuilder::aUser()->build();
         $source_information  = new TopBacklogActionArtifactSourceInformation(888, 140, 102);
         $this->build_program = BuildProgramStub::stubValidProgram();
-        $this->prioritize_features_permission_verifier->shouldReceive('canUserPrioritizeFeatures')->andReturn(true);
         $this->artifacts_explicit_top_backlog_dao->shouldReceive('isInTheExplicitTopBacklog')->andReturn(false);
         $this->plan_store->shouldReceive('isPlannable')->andReturn(true);
         $this->planned_feature_dao->shouldReceive('isFeaturePlannedInAProgramIncrement')->andReturn(false);
 
-        self::assertNotNull($this->getBuilder()->buildTopBacklogActionBuilder($source_information, $user));
+        self::assertNotNull($this->getBuilder(VerifyPrioritizeFeaturesPermissionStub::canPrioritize())->buildTopBacklogActionBuilder($source_information, $user));
     }
 
     public function testBuildsActionForAnArtifactInTheTopBacklog(): void
@@ -85,17 +77,16 @@ final class ArtifactTopBacklogActionBuilderTest extends \Tuleap\Test\PHPUnit\Tes
         $user                = UserTestBuilder::aUser()->build();
         $source_information  = new TopBacklogActionArtifactSourceInformation(999, 140, 102);
         $this->build_program = BuildProgramStub::stubValidProgram();
-        $this->prioritize_features_permission_verifier->shouldReceive('canUserPrioritizeFeatures')->andReturn(true);
         $this->artifacts_explicit_top_backlog_dao->shouldReceive('isInTheExplicitTopBacklog')->andReturn(true);
 
-        self::assertNotNull($this->getBuilder()->buildTopBacklogActionBuilder($source_information, $user));
+        self::assertNotNull($this->getBuilder(VerifyPrioritizeFeaturesPermissionStub::canPrioritize())->buildTopBacklogActionBuilder($source_information, $user));
     }
 
     public function testNoActionIsBuiltForArtifactsThatAreNotInAProgramProject(): void
     {
         $source_information  = new TopBacklogActionArtifactSourceInformation(400, 140, 102);
         $this->build_program = BuildProgramStub::stubInvalidProgram();
-        self::assertNull($this->getBuilder()->buildTopBacklogActionBuilder($source_information, UserTestBuilder::aUser()->build()));
+        self::assertNull($this->getBuilder(VerifyPrioritizeFeaturesPermissionStub::canPrioritize())->buildTopBacklogActionBuilder($source_information, UserTestBuilder::aUser()->build()));
     }
 
     public function testNoActionIsBuiltForUsersThatCannotPrioritizeFeatures(): void
@@ -103,9 +94,8 @@ final class ArtifactTopBacklogActionBuilderTest extends \Tuleap\Test\PHPUnit\Tes
         $user                = UserTestBuilder::aUser()->build();
         $source_information  = new TopBacklogActionArtifactSourceInformation(401, 140, 102);
         $this->build_program = BuildProgramStub::stubValidProgram();
-        $this->prioritize_features_permission_verifier->shouldReceive('canUserPrioritizeFeatures')->andReturn(false);
 
-        self::assertNull($this->getBuilder()->buildTopBacklogActionBuilder($source_information, $user));
+        self::assertNull($this->getBuilder(VerifyPrioritizeFeaturesPermissionStub::cannotPrioritize())->buildTopBacklogActionBuilder($source_information, $user));
     }
 
     public function testNoActionIsBuiltForArtifactsThatAreNotPlannable(): void
@@ -113,11 +103,10 @@ final class ArtifactTopBacklogActionBuilderTest extends \Tuleap\Test\PHPUnit\Tes
         $user                = UserTestBuilder::aUser()->build();
         $source_information  = new TopBacklogActionArtifactSourceInformation(2, 140, 102);
         $this->build_program = BuildProgramStub::stubValidProgram();
-        $this->prioritize_features_permission_verifier->shouldReceive('canUserPrioritizeFeatures')->andReturn(true);
         $this->artifacts_explicit_top_backlog_dao->shouldReceive('isInTheExplicitTopBacklog')->andReturn(false);
         $this->plan_store->shouldReceive('isPlannable')->andReturn(false);
 
-        self::assertNull($this->getBuilder()->buildTopBacklogActionBuilder($source_information, $user));
+        self::assertNull($this->getBuilder(VerifyPrioritizeFeaturesPermissionStub::canPrioritize())->buildTopBacklogActionBuilder($source_information, $user));
     }
 
     public function testNoActionIsBuiltForArtifactsThatArePlannedInAProgramIncrement(): void
@@ -125,19 +114,18 @@ final class ArtifactTopBacklogActionBuilderTest extends \Tuleap\Test\PHPUnit\Tes
         $user                = UserTestBuilder::aUser()->build();
         $source_information  = new TopBacklogActionArtifactSourceInformation(3, 140, 102);
         $this->build_program = BuildProgramStub::stubValidProgram();
-        $this->prioritize_features_permission_verifier->shouldReceive('canUserPrioritizeFeatures')->andReturn(true);
         $this->artifacts_explicit_top_backlog_dao->shouldReceive('isInTheExplicitTopBacklog')->andReturn(false);
         $this->plan_store->shouldReceive('isPlannable')->andReturn(true);
         $this->planned_feature_dao->shouldReceive('isFeaturePlannedInAProgramIncrement')->andReturn(true);
 
-        self::assertNull($this->getBuilder()->buildTopBacklogActionBuilder($source_information, $user));
+        self::assertNull($this->getBuilder(VerifyPrioritizeFeaturesPermissionStub::canPrioritize())->buildTopBacklogActionBuilder($source_information, $user));
     }
 
-    private function getBuilder(): ArtifactTopBacklogActionBuilder
+    private function getBuilder(VerifyPrioritizeFeaturesPermission $prioritize_features_permission_verifier): ArtifactTopBacklogActionBuilder
     {
         return new ArtifactTopBacklogActionBuilder(
             $this->build_program,
-            $this->prioritize_features_permission_verifier,
+            $prioritize_features_permission_verifier,
             $this->plan_store,
             $this->artifacts_explicit_top_backlog_dao,
             $this->planned_feature_dao,
