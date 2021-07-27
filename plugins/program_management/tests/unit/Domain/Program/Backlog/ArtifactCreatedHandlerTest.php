@@ -20,10 +20,12 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation;
+namespace Tuleap\ProgramManagement\Domain\Program\Backlog;
 
 use Psr\Log\NullLogger;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracker\VerifyIsProgramIncrementTracker;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\PendingArtifactCreationStore;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\RunProgramIncrementCreation;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\RemovePlannedFeaturesFromTopBacklog;
 use Tuleap\ProgramManagement\Domain\Program\VerifyIsProgram;
 use Tuleap\ProgramManagement\Stub\VerifyIsProgramIncrementTrackerStub;
 use Tuleap\ProgramManagement\Stub\VerifyIsProgramStub;
@@ -35,6 +37,10 @@ use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class ArtifactCreatedHandlerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
+    private int $artifact_id     = 1;
+    private int $current_user_id = 1001;
+    private int $changeset_id    = 21;
+    private ArtifactCreated $event;
     /**
      * @var \PHPUnit\Framework\MockObject\MockObject|PendingArtifactCreationStore
      */
@@ -43,76 +49,70 @@ final class ArtifactCreatedHandlerTest extends \Tuleap\Test\PHPUnit\TestCase
      * @var \PHPUnit\Framework\MockObject\Stub|RunProgramIncrementCreation
      */
     private $asyncronous_runner;
+    /**
+     * @var \PHPUnit\Framework\MockObject\MockObject|RemovePlannedFeaturesFromTopBacklog
+     */
+    private $feature_remover;
     private VerifyIsProgram $program_verifier;
+    private VerifyIsProgramIncrementTrackerStub $program_increment_verifier;
 
     protected function setUp(): void
     {
+        $project = ProjectTestBuilder::aProject()->withId(101)->build();
+        $tracker = TrackerTestBuilder::aTracker()->withId(15)->withProject($project)->build();
+
+        $current_user = UserTestBuilder::aUser()->withId($this->current_user_id)->build();
+        $artifact     = new Artifact($this->artifact_id, $tracker->getId(), $current_user->getId(), 12345678, false);
+        $artifact->setTracker($tracker);
+        $changeset   = new \Tracker_Artifact_Changeset($this->changeset_id, $artifact, 36, 12345678, '');
+        $this->event = new ArtifactCreated($artifact, $changeset, $current_user);
+
+        $this->program_increment_verifier      = VerifyIsProgramIncrementTrackerStub::buildValidProgramIncrement();
         $this->program_verifier                = VerifyIsProgramStub::withValidProgram();
         $this->pending_artifact_creation_store = $this->createMock(PendingArtifactCreationStore::class);
         $this->asyncronous_runner              = $this->createMock(RunProgramIncrementCreation::class);
+        $this->feature_remover                 = $this->createMock(RemovePlannedFeaturesFromTopBacklog::class);
     }
 
-    private function getHandler(VerifyIsProgramIncrementTracker $verifier): ArtifactCreatedHandler
+    private function getHandler(): ArtifactCreatedHandler
     {
         return new ArtifactCreatedHandler(
             $this->program_verifier,
             $this->asyncronous_runner,
             $this->pending_artifact_creation_store,
-            $verifier,
+            $this->program_increment_verifier,
+            $this->feature_remover,
             new NullLogger()
         );
     }
 
-    public function testHandleDelegatesToAsynchronousMirrorCreator(): void
+    public function testHandleCleansUpTopBacklogAndDelegatesToAsynchronousMirrorCreator(): void
     {
-        $project = ProjectTestBuilder::aProject()->withId(101)->build();
-        $tracker = TrackerTestBuilder::aTracker()->withId(15)->withProject($project)->build();
-
-        $current_user = UserTestBuilder::aUser()->withId(1001)->build();
-        $artifact     = new Artifact(1, $tracker->getId(), $current_user->getId(), 12345678, false);
-        $artifact->setTracker($tracker);
-        $changeset = new \Tracker_Artifact_Changeset(21, $artifact, 36, 12345678, '');
-
+        $this->feature_remover->expects(self::once())->method('removeFeaturesPlannedInAProgramIncrementFromTopBacklog');
         $this->pending_artifact_creation_store->expects(self::once())
             ->method('addArtifactToPendingCreation')
-            ->with($artifact->getId(), $current_user->getId(), $changeset->getId());
+            ->with($this->artifact_id, $this->current_user_id, $this->changeset_id);
 
         $this->asyncronous_runner->expects(self::once())->method('executeProgramIncrementsCreation');
 
-        $handler = $this->getHandler(VerifyIsProgramIncrementTrackerStub::buildValidProgramIncrement());
-        $handler->handle(new ArtifactCreated($artifact, $changeset, $current_user));
+        $this->getHandler()->handle($this->event);
     }
 
     public function testHandleReactsOnlyToArtifactsFromProgramProjects(): void
     {
-        $project                = ProjectTestBuilder::aProject()->withId(101)->build();
-        $tracker                = TrackerTestBuilder::aTracker()->withId(15)->withProject($project)->build();
         $this->program_verifier = VerifyIsProgramStub::withNotValidProgram();
-
-        $current_user = UserTestBuilder::aUser()->build();
-        $artifact     = new Artifact(1, $tracker->getId(), $current_user->getId(), 12345678, false);
-        $artifact->setTracker($tracker);
-        $changeset = new \Tracker_Artifact_Changeset(21, $artifact, 36, 12345678, '');
-
+        $this->feature_remover->expects(self::once())->method('removeFeaturesPlannedInAProgramIncrementFromTopBacklog');
         $this->asyncronous_runner->expects(self::never())->method('executeProgramIncrementsCreation');
 
-        $handler = $this->getHandler(VerifyIsProgramIncrementTrackerStub::buildValidProgramIncrement());
-        $handler->handle(new ArtifactCreated($artifact, $changeset, $current_user));
+        $this->getHandler()->handle($this->event);
     }
 
     public function testHandleReactsOnlyToTrackersThatAreProgramIncrements(): void
     {
-        $project = ProjectTestBuilder::aProject()->withId(101)->build();
-        $tracker = TrackerTestBuilder::aTracker()->withId(15)->withProject($project)->build();
-
-        $current_user = UserTestBuilder::aUser()->build();
-        $artifact     = new Artifact(1, $tracker->getId(), $current_user->getId(), 12345678, false);
-        $artifact->setTracker($tracker);
-        $changeset = new \Tracker_Artifact_Changeset(21, $artifact, 36, 12345678, '');
-
+        $this->program_increment_verifier = VerifyIsProgramIncrementTrackerStub::buildNotProgramIncrement();
+        $this->feature_remover->expects(self::once())->method('removeFeaturesPlannedInAProgramIncrementFromTopBacklog');
         $this->asyncronous_runner->expects(self::never())->method('executeProgramIncrementsCreation');
 
-        $handler = $this->getHandler(VerifyIsProgramIncrementTrackerStub::buildNotProgramIncrement());
-        $handler->handle(new ArtifactCreated($artifact, $changeset, $current_user));
+        $this->getHandler()->handle($this->event);
     }
 }

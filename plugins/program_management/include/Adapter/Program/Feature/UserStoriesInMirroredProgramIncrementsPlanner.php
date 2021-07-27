@@ -76,10 +76,6 @@ class UserStoriesInMirroredProgramIncrementsPlanner implements PlanUserStoriesIn
         $this->artifacts_linked_to_parent_dao = $artifacts_linked_to_parent_dao;
     }
 
-    /**
-     * @throws \Tuleap\ProgramManagement\Domain\Program\Plan\PlannableTrackerCannotBeEmptyException
-     * @throws \Tuleap\ProgramManagement\Domain\Program\ProgramTrackerException
-     */
     public function plan(ProgramIncrementChanged $program_increment_changed): void
     {
         $this->logger->debug("Check if we need to plan/unplan items in mirrored releases.");

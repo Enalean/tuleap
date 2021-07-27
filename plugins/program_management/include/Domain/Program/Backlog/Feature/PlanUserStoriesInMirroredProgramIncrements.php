@@ -24,9 +24,5 @@ namespace Tuleap\ProgramManagement\Domain\Program\Backlog\Feature;
 
 interface PlanUserStoriesInMirroredProgramIncrements
 {
-    /**
-     * @throws \Tuleap\ProgramManagement\Domain\Program\Plan\PlannableTrackerCannotBeEmptyException
-     * @throws \Tuleap\ProgramManagement\Domain\Program\ProgramTrackerException
-     */
     public function plan(ProgramIncrementChanged $program_increment_changed): void;
 }

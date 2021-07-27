@@ -18,21 +18,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
-
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog;
 
-interface TopBacklogStore
+interface RemovePlannedFeaturesFromTopBacklog
 {
-    public function isInTheExplicitTopBacklog(int $artifact_id): bool;
-
-    /**
-     * @psalm-param non-empty-array<int> $artifact_ids
-     */
-    public function addArtifactsToTheExplicitTopBacklog(array $artifact_ids): void;
-
-    /**
-     * @psalm-param non-empty-array<int> $artifact_ids
-     */
-    public function removeArtifactsFromExplicitTopBacklog(array $artifact_ids): void;
+    public function removeFeaturesPlannedInAProgramIncrementFromTopBacklog(int $potential_program_increment_id): void;
 }

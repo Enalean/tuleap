@@ -34,8 +34,6 @@ use Tuleap\Glyph\GlyphLocationsCollector;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Layout\ServiceUrlCollector;
 use Tuleap\ProgramManagement\Adapter\Program\Admin\CanPrioritizeItems\UGroupRepresentationBuilder;
-use Tuleap\ProgramManagement\Adapter\Workspace\UGroupManagerAdapter;
-use Tuleap\ProgramManagement\Domain\Program\Admin\CanPrioritizeItems\ProjectUGroupCanPrioritizeItemsPresentersBuilder;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation\CreateProgramIncrementsRunner;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation\PendingArtifactCreationDao;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation\TaskBuilder;
@@ -62,8 +60,6 @@ use Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\MassChangeTopBac
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\MassChangeTopBacklogSourceInformation;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\PlannedFeatureDAO;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\ProcessTopBacklogChange;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\TopBacklogActionArtifactSourceInformation;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\TopBacklogActionMassChangeSourceInformation;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\Workflow\AddToTopBacklogPostAction;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\Workflow\AddToTopBacklogPostActionDAO;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\Workflow\AddToTopBacklogPostActionFactory;
@@ -90,25 +86,29 @@ use Tuleap\ProgramManagement\Adapter\Team\TeamDao;
 use Tuleap\ProgramManagement\Adapter\Workspace\ProjectManagerAdapter;
 use Tuleap\ProgramManagement\Adapter\Workspace\ProjectPermissionVerifier;
 use Tuleap\ProgramManagement\Adapter\Workspace\TrackerFactoryAdapter;
+use Tuleap\ProgramManagement\Adapter\Workspace\UGroupManagerAdapter;
 use Tuleap\ProgramManagement\Adapter\Workspace\WorkspaceDAO;
 use Tuleap\ProgramManagement\DisplayAdminProgramManagementController;
 use Tuleap\ProgramManagement\DisplayProgramBacklogController;
-use Tuleap\ProgramManagement\Domain\Program\Plan\PrioritizeFeaturesPermissionVerifier;
-use Tuleap\ProgramManagement\Domain\Service\ProjectServiceBeforeActivationHandler;
-use Tuleap\ProgramManagement\Domain\Service\ServiceDisabledCollectorHandler;
+use Tuleap\ProgramManagement\Domain\Program\Admin\CanPrioritizeItems\ProjectUGroupCanPrioritizeItemsPresentersBuilder;
 use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ConfigurationErrorsCollector;
 use Tuleap\ProgramManagement\Domain\Program\Admin\PlannableTrackersConfiguration\PotentialPlannableTrackersConfigurationPresentersBuilder;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\ArtifactCreatedHandler;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ArtifactCreatedHandler;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ArtifactUpdatedHandler;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck\CanSubmitNewArtifactHandler;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck\IterationCreatorChecker;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck\ProgramIncrementCreatorChecker;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck\TimeboxCreatorChecker;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\ProgramIncrementChanged;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFieldFromProgramAndTeamTrackersCollectionBuilder;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\NatureAnalyzerException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TimeboxArtifactLinkType;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\TopBacklogActionArtifactSourceInformation;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\TopBacklogActionMassChangeSourceInformation;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\TopBacklogChangeProcessor;
+use Tuleap\ProgramManagement\Domain\Program\Plan\PrioritizeFeaturesPermissionVerifier;
 use Tuleap\ProgramManagement\Domain\ProgramTracker;
+use Tuleap\ProgramManagement\Domain\Service\ProjectServiceBeforeActivationHandler;
+use Tuleap\ProgramManagement\Domain\Service\ServiceDisabledCollectorHandler;
 use Tuleap\ProgramManagement\Domain\Team\RootPlanning\RootPlanningEditionHandler;
 use Tuleap\ProgramManagement\Domain\Workspace\CollectLinkedProjectsHandler;
 use Tuleap\ProgramManagement\Domain\Workspace\ComponentInvolvedVerifier;
@@ -388,15 +388,12 @@ final class program_managementPlugin extends Plugin
 
     public function trackerArtifactCreated(ArtifactCreated $event): void
     {
-        $artifact = $event->getArtifact();
-
-        $this->cleanUpFromTopBacklogFeatureAddedToAProgramIncrement($artifact);
-
         $handler = new ArtifactCreatedHandler(
             new ProgramDao(),
             $this->getProgramIncrementRunner(),
             new PendingArtifactCreationDao(),
             new ProgramIncrementsDAO(),
+            new ArtifactsExplicitTopBacklogDAO(),
             $this->getLogger()
         );
         $handler->handle($event);
@@ -404,31 +401,21 @@ final class program_managementPlugin extends Plugin
 
     public function trackerArtifactUpdated(ArtifactUpdated $event): void
     {
-        $this->planArtifactIfNeeded($event);
-        $this->cleanUpFromTopBacklogFeatureAddedToAProgramIncrement($event->getArtifact());
-    }
+        $artifact_factory = Tracker_ArtifactFactory::instance();
 
-
-    private function planArtifactIfNeeded(ArtifactUpdated $event): void
-    {
-        $checker    = new ProgramIncrementsDAO();
-        $tracker_id = $event->getArtifact()->getTrackerId();
-        if (! $checker->isProgramIncrementTracker($tracker_id)) {
-            return;
-        }
-
-        $program_increment_changed = new ProgramIncrementChanged(
-            $event->getArtifact()->getId(),
-            $tracker_id,
-            $event->getUser()
+        $handler = new ArtifactUpdatedHandler(
+            new ProgramIncrementsDAO(),
+            new UserStoriesInMirroredProgramIncrementsPlanner(
+                new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection()),
+                new ArtifactsLinkedToParentDao(),
+                $artifact_factory,
+                new MirroredTimeboxRetriever(new MirroredTimeboxesDao()),
+                new ContentDao(),
+                $this->getLogger()
+            ),
+            new ArtifactsExplicitTopBacklogDAO()
         );
-
-        $this->getUserStoriesPlanner()->plan($program_increment_changed);
-    }
-
-    private function cleanUpFromTopBacklogFeatureAddedToAProgramIncrement(\Tuleap\Tracker\Artifact\Artifact $artifact): void
-    {
-        (new ArtifactsExplicitTopBacklogDAO())->removeArtifactsPlannedInAProgramIncrement($artifact->getId());
+        $handler->handle($event);
     }
 
     public function trackerArtifactDeleted(ArtifactDeleted $artifact_deleted): void
@@ -842,20 +829,6 @@ final class program_managementPlugin extends Plugin
             ),
             new ProgramDao(),
             new TeamDao()
-        );
-    }
-
-    private function getUserStoriesPlanner(): UserStoriesInMirroredProgramIncrementsPlanner
-    {
-        $artifact_factory = Tracker_ArtifactFactory::instance();
-
-        return new UserStoriesInMirroredProgramIncrementsPlanner(
-            new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection()),
-            new ArtifactsLinkedToParentDao(),
-            $artifact_factory,
-            new MirroredTimeboxRetriever(new MirroredTimeboxesDao()),
-            new ContentDao(),
-            $this->getLogger()
         );
     }
 
