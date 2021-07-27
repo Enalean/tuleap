@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Events;
 
+use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\Tracker\Artifact\Event\ArtifactUpdated;
 
 /**
@@ -34,9 +35,9 @@ final class ArtifactUpdatedProxy
 {
     public int $artifact_id;
     public int $tracker_id;
-    public \PFUser $user;
+    public UserIdentifier $user;
 
-    private function __construct(int $artifact_id, int $tracker_id, \PFUser $user)
+    private function __construct(int $artifact_id, int $tracker_id, UserIdentifier $user)
     {
         $this->artifact_id = $artifact_id;
         $this->tracker_id  = $tracker_id;
@@ -46,6 +47,6 @@ final class ArtifactUpdatedProxy
     public static function fromArtifactUpdated(ArtifactUpdated $artifact_updated): self
     {
         $artifact = $artifact_updated->getArtifact();
-        return new self($artifact->getId(), $artifact->getTrackerId(), $artifact_updated->getUser());
+        return new self($artifact->getId(), $artifact->getTrackerId(), UserIdentifier::fromPFUser($artifact_updated->getUser()));
     }
 }

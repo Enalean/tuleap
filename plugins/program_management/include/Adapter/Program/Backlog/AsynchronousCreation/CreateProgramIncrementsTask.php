@@ -23,12 +23,12 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation;
 
 use Psr\Log\LoggerInterface;
-use Tuleap\ProgramManagement\Adapter\Program\Feature\UserStoriesInMirroredProgramIncrementsPlanner;
 use Tuleap\ProgramManagement\Domain\BuildProject;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\CreateTaskProgramIncrement;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\PendingArtifactCreationStore;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\ProgramIncrementCreationException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\ProgramIncrementsCreator;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\PlanUserStoriesInMirroredProgramIncrements;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\ProgramIncrementChanged;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\BuildFieldValues;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\FieldRetrievalException;
@@ -41,31 +41,16 @@ use Tuleap\ProgramManagement\Domain\Program\PlanningConfiguration\TopPlanningNot
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\SearchTeamsOfProgram;
 use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\RetrievePlanningMilestoneTracker;
+use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 
 final class CreateProgramIncrementsTask implements CreateTaskProgramIncrement
 {
-    /**
-     * @var BuildFieldValues
-     */
-    private $changeset_collection_adapter;
-    /**
-     * @var ProgramIncrementsCreator
-     */
-    private $program_increment_creator;
-
+    private BuildFieldValues $changeset_collection_adapter;
+    private ProgramIncrementsCreator $program_increment_creator;
     private RetrievePlanningMilestoneTracker $root_milestone_retriever;
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
-    /**
-     * @var PendingArtifactCreationStore
-     */
-    private $pending_artifact_creation_store;
-    /**
-     * @var UserStoriesInMirroredProgramIncrementsPlanner
-     */
-    private $user_stories_planner;
+    private LoggerInterface $logger;
+    private PendingArtifactCreationStore $pending_artifact_creation_store;
+    private PlanUserStoriesInMirroredProgramIncrements $user_stories_planner;
     private SearchTeamsOfProgram $teams_searcher;
     private BuildProject $project_builder;
 
@@ -75,7 +60,7 @@ final class CreateProgramIncrementsTask implements CreateTaskProgramIncrement
         ProgramIncrementsCreator $program_increment_creator,
         LoggerInterface $logger,
         PendingArtifactCreationStore $pending_artifact_creation_store,
-        UserStoriesInMirroredProgramIncrementsPlanner $user_stories_planner,
+        PlanUserStoriesInMirroredProgramIncrements $user_stories_planner,
         SearchTeamsOfProgram $teams_searcher,
         BuildProject $project_builder
     ) {
@@ -135,7 +120,7 @@ final class CreateProgramIncrementsTask implements CreateTaskProgramIncrement
         $program_increment_changed = new ProgramIncrementChanged(
             $replication_data->getArtifact()->getId(),
             $replication_data->getTracker()->getTrackerId(),
-            $replication_data->getUser()
+            UserIdentifier::fromPFUser($replication_data->getUser())
         );
 
         $this->user_stories_planner->plan($program_increment_changed);

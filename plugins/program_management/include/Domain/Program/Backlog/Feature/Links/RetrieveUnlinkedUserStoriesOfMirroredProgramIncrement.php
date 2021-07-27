@@ -1,8 +1,8 @@
 <?php
 /**
- * Copyright (c) Enalean, 2021 - Present. All Rights Reserved.
+ * Copyright (c) Enalean 2021 -  Present. All Rights Reserved.
  *
- * This file is a part of Tuleap.
+ *  This file is a part of Tuleap.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,27 +16,17 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Domain\Program\Backlog\Feature;
+namespace Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Links;
 
-use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
-
-/**
- * @psalm-immutable
- */
-final class ProgramIncrementChanged
+interface RetrieveUnlinkedUserStoriesOfMirroredProgramIncrement
 {
-    public int $program_increment_id;
-    public int $tracker_id;
-    public UserIdentifier $user;
-
-    public function __construct(int $program_increment_id, int $tracker_id, UserIdentifier $user)
-    {
-        $this->program_increment_id = $program_increment_id;
-        $this->tracker_id           = $tracker_id;
-        $this->user                 = $user;
-    }
+    /**
+     * @psalm-return array{id: int}[]
+     */
+    public function getUserStoriesOfMirroredProgramIncrementThatAreNotLinkedToASprint(int $milestone_id): array;
 }

@@ -39,6 +39,7 @@ use Tuleap\ProgramManagement\Adapter\Program\Admin\CanPrioritizeItems\UGroupRepr
 use Tuleap\ProgramManagement\Adapter\Program\ProgramUserGroupRetriever;
 use Tuleap\ProgramManagement\Adapter\Workspace\UGroupManagerAdapter;
 use Tuleap\ProgramManagement\Adapter\XML\ProgramManagementConfigXMLImporter;
+use Tuleap\ProgramManagement\Adapter\Workspace\UserManagerAdapter;
 use Tuleap\ProgramManagement\Domain\Program\Admin\CanPrioritizeItems\ProjectUGroupCanPrioritizeItemsPresentersBuilder;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation\CreateProgramIncrementsRunner;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation\PendingArtifactCreationDao;
@@ -416,21 +417,24 @@ final class program_managementPlugin extends Plugin
         $artifact_factory = Tracker_ArtifactFactory::instance();
         $logger           = $this->getLogger();
 
-        $handler     = new ArtifactUpdatedHandler(
+        $artifacts_linked_to_parent_dao = new ArtifactsLinkedToParentDao();
+        $handler                        = new ArtifactUpdatedHandler(
             new ProgramIncrementsDAO(),
             new UserStoriesInMirroredProgramIncrementsPlanner(
                 new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection()),
-                new ArtifactsLinkedToParentDao(),
+                $artifacts_linked_to_parent_dao,
                 $artifact_factory,
                 new MirroredTimeboxRetriever(new MirroredTimeboxesDao()),
                 new ContentDao(),
-                $logger
+                $logger,
+                new UserManagerAdapter(UserManager::instance()),
+                $artifacts_linked_to_parent_dao
             ),
             new ArtifactsExplicitTopBacklogDAO(),
             new ForgeConfigAdapter(),
             $logger
         );
-        $event_proxy = ArtifactUpdatedProxy::fromArtifactUpdated($event);
+        $event_proxy                    = ArtifactUpdatedProxy::fromArtifactUpdated($event);
         $handler->handle($event_proxy);
     }
 

@@ -31,13 +31,16 @@ use Tracker_FormElement_Field_ArtifactLink;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Content\ContentDao;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\ArtifactsLinkedToParentDao;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\UserStoriesInMirroredProgramIncrementsPlanner;
-use Tuleap\ProgramManagement\Adapter\Program\Plan\PrioritizeFeaturesPermissionVerifier;
 use Tuleap\ProgramManagement\Adapter\Team\MirroredTimeboxes\MirroredTimeboxRetriever;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Content\FeatureChange;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FieldData;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\ProgramIncrementChanged;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\CheckProgramIncrement;
+use Tuleap\ProgramManagement\Domain\Program\Plan\PrioritizeFeaturesPermissionVerifier;
 use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\MirroredTimebox;
+use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
+use Tuleap\ProgramManagement\Stub\RetrieveUnlinkedUserStoriesOfMirroredProgramIncrementStub;
+use Tuleap\ProgramManagement\Stub\RetrieveUserStub;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 use Tuleap\Tracker\Artifact\Artifact;
@@ -52,10 +55,7 @@ final class UserStoriesInMirroredProgramIncrementsPlannerTest extends TestCase
      */
     private $content_dao;
 
-    /**
-     * @var UserStoriesInMirroredProgramIncrementsPlanner
-     */
-    private $planner;
+    private UserStoriesInMirroredProgramIncrementsPlanner $planner;
 
     /**
      * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|MirroredTimeboxRetriever
@@ -81,6 +81,7 @@ final class UserStoriesInMirroredProgramIncrementsPlannerTest extends TestCase
      * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|ArtifactsLinkedToParentDao
      */
     private $artifacts_linked_dao;
+    private UserIdentifier $user;
 
     protected function setUp(): void
     {
@@ -96,14 +97,17 @@ final class UserStoriesInMirroredProgramIncrementsPlannerTest extends TestCase
             $this->tracker_artifact_factory,
             $this->mirrored_milestone_retriever,
             $this->content_dao,
-            new TestLogger()
+            new TestLogger(),
+            RetrieveUserStub::buildRegularUser(),
+            RetrieveUnlinkedUserStoriesOfMirroredProgramIncrementStub::buildEmptyUserStories()
         );
+
+        $this->user = UserIdentifier::fromPFUser(UserTestBuilder::aUser()->build());
     }
 
     public function testItAddLinksToMirroredMilestones(): void
     {
-        $user   = UserTestBuilder::aUser()->build();
-        $change = new ProgramIncrementChanged(1, 10, $user);
+        $change = new ProgramIncrementChanged(1, 10, $this->user);
 
         $feature_id = 1234;
         $raw_link   = ['id' => $feature_id, 'project_id' => 101];
@@ -137,15 +141,14 @@ final class UserStoriesInMirroredProgramIncrementsPlannerTest extends TestCase
             1
         );
 
-        $milestone->shouldReceive('createNewChangeset')->with($fields_data->getFieldDataForChangesetCreationFormat(101), "", $user)->once();
+        $milestone->shouldReceive('createNewChangeset')->with($fields_data->getFieldDataForChangesetCreationFormat(101), "", \Mockery::type(\PFUser::class))->once();
 
         $this->planner->plan($change);
     }
 
     public function testItDoesNothingWhenArtifactLinkIsNotFound(): void
     {
-        $user   = UserTestBuilder::aUser()->build();
-        $change = new ProgramIncrementChanged(1, 10, $user);
+        $change = new ProgramIncrementChanged(1, 10, $this->user);
 
         $feature_id = 1234;
         $this->content_dao->shouldReceive('searchContent')->once()
@@ -171,8 +174,7 @@ final class UserStoriesInMirroredProgramIncrementsPlannerTest extends TestCase
 
     public function testItDoesNothingWhenMilestoneIsNotFound(): void
     {
-        $user   = UserTestBuilder::aUser()->build();
-        $change = new ProgramIncrementChanged(1, 10, $user);
+        $change = new ProgramIncrementChanged(1, 10, $this->user);
 
         $feature_id = 1234;
         $this->content_dao->shouldReceive('searchContent')->once()
@@ -193,8 +195,7 @@ final class UserStoriesInMirroredProgramIncrementsPlannerTest extends TestCase
 
     public function testItDoesNotAddUserStoryIfUserStoryIsNotInProject(): void
     {
-        $user   = UserTestBuilder::aUser()->build();
-        $change = new ProgramIncrementChanged(1, 10, $user);
+        $change = new ProgramIncrementChanged(1, 10, $this->user);
 
         $this->content_dao->shouldReceive('searchContent')->once()
             ->andReturn([['artifact_id' => 101]]);
@@ -237,7 +238,7 @@ final class UserStoriesInMirroredProgramIncrementsPlannerTest extends TestCase
             1
         );
 
-        $milestone->shouldReceive('createNewChangeset')->with($fields_data->getFieldDataForChangesetCreationFormat(122), "", $user)->once();
+        $milestone->shouldReceive('createNewChangeset')->with($fields_data->getFieldDataForChangesetCreationFormat(122), "", \Mockery::type(\PFUser::class))->once();
 
         $this->planner->plan($change);
     }

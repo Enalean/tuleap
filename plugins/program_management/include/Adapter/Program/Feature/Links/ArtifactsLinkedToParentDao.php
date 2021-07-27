@@ -25,8 +25,9 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Feature\Links;
 use Tracker_FormElement_Field_ArtifactLink;
 use Tuleap\DB\DataAccessObject;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\ArtifactsLinksSearch;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Links\RetrieveUnlinkedUserStoriesOfMirroredProgramIncrement;
 
-class ArtifactsLinkedToParentDao extends DataAccessObject implements ArtifactsLinksSearch
+class ArtifactsLinkedToParentDao extends DataAccessObject implements ArtifactsLinksSearch, RetrieveUnlinkedUserStoriesOfMirroredProgramIncrement
 {
     /**
      * @psalm-return array{id: int, project_id: int}[]

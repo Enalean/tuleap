@@ -54,6 +54,11 @@ class FeaturePlanChangeTest extends \Tuleap\Test\PHPUnit\TestCase
                 }
                 return [];
             }
+
+            public function getUserStoriesOfMirroredProgramIncrementThatAreNotLinkedToASprint(int $milestone_id): array
+            {
+                throw new \LogicException('Not implemented here');
+            }
         };
     }
 }
