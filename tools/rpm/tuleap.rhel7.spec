@@ -1069,7 +1069,6 @@ fi
 %{APP_DIR}/src/www/api/reference
 %dir %{APP_DIR}/src/www/assets
 %{APP_DIR}/src/www/assets/core
-%{APP_DIR}/src/www/assets/admindelegation
 %{APP_DIR}/src/www/assets/pluginsadministration
 %{APP_DIR}/src/www/assets/projectlinks
 %{APP_DIR}/src/www/assets/statistics
@@ -1100,7 +1099,6 @@ fi
 %{APP_DIR}/src/www/wiki
 # Plugins dir
 %dir %{APP_DIR}/plugins
-%{APP_DIR}/plugins/admindelegation
 %{APP_DIR}/plugins/pluginsadministration
 %{APP_DIR}/plugins/projectlinks
 %{APP_DIR}/plugins/statistics

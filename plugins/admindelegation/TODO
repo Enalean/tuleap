@@ -1,5 +1,0 @@
-For futur developers/developments:
-=== Might be a good idea to add pagination on admin delegation logs ===
-* This will require a DB update to add an index on some columns (in order to sort)
-* Take the opportunity of the upgrade script to rename the "UserWidget" because
-  it's name is too generic (admindelegation).
