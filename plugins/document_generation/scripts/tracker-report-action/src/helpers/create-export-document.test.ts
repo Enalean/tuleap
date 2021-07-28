@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { createArtifactValuesCollection } from "./artifact-fields-values-builder";
+import { createExportDocument } from "./create-export-document";
 
 describe("Create ArtifactValues Collection", () => {
     it("Transforms json content into a collection", () => {
@@ -50,7 +50,8 @@ describe("Create ArtifactValues Collection", () => {
             },
         ];
 
-        const collection = createArtifactValuesCollection(report_artifacts);
+        const report = createExportDocument(report_artifacts);
+        const collection = report.fields;
 
         expect(collection.length).toEqual(2);
         expect(collection[0].field_name).toEqual("Artifact Number");

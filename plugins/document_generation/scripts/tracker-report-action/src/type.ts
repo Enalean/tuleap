@@ -29,6 +29,10 @@ interface ArtifactReportResponseFieldValue {
 }
 
 export interface ArtifactFieldValue {
-    field_name: string;
-    field_value: number;
+    readonly field_name: string;
+    readonly field_value: number;
+}
+
+export interface ExportDocument {
+    readonly fields: ReadonlyArray<ArtifactFieldValue>;
 }

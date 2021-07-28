@@ -17,12 +17,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { ArtifactReportResponse } from "./type";
+import type { ArtifactReportResponse, ExportDocument } from "./type";
 import { recursiveGet } from "@tuleap/tlp-fetch";
-import { createArtifactValuesCollection } from "./helpers/artifact-fields-values-builder";
-import { buildDocument } from "./helpers/document-builder";
+import { createExportDocument } from "./helpers/create-export-document";
 
-export async function startDownloadExportDocument(report_id: number): Promise<void> {
+export async function startDownloadExportDocument(
+    report_id: number,
+    document_exporter: (doc: ExportDocument) => Promise<void>
+): Promise<void> {
     const report_artifacts: ArtifactReportResponse[] = await recursiveGet(
         `/api/v1/tracker_reports/${encodeURIComponent(report_id)}/artifacts`,
         {
@@ -33,7 +35,7 @@ export async function startDownloadExportDocument(report_id: number): Promise<vo
         }
     );
 
-    const artifact_values = createArtifactValuesCollection(report_artifacts);
+    const export_document = createExportDocument(report_artifacts);
 
-    await buildDocument(artifact_values);
+    await document_exporter(export_document);
 }
