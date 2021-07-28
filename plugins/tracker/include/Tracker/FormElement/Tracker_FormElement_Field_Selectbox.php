@@ -22,7 +22,7 @@
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStaticValueUnchanged;
 
-class Tracker_FormElement_Field_Selectbox extends Tracker_FormElement_Field_List implements Tracker_FormElement_IComputeValues
+class Tracker_FormElement_Field_Selectbox extends Tracker_FormElement_Field_List implements Tracker_FormElement_IComputeValues // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
 
     public static function getFactoryLabel()
@@ -106,8 +106,7 @@ class Tracker_FormElement_Field_Selectbox extends Tracker_FormElement_Field_List
         $html      = sprintf('<script type="text/javascript" nonce="%s">', $hp->purify($csp_nonce));
         $html     .= "tuleap.tracker.fields.add('" . (int) $this->getID() . "', '" . $this->getName() . "', '" . $hp->purify($this->getLabel(), CODENDI_PURIFIER_JS_QUOTE) . "')";
         $values    = $this->getBind()->getAllValues();
-
-        $html .= "\n\t.addOption('None'.escapeHTML(), '100', " . (empty($changeset_values) ? 'true' : 'false') . ", '')";
+        $html     .= "\n\t.addOption('" . dgettext('tuleap-tracker', 'None') . "'.escapeHTML(), '100', " . (empty($changeset_values) ? 'true' : 'false') . ", '')";
 
         foreach ($values as $id => $value) {
             $html .= "\n\t.addOption('" . $hp->purify($value->getLabel(), CODENDI_PURIFIER_JS_QUOTE) . "'.escapeHTML(), '" . (int) $id . "', " . (in_array($id, array_values($changeset_values)) ? 'true' : 'false') . ", " . json_encode($value->getDataset()) . ")";
