@@ -25,6 +25,7 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Feature;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\VerifyIsVisibleFeature;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
+use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\ProgramManagement\Stub\BuildProgramStub;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
@@ -54,7 +55,7 @@ final class VerifyIsVisibleFeatureAdapterTest extends \Tuleap\Test\PHPUnit\TestC
     {
         $user = UserTestBuilder::aUser()->build();
         $this->artifact_factory->shouldReceive('getArtifactByIdUserCanView')->once()->with($user, 404)->andReturnNull();
-        $program = ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 110, $user);
+        $program = ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 110, UserIdentifier::fromPFUser($user));
 
         self::assertFalse($this->verifier->isVisibleFeature(404, $user, $program));
     }
@@ -67,7 +68,7 @@ final class VerifyIsVisibleFeatureAdapterTest extends \Tuleap\Test\PHPUnit\TestC
             ->once()
             ->with($user, $artifact->getId())
             ->andReturn($artifact);
-        $program = ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 404, $user);
+        $program = ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 404, UserIdentifier::fromPFUser($user));
 
         self::assertFalse($this->verifier->isVisibleFeature(741, $user, $program));
     }
@@ -80,7 +81,7 @@ final class VerifyIsVisibleFeatureAdapterTest extends \Tuleap\Test\PHPUnit\TestC
             ->once()
             ->with($user, $artifact->getId())
             ->andReturn($artifact);
-        $program = ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 110, $user);
+        $program = ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 110, UserIdentifier::fromPFUser($user));
 
         self::assertTrue($this->verifier->isVisibleFeature(741, $user, $program));
     }

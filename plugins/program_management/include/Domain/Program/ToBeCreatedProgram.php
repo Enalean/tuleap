@@ -25,6 +25,7 @@ namespace Tuleap\ProgramManagement\Domain\Program;
 use Tuleap\ProgramManagement\Domain\Program\Plan\ProgramAccessException;
 use Tuleap\ProgramManagement\Domain\Program\Plan\BuildProgram;
 use Tuleap\ProgramManagement\Domain\Program\Plan\ProgramIsATeamException;
+use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 
 /**
  * @psalm-immutable
@@ -52,7 +53,7 @@ final class ToBeCreatedProgram
      */
     public static function fromId(BuildProgram $build_program, int $id, \PFUser $user): self
     {
-        $build_program->ensureProgramIsProjectAndUserIsAdminOf($id, $user);
+        $build_program->ensureProgramIsProjectAndUserIsAdminOf($id, UserIdentifier::fromPFUser($user));
 
         return new self($id);
     }

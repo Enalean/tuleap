@@ -30,6 +30,7 @@ use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\UserStoryLinkedToFeat
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\BackgroundColor;
 use Tuleap\ProgramManagement\Domain\Program\BuildPlanning;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
+use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\ProgramManagement\REST\v1\FeatureRepresentation;
 use Tuleap\ProgramManagement\Stub\BuildProgramStub;
 use Tuleap\Test\Builders\ProjectTestBuilder;
@@ -90,7 +91,7 @@ final class FeatureRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCa
     public function testItDoesNotReturnAnythingWhenUserCanNotReadArtifact(): void
     {
         $user    = UserTestBuilder::aUser()->build();
-        $program = ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 110, $user);
+        $program = ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 110, UserIdentifier::fromPFUser($user));
 
         $this->artifact_factory->shouldReceive('getArtifactByIdUserCanView')->with($user, 1)->andReturnNull();
 
@@ -100,7 +101,7 @@ final class FeatureRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCa
     public function testItDoesNotReturnAnythingWhenUserCanNotReadField(): void
     {
         $user    = UserTestBuilder::aUser()->build();
-        $program = ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 110, $user);
+        $program = ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 110, UserIdentifier::fromPFUser($user));
 
         $project  = $this->buildProject(110);
         $tracker  = $this->buildTracker(14, $project);
@@ -118,7 +119,7 @@ final class FeatureRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCa
     public function testItBuildsRepresentation(): void
     {
         $user    = UserTestBuilder::aUser()->build();
-        $program = ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 101, $user);
+        $program = ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 101, UserIdentifier::fromPFUser($user));
 
         $project  = $this->buildProject(101);
         $tracker  = $this->buildTracker(1, $project);

@@ -24,6 +24,7 @@ namespace Tuleap\ProgramManagement\Domain\Program\Admin\Team;
 
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Team\TeamProjectsCollection;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
+use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\ProgramManagement\Stub\BuildProgramStub;
 use Tuleap\ProgramManagement\Stub\BuildProjectStub;
 use Tuleap\ProgramManagement\Stub\SearchTeamsOfProgramStub;
@@ -41,7 +42,7 @@ final class TeamsPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             ProgramIdentifier::fromId(
                 BuildProgramStub::stubValidProgram(),
                 101,
-                $user
+                UserIdentifier::fromPFUser($user)
             )
         );
 

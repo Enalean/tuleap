@@ -30,6 +30,7 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracker\Veri
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\ProgramTracker;
 use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\RetrievePlanningMilestoneTracker;
+use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\ProgramManagement\Stub\BuildProgramStub;
 use Tuleap\ProgramManagement\Stub\BuildProjectStub;
 use Tuleap\ProgramManagement\Stub\SearchTeamsOfProgramStub;
@@ -75,7 +76,7 @@ final class ProgramIncrementCreatorCheckerTest extends \Tuleap\Test\PHPUnit\Test
         $this->program = ProgramIdentifier::fromId(
             BuildProgramStub::stubValidProgram(),
             101,
-            $this->user
+            UserIdentifier::fromPFUser($this->user)
         );
     }
 
@@ -91,7 +92,7 @@ final class ProgramIncrementCreatorCheckerTest extends \Tuleap\Test\PHPUnit\Test
                 TeamProjectsCollection::fromProgramIdentifier(
                     SearchTeamsOfProgramStub::buildTeams(104),
                     new BuildProjectStub(),
-                    ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 100, UserTestBuilder::aUser()->build())
+                    $this->program
                 ),
                 new ConfigurationErrorsCollector(true)
             )
@@ -111,7 +112,7 @@ final class ProgramIncrementCreatorCheckerTest extends \Tuleap\Test\PHPUnit\Test
                 TeamProjectsCollection::fromProgramIdentifier(
                     SearchTeamsOfProgramStub::buildTeams(),
                     new BuildProjectStub(),
-                    ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 100, UserTestBuilder::aUser()->build())
+                    $this->program
                 ),
                 new ConfigurationErrorsCollector(true)
             )
@@ -130,7 +131,7 @@ final class ProgramIncrementCreatorCheckerTest extends \Tuleap\Test\PHPUnit\Test
                 TeamProjectsCollection::fromProgramIdentifier(
                     SearchTeamsOfProgramStub::buildTeams(104),
                     new BuildProjectStub(),
-                    ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 100, UserTestBuilder::aUser()->build())
+                    $this->program
                 ),
                 new ConfigurationErrorsCollector(true)
             )
@@ -149,7 +150,7 @@ final class ProgramIncrementCreatorCheckerTest extends \Tuleap\Test\PHPUnit\Test
                 TeamProjectsCollection::fromProgramIdentifier(
                     SearchTeamsOfProgramStub::buildTeams(),
                     new BuildProjectStub(),
-                    ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 100, UserTestBuilder::aUser()->build())
+                    $this->program
                 ),
                 new ConfigurationErrorsCollector(true)
             )
@@ -169,7 +170,7 @@ final class ProgramIncrementCreatorCheckerTest extends \Tuleap\Test\PHPUnit\Test
                 TeamProjectsCollection::fromProgramIdentifier(
                     SearchTeamsOfProgramStub::buildTeams(104),
                     new BuildProjectStub(),
-                    ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 100, UserTestBuilder::aUser()->build())
+                    $this->program
                 ),
                 new ConfigurationErrorsCollector(true)
             )
@@ -187,7 +188,7 @@ final class ProgramIncrementCreatorCheckerTest extends \Tuleap\Test\PHPUnit\Test
             TeamProjectsCollection::fromProgramIdentifier(
                 SearchTeamsOfProgramStub::buildTeams(104),
                 new BuildProjectStub(),
-                ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 100, UserTestBuilder::aUser()->build())
+                $this->program
             ),
             new ConfigurationErrorsCollector(true)
         ));

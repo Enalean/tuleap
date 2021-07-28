@@ -52,8 +52,8 @@ final class PrioritizeFeaturesPermissionVerifierTest extends \Tuleap\Test\PHPUni
         $this->retrieve_ugroups = RetrieveProjectUgroupsCanPrioritizeItemsStub::buildWithIds(4);
         $this->user             = $this->createMock(\PFUser::class);
         $this->user->method('getId')->willReturn(101);
-        $this->program_identifier = ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 102, $this->user);
         $this->user_identifier    = UserIdentifier::fromPFUser($this->user);
+        $this->program_identifier = ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 102, $this->user_identifier);
     }
 
     public function testUsersCanPrioritizeFeaturesWhenTheyAreInTheAppropriateUserGroup(): void

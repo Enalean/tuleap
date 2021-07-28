@@ -25,6 +25,7 @@ namespace Tuleap\ProgramManagement\Domain\Program;
 use Tuleap\ProgramManagement\Domain\Program\Plan\BuildProgram;
 use Tuleap\ProgramManagement\Domain\Program\Plan\ProgramAccessException;
 use Tuleap\ProgramManagement\Domain\Program\Plan\ProjectIsNotAProgramException;
+use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 
 final class ProgramSearcher
 {
@@ -54,6 +55,6 @@ final class ProgramSearcher
         if ($potential_program_id === null) {
             throw new ProgramNotFoundException($program_increment_id);
         }
-        return ProgramIdentifier::fromId($this->build_program, $potential_program_id, $user);
+        return ProgramIdentifier::fromId($this->build_program, $potential_program_id, UserIdentifier::fromPFUser($user));
     }
 }

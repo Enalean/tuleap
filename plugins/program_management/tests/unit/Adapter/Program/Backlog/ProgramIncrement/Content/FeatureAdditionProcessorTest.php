@@ -30,6 +30,7 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncr
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementNotFoundException;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\UserCanPrioritize;
+use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\ProgramManagement\Stub\BuildProgramStub;
 use Tuleap\ProgramManagement\Stub\CheckProgramIncrementStub;
 use Tuleap\ProgramManagement\Stub\VerifyCanBePlannedInProgramIncrementStub;
@@ -97,7 +98,7 @@ final class FeatureAdditionProcessorTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItUpdatesArtifactLinksToAddFeatureToProgramIncrement(): void
     {
         $user                       = UserTestBuilder::aUser()->build();
-        $program                    = ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 110, $user);
+        $program                    = ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 110, UserIdentifier::fromPFUser($user));
         $program_increment          = ProgramIncrementIdentifier::fromId(CheckProgramIncrementStub::buildProgramIncrementChecker(), 37, $user);
         $feature                    = FeatureIdentifier::fromId(VerifyIsVisibleFeatureStub::buildVisibleFeature(), 76, $user, $program);
         $feature_addition           = FeatureAddition::fromFeature(
@@ -118,7 +119,7 @@ final class FeatureAdditionProcessorTest extends \Tuleap\Test\PHPUnit\TestCase
     private function buildFeatureAddition(): FeatureAddition
     {
         $user              = UserTestBuilder::aUser()->build();
-        $program           = ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 110, $user);
+        $program           = ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 110, UserIdentifier::fromPFUser($user));
         $program_increment = ProgramIncrementIdentifier::fromId(CheckProgramIncrementStub::buildProgramIncrementChecker(), 37, $user);
         $feature           = FeatureIdentifier::fromId(VerifyIsVisibleFeatureStub::buildVisibleFeature(), 76, $user, $program);
         return FeatureAddition::fromFeature(

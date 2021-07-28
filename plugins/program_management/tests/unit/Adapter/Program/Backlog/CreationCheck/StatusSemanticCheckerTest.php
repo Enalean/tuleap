@@ -33,6 +33,7 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\Source\SourceTrackerCollecti
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TrackerCollection;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\ProgramTracker;
+use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\ProgramManagement\Stub\BuildProgramStub;
 use Tuleap\ProgramManagement\Stub\BuildProjectStub;
 use Tuleap\ProgramManagement\Stub\SearchTeamsOfProgramStub;
@@ -86,20 +87,22 @@ final class StatusSemanticCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->program_increment         = TrackerTestBuilder::aTracker()->withId(104)->build();
         $this->program_increment_tracker = new ProgramTracker($this->program_increment);
 
-        $teams                 = TeamProjectsCollection::fromProgramIdentifier(
+        $user            = UserTestBuilder::aUser()->build();
+        $user_identifier = UserIdentifier::fromPFUser($user);
+        $teams           = TeamProjectsCollection::fromProgramIdentifier(
             SearchTeamsOfProgramStub::buildTeams(101, 102),
             new BuildProjectStub(),
-            ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 100, UserTestBuilder::aUser()->build())
+            ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 100, $user_identifier)
         );
-        $retriever             = RetrievePlanningMilestoneTrackerStub::withValidTrackers(
+        $retriever       = RetrievePlanningMilestoneTrackerStub::withValidTrackers(
             $this->tracker_team_01,
             $this->tracker_team_02
         );
-        $user                  = UserTestBuilder::aUser()->build();
+
         $this->collection      = TrackerCollection::buildRootPlanningMilestoneTrackers($retriever, $teams, $user);
         $this->source_trackers = SourceTrackerCollection::fromProgramAndTeamTrackers(
             RetrieveVisibleProgramIncrementTrackerStub::withValidTracker($this->timebox_tracker),
-            ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 101, $user),
+            ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 101, $user_identifier),
             $this->collection,
             $user
         );

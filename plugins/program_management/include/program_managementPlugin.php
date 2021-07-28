@@ -558,7 +558,13 @@ final class program_managementPlugin extends Plugin
             '/assets/program_management'
         );
         $action_builder         = new ArtifactTopBacklogActionBuilder(
-            new ProgramAdapter($project_manager, $project_access_checker, new ProgramDao(), new TeamDao()),
+            new ProgramAdapter(
+                $project_manager,
+                $project_access_checker,
+                new ProgramDao(),
+                new TeamDao(),
+                new UserManagerAdapter(UserManager::instance())
+            ),
             new PrioritizeFeaturesPermissionVerifier(
                 new ProjectManagerAdapter($project_manager),
                 $project_access_checker,
@@ -594,13 +600,20 @@ final class program_managementPlugin extends Plugin
             new RestrictedUserCanAccessProjectVerifier(),
             \EventManager::instance()
         );
+        $user_manager_adapter   = new UserManagerAdapter(UserManager::instance());
         $action_builder         = new MassChangeTopBacklogActionBuilder(
-            new ProgramAdapter($project_manager, $project_access_checker, new ProgramDao(), new TeamDao()),
+            new ProgramAdapter(
+                $project_manager,
+                $project_access_checker,
+                new ProgramDao(),
+                new TeamDao(),
+                $user_manager_adapter
+            ),
             new PrioritizeFeaturesPermissionVerifier(
                 new ProjectManagerAdapter($project_manager),
                 $project_access_checker,
                 new CanPrioritizeFeaturesDAO(),
-                new \Tuleap\ProgramManagement\Adapter\Workspace\UserManagerAdapter(UserManager::instance())
+                $user_manager_adapter
             ),
             new PlanDao(),
             TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../templates')
@@ -859,7 +872,8 @@ final class program_managementPlugin extends Plugin
                 \EventManager::instance()
             ),
             new ProgramDao(),
-            new TeamDao()
+            new TeamDao(),
+            new UserManagerAdapter(UserManager::instance())
         );
     }
 

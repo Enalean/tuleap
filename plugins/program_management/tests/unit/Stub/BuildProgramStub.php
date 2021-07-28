@@ -25,6 +25,8 @@ namespace Tuleap\ProgramManagement\Stub;
 use Tuleap\ProgramManagement\Domain\Program\Plan\BuildProgram;
 use Tuleap\ProgramManagement\Domain\Program\Plan\ProgramAccessException;
 use Tuleap\ProgramManagement\Domain\Program\Plan\ProjectIsNotAProgramException;
+use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
+use Tuleap\Test\Builders\UserTestBuilder;
 
 final class BuildProgramStub implements BuildProgram
 {
@@ -62,18 +64,19 @@ final class BuildProgramStub implements BuildProgram
         return new self(true, true, true);
     }
 
-    public function ensureProgramIsAProject(int $project_id, \PFUser $user): void
+    public function ensureProgramIsAProject(int $project_id, UserIdentifier $user_identifier): void
     {
         if (! $this->is_a_program) {
             throw new ProjectIsNotAProgramException($project_id);
         }
 
         if (! $this->is_access_allowed) {
+            $user = UserTestBuilder::aUser()->build();
             throw new ProgramAccessException($project_id, $user);
         }
     }
 
-    public function ensureProgramIsProjectAndUserIsAdminOf(int $id, \PFUser $user): void
+    public function ensureProgramIsProjectAndUserIsAdminOf(int $id, UserIdentifier $user): void
     {
         if ($this->is_valid_to_be_created_program) {
             return;

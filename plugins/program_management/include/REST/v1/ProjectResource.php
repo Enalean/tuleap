@@ -59,6 +59,7 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\RetrieveFeatures;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementBuilder;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\CannotManipulateTopBacklog;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\TopBacklogChange;
+use Tuleap\ProgramManagement\Domain\Program\Plan\BuildProgram;
 use Tuleap\ProgramManagement\Domain\Program\Plan\CannotPlanIntoItselfException;
 use Tuleap\ProgramManagement\Domain\Program\Plan\CreatePlan;
 use Tuleap\ProgramManagement\Domain\Program\Plan\InvalidProgramUserGroup;
@@ -77,6 +78,7 @@ use Tuleap\ProgramManagement\Domain\Program\ProgramTrackerException;
 use Tuleap\ProgramManagement\Domain\Team\Creation\CreateTeam;
 use Tuleap\ProgramManagement\Domain\Team\Creation\TeamCreator;
 use Tuleap\ProgramManagement\Domain\Team\TeamException;
+use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\Project\ProjectAccessChecker;
 use Tuleap\Project\REST\UserGroupRetriever;
 use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
@@ -97,25 +99,29 @@ final class ProjectResource extends AuthenticatedResource
     private CreatePlan $plan_creator;
     private \UserManager $user_manager;
     private ProgramIncrementBuilder $program_increments_builder;
+    private BuildProgram $build_program;
+    private UserManagerAdapter $user_manager_adapter;
 
     public function __construct()
     {
-        $this->user_manager   = \UserManager::instance();
-        $plan_dao             = new PlanDao();
-        $team_dao             = new TeamDao();
-        $project_manager      = \ProjectManager::instance();
-        $program_dao          = new ProgramDao();
-        $explicit_backlog_dao = new ExplicitBacklogDao();
-        $build_program        = new ProgramAdapter(
+        $this->user_manager         = \UserManager::instance();
+        $plan_dao                   = new PlanDao();
+        $team_dao                   = new TeamDao();
+        $project_manager            = \ProjectManager::instance();
+        $program_dao                = new ProgramDao();
+        $explicit_backlog_dao       = new ExplicitBacklogDao();
+        $this->user_manager_adapter = new UserManagerAdapter($this->user_manager);
+        $this->build_program        = new ProgramAdapter(
             $project_manager,
             new ProjectAccessChecker(
                 new RestrictedUserCanAccessProjectVerifier(),
                 \EventManager::instance()
             ),
             $program_dao,
-            $team_dao
+            $team_dao,
+            $this->user_manager_adapter
         );
-        $this->plan_creator   = new PlanCreator(
+        $this->plan_creator         = new PlanCreator(
             new TrackerFactoryAdapter(\TrackerFactory::instance()),
             new ProgramUserGroupRetriever(new UserGroupRetriever(new \UGroupManager())),
             $plan_dao,
@@ -125,12 +131,12 @@ final class ProjectResource extends AuthenticatedResource
         );
 
         $team_adapter       = new TeamAdapter($project_manager, $program_dao, $explicit_backlog_dao);
-        $this->team_creator = new TeamCreator($build_program, $team_adapter, $team_dao);
+        $this->team_creator = new TeamCreator($this->build_program, $team_adapter, $team_dao);
 
         $artifact_factory                 = \Tracker_ArtifactFactory::instance();
         $form_element_factory             = \Tracker_FormElementFactory::instance();
         $this->features_retriever         = new FeatureElementsRetriever(
-            $build_program,
+            $this->build_program,
             new FeaturesDao(),
             new FeatureRepresentationBuilder(
                 $artifact_factory,
@@ -145,7 +151,7 @@ final class ProjectResource extends AuthenticatedResource
             )
         );
         $this->program_increments_builder = new ProgramIncrementBuilder(
-            $build_program,
+            $this->build_program,
             new ProgramIncrementsRetriever(
                 new ProgramIncrementsDAO(),
                 $artifact_factory,
@@ -376,12 +382,6 @@ final class ProjectResource extends AuthenticatedResource
         );
 
         $project_manager     = \ProjectManager::instance();
-        $program_adapter     = new ProgramAdapter(
-            $project_manager,
-            $project_access_checker,
-            new ProgramDao(),
-            new TeamDao()
-        );
         $artifact_factory    = \Tracker_ArtifactFactory::instance();
         $priority_manager    = \Tracker_Artifact_PriorityManager::build();
         $top_backlog_updater = new ProcessTopBacklogChange(
@@ -389,7 +389,7 @@ final class ProjectResource extends AuthenticatedResource
                 new ProjectManagerAdapter($project_manager),
                 $project_access_checker,
                 new CanPrioritizeFeaturesDAO(),
-                new UserManagerAdapter($this->user_manager)
+                $this->user_manager_adapter
             ),
             new ArtifactsExplicitTopBacklogDAO(),
             new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection()),
@@ -408,7 +408,7 @@ final class ProjectResource extends AuthenticatedResource
         );
 
         try {
-            $program = ProgramIdentifier::fromId($program_adapter, $id, $user);
+            $program = ProgramIdentifier::fromId($this->build_program, $id, UserIdentifier::fromPFUser($user));
             $top_backlog_updater->processTopBacklogChangeForAProgram(
                 $program,
                 new TopBacklogChange(

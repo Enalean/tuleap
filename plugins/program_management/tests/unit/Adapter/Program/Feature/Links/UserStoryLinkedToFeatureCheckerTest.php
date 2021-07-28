@@ -24,6 +24,7 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Feature\Links;
 
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
+use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\ProgramManagement\Stub\BuildPlanningStub;
 use Tuleap\ProgramManagement\Stub\BuildProgramStub;
 use Tuleap\ProgramManagement\Stub\VerifyIsVisibleFeatureStub;
@@ -159,7 +160,7 @@ final class UserStoryLinkedToFeatureCheckerTest extends \Tuleap\Test\PHPUnit\Tes
 
     private function buildFeature(int $feature_id): FeatureIdentifier
     {
-        return FeatureIdentifier::fromId(VerifyIsVisibleFeatureStub::buildVisibleFeature(), $feature_id, $this->user, ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 110, $this->user));
+        return FeatureIdentifier::fromId(VerifyIsVisibleFeatureStub::buildVisibleFeature(), $feature_id, $this->user, ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 110, UserIdentifier::fromPFUser($this->user)));
     }
 
     private function getChecker(): UserStoryLinkedToFeatureChecker

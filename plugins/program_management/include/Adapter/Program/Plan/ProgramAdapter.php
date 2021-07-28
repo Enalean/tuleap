@@ -29,6 +29,8 @@ use Tuleap\ProgramManagement\Domain\Program\Plan\ProgramIsATeamException;
 use Tuleap\ProgramManagement\Domain\Program\Plan\ProjectIsNotAProgramException;
 use Tuleap\ProgramManagement\Domain\Program\VerifyIsProgram;
 use Tuleap\ProgramManagement\Domain\Team\VerifyIsTeam;
+use Tuleap\ProgramManagement\Domain\Workspace\RetrieveUser;
+use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\Project\ProjectAccessChecker;
 
 final class ProgramAdapter implements BuildProgram
@@ -37,24 +39,27 @@ final class ProgramAdapter implements BuildProgram
     private VerifyIsProgram $program_verifier;
     private ProjectAccessChecker $project_access_checker;
     private VerifyIsTeam $team_verifier;
+    private RetrieveUser $user_manager_adapter;
 
     public function __construct(
         \ProjectManager $project_manager,
         ProjectAccessChecker $project_access_checker,
         VerifyIsProgram $program_verifier,
-        VerifyIsTeam $team_verifier
+        VerifyIsTeam $team_verifier,
+        RetrieveUser $user_manager_adapter
     ) {
         $this->project_manager        = $project_manager;
         $this->project_access_checker = $project_access_checker;
         $this->program_verifier       = $program_verifier;
         $this->team_verifier          = $team_verifier;
+        $this->user_manager_adapter   = $user_manager_adapter;
     }
 
     /**
      * @throws ProjectIsNotAProgramException
      * @throws ProgramAccessException
      */
-    public function ensureProgramIsAProject(int $project_id, \PFUser $user): void
+    public function ensureProgramIsAProject(int $project_id, UserIdentifier $user): void
     {
         $this->ensureUserCanAccessToProject($project_id, $user);
         if (! $this->program_verifier->isAProgram($project_id)) {
@@ -66,7 +71,7 @@ final class ProgramAdapter implements BuildProgram
      * @throws ProgramAccessException
      * @throws ProgramIsATeamException
      */
-    public function ensureProgramIsProjectAndUserIsAdminOf(int $id, \PFUser $user): void
+    public function ensureProgramIsProjectAndUserIsAdminOf(int $id, UserIdentifier $user): void
     {
         $this->ensureUserIsAdminOfProject($id, $user);
         $this->ensureProgramIsNotATeam($id);
@@ -85,9 +90,10 @@ final class ProgramAdapter implements BuildProgram
     /**
      * @throws ProgramAccessException
      */
-    private function ensureUserIsAdminOfProject(int $id, \PFUser $user): void
+    private function ensureUserIsAdminOfProject(int $id, UserIdentifier $user_identifier): void
     {
-        $this->ensureUserCanAccessToProject($id, $user);
+        $this->ensureUserCanAccessToProject($id, $user_identifier);
+        $user = $this->user_manager_adapter->getUserWithId($user_identifier);
         if (! $user->isAdmin($id)) {
             throw new ProgramAccessException($id, $user);
         }
@@ -96,9 +102,10 @@ final class ProgramAdapter implements BuildProgram
     /**
      * @throws ProgramAccessException
      */
-    private function ensureUserCanAccessToProject(int $id, \PFUser $user): void
+    private function ensureUserCanAccessToProject(int $id, UserIdentifier $user_identifier): void
     {
         $project = $this->project_manager->getProject($id);
+        $user    = $this->user_manager_adapter->getUserWithId($user_identifier);
         try {
             $this->project_access_checker->checkUserCanAccessProject($user, $project);
         } catch (Project_AccessException $exception) {

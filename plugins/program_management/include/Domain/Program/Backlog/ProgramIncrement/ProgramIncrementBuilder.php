@@ -26,6 +26,7 @@ use Tuleap\ProgramManagement\Domain\Program\Plan\BuildProgram;
 use Tuleap\ProgramManagement\Domain\Program\Plan\ProgramAccessException;
 use Tuleap\ProgramManagement\Domain\Program\Plan\ProjectIsNotAProgramException;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
+use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 
 final class ProgramIncrementBuilder
 {
@@ -52,7 +53,7 @@ final class ProgramIncrementBuilder
      */
     public function buildOpenProgramIncrements(int $potential_program_id, \PFUser $user): array
     {
-        $program = ProgramIdentifier::fromId($this->build_program, $potential_program_id, $user);
+        $program = ProgramIdentifier::fromId($this->build_program, $potential_program_id, UserIdentifier::fromPFUser($user));
         return $this->program_increments_retriever->retrieveOpenProgramIncrements($program, $user);
     }
 }

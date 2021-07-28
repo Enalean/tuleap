@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program;
 
+use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\ProgramManagement\Stub\BuildProgramStub;
 use Tuleap\Test\Builders\UserTestBuilder;
 
@@ -33,7 +34,7 @@ final class ProgramSearcherTest extends \Tuleap\Test\PHPUnit\TestCase
         $searcher = new ProgramSearcher($this->getStubDao(), BuildProgramStub::stubValidProgram());
         $result   = $searcher->getProgramOfProgramIncrement(42, $user);
 
-        self::assertEquals(ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 101, $user), $result);
+        self::assertEquals(ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 101, UserIdentifier::fromPFUser($user)), $result);
     }
 
     public function testItThrowsIfProgramWasNotFound(): void

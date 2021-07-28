@@ -31,6 +31,7 @@ use Tuleap\ProgramManagement\Domain\Program\Plan\BuildProgram;
 use Tuleap\ProgramManagement\Domain\Program\Plan\ProgramAccessException;
 use Tuleap\ProgramManagement\Domain\Program\Plan\ProjectIsNotAProgramException;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
+use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Workflow;
 
 class AddToTopBacklogPostActionFactory implements Transition_PostActionSubFactory
@@ -98,7 +99,7 @@ class AddToTopBacklogPostActionFactory implements Transition_PostActionSubFactor
 
         $project_id = (int) $transition->getGroupId();
         try {
-            ProgramIdentifier::fromId($this->build_program, $project_id, new AddToBacklogPostActionAllPowerfulUser());
+            ProgramIdentifier::fromId($this->build_program, $project_id, UserIdentifier::fromPFUser(new AddToBacklogPostActionAllPowerfulUser()));
         } catch (ProgramAccessException | ProjectIsNotAProgramException $e) {
             return [];
         }
