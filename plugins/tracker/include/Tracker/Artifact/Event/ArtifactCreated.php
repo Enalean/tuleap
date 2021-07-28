@@ -21,27 +21,25 @@
 namespace Tuleap\Tracker\Artifact\Event;
 
 use Tuleap\Event\Dispatchable;
+use Tuleap\Tracker\Artifact\Artifact;
 
 final class ArtifactCreated implements Dispatchable
 {
     public const NAME = 'trackerArtifactCreated';
     /**
-     * @var \Tuleap\Tracker\Artifact\Artifact
      * @psalm-readonly
      */
-    private $artifact;
+    private Artifact $artifact;
     /**
-     * @var \Tracker_Artifact_Changeset
      * @psalm-readonly
      */
-    private $changeset;
+    private \Tracker_Artifact_Changeset $changeset;
     /**
-     * @var \PFUser
      * @psalm-readonly
      */
-    private $user;
+    private \PFUser $user;
 
-    public function __construct(\Tuleap\Tracker\Artifact\Artifact $artifact, \Tracker_Artifact_Changeset $changeset, \PFUser $user)
+    public function __construct(Artifact $artifact, \Tracker_Artifact_Changeset $changeset, \PFUser $user)
     {
         $this->artifact  = $artifact;
         $this->changeset = $changeset;
@@ -51,7 +49,7 @@ final class ArtifactCreated implements Dispatchable
     /**
      * @psalm-mutation-free
      */
-    public function getArtifact(): \Tuleap\Tracker\Artifact\Artifact
+    public function getArtifact(): Artifact
     {
         return $this->artifact;
     }

@@ -286,11 +286,6 @@ final class ContentModifierTest extends \Tuleap\Test\PHPUnit\TestCase
             {
                 // Side effects
             }
-
-            public function removeArtifactsPlannedInAProgramIncrement(int $potential_program_increment_id): void
-            {
-                throw new \LogicException('This method is not supposed to be called in the test');
-            }
         };
     }
 

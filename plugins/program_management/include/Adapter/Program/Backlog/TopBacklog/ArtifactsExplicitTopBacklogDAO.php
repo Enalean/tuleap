@@ -25,9 +25,10 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog;
 
 use ParagonIE\EasyDB\EasyStatement;
 use Tuleap\DB\DataAccessObject;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\RemovePlannedFeaturesFromTopBacklog;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\TopBacklogStore;
 
-class ArtifactsExplicitTopBacklogDAO extends DataAccessObject implements TopBacklogStore
+class ArtifactsExplicitTopBacklogDAO extends DataAccessObject implements TopBacklogStore, RemovePlannedFeaturesFromTopBacklog
 {
     public function isInTheExplicitTopBacklog(int $artifact_id): bool
     {
@@ -83,7 +84,7 @@ class ArtifactsExplicitTopBacklogDAO extends DataAccessObject implements TopBack
         );
     }
 
-    public function removeArtifactsPlannedInAProgramIncrement(int $potential_program_increment_id): void
+    public function removeFeaturesPlannedInAProgramIncrementFromTopBacklog(int $potential_program_increment_id): void
     {
         $this->getDB()->run(
             'DELETE plugin_program_management_explicit_top_backlog.*

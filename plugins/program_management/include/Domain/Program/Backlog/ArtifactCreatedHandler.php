@@ -20,11 +20,14 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation;
+namespace Tuleap\ProgramManagement\Domain\Program\Backlog;
 
 use Psr\Log\LoggerInterface;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\ReplicationDataAdapter;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\PendingArtifactCreationStore;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\RunProgramIncrementCreation;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracker\VerifyIsProgramIncrementTracker;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\RemovePlannedFeaturesFromTopBacklog;
 use Tuleap\ProgramManagement\Domain\Program\VerifyIsProgram;
 use Tuleap\Tracker\Artifact\Event\ArtifactCreated;
 
@@ -34,6 +37,7 @@ final class ArtifactCreatedHandler
     private RunProgramIncrementCreation $run_program_increment_creation;
     private PendingArtifactCreationStore $pending_artifact_creation_store;
     private VerifyIsProgramIncrementTracker $verify_is_program_increment;
+    private RemovePlannedFeaturesFromTopBacklog $feature_remover;
     private LoggerInterface $logger;
 
     public function __construct(
@@ -41,15 +45,16 @@ final class ArtifactCreatedHandler
         RunProgramIncrementCreation $run_program_increment_creation,
         PendingArtifactCreationStore $pending_artifact_creation_store,
         VerifyIsProgramIncrementTracker $verify_is_program_increment,
+        RemovePlannedFeaturesFromTopBacklog $feature_remover,
         LoggerInterface $logger
     ) {
         $this->program_verifier                = $program_verifier;
         $this->run_program_increment_creation  = $run_program_increment_creation;
         $this->pending_artifact_creation_store = $pending_artifact_creation_store;
         $this->verify_is_program_increment     = $verify_is_program_increment;
+        $this->feature_remover                 = $feature_remover;
         $this->logger                          = $logger;
     }
-
 
     public function handle(ArtifactCreated $event): void
     {
@@ -57,6 +62,8 @@ final class ArtifactCreatedHandler
         $source_tracker  = $source_artifact->getTracker();
         $source_project  = $source_tracker->getProject();
         $current_user    = $event->getUser();
+
+        $this->feature_remover->removeFeaturesPlannedInAProgramIncrementFromTopBacklog($source_artifact->getId());
 
         if (! $this->program_verifier->isAProgram((int) $source_project->getID())) {
             $this->logger->debug($source_project->getID() . " is not a program");
