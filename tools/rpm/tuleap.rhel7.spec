@@ -556,7 +556,7 @@ echo '@@VERSION@@-@@RELEASE@@' > VERSION
 #
 # Install tuleap application
 %{__install} -m 755 -d $RPM_BUILD_ROOT/%{APP_DIR}
-for i in tools plugins site-content src VERSION LICENSE; do
+for i in tools plugins site-content src VERSION LICENSE preload.php; do
 	%{__cp} -ar $i $RPM_BUILD_ROOT/%{APP_DIR}
 done
 %if %{with enterprise}
@@ -1042,6 +1042,7 @@ fi
 %{APP_DIR}/site-content
 %{APP_DIR}/VERSION
 %{APP_DIR}/LICENSE
+%{APP_DIR}/preload.php
 %if %{with enterprise}
 %{APP_DIR}/ENTERPRISE_BUILD
 %endif
