@@ -24,7 +24,6 @@ declare(strict_types=1);
 namespace Tuleap\JiraImport\JiraAgile;
 
 use Psr\Log\NullLogger;
-use Tuleap\Tracker\Creation\JiraImporter\JiraClient;
 use Tuleap\Tracker\Creation\JiraImporter\UnexpectedFormatException;
 use function PHPUnit\Framework\assertSame;
 
@@ -32,7 +31,7 @@ class JiraBoardsRetrieverFromAPITest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItHasNotExpectedContent(): void
     {
-        $client = new class implements JiraClient
+        $client = new class extends \Tuleap\Tracker\Test\Tracker\Creation\JiraImporter\Stub\JiraCloudClientStub
         {
             public function getUrl(string $url): ?array
             {
@@ -49,7 +48,7 @@ class JiraBoardsRetrieverFromAPITest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItHasNoBoard(): void
     {
-        $client = new class implements JiraClient
+        $client = new class extends \Tuleap\Tracker\Test\Tracker\Creation\JiraImporter\Stub\JiraCloudClientStub
         {
             public function getUrl(string $url): ?array
             {
@@ -72,7 +71,7 @@ class JiraBoardsRetrieverFromAPITest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItHasOneBoard(): void
     {
-        $client = new class implements JiraClient
+        $client = new class extends \Tuleap\Tracker\Test\Tracker\Creation\JiraImporter\Stub\JiraCloudClientStub
         {
             public function getUrl(string $url): ?array
             {
@@ -114,7 +113,7 @@ class JiraBoardsRetrieverFromAPITest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItHasNoBoardForRequiredProject(): void
     {
-        $client = new class implements JiraClient
+        $client = new class extends \Tuleap\Tracker\Test\Tracker\Creation\JiraImporter\Stub\JiraCloudClientStub
         {
             public function getUrl(string $url): ?array
             {
@@ -152,7 +151,7 @@ class JiraBoardsRetrieverFromAPITest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItGetTheBoardOnTheSecondPage(): void
     {
-        $client = new class implements JiraClient
+        $client = new class extends \Tuleap\Tracker\Test\Tracker\Creation\JiraImporter\Stub\JiraCloudClientStub
         {
             /**
              * @var int

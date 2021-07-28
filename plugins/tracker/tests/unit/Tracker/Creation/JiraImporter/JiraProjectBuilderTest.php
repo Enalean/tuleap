@@ -29,6 +29,8 @@ use Tuleap\Tracker\Creation\JiraImporter\ClientWrapper;
 use Tuleap\Tracker\Creation\JiraImporter\JiraProjectBuilder;
 use Tuleap\Tracker\Creation\JiraImporter\JiraProjectCollection;
 use Tuleap\Tracker\Creation\JiraImporter\UnexpectedFormatException;
+use Tuleap\Tracker\Test\Tracker\Creation\JiraImporter\Stub\JiraServerClientStub;
+use function PHPUnit\Framework\assertEquals;
 
 final class JiraProjectBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -63,6 +65,7 @@ final class JiraProjectBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             'values'     => [$project_two]
         ];
 
+        $wrapper->shouldReceive('isJiraCloud')->andReturnTrue();
         $wrapper->shouldReceive('getUrl')->with(
             ClientWrapper::JIRA_CORE_BASE_URL . "/project/search?startAt=1"
         )->andReturn($other_result);
@@ -102,6 +105,7 @@ final class JiraProjectBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         ];
 
         $wrapper = \Mockery::mock(ClientWrapper::class);
+        $wrapper->shouldReceive('isJiraCloud')->andReturnTrue();
         $wrapper->shouldReceive('getUrl')->with(ClientWrapper::JIRA_CORE_BASE_URL . '/project/search?startAt=0')->andReturn($result);
 
         $wrapper->shouldReceive('getUrl')->with(
@@ -139,5 +143,60 @@ final class JiraProjectBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $builder = new JiraProjectBuilder();
         $builder->build($wrapper);
+    }
+
+    public function testItIteratesOverJiraServerPayload(): void
+    {
+        $jira_client = new class extends JiraServerClientStub
+        {
+            public function getUrl(string $url): ?array
+            {
+                assertEquals('/rest/api/2/project', $url);
+
+                return [
+                    [
+                        'key'  => 'MPN',
+                        'name' => 'My project name',
+                    ],
+                    [
+                        'key' => 'SP',
+                        'name' => 'Scrum Project',
+                    ]
+                ];
+            }
+        };
+
+        $builder = new JiraProjectBuilder();
+        $result  = $builder->build($jira_client, new NullLogger());
+
+        self::assertEquals(
+            (new JiraProjectCollection())
+                ->addProject(['id' => 'MPN', 'label' => 'My project name'])
+                ->addProject(['id' => 'SP', 'label' => 'Scrum Project'])
+                ->getJiraProjects(),
+            $result
+        );
+    }
+
+    public function testItCatchesMissingMandatoryInfoInJiraServerPayload(): void
+    {
+        $jira_client = new class extends JiraServerClientStub
+        {
+            public function getUrl(string $url): ?array
+            {
+                assertEquals('/rest/api/2/project', $url);
+
+                return [
+                    [
+                        'name' => 'My project name',
+                    ]
+                ];
+            }
+        };
+
+        $this->expectException(UnexpectedFormatException::class);
+
+        $builder = new JiraProjectBuilder();
+        $builder->build($jira_client, new NullLogger());
     }
 }

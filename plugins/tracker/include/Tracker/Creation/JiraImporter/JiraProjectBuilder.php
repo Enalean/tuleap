@@ -28,10 +28,24 @@ use Psr\Log\LoggerInterface;
 class JiraProjectBuilder
 {
     /**
-     * @throws JiraConnectionException
      * @return array<array{id: string, label: string}>
+     * @throws UnexpectedFormatException
+     * @throws JiraConnectionException
+     * @throws \JsonException
      */
     public function build(JiraClient $jira_client, LoggerInterface $logger): array
+    {
+        if ($jira_client->isJiraCloud()) {
+            return $this->getCollectionFromJiraCloud($jira_client, $logger);
+        }
+        return $this->getCollectionFromJiraServer($jira_client);
+    }
+
+    /**
+     * @return array<array{id: string, label: string}>
+     * @throws UnexpectedFormatException
+     */
+    private function getCollectionFromJiraCloud(JiraClient $jira_client, LoggerInterface $logger): array
     {
         $iterator           = JiraCollectionBuilder::iterateUntilIsLast(
             $jira_client,
@@ -48,6 +62,32 @@ class JiraProjectBuilder
                 [
                     'id'    => (string) $project['key'],
                     'label' => (string) $project['name'],
+                ]
+            );
+        }
+        return $project_collection->getJiraProjects();
+    }
+
+    /**
+     * @throws UnexpectedFormatException
+     * @throws JiraConnectionException
+     * @throws \JsonException
+     */
+    private function getCollectionFromJiraServer(JiraClient $jira_client): array
+    {
+        $json = $jira_client->getUrl(ClientWrapper::JIRA_CORE_BASE_URL . '/project');
+        if ($json === null) {
+            throw new UnexpectedFormatException(ClientWrapper::JIRA_CORE_BASE_URL . '/project is supposed to return a collection of projects, null received');
+        }
+        $project_collection = new JiraProjectCollection();
+        foreach ($json as $project_entry) {
+            if (! isset($project_entry['key'], $project_entry['name'])) {
+                throw new UnexpectedFormatException('`key` or `name` has not been founded in jira_representation');
+            }
+            $project_collection->addProject(
+                [
+                    'id' => (string) $project_entry['key'],
+                    'label' => (string) $project_entry['name']
                 ]
             );
         }

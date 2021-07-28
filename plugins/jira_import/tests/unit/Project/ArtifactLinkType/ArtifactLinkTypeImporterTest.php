@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace Tuleap\JiraImport\Project\ArtifactLinkType;
 
-use Tuleap\Tracker\Creation\JiraImporter\JiraClient;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\AllNaturesRetriever;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureCreatorInterface;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenter;
@@ -32,7 +31,7 @@ final class ArtifactLinkTypeImporterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItCatchesWhenDataReturnedByJiraIsNotWellFormed(): void
     {
-        $client = new class implements JiraClient {
+        $client = new class extends \Tuleap\Tracker\Test\Tracker\Creation\JiraImporter\Stub\JiraCloudClientStub {
             public function getUrl(string $url): ?array
             {
                 return [
@@ -64,7 +63,7 @@ final class ArtifactLinkTypeImporterTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItReturnsAnArtifactLinkTypeWithAccurateLabels(): void
     {
-        $client = new class implements JiraClient {
+        $client = new class extends \Tuleap\Tracker\Test\Tracker\Creation\JiraImporter\Stub\JiraCloudClientStub {
             public function getUrl(string $url): ?array
             {
                 return [
@@ -109,7 +108,7 @@ final class ArtifactLinkTypeImporterTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItDoesntReturnAnythingWhenTypeAlreadyExists(): void
     {
-        $client = new class implements JiraClient {
+        $client = new class extends \Tuleap\Tracker\Test\Tracker\Creation\JiraImporter\Stub\JiraCloudClientStub {
             public function getUrl(string $url): ?array
             {
                 return [

@@ -24,7 +24,6 @@ declare(strict_types=1);
 namespace Tuleap\JiraImport\JiraAgile;
 
 use Psr\Log\NullLogger;
-use Tuleap\Tracker\Creation\JiraImporter\JiraClient;
 use Tuleap\Tracker\Creation\JiraImporter\UnexpectedFormatException;
 use function PHPUnit\Framework\assertEquals;
 
@@ -36,7 +35,7 @@ final class JiraSprintRetrieverFromAPITest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItHasNoSprints(): void
     {
-        $client = new class implements JiraClient
+        $client = new class extends \Tuleap\Tracker\Test\Tracker\Creation\JiraImporter\Stub\JiraCloudClientStub
         {
             public function getUrl(string $url): ?array
             {
@@ -57,7 +56,7 @@ final class JiraSprintRetrieverFromAPITest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItHasOneSprint(): void
     {
-        $client = new class implements JiraClient
+        $client = new class extends \Tuleap\Tracker\Test\Tracker\Creation\JiraImporter\Stub\JiraCloudClientStub
         {
             public function getUrl(string $url): ?array
             {
@@ -100,7 +99,7 @@ final class JiraSprintRetrieverFromAPITest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItHasSprintsOnSeveralPages(): void
     {
-        $client = new class implements JiraClient
+        $client = new class extends \Tuleap\Tracker\Test\Tracker\Creation\JiraImporter\Stub\JiraCloudClientStub
         {
             private int $call_count = 0;
 
@@ -161,7 +160,7 @@ final class JiraSprintRetrieverFromAPITest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItHasOneSprintWithUnSupportedState(): void
     {
-        $client = new class implements JiraClient
+        $client = new class extends \Tuleap\Tracker\Test\Tracker\Creation\JiraImporter\Stub\JiraCloudClientStub
         {
             public function getUrl(string $url): ?array
             {

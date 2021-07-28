@@ -79,9 +79,9 @@ class JiraProjectListController implements DispatchableWithRequest, Dispatchable
             $projects = $this->jira_project_builder->build($wrapper, $this->logger);
             $layout->sendJSON($projects);
         } catch (JiraConnectionException $exception) {
-            $layout->send400JSONErrors(['error' => $exception->getI18nMessage()]);
+            $layout->send400JSONErrors(['error' => $exception->getI18nMessage(), 'type' => $exception::class]);
         } catch (\Exception $exception) {
-            $layout->send400JSONErrors(['error' => $exception->getMessage()]);
+            $layout->send400JSONErrors(['error' => $exception->getMessage(), 'type' => $exception::class]);
         }
     }
 
