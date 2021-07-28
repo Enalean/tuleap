@@ -29,7 +29,7 @@
 
             <actions-header v-bind:item="currently_previewed_item" />
 
-            <approval-table-badge
+            <approval-badge
                 v-bind:item="currently_previewed_item"
                 v-bind:is-in-folder-content-row="false"
             />
@@ -74,7 +74,7 @@
 <script>
 import ActionsHeader from "./ActionsHeader.vue";
 import DocumentTitleLockInfo from "../LockInfo/DocumentTitleLockInfo.vue";
-import ApprovalTableBadge from "../ApprovalTables/ApprovalTableBadge.vue";
+import ApprovalBadge from "../ApprovalTables/ApprovalBadge.vue";
 import EmbeddedFileEditionSwitcher from "./EmbeddedFileEditionSwitcher.vue";
 import UpdateMetadataModal from "../ModalUpdateMetadata/UpdateMetadataModal.vue";
 import { mapState } from "vuex";
@@ -85,7 +85,7 @@ export default {
     components: {
         UpdateMetadataModal,
         EmbeddedFileEditionSwitcher,
-        ApprovalTableBadge,
+        ApprovalBadge,
         DocumentTitleLockInfo,
         ActionsHeader,
         "permissions-update-modal": () =>

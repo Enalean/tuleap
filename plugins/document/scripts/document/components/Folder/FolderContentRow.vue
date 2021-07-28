@@ -71,7 +71,7 @@
                     v-bind:item="item"
                     v-bind:is-displaying-in-header="false"
                 />
-                <approval-table-badge v-bind:item="item" v-bind:is-in-folder-content-row="true" />
+                <approval-badge v-bind:item="item" v-bind:is-in-folder-content-row="true" />
             </div>
         </td>
         <template v-if="is_item_uploading_without_quick_look_mode">
@@ -119,7 +119,7 @@ import UploadProgressBar from "./ProgressBar/UploadProgressBar.vue";
 import DropDownButton from "./DropDown/DropDownButton.vue";
 import LockProperty from "./Property/LockProperty.vue";
 import DocumentTitleLockInfo from "./LockInfo/DocumentTitleLockInfo.vue";
-import ApprovalTableBadge from "./ApprovalTables/ApprovalTableBadge.vue";
+import ApprovalBadge from "./ApprovalTables/ApprovalBadge.vue";
 import DropDownMenuTreeView from "./DropDown/DropDownMenuTreeView.vue";
 import {
     relativeDatePlacement,
@@ -130,7 +130,7 @@ export default {
     name: "FolderContentRow",
     components: {
         DropDownMenuTreeView,
-        ApprovalTableBadge,
+        ApprovalBadge,
         DocumentTitleLockInfo,
         LockProperty,
         QuickLookButton,
