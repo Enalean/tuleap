@@ -1,5 +1,5 @@
-/*
- * Copyright (c) Enalean, 2021 - Present. All Rights Reserved.
+/**
+ * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,18 +17,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export interface ArtifactReportResponse {
-    values: Array<ArtifactReportResponseFieldValue>;
-}
+const base_config = require("../../tests/jest/jest.base.config.js");
 
-interface ArtifactReportResponseFieldValue {
-    field_id: number;
-    type: string;
-    label: string;
-    value: number;
-}
-
-export interface ArtifactFieldValue {
-    field_name: string;
-    field_value: number;
-}
+module.exports = {
+    ...base_config,
+    displayName: "document_generation",
+};

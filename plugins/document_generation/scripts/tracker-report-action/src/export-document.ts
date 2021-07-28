@@ -19,7 +19,8 @@
 
 import type { ArtifactReportResponse } from "./type";
 import { recursiveGet } from "@tuleap/tlp-fetch";
-import { AlignmentType, Document, Footer, Packer, PageNumber, Paragraph, TextRun } from "docx";
+import { createArtifactValuesCollection } from "./helpers/artifact-fields-values-builder";
+import { buildDocument } from "./helpers/document-builder";
 
 export async function startDownloadExportDocument(report_id: number): Promise<void> {
     const report_artifacts: ArtifactReportResponse[] = await recursiveGet(
@@ -31,43 +32,8 @@ export async function startDownloadExportDocument(report_id: number): Promise<vo
             },
         }
     );
-    const footers = {
-        default: new Footer({
-            children: [
-                new Paragraph({
-                    alignment: AlignmentType.CENTER,
-                    children: [
-                        new TextRun({
-                            children: [PageNumber.CURRENT, " / ", PageNumber.TOTAL_PAGES],
-                        }),
-                    ],
-                }),
-            ],
-        }),
-    };
-    const artifact_data = [];
-    for (const artifact of report_artifacts) {
-        const field_content = [];
-        for (const value of artifact.values) {
-            if (value.type === "aid") {
-                field_content.push(
-                    new Paragraph({
-                        text: value.label + "\n" + value.value,
-                    })
-                );
-            }
-        }
-        artifact_data.push(...field_content);
-    }
-    const doc = new Document({
-        sections: [
-            {
-                children: [...artifact_data],
-                footers,
-            },
-        ],
-    });
-    const blob = await Packer.toBlob(doc);
-    const file = window.URL.createObjectURL(blob);
-    window.location.assign(file);
+
+    const artifact_values = createArtifactValuesCollection(report_artifacts);
+
+    await buildDocument(artifact_values);
 }
