@@ -21,6 +21,9 @@ import { initMentions } from "@tuleap/mention";
 
 export function initMentionsOnEditorDataReady(ckeditor: CKEDITOR.editor): void {
     // This MUST be called after "dataReady" event because calling setData() on CKEditor will kill the event listeners of @tuleap/mention
+    if (!ckeditor.document) {
+        return;
+    }
     const ckeditor_document = ckeditor.document.getBody().$;
     // Set the ckeditor's iframe document <body> to contentEditable=true otherwise @tuleap/mention will filter it out
     ckeditor_document.contentEditable = "true";
