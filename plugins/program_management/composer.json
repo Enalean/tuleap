@@ -10,5 +10,14 @@
       "Tuleap\\ProgramManagement\\": "tests/unit/",
       "Tuleap\\ProgramManagement\\REST\\": "./tests/rest/"
     }
+  },
+  "tuleap": {
+    "preload": {
+      "include": [
+        "/include"
+      ],
+      "exclude": [
+      ]
+    }
   }
 }

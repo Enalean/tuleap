@@ -12,5 +12,19 @@
   },
   "config": {
     "sort-packages": true
+  },
+  "tuleap": {
+    "preload": {
+      "include": [
+        "/include"
+      ],
+      "exclude": [
+        "/include/REST/v1/GitlabBranchCreator.php",
+        "/include/Plugin/GitlabIntegrationAvailabilityChecker.php",
+        "/include/Plugin/PluginInfo.php",
+        "/include/Artifact/BranchNameCreatorFromArtifact.php",
+        "/include/Artifact/Action/CreateBranchButtonFetcher.php"
+      ]
+    }
   }
 }

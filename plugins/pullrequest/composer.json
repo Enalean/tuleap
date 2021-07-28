@@ -5,5 +5,12 @@
       "Tuleap\\PullRequest\\": ["include/", "include/PullRequest/"]
     },
     "classmap": ["include/"]
+  },
+  "tuleap": {
+    "preload": {
+      "include": [
+        "/include"
+      ]
+    }
   }
 }

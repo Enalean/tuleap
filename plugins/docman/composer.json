@@ -16,5 +16,23 @@
   },
   "config": {
     "sort-packages": true
+  },
+  "tuleap": {
+    "preload": {
+      "include": [
+        "/include"
+      ],
+      "exclude": [
+        "/include/REST/v1/Metadata/ProjectConfiguredMetadataRepresentation.php",
+        "/include/REST/v1/Metadata/ItemStatusMapper.php",
+        "/include/REST/v1/Metadata/PUTMetadataRepresentation.php",
+        "/include/REST/v1/Metadata/PUTRecursiveStatusRepresentation.php",
+        "/include/REST/v1/EmbeddedFiles/DocmanEmbeddedFilesPATCHRepresentation.php",
+        "/include/REST/v1/Files/DocmanFilesPATCHRepresentation.php",
+        "/include/REST/v1/Links/DocmanLinkPATCHRepresentation.php",
+        "/include/REST/v1/Wiki/DocmanWikiPATCHRepresentation.php",
+        "/include/Docman_Sample.php"
+      ]
+    }
   }
 }
