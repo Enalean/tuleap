@@ -361,7 +361,8 @@ class TrackerXmlImport
             $this->logger,
             $xml_field_values_mapping,
             $this->user_finder,
-            $created_trackers_objects
+            $created_trackers_objects,
+            $user
         );
         $this->event_manager->processEvent($event);
 

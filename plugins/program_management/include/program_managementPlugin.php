@@ -36,6 +36,10 @@ use Tuleap\Layout\ServiceUrlCollector;
 use Tuleap\ProgramManagement\Adapter\Events\ArtifactUpdatedProxy;
 use Tuleap\ProgramManagement\Adapter\FeatureFlag\ForgeConfigAdapter;
 use Tuleap\ProgramManagement\Adapter\Program\Admin\CanPrioritizeItems\UGroupRepresentationBuilder;
+use Tuleap\ProgramManagement\Adapter\Program\ProgramUserGroupRetriever;
+use Tuleap\ProgramManagement\Adapter\Workspace\UGroupManagerAdapter;
+use Tuleap\ProgramManagement\Adapter\XML\ProgramManagementConfigXMLImporter;
+use Tuleap\ProgramManagement\Domain\Program\Admin\CanPrioritizeItems\ProjectUGroupCanPrioritizeItemsPresentersBuilder;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation\CreateProgramIncrementsRunner;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation\PendingArtifactCreationDao;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation\TaskBuilder;
@@ -62,6 +66,9 @@ use Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\MassChangeTopBac
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\MassChangeTopBacklogSourceInformation;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\PlannedFeatureDAO;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\ProcessTopBacklogChange;
+use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramForAdministrationIdentifier;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\TopBacklogActionArtifactSourceInformation;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\TopBacklogActionMassChangeSourceInformation;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\Workflow\AddToTopBacklogPostAction;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\Workflow\AddToTopBacklogPostActionDAO;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\Workflow\AddToTopBacklogPostActionFactory;
@@ -88,12 +95,13 @@ use Tuleap\ProgramManagement\Adapter\Team\TeamDao;
 use Tuleap\ProgramManagement\Adapter\Workspace\ProjectManagerAdapter;
 use Tuleap\ProgramManagement\Adapter\Workspace\ProjectPermissionVerifier;
 use Tuleap\ProgramManagement\Adapter\Workspace\TrackerFactoryAdapter;
-use Tuleap\ProgramManagement\Adapter\Workspace\UGroupManagerAdapter;
 use Tuleap\ProgramManagement\Adapter\Workspace\WorkspaceDAO;
 use Tuleap\ProgramManagement\DisplayAdminProgramManagementController;
 use Tuleap\ProgramManagement\DisplayProgramBacklogController;
 use Tuleap\ProgramManagement\Domain\FeatureFlag\VerifyIterationsFeatureActive;
-use Tuleap\ProgramManagement\Domain\Program\Admin\CanPrioritizeItems\ProjectUGroupCanPrioritizeItemsPresentersBuilder;
+use Tuleap\ProgramManagement\Domain\Program\Plan\PlanCreator;
+use Tuleap\ProgramManagement\Domain\Service\ProjectServiceBeforeActivationHandler;
+use Tuleap\ProgramManagement\Domain\Service\ServiceDisabledCollectorHandler;
 use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ConfigurationErrorsCollector;
 use Tuleap\ProgramManagement\Domain\Program\Admin\PlannableTrackersConfiguration\PotentialPlannableTrackersConfigurationPresentersBuilder;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ArtifactCreatedHandler;
@@ -105,18 +113,15 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck\TimeboxCreator
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFieldFromProgramAndTeamTrackersCollectionBuilder;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\NatureAnalyzerException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TimeboxArtifactLinkType;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\TopBacklogActionArtifactSourceInformation;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\TopBacklogActionMassChangeSourceInformation;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\TopBacklogChangeProcessor;
 use Tuleap\ProgramManagement\Domain\Program\Plan\PrioritizeFeaturesPermissionVerifier;
 use Tuleap\ProgramManagement\Domain\ProgramTracker;
-use Tuleap\ProgramManagement\Domain\Service\ProjectServiceBeforeActivationHandler;
-use Tuleap\ProgramManagement\Domain\Service\ServiceDisabledCollectorHandler;
 use Tuleap\ProgramManagement\Domain\Team\RootPlanning\RootPlanningEditionHandler;
 use Tuleap\ProgramManagement\Domain\Workspace\CollectLinkedProjectsHandler;
 use Tuleap\ProgramManagement\Domain\Workspace\ComponentInvolvedVerifier;
 use Tuleap\ProgramManagement\Domain\Workspace\ProgramsSearcher;
 use Tuleap\ProgramManagement\Domain\Workspace\TeamsSearcher;
+use Tuleap\ProgramManagement\Domain\XML\ProgramManagementXMLConfigExtractor;
 use Tuleap\ProgramManagement\EventRedirectAfterArtifactCreationOrUpdateHandler;
 use Tuleap\ProgramManagement\ProgramManagementBreadCrumbsBuilder;
 use Tuleap\ProgramManagement\ProgramService;
@@ -129,6 +134,7 @@ use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupUGroupFormatter;
 use Tuleap\Project\Event\ProjectServiceBeforeActivation;
 use Tuleap\Project\ProjectAccessChecker;
 use Tuleap\Project\Registration\Template\Events\CollectCategorisedExternalTemplatesEvent;
+use Tuleap\Project\REST\UserGroupRetriever;
 use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
 use Tuleap\Project\Service\ServiceDisabledCollector;
 use Tuleap\Project\Sidebar\CollectLinkedProjects;
@@ -163,6 +169,7 @@ use Tuleap\Tracker\Workflow\PostAction\ExternalPostActionSaveObjectEvent;
 use Tuleap\Tracker\Workflow\PostAction\GetExternalPostActionPluginsEvent;
 use Tuleap\Tracker\Workflow\PostAction\GetExternalSubFactoriesEvent;
 use Tuleap\Tracker\Workflow\PostAction\GetExternalSubFactoryByNameEvent;
+use Tuleap\Tracker\XML\Importer\ImportXMLProjectTrackerDone;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__ . '/../../tracker/include/trackerPlugin.php';
@@ -229,6 +236,7 @@ final class program_managementPlugin extends Plugin
         $this->addHook(CollectCategorisedExternalTemplatesEvent::NAME);
         $this->addHook(ServiceEnableForXmlImportRetriever::NAME);
         $this->addHook(\Tuleap\Glyph\GlyphLocationsCollector::NAME);
+        $this->addHook(ImportXMLProjectTrackerDone::NAME);
 
         return parent::getHooksAndCallbacks();
     }
@@ -972,6 +980,36 @@ final class program_managementPlugin extends Plugin
         $glyph_locations_collector->addLocation(
             'tuleap-program-management',
             new GlyphLocation(__DIR__ . '/../glyphs')
+        );
+    }
+
+    public function importXMLProjectTrackerDone(ImportXMLProjectTrackerDone $event): void
+    {
+        $importer = new ProgramManagementConfigXMLImporter(
+            new PlanCreator(
+                new TrackerFactoryAdapter(\TrackerFactory::instance()),
+                new ProgramUserGroupRetriever(new UserGroupRetriever(new \UGroupManager())),
+                new PlanDao(),
+                new ProjectManagerAdapter(\ProjectManager::instance()),
+                new TeamDao(),
+                new ProjectPermissionVerifier()
+            ),
+            new ProgramManagementXMLConfigExtractor(
+                new UGroupManagerAdapter(ProjectManager::instance(), new UGroupManager())
+            ),
+            $event->getLogger()
+        );
+
+        $importer->import(
+            ProgramForAdministrationIdentifier::fromProject(
+                new TeamDao(),
+                new ProjectPermissionVerifier(),
+                $event->getUser(),
+                $event->getProject()
+            ),
+            $event->getExtractionPath(),
+            $event->getCreatedTrackersMapping(),
+            $event->getUser()
         );
     }
 }

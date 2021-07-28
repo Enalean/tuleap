@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Adapter\Workspace;
 
 use ProjectUGroup;
+use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramForAdministrationIdentifier;
 use Tuleap\ProgramManagement\Domain\Workspace\RetrieveUGroups;
 
 final class UGroupManagerAdapter implements RetrieveUGroups
@@ -40,9 +41,15 @@ final class UGroupManagerAdapter implements RetrieveUGroups
     /**
      * @return ProjectUGroup[]
      */
-    public function getUgroupsFromProjectId(int $project_id): array
+    public function getUgroupsFromProgram(ProgramForAdministrationIdentifier $program_identifier): array
     {
-        $project = $this->project_manager->getProject($project_id);
+        $project = $this->project_manager->getProject($program_identifier->id);
         return $this->group_manager->getUGroups($project, ProjectUGroup::SYSTEM_USER_GROUPS);
+    }
+
+    public function getUGroupByNameInProgram(ProgramForAdministrationIdentifier $program_identifier, string $ugroup_name): ?ProjectUGroup
+    {
+        $project = $this->project_manager->getProject($program_identifier->id);
+        return $this->group_manager->getUGroupByName($project, $ugroup_name);
     }
 }

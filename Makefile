@@ -75,7 +75,8 @@ rnc2rng: src/common/xml/resources/project/project.rng \
 	 plugins/testmanagement/resources/testmanagement.rng \
 	 plugins/testmanagement/resources/testmanagement_external_changeset.rng \
 	 plugins/testmanagement/resources/testmanagement_external_fields.rng \
-	 plugins/timetracking/resources/timetracking.rng
+	 plugins/timetracking/resources/timetracking.rng \
+	 plugins/program_management/resources/program_management.rng
 
 src/common/xml/resources/project/project.rng: src/common/xml/resources/project/project.rnc plugins/tracker/resources/tracker-definition.rnc plugins/docman/resources/docman-definition.rnc src/common/xml/resources/ugroups-definition.rnc plugins/svn/resources/svn-definition.rnc src/common/xml/resources/frs-definition.rnc src/common/xml/resources/mediawiki-definition.rnc src/common/xml/resources/project-definition.rnc
 
