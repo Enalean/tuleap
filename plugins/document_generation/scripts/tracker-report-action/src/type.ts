@@ -18,7 +18,9 @@
  */
 
 export interface ArtifactReportResponse {
-    values: Array<ArtifactReportResponseFieldValue>;
+    readonly id: number;
+    readonly title: string | null;
+    readonly values: ReadonlyArray<ArtifactReportResponseFieldValue>;
 }
 
 interface ArtifactReportResponseFieldValue {
@@ -34,5 +36,11 @@ export interface ArtifactFieldValue {
 }
 
 export interface ExportDocument {
+    readonly artifacts: ReadonlyArray<FormattedArtifact>;
+}
+
+interface FormattedArtifact {
+    readonly id: number;
+    readonly title: string | null;
     readonly fields: ReadonlyArray<ArtifactFieldValue>;
 }
