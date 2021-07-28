@@ -29,7 +29,7 @@ describe("export-document", () => {
         const recursive_get_spy = jest.spyOn(tlp_fetch, "recursiveGet");
         recursive_get_spy.mockResolvedValue([]);
         const export_creator = jest.spyOn(document_export_creator, "createExportDocument");
-        export_creator.mockReturnValue({ fields: [] });
+        export_creator.mockReturnValue({ artifacts: [{ id: 1, title: "title", fields: [] }] });
 
         await startDownloadExportDocument(12, document_exporter);
 

@@ -22,6 +22,8 @@ import type { ArtifactReportResponse, ExportDocument } from "../type";
 export function createExportDocument(report_artifacts: ArtifactReportResponse[]): ExportDocument {
     const artifact_data = [];
     for (const artifact of report_artifacts) {
+        const artifact_id = artifact.id;
+        const artifact_title = artifact.title;
         const fields_content = [];
         for (const value of artifact.values) {
             if (value.type === "aid") {
@@ -31,8 +33,12 @@ export function createExportDocument(report_artifacts: ArtifactReportResponse[])
                 });
             }
         }
-        artifact_data.push(...fields_content);
+        artifact_data.push({
+            id: artifact_id,
+            title: artifact_title,
+            fields: fields_content,
+        });
     }
 
-    return { fields: artifact_data };
+    return { artifacts: artifact_data };
 }

@@ -18,7 +18,16 @@
  */
 
 import type { ExportDocument } from "../type";
-import { AlignmentType, Document, Footer, Packer, PageNumber, Paragraph, TextRun } from "docx";
+import {
+    AlignmentType,
+    Document,
+    Footer,
+    Packer,
+    PageNumber,
+    Paragraph,
+    TextRun,
+    HeadingLevel,
+} from "docx";
 
 export async function downloadDocx(document: ExportDocument): Promise<void> {
     const footers = {
@@ -37,12 +46,24 @@ export async function downloadDocx(document: ExportDocument): Promise<void> {
     };
 
     const paragraphs = [];
-    for (const artifact_value of document.fields) {
+    for (const artifact of document.artifacts) {
+        let title = "art #" + artifact.id;
+        if (artifact.title !== null) {
+            title += " - " + artifact.title;
+        }
         paragraphs.push(
             new Paragraph({
-                text: artifact_value.field_name + "\n" + artifact_value.field_value,
+                text: title,
+                heading: HeadingLevel.HEADING_6,
             })
         );
+        for (const artifact_value of artifact.fields) {
+            paragraphs.push(
+                new Paragraph({
+                    text: artifact_value.field_name + "\n" + artifact_value.field_value,
+                })
+            );
+        }
     }
 
     const doc = new Document({
