@@ -17,11 +17,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { ArtifactFieldValue, ArtifactReportResponse } from "../type";
+import type { ArtifactReportResponse, ExportDocument } from "../type";
 
-export function createArtifactValuesCollection(
-    report_artifacts: ArtifactReportResponse[]
-): Array<ArtifactFieldValue> {
+export function createExportDocument(report_artifacts: ArtifactReportResponse[]): ExportDocument {
     const artifact_data = [];
     for (const artifact of report_artifacts) {
         const fields_content = [];
@@ -36,5 +34,5 @@ export function createArtifactValuesCollection(
         artifact_data.push(...fields_content);
     }
 
-    return artifact_data;
+    return { fields: artifact_data };
 }

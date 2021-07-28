@@ -17,10 +17,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import type { ExportDocument } from "../type";
 import { AlignmentType, Document, Footer, Packer, PageNumber, Paragraph, TextRun } from "docx";
-import type { ArtifactFieldValue } from "../type";
 
-export async function buildDocument(artifact_values: ArtifactFieldValue[]): Promise<void> {
+export async function downloadDocx(document: ExportDocument): Promise<void> {
     const footers = {
         default: new Footer({
             children: [
@@ -37,7 +37,7 @@ export async function buildDocument(artifact_values: ArtifactFieldValue[]): Prom
     };
 
     const paragraphs = [];
-    for (const artifact_value of artifact_values) {
+    for (const artifact_value of document.fields) {
         paragraphs.push(
             new Paragraph({
                 text: artifact_value.field_name + "\n" + artifact_value.field_value,

@@ -36,7 +36,11 @@ document.addEventListener("DOMContentLoaded", () => {
             /* webpackChunkName: "document_generation-download-export" */ "./export-document"
         );
 
-        await startDownloadExportDocument(report_id);
+        const { downloadDocx } = await import(
+            /* webpackChunkName: "document_generation-download-export-transformation" */ "./Exporter/download-docx"
+        );
+
+        await startDownloadExportDocument(report_id, downloadDocx);
     });
 });
 
