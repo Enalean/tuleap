@@ -23,6 +23,7 @@ import { createExportDocument } from "./helpers/create-export-document";
 
 export async function startDownloadExportDocument(
     report_id: number,
+    tracker_shortname: string,
     document_exporter: (doc: ExportDocument) => Promise<void>
 ): Promise<void> {
     const report_artifacts: ArtifactReportResponse[] = await recursiveGet(
@@ -35,7 +36,7 @@ export async function startDownloadExportDocument(
         }
     );
 
-    const export_document = createExportDocument(report_artifacts);
+    const export_document = createExportDocument(report_artifacts, tracker_shortname);
 
     await document_exporter(export_document);
 }

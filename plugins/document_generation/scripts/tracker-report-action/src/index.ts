@@ -32,6 +32,11 @@ document.addEventListener("DOMContentLoaded", () => {
         }
         const report_id = Number(generate_document_link.dataset.reportId);
 
+        if (!generate_document_link.dataset.trackerShortname) {
+            throw new Error("Missing tracker shortname dataset");
+        }
+        const tracker_shortname = generate_document_link.dataset.trackerShortname;
+
         const { startDownloadExportDocument } = await import(
             /* webpackChunkName: "document_generation-download-export" */ "./export-document"
         );
@@ -40,7 +45,7 @@ document.addEventListener("DOMContentLoaded", () => {
             /* webpackChunkName: "document_generation-download-export-transformation" */ "./Exporter/download-docx"
         );
 
-        await startDownloadExportDocument(report_id, downloadDocx);
+        await startDownloadExportDocument(report_id, tracker_shortname, downloadDocx);
     });
 });
 

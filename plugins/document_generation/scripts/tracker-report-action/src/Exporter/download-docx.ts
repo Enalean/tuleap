@@ -52,13 +52,9 @@ export async function downloadDocx(document: ExportDocument): Promise<void> {
 
     const paragraphs = [];
     for (const artifact of document.artifacts) {
-        let title = "art #" + artifact.id;
-        if (artifact.title !== null) {
-            title += " - " + artifact.title;
-        }
         paragraphs.push(
             new Paragraph({
-                text: title,
+                text: artifact.title,
                 heading: HEADER_LEVEL_ARTIFACT_TITLE,
                 style: HEADER_STYLE_ARTIFACT_TITLE,
             })
