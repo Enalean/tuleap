@@ -100,7 +100,8 @@ class ProjectHistoryPresenter
             $this->start_date,
             [],
             [],
-            false
+            false,
+            'date-time-history-start-date'
         );
     }
 
@@ -112,7 +113,8 @@ class ProjectHistoryPresenter
             $this->end_date,
             [],
             [],
-            false
+            false,
+            'date-time-history-end-date'
         );
     }
 

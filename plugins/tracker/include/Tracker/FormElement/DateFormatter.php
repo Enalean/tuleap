@@ -132,7 +132,8 @@ class Tracker_FormElement_DateFormatter
             $value,
             [],
             $errors,
-            false
+            false,
+            'date-time-' . $this->field->getName()
         );
     }
 }

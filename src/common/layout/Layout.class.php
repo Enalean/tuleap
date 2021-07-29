@@ -607,22 +607,19 @@ abstract class Layout extends Tuleap\Layout\BaseLayout //phpcs:ignore PSR1.Class
      * Helper for the calendar picker. It returns the html snippet which will
      * enable user to specify a date with the help of little dhtml
      *
-     * @param string  $id the id of the input element
-     * @param string  $name the name of the input element
      * @param array   $criteria_selector list of extra criterias to be listed in a prepended select
      * @param array   $classes extra css classes if needed
-     * @param bool $is_time_displayed to know if the time need to be displayed
      *
-     * @return string The calendar picker
      */
     public function getBootstrapDatePicker(
-        $id,
-        $name,
+        string $id,
+        string $name,
         $value,
         array $criteria_selector,
         array $classes,
-        $is_time_displayed
-    ) {
+        bool $is_time_displayed,
+        string $data_test
+    ): string {
         $hp    = Codendi_HTMLPurifier::instance();
         $html  = '';
         $html .= '<div class="input-prepend dropdown input-append date ' . implode(' ', $classes) . '">';
@@ -650,7 +647,8 @@ abstract class Layout extends Tuleap\Layout\BaseLayout //phpcs:ignore PSR1.Class
                        id="' . $hp->purify($id, CODENDI_PURIFIER_CONVERT_HTML) . '"
                        data-format="' . $format . '"
                        type="text"
-                       value="' . $hp->purify($value, CODENDI_PURIFIER_CONVERT_HTML) . '">
+                       value="' . $hp->purify($value, CODENDI_PURIFIER_CONVERT_HTML) . '"
+                       data-test="' . $hp->purify($data_test, CODENDI_PURIFIER_CONVERT_HTML) . '">
                 </input>
                 <span class="add-on add-on-calendar">
                   <i class="fas fa-calendar-alt" data-time-icon="fa-clock-o" data-date-icon="fa-calendar"></i>

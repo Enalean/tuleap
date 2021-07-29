@@ -75,12 +75,32 @@ describe("Program management", () => {
         selectLabelInListPickerDropdown(team_project_name);
         cy.get("[data-test=program-management-add-team-button]").click({ force: true });
 
-        cy.log("Check navbar for program");
-        cy.get("[data-test=nav-bar-linked-projects").contains(team_project_name);
+        cy.log("Edit configuration");
+        cy.get("[data-test=admin-program-increment-label]").type("Foo");
+        cy.get("[data-test=admin-program-increment-sub-label]").type("Bar{enter}");
 
-        cy.log("Check navbar for team");
+        cy.log("Check configuration is applied");
+        cy.visitProjectService(program_project_name, "Program");
+        cy.get("[data-test=create-program-increment-button]")
+            .contains("Create the first Bar")
+            .click();
+
+        cy.log("Create a program increment");
+        cy.get("[data-test=release_number]").type("My first PI");
+        cy.get("[data-test=date-time-start_date]").type("2021-08-03");
+        cy.get("[data-test=date-time-end_date]").type("2021-10-03");
+        cy.get("[data-test=artifact-submit-button]").click();
+
+        cy.log("Check sidebar for program");
+        cy.get("[data-test=nav-bar-linked-projects]").contains(team_project_name);
+
+        cy.log("Check sidebar for team");
         cy.visitProjectService(team_project_name, "Agile Dashboard");
-        cy.get("[data-test=nav-bar-linked-projects").contains(program_project_name);
+        cy.get("[data-test=nav-bar-linked-projects]").contains(program_project_name);
+
+        cy.log("Check mirrored program increment have been created");
+        cy.get("[data-test=go-to-top-backlog]").click();
+        cy.get("[data-test=expand-collapse-milestone]").contains("My first PI");
     });
 });
 
