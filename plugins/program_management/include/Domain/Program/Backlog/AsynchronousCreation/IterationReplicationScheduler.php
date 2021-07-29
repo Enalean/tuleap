@@ -25,7 +25,9 @@ namespace Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation;
 use Psr\Log\LoggerInterface;
 use Tuleap\ProgramManagement\Domain\FeatureFlag\VerifyIterationsFeatureActive;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration\IterationIdentifier;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration\JustLinkedIterationCollection;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration\SearchIterations;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration\VerifyIterationHasBeenLinkedBefore;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementIdentifier;
 use Tuleap\ProgramManagement\Domain\VerifyIsVisibleArtifact;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
@@ -38,18 +40,21 @@ final class IterationReplicationScheduler
     private VerifyIterationsFeatureActive $feature_flag_verifier;
     private SearchIterations $iterations_searcher;
     private VerifyIsVisibleArtifact $visibility_verifier;
+    private VerifyIterationHasBeenLinkedBefore $iteration_link_verifier;
     private LoggerInterface $logger;
 
     public function __construct(
         VerifyIterationsFeatureActive $feature_flag_verifier,
         SearchIterations $iterations_searcher,
         VerifyIsVisibleArtifact $visibility_verifier,
+        VerifyIterationHasBeenLinkedBefore $iteration_link_verifier,
         LoggerInterface $logger
     ) {
-        $this->feature_flag_verifier = $feature_flag_verifier;
-        $this->iterations_searcher   = $iterations_searcher;
-        $this->visibility_verifier   = $visibility_verifier;
-        $this->logger                = $logger;
+        $this->feature_flag_verifier   = $feature_flag_verifier;
+        $this->iterations_searcher     = $iterations_searcher;
+        $this->visibility_verifier     = $visibility_verifier;
+        $this->iteration_link_verifier = $iteration_link_verifier;
+        $this->logger                  = $logger;
     }
 
     public function replicateIterationsIfNeeded(
@@ -59,17 +64,25 @@ final class IterationReplicationScheduler
         if (! $this->feature_flag_verifier->isIterationsFeatureActive()) {
             return;
         }
-        $iterations = IterationIdentifier::buildCollectionFromProgramIncrement(
+        $iterations             = IterationIdentifier::buildCollectionFromProgramIncrement(
             $this->iterations_searcher,
             $this->visibility_verifier,
             $program_increment,
             $user
         );
+        $just_linked_iterations = JustLinkedIterationCollection::fromIterations(
+            $this->iteration_link_verifier,
+            $program_increment,
+            ...$iterations
+        );
+        if ($just_linked_iterations->isEmpty()) {
+            return;
+        }
         $ids        = array_map(
             static fn(IterationIdentifier $iteration): int => $iteration->id,
-            $iterations
+            $just_linked_iterations->ids
         );
         $ids_string = implode(',', $ids);
-        $this->logger->debug("Program increment has iterations: [$ids_string]");
+        $this->logger->debug("Program increment has new iterations: [$ids_string]");
     }
 }

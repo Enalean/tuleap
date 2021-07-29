@@ -28,6 +28,7 @@ use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\ProgramManagement\Stub\CheckProgramIncrementStub;
 use Tuleap\ProgramManagement\Stub\SearchIterationsStub;
 use Tuleap\ProgramManagement\Stub\VerifyIsVisibleArtifactStub;
+use Tuleap\ProgramManagement\Stub\VerifyIterationHasBeenLinkedBeforeStub;
 use Tuleap\ProgramManagement\Stub\VerifyIterationsFeatureActiveStub;
 use Tuleap\Test\Builders\UserTestBuilder;
 
@@ -41,26 +42,28 @@ final class IterationReplicationSchedulerTest extends \Tuleap\Test\PHPUnit\TestC
     private VerifyIterationsFeatureActiveStub $feature_flag_verifier;
     private SearchIterationsStub $iterations_searcher;
     private VerifyIsVisibleArtifactStub $visibility_verifier;
+    private VerifyIterationHasBeenLinkedBeforeStub $iteration_link_verifier;
 
     protected function setUp(): void
     {
-        $pfuser                      = UserTestBuilder::aUser()->build();
-        $this->user                  = UserIdentifier::fromPFUser($pfuser);
-        $this->program_increment     = ProgramIncrementIdentifier::fromId(
+        $pfuser                        = UserTestBuilder::aUser()->build();
+        $this->user                    = UserIdentifier::fromPFUser($pfuser);
+        $this->program_increment       = ProgramIncrementIdentifier::fromId(
             CheckProgramIncrementStub::buildProgramIncrementChecker(),
             902,
             $pfuser
         );
-        $this->logger                = new TestLogger();
-        $this->feature_flag_verifier = VerifyIterationsFeatureActiveStub::withActiveFeature();
-        $this->iterations_searcher   = SearchIterationsStub::withIterationIds(
+        $this->logger                  = new TestLogger();
+        $this->feature_flag_verifier   = VerifyIterationsFeatureActiveStub::withActiveFeature();
+        $this->iterations_searcher     = SearchIterationsStub::withIterationIds(
             self::FIRST_ITERATION_ID,
             self::SECOND_ITERATION_ID
         );
-        $this->visibility_verifier   = VerifyIsVisibleArtifactStub::withVisibleIds(
+        $this->visibility_verifier     = VerifyIsVisibleArtifactStub::withVisibleIds(
             self::FIRST_ITERATION_ID,
             self::SECOND_ITERATION_ID
         );
+        $this->iteration_link_verifier = VerifyIterationHasBeenLinkedBeforeStub::withNoIteration();
     }
 
     private function getScheduler(): IterationReplicationScheduler
@@ -69,6 +72,7 @@ final class IterationReplicationSchedulerTest extends \Tuleap\Test\PHPUnit\TestC
             $this->feature_flag_verifier,
             $this->iterations_searcher,
             $this->visibility_verifier,
+            $this->iteration_link_verifier,
             $this->logger
         );
     }
@@ -81,10 +85,30 @@ final class IterationReplicationSchedulerTest extends \Tuleap\Test\PHPUnit\TestC
         self::assertFalse($this->logger->hasDebugRecords());
     }
 
+    public function testItDoesNotScheduleAReplicationWhenProgramIncrementHasNoIteration(): void
+    {
+        $this->iterations_searcher = SearchIterationsStub::withNoIteration();
+        $this->visibility_verifier = VerifyIsVisibleArtifactStub::withNoVisibleArtifact();
+        $this->getScheduler()->replicateIterationsIfNeeded($this->program_increment, $this->user);
+
+        self::assertFalse($this->logger->hasDebugRecords());
+    }
+
+    public function testItDoesNotScheduleAReplicationWhenAllIterationsHadBeenLinkedPreviously(): void
+    {
+        $this->iteration_link_verifier = VerifyIterationHasBeenLinkedBeforeStub::withIterationIds(
+            self::FIRST_ITERATION_ID,
+            self::SECOND_ITERATION_ID
+        );
+        $this->getScheduler()->replicateIterationsIfNeeded($this->program_increment, $this->user);
+
+        self::assertFalse($this->logger->hasDebugRecords());
+    }
+
     public function testItSchedulesAReplication(): void
     {
         $this->getScheduler()->replicateIterationsIfNeeded($this->program_increment, $this->user);
 
-        self::assertTrue($this->logger->hasDebug('Program increment has iterations: [828,251]'));
+        self::assertTrue($this->logger->hasDebug('Program increment has new iterations: [828,251]'));
     }
 }

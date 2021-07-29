@@ -20,35 +20,14 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Stub;
+namespace Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration;
 
-use Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration\SearchIterations;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementIdentifier;
 
-final class SearchIterationsStub implements SearchIterations
+interface VerifyIterationHasBeenLinkedBefore
 {
-    /**
-     * @var int[]
-     */
-    private array $iteration_ids;
-
-    private function __construct(int ...$iteration_ids)
-    {
-        $this->iteration_ids = $iteration_ids;
-    }
-
-    public function searchIterations(ProgramIncrementIdentifier $program_increment): array
-    {
-        return $this->iteration_ids;
-    }
-
-    public static function withIterationIds(int ...$iteration_ids): self
-    {
-        return new self(...$iteration_ids);
-    }
-
-    public static function withNoIteration(): self
-    {
-        return new self();
-    }
+    public function hasIterationBeenLinkedBefore(
+        ProgramIncrementIdentifier $program_increment,
+        IterationIdentifier $iteration
+    ): bool;
 }

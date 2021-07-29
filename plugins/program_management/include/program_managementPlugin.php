@@ -441,6 +441,7 @@ final class program_managementPlugin extends Plugin
                 new ForgeConfigAdapter(),
                 $iterations_linked_dao,
                 new ArtifactVisibleVerifier($artifact_factory, $user_retriever),
+                $iterations_linked_dao,
                 $logger
             )
         );

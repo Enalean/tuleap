@@ -30,6 +30,7 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\RemovePlannedFeat
 use Tuleap\ProgramManagement\Stub\SearchIterationsStub;
 use Tuleap\ProgramManagement\Stub\VerifyIsProgramIncrementTrackerStub;
 use Tuleap\ProgramManagement\Stub\VerifyIsVisibleArtifactStub;
+use Tuleap\ProgramManagement\Stub\VerifyIterationHasBeenLinkedBeforeStub;
 use Tuleap\ProgramManagement\Stub\VerifyIterationsFeatureActiveStub;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
@@ -80,6 +81,7 @@ final class ArtifactUpdatedHandlerTest extends TestCase
                 VerifyIterationsFeatureActiveStub::withActiveFeature(),
                 SearchIterationsStub::withIterationIds(101, 102),
                 VerifyIsVisibleArtifactStub::withVisibleIds(101, 102),
+                VerifyIterationHasBeenLinkedBeforeStub::withNoIteration(),
                 $this->logger
             )
         );
