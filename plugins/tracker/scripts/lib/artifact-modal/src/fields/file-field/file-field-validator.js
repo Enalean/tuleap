@@ -17,8 +17,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { findImageUrls } from "@tuleap/ckeditor-image-upload";
-import { TEXT_FORMAT_HTML } from "../../../../../constants/fields-constants.js";
+import {
+    TEXT_FORMAT_HTML,
+    TEXT_FORMAT_COMMONMARK,
+} from "../../../../../constants/fields-constants.js";
 
 export function validateFileField(file_value_model, text_field_value_models, followup_value_model) {
     if (typeof file_value_model === "undefined") {
@@ -61,12 +63,15 @@ function isFileReferencedByAnyTextField(file, text_field_value_models) {
 }
 
 function isFileReferencedByAnEditor(file, text_content, text_format) {
+    if (!text_content) {
+        return false;
+    }
+
     return (
-        isTextFieldInHTMLFormat(text_format) &&
-        findImageUrls(text_content).includes(file.download_href)
+        isTextFieldInHTMLOrMarkdownFormat(text_format) && text_content.includes(file.download_href)
     );
 }
 
-function isTextFieldInHTMLFormat(text_format) {
-    return text_format === TEXT_FORMAT_HTML;
+function isTextFieldInHTMLOrMarkdownFormat(text_format) {
+    return text_format === TEXT_FORMAT_HTML || text_format === TEXT_FORMAT_COMMONMARK;
 }

@@ -18,7 +18,11 @@
  */
 
 import { validateFileField } from "./file-field-validator.js";
-import { TEXT_FORMAT_HTML, TEXT_FORMAT_TEXT } from "../../../../../constants/fields-constants.js";
+import {
+    TEXT_FORMAT_COMMONMARK,
+    TEXT_FORMAT_HTML,
+    TEXT_FORMAT_TEXT,
+} from "../../../../../constants/fields-constants.js";
 
 describe(`file-field-validator`, () => {
     describe(`validateFileField()
@@ -141,8 +145,8 @@ describe(`file-field-validator`, () => {
                 other_text_field = {
                     field_id: 6959,
                     value: {
-                        content: `<p><img src="https://example.com/carboxylation.gif"></p>`,
-                        format: TEXT_FORMAT_HTML,
+                        content: `![](<p><img src="https://example.com/carboxylation.gif"></p>)`,
+                        format: TEXT_FORMAT_COMMONMARK,
                     },
                 };
                 text_field_value_models = [text_field_referencing_an_image, other_text_field];
