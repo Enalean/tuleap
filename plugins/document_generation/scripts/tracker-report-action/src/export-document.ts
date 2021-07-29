@@ -23,6 +23,7 @@ import { createExportDocument } from "./helpers/create-export-document";
 
 export async function startDownloadExportDocument(
     report_id: number,
+    report_name: string,
     tracker_shortname: string,
     document_exporter: (doc: ExportDocument) => Promise<void>
 ): Promise<void> {
@@ -37,7 +38,7 @@ export async function startDownloadExportDocument(
         }
     );
 
-    const export_document = createExportDocument(report_artifacts, tracker_shortname);
+    const export_document = createExportDocument(report_artifacts, report_name, tracker_shortname);
 
     await document_exporter(export_document);
 }

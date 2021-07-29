@@ -68,7 +68,9 @@ class document_generationPlugin extends Plugin
             return;
         }
 
-        $report_id         = $event->getReport()->getId();
+        $report            = $event->getReport();
+        $report_id         = $report->getId();
+        $report_name       = $report->getName();
         $tracker_shortname = $event->getReport()->getTracker()->getItemName();
 
         $renderer = TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../templates');
@@ -78,6 +80,7 @@ class document_generationPlugin extends Plugin
                 'tracker-report-action',
                 [
                     "report_id"         => $report_id,
+                    "report_name"       => $report_name,
                     "tracker_shortname" => $tracker_shortname,
                 ]
             )
