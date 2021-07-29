@@ -91,6 +91,7 @@ final class UserStoriesInMirroredProgramIncrementsPlannerTest extends TestCase
         $this->mirrored_milestone_retriever = \Mockery::mock(MirroredTimeboxRetriever::class);
         $this->content_dao                  = \Mockery::mock(ContentDao::class);
 
+        $pfuser        = UserTestBuilder::aUser()->build();
         $this->planner = new UserStoriesInMirroredProgramIncrementsPlanner(
             $db_transaction_executor,
             $this->artifacts_linked_dao,
@@ -98,11 +99,11 @@ final class UserStoriesInMirroredProgramIncrementsPlannerTest extends TestCase
             $this->mirrored_milestone_retriever,
             $this->content_dao,
             new TestLogger(),
-            RetrieveUserStub::buildRegularUser(),
+            RetrieveUserStub::withUser($pfuser),
             RetrieveUnlinkedUserStoriesOfMirroredProgramIncrementStub::buildEmptyUserStories()
         );
 
-        $this->user = UserIdentifier::fromPFUser(UserTestBuilder::aUser()->build());
+        $this->user = UserIdentifier::fromPFUser($pfuser);
     }
 
     public function testItAddLinksToMirroredMilestones(): void

@@ -22,9 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog;
 
-use Psr\Log\LoggerInterface;
 use Tuleap\ProgramManagement\Adapter\Events\ArtifactUpdatedProxy;
-use Tuleap\ProgramManagement\Domain\FeatureFlag\VerifyIterationsFeatureActive;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\IterationReplicationScheduler;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\PlanUserStoriesInMirroredProgramIncrements;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\ProgramIncrementChanged;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementIdentifier;
@@ -36,21 +35,18 @@ final class ArtifactUpdatedHandler
     private VerifyIsProgramIncrementTracker $program_increment_verifier;
     private PlanUserStoriesInMirroredProgramIncrements $user_stories_planner;
     private RemovePlannedFeaturesFromTopBacklog $feature_remover;
-    private VerifyIterationsFeatureActive $feature_flag_verifier;
-    private LoggerInterface $logger;
+    private IterationReplicationScheduler $iteration_replicator;
 
     public function __construct(
         VerifyIsProgramIncrementTracker $program_increment_verifier,
         PlanUserStoriesInMirroredProgramIncrements $user_stories_planner,
         RemovePlannedFeaturesFromTopBacklog $feature_remover,
-        VerifyIterationsFeatureActive $feature_flag_verifier,
-        LoggerInterface $logger
+        IterationReplicationScheduler $iteration_replicator
     ) {
         $this->program_increment_verifier = $program_increment_verifier;
         $this->user_stories_planner       = $user_stories_planner;
         $this->feature_remover            = $feature_remover;
-        $this->feature_flag_verifier      = $feature_flag_verifier;
-        $this->logger                     = $logger;
+        $this->iteration_replicator       = $iteration_replicator;
     }
 
     public function handle(ArtifactUpdatedProxy $event): void
@@ -58,7 +54,7 @@ final class ArtifactUpdatedHandler
         $program_increment = ProgramIncrementIdentifier::fromArtifactUpdated($this->program_increment_verifier, $event);
         if ($program_increment) {
             $this->planArtifactIfNeeded($event, $program_increment);
-            $this->createIterationsMirrors();
+            $this->iteration_replicator->replicateIterationsIfNeeded($program_increment, $event->user);
         }
         $this->cleanUpFromTopBacklogFeatureAddedToAProgramIncrement($event);
     }
@@ -78,13 +74,5 @@ final class ArtifactUpdatedHandler
     private function cleanUpFromTopBacklogFeatureAddedToAProgramIncrement(ArtifactUpdatedProxy $artifact_updated): void
     {
         $this->feature_remover->removeFeaturesPlannedInAProgramIncrementFromTopBacklog($artifact_updated->artifact_id);
-    }
-
-    private function createIterationsMirrors(): void
-    {
-        if (! $this->feature_flag_verifier->isIterationsFeatureActive()) {
-            return;
-        }
-        $this->logger->debug('Program increment artifact has been updated');
     }
 }
