@@ -20,14 +20,19 @@
 import type { ExportDocument } from "../type";
 import {
     AlignmentType,
-    Document,
+    File,
     Footer,
     Packer,
     PageNumber,
     Paragraph,
     TextRun,
     HeadingLevel,
+    TableOfContents,
+    StyleLevel,
 } from "docx";
+
+const HEADER_STYLE_ARTIFACT_TITLE = "ArtifactTitle";
+const HEADER_LEVEL_ARTIFACT_TITLE = HeadingLevel.HEADING_6;
 
 export async function downloadDocx(document: ExportDocument): Promise<void> {
     const footers = {
@@ -54,7 +59,8 @@ export async function downloadDocx(document: ExportDocument): Promise<void> {
         paragraphs.push(
             new Paragraph({
                 text: title,
-                heading: HeadingLevel.HEADING_6,
+                heading: HEADER_LEVEL_ARTIFACT_TITLE,
+                style: HEADER_STYLE_ARTIFACT_TITLE,
             })
         );
         for (const artifact_value of artifact.fields) {
@@ -66,10 +72,28 @@ export async function downloadDocx(document: ExportDocument): Promise<void> {
         }
     }
 
-    const doc = new Document({
+    const table_of_contents = new TableOfContents("Table of Contents", {
+        hyperlink: true,
+        stylesWithLevels: [
+            new StyleLevel("ArtifactTitle", Number(HEADER_LEVEL_ARTIFACT_TITLE.substr(-1))),
+        ],
+    });
+
+    const doc = new File({
+        styles: {
+            paragraphStyles: [
+                {
+                    id: HEADER_STYLE_ARTIFACT_TITLE,
+                    name: HEADER_STYLE_ARTIFACT_TITLE,
+                    basedOn: HEADER_LEVEL_ARTIFACT_TITLE,
+                    next: HEADER_LEVEL_ARTIFACT_TITLE,
+                    quickFormat: true,
+                },
+            ],
+        },
         sections: [
             {
-                children: [...paragraphs],
+                children: [table_of_contents, ...paragraphs],
                 footers,
             },
         ],
