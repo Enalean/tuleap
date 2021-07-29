@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement;
 
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
+use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\ProgramManagement\Stub\BuildProgramStub;
 use Tuleap\Test\Builders\UserTestBuilder;
 
@@ -31,13 +32,24 @@ final class ProgramIncrementBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testBuildsOpenProgramIncrements(): void
     {
         $retrieve_program_increments = new class implements RetrieveProgramIncrements {
-            public function retrieveOpenProgramIncrements(ProgramIdentifier $program, \PFUser $user): array
-            {
+            public function retrieveOpenProgramIncrements(
+                ProgramIdentifier $program,
+                UserIdentifier $user_identifier
+            ): array {
                 return [];
             }
         };
 
-        $program_increment_builder = new ProgramIncrementBuilder(BuildProgramStub::stubValidProgram(), $retrieve_program_increments);
-        self::assertEquals([], $program_increment_builder->buildOpenProgramIncrements(12, UserTestBuilder::aUser()->build()));
+        $program_increment_builder = new ProgramIncrementBuilder(
+            BuildProgramStub::stubValidProgram(),
+            $retrieve_program_increments
+        );
+        self::assertEquals(
+            [],
+            $program_increment_builder->buildOpenProgramIncrements(
+                12,
+                UserIdentifier::fromPFUser(UserTestBuilder::aUser()->build())
+            )
+        );
     }
 }
