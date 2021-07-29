@@ -30,14 +30,32 @@ import {
     StyleLevel,
     Bookmark,
     PageBreak,
+    Table,
+    TableRow,
+    TableCell,
+    WidthType,
 } from "docx";
 import { TableOfContentsPrefilled } from "./DOCX/TableOfContents/table-of-contents";
 import { getAnchorToArtifactContent } from "./DOCX/sections-anchor";
+import {
+    getPOFileFromLocale,
+    initGettext,
+} from "../../../../../../src/scripts/tuleap/gettext/gettext-init";
 
 const HEADER_STYLE_ARTIFACT_TITLE = "ArtifactTitle";
 const HEADER_LEVEL_ARTIFACT_TITLE = HeadingLevel.HEADING_6;
 
-export async function downloadDocx(document: ExportDocument): Promise<void> {
+export async function downloadDocx(document: ExportDocument, language: string): Promise<void> {
+    const gettext_provider = await initGettext(
+        language,
+        "tracker-report-action",
+        (locale) =>
+            import(
+                /* webpackChunkName: "tracker-report-po-" */ "../../po/" +
+                    getPOFileFromLocale(locale)
+            )
+    );
+
     const footers = {
         default: new Footer({
             children: [
@@ -67,13 +85,44 @@ export async function downloadDocx(document: ExportDocument): Promise<void> {
                 ],
             })
         );
+
+        const fields_rows = [
+            new TableRow({
+                children: [
+                    new TableCell({
+                        children: [new Paragraph(gettext_provider.gettext("Field name"))],
+                    }),
+                    new TableCell({
+                        children: [new Paragraph(gettext_provider.gettext("Value"))],
+                    }),
+                ],
+                tableHeader: true,
+            }),
+        ];
+
         for (const artifact_value of artifact.fields) {
-            artifacts_content.push(
-                new Paragraph({
-                    text: artifact_value.field_name + "\n" + artifact_value.field_value,
-                })
-            );
+            const table_row = new TableRow({
+                children: [
+                    new TableCell({
+                        children: [new Paragraph(artifact_value.field_name)],
+                    }),
+                    new TableCell({
+                        children: [new Paragraph(artifact_value.field_value.toString())],
+                    }),
+                ],
+            });
+
+            fields_rows.push(table_row);
         }
+        artifacts_content.push(
+            new Table({
+                rows: fields_rows,
+                width: {
+                    size: 100,
+                    type: WidthType.PERCENTAGE,
+                },
+            })
+        );
     }
 
     const table_of_contents = new TableOfContentsPrefilled(document.artifacts, {

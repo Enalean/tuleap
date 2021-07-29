@@ -27,6 +27,11 @@ document.addEventListener("DOMContentLoaded", () => {
     generate_document_link.addEventListener("click", async (event): Promise<void> => {
         event.preventDefault();
 
+        const language = document.body.dataset.userLocale;
+        if (language === undefined) {
+            throw new Error("Not able to find the user language.");
+        }
+
         if (!generate_document_link.dataset.reportId) {
             throw new Error("Missing report ID dataset");
         }
@@ -50,7 +55,13 @@ document.addEventListener("DOMContentLoaded", () => {
             /* webpackChunkName: "document_generation-download-export-transformation" */ "./Exporter/download-docx"
         );
 
-        await startDownloadExportDocument(report_id, report_name, tracker_shortname, downloadDocx);
+        await startDownloadExportDocument(
+            report_id,
+            report_name,
+            tracker_shortname,
+            language,
+            downloadDocx
+        );
     });
 });
 

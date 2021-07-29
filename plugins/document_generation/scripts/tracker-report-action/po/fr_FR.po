@@ -1,0 +1,5 @@
+msgid "Field name"
+msgstr "Nom du champ"
+
+msgid "Value"
+msgstr "Valeur"
