@@ -16,6 +16,10 @@ grammar {
                     attribute ugroup_name { xsd:string }
                 }+
             }
-        }
+        },
+        element customisation {
+            element program_increments_section_name { xsd:string }?,
+            element program_increments_milestones_name { xsd:string }?
+        }?
     }
 }

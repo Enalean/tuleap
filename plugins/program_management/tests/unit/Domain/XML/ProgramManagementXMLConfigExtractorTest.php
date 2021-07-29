@@ -113,6 +113,27 @@ class ProgramManagementXMLConfigExtractorTest extends TestCase
         self::assertEquals(277, $config->source_tracker_id);
         self::assertEquals([278, 279], $config->plannable_trackers_ids);
         self::assertEquals(['101_3'], $config->ugroups_that_can_prioritize);
+        self::assertNull($config->program_increments_section_name);
+        self::assertNull($config->milestones_name);
+    }
+
+    public function testItExtractsTheXMLConfigWithLabelsCustomisation(): void
+    {
+        $config = $this->processExtraction(
+            __DIR__ . '/__fixtures/with_customisation_xml',
+            [
+                'T36277' => 277,
+                'T36280' => 278,
+                'T37001' => 279,
+            ],
+            true
+        );
+
+        self::assertEquals(277, $config->source_tracker_id);
+        self::assertEquals([278, 279], $config->plannable_trackers_ids);
+        self::assertEquals(['101_3'], $config->ugroups_that_can_prioritize);
+        self::assertEquals("Crémants d'Alsace", $config->program_increments_section_name);
+        self::assertEquals('Crémant', $config->milestones_name);
     }
 
     private function processExtraction(string $xml_extraction_path, array $created_trackers_mapping, bool $build_ugroup_retriever_with_ugroups): ProgramManagementXMLConfig

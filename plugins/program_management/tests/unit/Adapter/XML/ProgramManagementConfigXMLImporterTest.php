@@ -78,8 +78,8 @@ class ProgramManagementConfigXMLImporterTest extends TestCase
         $last_plan_creation_args = $this->plan_creator->getCreateMethodCallsArgs(0);
 
         self::assertEquals(10, $last_plan_creation_args->program_increment_change->tracker_id);
-        self::assertNull($last_plan_creation_args->program_increment_change->label);
-        self::assertNull($last_plan_creation_args->program_increment_change->sub_label);
+        self::assertEquals("Crémants d'Alsace", $last_plan_creation_args->program_increment_change->label);
+        self::assertEquals('Crémant', $last_plan_creation_args->program_increment_change->sub_label);
 
         self::assertEquals($this->current_user, $last_plan_creation_args->user);
         self::assertEquals(101, $last_plan_creation_args->project_id);
@@ -97,7 +97,9 @@ class ProgramManagementConfigXMLImporterTest extends TestCase
                 new ProgramManagementXMLConfig(
                     10,
                     [12, 13],
-                    ['101_3']
+                    ['101_3'],
+                    "Crémants d'Alsace",
+                    "Crémant",
                 )
             );
         } else {

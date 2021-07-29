@@ -37,6 +37,9 @@ final class ProgramManagementXMLConfig
      */
     public array $ugroups_that_can_prioritize;
 
+    public ?string $program_increments_section_name;
+    public ?string $milestones_name;
+
     /**
      * @param int[] $plannable_trackers_ids
      * @param string[] $ugroups_that_can_prioritize
@@ -44,10 +47,14 @@ final class ProgramManagementXMLConfig
     public function __construct(
         int $source_tracker_id,
         array $plannable_trackers_ids,
-        array $ugroups_that_can_prioritize
+        array $ugroups_that_can_prioritize,
+        ?string $program_increments_section_name,
+        ?string $milestones_name
     ) {
-        $this->source_tracker_id           = $source_tracker_id;
-        $this->plannable_trackers_ids      = $plannable_trackers_ids;
-        $this->ugroups_that_can_prioritize = $ugroups_that_can_prioritize;
+        $this->source_tracker_id               = $source_tracker_id;
+        $this->plannable_trackers_ids          = $plannable_trackers_ids;
+        $this->ugroups_that_can_prioritize     = $ugroups_that_can_prioritize;
+        $this->program_increments_section_name = $program_increments_section_name;
+        $this->milestones_name                 = $milestones_name;
     }
 }
