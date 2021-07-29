@@ -8,5 +8,15 @@
   },
   "config": {
     "sort-packages": true
+  },
+  "tuleap": {
+    "preload": {
+      "include": [
+        "/include"
+      ],
+      "exclude": [
+        "/include/SVN/AccessControl/SVNRefreshAllAccessFilesCommand.php"
+      ]
+    }
   }
 }

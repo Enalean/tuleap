@@ -10,5 +10,12 @@
     "psr-4": {
       "Tuleap\\AgileDashboard\\": "tests/unit/"
     }
+  },
+  "tuleap": {
+    "preload": {
+      "include": [
+        "/include"
+      ]
+    }
   }
 }
