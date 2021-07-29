@@ -39,7 +39,7 @@ export interface ExportDocument {
     readonly artifacts: ReadonlyArray<FormattedArtifact>;
 }
 
-interface FormattedArtifact {
+export interface FormattedArtifact {
     readonly id: number;
     readonly title: string;
     readonly fields: ReadonlyArray<ArtifactFieldValue>;

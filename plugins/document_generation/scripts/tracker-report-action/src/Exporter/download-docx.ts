@@ -27,9 +27,12 @@ import {
     Paragraph,
     TextRun,
     HeadingLevel,
-    TableOfContents,
     StyleLevel,
+    Bookmark,
+    PageBreak,
 } from "docx";
+import { TableOfContentsPrefilled } from "./DOCX/TableOfContents/table-of-contents";
+import { getAnchorToArtifactContent } from "./DOCX/sections-anchor";
 
 const HEADER_STYLE_ARTIFACT_TITLE = "ArtifactTitle";
 const HEADER_LEVEL_ARTIFACT_TITLE = HeadingLevel.HEADING_6;
@@ -50,17 +53,22 @@ export async function downloadDocx(document: ExportDocument): Promise<void> {
         }),
     };
 
-    const paragraphs = [];
+    const artifacts_content = [];
     for (const artifact of document.artifacts) {
-        paragraphs.push(
+        artifacts_content.push(
             new Paragraph({
-                text: artifact.title,
                 heading: HEADER_LEVEL_ARTIFACT_TITLE,
                 style: HEADER_STYLE_ARTIFACT_TITLE,
+                children: [
+                    new Bookmark({
+                        id: getAnchorToArtifactContent(artifact),
+                        children: [new TextRun(artifact.title)],
+                    }),
+                ],
             })
         );
         for (const artifact_value of artifact.fields) {
-            paragraphs.push(
+            artifacts_content.push(
                 new Paragraph({
                     text: artifact_value.field_name + "\n" + artifact_value.field_value,
                 })
@@ -68,7 +76,7 @@ export async function downloadDocx(document: ExportDocument): Promise<void> {
         }
     }
 
-    const table_of_contents = new TableOfContents("Table of Contents", {
+    const table_of_contents = new TableOfContentsPrefilled(document.artifacts, {
         hyperlink: true,
         stylesWithLevels: [
             new StyleLevel("ArtifactTitle", Number(HEADER_LEVEL_ARTIFACT_TITLE.substr(-1))),
@@ -89,7 +97,11 @@ export async function downloadDocx(document: ExportDocument): Promise<void> {
         },
         sections: [
             {
-                children: [table_of_contents, ...paragraphs],
+                children: [
+                    table_of_contents,
+                    new Paragraph({ children: [new PageBreak()] }),
+                    ...artifacts_content,
+                ],
                 footers,
             },
         ],
