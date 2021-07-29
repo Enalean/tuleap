@@ -40,8 +40,8 @@
                                         data-target-modal-id="add-user-to-ugroup-and-project-members"
                                         data-project-id="{{ project_id }}"
                                         data-ugroup-id="{{ id }}"
-                                        data-test="project-admin-submit-add-member"
                                     {{/ is_dynamic_group }}
+                                    data-test="project-admin-submit-add-member"
                                 >
                                     <i class="fa fa-plus tlp-button-icon" id="project-administration-add-to-ugroup-and-project-members-icon"></i> {{# gettext }}
                                     Add member{{/ gettext }}
@@ -94,7 +94,7 @@
                                             <img src="{{ avatar_url }}"/>
                                         {{/ has_avatar }}
                                     </div>
-                                    <a href="{{ profile_page_url }}">{{ username_display }}</a>
+                                    <a href="{{ profile_page_url }}" data-user-id="{{ user_id }}">{{ username_display }}</a>
                                 </td>
                                 {{# status_presenter }}
                                     <td>
@@ -133,6 +133,7 @@
                                             data-user-name="{{ username_display }}"
                                             data-ugroup-name="{{ name }}"
                                             data-user-is-project-admin="{{ user_is_project_admin }}"
+                                            data-test="remove-user-{{ user_id }}"
                                         >
                                             <i class="far fa-trash-alt tlp-button-icon"></i> {{# gettext }}Remove from users group{{/ gettext }}
                                         </button>

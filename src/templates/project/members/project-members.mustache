@@ -84,7 +84,7 @@
                                     <div class="tlp-avatar projectadmin-userlist-result-name-avatar">
                                         <img src="{{ avatar_url }}" />
                                     </div>
-                                    <a href="{{ profile_page_url }}">{{ username_display }}</a>
+                                    <a href="{{ profile_page_url }}" data-user-id="{{ user_id }}">{{ username_display }}</a>
                                 </td>
                                 <td class="project-admin-members-uemails">
                                     <a href="mailto:{{ email }}">
@@ -125,6 +125,7 @@
                                             data-target-modal-id="project-admin-members-remove"
                                             data-user-id="{{ user_id }}"
                                             data-name="{{ username_display }}"
+                                            data-test="remove-user-{{ user_id }}"
                                             class="tlp-table-cell-actions-button
                                                    tlp-button-danger
                                                    tlp-button-small

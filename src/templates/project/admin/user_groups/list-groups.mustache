@@ -11,6 +11,7 @@
                 <div class="tlp-table-actions">
                     <button
                             id="project-admin-ugroups-modal"
+                            data-test="project-admin-ugroups-modal"
                             type="button"
                             data-target-modal-id="user-group-modal"
                             class="tlp-button-primary tlp-table-actions-element">
@@ -70,7 +71,7 @@
                                     <td class="tlp-table-cell-section tlp-table-cell-filterable" colspan="4">{{# gettext }}Custom groups{{/ gettext }}</td>
                                 </tr>
                             </tbody>
-                            <tbody>
+                            <tbody data-test="custom-groups">
                                 {{# static_ugroups }}
                                     {{> list-groups-row }}
                                 {{/ static_ugroups }}

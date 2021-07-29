@@ -6,6 +6,7 @@
             <members>
                 <member format="username">ProjectAdministrator</member>
                 <member format="username">ProjectMember</member>
+                <member format="username">PermissionDelegation</member>
             </members>
         </ugroup>
         <ugroup name="project_admins" description="">

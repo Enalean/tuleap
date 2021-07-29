@@ -185,7 +185,8 @@ class StatisticsPlugin extends Plugin
                 dgettext('tuleap-statistics', 'Disk usage'),
                 $this->getPluginPath() . '/project_stat.php?' . http_build_query(
                     ['group_id' => $presenter->getProjectId()]
-                )
+                ),
+                "statistics-disk-usage"
             )
         );
     }

@@ -6,11 +6,13 @@
         <ugroup name="project_members" description="">
             <members>
                 <member format="username">ProjectAdministrator</member>
+                <member format="username">SuspendedUser</member>
             </members>
         </ugroup>
         <ugroup name="project_admins" description="">
             <members>
                 <member format="username">ProjectAdministrator</member>
+                <member format="username">SuspendedUser</member>
             </members>
         </ugroup>
     </ugroups>
@@ -19,4 +21,14 @@
         <service shortname="summary" enabled="true"/>
         <service shortname="plugin_svn" enabled="true"/>
     </services>
+
+  <dashboards>
+    <dashboard name="Dashboard">
+      <line>
+        <column>
+          <widget name="projectdescription" />
+        </column>
+      </line>
+    </dashboard>
+  </dashboards>
 </project>

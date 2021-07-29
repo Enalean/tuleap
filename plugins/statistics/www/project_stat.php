@@ -156,9 +156,9 @@ if ($project && ! $project->isError()) {
         $link_label = dgettext('tuleap-statistics', 'View statistics for the last year');
     }
     //Display tooltip for start and end date.
-    echo '<h2><span class="plugin_statistics_period" title="' . sprintf(dgettext('tuleap-statistics', 'From %1$s to %2$s.'), $startDate, $endDate) . '">' . $title . '</span></h2>';
+    echo '<h2><span class="plugin_statistics_period" data-test="statistics-period" title="' . sprintf(dgettext('tuleap-statistics', 'From %1$s to %2$s.'), $startDate, $endDate) . '">' . $title . '</span></h2>';
     echo '<div class="stat_help">' . dgettext('tuleap-statistics', "Differences may exist between actual size of a project/service and statistics which are computed daily") . '</div>';
-    echo '<p><a href="' . $link . '">' . $link_label . '</a></p>';
+    echo '<p><a href="' . $link . '" data-test="last-year-statistics">' . $link_label . '</a></p>';
     echo '<form name="progress_by_service" method="get" action="?">';
     echo '<input type="hidden" name="group_id" value="' . $groupId . '" />';
     echo '<input type="hidden" name="period" value="' . $period . '" />';

@@ -7,4 +7,11 @@
         <email><![CDATA[ProjectAdministrator@example.com]]></email>
         <ldapid></ldapid>
     </user>
+  <user>
+    <id>201</id>
+    <username>SuspendedUser</username>
+    <realname><![CDATA[SuspendedUser]]></realname>
+    <email><![CDATA[SuspendedUser@example.com]]></email>
+    <ldapid></ldapid>
+  </user>
 </users>

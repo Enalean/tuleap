@@ -115,7 +115,8 @@ enable_plugins() {
         testmanagement  \
         testplan  \
         program_management  \
-        frs
+        frs \
+        statistics
 }
 
 seed_data() {
