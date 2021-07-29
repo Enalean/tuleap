@@ -55,6 +55,7 @@ use Tuleap\ProgramManagement\Adapter\Program\ProgramDao;
 use Tuleap\ProgramManagement\Adapter\ProgramManagementProjectAdapter;
 use Tuleap\ProgramManagement\Adapter\Team\MirroredTimeboxes\MirroredTimeboxesDao;
 use Tuleap\ProgramManagement\Adapter\Team\MirroredTimeboxes\MirroredTimeboxRetriever;
+use Tuleap\ProgramManagement\Adapter\Workspace\UserManagerAdapter;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\ProgramIncrementsCreator;
 use Tuleap\Tracker\Artifact\Creation\TrackerArtifactCreator;
 use Tuleap\Tracker\FormElement\Field\ListFields\FieldValueMatcher;
@@ -73,16 +74,19 @@ class TaskBuilder
         $transaction_executor = new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection());
         $logger               = BackendLogger::getDefaultLogger("program_management_syslog");
 
-        $tracker_artifact_factory = Tracker_ArtifactFactory::instance();
-        $user_stories_planner     = new UserStoriesInMirroredProgramIncrementsPlanner(
+        $tracker_artifact_factory       = Tracker_ArtifactFactory::instance();
+        $artifacts_linked_to_parent_dao = new ArtifactsLinkedToParentDao();
+        $user_stories_planner           = new UserStoriesInMirroredProgramIncrementsPlanner(
             new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection()),
-            new ArtifactsLinkedToParentDao(),
+            $artifacts_linked_to_parent_dao,
             $tracker_artifact_factory,
             new MirroredTimeboxRetriever(new MirroredTimeboxesDao()),
             new ContentDao(),
-            $logger
+            $logger,
+            new UserManagerAdapter($user_manager),
+            $artifacts_linked_to_parent_dao
         );
-        $artifact_creator         = new ArtifactCreatorAdapter(
+        $artifact_creator               = new ArtifactCreatorAdapter(
             TrackerArtifactCreator::build(
                 Tracker_Artifact_Changeset_InitialChangesetCreator::build($logger),
                 Tracker_Artifact_Changeset_InitialChangesetFieldsValidator::build(),
