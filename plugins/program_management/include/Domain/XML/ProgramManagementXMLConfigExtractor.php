@@ -59,7 +59,9 @@ final class ProgramManagementXMLConfigExtractor implements ExtractXMLConfig
         return new ProgramManagementXMLConfig(
             $this->getSourceTrackerId($xml_config, $created_trackers_mapping),
             $this->getPlannableTrackersIds($xml_config, $created_trackers_mapping),
-            $this->getUgroupsIdsThatCanPrioritize($xml_config, $program_identifier)
+            $this->getUgroupsIdsThatCanPrioritize($xml_config, $program_identifier),
+            $this->getCustomProgramIncrementsSectionName($xml_config),
+            $this->getCustomMilestonesName($xml_config)
         );
     }
 
@@ -152,5 +154,23 @@ final class ProgramManagementXMLConfigExtractor implements ExtractXMLConfig
         }
 
         return $ugroups_that_can_prioritize;
+    }
+
+    private function getCustomProgramIncrementsSectionName(SimpleXMLElement $xml_config): ?string
+    {
+        if ($xml_config->customisation && $xml_config->customisation->program_increments_section_name) {
+            return (string) $xml_config->customisation->program_increments_section_name;
+        }
+
+        return null;
+    }
+
+    private function getCustomMilestonesName(SimpleXMLElement $xml_config): ?string
+    {
+        if ($xml_config->customisation && $xml_config->customisation->program_increments_milestones_name) {
+            return (string) $xml_config->customisation->program_increments_milestones_name;
+        }
+
+        return null;
     }
 }

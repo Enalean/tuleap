@@ -94,8 +94,8 @@ final class ProgramManagementConfigXMLImporter
     ): void {
         $plan_program_increment_change = new PlanProgramIncrementChange(
             $xml_config->source_tracker_id,
-            null,
-            null
+            $xml_config->program_increments_section_name,
+            $xml_config->milestones_name
         );
 
         $plan_change = PlanChange::fromProgramIncrementAndRaw(

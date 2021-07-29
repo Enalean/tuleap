@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<program_increments>
+  <configuration>
+    <source_tracker REF="T36277"/>
+    <plannable_trackers>
+      <plannable_tracker REF="T36280"/>
+      <plannable_tracker REF="T37001"/>
+    </plannable_trackers>
+    <can_prioritize>
+      <ugroup ugroup_name="project_members"/>
+    </can_prioritize>
+  </configuration>
+  <customisation>
+    <program_increments_section_name>Crémants d'Alsace</program_increments_section_name>
+    <program_increments_milestones_name>Crémant</program_increments_milestones_name>
+  </customisation>
+</program_increments>

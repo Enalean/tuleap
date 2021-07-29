@@ -26,6 +26,20 @@
           </oneOrMore>
         </element>
       </element>
+      <optional>
+        <element name="customisation">
+          <optional>
+            <element name="program_increments_section_name">
+              <data type="string" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"/>
+            </element>
+          </optional>
+          <optional>
+            <element name="program_increments_milestones_name">
+              <data type="string" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"/>
+            </element>
+          </optional>
+        </element>
+      </optional>
     </element>
   </start>
 </grammar>
