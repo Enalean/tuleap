@@ -29,6 +29,7 @@ use Tuleap\ProgramManagement\Domain\Program\Plan\CreatePlan;
 use Tuleap\ProgramManagement\Domain\Program\Plan\PlanChange;
 use Tuleap\ProgramManagement\Domain\Program\Plan\PlanProgramIncrementChange;
 use Tuleap\ProgramManagement\Domain\XML\ExtractXMLConfig;
+use Tuleap\ProgramManagement\Domain\XML\ParseXMLConfig;
 use Tuleap\ProgramManagement\Domain\XML\ProgramManagementXMLConfig;
 
 final class ProgramManagementConfigXMLImporter
@@ -36,10 +37,16 @@ final class ProgramManagementConfigXMLImporter
     private LoggerInterface $logger;
     private ExtractXMLConfig $xml_config_extractor;
     private CreatePlan $plan_creator;
+    private ParseXMLConfig $xml_config_parser;
 
-    public function __construct(CreatePlan $plan_creator, ExtractXMLConfig $xml_config_extractor, LoggerInterface $logger)
-    {
+    public function __construct(
+        CreatePlan $plan_creator,
+        ParseXMLConfig $xml_config_parser,
+        ExtractXMLConfig $xml_config_extractor,
+        LoggerInterface $logger
+    ) {
         $this->plan_creator         = $plan_creator;
+        $this->xml_config_parser    = $xml_config_parser;
         $this->xml_config_extractor = $xml_config_extractor;
         $this->logger               = $logger;
     }
@@ -50,7 +57,7 @@ final class ProgramManagementConfigXMLImporter
         array $created_trackers_mapping,
         \PFUser $user
     ): void {
-        if (! $this->xml_config_extractor->isThereAConfigToImport($extraction_path)) {
+        if (! $this->xml_config_parser->isThereAConfigToImport($extraction_path)) {
             $this->logger->info('[ProgramManagementConfigXMLImporter] No config to be imported');
             return;
         }
@@ -59,7 +66,9 @@ final class ProgramManagementConfigXMLImporter
             $this->createConfig(
                 $program_identifier,
                 $user,
-                $this->xml_config_extractor->extractConfigForProgram(
+                ProgramManagementXMLConfig::fromXML(
+                    $this->xml_config_parser,
+                    $this->xml_config_extractor,
                     $program_identifier,
                     $extraction_path,
                     $created_trackers_mapping

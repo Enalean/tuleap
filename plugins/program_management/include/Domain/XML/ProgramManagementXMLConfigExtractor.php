@@ -29,12 +29,9 @@ use Tuleap\ProgramManagement\Domain\XML\Exceptions\CannotFindPlannableTrackerInM
 use Tuleap\ProgramManagement\Domain\XML\Exceptions\CannotFindSourceTrackerUsingXmlReference;
 use Tuleap\ProgramManagement\Domain\XML\Exceptions\CannotFindUserGroupInProjectException;
 use Tuleap\ProgramManagement\Domain\XML\Exceptions\CannotFindXMLNodeAttributeException;
-use Tuleap\ProgramManagement\Domain\XML\Exceptions\CannotLoadXMLConfigFileException;
 
 final class ProgramManagementXMLConfigExtractor implements ExtractXMLConfig
 {
-    private const PROGRAM_MANAGEMENT_CONFIG_XML = 'program-management-config.xml';
-
     private RetrieveUGroups $ugroup_retriever;
 
     public function __construct(RetrieveUGroups $ugroup_retriever)
@@ -42,67 +39,7 @@ final class ProgramManagementXMLConfigExtractor implements ExtractXMLConfig
         $this->ugroup_retriever = $ugroup_retriever;
     }
 
-    public function isThereAConfigToImport(string $extraction_path): bool
-    {
-        $xml_path = $extraction_path . '/' . self::PROGRAM_MANAGEMENT_CONFIG_XML;
-
-        return file_exists($xml_path);
-    }
-
-    public function extractConfigForProgram(
-        ProgramForAdministrationIdentifier $program_identifier,
-        string $extraction_path,
-        array $created_trackers_mapping
-    ): ProgramManagementXMLConfig {
-        $xml_config = $this->getValidXMLConfig($extraction_path);
-
-        return new ProgramManagementXMLConfig(
-            $this->getSourceTrackerId($xml_config, $created_trackers_mapping),
-            $this->getPlannableTrackersIds($xml_config, $created_trackers_mapping),
-            $this->getUgroupsIdsThatCanPrioritize($xml_config, $program_identifier),
-            $this->getCustomProgramIncrementsSectionName($xml_config),
-            $this->getCustomMilestonesName($xml_config)
-        );
-    }
-
-    /**
-     * @throws CannotLoadXMLConfigFileException
-     * @throws \XML_ParseException
-     */
-    private function getValidXMLConfig(string $extraction_path): SimpleXMLElement
-    {
-        $xml_path   = $extraction_path . '/' . self::PROGRAM_MANAGEMENT_CONFIG_XML;
-        $xml_config = simplexml_load_string(file_get_contents($xml_path));
-        if (! $xml_config) {
-            throw new CannotLoadXMLConfigFileException($xml_path);
-        }
-
-        $xml_validator = new \XML_RNGValidator();
-        $rng_path      = dirname(__DIR__, 3) . '/resources/program_management.rng';
-
-        $xml_validator->validate($xml_config, $rng_path);
-
-        return $xml_config;
-    }
-
-    /**
-     * @throws CannotFindXMLNodeAttributeException
-     */
-    private function getTargetAttributeValueInXMLNode(SimpleXMLElement $xml_node, string $attribute_name): string
-    {
-        $node_attributes = $xml_node->attributes();
-        if ($node_attributes === null || ! isset($node_attributes[$attribute_name])) {
-            throw new CannotFindXMLNodeAttributeException($attribute_name, $xml_node->getName());
-        }
-
-        return (string) $node_attributes[$attribute_name];
-    }
-
-    /**
-     * @throws CannotFindXMLNodeAttributeException
-     * @throws CannotFindSourceTrackerUsingXmlReference
-     */
-    private function getSourceTrackerId(SimpleXMLElement $xml_config, array $created_trackers_mapping): int
+    public function getSourceTrackerId(SimpleXMLElement $xml_config, array $created_trackers_mapping): int
     {
         $source_tracker_ref = $this->getTargetAttributeValueInXMLNode($xml_config->configuration->source_tracker, 'REF');
 
@@ -113,12 +50,7 @@ final class ProgramManagementXMLConfigExtractor implements ExtractXMLConfig
         return (int) $created_trackers_mapping[$source_tracker_ref];
     }
 
-    /**
-     * @return int[]
-     * @throws CannotFindXMLNodeAttributeException
-     * @throws CannotFindPlannableTrackerInMappingException
-     */
-    private function getPlannableTrackersIds(SimpleXMLElement $xml_config, array $created_trackers_mapping): array
+    public function getPlannableTrackersIds(SimpleXMLElement $xml_config, array $created_trackers_mapping): array
     {
         $trackers_ids = [];
         foreach ($xml_config->configuration->plannable_trackers->children() as $plannable_tracker) {
@@ -133,12 +65,7 @@ final class ProgramManagementXMLConfigExtractor implements ExtractXMLConfig
         return $trackers_ids;
     }
 
-    /**
-     * @return string[]
-     * @throws CannotFindXMLNodeAttributeException
-     * @throws CannotFindUserGroupInProjectException
-     */
-    private function getUgroupsIdsThatCanPrioritize(SimpleXMLElement $xml_config, ProgramForAdministrationIdentifier $program_identifier): array
+    public function getUgroupsIdsThatCanPrioritize(SimpleXMLElement $xml_config, ProgramForAdministrationIdentifier $program_identifier): array
     {
         $ugroups_that_can_prioritize = [];
 
@@ -156,7 +83,7 @@ final class ProgramManagementXMLConfigExtractor implements ExtractXMLConfig
         return $ugroups_that_can_prioritize;
     }
 
-    private function getCustomProgramIncrementsSectionName(SimpleXMLElement $xml_config): ?string
+    public function getCustomProgramIncrementsSectionName(SimpleXMLElement $xml_config): ?string
     {
         if ($xml_config->customisation && $xml_config->customisation->program_increments_section_name) {
             return (string) $xml_config->customisation->program_increments_section_name;
@@ -165,12 +92,25 @@ final class ProgramManagementXMLConfigExtractor implements ExtractXMLConfig
         return null;
     }
 
-    private function getCustomMilestonesName(SimpleXMLElement $xml_config): ?string
+    public function getCustomMilestonesName(SimpleXMLElement $xml_config): ?string
     {
         if ($xml_config->customisation && $xml_config->customisation->program_increments_milestones_name) {
             return (string) $xml_config->customisation->program_increments_milestones_name;
         }
 
         return null;
+    }
+
+    /**
+     * @throws CannotFindXMLNodeAttributeException
+     */
+    private function getTargetAttributeValueInXMLNode(SimpleXMLElement $xml_node, string $attribute_name): string
+    {
+        $node_attributes = $xml_node->attributes();
+        if ($node_attributes === null || ! isset($node_attributes[$attribute_name])) {
+            throw new CannotFindXMLNodeAttributeException($attribute_name, $xml_node->getName());
+        }
+
+        return (string) $node_attributes[$attribute_name];
     }
 }

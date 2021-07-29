@@ -20,28 +20,36 @@
 
 namespace Tuleap\ProgramManagement\Domain\XML;
 
+use SimpleXMLElement;
 use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramForAdministrationIdentifier;
 use Tuleap\ProgramManagement\Domain\XML\Exceptions\CannotFindPlannableTrackerInMappingException;
 use Tuleap\ProgramManagement\Domain\XML\Exceptions\CannotFindSourceTrackerUsingXmlReference;
 use Tuleap\ProgramManagement\Domain\XML\Exceptions\CannotFindUserGroupInProjectException;
 use Tuleap\ProgramManagement\Domain\XML\Exceptions\CannotFindXMLNodeAttributeException;
-use Tuleap\ProgramManagement\Domain\XML\Exceptions\CannotLoadXMLConfigFileException;
 
 interface ExtractXMLConfig
 {
-    public function isThereAConfigToImport(string $extraction_path): bool;
-
     /**
-     * @throws \XML_ParseException
-     * @throws CannotLoadXMLConfigFileException
      * @throws CannotFindXMLNodeAttributeException
-     * @throws CannotFindPlannableTrackerInMappingException
-     * @throws CannotFindUserGroupInProjectException
      * @throws CannotFindSourceTrackerUsingXmlReference
      */
-    public function extractConfigForProgram(
-        ProgramForAdministrationIdentifier $program_identifier,
-        string $extraction_path,
-        array $created_trackers_mapping
-    ): ProgramManagementXMLConfig;
+    public function getSourceTrackerId(SimpleXMLElement $xml_config, array $created_trackers_mapping): int;
+
+    /**
+     * @return int[]
+     * @throws CannotFindXMLNodeAttributeException
+     * @throws CannotFindPlannableTrackerInMappingException
+     */
+    public function getPlannableTrackersIds(SimpleXMLElement $xml_config, array $created_trackers_mapping): array;
+
+    /**
+     * @return string[]
+     * @throws CannotFindXMLNodeAttributeException
+     * @throws CannotFindUserGroupInProjectException
+     */
+    public function getUgroupsIdsThatCanPrioritize(SimpleXMLElement $xml_config, ProgramForAdministrationIdentifier $program_identifier): array;
+
+    public function getCustomProgramIncrementsSectionName(SimpleXMLElement $xml_config): ?string;
+
+    public function getCustomMilestonesName(SimpleXMLElement $xml_config): ?string;
 }

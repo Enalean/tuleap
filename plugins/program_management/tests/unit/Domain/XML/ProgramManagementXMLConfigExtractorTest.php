@@ -33,127 +33,219 @@ use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 
-class ProgramManagementXMLConfigExtractorTest extends TestCase
+final class ProgramManagementXMLConfigExtractorTest extends TestCase
 {
-    /**
-     * @testWith ["__fixtures/none", false]
-     *           ["__fixtures/valid_xml", true]
-     */
-    public function testIsThereAConfigToImport(string $xml_dir, bool $is_there_a_config): void
-    {
-        $extractor = new ProgramManagementXMLConfigExtractor(
-            RetrieveUGroupsStub::buildWithNoUGroups()
-        );
-
-        self::assertEquals($is_there_a_config, $extractor->isThereAConfigToImport(__DIR__ . '/' . $xml_dir));
-    }
-
-    public function testItThrowsWhenTheXMLFileIsNotValid(): void
-    {
-        $this->expectException(\XML_ParseException::class);
-        $this->processExtraction(
-            __DIR__ . "/__fixtures/invalid_xml",
-            [],
-            false
-        );
-    }
-
     public function testItThrowsWhenTheSourceTrackerReferenceIsNotValid(): void
     {
         $this->expectException(CannotFindSourceTrackerUsingXmlReference::class);
-        $this->processExtraction(
-            __DIR__ . "/__fixtures/valid_xml",
+
+        $extractor = new ProgramManagementXMLConfigExtractor(RetrieveUGroupsStub::buildWithUGroups());
+        $extractor->getSourceTrackerId(
+            new \SimpleXMLElement(
+                '<?xml version="1.0" encoding="UTF-8"?>
+                <program_increments>
+                    <configuration>
+                        <source_tracker REF="T123"/>
+                    </configuration>
+                </program_increments>'
+            ),
             [
                 'T2' => 102,
                 'T3' => 103
-            ],
-            false
+            ]
         );
+    }
+
+    public function testItReturnsTheSourceTrackerId(): void
+    {
+        $extractor         = new ProgramManagementXMLConfigExtractor(RetrieveUGroupsStub::buildWithUGroups());
+        $source_tracker_id = $extractor->getSourceTrackerId(
+            new \SimpleXMLElement(
+                '<?xml version="1.0" encoding="UTF-8"?>
+                <program_increments>
+                    <configuration>
+                        <source_tracker REF="T123"/>
+                    </configuration>
+                </program_increments>'
+            ),
+            [
+                'T2' => 102,
+                'T3' => 103,
+                'T123' => 123
+            ]
+        );
+
+        self::assertEquals(123, $source_tracker_id);
     }
 
     public function testItThrowsWhenAPlannableTrackerReferenceIsNotValid(): void
     {
         $this->expectException(CannotFindPlannableTrackerInMappingException::class);
-        $this->processExtraction(
-            __DIR__ . '/__fixtures/valid_xml',
+
+        $extractor = new ProgramManagementXMLConfigExtractor(RetrieveUGroupsStub::buildWithUGroups());
+        $extractor->getPlannableTrackersIds(
+            new \SimpleXMLElement(
+                '<?xml version="1.0" encoding="UTF-8"?>
+                <program_increments>
+                    <configuration>
+                        <plannable_trackers>
+                            <plannable_tracker REF="T2"/>
+                            <plannable_tracker REF="T4"/>
+                        </plannable_trackers>
+                    </configuration>
+                </program_increments>'
+            ),
             [
-                'T36277' => 277,
-                'T36278' => 278,
-            ],
-            false
+                'T2' => 102,
+                'T3' => 103,
+            ]
         );
+    }
+
+    public function testItReturnsTheArrayOfPlannableTrackersIds(): void
+    {
+        $extractor              = new ProgramManagementXMLConfigExtractor(RetrieveUGroupsStub::buildWithUGroups());
+        $plannable_trackers_ids = $extractor->getPlannableTrackersIds(
+            new \SimpleXMLElement(
+                '<?xml version="1.0" encoding="UTF-8"?>
+                <program_increments>
+                    <configuration>
+                        <plannable_trackers>
+                            <plannable_tracker REF="T2"/>
+                            <plannable_tracker REF="T4"/>
+                        </plannable_trackers>
+                    </configuration>
+                </program_increments>'
+            ),
+            [
+                'T2' => 102,
+                'T4' => 104,
+            ]
+        );
+
+        self::assertSame([102, 104], $plannable_trackers_ids);
     }
 
     public function testItThrowsWhenAnUgroupReferenceIsNotValid(): void
     {
         $this->expectException(CannotFindUserGroupInProjectException::class);
-        $this->processExtraction(
-            __DIR__ . '/__fixtures/valid_xml',
-            [
-                'T36277' => 277,
-                'T36280' => 278,
-                'T37001' => 279,
-            ],
-            false
-        );
-    }
 
-    public function testItExtractsTheXMLConfig(): void
-    {
-        $config = $this->processExtraction(
-            __DIR__ . '/__fixtures/valid_xml',
-            [
-                'T36277' => 277,
-                'T36280' => 278,
-                'T37001' => 279,
-            ],
-            true
-        );
-
-        self::assertEquals(277, $config->source_tracker_id);
-        self::assertEquals([278, 279], $config->plannable_trackers_ids);
-        self::assertEquals(['101_3'], $config->ugroups_that_can_prioritize);
-        self::assertNull($config->program_increments_section_name);
-        self::assertNull($config->milestones_name);
-    }
-
-    public function testItExtractsTheXMLConfigWithLabelsCustomisation(): void
-    {
-        $config = $this->processExtraction(
-            __DIR__ . '/__fixtures/with_customisation_xml',
-            [
-                'T36277' => 277,
-                'T36280' => 278,
-                'T37001' => 279,
-            ],
-            true
-        );
-
-        self::assertEquals(277, $config->source_tracker_id);
-        self::assertEquals([278, 279], $config->plannable_trackers_ids);
-        self::assertEquals(['101_3'], $config->ugroups_that_can_prioritize);
-        self::assertEquals("Crémants d'Alsace", $config->program_increments_section_name);
-        self::assertEquals('Crémant', $config->milestones_name);
-    }
-
-    private function processExtraction(string $xml_extraction_path, array $created_trackers_mapping, bool $build_ugroup_retriever_with_ugroups): ProgramManagementXMLConfig
-    {
-        if ($build_ugroup_retriever_with_ugroups) {
-            $ugroup_retriever = RetrieveUGroupsStub::buildWithUGroups();
-        } else {
-            $ugroup_retriever = RetrieveUGroupsStub::buildWithNoUGroups();
-        }
-
-        $extractor = new ProgramManagementXMLConfigExtractor($ugroup_retriever);
-        return $extractor->extractConfigForProgram(
+        $extractor = new ProgramManagementXMLConfigExtractor(RetrieveUGroupsStub::buildWithNoUGroups());
+        $extractor->getUgroupsIdsThatCanPrioritize(
+            new \SimpleXMLElement(
+                '<?xml version="1.0" encoding="UTF-8"?>
+                <program_increments>
+                    <configuration>
+                        <can_prioritize>
+                            <ugroup ugroup_name="metallica"/>
+                        </can_prioritize>
+                    </configuration>
+                </program_increments>'
+            ),
             ProgramForAdministrationIdentifier::fromProject(
                 VerifyIsTeamStub::withNotValidTeam(),
                 VerifyProjectPermissionStub::withAdministrator(),
                 UserTestBuilder::aUser()->build(),
                 ProjectTestBuilder::aProject()->withId(101)->build()
-            ),
-            $xml_extraction_path,
-            $created_trackers_mapping
+            )
         );
+    }
+
+    public function testItReturnsTheArrayOfProjectUgroupsThatCanPrioritize(): void
+    {
+        $extractor = new ProgramManagementXMLConfigExtractor(RetrieveUGroupsStub::buildWithUGroups());
+        $ugroups   = $extractor->getUgroupsIdsThatCanPrioritize(
+            new \SimpleXMLElement(
+                '<?xml version="1.0" encoding="UTF-8"?>
+                <program_increments>
+                    <configuration>
+                        <can_prioritize>
+                            <ugroup ugroup_name="project_members"/>
+                        </can_prioritize>
+                    </configuration>
+                </program_increments>'
+            ),
+            ProgramForAdministrationIdentifier::fromProject(
+                VerifyIsTeamStub::withNotValidTeam(),
+                VerifyProjectPermissionStub::withAdministrator(),
+                UserTestBuilder::aUser()->build(),
+                ProjectTestBuilder::aProject()->withId(101)->build()
+            )
+        );
+
+        self::assertSame(["101_3"], $ugroups);
+    }
+
+    public function testItDoesNothingWhenThereAreNoCustomisations(): void
+    {
+        $xml_config = new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><program_increments/>');
+        $extractor  = new ProgramManagementXMLConfigExtractor(RetrieveUGroupsStub::buildWithUGroups());
+
+        self::assertNull($extractor->getCustomProgramIncrementsSectionName($xml_config));
+        self::assertNull($extractor->getCustomMilestonesName($xml_config));
+    }
+
+    public function testItReturnsNullWhenThereIsNoCustomPISectionName(): void
+    {
+        $xml_config = new \SimpleXMLElement(
+            '<?xml version="1.0" encoding="UTF-8"?>
+            <program_increments>
+                <customisation>
+                    <program_increments_milestones_name>Bar</program_increments_milestones_name>
+                </customisation>
+            </program_increments>
+        '
+        );
+        $extractor  = new ProgramManagementXMLConfigExtractor(RetrieveUGroupsStub::buildWithUGroups());
+
+        self::assertNull($extractor->getCustomProgramIncrementsSectionName($xml_config));
+    }
+
+    public function testItReturnsTheCustomPISectionName(): void
+    {
+        $xml_config = new \SimpleXMLElement(
+            '<?xml version="1.0" encoding="UTF-8"?>
+            <program_increments>
+                <customisation>
+                    <program_increments_section_name>Foo</program_increments_section_name>
+                </customisation>
+            </program_increments>
+        '
+        );
+        $extractor  = new ProgramManagementXMLConfigExtractor(RetrieveUGroupsStub::buildWithUGroups());
+
+        self::assertEquals('Foo', $extractor->getCustomProgramIncrementsSectionName($xml_config));
+    }
+
+    public function testItReturnsNullWhenThereIsNoCustomPIMilestonesName(): void
+    {
+        $xml_config = new \SimpleXMLElement(
+            '<?xml version="1.0" encoding="UTF-8"?>
+            <program_increments>
+                <customisation>
+                    <program_increments_section_name>Foo</program_increments_section_name>
+                </customisation>
+            </program_increments>
+        '
+        );
+        $extractor  = new ProgramManagementXMLConfigExtractor(RetrieveUGroupsStub::buildWithUGroups());
+
+        self::assertNull($extractor->getCustomMilestonesName($xml_config));
+    }
+
+    public function testItReturnsTheCustomPIMilestonesName(): void
+    {
+        $xml_config = new \SimpleXMLElement(
+            '<?xml version="1.0" encoding="UTF-8"?>
+            <program_increments>
+                <customisation>
+                    <program_increments_milestones_name>Bar</program_increments_milestones_name>
+                </customisation>
+            </program_increments>
+        '
+        );
+        $extractor  = new ProgramManagementXMLConfigExtractor(RetrieveUGroupsStub::buildWithUGroups());
+
+        self::assertSame('Bar', $extractor->getCustomMilestonesName($xml_config));
     }
 }

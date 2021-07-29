@@ -24,9 +24,9 @@ namespace Tuleap\ProgramManagement\Adapter\XML;
 
 use Psr\Log\Test\TestLogger;
 use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramForAdministrationIdentifier;
-use Tuleap\ProgramManagement\Domain\XML\ProgramManagementXMLConfig;
 use Tuleap\ProgramManagement\Stub\CreatePlanStub;
 use Tuleap\ProgramManagement\Stub\ExtractXMLConfigStub;
+use Tuleap\ProgramManagement\Stub\ParseXMLConfigStub;
 use Tuleap\ProgramManagement\Stub\VerifyIsTeamStub;
 use Tuleap\ProgramManagement\Stub\VerifyProjectPermissionStub;
 use Tuleap\Test\Builders\ProjectTestBuilder;
@@ -50,14 +50,14 @@ class ProgramManagementConfigXMLImporterTest extends TestCase
 
     public function testItDoesNothingWhenThereIsNoConfigFile(): void
     {
-        $this->processImport(false, true);
+        $this->processImport(false, true, true);
 
         self::assertTrue($this->logger->hasInfoThatContains('No config to be imported'));
     }
 
-    public function testItAbortsTheImportWhenXMLConfigExtractionHasFailed(): void
+    public function testItAbortsTheImportWhenXMLConfigParsingHasFailed(): void
     {
-        $this->processImport(true, true);
+        $this->processImport(true, true, true);
 
         self::assertTrue($this->logger->hasErrorThatContains('Cannot load XML from path/to/xml'));
     }
@@ -66,14 +66,14 @@ class ProgramManagementConfigXMLImporterTest extends TestCase
     {
         $this->plan_creator->willThrowExceptionOnPlanChangeCreation();
 
-        $this->processImport(true, false);
+        $this->processImport(true, false, false);
 
         self::assertTrue($this->logger->hasErrorThatContains('PlanChange creation has failed for some reasons ¯\_(ツ)_/¯'));
     }
 
     public function testItImportsTheConfiguration(): void
     {
-        $this->processImport(true, false);
+        $this->processImport(true, false, false);
 
         $last_plan_creation_args = $this->plan_creator->getCreateMethodCallsArgs(0);
 
@@ -90,20 +90,27 @@ class ProgramManagementConfigXMLImporterTest extends TestCase
         self::assertTrue($this->logger->hasInfoThatContains('Configuration imported successfully'));
     }
 
-    private function processImport(bool $is_there_a_config_to_import, bool $will_xml_extraction_fail): void
-    {
+    private function processImport(
+        bool $is_there_a_config_to_import,
+        bool $will_xml_parsing_fail,
+        bool $will_xml_extraction_fail
+    ): void {
         if ($is_there_a_config_to_import) {
+            $xml_config_parser    = ParseXMLConfigStub::buildWithConfigFile();
             $xml_config_extractor = ExtractXMLConfigStub::buildWithConfigToImport(
-                new ProgramManagementXMLConfig(
-                    10,
-                    [12, 13],
-                    ['101_3'],
-                    "Crémants d'Alsace",
-                    "Crémant",
-                )
+                10,
+                [12, 13],
+                ['101_3'],
+                "Crémants d'Alsace",
+                "Crémant"
             );
         } else {
+            $xml_config_parser    = ParseXMLConfigStub::buildWithNoConfigFile();
             $xml_config_extractor = ExtractXMLConfigStub::buildWithNoConfigToImport();
+        }
+
+        if ($will_xml_parsing_fail) {
+            $xml_config_parser->withFailingParsing();
         }
 
         if ($will_xml_extraction_fail) {
@@ -112,6 +119,7 @@ class ProgramManagementConfigXMLImporterTest extends TestCase
 
         $importer = new ProgramManagementConfigXMLImporter(
             $this->plan_creator,
+            $xml_config_parser,
             $xml_config_extractor,
             $this->logger
         );

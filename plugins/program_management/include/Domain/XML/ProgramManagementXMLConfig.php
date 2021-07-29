@@ -22,6 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\XML;
 
+use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramForAdministrationIdentifier;
+
 /**
  * @psalm-immutable
  */
@@ -44,7 +46,7 @@ final class ProgramManagementXMLConfig
      * @param int[] $plannable_trackers_ids
      * @param string[] $ugroups_that_can_prioritize
      */
-    public function __construct(
+    private function __construct(
         int $source_tracker_id,
         array $plannable_trackers_ids,
         array $ugroups_that_can_prioritize,
@@ -56,5 +58,30 @@ final class ProgramManagementXMLConfig
         $this->ugroups_that_can_prioritize     = $ugroups_that_can_prioritize;
         $this->program_increments_section_name = $program_increments_section_name;
         $this->milestones_name                 = $milestones_name;
+    }
+
+    /**
+     * @throws \XML_ParseException
+     * @throws Exceptions\CannotFindUserGroupInProjectException
+     * @throws Exceptions\CannotFindPlannableTrackerInMappingException
+     * @throws Exceptions\CannotFindSourceTrackerUsingXmlReference
+     * @throws Exceptions\CannotFindXMLNodeAttributeException
+     * @throws Exceptions\CannotLoadXMLConfigFileException
+     */
+    public static function fromXML(
+        ParseXMLConfig $config_parser,
+        ExtractXMLConfig $config_extracter,
+        ProgramForAdministrationIdentifier $program_identifier,
+        string $extraction_path,
+        array $created_trackers_mapping
+    ): self {
+        $xml_config = $config_parser->parseConfig($extraction_path);
+        return new self(
+            $config_extracter->getSourceTrackerId($xml_config, $created_trackers_mapping),
+            $config_extracter->getPlannableTrackersIds($xml_config, $created_trackers_mapping),
+            $config_extracter->getUgroupsIdsThatCanPrioritize($xml_config, $program_identifier),
+            $config_extracter->getCustomProgramIncrementsSectionName($xml_config),
+            $config_extracter->getCustomMilestonesName($xml_config)
+        );
     }
 }
