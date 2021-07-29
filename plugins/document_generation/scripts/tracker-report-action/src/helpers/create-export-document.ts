@@ -29,7 +29,7 @@ export function createExportDocument(
         const artifact_title = artifact.title;
         const fields_content = [];
         for (const value of artifact.values) {
-            if (value.type === "aid") {
+            if (value.type === "aid" || value.type === "string") {
                 fields_content.push({
                     field_name: value.label,
                     field_value: value.value,
