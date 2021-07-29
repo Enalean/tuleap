@@ -20,6 +20,7 @@
  * phpcs:disable PSR1.Classes.ClassDeclaration
  */
 
+use Tuleap\Dashboard\Project\DashboardXMLExporter;
 use Tuleap\Event\Events\ExportXmlProject;
 use Tuleap\Project\UGroups\SynchronizedProjectMembershipDetector;
 use Tuleap\Project\XML\Export\ArchiveInterface;
@@ -48,12 +49,14 @@ class ProjectXMLExporter
      * @var SynchronizedProjectMembershipDetector
      */
     private $synchronized_project_membership_detector;
+    private DashboardXMLExporter $dashboard_xml_exporter;
 
     public function __construct(
         EventManager $event_manager,
         UGroupManager $ugroup_manager,
         XML_RNGValidator $xml_validator,
         UserXMLExporter $user_xml_exporter,
+        DashboardXMLExporter $dashboard_xml_exporter,
         SynchronizedProjectMembershipDetector $synchronized_project_membership_detector,
         \Psr\Log\LoggerInterface $logger
     ) {
@@ -63,6 +66,7 @@ class ProjectXMLExporter
         $this->user_xml_exporter                        = $user_xml_exporter;
         $this->synchronized_project_membership_detector = $synchronized_project_membership_detector;
         $this->logger                                   = $logger;
+        $this->dashboard_xml_exporter                   = $dashboard_xml_exporter;
     }
 
     public static function getLogger(): \Psr\Log\LoggerInterface
@@ -155,6 +159,11 @@ class ProjectXMLExporter
         $this->event_manager->processEvent($event);
     }
 
+    private function exportDashboards(Project $project, SimpleXMLElement $xml_element): void
+    {
+        $this->dashboard_xml_exporter->exportDashboards($project, $xml_element);
+    }
+
     public function export(Project $project, array $options, PFUser $user, ArchiveInterface $archive, $temporary_dump_path_on_filesystem)
     {
         $this->logger->info("Start exporting project " . $project->getPublicName());
@@ -164,6 +173,7 @@ class ProjectXMLExporter
 
         $this->exportProjectInfo($project, $xml_element);
         $this->exportProjectUgroups($project, $xml_element);
+        $this->exportDashboards($project, $xml_element);
         $this->exportPlugins($project, $xml_element, $options, $user, $archive, $temporary_dump_path_on_filesystem);
 
         $this->logger->info("Finish exporting project " . $project->getPublicName());

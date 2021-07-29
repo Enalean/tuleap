@@ -22,7 +22,7 @@ namespace Tuleap\Dashboard\Project;
 
 use Project;
 
-class ProjectDashboardRetriever
+class ProjectDashboardRetriever implements IRetrieveDashboards
 {
     /**
      * @var ProjectDashboardDao
@@ -37,7 +37,7 @@ class ProjectDashboardRetriever
     /**
      * @return ProjectDashboard[]
      */
-    public function getAllProjectDashboards(Project $project)
+    public function getAllProjectDashboards(Project $project): array
     {
         $project_dashboards = [];
 

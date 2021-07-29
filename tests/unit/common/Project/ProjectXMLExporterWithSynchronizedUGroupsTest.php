@@ -30,6 +30,7 @@ use Project;
 use ProjectUGroup;
 use ProjectXMLExporter;
 use Psr\Log\LoggerInterface;
+use Tuleap\Dashboard\Project\DashboardXMLExporter;
 use Tuleap\Project\UGroups\SynchronizedProjectMembershipDetector;
 use Tuleap\Test\Builders as B;
 use UGroupManager;
@@ -72,6 +73,7 @@ class ProjectXMLExporterWithSynchronizedUGroupsTest extends \Tuleap\Test\PHPUnit
             $this->ugroup_manager,
             $xml_validator,
             $user_xml_exporter,
+            M::spy(DashboardXMLExporter::class),
             $this->synch_detector,
             M::spy(LoggerInterface::class)
         );
