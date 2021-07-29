@@ -116,14 +116,13 @@ class SystemEventPresenter
         return date($GLOBALS['Language']->getText('system', 'datefmt_full'), strtotime($datetime));
     }
 
-    private function extractNamespaceFromType($type)
+    private function extractNamespaceFromType(string $type): void
     {
-        $this->namespace = '';
-        $namespaced_type = substr(strrchr($type, '\\'), 1);
-        if ($namespaced_type !== false) {
-            $this->namespace = substr($type, 0, strpos($type, $namespaced_type));
-            $type            = $namespaced_type;
+        if (preg_match('/(?<namespace>.+\\\)?SystemEvent_(?<type>.+)/', $type, $matches) !== 1) {
+            $this->type = $type;
+            return;
         }
-        $this->type = str_replace('SystemEvent_', '', $type);
+        $this->namespace = $matches['namespace'] ?? '';
+        $this->type      = $matches['type'];
     }
 }
