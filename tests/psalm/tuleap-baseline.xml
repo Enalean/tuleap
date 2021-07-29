@@ -67196,7 +67196,7 @@
       <code>search</code>
     </MissingReturnType>
   </file>
-  <file src="src/common/session/Codendi_Session.class.php">
+  <file src="src/common/Session/Codendi_Session.class.php">
     <MissingParamType occurrences="8">
       <code>$create_path</code>
       <code>$key</code>
@@ -67223,7 +67223,7 @@
       <code>setSessionNamespacePath</code>
     </MissingReturnType>
   </file>
-  <file src="src/common/session/PHP_Session.class.php">
+  <file src="src/common/Session/PHP_Session.class.php">
     <MissingReturnType occurrences="3">
       <code>clean</code>
       <code>destroy</code>

@@ -31,6 +31,7 @@ export async function startDownloadExportDocument(
         {
             params: {
                 values: "all",
+                with_unsaved_changes: true,
                 limit: 50,
             },
         }

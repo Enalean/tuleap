@@ -31,6 +31,7 @@ use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\REST\ProjectAuthorization;
 use Tuleap\REST\ProjectStatusVerificator;
+use Tuleap\Session\SessionPopulator;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\CachingTrackerPrivateCommentInformationRetriever;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\PermissionChecker;
@@ -72,7 +73,7 @@ class ReportsResource extends AuthenticatedResource
      *
      * @param string $id Id of the report
      */
-    public function optionsId($id)
+    public function optionsId($id, bool $with_unsaved_changes = false)
     {
         Header::allowOptionsGet();
     }
@@ -87,16 +88,16 @@ class ReportsResource extends AuthenticatedResource
      * @oauth2-scope read:tracker
      *
      * @param int $id Id of the report
+     * @param bool $with_unsaved_changes Enable to take into account unsaved changes made to the report on your ongoing session {@from query}{@required false}
      *
-     * @return ReportRepresentation
      * @throws RestException 403
      * @throws RestException 404
      */
-    public function getId($id)
+    public function getId(int $id, bool $with_unsaved_changes = false): ReportRepresentation
     {
         $this->checkAccess();
         $user   = UserManager::instance()->getCurrentUser();
-        $report = $this->getReportById($user, $id);
+        $report = $this->getReportById($user, $id, $with_unsaved_changes);
 
         ProjectStatusVerificator::build()->checkProjectStatusAllowsOnlySiteAdminToAccessIt(
             $user,
@@ -115,7 +116,7 @@ class ReportsResource extends AuthenticatedResource
      *
      * @param string $id Id of the report
      */
-    public function optionsArtifacts($id)
+    public function optionsArtifacts($id, bool $with_unsaved_changes = false)
     {
         Header::allowOptionsGet();
     }
@@ -145,24 +146,26 @@ class ReportsResource extends AuthenticatedResource
      * @oauth2-scope read:tracker
      *
      * @param int $id Id of the report
-     * @param string $values Which fields to include in the response. Default is no field values {@from path}{@choice ,all}
-     * @param int $limit Number of elements displayed per page {@from path}{@min 1} {@max 50}
-     * @param int $offset Position of the first element to display {@from path}{@min 0}
+     * @param bool $with_unsaved_changes Enable to take into account unsaved changes made to the report on your ongoing session {@from query}{@required false}
+     * @param string $values Which fields to include in the response. Default is no field values {@from query}{@choice ,all}
+     * @param int $limit Number of elements displayed per page {@from query}{@min 1} {@max 50}
+     * @param int $offset Position of the first element to display {@from query}{@min 0}
      *
      * @return array {@type Tuleap\Tracker\REST\Artifact\ArtifactRepresentation}
      * @throws RestException 403
      * @throws RestException 404
      */
     public function getArtifacts(
-        $id,
-        $values = self::DEFAULT_VALUES,
-        $limit = self::DEFAULT_LIMIT,
-        $offset = self::DEFAULT_OFFSET
-    ) {
+        int $id,
+        bool $with_unsaved_changes = false,
+        ?string $values = self::DEFAULT_VALUES,
+        int $limit = self::DEFAULT_LIMIT,
+        int $offset = self::DEFAULT_OFFSET
+    ): array {
         $this->checkAccess();
 
         $user   = UserManager::instance()->getCurrentUser();
-        $report = $this->getReportById($user, $id);
+        $report = $this->getReportById($user, $id, $with_unsaved_changes);
 
         ProjectStatusVerificator::build()->checkProjectStatusAllowsOnlySiteAdminToAccessIt(
             $user,
@@ -230,14 +233,16 @@ class ReportsResource extends AuthenticatedResource
         return array_values(array_filter($list_of_artifact_representation));
     }
 
-    /** @return \Tracker_Report */
-    private function getReportById(\PFUser $user, $id)
+    private function getReportById(\PFUser $user, int $id, bool $load_report_from_session): \Tracker_Report
     {
-        $store_in_session = false;
-        $report           = Tracker_ReportFactory::instance()->getReportById(
+        if ($load_report_from_session) {
+            SessionPopulator::populateSessionIfNeeded();
+        }
+
+        $report = Tracker_ReportFactory::instance()->getReportById(
             $id,
             $user->getId(),
-            $store_in_session
+            $load_report_from_session
         );
 
         if (! $report) {
