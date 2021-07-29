@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement;
 
 use Project;
-use Tuleap\GlobalLanguageMock;
 use Tuleap\ProgramManagement\Domain\BuildProject;
 use Tuleap\ProgramManagement\Domain\Program\Admin\PlannableTrackersConfiguration\PotentialPlannableTrackersConfigurationPresentersBuilder;
 use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramAdminPresenter;
@@ -33,8 +32,8 @@ use Tuleap\ProgramManagement\Stub\AllProgramSearcherStub;
 use Tuleap\ProgramManagement\Stub\BuildProgramStub;
 use Tuleap\ProgramManagement\Stub\BuildProjectStub;
 use Tuleap\ProgramManagement\Stub\BuildProjectUGroupCanPrioritizeItemsPresentersStub;
-use Tuleap\ProgramManagement\Stub\RetrievePlannableTrackersStub;
 use Tuleap\ProgramManagement\Stub\RetrieveIterationLabelsStub;
+use Tuleap\ProgramManagement\Stub\RetrievePlannableTrackersStub;
 use Tuleap\ProgramManagement\Stub\RetrieveProgramIncrementLabelsStub;
 use Tuleap\ProgramManagement\Stub\RetrieveProjectStub;
 use Tuleap\ProgramManagement\Stub\RetrieveTrackerFromProgramStub;
@@ -42,6 +41,7 @@ use Tuleap\ProgramManagement\Stub\RetrieveVisibleIterationTrackerStub;
 use Tuleap\ProgramManagement\Stub\RetrieveVisibleProgramIncrementTrackerStub;
 use Tuleap\ProgramManagement\Stub\SearchTeamsOfProgramStub;
 use Tuleap\ProgramManagement\Stub\VerifyIsTeamStub;
+use Tuleap\ProgramManagement\Stub\VerifyIterationsFeatureActiveStub;
 use Tuleap\ProgramManagement\Stub\VerifyProjectPermissionStub;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Request\NotFoundException;
@@ -52,8 +52,6 @@ use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class DisplayAdminProgramManagementControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use GlobalLanguageMock;
-
     private BuildProgramStub $build_program;
     /**
      * @var \PHPUnit\Framework\MockObject\MockObject|\TemplateRenderer
@@ -174,7 +172,8 @@ final class DisplayAdminProgramManagementControllerTest extends \Tuleap\Test\PHP
                 TrackerReference::fromTracker(TrackerTestBuilder::aTracker()->withId(80)->withName('Sprint')->build()),
             ),
             RetrieveIterationLabelsStub::buildLabels(null, null),
-            AllProgramSearcherStub::buildPrograms()
+            AllProgramSearcherStub::buildPrograms(),
+            VerifyIterationsFeatureActiveStub::withActiveFeature(),
         );
     }
 
