@@ -95,6 +95,8 @@ class ImportXMLProjectTrackerDone implements Dispatchable
      */
     private $created_trackers_objects;
 
+    private \PFUser $user;
+
     public function __construct(
         Project $project,
         SimpleXMLElement $xml_element,
@@ -107,7 +109,8 @@ class ImportXMLProjectTrackerDone implements Dispatchable
         LoggerInterface $logger,
         TrackerXmlFieldsMapping $xml_field_values_mapping,
         IFindUserFromXMLReference $user_finder,
-        array $created_trackers_objects
+        array $created_trackers_objects,
+        \PFUser $user
     ) {
         $this->project                  = $project;
         $this->xml_element              = $xml_element;
@@ -121,6 +124,7 @@ class ImportXMLProjectTrackerDone implements Dispatchable
         $this->xml_field_values_mapping = $xml_field_values_mapping;
         $this->user_finder              = $user_finder;
         $this->created_trackers_objects = $created_trackers_objects;
+        $this->user                     = $user;
     }
 
     public function getProject(): Project
@@ -181,5 +185,10 @@ class ImportXMLProjectTrackerDone implements Dispatchable
     public function getCreatedTrackersObjects(): array
     {
         return $this->created_trackers_objects;
+    }
+
+    public function getUser(): \PFUser
+    {
+        return $this->user;
     }
 }

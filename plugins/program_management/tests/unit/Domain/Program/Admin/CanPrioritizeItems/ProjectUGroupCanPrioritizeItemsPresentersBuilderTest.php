@@ -49,7 +49,7 @@ final class ProjectUGroupCanPrioritizeItemsPresentersBuilderTest extends \Tuleap
 
     public function testBuildPresenterWithDynamicAndStaticProjectUGroup(): void
     {
-        $ugroup_manager = new RetrieveUGroupsStub();
+        $ugroup_manager = RetrieveUGroupsStub::buildWithUGroups();
 
         $builder = new ProjectUGroupCanPrioritizeItemsPresentersBuilder(
             $ugroup_manager,

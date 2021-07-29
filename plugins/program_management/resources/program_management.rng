@@ -1,0 +1,31 @@
+<grammar xmlns="http://relaxng.org/ns/structure/1.0">
+  <start>
+    <element name="program_increments">
+      <element name="configuration">
+        <element name="source_tracker">
+          <attribute name="REF">
+            <data type="string" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"/>
+          </attribute>
+        </element>
+        <element name="plannable_trackers">
+          <oneOrMore>
+            <element name="plannable_tracker">
+              <attribute name="REF">
+                <data type="string" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"/>
+              </attribute>
+            </element>
+          </oneOrMore>
+        </element>
+        <element name="can_prioritize">
+          <oneOrMore>
+            <element name="ugroup">
+              <attribute name="ugroup_name">
+                <data type="string" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"/>
+              </attribute>
+            </element>
+          </oneOrMore>
+        </element>
+      </element>
+    </element>
+  </start>
+</grammar>

@@ -23,15 +23,42 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Stub;
 
+use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramForAdministrationIdentifier;
 use Tuleap\ProgramManagement\Domain\Workspace\RetrieveUGroups;
 
 final class RetrieveUGroupsStub implements RetrieveUGroups
 {
-    public function getUgroupsFromProjectId(int $project_id): array
+    private bool $will_return_ugroups;
+
+    private function __construct(bool $will_return_ugroups)
+    {
+        $this->will_return_ugroups = $will_return_ugroups;
+    }
+
+    public static function buildWithUGroups(): self
+    {
+        return new self(true);
+    }
+
+    public static function buildWithNoUGroups(): self
+    {
+        return new self(false);
+    }
+
+    public function getUgroupsFromProgram(ProgramForAdministrationIdentifier $program): array
     {
         return [
             new \ProjectUGroup(['ugroup_id' => 3]),
             new \ProjectUGroup(['ugroup_id' => 105])
         ];
+    }
+
+    public function getUGroupByNameInProgram(ProgramForAdministrationIdentifier $program, string $ugroup_name): ?\ProjectUGroup
+    {
+        if ($this->will_return_ugroups === false) {
+            return null;
+        }
+
+        return new \ProjectUGroup(['name' => $ugroup_name, 'ugroup_id' => 3, 'group_id' => $program->id]);
     }
 }

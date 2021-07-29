@@ -1,8 +1,8 @@
 <?php
 /**
- * Copyright (c) Enalean 2021 -  Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2021 - present. All Rights Reserved.
  *
- *  This file is a part of Tuleap.
+ * This file is a part of Tuleap.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,22 +16,18 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
- *
  */
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Domain\Workspace;
+namespace Tuleap\ProgramManagement\Domain\XML\Exceptions;
 
-use ProjectUGroup;
-use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramForAdministrationIdentifier;
-
-interface RetrieveUGroups
+class CannotFindSourceTrackerUsingXmlReference extends \Exception implements XMLConfigExtractionException
 {
-    /**
-     * @return ProjectUGroup[]
-     */
-    public function getUgroupsFromProgram(ProgramForAdministrationIdentifier $program_identifier): array;
-
-    public function getUGroupByNameInProgram(ProgramForAdministrationIdentifier $program_identifier, string $ugroup_name): ?ProjectUGroup;
+    public function __construct(string $source_tracker_ref)
+    {
+        parent::__construct(
+            sprintf("Source tracker not found in created trackers mapping using reference %s", $source_tracker_ref)
+        );
+    }
 }

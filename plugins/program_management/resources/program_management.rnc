@@ -1,0 +1,21 @@
+namespace xsd = "http://www.w3.org/2001/XMLSchema"
+
+grammar {
+    start = element program_increments {
+        element configuration {
+            element source_tracker {
+                attribute REF { xsd:string }
+            },
+            element plannable_trackers {
+                element plannable_tracker {
+                    attribute REF { xsd:string }
+                }+
+            },
+            element can_prioritize {
+                element ugroup {
+                    attribute ugroup_name { xsd:string }
+                }+
+            }
+        }
+    }
+}

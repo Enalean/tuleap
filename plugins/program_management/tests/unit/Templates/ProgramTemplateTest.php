@@ -55,6 +55,7 @@ class ProgramTemplateTest extends \Tuleap\Test\PHPUnit\TestCase
 
         self::assertEquals($program_template_dir . '/project.xml', $xml_path);
         self::assertTrue($this->root_dir->hasChild('program_management_template/program/project.xml'));
+        self::assertTrue($this->root_dir->hasChild('program_management_template/program/program-management-config.xml'));
         self::assertTrue($this->root_dir->hasChild('program_management_template/program/testmanagement.xml'));
     }
 }

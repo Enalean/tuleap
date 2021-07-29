@@ -32,8 +32,9 @@ class ProgramTemplate implements CategorisedTemplate
 {
     public const NAME = 'program_management_program';
 
-    private const PROGRAM_XML = __DIR__ . '/../../resources/templates/program_template.xml';
-    private const TTM_XML     = __DIR__ . '/../../resources/templates/testmanagement.xml';
+    private const PROGRAM_XML        = __DIR__ . '/../../resources/templates/program_template.xml';
+    private const PROGRAM_CONFIG_XML = __DIR__ . '/../../resources/templates/program_management_config.xml';
+    private const TTM_XML            = __DIR__ . '/../../resources/templates/testmanagement.xml';
 
     private string $title;
     private string $description;
@@ -96,10 +97,15 @@ class ProgramTemplate implements CategorisedTemplate
             if (! is_dir($base_dir) && ! mkdir($base_dir, 0755, true) && ! is_dir($base_dir)) {
                 throw new \RuntimeException(sprintf('Directory "%s" was not created', $base_dir));
             }
-            $this->xml_path = $base_dir . '/project.xml';
 
+            $this->xml_path = $base_dir . '/project.xml';
             if (! copy(self::PROGRAM_XML, $this->xml_path)) {
                 throw new \RuntimeException("Can not copy Program file for tuleap template import");
+            }
+
+            $program_management_config_file = $base_dir . '/program-management-config.xml';
+            if (! copy(self::PROGRAM_CONFIG_XML, $program_management_config_file)) {
+                throw new \RuntimeException("Can not copy Program config file for tuleap template import");
             }
 
             $testmanagment_file = $base_dir . '/testmanagement.xml';

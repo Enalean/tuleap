@@ -49,7 +49,7 @@ final class ProjectUGroupCanPrioritizeItemsPresentersBuilder implements BuildPro
      */
     public function buildProjectUgroupCanPrioritizeItemsPresenters(ProgramForAdministrationIdentifier $program): array
     {
-        $ugroups                 = $this->retrieve_u_groups->getUgroupsFromProjectId($program->id);
+        $ugroups                 = $this->retrieve_u_groups->getUgroupsFromProgram($program);
         $can_prioritize_features = $this->can_prioritize_items_retriever->searchUserGroupIDsWhoCanPrioritizeFeaturesByProjectID(
             $program->id
         );

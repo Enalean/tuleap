@@ -1,0 +1,112 @@
+<?php
+/**
+ * Copyright (c) Enalean, 2021 - present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+declare(strict_types=1);
+
+namespace Tuleap\ProgramManagement\Adapter\XML;
+
+use Psr\Log\LoggerInterface;
+use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramForAdministrationIdentifier;
+use Tuleap\ProgramManagement\Domain\Program\Plan\CannotPlanIntoItselfException;
+use Tuleap\ProgramManagement\Domain\Program\Plan\CreatePlan;
+use Tuleap\ProgramManagement\Domain\Program\Plan\PlanChange;
+use Tuleap\ProgramManagement\Domain\Program\Plan\PlanProgramIncrementChange;
+use Tuleap\ProgramManagement\Domain\XML\ExtractXMLConfig;
+use Tuleap\ProgramManagement\Domain\XML\ProgramManagementXMLConfig;
+
+final class ProgramManagementConfigXMLImporter
+{
+    private LoggerInterface $logger;
+    private ExtractXMLConfig $xml_config_extractor;
+    private CreatePlan $plan_creator;
+
+    public function __construct(CreatePlan $plan_creator, ExtractXMLConfig $xml_config_extractor, LoggerInterface $logger)
+    {
+        $this->plan_creator         = $plan_creator;
+        $this->xml_config_extractor = $xml_config_extractor;
+        $this->logger               = $logger;
+    }
+
+    public function import(
+        ProgramForAdministrationIdentifier $program_identifier,
+        string $extraction_path,
+        array $created_trackers_mapping,
+        \PFUser $user
+    ): void {
+        if (! $this->xml_config_extractor->isThereAConfigToImport($extraction_path)) {
+            $this->logger->info('[ProgramManagementConfigXMLImporter] No config to be imported');
+            return;
+        }
+
+        try {
+            $this->createConfig(
+                $program_identifier,
+                $user,
+                $this->xml_config_extractor->extractConfigForProgram(
+                    $program_identifier,
+                    $extraction_path,
+                    $created_trackers_mapping
+                )
+            );
+        } catch (\Exception $exception) {
+            $this->logger->error(
+                sprintf(
+                    "[ProgramManagementConfigXMLImporter] Import has failed: %s",
+                    $exception->getMessage()
+                )
+            );
+
+            return;
+        }
+
+        $this->logger->info('[ProgramManagementConfigXMLImporter] Configuration imported successfully');
+    }
+
+    /**
+     * @throws CannotPlanIntoItselfException
+     * @throws \Tuleap\ProgramManagement\Domain\Program\Plan\ProgramAccessException
+     * @throws \Tuleap\ProgramManagement\Domain\Program\Plan\InvalidProgramUserGroup
+     * @throws \Tuleap\ProgramManagement\Domain\Program\ProgramTrackerException
+     * @throws \Tuleap\ProgramManagement\Domain\Program\Admin\ProgramCannotBeATeamException
+     * @throws \Tuleap\ProgramManagement\Domain\Program\Plan\PlanTrackerException
+     */
+    private function createConfig(
+        ProgramForAdministrationIdentifier $project,
+        \PFUser $user,
+        ProgramManagementXMLConfig $xml_config
+    ): void {
+        $plan_program_increment_change = new PlanProgramIncrementChange(
+            $xml_config->source_tracker_id,
+            null,
+            null
+        );
+
+        $plan_change = PlanChange::fromProgramIncrementAndRaw(
+            $plan_program_increment_change,
+            $user,
+            $project->id,
+            $xml_config->plannable_trackers_ids,
+            $xml_config->ugroups_that_can_prioritize,
+            null
+        );
+
+        $this->plan_creator->create($plan_change);
+    }
+}
