@@ -27,12 +27,12 @@ interface ArtifactReportResponseFieldValue {
     field_id: number;
     type: string;
     label: string;
-    value: number;
+    value: number | string;
 }
 
 export interface ArtifactFieldValue {
     readonly field_name: string;
-    readonly field_value: number;
+    readonly field_value: number | string;
 }
 
 export interface ExportDocument {

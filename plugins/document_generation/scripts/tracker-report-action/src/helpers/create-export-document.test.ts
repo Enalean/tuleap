@@ -33,10 +33,16 @@ describe("Create ArtifactValues Collection", () => {
                         value: 1001,
                     },
                     {
-                        field_id: 1,
+                        field_id: 2,
                         type: "whatever",
                         label: "What Ever",
                         value: 9999,
+                    },
+                    {
+                        field_id: 3,
+                        type: "string",
+                        label: "Title",
+                        value: "title01",
                     },
                 ],
             },
@@ -50,6 +56,12 @@ describe("Create ArtifactValues Collection", () => {
                         label: "Artifact Number",
                         value: 1002,
                     },
+                    {
+                        field_id: 3,
+                        type: "string",
+                        label: "Title",
+                        value: "title02",
+                    },
                 ],
             },
         ];
@@ -59,12 +71,16 @@ describe("Create ArtifactValues Collection", () => {
 
         expect(collection.length).toEqual(2);
         expect(collection[0].title).toEqual("tracker_shortname #1001 - title01");
-        expect(collection[0].fields.length).toEqual(1);
+        expect(collection[0].fields.length).toEqual(2);
         expect(collection[0].fields[0].field_name).toEqual("Artifact Number");
         expect(collection[0].fields[0].field_value).toEqual(1001);
+        expect(collection[0].fields[1].field_name).toEqual("Title");
+        expect(collection[0].fields[1].field_value).toEqual("title01");
         expect(collection[1].title).toEqual("tracker_shortname #1002 - title02");
-        expect(collection[1].fields.length).toEqual(1);
+        expect(collection[1].fields.length).toEqual(2);
         expect(collection[1].fields[0].field_name).toEqual("Artifact Number");
         expect(collection[1].fields[0].field_value).toEqual(1002);
+        expect(collection[1].fields[1].field_name).toEqual("Title");
+        expect(collection[1].fields[1].field_value).toEqual("title02");
     });
 });
