@@ -19,7 +19,10 @@
 
 import type { ArtifactReportResponse, ExportDocument } from "../type";
 
-export function createExportDocument(report_artifacts: ArtifactReportResponse[]): ExportDocument {
+export function createExportDocument(
+    report_artifacts: ArtifactReportResponse[],
+    tracker_shortname: string
+): ExportDocument {
     const artifact_data = [];
     for (const artifact of report_artifacts) {
         const artifact_id = artifact.id;
@@ -33,9 +36,13 @@ export function createExportDocument(report_artifacts: ArtifactReportResponse[])
                 });
             }
         }
+        let formatted_title = tracker_shortname + " #" + artifact.id;
+        if (artifact_title !== null) {
+            formatted_title += " - " + artifact_title;
+        }
         artifact_data.push({
             id: artifact_id,
-            title: artifact_title,
+            title: formatted_title,
             fields: fields_content,
         });
     }

@@ -68,14 +68,19 @@ class document_generationPlugin extends Plugin
             return;
         }
 
-        $report_id = $event->getReport()->getId();
+        $report_id         = $event->getReport()->getId();
+        $tracker_shortname = $event->getReport()->getTracker()->getItemName();
+
+        $renderer = TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../templates');
 
         $event->addExportItem(
-            '<li>' .
-            '<a id="tracker-report-action-generate-document" href="#" data-report-id="' . $report_id . '">' .
-            dgettext('tuleap-document_generation', 'Generate document') .
-            '</a>' .
-            '</li>'
+            $renderer->renderToString(
+                'tracker-report-action',
+                [
+                    "report_id"         => $report_id,
+                    "tracker_shortname" => $tracker_shortname,
+                ]
+            )
         );
 
         $document_generation_asset = new IncludeAssets(

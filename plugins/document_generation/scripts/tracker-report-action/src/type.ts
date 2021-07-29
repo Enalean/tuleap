@@ -41,6 +41,6 @@ export interface ExportDocument {
 
 interface FormattedArtifact {
     readonly id: number;
-    readonly title: string | null;
+    readonly title: string;
     readonly fields: ReadonlyArray<ArtifactFieldValue>;
 }
