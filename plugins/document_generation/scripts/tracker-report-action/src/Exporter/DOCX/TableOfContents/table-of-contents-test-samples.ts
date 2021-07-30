@@ -136,6 +136,23 @@ export const TOC_WITH_CONTENT = {
                 {
                     "w:p": [
                         {
+                            "w:pPr": [
+                                {
+                                    "w:tabs": [
+                                        {
+                                            "w:tab": {
+                                                _attr: {
+                                                    "w:leader": "dot",
+                                                    "w:pos": 9026,
+                                                    "w:val": "right",
+                                                },
+                                            },
+                                        },
+                                    ],
+                                },
+                            ],
+                        },
+                        {
                             "w:hyperlink": [
                                 {
                                     _attr: {
@@ -152,10 +169,39 @@ export const TOC_WITH_CONTENT = {
                                                         "xml:space": "preserve",
                                                     },
                                                 },
-                                                "Some title #123",
+                                                "Some title #123\t",
                                             ],
                                         },
                                     ],
+                                },
+                            ],
+                        },
+                        {
+                            "w:r": [
+                                {
+                                    "w:fldChar": {
+                                        _attr: {
+                                            "w:dirty": true,
+                                            "w:fldCharType": "begin",
+                                        },
+                                    },
+                                },
+                                {
+                                    "w:instrText": [
+                                        {
+                                            _attr: {
+                                                "xml:space": "preserve",
+                                            },
+                                        },
+                                        "PAGEREF artifact-123",
+                                    ],
+                                },
+                                {
+                                    "w:fldChar": {
+                                        _attr: {
+                                            "w:fldCharType": "end",
+                                        },
+                                    },
                                 },
                             ],
                         },
@@ -163,6 +209,23 @@ export const TOC_WITH_CONTENT = {
                 },
                 {
                     "w:p": [
+                        {
+                            "w:pPr": [
+                                {
+                                    "w:tabs": [
+                                        {
+                                            "w:tab": {
+                                                _attr: {
+                                                    "w:leader": "dot",
+                                                    "w:pos": 9026,
+                                                    "w:val": "right",
+                                                },
+                                            },
+                                        },
+                                    ],
+                                },
+                            ],
+                        },
                         {
                             "w:hyperlink": [
                                 {
@@ -180,10 +243,39 @@ export const TOC_WITH_CONTENT = {
                                                         "xml:space": "preserve",
                                                     },
                                                 },
-                                                "Some other title #987",
+                                                "Some other title #987\t",
                                             ],
                                         },
                                     ],
+                                },
+                            ],
+                        },
+                        {
+                            "w:r": [
+                                {
+                                    "w:fldChar": {
+                                        _attr: {
+                                            "w:dirty": true,
+                                            "w:fldCharType": "begin",
+                                        },
+                                    },
+                                },
+                                {
+                                    "w:instrText": [
+                                        {
+                                            _attr: {
+                                                "xml:space": "preserve",
+                                            },
+                                        },
+                                        "PAGEREF artifact-987",
+                                    ],
+                                },
+                                {
+                                    "w:fldChar": {
+                                        _attr: {
+                                            "w:fldCharType": "end",
+                                        },
+                                    },
                                 },
                             ],
                         },
