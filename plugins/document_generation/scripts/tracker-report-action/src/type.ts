@@ -23,11 +23,40 @@ export interface ArtifactReportResponse {
     readonly values: ReadonlyArray<ArtifactReportResponseFieldValue>;
 }
 
-interface ArtifactReportResponseFieldValue {
+type ArtifactReportResponseFieldValue =
+    | ArtifactReportResponseUnknownFieldValue
+    | ArtifactReportResponseNumericFieldValue
+    | ArtifactReportResponseStringFieldValue
+    | ArtifactReportResponseComputedFieldValue;
+
+interface ArtifactReportResponseNumericFieldValue {
     field_id: number;
-    type: string;
+    type: "aid" | "atid" | "int" | "float" | "priority";
     label: string;
-    value: number | string | null;
+    value: number | null;
+}
+
+interface ArtifactReportResponseStringFieldValue {
+    field_id: number;
+    type: "string";
+    label: string;
+    value: string | null;
+}
+
+interface ArtifactReportResponseComputedFieldValue {
+    field_id: number;
+    type: "computed";
+    label: string;
+    value: number | null;
+    manual_value: number | null;
+    is_autocomputed: boolean;
+}
+
+export interface ArtifactReportResponseUnknownFieldValue {
+    field_id: number;
+    type: never;
+    label: string;
+    value: never;
 }
 
 export interface ArtifactFieldValue {

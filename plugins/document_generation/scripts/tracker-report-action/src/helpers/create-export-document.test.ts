@@ -18,10 +18,11 @@
  */
 
 import { createExportDocument } from "./create-export-document";
+import type { ArtifactReportResponse, ArtifactReportResponseUnknownFieldValue } from "../type";
 
 describe("Create ArtifactValues Collection", () => {
     it("Transforms json content into a collection", () => {
-        const report_artifacts = [
+        const report_artifacts: ArtifactReportResponse[] = [
             {
                 id: 1001,
                 title: "title01",
@@ -37,7 +38,7 @@ describe("Create ArtifactValues Collection", () => {
                         type: "whatever",
                         label: "What Ever",
                         value: 9999,
-                    },
+                    } as ArtifactReportResponseUnknownFieldValue,
                     {
                         field_id: 3,
                         type: "string",
@@ -67,6 +68,14 @@ describe("Create ArtifactValues Collection", () => {
                         type: "priority",
                         label: "Rank",
                         value: 50,
+                    },
+                    {
+                        field_id: 8,
+                        type: "computed",
+                        label: "Computed",
+                        value: null,
+                        manual_value: 10,
+                        is_autocomputed: false,
                     },
                 ],
             },
@@ -110,6 +119,14 @@ describe("Create ArtifactValues Collection", () => {
                         label: "Rank",
                         value: 51,
                     },
+                    {
+                        field_id: 8,
+                        type: "computed",
+                        label: "Computed",
+                        value: 10,
+                        manual_value: null,
+                        is_autocomputed: true,
+                    },
                 ],
             },
         ];
@@ -122,7 +139,7 @@ describe("Create ArtifactValues Collection", () => {
 
         expect(collection.length).toEqual(2);
         expect(collection[0].title).toEqual("tracker_shortname #1001 - title01");
-        expect(collection[0].fields.length).toEqual(6);
+        expect(collection[0].fields.length).toEqual(7);
         expect(collection[0].fields[0].field_name).toEqual("Artifact Number");
         expect(collection[0].fields[0].field_value).toEqual("1001");
         expect(collection[0].fields[1].field_name).toEqual("Title");
@@ -135,8 +152,10 @@ describe("Create ArtifactValues Collection", () => {
         expect(collection[0].fields[4].field_value).toEqual("1");
         expect(collection[0].fields[5].field_name).toEqual("Rank");
         expect(collection[0].fields[5].field_value).toEqual("50");
+        expect(collection[0].fields[6].field_name).toEqual("Computed");
+        expect(collection[0].fields[6].field_value).toEqual("10");
         expect(collection[1].title).toEqual("tracker_shortname #1002 - title02");
-        expect(collection[1].fields.length).toEqual(6);
+        expect(collection[1].fields.length).toEqual(7);
         expect(collection[1].fields[0].field_name).toEqual("Artifact Number");
         expect(collection[1].fields[0].field_value).toEqual("1002");
         expect(collection[1].fields[1].field_name).toEqual("Title");
@@ -149,5 +168,7 @@ describe("Create ArtifactValues Collection", () => {
         expect(collection[1].fields[4].field_value).toEqual("2");
         expect(collection[1].fields[5].field_name).toEqual("Rank");
         expect(collection[1].fields[5].field_value).toEqual("51");
+        expect(collection[1].fields[6].field_name).toEqual("Computed");
+        expect(collection[1].fields[6].field_value).toEqual("10");
     });
 });

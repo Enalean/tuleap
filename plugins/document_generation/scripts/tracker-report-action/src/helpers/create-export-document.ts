@@ -30,24 +30,35 @@ export function createExportDocument(
         const artifact_title = artifact.title;
         const fields_content = [];
         for (const value of artifact.values) {
+            let artifact_field_value = "";
             if (
                 value.type === "aid" ||
                 value.type === "atid" ||
-                value.type === "string" ||
                 value.type === "int" ||
                 value.type === "float" ||
                 value.type === "priority"
             ) {
-                let artifact_field_value = "";
                 if (value.value !== null) {
                     artifact_field_value = value.value.toString();
                 }
-
-                fields_content.push({
-                    field_name: value.label,
-                    field_value: artifact_field_value,
-                });
+            } else if (value.type === "string") {
+                if (value.value !== null) {
+                    artifact_field_value = value.value;
+                }
+            } else if (value.type === "computed") {
+                if (!value.is_autocomputed && value.manual_value !== null) {
+                    artifact_field_value = value.manual_value.toString();
+                } else if (value.is_autocomputed && value.value !== null) {
+                    artifact_field_value = value.value.toString();
+                }
+            } else {
+                continue;
             }
+
+            fields_content.push({
+                field_name: value.label,
+                field_value: artifact_field_value,
+            });
         }
         let formatted_title = tracker_shortname + " #" + artifact.id;
         if (artifact_title !== null) {
