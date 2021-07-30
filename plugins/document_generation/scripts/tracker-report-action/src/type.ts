@@ -36,6 +36,7 @@ export interface ArtifactFieldValue {
 }
 
 export interface ExportDocument {
+    readonly name: string;
     readonly artifacts: ReadonlyArray<FormattedArtifact>;
 }
 

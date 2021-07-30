@@ -75,7 +75,7 @@ export async function downloadDocx(document: ExportDocument): Promise<void> {
         ],
     });
 
-    const doc = new File({
+    const file = new File({
         styles: {
             paragraphStyles: [
                 {
@@ -94,7 +94,17 @@ export async function downloadDocx(document: ExportDocument): Promise<void> {
             },
         ],
     });
-    const blob = await Packer.toBlob(doc);
-    const file = window.URL.createObjectURL(blob);
-    window.location.assign(file);
+    await triggerDownload(document.name, file);
+}
+
+async function triggerDownload(filename: string, file: File): Promise<void> {
+    const blob = await Packer.toBlob(file);
+    const download_link = document.createElement("a");
+    const object_url = URL.createObjectURL(blob);
+    download_link.href = object_url;
+    download_link.setAttribute("download", `${filename}.docx`);
+    document.body.appendChild(download_link);
+    download_link.click();
+    download_link.remove();
+    URL.revokeObjectURL(object_url);
 }

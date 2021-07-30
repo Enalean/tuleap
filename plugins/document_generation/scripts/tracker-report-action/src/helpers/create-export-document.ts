@@ -21,6 +21,7 @@ import type { ArtifactReportResponse, ExportDocument } from "../type";
 
 export function createExportDocument(
     report_artifacts: ArtifactReportResponse[],
+    report_name: string,
     tracker_shortname: string
 ): ExportDocument {
     const artifact_data = [];
@@ -47,5 +48,5 @@ export function createExportDocument(
         });
     }
 
-    return { artifacts: artifact_data };
+    return { name: `${tracker_shortname} - ${report_name}`, artifacts: artifact_data };
 }

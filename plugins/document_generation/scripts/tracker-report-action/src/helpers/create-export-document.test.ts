@@ -66,7 +66,10 @@ describe("Create ArtifactValues Collection", () => {
             },
         ];
 
-        const report = createExportDocument(report_artifacts, "tracker_shortname");
+        const report = createExportDocument(report_artifacts, "report_name", "tracker_shortname");
+
+        expect(report.name).toEqual("tracker_shortname - report_name");
+
         const collection = report.artifacts;
 
         expect(collection.length).toEqual(2);
