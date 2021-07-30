@@ -27,7 +27,7 @@ interface ArtifactReportResponseFieldValue {
     field_id: number;
     type: string;
     label: string;
-    value: number | string;
+    value: number | string | null;
 }
 
 export interface ArtifactFieldValue {
