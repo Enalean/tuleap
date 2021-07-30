@@ -25,7 +25,8 @@ export async function startDownloadExportDocument(
     report_id: number,
     report_name: string,
     tracker_shortname: string,
-    document_exporter: (doc: ExportDocument) => Promise<void>
+    language: string,
+    document_exporter: (doc: ExportDocument, language: string) => Promise<void>
 ): Promise<void> {
     const report_artifacts: ArtifactReportResponse[] = await recursiveGet(
         `/api/v1/tracker_reports/${encodeURIComponent(report_id)}/artifacts`,
@@ -40,5 +41,5 @@ export async function startDownloadExportDocument(
 
     const export_document = createExportDocument(report_artifacts, report_name, tracker_shortname);
 
-    await document_exporter(export_document);
+    await document_exporter(export_document, language);
 }

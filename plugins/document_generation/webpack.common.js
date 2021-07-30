@@ -29,7 +29,10 @@ module.exports = [
             path.resolve(__dirname, "../../src/www/assets/document_generation/")
         ),
         module: {
-            rules: [...webpack_configurator.configureTypescriptRules()],
+            rules: [
+                ...webpack_configurator.configureTypescriptRules(),
+                webpack_configurator.rule_po_files,
+            ],
         },
         resolve: {
             extensions: [".ts", ".js"],

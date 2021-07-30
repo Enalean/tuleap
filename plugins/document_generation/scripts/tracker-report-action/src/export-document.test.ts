@@ -38,6 +38,7 @@ describe("export-document", () => {
             12,
             "report_name",
             "tracker_shortname",
+            "fr_FR",
             document_exporter
         );
 
