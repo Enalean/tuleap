@@ -50,7 +50,12 @@ describe("EmptyState", () => {
             localVue: await createProgramManagementLocalVue(),
             mocks: {
                 $store: createStoreMock({
-                    state: { configuration: { can_create_program_increment: true } },
+                    state: {
+                        configuration: {
+                            can_create_program_increment: true,
+                            tracker_program_increment_sub_label: "Foo",
+                        },
+                    },
                 }),
             },
         };
@@ -58,6 +63,7 @@ describe("EmptyState", () => {
         const wrapper = shallowMount(EmptyState, component_options);
 
         expect(wrapper.find("[data-test=create-program-increment-button]").exists()).toBe(true);
+        expect(wrapper.get("[data-test=create-program-increment-button]").html()).toContain("Foo");
     });
 
     it("No button is displayed when user can not add program increments", async () => {

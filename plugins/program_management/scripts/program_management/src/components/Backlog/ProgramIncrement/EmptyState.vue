@@ -28,7 +28,13 @@
                 v-if="can_create_program_increment"
             >
                 <i class="fas fa-plus tlp-button-icon" aria-hidden="true"></i>
-                <span v-translate>Create the first program increment</span>
+                <span
+                    v-translate="{
+                        program_increment_sub_label: tracker_program_increment_sub_label,
+                    }"
+                >
+                    Create the first %{ program_increment_sub_label }
+                </span>
             </button>
         </form>
     </div>
@@ -52,6 +58,9 @@ export default class EmptyState extends Vue {
 
     @configuration.State
     readonly tracker_program_increment_id!: number;
+
+    @configuration.State
+    readonly tracker_program_increment_sub_label!: string;
 
     get create_new_program_increment(): string {
         return buildCreateNewProgramIncrement(this.tracker_program_increment_id);
