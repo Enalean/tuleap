@@ -1,7 +1,7 @@
 <grammar xmlns="http://relaxng.org/ns/structure/1.0">
   <start>
-    <element name="program_increments">
-      <element name="configuration">
+    <element name="program_management">
+      <element name="increments">
         <element name="source_tracker">
           <attribute name="REF">
             <data type="string" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"/>
@@ -25,21 +25,17 @@
             </element>
           </oneOrMore>
         </element>
+        <optional>
+          <element name="section_name">
+            <data type="string" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"/>
+          </element>
+        </optional>
+        <optional>
+          <element name="milestones_name">
+            <data type="string" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"/>
+          </element>
+        </optional>
       </element>
-      <optional>
-        <element name="customisation">
-          <optional>
-            <element name="program_increments_section_name">
-              <data type="string" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"/>
-            </element>
-          </optional>
-          <optional>
-            <element name="program_increments_milestones_name">
-              <data type="string" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"/>
-            </element>
-          </optional>
-        </element>
-      </optional>
     </element>
   </start>
 </grammar>

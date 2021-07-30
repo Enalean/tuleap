@@ -1,8 +1,8 @@
 namespace xsd = "http://www.w3.org/2001/XMLSchema"
 
 grammar {
-    start = element program_increments {
-        element configuration {
+    start = element program_management {
+        element increments {
             element source_tracker {
                 attribute REF { xsd:string }
             },
@@ -15,11 +15,9 @@ grammar {
                 element ugroup {
                     attribute ugroup_name { xsd:string }
                 }+
-            }
-        },
-        element customisation {
-            element program_increments_section_name { xsd:string }?,
-            element program_increments_milestones_name { xsd:string }?
-        }?
+            },
+            element section_name { xsd:string }?,
+            element milestones_name { xsd:string }?
+        }
     }
 }

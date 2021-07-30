@@ -1,10 +1,10 @@
 <?xml version="1.0"?>
-<program_increments>
-  <configuration>
+<program_management>
+  <increments>
     <source_tracker REF="T36277"/>
     <plannable_trackers>
     </plannable_trackers>
     <can_prioritize>
     </can_prioritize>
-  </configuration>
-</program_increments>
+  </increments>
+</program_management>

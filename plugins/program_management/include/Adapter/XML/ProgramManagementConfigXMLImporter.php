@@ -102,17 +102,17 @@ final class ProgramManagementConfigXMLImporter
         ProgramManagementXMLConfig $xml_config
     ): void {
         $plan_program_increment_change = new PlanProgramIncrementChange(
-            $xml_config->source_tracker_id,
+            $xml_config->increments_source_tracker_id,
             $xml_config->program_increments_section_name,
-            $xml_config->milestones_name
+            $xml_config->program_increments_milestones_name
         );
 
         $plan_change = PlanChange::fromProgramIncrementAndRaw(
             $plan_program_increment_change,
             $user,
             $project->id,
-            $xml_config->plannable_trackers_ids,
-            $xml_config->ugroups_that_can_prioritize,
+            $xml_config->increments_plannable_trackers_ids,
+            $xml_config->ugroups_that_can_prioritize_increments,
             null
         );
 
