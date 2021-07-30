@@ -25,7 +25,6 @@ namespace Tuleap\ProgramManagement\Stub;
 
 use Tuleap\ProgramManagement\Domain\Workspace\RetrieveUser;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
-use Tuleap\Test\Builders\UserTestBuilder;
 
 final class RetrieveUserStub implements RetrieveUser
 {
@@ -73,8 +72,8 @@ final class RetrieveUserStub implements RetrieveUser
         return new self($user);
     }
 
-    public static function buildRegularUser(): self
+    public static function withUser(\PFUser $user): self
     {
-        return new self(UserTestBuilder::aUser()->build());
+        return new self($user);
     }
 }

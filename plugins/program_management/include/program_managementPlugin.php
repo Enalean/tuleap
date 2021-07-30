@@ -33,14 +33,10 @@ use Tuleap\Glyph\GlyphLocation;
 use Tuleap\Glyph\GlyphLocationsCollector;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Layout\ServiceUrlCollector;
+use Tuleap\ProgramManagement\Adapter\ArtifactVisibleVerifier;
 use Tuleap\ProgramManagement\Adapter\Events\ArtifactUpdatedProxy;
 use Tuleap\ProgramManagement\Adapter\FeatureFlag\ForgeConfigAdapter;
 use Tuleap\ProgramManagement\Adapter\Program\Admin\CanPrioritizeItems\UGroupRepresentationBuilder;
-use Tuleap\ProgramManagement\Adapter\Program\ProgramUserGroupRetriever;
-use Tuleap\ProgramManagement\Adapter\Workspace\UGroupManagerAdapter;
-use Tuleap\ProgramManagement\Adapter\XML\ProgramManagementConfigXMLImporter;
-use Tuleap\ProgramManagement\Adapter\Workspace\UserManagerAdapter;
-use Tuleap\ProgramManagement\Domain\Program\Admin\CanPrioritizeItems\ProjectUGroupCanPrioritizeItemsPresentersBuilder;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation\CreateProgramIncrementsRunner;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation\PendingArtifactCreationDao;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation\TaskBuilder;
@@ -49,6 +45,7 @@ use Tuleap\ProgramManagement\Adapter\Program\Backlog\CreationCheck\SemanticCheck
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\CreationCheck\StatusSemanticChecker;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\CreationCheck\WorkflowChecker;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\Iteration\IterationsDAO;
+use Tuleap\ProgramManagement\Adapter\Program\Backlog\Iteration\IterationsLinkedToProgramIncrementDAO;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\ArtifactLinkFieldAdapter;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Content\FeatureRemovalProcessor;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\DescriptionFieldAdapter;
@@ -67,9 +64,6 @@ use Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\MassChangeTopBac
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\MassChangeTopBacklogSourceInformation;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\PlannedFeatureDAO;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\ProcessTopBacklogChange;
-use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramForAdministrationIdentifier;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\TopBacklogActionArtifactSourceInformation;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\TopBacklogActionMassChangeSourceInformation;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\Workflow\AddToTopBacklogPostAction;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\Workflow\AddToTopBacklogPostActionDAO;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\Workflow\AddToTopBacklogPostActionFactory;
@@ -88,6 +82,7 @@ use Tuleap\ProgramManagement\Adapter\Program\Plan\ProgramAdapter;
 use Tuleap\ProgramManagement\Adapter\Program\PlanningAdapter;
 use Tuleap\ProgramManagement\Adapter\Program\ProgramDao;
 use Tuleap\ProgramManagement\Adapter\Program\ProgramIncrementTracker\VisibleProgramIncrementTrackerRetriever;
+use Tuleap\ProgramManagement\Adapter\Program\ProgramUserGroupRetriever;
 use Tuleap\ProgramManagement\Adapter\ProgramManagementProjectAdapter;
 use Tuleap\ProgramManagement\Adapter\ProjectAdmin\PermissionPerGroupSectionBuilder;
 use Tuleap\ProgramManagement\Adapter\Team\MirroredTimeboxes\MirroredTimeboxesDao;
@@ -96,17 +91,20 @@ use Tuleap\ProgramManagement\Adapter\Team\TeamDao;
 use Tuleap\ProgramManagement\Adapter\Workspace\ProjectManagerAdapter;
 use Tuleap\ProgramManagement\Adapter\Workspace\ProjectPermissionVerifier;
 use Tuleap\ProgramManagement\Adapter\Workspace\TrackerFactoryAdapter;
+use Tuleap\ProgramManagement\Adapter\Workspace\UGroupManagerAdapter;
+use Tuleap\ProgramManagement\Adapter\Workspace\UserManagerAdapter;
 use Tuleap\ProgramManagement\Adapter\Workspace\WorkspaceDAO;
+use Tuleap\ProgramManagement\Adapter\XML\ProgramManagementConfigXMLImporter;
 use Tuleap\ProgramManagement\DisplayAdminProgramManagementController;
 use Tuleap\ProgramManagement\DisplayProgramBacklogController;
 use Tuleap\ProgramManagement\Domain\FeatureFlag\VerifyIterationsFeatureActive;
-use Tuleap\ProgramManagement\Domain\Program\Plan\PlanCreator;
-use Tuleap\ProgramManagement\Domain\Service\ProjectServiceBeforeActivationHandler;
-use Tuleap\ProgramManagement\Domain\Service\ServiceDisabledCollectorHandler;
+use Tuleap\ProgramManagement\Domain\Program\Admin\CanPrioritizeItems\ProjectUGroupCanPrioritizeItemsPresentersBuilder;
 use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ConfigurationErrorsCollector;
 use Tuleap\ProgramManagement\Domain\Program\Admin\PlannableTrackersConfiguration\PotentialPlannableTrackersConfigurationPresentersBuilder;
+use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramForAdministrationIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ArtifactCreatedHandler;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ArtifactUpdatedHandler;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\IterationReplicationScheduler;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck\CanSubmitNewArtifactHandler;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck\IterationCreatorChecker;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck\ProgramIncrementCreatorChecker;
@@ -114,9 +112,14 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck\TimeboxCreator
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFieldFromProgramAndTeamTrackersCollectionBuilder;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\NatureAnalyzerException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TimeboxArtifactLinkType;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\TopBacklogActionArtifactSourceInformation;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\TopBacklogActionMassChangeSourceInformation;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\TopBacklogChangeProcessor;
+use Tuleap\ProgramManagement\Domain\Program\Plan\PlanCreator;
 use Tuleap\ProgramManagement\Domain\Program\Plan\PrioritizeFeaturesPermissionVerifier;
 use Tuleap\ProgramManagement\Domain\ProgramTracker;
+use Tuleap\ProgramManagement\Domain\Service\ProjectServiceBeforeActivationHandler;
+use Tuleap\ProgramManagement\Domain\Service\ServiceDisabledCollectorHandler;
 use Tuleap\ProgramManagement\Domain\Team\RootPlanning\RootPlanningEditionHandler;
 use Tuleap\ProgramManagement\Domain\Workspace\CollectLinkedProjectsHandler;
 use Tuleap\ProgramManagement\Domain\Workspace\ComponentInvolvedVerifier;
@@ -419,6 +422,8 @@ final class program_managementPlugin extends Plugin
         $logger           = $this->getLogger();
 
         $artifacts_linked_to_parent_dao = new ArtifactsLinkedToParentDao();
+        $user_retriever                 = new UserManagerAdapter(UserManager::instance());
+        $iterations_linked_dao          = new IterationsLinkedToProgramIncrementDAO();
         $handler                        = new ArtifactUpdatedHandler(
             new ProgramIncrementsDAO(),
             new UserStoriesInMirroredProgramIncrementsPlanner(
@@ -428,14 +433,19 @@ final class program_managementPlugin extends Plugin
                 new MirroredTimeboxRetriever(new MirroredTimeboxesDao()),
                 new ContentDao(),
                 $logger,
-                new UserManagerAdapter(UserManager::instance()),
+                $user_retriever,
                 $artifacts_linked_to_parent_dao
             ),
             new ArtifactsExplicitTopBacklogDAO(),
-            new ForgeConfigAdapter(),
-            $logger
+            new IterationReplicationScheduler(
+                new ForgeConfigAdapter(),
+                $iterations_linked_dao,
+                new ArtifactVisibleVerifier($artifact_factory, $user_retriever),
+                $logger
+            )
         );
-        $event_proxy                    = ArtifactUpdatedProxy::fromArtifactUpdated($event);
+
+        $event_proxy = ArtifactUpdatedProxy::fromArtifactUpdated($event);
         $handler->handle($event_proxy);
     }
 
