@@ -22,49 +22,99 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Stub;
 
+use SimpleXMLElement;
 use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramForAdministrationIdentifier;
-use Tuleap\ProgramManagement\Domain\XML\Exceptions\CannotLoadXMLConfigFileException;
+use Tuleap\ProgramManagement\Domain\XML\Exceptions\CannotFindPlannableTrackerInMappingException;
+use Tuleap\ProgramManagement\Domain\XML\Exceptions\CannotFindSourceTrackerUsingXmlReference;
+use Tuleap\ProgramManagement\Domain\XML\Exceptions\CannotFindUserGroupInProjectException;
 use Tuleap\ProgramManagement\Domain\XML\ExtractXMLConfig;
-use Tuleap\ProgramManagement\Domain\XML\ProgramManagementXMLConfig;
 
 class ExtractXMLConfigStub implements ExtractXMLConfig
 {
-    private ?ProgramManagementXMLConfig $xml_config;
-
     private bool $will_extraction_fail = false;
 
-    private function __construct(?ProgramManagementXMLConfig $xml_config)
-    {
-        $this->xml_config = $xml_config;
+    private ?int $source_tracker_id;
+
+    private ?array $plannable_trackers_ids;
+
+    private ?array $ugroups_that_can_prioritize;
+    private ?string $program_increments_section_name;
+    private ?string $milestones_name;
+
+    private function __construct(
+        ?int $source_tracker_id,
+        ?array $plannable_trackers_ids,
+        ?array $ugroups_that_can_prioritize,
+        ?string $program_increments_section_name,
+        ?string $milestones_name
+    ) {
+        $this->source_tracker_id               = $source_tracker_id;
+        $this->plannable_trackers_ids          = $plannable_trackers_ids;
+        $this->ugroups_that_can_prioritize     = $ugroups_that_can_prioritize;
+        $this->program_increments_section_name = $program_increments_section_name;
+        $this->milestones_name                 = $milestones_name;
     }
 
     public static function buildWithNoConfigToImport(): self
     {
-        return new self(null);
+        return new self(null, null, null, null, null);
     }
 
-    public static function buildWithConfigToImport(ProgramManagementXMLConfig $xml_config): self
-    {
-        return new self($xml_config);
+    public static function buildWithConfigToImport(
+        int $source_tracker_id,
+        array $plannable_trackers_ids,
+        array $ugroups_that_can_prioritize,
+        ?string $program_increments_section_name,
+        ?string $milestones_name
+    ): self {
+        return new self(
+            $source_tracker_id,
+            $plannable_trackers_ids,
+            $ugroups_that_can_prioritize,
+            $program_increments_section_name,
+            $milestones_name
+        );
     }
 
-    public function withFailingExtraction(): self
+    public function getSourceTrackerId(SimpleXMLElement $xml_config, array $created_trackers_mapping): int
     {
-        $this->will_extraction_fail = true;
-        return $this;
-    }
-
-    public function isThereAConfigToImport(string $extraction_path): bool
-    {
-        return $this->xml_config !== null;
-    }
-
-    public function extractConfigForProgram(ProgramForAdministrationIdentifier $program_identifier, string $extraction_path, array $created_trackers_mapping): ProgramManagementXMLConfig
-    {
-        if ($this->will_extraction_fail) {
-            throw new CannotLoadXMLConfigFileException($extraction_path);
+        if ($this->source_tracker_id === null || $this->will_extraction_fail) {
+            throw new CannotFindSourceTrackerUsingXmlReference("T1234");
         }
 
-        return $this->xml_config;
+        return $this->source_tracker_id;
+    }
+
+    public function getPlannableTrackersIds(SimpleXMLElement $xml_config, array $created_trackers_mapping): array
+    {
+        if ($this->plannable_trackers_ids === null || $this->will_extraction_fail) {
+            throw new CannotFindPlannableTrackerInMappingException('T1234');
+        }
+
+        return $this->plannable_trackers_ids;
+    }
+
+    public function getUgroupsIdsThatCanPrioritize(SimpleXMLElement $xml_config, ProgramForAdministrationIdentifier $program_identifier): array
+    {
+        if ($this->ugroups_that_can_prioritize === null || $this->will_extraction_fail) {
+            throw new CannotFindUserGroupInProjectException("Metallica");
+        }
+
+        return $this->ugroups_that_can_prioritize;
+    }
+
+    public function getCustomProgramIncrementsSectionName(SimpleXMLElement $xml_config): ?string
+    {
+        return $this->program_increments_section_name;
+    }
+
+    public function getCustomMilestonesName(SimpleXMLElement $xml_config): ?string
+    {
+        return $this->milestones_name;
+    }
+
+    public function withFailingExtraction(): void
+    {
+        $this->will_extraction_fail = true;
     }
 }

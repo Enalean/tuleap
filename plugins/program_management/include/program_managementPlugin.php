@@ -123,6 +123,7 @@ use Tuleap\ProgramManagement\Domain\Workspace\ComponentInvolvedVerifier;
 use Tuleap\ProgramManagement\Domain\Workspace\ProgramsSearcher;
 use Tuleap\ProgramManagement\Domain\Workspace\TeamsSearcher;
 use Tuleap\ProgramManagement\Domain\XML\ProgramManagementXMLConfigExtractor;
+use Tuleap\ProgramManagement\Domain\XML\ProgramManagementXMLConfigParser;
 use Tuleap\ProgramManagement\EventRedirectAfterArtifactCreationOrUpdateHandler;
 use Tuleap\ProgramManagement\ProgramManagementBreadCrumbsBuilder;
 use Tuleap\ProgramManagement\ProgramService;
@@ -998,6 +999,7 @@ final class program_managementPlugin extends Plugin
                 new TeamDao(),
                 new ProjectPermissionVerifier()
             ),
+            new ProgramManagementXMLConfigParser(),
             new ProgramManagementXMLConfigExtractor(
                 new UGroupManagerAdapter(ProjectManager::instance(), new UGroupManager())
             ),
