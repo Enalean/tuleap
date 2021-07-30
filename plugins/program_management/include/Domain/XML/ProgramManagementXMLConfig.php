@@ -30,6 +30,8 @@ use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramForAdministrationIdenti
 final class ProgramManagementXMLConfig
 {
     public int $increments_source_tracker_id;
+    public ?int $iterations_source_tracker_id;
+
     /**
      * @var int[]
      */
@@ -41,6 +43,8 @@ final class ProgramManagementXMLConfig
 
     public ?string $program_increments_section_name;
     public ?string $program_increments_milestones_name;
+    public ?string $iterations_section_name;
+    public ?string $iterations_milestones_name;
 
     /**
      * @param int[] $increments_plannable_trackers_ids
@@ -51,13 +55,19 @@ final class ProgramManagementXMLConfig
         array $increments_plannable_trackers_ids,
         array $ugroups_that_can_prioritize_increments,
         ?string $program_increments_section_name,
-        ?string $program_increments_milestones_name
+        ?string $program_increments_milestones_name,
+        ?int $iterations_source_tracker_id,
+        ?string $iterations_section_name,
+        ?string $iterations_milestones_name
     ) {
         $this->increments_source_tracker_id           = $increments_source_tracker_id;
         $this->increments_plannable_trackers_ids      = $increments_plannable_trackers_ids;
         $this->ugroups_that_can_prioritize_increments = $ugroups_that_can_prioritize_increments;
         $this->program_increments_section_name        = $program_increments_section_name;
         $this->program_increments_milestones_name     = $program_increments_milestones_name;
+        $this->iterations_source_tracker_id           = $iterations_source_tracker_id;
+        $this->iterations_section_name                = $iterations_section_name;
+        $this->iterations_milestones_name             = $iterations_milestones_name;
     }
 
     /**
@@ -81,7 +91,10 @@ final class ProgramManagementXMLConfig
             $config_extracter->getIncrementsPlannableTrackersIds($xml_config, $created_trackers_mapping),
             $config_extracter->getUgroupsIdsThatCanPrioritizeIncrements($xml_config, $program_identifier),
             $config_extracter->getCustomProgramIncrementsSectionName($xml_config),
-            $config_extracter->getCustomProgramIncrementsMilestonesName($xml_config)
+            $config_extracter->getCustomProgramIncrementsMilestonesName($xml_config),
+            $config_extracter->getIterationsSourceTrackerId($xml_config, $created_trackers_mapping),
+            $config_extracter->getCustomIterationsSectionName($xml_config),
+            $config_extracter->getCustomIterationsMilestonesName($xml_config)
         );
     }
 }

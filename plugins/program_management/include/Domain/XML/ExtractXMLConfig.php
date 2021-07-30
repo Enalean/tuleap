@@ -52,4 +52,14 @@ interface ExtractXMLConfig
     public function getCustomProgramIncrementsSectionName(SimpleXMLElement $xml_config): ?string;
 
     public function getCustomProgramIncrementsMilestonesName(SimpleXMLElement $xml_config): ?string;
+
+    /**
+     * @throws CannotFindSourceTrackerUsingXmlReference
+     * @throws CannotFindXMLNodeAttributeException
+     */
+    public function getIterationsSourceTrackerId(SimpleXMLElement $xml_config, array $created_trackers_mapping): ?int;
+
+    public function getCustomIterationsSectionName(SimpleXMLElement $xml_config): ?string;
+
+    public function getCustomIterationsMilestonesName(SimpleXMLElement $xml_config): ?string;
 }

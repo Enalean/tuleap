@@ -18,6 +18,13 @@ grammar {
             },
             element section_name { xsd:string }?,
             element milestones_name { xsd:string }?
-        }
+        },
+        element iterations {
+            element source_tracker {
+                attribute REF { xsd:string }
+            },
+            element section_name { xsd:string }?,
+            element milestones_name { xsd:string }?
+        }?
     }
 }

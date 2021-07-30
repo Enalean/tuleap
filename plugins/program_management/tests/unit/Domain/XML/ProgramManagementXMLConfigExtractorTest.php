@@ -237,6 +237,113 @@ final class ProgramManagementXMLConfigExtractorTest extends TestCase
         self::assertNull($extractor->getCustomProgramIncrementsMilestonesName($xml_config));
     }
 
+    public function testItThrowsWhenTheSourceIterationTrackerReferenceIsNotValid(): void
+    {
+        $this->expectException(CannotFindSourceTrackerUsingXmlReference::class);
+
+        $extractor = new ProgramManagementXMLConfigExtractor(RetrieveUGroupsStub::buildWithUGroups());
+        $extractor->getIterationsSourceTrackerId(
+            new \SimpleXMLElement(
+                '<?xml version="1.0" encoding="UTF-8"?>
+                <program_management>
+                    <iterations>
+                        <source_tracker REF="T123"/>
+                    </iterations>
+                </program_management>'
+            ),
+            [
+                'T2' => 102,
+                'T3' => 103
+            ]
+        );
+    }
+
+    public function testItReturnsTheSourceIterationTrackerId(): void
+    {
+        $extractor         = new ProgramManagementXMLConfigExtractor(RetrieveUGroupsStub::buildWithUGroups());
+        $source_tracker_id = $extractor->getIterationsSourceTrackerId(
+            new \SimpleXMLElement(
+                '<?xml version="1.0" encoding="UTF-8"?>
+                <program_management>
+                    <iterations>
+                        <source_tracker REF="T123"/>
+                    </iterations>
+                </program_management>'
+            ),
+            [
+                'T2' => 102,
+                'T3' => 103,
+                'T123' => 123
+            ]
+        );
+
+        self::assertEquals(123, $source_tracker_id);
+    }
+
+    public function testItReturnsNullWhenThereAreNoIterationConfiguration(): void
+    {
+        $xml_config = new \SimpleXMLElement(
+            '<?xml version="1.0" encoding="UTF-8"?>
+            <program_management>
+            </program_management>
+        '
+        );
+        $extractor  = new ProgramManagementXMLConfigExtractor(RetrieveUGroupsStub::buildWithUGroups());
+
+        self::assertNull($extractor->getIterationsSourceTrackerId($xml_config, ['T2' => 102, 'T3' => 103]));
+        self::assertNull($extractor->getCustomIterationsMilestonesName($xml_config));
+        self::assertNull($extractor->getCustomIterationsMilestonesName($xml_config));
+    }
+
+    public function testItReturnsNullWhenThereAreNoIterationLabelsCustomisation(): void
+    {
+        $xml_config = new \SimpleXMLElement(
+            '<?xml version="1.0" encoding="UTF-8"?>
+            <program_management>
+                <iterations>
+                    <source_tracker REF="T1234"/>
+                </iterations>
+            </program_management>
+        '
+        );
+        $extractor  = new ProgramManagementXMLConfigExtractor(RetrieveUGroupsStub::buildWithUGroups());
+
+        self::assertNull($extractor->getCustomIterationsSectionName($xml_config));
+        self::assertNull($extractor->getCustomIterationsMilestonesName($xml_config));
+    }
+
+    public function testItReturnsTheCustomIterationSectionName(): void
+    {
+        $xml_config = new \SimpleXMLElement(
+            '<?xml version="1.0" encoding="UTF-8"?>
+            <program_management>
+                <iterations>
+                    <section_name>Foo</section_name>
+                </iterations>
+            </program_management>
+        '
+        );
+        $extractor  = new ProgramManagementXMLConfigExtractor(RetrieveUGroupsStub::buildWithUGroups());
+
+        self::assertEquals('Foo', $extractor->getCustomIterationsSectionName($xml_config));
+    }
+
+    public function testItReturnsTheCustomIterationMilestonesName(): void
+    {
+        $xml_config = new \SimpleXMLElement(
+            '<?xml version="1.0" encoding="UTF-8"?>
+            <program_management>
+                <iterations>
+                    <milestones_name>Bar</milestones_name>
+                </iterations>
+            </program_management>
+        '
+        );
+        $extractor  = new ProgramManagementXMLConfigExtractor(RetrieveUGroupsStub::buildWithUGroups());
+
+        self::assertEquals('Bar', $extractor->getCustomIterationsMilestonesName($xml_config));
+    }
+
     public function testItReturnsTheCustomPIMilestonesName(): void
     {
         $xml_config = new \SimpleXMLElement(
