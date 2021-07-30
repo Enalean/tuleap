@@ -20,19 +20,19 @@
 import type { ExportDocument } from "../type";
 import {
     AlignmentType,
+    Bookmark,
     File,
     Footer,
+    HeadingLevel,
     Packer,
+    PageBreak,
     PageNumber,
     Paragraph,
-    TextRun,
-    HeadingLevel,
     StyleLevel,
-    Bookmark,
-    PageBreak,
     Table,
-    TableRow,
     TableCell,
+    TableRow,
+    TextRun,
     WidthType,
 } from "docx";
 import { TableOfContentsPrefilled } from "./DOCX/TableOfContents/table-of-contents";
@@ -90,10 +90,20 @@ export async function downloadDocx(document: ExportDocument, language: string): 
             new TableRow({
                 children: [
                     new TableCell({
-                        children: [new Paragraph(gettext_provider.gettext("Field name"))],
+                        children: [
+                            new Paragraph({
+                                text: gettext_provider.gettext("Field name"),
+                                style: "table_header",
+                            }),
+                        ],
                     }),
                     new TableCell({
-                        children: [new Paragraph(gettext_provider.gettext("Value"))],
+                        children: [
+                            new Paragraph({
+                                text: gettext_provider.gettext("Value"),
+                                style: "table_header",
+                            }),
+                        ],
                     }),
                 ],
                 tableHeader: true,
@@ -141,6 +151,20 @@ export async function downloadDocx(document: ExportDocument, language: string): 
                     basedOn: HEADER_LEVEL_ARTIFACT_TITLE,
                     next: HEADER_LEVEL_ARTIFACT_TITLE,
                     quickFormat: true,
+                },
+                {
+                    id: "table_header",
+                    name: "table_header",
+                    basedOn: "Normal",
+                    next: "Normal",
+                    run: {
+                        bold: true,
+                        allCaps: true,
+                        size: 18,
+                    },
+                    paragraph: {
+                        alignment: AlignmentType.CENTER,
+                    },
                 },
             ],
         },
