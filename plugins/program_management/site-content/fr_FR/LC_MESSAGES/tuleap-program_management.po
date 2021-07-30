@@ -256,6 +256,12 @@ msgstr "Gestion de Programme"
 msgid "Program administration"
 msgstr "Administration du Programme"
 
+msgid ""
+"Program increment tracker and Iteration tracker must not be the same tracker."
+msgstr ""
+"L'outil de suivi d'incréments de programme et des itérations ne peut pas "
+"être le même."
+
 msgid "Program management service is disabled."
 msgstr "Le service de gestion de programme est désactivé."
 

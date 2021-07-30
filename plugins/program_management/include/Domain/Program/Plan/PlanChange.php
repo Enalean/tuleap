@@ -71,7 +71,9 @@ final class PlanChange
     /**
      * @param int[]                  $tracker_ids_that_can_be_planned
      * @param non-empty-list<string> $can_possibly_prioritize_ugroups
+     *
      * @throws CannotPlanIntoItselfException
+     * @throws ProgramIncrementAndIterationCanNotBeTheSameTrackerException
      */
     public static function fromProgramIncrementAndRaw(
         PlanProgramIncrementChange $program_increment_change,
@@ -83,6 +85,10 @@ final class PlanChange
     ): self {
         if (in_array($program_increment_change->tracker_id, $tracker_ids_that_can_be_planned, true)) {
             throw new ProgramIncrementCannotPlanIntoItselfException();
+        }
+
+        if ($iteration_representation && $program_increment_change->tracker_id === $iteration_representation->tracker_id) {
+            throw new ProgramIncrementAndIterationCanNotBeTheSameTrackerException();
         }
 
         if ($iteration_representation && in_array($iteration_representation->tracker_id, $tracker_ids_that_can_be_planned, true)) {
