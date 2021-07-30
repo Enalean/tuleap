@@ -39,7 +39,10 @@ final class ProgramManagementXMLConfigTest extends \Tuleap\Test\PHPUnit\TestCase
                 [12, 13],
                 ['101_3'],
                 "Crémants d'Alsace",
-                "Crémant"
+                "Crémant",
+                null,
+                null,
+                null
             ),
             ProgramForAdministrationIdentifier::fromProject(
                 VerifyIsTeamStub::withNotValidTeam(),
@@ -56,5 +59,42 @@ final class ProgramManagementXMLConfigTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertEquals(['101_3'], $config->ugroups_that_can_prioritize_increments);
         self::assertEquals("Crémants d'Alsace", $config->program_increments_section_name);
         self::assertEquals('Crémant', $config->program_increments_milestones_name);
+        self::assertNull($config->iterations_source_tracker_id);
+        self::assertNull($config->iterations_section_name);
+        self::assertNull($config->iterations_milestones_name);
+    }
+
+    public function testFromXMLWithIterationsConfig(): void
+    {
+        $config = ProgramManagementXMLConfig::fromXML(
+            ParseXMLConfigStub::buildWithConfigFile(),
+            ExtractXMLConfigStub::buildWithConfigToImport(
+                10,
+                [12, 13],
+                ['101_3'],
+                "Crémants d'Alsace",
+                "Crémant",
+                14,
+                'Rations de survie',
+                'ration'
+            ),
+            ProgramForAdministrationIdentifier::fromProject(
+                VerifyIsTeamStub::withNotValidTeam(),
+                VerifyProjectPermissionStub::withAdministrator(),
+                UserTestBuilder::aUser()->build(),
+                ProjectTestBuilder::aProject()->withId(101)->build()
+            ),
+            'path/to/xml',
+            []
+        );
+
+        self::assertEquals(10, $config->increments_source_tracker_id);
+        self::assertEquals([12, 13], $config->increments_plannable_trackers_ids);
+        self::assertEquals(['101_3'], $config->ugroups_that_can_prioritize_increments);
+        self::assertEquals("Crémants d'Alsace", $config->program_increments_section_name);
+        self::assertEquals('Crémant', $config->program_increments_milestones_name);
+        self::assertEquals(14, $config->iterations_source_tracker_id);
+        self::assertEquals('Rations de survie', $config->iterations_section_name);
+        self::assertEquals('ration', $config->iterations_milestones_name);
     }
 }

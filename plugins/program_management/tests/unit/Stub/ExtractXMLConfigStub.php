@@ -34,30 +34,48 @@ class ExtractXMLConfigStub implements ExtractXMLConfig
     private bool $will_extraction_fail = false;
 
     private ?int $source_tracker_id;
+    private ?int $iterations_source_tracker_id;
 
     private ?array $plannable_trackers_ids;
-
     private ?array $ugroups_that_can_prioritize;
+
     private ?string $program_increments_section_name;
     private ?string $milestones_name;
+    private ?string $iterations_section_name;
+    private ?string $iterations_milestones_name;
 
     private function __construct(
         ?int $source_tracker_id,
         ?array $plannable_trackers_ids,
         ?array $ugroups_that_can_prioritize,
         ?string $program_increments_section_name,
-        ?string $milestones_name
+        ?string $milestones_name,
+        ?int $iterations_source_tracker_id,
+        ?string $iterations_section_name,
+        ?string $iterations_milestones_name
     ) {
         $this->source_tracker_id               = $source_tracker_id;
         $this->plannable_trackers_ids          = $plannable_trackers_ids;
         $this->ugroups_that_can_prioritize     = $ugroups_that_can_prioritize;
         $this->program_increments_section_name = $program_increments_section_name;
         $this->milestones_name                 = $milestones_name;
+        $this->iterations_source_tracker_id    = $iterations_source_tracker_id;
+        $this->iterations_section_name         = $iterations_section_name;
+        $this->iterations_milestones_name      = $iterations_milestones_name;
     }
 
     public static function buildWithNoConfigToImport(): self
     {
-        return new self(null, null, null, null, null);
+        return new self(
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+        );
     }
 
     public static function buildWithConfigToImport(
@@ -65,14 +83,20 @@ class ExtractXMLConfigStub implements ExtractXMLConfig
         array $plannable_trackers_ids,
         array $ugroups_that_can_prioritize,
         ?string $program_increments_section_name,
-        ?string $milestones_name
+        ?string $milestones_name,
+        ?int $iterations_source_tracker_id,
+        ?string $iterations_section_name,
+        ?string $iterations_milestones_name
     ): self {
         return new self(
             $source_tracker_id,
             $plannable_trackers_ids,
             $ugroups_that_can_prioritize,
             $program_increments_section_name,
-            $milestones_name
+            $milestones_name,
+            $iterations_source_tracker_id,
+            $iterations_section_name,
+            $iterations_milestones_name
         );
     }
 
@@ -116,5 +140,24 @@ class ExtractXMLConfigStub implements ExtractXMLConfig
     public function withFailingExtraction(): void
     {
         $this->will_extraction_fail = true;
+    }
+
+    public function getIterationsSourceTrackerId(SimpleXMLElement $xml_config, array $created_trackers_mapping): ?int
+    {
+        if ($this->will_extraction_fail) {
+            throw new CannotFindSourceTrackerUsingXmlReference("T1234");
+        }
+
+        return $this->iterations_source_tracker_id;
+    }
+
+    public function getCustomIterationsSectionName(SimpleXMLElement $xml_config): ?string
+    {
+        return $this->iterations_section_name;
+    }
+
+    public function getCustomIterationsMilestonesName(SimpleXMLElement $xml_config): ?string
+    {
+        return $this->iterations_milestones_name;
     }
 }

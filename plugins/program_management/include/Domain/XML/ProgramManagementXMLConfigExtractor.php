@@ -50,6 +50,21 @@ final class ProgramManagementXMLConfigExtractor implements ExtractXMLConfig
         return (int) $created_trackers_mapping[$source_tracker_ref];
     }
 
+    public function getIterationsSourceTrackerId(SimpleXMLElement $xml_config, array $created_trackers_mapping): ?int
+    {
+        if (! $xml_config->iterations) {
+            return null;
+        }
+
+        $source_tracker_ref = $this->getTargetAttributeValueInXMLNode($xml_config->iterations->source_tracker, 'REF');
+
+        if (! isset($created_trackers_mapping[$source_tracker_ref])) {
+            throw new CannotFindSourceTrackerUsingXmlReference($source_tracker_ref);
+        }
+
+        return (int) $created_trackers_mapping[$source_tracker_ref];
+    }
+
     public function getIncrementsPlannableTrackersIds(SimpleXMLElement $xml_config, array $created_trackers_mapping): array
     {
         $trackers_ids = [];
@@ -96,6 +111,24 @@ final class ProgramManagementXMLConfigExtractor implements ExtractXMLConfig
     {
         if ($xml_config->increments->milestones_name) {
             return (string) $xml_config->increments->milestones_name;
+        }
+
+        return null;
+    }
+
+    public function getCustomIterationsSectionName(SimpleXMLElement $xml_config): ?string
+    {
+        if ($xml_config->iterations && $xml_config->iterations->section_name) {
+            return (string) $xml_config->iterations->section_name;
+        }
+
+        return null;
+    }
+
+    public function getCustomIterationsMilestonesName(SimpleXMLElement $xml_config): ?string
+    {
+        if ($xml_config->iterations && $xml_config->iterations->milestones_name) {
+            return (string) $xml_config->iterations->milestones_name;
         }
 
         return null;

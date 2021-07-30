@@ -27,6 +27,7 @@ use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramForAdministrationIdenti
 use Tuleap\ProgramManagement\Domain\Program\Plan\CannotPlanIntoItselfException;
 use Tuleap\ProgramManagement\Domain\Program\Plan\CreatePlan;
 use Tuleap\ProgramManagement\Domain\Program\Plan\PlanChange;
+use Tuleap\ProgramManagement\Domain\Program\Plan\PlanIterationChange;
 use Tuleap\ProgramManagement\Domain\Program\Plan\PlanProgramIncrementChange;
 use Tuleap\ProgramManagement\Domain\XML\ExtractXMLConfig;
 use Tuleap\ProgramManagement\Domain\XML\ParseXMLConfig;
@@ -107,13 +108,22 @@ final class ProgramManagementConfigXMLImporter
             $xml_config->program_increments_milestones_name
         );
 
+        $iteration_representation = null;
+        if ($xml_config->iterations_source_tracker_id) {
+            $iteration_representation = new PlanIterationChange(
+                $xml_config->iterations_source_tracker_id,
+                $xml_config->iterations_section_name,
+                $xml_config->iterations_milestones_name
+            );
+        }
+
         $plan_change = PlanChange::fromProgramIncrementAndRaw(
             $plan_program_increment_change,
             $user,
             $project->id,
             $xml_config->increments_plannable_trackers_ids,
             $xml_config->ugroups_that_can_prioritize_increments,
-            null
+            $iteration_representation
         );
 
         $this->plan_creator->create($plan_change);
