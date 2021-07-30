@@ -33,23 +33,23 @@ interface ExtractXMLConfig
      * @throws CannotFindXMLNodeAttributeException
      * @throws CannotFindSourceTrackerUsingXmlReference
      */
-    public function getSourceTrackerId(SimpleXMLElement $xml_config, array $created_trackers_mapping): int;
+    public function getIncrementsSourceTrackerId(SimpleXMLElement $xml_config, array $created_trackers_mapping): int;
 
     /**
      * @return int[]
      * @throws CannotFindXMLNodeAttributeException
      * @throws CannotFindPlannableTrackerInMappingException
      */
-    public function getPlannableTrackersIds(SimpleXMLElement $xml_config, array $created_trackers_mapping): array;
+    public function getIncrementsPlannableTrackersIds(SimpleXMLElement $xml_config, array $created_trackers_mapping): array;
 
     /**
      * @return string[]
      * @throws CannotFindXMLNodeAttributeException
      * @throws CannotFindUserGroupInProjectException
      */
-    public function getUgroupsIdsThatCanPrioritize(SimpleXMLElement $xml_config, ProgramForAdministrationIdentifier $program_identifier): array;
+    public function getUgroupsIdsThatCanPrioritizeIncrements(SimpleXMLElement $xml_config, ProgramForAdministrationIdentifier $program_identifier): array;
 
     public function getCustomProgramIncrementsSectionName(SimpleXMLElement $xml_config): ?string;
 
-    public function getCustomMilestonesName(SimpleXMLElement $xml_config): ?string;
+    public function getCustomProgramIncrementsMilestonesName(SimpleXMLElement $xml_config): ?string;
 }

@@ -76,7 +76,7 @@ class ExtractXMLConfigStub implements ExtractXMLConfig
         );
     }
 
-    public function getSourceTrackerId(SimpleXMLElement $xml_config, array $created_trackers_mapping): int
+    public function getIncrementsSourceTrackerId(SimpleXMLElement $xml_config, array $created_trackers_mapping): int
     {
         if ($this->source_tracker_id === null || $this->will_extraction_fail) {
             throw new CannotFindSourceTrackerUsingXmlReference("T1234");
@@ -85,7 +85,7 @@ class ExtractXMLConfigStub implements ExtractXMLConfig
         return $this->source_tracker_id;
     }
 
-    public function getPlannableTrackersIds(SimpleXMLElement $xml_config, array $created_trackers_mapping): array
+    public function getIncrementsPlannableTrackersIds(SimpleXMLElement $xml_config, array $created_trackers_mapping): array
     {
         if ($this->plannable_trackers_ids === null || $this->will_extraction_fail) {
             throw new CannotFindPlannableTrackerInMappingException('T1234');
@@ -94,7 +94,7 @@ class ExtractXMLConfigStub implements ExtractXMLConfig
         return $this->plannable_trackers_ids;
     }
 
-    public function getUgroupsIdsThatCanPrioritize(SimpleXMLElement $xml_config, ProgramForAdministrationIdentifier $program_identifier): array
+    public function getUgroupsIdsThatCanPrioritizeIncrements(SimpleXMLElement $xml_config, ProgramForAdministrationIdentifier $program_identifier): array
     {
         if ($this->ugroups_that_can_prioritize === null || $this->will_extraction_fail) {
             throw new CannotFindUserGroupInProjectException("Metallica");
@@ -108,7 +108,7 @@ class ExtractXMLConfigStub implements ExtractXMLConfig
         return $this->program_increments_section_name;
     }
 
-    public function getCustomMilestonesName(SimpleXMLElement $xml_config): ?string
+    public function getCustomProgramIncrementsMilestonesName(SimpleXMLElement $xml_config): ?string
     {
         return $this->milestones_name;
     }

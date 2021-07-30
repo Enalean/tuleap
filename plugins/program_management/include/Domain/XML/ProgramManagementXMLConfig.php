@@ -29,35 +29,35 @@ use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramForAdministrationIdenti
  */
 final class ProgramManagementXMLConfig
 {
-    public int $source_tracker_id;
+    public int $increments_source_tracker_id;
     /**
      * @var int[]
      */
-    public array $plannable_trackers_ids;
+    public array $increments_plannable_trackers_ids;
     /**
      * @var string[]
      */
-    public array $ugroups_that_can_prioritize;
+    public array $ugroups_that_can_prioritize_increments;
 
     public ?string $program_increments_section_name;
-    public ?string $milestones_name;
+    public ?string $program_increments_milestones_name;
 
     /**
-     * @param int[] $plannable_trackers_ids
-     * @param string[] $ugroups_that_can_prioritize
+     * @param int[] $increments_plannable_trackers_ids
+     * @param string[] $ugroups_that_can_prioritize_increments
      */
     private function __construct(
-        int $source_tracker_id,
-        array $plannable_trackers_ids,
-        array $ugroups_that_can_prioritize,
+        int $increments_source_tracker_id,
+        array $increments_plannable_trackers_ids,
+        array $ugroups_that_can_prioritize_increments,
         ?string $program_increments_section_name,
-        ?string $milestones_name
+        ?string $program_increments_milestones_name
     ) {
-        $this->source_tracker_id               = $source_tracker_id;
-        $this->plannable_trackers_ids          = $plannable_trackers_ids;
-        $this->ugroups_that_can_prioritize     = $ugroups_that_can_prioritize;
-        $this->program_increments_section_name = $program_increments_section_name;
-        $this->milestones_name                 = $milestones_name;
+        $this->increments_source_tracker_id           = $increments_source_tracker_id;
+        $this->increments_plannable_trackers_ids      = $increments_plannable_trackers_ids;
+        $this->ugroups_that_can_prioritize_increments = $ugroups_that_can_prioritize_increments;
+        $this->program_increments_section_name        = $program_increments_section_name;
+        $this->program_increments_milestones_name     = $program_increments_milestones_name;
     }
 
     /**
@@ -77,11 +77,11 @@ final class ProgramManagementXMLConfig
     ): self {
         $xml_config = $config_parser->parseConfig($extraction_path);
         return new self(
-            $config_extracter->getSourceTrackerId($xml_config, $created_trackers_mapping),
-            $config_extracter->getPlannableTrackersIds($xml_config, $created_trackers_mapping),
-            $config_extracter->getUgroupsIdsThatCanPrioritize($xml_config, $program_identifier),
+            $config_extracter->getIncrementsSourceTrackerId($xml_config, $created_trackers_mapping),
+            $config_extracter->getIncrementsPlannableTrackersIds($xml_config, $created_trackers_mapping),
+            $config_extracter->getUgroupsIdsThatCanPrioritizeIncrements($xml_config, $program_identifier),
             $config_extracter->getCustomProgramIncrementsSectionName($xml_config),
-            $config_extracter->getCustomMilestonesName($xml_config)
+            $config_extracter->getCustomProgramIncrementsMilestonesName($xml_config)
         );
     }
 }

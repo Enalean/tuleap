@@ -39,9 +39,9 @@ final class ProgramManagementXMLConfigExtractor implements ExtractXMLConfig
         $this->ugroup_retriever = $ugroup_retriever;
     }
 
-    public function getSourceTrackerId(SimpleXMLElement $xml_config, array $created_trackers_mapping): int
+    public function getIncrementsSourceTrackerId(SimpleXMLElement $xml_config, array $created_trackers_mapping): int
     {
-        $source_tracker_ref = $this->getTargetAttributeValueInXMLNode($xml_config->configuration->source_tracker, 'REF');
+        $source_tracker_ref = $this->getTargetAttributeValueInXMLNode($xml_config->increments->source_tracker, 'REF');
 
         if (! isset($created_trackers_mapping[$source_tracker_ref])) {
             throw new CannotFindSourceTrackerUsingXmlReference($source_tracker_ref);
@@ -50,10 +50,10 @@ final class ProgramManagementXMLConfigExtractor implements ExtractXMLConfig
         return (int) $created_trackers_mapping[$source_tracker_ref];
     }
 
-    public function getPlannableTrackersIds(SimpleXMLElement $xml_config, array $created_trackers_mapping): array
+    public function getIncrementsPlannableTrackersIds(SimpleXMLElement $xml_config, array $created_trackers_mapping): array
     {
         $trackers_ids = [];
-        foreach ($xml_config->configuration->plannable_trackers->children() as $plannable_tracker) {
+        foreach ($xml_config->increments->plannable_trackers->children() as $plannable_tracker) {
             $tracker_ref = $this->getTargetAttributeValueInXMLNode($plannable_tracker, "REF");
 
             if (! isset($created_trackers_mapping[$tracker_ref])) {
@@ -65,11 +65,11 @@ final class ProgramManagementXMLConfigExtractor implements ExtractXMLConfig
         return $trackers_ids;
     }
 
-    public function getUgroupsIdsThatCanPrioritize(SimpleXMLElement $xml_config, ProgramForAdministrationIdentifier $program_identifier): array
+    public function getUgroupsIdsThatCanPrioritizeIncrements(SimpleXMLElement $xml_config, ProgramForAdministrationIdentifier $program_identifier): array
     {
         $ugroups_that_can_prioritize = [];
 
-        foreach ($xml_config->configuration->can_prioritize->children() as $ugroup) {
+        foreach ($xml_config->increments->can_prioritize->children() as $ugroup) {
             $ugroup_name    = $this->getTargetAttributeValueInXMLNode($ugroup, "ugroup_name");
             $project_ugroup = $this->ugroup_retriever->getUGroupByNameInProgram($program_identifier, $ugroup_name);
 
@@ -85,17 +85,17 @@ final class ProgramManagementXMLConfigExtractor implements ExtractXMLConfig
 
     public function getCustomProgramIncrementsSectionName(SimpleXMLElement $xml_config): ?string
     {
-        if ($xml_config->customisation && $xml_config->customisation->program_increments_section_name) {
-            return (string) $xml_config->customisation->program_increments_section_name;
+        if ($xml_config->increments->section_name) {
+            return (string) $xml_config->increments->section_name;
         }
 
         return null;
     }
 
-    public function getCustomMilestonesName(SimpleXMLElement $xml_config): ?string
+    public function getCustomProgramIncrementsMilestonesName(SimpleXMLElement $xml_config): ?string
     {
-        if ($xml_config->customisation && $xml_config->customisation->program_increments_milestones_name) {
-            return (string) $xml_config->customisation->program_increments_milestones_name;
+        if ($xml_config->increments->milestones_name) {
+            return (string) $xml_config->increments->milestones_name;
         }
 
         return null;

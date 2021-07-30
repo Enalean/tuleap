@@ -40,14 +40,14 @@ final class ProgramManagementXMLConfigExtractorTest extends TestCase
         $this->expectException(CannotFindSourceTrackerUsingXmlReference::class);
 
         $extractor = new ProgramManagementXMLConfigExtractor(RetrieveUGroupsStub::buildWithUGroups());
-        $extractor->getSourceTrackerId(
+        $extractor->getIncrementsSourceTrackerId(
             new \SimpleXMLElement(
                 '<?xml version="1.0" encoding="UTF-8"?>
-                <program_increments>
-                    <configuration>
+                <program_management>
+                    <increments>
                         <source_tracker REF="T123"/>
-                    </configuration>
-                </program_increments>'
+                    </increments>
+                </program_management>'
             ),
             [
                 'T2' => 102,
@@ -59,14 +59,14 @@ final class ProgramManagementXMLConfigExtractorTest extends TestCase
     public function testItReturnsTheSourceTrackerId(): void
     {
         $extractor         = new ProgramManagementXMLConfigExtractor(RetrieveUGroupsStub::buildWithUGroups());
-        $source_tracker_id = $extractor->getSourceTrackerId(
+        $source_tracker_id = $extractor->getIncrementsSourceTrackerId(
             new \SimpleXMLElement(
                 '<?xml version="1.0" encoding="UTF-8"?>
-                <program_increments>
-                    <configuration>
+                <program_management>
+                    <increments>
                         <source_tracker REF="T123"/>
-                    </configuration>
-                </program_increments>'
+                    </increments>
+                </program_management>'
             ),
             [
                 'T2' => 102,
@@ -83,17 +83,17 @@ final class ProgramManagementXMLConfigExtractorTest extends TestCase
         $this->expectException(CannotFindPlannableTrackerInMappingException::class);
 
         $extractor = new ProgramManagementXMLConfigExtractor(RetrieveUGroupsStub::buildWithUGroups());
-        $extractor->getPlannableTrackersIds(
+        $extractor->getIncrementsPlannableTrackersIds(
             new \SimpleXMLElement(
                 '<?xml version="1.0" encoding="UTF-8"?>
-                <program_increments>
-                    <configuration>
+                <program_management>
+                    <increments>
                         <plannable_trackers>
                             <plannable_tracker REF="T2"/>
                             <plannable_tracker REF="T4"/>
                         </plannable_trackers>
-                    </configuration>
-                </program_increments>'
+                    </increments>
+                </program_management>'
             ),
             [
                 'T2' => 102,
@@ -105,17 +105,17 @@ final class ProgramManagementXMLConfigExtractorTest extends TestCase
     public function testItReturnsTheArrayOfPlannableTrackersIds(): void
     {
         $extractor              = new ProgramManagementXMLConfigExtractor(RetrieveUGroupsStub::buildWithUGroups());
-        $plannable_trackers_ids = $extractor->getPlannableTrackersIds(
+        $plannable_trackers_ids = $extractor->getIncrementsPlannableTrackersIds(
             new \SimpleXMLElement(
                 '<?xml version="1.0" encoding="UTF-8"?>
-                <program_increments>
-                    <configuration>
+                <program_management>
+                    <increments>
                         <plannable_trackers>
                             <plannable_tracker REF="T2"/>
                             <plannable_tracker REF="T4"/>
                         </plannable_trackers>
-                    </configuration>
-                </program_increments>'
+                    </increments>
+                </program_management>'
             ),
             [
                 'T2' => 102,
@@ -131,16 +131,16 @@ final class ProgramManagementXMLConfigExtractorTest extends TestCase
         $this->expectException(CannotFindUserGroupInProjectException::class);
 
         $extractor = new ProgramManagementXMLConfigExtractor(RetrieveUGroupsStub::buildWithNoUGroups());
-        $extractor->getUgroupsIdsThatCanPrioritize(
+        $extractor->getUgroupsIdsThatCanPrioritizeIncrements(
             new \SimpleXMLElement(
                 '<?xml version="1.0" encoding="UTF-8"?>
-                <program_increments>
-                    <configuration>
+                <program_management>
+                    <increments>
                         <can_prioritize>
                             <ugroup ugroup_name="metallica"/>
                         </can_prioritize>
-                    </configuration>
-                </program_increments>'
+                    </increments>
+                </program_management>'
             ),
             ProgramForAdministrationIdentifier::fromProject(
                 VerifyIsTeamStub::withNotValidTeam(),
@@ -154,16 +154,16 @@ final class ProgramManagementXMLConfigExtractorTest extends TestCase
     public function testItReturnsTheArrayOfProjectUgroupsThatCanPrioritize(): void
     {
         $extractor = new ProgramManagementXMLConfigExtractor(RetrieveUGroupsStub::buildWithUGroups());
-        $ugroups   = $extractor->getUgroupsIdsThatCanPrioritize(
+        $ugroups   = $extractor->getUgroupsIdsThatCanPrioritizeIncrements(
             new \SimpleXMLElement(
                 '<?xml version="1.0" encoding="UTF-8"?>
-                <program_increments>
-                    <configuration>
+                <program_management>
+                    <increments>
                         <can_prioritize>
                             <ugroup ugroup_name="project_members"/>
                         </can_prioritize>
-                    </configuration>
-                </program_increments>'
+                    </increments>
+                </program_management>'
             ),
             ProgramForAdministrationIdentifier::fromProject(
                 VerifyIsTeamStub::withNotValidTeam(),
@@ -178,22 +178,26 @@ final class ProgramManagementXMLConfigExtractorTest extends TestCase
 
     public function testItDoesNothingWhenThereAreNoCustomisations(): void
     {
-        $xml_config = new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><program_increments/>');
+        $xml_config = new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?>
+            <program_management>
+                <increments/>
+            </program_management>
+        ');
         $extractor  = new ProgramManagementXMLConfigExtractor(RetrieveUGroupsStub::buildWithUGroups());
 
         self::assertNull($extractor->getCustomProgramIncrementsSectionName($xml_config));
-        self::assertNull($extractor->getCustomMilestonesName($xml_config));
+        self::assertNull($extractor->getCustomProgramIncrementsMilestonesName($xml_config));
     }
 
     public function testItReturnsNullWhenThereIsNoCustomPISectionName(): void
     {
         $xml_config = new \SimpleXMLElement(
             '<?xml version="1.0" encoding="UTF-8"?>
-            <program_increments>
-                <customisation>
-                    <program_increments_milestones_name>Bar</program_increments_milestones_name>
-                </customisation>
-            </program_increments>
+            <program_management>
+                <increments>
+                    <milestones_name>Bar</milestones_name>
+                </increments>
+            </program_management>
         '
         );
         $extractor  = new ProgramManagementXMLConfigExtractor(RetrieveUGroupsStub::buildWithUGroups());
@@ -205,11 +209,11 @@ final class ProgramManagementXMLConfigExtractorTest extends TestCase
     {
         $xml_config = new \SimpleXMLElement(
             '<?xml version="1.0" encoding="UTF-8"?>
-            <program_increments>
-                <customisation>
-                    <program_increments_section_name>Foo</program_increments_section_name>
-                </customisation>
-            </program_increments>
+            <program_management>
+                <increments>
+                    <section_name>Foo</section_name>
+                </increments>
+            </program_management>
         '
         );
         $extractor  = new ProgramManagementXMLConfigExtractor(RetrieveUGroupsStub::buildWithUGroups());
@@ -221,31 +225,31 @@ final class ProgramManagementXMLConfigExtractorTest extends TestCase
     {
         $xml_config = new \SimpleXMLElement(
             '<?xml version="1.0" encoding="UTF-8"?>
-            <program_increments>
-                <customisation>
-                    <program_increments_section_name>Foo</program_increments_section_name>
-                </customisation>
-            </program_increments>
+            <program_management>
+                <increments>
+                    <section_name>Foo</section_name>
+                </increments>
+            </program_management>
         '
         );
         $extractor  = new ProgramManagementXMLConfigExtractor(RetrieveUGroupsStub::buildWithUGroups());
 
-        self::assertNull($extractor->getCustomMilestonesName($xml_config));
+        self::assertNull($extractor->getCustomProgramIncrementsMilestonesName($xml_config));
     }
 
     public function testItReturnsTheCustomPIMilestonesName(): void
     {
         $xml_config = new \SimpleXMLElement(
             '<?xml version="1.0" encoding="UTF-8"?>
-            <program_increments>
-                <customisation>
-                    <program_increments_milestones_name>Bar</program_increments_milestones_name>
-                </customisation>
-            </program_increments>
+            <program_management>
+                <increments>
+                    <milestones_name>Bar</milestones_name>
+                </increments>
+            </program_management>
         '
         );
         $extractor  = new ProgramManagementXMLConfigExtractor(RetrieveUGroupsStub::buildWithUGroups());
 
-        self::assertSame('Bar', $extractor->getCustomMilestonesName($xml_config));
+        self::assertSame('Bar', $extractor->getCustomProgramIncrementsMilestonesName($xml_config));
     }
 }

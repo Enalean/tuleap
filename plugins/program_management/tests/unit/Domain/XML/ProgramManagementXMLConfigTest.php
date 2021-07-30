@@ -51,10 +51,10 @@ final class ProgramManagementXMLConfigTest extends \Tuleap\Test\PHPUnit\TestCase
             []
         );
 
-        self::assertEquals(10, $config->source_tracker_id);
-        self::assertEquals([12, 13], $config->plannable_trackers_ids);
-        self::assertEquals(['101_3'], $config->ugroups_that_can_prioritize);
+        self::assertEquals(10, $config->increments_source_tracker_id);
+        self::assertEquals([12, 13], $config->increments_plannable_trackers_ids);
+        self::assertEquals(['101_3'], $config->ugroups_that_can_prioritize_increments);
         self::assertEquals("Crémants d'Alsace", $config->program_increments_section_name);
-        self::assertEquals('Crémant', $config->milestones_name);
+        self::assertEquals('Crémant', $config->program_increments_milestones_name);
     }
 }
