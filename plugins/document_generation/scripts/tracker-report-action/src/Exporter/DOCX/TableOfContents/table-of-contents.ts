@@ -24,8 +24,11 @@
 import type { ITableOfContentsOptions } from "docx";
 import {
     InternalHyperlink,
+    LeaderType,
     Paragraph,
     Run,
+    TabStopPosition,
+    TabStopType,
     TextRun,
     XmlAttributeComponent,
     XmlComponent,
@@ -33,6 +36,8 @@ import {
 import { TOCFieldInstruction } from "./toc-field-instruction";
 import type { FormattedArtifact } from "../../../type";
 import { getAnchorToArtifactContent } from "../sections-anchor";
+import { PageRef } from "../PageRef/pageref";
+import { ComplexFieldCharacter } from "../base-elements";
 
 class AliasAttributes extends XmlAttributeComponent<{ readonly alias: string }> {
     protected override readonly xmlKeys = { alias: "w:val" };
@@ -42,22 +47,6 @@ class Alias extends XmlComponent {
     constructor(alias: string) {
         super("w:alias");
         this.root.push(new AliasAttributes({ alias }));
-    }
-}
-
-type FieldCharacterType = "begin" | "end" | "separate";
-
-class FidCharAttrs extends XmlAttributeComponent<{
-    readonly type: FieldCharacterType;
-    readonly dirty?: boolean;
-}> {
-    protected override readonly xmlKeys = { type: "w:fldCharType", dirty: "w:dirty" };
-}
-
-class ComplexFieldCharacter extends XmlComponent {
-    constructor(type: FieldCharacterType, dirty?: boolean) {
-        super("w:fldChar");
-        this.root.push(new FidCharAttrs({ type: type, dirty }));
     }
 }
 
@@ -123,13 +112,25 @@ export class TableOfContentsPrefilled extends XmlComponent {
         const links_to_content = [];
 
         for (const artifact of artifacts) {
+            const artifact_anchor = getAnchorToArtifactContent(artifact);
             const link = new InternalHyperlink({
                 child: new TextRun({
-                    text: artifact.title,
+                    text: `${artifact.title}\t`,
                 }),
-                anchor: getAnchorToArtifactContent(artifact),
+                anchor: artifact_anchor,
             });
-            links_to_content.push(new Paragraph({ children: [link] }));
+            links_to_content.push(
+                new Paragraph({
+                    children: [link, new PageRef(artifact_anchor)],
+                    tabStops: [
+                        {
+                            type: TabStopType.RIGHT,
+                            position: TabStopPosition.MAX,
+                            leader: LeaderType.DOT,
+                        },
+                    ],
+                })
+            );
         }
 
         return links_to_content;

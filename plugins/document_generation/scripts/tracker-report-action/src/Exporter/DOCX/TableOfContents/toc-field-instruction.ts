@@ -22,11 +22,8 @@
  */
 
 import type { ITableOfContentsOptions } from "docx";
-import { XmlAttributeComponent, XmlComponent } from "docx";
-
-class TextAttributes extends XmlAttributeComponent<{ readonly space: "default" | "preserve" }> {
-    protected override readonly xmlKeys = { space: "xml:space" };
-}
+import { XmlComponent } from "docx";
+import { TextAttributes } from "../base-elements";
 
 export class TOCFieldInstruction extends XmlComponent {
     constructor(properties: ITableOfContentsOptions = {}) {
