@@ -109,10 +109,8 @@ final class DisplaySecurityController implements DispatchableWithRequest, Dispat
         );
 
         $tabs = $this->dispatcher->dispatch(new AccountTabPresenterCollection($user, self::URL));
-        assert($tabs instanceof AccountTabPresenterCollection);
 
         $password_pre_update = $this->dispatcher->dispatch(new PasswordPreUpdateEvent($user));
-        assert($password_pre_update instanceof PasswordPreUpdateEvent);
 
         $purifier             = \Codendi_HTMLPurifier::instance();
         $passwords_validators = [];

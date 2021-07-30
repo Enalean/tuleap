@@ -102,7 +102,6 @@ class CrossReferenceByDirectionPresenterBuilder
                 $current_user
             )
         );
-        assert($organizer instanceof CrossReferenceByNatureOrganizer);
 
         $this->in_core_organizer->organizeCoreReferences($organizer);
         $organizer->organizeRemainingCrossReferences();

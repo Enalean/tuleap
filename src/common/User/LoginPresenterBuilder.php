@@ -38,7 +38,6 @@ class User_LoginPresenterBuilder
         );
 
         $registration_guard = EventManager::instance()->dispatch(new RegistrationGuardEvent());
-        assert($registration_guard instanceof RegistrationGuardEvent);
 
         $presenter = new User_LoginPresenter(
             $return_to,

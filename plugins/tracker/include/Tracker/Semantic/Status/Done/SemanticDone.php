@@ -129,7 +129,6 @@ class SemanticDone extends Tracker_Semantic
         $event = \EventManager::instance()->dispatch(
             new SemanticDoneUsedExternalServiceEvent($this->tracker)
         );
-        assert($event instanceof SemanticDoneUsedExternalServiceEvent);
 
         $presenter = new SemanticDoneIntroPresenter(
             $selected_values,

@@ -79,10 +79,8 @@ final class DisplayAccountInformationController implements DispatchableWithReque
         }
 
         $tabs = $this->dispatcher->dispatch(new AccountTabPresenterCollection($user, self::URL));
-        assert($tabs instanceof AccountTabPresenterCollection);
 
         $account_information_collection = $this->dispatcher->dispatch(new AccountInformationCollection($user));
-        assert($account_information_collection instanceof AccountInformationCollection);
 
         $account_asset = new \Tuleap\Layout\IncludeCoreAssets();
 

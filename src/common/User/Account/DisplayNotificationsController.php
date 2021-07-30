@@ -77,7 +77,6 @@ final class DisplayNotificationsController implements DispatchableWithRequest, D
         }
 
         $tabs = $this->dispatcher->dispatch(new AccountTabPresenterCollection($user, self::URL));
-        assert($tabs instanceof AccountTabPresenterCollection);
 
         (new UserPreferencesHeader())->display(_('Notifications'), $layout);
         $this->renderer->renderToPage(

@@ -48,7 +48,6 @@ if (! $project || $project->isError() || ! $project->isActive()) {
     exit_permission_denied();
 }
 $svn_core_access = EventManager::instance()->dispatch(new SvnCoreAccess($project, $_SERVER['REQUEST_URI'], $GLOBALS['Response']));
-assert($svn_core_access instanceof SvnCoreAccess);
 $svn_core_access->redirect();
 
 $vFunc = new Valid_WhiteList('func', [

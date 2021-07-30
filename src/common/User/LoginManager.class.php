@@ -80,8 +80,7 @@ class User_LoginManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNam
     public function authenticate(string $name, ConcealedString $password): PFUser
     {
         $beforeLogin = $this->event_dispatcher->dispatch(new BeforeLogin($name, $password));
-        assert($beforeLogin instanceof BeforeLogin);
-        $user = $beforeLogin->getUser();
+        $user        = $beforeLogin->getUser();
 
         if ($user === null) {
             $user = $this->user_manager->getUserByUserName($name);
@@ -93,7 +92,6 @@ class User_LoginManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNam
         }
 
         $auth_succeeded = $this->event_dispatcher->dispatch(new UserAuthenticationSucceeded($user));
-        assert($auth_succeeded instanceof UserAuthenticationSucceeded);
         if (! $auth_succeeded->isLoginAllowed()) {
             throw new User_InvalidPasswordWithUserException($user, $auth_succeeded->getFeedbackMessage());
         }
@@ -114,7 +112,6 @@ class User_LoginManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNam
         $this->checkPasswordStorageConformity($user);
 
         $afterLogin = $this->event_dispatcher->dispatch(new AfterLocalLogin($user));
-        assert($afterLogin instanceof AfterLocalLogin);
         if (! $afterLogin->isIsLoginAllowed()) {
             throw new User_InvalidPasswordWithUserException($user, $afterLogin->getFeedbackMessage());
         }

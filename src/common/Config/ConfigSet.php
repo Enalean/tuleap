@@ -50,7 +50,6 @@ final class ConfigSet
     public function set(string $key, string $value): void
     {
         $white_listed_keys = $this->event_dispatcher->dispatch(GetWhitelistedKeys::build());
-        assert($white_listed_keys instanceof GetWhitelistedKeys);
 
         if (! $white_listed_keys->isKeyWhiteListed($key)) {
             throw new InvalidConfigKeyException($white_listed_keys);

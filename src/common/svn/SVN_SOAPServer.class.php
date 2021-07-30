@@ -273,7 +273,6 @@ class SVN_SOAPServer
     private function assertCanAccess(\Project $project): void
     {
         $svn_core_access = $this->dispatcher->dispatch(new SvnCoreAccess($project, self::FAKE_URL, null));
-        assert($svn_core_access instanceof SvnCoreAccess);
         if ($svn_core_access->hasRedirectUri()) {
             throw new Exception('Repository migrated to SVN plugin, SOAP no longer available', 3003);
         }

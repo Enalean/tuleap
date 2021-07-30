@@ -127,7 +127,6 @@ final class UpdatePasswordController implements DispatchableWithRequest
 
         try {
             $password_pre_update_event = $this->event_dispatcher->dispatch(new PasswordPreUpdateEvent($user));
-            assert($password_pre_update_event instanceof PasswordPreUpdateEvent);
 
             if (! $password_pre_update_event->areUsersAllowedToChangePassword()) {
                 throw new UpdatePasswordException(_('Platform configuration forbid users to change password'));

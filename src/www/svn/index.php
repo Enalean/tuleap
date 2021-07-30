@@ -21,7 +21,6 @@ if ($request->valid($vGroupId)) {
     $project_svnroot = $project->getSVNRootPath();
 
     $svn_core_access = EventManager::instance()->dispatch(new SvnCoreAccess($project, $_SERVER['REQUEST_URI'], $GLOBALS['Response']));
-    assert($svn_core_access instanceof SvnCoreAccess);
     $svn_core_access->redirect();
 } else {
     exit_permission_denied();

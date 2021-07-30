@@ -242,7 +242,6 @@ final class ScrumTrackerBuilder
             );
 
         $event = $this->event_dispatcher->dispatch(new ScrumTrackerStructureEvent($tracker, $id_generator));
-        assert($event instanceof ScrumTrackerStructureEvent);
         return $event->tracker;
     }
 }

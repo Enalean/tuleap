@@ -73,7 +73,6 @@ final class AccountGerritController implements DispatchableWithRequest, Dispatch
         }
 
         $tabs = $this->dispatcher->dispatch(new AccountTabPresenterCollection($user, self::URL));
-        assert($tabs instanceof AccountTabPresenterCollection);
 
         (new UserPreferencesHeader())->display(dgettext('tuleap-git', 'Gerrit'), $layout);
         $this->renderer->renderToPage(

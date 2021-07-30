@@ -1199,7 +1199,6 @@ class Tracker implements Tracker_Dispatchable_Interface
     {
         $user          = UserManager::instance()->getCurrentUser();
         $tracker_crumb = EventManager::instance()->dispatch(new TrackerCrumbInContext($this, $user));
-        assert($tracker_crumb instanceof TrackerCrumbInContext);
 
         $crumb             = $tracker_crumb->getCrumb(TrackerCrumbInContext::TRACKER_CRUMB_IDENTIFIER);
         $sub_items         = $crumb->getSubItems();

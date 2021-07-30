@@ -78,8 +78,7 @@ class SystemEvent_ROOT_DAILY extends SystemEvent // phpcs:ignore
 
         try {
             $root_daily_event = $this->getEventManager()->dispatch(new RootDailyStartEvent($logger));
-            assert($root_daily_event instanceof RootDailyStartEvent);
-            $warnings = array_merge($warnings, $root_daily_event->getWarnings());
+            $warnings         = array_merge($warnings, $root_daily_event->getWarnings());
 
             if (count($warnings) > 0) {
                 $this->warning(implode(PHP_EOL, $warnings));
