@@ -27,6 +27,7 @@ use Psr\Http\Message\RequestFactoryInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\StreamFactoryInterface;
 use Psr\Http\Message\UriFactoryInterface;
+use Tuleap\Http\Factory\StreamFactory;
 
 final class HTTPFactoryBuilder
 {
@@ -42,7 +43,7 @@ final class HTTPFactoryBuilder
 
     public static function streamFactory(): StreamFactoryInterface
     {
-        return self::buildFactory();
+        return new StreamFactory(self::buildFactory());
     }
 
     public static function URIFactory(): UriFactoryInterface
