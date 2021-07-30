@@ -30,10 +30,22 @@ export function createExportDocument(
         const artifact_title = artifact.title;
         const fields_content = [];
         for (const value of artifact.values) {
-            if (value.type === "aid" || value.type === "string") {
+            if (
+                value.type === "aid" ||
+                value.type === "atid" ||
+                value.type === "string" ||
+                value.type === "int" ||
+                value.type === "float" ||
+                value.type === "priority"
+            ) {
+                let artifact_field_value = "";
+                if (value.value !== null) {
+                    artifact_field_value = value.value.toString();
+                }
+
                 fields_content.push({
                     field_name: value.label,
-                    field_value: value.value,
+                    field_value: artifact_field_value,
                 });
             }
         }

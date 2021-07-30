@@ -44,6 +44,30 @@ describe("Create ArtifactValues Collection", () => {
                         label: "Title",
                         value: "title01",
                     },
+                    {
+                        field_id: 4,
+                        type: "int",
+                        label: "Capacity",
+                        value: 5,
+                    },
+                    {
+                        field_id: 5,
+                        type: "float",
+                        label: "Effort",
+                        value: 1.5,
+                    },
+                    {
+                        field_id: 6,
+                        type: "atid",
+                        label: "Per tracker ID",
+                        value: 1,
+                    },
+                    {
+                        field_id: 7,
+                        type: "priority",
+                        label: "Rank",
+                        value: 50,
+                    },
                 ],
             },
             {
@@ -62,6 +86,30 @@ describe("Create ArtifactValues Collection", () => {
                         label: "Title",
                         value: "title02",
                     },
+                    {
+                        field_id: 4,
+                        type: "int",
+                        label: "Capacity",
+                        value: 2,
+                    },
+                    {
+                        field_id: 5,
+                        type: "float",
+                        label: "Effort",
+                        value: 2.5,
+                    },
+                    {
+                        field_id: 6,
+                        type: "atid",
+                        label: "Per tracker ID",
+                        value: 2,
+                    },
+                    {
+                        field_id: 7,
+                        type: "priority",
+                        label: "Rank",
+                        value: 51,
+                    },
                 ],
             },
         ];
@@ -74,16 +122,32 @@ describe("Create ArtifactValues Collection", () => {
 
         expect(collection.length).toEqual(2);
         expect(collection[0].title).toEqual("tracker_shortname #1001 - title01");
-        expect(collection[0].fields.length).toEqual(2);
+        expect(collection[0].fields.length).toEqual(6);
         expect(collection[0].fields[0].field_name).toEqual("Artifact Number");
-        expect(collection[0].fields[0].field_value).toEqual(1001);
+        expect(collection[0].fields[0].field_value).toEqual("1001");
         expect(collection[0].fields[1].field_name).toEqual("Title");
         expect(collection[0].fields[1].field_value).toEqual("title01");
+        expect(collection[0].fields[2].field_name).toEqual("Capacity");
+        expect(collection[0].fields[2].field_value).toEqual("5");
+        expect(collection[0].fields[3].field_name).toEqual("Effort");
+        expect(collection[0].fields[3].field_value).toEqual("1.5");
+        expect(collection[0].fields[4].field_name).toEqual("Per tracker ID");
+        expect(collection[0].fields[4].field_value).toEqual("1");
+        expect(collection[0].fields[5].field_name).toEqual("Rank");
+        expect(collection[0].fields[5].field_value).toEqual("50");
         expect(collection[1].title).toEqual("tracker_shortname #1002 - title02");
-        expect(collection[1].fields.length).toEqual(2);
+        expect(collection[1].fields.length).toEqual(6);
         expect(collection[1].fields[0].field_name).toEqual("Artifact Number");
-        expect(collection[1].fields[0].field_value).toEqual(1002);
+        expect(collection[1].fields[0].field_value).toEqual("1002");
         expect(collection[1].fields[1].field_name).toEqual("Title");
         expect(collection[1].fields[1].field_value).toEqual("title02");
+        expect(collection[1].fields[2].field_name).toEqual("Capacity");
+        expect(collection[1].fields[2].field_value).toEqual("2");
+        expect(collection[1].fields[3].field_name).toEqual("Effort");
+        expect(collection[1].fields[3].field_value).toEqual("2.5");
+        expect(collection[1].fields[4].field_name).toEqual("Per tracker ID");
+        expect(collection[1].fields[4].field_value).toEqual("2");
+        expect(collection[1].fields[5].field_name).toEqual("Rank");
+        expect(collection[1].fields[5].field_value).toEqual("51");
     });
 });
