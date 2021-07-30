@@ -30,7 +30,7 @@ import {
 } from "../../constants";
 import { mockFetchError } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper";
 import * as rest_querier from "../../api/move-rest-querier";
-import * as adjust_item_to_content_after_item_creation_in_folder from "../actions-helpers/adjust-item-to-content-after-item-creation-in-folder.js";
+import * as adjust_item_to_content_after_item_creation_in_folder from "../actions-helpers/adjust-item-to-content-after-item-creation-in-folder";
 
 describe("Clipboard actions", () => {
     it(`When an item is already being pasted

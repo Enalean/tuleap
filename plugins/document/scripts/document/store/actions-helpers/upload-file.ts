@@ -19,10 +19,21 @@
 
 import { Upload } from "tus-js-client";
 import { getItem } from "../../api/rest-querier";
-import { flagItemAsCreated } from "./flag-item-as-created.js";
+import { flagItemAsCreated } from "./flag-item-as-created";
 import { FILE_UPLOAD_UNKNOWN_ERROR } from "../../constants";
+import type { FakeItem, Folder, ItemFile, State } from "../../type";
+import type { FileProperties } from "../../type";
+import type { ActionContext } from "vuex";
+import { isFile } from "../../helpers/type-check-helper";
+import { getParentFolder } from "./item-retriever";
 
-function updateParentProgress(bytes_total, fake_item, bytes_uploaded, context, parent) {
+function updateParentProgress(
+    bytes_total: number,
+    fake_item: FakeItem,
+    bytes_uploaded: number,
+    context: ActionContext<State, State>,
+    parent: Folder
+): void {
     if (bytes_total === 0) {
         fake_item.progress = 100;
     } else {
@@ -31,23 +42,31 @@ function updateParentProgress(bytes_total, fake_item, bytes_uploaded, context, p
     context.commit("updateFolderProgressbar", parent);
 }
 
-export function uploadFile(context, dropped_file, fake_item, docman_item, parent) {
+export function uploadFile(
+    context: ActionContext<State, State>,
+    dropped_file: File,
+    fake_item: FakeItem,
+    docman_item: ItemFile,
+    parent: Folder
+): Upload {
     const uploader = new Upload(dropped_file, {
         uploadUrl: docman_item.file_properties.upload_href,
         metadata: {
             filename: dropped_file.name,
             filetype: dropped_file.type,
         },
-        onProgress: (bytes_uploaded, bytes_total) => {
+        onProgress: (bytes_uploaded, bytes_total): void => {
             updateParentProgress(bytes_total, fake_item, bytes_uploaded, context, parent);
         },
-        onSuccess: async () => {
+        onSuccess: async (): Promise<void> => {
             try {
                 const file = await getItem(docman_item.id);
-                flagItemAsCreated(context, file);
-                file.level = fake_item.level;
-                context.commit("replaceUploadingFileWithActualFile", [fake_item, file]);
-                context.commit("removeFileFromUploadsList", fake_item);
+                if (isFile(file)) {
+                    flagItemAsCreated(context, file);
+                    file.level = fake_item.level;
+                    context.commit("replaceUploadingFileWithActualFile", [fake_item, file]);
+                    context.commit("removeFileFromUploadsList", fake_item);
+                }
             } catch (exception) {
                 fake_item.upload_error = FILE_UPLOAD_UNKNOWN_ERROR;
                 fake_item.is_uploading = false;
@@ -56,9 +75,9 @@ export function uploadFile(context, dropped_file, fake_item, docman_item, parent
                 context.commit("toggleCollapsedFolderHasUploadingContent", [parent, false]);
             }
         },
-        onError: ({ originalRequest }) => {
+        onError: (error: Error): void => {
             fake_item.is_uploading = false;
-            fake_item.upload_error = originalRequest.statusText;
+            fake_item.upload_error = error.message;
 
             context.commit("removeItemFromFolderContent", fake_item);
         },
@@ -69,14 +88,17 @@ export function uploadFile(context, dropped_file, fake_item, docman_item, parent
     return uploader;
 }
 
-export function uploadVersion(context, dropped_file, updated_file, new_version) {
-    let parent_folder = context.state.folder_content.find(
-        (item) => item.id === updated_file.parent_id
+export function uploadVersion(
+    context: ActionContext<State, State>,
+    dropped_file: File,
+    updated_file: FakeItem,
+    new_version: FileProperties
+): Upload {
+    const parent_folder = getParentFolder(
+        context.state.folder_content,
+        updated_file,
+        context.state.current_folder
     );
-
-    if (!parent_folder) {
-        parent_folder = context.state.current_folder;
-    }
 
     const uploader = new Upload(dropped_file, {
         uploadUrl: new_version.upload_href,
@@ -84,10 +106,10 @@ export function uploadVersion(context, dropped_file, updated_file, new_version) 
             filename: dropped_file.name,
             filetype: dropped_file.type,
         },
-        onProgress: (bytes_uploaded, bytes_total) => {
+        onProgress: (bytes_uploaded, bytes_total): void => {
             updateParentProgress(bytes_total, updated_file, bytes_uploaded, context, parent_folder);
         },
-        onSuccess: async () => {
+        onSuccess: async (): Promise<void> => {
             updated_file.progress = null;
             updated_file.is_uploading_new_version = false;
             updated_file.last_update_date = new Date();
@@ -96,27 +118,33 @@ export function uploadVersion(context, dropped_file, updated_file, new_version) 
             const new_item_version = await getItem(updated_file.id);
             context.commit("replaceFileWithNewVersion", [updated_file, new_item_version]);
         },
-        onError: ({ originalRequest }) => {
-            updated_file.upload_error = originalRequest.statusText;
+        onError: (error: Error): void => {
+            updated_file.upload_error = error.message;
         },
     });
     uploader.start();
     return uploader;
 }
-export function uploadVersionFromEmpty(context, dropped_file, updated_empty, new_version) {
-    let parent_folder = context.state.folder_content.find(
-        (item) => item.id === updated_empty.parent_id
+
+export function uploadVersionFromEmpty(
+    context: ActionContext<State, State>,
+    dropped_file: File,
+    updated_empty: FakeItem,
+    new_version: FileProperties
+): Upload {
+    const parent_folder = getParentFolder(
+        context.state.folder_content,
+        updated_empty,
+        context.state.current_folder
     );
-    if (!parent_folder) {
-        parent_folder = context.state.current_folder;
-    }
+
     const uploader = new Upload(dropped_file, {
         uploadUrl: new_version.upload_href,
         metadata: {
             filename: dropped_file.name,
             filetype: dropped_file.type,
         },
-        onProgress: (bytes_uploaded, bytes_total) => {
+        onProgress: (bytes_uploaded, bytes_total): void => {
             updateParentProgress(
                 bytes_total,
                 updated_empty,
@@ -125,7 +153,7 @@ export function uploadVersionFromEmpty(context, dropped_file, updated_empty, new
                 parent_folder
             );
         },
-        onSuccess: async () => {
+        onSuccess: async (): Promise<void> => {
             updated_empty.progress = null;
             updated_empty.is_uploading_new_version = false;
             updated_empty.last_update_date = Date.now();
@@ -135,8 +163,8 @@ export function uploadVersionFromEmpty(context, dropped_file, updated_empty, new
             context.commit("addJustCreatedItemToFolderContent", new_item_version);
             context.commit("updateCurrentItemForQuickLokDisplay", new_item_version);
         },
-        onError: ({ originalRequest }) => {
-            updated_empty.upload_error = originalRequest.statusText;
+        onError: (error: Error): void => {
+            updated_empty.upload_error = error.message;
         },
     });
 

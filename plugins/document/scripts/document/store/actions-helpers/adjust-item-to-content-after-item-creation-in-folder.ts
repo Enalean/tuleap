@@ -20,14 +20,17 @@
 export { adjustItemToContentAfterItemCreationInAFolder };
 
 import { getItem } from "../../api/rest-querier";
-import { flagItemAsCreated } from "./flag-item-as-created.js";
+
+import { flagItemAsCreated } from "./flag-item-as-created";
+import type { Folder, State } from "../../type";
+import type { ActionContext } from "vuex";
 
 async function adjustItemToContentAfterItemCreationInAFolder(
-    context,
-    parent,
-    current_folder,
-    item_id
-) {
+    context: ActionContext<State, State>,
+    parent: Folder,
+    current_folder: Folder,
+    item_id: number
+): Promise<void> {
     const created_item = await getItem(item_id);
 
     context.commit("removeItemFromFolderContent", created_item);

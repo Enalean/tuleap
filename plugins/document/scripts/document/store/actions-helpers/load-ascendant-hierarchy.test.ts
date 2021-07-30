@@ -19,15 +19,18 @@
 
 import { mockFetchError } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper";
 import * as rest_querier from "../../api/rest-querier";
-import { loadAscendantHierarchy } from "./load-ascendant-hierarchy.js";
+import { loadAscendantHierarchy } from "./load-ascendant-hierarchy";
+import type { ActionContext } from "vuex";
+import type { ErrorState } from "../error/module";
+import type { Folder, Item } from "../../type";
 
 describe("loadAscendantHierarchy", () => {
-    let context, getParents;
+    let context: ActionContext<ErrorState, ErrorState>, getParents: jest.SpyInstance;
 
     beforeEach(() => {
         context = {
             commit: jest.fn(),
-        };
+        } as unknown as ActionContext<ErrorState, ErrorState>;
 
         getParents = jest.spyOn(rest_querier, "getParents");
     });
@@ -41,7 +44,7 @@ describe("loadAscendantHierarchy", () => {
                     id: 101,
                 },
                 last_update_date: "2018-10-03T11:16:11+02:00",
-            },
+            } as Folder,
             {
                 id: 2,
                 title: "folder A",
@@ -49,7 +52,7 @@ describe("loadAscendantHierarchy", () => {
                     id: 101,
                 },
                 last_update_date: "2018-08-07T16:42:49+02:00",
-            },
+            } as Folder,
         ];
 
         const item = {
@@ -60,7 +63,7 @@ describe("loadAscendantHierarchy", () => {
                 display_name: "user (login)",
             },
             last_update_date: "2018-08-21T17:01:49+02:00",
-        };
+        } as Folder;
 
         const expected_parents = [
             {
@@ -92,6 +95,11 @@ describe("loadAscendantHierarchy", () => {
     });
 
     it("When the parents can't be found, another error screen will be shown", async () => {
+        const item = {
+            id: 3,
+            title: "Current folder",
+        } as Folder;
+
         const error_message = "The folder does not exist.";
         mockFetchError(getParents, {
             status: 404,
@@ -102,7 +110,7 @@ describe("loadAscendantHierarchy", () => {
             },
         });
 
-        await loadAscendantHierarchy(context);
+        await loadAscendantHierarchy(context, 3, Promise.resolve(item));
 
         expect(context.commit).not.toHaveBeenCalledWith("saveAscendantHierarchy");
         expect(context.commit).toHaveBeenCalledWith("error/setFolderLoadingError", error_message);
@@ -153,7 +161,7 @@ describe("loadAscendantHierarchy", () => {
                 display_name: "user (login)",
             },
             last_update_date: "2018-08-21T17:01:49+02:00",
-        };
+        } as Item;
 
         await loadAscendantHierarchy(context, 3, Promise.resolve(item));
 

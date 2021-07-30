@@ -23,7 +23,8 @@ import type { PermissionsState } from "./store/permissions/permissions-default-s
 
 export interface State {
     is_loading_folder: boolean;
-    current_folder: Folder | null;
+    current_folder: Folder;
+    folder_content: Array<Item>;
 }
 
 export interface RootState extends State {
@@ -79,7 +80,7 @@ export interface Item {
     description: string;
     post_processed_description: string;
     owner: User;
-    last_update_date: string;
+    last_update_date: Date | string | number;
     creation_date: string;
     user_can_write: boolean;
     can_user_manage: boolean;
@@ -88,6 +89,15 @@ export interface Item {
     parent_id: number | null;
     type: string;
     status: string | FolderStatus;
+    created?: boolean;
+}
+
+export interface FakeItem extends Item {
+    progress: number | null;
+    level: number;
+    upload_error?: string;
+    is_uploading?: boolean;
+    is_uploading_new_version?: boolean;
 }
 
 export interface Folder extends Item {
@@ -120,6 +130,7 @@ export interface ItemFile extends Item, ApprovableDocument {
     name?: string;
     size?: number;
     uploader?: FileUploader;
+    level?: number;
 }
 
 export interface ItemFileUploader extends ItemFile {
@@ -205,6 +216,8 @@ export interface FileProperties {
     file_type: string;
     download_href: string;
     file_size: number;
+    upload_href?: string;
+    level?: number;
 }
 
 export interface LinkProperties {

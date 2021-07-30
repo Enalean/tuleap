@@ -46,11 +46,11 @@ import {
     loadRootFolder,
     toggleQuickLook,
 } from "./actions.js";
-import * as load_ascendant_hierarchy from "./actions-helpers/load-ascendant-hierarchy.js";
-import * as load_folder_content from "./actions-helpers/load-folder-content.js";
+import * as load_ascendant_hierarchy from "./actions-helpers/load-ascendant-hierarchy";
+import * as load_folder_content from "./actions-helpers/load-folder-content";
 import * as rest_querier from "../api/rest-querier";
 
-import * as upload_file from "./actions-helpers/upload-file.js";
+import * as upload_file from "./actions-helpers/upload-file";
 import * as error_handler from "./actions-helpers/handle-errors";
 import * as action_error_handler from "./error/error-actions";
 

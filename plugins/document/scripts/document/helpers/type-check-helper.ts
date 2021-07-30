@@ -18,8 +18,15 @@
  *
  */
 
-import type { Embedded, Empty, Item, ItemFile, Link, Wiki } from "../type";
-import { TYPE_EMBEDDED, TYPE_EMPTY, TYPE_FILE, TYPE_LINK, TYPE_WIKI } from "../constants";
+import type { Embedded, Empty, Folder, Item, ItemFile, Link, Wiki } from "../type";
+import {
+    TYPE_EMBEDDED,
+    TYPE_EMPTY,
+    TYPE_FILE,
+    TYPE_FOLDER,
+    TYPE_LINK,
+    TYPE_WIKI,
+} from "../constants";
 
 export function isFile(item: Item | Embedded | Empty | ItemFile | Link | Wiki): item is ItemFile {
     return item.type === TYPE_FILE;
@@ -41,4 +48,10 @@ export function isEmbedded(
     item: Item | Embedded | Empty | ItemFile | Link | Wiki
 ): item is Embedded {
     return item.type === TYPE_EMBEDDED;
+}
+
+export function isFolder(
+    item: Item | Embedded | Empty | ItemFile | Link | Wiki | Folder
+): item is Folder {
+    return item.type === TYPE_FOLDER;
 }

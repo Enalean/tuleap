@@ -41,7 +41,7 @@ import {
     CLIPBOARD_OPERATION_CUT,
     CLIPBOARD_OPERATION_COPY,
 } from "../../constants";
-import { adjustItemToContentAfterItemCreationInAFolder } from "../actions-helpers/adjust-item-to-content-after-item-creation-in-folder.js";
+import { adjustItemToContentAfterItemCreationInAFolder } from "../actions-helpers/adjust-item-to-content-after-item-creation-in-folder";
 import { handleErrors } from "../actions-helpers/handle-errors";
 
 export const pasteItem = async (context, [destination_folder, current_folder, global_context]) => {
