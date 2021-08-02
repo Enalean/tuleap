@@ -105,12 +105,9 @@ class ChangesetRepresentationBuilder
         PFUser $user,
         \Tracker_Artifact_Changeset $previous_item
     ): bool {
-        foreach ($changeset->getValues() as $current_changeset_value) {
-            if ($current_changeset_value === null) {
-                continue;
-            }
+        foreach ($changeset->getChangesetValuesHasChanged() as $current_changeset_value) {
             $field = $current_changeset_value->getField();
-            if (! $current_changeset_value->hasChanged() || ! $field->userCanRead($user)) {
+            if (! $field->userCanRead($user)) {
                 continue;
             }
 

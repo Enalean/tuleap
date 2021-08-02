@@ -83,6 +83,28 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item
         return $this->values[$field->getId()];
     }
 
+    /**
+     * @return Tracker_Artifact_ChangesetValue[]
+     */
+    public function getChangesetValuesHasChanged(): array
+    {
+        $has_changed_changeset = [];
+
+        foreach ($this->getValueDao()->getAllChangedValueFromChangesetId((int) $this->getId()) as $changeset_raw) {
+            $field = $this->getFormElementFactory()->getFieldById($changeset_raw['field_id']);
+            if (! $field) {
+                continue;
+            }
+            if (isset($this->values[$field->getId()])) {
+                $has_changed_changeset[] = $this->values[$field->getId()];
+                continue;
+            }
+            $has_changed_changeset[] = $field->getChangesetValue($this, $changeset_raw['id'], true);
+        }
+
+        return $has_changed_changeset;
+    }
+
     public function canHoldValue()
     {
         return true;

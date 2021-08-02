@@ -29,18 +29,19 @@ use Tuleap\Tracker\REST\DataBuilder;
 
 class TrackerBase extends RestBase
 {
-    public const MOVE_PROJECT_NAME                  = 'move-artifact';
-    public const DELETE_PROJECT_NAME                = 'test-delete-artifacts';
-    public const TRACKER_FIELDS_PROJECT_NAME        = 'test-tracker-fields';
-    public const TRACKER_ADMINISTRATOR_PROJECT_NAME = 'test-tracker-project-filter';
-    public const TRACKER_WORKFLOWS_PROJECT_NAME     = 'test-tracker-workflows';
-    public const TRACKER_SEMANTICS_PROJECT_NAME     = 'test-tracker-semantics';
-    public const TRACKER_ARTIFACTS_PROJECT_NAME     = 'test-tracker-artifacts';
-    private const TRACKER_FILE_URL_PROJECT_NAME     = 'test-tracker-file-url';
-    private const REST_XML_API_PROJECT_NAME         = 'rest-xml-api';
-    private const COMPUTED_VALUE_PROJECT_NAME       = 'computed-fields-default-value';
-    public const PRIVATE_COMMENT_PROJECT_NAME       = 'tracker-private-comment';
-    private const TRACKER_ALL_FIELDS_PROJECT_NAME   = 'tracker-all-fields';
+    public const MOVE_PROJECT_NAME                           = 'move-artifact';
+    public const DELETE_PROJECT_NAME                         = 'test-delete-artifacts';
+    public const TRACKER_FIELDS_PROJECT_NAME                 = 'test-tracker-fields';
+    public const TRACKER_ADMINISTRATOR_PROJECT_NAME          = 'test-tracker-project-filter';
+    public const TRACKER_WORKFLOWS_PROJECT_NAME              = 'test-tracker-workflows';
+    public const TRACKER_SEMANTICS_PROJECT_NAME              = 'test-tracker-semantics';
+    public const TRACKER_ARTIFACTS_PROJECT_NAME              = 'test-tracker-artifacts';
+    private const TRACKER_FILE_URL_PROJECT_NAME              = 'test-tracker-file-url';
+    private const REST_XML_API_PROJECT_NAME                  = 'rest-xml-api';
+    private const COMPUTED_VALUE_PROJECT_NAME                = 'computed-fields-default-value';
+    public const PRIVATE_COMMENT_PROJECT_NAME                = 'tracker-private-comment';
+    private const TRACKER_ALL_FIELDS_PROJECT_NAME            = 'tracker-all-fields';
+    private const FILE_FIELD_ARTIFACT_CHANGESET_PROJECT_NAME = 'file-field-artifact-changeset';
 
     public const MOVE_TRACKER_SHORTNAME                           = 'ToMoveArtifacts';
     public const BASE_TRACKER_SHORTNAME                           = 'base';
@@ -60,6 +61,7 @@ class TrackerBase extends RestBase
     private const COMPUTED_VALUE_TRACKER_SHORTNAME                = 'ComputedFieldsDefaultValues';
     private const PRIVATE_COMMENT_TRACKER_SHORTNAME               = 'bug';
     private const TRACKER_ALL_FIELDS_TRACKER_SHORTNAME            = 'all_fields';
+    private const TRACKER_FILE_AND_TITLE_FIELDS_TRACKER_SHORTNAME = 'file_and_title_fields';
 
     protected $tracker_administrator_project_id;
     protected $tracker_workflows_project_id;
@@ -79,11 +81,13 @@ class TrackerBase extends RestBase
     protected $computed_value_tracker_id;
     protected $tracker_artifacts_tracker_id;
     protected $tracker_all_fields_tracker_id;
+    protected $tracker_file_and_title_fields_tracker_id;
 
-    protected $base_artifact_ids            = [];
-    protected $delete_artifact_ids          = [];
-    private $private_comment_artifact_ids   = [];
-    private $tracker_all_field_artifact_ids = [];
+    protected $base_artifact_ids                        = [];
+    protected $delete_artifact_ids                      = [];
+    private $private_comment_artifact_ids               = [];
+    private $tracker_all_field_artifact_ids             = [];
+    private $tracker_file_and_title_fields_artifact_ids = [];
 
     /**
      * @var int
@@ -105,23 +109,28 @@ class TrackerBase extends RestBase
      * @var int
      */
     protected $tracker_all_fields_artifact_id;
+    /**
+     * @var int
+     */
+    protected $tracker_file_and_title_fields_artifact_id;
 
     public function setUp(): void
     {
         parent::setUp();
 
-        $move_project_id                        = $this->getProjectId(self::MOVE_PROJECT_NAME);
-        $delete_project_id                      = $this->getProjectId(self::DELETE_PROJECT_NAME);
-        $tracker_fields_project_id              = $this->getProjectId(self::TRACKER_FIELDS_PROJECT_NAME);
-        $this->tracker_administrator_project_id = $this->getProjectId(self::TRACKER_ADMINISTRATOR_PROJECT_NAME);
-        $this->tracker_workflows_project_id     = $this->getProjectId(self::TRACKER_WORKFLOWS_PROJECT_NAME);
-        $file_url_project_id                    = $this->getProjectId(self::TRACKER_FILE_URL_PROJECT_NAME);
-        $tracker_semantics_project_id           = $this->getProjectId(self::TRACKER_SEMANTICS_PROJECT_NAME);
-        $tracker_artifacts_project_id           = $this->getProjectId(self::TRACKER_ARTIFACTS_PROJECT_NAME);
-        $this->rest_xml_api_project_id          = $this->getProjectId(self::REST_XML_API_PROJECT_NAME);
-        $computed_value_project_id              = $this->getProjectId(self::COMPUTED_VALUE_PROJECT_NAME);
-        $private_comment_project_id             = $this->getProjectId(self::PRIVATE_COMMENT_PROJECT_NAME);
-        $tracker_all_fields_project_id          = $this->getProjectId(self::TRACKER_ALL_FIELDS_PROJECT_NAME);
+        $move_project_id                          = $this->getProjectId(self::MOVE_PROJECT_NAME);
+        $delete_project_id                        = $this->getProjectId(self::DELETE_PROJECT_NAME);
+        $tracker_fields_project_id                = $this->getProjectId(self::TRACKER_FIELDS_PROJECT_NAME);
+        $this->tracker_administrator_project_id   = $this->getProjectId(self::TRACKER_ADMINISTRATOR_PROJECT_NAME);
+        $this->tracker_workflows_project_id       = $this->getProjectId(self::TRACKER_WORKFLOWS_PROJECT_NAME);
+        $file_url_project_id                      = $this->getProjectId(self::TRACKER_FILE_URL_PROJECT_NAME);
+        $tracker_semantics_project_id             = $this->getProjectId(self::TRACKER_SEMANTICS_PROJECT_NAME);
+        $tracker_artifacts_project_id             = $this->getProjectId(self::TRACKER_ARTIFACTS_PROJECT_NAME);
+        $this->rest_xml_api_project_id            = $this->getProjectId(self::REST_XML_API_PROJECT_NAME);
+        $computed_value_project_id                = $this->getProjectId(self::COMPUTED_VALUE_PROJECT_NAME);
+        $private_comment_project_id               = $this->getProjectId(self::PRIVATE_COMMENT_PROJECT_NAME);
+        $tracker_all_fields_project_id            = $this->getProjectId(self::TRACKER_ALL_FIELDS_PROJECT_NAME);
+        $tracker_file_and_title_fields_project_id = $this->getProjectId(self::FILE_FIELD_ARTIFACT_CHANGESET_PROJECT_NAME);
 
         $this->move_tracker_id                           = $this->tracker_ids[$move_project_id][self::MOVE_TRACKER_SHORTNAME];
         $this->base_tracker_id                           = $this->tracker_ids[$move_project_id][self::BASE_TRACKER_SHORTNAME];
@@ -139,14 +148,17 @@ class TrackerBase extends RestBase
         $this->tracker_artifacts_tracker_id              = $this->tracker_ids[$tracker_artifacts_project_id][self::TRACKER_ARTIFACTS_TRACKER_SHORTNAME];
         $this->private_comment_tracker_id                = $this->tracker_ids[$private_comment_project_id][self::PRIVATE_COMMENT_TRACKER_SHORTNAME];
         $this->tracker_all_fields_tracker_id             = $this->tracker_ids[$tracker_all_fields_project_id][self::TRACKER_ALL_FIELDS_TRACKER_SHORTNAME];
+        $this->tracker_file_and_title_fields_tracker_id  = $this->tracker_ids[$tracker_file_and_title_fields_project_id][self::TRACKER_FILE_AND_TITLE_FIELDS_TRACKER_SHORTNAME];
 
         $this->getBaseArtifactIds();
         $this->getDeleteArtifactIds();
         $this->getPrivateCommentArtifactIds();
         $this->getTrackerAllFieldsArtifactIds();
+        $this->getTrackerFileAndTitleFieldsArtifactIds();
         $this->private_comment_artifact_id                   = $this->private_comment_artifact_ids[1];
         $this->private_comment_and_private_field_artifact_id = $this->private_comment_artifact_ids[2];
         $this->tracker_all_fields_artifact_id                = current($this->tracker_all_field_artifact_ids);
+        $this->tracker_file_and_title_fields_artifact_id     = current($this->tracker_file_and_title_fields_artifact_ids);
 
         $this->initUserId(DataBuilder::USER_TESTER_NAME);
     }
@@ -180,6 +192,14 @@ class TrackerBase extends RestBase
         $this->getArtifactIds(
             $this->tracker_all_fields_tracker_id,
             $this->tracker_all_field_artifact_ids
+        );
+    }
+
+    private function getTrackerFileAndTitleFieldsArtifactIds(): void
+    {
+        $this->getArtifactIds(
+            $this->tracker_file_and_title_fields_tracker_id,
+            $this->tracker_file_and_title_fields_artifact_ids
         );
     }
 

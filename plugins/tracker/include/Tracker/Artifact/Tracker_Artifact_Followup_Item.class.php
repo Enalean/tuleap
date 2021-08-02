@@ -64,6 +64,11 @@ abstract class Tracker_Artifact_Followup_Item
 
     abstract public function getValue(Tracker_FormElement_Field $field);
 
+    /**
+     * @return Tracker_Artifact_ChangesetValue[]
+     */
+    abstract public function getChangesetValuesHasChanged(): array;
+
     abstract public function canHoldValue();
 
     public function getAvatar()
