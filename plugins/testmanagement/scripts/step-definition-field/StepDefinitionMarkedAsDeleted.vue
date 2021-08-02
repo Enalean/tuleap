@@ -61,14 +61,17 @@ export default {
         StepDefinitionActions,
     },
     props: {
-        step: Object,
+        step: {
+            type: Object,
+            required: true,
+        },
     },
     computed: {
         ...mapGetters(["is_text"]),
     },
     methods: {
         unmarkDeletion() {
-            this.$emit("unmark-deletion");
+            this.$store.commit("setStepDeleted", [this.step, false]);
         },
     },
 };

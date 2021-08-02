@@ -201,11 +201,10 @@ export default {
     },
     mounted() {
         this.loadEditor();
-        this.$emit("remove-deleted-steps-on-form-submission", this.$refs.description.form);
     },
     methods: {
         markAsDeleted() {
-            this.$emit("mark-as-deleted");
+            this.$store.commit("setStepDeleted", [this.step, true]);
         },
         getEditorsContent() {
             if (this.is_current_step_in_html_format && this.areRTEEditorsSet()) {
