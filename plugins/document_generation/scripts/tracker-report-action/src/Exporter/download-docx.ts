@@ -21,6 +21,7 @@ import type { ExportDocument } from "../type";
 import {
     AlignmentType,
     Bookmark,
+    BorderStyle,
     File,
     Footer,
     HeadingLevel,
@@ -33,6 +34,7 @@ import {
     TableCell,
     TableRow,
     TextRun,
+    VerticalAlign,
     WidthType,
 } from "docx";
 import { TableOfContentsPrefilled } from "./DOCX/TableOfContents/table-of-contents";
@@ -96,6 +98,29 @@ export async function downloadDocx(document: ExportDocument, language: string): 
                                 style: "table_header",
                             }),
                         ],
+                        verticalAlign: VerticalAlign.CENTER,
+                        borders: {
+                            top: {
+                                size: 0,
+                                style: BorderStyle.NONE,
+                                color: "ffffff",
+                            },
+                            bottom: {
+                                size: 0,
+                                style: BorderStyle.NONE,
+                                color: "ffffff",
+                            },
+                            left: {
+                                size: 0,
+                                style: BorderStyle.NONE,
+                                color: "ffffff",
+                            },
+                            right: {
+                                size: 0,
+                                style: BorderStyle.NONE,
+                                color: "ffffff",
+                            },
+                        },
                     }),
                     new TableCell({
                         children: [
@@ -104,6 +129,29 @@ export async function downloadDocx(document: ExportDocument, language: string): 
                                 style: "table_header",
                             }),
                         ],
+                        verticalAlign: VerticalAlign.CENTER,
+                        borders: {
+                            top: {
+                                size: 0,
+                                style: BorderStyle.NONE,
+                                color: "ffffff",
+                            },
+                            bottom: {
+                                size: 0,
+                                style: BorderStyle.NONE,
+                                color: "ffffff",
+                            },
+                            left: {
+                                size: 0,
+                                style: BorderStyle.NONE,
+                                color: "ffffff",
+                            },
+                            right: {
+                                size: 0,
+                                style: BorderStyle.NONE,
+                                color: "ffffff",
+                            },
+                        },
                     }),
                 ],
                 tableHeader: true,
@@ -114,10 +162,28 @@ export async function downloadDocx(document: ExportDocument, language: string): 
             const table_row = new TableRow({
                 children: [
                     new TableCell({
-                        children: [new Paragraph(artifact_value.field_name)],
+                        children: [
+                            new Paragraph({
+                                text: artifact_value.field_name,
+                                style: "table_content",
+                            }),
+                        ],
+                        verticalAlign: VerticalAlign.CENTER,
+                        margins: {
+                            left: 50,
+                        },
                     }),
                     new TableCell({
-                        children: [new Paragraph(artifact_value.field_value.toString())],
+                        children: [
+                            new Paragraph({
+                                text: artifact_value.field_value.toString(),
+                                style: "table_content",
+                            }),
+                        ],
+                        verticalAlign: VerticalAlign.CENTER,
+                        margins: {
+                            left: 50,
+                        },
                     }),
                 ],
             });
@@ -164,6 +230,23 @@ export async function downloadDocx(document: ExportDocument, language: string): 
                     },
                     paragraph: {
                         alignment: AlignmentType.CENTER,
+                        spacing: {
+                            before: 200,
+                            after: 200,
+                        },
+                    },
+                },
+                {
+                    id: "table_content",
+                    name: "table_content",
+                    basedOn: "Normal",
+                    next: "Normal",
+                    paragraph: {
+                        alignment: AlignmentType.LEFT,
+                        spacing: {
+                            before: 50,
+                            after: 50,
+                        },
                     },
                 },
             ],
