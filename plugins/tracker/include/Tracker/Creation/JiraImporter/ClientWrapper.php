@@ -121,7 +121,12 @@ class ClientWrapper implements JiraClient
 
         $body_contents = $response->getBody()->getContents();
         if ($response_debug_path) {
-            file_put_contents($response_debug_path, $body_contents);
+            file_put_contents($response_debug_path, "Headers: " . PHP_EOL, FILE_APPEND);
+            foreach ($response->getHeaders() as $header_name => $header_values) {
+                file_put_contents($response_debug_path, "$header_name: " . implode(', ', $header_values) . PHP_EOL, FILE_APPEND);
+            }
+            file_put_contents($response_debug_path, PHP_EOL . "Body content: " . PHP_EOL, FILE_APPEND);
+            file_put_contents($response_debug_path, $body_contents, FILE_APPEND);
         }
 
         return json_decode($body_contents, true, 512, JSON_OBJECT_AS_ARRAY & JSON_THROW_ON_ERROR);
