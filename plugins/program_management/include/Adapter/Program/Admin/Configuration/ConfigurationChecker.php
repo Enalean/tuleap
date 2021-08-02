@@ -33,6 +33,7 @@ use Tuleap\ProgramManagement\Domain\Program\Plan\ProjectIsNotAProgramException;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\ProgramTrackerNotFoundException;
 use Tuleap\ProgramManagement\Domain\ProgramTracker;
+use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\Tracker\Artifact\CanSubmitNewArtifact;
 
 class ConfigurationChecker
@@ -50,7 +51,7 @@ class ConfigurationChecker
         PFUser $user
     ): array {
         try {
-            $program = ProgramIdentifier::fromId($build_program, $program_id->id, $user);
+            $program = ProgramIdentifier::fromId($build_program, $program_id->id, UserIdentifier::fromPFUser($user));
         } catch (ProjectIsNotAProgramException $e) {
             return [];
         }

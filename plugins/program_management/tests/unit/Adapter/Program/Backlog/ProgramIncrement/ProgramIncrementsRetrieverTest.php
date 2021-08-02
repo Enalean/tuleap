@@ -27,6 +27,7 @@ use Psr\Log\NullLogger;
 use Tracker_FormElement_Field_List;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrement;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
+use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\ProgramManagement\Stub\BuildProgramStub;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
@@ -159,6 +160,6 @@ final class ProgramIncrementsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 
     private static function buildProgram(\PFUser $user): ProgramIdentifier
     {
-        return ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 1, $user);
+        return ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 1, UserIdentifier::fromPFUser($user));
     }
 }

@@ -31,6 +31,7 @@ use Tuleap\ProgramManagement\Domain\Program\Plan\ProjectIsNotAProgramException;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\SearchTeamsOfProgram;
 use Tuleap\ProgramManagement\Domain\ProgramTracker;
+use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\Tracker\Artifact\CanSubmitNewArtifact;
 
 final class CanSubmitNewArtifactHandler
@@ -62,7 +63,7 @@ final class CanSubmitNewArtifactHandler
         $tracker_data = new ProgramTracker($tracker);
 
         try {
-            $program = ProgramIdentifier::fromId($this->program_builder, (int) $tracker->getGroupId(), $user);
+            $program = ProgramIdentifier::fromId($this->program_builder, (int) $tracker->getGroupId(), UserIdentifier::fromPFUser($user));
         } catch (ProgramAccessException | ProjectIsNotAProgramException $e) {
             // Do not disable artifact submission. Keep it enabled
             return;

@@ -22,17 +22,19 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Plan;
 
+use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
+
 interface BuildProgram
 {
     /**
      * @throws ProjectIsNotAProgramException
      * @throws ProgramAccessException
      */
-    public function ensureProgramIsAProject(int $project_id, \PFUser $user): void;
+    public function ensureProgramIsAProject(int $project_id, UserIdentifier $user): void;
 
     /**
      * @throws ProgramAccessException
      * @throws ProgramIsATeamException
      */
-    public function ensureProgramIsProjectAndUserIsAdminOf(int $id, \PFUser $user): void;
+    public function ensureProgramIsProjectAndUserIsAdminOf(int $id, UserIdentifier $user): void;
 }

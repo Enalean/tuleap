@@ -39,6 +39,7 @@ use Tuleap\ProgramManagement\Domain\Program\Plan\ProjectIsNotAProgramException;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\ProgramTrackerNotFoundException;
 use Tuleap\ProgramManagement\Domain\Team\VerifyIsTeam;
+use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\Project\Flags\ProjectFlagsBuilder;
 use Tuleap\Request\DispatchableWithBurningParrot;
 use Tuleap\Request\DispatchableWithProject;
@@ -159,7 +160,7 @@ final class DisplayProgramBacklogController implements DispatchableWithRequest, 
      */
     private function buildConfigurationForExistingProgram(Project $project, HTTPRequest $request, PFUser $user): ProgramBacklogConfigurationPresenter
     {
-        $program = ProgramIdentifier::fromId($this->build_program, (int) $project->getID(), $request->getCurrentUser());
+        $program = ProgramIdentifier::fromId($this->build_program, (int) $project->getID(), UserIdentifier::fromPFUser($request->getCurrentUser()));
 
         $plan_configuration = ProgramIncrementTrackerConfiguration::fromProgram(
             $this->program_increment_tracker_retriever,

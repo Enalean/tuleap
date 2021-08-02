@@ -20,11 +20,11 @@
 
 declare(strict_types=1);
 
-namespace unit\Domain\Program\Backlog\IterationTracker;
+namespace Tuleap\ProgramManagement\Domain\Program\Backlog\IterationTracker;
 
-use Tuleap\ProgramManagement\Domain\Program\Backlog\IterationTracker\IterationLabels;
-use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\ProgramTracker;
+use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
+use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\ProgramManagement\Stub\BuildProgramStub;
 use Tuleap\ProgramManagement\Stub\RetrieveIterationLabelsStub;
 use Tuleap\ProgramManagement\Stub\RetrieveVisibleIterationTrackerStub;
@@ -37,10 +37,11 @@ final class IterationLabelsTest extends \Tuleap\Test\PHPUnit\TestCase
 
     protected function setUp(): void
     {
+        $user                  = UserTestBuilder::aUser()->build();
         $this->program_tracker = ProgramTracker::buildIterationTrackerFromProgram(
             RetrieveVisibleIterationTrackerStub::withValidTracker(TrackerTestBuilder::aTracker()->build()),
-            ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 101, UserTestBuilder::aUser()->build()),
-            UserTestBuilder::aUser()->build()
+            ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 101, UserIdentifier::fromPFUser($user)),
+            $user
         );
     }
 

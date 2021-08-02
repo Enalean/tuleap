@@ -131,6 +131,7 @@ final class DisplayProgramBacklogControllerTest extends \Tuleap\Test\PHPUnit\Tes
         $user = $this->createMock(\PFUser::class);
         $user->method('getPreference')->willReturn(false);
         $user->method('isAdmin')->willReturn(true);
+        $user->method('getId')->willReturn(101);
 
         $request   = HTTPRequestBuilder::get()->withUser($user)->build();
         $variables = ['project_name' => 'test_project'];
@@ -160,6 +161,7 @@ final class DisplayProgramBacklogControllerTest extends \Tuleap\Test\PHPUnit\Tes
         $user = $this->createMock(\PFUser::class);
         $user->method('getPreference')->willReturn(false);
         $user->method('isAdmin')->willReturn(true);
+        $user->method('getId')->willReturn(101);
 
         $request   = HTTPRequestBuilder::get()->withUser($user)->build();
         $variables = ['project_name' => 'test_project'];

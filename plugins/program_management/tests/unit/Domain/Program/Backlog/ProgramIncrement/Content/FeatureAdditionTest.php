@@ -27,6 +27,7 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncr
 use Tuleap\ProgramManagement\Domain\Program\Plan\FeatureCannotBePlannedInProgramIncrementException;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\UserCanPrioritize;
+use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\ProgramManagement\Stub\BuildProgramStub;
 use Tuleap\ProgramManagement\Stub\CheckProgramIncrementStub;
 use Tuleap\ProgramManagement\Stub\VerifyCanBePlannedInProgramIncrementStub;
@@ -40,7 +41,7 @@ final class FeatureAdditionTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $user              = UserTestBuilder::aUser()->build();
         $program_increment = ProgramIncrementIdentifier::fromId(CheckProgramIncrementStub::buildProgramIncrementChecker(), 89, $user);
-        $program           = ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 110, $user);
+        $program           = ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 110, UserIdentifier::fromPFUser($user));
         $feature           = FeatureIdentifier::fromId(VerifyIsVisibleFeatureStub::buildVisibleFeature(), 127, $user, $program);
 
         $this->expectException(FeatureCannotBePlannedInProgramIncrementException::class);
@@ -56,7 +57,7 @@ final class FeatureAdditionTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $user                = UserTestBuilder::aUser()->build();
         $program_increment   = ProgramIncrementIdentifier::fromId(CheckProgramIncrementStub::buildProgramIncrementChecker(), 89, $user);
-        $program             = ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 110, $user);
+        $program             = ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 110, UserIdentifier::fromPFUser($user));
         $feature             = FeatureIdentifier::fromId(VerifyIsVisibleFeatureStub::buildVisibleFeature(), 741, $user, $program);
         $user_can_prioritize = UserCanPrioritize::fromUser(VerifyPrioritizeFeaturesPermissionStub::canPrioritize(), $user, $program);
         $payload             = FeatureAddition::fromFeature(

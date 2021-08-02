@@ -24,6 +24,7 @@ namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Team;
 
 use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramForAdministrationIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
+use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\ProgramManagement\Stub\BuildProgramStub;
 use Tuleap\ProgramManagement\Stub\BuildProjectStub;
 use Tuleap\ProgramManagement\Stub\SearchTeamsOfProgramStub;
@@ -45,7 +46,7 @@ final class TeamProjectsCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->program         = ProgramIdentifier::fromId(
             BuildProgramStub::stubValidProgram(),
             100,
-            UserTestBuilder::aUser()->build()
+            UserIdentifier::fromPFUser(UserTestBuilder::aUser()->build())
         );
     }
 

@@ -36,6 +36,7 @@ use Tuleap\ProgramManagement\Adapter\Program\Plan\ProgramAdapter;
 use Tuleap\ProgramManagement\Adapter\Program\ProgramDao;
 use Tuleap\ProgramManagement\Adapter\Team\TeamAdapter;
 use Tuleap\ProgramManagement\Adapter\Team\TeamDao;
+use Tuleap\ProgramManagement\Adapter\Workspace\UserManagerAdapter;
 use Tuleap\ProgramManagement\Domain\Program\ToBeCreatedProgram;
 use Tuleap\ProgramManagement\Domain\Team\Creation\Team;
 use Tuleap\ProgramManagement\Domain\Team\Creation\TeamCollection;
@@ -49,43 +50,17 @@ class ProgramDataBuilder extends REST_TestDataBuilder
 {
     public const PROJECT_TEAM_NAME    = 'team';
     public const PROJECT_PROGRAM_NAME = 'program';
-    /**
-     * @var ReplicationDataAdapter
-     */
-    public $replication_data_adapter;
-    /**
-     * @var CreateProgramIncrementsRunner
-     */
-    private $runner;
-    /**
-     * @var \PFUser|null
-     */
-    private $user;
-    /**
-     * @var \Tracker
-     */
-    private $program_increment;
-    /**
-     * @var \Tracker
-     */
-    private $user_story;
-    /**
-     * @var \Tracker
-     */
-    private $feature;
-    /**
-     * @var \Tracker_ArtifactFactory
-     */
-    private $artifact_factory;
 
-    /**
-     * @var \Project|null
-     */
-    private $team;
-    /**
-     * @var \Project|null
-     */
-    private $program;
+
+    public ReplicationDataAdapter $replication_data_adapter;
+    private CreateProgramIncrementsRunner $runner;
+    private ?\PFUser $user;
+    private \Tracker $program_increment;
+    private \Tracker $user_story;
+    private \Tracker $feature;
+    private \Tracker_ArtifactFactory $artifact_factory;
+    private ?\Project $team;
+    private ?\Project $program;
 
     public function setUp(): void
     {
@@ -96,7 +71,8 @@ class ProgramDataBuilder extends REST_TestDataBuilder
             $this->project_manager,
             new ProjectAccessChecker(new RestrictedUserCanAccessProjectVerifier(), \EventManager::instance()),
             new ProgramDao(),
-            new TeamDao()
+            new TeamDao(),
+            new UserManagerAdapter(UserManager::instance())
         );
 
         $this->replication_data_adapter = new ReplicationDataAdapter(

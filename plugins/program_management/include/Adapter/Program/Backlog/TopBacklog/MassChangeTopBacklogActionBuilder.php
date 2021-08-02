@@ -34,6 +34,7 @@ use Tuleap\ProgramManagement\Domain\Program\Plan\ProjectIsNotAProgramException;
 use Tuleap\ProgramManagement\Domain\Program\Plan\VerifyPrioritizeFeaturesPermission;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\UserCanPrioritize;
+use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 
 final class MassChangeTopBacklogActionBuilder
 {
@@ -57,7 +58,7 @@ final class MassChangeTopBacklogActionBuilder
     public function buildMassChangeAction(TopBacklogActionMassChangeSourceInformation $source_information, PFUser $user): ?string
     {
         try {
-            $program = ProgramIdentifier::fromId($this->build_program, $source_information->project_id, $user);
+            $program = ProgramIdentifier::fromId($this->build_program, $source_information->project_id, UserIdentifier::fromPFUser($user));
             UserCanPrioritize::fromUser($this->prioritize_features_permission_verifier, $user, $program);
         } catch (ProgramAccessException | ProjectIsNotAProgramException | NotAllowedToPrioritizeException $e) {
             return null;

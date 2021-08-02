@@ -42,6 +42,8 @@ final class RetrieveUserStub implements RetrieveUser
     {
         $user->method('isAdmin')->willReturn(false);
         $user->method('isMemberOfUGroup')->willReturn(false);
+        $user->method('getRealName')->willReturn("John");
+        $user->method('getId')->willReturn(101);
 
         return new self($user);
     }
@@ -58,6 +60,7 @@ final class RetrieveUserStub implements RetrieveUser
     {
         $user->method('isAdmin')->willReturn(false);
         $user->method('isMemberOfUGroup')->willReturn(true);
+        $user->method('getId')->willReturn(101);
 
         return new self($user);
     }
@@ -68,6 +71,7 @@ final class RetrieveUserStub implements RetrieveUser
     public static function buildMockedAdminUser($user): self
     {
         $user->method('isAdmin')->willReturn(true);
+        $user->method('getId')->willReturn(101);
 
         return new self($user);
     }

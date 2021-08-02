@@ -60,6 +60,7 @@ use Tuleap\ProgramManagement\Domain\ProgramTracker;
 use Tuleap\ProgramManagement\Domain\Team\VerifyIsTeam;
 use Tuleap\ProgramManagement\Domain\Workspace\RetrieveProject;
 use Tuleap\ProgramManagement\Domain\Workspace\RetrieveTrackerFromProgram;
+use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\ProgramManagement\Domain\Workspace\VerifyProjectPermission;
 use Tuleap\Request\DispatchableWithBurningParrot;
 use Tuleap\Request\DispatchableWithProject;
@@ -187,7 +188,7 @@ final class DisplayAdminProgramManagementController implements DispatchableWithR
         try {
             $program_increment_tracker = ProgramTracker::buildProgramIncrementTrackerFromProgram(
                 $this->program_increment_tracker_retriever,
-                ProgramIdentifier::fromId($this->build_program, $program->id, $user),
+                ProgramIdentifier::fromId($this->build_program, $program->id, UserIdentifier::fromPFUser($user)),
                 $user
             );
         } catch (ProgramAccessException | ProgramHasNoProgramIncrementTrackerException | ProjectIsNotAProgramException | ProgramTrackerNotFoundException $e) {
@@ -197,7 +198,7 @@ final class DisplayAdminProgramManagementController implements DispatchableWithR
         try {
             $iteration_tracker = ProgramTracker::buildIterationTrackerFromProgram(
                 $this->iteration_tracker_retriever,
-                ProgramIdentifier::fromId($this->build_program, $program->id, $user),
+                ProgramIdentifier::fromId($this->build_program, $program->id, UserIdentifier::fromPFUser($user)),
                 $user
             );
         } catch (ProgramAccessException | ProjectIsNotAProgramException | ProgramTrackerNotFoundException $e) {

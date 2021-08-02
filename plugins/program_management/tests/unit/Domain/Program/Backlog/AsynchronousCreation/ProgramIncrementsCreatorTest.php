@@ -39,6 +39,7 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Subm
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Team\TeamProjectsCollection;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TrackerCollection;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
+use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\ProgramManagement\Stub\BuildProgramStub;
 use Tuleap\ProgramManagement\Stub\BuildProjectStub;
 use Tuleap\ProgramManagement\Stub\SearchTeamsOfProgramStub;
@@ -82,7 +83,7 @@ final class ProgramIncrementsCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $teams         = TeamProjectsCollection::fromProgramIdentifier(
             SearchTeamsOfProgramStub::buildTeams(101, 102),
             new BuildProjectStub(),
-            ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 100, UserTestBuilder::aUser()->build())
+            ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 100, UserIdentifier::fromPFUser(UserTestBuilder::aUser()->build()))
         );
         $current_user  = UserTestBuilder::aUser()->build();
         $retriever     = RetrievePlanningMilestoneTrackerStub::withValidTrackerIds(1024, 2048);
@@ -113,7 +114,7 @@ final class ProgramIncrementsCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $teams         = TeamProjectsCollection::fromProgramIdentifier(
             SearchTeamsOfProgramStub::buildTeams(101),
             new BuildProjectStub(),
-            ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 100, UserTestBuilder::aUser()->build())
+            ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 100, UserIdentifier::fromPFUser(UserTestBuilder::aUser()->build()))
         );
         $current_user  = UserTestBuilder::aUser()->build();
         $retriever     = RetrievePlanningMilestoneTrackerStub::withValidTrackerIds(1024, 2048);

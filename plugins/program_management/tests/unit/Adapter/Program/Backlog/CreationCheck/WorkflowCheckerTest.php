@@ -31,6 +31,7 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fiel
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Team\TeamProjectsCollection;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TrackerCollection;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
+use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\ProgramManagement\Stub\BuildProgramStub;
 use Tuleap\ProgramManagement\Stub\BuildProjectStub;
 use Tuleap\ProgramManagement\Stub\SearchTeamsOfProgramStub;
@@ -74,7 +75,7 @@ final class WorkflowCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         $teams     = TeamProjectsCollection::fromProgramIdentifier(
             SearchTeamsOfProgramStub::buildTeams(),
             new BuildProjectStub(),
-            ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 100, UserTestBuilder::aUser()->build())
+            ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 100, UserIdentifier::fromPFUser(UserTestBuilder::aUser()->build()))
         );
         $retriever = RetrievePlanningMilestoneTrackerStub::withValidTrackerIds(123);
         $user      = UserTestBuilder::aUser()->build();
@@ -102,7 +103,7 @@ final class WorkflowCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         $teams     = TeamProjectsCollection::fromProgramIdentifier(
             SearchTeamsOfProgramStub::buildTeams(147),
             new BuildProjectStub(),
-            ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 100, UserTestBuilder::aUser()->build())
+            ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 100, UserIdentifier::fromPFUser(UserTestBuilder::aUser()->build()))
         );
         $retriever = RetrievePlanningMilestoneTrackerStub::withValidTrackerIds(758);
         $user      = UserTestBuilder::aUser()->build();
@@ -129,7 +130,7 @@ final class WorkflowCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         $teams     = TeamProjectsCollection::fromProgramIdentifier(
             SearchTeamsOfProgramStub::buildTeams(147),
             new BuildProjectStub(),
-            ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 100, UserTestBuilder::aUser()->build())
+            ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 100, UserIdentifier::fromPFUser(UserTestBuilder::aUser()->build()))
         );
         $retriever = RetrievePlanningMilestoneTrackerStub::withValidTrackerIds(758);
         $user      = UserTestBuilder::aUser()->build();
@@ -157,7 +158,7 @@ final class WorkflowCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         $teams     = TeamProjectsCollection::fromProgramIdentifier(
             SearchTeamsOfProgramStub::buildTeams(147),
             new BuildProjectStub(),
-            ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 100, UserTestBuilder::aUser()->build())
+            ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 100, UserIdentifier::fromPFUser(UserTestBuilder::aUser()->build()))
         );
         $retriever = RetrievePlanningMilestoneTrackerStub::withValidTrackerIds(758);
         $user      = UserTestBuilder::aUser()->build();
@@ -187,7 +188,7 @@ final class WorkflowCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         $teams     = TeamProjectsCollection::fromProgramIdentifier(
             SearchTeamsOfProgramStub::buildTeams(147),
             new BuildProjectStub(),
-            ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 100, UserTestBuilder::aUser()->build())
+            ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 100, UserIdentifier::fromPFUser(UserTestBuilder::aUser()->build()))
         );
         $retriever = RetrievePlanningMilestoneTrackerStub::withValidTrackerIds(758);
         $user      = UserTestBuilder::aUser()->build();

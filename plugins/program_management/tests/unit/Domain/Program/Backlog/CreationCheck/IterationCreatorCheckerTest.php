@@ -30,6 +30,7 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Team\TeamPr
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\ProgramTracker;
 use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\RetrievePlanningMilestoneTracker;
+use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\ProgramManagement\Stub\BuildProgramStub;
 use Tuleap\ProgramManagement\Stub\BuildProjectStub;
 use Tuleap\ProgramManagement\Stub\SearchTeamsOfProgramStub;
@@ -61,7 +62,7 @@ final class IterationCreatorCheckerTest extends TestCase
         $this->program           = ProgramIdentifier::fromId(
             BuildProgramStub::stubValidProgram(),
             101,
-            $this->user
+            UserIdentifier::fromPFUser($this->user)
         );
         $first_milestone_tracker = $this->createStub(Tracker::class);
         $first_milestone_tracker->method('getId')->willReturn(1);
@@ -89,7 +90,7 @@ final class IterationCreatorCheckerTest extends TestCase
                 TeamProjectsCollection::fromProgramIdentifier(
                     SearchTeamsOfProgramStub::buildTeams(),
                     new BuildProjectStub(),
-                    ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 100, UserTestBuilder::aUser()->build())
+                    $this->program
                 ),
                 new ConfigurationErrorsCollector(true)
             )
@@ -107,7 +108,7 @@ final class IterationCreatorCheckerTest extends TestCase
                 TeamProjectsCollection::fromProgramIdentifier(
                     SearchTeamsOfProgramStub::buildTeams(),
                     new BuildProjectStub(),
-                    ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 100, UserTestBuilder::aUser()->build())
+                    $this->program
                 ),
                 new ConfigurationErrorsCollector(true)
             )
@@ -126,7 +127,7 @@ final class IterationCreatorCheckerTest extends TestCase
                 TeamProjectsCollection::fromProgramIdentifier(
                     SearchTeamsOfProgramStub::buildTeams(104),
                     new BuildProjectStub(),
-                    ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 100, UserTestBuilder::aUser()->build())
+                    $this->program
                 ),
                 new ConfigurationErrorsCollector(true)
             )
@@ -147,7 +148,7 @@ final class IterationCreatorCheckerTest extends TestCase
                 TeamProjectsCollection::fromProgramIdentifier(
                     SearchTeamsOfProgramStub::buildTeams(104),
                     new BuildProjectStub(),
-                    ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 100, UserTestBuilder::aUser()->build())
+                    $this->program
                 ),
                 new ConfigurationErrorsCollector(true)
             )
@@ -166,7 +167,7 @@ final class IterationCreatorCheckerTest extends TestCase
                 TeamProjectsCollection::fromProgramIdentifier(
                     SearchTeamsOfProgramStub::buildTeams(104),
                     new BuildProjectStub(),
-                    ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 100, UserTestBuilder::aUser()->build())
+                    $this->program
                 ),
                 new ConfigurationErrorsCollector(true)
             )
@@ -185,7 +186,7 @@ final class IterationCreatorCheckerTest extends TestCase
                 TeamProjectsCollection::fromProgramIdentifier(
                     SearchTeamsOfProgramStub::buildTeams(104),
                     new BuildProjectStub(),
-                    ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 100, UserTestBuilder::aUser()->build())
+                    $this->program
                 ),
                 new ConfigurationErrorsCollector(true)
             )

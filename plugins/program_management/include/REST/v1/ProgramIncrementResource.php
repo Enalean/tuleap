@@ -229,7 +229,8 @@ final class ProgramIncrementResource extends AuthenticatedResource
                 ProjectManager::instance(),
                 new ProjectAccessChecker(new RestrictedUserCanAccessProjectVerifier(), \EventManager::instance()),
                 new ProgramDao(),
-                new TeamDao()
+                new TeamDao(),
+                new UserManagerAdapter(\UserManager::instance())
             )
         );
     }
