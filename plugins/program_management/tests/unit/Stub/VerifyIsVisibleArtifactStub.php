@@ -46,4 +46,9 @@ final class VerifyIsVisibleArtifactStub implements VerifyIsVisibleArtifact
     {
         return new self(...$visible_artifact_ids);
     }
+
+    public static function withNoVisibleArtifact(): self
+    {
+        return new self();
+    }
 }

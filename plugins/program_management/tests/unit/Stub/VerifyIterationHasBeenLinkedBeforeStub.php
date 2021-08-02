@@ -22,29 +22,32 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Stub;
 
-use Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration\SearchIterations;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration\IterationIdentifier;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration\VerifyIterationHasBeenLinkedBefore;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementIdentifier;
 
-final class SearchIterationsStub implements SearchIterations
+final class VerifyIterationHasBeenLinkedBeforeStub implements VerifyIterationHasBeenLinkedBefore
 {
     /**
      * @var int[]
      */
-    private array $iteration_ids;
+    private array $iterations_that_have_been_linked_before;
 
     private function __construct(int ...$iteration_ids)
     {
-        $this->iteration_ids = $iteration_ids;
+        $this->iterations_that_have_been_linked_before = $iteration_ids;
     }
 
-    public function searchIterations(ProgramIncrementIdentifier $program_increment): array
-    {
-        return $this->iteration_ids;
+    public function hasIterationBeenLinkedBefore(
+        ProgramIncrementIdentifier $program_increment,
+        IterationIdentifier $iteration
+    ): bool {
+        return in_array($iteration->id, $this->iterations_that_have_been_linked_before, true);
     }
 
-    public static function withIterationIds(int ...$iteration_ids): self
+    public static function withIterationIds(int ...$iterations_that_have_been_linked_before): self
     {
-        return new self(...$iteration_ids);
+        return new self(...$iterations_that_have_been_linked_before);
     }
 
     public static function withNoIteration(): self
