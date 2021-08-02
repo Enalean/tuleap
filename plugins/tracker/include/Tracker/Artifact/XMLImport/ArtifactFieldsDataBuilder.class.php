@@ -115,40 +115,41 @@ class Tracker_Artifact_XMLImport_ArtifactFieldsDataBuilder
     /**
      * @return array
      */
-    public function getFieldsData(SimpleXMLElement $xml_field_change, PFUser $submitted_by, Artifact $artifact)
+    public function getFieldsData(SimpleXMLElement $xml_changeset, PFUser $submitted_by, Artifact $artifact)
     {
         $data = [];
 
-        if (! $xml_field_change->field_change && ! $xml_field_change->external_field_change) {
+        if (! $xml_changeset->field_change && ! $xml_changeset->external_field_change) {
             return $data;
         }
 
-        $data = $this->getChangesetData($xml_field_change->field_change, $submitted_by, $artifact, $data);
-        $data = $this->getChangesetData($xml_field_change->external_field_change, $submitted_by, $artifact, $data);
+        foreach ($xml_changeset->field_change as $xml_field_change) {
+            $this->getChangesetData($xml_field_change, $submitted_by, $artifact, $data);
+        }
+        foreach ($xml_changeset->external_field_change as $xml_field_change) {
+            $this->getChangesetData($xml_field_change, $submitted_by, $artifact, $data);
+        }
 
         return $data;
     }
 
     private function getChangesetData(
-        SimpleXMLElement $xml_field_change,
+        SimpleXMLElement $field_change,
         PFUser $submitted_by,
         Artifact $artifact,
-        array $data
+        array &$data
     ) {
-        foreach ($xml_field_change as $field_change) {
-            $field = $this->formelement_factory->getUsedFieldByName(
-                $this->tracker->getId(),
-                (string) $field_change['field_name']
-            );
+        $field = $this->formelement_factory->getUsedFieldByName(
+            $this->tracker->getId(),
+            (string) $field_change['field_name']
+        );
 
-            if ($field) {
-                $this->forceTrackerSoThatFieldDoesNotLoadAFreshNewTrackerAndLooseTheDisabledStateOnWorkflow($field);
-                $this->appendValidValue($data, $field, $field_change, $submitted_by, $artifact);
-            } else {
-                $this->logger->debug("Skipped unknown/unused field " . (string) $field_change['field_name']);
-            }
+        if ($field) {
+            $this->forceTrackerSoThatFieldDoesNotLoadAFreshNewTrackerAndLooseTheDisabledStateOnWorkflow($field);
+            $this->appendValidValue($data, $field, $field_change, $submitted_by, $artifact);
+        } else {
+            $this->logger->debug("Skipped unknown/unused field " . (string) $field_change['field_name']);
         }
-        return $data;
     }
 
     private function forceTrackerSoThatFieldDoesNotLoadAFreshNewTrackerAndLooseTheDisabledStateOnWorkflow(
