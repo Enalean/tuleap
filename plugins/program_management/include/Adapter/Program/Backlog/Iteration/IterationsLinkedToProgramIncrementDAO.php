@@ -32,17 +32,23 @@ final class IterationsLinkedToProgramIncrementDAO extends DataAccessObject imple
 {
     public function searchIterations(ProgramIncrementIdentifier $program_increment): array
     {
-        $sql = 'SELECT iteration.id
+        $sql = "SELECT iteration.id
                     FROM tracker_artifact AS program_increment
+                    JOIN tracker AS tpi
+                        ON (program_increment.tracker_id = tpi.id AND tpi.deletion_date IS NULL)
+                    JOIN tracker_field AS f
+                        ON (tpi.id = f.tracker_id AND f.formElement_type = 'art_link' AND f.use_it = 1)
                     JOIN plugin_program_management_program AS program
                         ON program.program_increment_tracker_id = program_increment.tracker_id
-                    JOIN tracker_changeset_value
-                        ON tracker_changeset_value.changeset_id = program_increment.last_changeset_id
+                    JOIN tracker_changeset_value AS tcv
+                        ON (tcv.changeset_id = program_increment.last_changeset_id AND tcv.field_id = f.id)
                     JOIN tracker_changeset_value_artifactlink AS artifact_link
-                        ON artifact_link.changeset_value_id = tracker_changeset_value.id
+                        ON artifact_link.changeset_value_id = tcv.id
                     JOIN tracker_artifact AS iteration
                         ON (artifact_link.artifact_id = iteration.id AND program.iteration_tracker_id = iteration.tracker_id)
-                WHERE program_increment.id = ? AND artifact_link.nature = ?';
+                    JOIN tracker AS ti
+                        ON (iteration.tracker_id = ti.id AND ti.deletion_date IS NULL)
+                WHERE program_increment.id = ? AND artifact_link.nature = ?";
 
         $rows = $this->getDB()->col(
             $sql,
