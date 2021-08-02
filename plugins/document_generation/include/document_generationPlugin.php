@@ -64,14 +64,17 @@ class document_generationPlugin extends Plugin
             return;
         }
 
-        if (! $this->_getPluginManager()->isPluginAllowedForProject($this, $event->getReport()->getTracker()->getProject())) {
+        $report  = $event->getReport();
+        $tracker = $report->getTracker();
+        $project = $tracker->getProject();
+
+        if (! $this->_getPluginManager()->isPluginAllowedForProject($this, $project)) {
             return;
         }
 
-        $report            = $event->getReport();
         $report_id         = $report->getId();
         $report_name       = $report->getName();
-        $tracker_shortname = $event->getReport()->getTracker()->getItemName();
+        $tracker_shortname = $tracker->getItemName();
 
         $renderer = TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../templates');
 
@@ -79,9 +82,19 @@ class document_generationPlugin extends Plugin
             $renderer->renderToString(
                 'tracker-report-action',
                 [
-                    "report_id"         => $report_id,
-                    "report_name"       => $report_name,
-                    "tracker_shortname" => $tracker_shortname,
+                    'properties' => json_encode(
+                        [
+                            "report_id" => $report_id,
+                            "report_name" => $report_name,
+                            "tracker_shortname" => $tracker_shortname,
+                            "platform_name" => ForgeConfig::get('sys_name'),
+                            "project_name" => $project->getPublicName(),
+                            "tracker_name" => $tracker->getName(),
+                            "user_display_name" => UserHelper::instance()->getDisplayNameFromUser($current_user),
+                            "report_url" => HTTPRequest::instance()->getServerUrl() . '/plugins/tracker/?report=' . urlencode((string) $report_id)
+                        ],
+                        JSON_THROW_ON_ERROR
+                    )
                 ]
             )
         );

@@ -17,6 +17,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+export interface GlobalExportProperties {
+    readonly report_id: number;
+    readonly report_name: string;
+    readonly tracker_shortname: string;
+    readonly platform_name: string;
+    readonly project_name: string;
+    readonly tracker_name: string;
+    readonly user_display_name: string;
+    readonly report_url: string;
+}
+
 export interface ArtifactReportResponse {
     readonly id: number;
     readonly title: string | null;

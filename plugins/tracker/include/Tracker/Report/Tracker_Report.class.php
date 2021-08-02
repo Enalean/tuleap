@@ -1062,7 +1062,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
     }
 
     protected $tracker;
-    public function getTracker()
+    public function getTracker(): Tracker
     {
         if (! $this->tracker) {
             $this->tracker = TrackerFactory::instance()->getTrackerById($this->tracker_id);
