@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Stub;
 
+use Tuleap\ProgramManagement\Adapter\Workspace\UserGroupProxy;
 use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramForAdministrationIdentifier;
 use Tuleap\ProgramManagement\Domain\Workspace\RetrieveUGroups;
 
@@ -48,17 +49,17 @@ final class RetrieveUGroupsStub implements RetrieveUGroups
     public function getUgroupsFromProgram(ProgramForAdministrationIdentifier $program): array
     {
         return [
-            new \ProjectUGroup(['ugroup_id' => 3]),
-            new \ProjectUGroup(['ugroup_id' => 105])
+            UserGroupProxy::fromProjectUGroup(new \ProjectUGroup(['ugroup_id' => 3])),
+            UserGroupProxy::fromProjectUGroup(new \ProjectUGroup(['ugroup_id' => 105]))
         ];
     }
 
-    public function getUGroupByNameInProgram(ProgramForAdministrationIdentifier $program, string $ugroup_name): ?\ProjectUGroup
+    public function getUGroupByNameInProgram(ProgramForAdministrationIdentifier $program, string $ugroup_name): ?UserGroupProxy
     {
         if ($this->will_return_ugroups === false) {
             return null;
         }
 
-        return new \ProjectUGroup(['name' => $ugroup_name, 'ugroup_id' => 3, 'group_id' => $program->id]);
+        return UserGroupProxy::fromProjectUGroup(new \ProjectUGroup(['ugroup_id' => 3]));
     }
 }
