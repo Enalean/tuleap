@@ -45,7 +45,6 @@ class TrackerArtifactXMLImportArtifactFieldsDataBuilderTest extends \Tuleap\Test
      * @var Mockery\MockInterface|Tracker_Artifact_XMLImport_ArtifactFieldsDataBuilder
      */
     private $artifact_fields_data_builder;
-
     /**
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|PFUser
      */
@@ -62,9 +61,6 @@ class TrackerArtifactXMLImportArtifactFieldsDataBuilderTest extends \Tuleap\Test
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Tracker
      */
     private $tracker;
-    /**
-     * @var array
-     */
 
     protected function setUp(): void
     {
@@ -102,10 +98,12 @@ class TrackerArtifactXMLImportArtifactFieldsDataBuilderTest extends \Tuleap\Test
         )->makePartial()->shouldAllowMockingProtectedMethods();
     }
 
-    public function testGetFieldsData()
+    public function testGetFieldsData(): void
     {
         $xml_data = '
         <changeset>
+            <submitted_on/>
+            <submitted_by/>
             <field_change field_name="summary" type="string">
               <value><![CDATA[Ceci n\'est pas un test]]></value>
             </field_change>
@@ -148,6 +146,21 @@ class TrackerArtifactXMLImportArtifactFieldsDataBuilderTest extends \Tuleap\Test
                                   ->withArgs([111, 'steps'])
                                   ->andReturn($external_field);
 
-        $this->assertCount(3, $this->artifact_fields_data_builder->getFieldsData($xml, $this->user, $this->artifact));
+        self::assertCount(3, $this->artifact_fields_data_builder->getFieldsData($xml, $this->user, $this->artifact));
+    }
+
+    public function testFieldsDataIsEmptyIfNoFieldChangeProvided(): void
+    {
+        $xml_data = '
+        <changeset>
+            <submitted_on/>
+            <submitted_by/>
+        </changeset>';
+
+        $xml = new SimpleXMLElement($xml_data);
+
+        $this->formelement_factory->shouldNotReceive('getUsedFieldByName');
+
+        self::assertEmpty($this->artifact_fields_data_builder->getFieldsData($xml, $this->user, $this->artifact));
     }
 }
