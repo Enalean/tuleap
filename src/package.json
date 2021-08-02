@@ -8,14 +8,14 @@
   "dependencies": {
     "@fortawesome/fontawesome-free": "^5.15.2",
     "@juggle/resize-observer": "^3.3.1",
-    "@tuleap/date-helper": "file://./scripts/lib/date-helper",
-    "@tuleap/filter-inline-table": "file://./scripts/lib/filter-table",
-    "@tuleap/gettext": "file://./scripts/lib/gettext",
+    "@tuleap/date-helper": "file:scripts/lib/date-helper",
+    "@tuleap/filter-inline-table": "file:scripts/lib/filter-table",
+    "@tuleap/gettext": "file:scripts/lib/gettext",
     "@tuleap/html-escaper": "file:scripts/lib/html-escaper",
-    "@tuleap/keyboard-shortcuts": "file:./scripts/lib/keyboard-shortcuts",
-    "@tuleap/list-picker": "file://./scripts/lib/list-picker",
+    "@tuleap/keyboard-shortcuts": "file:scripts/lib/keyboard-shortcuts",
+    "@tuleap/list-picker": "file:scripts/lib/list-picker",
     "@tuleap/mention": "file:scripts/lib/mention",
-    "@tuleap/tlp-fetch": "file://./scripts/lib/tlp-fetch",
+    "@tuleap/tlp-fetch": "file:scripts/lib/tlp-fetch",
     "@tuleap/tlp-popovers": "file:scripts/lib/tlp-popovers",
     "@tuleap/tooltip": "file:scripts/lib/tooltip",
     "@tuleap/vue-breadcrumb-privacy": "file:scripts/lib/vue-breadcrumb-privacy",
@@ -75,7 +75,6 @@
   "scripts": {
     "build": "rm -rf ./www/assets/core && $npm_package_config_bin/webpack --config webpack.prod.js",
     "watch": "$npm_package_config_bin/webpack --config webpack.dev.js --watch",
-    "test": "$npm_package_config_bin/jest",
-    "postshrinkwrap": "php ../tools/utils/scripts/clean-lockfile-from-local-tuleap-dep.php \"$(pwd)\""
+    "test": "$npm_package_config_bin/jest"
   }
 }

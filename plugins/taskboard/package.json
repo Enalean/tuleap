@@ -5,7 +5,7 @@
   "license": "GPL-2.0-or-later",
   "private": true,
   "dependencies": {
-    "@tuleap/drag-and-drop": "file://../../src/scripts/lib/drag-and-drop",
+    "@tuleap/drag-and-drop": "file:../../src/scripts/lib/drag-and-drop",
     "@tuleap/keyboard-shortcuts": "file:../../src/scripts/lib/keyboard-shortcuts",
     "dompurify": "^2.2.9",
     "fscreen": "^1.2.0",
@@ -16,7 +16,7 @@
     "vuex": "^3.6.2"
   },
   "devDependencies": {
-    "@tuleap/tlp-fetch": "file://../../src/scripts/lib/tlp-fetch",
+    "@tuleap/tlp-fetch": "file:../../src/scripts/lib/tlp-fetch",
     "@types/dompurify": "^2.2.2",
     "@types/fscreen": "^1.0.1",
     "@types/jquery": "^3.5.5",
@@ -33,7 +33,6 @@
   "scripts": {
     "build": "$npm_package_config_bin/webpack --config webpack.prod.js",
     "watch": "$npm_package_config_bin/webpack --config webpack.dev.js --watch",
-    "test": "$npm_package_config_bin/jest",
-    "postshrinkwrap": "php ../../tools/utils/scripts/clean-lockfile-from-local-tuleap-dep.php \"$(pwd)\""
+    "test": "$npm_package_config_bin/jest"
   }
 }

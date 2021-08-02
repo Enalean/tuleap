@@ -8,11 +8,10 @@
     "bin": "../../node_modules/.bin"
   },
   "dependencies": {
-    "@tuleap/filter-inline-table": "file://../../src/scripts/lib/filter-table"
+    "@tuleap/filter-inline-table": "file:../../src/scripts/lib/filter-table"
   },
   "scripts": {
     "build": "$npm_package_config_bin/webpack --config webpack.prod.js",
-    "watch": "$npm_package_config_bin/webpack --config webpack.dev.js --watch",
-    "postshrinkwrap": "php ../../tools/utils/scripts/clean-lockfile-from-local-tuleap-dep.php \"$(pwd)\""
+    "watch": "$npm_package_config_bin/webpack --config webpack.dev.js --watch"
   }
 }

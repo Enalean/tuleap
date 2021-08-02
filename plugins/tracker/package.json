@@ -7,11 +7,11 @@
   "version": "0.0.0",
   "dependencies": {
     "@tuleap/html-escaper": "file:../../src/scripts/lib/html-escaper",
-    "@tuleap/list-picker": "file://../../src/scripts/lib/list-picker",
+    "@tuleap/list-picker": "file:../../src/scripts/lib/list-picker",
     "@tuleap/mention": "file:../../src/scripts/lib/mention",
     "@tuleap/plugin-tracker-artifact-ckeditor-image-upload": "file:scripts/lib/artifact-ckeditor-image-upload",
     "@tuleap/plugin-tracker-rich-text-editor": "file:scripts/lib/rich-text-editor",
-    "@tuleap/tlp-fetch": "file://../../src/scripts/lib/tlp-fetch",
+    "@tuleap/tlp-fetch": "file:../../src/scripts/lib/tlp-fetch",
     "@tuleap/tooltip": "file:../../src/scripts/lib/tooltip",
     "codemirror": "^5.62.0",
     "d3-array": "^3.0.1",
@@ -51,7 +51,6 @@
   "scripts": {
     "build": "rm -rf ../../src/www/assets/trackers && $npm_package_config_bin/webpack --config webpack.prod.js",
     "watch": "$npm_package_config_bin/webpack --config webpack.dev.js --watch",
-    "test": "$npm_package_config_bin/jest --config=../../tests/jest/jest.projects.config.js \"$(pwd)\"",
-    "postshrinkwrap": "php ../../tools/utils/scripts/clean-lockfile-from-local-tuleap-dep.php \"$(pwd)\""
+    "test": "$npm_package_config_bin/jest --config=../../tests/jest/jest.projects.config.js \"$(pwd)\""
   }
 }

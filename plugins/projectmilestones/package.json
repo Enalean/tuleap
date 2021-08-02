@@ -17,7 +17,7 @@
     "vuex": "^3.6.2"
   },
   "devDependencies": {
-    "@tuleap/tlp-fetch": "file://../../src/scripts/lib/tlp-fetch",
+    "@tuleap/tlp-fetch": "file:../../src/scripts/lib/tlp-fetch",
     "@types/d3-array": "^2.12.1",
     "@types/d3-selection": "^2.0.0",
     "@types/d3-shape": "^2.1.0",
@@ -33,7 +33,6 @@
   "scripts": {
     "build": "$npm_package_config_bin/webpack --config webpack.prod.js",
     "watch": "$npm_package_config_bin/webpack --config webpack.dev.js --watch",
-    "test": "$npm_package_config_bin/jest",
-    "postshrinkwrap": "php ../../tools/utils/scripts/clean-lockfile-from-local-tuleap-dep.php \"$(pwd)\""
+    "test": "$npm_package_config_bin/jest"
   }
 }

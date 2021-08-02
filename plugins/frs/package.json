@@ -5,7 +5,7 @@
   "license": "GPL-2.0-or-later",
   "private": true,
   "dependencies": {
-    "@tuleap/angular-tlp": "file://../../src/scripts/lib/angular-tlp",
+    "@tuleap/angular-tlp": "file:../../src/scripts/lib/angular-tlp",
     "angular": "^1.8.2",
     "angular-filter": "^0.5.17",
     "angular-gettext": "^2.4.2",
@@ -22,7 +22,6 @@
   "scripts": {
     "build": "$npm_package_config_bin/webpack --config webpack.prod.js",
     "watch": "$npm_package_config_bin/webpack --config webpack.dev.js --watch",
-    "test": "$npm_package_config_bin/jest",
-    "postshrinkwrap": "php ../../tools/utils/scripts/clean-lockfile-from-local-tuleap-dep.php \"$(pwd)\""
+    "test": "$npm_package_config_bin/jest"
   }
 }

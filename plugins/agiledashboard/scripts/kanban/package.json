@@ -6,10 +6,10 @@
   "private": true,
   "version": "0.0.0",
   "dependencies": {
-    "@tuleap/angular-async": "file://../../../../src/scripts/lib/angular-async",
-    "@tuleap/angular-tlp": "file://../../../../src/scripts/lib/angular-tlp",
+    "@tuleap/angular-async": "file:../../../../src/scripts/lib/angular-async",
+    "@tuleap/angular-tlp": "file:../../../../src/scripts/lib/angular-tlp",
     "@tuleap/html-escaper": "file:../../../../src/scripts/lib/html-escaper",
-    "@tuleap/plugin-agiledashboard-card-fields": "file://../lib/card-fields",
+    "@tuleap/plugin-agiledashboard-card-fields": "file:../lib/card-fields",
     "@tuleap/plugin-tracker-artifact-modal": "file:../../../tracker/scripts/lib/artifact-modal",
     "angular": "^1.8.2",
     "angular-gettext": "^2.4.2",
@@ -27,8 +27,5 @@
   "devDependencies": {
     "angular-mocks": "^1.8.2",
     "jquery": "^3.6.0"
-  },
-  "scripts": {
-    "postshrinkwrap": "php ../../../../tools/utils/scripts/clean-lockfile-from-local-tuleap-dep.php \"$(pwd)\""
   }
 }
