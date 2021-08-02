@@ -27,6 +27,7 @@ use Tuleap\ProgramManagement\Adapter\Events\ArtifactUpdatedProxy;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\IterationReplicationScheduler;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\PlanUserStoriesInMirroredProgramIncrements;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\RemovePlannedFeaturesFromTopBacklog;
+use Tuleap\ProgramManagement\Stub\RetrieveLastChangesetStub;
 use Tuleap\ProgramManagement\Stub\SearchIterationsStub;
 use Tuleap\ProgramManagement\Stub\VerifyIsProgramIncrementTrackerStub;
 use Tuleap\ProgramManagement\Stub\VerifyIsVisibleArtifactStub;
@@ -80,9 +81,10 @@ final class ArtifactUpdatedHandlerTest extends TestCase
             new IterationReplicationScheduler(
                 VerifyIterationsFeatureActiveStub::withActiveFeature(),
                 SearchIterationsStub::withIterationIds(101, 102),
-                VerifyIsVisibleArtifactStub::withVisibleIds(101, 102),
+                VerifyIsVisibleArtifactStub::withAlwaysVisibleArtifacts(),
                 VerifyIterationHasBeenLinkedBeforeStub::withNoIteration(),
-                $this->logger
+                $this->logger,
+                RetrieveLastChangesetStub::withLastChangesetIds(457, 4915),
             )
         );
     }

@@ -32,14 +32,16 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncr
  */
 final class JustLinkedIterationCollection
 {
+    public ProgramIncrementIdentifier $program_increment;
     /**
      * @var IterationIdentifier[]
      */
     public array $ids;
 
-    private function __construct(IterationIdentifier ...$ids)
+    private function __construct(ProgramIncrementIdentifier $program_increment, IterationIdentifier ...$ids)
     {
-        $this->ids = $ids;
+        $this->program_increment = $program_increment;
+        $this->ids               = $ids;
     }
 
     public static function fromIterations(
@@ -54,7 +56,7 @@ final class JustLinkedIterationCollection
                 $iteration
             )
         );
-        return new self(...$iterations_that_have_never_been_linked_before);
+        return new self($program_increment, ...$iterations_that_have_never_been_linked_before);
     }
 
     public function isEmpty(): bool

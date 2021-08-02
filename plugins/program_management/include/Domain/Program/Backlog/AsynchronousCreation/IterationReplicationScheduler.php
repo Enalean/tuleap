@@ -33,7 +33,7 @@ use Tuleap\ProgramManagement\Domain\VerifyIsVisibleArtifact;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 
 /**
- * I detect when an Iteration needs to be replicated and schedule the asynchronous task
+ * I detect when an Iteration needs to be replicated and store the pending replication.
  */
 final class IterationReplicationScheduler
 {
@@ -42,19 +42,22 @@ final class IterationReplicationScheduler
     private VerifyIsVisibleArtifact $visibility_verifier;
     private VerifyIterationHasBeenLinkedBefore $iteration_link_verifier;
     private LoggerInterface $logger;
+    private RetrieveLastChangeset $changeset_retriever;
 
     public function __construct(
         VerifyIterationsFeatureActive $feature_flag_verifier,
         SearchIterations $iterations_searcher,
         VerifyIsVisibleArtifact $visibility_verifier,
         VerifyIterationHasBeenLinkedBefore $iteration_link_verifier,
-        LoggerInterface $logger
+        LoggerInterface $logger,
+        RetrieveLastChangeset $changeset_retriever
     ) {
         $this->feature_flag_verifier   = $feature_flag_verifier;
         $this->iterations_searcher     = $iterations_searcher;
         $this->visibility_verifier     = $visibility_verifier;
         $this->iteration_link_verifier = $iteration_link_verifier;
         $this->logger                  = $logger;
+        $this->changeset_retriever     = $changeset_retriever;
     }
 
     public function replicateIterationsIfNeeded(
@@ -78,11 +81,30 @@ final class IterationReplicationScheduler
         if ($just_linked_iterations->isEmpty()) {
             return;
         }
+        $this->logNewIterationIds($just_linked_iterations);
+        $creations = NewPendingIterationCreation::buildCollectionFromJustLinkedIterations(
+            $this->changeset_retriever,
+            $this->logger,
+            $just_linked_iterations,
+            $user
+        );
+        $this->logLastChangesetIds(...$creations);
+    }
+
+    private function logNewIterationIds(JustLinkedIterationCollection $just_linked_iterations): void
+    {
         $ids        = array_map(
             static fn(IterationIdentifier $iteration): int => $iteration->id,
             $just_linked_iterations->ids
         );
         $ids_string = implode(',', $ids);
         $this->logger->debug("Program increment has new iterations: [$ids_string]");
+    }
+
+    private function logLastChangesetIds(NewPendingIterationCreation ...$creations): void
+    {
+        foreach ($creations as $creation) {
+            $this->logger->debug(sprintf('Iteration has last changeset id: %s', $creation->changeset->id));
+        }
     }
 }
