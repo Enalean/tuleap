@@ -76,7 +76,12 @@ class JiraConnectionException extends \Exception
         try {
             $text_body = (string) $response->getBody();
             if ($debug_file) {
-                file_put_contents($debug_file, $text_body);
+                file_put_contents($debug_file, "Headers: " . PHP_EOL, FILE_APPEND);
+                foreach ($response->getHeaders() as $header_name => $header_values) {
+                    file_put_contents($debug_file, "$header_name: " . implode(', ', $header_values) . PHP_EOL, FILE_APPEND);
+                }
+                file_put_contents($debug_file, PHP_EOL . "Body content: " . PHP_EOL, FILE_APPEND);
+                file_put_contents($debug_file, $text_body, FILE_APPEND);
             }
             $body = \json_decode($text_body, true, 512, JSON_THROW_ON_ERROR);
             if (isset($body['errorMessages']) && count($body['errorMessages'])) {
