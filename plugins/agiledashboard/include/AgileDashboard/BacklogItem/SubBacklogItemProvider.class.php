@@ -96,8 +96,9 @@ class AgileDashboard_BacklogItem_SubBacklogItemProvider
 
     private function getMatchingIdsForMilestone(Planning_Milestone $milestone, Tracker $backlog_tracker, PFUser $user)
     {
-        $milestone_id_seed   = [$milestone->getArtifactId() ?? 0];
-        $this->inspected_ids = $milestone_id_seed;
+        $milestone_id_seed             = [];
+        $milestone_id_seed['planning'] = [$milestone->getArtifactId() ?? 0];
+        $this->inspected_ids           = $milestone_id_seed['planning'];
 
         $filtrable_backlog_tracker_ids = $this->getSubPlanningTrackerIds($milestone, $user);
         $this->filterBacklogIds($backlog_tracker->getId(), $milestone_id_seed, $filtrable_backlog_tracker_ids);
@@ -131,25 +132,31 @@ class AgileDashboard_BacklogItem_SubBacklogItemProvider
      *
      * We need to keep list of ids we already looked at so we avoid cycles.
      */
-    private function filterBacklogIds($backlog_tracker_id, array $artifacts, array $filtrable_planning_tracker_ids)
+    private function filterBacklogIds(int $backlog_tracker_id, array $artifacts, array $filtrable_planning_tracker_ids)
     {
-        $artifacts_to_inspect = [];
-        foreach ($this->dao->getLinkedArtifactsByIds($artifacts, $this->inspected_ids) as $artifact_row) {
-            $artifact_row_tracker_id = $artifact_row['tracker_id'];
+        $children               = [];
+        $artifacts_for_planning = [];
 
-            if (
-                ! $this->planning_factory->isTrackerIdUsedInAPlanning($artifact_row['tracker_id']) ||
-                in_array($artifact_row_tracker_id, $filtrable_planning_tracker_ids)
-            ) {
-                $artifacts_to_inspect[] = $artifact_row['id'];
-            }
-
-            if ($artifact_row['tracker_id'] == $backlog_tracker_id) {
-                $this->backlog_ids[$artifact_row['id']] = true;
-            }
-
-            $this->inspected_ids[] = $artifact_row['id'];
+        if (isset($artifacts['planning'])) {
+            $artifacts_for_planning = $this->dao->getLinkedArtifactsByIds($artifacts['planning'], $this->inspected_ids);
         }
+        if (isset($artifacts['not_planning'])) {
+            $children = $this->getFilteredChildrenFromArtifacts($artifacts['not_planning']);
+        }
+
+        $artifacts_in_planning = $this->filterResult(
+            $artifacts_for_planning,
+            $filtrable_planning_tracker_ids,
+            $backlog_tracker_id
+        );
+
+        $children_of_artifacts_in_planning = $this->filterResult(
+            $children,
+            $filtrable_planning_tracker_ids,
+            $backlog_tracker_id
+        );
+
+        $artifacts_to_inspect = array_merge($artifacts_in_planning, $children_of_artifacts_in_planning);
 
         if (count($artifacts_to_inspect) > 0) {
             $this->filterBacklogIds($backlog_tracker_id, $artifacts_to_inspect, $filtrable_planning_tracker_ids);
@@ -167,5 +174,55 @@ class AgileDashboard_BacklogItem_SubBacklogItemProvider
         }
 
         return $planning_tracker_ids;
+    }
+
+    /**
+     * @psalm-param DataAccessResult|list<array{tracker_id: int, id: int}> $artifacts_for_planning
+     * @param int[] $filtrable_planning_tracker_ids
+     * @psalm-return array{planning?: list<int>, not_planning?: list<int>}
+     */
+    private function filterResult(
+        $artifacts_for_planning,
+        array $filtrable_planning_tracker_ids,
+        int $backlog_tracker_id
+    ): array {
+        $artifacts_to_inspect = [];
+        foreach ($artifacts_for_planning as $artifact_row) {
+            $artifact_row_tracker_id = (int) $artifact_row['tracker_id'];
+            $artifact_id             = (int) $artifact_row['id'];
+
+            if (
+                ! $this->planning_factory->isTrackerIdUsedInAPlanning($artifact_row_tracker_id)
+            ) {
+                $artifacts_to_inspect['not_planning'][] = $artifact_id;
+            }
+
+            if (in_array($artifact_row_tracker_id, $filtrable_planning_tracker_ids)) {
+                $artifacts_to_inspect['planning'][] = $artifact_id;
+            }
+
+            if ($artifact_row_tracker_id === $backlog_tracker_id) {
+                $this->backlog_ids[$artifact_id] = true;
+            }
+
+            $this->inspected_ids[] = $artifact_id;
+        }
+        return $artifacts_to_inspect;
+    }
+
+    /**
+     * @param int[] $artifacts
+     * @psalm-return list<array{tracker_id: int, id: int}>
+     */
+    private function getFilteredChildrenFromArtifacts(array $artifacts): array
+    {
+        $children = [];
+        foreach ($this->dao->getChildrenForArtifacts($artifacts) as $child) {
+            if (! in_array($child['id'], $this->inspected_ids)) {
+                $children[] = $child;
+            }
+        }
+
+        return $children;
     }
 }

@@ -88,11 +88,11 @@ final class AgileDashboard_BacklogItem_SubBacklogItemProviderTest extends \Tulea
 
         $sprint_tracker = Mockery::mock(Tracker::class);
         $sprint_tracker->shouldReceive("getId")->andReturn(106);
-        $sprint_tracker->shouldReceive("getPplanning")->andReturn($sprint_tracker);
+        $sprint_tracker->shouldReceive("getPlanning")->andReturn($sprint_tracker);
         $sprint_tracker->shouldReceive("getBacklogTracker")->andReturn($this->backlog_tracker);
 
         $sprint_planning = Mockery::mock(Planning::class);
-        $sprint_planning->shouldReceive('getPlanningTracker')->andReturn($sprint_tracker);
+        $sprint_planning->shouldReceive('getPlanningTrackerId')->andReturn($sprint_tracker->getId());
         $sprint_planning->shouldReceive('getBacklogTracker')->andReturn($this->backlog_tracker);
 
         $this->milestone = Mockery::mock(Planning_Milestone::class);
@@ -120,10 +120,11 @@ final class AgileDashboard_BacklogItem_SubBacklogItemProviderTest extends \Tulea
             $this->artifact_in_explicit_backlog_dao
         );
 
-        $this->planning_factory->shouldReceive('getSubPlannings')->andReturn($sprint_planning);
+        $this->planning_factory->shouldReceive('getSubPlannings')->andReturn([$sprint_planning]);
         $this->planning_factory->shouldReceive('isTrackerIdUsedInAPlanning')->with(35)->andReturn(false);
         $this->planning_factory->shouldReceive('isTrackerIdUsedInAPlanning')->with(36)->andReturn(false);
         $this->planning_factory->shouldReceive('isTrackerIdUsedInAPlanning')->with(105)->andReturn(true);
+        $this->planning_factory->shouldReceive('isTrackerIdUsedInAPlanning')->with(106)->andReturn(true);
     }
 
     public function testItReturnsTheMatchingIds(): void
@@ -136,7 +137,7 @@ final class AgileDashboard_BacklogItem_SubBacklogItemProviderTest extends \Tulea
                     ['id' => 11, 'tracker_id' => 35]
                 )
             );
-        $this->dao->shouldReceive('getLinkedArtifactsByIds')->with([7, 8, 11], [3, 7, 8, 11])->andReturns(
+        $this->dao->shouldReceive('getChildrenForArtifacts')->with([7, 8, 11])->andReturns(
             \TestHelper::emptyDar()
         );
 
@@ -190,9 +191,8 @@ final class AgileDashboard_BacklogItem_SubBacklogItemProviderTest extends \Tulea
             )
         );
 
-        $this->dao->shouldReceive('getLinkedArtifactsByIds')->with(
-            [7, 8, 11],
-            [3, 7, 8, 11, 158]
+        $this->dao->shouldReceive('getChildrenForArtifacts')->with(
+            [7, 8, 11]
         )->andReturns(\TestHelper::emptyDar());
 
         $result = $this->provider->getMatchingIds($this->milestone, $this->backlog_tracker, $this->user);
@@ -206,13 +206,18 @@ final class AgileDashboard_BacklogItem_SubBacklogItemProviderTest extends \Tulea
                 ['id' => 7, 'tracker_id' => 35],
                 ['id' => 8, 'tracker_id' => 35],
                 ['id' => 11, 'tracker_id' => 35],
-                ['id' => 158, 'tracker_id' => 105]
+                ['id' => 158, 'tracker_id' => 105],
+                ['id' => 148, 'tracker_id' => 106]
             )
         );
 
-        $this->dao->shouldReceive('getLinkedArtifactsByIds')->with(
-            [7, 8, 11],
-            [3, 7, 8, 11, 158]
+        $this->dao->shouldReceive("getLinkedArtifactsByIds")->with([148], [3, 7, 8, 11, 158, 148])->andReturn(
+            \TestHelper::emptyDar()
+        );
+
+
+        $this->dao->shouldReceive('getChildrenForArtifacts')->with(
+            [7, 8, 11]
         )->andReturns(
             \TestHelper::arrayToDar(
                 ['id' => 200, 'tracker_id' => 36],
@@ -221,9 +226,8 @@ final class AgileDashboard_BacklogItem_SubBacklogItemProviderTest extends \Tulea
             )
         );
 
-        $this->dao->shouldReceive('getLinkedArtifactsByIds')->with(
-            [200, 201],
-            [3, 7, 8, 11, 158, 200, 201, 159]
+        $this->dao->shouldReceive('getChildrenForArtifacts')->with(
+            [200, 201]
         )->andReturns(\TestHelper::emptyDar());
 
         $result = $this->provider->getMatchingIds($this->milestone, $this->task_tracker, $this->user);
