@@ -32,20 +32,10 @@ document.addEventListener("DOMContentLoaded", () => {
             throw new Error("Not able to find the user language.");
         }
 
-        if (!generate_document_link.dataset.reportId) {
-            throw new Error("Missing report ID dataset");
+        if (!generate_document_link.dataset.properties) {
+            throw new Error("Missing properties dataset");
         }
-        const report_id = Number(generate_document_link.dataset.reportId);
-
-        if (!generate_document_link.dataset.reportName) {
-            throw new Error("Missing report name dataset");
-        }
-        const report_name = generate_document_link.dataset.reportName;
-
-        if (!generate_document_link.dataset.trackerShortname) {
-            throw new Error("Missing tracker shortname dataset");
-        }
-        const tracker_shortname = generate_document_link.dataset.trackerShortname;
+        const properties = JSON.parse(generate_document_link.dataset.properties);
 
         const { startDownloadExportDocument } = await import(
             /* webpackChunkName: "document_generation-download-export" */ "./export-document"
@@ -55,13 +45,7 @@ document.addEventListener("DOMContentLoaded", () => {
             /* webpackChunkName: "document_generation-download-export-transformation" */ "./Exporter/download-docx"
         );
 
-        await startDownloadExportDocument(
-            report_id,
-            report_name,
-            tracker_shortname,
-            language,
-            downloadDocx
-        );
+        await startDownloadExportDocument(properties, language, downloadDocx);
     });
 });
 

@@ -18,13 +18,18 @@
  */
 
 import type { ExportDocument } from "../type";
+import type { GlobalExportProperties } from "../type";
+import type { ParagraphChild } from "docx";
 import {
     AlignmentType,
     Bookmark,
     BorderStyle,
+    convertInchesToTwip,
+    ExternalHyperlink,
     File,
     Footer,
     HeadingLevel,
+    LevelFormat,
     Packer,
     PageBreak,
     PageNumber,
@@ -39,15 +44,22 @@ import {
 } from "docx";
 import { TableOfContentsPrefilled } from "./DOCX/TableOfContents/table-of-contents";
 import { getAnchorToArtifactContent } from "./DOCX/sections-anchor";
+import type { GetText } from "../../../../../../src/scripts/tuleap/gettext/gettext-init";
 import {
     getPOFileFromLocale,
     initGettext,
 } from "../../../../../../src/scripts/tuleap/gettext/gettext-init";
+import { sprintf } from "sprintf-js";
 
 const HEADER_STYLE_ARTIFACT_TITLE = "ArtifactTitle";
-const HEADER_LEVEL_ARTIFACT_TITLE = HeadingLevel.HEADING_6;
+const HEADER_LEVEL_ARTIFACT_TITLE = HeadingLevel.HEADING_2;
+const HEADER_LEVEL_SECTION = HeadingLevel.HEADING_1;
 
-export async function downloadDocx(document: ExportDocument, language: string): Promise<void> {
+export async function downloadDocx(
+    document: ExportDocument,
+    language: string,
+    global_export_properties: GlobalExportProperties
+): Promise<void> {
     const gettext_provider = await initGettext(
         language,
         "tracker-report-action",
@@ -201,14 +213,21 @@ export async function downloadDocx(document: ExportDocument, language: string): 
         );
     }
 
-    const table_of_contents = new TableOfContentsPrefilled(document.artifacts, {
-        hyperlink: true,
-        stylesWithLevels: [
-            new StyleLevel("ArtifactTitle", Number(HEADER_LEVEL_ARTIFACT_TITLE.substr(-1))),
-        ],
-    });
+    const table_of_contents = [
+        new Paragraph({
+            text: gettext_provider.gettext("Table of contents"),
+            heading: HEADER_LEVEL_SECTION,
+        }),
+        new TableOfContentsPrefilled(document.artifacts, {
+            hyperlink: true,
+            stylesWithLevels: [
+                new StyleLevel("ArtifactTitle", Number(HEADER_LEVEL_ARTIFACT_TITLE.substr(-1))),
+            ],
+        }),
+    ];
 
     const file = new File({
+        creator: global_export_properties.user_display_name,
         styles: {
             paragraphStyles: [
                 {
@@ -251,11 +270,39 @@ export async function downloadDocx(document: ExportDocument, language: string): 
                 },
             ],
         },
+        numbering: {
+            config: [
+                {
+                    reference: "unordered-list",
+                    levels: [
+                        {
+                            level: 0,
+                            format: LevelFormat.BULLET,
+                            text: "•",
+                            alignment: AlignmentType.LEFT,
+                            style: {
+                                paragraph: {
+                                    indent: {
+                                        left: convertInchesToTwip(0.1),
+                                        hanging: convertInchesToTwip(0.1),
+                                    },
+                                },
+                            },
+                        },
+                    ],
+                },
+            ],
+        },
         sections: [
             {
                 children: [
-                    table_of_contents,
+                    ...buildIntroductionParagraphes(gettext_provider, global_export_properties),
+                    ...table_of_contents,
                     new Paragraph({ children: [new PageBreak()] }),
+                    new Paragraph({
+                        text: gettext_provider.gettext("Artifacts"),
+                        heading: HEADER_LEVEL_SECTION,
+                    }),
                     ...artifacts_content,
                 ],
                 footers,
@@ -263,6 +310,55 @@ export async function downloadDocx(document: ExportDocument, language: string): 
         ],
     });
     await triggerDownload(document.name, file);
+}
+
+function buildIntroductionParagraphes(
+    gettext_provider: GetText,
+    global_export_properties: GlobalExportProperties
+): ReadonlyArray<Paragraph> {
+    const { platform_name, project_name, tracker_name, report_name, report_url } =
+        global_export_properties;
+    return [
+        new Paragraph({
+            heading: HeadingLevel.TITLE,
+            text: `${platform_name} ‒ ${project_name} ‒ ${tracker_name} ‒ ${report_name}`,
+        }),
+        buildParagraphOfAnUnorderedList(
+            new TextRun(
+                sprintf(
+                    gettext_provider.gettext("Export date: %s"),
+                    new Date().toLocaleDateString()
+                )
+            )
+        ),
+        buildParagraphOfAnUnorderedList(
+            new TextRun(
+                sprintf(
+                    gettext_provider.gettext("Exported by: %s"),
+                    global_export_properties.user_display_name
+                )
+            )
+        ),
+        buildParagraphOfAnUnorderedList(
+            new ExternalHyperlink({
+                child: new TextRun(
+                    sprintf(gettext_provider.gettext("Tracker report URL: %s"), report_url)
+                ),
+                link: report_url,
+            })
+        ),
+        new Paragraph({ children: [new PageBreak()] }),
+    ];
+}
+
+function buildParagraphOfAnUnorderedList(content: ParagraphChild): Paragraph {
+    return new Paragraph({
+        children: [content],
+        numbering: {
+            reference: "unordered-list",
+            level: 0,
+        },
+    });
 }
 
 async function triggerDownload(filename: string, file: File): Promise<void> {

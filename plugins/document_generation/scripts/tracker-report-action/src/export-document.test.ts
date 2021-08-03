@@ -20,6 +20,7 @@
 import * as tlp_fetch from "@tuleap/tlp-fetch";
 import * as document_export_creator from "./helpers/create-export-document";
 import { startDownloadExportDocument } from "./export-document";
+import type { GlobalExportProperties } from "./type";
 
 jest.mock("@tuleap/tlp-fetch");
 
@@ -34,13 +35,7 @@ describe("export-document", () => {
             artifacts: [{ id: 1, title: "title", fields: [] }],
         });
 
-        await startDownloadExportDocument(
-            12,
-            "report_name",
-            "tracker_shortname",
-            "fr_FR",
-            document_exporter
-        );
+        await startDownloadExportDocument({} as GlobalExportProperties, "fr_FR", document_exporter);
 
         expect(export_creator).toHaveBeenCalled();
         expect(document_exporter).toHaveBeenCalled();

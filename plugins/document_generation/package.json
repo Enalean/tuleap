@@ -6,9 +6,12 @@
   "private": true,
   "dependencies": {
     "@tuleap/tlp-fetch": "file:../../src/scripts/lib/tlp-fetch",
-    "docx": "^6.0.3"
+    "docx": "^6.0.3",
+    "sprintf-js": "^1.1.2"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "@types/sprintf-js": "^1.1.2"
+  },
   "config": {
     "bin": "../../node_modules/.bin/"
   },
