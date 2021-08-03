@@ -33,7 +33,8 @@ use Tuleap\ProgramManagement\Domain\VerifyIsVisibleArtifact;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 
 /**
- * I detect when an Iteration needs to be replicated and store the pending replication.
+ * I detect when an Iteration needs to be replicated, store the pending replication
+ * and schedule it.
  */
 final class IterationReplicationScheduler
 {
@@ -44,6 +45,7 @@ final class IterationReplicationScheduler
     private LoggerInterface $logger;
     private RetrieveLastChangeset $changeset_retriever;
     private StorePendingIterations $pending_store;
+    private RunIterationsCreation $iterations_creator;
 
     public function __construct(
         VerifyIterationsFeatureActive $feature_flag_verifier,
@@ -52,7 +54,8 @@ final class IterationReplicationScheduler
         VerifyIterationHasBeenLinkedBefore $iteration_link_verifier,
         LoggerInterface $logger,
         RetrieveLastChangeset $changeset_retriever,
-        StorePendingIterations $pending_store
+        StorePendingIterations $pending_store,
+        RunIterationsCreation $iterations_creator
     ) {
         $this->feature_flag_verifier   = $feature_flag_verifier;
         $this->iterations_searcher     = $iterations_searcher;
@@ -61,6 +64,7 @@ final class IterationReplicationScheduler
         $this->logger                  = $logger;
         $this->changeset_retriever     = $changeset_retriever;
         $this->pending_store           = $pending_store;
+        $this->iterations_creator      = $iterations_creator;
     }
 
     public function replicateIterationsIfNeeded(
@@ -92,6 +96,7 @@ final class IterationReplicationScheduler
             $user
         );
         $this->pending_store->storePendingIterationCreations(...$creations);
+        $this->iterations_creator->scheduleIterationCreations(...$creations);
     }
 
     private function logNewIterationIds(JustLinkedIterationCollection $just_linked_iterations): void

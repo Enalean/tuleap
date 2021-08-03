@@ -105,6 +105,9 @@ final class RedisEventMessageForPersistentQueue implements EventMessageForPersis
         return $this->nb_added_in_queue;
     }
 
+    /**
+     * @throws JsonException
+     */
     public function toSerializedEventMessageValue(): string
     {
         return json_encode(

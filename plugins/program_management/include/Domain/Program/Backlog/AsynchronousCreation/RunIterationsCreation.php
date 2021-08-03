@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -16,20 +16,13 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
- *
  */
 
-namespace Tuleap\Queue;
+declare(strict_types=1);
 
-interface PersistentQueue
+namespace Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation;
+
+interface RunIterationsCreation
 {
-    /**
-     * @throws QueueServerConnectionException
-     */
-    public function pushSinglePersistentMessage(string $topic, $content): void;
-
-    /**
-     * @psalm-param callable(string): void $callback
-     */
-    public function listen($queue_id, $topic, callable $callback);
+    public function scheduleIterationCreations(NewPendingIterationCreation ...$creations): void;
 }

@@ -35,9 +35,11 @@ use Tuleap\Layout\IncludeAssets;
 use Tuleap\Layout\ServiceUrlCollector;
 use Tuleap\ProgramManagement\Adapter\ArtifactVisibleVerifier;
 use Tuleap\ProgramManagement\Adapter\Events\ArtifactUpdatedProxy;
+use Tuleap\ProgramManagement\Adapter\Events\IterationCreationEventProxy;
 use Tuleap\ProgramManagement\Adapter\FeatureFlag\ForgeConfigAdapter;
 use Tuleap\ProgramManagement\Adapter\Program\Admin\CanPrioritizeItems\UGroupRepresentationBuilder;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation\CreateProgramIncrementsRunner;
+use Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation\IterationCreationsRunner;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation\LastChangesetRetriever;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation\PendingArtifactCreationDao;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation\PendingIterationCreationDAO;
@@ -401,8 +403,16 @@ final class program_managementPlugin extends Plugin
 
     public function workerEvent(WorkerEvent $event): void
     {
+        $logger = $this->getLogger();
+
         $create_mirrors_runner = $this->getProgramIncrementRunner();
         $create_mirrors_runner->addListener($event);
+
+        $iteration_creation_runner = new IterationCreationsRunner(
+            $logger,
+            new QueueFactory($logger),
+        );
+        $iteration_creation_runner->addListener(IterationCreationEventProxy::fromWorkerEvent($logger, $event));
     }
 
     public function trackerArtifactCreated(ArtifactCreated $event): void
@@ -446,7 +456,8 @@ final class program_managementPlugin extends Plugin
                 $iterations_linked_dao,
                 $logger,
                 new LastChangesetRetriever($artifact_factory, Tracker_Artifact_ChangesetFactoryBuilder::build()),
-                new PendingIterationCreationDAO()
+                new PendingIterationCreationDAO(),
+                new IterationCreationsRunner($logger, new QueueFactory($logger)),
             )
         );
 

@@ -46,6 +46,7 @@ final class IterationReplicationSchedulerTest extends \Tuleap\Test\PHPUnit\TestC
     private VerifyIterationHasBeenLinkedBeforeStub $iteration_link_verifier;
     private RetrieveLastChangesetStub $changeset_retriever;
     private StorePendingIterations $pending_store;
+    private RunIterationsCreation $iterations_creator;
 
     protected function setUp(): void
     {
@@ -71,6 +72,12 @@ final class IterationReplicationSchedulerTest extends \Tuleap\Test\PHPUnit\TestC
                 // Side effects
             }
         };
+        $this->iterations_creator      = new class implements RunIterationsCreation {
+            public function scheduleIterationCreations(NewPendingIterationCreation ...$creations): void
+            {
+                // Side effects
+            }
+        };
     }
 
     private function getScheduler(): IterationReplicationScheduler
@@ -82,7 +89,8 @@ final class IterationReplicationSchedulerTest extends \Tuleap\Test\PHPUnit\TestC
             $this->iteration_link_verifier,
             $this->logger,
             $this->changeset_retriever,
-            $this->pending_store
+            $this->pending_store,
+            $this->iterations_creator,
         );
     }
 
