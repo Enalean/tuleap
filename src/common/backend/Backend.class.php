@@ -412,6 +412,9 @@ class Backend
      */
     public function recurseChownChgrp($mypath, $uid, $gid, array $file_extension_filter)
     {
+        if (! file_exists($mypath)) {
+            return;
+        }
         $this->chown($mypath, $uid);
         $this->chgrp($mypath, $gid);
         try {
@@ -493,7 +496,7 @@ class Backend
      */
     public function addBlock($filename, $command)
     {
-        if (! $handle = fopen($filename, 'a')) {
+        if (! $handle = @fopen($filename, 'a')) {
             $this->log("Can't open file for writing: $filename", self::LOG_ERROR);
             return false;
         }
@@ -541,7 +544,7 @@ class Backend
      */
     public function writeArrayToFile($file_array, $filename)
     {
-        if (! $handle = fopen($filename, 'w')) {
+        if (! $handle = @fopen($filename, 'w')) {
             $this->log("Can't open file for writing: $filename", self::LOG_ERROR);
             return false;
         }

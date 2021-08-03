@@ -213,7 +213,7 @@ class BackendCVS extends Backend
         if (! $this->useCVSNT()) {
             $lockdir = ForgeConfig::get('cvslock_prefix') . "/" . $project->getUnixName(false);
             if (! is_dir($lockdir)) {
-                if (! mkdir("$lockdir", 02777)) {
+                if (! @mkdir("$lockdir", 02777)) {
                     $this->log("Can't create project CVS lock dir: $lockdir", Backend::LOG_ERROR);
                     return false;
                 }
@@ -237,7 +237,7 @@ class BackendCVS extends Backend
         if ($project->isCVSTracked()) {
             // hook for commit tracking in cvs loginfo file
             $filename   = "$cvs_dir/CVSROOT/loginfo";
-            $file_array = file($filename);
+            $file_array = @file($filename) ?: [];
             if (! in_array($this->block_marker_start, $file_array)) {
                 if ($this->useCVSNT()) {
                     $command = "ALL sudo -u codendiadm -E " . ForgeConfig::get('codendi_bin_prefix') . "/log_accum -T $unix_group_name -C $unix_group_name -s %{sVv}";
@@ -258,7 +258,7 @@ class BackendCVS extends Backend
 
             // hook for commit tracking in cvs commitinfo file
             $filename   = "$cvs_dir/CVSROOT/commitinfo";
-            $file_array = file($filename);
+            $file_array = @file($filename) ?: [];
             if (! in_array($this->block_marker_start, $file_array)) {
                 $this->_RcsCheckout($filename);
                 $this->addBlock($filename, "ALL " . ForgeConfig::get('codendi_bin_prefix') . "/commit_prep -T $unix_group_name -r");
