@@ -23,20 +23,15 @@ declare(strict_types=1);
 namespace Tuleap\Markdown;
 
 use Codendi_HTMLPurifier;
-use League\CommonMark\Environment;
+use League\CommonMark\Environment\Environment;
+use League\CommonMark\Extension\CommonMark\CommonMarkCoreExtension;
 use League\CommonMark\Extension\ExtensionInterface;
 use League\CommonMark\MarkdownConverter;
 
 final class CommonMarkInterpreter implements ContentInterpretor
 {
-    /**
-     * @var Codendi_HTMLPurifier
-     */
-    private $html_purifier;
-    /**
-     * @var MarkdownConverter
-     */
-    private $converter;
+    private Codendi_HTMLPurifier $html_purifier;
+    private MarkdownConverter $converter;
 
     private function __construct(Codendi_HTMLPurifier $html_purifier, MarkdownConverter $converter)
     {
@@ -46,13 +41,13 @@ final class CommonMarkInterpreter implements ContentInterpretor
 
     public static function build(Codendi_HTMLPurifier $html_purifier, ExtensionInterface ...$extensions): self
     {
-        $environment = Environment::createCommonMarkEnvironment();
+        $environment = new Environment(['max_nesting_level' => 10]);
+        $environment->addExtension(new CommonMarkCoreExtension());
         $environment->addExtension(new AutolinkExtension());
         $environment->addExtension(new TableTLPExtension());
         foreach ($extensions as $extension) {
             $environment->addExtension($extension);
         }
-        $environment->mergeConfig(['max_nesting_level' => 10]);
 
         return new self($html_purifier, new MarkdownConverter($environment));
     }
@@ -60,20 +55,20 @@ final class CommonMarkInterpreter implements ContentInterpretor
     public function getInterpretedContent(string $content): string
     {
         return $this->html_purifier->purify(
-            $this->converter->convertToHtml($content),
+            $this->converter->convertToHtml($content)->getContent(),
             CODENDI_PURIFIER_FULL
         );
     }
 
     public function getInterpretedContentWithReferences(string $content, int $project_id): string
     {
-        return $this->html_purifier->purifyHTMLWithReferences($this->converter->convertToHtml($content), $project_id);
+        return $this->html_purifier->purifyHTMLWithReferences($this->converter->convertToHtml($content)->getContent(), $project_id);
     }
 
     public function getContentStrippedOfTags(string $content): string
     {
         return $this->html_purifier->purify(
-            $this->converter->convertToHtml($content),
+            $this->converter->convertToHtml($content)->getContent(),
             Codendi_HTMLPurifier::CONFIG_STRIP_HTML
         );
     }

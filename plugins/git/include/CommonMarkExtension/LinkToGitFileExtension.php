@@ -22,23 +22,20 @@ declare(strict_types=1);
 
 namespace Tuleap\Git\CommonMarkExtension;
 
-use League\CommonMark\ConfigurableEnvironmentInterface;
+use League\CommonMark\Environment\EnvironmentBuilderInterface;
 use League\CommonMark\Event\DocumentParsedEvent;
 use League\CommonMark\Extension\ExtensionInterface;
 
 final class LinkToGitFileExtension implements ExtensionInterface
 {
-    /**
-     * @var LinkToGitFileBlobFinder
-     */
-    private $git_file_blob_finder;
+    private LinkToGitFileBlobFinder $git_file_blob_finder;
 
     public function __construct(LinkToGitFileBlobFinder $git_file_blob_finder)
     {
         $this->git_file_blob_finder = $git_file_blob_finder;
     }
 
-    public function register(ConfigurableEnvironmentInterface $environment): void
+    public function register(EnvironmentBuilderInterface $environment): void
     {
         $environment->addEventListener(
             DocumentParsedEvent::class,

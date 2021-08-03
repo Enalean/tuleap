@@ -22,14 +22,14 @@ declare(strict_types=1);
 
 namespace Tuleap\Markdown;
 
-use League\CommonMark\ConfigurableEnvironmentInterface;
+use League\CommonMark\Environment\EnvironmentBuilderInterface;
 use League\CommonMark\Event\DocumentParsedEvent;
 use League\CommonMark\Extension\ExtensionInterface;
 use League\CommonMark\Extension\Table\TableExtension;
 
 final class TableTLPExtension implements ExtensionInterface
 {
-    public function register(ConfigurableEnvironmentInterface $environment): void
+    public function register(EnvironmentBuilderInterface $environment): void
     {
         $environment->addExtension(new TableExtension());
         $environment->addEventListener(

@@ -55,7 +55,7 @@
     "laminas/laminas-mail": "^2.10",
     "lasserafn/php-initial-avatar-generator": "^4.1",
     "lcobucci/jwt": "^4.1",
-    "league/commonmark": "^1.3",
+    "league/commonmark": "^2.0",
     "luracast/restler": "dev-master-tuleap#20201118",
     "monolog/monolog": "^2.0",
     "mustache/mustache": "dev-master-tuleap#master-tuleap-20191219",
@@ -114,13 +114,11 @@
   "tuleap": {
     "preload": {
       "include": [
-        "/common",
         "/vendor/paragonie",
         "/vendor/graylog2",
         "/vendor/monolog",
         "/vendor/tuleap",
         "/vendor/nikic",
-        "/vendor/league",
         "/vendor/psr",
         "/vendor/mustache",
         "/vendor/symfony/var-exporter",
@@ -133,7 +131,8 @@
         "/vendor/laminas/laminas-servicemanager",
         "/vendor/laminas/laminas-httphandlerrunner",
         "/vendor/laminas/laminas-eventmanager",
-        "/vendor/laminas/laminas-cache"
+        "/vendor/laminas/laminas-cache",
+        "/common"
       ],
       "exclude": [
         "/common/chart",
@@ -155,12 +154,11 @@
         "/common/soap",
         "/common/tracker",
         "/common/wiki",
+        "/common/Markdown/",
         "/vendor/monolog/monolog/src/Monolog/Test",
         "/vendor/monolog/monolog/src/Monolog/Handler",
         "/vendor/psr/log/Psr/Log/Test",
-        "/vendor/league/commonmark/src/Input",
-        "/vendor/laminas/laminas-stdlib/src/ConsoleHelper.php",
-        "/vendor/league/commonmark/src/Extension/TableOfContents/TableOfContents.php"
+        "/vendor/laminas/laminas-stdlib/src/ConsoleHelper.php"
       ]
     }
   }

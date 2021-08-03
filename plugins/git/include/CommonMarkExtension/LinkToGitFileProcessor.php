@@ -23,15 +23,12 @@ declare(strict_types=1);
 namespace Tuleap\Git\CommonMarkExtension;
 
 use League\CommonMark\Event\DocumentParsedEvent;
-use League\CommonMark\Inline\Element\AbstractWebResource;
-use League\CommonMark\Inline\Element\Image;
+use League\CommonMark\Extension\CommonMark\Node\Inline\AbstractWebResource;
+use League\CommonMark\Extension\CommonMark\Node\Inline\Image;
 
 final class LinkToGitFileProcessor
 {
-    /**
-     * @var LinkToGitFileBlobFinder
-     */
-    private $blob_finder;
+    private LinkToGitFileBlobFinder $blob_finder;
 
     public function __construct(LinkToGitFileBlobFinder $blob_finder)
     {

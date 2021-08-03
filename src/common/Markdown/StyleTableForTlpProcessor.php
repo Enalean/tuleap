@@ -38,7 +38,7 @@ final class StyleTableForTlpProcessor
                 continue;
             }
 
-            $node->data['attributes']['class'] = 'tlp-table';
+            $node->data->set('attributes', array_merge($node->data->get('attributes', []), ['class' => 'tlp-table']));
         }
     }
 }

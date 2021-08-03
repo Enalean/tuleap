@@ -37,7 +37,8 @@
         "/include/Tracker/Artifact/Tracker_Artifact_Changeset_Null.class.php",
         "/include/Workflow/PostAction/Transition_PostActionFactory.class.php",
         "/include/Workflow/PostAction/CIBuild/Transition_PostAction_CIBuild.class.php",
-        "/include/Workflow/PostAction/CIBuild/Transition_PostAction_CIBuildFactory.class.php"
+        "/include/Workflow/PostAction/CIBuild/Transition_PostAction_CIBuildFactory.class.php",
+        "/include/Tracker/Artifact/CodeBlockFeaturesOnArtifact.php"
       ]
     }
   }
