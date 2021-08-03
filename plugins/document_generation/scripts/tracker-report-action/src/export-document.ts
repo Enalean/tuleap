@@ -37,7 +37,7 @@ export async function startDownloadExportDocument(
         {
             params: {
                 values: "all",
-                with_unsaved_changes: true,
+                with_unsaved_changes: global_export_properties.report_has_changed,
                 limit: 50,
             },
         }
