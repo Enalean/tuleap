@@ -149,6 +149,7 @@ class AdditionalArtifactActionBuilder
         $link = new AdditionalButtonLinkPresenter(
             $link_label,
             '',
+            "",
             $icon,
             $id,
             [
