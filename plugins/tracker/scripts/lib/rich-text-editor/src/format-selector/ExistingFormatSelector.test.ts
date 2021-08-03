@@ -35,6 +35,7 @@ describe(`ExistingFormatSelector`, () => {
             doc.body.append(textarea);
 
             editor = new (class implements TextEditorInterface {
+                init = emptyFunction;
                 destroy = emptyFunction;
                 onFormatChange = emptyFunction;
                 getContent(): string {

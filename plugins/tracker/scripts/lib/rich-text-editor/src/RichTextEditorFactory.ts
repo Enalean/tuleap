@@ -75,7 +75,7 @@ export class RichTextEditorFactory {
             selected_value,
             editor,
         });
-        editor.onFormatChange(selected_value);
+        editor.init(selected_value);
         return editor;
     }
 

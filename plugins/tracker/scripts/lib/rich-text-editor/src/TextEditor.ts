@@ -57,20 +57,29 @@ export class TextEditor implements TextEditorInterface {
         private readonly markdown_renderer: MarkdownToHTMLRendererInterface
     ) {}
 
-    public onFormatChange(new_format: TextFieldFormat): void {
+    public init(new_format: TextFieldFormat): void {
         if (new_format === TEXT_FORMAT_HTML) {
-            const text = this.textarea.value;
-            const editor = this.initCKEditor();
-            this.options.onFormatChange(new_format);
-            editor.setData(this.markdown_renderer.render(text));
+            this.insertFormatAndTextInCKEditorWhenFormatIsHTML(this.textarea.value);
             return;
         }
+        this.options.onFormatChange(new_format);
+    }
+
+    public onFormatChange(new_format: TextFieldFormat): void {
+        if (new_format === TEXT_FORMAT_HTML) {
+            this.insertFormatAndTextInCKEditorWhenFormatIsHTML(
+                this.markdown_renderer.render(this.textarea.value)
+            );
+            return;
+        }
+
         if (this.ckeditor) {
             const text = this.markdown_converter.convert(this.ckeditor.getData());
             this.ckeditor.destroy();
             this.ckeditor = null;
             this.textarea.value = text;
         }
+
         this.options.onFormatChange(new_format);
     }
 
@@ -83,6 +92,12 @@ export class TextEditor implements TextEditorInterface {
 
     public destroy(): void {
         this.ckeditor?.destroy();
+    }
+
+    private insertFormatAndTextInCKEditorWhenFormatIsHTML(text: string): void {
+        const editor = this.initCKEditor();
+        this.options.onFormatChange(TEXT_FORMAT_HTML);
+        editor.setData(text);
     }
 
     private initCKEditor(): CKEDITOR.editor {
