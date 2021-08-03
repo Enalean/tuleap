@@ -39,7 +39,7 @@ final class RetrieveLastChangesetStub implements RetrieveLastChangeset
         $this->last_changeset_ids = $last_changeset_ids;
     }
 
-    public function retrieveLastChangeset(IterationIdentifier $iteration_identifier): ?int
+    public function retrieveLastChangesetId(IterationIdentifier $iteration_identifier): ?int
     {
         if ($this->should_return_null) {
             return null;

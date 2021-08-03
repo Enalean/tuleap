@@ -25,6 +25,8 @@ namespace Tuleap\ProgramManagement\Domain\Program\Backlog;
 use Psr\Log\Test\TestLogger;
 use Tuleap\ProgramManagement\Adapter\Events\ArtifactUpdatedProxy;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\IterationReplicationScheduler;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\NewPendingIterationCreation;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\StorePendingIterations;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\PlanUserStoriesInMirroredProgramIncrements;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\RemovePlannedFeaturesFromTopBacklog;
 use Tuleap\ProgramManagement\Stub\RetrieveLastChangesetStub;
@@ -85,6 +87,12 @@ final class ArtifactUpdatedHandlerTest extends TestCase
                 VerifyIterationHasBeenLinkedBeforeStub::withNoIteration(),
                 $this->logger,
                 RetrieveLastChangesetStub::withLastChangesetIds(457, 4915),
+                new class implements StorePendingIterations {
+                    public function storePendingIterationCreations(NewPendingIterationCreation ...$creations): void
+                    {
+                        // Side effects
+                    }
+                }
             )
         );
     }

@@ -45,6 +45,7 @@ final class IterationReplicationSchedulerTest extends \Tuleap\Test\PHPUnit\TestC
     private VerifyIsVisibleArtifactStub $visibility_verifier;
     private VerifyIterationHasBeenLinkedBeforeStub $iteration_link_verifier;
     private RetrieveLastChangesetStub $changeset_retriever;
+    private StorePendingIterations $pending_store;
 
     protected function setUp(): void
     {
@@ -64,6 +65,12 @@ final class IterationReplicationSchedulerTest extends \Tuleap\Test\PHPUnit\TestC
         $this->visibility_verifier     = VerifyIsVisibleArtifactStub::withAlwaysVisibleArtifacts();
         $this->iteration_link_verifier = VerifyIterationHasBeenLinkedBeforeStub::withNoIteration();
         $this->changeset_retriever     = RetrieveLastChangesetStub::withLastChangesetIds(4297, 7872);
+        $this->pending_store           = new class implements StorePendingIterations {
+            public function storePendingIterationCreations(NewPendingIterationCreation ...$creations): void
+            {
+                // Side effects
+            }
+        };
     }
 
     private function getScheduler(): IterationReplicationScheduler
@@ -75,12 +82,14 @@ final class IterationReplicationSchedulerTest extends \Tuleap\Test\PHPUnit\TestC
             $this->iteration_link_verifier,
             $this->logger,
             $this->changeset_retriever,
+            $this->pending_store
         );
     }
 
     public function testItDoesNotScheduleAReplicationWhenFeatureFlagIsDisabled(): void
     {
         $this->feature_flag_verifier = VerifyIterationsFeatureActiveStub::withDisabledFeature();
+        $this->pending_store         = $this->getStoreShouldNotBeCalled();
 
         $this->getScheduler()->replicateIterationsIfNeeded($this->program_increment, $this->user);
         self::assertFalse($this->logger->hasDebugRecords());
@@ -90,6 +99,7 @@ final class IterationReplicationSchedulerTest extends \Tuleap\Test\PHPUnit\TestC
     {
         $this->iterations_searcher = SearchIterationsStub::withNoIteration();
         $this->visibility_verifier = VerifyIsVisibleArtifactStub::withNoVisibleArtifact();
+        $this->pending_store       = $this->getStoreShouldNotBeCalled();
 
         $this->getScheduler()->replicateIterationsIfNeeded($this->program_increment, $this->user);
         self::assertFalse($this->logger->hasDebugRecords());
@@ -101,6 +111,7 @@ final class IterationReplicationSchedulerTest extends \Tuleap\Test\PHPUnit\TestC
             self::FIRST_ITERATION_ID,
             self::SECOND_ITERATION_ID
         );
+        $this->pending_store           = $this->getStoreShouldNotBeCalled();
 
         $this->getScheduler()->replicateIterationsIfNeeded($this->program_increment, $this->user);
         self::assertFalse($this->logger->hasDebugRecords());
@@ -111,5 +122,15 @@ final class IterationReplicationSchedulerTest extends \Tuleap\Test\PHPUnit\TestC
         $this->getScheduler()->replicateIterationsIfNeeded($this->program_increment, $this->user);
 
         self::assertTrue($this->logger->hasDebug('Program increment has new iterations: [828,251]'));
+    }
+
+    private function getStoreShouldNotBeCalled(): StorePendingIterations
+    {
+        return new class implements StorePendingIterations {
+            public function storePendingIterationCreations(NewPendingIterationCreation ...$creations): void
+            {
+                throw new \LogicException('Method should not have been called');
+            }
+        };
     }
 }

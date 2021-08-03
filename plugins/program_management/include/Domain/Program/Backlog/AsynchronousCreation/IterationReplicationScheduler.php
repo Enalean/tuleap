@@ -43,6 +43,7 @@ final class IterationReplicationScheduler
     private VerifyIterationHasBeenLinkedBefore $iteration_link_verifier;
     private LoggerInterface $logger;
     private RetrieveLastChangeset $changeset_retriever;
+    private StorePendingIterations $pending_store;
 
     public function __construct(
         VerifyIterationsFeatureActive $feature_flag_verifier,
@@ -50,7 +51,8 @@ final class IterationReplicationScheduler
         VerifyIsVisibleArtifact $visibility_verifier,
         VerifyIterationHasBeenLinkedBefore $iteration_link_verifier,
         LoggerInterface $logger,
-        RetrieveLastChangeset $changeset_retriever
+        RetrieveLastChangeset $changeset_retriever,
+        StorePendingIterations $pending_store
     ) {
         $this->feature_flag_verifier   = $feature_flag_verifier;
         $this->iterations_searcher     = $iterations_searcher;
@@ -58,6 +60,7 @@ final class IterationReplicationScheduler
         $this->iteration_link_verifier = $iteration_link_verifier;
         $this->logger                  = $logger;
         $this->changeset_retriever     = $changeset_retriever;
+        $this->pending_store           = $pending_store;
     }
 
     public function replicateIterationsIfNeeded(
@@ -88,7 +91,7 @@ final class IterationReplicationScheduler
             $just_linked_iterations,
             $user
         );
-        $this->logLastChangesetIds(...$creations);
+        $this->pending_store->storePendingIterationCreations(...$creations);
     }
 
     private function logNewIterationIds(JustLinkedIterationCollection $just_linked_iterations): void
@@ -99,12 +102,5 @@ final class IterationReplicationScheduler
         );
         $ids_string = implode(',', $ids);
         $this->logger->debug("Program increment has new iterations: [$ids_string]");
-    }
-
-    private function logLastChangesetIds(NewPendingIterationCreation ...$creations): void
-    {
-        foreach ($creations as $creation) {
-            $this->logger->debug(sprintf('Iteration has last changeset id: %s', $creation->changeset->id));
-        }
     }
 }
