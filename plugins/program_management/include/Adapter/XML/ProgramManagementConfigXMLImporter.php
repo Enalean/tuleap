@@ -96,6 +96,7 @@ final class ProgramManagementConfigXMLImporter
      * @throws \Tuleap\ProgramManagement\Domain\Program\ProgramTrackerException
      * @throws \Tuleap\ProgramManagement\Domain\Program\Admin\ProgramCannotBeATeamException
      * @throws \Tuleap\ProgramManagement\Domain\Program\Plan\PlanTrackerException
+     * @throws \Tuleap\ProgramManagement\Domain\Program\Plan\ProgramIncrementAndIterationCanNotBeTheSameTrackerException
      */
     private function createConfig(
         ProgramForAdministrationIdentifier $project,

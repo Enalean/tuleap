@@ -62,6 +62,26 @@ final class PlanChangeTest extends TestCase
         );
     }
 
+    public function testItThrowsWhenProgramIncrementAndIterationAreTheSameTracker(): void
+    {
+        $plan_program_increment_change   = new PlanProgramIncrementChange(16, 'Releases', 'release');
+        $user                            = UserTestBuilder::aUser()->build();
+        $project_id                      = 101;
+        $tracker_ids_that_can_be_planned = [99, 67];
+        $can_possibly_prioritize_ugroups = ['198', '101_3'];
+        $plan_iteration_change           = new PlanIterationChange(16, "Iterations", "iteration");
+
+        $this->expectException(ProgramIncrementAndIterationCanNotBeTheSameTrackerException::class);
+        PlanChange::fromProgramIncrementAndRaw(
+            $plan_program_increment_change,
+            $user,
+            $project_id,
+            $tracker_ids_that_can_be_planned,
+            $can_possibly_prioritize_ugroups,
+            $plan_iteration_change
+        );
+    }
+
     public function testItBuildsAValidPlanChange(): void
     {
         $plan_program_increment_change   = new PlanProgramIncrementChange(16, 'Releases', 'release');

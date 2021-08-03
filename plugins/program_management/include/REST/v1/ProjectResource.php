@@ -70,6 +70,7 @@ use Tuleap\ProgramManagement\Domain\Program\Plan\PlanProgramIncrementChange;
 use Tuleap\ProgramManagement\Domain\Program\Plan\PlanTrackerException;
 use Tuleap\ProgramManagement\Domain\Program\Plan\PrioritizeFeaturesPermissionVerifier;
 use Tuleap\ProgramManagement\Domain\Program\Plan\ProgramAccessException;
+use Tuleap\ProgramManagement\Domain\Program\Plan\ProgramIncrementAndIterationCanNotBeTheSameTrackerException;
 use Tuleap\ProgramManagement\Domain\Program\Plan\ProgramIsATeamException;
 use Tuleap\ProgramManagement\Domain\Program\Plan\ProjectIsNotAProgramException;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
@@ -246,7 +247,7 @@ final class ProjectResource extends AuthenticatedResource
                 $plan_iteration_change
             );
             $this->plan_creator->create($plan_change);
-        } catch (CannotPlanIntoItselfException | PlanTrackerException | ProgramTrackerException | InvalidProgramUserGroup $e) {
+        } catch (CannotPlanIntoItselfException | PlanTrackerException | ProgramTrackerException | InvalidProgramUserGroup | ProgramIncrementAndIterationCanNotBeTheSameTrackerException $e) {
             throw new I18NRestException(400, $e->getI18NExceptionMessage());
         } catch (ProgramCannotBeATeamException | ProgramAccessException $e) {
             throw new I18NRestException(404, $e->getI18NExceptionMessage());
