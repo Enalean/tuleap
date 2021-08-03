@@ -51,10 +51,10 @@ describe("PasteItem", () => {
         store.state.clipboard = { item_title: "My item", operation_type: CLIPBOARD_OPERATION_COPY };
         const current_folder = {};
         store.state.current_folder = current_folder;
-        store.getters.is_item_a_folder = () => true;
 
         const destination = {
             user_can_write: true,
+            type: TYPE_FOLDER,
         };
         const event_bus_emit = jest.spyOn(EventBus, "$emit");
         const wrapper = paste_item_factory({ destination });
@@ -73,12 +73,12 @@ describe("PasteItem", () => {
 
     it(`Given no item is in the clipboard
         Then no item can be pasted`, () => {
-        store.state.clipboard = { item_title: null, operation_type: null };
-        store.getters.is_item_a_folder = () => true;
+        store.state.clipboard = { item_title: null, operation_type: null, type: null };
 
         const wrapper = paste_item_factory({
             destination: {
                 user_can_write: true,
+                type: TYPE_FOLDER,
             },
         });
 
@@ -88,12 +88,16 @@ describe("PasteItem", () => {
     it(`Given an item is in the clipboard
         And the inspected item is not a folder
         Then no item can be pasted`, () => {
-        store.state.clipboard = { item_title: "My item", operation_type: CLIPBOARD_OPERATION_COPY };
-        store.getters.is_item_a_folder = () => false;
+        store.state.clipboard = {
+            item_title: "My item",
+            operation_type: CLIPBOARD_OPERATION_COPY,
+            type: TYPE_EMPTY,
+        };
 
         const wrapper = paste_item_factory({
             destination: {
                 user_can_write: true,
+                type: TYPE_EMPTY,
             },
         });
 
@@ -104,11 +108,11 @@ describe("PasteItem", () => {
         And the inspected item is a folder the user can not write
         Then no item can be pasted`, () => {
         store.state.clipboard = { item_title: "My item", operation_type: CLIPBOARD_OPERATION_COPY };
-        store.getters.is_item_a_folder = () => true;
 
         const wrapper = paste_item_factory({
             destination: {
                 user_can_write: false,
+                type: TYPE_FOLDER,
             },
         });
 
@@ -123,12 +127,12 @@ describe("PasteItem", () => {
             operation_type: CLIPBOARD_OPERATION_COPY,
             pasting_in_progress: true,
         };
-        store.getters.is_item_a_folder = () => true;
         const event_bus_emit = jest.spyOn(EventBus, "$emit");
 
         const wrapper = paste_item_factory({
             destination: {
                 user_can_write: true,
+                type: TYPE_FOLDER,
             },
         });
 
@@ -149,13 +153,13 @@ describe("PasteItem", () => {
             operation_type: CLIPBOARD_OPERATION_CUT,
         };
         store.state.folder_content = [];
-        store.getters.is_item_a_folder = () => true;
 
         jest.spyOn(check_item_title, "doesDocumentNameAlreadyExist").mockReturnValue(true);
 
         const wrapper = paste_item_factory({
             destination: {
                 user_can_write: true,
+                type: TYPE_FOLDER,
             },
         });
 
@@ -171,13 +175,13 @@ describe("PasteItem", () => {
             operation_type: CLIPBOARD_OPERATION_CUT,
         };
         store.state.folder_content = [];
-        store.getters.is_item_a_folder = () => true;
 
         jest.spyOn(check_item_title, "doesFolderNameAlreadyExist").mockReturnValue(true);
 
         const wrapper = paste_item_factory({
             destination: {
                 user_can_write: true,
+                type: TYPE_FOLDER,
             },
         });
 
@@ -193,7 +197,6 @@ describe("PasteItem", () => {
             operation_type: CLIPBOARD_OPERATION_CUT,
         };
         store.state.folder_content = [];
-        store.getters.is_item_a_folder = () => true;
 
         jest.spyOn(check_item_title, "doesFolderNameAlreadyExist").mockReturnValue(false);
         jest.spyOn(clipboard_helpers, "isItemDestinationIntoItself").mockReturnValue(true);
@@ -201,6 +204,7 @@ describe("PasteItem", () => {
         const wrapper = paste_item_factory({
             destination: {
                 user_can_write: true,
+                type: TYPE_FOLDER,
             },
         });
 

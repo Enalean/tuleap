@@ -17,8 +17,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { TYPE_EMBEDDED, TYPE_EMPTY, TYPE_FOLDER, TYPE_WIKI } from "../constants";
-
 export const is_folder_empty = (state) => state.folder_content.length === 0;
 
 export const current_folder_title = (state) => {
@@ -51,20 +49,4 @@ export const global_upload_progress = (state) => {
 
 export const is_uploading = (state) => {
     return Boolean(state.folder_content.find((item) => item.is_uploading));
-};
-
-export const is_item_a_wiki = () => (item) => {
-    return item.type === TYPE_WIKI;
-};
-
-export const is_item_a_folder = () => (item) => {
-    return item.type === TYPE_FOLDER;
-};
-
-export const is_item_an_empty_document = () => (item) => {
-    return item.type === TYPE_EMPTY;
-};
-
-export const is_item_an_embedded_file = () => (item) => {
-    return item.type === TYPE_EMBEDDED;
 };

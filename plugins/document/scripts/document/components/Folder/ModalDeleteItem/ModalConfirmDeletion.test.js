@@ -70,9 +70,6 @@ describe("ModalConfirmDeletion", () => {
             show: () => {},
             hide: () => {},
         });
-
-        store.getters.is_item_a_wiki = () => false;
-        store.getters.is_item_a_folder = () => false;
     });
 
     describe("When the item is a wiki", () => {
@@ -88,8 +85,6 @@ describe("ModalConfirmDeletion", () => {
                 },
                 type: "wiki",
             };
-
-            store.getters.is_item_a_wiki = () => true;
         });
 
         it(`When some docman wikis reference the same wiki page, then it should add a checkbox`, async () => {
@@ -148,8 +143,6 @@ describe("ModalConfirmDeletion", () => {
             type: "folder",
         };
 
-        store.getters.is_item_a_folder = () => true;
-
         const deletion_modal = getDeletionModal({ item });
 
         expect(store.dispatch).not.toHaveBeenCalled();
@@ -185,7 +178,6 @@ describe("ModalConfirmDeletion", () => {
             const additional_options = {};
 
             store.state.currently_previewed_item = item;
-            store.getters.is_item_a_folder = () => false;
 
             const deletion_modal = getDeletionModal({ item, additional_options });
             jest.spyOn(deletion_modal.vm.$router, "replace");
@@ -216,7 +208,6 @@ describe("ModalConfirmDeletion", () => {
             const additional_options = {};
             const deletion_modal = getDeletionModal({ item, additional_options });
 
-            store.getters.is_item_a_folder = () => true;
             jest.spyOn(deletion_modal.vm.$router, "replace");
 
             await deletion_modal.vm.deleteItem();

@@ -39,7 +39,7 @@
     </div>
 </template>
 <script>
-import { TYPE_FOLDER } from "../../../constants";
+import { isFolder } from "../../../helpers/type-check-helper";
 
 export default {
     name: "PermissionsUpdateFolderSubItems",
@@ -49,7 +49,7 @@ export default {
     },
     computed: {
         is_item_a_folder() {
-            return this.item.type === TYPE_FOLDER;
+            return isFolder(this.item);
         },
     },
 };

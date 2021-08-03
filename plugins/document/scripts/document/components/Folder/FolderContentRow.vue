@@ -125,6 +125,7 @@ import {
     relativeDatePlacement,
     relativeDatePreference,
 } from "../../../../../../src/scripts/tuleap/custom-elements/relative-date/relative-date-helper";
+import { isFile, isFolder } from "../../helpers/type-check-helper";
 
 export default {
     name: "FolderContentRow",
@@ -174,8 +175,8 @@ export default {
                 "document-tree-item-created": this.item.created,
                 "document-tree-item-updated": this.item.updated,
                 "document-tree-item-uploading": this.item.is_uploading,
-                "document-tree-item-folder": this.item.type === TYPE_FOLDER,
-                "document-tree-item-file": this.item.type === TYPE_FILE,
+                "document-tree-item-folder": isFolder(this.item),
+                "document-tree-item-file": isFile(this.item),
             };
         },
         cell_title_component_name() {

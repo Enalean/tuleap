@@ -47,13 +47,13 @@
 </template>
 <script>
 import { mapState } from "vuex";
-import { TYPE_FOLDER } from "../../../constants";
 import {
     doesDocumentAlreadyExistsAtUpdate,
     doesDocumentNameAlreadyExist,
     doesFolderNameAlreadyExist,
     doesFolderAlreadyExistsAtUpdate,
 } from "../../../helpers/metadata-helpers/check-item-title";
+import { isFolder } from "../../../helpers/type-check-helper";
 
 export default {
     props: {
@@ -100,12 +100,12 @@ export default {
         },
         getValidityErrorAtCreation(text_value) {
             if (
-                this.currentlyUpdatedItem.type === TYPE_FOLDER &&
+                isFolder(this.currentlyUpdatedItem) &&
                 doesFolderNameAlreadyExist(text_value, this.folder_content, this.parent)
             ) {
                 return this.getErrorWhenFolderAlreadyExists();
             } else if (
-                this.currentlyUpdatedItem.type !== TYPE_FOLDER &&
+                !isFolder(this.currentlyUpdatedItem) &&
                 doesDocumentNameAlreadyExist(text_value, this.folder_content, this.parent)
             ) {
                 return this.getErrorWhenDocumentAlreadyExists();
@@ -115,7 +115,7 @@ export default {
         },
         getValidityErrorAtUpdate(text_value) {
             if (
-                this.currentlyUpdatedItem.type !== TYPE_FOLDER &&
+                !isFolder(this.currentlyUpdatedItem.type) &&
                 doesDocumentAlreadyExistsAtUpdate(
                     text_value,
                     this.folder_content,
@@ -125,7 +125,7 @@ export default {
             ) {
                 return this.getErrorWhenDocumentAlreadyExists();
             } else if (
-                this.currentlyUpdatedItem.type === TYPE_FOLDER &&
+                isFolder(this.currentlyUpdatedItem.type) &&
                 doesFolderAlreadyExistsAtUpdate(
                     text_value,
                     this.folder_content,

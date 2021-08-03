@@ -41,10 +41,10 @@
 
 <!-- eslint-disable vue/no-mutating-props -->
 <script>
-import { TYPE_FILE } from "../../../constants";
 import { mapState } from "vuex";
 import { sprintf } from "sprintf-js";
 import prettyKibibytes from "pretty-kibibytes";
+import { isFile } from "../../../helpers/type-check-helper";
 
 export default {
     name: "FileProperties",
@@ -60,7 +60,7 @@ export default {
     computed: {
         ...mapState("configuration", ["max_size_upload"]),
         is_displayed() {
-            return this.item.type === TYPE_FILE;
+            return isFile(this.item);
         },
     },
     methods: {

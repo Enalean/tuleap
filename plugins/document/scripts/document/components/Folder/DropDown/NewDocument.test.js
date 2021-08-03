@@ -38,7 +38,6 @@ describe("NewDocument", () => {
     });
 
     it(`User can create add document to folder when he is docman writer`, () => {
-        store.getters.is_item_a_folder = () => true;
         const item = {
             type: TYPE_FOLDER,
             user_can_write: true,
@@ -48,7 +47,6 @@ describe("NewDocument", () => {
         expect(wrapper.find("[data-test=document-new-item]").exists()).toBeTruthy();
     });
     it(`User can NOT add document to folder when he is docman reader`, () => {
-        store.getters.is_item_a_folder = () => true;
         const item = {
             type: TYPE_FOLDER,
             user_can_write: false,
@@ -58,7 +56,6 @@ describe("NewDocument", () => {
         expect(wrapper.find("[data-test=document-new-item]").exists()).toBeFalsy();
     });
     it(`Click on new document open the corresponding modal`, () => {
-        store.getters.is_item_a_folder = () => true;
         const item = {
             type: TYPE_FOLDER,
             user_can_write: true,

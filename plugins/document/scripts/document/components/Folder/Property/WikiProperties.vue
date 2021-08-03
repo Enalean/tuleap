@@ -43,7 +43,8 @@
     </div>
 </template>
 <script>
-import { TYPE_WIKI } from "../../../constants";
+import { isWiki } from "../../../helpers/type-check-helper";
+
 export default {
     props: {
         value: Object,
@@ -51,7 +52,7 @@ export default {
     },
     computed: {
         is_displayed() {
-            return this.item.type === TYPE_WIKI;
+            return isWiki(this.item);
         },
         placeholder() {
             return this.$gettext("My wiki page");

@@ -33,19 +33,19 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
 import EventBus from "../../../helpers/event-bus.js";
+import { isFolder } from "../../../helpers/type-check-helper";
 export default {
     name: "NewDocument",
     props: {
         item: Object,
     },
-    computed: {
-        ...mapGetters(["is_item_a_folder"]),
-    },
     methods: {
         showNewDocumentModal() {
             EventBus.$emit("show-new-document-modal", { detail: { parent: this.item } });
+        },
+        is_item_a_folder(item) {
+            return isFolder(item);
         },
     },
 };

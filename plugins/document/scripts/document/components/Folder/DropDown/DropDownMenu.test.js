@@ -37,8 +37,6 @@ describe("DropDownMenu", () => {
                 mocks: { $store: store },
             });
         };
-        store.getters.is_item_an_empty_document = () => false;
-        store.getters.is_item_a_folder = () => false;
     });
 
     describe("Approval table menu option -", () => {
@@ -53,7 +51,6 @@ describe("DropDownMenu", () => {
                     can_user_manage: false,
                 },
             });
-            store.getters.is_item_an_empty_document = () => true;
             await wrapper.vm.$nextTick();
             expect(
                 wrapper.find("[data-test=document-dropdown-approval-tables]").exists()
@@ -85,8 +82,6 @@ describe("DropDownMenu", () => {
                     type: "folder",
                 },
             });
-
-            store.getters.is_item_a_folder = () => true;
 
             await wrapper.vm.$nextTick();
 

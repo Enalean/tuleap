@@ -28,7 +28,6 @@ describe("QuickLookButton", () => {
     let factory, store;
     beforeEach(() => {
         store = createStoreMock({});
-        store.getters.is_item_a_folder = () => true;
         factory = (props = {}) => {
             return shallowMount(QuickLookButton, {
                 localVue,
