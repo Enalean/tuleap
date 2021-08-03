@@ -438,6 +438,11 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
         return isset($this->report_session) && $this->updated_at && ($this->report_session->get('checkout_date') < $this->updated_at);
     }
 
+    public function hasChanged(): bool
+    {
+        return isset($this->report_session) && $this->report_session->hasChanged();
+    }
+
     /**
      * @return string html the user who has modified the report. Or false if the report has not been modified
      */

@@ -86,6 +86,7 @@ class document_generationPlugin extends Plugin
                         [
                             "report_id" => $report_id,
                             "report_name" => $report_name,
+                            "report_has_changed" => $report->hasChanged(),
                             "tracker_shortname" => $tracker_shortname,
                             "platform_name" => ForgeConfig::get('sys_name'),
                             "project_name" => $project->getPublicName(),
