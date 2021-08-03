@@ -76,14 +76,14 @@ final class LastChangesetRetrieverTest extends TestCase
             new \Tracker_Artifact_Changeset(self::LAST_CHANGESET_ID, $artifact, 101, 1234567890, '')
         );
 
-        $last_changeset_id = $this->getRetriever()->retrieveLastChangeset($this->iteration);
+        $last_changeset_id = $this->getRetriever()->retrieveLastChangesetId($this->iteration);
         self::assertSame(self::LAST_CHANGESET_ID, $last_changeset_id);
     }
 
     public function testItReturnsNullWhenGivenIterationCantBeFound(): void
     {
         $this->artifact_factory->method('getArtifactById')->willReturn(null);
-        self::assertNull($this->getRetriever()->retrieveLastChangeset($this->iteration));
+        self::assertNull($this->getRetriever()->retrieveLastChangesetId($this->iteration));
     }
 
     public function testItReturnsNullWhenGivenIterationHasNoLastChangeset(): void
@@ -92,6 +92,6 @@ final class LastChangesetRetrieverTest extends TestCase
         $this->artifact_factory->method('getArtifactById')->willReturn($artifact);
         $this->changeset_factory->method('getLastChangeset')->willReturn(null);
 
-        self::assertNull($this->getRetriever()->retrieveLastChangeset($this->iteration));
+        self::assertNull($this->getRetriever()->retrieveLastChangesetId($this->iteration));
     }
 }

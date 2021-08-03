@@ -26,5 +26,5 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration\IterationIdentifie
 
 interface RetrieveLastChangeset
 {
-    public function retrieveLastChangeset(IterationIdentifier $iteration_identifier): ?int;
+    public function retrieveLastChangesetId(IterationIdentifier $iteration_identifier): ?int;
 }

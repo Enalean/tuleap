@@ -40,6 +40,7 @@ use Tuleap\ProgramManagement\Adapter\Program\Admin\CanPrioritizeItems\UGroupRepr
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation\CreateProgramIncrementsRunner;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation\LastChangesetRetriever;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation\PendingArtifactCreationDao;
+use Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation\PendingIterationCreationDAO;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation\TaskBuilder;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\CreationCheck\RequiredFieldChecker;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\CreationCheck\SemanticChecker;
@@ -445,6 +446,7 @@ final class program_managementPlugin extends Plugin
                 $iterations_linked_dao,
                 $logger,
                 new LastChangesetRetriever($artifact_factory, Tracker_Artifact_ChangesetFactoryBuilder::build()),
+                new PendingIterationCreationDAO()
             )
         );
 
