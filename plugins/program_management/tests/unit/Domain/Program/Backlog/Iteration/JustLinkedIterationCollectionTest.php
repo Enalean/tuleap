@@ -56,12 +56,7 @@ final class JustLinkedIterationCollectionTest extends \Tuleap\Test\PHPUnit\TestC
             self::FIRST_JUST_ADDED_ITERATION_ID,
             self::SECOND_JUST_ADDED_ITERATION_ID
         );
-        $visibility_verifier     = VerifyIsVisibleArtifactStub::withVisibleIds(
-            self::FIRST_PREVIOUS_ITERATION_ID,
-            self::SECOND_PREVIOUS_ITERATION_ID,
-            self::FIRST_JUST_ADDED_ITERATION_ID,
-            self::SECOND_JUST_ADDED_ITERATION_ID
-        );
+        $visibility_verifier     = VerifyIsVisibleArtifactStub::withAlwaysVisibleArtifacts();
         $this->iterations        = IterationIdentifier::buildCollectionFromProgramIncrement(
             $iterations_searcher,
             $visibility_verifier,
@@ -88,6 +83,7 @@ final class JustLinkedIterationCollectionTest extends \Tuleap\Test\PHPUnit\TestC
         self::assertContains(self::FIRST_JUST_ADDED_ITERATION_ID, $ids);
         self::assertContains(self::SECOND_JUST_ADDED_ITERATION_ID, $ids);
         self::assertFalse($collection->isEmpty());
+        self::assertSame($this->program_increment, $collection->program_increment);
     }
 
     public function testItCanBuildAnEmptyCollection(): void
@@ -105,5 +101,6 @@ final class JustLinkedIterationCollectionTest extends \Tuleap\Test\PHPUnit\TestC
         );
 
         self::assertTrue($collection->isEmpty());
+        self::assertSame($this->program_increment, $collection->program_increment);
     }
 }

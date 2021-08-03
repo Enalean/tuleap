@@ -27,28 +27,38 @@ use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 
 final class VerifyIsVisibleArtifactStub implements VerifyIsVisibleArtifact
 {
+    private bool $is_always_visible;
     /**
      * @var int[]
      */
     private array $visible_artifact_ids;
 
-    private function __construct(int ...$visible_ids)
+    private function __construct(bool $is_always_visible, int ...$visible_ids)
     {
+        $this->is_always_visible    = $is_always_visible;
         $this->visible_artifact_ids = $visible_ids;
     }
 
     public function isVisible(int $artifact_id, UserIdentifier $user_identifier): bool
     {
+        if ($this->is_always_visible) {
+            return true;
+        }
         return in_array($artifact_id, $this->visible_artifact_ids, true);
     }
 
     public static function withVisibleIds(int ...$visible_artifact_ids): self
     {
-        return new self(...$visible_artifact_ids);
+        return new self(false, ...$visible_artifact_ids);
     }
 
     public static function withNoVisibleArtifact(): self
     {
-        return new self();
+        return new self(false);
+    }
+
+    public static function withAlwaysVisibleArtifacts(): self
+    {
+        return new self(true);
     }
 }

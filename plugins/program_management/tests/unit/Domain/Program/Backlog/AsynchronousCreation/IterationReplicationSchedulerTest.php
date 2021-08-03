@@ -26,6 +26,7 @@ use Psr\Log\Test\TestLogger;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementIdentifier;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\ProgramManagement\Stub\CheckProgramIncrementStub;
+use Tuleap\ProgramManagement\Stub\RetrieveLastChangesetStub;
 use Tuleap\ProgramManagement\Stub\SearchIterationsStub;
 use Tuleap\ProgramManagement\Stub\VerifyIsVisibleArtifactStub;
 use Tuleap\ProgramManagement\Stub\VerifyIterationHasBeenLinkedBeforeStub;
@@ -43,6 +44,7 @@ final class IterationReplicationSchedulerTest extends \Tuleap\Test\PHPUnit\TestC
     private SearchIterationsStub $iterations_searcher;
     private VerifyIsVisibleArtifactStub $visibility_verifier;
     private VerifyIterationHasBeenLinkedBeforeStub $iteration_link_verifier;
+    private RetrieveLastChangesetStub $changeset_retriever;
 
     protected function setUp(): void
     {
@@ -59,11 +61,9 @@ final class IterationReplicationSchedulerTest extends \Tuleap\Test\PHPUnit\TestC
             self::FIRST_ITERATION_ID,
             self::SECOND_ITERATION_ID
         );
-        $this->visibility_verifier     = VerifyIsVisibleArtifactStub::withVisibleIds(
-            self::FIRST_ITERATION_ID,
-            self::SECOND_ITERATION_ID
-        );
+        $this->visibility_verifier     = VerifyIsVisibleArtifactStub::withAlwaysVisibleArtifacts();
         $this->iteration_link_verifier = VerifyIterationHasBeenLinkedBeforeStub::withNoIteration();
+        $this->changeset_retriever     = RetrieveLastChangesetStub::withLastChangesetIds(4297, 7872);
     }
 
     private function getScheduler(): IterationReplicationScheduler
@@ -73,15 +73,16 @@ final class IterationReplicationSchedulerTest extends \Tuleap\Test\PHPUnit\TestC
             $this->iterations_searcher,
             $this->visibility_verifier,
             $this->iteration_link_verifier,
-            $this->logger
+            $this->logger,
+            $this->changeset_retriever,
         );
     }
 
     public function testItDoesNotScheduleAReplicationWhenFeatureFlagIsDisabled(): void
     {
         $this->feature_flag_verifier = VerifyIterationsFeatureActiveStub::withDisabledFeature();
-        $this->getScheduler()->replicateIterationsIfNeeded($this->program_increment, $this->user);
 
+        $this->getScheduler()->replicateIterationsIfNeeded($this->program_increment, $this->user);
         self::assertFalse($this->logger->hasDebugRecords());
     }
 
@@ -89,8 +90,8 @@ final class IterationReplicationSchedulerTest extends \Tuleap\Test\PHPUnit\TestC
     {
         $this->iterations_searcher = SearchIterationsStub::withNoIteration();
         $this->visibility_verifier = VerifyIsVisibleArtifactStub::withNoVisibleArtifact();
-        $this->getScheduler()->replicateIterationsIfNeeded($this->program_increment, $this->user);
 
+        $this->getScheduler()->replicateIterationsIfNeeded($this->program_increment, $this->user);
         self::assertFalse($this->logger->hasDebugRecords());
     }
 
@@ -100,8 +101,8 @@ final class IterationReplicationSchedulerTest extends \Tuleap\Test\PHPUnit\TestC
             self::FIRST_ITERATION_ID,
             self::SECOND_ITERATION_ID
         );
-        $this->getScheduler()->replicateIterationsIfNeeded($this->program_increment, $this->user);
 
+        $this->getScheduler()->replicateIterationsIfNeeded($this->program_increment, $this->user);
         self::assertFalse($this->logger->hasDebugRecords());
     }
 
