@@ -51,6 +51,7 @@ import {
 } from "../../../../../../src/scripts/tuleap/gettext/gettext-init";
 import { sprintf } from "sprintf-js";
 
+const MAIN_TITLES_NUMBERING_ID = "main-titles";
 const HEADER_STYLE_ARTIFACT_TITLE = "ArtifactTitle";
 const HEADER_LEVEL_ARTIFACT_TITLE = HeadingLevel.HEADING_2;
 const HEADER_LEVEL_SECTION = HeadingLevel.HEADING_1;
@@ -97,6 +98,10 @@ export async function downloadDocx(
                         children: [new TextRun(artifact.title)],
                     }),
                 ],
+                numbering: {
+                    reference: MAIN_TITLES_NUMBERING_ID,
+                    level: 1,
+                },
             })
         );
 
@@ -217,6 +222,10 @@ export async function downloadDocx(
         new Paragraph({
             text: gettext_provider.gettext("Table of contents"),
             heading: HEADER_LEVEL_SECTION,
+            numbering: {
+                reference: MAIN_TITLES_NUMBERING_ID,
+                level: 0,
+            },
         }),
         new TableOfContentsPrefilled(document.artifacts, {
             hyperlink: true,
@@ -291,6 +300,23 @@ export async function downloadDocx(
                         },
                     ],
                 },
+                {
+                    reference: MAIN_TITLES_NUMBERING_ID,
+                    levels: [
+                        {
+                            level: 0,
+                            format: LevelFormat.DECIMAL,
+                            alignment: AlignmentType.START,
+                            text: "%1.",
+                        },
+                        {
+                            level: 1,
+                            format: LevelFormat.DECIMAL,
+                            alignment: AlignmentType.START,
+                            text: "%1.%2.",
+                        },
+                    ],
+                },
             ],
         },
         sections: [
@@ -302,6 +328,10 @@ export async function downloadDocx(
                     new Paragraph({
                         text: gettext_provider.gettext("Artifacts"),
                         heading: HEADER_LEVEL_SECTION,
+                        numbering: {
+                            reference: MAIN_TITLES_NUMBERING_ID,
+                            level: 0,
+                        },
                     }),
                     ...artifacts_content,
                 ],
