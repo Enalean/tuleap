@@ -62,7 +62,6 @@ class ViewVCController implements DispatchableWithRequest
         }
 
         $svn_core_access = EventManager::instance()->dispatch(new SvnCoreAccess($project, $_SERVER['REQUEST_URI'], $layout));
-        assert($svn_core_access instanceof SvnCoreAccess);
         $svn_core_access->redirect();
 
         $viewvc_proxy = new ViewVCProxy(EventManager::instance());

@@ -66,7 +66,6 @@ final class ConfirmNewEmailController implements DispatchableWithRequest
         }
 
         $account_information_collection = $this->event_manager->dispatch(new AccountInformationCollection($current_user));
-        assert($account_information_collection instanceof AccountInformationCollection);
         if (! $account_information_collection->isUserAllowedToChangeEmail()) {
             throw new ForbiddenException();
         }

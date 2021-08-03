@@ -56,7 +56,6 @@ class BreadCrumbBuilder
         $tracker = $this->tracker_factory->getTrackerById($kanban->getTrackerId());
         if ($tracker && $tracker->userCanView($current_user)) {
             $tracker_crumb = EventManager::instance()->dispatch(new TrackerCrumbInContext($tracker, $current_user));
-            assert($tracker_crumb instanceof TrackerCrumbInContext);
             return $tracker_crumb->getCrumb(self::CRUMB_IDENTIFIER);
         }
         throw new AgileDashboard_KanbanNotFoundException();

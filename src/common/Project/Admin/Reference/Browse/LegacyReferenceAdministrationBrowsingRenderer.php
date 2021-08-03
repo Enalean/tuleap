@@ -237,7 +237,6 @@ class LegacyReferenceAdministrationBrowsingRenderer
     private function displayExternalSystemReferences(): void
     {
         $collector = $this->event_manager->dispatch(new ExternalSystemReferencePresentersCollector());
-        assert($collector instanceof ExternalSystemReferencePresentersCollector);
 
         $presenters = $collector->getExternalSystemReferencePresenters();
         if (! $presenters) {

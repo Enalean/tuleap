@@ -83,7 +83,6 @@ class SiteHomepageController implements DispatchableWithRequest, DispatchableWit
         $event_manager->processEvent(Event::DISPLAYING_HOMEPAGE, []);
 
         $registration_guard = $event_manager->dispatch(new RegistrationGuardEvent());
-        assert($registration_guard instanceof RegistrationGuardEvent);
 
         $login_url = '';
         $event_manager->processEvent(\Event::GET_LOGIN_URL, ['return_to' => '', 'login_url' => &$login_url]);

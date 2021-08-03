@@ -94,7 +94,6 @@ final class DisplayKeysTokensController implements DispatchableWithRequest, Disp
         );
 
         $tabs = $this->dispatcher->dispatch(new AccountTabPresenterCollection($user, self::URL));
-        assert($tabs instanceof AccountTabPresenterCollection);
 
         (new UserPreferencesHeader())->display(_('Keys & Tokens'), $layout, ['user-preferences-frame-wide']);
         $this->renderer->renderToPage(

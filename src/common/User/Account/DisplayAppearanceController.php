@@ -86,7 +86,6 @@ final class DisplayAppearanceController implements DispatchableWithRequest, Disp
         );
 
         $tabs = $this->dispatcher->dispatch(new AccountTabPresenterCollection($user, self::URL));
-        assert($tabs instanceof AccountTabPresenterCollection);
 
         $presenter = $this->appareance_presenter_builder->getAppareancePresenterForUser(
             $this->csrf_token,

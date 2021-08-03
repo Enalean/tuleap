@@ -109,7 +109,6 @@ final class OIDCProvidersController implements DispatchableWithRequest, Dispatch
         );
 
         $tabs = $this->dispatcher->dispatch(new AccountTabPresenterCollection($user, self::URL));
-        assert($tabs instanceof AccountTabPresenterCollection);
 
         (new UserPreferencesHeader())->display(dgettext('tuleap-openidconnectclient', 'OpenID Connect providers'), $layout);
         $this->renderer->renderToPage(

@@ -93,7 +93,6 @@ final class UpdateAccountInformationController implements DispatchableWithReques
         $this->csrf_token->check(DisplayAccountInformationController::URL);
 
         $account_information_collection = $this->event_dispatcher->dispatch(new AccountInformationCollection($user));
-        assert($account_information_collection instanceof AccountInformationCollection);
 
         $something_changed = false;
 

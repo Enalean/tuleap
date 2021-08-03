@@ -371,7 +371,6 @@ class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDecla
     private function displayNewAccount(): bool
     {
         $registration_guard = EventManager::instance()->dispatch(new RegistrationGuardEvent());
-        assert($registration_guard instanceof RegistrationGuardEvent);
         return $registration_guard->isRegistrationPossible();
     }
 

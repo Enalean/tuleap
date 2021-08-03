@@ -79,7 +79,6 @@ class PresenterBuilder
     private function displayNewAccountMenuItem()
     {
         $registration_guard = EventManager::instance()->dispatch(new RegistrationGuardEvent());
-        assert($registration_guard instanceof RegistrationGuardEvent);
         return $registration_guard->isRegistrationPossible();
     }
 }

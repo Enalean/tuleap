@@ -71,7 +71,6 @@ final class DisplayEditionController implements DispatchableWithRequest, Dispatc
         }
 
         $tabs = $this->dispatcher->dispatch(new AccountTabPresenterCollection($user, self::URL));
-        assert($tabs instanceof AccountTabPresenterCollection);
 
         (new UserPreferencesHeader())->display(_('Edition & CSV'), $layout);
         $this->renderer->renderToPage('edition', new EditionPresenter($this->csrf_token, $tabs, $user));

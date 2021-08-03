@@ -43,7 +43,6 @@ if ($page == "admin_creation") {
 $event_manager = EventManager::instance();
 
 $registration_guard = $event_manager->dispatch(new RegistrationGuardEvent());
-assert($registration_guard instanceof RegistrationGuardEvent);
 
 if (! $request->getCurrentUser()->isSuperUser() && ! $registration_guard->isRegistrationPossible()) {
     exit_error(

@@ -69,7 +69,6 @@ class InviteBuddyConfiguration
     private function isRegistrationPossible(): bool
     {
         $registration_guard = $this->event_dispatcher->dispatch(new RegistrationGuardEvent());
-        assert($registration_guard instanceof RegistrationGuardEvent);
 
         return $registration_guard->isRegistrationPossible();
     }

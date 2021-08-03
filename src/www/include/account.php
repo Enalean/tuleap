@@ -89,8 +89,7 @@ function account_redirect_after_login(PFUser $user, string $return_to): void
 
     $event_manager        = EventManager::instance();
     $redirect_after_login = $event_manager->dispatch(new RedirectAfterLogin($user, $return_to, isset($pv) && $pv == 2));
-    assert($redirect_after_login instanceof RedirectAfterLogin);
-    $return_to = $redirect_after_login->getReturnTo();
+    $return_to            = $redirect_after_login->getReturnTo();
 
     if ($return_to) {
         $returnToToken = parse_url($return_to);
