@@ -151,19 +151,19 @@ generate-mo: ## Compile translated strings into binary format
 	@tools/utils/generate-mo.sh `pwd`
 
 tests-rest: ## Run all REST tests. SETUP_ONLY=1 to disable auto run. PHP_VERSION to select the version of PHP to use (74,80). DB to select the database to use (mysql57, mariadb103)
-	$(eval PHP_VERSION ?= 74)
+	$(eval PHP_VERSION ?= 80)
 	$(eval DB ?= mysql57)
 	$(eval SETUP_ONLY ?= 0)
 	$(eval TESTS_RESULT ?= ./test_results_rest_$(PHP_VERSION)_$(DB))
 	SETUP_ONLY="$(SETUP_ONLY)" TESTS_RESULT="$(TESTS_RESULT)" tests/rest/bin/run-compose.sh "$(PHP_VERSION)" "$(DB)"
 
 tests-soap: ## Run all SOAP tests. PHP_VERSION to select the version of PHP to use (74). DB to select the database to use (mysql57, mariadb103)
-	$(eval PHP_VERSION ?= 74)
+	$(eval PHP_VERSION ?= 80)
 	$(eval DB ?= mysql57)
 	SETUP_ONLY="$(SETUP_ONLY)" tests/soap/bin/run-compose.sh "$(PHP_VERSION)" "$(DB)"
 
 tests-db: ## Run all DB integration tests. SETUP_ONLY=1 to disable auto run. PHP_VERSION to select the version of PHP to use (74,80). DB to select the database to use (mysql57, mariadb103)
-	$(eval PHP_VERSION ?= 74)
+	$(eval PHP_VERSION ?= 80)
 	$(eval DB ?= mysql57)
 	$(eval SETUP_ONLY ?= 0)
 	SETUP_ONLY="$(SETUP_ONLY)" tests/integration/bin/run-compose.sh "$(PHP_VERSION)" "$(DB)"
@@ -198,7 +198,7 @@ run-as-owner:
 
 phpunit-ci:
 	$(eval COVERAGE_ENABLED ?= 1)
-	$(eval PHP_VERSION ?= 74)
+	$(eval PHP_VERSION ?= 80)
 	mkdir -p $(WORKSPACE)/results/ut-phpunit/php-$(PHP_VERSION)
 	@docker run --rm -v $(CURDIR):/tuleap:ro --network none -v $(WORKSPACE)/results/ut-phpunit/php-$(PHP_VERSION):/tmp/results ghcr.io/enalean/tuleap-test-phpunit:c7-php$(PHP_VERSION) make -C /tuleap TARGET="phpunit-ci-run COVERAGE_ENABLED=$(COVERAGE_ENABLED)" PHP=/opt/remi/php$(PHP_VERSION)/root/usr/bin/php run-as-owner
 
@@ -207,7 +207,7 @@ phpunit-docker-74:
 
 .PHONY: tests-unit-php
 tests-unit-php: ## Run PHPUnit unit tests in a Docker container. PHP_VERSION to select the version of PHP to use (74, 80). FILES to run specific tests.
-	$(eval PHP_VERSION ?= 74)
+	$(eval PHP_VERSION ?= 80)
 	@docker run --rm -v $(CURDIR):/tuleap:ro --network none ghcr.io/enalean/tuleap-test-phpunit:c7-php$(PHP_VERSION) scl enable php$(PHP_VERSION) "make -C /tuleap phpunit FILES=$(FILES)"
 
 ifneq ($(origin SEED),undefined)
@@ -279,7 +279,7 @@ bash-web: ## Give a bash on web container
 pull-docker-images: ## Pull all docker images used for development
 	$(DOCKER) pull ghcr.io/enalean/tuleap-test-phpunit:c7-php74
 	$(DOCKER) pull ghcr.io/enalean/tuleap-test-phpunit:c7-php80
-	$(DOCKER) pull ghcr.io/enalean/tuleap-test-rest:c7-php74
+	$(DOCKER) pull ghcr.io/enalean/tuleap-test-rest:c7-php80
 	$(DOCKER) pull ghcr.io/enalean/rnc2rng:latest
 	$(DOCKER) pull tuleap/tuleap-community-edition:latest
 	$(DOCKER_COMPOSE) pull web db redis mailhog ldap
@@ -327,12 +327,12 @@ dev-forgeupgrade: ## Run forgeupgrade in Docker Compose environment
 dev-clear-cache: ## Clear caches in Docker Compose environment
 	@$(DOCKER_COMPOSE) exec web /usr/share/tuleap/src/utils/tuleap --clear-caches
 
-start: ## Start Tuleap web with php 7.4 & nginx on CentOS7
-	@echo "Start Tuleap in PHP 7.4 on CentOS 7"
+start: ## Start Tuleap web with PHP 8.0 & nginx on CentOS7
+	@echo "Start Tuleap in PHP 8.0 on CentOS 7"
 	@$(MAKE) --no-print-directory start-rp
 
-start-php80: ## Start Tuleap web with PHP 8.0 & nginx on CentOS7
-	@$(MAKE) --no-print-directory DOCKER_COMPOSE_FLAGS="-f docker-compose-php80.yml" start-rp
+start-php74: ## Start Tuleap web with PHP 7.4 & nginx on CentOS7
+	@$(MAKE) --no-print-directory DOCKER_COMPOSE_FLAGS="-f docker-compose-php74.yml" start-rp
 
 start-rp:
 	$(eval DOCKER_COMPOSE_FLAGS ?= )

@@ -15,7 +15,7 @@ services:
     - realtime
 
   web:
-    image: ghcr.io/enalean/tuleap-aio-dev:c7-php74-nginx-v2
+    image: ghcr.io/enalean/tuleap-aio-dev:c7-php80-nginx
     volumes:
       - .:/usr/share/tuleap:cached
       - tuleap-data:/data
