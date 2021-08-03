@@ -20,6 +20,7 @@
 import type { TextFieldFormat } from "../../../constants/fields-constants";
 
 export interface TextEditorInterface {
+    init(new_format: TextFieldFormat): void;
     onFormatChange(new_format: TextFieldFormat): void;
     getContent(): string;
     destroy(): void;

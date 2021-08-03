@@ -42,6 +42,7 @@ describe(`EditorAreaState`, () => {
         textarea.dataset.projectId = "101";
 
         const editor = new (class implements TextEditorInterface {
+            init = emptyFunction;
             destroy = emptyFunction;
             onFormatChange = emptyFunction;
             getContent(): string {
