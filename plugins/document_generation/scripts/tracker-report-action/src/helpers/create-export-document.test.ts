@@ -77,6 +77,24 @@ describe("Create ArtifactValues Collection", () => {
                         manual_value: 10,
                         is_autocomputed: false,
                     },
+                    {
+                        field_id: 9,
+                        type: "subon",
+                        label: "Submitted On",
+                        value: "2020-12-28T09:55:55+01:00",
+                    },
+                    {
+                        field_id: 10,
+                        type: "lud",
+                        label: "Last Update Date",
+                        value: "2021-07-30T15:56:09+02:00",
+                    },
+                    {
+                        field_id: 11,
+                        type: "date",
+                        label: "Closed Date",
+                        value: null,
+                    },
                 ],
             },
             {
@@ -127,6 +145,24 @@ describe("Create ArtifactValues Collection", () => {
                         manual_value: null,
                         is_autocomputed: true,
                     },
+                    {
+                        field_id: 9,
+                        type: "subon",
+                        label: "Submitted On",
+                        value: "2020-12-29T09:55:55+01:00",
+                    },
+                    {
+                        field_id: 10,
+                        type: "lud",
+                        label: "Last Update Date",
+                        value: "2021-07-29T15:56:09+02:00",
+                    },
+                    {
+                        field_id: 11,
+                        type: "date",
+                        label: "Closed Date",
+                        value: null,
+                    },
                 ],
             },
         ];
@@ -139,7 +175,7 @@ describe("Create ArtifactValues Collection", () => {
 
         expect(collection.length).toEqual(2);
         expect(collection[0].title).toEqual("tracker_shortname #1001 - title01");
-        expect(collection[0].fields.length).toEqual(7);
+        expect(collection[0].fields.length).toEqual(10);
         expect(collection[0].fields[0].field_name).toEqual("Artifact Number");
         expect(collection[0].fields[0].field_value).toEqual("1001");
         expect(collection[0].fields[1].field_name).toEqual("Title");
@@ -154,8 +190,14 @@ describe("Create ArtifactValues Collection", () => {
         expect(collection[0].fields[5].field_value).toEqual("50");
         expect(collection[0].fields[6].field_name).toEqual("Computed");
         expect(collection[0].fields[6].field_value).toEqual("10");
+        expect(collection[0].fields[7].field_name).toEqual("Submitted On");
+        expect(collection[0].fields[7].field_value).toEqual("12/28/2020");
+        expect(collection[0].fields[8].field_name).toEqual("Last Update Date");
+        expect(collection[0].fields[8].field_value).toEqual("7/30/2021");
+        expect(collection[0].fields[9].field_name).toEqual("Closed Date");
+        expect(collection[0].fields[9].field_value).toEqual("");
         expect(collection[1].title).toEqual("tracker_shortname #1002 - title02");
-        expect(collection[1].fields.length).toEqual(7);
+        expect(collection[1].fields.length).toEqual(10);
         expect(collection[1].fields[0].field_name).toEqual("Artifact Number");
         expect(collection[1].fields[0].field_value).toEqual("1002");
         expect(collection[1].fields[1].field_name).toEqual("Title");
@@ -170,5 +212,11 @@ describe("Create ArtifactValues Collection", () => {
         expect(collection[1].fields[5].field_value).toEqual("51");
         expect(collection[1].fields[6].field_name).toEqual("Computed");
         expect(collection[1].fields[6].field_value).toEqual("10");
+        expect(collection[1].fields[7].field_name).toEqual("Submitted On");
+        expect(collection[1].fields[7].field_value).toEqual("12/29/2020");
+        expect(collection[1].fields[8].field_name).toEqual("Last Update Date");
+        expect(collection[1].fields[8].field_value).toEqual("7/29/2021");
+        expect(collection[1].fields[9].field_name).toEqual("Closed Date");
+        expect(collection[1].fields[9].field_value).toEqual("");
     });
 });
