@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@use '../../../../node_modules/dragula/dist/dragula.min.css';
+@use 'dragula/dist/dragula';
 
 #add-dashboard-button {
     margin: 10px 0 10px var(--tlp-medium-spacing);

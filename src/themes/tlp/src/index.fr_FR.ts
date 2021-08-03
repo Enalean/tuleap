@@ -22,7 +22,7 @@ import { French } from "flatpickr/dist/l10n/fr.js";
 
 export * from "./js/index";
 
-import "../node_modules/select2/dist/js/i18n/fr.js";
+import "select2/dist/js/i18n/fr.js";
 
 import locale from "./vendor-i18n/fr_FR/tlp.fr";
 import type { Options, Select2Plugin } from "./js/index";

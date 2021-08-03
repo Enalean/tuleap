@@ -18,9 +18,12 @@
  */
 
 const path = require("path");
-const webpack = require("../../../../../node_modules/webpack");
-const RemoveEmptyScriptsPlugin = require("../../../../../node_modules/webpack-remove-empty-scripts");
-const MiniCssExtractPlugin = require("../../../../../node_modules/mini-css-extract-plugin");
+// eslint-disable-next-line import/no-extraneous-dependencies
+const webpack = require("webpack");
+// eslint-disable-next-line import/no-extraneous-dependencies
+const RemoveEmptyScriptsPlugin = require("webpack-remove-empty-scripts");
+// eslint-disable-next-line import/no-extraneous-dependencies
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const webpack_configurator = require("../../../../../tools/utils/scripts/webpack-configurator.js");
 
 const context = __dirname;
