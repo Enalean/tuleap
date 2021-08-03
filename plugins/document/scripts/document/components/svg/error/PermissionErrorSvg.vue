@@ -122,9 +122,3 @@
         </g>
     </svg>
 </template>
-
-<script>
-export default {
-    name: "PermissionErrorSvg",
-};
-</script>
