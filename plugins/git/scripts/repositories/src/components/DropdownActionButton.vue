@@ -46,28 +46,29 @@
     </div>
 </template>
 
-<script>
-import { mapActions } from "vuex";
+<script lang="ts">
+import Vue from "vue";
+import { Action } from "vuex-class";
+import { Component, Prop } from "vue-property-decorator";
+import type { Dropdown } from "tlp";
 import { createDropdown } from "tlp";
 import AddGitlabRepositoryActionButton from "./AddGitlabRepositoryActionButton.vue";
 
-export default {
-    name: "DropdownActionButton",
-    components: { AddGitlabRepositoryActionButton },
-    props: {
-        is_empty_state: {
-            type: Boolean,
-            default: false,
-        },
-    },
-    data() {
-        return { dropdown: null };
-    },
-    mounted() {
+@Component({ components: { AddGitlabRepositoryActionButton } })
+export default class DropdownActionButton extends Vue {
+    @Prop({ required: true })
+    readonly is_empty_state!: boolean;
+
+    @Action
+    private readonly showAddRepositoryModal!: () => void;
+
+    private dropdown: null | Dropdown = null;
+
+    mounted(): void {
+        if (!(this.$refs.dropdownButton instanceof Element)) {
+            throw new Error("Can not find DOM element for dropdown");
+        }
         this.dropdown = createDropdown(this.$refs.dropdownButton);
-    },
-    methods: {
-        ...mapActions(["showAddRepositoryModal"]),
-    },
-};
+    }
+}
 </script>

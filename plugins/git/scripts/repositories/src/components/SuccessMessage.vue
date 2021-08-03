@@ -20,13 +20,17 @@
 <template>
     <div v-if="hasSuccess" class="tlp-alert-success" v-dompurify-html="getSuccessMessage"></div>
 </template>
-<script>
-import { mapGetters } from "vuex";
+<script lang="ts">
+import Vue from "vue";
+import { Component } from "vue-property-decorator";
+import { Getter } from "vuex-class";
 
-export default {
-    name: "SuccessMessage",
-    computed: {
-        ...mapGetters(["hasSuccess", "getSuccessMessage"]),
-    },
-};
+@Component
+export default class SuccessMessage extends Vue {
+    @Getter
+    readonly hasSuccess!: boolean;
+
+    @Getter
+    readonly getSuccessMessage!: string;
+}
 </script>

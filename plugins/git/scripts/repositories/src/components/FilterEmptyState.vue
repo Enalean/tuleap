@@ -18,31 +18,41 @@
   -->
 
 <template>
-    <div class="empty-page" v-if="show_filter_empty_state">
-        <div class="empty-page-text">
+    <div class="empty-page" v-if="show_filter_empty_state()">
+        <div class="empty-page-text" data-test="empty-state">
             <translate>No repository name matching your query has been found.</translate>
         </div>
     </div>
 </template>
-<script>
-import { mapGetters } from "vuex";
-export default {
-    name: "FilterEmptyState",
-    computed: {
-        show_filter_empty_state() {
-            return (
-                !this.isCurrentRepositoryListEmpty &&
-                this.isInitialLoadingDoneWithoutError &&
-                this.isFiltering &&
-                !this.isThereAResultInCurrentFilteredList
-            );
-        },
-        ...mapGetters([
-            "isThereAResultInCurrentFilteredList",
-            "isCurrentRepositoryListEmpty",
-            "isInitialLoadingDoneWithoutError",
-            "isFiltering",
-        ]),
-    },
-};
+<script lang="ts">
+import { Component } from "vue-property-decorator";
+import Vue from "vue";
+import { Getter } from "vuex-class";
+
+@Component
+export default class FilterEmptyState extends Vue {
+    @Getter
+    readonly isThereAResultInCurrentFilteredList!: boolean;
+
+    @Getter
+    readonly isCurrentRepositoryListEmpty!: boolean;
+
+    @Getter
+    readonly isInitialLoadingDoneWithoutError!: boolean;
+
+    @Getter
+    readonly isFiltering!: boolean;
+
+    show_filter_empty_state(): boolean {
+        if (!this.isFiltering) {
+            return false;
+        }
+
+        if (!this.isInitialLoadingDoneWithoutError) {
+            return false;
+        }
+
+        return !this.isCurrentRepositoryListEmpty && !this.isThereAResultInCurrentFilteredList;
+    }
+}
 </script>

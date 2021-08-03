@@ -22,7 +22,7 @@
         <button
             type="button"
             data-test="gitlab-project-button"
-            v-on:click="showAddGitlabRepositoryModal()"
+            v-on:click="showModal"
             class="tlp-dropdown-menu-item"
             role="menuitem"
         >
@@ -32,16 +32,18 @@
     </div>
 </template>
 
-<script>
-import { mapActions, mapGetters } from "vuex";
+<script lang="ts">
+import Vue from "vue";
+import { Getter } from "vuex-class";
+import { Component } from "vue-property-decorator";
 
-export default {
-    name: "AddGitlabRepositoryActionButton",
-    computed: {
-        ...mapGetters(["isGitlabUsed"]),
-    },
-    methods: {
-        ...mapActions("gitlab", ["showAddGitlabRepositoryModal"]),
-    },
-};
+@Component
+export default class AddGitlabRepositoryActionButton extends Vue {
+    @Getter
+    readonly isGitlabUsed!: boolean;
+
+    showModal(): void {
+        this.$store.commit("gitlab/showAddGitlabRepositoryModal");
+    }
+}
 </script>

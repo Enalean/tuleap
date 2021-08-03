@@ -17,23 +17,39 @@
  * along with Tuleap. If not, see http://www.gnu.org/licenses/.
  */
 
-import { createStoreMock } from "../../../../../../src/scripts/vue-components/store-wrapper-jest.js";
-import { shallowMount } from "@vue/test-utils";
+import { createStoreMock } from "@tuleap/core/scripts/vue-components/store-wrapper-jest";
+import type { Wrapper } from "@vue/test-utils";
+import { createLocalVue, shallowMount } from "@vue/test-utils";
 import GitRepository from "./GitRepository.vue";
-import localVue from "../support/local-vue.js";
 import * as repositoryListPresenter from "../repository-list-presenter";
 import PullRequestBadge from "./PullRequestBadge.vue";
-import * as breadcrumPresenter from "./../breadcrumb-presenter";
+import * as breadcrumbPresenter from "./../breadcrumb-presenter";
+import type { Store } from "vuex-mock-store";
+import VueDOMPurifyHTML from "vue-dompurify-html";
+import GetTextPlugin from "vue-gettext";
+import type { State } from "../type";
+import TimeAgo from "javascript-time-ago";
+import time_ago_english from "javascript-time-ago/locale/en";
+
+interface StoreOptions {
+    state: State;
+    getters: {
+        isGitlabUsed: boolean;
+        isFolderDisplayMode: boolean;
+    };
+}
 
 describe("GitRepository", () => {
-    let store_options, store, propsData;
+    let store_options: StoreOptions;
+    let propsData = {};
+    let store: Store;
     beforeEach(() => {
+        TimeAgo.locale(time_ago_english);
         jest.spyOn(repositoryListPresenter, "getUserIsAdmin").mockReturnValue(true);
+        jest.spyOn(repositoryListPresenter, "getDashCasedLocale").mockReturnValue("en-US");
 
         store_options = {
-            state: {
-                used_service_name: [],
-            },
+            state: {} as State,
             getters: {
                 isGitlabUsed: false,
                 isFolderDisplayMode: true,
@@ -41,43 +57,21 @@ describe("GitRepository", () => {
         };
     });
 
-    function instantiateComponent() {
-        store = createStoreMock(store_options, { gitlab: {} });
+    function instantiateComponent(): Wrapper<GitRepository> {
+        const localVue = createLocalVue();
+        localVue.use(VueDOMPurifyHTML);
+        localVue.use(GetTextPlugin, {
+            translations: {},
+            silent: true,
+        });
+
+        store = createStoreMock(store_options);
         return shallowMount(GitRepository, {
             propsData,
             mocks: { $store: store },
             localVue,
         });
     }
-
-    it("When user is git admin but repository comes from Gitlab, Then admin icon is displayed", () => {
-        propsData = {
-            repository: {
-                id: 1,
-                normalized_path: "MyPath/MyRepo",
-                description: "This is my description.",
-                path_without_project: "MyPath",
-                label: "MyRepo",
-                last_update_date: "2020-10-28T15:13:13+01:00",
-                additional_information: [],
-                gitlab_data: {
-                    gitlab_repository_url: "https://example.com/MyPath/MyRepo",
-                    gitlab_repository_id: 1,
-                },
-            },
-        };
-        const wrapper = instantiateComponent();
-
-        expect(wrapper.find("[data-test=git-repository-card-admin-link]").exists()).toBeFalsy();
-        expect(
-            wrapper.find("[data-test=git-repository-card-admin-unlink-gitlab]").exists()
-        ).toBeTruthy();
-
-        expect(wrapper.find("[data-test=dropdown-gitlab-administration-1]").exists()).toBeTruthy();
-        expect(
-            wrapper.find("[data-test=dropdown-gitlab-administration-menu-options]").exists()
-        ).toBeTruthy();
-    });
 
     it("When repository comes from Gitlab and there is a description, Then Gitlab icon and description are displayed", () => {
         propsData = {
@@ -195,7 +189,7 @@ describe("GitRepository", () => {
     });
 
     it("When repository is Git, Then url to repository is displayed", () => {
-        jest.spyOn(breadcrumPresenter, "getRepositoryListUrl").mockReturnValue("plugins/git/");
+        jest.spyOn(breadcrumbPresenter, "getRepositoryListUrl").mockReturnValue("plugins/git/");
 
         propsData = {
             repository: {
@@ -257,115 +251,6 @@ describe("GitRepository", () => {
 
         expect(wrapper.find("[data-test=repository_name]").text()).not.toContain("MyPath/");
         expect(wrapper.find("[data-test=repository_name]").text()).toContain("MyRepo");
-    });
-
-    it("When repository is GitLab and user clicks to unlink, Then modal opens", async () => {
-        const repository = {
-            id: 1,
-            normalized_path: "MyPath/MyRepo",
-            description: "This is my description.",
-            path_without_project: "MyPath",
-            label: "MyRepo",
-            last_update_date: "2020-10-28T15:13:13+01:00",
-            additional_information: [],
-            gitlab_data: {
-                gitlab_repository_url: "https://example.com/MyPath/MyRepo",
-                gitlab_repository_id: 1,
-            },
-        };
-        propsData = { repository };
-
-        const wrapper = instantiateComponent();
-
-        wrapper.find("[data-test=unlink-gitlab-repository-1]").trigger("click");
-
-        await wrapper.vm.$nextTick();
-
-        expect(store.dispatch).toHaveBeenCalledWith(
-            "gitlab/showDeleteGitlabRepositoryModal",
-            repository
-        );
-    });
-
-    it("When repository is GitLab and user clicks to edit token, Then modal opens", async () => {
-        const repository = {
-            id: 1,
-            normalized_path: "MyPath/MyRepo",
-            description: "This is my description.",
-            path_without_project: "MyPath",
-            label: "MyRepo",
-            last_update_date: "2020-10-28T15:13:13+01:00",
-            additional_information: [],
-            gitlab_data: {
-                gitlab_repository_url: "https://example.com/MyPath/MyRepo",
-                gitlab_repository_id: 1,
-            },
-        };
-        propsData = { repository };
-
-        const wrapper = instantiateComponent();
-
-        wrapper.find("[data-test=edit-access-token-gitlab-repository]").trigger("click");
-
-        await wrapper.vm.$nextTick();
-
-        expect(store.dispatch).toHaveBeenCalledWith(
-            "gitlab/showEditAccessTokenGitlabRepositoryModal",
-            repository
-        );
-    });
-
-    it("When repository is GitLab and user clicks to regenerate webhook, Then modal opens", async () => {
-        const repository = {
-            id: 1,
-            normalized_path: "MyPath/MyRepo",
-            description: "This is my description.",
-            path_without_project: "MyPath",
-            label: "MyRepo",
-            last_update_date: "2020-10-28T15:13:13+01:00",
-            additional_information: [],
-            gitlab_data: {
-                gitlab_repository_url: "https://example.com/MyPath/MyRepo",
-                gitlab_repository_id: 1,
-            },
-        };
-        propsData = { repository };
-
-        const wrapper = instantiateComponent();
-
-        wrapper.find("[data-test=regenerate-webhook-gitlab-repository]").trigger("click");
-
-        await wrapper.vm.$nextTick();
-
-        expect(store.dispatch).toHaveBeenCalledWith(
-            "gitlab/showRegenerateGitlabWebhookModal",
-            repository
-        );
-    });
-
-    it("When repository is GitLab and user clicks to update the allowing artifact closure value, Then modal opens", async () => {
-        const repository = {
-            id: 1,
-            normalized_path: "MyPath/MyRepo",
-            description: "This is my description.",
-            path_without_project: "MyPath",
-            label: "MyRepo",
-            last_update_date: "2020-10-28T15:13:13+01:00",
-            additional_information: [],
-            gitlab_data: {
-                gitlab_repository_url: "https://example.com/MyPath/MyRepo",
-                gitlab_repository_id: 1,
-            },
-        };
-        propsData = { repository };
-
-        const wrapper = instantiateComponent();
-
-        wrapper.find("[data-test=artifact-closure-gitlab-repository]").trigger("click");
-
-        await wrapper.vm.$nextTick();
-
-        expect(store.dispatch).toHaveBeenCalledWith("gitlab/showArtifactClosureModal", repository);
     });
 
     it("When repository is Git and handled by Gerrit, Then Gerrit icon and description are displayed", () => {

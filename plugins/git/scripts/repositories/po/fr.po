@@ -98,7 +98,9 @@ msgstr ""
 "succès avec la valeur %s !"
 
 msgid "Create branch prefix for integration %s has been successfully cleared."
-msgstr "Le préfix de création de branche pour l'intégration %s a été vidé avec succès."
+msgstr ""
+"Le préfix de création de branche pour l'intégration %s a été vidé avec "
+"succès."
 
 msgid "Edit access token"
 msgstr "Éditer le token d'accès"
@@ -307,8 +309,8 @@ msgstr "Voulez-vous supprimer l'intégration du dépôt GitLab ?"
 msgid "Unlink the repository"
 msgstr "Supprimer l'intégration du dépôt"
 
-msgid "Updated %{ formatted_last_update_date }"
-msgstr "Mis à jour %{ formatted_last_update_date }"
+msgid "Updated %s"
+msgstr "Mis à jour %s"
 
 msgid "Users forks"
 msgstr "Forks des utilisateurs"

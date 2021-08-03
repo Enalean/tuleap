@@ -40,7 +40,7 @@ function isGitLabRepository(
 
 export const getGitlabRepositoriesIntegrated = (
     state: State
-): Array<FormattedGitLabRepository | Folder> => {
+): Array<FormattedGitLabRepository | Folder | Repository> => {
     return currentRepositoryList(state).filter(
         (repository: Repository | FormattedGitLabRepository | Folder) => {
             return isGitLabRepository(repository);
@@ -120,5 +120,6 @@ export const isFiltering = (state: State): boolean => state.filter.length > 0;
 export const isGitlabUsed = (state: State): boolean =>
     state.services_name_used.indexOf("gitlab") !== -1;
 
-export const areExternalUsedServices = (state: State): boolean =>
-    state.services_name_used.length > 0;
+export const areExternalUsedServices = (state: State): boolean => {
+    return state.services_name_used.length > 0;
+};

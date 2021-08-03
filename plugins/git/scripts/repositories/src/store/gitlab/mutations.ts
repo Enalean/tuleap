@@ -69,3 +69,10 @@ export function setCreateBranchPrefixRepository(
 ): void {
     state.create_branch_prefix_repository = repository;
 }
+
+export function showAddGitlabRepositoryModal(state: GitlabState): void {
+    if (!state.add_gitlab_repository_modal) {
+        return;
+    }
+    state.add_gitlab_repository_modal.toggle();
+}

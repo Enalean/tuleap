@@ -98,7 +98,7 @@ function getRepositoryList(
     });
 }
 
-async function postRepository(project_id: number, repository_name: string): Promise<string> {
+async function postRepository(project_id: number, repository_name: string): Promise<Repository> {
     const headers = {
         "content-type": "application/json",
     };

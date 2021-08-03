@@ -22,19 +22,22 @@ import Vuex from "vuex";
 import mutations from "./mutations";
 import * as getters from "./getters";
 import * as actions from "./actions";
-import state from "./state";
 import { createGitLabModule } from "./gitlab/module";
+import type { Store } from "vuex";
+import type { State } from "../type";
 
 Vue.use(Vuex);
 
 const gitlab = createGitLabModule();
 
-export default new Vuex.Store({
-    state,
-    getters,
-    mutations,
-    actions,
-    modules: {
-        gitlab,
-    },
-});
+export function createStore(initialState: State): Store<State> {
+    return new Vuex.Store({
+        state: initialState,
+        getters,
+        mutations,
+        actions,
+        modules: {
+            gitlab,
+        },
+    });
+}

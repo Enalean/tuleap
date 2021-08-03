@@ -25,6 +25,7 @@ import VueDOMPurifyHTML from "vue-dompurify-html";
 import GetTextPlugin from "vue-gettext";
 import * as api from "../../../gitlab/gitlab-api-querier";
 import { mockFetchError, mockFetchSuccess } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper";
+import type { State } from "../../../type";
 
 describe("UnlinkRepositoryGitlabModal", () => {
     let store_options = {},
@@ -36,9 +37,8 @@ describe("UnlinkRepositoryGitlabModal", () => {
     beforeEach(() => {
         store_options = {
             state: {
-                used_service_name: [],
                 is_first_load_done: true,
-            },
+            } as State,
             getters: {
                 areExternalUsedServices: false,
                 isCurrentRepositoryListEmpty: false,

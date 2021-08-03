@@ -17,23 +17,34 @@
  * along with Tuleap. If not, see http://www.gnu.org/licenses/.
  */
 
-import { createStoreMock } from "../../../../../../src/scripts/vue-components/store-wrapper-jest.js";
-import { shallowMount } from "@vue/test-utils";
+import { createStoreMock } from "@tuleap/core/scripts/vue-components/store-wrapper-jest";
+import type { Wrapper } from "@vue/test-utils";
+import { createLocalVue, shallowMount } from "@vue/test-utils";
 import NoRepositoryEmptyState from "./NoRepositoryEmptyState.vue";
-import localVue from "../support/local-vue.js";
 import DropdownActionButton from "./DropdownActionButton.vue";
 import * as repo_list from "../repository-list-presenter";
+import VueDOMPurifyHTML from "vue-dompurify-html";
+import GetTextPlugin from "vue-gettext";
+import type { State } from "../type";
 
 describe("NoRepositoryEmptyState", () => {
-    let store_options;
+    interface StoreOption {
+        state: State;
+        getters: {
+            areExternalUsedServices?: boolean;
+            isCurrentRepositoryListEmpty?: boolean;
+            isInitialLoadingDoneWithoutError?: boolean;
+        };
+    }
+
+    let store_options: StoreOption;
     beforeEach(() => {
         jest.spyOn(repo_list, "getUserIsAdmin").mockReturnValue(true);
 
         store_options = {
             state: {
-                used_service_name: [],
                 is_first_load_done: true,
-            },
+            } as State,
             getters: {
                 areExternalUsedServices: false,
                 isCurrentRepositoryListEmpty: true,
@@ -42,7 +53,14 @@ describe("NoRepositoryEmptyState", () => {
         };
     });
 
-    function instantiateComponent() {
+    function instantiateComponent(): Wrapper<NoRepositoryEmptyState> {
+        const localVue = createLocalVue();
+        localVue.use(VueDOMPurifyHTML);
+        localVue.use(GetTextPlugin, {
+            translations: {},
+            silent: true,
+        });
+
         const store = createStoreMock(store_options);
         return shallowMount(NoRepositoryEmptyState, {
             mocks: { $store: store },
@@ -58,7 +76,6 @@ describe("NoRepositoryEmptyState", () => {
 
     it("When Gitlab is an external service, Then dropdown is displayed the action is displayed", () => {
         store_options.getters.areExternalUsedServices = true;
-        store_options.state.used_service_name = ["gitlab"];
         const wrapper = instantiateComponent();
         expect(wrapper.findComponent(DropdownActionButton).exists()).toBeTruthy();
         expect(wrapper.find("[data-test=empty_state_create_repository]").exists()).toBeFalsy();

@@ -1,7 +1,7 @@
 <!--
-  - Copyright (c) Enalean, 2018 - Present. All Rights Reserved.
+  - Copyright (c) Enalean 2018 -  Present. All Rights Reserved.
   -
-  - This file is a part of Tuleap.
+  -  This file is a part of Tuleap.
   -
   - Tuleap is free software; you can redistribute it and/or modify
   - it under the terms of the GNU General Public License as published by
@@ -15,6 +15,7 @@
   -
   - You should have received a copy of the GNU General Public License
   - along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+  -
   -->
 
 <template>
@@ -22,7 +23,7 @@
         <git-breadcrumbs />
         <div class="git-repository-list-header">
             <h1><translate>Git repositories</translate></h1>
-            <jenkins-servers v-if="has_jenkins_server" v-bind:servers="jenkins_servers" />
+            <jenkins-servers v-if="has_jenkins_server()" v-bind:servers="jenkins_servers()" />
         </div>
         <action-bar />
         <div class="tlp-framed">
@@ -43,9 +44,10 @@
         </div>
     </div>
 </template>
-<script>
-import { mapGetters } from "vuex";
-import store from "../store/index";
+<script lang="ts">
+import Vue from "vue";
+import { Component } from "vue-property-decorator";
+import { Getter } from "vuex-class";
 import GitRepositoryCreate from "./GitRepositoryCreate.vue";
 import FilterEmptyState from "./FilterEmptyState.vue";
 import GitBreadcrumbs from "./GitBreadcrumbs.vue";
@@ -61,14 +63,12 @@ import JenkinsServers from "./ActionBar/JenkinsServers.vue";
 import GitlabRepositoryModal from "./GitlabModal/CreateGitlabLinkModal/GitlabRepositoryModal.vue";
 import EditAccessTokenGitlabModal from "./GitlabModal/EditAccessTokenGitlabModal/EditAccessTokenGitlabModal.vue";
 import UnlinkRepositoryGitlabModal from "./GitlabModal/UnlinkGitlabRepositoryModal/UnlinkRepositoryGitlabModal.vue";
-import SuccessMessage from "./SuccessMessage";
-import RegenerateGitlabWebhook from "./GitlabModal/RegenerateGitlabWebhookModal/RegenerateGitlabWebhook";
+import SuccessMessage from "./SuccessMessage.vue";
+import RegenerateGitlabWebhook from "./GitlabModal/RegenerateGitlabWebhookModal/RegenerateGitlabWebhook.vue";
 import ArtifactClosureModal from "./GitlabModal/ArtifactClosureModal/ArtifactClosureModal.vue";
 import CreateBranchPrefixModal from "./GitlabModal/CreateBranchPrefix/CreateBranchPrefixModal.vue";
 
-export default {
-    name: "App",
-    store,
+@Component({
     components: {
         ArtifactClosureModal,
         CreateBranchPrefixModal,
@@ -88,33 +88,31 @@ export default {
         FolderRepositoryList,
         JenkinsServers,
     },
-    props: {
-        displayMode: {
-            type: String,
-            default: "",
-        },
-        servicesNameUsed: {
-            type: Array,
-            default: () => [],
-        },
-    },
-    computed: {
-        has_jenkins_server() {
-            return getExternalPlugins().find((plugin) => {
+})
+export default class App extends Vue {
+    @Getter
+    readonly isFolderDisplayMode!: boolean;
+
+    async mounted(): Promise<void> {
+        await this.$store.dispatch("changeRepositories", PROJECT_KEY);
+    }
+
+    has_jenkins_server(): boolean {
+        return (
+            getExternalPlugins().find((plugin) => {
                 return plugin.plugin_name === "hudson_git" && plugin.data.length > 0;
-            });
-        },
-        jenkins_servers() {
-            return getExternalPlugins().find((plugin) => {
-                return plugin.plugin_name === "hudson_git";
-            }).data;
-        },
-        ...mapGetters(["isFolderDisplayMode"]),
-    },
-    mounted() {
-        this.$store.commit("setDisplayMode", this.displayMode);
-        this.$store.commit("setServicesNameUsed", this.servicesNameUsed);
-        this.$store.dispatch("changeRepositories", PROJECT_KEY);
-    },
-};
+            }) !== undefined
+        );
+    }
+    jenkins_servers(): Array<unknown> {
+        const external_plugin = getExternalPlugins().find((plugin) => {
+            return plugin.plugin_name === "hudson_git";
+        });
+        if (!external_plugin) {
+            return [];
+        }
+
+        return external_plugin.data;
+    }
+}
 </script>

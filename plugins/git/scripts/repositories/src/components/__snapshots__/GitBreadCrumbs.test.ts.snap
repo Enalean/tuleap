@@ -1,0 +1,20 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`GitBreadcrumbs displays breadcrumbs 1`] = `
+<div class="breadcrumb-container">
+  <breadcrumb-privacy-stub></breadcrumb-privacy-stub>
+  <nav class="breadcrumb">
+    <div class="breadcrumb-item breadcrumb-project"><a class="breadcrumb-link">
+
+      </a></div>
+    <div class="breadcrumb-switchable breadcrumb-item"><a title="Repository list" class="breadcrumb-link"><i class="breadcrumb-link-icon fa fa-fw fa-tlp-versioning-git"></i>
+        <translate-stub tag="span">Git repositories</translate-stub>
+      </a>
+      <div class="breadcrumb-switch-menu-container">
+        <nav class="breadcrumb-switch-menu">
+          <!----> <span class="breadcrumb-dropdown-item"><a title="Fork repositories" class="breadcrumb-dropdown-link"><i class="fas fa-code-branch fa-fw"></i> <translate-stub tag="span">Fork repositories</translate-stub></a></span></nav>
+      </div>
+    </div>
+  </nav>
+</div>
+`;
