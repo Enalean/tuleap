@@ -17,7 +17,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export function flagItemAsCreated(context, item) {
+import type { ActionContext } from "vuex";
+import type { Item, State } from "../../type";
+
+export function flagItemAsCreated(context: ActionContext<State, State>, item: Item): void {
     item.created = true;
     setTimeout(() => {
         context.commit("removeCreatedPropertyOnItem", item);

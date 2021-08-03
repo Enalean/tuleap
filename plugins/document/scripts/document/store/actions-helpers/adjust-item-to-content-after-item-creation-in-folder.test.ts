@@ -18,17 +18,21 @@
  */
 
 import * as rest_querier from "../../api/rest-querier";
-import { adjustItemToContentAfterItemCreationInAFolder } from "./adjust-item-to-content-after-item-creation-in-folder.js";
-import * as flag_item_as_created from "./flag-item-as-created.js";
+import { adjustItemToContentAfterItemCreationInAFolder } from "./adjust-item-to-content-after-item-creation-in-folder";
+import * as flag_item_as_created from "./flag-item-as-created";
+import type { ActionContext } from "vuex";
+import type { Folder, State } from "../../type";
 
 describe("adjustItemToContentAfterItemCreationInAFolder", () => {
-    let context, flagItemAsCreated, getItem;
+    let context: ActionContext<State, State>,
+        flagItemAsCreated: jest.SpyInstance,
+        getItem: jest.SpyInstance;
 
     beforeEach(() => {
         context = {
             commit: jest.fn(),
-            state: {},
-        };
+            state: {} as State,
+        } as unknown as ActionContext<State, State>;
 
         flagItemAsCreated = jest.spyOn(flag_item_as_created, "flagItemAsCreated");
 
@@ -43,16 +47,16 @@ describe("adjustItemToContentAfterItemCreationInAFolder", () => {
                 id: 101,
             },
             last_update_date: "2018-10-03T11:16:11+02:00",
-        };
+        } as Folder;
 
         const parent = {
             id: 10,
             is_expanded: false,
-        };
+        } as Folder;
 
         const current_folder = {
             id: 1,
-        };
+        } as Folder;
 
         const item_id = 10;
 
@@ -86,16 +90,16 @@ describe("adjustItemToContentAfterItemCreationInAFolder", () => {
                 id: 101,
             },
             last_update_date: "2018-10-03T11:16:11+02:00",
-        };
+        } as Folder;
 
         const parent = {
             id: 10,
             is_expanded: true,
-        };
+        } as Folder;
 
         const current_folder = {
             id: 1,
-        };
+        } as Folder;
 
         const item_id = 10;
 
@@ -125,16 +129,16 @@ describe("adjustItemToContentAfterItemCreationInAFolder", () => {
                 id: 101,
             },
             last_update_date: "2018-10-03T11:16:11+02:00",
-        };
+        } as Folder;
 
         const parent = {
             id: 10,
             is_expanded: true,
-        };
+        } as Folder;
 
         const current_folder = {
             id: 1,
-        };
+        } as Folder;
 
         const item_id = 10;
 

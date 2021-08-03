@@ -19,15 +19,18 @@
 
 import { mockFetchError } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper";
 import * as rest_querier from "../../api/rest-querier";
-import { loadFolderContent } from "./load-folder-content.js";
+import { loadFolderContent } from "./load-folder-content";
+import type { ActionContext } from "vuex";
+import type { Folder, ItemFile } from "../../type";
+import type { ErrorState } from "../error/module";
 
 describe("loadFolderContent", () => {
-    let context, getFolderContent;
+    let context: ActionContext<ErrorState, ErrorState>, getFolderContent: jest.SpyInstance;
 
     beforeEach(() => {
         context = {
             commit: jest.fn(),
-        };
+        } as unknown as ActionContext<ErrorState, ErrorState>;
 
         getFolderContent = jest.spyOn(rest_querier, "getFolderContent");
     });
@@ -41,7 +44,7 @@ describe("loadFolderContent", () => {
                     id: 101,
                 },
                 last_update_date: "2018-10-03T11:16:11+02:00",
-            },
+            } as Folder,
             {
                 id: 2,
                 title: "item",
@@ -49,12 +52,12 @@ describe("loadFolderContent", () => {
                     id: 101,
                 },
                 last_update_date: "2018-08-07T16:42:49+02:00",
-            },
+            } as ItemFile,
         ];
 
         getFolderContent.mockReturnValue(folder_content);
 
-        await loadFolderContent(context);
+        await loadFolderContent(context, 1, Promise.resolve());
 
         expect(context.commit).toHaveBeenCalledWith("beginLoading");
         expect(context.commit).toHaveBeenCalledWith("saveFolderContent", folder_content);
@@ -72,7 +75,7 @@ describe("loadFolderContent", () => {
             },
         });
 
-        await loadFolderContent(context);
+        await loadFolderContent(context, 1, Promise.resolve());
 
         expect(context.commit).not.toHaveBeenCalledWith("saveFolderContent");
         expect(context.commit).toHaveBeenCalledWith("error/setFolderLoadingError", error_message);
@@ -89,7 +92,7 @@ describe("loadFolderContent", () => {
             },
         });
 
-        await loadFolderContent(context);
+        await loadFolderContent(context, 1, Promise.resolve());
 
         expect(context.commit).not.toHaveBeenCalledWith("saveFolderContent");
         expect(context.commit).toHaveBeenCalledWith("error/switchFolderPermissionError");

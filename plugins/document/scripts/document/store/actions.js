@@ -51,15 +51,11 @@ import {
     handleErrorsForDeletionModal,
     handleErrorsForDocument,
 } from "./actions-helpers/handle-errors";
-import { loadFolderContent } from "./actions-helpers/load-folder-content.js";
-import { loadAscendantHierarchy } from "./actions-helpers/load-ascendant-hierarchy.js";
-import {
-    uploadFile,
-    uploadVersion,
-    uploadVersionFromEmpty,
-} from "./actions-helpers/upload-file.js";
-import { flagItemAsCreated } from "./actions-helpers/flag-item-as-created.js";
-import { adjustItemToContentAfterItemCreationInAFolder } from "./actions-helpers/adjust-item-to-content-after-item-creation-in-folder.js";
+import { loadFolderContent } from "./actions-helpers/load-folder-content";
+import { loadAscendantHierarchy } from "./actions-helpers/load-ascendant-hierarchy";
+import { uploadFile, uploadVersion, uploadVersionFromEmpty } from "./actions-helpers/upload-file";
+import { flagItemAsCreated } from "./actions-helpers/flag-item-as-created";
+import { adjustItemToContentAfterItemCreationInAFolder } from "./actions-helpers/adjust-item-to-content-after-item-creation-in-folder";
 import { buildItemPath } from "./actions-helpers/build-parent-paths";
 import {
     TYPE_EMBEDDED,

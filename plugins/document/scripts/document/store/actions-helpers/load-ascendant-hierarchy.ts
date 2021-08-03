@@ -19,8 +19,15 @@
 
 import { getParents } from "../../api/rest-querier";
 import { handleErrors } from "./handle-errors";
+import type { ActionContext } from "vuex";
+import type { Item } from "../../type";
+import type { ErrorState } from "../error/module";
 
-export async function loadAscendantHierarchy(context, folder_id, loading_current_folder_promise) {
+export async function loadAscendantHierarchy(
+    context: ActionContext<ErrorState, ErrorState>,
+    folder_id: number,
+    loading_current_folder_promise: Promise<Item>
+): Promise<void> {
     try {
         context.commit("beginLoadingAscendantHierarchy");
         context.commit("resetAscendantHierarchy");
@@ -36,7 +43,7 @@ export async function loadAscendantHierarchy(context, folder_id, loading_current
         context.commit("saveAscendantHierarchy", parents);
         context.commit("setCurrentFolder", current_folder);
     } catch (exception) {
-        return handleErrors(context, exception);
+        handleErrors(context, exception);
     } finally {
         context.commit("stopLoadingAscendantHierarchy");
     }

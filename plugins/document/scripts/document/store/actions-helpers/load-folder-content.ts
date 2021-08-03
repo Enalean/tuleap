@@ -19,8 +19,14 @@
 
 import { getFolderContent } from "../../api/rest-querier";
 import { handleErrors } from "./handle-errors";
+import type { ActionContext } from "vuex";
+import type { ErrorState } from "../error/module";
 
-export async function loadFolderContent(context, folder_id, loading_current_folder_promise) {
+export async function loadFolderContent(
+    context: ActionContext<ErrorState, ErrorState>,
+    folder_id: number,
+    loading_current_folder_promise: Promise<void>
+): Promise<void> {
     try {
         context.commit("beginLoading");
         context.commit("saveFolderContent", []);
@@ -32,7 +38,7 @@ export async function loadFolderContent(context, folder_id, loading_current_fold
 
         context.commit("saveFolderContent", folder_content);
     } catch (exception) {
-        return handleErrors(context, exception);
+        handleErrors(context, exception);
     } finally {
         context.commit("stopLoading");
     }

@@ -254,7 +254,7 @@ describe("loadProjectUserGroupsIfNeeded", () => {
         context = {
             commit: jest.fn(),
             rootState: {
-                current_folder: null,
+                current_folder: { id: 123, type: TYPE_FOLDER } as Folder,
                 permissions: { project_ugroups: null } as PermissionsState,
             } as RootState,
         } as unknown as ActionContext<PermissionsState, RootState>;
