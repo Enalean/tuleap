@@ -5,8 +5,8 @@
   "license": "GPL-2.0-or-later",
   "private": true,
   "dependencies": {
-    "@tuleap/core": "file://../../src",
-    "@tuleap/filter-inline-table": "file://../../src/scripts/lib/filter-table",
+    "@tuleap/core": "file:../../src",
+    "@tuleap/filter-inline-table": "file:../../src/scripts/lib/filter-table",
     "@tuleap/html-escaper": "file:../../src/scripts/lib/html-escaper",
     "@tuleap/vue-breadcrumb-privacy": "file:../../src/scripts/lib/vue-breadcrumb-privacy",
     "javascript-time-ago": "^2.3.4",
@@ -18,7 +18,7 @@
     "vuex": "^3.6.2"
   },
   "devDependencies": {
-    "@tuleap/tlp-fetch": "file://../../src/scripts/lib/tlp-fetch",
+    "@tuleap/tlp-fetch": "file:../../src/scripts/lib/tlp-fetch",
     "@types/javascript-time-ago": "^2.0.1",
     "@types/prismjs": "^1.16.3",
     "@types/sprintf-js": "^1.1.2",
@@ -34,7 +34,6 @@
   "scripts": {
     "build": "rm -rf ../../src/www/assets/git && $npm_package_config_bin/webpack --config webpack.prod.js",
     "watch": "$npm_package_config_bin/webpack --config webpack.dev.js --watch",
-    "test": "$npm_package_config_bin/jest",
-    "postshrinkwrap": "php ../../tools/utils/scripts/clean-lockfile-from-local-tuleap-dep.php \"$(pwd)\""
+    "test": "$npm_package_config_bin/jest"
   }
 }

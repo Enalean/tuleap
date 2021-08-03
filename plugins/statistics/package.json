@@ -5,7 +5,7 @@
   "license": "GPL-2.0-or-later",
   "private": true,
   "dependencies": {
-    "@tuleap/filter-inline-table": "file://../../src/scripts/lib/filter-table",
+    "@tuleap/filter-inline-table": "file:../../src/scripts/lib/filter-table",
     "d3-selection": "^3.0.0",
     "d3-shape": "^3.0.1",
     "d3-transition": "^3.0.1"
@@ -16,7 +16,6 @@
   },
   "scripts": {
     "build": "$npm_package_config_bin/webpack --config webpack.prod.js",
-    "watch": "$npm_package_config_bin/webpack --config webpack.dev.js --watch",
-    "postshrinkwrap": "php ../../tools/utils/scripts/clean-lockfile-from-local-tuleap-dep.php \"$(pwd)\""
+    "watch": "$npm_package_config_bin/webpack --config webpack.dev.js --watch"
   }
 }

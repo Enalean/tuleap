@@ -21,7 +21,6 @@
   },
   "scripts": {
     "build": "$npm_package_config_bin/vite build",
-    "watch": "$npm_package_config_bin/vite build --watch --mode development --minify false",
-    "postshrinkwrap": "php ../../../../tools/utils/scripts/clean-lockfile-from-local-tuleap-dep.php \"$(pwd)\""
+    "watch": "$npm_package_config_bin/vite build --watch --mode development --minify false"
   }
 }

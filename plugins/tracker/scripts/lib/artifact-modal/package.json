@@ -50,7 +50,6 @@
   "scripts": {
     "build": "$npm_package_config_bin/webpack --config webpack.prod.js",
     "watch": "$npm_package_config_bin/webpack --config webpack.dev.js --watch",
-    "test": "BABEL_ENV=test $npm_package_config_bin/jest",
-    "postshrinkwrap": "php ../../../../../tools/utils/scripts/clean-lockfile-from-local-tuleap-dep.php \"$(pwd)\""
+    "test": "BABEL_ENV=test $npm_package_config_bin/jest"
   }
 }

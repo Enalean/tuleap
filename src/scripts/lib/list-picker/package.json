@@ -11,7 +11,7 @@
   "style": "dist/style.css",
   "dependencies": {
     "@juggle/resize-observer": "^3.3.1",
-    "@tuleap/gettext": "file://../gettext",
+    "@tuleap/gettext": "file:../gettext",
     "lit-html": "^1.4.1"
   },
   "devDependencies": {},
@@ -25,7 +25,6 @@
     "watch": "$npm_package_config_bin/run-p watch:*",
     "watch:vite": "$npm_package_config_bin/vite build --watch --mode development --minify false",
     "watch:types": "rm -rf types/ && $npm_package_config_bin/tsc -w --preserveWatchOutput",
-    "test": "$npm_package_config_bin/jest",
-    "postshrinkwrap": "php ../../../../tools/utils/scripts/clean-lockfile-from-local-tuleap-dep.php \"$(pwd)\""
+    "test": "$npm_package_config_bin/jest"
   }
 }

@@ -8,7 +8,7 @@
   "version": "0.0.0",
   "module": "./src/js/index.ts",
   "dependencies": {
-    "@tuleap/tlp-fetch": "file://../../scripts/lib/tlp-fetch",
+    "@tuleap/tlp-fetch": "file:../../scripts/lib/tlp-fetch",
     "@tuleap/tlp-popovers": "file:../../scripts/lib/tlp-popovers",
     "flatpickr": "^4.6.9",
     "jquery": "^3.6.0",
@@ -22,7 +22,6 @@
   },
   "scripts": {
     "build": "echo 'I exist only to make lerna build things that depend on me in the right order'",
-    "test": "$npm_package_config_bin/jest",
-    "postshrinkwrap": "php ../../../tools/utils/scripts/clean-lockfile-from-local-tuleap-dep.php \"$(pwd)\""
+    "test": "$npm_package_config_bin/jest"
   }
 }

@@ -6,13 +6,13 @@ let
   sources = {};
 in
 {
-  "npm-^6" = nodeEnv.buildNodePackage {
+  "npm-^7" = nodeEnv.buildNodePackage {
     name = "npm";
     packageName = "npm";
-    version = "6.14.13";
+    version = "7.20.3";
     src = fetchurl {
-      url = "https://registry.npmjs.org/npm/-/npm-6.14.13.tgz";
-      sha512 = "SRl4jJi0EBHY2xKuu98FLRMo3VhYQSA6otyLnjSEiHoSG/9shXCFNJy9tivpUJvtkN9s6VDdItHa5Rn+fNBzag==";
+      url = "https://registry.npmjs.org/npm/-/npm-7.20.3.tgz";
+      sha512 = "Kxk+NSnv+bcUKlWEKRaJ745AjEApYzM6GHxXs9AzR8VJiRMPcKvrIGMp+pdkIaF++2kEbcyg/Kx0FCrv+ySJiQ==";
     };
     buildInputs = globalBuildInputs;
     meta = {

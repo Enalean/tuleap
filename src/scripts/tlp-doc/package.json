@@ -6,13 +6,10 @@
   "private": true,
   "version": "0.0.0",
   "dependencies": {
-    "@tuleap/filter-inline-table": "file://../lib/filter-table",
-    "@tuleap/list-picker": "file://../lib/list-picker",
+    "@tuleap/filter-inline-table": "file:../lib/filter-table",
+    "@tuleap/list-picker": "file:../lib/list-picker",
     "codemirror": "^5.62.0",
     "dompurify": "^2.2.9"
   },
-  "devDependencies": {},
-  "scripts": {
-    "postshrinkwrap": "php ../../../tools/utils/scripts/clean-lockfile-from-local-tuleap-dep.php \"$(pwd)\""
-  }
+  "devDependencies": {}
 }

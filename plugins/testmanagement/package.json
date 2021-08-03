@@ -5,13 +5,13 @@
   "license": "GPL-2.0-or-later",
   "private": true,
   "dependencies": {
-    "@tuleap/angular-tlp": "file://../../src/scripts/lib/angular-tlp",
-    "@tuleap/ckeditor-image-upload": "file://../../src/scripts/lib/ckeditor-image-upload",
-    "@tuleap/core": "file://../../src",
-    "@tuleap/filter-inline-table": "file://../../src/scripts/lib/filter-table",
+    "@tuleap/angular-tlp": "file:../../src/scripts/lib/angular-tlp",
+    "@tuleap/ckeditor-image-upload": "file:../../src/scripts/lib/ckeditor-image-upload",
+    "@tuleap/core": "file:../../src",
+    "@tuleap/filter-inline-table": "file:../../src/scripts/lib/filter-table",
     "@tuleap/keyboard-shortcuts": "file:../../src/scripts/lib/keyboard-shortcuts",
-    "@tuleap/list-picker": "file://../../src/scripts/lib/list-picker",
-    "@tuleap/plugin-tracker": "file://../tracker",
+    "@tuleap/list-picker": "file:../../src/scripts/lib/list-picker",
+    "@tuleap/plugin-tracker": "file:../tracker",
     "@tuleap/plugin-tracker-artifact-ckeditor-image-upload": "file:../tracker/scripts/lib/artifact-ckeditor-image-upload",
     "@tuleap/plugin-tracker-artifact-modal": "file:../tracker/scripts/lib/artifact-modal",
     "@tuleap/plugin-tracker-rich-text-editor": "file:../tracker/scripts/lib/rich-text-editor",
@@ -63,7 +63,6 @@
   "scripts": {
     "build": "rm -rf ../../src/www/assets/testmanagement && $npm_package_config_bin/webpack --config webpack.prod.js",
     "watch": "$npm_package_config_bin/webpack --config webpack.dev.js --watch",
-    "test": "$npm_package_config_bin/jest",
-    "postshrinkwrap": "php ../../tools/utils/scripts/clean-lockfile-from-local-tuleap-dep.php \"$(pwd)\""
+    "test": "$npm_package_config_bin/jest"
   }
 }
