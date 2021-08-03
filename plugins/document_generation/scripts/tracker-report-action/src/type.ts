@@ -38,6 +38,7 @@ type ArtifactReportResponseFieldValue =
     | ArtifactReportResponseUnknownFieldValue
     | ArtifactReportResponseNumericFieldValue
     | ArtifactReportResponseStringFieldValue
+    | ArtifactReportResponseDateFieldValue
     | ArtifactReportResponseComputedFieldValue;
 
 interface ArtifactReportResponseNumericFieldValue {
@@ -50,6 +51,13 @@ interface ArtifactReportResponseNumericFieldValue {
 interface ArtifactReportResponseStringFieldValue {
     field_id: number;
     type: "string";
+    label: string;
+    value: string | null;
+}
+
+interface ArtifactReportResponseDateFieldValue {
+    field_id: number;
+    type: "date" | "lud" | "subon";
     label: string;
     value: string | null;
 }

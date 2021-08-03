@@ -45,6 +45,11 @@ export function createExportDocument(
                 if (value.value !== null) {
                     artifact_field_value = value.value;
                 }
+            } else if (value.type === "date" || value.type === "lud" || value.type === "subon") {
+                if (value.value !== null) {
+                    const date_value = new Date(value.value);
+                    artifact_field_value = date_value.toLocaleDateString();
+                }
             } else if (value.type === "computed") {
                 if (!value.is_autocomputed && value.manual_value !== null) {
                     artifact_field_value = value.manual_value.toString();
