@@ -35,6 +35,9 @@ final class b202105250900_move_program_increment_tracker_id_in_program_table ext
 
     public function up(): void
     {
+        if (! $this->db->tableNameExists('plugin_program_management_label_program_increment')) {
+            return;
+        }
         $this->dropTemporaryTablesIfExists();
         $this->createPluginProgramManagementPlan();
         $this->createPluginProgramManagementProgram();
@@ -118,8 +121,5 @@ final class b202105250900_move_program_increment_tracker_id_in_program_table ext
         if ($res === false) {
             throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('An error occurred while renaming of plugin_program_management_program_tmp and plugin_program_management_plan_tmp');
         }
-
-        $sql = 'DROP TABLE IF EXISTS plugin_program_management_label_program_increment';
-        $this->db->dbh->exec($sql);
     }
 }
