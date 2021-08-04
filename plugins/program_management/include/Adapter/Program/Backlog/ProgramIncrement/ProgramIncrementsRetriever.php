@@ -27,45 +27,39 @@ use Psr\Log\LoggerInterface;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrement;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\RetrieveProgramIncrements;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
+use Tuleap\ProgramManagement\Domain\Workspace\RetrieveUser;
+use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 
 final class ProgramIncrementsRetriever implements RetrieveProgramIncrements
 {
-    /**
-     * @var ProgramIncrementsDAO
-     */
-    private $program_increments_dao;
-    /**
-     * @var \Tracker_ArtifactFactory
-     */
-    private $artifact_factory;
-    /**
-     * @var SemanticTimeframeBuilder
-     */
-    private $semantic_timeframe_builder;
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
+    private ProgramIncrementsDAO $program_increments_dao;
+    private \Tracker_ArtifactFactory $artifact_factory;
+    private SemanticTimeframeBuilder $semantic_timeframe_builder;
+    private LoggerInterface $logger;
+    private RetrieveUser $user_manager_adapter;
 
     public function __construct(
         ProgramIncrementsDAO $program_increments_dao,
         \Tracker_ArtifactFactory $artifact_factory,
         SemanticTimeframeBuilder $semantic_timeframe_builder,
-        LoggerInterface $logger
+        LoggerInterface $logger,
+        RetrieveUser $user_manager_adapter
     ) {
         $this->program_increments_dao     = $program_increments_dao;
         $this->artifact_factory           = $artifact_factory;
         $this->semantic_timeframe_builder = $semantic_timeframe_builder;
         $this->logger                     = $logger;
+        $this->user_manager_adapter       = $user_manager_adapter;
     }
 
     /**
      * @return ProgramIncrement[]
      */
-    public function retrieveOpenProgramIncrements(ProgramIdentifier $program, \PFUser $user): array
+    public function retrieveOpenProgramIncrements(ProgramIdentifier $program, UserIdentifier $user_identifier): array
     {
+        $user                        = $this->user_manager_adapter->getUserWithId($user_identifier);
         $program_increment_rows      = $this->program_increments_dao->searchOpenProgramIncrements($program->getId());
         $program_increment_artifacts = [];
 
@@ -89,8 +83,10 @@ final class ProgramIncrementsRetriever implements RetrieveProgramIncrements
         return $program_increments;
     }
 
-    private function getProgramIncrementFromArtifact(\PFUser $user, Artifact $program_increment_artifact): ?ProgramIncrement
-    {
+    private function getProgramIncrementFromArtifact(
+        \PFUser $user,
+        Artifact $program_increment_artifact
+    ): ?ProgramIncrement {
         $title = $program_increment_artifact->getTitle();
         if ($title === null) {
             return null;

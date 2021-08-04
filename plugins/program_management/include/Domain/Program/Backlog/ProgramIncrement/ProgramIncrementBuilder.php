@@ -30,14 +30,8 @@ use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 
 final class ProgramIncrementBuilder
 {
-    /**
-     * @var BuildProgram
-     */
-    private $build_program;
-    /**
-     * @var RetrieveProgramIncrements
-     */
-    private $program_increments_retriever;
+    private BuildProgram $build_program;
+    private RetrieveProgramIncrements $program_increments_retriever;
 
     public function __construct(BuildProgram $build_program, RetrieveProgramIncrements $program_increments_retriever)
     {
@@ -51,9 +45,9 @@ final class ProgramIncrementBuilder
      * @throws ProgramAccessException
      * @throws ProjectIsNotAProgramException
      */
-    public function buildOpenProgramIncrements(int $potential_program_id, \PFUser $user): array
+    public function buildOpenProgramIncrements(int $potential_program_id, UserIdentifier $user_identifier): array
     {
-        $program = ProgramIdentifier::fromId($this->build_program, $potential_program_id, UserIdentifier::fromPFUser($user));
-        return $this->program_increments_retriever->retrieveOpenProgramIncrements($program, $user);
+        $program = ProgramIdentifier::fromId($this->build_program, $potential_program_id, $user_identifier);
+        return $this->program_increments_retriever->retrieveOpenProgramIncrements($program, $user_identifier);
     }
 }

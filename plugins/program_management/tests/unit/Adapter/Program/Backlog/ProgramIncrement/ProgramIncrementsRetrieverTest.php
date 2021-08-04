@@ -27,9 +27,10 @@ use Psr\Log\NullLogger;
 use Tracker_FormElement_Field_List;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrement;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
+use Tuleap\ProgramManagement\Domain\Workspace\RetrieveUser;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\ProgramManagement\Stub\BuildProgramStub;
-use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\ProgramManagement\Stub\RetrieveUserStub;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframe;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
@@ -37,8 +38,6 @@ use Tuleap\Tracker\Semantic\Timeframe\TimeframeWithDuration;
 
 final class ProgramIncrementsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
     /**
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ProgramIncrementsDAO
      */
@@ -52,84 +51,93 @@ final class ProgramIncrementsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $semantic_timeframe_builder;
     /**
-     * @var ProgramIncrementsRetriever
+     * @var \PFUser|\PHPUnit\Framework\MockObject\MockObject
      */
-    private $retriever;
-    /**
-     * @var NullLogger
-     */
-    private $logger;
+    private $user;
+    private NullLogger $logger;
+    private UserIdentifier $user_identifier;
+
 
     protected function setUp(): void
     {
-        $this->dao                        = Mockery::mock(ProgramIncrementsDAO::class);
-        $this->artifact_factory           = Mockery::mock(\Tracker_ArtifactFactory::class);
-        $this->semantic_timeframe_builder = Mockery::mock(SemanticTimeframeBuilder::class);
-
-        $this->logger    = new NullLogger();
-        $this->retriever = new ProgramIncrementsRetriever(
-            $this->dao,
-            $this->artifact_factory,
-            $this->semantic_timeframe_builder,
-            $this->logger
-        );
+        $this->dao                        = $this->createMock(ProgramIncrementsDAO::class);
+        $this->artifact_factory           = $this->createMock(\Tracker_ArtifactFactory::class);
+        $this->semantic_timeframe_builder = $this->createMock(SemanticTimeframeBuilder::class);
+        $this->logger                     = new NullLogger();
+        $this->user                       = $this->createMock(\PFUser::class);
+        $this->user->method('getId')->willReturn(101);
+        $this->user_identifier = UserIdentifier::fromPFUser($this->user);
     }
 
     public function testCanRetrievesOpenProgramIncrements(): void
     {
-        $user = UserTestBuilder::aUser()->build();
+        $this->dao->method('searchOpenProgramIncrements')->willReturn([['id' => 14], ['id' => 15]]);
+        $artifact_14 = $this->createMock(Artifact::class);
+        $artifact_14->method('getId')->willReturn(14);
+        $artifact_14->method('userCanUpdate')->willReturn(true);
+        $artifact_14->method('getUri')->willReturn("/plugins/tracker/?aid=14");
+        $artifact_14->method('getXref')->willReturn("art #14");
+        $field = $this->createMock(\Tracker_FormElement_Field_ArtifactLink::class);
+        $field->method('userCanUpdate')->willReturn(false);
+        $artifact_14->method('getAnArtifactLinkField')->willReturn($field);
+        $artifact_15 = $this->createMock(Artifact::class);
+        $artifact_15->method('getId')->willReturn(15);
+        $artifact_15->method('userCanUpdate')->willReturn(false);
+        $artifact_15->method('getUri')->willReturn("/plugins/tracker/?aid=15");
+        $artifact_15->method('getXref')->willReturn("art #15");
+        $artifact_15->method('getAnArtifactLinkField')->willReturn(null);
+        $this->artifact_factory->method('getArtifactByIdUserCanView')->willReturnOnConsecutiveCalls($artifact_15, $artifact_14);
 
-        $this->dao->shouldReceive('searchOpenProgramIncrements')->andReturn([['id' => 14], ['id' => 15]]);
-        $artifact_14 = Mockery::mock(Artifact::class);
-        $artifact_14->shouldReceive('getId')->andReturn(14);
-        $artifact_14->shouldReceive('userCanUpdate')->andReturnTrue();
-        $artifact_14->shouldReceive('getUri')->andReturn("/plugins/tracker/?aid=14");
-        $artifact_14->shouldReceive('getXref')->andReturn("art #14");
-        $field = Mockery::mock(\Tracker_FormElement_Field_ArtifactLink::class);
-        $field->shouldReceive('userCanUpdate')->andReturnFalse();
-        $artifact_14->shouldReceive('getAnArtifactLinkField')->andReturn($field);
-        $artifact_15 = Mockery::mock(Artifact::class);
-        $artifact_15->shouldReceive('getId')->andReturn(15);
-        $artifact_15->shouldReceive('userCanUpdate')->andReturnFalse();
-        $artifact_15->shouldReceive('getUri')->andReturn("/plugins/tracker/?aid=15");
-        $artifact_15->shouldReceive('getXref')->andReturn("art #15");
-        $artifact_15->shouldReceive('getAnArtifactLinkField')->andReturnNull();
-        $this->artifact_factory->shouldReceive('getArtifactByIdUserCanView')->with($user, 14)->andReturn($artifact_14);
-        $this->artifact_factory->shouldReceive('getArtifactByIdUserCanView')->with($user, 15)->andReturn($artifact_15);
-
-        $artifact_14->shouldReceive('getTitle')->andReturn('Artifact 14');
-        $artifact_15->shouldReceive('getTitle')->andReturn('Artifact 15');
-        $tracker        = Mockery::mock(\Tracker::class);
+        $artifact_14->method('getTitle')->willReturn('Artifact 14');
+        $artifact_15->method('getTitle')->willReturn('Artifact 15');
+        $tracker        = $this->createMock(\Tracker::class);
         $time_period_14 = \TimePeriodWithoutWeekEnd::buildFromDuration(1611067637, 10);
         $time_period_15 = \TimePeriodWithoutWeekEnd::buildFromDuration(1631067637, 10);
         foreach ([$artifact_14, $artifact_15] as $mock_artifact) {
-            $mock_artifact->shouldReceive('getTracker')->andReturn($tracker);
-            $mock_artifact->shouldReceive('getStatus')->andReturn('Open');
+            $mock_artifact->method('getTracker')->willReturn($tracker);
+            $mock_artifact->method('getStatus')->willReturn('Open');
         }
 
-        $timeframe_calculator = Mockery::mock(TimeframeWithDuration::class);
+        $timeframe_calculator = $this->createMock(TimeframeWithDuration::class);
 
-        $this->semantic_timeframe_builder->shouldReceive('getSemantic')
+        $this->semantic_timeframe_builder->method('getSemantic')
             ->with($tracker)
-            ->andReturn(new SemanticTimeframe($tracker, $timeframe_calculator));
+            ->willReturn(new SemanticTimeframe($tracker, $timeframe_calculator));
 
 
-        $timeframe_calculator->shouldReceive('buildTimePeriodWithoutWeekendForArtifactForREST')
-            ->with($artifact_14, $user, $this->logger)
-            ->andReturn($time_period_14);
-        $timeframe_calculator->shouldReceive('buildTimePeriodWithoutWeekendForArtifactForREST')
-            ->with($artifact_15, $user, $this->logger)
-            ->andReturn($time_period_15);
-        $status_field = Mockery::mock(Tracker_FormElement_Field_List::class);
-        $status_field->shouldReceive('userCanRead')->andReturn(true);
-        $tracker->shouldReceive('getStatusField')->andReturn($status_field);
+        $timeframe_calculator->method('buildTimePeriodWithoutWeekendForArtifactForREST')->willReturnOnConsecutiveCalls($time_period_15, $time_period_14);
+        $status_field = $this->createMock(Tracker_FormElement_Field_List::class);
+        $status_field->method('userCanRead')->willReturn(true);
+        $tracker->method('getStatusField')->willReturn($status_field);
 
-        $program_increments = $this->retriever->retrieveOpenProgramIncrements(self::buildProgram($user), $user);
+        $program_increments = $this->buildProgramIncrementsRetriever(
+            RetrieveUserStub::buildMockedRegularUser($this->user)
+        )->retrieveOpenProgramIncrements(self::buildProgram($this->user_identifier), $this->user_identifier);
 
         self::assertEquals(
             [
-                new ProgramIncrement($artifact_15->getId(), 'Artifact 15', $artifact_15->getUri(), $artifact_15->getXRef(), false, false, 'Open', $time_period_15->getStartDate(), $time_period_15->getEndDate()),
-                new ProgramIncrement($artifact_14->getId(), 'Artifact 14', $artifact_14->getUri(), $artifact_14->getXRef(), true, false, 'Open', $time_period_14->getStartDate(), $time_period_14->getEndDate()),
+                new ProgramIncrement(
+                    $artifact_15->getId(),
+                    'Artifact 15',
+                    $artifact_15->getUri(),
+                    $artifact_15->getXRef(),
+                    false,
+                    false,
+                    'Open',
+                    $time_period_15->getStartDate(),
+                    $time_period_15->getEndDate()
+                ),
+                new ProgramIncrement(
+                    $artifact_14->getId(),
+                    'Artifact 14',
+                    $artifact_14->getUri(),
+                    $artifact_14->getXRef(),
+                    true,
+                    false,
+                    'Open',
+                    $time_period_14->getStartDate(),
+                    $time_period_14->getEndDate()
+                ),
             ],
             $program_increments
         );
@@ -137,29 +145,46 @@ final class ProgramIncrementsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testDoesNotRetrieveArtifactsTheUserCannotRead(): void
     {
-        $user = UserTestBuilder::aUser()->build();
+        $this->dao->method('searchOpenProgramIncrements')->willReturn([['id' => 403]]);
+        $this->artifact_factory->method('getArtifactByIdUserCanView')->willReturn(null);
 
-        $this->dao->shouldReceive('searchOpenProgramIncrements')->andReturn([['id' => 403]]);
-        $this->artifact_factory->shouldReceive('getArtifactByIdUserCanView')->andReturn(null);
-
-        self::assertEmpty($this->retriever->retrieveOpenProgramIncrements(self::buildProgram($user), $user));
+        self::assertEmpty(
+            $this->buildProgramIncrementsRetriever(RetrieveUserStub::buildMockedRegularUser($this->user))->retrieveOpenProgramIncrements(
+                self::buildProgram($this->user_identifier),
+                $this->user_identifier
+            )
+        );
     }
 
     public function testDoesNotRetrieveArtifactsWhereTheUserCannotReadTheTitle(): void
     {
-        $user = UserTestBuilder::aUser()->build();
+        $this->dao->method('searchOpenProgramIncrements')->willReturn([['id' => 16]]);
+        $artifact = $this->createMock(Artifact::class);
+        $this->artifact_factory->method('getArtifactByIdUserCanView')->willReturn($artifact);
 
-        $this->dao->shouldReceive('searchOpenProgramIncrements')->andReturn([['id' => 16]]);
-        $artifact = Mockery::mock(Artifact::class);
-        $this->artifact_factory->shouldReceive('getArtifactByIdUserCanView')->andReturn($artifact);
+        $artifact->method('getTitle')->willReturn(null);
 
-        $artifact->shouldReceive('getTitle')->andReturn(null);
-
-        self::assertEmpty($this->retriever->retrieveOpenProgramIncrements(self::buildProgram($user), $user));
+        self::assertEmpty(
+            $this->buildProgramIncrementsRetriever(RetrieveUserStub::buildMockedRegularUser($this->user))->retrieveOpenProgramIncrements(
+                self::buildProgram($this->user_identifier),
+                $this->user_identifier
+            )
+        );
     }
 
-    private static function buildProgram(\PFUser $user): ProgramIdentifier
+    private static function buildProgram(UserIdentifier $user): ProgramIdentifier
     {
-        return ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 1, UserIdentifier::fromPFUser($user));
+        return ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 1, $user);
+    }
+
+    private function buildProgramIncrementsRetriever(RetrieveUser $retrieve_user): ProgramIncrementsRetriever
+    {
+        return new ProgramIncrementsRetriever(
+            $this->dao,
+            $this->artifact_factory,
+            $this->semantic_timeframe_builder,
+            $this->logger,
+            $retrieve_user
+        );
     }
 }

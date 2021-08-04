@@ -157,7 +157,8 @@ final class ProjectResource extends AuthenticatedResource
                 new ProgramIncrementsDAO(),
                 $artifact_factory,
                 SemanticTimeframeBuilder::build(),
-                BackendLogger::getDefaultLogger()
+                BackendLogger::getDefaultLogger(),
+                new UserManagerAdapter($this->user_manager)
             )
         );
     }
@@ -468,7 +469,7 @@ final class ProjectResource extends AuthenticatedResource
     {
         $user = $this->user_manager->getCurrentUser();
         try {
-            $program_increments = $this->program_increments_builder->buildOpenProgramIncrements($id, $user);
+            $program_increments = $this->program_increments_builder->buildOpenProgramIncrements($id, UserIdentifier::fromPFUser($user));
         } catch (ProgramAccessException $e) {
             throw new I18NRestException(404, $e->getI18NExceptionMessage());
         } catch (ProjectIsNotAProgramException $e) {
