@@ -469,7 +469,8 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field
             $value,
             [],
             [],
-            false
+            false,
+            'date-time-' . $this->getName()
         );
         $html          .= '</label>';
         $value          = isset($criteria_value['to_date']) ? $this->formatDateForReport($criteria_value['to_date']) : '';
@@ -481,7 +482,8 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field
             $value,
             [],
             [],
-            false
+            false,
+            'date-time-' . $this->getName()
         );
         $html          .= '</label>';
         $html          .= '</div>';
@@ -539,7 +541,8 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field
                 $value,
                 $criteria_selector,
                 [],
-                false
+                false,
+                'date-time-' . $this->getName()
             );
             $html .= '</div>';
         }
@@ -758,7 +761,8 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field
             $this->hasDefaultValue() ? $this->getDefaultValue() : '',
             [],
             [],
-            $this->isTimeDisplayed()
+            $this->isTimeDisplayed(),
+            'date-time-' . $this->getName()
         );
     }
 
