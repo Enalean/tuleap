@@ -31,12 +31,15 @@ class Tracker_Artifact_ChangesetValue_PermissionsOnArtifact extends Tracker_Arti
 {
 
     /**
-     * @var array
+     * @var array<int, string>
      */
-    protected $perms;
+    private array $perms;
     protected $used;
 
-    public function __construct($id, Tracker_Artifact_Changeset $changeset, $field, $has_changed, $used, $perms)
+    /**
+     * @param array<int, string> $perms
+     */
+    public function __construct($id, Tracker_Artifact_Changeset $changeset, $field, $has_changed, $used, array $perms)
     {
         parent::__construct($id, $changeset, $field, $has_changed);
         $this->perms = $perms;
@@ -54,25 +57,19 @@ class Tracker_Artifact_ChangesetValue_PermissionsOnArtifact extends Tracker_Arti
     /**
      * Get the permissions
      *
-     * @return Array the permissions
+     * @return int[] the permissions
      */
-    public function getPerms()
+    public function getPerms(): array
     {
-        return $this->perms;
+        return array_keys($this->perms);
     }
 
     /**
-     * @return array
+     * @return string[]
      */
-    public function getUgroupNamesFromPerms()
+    public function getUgroupNamesFromPerms(): array
     {
-        $ugroup_names = [];
-
-        foreach ($this->perms as $ugroup_id) {
-            $ugroup_names[] = $this->getUgroupName($ugroup_id);
-        }
-
-        return $ugroup_names;
+        return array_values($this->perms);
     }
 
     /**
@@ -119,7 +116,7 @@ class Tracker_Artifact_ChangesetValue_PermissionsOnArtifact extends Tracker_Arti
             $this->field->getLabel(),
             array_map(
                 [$this, 'getUgroupLabel'],
-                $this->getPerms()
+                $this->getUgroupNamesFromPerms()
             ),
             array_map(
                 [$this, 'getUserGroupRESTId'],
@@ -146,20 +143,21 @@ class Tracker_Artifact_ChangesetValue_PermissionsOnArtifact extends Tracker_Arti
      */
     public function diff($changeset_value, $format = 'html', ?PFUser $user = null, $ignore_perms = false)
     {
+        assert($changeset_value instanceof self);
         $previous = $changeset_value->getPerms();
         $next     = $this->getPerms();
         $changes  = false;
         if ($previous !== $next) {
             $removed_elements = array_diff($previous, $next);
             $removed_arr      = [];
-            foreach ($removed_elements as $removed_element) {
-                $removed_arr[] = $this->getUgroupLabel($removed_element);
+            foreach ($removed_elements as $removed_element_id) {
+                $removed_arr[] = $this->getUgroupLabel($changeset_value->perms[$removed_element_id]);
             }
             $removed        = $this->format(implode(', ', $removed_arr), $format);
             $added_elements = array_diff($next, $previous);
             $added_arr      = [];
-            foreach ($added_elements as $added_element) {
-                $added_arr[] = $this->getUgroupLabel($added_element);
+            foreach ($added_elements as $added_element_id) {
+                $added_arr[] = $this->getUgroupLabel($this->perms[$added_element_id]);
             }
             $added = $this->format(implode(', ', $added_arr), $format);
             if (empty($next)) {
@@ -185,10 +183,9 @@ class Tracker_Artifact_ChangesetValue_PermissionsOnArtifact extends Tracker_Arti
 
     public function nodiff($format = 'html')
     {
-        $next      = $this->getPerms();
         $added_arr = [];
-        foreach ($next as $element) {
-                $added_arr[] = $this->getUgroupLabel($element);
+        foreach ($this->perms as $ugroup_name) {
+                $added_arr[] = $this->getUgroupLabel($ugroup_name);
         }
         $added = $this->format(implode(', ', $added_arr), $format);
         return ' ' . dgettext('tuleap-tracker', 'set to') . ' ' . $added;
@@ -207,15 +204,9 @@ class Tracker_Artifact_ChangesetValue_PermissionsOnArtifact extends Tracker_Arti
         return new UGroupDao(CodendiDataAccess::instance());
     }
 
-    private function getUgroupName($ugroup_id)
+    protected function getUgroupLabel(string $ugroup_name): string
     {
-        $row = $this->getDao()->searchByUGroupId($ugroup_id)->getRow();
-        return $row['name'];
-    }
-
-    protected function getUgroupLabel($ugroup_id)
-    {
-        return \Tuleap\User\UserGroup\NameTranslator::getUserGroupDisplayKey((string) $this->getUgroupName($ugroup_id));
+        return \Tuleap\User\UserGroup\NameTranslator::getUserGroupDisplayKey($ugroup_name);
     }
 
     protected function getUgroupRESTRepresentation($u_group_id)

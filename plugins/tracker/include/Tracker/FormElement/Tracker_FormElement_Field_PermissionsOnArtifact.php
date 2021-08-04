@@ -80,9 +80,8 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
             }
             $changeset_value_id = $row['id'];
 
-            foreach ($this->getValueDao()->searchByChangesetValueId($changeset_value_id) as $value) {
-                $name     = $this->getUGroupDao()->searchByUGroupId($value['ugroup_id'])->getRow();
-                $values[] = \Tuleap\User\UserGroup\NameTranslator::getUserGroupDisplayKey((string) $name['name']);
+            foreach ($this->getValueDao()->searchById($changeset_value_id) ?: [] as $value) {
+                $values[] = \Tuleap\User\UserGroup\NameTranslator::getUserGroupDisplayKey((string) $value['ugroup_name']);
             }
 
             return implode(',', $values);
@@ -700,16 +699,14 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
      */
     public function getChangesetValue($changeset, $value_id, $has_changed)
     {
-        $changeset_value = null;
-        $value_ids       = $this->getValueDao()->searchById($value_id, $this->id);
-        $ugroups         = [];
+        $value_ids = $this->getValueDao()->searchById($value_id) ?: [];
+        $ugroups   = [];
 
         foreach ($value_ids as $v) {
-            $ugroups[] = $v['ugroup_id'];
+            $ugroups[(int) $v['ugroup_id']] = $v['ugroup_name'];
         }
 
-        $changeset_value = new Tracker_Artifact_ChangesetValue_PermissionsOnArtifact($value_id, $changeset, $this, $has_changed, $changeset->getArtifact()->useArtifactPermissions(), $ugroups);
-        return $changeset_value;
+        return new Tracker_Artifact_ChangesetValue_PermissionsOnArtifact($value_id, $changeset, $this, $has_changed, $changeset->getArtifact()->useArtifactPermissions(), $ugroups);
     }
 
     public function getFieldDataFromRESTValue(array $value, ?Artifact $artifact = null)

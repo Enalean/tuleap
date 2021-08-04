@@ -33,6 +33,19 @@ class PermissionsOnArtifactFieldValueDao extends FieldValueDao
         $this->table_name = 'tracker_changeset_value_permissionsonartifact';
     }
 
+    /**
+     * @return \DataAccessResult|false
+     */
+    public function searchById($changeset_value_id)
+    {
+        $changeset_value_id = $this->da->escapeInt($changeset_value_id);
+        $sql                = "SELECT changeset_value_id, use_perm, ugroup.ugroup_id, ugroup.name AS ugroup_name
+                FROM tracker_changeset_value_permissionsonartifact
+                JOIN ugroup ON (ugroup.ugroup_id = tracker_changeset_value_permissionsonartifact.ugroup_id)
+                WHERE changeset_value_id = $changeset_value_id ";
+        return $this->retrieve($sql);
+    }
+
     public function create($changeset_value_id, $use_perm, $value_ids)
     {
         $changeset_value_id = $this->da->escapeInt($changeset_value_id);
@@ -73,14 +86,5 @@ class PermissionsOnArtifactFieldValueDao extends FieldValueDao
                 FROM $this->table_name
                 WHERE changeset_value_id = $from";
         return $this->update($sql);
-    }
-
-    public function searchByChangesetValueId($changeset_value_id)
-    {
-        $changeset_value_id = $this->da->escapeInt($changeset_value_id);
-        $sql                = "SELECT *
-                FROM $this->table_name
-                WHERE changeset_value_id = $changeset_value_id ";
-        return $this->retrieve($sql);
     }
 }
