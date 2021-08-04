@@ -90,8 +90,10 @@ class document_generationPlugin extends Plugin
                             "tracker_shortname" => $tracker_shortname,
                             "platform_name" => ForgeConfig::get('sys_name'),
                             "project_name" => $project->getPublicName(),
+                            "tracker_id" => $tracker->getId(),
                             "tracker_name" => $tracker->getName(),
                             "user_display_name" => UserHelper::instance()->getDisplayNameFromUser($current_user),
+                            "user_timezone" => \Tuleap\TimezoneRetriever::getUserTimezone($current_user),
                             "report_url" => HTTPRequest::instance()->getServerUrl() . '/plugins/tracker/?report=' . urlencode((string) $report_id)
                         ],
                         JSON_THROW_ON_ERROR

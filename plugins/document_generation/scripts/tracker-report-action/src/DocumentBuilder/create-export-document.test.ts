@@ -17,12 +17,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import * as artifact_retriever from "./artifacts-retriever";
 import { createExportDocument } from "./create-export-document";
-import type { ArtifactReportResponse, ArtifactReportResponseUnknownFieldValue } from "../type";
+import type {
+    ArtifactFromReport,
+    ArtifactReportResponseUnknownFieldValue,
+} from "./artifacts-retriever";
 
 describe("Create ArtifactValues Collection", () => {
-    it("Transforms json content into a collection", () => {
-        const report_artifacts: ArtifactReportResponse[] = [
+    it("Transforms json content into a collection", async () => {
+        const report_artifacts: ArtifactFromReport[] = [
             {
                 id: 1001,
                 title: "title01",
@@ -81,19 +85,22 @@ describe("Create ArtifactValues Collection", () => {
                         field_id: 9,
                         type: "subon",
                         label: "Submitted On",
-                        value: "2020-12-28T09:55:55+01:00",
+                        value: "2020-12-28T09:55:55+00:00",
+                        is_time_displayed: true,
                     },
                     {
                         field_id: 10,
                         type: "lud",
                         label: "Last Update Date",
-                        value: "2021-07-30T15:56:09+02:00",
+                        value: "2021-07-30T15:56:09+00:00",
+                        is_time_displayed: false,
                     },
                     {
                         field_id: 11,
                         type: "date",
                         label: "Closed Date",
                         value: null,
+                        is_time_displayed: false,
                     },
                 ],
             },
@@ -149,25 +156,38 @@ describe("Create ArtifactValues Collection", () => {
                         field_id: 9,
                         type: "subon",
                         label: "Submitted On",
-                        value: "2020-12-29T09:55:55+01:00",
+                        value: "2020-12-29T09:55:55+00:00",
+                        is_time_displayed: true,
                     },
                     {
                         field_id: 10,
                         type: "lud",
                         label: "Last Update Date",
-                        value: "2021-07-29T15:56:09+02:00",
+                        value: "2021-07-29T15:56:09+00:00",
+                        is_time_displayed: false,
                     },
                     {
                         field_id: 11,
                         type: "date",
                         label: "Closed Date",
                         value: null,
+                        is_time_displayed: false,
                     },
                 ],
             },
         ];
+        jest.spyOn(artifact_retriever, "retrieveReportArtifacts").mockResolvedValueOnce(
+            report_artifacts
+        );
 
-        const report = createExportDocument(report_artifacts, "report_name", "tracker_shortname");
+        const report = await createExportDocument(
+            1,
+            false,
+            "report_name",
+            123,
+            "tracker_shortname",
+            { locale: "en-US", timezone: "UTC" }
+        );
 
         expect(report.name).toEqual("tracker_shortname - report_name");
 
@@ -191,7 +211,7 @@ describe("Create ArtifactValues Collection", () => {
         expect(collection[0].fields[6].field_name).toEqual("Computed");
         expect(collection[0].fields[6].field_value).toEqual("10");
         expect(collection[0].fields[7].field_name).toEqual("Submitted On");
-        expect(collection[0].fields[7].field_value).toEqual("12/28/2020");
+        expect(collection[0].fields[7].field_value).toEqual("12/28/2020 9:55:55 AM");
         expect(collection[0].fields[8].field_name).toEqual("Last Update Date");
         expect(collection[0].fields[8].field_value).toEqual("7/30/2021");
         expect(collection[0].fields[9].field_name).toEqual("Closed Date");
@@ -213,7 +233,7 @@ describe("Create ArtifactValues Collection", () => {
         expect(collection[1].fields[6].field_name).toEqual("Computed");
         expect(collection[1].fields[6].field_value).toEqual("10");
         expect(collection[1].fields[7].field_name).toEqual("Submitted On");
-        expect(collection[1].fields[7].field_value).toEqual("12/29/2020");
+        expect(collection[1].fields[7].field_value).toEqual("12/29/2020 9:55:55 AM");
         expect(collection[1].fields[8].field_name).toEqual("Last Update Date");
         expect(collection[1].fields[8].field_value).toEqual("7/29/2021");
         expect(collection[1].fields[9].field_name).toEqual("Closed Date");

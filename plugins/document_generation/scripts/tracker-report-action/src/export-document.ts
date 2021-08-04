@@ -18,9 +18,8 @@
  */
 
 import type { GetText } from "../../../../../src/scripts/tuleap/gettext/gettext-init";
-import type { ArtifactReportResponse, ExportDocument, GlobalExportProperties } from "./type";
-import { recursiveGet } from "@tuleap/tlp-fetch";
-import { createExportDocument } from "./helpers/create-export-document";
+import type { DateTimeLocaleInformation, ExportDocument, GlobalExportProperties } from "./type";
+import { createExportDocument } from "./DocumentBuilder/create-export-document";
 
 export async function startDownloadExportDocument(
     global_export_properties: GlobalExportProperties,
@@ -28,27 +27,28 @@ export async function startDownloadExportDocument(
     document_exporter: (
         doc: ExportDocument,
         gettext_provider: GetText,
-        global_export_properties: GlobalExportProperties
+        global_export_properties: GlobalExportProperties,
+        datetime_locale_information: DateTimeLocaleInformation
     ) => Promise<void>
 ): Promise<void> {
-    const report_artifacts: ArtifactReportResponse[] = await recursiveGet(
-        `/api/v1/tracker_reports/${encodeURIComponent(
-            global_export_properties.report_id
-        )}/artifacts`,
-        {
-            params: {
-                values: "all",
-                with_unsaved_changes: global_export_properties.report_has_changed,
-                limit: 50,
-            },
-        }
-    );
+    const datetime_locale_information = {
+        locale: gettext_provider.locale.replace("_", "-"),
+        timezone: global_export_properties.user_timezone,
+    };
 
-    const export_document = createExportDocument(
-        report_artifacts,
+    const export_document = await createExportDocument(
+        global_export_properties.report_id,
+        global_export_properties.report_has_changed,
         global_export_properties.report_name,
-        global_export_properties.tracker_shortname
+        global_export_properties.tracker_id,
+        global_export_properties.tracker_shortname,
+        datetime_locale_information
     );
 
-    await document_exporter(export_document, gettext_provider, global_export_properties);
+    await document_exporter(
+        export_document,
+        gettext_provider,
+        global_export_properties,
+        datetime_locale_information
+    );
 }

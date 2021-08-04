@@ -46,6 +46,7 @@ import { getAnchorToArtifactContent } from "./sections-anchor";
 import type { GetText } from "../../../../../../../src/scripts/tuleap/gettext/gettext-init";
 import { sprintf } from "sprintf-js";
 import { triggerBlobDownload } from "../trigger-blob-download";
+import type { DateTimeLocaleInformation } from "../../type";
 
 const MAIN_TITLES_NUMBERING_ID = "main-titles";
 const HEADER_STYLE_ARTIFACT_TITLE = "ArtifactTitle";
@@ -55,7 +56,8 @@ const HEADER_LEVEL_SECTION = HeadingLevel.HEADING_1;
 export async function downloadDocx(
     document: ExportDocument,
     gettext_provider: GetText,
-    global_export_properties: GlobalExportProperties
+    global_export_properties: GlobalExportProperties,
+    datetime_locale_information: DateTimeLocaleInformation
 ): Promise<void> {
     const footers = {
         default: new Footer({
@@ -308,7 +310,11 @@ export async function downloadDocx(
         sections: [
             {
                 children: [
-                    ...buildIntroductionParagraphes(gettext_provider, global_export_properties),
+                    ...buildIntroductionParagraphes(
+                        gettext_provider,
+                        global_export_properties,
+                        datetime_locale_information
+                    ),
                     ...table_of_contents,
                     new Paragraph({ children: [new PageBreak()] }),
                     new Paragraph({
@@ -330,7 +336,8 @@ export async function downloadDocx(
 
 function buildIntroductionParagraphes(
     gettext_provider: GetText,
-    global_export_properties: GlobalExportProperties
+    global_export_properties: GlobalExportProperties,
+    datetime_locale_information: DateTimeLocaleInformation
 ): ReadonlyArray<Paragraph> {
     const { platform_name, project_name, tracker_name, report_name, report_url } =
         global_export_properties;
@@ -343,7 +350,9 @@ function buildIntroductionParagraphes(
             new TextRun(
                 sprintf(
                     gettext_provider.gettext("Export date: %s"),
-                    new Date().toLocaleDateString()
+                    new Date().toLocaleDateString(datetime_locale_information.locale, {
+                        timeZone: datetime_locale_information.timezone,
+                    })
                 )
             )
         ),
