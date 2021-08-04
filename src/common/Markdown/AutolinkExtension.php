@@ -22,15 +22,14 @@ declare(strict_types=1);
 
 namespace Tuleap\Markdown;
 
-use League\CommonMark\ConfigurableEnvironmentInterface;
-use League\CommonMark\Event\DocumentParsedEvent;
-use League\CommonMark\Extension\Autolink\UrlAutolinkProcessor;
+use League\CommonMark\Environment\EnvironmentBuilderInterface;
+use League\CommonMark\Extension\Autolink\UrlAutolinkParser;
 use League\CommonMark\Extension\ExtensionInterface;
 
 final class AutolinkExtension implements ExtensionInterface
 {
-    public function register(ConfigurableEnvironmentInterface $environment): void
+    public function register(EnvironmentBuilderInterface $environment): void
     {
-        $environment->addEventListener(DocumentParsedEvent::class, new UrlAutolinkProcessor(['http', 'https']));
+        $environment->addInlineParser(new UrlAutolinkParser(['http', 'https']));
     }
 }

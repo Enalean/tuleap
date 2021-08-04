@@ -14,6 +14,10 @@
     "preload": {
       "include": [
         "/include"
+      ],
+      "exclude": [
+        "/include/TestManagement/REST/v1/DefinitionRepresentations/DefinitionTextOrHTMLRepresentation.php",
+        "/include/TestManagement/REST/v1/DefinitionRepresentations/DefinitionCommonmarkRepresentation.php"
       ]
     }
   }

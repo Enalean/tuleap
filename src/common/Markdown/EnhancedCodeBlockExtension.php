@@ -22,26 +22,23 @@ declare(strict_types=1);
 
 namespace Tuleap\Markdown;
 
-use League\CommonMark\Block\Element\FencedCode;
-use League\CommonMark\Block\Renderer\FencedCodeRenderer;
-use League\CommonMark\ConfigurableEnvironmentInterface;
+use League\CommonMark\Environment\EnvironmentBuilderInterface;
+use League\CommonMark\Extension\CommonMark\Node\Block\FencedCode;
+use League\CommonMark\Extension\CommonMark\Renderer\Block\FencedCodeRenderer;
 use League\CommonMark\Extension\ExtensionInterface;
 use Tuleap\Markdown\BlockRenderer\EnhancedCodeBlockRenderer;
 
 final class EnhancedCodeBlockExtension implements ExtensionInterface
 {
-    /**
-     * @var CodeBlockFeaturesInterface
-     */
-    private $code_block_features;
+    private CodeBlockFeaturesInterface $code_block_features;
 
     public function __construct(CodeBlockFeaturesInterface $code_block_features)
     {
         $this->code_block_features = $code_block_features;
     }
 
-    public function register(ConfigurableEnvironmentInterface $environment): void
+    public function register(EnvironmentBuilderInterface $environment): void
     {
-        $environment->addBlockRenderer(FencedCode::class, new EnhancedCodeBlockRenderer($this->code_block_features, new FencedCodeRenderer()), 1);
+        $environment->addRenderer(FencedCode::class, new EnhancedCodeBlockRenderer($this->code_block_features, new FencedCodeRenderer()), 1);
     }
 }

@@ -22,21 +22,19 @@ declare(strict_types=1);
 
 namespace Tuleap\Markdown\BlockRenderer;
 
-use League\CommonMark\Block\Element\FencedCode;
-use League\CommonMark\Block\Renderer\FencedCodeRenderer;
-use League\CommonMark\Environment;
+use League\CommonMark\Environment\Environment;
+use League\CommonMark\Extension\CommonMark\CommonMarkCoreExtension;
+use League\CommonMark\Extension\CommonMark\Node\Block\FencedCode;
+use League\CommonMark\Extension\CommonMark\Renderer\Block\FencedCodeRenderer;
 use League\CommonMark\MarkdownConverter;
 use Mockery;
 use Tuleap\Markdown\CodeBlockFeaturesInterface;
 
-class EnhancedCodeBlockRendererTest extends \Tuleap\Test\PHPUnit\TestCase
+final class EnhancedCodeBlockRendererTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
-    /**
-     * @var MarkdownConverter
-     */
-    private $converter;
+    private MarkdownConverter $converter;
     /**
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|CodeBlockFeaturesInterface
      */
@@ -46,8 +44,9 @@ class EnhancedCodeBlockRendererTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->code_block_features = Mockery::mock(CodeBlockFeaturesInterface::class);
 
-        $environment = Environment::createCommonMarkEnvironment();
-        $environment->addBlockRenderer(
+        $environment = new Environment();
+        $environment->addExtension(new CommonMarkCoreExtension());
+        $environment->addRenderer(
             FencedCode::class,
             new EnhancedCodeBlockRenderer($this->code_block_features, new FencedCodeRenderer())
         );
@@ -93,7 +92,7 @@ class EnhancedCodeBlockRendererTest extends \Tuleap\Test\PHPUnit\TestCase
                 C--&gt;D;
             </code></pre>\n
             EXPECTED_HTML,
-            $result
+            $result->getContent()
         );
     }
 
@@ -136,7 +135,7 @@ class EnhancedCodeBlockRendererTest extends \Tuleap\Test\PHPUnit\TestCase
                 C--&gt;D;
             </code></pre></tlp-mermaid-diagram>\n
             EXPECTED_HTML,
-            $result
+            $result->getContent()
         );
     }
 
@@ -179,7 +178,7 @@ class EnhancedCodeBlockRendererTest extends \Tuleap\Test\PHPUnit\TestCase
                 C--&gt;D;
             </code></pre></tlp-mermaid-diagram>\n
             EXPECTED_HTML,
-            $result
+            $result->getContent()
         );
     }
 }

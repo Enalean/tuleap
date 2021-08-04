@@ -26,7 +26,8 @@
       "exclude": [
         "/include/Git/Repository/RepositoriesWithObjectsOverTheLimitCommand.php",
         "/include/Git/Gitolite/RegenerateConfigurationCommand.php",
-        "/include/Git/Statistics/FrequenciesSample.php"
+        "/include/Git/Statistics/FrequenciesSample.php",
+        "/include/CommonMarkExtension/LinkToGitFileExtension.php"
       ]
     }
   }

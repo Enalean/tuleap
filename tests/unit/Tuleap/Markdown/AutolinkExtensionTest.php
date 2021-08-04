@@ -22,19 +22,18 @@ declare(strict_types=1);
 
 namespace Tuleap\Markdown;
 
-use League\CommonMark\Environment;
+use League\CommonMark\Environment\Environment;
+use League\CommonMark\Extension\CommonMark\CommonMarkCoreExtension;
 use League\CommonMark\MarkdownConverter;
 
 final class AutolinkExtensionTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    /**
-     * @var MarkdownConverter
-     */
-    private $converter;
+    private MarkdownConverter $converter;
 
     protected function setUp(): void
     {
-        $environment = Environment::createCommonMarkEnvironment();
+        $environment = new Environment();
+        $environment->addExtension(new CommonMarkCoreExtension());
 
         $environment->addExtension(new AutolinkExtension());
         $this->converter = new MarkdownConverter($environment);

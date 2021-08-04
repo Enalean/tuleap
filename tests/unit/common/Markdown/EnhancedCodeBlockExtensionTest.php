@@ -23,28 +23,30 @@ declare(strict_types=1);
 
 namespace Tuleap\Markdown;
 
-use League\CommonMark\Block\Element\FencedCode;
-use League\CommonMark\Block\Renderer\BlockRendererInterface;
-use League\CommonMark\Environment;
+use League\CommonMark\Environment\Environment;
+use League\CommonMark\Extension\CommonMark\CommonMarkCoreExtension;
+use League\CommonMark\Extension\CommonMark\Node\Block\FencedCode;
+use League\CommonMark\Renderer\NodeRendererInterface;
 use Tuleap\Markdown\BlockRenderer\EnhancedCodeBlockRenderer;
 
 final class EnhancedCodeBlockExtensionTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testAddsTheEnhancedCodeBlockRendererToTheEnvironmentAndOverridesDefaultCodeBlockRenderer(): void
     {
-        $environment = Environment::createCommonMarkEnvironment();
+        $environment = new Environment();
+        $environment->addExtension(new CommonMarkCoreExtension());
 
         $environment->addExtension(new EnhancedCodeBlockExtension(new CodeBlockFeatures()));
 
-        $block_renderers = $environment->getBlockRenderersForClass(FencedCode::class);
+        $block_renderers = $environment->getRenderersForClass(FencedCode::class);
 
         self::assertInstanceOf(EnhancedCodeBlockRenderer::class, self::getFirstElement($block_renderers));
     }
 
     /**
-     * @param iterable<BlockRendererInterface> $block_renderers
+     * @param iterable<NodeRendererInterface> $block_renderers
      */
-    private static function getFirstElement(iterable $block_renderers): ?BlockRendererInterface
+    private static function getFirstElement(iterable $block_renderers): ?NodeRendererInterface
     {
         foreach ($block_renderers as $block_renderer) {
             return $block_renderer;
