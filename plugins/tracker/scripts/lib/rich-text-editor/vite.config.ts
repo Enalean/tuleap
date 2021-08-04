@@ -40,10 +40,4 @@ export default defineConfig({
             },
         },
     },
-    resolve: {
-        alias: {
-            // Alias turndown because in Node version it leaves a require() call
-            turndown: path.resolve(__dirname, "./node_modules/turndown/lib/turndown.browser.es.js"),
-        },
-    },
 });
