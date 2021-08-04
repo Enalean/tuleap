@@ -18,7 +18,8 @@
  */
 
 const loadJsonFile = require("load-json-file");
-const WebpackAssetsManifest = require("../node_modules/webpack-assets-manifest");
+// eslint-disable-next-line import/no-extraneous-dependencies
+const WebpackAssetsManifest = require("webpack-assets-manifest");
 const path = require("path");
 const webpack_configurator = require("../tools/utils/scripts/webpack-configurator.js");
 const { esbuild_target } = require("../tools/utils/scripts/browserslist_config");
@@ -110,9 +111,6 @@ const webpack_config_for_tlp = {
     },
     resolve: {
         extensions: [".js", ".ts"],
-        alias: {
-            select2: "select2/dist/js/select2.full.js",
-        },
     },
     module: {
         rules: [

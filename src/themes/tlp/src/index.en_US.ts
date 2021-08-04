@@ -19,4 +19,4 @@
 
 export * from "./js/index";
 
-import "../node_modules/select2/dist/js/i18n/en.js";
+import "select2/dist/js/i18n/en.js";

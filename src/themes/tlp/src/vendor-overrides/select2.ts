@@ -18,7 +18,7 @@
  */
 
 import jQuery from "jquery";
-import "select2";
+import "select2/dist/js/select2.full";
 
 import default_locale from "../js/default_locale";
 import type {
