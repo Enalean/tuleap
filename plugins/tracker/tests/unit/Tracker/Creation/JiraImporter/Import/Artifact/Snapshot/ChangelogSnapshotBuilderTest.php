@@ -291,8 +291,8 @@ class ChangelogSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                         "fieldId"    => "homies",
                         "from"       => null,
                         "fromString" => null,
-                        "to"         => "e8a7dbae5, a7e8b9c5",
-                        "toString"   => "John Doe, Mysterio"
+                        "to"         => "[e8a7dbae5, a7e8b9c5]",
+                        "toString"   => "[John Doe, Mysterio]"
                     ]
                 ],
                 'author' => [
