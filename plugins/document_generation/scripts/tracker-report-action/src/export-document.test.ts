@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import type { GetText } from "../../../../../src/scripts/tuleap/gettext/gettext-init";
 import * as tlp_fetch from "@tuleap/tlp-fetch";
 import * as document_export_creator from "./helpers/create-export-document";
 import { startDownloadExportDocument } from "./export-document";
@@ -35,7 +36,11 @@ describe("export-document", () => {
             artifacts: [{ id: 1, title: "title", fields: [] }],
         });
 
-        await startDownloadExportDocument({} as GlobalExportProperties, "fr_FR", document_exporter);
+        await startDownloadExportDocument(
+            {} as GlobalExportProperties,
+            {} as GetText,
+            document_exporter
+        );
 
         expect(export_creator).toHaveBeenCalled();
         expect(document_exporter).toHaveBeenCalled();

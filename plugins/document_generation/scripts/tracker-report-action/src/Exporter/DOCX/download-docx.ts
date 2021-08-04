@@ -17,8 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { ExportDocument } from "../type";
-import type { GlobalExportProperties } from "../type";
+import type { ExportDocument, GlobalExportProperties } from "../../type";
 import type { ParagraphChild } from "docx";
 import {
     AlignmentType,
@@ -42,14 +41,11 @@ import {
     VerticalAlign,
     WidthType,
 } from "docx";
-import { TableOfContentsPrefilled } from "./DOCX/TableOfContents/table-of-contents";
-import { getAnchorToArtifactContent } from "./DOCX/sections-anchor";
-import type { GetText } from "../../../../../../src/scripts/tuleap/gettext/gettext-init";
-import {
-    getPOFileFromLocale,
-    initGettext,
-} from "../../../../../../src/scripts/tuleap/gettext/gettext-init";
+import { TableOfContentsPrefilled } from "./TableOfContents/table-of-contents";
+import { getAnchorToArtifactContent } from "./sections-anchor";
+import type { GetText } from "../../../../../../../src/scripts/tuleap/gettext/gettext-init";
 import { sprintf } from "sprintf-js";
+import { triggerBlobDownload } from "../trigger-blob-download";
 
 const MAIN_TITLES_NUMBERING_ID = "main-titles";
 const HEADER_STYLE_ARTIFACT_TITLE = "ArtifactTitle";
@@ -58,19 +54,9 @@ const HEADER_LEVEL_SECTION = HeadingLevel.HEADING_1;
 
 export async function downloadDocx(
     document: ExportDocument,
-    language: string,
+    gettext_provider: GetText,
     global_export_properties: GlobalExportProperties
 ): Promise<void> {
-    const gettext_provider = await initGettext(
-        language,
-        "tracker-report-action",
-        (locale) =>
-            import(
-                /* webpackChunkName: "tracker-report-po-" */ "../../po/" +
-                    getPOFileFromLocale(locale)
-            )
-    );
-
     const footers = {
         default: new Footer({
             children: [
@@ -339,7 +325,7 @@ export async function downloadDocx(
             },
         ],
     });
-    await triggerDownload(document.name, file);
+    triggerBlobDownload(`${document.name}.docx`, await Packer.toBlob(file));
 }
 
 function buildIntroductionParagraphes(
@@ -389,16 +375,4 @@ function buildParagraphOfAnUnorderedList(content: ParagraphChild): Paragraph {
             level: 0,
         },
     });
-}
-
-async function triggerDownload(filename: string, file: File): Promise<void> {
-    const blob = await Packer.toBlob(file);
-    const download_link = document.createElement("a");
-    const object_url = URL.createObjectURL(blob);
-    download_link.href = object_url;
-    download_link.setAttribute("download", `${filename}.docx`);
-    document.body.appendChild(download_link);
-    download_link.click();
-    download_link.remove();
-    URL.revokeObjectURL(object_url);
 }

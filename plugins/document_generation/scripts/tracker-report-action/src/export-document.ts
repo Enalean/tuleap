@@ -17,16 +17,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import type { GetText } from "../../../../../src/scripts/tuleap/gettext/gettext-init";
 import type { ArtifactReportResponse, ExportDocument, GlobalExportProperties } from "./type";
 import { recursiveGet } from "@tuleap/tlp-fetch";
 import { createExportDocument } from "./helpers/create-export-document";
 
 export async function startDownloadExportDocument(
     global_export_properties: GlobalExportProperties,
-    language: string,
+    gettext_provider: GetText,
     document_exporter: (
         doc: ExportDocument,
-        language: string,
+        gettext_provider: GetText,
         global_export_properties: GlobalExportProperties
     ) => Promise<void>
 ): Promise<void> {
@@ -49,5 +50,5 @@ export async function startDownloadExportDocument(
         global_export_properties.tracker_shortname
     );
 
-    await document_exporter(export_document, language, global_export_properties);
+    await document_exporter(export_document, gettext_provider, global_export_properties);
 }
