@@ -175,6 +175,7 @@ class RedisPersistentQueue implements PersistentQueue
 
     /**
      * @throws QueueServerConnectionException
+     * @throws \JsonException
      */
     public function pushSinglePersistentMessage(string $topic, $content): void
     {
@@ -184,6 +185,7 @@ class RedisPersistentQueue implements PersistentQueue
 
     /**
      * @throws QueueServerConnectionException
+     * @throws \JsonException
      */
     private function pushMessageIntoEventQueue(RedisEventMessageForPersistentQueue $message_to_queue): void
     {
