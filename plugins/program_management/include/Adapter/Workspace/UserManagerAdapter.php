@@ -37,7 +37,7 @@ final class UserManagerAdapter implements RetrieveUser
 
     public function getUserWithId(UserIdentifier $user_identifier): \PFUser
     {
-        $user_id = $user_identifier->user_id;
+        $user_id = $user_identifier->id;
         $user    = $this->user_manager->getUserById($user_id);
 
         if (! $user) {

@@ -37,9 +37,9 @@ use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\ProgramManagement\REST\v1\FeatureElementToOrderInvolvedInChangeRepresentation;
 use Tuleap\ProgramManagement\Stub\BuildProgramStub;
+use Tuleap\ProgramManagement\Stub\RetrieveUserStub;
 use Tuleap\ProgramManagement\Stub\VerifyLinkedUserStoryIsNotPlannedStub;
 use Tuleap\ProgramManagement\Stub\VerifyPrioritizeFeaturesPermissionStub;
-use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkUpdater;
@@ -74,6 +74,12 @@ final class ProcessTopBacklogChangeTest extends \Tuleap\Test\PHPUnit\TestCase
      * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|ProgramIncrementsDAO
      */
     private $program_increment_dao;
+    /**
+     * @var \PFUser|\PHPUnit\Framework\MockObject\MockObject
+     */
+    private $user;
+    private RetrieveUserStub $retrieve_user;
+
 
     protected function setUp(): void
     {
@@ -82,6 +88,11 @@ final class ProcessTopBacklogChangeTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->artifact_link_updater = \Mockery::mock(ArtifactLinkUpdater::class);
         $this->program_increment_dao = \Mockery::mock(ProgramIncrementsDAO::class);
         $this->feature_orderer       = \Mockery::mock(FeaturesRankOrderer::class);
+        $this->user                  = $this->createMock(\PFUser::class);
+        $this->user->method('isSuperUser')->willReturn(true);
+        $this->user->method('isAdmin')->willReturn(true);
+        $this->user->method('getId')->willReturn(101);
+        $this->retrieve_user = RetrieveUserStub::withUser($this->user);
 
         $this->process_top_backlog_change = new ProcessTopBacklogChange(
             VerifyPrioritizeFeaturesPermissionStub::canPrioritize(),
@@ -89,54 +100,47 @@ final class ProcessTopBacklogChangeTest extends \Tuleap\Test\PHPUnit\TestCase
             new DBTransactionExecutorPassthrough(),
             $this->feature_orderer,
             VerifyLinkedUserStoryIsNotPlannedStub::buildNotLinkedStories(),
-            new VerifyIsVisibleFeatureAdapter($this->artifact_factory),
-            new FeatureRemovalProcessor($this->program_increment_dao, $this->artifact_factory, $this->artifact_link_updater),
+            new VerifyIsVisibleFeatureAdapter($this->artifact_factory, $this->retrieve_user),
+            new FeatureRemovalProcessor($this->program_increment_dao, $this->artifact_factory, $this->artifact_link_updater, $this->retrieve_user),
         );
     }
 
     public function testAddAThrowExceptionWhenFeatureCannotBeViewByUser(): void
     {
-        $user = UserTestBuilder::aUser()->build();
-
         $tracker      = TrackerTestBuilder::aTracker()->withId(69)->withProject(new \Project(['group_id' => 102, 'group_name' => "My project"]))->build();
         $artifact_741 = $this->mockAnArtifact(741, "My 741", $tracker);
         $artifact_742 = $this->mockAnArtifact(742, "My 742", $tracker);
-        $this->artifact_factory->shouldReceive('getArtifactByIdUserCanView')->with($user, 741)->andReturn($artifact_741);
-        $this->artifact_factory->shouldReceive('getArtifactByIdUserCanView')->with($user, 742)->andReturn($artifact_742);
-        $this->artifact_factory->shouldReceive('getArtifactByIdUserCanView')->with($user, 789)->andReturn(null);
-        $this->artifact_factory->shouldReceive('getArtifactByIdUserCanView')->with($user, 790)->andReturn(null);
+        $this->artifact_factory->shouldReceive('getArtifactByIdUserCanView')->with($this->user, 741)->andReturn($artifact_741);
+        $this->artifact_factory->shouldReceive('getArtifactByIdUserCanView')->with($this->user, 742)->andReturn($artifact_742);
+        $this->artifact_factory->shouldReceive('getArtifactByIdUserCanView')->with($this->user, 789)->andReturn(null);
+        $this->artifact_factory->shouldReceive('getArtifactByIdUserCanView')->with($this->user, 790)->andReturn(null);
 
         $this->expectException(FeatureNotFoundException::class);
         $this->process_top_backlog_change->processTopBacklogChangeForAProgram(
-            ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 102, UserIdentifier::fromPFUser($user)),
+            ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 102, UserIdentifier::fromPFUser($this->user)),
             new TopBacklogChange([742, 790], [741, 789], false, null),
-            $user
+            $this->user
         );
     }
 
     public function testRemoveWhenFeatureCannotBeViewByUserThenNothingHappens(): void
     {
-        $user = UserTestBuilder::aUser()->build();
-
         $tracker      = TrackerTestBuilder::aTracker()->withId(69)->withProject(new \Project(['group_id' => 102, 'group_name' => "My project"]))->build();
         $artifact_741 = $this->mockAnArtifact(741, "My 741", $tracker);
-        $artifact_742 = $this->mockAnArtifact(742, "My 742", $tracker);
-        $this->artifact_factory->shouldReceive('getArtifactByIdUserCanView')->with($user, 741)->andReturn($artifact_741);
-        $this->artifact_factory->shouldReceive('getArtifactByIdUserCanView')->with($user, 789)->andReturn(null);
+        $this->artifact_factory->shouldReceive('getArtifactByIdUserCanView')->with($this->user, 741)->andReturn($artifact_741);
+        $this->artifact_factory->shouldReceive('getArtifactByIdUserCanView')->with($this->user, 789)->andReturn(null);
 
         $this->dao->shouldReceive('removeArtifactsFromExplicitTopBacklog')->with([741])->once();
 
         $this->process_top_backlog_change->processTopBacklogChangeForAProgram(
-            ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 102, UserIdentifier::fromPFUser($user)),
+            ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 102, UserIdentifier::fromPFUser($this->user)),
             new TopBacklogChange([], [741, 789], false, null),
-            $user
+            $this->user
         );
     }
 
     public function testAddAndRemoveThrowExceptionWhenFeatureThatAreNotPartOfTheRequestedProgram(): void
     {
-        $user = UserTestBuilder::aUser()->build();
-
         $tracker  = TrackerTestBuilder::aTracker()->withId(69)->withProject(new \Project(['group_id' => 666, 'group_name' => "My project"]))->build();
         $artifact = $this->mockAnArtifact(964, "My 964", $tracker);
         $this->artifact_factory->shouldReceive('getArtifactByIdUserCanView')->andReturn($artifact);
@@ -144,31 +148,29 @@ final class ProcessTopBacklogChangeTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->dao->shouldNotReceive('removeArtifactsFromExplicitTopBacklog');
         $this->expectException(FeatureNotFoundException::class);
         $this->process_top_backlog_change->processTopBacklogChangeForAProgram(
-            ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 102, UserIdentifier::fromPFUser($user)),
+            ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 102, UserIdentifier::fromPFUser($this->user)),
             new TopBacklogChange([964], [963], false, null),
-            $user
+            $this->user
         );
     }
 
     public function testAddFeatureInTopBacklogAndRemoveLinkToProgramIncrement(): void
     {
-        $user = UserTestBuilder::aUser()->build();
-
         $tracker = TrackerTestBuilder::aTracker()->withId(69)->withProject(new \Project(['group_id' => 102, 'group_name' => "My project"]))->build();
         $feature = $this->mockAnArtifact(964, "My 964", $tracker);
-        $this->artifact_factory->shouldReceive('getArtifactByIdUserCanView')->with($user, 964)->andReturn($feature)->once();
+        $this->artifact_factory->shouldReceive('getArtifactByIdUserCanView')->with($this->user, 964)->andReturn($feature)->once();
 
         $this->program_increment_dao->shouldReceive("getProgramIncrementsLinkToFeatureId")->with(964)->once()->andReturn([["id" => 63]]);
         $program_increment = \Mockery::mock(Artifact::class);
         $this->artifact_factory->shouldReceive('getArtifactById')->with(63)->andReturn($program_increment)->once();
 
         $this->dao->shouldReceive('addArtifactsToTheExplicitTopBacklog')->once();
-        $this->artifact_link_updater->shouldReceive("updateArtifactLinks")->once()->with($user, $program_increment, [], [964], "");
+        $this->artifact_link_updater->shouldReceive("updateArtifactLinks")->once()->with($this->user, $program_increment, [], [964], "");
 
         $this->process_top_backlog_change->processTopBacklogChangeForAProgram(
-            ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 102, UserIdentifier::fromPFUser($user)),
+            ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 102, UserIdentifier::fromPFUser($this->user)),
             new TopBacklogChange([964], [], true, null),
-            $user
+            $this->user
         );
     }
 
@@ -180,15 +182,13 @@ final class ProcessTopBacklogChangeTest extends \Tuleap\Test\PHPUnit\TestCase
             new DBTransactionExecutorPassthrough(),
             $this->feature_orderer,
             VerifyLinkedUserStoryIsNotPlannedStub::buildLinkedStories(),
-            new VerifyIsVisibleFeatureAdapter($this->artifact_factory),
-            new FeatureRemovalProcessor($this->program_increment_dao, $this->artifact_factory, $this->artifact_link_updater)
+            new VerifyIsVisibleFeatureAdapter($this->artifact_factory, $this->retrieve_user),
+            new FeatureRemovalProcessor($this->program_increment_dao, $this->artifact_factory, $this->artifact_link_updater, $this->retrieve_user)
         );
-
-        $user = UserTestBuilder::aUser()->build();
 
         $tracker = TrackerTestBuilder::aTracker()->withId(69)->withProject(new \Project(['group_id' => 102, 'group_name' => "My project"]))->build();
         $feature = $this->mockAnArtifact(964, "My 964", $tracker);
-        $this->artifact_factory->shouldReceive('getArtifactByIdUserCanView')->with($user, 964)->andReturn($feature)->once();
+        $this->artifact_factory->shouldReceive('getArtifactByIdUserCanView')->with($this->user, 964)->andReturn($feature)->once();
 
         $this->program_increment_dao->shouldReceive("getProgramIncrementsLinkToFeatureId")->never();
         $this->artifact_factory->shouldReceive('getArtifactById')->never();
@@ -199,38 +199,40 @@ final class ProcessTopBacklogChangeTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->expectException(FeatureHasPlannedUserStoryException::class);
 
         $this->process_top_backlog_change->processTopBacklogChangeForAProgram(
-            ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 102, UserIdentifier::fromPFUser($user)),
+            ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 102, UserIdentifier::fromPFUser($this->user)),
             new TopBacklogChange([964], [], true, null),
-            $user
+            $this->user
         );
     }
 
     public function testUserThatCannotPrioritizeFeaturesCannotAskForATopBacklogChange(): void
     {
+        $user = $this->createMock(\PFUser::class);
+        $user->method('isSuperUser')->willReturn(false);
+        $user->method('isAdmin')->willReturn(false);
+        $user->method('getId')->willReturn(101);
+        $retrieve_user                    = RetrieveUserStub::withUser($this->user);
         $this->process_top_backlog_change = new ProcessTopBacklogChange(
             VerifyPrioritizeFeaturesPermissionStub::cannotPrioritize(),
             $this->dao,
             new DBTransactionExecutorPassthrough(),
             $this->feature_orderer,
             VerifyLinkedUserStoryIsNotPlannedStub::buildNotLinkedStories(),
-            new VerifyIsVisibleFeatureAdapter($this->artifact_factory),
-            new FeatureRemovalProcessor($this->program_increment_dao, $this->artifact_factory, $this->artifact_link_updater),
+            new VerifyIsVisibleFeatureAdapter($this->artifact_factory, $retrieve_user),
+            new FeatureRemovalProcessor($this->program_increment_dao, $this->artifact_factory, $this->artifact_link_updater, $retrieve_user),
         );
-        $user                             = UserTestBuilder::aUser()->build();
         $this->dao->shouldNotReceive('removeArtifactsFromExplicitTopBacklog');
 
         $this->expectException(CannotManipulateTopBacklog::class);
         $this->process_top_backlog_change->processTopBacklogChangeForAProgram(
             ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 102, UserIdentifier::fromPFUser($user)),
             new TopBacklogChange([], [403], false, null),
-            UserTestBuilder::aUser()->build()
+            $user
         );
     }
 
     public function testUserCanReorderTheBacklog(): void
     {
-        $user = UserTestBuilder::aUser()->build();
-
         $artifact = \Mockery::mock(Artifact::class);
         $tracker  = \Mockery::mock(\Tracker::class);
         $tracker->shouldReceive('getGroupId')->andReturn(666);
@@ -244,7 +246,7 @@ final class ProcessTopBacklogChangeTest extends \Tuleap\Test\PHPUnit\TestCase
         $element_to_order->direction   = "before";
         $element_to_order->compared_to = 900;
 
-        $program = ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 666, UserIdentifier::fromPFUser($user));
+        $program = ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 666, UserIdentifier::fromPFUser($this->user));
 
         $this->feature_orderer->shouldReceive('reorder')->with($element_to_order, $program->getId(), $program)->once();
 
@@ -256,7 +258,7 @@ final class ProcessTopBacklogChangeTest extends \Tuleap\Test\PHPUnit\TestCase
                 false,
                 $element_to_order
             ),
-            $user
+            $this->user
         );
     }
 

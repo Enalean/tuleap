@@ -33,6 +33,8 @@ use Tuleap\ProgramManagement\Domain\UserCanPrioritize;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\ProgramManagement\Stub\BuildProgramStub;
 use Tuleap\ProgramManagement\Stub\CheckProgramIncrementStub;
+use Tuleap\ProgramManagement\Stub\RetrieveUserStub;
+use Tuleap\ProgramManagement\Stub\UserPermissionsStub;
 use Tuleap\ProgramManagement\Stub\VerifyCanBePlannedInProgramIncrementStub;
 use Tuleap\ProgramManagement\Stub\VerifyIsVisibleFeatureStub;
 use Tuleap\ProgramManagement\Stub\VerifyPrioritizeFeaturesPermissionStub;
@@ -60,7 +62,8 @@ final class FeatureAdditionProcessorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->artifact_link_updater = \Mockery::mock(ArtifactLinkUpdater::class);
         $this->processor             = new FeatureAdditionProcessor(
             $this->artifact_factory,
-            $this->artifact_link_updater
+            $this->artifact_link_updater,
+            RetrieveUserStub::withUser(UserTestBuilder::aUser()->build())
         );
     }
 
@@ -98,20 +101,39 @@ final class FeatureAdditionProcessorTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItUpdatesArtifactLinksToAddFeatureToProgramIncrement(): void
     {
         $user                       = UserTestBuilder::aUser()->build();
-        $program                    = ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 110, UserIdentifier::fromPFUser($user));
-        $program_increment          = ProgramIncrementIdentifier::fromId(CheckProgramIncrementStub::buildProgramIncrementChecker(), 37, $user);
-        $feature                    = FeatureIdentifier::fromId(VerifyIsVisibleFeatureStub::buildVisibleFeature(), 76, $user, $program);
+        $user_identifier            = UserIdentifier::fromPFUser($user);
+        $program                    = ProgramIdentifier::fromId(
+            BuildProgramStub::stubValidProgram(),
+            110,
+            $user_identifier
+        );
+        $program_increment          = ProgramIncrementIdentifier::fromId(
+            CheckProgramIncrementStub::buildProgramIncrementChecker(),
+            37,
+            $user
+        );
+        $feature                    = FeatureIdentifier::fromId(
+            VerifyIsVisibleFeatureStub::buildVisibleFeature(),
+            76,
+            $user_identifier,
+            $program
+        );
         $feature_addition           = FeatureAddition::fromFeature(
             VerifyCanBePlannedInProgramIncrementStub::buildCanBePlannedVerifier(),
             $feature,
             $program_increment,
-            UserCanPrioritize::fromUser(VerifyPrioritizeFeaturesPermissionStub::canPrioritize(), $user, $program)
+            UserCanPrioritize::fromUser(
+                VerifyPrioritizeFeaturesPermissionStub::canPrioritize(),
+                UserPermissionsStub::aRegularUser(),
+                $user_identifier,
+                $program
+            )
         );
         $program_increment_artifact = new Artifact(37, 7, 110, 1234567890, false);
         $this->artifact_factory->shouldReceive('getArtifactById')->with(37)->andReturn($program_increment_artifact);
         $this->artifact_link_updater->shouldReceive('updateArtifactLinks')
             ->once()
-            ->with($user, $program_increment_artifact, [76], [], \Tracker_FormElement_Field_ArtifactLink::NO_NATURE);
+            ->with(\Mockery::type(\PFUser::class), $program_increment_artifact, [76], [], \Tracker_FormElement_Field_ArtifactLink::NO_NATURE);
 
         $this->processor->add($feature_addition);
     }
@@ -119,14 +141,30 @@ final class FeatureAdditionProcessorTest extends \Tuleap\Test\PHPUnit\TestCase
     private function buildFeatureAddition(): FeatureAddition
     {
         $user              = UserTestBuilder::aUser()->build();
-        $program           = ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 110, UserIdentifier::fromPFUser($user));
-        $program_increment = ProgramIncrementIdentifier::fromId(CheckProgramIncrementStub::buildProgramIncrementChecker(), 37, $user);
-        $feature           = FeatureIdentifier::fromId(VerifyIsVisibleFeatureStub::buildVisibleFeature(), 76, $user, $program);
+        $user_identifier   = UserIdentifier::fromPFUser($user);
+        $program           = ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 110, $user_identifier);
+        $program_increment = ProgramIncrementIdentifier::fromId(
+            CheckProgramIncrementStub::buildProgramIncrementChecker(),
+            37,
+            $user
+        );
+        $feature           = FeatureIdentifier::fromId(
+            VerifyIsVisibleFeatureStub::buildVisibleFeature(),
+            76,
+            $user_identifier,
+            $program
+        );
+
         return FeatureAddition::fromFeature(
             VerifyCanBePlannedInProgramIncrementStub::buildCanBePlannedVerifier(),
             $feature,
             $program_increment,
-            UserCanPrioritize::fromUser(VerifyPrioritizeFeaturesPermissionStub::canPrioritize(), $user, $program)
+            UserCanPrioritize::fromUser(
+                VerifyPrioritizeFeaturesPermissionStub::canPrioritize(),
+                UserPermissionsStub::aRegularUser(),
+                $user_identifier,
+                $program
+            )
         );
     }
 }

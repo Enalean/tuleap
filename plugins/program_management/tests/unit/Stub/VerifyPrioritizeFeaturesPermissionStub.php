@@ -25,6 +25,7 @@ namespace Tuleap\ProgramManagement\Stub;
 use Tuleap\ProgramManagement\Domain\Program\Plan\VerifyPrioritizeFeaturesPermission;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
+use Tuleap\ProgramManagement\Domain\Workspace\UserPermissions;
 
 final class VerifyPrioritizeFeaturesPermissionStub implements VerifyPrioritizeFeaturesPermission
 {
@@ -45,7 +46,7 @@ final class VerifyPrioritizeFeaturesPermissionStub implements VerifyPrioritizeFe
         return new self(false);
     }
 
-    public function canUserPrioritizeFeatures(ProgramIdentifier $program, UserIdentifier $user_identifier): bool
+    public function canUserPrioritizeFeatures(ProgramIdentifier $program, UserPermissions $user_permissions, UserIdentifier $user_identifier): bool
     {
         return $this->is_authorized;
     }

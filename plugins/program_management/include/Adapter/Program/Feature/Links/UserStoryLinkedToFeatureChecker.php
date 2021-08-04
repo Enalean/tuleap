@@ -29,34 +29,33 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\BuildPlanning;
 use Tuleap\ProgramManagement\Domain\Program\PlanningConfiguration\Planning;
 use Tuleap\ProgramManagement\Domain\Program\PlanningConfiguration\TopPlanningNotFoundInProjectException;
+use Tuleap\ProgramManagement\Domain\Workspace\RetrieveUser;
+use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 
 final class UserStoryLinkedToFeatureChecker implements VerifyLinkedUserStoryIsNotPlanned
 {
-    /**
-     * @var ArtifactsLinkedToParentDao
-     */
-    private $stories_linked_to_feature_dao;
-    /**
-     * @var BuildPlanning
-     */
-    private $planning_adapter;
-    /**
-     * @var Tracker_ArtifactFactory
-     */
-    private $artifact_factory;
+    private ArtifactsLinkedToParentDao $stories_linked_to_feature_dao;
+    private BuildPlanning $planning_adapter;
+    private Tracker_ArtifactFactory $artifact_factory;
+    private RetrieveUser $retrieve_user;
 
     public function __construct(
         ArtifactsLinkedToParentDao $stories_linked_to_feature_dao,
         BuildPlanning $planning_adapter,
-        Tracker_ArtifactFactory $artifact_factory
+        Tracker_ArtifactFactory $artifact_factory,
+        RetrieveUser $retrieve_user
     ) {
         $this->stories_linked_to_feature_dao = $stories_linked_to_feature_dao;
         $this->planning_adapter              = $planning_adapter;
         $this->artifact_factory              = $artifact_factory;
+        $this->retrieve_user                 = $retrieve_user;
     }
 
-    public function isLinkedToAtLeastOnePlannedUserStory(PFUser $user, FeatureIdentifier $feature): bool
-    {
+    public function isLinkedToAtLeastOnePlannedUserStory(
+        UserIdentifier $user_identifier,
+        FeatureIdentifier $feature
+    ): bool {
+        $user                 = $this->retrieve_user->getUserWithId($user_identifier);
         $planned_user_stories = $this->stories_linked_to_feature_dao->getPlannedUserStory($feature->id);
         foreach ($planned_user_stories as $user_story) {
             try {

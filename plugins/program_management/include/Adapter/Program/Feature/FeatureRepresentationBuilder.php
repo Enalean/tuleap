@@ -27,6 +27,7 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Content\Links\Verify
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\VerifyIsVisibleFeature;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
+use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\ProgramManagement\REST\v1\FeatureRepresentation;
 use Tuleap\Tracker\REST\MinimalTrackerRepresentation;
 
@@ -74,7 +75,9 @@ class FeatureRepresentationBuilder
         int $title_field_id,
         string $artifact_title
     ): ?FeatureRepresentation {
-        $feature = FeatureIdentifier::fromId($this->feature_verifier, $artifact_id, $user, $program);
+        $user_identifier = UserIdentifier::fromPFUser($user);
+
+        $feature = FeatureIdentifier::fromId($this->feature_verifier, $artifact_id, $user_identifier, $program);
         if (! $feature) {
             return null;
         }
@@ -95,7 +98,7 @@ class FeatureRepresentationBuilder
             $full_artifact->getUri(),
             MinimalTrackerRepresentation::build($full_artifact->getTracker()),
             $this->retrieve_background_color->retrieveBackgroundColor($full_artifact, $user),
-            $this->user_story_checker->isLinkedToAtLeastOnePlannedUserStory($user, $feature),
+            $this->user_story_checker->isLinkedToAtLeastOnePlannedUserStory($user_identifier, $feature),
             $this->user_story_checker->hasStoryLinked($user, $feature)
         );
     }

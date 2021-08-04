@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\Feature;
 
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
+use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 
 /**
  * I identify a Feature, I'm its ID property
@@ -30,10 +31,7 @@ use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
  */
 final class FeatureIdentifier
 {
-    /**
-     * @var int
-     */
-    public $id;
+    public int $id;
 
     private function __construct(int $id)
     {
@@ -43,10 +41,10 @@ final class FeatureIdentifier
     public static function fromId(
         VerifyIsVisibleFeature $feature_verifier,
         int $feature_id,
-        \PFUser $user,
+        UserIdentifier $user_identifier,
         ProgramIdentifier $program
     ): ?self {
-        if (! $feature_verifier->isVisibleFeature($feature_id, $user, $program)) {
+        if (! $feature_verifier->isVisibleFeature($feature_id, $user_identifier, $program)) {
             return null;
         }
         return new self($feature_id);

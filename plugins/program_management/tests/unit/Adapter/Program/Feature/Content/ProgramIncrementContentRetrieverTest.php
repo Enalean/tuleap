@@ -38,6 +38,7 @@ use Tuleap\ProgramManagement\Domain\Program\SearchProgram;
 use Tuleap\ProgramManagement\REST\v1\FeatureRepresentation;
 use Tuleap\ProgramManagement\Stub\BuildProgramStub;
 use Tuleap\ProgramManagement\Stub\CheckProgramIncrementStub;
+use Tuleap\ProgramManagement\Stub\RetrieveUserStub;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
@@ -59,10 +60,7 @@ final class ProgramIncrementContentRetrieverTest extends \Tuleap\Test\PHPUnit\Te
      */
     private $retrieve_background;
 
-    /**
-     * @var FeatureContentRetriever
-     */
-    private $retriever;
+    private FeatureContentRetriever $retriever;
 
     /**
      * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|\Tracker_FormElementFactory
@@ -78,6 +76,7 @@ final class ProgramIncrementContentRetrieverTest extends \Tuleap\Test\PHPUnit\Te
      * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|ContentStore
      */
     private $content_store;
+    private \PFUser $user;
 
     protected function setUp(): void
     {
@@ -87,6 +86,8 @@ final class ProgramIncrementContentRetrieverTest extends \Tuleap\Test\PHPUnit\Te
         $this->form_element_factory = \Mockery::mock(\Tracker_FormElementFactory::instance());
         $this->retrieve_background  = \Mockery::mock(BackgroundColorRetriever::class);
         $this->parent_dao           = \Mockery::mock(ArtifactsLinkedToParentDao::class);
+        $this->user                 = UserTestBuilder::aUser()->build();
+        $retrieve_user              = RetrieveUserStub::withUser($this->user);
 
         $this->retriever = new FeatureContentRetriever(
             $retrieve_program_increment,
@@ -95,11 +96,12 @@ final class ProgramIncrementContentRetrieverTest extends \Tuleap\Test\PHPUnit\Te
                 $this->artifact_factory,
                 $this->form_element_factory,
                 $this->retrieve_background,
-                new VerifyIsVisibleFeatureAdapter($this->artifact_factory),
+                new VerifyIsVisibleFeatureAdapter($this->artifact_factory, $retrieve_user),
                 new UserStoryLinkedToFeatureChecker(
                     $this->parent_dao,
                     \Mockery::mock(BuildPlanning::class),
-                    $this->artifact_factory
+                    $this->artifact_factory,
+                    $retrieve_user
                 )
             ),
             new ProgramSearcher($this->getStubSearchProgram(), BuildProgramStub::stubValidProgram())
@@ -108,7 +110,6 @@ final class ProgramIncrementContentRetrieverTest extends \Tuleap\Test\PHPUnit\Te
 
     public function testItBuildsACollectionOfOpenedElements(): void
     {
-        $user = UserTestBuilder::aUser()->build();
         $this->content_store->shouldReceive('searchContent')->andReturn(
             [
                 [
@@ -134,12 +135,12 @@ final class ProgramIncrementContentRetrieverTest extends \Tuleap\Test\PHPUnit\Te
         $tracker_one  = $this->buildTracker(1, 'bug', $project);
         $artifact_one = $this->buildArtifact(1, $tracker_one);
         $this->artifact_factory->shouldReceive('getArtifactById')->with(1)->andReturn($artifact_one);
-        $this->artifact_factory->shouldReceive('getArtifactByIdUserCanView')->with($user, 1)->andReturn($artifact_one);
+        $this->artifact_factory->shouldReceive('getArtifactByIdUserCanView')->with($this->user, 1)->andReturn($artifact_one);
 
         $tracker_two  = $this->buildTracker(2, 'user stories', $project);
         $artifact_two = $this->buildArtifact(2, $tracker_two);
         $this->artifact_factory->shouldReceive('getArtifactById')->with(2)->andReturn($artifact_two);
-        $this->artifact_factory->shouldReceive('getArtifactByIdUserCanView')->with($user, 2)->andReturn($artifact_two);
+        $this->artifact_factory->shouldReceive('getArtifactByIdUserCanView')->with($this->user, 2)->andReturn($artifact_two);
 
         $this->retrieve_background->shouldReceive('retrieveBackgroundColor')
             ->andReturn(new BackgroundColor("lake-placid-blue"));
@@ -170,7 +171,7 @@ final class ProgramIncrementContentRetrieverTest extends \Tuleap\Test\PHPUnit\Te
             ),
         ];
 
-        self::assertEquals($collection, $this->retriever->retrieveProgramIncrementContent(202, $user));
+        self::assertEquals($collection, $this->retriever->retrieveProgramIncrementContent(202, $this->user));
     }
 
     private function getStubSearchProgram(): SearchProgram

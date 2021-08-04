@@ -31,7 +31,6 @@ use Tuleap\ProgramManagement\Domain\Program\Plan\PrioritizeFeaturesPermissionVer
 use Tuleap\ProgramManagement\Domain\Program\Plan\VerifyPrioritizeFeaturesPermission;
 use Tuleap\ProgramManagement\Stub\BuildProgramStub;
 use Tuleap\ProgramManagement\Stub\VerifyPrioritizeFeaturesPermissionStub;
-use Tuleap\Test\Builders\UserTestBuilder;
 
 final class MassChangeTopBacklogActionBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -48,11 +47,19 @@ final class MassChangeTopBacklogActionBuilderTest extends \Tuleap\Test\PHPUnit\T
      */
     private $plan_store;
     private MassChangeTopBacklogActionBuilder $action_builder;
+    /**
+     * @var \PFUser|\PHPUnit\Framework\MockObject\MockObject
+     */
+    private $user;
 
     protected function setUp(): void
     {
         $this->build_program = BuildProgramStub::stubValidProgram();
         $this->plan_store    = \Mockery::mock(PlanStore::class);
+        $this->user          = $this->createMock(\PFUser::class);
+        $this->user->method('isSuperUser')->willReturn(true);
+        $this->user->method('isAdmin')->willReturn(true);
+        $this->user->method('getId')->willReturn(101);
     }
 
     public function testMassChangeTopBacklogActionCanBeProvidedWhenUserHasPermissionInAAppropriateTracker(): void
@@ -61,7 +68,7 @@ final class MassChangeTopBacklogActionBuilderTest extends \Tuleap\Test\PHPUnit\T
         $this->build_program = BuildProgramStub::stubValidProgram();
         $this->plan_store->shouldReceive('isPlannable')->andReturn(true);
 
-        self::assertNotNull($this->getBuild(VerifyPrioritizeFeaturesPermissionStub::canPrioritize())->buildMassChangeAction($source_information, UserTestBuilder::aUser()->build()));
+        self::assertNotNull($this->getBuild(VerifyPrioritizeFeaturesPermissionStub::canPrioritize())->buildMassChangeAction($source_information, $this->user));
     }
 
     public function testNoMassChangeTopBacklogActionWhenTheProjectIsNotAProgram(): void
@@ -69,7 +76,7 @@ final class MassChangeTopBacklogActionBuilderTest extends \Tuleap\Test\PHPUnit\T
         $source_information  = new TopBacklogActionMassChangeSourceInformation(240, 200);
         $this->build_program = BuildProgramStub::stubInvalidProgram();
 
-        self::assertNull($this->getBuild(VerifyPrioritizeFeaturesPermissionStub::canPrioritize())->buildMassChangeAction($source_information, UserTestBuilder::aUser()->build()));
+        self::assertNull($this->getBuild(VerifyPrioritizeFeaturesPermissionStub::canPrioritize())->buildMassChangeAction($source_information, $this->user));
     }
 
     public function testNoMassChangeTopBacklogActionWhenTheUserCannotPrioritizeFeatures(): void
@@ -77,7 +84,7 @@ final class MassChangeTopBacklogActionBuilderTest extends \Tuleap\Test\PHPUnit\T
         $source_information  = new TopBacklogActionMassChangeSourceInformation(403, 102);
         $this->build_program = BuildProgramStub::stubValidProgram();
 
-        self::assertNull($this->getBuild(VerifyPrioritizeFeaturesPermissionStub::cannotPrioritize())->buildMassChangeAction($source_information, UserTestBuilder::aUser()->build()));
+        self::assertNull($this->getBuild(VerifyPrioritizeFeaturesPermissionStub::cannotPrioritize())->buildMassChangeAction($source_information, $this->user));
     }
 
     public function testNoMassChangeTopBacklogActionWhenTheTrackerDoesNotContainsFeatures(): void
@@ -86,7 +93,7 @@ final class MassChangeTopBacklogActionBuilderTest extends \Tuleap\Test\PHPUnit\T
         $this->build_program = BuildProgramStub::stubValidProgram();
         $this->plan_store->shouldReceive('isPlannable')->andReturn(false);
 
-        self::assertNull($this->getBuild(VerifyPrioritizeFeaturesPermissionStub::canPrioritize())->buildMassChangeAction($source_information, UserTestBuilder::aUser()->build()));
+        self::assertNull($this->getBuild(VerifyPrioritizeFeaturesPermissionStub::canPrioritize())->buildMassChangeAction($source_information, $this->user));
     }
 
     private function getBuild(VerifyPrioritizeFeaturesPermission $prioritize_features_permission_verifier): MassChangeTopBacklogActionBuilder

@@ -26,12 +26,13 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\ProgramIncrementsDAO;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Content\FeatureRemoval;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Content\RemoveFeature;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Content\RemoveFeatureException;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\UserCanPrioritize;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\ProgramManagement\Stub\BuildProgramStub;
+use Tuleap\ProgramManagement\Stub\RetrieveUserStub;
+use Tuleap\ProgramManagement\Stub\UserPermissionsStub;
 use Tuleap\ProgramManagement\Stub\VerifyIsVisibleFeatureStub;
 use Tuleap\ProgramManagement\Stub\VerifyLinkedUserStoryIsNotPlannedStub;
 use Tuleap\ProgramManagement\Stub\VerifyPrioritizeFeaturesPermissionStub;
@@ -43,10 +44,7 @@ final class FeatureRemovalProcessorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 
-    /**
-     * @var RemoveFeature
-     */
-    private $processor;
+    private FeatureRemovalProcessor $processor;
     /**
      * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|ProgramIncrementsDAO
      */
@@ -68,7 +66,8 @@ final class FeatureRemovalProcessorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->processor              = new FeatureRemovalProcessor(
             $this->program_increments_dao,
             $this->artifact_factory,
-            $this->artifact_link_updater
+            $this->artifact_link_updater,
+            RetrieveUserStub::withUser(UserTestBuilder::aUser()->build())
         );
     }
 
@@ -103,7 +102,7 @@ final class FeatureRemovalProcessorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->artifact_link_updater->shouldReceive('updateArtifactLinks')
             ->once()
             ->with(
-                $feature_removal->user->getFullUser(),
+                \Mockery::type(\PFUser::class),
                 $program_increment_artifact,
                 [],
                 [$feature_removal->feature_id],
@@ -162,13 +161,13 @@ final class FeatureRemovalProcessorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     private function buildFeatureRemoval(): FeatureRemoval
     {
-        $user    = UserTestBuilder::aUser()->build();
-        $program = ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 110, UserIdentifier::fromPFUser($user));
-        $feature = FeatureIdentifier::fromId(VerifyIsVisibleFeatureStub::buildVisibleFeature(), 76, $user, $program);
+        $user_identifier = UserIdentifier::fromPFUser(UserTestBuilder::aUser()->build());
+        $program         = ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 110, $user_identifier);
+        $feature         = FeatureIdentifier::fromId(VerifyIsVisibleFeatureStub::buildVisibleFeature(), 76, $user_identifier, $program);
         return FeatureRemoval::fromFeature(
             VerifyLinkedUserStoryIsNotPlannedStub::buildNotLinkedStories(),
             $feature,
-            UserCanPrioritize::fromUser(VerifyPrioritizeFeaturesPermissionStub::canPrioritize(), $user, $program)
+            UserCanPrioritize::fromUser(VerifyPrioritizeFeaturesPermissionStub::canPrioritize(), UserPermissionsStub::aRegularUser(), $user_identifier, $program)
         );
     }
 }

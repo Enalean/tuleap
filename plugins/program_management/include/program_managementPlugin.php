@@ -584,7 +584,8 @@ final class program_managementPlugin extends Plugin
 
         $artifact = $event->getArtifact();
         $tracker  = $artifact->getTracker();
-        $action   = $action_builder->buildTopBacklogActionBuilder(
+
+        $action = $action_builder->buildTopBacklogActionBuilder(
             new TopBacklogActionArtifactSourceInformation(
                 $artifact->getId(),
                 $tracker->getId(),
@@ -673,8 +674,9 @@ final class program_managementPlugin extends Plugin
 
     private function getTopBacklogChangeProcessor(): TopBacklogChangeProcessor
     {
-        $artifact_factory = Tracker_ArtifactFactory::instance();
-        $priority_manager = \Tracker_Artifact_PriorityManager::build();
+        $artifact_factory     = Tracker_ArtifactFactory::instance();
+        $priority_manager     = \Tracker_Artifact_PriorityManager::build();
+        $user_manager_adapter = new UserManagerAdapter(UserManager::instance());
 
         return new ProcessTopBacklogChange(
             new PrioritizeFeaturesPermissionVerifier(
@@ -684,7 +686,7 @@ final class program_managementPlugin extends Plugin
                     \EventManager::instance()
                 ),
                 new CanPrioritizeFeaturesDAO(),
-                new \Tuleap\ProgramManagement\Adapter\Workspace\UserManagerAdapter(UserManager::instance())
+                $user_manager_adapter
             ),
             new ArtifactsExplicitTopBacklogDAO(),
             new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection()),
@@ -692,13 +694,15 @@ final class program_managementPlugin extends Plugin
             new UserStoryLinkedToFeatureChecker(
                 new ArtifactsLinkedToParentDao(),
                 new PlanningAdapter(\PlanningFactory::build()),
-                $artifact_factory
+                $artifact_factory,
+                $user_manager_adapter
             ),
-            new VerifyIsVisibleFeatureAdapter($artifact_factory),
+            new VerifyIsVisibleFeatureAdapter($artifact_factory, $user_manager_adapter),
             new FeatureRemovalProcessor(
                 new ProgramIncrementsDAO(),
                 $artifact_factory,
                 new ArtifactLinkUpdater($priority_manager, new ArtifactLinkUpdaterDataFormater()),
+                $user_manager_adapter
             ),
         );
     }

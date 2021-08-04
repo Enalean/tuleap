@@ -82,12 +82,12 @@ final class NewPendingIterationCreationTest extends \Tuleap\Test\PHPUnit\TestCas
         );
         self::assertSame(self::FIRST_ITERATION_ID, $first_creation->iteration->id);
         self::assertSame(self::PROGRAM_INCREMENT_ID, $first_creation->program_increment->getId());
-        self::assertSame(self::USER_ID, $first_creation->user->user_id);
+        self::assertSame(self::USER_ID, $first_creation->user->id);
         self::assertSame(self::FIRST_CHANGESET_ID, $first_creation->changeset->id);
 
         self::assertSame(self::SECOND_ITERATION_ID, $second_creation->iteration->id);
         self::assertSame(self::PROGRAM_INCREMENT_ID, $second_creation->program_increment->getId());
-        self::assertSame(self::USER_ID, $second_creation->user->user_id);
+        self::assertSame(self::USER_ID, $second_creation->user->id);
         self::assertSame(self::SECOND_CHANGESET_ID, $second_creation->changeset->id);
     }
 

@@ -143,11 +143,12 @@ final class ProjectResource extends AuthenticatedResource
                 $artifact_factory,
                 $form_element_factory,
                 new BackgroundColorRetriever(new BackgroundColorBuilder(new BindDecoratorRetriever())),
-                new VerifyIsVisibleFeatureAdapter($artifact_factory),
+                new VerifyIsVisibleFeatureAdapter($artifact_factory, $this->user_manager_adapter),
                 new UserStoryLinkedToFeatureChecker(
                     new ArtifactsLinkedToParentDao(),
                     new PlanningAdapter(\PlanningFactory::build()),
-                    $artifact_factory
+                    $artifact_factory,
+                    $this->user_manager_adapter
                 )
             )
         );
@@ -398,13 +399,15 @@ final class ProjectResource extends AuthenticatedResource
             new UserStoryLinkedToFeatureChecker(
                 new ArtifactsLinkedToParentDao(),
                 new PlanningAdapter(\PlanningFactory::build()),
-                $artifact_factory
+                $artifact_factory,
+                $this->user_manager_adapter
             ),
-            new VerifyIsVisibleFeatureAdapter($artifact_factory),
+            new VerifyIsVisibleFeatureAdapter($artifact_factory, $this->user_manager_adapter),
             new FeatureRemovalProcessor(
                 new ProgramIncrementsDAO(),
                 $artifact_factory,
                 new ArtifactLinkUpdater($priority_manager, new ArtifactLinkUpdaterDataFormater()),
+                $this->user_manager_adapter
             )
         );
 

@@ -26,6 +26,7 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Content\Links\Verify
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureHasPlannedUserStoryException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureIdentifier;
 use Tuleap\ProgramManagement\Domain\UserCanPrioritize;
+use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 
 /**
  * I am an order to un-plan the Feature from all Program Increments
@@ -56,7 +57,7 @@ final class FeatureRemoval
         FeatureIdentifier $feature,
         UserCanPrioritize $user
     ): self {
-        if ($story_verifier->isLinkedToAtLeastOnePlannedUserStory($user->getFullUser(), $feature)) {
+        if ($story_verifier->isLinkedToAtLeastOnePlannedUserStory(UserIdentifier::fromUserCanPrioritize($user), $feature)) {
             throw new FeatureHasPlannedUserStoryException($feature->id);
         }
         return new self($feature->id, $user);

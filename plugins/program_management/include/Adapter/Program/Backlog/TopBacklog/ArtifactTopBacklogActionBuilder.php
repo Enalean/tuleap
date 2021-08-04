@@ -25,6 +25,7 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog;
 
 use PFUser;
 use Tuleap\Layout\JavascriptAsset;
+use Tuleap\ProgramManagement\Adapter\Workspace\UserPermissionsProxy;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\NotAllowedToPrioritizeException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\TopBacklogActionArtifactSourceInformation;
 use Tuleap\ProgramManagement\Domain\Program\Plan\BuildProgram;
@@ -40,7 +41,6 @@ use Tuleap\Tracker\Artifact\ActionButtons\AdditionalButtonLinkPresenter;
 
 final class ArtifactTopBacklogActionBuilder
 {
-
     private BuildProgram $build_program;
     private VerifyPrioritizeFeaturesPermission $prioritize_features_permission_verifier;
     private PlanStore $plan_store;
@@ -67,8 +67,14 @@ final class ArtifactTopBacklogActionBuilder
     public function buildTopBacklogActionBuilder(TopBacklogActionArtifactSourceInformation $source_information, PFUser $user): ?AdditionalButtonAction
     {
         try {
-            $program = ProgramIdentifier::fromId($this->build_program, $source_information->project_id, UserIdentifier::fromPFUser($user));
-            UserCanPrioritize::fromUser($this->prioritize_features_permission_verifier, $user, $program);
+            $user_identifier = UserIdentifier::fromPFUser($user);
+            $program         = ProgramIdentifier::fromId($this->build_program, $source_information->project_id, $user_identifier);
+            UserCanPrioritize::fromUser(
+                $this->prioritize_features_permission_verifier,
+                UserPermissionsProxy::buildFromPFUser($user, $program),
+                $user_identifier,
+                $program
+            );
         } catch (ProgramAccessException | ProjectIsNotAProgramException | NotAllowedToPrioritizeException $e) {
             return null;
         }

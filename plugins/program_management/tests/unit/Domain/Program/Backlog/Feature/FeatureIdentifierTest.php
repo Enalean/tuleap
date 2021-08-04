@@ -32,18 +32,18 @@ final class FeatureIdentifierTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItReturnsNullWhenFeatureIsNotVisibleByUser(): void
     {
-        $user    = UserTestBuilder::aUser()->build();
-        $program = ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 110, UserIdentifier::fromPFUser($user));
+        $user_identifier = UserIdentifier::fromPFUser(UserTestBuilder::aUser()->build());
+        $program         = ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 110, $user_identifier);
 
-        self::assertNull(FeatureIdentifier::fromId(VerifyIsVisibleFeatureStub::buildInvisibleFeature(), 404, $user, $program));
+        self::assertNull(FeatureIdentifier::fromId(VerifyIsVisibleFeatureStub::buildInvisibleFeature(), 404, $user_identifier, $program));
     }
 
     public function testItBuildsAValidFeature(): void
     {
-        $user    = UserTestBuilder::aUser()->build();
-        $program = ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 110, UserIdentifier::fromPFUser($user));
+        $user_identifier = UserIdentifier::fromPFUser(UserTestBuilder::aUser()->build());
+        $program         = ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 110, $user_identifier);
 
-        $feature = FeatureIdentifier::fromId(VerifyIsVisibleFeatureStub::buildVisibleFeature(), 87, $user, $program);
+        $feature = FeatureIdentifier::fromId(VerifyIsVisibleFeatureStub::buildVisibleFeature(), 87, $user_identifier, $program);
         self::assertSame(87, $feature->id);
     }
 }

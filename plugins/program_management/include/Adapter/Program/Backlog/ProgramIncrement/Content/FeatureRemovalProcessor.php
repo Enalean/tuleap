@@ -26,6 +26,8 @@ use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\ProgramInc
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Content\FeatureRemoval;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Content\RemoveFeature;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Content\RemoveFeatureException;
+use Tuleap\ProgramManagement\Domain\Workspace\RetrieveUser;
+use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkUpdater;
 
 final class FeatureRemovalProcessor implements RemoveFeature
@@ -33,29 +35,27 @@ final class FeatureRemovalProcessor implements RemoveFeature
     /**
      * @var ProgramIncrementsDAO
      */
-    private $program_increments_dao;
-    /**
-     * @var \Tracker_ArtifactFactory
-     */
-    private $artifact_factory;
-    /**
-     * @var ArtifactLinkUpdater
-     */
-    private $artifact_link_updater;
+    private ProgramIncrementsDAO $program_increments_dao;
+    private \Tracker_ArtifactFactory $artifact_factory;
+    private ArtifactLinkUpdater $artifact_link_updater;
+    private RetrieveUser $retrieve_user;
 
     public function __construct(
         ProgramIncrementsDAO $program_increments_dao,
         \Tracker_ArtifactFactory $artifact_factory,
-        ArtifactLinkUpdater $artifact_link_updater
+        ArtifactLinkUpdater $artifact_link_updater,
+        RetrieveUser $retrieve_user
     ) {
         $this->program_increments_dao = $program_increments_dao;
         $this->artifact_factory       = $artifact_factory;
         $this->artifact_link_updater  = $artifact_link_updater;
+        $this->retrieve_user          = $retrieve_user;
     }
 
     public function removeFromAllProgramIncrements(FeatureRemoval $feature_removal): void
     {
         $program_ids = $this->program_increments_dao->getProgramIncrementsLinkToFeatureId($feature_removal->feature_id);
+        $user        = $this->retrieve_user->getUserWithId(UserIdentifier::fromUserCanPrioritize($feature_removal->user));
         foreach ($program_ids as $program_id) {
             $program_increment_artifact = $this->artifact_factory->getArtifactById($program_id['id']);
             if (! $program_increment_artifact) {
@@ -63,7 +63,7 @@ final class FeatureRemovalProcessor implements RemoveFeature
             }
             try {
                 $this->artifact_link_updater->updateArtifactLinks(
-                    $feature_removal->user->getFullUser(),
+                    $user,
                     $program_increment_artifact,
                     [],
                     [$feature_removal->feature_id],

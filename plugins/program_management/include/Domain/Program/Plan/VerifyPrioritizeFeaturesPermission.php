@@ -23,8 +23,9 @@ namespace Tuleap\ProgramManagement\Domain\Program\Plan;
 
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
+use Tuleap\ProgramManagement\Domain\Workspace\UserPermissions;
 
 interface VerifyPrioritizeFeaturesPermission
 {
-    public function canUserPrioritizeFeatures(ProgramIdentifier $program, UserIdentifier $user_identifier): bool;
+    public function canUserPrioritizeFeatures(ProgramIdentifier $program, UserPermissions $user_permissions, UserIdentifier $user_identifier): bool;
 }
