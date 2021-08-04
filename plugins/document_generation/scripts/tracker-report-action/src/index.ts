@@ -37,15 +37,23 @@ document.addEventListener("DOMContentLoaded", () => {
         }
         const properties = JSON.parse(generate_document_link.dataset.properties);
 
-        const { startDownloadExportDocument } = await import(
-            /* webpackChunkName: "document_generation-download-export" */ "./export-document"
-        );
+        const loading_modal_element = document.createElement("div");
+        loading_modal_element.classList.add("tuleap-modal-loading");
+        document.body.appendChild(loading_modal_element);
 
-        const { downloadDocx } = await import(
-            /* webpackChunkName: "document_generation-download-export-transformation" */ "./Exporter/download-docx"
-        );
+        try {
+            const { startDownloadExportDocument } = await import(
+                /* webpackChunkName: "document_generation-download-export" */ "./export-document"
+            );
 
-        await startDownloadExportDocument(properties, language, downloadDocx);
+            const { downloadDocx } = await import(
+                /* webpackChunkName: "document_generation-download-export-transformation" */ "./Exporter/download-docx"
+            );
+
+            await startDownloadExportDocument(properties, language, downloadDocx);
+        } finally {
+            document.body.removeChild(loading_modal_element);
+        }
     });
 });
 
