@@ -41,16 +41,35 @@ document.addEventListener("DOMContentLoaded", () => {
         loading_modal_element.classList.add("tuleap-modal-loading");
         document.body.appendChild(loading_modal_element);
 
+        const export_document_module = import(
+            /* webpackChunkName: "document_generation-download-export" */ "./export-document"
+        );
+
+        const download_docx_module = import(
+            /* webpackChunkName: "document_generation-download-export-transformation" */ "./Exporter/DOCX/download-docx"
+        );
+
+        const gettext_module = import(
+            /* webpackChunkName: "document_generation-gettext" */ "../../../../../src/scripts/tuleap/gettext/gettext-init"
+        );
+
         try {
-            const { startDownloadExportDocument } = await import(
-                /* webpackChunkName: "document_generation-download-export" */ "./export-document"
+            const { initGettext, getPOFileFromLocale } = await gettext_module;
+
+            const gettext_provider = await initGettext(
+                language,
+                "tracker-report-action",
+                (locale) =>
+                    import(
+                        /* webpackChunkName: "document_generation-po" */ "../po/" +
+                            getPOFileFromLocale(locale)
+                    )
             );
 
-            const { downloadDocx } = await import(
-                /* webpackChunkName: "document_generation-download-export-transformation" */ "./Exporter/download-docx"
-            );
+            const { startDownloadExportDocument } = await export_document_module;
+            const { downloadDocx } = await download_docx_module;
 
-            await startDownloadExportDocument(properties, language, downloadDocx);
+            await startDownloadExportDocument(properties, gettext_provider, downloadDocx);
         } finally {
             document.body.removeChild(loading_modal_element);
         }
