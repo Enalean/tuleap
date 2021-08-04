@@ -133,4 +133,42 @@ class ListFieldChangeInitialValueRetrieverTest extends \Tuleap\Test\PHPUnit\Test
             $list_value
         );
     }
+
+    public function testItReturnsTheUsersIdsFormattedInNewFormat(): void
+    {
+        $john_doe = \Mockery::mock(\PFUser::class);
+        $john_doe->shouldReceive('getId')->andReturn(105);
+
+        $another_user = \Mockery::mock(\PFUser::class);
+        $another_user->shouldReceive('getId')->andReturn(106);
+
+        $this->jira_user_retriever->shouldReceive('getAssignedTuleapUser')
+            ->with('e8a6c4d54')
+            ->andReturn($john_doe);
+
+        $this->jira_user_retriever->shouldReceive('getAssignedTuleapUser')
+            ->with('a7e9f1b2c')
+            ->andReturn($another_user);
+
+        $list_value = $this->list_field_change_initial_value_retriever->retrieveBoundValue(
+            '[e8a6c4d54, a7e9f1b2c]',
+            new ListFieldMapping(
+                'multiuserpicker',
+                'Multi userpicker',
+                'Fmultiuserpicker',
+                'multiuserpicker',
+                'msb',
+                \Tracker_FormElement_Field_List_Bind_Users::TYPE,
+                [],
+            )
+        );
+
+        $this->assertSame(
+            [
+                ['id' => '105'],
+                ['id' => '106']
+            ],
+            $list_value
+        );
+    }
 }

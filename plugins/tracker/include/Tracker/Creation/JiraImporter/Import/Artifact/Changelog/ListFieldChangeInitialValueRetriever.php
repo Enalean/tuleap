@@ -68,7 +68,11 @@ class ListFieldChangeInitialValueRetriever
             );
         }
 
-        $account_ids        = explode(',', $changed_field_from);
+        if (strpos($changed_field_from, '[') === 0) {
+            $account_ids = explode(',', substr($changed_field_from, 1, -1));
+        } else {
+            $account_ids = explode(',', $changed_field_from);
+        }
         $selected_users_ids = [];
 
         foreach ($account_ids as $account_id) {
