@@ -36,16 +36,16 @@ final class IterationIdentifierTest extends \Tuleap\Test\PHPUnit\TestCase
     private const FIRST_VISIBLE_ARTIFACT_ID      = 271;
     private const SECOND_VISIBLE_ARTIFACT_ID     = 124;
     private \PFUser $user;
-    private ProgramIncrementIdentifier $program_increment;
 
     protected function setUp(): void
     {
-        $this->user              = UserTestBuilder::aUser()->build();
-        $this->program_increment = ProgramIncrementIdentifier::fromId(
-            CheckProgramIncrementStub::buildProgramIncrementChecker(),
-            36,
-            $this->user
-        );
+        $this->user = UserTestBuilder::aUser()->build();
+    }
+
+    public function testItBuildsFromId(): void
+    {
+        $iteration = IterationIdentifier::fromId(32);
+        self::assertSame(32, $iteration->id);
     }
 
     public function testItFiltersIterationsThatAreNotVisible(): void
@@ -61,7 +61,11 @@ final class IterationIdentifierTest extends \Tuleap\Test\PHPUnit\TestCase
                 self::FIRST_VISIBLE_ARTIFACT_ID,
                 self::SECOND_VISIBLE_ARTIFACT_ID
             ),
-            $this->program_increment,
+            ProgramIncrementIdentifier::fromId(
+                CheckProgramIncrementStub::buildProgramIncrementChecker(),
+                36,
+                $this->user
+            ),
             UserIdentifier::fromPFUser($this->user)
         );
 

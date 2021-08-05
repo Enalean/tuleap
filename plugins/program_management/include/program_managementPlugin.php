@@ -75,6 +75,7 @@ use Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\Workflow\AddToTo
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\Workflow\AddToTopBacklogPostActionRepresentation;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\Workflow\AddToTopBacklogPostActionValueUpdater;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Content\ContentDao;
+use Tuleap\ProgramManagement\Adapter\Program\Feature\Content\ProgramIncrementChecker;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\ArtifactsLinkedToParentDao;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\UserStoryLinkedToFeatureChecker;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\UserStoriesInMirroredProgramIncrementsPlanner;
@@ -108,6 +109,7 @@ use Tuleap\ProgramManagement\Domain\Program\Admin\PlannableTrackersConfiguration
 use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramForAdministrationIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ArtifactCreatedHandler;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ArtifactUpdatedHandler;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\IterationCreationEventHandler;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\IterationReplicationScheduler;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck\CanSubmitNewArtifactHandler;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck\IterationCreatorChecker;
@@ -408,11 +410,16 @@ final class program_managementPlugin extends Plugin
         $create_mirrors_runner = $this->getProgramIncrementRunner();
         $create_mirrors_runner->addListener($event);
 
-        $iteration_creation_runner = new IterationCreationsRunner(
+        $user_retriever   = new UserManagerAdapter(UserManager::instance());
+        $artifact_factory = \Tracker_ArtifactFactory::instance();
+
+        $handler = new IterationCreationEventHandler(
             $logger,
-            new QueueFactory($logger),
+            new PendingIterationCreationDAO(),
+            new ProgramIncrementChecker($artifact_factory, new ProgramIncrementsDAO()),
+            $user_retriever
         );
-        $iteration_creation_runner->addListener(IterationCreationEventProxy::fromWorkerEvent($logger, $event));
+        $handler->handle(IterationCreationEventProxy::fromWorkerEvent($logger, $event));
     }
 
     public function trackerArtifactCreated(ArtifactCreated $event): void
@@ -436,8 +443,12 @@ final class program_managementPlugin extends Plugin
         $artifacts_linked_to_parent_dao = new ArtifactsLinkedToParentDao();
         $user_retriever                 = new UserManagerAdapter(UserManager::instance());
         $iterations_linked_dao          = new IterationsLinkedToProgramIncrementDAO();
-        $handler                        = new ArtifactUpdatedHandler(
-            new ProgramIncrementsDAO(),
+        $iteration_creation_DAO         = new PendingIterationCreationDAO();
+        $visibility_verifier            = new ArtifactVisibleVerifier($artifact_factory, $user_retriever);
+        $program_increments_DAO         = new ProgramIncrementsDAO();
+
+        $handler = new ArtifactUpdatedHandler(
+            $program_increments_DAO,
             new UserStoriesInMirroredProgramIncrementsPlanner(
                 new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection()),
                 $artifacts_linked_to_parent_dao,
@@ -452,12 +463,21 @@ final class program_managementPlugin extends Plugin
             new IterationReplicationScheduler(
                 new ForgeConfigAdapter(),
                 $iterations_linked_dao,
-                new ArtifactVisibleVerifier($artifact_factory, $user_retriever),
+                $visibility_verifier,
                 $iterations_linked_dao,
                 $logger,
                 new LastChangesetRetriever($artifact_factory, Tracker_Artifact_ChangesetFactoryBuilder::build()),
-                new PendingIterationCreationDAO(),
-                new IterationCreationsRunner($logger, new QueueFactory($logger)),
+                $iteration_creation_DAO,
+                new IterationCreationsRunner(
+                    $logger,
+                    new QueueFactory($logger),
+                    new IterationCreationEventHandler(
+                        $logger,
+                        $iteration_creation_DAO,
+                        new ProgramIncrementChecker($artifact_factory, $program_increments_DAO),
+                        $user_retriever
+                    )
+                ),
             )
         );
 

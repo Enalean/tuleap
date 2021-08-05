@@ -24,5 +24,5 @@ namespace Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation;
 
 interface RunIterationsCreation
 {
-    public function scheduleIterationCreations(NewPendingIterationCreation ...$creations): void;
+    public function scheduleIterationCreations(IterationCreation ...$creations): void;
 }

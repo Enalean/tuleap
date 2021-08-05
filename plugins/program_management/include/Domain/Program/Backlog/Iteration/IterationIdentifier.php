@@ -41,6 +41,11 @@ final class IterationIdentifier
         $this->id = $id;
     }
 
+    public static function fromId(int $artifact_id): self
+    {
+        return new self($artifact_id);
+    }
+
     /**
      * @return self[]
      */

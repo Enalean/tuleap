@@ -22,31 +22,10 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation;
 
-use Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration\IterationIdentifier;
-
-/**
- * I am the ID (identifier) of an Artifact's Changeset.
- * @psalm-immutable
- */
-final class ChangesetIdentifier
+interface SearchPendingIteration
 {
-    public int $id;
-
-    private function __construct(int $id)
-    {
-        $this->id = $id;
-    }
-
-    public static function fromId(int $changeset_id): self
-    {
-        return new self($changeset_id);
-    }
-
-    public static function fromIterationLastChangeset(
-        RetrieveLastChangeset $changeset_retriever,
-        IterationIdentifier $iteration
-    ): ?self {
-        $changeset_id = $changeset_retriever->retrieveLastChangesetId($iteration);
-        return ($changeset_id !== null) ? new self($changeset_id) : null;
-    }
+    /**
+     * @return null|array{iteration_id: int, program_increment_id: int, user_id: int, iteration_changeset_id: int}
+     */
+    public function searchPendingIterationCreation(int $iteration_id, int $user_id): ?array;
 }

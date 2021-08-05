@@ -25,15 +25,18 @@ namespace Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation;
 use Psr\Log\LoggerInterface;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration\IterationIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration\JustLinkedIterationCollection;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\CheckProgramIncrement;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementIdentifier;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementNotFoundException;
+use Tuleap\ProgramManagement\Domain\Workspace\RetrieveUser;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 
 /**
- * I store the information necessary to create Mirrored Iterations from a source Iteration.
- * I will be stored in DB.
+ * I hold all the information necessary to create Mirrored Iterations from a source Iteration.
+ * I can be stored and retrieved from storage.
  * @psalm-immutable
  */
-final class NewPendingIterationCreation
+final class IterationCreation
 {
     public IterationIdentifier $iteration;
     public ProgramIncrementIdentifier $program_increment;
@@ -69,12 +72,42 @@ final class NewPendingIterationCreation
             );
             if ($last_changeset_id === null) {
                 $logger->error(
-                    sprintf('Could not retrieve last changeset of iteration #%s, skipping it', $iteration_identifier->id),
+                    sprintf(
+                        'Could not retrieve last changeset of iteration #%s, skipping it',
+                        $iteration_identifier->id
+                    ),
                 );
                 continue;
             }
             $creations[] = new self($iteration_identifier, $iterations->program_increment, $user, $last_changeset_id);
         }
         return $creations;
+    }
+
+    public static function fromStorage(
+        SearchPendingIteration $iteration_searcher,
+        CheckProgramIncrement $program_increment_checker,
+        RetrieveUser $user_retriever,
+        int $iteration_id,
+        int $user_id
+    ): ?self {
+        $stored_creation = $iteration_searcher->searchPendingIterationCreation($iteration_id, $user_id);
+        if (! $stored_creation) {
+            return null;
+        }
+        $user_identifier = UserIdentifier::fromId($stored_creation['user_id']);
+        $iteration       = IterationIdentifier::fromId($stored_creation['iteration_id']);
+        $user            = $user_retriever->getUserWithId($user_identifier);
+        try {
+            $program_increment = ProgramIncrementIdentifier::fromId(
+                $program_increment_checker,
+                $stored_creation['program_increment_id'],
+                $user
+            );
+        } catch (ProgramIncrementNotFoundException $e) {
+            return null;
+        }
+        $changeset = ChangesetIdentifier::fromId($stored_creation['iteration_changeset_id']);
+        return new self($iteration, $program_increment, $user_identifier, $changeset);
     }
 }

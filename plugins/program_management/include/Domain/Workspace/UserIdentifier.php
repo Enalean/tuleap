@@ -21,12 +21,12 @@
 
 declare(strict_types=1);
 
-
 namespace Tuleap\ProgramManagement\Domain\Workspace;
 
 use Tuleap\ProgramManagement\Domain\UserCanPrioritize;
 
 /**
+ * I am the ID (identifier) of a User.
  * @psalm-immutable
  */
 final class UserIdentifier
@@ -36,6 +36,11 @@ final class UserIdentifier
     private function __construct(int $user_id)
     {
         $this->id = $user_id;
+    }
+
+    public static function fromId(int $user_id): self
+    {
+        return new self($user_id);
     }
 
     public static function fromPFUser(\PFUser $user): self

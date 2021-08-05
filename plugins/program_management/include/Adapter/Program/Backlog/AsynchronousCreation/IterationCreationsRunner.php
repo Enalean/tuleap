@@ -24,7 +24,8 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation;
 
 use Psr\Log\LoggerInterface;
 use Tuleap\ProgramManagement\Adapter\Events\IterationCreationEventProxy;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\NewPendingIterationCreation;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\IterationCreation;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\ProcessIterationCreation;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\RunIterationsCreation;
 use Tuleap\Queue\NoQueueSystemAvailableException;
 use Tuleap\Queue\QueueFactory;
@@ -35,14 +36,19 @@ final class IterationCreationsRunner implements RunIterationsCreation
 {
     private LoggerInterface $logger;
     private QueueFactory $queue_factory;
+    private ProcessIterationCreation $iteration_creator;
 
-    public function __construct(LoggerInterface $logger, QueueFactory $queue_factory)
-    {
-        $this->logger        = $logger;
-        $this->queue_factory = $queue_factory;
+    public function __construct(
+        LoggerInterface $logger,
+        QueueFactory $queue_factory,
+        ProcessIterationCreation $iteration_creator
+    ) {
+        $this->logger            = $logger;
+        $this->queue_factory     = $queue_factory;
+        $this->iteration_creator = $iteration_creator;
     }
 
-    public function scheduleIterationCreations(NewPendingIterationCreation ...$creations): void
+    public function scheduleIterationCreations(IterationCreation ...$creations): void
     {
         try {
             $queue = $this->queue_factory->getPersistentQueue(Worker::EVENT_QUEUE_NAME, QueueFactory::REDIS);
@@ -69,26 +75,13 @@ final class IterationCreationsRunner implements RunIterationsCreation
 
     private function processCreationSynchronously(
         \Exception $exception,
-        NewPendingIterationCreation $creation
+        IterationCreation $creation
     ): void {
         $iteration_id = $creation->iteration->id;
         $this->logger->error(
             "Unable to queue iteration mirrors creation for iteration #{$iteration_id}",
             ['exception' => $exception]
         );
-        $this->processIterationCreation($iteration_id, $creation->user->id);
-    }
-
-    public function addListener(?IterationCreationEventProxy $event): void
-    {
-        if (! $event) {
-            return;
-        }
-        $this->processIterationCreation($event->artifact_id, $event->user_id);
-    }
-
-    private function processIterationCreation(int $iteration_id, int $user_id): void
-    {
-        $this->logger->debug("Processing iteration creation with iteration #$iteration_id for user #$user_id");
+        $this->iteration_creator->processIterationCreation($creation);
     }
 }
