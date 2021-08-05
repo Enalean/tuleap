@@ -17,9 +17,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export const is_folder_empty = (state) => state.folder_content.length === 0;
+import type { FakeItem, Item, State } from "../type";
+import { isFakeItem } from "../helpers/type-check-helper";
 
-export const current_folder_title = (state) => {
+export const is_folder_empty = (state: State): boolean => state.folder_content.length === 0;
+
+export const current_folder_title = (state: State): string => {
     const hierarchy = state.current_folder_ascendant_hierarchy;
 
     if (hierarchy.length === 0) {
@@ -29,24 +32,28 @@ export const current_folder_title = (state) => {
     return hierarchy[hierarchy.length - 1] ? hierarchy[hierarchy.length - 1].title : "";
 };
 
-export const user_can_dragndrop = (state) => state.configuration.max_files_dragndrop > 0;
-
-export const global_upload_progress = (state) => {
-    const ongoing_uploads = state.folder_content.filter((item) => {
-        return Object.prototype.hasOwnProperty.call(item, "progress") && item.upload_error === null;
+export const global_upload_progress = (state: State): number => {
+    const ongoing_uploads = state.folder_content.filter((item: Item | FakeItem) => {
+        return isFakeItem(item) && item.upload_error === null;
     });
 
     if (ongoing_uploads.length === 0) {
         return 0;
     }
 
-    const total_progress = ongoing_uploads.reduce((sum, item) => {
-        return sum + item.progress;
+    const total_progress = ongoing_uploads.reduce((sum: number, item: Item | FakeItem): number => {
+        if (isFakeItem(item) && item.progress) {
+            return sum + item.progress;
+        }
+
+        return sum;
     }, 0);
 
     return Math.trunc(total_progress / ongoing_uploads.length);
 };
 
-export const is_uploading = (state) => {
-    return Boolean(state.folder_content.find((item) => item.is_uploading));
+export const is_uploading = (state: State): boolean => {
+    return Boolean(
+        state.folder_content.find((item: Item | FakeItem) => isFakeItem(item) && item.is_uploading)
+    );
 };

@@ -17,7 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import * as getters from "./getters.js";
+import * as getters from "./getters";
+import type { FakeItem, Folder, Item, State } from "../type";
 
 describe("Store getters", () => {
     describe("current_folder_title", () => {
@@ -27,32 +28,26 @@ describe("Store getters", () => {
                     {
                         id: 2,
                         title: "folder A",
-                        owner: {
-                            id: 101,
-                        },
                         last_update_date: "2018-08-07T16:42:49+02:00",
-                    },
+                    } as Folder,
                     {
                         id: 3,
                         title: "Current folder",
-                        owner: {
-                            id: 101,
-                            display_name: "user (login)",
-                        },
                         last_update_date: "2018-08-21T17:01:49+02:00",
-                    },
+                    } as Folder,
                 ],
                 root_title: "Documents",
-            });
+            } as State);
 
             expect(title).toBe("Current folder");
         });
 
         it("returns the root title if the ascendant hierarchy is empty", () => {
+            const hierarchy: Array<Folder> = [];
             const title = getters.current_folder_title({
-                current_folder_ascendant_hierarchy: [],
+                current_folder_ascendant_hierarchy: hierarchy,
                 root_title: "Documents",
-            });
+            } as State);
 
             expect(title).toBe("Documents");
         });
@@ -62,22 +57,29 @@ describe("Store getters", () => {
         it("returns the global upload progress by computing the mean of all progress values", () => {
             const global_progress = getters.global_upload_progress({
                 folder_content: [
-                    { id: 1 },
-                    { id: 2, progress: 25, upload_error: "Error during upload" },
-                    { id: 3, progress: 25, upload_error: null },
-                    { id: 4 },
-                    { id: 5, progress: 75, upload_error: null },
-                    { id: 6 },
+                    { id: 1 } as Item,
+                    { id: 2, progress: 25, upload_error: "Error during upload" } as FakeItem,
+                    { id: 3, progress: 25, upload_error: null } as FakeItem,
+                    { id: 4 } as Item,
+                    { id: 5, progress: 75, upload_error: null } as FakeItem,
+                    { id: 6 } as Item,
                 ],
-            });
+            } as State);
 
             expect(global_progress).toEqual(50);
         });
 
         it("returns 0 if no upload is in progress", () => {
             const global_progress = getters.global_upload_progress({
-                folder_content: [{ id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }, { id: 5 }, { id: 6 }],
-            });
+                folder_content: [
+                    { id: 1 } as Item,
+                    { id: 2 } as Item,
+                    { id: 3 } as Item,
+                    { id: 4 } as Item,
+                    { id: 5 } as Item,
+                    { id: 6 } as Item,
+                ],
+            } as State);
 
             expect(global_progress).toEqual(0);
         });

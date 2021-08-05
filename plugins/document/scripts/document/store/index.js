@@ -26,7 +26,7 @@ import createMutationsSharer, {
 } from "vuex-shared-mutations";
 import { expiringLocalStorage } from "./store-persistence/storage";
 import * as mutations from "./mutations.js";
-import * as getters from "./getters.js";
+import * as getters from "./getters";
 import * as actions from "./actions.js";
 import state from "./state.js";
 import error from "./error/module";
