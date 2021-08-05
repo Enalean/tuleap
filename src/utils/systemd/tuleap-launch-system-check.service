@@ -1,5 +1,6 @@
 [Unit]
 Description=Tuleap queue system check
+Documentation=https://docs.tuleap.org
 
 [Service]
 Type=simple

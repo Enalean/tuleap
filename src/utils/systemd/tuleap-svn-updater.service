@@ -1,5 +1,6 @@
 [Unit]
 Description=SVN Updater Service
+Documentation=https://docs.tuleap.org
 After=tuleap.service
 PartOf=tuleap.service
 
