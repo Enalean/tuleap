@@ -211,6 +211,7 @@ class ServiceIconValidator
         'fa-hospital-o' => "Hospital Outlined",
         'fa-ambulance' => "Ambulance",
         'fa-medkit' => "Medkit",
+        'fab fa-figma' => "Figma Logo",
         'fa-fighter-jet' => "Fighter-jet",
         'fa-beer' => "Beer",
         'fa-h-square' => "H Square",

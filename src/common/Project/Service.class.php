@@ -298,6 +298,12 @@ class Service // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 
     private function getFontAwesomeIcon(string $icon): string
     {
-        return 'fa fa-fw ' . $icon;
+        $fa_icon = 'fa-fw ';
+
+        if (strpos($icon, ' ') !== false) {
+            return $fa_icon . $icon;
+        }
+
+        return $fa_icon . "fa $icon";
     }
 }
