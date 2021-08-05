@@ -88,6 +88,7 @@ class CreateBranchButtonFetcher
         $link       = new AdditionalButtonLinkPresenter(
             $link_label,
             "",
+            "",
             $icon,
             'artifact-create-gitlab-branches',
             [
@@ -103,7 +104,7 @@ class CreateBranchButtonFetcher
                     'name'  => 'branch-name',
                     'value' => $this->branch_name_creator_from_artifact->getBaseBranchName($artifact)
                 ],
-            ]
+            ],
         );
 
         return new AdditionalButtonAction(

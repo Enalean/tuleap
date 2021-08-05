@@ -20,39 +20,25 @@
 
 namespace Tuleap\Tracker\Artifact\ActionButtons;
 
-class AdditionalButtonLinkPresenter
+/**
+ * @psalm-immutable
+ */
+final class AdditionalButtonLinkPresenter
 {
-    /**
-     * @var string
-     */
-    public $link_label;
+    public string $link_label;
+    public string $url;
+    public string $icon;
+    public string $id;
+    public array $data;
+    public string $data_test;
 
-    /**
-     * @var string
-     */
-    public $url;
-
-    /**
-     * @var string
-     */
-    public $icon;
-
-    /**
-     * @var string
-     */
-    public $id;
-
-    /**
-     * @var array
-     */
-    public $data;
-
-    public function __construct(string $link_label, string $url, ?string $icon = null, ?string $id = null, ?array $data = null)
+    public function __construct(string $link_label, string $url, string $data_test, ?string $icon = null, ?string $id = null, ?array $data = null)
     {
         $this->link_label = $link_label;
         $this->url        = $url;
-        $this->icon       = $icon ? $icon : '';
-        $this->id         = $id ? $id : '';
-        $this->data       = $data ? $data : [];
+        $this->icon       = $icon ?: '';
+        $this->id         = $id ?: '';
+        $this->data       = $data ?: [];
+        $this->data_test  = $data_test;
     }
 }

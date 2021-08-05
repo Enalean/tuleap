@@ -293,6 +293,7 @@ class testmanagementPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDecla
         $link = new AdditionalButtonLinkPresenter(
             $link_label,
             $url,
+            "",
             $icon
         );
 

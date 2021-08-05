@@ -88,6 +88,7 @@ final class ArtifactTopBacklogActionBuilder
         $link = new AdditionalButtonLinkPresenter(
             $link_label,
             '',
+            'add-to-top-backlog',
             $icon,
             'artifact-program-management-top-backlog-action',
             [

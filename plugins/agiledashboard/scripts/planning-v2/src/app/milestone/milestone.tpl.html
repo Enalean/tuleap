@@ -123,6 +123,7 @@
             data-accept="{{ milestoneController.milestone.content_accepted_types.toString() }}"
             data-submilestone-id="{{ milestoneController.milestone.id }}"
             data-nodrop="{{ ! milestoneController.canUserMoveCards() }}"
+             data-test="milestone-backlog-items"
         >
             <div ng-repeat="backlog_item in milestoneController.milestone.content"
                 class="backlog-item {{ planning.current_view_class }}"
