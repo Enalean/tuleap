@@ -18,30 +18,30 @@
  */
 
 describe("Program management", () => {
-    let program_project_name: string, team_project_name: string, now: number;
+    let program_project_name: string, team_project_name: string;
 
     before(() => {
         cy.clearSessionCookie();
         cy.projectAdministratorLogin();
-        now = Date.now();
     });
 
     beforeEach(function () {
         cy.preserveSessionCookies();
 
+        const now = Date.now();
         program_project_name = "program-" + now;
         team_project_name = "team-" + now;
     });
 
     it("SAFe usage", () => {
-        createProjects(team_project_name, program_project_name);
-        configureProgram(program_project_name, selectLabelInListPickerDropdown, team_project_name);
+        createProjects(program_project_name, team_project_name);
+        configureProgram(program_project_name, team_project_name);
         createAndPlanFeature(program_project_name, team_project_name);
-        checkThatProgramAndTeamsAreCorrect(team_project_name, program_project_name);
+        checkThatProgramAndTeamsAreCorrect(program_project_name, team_project_name);
     });
 });
 
-function createProjects(team_project_name: string, program_project_name: string): void {
+function createProjects(program_project_name: string, team_project_name: string): void {
     cy.log("Create team project");
     cy.visit("/project/new");
     cy.get("[data-test=project-registration-SAFe-templates-tab]").click();
@@ -77,11 +77,7 @@ function createProjects(team_project_name: string, program_project_name: string)
     });
 }
 
-function configureProgram(
-    program_project_name: string,
-    selectLabelInListPickerDropdown: (label: string) => CypressWrapper,
-    team_project_name: string
-): void {
+function configureProgram(program_project_name: string, team_project_name: string): void {
     cy.log("Add team inside project");
     cy.visitProjectService(program_project_name, "Program");
     cy.get("[data-test=program-go-to-administration]").click({ force: true });
@@ -118,19 +114,15 @@ function createAndLinkUserStory(
     cy.get("[data-test=artifact-submit-options]").click();
     cy.get("[data-test=artifact-submit-and-stay]").click();
 
-    let user_story_id: string;
-    cy.get("[data-test=current-artifact-id]")
-        .should(($input) => {
-            user_story_id = String($input.val());
-        })
-        .then((): void => {
-            planFeatureIntoProgramIncrement(
-                program_project_name,
-                team_project_name,
-                feature_id,
-                user_story_id
-            );
-        });
+    cy.get("[data-test=current-artifact-id]").then(($input) => {
+        const user_story_id = String($input.val());
+        planFeatureIntoProgramIncrement(
+            program_project_name,
+            team_project_name,
+            feature_id,
+            user_story_id
+        );
+    });
 }
 
 function planFeatureIntoProgramIncrement(
@@ -172,19 +164,15 @@ function createAndPlanFeature(program_project_name: string, team_project_name: s
     cy.get("[data-test=artifact-submit-options]").click();
     cy.get("[data-test=artifact-submit-and-stay]").click();
 
-    let feature_id: string;
-    cy.get("[data-test=current-artifact-id]")
-        .should(($input) => {
-            feature_id = String($input.val());
-        })
-        .then((): void => {
-            createAndLinkUserStory(program_project_name, team_project_name, feature_id);
-        });
+    cy.get("[data-test=current-artifact-id]").then(($input) => {
+        const feature_id = String($input.val());
+        createAndLinkUserStory(program_project_name, team_project_name, feature_id);
+    });
 }
 
 function checkThatProgramAndTeamsAreCorrect(
-    team_project_name: string,
-    program_project_name: string
+    program_project_name: string,
+    team_project_name: string
 ): void {
     cy.visitProjectService(program_project_name, "Program");
     cy.log("Check sidebar for program");
