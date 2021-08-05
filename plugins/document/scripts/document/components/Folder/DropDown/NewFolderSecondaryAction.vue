@@ -32,15 +32,17 @@
     </button>
 </template>
 <script>
-import { mapGetters } from "vuex";
 import EventBus from "../../../helpers/event-bus.js";
+import { isFolder } from "../../../helpers/type-check-helper";
 export default {
     name: "NewFolderSecondaryAction",
     props: { item: Object },
-    computed: { ...mapGetters(["is_item_a_folder"]) },
     methods: {
         showNewFolderModal() {
             EventBus.$emit("show-new-folder-modal", { detail: { parent: this.item } });
+        },
+        is_item_a_folder(item) {
+            return isFolder(item);
         },
     },
 };

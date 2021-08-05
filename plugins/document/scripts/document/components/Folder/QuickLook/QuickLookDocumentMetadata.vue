@@ -100,13 +100,13 @@ import prettyBytes from "pretty-kibibytes";
 import { mapState } from "vuex";
 import { formatDateUsingPreferredUserFormat } from "../../../helpers/date-formatter";
 import UserBadge from "../../User/UserBadge.vue";
-import { TYPE_FILE, TYPE_FOLDER } from "../../../constants";
 import QuickLookDocumentAdditionalMetadataList from "./QuickLookDocumentAdditionalMetadataList.vue";
 import ApprovalBadge from "../ApprovalTables/ApprovalBadge.vue";
 import {
     relativeDatePlacement,
     relativeDatePreference,
 } from "@tuleap/core/scripts/tuleap/custom-elements/relative-date/relative-date-helper";
+import { isFile, isFolder } from "../../../helpers/type-check-helper";
 
 export default {
     components: { ApprovalBadge, QuickLookDocumentAdditionalMetadataList, UserBadge },
@@ -124,12 +124,6 @@ export default {
             const metadata_length = this.get_custom_metadata.length;
 
             return this.get_custom_metadata.slice(Math.ceil(metadata_length / 2), metadata_length);
-        },
-        is_file() {
-            return this.item.type === TYPE_FILE;
-        },
-        is_document() {
-            return this.item.type !== TYPE_FOLDER;
         },
         file_size_in_mega_bytes() {
             if (!this.item.file_properties) {
@@ -163,6 +157,12 @@ export default {
     methods: {
         getFormattedDate(date) {
             return formatDateUsingPreferredUserFormat(date, this.date_time_format);
+        },
+        is_file() {
+            return isFile(this.item);
+        },
+        is_document() {
+            return !isFolder(this.item.type);
         },
     },
 };

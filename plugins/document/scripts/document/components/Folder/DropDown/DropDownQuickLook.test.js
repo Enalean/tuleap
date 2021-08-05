@@ -27,8 +27,6 @@ describe("DropDownQuickLook", () => {
     beforeEach(() => {
         store = createStoreMock({});
 
-        store.getters.is_item_a_folder = () => false;
-
         factory = (props = {}) => {
             return shallowMount(DropDownQuickLook, {
                 localVue,
@@ -80,10 +78,6 @@ describe("DropDownQuickLook", () => {
             type: "folder",
             user_can_write: true,
         };
-
-        beforeEach(() => {
-            store.getters.is_item_a_folder = () => true;
-        });
 
         it(`When the dropdown is open
             Then user should not have the "create new version" option`, () => {

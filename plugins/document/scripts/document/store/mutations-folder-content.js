@@ -18,8 +18,8 @@
  */
 
 import Vue from "vue";
-import { TYPE_FOLDER } from "../constants";
 import { getFolderSubtree } from "../helpers/retrieve-subtree-helper";
+import { isFolder } from "../helpers/type-check-helper";
 
 export {
     saveFolderContent,
@@ -42,7 +42,7 @@ function saveFolderContent(state, folder_content) {
 function addDocumentToTheRightPlace(state, new_item, parent) {
     const near_sibling_index = state.folder_content.findIndex(
         (sibling) =>
-            sibling.type !== TYPE_FOLDER &&
+            !isFolder(sibling) &&
             sibling.parent_id === new_item.parent_id &&
             sibling.title.localeCompare(new_item.title, undefined, {
                 numeric: true,
@@ -83,7 +83,7 @@ function addDocumentToTheRightPlace(state, new_item, parent) {
 
 function addFolderToTheRightPlace(state, new_item, parent) {
     const folder_siblings = state.folder_content.filter(
-        (item) => item.type === TYPE_FOLDER && item.parent_id === new_item.parent_id
+        (item) => isFolder(item) && item.parent_id === new_item.parent_id
     );
 
     let nearest_sibling = folder_siblings.find((sibling) => {
@@ -130,7 +130,7 @@ function addJustCreatedItemToFolderContent(state, new_item) {
 
     new_item.level = parent ? parent.level + 1 : 0;
 
-    if (new_item.type !== TYPE_FOLDER) {
+    if (!isFolder(new_item)) {
         return addDocumentToTheRightPlace(state, new_item, parent);
     }
 
@@ -264,13 +264,13 @@ function removeItemFromFolderContent(state, item_to_remove) {
         return;
     }
 
-    if (item_to_remove.type === TYPE_FOLDER) {
+    if (isFolder(item_to_remove)) {
         unfoldFolderContent(state, item_to_remove.id);
 
         const children = getFolderSubtree(state.folder_content, item_to_remove.id);
 
         children.forEach((child) => {
-            if (child.type === TYPE_FOLDER) {
+            if (isFolder(child)) {
                 unfoldFolderContent(state, child.id);
             }
 

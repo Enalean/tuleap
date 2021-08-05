@@ -26,7 +26,7 @@
 </template>
 <script>
 import { mapState } from "vuex";
-import { TYPE_FOLDER } from "../../../constants";
+import { isFolder } from "../../../helpers/type-check-helper";
 
 export default {
     props: {
@@ -40,7 +40,7 @@ export default {
         is_item_sibling_of_a_folder() {
             return Boolean(
                 this.folder_content.find(
-                    (item) => item.parent_id === this.current_folder.id && item.type === TYPE_FOLDER
+                    (item) => item.parent_id === this.current_folder.id && isFolder(item)
                 )
             );
         },

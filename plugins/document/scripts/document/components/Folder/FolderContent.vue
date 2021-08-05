@@ -71,8 +71,8 @@
 import { mapState } from "vuex";
 import FolderContentRow from "./FolderContentRow.vue";
 import QuicklookGlobal from "./QuickLook/QuickLookGlobal.vue";
-import { TYPE_FOLDER, TYPE_FILE } from "../../constants";
 import EventBus from "../../helpers/event-bus.js";
+import { isFile, isFolder } from "../../helpers/type-check-helper";
 
 export default {
     name: "FolderContent",
@@ -97,10 +97,8 @@ export default {
             }
 
             return {
-                "document-quick-look-folder-dropzone":
-                    this.currently_previewed_item.type === TYPE_FOLDER,
-                "document-quick-look-file-dropzone":
-                    this.currently_previewed_item.type === TYPE_FILE,
+                "document-quick-look-folder-dropzone": isFolder(this.currently_previewed_item),
+                "document-quick-look-file-dropzone": isFile(this.currently_previewed_item),
             };
         },
         should_display_preview() {

@@ -65,7 +65,6 @@
     </div>
 </template>
 <script>
-import { mapGetters } from "vuex";
 import DropDownMenu from "./DropDownMenu.vue";
 import CreateNewItemVersionButton from "../ActionsButton/NewItemVersionButton.vue";
 import NewItemButton from "../ActionsButton/NewItemButton.vue";
@@ -75,7 +74,7 @@ import UnlockItem from "./UnlockItem.vue";
 import DropDownSeparator from "./DropDownSeparator.vue";
 import UpdateProperties from "./UpdateProperties.vue";
 import UpdatePermissions from "./UpdatePermissions.vue";
-import { TYPE_WIKI } from "../../../constants";
+import { isFolder, isWiki } from "../../../helpers/type-check-helper";
 
 export default {
     name: "DropDownQuickLook",
@@ -94,9 +93,13 @@ export default {
         item: Object,
     },
     computed: {
-        ...mapGetters(["is_item_a_folder"]),
         is_item_a_wiki_with_approval_table() {
-            return this.item.type === TYPE_WIKI && this.item.approval_table !== null;
+            return isWiki(this.item) && this.item.approval_table !== null;
+        },
+    },
+    methods: {
+        is_item_a_folder(item) {
+            return isFolder(item);
         },
     },
 };

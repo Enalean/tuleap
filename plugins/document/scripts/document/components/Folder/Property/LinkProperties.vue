@@ -44,7 +44,7 @@
     </div>
 </template>
 <script>
-import { TYPE_LINK } from "../../../constants";
+import { isLink } from "../../../helpers/type-check-helper";
 export default {
     name: "LinkProperties",
     props: {
@@ -53,7 +53,7 @@ export default {
     },
     computed: {
         is_displayed() {
-            return this.item.type === TYPE_LINK;
+            return isLink(this.item);
         },
     },
 };

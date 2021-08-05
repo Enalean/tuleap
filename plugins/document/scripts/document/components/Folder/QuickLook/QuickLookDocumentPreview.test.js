@@ -33,8 +33,6 @@ describe("QuickLookDocumentPreview", () => {
         const store_options = { state };
 
         store = createStoreMock(store_options);
-        store.getters.is_item_a_folder = () => false;
-        store.getters.is_item_an_embedded_file = () => false;
 
         preview_factory = (props = {}) => {
             return shallowMount(QuickLookDocumentPreview, {
@@ -71,8 +69,6 @@ describe("QuickLookDocumentPreview", () => {
                 content: "<h1>Hello world!</h1>",
             },
         };
-
-        store.getters.is_item_an_embedded_file = () => true;
 
         const wrapper = preview_factory();
 

@@ -35,7 +35,7 @@
 </template>
 
 <script>
-import { TYPE_EMBEDDED } from "../../../constants";
+import { isEmbedded } from "../../../helpers/type-check-helper";
 
 export default {
     name: "EmbeddedProperties",
@@ -50,7 +50,7 @@ export default {
     },
     computed: {
         is_displayed() {
-            return this.item.type === TYPE_EMBEDDED;
+            return isEmbedded(this.item);
         },
         placeholder() {
             return this.$gettext("My content...");

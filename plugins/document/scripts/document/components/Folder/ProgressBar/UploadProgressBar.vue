@@ -44,7 +44,7 @@
 
 <script>
 import { mapActions } from "vuex";
-import { TYPE_FOLDER } from "../../../constants";
+import { isFolder } from "../../../helpers/type-check-helper";
 
 export default {
     props: {
@@ -67,7 +67,7 @@ export default {
                 this.is_canceled = true;
                 if (this.item.is_uploading_new_version) {
                     this.cancelVersionUpload(this.item);
-                } else if (this.item.type !== TYPE_FOLDER) {
+                } else if (!isFolder(this.item)) {
                     this.cancelFileUpload(this.item);
                 } else {
                     this.cancelFolderUpload(this.item);

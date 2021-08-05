@@ -35,9 +35,9 @@
 <script>
 import { mapGetters, mapState } from "vuex";
 import CurrentFolderDropZone from "./CurrentFolderDropZone.vue";
-import { TYPE_FILE, TYPE_FOLDER } from "../../../constants";
 import { highlightItem } from "../../../helpers/highlight-items-helper";
 import EventBus from "./../../../helpers/event-bus.js";
+import { isFile, isFolder } from "../../../helpers/type-check-helper";
 
 export default {
     components: { CurrentFolderDropZone },
@@ -181,7 +181,7 @@ export default {
                 return;
             }
 
-            if (dropzone_item.type === TYPE_FILE) {
+            if (isFile(dropzone_item)) {
                 await this.uploadNewFileVersion(event, dropzone_item);
 
                 return;
@@ -212,7 +212,7 @@ export default {
                     this.folder_content.find(
                         (item) =>
                             item.title === file.name &&
-                            item.type !== TYPE_FOLDER &&
+                            !isFolder(item) &&
                             item.parent_id === dropzone_item.id
                     )
                 ) {

@@ -17,8 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { TYPE_FOLDER } from "../constants";
 import type { Item } from "../type";
+import { isFolder } from "./type-check-helper";
 
 export function getFolderSubtree(
     folder_content: Array<Item>,
@@ -29,7 +29,7 @@ export function getFolderSubtree(
     const undirect_children: Array<Item> = [];
 
     children.forEach((child) => {
-        if (child.type === TYPE_FOLDER) {
+        if (isFolder(child)) {
             undirect_children.push(...getFolderSubtree(folder_content, child.id));
         }
     });

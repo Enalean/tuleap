@@ -18,8 +18,8 @@
  *
  */
 
-import { TYPE_FOLDER } from "../../constants";
 import type { Folder, Item } from "../../type";
+import { isFolder } from "../type-check-helper";
 
 function doesTitleAlreadyExists(text_value: string, item: Item, parent_folder: Folder): boolean {
     return item.title === text_value && item.parent_id === parent_folder.id;
@@ -31,7 +31,7 @@ export function doesFolderNameAlreadyExist(
     parent_folder: Folder
 ): boolean {
     return folder_content.some((item: Item) => {
-        return doesTitleAlreadyExists(text_value, item, parent_folder) && item.type === TYPE_FOLDER;
+        return doesTitleAlreadyExists(text_value, item, parent_folder) && isFolder(item);
     });
 }
 
@@ -41,7 +41,7 @@ export function doesDocumentNameAlreadyExist(
     parent_folder: Folder
 ): boolean {
     return folder_content.some((item) => {
-        return doesTitleAlreadyExists(text_value, item, parent_folder) && item.type !== TYPE_FOLDER;
+        return doesTitleAlreadyExists(text_value, item, parent_folder) && !isFolder(item);
     });
 }
 
@@ -54,7 +54,7 @@ export function doesDocumentAlreadyExistsAtUpdate(
     return folder_content.some((item) => {
         return (
             doesTitleAlreadyExists(text_value, item, parent_folder) &&
-            item.type !== TYPE_FOLDER &&
+            !isFolder(item) &&
             item.id !== item_to_update.id
         );
     });
@@ -69,7 +69,7 @@ export function doesFolderAlreadyExistsAtUpdate(
     return folder_content.some((item) => {
         return (
             doesTitleAlreadyExists(text_value, item, parent_folder) &&
-            item.type === TYPE_FOLDER &&
+            isFolder(item) &&
             item.id !== item_to_update.id
         );
     });

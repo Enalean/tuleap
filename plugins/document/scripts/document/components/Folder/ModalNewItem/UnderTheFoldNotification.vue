@@ -30,8 +30,8 @@
 </template>
 
 <script>
-import { TYPE_FOLDER } from "../../../constants";
 import EventBus from "../../../helpers/event-bus.js";
+import { isFolder } from "../../../helpers/type-check-helper";
 
 export default {
     data() {
@@ -60,7 +60,7 @@ export default {
     },
     methods: {
         show(event) {
-            this.is_folder = event.detail.item.type === TYPE_FOLDER;
+            this.is_folder = isFolder(event.detail.item);
 
             if (this.is_displayed) {
                 clearTimeout(this.fadeout_timeout_id);

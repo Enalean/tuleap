@@ -89,12 +89,13 @@
     </div>
 </template>
 <script>
-import { mapGetters, mapState } from "vuex";
+import { mapState } from "vuex";
 import CutItem from "./CutItem.vue";
 import CopyItem from "./CopyItem.vue";
 import PasteItem from "./PasteItem.vue";
 import DropDownSeparator from "./DropDownSeparator.vue";
 import DownloadFolderAsZip from "./DownloadFolderAsZip/DownloadFolderAsZip.vue";
+import { isFolder, isEmpty } from "../../../helpers/type-check-helper";
 
 export default {
     name: "DropDownMenu",
@@ -121,11 +122,16 @@ export default {
     },
     computed: {
         ...mapState("configuration", ["project_id", "is_deletion_allowed"]),
-        ...mapGetters(["is_item_an_empty_document", "is_item_a_folder"]),
     },
     methods: {
         getUrlForPane(pane_name) {
             return `/plugins/docman/?group_id=${this.project_id}&id=${this.item.id}&action=details&section=${pane_name}`;
+        },
+        is_item_a_folder(item) {
+            return isFolder(item);
+        },
+        is_item_an_empty_document(item) {
+            return isEmpty(item);
         },
     },
 };

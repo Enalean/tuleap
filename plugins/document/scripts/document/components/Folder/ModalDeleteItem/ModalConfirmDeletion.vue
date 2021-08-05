@@ -92,9 +92,10 @@
 
 <script>
 import { sprintf } from "sprintf-js";
-import { mapState, mapGetters } from "vuex";
+import { mapState } from "vuex";
 import { createModal } from "tlp";
 import ModalFeedback from "../ModalCommon/ModalFeedback.vue";
+import { isWiki, isFolder } from "../../../helpers/type-check-helper";
 
 export default {
     components: {
@@ -121,7 +122,6 @@ export default {
     computed: {
         ...mapState("error", ["has_modal_error"]),
         ...mapState(["current_folder", "currently_previewed_item"]),
-        ...mapGetters(["is_item_a_wiki", "is_item_a_folder"]),
         close() {
             return this.$gettext("Close");
         },
@@ -203,6 +203,12 @@ export default {
                 name: "folder",
                 params: { item_id: deleted_item_parent_id },
             });
+        },
+        is_item_a_wiki(item) {
+            return isWiki(item);
+        },
+        is_item_a_folder(item) {
+            return isFolder(item);
         },
     },
 };

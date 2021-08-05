@@ -108,10 +108,10 @@
     </div>
 </template>
 <script>
-import { mapState, mapGetters } from "vuex";
+import { mapState } from "vuex";
 import IconQuicklookFolder from "../../svg/svg-icons/IconQuicklookFolder.vue";
 import IconQuicklookDropIntoFolder from "../../svg/svg-icons/IconQuicklookDropIntoFolder.vue";
-import { TYPE_EMBEDDED } from "../../../constants";
+import { isEmbedded, isFolder } from "../../../helpers/type-check-helper";
 
 export default {
     components: {
@@ -123,7 +123,6 @@ export default {
     },
     computed: {
         ...mapState(["currently_previewed_item", "is_loading_currently_previewed_item"]),
-        ...mapGetters(["is_item_a_folder"]),
         is_loading_content() {
             if (!this.is_an_embedded_file) {
                 return false;
@@ -141,7 +140,12 @@ export default {
             );
         },
         is_an_embedded_file() {
-            return this.currently_previewed_item.type === TYPE_EMBEDDED;
+            return isEmbedded(this.currently_previewed_item);
+        },
+    },
+    methods: {
+        is_item_a_folder(item) {
+            return isFolder(item);
         },
     },
 };

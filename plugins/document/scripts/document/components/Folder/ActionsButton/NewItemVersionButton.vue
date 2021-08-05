@@ -38,8 +38,8 @@
     </button>
 </template>
 <script>
-import { TYPE_LINK, TYPE_WIKI } from "../../../constants";
 import EventBus from "../../../helpers/event-bus.js";
+import { isLink, isWiki } from "../../../helpers/type-check-helper";
 
 export default {
     name: "NewItemVersionButton",
@@ -55,7 +55,7 @@ export default {
     },
     computed: {
         is_item_a_wiki_with_approval_table() {
-            return this.item.type === TYPE_WIKI && this.item.approval_table !== null;
+            return isWiki(this.item) && this.item.approval_table !== null;
         },
         cannot_create_new_wiki_version_because_approval_table() {
             return this.$gettext("This wiki has a approval table, you can't update it.");
@@ -77,7 +77,7 @@ export default {
                 return;
             }
 
-            if (this.item.type === TYPE_LINK) {
+            if (isLink(this.item)) {
                 this.is_loading_item = true;
 
                 const link_with_all_properties = await this.$store.dispatch(

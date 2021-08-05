@@ -76,7 +76,6 @@
     </drop-down-menu>
 </template>
 <script>
-import { mapGetters } from "vuex";
 import DropDownMenu from "./DropDownMenu.vue";
 import CreateNewItemVersionButton from "../ActionsButton/NewItemVersionButton.vue";
 import DeleteItem from "./DeleteItem.vue";
@@ -88,6 +87,7 @@ import UnlockItem from "./UnlockItem.vue";
 import UpdateProperties from "./UpdateProperties.vue";
 import UpdatePermissions from "./UpdatePermissions.vue";
 import DropDownItemTitle from "./DropDownItemTitle.vue";
+import { isFolder } from "../../../helpers/type-check-helper";
 
 export default {
     name: "DropDownMenuTreeView",
@@ -105,6 +105,10 @@ export default {
         DropDownMenu,
     },
     props: { item: Object },
-    computed: { ...mapGetters(["is_item_a_folder"]) },
+    methods: {
+        is_item_a_folder(item) {
+            return isFolder(item);
+        },
+    },
 };
 </script>

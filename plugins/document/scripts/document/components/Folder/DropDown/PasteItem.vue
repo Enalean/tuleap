@@ -42,14 +42,15 @@
     </button>
 </template>
 <script>
-import { mapState, mapGetters } from "vuex";
+import { mapState } from "vuex";
 import EventBus from "../../../helpers/event-bus.js";
-import { TYPE_FOLDER, CLIPBOARD_OPERATION_COPY } from "../../../constants";
+import { CLIPBOARD_OPERATION_COPY, TYPE_FOLDER } from "../../../constants";
 import {
     doesFolderNameAlreadyExist,
     doesDocumentNameAlreadyExist,
 } from "../../../helpers/metadata-helpers/check-item-title";
 import { isItemDestinationIntoItself } from "../../../helpers/clipboard/clipboard-helpers";
+import { isFolder } from "../../../helpers/type-check-helper";
 
 export default {
     name: "PasteItem",
@@ -65,12 +66,11 @@ export default {
             "item_type",
             "item_id",
         ]),
-        ...mapGetters(["is_item_a_folder"]),
         can_item_be_pasted() {
             if (
                 this.item_title === null ||
                 this.operation_type === null ||
-                !this.is_item_a_folder(this.destination) ||
+                !isFolder(this.destination) ||
                 !this.destination.user_can_write
             ) {
                 return false;
@@ -108,6 +108,9 @@ export default {
                 this.$store.state.current_folder,
                 this.$store,
             ]);
+        },
+        is_item_a_folder(item) {
+            return isFolder(item);
         },
     },
 };

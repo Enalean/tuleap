@@ -90,20 +90,14 @@
 
 <script>
 import { mapGetters, mapState } from "vuex";
-import {
-    TYPE_EMBEDDED,
-    TYPE_EMPTY,
-    TYPE_FILE,
-    TYPE_FOLDER,
-    TYPE_LINK,
-    TYPE_WIKI,
-} from "../../constants";
+import { TYPE_EMBEDDED, TYPE_EMPTY, TYPE_FILE, TYPE_LINK, TYPE_WIKI } from "../../constants";
 import SearchBox from "./SearchBox.vue";
 import FileUploadManager from "./FilesUploads/FilesUploadsManager.vue";
 import NewItemModal from "./ModalNewItem/NewItemModal.vue";
 import NewFolderModal from "./ModalNewItem/NewFolderModal.vue";
 import FolderHeaderAction from "./FolderHeaderAction.vue";
 import EventBus from "../../helpers/event-bus.js";
+import { isFolder } from "../../helpers/type-check-helper";
 
 export default {
     name: "FolderHeader",
@@ -275,7 +269,7 @@ export default {
             this.item_to_update_permissions = event.detail.current_item;
         },
         isItemAFolder(item) {
-            return item.type === TYPE_FOLDER;
+            return isFolder(item);
         },
     },
 };

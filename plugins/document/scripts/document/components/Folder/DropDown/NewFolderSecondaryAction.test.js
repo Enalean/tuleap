@@ -28,7 +28,6 @@ describe("NewFolderSecondaryAction", () => {
     let document_action_button_factory, store;
     beforeEach(() => {
         store = createStoreMock({});
-        store.getters.is_item_a_folder = () => true;
         document_action_button_factory = (props = {}) => {
             return shallowMount(NewFolderSecondaryAction, {
                 localVue,

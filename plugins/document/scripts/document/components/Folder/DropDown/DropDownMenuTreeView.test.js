@@ -36,7 +36,6 @@ describe("DropDownMenuTreeView", () => {
     });
     it(`Given item is a folder and user can write
         Then the drop down enable user to add new folder and new item inside`, () => {
-        store.getters.is_item_a_folder = () => true;
         const wrapper = dropdown_quicklook_menu_factory({
             item: {
                 id: 1,
@@ -56,7 +55,6 @@ describe("DropDownMenuTreeView", () => {
     });
     it(`Given item is not a folder
         Then document can be locked/unlocked`, () => {
-        store.getters.is_item_a_folder = () => false;
         const wrapper = dropdown_quicklook_menu_factory({
             item: {
                 id: 1,
@@ -78,7 +76,6 @@ describe("DropDownMenuTreeView", () => {
     });
     it(`Given item is not a folder and user can write
         Then user can create new version of document`, () => {
-        store.getters.is_item_a_folder = () => false;
         const wrapper = dropdown_quicklook_menu_factory({
             item: {
                 id: 1,
@@ -100,7 +97,6 @@ describe("DropDownMenuTreeView", () => {
     });
     it(`Given user can write
         Then he can update its properties and delete it`, () => {
-        store.getters.is_item_a_folder = () => false;
         const wrapper = dropdown_quicklook_menu_factory({
             item: {
                 id: 1,
@@ -122,7 +118,6 @@ describe("DropDownMenuTreeView", () => {
     });
     it(`Given it is a file and user has read permission
         Then he can't manage document`, () => {
-        store.getters.is_item_a_folder = () => false;
         const wrapper = dropdown_quicklook_menu_factory({
             item: {
                 id: 1,
@@ -144,7 +139,6 @@ describe("DropDownMenuTreeView", () => {
     });
     it(`Given it is a folder and user has read permission
         Then he can't manage document`, () => {
-        store.getters.is_item_a_folder = () => true;
         const wrapper = dropdown_quicklook_menu_factory({
             item: {
                 id: 1,

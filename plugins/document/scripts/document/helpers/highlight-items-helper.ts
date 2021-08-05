@@ -17,8 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { TYPE_FOLDER, TYPE_FILE } from "../constants";
 import type { Item } from "../type";
+import { isFile, isFolder } from "./type-check-helper";
 
 export const highlightItem = (item: Item, closest_row: HTMLElement): void => {
     if (item.user_can_write) {
@@ -38,9 +38,9 @@ function applyDefaultClass(closest_row: HTMLElement): void {
 }
 
 function applyIconClass(item: Item, closest_row: HTMLElement): void {
-    if (item.type === TYPE_FILE) {
+    if (isFile(item)) {
         closest_row.classList.add("document-file-highlighted");
-    } else if (item.type === TYPE_FOLDER) {
+    } else if (isFolder(item)) {
         closest_row.classList.add("document-folder-highlighted");
     }
 }
