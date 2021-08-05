@@ -34,7 +34,6 @@ class ProgramTemplate implements CategorisedTemplate
 
     private const PROGRAM_XML        = __DIR__ . '/../../resources/templates/program_template.xml';
     private const PROGRAM_CONFIG_XML = __DIR__ . '/../../resources/templates/program_management_config.xml';
-    private const TTM_XML            = __DIR__ . '/../../resources/templates/testmanagement.xml';
 
     private string $title;
     private string $description;
@@ -106,11 +105,6 @@ class ProgramTemplate implements CategorisedTemplate
             $program_management_config_file = $base_dir . '/program-management-config.xml';
             if (! copy(self::PROGRAM_CONFIG_XML, $program_management_config_file)) {
                 throw new \RuntimeException("Can not copy Program config file for tuleap template import");
-            }
-
-            $testmanagment_file = $base_dir . '/testmanagement.xml';
-            if (! copy(self::TTM_XML, $testmanagment_file)) {
-                throw new \RuntimeException("Can not copy TTM file for tuleap template import");
             }
         }
 
