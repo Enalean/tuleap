@@ -39,33 +39,47 @@
     </div>
 </template>
 
-<script>
-import { mapState } from "vuex";
+<script lang="ts">
 import EmptyFolderForReadersSvg from "../../svg/folder/EmptyFolderForReadersSvg.vue";
+import { Component, Vue } from "vue-property-decorator";
+import { State } from "vuex-class";
+import type { Folder, Item } from "../../../type";
 
-export default {
-    name: "EmptyFolderForReaders",
+interface RouterPayload {
+    name: string;
+    params?: {
+        item_id?: number;
+    };
+}
+
+@Component({
     components: { EmptyFolderForReadersSvg },
-    computed: {
-        ...mapState(["current_folder", "current_folder_ascendant_hierarchy"]),
-        index_of_parent() {
-            return this.current_folder_ascendant_hierarchy.length - 2;
-        },
-        parent() {
-            if (this.index_of_parent > 0) {
-                return this.current_folder_ascendant_hierarchy[this.index_of_parent];
-            }
+})
+export default class EmptyFolderForReaders extends Vue {
+    @State
+    readonly current_folder!: Folder;
 
-            return null;
-        },
-        route_to() {
-            return this.parent !== null
-                ? { name: "folder", params: { item_id: this.parent.id } }
-                : { name: "root_folder" };
-        },
-        can_go_to_parent() {
-            return this.index_of_parent >= -1;
-        },
-    },
-};
+    @State
+    readonly current_folder_ascendant_hierarchy!: Array<Folder>;
+
+    index_of_parent(): number {
+        return this.current_folder_ascendant_hierarchy.length - 2;
+    }
+    parent(): Item | null {
+        if (this.index_of_parent() > 0) {
+            return this.current_folder_ascendant_hierarchy[this.index_of_parent()];
+        }
+
+        return null;
+    }
+    route_to(): RouterPayload {
+        const parent = this.parent();
+        return parent !== null
+            ? { name: "folder", params: { item_id: parent.id } }
+            : { name: "root_folder" };
+    }
+    can_go_to_parent(): boolean {
+        return this.index_of_parent() >= -1;
+    }
+}
 </script>

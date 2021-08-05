@@ -37,23 +37,20 @@
     </div>
 </template>
 
-<script>
-import { mapState } from "vuex";
+<script lang="ts">
 import EmptyFolderForWritersSvg from "../../svg/folder/EmptyFolderForWritersSvg.vue";
 import NewItemButton from "../ActionsButton/NewItemButton.vue";
 import DropDownButton from "../DropDown/DropDownButton.vue";
 import DropDownCurrentFolder from "../DropDown/DropDownCurrentFolder.vue";
+import { Component, Vue } from "vue-property-decorator";
+import { State } from "vuex-class";
+import type { Folder } from "../../../type";
 
-export default {
-    name: "EmptyFolderForWriters",
-    components: {
-        DropDownCurrentFolder,
-        EmptyFolderForWritersSvg,
-        NewItemButton,
-        DropDownButton,
-    },
-    computed: {
-        ...mapState(["current_folder"]),
-    },
-};
+@Component({
+    components: { DropDownCurrentFolder, EmptyFolderForWritersSvg, NewItemButton, DropDownButton },
+})
+export default class EmptyFolderForWriters extends Vue {
+    @State
+    readonly current_folder!: Folder;
+}
 </script>
