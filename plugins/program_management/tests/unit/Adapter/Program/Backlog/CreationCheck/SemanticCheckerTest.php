@@ -29,9 +29,9 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\Source\SourceTrackerCollecti
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TrackerCollection;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\ProgramTracker;
-use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\ProgramManagement\Stub\BuildProgramStub;
 use Tuleap\ProgramManagement\Stub\BuildProjectStub;
+use Tuleap\ProgramManagement\Stub\UserIdentifierStub;
 use Tuleap\ProgramManagement\Stub\SearchTeamsOfProgramStub;
 use Tuleap\ProgramManagement\Stub\RetrievePlanningMilestoneTrackerStub;
 use Tuleap\ProgramManagement\Stub\RetrieveVisibleProgramIncrementTrackerStub;
@@ -59,7 +59,6 @@ final class SemanticCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $semantic_status_checker;
     private ProgramTracker $program_increment_tracker;
-    private \PFUser $user;
     private TrackerCollection $trackers;
     private SourceTrackerCollection $source_trackers;
 
@@ -68,20 +67,21 @@ final class SemanticCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         $tracker                         = TrackerTestBuilder::aTracker()->withId(104)->build();
         $this->program_increment_tracker = new ProgramTracker($tracker);
 
-        $teams = TeamProjectsCollection::fromProgramIdentifier(
+        $user_identifier = UserIdentifierStub::buildGenericUser();
+        $teams           = TeamProjectsCollection::fromProgramIdentifier(
             SearchTeamsOfProgramStub::buildTeams(101, 102),
             new BuildProjectStub(),
-            ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 100, UserIdentifier::fromPFUser(UserTestBuilder::aUser()->build()))
+            ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 100, $user_identifier)
         );
 
         $retriever             = RetrievePlanningMilestoneTrackerStub::withValidTrackerIds(1024, 2048);
-        $this->user            = UserTestBuilder::aUser()->build();
-        $this->trackers        = TrackerCollection::buildRootPlanningMilestoneTrackers($retriever, $teams, $this->user);
+        $user                  = UserTestBuilder::aUser()->build();
+        $this->trackers        = TrackerCollection::buildRootPlanningMilestoneTrackers($retriever, $teams, $user);
         $this->source_trackers = SourceTrackerCollection::fromProgramAndTeamTrackers(
             RetrieveVisibleProgramIncrementTrackerStub::withValidTracker(TrackerTestBuilder::aTracker()->withId(1)->build()),
-            ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 101, UserIdentifier::fromPFUser($this->user)),
+            ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 101, $user_identifier),
             $this->trackers,
-            $this->user
+            $user
         );
 
         $this->title_dao               = $this->createMock(\Tracker_Semantic_TitleDao::class);

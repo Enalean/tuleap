@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation;
 
 use Psr\Log\LoggerInterface;
+use Tuleap\ProgramManagement\Adapter\Workspace\UserProxy;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration\IterationIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration\JustLinkedIterationCollection;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\CheckProgramIncrement;
@@ -95,7 +96,7 @@ final class IterationCreation
         if (! $stored_creation) {
             return null;
         }
-        $user_identifier = UserIdentifier::fromId($stored_creation['user_id']);
+        $user_identifier = UserProxy::buildFromId($stored_creation['user_id']);
         $iteration       = IterationIdentifier::fromId($stored_creation['iteration_id']);
         $user            = $user_retriever->getUserWithId($user_identifier);
         try {

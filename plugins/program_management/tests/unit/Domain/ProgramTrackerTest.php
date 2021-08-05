@@ -23,8 +23,8 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Domain;
 
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
-use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\ProgramManagement\Stub\BuildProgramStub;
+use Tuleap\ProgramManagement\Stub\UserIdentifierStub;
 use Tuleap\ProgramManagement\Stub\RetrievePlanningMilestoneTrackerStub;
 use Tuleap\ProgramManagement\Stub\RetrieveVisibleIterationTrackerStub;
 use Tuleap\ProgramManagement\Stub\RetrieveVisibleProgramIncrementTrackerStub;
@@ -59,7 +59,7 @@ final class ProgramTrackerTest extends TestCase
         $tracker   = TrackerTestBuilder::aTracker()->withId(78)->build();
         $retriever = RetrieveVisibleProgramIncrementTrackerStub::withValidTracker($tracker);
         $user      = UserTestBuilder::aUser()->build();
-        $program   = ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 101, UserIdentifier::fromPFUser($user));
+        $program   = ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 101, UserIdentifierStub::buildGenericUser());
 
         $program_increment_tracker = ProgramTracker::buildProgramIncrementTrackerFromProgram($retriever, $program, $user);
         self::assertSame(78, $program_increment_tracker->getTrackerId());
@@ -70,7 +70,7 @@ final class ProgramTrackerTest extends TestCase
         $tracker   = TrackerTestBuilder::aTracker()->withId(78)->build();
         $retriever = RetrieveVisibleIterationTrackerStub::withValidTracker($tracker);
         $user      = UserTestBuilder::aUser()->build();
-        $program   = ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 101, UserIdentifier::fromPFUser($user));
+        $program   = ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 101, UserIdentifierStub::buildGenericUser());
 
         $iteration_tracker = ProgramTracker::buildIterationTrackerFromProgram($retriever, $program, $user);
         self::assertSame(78, $iteration_tracker->getTrackerId());
@@ -80,7 +80,7 @@ final class ProgramTrackerTest extends TestCase
     {
         $retriever = RetrieveVisibleIterationTrackerStub::withNotVisibleIterationTracker();
         $user      = UserTestBuilder::aUser()->build();
-        $program   = ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 101, UserIdentifier::fromPFUser($user));
+        $program   = ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 101, UserIdentifierStub::buildGenericUser());
 
         $iteration_tracker = ProgramTracker::buildIterationTrackerFromProgram($retriever, $program, $user);
         self::assertNull($iteration_tracker);

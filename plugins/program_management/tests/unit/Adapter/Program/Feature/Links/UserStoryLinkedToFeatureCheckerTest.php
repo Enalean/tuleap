@@ -27,6 +27,7 @@ use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\ProgramManagement\Stub\BuildPlanningStub;
 use Tuleap\ProgramManagement\Stub\BuildProgramStub;
+use Tuleap\ProgramManagement\Stub\UserIdentifierStub;
 use Tuleap\ProgramManagement\Stub\RetrieveUserStub;
 use Tuleap\ProgramManagement\Stub\VerifyIsVisibleFeatureStub;
 use Tuleap\Test\Builders\UserTestBuilder;
@@ -51,7 +52,7 @@ final class UserStoryLinkedToFeatureCheckerTest extends \Tuleap\Test\PHPUnit\Tes
         $this->feature_dao      = $this->createMock(ArtifactsLinkedToParentDao::class);
         $this->artifact_factory = $this->createMock(\Tracker_ArtifactFactory::class);
         $this->user             = UserTestBuilder::aUser()->build();
-        $this->user_identifier  = UserIdentifier::fromPFUser($this->user);
+        $this->user_identifier  = UserIdentifierStub::buildGenericUser();
     }
 
     public function testHasNotAPlannedUserStoryIfNoUserStoryIsLinked(): void

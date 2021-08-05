@@ -22,6 +22,7 @@
 namespace Tuleap\ProgramManagement\Adapter\Program\Admin\Configuration;
 
 use PFUser;
+use Tuleap\ProgramManagement\Adapter\Workspace\UserProxy;
 use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ErrorPresenter;
 use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramForAdministrationIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\IterationTracker\RetrieveVisibleIterationTracker;
@@ -33,7 +34,6 @@ use Tuleap\ProgramManagement\Domain\Program\Plan\ProjectIsNotAProgramException;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\ProgramTrackerNotFoundException;
 use Tuleap\ProgramManagement\Domain\ProgramTracker;
-use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\Tracker\Artifact\CanSubmitNewArtifact;
 
 class ConfigurationChecker
@@ -51,7 +51,8 @@ class ConfigurationChecker
         PFUser $user
     ): array {
         try {
-            $program = ProgramIdentifier::fromId($build_program, $program_id->id, UserIdentifier::fromPFUser($user));
+            $user_identifier = UserProxy::buildFromPFUser($user);
+            $program         = ProgramIdentifier::fromId($build_program, $program_id->id, $user_identifier);
         } catch (ProjectIsNotAProgramException $e) {
             return [];
         }

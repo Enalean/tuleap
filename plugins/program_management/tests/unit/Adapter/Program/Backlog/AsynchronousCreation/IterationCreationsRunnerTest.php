@@ -26,10 +26,10 @@ use Psr\Log\Test\TestLogger;
 use Tuleap\ProgramManagement\Domain\Events\IterationCreationEvent;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\IterationCreation;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\ProcessIterationCreation;
+use Tuleap\ProgramManagement\Adapter\Workspace\UserProxy;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration\IterationIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration\JustLinkedIterationCollection;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementIdentifier;
-use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\ProgramManagement\Stub\CheckProgramIncrementStub;
 use Tuleap\ProgramManagement\Stub\RetrieveLastChangesetStub;
 use Tuleap\ProgramManagement\Stub\SearchIterationsStub;
@@ -63,7 +63,7 @@ final class IterationCreationsRunnerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->queue_factory = $this->createStub(QueueFactory::class);
 
         $pfuser                    = UserTestBuilder::aUser()->withId(self::USER_ID)->build();
-        $user                      = UserIdentifier::fromPFUser($pfuser);
+        $user                      = UserProxy::buildFromPFUser($pfuser);
         $program_increment         = ProgramIncrementIdentifier::fromId(
             CheckProgramIncrementStub::buildProgramIncrementChecker(),
             101,

@@ -29,8 +29,8 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Content\Fea
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Content\RemoveFeatureException;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\UserCanPrioritize;
-use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\ProgramManagement\Stub\BuildProgramStub;
+use Tuleap\ProgramManagement\Stub\UserIdentifierStub;
 use Tuleap\ProgramManagement\Stub\RetrieveUserStub;
 use Tuleap\ProgramManagement\Stub\UserPermissionsStub;
 use Tuleap\ProgramManagement\Stub\VerifyIsVisibleFeatureStub;
@@ -161,7 +161,7 @@ final class FeatureRemovalProcessorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     private function buildFeatureRemoval(): FeatureRemoval
     {
-        $user_identifier = UserIdentifier::fromPFUser(UserTestBuilder::aUser()->build());
+        $user_identifier = UserIdentifierStub::buildGenericUser();
         $program         = ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 110, $user_identifier);
         $feature         = FeatureIdentifier::fromId(VerifyIsVisibleFeatureStub::buildVisibleFeature(), 76, $user_identifier, $program);
         return FeatureRemoval::fromFeature(

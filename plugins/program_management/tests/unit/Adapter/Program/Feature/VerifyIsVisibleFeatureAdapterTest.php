@@ -26,6 +26,7 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\ProgramManagement\Stub\BuildProgramStub;
+use Tuleap\ProgramManagement\Stub\UserIdentifierStub;
 use Tuleap\ProgramManagement\Stub\RetrieveUserStub;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
@@ -48,7 +49,7 @@ final class VerifyIsVisibleFeatureAdapterTest extends \Tuleap\Test\PHPUnit\TestC
     {
         $this->artifact_factory = \Mockery::mock(\Tracker_ArtifactFactory::class);
         $this->user             = UserTestBuilder::aUser()->build();
-        $this->user_identifier  =  UserIdentifier::fromPFUser($this->user);
+        $this->user_identifier  = UserIdentifierStub::buildGenericUser();
         $this->verifier         = new VerifyIsVisibleFeatureAdapter(
             $this->artifact_factory,
             RetrieveUserStub::withUser($this->user)

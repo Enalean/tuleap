@@ -25,6 +25,7 @@ namespace Tuleap\ProgramManagement\Domain\Team\Creation;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIsTeamException;
 use Tuleap\ProgramManagement\Domain\Program\ToBeCreatedProgram;
 use Tuleap\ProgramManagement\Stub\BuildProgramStub;
+use Tuleap\ProgramManagement\Stub\UserIdentifierStub;
 use Tuleap\Test\Builders\UserTestBuilder;
 
 final class TeamCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -57,13 +58,13 @@ final class TeamCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->team_adapter->expects(self::once())->method('checkProjectIsATeam');
 
-        $program    = ToBeCreatedProgram::fromId($this->program_adapter, $this->project_id, $this->user);
+        $program    = ToBeCreatedProgram::fromId($this->program_adapter, $this->project_id, UserIdentifierStub::buildGenericUser());
         $collection = new TeamCollection([Team::build($this->team_adapter, $this->team_project_id, $this->user)], $program);
         $this->team_adapter
             ->expects(self::once())
             ->method('buildTeamProject')
             ->willReturnCallback(
-                function (array $team_ids, ToBeCreatedProgram $to_be_created_program, \PFUser $user) use ($program, $collection): TeamCollection {
+                function (array $team_ids, ToBeCreatedProgram $to_be_created_program) use ($program, $collection): TeamCollection {
                     if ($to_be_created_program->getId() !== $program->getId()) {
                         throw new \RuntimeException('program id #' . $program->getId() . ' is not same to ' . $to_be_created_program->getId());
                     }

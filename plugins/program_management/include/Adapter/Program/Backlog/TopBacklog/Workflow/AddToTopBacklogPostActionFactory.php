@@ -26,32 +26,23 @@ use Tracker_FormElement_Field;
 use Transition;
 use Transition_PostAction;
 use Transition_PostActionSubFactory;
+use Tuleap\ProgramManagement\Adapter\Workspace\UserProxy;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\TopBacklogChangeProcessor;
 use Tuleap\ProgramManagement\Domain\Program\Plan\BuildProgram;
 use Tuleap\ProgramManagement\Domain\Program\Plan\ProgramAccessException;
 use Tuleap\ProgramManagement\Domain\Program\Plan\ProjectIsNotAProgramException;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
-use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Workflow;
 
-class AddToTopBacklogPostActionFactory implements Transition_PostActionSubFactory
+final class AddToTopBacklogPostActionFactory implements Transition_PostActionSubFactory
 {
     /**
      * @var array<int, array<int, int>>
      */
-    private $cache = [];
-    /**
-     * @var AddToTopBacklogPostActionDAO
-     */
-    private $add_to_top_backlog_post_action_dao;
-    /**
-     * @var BuildProgram
-     */
-    private $build_program;
-    /**
-     * @var TopBacklogChangeProcessor
-     */
-    private $top_backlog_change_processor;
+    private array $cache = [];
+    private AddToTopBacklogPostActionDAO $add_to_top_backlog_post_action_dao;
+    private BuildProgram $build_program;
+    private TopBacklogChangeProcessor $top_backlog_change_processor;
 
     public function __construct(
         AddToTopBacklogPostActionDAO $add_to_top_backlog_post_action_dao,
@@ -97,9 +88,10 @@ class AddToTopBacklogPostActionFactory implements Transition_PostActionSubFactor
             return [];
         }
 
-        $project_id = (int) $transition->getGroupId();
+        $project_id      = (int) $transition->getGroupId();
+        $user_identifier = UserProxy::buildFromPFUser(new AddToBacklogPostActionAllPowerfulUser());
         try {
-            ProgramIdentifier::fromId($this->build_program, $project_id, UserIdentifier::fromPFUser(new AddToBacklogPostActionAllPowerfulUser()));
+            ProgramIdentifier::fromId($this->build_program, $project_id, $user_identifier);
         } catch (ProgramAccessException | ProjectIsNotAProgramException $e) {
             return [];
         }

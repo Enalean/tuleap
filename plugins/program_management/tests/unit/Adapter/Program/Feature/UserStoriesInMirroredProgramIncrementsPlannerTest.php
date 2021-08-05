@@ -39,6 +39,7 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\CheckProgra
 use Tuleap\ProgramManagement\Domain\Program\Plan\PrioritizeFeaturesPermissionVerifier;
 use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\MirroredTimebox;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
+use Tuleap\ProgramManagement\Stub\UserIdentifierStub;
 use Tuleap\ProgramManagement\Stub\RetrieveUnlinkedUserStoriesOfMirroredProgramIncrementStub;
 use Tuleap\ProgramManagement\Stub\RetrieveUserStub;
 use Tuleap\Test\Builders\UserTestBuilder;
@@ -103,7 +104,7 @@ final class UserStoriesInMirroredProgramIncrementsPlannerTest extends TestCase
             RetrieveUnlinkedUserStoriesOfMirroredProgramIncrementStub::buildEmptyUserStories()
         );
 
-        $this->user = UserIdentifier::fromPFUser($pfuser);
+        $this->user = UserIdentifierStub::buildGenericUser();
     }
 
     public function testItAddLinksToMirroredMilestones(): void

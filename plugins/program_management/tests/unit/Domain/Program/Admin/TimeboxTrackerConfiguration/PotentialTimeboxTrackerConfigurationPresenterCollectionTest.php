@@ -28,8 +28,8 @@ use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramSelectOptionConfigurati
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\ProgramTracker;
 use Tuleap\ProgramManagement\Domain\TrackerReference;
-use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\ProgramManagement\Stub\BuildProgramStub;
+use Tuleap\ProgramManagement\Stub\UserIdentifierStub;
 use Tuleap\ProgramManagement\Stub\RetrieveTrackerFromProgramStub;
 use Tuleap\ProgramManagement\Stub\RetrieveVisibleProgramIncrementTrackerStub;
 use Tuleap\ProgramManagement\Stub\VerifyIsTeamStub;
@@ -61,7 +61,7 @@ final class PotentialTimeboxTrackerConfigurationPresenterCollectionTest extends 
                 RetrieveVisibleProgramIncrementTrackerStub::withValidTracker(
                     TrackerTestBuilder::aTracker()->withId(300)->build()
                 ),
-                ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 101, UserIdentifier::fromPFUser($this->user)),
+                ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 101, UserIdentifierStub::buildGenericUser()),
                 $this->user
             )
         );

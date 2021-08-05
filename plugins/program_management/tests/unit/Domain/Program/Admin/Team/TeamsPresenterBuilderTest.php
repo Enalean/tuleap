@@ -24,25 +24,22 @@ namespace Tuleap\ProgramManagement\Domain\Program\Admin\Team;
 
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Team\TeamProjectsCollection;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
-use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\ProgramManagement\Stub\BuildProgramStub;
 use Tuleap\ProgramManagement\Stub\BuildProjectStub;
+use Tuleap\ProgramManagement\Stub\UserIdentifierStub;
 use Tuleap\ProgramManagement\Stub\SearchTeamsOfProgramStub;
-use Tuleap\Test\Builders\UserTestBuilder;
 
 final class TeamsPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testBuildPresenterWithAllTeam(): void
     {
-        $user = UserTestBuilder::aUser()->build();
-
         $collection = TeamProjectsCollection::fromProgramIdentifier(
             SearchTeamsOfProgramStub::buildTeams(150, 666),
             new BuildProjectStub(),
             ProgramIdentifier::fromId(
                 BuildProgramStub::stubValidProgram(),
                 101,
-                UserIdentifier::fromPFUser($user)
+                UserIdentifierStub::buildGenericUser()
             )
         );
 

@@ -23,11 +23,11 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Adapter\Program\Feature;
 
 use PFUser;
+use Tuleap\ProgramManagement\Adapter\Workspace\UserProxy;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Content\Links\VerifyLinkedUserStoryIsNotPlanned;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\VerifyIsVisibleFeature;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
-use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\ProgramManagement\REST\v1\FeatureRepresentation;
 use Tuleap\Tracker\REST\MinimalTrackerRepresentation;
 
@@ -75,7 +75,7 @@ class FeatureRepresentationBuilder
         int $title_field_id,
         string $artifact_title
     ): ?FeatureRepresentation {
-        $user_identifier = UserIdentifier::fromPFUser($user);
+        $user_identifier = UserProxy::buildFromPFUser($user);
 
         $feature = FeatureIdentifier::fromId($this->feature_verifier, $artifact_id, $user_identifier, $program);
         if (! $feature) {

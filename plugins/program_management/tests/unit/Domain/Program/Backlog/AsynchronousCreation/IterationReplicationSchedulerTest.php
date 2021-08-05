@@ -26,6 +26,7 @@ use Psr\Log\Test\TestLogger;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementIdentifier;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\ProgramManagement\Stub\CheckProgramIncrementStub;
+use Tuleap\ProgramManagement\Stub\UserIdentifierStub;
 use Tuleap\ProgramManagement\Stub\RetrieveLastChangesetStub;
 use Tuleap\ProgramManagement\Stub\SearchIterationsStub;
 use Tuleap\ProgramManagement\Stub\VerifyIsVisibleArtifactStub;
@@ -51,7 +52,7 @@ final class IterationReplicationSchedulerTest extends \Tuleap\Test\PHPUnit\TestC
     protected function setUp(): void
     {
         $pfuser                        = UserTestBuilder::aUser()->build();
-        $this->user                    = UserIdentifier::fromPFUser($pfuser);
+        $this->user                    = UserIdentifierStub::buildGenericUser();
         $this->program_increment       = ProgramIncrementIdentifier::fromId(
             CheckProgramIncrementStub::buildProgramIncrementChecker(),
             902,

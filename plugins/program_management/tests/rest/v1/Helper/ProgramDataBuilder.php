@@ -36,6 +36,7 @@ use Tuleap\ProgramManagement\Adapter\Program\Plan\ProgramAdapter;
 use Tuleap\ProgramManagement\Adapter\Program\ProgramDao;
 use Tuleap\ProgramManagement\Adapter\Team\TeamAdapter;
 use Tuleap\ProgramManagement\Adapter\Team\TeamDao;
+use Tuleap\ProgramManagement\Adapter\Workspace\UserProxy;
 use Tuleap\ProgramManagement\Adapter\Workspace\UserManagerAdapter;
 use Tuleap\ProgramManagement\Domain\Program\ToBeCreatedProgram;
 use Tuleap\ProgramManagement\Domain\Team\Creation\Team;
@@ -98,11 +99,13 @@ class ProgramDataBuilder extends REST_TestDataBuilder
         $this->program = $this->project_manager->getProjectByUnixName(self::PROJECT_PROGRAM_NAME);
         $this->team    = $this->project_manager->getProjectByUnixName(self::PROJECT_TEAM_NAME);
 
+        $user_identifier = UserProxy::buildFromPFUser($this->user);
+
         $team_dao = new TeamDao();
         $team_dao->save(
             new TeamCollection(
                 [Team::buildForRestTest($team_adapter, (int) $this->team->getID(), $this->user)],
-                ToBeCreatedProgram::fromId($program_adapter, (int) $this->program->getID(), $this->user)
+                ToBeCreatedProgram::fromId($program_adapter, (int) $this->program->getID(), $user_identifier)
             )
         );
 

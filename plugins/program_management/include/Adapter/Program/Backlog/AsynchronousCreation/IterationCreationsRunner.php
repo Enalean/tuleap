@@ -64,7 +64,7 @@ final class IterationCreationsRunner implements RunIterationsCreation
                     IterationCreationEvent::TOPIC,
                     [
                         'artifact_id' => $iteration_creation->iteration->id,
-                        'user_id'     => $iteration_creation->user->id,
+                        'user_id'     => $iteration_creation->user->getId(),
                     ]
                 );
             } catch (QueueServerConnectionException $exception) {

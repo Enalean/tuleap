@@ -27,7 +27,6 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Content\Add
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Content\FeatureAddition;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementNotFoundException;
 use Tuleap\ProgramManagement\Domain\Workspace\RetrieveUser;
-use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkUpdater;
 
 final class FeatureAdditionProcessor implements AddFeature
@@ -57,7 +56,7 @@ final class FeatureAdditionProcessor implements AddFeature
         }
         try {
             $this->artifact_link_updater->updateArtifactLinks(
-                $this->retrieve_user->getUserWithId(UserIdentifier::fromUserCanPrioritize($feature_addition->user)),
+                $this->retrieve_user->getUserWithId($feature_addition->user),
                 $program_increment_artifact,
                 [$feature_addition->feature->id],
                 [],

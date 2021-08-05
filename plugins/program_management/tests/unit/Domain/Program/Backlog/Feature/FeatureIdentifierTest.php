@@ -23,16 +23,15 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\Feature;
 
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
-use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\ProgramManagement\Stub\BuildProgramStub;
+use Tuleap\ProgramManagement\Stub\UserIdentifierStub;
 use Tuleap\ProgramManagement\Stub\VerifyIsVisibleFeatureStub;
-use Tuleap\Test\Builders\UserTestBuilder;
 
 final class FeatureIdentifierTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItReturnsNullWhenFeatureIsNotVisibleByUser(): void
     {
-        $user_identifier = UserIdentifier::fromPFUser(UserTestBuilder::aUser()->build());
+        $user_identifier = UserIdentifierStub::buildGenericUser();
         $program         = ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 110, $user_identifier);
 
         self::assertNull(FeatureIdentifier::fromId(VerifyIsVisibleFeatureStub::buildInvisibleFeature(), 404, $user_identifier, $program));
@@ -40,7 +39,7 @@ final class FeatureIdentifierTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItBuildsAValidFeature(): void
     {
-        $user_identifier = UserIdentifier::fromPFUser(UserTestBuilder::aUser()->build());
+        $user_identifier = UserIdentifierStub::buildGenericUser();
         $program         = ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 110, $user_identifier);
 
         $feature = FeatureIdentifier::fromId(VerifyIsVisibleFeatureStub::buildVisibleFeature(), 87, $user_identifier, $program);

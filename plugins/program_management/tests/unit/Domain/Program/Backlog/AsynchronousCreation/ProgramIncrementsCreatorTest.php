@@ -42,6 +42,7 @@ use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\ProgramManagement\Stub\BuildProgramStub;
 use Tuleap\ProgramManagement\Stub\BuildProjectStub;
+use Tuleap\ProgramManagement\Stub\UserIdentifierStub;
 use Tuleap\ProgramManagement\Stub\SearchTeamsOfProgramStub;
 use Tuleap\ProgramManagement\Stub\RetrievePlanningMilestoneTrackerStub;
 use Tuleap\Test\Builders\UserTestBuilder;
@@ -62,9 +63,11 @@ final class ProgramIncrementsCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
      * @var \PHPUnit\Framework\MockObject\MockObject|MapStatusByValue
      */
     private $status_mapper;
+    private UserIdentifier $user_identifier;
 
     protected function setUp(): void
     {
+        $this->user_identifier             =  UserIdentifierStub::buildGenericUser();
         $transaction_executor              = new DBTransactionExecutorPassthrough();
         $this->synchronized_fields_adapter = $this->createMock(BuildSynchronizedFields::class);
         $this->artifact_creator            = $this->createMock(CreateArtifact::class);
@@ -83,7 +86,7 @@ final class ProgramIncrementsCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $teams         = TeamProjectsCollection::fromProgramIdentifier(
             SearchTeamsOfProgramStub::buildTeams(101, 102),
             new BuildProjectStub(),
-            ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 100, UserIdentifier::fromPFUser(UserTestBuilder::aUser()->build()))
+            ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 100, $this->user_identifier)
         );
         $current_user  = UserTestBuilder::aUser()->build();
         $retriever     = RetrievePlanningMilestoneTrackerStub::withValidTrackerIds(1024, 2048);
@@ -114,7 +117,7 @@ final class ProgramIncrementsCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $teams         = TeamProjectsCollection::fromProgramIdentifier(
             SearchTeamsOfProgramStub::buildTeams(101),
             new BuildProjectStub(),
-            ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 100, UserIdentifier::fromPFUser(UserTestBuilder::aUser()->build()))
+            ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 100, $this->user_identifier)
         );
         $current_user  = UserTestBuilder::aUser()->build();
         $retriever     = RetrievePlanningMilestoneTrackerStub::withValidTrackerIds(1024, 2048);

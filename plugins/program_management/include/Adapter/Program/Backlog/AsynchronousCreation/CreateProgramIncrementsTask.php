@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation;
 
 use Psr\Log\LoggerInterface;
+use Tuleap\ProgramManagement\Adapter\Workspace\UserProxy;
 use Tuleap\ProgramManagement\Domain\BuildProject;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\CreateTaskProgramIncrement;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\PendingArtifactCreationStore;
@@ -41,7 +42,6 @@ use Tuleap\ProgramManagement\Domain\Program\PlanningConfiguration\TopPlanningNot
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\SearchTeamsOfProgram;
 use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\RetrievePlanningMilestoneTracker;
-use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 
 final class CreateProgramIncrementsTask implements CreateTaskProgramIncrement
 {
@@ -117,10 +117,11 @@ final class CreateProgramIncrementsTask implements CreateTaskProgramIncrement
             (int) $replication_data->getUser()->getId()
         );
 
+        $user_identifier           = UserProxy::buildFromPFUser($replication_data->getUser());
         $program_increment_changed = new ProgramIncrementChanged(
             $replication_data->getArtifact()->getId(),
             $replication_data->getTracker()->getTrackerId(),
-            UserIdentifier::fromPFUser($replication_data->getUser())
+            $user_identifier
         );
 
         $this->user_stories_planner->plan($program_increment_changed);

@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Content;
 
+use Tuleap\ProgramManagement\Adapter\Workspace\UserProxy;
 use Tuleap\ProgramManagement\Adapter\Workspace\UserPermissionsProxy;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureCanNotBeRankedWithItselfException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureHasPlannedUserStoryException;
@@ -39,7 +40,6 @@ use Tuleap\ProgramManagement\Domain\Program\Plan\VerifyPrioritizeFeaturesPermiss
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\ProgramSearcher;
 use Tuleap\ProgramManagement\Domain\UserCanPrioritize;
-use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\ProgramManagement\REST\v1\FeatureElementToOrderInvolvedInChangeRepresentation;
 
 final class ContentModifier implements ModifyContent
@@ -78,16 +78,17 @@ final class ContentModifier implements ModifyContent
         if ($content_change->potential_feature_id_to_add === null && $content_change->elements_to_order === null) {
             throw new AddOrOrderMustBeSetException();
         }
+        $user_identifier     = UserProxy::buildFromPFUser($user);
         $program_increment   = ProgramIncrementIdentifier::fromId(
             $this->program_increment_checker,
             $program_increment_id,
             $user
         );
-        $program             = $this->program_searcher->getProgramOfProgramIncrement($program_increment->getId(), $user);
+        $program             = $this->program_searcher->getProgramOfProgramIncrement($program_increment->getId(), $user_identifier);
         $user_can_prioritize = UserCanPrioritize::fromUser(
             $this->permission_verifier,
             UserPermissionsProxy::buildFromPFUser($user, $program),
-            UserIdentifier::fromPFUser($user),
+            $user_identifier,
             $program
         );
 
@@ -113,7 +114,7 @@ final class ContentModifier implements ModifyContent
         UserCanPrioritize $user,
         ProgramIdentifier $program
     ): void {
-        $feature = FeatureIdentifier::fromId($this->visible_verifier, $potential_feature_id_to_add, UserIdentifier::fromUserCanPrioritize($user), $program);
+        $feature = FeatureIdentifier::fromId($this->visible_verifier, $potential_feature_id_to_add, $user, $program);
         if ($feature === null) {
             throw new FeatureNotFoundException($potential_feature_id_to_add);
         }

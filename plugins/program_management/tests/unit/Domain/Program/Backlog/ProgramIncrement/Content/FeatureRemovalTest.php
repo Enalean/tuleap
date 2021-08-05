@@ -26,19 +26,18 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureHasPlannedUse
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\UserCanPrioritize;
-use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\ProgramManagement\Stub\BuildProgramStub;
+use Tuleap\ProgramManagement\Stub\UserIdentifierStub;
 use Tuleap\ProgramManagement\Stub\UserPermissionsStub;
 use Tuleap\ProgramManagement\Stub\VerifyIsVisibleFeatureStub;
 use Tuleap\ProgramManagement\Stub\VerifyLinkedUserStoryIsNotPlannedStub;
 use Tuleap\ProgramManagement\Stub\VerifyPrioritizeFeaturesPermissionStub;
-use Tuleap\Test\Builders\UserTestBuilder;
 
 final class FeatureRemovalTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItThrowsWhenFeatureIsLinkedToAnAlreadyPlannedUserStory(): void
     {
-        $user_identifier = UserIdentifier::fromPFUser(UserTestBuilder::aUser()->build());
+        $user_identifier = UserIdentifierStub::buildGenericUser();
         $program         = ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 110, $user_identifier);
         $feature         = FeatureIdentifier::fromId(VerifyIsVisibleFeatureStub::buildVisibleFeature(), 741, $user_identifier, $program);
 
@@ -52,7 +51,7 @@ final class FeatureRemovalTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItBuildsAValidPayload(): void
     {
-        $user_identifier = UserIdentifier::fromPFUser(UserTestBuilder::aUser()->build());
+        $user_identifier = UserIdentifierStub::buildGenericUser();
         $program         = ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 110, $user_identifier);
         $feature         = FeatureIdentifier::fromId(VerifyIsVisibleFeatureStub::buildVisibleFeature(), 76, $user_identifier, $program);
 

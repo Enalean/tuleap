@@ -30,6 +30,7 @@ use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\Workspace\RetrieveUser;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\ProgramManagement\Stub\BuildProgramStub;
+use Tuleap\ProgramManagement\Stub\UserIdentifierStub;
 use Tuleap\ProgramManagement\Stub\RetrieveUserStub;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframe;
@@ -57,7 +58,6 @@ final class ProgramIncrementsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
     private NullLogger $logger;
     private UserIdentifier $user_identifier;
 
-
     protected function setUp(): void
     {
         $this->dao                        = $this->createMock(ProgramIncrementsDAO::class);
@@ -66,7 +66,7 @@ final class ProgramIncrementsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->logger                     = new NullLogger();
         $this->user                       = $this->createMock(\PFUser::class);
         $this->user->method('getId')->willReturn(101);
-        $this->user_identifier = UserIdentifier::fromPFUser($this->user);
+        $this->user_identifier = UserIdentifierStub::buildGenericUser();
     }
 
     public function testCanRetrievesOpenProgramIncrements(): void
