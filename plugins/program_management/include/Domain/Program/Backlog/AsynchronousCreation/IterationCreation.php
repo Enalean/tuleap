@@ -23,14 +23,15 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation;
 
 use Psr\Log\LoggerInterface;
-use Tuleap\ProgramManagement\Adapter\Workspace\UserProxy;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration\IterationIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration\JustLinkedIterationCollection;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\CheckProgramIncrement;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementNotFoundException;
 use Tuleap\ProgramManagement\Domain\Workspace\RetrieveUser;
+use Tuleap\ProgramManagement\Domain\Workspace\StoredUser;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
+use Tuleap\ProgramManagement\Domain\Workspace\VerifyIsUser;
 
 /**
  * I hold all the information necessary to create Mirrored Iterations from a source Iteration.
@@ -87,6 +88,7 @@ final class IterationCreation
 
     public static function fromStorage(
         SearchPendingIteration $iteration_searcher,
+        VerifyIsUser $user_verifier,
         CheckProgramIncrement $program_increment_checker,
         RetrieveUser $user_retriever,
         int $iteration_id,
@@ -96,9 +98,12 @@ final class IterationCreation
         if (! $stored_creation) {
             return null;
         }
-        $user_identifier = UserProxy::buildFromId($stored_creation['user_id']);
-        $iteration       = IterationIdentifier::fromId($stored_creation['iteration_id']);
-        $user            = $user_retriever->getUserWithId($user_identifier);
+        $user_identifier = StoredUser::fromId($user_verifier, $stored_creation['user_id']);
+        if (! $user_identifier) {
+            return null;
+        }
+        $iteration = IterationIdentifier::fromId($stored_creation['iteration_id']);
+        $user      = $user_retriever->getUserWithId($user_identifier);
         try {
             $program_increment = ProgramIncrementIdentifier::fromId(
                 $program_increment_checker,

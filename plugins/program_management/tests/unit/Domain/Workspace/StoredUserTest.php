@@ -20,16 +20,20 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Adapter\Workspace;
+namespace Tuleap\ProgramManagement\Domain\Workspace;
 
-use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\ProgramManagement\Stub\VerifyIsUserStub;
 
-final class UserProxyTest extends \Tuleap\Test\PHPUnit\TestCase
+final class StoredUserTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    public function testItBuildsFromPFUser(): void
+    public function testItBuildsFromId(): void
     {
-        $pfuser = UserTestBuilder::aUser()->withId(101)->build();
-        $user   = UserProxy::buildFromPFUser($pfuser);
-        self::assertSame(101, $user->getId());
+        $user = StoredUser::fromId(VerifyIsUserStub::withValidUser(), 118);
+        self::assertSame(118, $user->getId());
+    }
+
+    public function testItReturnsNullWhenIdIsNotAUser(): void
+    {
+        self::assertNull(StoredUser::fromId(VerifyIsUserStub::withNotValidUser(), -1));
     }
 }

@@ -43,11 +43,6 @@ final class UserProxy implements UserIdentifier
         return new self((int) $user->getId());
     }
 
-    public static function buildFromId(int $id): self
-    {
-        return new self($id);
-    }
-
     public function getId(): int
     {
         return $this->id;

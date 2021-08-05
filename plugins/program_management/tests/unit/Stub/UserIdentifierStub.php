@@ -44,7 +44,7 @@ final class UserIdentifierStub implements UserIdentifier
         return new self(101);
     }
 
-    public static function buildUserWithId(int $user_id): self
+    public static function withId(int $user_id): self
     {
         return new self($user_id);
     }

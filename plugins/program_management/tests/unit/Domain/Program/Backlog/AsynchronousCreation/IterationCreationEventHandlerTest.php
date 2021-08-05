@@ -28,6 +28,7 @@ use Tuleap\ProgramManagement\Domain\Events\IterationCreationEvent;
 use Tuleap\ProgramManagement\Stub\CheckProgramIncrementStub;
 use Tuleap\ProgramManagement\Stub\RetrieveUserStub;
 use Tuleap\ProgramManagement\Stub\SearchPendingIterationStub;
+use Tuleap\ProgramManagement\Stub\VerifyIsUserStub;
 use Tuleap\Queue\WorkerEvent;
 use Tuleap\Test\Builders\UserTestBuilder;
 
@@ -60,6 +61,7 @@ final class IterationCreationEventHandlerTest extends \Tuleap\Test\PHPUnit\TestC
         return new IterationCreationEventHandler(
             $this->logger,
             $this->iteration_searcher,
+            VerifyIsUserStub::withValidUser(),
             $this->program_increment_checker,
             $this->user_retriever
         );

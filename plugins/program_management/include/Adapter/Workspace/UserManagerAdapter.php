@@ -25,8 +25,9 @@ namespace Tuleap\ProgramManagement\Adapter\Workspace;
 
 use Tuleap\ProgramManagement\Domain\Workspace\RetrieveUser;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
+use Tuleap\ProgramManagement\Domain\Workspace\VerifyIsUser;
 
-final class UserManagerAdapter implements RetrieveUser
+final class UserManagerAdapter implements RetrieveUser, VerifyIsUser
 {
     private \UserManager $user_manager;
 
@@ -45,5 +46,11 @@ final class UserManagerAdapter implements RetrieveUser
         }
 
         return $user;
+    }
+
+    public function isUser(int $user_id): bool
+    {
+        $user = $this->user_manager->getUserById($user_id);
+        return $user !== null;
     }
 }
