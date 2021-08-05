@@ -1,5 +1,6 @@
 [Unit]
 Description=The PHP FastCGI Process Manager for Tuleap
+Documentation=https://docs.tuleap.org
 After=tuleap.service
 PartOf=tuleap.service
 Conflicts=php74-php-fpm.service php80-php-fpm.service

@@ -1,5 +1,6 @@
 [Unit]
 Description=Tuleap worker instance %i
+Documentation=https://docs.tuleap.org
 
 [Service]
 Type=simple

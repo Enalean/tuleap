@@ -1,5 +1,6 @@
 [Unit]
 Description=Tuleap default system events
+Documentation=https://docs.tuleap.org
 
 [Timer]
 OnCalendar=*:*:00

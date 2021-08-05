@@ -1,5 +1,6 @@
 [Unit]
 Description=Tuleap git system events
+Documentation=https://docs.tuleap.org
 
 [Service]
 Type=simple
