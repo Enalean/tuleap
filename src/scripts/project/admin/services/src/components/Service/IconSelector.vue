@@ -21,7 +21,7 @@
     <div class="tlp-form-element">
         <label class="tlp-label" v-bind:for="id">
             <translate>Icon</translate>
-            <i class="fa fa-asterisk"></i>
+            <i class="fas fa-asterisk" aria-hidden="true"></i>
         </label>
         <select
             class="tlp-select"
@@ -94,7 +94,13 @@ export default {
             }
 
             const icon = document.createElement("i");
-            icon.classList.add("fa", "fa-fw", "project-admin-services-modal-icon-item", item.id);
+            icon.setAttribute("aria-hidden", "true");
+            icon.classList.add("fa-fw", "project-admin-services-modal-icon-item");
+            if (item.id.includes(" ")) {
+                icon.classList.add(...item.id.split(" "));
+            } else {
+                icon.classList.add("fa", item.id);
+            }
             const span = document.createElement("span");
             span.insertAdjacentElement("afterbegin", icon);
             span.insertAdjacentText("beforeend", item.element.text);
