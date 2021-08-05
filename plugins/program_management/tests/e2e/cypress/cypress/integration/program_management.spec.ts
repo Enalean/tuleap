@@ -93,7 +93,7 @@ function configureProgram(program_project_name: string, team_project_name: strin
     cy.get("[data-test=create-program-increment-button]").contains("Create the first Bar").click();
 
     cy.log("Create a program increment");
-    cy.get("[data-test=release_number]").type("My first PI");
+    cy.get("[data-test=program_increment_name]").type("My first PI");
     cy.get("[data-test=date-time-start_date]").type("2021-08-03");
     cy.get("[data-test=date-time-end_date]").type("2021-10-03");
     cy.get("[data-test=artifact-submit-button]").click();
