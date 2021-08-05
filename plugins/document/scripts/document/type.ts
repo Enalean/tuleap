@@ -24,7 +24,9 @@ import type { PermissionsState } from "./store/permissions/permissions-default-s
 export interface State {
     is_loading_folder: boolean;
     current_folder: Folder;
-    folder_content: Array<Item>;
+    folder_content: Array<Item | FakeItem>;
+    current_folder_ascendant_hierarchy: Array<Folder>;
+    root_title: string;
 }
 
 export interface RootState extends State {
@@ -95,7 +97,7 @@ export interface Item {
 export interface FakeItem extends Item {
     progress: number | null;
     level: number;
-    upload_error?: string;
+    upload_error: string | null;
     is_uploading?: boolean;
     is_uploading_new_version?: boolean;
 }

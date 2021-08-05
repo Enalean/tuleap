@@ -18,7 +18,7 @@
  *
  */
 
-import type { Embedded, Empty, Folder, Item, ItemFile, Link, Wiki } from "../type";
+import type { Embedded, Empty, FakeItem, Folder, Item, ItemFile, Link, Wiki } from "../type";
 import {
     TYPE_EMBEDDED,
     TYPE_EMPTY,
@@ -54,4 +54,8 @@ export function isFolder(
     item: Item | Embedded | Empty | ItemFile | Link | Wiki | Folder
 ): item is Folder {
     return item.type === TYPE_FOLDER;
+}
+
+export function isFakeItem(item: Item | FakeItem): item is FakeItem {
+    return Object.prototype.hasOwnProperty.call(item, "progress");
 }

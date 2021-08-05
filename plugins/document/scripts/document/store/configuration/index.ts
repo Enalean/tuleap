@@ -20,6 +20,7 @@
 import type { RootState } from "../../type";
 import type { Module } from "vuex";
 import type { ProjectFlag, ProjectPrivacy } from "@tuleap/vue-breadcrumb-privacy";
+import * as getters from "./getters";
 
 export interface ConfigurationState {
     readonly user_id: string;
@@ -51,5 +52,6 @@ export function createConfigurationModule(
     return {
         namespaced: true,
         state: initial_configuration_state,
+        getters,
     };
 }

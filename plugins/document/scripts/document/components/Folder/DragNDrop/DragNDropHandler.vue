@@ -58,7 +58,7 @@ export default {
         };
     },
     computed: {
-        ...mapGetters(["user_can_dragndrop"]),
+        ...mapGetters("configuration", ["user_can_dragndrop"]),
         ...mapState(["current_folder", "folder_content"]),
         ...mapState("configuration", [
             "user_id",

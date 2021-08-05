@@ -61,7 +61,7 @@ describe("DragNDropHandler", () => {
                 },
             },
             getters: {
-                user_can_dragndrop: true,
+                "configuration/user_can_dragndrop": true,
                 current_folder_title: "workdir",
             },
         };
@@ -508,7 +508,7 @@ describe("DragNDropHandler", () => {
             const wrapper = getWrapper();
             drop_event.dataTransfer.files.push(file1);
 
-            store.getters.user_can_dragndrop = false;
+            store.getters["configuration/user_can_dragndrop"] = false;
 
             await wrapper.vm.ondrop(drop_event);
 
