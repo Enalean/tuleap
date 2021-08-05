@@ -5,4 +5,4 @@ version: "2"
 
 services:
   web:
-    image: ghcr.io/enalean/tuleap-aio-dev:c7-php80-nginx
+    image: ghcr.io/enalean/tuleap-aio-dev:c7-php74-nginx-v2

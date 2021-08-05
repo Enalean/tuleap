@@ -33,7 +33,7 @@ fi
 mkdir -p "$WORKSPACE/results/build-and-run-$OS"
 
 docker cp "$UNIQUE_NAME-rpm-installer":/var/log/nginx "$WORKSPACE/results/build-and-run-$OS/nginx" || true
-docker cp "$UNIQUE_NAME-rpm-installer":/var/opt/remi/php74/log/php-fpm "$WORKSPACE/results/build-and-run-$OS/fpm" || true
+docker cp "$UNIQUE_NAME-rpm-installer":/var/opt/remi/php80/log/php-fpm "$WORKSPACE/results/build-and-run-$OS/fpm" || true
 docker cp "$UNIQUE_NAME-rpm-installer":/var/log/tuleap "$WORKSPACE/results/build-and-run-$OS/tuleap" || true
 
 docker cp "$UNIQUE_NAME-rpm-installer":/output/index.html "$WORKSPACE/results/build-and-run-$OS"

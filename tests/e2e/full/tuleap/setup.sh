@@ -145,7 +145,7 @@ seed_data
 sed -i 's/inet_interfaces = localhost/inet_interfaces = 127.0.0.1/' /etc/postfix/main.cf
 /usr/sbin/postfix -c /etc/postfix start
 
-/opt/remi/php74/root/usr/sbin/php-fpm --daemonize
+/opt/remi/php80/root/usr/sbin/php-fpm --daemonize
 nginx
 
 exec tail -f /var/log/nginx/error.log

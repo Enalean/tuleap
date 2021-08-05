@@ -36,8 +36,8 @@ final class SiteDeployFPMCommand extends Command
 {
     public const NAME            = 'site-deploy:fpm';
     public const OPT_PHP_VERSION = 'php-version';
-    public const PHP74           = 'php74';
-    private const PHP80          = 'php80';
+    private const PHP74          = 'php74';
+    public const PHP80           = 'php80';
     public const OPT_FORCE       = 'force';
 
     private const OPT_DEVELOPMENT = 'development';
@@ -50,7 +50,7 @@ final class SiteDeployFPMCommand extends Command
     protected function configure(): void
     {
         $this->setDescription('Deploy PHP FPM configuration files')
-            ->addOption(self::OPT_PHP_VERSION, '', InputOption::VALUE_REQUIRED, 'Target php version: `php74` (default)', self::PHP74)
+            ->addOption(self::OPT_PHP_VERSION, '', InputOption::VALUE_REQUIRED, 'Target php version: `php80` (default), `php74`', self::PHP80)
             ->addOption(self::OPT_DEVELOPMENT, '', InputOption::VALUE_NONE, 'Deploy development version of the configuration files')
             ->addOption(self::OPT_FORCE, '', InputOption::VALUE_NONE, 'Force files to be rewritten (by default existing files are not modified)');
     }
