@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { ExportDocument, GlobalExportProperties } from "../../type";
+import type { DateTimeLocaleInformation, ExportDocument, GlobalExportProperties } from "../../type";
 import type { ParagraphChild } from "docx";
 import {
     AlignmentType,
@@ -46,7 +46,6 @@ import { getAnchorToArtifactContent } from "./sections-anchor";
 import type { GetText } from "../../../../../../../src/scripts/tuleap/gettext/gettext-init";
 import { sprintf } from "sprintf-js";
 import { triggerBlobDownload } from "../trigger-blob-download";
-import type { DateTimeLocaleInformation } from "../../type";
 
 const MAIN_TITLES_NUMBERING_ID = "main-titles";
 const HEADER_STYLE_ARTIFACT_TITLE = "ArtifactTitle";
@@ -110,11 +109,6 @@ export async function downloadDocx(
                                 style: BorderStyle.NONE,
                                 color: "ffffff",
                             },
-                            bottom: {
-                                size: 0,
-                                style: BorderStyle.NONE,
-                                color: "ffffff",
-                            },
                             left: {
                                 size: 0,
                                 style: BorderStyle.NONE,
@@ -137,11 +131,6 @@ export async function downloadDocx(
                         verticalAlign: VerticalAlign.CENTER,
                         borders: {
                             top: {
-                                size: 0,
-                                style: BorderStyle.NONE,
-                                color: "ffffff",
-                            },
-                            bottom: {
                                 size: 0,
                                 style: BorderStyle.NONE,
                                 color: "ffffff",
@@ -198,10 +187,16 @@ export async function downloadDocx(
         artifacts_content.push(
             new Table({
                 rows: fields_rows,
+                alignment: AlignmentType.CENTER,
+                // Some readers such as Google Docs does not deal properly with automatic table column widths.
+                // To avoid that we use the same strategy than LibreOffice and set the column widths explicitly.
+                // The table is expected to take the whole width, the page width with the margins is ~9638 DXA so
+                // we set the size of each columns to (9638 / 2) = 4619 DXA
                 width: {
-                    size: 100,
-                    type: WidthType.PERCENTAGE,
+                    size: 0,
+                    type: WidthType.AUTO,
                 },
+                columnWidths: [4619, 4619],
             })
         );
     }
