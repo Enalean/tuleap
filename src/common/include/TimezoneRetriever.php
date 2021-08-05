@@ -24,16 +24,16 @@ use PFUser;
 
 class TimezoneRetriever
 {
-    public static function getServerTimezone()
+    public static function getServerTimezone(): string
     {
         return ini_get('date.timezone') ? : 'Europe/Paris';
     }
 
-    public static function getUserTimezone(PFUser $user)
+    public static function getUserTimezone(PFUser $user): string
     {
         $timezone = '';
         if ($user->isLoggedIn()) {
-            $timezone = $user->getTimezone();
+            $timezone = $user->getTimezone() ?? '';
         }
         try {
             new \DateTimeZone($timezone);

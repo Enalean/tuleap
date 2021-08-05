@@ -43,12 +43,8 @@ describe("download-docx", () => {
                         title: "Art title 741",
                         fields: [
                             {
-                                field_name: "Field string 1",
+                                field_name: "Field 1",
                                 field_value: "Some string",
-                            },
-                            {
-                                field_name: "Field number 2",
-                                field_value: 999,
                             },
                         ],
                     },
@@ -62,9 +58,15 @@ describe("download-docx", () => {
                 tracker_shortname: "bug",
                 platform_name: "Platform",
                 project_name: "Project name",
+                tracker_id: 852,
                 tracker_name: "Bug",
                 user_display_name: "Realname (shortname)",
+                user_timezone: "UTC",
                 report_url: "https://example.com/plugins/tracker",
+            },
+            {
+                locale: "en-US",
+                timezone: "UTC",
             }
         );
 

@@ -18,27 +18,22 @@
  */
 
 import type { GetText } from "../../../../../src/scripts/tuleap/gettext/gettext-init";
-import * as tlp_fetch from "@tuleap/tlp-fetch";
-import * as document_export_creator from "./helpers/create-export-document";
+import * as document_export_creator from "./DocumentBuilder/create-export-document";
 import { startDownloadExportDocument } from "./export-document";
 import type { GlobalExportProperties } from "./type";
-
-jest.mock("@tuleap/tlp-fetch");
 
 describe("export-document", () => {
     it("generates the export document, transforms it and then trigger the download", async (): Promise<void> => {
         const document_exporter = jest.fn();
-        const recursive_get_spy = jest.spyOn(tlp_fetch, "recursiveGet");
-        recursive_get_spy.mockResolvedValue([]);
         const export_creator = jest.spyOn(document_export_creator, "createExportDocument");
-        export_creator.mockReturnValue({
+        export_creator.mockResolvedValue({
             name: "name",
             artifacts: [{ id: 1, title: "title", fields: [] }],
         });
 
         await startDownloadExportDocument(
             {} as GlobalExportProperties,
-            {} as GetText,
+            { locale: "en_US" } as GetText,
             document_exporter
         );
 

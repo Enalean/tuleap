@@ -24,64 +24,16 @@ export interface GlobalExportProperties {
     readonly tracker_shortname: string;
     readonly platform_name: string;
     readonly project_name: string;
+    readonly tracker_id: number;
     readonly tracker_name: string;
     readonly user_display_name: string;
+    readonly user_timezone: string;
     readonly report_url: string;
-}
-
-export interface ArtifactReportResponse {
-    readonly id: number;
-    readonly title: string | null;
-    readonly values: ReadonlyArray<ArtifactReportResponseFieldValue>;
-}
-
-type ArtifactReportResponseFieldValue =
-    | ArtifactReportResponseUnknownFieldValue
-    | ArtifactReportResponseNumericFieldValue
-    | ArtifactReportResponseStringFieldValue
-    | ArtifactReportResponseDateFieldValue
-    | ArtifactReportResponseComputedFieldValue;
-
-interface ArtifactReportResponseNumericFieldValue {
-    field_id: number;
-    type: "aid" | "atid" | "int" | "float" | "priority";
-    label: string;
-    value: number | null;
-}
-
-interface ArtifactReportResponseStringFieldValue {
-    field_id: number;
-    type: "string";
-    label: string;
-    value: string | null;
-}
-
-interface ArtifactReportResponseDateFieldValue {
-    field_id: number;
-    type: "date" | "lud" | "subon";
-    label: string;
-    value: string | null;
-}
-
-interface ArtifactReportResponseComputedFieldValue {
-    field_id: number;
-    type: "computed";
-    label: string;
-    value: number | null;
-    manual_value: number | null;
-    is_autocomputed: boolean;
-}
-
-export interface ArtifactReportResponseUnknownFieldValue {
-    field_id: number;
-    type: never;
-    label: string;
-    value: never;
 }
 
 export interface ArtifactFieldValue {
     readonly field_name: string;
-    readonly field_value: number | string;
+    readonly field_value: string;
 }
 
 export interface ExportDocument {
@@ -93,4 +45,9 @@ export interface FormattedArtifact {
     readonly id: number;
     readonly title: string;
     readonly fields: ReadonlyArray<ArtifactFieldValue>;
+}
+
+export interface DateTimeLocaleInformation {
+    readonly locale: string;
+    readonly timezone: string;
 }

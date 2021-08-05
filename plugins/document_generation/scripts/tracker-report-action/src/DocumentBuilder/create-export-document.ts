@@ -1,4 +1,4 @@
-/*
+/**
  * Copyright (c) Enalean, 2021 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -17,13 +17,23 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { ArtifactReportResponse, ExportDocument } from "../type";
+import type { DateTimeLocaleInformation, ExportDocument } from "../type";
+import { retrieveReportArtifacts } from "./artifacts-retriever";
 
-export function createExportDocument(
-    report_artifacts: ArtifactReportResponse[],
+export async function createExportDocument(
+    report_id: number,
+    report_has_changed: boolean,
     report_name: string,
-    tracker_shortname: string
-): ExportDocument {
+    tracker_id: number,
+    tracker_shortname: string,
+    datetime_locale_information: DateTimeLocaleInformation
+): Promise<ExportDocument> {
+    const report_artifacts = await retrieveReportArtifacts(
+        tracker_id,
+        report_id,
+        report_has_changed
+    );
+
     const artifact_data = [];
     for (const artifact of report_artifacts) {
         const artifact_id = artifact.id;
@@ -48,7 +58,15 @@ export function createExportDocument(
             } else if (value.type === "date" || value.type === "lud" || value.type === "subon") {
                 if (value.value !== null) {
                     const date_value = new Date(value.value);
-                    artifact_field_value = date_value.toLocaleDateString();
+                    const { locale, timezone } = datetime_locale_information;
+                    artifact_field_value = date_value.toLocaleDateString(locale, {
+                        timeZone: timezone,
+                    });
+                    if (value.is_time_displayed) {
+                        artifact_field_value += ` ${date_value.toLocaleTimeString(locale, {
+                            timeZone: timezone,
+                        })}`;
+                    }
                 }
             } else if (value.type === "computed") {
                 if (!value.is_autocomputed && value.manual_value !== null) {
