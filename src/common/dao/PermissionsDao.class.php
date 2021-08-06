@@ -183,7 +183,7 @@ class PermissionsDao extends DataAccessObject implements IPermissionsNGDao
     * @param int    $to
     * @param Array $permission_type
     * @param int    $duplicate_type
-    * @param Array  $ugroup_mapping, an array of static ugroups
+    * @param Array|false  $ugroup_mapping, an array of static ugroups
     *
     * @return bool
     */

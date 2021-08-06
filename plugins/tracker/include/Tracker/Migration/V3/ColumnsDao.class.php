@@ -67,6 +67,7 @@ class Tracker_Migration_V3_ColumnsDao extends DataAccessObject
         $sql       = "SELECT *
                 FROM temp_tracker_field_$tv5_id
                 ORDER BY parent_id, global_rank";
+        $nb        = 0;
         foreach ($this->retrieve($sql) as $data) {
             if ($parent_id !== $data['parent_id']) {
                 $parent_id = $data['parent_id'];

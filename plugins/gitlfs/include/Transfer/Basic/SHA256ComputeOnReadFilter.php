@@ -27,7 +27,7 @@ use Tuleap\GitLFS\StreamFilter\FilterInterface;
 final class SHA256ComputeOnReadFilter implements FilterInterface
 {
     /**
-     * @var resource
+     * @var \HashContext
      */
     private $hash_context;
 

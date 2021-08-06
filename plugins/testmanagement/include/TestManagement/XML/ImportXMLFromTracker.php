@@ -81,7 +81,7 @@ class ImportXMLFromTracker
     }
 
     /**
-     * @return StepDefinition | StepExecution
+     * @return StepDefinition|StepExecution|null
      */
     private function createStepFormElement(array $row): ?Tracker_FormElement_Field
     {

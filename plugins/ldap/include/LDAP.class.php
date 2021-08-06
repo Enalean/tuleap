@@ -510,6 +510,7 @@ class LDAP
                 $asr = ldap_search($ds, $peopleDn, $filter, $attrs, $attrsOnly, $sizeLimit, 0, LDAP_DEREF_NEVER);
                 $this->logger->debug('LDAP in-depth search as you type ' . $filter . ' *** PEOPLEDN: ' . implode(',', $peopleDn) . ' *** errors:' .  ldap_error($this->ds));
             } else {
+                /** @psalm-suppress InvalidArgument $peopleDn can be an array, this will be fixed when we upgrade to PHP 8.0 https://github.com/php/php-src/blob/php-8.0.9/ext/ldap/ldap_arginfo.h#L55 */
                 $asr = ldap_list($ds, $peopleDn, $filter, $attrs, $attrsOnly, $sizeLimit, 0, LDAP_DEREF_NEVER);
                 $this->logger->debug('LDAP high-level search as you type ' . $filter . ' *** PEOPLEDN: ' . implode(',', $peopleDn) . ' *** errors:' .  ldap_error($this->ds));
             }
@@ -668,8 +669,12 @@ class LDAP
     private function _initErrorHandler()
     {
         if ($this->errorsTrapped) {
-            set_error_handler(function ($errno, $errstr) {
-            });
+            /**
+             * @psalm-var callable(int, string, string=, int=, array<array-key, mixed>=):bool|null
+             */
+            $silent_error_handler = function ($errno, $errstr): void {
+            };
+            set_error_handler($silent_error_handler);
         }
     }
 

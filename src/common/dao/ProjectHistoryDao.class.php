@@ -75,7 +75,7 @@ class ProjectHistoryDao extends DataAccessObject
      * @param String  $fieldName Event category
      * @param String  $oldValue  Event value
      * @param int $groupId Project ID
-     * @param Array   $args      list of parameters used for message display
+     * @param Array|false   $args      list of parameters used for message display
      *
      * @return DataAccessResult
      */

@@ -24,7 +24,6 @@ namespace Tuleap\Cryptography\Symmetric;
 
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\Cryptography\Exception\InvalidCiphertextException;
-use Tuleap\Cryptography\Exception\UnexpectedOperationFailureException;
 
 final class SymmetricCrypto
 {
@@ -55,10 +54,7 @@ final class SymmetricCrypto
     {
         $nonce             = \mb_substr($ciphertext, 0, SODIUM_CRYPTO_SECRETBOX_NONCEBYTES, '8bit');
         $ciphertext_length = \mb_strlen($ciphertext, '8bit');
-        if ($ciphertext_length === false) {
-            throw new UnexpectedOperationFailureException('mb_strlen() failed unexpectedly');
-        }
-        $encrypted = \mb_substr($ciphertext, SODIUM_CRYPTO_SECRETBOX_NONCEBYTES, $ciphertext_length, '8bit');
+        $encrypted         = \mb_substr($ciphertext, SODIUM_CRYPTO_SECRETBOX_NONCEBYTES, $ciphertext_length, '8bit');
 
         $raw_plaintext = \sodium_crypto_secretbox_open($encrypted, $nonce, $secret_key->getRawKeyMaterial());
         if ($raw_plaintext === false) {

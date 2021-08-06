@@ -237,7 +237,7 @@ class MediaWikiInstantiater
      *
      *  @param string $file File that contains the SQL statements.
      *  @param string $table_prefix Prefix for tables
-     *  @return int result set handle.
+     *  @return bool result set handle.
      */
     private function createTablesFromFile(\ParagonIE\EasyDB\EasyDB $db, $file, $table_prefix)
     {
@@ -245,7 +245,6 @@ class MediaWikiInstantiater
         $fp = fopen($file, 'r');
         if (false === $fp) {
             $this->logger->error("createTablesFromFile: Cannot read file $file!");
-            fclose($fp);
             return false;
         }
 
