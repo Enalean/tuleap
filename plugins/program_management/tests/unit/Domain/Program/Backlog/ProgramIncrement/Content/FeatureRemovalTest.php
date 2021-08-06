@@ -28,6 +28,7 @@ use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\UserCanPrioritize;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\ProgramManagement\Stub\BuildProgramStub;
+use Tuleap\ProgramManagement\Stub\UserPermissionsStub;
 use Tuleap\ProgramManagement\Stub\VerifyIsVisibleFeatureStub;
 use Tuleap\ProgramManagement\Stub\VerifyLinkedUserStoryIsNotPlannedStub;
 use Tuleap\ProgramManagement\Stub\VerifyPrioritizeFeaturesPermissionStub;
@@ -37,28 +38,28 @@ final class FeatureRemovalTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItThrowsWhenFeatureIsLinkedToAnAlreadyPlannedUserStory(): void
     {
-        $user    = UserTestBuilder::aUser()->withId(104)->build();
-        $program = ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 110, UserIdentifier::fromPFUser($user));
-        $feature = FeatureIdentifier::fromId(VerifyIsVisibleFeatureStub::buildVisibleFeature(), 741, $user, $program);
+        $user_identifier = UserIdentifier::fromPFUser(UserTestBuilder::aUser()->build());
+        $program         = ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 110, $user_identifier);
+        $feature         = FeatureIdentifier::fromId(VerifyIsVisibleFeatureStub::buildVisibleFeature(), 741, $user_identifier, $program);
 
         $this->expectException(FeatureHasPlannedUserStoryException::class);
         FeatureRemoval::fromFeature(
             VerifyLinkedUserStoryIsNotPlannedStub::buildLinkedStories(),
             $feature,
-            UserCanPrioritize::fromUser(VerifyPrioritizeFeaturesPermissionStub::canPrioritize(), $user, $program)
+            UserCanPrioritize::fromUser(VerifyPrioritizeFeaturesPermissionStub::canPrioritize(), UserPermissionsStub::aRegularUser(), $user_identifier, $program)
         );
     }
 
     public function testItBuildsAValidPayload(): void
     {
-        $user    = UserTestBuilder::aUser()->build();
-        $program = ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 110, UserIdentifier::fromPFUser($user));
-        $feature = FeatureIdentifier::fromId(VerifyIsVisibleFeatureStub::buildVisibleFeature(), 76, $user, $program);
+        $user_identifier = UserIdentifier::fromPFUser(UserTestBuilder::aUser()->build());
+        $program         = ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 110, $user_identifier);
+        $feature         = FeatureIdentifier::fromId(VerifyIsVisibleFeatureStub::buildVisibleFeature(), 76, $user_identifier, $program);
 
         $payload = FeatureRemoval::fromFeature(
             VerifyLinkedUserStoryIsNotPlannedStub::buildNotLinkedStories(),
             $feature,
-            UserCanPrioritize::fromUser(VerifyPrioritizeFeaturesPermissionStub::canPrioritize(), $user, $program)
+            UserCanPrioritize::fromUser(VerifyPrioritizeFeaturesPermissionStub::canPrioritize(), UserPermissionsStub::aRegularUser(), $user_identifier, $program)
         );
         self::assertSame(76, $payload->feature_id);
     }

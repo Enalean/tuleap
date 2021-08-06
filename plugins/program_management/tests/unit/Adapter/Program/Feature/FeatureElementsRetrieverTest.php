@@ -33,6 +33,7 @@ use Tuleap\ProgramManagement\Domain\Program\BuildPlanning;
 use Tuleap\ProgramManagement\Domain\Program\Plan\BuildProgram;
 use Tuleap\ProgramManagement\REST\v1\FeatureRepresentation;
 use Tuleap\ProgramManagement\Stub\BuildProgramStub;
+use Tuleap\ProgramManagement\Stub\RetrieveUserStub;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
@@ -54,10 +55,7 @@ class FeatureElementsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $retrieve_background;
 
-    /**
-     * @var FeatureElementsRetriever
-     */
-    private $retriever;
+    private FeatureElementsRetriever $retriever;
 
     /**
      * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|\Tracker_FormElementFactory
@@ -74,10 +72,8 @@ class FeatureElementsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $features_dao;
 
-    /**
-     * @var BuildProgram
-     */
-    private $build_program;
+    private BuildProgram $build_program;
+    private \PFUser $user;
 
     protected function setUp(): void
     {
@@ -87,6 +83,8 @@ class FeatureElementsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->form_element_factory = \Mockery::mock(\Tracker_FormElementFactory::class);
         $this->retrieve_background  = \Mockery::mock(BackgroundColorRetriever::class);
         $this->parent_dao           = \Mockery::mock(ArtifactsLinkedToParentDao::class);
+        $this->user                 = UserTestBuilder::aUser()->build();
+        $retrieve_user              = RetrieveUserStub::withUser($this->user);
 
         $this->retriever = new FeatureElementsRetriever(
             $this->build_program,
@@ -95,16 +93,14 @@ class FeatureElementsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
                 $this->artifact_factory,
                 $this->form_element_factory,
                 $this->retrieve_background,
-                new VerifyIsVisibleFeatureAdapter($this->artifact_factory),
-                new UserStoryLinkedToFeatureChecker($this->parent_dao, \Mockery::mock(BuildPlanning::class), $this->artifact_factory)
+                new VerifyIsVisibleFeatureAdapter($this->artifact_factory, $retrieve_user),
+                new UserStoryLinkedToFeatureChecker($this->parent_dao, \Mockery::mock(BuildPlanning::class), $this->artifact_factory, $retrieve_user)
             )
         );
     }
 
     public function testItBuildsACollectionOfOpenedElements(): void
     {
-        $user = UserTestBuilder::aUser()->build();
-
         $this->features_dao->shouldReceive('searchPlannableFeatures')->andReturn(
             [
                 ['tracker_name' => 'User stories', 'artifact_id' => 1, 'artifact_title' => 'Artifact 1', 'field_title_id' => 1],
@@ -120,12 +116,12 @@ class FeatureElementsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $tracker_one  = $this->buildTracker(1, 'bug', $project);
         $artifact_one = $this->buildArtifact(1, $tracker_one);
         $this->artifact_factory->shouldReceive('getArtifactById')->with(1)->andReturn($artifact_one);
-        $this->artifact_factory->shouldReceive('getArtifactByIdUserCanView')->with($user, 1)->andReturn($artifact_one);
+        $this->artifact_factory->shouldReceive('getArtifactByIdUserCanView')->with($this->user, 1)->andReturn($artifact_one);
 
         $tracker_two  = $this->buildTracker(2, 'user stories', $project);
         $artifact_two = $this->buildArtifact(2, $tracker_two);
         $this->artifact_factory->shouldReceive('getArtifactById')->with(2)->andReturn($artifact_two);
-        $this->artifact_factory->shouldReceive('getArtifactByIdUserCanView')->with($user, 2)->andReturn($artifact_two);
+        $this->artifact_factory->shouldReceive('getArtifactByIdUserCanView')->with($this->user, 2)->andReturn($artifact_two);
 
         $this->retrieve_background->shouldReceive('retrieveBackgroundColor')
             ->andReturn(new BackgroundColor("lake-placid-blue"));
@@ -156,7 +152,7 @@ class FeatureElementsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             ),
         ];
 
-        self::assertEquals($collection, $this->retriever->retrieveFeaturesToBePlanned(202, $user));
+        self::assertEquals($collection, $this->retriever->retrieveFeaturesToBePlanned(202, $this->user));
     }
 
     private function buildTracker(int $tracker_id, string $name, Project $project): \Tracker

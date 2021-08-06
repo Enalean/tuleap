@@ -26,23 +26,24 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Content\Add
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Content\AddFeatureException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Content\FeatureAddition;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementNotFoundException;
+use Tuleap\ProgramManagement\Domain\Workspace\RetrieveUser;
+use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkUpdater;
 
 final class FeatureAdditionProcessor implements AddFeature
 {
-    /**
-     * @var \Tracker_ArtifactFactory
-     */
-    private $artifact_factory;
-    /**
-     * @var ArtifactLinkUpdater
-     */
-    private $artifact_link_updater;
+    private \Tracker_ArtifactFactory $artifact_factory;
+    private ArtifactLinkUpdater $artifact_link_updater;
+    private RetrieveUser $retrieve_user;
 
-    public function __construct(\Tracker_ArtifactFactory $artifact_factory, ArtifactLinkUpdater $artifact_link_updater)
-    {
+    public function __construct(
+        \Tracker_ArtifactFactory $artifact_factory,
+        ArtifactLinkUpdater $artifact_link_updater,
+        RetrieveUser $retrieve_user
+    ) {
         $this->artifact_factory      = $artifact_factory;
         $this->artifact_link_updater = $artifact_link_updater;
+        $this->retrieve_user         = $retrieve_user;
     }
 
     public function add(FeatureAddition $feature_addition): void
@@ -56,7 +57,7 @@ final class FeatureAdditionProcessor implements AddFeature
         }
         try {
             $this->artifact_link_updater->updateArtifactLinks(
-                $feature_addition->user->getFullUser(),
+                $this->retrieve_user->getUserWithId(UserIdentifier::fromUserCanPrioritize($feature_addition->user)),
                 $program_increment_artifact,
                 [$feature_addition->feature->id],
                 [],

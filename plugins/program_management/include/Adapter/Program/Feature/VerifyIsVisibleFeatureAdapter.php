@@ -24,21 +24,23 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Feature;
 
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\VerifyIsVisibleFeature;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
+use Tuleap\ProgramManagement\Domain\Workspace\RetrieveUser;
+use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 
 final class VerifyIsVisibleFeatureAdapter implements VerifyIsVisibleFeature
 {
-    /**
-     * @var \Tracker_ArtifactFactory
-     */
-    private $artifact_factory;
+    private \Tracker_ArtifactFactory $artifact_factory;
+    private RetrieveUser $retrieve_user;
 
-    public function __construct(\Tracker_ArtifactFactory $artifact_factory)
+    public function __construct(\Tracker_ArtifactFactory $artifact_factory, RetrieveUser $retrieve_user)
     {
         $this->artifact_factory = $artifact_factory;
+        $this->retrieve_user    = $retrieve_user;
     }
 
-    public function isVisibleFeature(int $feature_id, \PFUser $user, ProgramIdentifier $program): bool
+    public function isVisibleFeature(int $feature_id, UserIdentifier $user_identifier, ProgramIdentifier $program): bool
     {
+        $user     = $this->retrieve_user->getUserWithId($user_identifier);
         $artifact = $this->artifact_factory->getArtifactByIdUserCanView($user, $feature_id);
         return $artifact !== null && (int) $artifact->getTracker()->getGroupId() === $program->getId();
     }

@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Content;
 
+use Tuleap\ProgramManagement\Adapter\Workspace\UserPermissionsProxy;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureCanNotBeRankedWithItselfException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureHasPlannedUserStoryException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureIdentifier;
@@ -38,6 +39,7 @@ use Tuleap\ProgramManagement\Domain\Program\Plan\VerifyPrioritizeFeaturesPermiss
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\ProgramSearcher;
 use Tuleap\ProgramManagement\Domain\UserCanPrioritize;
+use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\ProgramManagement\REST\v1\FeatureElementToOrderInvolvedInChangeRepresentation;
 
 final class ContentModifier implements ModifyContent
@@ -82,7 +84,12 @@ final class ContentModifier implements ModifyContent
             $user
         );
         $program             = $this->program_searcher->getProgramOfProgramIncrement($program_increment->getId(), $user);
-        $user_can_prioritize = UserCanPrioritize::fromUser($this->permission_verifier, $user, $program);
+        $user_can_prioritize = UserCanPrioritize::fromUser(
+            $this->permission_verifier,
+            UserPermissionsProxy::buildFromPFUser($user, $program),
+            UserIdentifier::fromPFUser($user),
+            $program
+        );
 
         if ($content_change->potential_feature_id_to_add !== null) {
             $this->planFeature($content_change->potential_feature_id_to_add, $program_increment, $user_can_prioritize, $program);
@@ -106,7 +113,7 @@ final class ContentModifier implements ModifyContent
         UserCanPrioritize $user,
         ProgramIdentifier $program
     ): void {
-        $feature = FeatureIdentifier::fromId($this->visible_verifier, $potential_feature_id_to_add, $user->getFullUser(), $program);
+        $feature = FeatureIdentifier::fromId($this->visible_verifier, $potential_feature_id_to_add, UserIdentifier::fromUserCanPrioritize($user), $program);
         if ($feature === null) {
             throw new FeatureNotFoundException($potential_feature_id_to_add);
         }

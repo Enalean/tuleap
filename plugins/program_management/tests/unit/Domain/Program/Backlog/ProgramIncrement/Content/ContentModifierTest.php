@@ -58,7 +58,7 @@ final class ContentModifierTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->getStubCheckFeatureIsPlannedInProgramIncrement(),
         );
 
-        $user = UserTestBuilder::aUser()->build();
+        $user = $this->getAMockedUser(true);
 
         $this->expectException(NotAllowedToPrioritizeException::class);
         $modifier->modifyContent($user, 12, ContentChange::fromRESTRepresentation(201, null));
@@ -77,7 +77,8 @@ final class ContentModifierTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->getStubCheckFeatureIsPlannedInProgramIncrement(),
         );
 
-        $user = UserTestBuilder::aUser()->build();
+        $user = $this->getAMockedUser(false);
+        $user->method('isAdmin')->willReturn(false);
 
         $this->expectException(FeatureNotFoundException::class);
         $modifier->modifyContent($user, 12, ContentChange::fromRESTRepresentation(404, null));
@@ -96,7 +97,7 @@ final class ContentModifierTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->getStubCheckFeatureIsPlannedInProgramIncrement(),
         );
 
-        $user = UserTestBuilder::aUser()->build();
+        $user = $this->getAMockedUser(true);
 
         $this->expectException(FeatureCannotBePlannedInProgramIncrementException::class);
         $modifier->modifyContent($user, 12, ContentChange::fromRESTRepresentation(404, null));
@@ -115,7 +116,7 @@ final class ContentModifierTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->getStubCheckFeatureIsPlannedInProgramIncrement(),
         );
 
-        $user = UserTestBuilder::aUser()->build();
+        $user = $this->getAMockedUser(true);
 
         $this->expectNotToPerformAssertions();
         $modifier->modifyContent($user, 12, ContentChange::fromRESTRepresentation(201, null));
@@ -153,7 +154,7 @@ final class ContentModifierTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->getStubCheckFeatureIsPlannedInProgramIncrement(),
         );
 
-        $user = UserTestBuilder::aUser()->build();
+        $user = $this->getAMockedUser(true);
 
         $modifier->modifyContent(
             $user,
@@ -175,7 +176,7 @@ final class ContentModifierTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->getStubCheckFeatureIsPlannedInProgramIncrement(),
         );
 
-        $user = UserTestBuilder::aUser()->build();
+        $user = $this->getAMockedUser(true);
         $this->expectException(InvalidFeatureIdInProgramIncrementException::class);
         $modifier->modifyContent(
             $user,
@@ -197,7 +198,7 @@ final class ContentModifierTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->getStubCheckFeatureIsPlannedInProgramIncrement(false),
         );
 
-        $user = UserTestBuilder::aUser()->build();
+        $user = $this->getAMockedUser(true);
         $this->expectException(InvalidFeatureIdInProgramIncrementException::class);
         $modifier->modifyContent(
             $user,
@@ -318,5 +319,18 @@ final class ContentModifierTest extends \Tuleap\Test\PHPUnit\TestCase
                 }
             }
         };
+    }
+
+    /**
+     * @return \PFUser|\PHPUnit\Framework\MockObject\MockObject
+     */
+    private function getAMockedUser(bool $is_super_user)
+    {
+        $user = $this->createMock(\PFUser::class);
+        $user->method('isSuperUser')->willReturn($is_super_user);
+        $user->method('isAdmin')->willReturn($is_super_user);
+        $user->method('getId')->willReturn(101);
+
+        return $user;
     }
 }

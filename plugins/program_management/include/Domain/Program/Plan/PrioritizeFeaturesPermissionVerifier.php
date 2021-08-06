@@ -28,6 +28,7 @@ use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\Workspace\RetrieveProject;
 use Tuleap\ProgramManagement\Domain\Workspace\RetrieveUser;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
+use Tuleap\ProgramManagement\Domain\Workspace\UserPermissions;
 use Tuleap\Project\CheckProjectAccess;
 
 final class PrioritizeFeaturesPermissionVerifier implements VerifyPrioritizeFeaturesPermission
@@ -49,8 +50,12 @@ final class PrioritizeFeaturesPermissionVerifier implements VerifyPrioritizeFeat
         $this->user_manager                = $user_manager;
     }
 
-    public function canUserPrioritizeFeatures(ProgramIdentifier $program, UserIdentifier $user_identifier): bool
+    public function canUserPrioritizeFeatures(ProgramIdentifier $program, UserPermissions $user_permissions, UserIdentifier $user_identifier): bool
     {
+        if ($user_permissions->isPlatformAdmin() || $user_permissions->isProjectAdmin()) {
+            return true;
+        }
+
         $user       = $this->user_manager->getUserWithId($user_identifier);
         $program_id = $program->getId();
         $project    = $this->project_manager->getProjectWithId($program_id);
@@ -58,10 +63,6 @@ final class PrioritizeFeaturesPermissionVerifier implements VerifyPrioritizeFeat
             $this->project_access_checker->checkUserCanAccessProject($user, $project);
         } catch (Project_AccessException $exception) {
             return false;
-        }
-
-        if ($user->isAdmin($program_id)) {
-            return true;
         }
 
         $ugroups_that_can_prioritize = $this->can_prioritize_features_dao->searchUserGroupIDsWhoCanPrioritizeFeaturesByProjectID($program_id);

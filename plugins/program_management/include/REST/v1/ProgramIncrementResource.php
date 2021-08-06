@@ -77,10 +77,12 @@ final class ProgramIncrementResource extends AuthenticatedResource
 
     public FeatureContentRetriever $program_increment_content_retriever;
     private \UserManager $user_manager;
+    private UserManagerAdapter $user_manager_adapter;
 
     public function __construct()
     {
         $this->user_manager                        = \UserManager::instance();
+        $this->user_manager_adapter                = new UserManagerAdapter($this->user_manager);
         $artifact_factory                          = \Tracker_ArtifactFactory::instance();
         $this->program_increment_content_retriever = new FeatureContentRetriever(
             new ProgramIncrementChecker($artifact_factory, new ProgramIncrementsDAO()),
@@ -89,8 +91,13 @@ final class ProgramIncrementResource extends AuthenticatedResource
                 $artifact_factory,
                 \Tracker_FormElementFactory::instance(),
                 new BackgroundColorRetriever(new BackgroundColorBuilder(new BindDecoratorRetriever())),
-                new VerifyIsVisibleFeatureAdapter($artifact_factory),
-                new UserStoryLinkedToFeatureChecker(new ArtifactsLinkedToParentDao(), new PlanningAdapter(\PlanningFactory::build()), $artifact_factory)
+                new VerifyIsVisibleFeatureAdapter($artifact_factory, $this->user_manager_adapter),
+                new UserStoryLinkedToFeatureChecker(
+                    new ArtifactsLinkedToParentDao(),
+                    new PlanningAdapter(\PlanningFactory::build()),
+                    $artifact_factory,
+                    $this->user_manager_adapter
+                )
             ),
             $this->getProgramSearcher()
         );
@@ -149,8 +156,9 @@ final class ProgramIncrementResource extends AuthenticatedResource
      * @url    PATCH {id}/content
      * @access protected
      *
-     * @param int                                        $id                   ID of the program increment
+     * @param int                                        $id ID of the program increment
      * @param ProgramIncrementContentPatchRepresentation $patch_representation {@from body}
+     *
      * @throws RestException 400
      * @throws RestException 403
      * @throws RestException 404
@@ -174,22 +182,23 @@ final class ProgramIncrementResource extends AuthenticatedResource
                     \EventManager::instance()
                 ),
                 new CanPrioritizeFeaturesDAO(),
-                new UserManagerAdapter($this->user_manager)
+                $this->user_manager_adapter
             ),
             new ProgramIncrementChecker($artifact_factory, $program_increments_dao),
             $this->getProgramSearcher(),
-            new VerifyIsVisibleFeatureAdapter($artifact_factory),
+            new VerifyIsVisibleFeatureAdapter($artifact_factory, $this->user_manager_adapter),
             $plan_dao,
             new FeaturePlanner(
                 new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection()),
                 new UserStoryLinkedToFeatureChecker(
                     new ArtifactsLinkedToParentDao(),
                     new PlanningAdapter(\PlanningFactory::build()),
-                    $artifact_factory
+                    $artifact_factory,
+                    $this->user_manager_adapter
                 ),
-                new FeatureRemovalProcessor($program_increments_dao, $artifact_factory, $artifact_link_updater),
+                new FeatureRemovalProcessor($program_increments_dao, $artifact_factory, $artifact_link_updater, $this->user_manager_adapter),
                 new ArtifactsExplicitTopBacklogDAO(),
-                new FeatureAdditionProcessor($artifact_factory, $artifact_link_updater)
+                new FeatureAdditionProcessor($artifact_factory, $artifact_link_updater, $this->user_manager_adapter)
             ),
             new FeaturesRankOrderer(\Tracker_Artifact_PriorityManager::build()),
             new FeatureDAO(),

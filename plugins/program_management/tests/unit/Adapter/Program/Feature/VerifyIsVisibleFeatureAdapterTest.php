@@ -23,10 +23,10 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Adapter\Program\Feature;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\VerifyIsVisibleFeature;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\ProgramManagement\Stub\BuildProgramStub;
+use Tuleap\ProgramManagement\Stub\RetrieveUserStub;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
@@ -36,54 +36,55 @@ final class VerifyIsVisibleFeatureAdapterTest extends \Tuleap\Test\PHPUnit\TestC
 {
     use MockeryPHPUnitIntegration;
 
-    /** @var VerifyIsVisibleFeature */
-    private $verifier;
+    private VerifyIsVisibleFeatureAdapter $verifier;
     /**
      * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|\Tracker_ArtifactFactory
      */
     private $artifact_factory;
+    private UserIdentifier $user_identifier;
+    private \PFUser $user;
 
     protected function setUp(): void
     {
         $this->artifact_factory = \Mockery::mock(\Tracker_ArtifactFactory::class);
+        $this->user             = UserTestBuilder::aUser()->build();
+        $this->user_identifier  =  UserIdentifier::fromPFUser($this->user);
         $this->verifier         = new VerifyIsVisibleFeatureAdapter(
-            $this->artifact_factory
+            $this->artifact_factory,
+            RetrieveUserStub::withUser($this->user)
         );
     }
 
     public function testReturnsFalseIfFeatureArtifactCannotBeFoundOrUserCantViewIt(): void
     {
-        $user = UserTestBuilder::aUser()->build();
-        $this->artifact_factory->shouldReceive('getArtifactByIdUserCanView')->once()->with($user, 404)->andReturnNull();
-        $program = ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 110, UserIdentifier::fromPFUser($user));
+        $this->artifact_factory->shouldReceive('getArtifactByIdUserCanView')->once()->with($this->user, 404)->andReturnNull();
+        $program = ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 110, $this->user_identifier);
 
-        self::assertFalse($this->verifier->isVisibleFeature(404, $user, $program));
+        self::assertFalse($this->verifier->isVisibleFeature(404, $this->user_identifier, $program));
     }
 
     public function testReturnsFalseIfFeatureDoesNotBelongToGivenProgram(): void
     {
-        $user     = UserTestBuilder::aUser()->withId(107)->build();
         $artifact = $this->buildFeatureArtifact(741, 110);
         $this->artifact_factory->shouldReceive('getArtifactByIdUserCanView')
             ->once()
-            ->with($user, $artifact->getId())
+            ->with($this->user, $artifact->getId())
             ->andReturn($artifact);
-        $program = ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 404, UserIdentifier::fromPFUser($user));
+        $program = ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 404, $this->user_identifier);
 
-        self::assertFalse($this->verifier->isVisibleFeature(741, $user, $program));
+        self::assertFalse($this->verifier->isVisibleFeature(741, $this->user_identifier, $program));
     }
 
     public function testReturnsTrue(): void
     {
-        $user     = UserTestBuilder::aUser()->withId(107)->build();
         $artifact = $this->buildFeatureArtifact(741, 110);
         $this->artifact_factory->shouldReceive('getArtifactByIdUserCanView')
             ->once()
-            ->with($user, $artifact->getId())
+            ->with($this->user, $artifact->getId())
             ->andReturn($artifact);
-        $program = ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 110, UserIdentifier::fromPFUser($user));
+        $program = ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 110, $this->user_identifier);
 
-        self::assertTrue($this->verifier->isVisibleFeature(741, $user, $program));
+        self::assertTrue($this->verifier->isVisibleFeature(741, $this->user_identifier, $program));
     }
 
     private function buildFeatureArtifact(int $artifact_id, int $project_id): Artifact

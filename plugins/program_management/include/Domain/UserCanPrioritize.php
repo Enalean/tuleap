@@ -26,42 +26,33 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\NotAllowedToPrioritizeExcept
 use Tuleap\ProgramManagement\Domain\Program\Plan\VerifyPrioritizeFeaturesPermission;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
+use Tuleap\ProgramManagement\Domain\Workspace\UserPermissions;
 
+/**
+ * @psalm-immutable
+ */
 final class UserCanPrioritize
 {
-    /**
-     * @psalm-readonly
-     */
-    private \PFUser $user;
-    /**
-     * @psalm-readonly
-     */
-    private int $id;
+    public int $id;
 
-    private function __construct(\PFUser $user)
+    private function __construct(int $id)
     {
-        $this->user = $user;
-        $this->id   = (int) $user->getId();
-    }
-
-    public function getFullUser(): \PFUser
-    {
-        return $this->user;
-    }
-
-    public function getId(): int
-    {
-        return $this->id;
+        $this->id = $id;
     }
 
     /**
      * @throws NotAllowedToPrioritizeException
      */
-    public static function fromUser(VerifyPrioritizeFeaturesPermission $permission, \PFUser $user, ProgramIdentifier $program): self
-    {
-        if (! $permission->canUserPrioritizeFeatures($program, UserIdentifier::fromPFUser($user))) {
-            throw new NotAllowedToPrioritizeException((int) $user->getId(), $program->getId());
+    public static function fromUser(
+        VerifyPrioritizeFeaturesPermission $permission,
+        UserPermissions $user_permissions,
+        UserIdentifier $user_identifier,
+        ProgramIdentifier $program
+    ): self {
+        if (! $permission->canUserPrioritizeFeatures($program, $user_permissions, $user_identifier)) {
+            throw new NotAllowedToPrioritizeException($user_identifier->id, $program->getId());
         }
-        return new self($user);
+
+        return new self($user_identifier->id);
     }
 }

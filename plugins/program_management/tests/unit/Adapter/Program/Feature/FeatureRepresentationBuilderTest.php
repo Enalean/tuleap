@@ -33,6 +33,7 @@ use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\ProgramManagement\REST\v1\FeatureRepresentation;
 use Tuleap\ProgramManagement\Stub\BuildProgramStub;
+use Tuleap\ProgramManagement\Stub\RetrieveUserStub;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
@@ -54,10 +55,7 @@ final class FeatureRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCa
      */
     private $parent_dao;
 
-    /**
-     * @var FeatureRepresentationBuilder
-     */
-    private $builder;
+    private FeatureRepresentationBuilder $builder;
     /**
      * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Tracker_ArtifactFactory
      */
@@ -70,6 +68,7 @@ final class FeatureRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCa
      * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|BackgroundColorRetriever
      */
     private $retrieve_background;
+    private \PFUser $user;
 
     protected function setUp(): void
     {
@@ -78,56 +77,55 @@ final class FeatureRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCa
         $this->retrieve_background  = \Mockery::mock(BackgroundColorRetriever::class);
         $this->parent_dao           = \Mockery::mock(ArtifactsLinkedToParentDao::class);
         $this->build_planning       = \Mockery::mock(BuildPlanning::class);
+        $this->user                 = UserTestBuilder::aUser()->build();
+        $retrieve_user              = RetrieveUserStub::withUser($this->user);
 
         $this->builder = new FeatureRepresentationBuilder(
             $this->artifact_factory,
             $this->form_element_factory,
             $this->retrieve_background,
-            new VerifyIsVisibleFeatureAdapter($this->artifact_factory),
-            new UserStoryLinkedToFeatureChecker($this->parent_dao, $this->build_planning, $this->artifact_factory)
+            new VerifyIsVisibleFeatureAdapter($this->artifact_factory, $retrieve_user),
+            new UserStoryLinkedToFeatureChecker($this->parent_dao, $this->build_planning, $this->artifact_factory, $retrieve_user)
         );
     }
 
     public function testItDoesNotReturnAnythingWhenUserCanNotReadArtifact(): void
     {
-        $user    = UserTestBuilder::aUser()->build();
-        $program = ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 110, UserIdentifier::fromPFUser($user));
+        $program = ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 110, UserIdentifier::fromPFUser($this->user));
 
-        $this->artifact_factory->shouldReceive('getArtifactByIdUserCanView')->with($user, 1)->andReturnNull();
+        $this->artifact_factory->shouldReceive('getArtifactByIdUserCanView')->with($this->user, 1)->andReturnNull();
 
-        self::assertNull($this->builder->buildFeatureRepresentation($user, $program, 1, 101, 'title'));
+        self::assertNull($this->builder->buildFeatureRepresentation($this->user, $program, 1, 101, 'title'));
     }
 
     public function testItDoesNotReturnAnythingWhenUserCanNotReadField(): void
     {
-        $user    = UserTestBuilder::aUser()->build();
-        $program = ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 110, UserIdentifier::fromPFUser($user));
+        $program = ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 110, UserIdentifier::fromPFUser($this->user));
 
         $project  = $this->buildProject(110);
         $tracker  = $this->buildTracker(14, $project);
         $artifact = $this->buildArtifact(117, $tracker);
-        $this->artifact_factory->shouldReceive('getArtifactByIdUserCanView')->with($user, 1)->andReturn($artifact);
+        $this->artifact_factory->shouldReceive('getArtifactByIdUserCanView')->with($this->user, 1)->andReturn($artifact);
         $this->artifact_factory->shouldReceive('getArtifactById')->with(1)->andReturn($artifact);
 
         $field = \Mockery::mock(\Tracker_FormElement_Field_Text::class);
         $this->form_element_factory->shouldReceive('getFieldById')->with(101)->andReturn($field);
         $field->shouldReceive('userCanRead')->andReturnFalse();
 
-        self::assertNull($this->builder->buildFeatureRepresentation($user, $program, 1, 101, 'title'));
+        self::assertNull($this->builder->buildFeatureRepresentation($this->user, $program, 1, 101, 'title'));
     }
 
     public function testItBuildsRepresentation(): void
     {
-        $user    = UserTestBuilder::aUser()->build();
-        $program = ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 101, UserIdentifier::fromPFUser($user));
+        $program = ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 101, UserIdentifier::fromPFUser($this->user));
 
         $project  = $this->buildProject(101);
         $tracker  = $this->buildTracker(1, $project);
         $artifact = $this->buildArtifact(1, $tracker);
         $this->artifact_factory->shouldReceive('getArtifactById')->with(1)->andReturn($artifact);
-        $this->artifact_factory->shouldReceive('getArtifactByIdUserCanView')->with($user, 1)->andReturn($artifact);
-        $this->artifact_factory->shouldReceive('getArtifactByIdUserCanView')->with($user, 2)->once()->andReturnNull();
-        $this->artifact_factory->shouldReceive('getArtifactByIdUserCanView')->with($user, 3)->once()->andReturn(
+        $this->artifact_factory->shouldReceive('getArtifactByIdUserCanView')->with($this->user, 1)->andReturn($artifact);
+        $this->artifact_factory->shouldReceive('getArtifactByIdUserCanView')->with($this->user, 2)->once()->andReturnNull();
+        $this->artifact_factory->shouldReceive('getArtifactByIdUserCanView')->with($this->user, 3)->once()->andReturn(
             \Mockery::mock(Artifact::class)
         );
 
@@ -167,7 +165,7 @@ final class FeatureRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCa
             true
         );
 
-        self::assertEquals($expected, $this->builder->buildFeatureRepresentation($user, $program, 1, 101, 'title'));
+        self::assertEquals($expected, $this->builder->buildFeatureRepresentation($this->user, $program, 1, 101, 'title'));
     }
 
     private function buildProject(int $program_id): Project

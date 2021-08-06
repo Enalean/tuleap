@@ -27,7 +27,9 @@ use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\ProgramManagement\Stub\BuildPlanningStub;
 use Tuleap\ProgramManagement\Stub\BuildProgramStub;
+use Tuleap\ProgramManagement\Stub\RetrieveUserStub;
 use Tuleap\ProgramManagement\Stub\VerifyIsVisibleFeatureStub;
+use Tuleap\Test\Builders\UserTestBuilder;
 
 final class UserStoryLinkedToFeatureCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -39,15 +41,17 @@ final class UserStoryLinkedToFeatureCheckerTest extends \Tuleap\Test\PHPUnit\Tes
      * @var \PHPUnit\Framework\MockObject\MockObject|\Tracker_ArtifactFactory
      */
     private $artifact_factory;
-    private \PFUser $user;
+    private UserIdentifier $user_identifier;
     private BuildPlanningStub $planning_builder;
+    private \PFUser $user;
 
     protected function setUp(): void
     {
         $this->planning_builder = BuildPlanningStub::withValidRootPlanning();
         $this->feature_dao      = $this->createMock(ArtifactsLinkedToParentDao::class);
         $this->artifact_factory = $this->createMock(\Tracker_ArtifactFactory::class);
-        $this->user             = new \PFUser(['language_id' => 'en']);
+        $this->user             = UserTestBuilder::aUser()->build();
+        $this->user_identifier  = UserIdentifier::fromPFUser($this->user);
     }
 
     public function testHasNotAPlannedUserStoryIfNoUserStoryIsLinked(): void
@@ -56,7 +60,9 @@ final class UserStoryLinkedToFeatureCheckerTest extends \Tuleap\Test\PHPUnit\Tes
             ->expects(self::once())
             ->method('getPlannedUserStory')
             ->willReturn([]);
-        self::assertFalse($this->getChecker()->isLinkedToAtLeastOnePlannedUserStory($this->user, $this->buildFeature(101)));
+        self::assertFalse(
+            $this->getChecker()->isLinkedToAtLeastOnePlannedUserStory($this->user_identifier, $this->buildFeature(101))
+        );
     }
 
     public function testHasAPlannedUserStory(): void
@@ -76,7 +82,9 @@ final class UserStoryLinkedToFeatureCheckerTest extends \Tuleap\Test\PHPUnit\Tes
             ->withConsecutive([666, 20, 666], [236, 20, 25])
             ->willReturnOnConsecutiveCalls(false, true);
 
-        self::assertTrue($this->getChecker()->isLinkedToAtLeastOnePlannedUserStory($this->user, $this->buildFeature(101)));
+        self::assertTrue(
+            $this->getChecker()->isLinkedToAtLeastOnePlannedUserStory($this->user_identifier, $this->buildFeature(101))
+        );
     }
 
     public function testHasNotAPlannedUserStoryIfUserStoriesAreLinkedButNotPlanned(): void
@@ -95,7 +103,9 @@ final class UserStoryLinkedToFeatureCheckerTest extends \Tuleap\Test\PHPUnit\Tes
             ->with(666, 20, 666)
             ->willReturn(false);
 
-        self::assertFalse($this->getChecker()->isLinkedToAtLeastOnePlannedUserStory($this->user, $this->buildFeature(101)));
+        self::assertFalse(
+            $this->getChecker()->isLinkedToAtLeastOnePlannedUserStory($this->user_identifier, $this->buildFeature(101))
+        );
     }
 
     public function testHasNotALinkedUserStoryToFeature(): void
@@ -105,7 +115,9 @@ final class UserStoryLinkedToFeatureCheckerTest extends \Tuleap\Test\PHPUnit\Tes
             ->method('getChildrenOfFeatureInTeamProjects')
             ->willReturn([]);
 
-        self::assertFalse($this->getChecker()->hasStoryLinked($this->user, $this->buildFeature(101)));
+        self::assertFalse(
+            $this->getChecker()->hasStoryLinked($this->user, $this->buildFeature(101))
+        );
     }
 
     public function testHasNotALinkedUserStoryToFeatureThatUserCanSee(): void
@@ -123,7 +135,9 @@ final class UserStoryLinkedToFeatureCheckerTest extends \Tuleap\Test\PHPUnit\Tes
             ->with($this->user, 666)
             ->willReturn(null);
 
-        self::assertFalse($this->getChecker()->hasStoryLinked($this->user, $this->buildFeature(101)));
+        self::assertFalse(
+            $this->getChecker()->hasStoryLinked($this->user, $this->buildFeature(101))
+        );
     }
 
     public function testHasALinkedUserStoryToFeature(): void
@@ -141,7 +155,9 @@ final class UserStoryLinkedToFeatureCheckerTest extends \Tuleap\Test\PHPUnit\Tes
             ->with($this->user, 236)
             ->willReturn($this->createMock(\Artifact::class));
 
-        self::assertTrue($this->getChecker()->hasStoryLinked($this->user, $this->buildFeature(101)));
+        self::assertTrue(
+            $this->getChecker()->hasStoryLinked($this->user, $this->buildFeature(101))
+        );
     }
 
     public function testReturnFalseWhenUserHasAccessedToTheUserStory(): void
@@ -155,16 +171,32 @@ final class UserStoryLinkedToFeatureCheckerTest extends \Tuleap\Test\PHPUnit\Tes
 
         $this->planning_builder = BuildPlanningStub::withoutRootValid();
 
-        self::assertFalse($this->getChecker()->isLinkedToAtLeastOnePlannedUserStory($this->user, $this->buildFeature(101)));
+        self::assertFalse(
+            $this->getChecker()->isLinkedToAtLeastOnePlannedUserStory($this->user_identifier, $this->buildFeature(101))
+        );
     }
 
     private function buildFeature(int $feature_id): FeatureIdentifier
     {
-        return FeatureIdentifier::fromId(VerifyIsVisibleFeatureStub::buildVisibleFeature(), $feature_id, $this->user, ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 110, UserIdentifier::fromPFUser($this->user)));
+        return FeatureIdentifier::fromId(
+            VerifyIsVisibleFeatureStub::buildVisibleFeature(),
+            $feature_id,
+            $this->user_identifier,
+            ProgramIdentifier::fromId(
+                BuildProgramStub::stubValidProgram(),
+                110,
+                $this->user_identifier
+            )
+        );
     }
 
     private function getChecker(): UserStoryLinkedToFeatureChecker
     {
-        return new UserStoryLinkedToFeatureChecker($this->feature_dao, $this->planning_builder, $this->artifact_factory);
+        return new UserStoryLinkedToFeatureChecker(
+            $this->feature_dao,
+            $this->planning_builder,
+            $this->artifact_factory,
+            RetrieveUserStub::withUser($this->user)
+        );
     }
 }

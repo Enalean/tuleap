@@ -24,18 +24,18 @@ namespace Tuleap\ProgramManagement\Stub;
 
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Content\Links\VerifyLinkedUserStoryIsNotPlanned;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureIdentifier;
+use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 
 final class VerifyLinkedUserStoryIsNotPlannedStub implements VerifyLinkedUserStoryIsNotPlanned
 {
-    /** @var bool */
-    private $is_linked;
+    private bool $is_linked;
 
     private function __construct(bool $is_linked = false)
     {
         $this->is_linked = $is_linked;
     }
 
-    public function isLinkedToAtLeastOnePlannedUserStory(\PFUser $user, FeatureIdentifier $feature): bool
+    public function isLinkedToAtLeastOnePlannedUserStory(UserIdentifier $user_identifier, FeatureIdentifier $feature): bool
     {
         return $this->is_linked;
     }

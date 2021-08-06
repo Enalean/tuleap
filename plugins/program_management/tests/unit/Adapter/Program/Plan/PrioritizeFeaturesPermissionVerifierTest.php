@@ -31,6 +31,7 @@ use Tuleap\ProgramManagement\Stub\BuildProgramStub;
 use Tuleap\ProgramManagement\Stub\RetrieveProjectStub;
 use Tuleap\ProgramManagement\Stub\RetrieveProjectUgroupsCanPrioritizeItemsStub;
 use Tuleap\ProgramManagement\Stub\RetrieveUserStub;
+use Tuleap\ProgramManagement\Stub\UserPermissionsStub;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Stubs\CheckProjectAccessStub;
 
@@ -53,7 +54,11 @@ final class PrioritizeFeaturesPermissionVerifierTest extends \Tuleap\Test\PHPUni
         $this->user             = $this->createMock(\PFUser::class);
         $this->user->method('getId')->willReturn(101);
         $this->user_identifier    = UserIdentifier::fromPFUser($this->user);
-        $this->program_identifier = ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 102, $this->user_identifier);
+        $this->program_identifier = ProgramIdentifier::fromId(
+            BuildProgramStub::stubValidProgram(),
+            102,
+            $this->user_identifier
+        );
     }
 
     public function testUsersCanPrioritizeFeaturesWhenTheyAreInTheAppropriateUserGroup(): void
@@ -66,21 +71,47 @@ final class PrioritizeFeaturesPermissionVerifierTest extends \Tuleap\Test\PHPUni
         );
 
         self::assertTrue(
-            $this->verifier->canUserPrioritizeFeatures($this->program_identifier, $this->user_identifier)
+            $this->verifier->canUserPrioritizeFeatures($this->program_identifier, UserPermissionsStub::aRegularUser(), $this->user_identifier)
+        );
+    }
+
+    public function testUsersCanPrioritizeFeaturesWhenTheyArePlatformAdmin(): void
+    {
+        $user = $this->createMock(\PFUser::class);
+        $user->method('isSuperUser')->willReturn(true);
+        $this->verifier = new PrioritizeFeaturesPermissionVerifier(
+            $this->retrieve_project,
+            CheckProjectAccessStub::withValidAccess(),
+            $this->retrieve_ugroups,
+            RetrieveUserStub::buildMockedAdminUser($user)
+        );
+
+        self::assertTrue(
+            $this->verifier->canUserPrioritizeFeatures(
+                $this->program_identifier,
+                UserPermissionsStub::aPlatformAdmin(),
+                $this->user_identifier
+            )
         );
     }
 
     public function testUsersCanPrioritizeFeaturesWhenTheyAreProjectAdmin(): void
     {
+        $user = $this->createMock(\PFUser::class);
+        $user->method('isSuperUser')->willReturn(true);
         $this->verifier = new PrioritizeFeaturesPermissionVerifier(
             $this->retrieve_project,
             CheckProjectAccessStub::withValidAccess(),
             $this->retrieve_ugroups,
-            RetrieveUserStub::buildMockedAdminUser($this->user)
+            RetrieveUserStub::buildMockedAdminUser($user)
         );
 
         self::assertTrue(
-            $this->verifier->canUserPrioritizeFeatures($this->program_identifier, $this->user_identifier)
+            $this->verifier->canUserPrioritizeFeatures(
+                $this->program_identifier,
+                UserPermissionsStub::aProjectAdmin(),
+                $this->user_identifier
+            )
         );
     }
 
@@ -94,7 +125,7 @@ final class PrioritizeFeaturesPermissionVerifierTest extends \Tuleap\Test\PHPUni
         );
 
         self::assertFalse(
-            $this->verifier->canUserPrioritizeFeatures($this->program_identifier, $this->user_identifier)
+            $this->verifier->canUserPrioritizeFeatures($this->program_identifier, UserPermissionsStub::aRegularUser(), $this->user_identifier)
         );
     }
 
@@ -108,7 +139,7 @@ final class PrioritizeFeaturesPermissionVerifierTest extends \Tuleap\Test\PHPUni
         );
 
         self::assertFalse(
-            $this->verifier->canUserPrioritizeFeatures($this->program_identifier, $this->user_identifier)
+            $this->verifier->canUserPrioritizeFeatures($this->program_identifier, UserPermissionsStub::aRegularUser(), $this->user_identifier)
         );
     }
 }

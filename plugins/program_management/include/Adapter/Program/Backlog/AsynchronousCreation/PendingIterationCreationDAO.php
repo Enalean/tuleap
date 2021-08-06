@@ -34,7 +34,7 @@ final class PendingIterationCreationDAO extends DataAccessObject implements Stor
             return [
                 'iteration_id'           => $creation->iteration->id,
                 'program_increment_id'   => $creation->program_increment->getId(),
-                'user_id'                => $creation->user->user_id,
+                'user_id'                => $creation->user->id,
                 'iteration_changeset_id' => $creation->changeset->id
             ];
         }, $creations);
