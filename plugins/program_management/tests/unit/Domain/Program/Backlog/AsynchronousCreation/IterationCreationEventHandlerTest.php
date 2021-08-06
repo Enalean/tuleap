@@ -24,6 +24,7 @@ namespace Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation;
 
 use Psr\Log\Test\TestLogger;
 use Tuleap\ProgramManagement\Adapter\Events\IterationCreationEventProxy;
+use Tuleap\ProgramManagement\Domain\Events\IterationCreationEvent;
 use Tuleap\ProgramManagement\Stub\CheckProgramIncrementStub;
 use Tuleap\ProgramManagement\Stub\RetrieveUserStub;
 use Tuleap\ProgramManagement\Stub\SearchPendingIterationStub;
@@ -94,10 +95,10 @@ final class IterationCreationEventHandlerTest extends \Tuleap\Test\PHPUnit\TestC
         self::assertFalse($this->logger->hasDebugRecords());
     }
 
-    private function buildValidEvent(): ?IterationCreationEventProxy
+    private function buildValidEvent(): ?IterationCreationEvent
     {
         $worker_event = new WorkerEvent($this->logger, [
-            'event_name' => IterationCreationEventProxy::TOPIC,
+            'event_name' => IterationCreationEvent::TOPIC,
             'payload'    => [
                 'artifact_id' => self::ITERATION_ID,
                 'user_id'     => self::USER_ID,
