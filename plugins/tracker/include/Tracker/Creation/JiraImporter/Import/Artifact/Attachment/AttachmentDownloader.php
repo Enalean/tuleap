@@ -24,13 +24,11 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Attachment;
 
 use ForgeConfig;
-use Http\Client\Common\Plugin\AuthenticationPlugin;
-use Http\Message\Authentication\BasicAuth;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestFactoryInterface;
 use Psr\Log\LoggerInterface;
-use Tuleap\Http\HttpClientFactory;
 use Tuleap\Http\HTTPFactoryBuilder;
+use Tuleap\Tracker\Creation\JiraImporter\Client\JiraHTTPClientBuilder;
 use Tuleap\Tracker\Creation\JiraImporter\JiraCredentials;
 
 class AttachmentDownloader
@@ -91,10 +89,8 @@ class AttachmentDownloader
 
     public static function build(JiraCredentials $jira_credentials, LoggerInterface $logger): self
     {
-        $client = HttpClientFactory::createClient(
-            new AuthenticationPlugin(
-                new BasicAuth($jira_credentials->getJiraUsername(), $jira_credentials->getJiraToken()->getString())
-            )
+        $client = JiraHTTPClientBuilder::buildHTTPClientFromCredentials(
+            $jira_credentials
         );
 
         $request_factory = HTTPFactoryBuilder::requestFactory();
