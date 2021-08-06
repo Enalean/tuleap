@@ -58,7 +58,7 @@ final class IterationCreationsRunner implements RunIterationsCreation
                     IterationCreationEventProxy::TOPIC,
                     [
                         'artifact_id' => $iteration_creation->iteration->id,
-                        'user_id'     => $iteration_creation->user->user_id,
+                        'user_id'     => $iteration_creation->user->id,
                     ]
                 );
             } catch (QueueServerConnectionException $exception) {
@@ -76,7 +76,7 @@ final class IterationCreationsRunner implements RunIterationsCreation
             "Unable to queue iteration mirrors creation for iteration #{$iteration_id}",
             ['exception' => $exception]
         );
-        $this->processIterationCreation($iteration_id, $creation->user->user_id);
+        $this->processIterationCreation($iteration_id, $creation->user->id);
     }
 
     public function addListener(?IterationCreationEventProxy $event): void
