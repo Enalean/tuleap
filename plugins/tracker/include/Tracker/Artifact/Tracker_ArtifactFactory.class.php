@@ -434,6 +434,12 @@ class Tracker_ArtifactFactory
         return $children_count[$artifact->getId()] > 0;
     }
 
+    public function hasChildrenInSameProject(Artifact $artifact): bool
+    {
+        $children_count = $this->getDao()->getChildrenCountInSameProjectOfParent($artifact->getId());
+        return $children_count > 0;
+    }
+
     /**
      * @param int[] $artifact_ids
      */

@@ -607,6 +607,26 @@ class Tracker_ArtifactDao extends DataAccessObject
         return $children_count;
     }
 
+    public function getChildrenCountInSameProjectOfParent(int $artifact_id): int
+    {
+        $is_child_shortname = $this->da->quoteSmart(Tracker_FormElement_Field_ArtifactLink::NATURE_IS_CHILD);
+
+        $sql = "SELECT count(*) AS nb
+                FROM tracker_artifact parent_art
+                     INNER JOIN tracker_field                        AS f              ON (f.tracker_id = parent_art.tracker_id AND f.formElement_type = 'art_link' AND use_it = 1)
+                     INNER JOIN tracker_changeset_value              AS cv             ON (cv.changeset_id = parent_art.last_changeset_id AND cv.field_id = f.id)
+                     INNER JOIN tracker_changeset_value_artifactlink AS artlink        ON (artlink.changeset_value_id = cv.id)
+                     INNER JOIN tracker_artifact                     AS child_art      ON (child_art.id = artlink.artifact_id)
+                     INNER JOIN tracker                              AS parent_tracker ON (parent_art.tracker_id = parent_tracker.id)
+                     INNER JOIN tracker                              AS child_tracker  ON (child_art.tracker_id = child_tracker.id AND child_tracker.group_id = parent_tracker.group_id)
+                WHERE parent_art.id = " . $this->da->escapeInt($artifact_id) . "
+                    AND artlink.nature=$is_child_shortname
+                    AND child_tracker.deletion_date IS NULL
+                GROUP BY parent_art.id";
+
+        return $this->retrieveCount($sql);
+    }
+
     /**
      * It does not check permissions
      */

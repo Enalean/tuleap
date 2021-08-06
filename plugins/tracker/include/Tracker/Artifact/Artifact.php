@@ -1004,6 +1004,19 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
         return $children;
     }
 
+    /** @return Artifact[] */
+    public function getChildrenForUserInSameProject(PFUser $user): array
+    {
+        $children = [];
+        foreach ($this->getArtifactFactory()->getChildren($this) as $child) {
+            if ($child->userCanView($user) && $child->getProjectId() === $this->getProjectId()) {
+                $children[] = $child;
+            }
+        }
+
+        return $children;
+    }
+
     /** @return Tracker_ArtifactChildPresenter[] */
     private function getChildPresenterCollection(PFUser $current_user)
     {
@@ -1026,6 +1039,11 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
     public function hasChildren()
     {
         return $this->getArtifactFactory()->hasChildren($this);
+    }
+
+    public function hasChildrenInSameProject(): bool
+    {
+        return $this->getArtifactFactory()->hasChildrenInSameProject($this);
     }
 
     /**

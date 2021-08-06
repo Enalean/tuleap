@@ -35,6 +35,8 @@ use Tracker_XML_Exporter_ArtifactXMLExporterBuilder;
 use Tracker_XML_Exporter_InArchiveFilePathXMLExporter;
 use Tracker_XML_Exporter_NullChildrenCollector;
 use Tuleap\GlobalResponseMock;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Artifact\Changeset\ArtifactChangesetSaver;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupPermissionInserter;
 use Tuleap\Tracker\Artifact\Changeset\FieldsToBeSavedInSpecificOrderRetriever;
@@ -860,5 +862,47 @@ final class Tracker_ArtifactTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:i
         $artifact->exportToXML($artifacts_node, $archive, $artifact_xml_exporter);
 
         $this->assertEquals(101, (int) $artifacts_node->artifact['id']);
+    }
+
+    public function testGetOnlyChildrenOfArtifactInSameProject(): void
+    {
+        $project = ProjectTestBuilder::aProject()->withId(101)->build();
+
+        $visible_artifact_children = $this->createMock(Artifact::class);
+        $visible_artifact_children
+            ->method('getTracker')
+            ->willReturn(TrackerTestBuilder::aTracker()->withProject($project)->build());
+        $visible_artifact_children->method('userCanView')->willReturn(true);
+
+        $children_not_in_project = $this->createMock(Artifact::class);
+        $children_not_in_project
+            ->method('getTracker')
+            ->willReturn(
+                TrackerTestBuilder::aTracker()
+                    ->withProject(ProjectTestBuilder::aProject()->withId(666)->build())
+                    ->build()
+            );
+        $children_not_in_project->method('userCanView')->willReturn(true);
+
+        $children_not_visible_by_user = $this->createMock(Artifact::class);
+        $children_not_visible_by_user
+            ->method('getTracker')
+            ->willReturn(TrackerTestBuilder::aTracker()->withProject($project)->build());
+        $children_not_visible_by_user->method('userCanView')->willReturn(false);
+
+        $artifact_factory = $this->createStub(\Tracker_ArtifactFactory::class);
+        $artifact_factory
+            ->method('getChildren')
+            ->willReturn([$visible_artifact_children, $children_not_in_project, $children_not_visible_by_user]);
+
+        $user     = UserTestBuilder::aUser()->withId(5)->build();
+        $artifact = $this->createPartialMock(Artifact::class, ['getArtifactFactory', 'getTracker']);
+        $artifact->method('getArtifactFactory')->willReturn($artifact_factory);
+        $artifact->method('getTracker')->willReturn(TrackerTestBuilder::aTracker()->withProject($project)->build());
+
+        $children = $artifact->getChildrenForUserInSameProject($user);
+
+        $this->assertCount(1, $children);
+        $this->assertSame($children[0], $visible_artifact_children);
     }
 }
