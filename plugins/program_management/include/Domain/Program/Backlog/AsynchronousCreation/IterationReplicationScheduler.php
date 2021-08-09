@@ -89,7 +89,7 @@ final class IterationReplicationScheduler
             return;
         }
         $this->logNewIterationIds($just_linked_iterations);
-        $creations = NewPendingIterationCreation::buildCollectionFromJustLinkedIterations(
+        $creations = IterationCreation::buildCollectionFromJustLinkedIterations(
             $this->changeset_retriever,
             $this->logger,
             $just_linked_iterations,

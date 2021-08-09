@@ -24,7 +24,8 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation;
 
 use Psr\Log\Test\TestLogger;
 use Tuleap\ProgramManagement\Adapter\Events\IterationCreationEventProxy;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\NewPendingIterationCreation;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\IterationCreation;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\ProcessIterationCreation;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration\IterationIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration\JustLinkedIterationCollection;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementIdentifier;
@@ -38,7 +39,6 @@ use Tuleap\Queue\NoQueueSystemAvailableException;
 use Tuleap\Queue\PersistentQueue;
 use Tuleap\Queue\QueueFactory;
 use Tuleap\Queue\QueueServerConnectionException;
-use Tuleap\Queue\WorkerEvent;
 use Tuleap\Test\Builders\UserTestBuilder;
 
 final class IterationCreationsRunnerTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -52,9 +52,10 @@ final class IterationCreationsRunnerTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $queue_factory;
     /**
-     * @var NewPendingIterationCreation[]
+     * @var IterationCreation[]
      */
     private array $iteration_creations;
+    private ProcessIterationCreation $iteration_creator;
 
     protected function setUp(): void
     {
@@ -79,17 +80,23 @@ final class IterationCreationsRunnerTest extends \Tuleap\Test\PHPUnit\TestCase
             $program_increment,
             ...$iterations
         );
-        $this->iteration_creations = NewPendingIterationCreation::buildCollectionFromJustLinkedIterations(
+        $this->iteration_creations = IterationCreation::buildCollectionFromJustLinkedIterations(
             RetrieveLastChangesetStub::withLastChangesetIds(5539, 5174),
             $this->logger,
             $just_linked_iterations,
             $user
         );
+        $this->iteration_creator   = new class implements ProcessIterationCreation {
+            public function processIterationCreation(IterationCreation $iteration_creation): void
+            {
+                // Side effects
+            }
+        };
     }
 
     private function getRunner(): IterationCreationsRunner
     {
-        return new IterationCreationsRunner($this->logger, $this->queue_factory);
+        return new IterationCreationsRunner($this->logger, $this->queue_factory, $this->iteration_creator);
     }
 
     public function testItPushesAMessageForEachIterationCreation(): void
@@ -126,8 +133,8 @@ final class IterationCreationsRunnerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->getRunner()->scheduleIterationCreations(...$this->iteration_creations);
 
-        self::assertTrue($this->logger->hasDebug('Processing iteration creation with iteration #54 for user #110'));
-        self::assertTrue($this->logger->hasDebug('Processing iteration creation with iteration #89 for user #110'));
+        self::assertTrue($this->logger->hasError('Unable to queue iteration mirrors creation for iteration #54'));
+        self::assertTrue($this->logger->hasError('Unable to queue iteration mirrors creation for iteration #89'));
     }
 
     public function testWhenThereIsAProblemWithQueueItProcessesIterationCreationImmediately(): void
@@ -140,36 +147,7 @@ final class IterationCreationsRunnerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->getRunner()->scheduleIterationCreations(...$this->iteration_creations);
 
-        self::assertTrue($this->logger->hasDebug('Processing iteration creation with iteration #54 for user #110'));
-        self::assertTrue($this->logger->hasDebug('Processing iteration creation with iteration #89 for user #110'));
-    }
-
-    public function testItProcessesValidEvent(): void
-    {
-        $worker_event = new WorkerEvent($this->logger, [
-            'event_name' => IterationCreationEventProxy::TOPIC,
-            'payload'    => [
-                'artifact_id' => self::FIRST_ITERATION_ID,
-                'user_id'     => self::USER_ID,
-            ]
-        ]);
-        $event        = IterationCreationEventProxy::fromWorkerEvent($this->logger, $worker_event);
-
-        $this->getRunner()->addListener($event);
-
-        self::assertTrue($this->logger->hasDebug('Processing iteration creation with iteration #54 for user #110'));
-    }
-
-    public function testItDoesNothingWhenEventIsNull(): void
-    {
-        $invalid_worker_event = new WorkerEvent($this->logger, [
-            'event_name' => 'unrelated.topic',
-            'payload'    => [],
-        ]);
-        $event                = IterationCreationEventProxy::fromWorkerEvent($this->logger, $invalid_worker_event);
-
-        $this->getRunner()->addListener($event);
-
-        self::assertFalse($this->logger->hasDebugRecords());
+        self::assertTrue($this->logger->hasError('Unable to queue iteration mirrors creation for iteration #54'));
+        self::assertTrue($this->logger->hasError('Unable to queue iteration mirrors creation for iteration #89'));
     }
 }

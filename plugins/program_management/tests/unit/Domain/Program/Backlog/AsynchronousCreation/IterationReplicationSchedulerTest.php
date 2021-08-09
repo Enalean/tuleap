@@ -67,13 +67,13 @@ final class IterationReplicationSchedulerTest extends \Tuleap\Test\PHPUnit\TestC
         $this->iteration_link_verifier = VerifyIterationHasBeenLinkedBeforeStub::withNoIteration();
         $this->changeset_retriever     = RetrieveLastChangesetStub::withLastChangesetIds(4297, 7872);
         $this->pending_store           = new class implements StorePendingIterations {
-            public function storePendingIterationCreations(NewPendingIterationCreation ...$creations): void
+            public function storePendingIterationCreations(IterationCreation ...$creations): void
             {
                 // Side effects
             }
         };
         $this->iterations_creator      = new class implements RunIterationsCreation {
-            public function scheduleIterationCreations(NewPendingIterationCreation ...$creations): void
+            public function scheduleIterationCreations(IterationCreation ...$creations): void
             {
                 // Side effects
             }
@@ -135,7 +135,7 @@ final class IterationReplicationSchedulerTest extends \Tuleap\Test\PHPUnit\TestC
     private function getStoreShouldNotBeCalled(): StorePendingIterations
     {
         return new class implements StorePendingIterations {
-            public function storePendingIterationCreations(NewPendingIterationCreation ...$creations): void
+            public function storePendingIterationCreations(IterationCreation ...$creations): void
             {
                 throw new \LogicException('Method should not have been called');
             }

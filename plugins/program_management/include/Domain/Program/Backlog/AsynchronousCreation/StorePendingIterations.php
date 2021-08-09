@@ -24,5 +24,5 @@ namespace Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation;
 
 interface StorePendingIterations
 {
-    public function storePendingIterationCreations(NewPendingIterationCreation ...$creations): void;
+    public function storePendingIterationCreations(IterationCreation ...$creations): void;
 }

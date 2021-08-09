@@ -21,34 +21,21 @@
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation;
 
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration\IterationIdentifier;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementIdentifier;
-use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
-use Tuleap\ProgramManagement\Stub\CheckProgramIncrementStub;
 use Tuleap\ProgramManagement\Stub\RetrieveLastChangesetStub;
-use Tuleap\ProgramManagement\Stub\SearchIterationsStub;
-use Tuleap\ProgramManagement\Stub\VerifyIsVisibleArtifactStub;
-use Tuleap\Test\Builders\UserTestBuilder;
 
 final class ChangesetIdentifierTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private ProgramIncrementIdentifier $program_increment;
     private IterationIdentifier $iteration;
 
     protected function setUp(): void
     {
-        $user                    = UserTestBuilder::aUser()->build();
-        $this->program_increment = ProgramIncrementIdentifier::fromId(
-            CheckProgramIncrementStub::buildProgramIncrementChecker(),
-            101,
-            $user
-        );
+        $this->iteration = IterationIdentifier::fromId(37);
+    }
 
-        [$this->iteration] = IterationIdentifier::buildCollectionFromProgramIncrement(
-            SearchIterationsStub::withIterationIds(296),
-            VerifyIsVisibleArtifactStub::withAlwaysVisibleArtifacts(),
-            $this->program_increment,
-            UserIdentifier::fromPFUser($user)
-        );
+    public function testItBuildsFromId(): void
+    {
+        $changeset = ChangesetIdentifier::fromId(7715);
+        self::assertSame(7715, $changeset->id);
     }
 
     public function testItBuildsFromIterationLastChangeset(): void

@@ -27,12 +27,14 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncr
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\ProgramManagement\Stub\CheckProgramIncrementStub;
 use Tuleap\ProgramManagement\Stub\RetrieveLastChangesetStub;
+use Tuleap\ProgramManagement\Stub\RetrieveUserStub;
 use Tuleap\ProgramManagement\Stub\SearchIterationsStub;
+use Tuleap\ProgramManagement\Stub\SearchPendingIterationStub;
 use Tuleap\ProgramManagement\Stub\VerifyIsVisibleArtifactStub;
 use Tuleap\ProgramManagement\Stub\VerifyIterationHasBeenLinkedBeforeStub;
 use Tuleap\Test\Builders\UserTestBuilder;
 
-final class NewPendingIterationCreationTest extends \Tuleap\Test\PHPUnit\TestCase
+final class IterationCreationTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const USER_ID              = 101;
     private const PROGRAM_INCREMENT_ID = 54;
@@ -44,6 +46,9 @@ final class NewPendingIterationCreationTest extends \Tuleap\Test\PHPUnit\TestCas
     private JustLinkedIterationCollection $just_linked_iterations;
     private RetrieveLastChangesetStub $changeset_retriever;
     private TestLogger $logger;
+    private SearchPendingIterationStub $iteration_searcher;
+    private CheckProgramIncrementStub $program_increment_checker;
+    private RetrieveUserStub $user_retriever;
 
     protected function setUp(): void
     {
@@ -70,11 +75,20 @@ final class NewPendingIterationCreationTest extends \Tuleap\Test\PHPUnit\TestCas
             self::SECOND_CHANGESET_ID
         );
         $this->logger                 = new TestLogger();
+
+        $this->iteration_searcher        = SearchPendingIterationStub::withRow(
+            self::FIRST_ITERATION_ID,
+            self::PROGRAM_INCREMENT_ID,
+            self::USER_ID,
+            self::FIRST_CHANGESET_ID
+        );
+        $this->program_increment_checker = CheckProgramIncrementStub::buildProgramIncrementChecker();
+        $this->user_retriever            = RetrieveUserStub::withUser($user);
     }
 
     public function testItRetrievesLastChangesetOfEachIterationAndBuildsCollection(): void
     {
-        [$first_creation, $second_creation] = NewPendingIterationCreation::buildCollectionFromJustLinkedIterations(
+        [$first_creation, $second_creation] = IterationCreation::buildCollectionFromJustLinkedIterations(
             $this->changeset_retriever,
             $this->logger,
             $this->just_linked_iterations,
@@ -96,13 +110,62 @@ final class NewPendingIterationCreationTest extends \Tuleap\Test\PHPUnit\TestCas
         $this->changeset_retriever = RetrieveLastChangesetStub::withNoLastChangeset();
 
         self::assertEmpty(
-            NewPendingIterationCreation::buildCollectionFromJustLinkedIterations(
+            IterationCreation::buildCollectionFromJustLinkedIterations(
                 $this->changeset_retriever,
                 $this->logger,
                 $this->just_linked_iterations,
                 $this->user
             )
         );
-        self::assertTrue($this->logger->hasErrorThatMatches('/Could not retrieve last changeset of iteration #[0-9]+, skipping it$/'));
+        self::assertTrue(
+            $this->logger->hasErrorThatMatches('/Could not retrieve last changeset of iteration #[0-9]+, skipping it$/')
+        );
+    }
+
+    public function testItBuildsFromStorage(): void
+    {
+        $iteration_creation = IterationCreation::fromStorage(
+            $this->iteration_searcher,
+            $this->program_increment_checker,
+            $this->user_retriever,
+            self::FIRST_ITERATION_ID,
+            self::USER_ID
+        );
+        self::assertSame(self::FIRST_ITERATION_ID, $iteration_creation->iteration->id);
+        self::assertSame(self::PROGRAM_INCREMENT_ID, $iteration_creation->program_increment->getId());
+        self::assertSame(self::USER_ID, $iteration_creation->user->id);
+        self::assertSame(self::FIRST_CHANGESET_ID, $iteration_creation->changeset->id);
+    }
+
+    public function testItReturnsNullWhenStoredIterationCreationIsNotValid(): void
+    {
+        // It can happen if the Iteration artifact or the Program Increment artifact are deleted
+        // between storage and processing.
+        $iteration_searcher = SearchPendingIterationStub::withNoRow();
+        self::assertNull(
+            IterationCreation::fromStorage(
+                $iteration_searcher,
+                $this->program_increment_checker,
+                $this->user_retriever,
+                self::FIRST_ITERATION_ID,
+                self::USER_ID
+            )
+        );
+    }
+
+    public function testItReturnsNullWhenStoredProgramIncrementIsNotValid(): void
+    {
+        // It can happen if Program configuration changes between storage and processing; for example someone
+        // changed the Program Increment tracker.
+        $program_increment_checker = CheckProgramIncrementStub::buildOtherArtifactChecker();
+        self::assertNull(
+            IterationCreation::fromStorage(
+                $this->iteration_searcher,
+                $program_increment_checker,
+                $this->user_retriever,
+                self::FIRST_ITERATION_ID,
+                self::USER_ID
+            )
+        );
     }
 }
