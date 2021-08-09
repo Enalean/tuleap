@@ -29,12 +29,13 @@
             name="icon_name"
             required
             ref="select"
-            style="width: 100%"
+            v-on:change="$emit('input', $event.target.value)"
         >
             <option
                 v-for="(label, icon_name) in allowed_icons"
                 v-bind:key="icon_name"
                 v-bind:value="icon_name"
+                v-bind:selected="value === icon_name"
             >
                 {{ label }}
             </option>
@@ -42,7 +43,7 @@
     </div>
 </template>
 <script>
-import { select2 } from "tlp";
+import { createListPicker } from "@tuleap/list-picker";
 
 export default {
     name: "IconSelector",
@@ -65,47 +66,28 @@ export default {
             selector: null,
         };
     },
-    watch: {
-        value(value) {
-            this.selector.val(value).trigger("change");
-        },
-    },
-    mounted() {
-        this.selector = select2(this.$refs.select, {
+    async mounted() {
+        this.selector = await createListPicker(this.$refs.select, {
+            is_filterable: true,
             placeholder: this.$gettext("Choose an icon"),
-            allowClear: true,
-            templateSelection: this.formatItem,
-            templateResult: this.formatItem,
-        })
-            .val(this.value)
-            .trigger("change")
-            .on("change", this.onChange);
+            items_template_formatter: (html_processor, value_id, item_label) => {
+                let font_awesome_icon_classes = value_id;
+                if (!font_awesome_icon_classes.includes(" ")) {
+                    font_awesome_icon_classes += " fa";
+                }
+
+                const template = html_processor`
+                    <i aria-hidden="true" class="project-admin-services-modal-icon-item fa-fw ${font_awesome_icon_classes}"></i>
+                    <span>${item_label}</span>
+                `;
+                return Promise.resolve(template);
+            },
+        });
     },
     beforeDestroy() {
-        this.selector.off().select2("destroy");
-    },
-    methods: {
-        onChange() {
-            this.$emit("input", this.selector.val());
-        },
-        formatItem(item) {
-            if (item.id === "" || typeof item.id === "undefined") {
-                return item.text;
-            }
-
-            const icon = document.createElement("i");
-            icon.setAttribute("aria-hidden", "true");
-            icon.classList.add("fa-fw", "project-admin-services-modal-icon-item");
-            if (item.id.includes(" ")) {
-                icon.classList.add(...item.id.split(" "));
-            } else {
-                icon.classList.add("fa", item.id);
-            }
-            const span = document.createElement("span");
-            span.insertAdjacentElement("afterbegin", icon);
-            span.insertAdjacentText("beforeend", item.element.text);
-            return span;
-        },
+        if (this.selector !== null) {
+            this.selector.destroy();
+        }
     },
 };
 </script>
