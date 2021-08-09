@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Team\Creation;
 
-use Tuleap\ProgramManagement\Domain\Program\ToBeCreatedProgram;
+use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramForAdministrationIdentifier;
 
 /**
  * @psalm-immutable
@@ -32,16 +32,13 @@ final class TeamCollection
     /**
      * @var Team[]
      */
-    private $teams;
-    /**
-     * @var ToBeCreatedProgram
-     */
-    private $program;
+    private array $teams;
+    private ProgramForAdministrationIdentifier $program;
 
     /**
      * @param Team[] $teams
      */
-    public function __construct(array $teams, ToBeCreatedProgram $program)
+    private function __construct(array $teams, ProgramForAdministrationIdentifier $program)
     {
         $this->teams   = $teams;
         $this->program = $program;
@@ -52,16 +49,16 @@ final class TeamCollection
      */
     public function getTeamIds(): array
     {
-        return array_map(
-            static function (Team $team) {
-                return $team->getTeamId();
-            },
-            $this->teams
-        );
+        return array_map(static fn(Team $team): int => $team->getTeamId(), $this->teams);
     }
 
-    public function getProgram(): ToBeCreatedProgram
+    public function getProgram(): ProgramForAdministrationIdentifier
     {
         return $this->program;
+    }
+
+    public static function fromProgramAndTeams(ProgramForAdministrationIdentifier $program, Team ...$teams): self
+    {
+        return new self($teams, $program);
     }
 }

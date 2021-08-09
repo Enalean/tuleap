@@ -23,66 +23,65 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Domain\Team\Creation;
 
 use Tuleap\ProgramManagement\Domain\Program\ProgramIsTeamException;
-use Tuleap\ProgramManagement\Domain\Program\ToBeCreatedProgram;
-use Tuleap\ProgramManagement\Stub\BuildProgramStub;
-use Tuleap\ProgramManagement\Stub\UserIdentifierStub;
+use Tuleap\ProgramManagement\Stub\RetrieveProjectStub;
+use Tuleap\ProgramManagement\Stub\VerifyIsTeamStub;
+use Tuleap\ProgramManagement\Stub\VerifyProjectPermissionStub;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 
 final class TeamCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private BuildProgramStub $program_adapter;
+    private const PROGRAM_ID = 101;
+    private const TEAM_ID    = 102;
+    private RetrieveProjectStub $project_retriever;
+    private VerifyIsTeamStub $team_verifier;
+    private VerifyProjectPermissionStub $permission_verifier;
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|BuildTeam
+     * @var mixed|\PHPUnit\Framework\MockObject\Stub|BuildTeam
      */
-    private $team_adapter;
+    private $team_builder;
     /**
      * @var \PHPUnit\Framework\MockObject\MockObject|TeamStore
      */
-    private $team_dao;
-    private int $project_id;
-    private int $team_project_id;
+    private $team_store;
+    private \Project $program_project;
     private \PFUser $user;
 
     protected function setUp(): void
     {
-        $this->program_adapter = BuildProgramStub::stubValidToBeCreatedProgram();
-        $this->team_adapter    = $this->createMock(BuildTeam::class);
-        $this->team_dao        = $this->createMock(TeamStore::class);
+        $this->program_project     = ProjectTestBuilder::aProject()->withId(self::PROGRAM_ID)->build();
+        $this->project_retriever   = RetrieveProjectStub::withValidProjects($this->program_project);
+        $this->team_verifier       = VerifyIsTeamStub::withNotValidTeam();
+        $this->permission_verifier = VerifyProjectPermissionStub::withAdministrator();
+        $this->team_builder        = $this->createStub(BuildTeam::class);
+        $this->team_store          = $this->createMock(TeamStore::class);
 
-        $this->project_id      = 101;
-        $this->team_project_id = 2;
-        $this->user            = UserTestBuilder::aUser()->build();
+        $this->user = UserTestBuilder::aUser()->build();
+    }
+
+    private function getCreator(): TeamCreator
+    {
+        return new TeamCreator(
+            $this->project_retriever,
+            $this->team_verifier,
+            $this->permission_verifier,
+            $this->team_builder,
+            $this->team_store
+        );
     }
 
     public function testItCreatesAPlan(): void
     {
-        $this->team_adapter->expects(self::once())->method('checkProjectIsATeam');
+        $this->team_builder->method('checkProjectIsATeam');
+        $this->team_store->expects(self::once())->method('save');
 
-        $program    = ToBeCreatedProgram::fromId($this->program_adapter, $this->project_id, UserIdentifierStub::buildGenericUser());
-        $collection = new TeamCollection([Team::build($this->team_adapter, $this->team_project_id, $this->user)], $program);
-        $this->team_adapter
-            ->expects(self::once())
-            ->method('buildTeamProject')
-            ->willReturnCallback(
-                function (array $team_ids, ToBeCreatedProgram $to_be_created_program) use ($program, $collection): TeamCollection {
-                    if ($to_be_created_program->getId() !== $program->getId()) {
-                        throw new \RuntimeException('program id #' . $program->getId() . ' is not same to ' . $to_be_created_program->getId());
-                    }
-                    return $collection;
-                }
-            );
-
-        $this->team_dao->expects(self::once())->method('save')->with($collection);
-
-        $team_adapter = new TeamCreator($this->program_adapter, $this->team_adapter, $this->team_dao);
-        $team_adapter->create($this->user, $this->project_id, [$this->team_project_id]);
+        $this->getCreator()->create($this->user, self::PROGRAM_ID, [self::TEAM_ID]);
     }
 
     public function testThrowExceptionWhenTeamIdsContainProgram(): void
     {
         $this->expectException(ProgramIsTeamException::class);
 
-        $team_adapter = new TeamCreator($this->program_adapter, $this->team_adapter, $this->team_dao);
-        $team_adapter->create($this->user, $this->project_id, [$this->team_project_id, $this->project_id]);
+        $this->getCreator()->create($this->user, self::PROGRAM_ID, [self::TEAM_ID, self::PROGRAM_ID]);
     }
 }

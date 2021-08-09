@@ -72,7 +72,6 @@ use Tuleap\ProgramManagement\Domain\Program\Plan\PlanTrackerException;
 use Tuleap\ProgramManagement\Domain\Program\Plan\PrioritizeFeaturesPermissionVerifier;
 use Tuleap\ProgramManagement\Domain\Program\Plan\ProgramAccessException;
 use Tuleap\ProgramManagement\Domain\Program\Plan\ProgramIncrementAndIterationCanNotBeTheSameTrackerException;
-use Tuleap\ProgramManagement\Domain\Program\Plan\ProgramIsATeamException;
 use Tuleap\ProgramManagement\Domain\Program\Plan\ProjectIsNotAProgramException;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIsTeamException;
@@ -105,34 +104,43 @@ final class ProjectResource extends AuthenticatedResource
 
     public function __construct()
     {
-        $this->user_manager         = \UserManager::instance();
-        $plan_dao                   = new PlanDao();
-        $team_dao                   = new TeamDao();
-        $project_manager            = \ProjectManager::instance();
-        $program_dao                = new ProgramDao();
-        $explicit_backlog_dao       = new ExplicitBacklogDao();
-        $this->user_manager_adapter = new UserManagerAdapter($this->user_manager);
-        $this->build_program        = new ProgramAdapter(
+        $this->user_manager          = \UserManager::instance();
+        $plan_dao                    = new PlanDao();
+        $team_dao                    = new TeamDao();
+        $project_manager             = \ProjectManager::instance();
+        $program_dao                 = new ProgramDao();
+        $explicit_backlog_dao        = new ExplicitBacklogDao();
+        $this->user_manager_adapter  = new UserManagerAdapter($this->user_manager);
+        $project_retriever           = new ProjectManagerAdapter($project_manager);
+        $project_permission_verifier = new ProjectPermissionVerifier();
+
+        $this->build_program = new ProgramAdapter(
             $project_manager,
             new ProjectAccessChecker(
                 new RestrictedUserCanAccessProjectVerifier(),
                 \EventManager::instance()
             ),
             $program_dao,
-            $team_dao,
             $this->user_manager_adapter
         );
-        $this->plan_creator         = new PlanCreator(
+
+        $this->plan_creator = new PlanCreator(
             new TrackerFactoryAdapter(\TrackerFactory::instance()),
             new ProgramUserGroupRetriever(new UserGroupRetriever(new \UGroupManager())),
             $plan_dao,
-            new ProjectManagerAdapter($project_manager),
+            $project_retriever,
             $team_dao,
-            new ProjectPermissionVerifier()
+            $project_permission_verifier
         );
 
         $team_adapter       = new TeamAdapter($project_manager, $program_dao, $explicit_backlog_dao);
-        $this->team_creator = new TeamCreator($this->build_program, $team_adapter, $team_dao);
+        $this->team_creator = new TeamCreator(
+            $project_retriever,
+            $team_dao,
+            $project_permission_verifier,
+            $team_adapter,
+            $team_dao
+        );
 
         $artifact_factory                 = \Tracker_ArtifactFactory::instance();
         $form_element_factory             = \Tracker_FormElementFactory::instance();
@@ -281,8 +289,6 @@ final class ProjectResource extends AuthenticatedResource
             throw new I18NRestException(400, $e->getI18NExceptionMessage());
         } catch (ProgramAccessException $e) {
             throw new I18NRestException(404, $e->getI18NExceptionMessage());
-        } catch (ProgramIsATeamException $e) {
-            throw new I18NRestException(403, $e->getI18NExceptionMessage());
         }
     }
 

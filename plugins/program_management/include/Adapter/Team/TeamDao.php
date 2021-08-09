@@ -39,7 +39,7 @@ final class TeamDao extends DataAccessObject implements TeamStore, VerifyIsTeam,
         $this->getDB()->tryFlatTransaction(function () use ($team_collection): void {
             $sql = 'DELETE FROM plugin_program_management_team_projects WHERE program_project_id = ?';
 
-            $program_id = $team_collection->getProgram()->getId();
+            $program_id = $team_collection->getProgram()->id;
             $this->getDB()->run($sql, $program_id);
 
             if (count($team_collection->getTeamIds()) === 0) {

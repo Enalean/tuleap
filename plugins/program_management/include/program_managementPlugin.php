@@ -334,6 +334,7 @@ final class program_managementPlugin extends Plugin
     {
         $project_manager = ProjectManager::instance();
         $program_dao     = new ProgramDao();
+        $event_manager   = \EventManager::instance();
 
         return new DisplayAdminProgramManagementController(
             new ProjectManagerAdapter($project_manager),
@@ -342,9 +343,17 @@ final class program_managementPlugin extends Plugin
             $program_dao,
             new ProgramManagementProjectAdapter($project_manager),
             new TeamDao(),
-            $this->getProgramAdapter(),
+            new ProgramAdapter(
+                $project_manager,
+                new ProjectAccessChecker(
+                    new RestrictedUserCanAccessProjectVerifier(),
+                    $event_manager
+                ),
+                $program_dao,
+                new UserManagerAdapter(UserManager::instance())
+            ),
             $this->getVisibleProgramIncrementTrackerRetriever(),
-            EventManager::instance(),
+            $event_manager,
             $this->getVisibleIterationTrackerRetriever(),
             new PotentialPlannableTrackersConfigurationPresentersBuilder(new PlanDao()),
             new ProjectUGroupCanPrioritizeItemsPresentersBuilder(
@@ -598,7 +607,6 @@ final class program_managementPlugin extends Plugin
                 $project_manager,
                 $project_access_checker,
                 new ProgramDao(),
-                new TeamDao(),
                 new UserManagerAdapter(UserManager::instance())
             ),
             new PrioritizeFeaturesPermissionVerifier(
@@ -643,7 +651,6 @@ final class program_managementPlugin extends Plugin
                 $project_manager,
                 $project_access_checker,
                 new ProgramDao(),
-                new TeamDao(),
                 $user_manager_adapter
             ),
             new PrioritizeFeaturesPermissionVerifier(
@@ -912,7 +919,6 @@ final class program_managementPlugin extends Plugin
                 \EventManager::instance()
             ),
             new ProgramDao(),
-            new TeamDao(),
             new UserManagerAdapter(UserManager::instance())
         );
     }

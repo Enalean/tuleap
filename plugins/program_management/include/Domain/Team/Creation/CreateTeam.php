@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Domain\Team\Creation;
 
 use Tuleap\ProgramManagement\Domain\Program\Plan\ProgramAccessException;
-use Tuleap\ProgramManagement\Domain\Program\Plan\ProgramIsATeamException;
 use Tuleap\ProgramManagement\Domain\Program\Plan\ProjectIsNotAProgramException;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIsTeamException;
 use Tuleap\ProgramManagement\Domain\Team\ProjectIsAProgramException;
@@ -37,7 +36,6 @@ interface CreateTeam
      * @throws ProjectIsAProgramException
      * @throws TeamAccessException
      * @throws ProgramIsTeamException
-     * @throws ProgramIsATeamException
      */
     public function create(\PFUser $user, int $project_id, array $team_ids): void;
 }

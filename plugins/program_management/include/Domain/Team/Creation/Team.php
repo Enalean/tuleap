@@ -54,7 +54,8 @@ final class Team
     }
 
     /**
-     * This method has meaning only while we can't do test initialization by xml import
+     * This method has meaning only while we can't do test initialization by xml import.
+     * If build() is used, it breaks because REQUEST_URI is null.
      * @throws \Tuleap\ProgramManagement\Domain\Team\ProjectIsAProgramException
      * @throws \Tuleap\ProgramManagement\Domain\Team\TeamAccessException
      */
