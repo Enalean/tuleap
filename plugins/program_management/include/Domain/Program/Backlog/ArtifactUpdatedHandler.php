@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog;
 
-use Tuleap\ProgramManagement\Adapter\Events\ArtifactUpdatedProxy;
+use Tuleap\ProgramManagement\Domain\Events\ArtifactUpdatedEvent;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\IterationReplicationScheduler;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\PlanUserStoriesInMirroredProgramIncrements;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\ProgramIncrementChanged;
@@ -49,30 +49,32 @@ final class ArtifactUpdatedHandler
         $this->iteration_replicator       = $iteration_replicator;
     }
 
-    public function handle(ArtifactUpdatedProxy $event): void
+    public function handle(ArtifactUpdatedEvent $event): void
     {
         $program_increment = ProgramIncrementIdentifier::fromArtifactUpdated($this->program_increment_verifier, $event);
         if ($program_increment) {
             $this->planArtifactIfNeeded($event, $program_increment);
-            $this->iteration_replicator->replicateIterationsIfNeeded($program_increment, $event->user);
+            $this->iteration_replicator->replicateIterationsIfNeeded($program_increment, $event->getUser());
         }
         $this->cleanUpFromTopBacklogFeatureAddedToAProgramIncrement($event);
     }
 
     private function planArtifactIfNeeded(
-        ArtifactUpdatedProxy $artifact_updated,
+        ArtifactUpdatedEvent $artifact_updated,
         ProgramIncrementIdentifier $program_increment
     ): void {
         $program_increment_changed = new ProgramIncrementChanged(
             $program_increment->getId(),
-            $artifact_updated->tracker_id,
-            $artifact_updated->user
+            $artifact_updated->getTrackerId(),
+            $artifact_updated->getUser()
         );
         $this->user_stories_planner->plan($program_increment_changed);
     }
 
-    private function cleanUpFromTopBacklogFeatureAddedToAProgramIncrement(ArtifactUpdatedProxy $artifact_updated): void
+    private function cleanUpFromTopBacklogFeatureAddedToAProgramIncrement(ArtifactUpdatedEvent $artifact_updated): void
     {
-        $this->feature_remover->removeFeaturesPlannedInAProgramIncrementFromTopBacklog($artifact_updated->artifact_id);
+        $this->feature_remover->removeFeaturesPlannedInAProgramIncrementFromTopBacklog(
+            $artifact_updated->getArtifactId()
+        );
     }
 }

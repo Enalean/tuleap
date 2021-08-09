@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement;
 
 use Tuleap\ProgramManagement\Adapter\Events\ArtifactUpdatedProxy;
+use Tuleap\ProgramManagement\Domain\Events\ArtifactUpdatedEvent;
 use Tuleap\ProgramManagement\Stub\CheckProgramIncrementStub;
 use Tuleap\ProgramManagement\Stub\VerifyIsProgramIncrementTrackerStub;
 use Tuleap\Test\Builders\ProjectTestBuilder;
@@ -75,7 +76,7 @@ final class ProgramIncrementIdentifierTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertSame(96, $program_increment->getId());
     }
 
-    private function buildArtifactUpdated(): ArtifactUpdatedProxy
+    private function buildArtifactUpdated(): ArtifactUpdatedEvent
     {
         $tracker  = TrackerTestBuilder::aTracker()->withId(127)->build();
         $artifact = ArtifactTestBuilder::anArtifact(96)->inTracker($tracker)->build();

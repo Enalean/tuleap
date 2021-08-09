@@ -24,6 +24,7 @@ namespace Tuleap\ProgramManagement\Domain\Program\Backlog;
 
 use Psr\Log\Test\TestLogger;
 use Tuleap\ProgramManagement\Adapter\Events\ArtifactUpdatedProxy;
+use Tuleap\ProgramManagement\Domain\Events\ArtifactUpdatedEvent;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\IterationReplicationScheduler;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\IterationCreation;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\RunIterationsCreation;
@@ -45,7 +46,7 @@ use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class ArtifactUpdatedHandlerTest extends TestCase
 {
-    private ArtifactUpdatedProxy $event;
+    private ArtifactUpdatedEvent $event;
     private VerifyIsProgramIncrementTrackerStub $program_increment_verifier;
     /**
      * @var \PHPUnit\Framework\MockObject\MockObject|PlanUserStoriesInMirroredProgramIncrements

@@ -23,7 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation;
 
 use Psr\Log\Test\TestLogger;
-use Tuleap\ProgramManagement\Adapter\Events\IterationCreationEventProxy;
+use Tuleap\ProgramManagement\Domain\Events\IterationCreationEvent;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\IterationCreation;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\ProcessIterationCreation;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration\IterationIdentifier;
@@ -105,10 +105,10 @@ final class IterationCreationsRunnerTest extends \Tuleap\Test\PHPUnit\TestCase
         $queue->expects(self::exactly(2))
             ->method('pushSinglePersistentMessage')
             ->withConsecutive([
-                IterationCreationEventProxy::TOPIC,
+                IterationCreationEvent::TOPIC,
                 ['artifact_id' => self::FIRST_ITERATION_ID, 'user_id' => self::USER_ID]
             ], [
-                IterationCreationEventProxy::TOPIC,
+                IterationCreationEvent::TOPIC,
                 ['artifact_id' => self::SECOND_ITERATION_ID, 'user_id' => self::USER_ID]
             ]);
         $this->queue_factory->method('getPersistentQueue')->willReturn($queue);

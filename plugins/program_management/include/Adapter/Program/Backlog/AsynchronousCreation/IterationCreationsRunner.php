@@ -23,7 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation;
 
 use Psr\Log\LoggerInterface;
-use Tuleap\ProgramManagement\Adapter\Events\IterationCreationEventProxy;
+use Tuleap\ProgramManagement\Domain\Events\IterationCreationEvent;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\IterationCreation;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\ProcessIterationCreation;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\RunIterationsCreation;
@@ -61,7 +61,7 @@ final class IterationCreationsRunner implements RunIterationsCreation
         foreach ($creations as $iteration_creation) {
             try {
                 $queue->pushSinglePersistentMessage(
-                    IterationCreationEventProxy::TOPIC,
+                    IterationCreationEvent::TOPIC,
                     [
                         'artifact_id' => $iteration_creation->iteration->id,
                         'user_id'     => $iteration_creation->user->id,

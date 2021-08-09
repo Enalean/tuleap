@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Events;
 
+use Tuleap\ProgramManagement\Domain\Events\ArtifactUpdatedEvent;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\Tracker\Artifact\Event\ArtifactUpdated;
 
@@ -31,11 +32,11 @@ use Tuleap\Tracker\Artifact\Event\ArtifactUpdated;
  * @see ArtifactUpdated
  * @psalm-immutable
  */
-final class ArtifactUpdatedProxy
+final class ArtifactUpdatedProxy implements ArtifactUpdatedEvent
 {
-    public int $artifact_id;
-    public int $tracker_id;
-    public UserIdentifier $user;
+    private int $artifact_id;
+    private int $tracker_id;
+    private UserIdentifier $user;
 
     private function __construct(int $artifact_id, int $tracker_id, UserIdentifier $user)
     {
@@ -48,5 +49,20 @@ final class ArtifactUpdatedProxy
     {
         $artifact = $artifact_updated->getArtifact();
         return new self($artifact->getId(), $artifact->getTrackerId(), UserIdentifier::fromPFUser($artifact_updated->getUser()));
+    }
+
+    public function getArtifactId(): int
+    {
+        return $this->artifact_id;
+    }
+
+    public function getTrackerId(): int
+    {
+        return $this->tracker_id;
+    }
+
+    public function getUser(): UserIdentifier
+    {
+        return $this->user;
     }
 }

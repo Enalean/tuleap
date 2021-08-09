@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Adapter\Events;
 
 use Psr\Log\LoggerInterface;
+use Tuleap\ProgramManagement\Domain\Events\IterationCreationEvent;
 use Tuleap\Queue\WorkerEvent;
 
 /**
@@ -31,11 +32,10 @@ use Tuleap\Queue\WorkerEvent;
  * @see WorkerEvent
  * @psalm-immutable
  */
-final class IterationCreationEventProxy
+final class IterationCreationEventProxy implements IterationCreationEvent
 {
-    public const TOPIC = 'tuleap.program_management.iteration.creation';
-    public int $artifact_id;
-    public int $user_id;
+    private int $artifact_id;
+    private int $user_id;
 
     private function __construct(int $artifact_id, int $user_id)
     {
@@ -56,5 +56,15 @@ final class IterationCreationEventProxy
             return null;
         }
         return new self($payload['artifact_id'], $payload['user_id']);
+    }
+
+    public function getArtifactId(): int
+    {
+        return $this->artifact_id;
+    }
+
+    public function getUserId(): int
+    {
+        return $this->user_id;
     }
 }

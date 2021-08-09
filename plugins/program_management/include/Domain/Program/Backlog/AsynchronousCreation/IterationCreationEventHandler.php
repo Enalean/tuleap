@@ -23,7 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation;
 
 use Psr\Log\LoggerInterface;
-use Tuleap\ProgramManagement\Adapter\Events\IterationCreationEventProxy;
+use Tuleap\ProgramManagement\Domain\Events\IterationCreationEvent;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\CheckProgramIncrement;
 use Tuleap\ProgramManagement\Domain\Workspace\RetrieveUser;
 
@@ -46,7 +46,7 @@ final class IterationCreationEventHandler implements ProcessIterationCreation
         $this->user_retriever            = $user_retriever;
     }
 
-    public function handle(?IterationCreationEventProxy $event): void
+    public function handle(?IterationCreationEvent $event): void
     {
         if (! $event) {
             return;
@@ -55,8 +55,8 @@ final class IterationCreationEventHandler implements ProcessIterationCreation
             $this->iteration_searcher,
             $this->program_increment_checker,
             $this->user_retriever,
-            $event->artifact_id,
-            $event->user_id
+            $event->getArtifactId(),
+            $event->getUserId()
         );
         if (! $iteration_creation) {
             return;
