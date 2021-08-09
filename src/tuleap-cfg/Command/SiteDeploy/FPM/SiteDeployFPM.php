@@ -28,10 +28,10 @@ use TuleapCfg\Command\TemplateHelper;
 
 final class SiteDeployFPM
 {
-    public const PHP74_DST_CONF_DIR  = '/etc/opt/remi/php74';
-    public const PHP74_SRC_CONF_DIR  = __DIR__ . '/../../../../etc/fpm74';
-    private const PHP80_DST_CONF_DIR = '/etc/opt/remi/php80';
-    private const PHP80_SRC_CONF_DIR = __DIR__ . '/../../../../etc/fpm80';
+    private const PHP74_DST_CONF_DIR = '/etc/opt/remi/php74';
+    private const PHP74_SRC_CONF_DIR = __DIR__ . '/../../../../etc/fpm74';
+    public const PHP80_DST_CONF_DIR  = '/etc/opt/remi/php80';
+    public const PHP80_SRC_CONF_DIR  = __DIR__ . '/../../../../etc/fpm80';
 
     private const FPM_PART_ERRORS             = 'tuleap_errors.part';
     private const FPM_PART_ERRORS_PROD        = 'tuleap_errors_prod.part';
