@@ -139,7 +139,7 @@ final class Tuleap
         $site_deploy_nginx->configure();
 
         $output->writeln('<info>Regenerate configuration for fpm</info>');
-        $site_deploy_fpm = SiteDeployFPM::buildForPHP74(
+        $site_deploy_fpm = SiteDeployFPM::buildForPHP80(
             $logger,
             'codendiadm',
             false
