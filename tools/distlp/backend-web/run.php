@@ -43,8 +43,8 @@ $fpm             = new SiteDeployFPM(
         'codendiadm',
         'redis',
     ),
-    SiteDeployFPM::PHP74_DST_CONF_DIR,
-    SiteDeployFPM::PHP74_SRC_CONF_DIR,
+    SiteDeployFPM::PHP80_DST_CONF_DIR,
+    SiteDeployFPM::PHP80_SRC_CONF_DIR,
     [],
 );
 $nginx           = new SiteDeployNginx($logger, '/usr/share/tuleap', '/etc/nginx', 'reverse-proxy', true);
@@ -52,7 +52,7 @@ $nginx           = new SiteDeployNginx($logger, '/usr/share/tuleap', '/etc/nginx
 $fpm->forceDeploy();
 $nginx->configure();
 
-if (isset($argv[1]) && $argv[1] == 'test') {
+if (isset($argv[1]) && $argv[1] === 'test') {
     try {
         $process = new Process(['/usr/share/tuleap/tools/distlp/backend-web/prepare-instance.sh']);
         $process
