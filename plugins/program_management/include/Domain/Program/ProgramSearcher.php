@@ -29,14 +29,8 @@ use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 
 final class ProgramSearcher
 {
-    /**
-     * @var SearchProgram
-     */
-    private $search_program;
-    /**
-     * @var BuildProgram
-     */
-    private $build_program;
+    private SearchProgram $search_program;
+    private BuildProgram $build_program;
 
     public function __construct(SearchProgram $search_program, BuildProgram $build_program)
     {
@@ -49,12 +43,12 @@ final class ProgramSearcher
      * @throws ProgramAccessException
      * @throws ProjectIsNotAProgramException
      */
-    public function getProgramOfProgramIncrement(int $program_increment_id, \PFUser $user): ProgramIdentifier
+    public function getProgramOfProgramIncrement(int $program_increment_id, UserIdentifier $user_identifier): ProgramIdentifier
     {
         $potential_program_id = $this->search_program->searchProgramOfProgramIncrement($program_increment_id);
         if ($potential_program_id === null) {
             throw new ProgramNotFoundException($program_increment_id);
         }
-        return ProgramIdentifier::fromId($this->build_program, $potential_program_id, UserIdentifier::fromPFUser($user));
+        return ProgramIdentifier::fromId($this->build_program, $potential_program_id, $user_identifier);
     }
 }

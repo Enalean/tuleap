@@ -27,9 +27,9 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncr
 use Tuleap\ProgramManagement\Domain\Program\Plan\FeatureCannotBePlannedInProgramIncrementException;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\UserCanPrioritize;
-use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\ProgramManagement\Stub\BuildProgramStub;
 use Tuleap\ProgramManagement\Stub\CheckProgramIncrementStub;
+use Tuleap\ProgramManagement\Stub\UserIdentifierStub;
 use Tuleap\ProgramManagement\Stub\UserPermissionsStub;
 use Tuleap\ProgramManagement\Stub\VerifyCanBePlannedInProgramIncrementStub;
 use Tuleap\ProgramManagement\Stub\VerifyIsVisibleFeatureStub;
@@ -42,7 +42,7 @@ final class FeatureAdditionTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $user              = UserTestBuilder::aUser()->build();
         $program_increment = ProgramIncrementIdentifier::fromId(CheckProgramIncrementStub::buildProgramIncrementChecker(), 89, $user);
-        $user_identifier   = UserIdentifier::fromPFUser($user);
+        $user_identifier   = UserIdentifierStub::buildGenericUser();
         $program           = ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 110, $user_identifier);
         $feature           = FeatureIdentifier::fromId(VerifyIsVisibleFeatureStub::buildVisibleFeature(), 127, $user_identifier, $program);
 
@@ -59,7 +59,7 @@ final class FeatureAdditionTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $user                = UserTestBuilder::aUser()->build();
         $program_increment   = ProgramIncrementIdentifier::fromId(CheckProgramIncrementStub::buildProgramIncrementChecker(), 89, $user);
-        $user_identifier     = UserIdentifier::fromPFUser($user);
+        $user_identifier     = UserIdentifierStub::buildGenericUser();
         $program             = ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 110, $user_identifier);
         $feature             = FeatureIdentifier::fromId(VerifyIsVisibleFeatureStub::buildVisibleFeature(), 741, $user_identifier, $program);
         $user_can_prioritize = UserCanPrioritize::fromUser(VerifyPrioritizeFeaturesPermissionStub::canPrioritize(), UserPermissionsStub::aRegularUser(), $user_identifier, $program);

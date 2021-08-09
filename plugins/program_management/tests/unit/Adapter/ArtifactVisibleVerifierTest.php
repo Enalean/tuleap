@@ -21,6 +21,7 @@
 namespace Tuleap\ProgramManagement\Adapter;
 
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
+use Tuleap\ProgramManagement\Stub\UserIdentifierStub;
 use Tuleap\ProgramManagement\Stub\RetrieveUserStub;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
@@ -37,7 +38,7 @@ final class ArtifactVisibleVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
     protected function setUp(): void
     {
         $pfuser                = UserTestBuilder::aUser()->build();
-        $this->user_identifier = UserIdentifier::fromPFUser($pfuser);
+        $this->user_identifier = UserIdentifierStub::buildGenericUser();
         $this->user_retriever  = RetrieveUserStub::withUser($pfuser);
         $this->tracker_factory = $this->createMock(\Tracker_ArtifactFactory::class);
     }

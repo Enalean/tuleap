@@ -23,8 +23,8 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Domain\Program;
 
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\ReplicationDataAdapter;
-use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\ProgramManagement\Stub\BuildProgramStub;
+use Tuleap\ProgramManagement\Stub\UserIdentifierStub;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
@@ -37,9 +37,8 @@ final class ProgramIdentifierTest extends TestCase
     {
         $builder    = BuildProgramStub::stubValidProgram();
         $project_id = 101;
-        $user       = UserTestBuilder::aUser()->build();
 
-        $program = ProgramIdentifier::fromId($builder, $project_id, UserIdentifier::fromPFUser($user));
+        $program = ProgramIdentifier::fromId($builder, $project_id, UserIdentifierStub::buildGenericUser());
         self::assertSame($project_id, $program->getId());
     }
 

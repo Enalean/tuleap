@@ -22,35 +22,33 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program;
 
-use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\ProgramManagement\Stub\BuildProgramStub;
-use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\ProgramManagement\Stub\UserIdentifierStub;
 
 final class ProgramSearcherTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItReturnsAProgramFromAProgramIncrementID(): void
     {
-        $user     = UserTestBuilder::aUser()->build();
-        $searcher = new ProgramSearcher($this->getStubDao(), BuildProgramStub::stubValidProgram());
-        $result   = $searcher->getProgramOfProgramIncrement(42, $user);
+        $user_identifier = UserIdentifierStub::buildGenericUser();
+        $searcher        = new ProgramSearcher($this->getStubDao(), BuildProgramStub::stubValidProgram());
+        $result          = $searcher->getProgramOfProgramIncrement(42, $user_identifier);
 
-        self::assertEquals(ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 101, UserIdentifier::fromPFUser($user)), $result);
+        self::assertEquals(ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 101, $user_identifier), $result);
     }
 
     public function testItThrowsIfProgramWasNotFound(): void
     {
-        $user     = UserTestBuilder::aUser()->build();
-        $searcher = new ProgramSearcher($this->getStubDao(true), BuildProgramStub::stubValidProgram());
+        $user_identifier = UserIdentifierStub::buildGenericUser();
+        $searcher        = new ProgramSearcher($this->getStubDao(true), BuildProgramStub::stubValidProgram());
         $this->expectException(ProgramNotFoundException::class);
 
-        $searcher->getProgramOfProgramIncrement(404, $user);
+        $searcher->getProgramOfProgramIncrement(404, $user_identifier);
     }
 
     private function getStubDao(bool $return_null = false): SearchProgram
     {
         return new class ($return_null) implements SearchProgram {
-            /** @var bool */
-            private $return_null;
+            private bool $return_null;
 
             public function __construct(bool $return_null)
             {

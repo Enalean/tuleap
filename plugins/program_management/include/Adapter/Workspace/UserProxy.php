@@ -21,13 +21,35 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Domain\Workspace;
+namespace Tuleap\ProgramManagement\Adapter\Workspace;
+
+use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 
 /**
- * I am the ID (identifier) of a User.
+ * I am a Proxy around PFUser attributes
+ *
  * @psalm-immutable
  */
-interface UserIdentifier
+final class UserProxy implements UserIdentifier
 {
-    public function getId(): int;
+    private int $id;
+
+    private function __construct(int $id)
+    {
+        $this->id = $id;
+    }
+    public static function buildFromPFUser(\PFUser $user): self
+    {
+        return new self((int) $user->getId());
+    }
+
+    public static function buildFromId(int $id): self
+    {
+        return new self($id);
+    }
+
+    public function getId(): int
+    {
+        return $this->id;
+    }
 }

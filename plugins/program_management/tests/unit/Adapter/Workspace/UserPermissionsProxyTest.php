@@ -24,7 +24,6 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Adapter\Workspace;
 
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
-use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\ProgramManagement\Stub\BuildProgramStub;
 use Tuleap\Test\Builders\UserTestBuilder;
 
@@ -37,7 +36,7 @@ final class UserPermissionsProxyTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->program_identifier = ProgramIdentifier::fromId(
             BuildProgramStub::stubValidProgram(),
             100,
-            UserIdentifier::fromPFUser(UserTestBuilder::aUser()->build())
+            UserProxy::buildFromPFUser(UserTestBuilder::aUser()->build())
         );
     }
 

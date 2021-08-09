@@ -23,24 +23,18 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog;
 
+use Tuleap\ProgramManagement\Adapter\Workspace\UserProxy;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\TopBacklogChange;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\TopBacklogChangeProcessor;
 use Tuleap\ProgramManagement\Domain\Program\Plan\BuildProgram;
 use Tuleap\ProgramManagement\Domain\Program\Plan\ProgramAccessException;
 use Tuleap\ProgramManagement\Domain\Program\Plan\ProjectIsNotAProgramException;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
-use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 
-class MassChangeTopBacklogActionProcessor
+final class MassChangeTopBacklogActionProcessor
 {
-    /**
-     * @var BuildProgram
-     */
-    private $build_program;
-    /**
-     * @var TopBacklogChangeProcessor
-     */
-    private $top_backlog_change_processor;
+    private BuildProgram $build_program;
+    private TopBacklogChangeProcessor $top_backlog_change_processor;
 
     public function __construct(BuildProgram $build_program, TopBacklogChangeProcessor $top_backlog_change_processor)
     {
@@ -62,9 +56,10 @@ class MassChangeTopBacklogActionProcessor
                 return;
         }
 
-        $user = $source_information->user;
+        $user            = $source_information->user;
+        $user_identifier = UserProxy::buildFromPFUser($user);
         try {
-            $program = ProgramIdentifier::fromId($this->build_program, $source_information->project_id, UserIdentifier::fromPFUser($user));
+            $program = ProgramIdentifier::fromId($this->build_program, $source_information->project_id, $user_identifier);
         } catch (ProgramAccessException | ProjectIsNotAProgramException $e) {
             return;
         }

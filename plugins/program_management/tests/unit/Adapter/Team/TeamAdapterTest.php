@@ -33,9 +33,10 @@ use Tuleap\ProgramManagement\Domain\Team\Creation\TeamCollection;
 use Tuleap\ProgramManagement\Domain\Team\ProjectIsAProgramException;
 use Tuleap\ProgramManagement\Domain\Team\TeamAccessException;
 use Tuleap\ProgramManagement\Domain\Team\TeamMustHaveExplicitBacklogEnabledException;
+use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\ProgramManagement\Stub\BuildProgramStub;
+use Tuleap\ProgramManagement\Stub\UserIdentifierStub;
 use Tuleap\ProgramManagement\Stub\VerifyIsProgramStub;
-use Tuleap\Test\Builders\UserTestBuilder;
 
 final class TeamAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -51,12 +52,14 @@ final class TeamAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $explicit_backlog_dao;
     private VerifyIsProgram $program_verifier;
+    private UserIdentifier $user_identifier;
 
     protected function setUp(): void
     {
         $this->project_manager      = \Mockery::mock(ProjectManager::class);
         $this->explicit_backlog_dao = \Mockery::mock(ExplicitBacklogDao::class);
         $this->program_verifier     = VerifyIsProgramStub::withValidProgram();
+        $this->user_identifier      = UserIdentifierStub::buildGenericUser();
 
         $_SERVER['REQUEST_URI'] = '/';
     }
@@ -70,7 +73,7 @@ final class TeamAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $team_id = 202;
         $project = new \Project(['group_id' => $team_id, 'status' => 'A', 'access' => 'public']);
-        $program = ToBeCreatedProgram::fromId(BuildProgramStub::stubValidToBeCreatedProgram(), 101, UserTestBuilder::aUser()->build());
+        $program = ToBeCreatedProgram::fromId(BuildProgramStub::stubValidToBeCreatedProgram(), 101, $this->user_identifier);
         $user    = \Mockery::mock(\PFUser::class);
         $user->shouldReceive('isAdmin')->with($team_id)->andReturnFalse();
         $user->shouldReceive('isMember')->with($team_id)->andReturnFalse();
@@ -88,7 +91,7 @@ final class TeamAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $team_id = 202;
         $project = new \Project(['group_id' => $team_id, 'status' => 'A', 'access' => 'public']);
-        $program = ToBeCreatedProgram::fromId(BuildProgramStub::stubValidToBeCreatedProgram(), 101, UserTestBuilder::aUser()->build());
+        $program = ToBeCreatedProgram::fromId(BuildProgramStub::stubValidToBeCreatedProgram(), 101, $this->user_identifier);
         $user    = \Mockery::mock(\PFUser::class);
         $user->shouldReceive('isAdmin')->with($team_id)->andReturnTrue();
         $user->shouldReceive('isAnonymous')->andReturnFalse();
@@ -102,7 +105,7 @@ final class TeamAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testGetEmptyTeamWhenNoTeamIsFound(): void
     {
-        $program = ToBeCreatedProgram::fromId(BuildProgramStub::stubValidToBeCreatedProgram(), 101, UserTestBuilder::aUser()->build());
+        $program = ToBeCreatedProgram::fromId(BuildProgramStub::stubValidToBeCreatedProgram(), 101, $this->user_identifier);
         $user    = \Mockery::mock(\PFUser::class);
 
         $team_collection = $this->getAdapter()->buildTeamProject([], $program, $user);
@@ -114,7 +117,7 @@ final class TeamAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $team_id = 202;
         $project = new \Project(['group_id' => $team_id, 'status' => 'A', 'access' => 'public']);
-        $program = ToBeCreatedProgram::fromId(BuildProgramStub::stubValidToBeCreatedProgram(), 101, UserTestBuilder::aUser()->build());
+        $program = ToBeCreatedProgram::fromId(BuildProgramStub::stubValidToBeCreatedProgram(), 101, $this->user_identifier);
         $user    = \Mockery::mock(\PFUser::class);
         $user->shouldReceive('isAdmin')->andReturnTrue();
         $user->shouldReceive('isAnonymous')->andReturnFalse();
@@ -133,7 +136,7 @@ final class TeamAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $team_id = 202;
         $project = new \Project(['group_id' => $team_id, 'status' => 'A', 'access' => 'public']);
-        $program = ToBeCreatedProgram::fromId(BuildProgramStub::stubValidToBeCreatedProgram(), 101, UserTestBuilder::aUser()->build());
+        $program = ToBeCreatedProgram::fromId(BuildProgramStub::stubValidToBeCreatedProgram(), 101, $this->user_identifier);
         $user    = \Mockery::mock(\PFUser::class);
         $user->shouldReceive('isAdmin')->with($team_id)->andReturnTrue();
         $user->shouldReceive('isAnonymous')->andReturnFalse();

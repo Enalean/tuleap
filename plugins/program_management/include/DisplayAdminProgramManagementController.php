@@ -29,6 +29,7 @@ use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\ProgramManagement\Adapter\Program\Admin\Configuration\ConfigurationChecker;
+use Tuleap\ProgramManagement\Adapter\Workspace\UserProxy;
 use Tuleap\ProgramManagement\Domain\BuildProject;
 use Tuleap\ProgramManagement\Domain\FeatureFlag\VerifyIterationsFeatureActive;
 use Tuleap\ProgramManagement\Domain\Program\Admin\CanPrioritizeItems\BuildProjectUGroupCanPrioritizeItemsPresenters;
@@ -60,7 +61,6 @@ use Tuleap\ProgramManagement\Domain\ProgramTracker;
 use Tuleap\ProgramManagement\Domain\Team\VerifyIsTeam;
 use Tuleap\ProgramManagement\Domain\Workspace\RetrieveProject;
 use Tuleap\ProgramManagement\Domain\Workspace\RetrieveTrackerFromProgram;
-use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\ProgramManagement\Domain\Workspace\VerifyProjectPermission;
 use Tuleap\Request\DispatchableWithBurningParrot;
 use Tuleap\Request\DispatchableWithProject;
@@ -185,10 +185,11 @@ final class DisplayAdminProgramManagementController implements DispatchableWithR
         $this->includeHeaderAndNavigationBar($layout, $project);
         $layout->includeFooterJavascriptFile($assets->getFileURL('program_management_admin.js'));
 
+        $user_identifier = UserProxy::buildFromPFUser($user);
         try {
             $program_increment_tracker = ProgramTracker::buildProgramIncrementTrackerFromProgram(
                 $this->program_increment_tracker_retriever,
-                ProgramIdentifier::fromId($this->build_program, $program->id, UserIdentifier::fromPFUser($user)),
+                ProgramIdentifier::fromId($this->build_program, $program->id, $user_identifier),
                 $user
             );
         } catch (ProgramAccessException | ProgramHasNoProgramIncrementTrackerException | ProjectIsNotAProgramException | ProgramTrackerNotFoundException $e) {
@@ -198,7 +199,7 @@ final class DisplayAdminProgramManagementController implements DispatchableWithR
         try {
             $iteration_tracker = ProgramTracker::buildIterationTrackerFromProgram(
                 $this->iteration_tracker_retriever,
-                ProgramIdentifier::fromId($this->build_program, $program->id, UserIdentifier::fromPFUser($user)),
+                ProgramIdentifier::fromId($this->build_program, $program->id, $user_identifier),
                 $user
             );
         } catch (ProgramAccessException | ProjectIsNotAProgramException | ProgramTrackerNotFoundException $e) {

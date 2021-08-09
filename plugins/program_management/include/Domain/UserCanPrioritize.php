@@ -31,9 +31,9 @@ use Tuleap\ProgramManagement\Domain\Workspace\UserPermissions;
 /**
  * @psalm-immutable
  */
-final class UserCanPrioritize
+final class UserCanPrioritize implements UserIdentifier
 {
-    public int $id;
+    private int $id;
 
     private function __construct(int $id)
     {
@@ -50,9 +50,14 @@ final class UserCanPrioritize
         ProgramIdentifier $program
     ): self {
         if (! $permission->canUserPrioritizeFeatures($program, $user_permissions, $user_identifier)) {
-            throw new NotAllowedToPrioritizeException($user_identifier->id, $program->getId());
+            throw new NotAllowedToPrioritizeException($user_identifier->getId(), $program->getId());
         }
 
-        return new self($user_identifier->id);
+        return new self($user_identifier->getId());
+    }
+
+    public function getId(): int
+    {
+        return $this->id;
     }
 }

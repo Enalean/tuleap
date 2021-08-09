@@ -27,7 +27,6 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Content\Fea
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Content\RemoveFeature;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Content\RemoveFeatureException;
 use Tuleap\ProgramManagement\Domain\Workspace\RetrieveUser;
-use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkUpdater;
 
 final class FeatureRemovalProcessor implements RemoveFeature
@@ -55,7 +54,7 @@ final class FeatureRemovalProcessor implements RemoveFeature
     public function removeFromAllProgramIncrements(FeatureRemoval $feature_removal): void
     {
         $program_ids = $this->program_increments_dao->getProgramIncrementsLinkToFeatureId($feature_removal->feature_id);
-        $user        = $this->retrieve_user->getUserWithId(UserIdentifier::fromUserCanPrioritize($feature_removal->user));
+        $user        = $this->retrieve_user->getUserWithId($feature_removal->user);
         foreach ($program_ids as $program_id) {
             $program_increment_artifact = $this->artifact_factory->getArtifactById($program_id['id']);
             if (! $program_increment_artifact) {

@@ -21,13 +21,31 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Domain\Workspace;
+namespace Tuleap\ProgramManagement\Stub;
 
-/**
- * I am the ID (identifier) of a User.
- * @psalm-immutable
- */
-interface UserIdentifier
+use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
+
+final class UserIdentifierStub implements UserIdentifier
 {
-    public function getId(): int;
+    private int $id;
+
+    private function __construct(int $id)
+    {
+        $this->id = $id;
+    }
+
+    public function getId(): int
+    {
+        return $this->id;
+    }
+
+    public static function buildGenericUser(): self
+    {
+        return new self(101);
+    }
+
+    public static function buildUserWithId(int $user_id): self
+    {
+        return new self($user_id);
+    }
 }

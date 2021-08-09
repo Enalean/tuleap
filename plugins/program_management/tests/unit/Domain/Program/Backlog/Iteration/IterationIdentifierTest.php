@@ -23,8 +23,8 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration;
 
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementIdentifier;
-use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\ProgramManagement\Stub\CheckProgramIncrementStub;
+use Tuleap\ProgramManagement\Stub\UserIdentifierStub;
 use Tuleap\ProgramManagement\Stub\SearchIterationsStub;
 use Tuleap\ProgramManagement\Stub\VerifyIsVisibleArtifactStub;
 use Tuleap\Test\Builders\UserTestBuilder;
@@ -66,7 +66,7 @@ final class IterationIdentifierTest extends \Tuleap\Test\PHPUnit\TestCase
                 36,
                 $this->user
             ),
-            UserIdentifier::fromPFUser($this->user)
+            UserIdentifierStub::buildGenericUser()
         );
 
         $ids = array_map(static fn(IterationIdentifier $iteration): int => $iteration->id, $iterations);

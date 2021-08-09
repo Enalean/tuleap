@@ -27,13 +27,13 @@ use Tracker_Artifact_Changeset;
 use Tracker_FormElement_Field;
 use Transition;
 use Transition_PostAction;
+use Tuleap\ProgramManagement\Adapter\Workspace\UserProxy;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\TopBacklogChange;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\TopBacklogChangeProcessor;
 use Tuleap\ProgramManagement\Domain\Program\Plan\BuildProgram;
 use Tuleap\ProgramManagement\Domain\Program\Plan\ProgramAccessException;
 use Tuleap\ProgramManagement\Domain\Program\Plan\ProjectIsNotAProgramException;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
-use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\Tracker\Workflow\PostAction\Visitor;
 
 class AddToTopBacklogPostAction extends Transition_PostAction
@@ -93,12 +93,13 @@ class AddToTopBacklogPostAction extends Transition_PostAction
 
     public function after(Tracker_Artifact_Changeset $changeset): void
     {
-        $user = new AddToBacklogPostActionAllPowerfulUser();
+        $user            = new AddToBacklogPostActionAllPowerfulUser();
+        $user_identifier = UserProxy::buildFromPFUser($user);
 
         $artifact = $changeset->getArtifact();
 
         try {
-            $program = ProgramIdentifier::fromId($this->build_program, (int) $artifact->getTracker()->getGroupId(), UserIdentifier::fromPFUser($user));
+            $program = ProgramIdentifier::fromId($this->build_program, (int) $artifact->getTracker()->getGroupId(), $user_identifier);
         } catch (ProgramAccessException | ProjectIsNotAProgramException $e) {
             return;
         }

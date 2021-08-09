@@ -29,6 +29,7 @@ use Project;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
 use Tuleap\Layout\IncludeAssets;
+use Tuleap\ProgramManagement\Adapter\Workspace\UserProxy;
 use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramBacklogConfigurationPresenter;
 use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramBacklogPresenter;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracker\ProgramIncrementTrackerConfiguration;
@@ -39,7 +40,6 @@ use Tuleap\ProgramManagement\Domain\Program\Plan\ProjectIsNotAProgramException;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\ProgramTrackerNotFoundException;
 use Tuleap\ProgramManagement\Domain\Team\VerifyIsTeam;
-use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\Project\Flags\ProjectFlagsBuilder;
 use Tuleap\Request\DispatchableWithBurningParrot;
 use Tuleap\Request\DispatchableWithProject;
@@ -101,7 +101,7 @@ final class DisplayProgramBacklogController implements DispatchableWithRequest, 
 
         $user = $request->getCurrentUser();
         try {
-            $configuration = $this->buildConfigurationForExistingProgram($project, $request, $user);
+            $configuration = $this->buildConfigurationForExistingProgram($project, $user);
         } catch (ProjectIsNotAProgramException | Domain\Program\Plan\ProgramHasNoProgramIncrementTrackerException $exception) {
             $configuration = $this->buildConfigurationForPotentialProgram();
         } catch (ProgramTrackerNotFoundException $e) {
@@ -158,9 +158,10 @@ final class DisplayProgramBacklogController implements DispatchableWithRequest, 
      * @throws ProgramTrackerNotFoundException
      * @throws ProjectIsNotAProgramException
      */
-    private function buildConfigurationForExistingProgram(Project $project, HTTPRequest $request, PFUser $user): ProgramBacklogConfigurationPresenter
+    private function buildConfigurationForExistingProgram(Project $project, PFUser $user): ProgramBacklogConfigurationPresenter
     {
-        $program = ProgramIdentifier::fromId($this->build_program, (int) $project->getID(), UserIdentifier::fromPFUser($request->getCurrentUser()));
+        $user_identifier = UserProxy::buildFromPFUser($user);
+        $program         = ProgramIdentifier::fromId($this->build_program, (int) $project->getID(), $user_identifier);
 
         $plan_configuration = ProgramIncrementTrackerConfiguration::fromProgram(
             $this->program_increment_tracker_retriever,

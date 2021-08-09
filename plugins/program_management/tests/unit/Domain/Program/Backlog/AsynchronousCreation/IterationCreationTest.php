@@ -26,6 +26,7 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration\JustLinkedIteratio
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementIdentifier;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\ProgramManagement\Stub\CheckProgramIncrementStub;
+use Tuleap\ProgramManagement\Stub\UserIdentifierStub;
 use Tuleap\ProgramManagement\Stub\RetrieveLastChangesetStub;
 use Tuleap\ProgramManagement\Stub\RetrieveUserStub;
 use Tuleap\ProgramManagement\Stub\SearchIterationsStub;
@@ -53,7 +54,7 @@ final class IterationCreationTest extends \Tuleap\Test\PHPUnit\TestCase
     protected function setUp(): void
     {
         $user                         = UserTestBuilder::aUser()->withId(self::USER_ID)->build();
-        $this->user                   = UserIdentifier::fromPFUser($user);
+        $this->user                   = UserIdentifierStub::buildUserWithId(self::USER_ID);
         $program_increment            = ProgramIncrementIdentifier::fromId(
             CheckProgramIncrementStub::buildProgramIncrementChecker(),
             self::PROGRAM_INCREMENT_ID,
@@ -96,12 +97,12 @@ final class IterationCreationTest extends \Tuleap\Test\PHPUnit\TestCase
         );
         self::assertSame(self::FIRST_ITERATION_ID, $first_creation->iteration->id);
         self::assertSame(self::PROGRAM_INCREMENT_ID, $first_creation->program_increment->getId());
-        self::assertSame(self::USER_ID, $first_creation->user->id);
+        self::assertSame(self::USER_ID, $first_creation->user->getId());
         self::assertSame(self::FIRST_CHANGESET_ID, $first_creation->changeset->id);
 
         self::assertSame(self::SECOND_ITERATION_ID, $second_creation->iteration->id);
         self::assertSame(self::PROGRAM_INCREMENT_ID, $second_creation->program_increment->getId());
-        self::assertSame(self::USER_ID, $second_creation->user->id);
+        self::assertSame(self::USER_ID, $second_creation->user->getId());
         self::assertSame(self::SECOND_CHANGESET_ID, $second_creation->changeset->id);
     }
 
@@ -133,7 +134,7 @@ final class IterationCreationTest extends \Tuleap\Test\PHPUnit\TestCase
         );
         self::assertSame(self::FIRST_ITERATION_ID, $iteration_creation->iteration->id);
         self::assertSame(self::PROGRAM_INCREMENT_ID, $iteration_creation->program_increment->getId());
-        self::assertSame(self::USER_ID, $iteration_creation->user->id);
+        self::assertSame(self::USER_ID, $iteration_creation->user->getId());
         self::assertSame(self::FIRST_CHANGESET_ID, $iteration_creation->changeset->id);
     }
 

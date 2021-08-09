@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Team\Creation;
 
+use Tuleap\ProgramManagement\Adapter\Workspace\UserProxy;
 use Tuleap\ProgramManagement\Domain\Program\Plan\BuildProgram;
 use Tuleap\ProgramManagement\Domain\Program\Plan\ProgramAccessException;
 use Tuleap\ProgramManagement\Domain\Program\Plan\ProgramIsATeamException;
@@ -33,18 +34,9 @@ use Tuleap\ProgramManagement\Domain\Team\TeamAccessException;
 
 final class TeamCreator implements CreateTeam
 {
-    /**
-     * @var BuildProgram
-     */
-    private $program_build;
-    /**
-     * @var BuildTeam
-     */
-    private $build_team;
-    /**
-     * @var TeamStore
-     */
-    private $team_store;
+    private BuildProgram $program_build;
+    private BuildTeam $build_team;
+    private TeamStore $team_store;
 
     public function __construct(BuildProgram $program_build, BuildTeam $build_team, TeamStore $team_store)
     {
@@ -67,7 +59,8 @@ final class TeamCreator implements CreateTeam
             throw new ProgramIsTeamException($project_id);
         }
 
-        $program_project = ToBeCreatedProgram::fromId($this->program_build, $project_id, $user);
+        $user_identifier = UserProxy::buildFromPFUser($user);
+        $program_project = ToBeCreatedProgram::fromId($this->program_build, $project_id, $user_identifier);
 
         $team_collection = $this->build_team->buildTeamProject(
             $team_ids,

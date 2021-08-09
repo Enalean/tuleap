@@ -21,13 +21,21 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Domain\Workspace;
+namespace Tuleap\ProgramManagement\Adapter\Workspace;
 
-/**
- * I am the ID (identifier) of a User.
- * @psalm-immutable
- */
-interface UserIdentifier
+use Tuleap\Test\Builders\UserTestBuilder;
+
+final class UserProxyTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    public function getId(): int;
+    public function testItBuildsFromId(): void
+    {
+        $user = UserProxy::buildFromId(118);
+        self::assertSame(118, $user->getId());
+    }
+
+    public function testItBuildsFromPFUser(): void
+    {
+        $user = UserProxy::buildFromPFUser(UserTestBuilder::aUser()->withId(101)->build());
+        self::assertSame(101, $user->getId());
+    }
 }

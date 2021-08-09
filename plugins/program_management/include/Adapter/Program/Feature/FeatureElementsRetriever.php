@@ -22,28 +22,18 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\Feature;
 
+use Tuleap\ProgramManagement\Adapter\Workspace\UserProxy;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeaturesStore;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\RetrieveFeatures;
 use Tuleap\ProgramManagement\Domain\Program\Plan\BuildProgram;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
-use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\ProgramManagement\REST\v1\FeatureRepresentation;
 
 final class FeatureElementsRetriever implements RetrieveFeatures
 {
-    /**
-     * @var FeaturesStore
-     */
-    private $features_store;
-    /**
-     * @var BuildProgram
-     */
-    private $build_program;
-
-    /**
-     * @var FeatureRepresentationBuilder
-     */
-    private $feature_representation_builder;
+    private FeaturesStore $features_store;
+    private BuildProgram $build_program;
+    private FeatureRepresentationBuilder $feature_representation_builder;
 
     public function __construct(
         BuildProgram $build_program,
@@ -63,7 +53,8 @@ final class FeatureElementsRetriever implements RetrieveFeatures
      */
     public function retrieveFeaturesToBePlanned(int $program_id, \PFUser $user): array
     {
-        $program = ProgramIdentifier::fromId($this->build_program, $program_id, UserIdentifier::fromPFUser($user));
+        $user_identifier = UserProxy::buildFromPFUser($user);
+        $program         = ProgramIdentifier::fromId($this->build_program, $program_id, $user_identifier);
 
         $to_be_planned_artifacts = $this->features_store->searchPlannableFeatures($program);
 

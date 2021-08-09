@@ -49,6 +49,7 @@ use Tuleap\ProgramManagement\Adapter\Program\ProgramDao;
 use Tuleap\ProgramManagement\Adapter\Program\ProgramUserGroupRetriever;
 use Tuleap\ProgramManagement\Adapter\Team\TeamAdapter;
 use Tuleap\ProgramManagement\Adapter\Team\TeamDao;
+use Tuleap\ProgramManagement\Adapter\Workspace\UserProxy;
 use Tuleap\ProgramManagement\Adapter\Workspace\ProjectManagerAdapter;
 use Tuleap\ProgramManagement\Adapter\Workspace\ProjectPermissionVerifier;
 use Tuleap\ProgramManagement\Adapter\Workspace\TrackerFactoryAdapter;
@@ -79,7 +80,6 @@ use Tuleap\ProgramManagement\Domain\Program\ProgramTrackerException;
 use Tuleap\ProgramManagement\Domain\Team\Creation\CreateTeam;
 use Tuleap\ProgramManagement\Domain\Team\Creation\TeamCreator;
 use Tuleap\ProgramManagement\Domain\Team\TeamException;
-use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\Project\ProjectAccessChecker;
 use Tuleap\Project\REST\UserGroupRetriever;
 use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
@@ -413,7 +413,8 @@ final class ProjectResource extends AuthenticatedResource
         );
 
         try {
-            $program = ProgramIdentifier::fromId($this->build_program, $id, UserIdentifier::fromPFUser($user));
+            $user_identifier = UserProxy::buildFromPFUser($user);
+            $program         = ProgramIdentifier::fromId($this->build_program, $id, $user_identifier);
             $top_backlog_updater->processTopBacklogChangeForAProgram(
                 $program,
                 new TopBacklogChange(
@@ -472,7 +473,10 @@ final class ProjectResource extends AuthenticatedResource
     {
         $user = $this->user_manager->getCurrentUser();
         try {
-            $program_increments = $this->program_increments_builder->buildOpenProgramIncrements($id, UserIdentifier::fromPFUser($user));
+            $program_increments = $this->program_increments_builder->buildOpenProgramIncrements(
+                $id,
+                UserProxy::buildFromPFUser($user)
+            );
         } catch (ProgramAccessException $e) {
             throw new I18NRestException(404, $e->getI18NExceptionMessage());
         } catch (ProjectIsNotAProgramException $e) {

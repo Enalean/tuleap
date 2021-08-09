@@ -35,7 +35,7 @@ final class ToBeCreatedProgram
     /**
      * @var int
      */
-    private $id;
+    private int $id;
 
     private function __construct(int $id)
     {
@@ -51,9 +51,9 @@ final class ToBeCreatedProgram
      * @throws ProgramAccessException
      * @throws ProgramIsATeamException
      */
-    public static function fromId(BuildProgram $build_program, int $id, \PFUser $user): self
+    public static function fromId(BuildProgram $build_program, int $id, UserIdentifier $user_identifier): self
     {
-        $build_program->ensureProgramIsProjectAndUserIsAdminOf($id, UserIdentifier::fromPFUser($user));
+        $build_program->ensureProgramIsProjectAndUserIsAdminOf($id, $user_identifier);
 
         return new self($id);
     }

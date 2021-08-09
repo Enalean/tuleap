@@ -28,6 +28,7 @@ use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\Workspace\RetrieveProject;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\ProgramManagement\Stub\BuildProgramStub;
+use Tuleap\ProgramManagement\Stub\UserIdentifierStub;
 use Tuleap\ProgramManagement\Stub\RetrieveProjectStub;
 use Tuleap\ProgramManagement\Stub\RetrieveProjectUgroupsCanPrioritizeItemsStub;
 use Tuleap\ProgramManagement\Stub\RetrieveUserStub;
@@ -53,7 +54,7 @@ final class PrioritizeFeaturesPermissionVerifierTest extends \Tuleap\Test\PHPUni
         $this->retrieve_ugroups = RetrieveProjectUgroupsCanPrioritizeItemsStub::buildWithIds(4);
         $this->user             = $this->createMock(\PFUser::class);
         $this->user->method('getId')->willReturn(101);
-        $this->user_identifier    = UserIdentifier::fromPFUser($this->user);
+        $this->user_identifier    = UserIdentifierStub::buildGenericUser();
         $this->program_identifier = ProgramIdentifier::fromId(
             BuildProgramStub::stubValidProgram(),
             102,

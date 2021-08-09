@@ -24,6 +24,7 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog;
 
 use Tuleap\DB\DBTransactionExecutor;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Content\FeatureRemovalProcessor;
+use Tuleap\ProgramManagement\Adapter\Workspace\UserProxy;
 use Tuleap\ProgramManagement\Adapter\Workspace\UserPermissionsProxy;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Content\Links\VerifyLinkedUserStoryIsNotPlanned;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureHasPlannedUserStoryException;
@@ -41,7 +42,6 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\TopBacklogStore;
 use Tuleap\ProgramManagement\Domain\Program\Plan\VerifyPrioritizeFeaturesPermission;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\UserCanPrioritize;
-use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 
 final class ProcessTopBacklogChange implements TopBacklogChangeProcessor
 {
@@ -78,11 +78,12 @@ final class ProcessTopBacklogChange implements TopBacklogChangeProcessor
         \PFUser $user
     ): void {
         $this->db_transaction_executor->execute(function () use ($program, $top_backlog_change, $user) {
+            $user_identifier = UserProxy::buildFromPFUser($user);
             try {
                 $user_can_prioritize = UserCanPrioritize::fromUser(
                     $this->prioritize_features_permission_verifier,
                     UserPermissionsProxy::buildFromPFUser($user, $program),
-                    UserIdentifier::fromPFUser($user),
+                    $user_identifier,
                     $program
                 );
             } catch (NotAllowedToPrioritizeException $e) {
@@ -158,7 +159,7 @@ final class ProcessTopBacklogChange implements TopBacklogChangeProcessor
         $filtered_features = [];
 
         foreach ($features_id as $feature_id) {
-            $feature = FeatureIdentifier::fromId($this->visible_feature_verifier, $feature_id, UserIdentifier::fromUserCanPrioritize($user), $program);
+            $feature = FeatureIdentifier::fromId($this->visible_feature_verifier, $feature_id, $user, $program);
             if (! $feature) {
                 if ($ignore_feature_cannot_be_retrieved) {
                     continue;
