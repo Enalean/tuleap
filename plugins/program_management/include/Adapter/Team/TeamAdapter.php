@@ -24,11 +24,8 @@ namespace Tuleap\ProgramManagement\Adapter\Team;
 
 use Luracast\Restler\RestException;
 use Tuleap\AgileDashboard\ExplicitBacklog\ExplicitBacklogDao;
-use Tuleap\ProgramManagement\Domain\Program\ToBeCreatedProgram;
 use Tuleap\ProgramManagement\Domain\Program\VerifyIsProgram;
 use Tuleap\ProgramManagement\Domain\Team\Creation\BuildTeam;
-use Tuleap\ProgramManagement\Domain\Team\Creation\Team;
-use Tuleap\ProgramManagement\Domain\Team\Creation\TeamCollection;
 use Tuleap\ProgramManagement\Domain\Team\ProjectIsAProgramException;
 use Tuleap\ProgramManagement\Domain\Team\TeamAccessException;
 use Tuleap\ProgramManagement\Domain\Team\TeamMustHaveExplicitBacklogEnabledException;
@@ -50,25 +47,6 @@ final class TeamAdapter implements BuildTeam
         $this->explicit_backlog_dao = $explicit_backlog_dao;
     }
 
-    /**
-     * @throws ProjectIsAProgramException
-     * @throws TeamAccessException
-     * @throws TeamMustHaveExplicitBacklogEnabledException
-     */
-    public function buildTeamProject(array $team_ids, ToBeCreatedProgram $program, \PFUser $user): TeamCollection
-    {
-        $team_list = [];
-        foreach ($team_ids as $team_id) {
-            $team_list[] = Team::build($this, $team_id, $user);
-        }
-
-        return new TeamCollection($team_list, $program);
-    }
-
-    /**
-     * @throws ProjectIsAProgramException
-     * @throws TeamAccessException
-     */
     public function checkProjectIsATeam(int $team_id, \PFUser $user): void
     {
         $project = $this->project_manager->getProject($team_id);
@@ -81,9 +59,6 @@ final class TeamAdapter implements BuildTeam
         $this->checkProject($project);
     }
 
-    /**
-     * @throws ProjectIsAProgramException
-     */
     public function checkProjectIsATeamForRestTestInitialization(int $team_id, \PFUser $user): void
     {
         $project = $this->project_manager->getProject($team_id);
@@ -93,6 +68,7 @@ final class TeamAdapter implements BuildTeam
 
     /**
      * @throws ProjectIsAProgramException
+     * @throws TeamMustHaveExplicitBacklogEnabledException
      */
     private function checkProject(\Project $project): void
     {

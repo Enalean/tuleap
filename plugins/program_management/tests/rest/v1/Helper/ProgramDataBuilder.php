@@ -32,26 +32,21 @@ use Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation\Create
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation\PendingArtifactCreationDao;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation\TaskBuilder;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\ReplicationDataAdapter;
-use Tuleap\ProgramManagement\Adapter\Program\Plan\ProgramAdapter;
 use Tuleap\ProgramManagement\Adapter\Program\ProgramDao;
 use Tuleap\ProgramManagement\Adapter\Team\TeamAdapter;
 use Tuleap\ProgramManagement\Adapter\Team\TeamDao;
-use Tuleap\ProgramManagement\Adapter\Workspace\UserProxy;
-use Tuleap\ProgramManagement\Adapter\Workspace\UserManagerAdapter;
-use Tuleap\ProgramManagement\Domain\Program\ToBeCreatedProgram;
+use Tuleap\ProgramManagement\Adapter\Workspace\ProjectPermissionVerifier;
+use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramForAdministrationIdentifier;
 use Tuleap\ProgramManagement\Domain\Team\Creation\Team;
 use Tuleap\ProgramManagement\Domain\Team\Creation\TeamCollection;
-use Tuleap\Project\ProjectAccessChecker;
-use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
 use Tuleap\Queue\QueueFactory;
 use Tuleap\Tracker\Artifact\Artifact;
 use UserManager;
 
-class ProgramDataBuilder extends REST_TestDataBuilder
+final class ProgramDataBuilder extends REST_TestDataBuilder
 {
     public const PROJECT_TEAM_NAME    = 'team';
     public const PROJECT_PROGRAM_NAME = 'program';
-
 
     public ReplicationDataAdapter $replication_data_adapter;
     private CreateProgramIncrementsRunner $runner;
@@ -60,66 +55,65 @@ class ProgramDataBuilder extends REST_TestDataBuilder
     private \Tracker $user_story;
     private \Tracker $feature;
     private \Tracker_ArtifactFactory $artifact_factory;
-    private ?\Project $team;
-    private ?\Project $program;
+    private PendingArtifactCreationDao $pending_program_increments_dao;
 
     public function setUp(): void
     {
         echo 'Setup Program Management REST Tests configuration' . PHP_EOL;
 
-        $team_adapter    = new TeamAdapter($this->project_manager, new ProgramDao(), new ExplicitBacklogDao());
-        $program_adapter = new ProgramAdapter(
-            $this->project_manager,
-            new ProjectAccessChecker(new RestrictedUserCanAccessProjectVerifier(), \EventManager::instance()),
-            new ProgramDao(),
-            new TeamDao(),
-            new UserManagerAdapter(UserManager::instance())
-        );
+        $user_manager                         = UserManager::instance();
+        $this->artifact_factory               = Tracker_ArtifactFactory::instance();
+        $changeset_factory                    = Tracker_Artifact_ChangesetFactoryBuilder::build();
+        $team_dao                             = new TeamDao();
+        $program_dao                          = new ProgramDao();
+        $project_permissions_verifier         = new ProjectPermissionVerifier();
+        $this->pending_program_increments_dao = new PendingArtifactCreationDao();
+
+        $team_builder = new TeamAdapter($this->project_manager, $program_dao, new ExplicitBacklogDao());
 
         $this->replication_data_adapter = new ReplicationDataAdapter(
-            Tracker_ArtifactFactory::instance(),
-            UserManager::instance(),
-            new PendingArtifactCreationDao(),
-            Tracker_Artifact_ChangesetFactoryBuilder::build()
+            $this->artifact_factory,
+            $user_manager,
+            $this->pending_program_increments_dao,
+            $changeset_factory
         );
-        $this->runner                   = new CreateProgramIncrementsRunner(
+
+        $this->runner = new CreateProgramIncrementsRunner(
             new NullLogger(),
             new QueueFactory(new NullLogger()),
             new ReplicationDataAdapter(
-                Tracker_ArtifactFactory::instance(),
-                UserManager::instance(),
-                new PendingArtifactCreationDao(),
-                Tracker_Artifact_ChangesetFactoryBuilder::build()
+                $this->artifact_factory,
+                $user_manager,
+                $this->pending_program_increments_dao,
+                $changeset_factory
             ),
             new TaskBuilder()
         );
 
-        $this->user = \UserManager::instance()->getUserByUserName(\TestDataBuilder::TEST_USER_1_NAME);
+        $this->user = $user_manager->getUserByUserName(\TestDataBuilder::TEST_USER_1_NAME);
 
-        $this->program = $this->project_manager->getProjectByUnixName(self::PROJECT_PROGRAM_NAME);
-        $this->team    = $this->project_manager->getProjectByUnixName(self::PROJECT_TEAM_NAME);
+        $program_project = $this->getProjectByShortName(self::PROJECT_PROGRAM_NAME);
+        $team_project    = $this->getProjectByShortName(self::PROJECT_TEAM_NAME);
 
-        $user_identifier = UserProxy::buildFromPFUser($this->user);
-
-        $team_dao = new TeamDao();
-        $team_dao->save(
-            new TeamCollection(
-                [Team::buildForRestTest($team_adapter, (int) $this->team->getID(), $this->user)],
-                ToBeCreatedProgram::fromId($program_adapter, (int) $this->program->getID(), $user_identifier)
-            )
+        $program = ProgramForAdministrationIdentifier::fromProject(
+            $team_dao,
+            $project_permissions_verifier,
+            $this->user,
+            $program_project
         );
+
+        $team = Team::buildForRestTest($team_builder, (int) $team_project->getID(), $this->user);
+        $team_dao->save(TeamCollection::fromProgramAndTeams($program, $team));
 
         $tracker_factory = \TrackerFactory::instance();
         assert($tracker_factory instanceof \TrackerFactory);
-        $program_trackers = $tracker_factory->getTrackersByGroupId((int) $this->program->getGroupId());
-        $team_trackers    = $tracker_factory->getTrackersByGroupId((int) $this->team->getGroupId());
+        $program_trackers = $tracker_factory->getTrackersByGroupId((int) $program_project->getID());
+        $team_trackers    = $tracker_factory->getTrackersByGroupId((int) $team_project->getID());
 
         $this->feature    = $this->getTrackerByName($program_trackers, "features");
         $this->user_story = $this->getTrackerByName($team_trackers, "story");
 
         $this->program_increment = $this->getTrackerByName($program_trackers, "pi");
-
-        $this->artifact_factory = \Tracker_ArtifactFactory::instance();
 
         $this->linkFeatureAndUserStories();
         $this->linkProgramIncrementToMirroredRelease();
@@ -155,11 +149,10 @@ class ProgramDataBuilder extends REST_TestDataBuilder
 
     public function linkProgramIncrementToMirroredRelease(): void
     {
-        $dao                    = new PendingArtifactCreationDao();
         $program_increment_list = $this->artifact_factory->getArtifactsByTrackerId($this->program_increment->getId());
 
         $pi = $this->getArtifactByTitle($program_increment_list, "PI");
-        $dao->addArtifactToPendingCreation((int) $pi->getId(), (int) $pi->getSubmittedBy(), (int) $pi->getLastChangeset()->getId());
+        $this->pending_program_increments_dao->addArtifactToPendingCreation((int) $pi->getId(), (int) $pi->getSubmittedBy(), (int) $pi->getLastChangeset()->getId());
         $replication_data = $this->replication_data_adapter->buildFromArtifactAndUserId(
             $pi->getId(),
             (int) $pi->getSubmittedBy()
@@ -198,5 +191,14 @@ class ProgramDataBuilder extends REST_TestDataBuilder
         }
 
         throw new \LogicException("Can not find asked artifact with title $title");
+    }
+
+    private function getProjectByShortName(string $short_name): \Project
+    {
+        $program_project = $this->project_manager->getProjectByUnixName($short_name);
+        if (! $program_project) {
+            throw new \LogicException(sprintf('Could not find project with short name %s', $short_name));
+        }
+        return $program_project;
     }
 }

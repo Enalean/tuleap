@@ -31,10 +31,4 @@ interface BuildProgram
      * @throws ProgramAccessException
      */
     public function ensureProgramIsAProject(int $project_id, UserIdentifier $user): void;
-
-    /**
-     * @throws ProgramAccessException
-     * @throws ProgramIsATeamException
-     */
-    public function ensureProgramIsProjectAndUserIsAdminOf(int $id, UserIdentifier $user): void;
 }

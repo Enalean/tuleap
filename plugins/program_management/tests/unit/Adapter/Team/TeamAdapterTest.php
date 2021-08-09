@@ -22,44 +22,58 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Team;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use ProjectManager;
 use Tuleap\AgileDashboard\ExplicitBacklog\ExplicitBacklogDao;
 use Tuleap\GlobalLanguageMock;
-use Tuleap\ProgramManagement\Domain\Program\ToBeCreatedProgram;
+use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramForAdministrationIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\VerifyIsProgram;
-use Tuleap\ProgramManagement\Domain\Team\Creation\Team;
-use Tuleap\ProgramManagement\Domain\Team\Creation\TeamCollection;
 use Tuleap\ProgramManagement\Domain\Team\ProjectIsAProgramException;
 use Tuleap\ProgramManagement\Domain\Team\TeamAccessException;
 use Tuleap\ProgramManagement\Domain\Team\TeamMustHaveExplicitBacklogEnabledException;
-use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
-use Tuleap\ProgramManagement\Stub\BuildProgramStub;
-use Tuleap\ProgramManagement\Stub\UserIdentifierStub;
 use Tuleap\ProgramManagement\Stub\VerifyIsProgramStub;
+use Tuleap\ProgramManagement\Stub\VerifyIsTeamStub;
+use Tuleap\ProgramManagement\Stub\VerifyProjectPermissionStub;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 
 final class TeamAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
     use GlobalLanguageMock;
 
+    private const TEAM_ID = 202;
+    private VerifyIsProgram $program_verifier;
+    private ProgramForAdministrationIdentifier $program;
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|ProjectManager
-     */
-    private $project_manager;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|ExplicitBacklogDao
+     * @var mixed|\PHPUnit\Framework\MockObject\Stub|ExplicitBacklogDao
      */
     private $explicit_backlog_dao;
-    private VerifyIsProgram $program_verifier;
-    private UserIdentifier $user_identifier;
+    /**
+     * @var mixed|\PFUser|\PHPUnit\Framework\MockObject\MockObject
+     */
+    private $user;
+    /**
+     * @var mixed|\PHPUnit\Framework\MockObject\MockObject|ProjectManager
+     */
+    private $project_manager;
+    private \Project $team_project;
 
     protected function setUp(): void
     {
-        $this->project_manager      = \Mockery::mock(ProjectManager::class);
-        $this->explicit_backlog_dao = \Mockery::mock(ExplicitBacklogDao::class);
+        $this->project_manager      = $this->createMock(ProjectManager::class);
+        $this->explicit_backlog_dao = $this->createStub(ExplicitBacklogDao::class);
         $this->program_verifier     = VerifyIsProgramStub::withValidProgram();
-        $this->user_identifier      = UserIdentifierStub::buildGenericUser();
+        $this->user                 = $this->createMock(\PFUser::class);
+        $this->program              = ProgramForAdministrationIdentifier::fromProject(
+            VerifyIsTeamStub::withNotValidTeam(),
+            VerifyProjectPermissionStub::withAdministrator(),
+            $this->user,
+            ProjectTestBuilder::aProject()->withId(101)->build()
+        );
+
+        $this->team_project = new \Project(['group_id' => self::TEAM_ID, 'status' => 'A', 'access' => 'public']);
+        $this->project_manager->expects(self::once())
+            ->method('getProject')
+            ->with(self::TEAM_ID)
+            ->willReturn($this->team_project);
 
         $_SERVER['REQUEST_URI'] = '/';
     }
@@ -69,92 +83,55 @@ final class TeamAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
         unset($_SERVER['REQUEST_URI']);
     }
 
+    private function getAdapter(): TeamAdapter
+    {
+        return new TeamAdapter($this->project_manager, $this->program_verifier, $this->explicit_backlog_dao);
+    }
+
     public function testItThrowsErrorWhenUserIsNotProjectAdmin(): void
     {
-        $team_id = 202;
-        $project = new \Project(['group_id' => $team_id, 'status' => 'A', 'access' => 'public']);
-        $program = ToBeCreatedProgram::fromId(BuildProgramStub::stubValidToBeCreatedProgram(), 101, $this->user_identifier);
-        $user    = \Mockery::mock(\PFUser::class);
-        $user->shouldReceive('isAdmin')->with($team_id)->andReturnFalse();
-        $user->shouldReceive('isMember')->with($team_id)->andReturnFalse();
-        $user->shouldReceive('isAnonymous')->andReturnFalse();
-        $user->shouldReceive('isSuperUser')->andReturnFalse();
-        $user->shouldReceive('isRestricted')->andReturnFalse();
-
-        $this->project_manager->shouldReceive('getProject')->with($team_id)->once()->andReturn($project);
+        $this->user->method('isAdmin')->with(self::TEAM_ID)->willReturn(false);
+        $this->user->method('isMember')->with(self::TEAM_ID)->willReturn(false);
+        $this->user->method('isAnonymous')->willReturn(false);
+        $this->user->method('isSuperUser')->willReturn(false);
+        $this->user->method('isRestricted')->willReturn(false);
 
         $this->expectException(TeamAccessException::class);
-        $this->getAdapter()->buildTeamProject([$team_id], $program, $user);
+        $this->getAdapter()->checkProjectIsATeam(self::TEAM_ID, $this->user);
     }
 
     public function testItThrowExceptionWhenTeamProjectIsAlreadyAProgram(): void
     {
-        $team_id = 202;
-        $project = new \Project(['group_id' => $team_id, 'status' => 'A', 'access' => 'public']);
-        $program = ToBeCreatedProgram::fromId(BuildProgramStub::stubValidToBeCreatedProgram(), 101, $this->user_identifier);
-        $user    = \Mockery::mock(\PFUser::class);
-        $user->shouldReceive('isAdmin')->with($team_id)->andReturnTrue();
-        $user->shouldReceive('isAnonymous')->andReturnFalse();
-        $user->shouldReceive('isSuperUser')->andReturnTrue();
-
-        $this->project_manager->shouldReceive('getProject')->with($team_id)->once()->andReturn($project);
+        $this->user->method('isAdmin')->with(self::TEAM_ID)->willReturn(true);
+        $this->user->method('isAnonymous')->willReturn(false);
+        $this->user->method('isSuperUser')->willReturn(true);
 
         $this->expectException(ProjectIsAProgramException::class);
-        $this->getAdapter()->buildTeamProject([$team_id], $program, $user);
-    }
-
-    public function testGetEmptyTeamWhenNoTeamIsFound(): void
-    {
-        $program = ToBeCreatedProgram::fromId(BuildProgramStub::stubValidToBeCreatedProgram(), 101, $this->user_identifier);
-        $user    = \Mockery::mock(\PFUser::class);
-
-        $team_collection = $this->getAdapter()->buildTeamProject([], $program, $user);
-
-        self::assertCount(0, $team_collection->getTeamIds());
+        $this->getAdapter()->checkProjectIsATeam(self::TEAM_ID, $this->user);
     }
 
     public function testThrowsExceptionWhenTeamProjectDoesNotHaveTheExplicitBacklogModeEnabled(): void
     {
-        $team_id = 202;
-        $project = new \Project(['group_id' => $team_id, 'status' => 'A', 'access' => 'public']);
-        $program = ToBeCreatedProgram::fromId(BuildProgramStub::stubValidToBeCreatedProgram(), 101, $this->user_identifier);
-        $user    = \Mockery::mock(\PFUser::class);
-        $user->shouldReceive('isAdmin')->andReturnTrue();
-        $user->shouldReceive('isAnonymous')->andReturnFalse();
-        $user->shouldReceive('isSuperUser')->andReturnTrue();
+        $this->user->method('isAdmin')->willReturn(true);
+        $this->user->method('isAnonymous')->willReturn(false);
+        $this->user->method('isSuperUser')->willReturn(true);
 
-        $this->project_manager->shouldReceive('getProject')->with($team_id)->once()->andReturn($project);
         $this->program_verifier = VerifyIsProgramStub::withNotValidProgram();
-
-        $this->explicit_backlog_dao->shouldReceive('isProjectUsingExplicitBacklog')->andReturn(false);
+        $this->explicit_backlog_dao->method('isProjectUsingExplicitBacklog')->willReturn(false);
 
         $this->expectException(TeamMustHaveExplicitBacklogEnabledException::class);
-        $this->getAdapter()->buildTeamProject([$team_id], $program, $user);
+        $this->getAdapter()->checkProjectIsATeam(self::TEAM_ID, $this->user);
     }
 
-    public function testItBuildTeamCollection(): void
+    public function testItChecksAProjectCanBecomeATeam(): void
     {
-        $team_id = 202;
-        $project = new \Project(['group_id' => $team_id, 'status' => 'A', 'access' => 'public']);
-        $program = ToBeCreatedProgram::fromId(BuildProgramStub::stubValidToBeCreatedProgram(), 101, $this->user_identifier);
-        $user    = \Mockery::mock(\PFUser::class);
-        $user->shouldReceive('isAdmin')->with($team_id)->andReturnTrue();
-        $user->shouldReceive('isAnonymous')->andReturnFalse();
-        $user->shouldReceive('isSuperUser')->andReturnTrue();
+        $this->user->method('isAdmin')->with(self::TEAM_ID)->willReturn(true);
+        $this->user->method('isAnonymous')->willReturn(false);
+        $this->user->method('isSuperUser')->willReturn(true);
 
-        $this->project_manager->shouldReceive('getProject')->with($team_id)->andReturn($project);
         $this->program_verifier = VerifyIsProgramStub::withNotValidProgram();
+        $this->explicit_backlog_dao->method('isProjectUsingExplicitBacklog')->willReturn(true);
 
-        $this->explicit_backlog_dao->shouldReceive('isProjectUsingExplicitBacklog')->andReturn(true);
-
-        $adapter         = $this->getAdapter();
-        $team_collection = new TeamCollection([Team::build($adapter, $team_id, $user)], $program);
-
-        self::assertEquals($team_collection, $adapter->buildTeamProject([$team_id], $program, $user));
-    }
-
-    private function getAdapter(): TeamAdapter
-    {
-        return new TeamAdapter($this->project_manager, $this->program_verifier, $this->explicit_backlog_dao);
+        $this->getAdapter()->checkProjectIsATeam(self::TEAM_ID, $this->user);
     }
 }

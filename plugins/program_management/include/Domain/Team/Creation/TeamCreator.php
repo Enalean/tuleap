@@ -22,51 +22,62 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Team\Creation;
 
-use Tuleap\ProgramManagement\Adapter\Workspace\UserProxy;
-use Tuleap\ProgramManagement\Domain\Program\Plan\BuildProgram;
+use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramCannotBeATeamException;
+use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramForAdministrationIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Plan\ProgramAccessException;
-use Tuleap\ProgramManagement\Domain\Program\Plan\ProgramIsATeamException;
-use Tuleap\ProgramManagement\Domain\Program\Plan\ProjectIsNotAProgramException;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIsTeamException;
-use Tuleap\ProgramManagement\Domain\Program\ToBeCreatedProgram;
 use Tuleap\ProgramManagement\Domain\Team\ProjectIsAProgramException;
 use Tuleap\ProgramManagement\Domain\Team\TeamAccessException;
+use Tuleap\ProgramManagement\Domain\Team\VerifyIsTeam;
+use Tuleap\ProgramManagement\Domain\Workspace\RetrieveProject;
+use Tuleap\ProgramManagement\Domain\Workspace\VerifyProjectPermission;
 
 final class TeamCreator implements CreateTeam
 {
-    private BuildProgram $program_build;
-    private BuildTeam $build_team;
+    private RetrieveProject $project_retriever;
+    private VerifyIsTeam $team_verifier;
+    private VerifyProjectPermission $permission_verifier;
+    private BuildTeam $team_builder;
     private TeamStore $team_store;
 
-    public function __construct(BuildProgram $program_build, BuildTeam $build_team, TeamStore $team_store)
-    {
-        $this->program_build = $program_build;
-        $this->build_team    = $build_team;
-        $this->team_store    = $team_store;
+    public function __construct(
+        RetrieveProject $project_retriever,
+        VerifyIsTeam $team_verifier,
+        VerifyProjectPermission $permission_verifier,
+        BuildTeam $team_builder,
+        TeamStore $team_store
+    ) {
+        $this->project_retriever   = $project_retriever;
+        $this->team_verifier       = $team_verifier;
+        $this->permission_verifier = $permission_verifier;
+        $this->team_builder        = $team_builder;
+        $this->team_store          = $team_store;
     }
 
     /**
      * @throws ProgramAccessException
-     * @throws ProjectIsNotAProgramException
      * @throws ProjectIsAProgramException
      * @throws TeamAccessException
      * @throws ProgramIsTeamException
-     * @throws ProgramIsATeamException
+     * @throws ProgramCannotBeATeamException
      */
     public function create(\PFUser $user, int $project_id, array $team_ids): void
     {
-        if (in_array($project_id, $team_ids)) {
+        if (in_array($project_id, $team_ids, true)) {
             throw new ProgramIsTeamException($project_id);
         }
-
-        $user_identifier = UserProxy::buildFromPFUser($user);
-        $program_project = ToBeCreatedProgram::fromId($this->program_build, $project_id, $user_identifier);
-
-        $team_collection = $this->build_team->buildTeamProject(
-            $team_ids,
-            $program_project,
-            $user
+        $project         = $this->project_retriever->getProjectWithId($project_id);
+        $program         = ProgramForAdministrationIdentifier::fromProject(
+            $this->team_verifier,
+            $this->permission_verifier,
+            $user,
+            $project
         );
+        $teams           = array_map(
+            fn(int $team_id): Team => Team::build($this->team_builder, $team_id, $user),
+            $team_ids
+        );
+        $team_collection = TeamCollection::fromProgramAndTeams($program, ...$teams);
 
         $this->team_store->save($team_collection);
     }

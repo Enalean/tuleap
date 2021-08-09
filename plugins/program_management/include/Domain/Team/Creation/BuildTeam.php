@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Team\Creation;
 
-use Tuleap\ProgramManagement\Domain\Program\ToBeCreatedProgram;
 use Tuleap\ProgramManagement\Domain\Team\ProjectIsAProgramException;
 use Tuleap\ProgramManagement\Domain\Team\TeamAccessException;
 use Tuleap\ProgramManagement\Domain\Team\TeamMustHaveExplicitBacklogEnabledException;
@@ -34,16 +33,11 @@ interface BuildTeam
      * @throws TeamAccessException
      * @throws TeamMustHaveExplicitBacklogEnabledException
      */
-    public function buildTeamProject(array $team_ids, ToBeCreatedProgram $program, \PFUser $user): TeamCollection;
-
-    /**
-     * @throws ProjectIsAProgramException
-     * @throws TeamAccessException
-     */
     public function checkProjectIsATeam(int $team_id, \PFUser $user): void;
 
     /**
      * @throws ProjectIsAProgramException
+     * @throws TeamMustHaveExplicitBacklogEnabledException
      */
     public function checkProjectIsATeamForRestTestInitialization(int $team_id, \PFUser $user): void;
 }
