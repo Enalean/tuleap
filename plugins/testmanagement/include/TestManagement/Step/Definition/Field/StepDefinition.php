@@ -258,12 +258,14 @@ class StepDefinition extends Tracker_FormElement_Field implements TrackerFormEle
      */
     public function getFieldDataFromRESTValue(array $value, ?Artifact $artifact = null)
     {
-        if (
-            ! isset($value["value"]) || count(
-                $value["value"]
-            ) === 0 || $this->areWeTryingToUpdateAnExistingStepDefinition($artifact)
-        ) {
+        if (! isset($value['value'])) {
             return null;
+        }
+        if (! is_array($value['value'])) {
+            throw new RestException(400, sprintf('The value of step definition is expected to be an array, got %s', gettype($value)));
+        }
+        if ($this->areWeTryingToUpdateAnExistingStepDefinition($artifact)) {
+            return StepDefinitionDataConverter::convertStepDefinitionFromRESTUpdateFormatToDBCompatibleFormat($value['value']);
         }
         return StepDefinitionDataConverter::convertStepDefinitionFromRESTPostFormatToDBCompatibleFormat($value["value"]);
     }
@@ -273,15 +275,7 @@ class StepDefinition extends Tracker_FormElement_Field implements TrackerFormEle
      */
     public function getFieldDataFromRESTValueByField(array $value, ?Artifact $artifact = null)
     {
-        if (
-            ! isset($value["value"]) || count(
-                $value["value"]
-            ) === 0 || $this->areWeTryingToUpdateAnExistingStepDefinition($artifact)
-        ) {
-            return null;
-        }
-
-        return StepDefinitionDataConverter::convertStepDefinitionFromRESTPostFormatToDBCompatibleFormat($value["value"]);
+        return $this->getFieldDataFromRESTValue($value, $artifact);
     }
 
     private function areWeTryingToUpdateAnExistingStepDefinition(?Artifact $artifact): bool

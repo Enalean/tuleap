@@ -28,12 +28,14 @@ use Tuleap\TestManagement\Step\StepChecker;
 
 final class StepDefinitionDataConverter
 {
-
     /**
      * @throws RestException
      */
     public static function convertStepDefinitionFromRESTPostFormatToDBCompatibleFormat(array $steps): array
     {
+        if (count($steps) === 0) {
+            return ['no_steps' => true];
+        }
         $converted_steps = [];
 
         foreach ($steps as $step) {
@@ -45,5 +47,33 @@ final class StepDefinitionDataConverter
         }
 
         return $converted_steps;
+    }
+
+    /**
+     * @throws RestException
+     */
+    public static function convertStepDefinitionFromRESTUpdateFormatToDBCompatibleFormat(array $steps): array
+    {
+        $steps_by_rank = [];
+
+        foreach ($steps as $step) {
+            $rank = $step['rank'] ?? null;
+            if ($rank === null) {
+                throw new RestException(400, 'All step definitions must have a rank');
+            }
+
+            if (! is_int($rank)) {
+                throw new RestException(400, sprintf('The step definition rank can only be an integer, got %s', gettype($rank)));
+            }
+
+            if (isset($steps_by_rank[$rank])) {
+                throw new RestException(400, sprintf('The rank %d can not be used multiple times', $rank));
+            }
+
+            $steps_by_rank[$rank] = $step;
+        }
+
+        ksort($steps_by_rank);
+        return self::convertStepDefinitionFromRESTPostFormatToDBCompatibleFormat($steps_by_rank);
     }
 }

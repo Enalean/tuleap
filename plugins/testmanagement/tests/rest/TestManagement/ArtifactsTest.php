@@ -24,11 +24,9 @@ declare(strict_types=1);
 namespace Tuleap\TestManagement;
 
 
-require_once __DIR__ . '/../bootstrap.php';
-
 final class ArtifactsTest extends BaseTest
 {
-    public function testItPostAnArtifactWithStepDefinitionFieldId(): void
+    public function testItPostAnArtifactWithStepDefinitionFieldId(): int
     {
         $test_def_tracker_id = $this->tracker_ids[$this->project_id][TestManagementDataBuilder::TEST_DEF_TRACKER_SHORTNAME];
         $summary_field_id    = $this->getUsedFieldId($test_def_tracker_id, "summary");
@@ -74,6 +72,8 @@ final class ArtifactsTest extends BaseTest
 
         $artifact_id = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR)["id"];
         $this->assertArtifactHasStepDefField($artifact_id);
+
+        return $artifact_id;
     }
 
     public function testItPostAnArtifactWithStepDefinitionFieldName(): void
@@ -115,6 +115,80 @@ final class ArtifactsTest extends BaseTest
     }
 
     /**
+     * @depends testItPostAnArtifactWithStepDefinitionFieldId
+     */
+    public function testUpdatesArtifactStepDef(int $artifact_id): void
+    {
+        $field_value = $this->getArtifactStepDefFieldValue($artifact_id);
+        self::assertNotNull($field_value);
+
+        $field_value['value'] = [
+            [
+                'description' => 'D10',
+                'description_format' => 'html',
+                'expected_results' => 'R10',
+                'expected_results_format' => 'html',
+                'rank' => 10
+            ],
+            [
+                'description' => 'D1',
+                'description_format' => 'html',
+                'expected_results' => 'R1',
+                'expected_results_format' => 'html',
+                'rank' => 1
+            ],
+        ];
+
+        $response = $this->getResponse(
+            $this->request_factory->createRequest('PUT', 'artifacts/' . urlencode((string) $artifact_id))->withBody(
+                $this->stream_factory->createStream(
+                    json_encode(['values' => [$field_value], 'comment' => ['body' => 'Update step def', 'format' => 'text']], JSON_THROW_ON_ERROR)
+                )
+            )
+        );
+        self::assertEquals(200, $response->getStatusCode());
+
+        $updated_step_field_value                       = $this->getArtifactStepDefFieldValue($artifact_id);
+        $updated_step_field_definition_value_without_id = [];
+        foreach ($updated_step_field_value['value'] as $step_def_value) {
+            unset($step_def_value['id']);
+            $updated_step_field_definition_value_without_id[] = $step_def_value;
+        }
+        self::assertEquals(
+            [
+                [
+                    'description' => 'D1',
+                    'description_format' => 'html',
+                    'expected_results' => 'R1',
+                    'expected_results_format' => 'html',
+                    'rank' => 1
+                ],
+                [
+                    'description' => 'D10',
+                    'description_format' => 'html',
+                    'expected_results' => 'R10',
+                    'expected_results_format' => 'html',
+                    'rank' => 2
+                ],
+            ],
+            $updated_step_field_definition_value_without_id
+        );
+
+        $field_value['value'] = [];
+        $response             = $this->getResponse(
+            $this->request_factory->createRequest('PUT', 'artifacts/' . urlencode((string) $artifact_id))->withBody(
+                $this->stream_factory->createStream(
+                    json_encode(['values' => [$field_value], 'comment' => ['body' => 'Empty step def', 'format' => 'text']], JSON_THROW_ON_ERROR)
+                )
+            )
+        );
+        self::assertEquals(200, $response->getStatusCode());
+
+        $emptied_step_field_value = $this->getArtifactStepDefFieldValue($artifact_id);
+        self::assertEquals([], $emptied_step_field_value['value']);
+    }
+
+    /**
      * @throws UsedFieldIdNotFoundException
      */
     private function getUsedFieldId(int $tracker_id, string $field_shortname): ?int
@@ -130,15 +204,22 @@ final class ArtifactsTest extends BaseTest
 
     private function assertArtifactHasStepDefField(int $artifact_id): void
     {
-        $artifact_request = $this->request_factory->createRequest('GET', 'artifacts/' . $artifact_id);
-        $artifact         = json_decode($this->getResponse($artifact_request)->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
+        self::assertNotNull($this->getArtifactStepDefFieldValue($artifact_id));
+    }
 
-        $ttmstepdef = array_filter(
-            $artifact['values'],
-            static function (array $value): bool {
-                return $value['type'] === 'ttmstepdef';
+    private function getArtifactStepDefFieldValue(int $artifact_id): ?array
+    {
+        $artifact_request = $this->request_factory->createRequest('GET', 'artifacts/' . $artifact_id);
+        $response         = $this->getResponse($artifact_request);
+        self::assertEquals(200, $response->getStatusCode());
+        $artifact = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
+
+        foreach ($artifact['values'] as $value) {
+            if ($value['type'] === 'ttmstepdef') {
+                return $value;
             }
-        );
-        self::assertNotEmpty($ttmstepdef);
+        }
+
+        return null;
     }
 }

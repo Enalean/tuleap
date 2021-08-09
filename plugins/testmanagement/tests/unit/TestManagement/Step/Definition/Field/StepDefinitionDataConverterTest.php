@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace Tuleap\TestManagement\Step\Definition\Field;
 
+use Luracast\Restler\RestException;
 use Tracker_Artifact_ChangesetValue_Text;
 
 final class StepDefinitionDataConverterTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -33,24 +34,24 @@ final class StepDefinitionDataConverterTest extends \Tuleap\Test\PHPUnit\TestCas
             [
                 "description"             => "some description",
                 "description_format"      => Tracker_Artifact_ChangesetValue_Text::COMMONMARK_CONTENT,
-                "expected_results"        => "somme results",
+                "expected_results"        => "some results",
                 "expected_results_format" => Tracker_Artifact_ChangesetValue_Text::COMMONMARK_CONTENT
             ],
             [
                 "description"             => "description step 2",
                 "description_format"      => Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT,
-                "expected_results"        => "somme results of step 2",
+                "expected_results"        => "some results of step 2",
                 "expected_results_format" => Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT
             ],
         ];
 
-        $expected_converted_step = [
+        $expected_converted_steps = [
             "description"             => ["some description", "description step 2"],
             "description_format"      => [
                 Tracker_Artifact_ChangesetValue_Text::COMMONMARK_CONTENT,
                 Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT
             ],
-            "expected_results"        => ["somme results", "somme results of step 2"],
+            "expected_results"        => ["some results", "some results of step 2"],
             "expected_results_format" => [
                 Tracker_Artifact_ChangesetValue_Text::COMMONMARK_CONTENT,
                 Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT
@@ -58,8 +59,97 @@ final class StepDefinitionDataConverterTest extends \Tuleap\Test\PHPUnit\TestCas
         ];
 
         self::assertEquals(
-            $expected_converted_step,
+            $expected_converted_steps,
             StepDefinitionDataConverter::convertStepDefinitionFromRESTPostFormatToDBCompatibleFormat($steps)
         );
+    }
+
+    public function testConvertsStepDefinitionRESTUpdateFormatToDBCompatibleFormat(): void
+    {
+        $steps = [
+            [
+                "description"             => "some description",
+                "description_format"      => 'commonmark',
+                "expected_results"        => "some results",
+                "expected_results_format" => 'commonmark',
+                "rank" => 2,
+            ],
+            [
+                "description"             => "description step 2",
+                "description_format"      => 'html',
+                "expected_results"        => "some results of step 2",
+                "expected_results_format" => 'html',
+                "rank" => 1,
+            ],
+        ];
+
+        $expected_converted_steps = [
+            "description"             => ["description step 2", "some description"],
+            "description_format"      => [
+                'html',
+                'commonmark',
+            ],
+            "expected_results"        => ["some results of step 2", "some results"],
+            "expected_results_format" => [
+                'html',
+                'commonmark',
+            ],
+        ];
+
+        self::assertEquals(
+            $expected_converted_steps,
+            StepDefinitionDataConverter::convertStepDefinitionFromRESTUpdateFormatToDBCompatibleFormat($steps)
+        );
+    }
+
+    public function testUpdatedStepsAreExpectedToHaveARank(): void
+    {
+        $this->expectException(RestException::class);
+        $this->expectExceptionCode(400);
+        StepDefinitionDataConverter::convertStepDefinitionFromRESTUpdateFormatToDBCompatibleFormat([
+            [
+                'description'             => 'description',
+                'description_format'      => 'commonmark',
+                'expected_results'        => 'result',
+                'expected_results_format' => 'commonmark',
+            ]
+        ]);
+    }
+
+    public function testUpdatedStepsAreExpectedToHaveAnIntegerRank(): void
+    {
+        $this->expectException(RestException::class);
+        $this->expectExceptionCode(400);
+        StepDefinitionDataConverter::convertStepDefinitionFromRESTUpdateFormatToDBCompatibleFormat([
+           [
+               'description'             => 'description',
+               'description_format'      => 'commonmark',
+               'expected_results'        => 'result',
+               'expected_results_format' => 'commonmark',
+               'rank' => '1'
+           ]
+        ]);
+    }
+
+    public function testUpdatedStepsCannotUseMultipleTimesTheSameRank(): void
+    {
+        $this->expectException(RestException::class);
+        $this->expectExceptionCode(400);
+        StepDefinitionDataConverter::convertStepDefinitionFromRESTUpdateFormatToDBCompatibleFormat([
+           [
+               'description'             => 'description',
+               'description_format'      => 'commonmark',
+               'expected_results'        => 'result',
+               'expected_results_format' => 'commonmark',
+               'rank' => 1
+           ],
+           [
+               'description'             => 'description',
+               'description_format'      => 'commonmark',
+               'expected_results'        => 'result',
+               'expected_results_format' => 'commonmark',
+               'rank' => 1
+           ]
+        ]);
     }
 }
