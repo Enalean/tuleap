@@ -22,21 +22,15 @@ declare(strict_types=1);
 
 namespace Tuleap\TestManagement\Step\Definition\Field;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use Luracast\Restler\RestException;
 use Tracker_Artifact_Changeset;
 use Tracker_Artifact_ChangesetValue_Text;
 use Tuleap\TestManagement\Step\Step;
-use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 
 final class StepDefinitionTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var StepDefinition
-     */
-    private $field;
+    private StepDefinition $field;
 
     protected function setUp(): void
     {
@@ -47,10 +41,10 @@ final class StepDefinitionTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         self::assertFalse(
             $this->field->hasChanges(
-                Mockery::mock(Artifact::class),
+                ArtifactTestBuilder::anArtifact(1)->build(),
                 new StepDefinitionChangesetValue(
                     1,
-                    Mockery::mock(Tracker_Artifact_Changeset::class),
+                    $this->createStub(Tracker_Artifact_Changeset::class),
                     $this->field,
                     false,
                     []
@@ -64,10 +58,10 @@ final class StepDefinitionTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         self::assertTrue(
             $this->field->hasChanges(
-                Mockery::mock(Artifact::class),
+                ArtifactTestBuilder::anArtifact(1)->build(),
                 new StepDefinitionChangesetValue(
                     1,
-                    Mockery::mock(Tracker_Artifact_Changeset::class),
+                    $this->createStub(Tracker_Artifact_Changeset::class),
                     $this->field,
                     true,
                     [
@@ -92,10 +86,10 @@ final class StepDefinitionTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         self::assertTrue(
             $this->field->hasChanges(
-                Mockery::mock(Artifact::class),
+                ArtifactTestBuilder::anArtifact(1)->build(),
                 new StepDefinitionChangesetValue(
                     1,
-                    Mockery::mock(Tracker_Artifact_Changeset::class),
+                    $this->createStub(Tracker_Artifact_Changeset::class),
                     $this->field,
                     true,
                     [
@@ -134,10 +128,10 @@ final class StepDefinitionTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         self::assertFalse(
             $this->field->hasChanges(
-                Mockery::mock(Artifact::class),
+                ArtifactTestBuilder::anArtifact(1)->build(),
                 new StepDefinitionChangesetValue(
                     1,
-                    Mockery::mock(Tracker_Artifact_Changeset::class),
+                    $this->createStub(Tracker_Artifact_Changeset::class),
                     $this->field,
                     true,
                     [
@@ -179,7 +173,7 @@ final class StepDefinitionTest extends \Tuleap\Test\PHPUnit\TestCase
                 [
                     "description"             => "some description",
                     "description_format"      => Tracker_Artifact_ChangesetValue_Text::COMMONMARK_CONTENT,
-                    "expected_results"        => "somme results",
+                    "expected_results"        => "some results",
                     "expected_results_format" => Tracker_Artifact_ChangesetValue_Text::COMMONMARK_CONTENT
                 ],
             ],
@@ -190,7 +184,7 @@ final class StepDefinitionTest extends \Tuleap\Test\PHPUnit\TestCase
             "description_format"      => [
                 Tracker_Artifact_ChangesetValue_Text::COMMONMARK_CONTENT,
             ],
-            "expected_results"        => ["somme results"],
+            "expected_results"        => ["some results"],
             "expected_results_format" => [
                 Tracker_Artifact_ChangesetValue_Text::COMMONMARK_CONTENT,
             ]
@@ -199,6 +193,33 @@ final class StepDefinitionTest extends \Tuleap\Test\PHPUnit\TestCase
 
         self::assertEquals($expected_converted_step, $this->field->getFieldDataFromRESTValue($steps));
         self::assertEquals($expected_converted_step, $this->field->getFieldDataFromRESTValueByField($steps));
+    }
+
+    public function testReturnsConvertedRESTFormatInDBCompatibleFormatBeforeInsertionOnUpdate(): void
+    {
+        $steps = [
+            "value" => [
+                [
+                    "description" => "some description",
+                    "description_format" => Tracker_Artifact_ChangesetValue_Text::COMMONMARK_CONTENT,
+                    "expected_results" => "some results",
+                    "expected_results_format" => Tracker_Artifact_ChangesetValue_Text::COMMONMARK_CONTENT,
+                    "rank" => 1,
+                ]
+            ],
+        ];
+
+        $artifact = ArtifactTestBuilder::anArtifact(1)->build();
+
+        $expected_format = [
+            'description' => ['some description'],
+            'description_format' => ['commonmark'],
+            'expected_results' => ['some results'],
+            'expected_results_format' => ['commonmark']
+        ];
+
+        self::assertEquals($expected_format, $this->field->getFieldDataFromRESTValue($steps, $artifact));
+        self::assertEquals($expected_format, $this->field->getFieldDataFromRESTValueByField($steps, $artifact));
     }
 
     public function testItReturnsNullIfTheRESTStepDefinitionValueIsNotSet(): void
@@ -210,29 +231,21 @@ final class StepDefinitionTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertNull($this->field->getFieldDataFromRESTValueByField($steps));
     }
 
-    public function testItReturnsNullIfTheRESTStepDefinitionValueIsEmpty(): void
+    public function testReturnsNoStepsIfTheRESTStepDefinitionValueIsEmpty(): void
     {
         $steps = ["value" => []];
 
+        $expected_value = ['no_steps' => true];
 
-        self::assertNull($this->field->getFieldDataFromRESTValue($steps));
-        self::assertNull($this->field->getFieldDataFromRESTValueByField($steps));
+        self::assertEquals($expected_value, $this->field->getFieldDataFromRESTValue($steps));
+        self::assertEquals($expected_value, $this->field->getFieldDataFromRESTValueByField($steps));
     }
 
-    public function testItDoesNotAllowUpdatingAnExistingStepDefinition(): void
+    public function testVerifiesThatRESTDefinitionValueIsAnArray(): void
     {
-        $steps = [
-            "value" => [
-                "description"             => "some description",
-                "description_format"      => Tracker_Artifact_ChangesetValue_Text::COMMONMARK_CONTENT,
-                "expected_results"        => "somme results",
-                "expected_results_format" => Tracker_Artifact_ChangesetValue_Text::COMMONMARK_CONTENT
-            ],
-        ];
+        $this->expectException(RestException::class);
+        $this->expectExceptionCode(400);
 
-        $artifact = Mockery::mock(Artifact::class);
-
-        self::assertNull($this->field->getFieldDataFromRESTValue($steps, $artifact));
-        self::assertNull($this->field->getFieldDataFromRESTValueByField($steps, $artifact));
+        $this->field->getFieldDataFromRESTValue(['value' => 'foo']);
     }
 }
