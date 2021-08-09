@@ -276,13 +276,21 @@ eslint-fix: ## Execute eslint with --fix to try to fix problems automatically. U
 bash-web: ## Give a bash on web container
 	@docker exec -e COLUMNS="`tput cols`" -e LINES="`tput lines`" -ti `docker-compose ps -q web` bash
 
+.PHONY:pull-docker-images
 pull-docker-images: ## Pull all docker images used for development
-	$(DOCKER) pull ghcr.io/enalean/tuleap-test-phpunit:c7-php74
-	$(DOCKER) pull ghcr.io/enalean/tuleap-test-phpunit:c7-php80
-	$(DOCKER) pull ghcr.io/enalean/tuleap-test-rest:c7-php80
-	$(DOCKER) pull ghcr.io/enalean/rnc2rng:latest
-	$(DOCKER) pull tuleap/tuleap-community-edition:latest
+	@$(MAKE) --no-print-directory docker-pull-verify IMAGE_NAME=ghcr.io/enalean/tuleap-test-phpunit:c7-php74 KEY_PATH=tools/utils/signing-keys/tuleap-additional-tools.pub
+	@$(MAKE) --no-print-directory docker-pull-verify IMAGE_NAME=ghcr.io/enalean/tuleap-test-phpunit:c7-php80 KEY_PATH=tools/utils/signing-keys/tuleap-additional-tools.pub
+	@$(MAKE) --no-print-directory docker-pull-verify IMAGE_NAME=ghcr.io/enalean/tuleap-test-rest:c7-php80 KEY_PATH=tools/utils/signing-keys/tuleap-additional-tools.pub
+	@$(MAKE) --no-print-directory docker-pull-verify IMAGE_NAME=ghcr.io/enalean/rnc2rng:latest KEY_PATH=tools/utils/signing-keys/tuleap-additional-tools.pub
+	@$(MAKE) --no-print-directory docker-pull-verify IMAGE_NAME=tuleap/tuleap-community-edition:latest KEY_PATH=tools/utils/signing-keys/tuleap-community.pub
 	$(DOCKER_COMPOSE) pull web db redis mailhog ldap
+	cosign verify -key=tools/utils/signing-keys/tuleap-additional-tools.pub ghcr.io/enalean/tuleap-aio-dev:c7-php80-nginx
+	cosign verify -key=tools/utils/signing-keys/tuleap-additional-tools.pub ghcr.io/enalean/ldap:latest
+
+.PHONY:docker-pull-verify
+docker-pull-verify:
+	$(DOCKER) pull $(IMAGE_NAME)
+	cosign verify -key $(KEY_PATH) $(IMAGE_NAME)
 
 #
 # Dev setup

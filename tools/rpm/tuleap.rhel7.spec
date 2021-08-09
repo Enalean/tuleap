@@ -630,6 +630,7 @@ done
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/tools/utils/githooks
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/tools/utils/jetbrains
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/tools/utils/nix
+%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/tools/utils/signing-keys
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/tools/utils/version_numbers
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/tools/utils/autoload.sh
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/tools/utils/generate-mo.sh
