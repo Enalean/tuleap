@@ -76,7 +76,7 @@ class BoardPresenterBuilder
         $backlog_items_have_children = false;
         foreach ($backlog_content_rows as $row) {
             $artifact = $this->artifact_factory->getInstanceFromRow($row);
-            if (count($artifact->getChildrenForUser($user)) > 0) {
+            if (count($artifact->getChildrenForUserInSameProject($user)) > 0) {
                 $backlog_items_have_children = true;
                 break;
             }
