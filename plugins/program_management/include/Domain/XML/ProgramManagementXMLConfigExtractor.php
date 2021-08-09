@@ -25,6 +25,7 @@ namespace Tuleap\ProgramManagement\Domain\XML;
 use SimpleXMLElement;
 use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramForAdministrationIdentifier;
 use Tuleap\ProgramManagement\Domain\Workspace\RetrieveUGroups;
+use Tuleap\ProgramManagement\Domain\Workspace\UserGroup;
 use Tuleap\ProgramManagement\Domain\XML\Exceptions\CannotFindPlannableTrackerInMappingException;
 use Tuleap\ProgramManagement\Domain\XML\Exceptions\CannotFindSourceTrackerUsingXmlReference;
 use Tuleap\ProgramManagement\Domain\XML\Exceptions\CannotFindUserGroupInProjectException;
@@ -86,13 +87,13 @@ final class ProgramManagementXMLConfigExtractor implements ExtractXMLConfig
 
         foreach ($xml_config->increments->can_prioritize->children() as $ugroup) {
             $ugroup_name    = $this->getTargetAttributeValueInXMLNode($ugroup, "ugroup_name");
-            $project_ugroup = $this->ugroup_retriever->getUGroupByNameInProgram($program_identifier, $ugroup_name);
+            $project_ugroup = UserGroup::fromName($this->ugroup_retriever, $program_identifier, $ugroup_name);
 
             if (! $project_ugroup) {
                 throw new CannotFindUserGroupInProjectException($ugroup_name);
             }
 
-            $ugroups_that_can_prioritize[] = implode('_', [$program_identifier->id, $project_ugroup->getId()]);
+            $ugroups_that_can_prioritize[] = implode('_', [$program_identifier->id, $project_ugroup->id]);
         }
 
         return $ugroups_that_can_prioritize;

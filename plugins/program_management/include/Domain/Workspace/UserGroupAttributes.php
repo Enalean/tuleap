@@ -23,14 +23,11 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Workspace;
 
-use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramForAdministrationIdentifier;
-
-interface RetrieveUGroups
+interface UserGroupAttributes
 {
-    /**
-     * @return UserGroupAttributes[]
-     */
-    public function getUgroupsFromProgram(ProgramForAdministrationIdentifier $program_identifier): array;
+    public function getId(): int;
 
-    public function getUGroupByNameInProgram(ProgramForAdministrationIdentifier $program_identifier, string $ugroup_name): ?UserGroupAttributes;
+    public function isCreatedByUser(): bool;
+
+    public function getTranslatedName(): string;
 }

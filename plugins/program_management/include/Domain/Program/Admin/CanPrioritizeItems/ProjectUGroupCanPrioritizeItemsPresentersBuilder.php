@@ -27,6 +27,7 @@ use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramForAdministrationIdenti
 use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramSelectOptionConfigurationPresenter;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Content\RetrieveProjectUgroupsCanPrioritizeItems;
 use Tuleap\ProgramManagement\Domain\Workspace\RetrieveUGroups;
+use Tuleap\ProgramManagement\Domain\Workspace\UserGroup;
 
 final class ProjectUGroupCanPrioritizeItemsPresentersBuilder implements BuildProjectUGroupCanPrioritizeItemsPresenters
 {
@@ -49,21 +50,21 @@ final class ProjectUGroupCanPrioritizeItemsPresentersBuilder implements BuildPro
      */
     public function buildProjectUgroupCanPrioritizeItemsPresenters(ProgramForAdministrationIdentifier $program): array
     {
-        $ugroups                 = $this->retrieve_u_groups->getUgroupsFromProgram($program);
+        $ugroups                 = UserGroup::buildCollectionFromProgram($this->retrieve_u_groups, $program);
         $can_prioritize_features = $this->can_prioritize_items_retriever->searchUserGroupIDsWhoCanPrioritizeFeaturesByProjectID(
             $program->id
         );
         $presenters              = [];
 
         foreach ($ugroups as $ugroup) {
-            $id = $ugroup->getId();
-            if (! $ugroup->isStatic()) {
-                $id = $this->ugroup_representation_builder->getUGroupRepresentation($program->id, $ugroup->getId());
+            $id = $ugroup->id;
+            if (! $ugroup->is_created_by_user) {
+                $id = $this->ugroup_representation_builder->getUGroupRepresentation($program->id, $ugroup->id);
             }
             $presenters[] = new ProgramSelectOptionConfigurationPresenter(
                 $id,
-                $ugroup->getTranslatedName(),
-                in_array($ugroup->getId(), $can_prioritize_features)
+                $ugroup->translated_name,
+                in_array($ugroup->id, $can_prioritize_features)
             );
         }
 
