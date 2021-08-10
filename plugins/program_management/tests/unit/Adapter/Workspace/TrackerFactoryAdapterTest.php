@@ -24,8 +24,8 @@ namespace Tuleap\ProgramManagement\Adapter\Workspace;
 
 use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramForAdministrationIdentifier;
 use Tuleap\ProgramManagement\Domain\ProgramTracker;
-use Tuleap\ProgramManagement\Stub\VerifyIsTeamStub;
-use Tuleap\ProgramManagement\Stub\VerifyProjectPermissionStub;
+use Tuleap\ProgramManagement\Tests\Stub\VerifyIsTeamStub;
+use Tuleap\ProgramManagement\Tests\Stub\VerifyProjectPermissionStub;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 

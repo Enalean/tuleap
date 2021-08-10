@@ -30,13 +30,13 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracker\Veri
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\ProgramTracker;
 use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\RetrievePlanningMilestoneTracker;
-use Tuleap\ProgramManagement\Stub\BuildProgramStub;
-use Tuleap\ProgramManagement\Stub\BuildProjectStub;
-use Tuleap\ProgramManagement\Stub\UserIdentifierStub;
-use Tuleap\ProgramManagement\Stub\SearchTeamsOfProgramStub;
-use Tuleap\ProgramManagement\Stub\RetrievePlanningMilestoneTrackerStub;
-use Tuleap\ProgramManagement\Stub\RetrieveVisibleProgramIncrementTrackerStub;
-use Tuleap\ProgramManagement\Stub\VerifyIsProgramIncrementTrackerStub;
+use Tuleap\ProgramManagement\Tests\Stub\BuildProgramStub;
+use Tuleap\ProgramManagement\Tests\Stub\BuildProjectStub;
+use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
+use Tuleap\ProgramManagement\Tests\Stub\SearchTeamsOfProgramStub;
+use Tuleap\ProgramManagement\Tests\Stub\RetrievePlanningMilestoneTrackerStub;
+use Tuleap\ProgramManagement\Tests\Stub\RetrieveVisibleProgramIncrementTrackerStub;
+use Tuleap\ProgramManagement\Tests\Stub\VerifyIsProgramIncrementTrackerStub;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 

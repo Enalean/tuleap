@@ -39,9 +39,9 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\CheckProgra
 use Tuleap\ProgramManagement\Domain\Program\Plan\PrioritizeFeaturesPermissionVerifier;
 use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\MirroredTimebox;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
-use Tuleap\ProgramManagement\Stub\UserIdentifierStub;
-use Tuleap\ProgramManagement\Stub\RetrieveUnlinkedUserStoriesOfMirroredProgramIncrementStub;
-use Tuleap\ProgramManagement\Stub\RetrieveUserStub;
+use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
+use Tuleap\ProgramManagement\Tests\Stub\RetrieveUnlinkedUserStoriesOfMirroredProgramIncrementStub;
+use Tuleap\ProgramManagement\Tests\Stub\RetrieveUserStub;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 use Tuleap\Tracker\Artifact\Artifact;

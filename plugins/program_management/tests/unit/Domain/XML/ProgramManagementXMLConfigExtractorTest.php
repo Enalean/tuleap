@@ -26,9 +26,9 @@ use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramForAdministrationIdenti
 use Tuleap\ProgramManagement\Domain\XML\Exceptions\CannotFindPlannableTrackerInMappingException;
 use Tuleap\ProgramManagement\Domain\XML\Exceptions\CannotFindSourceTrackerUsingXmlReference;
 use Tuleap\ProgramManagement\Domain\XML\Exceptions\CannotFindUserGroupInProjectException;
-use Tuleap\ProgramManagement\Stub\RetrieveUGroupsStub;
-use Tuleap\ProgramManagement\Stub\VerifyIsTeamStub;
-use Tuleap\ProgramManagement\Stub\VerifyProjectPermissionStub;
+use Tuleap\ProgramManagement\Tests\Stub\RetrieveUGroupsStub;
+use Tuleap\ProgramManagement\Tests\Stub\VerifyIsTeamStub;
+use Tuleap\ProgramManagement\Tests\Stub\VerifyProjectPermissionStub;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;

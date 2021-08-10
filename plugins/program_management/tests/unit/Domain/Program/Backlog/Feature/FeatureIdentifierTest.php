@@ -23,9 +23,9 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\Feature;
 
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
-use Tuleap\ProgramManagement\Stub\BuildProgramStub;
-use Tuleap\ProgramManagement\Stub\UserIdentifierStub;
-use Tuleap\ProgramManagement\Stub\VerifyIsVisibleFeatureStub;
+use Tuleap\ProgramManagement\Tests\Stub\BuildProgramStub;
+use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
+use Tuleap\ProgramManagement\Tests\Stub\VerifyIsVisibleFeatureStub;
 
 final class FeatureIdentifierTest extends \Tuleap\Test\PHPUnit\TestCase
 {

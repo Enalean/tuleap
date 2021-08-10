@@ -25,11 +25,11 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Feature\Links;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
-use Tuleap\ProgramManagement\Stub\BuildPlanningStub;
-use Tuleap\ProgramManagement\Stub\BuildProgramStub;
-use Tuleap\ProgramManagement\Stub\UserIdentifierStub;
-use Tuleap\ProgramManagement\Stub\RetrieveUserStub;
-use Tuleap\ProgramManagement\Stub\VerifyIsVisibleFeatureStub;
+use Tuleap\ProgramManagement\Tests\Stub\BuildPlanningStub;
+use Tuleap\ProgramManagement\Tests\Stub\BuildProgramStub;
+use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
+use Tuleap\ProgramManagement\Tests\Stub\RetrieveUserStub;
+use Tuleap\ProgramManagement\Tests\Stub\VerifyIsVisibleFeatureStub;
 use Tuleap\Test\Builders\UserTestBuilder;
 
 final class UserStoryLinkedToFeatureCheckerTest extends \Tuleap\Test\PHPUnit\TestCase

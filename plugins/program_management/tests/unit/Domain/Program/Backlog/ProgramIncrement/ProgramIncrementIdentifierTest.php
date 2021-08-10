@@ -24,8 +24,8 @@ namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement;
 
 use Tuleap\ProgramManagement\Adapter\Events\ArtifactUpdatedProxy;
 use Tuleap\ProgramManagement\Domain\Events\ArtifactUpdatedEvent;
-use Tuleap\ProgramManagement\Stub\CheckProgramIncrementStub;
-use Tuleap\ProgramManagement\Stub\VerifyIsProgramIncrementTrackerStub;
+use Tuleap\ProgramManagement\Tests\Stub\CheckProgramIncrementStub;
+use Tuleap\ProgramManagement\Tests\Stub\VerifyIsProgramIncrementTrackerStub;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Artifact\Event\ArtifactUpdated;

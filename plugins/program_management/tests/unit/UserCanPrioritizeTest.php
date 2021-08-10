@@ -25,10 +25,10 @@ namespace Tuleap\ProgramManagement\Domain;
 
 use Tuleap\ProgramManagement\Domain\Program\Backlog\NotAllowedToPrioritizeException;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
-use Tuleap\ProgramManagement\Stub\BuildProgramStub;
-use Tuleap\ProgramManagement\Stub\UserIdentifierStub;
-use Tuleap\ProgramManagement\Stub\UserPermissionsStub;
-use Tuleap\ProgramManagement\Stub\VerifyPrioritizeFeaturesPermissionStub;
+use Tuleap\ProgramManagement\Tests\Stub\BuildProgramStub;
+use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
+use Tuleap\ProgramManagement\Tests\Stub\UserPermissionsStub;
+use Tuleap\ProgramManagement\Tests\Stub\VerifyPrioritizeFeaturesPermissionStub;
 use Tuleap\Test\PHPUnit\TestCase;
 
 final class UserCanPrioritizeTest extends TestCase

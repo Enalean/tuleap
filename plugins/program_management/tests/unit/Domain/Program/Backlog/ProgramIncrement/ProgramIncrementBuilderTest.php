@@ -25,7 +25,7 @@ namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement;
 use Tuleap\ProgramManagement\Adapter\Workspace\UserProxy;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
-use Tuleap\ProgramManagement\Stub\BuildProgramStub;
+use Tuleap\ProgramManagement\Tests\Stub\BuildProgramStub;
 use Tuleap\Test\Builders\UserTestBuilder;
 
 final class ProgramIncrementBuilderTest extends \Tuleap\Test\PHPUnit\TestCase

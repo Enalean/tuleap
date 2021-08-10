@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Workspace;
 
-use Tuleap\ProgramManagement\Stub\VerifyIsUserStub;
+use Tuleap\ProgramManagement\Tests\Stub\VerifyIsUserStub;
 
 final class StoredUserTest extends \Tuleap\Test\PHPUnit\TestCase
 {

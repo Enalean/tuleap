@@ -21,7 +21,7 @@
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracker;
 
 use Tuleap\ProgramManagement\Domain\ProgramTracker;
-use Tuleap\ProgramManagement\Stub\RetrieveProgramIncrementLabelsStub;
+use Tuleap\ProgramManagement\Tests\Stub\RetrieveProgramIncrementLabelsStub;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 

@@ -30,9 +30,9 @@ use Tuleap\ProgramManagement\Domain\Program\VerifyIsProgram;
 use Tuleap\ProgramManagement\Domain\Team\ProjectIsAProgramException;
 use Tuleap\ProgramManagement\Domain\Team\TeamAccessException;
 use Tuleap\ProgramManagement\Domain\Team\TeamMustHaveExplicitBacklogEnabledException;
-use Tuleap\ProgramManagement\Stub\VerifyIsProgramStub;
-use Tuleap\ProgramManagement\Stub\VerifyIsTeamStub;
-use Tuleap\ProgramManagement\Stub\VerifyProjectPermissionStub;
+use Tuleap\ProgramManagement\Tests\Stub\VerifyIsProgramStub;
+use Tuleap\ProgramManagement\Tests\Stub\VerifyIsTeamStub;
+use Tuleap\ProgramManagement\Tests\Stub\VerifyProjectPermissionStub;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 
 final class TeamAdapterTest extends \Tuleap\Test\PHPUnit\TestCase

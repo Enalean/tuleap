@@ -23,8 +23,8 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Domain\Workspace;
 
 use Tuleap\ProgramManagement\Domain\Team\SearchProgramsOfTeam;
-use Tuleap\ProgramManagement\Stub\RetrieveProjectStub;
-use Tuleap\ProgramManagement\Stub\SearchProgramsOfTeamStub;
+use Tuleap\ProgramManagement\Tests\Stub\RetrieveProjectStub;
+use Tuleap\ProgramManagement\Tests\Stub\SearchProgramsOfTeamStub;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 

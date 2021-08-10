@@ -22,11 +22,11 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Plan;
 
-use Tuleap\ProgramManagement\Stub\RetrieveTrackerStub;
-use Tuleap\ProgramManagement\Stub\RetrieveProgramUserGroupStub;
-use Tuleap\ProgramManagement\Stub\RetrieveProjectStub;
-use Tuleap\ProgramManagement\Stub\VerifyIsTeamStub;
-use Tuleap\ProgramManagement\Stub\VerifyProjectPermissionStub;
+use Tuleap\ProgramManagement\Tests\Stub\RetrieveTrackerStub;
+use Tuleap\ProgramManagement\Tests\Stub\RetrieveProgramUserGroupStub;
+use Tuleap\ProgramManagement\Tests\Stub\RetrieveProjectStub;
+use Tuleap\ProgramManagement\Tests\Stub\VerifyIsTeamStub;
+use Tuleap\ProgramManagement\Tests\Stub\VerifyProjectPermissionStub;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 

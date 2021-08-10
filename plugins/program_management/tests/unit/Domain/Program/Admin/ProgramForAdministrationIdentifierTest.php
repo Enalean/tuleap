@@ -25,8 +25,8 @@ namespace unit\Domain\Program\Admin;
 use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramCannotBeATeamException;
 use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramForAdministrationIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Plan\ProgramAccessException;
-use Tuleap\ProgramManagement\Stub\VerifyIsTeamStub;
-use Tuleap\ProgramManagement\Stub\VerifyProjectPermissionStub;
+use Tuleap\ProgramManagement\Tests\Stub\VerifyIsTeamStub;
+use Tuleap\ProgramManagement\Tests\Stub\VerifyProjectPermissionStub;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 

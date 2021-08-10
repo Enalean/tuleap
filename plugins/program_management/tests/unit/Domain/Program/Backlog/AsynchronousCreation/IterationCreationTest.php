@@ -25,15 +25,15 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration\IterationIdentifie
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration\JustLinkedIterationCollection;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementIdentifier;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
-use Tuleap\ProgramManagement\Stub\CheckProgramIncrementStub;
-use Tuleap\ProgramManagement\Stub\RetrieveLastChangesetStub;
-use Tuleap\ProgramManagement\Stub\RetrieveUserStub;
-use Tuleap\ProgramManagement\Stub\SearchIterationsStub;
-use Tuleap\ProgramManagement\Stub\SearchPendingIterationStub;
-use Tuleap\ProgramManagement\Stub\UserIdentifierStub;
-use Tuleap\ProgramManagement\Stub\VerifyIsUserStub;
-use Tuleap\ProgramManagement\Stub\VerifyIsVisibleArtifactStub;
-use Tuleap\ProgramManagement\Stub\VerifyIterationHasBeenLinkedBeforeStub;
+use Tuleap\ProgramManagement\Tests\Stub\CheckProgramIncrementStub;
+use Tuleap\ProgramManagement\Tests\Stub\RetrieveLastChangesetStub;
+use Tuleap\ProgramManagement\Tests\Stub\RetrieveUserStub;
+use Tuleap\ProgramManagement\Tests\Stub\SearchIterationsStub;
+use Tuleap\ProgramManagement\Tests\Stub\SearchPendingIterationStub;
+use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
+use Tuleap\ProgramManagement\Tests\Stub\VerifyIsUserStub;
+use Tuleap\ProgramManagement\Tests\Stub\VerifyIsVisibleArtifactStub;
+use Tuleap\ProgramManagement\Tests\Stub\VerifyIterationHasBeenLinkedBeforeStub;
 use Tuleap\Test\Builders\UserTestBuilder;
 
 final class IterationCreationTest extends \Tuleap\Test\PHPUnit\TestCase

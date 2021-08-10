@@ -21,7 +21,7 @@
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation;
 
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration\IterationIdentifier;
-use Tuleap\ProgramManagement\Stub\RetrieveLastChangesetStub;
+use Tuleap\ProgramManagement\Tests\Stub\RetrieveLastChangesetStub;
 
 final class ChangesetIdentifierTest extends \Tuleap\Test\PHPUnit\TestCase
 {

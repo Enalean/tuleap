@@ -27,13 +27,13 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncr
 use Tuleap\ProgramManagement\Domain\Program\Plan\FeatureCannotBePlannedInProgramIncrementException;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\UserCanPrioritize;
-use Tuleap\ProgramManagement\Stub\BuildProgramStub;
-use Tuleap\ProgramManagement\Stub\CheckProgramIncrementStub;
-use Tuleap\ProgramManagement\Stub\UserIdentifierStub;
-use Tuleap\ProgramManagement\Stub\UserPermissionsStub;
-use Tuleap\ProgramManagement\Stub\VerifyCanBePlannedInProgramIncrementStub;
-use Tuleap\ProgramManagement\Stub\VerifyIsVisibleFeatureStub;
-use Tuleap\ProgramManagement\Stub\VerifyPrioritizeFeaturesPermissionStub;
+use Tuleap\ProgramManagement\Tests\Stub\BuildProgramStub;
+use Tuleap\ProgramManagement\Tests\Stub\CheckProgramIncrementStub;
+use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
+use Tuleap\ProgramManagement\Tests\Stub\UserPermissionsStub;
+use Tuleap\ProgramManagement\Tests\Stub\VerifyCanBePlannedInProgramIncrementStub;
+use Tuleap\ProgramManagement\Tests\Stub\VerifyIsVisibleFeatureStub;
+use Tuleap\ProgramManagement\Tests\Stub\VerifyPrioritizeFeaturesPermissionStub;
 use Tuleap\Test\Builders\UserTestBuilder;
 
 final class FeatureAdditionTest extends \Tuleap\Test\PHPUnit\TestCase
