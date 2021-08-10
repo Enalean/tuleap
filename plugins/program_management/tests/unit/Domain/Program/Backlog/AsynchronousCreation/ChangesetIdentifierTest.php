@@ -23,6 +23,7 @@ namespace Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration\IterationIdentifier;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveLastChangesetStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
+use Tuleap\ProgramManagement\Tests\Stub\VerifyIsChangesetStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsIterationStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsVisibleArtifactStub;
 
@@ -42,8 +43,13 @@ final class ChangesetIdentifierTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItBuildsFromId(): void
     {
-        $changeset = ChangesetIdentifier::fromId(7715);
+        $changeset = ChangesetIdentifier::fromId(VerifyIsChangesetStub::withValidChangeset(), 7715);
         self::assertSame(7715, $changeset->id);
+    }
+
+    public function testItReturnsNullWhenIdIsNotAChangeset(): void
+    {
+        self::assertNull(ChangesetIdentifier::fromId(VerifyIsChangesetStub::withNotValidChangeset(), -1));
     }
 
     public function testItBuildsFromIterationLastChangeset(): void

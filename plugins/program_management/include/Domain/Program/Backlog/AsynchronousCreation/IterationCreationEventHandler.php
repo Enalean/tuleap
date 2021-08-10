@@ -39,6 +39,7 @@ final class IterationCreationEventHandler implements ProcessIterationCreation
     private VerifyIsVisibleArtifact $visibility_verifier;
     private RetrieveUser $user_retriever;
     private CheckProgramIncrement $program_increment_checker;
+    private VerifyIsChangeset $changeset_verifier;
     private DeletePendingIterations $iteration_deleter;
 
     public function __construct(
@@ -49,6 +50,7 @@ final class IterationCreationEventHandler implements ProcessIterationCreation
         VerifyIsVisibleArtifact $visibility_verifier,
         RetrieveUser $user_retriever,
         CheckProgramIncrement $program_increment_checker,
+        VerifyIsChangeset $changeset_verifier,
         DeletePendingIterations $iteration_deleter
     ) {
         $this->logger                    = $logger;
@@ -58,6 +60,7 @@ final class IterationCreationEventHandler implements ProcessIterationCreation
         $this->visibility_verifier       = $visibility_verifier;
         $this->user_retriever            = $user_retriever;
         $this->program_increment_checker = $program_increment_checker;
+        $this->changeset_verifier        = $changeset_verifier;
         $this->iteration_deleter         = $iteration_deleter;
     }
 
@@ -74,6 +77,7 @@ final class IterationCreationEventHandler implements ProcessIterationCreation
                 $this->visibility_verifier,
                 $this->user_retriever,
                 $this->program_increment_checker,
+                $this->changeset_verifier,
                 $event->getArtifactId(),
                 $event->getUserId()
             );

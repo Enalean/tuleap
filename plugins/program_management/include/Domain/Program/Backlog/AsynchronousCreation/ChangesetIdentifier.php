@@ -37,8 +37,11 @@ final class ChangesetIdentifier
         $this->id = $id;
     }
 
-    public static function fromId(int $changeset_id): self
+    public static function fromId(VerifyIsChangeset $changeset_verifier, int $changeset_id): ?self
     {
+        if (! $changeset_verifier->isChangeset($changeset_id)) {
+            return null;
+        }
         return new self($changeset_id);
     }
 

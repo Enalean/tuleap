@@ -28,6 +28,7 @@ use Tuleap\ProgramManagement\Domain\Events\IterationCreationEvent;
 use Tuleap\ProgramManagement\Tests\Stub\CheckProgramIncrementStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveUserStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchPendingIterationStub;
+use Tuleap\ProgramManagement\Tests\Stub\VerifyIsChangesetStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsIterationStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsUserStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsVisibleArtifactStub;
@@ -40,9 +41,9 @@ final class IterationCreationEventHandlerTest extends \Tuleap\Test\PHPUnit\TestC
     private const USER_ID      = 108;
     private TestLogger $logger;
     private SearchPendingIterationStub $iteration_searcher;
-    private VerifyIsIterationStub $iteration_verifier;
     private CheckProgramIncrementStub $program_increment_checker;
     private RetrieveUserStub $user_retriever;
+    private VerifyIsIterationStub $iteration_verifier;
     /**
      * @var mixed|\PHPUnit\Framework\MockObject\MockObject|DeletePendingIterations
      */
@@ -57,10 +58,10 @@ final class IterationCreationEventHandlerTest extends \Tuleap\Test\PHPUnit\TestC
             self::USER_ID,
             5457
         );
+        $this->iteration_verifier        = VerifyIsIterationStub::withValidIteration();
         $this->user_retriever            = RetrieveUserStub::withUser(
             UserTestBuilder::aUser()->withId(self::USER_ID)->build()
         );
-        $this->iteration_verifier        = VerifyIsIterationStub::withValidIteration();
         $this->program_increment_checker = CheckProgramIncrementStub::buildProgramIncrementChecker();
         $this->iteration_deleter         = $this->createMock(DeletePendingIterations::class);
     }
@@ -75,6 +76,7 @@ final class IterationCreationEventHandlerTest extends \Tuleap\Test\PHPUnit\TestC
             VerifyIsVisibleArtifactStub::withAlwaysVisibleArtifacts(),
             $this->user_retriever,
             $this->program_increment_checker,
+            VerifyIsChangesetStub::withValidChangeset(),
             $this->iteration_deleter
         );
     }

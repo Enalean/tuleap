@@ -99,6 +99,7 @@ final class IterationCreation
         VerifyIsVisibleArtifact $visibility_verifier,
         RetrieveUser $user_retriever,
         CheckProgramIncrement $program_increment_checker,
+        VerifyIsChangeset $changeset_verifier,
         int $iteration_id,
         int $user_id
     ): ?self {
@@ -131,7 +132,10 @@ final class IterationCreation
         } catch (ProgramIncrementNotFoundException $e) {
             throw new StoredProgramIncrementNoLongerValidException($program_increment_id);
         }
-        $changeset = ChangesetIdentifier::fromId($stored_creation['iteration_changeset_id']);
+        $changeset = ChangesetIdentifier::fromId($changeset_verifier, $stored_creation['iteration_changeset_id']);
+        if (! $changeset) {
+            return null;
+        }
         return new self($iteration, $program_increment, $user_identifier, $changeset);
     }
 }
