@@ -52,6 +52,7 @@ import { getAnchorToArtifactContent } from "./sections-anchor";
 import type { GetText } from "../../../../../../../src/scripts/tuleap/gettext/gettext-init";
 import { sprintf } from "sprintf-js";
 import { triggerBlobDownload } from "../trigger-blob-download";
+import type { ClassicReportCriterionValue } from "../../type";
 
 const MAIN_TITLES_NUMBERING_ID = "main-titles";
 const HEADER_STYLE_ARTIFACT_TITLE = "ArtifactTitle";
@@ -123,6 +124,33 @@ export async function downloadDocx(
             ],
         }),
     ];
+
+    const report_criteria_data = [];
+    report_criteria_data.push(
+        new Paragraph({
+            text: gettext_provider.gettext("Tracker Report"),
+            heading: HEADER_LEVEL_SECTION,
+            numbering: {
+                reference: MAIN_TITLES_NUMBERING_ID,
+                level: 0,
+            },
+        })
+    );
+
+    const report_criteria = global_export_properties.report_criteria;
+    let report_criteria_content;
+    if (report_criteria.is_in_expert_mode) {
+        report_criteria_content = new Paragraph(
+            gettext_provider.gettext("TQL query: ") + report_criteria.query
+        );
+    } else {
+        report_criteria_content = buildReportCriteriaDisplayZone(
+            report_criteria.criteria,
+            gettext_provider
+        );
+    }
+
+    report_criteria_data.push(report_criteria_content);
 
     const file = new File({
         creator: global_export_properties.user_display_name,
@@ -204,6 +232,8 @@ export async function downloadDocx(
                         datetime_locale_information
                     ),
                     ...table_of_contents,
+                    new Paragraph({ children: [new PageBreak()] }),
+                    ...report_criteria_data,
                     new Paragraph({ children: [new PageBreak()] }),
                     new Paragraph({
                         text: gettext_provider.gettext("Artifacts"),
@@ -308,6 +338,34 @@ function buildContainersDisplayZone(
     });
 }
 
+function buildReportCriteriaDisplayZone(
+    criterion_values: ReadonlyArray<ClassicReportCriterionValue>,
+    gettext_provider: GetText
+): Table {
+    const fields_rows = [
+        new TableRow({
+            children: [
+                buildTableCellHeader(gettext_provider.gettext("Search criteria")),
+                buildTableCellHeader(gettext_provider.gettext("Value")),
+            ],
+            tableHeader: true,
+        }),
+    ];
+
+    for (const criterion_value of criterion_values) {
+        const table_row = new TableRow({
+            children: [
+                buildTableCellContent(criterion_value.criterion_name),
+                buildTableCellContent(criterion_value.criterion_value),
+            ],
+        });
+
+        fields_rows.push(table_row);
+    }
+
+    return buildTable(fields_rows);
+}
+
 function buildFieldValuesDisplayZone(
     artifact_values: ReadonlyArray<ArtifactFieldValue>,
     gettext_provider: GetText
@@ -333,6 +391,10 @@ function buildFieldValuesDisplayZone(
         fields_rows.push(table_row);
     }
 
+    return buildTable(fields_rows);
+}
+
+function buildTable(fields_rows: TableRow[]): Table {
     return new Table({
         rows: fields_rows,
         alignment: AlignmentType.CENTER,

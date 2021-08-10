@@ -17,8 +17,17 @@ msgstr "Exporté par : %s"
 msgid "Field name"
 msgstr "Nom du champ"
 
+msgid "Search criteria"
+msgstr "Critère de recherche"
+
+msgid "TQL query: "
+msgstr "Requête TQL : "
+
 msgid "Table of contents"
 msgstr "Table des matières"
+
+msgid "Tracker Report"
+msgstr "Rapport de l'outil de suivi"
 
 msgid "Tracker report URL: %s"
 msgstr "URL du rapport de l'outil de suivi : %s"

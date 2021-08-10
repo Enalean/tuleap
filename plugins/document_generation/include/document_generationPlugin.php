@@ -20,6 +20,7 @@
 
 declare(strict_types=1);
 
+use Tuleap\DocumentGeneration\Report\ReportCriteriaJsonBuilder;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Layout\JavascriptAsset;
 use Tuleap\Tracker\Report\Renderer\Table\GetExportOptionsMenuItemsEvent;
@@ -78,6 +79,8 @@ class document_generationPlugin extends Plugin
 
         $renderer = TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../templates');
 
+        $report_criteria_json = (new ReportCriteriaJsonBuilder())->buildReportCriteriaJson($report);
+
         $event->addExportItem(
             $renderer->renderToString(
                 'tracker-report-action',
@@ -94,7 +97,8 @@ class document_generationPlugin extends Plugin
                             "tracker_name" => $tracker->getName(),
                             "user_display_name" => UserHelper::instance()->getDisplayNameFromUser($current_user),
                             "user_timezone" => \Tuleap\TimezoneRetriever::getUserTimezone($current_user),
-                            "report_url" => HTTPRequest::instance()->getServerUrl() . '/plugins/tracker/?report=' . urlencode((string) $report_id)
+                            "report_url" => HTTPRequest::instance()->getServerUrl() . '/plugins/tracker/?report=' . urlencode((string) $report_id),
+                            "report_criteria" => $report_criteria_json
                         ],
                         JSON_THROW_ON_ERROR
                     )

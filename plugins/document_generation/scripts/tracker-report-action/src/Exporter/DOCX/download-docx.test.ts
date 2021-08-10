@@ -80,6 +80,10 @@ describe("download-docx", () => {
                 user_display_name: "Realname (shortname)",
                 user_timezone: "UTC",
                 report_url: "https://example.com/plugins/tracker",
+                report_criteria: {
+                    is_in_expert_mode: true,
+                    query: "field01 = value01",
+                },
             },
             {
                 locale: "en-US",

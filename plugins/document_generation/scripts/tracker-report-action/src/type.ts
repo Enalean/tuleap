@@ -29,6 +29,24 @@ export interface GlobalExportProperties {
     readonly user_display_name: string;
     readonly user_timezone: string;
     readonly report_url: string;
+    readonly report_criteria: ReportCriteria;
+}
+
+export type ReportCriteria = ExportReportCriteria | ClassicReportCriteria;
+
+interface ExportReportCriteria {
+    readonly is_in_expert_mode: true;
+    readonly query: string;
+}
+
+interface ClassicReportCriteria {
+    readonly is_in_expert_mode: false;
+    readonly criteria: ReadonlyArray<ClassicReportCriterionValue>;
+}
+
+export interface ClassicReportCriterionValue {
+    readonly criterion_name: string;
+    readonly criterion_value: string;
 }
 
 export interface ArtifactFieldValue {
