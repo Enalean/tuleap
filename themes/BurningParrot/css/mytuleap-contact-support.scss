@@ -18,7 +18,7 @@
  */
 
 .contact-support-modal > .tlp-modal-body {
-    border-radius: 0 0 3px 3px;
+    border-radius: 0 0 var(--tlp-x-large-radius) var(--tlp-x-large-radius);
     background: var(--tlp-background-color);
 }
 
