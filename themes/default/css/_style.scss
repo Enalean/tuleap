@@ -22,13 +22,14 @@
         max-width: 960px;
         margin: 0 0 20px;
         border: 1px solid #dddddd;
-        border-radius: 3px;
+        border-radius: var(--tlp-large-radius);
         background: #ffffff;
     }
 
     .panel-header {
         padding: 10px;
         border-bottom: 2px solid #333333;
+        border-radius: var(--tlp-large-radius) var(--tlp-large-radius) 0 0;
         background: #eeeeee;
     }
 
