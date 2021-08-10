@@ -59,9 +59,9 @@ CREATE TABLE plugin_program_management_program(
 ) ENGINE=InnoDB;
 
 CREATE TABLE plugin_program_management_can_prioritize_features(
-    program_increment_tracker_id INT(11) NOT NULL,
+    project_id INT(11) NOT NULL,
     user_group_id INT(11) NOT NULL,
-    PRIMARY KEY (program_increment_tracker_id, user_group_id)
+    PRIMARY KEY (project_id, user_group_id)
 ) ENGINE=InnoDB;
 
 CREATE TABLE plugin_program_management_explicit_top_backlog(
