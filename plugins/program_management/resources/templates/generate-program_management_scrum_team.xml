@@ -2047,6 +2047,7 @@
         <permission scope="field" REF="F792744" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
         <permission scope="field" REF="F792744" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
         <permission scope="field" REF="F792746" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F792746" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
         <permission scope="field" REF="F792746" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
         <permission scope="field" REF="F792748" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
         <permission scope="field" REF="F792748" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
