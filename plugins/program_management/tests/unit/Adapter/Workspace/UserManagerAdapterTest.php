@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Workspace;
 
-use Tuleap\ProgramManagement\Stub\UserIdentifierStub;
+use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 use Tuleap\Test\Builders\UserTestBuilder;
 
 final class UserManagerAdapterTest extends \Tuleap\Test\PHPUnit\TestCase

@@ -24,7 +24,7 @@ namespace Tuleap\ProgramManagement\Domain\Program\Plan;
 
 use Tuleap\ProgramManagement\Domain\Program\PlanTrackerDoesNotBelongToProjectException;
 use Tuleap\ProgramManagement\Domain\Program\PlanTrackerNotFoundException;
-use Tuleap\ProgramManagement\Stub\RetrieveTrackerStub;
+use Tuleap\ProgramManagement\Tests\Stub\RetrieveTrackerStub;
 use Tuleap\Test\PHPUnit\TestCase;
 
 final class TrackerIsValidCheckerTest extends TestCase

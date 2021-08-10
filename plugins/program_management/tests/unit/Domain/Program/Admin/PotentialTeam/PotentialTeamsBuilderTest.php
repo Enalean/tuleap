@@ -23,11 +23,11 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Domain\Program\Admin\PotentialTeam;
 
 use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramForAdministrationIdentifier;
-use Tuleap\ProgramManagement\Stub\AllProgramSearcherStub;
-use Tuleap\ProgramManagement\Stub\RetrieveProjectStub;
-use Tuleap\ProgramManagement\Stub\SearchTeamsOfProgramStub;
-use Tuleap\ProgramManagement\Stub\VerifyIsTeamStub;
-use Tuleap\ProgramManagement\Stub\VerifyProjectPermissionStub;
+use Tuleap\ProgramManagement\Tests\Stub\AllProgramSearcherStub;
+use Tuleap\ProgramManagement\Tests\Stub\RetrieveProjectStub;
+use Tuleap\ProgramManagement\Tests\Stub\SearchTeamsOfProgramStub;
+use Tuleap\ProgramManagement\Tests\Stub\VerifyIsTeamStub;
+use Tuleap\ProgramManagement\Tests\Stub\VerifyProjectPermissionStub;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 

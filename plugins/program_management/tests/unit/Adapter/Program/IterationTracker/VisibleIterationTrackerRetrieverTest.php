@@ -25,9 +25,9 @@ namespace Tuleap\ProgramManagement\Adapter\Program\IterationTracker;
 use TrackerFactory;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\ProgramTrackerNotFoundException;
-use Tuleap\ProgramManagement\Stub\BuildProgramStub;
-use Tuleap\ProgramManagement\Stub\UserIdentifierStub;
-use Tuleap\ProgramManagement\Stub\RetrieveIterationTrackerStub;
+use Tuleap\ProgramManagement\Tests\Stub\BuildProgramStub;
+use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
+use Tuleap\ProgramManagement\Tests\Stub\RetrieveIterationTrackerStub;
 use Tuleap\Test\Builders\UserTestBuilder;
 
 final class VisibleIterationTrackerRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase

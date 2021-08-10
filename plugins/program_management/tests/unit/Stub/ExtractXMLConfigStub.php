@@ -20,7 +20,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Stub;
+namespace Tuleap\ProgramManagement\Tests\Stub;
 
 use SimpleXMLElement;
 use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramForAdministrationIdentifier;

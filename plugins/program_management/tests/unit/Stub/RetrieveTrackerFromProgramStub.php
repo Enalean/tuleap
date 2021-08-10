@@ -19,8 +19,7 @@
  */
 
 declare(strict_types=1);
-
-namespace Tuleap\ProgramManagement\Stub;
+namespace Tuleap\ProgramManagement\Tests\Stub;
 
 use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramForAdministrationIdentifier;
 use Tuleap\ProgramManagement\Domain\TrackerReference;

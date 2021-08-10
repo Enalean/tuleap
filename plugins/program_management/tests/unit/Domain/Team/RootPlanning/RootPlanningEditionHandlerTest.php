@@ -23,7 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Domain\Team\RootPlanning;
 
 use Tuleap\AgileDashboard\Planning\RootPlanning\RootPlanningEditionEvent;
-use Tuleap\ProgramManagement\Stub\VerifyIsTeamStub;
+use Tuleap\ProgramManagement\Tests\Stub\VerifyIsTeamStub;
 
 final class RootPlanningEditionHandlerTest extends \Tuleap\Test\PHPUnit\TestCase
 {

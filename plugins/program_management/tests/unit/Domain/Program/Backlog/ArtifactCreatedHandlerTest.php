@@ -27,8 +27,8 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\Pending
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\RunProgramIncrementCreation;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\RemovePlannedFeaturesFromTopBacklog;
 use Tuleap\ProgramManagement\Domain\Program\VerifyIsProgram;
-use Tuleap\ProgramManagement\Stub\VerifyIsProgramIncrementTrackerStub;
-use Tuleap\ProgramManagement\Stub\VerifyIsProgramStub;
+use Tuleap\ProgramManagement\Tests\Stub\VerifyIsProgramIncrementTrackerStub;
+use Tuleap\ProgramManagement\Tests\Stub\VerifyIsProgramStub;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Artifact\Artifact;

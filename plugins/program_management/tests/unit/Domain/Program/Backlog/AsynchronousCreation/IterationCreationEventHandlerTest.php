@@ -25,10 +25,10 @@ namespace Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation;
 use Psr\Log\Test\TestLogger;
 use Tuleap\ProgramManagement\Adapter\Events\IterationCreationEventProxy;
 use Tuleap\ProgramManagement\Domain\Events\IterationCreationEvent;
-use Tuleap\ProgramManagement\Stub\CheckProgramIncrementStub;
-use Tuleap\ProgramManagement\Stub\RetrieveUserStub;
-use Tuleap\ProgramManagement\Stub\SearchPendingIterationStub;
-use Tuleap\ProgramManagement\Stub\VerifyIsUserStub;
+use Tuleap\ProgramManagement\Tests\Stub\CheckProgramIncrementStub;
+use Tuleap\ProgramManagement\Tests\Stub\RetrieveUserStub;
+use Tuleap\ProgramManagement\Tests\Stub\SearchPendingIterationStub;
+use Tuleap\ProgramManagement\Tests\Stub\VerifyIsUserStub;
 use Tuleap\Queue\WorkerEvent;
 use Tuleap\Test\Builders\UserTestBuilder;
 

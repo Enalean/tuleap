@@ -24,7 +24,7 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Adapter\Workspace;
 
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
-use Tuleap\ProgramManagement\Stub\BuildProgramStub;
+use Tuleap\ProgramManagement\Tests\Stub\BuildProgramStub;
 use Tuleap\Test\Builders\UserTestBuilder;
 
 final class UserPermissionsProxyTest extends \Tuleap\Test\PHPUnit\TestCase

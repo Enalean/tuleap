@@ -24,7 +24,7 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Domain\Service;
 
 use Tuleap\AgileDashboard\Stub\RetrievePlanningStub;
-use Tuleap\ProgramManagement\Stub\VerifyIsTeamStub;
+use Tuleap\ProgramManagement\Tests\Stub\VerifyIsTeamStub;
 use Tuleap\Project\Event\ProjectServiceBeforeActivation;
 use Tuleap\Test\Builders\UserTestBuilder;
 

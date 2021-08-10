@@ -25,8 +25,8 @@ namespace Tuleap\ProgramManagement\Domain\Workspace;
 use Tuleap\ProgramManagement\Domain\Program\VerifyIsProgram;
 use Tuleap\ProgramManagement\Domain\ProgramManagementProject;
 use Tuleap\ProgramManagement\Domain\Team\VerifyIsTeam;
-use Tuleap\ProgramManagement\Stub\VerifyIsProgramStub;
-use Tuleap\ProgramManagement\Stub\VerifyIsTeamStub;
+use Tuleap\ProgramManagement\Tests\Stub\VerifyIsProgramStub;
+use Tuleap\ProgramManagement\Tests\Stub\VerifyIsTeamStub;
 
 final class ComponentInvolvedVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
 {

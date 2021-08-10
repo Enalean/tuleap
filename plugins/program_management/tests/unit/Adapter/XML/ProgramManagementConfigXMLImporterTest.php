@@ -24,11 +24,11 @@ namespace Tuleap\ProgramManagement\Adapter\XML;
 
 use Psr\Log\Test\TestLogger;
 use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramForAdministrationIdentifier;
-use Tuleap\ProgramManagement\Stub\CreatePlanStub;
-use Tuleap\ProgramManagement\Stub\ExtractXMLConfigStub;
-use Tuleap\ProgramManagement\Stub\ParseXMLConfigStub;
-use Tuleap\ProgramManagement\Stub\VerifyIsTeamStub;
-use Tuleap\ProgramManagement\Stub\VerifyProjectPermissionStub;
+use Tuleap\ProgramManagement\Tests\Stub\CreatePlanStub;
+use Tuleap\ProgramManagement\Tests\Stub\ExtractXMLConfigStub;
+use Tuleap\ProgramManagement\Tests\Stub\ParseXMLConfigStub;
+use Tuleap\ProgramManagement\Tests\Stub\VerifyIsTeamStub;
+use Tuleap\ProgramManagement\Tests\Stub\VerifyProjectPermissionStub;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
