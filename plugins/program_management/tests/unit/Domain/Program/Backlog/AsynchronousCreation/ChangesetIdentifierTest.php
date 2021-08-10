@@ -22,6 +22,9 @@ namespace Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation;
 
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration\IterationIdentifier;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveLastChangesetStub;
+use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
+use Tuleap\ProgramManagement\Tests\Stub\VerifyIsIterationStub;
+use Tuleap\ProgramManagement\Tests\Stub\VerifyIsVisibleArtifactStub;
 
 final class ChangesetIdentifierTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -29,7 +32,12 @@ final class ChangesetIdentifierTest extends \Tuleap\Test\PHPUnit\TestCase
 
     protected function setUp(): void
     {
-        $this->iteration = IterationIdentifier::fromId(37);
+        $this->iteration = IterationIdentifier::fromId(
+            VerifyIsIterationStub::withValidIteration(),
+            VerifyIsVisibleArtifactStub::withAlwaysVisibleArtifacts(),
+            37,
+            UserIdentifierStub::buildGenericUser()
+        );
     }
 
     public function testItBuildsFromId(): void

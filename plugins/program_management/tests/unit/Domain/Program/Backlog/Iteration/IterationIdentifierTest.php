@@ -22,10 +22,11 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration;
 
+use Tuleap\ProgramManagement\Adapter\Workspace\UserProxy;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementIdentifier;
 use Tuleap\ProgramManagement\Tests\Stub\CheckProgramIncrementStub;
-use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchIterationsStub;
+use Tuleap\ProgramManagement\Tests\Stub\VerifyIsIterationStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsVisibleArtifactStub;
 use Tuleap\Test\Builders\UserTestBuilder;
 
@@ -36,16 +37,51 @@ final class IterationIdentifierTest extends \Tuleap\Test\PHPUnit\TestCase
     private const FIRST_VISIBLE_ARTIFACT_ID      = 271;
     private const SECOND_VISIBLE_ARTIFACT_ID     = 124;
     private \PFUser $user;
+    private VerifyIsIterationStub $iteration_verifier;
+    private VerifyIsVisibleArtifactStub $visibility_verifier;
 
     protected function setUp(): void
     {
-        $this->user = UserTestBuilder::aUser()->build();
+        $this->user                = UserTestBuilder::aUser()->build();
+        $this->iteration_verifier  = VerifyIsIterationStub::withValidIteration();
+        $this->visibility_verifier = VerifyIsVisibleArtifactStub::withAlwaysVisibleArtifacts();
     }
 
     public function testItBuildsFromId(): void
     {
-        $iteration = IterationIdentifier::fromId(32);
+        $iteration = IterationIdentifier::fromId(
+            $this->iteration_verifier,
+            $this->visibility_verifier,
+            32,
+            UserProxy::buildFromPFUser($this->user)
+        );
         self::assertSame(32, $iteration->id);
+    }
+
+    public function testItReturnsNullWhenIdIsNotAnIteration(): void
+    {
+        $iteration_verifier = VerifyIsIterationStub::withNotIteration();
+        self::assertNull(
+            IterationIdentifier::fromId(
+                $iteration_verifier,
+                $this->visibility_verifier,
+                48,
+                UserProxy::buildFromPFUser($this->user)
+            )
+        );
+    }
+
+    public function testItReturnsNullWhenArtifactIsNotVisibleByUser(): void
+    {
+        $visibility_verifier = VerifyIsVisibleArtifactStub::withNoVisibleArtifact();
+        self::assertNull(
+            IterationIdentifier::fromId(
+                $this->iteration_verifier,
+                $visibility_verifier,
+                404,
+                UserProxy::buildFromPFUser($this->user)
+            )
+        );
     }
 
     public function testItFiltersIterationsThatAreNotVisible(): void
@@ -66,7 +102,7 @@ final class IterationIdentifierTest extends \Tuleap\Test\PHPUnit\TestCase
                 36,
                 $this->user
             ),
-            UserIdentifierStub::buildGenericUser()
+            UserProxy::buildFromPFUser($this->user)
         );
 
         $ids = array_map(static fn(IterationIdentifier $iteration): int => $iteration->id, $iterations);

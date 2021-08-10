@@ -24,11 +24,12 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation;
 
 use ParagonIE\EasyDB\EasyDB;
 use Tuleap\DB\DataAccessObject;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\DeletePendingIterations;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\IterationCreation;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\SearchPendingIteration;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\StorePendingIterations;
 
-final class PendingIterationCreationDAO extends DataAccessObject implements StorePendingIterations, SearchPendingIteration
+final class PendingIterationCreationDAO extends DataAccessObject implements StorePendingIterations, SearchPendingIteration, DeletePendingIterations
 {
     public function storePendingIterationCreations(IterationCreation ...$creations): void
     {
@@ -77,5 +78,14 @@ final class PendingIterationCreationDAO extends DataAccessObject implements Stor
                 WHERE tracker_artifact.id IS NULL AND pending.iteration_id = ?';
 
         $this->getDB()->run($sql, $program_increment_id);
+    }
+
+    public function deletePendingIterationCreationsByIterationId(int $iteration_id): void
+    {
+        $sql = 'DELETE pending.*
+                FROM plugin_program_management_pending_iterations AS pending
+                WHERE pending.iteration_id = ?';
+
+        $this->getDB()->run($sql, $iteration_id);
     }
 }

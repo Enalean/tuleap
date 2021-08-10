@@ -31,6 +31,7 @@ use Tuleap\ProgramManagement\Tests\Stub\RetrieveUserStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchIterationsStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchPendingIterationStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
+use Tuleap\ProgramManagement\Tests\Stub\VerifyIsIterationStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsUserStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsVisibleArtifactStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIterationHasBeenLinkedBeforeStub;
@@ -50,8 +51,10 @@ final class IterationCreationTest extends \Tuleap\Test\PHPUnit\TestCase
     private TestLogger $logger;
     private SearchPendingIterationStub $iteration_searcher;
     private VerifyIsUserStub $user_verifier;
-    private CheckProgramIncrementStub $program_increment_checker;
+    private VerifyIsIterationStub $iteration_verifier;
+    private VerifyIsVisibleArtifactStub $visibility_verifier;
     private RetrieveUserStub $user_retriever;
+    private CheckProgramIncrementStub $program_increment_checker;
 
     protected function setUp(): void
     {
@@ -86,8 +89,10 @@ final class IterationCreationTest extends \Tuleap\Test\PHPUnit\TestCase
             self::FIRST_CHANGESET_ID
         );
         $this->user_verifier             = VerifyIsUserStub::withValidUser();
-        $this->program_increment_checker = CheckProgramIncrementStub::buildProgramIncrementChecker();
+        $this->iteration_verifier        = VerifyIsIterationStub::withValidIteration();
+        $this->visibility_verifier       = VerifyIsVisibleArtifactStub::withAlwaysVisibleArtifacts();
         $this->user_retriever            = RetrieveUserStub::withUser($user);
+        $this->program_increment_checker = CheckProgramIncrementStub::buildProgramIncrementChecker();
     }
 
     public function testItRetrievesLastChangesetOfEachIterationAndBuildsCollection(): void
@@ -131,8 +136,10 @@ final class IterationCreationTest extends \Tuleap\Test\PHPUnit\TestCase
         $iteration_creation = IterationCreation::fromStorage(
             $this->iteration_searcher,
             $this->user_verifier,
-            $this->program_increment_checker,
+            $this->iteration_verifier,
+            $this->visibility_verifier,
             $this->user_retriever,
+            $this->program_increment_checker,
             self::FIRST_ITERATION_ID,
             self::USER_ID
         );
@@ -151,8 +158,10 @@ final class IterationCreationTest extends \Tuleap\Test\PHPUnit\TestCase
             IterationCreation::fromStorage(
                 $iteration_searcher,
                 $this->user_verifier,
-                $this->program_increment_checker,
+                $this->iteration_verifier,
+                $this->visibility_verifier,
                 $this->user_retriever,
+                $this->program_increment_checker,
                 self::FIRST_ITERATION_ID,
                 self::USER_ID
             )
@@ -166,11 +175,30 @@ final class IterationCreationTest extends \Tuleap\Test\PHPUnit\TestCase
             IterationCreation::fromStorage(
                 $this->iteration_searcher,
                 VerifyIsUserStub::withNotValidUser(),
-                $this->program_increment_checker,
+                $this->iteration_verifier,
+                $this->visibility_verifier,
                 $this->user_retriever,
+                $this->program_increment_checker,
                 self::FIRST_ITERATION_ID,
                 self::USER_ID
             )
+        );
+    }
+
+    public function testItThrowsWhenStoredIterationIsNotValid(): void
+    {
+        // It can happen if Program configuration changes between storage and processing; for example someone
+        // changed the Iteration tracker.
+        $this->expectException(StoredIterationNoLongerValidException::class);
+        IterationCreation::fromStorage(
+            $this->iteration_searcher,
+            $this->user_verifier,
+            VerifyIsIterationStub::withNotIteration(),
+            $this->visibility_verifier,
+            $this->user_retriever,
+            $this->program_increment_checker,
+            self::FIRST_ITERATION_ID,
+            self::USER_ID
         );
     }
 
@@ -178,13 +206,14 @@ final class IterationCreationTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         // It can happen if Program configuration changes between storage and processing; for example someone
         // changed the Program Increment tracker.
-        $program_increment_checker = CheckProgramIncrementStub::buildOtherArtifactChecker();
         self::assertNull(
             IterationCreation::fromStorage(
                 $this->iteration_searcher,
                 $this->user_verifier,
-                $program_increment_checker,
+                $this->iteration_verifier,
+                $this->visibility_verifier,
                 $this->user_retriever,
+                CheckProgramIncrementStub::buildOtherArtifactChecker(),
                 self::FIRST_ITERATION_ID,
                 self::USER_ID
             )

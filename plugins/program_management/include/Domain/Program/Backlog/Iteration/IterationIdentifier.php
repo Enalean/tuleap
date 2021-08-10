@@ -41,8 +41,18 @@ final class IterationIdentifier
         $this->id = $id;
     }
 
-    public static function fromId(int $artifact_id): self
-    {
+    public static function fromId(
+        VerifyIsIteration $iteration_verifier,
+        VerifyIsVisibleArtifact $visibility_verifier,
+        int $artifact_id,
+        UserIdentifier $user
+    ): ?self {
+        if (
+            ! $iteration_verifier->isIteration($artifact_id)
+            || ! $visibility_verifier->isVisible($artifact_id, $user)
+        ) {
+            return null;
+        }
         return new self($artifact_id);
     }
 
