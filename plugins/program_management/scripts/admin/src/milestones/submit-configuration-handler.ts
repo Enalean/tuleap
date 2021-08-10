@@ -29,6 +29,8 @@ import {
 import { buildProgramConfiguration } from "../helper/program-configuration-builder";
 
 const DISPLAY_ERROR_REST_ID = "program-management-save-configuration-error-rest";
+const FORM_ID = "form-program-configuration";
+const SUBMIT_BUTTON_ID = "program-management-admin-button-save-configuration";
 
 export function submitConfigurationHandler(
     doc: Document,
@@ -36,14 +38,18 @@ export function submitConfigurationHandler(
     program_id: number,
     use_iteration: boolean
 ): void {
-    const button_configuration = document.getElementById(
-        "program-management-admin-button-save-configuration"
-    );
-    if (!button_configuration || !(button_configuration instanceof HTMLButtonElement)) {
-        return;
+    const form = document.getElementById(FORM_ID);
+    if (!(form instanceof HTMLFormElement)) {
+        throw new Error(`Form #${FORM_ID}does not seem to exist`);
     }
 
-    button_configuration.addEventListener("click", async () => {
+    const button_configuration = document.getElementById(SUBMIT_BUTTON_ID);
+    if (!(button_configuration instanceof HTMLButtonElement)) {
+        throw new Error(`Button #${SUBMIT_BUTTON_ID} does not seem to exist`);
+    }
+
+    form.addEventListener("submit", async (event) => {
+        event.preventDefault();
         resetRestErrorAlert(doc, DISPLAY_ERROR_REST_ID);
         setButtonToDisabledWithSpinner(button_configuration);
 
