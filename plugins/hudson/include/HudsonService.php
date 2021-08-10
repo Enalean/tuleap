@@ -27,6 +27,6 @@ class HudsonService extends \Service
 {
     public function getIconName(): string
     {
-        return 'fa-refresh';
+        return 'fas fa-sync';
     }
 }

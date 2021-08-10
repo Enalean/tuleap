@@ -27,6 +27,6 @@ class AgileDashboardService extends \Service
 {
     public function getIconName(): string
     {
-        return 'fa-tlp-taskboard';
+        return 'fas fa-tlp-taskboard';
     }
 }

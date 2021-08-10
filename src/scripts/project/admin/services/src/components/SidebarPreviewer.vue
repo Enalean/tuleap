@@ -22,8 +22,9 @@
         <div class="project-admin-services-modal-preview-sidebar">
             <div class="project-sidebar-nav-item active">
                 <i
-                    class="fa fa-fw project-sidebar-nav-item-icon"
-                    v-bind:class="[props.icon_name]"
+                    class="fa-fw project-sidebar-nav-item-icon"
+                    v-if="props.allowed_icons[props.icon_name]"
+                    v-bind:class="[props.allowed_icons[props.icon_name]['fa-icon']]"
                 ></i>
                 <span
                     class="
@@ -34,7 +35,7 @@
                 </span>
                 <i
                     v-if="props.is_in_new_tab"
-                    class="fa fa-arrow-right project-sidebar-nav-item-new-tab"
+                    class="fas fa-arrow-right project-sidebar-nav-item-new-tab"
                 ></i>
             </div>
         </div>

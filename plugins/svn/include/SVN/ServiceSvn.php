@@ -55,7 +55,7 @@ class ServiceSvn extends Service
 
     public function getIconName(): string
     {
-        return 'fa-tlp-versioning-svn';
+        return 'fas fa-tlp-versioning-svn';
     }
 
     private function getPermissionsManager()

@@ -37,14 +37,14 @@ class Service // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
     public const SCOPE_PROJECT = 'project';
 
     public const ICONS = [
-        self::ADMIN     => 'fa-cogs',
-        self::FORUM     => 'fa-users',
-        self::HOMEPAGE  => 'fa-home',
-        self::ML        => 'fa-envelope',
-        self::NEWS      => 'fa-rss',
-        self::CVS       => 'fa-tlp-versioning-cvs',
-        self::WIKI      => 'fa-tlp-wiki',
-        self::TRACKERV3 => 'fa-list-ol',
+        self::ADMIN     => 'fas fa-cogs',
+        self::FORUM     => 'fas fa-users',
+        self::HOMEPAGE  => 'fas fa-home',
+        self::ML        => 'fas fa-envelope',
+        self::NEWS      => 'fas fa-rss',
+        self::CVS       => 'fas fa-tlp-versioning-cvs',
+        self::WIKI      => 'fas fa-tlp-wiki',
+        self::TRACKERV3 => 'fas fa-list-ol',
     ];
 
     /**
@@ -298,12 +298,11 @@ class Service // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 
     private function getFontAwesomeIcon(string $icon): string
     {
-        $fa_icon = 'fa-fw ';
-
-        if (strpos($icon, ' ') !== false) {
-            return $fa_icon . $icon;
+        $font_awesome_ref = \Tuleap\Project\Service\ServiceIconValidator::getFontAwesomeIconFromID($icon);
+        if ($font_awesome_ref !== null) {
+            return 'fa-fw ' . $font_awesome_ref;
         }
 
-        return $fa_icon . "fa $icon";
+        return 'fa-fw ' . $icon;
     }
 }

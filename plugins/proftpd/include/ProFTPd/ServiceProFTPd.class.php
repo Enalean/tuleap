@@ -35,7 +35,7 @@ class ServiceProFTPd extends Service
 
     public function getIconName(): string
     {
-        return 'fa-tlp-folder-globe';
+        return 'fas fa-tlp-folder-globe';
     }
 
     public function renderInPage(HTTPRequest $request, $title, $template, $presenter = null)

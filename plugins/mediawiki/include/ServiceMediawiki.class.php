@@ -24,7 +24,7 @@ class ServiceMediawiki extends Service
 {
     public function getIconName(): string
     {
-        return 'fa-tlp-mediawiki';
+        return 'fas fa-tlp-mediawiki';
     }
 
     public function renderInPage($title, $template, $presenter = null)
