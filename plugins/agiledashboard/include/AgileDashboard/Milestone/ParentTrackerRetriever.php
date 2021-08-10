@@ -50,7 +50,7 @@ class ParentTrackerRetriever
         $descendant_backlog_tracker_ids = [];
         foreach ($descendant_backlog_trackers as $backlog_tracker) {
             $descendant_backlog_tracker_ids[] = $backlog_tracker->getId();
-            if ($backlog_tracker->getParent()) {
+            if ($backlog_tracker->getParent() && ! \in_array($backlog_tracker->getParent(), $parent_trackers, true)) {
                 $parent_trackers[] = $backlog_tracker->getParent();
             }
         }
