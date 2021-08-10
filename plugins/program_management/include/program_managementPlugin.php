@@ -425,6 +425,7 @@ final class program_managementPlugin extends Plugin
         $handler = new IterationCreationEventHandler(
             $logger,
             new PendingIterationCreationDAO(),
+            $user_retriever,
             new ProgramIncrementChecker($artifact_factory, new ProgramIncrementsDAO()),
             $user_retriever
         );
@@ -483,6 +484,7 @@ final class program_managementPlugin extends Plugin
                     new IterationCreationEventHandler(
                         $logger,
                         $iteration_creation_DAO,
+                        $user_retriever,
                         new ProgramIncrementChecker($artifact_factory, $program_increments_DAO),
                         $user_retriever
                     )

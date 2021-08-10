@@ -20,16 +20,30 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Adapter\Workspace;
+namespace Tuleap\ProgramManagement\Domain\Workspace;
 
-use Tuleap\Test\Builders\UserTestBuilder;
-
-final class UserProxyTest extends \Tuleap\Test\PHPUnit\TestCase
+/**
+ * @psalm-immutable
+ */
+final class StoredUser implements UserIdentifier
 {
-    public function testItBuildsFromPFUser(): void
+    private int $id;
+
+    private function __construct(int $id)
     {
-        $pfuser = UserTestBuilder::aUser()->withId(101)->build();
-        $user   = UserProxy::buildFromPFUser($pfuser);
-        self::assertSame(101, $user->getId());
+        $this->id = $id;
+    }
+
+    public function getId(): int
+    {
+        return $this->id;
+    }
+
+    public static function fromId(VerifyIsUser $user_verifier, int $user_id): ?self
+    {
+        if (! $user_verifier->isUser($user_id)) {
+            return null;
+        }
+        return new self($user_id);
     }
 }

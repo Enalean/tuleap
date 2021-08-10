@@ -20,16 +20,31 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Adapter\Workspace;
+namespace Tuleap\ProgramManagement\Stub;
 
-use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\ProgramManagement\Domain\Workspace\VerifyIsUser;
 
-final class UserProxyTest extends \Tuleap\Test\PHPUnit\TestCase
+final class VerifyIsUserStub implements VerifyIsUser
 {
-    public function testItBuildsFromPFUser(): void
+    private bool $is_valid;
+
+    private function __construct(bool $is_valid)
     {
-        $pfuser = UserTestBuilder::aUser()->withId(101)->build();
-        $user   = UserProxy::buildFromPFUser($pfuser);
-        self::assertSame(101, $user->getId());
+        $this->is_valid = $is_valid;
+    }
+
+    public function isUser(int $user_id): bool
+    {
+        return $this->is_valid;
+    }
+
+    public static function withValidUser(): self
+    {
+        return new self(true);
+    }
+
+    public static function withNotValidUser(): self
+    {
+        return new self(false);
     }
 }

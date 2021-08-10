@@ -26,22 +26,26 @@ use Psr\Log\LoggerInterface;
 use Tuleap\ProgramManagement\Domain\Events\IterationCreationEvent;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\CheckProgramIncrement;
 use Tuleap\ProgramManagement\Domain\Workspace\RetrieveUser;
+use Tuleap\ProgramManagement\Domain\Workspace\VerifyIsUser;
 
 final class IterationCreationEventHandler implements ProcessIterationCreation
 {
     private LoggerInterface $logger;
     private SearchPendingIteration $iteration_searcher;
+    private VerifyIsUser $user_verifier;
     private CheckProgramIncrement $program_increment_checker;
     private RetrieveUser $user_retriever;
 
     public function __construct(
         LoggerInterface $logger,
         SearchPendingIteration $iteration_searcher,
+        VerifyIsUser $user_verifier,
         CheckProgramIncrement $program_increment_checker,
         RetrieveUser $user_retriever
     ) {
         $this->logger                    = $logger;
         $this->iteration_searcher        = $iteration_searcher;
+        $this->user_verifier             = $user_verifier;
         $this->program_increment_checker = $program_increment_checker;
         $this->user_retriever            = $user_retriever;
     }
@@ -53,6 +57,7 @@ final class IterationCreationEventHandler implements ProcessIterationCreation
         }
         $iteration_creation = IterationCreation::fromStorage(
             $this->iteration_searcher,
+            $this->user_verifier,
             $this->program_increment_checker,
             $this->user_retriever,
             $event->getArtifactId(),

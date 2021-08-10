@@ -26,11 +26,12 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration\JustLinkedIteratio
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementIdentifier;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\ProgramManagement\Stub\CheckProgramIncrementStub;
-use Tuleap\ProgramManagement\Stub\UserIdentifierStub;
 use Tuleap\ProgramManagement\Stub\RetrieveLastChangesetStub;
 use Tuleap\ProgramManagement\Stub\RetrieveUserStub;
 use Tuleap\ProgramManagement\Stub\SearchIterationsStub;
 use Tuleap\ProgramManagement\Stub\SearchPendingIterationStub;
+use Tuleap\ProgramManagement\Stub\UserIdentifierStub;
+use Tuleap\ProgramManagement\Stub\VerifyIsUserStub;
 use Tuleap\ProgramManagement\Stub\VerifyIsVisibleArtifactStub;
 use Tuleap\ProgramManagement\Stub\VerifyIterationHasBeenLinkedBeforeStub;
 use Tuleap\Test\Builders\UserTestBuilder;
@@ -48,13 +49,14 @@ final class IterationCreationTest extends \Tuleap\Test\PHPUnit\TestCase
     private RetrieveLastChangesetStub $changeset_retriever;
     private TestLogger $logger;
     private SearchPendingIterationStub $iteration_searcher;
+    private VerifyIsUserStub $user_verifier;
     private CheckProgramIncrementStub $program_increment_checker;
     private RetrieveUserStub $user_retriever;
 
     protected function setUp(): void
     {
         $user                         = UserTestBuilder::aUser()->withId(self::USER_ID)->build();
-        $this->user                   = UserIdentifierStub::buildUserWithId(self::USER_ID);
+        $this->user                   = UserIdentifierStub::withId(self::USER_ID);
         $program_increment            = ProgramIncrementIdentifier::fromId(
             CheckProgramIncrementStub::buildProgramIncrementChecker(),
             self::PROGRAM_INCREMENT_ID,
@@ -83,6 +85,7 @@ final class IterationCreationTest extends \Tuleap\Test\PHPUnit\TestCase
             self::USER_ID,
             self::FIRST_CHANGESET_ID
         );
+        $this->user_verifier             = VerifyIsUserStub::withValidUser();
         $this->program_increment_checker = CheckProgramIncrementStub::buildProgramIncrementChecker();
         $this->user_retriever            = RetrieveUserStub::withUser($user);
     }
@@ -127,6 +130,7 @@ final class IterationCreationTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $iteration_creation = IterationCreation::fromStorage(
             $this->iteration_searcher,
+            $this->user_verifier,
             $this->program_increment_checker,
             $this->user_retriever,
             self::FIRST_ITERATION_ID,
@@ -146,6 +150,22 @@ final class IterationCreationTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertNull(
             IterationCreation::fromStorage(
                 $iteration_searcher,
+                $this->user_verifier,
+                $this->program_increment_checker,
+                $this->user_retriever,
+                self::FIRST_ITERATION_ID,
+                self::USER_ID
+            )
+        );
+    }
+
+    public function testItReturnsNullWhenStoredUserIsNotValid(): void
+    {
+        // It's not supposed to happen as users cannot be deleted in Tuleap. They change status.
+        self::assertNull(
+            IterationCreation::fromStorage(
+                $this->iteration_searcher,
+                VerifyIsUserStub::withNotValidUser(),
                 $this->program_increment_checker,
                 $this->user_retriever,
                 self::FIRST_ITERATION_ID,
@@ -162,6 +182,7 @@ final class IterationCreationTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertNull(
             IterationCreation::fromStorage(
                 $this->iteration_searcher,
+                $this->user_verifier,
                 $program_increment_checker,
                 $this->user_retriever,
                 self::FIRST_ITERATION_ID,
