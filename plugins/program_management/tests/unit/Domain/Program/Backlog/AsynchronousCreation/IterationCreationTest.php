@@ -202,21 +202,20 @@ final class IterationCreationTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
-    public function testItReturnsNullWhenStoredProgramIncrementIsNotValid(): void
+    public function testItThrowsWhenStoredProgramIncrementIsNotValid(): void
     {
         // It can happen if Program configuration changes between storage and processing; for example someone
         // changed the Program Increment tracker.
-        self::assertNull(
-            IterationCreation::fromStorage(
-                $this->iteration_searcher,
-                $this->user_verifier,
-                $this->iteration_verifier,
-                $this->visibility_verifier,
-                $this->user_retriever,
-                CheckProgramIncrementStub::buildOtherArtifactChecker(),
-                self::FIRST_ITERATION_ID,
-                self::USER_ID
-            )
+        $this->expectException(StoredProgramIncrementNoLongerValidException::class);
+        IterationCreation::fromStorage(
+            $this->iteration_searcher,
+            $this->user_verifier,
+            $this->iteration_verifier,
+            $this->visibility_verifier,
+            $this->user_retriever,
+            CheckProgramIncrementStub::buildOtherArtifactChecker(),
+            self::FIRST_ITERATION_ID,
+            self::USER_ID
         );
     }
 }

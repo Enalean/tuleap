@@ -119,6 +119,16 @@ final class IterationCreationEventHandlerTest extends \Tuleap\Test\PHPUnit\TestC
         $this->getHandler()->handle($this->buildValidEvent());
     }
 
+    public function testItCleansUpStoredCreationWhenProgramIncrementIsNoLongerValid(): void
+    {
+        // It can happen if Program configuration changes between storage and processing; for example someone
+        // changed the Program Increment tracker.
+        $this->program_increment_checker = CheckProgramIncrementStub::buildOtherArtifactChecker();
+        $this->iteration_deleter->expects(self::once())->method('deletePendingIterationCreationsByProgramIncrementId');
+
+        $this->getHandler()->handle($this->buildValidEvent());
+    }
+
     private function buildValidEvent(): ?IterationCreationEvent
     {
         $worker_event = new WorkerEvent($this->logger, [

@@ -84,6 +84,16 @@ final class IterationCreationEventHandler implements ProcessIterationCreation
             );
             $this->iteration_deleter->deletePendingIterationCreationsByIterationId($iteration_id);
             return;
+        } catch (StoredProgramIncrementNoLongerValidException $e) {
+            $program_increment_id = $e->getProgramIncrementId();
+            $this->logger->debug(
+                sprintf(
+                    'Stored program increment #%d is no longer valid, cleaning up pending iterations',
+                    $program_increment_id
+                )
+            );
+            $this->iteration_deleter->deletePendingIterationCreationsByProgramIncrementId($program_increment_id);
+            return;
         }
         if (! $iteration_creation) {
             return;

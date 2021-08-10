@@ -90,6 +90,7 @@ final class IterationCreation
 
     /**
      * @throws StoredIterationNoLongerValidException
+     * @throws StoredProgramIncrementNoLongerValidException
      */
     public static function fromStorage(
         SearchPendingIteration $iteration_searcher,
@@ -119,15 +120,16 @@ final class IterationCreation
         if (! $iteration) {
             throw new StoredIterationNoLongerValidException($stored_iteration_id);
         }
-        $user = $user_retriever->getUserWithId($user_identifier);
+        $user                 = $user_retriever->getUserWithId($user_identifier);
+        $program_increment_id = $stored_creation['program_increment_id'];
         try {
             $program_increment = ProgramIncrementIdentifier::fromId(
                 $program_increment_checker,
-                $stored_creation['program_increment_id'],
+                $program_increment_id,
                 $user
             );
         } catch (ProgramIncrementNotFoundException $e) {
-            return null;
+            throw new StoredProgramIncrementNoLongerValidException($program_increment_id);
         }
         $changeset = ChangesetIdentifier::fromId($stored_creation['iteration_changeset_id']);
         return new self($iteration, $program_increment, $user_identifier, $changeset);

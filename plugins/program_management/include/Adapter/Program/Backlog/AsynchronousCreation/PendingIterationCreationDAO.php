@@ -88,4 +88,13 @@ final class PendingIterationCreationDAO extends DataAccessObject implements Stor
 
         $this->getDB()->run($sql, $iteration_id);
     }
+
+    public function deletePendingIterationCreationsByProgramIncrementId(int $program_increment_id): void
+    {
+        $sql = 'DELETE pending.*
+                FROM plugin_program_management_pending_iterations AS pending
+                WHERE pending.program_increment_id = ?';
+
+        $this->getDB()->run($sql, $program_increment_id);
+    }
 }

@@ -22,9 +22,23 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation;
 
-interface DeletePendingIterations
+/**
+ * @psalm-immutable
+ */
+final class StoredProgramIncrementNoLongerValidException extends \Exception
 {
-    public function deletePendingIterationCreationsByIterationId(int $iteration_id): void;
+    private int $program_increment_id;
 
-    public function deletePendingIterationCreationsByProgramIncrementId(int $program_increment_id): void;
+    public function __construct(int $program_increment_id)
+    {
+        parent::__construct(
+            sprintf('Artifact #%d is no longer a valid program increment per program configuration', $program_increment_id)
+        );
+        $this->program_increment_id = $program_increment_id;
+    }
+
+    public function getProgramIncrementId(): int
+    {
+        return $this->program_increment_id;
+    }
 }
