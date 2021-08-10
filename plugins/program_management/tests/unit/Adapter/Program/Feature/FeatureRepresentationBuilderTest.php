@@ -29,10 +29,8 @@ use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\ArtifactsLinkedToPare
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\UserStoryLinkedToFeatureChecker;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\BackgroundColor;
 use Tuleap\ProgramManagement\Domain\Program\BuildPlanning;
-use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\REST\v1\FeatureRepresentation;
-use Tuleap\ProgramManagement\Tests\Stub\BuildProgramStub;
-use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
+use Tuleap\ProgramManagement\Tests\Builder\ProgramIdentifierBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveUserStub;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
@@ -91,7 +89,7 @@ final class FeatureRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCa
 
     public function testItDoesNotReturnAnythingWhenUserCanNotReadArtifact(): void
     {
-        $program = ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 110, UserIdentifierStub::buildGenericUser());
+        $program = ProgramIdentifierBuilder::buildWithId(110);
 
         $this->artifact_factory->shouldReceive('getArtifactByIdUserCanView')->with($this->user, 1)->andReturnNull();
 
@@ -100,7 +98,7 @@ final class FeatureRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCa
 
     public function testItDoesNotReturnAnythingWhenUserCanNotReadField(): void
     {
-        $program = ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 110, UserIdentifierStub::buildGenericUser());
+        $program = ProgramIdentifierBuilder::buildWithId(110);
 
         $project  = $this->buildProject(110);
         $tracker  = $this->buildTracker(14, $project);
@@ -117,7 +115,7 @@ final class FeatureRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCa
 
     public function testItBuildsRepresentation(): void
     {
-        $program = ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 101, UserIdentifierStub::buildGenericUser());
+        $program = ProgramIdentifierBuilder::build();
 
         $project  = $this->buildProject(101);
         $tracker  = $this->buildTracker(1, $project);

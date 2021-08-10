@@ -25,9 +25,8 @@ namespace Tuleap\ProgramManagement\Domain\Program\Backlog;
 use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ConfigurationErrorsCollector;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Team\TeamProjectsCollection;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
-use Tuleap\ProgramManagement\Tests\Stub\BuildProgramStub;
+use Tuleap\ProgramManagement\Tests\Builder\ProgramIdentifierBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProjectStub;
-use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchTeamsOfProgramStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrievePlanningMilestoneTrackerStub;
 use Tuleap\Test\Builders\UserTestBuilder;
@@ -38,7 +37,7 @@ final class TrackerCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
 
     protected function setUp(): void
     {
-        $this->program_identifier = ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 101, UserIdentifierStub::buildGenericUser());
+        $this->program_identifier = ProgramIdentifierBuilder::build();
     }
 
     public function testGetEmptyTrackerArrayWhenNoRootPlanningTrackers(): void

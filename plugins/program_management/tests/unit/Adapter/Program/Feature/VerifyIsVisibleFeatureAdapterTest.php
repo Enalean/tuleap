@@ -25,9 +25,9 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Feature;
 use Tuleap\ProgramManagement\Adapter\Permissions\WorkflowUserPermissionBypass;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
-use Tuleap\ProgramManagement\Tests\Stub\BuildProgramStub;
-use Tuleap\ProgramManagement\Tests\Stub\RetrieveUserStub;
+use Tuleap\ProgramManagement\Tests\Builder\ProgramIdentifierBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
+use Tuleap\ProgramManagement\Tests\Stub\RetrieveUserStub;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
@@ -50,11 +50,7 @@ final class VerifyIsVisibleFeatureAdapterTest extends \Tuleap\Test\PHPUnit\TestC
         $this->artifact_factory = $this->createMock(\Tracker_ArtifactFactory::class);
         $this->user             = UserTestBuilder::aUser()->build();
         $this->user_identifier  = UserIdentifierStub::buildGenericUser();
-        $this->program          = ProgramIdentifier::fromId(
-            BuildProgramStub::stubValidProgram(),
-            self::PROGRAM_ID,
-            $this->user_identifier
-        );
+        $this->program          = ProgramIdentifierBuilder::buildWithId(self::PROGRAM_ID);
     }
 
     private function getVerifier(): VerifyIsVisibleFeatureAdapter
@@ -76,7 +72,7 @@ final class VerifyIsVisibleFeatureAdapterTest extends \Tuleap\Test\PHPUnit\TestC
     {
         $artifact = $this->buildFeatureArtifact();
         $this->artifact_factory->method('getArtifactByIdUserCanView')->willReturn($artifact);
-        $program = ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 404, $this->user_identifier);
+        $program = ProgramIdentifierBuilder::buildWithId(404);
 
         self::assertFalse(
             $this->getVerifier()->isVisibleFeature(self::FEATURE_ID, $this->user_identifier, $program, null)
@@ -129,7 +125,7 @@ final class VerifyIsVisibleFeatureAdapterTest extends \Tuleap\Test\PHPUnit\TestC
     {
         $artifact = $this->buildFeatureArtifact();
         $this->artifact_factory->method('getArtifactById')->willReturn($artifact);
-        $program = ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 404, $this->user_identifier);
+        $program = ProgramIdentifierBuilder::buildWithId(404);
 
         self::assertFalse(
             $this->getVerifier()->isVisibleFeature(

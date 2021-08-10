@@ -33,10 +33,8 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\CannotManipulateT
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\TopBacklogChange;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\TopBacklogStore;
 use Tuleap\ProgramManagement\Domain\Program\Plan\PrioritizeFeaturesPermissionVerifier;
-use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\REST\v1\FeatureElementToOrderInvolvedInChangeRepresentation;
-use Tuleap\ProgramManagement\Tests\Stub\BuildProgramStub;
-use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
+use Tuleap\ProgramManagement\Tests\Builder\ProgramIdentifierBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveUserStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyLinkedUserStoryIsNotPlannedStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyPrioritizeFeaturesPermissionStub;
@@ -117,7 +115,7 @@ final class ProcessTopBacklogChangeTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->expectException(FeatureNotFoundException::class);
         $this->process_top_backlog_change->processTopBacklogChangeForAProgram(
-            ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 102, UserIdentifierStub::buildGenericUser()),
+            ProgramIdentifierBuilder::buildWithId(102),
             new TopBacklogChange([742, 790], [741, 789], false, null),
             $this->user,
             null
@@ -134,7 +132,7 @@ final class ProcessTopBacklogChangeTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->dao->shouldReceive('removeArtifactsFromExplicitTopBacklog')->with([741])->once();
 
         $this->process_top_backlog_change->processTopBacklogChangeForAProgram(
-            ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 102, UserIdentifierStub::buildGenericUser()),
+            ProgramIdentifierBuilder::buildWithId(102),
             new TopBacklogChange([], [741, 789], false, null),
             $this->user,
             null
@@ -150,7 +148,7 @@ final class ProcessTopBacklogChangeTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->dao->shouldNotReceive('removeArtifactsFromExplicitTopBacklog');
         $this->expectException(FeatureNotFoundException::class);
         $this->process_top_backlog_change->processTopBacklogChangeForAProgram(
-            ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 102, UserIdentifierStub::buildGenericUser()),
+            ProgramIdentifierBuilder::buildWithId(102),
             new TopBacklogChange([964], [963], false, null),
             $this->user,
             null
@@ -171,7 +169,7 @@ final class ProcessTopBacklogChangeTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->artifact_link_updater->shouldReceive("updateArtifactLinks")->once()->with($this->user, $program_increment, [], [964], "");
 
         $this->process_top_backlog_change->processTopBacklogChangeForAProgram(
-            ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 102, UserIdentifierStub::buildGenericUser()),
+            ProgramIdentifierBuilder::buildWithId(102),
             new TopBacklogChange([964], [], true, null),
             $this->user,
             null
@@ -203,7 +201,7 @@ final class ProcessTopBacklogChangeTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->expectException(FeatureHasPlannedUserStoryException::class);
 
         $this->process_top_backlog_change->processTopBacklogChangeForAProgram(
-            ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 102, UserIdentifierStub::buildGenericUser()),
+            ProgramIdentifierBuilder::buildWithId(102),
             new TopBacklogChange([964], [], true, null),
             $this->user,
             null
@@ -230,7 +228,7 @@ final class ProcessTopBacklogChangeTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->expectException(CannotManipulateTopBacklog::class);
         $this->process_top_backlog_change->processTopBacklogChangeForAProgram(
-            ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 102, UserIdentifierStub::buildGenericUser()),
+            ProgramIdentifierBuilder::buildWithId(102),
             new TopBacklogChange([], [403], false, null),
             $user,
             null
@@ -252,7 +250,7 @@ final class ProcessTopBacklogChangeTest extends \Tuleap\Test\PHPUnit\TestCase
         $element_to_order->direction   = "before";
         $element_to_order->compared_to = 900;
 
-        $program = ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 666, UserIdentifierStub::buildGenericUser());
+        $program = ProgramIdentifierBuilder::buildWithId(666);
 
         $this->feature_orderer->shouldReceive('reorder')->with($element_to_order, $program->getId(), $program)->once();
 

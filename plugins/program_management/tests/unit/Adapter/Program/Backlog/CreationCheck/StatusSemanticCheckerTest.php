@@ -31,11 +31,9 @@ use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ConfigurationErr
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Team\TeamProjectsCollection;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Source\SourceTrackerCollection;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TrackerCollection;
-use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\ProgramTracker;
-use Tuleap\ProgramManagement\Tests\Stub\BuildProgramStub;
+use Tuleap\ProgramManagement\Tests\Builder\ProgramIdentifierBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProjectStub;
-use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchTeamsOfProgramStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrievePlanningMilestoneTrackerStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveVisibleProgramIncrementTrackerStub;
@@ -87,14 +85,13 @@ final class StatusSemanticCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->program_increment         = TrackerTestBuilder::aTracker()->withId(104)->build();
         $this->program_increment_tracker = new ProgramTracker($this->program_increment);
 
-        $user            = UserTestBuilder::aUser()->build();
-        $user_identifier = UserIdentifierStub::buildGenericUser();
-        $teams           = TeamProjectsCollection::fromProgramIdentifier(
+        $user      = UserTestBuilder::aUser()->build();
+        $teams     = TeamProjectsCollection::fromProgramIdentifier(
             SearchTeamsOfProgramStub::buildTeams(101, 102),
             new BuildProjectStub(),
-            ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 100, $user_identifier)
+            ProgramIdentifierBuilder::build()
         );
-        $retriever       = RetrievePlanningMilestoneTrackerStub::withValidTrackers(
+        $retriever = RetrievePlanningMilestoneTrackerStub::withValidTrackers(
             $this->tracker_team_01,
             $this->tracker_team_02
         );
@@ -102,7 +99,7 @@ final class StatusSemanticCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->collection      = TrackerCollection::buildRootPlanningMilestoneTrackers($retriever, $teams, $user);
         $this->source_trackers = SourceTrackerCollection::fromProgramAndTeamTrackers(
             RetrieveVisibleProgramIncrementTrackerStub::withValidTracker($this->timebox_tracker),
-            ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 101, $user_identifier),
+            ProgramIdentifierBuilder::build(),
             $this->collection,
             $user
         );

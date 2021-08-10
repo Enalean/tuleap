@@ -24,7 +24,7 @@ namespace Tuleap\ProgramManagement\Domain\Program\Backlog\Feature;
 
 use Tuleap\ProgramManagement\Adapter\Permissions\WorkflowUserPermissionBypass;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
-use Tuleap\ProgramManagement\Tests\Stub\BuildProgramStub;
+use Tuleap\ProgramManagement\Tests\Builder\ProgramIdentifierBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsVisibleFeatureStub;
 
@@ -36,7 +36,7 @@ final class FeatureIdentifierTest extends \Tuleap\Test\PHPUnit\TestCase
     protected function setUp(): void
     {
         $this->user    = UserIdentifierStub::buildGenericUser();
-        $this->program = ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 110, $this->user);
+        $this->program = ProgramIdentifierBuilder::build();
     }
 
     public function testItReturnsNullWhenFeatureIsNotVisibleByUser(): void
@@ -59,6 +59,7 @@ final class FeatureIdentifierTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->user,
             $this->program
         );
+
         self::assertSame(87, $feature->id);
     }
 

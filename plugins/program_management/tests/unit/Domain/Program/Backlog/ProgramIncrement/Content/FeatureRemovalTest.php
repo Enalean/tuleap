@@ -24,9 +24,8 @@ namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Conte
 
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureHasPlannedUserStoryException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureIdentifier;
-use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\UserCanPrioritize;
-use Tuleap\ProgramManagement\Tests\Stub\BuildProgramStub;
+use Tuleap\ProgramManagement\Tests\Builder\ProgramIdentifierBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsVisibleFeatureStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyLinkedUserStoryIsNotPlannedStub;
@@ -41,11 +40,7 @@ final class FeatureRemovalTest extends \Tuleap\Test\PHPUnit\TestCase
     protected function setUp(): void
     {
         $user_identifier           = UserIdentifierStub::buildGenericUser();
-        $program                   = ProgramIdentifier::fromId(
-            BuildProgramStub::stubValidProgram(),
-            110,
-            $user_identifier
-        );
+        $program                   = ProgramIdentifierBuilder::buildWithId(110);
         $this->feature             = FeatureIdentifier::fromId(
             VerifyIsVisibleFeatureStub::buildVisibleFeature(),
             self::FEATURE_ID,

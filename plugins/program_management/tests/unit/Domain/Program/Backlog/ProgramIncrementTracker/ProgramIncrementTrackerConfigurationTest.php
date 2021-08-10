@@ -23,9 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrementTracker;
 
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracker\ProgramIncrementTrackerConfiguration;
-use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
-use Tuleap\ProgramManagement\Tests\Stub\BuildProgramStub;
-use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
+use Tuleap\ProgramManagement\Tests\Builder\ProgramIdentifierBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveProgramIncrementLabelsStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveVisibleProgramIncrementTrackerStub;
 use Tuleap\Test\Builders\UserTestBuilder;
@@ -38,7 +36,7 @@ final class ProgramIncrementTrackerConfigurationTest extends \Tuleap\Test\PHPUni
         $program_increment_tracker = TrackerTestBuilder::aTracker()->withId(101)->build();
 
         $user    = UserTestBuilder::aUser()->build();
-        $program = ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 101, UserIdentifierStub::buildGenericUser());
+        $program = ProgramIdentifierBuilder::build();
 
         $configuration = ProgramIncrementTrackerConfiguration::fromProgram(
             RetrieveVisibleProgramIncrementTrackerStub::withValidTracker($program_increment_tracker),

@@ -30,10 +30,8 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fiel
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFields;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Team\TeamProjectsCollection;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TrackerCollection;
-use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
-use Tuleap\ProgramManagement\Tests\Stub\BuildProgramStub;
+use Tuleap\ProgramManagement\Tests\Builder\ProgramIdentifierBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProjectStub;
-use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchTeamsOfProgramStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrievePlanningMilestoneTrackerStub;
 use Tuleap\Test\Builders\UserTestBuilder;
@@ -52,7 +50,7 @@ final class RequiredFieldCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         $teams = TeamProjectsCollection::fromProgramIdentifier(
             SearchTeamsOfProgramStub::buildTeams(147, 148),
             new BuildProjectStub(),
-            ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 100, UserIdentifierStub::buildGenericUser())
+            ProgramIdentifierBuilder::build()
         );
 
         $required_title = $this->createMock(\Tracker_FormElement_Field_Text::class);
@@ -99,7 +97,7 @@ final class RequiredFieldCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         $teams = TeamProjectsCollection::fromProgramIdentifier(
             SearchTeamsOfProgramStub::buildTeams(147),
             new BuildProjectStub(),
-            ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 100, UserIdentifierStub::buildGenericUser())
+            ProgramIdentifierBuilder::build()
         );
 
         $required_title = $this->createMock(\Tracker_FormElement_Field_Text::class);

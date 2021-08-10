@@ -22,10 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program;
 
-use Tuleap\ProgramManagement\Adapter\Permissions\WorkflowUserPermissionBypass;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\ReplicationDataAdapter;
-use Tuleap\ProgramManagement\Tests\Stub\BuildProgramStub;
-use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
+use Tuleap\ProgramManagement\Tests\Builder\ProgramIdentifierBuilder;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
@@ -36,23 +34,16 @@ final class ProgramIdentifierTest extends TestCase
 {
     public function testItBuildsAProgramIdentifierFromAProjectId(): void
     {
-        $program = ProgramIdentifier::fromId(
-            BuildProgramStub::stubValidProgram(),
-            101,
-            UserIdentifierStub::buildGenericUser()
-        );
-        self::assertSame(101, $program->getId());
+        $project_id = 101;
+        $program    = ProgramIdentifierBuilder::buildWithId($project_id);
+        self::assertSame($project_id, $program->getId());
     }
 
     public function testItBuildsWithBypass(): void
     {
-        $program = ProgramIdentifier::fromId(
-            BuildProgramStub::stubValidProgram(),
-            103,
-            UserIdentifierStub::buildGenericUser(),
-            new WorkflowUserPermissionBypass()
-        );
-        self::assertSame(103, $program->getId());
+        $project_id = 101;
+        $program    = ProgramIdentifierBuilder::buildWithIdAndPass($project_id);
+        self::assertSame($project_id, $program->getId());
     }
 
     public function testItBuildsAProgramIdentifierFromReplicationData(): void

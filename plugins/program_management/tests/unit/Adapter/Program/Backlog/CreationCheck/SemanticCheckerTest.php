@@ -27,9 +27,8 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck\CheckStatus;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Team\TeamProjectsCollection;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Source\SourceTrackerCollection;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TrackerCollection;
-use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\ProgramTracker;
-use Tuleap\ProgramManagement\Tests\Stub\BuildProgramStub;
+use Tuleap\ProgramManagement\Tests\Builder\ProgramIdentifierBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProjectStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchTeamsOfProgramStub;
@@ -71,7 +70,7 @@ final class SemanticCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         $teams           = TeamProjectsCollection::fromProgramIdentifier(
             SearchTeamsOfProgramStub::buildTeams(101, 102),
             new BuildProjectStub(),
-            ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 100, $user_identifier)
+            ProgramIdentifierBuilder::build()
         );
 
         $retriever             = RetrievePlanningMilestoneTrackerStub::withValidTrackerIds(1024, 2048);
@@ -79,7 +78,7 @@ final class SemanticCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->trackers        = TrackerCollection::buildRootPlanningMilestoneTrackers($retriever, $teams, $user);
         $this->source_trackers = SourceTrackerCollection::fromProgramAndTeamTrackers(
             RetrieveVisibleProgramIncrementTrackerStub::withValidTracker(TrackerTestBuilder::aTracker()->withId(1)->build()),
-            ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 101, $user_identifier),
+            ProgramIdentifierBuilder::build(),
             $this->trackers,
             $user
         );

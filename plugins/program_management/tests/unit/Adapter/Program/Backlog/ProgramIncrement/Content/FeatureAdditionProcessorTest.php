@@ -28,9 +28,8 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Content\Add
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Content\FeatureAddition;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementNotFoundException;
-use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\UserCanPrioritize;
-use Tuleap\ProgramManagement\Tests\Stub\BuildProgramStub;
+use Tuleap\ProgramManagement\Tests\Builder\ProgramIdentifierBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\CheckProgramIncrementStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveUserStub;
@@ -101,11 +100,7 @@ final class FeatureAdditionProcessorTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $user                       = UserTestBuilder::aUser()->build();
         $user_identifier            = UserIdentifierStub::buildGenericUser();
-        $program                    = ProgramIdentifier::fromId(
-            BuildProgramStub::stubValidProgram(),
-            110,
-            $user_identifier
-        );
+        $program                    = ProgramIdentifierBuilder::buildWithId(110);
         $program_increment          = ProgramIncrementIdentifier::fromId(
             CheckProgramIncrementStub::buildProgramIncrementChecker(),
             37,
@@ -140,7 +135,7 @@ final class FeatureAdditionProcessorTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $user              = UserTestBuilder::aUser()->build();
         $user_identifier   = UserIdentifierStub::buildGenericUser();
-        $program           = ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 110, $user_identifier);
+        $program           = ProgramIdentifierBuilder::buildWithId(110);
         $program_increment = ProgramIncrementIdentifier::fromId(
             CheckProgramIncrementStub::buildProgramIncrementChecker(),
             37,
