@@ -101,6 +101,15 @@ final class AddToTopBacklogPostActionTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->getPostAction()->after($changeset);
     }
 
+    public function testItExportsToXMl(): void
+    {
+        $root = new \SimpleXMLElement('<postactions></postactions>');
+        $this->getPostAction()->exportToXml($root, []);
+
+        self::assertEquals(1, $root->children()->count());
+        self::assertEquals("postaction_add_to_program_top_backlog", $root->children()->getName());
+    }
+
     private function getPostAction(): AddToTopBacklogPostAction
     {
         return new AddToTopBacklogPostAction(

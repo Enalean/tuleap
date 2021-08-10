@@ -382,6 +382,7 @@
               <postaction_hidden_fieldsets>
                 <fieldset_id REF="F18444"/>
               </postaction_hidden_fieldsets>
+              <postaction_add_to_program_top_backlog/>
             </postactions>
             <conditions>
               <condition type="perms">
@@ -413,6 +414,9 @@
                 <from_id REF="V4500"/>
               </transition>
             </transitions>
+            <postactions>
+              <postaction_add_to_program_top_backlog/>
+            </postactions>
             <conditions>
               <condition type="perms">
                 <permissions>
@@ -473,6 +477,9 @@
                 <from_id REF="V4496"/>
               </transition>
             </transitions>
+            <postactions>
+              <postaction_add_to_program_top_backlog/>
+            </postactions>
             <conditions>
               <condition type="perms">
                 <permissions>
@@ -1143,6 +1150,9 @@
                 <from_id REF="V4474"/>
               </transition>
             </transitions>
+            <postactions>
+              <postaction_add_to_program_top_backlog/>
+            </postactions>
             <conditions>
               <condition type="perms">
                 <permissions>
@@ -1173,6 +1183,9 @@
                 <from_id REF="V4474"/>
               </transition>
             </transitions>
+            <postactions>
+              <postaction_add_to_program_top_backlog/>
+            </postactions>
             <conditions>
               <condition type="perms">
                 <permissions>
@@ -1203,6 +1216,9 @@
                 <from_id REF="V4474"/>
               </transition>
             </transitions>
+            <postactions>
+              <postaction_add_to_program_top_backlog/>
+            </postactions>
             <conditions>
               <condition type="perms">
                 <permissions>

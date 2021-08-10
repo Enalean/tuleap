@@ -38,7 +38,8 @@ use Tuleap\Tracker\Workflow\PostAction\Visitor;
 
 class AddToTopBacklogPostAction extends Transition_PostAction
 {
-    public const SHORT_NAME = 'program_management_add_to_top_backlog';
+    public const SHORT_NAME   = 'program_management_add_to_top_backlog';
+    public const XML_TAG_NAME = 'postaction_add_to_program_top_backlog';
     /**
      * @var BuildProgram
      */
@@ -78,7 +79,7 @@ class AddToTopBacklogPostAction extends Transition_PostAction
 
     public function exportToXml(SimpleXMLElement $root, $xmlMapping): void
     {
-        // Not yet implemented.
+        $root->addChild(self::XML_TAG_NAME);
     }
 
     public function bypassPermissions(Tracker_FormElement_Field $field): bool

@@ -135,8 +135,13 @@ final class AddToTopBacklogPostActionFactory implements Transition_PostActionSub
         }
     }
 
-    public function getInstanceFromXML($xml, &$xmlMapping, Transition $transition): void
+    public function getInstanceFromXML($xml, &$xmlMapping, Transition $transition): AddToTopBacklogPostAction
     {
-        throw new \LogicException('XML import/export of program management add to top backlog post action is not implemented');
+        return new AddToTopBacklogPostAction(
+            $transition,
+            0,
+            $this->build_program,
+            $this->top_backlog_change_processor
+        );
     }
 }
