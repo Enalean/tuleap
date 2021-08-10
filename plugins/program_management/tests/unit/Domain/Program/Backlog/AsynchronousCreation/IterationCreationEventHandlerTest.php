@@ -28,7 +28,9 @@ use Tuleap\ProgramManagement\Domain\Events\IterationCreationEvent;
 use Tuleap\ProgramManagement\Tests\Stub\CheckProgramIncrementStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveUserStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchPendingIterationStub;
+use Tuleap\ProgramManagement\Tests\Stub\VerifyIsIterationStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsUserStub;
+use Tuleap\ProgramManagement\Tests\Stub\VerifyIsVisibleArtifactStub;
 use Tuleap\Queue\WorkerEvent;
 use Tuleap\Test\Builders\UserTestBuilder;
 
@@ -38,8 +40,13 @@ final class IterationCreationEventHandlerTest extends \Tuleap\Test\PHPUnit\TestC
     private const USER_ID      = 108;
     private TestLogger $logger;
     private SearchPendingIterationStub $iteration_searcher;
+    private VerifyIsIterationStub $iteration_verifier;
     private CheckProgramIncrementStub $program_increment_checker;
     private RetrieveUserStub $user_retriever;
+    /**
+     * @var mixed|\PHPUnit\Framework\MockObject\MockObject|DeletePendingIterations
+     */
+    private $iteration_deleter;
 
     protected function setUp(): void
     {
@@ -50,10 +57,12 @@ final class IterationCreationEventHandlerTest extends \Tuleap\Test\PHPUnit\TestC
             self::USER_ID,
             5457
         );
-        $this->program_increment_checker = CheckProgramIncrementStub::buildProgramIncrementChecker();
         $this->user_retriever            = RetrieveUserStub::withUser(
             UserTestBuilder::aUser()->withId(self::USER_ID)->build()
         );
+        $this->iteration_verifier        = VerifyIsIterationStub::withValidIteration();
+        $this->program_increment_checker = CheckProgramIncrementStub::buildProgramIncrementChecker();
+        $this->iteration_deleter         = $this->createMock(DeletePendingIterations::class);
     }
 
     private function getHandler(): IterationCreationEventHandler
@@ -62,8 +71,11 @@ final class IterationCreationEventHandlerTest extends \Tuleap\Test\PHPUnit\TestC
             $this->logger,
             $this->iteration_searcher,
             VerifyIsUserStub::withValidUser(),
+            $this->iteration_verifier,
+            VerifyIsVisibleArtifactStub::withAlwaysVisibleArtifacts(),
+            $this->user_retriever,
             $this->program_increment_checker,
-            $this->user_retriever
+            $this->iteration_deleter
         );
     }
 
@@ -95,6 +107,16 @@ final class IterationCreationEventHandlerTest extends \Tuleap\Test\PHPUnit\TestC
         $this->getHandler()->handle($this->buildValidEvent());
 
         self::assertFalse($this->logger->hasDebugRecords());
+    }
+
+    public function testItCleansUpStoredCreationWhenIterationIsNoLongerValid(): void
+    {
+        // It can happen if Program configuration changes between storage and processing; for example someone
+        // changed the Iteration tracker.
+        $this->iteration_verifier = VerifyIsIterationStub::withNotIteration();
+        $this->iteration_deleter->expects(self::once())->method('deletePendingIterationCreationsByIterationId');
+
+        $this->getHandler()->handle($this->buildValidEvent());
     }
 
     private function buildValidEvent(): ?IterationCreationEvent

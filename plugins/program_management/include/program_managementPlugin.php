@@ -421,15 +421,19 @@ final class program_managementPlugin extends Plugin
         $create_mirrors_runner = $this->getProgramIncrementRunner();
         $create_mirrors_runner->addListener($event);
 
-        $user_retriever   = new UserManagerAdapter(UserManager::instance());
-        $artifact_factory = \Tracker_ArtifactFactory::instance();
+        $user_retriever         = new UserManagerAdapter(UserManager::instance());
+        $artifact_factory       = \Tracker_ArtifactFactory::instance();
+        $iteration_creation_DAO = new PendingIterationCreationDAO();
 
         $handler = new IterationCreationEventHandler(
             $logger,
-            new PendingIterationCreationDAO(),
+            $iteration_creation_DAO,
+            $user_retriever,
+            new IterationsDAO(),
+            new ArtifactVisibleVerifier($artifact_factory, $user_retriever),
             $user_retriever,
             new ProgramIncrementChecker($artifact_factory, new ProgramIncrementsDAO()),
-            $user_retriever
+            $iteration_creation_DAO
         );
         $handler->handle(IterationCreationEventProxy::fromWorkerEvent($logger, $event));
     }
@@ -487,8 +491,11 @@ final class program_managementPlugin extends Plugin
                         $logger,
                         $iteration_creation_DAO,
                         $user_retriever,
+                        new IterationsDAO(),
+                        $visibility_verifier,
+                        $user_retriever,
                         new ProgramIncrementChecker($artifact_factory, $program_increments_DAO),
-                        $user_retriever
+                        $iteration_creation_DAO
                     )
                 ),
             )

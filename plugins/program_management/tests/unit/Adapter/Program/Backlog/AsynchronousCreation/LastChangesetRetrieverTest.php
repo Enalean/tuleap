@@ -21,6 +21,9 @@
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation;
 
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration\IterationIdentifier;
+use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
+use Tuleap\ProgramManagement\Tests\Stub\VerifyIsIterationStub;
+use Tuleap\ProgramManagement\Tests\Stub\VerifyIsVisibleArtifactStub;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 
@@ -43,7 +46,12 @@ final class LastChangesetRetrieverTest extends TestCase
         $this->artifact_factory  = $this->createMock(\Tracker_ArtifactFactory::class);
         $this->changeset_factory = $this->createMock(\Tracker_Artifact_ChangesetFactory::class);
 
-        $this->iteration = IterationIdentifier::fromId(self::ITERATION_ID);
+        $this->iteration = IterationIdentifier::fromId(
+            VerifyIsIterationStub::withValidIteration(),
+            VerifyIsVisibleArtifactStub::withAlwaysVisibleArtifacts(),
+            self::ITERATION_ID,
+            UserIdentifierStub::buildGenericUser()
+        );
     }
 
     private function getRetriever(): LastChangesetRetriever

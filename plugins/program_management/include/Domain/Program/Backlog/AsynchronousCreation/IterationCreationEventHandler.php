@@ -24,7 +24,9 @@ namespace Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation;
 
 use Psr\Log\LoggerInterface;
 use Tuleap\ProgramManagement\Domain\Events\IterationCreationEvent;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration\VerifyIsIteration;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\CheckProgramIncrement;
+use Tuleap\ProgramManagement\Domain\VerifyIsVisibleArtifact;
 use Tuleap\ProgramManagement\Domain\Workspace\RetrieveUser;
 use Tuleap\ProgramManagement\Domain\Workspace\VerifyIsUser;
 
@@ -33,21 +35,30 @@ final class IterationCreationEventHandler implements ProcessIterationCreation
     private LoggerInterface $logger;
     private SearchPendingIteration $iteration_searcher;
     private VerifyIsUser $user_verifier;
-    private CheckProgramIncrement $program_increment_checker;
+    private VerifyIsIteration $iteration_verifier;
+    private VerifyIsVisibleArtifact $visibility_verifier;
     private RetrieveUser $user_retriever;
+    private CheckProgramIncrement $program_increment_checker;
+    private DeletePendingIterations $iteration_deleter;
 
     public function __construct(
         LoggerInterface $logger,
         SearchPendingIteration $iteration_searcher,
         VerifyIsUser $user_verifier,
+        VerifyIsIteration $iteration_verifier,
+        VerifyIsVisibleArtifact $visibility_verifier,
+        RetrieveUser $user_retriever,
         CheckProgramIncrement $program_increment_checker,
-        RetrieveUser $user_retriever
+        DeletePendingIterations $iteration_deleter
     ) {
         $this->logger                    = $logger;
         $this->iteration_searcher        = $iteration_searcher;
         $this->user_verifier             = $user_verifier;
-        $this->program_increment_checker = $program_increment_checker;
+        $this->iteration_verifier        = $iteration_verifier;
+        $this->visibility_verifier       = $visibility_verifier;
         $this->user_retriever            = $user_retriever;
+        $this->program_increment_checker = $program_increment_checker;
+        $this->iteration_deleter         = $iteration_deleter;
     }
 
     public function handle(?IterationCreationEvent $event): void
@@ -55,14 +66,25 @@ final class IterationCreationEventHandler implements ProcessIterationCreation
         if (! $event) {
             return;
         }
-        $iteration_creation = IterationCreation::fromStorage(
-            $this->iteration_searcher,
-            $this->user_verifier,
-            $this->program_increment_checker,
-            $this->user_retriever,
-            $event->getArtifactId(),
-            $event->getUserId()
-        );
+        try {
+            $iteration_creation = IterationCreation::fromStorage(
+                $this->iteration_searcher,
+                $this->user_verifier,
+                $this->iteration_verifier,
+                $this->visibility_verifier,
+                $this->user_retriever,
+                $this->program_increment_checker,
+                $event->getArtifactId(),
+                $event->getUserId()
+            );
+        } catch (StoredIterationNoLongerValidException $e) {
+            $iteration_id = $e->getIterationId();
+            $this->logger->debug(
+                sprintf('Stored iteration #%d is no longer valid, cleaning up pending iterations', $iteration_id)
+            );
+            $this->iteration_deleter->deletePendingIterationCreationsByIterationId($iteration_id);
+            return;
+        }
         if (! $iteration_creation) {
             return;
         }

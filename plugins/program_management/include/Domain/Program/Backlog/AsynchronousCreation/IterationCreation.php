@@ -25,9 +25,11 @@ namespace Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation;
 use Psr\Log\LoggerInterface;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration\IterationIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration\JustLinkedIterationCollection;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration\VerifyIsIteration;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\CheckProgramIncrement;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementNotFoundException;
+use Tuleap\ProgramManagement\Domain\VerifyIsVisibleArtifact;
 use Tuleap\ProgramManagement\Domain\Workspace\RetrieveUser;
 use Tuleap\ProgramManagement\Domain\Workspace\StoredUser;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
@@ -86,11 +88,16 @@ final class IterationCreation
         return $creations;
     }
 
+    /**
+     * @throws StoredIterationNoLongerValidException
+     */
     public static function fromStorage(
         SearchPendingIteration $iteration_searcher,
         VerifyIsUser $user_verifier,
-        CheckProgramIncrement $program_increment_checker,
+        VerifyIsIteration $iteration_verifier,
+        VerifyIsVisibleArtifact $visibility_verifier,
         RetrieveUser $user_retriever,
+        CheckProgramIncrement $program_increment_checker,
         int $iteration_id,
         int $user_id
     ): ?self {
@@ -102,8 +109,17 @@ final class IterationCreation
         if (! $user_identifier) {
             return null;
         }
-        $iteration = IterationIdentifier::fromId($stored_creation['iteration_id']);
-        $user      = $user_retriever->getUserWithId($user_identifier);
+        $stored_iteration_id = $stored_creation['iteration_id'];
+        $iteration           = IterationIdentifier::fromId(
+            $iteration_verifier,
+            $visibility_verifier,
+            $stored_iteration_id,
+            $user_identifier
+        );
+        if (! $iteration) {
+            throw new StoredIterationNoLongerValidException($stored_iteration_id);
+        }
+        $user = $user_retriever->getUserWithId($user_identifier);
         try {
             $program_increment = ProgramIncrementIdentifier::fromId(
                 $program_increment_checker,
