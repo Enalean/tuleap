@@ -22,11 +22,11 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain;
 
+use Tuleap\ProgramManagement\Domain\Permissions\PermissionBypass;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\NotAllowedToPrioritizeException;
 use Tuleap\ProgramManagement\Domain\Program\Plan\VerifyPrioritizeFeaturesPermission;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
-use Tuleap\ProgramManagement\Domain\Workspace\UserPermissions;
 
 /**
  * @psalm-immutable
@@ -45,11 +45,11 @@ final class UserCanPrioritize implements UserIdentifier
      */
     public static function fromUser(
         VerifyPrioritizeFeaturesPermission $permission,
-        UserPermissions $user_permissions,
         UserIdentifier $user_identifier,
-        ProgramIdentifier $program
+        ProgramIdentifier $program,
+        ?PermissionBypass $bypass = null
     ): self {
-        if (! $permission->canUserPrioritizeFeatures($program, $user_permissions, $user_identifier)) {
+        if (! $permission->canUserPrioritizeFeatures($program, $user_identifier, $bypass)) {
             throw new NotAllowedToPrioritizeException($user_identifier->getId(), $program->getId());
         }
 

@@ -34,7 +34,6 @@ use Tuleap\ProgramManagement\Tests\Stub\BuildProgramStub;
 use Tuleap\ProgramManagement\Tests\Stub\CheckProgramIncrementStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveUserStub;
-use Tuleap\ProgramManagement\Tests\Stub\UserPermissionsStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyCanBePlannedInProgramIncrementStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsVisibleFeatureStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyPrioritizeFeaturesPermissionStub;
@@ -124,7 +123,6 @@ final class FeatureAdditionProcessorTest extends \Tuleap\Test\PHPUnit\TestCase
             $program_increment,
             UserCanPrioritize::fromUser(
                 VerifyPrioritizeFeaturesPermissionStub::canPrioritize(),
-                UserPermissionsStub::aRegularUser(),
                 $user_identifier,
                 $program
             )
@@ -161,7 +159,6 @@ final class FeatureAdditionProcessorTest extends \Tuleap\Test\PHPUnit\TestCase
             $program_increment,
             UserCanPrioritize::fromUser(
                 VerifyPrioritizeFeaturesPermissionStub::canPrioritize(),
-                UserPermissionsStub::aRegularUser(),
                 $user_identifier,
                 $program
             )

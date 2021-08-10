@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program;
 
+use Tuleap\ProgramManagement\Adapter\Permissions\WorkflowUserPermissionBypass;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\ReplicationDataAdapter;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProgramStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
@@ -35,11 +36,23 @@ final class ProgramIdentifierTest extends TestCase
 {
     public function testItBuildsAProgramIdentifierFromAProjectId(): void
     {
-        $builder    = BuildProgramStub::stubValidProgram();
-        $project_id = 101;
+        $program = ProgramIdentifier::fromId(
+            BuildProgramStub::stubValidProgram(),
+            101,
+            UserIdentifierStub::buildGenericUser()
+        );
+        self::assertSame(101, $program->getId());
+    }
 
-        $program = ProgramIdentifier::fromId($builder, $project_id, UserIdentifierStub::buildGenericUser());
-        self::assertSame($project_id, $program->getId());
+    public function testItBuildsWithBypass(): void
+    {
+        $program = ProgramIdentifier::fromId(
+            BuildProgramStub::stubValidProgram(),
+            103,
+            UserIdentifierStub::buildGenericUser(),
+            new WorkflowUserPermissionBypass()
+        );
+        self::assertSame(103, $program->getId());
     }
 
     public function testItBuildsAProgramIdentifierFromReplicationData(): void

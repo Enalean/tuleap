@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog;
 
+use Tuleap\ProgramManagement\Domain\Permissions\PermissionBypass;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureHasPlannedUserStoryException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureNotFoundException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Content\RemoveFeatureException;
@@ -35,5 +36,10 @@ interface TopBacklogChangeProcessor
      * @throws RemoveFeatureException
      * @throws FeatureNotFoundException
      */
-    public function processTopBacklogChangeForAProgram(ProgramIdentifier $program, TopBacklogChange $top_backlog_change, \PFUser $user): void;
+    public function processTopBacklogChangeForAProgram(
+        ProgramIdentifier $program,
+        TopBacklogChange $top_backlog_change,
+        \PFUser $user,
+        ?PermissionBypass $bypass
+    ): void;
 }

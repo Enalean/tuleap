@@ -26,6 +26,7 @@ use Tracker_FormElement_Field;
 use Transition;
 use Transition_PostAction;
 use Transition_PostActionSubFactory;
+use Tuleap\ProgramManagement\Adapter\Permissions\WorkflowUserPermissionBypass;
 use Tuleap\ProgramManagement\Adapter\Workspace\UserProxy;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\TopBacklogChangeProcessor;
 use Tuleap\ProgramManagement\Domain\Program\Plan\BuildProgram;
@@ -91,7 +92,7 @@ final class AddToTopBacklogPostActionFactory implements Transition_PostActionSub
         $project_id      = (int) $transition->getGroupId();
         $user_identifier = UserProxy::buildFromPFUser(new AddToBacklogPostActionAllPowerfulUser());
         try {
-            ProgramIdentifier::fromId($this->build_program, $project_id, $user_identifier);
+            ProgramIdentifier::fromId($this->build_program, $project_id, $user_identifier, new WorkflowUserPermissionBypass());
         } catch (ProgramAccessException | ProjectIsNotAProgramException $e) {
             return [];
         }

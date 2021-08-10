@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program;
 
+use Tuleap\ProgramManagement\Domain\Permissions\PermissionBypass;
 use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramForAdministrationIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\ReplicationData;
 use Tuleap\ProgramManagement\Domain\Program\Plan\BuildProgram;
@@ -54,9 +55,13 @@ final class ProgramIdentifier
      * @throws ProjectIsNotAProgramException
      * @throws ProgramAccessException
      */
-    public static function fromId(BuildProgram $build_program, int $id, UserIdentifier $user): self
-    {
-        $build_program->ensureProgramIsAProject($id, $user);
+    public static function fromId(
+        BuildProgram $build_program,
+        int $id,
+        UserIdentifier $user,
+        ?PermissionBypass $bypass = null
+    ): self {
+        $build_program->ensureProgramIsAProject($id, $user, $bypass);
 
         return new self($id);
     }

@@ -27,28 +27,29 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\NotAllowedToPrioritizeExcept
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProgramStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
-use Tuleap\ProgramManagement\Tests\Stub\UserPermissionsStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyPrioritizeFeaturesPermissionStub;
 use Tuleap\Test\PHPUnit\TestCase;
 
 final class UserCanPrioritizeTest extends TestCase
 {
-    private UserPermissionsStub $user_permissions;
     private UserIdentifierStub $user_identifier;
     private ProgramIdentifier $program_identifier;
 
     protected function setUp(): void
     {
-        $this->user_permissions   = UserPermissionsStub::aRegularUser();
         $this->user_identifier    = UserIdentifierStub::buildGenericUser();
-        $this->program_identifier = ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 101, $this->user_identifier);
+        $this->program_identifier = ProgramIdentifier::fromId(
+            BuildProgramStub::stubValidProgram(),
+            101,
+            $this->user_identifier,
+            null
+        );
     }
 
     public function testItBuildsFromUserCanPrioritize(): void
     {
         $user_can_prioritize = UserCanPrioritize::fromUser(
             VerifyPrioritizeFeaturesPermissionStub::canPrioritize(),
-            $this->user_permissions,
             $this->user_identifier,
             $this->program_identifier
         );
@@ -60,7 +61,6 @@ final class UserCanPrioritizeTest extends TestCase
         $this->expectException(NotAllowedToPrioritizeException::class);
         UserCanPrioritize::fromUser(
             VerifyPrioritizeFeaturesPermissionStub::cannotPrioritize(),
-            $this->user_permissions,
             $this->user_identifier,
             $this->program_identifier
         );

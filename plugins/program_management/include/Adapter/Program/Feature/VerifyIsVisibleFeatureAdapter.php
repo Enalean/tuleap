@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\Feature;
 
+use Tuleap\ProgramManagement\Domain\Permissions\PermissionBypass;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\VerifyIsVisibleFeature;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\Workspace\RetrieveUser;
@@ -38,8 +39,16 @@ final class VerifyIsVisibleFeatureAdapter implements VerifyIsVisibleFeature
         $this->retrieve_user    = $retrieve_user;
     }
 
-    public function isVisibleFeature(int $feature_id, UserIdentifier $user_identifier, ProgramIdentifier $program): bool
-    {
+    public function isVisibleFeature(
+        int $feature_id,
+        UserIdentifier $user_identifier,
+        ProgramIdentifier $program,
+        ?PermissionBypass $bypass
+    ): bool {
+        if ($bypass) {
+            $artifact = $this->artifact_factory->getArtifactById($feature_id);
+            return $artifact !== null && (int) $artifact->getTracker()->getGroupId() === $program->getId();
+        }
         $user     = $this->retrieve_user->getUserWithId($user_identifier);
         $artifact = $this->artifact_factory->getArtifactByIdUserCanView($user, $feature_id);
         return $artifact !== null && (int) $artifact->getTracker()->getGroupId() === $program->getId();

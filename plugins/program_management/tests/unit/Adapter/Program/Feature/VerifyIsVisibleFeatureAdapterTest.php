@@ -22,12 +22,12 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\Feature;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use Tuleap\ProgramManagement\Adapter\Permissions\WorkflowUserPermissionBypass;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProgramStub;
-use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveUserStub;
+use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
@@ -35,64 +35,117 @@ use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class VerifyIsVisibleFeatureAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    private VerifyIsVisibleFeatureAdapter $verifier;
+    private const FEATURE_ID = 741;
+    private const PROGRAM_ID = 110;
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|\Tracker_ArtifactFactory
+     * @var mixed|\PHPUnit\Framework\MockObject\MockObject|\Tracker_ArtifactFactory
      */
     private $artifact_factory;
     private UserIdentifier $user_identifier;
     private \PFUser $user;
+    private ProgramIdentifier $program;
 
     protected function setUp(): void
     {
-        $this->artifact_factory = \Mockery::mock(\Tracker_ArtifactFactory::class);
+        $this->artifact_factory = $this->createMock(\Tracker_ArtifactFactory::class);
         $this->user             = UserTestBuilder::aUser()->build();
         $this->user_identifier  = UserIdentifierStub::buildGenericUser();
-        $this->verifier         = new VerifyIsVisibleFeatureAdapter(
-            $this->artifact_factory,
-            RetrieveUserStub::withUser($this->user)
+        $this->program          = ProgramIdentifier::fromId(
+            BuildProgramStub::stubValidProgram(),
+            self::PROGRAM_ID,
+            $this->user_identifier
         );
+    }
+
+    private function getVerifier(): VerifyIsVisibleFeatureAdapter
+    {
+        return new VerifyIsVisibleFeatureAdapter($this->artifact_factory, RetrieveUserStub::withUser($this->user));
     }
 
     public function testReturnsFalseIfFeatureArtifactCannotBeFoundOrUserCantViewIt(): void
     {
-        $this->artifact_factory->shouldReceive('getArtifactByIdUserCanView')->once()->with($this->user, 404)->andReturnNull();
-        $program = ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 110, $this->user_identifier);
+        $this->artifact_factory->expects(self::once())
+            ->method('getArtifactByIdUserCanView')
+            ->with($this->user, 404)
+            ->willReturn(null);
 
-        self::assertFalse($this->verifier->isVisibleFeature(404, $this->user_identifier, $program));
+        self::assertFalse($this->getVerifier()->isVisibleFeature(404, $this->user_identifier, $this->program, null));
     }
 
     public function testReturnsFalseIfFeatureDoesNotBelongToGivenProgram(): void
     {
-        $artifact = $this->buildFeatureArtifact(741, 110);
-        $this->artifact_factory->shouldReceive('getArtifactByIdUserCanView')
-            ->once()
-            ->with($this->user, $artifact->getId())
-            ->andReturn($artifact);
+        $artifact = $this->buildFeatureArtifact();
+        $this->artifact_factory->method('getArtifactByIdUserCanView')->willReturn($artifact);
         $program = ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 404, $this->user_identifier);
 
-        self::assertFalse($this->verifier->isVisibleFeature(741, $this->user_identifier, $program));
+        self::assertFalse(
+            $this->getVerifier()->isVisibleFeature(self::FEATURE_ID, $this->user_identifier, $program, null)
+        );
     }
 
     public function testReturnsTrue(): void
     {
-        $artifact = $this->buildFeatureArtifact(741, 110);
-        $this->artifact_factory->shouldReceive('getArtifactByIdUserCanView')
-            ->once()
-            ->with($this->user, $artifact->getId())
-            ->andReturn($artifact);
-        $program = ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 110, $this->user_identifier);
+        $artifact = $this->buildFeatureArtifact();
+        $this->artifact_factory->method('getArtifactByIdUserCanView')->willReturn($artifact);
 
-        self::assertTrue($this->verifier->isVisibleFeature(741, $this->user_identifier, $program));
+        self::assertTrue(
+            $this->getVerifier()->isVisibleFeature(self::FEATURE_ID, $this->user_identifier, $this->program, null)
+        );
     }
 
-    private function buildFeatureArtifact(int $artifact_id, int $project_id): Artifact
+    public function testItReturnsTrueWithBypassAndArtifactFromTheSameProgram(): void
     {
-        $project  = ProjectTestBuilder::aProject()->withId($project_id)->build();
+        $artifact = $this->buildFeatureArtifact();
+        $this->artifact_factory->expects(self::once())
+            ->method('getArtifactById')
+            ->with(self::FEATURE_ID)
+            ->willReturn($artifact);
+
+        self::assertTrue(
+            $this->getVerifier()->isVisibleFeature(
+                self::FEATURE_ID,
+                $this->user_identifier,
+                $this->program,
+                new WorkflowUserPermissionBypass()
+            )
+        );
+    }
+
+    public function testItReturnsFalseWithBypassAndArtifactCantBeFound(): void
+    {
+        $this->artifact_factory->method('getArtifactById')->willReturn(null);
+
+        self::assertFalse(
+            $this->getVerifier()->isVisibleFeature(
+                self::FEATURE_ID,
+                $this->user_identifier,
+                $this->program,
+                new WorkflowUserPermissionBypass()
+            )
+        );
+    }
+
+    public function testItReturnsFalseWithBypassAndArtifactFromOtherProject(): void
+    {
+        $artifact = $this->buildFeatureArtifact();
+        $this->artifact_factory->method('getArtifactById')->willReturn($artifact);
+        $program = ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 404, $this->user_identifier);
+
+        self::assertFalse(
+            $this->getVerifier()->isVisibleFeature(
+                self::FEATURE_ID,
+                $this->user_identifier,
+                $program,
+                new WorkflowUserPermissionBypass()
+            )
+        );
+    }
+
+    private function buildFeatureArtifact(): Artifact
+    {
+        $project  = ProjectTestBuilder::aProject()->withId(self::PROGRAM_ID)->build();
         $tracker  = TrackerTestBuilder::aTracker()->withId(76)->withProject($project)->build();
-        $artifact = new Artifact($artifact_id, $tracker->getId(), 101, 1234567890, false);
+        $artifact = new Artifact(self::FEATURE_ID, $tracker->getId(), 101, 1234567890, false);
         $artifact->setTracker($tracker);
         return $artifact;
     }

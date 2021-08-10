@@ -64,6 +64,6 @@ final class MassChangeTopBacklogActionProcessor
             return;
         }
 
-        $this->top_backlog_change_processor->processTopBacklogChangeForAProgram($program, $top_backlog_change, $user);
+        $this->top_backlog_change_processor->processTopBacklogChangeForAProgram($program, $top_backlog_change, $user, null);
     }
 }
