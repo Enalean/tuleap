@@ -31,6 +31,7 @@ import "./project-flags.ts";
 import "./project-privacy.js";
 import "./help-dropdown.ts";
 import "../global-shortcuts/index.ts";
+import "./help-window";
 
 document.addEventListener("DOMContentLoaded", () => {
     const sidebar = document.querySelector(".sidebar-nav");

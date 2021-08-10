@@ -39,9 +39,9 @@ class hudsonViews extends Views
         $request  = HTTPRequest::instance();
         $purifier = Codendi_HTMLPurifier::instance();
         $locale   = $request->getCurrentUser()->getShortLocale();
-        $GLOBALS['HTML']->addToolbarItem('<a href="javascript:help_window(\'' .
-                                         $purifier->purify('/doc/' . urlencode($locale) . '/user-guide/ci.html', CODENDI_PURIFIER_JS_QUOTE)
-                                         . '\')">' . $purifier->purify($GLOBALS['Language']->getText('global', 'help')) . '</a>');
+        $GLOBALS['HTML']->addToolbarItem('<a data-help-window href="' .
+                                         $purifier->purify('/doc/' . urlencode($locale) . '/user-guide/ci.html')
+                                         . '">' . $purifier->purify($GLOBALS['Language']->getText('global', 'help')) . '</a>');
         $GLOBALS['HTML']->header(['title' => $this->_getTitle(), 'group' => $request->get('group_id'), 'toptab' => 'hudson', [], 'body_class' => ['continuous-integration-body']]);
         echo '<h2 class="almost-tlp-title project-header-title">' . $this->_getTitle() . '</h2>';
     }
@@ -59,7 +59,7 @@ class hudsonViews extends Views
         } else {
             $help_label = $GLOBALS['Language']->getText('global', 'help');
         }
-        return help_button('ci.html' . $section, false, $help_label);
+        return help_button('ci.html' . $section, $help_label);
     }
     public function footer()
     {

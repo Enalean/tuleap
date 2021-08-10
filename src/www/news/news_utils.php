@@ -90,7 +90,7 @@ function news_header($params)
             }
         }
         if (isset($params['help'])) {
-            echo help_button($params['help'], false, $Language->getText('global', 'help'));
+            echo help_button($params['help'], $Language->getText('global', 'help'));
         }
         echo '</b><P>';
     }

@@ -159,10 +159,10 @@ class ReleaseNotesController implements DispatchableWithRequest, DispatchableWit
             $admin_toolbar_item = '<a href="' . $admin_url . '">' . $admin_title . '</a>';
             $layout->addToolbarItem($admin_toolbar_item);
         }
+        $purifier          = \Codendi_HTMLPurifier::instance();
         $help_title        = $GLOBALS['Language']->getText('file_file_utils', 'toolbar_help');
-        $help_url          = "javascript:help_window('/doc/" . $user->getShortLocale(
-        ) . "/user-guide/documents-and-files/frs.html')";
-        $help_toolbar_item = '<a href="' . $help_url . '">' . $help_title . '</a>';
+        $help_url          = "/doc/" . urlencode($user->getShortLocale()) . "/user-guide/documents-and-files/frs.html";
+        $help_toolbar_item = '<a data-help-window href="' . $purifier->purify($help_url) . '">' . $purifier->purify($help_title) . '</a>';
         $layout->addToolbarItem($help_toolbar_item);
     }
 }

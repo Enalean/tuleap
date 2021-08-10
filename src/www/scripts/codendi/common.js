@@ -18,15 +18,6 @@
  */
 
 /* global ProtoCheck:readonly Prototype:readonly Ajax:readonly $$:readonly */
-function help_window(helpurl) {
-    var HelpWin = window.open(
-        helpurl,
-        "HelpWindow",
-        "scrollbars=yes,resizable=yes,toolbar=no,height=740,width=1000"
-    );
-    HelpWin.focus();
-}
-window.help_window = help_window;
 
 var codendi = codendi || {};
 

@@ -81,7 +81,7 @@ class Docman_View_Admin_Obsolete extends Docman_View_Extra
                     false,
                     true
                 );
-                $table      .= '<a href="' . $url . '">';
+                $table      .= '<a data-help-window href="' . $url . '">';
                 $table      .= htmlentities($item->getTitle(), ENT_QUOTES, 'UTF-8');
                 $table      .= '</a>';
                 $table      .= '</span>';
