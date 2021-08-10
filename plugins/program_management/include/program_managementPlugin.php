@@ -180,6 +180,7 @@ use Tuleap\Tracker\Workflow\PostAction\ExternalPostActionSaveObjectEvent;
 use Tuleap\Tracker\Workflow\PostAction\GetExternalPostActionPluginsEvent;
 use Tuleap\Tracker\Workflow\PostAction\GetExternalSubFactoriesEvent;
 use Tuleap\Tracker\Workflow\PostAction\GetExternalSubFactoryByNameEvent;
+use Tuleap\Tracker\Workflow\PostAction\GetPostActionShortNameFromXmlTagNameEvent;
 use Tuleap\Tracker\XML\Importer\ImportXMLProjectTrackerDone;
 
 require_once __DIR__ . '/../vendor/autoload.php';
@@ -236,6 +237,7 @@ final class program_managementPlugin extends Plugin
         $this->addHook(GetWorkflowExternalPostActionsValueUpdater::NAME);
         $this->addHook(GetExternalSubFactoryByNameEvent::NAME);
         $this->addHook(ExternalPostActionSaveObjectEvent::NAME);
+        $this->addHook(GetPostActionShortNameFromXmlTagNameEvent::NAME);
         $this->addHook(CheckPostActionsForTracker::NAME);
         $this->addHook(WorkflowDeletionEvent::NAME);
         $this->addHook(TransitionDeletionEvent::NAME);
@@ -794,6 +796,13 @@ final class program_managementPlugin extends Plugin
 
         $factory = $this->getAddToTopBacklogPostActionFactory();
         $factory->saveObject($post_action);
+    }
+
+    public function getPostActionShortNameFromXmlTagNameEvent(GetPostActionShortNameFromXmlTagNameEvent $event): void
+    {
+        if ($event->getXmlTagName() === AddToTopBacklogPostAction::XML_TAG_NAME) {
+            $event->setPostActionShortName(AddToTopBacklogPostAction::SHORT_NAME);
+        }
     }
 
     public function checkPostActionsForTracker(CheckPostActionsForTracker $event): void
