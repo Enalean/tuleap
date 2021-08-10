@@ -20,11 +20,16 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation;
+namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation;
 
-interface DeletePendingIterations
+use Tuleap\DB\DataAccessObject;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\VerifyIsChangeset;
+
+final class ChangesetDAO extends DataAccessObject implements VerifyIsChangeset
 {
-    public function deletePendingIterationCreationsByIterationId(int $iteration_id): void;
-
-    public function deletePendingIterationCreationsByProgramIncrementId(int $program_increment_id): void;
+    public function isChangeset(int $changeset_id): bool
+    {
+        $sql = 'SELECT COUNT(*) FROM tracker_changeset WHERE id = ?';
+        return $this->getDB()->exists($sql, $changeset_id);
+    }
 }

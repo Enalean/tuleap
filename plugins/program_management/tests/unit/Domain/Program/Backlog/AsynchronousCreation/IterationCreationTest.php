@@ -31,6 +31,7 @@ use Tuleap\ProgramManagement\Tests\Stub\RetrieveUserStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchIterationsStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchPendingIterationStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
+use Tuleap\ProgramManagement\Tests\Stub\VerifyIsChangesetStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsIterationStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsUserStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsVisibleArtifactStub;
@@ -55,6 +56,7 @@ final class IterationCreationTest extends \Tuleap\Test\PHPUnit\TestCase
     private VerifyIsVisibleArtifactStub $visibility_verifier;
     private RetrieveUserStub $user_retriever;
     private CheckProgramIncrementStub $program_increment_checker;
+    private VerifyIsChangesetStub $changeset_verifier;
 
     protected function setUp(): void
     {
@@ -93,6 +95,7 @@ final class IterationCreationTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->visibility_verifier       = VerifyIsVisibleArtifactStub::withAlwaysVisibleArtifacts();
         $this->user_retriever            = RetrieveUserStub::withUser($user);
         $this->program_increment_checker = CheckProgramIncrementStub::buildProgramIncrementChecker();
+        $this->changeset_verifier        = VerifyIsChangesetStub::withValidChangeset();
     }
 
     public function testItRetrievesLastChangesetOfEachIterationAndBuildsCollection(): void
@@ -140,6 +143,7 @@ final class IterationCreationTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->visibility_verifier,
             $this->user_retriever,
             $this->program_increment_checker,
+            $this->changeset_verifier,
             self::FIRST_ITERATION_ID,
             self::USER_ID
         );
@@ -153,15 +157,15 @@ final class IterationCreationTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         // It can happen if the Iteration artifact or the Program Increment artifact are deleted
         // between storage and processing.
-        $iteration_searcher = SearchPendingIterationStub::withNoRow();
         self::assertNull(
             IterationCreation::fromStorage(
-                $iteration_searcher,
+                SearchPendingIterationStub::withNoRow(),
                 $this->user_verifier,
                 $this->iteration_verifier,
                 $this->visibility_verifier,
                 $this->user_retriever,
                 $this->program_increment_checker,
+                $this->changeset_verifier,
                 self::FIRST_ITERATION_ID,
                 self::USER_ID
             )
@@ -179,6 +183,7 @@ final class IterationCreationTest extends \Tuleap\Test\PHPUnit\TestCase
                 $this->visibility_verifier,
                 $this->user_retriever,
                 $this->program_increment_checker,
+                $this->changeset_verifier,
                 self::FIRST_ITERATION_ID,
                 self::USER_ID
             )
@@ -197,15 +202,33 @@ final class IterationCreationTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->visibility_verifier,
             $this->user_retriever,
             $this->program_increment_checker,
+            $this->changeset_verifier,
             self::FIRST_ITERATION_ID,
             self::USER_ID
         );
     }
 
-    public function testItReturnsNullWhenStoredProgramIncrementIsNotValid(): void
+    public function testItThrowsWhenStoredProgramIncrementIsNotValid(): void
     {
         // It can happen if Program configuration changes between storage and processing; for example someone
         // changed the Program Increment tracker.
+        $this->expectException(StoredProgramIncrementNoLongerValidException::class);
+        IterationCreation::fromStorage(
+            $this->iteration_searcher,
+            $this->user_verifier,
+            $this->iteration_verifier,
+            $this->visibility_verifier,
+            $this->user_retriever,
+            CheckProgramIncrementStub::buildOtherArtifactChecker(),
+            $this->changeset_verifier,
+            self::FIRST_ITERATION_ID,
+            self::USER_ID
+        );
+    }
+
+    public function testItReturnsNullWhenStoredChangesetIsNotValid(): void
+    {
+        // It's not supposed to happen as changesets cannot be deleted in Tuleap.
         self::assertNull(
             IterationCreation::fromStorage(
                 $this->iteration_searcher,
@@ -213,7 +236,8 @@ final class IterationCreationTest extends \Tuleap\Test\PHPUnit\TestCase
                 $this->iteration_verifier,
                 $this->visibility_verifier,
                 $this->user_retriever,
-                CheckProgramIncrementStub::buildOtherArtifactChecker(),
+                $this->program_increment_checker,
+                VerifyIsChangesetStub::withNotValidChangeset(),
                 self::FIRST_ITERATION_ID,
                 self::USER_ID
             )

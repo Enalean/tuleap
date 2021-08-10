@@ -38,6 +38,7 @@ use Tuleap\ProgramManagement\Adapter\Events\ArtifactUpdatedProxy;
 use Tuleap\ProgramManagement\Adapter\Events\IterationCreationEventProxy;
 use Tuleap\ProgramManagement\Adapter\FeatureFlag\ForgeConfigAdapter;
 use Tuleap\ProgramManagement\Adapter\Program\Admin\CanPrioritizeItems\UGroupRepresentationBuilder;
+use Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation\ChangesetDAO;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation\CreateProgramIncrementsRunner;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation\IterationCreationsRunner;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation\LastChangesetRetriever;
@@ -433,6 +434,7 @@ final class program_managementPlugin extends Plugin
             new ArtifactVisibleVerifier($artifact_factory, $user_retriever),
             $user_retriever,
             new ProgramIncrementChecker($artifact_factory, new ProgramIncrementsDAO()),
+            new ChangesetDAO(),
             $iteration_creation_DAO
         );
         $handler->handle(IterationCreationEventProxy::fromWorkerEvent($logger, $event));
@@ -495,6 +497,7 @@ final class program_managementPlugin extends Plugin
                         $visibility_verifier,
                         $user_retriever,
                         new ProgramIncrementChecker($artifact_factory, $program_increments_DAO),
+                        new ChangesetDAO(),
                         $iteration_creation_DAO
                     )
                 ),

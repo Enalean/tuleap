@@ -22,34 +22,23 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation;
 
-use Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration\IterationIdentifier;
-
 /**
- * I am the ID (identifier) of an Artifact's Changeset.
  * @psalm-immutable
  */
-final class ChangesetIdentifier
+final class StoredProgramIncrementNoLongerValidException extends \Exception
 {
-    public int $id;
+    private int $program_increment_id;
 
-    private function __construct(int $id)
+    public function __construct(int $program_increment_id)
     {
-        $this->id = $id;
+        parent::__construct(
+            sprintf('Artifact #%d is no longer a valid program increment per program configuration', $program_increment_id)
+        );
+        $this->program_increment_id = $program_increment_id;
     }
 
-    public static function fromId(VerifyIsChangeset $changeset_verifier, int $changeset_id): ?self
+    public function getProgramIncrementId(): int
     {
-        if (! $changeset_verifier->isChangeset($changeset_id)) {
-            return null;
-        }
-        return new self($changeset_id);
-    }
-
-    public static function fromIterationLastChangeset(
-        RetrieveLastChangeset $changeset_retriever,
-        IterationIdentifier $iteration
-    ): ?self {
-        $changeset_id = $changeset_retriever->retrieveLastChangesetId($iteration);
-        return ($changeset_id !== null) ? new self($changeset_id) : null;
+        return $this->program_increment_id;
     }
 }

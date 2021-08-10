@@ -20,11 +20,31 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation;
+namespace Tuleap\ProgramManagement\Tests\Stub;
 
-interface DeletePendingIterations
+use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\VerifyIsChangeset;
+
+final class VerifyIsChangesetStub implements VerifyIsChangeset
 {
-    public function deletePendingIterationCreationsByIterationId(int $iteration_id): void;
+    private bool $is_valid;
 
-    public function deletePendingIterationCreationsByProgramIncrementId(int $program_increment_id): void;
+    private function __construct(bool $is_valid)
+    {
+        $this->is_valid = $is_valid;
+    }
+
+    public function isChangeset(int $changeset_id): bool
+    {
+        return $this->is_valid;
+    }
+
+    public static function withValidChangeset(): self
+    {
+        return new self(true);
+    }
+
+    public static function withNotValidChangeset(): self
+    {
+        return new self(false);
+    }
 }
