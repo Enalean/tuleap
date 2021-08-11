@@ -737,8 +737,8 @@ class Tracker implements Tracker_Dispatchable_Interface
                         // display preview before importing artifacts
                         $this->displayImportPreview($layout, $request, $current_user, $session);
                     } elseif ($request->exist('action') && $request->get('action') == 'import') {
-                        $csv_header = $session->get('csv_header');
-                        $csv_body   = $session->get('csv_body');
+                        $csv_header = $session->get('csv_header') ?? [];
+                        $csv_body   = $session->get('csv_body') ?? [];
 
                         if ($this->importFromCSV($request, $current_user, $csv_header, $csv_body)) {
                             $GLOBALS['Response']->addFeedback('info', dgettext('tuleap-tracker', 'Import succeed.'));

@@ -479,7 +479,7 @@ abstract class GraphOnTrackersV5_Chart implements Visitable
         $session  = new Tracker_Report_Session($this->renderer->report->id);
         $session->changeSessionNamespace("renderers.{$this->renderer->id}");
 
-        $charts = $session->get('charts');
+        $charts = $session->get('charts') ?? [];
         uasort($charts, [GraphOnTrackersV5_ChartFactory::instance(), 'sortArrayByRank']);
         foreach ($charts as $sibling) {
             if ($sibling === GraphOnTrackersV5_ChartFactory::CHART_REMOVED) {

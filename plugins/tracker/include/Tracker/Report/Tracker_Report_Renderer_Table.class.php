@@ -1910,7 +1910,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
                             $key           .= '_' . $artlink_nature;
                         }
                         if (! isset($columns[$key])) {
-                            $session_table_columns = $this->report_session->get("{$this->id}.columns");
+                            $session_table_columns = $this->report_session->get("{$this->id}.columns") ?? [];
                             $nb_col                = count($session_table_columns);
                             //Update session with new column
                             $this->report_session->set(
@@ -1955,7 +1955,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
                     $columns = $this->getColumns();
                     if (isset($columns[$column_id])) {
                         if ($ff->getUsedFormElementById($columns[$column_id]['field_id'])) {
-                            $columns = &$this->report_session->get("{$this->id}.columns");
+                            $columns = $this->report_session->get("{$this->id}.columns") ?? [];
                             if ($new_position == '-1') {
                                 //beginning
                                 foreach ($columns as $id => $properties) {
