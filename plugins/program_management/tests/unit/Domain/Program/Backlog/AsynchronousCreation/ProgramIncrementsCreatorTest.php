@@ -24,21 +24,14 @@ namespace Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation;
 
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ArtifactCreationException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\CreateArtifact;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\ArtifactLinkValue;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\DescriptionValue;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\EndPeriodValue;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\MappedStatusValue;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\SourceChangesetValuesCollection;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\StartDateValue;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\StatusValue;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\TitleValue;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\BuildSynchronizedFields;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\Field;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFields;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\SubmissionDate;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Team\TeamProjectsCollection;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TrackerCollection;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramIdentifierBuilder;
+use Tuleap\ProgramManagement\Tests\Builder\SourceChangesetValuesCollectionBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProjectStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchTeamsOfProgramStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrievePlanningMilestoneTrackerStub;
@@ -77,7 +70,7 @@ final class ProgramIncrementsCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItCreatesMirrorProgramIncrements(): void
     {
-        $copied_values = $this->buildCopiedValues();
+        $copied_values = SourceChangesetValuesCollectionBuilder::build();
         $teams         = TeamProjectsCollection::fromProgramIdentifier(
             SearchTeamsOfProgramStub::buildTeams(101, 102),
             new BuildProjectStub(),
@@ -108,7 +101,7 @@ final class ProgramIncrementsCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItThrowsWhenThereIsAnErrorDuringCreation(): void
     {
-        $copied_values = $this->buildCopiedValues();
+        $copied_values = SourceChangesetValuesCollectionBuilder::build();
         $teams         = TeamProjectsCollection::fromProgramIdentifier(
             SearchTeamsOfProgramStub::buildTeams(101),
             new BuildProjectStub(),
@@ -126,30 +119,6 @@ final class ProgramIncrementsCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->expectException(ProgramIncrementArtifactCreationException::class);
         $this->mirrors_creator->createProgramIncrements($copied_values, $trackers, $current_user);
-    }
-
-    private function buildCopiedValues(): SourceChangesetValuesCollection
-    {
-        $planned_value = new \Tracker_FormElement_Field_List_Bind_StaticValue(2000, 'Planned', 'Irrelevant', 1, false);
-
-        $title_value         = new TitleValue('Program Release');
-        $description_value   = new DescriptionValue('Description', 'text');
-        $status_value        = new StatusValue([$planned_value]);
-        $start_date_value    = new StartDateValue("2020-10-01");
-        $end_period_value    = new EndPeriodValue("2020-10-31");
-        $artifact_link_value = new ArtifactLinkValue(112);
-        $submission_date     = new SubmissionDate(123456789);
-
-        return new SourceChangesetValuesCollection(
-            112,
-            $title_value,
-            $description_value,
-            $status_value,
-            $submission_date,
-            $start_date_value,
-            $end_period_value,
-            $artifact_link_value
-        );
     }
 
     private function buildSynchronizedFields(

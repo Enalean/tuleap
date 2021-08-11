@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2020 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,9 +22,20 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values;
 
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\ReplicationData;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\TimeboxArtifactLinkType;
+use Tuleap\ProgramManagement\Tests\Builder\ReplicationDataBuilder;
 
-interface BuildArtifactLinkValue
+final class ArtifactLinkValueTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    public function build(ReplicationData $replication_data): ArtifactLinkValue;
+    private const TIMEBOX_ID = 90;
+
+    public function testItBuildsFromReplicationData(): void
+    {
+        $replication_data = ReplicationDataBuilder::buildWithArtifactId(self::TIMEBOX_ID);
+        $value            = ArtifactLinkValue::fromReplicationData($replication_data);
+        self::assertEquals([
+            'new_values' => (string) self::TIMEBOX_ID,
+            'natures'    => [(string) self::TIMEBOX_ID => TimeboxArtifactLinkType::ART_LINK_SHORT_NAME]
+        ], $value->getValues());
+    }
 }

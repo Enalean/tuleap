@@ -35,7 +35,6 @@ use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\ArtifactCreatorAdapter;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\ArtifactLinkFieldAdapter;
-use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\ArtifactLinkValueAdapter;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\DescriptionFieldAdapter;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\DescriptionValueAdapter;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\EndPeriodValueAdapter;
@@ -120,8 +119,7 @@ class TaskBuilder
                 new DescriptionValueAdapter(),
                 new StatusValueAdapter(),
                 new StartDateValueValueAdapter(),
-                new EndPeriodValueAdapter(),
-                new ArtifactLinkValueAdapter()
+                new EndPeriodValueAdapter()
             ),
             new PlanningAdapter(\PlanningFactory::build()),
             $mirror_creator,

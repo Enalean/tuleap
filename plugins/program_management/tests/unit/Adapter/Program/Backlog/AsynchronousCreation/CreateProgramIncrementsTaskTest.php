@@ -23,29 +23,18 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation;
 
 use Psr\Log\Test\TestLogger;
-use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\ReplicationDataAdapter;
 use Tuleap\ProgramManagement\Adapter\Program\PlanningAdapter;
 use Tuleap\ProgramManagement\Adapter\ProgramManagementProjectAdapter;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\PendingArtifactCreationStore;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\ProgramIncrementsCreator;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\PlanUserStoriesInMirroredProgramIncrements;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\ArtifactLinkValue;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\BuildFieldValues;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\DescriptionValue;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\EndPeriodValue;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\SourceChangesetValuesCollection;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\StartDateValue;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\StatusValue;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\TitleValue;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\FieldRetrievalException;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\ReplicationData;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\SubmissionDate;
 use Tuleap\ProgramManagement\Domain\Program\SearchTeamsOfProgram;
+use Tuleap\ProgramManagement\Tests\Builder\ReplicationDataBuilder;
+use Tuleap\ProgramManagement\Tests\Builder\SourceChangesetValuesCollectionBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\SearchTeamsOfProgramStub;
 use Tuleap\Test\Builders\ProjectTestBuilder;
-use Tuleap\Test\Builders\UserTestBuilder;
-use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
-use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class CreateProgramIncrementsTaskTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -106,10 +95,8 @@ final class CreateProgramIncrementsTaskTest extends \Tuleap\Test\PHPUnit\TestCas
 
     public function testItCreateMirrors(): void
     {
-        $program_project  = ProjectTestBuilder::aProject()->withId(101)->build();
-        $replication_data = $this->getReplicationData($program_project);
-
-        $copied_values = $this->buildCopiedValues();
+        $replication_data = ReplicationDataBuilder::build();
+        $copied_values    = SourceChangesetValuesCollectionBuilder::build();
         $this->changeset_values_adapter->method('buildCollection')->willReturn($copied_values);
 
         $team_project_id = 102;
@@ -133,9 +120,7 @@ final class CreateProgramIncrementsTaskTest extends \Tuleap\Test\PHPUnit\TestCas
 
     public function testItLogsWhenAnExceptionOccurs(): void
     {
-        $program_project  = ProjectTestBuilder::aProject()->withId(101)->build();
-        $replication_data = $this->getReplicationData($program_project);
-
+        $replication_data = ReplicationDataBuilder::build();
         $this->changeset_values_adapter->method('buildCollection')
             ->willThrowException(new FieldRetrievalException(1, 'title'));
 
@@ -143,39 +128,5 @@ final class CreateProgramIncrementsTaskTest extends \Tuleap\Test\PHPUnit\TestCas
 
         $this->getTask()->createProgramIncrements($replication_data);
         self::assertTrue($this->logger->hasErrorRecords());
-    }
-
-    private function buildCopiedValues(): SourceChangesetValuesCollection
-    {
-        $planned_value = new \Tracker_FormElement_Field_List_Bind_StaticValue(2000, 'Planned', 'Irrelevant', 1, false);
-
-        $title_value         = new TitleValue('Program Release');
-        $description_value   = new DescriptionValue('Description', 'text');
-        $status_value        = new StatusValue([$planned_value]);
-        $start_date_value    = new StartDateValue("2020-10-01");
-        $end_period_value    = new EndPeriodValue("2020-10-30");
-        $artifact_link_value = new ArtifactLinkValue(112);
-        $submission_date     = new SubmissionDate(123456789);
-
-        return new SourceChangesetValuesCollection(
-            112,
-            $title_value,
-            $description_value,
-            $status_value,
-            $submission_date,
-            $start_date_value,
-            $end_period_value,
-            $artifact_link_value
-        );
-    }
-
-    private function getReplicationData(\Project $program_project): ReplicationData
-    {
-        $user      = UserTestBuilder::aUser()->withId(1001)->build();
-        $tracker   = TrackerTestBuilder::aTracker()->withId(89)->withProject($program_project)->build();
-        $artifact  = ArtifactTestBuilder::anArtifact(101)->inTracker($tracker)->build();
-        $changeset = new \Tracker_Artifact_Changeset(1, $artifact, $user->getId(), 1234567890, null);
-
-        return ReplicationDataAdapter::build($artifact, $user, $changeset);
     }
 }

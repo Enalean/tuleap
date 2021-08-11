@@ -33,6 +33,7 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Chan
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\ProgramIncrementFields;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\SubmissionDate;
 use Tuleap\ProgramManagement\Domain\ProgramTracker;
+use Tuleap\ProgramManagement\Tests\Builder\ReplicationDataBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\Creation\TrackerArtifactCreator;
@@ -96,9 +97,11 @@ final class ArtifactCreatorAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
 
     private function buildProgramIncrementFieldsData(): ProgramIncrementFields
     {
+        $replication_data = ReplicationDataBuilder::build();
+
         return new ProgramIncrementFields(
             1000,
-            new ArtifactLinkValue(200),
+            ArtifactLinkValue::fromReplicationData($replication_data),
             1001,
             new TitleValue('Program Increment'),
             1002,
