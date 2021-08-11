@@ -34,8 +34,7 @@ class CanPrioritizeFeaturesDAO extends DataAccessObject implements RetrieveProje
     {
         $sql = 'SELECT user_group_id
                 FROM plugin_program_management_can_prioritize_features
-                JOIN tracker ON (tracker.id = plugin_program_management_can_prioritize_features.program_increment_tracker_id)
-                WHERE tracker.group_id = ?';
+                WHERE project_id = ?';
 
         return $this->getDB()->first($sql, $project_id);
     }

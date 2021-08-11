@@ -64,16 +64,15 @@ final class PlanDao extends DataAccessObject implements PlanStore, VerifyCanBePl
 
     private function setUpPlanPermissions(Plan $plan): void
     {
-        $sql = 'DELETE FROM plugin_program_management_can_prioritize_features WHERE program_increment_tracker_id = ?';
+        $sql = 'DELETE FROM plugin_program_management_can_prioritize_features WHERE project_id = ?';
 
-        $program_increment_tracker_id = $plan->getProgramIncrementTracker()->getId();
-        $this->getDB()->run($sql, $program_increment_tracker_id);
+        $this->getDB()->run($sql, $plan->getProjectId());
 
         $insert = [];
         foreach ($plan->getCanPrioritize() as $can_prioritize_ugroup) {
             $insert[] = [
-                'program_increment_tracker_id' => $program_increment_tracker_id,
-                'user_group_id'                => $can_prioritize_ugroup->getId()
+                'project_id'    => $plan->getProjectId(),
+                'user_group_id' => $can_prioritize_ugroup->getId()
             ];
         }
         $this->getDB()->insertMany('plugin_program_management_can_prioritize_features', $insert);

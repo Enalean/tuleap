@@ -41,7 +41,7 @@ final class WorkspaceDAO extends DataAccessObject implements UnusedComponentClea
                 LEFT JOIN tracker ON (tracker.group_id = `groups`.group_id)
                 LEFT JOIN plugin_program_management_plan ON (plugin_program_management_plan.project_id = tracker.group_id)
                 LEFT JOIN plugin_program_management_program ON (plugin_program_management_program.program_project_id = tracker.group_id)
-                LEFT JOIN plugin_program_management_can_prioritize_features ON (plugin_program_management_can_prioritize_features.program_increment_tracker_id = plugin_program_management_program.program_increment_tracker_id)
+                LEFT JOIN plugin_program_management_can_prioritize_features ON (plugin_program_management_can_prioritize_features.project_id = plugin_program_management_program.program_project_id)
                 LEFT JOIN plugin_program_management_team_projects ON (plugin_program_management_team_projects.team_project_id = `groups`.group_id OR plugin_program_management_team_projects.program_project_id = `groups`.group_id)
                 LEFT JOIN tracker_artifact ON (tracker_artifact.tracker_id = tracker.id)
                 LEFT JOIN plugin_program_management_pending_mirrors ON (plugin_program_management_pending_mirrors.program_artifact_id = tracker_artifact.id)
