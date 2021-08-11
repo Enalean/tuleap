@@ -27,6 +27,7 @@ use Planning;
 use Planning_Milestone;
 use PlanningFactory;
 use Tracker;
+use Tuleap\Test\Builders\UserTestBuilder;
 
 final class ParentTrackerRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -188,5 +189,28 @@ final class ParentTrackerRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $trackers = $this->retriever->getCreatableParentTrackers($milestone, $user, $descendant_backlog_trackers);
 
         $this->assertEmpty($trackers);
+    }
+
+    public function testItGetsUniqueParentTrackerOfPlanning(): void
+    {
+        $epic_tracker       = $this->getMockedTracker(101, null);
+        $release_tracker    = $this->getMockedTracker(102, null);
+        $user_story_tracker = $this->getMockedTracker(103, $epic_tracker);
+        $bug_tracker        = $this->getMockedTracker(104, $epic_tracker);
+        $activity_tracker   = $this->getMockedTracker(105, $release_tracker);
+
+        $descendant_backlog_trackers = [$user_story_tracker, $bug_tracker, $activity_tracker];
+
+        $milestone = $this->createMock(Planning_Milestone::class);
+        $milestone->method('getPlanning')->willReturn($this->createMock(Planning::class));
+        $user = UserTestBuilder::aUser()->build();
+
+        $this->planning_factory->shouldReceive('getSubPlannings')->andReturns([]);
+
+        $trackers = $this->retriever->getCreatableParentTrackers($milestone, $user, $descendant_backlog_trackers);
+
+        self::assertCount(2, $trackers);
+        self::assertSame(101, $trackers[0]->getId());
+        self::assertSame(102, $trackers[1]->getId());
     }
 }
