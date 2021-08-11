@@ -17,8 +17,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { DateTimeLocaleInformation, ExportDocument } from "../type";
+import type { ArtifactContainer, DateTimeLocaleInformation, ExportDocument } from "../type";
+import type { ArtifactReportContainer, ArtifactReportFieldValue } from "./artifacts-retriever";
 import { retrieveReportArtifacts } from "./artifacts-retriever";
+import type { ArtifactFieldValue, FormattedArtifact } from "../type";
 
 export async function createExportDocument(
     report_id: number,
@@ -34,55 +36,11 @@ export async function createExportDocument(
         report_has_changed
     );
 
-    const artifact_data = [];
+    const artifact_data: FormattedArtifact[] = [];
     for (const artifact of report_artifacts) {
         const artifact_id = artifact.id;
         const artifact_title = artifact.title;
-        const fields_content = [];
-        for (const value of artifact.values) {
-            let artifact_field_value = "";
-            if (
-                value.type === "aid" ||
-                value.type === "atid" ||
-                value.type === "int" ||
-                value.type === "float" ||
-                value.type === "priority"
-            ) {
-                if (value.value !== null) {
-                    artifact_field_value = value.value.toString();
-                }
-            } else if (value.type === "string") {
-                if (value.value !== null) {
-                    artifact_field_value = value.value;
-                }
-            } else if (value.type === "date" || value.type === "lud" || value.type === "subon") {
-                if (value.value !== null) {
-                    const date_value = new Date(value.value);
-                    const { locale, timezone } = datetime_locale_information;
-                    artifact_field_value = date_value.toLocaleDateString(locale, {
-                        timeZone: timezone,
-                    });
-                    if (value.is_time_displayed) {
-                        artifact_field_value += ` ${date_value.toLocaleTimeString(locale, {
-                            timeZone: timezone,
-                        })}`;
-                    }
-                }
-            } else if (value.type === "computed") {
-                if (!value.is_autocomputed && value.manual_value !== null) {
-                    artifact_field_value = value.manual_value.toString();
-                } else if (value.is_autocomputed && value.value !== null) {
-                    artifact_field_value = value.value.toString();
-                }
-            } else {
-                continue;
-            }
 
-            fields_content.push({
-                field_name: value.label,
-                field_value: artifact_field_value,
-            });
-        }
         let formatted_title = tracker_shortname + " #" + artifact.id;
         if (artifact_title !== null) {
             formatted_title += " - " + artifact_title;
@@ -90,9 +48,84 @@ export async function createExportDocument(
         artifact_data.push({
             id: artifact_id,
             title: formatted_title,
-            fields: fields_content,
+            fields: formatFieldValues(artifact.values, datetime_locale_information),
+            containers: formatContainers(artifact.containers, datetime_locale_information),
         });
     }
 
     return { name: `${tracker_shortname} - ${report_name}`, artifacts: artifact_data };
+}
+
+function formatFieldValues(
+    values: ReadonlyArray<ArtifactReportFieldValue>,
+    datetime_locale_information: DateTimeLocaleInformation
+): ReadonlyArray<ArtifactFieldValue> {
+    return values.flatMap((value) => {
+        const formatted_field_value = formatFieldValue(value, datetime_locale_information);
+        if (formatted_field_value === null) {
+            return [];
+        }
+        return [formatted_field_value];
+    });
+}
+
+function formatFieldValue(
+    value: ArtifactReportFieldValue,
+    datetime_locale_information: DateTimeLocaleInformation
+): ArtifactFieldValue | null {
+    let artifact_field_value = "";
+    if (
+        value.type === "aid" ||
+        value.type === "atid" ||
+        value.type === "int" ||
+        value.type === "float" ||
+        value.type === "priority"
+    ) {
+        if (value.value !== null) {
+            artifact_field_value = value.value.toString();
+        }
+    } else if (value.type === "string") {
+        if (value.value !== null) {
+            artifact_field_value = value.value;
+        }
+    } else if (value.type === "date" || value.type === "lud" || value.type === "subon") {
+        if (value.value !== null) {
+            const date_value = new Date(value.value);
+            const { locale, timezone } = datetime_locale_information;
+            artifact_field_value = date_value.toLocaleDateString(locale, {
+                timeZone: timezone,
+            });
+            if (value.is_time_displayed) {
+                artifact_field_value += ` ${date_value.toLocaleTimeString(locale, {
+                    timeZone: timezone,
+                })}`;
+            }
+        }
+    } else if (value.type === "computed") {
+        if (!value.is_autocomputed && value.manual_value !== null) {
+            artifact_field_value = value.manual_value.toString();
+        } else if (value.is_autocomputed && value.value !== null) {
+            artifact_field_value = value.value.toString();
+        }
+    } else {
+        return null;
+    }
+
+    return {
+        field_name: value.label,
+        field_value: artifact_field_value,
+    };
+}
+
+function formatContainers(
+    containers: ReadonlyArray<ArtifactReportContainer>,
+    datetime_locale_information: DateTimeLocaleInformation
+): ReadonlyArray<ArtifactContainer> {
+    return containers.map((container) => {
+        return {
+            name: container.name,
+            fields: formatFieldValues(container.values, datetime_locale_information),
+            containers: formatContainers(container.containers, datetime_locale_information),
+        };
+    });
 }

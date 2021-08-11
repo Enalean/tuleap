@@ -54,7 +54,20 @@ describe("artifacts-retriever", () => {
         recursive_get_spy.mockResolvedValue(artifacts_report_response);
 
         const tracker_definition_response: TrackerDefinition = {
-            fields: [{ field_id: 2, type: "date", is_time_displayed: false }],
+            fields: [
+                { field_id: 2, type: "date", is_time_displayed: false },
+                { field_id: 5, type: "fieldset", label: "Fieldset label" },
+            ],
+            structure: [
+                { id: 3, content: null },
+                {
+                    id: 5,
+                    content: [
+                        { id: 2, content: null },
+                        { id: 1, content: null },
+                    ],
+                },
+            ],
         };
         mockFetchSuccess(jest.spyOn(tlp_fetch, "get"), {
             return_json: tracker_definition_response,
@@ -67,24 +80,32 @@ describe("artifacts-retriever", () => {
                 title: null,
                 values: [
                     {
-                        field_id: 1,
-                        is_time_displayed: true,
-                        label: "My Date",
-                        type: "date",
-                        value: "2021-07-30T15:56:09+02:00",
-                    },
-                    {
-                        field_id: 2,
-                        is_time_displayed: false,
-                        label: "My Other Date",
-                        type: "date",
-                        value: "2021-07-01T00:00:00+02:00",
-                    },
-                    {
                         field_id: 3,
                         label: "Some String",
                         type: "string",
                         value: null,
+                    },
+                ],
+                containers: [
+                    {
+                        name: "Fieldset label",
+                        values: [
+                            {
+                                field_id: 2,
+                                is_time_displayed: false,
+                                label: "My Other Date",
+                                type: "date",
+                                value: "2021-07-01T00:00:00+02:00",
+                            },
+                            {
+                                field_id: 1,
+                                is_time_displayed: true,
+                                label: "My Date",
+                                type: "date",
+                                value: "2021-07-30T15:56:09+02:00",
+                            },
+                        ],
+                        containers: [],
                     },
                 ],
             },

@@ -17,8 +17,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { DateTimeLocaleInformation, ExportDocument, GlobalExportProperties } from "../../type";
-import type { ParagraphChild } from "docx";
+import type {
+    ArtifactContainer,
+    ArtifactFieldValue,
+    DateTimeLocaleInformation,
+    ExportDocument,
+    GlobalExportProperties,
+} from "../../type";
+import type { ParagraphChild, XmlComponent } from "docx";
 import {
     AlignmentType,
     Bookmark,
@@ -92,112 +98,12 @@ export async function downloadDocx(
             })
         );
 
-        const fields_rows = [
-            new TableRow({
-                children: [
-                    new TableCell({
-                        children: [
-                            new Paragraph({
-                                text: gettext_provider.gettext("Field name"),
-                                style: "table_header",
-                            }),
-                        ],
-                        verticalAlign: VerticalAlign.CENTER,
-                        borders: {
-                            top: {
-                                size: 0,
-                                style: BorderStyle.NONE,
-                                color: "ffffff",
-                            },
-                            left: {
-                                size: 0,
-                                style: BorderStyle.NONE,
-                                color: "ffffff",
-                            },
-                            right: {
-                                size: 0,
-                                style: BorderStyle.NONE,
-                                color: "ffffff",
-                            },
-                        },
-                    }),
-                    new TableCell({
-                        children: [
-                            new Paragraph({
-                                text: gettext_provider.gettext("Value"),
-                                style: "table_header",
-                            }),
-                        ],
-                        verticalAlign: VerticalAlign.CENTER,
-                        borders: {
-                            top: {
-                                size: 0,
-                                style: BorderStyle.NONE,
-                                color: "ffffff",
-                            },
-                            left: {
-                                size: 0,
-                                style: BorderStyle.NONE,
-                                color: "ffffff",
-                            },
-                            right: {
-                                size: 0,
-                                style: BorderStyle.NONE,
-                                color: "ffffff",
-                            },
-                        },
-                    }),
-                ],
-                tableHeader: true,
-            }),
-        ];
-
-        for (const artifact_value of artifact.fields) {
-            const table_row = new TableRow({
-                children: [
-                    new TableCell({
-                        children: [
-                            new Paragraph({
-                                text: artifact_value.field_name,
-                                style: "table_content",
-                            }),
-                        ],
-                        verticalAlign: VerticalAlign.CENTER,
-                        margins: {
-                            left: 50,
-                        },
-                    }),
-                    new TableCell({
-                        children: [
-                            new Paragraph({
-                                text: artifact_value.field_value.toString(),
-                                style: "table_content",
-                            }),
-                        ],
-                        verticalAlign: VerticalAlign.CENTER,
-                        margins: {
-                            left: 50,
-                        },
-                    }),
-                ],
-            });
-
-            fields_rows.push(table_row);
+        if (artifact.fields.length > 0) {
+            artifacts_content.push(buildFieldValuesDisplayZone(artifact.fields, gettext_provider));
         }
+
         artifacts_content.push(
-            new Table({
-                rows: fields_rows,
-                alignment: AlignmentType.CENTER,
-                // Some readers such as Google Docs does not deal properly with automatic table column widths.
-                // To avoid that we use the same strategy than LibreOffice and set the column widths explicitly.
-                // The table is expected to take the whole width, the page width with the margins is ~9638 DXA so
-                // we set the size of each columns to (9638 / 2) = 4619 DXA
-                width: {
-                    size: 0,
-                    type: WidthType.AUTO,
-                },
-                columnWidths: [4619, 4619],
-            })
+            ...buildContainersDisplayZone(artifact.containers, gettext_provider)
         );
     }
 
@@ -377,6 +283,119 @@ function buildParagraphOfAnUnorderedList(content: ParagraphChild): Paragraph {
         numbering: {
             reference: "unordered-list",
             level: 0,
+        },
+    });
+}
+
+function buildContainersDisplayZone(
+    containers: ReadonlyArray<ArtifactContainer>,
+    gettext_provider: GetText
+): ReadonlyArray<XmlComponent> {
+    return containers.flatMap((container) => {
+        const sub_containers_display_zones = buildContainersDisplayZone(
+            container.containers,
+            gettext_provider
+        );
+        const field_values_display_zone = [];
+        if (container.fields.length > 0) {
+            field_values_display_zone.push(
+                buildFieldValuesDisplayZone(container.fields, gettext_provider)
+            );
+        }
+
+        if (sub_containers_display_zones.length === 0 && field_values_display_zone.length === 0) {
+            return [];
+        }
+
+        return [
+            new Paragraph({ text: "\n" }),
+            new Paragraph({ text: container.name }),
+            ...field_values_display_zone,
+            ...sub_containers_display_zones,
+        ];
+    });
+}
+
+function buildFieldValuesDisplayZone(
+    artifact_values: ReadonlyArray<ArtifactFieldValue>,
+    gettext_provider: GetText
+): Table {
+    const fields_rows = [
+        new TableRow({
+            children: [
+                buildTableCellHeader(gettext_provider.gettext("Field name")),
+                buildTableCellHeader(gettext_provider.gettext("Value")),
+            ],
+            tableHeader: true,
+        }),
+    ];
+
+    for (const artifact_value of artifact_values) {
+        const table_row = new TableRow({
+            children: [
+                buildTableCellContent(artifact_value.field_name),
+                buildTableCellContent(artifact_value.field_value),
+            ],
+        });
+
+        fields_rows.push(table_row);
+    }
+
+    return new Table({
+        rows: fields_rows,
+        alignment: AlignmentType.CENTER,
+        // Some readers such as Google Docs does not deal properly with automatic table column widths.
+        // To avoid that we use the same strategy than LibreOffice and set the column widths explicitly.
+        // The table is expected to take the whole width, the page width with the margins is ~9638 DXA so
+        // we set the size of each columns to (9638 / 2) = 4619 DXA
+        width: {
+            size: 0,
+            type: WidthType.AUTO,
+        },
+        columnWidths: [4619, 4619],
+    });
+}
+
+function buildTableCellHeader(name: string): TableCell {
+    return new TableCell({
+        children: [
+            new Paragraph({
+                text: name,
+                style: "table_header",
+            }),
+        ],
+        verticalAlign: VerticalAlign.CENTER,
+        borders: {
+            top: {
+                size: 0,
+                style: BorderStyle.NONE,
+                color: "ffffff",
+            },
+            left: {
+                size: 0,
+                style: BorderStyle.NONE,
+                color: "ffffff",
+            },
+            right: {
+                size: 0,
+                style: BorderStyle.NONE,
+                color: "ffffff",
+            },
+        },
+    });
+}
+
+function buildTableCellContent(content: string): TableCell {
+    return new TableCell({
+        children: [
+            new Paragraph({
+                text: content,
+                style: "table_content",
+            }),
+        ],
+        verticalAlign: VerticalAlign.CENTER,
+        margins: {
+            left: 50,
         },
     });
 }

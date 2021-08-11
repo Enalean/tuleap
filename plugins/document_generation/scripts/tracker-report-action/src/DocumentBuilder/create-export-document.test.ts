@@ -103,6 +103,26 @@ describe("Create ArtifactValues Collection", () => {
                         is_time_displayed: false,
                     },
                 ],
+                containers: [
+                    {
+                        name: "Details",
+                        values: [],
+                        containers: [
+                            {
+                                name: "Sub details",
+                                values: [
+                                    {
+                                        field_id: 12,
+                                        type: "string",
+                                        label: "A detail",
+                                        value: "Value in art #1001",
+                                    },
+                                ],
+                                containers: [],
+                            },
+                        ],
+                    },
+                ],
             },
             {
                 id: 1002,
@@ -174,6 +194,26 @@ describe("Create ArtifactValues Collection", () => {
                         is_time_displayed: false,
                     },
                 ],
+                containers: [
+                    {
+                        name: "Details",
+                        values: [],
+                        containers: [
+                            {
+                                name: "Sub details",
+                                values: [
+                                    {
+                                        field_id: 12,
+                                        type: "string",
+                                        label: "A detail",
+                                        value: "Value in art #1002",
+                                    },
+                                ],
+                                containers: [],
+                            },
+                        ],
+                    },
+                ],
             },
         ];
         jest.spyOn(artifact_retriever, "retrieveReportArtifacts").mockResolvedValueOnce(
@@ -193,50 +233,135 @@ describe("Create ArtifactValues Collection", () => {
 
         const collection = report.artifacts;
 
-        expect(collection.length).toEqual(2);
-        expect(collection[0].title).toEqual("tracker_shortname #1001 - title01");
-        expect(collection[0].fields.length).toEqual(10);
-        expect(collection[0].fields[0].field_name).toEqual("Artifact Number");
-        expect(collection[0].fields[0].field_value).toEqual("1001");
-        expect(collection[0].fields[1].field_name).toEqual("Title");
-        expect(collection[0].fields[1].field_value).toEqual("title01");
-        expect(collection[0].fields[2].field_name).toEqual("Capacity");
-        expect(collection[0].fields[2].field_value).toEqual("5");
-        expect(collection[0].fields[3].field_name).toEqual("Effort");
-        expect(collection[0].fields[3].field_value).toEqual("1.5");
-        expect(collection[0].fields[4].field_name).toEqual("Per tracker ID");
-        expect(collection[0].fields[4].field_value).toEqual("1");
-        expect(collection[0].fields[5].field_name).toEqual("Rank");
-        expect(collection[0].fields[5].field_value).toEqual("50");
-        expect(collection[0].fields[6].field_name).toEqual("Computed");
-        expect(collection[0].fields[6].field_value).toEqual("10");
-        expect(collection[0].fields[7].field_name).toEqual("Submitted On");
-        expect(collection[0].fields[7].field_value).toEqual("12/28/2020 9:55:55 AM");
-        expect(collection[0].fields[8].field_name).toEqual("Last Update Date");
-        expect(collection[0].fields[8].field_value).toEqual("7/30/2021");
-        expect(collection[0].fields[9].field_name).toEqual("Closed Date");
-        expect(collection[0].fields[9].field_value).toEqual("");
-        expect(collection[1].title).toEqual("tracker_shortname #1002 - title02");
-        expect(collection[1].fields.length).toEqual(10);
-        expect(collection[1].fields[0].field_name).toEqual("Artifact Number");
-        expect(collection[1].fields[0].field_value).toEqual("1002");
-        expect(collection[1].fields[1].field_name).toEqual("Title");
-        expect(collection[1].fields[1].field_value).toEqual("title02");
-        expect(collection[1].fields[2].field_name).toEqual("Capacity");
-        expect(collection[1].fields[2].field_value).toEqual("2");
-        expect(collection[1].fields[3].field_name).toEqual("Effort");
-        expect(collection[1].fields[3].field_value).toEqual("2.5");
-        expect(collection[1].fields[4].field_name).toEqual("Per tracker ID");
-        expect(collection[1].fields[4].field_value).toEqual("2");
-        expect(collection[1].fields[5].field_name).toEqual("Rank");
-        expect(collection[1].fields[5].field_value).toEqual("51");
-        expect(collection[1].fields[6].field_name).toEqual("Computed");
-        expect(collection[1].fields[6].field_value).toEqual("10");
-        expect(collection[1].fields[7].field_name).toEqual("Submitted On");
-        expect(collection[1].fields[7].field_value).toEqual("12/29/2020 9:55:55 AM");
-        expect(collection[1].fields[8].field_name).toEqual("Last Update Date");
-        expect(collection[1].fields[8].field_value).toEqual("7/29/2021");
-        expect(collection[1].fields[9].field_name).toEqual("Closed Date");
-        expect(collection[1].fields[9].field_value).toEqual("");
+        expect(collection).toStrictEqual([
+            {
+                id: 1001,
+                title: "tracker_shortname #1001 - title01",
+                fields: [
+                    {
+                        field_name: "Artifact Number",
+                        field_value: "1001",
+                    },
+                    {
+                        field_name: "Title",
+                        field_value: "title01",
+                    },
+                    {
+                        field_name: "Capacity",
+                        field_value: "5",
+                    },
+                    {
+                        field_name: "Effort",
+                        field_value: "1.5",
+                    },
+                    {
+                        field_name: "Per tracker ID",
+                        field_value: "1",
+                    },
+                    {
+                        field_name: "Rank",
+                        field_value: "50",
+                    },
+                    {
+                        field_name: "Computed",
+                        field_value: "10",
+                    },
+                    {
+                        field_name: "Submitted On",
+                        field_value: "12/28/2020 9:55:55 AM",
+                    },
+                    {
+                        field_name: "Last Update Date",
+                        field_value: "7/30/2021",
+                    },
+                    {
+                        field_name: "Closed Date",
+                        field_value: "",
+                    },
+                ],
+                containers: [
+                    {
+                        name: "Details",
+                        fields: [],
+                        containers: [
+                            {
+                                name: "Sub details",
+                                fields: [
+                                    {
+                                        field_name: "A detail",
+                                        field_value: "Value in art #1001",
+                                    },
+                                ],
+                                containers: [],
+                            },
+                        ],
+                    },
+                ],
+            },
+            {
+                id: 1002,
+                title: "tracker_shortname #1002 - title02",
+                fields: [
+                    {
+                        field_name: "Artifact Number",
+                        field_value: "1002",
+                    },
+                    {
+                        field_name: "Title",
+                        field_value: "title02",
+                    },
+                    {
+                        field_name: "Capacity",
+                        field_value: "2",
+                    },
+                    {
+                        field_name: "Effort",
+                        field_value: "2.5",
+                    },
+                    {
+                        field_name: "Per tracker ID",
+                        field_value: "2",
+                    },
+                    {
+                        field_name: "Rank",
+                        field_value: "51",
+                    },
+                    {
+                        field_name: "Computed",
+                        field_value: "10",
+                    },
+                    {
+                        field_name: "Submitted On",
+                        field_value: "12/29/2020 9:55:55 AM",
+                    },
+                    {
+                        field_name: "Last Update Date",
+                        field_value: "7/29/2021",
+                    },
+                    {
+                        field_name: "Closed Date",
+                        field_value: "",
+                    },
+                ],
+                containers: [
+                    {
+                        name: "Details",
+                        fields: [],
+                        containers: [
+                            {
+                                name: "Sub details",
+                                fields: [
+                                    {
+                                        field_name: "A detail",
+                                        field_value: "Value in art #1002",
+                                    },
+                                ],
+                                containers: [],
+                            },
+                        ],
+                    },
+                ],
+            },
+        ]);
     });
 });

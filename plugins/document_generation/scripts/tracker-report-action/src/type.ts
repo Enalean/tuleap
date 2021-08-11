@@ -41,10 +41,17 @@ export interface ExportDocument {
     readonly artifacts: ReadonlyArray<FormattedArtifact>;
 }
 
+export interface ArtifactContainer {
+    readonly name: string;
+    readonly fields: ReadonlyArray<ArtifactFieldValue>;
+    readonly containers: ReadonlyArray<this>;
+}
+
 export interface FormattedArtifact {
     readonly id: number;
     readonly title: string;
     readonly fields: ReadonlyArray<ArtifactFieldValue>;
+    readonly containers: ReadonlyArray<ArtifactContainer>;
 }
 
 export interface DateTimeLocaleInformation {
