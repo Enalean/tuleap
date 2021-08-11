@@ -47,6 +47,23 @@ describe("download-docx", () => {
                                 field_value: "Some string",
                             },
                         ],
+                        containers: [
+                            {
+                                name: "Fieldset title",
+                                fields: [
+                                    {
+                                        field_name: "Field 1",
+                                        field_value: "Some string",
+                                    },
+                                ],
+                                containers: [],
+                            },
+                            {
+                                name: "Empty fieldset",
+                                fields: [],
+                                containers: [],
+                            },
+                        ],
                     },
                 ],
             },
