@@ -30,9 +30,8 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Team\TeamPr
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\ProgramTracker;
 use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\RetrievePlanningMilestoneTracker;
-use Tuleap\ProgramManagement\Tests\Stub\BuildProgramStub;
+use Tuleap\ProgramManagement\Tests\Builder\ProgramIdentifierBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProjectStub;
-use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchTeamsOfProgramStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrievePlanningMilestoneTrackerStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveVisibleIterationTrackerStub;
@@ -59,11 +58,7 @@ final class IterationCreatorCheckerTest extends TestCase
     {
         $this->logger            = new TestLogger();
         $this->user              = UserTestBuilder::aUser()->build();
-        $this->program           = ProgramIdentifier::fromId(
-            BuildProgramStub::stubValidProgram(),
-            101,
-            UserIdentifierStub::buildGenericUser()
-        );
+        $this->program           = ProgramIdentifierBuilder::build();
         $first_milestone_tracker = $this->createStub(Tracker::class);
         $first_milestone_tracker->method('getId')->willReturn(1);
         $this->milestone_retriever        = RetrievePlanningMilestoneTrackerStub::withValidTrackers($first_milestone_tracker);

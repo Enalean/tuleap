@@ -25,10 +25,8 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\Rank;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tracker_Artifact_Exception_CannotRankWithMyself;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureCanNotBeRankedWithItselfException;
-use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\REST\v1\FeatureElementToOrderInvolvedInChangeRepresentation;
-use Tuleap\ProgramManagement\Tests\Stub\BuildProgramStub;
-use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
+use Tuleap\ProgramManagement\Tests\Builder\ProgramIdentifierBuilder;
 
 final class FeaturesRankOrdererTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -38,10 +36,7 @@ final class FeaturesRankOrdererTest extends \Tuleap\Test\PHPUnit\TestCase
      * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|\Tracker_Artifact_PriorityManager
      */
     private $priority_manager;
-    /**
-     * @var FeaturesRankOrderer
-     */
-    private $orderer;
+    private FeaturesRankOrderer $orderer;
 
     protected function setUp(): void
     {
@@ -65,6 +60,6 @@ final class FeaturesRankOrdererTest extends \Tuleap\Test\PHPUnit\TestCase
             ->andThrow(new Tracker_Artifact_Exception_CannotRankWithMyself(45));
 
         $this->expectException(FeatureCanNotBeRankedWithItselfException::class);
-        $this->orderer->reorder($order, "101", ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 101, UserIdentifierStub::buildGenericUser()));
+        $this->orderer->reorder($order, "101", ProgramIdentifierBuilder::build());
     }
 }

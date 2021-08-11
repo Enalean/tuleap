@@ -25,7 +25,7 @@ namespace Tuleap\ProgramManagement\Domain;
 
 use Tuleap\ProgramManagement\Domain\Program\Backlog\NotAllowedToPrioritizeException;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
-use Tuleap\ProgramManagement\Tests\Stub\BuildProgramStub;
+use Tuleap\ProgramManagement\Tests\Builder\ProgramIdentifierBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyPrioritizeFeaturesPermissionStub;
 use Tuleap\Test\PHPUnit\TestCase;
@@ -38,12 +38,7 @@ final class UserCanPrioritizeTest extends TestCase
     protected function setUp(): void
     {
         $this->user_identifier    = UserIdentifierStub::buildGenericUser();
-        $this->program_identifier = ProgramIdentifier::fromId(
-            BuildProgramStub::stubValidProgram(),
-            101,
-            $this->user_identifier,
-            null
-        );
+        $this->program_identifier = ProgramIdentifierBuilder::build();
     }
 
     public function testItBuildsFromUserCanPrioritize(): void

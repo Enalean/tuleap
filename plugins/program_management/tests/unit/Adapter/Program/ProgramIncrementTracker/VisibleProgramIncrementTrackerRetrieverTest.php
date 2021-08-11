@@ -26,8 +26,7 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracker\Retr
 use Tuleap\ProgramManagement\Domain\Program\Plan\ProgramHasNoProgramIncrementTrackerException;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\ProgramTrackerNotFoundException;
-use Tuleap\ProgramManagement\Tests\Stub\BuildProgramStub;
-use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
+use Tuleap\ProgramManagement\Tests\Builder\ProgramIdentifierBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveProgramIncrementTrackerStub;
 use Tuleap\Test\Builders\UserTestBuilder;
 
@@ -45,7 +44,7 @@ final class VisibleProgramIncrementTrackerRetrieverTest extends \Tuleap\Test\PHP
     {
         $this->tracker_factory      = $this->createMock(\TrackerFactory::class);
         $this->user                 = UserTestBuilder::aUser()->build();
-        $this->program              = ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 101, UserIdentifierStub::buildGenericUser());
+        $this->program              = ProgramIdentifierBuilder::build();
         $this->tracker_id_retriever = RetrieveProgramIncrementTrackerStub::buildValidTrackerId(1);
     }
 

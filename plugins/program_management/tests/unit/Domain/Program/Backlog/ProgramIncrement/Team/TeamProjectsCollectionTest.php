@@ -24,9 +24,8 @@ namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Team;
 
 use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramForAdministrationIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
-use Tuleap\ProgramManagement\Tests\Stub\BuildProgramStub;
+use Tuleap\ProgramManagement\Tests\Builder\ProgramIdentifierBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProjectStub;
-use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchTeamsOfProgramStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsTeamStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyProjectPermissionStub;
@@ -43,11 +42,7 @@ final class TeamProjectsCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->search_teams    = SearchTeamsOfProgramStub::buildTeams(103, 125);
         $this->project_builder = new BuildProjectStub();
-        $this->program         = ProgramIdentifier::fromId(
-            BuildProgramStub::stubValidProgram(),
-            100,
-            UserIdentifierStub::buildGenericUser()
-        );
+        $this->program         = ProgramIdentifierBuilder::build();
     }
 
     public function testItBuildsFromProgramIdentifier(): void

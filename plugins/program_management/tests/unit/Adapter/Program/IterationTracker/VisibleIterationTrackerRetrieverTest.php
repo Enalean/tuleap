@@ -25,8 +25,7 @@ namespace Tuleap\ProgramManagement\Adapter\Program\IterationTracker;
 use TrackerFactory;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\ProgramTrackerNotFoundException;
-use Tuleap\ProgramManagement\Tests\Stub\BuildProgramStub;
-use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
+use Tuleap\ProgramManagement\Tests\Builder\ProgramIdentifierBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveIterationTrackerStub;
 use Tuleap\Test\Builders\UserTestBuilder;
 
@@ -44,7 +43,7 @@ final class VisibleIterationTrackerRetrieverTest extends \Tuleap\Test\PHPUnit\Te
     {
         $this->tracker_factory      = $this->createStub(TrackerFactory::class);
         $this->user                 = UserTestBuilder::aUser()->build();
-        $this->program              = ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 101, UserIdentifierStub::buildGenericUser());
+        $this->program              = ProgramIdentifierBuilder::build();
         $this->tracker_id_retriever = RetrieveIterationTrackerStub::buildValidTrackerId(1);
     }
 
