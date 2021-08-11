@@ -24,7 +24,7 @@ import type {
     ExportDocument,
     GlobalExportProperties,
 } from "../../type";
-import type { ParagraphChild, XmlComponent } from "docx";
+import type { ILevelsOptions, ParagraphChild, XmlComponent } from "docx";
 import {
     AlignmentType,
     Bookmark,
@@ -103,7 +103,7 @@ export async function downloadDocx(
         }
 
         artifacts_content.push(
-            ...buildContainersDisplayZone(artifact.containers, gettext_provider)
+            ...buildContainersDisplayZone(artifact.containers, 2, gettext_provider)
         );
     }
 
@@ -191,20 +191,7 @@ export async function downloadDocx(
                 },
                 {
                     reference: MAIN_TITLES_NUMBERING_ID,
-                    levels: [
-                        {
-                            level: 0,
-                            format: LevelFormat.DECIMAL,
-                            alignment: AlignmentType.START,
-                            text: "%1.",
-                        },
-                        {
-                            level: 1,
-                            format: LevelFormat.DECIMAL,
-                            alignment: AlignmentType.START,
-                            text: "%1.%2.",
-                        },
-                    ],
+                    levels: generateMainTitlesNumberingLevelConfiguration(),
                 },
             ],
         },
@@ -289,11 +276,13 @@ function buildParagraphOfAnUnorderedList(content: ParagraphChild): Paragraph {
 
 function buildContainersDisplayZone(
     containers: ReadonlyArray<ArtifactContainer>,
+    depth_level: number,
     gettext_provider: GetText
 ): ReadonlyArray<XmlComponent> {
     return containers.flatMap((container) => {
         const sub_containers_display_zones = buildContainersDisplayZone(
             container.containers,
+            depth_level + 1,
             gettext_provider
         );
         const field_values_display_zone = [];
@@ -308,8 +297,11 @@ function buildContainersDisplayZone(
         }
 
         return [
-            new Paragraph({ text: "\n" }),
-            new Paragraph({ text: container.name }),
+            new Paragraph({
+                text: container.name,
+                heading: HeadingLevel.HEADING_3,
+                numbering: { reference: MAIN_TITLES_NUMBERING_ID, level: depth_level },
+            }),
             ...field_values_display_zone,
             ...sub_containers_display_zones,
         ];
@@ -398,4 +390,20 @@ function buildTableCellContent(content: string): TableCell {
             left: 50,
         },
     });
+}
+
+function generateMainTitlesNumberingLevelConfiguration(): ILevelsOptions[] {
+    const levels: ILevelsOptions[] = [];
+    let text_level = "";
+    for (let level = 0; level < 10; level++) {
+        text_level += `%${level + 1}.`;
+        levels.push({
+            level: level,
+            format: LevelFormat.DECIMAL,
+            alignment: AlignmentType.START,
+            text: text_level,
+        });
+    }
+
+    return levels;
 }
