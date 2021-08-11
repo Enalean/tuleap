@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Tests\Stub;
 
+use Tuleap\ProgramManagement\Domain\Permissions\PermissionBypass;
 use Tuleap\ProgramManagement\Domain\Program\Plan\BuildProgram;
 use Tuleap\ProgramManagement\Domain\Program\Plan\ProgramAccessException;
 use Tuleap\ProgramManagement\Domain\Program\Plan\ProjectIsNotAProgramException;
@@ -31,57 +32,43 @@ use Tuleap\Test\Builders\UserTestBuilder;
 final class BuildProgramStub implements BuildProgram
 {
     private bool $is_a_program;
-    private bool $is_valid_to_be_created_program;
     private bool $is_access_allowed;
 
     private function __construct(
         bool $is_a_program,
-        bool $is_valid_to_be_created_program,
         bool $is_access_allowed
     ) {
-        $this->is_a_program                   = $is_a_program;
-        $this->is_valid_to_be_created_program = $is_valid_to_be_created_program;
-        $this->is_access_allowed              = $is_access_allowed;
+        $this->is_a_program      = $is_a_program;
+        $this->is_access_allowed = $is_access_allowed;
     }
 
     public static function stubValidProgram(): self
     {
-        return new self(true, false, true);
+        return new self(true, true);
     }
 
     public static function stubInvalidProgram(): self
     {
-        return new self(false, false, true);
+        return new self(false, true);
     }
 
     public static function stubInvalidProgramAccess(): self
     {
-        return new self(true, false, false);
+        return new self(true, false);
     }
 
-    public static function stubValidToBeCreatedProgram(): self
-    {
-        return new self(true, true, true);
-    }
-
-    public function ensureProgramIsAProject(int $project_id, UserIdentifier $user_identifier): void
-    {
+    public function ensureProgramIsAProject(
+        int $project_id,
+        UserIdentifier $user,
+        ?PermissionBypass $bypass
+    ): void {
         if (! $this->is_a_program) {
             throw new ProjectIsNotAProgramException($project_id);
         }
 
         if (! $this->is_access_allowed) {
-            $user = UserTestBuilder::aUser()->build();
-            throw new ProgramAccessException($project_id, $user);
+            $pfuser = UserTestBuilder::aUser()->build();
+            throw new ProgramAccessException($project_id, $pfuser);
         }
-    }
-
-    public function ensureProgramIsProjectAndUserIsAdminOf(int $id, UserIdentifier $user): void
-    {
-        if ($this->is_valid_to_be_created_program) {
-            return;
-        }
-
-        throw new \LogicException("Not implemented");
     }
 }

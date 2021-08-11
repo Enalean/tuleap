@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\Feature;
 
+use Tuleap\ProgramManagement\Adapter\Permissions\WorkflowUserPermissionBypass;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProgramStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
@@ -29,20 +30,47 @@ use Tuleap\ProgramManagement\Tests\Stub\VerifyIsVisibleFeatureStub;
 
 final class FeatureIdentifierTest extends \Tuleap\Test\PHPUnit\TestCase
 {
+    private UserIdentifierStub $user;
+    private ProgramIdentifier $program;
+
+    protected function setUp(): void
+    {
+        $this->user    = UserIdentifierStub::buildGenericUser();
+        $this->program = ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 110, $this->user);
+    }
+
     public function testItReturnsNullWhenFeatureIsNotVisibleByUser(): void
     {
-        $user_identifier = UserIdentifierStub::buildGenericUser();
-        $program         = ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 110, $user_identifier);
-
-        self::assertNull(FeatureIdentifier::fromId(VerifyIsVisibleFeatureStub::buildInvisibleFeature(), 404, $user_identifier, $program));
+        self::assertNull(
+            FeatureIdentifier::fromId(
+                VerifyIsVisibleFeatureStub::withNotVisibleFeature(),
+                404,
+                $this->user,
+                $this->program
+            )
+        );
     }
 
     public function testItBuildsAValidFeature(): void
     {
-        $user_identifier = UserIdentifierStub::buildGenericUser();
-        $program         = ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 110, $user_identifier);
-
-        $feature = FeatureIdentifier::fromId(VerifyIsVisibleFeatureStub::buildVisibleFeature(), 87, $user_identifier, $program);
+        $feature = FeatureIdentifier::fromId(
+            VerifyIsVisibleFeatureStub::buildVisibleFeature(),
+            87,
+            $this->user,
+            $this->program
+        );
         self::assertSame(87, $feature->id);
+    }
+
+    public function testItBuildsAValidFeatureWithPermissionBypass(): void
+    {
+        $feature = FeatureIdentifier::fromId(
+            VerifyIsVisibleFeatureStub::buildVisibleFeature(),
+            5,
+            $this->user,
+            $this->program,
+            new WorkflowUserPermissionBypass()
+        );
+        self::assertSame(5, $feature->id);
     }
 }

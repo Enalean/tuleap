@@ -70,7 +70,7 @@ final class ContentModifierTest extends \Tuleap\Test\PHPUnit\TestCase
             VerifyPrioritizeFeaturesPermissionStub::canPrioritize(),
             CheckProgramIncrementStub::buildProgramIncrementChecker(),
             $this->getStubProgramSearcher(),
-            VerifyIsVisibleFeatureStub::buildInvisibleFeature(),
+            VerifyIsVisibleFeatureStub::withNotVisibleFeature(),
             VerifyCanBePlannedInProgramIncrementStub::buildCanBePlannedVerifier(),
             $this->buildFeaturePlanner(),
             $this->getStubOrderFeature(),

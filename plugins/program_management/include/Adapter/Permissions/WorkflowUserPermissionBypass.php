@@ -1,8 +1,8 @@
 <?php
 /**
- * Copyright (c) Enalean 2021 -  Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
  *
- *  This file is a part of Tuleap.
+ * This file is a part of Tuleap.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,16 +16,19 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
- *
  */
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Domain\Workspace;
+namespace Tuleap\ProgramManagement\Adapter\Permissions;
 
-interface UserPermissions
+use Tuleap\ProgramManagement\Domain\Permissions\PermissionBypass;
+
+/**
+ * I tell adapters to bypass permission checks for the Workflow User. It is a special Tuleap User (user id #0).
+ * Checks should always consider that it is site administrator and can read everything.
+ * @psalm-immutable
+ */
+final class WorkflowUserPermissionBypass implements PermissionBypass
 {
-    public function isPlatformAdmin(): bool;
-
-    public function isProjectAdmin(): bool;
 }

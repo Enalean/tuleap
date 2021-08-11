@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\Feature;
 
+use Tuleap\ProgramManagement\Domain\Permissions\PermissionBypass;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 
@@ -42,9 +43,10 @@ final class FeatureIdentifier
         VerifyIsVisibleFeature $feature_verifier,
         int $feature_id,
         UserIdentifier $user_identifier,
-        ProgramIdentifier $program
+        ProgramIdentifier $program,
+        ?PermissionBypass $bypass = null
     ): ?self {
-        if (! $feature_verifier->isVisibleFeature($feature_id, $user_identifier, $program)) {
+        if (! $feature_verifier->isVisibleFeature($feature_id, $user_identifier, $program, $bypass)) {
             return null;
         }
         return new self($feature_id);

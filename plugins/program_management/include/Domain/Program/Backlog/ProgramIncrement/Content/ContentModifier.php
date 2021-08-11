@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Content;
 
 use Tuleap\ProgramManagement\Adapter\Workspace\UserProxy;
-use Tuleap\ProgramManagement\Adapter\Workspace\UserPermissionsProxy;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureCanNotBeRankedWithItselfException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureHasPlannedUserStoryException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureIdentifier;
@@ -87,7 +86,6 @@ final class ContentModifier implements ModifyContent
         $program             = $this->program_searcher->getProgramOfProgramIncrement($program_increment->getId(), $user_identifier);
         $user_can_prioritize = UserCanPrioritize::fromUser(
             $this->permission_verifier,
-            UserPermissionsProxy::buildFromPFUser($user, $program),
             $user_identifier,
             $program
         );

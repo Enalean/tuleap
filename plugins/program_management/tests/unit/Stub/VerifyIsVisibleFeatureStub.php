@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Tests\Stub;
 
+use Tuleap\ProgramManagement\Domain\Permissions\PermissionBypass;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\VerifyIsVisibleFeature;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
@@ -35,8 +36,12 @@ final class VerifyIsVisibleFeatureStub implements VerifyIsVisibleFeature
         $this->is_visible = $is_visible;
     }
 
-    public function isVisibleFeature(int $feature_id, UserIdentifier $user_identifier, ProgramIdentifier $program): bool
-    {
+    public function isVisibleFeature(
+        int $feature_id,
+        UserIdentifier $user_identifier,
+        ProgramIdentifier $program,
+        ?PermissionBypass $bypass
+    ): bool {
         return $this->is_visible;
     }
 
@@ -45,7 +50,7 @@ final class VerifyIsVisibleFeatureStub implements VerifyIsVisibleFeature
         return new self(true);
     }
 
-    public static function buildInvisibleFeature(): self
+    public static function withNotVisibleFeature(): self
     {
         return new self(false);
     }

@@ -429,7 +429,8 @@ final class ProjectResource extends AuthenticatedResource
                     $backlog_patch_representation->remove_from_program_increment_to_add_to_the_backlog,
                     $backlog_patch_representation->order
                 ),
-                $user
+                $user,
+                null
             );
         } catch (ProgramAccessException | CannotManipulateTopBacklog $e) {
             throw new I18NRestException(404, $e->getI18NExceptionMessage());

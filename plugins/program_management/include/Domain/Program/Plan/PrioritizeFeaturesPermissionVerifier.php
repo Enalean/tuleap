@@ -23,12 +23,12 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Domain\Program\Plan;
 
 use Project_AccessException;
+use Tuleap\ProgramManagement\Domain\Permissions\PermissionBypass;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Content\RetrieveProjectUgroupsCanPrioritizeItems;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\Workspace\RetrieveProject;
 use Tuleap\ProgramManagement\Domain\Workspace\RetrieveUser;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
-use Tuleap\ProgramManagement\Domain\Workspace\UserPermissions;
 use Tuleap\Project\CheckProjectAccess;
 
 final class PrioritizeFeaturesPermissionVerifier implements VerifyPrioritizeFeaturesPermission
@@ -50,15 +50,22 @@ final class PrioritizeFeaturesPermissionVerifier implements VerifyPrioritizeFeat
         $this->user_manager                = $user_manager;
     }
 
-    public function canUserPrioritizeFeatures(ProgramIdentifier $program, UserPermissions $user_permissions, UserIdentifier $user_identifier): bool
-    {
-        if ($user_permissions->isPlatformAdmin() || $user_permissions->isProjectAdmin()) {
+    public function canUserPrioritizeFeatures(
+        ProgramIdentifier $program,
+        UserIdentifier $user_identifier,
+        ?PermissionBypass $bypass
+    ): bool {
+        if ($bypass) {
             return true;
         }
 
         $user       = $this->user_manager->getUserWithId($user_identifier);
         $program_id = $program->getId();
-        $project    = $this->project_manager->getProjectWithId($program_id);
+        if ($user->isAdmin($program_id)) {
+            return true;
+        }
+
+        $project = $this->project_manager->getProjectWithId($program_id);
         try {
             $this->project_access_checker->checkUserCanAccessProject($user, $project);
         } catch (Project_AccessException $exception) {

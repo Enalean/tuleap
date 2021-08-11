@@ -25,7 +25,7 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog;
 use Tuleap\DB\DBTransactionExecutor;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Content\FeatureRemovalProcessor;
 use Tuleap\ProgramManagement\Adapter\Workspace\UserProxy;
-use Tuleap\ProgramManagement\Adapter\Workspace\UserPermissionsProxy;
+use Tuleap\ProgramManagement\Domain\Permissions\PermissionBypass;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Content\Links\VerifyLinkedUserStoryIsNotPlanned;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureHasPlannedUserStoryException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureIdentifier;
@@ -45,7 +45,6 @@ use Tuleap\ProgramManagement\Domain\UserCanPrioritize;
 
 final class ProcessTopBacklogChange implements TopBacklogChangeProcessor
 {
-
     private TopBacklogStore $top_backlog_store;
     private VerifyPrioritizeFeaturesPermission $prioritize_features_permission_verifier;
     private DBTransactionExecutor $db_transaction_executor;
@@ -75,16 +74,17 @@ final class ProcessTopBacklogChange implements TopBacklogChangeProcessor
     public function processTopBacklogChangeForAProgram(
         ProgramIdentifier $program,
         TopBacklogChange $top_backlog_change,
-        \PFUser $user
+        \PFUser $user,
+        ?PermissionBypass $bypass
     ): void {
-        $this->db_transaction_executor->execute(function () use ($program, $top_backlog_change, $user) {
+        $this->db_transaction_executor->execute(function () use ($program, $top_backlog_change, $user, $bypass) {
             $user_identifier = UserProxy::buildFromPFUser($user);
             try {
                 $user_can_prioritize = UserCanPrioritize::fromUser(
                     $this->prioritize_features_permission_verifier,
-                    UserPermissionsProxy::buildFromPFUser($user, $program),
                     $user_identifier,
-                    $program
+                    $program,
+                    $bypass
                 );
             } catch (NotAllowedToPrioritizeException $e) {
                 throw new CannotManipulateTopBacklog($program, $user);
@@ -94,7 +94,8 @@ final class ProcessTopBacklogChange implements TopBacklogChangeProcessor
                 $top_backlog_change->potential_features_id_to_add,
                 $user_can_prioritize,
                 $program,
-                false
+                false,
+                $bypass
             );
 
             if (count($feature_add_removals) > 0) {
@@ -112,7 +113,8 @@ final class ProcessTopBacklogChange implements TopBacklogChangeProcessor
                 $top_backlog_change->potential_features_id_to_remove,
                 $user_can_prioritize,
                 $program,
-                true
+                true,
+                $bypass
             );
 
             if (count($feature_remove_removals) > 0) {
@@ -154,12 +156,13 @@ final class ProcessTopBacklogChange implements TopBacklogChangeProcessor
         array $features_id,
         UserCanPrioritize $user,
         ProgramIdentifier $program,
-        bool $ignore_feature_cannot_be_retrieved
+        bool $ignore_feature_cannot_be_retrieved,
+        ?PermissionBypass $bypass
     ): array {
         $filtered_features = [];
 
         foreach ($features_id as $feature_id) {
-            $feature = FeatureIdentifier::fromId($this->visible_feature_verifier, $feature_id, $user, $program);
+            $feature = FeatureIdentifier::fromId($this->visible_feature_verifier, $feature_id, $user, $program, $bypass);
             if (! $feature) {
                 if ($ignore_feature_cannot_be_retrieved) {
                     continue;

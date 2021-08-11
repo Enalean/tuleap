@@ -27,6 +27,7 @@ use Tracker_Artifact_Changeset;
 use Tracker_FormElement_Field;
 use Transition;
 use Transition_PostAction;
+use Tuleap\ProgramManagement\Adapter\Permissions\WorkflowUserPermissionBypass;
 use Tuleap\ProgramManagement\Adapter\Workspace\UserProxy;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\TopBacklogChange;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\TopBacklogChangeProcessor;
@@ -95,17 +96,23 @@ class AddToTopBacklogPostAction extends Transition_PostAction
     public function after(Tracker_Artifact_Changeset $changeset): void
     {
         $user            = new AddToBacklogPostActionAllPowerfulUser();
+        $bypass          = new WorkflowUserPermissionBypass();
         $user_identifier = UserProxy::buildFromPFUser($user);
 
         $artifact = $changeset->getArtifact();
 
         try {
-            $program = ProgramIdentifier::fromId($this->build_program, (int) $artifact->getTracker()->getGroupId(), $user_identifier);
+            $program = ProgramIdentifier::fromId(
+                $this->build_program,
+                (int) $artifact->getTracker()->getGroupId(),
+                $user_identifier,
+                $bypass
+            );
         } catch (ProgramAccessException | ProjectIsNotAProgramException $e) {
             return;
         }
 
         $top_backlog_change = new TopBacklogChange([$artifact->getId()], [], false, null);
-        $this->top_backlog_change_processor->processTopBacklogChangeForAProgram($program, $top_backlog_change, $user);
+        $this->top_backlog_change_processor->processTopBacklogChangeForAProgram($program, $top_backlog_change, $user, $bypass);
     }
 }

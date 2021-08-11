@@ -119,7 +119,8 @@ final class ProcessTopBacklogChangeTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->process_top_backlog_change->processTopBacklogChangeForAProgram(
             ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 102, UserIdentifierStub::buildGenericUser()),
             new TopBacklogChange([742, 790], [741, 789], false, null),
-            $this->user
+            $this->user,
+            null
         );
     }
 
@@ -135,7 +136,8 @@ final class ProcessTopBacklogChangeTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->process_top_backlog_change->processTopBacklogChangeForAProgram(
             ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 102, UserIdentifierStub::buildGenericUser()),
             new TopBacklogChange([], [741, 789], false, null),
-            $this->user
+            $this->user,
+            null
         );
     }
 
@@ -150,7 +152,8 @@ final class ProcessTopBacklogChangeTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->process_top_backlog_change->processTopBacklogChangeForAProgram(
             ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 102, UserIdentifierStub::buildGenericUser()),
             new TopBacklogChange([964], [963], false, null),
-            $this->user
+            $this->user,
+            null
         );
     }
 
@@ -170,7 +173,8 @@ final class ProcessTopBacklogChangeTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->process_top_backlog_change->processTopBacklogChangeForAProgram(
             ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 102, UserIdentifierStub::buildGenericUser()),
             new TopBacklogChange([964], [], true, null),
-            $this->user
+            $this->user,
+            null
         );
     }
 
@@ -201,7 +205,8 @@ final class ProcessTopBacklogChangeTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->process_top_backlog_change->processTopBacklogChangeForAProgram(
             ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 102, UserIdentifierStub::buildGenericUser()),
             new TopBacklogChange([964], [], true, null),
-            $this->user
+            $this->user,
+            null
         );
     }
 
@@ -227,7 +232,8 @@ final class ProcessTopBacklogChangeTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->process_top_backlog_change->processTopBacklogChangeForAProgram(
             ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 102, UserIdentifierStub::buildGenericUser()),
             new TopBacklogChange([], [403], false, null),
-            $user
+            $user,
+            null
         );
     }
 
@@ -252,13 +258,9 @@ final class ProcessTopBacklogChangeTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->process_top_backlog_change->processTopBacklogChangeForAProgram(
             $program,
-            new TopBacklogChange(
-                [],
-                [],
-                false,
-                $element_to_order
-            ),
-            $this->user
+            new TopBacklogChange([], [], false, $element_to_order),
+            $this->user,
+            null
         );
     }
 
