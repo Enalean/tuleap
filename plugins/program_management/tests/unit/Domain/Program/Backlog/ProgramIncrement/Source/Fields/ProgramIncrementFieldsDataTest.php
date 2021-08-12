@@ -22,29 +22,24 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement;
 
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\ArtifactLinkValue;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\DescriptionValue;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\EndPeriodValue;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\MappedStatusValue;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\SourceChangesetValuesCollection;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\StartDateValue;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\StatusValue;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\TitleValue;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\Field;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\ProgramIncrementFields;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFields;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\SubmissionDate;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TimeboxArtifactLinkType;
+use Tuleap\ProgramManagement\Tests\Builder\SourceChangesetValuesCollectionBuilder;
 
 final class ProgramIncrementFieldsDataTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItReturnsFieldsDataAsArrayForArtifactCreator(): void
     {
-        $copied_values       = $this->buildCopiedValues(
+        $copied_values       = SourceChangesetValuesCollectionBuilder::buildWithValues(
             'Program Release',
             '<p>Description</p>',
             'html',
             [2001],
+            '2020-10-01',
+            '2020-10-10',
             112
         );
         $mapped_status_value = new MappedStatusValue([3001]);
@@ -66,47 +61,6 @@ final class ProgramIncrementFieldsDataTest extends \Tuleap\Test\PHPUnit\TestCase
                 1006 => '2020-10-10'
             ],
             $fields_data->toFieldsDataArray()
-        );
-    }
-
-    /**
-     * @param int[]  $status_value
-     */
-    private function buildCopiedValues(
-        string $title_value,
-        string $description_value,
-        string $description_format,
-        array $status_value,
-        int $program_artifact_id
-    ): SourceChangesetValuesCollection {
-        $list_values = [];
-        foreach ($status_value as $bind_value_id) {
-            $list_values[] = new \Tracker_FormElement_Field_List_Bind_StaticValue(
-                $bind_value_id,
-                'Irrelevant',
-                'Irrelevant',
-                0,
-                0
-            );
-        }
-
-        $title_value         = new TitleValue($title_value);
-        $description_value   = new DescriptionValue($description_value, $description_format);
-        $status_value        = new StatusValue($list_values);
-        $start_date_value    = new StartDateValue('2020-10-01');
-        $end_period_value    = new EndPeriodValue('2020-10-10');
-        $artifact_link_value = new ArtifactLinkValue($program_artifact_id);
-        $submission_date     = new SubmissionDate(123456789);
-
-        return new SourceChangesetValuesCollection(
-            $program_artifact_id,
-            $title_value,
-            $description_value,
-            $status_value,
-            $submission_date,
-            $start_date_value,
-            $end_period_value,
-            $artifact_link_value
         );
     }
 

@@ -22,21 +22,27 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values;
 
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\ReplicationData;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TimeboxArtifactLinkType;
 
 /**
+ * I hold the new value of the Artifact link field for Mirrored Timeboxes. I contain a link to the source Timebox
+ * with the _mirrored_milestone type.
+ * I format those values to the array expected by the field's validation.
  * @psalm-immutable
  */
 final class ArtifactLinkValue
 {
-    /**
-     * @var int
-     */
-    private $source_artifact_id;
+    private int $source_artifact_id;
 
-    public function __construct(int $source_artifact_id)
+    private function __construct(int $source_artifact_id)
     {
         $this->source_artifact_id = $source_artifact_id;
+    }
+
+    public static function fromReplicationData(ReplicationData $replication): self
+    {
+        return new self($replication->getArtifact()->getId());
     }
 
     /**

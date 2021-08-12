@@ -23,7 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement;
 
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\ProgramIncrementCreationException;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\BuildArtifactLinkValue;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\ArtifactLinkValue;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\BuildDescriptionValue;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\BuildEndPeriodValue;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\BuildFieldValues;
@@ -62,10 +62,6 @@ final class SourceChangesetValuesCollectionAdapter implements BuildFieldValues
      * @var BuildEndPeriodValue
      */
     private $build_end_period_value;
-    /**
-     * @var BuildArtifactLinkValue
-     */
-    private $build_artifact_link_value;
 
     public function __construct(
         BuildSynchronizedFields $fields_gatherer,
@@ -73,16 +69,14 @@ final class SourceChangesetValuesCollectionAdapter implements BuildFieldValues
         BuildDescriptionValue $build_description_value,
         BuildStatusValue $build_status_value,
         BuildStartDateValue $build_start_date_value,
-        BuildEndPeriodValue $build_end_period_value,
-        BuildArtifactLinkValue $build_artifact_link_value
+        BuildEndPeriodValue $build_end_period_value
     ) {
-        $this->fields_gatherer           = $fields_gatherer;
-        $this->build_title_value         = $build_title_value;
-        $this->build_description_value   = $build_description_value;
-        $this->build_status_value        = $build_status_value;
-        $this->build_start_date_value    = $build_start_date_value;
-        $this->build_end_period_value    = $build_end_period_value;
-        $this->build_artifact_link_value = $build_artifact_link_value;
+        $this->fields_gatherer         = $fields_gatherer;
+        $this->build_title_value       = $build_title_value;
+        $this->build_description_value = $build_description_value;
+        $this->build_status_value      = $build_status_value;
+        $this->build_start_date_value  = $build_start_date_value;
+        $this->build_end_period_value  = $build_end_period_value;
     }
 
     /**
@@ -97,7 +91,7 @@ final class SourceChangesetValuesCollectionAdapter implements BuildFieldValues
         $status_value        = $this->build_status_value->build($fields->getStatusField(), $replication_data);
         $start_date_value    = $this->build_start_date_value->build($fields->getStartDateField(), $replication_data);
         $end_period_value    = $this->build_end_period_value->build($fields->getEndPeriodField(), $replication_data);
-        $artifact_link_value = $this->build_artifact_link_value->build($replication_data);
+        $artifact_link_value = ArtifactLinkValue::fromReplicationData($replication_data);
 
         return new SourceChangesetValuesCollection(
             $replication_data->getArtifact()->getId(),

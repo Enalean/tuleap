@@ -24,17 +24,9 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation;
 
 use Mockery as M;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use Tracker_FormElement_Field_List_Bind_StaticValue;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\ArtifactLinkValue;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\DescriptionValue;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\EndPeriodValue;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\SourceChangesetValuesCollection;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\StartDateValue;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\StatusValue;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\TitleValue;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\Field;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\NoDuckTypedMatchingValueException;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\SubmissionDate;
+use Tuleap\ProgramManagement\Tests\Builder\SourceChangesetValuesCollectionBuilder;
 use Tuleap\Tracker\FormElement\Field\ListFields\FieldValueMatcher;
 
 final class StatusValueMapperTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -60,7 +52,7 @@ final class StatusValueMapperTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $first_list_value  = new \Tracker_FormElement_Field_List_Bind_StaticValue(2000, 'Not found', 'Irrelevant', 1, 0);
         $second_list_value = new \Tracker_FormElement_Field_List_Bind_StaticValue(2001, 'Planned', 'Irrelevant', 2, 0);
-        $copied_values     = $this->buildCopiedValues([$first_list_value, $second_list_value]);
+        $copied_values     = SourceChangesetValuesCollectionBuilder::buildWithStatusValues([$first_list_value, $second_list_value]);
         $status_field_data = new Field(
             new \Tracker_FormElement_Field_Selectbox(1004, 89, 1000, 'status', 'Status', 'Irrelevant', true, 'P', false, '', 4)
         );
@@ -86,7 +78,7 @@ final class StatusValueMapperTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $first_list_value  = new \Tracker_FormElement_Field_List_Bind_StaticValue(2000, 'Not found', 'Irrelevant', 1, 0);
         $second_list_value = new \Tracker_FormElement_Field_List_Bind_StaticValue(2001, 'Planned', 'Irrelevant', 1, 0);
-        $copied_values     = $this->buildCopiedValues([$first_list_value, $second_list_value]);
+        $copied_values     = SourceChangesetValuesCollectionBuilder::buildWithStatusValues([$first_list_value, $second_list_value]);
         $status_field_data = new Field(new \Tracker_FormElement_Field_Selectbox(
             1004,
             89,
@@ -105,31 +97,5 @@ final class StatusValueMapperTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->expectException(NoDuckTypedMatchingValueException::class);
         $this->mapper->mapStatusValueByDuckTyping($copied_values, $status_field_data);
-    }
-
-    /**
-     * @param Tracker_FormElement_Field_List_Bind_StaticValue[]  $status_value
-     */
-    private function buildCopiedValues(
-        array $status_value
-    ): SourceChangesetValuesCollection {
-        $title_value         = new TitleValue('Irrelevant');
-        $description_value   = new DescriptionValue('Irrelevant', 'text');
-        $status_value        = new StatusValue($status_value);
-        $start_date_value    = new StartDateValue('2020-10-01');
-        $end_period_value    = new EndPeriodValue('2020-10-10');
-        $artifact_link_value = new ArtifactLinkValue(123);
-        $submission_date     = new SubmissionDate(123456789);
-
-        return new SourceChangesetValuesCollection(
-            123,
-            $title_value,
-            $description_value,
-            $status_value,
-            $submission_date,
-            $start_date_value,
-            $end_period_value,
-            $artifact_link_value
-        );
     }
 }
