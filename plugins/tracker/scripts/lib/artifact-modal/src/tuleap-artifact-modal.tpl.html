@@ -454,8 +454,9 @@
         <input
             type="submit"
             data-test="artifact-modal-save-button"
-            class="tlp-button-primary tlp-modal-action"
-            value="{{ 'Save changes' | translate }}"
+            class="tlp-modal-action"
+            ng-class="{'tlp-button-danger': modal.confirm_action_to_edit, 'tlp-button-primary': !modal.confirm_action_to_edit }"
+            ng-value="modal.getButtonText()"
             ng-disabled="modal.isUploadingInCKEditor()"
         >
     </div>

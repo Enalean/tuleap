@@ -45,6 +45,7 @@ describe("TuleapArtifactModalController", () => {
         isInCreationMode,
         createArtifact,
         editArtifact,
+        editArtifactWithConcurrencyChecking,
         getAllFileFields,
         uploadAllTemporaryFiles,
         isUploadingInCKEditor;
@@ -104,6 +105,10 @@ describe("TuleapArtifactModalController", () => {
         isInCreationMode = jest.spyOn(modal_create_mode_state, "isInCreationMode");
         createArtifact = jest.spyOn(rest_service, "createArtifact");
         editArtifact = jest.spyOn(rest_service, "editArtifact");
+        editArtifactWithConcurrencyChecking = jest.spyOn(
+            rest_service,
+            "editArtifactWithConcurrencyChecking"
+        );
         getAllFileFields = jest.spyOn(file_field_detector, "getAllFileFields");
         uploadAllTemporaryFiles = jest.spyOn(file_uploader, "uploadAllTemporaryFiles");
         isUploadingInCKEditor = jest.spyOn(is_uploading_in_ckeditor_state, "isUploadingInCKEditor");
@@ -178,6 +183,7 @@ describe("TuleapArtifactModalController", () => {
             ).mockImplementation((values) => values);
             isUploadingInCKEditor.mockReturnValue(false);
             getAllFileFields.mockReturnValue([]);
+            TuleapArtifactModalLoading.loading = false;
         });
 
         it(`and given that an upload is still ongoing in CKEditor,
@@ -233,10 +239,13 @@ describe("TuleapArtifactModalController", () => {
             the modal will be closed
             and the callback will be called`, () => {
             const edit_request = $q.defer();
-            editArtifact.mockReturnValue(edit_request.promise);
+            editArtifactWithConcurrencyChecking.mockReturnValue(edit_request.promise);
             isInCreationMode.mockReturnValue(false);
             controller_params.modal_model.artifact_id = 8155;
+            controller_params.modal_model.last_changeset_id = 78;
             controller_params.modal_model.tracker_id = 186;
+            controller_params.modal_model.etag = "etag";
+            controller_params.modal_model.last_modified = 1629098929;
             ArtifactModalController = $controller(BaseModalController, controller_params);
             const values = [
                 { field_id: 983, value: 741 },
@@ -256,7 +265,13 @@ describe("TuleapArtifactModalController", () => {
                 false,
                 followup_comment
             );
-            expect(editArtifact).toHaveBeenCalledWith(8155, values, followup_comment);
+            expect(editArtifactWithConcurrencyChecking).toHaveBeenCalledWith(
+                8155,
+                values,
+                followup_comment,
+                "etag",
+                1629098929
+            );
             expect(createArtifact).not.toHaveBeenCalled();
             expect(tlp_modal.hide).toHaveBeenCalled();
             expect(TuleapArtifactModalLoading.loading).toBeFalsy();
@@ -310,11 +325,11 @@ describe("TuleapArtifactModalController", () => {
         });
 
         it("and given the server responded an error, when I submit the modal to Tuleap, then the modal will not be closed and the callback won't be called", () => {
-            TuleapArtifactModalLoading.loading = false;
             isInCreationMode.mockReturnValue(false);
             editArtifact.mockReturnValue($q.reject());
             ArtifactModalController = $controller(BaseModalController, controller_params);
             ArtifactModalController.values = [];
+            ArtifactModalController.confirm_action_to_edit = true;
 
             ArtifactModalController.submit();
             $scope.$apply();
@@ -322,6 +337,41 @@ describe("TuleapArtifactModalController", () => {
             expect(tlp_modal.hide).not.toHaveBeenCalled();
             expect(mockCallback).not.toHaveBeenCalled();
             expect(TuleapArtifactModalLoading.loading).toBeFalsy();
+        });
+
+        it("and given user force to edit artifact in concurrency mode, then the modal will be closed, and the artifact will be edited", () => {
+            const edit_request = $q.defer();
+            editArtifact.mockReturnValue(edit_request.promise);
+            isInCreationMode.mockReturnValue(false);
+            controller_params.modal_model.artifact_id = 8155;
+            controller_params.modal_model.last_changeset_id = 78;
+            controller_params.modal_model.tracker_id = 186;
+
+            ArtifactModalController = $controller(BaseModalController, controller_params);
+            const values = [
+                { field_id: 983, value: 741 },
+                { field_id: 860, bind_value_ids: [754] },
+            ];
+            const followup_comment = { body: "My comment", format: "text" };
+            ArtifactModalController.values = values;
+            ArtifactModalController.new_followup_comment = followup_comment;
+            ArtifactModalController.confirm_action_to_edit = true;
+
+            ArtifactModalController.submit();
+            expect(TuleapArtifactModalLoading.loading).toBeTruthy();
+            edit_request.resolve({ id: 8155 });
+            $scope.$apply();
+
+            expect(validateArtifactFieldsValues).toHaveBeenCalledWith(
+                values,
+                false,
+                followup_comment
+            );
+            expect(editArtifact).toHaveBeenCalledWith(8155, values, followup_comment);
+            expect(createArtifact).not.toHaveBeenCalled();
+            expect(tlp_modal.hide).toHaveBeenCalled();
+            expect(TuleapArtifactModalLoading.loading).toBeFalsy();
+            expect(mockCallback).toHaveBeenCalledWith(8155);
         });
     });
 

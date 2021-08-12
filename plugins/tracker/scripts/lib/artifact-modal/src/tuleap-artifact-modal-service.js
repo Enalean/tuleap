@@ -209,6 +209,9 @@ function ArtifactModalService($q, TlpModalService, TuleapArtifactModalLoading) {
                 applyWorkflowTransitions(tracker_with_field_values, artifact_values);
                 modal_model.values = getSelectedValues(artifact_values, transformed_tracker);
                 modal_model.title = artifact_values.title;
+                modal_model.etag = promises[0].Etag;
+                modal_model.last_modified = promises[0]["Last-Modified"];
+
                 applyFieldDependencies(tracker_with_field_values, modal_model.values);
 
                 modal_model.tracker = tracker_with_field_values;

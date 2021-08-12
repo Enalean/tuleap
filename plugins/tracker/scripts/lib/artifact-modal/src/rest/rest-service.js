@@ -24,6 +24,7 @@ import { resetError, setError } from "./rest-error-state.js";
 export {
     createArtifact,
     editArtifact,
+    editArtifactWithConcurrencyChecking,
     getAllOpenParentArtifacts,
     getArtifact,
     getFileUploadRules,
@@ -51,7 +52,7 @@ function getArtifact(artifact_id) {
 
 function getArtifactWithCompleteTrackerStructure(artifact_id) {
     return get(`/api/v1/artifacts/${artifact_id}?tracker_structure_format=complete`).then(
-        responseHandler,
+        responseHandlerWithConcurrencyData,
         errorHandler
     );
 }
@@ -98,6 +99,30 @@ async function editArtifact(artifact_id, field_values, followup_comment) {
 
     await put(`/api/v1/artifacts/${artifact_id}`, {
         headers,
+        body,
+    });
+    resetError();
+    return { id: artifact_id };
+}
+
+async function editArtifactWithConcurrencyChecking(
+    artifact_id,
+    field_values,
+    followup_comment,
+    etag,
+    last_modified
+) {
+    const body = JSON.stringify({
+        values: field_values,
+        comment: followup_comment,
+    });
+
+    await put(`/api/v1/artifacts/${artifact_id}`, {
+        headers: {
+            "If-match": etag,
+            "If-Unmodified-Since": last_modified,
+            ...headers,
+        },
         body,
     });
     resetError();
@@ -210,6 +235,15 @@ async function getFirstReverseIsChildLink(artifact_id) {
 function responseHandler(response) {
     resetError();
     return response.json();
+}
+
+async function responseHandlerWithConcurrencyData(response) {
+    resetError();
+    return {
+        Etag: response.headers.get("Etag"),
+        "Last-Modified": response.headers.get("Last-Modified"),
+        ...(await response.json()),
+    };
 }
 
 async function errorHandler(error) {
