@@ -23,9 +23,12 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracker;
 
 use Tuleap\ProgramManagement\Domain\Program\Plan\ProgramHasNoProgramIncrementTrackerException;
+use Tuleap\ProgramManagement\Domain\Program\Plan\VerifyPrioritizeFeaturesPermission;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\ProgramTrackerNotFoundException;
 use Tuleap\ProgramManagement\Domain\ProgramTracker;
+use Tuleap\ProgramManagement\Domain\Workspace\RetrieveUser;
+use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 
 /**
  * @psalm-immutable
@@ -35,15 +38,18 @@ final class ProgramIncrementTrackerConfiguration
     private bool $can_create_program_increment;
     private int $program_increment_tracker_id;
     private ProgramIncrementLabels $program_increment_labels;
+    private bool $has_plan_permissions;
 
     private function __construct(
         int $program_increment_tracker_id,
         bool $can_create_program_increment,
+        bool $has_plan_permissions,
         ProgramIncrementLabels $program_increment_labels
     ) {
         $this->can_create_program_increment = $can_create_program_increment;
         $this->program_increment_tracker_id = $program_increment_tracker_id;
         $this->program_increment_labels     = $program_increment_labels;
+        $this->has_plan_permissions         = $has_plan_permissions;
     }
 
     /**
@@ -54,8 +60,11 @@ final class ProgramIncrementTrackerConfiguration
         RetrieveVisibleProgramIncrementTracker $retrieve_tracker,
         RetrieveProgramIncrementLabels $retrieve_labels,
         ProgramIdentifier $program,
-        \PFUser $user
+        VerifyPrioritizeFeaturesPermission $prioritize_features_permission,
+        UserIdentifier $user_identifier,
+        RetrieveUser $retrieve_user
     ): self {
+        $user                      =  $retrieve_user->getUserWithId($user_identifier);
         $program_increment_tracker = ProgramTracker::buildProgramIncrementTrackerFromProgram(
             $retrieve_tracker,
             $program,
@@ -63,14 +72,17 @@ final class ProgramIncrementTrackerConfiguration
         );
 
         $can_create_program_increment = $program_increment_tracker->userCanSubmitArtifact($user);
+        $has_plan_permissions         = $prioritize_features_permission->canUserPrioritizeFeatures($program, $user_identifier, null);
 
         $program_increments_labels = ProgramIncrementLabels::fromProgramIncrementTracker(
             $retrieve_labels,
             $program_increment_tracker
         );
+
         return new self(
             $program_increment_tracker->getTrackerId(),
             $can_create_program_increment,
+            $has_plan_permissions,
             $program_increments_labels
         );
     }
@@ -93,5 +105,10 @@ final class ProgramIncrementTrackerConfiguration
     public function getProgramIncrementSubLabel(): ?string
     {
         return $this->program_increment_labels->sub_label;
+    }
+
+    public function hasPlanPermissions(): bool
+    {
+        return $this->has_plan_permissions;
     }
 }

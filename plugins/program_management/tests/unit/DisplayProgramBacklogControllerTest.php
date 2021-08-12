@@ -32,8 +32,10 @@ use Tuleap\ProgramManagement\Domain\Program\Plan\BuildProgram;
 use Tuleap\ProgramManagement\Domain\Team\VerifyIsTeam;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProgramStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveProgramIncrementLabelsStub;
+use Tuleap\ProgramManagement\Tests\Stub\RetrieveUserStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveVisibleProgramIncrementTrackerStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsTeamStub;
+use Tuleap\ProgramManagement\Tests\Stub\VerifyPrioritizeFeaturesPermissionStub;
 use Tuleap\Project\Flags\ProjectFlagsBuilder;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Request\NotFoundException;
@@ -182,7 +184,9 @@ final class DisplayProgramBacklogControllerTest extends \Tuleap\Test\PHPUnit\Tes
             $this->template_renderer,
             $this->program_increment_tracker_retriever,
             RetrieveProgramIncrementLabelsStub::buildLabels('Program Increments', 'program_increment'),
-            $verify_is_team
+            $verify_is_team,
+            RetrieveUserStub::withUser(UserTestBuilder::aUser()->build()),
+            VerifyPrioritizeFeaturesPermissionStub::canPrioritize()
         );
     }
 

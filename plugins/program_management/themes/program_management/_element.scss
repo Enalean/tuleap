@@ -167,6 +167,10 @@
     cursor: move;
 }
 
+.element-not-draggable {
+    cursor: not-allowed;
+}
+
 .element-backlog-items {
     display: flex;
     flex-direction: column;

@@ -94,3 +94,6 @@ msgstr "À planifier"
 
 msgid "You are not allowed to plan in this program increment."
 msgstr "Vous n'êtes pas autorisé à plannifier dans cet incrément de programme."
+
+msgid "You cannot plan items"
+msgstr "Vous ne pouvez pas plannifier des éléments"

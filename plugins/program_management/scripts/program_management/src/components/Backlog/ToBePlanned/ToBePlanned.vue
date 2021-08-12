@@ -20,8 +20,9 @@
 <template>
     <div>
         <h2 v-translate class="program-to-be-planned-title">To Be Planned</h2>
-        <div data-is-container="true" data-can-plan="true">
+        <div data-is-container="true" v-bind:data-can-plan="has_plan_permissions">
             <program-increment-not-plannable />
+            <feature-not-plannable v-if="!has_plan_permissions" />
 
             <empty-state
                 v-if="to_be_planned_elements.length === 0 && !is_loading && !has_error"
@@ -57,11 +58,13 @@ import type { Feature } from "../../../type";
 import { namespace } from "vuex-class";
 import ErrorDisplayer from "../ErrorDisplayer.vue";
 import ProgramIncrementNotPlannable from "../ProgramIncrement/ProgramIncrementNotPlannable.vue";
+import FeatureNotPlannable from "./FeatureNotPlannable.vue";
 
 const configuration = namespace("configuration");
 
 @Component({
     components: {
+        FeatureNotPlannable,
         ProgramIncrementNotPlannable,
         ErrorDisplayer,
         BacklogElementSkeleton,
@@ -78,6 +81,9 @@ export default class ToBePlanned extends Vue {
     readonly to_be_planned_elements!: Array<Feature>;
     @configuration.State
     readonly program_id!: number;
+
+    @configuration.State
+    readonly has_plan_permissions!: boolean;
 
     async mounted(): Promise<void> {
         try {
