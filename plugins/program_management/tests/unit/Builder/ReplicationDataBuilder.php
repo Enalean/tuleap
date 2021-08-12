@@ -26,35 +26,48 @@ use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Replicatio
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\ReplicationData;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class ReplicationDataBuilder
 {
+    public static function build(): ReplicationData
+    {
+        return self::buildWithArtifactId(311);
+    }
+
     public static function buildWithArtifactId(int $artifact_id): ReplicationData
     {
-        $program_project         = ProjectTestBuilder::aProject()->withId(578)
-            ->build();
-        $source_timebox_tracker  = TrackerTestBuilder::aTracker()->withId(1)
-            ->withProject($program_project)
-            ->build();
-        $source_timebox_artifact = ArtifactTestBuilder::anArtifact($artifact_id)
-            ->inTracker($source_timebox_tracker)
-            ->inProject($program_project)
-            ->build();
+        $source_timebox_artifact = self::buildArtifact($artifact_id);
         $user                    = UserTestBuilder::aUser()->withId(101)->build();
-        $changeset               = new \Tracker_Artifact_Changeset(
+        $source_changeset        = new \Tracker_Artifact_Changeset(
             2604,
             $source_timebox_artifact,
             $user->getId(),
             1234567890,
             null
         );
-        return ReplicationDataAdapter::build($source_timebox_artifact, $user, $changeset);
+        return ReplicationDataAdapter::build($source_timebox_artifact, $user, $source_changeset);
     }
 
-    public static function build(): ReplicationData
+    public static function buildWithChangeset(\Tracker_Artifact_Changeset $source_changeset): ReplicationData
     {
-        return self::buildWithArtifactId(311);
+        $source_timebox_artifact = self::buildArtifact(209);
+        $user                    = UserTestBuilder::aUser()->withId(179)->build();
+        return ReplicationDataAdapter::build($source_timebox_artifact, $user, $source_changeset);
+    }
+
+    private static function buildArtifact(int $artifact_id): Artifact
+    {
+        $program_project        = ProjectTestBuilder::aProject()->withId(578)
+            ->build();
+        $source_timebox_tracker = TrackerTestBuilder::aTracker()->withId(1)
+            ->withProject($program_project)
+            ->build();
+        return ArtifactTestBuilder::anArtifact($artifact_id)
+            ->inTracker($source_timebox_tracker)
+            ->inProject($program_project)
+            ->build();
     }
 }

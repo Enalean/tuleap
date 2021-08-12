@@ -23,11 +23,10 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement;
 
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\MappedStatusValue;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\Field;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\ProgramIncrementFields;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFields;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TimeboxArtifactLinkType;
 use Tuleap\ProgramManagement\Tests\Builder\SourceChangesetValuesCollectionBuilder;
+use Tuleap\ProgramManagement\Tests\Builder\SynchronizedFieldsBuilder;
 
 final class ProgramIncrementFieldsDataTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -43,7 +42,7 @@ final class ProgramIncrementFieldsDataTest extends \Tuleap\Test\PHPUnit\TestCase
             112
         );
         $mapped_status_value = new MappedStatusValue([3001]);
-        $target_fields       = $this->buildSynchronizedFields(1001, 1002, 1003, 1004, 1005, 1006);
+        $target_fields       = SynchronizedFieldsBuilder::buildWithIds(1001, 1002, 1003, 1004, 1005, 1006);
 
         $fields_data = ProgramIncrementFields::fromSourceChangesetValuesAndSynchronizedFields(
             $copied_values,
@@ -61,36 +60,6 @@ final class ProgramIncrementFieldsDataTest extends \Tuleap\Test\PHPUnit\TestCase
                 1006 => '2020-10-10'
             ],
             $fields_data->toFieldsDataArray()
-        );
-    }
-
-    private function buildSynchronizedFields(
-        int $artifact_link_id,
-        int $title_id,
-        int $description_id,
-        int $status_id,
-        int $start_date_id,
-        int $end_date_id
-    ): SynchronizedFields {
-        $artifact_link_field_data = new Field(new \Tracker_FormElement_Field_ArtifactLink($artifact_link_id, 89, 1000, 'art_link', 'Links', 'Irrelevant', true, 'P', false, '', 1));
-
-        $title_field_data = new Field(new \Tracker_FormElement_Field_String($title_id, 89, 1000, 'title', 'Title', 'Irrelevant', true, 'P', true, '', 2));
-
-        $description_field_data = new Field(new \Tracker_FormElement_Field_Text($description_id, 89, 1000, 'description', 'Description', 'Irrelevant', true, 'P', false, '', 3));
-
-        $status_field_data = new Field(new \Tracker_FormElement_Field_Selectbox($status_id, 89, 1000, 'status', 'Status', 'Irrelevant', true, 'P', false, '', 4));
-
-        $start_date_field_data = new Field(new \Tracker_FormElement_Field_Date($start_date_id, 89, 1000, 'date', 'Date', 'Irrelevant', true, 'P', false, '', 5));
-
-        $end_date_field_data = new Field(new \Tracker_FormElement_Field_Date($end_date_id, 89, 1000, 'date', 'Date', 'Irrelevant', true, 'P', false, '', 6));
-
-        return new SynchronizedFields(
-            $artifact_link_field_data,
-            $title_field_data,
-            $description_field_data,
-            $status_field_data,
-            $start_date_field_data,
-            $end_date_field_data
         );
     }
 }

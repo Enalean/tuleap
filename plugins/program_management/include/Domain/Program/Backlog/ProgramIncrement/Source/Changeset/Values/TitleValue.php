@@ -22,19 +22,33 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values;
 
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFields;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\ReplicationData;
+
 /**
+ * I hold the value of the Title semantic field of the source Timebox.
+ * I am the reference value that must be copied to Mirrored Timeboxes.
  * @psalm-immutable
  */
 final class TitleValue
 {
-    /**
-     * @var string
-     */
-    private $value;
+    private string $value;
 
-    public function __construct(string $value)
+    private function __construct(string $value)
     {
         $this->value = $value;
+    }
+
+    /**
+     * @throws ChangesetValueNotFoundException
+     * @throws UnsupportedTitleFieldException
+     */
+    public static function fromReplicationDataAndSynchronizedFields(
+        RetrieveTitleValue $title_retriever,
+        ReplicationData $replication,
+        SynchronizedFields $fields
+    ): self {
+        return new self($title_retriever->getTitleValue($replication, $fields));
     }
 
     public function getValue(): string
