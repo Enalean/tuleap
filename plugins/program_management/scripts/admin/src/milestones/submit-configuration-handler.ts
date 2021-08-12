@@ -38,12 +38,12 @@ export function submitConfigurationHandler(
     program_id: number,
     use_iteration: boolean
 ): void {
-    const form = document.getElementById(FORM_ID);
+    const form = doc.getElementById(FORM_ID);
     if (!(form instanceof HTMLFormElement)) {
-        throw new Error(`Form #${FORM_ID}does not seem to exist`);
+        return;
     }
 
-    const button_configuration = document.getElementById(SUBMIT_BUTTON_ID);
+    const button_configuration = doc.getElementById(SUBMIT_BUTTON_ID);
     if (!(button_configuration instanceof HTMLButtonElement)) {
         throw new Error(`Button #${SUBMIT_BUTTON_ID} does not seem to exist`);
     }
