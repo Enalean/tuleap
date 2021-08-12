@@ -78,26 +78,23 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
     public const TYPE_TABLE             = 'table';
     public const COMMENT_CRITERION_NAME = 'comment';
 
-    /**
-     * @var int
-     */
-    public $id;
+    public int $id;
     public $name;
     public $description;
     public $current_renderer_id;
-    public $parent_report_id;
+    public ?int $parent_report_id;
     public $user_id;
     public $group_id;
     public $is_default;
     public $tracker_id;
     public $is_query_displayed;
-    public $is_in_expert_mode;
-    public $expert_query;
+    public bool $is_in_expert_mode;
+    public string $expert_query;
     public $updated_by;
     public $updated_at;
 
     public $renderers;
-    public $criteria;
+    public array $criteria;
     public $criterias;
     public $report_session;
     /**
@@ -115,27 +112,25 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
     /**
      * Constructor
      *
-     * @param int     $id The id of the report
      * @param string  $name The name of the report
      * @param string  $description The description of the report
      * @param int     $current_renderer_id The current Renderer id to display
-     * @param int     $parent_report_id The parent report if this report is temporary (null else)
      * @param int     $user_id The owner of the report (null if scope = project)
      * @param bool    $is_default true if the report is the default one
      * @param int     $tracker_id The id of the tracker to which this Tracker_Report is associated.
      */
     public function __construct(
-        $id,
+        int $id,
         $name,
         $description,
         $current_renderer_id,
-        $parent_report_id,
+        ?int $parent_report_id,
         $user_id,
         $is_default,
         $tracker_id,
         $is_query_displayed,
-        $is_in_expert_mode,
-        $expert_query,
+        bool $is_in_expert_mode,
+        string $expert_query,
         $updated_by,
         $updated_at
     ) {
@@ -179,12 +174,12 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
         return $this->report_session;
     }
 
-    public function setIsInExpertMode($is_in_expert_mode)
+    public function setIsInExpertMode(bool $is_in_expert_mode): void
     {
         $this->is_in_expert_mode = $is_in_expert_mode;
     }
 
-    public function setExpertQuery($expert_query)
+    public function setExpertQuery(string $expert_query): void
     {
         $this->expert_query = $expert_query;
     }
@@ -209,7 +204,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
     }
 
     /** @return Tracker_Report_Criteria[] */
-    public function getCriteria()
+    public function getCriteria(): array
     {
         $session_criteria = null;
         if (isset($this->report_session)) {
