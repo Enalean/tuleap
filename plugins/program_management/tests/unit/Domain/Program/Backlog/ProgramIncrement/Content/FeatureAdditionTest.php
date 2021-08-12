@@ -54,12 +54,14 @@ final class FeatureAdditionTest extends \Tuleap\Test\PHPUnit\TestCase
             VerifyIsVisibleFeatureStub::buildVisibleFeature(),
             127,
             $user_identifier,
-            $program
+            $program,
+            null
         );
         $this->user_can_prioritize = UserCanPrioritize::fromUser(
             VerifyPrioritizeFeaturesPermissionStub::canPrioritize(),
             $user_identifier,
-            $program
+            $program,
+            null
         );
     }
 

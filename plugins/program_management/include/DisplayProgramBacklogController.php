@@ -161,7 +161,7 @@ final class DisplayProgramBacklogController implements DispatchableWithRequest, 
     private function buildConfigurationForExistingProgram(Project $project, PFUser $user): ProgramBacklogConfigurationPresenter
     {
         $user_identifier = UserProxy::buildFromPFUser($user);
-        $program         = ProgramIdentifier::fromId($this->build_program, (int) $project->getID(), $user_identifier);
+        $program         = ProgramIdentifier::fromId($this->build_program, (int) $project->getID(), $user_identifier, null);
 
         $plan_configuration = ProgramIncrementTrackerConfiguration::fromProgram(
             $this->program_increment_tracker_retriever,

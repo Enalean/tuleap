@@ -174,7 +174,7 @@ final class ProgramIncrementsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 
     private static function buildProgram(UserIdentifier $user): ProgramIdentifier
     {
-        return ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 1, $user);
+        return ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 1, $user, null);
     }
 
     private function buildProgramIncrementsRetriever(RetrieveUser $retrieve_user): ProgramIncrementsRetriever

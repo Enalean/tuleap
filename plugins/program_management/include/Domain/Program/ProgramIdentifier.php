@@ -59,7 +59,7 @@ final class ProgramIdentifier
         BuildProgram $build_program,
         int $id,
         UserIdentifier $user,
-        ?PermissionBypass $bypass = null
+        ?PermissionBypass $bypass
     ): self {
         $build_program->ensureProgramIsAProject($id, $user, $bypass);
 

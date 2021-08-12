@@ -54,7 +54,7 @@ final class FeatureElementsRetriever implements RetrieveFeatures
     public function retrieveFeaturesToBePlanned(int $program_id, \PFUser $user): array
     {
         $user_identifier = UserProxy::buildFromPFUser($user);
-        $program         = ProgramIdentifier::fromId($this->build_program, $program_id, $user_identifier);
+        $program         = ProgramIdentifier::fromId($this->build_program, $program_id, $user_identifier, null);
 
         $to_be_planned_artifacts = $this->features_store->searchPlannableFeatures($program);
 

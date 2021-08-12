@@ -59,7 +59,7 @@ final class MassChangeTopBacklogActionProcessor
         $user            = $source_information->user;
         $user_identifier = UserProxy::buildFromPFUser($user);
         try {
-            $program = ProgramIdentifier::fromId($this->build_program, $source_information->project_id, $user_identifier);
+            $program = ProgramIdentifier::fromId($this->build_program, $source_information->project_id, $user_identifier, null);
         } catch (ProgramAccessException | ProjectIsNotAProgramException $e) {
             return;
         }

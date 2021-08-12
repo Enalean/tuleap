@@ -49,6 +49,6 @@ final class ProgramSearcher
         if ($potential_program_id === null) {
             throw new ProgramNotFoundException($program_increment_id);
         }
-        return ProgramIdentifier::fromId($this->build_program, $potential_program_id, $user_identifier);
+        return ProgramIdentifier::fromId($this->build_program, $potential_program_id, $user_identifier, null);
     }
 }

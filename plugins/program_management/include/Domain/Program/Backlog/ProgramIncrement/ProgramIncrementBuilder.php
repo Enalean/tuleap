@@ -47,7 +47,7 @@ final class ProgramIncrementBuilder
      */
     public function buildOpenProgramIncrements(int $potential_program_id, UserIdentifier $user_identifier): array
     {
-        $program = ProgramIdentifier::fromId($this->build_program, $potential_program_id, $user_identifier);
+        $program = ProgramIdentifier::fromId($this->build_program, $potential_program_id, $user_identifier, null);
         return $this->program_increments_retriever->retrieveOpenProgramIncrements($program, $user_identifier);
     }
 }

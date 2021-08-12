@@ -64,7 +64,7 @@ final class CanSubmitNewArtifactHandler
 
         try {
             $user_identifier = UserProxy::buildFromPFUser($user);
-            $program         = ProgramIdentifier::fromId($this->program_builder, (int) $tracker->getGroupId(), $user_identifier);
+            $program         = ProgramIdentifier::fromId($this->program_builder, (int) $tracker->getGroupId(), $user_identifier, null);
         } catch (ProgramAccessException | ProjectIsNotAProgramException $e) {
             // Do not disable artifact submission. Keep it enabled
             return;

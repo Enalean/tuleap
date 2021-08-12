@@ -77,7 +77,7 @@ class FeatureRepresentationBuilder
     ): ?FeatureRepresentation {
         $user_identifier = UserProxy::buildFromPFUser($user);
 
-        $feature = FeatureIdentifier::fromId($this->feature_verifier, $artifact_id, $user_identifier, $program);
+        $feature = FeatureIdentifier::fromId($this->feature_verifier, $artifact_id, $user_identifier, $program, null);
         if (! $feature) {
             return null;
         }

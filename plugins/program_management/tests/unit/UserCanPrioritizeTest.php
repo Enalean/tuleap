@@ -46,7 +46,8 @@ final class UserCanPrioritizeTest extends TestCase
         $user_can_prioritize = UserCanPrioritize::fromUser(
             VerifyPrioritizeFeaturesPermissionStub::canPrioritize(),
             $this->user_identifier,
-            $this->program_identifier
+            $this->program_identifier,
+            null
         );
         self::assertSame($this->user_identifier->getId(), $user_can_prioritize->getId());
     }
@@ -57,7 +58,8 @@ final class UserCanPrioritizeTest extends TestCase
         UserCanPrioritize::fromUser(
             VerifyPrioritizeFeaturesPermissionStub::cannotPrioritize(),
             $this->user_identifier,
-            $this->program_identifier
+            $this->program_identifier,
+            null
         );
     }
 }

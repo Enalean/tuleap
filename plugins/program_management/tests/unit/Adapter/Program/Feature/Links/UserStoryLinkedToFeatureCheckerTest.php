@@ -182,7 +182,8 @@ final class UserStoryLinkedToFeatureCheckerTest extends \Tuleap\Test\PHPUnit\Tes
             VerifyIsVisibleFeatureStub::buildVisibleFeature(),
             $feature_id,
             $this->user_identifier,
-            ProgramIdentifierBuilder::buildWithId(110)
+            ProgramIdentifierBuilder::buildWithId(110),
+            null
         );
     }
 

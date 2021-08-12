@@ -185,25 +185,25 @@ final class DisplayAdminProgramManagementController implements DispatchableWithR
         $this->includeHeaderAndNavigationBar($layout, $project);
         $layout->includeFooterJavascriptFile($assets->getFileURL('program_management_admin.js'));
 
-        $user_identifier = UserProxy::buildFromPFUser($user);
+        $user_identifier   = UserProxy::buildFromPFUser($user);
+        $iteration_tracker = null;
         try {
+            $program_identifier        = ProgramIdentifier::fromId($this->build_program, $program->id, $user_identifier, null);
             $program_increment_tracker = ProgramTracker::buildProgramIncrementTrackerFromProgram(
                 $this->program_increment_tracker_retriever,
-                ProgramIdentifier::fromId($this->build_program, $program->id, $user_identifier),
+                $program_identifier,
                 $user
             );
+
+            if ($program_increment_tracker) {
+                $iteration_tracker = ProgramTracker::buildIterationTrackerFromProgram(
+                    $this->iteration_tracker_retriever,
+                    $program_identifier,
+                    $user
+                );
+            }
         } catch (ProgramAccessException | ProgramHasNoProgramIncrementTrackerException | ProjectIsNotAProgramException | ProgramTrackerNotFoundException $e) {
             $program_increment_tracker = null;
-        }
-
-        try {
-            $iteration_tracker = ProgramTracker::buildIterationTrackerFromProgram(
-                $this->iteration_tracker_retriever,
-                ProgramIdentifier::fromId($this->build_program, $program->id, $user_identifier),
-                $user
-            );
-        } catch (ProgramAccessException | ProjectIsNotAProgramException | ProgramTrackerNotFoundException $e) {
-            $iteration_tracker = null;
         }
 
         $program_increment_labels = ProgramIncrementLabels::fromProgramIncrementTracker(

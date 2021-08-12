@@ -52,7 +52,7 @@ class ConfigurationChecker
     ): array {
         try {
             $user_identifier = UserProxy::buildFromPFUser($user);
-            $program         = ProgramIdentifier::fromId($build_program, $program_id->id, $user_identifier);
+            $program         = ProgramIdentifier::fromId($build_program, $program_id->id, $user_identifier, null);
         } catch (ProjectIsNotAProgramException $e) {
             return [];
         }

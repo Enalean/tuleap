@@ -420,7 +420,7 @@ final class ProjectResource extends AuthenticatedResource
 
         try {
             $user_identifier = UserProxy::buildFromPFUser($user);
-            $program         = ProgramIdentifier::fromId($this->build_program, $id, $user_identifier);
+            $program         = ProgramIdentifier::fromId($this->build_program, $id, $user_identifier, null);
             $top_backlog_updater->processTopBacklogChangeForAProgram(
                 $program,
                 new TopBacklogChange(
