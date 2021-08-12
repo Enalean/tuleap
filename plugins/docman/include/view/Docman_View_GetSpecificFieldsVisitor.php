@@ -30,7 +30,7 @@ class Docman_View_GetSpecificFieldsVisitor implements \Tuleap\Docman\Item\ItemVi
     {
         $pagename = '';
         if (isset($params['force_item'])) {
-            if (\Docman_ItemFactory::getItemTypeForItem($params['force_item']) == \PLUGIN_DOCMAN_ITEM_TYPE_WIKI) {
+            if ((new Docman_ItemFactory())->getItemTypeForItem($params['force_item']) == \PLUGIN_DOCMAN_ITEM_TYPE_WIKI) {
                 $pagename = $params['force_item']->getPagename();
             }
         } else {

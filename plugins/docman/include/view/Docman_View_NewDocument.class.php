@@ -45,7 +45,7 @@ class Docman_View_NewDocument extends Docman_View_New
         $html            = '';
         $currentItemType = null;
         if (isset($params['force_item'])) {
-            $currentItemType = Docman_ItemFactory::getItemTypeForItem($params['force_item']);
+            $currentItemType = $this->_getItemFactory()->getItemTypeForItem($params['force_item']);
         }
         $specifics     = [
             [
