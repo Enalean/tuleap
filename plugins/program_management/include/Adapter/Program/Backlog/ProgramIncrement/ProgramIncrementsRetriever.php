@@ -22,16 +22,16 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement;
 
-use PFUser;
 use Psr\Log\LoggerInterface;
 use Tuleap\ProgramManagement\Adapter\Workspace\UserProxy;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\CheckProgramIncrement;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrement;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\RetrieveProgramIncrements;
-use Tuleap\ProgramManagement\Domain\Program\Plan\BuildProgram;
-use Tuleap\ProgramManagement\Domain\Program\Plan\VerifyPrioritizeFeaturesPermission;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\Workspace\RetrieveUser;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
+use Tuleap\ProgramManagement\Domain\Workspace\VerifyUserCanPlanInProgramIncrement;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 
@@ -42,8 +42,8 @@ final class ProgramIncrementsRetriever implements RetrieveProgramIncrements
     private SemanticTimeframeBuilder $semantic_timeframe_builder;
     private LoggerInterface $logger;
     private RetrieveUser $user_manager_adapter;
-    private VerifyPrioritizeFeaturesPermission $features_permission_verifier;
-    private BuildProgram $build_program;
+    private VerifyUserCanPlanInProgramIncrement $can_plan_in_program_increment_verifier;
+    private CheckProgramIncrement $check_program_increment;
 
     public function __construct(
         ProgramIncrementsDAO $program_increments_dao,
@@ -51,16 +51,16 @@ final class ProgramIncrementsRetriever implements RetrieveProgramIncrements
         SemanticTimeframeBuilder $semantic_timeframe_builder,
         LoggerInterface $logger,
         RetrieveUser $user_manager_adapter,
-        VerifyPrioritizeFeaturesPermission $features_permission_verifier,
-        BuildProgram $build_program
+        VerifyUserCanPlanInProgramIncrement $can_plan_in_program_increment_verifier,
+        CheckProgramIncrement $check_program_increment
     ) {
-        $this->program_increments_dao       = $program_increments_dao;
-        $this->artifact_factory             = $artifact_factory;
-        $this->semantic_timeframe_builder   = $semantic_timeframe_builder;
-        $this->logger                       = $logger;
-        $this->user_manager_adapter         = $user_manager_adapter;
-        $this->features_permission_verifier = $features_permission_verifier;
-        $this->build_program                = $build_program;
+        $this->program_increments_dao                 = $program_increments_dao;
+        $this->artifact_factory                       = $artifact_factory;
+        $this->semantic_timeframe_builder             = $semantic_timeframe_builder;
+        $this->logger                                 = $logger;
+        $this->user_manager_adapter                   = $user_manager_adapter;
+        $this->can_plan_in_program_increment_verifier = $can_plan_in_program_increment_verifier;
+        $this->check_program_increment                = $check_program_increment;
     }
 
     /**
@@ -116,11 +116,13 @@ final class ProgramIncrementsRetriever implements RetrieveProgramIncrements
             $this->logger
         );
 
-        $program_identifier = ProgramIdentifier::fromId(
-            $this->build_program,
-            (int) $program_increment_artifact->getTracker()->getGroupId(),
-            $user_identifier,
-            null
+        $user_can_plan = $this->can_plan_in_program_increment_verifier->userCanPlan(
+            ProgramIncrementIdentifier::fromId(
+                $this->check_program_increment,
+                $program_increment_artifact->getId(),
+                $user
+            ),
+            $user_identifier
         );
 
         return new ProgramIncrement(
@@ -129,33 +131,11 @@ final class ProgramIncrementsRetriever implements RetrieveProgramIncrements
             $program_increment_artifact->getUri(),
             $program_increment_artifact->getXRef(),
             $program_increment_artifact->userCanUpdate($user),
-            $this->userCanPlan($program_increment_artifact, $user, $user_identifier, $program_identifier),
+            $user_can_plan,
             $status,
             $time_period->getStartDate(),
             $time_period->getEndDate()
         );
-    }
-
-    private function userCanPlan(
-        Artifact $program_increment_artifact,
-        PFUser $user,
-        UserIdentifier $user_identifier,
-        ProgramIdentifier $program_identifier
-    ): bool {
-        if (! $program_increment_artifact->userCanUpdate($user)) {
-            return false;
-        }
-
-        if (! $this->features_permission_verifier->canUserPrioritizeFeatures($program_identifier, $user_identifier, null)) {
-            return false;
-        }
-
-        $artifact_link = $program_increment_artifact->getAnArtifactLinkField($user);
-        if (! $artifact_link) {
-            return false;
-        }
-
-        return $artifact_link->userCanUpdate($user);
     }
 
     /**

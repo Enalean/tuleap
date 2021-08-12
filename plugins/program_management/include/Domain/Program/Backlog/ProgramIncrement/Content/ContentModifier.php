@@ -28,6 +28,7 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureHasPlannedUse
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureNotFoundException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\VerifyIsVisibleFeature;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\NotAllowedToPrioritizeException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\CheckFeatureIsPlannedInProgramIncrement;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\CheckProgramIncrement;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementIdentifier;
@@ -39,6 +40,7 @@ use Tuleap\ProgramManagement\Domain\Program\Plan\VerifyPrioritizeFeaturesPermiss
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\ProgramSearcher;
 use Tuleap\ProgramManagement\Domain\UserCanPrioritize;
+use Tuleap\ProgramManagement\Domain\Workspace\VerifyUserCanPlanInProgramIncrement;
 use Tuleap\ProgramManagement\REST\v1\FeatureElementToOrderInvolvedInChangeRepresentation;
 
 final class ContentModifier implements ModifyContent
@@ -51,6 +53,7 @@ final class ContentModifier implements ModifyContent
     private OrderFeatureRank $features_rank_orderer;
     private CheckFeatureIsPlannedInProgramIncrement $check_feature_is_planned_in_PI;
     private FeaturePlanner $feature_planner;
+    private VerifyUserCanPlanInProgramIncrement $can_plan_in_program_increment_verifier;
 
     public function __construct(
         VerifyPrioritizeFeaturesPermission $permission_verifier,
@@ -60,16 +63,18 @@ final class ContentModifier implements ModifyContent
         VerifyCanBePlannedInProgramIncrement $can_be_planned_verifier,
         FeaturePlanner $feature_planner,
         OrderFeatureRank $features_rank_orderer,
-        CheckFeatureIsPlannedInProgramIncrement $check_feature_is_planned_in_PI
+        CheckFeatureIsPlannedInProgramIncrement $check_feature_is_planned_in_PI,
+        VerifyUserCanPlanInProgramIncrement $can_plan_in_program_increment_verifier
     ) {
-        $this->permission_verifier            = $permission_verifier;
-        $this->program_increment_checker      = $program_increment_checker;
-        $this->program_searcher               = $program_searcher;
-        $this->visible_verifier               = $visible_verifier;
-        $this->can_be_planned_verifier        = $can_be_planned_verifier;
-        $this->feature_planner                = $feature_planner;
-        $this->features_rank_orderer          = $features_rank_orderer;
-        $this->check_feature_is_planned_in_PI = $check_feature_is_planned_in_PI;
+        $this->permission_verifier                    = $permission_verifier;
+        $this->program_increment_checker              = $program_increment_checker;
+        $this->program_searcher                       = $program_searcher;
+        $this->visible_verifier                       = $visible_verifier;
+        $this->can_be_planned_verifier                = $can_be_planned_verifier;
+        $this->feature_planner                        = $feature_planner;
+        $this->features_rank_orderer                  = $features_rank_orderer;
+        $this->check_feature_is_planned_in_PI         = $check_feature_is_planned_in_PI;
+        $this->can_plan_in_program_increment_verifier = $can_plan_in_program_increment_verifier;
     }
 
     public function modifyContent(\PFUser $user, int $program_increment_id, ContentChange $content_change): void
@@ -95,7 +100,7 @@ final class ContentModifier implements ModifyContent
             $this->planFeature($content_change->potential_feature_id_to_add, $program_increment, $user_can_prioritize, $program);
         }
         if ($content_change->elements_to_order !== null) {
-            $this->reorderFeature($content_change->elements_to_order, $program_increment, $program);
+            $this->reorderFeature($content_change->elements_to_order, $program_increment, $program, $user_can_prioritize);
         }
     }
 
@@ -129,23 +134,27 @@ final class ContentModifier implements ModifyContent
     /**
      * @throws FeatureCanNotBeRankedWithItselfException
      * @throws InvalidFeatureIdInProgramIncrementException
+     * @throws NotAllowedToPrioritizeException
      */
     private function reorderFeature(
         FeatureElementToOrderInvolvedInChangeRepresentation $feature_to_order_representation,
         ProgramIncrementIdentifier $program_increment,
-        ProgramIdentifier $program
+        ProgramIdentifier $program,
+        UserCanPrioritize $user
     ): void {
-        $this->checkFeatureCanBeReordered($feature_to_order_representation->ids[0], $program_increment);
-        $this->checkFeatureCanBeReordered($feature_to_order_representation->compared_to, $program_increment);
+        $this->checkFeatureCanBeReordered($feature_to_order_representation->ids[0], $program_increment, $user);
+        $this->checkFeatureCanBeReordered($feature_to_order_representation->compared_to, $program_increment, $user);
         $this->features_rank_orderer->reorder($feature_to_order_representation, (string) $program_increment->getId(), $program);
     }
 
     /**
      * @throws InvalidFeatureIdInProgramIncrementException
+     * @throws NotAllowedToPrioritizeException
      */
     private function checkFeatureCanBeReordered(
         int $potential_feature_id_to_manipulate,
-        ProgramIncrementIdentifier $program_increment
+        ProgramIncrementIdentifier $program_increment,
+        UserCanPrioritize $user
     ): void {
         $can_be_planned = $this->can_be_planned_verifier->canBePlannedInProgramIncrement(
             $potential_feature_id_to_manipulate,
@@ -164,6 +173,10 @@ final class ContentModifier implements ModifyContent
                 $potential_feature_id_to_manipulate,
                 $program_increment->getId()
             );
+        }
+
+        if (! $this->can_plan_in_program_increment_verifier->userCanPlanAndPrioritize($program_increment, $user)) {
+            throw new NotAllowedToPrioritizeException($user->getId(), $program_increment->getId());
         }
     }
 }
