@@ -110,7 +110,8 @@ final class FeatureAdditionProcessorTest extends \Tuleap\Test\PHPUnit\TestCase
             VerifyIsVisibleFeatureStub::buildVisibleFeature(),
             76,
             $user_identifier,
-            $program
+            $program,
+            null
         );
         $feature_addition           = FeatureAddition::fromFeature(
             VerifyCanBePlannedInProgramIncrementStub::buildCanBePlannedVerifier(),
@@ -119,7 +120,8 @@ final class FeatureAdditionProcessorTest extends \Tuleap\Test\PHPUnit\TestCase
             UserCanPrioritize::fromUser(
                 VerifyPrioritizeFeaturesPermissionStub::canPrioritize(),
                 $user_identifier,
-                $program
+                $program,
+                null
             )
         );
         $program_increment_artifact = new Artifact(37, 7, 110, 1234567890, false);
@@ -145,7 +147,8 @@ final class FeatureAdditionProcessorTest extends \Tuleap\Test\PHPUnit\TestCase
             VerifyIsVisibleFeatureStub::buildVisibleFeature(),
             76,
             $user_identifier,
-            $program
+            $program,
+            null
         );
 
         return FeatureAddition::fromFeature(
@@ -155,7 +158,8 @@ final class FeatureAdditionProcessorTest extends \Tuleap\Test\PHPUnit\TestCase
             UserCanPrioritize::fromUser(
                 VerifyPrioritizeFeaturesPermissionStub::canPrioritize(),
                 $user_identifier,
-                $program
+                $program,
+                null
             )
         );
     }

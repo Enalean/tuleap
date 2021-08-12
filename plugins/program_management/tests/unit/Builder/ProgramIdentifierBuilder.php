@@ -32,12 +32,12 @@ final class ProgramIdentifierBuilder
 {
     public static function build(): ProgramIdentifier
     {
-        return ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 101, UserIdentifierStub::buildGenericUser());
+        return ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 101, UserIdentifierStub::buildGenericUser(), null);
     }
 
     public static function buildWithId(int $id): ProgramIdentifier
     {
-        return ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), $id, UserIdentifierStub::buildGenericUser());
+        return ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), $id, UserIdentifierStub::buildGenericUser(), null);
     }
 
     public static function buildWithIdAndPass(int $id): ProgramIdentifier

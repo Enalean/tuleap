@@ -161,11 +161,11 @@ final class FeatureRemovalProcessorTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $user_identifier = UserIdentifierStub::buildGenericUser();
         $program         = ProgramIdentifierBuilder::build();
-        $feature         = FeatureIdentifier::fromId(VerifyIsVisibleFeatureStub::buildVisibleFeature(), 76, $user_identifier, $program);
+        $feature         = FeatureIdentifier::fromId(VerifyIsVisibleFeatureStub::buildVisibleFeature(), 76, $user_identifier, $program, null);
         return FeatureRemoval::fromFeature(
             VerifyLinkedUserStoryIsNotPlannedStub::buildNotLinkedStories(),
             $feature,
-            UserCanPrioritize::fromUser(VerifyPrioritizeFeaturesPermissionStub::canPrioritize(), $user_identifier, $program)
+            UserCanPrioritize::fromUser(VerifyPrioritizeFeaturesPermissionStub::canPrioritize(), $user_identifier, $program, null)
         );
     }
 }

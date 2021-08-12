@@ -87,7 +87,8 @@ final class ContentModifier implements ModifyContent
         $user_can_prioritize = UserCanPrioritize::fromUser(
             $this->permission_verifier,
             $user_identifier,
-            $program
+            $program,
+            null
         );
 
         if ($content_change->potential_feature_id_to_add !== null) {
@@ -112,7 +113,7 @@ final class ContentModifier implements ModifyContent
         UserCanPrioritize $user,
         ProgramIdentifier $program
     ): void {
-        $feature = FeatureIdentifier::fromId($this->visible_verifier, $potential_feature_id_to_add, $user, $program);
+        $feature = FeatureIdentifier::fromId($this->visible_verifier, $potential_feature_id_to_add, $user, $program, null);
         if ($feature === null) {
             throw new FeatureNotFoundException($potential_feature_id_to_add);
         }

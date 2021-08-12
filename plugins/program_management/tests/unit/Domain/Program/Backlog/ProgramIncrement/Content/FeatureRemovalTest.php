@@ -45,12 +45,14 @@ final class FeatureRemovalTest extends \Tuleap\Test\PHPUnit\TestCase
             VerifyIsVisibleFeatureStub::buildVisibleFeature(),
             self::FEATURE_ID,
             $user_identifier,
-            $program
+            $program,
+            null
         );
         $this->user_can_prioritize = UserCanPrioritize::fromUser(
             VerifyPrioritizeFeaturesPermissionStub::canPrioritize(),
             $user_identifier,
-            $program
+            $program,
+            null
         );
     }
 

@@ -46,7 +46,8 @@ final class FeatureIdentifierTest extends \Tuleap\Test\PHPUnit\TestCase
                 VerifyIsVisibleFeatureStub::withNotVisibleFeature(),
                 404,
                 $this->user,
-                $this->program
+                $this->program,
+                null
             )
         );
     }
@@ -57,7 +58,8 @@ final class FeatureIdentifierTest extends \Tuleap\Test\PHPUnit\TestCase
             VerifyIsVisibleFeatureStub::buildVisibleFeature(),
             87,
             $this->user,
-            $this->program
+            $this->program,
+            null
         );
 
         self::assertSame(87, $feature->id);

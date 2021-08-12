@@ -67,11 +67,12 @@ final class ArtifactTopBacklogActionBuilder
     {
         try {
             $user_identifier = UserProxy::buildFromPFUser($user);
-            $program         = ProgramIdentifier::fromId($this->build_program, $source_information->project_id, $user_identifier);
+            $program         = ProgramIdentifier::fromId($this->build_program, $source_information->project_id, $user_identifier, null);
             UserCanPrioritize::fromUser(
                 $this->prioritize_features_permission_verifier,
                 $user_identifier,
-                $program
+                $program,
+                null
             );
         } catch (ProgramAccessException | ProjectIsNotAProgramException | NotAllowedToPrioritizeException $e) {
             return null;

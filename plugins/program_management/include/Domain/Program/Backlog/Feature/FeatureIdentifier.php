@@ -44,7 +44,7 @@ final class FeatureIdentifier
         int $feature_id,
         UserIdentifier $user_identifier,
         ProgramIdentifier $program,
-        ?PermissionBypass $bypass = null
+        ?PermissionBypass $bypass
     ): ?self {
         if (! $feature_verifier->isVisibleFeature($feature_id, $user_identifier, $program, $bypass)) {
             return null;
