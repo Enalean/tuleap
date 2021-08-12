@@ -363,6 +363,13 @@ msgstr "Outil de suivi source pour les Itérations"
 msgid "Source tracker for Program Increments"
 msgstr "Outil de suivi source pour les Incréments de Programme"
 
+msgid ""
+"Status semantic is not defined, the artifact cannot be added to the top "
+"backlog"
+msgstr ""
+"La sémantique status n'est pas définie, l'artéfact ne peut pas être ajouté à "
+"la planification générale"
+
 msgid "Teams"
 msgstr "Équipes"
 
@@ -434,6 +441,13 @@ msgstr "Plage de temps"
 
 msgid "Title"
 msgstr "Titre"
+
+msgid ""
+"Title semantic is not defined, the artifact cannot be added to the top "
+"backlog"
+msgstr ""
+"La sémantique titre n'est pas définie, l'artéfact ne peut pas être ajouté à "
+"la planification générale"
 
 msgid "To be planned"
 msgstr "À planifier"

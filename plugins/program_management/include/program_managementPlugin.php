@@ -616,23 +616,25 @@ final class program_managementPlugin extends Plugin
             __DIR__ . '/../../../src/www/assets/program_management',
             '/assets/program_management'
         );
+        $user_manager_adapter   = new UserManagerAdapter(UserManager::instance());
         $action_builder         = new ArtifactTopBacklogActionBuilder(
             new ProgramAdapter(
                 $project_manager,
                 $project_access_checker,
                 new ProgramDao(),
-                new UserManagerAdapter(UserManager::instance())
+                $user_manager_adapter
             ),
             new PrioritizeFeaturesPermissionVerifier(
                 new ProjectManagerAdapter($project_manager),
                 $project_access_checker,
                 new CanPrioritizeFeaturesDAO(),
-                new \Tuleap\ProgramManagement\Adapter\Workspace\UserManagerAdapter(UserManager::instance())
+                $user_manager_adapter
             ),
             new PlanDao(),
             new ArtifactsExplicitTopBacklogDAO(),
             new PlannedFeatureDAO(),
-            new \Tuleap\Layout\JavascriptAsset($assets, 'artifact_additional_action.js')
+            new \Tuleap\Layout\JavascriptAsset($assets, 'artifact_additional_action.js'),
+            new \Tuleap\ProgramManagement\Adapter\Workspace\TrackerSemantics(TrackerFactory::instance())
         );
 
         $artifact = $event->getArtifact();

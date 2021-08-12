@@ -35,6 +35,7 @@ use Tuleap\ProgramManagement\Domain\Program\Plan\ProjectIsNotAProgramException;
 use Tuleap\ProgramManagement\Domain\Program\Plan\VerifyPrioritizeFeaturesPermission;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\UserCanPrioritize;
+use Tuleap\ProgramManagement\Domain\Workspace\VerifyTrackerSemantics;
 use Tuleap\Tracker\Artifact\ActionButtons\AdditionalButtonAction;
 use Tuleap\Tracker\Artifact\ActionButtons\AdditionalButtonLinkPresenter;
 
@@ -46,6 +47,7 @@ final class ArtifactTopBacklogActionBuilder
     private ArtifactsExplicitTopBacklogDAO $artifacts_explicit_top_backlog_dao;
     private PlannedFeatureDAO $planned_feature_dao;
     private JavascriptAsset $asset;
+    private VerifyTrackerSemantics $tracker_factory;
 
     public function __construct(
         BuildProgram $build_program,
@@ -53,7 +55,8 @@ final class ArtifactTopBacklogActionBuilder
         PlanStore $plan_store,
         ArtifactsExplicitTopBacklogDAO $artifacts_explicit_top_backlog_dao,
         PlannedFeatureDAO $planned_feature_dao,
-        JavascriptAsset $asset
+        JavascriptAsset $asset,
+        VerifyTrackerSemantics $tracker_factory
     ) {
         $this->build_program                           = $build_program;
         $this->prioritize_features_permission_verifier = $prioritize_features_permission_verifier;
@@ -61,10 +64,13 @@ final class ArtifactTopBacklogActionBuilder
         $this->artifacts_explicit_top_backlog_dao      = $artifacts_explicit_top_backlog_dao;
         $this->planned_feature_dao                     = $planned_feature_dao;
         $this->asset                                   = $asset;
+        $this->tracker_factory                         = $tracker_factory;
     }
 
-    public function buildTopBacklogActionBuilder(TopBacklogActionArtifactSourceInformation $source_information, PFUser $user): ?AdditionalButtonAction
-    {
+    public function buildTopBacklogActionBuilder(
+        TopBacklogActionArtifactSourceInformation $source_information,
+        PFUser $user
+    ): ?AdditionalButtonAction {
         try {
             $user_identifier = UserProxy::buildFromPFUser($user);
             $program         = ProgramIdentifier::fromId($this->build_program, $source_information->project_id, $user_identifier, null);
@@ -78,6 +84,22 @@ final class ArtifactTopBacklogActionBuilder
             return null;
         }
 
+        $error_messages = [];
+
+        if (! $this->tracker_factory->hasTitleSemantic($source_information->tracker_id)) {
+            $error_messages[] = dgettext(
+                'tuleap-program_management',
+                'Title semantic is not defined, the artifact cannot be added to the top backlog'
+            );
+        }
+
+        if (! $this->tracker_factory->hasStatusSemantic($source_information->tracker_id)) {
+            $error_messages[] = dgettext(
+                'tuleap-program_management',
+                'Status semantic is not defined, the artifact cannot be added to the top backlog'
+            );
+        }
+
         $link_label = dgettext('tuleap-program_management', 'Add to top backlog');
         $icon       = 'fa-tlp-add-to-backlog';
         $action     = 'add';
@@ -86,7 +108,11 @@ final class ArtifactTopBacklogActionBuilder
             $link_label = dgettext('tuleap-program_management', 'Remove from top backlog');
             $icon       = 'fa-tlp-remove-from-backlog';
             $action     = 'remove';
-        } elseif (! $this->plan_store->isPlannable($source_information->tracker_id) || $this->planned_feature_dao->isFeaturePlannedInAProgramIncrement($source_information->artifact_id)) {
+        } elseif (
+            ! $this->plan_store->isPlannable(
+                $source_information->tracker_id
+            ) || $this->planned_feature_dao->isFeaturePlannedInAProgramIncrement($source_information->artifact_id)
+        ) {
             return null;
         }
 
@@ -109,7 +135,8 @@ final class ArtifactTopBacklogActionBuilder
                     'name'  => 'action',
                     'value' => $action
                 ]
-            ]
+            ],
+            $error_messages
         );
 
         return new AdditionalButtonAction(

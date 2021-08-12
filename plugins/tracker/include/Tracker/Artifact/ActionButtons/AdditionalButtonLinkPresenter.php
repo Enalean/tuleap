@@ -31,14 +31,25 @@ final class AdditionalButtonLinkPresenter
     public string $id;
     public array $data;
     public string $data_test;
+    public string $disabled_messages;
+    public bool $is_disabled;
 
-    public function __construct(string $link_label, string $url, string $data_test, ?string $icon = null, ?string $id = null, ?array $data = null)
-    {
-        $this->link_label = $link_label;
-        $this->url        = $url;
-        $this->icon       = $icon ?: '';
-        $this->id         = $id ?: '';
-        $this->data       = $data ?: [];
-        $this->data_test  = $data_test;
+    public function __construct(
+        string $link_label,
+        string $url,
+        string $data_test,
+        ?string $icon = null,
+        ?string $id = null,
+        ?array $data = null,
+        array $disabled_messages = []
+    ) {
+        $this->link_label        = $link_label;
+        $this->url               = $url;
+        $this->icon              = $icon ?: '';
+        $this->id                = $id ?: '';
+        $this->data              = $data ?: [];
+        $this->data_test         = $data_test;
+        $this->disabled_messages = implode(", ", $disabled_messages);
+        $this->is_disabled       = count($disabled_messages) > 0;
     }
 }

@@ -1,4 +1,4 @@
-    <li>
+    <li  {{# is_disabled }} class="disabled" {{/is_disabled}}>
         <a class="tracker-action-button"
            {{# url }} href="{{ url }}"{{/ url }}
            {{# id }} id="{{ id }}"{{/ id }}
@@ -6,6 +6,9 @@
                data-{{ name }}="{{ value }}"
            {{/ data }}
            data-test="{{ data_test }}"
+           {{# is_disabled }}
+               title="{{ disabled_messages }}"
+           {{/is_disabled}}
         >
             <i class="fa fa-fw {{ icon }}"></i>
             <span class="additional-artifact-action-title">{{ link_label }}</span>
