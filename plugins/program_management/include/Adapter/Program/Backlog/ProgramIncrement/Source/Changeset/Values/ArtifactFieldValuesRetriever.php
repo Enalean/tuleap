@@ -23,12 +23,14 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Changeset\Values;
 
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\ChangesetValueNotFoundException;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\RetrieveDescriptionValue;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\RetrieveTitleValue;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\TextFieldValue;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\UnsupportedTitleFieldException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFields;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\ReplicationData;
 
-final class ArtifactFieldValuesRetriever implements RetrieveTitleValue
+final class ArtifactFieldValuesRetriever implements RetrieveTitleValue, RetrieveDescriptionValue
 {
     public function getTitleValue(ReplicationData $replication, SynchronizedFields $fields): string
     {
@@ -46,5 +48,21 @@ final class ArtifactFieldValuesRetriever implements RetrieveTitleValue
             throw new UnsupportedTitleFieldException($title_field->getId());
         }
         return $title_value->getValue();
+    }
+
+    public function getDescriptionValue(ReplicationData $replication, SynchronizedFields $fields): TextFieldValue
+    {
+        $changeset         = $replication->getFullChangeset();
+        $description_field = $fields->getDescriptionField();
+        $description_value = $changeset->getValue($description_field->getFullField());
+        if (! $description_value) {
+            throw new ChangesetValueNotFoundException(
+                (int) $changeset->getId(),
+                $description_field->getId(),
+                'description'
+            );
+        }
+        assert($description_value instanceof \Tracker_Artifact_ChangesetValue_Text);
+        return new TextFieldValueProxy($description_value->getValue(), $description_value->getFormat());
     }
 }

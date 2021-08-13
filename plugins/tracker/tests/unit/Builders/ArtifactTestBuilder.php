@@ -25,7 +25,7 @@ namespace Tuleap\Tracker\Test\Builders;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\TrackerColor;
 
-class ArtifactTestBuilder
+final class ArtifactTestBuilder
 {
     /**
      * @var int
@@ -48,6 +48,7 @@ class ArtifactTestBuilder
      * @var \Project|null
      */
     private $project;
+    private int $submission_timestamp = 1234567890;
 
     private function __construct(int $id)
     {
@@ -92,13 +93,19 @@ class ArtifactTestBuilder
         return $this;
     }
 
+    public function withSubmissionTimestamp(int $submission_timestamp): self
+    {
+        $this->submission_timestamp = $submission_timestamp;
+        return $this;
+    }
+
     public function build(): Artifact
     {
         $artifact = new Artifact(
             $this->id,
             $this->tracker->getId(),
             102,
-            1234567890,
+            $this->submission_timestamp,
             false,
         );
 
