@@ -22,8 +22,15 @@ declare(strict_types=1);
 
 namespace Tuleap\DocumentGeneration\Report;
 
+use ProjectUGroup;
 use Tracker_FormElement_Field_Date;
 use Tracker_FormElement_Field_List;
+use Tracker_FormElement_Field_List_Bind_Static;
+use Tracker_FormElement_Field_List_Bind_StaticValue;
+use Tracker_FormElement_Field_List_Bind_Ugroups;
+use Tracker_FormElement_Field_List_Bind_UgroupsValue;
+use Tracker_FormElement_Field_List_Bind_Users;
+use Tracker_FormElement_Field_List_Bind_UsersValue;
 use Tracker_FormElement_Field_String;
 use Tracker_Report;
 use Tracker_Report_AdditionalCriterion;
@@ -53,11 +60,17 @@ final class ReportCriteriaJsonBuilderTest extends TestCase
         self::assertNotNull($report_json->is_in_expert_mode);
         self::assertFalse($report_json->is_in_expert_mode);
         self::assertNotNull($report_json->criteria);
-        self::assertCount(2, $report_json->criteria);
+        self::assertCount(5, $report_json->criteria);
         self::assertSame("Summary", $report_json->criteria[0]->criterion_name);
         self::assertSame("Test", $report_json->criteria[0]->criterion_value);
-        self::assertSame("Additional01", $report_json->criteria[1]->criterion_name);
-        self::assertSame("ValueAdd01", $report_json->criteria[1]->criterion_value);
+        self::assertSame("Users list", $report_json->criteria[1]->criterion_name);
+        self::assertSame("User Name 01, User Name 02", $report_json->criteria[1]->criterion_value);
+        self::assertSame("User groups list", $report_json->criteria[2]->criterion_name);
+        self::assertSame("Ugroup01, Ugroup02", $report_json->criteria[2]->criterion_value);
+        self::assertSame("Static values list", $report_json->criteria[3]->criterion_name);
+        self::assertSame("Static value 01, Static value 02", $report_json->criteria[3]->criterion_value);
+        self::assertSame("Additional01", $report_json->criteria[4]->criterion_name);
+        self::assertSame("ValueAdd01", $report_json->criteria[4]->criterion_value);
     }
 
     private function buildReportWithExpertQuery(): Tracker_Report
@@ -84,9 +97,11 @@ final class ReportCriteriaJsonBuilderTest extends TestCase
         $report                    = $this->createMock(Tracker_Report::class);
         $report->is_in_expert_mode = false;
 
-        $string_field = $this->createMock(Tracker_FormElement_Field_String::class);
-        $date_field   = $this->createMock(Tracker_FormElement_Field_Date::class);
-        $list_field   = $this->createMock(Tracker_FormElement_Field_List::class);
+        $string_field      = $this->createMock(Tracker_FormElement_Field_String::class);
+        $date_field        = $this->createMock(Tracker_FormElement_Field_Date::class);
+        $list_user_field   = $this->createMock(Tracker_FormElement_Field_List::class);
+        $list_groups_field = $this->createMock(Tracker_FormElement_Field_List::class);
+        $list_static_field = $this->createMock(Tracker_FormElement_Field_List::class);
 
         $criterion_string = new Tracker_Report_Criteria(
             1,
@@ -104,27 +119,114 @@ final class ReportCriteriaJsonBuilderTest extends TestCase
             0
         );
 
-        $criterion_list = new Tracker_Report_Criteria(
+        $criterion_user_list = new Tracker_Report_Criteria(
             3,
             $report,
-            $list_field,
+            $list_user_field,
             3,
             0
         );
+
+        $criterion_groups_list = new Tracker_Report_Criteria(
+            4,
+            $report,
+            $list_groups_field,
+            4,
+            0
+        );
+
+        $criterion_static_list = new Tracker_Report_Criteria(
+            5,
+            $report,
+            $list_static_field,
+            5,
+            0
+        );
+
+        $string_field
+            ->method('getLabel')
+            ->willReturn("Summary");
 
         $string_field
             ->method('getCriteriaValue')
             ->with($criterion_string)
             ->willReturn("Test");
 
-        $string_field
+        $user_bind = $this->createMock(Tracker_FormElement_Field_List_Bind_Users::class);
+        $user_bind
+            ->method('getValue')
+            ->willReturnMap([
+                ['101', new Tracker_FormElement_Field_List_Bind_UsersValue(101, "User01", "User Name 01")],
+                ['102', new Tracker_FormElement_Field_List_Bind_UsersValue(102, "User02", "User Name 02")],
+            ]);
+
+        $list_user_field
             ->method('getLabel')
-            ->willReturn("Summary");
+            ->willReturn("Users list");
+
+        $list_user_field
+            ->method('getCriteriaValue')
+            ->with($criterion_user_list)
+            ->willReturn(['101', '102']);
+
+        $list_user_field
+            ->method('getBind')
+            ->willReturn($user_bind);
+
+        $ugroup_01 = $this->createMock(ProjectUGroup::class);
+        $ugroup_01->method('getTranslatedName')->willReturn("Ugroup01");
+
+        $ugroup_02 = $this->createMock(ProjectUGroup::class);
+        $ugroup_02->method('getTranslatedName')->willReturn("Ugroup02");
+
+        $group_bind = $this->createMock(Tracker_FormElement_Field_List_Bind_Ugroups::class);
+        $group_bind
+            ->method('getValue')
+            ->willReturnMap([
+                ['115', new Tracker_FormElement_Field_List_Bind_UgroupsValue(115, $ugroup_01, false)],
+                ['172', new Tracker_FormElement_Field_List_Bind_UgroupsValue(172, $ugroup_02, false)],
+            ]);
+
+        $list_groups_field
+            ->method('getLabel')
+            ->willReturn("User groups list");
+
+        $list_groups_field
+            ->method('getCriteriaValue')
+            ->with($criterion_groups_list)
+            ->willReturn(['115', '172']);
+
+        $list_groups_field
+            ->method('getBind')
+            ->willReturn($group_bind);
+
+        $static_bind = $this->createMock(Tracker_FormElement_Field_List_Bind_Static::class);
+        $static_bind
+            ->method('getValue')
+            ->willReturnMap([
+                ['299', new Tracker_FormElement_Field_List_Bind_StaticValue(299, 'Static value 01', '', 1, false)],
+                ['300', new Tracker_FormElement_Field_List_Bind_StaticValue(300, 'Static value 02', '', 2, false)],
+            ]);
+
+        $list_static_field
+            ->method('getLabel')
+            ->willReturn("Static values list");
+
+        $list_static_field
+            ->method('getCriteriaValue')
+            ->with($criterion_static_list)
+            ->willReturn(['299', '300']);
+
+        $list_static_field
+            ->method('getBind')
+            ->willReturn($static_bind);
 
         $criteria = [
             $criterion_string,
             $criterion_date,
-            $criterion_list,
+            $criterion_user_list,
+            $criterion_groups_list,
+            $criterion_static_list,
         ];
 
         $report->method('getCriteria')->willReturn($criteria);
