@@ -32,6 +32,7 @@ use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProgramStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveUserStub;
+use Tuleap\ProgramManagement\Tests\Stub\VerifyPrioritizeFeaturesPermissionStub;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframe;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
@@ -90,7 +91,8 @@ final class ProgramIncrementsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $artifact_14->method('getTitle')->willReturn('Artifact 14');
         $artifact_15->method('getTitle')->willReturn('Artifact 15');
-        $tracker        = $this->createMock(\Tracker::class);
+        $tracker = $this->createMock(\Tracker::class);
+        $tracker->method('getGroupId')->willReturn(101);
         $time_period_14 = \TimePeriodWithoutWeekEnd::buildFromDuration(1611067637, 10);
         $time_period_15 = \TimePeriodWithoutWeekEnd::buildFromDuration(1631067637, 10);
         foreach ([$artifact_14, $artifact_15] as $mock_artifact) {
@@ -184,7 +186,9 @@ final class ProgramIncrementsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->artifact_factory,
             $this->semantic_timeframe_builder,
             $this->logger,
-            $retrieve_user
+            $retrieve_user,
+            VerifyPrioritizeFeaturesPermissionStub::canPrioritize(),
+            BuildProgramStub::stubValidProgram()
         );
     }
 }

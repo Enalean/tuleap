@@ -27,6 +27,7 @@ namespace Tuleap\ProgramManagement\Domain\Program\Admin;
 final class ProgramBacklogConfigurationPresenter
 {
     public bool $can_create_program;
+    public bool $has_plan_permissions;
     public int $program_increment_tracker_id;
     public ?string $program_increment_label;
     public ?string $program_increment_sublabel;
@@ -34,6 +35,7 @@ final class ProgramBacklogConfigurationPresenter
 
     public function __construct(
         bool $can_create_program,
+        bool $has_plan_permissions,
         int $program_increment_tracker_id,
         ?string $program_increment_label,
         ?string $program_increment_sublabel,
@@ -44,5 +46,6 @@ final class ProgramBacklogConfigurationPresenter
         $this->program_increment_label      = $program_increment_label;
         $this->program_increment_sublabel   = $program_increment_sublabel;
         $this->is_configured                = $is_configured;
+        $this->has_plan_permissions         = $has_plan_permissions;
     }
 }

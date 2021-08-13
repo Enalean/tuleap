@@ -89,6 +89,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const is_program_admin = Boolean(vue_mount_point.dataset.isProgramAdmin);
     const accessibility = Boolean(vue_mount_point.dataset.userWithAccessibilityMode);
     const can_create_program_increment = Boolean(vue_mount_point.dataset.canCreateProgramIncrement);
+    const has_plan_permissions = Boolean(vue_mount_point.dataset.hasPlanPermissions);
     const is_configured = Boolean(vue_mount_point.dataset.isConfigured);
 
     const configuration_state: ConfigurationState = {
@@ -100,6 +101,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         accessibility,
         user_locale: locale.replace("_", "-"),
         can_create_program_increment,
+        has_plan_permissions,
         tracker_program_increment_id: program_increment_tracker_id,
         tracker_program_increment_label: program_increment_label,
         tracker_program_increment_sub_label: program_increment_sub_label,

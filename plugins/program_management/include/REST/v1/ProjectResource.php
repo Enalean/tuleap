@@ -101,6 +101,7 @@ final class ProjectResource extends AuthenticatedResource
     private ProgramIncrementBuilder $program_increments_builder;
     private BuildProgram $build_program;
     private UserManagerAdapter $user_manager_adapter;
+    private PrioritizeFeaturesPermissionVerifier $features_permission_verifier;
 
     public function __construct()
     {
@@ -114,12 +115,13 @@ final class ProjectResource extends AuthenticatedResource
         $project_retriever           = new ProjectManagerAdapter($project_manager);
         $project_permission_verifier = new ProjectPermissionVerifier();
 
-        $this->build_program = new ProgramAdapter(
+        $project_access_checker = new ProjectAccessChecker(
+            new RestrictedUserCanAccessProjectVerifier(),
+            \EventManager::instance()
+        );
+        $this->build_program    = new ProgramAdapter(
             $project_manager,
-            new ProjectAccessChecker(
-                new RestrictedUserCanAccessProjectVerifier(),
-                \EventManager::instance()
-            ),
+            $project_access_checker,
             $program_dao,
             $this->user_manager_adapter
         );
@@ -142,9 +144,9 @@ final class ProjectResource extends AuthenticatedResource
             $team_dao
         );
 
-        $artifact_factory                 = \Tracker_ArtifactFactory::instance();
-        $form_element_factory             = \Tracker_FormElementFactory::instance();
-        $this->features_retriever         = new FeatureElementsRetriever(
+        $artifact_factory                   = \Tracker_ArtifactFactory::instance();
+        $form_element_factory               = \Tracker_FormElementFactory::instance();
+        $this->features_retriever           = new FeatureElementsRetriever(
             $this->build_program,
             new FeaturesDao(),
             new FeatureRepresentationBuilder(
@@ -160,14 +162,22 @@ final class ProjectResource extends AuthenticatedResource
                 )
             )
         );
-        $this->program_increments_builder = new ProgramIncrementBuilder(
+        $this->features_permission_verifier = new PrioritizeFeaturesPermissionVerifier(
+            $project_retriever,
+            $project_access_checker,
+            new CanPrioritizeFeaturesDAO(),
+            $this->user_manager_adapter
+        );
+        $this->program_increments_builder   = new ProgramIncrementBuilder(
             $this->build_program,
             new ProgramIncrementsRetriever(
                 new ProgramIncrementsDAO(),
                 $artifact_factory,
                 SemanticTimeframeBuilder::build(),
                 BackendLogger::getDefaultLogger(),
-                new UserManagerAdapter($this->user_manager)
+                $this->user_manager_adapter,
+                $this->features_permission_verifier,
+                $this->build_program
             )
         );
     }
@@ -385,21 +395,10 @@ final class ProjectResource extends AuthenticatedResource
             $feature_ids_to_add[] = $feature_to_add->id;
         }
 
-        $project_access_checker = new ProjectAccessChecker(
-            new RestrictedUserCanAccessProjectVerifier(),
-            \EventManager::instance()
-        );
-
-        $project_manager     = \ProjectManager::instance();
         $artifact_factory    = \Tracker_ArtifactFactory::instance();
         $priority_manager    = \Tracker_Artifact_PriorityManager::build();
         $top_backlog_updater = new ProcessTopBacklogChange(
-            new PrioritizeFeaturesPermissionVerifier(
-                new ProjectManagerAdapter($project_manager),
-                $project_access_checker,
-                new CanPrioritizeFeaturesDAO(),
-                $this->user_manager_adapter
-            ),
+            $this->features_permission_verifier,
             new ArtifactsExplicitTopBacklogDAO(),
             new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection()),
             new FeaturesRankOrderer(\Tracker_Artifact_PriorityManager::build()),

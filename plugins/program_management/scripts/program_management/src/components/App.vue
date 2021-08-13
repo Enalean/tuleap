@@ -125,6 +125,9 @@ export default class App extends Vue {
     readonly can_create_program_increment!: boolean;
 
     @configuration.State
+    readonly has_plan_permissions!: boolean;
+
+    @configuration.State
     readonly program_id!: number;
 
     @configuration.State
@@ -146,7 +149,7 @@ export default class App extends Vue {
     mounted(): void {
         window.addEventListener("beforeunload", this.beforeUnload);
 
-        if (!this.can_create_program_increment) {
+        if (!this.has_plan_permissions) {
             return;
         }
 

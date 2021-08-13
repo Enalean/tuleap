@@ -322,14 +322,27 @@ final class program_managementPlugin extends Plugin
     {
         $program_increments_dao = new ProgramIncrementsDAO();
 
+        $retrieve_user   = new UserManagerAdapter(UserManager::instance());
+        $project_manager = ProjectManager::instance();
+
         return new DisplayProgramBacklogController(
-            ProjectManager::instance(),
+            $project_manager,
             new \Tuleap\Project\Flags\ProjectFlagsBuilder(new \Tuleap\Project\Flags\ProjectFlagsDao()),
             $this->getProgramAdapter(),
             TemplateRendererFactory::build()->getRenderer(__DIR__ . "/../templates"),
             $this->getVisibleProgramIncrementTrackerRetriever(),
             $program_increments_dao,
-            new TeamDao()
+            new TeamDao(),
+            $retrieve_user,
+            new PrioritizeFeaturesPermissionVerifier(
+                new ProjectManagerAdapter(\ProjectManager::instance()),
+                new ProjectAccessChecker(
+                    new RestrictedUserCanAccessProjectVerifier(),
+                    \EventManager::instance()
+                ),
+                new CanPrioritizeFeaturesDAO(),
+                $retrieve_user
+            ),
         );
     }
 

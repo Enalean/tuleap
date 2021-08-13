@@ -32,7 +32,7 @@ describe("App", () => {
                     state: {
                         has_modal_error: false,
                         configuration: {
-                            can_create_program_increment: true,
+                            has_plan_permissions: true,
                             is_configured: is_configured,
                             is_admin: is_admin,
                         },

@@ -37,9 +37,12 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracker\Retr
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracker\RetrieveVisibleProgramIncrementTracker;
 use Tuleap\ProgramManagement\Domain\Program\Plan\BuildProgram;
 use Tuleap\ProgramManagement\Domain\Program\Plan\ProjectIsNotAProgramException;
+use Tuleap\ProgramManagement\Domain\Program\Plan\VerifyPrioritizeFeaturesPermission;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\ProgramTrackerNotFoundException;
 use Tuleap\ProgramManagement\Domain\Team\VerifyIsTeam;
+use Tuleap\ProgramManagement\Domain\Workspace\RetrieveUser;
+use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\Project\Flags\ProjectFlagsBuilder;
 use Tuleap\Request\DispatchableWithBurningParrot;
 use Tuleap\Request\DispatchableWithProject;
@@ -56,6 +59,8 @@ final class DisplayProgramBacklogController implements DispatchableWithRequest, 
     private RetrieveVisibleProgramIncrementTracker $program_increment_tracker_retriever;
     private RetrieveProgramIncrementLabels $labels_retriever;
     private VerifyIsTeam $verify_is_team;
+    private RetrieveUser $retrieve_user;
+    private VerifyPrioritizeFeaturesPermission $prioritize_features_permission;
 
     public function __construct(
         \ProjectManager $project_manager,
@@ -64,7 +69,9 @@ final class DisplayProgramBacklogController implements DispatchableWithRequest, 
         \TemplateRenderer $template_renderer,
         RetrieveVisibleProgramIncrementTracker $program_increment_tracker_retriever,
         RetrieveProgramIncrementLabels $labels_retriever,
-        VerifyIsTeam $verify_is_team
+        VerifyIsTeam $verify_is_team,
+        RetrieveUser $retrieve_user,
+        VerifyPrioritizeFeaturesPermission $prioritize_features_permission
     ) {
         $this->project_manager                     = $project_manager;
         $this->project_flags_builder               = $project_flags_builder;
@@ -73,6 +80,8 @@ final class DisplayProgramBacklogController implements DispatchableWithRequest, 
         $this->program_increment_tracker_retriever = $program_increment_tracker_retriever;
         $this->labels_retriever                    = $labels_retriever;
         $this->verify_is_team                      = $verify_is_team;
+        $this->retrieve_user                       = $retrieve_user;
+        $this->prioritize_features_permission      = $prioritize_features_permission;
     }
 
     /**
@@ -92,16 +101,24 @@ final class DisplayProgramBacklogController implements DispatchableWithRequest, 
     {
         $project = $this->getProject($variables);
         if (! $project->usesService(program_managementPlugin::SERVICE_SHORTNAME)) {
-            throw new NotFoundException(dgettext("tuleap-program_management", "Program management service is disabled."));
+            throw new NotFoundException(
+                dgettext("tuleap-program_management", "Program management service is disabled.")
+            );
         }
 
         if ($this->verify_is_team->isATeam((int) $project->getID())) {
-            throw new ForbiddenException(dgettext("tuleap-program_management", "Project is defined as a Team project. It can not be used as a Program."));
+            throw new ForbiddenException(
+                dgettext(
+                    "tuleap-program_management",
+                    "Project is defined as a Team project. It can not be used as a Program."
+                )
+            );
         }
 
-        $user = $request->getCurrentUser();
+        $user            = $request->getCurrentUser();
+        $user_identifier = UserProxy::buildFromPFUser($user);
         try {
-            $configuration = $this->buildConfigurationForExistingProgram($project, $user);
+            $configuration = $this->buildConfigurationForExistingProgram($project, $user_identifier);
         } catch (ProjectIsNotAProgramException | Domain\Program\Plan\ProgramHasNoProgramIncrementTrackerException $exception) {
             $configuration = $this->buildConfigurationForPotentialProgram();
         } catch (ProgramTrackerNotFoundException $e) {
@@ -134,11 +151,11 @@ final class DisplayProgramBacklogController implements DispatchableWithRequest, 
     {
         $layout->header(
             [
-                'title' => dgettext('tuleap-program_management', "Program"),
-                'group' => $project->getID(),
-                'toptab' => 'plugin_program_management',
-                'body_class' => ['has-sidebar-with-pinned-header'],
-                'main_classes' => [],
+                'title'                          => dgettext('tuleap-program_management', "Program"),
+                'group'                          => $project->getID(),
+                'toptab'                         => 'plugin_program_management',
+                'body_class'                     => ['has-sidebar-with-pinned-header'],
+                'main_classes'                   => [],
                 'without-project-in-breadcrumbs' => true,
             ]
         );
@@ -158,19 +175,24 @@ final class DisplayProgramBacklogController implements DispatchableWithRequest, 
      * @throws ProgramTrackerNotFoundException
      * @throws ProjectIsNotAProgramException
      */
-    private function buildConfigurationForExistingProgram(Project $project, PFUser $user): ProgramBacklogConfigurationPresenter
-    {
-        $user_identifier = UserProxy::buildFromPFUser($user);
-        $program         = ProgramIdentifier::fromId($this->build_program, (int) $project->getID(), $user_identifier, null);
+    private function buildConfigurationForExistingProgram(
+        Project $project,
+        UserIdentifier $user_identifier
+    ): ProgramBacklogConfigurationPresenter {
+        $program = ProgramIdentifier::fromId($this->build_program, (int) $project->getID(), $user_identifier, null);
 
         $plan_configuration = ProgramIncrementTrackerConfiguration::fromProgram(
             $this->program_increment_tracker_retriever,
             $this->labels_retriever,
             $program,
-            $user
+            $this->prioritize_features_permission,
+            $user_identifier,
+            $this->retrieve_user
         );
+
         return new ProgramBacklogConfigurationPresenter(
             $plan_configuration->canCreateProgramIncrement(),
+            $plan_configuration->hasPlanPermissions(),
             $plan_configuration->getProgramIncrementTrackerId(),
             $plan_configuration->getProgramIncrementLabel(),
             $plan_configuration->getProgramIncrementSubLabel(),
@@ -180,6 +202,6 @@ final class DisplayProgramBacklogController implements DispatchableWithRequest, 
 
     private function buildConfigurationForPotentialProgram(): ProgramBacklogConfigurationPresenter
     {
-        return new ProgramBacklogConfigurationPresenter(false, 0, "", "", false);
+        return new ProgramBacklogConfigurationPresenter(false, false, 0, "", "", false);
     }
 }

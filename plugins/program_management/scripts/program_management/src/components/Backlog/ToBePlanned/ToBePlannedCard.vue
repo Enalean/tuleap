@@ -18,12 +18,17 @@
   -->
 
 <template>
-    <div class="element-backlog-items" draggable="true" v-bind:data-element-id="feature.id">
+    <div
+        class="element-backlog-items"
+        v-bind:draggable="has_plan_permissions"
+        v-bind:data-element-id="feature.id"
+    >
         <div
             class="element-card"
             v-bind:class="additional_classnames"
             data-test="to-be-planned-card"
             ref="to_be_planned_card"
+            v-bind:title="userHasNoPermissionTitle()"
         >
             <div class="element-card-content">
                 <div class="element-card-xref-label">
@@ -74,6 +79,9 @@ export default class ToBePlannedCard extends Vue {
     readonly accessibility!: boolean;
 
     @configuration.State
+    readonly has_plan_permissions!: boolean;
+
+    @configuration.State
     readonly can_create_program_increment!: boolean;
 
     @State
@@ -110,11 +118,21 @@ export default class ToBePlannedCard extends Vue {
     get additional_classnames(): string {
         const classnames = getAccessibilityClasses(this.feature, this.accessibility);
 
-        if (this.can_create_program_increment) {
+        if (this.has_plan_permissions) {
             classnames.push("element-draggable-item");
+        } else {
+            classnames.push("element-not-draggable");
         }
 
         return classnames.join(" ");
+    }
+
+    userHasNoPermissionTitle(): string {
+        if (!this.has_plan_permissions) {
+            return this.$gettext("You cannot plan items");
+        }
+
+        return "";
     }
 }
 </script>

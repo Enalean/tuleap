@@ -46,6 +46,7 @@ final class ProgramBacklogPresenter
     public string $program_increment_sub_label;
     public bool $is_program_admin;
     public bool $is_configured;
+    public bool $has_plan_permissions;
 
     /**
      * @param ProjectFlagPresenter[] $project_flags
@@ -67,6 +68,7 @@ final class ProgramBacklogPresenter
         $this->program_id                   = (int) $project->getID();
         $this->user_has_accessibility_mode  = $user_has_accessibility_mode;
         $this->can_create_program_increment = $backlog_configuration->can_create_program;
+        $this->has_plan_permissions         = $backlog_configuration->has_plan_permissions;
         $this->program_increment_tracker_id = $backlog_configuration->program_increment_tracker_id;
         $this->program_increment_label      = dgettext('tuleap-program_management', "Program Increments");
         $this->program_increment_sub_label  = dgettext('tuleap-program_management', "program increment");

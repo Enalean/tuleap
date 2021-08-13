@@ -24,8 +24,11 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement;
 
 use PFUser;
 use Psr\Log\LoggerInterface;
+use Tuleap\ProgramManagement\Adapter\Workspace\UserProxy;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrement;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\RetrieveProgramIncrements;
+use Tuleap\ProgramManagement\Domain\Program\Plan\BuildProgram;
+use Tuleap\ProgramManagement\Domain\Program\Plan\VerifyPrioritizeFeaturesPermission;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\Workspace\RetrieveUser;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
@@ -39,19 +42,25 @@ final class ProgramIncrementsRetriever implements RetrieveProgramIncrements
     private SemanticTimeframeBuilder $semantic_timeframe_builder;
     private LoggerInterface $logger;
     private RetrieveUser $user_manager_adapter;
+    private VerifyPrioritizeFeaturesPermission $features_permission_verifier;
+    private BuildProgram $build_program;
 
     public function __construct(
         ProgramIncrementsDAO $program_increments_dao,
         \Tracker_ArtifactFactory $artifact_factory,
         SemanticTimeframeBuilder $semantic_timeframe_builder,
         LoggerInterface $logger,
-        RetrieveUser $user_manager_adapter
+        RetrieveUser $user_manager_adapter,
+        VerifyPrioritizeFeaturesPermission $features_permission_verifier,
+        BuildProgram $build_program
     ) {
-        $this->program_increments_dao     = $program_increments_dao;
-        $this->artifact_factory           = $artifact_factory;
-        $this->semantic_timeframe_builder = $semantic_timeframe_builder;
-        $this->logger                     = $logger;
-        $this->user_manager_adapter       = $user_manager_adapter;
+        $this->program_increments_dao       = $program_increments_dao;
+        $this->artifact_factory             = $artifact_factory;
+        $this->semantic_timeframe_builder   = $semantic_timeframe_builder;
+        $this->logger                       = $logger;
+        $this->user_manager_adapter         = $user_manager_adapter;
+        $this->features_permission_verifier = $features_permission_verifier;
+        $this->build_program                = $build_program;
     }
 
     /**
@@ -87,7 +96,8 @@ final class ProgramIncrementsRetriever implements RetrieveProgramIncrements
         \PFUser $user,
         Artifact $program_increment_artifact
     ): ?ProgramIncrement {
-        $title = $program_increment_artifact->getTitle();
+        $user_identifier = UserProxy::buildFromPFUser($user);
+        $title           = $program_increment_artifact->getTitle();
         if ($title === null) {
             return null;
         }
@@ -99,10 +109,18 @@ final class ProgramIncrementsRetriever implements RetrieveProgramIncrements
         }
 
         $semantic_timeframe = $this->semantic_timeframe_builder->getSemantic($program_increment_artifact->getTracker());
-        $time_period        = $semantic_timeframe->getTimeframeCalculator()->buildTimePeriodWithoutWeekendForArtifactForREST(
+        $time_period        = $semantic_timeframe->getTimeframeCalculator(
+        )->buildTimePeriodWithoutWeekendForArtifactForREST(
             $program_increment_artifact,
             $user,
             $this->logger
+        );
+
+        $program_identifier = ProgramIdentifier::fromId(
+            $this->build_program,
+            (int) $program_increment_artifact->getTracker()->getGroupId(),
+            $user_identifier,
+            null
         );
 
         return new ProgramIncrement(
@@ -111,16 +129,24 @@ final class ProgramIncrementsRetriever implements RetrieveProgramIncrements
             $program_increment_artifact->getUri(),
             $program_increment_artifact->getXRef(),
             $program_increment_artifact->userCanUpdate($user),
-            $this->userCanPlan($program_increment_artifact, $user),
+            $this->userCanPlan($program_increment_artifact, $user, $user_identifier, $program_identifier),
             $status,
             $time_period->getStartDate(),
             $time_period->getEndDate()
         );
     }
 
-    private function userCanPlan(Artifact $program_increment_artifact, PFUser $user): bool
-    {
+    private function userCanPlan(
+        Artifact $program_increment_artifact,
+        PFUser $user,
+        UserIdentifier $user_identifier,
+        ProgramIdentifier $program_identifier
+    ): bool {
         if (! $program_increment_artifact->userCanUpdate($user)) {
+            return false;
+        }
+
+        if (! $this->features_permission_verifier->canUserPrioritizeFeatures($program_identifier, $user_identifier, null)) {
             return false;
         }
 
@@ -147,6 +173,7 @@ final class ProgramIncrementsRetriever implements RetrieveProgramIncrements
             if ($b->start_date === null) {
                 return 1;
             }
+
             return $a->start_date > $b->start_date ? -1 : 1;
         });
     }

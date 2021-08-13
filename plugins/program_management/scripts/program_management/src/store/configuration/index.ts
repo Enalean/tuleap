@@ -30,6 +30,7 @@ export interface ConfigurationState {
     readonly accessibility: boolean;
     readonly user_locale: string;
     readonly can_create_program_increment: boolean;
+    readonly has_plan_permissions: boolean;
     readonly tracker_program_increment_id: number;
     readonly tracker_program_increment_label: string;
     readonly tracker_program_increment_sub_label: string;
