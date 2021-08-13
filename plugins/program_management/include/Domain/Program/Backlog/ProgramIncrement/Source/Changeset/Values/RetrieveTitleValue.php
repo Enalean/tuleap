@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2020 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,14 +22,14 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values;
 
-use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\ProgramIncrementCreationException;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFields;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\ReplicationData;
 
-final class ChangesetValueNotFoundException extends \RuntimeException implements ProgramIncrementCreationException
+interface RetrieveTitleValue
 {
-    public function __construct(int $source_changeset_id, int $field_id, string $field_type)
-    {
-        parent::__construct(
-            "Expected changeset #$source_changeset_id to have a value for $field_type field #$field_id, but this value was not found"
-        );
-    }
+    /**
+     * @throws ChangesetValueNotFoundException
+     * @throws UnsupportedTitleFieldException
+     */
+    public function getTitleValue(ReplicationData $replication, SynchronizedFields $fields): string;
 }

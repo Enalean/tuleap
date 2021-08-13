@@ -29,8 +29,9 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Chan
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\BuildFieldValues;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\BuildStartDateValue;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\BuildStatusValue;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\BuildTitleValue;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\RetrieveTitleValue;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\SourceChangesetValuesCollection;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\TitleValue;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\BuildSynchronizedFields;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\FieldRetrievalException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\ReplicationData;
@@ -42,10 +43,7 @@ final class SourceChangesetValuesCollectionAdapter implements BuildFieldValues
      * @var BuildSynchronizedFields
      */
     private $fields_gatherer;
-    /**
-     * @var BuildTitleValue
-     */
-    private $build_title_value;
+    private RetrieveTitleValue $title_retriever;
     /**
      * @var BuildDescriptionValue
      */
@@ -65,14 +63,14 @@ final class SourceChangesetValuesCollectionAdapter implements BuildFieldValues
 
     public function __construct(
         BuildSynchronizedFields $fields_gatherer,
-        BuildTitleValue $build_title_value,
+        RetrieveTitleValue $title_retriever,
         BuildDescriptionValue $build_description_value,
         BuildStatusValue $build_status_value,
         BuildStartDateValue $build_start_date_value,
         BuildEndPeriodValue $build_end_period_value
     ) {
         $this->fields_gatherer         = $fields_gatherer;
-        $this->build_title_value       = $build_title_value;
+        $this->title_retriever         = $title_retriever;
         $this->build_description_value = $build_description_value;
         $this->build_status_value      = $build_status_value;
         $this->build_start_date_value  = $build_start_date_value;
@@ -86,7 +84,11 @@ final class SourceChangesetValuesCollectionAdapter implements BuildFieldValues
     public function buildCollection(ReplicationData $replication_data): SourceChangesetValuesCollection
     {
         $fields              = $this->fields_gatherer->build($replication_data->getTracker());
-        $title_value         = $this->build_title_value->build($fields->getTitleField(), $replication_data);
+        $title_value         = TitleValue::fromReplicationDataAndSynchronizedFields(
+            $this->title_retriever,
+            $replication_data,
+            $fields
+        );
         $description_value   = $this->build_description_value->build($fields->getDescriptionField(), $replication_data);
         $status_value        = $this->build_status_value->build($fields->getStatusField(), $replication_data);
         $start_date_value    = $this->build_start_date_value->build($fields->getStartDateField(), $replication_data);

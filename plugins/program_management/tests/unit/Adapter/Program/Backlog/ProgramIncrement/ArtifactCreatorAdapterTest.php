@@ -24,16 +24,12 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement;
 
 use Mockery as M;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ArtifactCreationException;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\ArtifactLinkValue;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\DescriptionValue;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\EndPeriodValue;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\MappedStatusValue;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\StartDateValue;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\TitleValue;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\ProgramIncrementFields;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\SubmissionDate;
 use Tuleap\ProgramManagement\Domain\ProgramTracker;
-use Tuleap\ProgramManagement\Tests\Builder\ReplicationDataBuilder;
+use Tuleap\ProgramManagement\Tests\Builder\SourceChangesetValuesCollectionBuilder;
+use Tuleap\ProgramManagement\Tests\Builder\SynchronizedFieldsBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\Creation\TrackerArtifactCreator;
@@ -43,6 +39,8 @@ use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 final class ArtifactCreatorAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use M\Adapter\Phpunit\MockeryPHPUnitIntegration;
+
+    private const SOURCE_PROGRAM_INCREMENT_ID = 101;
 
     /**
      * @var ArtifactCreatorAdapter
@@ -97,21 +95,22 @@ final class ArtifactCreatorAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
 
     private function buildProgramIncrementFieldsData(): ProgramIncrementFields
     {
-        $replication_data = ReplicationDataBuilder::build();
+        $source_values       = SourceChangesetValuesCollectionBuilder::buildWithValues(
+            'Program Increment',
+            'Super important',
+            'text',
+            [7681],
+            '2020-11-02',
+            '2020-11-06',
+            self::SOURCE_PROGRAM_INCREMENT_ID
+        );
+        $target_fields       = SynchronizedFieldsBuilder::buildWithIds(1000, 1001, 1002, 1003, 1004, 1005);
+        $mapped_status_value = new MappedStatusValue([10001]);
 
-        return new ProgramIncrementFields(
-            1000,
-            ArtifactLinkValue::fromReplicationData($replication_data),
-            1001,
-            new TitleValue('Program Increment'),
-            1002,
-            new DescriptionValue('Super important', 'text'),
-            1003,
-            new MappedStatusValue([10001]),
-            1004,
-            new StartDateValue('2020-11-02'),
-            1005,
-            new EndPeriodValue('2020-11-06')
+        return ProgramIncrementFields::fromSourceChangesetValuesAndSynchronizedFields(
+            $source_values,
+            $mapped_status_value,
+            $target_fields
         );
     }
 }

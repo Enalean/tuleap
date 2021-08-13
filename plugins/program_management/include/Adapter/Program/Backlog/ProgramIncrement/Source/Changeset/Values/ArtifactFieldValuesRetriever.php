@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2020 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,35 +20,31 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement;
+namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Changeset\Values;
 
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\BuildTitleValue;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\ChangesetValueNotFoundException;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\TitleValue;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\RetrieveTitleValue;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\UnsupportedTitleFieldException;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\Field;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFields;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\ReplicationData;
 
-final class TitleValueAdapter implements BuildTitleValue
+final class ArtifactFieldValuesRetriever implements RetrieveTitleValue
 {
-    /**
-     * @throws UnsupportedTitleFieldException
-     * @throws ChangesetValueNotFoundException
-     */
-    public function build(Field $field_title_data, ReplicationData $replication_data): TitleValue
+    public function getTitleValue(ReplicationData $replication, SynchronizedFields $fields): string
     {
-        $title_value = $replication_data->getFullChangeset()->getValue($field_title_data->getFullField());
+        $changeset   = $replication->getFullChangeset();
+        $title_field = $fields->getTitleField();
+        $title_value = $changeset->getValue($title_field->getFullField());
         if (! $title_value) {
             throw new ChangesetValueNotFoundException(
-                (int) $replication_data->getFullChangeset()->getId(),
-                (int) $field_title_data->getId(),
-                "title"
+                (int) $changeset->getId(),
+                $title_field->getId(),
+                'title'
             );
         }
         if (! ($title_value instanceof \Tracker_Artifact_ChangesetValue_String)) {
-            throw new UnsupportedTitleFieldException((int) $field_title_data->getId());
+            throw new UnsupportedTitleFieldException($title_field->getId());
         }
-
-        return new TitleValue($title_value->getValue());
+        return $title_value->getValue();
     }
 }

@@ -38,6 +38,7 @@ use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\ArtifactLi
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\DescriptionFieldAdapter;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\DescriptionValueAdapter;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\EndPeriodValueAdapter;
+use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Changeset\Values\ArtifactFieldValuesRetriever;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\SourceChangesetValuesCollectionAdapter;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\StartDateValueValueAdapter;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\StatusFieldAdapter;
@@ -45,7 +46,6 @@ use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\StatusValu
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\SynchronizedFieldsAdapter;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\TimeFrameFieldsAdapter;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\TitleFieldAdapter;
-use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\TitleValueAdapter as TitleValueAdapterAlias;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Content\ContentDao;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\ArtifactsLinkedToParentDao;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\UserStoriesInMirroredProgramIncrementsPlanner;
@@ -115,7 +115,7 @@ class TaskBuilder
         return new CreateProgramIncrementsTask(
             new SourceChangesetValuesCollectionAdapter(
                 $synchronized_fields_gatherer,
-                new TitleValueAdapterAlias(),
+                new ArtifactFieldValuesRetriever(),
                 new DescriptionValueAdapter(),
                 new StatusValueAdapter(),
                 new StartDateValueValueAdapter(),

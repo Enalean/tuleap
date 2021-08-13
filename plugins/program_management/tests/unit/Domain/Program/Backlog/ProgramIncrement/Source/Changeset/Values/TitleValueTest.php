@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2020 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,14 +22,21 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values;
 
-use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\ProgramIncrementCreationException;
+use Tuleap\ProgramManagement\Tests\Builder\ReplicationDataBuilder;
+use Tuleap\ProgramManagement\Tests\Builder\SynchronizedFieldsBuilder;
+use Tuleap\ProgramManagement\Tests\Stub\RetrieveTitleValueStub;
 
-final class ChangesetValueNotFoundException extends \RuntimeException implements ProgramIncrementCreationException
+final class TitleValueTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    public function __construct(int $source_changeset_id, int $field_id, string $field_type)
+    private const TITLE_VALUE = 'uncomprehended Sinupallialia';
+
+    public function testItBuildsFromReplicationAndSynchronizedFields(): void
     {
-        parent::__construct(
-            "Expected changeset #$source_changeset_id to have a value for $field_type field #$field_id, but this value was not found"
+        $value = TitleValue::fromReplicationDataAndSynchronizedFields(
+            RetrieveTitleValueStub::withValue(self::TITLE_VALUE),
+            ReplicationDataBuilder::build(),
+            SynchronizedFieldsBuilder::build()
         );
+        self::assertSame(self::TITLE_VALUE, $value->getValue());
     }
 }
