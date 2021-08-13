@@ -90,8 +90,6 @@ class TaskBuilder
             )
         );
 
-        $field_values_retriever = new ArtifactFieldValuesRetriever();
-
         $synchronized_fields_gatherer = new SynchronizedFieldsAdapter(
             new ArtifactLinkFieldAdapter($form_element_factory),
             new TitleFieldAdapter(new Tracker_Semantic_TitleFactory()),
@@ -114,11 +112,8 @@ class TaskBuilder
         return new CreateProgramIncrementsTask(
             new SourceChangesetValuesCollectionAdapter(
                 $synchronized_fields_gatherer,
-                $field_values_retriever,
-                $field_values_retriever,
                 new StatusValueAdapter(),
-                $field_values_retriever,
-                $field_values_retriever
+                new ArtifactFieldValuesRetriever(),
             ),
             new PlanningAdapter(\PlanningFactory::build()),
             $mirror_creator,

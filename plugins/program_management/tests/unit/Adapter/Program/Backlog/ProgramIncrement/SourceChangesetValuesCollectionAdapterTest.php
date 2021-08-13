@@ -31,10 +31,7 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Repl
 use Tuleap\ProgramManagement\Domain\ProgramTracker;
 use Tuleap\ProgramManagement\Tests\Builder\ReplicationDataBuilder;
 use Tuleap\ProgramManagement\Tests\Builder\SynchronizedFieldsBuilder;
-use Tuleap\ProgramManagement\Tests\Stub\RetrieveDescriptionValueStub;
-use Tuleap\ProgramManagement\Tests\Stub\RetrieveEndPeriodValueStub;
-use Tuleap\ProgramManagement\Tests\Stub\RetrieveStartDateValueStub;
-use Tuleap\ProgramManagement\Tests\Stub\RetrieveTitleValueStub;
+use Tuleap\ProgramManagement\Tests\Stub\GatherFieldValuesStub;
 
 final class SourceChangesetValuesCollectionAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -46,33 +43,18 @@ final class SourceChangesetValuesCollectionAdapterTest extends \Tuleap\Test\PHPU
     private const START_DATE_VALUE                    = '2013-07-24';
     private const END_PERIOD_VALUE                    = '2016-10-17';
 
-    private BuildSynchronizedFields $fields_gatherer;
-    private RetrieveTitleValueStub $title_retriever;
-    private RetrieveDescriptionValueStub $description_retriever;
-    private RetrieveStartDateValueStub $start_date_retriever;
-    private RetrieveEndPeriodValueStub $end_period_retriever;
-
-    protected function setUp(): void
-    {
-        $this->fields_gatherer       = $this->getFieldsGatherer();
-        $this->title_retriever       = RetrieveTitleValueStub::withValue(self::TITLE_VALUE);
-        $this->description_retriever = RetrieveDescriptionValueStub::withValue(
-            self::DESCRIPTION_VALUE,
-            self::DESCRIPTION_FORMAT
-        );
-        $this->start_date_retriever  = RetrieveStartDateValueStub::withValue(self::START_DATE_VALUE);
-        $this->end_period_retriever  = RetrieveEndPeriodValueStub::withValue(self::END_PERIOD_VALUE);
-    }
-
     private function getAdapter(): SourceChangesetValuesCollectionAdapter
     {
         return new SourceChangesetValuesCollectionAdapter(
-            $this->fields_gatherer,
-            $this->title_retriever,
-            $this->description_retriever,
+            $this->getFieldsGatherer(),
             $this->getStatusBuilder(),
-            $this->start_date_retriever,
-            $this->end_period_retriever
+            GatherFieldValuesStub::withValues(
+                self::TITLE_VALUE,
+                self::DESCRIPTION_VALUE,
+                self::DESCRIPTION_FORMAT,
+                self::START_DATE_VALUE,
+                self::END_PERIOD_VALUE
+            )
         );
     }
 
