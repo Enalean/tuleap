@@ -23,6 +23,7 @@
 .project-with-background {
     .program-management-title-header {
         @include background.project-background-title-header-typography();
+        margin: 0 0 var(--tlp-medium-spacing);
     }
 }
 

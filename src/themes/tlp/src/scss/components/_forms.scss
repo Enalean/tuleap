@@ -51,8 +51,8 @@ $tlp-form-element-select-small-background-size: 6px;
     > .tlp-text-warning,
     > .tlp-text-danger {
         margin: 6px 0 0;
-        font-size: 0.8125rem;
-        line-height: 18px;
+        font-size: 0.75rem;
+        line-height: 1rem;
     }
 
     &.tlp-form-element-disabled {
@@ -118,6 +118,7 @@ $tlp-form-element-select-small-background-size: 6px;
     color: var(--tlp-label-color);
     font-size: 0.8125rem;
     font-weight: 500;
+    line-height: 1rem;
 
     &[for],
     &.tlp-radio,

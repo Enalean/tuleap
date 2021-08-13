@@ -1,12 +1,9 @@
 {{> teams/modals/admin-remove-team-modal }}
-<div class="tlp-framed-horizontally program-management-admin-framed">
-
-    <div class="program-management-subtitle-container">
-        <h2 class="program-management-subtitle">{{# dgettext }}tuleap-program_management | Teams{{/ dgettext }}</h2>
-        <div class="program-management-subtitle-details">
-            {{# dgettext }}tuleap-program_management | Aggregated projects{{/ dgettext }}
-        </div>
-    </div>
+<div class="tlp-framed-horizontally program-management-admin-teams-container">
+    <h2 class="program-management-subtitle">
+        {{# dgettext }}tuleap-program_management | Teams{{/ dgettext }}
+        <small>{{# dgettext }}tuleap-program_management | Aggregated projects{{/ dgettext }}</small>
+    </h2>
 
     <section class="tlp-pane program-management-admin-pane">
         {{> teams/admin-form-add-team}}

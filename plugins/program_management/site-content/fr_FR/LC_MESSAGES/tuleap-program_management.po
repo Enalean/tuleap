@@ -319,8 +319,8 @@ msgstr "Enlever l'équipe du programme"
 msgid "SAFe(R)"
 msgstr "SAFe®"
 
-msgid "Save configuration"
-msgstr "Sauvegarder la configuration"
+msgid "Save milestones configuration"
+msgstr "Sauvegarder la configuration des jalons"
 
 #, php-format
 msgid ""

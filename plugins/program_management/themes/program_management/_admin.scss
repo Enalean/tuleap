@@ -23,24 +23,12 @@
     margin: var(--tlp-medium-spacing) var(--tlp-medium-spacing) 0 var(--tlp-medium-spacing);
 }
 
-.program-management-admin-framed {
-    margin-top: var(--tlp-medium-spacing);
-}
-
-.program-management-subtitle-container {
-    display: flex;
-    align-items: baseline;
-    margin: 0 0 var(--tlp-medium-spacing) 0;
+.program-management-admin-teams-container {
+    margin-bottom: var(--tlp-x-large-spacing);
 }
 
 .program-management-subtitle {
-    margin: 0 var(--tlp-medium-spacing) 0 0;
     color: var(--tlp-typo-default-text-color);
-    font-weight: 600;
-}
-
-.program-management-subtitle-details {
-    color: var(--tlp-dimmed-color);
     font-weight: 600;
 }
 
@@ -49,22 +37,35 @@
     flex-direction: column;
     align-items: center;
     margin: var(--tlp-large-spacing) 0 var(--tlp-large-spacing) 0;
+
+    path {
+        stroke: var(--tlp-illustration-main-color);
+    }
 }
 
 .program-management-empty-state-label {
-    margin: var(--tlp-medium-spacing) 0 0 0;
+    margin: var(--tlp-medium-spacing) 0 var(--tlp-x-large-spacing);
     color: var(--tlp-dimmed-color);
-    font-size: 1.25rem;
+    font-size: 0.875rem;
 }
 
 .program-management-form-choose-teams {
     > .list-picker-component-wrapper {
         width: 350px;
+
+        > .list-picker > .list-picker-selection {
+            border-top-right-radius: 0;
+            border-bottom-right-radius: 0;
+        }
     }
 }
 
 .program-management-admin-pane {
     flex-direction: column;
+
+    .tlp-pane-container {
+        border-right: 0;
+    }
 }
 
 .program-management-card-teams {
@@ -82,11 +83,16 @@
 
 .program-management-admin-timebox-section {
     display: grid;
-    grid-template-columns: auto min-content;
+    grid-template-columns: 1fr fit-content(60%);
 }
 
 .program-management-admin-timebox-illustration {
-    margin: var(--tlp-jumbo-spacing);
+    margin: auto var(--tlp-jumbo-spacing) auto calc(var(--tlp-jumbo-spacing) + var(--tlp-medium-spacing));
+
+    > svg {
+        display: block;
+        width: 100%;
+    }
 }
 
 .program-management-admin-illustration-text-caps {
