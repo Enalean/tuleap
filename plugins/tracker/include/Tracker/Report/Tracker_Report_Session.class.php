@@ -132,7 +132,7 @@ class Tracker_Report_Session extends Codendi_Session
         }
     }
 
-    public function storeAdditionalCriterion(Tracker_Report_AdditionalCriterion $additional_criterion)
+    public function storeAdditionalCriterion(Tracker_Report_AdditionalCriterion $additional_criterion): void
     {
         $key = $additional_criterion->getKey();
         $this->set("additional_criteria.{$key}.value", $additional_criterion->getValue());
@@ -162,7 +162,7 @@ class Tracker_Report_Session extends Codendi_Session
         return $criteria;
     }
 
-    public function getAdditionalCriteria()
+    public function getAdditionalCriteria(): ?array
     {
         return $this->get('additional_criteria');
     }
