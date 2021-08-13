@@ -36,7 +36,6 @@ use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\ArtifactCreatorAdapter;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\ArtifactLinkFieldAdapter;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\DescriptionFieldAdapter;
-use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\EndPeriodValueAdapter;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Changeset\Values\ArtifactFieldValuesRetriever;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\SourceChangesetValuesCollectionAdapter;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\StatusFieldAdapter;
@@ -119,7 +118,7 @@ class TaskBuilder
                 $field_values_retriever,
                 new StatusValueAdapter(),
                 $field_values_retriever,
-                new EndPeriodValueAdapter()
+                $field_values_retriever
             ),
             new PlanningAdapter(\PlanningFactory::build()),
             $mirror_creator,

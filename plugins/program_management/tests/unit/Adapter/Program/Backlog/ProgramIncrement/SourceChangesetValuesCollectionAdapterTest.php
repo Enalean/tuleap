@@ -22,9 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement;
 
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\BuildEndPeriodValue;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\BuildStatusValue;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\EndPeriodValue;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\StatusValue;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\BuildSynchronizedFields;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\Field;
@@ -34,6 +32,7 @@ use Tuleap\ProgramManagement\Domain\ProgramTracker;
 use Tuleap\ProgramManagement\Tests\Builder\ReplicationDataBuilder;
 use Tuleap\ProgramManagement\Tests\Builder\SynchronizedFieldsBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveDescriptionValueStub;
+use Tuleap\ProgramManagement\Tests\Stub\RetrieveEndPeriodValueStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveStartDateValueStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveTitleValueStub;
 
@@ -45,11 +44,13 @@ final class SourceChangesetValuesCollectionAdapterTest extends \Tuleap\Test\PHPU
     private const SOURCE_TIMEBOX_ID                   = 11;
     private const SOURCE_TIMEBOX_SUBMISSION_TIMESTAMP = 1628844094;
     private const START_DATE_VALUE                    = '2013-07-24';
+    private const END_PERIOD_VALUE                    = '2016-10-17';
 
     private BuildSynchronizedFields $fields_gatherer;
     private RetrieveTitleValueStub $title_retriever;
     private RetrieveDescriptionValueStub $description_retriever;
     private RetrieveStartDateValueStub $start_date_retriever;
+    private RetrieveEndPeriodValueStub $end_period_retriever;
 
     protected function setUp(): void
     {
@@ -60,6 +61,7 @@ final class SourceChangesetValuesCollectionAdapterTest extends \Tuleap\Test\PHPU
             self::DESCRIPTION_FORMAT
         );
         $this->start_date_retriever  = RetrieveStartDateValueStub::withValue(self::START_DATE_VALUE);
+        $this->end_period_retriever  = RetrieveEndPeriodValueStub::withValue(self::END_PERIOD_VALUE);
     }
 
     private function getAdapter(): SourceChangesetValuesCollectionAdapter
@@ -70,7 +72,7 @@ final class SourceChangesetValuesCollectionAdapterTest extends \Tuleap\Test\PHPU
             $this->description_retriever,
             $this->getStatusBuilder(),
             $this->start_date_retriever,
-            $this->getEndDateBuilder()
+            $this->end_period_retriever
         );
     }
 
@@ -86,7 +88,7 @@ final class SourceChangesetValuesCollectionAdapterTest extends \Tuleap\Test\PHPU
         self::assertContains(self::DESCRIPTION_FORMAT, $values->getDescriptionValue()->getValue());
         self::assertEquals(1059, $values->getStatusValue()->getListValues()[0]->getId());
         self::assertSame(self::START_DATE_VALUE, $values->getStartDateValue()->getValue());
-        self::assertSame('2016-10-17', $values->getEndPeriodValue()->getValue());
+        self::assertSame(self::END_PERIOD_VALUE, $values->getEndPeriodValue()->getValue());
         self::assertSame(self::SOURCE_TIMEBOX_ID, $values->getSourceArtifactId());
         self::assertSame(self::SOURCE_TIMEBOX_SUBMISSION_TIMESTAMP, $values->getSubmittedOn()->getValue());
         self::assertContainsEquals(self::SOURCE_TIMEBOX_ID, $values->getArtifactLinkValue()->getValues());
@@ -109,16 +111,6 @@ final class SourceChangesetValuesCollectionAdapterTest extends \Tuleap\Test\PHPU
             {
                 $list_bind_value = new \Tracker_FormElement_Field_List_Bind_StaticValue(1059, 'Ongoing', '', 1, false);
                 return new StatusValue([$list_bind_value]);
-            }
-        };
-    }
-
-    private function getEndDateBuilder(): BuildEndPeriodValue
-    {
-        return new class implements BuildEndPeriodValue {
-            public function build(Field $end_period_field_data, ReplicationData $replication_data): EndPeriodValue
-            {
-                return new EndPeriodValue('2016-10-17');
             }
         };
     }

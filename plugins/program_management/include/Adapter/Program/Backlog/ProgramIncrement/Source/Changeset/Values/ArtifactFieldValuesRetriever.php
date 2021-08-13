@@ -24,6 +24,7 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Sour
 
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\ChangesetValueNotFoundException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\RetrieveDescriptionValue;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\RetrieveEndPeriodValue;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\RetrieveStartDateValue;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\RetrieveTitleValue;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\TextFieldValue;
@@ -31,7 +32,7 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Chan
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFields;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\ReplicationData;
 
-final class ArtifactFieldValuesRetriever implements RetrieveTitleValue, RetrieveDescriptionValue, RetrieveStartDateValue
+final class ArtifactFieldValuesRetriever implements RetrieveTitleValue, RetrieveDescriptionValue, RetrieveStartDateValue, RetrieveEndPeriodValue
 {
     public function getTitleValue(ReplicationData $replication, SynchronizedFields $fields): string
     {
@@ -81,5 +82,20 @@ final class ArtifactFieldValuesRetriever implements RetrieveTitleValue, Retrieve
         }
         assert($start_date_value instanceof \Tracker_Artifact_ChangesetValue_Date);
         return $start_date_value->getDate();
+    }
+
+    public function getEndPeriodValue(ReplicationData $replication, SynchronizedFields $fields): string
+    {
+        $changeset        = $replication->getFullChangeset();
+        $end_period_field = $fields->getEndPeriodField();
+        $end_period_value = $changeset->getValue($end_period_field->getFullField());
+        if (! $end_period_value) {
+            throw new ChangesetValueNotFoundException(
+                (int) $changeset->getId(),
+                $end_period_field->getId(),
+                'time frame end period'
+            );
+        }
+        return (string) $end_period_value->getValue();
     }
 }

@@ -50,7 +50,11 @@ final class ArtifactFieldValuesRetrieverTest extends \Tuleap\Test\PHPUnit\TestCa
             'when start date value is not found'  => [fn(
                 ReplicationData $replication,
                 SynchronizedFields $fields
-            ) => $this->getRetriever()->getStartDateValue($replication, $fields)]
+            ) => $this->getRetriever()->getStartDateValue($replication, $fields)],
+            'when end period value is not found'  => [fn(
+                ReplicationData $replication,
+                SynchronizedFields $fields
+            ) => $this->getRetriever()->getEndPeriodValue($replication, $fields)]
         ];
     }
 
@@ -118,5 +122,29 @@ final class ArtifactFieldValuesRetrieverTest extends \Tuleap\Test\PHPUnit\TestCa
         $replication = ReplicationDataBuilder::buildWithChangeset($source_changeset);
 
         self::assertSame('2020-10-01', $this->getRetriever()->getStartDateValue($replication, $fields));
+    }
+
+    public function testItReturnsEndPeriodValueWithEndDate(): void
+    {
+        $fields          = SynchronizedFieldsBuilder::build();
+        $changeset_value = $this->createStub(\Tracker_Artifact_ChangesetValue_Date::class);
+        $changeset_value->method('getValue')->willReturn('2023-09-01');
+        $source_changeset = $this->createStub(\Tracker_Artifact_Changeset::class);
+        $source_changeset->method('getValue')->willReturn($changeset_value);
+        $replication = ReplicationDataBuilder::buildWithChangeset($source_changeset);
+
+        self::assertSame('2023-09-01', $this->getRetriever()->getEndPeriodValue($replication, $fields));
+    }
+
+    public function testItReturnsEndPeriodValueWithDuration(): void
+    {
+        $fields          = SynchronizedFieldsBuilder::build();
+        $changeset_value = $this->createStub(\Tracker_Artifact_ChangesetValue_Integer::class);
+        $changeset_value->method('getValue')->willReturn(34);
+        $source_changeset = $this->createStub(\Tracker_Artifact_Changeset::class);
+        $source_changeset->method('getValue')->willReturn($changeset_value);
+        $replication = ReplicationDataBuilder::buildWithChangeset($source_changeset);
+
+        self::assertSame('34', $this->getRetriever()->getEndPeriodValue($replication, $fields));
     }
 }

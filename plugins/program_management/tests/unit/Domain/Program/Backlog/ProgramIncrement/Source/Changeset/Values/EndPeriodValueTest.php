@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2020 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,15 +22,21 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values;
 
-use Tracker_FormElement_Field_Date;
-use Tracker_FormElement_Field_Numeric;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\Field;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\ReplicationData;
+use Tuleap\ProgramManagement\Tests\Builder\ReplicationDataBuilder;
+use Tuleap\ProgramManagement\Tests\Builder\SynchronizedFieldsBuilder;
+use Tuleap\ProgramManagement\Tests\Stub\RetrieveEndPeriodValueStub;
 
-interface BuildEndPeriodValue
+final class EndPeriodValueTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    /**
-     * @psalm-param Field<Tracker_FormElement_Field_Date>|Field<Tracker_FormElement_Field_Numeric> $end_period_field_data
-     */
-    public function build(Field $end_period_field_data, ReplicationData $replication_data): EndPeriodValue;
+    private const VALUE = '2023-09-01';
+
+    public function testItBuildsFromReplicationAndSynchronizedFields(): void
+    {
+        $value = EndPeriodValue::fromReplicationAndSynchronizedFields(
+            RetrieveEndPeriodValueStub::withValue(self::VALUE),
+            ReplicationDataBuilder::build(),
+            SynchronizedFieldsBuilder::build()
+        );
+        self::assertSame(self::VALUE, $value->getValue());
+    }
 }
