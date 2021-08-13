@@ -30,6 +30,7 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Subm
 use Tuleap\ProgramManagement\Domain\ProgramTracker;
 use Tuleap\ProgramManagement\Tests\Builder\SourceChangesetValuesCollectionBuilder;
 use Tuleap\ProgramManagement\Tests\Builder\SynchronizedFieldsBuilder;
+use Tuleap\ProgramManagement\Tests\Stub\MapStatusByValueStub;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\Creation\TrackerArtifactCreator;
@@ -60,7 +61,7 @@ final class ArtifactCreatorAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItCreatesAnArtifact(): void
     {
         $tracker           = new ProgramTracker(TrackerTestBuilder::aTracker()->build());
-        $fields_and_values = $this->buildProgramIncrementFieldsData();
+        $fields_and_values = $this->buildProgramIncrementFields();
         $user              = UserTestBuilder::aUser()->build();
         $submission_date   = new SubmissionDate(1234567890);
 
@@ -83,7 +84,7 @@ final class ArtifactCreatorAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItThrowsWhenThereIsAnErrorDuringCreation(): void
     {
         $tracker           = new ProgramTracker(TrackerTestBuilder::aTracker()->build());
-        $fields_and_values = $this->buildProgramIncrementFieldsData();
+        $fields_and_values = $this->buildProgramIncrementFields();
         $user              = UserTestBuilder::aUser()->build();
         $submission_date   = new SubmissionDate(1234567890);
 
@@ -93,7 +94,7 @@ final class ArtifactCreatorAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->adapter->create($tracker, $fields_and_values, $user, $submission_date);
     }
 
-    private function buildProgramIncrementFieldsData(): ProgramIncrementFields
+    private function buildProgramIncrementFields(): ProgramIncrementFields
     {
         $source_values       = SourceChangesetValuesCollectionBuilder::buildWithValues(
             'Program Increment',
@@ -105,7 +106,11 @@ final class ArtifactCreatorAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
             self::SOURCE_PROGRAM_INCREMENT_ID
         );
         $target_fields       = SynchronizedFieldsBuilder::buildWithIds(1000, 1001, 1002, 1003, 1004, 1005);
-        $mapped_status_value = new MappedStatusValue([10001]);
+        $mapped_status_value = MappedStatusValue::fromStatusValueAndListField(
+            MapStatusByValueStub::withValues(10001),
+            $source_values->getStatusValue(),
+            $target_fields->getStatusField()
+        );
 
         return ProgramIncrementFields::fromSourceChangesetValuesAndSynchronizedFields(
             $source_values,

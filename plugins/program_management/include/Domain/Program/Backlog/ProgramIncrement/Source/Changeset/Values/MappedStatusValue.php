@@ -22,22 +22,40 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values;
 
+use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\MapStatusByValue;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\Field;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\NoDuckTypedMatchingValueException;
+
 /**
+ * I hold the mapped Tracker List field Bind values for the Status Semantic of a Mirrored Timebox tracker.
+ * My Bind values' labels match those from StatusValue, but the Bind value ids are different.
+ * They belong to the Mirrored Timebox tracker, not the source Timebox tracker.
+ * @see StatusValue
  * @psalm-immutable
  */
 final class MappedStatusValue
 {
     /**
-     * @var int[]
+     * @var BindValueIdentifier[]
      */
-    private $values;
+    private array $values;
 
-    /**
-     * @param int[] $values
-     */
-    public function __construct(array $values)
+    private function __construct(BindValueIdentifier ...$values)
     {
         $this->values = $values;
+    }
+
+    /**
+     * @psalm-param Field<\Tracker_FormElement_Field_List> $target_field
+     * @throws NoDuckTypedMatchingValueException
+     */
+    public static function fromStatusValueAndListField(
+        MapStatusByValue $status_mapper,
+        StatusValue $source_value,
+        Field $target_field
+    ): self {
+        $identifiers = $status_mapper->mapStatusValueByDuckTyping($source_value, $target_field);
+        return new self(...$identifiers);
     }
 
     /**
@@ -45,6 +63,9 @@ final class MappedStatusValue
      */
     public function getValues(): array
     {
-        return $this->values;
+        return array_map(
+            static fn(BindValueIdentifier $identifier): int => $identifier->getId(),
+            $this->values
+        );
     }
 }

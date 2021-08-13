@@ -27,9 +27,12 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fiel
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TimeboxArtifactLinkType;
 use Tuleap\ProgramManagement\Tests\Builder\SourceChangesetValuesCollectionBuilder;
 use Tuleap\ProgramManagement\Tests\Builder\SynchronizedFieldsBuilder;
+use Tuleap\ProgramManagement\Tests\Stub\MapStatusByValueStub;
 
 final class ProgramIncrementFieldsDataTest extends \Tuleap\Test\PHPUnit\TestCase
 {
+    private const MAPPED_STATUS_BIND_VALUE_ID = 3001;
+
     public function testItReturnsFieldsDataAsArrayForArtifactCreator(): void
     {
         $copied_values       = SourceChangesetValuesCollectionBuilder::buildWithValues(
@@ -41,8 +44,12 @@ final class ProgramIncrementFieldsDataTest extends \Tuleap\Test\PHPUnit\TestCase
             '2020-10-10',
             112
         );
-        $mapped_status_value = new MappedStatusValue([3001]);
         $target_fields       = SynchronizedFieldsBuilder::buildWithIds(1001, 1002, 1003, 1004, 1005, 1006);
+        $mapped_status_value = MappedStatusValue::fromStatusValueAndListField(
+            MapStatusByValueStub::withValues(self::MAPPED_STATUS_BIND_VALUE_ID),
+            $copied_values->getStatusValue(),
+            $target_fields->getStatusField()
+        );
 
         $fields_data = ProgramIncrementFields::fromSourceChangesetValuesAndSynchronizedFields(
             $copied_values,
@@ -55,7 +62,7 @@ final class ProgramIncrementFieldsDataTest extends \Tuleap\Test\PHPUnit\TestCase
                 1001 => ['new_values' => '112', 'natures' => ['112' => TimeboxArtifactLinkType::ART_LINK_SHORT_NAME]],
                 1002 => 'Program Release',
                 1003 => ['content' => '<p>Description</p>', 'format' => 'html'],
-                1004 => [3001],
+                1004 => [self::MAPPED_STATUS_BIND_VALUE_ID],
                 1005 => '2020-10-01',
                 1006 => '2020-10-10'
             ],

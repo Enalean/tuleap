@@ -25,6 +25,7 @@ namespace Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation;
 use Tuleap\DB\DBTransactionExecutor;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ArtifactCreationException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\CreateArtifact;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\MappedStatusValue;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\SourceChangesetValuesCollection;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\BuildSynchronizedFields;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\FieldRetrievalException;
@@ -77,8 +78,12 @@ class ProgramIncrementsCreator
             function () use ($copied_values, $program_increments_tracker_collection, $current_user) {
                 foreach ($program_increments_tracker_collection->getTrackers() as $program_increment_tracker) {
                     $synchronized_fields = $this->synchronized_fields_adapter->build($program_increment_tracker);
-                    $mapped_status       = $this->status_mapper
-                        ->mapStatusValueByDuckTyping($copied_values, $synchronized_fields->getStatusField());
+
+                    $mapped_status = MappedStatusValue::fromStatusValueAndListField(
+                        $this->status_mapper,
+                        $copied_values->getStatusValue(),
+                        $synchronized_fields->getStatusField()
+                    );
 
                     $fields_data = ProgramIncrementFields::fromSourceChangesetValuesAndSynchronizedFields(
                         $copied_values,

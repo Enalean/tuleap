@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2020 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,20 +20,36 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation;
+namespace Tuleap\ProgramManagement\Tests\Stub;
 
-use Tracker_FormElement_Field_List;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\MapStatusByValue;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\BindValueIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\StatusValue;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\Field;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\NoDuckTypedMatchingValueException;
 
-interface MapStatusByValue
+final class MapStatusByValueStub implements MapStatusByValue
 {
     /**
-     * @psalm-param Field<Tracker_FormElement_Field_List> $target_field
-     * @return BindValueIdentifier[]
-     * @throws NoDuckTypedMatchingValueException
+     * @var BindValueIdentifier[]
      */
-    public function mapStatusValueByDuckTyping(StatusValue $source_value, Field $target_field): array;
+    private array $values;
+
+    private function __construct(BindValueIdentifier ...$values)
+    {
+        $this->values = $values;
+    }
+
+    public static function withValues(int ...$bind_value_ids): self
+    {
+        $identifiers = array_map(
+            static fn(int $bind_value_id): BindValueIdentifier => BindValueIdentifierStub::withId($bind_value_id),
+            $bind_value_ids
+        );
+        return new self(...$identifiers);
+    }
+
+    public function mapStatusValueByDuckTyping(StatusValue $source_value, Field $target_field): array
+    {
+        return $this->values;
+    }
 }

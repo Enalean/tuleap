@@ -24,7 +24,6 @@ namespace Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation;
 
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ArtifactCreationException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\CreateArtifact;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\MappedStatusValue;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\BuildSynchronizedFields;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\Field;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFields;
@@ -33,6 +32,7 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\TrackerCollection;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramIdentifierBuilder;
 use Tuleap\ProgramManagement\Tests\Builder\SourceChangesetValuesCollectionBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProjectStub;
+use Tuleap\ProgramManagement\Tests\Stub\MapStatusByValueStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchTeamsOfProgramStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrievePlanningMilestoneTrackerStub;
 use Tuleap\Test\Builders\UserTestBuilder;
@@ -49,17 +49,14 @@ final class ProgramIncrementsCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
      * @var \PHPUnit\Framework\MockObject\MockObject|CreateArtifact
      */
     private $artifact_creator;
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|MapStatusByValue
-     */
-    private $status_mapper;
+    private MapStatusByValueStub $status_mapper;
 
     protected function setUp(): void
     {
         $transaction_executor              = new DBTransactionExecutorPassthrough();
         $this->synchronized_fields_adapter = $this->createMock(BuildSynchronizedFields::class);
         $this->artifact_creator            = $this->createMock(CreateArtifact::class);
-        $this->status_mapper               = $this->createMock(MapStatusByValue::class);
+        $this->status_mapper               = MapStatusByValueStub::withValues(5000);
         $this->mirrors_creator             = new ProgramIncrementsCreator(
             $transaction_executor,
             $this->synchronized_fields_adapter,
@@ -87,8 +84,6 @@ final class ProgramIncrementsCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->synchronized_fields_adapter->method('build')
             ->willReturnOnConsecutiveCalls($first_synchronized_fields, $second_synchronized_fields);
 
-        $this->status_mapper->method('mapStatusValueByDuckTyping')
-            ->willReturnOnConsecutiveCalls($this->buildMappedValue(5000), $this->buildMappedValue(6000));
         $this->artifact_creator->expects(self::atLeast(2))
             ->method('create')
             ->withConsecutive(
@@ -113,8 +108,6 @@ final class ProgramIncrementsCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->synchronized_fields_adapter->method('build')
             ->willReturn($this->buildSynchronizedFields(1001, 1002, 1003, 1004, 1005, 1006));
-        $this->status_mapper->method('mapStatusValueByDuckTyping')
-            ->willReturn($this->buildMappedValue(5000));
         $this->artifact_creator->method('create')->willThrowException(new ArtifactCreationException());
 
         $this->expectException(ProgramIncrementArtifactCreationException::class);
@@ -149,10 +142,5 @@ final class ProgramIncrementsCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             $start_date_field_data,
             $end_date_field_data
         );
-    }
-
-    private function buildMappedValue(int $bind_value_id): MappedStatusValue
-    {
-        return new MappedStatusValue([$bind_value_id]);
     }
 }

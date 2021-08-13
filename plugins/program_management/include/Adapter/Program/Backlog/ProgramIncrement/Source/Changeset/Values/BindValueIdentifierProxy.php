@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2020 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,20 +20,29 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation;
+namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Changeset\Values;
 
-use Tracker_FormElement_Field_List;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\BindValueIdentifier;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\StatusValue;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\Field;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\NoDuckTypedMatchingValueException;
 
-interface MapStatusByValue
+/**
+ * @psalm-immutable
+ */
+final class BindValueIdentifierProxy implements BindValueIdentifier
 {
-    /**
-     * @psalm-param Field<Tracker_FormElement_Field_List> $target_field
-     * @return BindValueIdentifier[]
-     * @throws NoDuckTypedMatchingValueException
-     */
-    public function mapStatusValueByDuckTyping(StatusValue $source_value, Field $target_field): array;
+    private int $id;
+
+    private function __construct(int $id)
+    {
+        $this->id = $id;
+    }
+
+    public static function fromListBindValue(\Tracker_FormElement_Field_List_BindValue $bind_value): self
+    {
+        return new self((int) $bind_value->getId());
+    }
+
+    public function getId(): int
+    {
+        return $this->id;
+    }
 }

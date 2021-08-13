@@ -23,51 +23,45 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation;
 
 use Tracker_FormElement_Field_List;
+use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Changeset\Values\BindValueIdentifierProxy;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\MapStatusByValue;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\MappedStatusValue;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\SourceChangesetValuesCollection;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\BindValueIdentifier;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\StatusValue;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\Field;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\NoDuckTypedMatchingValueException;
-use Tuleap\Tracker\FormElement\Field\ListFields\FieldValueMatcher;
 
 final class StatusValueMapper implements MapStatusByValue
 {
-    /**
-     * @var FieldValueMatcher
-     */
-    private $value_matcher;
-
-    /**
-     * @psalm-param Field<Tracker_FormElement_Field_List> $field_status_data
-     * @throws NoDuckTypedMatchingValueException
-     */
-    public function mapStatusValueByDuckTyping(
-        SourceChangesetValuesCollection $changeset_values_collection,
-        Field $field_status_data
-    ): MappedStatusValue {
+    public function mapStatusValueByDuckTyping(StatusValue $source_value, Field $target_field): array
+    {
         $matching_values = [];
-        $field_status    = $field_status_data->getFullField();
-        assert($field_status instanceof Tracker_FormElement_Field_List);
-        foreach ($changeset_values_collection->getStatusValue()->getListValues() as $status_value) {
-            $matching_value = $this->value_matcher->getMatchingBindValueByDuckTyping(
-                $status_value,
-                $field_status
-            );
+        $status_field    = $target_field->getFullField();
+        assert($status_field instanceof Tracker_FormElement_Field_List);
+        foreach ($source_value->getListValues() as $bind_value) {
+            $matching_value = $this->getMatchingValueByDuckTyping($bind_value, $status_field);
             if ($matching_value === null) {
                 throw new NoDuckTypedMatchingValueException(
-                    $status_value->getLabel(),
-                    $field_status_data->getId(),
-                    $field_status_data->getFullField()->getTrackerId()
+                    $bind_value->getLabel(),
+                    $target_field->getId(),
+                    $target_field->getFullField()->getTrackerId()
                 );
             }
-            $matching_values[] = (int) $matching_value->getId();
+            $matching_values[] = $matching_value;
         }
 
-        return new MappedStatusValue($matching_values);
+        return $matching_values;
     }
 
-    public function __construct(FieldValueMatcher $value_matcher)
-    {
-        $this->value_matcher = $value_matcher;
+    private function getMatchingValueByDuckTyping(
+        \Tracker_FormElement_Field_List_BindValue $source_value,
+        \Tracker_FormElement_Field_List $target_field
+    ): ?BindValueIdentifier {
+        $lowercase_label = strtolower($source_value->getLabel());
+        foreach ($target_field->getBind()->getAllValues() as $target_value) {
+            if ($lowercase_label === strtolower($target_value->getLabel())) {
+                return BindValueIdentifierProxy::fromListBindValue($target_value);
+            }
+        }
+        return null;
     }
 }
