@@ -90,6 +90,9 @@ export default class FeatureCard extends Vue {
     @configuration.State
     readonly can_create_program_increment!: boolean;
 
+    @configuration.State
+    readonly has_plan_permissions!: boolean;
+
     @State
     readonly ongoing_move_elements_id!: number[];
 
@@ -143,12 +146,16 @@ export default class FeatureCard extends Vue {
     }
 
     get is_draggable(): boolean {
-        return this.program_increment.user_can_plan;
+        return this.program_increment.user_can_plan && this.has_plan_permissions;
     }
 
     get reason_why_feature_is_not_draggable(): string {
         if (this.is_draggable) {
             return "";
+        }
+
+        if (!this.has_plan_permissions) {
+            return this.$gettext("You cannot plan items");
         }
 
         return this.$gettext(

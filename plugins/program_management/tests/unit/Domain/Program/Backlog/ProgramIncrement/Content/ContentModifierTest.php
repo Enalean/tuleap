@@ -24,7 +24,6 @@ namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Conte
 
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureNotFoundException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\NotAllowedToPrioritizeException;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\CheckFeatureIsPlannedInProgramIncrement;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Rank\OrderFeatureRank;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\TopBacklogStore;
 use Tuleap\ProgramManagement\Domain\Program\Plan\FeatureCannotBePlannedInProgramIncrementException;
@@ -34,11 +33,13 @@ use Tuleap\ProgramManagement\Domain\Program\ProgramSearcher;
 use Tuleap\ProgramManagement\Domain\Program\SearchProgram;
 use Tuleap\ProgramManagement\REST\v1\FeatureElementToOrderInvolvedInChangeRepresentation;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProgramStub;
+use Tuleap\ProgramManagement\Tests\Stub\CheckFeatureIsPlannedInProgramIncrementStub;
 use Tuleap\ProgramManagement\Tests\Stub\CheckProgramIncrementStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyCanBePlannedInProgramIncrementStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsVisibleFeatureStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyLinkedUserStoryIsNotPlannedStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyPrioritizeFeaturesPermissionStub;
+use Tuleap\ProgramManagement\Tests\Stub\VerifyUserCanPlanInProgramIncrementStub;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 use function PHPUnit\Framework\assertTrue;
@@ -55,7 +56,8 @@ final class ContentModifierTest extends \Tuleap\Test\PHPUnit\TestCase
             VerifyCanBePlannedInProgramIncrementStub::buildCanBePlannedVerifier(),
             $this->buildFeaturePlanner(),
             $this->getStubOrderFeature(),
-            $this->getStubCheckFeatureIsPlannedInProgramIncrement(),
+            CheckFeatureIsPlannedInProgramIncrementStub::buildPlannedFeature(),
+            VerifyUserCanPlanInProgramIncrementStub::buildCanPlan()
         );
 
         $user = $this->getAMockedUser(true);
@@ -74,7 +76,8 @@ final class ContentModifierTest extends \Tuleap\Test\PHPUnit\TestCase
             VerifyCanBePlannedInProgramIncrementStub::buildCanBePlannedVerifier(),
             $this->buildFeaturePlanner(),
             $this->getStubOrderFeature(),
-            $this->getStubCheckFeatureIsPlannedInProgramIncrement(),
+            CheckFeatureIsPlannedInProgramIncrementStub::buildPlannedFeature(),
+            VerifyUserCanPlanInProgramIncrementStub::buildCanPlan()
         );
 
         $user = $this->getAMockedUser(false);
@@ -94,7 +97,8 @@ final class ContentModifierTest extends \Tuleap\Test\PHPUnit\TestCase
             VerifyCanBePlannedInProgramIncrementStub::buildNotPlannableVerifier(),
             $this->buildFeaturePlanner(),
             $this->getStubOrderFeature(),
-            $this->getStubCheckFeatureIsPlannedInProgramIncrement(),
+            CheckFeatureIsPlannedInProgramIncrementStub::buildPlannedFeature(),
+            VerifyUserCanPlanInProgramIncrementStub::buildCanPlan()
         );
 
         $user = $this->getAMockedUser(true);
@@ -113,7 +117,8 @@ final class ContentModifierTest extends \Tuleap\Test\PHPUnit\TestCase
             VerifyCanBePlannedInProgramIncrementStub::buildCanBePlannedVerifier(),
             $this->buildFeaturePlanner(),
             $this->getStubOrderFeature(),
-            $this->getStubCheckFeatureIsPlannedInProgramIncrement(),
+            CheckFeatureIsPlannedInProgramIncrementStub::buildPlannedFeature(),
+            VerifyUserCanPlanInProgramIncrementStub::buildCanPlan()
         );
 
         $user = $this->getAMockedUser(true);
@@ -132,7 +137,8 @@ final class ContentModifierTest extends \Tuleap\Test\PHPUnit\TestCase
             VerifyCanBePlannedInProgramIncrementStub::buildCanBePlannedVerifier(),
             $this->buildFeaturePlanner(),
             $this->getStubOrderFeature(),
-            $this->getStubCheckFeatureIsPlannedInProgramIncrement(),
+            CheckFeatureIsPlannedInProgramIncrementStub::buildPlannedFeature(),
+            VerifyUserCanPlanInProgramIncrementStub::buildCanPlan()
         );
 
         $user = UserTestBuilder::aUser()->build();
@@ -151,7 +157,8 @@ final class ContentModifierTest extends \Tuleap\Test\PHPUnit\TestCase
             VerifyCanBePlannedInProgramIncrementStub::buildCanBePlannedVerifier(),
             $this->buildFeaturePlanner(),
             $this->getStubOrderFeature(true),
-            $this->getStubCheckFeatureIsPlannedInProgramIncrement(),
+            CheckFeatureIsPlannedInProgramIncrementStub::buildPlannedFeature(),
+            VerifyUserCanPlanInProgramIncrementStub::buildCanPlan()
         );
 
         $user = $this->getAMockedUser(true);
@@ -173,7 +180,8 @@ final class ContentModifierTest extends \Tuleap\Test\PHPUnit\TestCase
             VerifyCanBePlannedInProgramIncrementStub::buildNotPlannableVerifier(),
             $this->buildFeaturePlanner(),
             $this->getStubOrderFeature(),
-            $this->getStubCheckFeatureIsPlannedInProgramIncrement(),
+            CheckFeatureIsPlannedInProgramIncrementStub::buildPlannedFeature(),
+            VerifyUserCanPlanInProgramIncrementStub::buildCanPlan()
         );
 
         $user = $this->getAMockedUser(true);
@@ -195,7 +203,8 @@ final class ContentModifierTest extends \Tuleap\Test\PHPUnit\TestCase
             VerifyCanBePlannedInProgramIncrementStub::buildCanBePlannedVerifier(),
             $this->buildFeaturePlanner(),
             $this->getStubOrderFeature(),
-            $this->getStubCheckFeatureIsPlannedInProgramIncrement(false),
+            CheckFeatureIsPlannedInProgramIncrementStub::buildUnPlannedFeature(),
+            VerifyUserCanPlanInProgramIncrementStub::buildCanPlan()
         );
 
         $user = $this->getAMockedUser(true);
@@ -215,25 +224,6 @@ final class ContentModifierTest extends \Tuleap\Test\PHPUnit\TestCase
         $feature_to_order->compared_to = $compared_to_id;
         $feature_to_order->direction   = $direction;
         return $feature_to_order;
-    }
-
-    private function getStubCheckFeatureIsPlannedInProgramIncrement(bool $is_planned = true): CheckFeatureIsPlannedInProgramIncrement
-    {
-        return new class ($is_planned) implements CheckFeatureIsPlannedInProgramIncrement {
-
-            /** @var bool */
-            private $is_planned;
-
-            public function __construct(bool $is_planned)
-            {
-                $this->is_planned = $is_planned;
-            }
-
-            public function isFeaturePlannedInProgramIncrement(int $program_increment_id, int $feature_id): bool
-            {
-                return $this->is_planned;
-            }
-        };
     }
 
     private function getStubProgramSearcher(): ProgramSearcher

@@ -50,7 +50,7 @@ describe("FeatureCard", () => {
             mocks: {
                 $store: createStoreMock({
                     state: {
-                        configuration: { accessibility: true, can_create_program_increment: true },
+                        configuration: { accessibility: true, has_plan_permissions: true },
                         ongoing_move_elements_id: [],
                     },
                 }),
@@ -84,7 +84,7 @@ describe("FeatureCard", () => {
                     state: {
                         configuration: {
                             accessibility: false,
-                            can_create_program_increment: false,
+                            has_plan_permissions: false,
                         },
                         ongoing_move_elements_id: [],
                     },
@@ -117,7 +117,7 @@ describe("FeatureCard", () => {
             mocks: {
                 $store: createStoreMock({
                     state: {
-                        configuration: { accessibility: false, can_create_program_increment: true },
+                        configuration: { accessibility: false, has_plan_permissions: true },
                         ongoing_move_elements_id: [],
                     },
                 }),
@@ -150,7 +150,7 @@ describe("FeatureCard", () => {
             mocks: {
                 $store: createStoreMock({
                     state: {
-                        configuration: { accessibility: false, can_create_program_increment: true },
+                        configuration: { accessibility: false, has_plan_permissions: true },
                         ongoing_move_elements_id: [],
                     },
                 }),
@@ -183,7 +183,7 @@ describe("FeatureCard", () => {
             mocks: {
                 $store: createStoreMock({
                     state: {
-                        configuration: { accessibility: false, can_create_program_increment: true },
+                        configuration: { accessibility: false, has_plan_permissions: true },
                         ongoing_move_elements_id: [100],
                     },
                 }),

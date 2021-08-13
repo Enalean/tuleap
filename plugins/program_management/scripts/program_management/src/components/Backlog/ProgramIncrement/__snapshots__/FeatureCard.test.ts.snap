@@ -11,7 +11,7 @@ exports[`FeatureCard Displays a draggable card with accessibility pattern 1`] = 
     data-tlp-tooltip=""
   >
     <div
-      class="element-card element-card-lake_placid_blue element-card-background-peggy_pink_text element-card-with-accessibility element-draggable-item"
+      class="element-card element-card-lake_placid_blue element-card-background-peggy_pink_text element-card-with-accessibility"
       data-test="feature-card"
     >
       <div
@@ -98,11 +98,11 @@ exports[`FeatureCard Displays a not draggable card without accessibility pattern
 <div
   class="element-backlog-items"
   data-element-id="100"
-  draggable="true"
+  draggable="false"
 >
   <div
-    class="element-card-container"
-    data-tlp-tooltip=""
+    class="element-card-container tlp-tooltip tlp-tooltip-left"
+    data-tlp-tooltip="You cannot plan items"
   >
     <div
       class="element-card element-card-lake_placid_blue"

@@ -27,12 +27,13 @@ use Psr\Log\NullLogger;
 use Tracker_FormElement_Field_List;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrement;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
-use Tuleap\ProgramManagement\Domain\Workspace\RetrieveUser;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
+use Tuleap\ProgramManagement\Domain\Workspace\VerifyUserCanPlanInProgramIncrement;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProgramStub;
+use Tuleap\ProgramManagement\Tests\Stub\CheckProgramIncrementStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveUserStub;
-use Tuleap\ProgramManagement\Tests\Stub\VerifyPrioritizeFeaturesPermissionStub;
+use Tuleap\ProgramManagement\Tests\Stub\VerifyUserCanPlanInProgramIncrementStub;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframe;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
@@ -113,7 +114,7 @@ final class ProgramIncrementsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $tracker->method('getStatusField')->willReturn($status_field);
 
         $program_increments = $this->buildProgramIncrementsRetriever(
-            RetrieveUserStub::buildMockedRegularUser($this->user)
+            VerifyUserCanPlanInProgramIncrementStub::buildCanNotPlan()
         )->retrieveOpenProgramIncrements(self::buildProgram($this->user_identifier), $this->user_identifier);
 
         self::assertEquals(
@@ -151,7 +152,7 @@ final class ProgramIncrementsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->artifact_factory->method('getArtifactByIdUserCanView')->willReturn(null);
 
         self::assertEmpty(
-            $this->buildProgramIncrementsRetriever(RetrieveUserStub::buildMockedRegularUser($this->user))->retrieveOpenProgramIncrements(
+            $this->buildProgramIncrementsRetriever(VerifyUserCanPlanInProgramIncrementStub::buildCanPlan())->retrieveOpenProgramIncrements(
                 self::buildProgram($this->user_identifier),
                 $this->user_identifier
             )
@@ -167,7 +168,7 @@ final class ProgramIncrementsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $artifact->method('getTitle')->willReturn(null);
 
         self::assertEmpty(
-            $this->buildProgramIncrementsRetriever(RetrieveUserStub::buildMockedRegularUser($this->user))->retrieveOpenProgramIncrements(
+            $this->buildProgramIncrementsRetriever(VerifyUserCanPlanInProgramIncrementStub::buildCanPlan())->retrieveOpenProgramIncrements(
                 self::buildProgram($this->user_identifier),
                 $this->user_identifier
             )
@@ -179,16 +180,16 @@ final class ProgramIncrementsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         return ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 1, $user, null);
     }
 
-    private function buildProgramIncrementsRetriever(RetrieveUser $retrieve_user): ProgramIncrementsRetriever
+    private function buildProgramIncrementsRetriever(VerifyUserCanPlanInProgramIncrement $user_can_plan): ProgramIncrementsRetriever
     {
         return new ProgramIncrementsRetriever(
             $this->dao,
             $this->artifact_factory,
             $this->semantic_timeframe_builder,
             $this->logger,
-            $retrieve_user,
-            VerifyPrioritizeFeaturesPermissionStub::canPrioritize(),
-            BuildProgramStub::stubValidProgram()
+            RetrieveUserStub::buildMockedRegularUser($this->user),
+            $user_can_plan,
+            CheckProgramIncrementStub::buildProgramIncrementChecker()
         );
     }
 }

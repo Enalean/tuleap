@@ -31,10 +31,12 @@ use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Content\FeatureRemovalProcessor;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\ProgramIncrementsDAO;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\ProgramIncrementsRetriever;
+use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\UserCanPlanInProgramIncrementVerifier;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\Rank\FeaturesRankOrderer;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\ArtifactsExplicitTopBacklogDAO;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\ProcessTopBacklogChange;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\BackgroundColorRetriever;
+use Tuleap\ProgramManagement\Adapter\Program\Feature\Content\ProgramIncrementChecker;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\FeatureElementsRetriever;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\FeatureRepresentationBuilder;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\FeaturesDao;
@@ -168,16 +170,17 @@ final class ProjectResource extends AuthenticatedResource
             new CanPrioritizeFeaturesDAO(),
             $this->user_manager_adapter
         );
+        $program_increments_dao             = new ProgramIncrementsDAO();
         $this->program_increments_builder   = new ProgramIncrementBuilder(
             $this->build_program,
             new ProgramIncrementsRetriever(
-                new ProgramIncrementsDAO(),
+                $program_increments_dao,
                 $artifact_factory,
                 SemanticTimeframeBuilder::build(),
                 BackendLogger::getDefaultLogger(),
                 $this->user_manager_adapter,
-                $this->features_permission_verifier,
-                $this->build_program
+                new UserCanPlanInProgramIncrementVerifier($artifact_factory, $this->user_manager_adapter),
+                new ProgramIncrementChecker($artifact_factory, $program_increments_dao),
             )
         );
     }
