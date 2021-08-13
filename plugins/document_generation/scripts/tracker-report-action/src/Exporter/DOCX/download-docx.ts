@@ -20,6 +20,7 @@
 import type {
     ArtifactContainer,
     ArtifactFieldValue,
+    ClassicReportCriterionValue,
     DateTimeLocaleInformation,
     ExportDocument,
     GlobalExportProperties,
@@ -52,7 +53,6 @@ import { getAnchorToArtifactContent } from "./sections-anchor";
 import type { GetText } from "../../../../../../../src/scripts/tuleap/gettext/gettext-init";
 import { sprintf } from "sprintf-js";
 import { triggerBlobDownload } from "../trigger-blob-download";
-import type { ClassicReportCriterionValue } from "../../type";
 
 const MAIN_TITLES_NUMBERING_ID = "main-titles";
 const HEADER_STYLE_ARTIFACT_TITLE = "ArtifactTitle";
@@ -140,14 +140,30 @@ export async function downloadDocx(
     const report_criteria = global_export_properties.report_criteria;
     let report_criteria_content;
     if (report_criteria.is_in_expert_mode) {
-        report_criteria_content = new Paragraph(
-            gettext_provider.gettext("TQL query: ") + report_criteria.query
-        );
+        if (report_criteria.query === "") {
+            report_criteria_content = new Paragraph(
+                gettext_provider.gettext(
+                    "No filter has been applied to this report because no TQL query has been set"
+                )
+            );
+        } else {
+            report_criteria_content = new Paragraph(
+                gettext_provider.gettext("TQL query: ") + report_criteria.query
+            );
+        }
     } else {
-        report_criteria_content = buildReportCriteriaDisplayZone(
-            report_criteria.criteria,
-            gettext_provider
-        );
+        if (report_criteria.criteria.length > 0) {
+            report_criteria_content = buildReportCriteriaDisplayZone(
+                report_criteria.criteria,
+                gettext_provider
+            );
+        } else {
+            report_criteria_content = new Paragraph(
+                gettext_provider.gettext(
+                    "No filter has been applied to this report because no search criteria has a value set"
+                )
+            );
+        }
     }
 
     report_criteria_data.push(report_criteria_content);

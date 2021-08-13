@@ -17,6 +17,17 @@ msgstr "Exporté par : %s"
 msgid "Field name"
 msgstr "Nom du champ"
 
+msgid ""
+"No filter has been applied to this report because no TQL query has been set"
+msgstr ""
+"Aucun filtre n'a été appliqué à ce rapport car aucune requête TQL n'a été définie"
+
+msgid ""
+"No filter has been applied to this report because no search criteria has a value set"
+msgstr ""
+"Aucun filtre n'a été appliqué à ce rapport car aucun critère de recherche n'a"
+" de valeur définie"
+
 msgid "Search criteria"
 msgstr "Critère de recherche"
 
