@@ -24,7 +24,9 @@ namespace Tuleap\DocumentGeneration\Report;
 
 use Tracker_FormElement_Field_Date;
 use Tracker_FormElement_Field_List;
+use Tracker_FormElement_Field_OpenList;
 use Tracker_Report;
+use Tracker_Report_Criteria;
 
 class ReportCriteriaJsonBuilder
 {
@@ -50,13 +52,18 @@ class ReportCriteriaJsonBuilder
         foreach ($report->getCriteria() as $criterion) {
             $criterion_field = $criterion->getField();
             if (
-                $criterion_field instanceof Tracker_FormElement_Field_List ||
+                $criterion_field instanceof Tracker_FormElement_Field_OpenList ||
                 $criterion_field instanceof Tracker_FormElement_Field_Date
             ) {
                 continue;
             }
 
-            if (! empty($criterion_field->getCriteriaValue($criterion))) {
+            if ($criterion_field instanceof Tracker_FormElement_Field_List) {
+                $list_criterion_json_value = $this->buildCriterionValueJsonFromListValue($criterion);
+                if ($list_criterion_json_value !== null) {
+                    $criteria_value_json[] = $list_criterion_json_value;
+                }
+            } elseif (! empty($criterion_field->getCriteriaValue($criterion))) {
                 $criteria_value_json[] = new CriterionValueJson(
                     $criterion_field->getLabel(),
                     (string) $criterion_field->getCriteriaValue($criterion),
@@ -76,5 +83,32 @@ class ReportCriteriaJsonBuilder
         return new ClassicReportCriteriaJson(
             $criteria_value_json
         );
+    }
+
+    private function buildCriterionValueJsonFromListValue(Tracker_Report_Criteria $criterion): ?CriterionValueJson
+    {
+        $criterion_field = $criterion->getField();
+        $criterion_value = $criterion_field->getCriteriaValue($criterion);
+
+        if (! is_array($criterion_value)) {
+            return null;
+        }
+
+        $criterion_values_labels = [];
+        foreach ($criterion_value as $value_id) {
+            $value = $criterion_field->getBind()->getValue($value_id);
+            if ($value) {
+                $criterion_values_labels[] = $value->getLabel();
+            }
+        }
+
+        if (count($criterion_values_labels) > 0) {
+            return new CriterionValueJson(
+                $criterion_field->getLabel(),
+                implode(', ', $criterion_values_labels),
+            );
+        }
+
+        return null;
     }
 }
