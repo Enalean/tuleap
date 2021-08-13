@@ -24,13 +24,14 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Sour
 
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\ChangesetValueNotFoundException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\RetrieveDescriptionValue;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\RetrieveStartDateValue;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\RetrieveTitleValue;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\TextFieldValue;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\UnsupportedTitleFieldException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFields;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\ReplicationData;
 
-final class ArtifactFieldValuesRetriever implements RetrieveTitleValue, RetrieveDescriptionValue
+final class ArtifactFieldValuesRetriever implements RetrieveTitleValue, RetrieveDescriptionValue, RetrieveStartDateValue
 {
     public function getTitleValue(ReplicationData $replication, SynchronizedFields $fields): string
     {
@@ -64,5 +65,21 @@ final class ArtifactFieldValuesRetriever implements RetrieveTitleValue, Retrieve
         }
         assert($description_value instanceof \Tracker_Artifact_ChangesetValue_Text);
         return new TextFieldValueProxy($description_value->getValue(), $description_value->getFormat());
+    }
+
+    public function getStartDateValue(ReplicationData $replication, SynchronizedFields $fields): string
+    {
+        $changeset        = $replication->getFullChangeset();
+        $start_date_field = $fields->getStartDateField();
+        $start_date_value = $changeset->getValue($start_date_field->getFullField());
+        if (! $start_date_value) {
+            throw new ChangesetValueNotFoundException(
+                (int) $changeset->getId(),
+                $start_date_field->getId(),
+                'timeframe start date'
+            );
+        }
+        assert($start_date_value instanceof \Tracker_Artifact_ChangesetValue_Date);
+        return $start_date_value->getDate();
     }
 }

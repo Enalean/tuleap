@@ -24,6 +24,8 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Sour
 
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\ChangesetValueNotFoundException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\UnsupportedTitleFieldException;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFields;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\ReplicationData;
 use Tuleap\ProgramManagement\Tests\Builder\ReplicationDataBuilder;
 use Tuleap\ProgramManagement\Tests\Builder\SynchronizedFieldsBuilder;
 
@@ -34,7 +36,28 @@ final class ArtifactFieldValuesRetrieverTest extends \Tuleap\Test\PHPUnit\TestCa
         return new ArtifactFieldValuesRetriever();
     }
 
-    public function testItThrowsWhenTitleValueIsNotFound(): void
+    public function dataProviderMethodUnderTest(): array
+    {
+        return [
+            'when title value is not found'       => [fn(
+                ReplicationData $replication,
+                SynchronizedFields $fields
+            ) => $this->getRetriever()->getTitleValue($replication, $fields)],
+            'when description value is not found' => [fn(
+                ReplicationData $replication,
+                SynchronizedFields $fields
+            ) => $this->getRetriever()->getDescriptionValue($replication, $fields)],
+            'when start date value is not found'  => [fn(
+                ReplicationData $replication,
+                SynchronizedFields $fields
+            ) => $this->getRetriever()->getStartDateValue($replication, $fields)]
+        ];
+    }
+
+    /**
+     * @dataProvider dataProviderMethodUnderTest
+     */
+    public function testItThrowsWhenChangesetValuesAreNotFound(callable $method_under_test): void
     {
         $fields           = SynchronizedFieldsBuilder::build();
         $source_changeset = $this->createStub(\Tracker_Artifact_Changeset::class);
@@ -43,7 +66,7 @@ final class ArtifactFieldValuesRetrieverTest extends \Tuleap\Test\PHPUnit\TestCa
         $replication = ReplicationDataBuilder::buildWithChangeset($source_changeset);
 
         $this->expectException(ChangesetValueNotFoundException::class);
-        $this->getRetriever()->getTitleValue($replication, $fields);
+        $method_under_test($replication, $fields);
     }
 
     public function testItThrowsWhenTitleIsNotAString(): void
@@ -70,18 +93,6 @@ final class ArtifactFieldValuesRetrieverTest extends \Tuleap\Test\PHPUnit\TestCa
         self::assertSame('My title', $this->getRetriever()->getTitleValue($replication, $fields));
     }
 
-    public function testItThrowsWhenDescriptionValueIsNotFound(): void
-    {
-        $fields           = SynchronizedFieldsBuilder::build();
-        $source_changeset = $this->createStub(\Tracker_Artifact_Changeset::class);
-        $source_changeset->method('getValue')->willReturn(null);
-        $source_changeset->method('getId')->willReturn(1);
-        $replication = ReplicationDataBuilder::buildWithChangeset($source_changeset);
-
-        $this->expectException(ChangesetValueNotFoundException::class);
-        $this->getRetriever()->getDescriptionValue($replication, $fields);
-    }
-
     public function testItReturnsDescriptionValueFromReplicationAndSynchronizedFields(): void
     {
         $fields          = SynchronizedFieldsBuilder::build();
@@ -95,5 +106,17 @@ final class ArtifactFieldValuesRetrieverTest extends \Tuleap\Test\PHPUnit\TestCa
         $text_value = $this->getRetriever()->getDescriptionValue($relication, $fields);
         self::assertSame('My description', $text_value->getValue());
         self::assertSame('text', $text_value->getFormat());
+    }
+
+    public function testItReturnsStartDateValueFromReplicationAndSynchronizedFields(): void
+    {
+        $fields          = SynchronizedFieldsBuilder::build();
+        $changeset_value = $this->createStub(\Tracker_Artifact_ChangesetValue_Date::class);
+        $changeset_value->method('getDate')->willReturn('2020-10-01');
+        $source_changeset = $this->createStub(\Tracker_Artifact_Changeset::class);
+        $source_changeset->method('getValue')->willReturn($changeset_value);
+        $replication = ReplicationDataBuilder::buildWithChangeset($source_changeset);
+
+        self::assertSame('2020-10-01', $this->getRetriever()->getStartDateValue($replication, $fields));
     }
 }

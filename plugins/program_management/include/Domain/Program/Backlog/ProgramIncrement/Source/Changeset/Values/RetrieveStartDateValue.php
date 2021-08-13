@@ -25,33 +25,10 @@ namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Sourc
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFields;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\ReplicationData;
 
-/**
- * I hold the value of the start date field from the Timeframe semantic of the source Timebox.
- * I am the reference value that must be copied to Mirrored Timeboxes.
- * @psalm-immutable
- */
-final class StartDateValue
+interface RetrieveStartDateValue
 {
-    private string $date_value;
-
-    private function __construct(string $date_value)
-    {
-        $this->date_value = $date_value;
-    }
-
     /**
      * @throws ChangesetValueNotFoundException
      */
-    public static function fromReplicationAndSynchronizedFields(
-        RetrieveStartDateValue $start_date_retriever,
-        ReplicationData $replication,
-        SynchronizedFields $fields
-    ): self {
-        return new self($start_date_retriever->getStartDateValue($replication, $fields));
-    }
-
-    public function getValue(): string
-    {
-        return $this->date_value;
-    }
+    public function getStartDateValue(ReplicationData $replication, SynchronizedFields $fields): string;
 }
