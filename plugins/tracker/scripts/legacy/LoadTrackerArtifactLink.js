@@ -313,22 +313,40 @@ document.observe("dom:loaded", function () {
 
             codendi.Toggler.init($("tracker_report_query_form"), "hide", "noajax");
 
-            $("tracker_report_query_form").observe("submit", function (evt) {
-                $("tracker_report_query_form").request({
-                    parameters: {
-                        aid: 0,
-                        "only-renderer": 1,
-                        "link-artifact-id": $F("link-artifact-id"),
-                    },
-                    onSuccess: function (transport) {
-                        var renderer_panel = $("tracker-link-artifact-slow-way-content")
-                            .up()
-                            .down(".tracker_report_renderer");
-                        renderer_panel.update(transport.responseText);
-                        load_behavior_in_renderer_panel(renderer_panel);
-                    },
-                });
+            $("tracker_report_query_form").observe("submit", async function (evt) {
                 Event.stop(evt);
+
+                const url = encodeURI(
+                    codendi.tracker.base_url +
+                        "?" +
+                        new URLSearchParams({
+                            tracker: document.getElementById("tracker_select_tracker").value,
+                        }).toString()
+                );
+
+                const body = new URLSearchParams({
+                    aid: 0,
+                    "only-renderer": 1,
+                    "link-artifact-id": document.getElementById("link-artifact-id").value,
+                    ...$("tracker_report_query_form").serialize(true),
+                }).toString();
+
+                const response = await fetch(url, {
+                    method: "POST",
+                    headers: {
+                        "Content-type": "application/x-www-form-urlencoded",
+                    },
+                    body,
+                });
+
+                const text = await response.text();
+
+                const renderer_panel = $("tracker-link-artifact-slow-way-content")
+                    .up()
+                    .down(".tracker_report_renderer");
+                renderer_panel.update(text);
+                load_behavior_in_renderer_panel(renderer_panel);
+
                 return false;
             });
         }
