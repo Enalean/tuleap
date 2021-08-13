@@ -28,11 +28,19 @@ use Tuleap\ProgramManagement\Domain\UserCanPrioritize;
 
 interface VerifyUserCanPlanInProgramIncrement
 {
+    /**
+     * Check that user can update Program Increment
+     */
     public function userCanPlan(
         ProgramIncrementIdentifier $program_increment_identifier,
         UserIdentifier $user_identifier
     ): bool;
 
+    /**
+     * Check that user can update Program Increment and that User has Prioritized function
+     * (implicit check done by UserCanPrioritize object)
+     * this method is a reading help
+     */
     public function userCanPlanAndPrioritize(
         ProgramIncrementIdentifier $program_increment_identifier,
         UserCanPrioritize $user_identifier
