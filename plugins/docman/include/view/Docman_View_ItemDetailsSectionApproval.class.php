@@ -64,7 +64,7 @@ class Docman_View_ItemDetailsSectionApproval extends Docman_View_ItemDetailsSect
             $title = '';
             $url   = '';
 
-            $itemType = Docman_ItemFactory::getItemTypeForItem($this->item);
+            $itemType = (new Docman_ItemFactory())->getItemTypeForItem($this->item);
             if (
                 $itemType == PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE
                 || $itemType == PLUGIN_DOCMAN_ITEM_TYPE_FILE

@@ -311,7 +311,7 @@ class Docman_ItemFactory
         $item = null;
         if (! $dar->isError() && $dar->valid()) {
             $row  = $dar->current();
-            $item = self::getItemFromRow($row);
+            $item = $this->getItemFromRow($row);
         }
         return $item;
     }
@@ -327,7 +327,7 @@ class Docman_ItemFactory
             while ($dar->valid()) {
                 $row = $dar->current();
 
-                $itemArray[] = self::getItemFromRow($row);
+                $itemArray[] = $this->getItemFromRow($row);
 
                 $dar->next();
             }

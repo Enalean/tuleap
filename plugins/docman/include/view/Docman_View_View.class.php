@@ -110,10 +110,9 @@
         $icons = new Docman_Icons($params['theme_path'] . '/images/ic/');
         return $icons;
     }
-    public function &_getItemFactory($params)
+    public function _getItemFactory()
     {
-        $f = new Docman_ItemFactory();
-        return $f;
+        return new Docman_ItemFactory();
     }
 
     /**

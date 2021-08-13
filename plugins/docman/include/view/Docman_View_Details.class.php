@@ -53,7 +53,7 @@ class Docman_View_Details extends Docman_View_Display
             }
         }
 
-        $item_factory = $this->_getItemFactory($params);
+        $item_factory = $this->_getItemFactory();
         $details      = new Docman_View_ItemDetails($params['item'], $url);
         $sections     = [];
         if ($user_can_read || $user_can_read_obsolete) {
