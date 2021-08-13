@@ -24,6 +24,7 @@ namespace Tuleap\ProgramManagement\Domain\Team\Creation;
 
 use Tuleap\ProgramManagement\Domain\Program\ProgramIsTeamException;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveProjectStub;
+use Tuleap\ProgramManagement\Tests\Stub\RetrieveUserStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsTeamStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyProjectPermissionStub;
 use Tuleap\Test\Builders\ProjectTestBuilder;
@@ -66,7 +67,8 @@ final class TeamCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->team_verifier,
             $this->permission_verifier,
             $this->team_builder,
-            $this->team_store
+            $this->team_store,
+            RetrieveUserStub::withGenericUser()
         );
     }
 

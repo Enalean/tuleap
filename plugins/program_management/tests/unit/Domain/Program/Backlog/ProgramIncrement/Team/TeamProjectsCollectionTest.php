@@ -22,15 +22,11 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Team;
 
-use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramForAdministrationIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
+use Tuleap\ProgramManagement\Tests\Builder\ProgramForAdministrationIdentifierBuilder;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramIdentifierBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProjectStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchTeamsOfProgramStub;
-use Tuleap\ProgramManagement\Tests\Stub\VerifyIsTeamStub;
-use Tuleap\ProgramManagement\Tests\Stub\VerifyProjectPermissionStub;
-use Tuleap\Test\Builders\ProjectTestBuilder;
-use Tuleap\Test\Builders\UserTestBuilder;
 
 final class TeamProjectsCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -59,12 +55,7 @@ final class TeamProjectsCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItBuildsFromProgramForAdministration(): void
     {
-        $program    = ProgramForAdministrationIdentifier::fromProject(
-            VerifyIsTeamStub::withNotValidTeam(),
-            VerifyProjectPermissionStub::withAdministrator(),
-            UserTestBuilder::aUser()->build(),
-            ProjectTestBuilder::aProject()->withId(101)->build()
-        );
+        $program    = ProgramForAdministrationIdentifierBuilder::build();
         $collection = TeamProjectsCollection::fromProgramForAdministration(
             $this->search_teams,
             $this->project_builder,

@@ -22,15 +22,11 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\XML;
 
-use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramForAdministrationIdentifier;
 use Tuleap\ProgramManagement\Domain\XML\Exceptions\CannotFindPlannableTrackerInMappingException;
 use Tuleap\ProgramManagement\Domain\XML\Exceptions\CannotFindSourceTrackerUsingXmlReference;
 use Tuleap\ProgramManagement\Domain\XML\Exceptions\CannotFindUserGroupInProjectException;
+use Tuleap\ProgramManagement\Tests\Builder\ProgramForAdministrationIdentifierBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveUGroupsStub;
-use Tuleap\ProgramManagement\Tests\Stub\VerifyIsTeamStub;
-use Tuleap\ProgramManagement\Tests\Stub\VerifyProjectPermissionStub;
-use Tuleap\Test\Builders\ProjectTestBuilder;
-use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 
 final class ProgramManagementXMLConfigExtractorTest extends TestCase
@@ -142,12 +138,7 @@ final class ProgramManagementXMLConfigExtractorTest extends TestCase
                     </increments>
                 </program_management>'
             ),
-            ProgramForAdministrationIdentifier::fromProject(
-                VerifyIsTeamStub::withNotValidTeam(),
-                VerifyProjectPermissionStub::withAdministrator(),
-                UserTestBuilder::aUser()->build(),
-                ProjectTestBuilder::aProject()->withId(101)->build()
-            )
+            ProgramForAdministrationIdentifierBuilder::build()
         );
     }
 
@@ -165,12 +156,7 @@ final class ProgramManagementXMLConfigExtractorTest extends TestCase
                     </increments>
                 </program_management>'
             ),
-            ProgramForAdministrationIdentifier::fromProject(
-                VerifyIsTeamStub::withNotValidTeam(),
-                VerifyProjectPermissionStub::withAdministrator(),
-                UserTestBuilder::aUser()->build(),
-                ProjectTestBuilder::aProject()->withId(101)->build()
-            )
+            ProgramForAdministrationIdentifierBuilder::build()
         );
 
         self::assertSame(["101_3"], $ugroups);

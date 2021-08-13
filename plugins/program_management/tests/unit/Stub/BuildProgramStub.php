@@ -27,7 +27,6 @@ use Tuleap\ProgramManagement\Domain\Program\Plan\BuildProgram;
 use Tuleap\ProgramManagement\Domain\Program\Plan\ProgramAccessException;
 use Tuleap\ProgramManagement\Domain\Program\Plan\ProjectIsNotAProgramException;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
-use Tuleap\Test\Builders\UserTestBuilder;
 
 final class BuildProgramStub implements BuildProgram
 {
@@ -67,8 +66,7 @@ final class BuildProgramStub implements BuildProgram
         }
 
         if (! $this->is_access_allowed) {
-            $pfuser = UserTestBuilder::aUser()->build();
-            throw new ProgramAccessException($project_id, $pfuser);
+            throw new ProgramAccessException($project_id, RetrieveUserStub::withGenericUser(), $user);
         }
     }
 }

@@ -23,10 +23,8 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Domain\Program\Admin;
 
 use Tuleap\ProgramManagement\Domain\TrackerReference;
+use Tuleap\ProgramManagement\Tests\Builder\ProgramForAdministrationIdentifierBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveTrackerFromProgramStub;
-use Tuleap\ProgramManagement\Tests\Stub\VerifyIsTeamStub;
-use Tuleap\ProgramManagement\Tests\Stub\VerifyProjectPermissionStub;
-use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
@@ -39,12 +37,7 @@ final class PotentialTrackerCollectionTest extends TestCase
                 TrackerReference::fromTracker(TrackerTestBuilder::aTracker()->withId(80)->withName('Sprint')->build()),
                 TrackerReference::fromTracker(TrackerTestBuilder::aTracker()->withId(88)->withName('Feature')->build()),
             ),
-            ProgramForAdministrationIdentifier::fromProject(
-                VerifyIsTeamStub::withNotValidTeam(),
-                VerifyProjectPermissionStub::withAdministrator(),
-                UserTestBuilder::aUser()->build(),
-                \Project::buildForTest()
-            )
+            ProgramForAdministrationIdentifierBuilder::build()
         );
         self::assertCount(2, $collection->trackers_reference);
         self::assertSame(80, $collection->trackers_reference[0]->id);

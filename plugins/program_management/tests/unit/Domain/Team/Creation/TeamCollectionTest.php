@@ -23,9 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Domain\Team\Creation;
 
 use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramForAdministrationIdentifier;
-use Tuleap\ProgramManagement\Tests\Stub\VerifyIsTeamStub;
-use Tuleap\ProgramManagement\Tests\Stub\VerifyProjectPermissionStub;
-use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\ProgramManagement\Tests\Builder\ProgramForAdministrationIdentifierBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 
 final class TeamCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -43,12 +41,7 @@ final class TeamCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
     protected function setUp(): void
     {
         $this->user         = UserTestBuilder::aUser()->withId(101)->build();
-        $this->program      = ProgramForAdministrationIdentifier::fromProject(
-            VerifyIsTeamStub::withNotValidTeam(),
-            VerifyProjectPermissionStub::withAdministrator(),
-            $this->user,
-            ProjectTestBuilder::aProject()->withId(self::PROGRAM_ID)->build()
-        );
+        $this->program      = ProgramForAdministrationIdentifierBuilder::buildWithId(self::PROGRAM_ID);
         $this->team_builder = $this->createStub(BuildTeam::class);
     }
 

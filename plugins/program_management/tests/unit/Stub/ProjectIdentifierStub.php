@@ -1,8 +1,8 @@
 <?php
 /**
- * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
+ * Copyright (c) Enalean 2021 -  Present. All Rights Reserved.
  *
- * This file is a part of Tuleap.
+ *  This file is a part of Tuleap.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,13 +16,36 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Domain\Workspace;
+namespace Tuleap\ProgramManagement\Tests\Stub;
 
-interface VerifyProjectPermission
+use Tuleap\ProgramManagement\Domain\Workspace\ProjectIdentifier;
+
+final class ProjectIdentifierStub implements ProjectIdentifier
 {
-    public function isProjectAdministrator(UserIdentifier $user_identifier, ProjectIdentifier $project_identifier): bool;
+    private int $project_id;
+
+    private function __construct(int $project_id)
+    {
+        $this->project_id = $project_id;
+    }
+
+    public static function build(): self
+    {
+        return new self(101);
+    }
+
+    public static function buildWithId(int $id): self
+    {
+        return new self($id);
+    }
+
+    public function getId(): int
+    {
+        return $this->project_id;
+    }
 }

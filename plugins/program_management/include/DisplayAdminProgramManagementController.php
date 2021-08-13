@@ -29,6 +29,7 @@ use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\ProgramManagement\Adapter\Program\Admin\Configuration\ConfigurationErrorPresenterBuilder;
+use Tuleap\ProgramManagement\Adapter\Workspace\ProjectProxy;
 use Tuleap\ProgramManagement\Adapter\Workspace\UserProxy;
 use Tuleap\ProgramManagement\Domain\BuildProject;
 use Tuleap\ProgramManagement\Domain\FeatureFlag\VerifyIterationsFeatureActive;
@@ -62,6 +63,7 @@ use Tuleap\ProgramManagement\Domain\ProgramTracker;
 use Tuleap\ProgramManagement\Domain\Team\VerifyIsTeam;
 use Tuleap\ProgramManagement\Domain\Workspace\RetrieveProject;
 use Tuleap\ProgramManagement\Domain\Workspace\RetrieveTrackerFromProgram;
+use Tuleap\ProgramManagement\Domain\Workspace\RetrieveUser;
 use Tuleap\ProgramManagement\Domain\Workspace\VerifyProjectPermission;
 use Tuleap\Request\DispatchableWithBurningParrot;
 use Tuleap\Request\DispatchableWithProject;
@@ -71,63 +73,27 @@ use Tuleap\Request\NotFoundException;
 
 final class DisplayAdminProgramManagementController implements DispatchableWithRequest, DispatchableWithProject, DispatchableWithBurningParrot
 {
-    private RetrieveProject $project_manager;
-    private \TemplateRenderer $template_renderer;
-    private ProgramManagementBreadCrumbsBuilder $breadcrumbs_builder;
-    private SearchTeamsOfProgram $teams_searcher;
-    private BuildProject $project_data_adapter;
-    private VerifyIsTeam $verify_is_team;
-    private BuildProgram $build_program;
-    private RetrieveVisibleProgramIncrementTracker $program_increment_tracker_retriever;
-    private RetrieveVisibleIterationTracker $iteration_tracker_retriever;
-    private PotentialPlannableTrackersConfigurationPresentersBuilder $plannable_tracker_presenters_builder;
-    private BuildProjectUGroupCanPrioritizeItemsPresenters $ugroups_can_prioritize_builder;
-    private VerifyProjectPermission $permission_verifier;
-    private RetrieveProgramIncrementLabels $program_increment_labels_retriever;
-    private RetrieveTrackerFromProgram $retrieve_tracker_from_program;
-    private RetrieveIterationLabels $iteration_labels_retriever;
-    private AllProgramSearcher $all_program_searcher;
-    private VerifyIterationsFeatureActive $feature_flag_verifier;
-    private ConfigurationErrorPresenterBuilder $error_presenter_builder;
-
     public function __construct(
-        RetrieveProject $project_manager,
-        \TemplateRenderer $template_renderer,
-        ProgramManagementBreadCrumbsBuilder $breadcrumbs_builder,
-        SearchTeamsOfProgram $teams_searcher,
-        BuildProject $project_data_adapter,
-        VerifyIsTeam $verify_is_team,
-        BuildProgram $build_program,
-        RetrieveVisibleProgramIncrementTracker $program_increment_tracker_retriever,
-        RetrieveVisibleIterationTracker $iteration_tracker_retriever,
-        PotentialPlannableTrackersConfigurationPresentersBuilder $plannable_tracker_presenters_builder,
-        BuildProjectUGroupCanPrioritizeItemsPresenters $ugroups_can_prioritize_builder,
-        VerifyProjectPermission $permission_verifier,
-        RetrieveProgramIncrementLabels $program_increment_labels_retriever,
-        RetrieveTrackerFromProgram $retrieve_tracker_from_program,
-        RetrieveIterationLabels $iteration_labels_retriever,
-        AllProgramSearcher $all_program_searcher,
-        VerifyIterationsFeatureActive $feature_flag_verifier,
-        ConfigurationErrorPresenterBuilder $error_presenter_builder
+        private RetrieveProject $project_manager,
+        private \TemplateRenderer $template_renderer,
+        private ProgramManagementBreadCrumbsBuilder $breadcrumbs_builder,
+        private SearchTeamsOfProgram $teams_searcher,
+        private BuildProject $project_data_adapter,
+        private VerifyIsTeam $verify_is_team,
+        private BuildProgram $build_program,
+        private RetrieveVisibleProgramIncrementTracker $program_increment_tracker_retriever,
+        private RetrieveVisibleIterationTracker $iteration_tracker_retriever,
+        private PotentialPlannableTrackersConfigurationPresentersBuilder $plannable_tracker_presenters_builder,
+        private BuildProjectUGroupCanPrioritizeItemsPresenters $ugroups_can_prioritize_builder,
+        private VerifyProjectPermission $permission_verifier,
+        private RetrieveProgramIncrementLabels $program_increment_labels_retriever,
+        private RetrieveTrackerFromProgram $retrieve_tracker_from_program,
+        private RetrieveIterationLabels $iteration_labels_retriever,
+        private AllProgramSearcher $all_program_searcher,
+        private VerifyIterationsFeatureActive $feature_flag_verifier,
+        private ConfigurationErrorPresenterBuilder $error_presenter_builder,
+        private RetrieveUser $retrieve_user
     ) {
-        $this->project_manager                      = $project_manager;
-        $this->template_renderer                    = $template_renderer;
-        $this->breadcrumbs_builder                  = $breadcrumbs_builder;
-        $this->teams_searcher                       = $teams_searcher;
-        $this->project_data_adapter                 = $project_data_adapter;
-        $this->verify_is_team                       = $verify_is_team;
-        $this->build_program                        = $build_program;
-        $this->program_increment_tracker_retriever  = $program_increment_tracker_retriever;
-        $this->iteration_tracker_retriever          = $iteration_tracker_retriever;
-        $this->plannable_tracker_presenters_builder = $plannable_tracker_presenters_builder;
-        $this->ugroups_can_prioritize_builder       = $ugroups_can_prioritize_builder;
-        $this->permission_verifier                  = $permission_verifier;
-        $this->program_increment_labels_retriever   = $program_increment_labels_retriever;
-        $this->retrieve_tracker_from_program        = $retrieve_tracker_from_program;
-        $this->iteration_labels_retriever           = $iteration_labels_retriever;
-        $this->all_program_searcher                 = $all_program_searcher;
-        $this->feature_flag_verifier                = $feature_flag_verifier;
-        $this->error_presenter_builder              = $error_presenter_builder;
     }
 
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
@@ -142,17 +108,18 @@ final class DisplayAdminProgramManagementController implements DispatchableWithR
 
         $user                      = $request->getCurrentUser();
         $user_identifier           = UserProxy::buildFromPFUser($user);
+        $project_identifier        = ProjectProxy::buildFromProject($project);
         $increment_error_presenter = null;
         $iteration_error_presenter = null;
         $program_increment_tracker = null;
         $iteration_tracker         = null;
-
         try {
             $admin_program = ProgramForAdministrationIdentifier::fromProject(
                 $this->verify_is_team,
                 $this->permission_verifier,
-                $user,
-                $project
+                $this->retrieve_user,
+                $user_identifier,
+                $project_identifier
             );
         } catch (ProgramCannotBeATeamException $e) {
             throw new ForbiddenException($e->getI18NExceptionMessage());

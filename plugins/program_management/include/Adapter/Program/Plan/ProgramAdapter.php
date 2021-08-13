@@ -34,21 +34,12 @@ use Tuleap\Project\ProjectAccessChecker;
 
 final class ProgramAdapter implements BuildProgram
 {
-    private \ProjectManager $project_manager;
-    private VerifyIsProgram $program_verifier;
-    private ProjectAccessChecker $project_access_checker;
-    private RetrieveUser $user_manager_adapter;
-
     public function __construct(
-        \ProjectManager $project_manager,
-        ProjectAccessChecker $project_access_checker,
-        VerifyIsProgram $program_verifier,
-        RetrieveUser $user_manager_adapter
+        private \ProjectManager $project_manager,
+        private ProjectAccessChecker $project_access_checker,
+        private VerifyIsProgram $program_verifier,
+        private RetrieveUser $user_manager_adapter
     ) {
-        $this->project_manager        = $project_manager;
-        $this->project_access_checker = $project_access_checker;
-        $this->program_verifier       = $program_verifier;
-        $this->user_manager_adapter   = $user_manager_adapter;
     }
 
     public function ensureProgramIsAProject(int $project_id, UserIdentifier $user, ?PermissionBypass $bypass): void
@@ -73,7 +64,7 @@ final class ProgramAdapter implements BuildProgram
         try {
             $this->project_access_checker->checkUserCanAccessProject($user, $project);
         } catch (Project_AccessException $exception) {
-            throw new ProgramAccessException($id, $user);
+            throw new ProgramAccessException($id, $this->user_manager_adapter, $user_identifier);
         }
     }
 }

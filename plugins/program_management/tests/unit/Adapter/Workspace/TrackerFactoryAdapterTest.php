@@ -22,11 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Workspace;
 
-use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramForAdministrationIdentifier;
 use Tuleap\ProgramManagement\Domain\ProgramTracker;
-use Tuleap\ProgramManagement\Tests\Stub\VerifyIsTeamStub;
-use Tuleap\ProgramManagement\Tests\Stub\VerifyProjectPermissionStub;
-use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\ProgramManagement\Tests\Builder\ProgramForAdministrationIdentifierBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class TrackerFactoryAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -43,12 +40,7 @@ final class TrackerFactoryAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $adapter            = new TrackerFactoryAdapter($tracker_factory);
         $trackers_reference = $adapter->retrieveAllTrackersFromProgramId(
-            ProgramForAdministrationIdentifier::fromProject(
-                VerifyIsTeamStub::withNotValidTeam(),
-                VerifyProjectPermissionStub::withAdministrator(),
-                UserTestBuilder::aUser()->build(),
-                \Project::buildForTest()
-            )
+            ProgramForAdministrationIdentifierBuilder::build()
         );
 
         self::assertCount(2, $trackers_reference);

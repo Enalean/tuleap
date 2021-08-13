@@ -26,11 +26,8 @@ use Luracast\Restler\RestException;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramForAdministrationIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\ProgramUserGroupDoesNotExistException;
-use Tuleap\ProgramManagement\Tests\Stub\VerifyIsTeamStub;
-use Tuleap\ProgramManagement\Tests\Stub\VerifyProjectPermissionStub;
+use Tuleap\ProgramManagement\Tests\Builder\ProgramForAdministrationIdentifierBuilder;
 use Tuleap\Project\REST\UserGroupRetriever;
-use Tuleap\Test\Builders\ProjectTestBuilder;
-use Tuleap\Test\Builders\UserTestBuilder;
 
 final class ProgramUserGroupRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -47,12 +44,7 @@ final class ProgramUserGroupRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->user_group_retriever         = \Mockery::mock(UserGroupRetriever::class);
         $this->program_user_group_retriever = new ProgramUserGroupRetriever($this->user_group_retriever);
-        $this->program                      = ProgramForAdministrationIdentifier::fromProject(
-            VerifyIsTeamStub::withNotValidTeam(),
-            VerifyProjectPermissionStub::withAdministrator(),
-            UserTestBuilder::aUser()->build(),
-            ProjectTestBuilder::aProject()->withId(102)->build()
-        );
+        $this->program                      = ProgramForAdministrationIdentifierBuilder::buildWithId(102);
     }
 
     public function testItRetrievesTheUgroupId(): void

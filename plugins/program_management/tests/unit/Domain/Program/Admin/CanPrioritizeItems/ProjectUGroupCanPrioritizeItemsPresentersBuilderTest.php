@@ -24,12 +24,9 @@ namespace Tuleap\ProgramManagement\Domain\Program\Admin\CanPrioritizeItems;
 
 use Tuleap\ProgramManagement\Adapter\Program\Admin\CanPrioritizeItems\UGroupRepresentationBuilder;
 use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramForAdministrationIdentifier;
+use Tuleap\ProgramManagement\Tests\Builder\ProgramForAdministrationIdentifierBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveProjectUgroupsCanPrioritizeItemsStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveUGroupsStub;
-use Tuleap\ProgramManagement\Tests\Stub\VerifyIsTeamStub;
-use Tuleap\ProgramManagement\Tests\Stub\VerifyProjectPermissionStub;
-use Tuleap\Test\Builders\ProjectTestBuilder;
-use Tuleap\Test\Builders\UserTestBuilder;
 
 final class ProjectUGroupCanPrioritizeItemsPresentersBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -37,13 +34,7 @@ final class ProjectUGroupCanPrioritizeItemsPresentersBuilderTest extends \Tuleap
 
     protected function setUp(): void
     {
-        $project       = ProjectTestBuilder::aProject()->withId(101)->build();
-        $this->program = ProgramForAdministrationIdentifier::fromProject(
-            VerifyIsTeamStub::withNotValidTeam(),
-            VerifyProjectPermissionStub::withAdministrator(),
-            UserTestBuilder::aUser()->build(),
-            $project
-        );
+        $this->program = ProgramForAdministrationIdentifierBuilder::build();
     }
 
 

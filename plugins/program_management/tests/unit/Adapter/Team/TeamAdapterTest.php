@@ -30,10 +30,8 @@ use Tuleap\ProgramManagement\Domain\Program\VerifyIsProgram;
 use Tuleap\ProgramManagement\Domain\Team\ProjectIsAProgramException;
 use Tuleap\ProgramManagement\Domain\Team\TeamAccessException;
 use Tuleap\ProgramManagement\Domain\Team\TeamMustHaveExplicitBacklogEnabledException;
+use Tuleap\ProgramManagement\Tests\Builder\ProgramForAdministrationIdentifierBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsProgramStub;
-use Tuleap\ProgramManagement\Tests\Stub\VerifyIsTeamStub;
-use Tuleap\ProgramManagement\Tests\Stub\VerifyProjectPermissionStub;
-use Tuleap\Test\Builders\ProjectTestBuilder;
 
 final class TeamAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -62,12 +60,7 @@ final class TeamAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->explicit_backlog_dao = $this->createStub(ExplicitBacklogDao::class);
         $this->program_verifier     = VerifyIsProgramStub::withValidProgram();
         $this->user                 = $this->createMock(\PFUser::class);
-        $this->program              = ProgramForAdministrationIdentifier::fromProject(
-            VerifyIsTeamStub::withNotValidTeam(),
-            VerifyProjectPermissionStub::withAdministrator(),
-            $this->user,
-            ProjectTestBuilder::aProject()->withId(101)->build()
-        );
+        $this->program              = ProgramForAdministrationIdentifierBuilder::build();
 
         $this->team_project = new \Project(['group_id' => self::TEAM_ID, 'status' => 'A', 'access' => 'public']);
         $this->project_manager->expects(self::once())

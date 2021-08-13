@@ -22,20 +22,21 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Workspace;
 
-use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\ProgramManagement\Tests\Stub\ProjectIdentifierStub;
+use Tuleap\ProgramManagement\Tests\Stub\RetrieveUserStub;
+use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 
 final class ProjectPermissionVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItProxiesToPFUser(): void
     {
-        $project = ProjectTestBuilder::aProject()->withId(101)->build();
-        $user    = $this->createMock(\PFUser::class);
+        $user = $this->createMock(\PFUser::class);
         $user->expects(self::once())
             ->method('isAdmin')
             ->with(101)
             ->willReturn(true);
 
-        $verifier = new ProjectPermissionVerifier();
-        self::assertTrue($verifier->isProjectAdministrator($user, $project));
+        $verifier = new ProjectPermissionVerifier(RetrieveUserStub::buildMockedAdminUser($user));
+        self::assertTrue($verifier->isProjectAdministrator(UserIdentifierStub::buildGenericUser(), ProjectIdentifierStub::build()));
     }
 }

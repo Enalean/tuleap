@@ -29,11 +29,8 @@ use Tuleap\Test\Builders\UserTestBuilder;
 
 final class RetrieveUserStub implements RetrieveUser
 {
-    private \PFUser $user;
-
-    private function __construct(\PFUser $user)
+    private function __construct(private \PFUser $user)
     {
-        $this->user = $user;
     }
 
     /**
