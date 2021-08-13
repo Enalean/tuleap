@@ -18,21 +18,21 @@
   -->
 
 <template>
-    <div class="empty-state-page document-folder-with-error">
+    <section class="empty-state-page document-folder-with-error">
         <div class="empty-state-illustration">
             <permission-error-svg />
         </div>
-        <div class="empty-state-text-with-small-text">
-            <translate>This is a private folder.</translate>
-            <div class="empty-state-text-small" v-translate>
-                You may only access documents you are granted read permission on.
-            </div>
-        </div>
-        <a href="/my/" class="tlp-button-primary tlp-button-large">
-            <i class="fa fa-reply tlp-button-icon"></i>
+        <h1 class="empty-state-title">
+            <translate>This is a private folder</translate>
+        </h1>
+        <p class="empty-state-text" v-translate>
+            You may only access documents you are granted read permission on.
+        </p>
+        <a href="/my/" class="empty-state-action tlp-button-primary">
+            <i class="fa fa-long-arrow-right tlp-button-icon"></i>
             <translate>Go to my home page</translate>
         </a>
-    </div>
+    </section>
 </template>
 
 <script>

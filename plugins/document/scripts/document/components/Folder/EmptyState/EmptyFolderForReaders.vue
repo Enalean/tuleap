@@ -18,25 +18,25 @@
   -->
 
 <template>
-    <div class="empty-state-page">
+    <section class="empty-state-page">
         <div class="empty-state-illustration">
             <empty-folder-for-readers-svg />
         </div>
-        <div class="empty-state-text-with-small-text">
+        <h1 class="empty-state-title">
             <translate>This folder is empty</translate>
-            <div class="empty-state-text-small" v-translate>
-                or you don't have permissions to see its items
-            </div>
-        </div>
+        </h1>
+        <p class="empty-state-text" v-translate>
+            There are no items here or you don't have permissions to see them.
+        </p>
         <router-link
             v-bind:to="route_to"
-            class="tlp-button-primary tlp-button-large"
+            class="empty-state-action tlp-button-primary tlp-button-large"
             v-if="can_go_to_parent"
         >
-            <i class="fa fa-reply tlp-button-icon"></i>
+            <i class="fa fa-long-arrow-right tlp-button-icon"></i>
             <translate>Go to parent folder</translate>
         </router-link>
-    </div>
+    </section>
 </template>
 
 <script lang="ts">

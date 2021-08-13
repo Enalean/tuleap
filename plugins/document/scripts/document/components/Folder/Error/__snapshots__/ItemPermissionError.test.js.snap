@@ -1,7 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`ItemPermissionError displays the error with a for to send custom email 1`] = `
-<div
+<section
   class="empty-state-page document-folder-with-error"
 >
   <div
@@ -10,91 +10,104 @@ exports[`ItemPermissionError displays the error with a for to send custom email 
     <item-permission-error-svg-stub />
   </div>
    
-  <div
-    class="empty-state-text-with-small-text"
+  <h1
+    class="empty-state-title"
   >
     <translate-stub
       tag="span"
     >
-      You don't have read permission for this item.
+      You don't have read permission for this item
     </translate-stub>
-     
-    <div
-      class="empty-state-text-small"
-      data-current-language="en_US"
-      data-msgid="
-            You may only access documents you are granted read permission on.
-        "
-    >
-      
-            You may only access documents you are granted read permission on.
-        
-    </div>
-  </div>
+  </h1>
+   
+  <p
+    class="empty-state-text"
+    data-current-language="en_US"
+    data-msgid="
+        You may only access documents you are granted read permission on.
+    "
+  >
+    
+        You may only access documents you are granted read permission on.
+    
+  </p>
    
   <form
     action="/plugins/document/PermissionDeniedRequestMessage/101"
+    class="tlp-pane document-request-permission-pane"
     method="post"
     name="display_form"
   >
-    <input
-      name="challenge"
-      type="hidden"
-    />
-     
     <div
-      class="tlp-form-element"
+      class="tlp-pane-container"
     >
-      <label
-        class="tlp-label"
-        for="msg_private_project"
+      <section
+        class="tlp-pane-section"
       >
-        <translate-stub
-          tag="span"
-        >
-          
-                    Write your message below and click on the button to send your request to the
-                    project administrators
-                
-        </translate-stub>
-         
-        <i
-          class="fa fa-asterisk"
+        <input
+          name="challenge"
+          type="hidden"
         />
-      </label>
+         
+        <div
+          class="tlp-form-element"
+        >
+          <label
+            class="tlp-label"
+            for="msg_private_project"
+          >
+            <translate-stub
+              tag="span"
+            >
+              
+                            Write your message below and click on the button to send your
+                            request to the project administrators
+                        
+            </translate-stub>
+             
+            <i
+              class="fa fa-asterisk"
+            />
+          </label>
+           
+          <textarea
+            class="tlp-textarea"
+            id="msg_private_project"
+            name="msg_private_project"
+            placeholder="Please write something meaningful for the admin."
+            required="required"
+            rows="5"
+          />
+           
+          <input
+            name="groupId"
+            type="hidden"
+            value="101"
+          />
+           
+          <!---->
+        </div>
+      </section>
        
-      <textarea
-        cols="70"
-        id="msg_private_project"
-        name="msg_private_project"
-        placeholder="Please write something meaningful for the admin."
-        required="required"
-        rows="5"
-      />
-       
-      <input
-        name="groupId"
-        type="hidden"
-        value="101"
-      />
-       
-      <!---->
-    </div>
-     
-    <button
-      class="tlp-button-primary"
-      type="button"
-    >
-      <i
-        class="far fa-envelope tlp-button-icon"
-      />
-       
-      <translate-stub
-        tag="span"
+      <section
+        class="tlp-pane-section tlp-pane-section-submit"
       >
-        Send mail
-      </translate-stub>
-    </button>
+        <button
+          class="tlp-button-primary"
+          type="button"
+        >
+          <i
+            class="far fa-envelope tlp-button-icon"
+          />
+           
+          <translate-stub
+            tag="span"
+          >
+            Send mail
+          </translate-stub>
+        </button>
+      </section>
+    </div>
   </form>
-</div>
+</section>
 `;
