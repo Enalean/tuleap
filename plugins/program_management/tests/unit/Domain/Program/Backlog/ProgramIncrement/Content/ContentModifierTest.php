@@ -35,6 +35,7 @@ use Tuleap\ProgramManagement\REST\v1\FeatureElementToOrderInvolvedInChangeRepres
 use Tuleap\ProgramManagement\Tests\Stub\BuildProgramStub;
 use Tuleap\ProgramManagement\Tests\Stub\CheckFeatureIsPlannedInProgramIncrementStub;
 use Tuleap\ProgramManagement\Tests\Stub\CheckProgramIncrementStub;
+use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyCanBePlannedInProgramIncrementStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsVisibleFeatureStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyLinkedUserStoryIsNotPlannedStub;
@@ -63,7 +64,12 @@ final class ContentModifierTest extends \Tuleap\Test\PHPUnit\TestCase
         $user = $this->getAMockedUser(true);
 
         $this->expectException(NotAllowedToPrioritizeException::class);
-        $modifier->modifyContent($user, 12, ContentChange::fromRESTRepresentation(201, null));
+        $modifier->modifyContent(
+            $user,
+            12,
+            ContentChange::fromRESTRepresentation(201, null),
+            UserIdentifierStub::buildGenericUser()
+        );
     }
 
     public function testItThrowsWhenUserCannotSeeFeatureToAdd(): void
@@ -84,7 +90,12 @@ final class ContentModifierTest extends \Tuleap\Test\PHPUnit\TestCase
         $user->method('isAdmin')->willReturn(false);
 
         $this->expectException(FeatureNotFoundException::class);
-        $modifier->modifyContent($user, 12, ContentChange::fromRESTRepresentation(404, null));
+        $modifier->modifyContent(
+            $user,
+            12,
+            ContentChange::fromRESTRepresentation(404, null),
+            UserIdentifierStub::buildGenericUser()
+        );
     }
 
     public function testItThrowsWhenFeatureToAddCannotBePlanned(): void
@@ -104,7 +115,12 @@ final class ContentModifierTest extends \Tuleap\Test\PHPUnit\TestCase
         $user = $this->getAMockedUser(true);
 
         $this->expectException(FeatureCannotBePlannedInProgramIncrementException::class);
-        $modifier->modifyContent($user, 12, ContentChange::fromRESTRepresentation(404, null));
+        $modifier->modifyContent(
+            $user,
+            12,
+            ContentChange::fromRESTRepresentation(404, null),
+            UserIdentifierStub::buildGenericUser()
+        );
     }
 
     public function testItSucceedsWhenThereIsOnlyFeatureToAdd(): void
@@ -124,7 +140,12 @@ final class ContentModifierTest extends \Tuleap\Test\PHPUnit\TestCase
         $user = $this->getAMockedUser(true);
 
         $this->expectNotToPerformAssertions();
-        $modifier->modifyContent($user, 12, ContentChange::fromRESTRepresentation(201, null));
+        $modifier->modifyContent(
+            $user,
+            12,
+            ContentChange::fromRESTRepresentation(201, null),
+            UserIdentifierStub::buildGenericUser()
+        );
     }
 
     public function testItFailedWhenThereIsNoFeatureToAddOrToOrder(): void
@@ -144,7 +165,12 @@ final class ContentModifierTest extends \Tuleap\Test\PHPUnit\TestCase
         $user = UserTestBuilder::aUser()->build();
 
         $this->expectException(AddOrOrderMustBeSetException::class);
-        $modifier->modifyContent($user, 12, ContentChange::fromRESTRepresentation(null, null));
+        $modifier->modifyContent(
+            $user,
+            12,
+            ContentChange::fromRESTRepresentation(null, null),
+            UserIdentifierStub::buildGenericUser()
+        );
     }
 
     public function testItSucceedsWhenThereIsOnlyFeatureToReorder(): void
@@ -166,7 +192,8 @@ final class ContentModifierTest extends \Tuleap\Test\PHPUnit\TestCase
         $modifier->modifyContent(
             $user,
             12,
-            ContentChange::fromRESTRepresentation(null, $this->getFeatureElementToOrderRepresentation(201, 2020))
+            ContentChange::fromRESTRepresentation(null, $this->getFeatureElementToOrderRepresentation(201, 2020)),
+            UserIdentifierStub::buildGenericUser()
         );
     }
 
@@ -189,7 +216,8 @@ final class ContentModifierTest extends \Tuleap\Test\PHPUnit\TestCase
         $modifier->modifyContent(
             $user,
             12,
-            ContentChange::fromRESTRepresentation(null, $this->getFeatureElementToOrderRepresentation(201, 2020))
+            ContentChange::fromRESTRepresentation(null, $this->getFeatureElementToOrderRepresentation(201, 2020)),
+            UserIdentifierStub::buildGenericUser()
         );
     }
 
@@ -212,17 +240,22 @@ final class ContentModifierTest extends \Tuleap\Test\PHPUnit\TestCase
         $modifier->modifyContent(
             $user,
             12,
-            ContentChange::fromRESTRepresentation(null, $this->getFeatureElementToOrderRepresentation(201, 2020))
+            ContentChange::fromRESTRepresentation(null, $this->getFeatureElementToOrderRepresentation(201, 2020)),
+            UserIdentifierStub::buildGenericUser()
         );
     }
 
-    private function getFeatureElementToOrderRepresentation(int $id, int $compared_to_id, string $direction = "before"): FeatureElementToOrderInvolvedInChangeRepresentation
-    {
+    private function getFeatureElementToOrderRepresentation(
+        int $id,
+        int $compared_to_id,
+        string $direction = "before"
+    ): FeatureElementToOrderInvolvedInChangeRepresentation {
         $feature_to_order = new FeatureElementToOrderInvolvedInChangeRepresentation();
 
         $feature_to_order->ids         = [$id];
         $feature_to_order->compared_to = $compared_to_id;
         $feature_to_order->direction   = $direction;
+
         return $feature_to_order;
     }
 
@@ -301,8 +334,12 @@ final class ContentModifierTest extends \Tuleap\Test\PHPUnit\TestCase
             {
                 $this->is_called = $is_called;
             }
-            public function reorder(FeatureElementToOrderInvolvedInChangeRepresentation $order, string $context_id, ProgramIdentifier $program): void
-            {
+
+            public function reorder(
+                FeatureElementToOrderInvolvedInChangeRepresentation $order,
+                string $context_id,
+                ProgramIdentifier $program
+            ): void {
                 if ($this->is_called) {
                     assertTrue($context_id === "12");
                     assertTrue($program->getId() === 101);

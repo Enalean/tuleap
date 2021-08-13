@@ -27,6 +27,7 @@ use Tuleap\ProgramManagement\Adapter\ProgramManagementProjectAdapter;
 use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ConfigurationErrorsCollector;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProgramStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchTeamsOfProgramStub;
+use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
@@ -69,7 +70,7 @@ final class CanSubmitNewArtifactHandlerTest extends TestCase
 
         $this->mockProjectTeam();
 
-        $this->getHandler()->handle($event, new ConfigurationErrorsCollector(false));
+        $this->getHandler()->handle($event, new ConfigurationErrorsCollector(false), UserIdentifierStub::buildGenericUser());
         self::assertFalse($event->canSubmitNewArtifact());
     }
 
@@ -86,7 +87,7 @@ final class CanSubmitNewArtifactHandlerTest extends TestCase
 
         $this->mockProjectTeam();
 
-        $this->getHandler()->handle($event, new ConfigurationErrorsCollector(true));
+        $this->getHandler()->handle($event, new ConfigurationErrorsCollector(true), UserIdentifierStub::buildGenericUser());
         self::assertFalse($event->canSubmitNewArtifact());
     }
 
@@ -103,7 +104,7 @@ final class CanSubmitNewArtifactHandlerTest extends TestCase
 
         $this->mockProjectTeam();
 
-        $this->getHandler()->handle($event, new ConfigurationErrorsCollector(true));
+        $this->getHandler()->handle($event, new ConfigurationErrorsCollector(true), UserIdentifierStub::buildGenericUser());
         self::assertFalse($event->canSubmitNewArtifact());
     }
 
@@ -120,7 +121,7 @@ final class CanSubmitNewArtifactHandlerTest extends TestCase
 
         $this->mockProjectTeam();
 
-        $this->getHandler()->handle($event, new ConfigurationErrorsCollector(true));
+        $this->getHandler()->handle($event, new ConfigurationErrorsCollector(true), UserIdentifierStub::buildGenericUser());
         self::assertTrue($event->canSubmitNewArtifact());
     }
 
@@ -134,7 +135,7 @@ final class CanSubmitNewArtifactHandlerTest extends TestCase
             ->build();
         $event   = new CanSubmitNewArtifact($user, $tracker, false);
 
-        $this->getHandler()->handle($event, new ConfigurationErrorsCollector(true));
+        $this->getHandler()->handle($event, new ConfigurationErrorsCollector(true), UserIdentifierStub::buildGenericUser());
         self::assertTrue($event->canSubmitNewArtifact());
     }
 

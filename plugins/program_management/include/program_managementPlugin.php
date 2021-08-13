@@ -99,6 +99,7 @@ use Tuleap\ProgramManagement\Adapter\Workspace\ProjectPermissionVerifier;
 use Tuleap\ProgramManagement\Adapter\Workspace\TrackerFactoryAdapter;
 use Tuleap\ProgramManagement\Adapter\Workspace\UGroupManagerAdapter;
 use Tuleap\ProgramManagement\Adapter\Workspace\UserManagerAdapter;
+use Tuleap\ProgramManagement\Adapter\Workspace\UserProxy;
 use Tuleap\ProgramManagement\Adapter\Workspace\WorkspaceDAO;
 use Tuleap\ProgramManagement\Adapter\XML\ProgramManagementConfigXMLImporter;
 use Tuleap\ProgramManagement\DisplayAdminProgramManagementController;
@@ -422,7 +423,8 @@ final class program_managementPlugin extends Plugin
     {
         $handler          = $this->getCanSubmitNewArtifactHandler();
         $errors_collector = new ConfigurationErrorsCollector($can_submit_new_artifact->shouldCollectAllIssues());
-        $handler->handle($can_submit_new_artifact, $errors_collector);
+        $user_identifier  = UserProxy::buildFromPFUser($can_submit_new_artifact->getUser());
+        $handler->handle($can_submit_new_artifact, $errors_collector, $user_identifier);
         if ($errors_collector->hasError()) {
             $can_submit_new_artifact->addErrorMessage($errors_collector->getErrorMessages());
         }

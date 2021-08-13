@@ -49,6 +49,7 @@ use Tuleap\ProgramManagement\Adapter\Program\PlanningAdapter;
 use Tuleap\ProgramManagement\Adapter\Program\ProgramDao;
 use Tuleap\ProgramManagement\Adapter\Workspace\ProjectManagerAdapter;
 use Tuleap\ProgramManagement\Adapter\Workspace\UserManagerAdapter;
+use Tuleap\ProgramManagement\Adapter\Workspace\UserProxy;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\NotAllowedToPrioritizeException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Content\AddOrOrderMustBeSetException;
@@ -210,7 +211,8 @@ final class ProgramIncrementResource extends AuthenticatedResource
             $modifier->modifyContent(
                 $user,
                 $id,
-                ContentChange::fromRESTRepresentation($potential_feature_id_to_add, $patch_representation->order)
+                ContentChange::fromRESTRepresentation($potential_feature_id_to_add, $patch_representation->order),
+                UserProxy::buildFromPFUser($user)
             );
         } catch (ProgramTrackerException | ProgramIncrementNotFoundException | ProgramNotFoundException $e) {
             throw new I18NRestException(404, $e->getI18NExceptionMessage());
