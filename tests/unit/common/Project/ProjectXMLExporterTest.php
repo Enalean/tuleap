@@ -21,6 +21,7 @@
  */
 
 use Mockery as M;
+use Tuleap\Project\ProjectIsInactiveException;
 use Tuleap\Project\UGroups\SynchronizedProjectMembershipDetector;
 use Tuleap\Test\Builders as B;
 
@@ -50,7 +51,7 @@ final class ProjectXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->ugroup_manager = M::spy(UGroupManager::class);
         $xml_validator        = new XML_RNGValidator();
         $user_xml_exporter    = new UserXMLExporter(M::spy(UserManager::class), M::spy(UserXMLExportedCollection::class));
-        $this->project        = M::spy(Project::class, ['getPublicName' => 'Project01']);
+        $this->project        = M::spy(Project::class, ['getPublicName' => 'Project01', "isActive" => true]);
 
         $this->dashboard_exporter = $this->createMock(\Tuleap\Dashboard\Project\DashboardXMLExporter::class);
 
@@ -263,5 +264,12 @@ final class ProjectXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertEquals((string) $xml_objet->services->service[0]['shortname'], 's01');
         $this->assertEquals((string) $xml_objet->services->service[1]['enabled'], '0');
         $this->assertEquals((string) $xml_objet->services->service[1]['shortname'], 's02');
+    }
+
+    public function testItThrowExceptionIfProjectIsSuspended()
+    {
+        $this->project->shouldReceive("isActive")->andReturn(false);
+        $this->expectException(ProjectIsInactiveException::class);
+        $this->xml_exporter->export($this->project, $this->options, $this->user, $this->archive, $this->export_dir);
     }
 }

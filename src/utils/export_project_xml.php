@@ -25,6 +25,7 @@ use Tuleap\Dashboard\Project\DashboardXMLExporter;
 use Tuleap\Dashboard\Project\ProjectDashboardDao;
 use Tuleap\Dashboard\Project\ProjectDashboardRetriever;
 use Tuleap\Dashboard\Widget\DashboardWidgetDao;
+use Tuleap\Project\ProjectIsInactiveException;
 use Tuleap\Project\UGroups\SynchronizedProjectMembershipDao;
 use Tuleap\Project\UGroups\SynchronizedProjectMembershipDetector;
 use Tuleap\Project\XML\Export;
@@ -156,7 +157,13 @@ try {
     $user                              = UserManager::instance()->forceLogin($username);
     $temporary_dump_path_on_filesystem = $archive->getArchivePath() . time();
 
-    $xml_content       = $xml_exporter->export($project, $options, $user, $archive, $temporary_dump_path_on_filesystem);
+    try {
+        $xml_content = $xml_exporter->export($project, $options, $user, $archive, $temporary_dump_path_on_filesystem);
+    } catch (ProjectIsInactiveException $exception) {
+        fwrite(STDERR, 'Only active projects can be exported.' . PHP_EOL);
+        exit(1);
+    }
+
     $users_xml_content = $users_collection->toXML();
 
     if ($display_xml) {
