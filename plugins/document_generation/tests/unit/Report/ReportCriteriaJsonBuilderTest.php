@@ -26,6 +26,7 @@ use Tracker_FormElement_Field_Date;
 use Tracker_FormElement_Field_List;
 use Tracker_FormElement_Field_String;
 use Tracker_Report;
+use Tracker_Report_AdditionalCriterion;
 use Tracker_Report_Criteria;
 use Tuleap\Test\PHPUnit\TestCase;
 
@@ -52,9 +53,11 @@ final class ReportCriteriaJsonBuilderTest extends TestCase
         self::assertNotNull($report_json->is_in_expert_mode);
         self::assertFalse($report_json->is_in_expert_mode);
         self::assertNotNull($report_json->criteria);
-        self::assertCount(1, $report_json->criteria);
+        self::assertCount(2, $report_json->criteria);
         self::assertSame("Summary", $report_json->criteria[0]->criterion_name);
         self::assertSame("Test", $report_json->criteria[0]->criterion_value);
+        self::assertSame("Additional01", $report_json->criteria[1]->criterion_name);
+        self::assertSame("ValueAdd01", $report_json->criteria[1]->criterion_value);
     }
 
     private function buildReportWithExpertQuery(): Tracker_Report
@@ -125,6 +128,14 @@ final class ReportCriteriaJsonBuilderTest extends TestCase
         ];
 
         $report->method('getCriteria')->willReturn($criteria);
+
+        $additional_criteria = [
+            new Tracker_Report_AdditionalCriterion(
+                "Additional01",
+                "ValueAdd01"
+            )
+        ];
+        $report->method('getAdditionalCriteria')->willReturn($additional_criteria);
 
         return $report;
     }

@@ -1749,7 +1749,10 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
         return $this->name;
     }
 
-    public function getAdditionalCriteria()
+    /**
+     * @return Tracker_Report_AdditionalCriterion[]
+     */
+    public function getAdditionalCriteria(): array
     {
         $session_additional_criteria = null;
         if (isset($this->report_session)) {
