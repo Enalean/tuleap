@@ -7,7 +7,7 @@ exports[`EmptyState Displays the empty state for Program Increment 1`] = `
   <empty-svg-stub />
    
   <p
-    class="empty-page-text"
+    class="empty-state-text"
     data-current-language="en_US"
     data-msgid="There are no program increments yet"
   >

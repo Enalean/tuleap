@@ -25,7 +25,7 @@ rcs_id('$Id: WikiAdminUtils.php,v 1.18 2005/09/10 11:30:40 rurban Exp $');
   valid actions:
         purge-cache
         purge-bad-pagenames
-        purge-empty-pages
+        purge-empty-state-pages
         access-restrictions
         email-verification
         convert-cached-html
@@ -127,7 +127,7 @@ class WikiPlugin_WikiAdminUtils extends WikiPlugin
     {
         $labels = ['purge-cache' => _("Purge Markup Cache"),
                         'purge-bad-pagenames' => _("Purge all Pages With Invalid Names"),
-                        'purge-empty-pages' => _("Purge all empty, unreferenced Pages")];
+                        'purge-empty-state-pages' => _("Purge all empty, unreferenced Pages")];
         return @$labels[$action];
     }
 

@@ -19,8 +19,8 @@
   -->
 
 <template>
-    <div class="empty-pane">
-        <div class="empty-pane-text test-plan-list-of-test-definitions-empty-text" v-translate>
+    <div class="empty-state-pane">
+        <div class="empty-state-text test-plan-list-of-test-definitions-empty-text" v-translate>
             This item isn't covered yet.
         </div>
     </div>

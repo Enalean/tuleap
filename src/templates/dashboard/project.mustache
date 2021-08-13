@@ -64,10 +64,10 @@
                 {{> widgets }}
             {{/ has_widget }}
             {{^ has_widget }}
-                <div class="empty-page">
-                    <p class="empty-page-text">{{ no_widget_label }}</p>
+                <div class="empty-state-page">
+                    <p class="empty-state-text">{{ no_widget_label }}</p>
                     {{# can_update_dashboards }}
-                        <p class="empty-page-text">{{{ purified_no_widget_action_label }}}</p>
+                        <p class="empty-state-text">{{{ purified_no_widget_action_label }}}</p>
                         <button class="tlp-button-primary tlp-button-large add-widget-button"
                                 data-target-modal-id="add-widget-modal"
                                 data-href="{{ url_add_widget_content }}"
@@ -83,8 +83,8 @@
 {{/ has_dashboard }}
 
 {{^ has_dashboard }}
-    <div class="empty-page">
-        <p class="empty-page-text">{{ no_dashboard_label }}</p>
+    <div class="empty-state-page">
+        <p class="empty-state-text">{{ no_dashboard_label }}</p>
         {{# can_update_dashboards }}
             <button
                     type="button"

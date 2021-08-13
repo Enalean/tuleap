@@ -18,10 +18,10 @@
   -->
 
 <template>
-    <div class="empty-page" v-if="show_empty_state()">
-        <div class="empty-page-text">
+    <div class="empty-state-page" v-if="show_empty_state()">
+        <div class="empty-state-text">
             <svg
-                class="empty-page-icon git-repository-list-empty-image"
+                class="empty-state-icon git-repository-list-empty-image"
                 xmlns="http://www.w3.org/2000/svg"
                 width="70"
                 height="80"
@@ -75,7 +75,7 @@
                     </g>
                 </g>
             </svg>
-            <p class="empty-page-text" v-translate>There are no repositories in this project</p>
+            <p class="empty-state-text" v-translate>There are no repositories in this project</p>
             <div v-if="is_admin()">
                 <dropdown-action-button
                     v-if="areExternalUsedServices"

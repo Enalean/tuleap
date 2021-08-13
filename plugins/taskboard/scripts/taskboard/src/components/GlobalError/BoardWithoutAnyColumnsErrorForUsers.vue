@@ -18,13 +18,13 @@
   -
   -->
 <template>
-    <div class="empty-page">
-        <div class="empty-page-illustration">
+    <div class="empty-state-page">
+        <div class="empty-state-illustration">
             <board-without-any-columns-error-for-users-illustration />
         </div>
-        <div class="empty-page-text-with-small-text">
+        <div class="empty-state-text-with-small-text">
             <translate>This taskboard is not ready to be used</translate>
-            <div class="empty-page-small-text">
+            <div class="empty-state-text-small">
                 <translate>
                     Your project administrator needs to finish the planning configuration
                 </translate>

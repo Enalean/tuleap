@@ -4,10 +4,9 @@
             {{ error_message }}
         </div>
     {{/ there_is_error }}
-    <div class="empty-pane">
-        <i class="fa fa-columns empty-pane-icon widget-kanban-empty-icon"></i>
-        <p class="empty-pane-text">{{{ purified_empty_state }}}</p>
-    </div>
+    <section class="empty-state-pane">
+    <p class="empty-state-text">{{ empty_state }}</p>
+</section>
 {{/ is_empty }}
 {{^ is_empty }}
     {{# kanban_presenter }}

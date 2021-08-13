@@ -2,16 +2,16 @@
 
 exports[`ItemPermissionError displays the error with a for to send custom email 1`] = `
 <div
-  class="empty-page document-folder-with-error"
+  class="empty-state-page document-folder-with-error"
 >
   <div
-    class="empty-page-illustration"
+    class="empty-state-illustration"
   >
     <item-permission-error-svg-stub />
   </div>
    
   <div
-    class="empty-page-text-with-small-text"
+    class="empty-state-text-with-small-text"
   >
     <translate-stub
       tag="span"
@@ -20,7 +20,7 @@ exports[`ItemPermissionError displays the error with a for to send custom email 
     </translate-stub>
      
     <div
-      class="empty-page-small-text"
+      class="empty-state-text-small"
       data-current-language="en_US"
       data-msgid="
             You may only access documents you are granted read permission on.

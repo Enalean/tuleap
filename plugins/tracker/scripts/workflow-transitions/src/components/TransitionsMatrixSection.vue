@@ -44,9 +44,9 @@
                 </tr>
             </tbody>
         </table>
-        <div v-else class="empty-page tracker-workflow-transition-matrix-empty-state">
+        <div v-else class="empty-state-page tracker-workflow-transition-matrix-empty-state">
             <p
-                class="empty-page-text tracker-workflow-transition-matrix-empty-state-field-empty"
+                class="empty-state-text tracker-workflow-transition-matrix-empty-state-field-empty"
                 v-translate
             >
                 The field on which the transitions are based has no selectable value

@@ -2,16 +2,16 @@
 
 exports[`CampaignErrorState Displays empty state 1`] = `
 <div
-  class="empty-pane"
+  class="empty-state-pane"
 >
   <div
-    class="empty-pane-illustration"
+    class="empty-state-illustration"
   >
     <campaign-error-state-svg-stub />
   </div>
    
   <div
-    class="empty-pane-text"
+    class="empty-state-text"
   >
     <translate-stub
       tag="span"

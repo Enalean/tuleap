@@ -113,7 +113,7 @@ might create one....
   This will disable the possibility to revert or get back any deleted page.
 
   <?plugin WikiAdminUtils
-           action=purge-empty-pages
+           action=purge-empty-state-pages
            label="Purge all empty unreferenced pages"
    ?>
 

@@ -73,8 +73,8 @@ class MyProjects extends \Widget
                            " ORDER BY $order");
         $rows   = db_numrows($result);
         if (! $result || $rows < 1) {
-            $html .= '<div class="empty-pane">';
-            $html .= '<svg class="empty-pane-icon" xmlns="http://www.w3.org/2000/svg" width="239" height="287" viewBox="0 0 239 287">';
+            $html .= '<div class="empty-state-pane">';
+            $html .= '<svg class="empty-state-icon" xmlns="http://www.w3.org/2000/svg" width="239" height="287" viewBox="0 0 239 287">';
             $html .= '    <defs>';
             $html .= '        <filter id="my-projects-empty-a" width="112.6%" height="900%" x="-6.3%" y="-400%" filterUnits="objectBoundingBox">';
             $html .= '            <feGaussianBlur in="SourceGraphic" stdDeviation="4"/>';
@@ -92,7 +92,7 @@ class MyProjects extends \Widget
             $html .= '        <path class="empty-project-box-top" fill="#ECECEC" d="M4.90336505,268.495082 C3.37068338,267.875838 2.62777311,266.137354 3.25055476,264.595915 L59.8190792,124.583904 C60.438939,123.049697 62.1845186,122.308216 63.7166002,122.927217 L78.0360971,128.712669 C79.0584283,129.125718 79.5491579,130.297222 79.1382247,131.314318 L21.8229232,273.174667 C21.4092803,274.198469 20.2354351,274.68964 19.2228619,274.280534 L4.90336505,268.495082 Z"/>';
             $html .= '    </g>';
             $html .= '</svg>';
-            $html .= '<p class="empty-pane-text">' . $GLOBALS['Language']->getText('my_index', 'not_member') . '</p>';
+            $html .= '<p class="empty-state-text">' . $GLOBALS['Language']->getText('my_index', 'not_member') . '</p>';
             $html .= '</div>';
         } else {
             $html           .= '<table cellspacing="0" class="tlp-table" data-test="dashboard-my-projects">';

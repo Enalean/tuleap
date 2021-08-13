@@ -36,11 +36,11 @@
         </section>
     {{/ has_lists }}
     {{^ has_lists }}
-        <div class="empty-page">
-            <div class="empty-page-text-with-small-text">
+        <div class="empty-state-page">
+            <div class="empty-state-text-with-small-text">
                 {{# gettext }}There isn't any mailing lists yet.{{/ gettext }}
                 {{^ is_project_admin }}
-                    <div class="empty-page-small-text">
+                    <div class="empty-state-text-small">
                         {{# gettext }}Or you don't have permissions to see them.{{/ gettext }}
                     </div>
                 {{/ is_project_admin }}

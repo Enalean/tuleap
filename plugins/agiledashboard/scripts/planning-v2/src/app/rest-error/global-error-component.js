@@ -19,25 +19,24 @@
 
 import { reload } from "./location-helper";
 
-const template = `<div class="empty-page">
-    <div class="empty-page-illustration"></div>
-
-    <div class="empty-page-text-with-small-text">
-        {{::"There's been an issue" | translate }}
-        <div class="empty-page-small-text">
+const template = `<section class="empty-state-page">
+        <h1 class="empty-state-title">
+            {{::"There's been an issue" | translate }}
+        </h1>
+        <p class="empty-state-text">
             {{::"It seems an action you tried to perform can't be done" | translate }}
-        </div>
-        <div class="planning-error-link">
-            <a ng-if="!$ctrl.is_more_shown" ng-click="$ctrl.is_more_shown = true" translate>Show error details</a>
-        </div>
+        </p>
+        <p class="empty-state-text">
+            <a class="planning-error-link" ng-if="!$ctrl.is_more_shown" ng-click="$ctrl.is_more_shown = true" translate>Show error details</a>
+        </p>
         <pre ng-if="$ctrl.is_more_shown" class="planning-error-details">{{ $ctrl.getErrorMessage() }}</pre>
     </div>
 
-    <button type="button" class="tlp-button-primary tlp-button-large" ng-click="$ctrl.reloadPage()">
+    <button type="button" class="empty-state-action tlp-button-primary" ng-click="$ctrl.reloadPage()">
         <i class="fas fa-sync tlp-button-icon"></i>
         <span translate>Reload the page</span>
     </button>
-</div>`;
+</section>`;
 
 controller.$inject = ["ErrorState"];
 

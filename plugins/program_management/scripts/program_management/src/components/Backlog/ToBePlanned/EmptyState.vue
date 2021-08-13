@@ -18,7 +18,7 @@
   -->
 
 <template>
-    <p v-translate class="empty-page-text">There is nothing to plan</p>
+    <p v-translate class="empty-state-text">There is nothing to plan</p>
 </template>
 
 <script lang="ts">

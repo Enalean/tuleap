@@ -18,8 +18,8 @@
   -->
 
 <template>
-    <div class="empty-page" v-if="show_filter_empty_state()">
-        <div class="empty-page-text" data-test="empty-state">
+    <div class="empty-state-page" v-if="show_filter_empty_state()">
+        <div class="empty-state-text" data-test="empty-state">
             <translate>No repository name matching your query has been found.</translate>
         </div>
     </div>

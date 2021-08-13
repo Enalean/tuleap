@@ -62,7 +62,7 @@
         </form>
     </section>
     {if empty($shortlog_presenter) || (isset($hasemptysearchresults) && $hasemptysearchresults)}
-        <p class="empty-page-text git-repository-shortlog-results">
+        <p class="empty-state-text git-repository-shortlog-results">
             {if isset($hasemptysearchresults) && $hasemptysearchresults}
                 {t domain="gitphp" 1=$search}No matches for "%1"{/t}
             {else}

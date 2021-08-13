@@ -19,16 +19,16 @@
   -->
 
 <template>
-    <div class="empty-page">
-        <div class="empty-page-illustration">
+    <div class="empty-state-page">
+        <div class="empty-state-illustration">
             <project-approval-svg />
         </div>
 
-        <div class="empty-page-text-with-small-text">
+        <div class="empty-state-text-with-small-text">
             <span v-translate>
                 Your project has been submitted to the administrators for validation
             </span>
-            <div class="empty-page-small-text" v-dompurify-html="message_admin_validation"></div>
+            <div class="empty-state-text-small" v-dompurify-html="message_admin_validation"></div>
         </div>
 
         <div>

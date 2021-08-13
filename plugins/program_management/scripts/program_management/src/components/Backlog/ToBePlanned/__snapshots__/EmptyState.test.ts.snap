@@ -2,7 +2,7 @@
 
 exports[`EmptyState Displays the empty state for Backlog unplanned section 1`] = `
 <p
-  class="empty-page-text"
+  class="empty-state-text"
   data-current-language="en_US"
   data-msgid="There is nothing to plan"
   project_public_name="Public name"

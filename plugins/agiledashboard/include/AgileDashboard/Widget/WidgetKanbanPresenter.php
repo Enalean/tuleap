@@ -20,7 +20,6 @@
 
 namespace Tuleap\AgileDashboard\Widget;
 
-use Codendi_HTMLPurifier;
 use KanbanPresenter;
 
 class WidgetKanbanPresenter
@@ -31,6 +30,10 @@ class WidgetKanbanPresenter
     public $kanban_presenter;
     public $is_empty;
     public $error_message;
+    /**
+     * @var string
+     */
+    public $empty_state;
 
     public function __construct(
         $is_empty,
@@ -42,9 +45,6 @@ class WidgetKanbanPresenter
         $this->error_message    = $error_message;
         $this->there_is_error   = ! empty($this->error_message);
 
-        $this->purified_empty_state = Codendi_HTMLPurifier::instance()->purify(
-            dgettext('tuleap-agiledashboard', "There is no content <br> you can see"),
-            CODENDI_PURIFIER_LIGHT
-        );
+        $this->empty_state = dgettext('tuleap-agiledashboard', "There is no content you can see");
     }
 }

@@ -19,11 +19,11 @@
   -->
 
 <template>
-    <div class="empty-page">
-        <div class="empty-page-illustration">
+    <div class="empty-state-page">
+        <div class="empty-state-illustration">
             <no-content-empty-state-illustration />
         </div>
-        <translate tag="p" class="empty-page-text">This taskboard is empty</translate>
+        <translate tag="p" class="empty-state-text">This taskboard is empty</translate>
     </div>
 </template>
 

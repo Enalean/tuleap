@@ -18,13 +18,7 @@
  */
 
 .planning-error-link {
-    margin: var(--tlp-medium-spacing) 0 0;
-    font-size: 18px;
-    line-height: 20px;
-
-    > a {
-        cursor: pointer;
-    }
+    cursor: pointer;
 }
 
 .planning-error-details {
