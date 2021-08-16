@@ -51,14 +51,16 @@ class ReportCriteriaJsonBuilder
         $criteria_value_json = [];
         foreach ($report->getCriteria() as $criterion) {
             $criterion_field = $criterion->getField();
-            if (
-                $criterion_field instanceof Tracker_FormElement_Field_OpenList ||
-                $criterion_field instanceof Tracker_FormElement_Field_Date
-            ) {
+            if ($criterion_field instanceof Tracker_FormElement_Field_Date) {
                 continue;
             }
 
-            if ($criterion_field instanceof Tracker_FormElement_Field_List) {
+            if ($criterion_field instanceof Tracker_FormElement_Field_OpenList) {
+                $open_list_criterion_json_value = $this->buildCriterionValueJsonFromOpenListValue($criterion);
+                if ($open_list_criterion_json_value !== null) {
+                    $criteria_value_json[] = $open_list_criterion_json_value;
+                }
+            } elseif ($criterion_field instanceof Tracker_FormElement_Field_List) {
                 $list_criterion_json_value = $this->buildCriterionValueJsonFromListValue($criterion);
                 if ($list_criterion_json_value !== null) {
                     $criteria_value_json[] = $list_criterion_json_value;
@@ -83,6 +85,33 @@ class ReportCriteriaJsonBuilder
         return new ClassicReportCriteriaJson(
             $criteria_value_json
         );
+    }
+
+    private function buildCriterionValueJsonFromOpenListValue(Tracker_Report_Criteria $criterion): ?CriterionValueJson
+    {
+        $criterion_field = $criterion->getField();
+        $criterion_value = $criterion_field->getCriteriaValue($criterion);
+
+        if (! is_string($criterion_value) || $criterion_value === '') {
+            return null;
+        }
+
+        $selected_open_list_values    = $criterion_field->extractCriteriaValue($criterion_value);
+        $criterion_open_values_labels = [];
+        foreach ($selected_open_list_values as $value) {
+            if ($value) {
+                $criterion_open_values_labels[] = $value->getLabel();
+            }
+        }
+
+        if (count($criterion_open_values_labels) > 0) {
+            return new CriterionValueJson(
+                $criterion_field->getLabel(),
+                implode(', ', $criterion_open_values_labels),
+            );
+        }
+
+        return null;
     }
 
     private function buildCriterionValueJsonFromListValue(Tracker_Report_Criteria $criterion): ?CriterionValueJson
