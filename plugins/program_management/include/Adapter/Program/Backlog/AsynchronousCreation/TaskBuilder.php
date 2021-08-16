@@ -36,7 +36,6 @@ use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\ArtifactCreatorAdapter;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\ArtifactLinkFieldAdapter;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\DescriptionFieldAdapter;
-use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\DescriptionValueAdapter;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\EndPeriodValueAdapter;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Changeset\Values\ArtifactFieldValuesRetriever;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\SourceChangesetValuesCollectionAdapter;
@@ -93,6 +92,8 @@ class TaskBuilder
             )
         );
 
+        $field_values_retriever = new ArtifactFieldValuesRetriever();
+
         $synchronized_fields_gatherer = new SynchronizedFieldsAdapter(
             new ArtifactLinkFieldAdapter($form_element_factory),
             new TitleFieldAdapter(new Tracker_Semantic_TitleFactory()),
@@ -115,8 +116,8 @@ class TaskBuilder
         return new CreateProgramIncrementsTask(
             new SourceChangesetValuesCollectionAdapter(
                 $synchronized_fields_gatherer,
-                new ArtifactFieldValuesRetriever(),
-                new DescriptionValueAdapter(),
+                $field_values_retriever,
+                $field_values_retriever,
                 new StatusValueAdapter(),
                 new StartDateValueValueAdapter(),
                 new EndPeriodValueAdapter()

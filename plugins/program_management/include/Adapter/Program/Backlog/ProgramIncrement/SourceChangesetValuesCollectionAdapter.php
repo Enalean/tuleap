@@ -24,11 +24,12 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement;
 
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\ProgramIncrementCreationException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\ArtifactLinkValue;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\BuildDescriptionValue;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\BuildEndPeriodValue;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\BuildFieldValues;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\BuildStartDateValue;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\BuildStatusValue;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\DescriptionValue;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\RetrieveDescriptionValue;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\RetrieveTitleValue;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\SourceChangesetValuesCollection;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\TitleValue;
@@ -44,10 +45,7 @@ final class SourceChangesetValuesCollectionAdapter implements BuildFieldValues
      */
     private $fields_gatherer;
     private RetrieveTitleValue $title_retriever;
-    /**
-     * @var BuildDescriptionValue
-     */
-    private $build_description_value;
+    private RetrieveDescriptionValue $description_retriever;
     /**
      * @var BuildStatusValue
      */
@@ -64,17 +62,17 @@ final class SourceChangesetValuesCollectionAdapter implements BuildFieldValues
     public function __construct(
         BuildSynchronizedFields $fields_gatherer,
         RetrieveTitleValue $title_retriever,
-        BuildDescriptionValue $build_description_value,
+        RetrieveDescriptionValue $description_retriever,
         BuildStatusValue $build_status_value,
         BuildStartDateValue $build_start_date_value,
         BuildEndPeriodValue $build_end_period_value
     ) {
-        $this->fields_gatherer         = $fields_gatherer;
-        $this->title_retriever         = $title_retriever;
-        $this->build_description_value = $build_description_value;
-        $this->build_status_value      = $build_status_value;
-        $this->build_start_date_value  = $build_start_date_value;
-        $this->build_end_period_value  = $build_end_period_value;
+        $this->fields_gatherer        = $fields_gatherer;
+        $this->title_retriever        = $title_retriever;
+        $this->description_retriever  = $description_retriever;
+        $this->build_status_value     = $build_status_value;
+        $this->build_start_date_value = $build_start_date_value;
+        $this->build_end_period_value = $build_end_period_value;
     }
 
     /**
@@ -89,7 +87,11 @@ final class SourceChangesetValuesCollectionAdapter implements BuildFieldValues
             $replication_data,
             $fields
         );
-        $description_value   = $this->build_description_value->build($fields->getDescriptionField(), $replication_data);
+        $description_value   = DescriptionValue::fromReplicationDataAndSynchronizedFields(
+            $this->description_retriever,
+            $replication_data,
+            $fields
+        );
         $status_value        = $this->build_status_value->build($fields->getStatusField(), $replication_data);
         $start_date_value    = $this->build_start_date_value->build($fields->getStartDateField(), $replication_data);
         $end_period_value    = $this->build_end_period_value->build($fields->getEndPeriodField(), $replication_data);

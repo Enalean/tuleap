@@ -39,13 +39,18 @@ final class ReplicationDataBuilder
 
     public static function buildWithArtifactId(int $artifact_id): ReplicationData
     {
-        $source_timebox_artifact = self::buildArtifact($artifact_id);
+        return self::buildWithArtifactIdAndSubmissionDate($artifact_id, 1234567890);
+    }
+
+    public static function buildWithArtifactIdAndSubmissionDate(int $artifact_id, int $submission_timestamp): ReplicationData
+    {
+        $source_timebox_artifact = self::buildArtifact($artifact_id, $submission_timestamp);
         $user                    = UserTestBuilder::aUser()->withId(101)->build();
         $source_changeset        = new \Tracker_Artifact_Changeset(
             2604,
             $source_timebox_artifact,
             $user->getId(),
-            1234567890,
+            $submission_timestamp,
             null
         );
         return ReplicationDataAdapter::build($source_timebox_artifact, $user, $source_changeset);
@@ -53,12 +58,12 @@ final class ReplicationDataBuilder
 
     public static function buildWithChangeset(\Tracker_Artifact_Changeset $source_changeset): ReplicationData
     {
-        $source_timebox_artifact = self::buildArtifact(209);
+        $source_timebox_artifact = self::buildArtifact(209, 1234567890);
         $user                    = UserTestBuilder::aUser()->withId(179)->build();
         return ReplicationDataAdapter::build($source_timebox_artifact, $user, $source_changeset);
     }
 
-    private static function buildArtifact(int $artifact_id): Artifact
+    private static function buildArtifact(int $artifact_id, int $submission_timestamp): Artifact
     {
         $program_project        = ProjectTestBuilder::aProject()->withId(578)
             ->build();
@@ -66,6 +71,7 @@ final class ReplicationDataBuilder
             ->withProject($program_project)
             ->build();
         return ArtifactTestBuilder::anArtifact($artifact_id)
+            ->withSubmissionTimestamp($submission_timestamp)
             ->inTracker($source_timebox_tracker)
             ->inProject($program_project)
             ->build();

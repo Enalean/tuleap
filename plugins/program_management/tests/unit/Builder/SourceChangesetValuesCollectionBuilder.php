@@ -30,6 +30,7 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Chan
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\StatusValue;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\TitleValue;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\SubmissionDate;
+use Tuleap\ProgramManagement\Tests\Stub\RetrieveDescriptionValueStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveTitleValueStub;
 
 final class SourceChangesetValuesCollectionBuilder
@@ -116,7 +117,11 @@ final class SourceChangesetValuesCollectionBuilder
             $replication_data,
             $synchronized_fields
         );
-        $description_value   = new DescriptionValue($description_value, $description_format);
+        $description_value   = DescriptionValue::fromReplicationDataAndSynchronizedFields(
+            RetrieveDescriptionValueStub::withValue($description_value, $description_format),
+            $replication_data,
+            $synchronized_fields
+        );
         $status_values       = new StatusValue($list_values);
         $start_date_value    = new StartDateValue($start_date_value);
         $end_period_value    = new EndPeriodValue($end_period_value);

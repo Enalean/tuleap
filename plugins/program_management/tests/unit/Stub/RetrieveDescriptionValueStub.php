@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2020 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,17 +20,14 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values;
+namespace Tuleap\ProgramManagement\Tests\Stub;
 
+use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Changeset\Values\TextFieldValueProxy;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\TextFieldValue;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFields;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\ReplicationData;
 
-/**
- * I hold the value of the Description semantic field of the source Timebox.
- * I am the reference value that must be copied to Mirrored Timeboxes.
- * @psalm-immutable
- */
-final class DescriptionValue
+final class RetrieveDescriptionValueStub implements \Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\RetrieveDescriptionValue
 {
     private string $value;
     private string $format;
@@ -41,26 +38,13 @@ final class DescriptionValue
         $this->format = $format;
     }
 
-    /**
-     * @throws ChangesetValueNotFoundException
-     */
-    public static function fromReplicationDataAndSynchronizedFields(
-        RetrieveDescriptionValue $description_retriever,
-        ReplicationData $replication,
-        SynchronizedFields $fields
-    ): self {
-        $text_value = $description_retriever->getDescriptionValue($replication, $fields);
-        return new self($text_value->getValue(), $text_value->getFormat());
+    public static function withValue(string $value, string $format): self
+    {
+        return new self($value, $format);
     }
 
-    /**
-     * @return array{content: string, format: string}
-     */
-    public function getValue(): array
+    public function getDescriptionValue(ReplicationData $replication, SynchronizedFields $fields): TextFieldValue
     {
-        return [
-            'content' => $this->value,
-            'format'  => $this->format
-        ];
+        return new TextFieldValueProxy($this->value, $this->format);
     }
 }

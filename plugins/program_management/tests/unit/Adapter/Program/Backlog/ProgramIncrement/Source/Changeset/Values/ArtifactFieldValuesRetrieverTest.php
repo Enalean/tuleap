@@ -58,7 +58,7 @@ final class ArtifactFieldValuesRetrieverTest extends \Tuleap\Test\PHPUnit\TestCa
         $this->getRetriever()->getTitleValue($replication, $fields);
     }
 
-    public function testItBuildsFromReplicationAndSynchronizedFields(): void
+    public function testItReturnsTitleValueFromReplicationAndSynchronizedFields(): void
     {
         $fields          = SynchronizedFieldsBuilder::build();
         $changeset_value = $this->createStub(\Tracker_Artifact_ChangesetValue_String::class);
@@ -68,5 +68,32 @@ final class ArtifactFieldValuesRetrieverTest extends \Tuleap\Test\PHPUnit\TestCa
         $replication = ReplicationDataBuilder::buildWithChangeset($source_changeset);
 
         self::assertSame('My title', $this->getRetriever()->getTitleValue($replication, $fields));
+    }
+
+    public function testItThrowsWhenDescriptionValueIsNotFound(): void
+    {
+        $fields           = SynchronizedFieldsBuilder::build();
+        $source_changeset = $this->createStub(\Tracker_Artifact_Changeset::class);
+        $source_changeset->method('getValue')->willReturn(null);
+        $source_changeset->method('getId')->willReturn(1);
+        $replication = ReplicationDataBuilder::buildWithChangeset($source_changeset);
+
+        $this->expectException(ChangesetValueNotFoundException::class);
+        $this->getRetriever()->getDescriptionValue($replication, $fields);
+    }
+
+    public function testItReturnsDescriptionValueFromReplicationAndSynchronizedFields(): void
+    {
+        $fields          = SynchronizedFieldsBuilder::build();
+        $changeset_value = $this->createStub(\Tracker_Artifact_ChangesetValue_Text::class);
+        $changeset_value->method('getValue')->willReturn('My description');
+        $changeset_value->method('getFormat')->willReturn('text');
+        $source_changeset = $this->createStub(\Tracker_Artifact_Changeset::class);
+        $source_changeset->method('getValue')->willReturn($changeset_value);
+        $relication = ReplicationDataBuilder::buildWithChangeset($source_changeset);
+
+        $text_value = $this->getRetriever()->getDescriptionValue($relication, $fields);
+        self::assertSame('My description', $text_value->getValue());
+        self::assertSame('text', $text_value->getFormat());
     }
 }
