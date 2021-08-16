@@ -25,9 +25,13 @@ use Tracker_FormElement_Field_OpenList;
 
 final class ReportCriteriaDao extends \Tuleap\DB\DataAccessObject
 {
-    public function duplicate(int $from_report_id, int $to_report_id, array $field_mapping): void
+    /**
+     * @param int|string $from_report_id
+     * @param int|string $to_report_id
+     */
+    public function duplicate($from_report_id, $to_report_id, array $field_mapping): void
     {
-        $this->dusplicateComment($to_report_id, $from_report_id);
+        $this->duplicateComment($to_report_id, $from_report_id);
         $this->duplicatedFields($field_mapping, $to_report_id, $from_report_id);
     }
 
@@ -130,7 +134,11 @@ final class ReportCriteriaDao extends \Tuleap\DB\DataAccessObject
         return implode(',', $converted_values);
     }
 
-    private function dusplicateComment(int $to_report_id, int $from_report_id): void
+    /**
+     * @param int|string $to_report_id
+     * @param int|string $from_report_id
+     */
+    private function duplicateComment($to_report_id, $from_report_id): void
     {
         $sql = "INSERT INTO tracker_report_criteria_comment_value (report_id, comment)
                     SELECT ?, comment
@@ -139,7 +147,11 @@ final class ReportCriteriaDao extends \Tuleap\DB\DataAccessObject
         $this->getDB()->run($sql, $to_report_id, $from_report_id);
     }
 
-    private function duplicatedFields(array $field_mapping, int $to_report_id, int $from_report_id): void
+    /**
+     * @param int|string $to_report_id
+     * @param int|string $from_report_id
+     */
+    private function duplicatedFields(array $field_mapping, $to_report_id, $from_report_id): void
     {
         foreach ($field_mapping as $mapping) {
             $sql = "INSERT INTO tracker_report_criteria (report_id, field_id, rank, is_advanced)

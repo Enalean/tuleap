@@ -78,7 +78,10 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
     public const TYPE_TABLE             = 'table';
     public const COMMENT_CRITERION_NAME = 'comment';
 
-    public int $id;
+    /**
+     * @var int|string
+     */
+    public $id;
     public $name;
     public $description;
     public $current_renderer_id;
@@ -111,7 +114,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
 
     /**
      * Constructor
-     *
+     * @param int|string     $id The id of the report
      * @param string  $name The name of the report
      * @param string  $description The description of the report
      * @param int     $current_renderer_id The current Renderer id to display
@@ -120,7 +123,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
      * @param int     $tracker_id The id of the tracker to which this Tracker_Report is associated.
      */
     public function __construct(
-        int $id,
+        $id,
         $name,
         $description,
         $current_renderer_id,
