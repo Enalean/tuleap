@@ -41,12 +41,37 @@ interface ExportReportCriteria {
 
 interface ClassicReportCriteria {
     readonly is_in_expert_mode: false;
-    readonly criteria: ReadonlyArray<ClassicReportCriterionValue>;
+    readonly criteria: ReadonlyArray<ReportCriterionValue>;
 }
 
-export interface ClassicReportCriterionValue {
+export type ReportCriterionValue = ClassicReportCriterionValue | DateReportCriterionValue;
+
+interface ClassicReportCriterionValue {
     readonly criterion_name: string;
+    readonly criterion_type: "classic";
     readonly criterion_value: string;
+}
+
+export type DateReportCriterionValue =
+    | DateReportCriterionSimpleValue
+    | DateReportCriterionAdvancedValue;
+
+interface DateReportCriterionSimpleValue {
+    readonly criterion_name: string;
+    readonly criterion_type: "date";
+    readonly criterion_from_value: null;
+    readonly criterion_to_value: string;
+    readonly criterion_value_operator: "=" | "<" | ">";
+    readonly is_advanced: false;
+}
+
+interface DateReportCriterionAdvancedValue {
+    readonly criterion_name: string;
+    readonly criterion_type: "date";
+    readonly criterion_from_value: string | null;
+    readonly criterion_to_value: string | null;
+    readonly criterion_value_operator: "=" | "<" | ">";
+    readonly is_advanced: true;
 }
 
 export interface ArtifactFieldValue {

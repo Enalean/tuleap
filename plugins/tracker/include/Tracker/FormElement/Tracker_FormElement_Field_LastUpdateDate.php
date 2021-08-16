@@ -57,7 +57,7 @@ class Tracker_FormElement_Field_LastUpdateDate extends Tracker_FormElement_Field
         if ($criteria_value = $this->getCriteriaValue($criteria)) {
             //Last update date is stored in the changeset (the date of the changeset)
             return $this->getSQLCompareDate(
-                $criteria->is_advanced,
+                (bool) $criteria->is_advanced,
                 $criteria_value['op'],
                 $criteria_value['from_date'],
                 $criteria_value['to_date'],

@@ -27,6 +27,7 @@ use Tracker_FormElement_Field_List;
 use Tracker_FormElement_Field_OpenList;
 use Tracker_Report;
 use Tracker_Report_Criteria;
+use Tuleap\REST\JsonCast;
 
 class ReportCriteriaJsonBuilder
 {
@@ -52,10 +53,11 @@ class ReportCriteriaJsonBuilder
         foreach ($report->getCriteria() as $criterion) {
             $criterion_field = $criterion->getField();
             if ($criterion_field instanceof Tracker_FormElement_Field_Date) {
-                continue;
-            }
-
-            if ($criterion_field instanceof Tracker_FormElement_Field_OpenList) {
+                $date_criterion_json_value = $this->buildCriterionValueJsonFromDateValue($criterion);
+                if ($date_criterion_json_value !== null) {
+                    $criteria_value_json[] = $date_criterion_json_value;
+                }
+            } elseif ($criterion_field instanceof Tracker_FormElement_Field_OpenList) {
                 $open_list_criterion_json_value = $this->buildCriterionValueJsonFromOpenListValue($criterion);
                 if ($open_list_criterion_json_value !== null) {
                     $criteria_value_json[] = $open_list_criterion_json_value;
@@ -66,7 +68,7 @@ class ReportCriteriaJsonBuilder
                     $criteria_value_json[] = $list_criterion_json_value;
                 }
             } elseif (! empty($criterion_field->getCriteriaValue($criterion))) {
-                $criteria_value_json[] = new CriterionValueJson(
+                $criteria_value_json[] = new ClassicCriterionValueJson(
                     $criterion_field->getLabel(),
                     (string) $criterion_field->getCriteriaValue($criterion),
                 );
@@ -76,7 +78,7 @@ class ReportCriteriaJsonBuilder
         foreach ($report->getAdditionalCriteria() as $additional_criterion) {
             $criteria_value = (string) $additional_criterion->getValue();
             if ($criteria_value !== '') {
-                $criteria_value_json[] = new CriterionValueJson(
+                $criteria_value_json[] = new ClassicCriterionValueJson(
                     $additional_criterion->getKey(),
                     $criteria_value,
                 );
@@ -85,6 +87,28 @@ class ReportCriteriaJsonBuilder
 
         return new ClassicReportCriteriaJson(
             $criteria_value_json
+        );
+    }
+
+    private function buildCriterionValueJsonFromDateValue(Tracker_Report_Criteria $criterion): ?DateCriterionValueJson
+    {
+        $criterion_field = $criterion->getField();
+        $criterion_value = $criterion_field->getCriteriaValue($criterion);
+
+        if (
+            ! is_array($criterion_value) ||
+            ! array_key_exists("from_date", $criterion_value) ||
+            ! array_key_exists("to_date", $criterion_value)
+        ) {
+            return null;
+        }
+
+        return new DateCriterionValueJson(
+            $criterion_field->getLabel(),
+            (int) $criterion_value['from_date'] !== 0 ? JsonCast::toDate($criterion_value['from_date']) : null,
+            (int) $criterion_value['to_date'] !== 0 ? JsonCast::toDate($criterion_value['to_date']) : null,
+            $criterion_value['op'],
+            (bool) $criterion->is_advanced
         );
     }
 
@@ -106,7 +130,7 @@ class ReportCriteriaJsonBuilder
         }
 
         if (count($criterion_open_values_labels) > 0) {
-            return new CriterionValueJson(
+            return new ClassicCriterionValueJson(
                 $criterion_field->getLabel(),
                 implode(', ', $criterion_open_values_labels),
             );
@@ -133,7 +157,7 @@ class ReportCriteriaJsonBuilder
         }
 
         if (count($criterion_values_labels) > 0) {
-            return new CriterionValueJson(
+            return new ClassicCriterionValueJson(
                 $criterion_field->getLabel(),
                 implode(', ', $criterion_values_labels),
             );

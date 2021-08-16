@@ -26,6 +26,10 @@ class Tracker_Report_Criteria
     public $report;
     public $field;
     public $rank;
+
+    /**
+     * @var bool|int
+     */
     public $is_advanced;
 
     /**
@@ -38,7 +42,7 @@ class Tracker_Report_Criteria
      * @param Tracker_Report $report the id of the report
      * @param Tracker_FormElement_Field $field the name of the renderer
      * @param int $rank the rank
-     * @param int $is_advanced use advanced search for this field
+     * @param int | bool $is_advanced use advanced search for this field
      */
     public function __construct($id, $report, $field, $rank, $is_advanced)
     {
@@ -105,7 +109,7 @@ class Tracker_Report_Criteria
     {
         $root->addAttribute('rank', $this->rank);
         if ($this->is_advanced) {
-            $root->addAttribute('is_advanced', $this->is_advanced);
+            $root->addAttribute('is_advanced', (string) $this->is_advanced);
         }
 
         $root->addChild('field')->addAttribute('REF', array_search($this->field->id, $xmlMapping));

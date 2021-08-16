@@ -20,10 +20,11 @@
 import type {
     ArtifactContainer,
     ArtifactFieldValue,
-    ClassicReportCriterionValue,
+    ReportCriterionValue,
     DateTimeLocaleInformation,
     ExportDocument,
     GlobalExportProperties,
+    DateReportCriterionValue,
 } from "../../type";
 import type { ILevelsOptions, ParagraphChild, XmlComponent } from "docx";
 import {
@@ -155,7 +156,8 @@ export async function downloadDocx(
         if (report_criteria.criteria.length > 0) {
             report_criteria_content = buildReportCriteriaDisplayZone(
                 report_criteria.criteria,
-                gettext_provider
+                gettext_provider,
+                datetime_locale_information
             );
         } else {
             report_criteria_content = new Paragraph(
@@ -355,8 +357,9 @@ function buildContainersDisplayZone(
 }
 
 function buildReportCriteriaDisplayZone(
-    criterion_values: ReadonlyArray<ClassicReportCriterionValue>,
-    gettext_provider: GetText
+    criterion_values: ReadonlyArray<ReportCriterionValue>,
+    gettext_provider: GetText,
+    datetime_locale_information: DateTimeLocaleInformation
 ): Table {
     const fields_rows = [
         new TableRow({
@@ -369,17 +372,122 @@ function buildReportCriteriaDisplayZone(
     ];
 
     for (const criterion_value of criterion_values) {
-        const table_row = new TableRow({
-            children: [
-                buildTableCellContent(criterion_value.criterion_name),
-                buildTableCellContent(criterion_value.criterion_value),
-            ],
-        });
+        if (criterion_value.criterion_type === "classic") {
+            const table_row = new TableRow({
+                children: [
+                    buildTableCellContent(criterion_value.criterion_name),
+                    buildTableCellContent(criterion_value.criterion_value),
+                ],
+            });
 
-        fields_rows.push(table_row);
+            fields_rows.push(table_row);
+        } else if (criterion_value.criterion_type === "date") {
+            fields_rows.push(
+                buildDateReportCriterionValue(
+                    criterion_value,
+                    gettext_provider,
+                    datetime_locale_information
+                )
+            );
+        }
     }
 
     return buildTable(fields_rows);
+}
+
+function buildDateReportCriterionValue(
+    date_criterion_value: DateReportCriterionValue,
+    gettext_provider: GetText,
+    datetime_locale_information: DateTimeLocaleInformation
+): TableRow {
+    if (!date_criterion_value.is_advanced) {
+        const formatted_to_date = new Date(
+            date_criterion_value.criterion_to_value
+        ).toLocaleDateString(datetime_locale_information.locale, {
+            timeZone: datetime_locale_information.timezone,
+        });
+
+        let table_cell_date_criterion_content = "";
+        if (date_criterion_value.criterion_value_operator === ">") {
+            table_cell_date_criterion_content = sprintf(
+                gettext_provider.gettext("After %s"),
+                formatted_to_date
+            );
+        } else if (date_criterion_value.criterion_value_operator === "<") {
+            table_cell_date_criterion_content = sprintf(
+                gettext_provider.gettext("Before %s"),
+                formatted_to_date
+            );
+        } else {
+            table_cell_date_criterion_content = sprintf(
+                gettext_provider.gettext("As of %s"),
+                formatted_to_date
+            );
+        }
+
+        return new TableRow({
+            children: [
+                buildTableCellContent(date_criterion_value.criterion_name),
+                buildTableCellContent(table_cell_date_criterion_content),
+            ],
+        });
+    }
+
+    let table_cell_date_criterion_content = "";
+    if (date_criterion_value.criterion_from_value && date_criterion_value.criterion_to_value) {
+        const formatted_from_date = new Date(
+            date_criterion_value.criterion_from_value
+        ).toLocaleDateString(datetime_locale_information.locale, {
+            timeZone: datetime_locale_information.timezone,
+        });
+
+        const formatted_to_date = new Date(
+            date_criterion_value.criterion_to_value
+        ).toLocaleDateString(datetime_locale_information.locale, {
+            timeZone: datetime_locale_information.timezone,
+        });
+
+        table_cell_date_criterion_content = sprintf(
+            gettext_provider.gettext("After %s and before %s"),
+            formatted_from_date,
+            formatted_to_date
+        );
+    } else if (
+        date_criterion_value.criterion_from_value &&
+        !date_criterion_value.criterion_to_value
+    ) {
+        const formatted_from_date = new Date(
+            date_criterion_value.criterion_from_value
+        ).toLocaleDateString(datetime_locale_information.locale, {
+            timeZone: datetime_locale_information.timezone,
+        });
+
+        table_cell_date_criterion_content = sprintf(
+            gettext_provider.gettext("After %s"),
+            formatted_from_date
+        );
+    } else if (
+        !date_criterion_value.criterion_from_value &&
+        date_criterion_value.criterion_to_value
+    ) {
+        const formatted_to_date = new Date(
+            date_criterion_value.criterion_to_value
+        ).toLocaleDateString(datetime_locale_information.locale, {
+            timeZone: datetime_locale_information.timezone,
+        });
+
+        table_cell_date_criterion_content = sprintf(
+            gettext_provider.gettext("Before %s"),
+            formatted_to_date
+        );
+    }
+
+    return new TableRow({
+        children: [
+            buildTableCellContent(date_criterion_value.criterion_name),
+            buildTableCellContent(table_cell_date_criterion_content),
+        ],
+    });
 }
 
 function buildFieldValuesDisplayZone(
