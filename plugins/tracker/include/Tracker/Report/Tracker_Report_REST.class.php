@@ -190,7 +190,7 @@ class Tracker_Report_REST extends Tracker_Report
 
     private function addCriterionToFormElement($formelement, $criterion, $rank)
     {
-        $is_advanced = false;
+        $is_advanced = 0;
 
         $criteria = new Tracker_Report_Criteria(
             0,

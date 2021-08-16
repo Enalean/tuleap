@@ -48,6 +48,9 @@ final class ItemActionURLVisitor implements ItemVisitor
         return null;
     }
 
+    /**
+     * @psalm-return non-empty-string|null
+     */
     public function visitFile(Docman_File $item, array $params = []): ?string
     {
         if (! isset($params['action']) || $params['action'] !== 'show') {

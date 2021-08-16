@@ -85,7 +85,6 @@ class AuthorizedKeysFileCreator
 
         $temporary_authorized_key_line_file = tempnam(\ForgeConfig::get('tmp_dir'), 'gitolite3-authorized-key-line');
         if ($temporary_authorized_key_line_file === false) {
-            @unlink($temporary_authorized_key_line_file);
             throw new DumpKeyException('Could not create a temporary file to verify an authorized key line');
         }
 

@@ -28,7 +28,7 @@ class CSVRepresentation
     public const CSV_EMPTY_VALUE          = '';
 
     /**
-     * @var string[][]
+     * @var string[]
      */
     private $values;
     /**

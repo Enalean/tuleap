@@ -352,11 +352,11 @@ class nusoap_base
     * not serialized if $use == 'literal'.
     *
     * @param    mixed    $val    The value to serialize
-    * @param    string    $name    The name (local part) of the XML element
-    * @param    string    $type    The XML schema type (local part) for the element
-    * @param    string    $name_ns    The namespace for the name of the XML element
-    * @param    string    $type_ns    The namespace for the type of the element
-    * @param    array    $attributes    The attributes to serialize as name=>value pairs
+    * @param    string|false    $name    The name (local part) of the XML element
+    * @param    string|false    $type    The XML schema type (local part) for the element
+    * @param    string|false    $name_ns    The namespace for the name of the XML element
+    * @param    string|false    $type_ns    The namespace for the type of the element
+    * @param    array|false    $attributes    The attributes to serialize as name=>value pairs
     * @param    string    $use    The WSDL "use" (encoded|literal)
     * @return    string    The serialized element, possibly with child elements
     * @access    public
@@ -482,7 +482,7 @@ class nusoap_base
             case (is_array($val) || $type):
                 // detect if struct or array
                 $valueType = $this->isArraySimpleOrStruct($val);
-                if ($valueType == 'arraySimple' || preg_match('/^ArrayOf/D', $type)) {
+                if ($valueType == 'arraySimple' || preg_match('/^ArrayOf/D', $type ?: '')) {
                     $i = 0;
                     if (is_array($val) && count($val) > 0) {
                         foreach ($val as $v) {
