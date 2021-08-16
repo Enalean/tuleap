@@ -2,16 +2,16 @@
 
 exports[`NoContentEmptyState displays a cell that span on the whole table 1`] = `
 <div
-  class="empty-page"
+  class="empty-state-page"
 >
   <div
-    class="empty-page-illustration"
+    class="empty-state-illustration"
   >
     <!---->
   </div>
    
   <translate-stub
-    class="empty-page-text"
+    class="empty-state-text"
     tag="p"
   >
     This taskboard is empty

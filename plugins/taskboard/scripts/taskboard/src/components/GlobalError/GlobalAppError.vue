@@ -19,14 +19,14 @@
   -->
 
 <template>
-    <div class="empty-page taskboard-error">
-        <div class="empty-page-illustration">
+    <div class="empty-state-page taskboard-error">
+        <div class="empty-state-illustration">
             <global-app-error-illustration />
         </div>
 
-        <div class="empty-page-text-with-small-text">
+        <div class="empty-state-text-with-small-text">
             <translate>Oops, there's an issue</translate>
-            <div class="empty-page-small-text" v-translate>
+            <div class="empty-state-text-small" v-translate>
                 It seems an action you tried to perform can't be done
             </div>
             <template v-if="has_more_details">

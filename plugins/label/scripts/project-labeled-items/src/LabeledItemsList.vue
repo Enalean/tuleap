@@ -26,7 +26,7 @@
         <div v-if="error !== false" class="tlp-alert-danger labeled-items-error">
             <translate>Please select one or more labels by editing this widget</translate>
         </div>
-        <div class="empty-pane-text" v-if="empty && !loading && error === false">
+        <div class="empty-state-text" v-if="empty && !loading && error === false">
             <translate v-if="are_there_items_user_cannot_see">
                 There are no items you can see
             </translate>

@@ -2,16 +2,16 @@
 
 exports[`BoardWithoutAnyColumnsError is displays misconfiguration error for regular user 1`] = `
 <div
-  class="empty-page"
+  class="empty-state-page"
 >
   <div
-    class="empty-page-illustration"
+    class="empty-state-illustration"
   >
     <!---->
   </div>
    
   <div
-    class="empty-page-text-with-small-text"
+    class="empty-state-text-with-small-text"
   >
     <translate-stub
       tag="span"
@@ -20,7 +20,7 @@ exports[`BoardWithoutAnyColumnsError is displays misconfiguration error for regu
     </translate-stub>
      
     <div
-      class="empty-page-small-text"
+      class="empty-state-text-small"
     >
       <translate-stub
         tag="span"

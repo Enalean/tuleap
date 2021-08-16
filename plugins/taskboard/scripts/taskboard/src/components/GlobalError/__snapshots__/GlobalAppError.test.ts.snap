@@ -2,16 +2,16 @@
 
 exports[`GlobalAppError warns user that something is wrong with a button to show details 1`] = `
 <div
-  class="empty-page taskboard-error"
+  class="empty-state-page taskboard-error"
 >
   <div
-    class="empty-page-illustration"
+    class="empty-state-illustration"
   >
     <!---->
   </div>
    
   <div
-    class="empty-page-text-with-small-text"
+    class="empty-state-text-with-small-text"
   >
     <translate-stub
       tag="span"
@@ -20,7 +20,7 @@ exports[`GlobalAppError warns user that something is wrong with a button to show
     </translate-stub>
      
     <div
-      class="empty-page-small-text"
+      class="empty-state-text-small"
       data-current-language="en_US"
       data-msgid="
             It seems an action you tried to perform can't be done

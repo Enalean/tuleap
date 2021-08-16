@@ -18,7 +18,7 @@
   -->
 
 <template>
-    <div class="empty-pane">
+    <div class="empty-state-pane">
         <div class="tracker-workflow-transition-modal-empty-action">
             <div v-translate>No action is currently defined.</div>
             <div v-translate>Start by adding one.</div>

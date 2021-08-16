@@ -18,11 +18,14 @@
   -->
 
 <template>
-    <div class="empty-page document-empty-folder-for-writers" data-test="document-empty-state">
-        <div class="empty-page-illustration">
+    <div
+        class="empty-state-page document-empty-folder-for-writers"
+        data-test="document-empty-state"
+    >
+        <div class="empty-state-illustration">
             <empty-folder-for-writers-svg />
         </div>
-        <p class="empty-page-text" v-translate>It's time to add new documents!</p>
+        <p class="empty-state-text" v-translate>It's time to add new documents!</p>
         <div class="tlp-dropdown">
             <div class="tlp-dropdown-split-button">
                 <new-item-button

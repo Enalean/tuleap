@@ -18,13 +18,13 @@
   -->
 
 <template>
-    <div class="empty-page document-folder-with-error">
-        <div class="empty-page-illustration">
+    <div class="empty-state-page document-folder-with-error">
+        <div class="empty-state-illustration">
             <permission-error-svg />
         </div>
-        <div class="empty-page-text-with-small-text">
+        <div class="empty-state-text-with-small-text">
             <translate>This is a private folder.</translate>
-            <div class="empty-page-small-text" v-translate>
+            <div class="empty-state-text-small" v-translate>
                 You may only access documents you are granted read permission on.
             </div>
         </div>

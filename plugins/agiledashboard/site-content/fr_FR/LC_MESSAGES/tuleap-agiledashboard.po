@@ -589,8 +589,8 @@ msgstr "L'outil de suivi %s n'a pas été trouvé"
 msgid "There are no milestones for this period"
 msgstr "Il n'y a aucun jalon pour cette période"
 
-msgid "There is no content <br> you can see"
-msgstr "Il n’y a aucun élément <br> visible"
+msgid "There is no content you can see"
+msgstr "Il n’y a aucun élément visible"
 
 msgid "There is no item yet"
 msgstr "Il n’y a aucun élément pour l'instant"

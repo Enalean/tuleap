@@ -18,12 +18,12 @@
   -->
 
 <template>
-    <div class="empty-page-text-with-small-text">
+    <div class="empty-state-text-with-small-text">
         <translate>Oops, there's an issue.</translate>
-        <div class="empty-page-small-text" v-translate v-if="!has_lock_error">
+        <div class="empty-state-text-small" v-translate v-if="!has_lock_error">
             It seems the content of this element can't be loaded.
         </div>
-        <div class="empty-page-small-text" v-translate v-else>
+        <div class="empty-state-text-small" v-translate v-else>
             It seems an action you tried to perform can't be done.
         </div>
         <template v-if="has_any_loading_error">

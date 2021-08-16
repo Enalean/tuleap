@@ -18,13 +18,13 @@
   -->
 
 <template>
-    <div class="empty-page">
-        <div class="empty-page-illustration">
+    <div class="empty-state-page">
+        <div class="empty-state-illustration">
             <empty-folder-for-readers-svg />
         </div>
-        <div class="empty-page-text-with-small-text">
+        <div class="empty-state-text-with-small-text">
             <translate>This folder is empty</translate>
-            <div class="empty-page-small-text" v-translate>
+            <div class="empty-state-text-small" v-translate>
                 or you don't have permissions to see its items
             </div>
         </div>

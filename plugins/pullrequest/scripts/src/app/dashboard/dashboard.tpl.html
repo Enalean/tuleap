@@ -10,7 +10,7 @@
     </div>
 
     <div
-        class="empty-page-text"
+        class="empty-state-text"
         ng-if="! dashboard_controller.isThereAtLeastOneOpenpullRequest()
             && dashboard_controller.areOpenPullRequestsFullyLoaded()
             && (
@@ -32,7 +32,7 @@
     </div>
 
     <div
-        class="empty-page-text"
+        class="empty-state-text"
         ng-if="! dashboard_controller.isThereAtLeastOneClosedPullRequest() && dashboard_controller.areClosedPullRequestsFullyLoaded()">
         <span translate>There are no closed pull requests</span>
     </div>

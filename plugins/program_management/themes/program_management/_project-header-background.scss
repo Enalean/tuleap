@@ -25,6 +25,10 @@
         @include background.project-background-title-header-typography();
         margin: 0 0 var(--tlp-medium-spacing);
     }
+
+    .program-backlog {
+        margin: var(--tlp-large-spacing) 0 0 0;
+    }
 }
 
 body {

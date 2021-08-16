@@ -18,13 +18,13 @@
   -
   -->
 <template>
-    <div class="empty-page">
-        <div class="empty-page-illustration">
+    <div class="empty-state-page">
+        <div class="empty-state-illustration">
             <board-without-any-columns-error-for-admin-illustration />
         </div>
-        <div class="empty-page-text-with-small-text">
+        <div class="empty-state-text-with-small-text">
             <translate>This taskboard is not properly configured</translate>
-            <div class="empty-page-small-text">
+            <div class="empty-state-text-small">
                 <translate>You have to configure the columns mapping</translate>
             </div>
         </div>

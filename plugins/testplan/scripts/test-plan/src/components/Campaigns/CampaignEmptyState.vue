@@ -19,11 +19,11 @@
   -->
 
 <template>
-    <div class="empty-pane">
-        <div class="empty-pane-illustration">
+    <div class="empty-state-pane">
+        <div class="empty-state-illustration">
             <campaign-empty-state-svg />
         </div>
-        <div class="empty-pane-text">
+        <div class="empty-state-text">
             <translate>There is no test campaign yet.</translate>
         </div>
         <button

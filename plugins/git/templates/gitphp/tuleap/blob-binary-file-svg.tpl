@@ -1,4 +1,4 @@
-<svg class="empty-page-illustration" xmlns="http://www.w3.org/2000/svg" width="352" height="184" viewBox="0 0 352 184">
+<svg class="empty-state-illustration" xmlns="http://www.w3.org/2000/svg" width="352" height="184" viewBox="0 0 352 184">
     <g fill="none" fill-rule="evenodd" transform="translate(1)">
         <path stroke="#D5E8F3"
               class="tlp-illustration-tertiary-stroke"

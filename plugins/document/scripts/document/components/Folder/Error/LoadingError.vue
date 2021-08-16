@@ -18,8 +18,8 @@
   -->
 
 <template>
-    <div class="empty-page document-folder-with-error">
-        <div class="empty-page-illustration">
+    <div class="empty-state-page document-folder-with-error">
+        <div class="empty-state-illustration">
             <loading-error-svg />
         </div>
         <show-error-details />
