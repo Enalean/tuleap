@@ -281,7 +281,11 @@ final class ReportCriteriaJsonBuilderTest extends TestCase
             new Tracker_Report_AdditionalCriterion(
                 "Additional01",
                 "ValueAdd01"
-            )
+            ),
+            new Tracker_Report_AdditionalCriterion(
+                "Additional02",
+                null
+            ),
         ];
         $report->method('getAdditionalCriteria')->willReturn($additional_criteria);
 
