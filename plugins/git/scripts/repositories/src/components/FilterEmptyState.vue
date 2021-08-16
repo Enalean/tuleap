@@ -18,11 +18,14 @@
   -->
 
 <template>
-    <div class="empty-state-page" v-if="show_filter_empty_state()">
-        <div class="empty-state-text" data-test="empty-state">
-            <translate>No repository name matching your query has been found.</translate>
-        </div>
-    </div>
+    <section class="empty-state-page" v-if="show_filter_empty_state()">
+        <h1 class="empty-state-title" data-test="empty-state" v-translate>
+            No matching repository
+        </h1>
+        <p class="empty-state-text" v-translate>
+            No repository name matching your query has been found.
+        </p>
+    </section>
 </template>
 <script lang="ts">
 import { Component } from "vue-property-decorator";

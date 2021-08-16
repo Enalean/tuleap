@@ -77,7 +77,7 @@ class Git_AdminGerritPresenter extends Git_AdminPresenter
         $this->list_of_servers               = $list_of_gerrits;
         $this->add_server                    = dgettext('tuleap-git', 'Add server');
         $this->gerrit_add_server             = dgettext('tuleap-git', 'Add gerrit server');
-        $this->list_of_servers_empty_message = dgettext('tuleap-git', 'There is nothing here,<br> start by adding a gerrit server.');
+        $this->list_of_servers_empty_message = dgettext('tuleap-git', 'No gerrit server');
         $this->btn_edit                      = $GLOBALS['Language']->getText('global', 'btn_edit');
         $this->btn_delete                    = $GLOBALS['Language']->getText('global', 'btn_delete');
         $this->btn_cancel                    = $GLOBALS['Language']->getText('global', 'btn_cancel');

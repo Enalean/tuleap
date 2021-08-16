@@ -22,12 +22,7 @@
         class="tlp-dropdown"
         v-bind:class="{ 'git-repository-list-create-repository-button': !is_empty_state }"
     >
-        <button
-            class="tlp-button-primary"
-            v-bind:class="{ 'tlp-button-large': is_empty_state }"
-            ref="dropdownButton"
-            type="button"
-        >
+        <button class="tlp-button-primary" ref="dropdownButton" type="button">
             <translate>New repository</translate>
             <i class="fas fa-caret-down tlp-button-icon-right" aria-hidden="true"></i>
         </button>

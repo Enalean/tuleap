@@ -62,13 +62,13 @@
         </form>
     </section>
     {if empty($shortlog_presenter) || (isset($hasemptysearchresults) && $hasemptysearchresults)}
-        <p class="empty-state-text git-repository-shortlog-results">
+        <h1 class="empty-state-title git-repository-shortlog-results">
             {if isset($hasemptysearchresults) && $hasemptysearchresults}
                 {t domain="gitphp" 1=$search}No matches for "%1"{/t}
             {else}
                 {t domain="gitphp"}No commits{/t}
             {/if}
-        </p>
+        </h1>
     {else}
         <section id="git-repository-shortlog" class="git-repository-shortlog-results">
             {include file="tuleap/commits-as-cards.tpl"}

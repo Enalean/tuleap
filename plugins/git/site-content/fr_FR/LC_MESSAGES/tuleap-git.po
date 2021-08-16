@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 2.4.2\n"
+"X-Generator: Poedit 3.0\n"
 
 msgid " At least a git repository is migrated to gerrit"
 msgstr " Au moins un repertoire git est migré sur gerrit"
@@ -852,8 +852,14 @@ msgstr "La requête ne contient aucune donnée."
 msgid "No defined webhooks yet"
 msgstr "Aucun webhook défini"
 
+msgid "No gerrit server"
+msgstr "Aucun server gerrit"
+
 msgid "No logs yet"
 msgstr "Pas encore d'historique"
+
+msgid "No mirror"
+msgstr "Aucun miroir"
 
 msgid "No notifications set"
 msgstr "Aucune notification n'a été définie"
@@ -1434,12 +1440,6 @@ msgstr ""
 msgid "There is no logged pushes in the last %1$s week(s)"
 msgstr "Pas de push pour la/les dernière(s) %1$s semaine(s)"
 
-msgid "There is nothing here,"
-msgstr "Il n'y a rien ici,"
-
-msgid "There is nothing here,<br> start by adding a gerrit server."
-msgstr "Il n'y a rien ici,<br> commencez par ajouter un serveur gerrit."
-
 msgid "This mirror is used by repositories, you shall not delete it."
 msgstr "Le miroir est utilisé par des dépôts, vous ne pouvez pas le supprimer."
 
@@ -1848,9 +1848,6 @@ msgstr "ou"
 
 msgid "repository"
 msgstr "dépôt"
-
-msgid "start by adding a mirror."
-msgstr "commencez par ajouter un miroir."
 
 msgid "submodule"
 msgstr "sous-module"
