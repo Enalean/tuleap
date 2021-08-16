@@ -45,7 +45,6 @@ use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneDao;
 use Tuleap\AgileDashboard\Planning\PlanningDao;
 use Tuleap\AgileDashboard\RemainingEffortValueRetriever;
-use Tuleap\BrowserDetection\DetectedBrowser;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 use Tuleap\Tracker\Semantic\Timeframe\TimeframeBrokenConfigurationException;
 use Project;
@@ -205,10 +204,6 @@ class ProjectMilestonesPresenterBuilder
      */
     public function getProjectMilestonePresenter(?Project $project, ?Planning $root_planning): ProjectMilestonesPresenter
     {
-        if (DetectedBrowser::detectFromTuleapHTTPRequest($this->request)->isIE()) {
-            throw ProjectMilestonesException::buildBrowserIsIE11();
-        }
-
         if (! $project) {
             throw ProjectMilestonesException::buildProjectDontExist();
         }

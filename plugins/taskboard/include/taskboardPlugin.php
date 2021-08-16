@@ -33,7 +33,6 @@ use Tuleap\AgileDashboard\Planning\HeaderOptionsForPlanningProvider;
 use Tuleap\AgileDashboard\Planning\PlanningDao;
 use Tuleap\AgileDashboard\Planning\Presenters\AlternativeBoardLinkEvent;
 use Tuleap\AgileDashboard\Planning\Presenters\AlternativeBoardLinkPresenter;
-use Tuleap\BrowserDetection\DetectedBrowser;
 use Tuleap\Cardwall\Agiledashboard\CardwallPaneInfo;
 use Tuleap\Cardwall\CardwallIsAllowedEvent;
 use Tuleap\Layout\IncludeAssets;
@@ -197,10 +196,6 @@ class taskboardPlugin extends Plugin
 
     public function agiledashboardEventAdditionalPanesOnMilestone(PaneInfoCollector $collector): void
     {
-        if ($this->isIE11()) {
-            return;
-        }
-
         $pane_info = $this->getPaneInfoForMilestone($collector->getMilestone());
         if ($pane_info === null) {
             return;
@@ -253,10 +248,6 @@ class taskboardPlugin extends Plugin
 
     public function cardwallIsAllowedEvent(CardwallIsAllowedEvent $event): void
     {
-        if ($this->isIE11()) {
-            return;
-        }
-
         if (! $this->getTaskboardUsage()->isCardwallAllowed($event->getProject())) {
             $event->disallowCardwall();
         }
@@ -299,10 +290,5 @@ class taskboardPlugin extends Plugin
     public function allowedAdditionalPanesToDisplayCollector(AllowedAdditionalPanesToDisplayCollector $event): void
     {
         $event->add(TaskboardPaneInfo::NAME);
-    }
-
-    private function isIE11(): bool
-    {
-        return DetectedBrowser::detectFromTuleapHTTPRequest(HTTPRequest::instance())->isIE();
     }
 }

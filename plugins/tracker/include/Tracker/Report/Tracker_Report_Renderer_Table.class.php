@@ -19,7 +19,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\BrowserDetection\DetectedBrowser;
 use Tuleap\date\RelativeDatesAssetsRetriever;
 use Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface;
 use Tuleap\Layout\CssAssetCollection;
@@ -874,11 +873,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
 
         $html .= '>';
 
-        if (! DetectedBrowser::detectFromTuleapHTTPRequest(HTTPRequest::instance())->isIE()) {
-            $html .= '<thead class="table-sticky-header">';
-        } else {
-            $html .= '<thead>';
-        }
+        $html .= '<thead class="table-sticky-header">';
 
         $html .= '<tr>';
 

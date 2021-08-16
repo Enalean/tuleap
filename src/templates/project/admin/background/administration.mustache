@@ -1,69 +1,55 @@
-{{# is_browser_unsupported }}
-    <section class="tlp-framed-horizontally">
-        <div class="empty-state-page">
-            <div class="empty-state-text-with-small-text">
-                {{# gettext }} Your browser is not supported.{{/ gettext }}
-                <div class="empty-state-text-small">
-                    {{# gettext }} We recommend the latest version of Firefox, Chrome, or Edge.{{/ gettext }}
-                </div>
+<div class="tlp-framed-horizontally">
+    <section class="tlp-pane">
+        <form class="tlp-pane-container" id="form-header-background">
+            <div class="tlp-pane-header">
+                <h1 class="tlp-pane-title">
+                    <i class="tlp-pane-title-icon far fa-image"></i>
+                    {{# gettext }}Header background{{/ gettext }}
+                </h1>
             </div>
-        </div>
+            <input type="hidden" name="project-id" value="{{ project_id }}" />
+            <div id="project-admin-background-error" class="project-admin-background-feedback-hidden">
+                <div class="tlp-alert-danger">{{# gettext }}An error occurred, please retry{{/ gettext }}</div>
+            </div>
+            <div id="project-admin-background-success" class="project-admin-background-feedback-hidden">
+                <div class="tlp-alert-success">{{# gettext }}The header background has been successfully changed{{/ gettext }}</div>
+            </div>
+            <section class="tlp-pane-section">
+                <p>{{# gettext }}Personalize your project by adding a background image in the header of dashboard and administration pages.{{/ gettext }}</p>
+                <div class="project-admin-background-list">
+                    {{# backgrounds }}
+                        <div class="project-admin-background">
+                            <input
+                                type="radio"
+                                name="new-background"
+                                id="new-background-{{ identifier }}"
+                                class="project-admin-background-radio"
+                                {{# is_selected }}checked{{/ is_selected }}
+                                value="{{ identifier }}"
+                                autocomplete="off"
+                            >
+                            <label class="tlp-card tlp-card-selectable project-admin-background-card" for="new-background-{{ identifier }}">
+                                <div class="project-admin-background-preview project-admin-background-preview-{{ identifier }}">
+                                    {{# is_no_background }}
+                                        {{# gettext }}No background{{/ gettext }}
+                                    {{/ is_no_background }}
+                                </div>
+                                {{# author }}
+                                    <div class="project-admin-background-author">{{# gettext }}By %s | {{ author }}{{/ gettext }}</div>
+                                {{/ author }}
+                            </label>
+                        </div>
+                    {{/ backgrounds }}
+                </div>
+            </section>
+            <section class="tlp-pane-section tlp-pane-section-submit" id="project-admin-background-submit-section">
+                <div class="project-admin-background-submit-button-container">
+                    <button type="submit" class="tlp-button-primary" id="project-admin-background-submit-button">
+                        <i class="far fa-save tlp-button-icon" aria-hidden="true" id="project-admin-background-submit-button-icon"></i>
+                        {{# gettext }}Save header background{{/ gettext }}
+                    </button>
+                </div>
+            </section>
+        </form>
     </section>
-{{/ is_browser_unsupported }}
-{{^ is_browser_unsupported }}
-    <div class="tlp-framed-horizontally">
-        <section class="tlp-pane">
-            <form class="tlp-pane-container" id="form-header-background">
-                <div class="tlp-pane-header">
-                    <h1 class="tlp-pane-title">
-                        <i class="tlp-pane-title-icon far fa-image"></i>
-                        {{# gettext }}Header background{{/ gettext }}
-                    </h1>
-                </div>
-                <input type="hidden" name="project-id" value="{{ project_id }}" />
-                <div id="project-admin-background-error" class="project-admin-background-feedback-hidden">
-                    <div class="tlp-alert-danger">{{# gettext }}An error occurred, please retry{{/ gettext }}</div>
-                </div>
-                <div id="project-admin-background-success" class="project-admin-background-feedback-hidden">
-                    <div class="tlp-alert-success">{{# gettext }}The header background has been successfully changed{{/ gettext }}</div>
-                </div>
-                <section class="tlp-pane-section">
-                    <p>{{# gettext }}Personalize your project by adding a background image in the header of dashboard and administration pages.{{/ gettext }}</p>
-                    <div class="project-admin-background-list">
-                        {{# backgrounds }}
-                            <div class="project-admin-background">
-                                <input
-                                    type="radio"
-                                    name="new-background"
-                                    id="new-background-{{ identifier }}"
-                                    class="project-admin-background-radio"
-                                    {{# is_selected }}checked{{/ is_selected }}
-                                    value="{{ identifier }}"
-                                    autocomplete="off"
-                                >
-                                <label class="tlp-card tlp-card-selectable project-admin-background-card" for="new-background-{{ identifier }}">
-                                    <div class="project-admin-background-preview project-admin-background-preview-{{ identifier }}">
-                                        {{# is_no_background }}
-                                            {{# gettext }}No background{{/ gettext }}
-                                        {{/ is_no_background }}
-                                    </div>
-                                    {{# author }}
-                                        <div class="project-admin-background-author">{{# gettext }}By %s | {{ author }}{{/ gettext }}</div>
-                                    {{/ author }}
-                                </label>
-                            </div>
-                        {{/ backgrounds }}
-                    </div>
-                </section>
-                <section class="tlp-pane-section tlp-pane-section-submit" id="project-admin-background-submit-section">
-                    <div class="project-admin-background-submit-button-container">
-                        <button type="submit" class="tlp-button-primary" id="project-admin-background-submit-button">
-                            <i class="far fa-save tlp-button-icon" aria-hidden="true" id="project-admin-background-submit-button-icon"></i>
-                            {{# gettext }}Save header background{{/ gettext }}
-                        </button>
-                    </div>
-                </section>
-            </form>
-        </section>
-    </div>
-{{/ is_browser_unsupported }}
+</div>

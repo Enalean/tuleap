@@ -36,18 +36,17 @@ class ProjectBackgroundAdministrationPresenter
      * @var int
      */
     public $project_id;
-    /**
-     * @var bool
-     */
-    public $is_browser_unsupported;
 
-    public function __construct(array $backgrounds, int $project_id, bool $is_browser_unsupported)
+    public function __construct(array $backgrounds, int $project_id)
     {
-        $this->is_browser_unsupported = $is_browser_unsupported;
-        $this->project_id             = $project_id;
-        $this->backgrounds            = $backgrounds;
+        $this->project_id  = $project_id;
+        $this->backgrounds = $backgrounds;
         usort($this->backgrounds, static function (ProjectBackground $a, ProjectBackground $b) {
-            return strnatcasecmp($a->identifier, $b->identifier);
+            $identifier_a = $a->identifier;
+            $identifier_b = $b->identifier;
+            // Workaround for Psalm when the static analysis is done only on a part of the codebase
+            assert(is_string($identifier_a) && is_string($identifier_b));
+            return strnatcasecmp($identifier_a, $identifier_b);
         });
     }
 }

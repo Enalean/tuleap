@@ -35,11 +35,6 @@ class ProjectMilestonesException extends \Exception
         $this->translated_message = $message;
     }
 
-    public static function buildBrowserIsIE11(): self
-    {
-        return new self(dgettext('tuleap-projectmilestones', 'The plugin is not supported under IE11. Please use a more recent browser.'));
-    }
-
     public static function buildUserNotAccessToPrivateProject(): self
     {
         return new self(dgettext('tuleap-projectmilestones', 'This is a private project. You may only have access to private projects you are member of.'));

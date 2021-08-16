@@ -26,8 +26,6 @@ use HTTPRequest;
 use TemplateRenderer;
 use Tuleap\AgileDashboard\Milestone\AllBreadCrumbsForMilestoneBuilder;
 use Tuleap\AgileDashboard\Milestone\HeaderOptionsProvider;
-use Tuleap\BrowserDetection\DetectedBrowser;
-use Tuleap\Cardwall\Agiledashboard\CardwallPaneInfo;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
 use Tuleap\Layout\IncludeAssets;
@@ -109,21 +107,6 @@ class TaskboardController implements DispatchableWithRequestNoAuthz, Dispatchabl
                     dgettext('tuleap-agiledashboard', 'Agile Dashboard')
                 )
             );
-        }
-        if (DetectedBrowser::detectFromTuleapHTTPRequest($request)->isIE()) {
-            $layout->redirect(
-                '/plugins/agiledashboard/?' . http_build_query(
-                    [
-                        'group_id'    => $project->getID(),
-                        'planning_id' => $milestone->getPlanningId(),
-                        'action'      => 'show',
-                        'aid'         => $milestone->getArtifactId(),
-                        'pane'        => CardwallPaneInfo::IDENTIFIER
-                    ]
-                )
-            );
-
-            return;
         }
 
         $this->visit_recorder->record($user, $milestone->getArtifact());

@@ -22,8 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Artifact\Renderer;
 
-use HTTPRequest;
-use Tuleap\BrowserDetection\DetectedBrowser;
 
 final class ListPickerIncluder
 {
@@ -34,9 +32,9 @@ final class ListPickerIncluder
      */
     public const FORGE_CONFIG_KEY = 'use_list_pickers_in_trackers_and_modals';
 
-    public static function includeListPickerAssets(HTTPRequest $request, int $tracker_id): void
+    public static function includeListPickerAssets(int $tracker_id): void
     {
-        if (self::isListPickerEnabledAndBrowserCompatible($request, $tracker_id)) {
+        if (self::isListPickerEnabledAndBrowserCompatible($tracker_id)) {
             $include_assets = new \Tuleap\Layout\IncludeAssets(
                 __DIR__ . '/../../../../../../src/www/assets/trackers',
                 '/assets/trackers'
@@ -46,7 +44,7 @@ final class ListPickerIncluder
         }
     }
 
-    public static function isListPickerEnabledAndBrowserCompatible(HTTPRequest $request, int $tracker_id): bool
+    public static function isListPickerEnabledAndBrowserCompatible(int $tracker_id): bool
     {
         if (self::isListPickerEnabledOnPlatform() === false) {
             return false;
@@ -56,8 +54,7 @@ final class ListPickerIncluder
             return false;
         }
 
-        $detected_browser = DetectedBrowser::detectFromTuleapHTTPRequest($request);
-        return ! $detected_browser->isIE() && ! $detected_browser->isEdgeLegacy();
+        return true;
     }
 
     public static function isListPickerEnabledOnPlatform(): bool

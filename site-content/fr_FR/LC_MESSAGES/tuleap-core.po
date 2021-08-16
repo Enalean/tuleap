@@ -4240,10 +4240,6 @@ msgstr "Impossible de trouver des widgets."
 msgid "We need at least one email to send an invitation"
 msgstr "Nous avons besoin d'au moins un email pour envoyer une invitation"
 
-msgid "We recommend the latest version of Firefox, Chrome, or Edge."
-msgstr ""
-"Nous recommandons d'utiliser la dernière version de Firefox, Chrome, ou Edge."
-
 msgid "We will send an email at this address to confirm your account."
 msgstr ""
 "Nous allons envoyer un email à cette adresse afin de confirmer votre compte."
@@ -4824,9 +4820,6 @@ msgstr "Votre compte est créé, </br> il ne reste plus qu'à l'activer."
 
 msgid "Your avatar"
 msgstr "Votre avatar"
-
-msgid "Your browser is not supported."
-msgstr "Votre navigateur n'est pas supporté."
 
 msgid "Your catchy headline"
 msgstr "Votre accroche"

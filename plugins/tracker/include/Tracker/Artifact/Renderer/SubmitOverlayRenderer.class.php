@@ -68,7 +68,7 @@ class Tracker_Artifact_SubmitOverlayRenderer extends Tracker_Artifact_SubmitAbst
     {
         $GLOBALS['HTML']->overlay_header();
         $this->displayTrackerSwitcher($this->current_user);
-        ListPickerIncluder::includeListPickerAssets(HTTPRequest::instance(), $this->tracker->getId());
+        ListPickerIncluder::includeListPickerAssets($this->tracker->getId());
         echo $this->fetchSubmitInstructions();
     }
 
