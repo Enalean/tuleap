@@ -35,9 +35,8 @@ final class MissingTimeFrameFieldException extends \RuntimeException implements 
         $this->i18n_message = sprintf(
             dgettext(
                 'tuleap-program_management',
-                'Expected tracker with id <a href="%s">#%d</a> to have a %s field associated to its TimeFrame semantic, but this field was not found'
+                'Expected tracker with id #%d to have a %s field associated to its TimeFrame semantic, but this field was not found'
             ),
-            '/plugins/tracker/?tracker=' . urlencode((string) $tracker_id) . '&func=admin-semantic&semantic=timeframe',
             $tracker_id,
             $field_kind
         );

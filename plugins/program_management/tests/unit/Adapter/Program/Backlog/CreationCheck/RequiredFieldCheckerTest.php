@@ -89,7 +89,7 @@ final class RequiredFieldCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
             $errors_collector
         );
         self::assertTrue($no_other_required_fields);
-        self::assertCount(0, $errors_collector->getErrorMessages());
+        self::assertCount(0, $errors_collector->getRequiredFieldsErrors());
     }
 
     public function testDisallowsCreationWhenAnyFieldIsRequiredAndNotSynchronized(): void
@@ -111,7 +111,7 @@ final class RequiredFieldCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $other_required_field = $this->createMock(\Tracker_FormElement_Field_String::class);
         $other_required_field->method('isRequired')->willReturn(true);
-        $other_required_field->method('getId')->willReturn('987');
+        $other_required_field->method('getId')->willReturn(987);
         $other_required_field->method('getLabel')->willReturn('some_label');
         $other_required_field->method('getTrackerId')->willReturn(412);
 
@@ -139,7 +139,7 @@ final class RequiredFieldCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
             $errors_collector
         );
         self::assertFalse($no_other_required_fields);
-        self::assertCount(1, $errors_collector->getErrorMessages());
+        self::assertCount(1, $errors_collector->getRequiredFieldsErrors());
     }
 
     private function buildSynchronizedFieldDataFromProgramAndTeamTrackers(

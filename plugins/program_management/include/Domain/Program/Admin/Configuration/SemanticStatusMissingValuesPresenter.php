@@ -19,17 +19,28 @@
  *
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\ProgramManagement\Domain\Program\Admin\Configuration;
 
-final class ErrorPresenter
+/**
+ * @psalm-immutable
+ */
+final class SemanticStatusMissingValuesPresenter
 {
+    public string $missing_values;
     /**
-     * @psalm-readonly
+     * @var int[]
      */
-    public string $purified_error_message;
+    public array $tracker_ids;
 
-    public function __construct(string $error)
+    /**
+     * @param string[] $missing_values
+     * @param int[] $tracker_ids
+     */
+    public function __construct(array $missing_values, array $tracker_ids)
     {
-        $this->purified_error_message = \Codendi_HTMLPurifier::instance()->purify($error, CODENDI_PURIFIER_LIGHT);
+        $this->missing_values = implode(', ', $missing_values);
+        $this->tracker_ids    = $tracker_ids;
     }
 }

@@ -125,7 +125,7 @@ final class SemanticCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
                 $configuration_errors
             )
         );
-        self::assertCount(0, $configuration_errors->getErrorMessages());
+        self::assertCount(0, $configuration_errors->getSemanticErrors());
     }
 
     public function testItReturnsFalseIfSomethingIsIncorrect(): void
@@ -150,11 +150,11 @@ final class SemanticCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
             )
         );
 
-        $collected_errors = $configuration_errors->getErrorMessages();
+        $collected_errors = $configuration_errors->getSemanticErrors();
         self::assertCount(3, $collected_errors);
-        self::assertStringContainsString("Title", $collected_errors[0]);
-        self::assertStringContainsString("Description", $collected_errors[1]);
-        self::assertStringContainsString("Timeframe", $collected_errors[2]);
+        self::assertStringContainsString("Title", $collected_errors[0]->semantic_name);
+        self::assertStringContainsString("Description", $collected_errors[1]->semantic_name);
+        self::assertStringContainsString("Timeframe", $collected_errors[2]->semantic_name);
     }
 
     public function testItStopsAtFirstErrorFound(): void
@@ -179,9 +179,9 @@ final class SemanticCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
             )
         );
 
-        $collected_errors = $configuration_errors->getErrorMessages();
+        $collected_errors = $configuration_errors->getSemanticErrors();
         self::assertCount(1, $collected_errors);
-        self::assertStringContainsString("Title", $collected_errors[0]);
+        self::assertStringContainsString("Title", $collected_errors[0]->semantic_name);
     }
 
     public function testItReturnsFalseIfTimeFrameSemanticsDontUseTheSameFieldType(): void
@@ -205,8 +205,8 @@ final class SemanticCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
                 $configuration_errors
             )
         );
-        $collected_errors = $configuration_errors->getErrorMessages();
+        $collected_errors = $configuration_errors->getSemanticErrors();
         self::assertCount(1, $collected_errors);
-        self::assertStringContainsString("Timeframe", $collected_errors[0]);
+        self::assertStringContainsString("Timeframe", $collected_errors[0]->semantic_name);
     }
 }

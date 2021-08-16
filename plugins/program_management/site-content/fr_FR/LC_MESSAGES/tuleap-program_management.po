@@ -98,20 +98,19 @@ msgstr "Essential SAFe(R) - Équipe Scrum"
 
 #, php-format
 msgid ""
-"Expected tracker with id <a href=\"%s\">#%d</a> to have a %s field "
-"associated to its TimeFrame semantic, but this field was not found"
+"Expected tracker with id #%d to have a %s field associated to its TimeFrame "
+"semantic, but this field was not found"
 msgstr ""
-"L'outils de suivi avec l'identifiant <a href=\"%s\">#%d</a> devrait avoir un "
-"champ de type %s associé à sa sémantique plage de temps, mais le champ n'a "
-"pas été trouvé"
+"L'outils de suivi avec l'identifiant #%d devrait avoir un champ de type %s "
+"associé à sa sémantique plage de temps, mais le champ n'a pas été trouvé"
 
 #, php-format
 msgid ""
-"Expected tracker with id <a href=\"%s\">%d</a> to have a field associated to "
-"its %s semantic, but this field was not found"
+"Expected tracker with id %d to have a field associated to its %s semantic, "
+"but this field was not found"
 msgstr ""
-"L'outils de suivi <a href=\"%s\">%d</a> devrait avoir un champ associé à sa "
-"sémantique %s, mais le champ n'a pas été trouvé"
+"L'outils de suivi %d devrait avoir un champ associé à sa sémantique %s, mais "
+"le champ n'a pas été trouvé"
 
 #, php-format
 msgid "Feature #%d cannot be planned in program increment #%d"
@@ -126,43 +125,42 @@ msgstr "La fonctionnalité #%d n'existe pas dans l'incrément de programme #%d"
 msgid "Feature cannot be ranked with itself"
 msgstr "La fonctionnalité ne peut pas être réordonnée avec elle-même"
 
-#, php-format
 msgid ""
-"Field <a href='%s'>#%d</a> (%s) of tracker #%d is required but cannot be "
+"Field <a href='%s'>#%s</a> (%s) of tracker #%s is required but cannot be "
 "synchronized"
 msgstr ""
-"Le champ <a href='%s'>#%d</a> (%s) de l'outil de suivi #%d est requis mais "
+"Le champ <a href='%s'>#%s</a> (%s) de l'outil de suivi #%s est requis mais "
 "ne peut pas être synchronisé"
 
-#, php-format
 msgid ""
-"Following trackers %s are using a synchronized field in a workflow date rule "
+"Following trackers are using a synchronized field in a workflow date rule "
 "(global rules)"
 msgstr ""
-"Les outils de suivi suivants %s utilisent un champ synchronisé avec un "
-"workflow sur les dates (règles globales)"
+"Les outils de suivi suivants utilisent un champ synchronisé avec un workflow "
+"sur les dates (règles globales)"
 
-#, php-format
 msgid ""
-"Following trackers %s are using a synchronized field in a workflow list rule "
+"Following trackers are using a synchronized field in a workflow list rule "
 "(field dependencies)"
 msgstr ""
-"Les outils de suivi suivants %s utilisent un champ synchronisé avec un "
-"workflow sur une liste (dépendances de champs)"
+"Les outils de suivi suivants utilisent un champ synchronisé avec un workflow "
+"sur une liste (dépendances de champs)"
 
-#, php-format
 msgid ""
-"Following trackers %s are using a synchronized field in a workflow "
-"transition rule"
+"Following trackers are using a synchronized field in a workflow transition "
+"rule"
 msgstr ""
-"Les outils de suivi suivants %s utilisent un champ synchronisé avec des "
-"règles de transition de workflow"
+"Les outils de suivi suivants utilisent un champ synchronisé avec des règles "
+"de transition de workflow"
 
 msgid "Good to know:"
 msgstr "Bon à savoir :"
 
 msgid "Granted groups"
 msgstr "Groupes autorisés"
+
+msgid "Iteration configuration is incorrect:"
+msgstr "La configuration de l'itération est incorrecte :"
 
 msgid "Iteration tracker id must not be contained into plannable tracker ids"
 msgstr ""
@@ -190,11 +188,11 @@ msgstr ""
 
 #, php-format
 msgid ""
-"No matching value found for value %s in field <a href=\"%s\">#%d</a> of "
-"tracker #%d by duck typing."
+"No matching value found for value %s in field #%d of tracker #%d by duck "
+"typing."
 msgstr ""
-"Aucune valeur trouvé pour %s dans le champ <a href=\"%s\">#%d</a> de l'outil "
-"de suivi #%d par duck typing."
+"Aucune valeur trouvé pour %s dans le champ #%d de l'outil de suivi #%d par "
+"duck typing."
 
 msgid "No project have been aggregated yet."
 msgstr "Aucun projet n'a encore été regroupé."
@@ -255,6 +253,9 @@ msgstr "Gestion de Programme"
 
 msgid "Program administration"
 msgstr "Administration du Programme"
+
+msgid "Program increment configuration is incorrect:"
+msgstr "La configuration des Incréments de Programme est incorrecte :"
 
 msgid ""
 "Program increment tracker and Iteration tracker must not be the same tracker."
@@ -322,20 +323,19 @@ msgstr "SAFe®"
 msgid "Save milestones configuration"
 msgstr "Sauvegarder la configuration des jalons"
 
-#, php-format
 msgid ""
-"Semantic '%s' is not well configured. Please check semantic of trackers %s."
+"Semantic '%s' is not well configured. Please check semantic of following "
+"trackers:"
 msgstr ""
 "La sémantique '%s' n'est pas bien configurée. Merci de vérifier la "
-"sémantique des outils de suivi %s."
+"sémantique des outils de suivi suivants :"
 
-#, php-format
 msgid ""
 "Semantic 'status' is not linked to a field in program tracker <a href='%s'>#"
-"%d</a>"
+"%s</a>:"
 msgstr ""
 "La sémantique 'statut' est liée à aucun champ dans l'outil de suivi du "
-"programme <a href='%s'>#%d</a>"
+"programme <a href='%s'>#%s</a>"
 
 msgid ""
 "Singular and lowercase. Leave it blank to keep default label \"iteration\"."
@@ -350,12 +350,11 @@ msgstr ""
 "Au singulier et en minuscule. Laisser vide pour garder le label par défaut "
 "\"program increment\"."
 
-#, php-format
 msgid ""
-"Some tracker does not have status semantic defined, please check trackers %s"
+"Some tracker does not have status semantic defined, please check trackers"
 msgstr ""
 "Certains outils de suivi n'ont pas de semantique statut définie, merci de "
-"vérifier les outils de suivi %s"
+"vérifier les outils de suivi "
 
 msgid "Source tracker for Iterations"
 msgstr "Outil de suivi source pour les Itérations"
@@ -381,9 +380,6 @@ msgstr ""
 "La fonctionnalité avec l'id #%d ne peut pas être déplanifié car elle est "
 "liée à  des user stories planifiées dans les projets Équipes."
 
-msgid "The following points are incorrect:"
-msgstr "Les points suivants sont incorrects :"
-
 msgid ""
 "The post action cannot be saved because this tracker is not a plannable "
 "tracker of a plan."
@@ -393,11 +389,11 @@ msgstr ""
 
 #, php-format
 msgid ""
-"The title field with id <a href='%s'>#%d</a> in tracker #%d has an incorrect "
-"type, it must be a string type"
+"The title field with id #%d in tracker #%d has an incorrect type, it must be "
+"a string type"
 msgstr ""
-"Le champ titre avec l'identifiant <a href='%s'>#%d</a> dans l'outil de suici "
-"#%d a un type incorrect, il doit être de type chaîne de caractère"
+"Le champ titre avec l'identifiant #%d dans l'outil de suivi #%d a un type "
+"incorrect, il doit être de type chaîne de caractère"
 
 #, php-format
 msgid "The user group %s does not exist in the Program"
@@ -472,10 +468,8 @@ msgstr ""
 "L'outils de suivi avec l'id #%d n'est pas un outils de suivi planifiable"
 
 #, php-format
-msgid "Tracker with id <a href='%s'>#%d</a> has no artifact link field"
-msgstr ""
-"L'outil de suivi avec l'id <a href='%s'>#%d</a> n'a pas de champ de lien "
-"d'artéfacts"
+msgid "Tracker with id #%d has no artifact link field"
+msgstr "L'outil de suivi avec l'id #%d n'a pas de champ de lien d'artéfacts"
 
 msgid "Unchanged"
 msgstr "Inchangé"
@@ -498,29 +492,25 @@ msgstr ""
 msgid "User %s can not access to Program #%d"
 msgstr "L'utilisateur %s ne peut pas accéder au Programme #%d"
 
-#, php-format
-msgid "User can not submit artifact in Team tracker #%d"
+msgid "User can not submit artifact in Team tracker #%s"
 msgstr ""
 "L'utilisateur ne peut pas soumettre d'artéfact dans l'outil de suivi de "
-"l'Équipe #%d"
+"l'Équipe #%s"
 
-#, php-format
-msgid "User can not submit the field <a href='%s'>#%d</a> (%s) of tracker #%d"
+msgid "User can not submit the field <a href='%s'>#%s</a> (%s) of tracker #%s"
 msgstr ""
-"L'utilisateur ne peut pas soumettre le champ <a href='%s'>#%d</a> (%s) de "
-"l'outil de suivi #%d"
+"L'utilisateur ne peut pas soumettre le champ <a href='%s'>#%s</a> (%s) de "
+"l'outil de suivi #%s"
 
-#, php-format
-msgid "User can not update the field <a href='%s'>#%d</a> (%s) of tracker #%d"
+msgid "User can not update the field <a href='%s'>#%s</a> (%s) of tracker #%s"
 msgstr ""
-"L'utilisateur ne peut pas mettre à jour le champ <a href='%s'>#%d</a> (%s) "
-"de l'outil de suivi #%d"
+"L'utilisateur ne peut pas mettre à jour le champ <a href='%s'>#%s</a> (%s) "
+"de l'outil de suivi #%s"
 
-#, php-format
-msgid "Values \"%s\" are not found in every tracker, please check tracker %s"
+msgid "Values '%s' are not found in every tracker, please check tracker"
 msgstr ""
-"Les valeurs \"%s\" n'ont pas été trouvées dans tous les outils de suivi, "
-"merci de vérifier les otuils de suivi %s"
+"Les valeurs '%s' n'ont pas été trouvées dans tous les outils de suivi, "
+"merci de vérifier les outils de suivi"
 
 msgid "Which tracker's artifacts can be planned in Program increments?"
 msgstr ""

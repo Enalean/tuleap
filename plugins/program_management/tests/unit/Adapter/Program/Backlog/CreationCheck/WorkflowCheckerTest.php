@@ -204,10 +204,9 @@ final class WorkflowCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
                 $errors_collector
             )
         );
-        self::assertCount(3, $errors_collector->getErrorMessages());
-        self::assertStringContainsString('transition', $errors_collector->getErrorMessages()[0]);
-        self::assertStringContainsString('date', $errors_collector->getErrorMessages()[1]);
-        self::assertStringContainsString('list', $errors_collector->getErrorMessages()[2]);
+        self::assertSame(758, $errors_collector->getFieldDependencyError()[0]->tracker_id);
+        self::assertSame(123, $errors_collector->getTransitionRuleDateError()[0]->tracker_id);
+        self::assertSame(758, $errors_collector->getTransitionRuleError()[0]->tracker_id);
     }
 
     private function buildSynchronizedFieldsCollectionFromProgramAndTeam(): SynchronizedFieldFromProgramAndTeamTrackers

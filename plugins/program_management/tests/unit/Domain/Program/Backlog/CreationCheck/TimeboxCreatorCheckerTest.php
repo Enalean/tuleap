@@ -282,7 +282,7 @@ final class TimeboxCreatorCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
             )
         );
 
-        self::assertNotEmpty($configuration_errors->getErrorMessages());
+        self::assertTrue($configuration_errors->hasError());
     }
 
     private function getMilestoneRetriever(
@@ -305,7 +305,7 @@ final class TimeboxCreatorCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
-    private function buildSynchronizedFields(bool $submitable): void
+    private function buildSynchronizedFields(bool $submittable): void
     {
         $title_field = $this->createStub(\Tracker_FormElement_Field_Text::class);
         $this->mockField($title_field, 6, true, true);
@@ -314,7 +314,7 @@ final class TimeboxCreatorCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         $artifact_link = $this->createStub(Tracker_FormElement_Field_ArtifactLink::class);
         $artifact_link->method("getLabel")->willReturn('Link');
         $artifact_link->method("getTrackerId")->willReturn(49);
-        $this->mockField($artifact_link, 1, $submitable, true);
+        $this->mockField($artifact_link, 1, $submittable, true);
         $artifact_link_field_data = new Field($artifact_link);
 
         $description_field = $this->createStub(Tracker_FormElement_Field_Text::class);
@@ -344,10 +344,10 @@ final class TimeboxCreatorCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->fields_adapter->method('build')->willReturn($synchronized_fields);
     }
 
-    private function mockField(Stub $field, int $id, bool $submitable, bool $updatable): void
+    private function mockField(Stub $field, int $id, bool $submittable, bool $updatable): void
     {
         $field->method('getId')->willReturn($id);
-        $field->method('userCanSubmit')->willReturn($submitable);
+        $field->method('userCanSubmit')->willReturn($submittable);
         $field->method('userCanUpdate')->willReturn($updatable);
     }
 

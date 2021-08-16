@@ -108,7 +108,7 @@ class TimeboxCreatorChecker
             }
         } catch (FieldSynchronizationException $exception) {
             $can_be_created = false;
-            $configuration_errors->addError($exception->getI18NExceptionMessage());
+            $configuration_errors->addFieldSynchronisationError($exception->getI18NExceptionMessage());
             if (! $configuration_errors->shouldCollectAllIssues()) {
                 return $can_be_created;
             }
