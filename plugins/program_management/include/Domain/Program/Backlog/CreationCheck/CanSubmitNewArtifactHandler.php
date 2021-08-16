@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck;
 
-use Tuleap\ProgramManagement\Adapter\Workspace\UserProxy;
 use Tuleap\ProgramManagement\Domain\BuildProject;
 use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ConfigurationErrorsCollector;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Team\TeamProjectsCollection;
@@ -32,6 +31,7 @@ use Tuleap\ProgramManagement\Domain\Program\Plan\ProjectIsNotAProgramException;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\SearchTeamsOfProgram;
 use Tuleap\ProgramManagement\Domain\ProgramTracker;
+use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\Tracker\Artifact\CanSubmitNewArtifact;
 
 final class CanSubmitNewArtifactHandler
@@ -56,15 +56,17 @@ final class CanSubmitNewArtifactHandler
         $this->project_builder                   = $project_builder;
     }
 
-    public function handle(CanSubmitNewArtifact $event, ConfigurationErrorsCollector $errors_collector): void
-    {
+    public function handle(
+        CanSubmitNewArtifact $event,
+        ConfigurationErrorsCollector $errors_collector,
+        UserIdentifier $user_identifier
+    ): void {
         $tracker      = $event->getTracker();
         $user         = $event->getUser();
         $tracker_data = new ProgramTracker($tracker);
 
         try {
-            $user_identifier = UserProxy::buildFromPFUser($user);
-            $program         = ProgramIdentifier::fromId($this->program_builder, (int) $tracker->getGroupId(), $user_identifier, null);
+            $program = ProgramIdentifier::fromId($this->program_builder, (int) $tracker->getGroupId(), $user_identifier, null);
         } catch (ProgramAccessException | ProjectIsNotAProgramException $e) {
             // Do not disable artifact submission. Keep it enabled
             return;

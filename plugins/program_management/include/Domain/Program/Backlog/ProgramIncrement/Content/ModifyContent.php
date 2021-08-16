@@ -31,6 +31,7 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncr
 use Tuleap\ProgramManagement\Domain\Program\Plan\FeatureCannotBePlannedInProgramIncrementException;
 use Tuleap\ProgramManagement\Domain\Program\Plan\InvalidFeatureIdInProgramIncrementException;
 use Tuleap\ProgramManagement\Domain\Program\ProgramTrackerException;
+use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 
 /**
  * I add and/or reorder the contents of a Program Increment
@@ -51,5 +52,5 @@ interface ModifyContent
      *  @throws FeatureException
      * @throws \Tuleap\ProgramManagement\Domain\Program\ProgramNotFoundException
      */
-    public function modifyContent(\PFUser $user, int $program_increment_id, ContentChange $content_change): void;
+    public function modifyContent(\PFUser $user, int $program_increment_id, ContentChange $content_change, UserIdentifier $user_identifier): void;
 }

@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Content;
 
-use Tuleap\ProgramManagement\Adapter\Workspace\UserProxy;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureCanNotBeRankedWithItselfException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureHasPlannedUserStoryException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureIdentifier;
@@ -40,6 +39,7 @@ use Tuleap\ProgramManagement\Domain\Program\Plan\VerifyPrioritizeFeaturesPermiss
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\ProgramSearcher;
 use Tuleap\ProgramManagement\Domain\UserCanPrioritize;
+use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\ProgramManagement\Domain\Workspace\VerifyUserCanPlanInProgramIncrement;
 use Tuleap\ProgramManagement\REST\v1\FeatureElementToOrderInvolvedInChangeRepresentation;
 
@@ -77,12 +77,11 @@ final class ContentModifier implements ModifyContent
         $this->can_plan_in_program_increment_verifier = $can_plan_in_program_increment_verifier;
     }
 
-    public function modifyContent(\PFUser $user, int $program_increment_id, ContentChange $content_change): void
+    public function modifyContent(\PFUser $user, int $program_increment_id, ContentChange $content_change, UserIdentifier $user_identifier): void
     {
         if ($content_change->potential_feature_id_to_add === null && $content_change->elements_to_order === null) {
             throw new AddOrOrderMustBeSetException();
         }
-        $user_identifier     = UserProxy::buildFromPFUser($user);
         $program_increment   = ProgramIncrementIdentifier::fromId(
             $this->program_increment_checker,
             $program_increment_id,
