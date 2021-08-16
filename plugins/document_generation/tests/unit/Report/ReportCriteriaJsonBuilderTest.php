@@ -31,6 +31,8 @@ use Tracker_FormElement_Field_List_Bind_Ugroups;
 use Tracker_FormElement_Field_List_Bind_UgroupsValue;
 use Tracker_FormElement_Field_List_Bind_Users;
 use Tracker_FormElement_Field_List_Bind_UsersValue;
+use Tracker_FormElement_Field_List_UnsavedValue;
+use Tracker_FormElement_Field_OpenList;
 use Tracker_FormElement_Field_String;
 use Tracker_Report;
 use Tracker_Report_AdditionalCriterion;
@@ -60,7 +62,7 @@ final class ReportCriteriaJsonBuilderTest extends TestCase
         self::assertNotNull($report_json->is_in_expert_mode);
         self::assertFalse($report_json->is_in_expert_mode);
         self::assertNotNull($report_json->criteria);
-        self::assertCount(5, $report_json->criteria);
+        self::assertCount(6, $report_json->criteria);
         self::assertSame("Summary", $report_json->criteria[0]->criterion_name);
         self::assertSame("Test", $report_json->criteria[0]->criterion_value);
         self::assertSame("Users list", $report_json->criteria[1]->criterion_name);
@@ -69,8 +71,10 @@ final class ReportCriteriaJsonBuilderTest extends TestCase
         self::assertSame("Ugroup01, Ugroup02", $report_json->criteria[2]->criterion_value);
         self::assertSame("Static values list", $report_json->criteria[3]->criterion_name);
         self::assertSame("Static value 01, Static value 02", $report_json->criteria[3]->criterion_value);
-        self::assertSame("Additional01", $report_json->criteria[4]->criterion_name);
-        self::assertSame("ValueAdd01", $report_json->criteria[4]->criterion_value);
+        self::assertSame("Open list static values", $report_json->criteria[4]->criterion_name);
+        self::assertSame("a, b, abc", $report_json->criteria[4]->criterion_value);
+        self::assertSame("Additional01", $report_json->criteria[5]->criterion_name);
+        self::assertSame("ValueAdd01", $report_json->criteria[5]->criterion_value);
     }
 
     private function buildReportWithExpertQuery(): Tracker_Report
@@ -97,11 +101,12 @@ final class ReportCriteriaJsonBuilderTest extends TestCase
         $report                    = $this->createMock(Tracker_Report::class);
         $report->is_in_expert_mode = false;
 
-        $string_field      = $this->createMock(Tracker_FormElement_Field_String::class);
-        $date_field        = $this->createMock(Tracker_FormElement_Field_Date::class);
-        $list_user_field   = $this->createMock(Tracker_FormElement_Field_List::class);
-        $list_groups_field = $this->createMock(Tracker_FormElement_Field_List::class);
-        $list_static_field = $this->createMock(Tracker_FormElement_Field_List::class);
+        $string_field           = $this->createMock(Tracker_FormElement_Field_String::class);
+        $date_field             = $this->createMock(Tracker_FormElement_Field_Date::class);
+        $list_user_field        = $this->createMock(Tracker_FormElement_Field_List::class);
+        $list_groups_field      = $this->createMock(Tracker_FormElement_Field_List::class);
+        $list_static_field      = $this->createMock(Tracker_FormElement_Field_List::class);
+        $open_list_static_field = $this->createMock(Tracker_FormElement_Field_OpenList::class);
 
         $criterion_string = new Tracker_Report_Criteria(
             1,
@@ -140,6 +145,14 @@ final class ReportCriteriaJsonBuilderTest extends TestCase
             $report,
             $list_static_field,
             5,
+            0
+        );
+
+        $criterion_open_list_static = new Tracker_Report_Criteria(
+            6,
+            $report,
+            $open_list_static_field,
+            6,
             0
         );
 
@@ -221,12 +234,45 @@ final class ReportCriteriaJsonBuilderTest extends TestCase
             ->method('getBind')
             ->willReturn($static_bind);
 
+        $open_list_static_field
+            ->method('getLabel')
+            ->willReturn("Open list static values");
+
+        $open_list_static_field
+            ->method('getCriteriaValue')
+            ->with($criterion_open_list_static)
+            ->willReturn("b14,b15,!abc");
+
+        $open_list_static_field
+            ->method('extractCriteriaValue')
+            ->with("b14,b15,!abc")
+            ->willReturn([
+                new Tracker_FormElement_Field_List_Bind_StaticValue(
+                    14,
+                    'a',
+                    '',
+                    1,
+                    false
+                ),
+                new Tracker_FormElement_Field_List_Bind_StaticValue(
+                    15,
+                    'b',
+                    '',
+                    2,
+                    false
+                ),
+                new Tracker_FormElement_Field_List_UnsavedValue(
+                    'abc'
+                ),
+            ]);
+
         $criteria = [
             $criterion_string,
             $criterion_date,
             $criterion_user_list,
             $criterion_groups_list,
             $criterion_static_list,
+            $criterion_open_list_static,
         ];
 
         $report->method('getCriteria')->willReturn($criteria);

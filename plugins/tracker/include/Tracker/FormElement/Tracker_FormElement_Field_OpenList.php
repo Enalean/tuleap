@@ -746,8 +746,7 @@ class Tracker_FormElement_Field_OpenList extends Tracker_FormElement_Field_List 
         return $this->fetchOpenList($criteria_value, $name);
     }
 
-
-    protected function extractCriteriaValue($criteria_value)
+    public function extractCriteriaValue($criteria_value): array
     {
         //switch to array
         if (! is_array($criteria_value)) {
