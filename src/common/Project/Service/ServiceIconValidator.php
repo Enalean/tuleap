@@ -957,7 +957,7 @@ class ServiceIconValidator
             ],
         'fab fa-figma' =>
              [
-                'fa-icon' => 'fas fab fa-figma',
+                'fa-icon' => 'fab fa-figma',
                 'description' => 'Figma Logo',
             ],
         'fa-fighter-jet' =>
