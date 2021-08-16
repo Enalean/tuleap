@@ -28,6 +28,12 @@
     padding: var(--tlp-medium-spacing) var(--tlp-medium-spacing) var(--tlp-title-spacing);
 }
 
+.program-management-empty-state-label {
+    margin: var(--tlp-x-large-spacing) 0 0;
+    color: var(--tlp-dimmed-color);
+    font-size: 0.875rem;
+}
+
 .planning-divider {
     display: flex;
     justify-content: center;
