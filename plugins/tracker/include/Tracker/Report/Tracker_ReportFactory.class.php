@@ -224,13 +224,13 @@ class Tracker_ReportFactory
     }
 
     /**
-     * @param array the row identifying a report
+     * @param array the row identifing a report
      * @return Tracker_Report
      */
     protected function getInstanceFromRow($row, $store_in_session = true)
     {
         $r = new Tracker_Report(
-            (int) $row['id'],
+            $row['id'],
             $row['name'],
             $row['description'],
             $row['current_renderer_id'],
@@ -377,7 +377,7 @@ class Tracker_ReportFactory
         $report_session = $tracker_report->getReportSession();
 
         if ($report_session->get('is_in_expert_mode') !== null) {
-            $tracker_report->setIsInExpertMode((bool) $report_session->get('is_in_expert_mode'));
+            $tracker_report->setIsInExpertMode($report_session->get('is_in_expert_mode'));
         }
 
         if ($report_session->get('expert_query') !== null) {
