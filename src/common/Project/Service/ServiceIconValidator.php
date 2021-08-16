@@ -2435,11 +2435,6 @@ class ServiceIconValidator
                 'fa-icon' => 'fab fa-gg-circle',
                 'description' => 'GG Currency Circle',
             ],
-        'fa-tripadvisor' =>
-             [
-                'fa-icon' => 'fab-tripadvisor',
-                'description' => 'TripAdvisor',
-            ],
         'fa-odnoklassniki' =>
              [
                 'fa-icon' => 'fab fa-odnoklassniki',
