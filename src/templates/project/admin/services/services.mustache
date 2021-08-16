@@ -13,7 +13,7 @@
                        type="button"
                        class="tlp-button-primary tlp-table-actions-element"
                     >
-                        <i class="tlp-button-icon fa fa-plus"></i>
+                        <i class="tlp-button-icon fas fa-plus"></i>
                         {{# gettext }}Add a new service{{/ gettext }}
                     </button>
                 </div>
@@ -36,13 +36,13 @@
                         {{# services }}
                             <tr>
                                 <td title="{{ description }}">
-                                    {{# icon }}<i class="fa fa-fw {{ icon }} project-admin-services-icon"></i>{{/icon}}
+                                    {{# icon }}<i class="fa-fw {{ icon }} project-admin-services-icon" aria-hidden="true"></i>{{/icon}}
                                     {{ label }}
                                 </td>
                                 {{# is_default_template }}
-                                    <td>{{# is_active }}<i class="fa fa-check"></i>{{/ is_active }}</td>
+                                    <td>{{# is_active }}<i class="fas fa-check"></i>{{/ is_active }}</td>
                                 {{/ is_default_template }}
-                                <td>{{# is_used }}<i class="fa fa-check"></i>{{/ is_used }}</td>
+                                <td>{{# is_used }}<i class="fas fa-check"></i>{{/ is_used }}</td>
                                 {{# is_default_template }}
                                     <td>{{ scope }}</td>
                                 {{/ is_default_template }}

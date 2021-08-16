@@ -27,7 +27,7 @@ class ProjectDefinedService extends \Service
 {
     public function getIconName(): string
     {
-        return ($this->data['icon'] !== '') ? $this->data['icon'] : 'fa-angle-double-right';
+        return ($this->data['icon'] !== '') ? $this->data['icon'] : 'fas fa-angle-double-right';
     }
 
     public function isOpenedInNewTab(): bool

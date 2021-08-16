@@ -32,12 +32,12 @@
             v-on:change="$emit('input', $event.target.value)"
         >
             <option
-                v-for="(label, icon_name) in allowed_icons"
-                v-bind:key="icon_name"
-                v-bind:value="icon_name"
-                v-bind:selected="value === icon_name"
+                v-for="(icon_info, icon_id) in allowed_icons"
+                v-bind:key="icon_id"
+                v-bind:value="icon_id"
+                v-bind:selected="value === icon_id"
             >
-                {{ label }}
+                {{ icon_info.description }}
             </option>
         </select>
     </div>
@@ -70,15 +70,12 @@ export default {
         this.selector = await createListPicker(this.$refs.select, {
             is_filterable: true,
             placeholder: this.$gettext("Choose an icon"),
-            items_template_formatter: (html_processor, value_id, item_label) => {
-                let font_awesome_icon_classes = value_id;
-                if (!font_awesome_icon_classes.includes(" ")) {
-                    font_awesome_icon_classes += " fa";
-                }
+            items_template_formatter: (html_processor, value_id) => {
+                const icon_info = this.allowed_icons[value_id];
 
                 const template = html_processor`
-                    <i aria-hidden="true" class="project-admin-services-modal-icon-item fa-fw ${font_awesome_icon_classes}"></i>
-                    <span>${item_label}</span>
+                    <i aria-hidden="true" class="project-admin-services-modal-icon-item fa-fw ${icon_info["fa-icon"]}"></i>
+                    <span>${icon_info.description}</span>
                 `;
                 return Promise.resolve(template);
             },

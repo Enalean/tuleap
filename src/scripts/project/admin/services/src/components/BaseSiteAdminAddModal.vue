@@ -25,6 +25,7 @@
                 v-bind:label="preview_label"
                 v-bind:icon_name="service.icon_name"
                 v-bind:is_in_new_tab="service.is_in_new_tab"
+                v-bind:allowed_icons="allowed_icons"
             />
             <in-creation-custom-service
                 v-bind:minimal_rank="minimal_rank"

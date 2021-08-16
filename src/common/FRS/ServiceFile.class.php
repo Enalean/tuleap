@@ -31,7 +31,7 @@ class ServiceFile extends Service //phpcs:ignore PSR1.Classes.ClassDeclaration.M
 {
     public function getIconName(): string
     {
-        return 'fa-files-o';
+        return 'far fa-copy';
     }
 
     /**

@@ -66,7 +66,7 @@ class ServicePresenter
         $this->short_name     = $service->getShortName();
         $this->can_be_deleted = $this->canBeDeleted($service);
         $this->service_json   = json_encode($json_presenter);
-        $this->icon           = $service->getIconName();
+        $this->icon           = $service->getIcon();
     }
 
     private function canBeDeleted(Service $service)

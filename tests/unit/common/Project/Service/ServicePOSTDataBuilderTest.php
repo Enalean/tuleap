@@ -272,7 +272,7 @@ final class ServicePOSTDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $post_data = $this->service_postdata_builder->buildFromService($service, false);
 
-        $this->assertSame($post_data->getIconName(), 'fa-rss');
+        $this->assertSame('fas fa-rss', $post_data->getIconName());
     }
 
     public function testBuildFromRequestForceAdminServiceToBeUsed(): void

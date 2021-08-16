@@ -31,7 +31,7 @@ class ServiceDocman extends \Service
 
     public function getIconName(): string
     {
-        return 'fa-folder-open';
+        return 'fas fa-folder-open';
     }
 
     public function getInternationalizedName(): string

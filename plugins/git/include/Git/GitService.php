@@ -29,7 +29,7 @@ class GitService extends Service
 {
     public function getIconName(): string
     {
-        return 'fa-tlp-versioning-git';
+        return 'fas fa-tlp-versioning-git';
     }
 
     public function getInternationalizedName(): string
