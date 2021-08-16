@@ -33,6 +33,7 @@
 $tracker-artifact-submit-buttons-height: 80px;
 $tracker-artifact-submit-buttons-concurrent-edition-height: 286px;
 $tracker-artifact-followup-comments-in-concurrent-edition-padding-bottom: $tracker-artifact-submit-buttons-height + $tracker-artifact-submit-buttons-concurrent-edition-height;
+$tracker-artifact-markup-diff-text-color: #838383;
 
 /* stylelint-disable selector-id-pattern, selector-class-pattern, selector-no-qualifying-type, selector-max-compound-selectors */
 body.tracker-artifact-view-body .main .content {
@@ -990,7 +991,7 @@ select.tracker-report-expert-allowed-fields {
 .tracker_artifact_followup_changes {
     margin: 5px auto;
     list-style-position: inside;
-    color: #838383;
+    color: $tracker-artifact-markup-diff-text-color;
     font-size: 0.8em;
 
     li {
@@ -2139,6 +2140,14 @@ td.first-column {
 
 .artifact-event-popup-content .tracker_artifact_followup_changes_changes {
     border-radius: var(--tlp-medium-radius);
+}
+
+.artifact-event-popup-content .difftext {
+    color: $tracker-artifact-markup-diff-text-color;
+}
+
+.artifact-event-popup-content .diff .context {
+    color: var(--tlp-white-color);
 }
 
 .artifact-event-popup-actions {

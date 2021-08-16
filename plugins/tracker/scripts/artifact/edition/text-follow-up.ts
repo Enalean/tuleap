@@ -24,38 +24,57 @@ document.addEventListener("DOMContentLoaded", () => {
     const markup_buttons = document.getElementsByClassName("toggle-diff");
 
     for (const diff_button of markup_buttons) {
-        diff_button.addEventListener("click", async function (event: Event) {
-            event.preventDefault();
-
-            let changeset_id;
-            let field_id;
-            if (diff_button instanceof HTMLElement) {
-                changeset_id = diff_button.dataset.changesetId;
-                field_id = diff_button.dataset.fieldId;
-            }
-
-            if (!changeset_id) {
-                throw new Error("Missing changeset id -" + changeset_id);
-            }
-
-            if (!field_id) {
-                throw new Error("Missing field id -" + field_id);
-            }
-
-            await toggleDiffContent(
-                diff_button,
-                document,
-                changeset_id,
-                field_id,
-                "strip-html",
-                "show-diff-follow-up"
-            );
-
-            toggleIcon(diff_button);
-            toggleMarkupButton(diff_button, changeset_id, field_id);
-        });
+        diff_button.addEventListener("click", handleClickDiffButton);
     }
 });
+
+const notification_placeholder_element = document.getElementById("notification-placeholder");
+if (notification_placeholder_element) {
+    notification_placeholder_element.addEventListener("change", () => {
+        const diff_elements =
+            notification_placeholder_element.getElementsByClassName("toggle-diff");
+        for (const diff_button of diff_elements) {
+            diff_button.addEventListener("click", handleClickDiffButton);
+        }
+    });
+}
+
+async function handleClickDiffButton(event: Event): Promise<void> {
+    event.preventDefault();
+
+    if (!event.target || !(event.target instanceof HTMLElement)) {
+        throw new Error("No target for event on clicking diff button");
+    }
+
+    const diff_button = event.target;
+
+    let changeset_id;
+    let field_id;
+    if (diff_button instanceof HTMLElement) {
+        changeset_id = diff_button.dataset.changesetId;
+        field_id = diff_button.dataset.fieldId;
+    }
+
+    if (!changeset_id) {
+        throw new Error("Missing changeset id -" + changeset_id);
+    }
+
+    if (!field_id) {
+        throw new Error("Missing field id -" + field_id);
+    }
+
+    await toggleDiffContent(
+        diff_button,
+        document,
+        changeset_id,
+        field_id,
+        "strip-html",
+        "show-diff-follow-up"
+    );
+
+    toggleIcon(diff_button);
+    toggleMarkupButton(diff_button, changeset_id, field_id);
+}
 
 export async function toggleDiffContent(
     diff_button: Element,
