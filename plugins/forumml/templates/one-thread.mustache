@@ -12,15 +12,40 @@
                 {{/ has_avatar }}
             </div>
             <div class="tlp-card forumml-thread-message-card">
-                <p class="forumml-thread-message-sender">
-                    <a href="#message-{{ id }}"
-                       title="{{# dgettext }}tuleap-forumml | Permalink{{/ dgettext }}"
-                       class="forumml-thread-message-permalink"
-                    ><i class="fas fa-link" aria-hidden="true"></i></a>
-                    {{ user_name }}, {{# date }}{{> tlp_relative_date }}{{/ date }}
-                </p>
+                <div class="forumml-thread-message-card-header">
+                    <p class="forumml-thread-message-sender">
+                        <a href="#message-{{ id }}"
+                           title="{{# dgettext }}tuleap-forumml | Permalink{{/ dgettext }}"
+                           class="forumml-thread-message-permalink"
+                        ><i class="fas fa-link" aria-hidden="true"></i></a>
+                        {{ user_name }}, {{# date }}{{> tlp_relative_date }}{{/ date }}
+                    </p>
+                    <div class="tlp-dropdown">
+                        <i class="fas fa-cog fa-fw forumml-thread-message-action" aria-hidden="true"></i>
+                        <div class="tlp-dropdown-menu tlp-dropdown-menu-right tlp-dropdown-menu-on-icon" role="menu">
+                            <div class="tlp-dropdown-menu-item forumml-thread-message-action-item" role="menuitem">
+                                <label class="tlp-label forumml-thread-message-action-item-label" for="monospace-{{ id }}">
+                                    {{# dgettext}}tuleap-forumml | Monospaced font{{/ dgettext }}
+                                </label>
+                                <div class="tlp-form-element">
+                                    <div class="tlp-switch tlp-switch-mini">
+                                        <input
+                                            type="checkbox"
+                                            id="monospace-{{ id }}"
+                                            class="tlp-switch-checkbox forumml-thread-message-action-monospace"
+                                            data-target="forumml-thread-message-body-{{ id }}"
+                                            autocomplete="off">
+                                        <label for="monospace-{{ id }}" class="tlp-switch-button">
+                                            {{# dgettext}}tuleap-forumml | Monospaced font{{/ dgettext }}
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
-                <div class="forumml-thread-message-body">
+                <div class="forumml-thread-message-body" id="forumml-thread-message-body-{{ id }}">
                     {{{ body_html }}}
                 </div>
 
