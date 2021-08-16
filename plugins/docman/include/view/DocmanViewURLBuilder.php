@@ -48,15 +48,6 @@ final class DocmanViewURLBuilder
         return $url;
     }
 
-    private static function buildPopupUrl(string $url, bool $injs = false): string
-    {
-        if ($injs) {
-            return "javascript:help_window(\\'$url\\')";
-        }
-
-        return "javascript:help_window('$url')";
-    }
-
     /**
      * @psalm-param array{default_url?: string, pv?: mixed, report?: mixed} $params
      */
@@ -77,8 +68,7 @@ final class DocmanViewURLBuilder
             $prefix = $params['default_url'];
         }
         if ($popup && isset($params['pv']) && $params['pv'] !== false) {
-            $url = self::buildUrl($prefix, $url_parameters, ! $injs);
-            return self::buildPopupUrl($url, $injs);
+            return self::buildUrl($prefix, $url_parameters, ! $injs);
         }
         if (isset($params['pv']) && $params['pv'] !== false) {
             $url_parameters['pv'] = $params['pv'];

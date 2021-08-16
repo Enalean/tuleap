@@ -39,7 +39,7 @@ class Docman_View_Docman extends Docman_View_ProjectHeader
 
         $tools[] = [
             'title' => $GLOBALS['Language']->getText('global', 'help'),
-            'url'   => "javascript:help_window('/doc/" . $this->_controller->getUser()->getShortLocale() . "/user-guide/documents-and-files/doc.html')"
+            'url'   => "/doc/" . urlencode($this->_controller->getUser()->getShortLocale()) . "/user-guide/documents-and-files/doc.html",
         ];
 
         return $tools;

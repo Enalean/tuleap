@@ -54,7 +54,7 @@ class Docman_ItemAction
         $dfltUrlParams = ['action' => $this->action, 'id' => $this->item->getId()];
         $_urlParams    = \array_merge($dfltUrlParams, $this->extraUrlParams);
         $url           = \Tuleap\Docman\View\DocmanViewURLBuilder::buildActionUrl($this->item, $params, $_urlParams, \true, \true);
-        $html          = '<a href="' . $url . '" class="' . $this->classes . '" title="' . $this->title . '">';
+        $html          = '<a data-help-window href="' . $url . '" class="' . $this->classes . '" title="' . $this->title . '">';
         $html         .= '<img src="' . $params['docman_icons']->getActionIcon($this->action) . '" class="docman_item_icon" alt="[' . $this->title . ']" />';
         $html         .= '</a>&nbsp;';
         return $html;
