@@ -1050,7 +1050,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
             $size     = 'size="' . min($this->getMaxSize(), count($this->getBind()->getBindValues()) + 2) . '"';
         }
         if ($this->isRequired()) {
-            $required = 'required';
+            $required = 'required ';
         }
 
         $html .= "<select $id $name $multiple $size $bind_type $required";
