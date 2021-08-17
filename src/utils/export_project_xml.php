@@ -198,39 +198,3 @@ try {
     fwrite(STDERR, "*** ERROR: " . $exception->getMessage() . PHP_EOL);
     exit(1);
 }
-
-class ProjectXMLExport_Archive extends ZipArchive
-{
-
-    private $archive_path;
-
-    public function open($filename, $flags = null)
-    {
-        $this->archive_path = $filename;
-        return mkdir($filename, 0700, true);
-    }
-
-    public function close()
-    {
-        return true;
-    }
-
-    public function addEmptyDir($dirname)
-    {
-        if (! is_dir($this->archive_path . DIRECTORY_SEPARATOR . $dirname)) {
-            return mkdir($this->archive_path . DIRECTORY_SEPARATOR . $dirname, 0700);
-        }
-        return true;
-    }
-
-    public function addFile($filename, $localname = null, $start = 0, $length = 0)
-    {
-        return copy($filename, $this->archive_path . DIRECTORY_SEPARATOR . $localname);
-    }
-
-    public function addFromString($localname, $contents)
-    {
-        file_put_contents($this->archive_path . DIRECTORY_SEPARATOR . $localname, $contents);
-        return true;
-    }
-}
