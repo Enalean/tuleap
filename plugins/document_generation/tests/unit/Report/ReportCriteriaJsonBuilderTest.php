@@ -111,58 +111,44 @@ final class ReportCriteriaJsonBuilderTest extends TestCase
         $report                    = $this->createMock(Tracker_Report::class);
         $report->is_in_expert_mode = false;
 
-        $string_field           = $this->createMock(Tracker_FormElement_Field_String::class);
-        $date_field             = $this->createMock(Tracker_FormElement_Field_Date::class);
-        $list_user_field        = $this->createMock(Tracker_FormElement_Field_List::class);
-        $list_groups_field      = $this->createMock(Tracker_FormElement_Field_List::class);
-        $list_static_field      = $this->createMock(Tracker_FormElement_Field_List::class);
-        $open_list_static_field = $this->createMock(Tracker_FormElement_Field_OpenList::class);
+        $criteria = [
+            $this->buildStringCriterion($report),
+            $this->buildUserListCriterion($report),
+            $this->buildUserGroupListCriterion($report),
+            $this->buildStaticListCriterion($report),
+            $this->buildStaticOpenListCriterion($report),
+            $this->buildAdvancedDateCriterion($report),
+            $this->buildNotSetListCriterion($report),
+            $this->buildNotSetOpenListCriterion($report),
+            $this->buildNotSetDateCriterion($report),
+        ];
+
+        $report->method('getCriteria')->willReturn($criteria);
+
+        $additional_criteria = [
+            new Tracker_Report_AdditionalCriterion(
+                "Additional01",
+                "ValueAdd01"
+            ),
+            new Tracker_Report_AdditionalCriterion(
+                "Additional02",
+                null
+            ),
+        ];
+        $report->method('getAdditionalCriteria')->willReturn($additional_criteria);
+
+        return $report;
+    }
+
+    private function buildStringCriterion(Tracker_Report $report): Tracker_Report_Criteria
+    {
+        $string_field = $this->createMock(Tracker_FormElement_Field_String::class);
 
         $criterion_string = new Tracker_Report_Criteria(
             1,
             $report,
             $string_field,
             1,
-            0
-        );
-
-        $criterion_date = new Tracker_Report_Criteria(
-            2,
-            $report,
-            $date_field,
-            2,
-            1
-        );
-
-        $criterion_user_list = new Tracker_Report_Criteria(
-            3,
-            $report,
-            $list_user_field,
-            3,
-            0
-        );
-
-        $criterion_groups_list = new Tracker_Report_Criteria(
-            4,
-            $report,
-            $list_groups_field,
-            4,
-            0
-        );
-
-        $criterion_static_list = new Tracker_Report_Criteria(
-            5,
-            $report,
-            $list_static_field,
-            5,
-            0
-        );
-
-        $criterion_open_list_static = new Tracker_Report_Criteria(
-            6,
-            $report,
-            $open_list_static_field,
-            6,
             0
         );
 
@@ -174,6 +160,49 @@ final class ReportCriteriaJsonBuilderTest extends TestCase
             ->method('getCriteriaValue')
             ->with($criterion_string)
             ->willReturn("Test");
+
+        return $criterion_string;
+    }
+
+    private function buildAdvancedDateCriterion(Tracker_Report $report): Tracker_Report_Criteria
+    {
+        $date_field = $this->createMock(Tracker_FormElement_Field_Date::class);
+
+        $criterion_date = new Tracker_Report_Criteria(
+            2,
+            $report,
+            $date_field,
+            2,
+            1
+        );
+
+        $date_field
+            ->method('getLabel')
+            ->willReturn("Submitted On");
+
+        $date_field
+            ->method('getCriteriaValue')
+            ->with($criterion_date)
+            ->willReturn([
+                "op" => "=",
+                'from_date' => '1627768800',
+                'to_date' => '1630101600'
+            ]);
+
+        return $criterion_date;
+    }
+
+    private function buildUserListCriterion(Tracker_Report $report): Tracker_Report_Criteria
+    {
+        $list_user_field = $this->createMock(Tracker_FormElement_Field_List::class);
+
+        $criterion_user_list = new Tracker_Report_Criteria(
+            3,
+            $report,
+            $list_user_field,
+            3,
+            0
+        );
 
         $user_bind = $this->createMock(Tracker_FormElement_Field_List_Bind_Users::class);
         $user_bind
@@ -195,6 +224,21 @@ final class ReportCriteriaJsonBuilderTest extends TestCase
         $list_user_field
             ->method('getBind')
             ->willReturn($user_bind);
+
+        return $criterion_user_list;
+    }
+
+    private function buildUserGroupListCriterion(Tracker_Report $report): Tracker_Report_Criteria
+    {
+        $list_groups_field = $this->createMock(Tracker_FormElement_Field_List::class);
+
+        $criterion_groups_list = new Tracker_Report_Criteria(
+            4,
+            $report,
+            $list_groups_field,
+            4,
+            0
+        );
 
         $ugroup_01 = $this->createMock(ProjectUGroup::class);
         $ugroup_01->method('getTranslatedName')->willReturn("Ugroup01");
@@ -223,6 +267,21 @@ final class ReportCriteriaJsonBuilderTest extends TestCase
             ->method('getBind')
             ->willReturn($group_bind);
 
+        return $criterion_groups_list;
+    }
+
+    private function buildStaticListCriterion(Tracker_Report $report): Tracker_Report_Criteria
+    {
+        $list_static_field = $this->createMock(Tracker_FormElement_Field_List::class);
+
+        $criterion_static_list = new Tracker_Report_Criteria(
+            5,
+            $report,
+            $list_static_field,
+            5,
+            0
+        );
+
         $static_bind = $this->createMock(Tracker_FormElement_Field_List_Bind_Static::class);
         $static_bind
             ->method('getValue')
@@ -243,6 +302,21 @@ final class ReportCriteriaJsonBuilderTest extends TestCase
         $list_static_field
             ->method('getBind')
             ->willReturn($static_bind);
+
+        return $criterion_static_list;
+    }
+
+    private function buildStaticOpenListCriterion(Tracker_Report $report): Tracker_Report_Criteria
+    {
+        $open_list_static_field = $this->createMock(Tracker_FormElement_Field_OpenList::class);
+
+        $criterion_open_list_static = new Tracker_Report_Criteria(
+            6,
+            $report,
+            $open_list_static_field,
+            6,
+            0
+        );
 
         $open_list_static_field
             ->method('getLabel')
@@ -276,6 +350,69 @@ final class ReportCriteriaJsonBuilderTest extends TestCase
                 ),
             ]);
 
+        return $criterion_open_list_static;
+    }
+
+    private function buildNotSetListCriterion(Tracker_Report $report): Tracker_Report_Criteria
+    {
+        $list_static_field = $this->createMock(Tracker_FormElement_Field_List::class);
+
+        $criterion_static_list = new Tracker_Report_Criteria(
+            5,
+            $report,
+            $list_static_field,
+            5,
+            0
+        );
+
+        $list_static_field
+            ->method('getLabel')
+            ->willReturn("Static values list");
+
+        $list_static_field
+            ->method('getCriteriaValue')
+            ->with($criterion_static_list)
+            ->willReturn('');
+
+        return $criterion_static_list;
+    }
+
+    private function buildNotSetOpenListCriterion(Tracker_Report $report): Tracker_Report_Criteria
+    {
+        $open_list_static_field = $this->createMock(Tracker_FormElement_Field_OpenList::class);
+
+        $criterion_open_list_static = new Tracker_Report_Criteria(
+            8,
+            $report,
+            $open_list_static_field,
+            8,
+            0
+        );
+
+        $open_list_static_field
+            ->method('getLabel')
+            ->willReturn("Open list static values");
+
+        $open_list_static_field
+            ->method('getCriteriaValue')
+            ->with($criterion_open_list_static)
+            ->willReturn("");
+
+        return $criterion_open_list_static;
+    }
+
+    private function buildNotSetDateCriterion(Tracker_Report $report): Tracker_Report_Criteria
+    {
+        $date_field = $this->createMock(Tracker_FormElement_Field_Date::class);
+
+        $criterion_date = new Tracker_Report_Criteria(
+            9,
+            $report,
+            $date_field,
+            9,
+            1
+        );
+
         $date_field
             ->method('getLabel')
             ->willReturn("Submitted On");
@@ -283,35 +420,8 @@ final class ReportCriteriaJsonBuilderTest extends TestCase
         $date_field
             ->method('getCriteriaValue')
             ->with($criterion_date)
-            ->willReturn([
-                "op" => "=",
-                'from_date' => '1627768800',
-                'to_date' => '1630101600'
-            ]);
+            ->willReturn('');
 
-        $criteria = [
-            $criterion_string,
-            $criterion_user_list,
-            $criterion_groups_list,
-            $criterion_static_list,
-            $criterion_open_list_static,
-            $criterion_date,
-        ];
-
-        $report->method('getCriteria')->willReturn($criteria);
-
-        $additional_criteria = [
-            new Tracker_Report_AdditionalCriterion(
-                "Additional01",
-                "ValueAdd01"
-            ),
-            new Tracker_Report_AdditionalCriterion(
-                "Additional02",
-                null
-            ),
-        ];
-        $report->method('getAdditionalCriteria')->willReturn($additional_criteria);
-
-        return $report;
+        return $criterion_date;
     }
 }
