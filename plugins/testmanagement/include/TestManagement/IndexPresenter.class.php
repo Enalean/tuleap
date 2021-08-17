@@ -195,14 +195,13 @@ class IndexPresenter
      */
     private function getTrackersUsingListPicker($test_definition_tracker_id, $issue_tracker_id): string
     {
-        $request                    = \HTTPRequest::instance();
         $trackers_using_list_picker = [];
 
-        if ($test_definition_tracker_id && ListPickerIncluder::isListPickerEnabledAndBrowserCompatible($request, $test_definition_tracker_id)) {
+        if ($test_definition_tracker_id && ListPickerIncluder::isListPickerEnabledAndBrowserCompatible($test_definition_tracker_id)) {
             $trackers_using_list_picker[] = $test_definition_tracker_id;
         }
 
-        if ($issue_tracker_id && ListPickerIncluder::isListPickerEnabledAndBrowserCompatible($request, $issue_tracker_id)) {
+        if ($issue_tracker_id && ListPickerIncluder::isListPickerEnabledAndBrowserCompatible($issue_tracker_id)) {
             $trackers_using_list_picker[] = $issue_tracker_id;
         }
 

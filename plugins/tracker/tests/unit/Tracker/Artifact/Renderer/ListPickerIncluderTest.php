@@ -23,38 +23,18 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Artifact\Renderer;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use Tuleap\BrowserDetection\DetectedBrowserTest;
 use Tuleap\ForgeConfigSandbox;
 
-class ListPickerIncluderTest extends \Tuleap\Test\PHPUnit\TestCase
+final class ListPickerIncluderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
     use ForgeConfigSandbox;
-
-    public function testItDoesNotIncludeListPickerWhenBrowsersAreLegacy(): void
-    {
-        \ForgeConfig::set(\ForgeConfig::FEATURE_FLAG_PREFIX . ListPickerIncluder::FORGE_CONFIG_KEY, "1");
-
-        $legacy_user_agents = [
-            DetectedBrowserTest::IE11_USER_AGENT_STRING,
-            DetectedBrowserTest::OLD_IE_USER_AGENT_STRING,
-            DetectedBrowserTest::EDGE_LEGACY_USER_AGENT_STRING
-        ];
-
-        foreach ($legacy_user_agents as $user_agent_name) {
-            $request             = $this->buildRequestFromUserAgent($user_agent_name);
-            $will_include_assets = ListPickerIncluder::isListPickerEnabledAndBrowserCompatible($request, 42);
-
-            $this->assertEquals(false, $will_include_assets);
-        }
-    }
 
     public function testItIncludesListPickerForModernBrowsers(): void
     {
         \ForgeConfig::set(\ForgeConfig::FEATURE_FLAG_PREFIX . ListPickerIncluder::FORGE_CONFIG_KEY, "1");
 
-        $request             = $this->buildRequestFromUserAgent('Some modern browser UA');
-        $will_include_assets = ListPickerIncluder::isListPickerEnabledAndBrowserCompatible($request, 42);
+        $will_include_assets = ListPickerIncluder::isListPickerEnabledAndBrowserCompatible(42);
 
         $this->assertEquals(true, $will_include_assets);
     }
@@ -63,8 +43,7 @@ class ListPickerIncluderTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         \ForgeConfig::set(\ForgeConfig::FEATURE_FLAG_PREFIX . ListPickerIncluder::FORGE_CONFIG_KEY, "0");
 
-        $request             = $this->buildRequestFromUserAgent('Some modern browser UA');
-        $will_include_assets = ListPickerIncluder::isListPickerEnabledAndBrowserCompatible($request, 42);
+        $will_include_assets = ListPickerIncluder::isListPickerEnabledAndBrowserCompatible(42);
 
         $this->assertEquals(false, $will_include_assets);
     }
@@ -73,8 +52,7 @@ class ListPickerIncluderTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         \ForgeConfig::set(\ForgeConfig::FEATURE_FLAG_PREFIX . ListPickerIncluder::FORGE_CONFIG_KEY, "t:1,2,3");
 
-        $request             = $this->buildRequestFromUserAgent('Some modern browser UA');
-        $will_include_assets = ListPickerIncluder::isListPickerEnabledAndBrowserCompatible($request, 1);
+        $will_include_assets = ListPickerIncluder::isListPickerEnabledAndBrowserCompatible(1);
 
         $this->assertEquals(false, $will_include_assets);
     }
@@ -83,8 +61,7 @@ class ListPickerIncluderTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         \ForgeConfig::set(\ForgeConfig::FEATURE_FLAG_PREFIX . ListPickerIncluder::FORGE_CONFIG_KEY, "t:1,2,3");
 
-        $request             = $this->buildRequestFromUserAgent('Some modern browser UA');
-        $will_include_assets = ListPickerIncluder::isListPickerEnabledAndBrowserCompatible($request, 42);
+        $will_include_assets = ListPickerIncluder::isListPickerEnabledAndBrowserCompatible(42);
 
         $this->assertEquals(true, $will_include_assets);
     }
@@ -108,13 +85,5 @@ class ListPickerIncluderTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         \ForgeConfig::set(\ForgeConfig::FEATURE_FLAG_PREFIX . ListPickerIncluder::FORGE_CONFIG_KEY, "0");
         $this->assertEquals(false, ListPickerIncluder::isListPickerEnabledOnPlatform());
-    }
-
-    private function buildRequestFromUserAgent(string $user_agent): \HTTPRequest
-    {
-        $request = \Mockery::mock(\HTTPRequest::class);
-        $request->shouldReceive('getFromServer')->with('HTTP_USER_AGENT')->andReturn($user_agent);
-
-        return $request;
     }
 }

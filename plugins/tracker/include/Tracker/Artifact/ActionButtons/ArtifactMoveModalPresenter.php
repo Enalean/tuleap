@@ -58,7 +58,6 @@ class ArtifactMoveModalPresenter
         $this->artifact_id            = $artifact->getId();
         $this->project_id             = $artifact->getTracker()->getProject()->getID();
         $this->is_list_picker_enabled = json_encode(ListPickerIncluder::isListPickerEnabledAndBrowserCompatible(
-            \HTTPRequest::instance(),
             $artifact->getTrackerId()
         ));
     }

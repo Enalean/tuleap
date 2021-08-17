@@ -3386,7 +3386,7 @@ class Tracker implements Tracker_Dispatchable_Interface
 
     private function includeJavascriptAssetsForMassChange(): void
     {
-        ListPickerIncluder::includeListPickerAssets(HTTPRequest::instance(), $this->getId());
+        ListPickerIncluder::includeListPickerAssets($this->getId());
         $assets = $this->getIncludeAssets();
         $GLOBALS['HTML']->includeFooterJavascriptFile($assets->getFileURL('mass-change.js'));
     }

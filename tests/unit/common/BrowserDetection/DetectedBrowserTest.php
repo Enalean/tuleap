@@ -31,7 +31,7 @@ final class DetectedBrowserTest extends \Tuleap\Test\PHPUnit\TestCase
     public const CHROME_USER_AGENT_STRING           = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.96 Safari/537.36';
     public const FIREFOX_USER_AGENT_STRING          = 'Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101 Firefox/78.0';
     public const IE11_USER_AGENT_STRING             = 'Mozilla/5.0 (Windows NT 10.0; WOW64; Trident/7.0; rv:11.0) like Gecko';
-    public const OLD_IE_USER_AGENT_STRING           = 'Mozilla/4.0 (compatible; MSIE 4.01; Mac_PowerPC)';
+    private const OLD_IE_USER_AGENT_STRING          = 'Mozilla/4.0 (compatible; MSIE 4.01; Mac_PowerPC)';
     public const EDGE_LEGACY_USER_AGENT_STRING      = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.140 Safari/537.36 Edge/18.17763';
     public const VERY_OLD_FIREFOX_USER_AGENT_STRING = 'Mozilla/5.0 (Windows NT 6.1; rv:68.7) Gecko/20100101 Firefox/68.7';
 

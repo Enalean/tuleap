@@ -24,7 +24,6 @@ namespace Tuleap\Project\ProjectBackground;
 
 use HTTPRequest;
 use TemplateRendererFactory;
-use Tuleap\BrowserDetection\DetectedBrowser;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Layout\JavascriptAsset;
@@ -83,7 +82,7 @@ final class ProjectBackgroundAdministrationController implements DispatchableWit
             $backgrounds = $this->background_retriever->getBackgrounds($project);
             $this->renderer->renderToPage(
                 'administration',
-                new ProjectBackgroundAdministrationPresenter($backgrounds, (int) $project->getID(), DetectedBrowser::detectFromTuleapHTTPRequest($request)->isIE()),
+                new ProjectBackgroundAdministrationPresenter($backgrounds, (int) $project->getID()),
             );
         };
         $this->layout_helper->renderInProjectAdministrationLayout(

@@ -41,12 +41,6 @@ msgid "Service AgileDashboard is disabled."
 msgstr "Le service des tableaux de bords agile est désactivé."
 
 msgid ""
-"The plugin is not supported under IE11. Please use a more recent browser."
-msgstr ""
-"Le plugin n'est pas supporté pour IE11. Merci d'utiliser un navigateur plus "
-"récent."
-
-msgid ""
 "This is a private project. You may only have access to private projects you "
 "are member of."
 msgstr ""

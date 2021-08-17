@@ -39,7 +39,6 @@ use Tracker;
 use Tuleap\AgileDashboard\ExplicitBacklog\ArtifactsInExplicitBacklogDao;
 use Tuleap\AgileDashboard\ExplicitBacklog\ExplicitBacklogDao;
 use Tuleap\AgileDashboard\FormElement\Burnup\CountElementsModeChecker;
-use Tuleap\BrowserDetection\DetectedBrowserTest;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframe;
 use Tuleap\Tracker\Semantic\Timeframe\TimeframeBrokenConfigurationException;
 use Tuleap\Tracker\TrackerColor;
@@ -48,7 +47,7 @@ use Project_AccessProjectNotFoundException;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 use AgileDashboardPlugin;
 
-class ProjectMilestonesPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
+final class ProjectMilestonesPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 
@@ -672,14 +671,6 @@ class ProjectMilestonesPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCas
         $built_presenter = $this->builder->getProjectMilestonePresenter($this->project, $this->root_planning);
 
         $this->assertEquals($built_presenter->burnup_mode, "count");
-    }
-
-    public function testThrowExceptionWhenIsIE11(): void
-    {
-        $this->http_request->shouldReceive('getFromServer')->andReturn(DetectedBrowserTest::IE11_USER_AGENT_STRING);
-        $this->expectException(ProjectMilestonesException::class);
-        $this->expectExceptionMessage(ProjectMilestonesException::buildBrowserIsIE11()->getTranslatedMessage());
-        $this->builder->getProjectMilestonePresenter($this->project, $this->root_planning);
     }
 
     public function testThrowExceptionWhenUserCantAccessToProject(): void

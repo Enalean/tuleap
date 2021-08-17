@@ -67,7 +67,7 @@ class Tracker_Artifact_CopyRenderer extends Tracker_Artifact_ReadOnlyRenderer
             ]
         ];
 
-        ListPickerIncluder::includeListPickerAssets(HTTPRequest::instance(), $this->tracker->getId());
+        ListPickerIncluder::includeListPickerAssets($this->tracker->getId());
         $this->tracker->displayHeader(
             $this->layout,
             $title,

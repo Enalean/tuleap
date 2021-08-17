@@ -133,7 +133,6 @@ class KanbanPresenter
         );
         $this->user_accessibility_mode           = json_encode((bool) $user->getPreference(PFUser::ACCESSIBILITY_MODE));
         $this->is_list_picker_enabled            = json_encode(ListPickerIncluder::isListPickerEnabledAndBrowserCompatible(
-            HTTPRequest::instance(),
             $kanban->getTrackerId()
         ));
     }

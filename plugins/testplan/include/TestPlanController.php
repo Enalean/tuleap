@@ -26,7 +26,6 @@ use AgileDashboardPlugin;
 use HTTPRequest;
 use TemplateRenderer;
 use Tuleap\AgileDashboard\Milestone\AllBreadCrumbsForMilestoneBuilder;
-use Tuleap\BrowserDetection\DetectedBrowser;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
 use Tuleap\Layout\IncludeAssets;
@@ -142,23 +141,14 @@ final class TestPlanController implements DispatchableWithRequestNoAuthz, Dispat
         $expand_backlog_item_id       = (int) ($variables['backlog_item_id'] ?? 0);
         $highlight_test_definition_id = (int) ($variables['test_definition_id'] ?? 0);
 
-        $detected_browser = DetectedBrowser::detectFromTuleapHTTPRequest($request);
-        $presenter        = $this->presenter_builder->getPresenter(
+        $presenter = $this->presenter_builder->getPresenter(
             $milestone,
             $user,
             $expand_backlog_item_id,
             $highlight_test_definition_id
         );
-        if ($detected_browser->isIE()) {
-            $this->renderer->renderToPage('test-plan-unsupported-browser-ie11', $presenter);
-        } else {
-            if ($detected_browser->isEdgeLegacy()) {
-                $this->renderer->renderToPage('test-plan-unsupported-browser-edge-legacy', $presenter);
-            } else {
-                $layout->includeFooterJavascriptFile($this->testplan_assets->getFileURL('testplan.js'));
-                $this->renderer->renderToPage('test-plan', $presenter);
-            }
-        }
+        $layout->includeFooterJavascriptFile($this->testplan_assets->getFileURL('testplan.js'));
+        $this->renderer->renderToPage('test-plan', $presenter);
         $service->displayFooter();
     }
 }

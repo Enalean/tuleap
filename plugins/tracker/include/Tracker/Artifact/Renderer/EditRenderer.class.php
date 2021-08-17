@@ -146,7 +146,7 @@ class Tracker_Artifact_EditRenderer extends Tracker_Artifact_EditAbstractRendere
         ];
 
         $GLOBALS['HTML']->includeFooterJavascriptFile(RelativeDatesAssetsRetriever::retrieveAssetsUrl());
-        ListPickerIncluder::includeListPickerAssets($request, $this->tracker->getId());
+        ListPickerIncluder::includeListPickerAssets($this->tracker->getId());
 
         $event = new GetAdditionalJavascriptFilesForArtifactDisplay();
         $this->event_manager->dispatch($event);
