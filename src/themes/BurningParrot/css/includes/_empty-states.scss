@@ -53,7 +53,7 @@
     text-align: center;
 
     &:last-child {
-        margin: 0;
+        margin-bottom: 0;
     }
 
     + .empty-state-action {
@@ -61,14 +61,21 @@
     }
 }
 
+.empty-state-text-smaller {
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+}
+
 .empty-state-action {
     margin: var(--tlp-x-large-spacing) 0 0;
 }
 
 .empty-state-icon {
-    margin: 0 0 var(--tlp-jumbo-spacing);
+    margin: 0 0 var(--tlp-small-spacing);
+    color: var(--tlp-illustration-main-color);
+    font-size: 3rem;
 }
 
 .empty-state-illustration {
-    margin: 0 0 var(--tlp-jumbo-spacing);
+    margin: 0 0 var(--tlp-x-large-spacing);
 }

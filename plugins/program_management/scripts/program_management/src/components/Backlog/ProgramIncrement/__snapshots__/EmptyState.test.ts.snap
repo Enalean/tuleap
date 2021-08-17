@@ -1,8 +1,8 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`EmptyState Displays the empty state for Program Increment 1`] = `
-<div
-  class="program-increment-empty-state"
+<section
+  class="empty-state-page"
 >
   <empty-svg-stub />
    
@@ -20,5 +20,5 @@ exports[`EmptyState Displays the empty state for Program Increment 1`] = `
   >
     <!---->
   </form>
-</div>
+</section>
 `;

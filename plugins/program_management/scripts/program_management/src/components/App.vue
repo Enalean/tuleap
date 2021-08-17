@@ -40,22 +40,19 @@
             </div>
             <program-increment-list class="program-increment" />
         </div>
-        <div class="program-backlog-empty-state" v-else data-test="configuration-empty-state">
+        <div class="empty-state-page" v-else data-test="configuration-empty-state">
             <configuration-empty-state />
-            <div
-                class="program-management-empty-state-label"
-                v-if="is_program_admin"
-                data-test="administrator-empty-state"
-            >
-                <p v-dompurify-html="getAdminEmptyState()"></p>
+            <div v-if="is_program_admin" data-test="administrator-empty-state">
+                <h1 class="empty-state-title" v-translate>Program configuration is incomplete</h1>
+                <p class="empty-state-text" v-dompurify-html="getAdminEmptyState()"></p>
             </div>
-            <div
-                class="program-management-empty-state-label"
-                v-else
-                data-test="regular-user-empty-state"
-                v-translate
-            >
-                Program configuration is incomplete. That can be done in administration of service.
+            <div v-else>
+                <h1 class="empty-state-title" data-test="regular-user-empty-state" v-translate>
+                    Program configuration is incomplete
+                </h1>
+                <p class="empty-state-text" v-translate>
+                    Configuration can be done in administration of service.
+                </p>
             </div>
         </div>
         <error-modal v-if="has_modal_error" />
@@ -186,7 +183,7 @@ export default class App extends Vue {
         const url = `/program_management/admin/${this.short_name}`;
         return sprintf(
             this.$gettext(
-                "Program configuration is incomplete. That can be done in <a href='%s' data-test='program-go-to-administration'>administration</a> of service."
+                "Configuration can be done in <a href='%s' data-test='program-go-to-administration'>administration</a> of service."
             ),
             url
         );

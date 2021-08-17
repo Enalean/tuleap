@@ -32,18 +32,8 @@
 }
 
 .pull-request-no-comment {
-    display: flex;
     flex: 1 1 auto;
-    align-items: center;
-    align-self: stretch;
     justify-content: center;
-    min-height: 200px;
-
-    .empty-state-icon {
-        display: block;
-        margin: 0 0 10px;
-        font-size: 60px;
-    }
 }
 
 .pull-request-add-comment-form {

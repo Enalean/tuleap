@@ -22,11 +22,11 @@
         </section>
     {{/ has_aggregated_teams }}
     {{^ has_aggregated_teams }}
-        <div class="program-management-empty-state">
+        <section class="empty-state-pane program-management-empty-state">
             {{> svg-empty-state-tumbleweed }}
-            <div class="program-management-admin-empty-state-label">
+            <p class="empty-state-text">
                 {{# dgettext }}tuleap-program_management | No project have been aggregated yet.{{/dgettext}}
-            </div>
-        </div>
+            </p>
+        </section>
     {{/ has_aggregated_teams }}
 </div>
