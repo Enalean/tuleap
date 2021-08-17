@@ -22,80 +22,211 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation;
 
-use Mockery as M;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\BindValueIdentifier;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\StatusValue;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\Field;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\NoDuckTypedMatchingValueException;
-use Tuleap\ProgramManagement\Tests\Builder\SourceChangesetValuesCollectionBuilder;
-use Tuleap\Tracker\FormElement\Field\ListFields\FieldValueMatcher;
 
 final class StatusValueMapperTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
+    private const FIRST_BIND_VALUE_ID  = 1287;
+    private const SECOND_BIND_VALUE_ID = 3409;
+    private const THIRD_BIND_VALUE_ID  = 9264;
 
-    /**
-     * @var StatusValueMapper
-     */
-    private $mapper;
-    /**
-     * @var M\LegacyMockInterface|M\MockInterface|FieldValueMatcher
-     */
-    private $matcher;
-
-    protected function setUp(): void
+    private function getMapper(): StatusValueMapper
     {
-        $this->matcher = M::mock(FieldValueMatcher::class);
-        $this->mapper  = new StatusValueMapper($this->matcher);
+        return new StatusValueMapper();
     }
 
-    public function testItMapsValuesByDuckTyping(): void
+    public function dataProviderMatchingValue(): array
     {
-        $first_list_value  = new \Tracker_FormElement_Field_List_Bind_StaticValue(2000, 'Not found', 'Irrelevant', 1, 0);
-        $second_list_value = new \Tracker_FormElement_Field_List_Bind_StaticValue(2001, 'Planned', 'Irrelevant', 2, 0);
-        $copied_values     = SourceChangesetValuesCollectionBuilder::buildWithStatusValues([$first_list_value, $second_list_value]);
-        $status_field_data = new Field(
-            new \Tracker_FormElement_Field_Selectbox(1004, 89, 1000, 'status', 'Status', 'Irrelevant', true, 'P', false, '', 4)
-        );
+        return [
+            'It matches value by label'                                           => [
+                '2',
+                self::SECOND_BIND_VALUE_ID,
+                new \Tracker_FormElement_Field_List_Bind_StaticValue(self::FIRST_BIND_VALUE_ID, '1', 'Irrelevant', 0, false),
+                new \Tracker_FormElement_Field_List_Bind_StaticValue(self::SECOND_BIND_VALUE_ID, '2', 'Irrelevant', 1, false),
+            ],
+            'It matches value label with different cases'                         => [
+                'a',
+                self::FIRST_BIND_VALUE_ID,
+                new \Tracker_FormElement_Field_List_Bind_StaticValue(self::FIRST_BIND_VALUE_ID, 'A', 'Irrelevant', 0, false),
+                new \Tracker_FormElement_Field_List_Bind_StaticValue(self::SECOND_BIND_VALUE_ID, 'b', 'Irrelevant', 1, false),
+            ],
+            'It matches value even if it is hidden'                               => [
+                '2',
+                self::SECOND_BIND_VALUE_ID,
+                new \Tracker_FormElement_Field_List_Bind_StaticValue(self::FIRST_BIND_VALUE_ID, '1', 'Irrelevant', 0, false),
+                new \Tracker_FormElement_Field_List_Bind_StaticValue(self::SECOND_BIND_VALUE_ID, '2', 'Irrelevant', 1, true),
+            ],
+            'It matches first value if multiple values have the same label'       => [
+                '1',
+                self::FIRST_BIND_VALUE_ID,
+                new \Tracker_FormElement_Field_List_Bind_StaticValue(self::FIRST_BIND_VALUE_ID, '1', 'Irrelevant', 0, false),
+                new \Tracker_FormElement_Field_List_Bind_StaticValue(self::SECOND_BIND_VALUE_ID, '1', 'Irrelevant', 1, false),
+            ],
+            'It matches user bind values by display name'                         => [
+                'Celia Apollo',
+                self::SECOND_BIND_VALUE_ID,
+                new \Tracker_FormElement_Field_List_Bind_UsersValue(self::FIRST_BIND_VALUE_ID, 'Irrelevant', 'Mildred Favorito'),
+                new \Tracker_FormElement_Field_List_Bind_UsersValue(self::SECOND_BIND_VALUE_ID, 'Irrelevant', 'Celia Apollo'),
+            ],
+            'It matches username with different case'                             => [
+                'CELIA APOLLO',
+                self::FIRST_BIND_VALUE_ID,
+                new \Tracker_FormElement_Field_List_Bind_UsersValue(self::FIRST_BIND_VALUE_ID, 'Irrelevant', 'Celia Apollo'),
+                new \Tracker_FormElement_Field_List_Bind_UsersValue(self::SECOND_BIND_VALUE_ID, 'Irrelevant', 'Mildred Favorito'),
+            ],
+            'It matches first value if multiple users have the same display name' => [
+                'Celia Apollo',
+                self::FIRST_BIND_VALUE_ID,
+                new \Tracker_FormElement_Field_List_Bind_UsersValue(self::FIRST_BIND_VALUE_ID, 'Irrelevant', 'Celia Apollo'),
+                new \Tracker_FormElement_Field_List_Bind_UsersValue(self::SECOND_BIND_VALUE_ID, 'Irrelevant', 'Celia Apollo'),
+            ],
+            'It matches dynamic user group name'                                  => [
+                'project_members',
+                self::SECOND_BIND_VALUE_ID,
+                $this->buildUserGroupValue(self::FIRST_BIND_VALUE_ID, 905, 'palaeoclimatic', false),
+                $this->buildUserGroupValue(self::SECOND_BIND_VALUE_ID, \ProjectUGroup::PROJECT_MEMBERS, \ProjectUGroup::NORMALIZED_NAMES[\ProjectUGroup::PROJECT_MEMBERS], false),
+            ],
+            'It matches static user group name'                                   => [
+                'palaeoclimatic',
+                self::FIRST_BIND_VALUE_ID,
+                $this->buildUserGroupValue(self::FIRST_BIND_VALUE_ID, 905, 'palaeoclimatic', false),
+                $this->buildUserGroupValue(self::SECOND_BIND_VALUE_ID, 921, 'tolidine', false),
+            ],
+            'It matches static user group name with different case'               => [
+                'PALAEOCLIMATIC',
+                self::FIRST_BIND_VALUE_ID,
+                $this->buildUserGroupValue(self::FIRST_BIND_VALUE_ID, 905, 'palaeoclimatic', false),
+            ],
+            'It matches user group even it if is hidden'                          => [
+                'palaeoclimatic',
+                self::SECOND_BIND_VALUE_ID,
+                $this->buildUserGroupValue(self::FIRST_BIND_VALUE_ID, 921, 'tolidine', false),
+                $this->buildUserGroupValue(self::SECOND_BIND_VALUE_ID, 905, 'palaeoclimatic', true),
+            ],
+            'It matches first value if multiple user groups have the same name'   => [
+                'palaeoclimatic',
+                self::FIRST_BIND_VALUE_ID,
+                $this->buildUserGroupValue(self::FIRST_BIND_VALUE_ID, 905, 'palaeoclimatic', false),
+                $this->buildUserGroupValue(self::SECOND_BIND_VALUE_ID, 303, 'palaeoclimatic', false),
+            ]
+        ];
+    }
 
-        $first_mapped_value  = new \Tracker_FormElement_Field_List_Bind_StaticValue(3000, 'Not found', 'Irrelevant', 1, 0);
-        $second_mapped_value = new \Tracker_FormElement_Field_List_Bind_StaticValue(3001, 'Planned', 'Irrelevant', 2, 0);
-        $this->matcher->shouldReceive('getMatchingBindValueByDuckTyping')
-            ->once()
-            ->with($first_list_value, M::type(\Tracker_FormElement_Field_List::class))
-            ->andReturn($first_mapped_value);
-        $this->matcher->shouldReceive('getMatchingBindValueByDuckTyping')
-            ->once()
-            ->with($second_list_value, M::type(\Tracker_FormElement_Field_List::class))
-            ->andReturn($second_mapped_value);
+    /**
+     * @dataProvider dataProviderMatchingValue
+     */
+    public function testItMapsValuesByDuckTyping(
+        string $source_label,
+        int $expected_bind_value_id,
+        \Tracker_FormElement_Field_List_BindValue ...$values
+    ): void {
+        $status_value = $this->buildStatusValueWithLabels($source_label);
+        $status_field = $this->buildStatusFieldWithBindValues(...$values);
 
-        $result        = $this->mapper->mapStatusValueByDuckTyping($copied_values, $status_field_data);
-        $mapped_values = $result->getValues();
-        self::assertContains(3000, $mapped_values);
-        self::assertContains(3001, $mapped_values);
+        $result         = $this->getMapper()->mapStatusValueByDuckTyping($status_value, new Field($status_field));
+        $bind_value_ids = array_map(static fn(BindValueIdentifier $identifier): int => $identifier->getId(), $result);
+        self::assertContains($expected_bind_value_id, $bind_value_ids);
+    }
+
+    public function testItMapsMultipleValuesByDuckTyping(): void
+    {
+        $status_value = $this->buildStatusValueWithLabels('Not found', 'Planned');
+        $status_field = $this->buildStatusFieldWithLabels('Planned', 'Not found', 'Other value');
+
+        $result         = $this->getMapper()->mapStatusValueByDuckTyping($status_value, new Field($status_field));
+        $bind_value_ids = array_map(static fn(BindValueIdentifier $identifier): int => $identifier->getId(), $result);
+        self::assertContains(self::FIRST_BIND_VALUE_ID, $bind_value_ids);
+        self::assertContains(self::SECOND_BIND_VALUE_ID, $bind_value_ids);
+        self::assertNotContains(self::THIRD_BIND_VALUE_ID, $bind_value_ids);
     }
 
     public function testItThrowsWhenOneValueCannotBeMapped(): void
     {
-        $first_list_value  = new \Tracker_FormElement_Field_List_Bind_StaticValue(2000, 'Not found', 'Irrelevant', 1, 0);
-        $second_list_value = new \Tracker_FormElement_Field_List_Bind_StaticValue(2001, 'Planned', 'Irrelevant', 1, 0);
-        $copied_values     = SourceChangesetValuesCollectionBuilder::buildWithStatusValues([$first_list_value, $second_list_value]);
-        $status_field_data = new Field(new \Tracker_FormElement_Field_Selectbox(
-            1004,
-            89,
-            1000,
-            'status',
-            'Status',
-            'Irrelevant',
-            true,
-            'P',
-            false,
-            '',
-            4
-        ));
-        $this->matcher->shouldReceive('getMatchingBindValueByDuckTyping')
-            ->andReturnNull();
+        $status_value = $this->buildStatusValueWithLabels('Not found', 'Planned');
+        $status_field = $this->buildStatusFieldWithLabels('NOT MATCHING', 'not matching either', 'Nope');
 
         $this->expectException(NoDuckTypedMatchingValueException::class);
-        $this->mapper->mapStatusValueByDuckTyping($copied_values, $status_field_data);
+        $this->getMapper()->mapStatusValueByDuckTyping($status_value, new Field($status_field));
+    }
+
+    private function buildStatusValueWithLabels(string ...$values): StatusValue
+    {
+        $bind_values = array_map(
+            static fn(
+                string $label
+            ): \Tracker_FormElement_Field_List_BindValue => new \Tracker_FormElement_Field_List_Bind_StaticValue(
+                1,
+                $label,
+                'Irrelevant',
+                0,
+                false
+            ),
+            $values
+        );
+        return new StatusValue($bind_values);
+    }
+
+    private function buildStatusFieldWithLabels(
+        string $first_label,
+        string $second_label,
+        string $third_label
+    ): \Tracker_FormElement_Field_List {
+        $first_value  = new \Tracker_FormElement_Field_List_Bind_StaticValue(
+            self::FIRST_BIND_VALUE_ID,
+            $first_label,
+            'Irrelevant',
+            0,
+            false
+        );
+        $second_value = new \Tracker_FormElement_Field_List_Bind_StaticValue(
+            self::SECOND_BIND_VALUE_ID,
+            $second_label,
+            'Irrelevant',
+            0,
+            false
+        );
+        $third_value  = new \Tracker_FormElement_Field_List_Bind_StaticValue(
+            self::THIRD_BIND_VALUE_ID,
+            $third_label,
+            'Irrelevant',
+            0,
+            false
+        );
+
+        $static_bind = $this->createStub(\Tracker_FormElement_Field_List_Bind_Static::class);
+        $static_bind->method('getAllValues')->willReturn([$first_value, $second_value, $third_value]);
+        $status_field = $this->createStub(\Tracker_FormElement_Field_List::class);
+        $status_field->method('getBind')->willReturn($static_bind);
+        $status_field->method('getId')->willReturn(1984);
+        $status_field->method('getTrackerId')->willReturn(54);
+
+        return $status_field;
+    }
+
+    private function buildStatusFieldWithBindValues(
+        \Tracker_FormElement_Field_List_BindValue ...$bind_values
+    ): \Tracker_FormElement_Field_List {
+        $static_bind = $this->createStub(\Tracker_FormElement_Field_List_Bind::class);
+        $static_bind->method('getAllValues')->willReturn($bind_values);
+        $status_field = $this->createStub(\Tracker_FormElement_Field_List::class);
+        $status_field->method('getBind')->willReturn($static_bind);
+
+        return $status_field;
+    }
+
+    private function buildUserGroupValue(
+        int $bind_value_id,
+        int $user_group_id,
+        string $user_group_name,
+        bool $is_hidden
+    ): \Tracker_FormElement_Field_List_Bind_UgroupsValue {
+        return new \Tracker_FormElement_Field_List_Bind_UgroupsValue(
+            $bind_value_id,
+            new \ProjectUGroup(['ugroup_id' => $user_group_id, 'name' => $user_group_name]),
+            $is_hidden
+        );
     }
 }

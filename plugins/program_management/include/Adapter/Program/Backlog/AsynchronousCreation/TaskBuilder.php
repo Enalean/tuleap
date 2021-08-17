@@ -54,10 +54,8 @@ use Tuleap\ProgramManagement\Adapter\Team\MirroredTimeboxes\MirroredTimeboxRetri
 use Tuleap\ProgramManagement\Adapter\Workspace\UserManagerAdapter;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\ProgramIncrementsCreator;
 use Tuleap\Tracker\Artifact\Creation\TrackerArtifactCreator;
-use Tuleap\Tracker\FormElement\Field\ListFields\FieldValueMatcher;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 use UserManager;
-use XMLImportHelper;
 
 class TaskBuilder
 {
@@ -103,9 +101,7 @@ class TaskBuilder
         $mirror_creator = new ProgramIncrementsCreator(
             $transaction_executor,
             $synchronized_fields_gatherer,
-            new StatusValueMapper(
-                new FieldValueMatcher(new XMLImportHelper($user_manager))
-            ),
+            new StatusValueMapper(),
             $artifact_creator
         );
 
