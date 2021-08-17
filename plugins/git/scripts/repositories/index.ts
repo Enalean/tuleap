@@ -82,10 +82,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
     const projectId = vue_mount_point.dataset.projectId;
 
-    if (!vue_mount_point.dataset.isAdmin) {
-        throw new Error("Missing isAdmin dataset");
-    }
-    const isAdmin = vue_mount_point.dataset.isAdmin;
+    const isAdmin = Boolean(vue_mount_point.dataset.isAdmin);
 
     if (!vue_mount_point.dataset.repositoriesOwners) {
         throw new Error("Missing repositoriesOwners dataset");
@@ -144,7 +141,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     buildRepositoryListPresenter(
         parseInt(userId, 10),
         parseInt(projectId, 10),
-        Boolean(isAdmin),
+        isAdmin,
         locale,
         JSON.parse(repositoriesOwners),
         JSON.parse(externalPlugins)
