@@ -33,31 +33,39 @@ final class GatherFieldValuesStub implements GatherFieldValues
     private RetrieveDescriptionValueStub $description_stub;
     private RetrieveStartDateValueStub $start_date_stub;
     private RetrieveEndPeriodValueStub $end_period_stub;
+    private RetrieveStatusValuesStub $status_stub;
 
     public function __construct(
         RetrieveTitleValueStub $title_stub,
         RetrieveDescriptionValueStub $description_stub,
         RetrieveStartDateValueStub $start_date_stub,
-        RetrieveEndPeriodValueStub $end_period_stub
+        RetrieveEndPeriodValueStub $end_period_stub,
+        RetrieveStatusValuesStub $status_stub
     ) {
         $this->title_stub       = $title_stub;
         $this->description_stub = $description_stub;
         $this->start_date_stub  = $start_date_stub;
         $this->end_period_stub  = $end_period_stub;
+        $this->status_stub      = $status_stub;
     }
 
+    /**
+     * @param string[] $status_values
+     */
     public static function withValues(
         string $title,
         string $description_value,
         string $description_format,
         string $start_date,
-        string $end_period
+        string $end_period,
+        array $status_values
     ): self {
         return new self(
             RetrieveTitleValueStub::withValue($title),
             RetrieveDescriptionValueStub::withValue($description_value, $description_format),
             RetrieveStartDateValueStub::withValue($start_date),
             RetrieveEndPeriodValueStub::withValue($end_period),
+            RetrieveStatusValuesStub::withValues(...$status_values)
         );
     }
 
@@ -81,5 +89,10 @@ final class GatherFieldValuesStub implements GatherFieldValues
     public function getEndPeriodValue(ReplicationData $replication, SynchronizedFields $fields): string
     {
         return $this->end_period_stub->getEndPeriodValue($replication, $fields);
+    }
+
+    public function getStatusValues(ReplicationData $replication, SynchronizedFields $fields): array
+    {
+        return $this->status_stub->getStatusValues($replication, $fields);
     }
 }

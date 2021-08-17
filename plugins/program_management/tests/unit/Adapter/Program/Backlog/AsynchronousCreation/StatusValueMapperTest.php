@@ -26,6 +26,9 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Chan
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\StatusValue;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\Field;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\NoDuckTypedMatchingValueException;
+use Tuleap\ProgramManagement\Tests\Builder\ReplicationDataBuilder;
+use Tuleap\ProgramManagement\Tests\Builder\SynchronizedFieldsBuilder;
+use Tuleap\ProgramManagement\Tests\Stub\RetrieveStatusValuesStub;
 
 final class StatusValueMapperTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -154,19 +157,11 @@ final class StatusValueMapperTest extends \Tuleap\Test\PHPUnit\TestCase
 
     private function buildStatusValueWithLabels(string ...$values): StatusValue
     {
-        $bind_values = array_map(
-            static fn(
-                string $label
-            ): \Tracker_FormElement_Field_List_BindValue => new \Tracker_FormElement_Field_List_Bind_StaticValue(
-                1,
-                $label,
-                'Irrelevant',
-                0,
-                false
-            ),
-            $values
+        return StatusValue::fromReplicationAndSynchronizedFields(
+            RetrieveStatusValuesStub::withValues(...$values),
+            ReplicationDataBuilder::build(),
+            SynchronizedFieldsBuilder::build()
         );
-        return new StatusValue($bind_values);
     }
 
     private function buildStatusFieldWithLabels(

@@ -33,6 +33,7 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Subm
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveDescriptionValueStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveEndPeriodValueStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveStartDateValueStub;
+use Tuleap\ProgramManagement\Tests\Stub\RetrieveStatusValuesStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveTitleValueStub;
 
 final class SourceChangesetValuesCollectionBuilder
@@ -43,19 +44,16 @@ final class SourceChangesetValuesCollectionBuilder
             'Program Release',
             'Description',
             'text',
-            [2000],
+            ['Planned'],
             '2020-10-01',
             '2020-10-10',
             112
         );
     }
 
-    /**
-     * @param \Tracker_FormElement_Field_List_Bind_StaticValue[] $status_values
-     */
-    public static function buildWithStatusValues(array $status_values): SourceChangesetValuesCollection
+    public static function buildWithStatusValues(string ...$status_values): SourceChangesetValuesCollection
     {
-        return self::buildWithListBind(
+        return self::buildWithValues(
             'Program Increment',
             '<p>Description</p>',
             'html',
@@ -67,71 +65,42 @@ final class SourceChangesetValuesCollectionBuilder
     }
 
     /**
-     * @param int[] $status_values
+     * @param string[] $status
      */
     public static function buildWithValues(
-        string $title_value,
-        string $description_value,
+        string $title,
+        string $description_content,
         string $description_format,
-        array $status_values,
-        string $start_date_value,
-        string $end_period_value,
-        int $source_program_increment_id
-    ): SourceChangesetValuesCollection {
-        $list_values = [];
-        foreach ($status_values as $bind_value_id) {
-            $list_values[] = new \Tracker_FormElement_Field_List_Bind_StaticValue(
-                $bind_value_id,
-                'Irrelevant',
-                'Irrelevant',
-                0,
-                0
-            );
-        }
-        return self::buildWithListBind(
-            $title_value,
-            $description_value,
-            $description_format,
-            $list_values,
-            $start_date_value,
-            $end_period_value,
-            $source_program_increment_id
-        );
-    }
-
-    /**
-     * @param \Tracker_FormElement_Field_List_Bind_StaticValue[] $list_values
-     */
-    private static function buildWithListBind(
-        string $title_value,
-        string $description_value,
-        string $description_format,
-        array $list_values,
-        string $start_date_value,
-        string $end_period_value,
+        array $status,
+        string $start_date,
+        string $end_date,
         int $source_program_increment_id
     ): SourceChangesetValuesCollection {
         $replication_data    = ReplicationDataBuilder::buildWithArtifactId($source_program_increment_id);
         $synchronized_fields = SynchronizedFieldsBuilder::build();
 
         $title_value         = TitleValue::fromReplicationDataAndSynchronizedFields(
-            RetrieveTitleValueStub::withValue($title_value),
+            RetrieveTitleValueStub::withValue($title),
             $replication_data,
             $synchronized_fields
         );
         $description_value   = DescriptionValue::fromReplicationDataAndSynchronizedFields(
-            RetrieveDescriptionValueStub::withValue($description_value, $description_format),
+            RetrieveDescriptionValueStub::withValue($description_content, $description_format),
             $replication_data,
             $synchronized_fields
         );
-        $status_values       = new StatusValue($list_values);
+        $status_values       = StatusValue::fromReplicationAndSynchronizedFields(
+            RetrieveStatusValuesStub::withValues(...$status),
+            $replication_data,
+            $synchronized_fields
+        );
         $start_date_value    = StartDateValue::fromReplicationAndSynchronizedFields(
-            RetrieveStartDateValueStub::withValue($start_date_value),
+            RetrieveStartDateValueStub::withValue($start_date),
             $replication_data,
             $synchronized_fields
         );
         $end_period_value    = EndPeriodValue::fromReplicationAndSynchronizedFields(
-            RetrieveEndPeriodValueStub::withValue($end_period_value),
+            RetrieveEndPeriodValueStub::withValue($end_date),
             $replication_data,
             $synchronized_fields
         );

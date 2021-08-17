@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Changeset\Values;
 
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\BindValueLabel;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\ChangesetValueNotFoundException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\GatherFieldValues;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\TextFieldValue;
@@ -94,5 +95,27 @@ final class ArtifactFieldValuesRetriever implements GatherFieldValues
             );
         }
         return (string) $end_period_value->getValue();
+    }
+
+    public function getStatusValues(ReplicationData $replication, SynchronizedFields $fields): array
+    {
+        $changeset    = $replication->getFullChangeset();
+        $status_field = $fields->getStatusField();
+        $status_value = $changeset->getValue($status_field->getFullField());
+        if (! $status_value) {
+            throw new ChangesetValueNotFoundException(
+                (int) $changeset->getId(),
+                $status_field->getId(),
+                'status'
+            );
+        }
+        assert($status_value instanceof \Tracker_Artifact_ChangesetValue_List);
+
+        return array_map(
+            static fn(
+                \Tracker_FormElement_Field_List_BindValue $bind_value
+            ): BindValueLabel => BindValueLabelProxy::fromListBindValue($bind_value),
+            $status_value->getListValues()
+        );
     }
 }

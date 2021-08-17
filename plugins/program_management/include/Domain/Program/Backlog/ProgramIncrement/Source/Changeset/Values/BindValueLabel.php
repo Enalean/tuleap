@@ -22,6 +22,12 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values;
 
-interface GatherFieldValues extends RetrieveTitleValue, RetrieveEndPeriodValue, RetrieveStartDateValue, RetrieveDescriptionValue, RetrieveStatusValues
+/**
+ * I hold the label of a Tracker List field "Bind" value.
+ * A list field can be bound to static values, users or user groups. For each case, I will hold the label of the value.
+ * @psalm-immutable
+ */
+interface BindValueLabel
 {
+    public function getLabel(): string;
 }

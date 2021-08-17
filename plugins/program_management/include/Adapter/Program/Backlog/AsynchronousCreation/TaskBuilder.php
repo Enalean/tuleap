@@ -39,7 +39,6 @@ use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Descriptio
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Changeset\Values\ArtifactFieldValuesRetriever;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\SourceChangesetValuesCollectionAdapter;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\StatusFieldAdapter;
-use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\StatusValueAdapter;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\SynchronizedFieldsAdapter;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\TimeFrameFieldsAdapter;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\TitleFieldAdapter;
@@ -108,7 +107,6 @@ class TaskBuilder
         return new CreateProgramIncrementsTask(
             new SourceChangesetValuesCollectionAdapter(
                 $synchronized_fields_gatherer,
-                new StatusValueAdapter(),
                 new ArtifactFieldValuesRetriever(),
             ),
             new PlanningAdapter(\PlanningFactory::build()),

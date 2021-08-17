@@ -25,42 +25,11 @@ namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Sourc
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFields;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\ReplicationData;
 
-/**
- * I hold the original (unmapped) list value labels of the Status semantic field of the source Timebox.
- * I am the reference value labels that must be mapped to matching bind value identifiers.
- * in the Mirrored Timeboxes' trackers before being saved in Mirrored Timeboxes.
- * @see MappedStatusValue
- * @psalm-immutable
- */
-final class StatusValue
+interface RetrieveStatusValues
 {
     /**
-     * @var BindValueLabel[]
-     */
-    private array $labels;
-
-    private function __construct(BindValueLabel ...$labels)
-    {
-        $this->labels = $labels;
-    }
-
-    /**
      * @throws ChangesetValueNotFoundException
-     */
-    public static function fromReplicationAndSynchronizedFields(
-        RetrieveStatusValues $status_retriever,
-        ReplicationData $replication,
-        SynchronizedFields $fields
-    ): self {
-        $labels = $status_retriever->getStatusValues($replication, $fields);
-        return new self(...$labels);
-    }
-
-    /**
      * @return BindValueLabel[]
      */
-    public function getListValues(): array
-    {
-        return $this->labels;
-    }
+    public function getStatusValues(ReplicationData $replication, SynchronizedFields $fields): array;
 }
