@@ -298,6 +298,8 @@ describe("NewTuleapArtifactModalService", () => {
                             value: "unwadded",
                         },
                     ],
+                    Etag: "etag",
+                    "Last-Modified": 1629097552,
                 };
                 getArtifactWithCompleteTrackerStructure.mockReturnValue($q.when(artifact));
             });
@@ -344,6 +346,8 @@ describe("NewTuleapArtifactModalService", () => {
                 expect(model.ordered_fields).toBeDefined();
                 expect(setCreationMode).toHaveBeenCalledWith(false);
                 expect(model.title).toEqual("onomatomania");
+                expect(model.etag).toEqual("etag");
+                expect(model.last_modified).toEqual(1629097552);
             });
 
             it(`Given that the user didn't have a preference set for text fields format,

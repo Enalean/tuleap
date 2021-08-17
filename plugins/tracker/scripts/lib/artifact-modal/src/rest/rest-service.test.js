@@ -68,7 +68,7 @@ describe("rest-service", () => {
         expect(tlpGetSpy).toHaveBeenCalledWith("/api/v1/artifacts/792");
     });
 
-    it("getArtifactFieldValues() - given an artifact id, when I get the artifact's field values, then a promise will be resolved with a map of field values indexed by their field id", async () => {
+    it("getArtifactWithCompleteTrackerStructure() - given an artifact id, when I get the artifact's field values, then a promise will be resolved with a map of field values indexed by their field id", async () => {
         const return_json = {
             id: 40,
             values: [
@@ -85,11 +85,20 @@ describe("rest-service", () => {
             ],
             title: "coincoin",
         };
-        mockFetchSuccess(jest.spyOn(tlp, "get"), { return_json });
+        const headers = {
+            Etag: "etag",
+            "Last-Modified": 1629098386,
+        };
+        mockFetchSuccess(jest.spyOn(tlp, "get"), {
+            return_json,
+            headers: {
+                get: (header) => headers[header],
+            },
+        });
 
         const values = await RestService.getArtifactWithCompleteTrackerStructure(40);
 
-        expect(values).toEqual(return_json);
+        expect(values).toEqual({ ...return_json, ...headers });
     });
 
     describe("getAllOpenParentArtifacts() -", () => {
@@ -346,6 +355,49 @@ describe("rest-service", () => {
             expect(tlpPutSpy).toHaveBeenCalledWith("/api/v1/artifacts/8354", {
                 headers: {
                     "content-type": "application/json",
+                },
+                body: JSON.stringify({
+                    values: field_values,
+                    comment: followup_comment,
+                }),
+            });
+        });
+    });
+
+    describe("editArtifactWithConcurrencyChecking() -", () => {
+        it("Given an artifact id and an array of fields, when I edit an artifact in concurrency mode, then the field values will be sent using the edit REST route and a promise will be resolved with the edited artifact's id", async () => {
+            const followup_comment = {
+                value: "",
+                format: "text",
+            };
+            const field_values = [
+                { field_id: 47, value: "unpensionableness" },
+                { field_id: 71, bind_value_ids: [726, 332] },
+            ];
+            const tlpPutSpy = jest.spyOn(tlp, "put");
+            mockFetchSuccess(tlpPutSpy, {
+                return_json: {
+                    values: field_values,
+                    comment: followup_comment,
+                },
+            });
+
+            const artifact_edition = await RestService.editArtifactWithConcurrencyChecking(
+                8354,
+                field_values,
+                followup_comment,
+                "etag",
+                1629098047
+            );
+
+            expect(artifact_edition).toEqual({
+                id: 8354,
+            });
+            expect(tlpPutSpy).toHaveBeenCalledWith("/api/v1/artifacts/8354", {
+                headers: {
+                    "content-type": "application/json",
+                    "If-match": "etag",
+                    "If-Unmodified-Since": 1629098047,
                 },
                 body: JSON.stringify({
                     values: field_values,

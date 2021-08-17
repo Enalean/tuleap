@@ -21,7 +21,12 @@ import { loadTooltips } from "@tuleap/tooltip";
 import { isInCreationMode } from "./modal-creation-mode-state.js";
 import { setError, hasError, getErrorMessage } from "./rest/rest-error-state.js";
 import { isDisabled } from "./fields/disabled-field-detector.js";
-import { createArtifact, editArtifact, getFollowupsComments } from "./rest/rest-service.js";
+import {
+    createArtifact,
+    editArtifact,
+    editArtifactWithConcurrencyChecking,
+    getFollowupsComments,
+} from "./rest/rest-service.js";
 import {
     getAllFileFields,
     isThereAtLeastOneFileField,
@@ -68,6 +73,8 @@ function ArtifactModalController(
 ) {
     const self = this,
         user_id = modal_model.user_id;
+    let confirm_action_to_edit = false;
+    const concurrency_error_code = 412;
 
     Object.assign(self, {
         $onInit: init,
@@ -115,7 +122,17 @@ function ArtifactModalController(
         formatDateUsingPreferredUserFormat: (date) =>
             moment(date).format(formatFromPhpToMoment(document.body.dataset.dateTimeFormat)),
         user_locale: document.body.dataset.userLocale,
+        confirm_action_to_edit,
+        getButtonText,
     });
+
+    function getButtonText() {
+        if (self.confirm_action_to_edit) {
+            return gettextCatalog.getString("Confirm to apply your modifications");
+        }
+
+        return gettextCatalog.getString("Save changes");
+    }
 
     function init() {
         setFieldDependenciesWatchers();
@@ -180,15 +197,25 @@ function ArtifactModalController(
                     self.new_followup_comment
                 );
 
-                var promise;
+                let promise;
                 if (isInCreationMode()) {
                     promise = createArtifact(modal_model.tracker_id, validated_values);
                 } else {
-                    promise = editArtifact(
-                        modal_model.artifact_id,
-                        validated_values,
-                        self.new_followup_comment
-                    );
+                    if (self.confirm_action_to_edit) {
+                        promise = editArtifact(
+                            modal_model.artifact_id,
+                            validated_values,
+                            self.new_followup_comment
+                        );
+                    } else {
+                        promise = editArtifactWithConcurrencyChecking(
+                            modal_model.artifact_id,
+                            validated_values,
+                            self.new_followup_comment,
+                            modal_model.etag,
+                            modal_model.last_modified
+                        );
+                    }
                 }
 
                 return $q.when(promise);
@@ -198,15 +225,39 @@ function ArtifactModalController(
 
                 return displayItemCallback(new_artifact.id);
             })
-            .catch(() => {
+            .catch(async (e) => {
                 if (hasError()) {
                     return;
                 }
-                setError(gettextCatalog.getString("An error occurred while saving the artifact."));
+                await errorHandler(e);
             })
             .finally(function () {
                 TuleapArtifactModalLoading.loading = false;
             });
+    }
+
+    async function errorHandler(error) {
+        try {
+            const error_json = await error.response.json();
+
+            if (
+                error_json !== undefined &&
+                error_json.error &&
+                error_json.error.code === concurrency_error_code
+            ) {
+                setError(
+                    gettextCatalog.getString(
+                        "Someone updated this artifact while you were editing it. Please note that your modifications will be applied on top of previous changes. You need to confirm your action to submit your modification."
+                    )
+                );
+                self.confirm_action_to_edit = true;
+            } else {
+                setError(gettextCatalog.getString("An error occurred while saving the artifact."));
+            }
+        } catch {
+            setError(gettextCatalog.getString("An error occurred while saving the artifact."));
+        }
+        TuleapArtifactModalLoading.loading = false;
     }
 
     function uploadAllFileFields() {
