@@ -26,47 +26,50 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Chan
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\ChangesetValueNotFoundException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\UnsupportedTitleFieldException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFields;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\ReplicationData;
-use Tuleap\ProgramManagement\Tests\Builder\ReplicationDataBuilder;
 use Tuleap\ProgramManagement\Tests\Builder\SynchronizedFieldsBuilder;
 
 final class ArtifactFieldValuesRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private SynchronizedFields $fields;
+    /**
+     * @var mixed|\PHPUnit\Framework\MockObject\Stub|\Tracker_Artifact_Changeset
+     */
+    private $changeset;
 
     protected function setUp(): void
     {
-        $this->fields = SynchronizedFieldsBuilder::build();
+        $this->fields    = SynchronizedFieldsBuilder::build();
+        $this->changeset = $this->createStub(\Tracker_Artifact_Changeset::class);
     }
 
-    private function getRetriever(): ArtifactFieldValuesRetriever
+    private function getRetriever(\Tracker_Artifact_Changeset $changeset): ArtifactFieldValuesRetriever
     {
-        return new ArtifactFieldValuesRetriever();
+        return new ArtifactFieldValuesRetriever($changeset);
     }
 
     public function dataProviderMethodUnderTest(): array
     {
         return [
             'when title value is not found'       => [fn(
-                ReplicationData $replication,
+                \Tracker_Artifact_Changeset $changeset,
                 SynchronizedFields $fields
-            ) => $this->getRetriever()->getTitleValue($replication, $fields)],
+            ) => $this->getRetriever($changeset)->getTitleValue($fields)],
             'when description value is not found' => [fn(
-                ReplicationData $replication,
+                \Tracker_Artifact_Changeset $changeset,
                 SynchronizedFields $fields
-            ) => $this->getRetriever()->getDescriptionValue($replication, $fields)],
+            ) => $this->getRetriever($changeset)->getDescriptionValue($fields)],
             'when start date value is not found'  => [fn(
-                ReplicationData $replication,
+                \Tracker_Artifact_Changeset $changeset,
                 SynchronizedFields $fields
-            ) => $this->getRetriever()->getStartDateValue($replication, $fields)],
+            ) => $this->getRetriever($changeset)->getStartDateValue($fields)],
             'when end period value is not found'  => [fn(
-                ReplicationData $replication,
+                \Tracker_Artifact_Changeset $changeset,
                 SynchronizedFields $fields
-            ) => $this->getRetriever()->getEndPeriodValue($replication, $fields)],
+            ) => $this->getRetriever($changeset)->getEndPeriodValue($fields)],
             'when status value is not found'      => [fn(
-                ReplicationData $replication,
+                \Tracker_Artifact_Changeset $changeset,
                 SynchronizedFields $fields
-            ) => $this->getRetriever()->getStatusValues($replication, $fields)]
+            ) => $this->getRetriever($changeset)->getStatusValues($fields)]
         ];
     }
 
@@ -75,22 +78,20 @@ final class ArtifactFieldValuesRetrieverTest extends \Tuleap\Test\PHPUnit\TestCa
      */
     public function testItThrowsWhenChangesetValuesAreNotFound(callable $method_under_test): void
     {
-        $source_changeset = $this->createStub(\Tracker_Artifact_Changeset::class);
-        $source_changeset->method('getValue')->willReturn(null);
-        $source_changeset->method('getId')->willReturn(1);
-        $replication = ReplicationDataBuilder::buildWithChangeset($source_changeset);
+        $this->changeset->method('getValue')->willReturn(null);
+        $this->changeset->method('getId')->willReturn(1);
 
         $this->expectException(ChangesetValueNotFoundException::class);
-        $method_under_test($replication, $this->fields);
+        $method_under_test($this->changeset, $this->fields);
     }
 
     public function testItThrowsWhenTitleIsNotAString(): void
     {
         $changeset_value = $this->createStub(\Tracker_Artifact_ChangesetValue_Text::class);
-        $replication     = $this->buildReplicationWithValue($changeset_value);
+        $this->changeset->method('getValue')->willReturn($changeset_value);
 
         $this->expectException(UnsupportedTitleFieldException::class);
-        $this->getRetriever()->getTitleValue($replication, $this->fields);
+        $this->getRetriever($this->changeset)->getTitleValue($this->fields);
     }
 
     public function testItReturnsTitleValue(): void
@@ -98,9 +99,9 @@ final class ArtifactFieldValuesRetrieverTest extends \Tuleap\Test\PHPUnit\TestCa
         $fields          = SynchronizedFieldsBuilder::build();
         $changeset_value = $this->createStub(\Tracker_Artifact_ChangesetValue_String::class);
         $changeset_value->method('getValue')->willReturn('My title');
-        $replication = $this->buildReplicationWithValue($changeset_value);
+        $this->changeset->method('getValue')->willReturn($changeset_value);
 
-        self::assertSame('My title', $this->getRetriever()->getTitleValue($replication, $fields));
+        self::assertSame('My title', $this->getRetriever($this->changeset)->getTitleValue($fields));
     }
 
     public function testItReturnsDescriptionValue(): void
@@ -108,9 +109,9 @@ final class ArtifactFieldValuesRetrieverTest extends \Tuleap\Test\PHPUnit\TestCa
         $changeset_value = $this->createStub(\Tracker_Artifact_ChangesetValue_Text::class);
         $changeset_value->method('getValue')->willReturn('My description');
         $changeset_value->method('getFormat')->willReturn('text');
-        $replication = $this->buildReplicationWithValue($changeset_value);
+        $this->changeset->method('getValue')->willReturn($changeset_value);
 
-        $text_value = $this->getRetriever()->getDescriptionValue($replication, $this->fields);
+        $text_value = $this->getRetriever($this->changeset)->getDescriptionValue($this->fields);
         self::assertSame('My description', $text_value->getValue());
         self::assertSame('text', $text_value->getFormat());
     }
@@ -119,27 +120,27 @@ final class ArtifactFieldValuesRetrieverTest extends \Tuleap\Test\PHPUnit\TestCa
     {
         $changeset_value = $this->createStub(\Tracker_Artifact_ChangesetValue_Date::class);
         $changeset_value->method('getDate')->willReturn('2020-10-01');
-        $replication = $this->buildReplicationWithValue($changeset_value);
+        $this->changeset->method('getValue')->willReturn($changeset_value);
 
-        self::assertSame('2020-10-01', $this->getRetriever()->getStartDateValue($replication, $this->fields));
+        self::assertSame('2020-10-01', $this->getRetriever($this->changeset)->getStartDateValue($this->fields));
     }
 
     public function testItReturnsEndPeriodValueWithEndDate(): void
     {
         $changeset_value = $this->createStub(\Tracker_Artifact_ChangesetValue_Date::class);
         $changeset_value->method('getValue')->willReturn('2023-09-01');
-        $replication = $this->buildReplicationWithValue($changeset_value);
+        $this->changeset->method('getValue')->willReturn($changeset_value);
 
-        self::assertSame('2023-09-01', $this->getRetriever()->getEndPeriodValue($replication, $this->fields));
+        self::assertSame('2023-09-01', $this->getRetriever($this->changeset)->getEndPeriodValue($this->fields));
     }
 
     public function testItReturnsEndPeriodValueWithDuration(): void
     {
         $changeset_value = $this->createStub(\Tracker_Artifact_ChangesetValue_Integer::class);
         $changeset_value->method('getValue')->willReturn(34);
-        $replication = $this->buildReplicationWithValue($changeset_value);
+        $this->changeset->method('getValue')->willReturn($changeset_value);
 
-        self::assertSame('34', $this->getRetriever()->getEndPeriodValue($replication, $this->fields));
+        self::assertSame('34', $this->getRetriever($this->changeset)->getEndPeriodValue($this->fields));
     }
 
     public function testItReturnsStatusValuesWithStaticBind(): void
@@ -148,9 +149,9 @@ final class ArtifactFieldValuesRetrieverTest extends \Tuleap\Test\PHPUnit\TestCa
         $second_bind_value = new \Tracker_FormElement_Field_List_Bind_StaticValue(698, 'Current', '', 1, false);
         $changeset_value   = $this->createStub(\Tracker_Artifact_ChangesetValue_List::class);
         $changeset_value->method('getListValues')->willReturn([$first_bind_value, $second_bind_value]);
-        $replication = $this->buildReplicationWithValue($changeset_value);
+        $this->changeset->method('getValue')->willReturn($changeset_value);
 
-        $values = $this->getRetriever()->getStatusValues($replication, $this->fields);
+        $values = $this->getRetriever($this->changeset)->getStatusValues($this->fields);
         $labels = array_map(static fn(BindValueLabel $label): string => $label->getLabel(), $values);
         self::assertContains('Planned', $labels);
         self::assertContains('Current', $labels);
@@ -162,9 +163,9 @@ final class ArtifactFieldValuesRetrieverTest extends \Tuleap\Test\PHPUnit\TestCa
         $second_bind_value = new \Tracker_FormElement_Field_List_Bind_UsersValue(129, 'mmantel', 'Mildred Mantel');
         $changeset_value   = $this->createStub(\Tracker_Artifact_ChangesetValue_List::class);
         $changeset_value->method('getListValues')->willReturn([$first_bind_value, $second_bind_value]);
-        $replication = $this->buildReplicationWithValue($changeset_value);
+        $this->changeset->method('getValue')->willReturn($changeset_value);
 
-        $values = $this->getRetriever()->getStatusValues($replication, $this->fields);
+        $values = $this->getRetriever($this->changeset)->getStatusValues($this->fields);
         $labels = array_map(static fn(BindValueLabel $label): string => $label->getLabel(), $values);
         self::assertContains('Meridith Gregg', $labels);
         self::assertContains('Mildred Mantel', $labels);
@@ -184,18 +185,11 @@ final class ArtifactFieldValuesRetrieverTest extends \Tuleap\Test\PHPUnit\TestCa
         $second_bind_value = new \Tracker_FormElement_Field_List_Bind_UgroupsValue(265, $second_ugroup, false);
         $changeset_value   = $this->createStub(\Tracker_Artifact_ChangesetValue_List::class);
         $changeset_value->method('getListValues')->willReturn([$first_bind_value, $second_bind_value]);
-        $replication = $this->buildReplicationWithValue($changeset_value);
+        $this->changeset->method('getValue')->willReturn($changeset_value);
 
-        $values = $this->getRetriever()->getStatusValues($replication, $this->fields);
+        $values = $this->getRetriever($this->changeset)->getStatusValues($this->fields);
         $labels = array_map(static fn(BindValueLabel $label): string => $label->getLabel(), $values);
         self::assertContains('project_members', $labels);
         self::assertContains('bicyanide benzothiopyran', $labels);
-    }
-
-    private function buildReplicationWithValue(\Tracker_Artifact_ChangesetValue $changeset_value): ReplicationData
-    {
-        $source_changeset = $this->createStub(\Tracker_Artifact_Changeset::class);
-        $source_changeset->method('getValue')->willReturn($changeset_value);
-        return ReplicationDataBuilder::buildWithChangeset($source_changeset);
     }
 }

@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values;
 
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFields;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\ReplicationData;
 
 /**
  * I hold the value of the end period (end date or duration) field from the Timeframe semantic of the source Timebox.
@@ -42,12 +41,11 @@ final class EndPeriodValue
     /**
      * @throws ChangesetValueNotFoundException
      */
-    public static function fromReplicationAndSynchronizedFields(
+    public static function fromSynchronizedFields(
         RetrieveEndPeriodValue $end_period_retriever,
-        ReplicationData $replication,
         SynchronizedFields $fields
     ): self {
-        return new self($end_period_retriever->getEndPeriodValue($replication, $fields));
+        return new self($end_period_retriever->getEndPeriodValue($fields));
     }
 
     public function getValue(): string

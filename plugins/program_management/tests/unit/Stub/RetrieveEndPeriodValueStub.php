@@ -24,7 +24,6 @@ namespace Tuleap\ProgramManagement\Tests\Stub;
 
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\RetrieveEndPeriodValue;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFields;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\ReplicationData;
 
 final class RetrieveEndPeriodValueStub implements RetrieveEndPeriodValue
 {
@@ -40,7 +39,7 @@ final class RetrieveEndPeriodValueStub implements RetrieveEndPeriodValue
         return new self($value);
     }
 
-    public function getEndPeriodValue(ReplicationData $replication, SynchronizedFields $fields): string
+    public function getEndPeriodValue(SynchronizedFields $fields): string
     {
         return $this->value;
     }

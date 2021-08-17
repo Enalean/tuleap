@@ -129,7 +129,7 @@ final class ReplicationDataAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->adapter->buildFromArtifactAndUserId(1, 101);
     }
 
-    public function testItBuilsReplicationData(): void
+    public function testItBuildsReplicationData(): void
     {
         $this->pending_artifact_creation_store->shouldReceive('getPendingArtifactById')
             ->once()

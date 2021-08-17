@@ -23,11 +23,11 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Tests\Stub;
 
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Changeset\Values\TextFieldValueProxy;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\RetrieveDescriptionValue;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\TextFieldValue;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFields;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\ReplicationData;
 
-final class RetrieveDescriptionValueStub implements \Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\RetrieveDescriptionValue
+final class RetrieveDescriptionValueStub implements RetrieveDescriptionValue
 {
     private string $value;
     private string $format;
@@ -43,7 +43,7 @@ final class RetrieveDescriptionValueStub implements \Tuleap\ProgramManagement\Do
         return new self($value, $format);
     }
 
-    public function getDescriptionValue(ReplicationData $replication, SynchronizedFields $fields): TextFieldValue
+    public function getDescriptionValue(SynchronizedFields $fields): TextFieldValue
     {
         return new TextFieldValueProxy($this->value, $this->format);
     }

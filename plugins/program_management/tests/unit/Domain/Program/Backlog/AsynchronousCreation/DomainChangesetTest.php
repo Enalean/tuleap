@@ -27,7 +27,7 @@ use Tuleap\ProgramManagement\Tests\Stub\VerifyIsChangesetStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsIterationStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsVisibleArtifactStub;
 
-final class ChangesetIdentifierTest extends \Tuleap\Test\PHPUnit\TestCase
+final class DomainChangesetTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private IterationIdentifier $iteration;
 
@@ -43,29 +43,29 @@ final class ChangesetIdentifierTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItBuildsFromId(): void
     {
-        $changeset = ChangesetIdentifier::fromId(VerifyIsChangesetStub::withValidChangeset(), 7715);
-        self::assertSame(7715, $changeset->id);
+        $changeset = DomainChangeset::fromId(VerifyIsChangesetStub::withValidChangeset(), 7715);
+        self::assertSame(7715, $changeset->getId());
     }
 
     public function testItReturnsNullWhenIdIsNotAChangeset(): void
     {
-        self::assertNull(ChangesetIdentifier::fromId(VerifyIsChangesetStub::withNotValidChangeset(), -1));
+        self::assertNull(DomainChangeset::fromId(VerifyIsChangesetStub::withNotValidChangeset(), -1));
     }
 
     public function testItBuildsFromIterationLastChangeset(): void
     {
         $last_changeset_id = 94;
-        $changeset         = ChangesetIdentifier::fromIterationLastChangeset(
+        $changeset         = DomainChangeset::fromIterationLastChangeset(
             RetrieveLastChangesetStub::withLastChangesetIds($last_changeset_id),
             $this->iteration
         );
-        self::assertSame($last_changeset_id, $changeset->id);
+        self::assertSame($last_changeset_id, $changeset->getId());
     }
 
     public function testItReturnsNullWhenThereIsNoLastChangeset(): void
     {
         self::assertNull(
-            ChangesetIdentifier::fromIterationLastChangeset(
+            DomainChangeset::fromIterationLastChangeset(
                 RetrieveLastChangesetStub::withNoLastChangeset(),
                 $this->iteration
             )

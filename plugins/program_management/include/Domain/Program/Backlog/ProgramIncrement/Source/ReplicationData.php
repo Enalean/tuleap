@@ -22,22 +22,20 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source;
 
+use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\ChangesetIdentifier;
 use Tuleap\ProgramManagement\Domain\ProgramTracker;
 use Tuleap\ProgramManagement\Domain\ProgramManagementProject;
 
 /**
  * @psalm-immutable
  */
-class ReplicationData
+final class ReplicationData
 {
     /**
      * @var ProgramTracker
      */
     private $tracker;
-    /**
-     * @var \Tracker_Artifact_Changeset
-     */
-    private $changeset;
+    private ChangesetIdentifier $changeset;
     /**
      * @var \PFUser
      */
@@ -53,7 +51,7 @@ class ReplicationData
 
     public function __construct(
         ProgramTracker $tracker,
-        \Tracker_Artifact_Changeset $changeset,
+        ChangesetIdentifier $changeset,
         \PFUser $user,
         Artifact $artifact,
         ProgramManagementProject $project
@@ -70,7 +68,7 @@ class ReplicationData
         return $this->tracker;
     }
 
-    public function getFullChangeset(): \Tracker_Artifact_Changeset
+    public function getChangeset(): ChangesetIdentifier
     {
         return $this->changeset;
     }

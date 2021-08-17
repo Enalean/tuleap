@@ -22,25 +22,26 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Tests\Stub;
 
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\RetrieveStartDateValue;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFields;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\GatherFieldValues;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\RetrieveFieldValuesGatherer;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\ReplicationData;
 
-final class RetrieveStartDateValueStub implements RetrieveStartDateValue
+final class RetrieveFieldValuesGathererStub implements RetrieveFieldValuesGatherer
 {
-    private string $value;
+    private GatherFieldValues $gatherer;
 
-    private function __construct(string $value)
+    private function __construct(GatherFieldValues $gatherer)
     {
-        $this->value = $value;
+        $this->gatherer = $gatherer;
     }
 
-    public static function withValue(string $value): self
+    public static function withGatherer(GatherFieldValues $gatherer): self
     {
-        return new self($value);
+        return new self($gatherer);
     }
 
-    public function getStartDateValue(SynchronizedFields $fields): string
+    public function getFieldValuesGatherer(ReplicationData $replication): GatherFieldValues
     {
-        return $this->value;
+        return $this->gatherer;
     }
 }

@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values;
 
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\Field;
-use Tuleap\ProgramManagement\Tests\Builder\ReplicationDataBuilder;
 use Tuleap\ProgramManagement\Tests\Builder\SynchronizedFieldsBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\MapStatusByValueStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveStatusValuesStub;
@@ -36,9 +35,8 @@ final class MappedStatusValueTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItBuildsFromStatusValueAndListField(): void
     {
         $status_field  = $this->buildStatusField();
-        $status_value  = StatusValue::fromReplicationAndSynchronizedFields(
+        $status_value  = StatusValue::fromSynchronizedFields(
             RetrieveStatusValuesStub::withValues('Planned', 'Current'),
-            ReplicationDataBuilder::build(),
             SynchronizedFieldsBuilder::build()
         );
         $mapped_status = MappedStatusValue::fromStatusValueAndListField(

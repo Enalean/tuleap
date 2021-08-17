@@ -22,10 +22,10 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Tests\Stub;
 
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\RetrieveTitleValue;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFields;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\ReplicationData;
 
-final class RetrieveTitleValueStub implements \Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\RetrieveTitleValue
+final class RetrieveTitleValueStub implements RetrieveTitleValue
 {
     private string $value;
 
@@ -39,7 +39,7 @@ final class RetrieveTitleValueStub implements \Tuleap\ProgramManagement\Domain\P
         return new self($value);
     }
 
-    public function getTitleValue(ReplicationData $replication, SynchronizedFields $fields): string
+    public function getTitleValue(SynchronizedFields $fields): string
     {
         return $this->value;
     }

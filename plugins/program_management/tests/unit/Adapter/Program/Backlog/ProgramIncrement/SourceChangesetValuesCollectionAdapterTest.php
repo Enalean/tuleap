@@ -28,6 +28,7 @@ use Tuleap\ProgramManagement\Domain\ProgramTracker;
 use Tuleap\ProgramManagement\Tests\Builder\ReplicationDataBuilder;
 use Tuleap\ProgramManagement\Tests\Builder\SynchronizedFieldsBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\GatherFieldValuesStub;
+use Tuleap\ProgramManagement\Tests\Stub\RetrieveFieldValuesGathererStub;
 
 final class SourceChangesetValuesCollectionAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -44,14 +45,16 @@ final class SourceChangesetValuesCollectionAdapterTest extends \Tuleap\Test\PHPU
     {
         return new SourceChangesetValuesCollectionAdapter(
             $this->getFieldsGatherer(),
-            GatherFieldValuesStub::withValues(
-                self::TITLE_VALUE,
-                self::DESCRIPTION_VALUE,
-                self::DESCRIPTION_FORMAT,
-                self::START_DATE_VALUE,
-                self::END_PERIOD_VALUE,
-                [self::STATUS_VALUE]
-            )
+            RetrieveFieldValuesGathererStub::withGatherer(
+                GatherFieldValuesStub::withValues(
+                    self::TITLE_VALUE,
+                    self::DESCRIPTION_VALUE,
+                    self::DESCRIPTION_FORMAT,
+                    self::START_DATE_VALUE,
+                    self::END_PERIOD_VALUE,
+                    [self::STATUS_VALUE]
+                )
+            ),
         );
     }
 

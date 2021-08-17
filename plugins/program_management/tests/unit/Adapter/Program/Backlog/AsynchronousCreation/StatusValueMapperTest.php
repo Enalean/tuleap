@@ -26,7 +26,6 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Chan
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\StatusValue;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\Field;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\NoDuckTypedMatchingValueException;
-use Tuleap\ProgramManagement\Tests\Builder\ReplicationDataBuilder;
 use Tuleap\ProgramManagement\Tests\Builder\SynchronizedFieldsBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveStatusValuesStub;
 
@@ -157,9 +156,8 @@ final class StatusValueMapperTest extends \Tuleap\Test\PHPUnit\TestCase
 
     private function buildStatusValueWithLabels(string ...$values): StatusValue
     {
-        return StatusValue::fromReplicationAndSynchronizedFields(
+        return StatusValue::fromSynchronizedFields(
             RetrieveStatusValuesStub::withValues(...$values),
-            ReplicationDataBuilder::build(),
             SynchronizedFieldsBuilder::build()
         );
     }

@@ -56,13 +56,6 @@ final class ReplicationDataBuilder
         return ReplicationDataAdapter::build($source_timebox_artifact, $user, $source_changeset);
     }
 
-    public static function buildWithChangeset(\Tracker_Artifact_Changeset $source_changeset): ReplicationData
-    {
-        $source_timebox_artifact = self::buildArtifact(209, 1234567890);
-        $user                    = UserTestBuilder::aUser()->withId(179)->build();
-        return ReplicationDataAdapter::build($source_timebox_artifact, $user, $source_changeset);
-    }
-
     private static function buildArtifact(int $artifact_id, int $submission_timestamp): Artifact
     {
         $program_project        = ProjectTestBuilder::aProject()->withId(578)

@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values;
 
-use Tuleap\ProgramManagement\Tests\Builder\ReplicationDataBuilder;
 use Tuleap\ProgramManagement\Tests\Builder\SynchronizedFieldsBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveTitleValueStub;
 
@@ -30,11 +29,10 @@ final class TitleValueTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const TITLE_VALUE = 'uncomprehended Sinupallialia';
 
-    public function testItBuildsFromReplicationAndSynchronizedFields(): void
+    public function testItBuildsFromSynchronizedFields(): void
     {
-        $value = TitleValue::fromReplicationDataAndSynchronizedFields(
+        $value = TitleValue::fromSynchronizedFields(
             RetrieveTitleValueStub::withValue(self::TITLE_VALUE),
-            ReplicationDataBuilder::build(),
             SynchronizedFieldsBuilder::build()
         );
         self::assertSame(self::TITLE_VALUE, $value->getValue());

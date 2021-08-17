@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values;
 
-use Tuleap\ProgramManagement\Tests\Builder\ReplicationDataBuilder;
 use Tuleap\ProgramManagement\Tests\Builder\SynchronizedFieldsBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveStartDateValueStub;
 
@@ -30,11 +29,10 @@ final class StartDateValueTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const VALUE = '2018-05-02';
 
-    public function testItBuildsFromReplicationAndSynchronizedFields(): void
+    public function testItBuildsFromSynchronizedFields(): void
     {
-        $value = StartDateValue::fromReplicationAndSynchronizedFields(
+        $value = StartDateValue::fromSynchronizedFields(
             RetrieveStartDateValueStub::withValue(self::VALUE),
-            ReplicationDataBuilder::build(),
             SynchronizedFieldsBuilder::build()
         );
         self::assertSame(self::VALUE, $value->getValue());

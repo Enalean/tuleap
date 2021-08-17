@@ -20,15 +20,18 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values;
+namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation;
 
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFields;
+use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 
-interface RetrieveTitleValue
+final class ChangesetProxyTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    /**
-     * @throws ChangesetValueNotFoundException
-     * @throws UnsupportedTitleFieldException
-     */
-    public function getTitleValue(SynchronizedFields $fields): string;
+    public function testItBuildsFromChangeset(): void
+    {
+        $artifact  = ArtifactTestBuilder::anArtifact(458)->build();
+        $changeset = new \Tracker_Artifact_Changeset('5379', $artifact, 101, 1234567890, null);
+
+        $changeset_identifier = ChangesetProxy::fromChangeset($changeset);
+        self::assertSame(5379, $changeset_identifier->getId());
+    }
 }

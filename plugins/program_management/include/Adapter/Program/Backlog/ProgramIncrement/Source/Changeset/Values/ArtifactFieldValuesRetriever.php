@@ -28,18 +28,23 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Chan
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\TextFieldValue;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\UnsupportedTitleFieldException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFields;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\ReplicationData;
 
 final class ArtifactFieldValuesRetriever implements GatherFieldValues
 {
-    public function getTitleValue(ReplicationData $replication, SynchronizedFields $fields): string
+    private \Tracker_Artifact_Changeset $changeset;
+
+    public function __construct(\Tracker_Artifact_Changeset $changeset)
     {
-        $changeset   = $replication->getFullChangeset();
+        $this->changeset = $changeset;
+    }
+
+    public function getTitleValue(SynchronizedFields $fields): string
+    {
         $title_field = $fields->getTitleField();
-        $title_value = $changeset->getValue($title_field->getFullField());
+        $title_value = $this->changeset->getValue($title_field->getFullField());
         if (! $title_value) {
             throw new ChangesetValueNotFoundException(
-                (int) $changeset->getId(),
+                (int) $this->changeset->getId(),
                 $title_field->getId(),
                 'title'
             );
@@ -50,14 +55,13 @@ final class ArtifactFieldValuesRetriever implements GatherFieldValues
         return $title_value->getValue();
     }
 
-    public function getDescriptionValue(ReplicationData $replication, SynchronizedFields $fields): TextFieldValue
+    public function getDescriptionValue(SynchronizedFields $fields): TextFieldValue
     {
-        $changeset         = $replication->getFullChangeset();
         $description_field = $fields->getDescriptionField();
-        $description_value = $changeset->getValue($description_field->getFullField());
+        $description_value = $this->changeset->getValue($description_field->getFullField());
         if (! $description_value) {
             throw new ChangesetValueNotFoundException(
-                (int) $changeset->getId(),
+                (int) $this->changeset->getId(),
                 $description_field->getId(),
                 'description'
             );
@@ -66,14 +70,13 @@ final class ArtifactFieldValuesRetriever implements GatherFieldValues
         return new TextFieldValueProxy($description_value->getValue(), $description_value->getFormat());
     }
 
-    public function getStartDateValue(ReplicationData $replication, SynchronizedFields $fields): string
+    public function getStartDateValue(SynchronizedFields $fields): string
     {
-        $changeset        = $replication->getFullChangeset();
         $start_date_field = $fields->getStartDateField();
-        $start_date_value = $changeset->getValue($start_date_field->getFullField());
+        $start_date_value = $this->changeset->getValue($start_date_field->getFullField());
         if (! $start_date_value) {
             throw new ChangesetValueNotFoundException(
-                (int) $changeset->getId(),
+                (int) $this->changeset->getId(),
                 $start_date_field->getId(),
                 'timeframe start date'
             );
@@ -82,14 +85,13 @@ final class ArtifactFieldValuesRetriever implements GatherFieldValues
         return $start_date_value->getDate();
     }
 
-    public function getEndPeriodValue(ReplicationData $replication, SynchronizedFields $fields): string
+    public function getEndPeriodValue(SynchronizedFields $fields): string
     {
-        $changeset        = $replication->getFullChangeset();
         $end_period_field = $fields->getEndPeriodField();
-        $end_period_value = $changeset->getValue($end_period_field->getFullField());
+        $end_period_value = $this->changeset->getValue($end_period_field->getFullField());
         if (! $end_period_value) {
             throw new ChangesetValueNotFoundException(
-                (int) $changeset->getId(),
+                (int) $this->changeset->getId(),
                 $end_period_field->getId(),
                 'time frame end period'
             );
@@ -97,14 +99,13 @@ final class ArtifactFieldValuesRetriever implements GatherFieldValues
         return (string) $end_period_value->getValue();
     }
 
-    public function getStatusValues(ReplicationData $replication, SynchronizedFields $fields): array
+    public function getStatusValues(SynchronizedFields $fields): array
     {
-        $changeset    = $replication->getFullChangeset();
         $status_field = $fields->getStatusField();
-        $status_value = $changeset->getValue($status_field->getFullField());
+        $status_value = $this->changeset->getValue($status_field->getFullField());
         if (! $status_value) {
             throw new ChangesetValueNotFoundException(
-                (int) $changeset->getId(),
+                (int) $this->changeset->getId(),
                 $status_field->getId(),
                 'status'
             );
