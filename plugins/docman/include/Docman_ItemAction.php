@@ -51,12 +51,13 @@ class Docman_ItemAction
     }
     public function fetch($params)
     {
-        $dfltUrlParams = ['action' => $this->action, 'id' => $this->item->getId()];
-        $_urlParams    = \array_merge($dfltUrlParams, $this->extraUrlParams);
-        $url           = \Tuleap\Docman\View\DocmanViewURLBuilder::buildActionUrl($this->item, $params, $_urlParams, \true, \true);
-        $html          = '<a data-help-window href="' . $url . '" class="' . $this->classes . '" title="' . $this->title . '">';
-        $html         .= '<img src="' . $params['docman_icons']->getActionIcon($this->action) . '" class="docman_item_icon" alt="[' . $this->title . ']" />';
-        $html         .= '</a>&nbsp;';
+        $dfltUrlParams          = ['action' => $this->action, 'id' => $this->item->getId()];
+        $_urlParams             = \array_merge($dfltUrlParams, $this->extraUrlParams);
+        $url                    = \Tuleap\Docman\View\DocmanViewURLBuilder::buildActionUrl($this->item, $params, $_urlParams, \true, \true);
+        $display_in_help_window = empty($params['pv']) ? '' : 'data-help-window';
+        $html                   = '<a ' . $display_in_help_window . ' href="' . $url . '" class="' . $this->classes . '" title="' . $this->title . '">';
+        $html                  .= '<img src="' . $params['docman_icons']->getActionIcon($this->action) . '" class="docman_item_icon" alt="[' . $this->title . ']" />';
+        $html                  .= '</a>&nbsp;';
         return $html;
     }
 }

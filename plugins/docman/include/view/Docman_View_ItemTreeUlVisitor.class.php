@@ -203,10 +203,7 @@ class Docman_View_ItemTreeUlVisitor implements \Tuleap\Docman\Item\ItemVisitor
                         false,
                         isset($params['popup_doc'])
                     );
-                    $help_window = '';
-                    if (isset($params['popup_doc'])) {
-                        $help_window = 'data-help-window';
-                    }
+                    $help_window = empty($params['pv']) ? '' : 'data-help-window';
                     $this->html .= '<a ' . $help_window . ' href="' . $url . '" id="docman_item_title_link_' . $item->getId() . '">';
                 }
 
