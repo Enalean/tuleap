@@ -67,7 +67,7 @@ codendi.feedback = {
     clear: function () {
         var feedback = $("feedback");
         if (feedback) {
-            feedback.remove();
+            feedback.empty();
         }
     },
 };
