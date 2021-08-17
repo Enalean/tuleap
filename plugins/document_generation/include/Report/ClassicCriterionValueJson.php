@@ -22,6 +22,19 @@ declare(strict_types=1);
 
 namespace Tuleap\DocumentGeneration\Report;
 
-interface CriterionValueJson
+/**
+ * @psalm-immutable
+ */
+class ClassicCriterionValueJson implements CriterionValueJson
 {
+    public string $criterion_name;
+    public string $criterion_type;
+    public string $criterion_value;
+
+    public function __construct(string $criterion_name, string $criterion_value)
+    {
+        $this->criterion_name  = $criterion_name;
+        $this->criterion_type  = "classic";
+        $this->criterion_value = $criterion_value;
+    }
 }

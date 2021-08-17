@@ -273,7 +273,7 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field
                 $a                 = 'A_' . $this->id;
                 $b                 = 'B_' . $this->id;
                 $compare_date_stmt = $this->getSQLCompareDate(
-                    $criteria->is_advanced,
+                    (bool) $criteria->is_advanced,
                     $criteria_value['op'],
                     $criteria_value['from_date'],
                     $criteria_value['to_date'],

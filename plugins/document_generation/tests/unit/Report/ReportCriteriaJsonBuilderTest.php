@@ -62,19 +62,29 @@ final class ReportCriteriaJsonBuilderTest extends TestCase
         self::assertNotNull($report_json->is_in_expert_mode);
         self::assertFalse($report_json->is_in_expert_mode);
         self::assertNotNull($report_json->criteria);
-        self::assertCount(6, $report_json->criteria);
+        self::assertCount(7, $report_json->criteria);
+        self::assertInstanceOf(ClassicCriterionValueJson::class, $report_json->criteria[0]);
         self::assertSame("Summary", $report_json->criteria[0]->criterion_name);
         self::assertSame("Test", $report_json->criteria[0]->criterion_value);
+        self::assertInstanceOf(ClassicCriterionValueJson::class, $report_json->criteria[1]);
         self::assertSame("Users list", $report_json->criteria[1]->criterion_name);
         self::assertSame("User Name 01, User Name 02", $report_json->criteria[1]->criterion_value);
+        self::assertInstanceOf(ClassicCriterionValueJson::class, $report_json->criteria[2]);
         self::assertSame("User groups list", $report_json->criteria[2]->criterion_name);
         self::assertSame("Ugroup01, Ugroup02", $report_json->criteria[2]->criterion_value);
+        self::assertInstanceOf(ClassicCriterionValueJson::class, $report_json->criteria[3]);
         self::assertSame("Static values list", $report_json->criteria[3]->criterion_name);
         self::assertSame("Static value 01, Static value 02", $report_json->criteria[3]->criterion_value);
+        self::assertInstanceOf(ClassicCriterionValueJson::class, $report_json->criteria[4]);
         self::assertSame("Open list static values", $report_json->criteria[4]->criterion_name);
         self::assertSame("a, b, abc", $report_json->criteria[4]->criterion_value);
-        self::assertSame("Additional01", $report_json->criteria[5]->criterion_name);
-        self::assertSame("ValueAdd01", $report_json->criteria[5]->criterion_value);
+        self::assertInstanceOf(DateCriterionValueJson::class, $report_json->criteria[5]);
+        self::assertSame("Submitted On", $report_json->criteria[5]->criterion_name);
+        self::assertSame("2021-08-01T00:00:00+02:00", $report_json->criteria[5]->criterion_from_value);
+        self::assertSame("2021-08-28T00:00:00+02:00", $report_json->criteria[5]->criterion_to_value);
+        self::assertInstanceOf(ClassicCriterionValueJson::class, $report_json->criteria[6]);
+        self::assertSame("Additional01", $report_json->criteria[6]->criterion_name);
+        self::assertSame("ValueAdd01", $report_json->criteria[6]->criterion_value);
     }
 
     private function buildReportWithExpertQuery(): Tracker_Report
@@ -121,7 +131,7 @@ final class ReportCriteriaJsonBuilderTest extends TestCase
             $report,
             $date_field,
             2,
-            0
+            1
         );
 
         $criterion_user_list = new Tracker_Report_Criteria(
@@ -266,13 +276,26 @@ final class ReportCriteriaJsonBuilderTest extends TestCase
                 ),
             ]);
 
+        $date_field
+            ->method('getLabel')
+            ->willReturn("Submitted On");
+
+        $date_field
+            ->method('getCriteriaValue')
+            ->with($criterion_date)
+            ->willReturn([
+                "op" => "=",
+                'from_date' => '1627768800',
+                'to_date' => '1630101600'
+            ]);
+
         $criteria = [
             $criterion_string,
-            $criterion_date,
             $criterion_user_list,
             $criterion_groups_list,
             $criterion_static_list,
             $criterion_open_list_static,
+            $criterion_date,
         ];
 
         $report->method('getCriteria')->willReturn($criteria);

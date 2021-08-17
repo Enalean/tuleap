@@ -5,8 +5,20 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
+msgid "After %s"
+msgstr "Après le"
+
+msgid "After %s and before %s"
+msgstr "Après le %S et avant le %s"
+
 msgid "Artifacts"
 msgstr "Artéfacts"
+
+msgid "As of %s"
+msgstr "Le %s"
+
+msgid "Before %s"
+msgstr "Avant le %s"
 
 msgid "Export date: %s"
 msgstr "Date de l'export : %s"
@@ -20,13 +32,15 @@ msgstr "Nom du champ"
 msgid ""
 "No filter has been applied to this report because no TQL query has been set"
 msgstr ""
-"Aucun filtre n'a été appliqué à ce rapport car aucune requête TQL n'a été définie"
+"Aucun filtre n'a été appliqué à ce rapport car aucune requête TQL n'a été "
+"définie"
 
 msgid ""
-"No filter has been applied to this report because no search criteria has a value set"
+"No filter has been applied to this report because no search criteria has a "
+"value set"
 msgstr ""
-"Aucun filtre n'a été appliqué à ce rapport car aucun critère de recherche n'a"
-" de valeur définie"
+"Aucun filtre n'a été appliqué à ce rapport car aucun critère de recherche "
+"n'a de valeur définie"
 
 msgid "Search criteria"
 msgstr "Critère de recherche"
