@@ -29,7 +29,7 @@ use Tuleap\ProgramManagement\Tests\Builder\SourceChangesetValuesCollectionBuilde
 use Tuleap\ProgramManagement\Tests\Builder\SynchronizedFieldsBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\MapStatusByValueStub;
 
-final class ProgramIncrementFieldsDataTest extends \Tuleap\Test\PHPUnit\TestCase
+final class ProgramIncrementFieldsTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const MAPPED_STATUS_BIND_VALUE_ID = 3001;
 
@@ -39,7 +39,7 @@ final class ProgramIncrementFieldsDataTest extends \Tuleap\Test\PHPUnit\TestCase
             'Program Release',
             '<p>Description</p>',
             'html',
-            [2001],
+            ['Planned'],
             '2020-10-01',
             '2020-10-10',
             112

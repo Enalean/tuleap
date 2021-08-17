@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2020 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,16 +20,26 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values;
+namespace Tuleap\ProgramManagement\Tests\Stub;
 
-use Tracker_FormElement_Field_List;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\Field;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\ReplicationData;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\BindValueLabel;
 
-interface BuildStatusValue
+final class BindValueLabelStub implements BindValueLabel
 {
-    /**
-     * @psalm-param Field<Tracker_FormElement_Field_List> $field_status_data
-     */
-    public function build(Field $field_status_data, ReplicationData $replication_data): StatusValue;
+    private string $label;
+
+    private function __construct(string $label)
+    {
+        $this->label = $label;
+    }
+
+    public static function withLabel(string $label): self
+    {
+        return new self($label);
+    }
+
+    public function getLabel(): string
+    {
+        return $this->label;
+    }
 }

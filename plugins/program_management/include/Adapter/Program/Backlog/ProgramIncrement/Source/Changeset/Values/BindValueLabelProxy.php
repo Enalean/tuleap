@@ -20,8 +20,30 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values;
+namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Changeset\Values;
 
-interface GatherFieldValues extends RetrieveTitleValue, RetrieveEndPeriodValue, RetrieveStartDateValue, RetrieveDescriptionValue, RetrieveStatusValues
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\BindValueLabel;
+
+/**
+ * I am a proxy for the label of a List field's Bind value.
+ * @psalm-immutable
+ */
+final class BindValueLabelProxy implements BindValueLabel
 {
+    private string $label;
+
+    private function __construct(string $label)
+    {
+        $this->label = $label;
+    }
+
+    public static function fromListBindValue(\Tracker_FormElement_Field_List_BindValue $bind_value): self
+    {
+        return new self($bind_value->getLabel());
+    }
+
+    public function getLabel(): string
+    {
+        return $this->label;
+    }
 }

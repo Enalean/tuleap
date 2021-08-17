@@ -26,6 +26,7 @@ use Tracker_FormElement_Field_List;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Changeset\Values\BindValueIdentifierProxy;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\MapStatusByValue;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\BindValueIdentifier;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\BindValueLabel;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\StatusValue;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\Field;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\NoDuckTypedMatchingValueException;
@@ -37,11 +38,11 @@ final class StatusValueMapper implements MapStatusByValue
         $matching_values = [];
         $status_field    = $target_field->getFullField();
         assert($status_field instanceof Tracker_FormElement_Field_List);
-        foreach ($source_value->getListValues() as $bind_value) {
-            $matching_value = $this->getMatchingValueByDuckTyping($bind_value, $status_field);
+        foreach ($source_value->getListValues() as $label) {
+            $matching_value = $this->getMatchingValueByDuckTyping($label, $status_field);
             if ($matching_value === null) {
                 throw new NoDuckTypedMatchingValueException(
-                    $bind_value->getLabel(),
+                    $label->getLabel(),
                     $target_field->getId(),
                     $target_field->getFullField()->getTrackerId()
                 );
@@ -53,10 +54,10 @@ final class StatusValueMapper implements MapStatusByValue
     }
 
     private function getMatchingValueByDuckTyping(
-        \Tracker_FormElement_Field_List_BindValue $source_value,
+        BindValueLabel $source_label,
         \Tracker_FormElement_Field_List $target_field
     ): ?BindValueIdentifier {
-        $lowercase_label = strtolower($source_value->getLabel());
+        $lowercase_label = strtolower($source_label->getLabel());
         foreach ($target_field->getBind()->getAllValues() as $target_value) {
             if ($lowercase_label === strtolower($target_value->getLabel())) {
                 return BindValueIdentifierProxy::fromListBindValue($target_value);

@@ -22,12 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement;
 
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\BuildStatusValue;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\StatusValue;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\BuildSynchronizedFields;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\Field;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFields;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\ReplicationData;
 use Tuleap\ProgramManagement\Domain\ProgramTracker;
 use Tuleap\ProgramManagement\Tests\Builder\ReplicationDataBuilder;
 use Tuleap\ProgramManagement\Tests\Builder\SynchronizedFieldsBuilder;
@@ -42,18 +38,19 @@ final class SourceChangesetValuesCollectionAdapterTest extends \Tuleap\Test\PHPU
     private const SOURCE_TIMEBOX_SUBMISSION_TIMESTAMP = 1628844094;
     private const START_DATE_VALUE                    = '2013-07-24';
     private const END_PERIOD_VALUE                    = '2016-10-17';
+    private const STATUS_VALUE                        = 'Ongoing';
 
     private function getAdapter(): SourceChangesetValuesCollectionAdapter
     {
         return new SourceChangesetValuesCollectionAdapter(
             $this->getFieldsGatherer(),
-            $this->getStatusBuilder(),
             GatherFieldValuesStub::withValues(
                 self::TITLE_VALUE,
                 self::DESCRIPTION_VALUE,
                 self::DESCRIPTION_FORMAT,
                 self::START_DATE_VALUE,
-                self::END_PERIOD_VALUE
+                self::END_PERIOD_VALUE,
+                [self::STATUS_VALUE]
             )
         );
     }
@@ -68,7 +65,7 @@ final class SourceChangesetValuesCollectionAdapterTest extends \Tuleap\Test\PHPU
         self::assertSame(self::TITLE_VALUE, $values->getTitleValue()->getValue());
         self::assertContains(self::DESCRIPTION_VALUE, $values->getDescriptionValue()->getValue());
         self::assertContains(self::DESCRIPTION_FORMAT, $values->getDescriptionValue()->getValue());
-        self::assertEquals(1059, $values->getStatusValue()->getListValues()[0]->getId());
+        self::assertEquals(self::STATUS_VALUE, $values->getStatusValue()->getListValues()[0]->getLabel());
         self::assertSame(self::START_DATE_VALUE, $values->getStartDateValue()->getValue());
         self::assertSame(self::END_PERIOD_VALUE, $values->getEndPeriodValue()->getValue());
         self::assertSame(self::SOURCE_TIMEBOX_ID, $values->getSourceArtifactId());
@@ -82,17 +79,6 @@ final class SourceChangesetValuesCollectionAdapterTest extends \Tuleap\Test\PHPU
             public function build(ProgramTracker $source_tracker): SynchronizedFields
             {
                 return SynchronizedFieldsBuilder::buildWithIds(3001, 9041, 1635, 4382, 2729, 1995);
-            }
-        };
-    }
-
-    private function getStatusBuilder(): BuildStatusValue
-    {
-        return new class implements BuildStatusValue {
-            public function build(Field $field_status_data, ReplicationData $replication_data): StatusValue
-            {
-                $list_bind_value = new \Tracker_FormElement_Field_List_Bind_StaticValue(1059, 'Ongoing', '', 1, false);
-                return new StatusValue([$list_bind_value]);
             }
         };
     }

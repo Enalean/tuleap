@@ -25,12 +25,12 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\ProgramIncrementCreationException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\ArtifactLinkValue;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\BuildFieldValues;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\BuildStatusValue;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\DescriptionValue;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\EndPeriodValue;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\GatherFieldValues;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\SourceChangesetValuesCollection;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\StartDateValue;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\StatusValue;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\TitleValue;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\BuildSynchronizedFields;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\FieldRetrievalException;
@@ -39,23 +39,14 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Subm
 
 final class SourceChangesetValuesCollectionAdapter implements BuildFieldValues
 {
-    /**
-     * @var BuildSynchronizedFields
-     */
-    private $fields_gatherer;
-    /**
-     * @var BuildStatusValue
-     */
-    private $build_status_value;
+    private BuildSynchronizedFields $fields_gatherer;
     private GatherFieldValues $field_values_gatherer;
 
     public function __construct(
         BuildSynchronizedFields $fields_gatherer,
-        BuildStatusValue $build_status_value,
         GatherFieldValues $field_values_gatherer
     ) {
         $this->fields_gatherer       = $fields_gatherer;
-        $this->build_status_value    = $build_status_value;
         $this->field_values_gatherer = $field_values_gatherer;
     }
 
@@ -76,7 +67,11 @@ final class SourceChangesetValuesCollectionAdapter implements BuildFieldValues
             $replication_data,
             $fields
         );
-        $status_value        = $this->build_status_value->build($fields->getStatusField(), $replication_data);
+        $status_value        = StatusValue::fromReplicationAndSynchronizedFields(
+            $this->field_values_gatherer,
+            $replication_data,
+            $fields
+        );
         $start_date_value    = StartDateValue::fromReplicationAndSynchronizedFields(
             $this->field_values_gatherer,
             $replication_data,

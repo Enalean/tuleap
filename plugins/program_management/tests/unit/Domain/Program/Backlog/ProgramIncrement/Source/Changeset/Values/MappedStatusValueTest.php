@@ -23,7 +23,10 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values;
 
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\Field;
+use Tuleap\ProgramManagement\Tests\Builder\ReplicationDataBuilder;
+use Tuleap\ProgramManagement\Tests\Builder\SynchronizedFieldsBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\MapStatusByValueStub;
+use Tuleap\ProgramManagement\Tests\Stub\RetrieveStatusValuesStub;
 
 final class MappedStatusValueTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -33,7 +36,11 @@ final class MappedStatusValueTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItBuildsFromStatusValueAndListField(): void
     {
         $status_field  = $this->buildStatusField();
-        $status_value  = $this->buildStatusValue();
+        $status_value  = StatusValue::fromReplicationAndSynchronizedFields(
+            RetrieveStatusValuesStub::withValues('Planned', 'Current'),
+            ReplicationDataBuilder::build(),
+            SynchronizedFieldsBuilder::build()
+        );
         $mapped_status = MappedStatusValue::fromStatusValueAndListField(
             MapStatusByValueStub::withValues(self::FIRST_BIND_VALUE_ID, self::SECOND_BIND_VALUE_ID),
             $status_value,
@@ -61,13 +68,5 @@ final class MappedStatusValueTest extends \Tuleap\Test\PHPUnit\TestCase
                 1
             )
         );
-    }
-
-    private function buildStatusValue(): StatusValue
-    {
-        return new StatusValue([
-            new \Tracker_FormElement_Field_List_Bind_StaticValue(9339, 'Planned', '', 0, false),
-            new \Tracker_FormElement_Field_List_Bind_StaticValue(3267, 'Current', '', 1, false),
-        ]);
     }
 }

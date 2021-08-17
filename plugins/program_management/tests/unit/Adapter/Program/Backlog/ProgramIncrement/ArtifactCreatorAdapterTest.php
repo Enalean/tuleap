@@ -100,7 +100,7 @@ final class ArtifactCreatorAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
             'Program Increment',
             'Super important',
             'text',
-            [7681],
+            ['Current'],
             '2020-11-02',
             '2020-11-06',
             self::SOURCE_PROGRAM_INCREMENT_ID
