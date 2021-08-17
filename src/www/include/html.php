@@ -550,8 +550,6 @@ function site_footer($params)
 */
 function site_project_header($params)
 {
-    global $HTML, $Language;
-
     /*
         Check to see if active
         Check to see if private (if private check if user_ismember)
@@ -565,7 +563,7 @@ function site_project_header($params)
 
     //group doesn't exist
     if ($project->isError()) {
-        exit_error($Language->getText('include_html', 'invalid_g'), $Language->getText('include_html', 'g_not_exist'));
+        exit_error($GLOBALS['Language']->getText('include_html', 'invalid_g'), $GLOBALS['Language']->getText('include_html', 'g_not_exist'));
     }
 
     //group is private
@@ -579,9 +577,9 @@ function site_project_header($params)
         HTTPRequest::instance()->checkUserIsSuperUser();
     }
 
-    if (isset($params['pv']) && $params['pv'] != 0) {
+    if (isset($params['pv'], $GLOBALS['HTML']) && $GLOBALS['HTML'] instanceof Layout && $params['pv'] != 0) {
         // Printer version: no right column, no tabs...
-        echo $HTML->pv_header($params);
+        $GLOBALS['HTML']->pv_header($params);
     } else {
         site_header($params);
     }
@@ -595,14 +593,15 @@ function site_project_header($params)
 */
 function site_project_footer($params)
 {
-    global $HTML;
-
-    if (isset($params['pv']) && $params['pv'] != 0) {
+    if (! isset($GLOBALS['HTML']) || ! ($GLOBALS['HTML'] instanceof \Tuleap\Layout\BaseLayout)) {
+        return;
+    }
+    if (isset($params['pv']) && $GLOBALS['HTML'] instanceof Layout && $params['pv'] != 0) {
         // Printer version
-        echo $HTML->pv_footer($params);
+        $GLOBALS['HTML']->pv_footer($params);
     } else {
         echo html_feedback_bottom($GLOBALS['feedback']);
-        echo $HTML->footer($params);
+        $GLOBALS['HTML']->footer($params);
     }
 }
 
