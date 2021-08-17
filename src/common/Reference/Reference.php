@@ -23,6 +23,7 @@
  * Reference class
  * Stores a reference as stored in the DB (with keyword, link, etc.)
  */
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 class Reference
 {
 
@@ -93,7 +94,7 @@ class Reference
         $this->nature             = $nature;
         $this->is_active          = $myis_active;
         $this->group_id           = $mygroup_id;
-        $this->num_param          = $this->computeNumParam($this->link);
+        $this->num_param          = self::computeNumParam($this->link);
     }
 
     /**
@@ -152,7 +153,7 @@ class Reference
     {
         // Compute number of parameters if not already done
         if ($this->num_param == false) {
-            $this->num_param = $this->computeNumParam($this->link);
+            $this->num_param = self::computeNumParam($this->link);
         }
         return $this->num_param;
     }
@@ -225,7 +226,7 @@ class Reference
      * @return int number of parameters needed to compute the link
      * @static
      */
-    public function computeNumParam($link)
+    public static function computeNumParam(string $link): int
     {
         for ($i = 9; $i > 0; $i--) {
             if (strpos($link, '$' . $i) !== false) {
@@ -238,7 +239,7 @@ class Reference
     /**
      * @return ReferenceDao instance
      */
-    public function &_getReferenceDao()
+    public function &_getReferenceDao() // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         if (! is_a($this->referenceDao, 'ReferenceDao')) {
             $this->referenceDao = new ReferenceDao(CodendiDataAccess::instance());
