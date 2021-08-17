@@ -25,33 +25,10 @@ namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Sourc
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFields;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\ReplicationData;
 
-/**
- * I hold the value of the end period (end date or duration) field from the Timeframe semantic of the source Timebox.
- * I am the reference value that must be copied to Mirrored Timeboxes.
- * @psalm-immutable
- */
-final class EndPeriodValue
+interface RetrieveEndPeriodValue
 {
-    private string $value;
-
-    private function __construct(string $value)
-    {
-        $this->value = $value;
-    }
-
     /**
      * @throws ChangesetValueNotFoundException
      */
-    public static function fromReplicationAndSynchronizedFields(
-        RetrieveEndPeriodValue $end_period_retriever,
-        ReplicationData $replication,
-        SynchronizedFields $fields
-    ): self {
-        return new self($end_period_retriever->getEndPeriodValue($replication, $fields));
-    }
-
-    public function getValue(): string
-    {
-        return $this->value;
-    }
+    public function getEndPeriodValue(ReplicationData $replication, SynchronizedFields $fields): string;
 }

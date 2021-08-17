@@ -31,6 +31,7 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Chan
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\TitleValue;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\SubmissionDate;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveDescriptionValueStub;
+use Tuleap\ProgramManagement\Tests\Stub\RetrieveEndPeriodValueStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveStartDateValueStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveTitleValueStub;
 
@@ -129,7 +130,11 @@ final class SourceChangesetValuesCollectionBuilder
             $replication_data,
             $synchronized_fields
         );
-        $end_period_value    = new EndPeriodValue($end_period_value);
+        $end_period_value    = EndPeriodValue::fromReplicationAndSynchronizedFields(
+            RetrieveEndPeriodValueStub::withValue($end_period_value),
+            $replication_data,
+            $synchronized_fields
+        );
         $artifact_link_value = ArtifactLinkValue::fromReplicationData($replication_data);
         $submission_date     = new SubmissionDate(1234567890);
 
