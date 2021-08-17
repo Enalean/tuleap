@@ -66,8 +66,6 @@ else
     tuleap-cfg site-deploy:fpm --development --php-version=$PHP_VERSION
     tuleap-cfg site-deploy:nginx --development
 
-    /bin/cp /usr/share/tuleap/tools/docker/tuleap-aio-dev/xdebug-fpm.ini /usr/share/tuleap/tools/docker/tuleap-aio-dev/
-
     while [ ! -f /etc/pki/ca-trust/source/anchors/tuleap-realtime-cert.pem ]; do
         echo "Waiting for Tuleap Realtime certificate…"
         sleep 1
