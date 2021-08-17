@@ -24,18 +24,19 @@
             v-bind:class="{ error: error !== false }"
         ></div>
         <div v-if="error !== false" class="tlp-alert-danger labeled-items-error">
-            <translate>Please select one or more labels by editing this widget</translate>
+            <translate>Please select one or more labels by editing this widget.</translate>
         </div>
-        <div class="empty-state-text" v-if="empty && !loading && error === false">
-            <translate v-if="are_there_items_user_cannot_see">
-                There are no items you can see
+        <div class="empty-state-pane" v-if="empty && !loading && error === false">
+            <translate class="empty-state-text" v-if="are_there_items_user_cannot_see">
+                There are no items you can see.
             </translate>
             <translate
                 v-else
                 v-bind:translate-n="labels_id.length"
-                translate-plural="There isn't any item corresponding to labels"
+                translate-plural="There isn't any item corresponding to labels."
+                class="empty-state-text"
             >
-                There isn't any item corresponding to label
+                There isn't any item corresponding to label.
             </translate>
         </div>
         <labeled-item v-for="item in items" v-bind:item="item" v-bind:key="item.html_url" />

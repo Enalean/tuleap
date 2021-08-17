@@ -20,16 +20,20 @@
 <template>
     <div class="project-release-timeframe">
         <translate class="project-release-label">Roadmap</translate>
-        <div class="empty-state-container" data-test="project-milestone-empty-state">
+        <div class="empty-state-pane" data-test="project-milestone-empty-state">
             <s-v-g-project-milestones-empty-state />
             <translate class="empty-state-text" v-bind:translate-params="{ name: project_name }">
                 There is no item nor milestone in the %{ name } backlog yet.
             </translate>
-            <a v-bind:href="backlog_link" class="button-backlog-link" data-test="backlog-link">
-                <button type="button" class="tlp-button-primary empty-state-button">
+            <a
+                v-bind:href="backlog_link"
+                class="button-backlog-link empty-state-action"
+                data-test="backlog-link"
+            >
+                <button type="button" class="tlp-button-primary">
                     <translate>Start Planning</translate>
                     <i
-                        class="fas fa-long-arrow-alt-right empty-state-button-arrow-link"
+                        class="tlp-button-icon-right fas fa-long-arrow-alt-right"
                         data-test="display-arrow"
                     ></i>
                 </button>

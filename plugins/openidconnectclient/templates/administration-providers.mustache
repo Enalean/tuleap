@@ -2,7 +2,7 @@
     <div id="providers-configuration-header">
         <h1 id="providers-configuration-header-title">{{ title }}</h1>
         {{# there_are_providers }}
-            <div class="tlp-dropdow tlp-creation-dropdown">
+            <div class="tlp-dropdown">
                 <div class="tlp-dropdown-split-button">
                     <button type="button" class="tlp-button-primary add-provider-button add-generic-provider-button">
                         <i class="fa fa-plus tlp-button-icon"></i>
@@ -116,17 +116,16 @@
         </section>
     {{/ providers_presenters }}
     {{^ there_are_providers }}
-        <div class="empty-state-page">
-            <p class="empty-state-text">{{ empty_providers_text_start }}<br>{{ empty_providers_text_end }}</p>
-            <div class="tlp-dropdow tlp-creation-dropdown">
+        <section class="empty-state-page">
+            <h1 class="empty-state-title">{{ empty_providers_text_start }}</h1>
+            <div class="tlp-dropdown empty-state-action">
                 <div class="tlp-dropdown-split-button">
                     <button type="button"
-                            class="tlp-button-primary tlp-button-large add-provider-button add-generic-provider-button">
+                            class="tlp-button-primary add-provider-button add-generic-provider-button">
                         <i class="fa fa-plus tlp-button-icon"></i> {{# dgettext }}
                         tuleap-openidconnectclient | Add provider {{/ dgettext }}
                     </button>
                     <button class="tlp-button-primary
-                                       tlp-button-large
                                        tlp-append
                                        tlp-dropdown-split-button-caret"
                             id="dropdown-specific-providers">
@@ -141,7 +140,7 @@
                     </a>
                 </div>
             </div>
-        </div>
+        </section>
     {{/ there_are_providers}}
     {{> administration-providers-modal-create-generic}}
     {{> administration-providers-modal-create-azure}}

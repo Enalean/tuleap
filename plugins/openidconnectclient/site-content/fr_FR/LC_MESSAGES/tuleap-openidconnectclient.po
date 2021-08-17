@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 2.3\n"
+"X-Generator: Poedit 3.0\n"
 
 msgid "Add Azure Active Directory provider"
 msgstr "Ajouter un fournisseur s'appuyant sur Azure Active Directory"
@@ -110,6 +110,9 @@ msgstr ""
 msgid "Name"
 msgstr "Nom"
 
+msgid "No provider"
+msgstr "Aucun fournisseur"
+
 msgid "Only users with a personal Microsoft account"
 msgstr "Uniquement les utilisateurs disposant d'un compte Microsoft personnel"
 
@@ -176,9 +179,6 @@ msgstr "Le fournisseur %1$s a été mis à jour avec succès."
 
 msgid "There are no authorized providers yet"
 msgstr "Il n'y a aucun fournisseur autorisé pour le moment"
-
-msgid "There is nothing here,"
-msgstr "Il n'y a rien ici,"
 
 msgid "This provider is the only authentication method."
 msgstr "Ce fournisseur est le seul moyen d'authentification."
@@ -261,9 +261,6 @@ msgstr "ou"
 
 msgid "or login with"
 msgstr "ou connectez-vous avec"
-
-msgid "start by adding a provider."
-msgstr "commencez par ajouter un fournisseur."
 
 msgid "to OpenID Connect"
 msgstr "à OpenID Connect"
