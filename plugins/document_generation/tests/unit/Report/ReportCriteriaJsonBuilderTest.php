@@ -37,10 +37,13 @@ use Tracker_FormElement_Field_String;
 use Tracker_Report;
 use Tracker_Report_AdditionalCriterion;
 use Tracker_Report_Criteria;
+use Tuleap\GlobalLanguageMock;
 use Tuleap\Test\PHPUnit\TestCase;
 
 final class ReportCriteriaJsonBuilderTest extends TestCase
 {
+    use GlobalLanguageMock;
+
     public function testItBuildsJsonForReportWithExpertQuery(): void
     {
         $report      = $this->buildReportWithExpertQuery();
@@ -55,6 +58,11 @@ final class ReportCriteriaJsonBuilderTest extends TestCase
 
     public function testItBuildsJsonForReportWithClassicQuery(): void
     {
+        $GLOBALS['Language']
+            ->method('getText')
+            ->with('global', 'none')
+            ->willReturn('None');
+
         $report      = $this->buildReportWithCriteria();
         $report_json = (new ReportCriteriaJsonBuilder())->buildReportCriteriaJson($report);
 
@@ -74,7 +82,7 @@ final class ReportCriteriaJsonBuilderTest extends TestCase
         self::assertSame("Ugroup01, Ugroup02", $report_json->criteria[2]->criterion_value);
         self::assertInstanceOf(ClassicCriterionValueJson::class, $report_json->criteria[3]);
         self::assertSame("Static values list", $report_json->criteria[3]->criterion_name);
-        self::assertSame("Static value 01, Static value 02", $report_json->criteria[3]->criterion_value);
+        self::assertSame("None, Static value 01, Static value 02", $report_json->criteria[3]->criterion_value);
         self::assertInstanceOf(ClassicCriterionValueJson::class, $report_json->criteria[4]);
         self::assertSame("Open list static values", $report_json->criteria[4]->criterion_name);
         self::assertSame("a, b, abc", $report_json->criteria[4]->criterion_value);
@@ -297,7 +305,7 @@ final class ReportCriteriaJsonBuilderTest extends TestCase
         $list_static_field
             ->method('getCriteriaValue')
             ->with($criterion_static_list)
-            ->willReturn(['299', '300']);
+            ->willReturn(['100', '299', '300']);
 
         $list_static_field
             ->method('getBind')
