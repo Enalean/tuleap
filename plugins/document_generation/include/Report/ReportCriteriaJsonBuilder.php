@@ -150,9 +150,13 @@ class ReportCriteriaJsonBuilder
 
         $criterion_values_labels = [];
         foreach ($criterion_value as $value_id) {
-            $value = $criterion_field->getBind()->getValue($value_id);
-            if ($value) {
-                $criterion_values_labels[] = $value->getLabel();
+            if ((int) $value_id === Tracker_FormElement_Field_List::NONE_VALUE) {
+                $criterion_values_labels[] = $GLOBALS['Language']->getText('global', 'none');
+            } else {
+                $value = $criterion_field->getBind()->getValue($value_id);
+                if ($value) {
+                    $criterion_values_labels[] = $value->getLabel();
+                }
             }
         }
 
