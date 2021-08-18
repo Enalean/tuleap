@@ -147,7 +147,7 @@ class _PageList_Column_WantedPages_wanted extends _PageList_Column
         $this->parentobj = $params[3];
         parent::__construct($params[0], $params[1], $params[2]);
     }
-    public function _getValue(&$page, $revision_handle)
+    public function _getValue($page, &$revision_handle)
     {
         $html = false;
         foreach ($this->parentobj->_wpagelist[$page->getName()] as $page) {

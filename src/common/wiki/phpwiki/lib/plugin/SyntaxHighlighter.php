@@ -97,7 +97,7 @@ class WikiPlugin_SyntaxHighlighter extends WikiPlugin
                      'wrap'   => 0,
                      ];
     }
-    public function handle_plugin_args_cruft(&$argstr, &$args)
+    public function handle_plugin_args_cruft($argstr, $args)
     {
         $this->source = $argstr;
     }
