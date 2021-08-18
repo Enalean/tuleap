@@ -415,8 +415,8 @@ class Docman_PermissionsManager
     /**
      * Check if given user has write access on a item tree.
      *
-     * @param $user   User User object.
-     * @param $itemId Integer The parent item id.
+     * @param $user   PFUser User object.
+     * @param $itemId int The parent item id.
      * @return bool
      */
     public function userCanWriteSubItems($user, $itemId)
