@@ -3,8 +3,8 @@
   <increments>
     <source_tracker REF="T856"/>
     <plannable_trackers>
-      <plannable_tracker REF="T860"/>
-      <plannable_tracker REF="T855"/>
+      <plannable_tracker REF="T1144"/>
+      <plannable_tracker REF="T1142"/>
     </plannable_trackers>
     <can_prioritize>
       <ugroup ugroup_name="project_members"/>
