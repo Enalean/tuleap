@@ -123,9 +123,8 @@ class WikiServiceAdminViews extends WikiViews
    */
     public function displayMenu()
     {
-        switch (DEFAULT_LANGUAGE) {
-            case 'fr_FR':
-                print '
+        if (defined('DEFAULT_LANGUAGE') && DEFAULT_LANGUAGE === 'fr_FR') {
+            print '
 		     <ul class="ServiceMenu">
 		       <li><a href="/wiki/index.php?group_id=' . $this->gid . '">Parcourir</a>&nbsp;|&nbsp;</li>
 		       <li><a href="/wiki/admin/index.php?group_id=' . $this->gid . '">Admin</a>&nbsp;|&nbsp;</li>
@@ -134,10 +133,8 @@ class WikiServiceAdminViews extends WikiViews
 		       <li><a href="' . $this->wikiAdminLink . '&view=wikiAttachments">Fichiers joints</a>&nbsp;|&nbsp;</li>
 		       <li><a href="' . $this->wikiAdminLink . '&view=wikiPerms">Permissions Wiki</a>&nbsp;|&nbsp;</li>
 		     </ul>';
-                break;
-            case 'en_US':
-            default:
-                print '
+        } else {
+            print '
 		     <ul class="ServiceMenu">
 		       <li><a href="/wiki/index.php?group_id=' . $this->gid . '">View</a>&nbsp;|&nbsp;</li>
 		       <li><a href="/wiki/admin/index.php?group_id=' . $this->gid . '">Admin</a>&nbsp;|&nbsp;</li>
@@ -156,22 +153,18 @@ class WikiServiceAdminViews extends WikiViews
    */
     public function main()
     {
-        switch (DEFAULT_LANGUAGE) {
-            case 'fr_FR':
-                printf("<h2>Wiki %s - Administration</h2><h3><a href=%s&view=wikiDocuments>Gérer les documents Wiki</a></h3><p>Créer, supprimer, modifier et donner des permissions sur des documents Wiki.</p>", $this->wikiname, $this->wikiAdminLink);
-                printf("<h3><a href=%s&view=wikiPages>Gérer les pages Wiki</a></h3><p>Parcourir et donner des permissions sur des pages Wiki.</p>", $this->wikiAdminLink);
-                printf("<h3><a href=%s&view=wikiAttachments>Gérer les fichiers joints</a></h3><p>Parcourir et définir les permissions des fichiers joints au Wiki</p>", $this->wikiAdminLink);
-                printf("<h3><a href=%s&view=wikiPerms>Gérer les permissions Wiki</a></h3><p>Donner des permissions sur tout le Wiki %s.</p>", $this->wikiAdminLink, $this->wikiname);
-                printf("<h3><a href=%s&pagename=AdministrationDePhpWiki>Administration du wiki</a></h3><p>Panneau d'administration de l'engin wiki. Plusieurs outils pour suppression , renommage et réinitialisation de pages.</p>", $this->wikiLink);
-                break;
-            case 'en_US':
-            default:
-                printf("<h2>Wiki  %s - Administration</h2><h3><a href= %s&view=wikiDocuments>Manage Wiki Documents</a></h3><p>Create, delete, modify and set specific permissions on Wiki Documents.</p>", $this->wikiname, $this->wikiAdminLink);
-                printf("<h3><a href=%s&view=wikiPages>Manage Wiki Pages</a></h3><p>Browse and set specific permissions on Wiki Pages.</p>", $this->wikiAdminLink);
-                printf("<h3><a href=%s&view=wikiAttachments>Manage Wiki Attachments</a></h3><p>Browse and set permissions on ressources attached on the Wiki.</p>", $this->wikiAdminLink);
-                printf("<h3><a href=%s&view=wikiPerms>Set Wiki Permissions</a></h3><p>Set permissions on whole %s Wiki.</p>", $this->wikiAdminLink, $this->wikiname);
-                printf("<h3><a href=%s&pagename=PhpWikiAdministration>PhpWiki Administration</a></h3><p>Administration panel of the wiki engine. This propose a set of tools to delete and rename pages.</p>", $this->wikiLink);
-                break;
+        if (defined('DEFAULT_LANGUAGE') && DEFAULT_LANGUAGE === 'fr_FR') {
+            printf("<h2>Wiki %s - Administration</h2><h3><a href=%s&view=wikiDocuments>Gérer les documents Wiki</a></h3><p>Créer, supprimer, modifier et donner des permissions sur des documents Wiki.</p>", $this->wikiname, $this->wikiAdminLink);
+            printf("<h3><a href=%s&view=wikiPages>Gérer les pages Wiki</a></h3><p>Parcourir et donner des permissions sur des pages Wiki.</p>", $this->wikiAdminLink);
+            printf("<h3><a href=%s&view=wikiAttachments>Gérer les fichiers joints</a></h3><p>Parcourir et définir les permissions des fichiers joints au Wiki</p>", $this->wikiAdminLink);
+            printf("<h3><a href=%s&view=wikiPerms>Gérer les permissions Wiki</a></h3><p>Donner des permissions sur tout le Wiki %s.</p>", $this->wikiAdminLink, $this->wikiname);
+            printf("<h3><a href=%s&pagename=AdministrationDePhpWiki>Administration du wiki</a></h3><p>Panneau d'administration de l'engin wiki. Plusieurs outils pour suppression , renommage et réinitialisation de pages.</p>", $this->wikiLink);
+        } else {
+            printf("<h2>Wiki  %s - Administration</h2><h3><a href= %s&view=wikiDocuments>Manage Wiki Documents</a></h3><p>Create, delete, modify and set specific permissions on Wiki Documents.</p>", $this->wikiname, $this->wikiAdminLink);
+            printf("<h3><a href=%s&view=wikiPages>Manage Wiki Pages</a></h3><p>Browse and set specific permissions on Wiki Pages.</p>", $this->wikiAdminLink);
+            printf("<h3><a href=%s&view=wikiAttachments>Manage Wiki Attachments</a></h3><p>Browse and set permissions on ressources attached on the Wiki.</p>", $this->wikiAdminLink);
+            printf("<h3><a href=%s&view=wikiPerms>Set Wiki Permissions</a></h3><p>Set permissions on whole %s Wiki.</p>", $this->wikiAdminLink, $this->wikiname);
+            printf("<h3><a href=%s&pagename=PhpWikiAdministration>PhpWiki Administration</a></h3><p>Administration panel of the wiki engine. This propose a set of tools to delete and rename pages.</p>", $this->wikiLink);
         }
     }
 
