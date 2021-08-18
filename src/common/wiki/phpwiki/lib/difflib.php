@@ -891,8 +891,12 @@ class DiffFormatter
     {
     }
 
-    public function _lines($lines, $prefix = ' ')
+    public function _lines($lines, $class, $prefix = false, $elem = false)
     {
+        if ($prefix === false) {
+            $prefix = ' ';
+        }
+
         foreach ($lines as $line) {
             echo "$prefix $line\n";
         }
@@ -900,16 +904,16 @@ class DiffFormatter
 
     public function _context($lines)
     {
-        $this->_lines($lines);
+        $this->_lines($lines, '');
     }
 
     public function _added($lines)
     {
-        $this->_lines($lines, ">");
+        $this->_lines($lines, '', ">");
     }
     public function _deleted($lines)
     {
-        $this->_lines($lines, "<");
+        $this->_lines($lines, '', "<");
     }
 
     public function _changed($orig, $final)
@@ -946,11 +950,11 @@ class UnifiedDiffFormatter extends DiffFormatter
 
     public function _added($lines)
     {
-        $this->_lines($lines, "+");
+        $this->_lines($lines, '', "+");
     }
     public function _deleted($lines)
     {
-        $this->_lines($lines, "-");
+        $this->_lines($lines, '', "-");
     }
     public function _changed($orig, $final)
     {
@@ -977,8 +981,13 @@ class BlockDiffFormatter extends DiffFormatter
         $this->leading_context_lines  = $context_lines;
         $this->trailing_context_lines = $context_lines;
     }
-    public function _lines($lines, $prefix = '')
+
+    public function _lines($lines, $class, $prefix = false, $elem = false)
     {
+        if ($prefix === false) {
+            $prefix = '';
+        }
+
         if (! $prefix == '') {
             echo "$prefix\n";
         }
@@ -991,11 +1000,11 @@ class BlockDiffFormatter extends DiffFormatter
     }
     public function _added($lines)
     {
-        $this->_lines($lines, ">>>>>>>");
+        $this->_lines($lines, '', ">>>>>>>");
     }
     public function _deleted($lines)
     {
-        $this->_lines($lines, "<<<<<<<");
+        $this->_lines($lines, '', "<<<<<<<");
     }
     public function _block_header($xbeg, $xlen, $ybeg, $ylen)
     {
