@@ -69,7 +69,7 @@ final class StepCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         self::expectException(RestException::class);
         self::expectExceptionCode(400);
-        self::expectExceptionMessage("Invalid format given, only 'html' or 'commonmark' are supported for step");
+        self::expectExceptionMessage("Invalid format given, only 'html', 'text' or 'commonmark' are supported for step");
 
         StepChecker::checkStepDataFromRESTPost($step);
     }
@@ -86,39 +86,7 @@ final class StepCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         self::expectException(RestException::class);
         self::expectExceptionCode(400);
-        self::expectExceptionMessage("Invalid format given, only 'html' or 'commonmark' are supported for step");
-
-        StepChecker::checkStepDataFromRESTPost($step);
-    }
-    public function testItThrowsAnExceptionWhenDescriptionOfTheStepIsTheTextFormat(): void
-    {
-        $step =
-            [
-                "description"             => "some description",
-                "description_format"      =>  Tracker_Artifact_ChangesetValue_Text::TEXT_CONTENT,
-                "expected_results"        => "some results",
-                "expected_results_format" => Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT
-            ];
-
-        self::expectException(RestException::class);
-        self::expectExceptionCode(400);
-        self::expectExceptionMessage("Invalid format given, only 'html' or 'commonmark' are supported for step");
-
-        StepChecker::checkStepDataFromRESTPost($step);
-    }
-    public function testItThrowsAnExceptionWhenExpectedResultOfTheStepIsTheTextFormat(): void
-    {
-        $step =
-            [
-                "description"             => "some description",
-                "description_format"      =>  Tracker_Artifact_ChangesetValue_Text::COMMONMARK_CONTENT,
-                "expected_results"        => "some results",
-                "expected_results_format" => Tracker_Artifact_ChangesetValue_Text::TEXT_CONTENT
-            ];
-
-        self::expectException(RestException::class);
-        self::expectExceptionCode(400);
-        self::expectExceptionMessage("Invalid format given, only 'html' or 'commonmark' are supported for step");
+        self::expectExceptionMessage("Invalid format given, only 'html', 'text' or 'commonmark' are supported for step");
 
         StepChecker::checkStepDataFromRESTPost($step);
     }

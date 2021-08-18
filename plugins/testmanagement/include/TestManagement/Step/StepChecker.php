@@ -45,7 +45,7 @@ final class StepChecker
             ! self::isSubmittedFormatFromPostRESTValid($step['description_format']) ||
             ! self::isSubmittedFormatFromPostRESTValid($step['expected_results_format'])
         ) {
-            throw new RestException(400, "Invalid format given, only 'html' or 'commonmark' are supported for step");
+            throw new RestException(400, "Invalid format given, only 'html', 'text' or 'commonmark' are supported for step");
         }
     }
 
@@ -68,7 +68,8 @@ final class StepChecker
             $format,
             [
                     Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT,
-                    Tracker_Artifact_ChangesetValue_Text::COMMONMARK_CONTENT
+                    Tracker_Artifact_ChangesetValue_Text::COMMONMARK_CONTENT,
+                    Tracker_Artifact_ChangesetValue_Text::TEXT_CONTENT,
                 ],
             true
         );
