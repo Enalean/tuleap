@@ -405,6 +405,42 @@ describe("rest-service", () => {
                 }),
             });
         });
+
+        it("Given an artifact id and and no etag, when I edit an artifact in concurrency mode, then the field values will be sent using the edit REST route and a promise will be resolved with the edited artifact's id", async () => {
+            const followup_comment = {
+                value: "",
+                format: "text",
+            };
+            const tlpPutSpy = jest.spyOn(tlp, "put");
+            mockFetchSuccess(tlpPutSpy, {
+                return_json: {
+                    values: [],
+                    comment: followup_comment,
+                },
+            });
+
+            const artifact_edition = await RestService.editArtifactWithConcurrencyChecking(
+                8354,
+                [],
+                followup_comment,
+                null,
+                1629098047
+            );
+
+            expect(artifact_edition).toEqual({
+                id: 8354,
+            });
+            expect(tlpPutSpy).toHaveBeenCalledWith("/api/v1/artifacts/8354", {
+                headers: {
+                    "content-type": "application/json",
+                    "If-Unmodified-Since": 1629098047,
+                },
+                body: JSON.stringify({
+                    values: [],
+                    comment: followup_comment,
+                }),
+            });
+        });
     });
 
     describe("getFileUploadRules() -", () => {
