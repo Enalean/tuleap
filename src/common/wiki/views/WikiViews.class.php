@@ -49,7 +49,9 @@ function hide_url($svc, $db_item_id, $defaultHide = false, $hide = null)
     $pref_name = 'hide_' . $svc . $db_item_id;
 
     if (empty($hide)) {
-        $hide = $_REQUEST['hide_' . $svc];
+        if (isset($_REQUEST['hide_' . $svc])) {
+            $hide = $_REQUEST['hide_' . $svc];
+        }
     }
 
     $noPref   = false;
