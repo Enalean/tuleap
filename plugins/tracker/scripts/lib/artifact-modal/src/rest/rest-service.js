@@ -117,10 +117,17 @@ async function editArtifactWithConcurrencyChecking(
         comment: followup_comment,
     });
 
+    const header_concurrency = {
+        "If-Unmodified-Since": last_modified,
+    };
+
+    if (etag !== null) {
+        header_concurrency["If-match"] = etag;
+    }
+
     await put(`/api/v1/artifacts/${artifact_id}`, {
         headers: {
-            "If-match": etag,
-            "If-Unmodified-Since": last_modified,
+            ...header_concurrency,
             ...headers,
         },
         body,
