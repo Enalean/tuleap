@@ -83,7 +83,7 @@ class WikiPlugin_WikiAdminRemove extends WikiPlugin_WikiAdminSelect
         );
     }
 
-    public function collectPages(&$list, &$dbi, $sortby, $limit = 0)
+    public function collectPages(&$list, &$dbi, $sortby, $limit = 0, $exclude = false)
     {
         extract($this->_args);
 
