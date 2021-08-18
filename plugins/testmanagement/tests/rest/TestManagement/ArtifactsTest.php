@@ -58,6 +58,12 @@ final class ArtifactsTest extends BaseTest
                             "description_format"      => "html",
                             "expected_results"        => "It should be difficult to move",
                             "expected_results_format" => "html"
+                        ],
+                        [
+                            "description"             => "The car does not have tyre",
+                            "description_format"      => "text",
+                            "expected_results"        => "It should be difficult to move",
+                            "expected_results_format" => "text"
                         ]
                     ],
                 ]
