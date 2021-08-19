@@ -46,8 +46,8 @@ build: export HOME = "/build"
 build: export TMPDIR = "/build"
 build:
 	cd /build/src && CYPRESS_INSTALL_BINARY=0 npm install --no-audit && \
-	cd /build/src/src/scripts/lib/tlp-fetch/ && npm install --no-audit && npm run build && \
-	cd /build/src/plugins/mytuleap_contact_support && npm install && npm run build && \
+	cd /build/src/ && ./node_modules/.bin/lerna --concurrency=1 exec --stream --scope=@tuleap/plugin-mytuleap_contact_support --include-dependencies "npm install --no-audit" && \
+	./node_modules/.bin/lerna --concurrency=1 exec --stream --scope=@tuleap/plugin-mytuleap_contact_support --include-dependencies "npm run build" && \
 	cd /build/src/plugins/mytuleap_contact_support && composer install --classmap-authoritative --no-dev --no-interaction --no-scripts
 
 $(RPM_TMP)/SOURCES/$(NAME_VERSION).tar.gz: build $(RPM_TMP)
