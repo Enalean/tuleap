@@ -1,7 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`NoContentEmptyState displays a cell that span on the whole table 1`] = `
-<div
+<section
   class="empty-state-page"
 >
   <div
@@ -10,11 +10,12 @@ exports[`NoContentEmptyState displays a cell that span on the whole table 1`] = 
     <!---->
   </div>
    
-  <translate-stub
-    class="empty-state-text"
-    tag="p"
+  <h1
+    class="empty-state-title"
+    data-current-language="en_US"
+    data-msgid="This taskboard is empty"
   >
     This taskboard is empty
-  </translate-stub>
-</div>
+  </h1>
+</section>
 `;

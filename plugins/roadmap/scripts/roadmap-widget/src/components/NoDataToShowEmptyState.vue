@@ -19,13 +19,13 @@
   -->
 
 <template>
-    <div class="roadmap-empty-state">
+    <section class="empty-state-pane">
         <svg
             width="136"
             height="106"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
-            class="roadmap-empty-state-illustration"
+            class="empty-state-illustration"
         >
             <circle
                 opacity=".3"
@@ -47,11 +47,11 @@
                 fill="var(--tlp-illustration-yellow)"
             />
         </svg>
-        <p class="roadmap-empty-state-text">
+        <p class="empty-state-text">
             <translate>There is no data to show.</translate>
             <translate v-if="should_invite_to_come_back">Please come back later.</translate>
         </p>
-    </div>
+    </section>
 </template>
 
 <script lang="ts">

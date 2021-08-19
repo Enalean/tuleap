@@ -19,12 +19,12 @@
   -->
 
 <template>
-    <div class="empty-state-page">
+    <section class="empty-state-page">
         <div class="empty-state-illustration">
             <no-content-empty-state-illustration />
         </div>
-        <translate tag="p" class="empty-state-text">This taskboard is empty</translate>
-    </div>
+        <h1 class="empty-state-title" v-translate>This taskboard is empty</h1>
+    </section>
 </template>
 
 <script lang="ts">

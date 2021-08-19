@@ -17,24 +17,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-.taskboard-error {
-    margin: 100px var(--tlp-medium-spacing) var(--tlp-medium-spacing);
-}
-
-.taskboard-error-link {
-    margin: var(--tlp-medium-spacing) 0 0;
-    font-size: 18px;
-    line-height: 20px;
-
-    > a {
-        cursor: pointer;
-    }
+.taskboard-error-link > a,
+.taskboard-error-modal-link {
+    cursor: pointer;
 }
 
 .taskboard-error-details {
     text-align: left;
-}
-
-.taskboard-error-modal-link {
-    cursor: pointer;
 }
