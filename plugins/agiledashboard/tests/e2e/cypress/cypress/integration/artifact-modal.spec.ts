@@ -37,7 +37,7 @@ describe(`Artifact Modal`, function () {
 
         cy.get("[data-test=artifact-modal-form]").within(() => {
             getFieldWithLabel("Title", "[data-test=string-field]").within(() => {
-                cy.get("[data-test=string-field-input]").type("Artifact creation" + now);
+                cy.get("[data-test=string-field-input]").type(`Artifact creation ${now}`);
             });
 
             getFieldsetWithLabel("Other fields").within(() => {
@@ -184,6 +184,7 @@ describe(`Artifact Modal`, function () {
 
             cy.get("[data-test=artifact-modal-save-button]").click();
         });
+        waitForKanbanCard(`Artifact creation ${now}`);
     });
 
     it(`can edit an artifact with all fields`, function () {
@@ -348,6 +349,7 @@ describe(`Artifact Modal`, function () {
 
             cy.get("[data-test=artifact-modal-save-button]").click();
         });
+        waitForKanbanCard(`Editable Artifact ${now}`);
     });
 });
 
@@ -457,4 +459,8 @@ function getKanbanCard(label: string): CypressWrapper {
         .get("[data-test-static=kanban-item-content]")
         .contains(label)
         .parents("[data-test-static=kanban-item-content]");
+}
+
+function waitForKanbanCard(label: string): void {
+    cy.contains("[data-test-static=kanban-item-content]", label, { timeout: 10000 });
 }
