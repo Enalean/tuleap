@@ -127,24 +127,16 @@
 </script>
 
 <script type="text/ng-template" id="field-float.tpl.html">
-<div class="tlp-form-element" data-test="float-field">
-    <label for="{{ 'tracker_field_' + field.field_id }}"
-        class="tlp-label"
-    >
-        {{ field.label }}
-        <i ng-if="field.required" class="fa fa-asterisk"></i>
-    </label>
-    <input type="number"
-        class="tlp-input"
-        data-test="float-field-input"
-        step="any"
-        size="5"
-        ng-model="modal.values[field.field_id].value"
-        ng-required="{{ field.required }}"
-        ng-disabled="modal.isDisabled(field)"
-        id="{{ 'tracker_field_' + field.field_id }}"
-    >
-</div>
+<tuleap-artifact-modal-float-field
+    field-id="field.field_id"
+    label="field.label"
+    required="field.required"
+    disabled="modal.isDisabled(field)"
+    value="modal.values[field.field_id].value"
+    on-value-changed="modal.setFieldValueForCustomElement($event)"
+    ce-one-way
+    data-test="float-field"
+></tuleap-artifact-modal-float-field>
 </script>
 
 <script type="text/ng-template" id="field-text.tpl.html">
