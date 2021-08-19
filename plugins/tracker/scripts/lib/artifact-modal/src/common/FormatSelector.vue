@@ -35,12 +35,13 @@
                 <option v-bind:value="html_format">{{ html_label }}</option>
                 <option v-bind:value="commonmark_format">{{ commonmark_label }}</option>
             </select>
-            <commonmark-preview-button
+            <!-- eslint-disable-next-line vue/html-self-closing -->
+            <tuleap-artifact-modal-commonmark-preview
                 v-if="is_commonmark_format"
-                v-bind:is_in_preview_mode="is_in_preview_mode"
-                v-bind:is_preview_loading="is_preview_loading"
+                v-bind:isInPreviewMode.prop="is_in_preview_mode"
+                v-bind:isPreviewLoading.prop="is_preview_loading"
                 v-on:commonmark-preview-event="$emit('interpret-content-event')"
-            />
+            ></tuleap-artifact-modal-commonmark-preview>
             <!-- eslint-disable-next-line vue/html-self-closing -->
             <tuleap-artifact-modal-commonmark-syntax-helper
                 v-if="is_commonmark_format"
@@ -57,11 +58,9 @@ import {
     TEXT_FORMAT_TEXT,
 } from "../../../../constants/fields-constants.js";
 import { getCommonMarkLabel, getHTMLLabel, getTextLabel } from "../gettext-catalog";
-import CommonmarkPreviewButton from "./CommonmarkPreviewButton.vue";
 
 export default {
     name: "FormatSelector",
-    components: { CommonmarkPreviewButton },
     props: {
         id: String,
         label: String,

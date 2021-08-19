@@ -62,8 +62,9 @@ import { IntField } from "./fields/int-field/IntField";
 import { StringField } from "./fields/string-field/StringField";
 import { FloatField } from "./fields/float-field/FloatField";
 import { CommonmarkSyntaxHelper } from "./common/CommonmarkSyntaxHelper";
+import { CommonmarkPreviewButton } from "./common/CommonmarkPreviewButton";
 
-define(IntField, StringField, FloatField, CommonmarkSyntaxHelper);
+define(IntField, StringField, FloatField, CommonmarkSyntaxHelper, CommonmarkPreviewButton);
 
 export default angular
     .module("tuleap.artifact-modal", [

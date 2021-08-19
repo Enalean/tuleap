@@ -22,8 +22,8 @@ import localVue from "../helpers/local-vue.js";
 import { shallowMount } from "@vue/test-utils";
 import FormatSelector from "./FormatSelector.vue";
 import { setCatalog } from "../gettext-catalog";
-import CommonmarkPreviewButton from "./CommonmarkPreviewButton.vue";
 import { CommonmarkSyntaxHelper } from "./CommonmarkSyntaxHelper";
+import { CommonmarkPreviewButton } from "./CommonmarkPreviewButton";
 
 function getInstance(props = {}) {
     return shallowMount(FormatSelector, {
@@ -38,7 +38,7 @@ function getInstance(props = {}) {
 
 describe(`FormatSelector`, () => {
     beforeAll(() => {
-        define(CommonmarkSyntaxHelper);
+        define(CommonmarkSyntaxHelper, CommonmarkPreviewButton);
     });
 
     beforeEach(() => {
@@ -111,14 +111,14 @@ describe(`FormatSelector`, () => {
                 const value = format;
                 const wrapper = getInstance({ value });
                 expect(wrapper.find(CommonmarkSyntaxHelper.tag).exists()).toBeFalsy();
-                expect(wrapper.findComponent(CommonmarkPreviewButton).exists()).toBeFalsy();
+                expect(wrapper.find(CommonmarkPreviewButton.tag).exists()).toBeFalsy();
             }
         );
         it(`displays the CommonMark related buttons if the chosen format is 'Markdown'`, () => {
             const value = "commonmark";
             const wrapper = getInstance({ value });
             expect(wrapper.find(CommonmarkSyntaxHelper.tag).exists()).toBeTruthy();
-            expect(wrapper.findComponent(CommonmarkPreviewButton).exists()).toBeTruthy();
+            expect(wrapper.find(CommonmarkPreviewButton.tag).exists()).toBeTruthy();
         });
     });
     describe("disabling of the CommonMark syntax helper button", () => {
