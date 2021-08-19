@@ -60,9 +60,8 @@ describe("lock", () => {
 
         await lockDocument(context, item_to_lock);
 
-        expect(context.commit).toHaveBeenCalledWith("replaceLockInfoWithNewVersion", {
-            item: item_to_lock,
-            lock_info: updated_item.lock_info,
+        expect(context.commit).toHaveBeenCalledWith("replaceFolderContentByItem", updated_item, {
+            root: true,
         });
     });
 
@@ -83,7 +82,6 @@ describe("lock", () => {
         });
 
         await lockDocument(context, item_to_lock);
-
         expect(context.dispatch).toHaveBeenCalledWith(
             "error/handleErrorsForLock",
             expect.any(Object),
@@ -98,22 +96,20 @@ describe("lock", () => {
             type: TYPE_EMBEDDED,
         } as Embedded;
 
-        getItem.mockReturnValue(
-            Promise.resolve({
-                id: 123,
-                title: "My embedded",
-                type: TYPE_EMBEDDED,
-                lock_info: {
-                    user_id: 123,
-                },
-            })
-        );
+        const updated_item = {
+            id: 123,
+            title: "My embedded",
+            type: TYPE_EMBEDDED,
+            lock_info: {
+                user_id: 123,
+            },
+        };
+        getItem.mockReturnValue(Promise.resolve(updated_item));
 
         await lockDocument(context, item_to_lock);
 
-        expect(context.commit).toHaveBeenCalledWith("replaceLockInfoWithNewVersion", {
-            item: item_to_lock,
-            lock_info: { user_id: 123 },
+        expect(context.commit).toHaveBeenCalledWith("replaceFolderContentByItem", updated_item, {
+            root: true,
         });
     });
 });
@@ -152,9 +148,8 @@ describe("unlock", () => {
 
         await unlockDocument(context, item_to_lock);
 
-        expect(context.commit).toHaveBeenCalledWith("replaceLockInfoWithNewVersion", {
-            item: item_to_lock,
-            lock_info: updated_item.lock_info,
+        expect(context.commit).toHaveBeenCalledWith("replaceFolderContentByItem", updated_item, {
+            root: true,
         });
     });
 
@@ -177,9 +172,8 @@ describe("unlock", () => {
 
         await unlockDocument(context, item_to_lock);
 
-        expect(context.commit).toHaveBeenCalledWith("replaceLockInfoWithNewVersion", {
-            item: item_to_lock,
-            lock_info: updated_item.lock_info,
+        expect(context.commit).toHaveBeenCalledWith("replaceFolderContentByItem", updated_item, {
+            root: true,
         });
     });
 });

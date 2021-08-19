@@ -32,7 +32,7 @@ import state from "./state.js";
 import error from "./error/module";
 import clipboard from "./clipboard/module.js";
 import metadata from "./metadata/module.js";
-import lock from "./lock/module.js";
+import lock from "./lock/module";
 import preferencies from "./preferencies/module";
 import permissions from "./permissions/module";
 import { createConfigurationModule } from "./configuration";

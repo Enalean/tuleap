@@ -87,7 +87,7 @@ describe(`Error module actions`, () => {
             } as FetchWrapperError;
             await actions.handleErrorsForLock(context, error);
 
-            expect(context.commit).toHaveBeenCalledWith("error/setLockError", "Oh snap");
+            expect(context.commit).toHaveBeenCalledWith("setLockError", "Oh snap");
         });
 
         it(`when a message can't be extracted from the FetchWrapperError,
@@ -99,10 +99,7 @@ describe(`Error module actions`, () => {
 
             await actions.handleErrorsForLock(context, error);
 
-            expect(context.commit).toHaveBeenCalledWith(
-                "error/setLockError",
-                "Internal server error"
-            );
+            expect(context.commit).toHaveBeenCalledWith("setLockError", "Internal server error");
         });
     });
 });

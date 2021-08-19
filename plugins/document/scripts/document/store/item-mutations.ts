@@ -1,7 +1,7 @@
-/*
- * Copyright (c) Enalean, 2020 - present. All Rights Reserved.
+/**
+ * Copyright (c) Enalean 2021 -  Present. All Rights Reserved.
  *
- * This file is a part of Tuleap.
+ *  This file is a part of Tuleap.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,11 +15,18 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
-import * as actions from "./lock-actions";
+import type { Item, State } from "../type";
 
-export default {
-    namespaced: true,
-    actions,
-};
+export function replaceFolderContentByItem(state: State, element: Item): void {
+    const index = state.folder_content.findIndex((item) => item.id === element.id);
+    if (index !== -1) {
+        state.folder_content[index] = element;
+    }
+
+    if (state.currently_previewed_item && state.currently_previewed_item.id === element.id) {
+        state.currently_previewed_item = element;
+    }
+}
