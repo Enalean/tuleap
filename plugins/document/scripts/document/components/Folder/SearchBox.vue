@@ -24,65 +24,61 @@
         <input
             type="search"
             class="tlp-search tlp-search-small document-search-box"
-            v-bind:placeholder="placeholder_text"
+            v-bind:placeholder="`${$gettext('Name, description...')}`"
             v-model="search_query"
-            v-on:keyup.enter="searchUrl"
+            v-on:keyup.enter="searchUrl()"
             data-shortcut-search-document
         />
         <a
-            v-bind:title="advanced_title"
+            v-bind:title="`${$gettext('Advanced')}`"
             class="document-advanced-link"
-            v-bind:href="advanced_url"
+            v-bind:href="advancedUrl()"
             data-test="document-advanced-link"
+            v-translate
         >
-            {{ advanced_title }}
+            Advanced
         </a>
     </div>
 </template>
 
-<script>
-import { mapState } from "vuex";
+<script lang="ts">
+import { Component, Vue } from "vue-property-decorator";
+import { namespace, State } from "vuex-class";
+import type { Folder } from "../../type";
 
-export default {
-    name: "SearchBox",
-    data() {
-        return {
-            search_query: "",
-        };
-    },
-    computed: {
-        ...mapState(["current_folder"]),
-        ...mapState("configuration", ["project_id"]),
-        placeholder_text() {
-            return this.$gettext("Name, description...");
-        },
-        advanced_url() {
-            return (
-                "/plugins/docman/?group_id=" +
-                encodeURIComponent(this.project_id) +
-                "&id=" +
-                encodeURIComponent(this.current_folder.id) +
-                "&action=search&global_txt=" +
-                encodeURIComponent(this.search_query) +
-                "&sort_update_date=0&add_filter=--&save_report=--&filtersubmit=Apply"
-            );
-        },
-        advanced_title() {
-            return this.$gettext("Advanced");
-        },
-    },
-    methods: {
-        searchUrl() {
-            const encoded_url =
-                "/plugins/docman/?group_id=" +
-                encodeURIComponent(this.project_id) +
-                "&id=" +
-                encodeURIComponent(this.current_folder.id) +
-                "&action=search&global_txt=" +
-                encodeURIComponent(this.search_query) +
-                "&global_filtersubmit=Apply";
-            window.location.assign(encoded_url);
-        },
-    },
-};
+const configuration = namespace("configuration");
+
+@Component
+export default class SearchBox extends Vue {
+    @State
+    readonly current_folder!: Folder;
+    @configuration.State
+    readonly project_id!: number;
+
+    private search_query = "";
+
+    advancedUrl(): string {
+        return (
+            "/plugins/docman/?group_id=" +
+            encodeURIComponent(this.project_id) +
+            "&id=" +
+            encodeURIComponent(this.current_folder.id) +
+            "&action=search&global_txt=" +
+            encodeURIComponent(this.search_query) +
+            "&sort_update_date=0&add_filter=--&save_report=--&filtersubmit=Apply"
+        );
+    }
+
+    searchUrl(): void {
+        const encoded_url =
+            "/plugins/docman/?group_id=" +
+            encodeURIComponent(this.project_id) +
+            "&id=" +
+            encodeURIComponent(this.current_folder.id) +
+            "&action=search&global_txt=" +
+            encodeURIComponent(this.search_query) +
+            "&global_filtersubmit=Apply";
+        window.location.assign(encoded_url);
+    }
+}
 </script>
