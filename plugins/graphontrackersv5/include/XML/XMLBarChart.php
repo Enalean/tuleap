@@ -1,6 +1,6 @@
 <?php
-/*
- * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
+/**
+ * Copyright (c) Enalean, 2021 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -16,51 +16,46 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
- *
  */
 
 declare(strict_types=1);
 
-namespace Tuleap\Tracker\Report\Renderer\Table\XML;
+namespace Tuleap\GraphOnTrackersV5\XML;
 
 use SimpleXMLElement;
 use Tuleap\Tracker\FormElement\XML\XMLFormElementFlattenedCollection;
-use Tuleap\Tracker\Report\Renderer\XML\XMLRenderer;
-use Tuleap\Tracker\Report\Renderer\Table\Column\XML\XMLTableColumn;
+use Tuleap\Tracker\FormElement\XML\XMLReference;
 
-final class XMLTable extends XMLRenderer
+final class XMLBarChart extends XMLChart
 {
-    private const TYPE = 'table';
+    private const TYPE = 'bar';
 
     /**
      * @readonly
      */
-    private int $chunk_size = 50;
+    private ?XMLReference $base_reference = null;
     /**
-     * @var XMLTableColumn[]
      * @readonly
      */
-    private array $columns = [];
+    private ?XMLReference $group_reference = null;
 
     /**
-     * @return static
      * @psalm-mutation-free
      */
-    public function withColumns(XMLTableColumn ...$columns): self
+    public function withBase(XMLReference $reference): self
     {
-        $new          = clone $this;
-        $new->columns = array_merge($new->columns, $columns);
+        $new                 = clone $this;
+        $new->base_reference = $reference;
         return $new;
     }
 
     /**
-     * @return static
      * @psalm-mutation-free
      */
-    public function withChunkSize(int $size): self
+    public function withGroup(XMLReference $reference): self
     {
-        $new             = clone $this;
-        $new->chunk_size = $size;
+        $new                  = clone $this;
+        $new->group_reference = $reference;
         return $new;
     }
 
@@ -68,11 +63,12 @@ final class XMLTable extends XMLRenderer
     {
         $renderer_xml = parent::export($renderers, $form_elements);
         $renderer_xml->addAttribute('type', self::TYPE);
-        $renderer_xml->addAttribute('chunksz', (string) $this->chunk_size);
 
-        $renderer_xml->addChild('columns');
-        foreach ($this->columns as $column) {
-            $column->export($renderer_xml->columns, $form_elements);
+        if ($this->base_reference) {
+            $renderer_xml->addAttribute('base', $this->base_reference->getId($form_elements));
+        }
+        if ($this->group_reference) {
+            $renderer_xml->addAttribute('group', $this->group_reference->getId($form_elements));
         }
 
         return $renderer_xml;

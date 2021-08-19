@@ -21,34 +21,33 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Tracker\Semantic\Timeframe\XML;
+namespace Tuleap\Tracker\Semantic\Description\XML;
 
+use Tracker_Semantic_Description;
 use Tuleap\Tracker\FormElement\XML\XMLFormElementFlattenedCollection;
 use Tuleap\Tracker\FormElement\XML\XMLReference;
-use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframe;
 use Tuleap\Tracker\Semantic\XML\XMLSemantic;
 
-final class XMLTimeframeSemantic extends XMLSemantic
+final class XMLDescriptionSemantic extends XMLSemantic
 {
     public function __construct(
         /**
          * @readonly
          */
-        private XMLReference $start_date,
-        /**
-         * @readonly
-         */
-        private XMLReference $end_date,
+        private XMLReference $reference,
     ) {
-        parent::__construct(SemanticTimeframe::NAME);
+        parent::__construct(Tracker_Semantic_Description::NAME);
     }
 
     public function export(\SimpleXMLElement $parent_node, XMLFormElementFlattenedCollection $form_elements): \SimpleXMLElement
     {
         $child = parent::export($parent_node, $form_elements);
 
-        $child->addChild('start_date_field')->addAttribute('REF', $this->start_date->getId($form_elements));
-        $child->addChild('end_date_field')->addAttribute('REF', $this->end_date->getId($form_elements));
+        $cdata = new \XML_SimpleXMLCDATAFactory();
+        $cdata->insert($child, 'shortname', Tracker_Semantic_Description::NAME);
+        $cdata->insert($child, 'label', 'Description');
+        $cdata->insert($child, 'description', 'Define the description of an artifact');
+        $child->addChild('field')->addAttribute('REF', $this->reference->getId($form_elements));
 
         return $child;
     }

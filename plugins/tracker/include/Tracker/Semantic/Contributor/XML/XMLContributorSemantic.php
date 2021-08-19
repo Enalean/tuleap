@@ -1,6 +1,6 @@
 <?php
-/*
- * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
+/**
+ * Copyright (c) Enalean, 2021 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -16,39 +16,37 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
- *
  */
 
 declare(strict_types=1);
 
-namespace Tuleap\Tracker\Semantic\Timeframe\XML;
+namespace Tuleap\Tracker\Semantic\Contributor\XML;
 
 use Tuleap\Tracker\FormElement\XML\XMLFormElementFlattenedCollection;
 use Tuleap\Tracker\FormElement\XML\XMLReference;
-use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframe;
 use Tuleap\Tracker\Semantic\XML\XMLSemantic;
+use Tracker_Semantic_Contributor;
 
-final class XMLTimeframeSemantic extends XMLSemantic
+final class XMLContributorSemantic extends XMLSemantic
 {
     public function __construct(
         /**
          * @readonly
          */
-        private XMLReference $start_date,
-        /**
-         * @readonly
-         */
-        private XMLReference $end_date,
+        private XMLReference $reference,
     ) {
-        parent::__construct(SemanticTimeframe::NAME);
+        parent::__construct(Tracker_Semantic_Contributor::CONTRIBUTOR_SEMANTIC_SHORTNAME);
     }
 
     public function export(\SimpleXMLElement $parent_node, XMLFormElementFlattenedCollection $form_elements): \SimpleXMLElement
     {
         $child = parent::export($parent_node, $form_elements);
 
-        $child->addChild('start_date_field')->addAttribute('REF', $this->start_date->getId($form_elements));
-        $child->addChild('end_date_field')->addAttribute('REF', $this->end_date->getId($form_elements));
+        $cdata = new \XML_SimpleXMLCDATAFactory();
+        $cdata->insert($child, 'shortname', Tracker_Semantic_Contributor::CONTRIBUTOR_SEMANTIC_SHORTNAME);
+        $cdata->insert($child, 'label', 'Contributor/assignee');
+        $cdata->insert($child, 'description', 'Define the contributor/assignee of an artifact');
+        $child->addChild('field')->addAttribute('REF', $this->reference->getId($form_elements));
 
         return $child;
     }

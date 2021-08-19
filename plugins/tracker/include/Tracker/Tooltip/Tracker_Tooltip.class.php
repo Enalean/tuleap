@@ -21,6 +21,8 @@
 
 class Tracker_Tooltip extends Tracker_Semantic
 {
+    public const NAME = 'tooltip';
+
     public $fields = [];
 
     public function setFields($fields)

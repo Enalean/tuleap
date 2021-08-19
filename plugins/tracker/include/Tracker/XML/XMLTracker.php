@@ -34,6 +34,7 @@ use Tuleap\Tracker\Report\XML\XMLReport;
 use Tuleap\Tracker\Semantic\XML\XMLSemantic;
 use Tuleap\Tracker\TrackerColor;
 use Tuleap\Tracker\TrackerIsInvalidException;
+use Tuleap\Tracker\Workflow\XML\XMLWorkflow;
 
 final class XMLTracker
 {
@@ -94,6 +95,10 @@ final class XMLTracker
      * @readonly
      */
     private $artifacts = [];
+    /**
+     * @readonly
+     */
+    private ?XMLWorkflow $workflow = null;
 
     /**
      * @param string|IDGenerator $id
@@ -115,7 +120,6 @@ final class XMLTracker
 
     /**
      * @psalm-mutation-free
-     * @return static
      */
     public function withName(string $name): self
     {
@@ -126,7 +130,6 @@ final class XMLTracker
 
     /**
      * @psalm-mutation-free
-     * @return static
      */
     public function withDescription(string $description): self
     {
@@ -137,7 +140,6 @@ final class XMLTracker
 
     /**
      * @psalm-mutation-free
-     * @return static
      */
     public function withColor(TrackerColor $color): self
     {
@@ -148,7 +150,6 @@ final class XMLTracker
 
     /**
      * @psalm-mutation-free
-     * @return static
      */
     public function withParentId(string $parent_id): self
     {
@@ -159,7 +160,6 @@ final class XMLTracker
 
     /**
      * @psalm-mutation-free
-     * @return static
      */
     public function withSubmitInstructions(string $submit_instructions): self
     {
@@ -170,7 +170,6 @@ final class XMLTracker
 
     /**
      * @psalm-mutation-free
-     * @return static
      */
     public function withBrowseInstructions(string $browse_instructions): self
     {
@@ -181,7 +180,16 @@ final class XMLTracker
 
     /**
      * @psalm-mutation-free
-     * @return static
+     */
+    public function withWorkflow(XMLWorkflow $workflow): self
+    {
+        $new           = clone $this;
+        $new->workflow = $workflow;
+        return $new;
+    }
+
+    /**
+     * @psalm-mutation-free
      */
     public function withFormElement(XMLFormElement ...$form_elements): self
     {
@@ -192,7 +200,6 @@ final class XMLTracker
 
     /**
      * @psalm-mutation-free
-     * @return static
      */
     public function appendFormElement(string $name, XMLFormElement $form_element): self
     {
@@ -210,18 +217,16 @@ final class XMLTracker
 
     /**
      * @psalm-mutation-free
-     * @return static
      */
-    public function withReports(XMLReport $report): self
+    public function withReports(XMLReport ...$reports): self
     {
-        $new            = clone $this;
-        $new->reports[] = $report;
+        $new          = clone $this;
+        $new->reports = array_merge($new->reports, $reports);
         return $new;
     }
 
     /**
      * @psalm-mutation-free
-     * @return static
      */
     public function withSemantics(XMLSemantic ...$semantic): self
     {
@@ -232,7 +237,6 @@ final class XMLTracker
 
     /**
      * @psalm-mutation-free
-     * @return static
      */
     public function withArtifact(XMLArtifact $artifact): self
     {
@@ -305,6 +309,10 @@ final class XMLTracker
             foreach ($this->reports as $report) {
                 $report->export($tracker_xml->reports, $form_elements_flattened_collection);
             }
+        }
+
+        if ($this->workflow) {
+            $this->workflow->export($tracker_xml, $form_elements_flattened_collection);
         }
 
         if (count($form_elements_flattened_collection) > 0) {

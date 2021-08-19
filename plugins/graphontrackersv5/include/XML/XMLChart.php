@@ -1,6 +1,6 @@
 <?php
-/*
- * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
+/**
+ * Copyright (c) Enalean, 2021 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -16,58 +16,41 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
- *
  */
 
 declare(strict_types=1);
 
-namespace Tuleap\Tracker\Report\Renderer\XML;
+namespace Tuleap\GraphOnTrackersV5\XML;
 
 use SimpleXMLElement;
 use Tuleap\Tracker\FormElement\XML\XMLFormElementFlattenedCollection;
 use XML_SimpleXMLCDATAFactory;
 
-abstract class XMLRenderer
+abstract class XMLChart
 {
     /**
      * @readonly
      */
-    private int $rank = 1;
-    /**
-     * @readonly
-     */
     private string $description = '';
-    /**
-     * @readonly
-     */
-    private string $id = '';
 
     public function __construct(
         /**
          * @readonly
          */
-        private string $name,
+        private int $width,
+        /**
+         * @readonly
+         */
+        private int $height,
+        /**
+         * @readonly
+         */
+        private int $rank,
+        /**
+         * @readonly
+         */
+        private string $title,
     ) {
-    }
-
-    /**
-     * @psalm-mutation-free
-     */
-    public function withId(string $id): static
-    {
-        $new     = clone $this;
-        $new->id = $id;
-        return $new;
-    }
-
-    /**
-     * @psalm-mutation-free
-     */
-    public function withRank(int $rank): static
-    {
-        $new       = clone $this;
-        $new->rank = $rank;
-        return $new;
     }
 
     /**
@@ -77,19 +60,21 @@ abstract class XMLRenderer
     {
         $new              = clone $this;
         $new->description = $description;
+
         return $new;
     }
 
-    public function export(SimpleXMLElement $renderers, XMLFormElementFlattenedCollection $form_elements): SimpleXMLElement
-    {
-        $renderer_xml = $renderers->addChild('renderer');
+    public function export(
+        SimpleXMLElement $renderers,
+        XMLFormElementFlattenedCollection $form_elements,
+    ): SimpleXMLElement {
+        $renderer_xml = $renderers->addChild('chart');
+        $renderer_xml->addAttribute('width', (string) $this->width);
+        $renderer_xml->addAttribute('height', (string) $this->height);
         $renderer_xml->addAttribute('rank', (string) $this->rank);
-        if ($this->id) {
-            $renderer_xml->addAttribute('ID', $this->id);
-        }
 
         $cdata = new XML_SimpleXMLCDATAFactory();
-        $cdata->insert($renderer_xml, 'name', $this->name);
+        $cdata->insert($renderer_xml, 'title', $this->title);
 
         if ($this->description) {
             $cdata = new XML_SimpleXMLCDATAFactory();

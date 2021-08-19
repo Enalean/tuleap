@@ -1,6 +1,6 @@
 <?php
-/*
- * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
+/**
+ * Copyright (c) Enalean, 2021 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -16,51 +16,33 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
- *
  */
 
 declare(strict_types=1);
 
-namespace Tuleap\Tracker\Report\Renderer\Table\XML;
+namespace Tuleap\Cardwall\XML;
 
 use SimpleXMLElement;
 use Tuleap\Tracker\FormElement\XML\XMLFormElementFlattenedCollection;
+use Tuleap\Tracker\FormElement\XML\XMLReference;
 use Tuleap\Tracker\Report\Renderer\XML\XMLRenderer;
-use Tuleap\Tracker\Report\Renderer\Table\Column\XML\XMLTableColumn;
 
-final class XMLTable extends XMLRenderer
+final class XMLCardwallRenderer extends XMLRenderer
 {
-    private const TYPE = 'table';
+    private const TYPE = 'plugin_cardwall';
 
     /**
      * @readonly
      */
-    private int $chunk_size = 50;
-    /**
-     * @var XMLTableColumn[]
-     * @readonly
-     */
-    private array $columns = [];
+    private ?XMLReference $reference = null;
 
     /**
-     * @return static
      * @psalm-mutation-free
      */
-    public function withColumns(XMLTableColumn ...$columns): self
+    public function withField(XMLReference $reference): self
     {
-        $new          = clone $this;
-        $new->columns = array_merge($new->columns, $columns);
-        return $new;
-    }
-
-    /**
-     * @return static
-     * @psalm-mutation-free
-     */
-    public function withChunkSize(int $size): self
-    {
-        $new             = clone $this;
-        $new->chunk_size = $size;
+        $new            = clone $this;
+        $new->reference = $reference;
         return $new;
     }
 
@@ -68,11 +50,8 @@ final class XMLTable extends XMLRenderer
     {
         $renderer_xml = parent::export($renderers, $form_elements);
         $renderer_xml->addAttribute('type', self::TYPE);
-        $renderer_xml->addAttribute('chunksz', (string) $this->chunk_size);
-
-        $renderer_xml->addChild('columns');
-        foreach ($this->columns as $column) {
-            $column->export($renderer_xml->columns, $form_elements);
+        if ($this->reference) {
+            $renderer_xml->addAttribute('field_id', $this->reference->getId($form_elements));
         }
 
         return $renderer_xml;

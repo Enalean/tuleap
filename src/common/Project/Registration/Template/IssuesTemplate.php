@@ -23,6 +23,9 @@ declare(strict_types=1);
 
 namespace Tuleap\Project\Registration\Template;
 
+use ForgeConfig;
+use Psr\EventDispatcher\EventDispatcherInterface;
+use RuntimeException;
 use Tuleap\Glyph\Glyph;
 use Tuleap\Glyph\GlyphFinder;
 use Tuleap\Project\XML\ConsistencyChecker;
@@ -33,7 +36,7 @@ class IssuesTemplate implements TuleapTemplate
     public const NAME = 'issues';
 
     private const PROJECT_XML = __DIR__ . '/../../../../../tools/utils/setup_templates/issues/project.xml';
-    private const KANBAN_XML  = __DIR__ . '/../../../../../tools/utils/setup_templates/issues/issue_template.xml';
+    private const ISSUES_XML  = __DIR__ . '/../../../../../tools/utils/setup_templates/issues/issue_template.xml';
 
     /**
      * @var string
@@ -63,14 +66,20 @@ class IssuesTemplate implements TuleapTemplate
      * @var string
      */
     private $xml_path;
+    private EventDispatcherInterface $dispatcher;
 
-    public function __construct(GlyphFinder $glyph_finder, ProjectXMLMerger $project_xml_merger, ConsistencyChecker $consistency_checker)
-    {
+    public function __construct(
+        GlyphFinder $glyph_finder,
+        ProjectXMLMerger $project_xml_merger,
+        ConsistencyChecker $consistency_checker,
+        EventDispatcherInterface $dispatcher,
+    ) {
         $this->title               = _('Issue tracking');
         $this->description         = _('Trace and Track all types of activities.');
         $this->glyph_finder        = $glyph_finder;
         $this->project_xml_merger  = $project_xml_merger;
         $this->consistency_checker = $consistency_checker;
+        $this->dispatcher          = $dispatcher;
     }
 
     /**
@@ -80,18 +89,25 @@ class IssuesTemplate implements TuleapTemplate
     public function getXMLPath(): string
     {
         if ($this->xml_path === null) {
-            $base_dir = \ForgeConfig::getCacheDir() . '/issues_template';
+            $base_dir = ForgeConfig::getCacheDir() . '/issues_template';
             if (! is_dir($base_dir) && ! mkdir($base_dir, 0755) && ! is_dir($base_dir)) {
-                throw new \RuntimeException(sprintf('Directory "%s" was not created', $base_dir));
+                throw new RuntimeException(sprintf('Directory "%s" was not created', $base_dir));
             }
-            $this->xml_path = \ForgeConfig::getCacheDir() . '/issues_template/project.xml';
+            $this->xml_path = ForgeConfig::getCacheDir() . '/issues_template/project.xml';
 
             $this->project_xml_merger->merge(
                 self::PROJECT_XML,
-                self::KANBAN_XML,
+                self::ISSUES_XML,
                 $this->xml_path,
             );
+
+            $template = simplexml_load_string(file_get_contents($this->xml_path));
+
+            $this->dispatcher->dispatch(new DefineIssueTemplateEvent($template));
+
+            $template->asXML($this->xml_path);
         }
+
         return $this->xml_path;
     }
 
@@ -120,6 +136,7 @@ class IssuesTemplate implements TuleapTemplate
         if ($this->available === null) {
             $this->available = $this->consistency_checker->areAllServicesAvailable($this->getXMLPath());
         }
+
         return $this->available;
     }
 

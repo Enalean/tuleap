@@ -1,6 +1,6 @@
 <?php
-/*
- * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
+/**
+ * Copyright (c) Enalean, 2021 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -16,17 +16,31 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
- *
  */
 
 declare(strict_types=1);
 
 namespace Tuleap\Tracker\FormElement\Field\ListFields\XML;
 
-final class XMLSelectBoxField extends XMLListField
+class XMLDecorator
 {
-    public static function getType(): string
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private string $field_id_ref,
+        /**
+         * @readonly
+         */
+        private string $tlp_color_name,
+    ) {
+    }
+
+    public function export(\SimpleXMLElement $decorators): void
     {
-        return \Tracker_FormElementFactory::FIELD_SELECT_BOX_TYPE;
+        $decorator = $decorators->addChild('decorator');
+
+        $decorator->addAttribute('REF', $this->field_id_ref);
+        $decorator->addAttribute('tlp_color_name', $this->tlp_color_name);
     }
 }

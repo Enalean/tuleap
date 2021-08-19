@@ -30,16 +30,13 @@ use Tuleap\Velocity\Semantic\SemanticVelocity;
 
 final class XMLVelocitySemantic extends XMLSemantic
 {
-    /**
-     * @var XMLReference
-     * @readonly
-     */
-    private $reference;
-
-    public function __construct(XMLReference $reference)
-    {
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private XMLReference $reference,
+    ) {
         parent::__construct(SemanticVelocity::NAME);
-        $this->reference = $reference;
     }
 
     public function export(\SimpleXMLElement $parent_node, XMLFormElementFlattenedCollection $form_elements): \SimpleXMLElement
@@ -48,8 +45,8 @@ final class XMLVelocitySemantic extends XMLSemantic
 
         $cdata = new \XML_SimpleXMLCDATAFactory();
         $cdata->insert($semantic, 'shortname', SemanticVelocity::NAME);
-        $cdata->insert($semantic, 'label', dgettext('tuleap-velocity', 'Velocity'));
-        $cdata->insert($semantic, 'description', dgettext('tuleap-velocity', 'Define the field to use to compute velocity.'));
+        $cdata->insert($semantic, 'label', 'Velocity');
+        $cdata->insert($semantic, 'description', 'Define the field to use to compute velocity.');
         $semantic->addChild('field')->addAttribute('REF', $this->reference->getId($form_elements));
 
         return $semantic;

@@ -17,6 +17,7 @@
             <formElement type="text" ID="bug_description" rank="2">
               <name><![CDATA[description]]></name>
               <label><![CDATA[Description]]></label>
+              <properties rows="10" cols="50"/>
             </formElement>
             <formElement type="string" ID="bug_summary" rank="1" required="1">
               <name><![CDATA[summary]]></name>
@@ -172,6 +173,7 @@
         <formElement type="text" ID="bug_customfield_10044" rank="2" required="1">
           <name><![CDATA[customfield_10044]]></name>
           <label><![CDATA[[mag] Text]]></label>
+          <properties rows="10" cols="50"/>
         </formElement>
         <formElement type="string" ID="bug_customfield_10045" rank="1" required="1">
           <name><![CDATA[customfield_10045]]></name>

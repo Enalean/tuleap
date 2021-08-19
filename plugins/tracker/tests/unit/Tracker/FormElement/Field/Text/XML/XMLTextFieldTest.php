@@ -21,12 +21,20 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Tracker\FormElement\Field\ListFields\XML;
+namespace Tuleap\Tracker\FormElement\Field\Text\XML;
 
-final class XMLSelectBoxField extends XMLListField
+use function PHPUnit\Framework\assertEquals;
+
+final class XMLTextFieldTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    public static function getType(): string
+    public function testItHasRowsAndColsProperty(): void
     {
-        return \Tracker_FormElementFactory::FIELD_SELECT_BOX_TYPE;
+        $field = (new XMLTextField('some_id', 'details'))
+            ->withRows(7)
+            ->withCols(60)
+            ->export(new \SimpleXMLElement('<formElements />'));
+
+        assertEquals('7', $field->properties['rows']);
+        assertEquals('60', $field->properties['cols']);
     }
 }

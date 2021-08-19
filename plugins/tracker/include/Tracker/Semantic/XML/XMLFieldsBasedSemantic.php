@@ -1,6 +1,6 @@
 <?php
-/*
- * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
+/**
+ * Copyright (c) Enalean, 2021 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -16,39 +16,42 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
- *
  */
 
 declare(strict_types=1);
 
-namespace Tuleap\Tracker\Semantic\Timeframe\XML;
+namespace Tuleap\Tracker\Semantic\XML;
 
 use Tuleap\Tracker\FormElement\XML\XMLFormElementFlattenedCollection;
 use Tuleap\Tracker\FormElement\XML\XMLReference;
-use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframe;
-use Tuleap\Tracker\Semantic\XML\XMLSemantic;
 
-final class XMLTimeframeSemantic extends XMLSemantic
+final class XMLFieldsBasedSemantic extends XMLSemantic
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private XMLReference $start_date,
-        /**
-         * @readonly
-         */
-        private XMLReference $end_date,
-    ) {
-        parent::__construct(SemanticTimeframe::NAME);
+    /**
+     * @var XMLReference[]
+     * @readonly
+     */
+    private array $field_references = [];
+
+    /**
+     * @psalm-mutation-free
+     */
+    public function withFields(XMLReference ...$fields): self
+    {
+        $new                   = clone $this;
+        $new->field_references = array_merge($new->field_references, $fields);
+
+        return $new;
     }
 
     public function export(\SimpleXMLElement $parent_node, XMLFormElementFlattenedCollection $form_elements): \SimpleXMLElement
     {
         $child = parent::export($parent_node, $form_elements);
 
-        $child->addChild('start_date_field')->addAttribute('REF', $this->start_date->getId($form_elements));
-        $child->addChild('end_date_field')->addAttribute('REF', $this->end_date->getId($form_elements));
+        foreach ($this->field_references as $field_ref) {
+            $child->addChild('field')
+                ->addAttribute('REF', $field_ref->getId($form_elements));
+        }
 
         return $child;
     }

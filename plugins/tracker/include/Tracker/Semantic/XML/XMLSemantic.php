@@ -27,15 +27,12 @@ use Tuleap\Tracker\FormElement\XML\XMLFormElementFlattenedCollection;
 
 abstract class XMLSemantic
 {
-    /**
-     * @var string
-     * @readonly
-     */
-    private $type;
-
-    public function __construct(string $type)
-    {
-        $this->type = $type;
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private string $type,
+    ) {
     }
 
     public function export(\SimpleXMLElement $parent_node, XMLFormElementFlattenedCollection $form_elements): \SimpleXMLElement

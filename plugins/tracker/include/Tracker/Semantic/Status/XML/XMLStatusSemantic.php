@@ -31,18 +31,18 @@ use Tuleap\Tracker\Semantic\XML\XMLSemantic;
 final class XMLStatusSemantic extends XMLSemantic
 {
     /**
-     * @var XMLReference
-     */
-    private $reference;
-    /**
      * @var XMLBindValueReference[]
+     * @readonly
      */
-    private $open_values = [];
+    private array $open_values = [];
 
-    public function __construct(XMLReference $reference)
-    {
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private XMLReference $reference,
+    ) {
         parent::__construct(\Tracker_Semantic_Status::NAME);
-        $this->reference = $reference;
     }
 
     /**
@@ -61,8 +61,8 @@ final class XMLStatusSemantic extends XMLSemantic
 
         $cdata = new \XML_SimpleXMLCDATAFactory();
         $cdata->insert($semantic, 'shortname', \Tracker_Semantic_Status::NAME);
-        $cdata->insert($semantic, 'label', dgettext('tuleap-tracker', 'Status'));
-        $cdata->insert($semantic, 'description', dgettext('tuleap-tracker', 'Define the status of an artifact'));
+        $cdata->insert($semantic, 'label', 'Status');
+        $cdata->insert($semantic, 'description', 'Define the status of an artifact');
         $semantic->addChild('field')->addAttribute('REF', $this->reference->getId($form_elements));
 
         $open_values = $semantic->addChild('open_values');

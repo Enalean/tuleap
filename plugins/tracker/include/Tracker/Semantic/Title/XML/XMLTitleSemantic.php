@@ -30,16 +30,13 @@ use Tuleap\Tracker\Semantic\XML\XMLSemantic;
 
 final class XMLTitleSemantic extends XMLSemantic
 {
-    /**
-     * @var XMLReference
-     * @readonly
-     */
-    private $reference;
-
-    public function __construct(XMLReference $reference)
-    {
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private XMLReference $reference,
+    ) {
         parent::__construct(Tracker_Semantic_Title::NAME);
-        $this->reference = $reference;
     }
 
     public function export(\SimpleXMLElement $parent_node, XMLFormElementFlattenedCollection $form_elements): \SimpleXMLElement
@@ -48,8 +45,8 @@ final class XMLTitleSemantic extends XMLSemantic
 
         $cdata = new \XML_SimpleXMLCDATAFactory();
         $cdata->insert($child, 'shortname', Tracker_Semantic_Title::NAME);
-        $cdata->insert($child, 'label', dgettext('tuleap-tracker', 'Title'));
-        $cdata->insert($child, 'description', dgettext('tuleap-tracker', 'Define the title of an artifact'));
+        $cdata->insert($child, 'label', 'Title');
+        $cdata->insert($child, 'description', 'Define the title of an artifact');
         $child->addChild('field')->addAttribute('REF', $this->reference->getId($form_elements));
 
         return $child;

@@ -40,9 +40,18 @@ final class XMLReportCriterion
      */
     private $reference;
     /**
+     * @readonly
+     */
+    private bool $is_advanced = false;
+    /**
      * @var XMLBindValueReference[]
      */
     private $selected_values = [];
+
+    /**
+     * @readonly
+     */
+    private bool $is_none_selected = false;
 
     public function __construct(XMLReference $reference)
     {
@@ -62,6 +71,26 @@ final class XMLReportCriterion
     /**
      * @psalm-mutation-free
      */
+    public function withIsAdvanced(): self
+    {
+        $new              = clone $this;
+        $new->is_advanced = true;
+        return $new;
+    }
+
+    /**
+     * @psalm-mutation-free
+     */
+    public function withNoneSelected(): self
+    {
+        $new                   = clone $this;
+        $new->is_none_selected = true;
+        return $new;
+    }
+
+    /**
+     * @psalm-mutation-free
+     */
     public function withSelectedValues(XMLBindValueReference ...$selected_values): self
     {
         $new                  = clone $this;
@@ -73,16 +102,19 @@ final class XMLReportCriterion
     {
         $criterion = $criterias->addChild('criteria');
         $criterion->addAttribute('rank', (string) $this->rank);
-        if (count($this->selected_values) > 1) {
+        if ($this->is_advanced || count($this->selected_values) > 1) {
             $criterion->addAttribute('is_advanced', '1');
         }
 
         $field = $criterion->addChild('field');
         $field->addAttribute('REF', $this->reference->getId($form_elements));
 
-        if (count($this->selected_values) > 0) {
+        if (count($this->selected_values) > 0 || $this->is_none_selected) {
             $criteria_value = $criterion->addChild('criteria_value');
             $criteria_value->addAttribute('type', 'list');
+            if ($this->is_none_selected) {
+                $criteria_value->addChild('none_value');
+            }
             foreach ($this->selected_values as $selected_value) {
                 $criteria_value->addChild('selected_value')->addAttribute('REF', $selected_value->getId($form_elements));
             }

@@ -24,7 +24,7 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\FormElement\Field\ListFields\XML;
 
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStatic\XML\XMLBindStaticValue;
-use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStatic\XML\XMLBindUsersValue;
+use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindUsers\XML\XMLBindUsersValue;
 use Tuleap\Tracker\XML\IDGenerator;
 use function PHPUnit\Framework\assertCount;
 use function PHPUnit\Framework\assertEquals;
@@ -147,5 +147,53 @@ class XMLSelectBoxFieldTest extends \Tuleap\Test\PHPUnit\TestCase
         assertCount(1, $xml->bind->items->item);
 
         assertEquals('V58', $xml->bind->items->item[0]['ID']);
+    }
+
+    public function testWithDecorators(): void
+    {
+        $xml = (new XMLSelectBoxField('some_id', 'status'))
+            ->withStaticValues(
+                (new XMLBindStaticValue('V1', 'Todo'))
+                    ->withDecorator('acid-green'),
+                (new XMLBindStaticValue('V2', 'In progress'))
+                    ->withDecorator('fiesta-red'),
+            )
+            ->export(new \SimpleXMLElement('<formElements />'));
+
+        assertCount(2, $xml->bind->decorators->decorator);
+        assertEquals('V1', $xml->bind->decorators->decorator[0]['REF']);
+        assertEquals('acid-green', $xml->bind->decorators->decorator[0]['tlp_color_name']);
+        assertEquals('V2', $xml->bind->decorators->decorator[1]['REF']);
+        assertEquals('fiesta-red', $xml->bind->decorators->decorator[1]['tlp_color_name']);
+    }
+
+    public function testWithDefaultValue(): void
+    {
+        $xml = (new XMLSelectBoxField('some_id', 'status'))
+            ->withStaticValues(
+                (new XMLBindStaticValue('V1', 'Todo'))
+                    ->withDecorator('acid-green'),
+                (new XMLBindStaticValue('V2', 'In progress'))
+                    ->withDecorator('fiesta-red')
+                    ->withIsDefault()
+            )
+            ->export(new \SimpleXMLElement('<formElements />'));
+
+        assertCount(1, $xml->bind->default_values->value);
+        assertEquals('V2', $xml->bind->default_values->value[0]['REF']);
+    }
+
+    public function testWithUsers(): void
+    {
+        $xml = (new XMLSelectBoxField('some_id', 'status'))
+            ->withUsersValues(
+                new XMLBindUsersValue('group_members'),
+                new XMLBindUsersValue('group_admins')
+            )
+            ->export(new \SimpleXMLElement('<formElements />'));
+
+        assertCount(2, $xml->bind->items->item);
+        assertEquals('group_members', $xml->bind->items->item[0]['label']);
+        assertEquals('group_admins', $xml->bind->items->item[1]['label']);
     }
 }
