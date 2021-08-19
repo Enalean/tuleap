@@ -528,32 +528,32 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field
         return $output;
     }
 
-    protected $file_values_by_changeset;
-
     /**
-     * @return array
+     * @param int | string $changeset_id
+     * @return Tracker_FileInfo[]
      */
-    protected function getChangesetValues($changeset_id)
+    protected function getChangesetValues($changeset_id): array
     {
-        $da = CodendiDataAccess::instance();
-        if (! $this->file_values_by_changeset) {
-            $this->file_values_by_changeset = [];
-            $field_id                       = $da->escapeInt($this->id);
-            $sql                            = "SELECT c.changeset_id, c.has_changed, f.id
+        $da              = CodendiDataAccess::instance();
+        $changest_values = [];
+
+        $field_id     = $da->escapeInt($this->id);
+        $changeset_id = $da->escapeInt($changeset_id);
+        $sql          = "SELECT c.changeset_id, c.has_changed, f.id
                     FROM tracker_fileinfo as f
                          INNER JOIN tracker_changeset_value_file AS vf on (f.id = vf.fileinfo_id)
                          INNER JOIN tracker_changeset_value AS c
                          ON ( vf.changeset_value_id = c.id
-                          AND c.field_id = $field_id
+                          AND c.field_id = $field_id AND c.changeset_id= $changeset_id
                          )
                     ORDER BY f.id";
-            $dao                            = new DataAccessObject();
-            $file_info_factory              = $this->getTrackerFileInfoFactory();
-            foreach ($dao->retrieve($sql) as $row) {
-                $this->file_values_by_changeset[$row['changeset_id']][] = $file_info_factory->getById($row['id']);
-            }
+
+        $dao               = new DataAccessObject();
+        $file_info_factory = $this->getTrackerFileInfoFactory();
+        foreach ($dao->retrieve($sql) as $row) {
+            $changest_values[] = $file_info_factory->getById($row['id']);
         }
-        return isset($this->file_values_by_changeset[$changeset_id]) ? $this->file_values_by_changeset[$changeset_id] : [];
+        return $changest_values;
     }
 
     public function previewAttachment($attachment_id)
