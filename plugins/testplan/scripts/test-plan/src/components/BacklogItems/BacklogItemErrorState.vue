@@ -19,14 +19,14 @@
   -->
 
 <template>
-    <div class="empty-state-pane">
+    <section class="empty-state-page">
         <div class="empty-state-illustration">
             <backlog-item-error-state-svg />
         </div>
-        <div class="empty-state-text">
-            <translate>An error occurred while loading the backlog items.</translate>
-        </div>
-    </div>
+        <p class="empty-state-text">
+            <translate>An error occurred while loading the backlog items</translate>
+        </p>
+    </section>
 </template>
 
 <script lang="ts">

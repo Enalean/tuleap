@@ -19,16 +19,16 @@
   -->
 
 <template>
-    <div class="empty-state-pane">
+    <section class="empty-state-pane">
         <div class="empty-state-illustration">
             <campaign-empty-state-svg />
         </div>
-        <div class="empty-state-text">
-            <translate>There is no test campaign yet.</translate>
-        </div>
+        <p class="empty-state-text">
+            <translate>There is no test campaign yet</translate>
+        </p>
         <button
             type="button"
-            class="tlp-button-primary tlp-button-outline tlp-button-large"
+            class="tlp-button-primary tlp-button-outline empty-state-action"
             v-if="user_can_create_campaign"
             data-test="new-campaign"
             v-on:click="showCreateModal"
@@ -36,7 +36,7 @@
             <i class="fa fa-plus tlp-button-icon"></i>
             <translate>Create new campaign</translate>
         </button>
-    </div>
+    </section>
 </template>
 
 <script lang="ts">

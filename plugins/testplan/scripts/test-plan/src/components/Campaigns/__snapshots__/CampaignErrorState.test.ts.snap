@@ -1,7 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`CampaignErrorState Displays empty state 1`] = `
-<div
+<section
   class="empty-state-pane"
 >
   <div
@@ -19,5 +19,5 @@ exports[`CampaignErrorState Displays empty state 1`] = `
       An error occurred while loading the campaigns.
     </translate-stub>
   </div>
-</div>
+</section>
 `;

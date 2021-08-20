@@ -19,14 +19,14 @@
   -->
 
 <template>
-    <div class="empty-state-pane">
+    <section class="empty-state-pane">
         <div class="empty-state-illustration">
             <campaign-error-state-svg />
         </div>
         <div class="empty-state-text">
             <translate>An error occurred while loading the campaigns.</translate>
         </div>
-    </div>
+    </section>
 </template>
 
 <script lang="ts">

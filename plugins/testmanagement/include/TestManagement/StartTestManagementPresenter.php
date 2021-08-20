@@ -74,7 +74,7 @@ class StartTestManagementPresenter
 
         $this->config_is_not_fully_set_up = dgettext(
             'tuleap-testmanagement',
-            'TestManagement config is not fully set up,'
+            'Test Management is not fully set up'
         );
 
         $this->start_testmanagement = dgettext(
@@ -84,12 +84,12 @@ class StartTestManagementPresenter
 
         $this->help_message_config_not_fully_set_up = dgettext(
             'tuleap-testmanagement',
-            'go in the admin section to set manually the trackers or let us do it for you.'
+            'Go in the Test Management administration to set manually the trackers or let us do it for you.'
         );
 
         $this->come_back_later = dgettext(
             'tuleap-testmanagement',
-            'come back later.'
+            'Please come back later.'
         );
     }
 }
