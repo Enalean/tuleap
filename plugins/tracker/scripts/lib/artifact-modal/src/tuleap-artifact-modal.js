@@ -60,8 +60,9 @@ import RadioButtonFieldComponent from "./fields/radio-button-field/radio-button-
 
 import { IntField } from "./fields/int-field/IntField";
 import { StringField } from "./fields/string-field/StringField";
+import { FloatField } from "./fields/float-field/FloatField";
 
-define(IntField, StringField);
+define(IntField, StringField, FloatField);
 
 export default angular
     .module("tuleap.artifact-modal", [
