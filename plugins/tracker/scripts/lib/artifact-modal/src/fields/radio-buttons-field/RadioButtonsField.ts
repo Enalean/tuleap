@@ -31,6 +31,7 @@ export interface RadioButtonsField {
     disabled: boolean;
     values: Array<ListValue>;
     value: string;
+    content: () => HTMLElement;
 }
 
 interface ListValue {

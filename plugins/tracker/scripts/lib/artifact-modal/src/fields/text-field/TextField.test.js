@@ -20,7 +20,6 @@
 import localVue from "../../helpers/local-vue.js";
 import { shallowMount } from "@vue/test-utils";
 import TextField from "./TextField.vue";
-import FormatSelector from "../../common/FormatSelector.vue";
 import RichTextEditor from "../../common/RichTextEditor.vue";
 import * as disabled_field_detector from "../disabled-field-detector.js";
 import { setCatalog } from "../../gettext-catalog";
@@ -37,6 +36,9 @@ function getInstance(props = {}, data = {}) {
             return {
                 ...data,
             };
+        },
+        stubs: {
+            "tuleap-artifact-modal-format-selector": true,
         },
     });
 }
@@ -97,10 +99,10 @@ describe(`TextField`, () => {
         const field = { field_id: 197, required: true };
         const wrapper = getInstance({ field, value });
 
-        const label = wrapper.findComponent(FormatSelector);
+        const label = wrapper.find("[data-test=format-selector]");
         const editor = wrapper.findComponent(RichTextEditor);
 
-        expect(label.props("id")).toEqual("tracker_field_197");
+        expect(label.element.identifier).toEqual("tracker_field_197");
         expect(editor.props("id")).toEqual("tracker_field_197");
     });
     describe("Component display", () => {

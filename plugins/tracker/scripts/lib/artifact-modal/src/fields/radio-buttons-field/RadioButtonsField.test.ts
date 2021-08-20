@@ -17,17 +17,19 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { RadioButtonsField } from "./RadioButtonsField";
-import { onInput } from "./RadioButtonsField";
+import { onInput, RadioButtonsField } from "./RadioButtonsField";
+import { setCatalog } from "../../gettext-catalog";
 
 const getDocument = (): Document => document.implementation.createHTMLDocument();
 
 describe(`RadioButtonsField`, () => {
     let dispatchEvent: jest.SpyInstance,
-        host: Element & RadioButtonsField,
+        host: RadioButtonsField & HTMLElement,
         inner_input: HTMLInputElement;
 
     beforeEach(() => {
+        setCatalog({ getString: (msgid) => msgid });
+
         dispatchEvent = jest.fn();
         host = {
             fieldId: 1,
@@ -38,7 +40,7 @@ describe(`RadioButtonsField`, () => {
             value: 100,
             values: [],
             dispatchEvent,
-        } as unknown as Element & RadioButtonsField;
+        } as unknown as RadioButtonsField & HTMLElement;
         inner_input = getDocument().createElement("input");
         inner_input.addEventListener("input", (event) => onInput(host, event));
     });
@@ -51,5 +53,16 @@ describe(`RadioButtonsField`, () => {
         expect(event.type).toEqual("value-changed");
         expect(event.detail.field_id).toEqual(1);
         expect(event.detail.value).toEqual("ichi");
+    });
+
+    it(`adds a "none" value when the field is not required`, () => {
+        const doc = document.implementation.createHTMLDocument();
+        const target = doc.createElement("div") as unknown as ShadowRoot;
+        host.required = false;
+        const update = RadioButtonsField.content(host);
+        update(host, target);
+
+        const none_input = target.querySelector(`[data-test=radiobutton-field-input][value="100"]`);
+        expect(none_input).not.toBeNull();
     });
 });

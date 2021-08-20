@@ -34,6 +34,9 @@ function getInstance(props = {}, data = {}) {
                 ...data,
             };
         },
+        stubs: {
+            "tuleap-artifact-modal-format-selector": true,
+        },
     });
 }
 
