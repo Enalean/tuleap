@@ -18,12 +18,12 @@
   -->
 
 <template>
-    <div class="program-increment-empty-state">
+    <section class="empty-state-page">
         <empty-svg />
         <p v-translate class="empty-state-text">There are no program increments yet</p>
         <form v-bind:action="create_new_program_increment" method="post">
             <button
-                class="tlp-button-primary program-increment-title-button-icon"
+                class="empty-state-action tlp-button-primary"
                 data-test="create-program-increment-button"
                 v-if="can_create_program_increment"
             >
@@ -37,7 +37,7 @@
                 </span>
             </button>
         </form>
-    </div>
+    </section>
 </template>
 
 <script lang="ts">

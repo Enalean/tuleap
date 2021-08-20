@@ -10,14 +10,14 @@
     </div>
 
     <div
-        class="empty-state-text"
+        class="empty-state-page"
         ng-if="! dashboard_controller.isThereAtLeastOneOpenpullRequest()
             && dashboard_controller.areOpenPullRequestsFullyLoaded()
             && (
                 ! dashboard_controller.isThereAtLeastOneClosedPullRequest()
                 || dashboard_controller.areClosedPullRequestsHidden()
             )">
-        <span translate>There are no open pull requests</span>
+        <h1 class="empty-state-title" translate>There are no open pull requests</h1>
     </div>
 
     <div class="pull-request-loading" ng-if="dashboard_controller.loading_pull_requests"></div>
@@ -32,8 +32,8 @@
     </div>
 
     <div
-        class="empty-state-text"
+        class="empty-state-page"
         ng-if="! dashboard_controller.isThereAtLeastOneClosedPullRequest() && dashboard_controller.areClosedPullRequestsFullyLoaded()">
-        <span translate>There are no closed pull requests</span>
+        <h1 class="empty-state-title" translate>There are no closed pull requests</h1>
     </div>
 </div>

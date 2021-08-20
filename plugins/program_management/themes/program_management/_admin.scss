@@ -32,21 +32,8 @@
     font-weight: 600;
 }
 
-.program-management-empty-state {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin: var(--tlp-large-spacing) 0 var(--tlp-large-spacing) 0;
-
-    path {
-        stroke: var(--tlp-illustration-main-color);
-    }
-}
-
-.program-management-admin-empty-state-label {
-    margin: var(--tlp-medium-spacing) 0 var(--tlp-x-large-spacing);
-    color: var(--tlp-dimmed-color);
-    font-size: 0.875rem;
+.program-management-empty-state path {
+    stroke: var(--tlp-illustration-main-color);
 }
 
 .program-management-form-choose-teams {

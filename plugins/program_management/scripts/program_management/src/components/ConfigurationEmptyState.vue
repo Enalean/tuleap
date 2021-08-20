@@ -25,6 +25,7 @@
         viewBox="0 0 319 319"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
+        class="empty-state-illustration"
     >
         <path
             d="M319 159.5C319 247.589 247.589 319 159.5 319C71.4106 319 0 247.589 0 159.5C0 71.4106 71.4106 0 159.5 0C247.589 0 319 71.4106 319 159.5Z"
