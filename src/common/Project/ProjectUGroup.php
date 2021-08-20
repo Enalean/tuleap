@@ -386,7 +386,7 @@ class ProjectUGroup implements User_UGroup // phpcs:ignore PSR1.Classes.ClassDec
         $count = 0;
 
         if ($this->is_dynamic) {
-            $dar   = $this->getUGroupUserDao()->searchUserByDynamicUGroupId($this->id, $group_id);
+            $dar   = $this->getUGroupUserDao()->searchUserByDynamicUGroupIdIncludingSuspended($this->id, $group_id);
             $count = $dar->count();
         } else {
             $dar   = $this->getUGroupUserDao()->countUserByStaticUGroupId($this->id)->getRow();
