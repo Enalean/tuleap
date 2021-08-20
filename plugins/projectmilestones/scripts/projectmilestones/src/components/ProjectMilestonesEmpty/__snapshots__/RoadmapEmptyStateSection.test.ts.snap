@@ -12,7 +12,7 @@ exports[`RoadmapEmptyStateSection Given user display widget, Then a good link to
   </translate-stub>
    
   <div
-    class="empty-state-container"
+    class="empty-state-pane"
     data-test="project-milestone-empty-state"
   >
     <s-v-g-project-milestones-empty-state-stub />
@@ -28,12 +28,12 @@ exports[`RoadmapEmptyStateSection Given user display widget, Then a good link to
     </translate-stub>
      
     <a
-      class="button-backlog-link"
+      class="button-backlog-link empty-state-action"
       data-test="backlog-link"
       href="/plugins/agiledashboard/?action=show-top&group_id=102&pane=topplanning-v2"
     >
       <button
-        class="tlp-button-primary empty-state-button"
+        class="tlp-button-primary"
         type="button"
       >
         <translate-stub
@@ -43,7 +43,7 @@ exports[`RoadmapEmptyStateSection Given user display widget, Then a good link to
         </translate-stub>
          
         <i
-          class="fas fa-long-arrow-alt-right empty-state-button-arrow-link"
+          class="tlp-button-icon-right fas fa-long-arrow-alt-right"
           data-test="display-arrow"
         />
       </button>

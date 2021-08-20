@@ -239,12 +239,7 @@ class Presenter
 
     public function empty_providers_text_start()
     {
-        return dgettext('tuleap-openidconnectclient', 'There is nothing here,');
-    }
-
-    public function empty_providers_text_end()
-    {
-        return dgettext('tuleap-openidconnectclient', 'start by adding a provider.');
+        return dgettext('tuleap-openidconnectclient', 'No provider');
     }
 
     public function btn_preview()
