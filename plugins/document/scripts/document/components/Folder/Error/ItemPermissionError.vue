@@ -18,7 +18,10 @@
   -->
 
 <template>
-    <section class="empty-state-page document-folder-with-error">
+    <section
+        class="empty-state-page document-folder-with-error"
+        data-test="document-user-can-not-read-document"
+    >
         <div class="empty-state-illustration">
             <item-permission-error-svg />
         </div>

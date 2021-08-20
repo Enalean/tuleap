@@ -279,7 +279,7 @@ class WikiServiceViews extends WikiViews
             print '<li><a href="' . $this->wikiLink . '&pagename=' . $preferences_page . '">' . $preferences_menu . '</a>&nbsp;|&nbsp;</li>';
         }
         if (user_ismember($this->gid, 'W2') || user_ismember($this->gid, 'A')) {
-            print '<li><a href="' . $this->wikiAdminLink . '">' . $GLOBALS['Language']->getText('wiki_views_wikiserviceviews', 'menuadmin') . '</a>&nbsp;|&nbsp;</li>';
+            print '<li><a href="' . $this->wikiAdminLink . '" data-test="wiki-admin">' . $GLOBALS['Language']->getText('wiki_views_wikiserviceviews', 'menuadmin') . '</a>&nbsp;|&nbsp;</li>';
         }
 
         print '</ul>';
@@ -313,7 +313,7 @@ class WikiServiceViews extends WikiViews
               print '
           (<a href="' . $this->base_url . '&pv=1" title="' . $GLOBALS['Language']->getText('wiki_views_wikiserviceviews', 'lighter_display') . '">
           <img src="' . util_get_image_theme("msg.png") . '" border="0">&nbsp;' .
-              $GLOBALS['Language']->getText('global', 'printer_version') . '</A> ) 
+              $GLOBALS['Language']->getText('global', 'printer_version') . '</A> )
           </li>';
         }
 
@@ -404,7 +404,7 @@ class WikiServiceViews extends WikiViews
              <input type="hidden" name="group_id" value="' . $this->gid . '" />
              <input type="hidden" name="view" value="doinstall" />' . $GLOBALS['Language']->getText('wiki_views_wikiserviceviews', 'wiki_language') . ' ';
              echo html_get_language_popup($GLOBALS['Language'], 'language_id', UserManager::instance()->getCurrentUser()->getLocale());
-        echo '<input type="submit" value="' . $GLOBALS['Language']->getText('global', 'btn_create') . '">
+        echo '<input type="submit" value="' . $GLOBALS['Language']->getText('global', 'btn_create') . '" data-test="create-wiki">
 </form>';
     }
 

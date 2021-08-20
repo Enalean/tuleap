@@ -271,7 +271,7 @@ class Docman_WikiController extends Docman_Controller
                 $dpm     = Docman_PermissionsManager::instance($group_id);
                 // Wiki page could have many references in docman.
                 if (is_array($docman_item_id)) {
-                    $icon        = HTML::img(['id' => 'img_documents', 'src' => util_get_image_theme("ic/toggle_minus.png"), 'title' => dgettext('tuleap-docman', 'Open to see related documents')]);
+                    $icon        = HTML::img(['id' => 'img_documents', 'src' => util_get_image_theme("ic/toggle_minus.png"), 'title' => dgettext('tuleap-docman', 'Open to see related documents'), 'data-test' => 'wiki-document-location-toggle']);
                     $linked_icon = HTML::a(['href' => "#", 'onclick' => "javascript:toggle_documents('documents'); return false;"], $icon);
 
                     // creating the title of the section regarding number of referencing documents and from where we arrived to this wiki page.
@@ -309,7 +309,7 @@ class Docman_WikiController extends Docman_Controller
                     foreach ($docman_item_id as $index => $value) {
                         $details->pushContent($this->getDocumentPath($value, $group_id, isset($referrer_id) && $referrer_id ? $referrer_id : null));
                     }
-                    $content->pushContent(HTML::div(['id' => 'documents'], $details));
+                    $content->pushContent(HTML::div(['id' => 'documents', 'data-test' => 'wiki-document-location'], $details));
 
                     if (count($docman_item_id) == 1) {
                         $id = array_pop($docman_item_id);

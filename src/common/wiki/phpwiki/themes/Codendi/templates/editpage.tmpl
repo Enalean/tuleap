@@ -21,7 +21,7 @@
         <?=_("Saving this page will overwrite the current version.")?></strong></p>
 <?php } ?>
 <?php /*
- * FIXME: Hack! 
+ * FIXME: Hack!
  * The funky URL used for the form action parameter is bogus.
  * This is needed, otherwise the redirect to the real browser
  * page won't work with some browsers. (NS4 and Mozilla 0.97 won't accept
@@ -43,21 +43,21 @@
 </div>
 <table summary="Toolbar: Page editing options." class="toolbar" width="100%"
        cellpadding="0" cellspacing="0" border="0">
-<tr valign="middle">
-  <td> 
+<tr valign="middle" data-test="edit-page-action-buttons">
+  <td>
     <?=$MINOR_EDIT_CB ?> <label for="edit[minor_edit]"><?=_("This is a minor change.")?></label><br />
     <?=$OLD_MARKUP_CB?>  <label for="useOldMarkup"><?=_("Use old markup")?></label> <?=$OLD_MARKUP_CONVERT?>
   </td>
   <td align="center">
     <?= $PREVIEW_B ?>
-    <?php if ($SAVE_B)  { ?> 
+    <?php if ($SAVE_B)  { ?>
       <?=$SEP?><?= $SAVE_B ?>
     <?php } ?>
   </td>
 </tr>
 <tr>
   <td>
-    <?php if ($user->isAdmin()) { ?> 
+    <?php if ($user->isAdmin()) { ?>
     <?= $LOCKED_CB ?> <label for="edit[lock]"><?=_("Locked")?></label>
     <?php } ?>
   </td>
@@ -68,8 +68,8 @@
   </td>
 </tr>
 <?php if (0) {
-// Not yet supported within the same request. 
-// Better use a button to the external UpLoad page. 
+// Not yet supported within the same request.
+// Better use a button to the external UpLoad page.
 // Or fix action=edit to handle the uploaded filename within the same request.
 ?>
 <tr>

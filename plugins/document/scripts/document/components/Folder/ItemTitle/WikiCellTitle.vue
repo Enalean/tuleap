@@ -23,7 +23,12 @@
     <div>
         <fake-caret v-bind:item="item" />
         <i class="fa fa-fw document-folder-content-icon" v-bind:class="icon"></i>
-        <a v-bind:href="wiki_url" class="document-folder-subitem-link" draggable="false">
+        <a
+            v-bind:href="wiki_url"
+            class="document-folder-subitem-link"
+            draggable="false"
+            data-test="wiki-document-link"
+        >
             {{ item.title }}
         </a>
     </div>
