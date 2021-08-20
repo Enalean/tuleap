@@ -27,14 +27,8 @@ use Tracker_FormElementFactory;
 
 class BackgroundColorPresenterBuilder
 {
-    /**
-     * @var Tracker_FormElementFactory
-     */
-    private $form_element_factory;
-    /**
-     * @var BackgroundColorDao
-     */
-    private $dao;
+    private Tracker_FormElementFactory $form_element_factory;
+    private BackgroundColorDao $dao;
 
     public function __construct(Tracker_FormElementFactory $form_element_factory, BackgroundColorDao $dao)
     {
@@ -42,13 +36,23 @@ class BackgroundColorPresenterBuilder
         $this->dao                  = $dao;
     }
 
-    public function build(array $form_elements_fields, Tracker $tracker)
+    public function build(array $form_elements_fields, Tracker $tracker): BackgroundColorSelectorPresenter
     {
-        $selected_field_id = $this->dao->searchBackgroundColor($tracker->getId());
+        $selected_field_id  = $this->dao->searchBackgroundColor($tracker->getId());
+        $has_selected_field = false;
+        $url                = "";
+        if ($selected_field_id !== false) {
+            $has_selected_field = true;
+            $selected_field     = $this->form_element_factory->getFieldById($selected_field_id);
+            if ($selected_field) {
+                $url = $selected_field->getAdminEditUrl();
+            }
+        }
 
         return new BackgroundColorSelectorPresenter(
             $this->getTrackerFields($form_elements_fields, $selected_field_id),
-            $selected_field_id
+            $has_selected_field,
+            $url
         );
     }
 
@@ -75,7 +79,7 @@ class BackgroundColorPresenterBuilder
         return $formatted_field;
     }
 
-    private function isFieldAListBoundToStaticValues(Tracker_FormElement_Field $field)
+    private function isFieldAListBoundToStaticValues(Tracker_FormElement_Field $field): bool
     {
         return ($this->form_element_factory->getType($field) === 'sb'
                 || $this->form_element_factory->getType($field) === 'rb')
@@ -83,11 +87,7 @@ class BackgroundColorPresenterBuilder
             && $this->doesNotHaveAValueBoundToOldColorPicker($field);
     }
 
-    /**
-     *
-     * @return bool
-     */
-    private function doesNotHaveAValueBoundToOldColorPicker(Tracker_FormElement_Field $field)
+    private function doesNotHaveAValueBoundToOldColorPicker(Tracker_FormElement_Field $field): bool
     {
         /**
          * @var \Tracker_FormElement_Field_List_BindDecorator[] $decorators

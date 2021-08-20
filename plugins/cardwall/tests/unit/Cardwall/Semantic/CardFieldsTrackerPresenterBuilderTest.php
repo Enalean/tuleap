@@ -29,8 +29,9 @@ use Tracker_FormElement_Field_List_BindDecorator;
 use Tracker_FormElement_Field_Selectbox;
 use Tracker_FormElement_Field_String;
 use Tracker_FormElementFactory;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
-class CardFieldsTrackerPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
+final class CardFieldsTrackerPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 
@@ -43,10 +44,8 @@ class CardFieldsTrackerPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCas
      * @var Tracker_FormElementFactory
      */
     private $form_element_factory;
-    /**
-     * @var  BackgroundColorPresenterBuilder
-     */
-    private $builder;
+
+    private BackgroundColorPresenterBuilder $builder;
 
     public function setUp(): void
     {
@@ -75,13 +74,15 @@ class CardFieldsTrackerPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCas
             $this->buildSelectBoxField(100, 'selectbox', $selectbox_bind),
         ];
 
-        $background_color_presenter = $this->builder->build($tracker_fields, Mockery::mock(\Tracker::class)->shouldReceive('getId')->andReturn(36)->getMock());
+        $tracker                    = TrackerTestBuilder::aTracker()->withId(36)->build();
+        $background_color_presenter = $this->builder->build($tracker_fields, $tracker);
 
         $export_formatted_field_values = new BackgroundColorSelectorPresenter(
             [
                 ['id' => 100, 'name' => 'selectbox', 'is_selected' => false]
             ],
-            false
+            false,
+            ""
         );
 
         $this->assertEquals($export_formatted_field_values, $background_color_presenter);
@@ -103,9 +104,10 @@ class CardFieldsTrackerPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCas
             new Tracker_FormElement_Field_String(103, 12, 0, 'name', 'imastring', 'desc', true, 'S', false, false, 0),
         ];
 
-        $background_color_presenter = $this->builder->build($tracker_fields, Mockery::mock(\Tracker::class)->shouldReceive('getId')->andReturn(36)->getMock());
+        $tracker                    = TrackerTestBuilder::aTracker()->withId(36)->build();
+        $background_color_presenter = $this->builder->build($tracker_fields, $tracker);
 
-        $export_formatted_field_values = new BackgroundColorSelectorPresenter([], false);
+        $export_formatted_field_values = new BackgroundColorSelectorPresenter([], false, "");
 
         $this->assertEquals($export_formatted_field_values, $background_color_presenter);
     }
@@ -122,11 +124,13 @@ class CardFieldsTrackerPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCas
             $this->buildSelectBoxField(100, 'selectbox', $selectbox_bind),
         ];
 
-        $background_color_presenter = $this->builder->build($tracker_fields, Mockery::mock(\Tracker::class)->shouldReceive('getId')->andReturn(36)->getMock());
+        $tracker                    = TrackerTestBuilder::aTracker()->withId(36)->build();
+        $background_color_presenter = $this->builder->build($tracker_fields, $tracker);
 
         $export_formatted_field_values = new BackgroundColorSelectorPresenter(
             [],
-            false
+            false,
+            ""
         );
 
         $this->assertEquals($export_formatted_field_values, $background_color_presenter);
@@ -147,13 +151,15 @@ class CardFieldsTrackerPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCas
             $this->buildSelectBoxField(101, 'selectbox', $user_bind),
         ];
 
-        $background_color_presenter = $this->builder->build($tracker_fields, Mockery::mock(\Tracker::class)->shouldReceive('getId')->andReturn(36)->getMock());
+        $tracker                    = TrackerTestBuilder::aTracker()->withId(36)->build();
+        $background_color_presenter = $this->builder->build($tracker_fields, $tracker);
 
         $export_formatted_field_values = new BackgroundColorSelectorPresenter(
             [
                 ['id' => 101, 'name' => 'selectbox', 'is_selected' => false]
             ],
-            false
+            false,
+            ""
         );
 
         $this->assertEquals($export_formatted_field_values, $background_color_presenter);
@@ -174,9 +180,10 @@ class CardFieldsTrackerPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCas
             $this->buildSelectBoxField(103, 'selectbox', $color_bind),
         ];
 
-        $background_color_presenter = $this->builder->build($tracker_fields, Mockery::mock(\Tracker::class)->shouldReceive('getId')->andReturn(36)->getMock());
+        $tracker                    = TrackerTestBuilder::aTracker()->withId(36)->build();
+        $background_color_presenter = $this->builder->build($tracker_fields, $tracker);
 
-        $export_formatted_field_values = new BackgroundColorSelectorPresenter([], false);
+        $export_formatted_field_values = new BackgroundColorSelectorPresenter([], false, "");
 
         $this->assertEquals($export_formatted_field_values, $background_color_presenter);
     }
