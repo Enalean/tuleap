@@ -1,8 +1,8 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`GlobalAppError warns user that something is wrong with a button to show details 1`] = `
-<div
-  class="empty-state-page taskboard-error"
+<section
+  class="empty-state-page"
 >
   <div
     class="empty-state-illustration"
@@ -10,48 +10,48 @@ exports[`GlobalAppError warns user that something is wrong with a button to show
     <!---->
   </div>
    
-  <div
-    class="empty-state-text-with-small-text"
+  <h1
+    class="empty-state-title"
   >
     <translate-stub
       tag="span"
     >
       Oops, there's an issue
     </translate-stub>
-     
-    <div
-      class="empty-state-text-small"
+  </h1>
+   
+  <p
+    class="empty-state-text"
+    data-current-language="en_US"
+    data-msgid="
+        It seems an action you tried to perform can't be done.
+    "
+  >
+    
+        It seems an action you tried to perform can't be done.
+    
+  </p>
+   
+  <p
+    class="empty-state-text taskboard-error-link"
+  >
+    <a
       data-current-language="en_US"
       data-msgid="
-            It seems an action you tried to perform can't be done
-        "
+                Show error details
+            "
+      data-test="show-details"
     >
       
-            It seems an action you tried to perform can't be done
-        
-    </div>
-     
-    <div
-      class="taskboard-error-link"
-    >
-      <a
-        data-current-language="en_US"
-        data-msgid="
-                    Show error details
-                "
-        data-test="show-details"
-      >
-        
-                    Show error details
-                
-      </a>
-    </div>
-     
-    <!---->
-  </div>
+                Show error details
+            
+    </a>
+  </p>
+   
+  <!---->
    
   <button
-    class="tlp-button-primary tlp-button-large"
+    class="tlp-button-primary empty-state-action"
     type="button"
   >
     <i
@@ -65,5 +65,5 @@ exports[`GlobalAppError warns user that something is wrong with a button to show
       Reload the page
     </translate-stub>
   </button>
-</div>
+</section>
 `;

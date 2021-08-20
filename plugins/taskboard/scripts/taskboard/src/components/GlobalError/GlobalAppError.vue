@@ -19,38 +19,37 @@
   -->
 
 <template>
-    <div class="empty-state-page taskboard-error">
+    <section class="empty-state-page">
         <div class="empty-state-illustration">
             <global-app-error-illustration />
         </div>
 
-        <div class="empty-state-text-with-small-text">
+        <h1 class="empty-state-title">
             <translate>Oops, there's an issue</translate>
-            <div class="empty-state-text-small" v-translate>
-                It seems an action you tried to perform can't be done
-            </div>
-            <template v-if="has_more_details">
-                <div class="taskboard-error-link">
-                    <a
-                        v-if="!is_more_shown"
-                        v-on:click="is_more_shown = true"
-                        data-test="show-details"
-                        v-translate
-                    >
-                        Show error details
-                    </a>
-                </div>
-                <pre v-if="is_more_shown" class="taskboard-error-details" data-test="details">{{
-                    global_error_message
-                }}</pre>
-            </template>
-        </div>
-
-        <button type="button" class="tlp-button-primary tlp-button-large" v-on:click="reloadPage">
+        </h1>
+        <p class="empty-state-text" v-translate>
+            It seems an action you tried to perform can't be done.
+        </p>
+        <template v-if="has_more_details">
+            <p class="empty-state-text taskboard-error-link">
+                <a
+                    v-if="!is_more_shown"
+                    v-on:click="is_more_shown = true"
+                    data-test="show-details"
+                    v-translate
+                >
+                    Show error details
+                </a>
+            </p>
+            <pre v-if="is_more_shown" class="taskboard-error-details" data-test="details">{{
+                global_error_message
+            }}</pre>
+        </template>
+        <button type="button" class="tlp-button-primary empty-state-action" v-on:click="reloadPage">
             <i class="fas fa-sync tlp-button-icon" aria-hidden="true"></i>
             <translate>Reload the page</translate>
         </button>
-    </div>
+    </section>
 </template>
 
 <script lang="ts">

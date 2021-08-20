@@ -18,19 +18,19 @@
   -
   -->
 <template>
-    <div class="empty-state-page">
+    <section class="empty-state-page">
         <div class="empty-state-illustration">
             <board-without-any-columns-error-for-users-illustration />
         </div>
-        <div class="empty-state-text-with-small-text">
+        <h1 class="empty-state-title">
             <translate>This taskboard is not ready to be used</translate>
-            <div class="empty-state-text-small">
-                <translate>
-                    Your project administrator needs to finish the planning configuration
-                </translate>
-            </div>
-        </div>
-    </div>
+        </h1>
+        <p class="empty-state-text">
+            <translate>
+                Your project administrator needs to finish the planning configuration.
+            </translate>
+        </p>
+    </section>
 </template>
 <script lang="ts">
 import Vue from "vue";

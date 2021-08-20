@@ -18,21 +18,21 @@
   -
   -->
 <template>
-    <div class="empty-state-page">
+    <section class="empty-state-page">
         <div class="empty-state-illustration">
             <board-without-any-columns-error-for-admin-illustration />
         </div>
-        <div class="empty-state-text-with-small-text">
+        <h1 class="empty-state-title">
             <translate>This taskboard is not properly configured</translate>
-            <div class="empty-state-text-small">
-                <translate>You have to configure the columns mapping</translate>
-            </div>
-        </div>
-        <a class="tlp-button-primary tlp-button-large" v-bind:href="admin_url">
+        </h1>
+        <p class="empty-state-text">
+            <translate>You have to configure the columns mapping.</translate>
+        </p>
+        <a class="tlp-button-primary empty-state-action" v-bind:href="admin_url">
             <i class="fas fa-long-arrow-alt-right tlp-button-icon" aria-hidden="true"></i>
             <translate>Define columns</translate>
         </a>
-    </div>
+    </section>
 </template>
 <script lang="ts">
 import Vue from "vue";

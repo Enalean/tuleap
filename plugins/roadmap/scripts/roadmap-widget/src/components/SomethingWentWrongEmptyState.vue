@@ -19,13 +19,13 @@
   -->
 
 <template>
-    <div class="roadmap-empty-state">
+    <section class="empty-state-pane">
         <svg
             width="138"
             height="106"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
-            class="roadmap-empty-state-illustration"
+            class="empty-state-illustration"
         >
             <circle
                 opacity=".3"
@@ -51,9 +51,9 @@
                 fill="var(--tlp-illustration-yellow, #FBE484)"
             />
         </svg>
-        <p class="roadmap-empty-state-text" v-translate>Oops, something went wrong.</p>
-        <p class="roadmap-empty-state-text" v-if="message">{{ message }}</p>
-    </div>
+        <p class="empty-state-text" v-translate>Oops, something went wrong.</p>
+        <p class="empty-state-text" v-if="message">{{ message }}</p>
+    </section>
 </template>
 
 <script lang="ts">

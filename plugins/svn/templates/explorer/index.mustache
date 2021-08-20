@@ -108,9 +108,9 @@
     </section>
 {{/ has_repositories }}
 {{^ has_repositories }}
-    <div class="empty-state-page">
-        <div class=" empty-state-text">
-            {{# dgettext }} tuleap-svn | There isn't any repository yet.{{/ dgettext }}
-        </div>
-    </div>
+    <section class="empty-state-page">
+        <h1 class="empty-state-title">
+            {{# dgettext }} tuleap-svn | No SVN repository{{/ dgettext }}
+        </h1>
+    </section>
 {{/ has_repositories }}
