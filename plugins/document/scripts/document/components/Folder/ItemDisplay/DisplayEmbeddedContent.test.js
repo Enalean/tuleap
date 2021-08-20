@@ -26,7 +26,11 @@ describe("DisplayEmbeddedContent", () => {
     let factory, store;
 
     beforeEach(() => {
-        const store_options = {};
+        const store_options = {
+            state: {
+                modals: { delete_item: null },
+            },
+        };
 
         store = createStoreMock(store_options);
 

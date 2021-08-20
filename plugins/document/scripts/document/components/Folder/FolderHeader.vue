@@ -54,9 +54,8 @@
             />
         </div>
         <confirm-deletion-modal
-            v-if="item_to_delete"
-            v-bind:item="item_to_delete"
-            v-on:delete-modal-closed="hideDeleteItemModal"
+            v-if="delete_item"
+            v-bind:item="delete_item"
             data-test="document-delete-item-modal"
         />
         <permissions-update-modal
@@ -147,6 +146,7 @@ export default {
     },
     computed: {
         ...mapState(["is_loading_ascendant_hierarchy", "current_folder"]),
+        ...mapState("modals", ["delete_item"]),
         ...mapGetters(["current_folder_title", "is_folder_empty"]),
         title_class() {
             return this.is_loading_ascendant_hierarchy
@@ -165,7 +165,6 @@ export default {
     },
     created() {
         EventBus.$on("show-create-new-item-version-modal", this.showCreateNewItemVersionModal);
-        EventBus.$on("show-confirm-item-deletion-modal", this.showDeleteItemModal);
         EventBus.$on("show-update-item-metadata-modal", this.showUpdateItemMetadataModal);
         EventBus.$on("show-update-permissions-modal", this.showUpdateItemPermissionsModal);
         EventBus.$on(
@@ -177,7 +176,6 @@ export default {
     },
     beforeDestroy() {
         EventBus.$off("show-create-new-item-version-modal", this.showCreateNewItemVersionModal);
-        EventBus.$off("show-confirm-item-deletion-modal", this.showDeleteItemModal);
         EventBus.$off("show-update-item-metadata-modal", this.showUpdateItemMetadataModal);
         EventBus.$off("show-update-permissions-modal", this.showUpdateItemPermissionsModal);
         EventBus.$off(
@@ -228,9 +226,6 @@ export default {
         showChangelogModal(event) {
             this.file_changelog_properties = event.detail;
         },
-        showDeleteItemModal(event) {
-            this.item_to_delete = event.detail.current_item;
-        },
         showUpdateItemMetadataModal(event) {
             this.updated_metadata = event.detail.current_item;
             if (!this.isItemAFolder(this.updated_metadata)) {
@@ -257,9 +252,6 @@ export default {
         },
         hideChangelogModal() {
             this.file_changelog_properties = null;
-        },
-        hideDeleteItemModal() {
-            this.item_to_delete = null;
         },
         hideDownloadFolderModals() {
             this.current_folder_size = null;

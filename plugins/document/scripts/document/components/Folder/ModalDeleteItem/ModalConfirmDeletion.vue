@@ -171,6 +171,7 @@ export default {
                 this.modal.hide();
             }
 
+            this.$store.commit("modals/removeDeleteItem");
             this.is_item_being_deleted = false;
         },
         async setWikiPageReferencers() {
@@ -186,7 +187,7 @@ export default {
         },
         resetModal() {
             this.$store.commit("error/resetModalError");
-            this.$emit("delete-modal-closed");
+            this.$store.commit("modals/removeDeleteItem");
         },
         async redirectToParentFolderIfNeeded(deleted_item_parent_id) {
             const is_item_the_current_folder = this.item.id === this.current_folder.id;

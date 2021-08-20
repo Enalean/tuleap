@@ -30,24 +30,23 @@
     </button>
 </template>
 
-<script>
-import EventBus from "../../../helpers/event-bus.js";
-import { mapState } from "vuex";
+<script lang="ts">
+import { namespace } from "vuex-class";
+import { Component, Prop, Vue } from "vue-property-decorator";
+import type { Item } from "../../../type";
 
-export default {
-    name: "QuickLookDeleteButton",
-    props: {
-        item: Object,
-    },
-    computed: {
-        ...mapState("configuration", ["is_deletion_allowed"]),
-    },
-    methods: {
-        processDeletion() {
-            EventBus.$emit("show-confirm-item-deletion-modal", {
-                detail: { current_item: this.item },
-            });
-        },
-    },
-};
+const configuration = namespace("configuration");
+
+@Component
+export default class QuickLookDeleteButton extends Vue {
+    @Prop({ required: true })
+    readonly item!: Item;
+
+    @configuration.State
+    readonly is_deletion_allowed!: boolean;
+
+    processDeletion(): void {
+        this.$store.commit("modals/deleteItem", this.item);
+    }
+}
 </script>

@@ -35,6 +35,7 @@ import metadata from "./metadata/module.js";
 import lock from "./lock/module.js";
 import preferencies from "./preferencies/module";
 import permissions from "./permissions/module";
+import modals from "./modals/index";
 import { createConfigurationModule } from "./configuration";
 
 Vue.use(Vuex);
@@ -55,6 +56,7 @@ export function createStore(user_id, project_id, configuration_state) {
             preferencies,
             permissions,
             configuration,
+            modals,
         },
         plugins: [
             createPersistedState({

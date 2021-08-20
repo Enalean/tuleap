@@ -53,9 +53,8 @@
             v-on:hidden="hideModal()"
         />
         <confirm-deletion-modal
-            v-if="show_confirm_deletion_modal"
-            v-bind:item="currently_previewed_item"
-            v-on:delete-modal-closed="hideDeleteItemModal"
+            v-if="delete_item"
+            v-bind:item="delete_item"
             v-bind:should-redirect-to-parent-after-deletion="true"
         />
 
@@ -108,7 +107,6 @@ export default {
     data() {
         return {
             is_modal_shown: false,
-            show_confirm_deletion_modal: false,
             show_update_metadata_modal: false,
             show_update_permissions_modal: false,
             is_in_large_view: false,
@@ -117,6 +115,7 @@ export default {
     computed: {
         ...mapState(["currently_previewed_item"]),
         ...mapState("preferencies", ["is_embedded_in_large_view"]),
+        ...mapState("modals", ["delete_item"]),
         embedded_content() {
             if (!this.currently_previewed_item.embedded_file_properties) {
                 return "";
@@ -127,13 +126,11 @@ export default {
     },
     created() {
         EventBus.$on("show-create-new-item-version-modal", this.showCreateNewItemVersionModal);
-        EventBus.$on("show-confirm-item-deletion-modal", this.showDeleteItemModal);
         EventBus.$on("show-update-item-metadata-modal", this.showUpdateMetadataModal);
         EventBus.$on("show-update-permissions-modal", this.showUpdateItemPermissionsModal);
     },
     beforeDestroy() {
         EventBus.$off("show-create-new-item-version-modal", this.showCreateNewItemVersionModal);
-        EventBus.$off("show-confirm-item-deletion-modal", this.showDeleteItemModal);
         EventBus.$off("show-update-item-metadata-modal", this.showUpdateMetadataModal);
         EventBus.$off("show-update-permissions-modal", this.showUpdateItemPermissionsModal);
     },
@@ -143,12 +140,6 @@ export default {
         },
         hideModal() {
             this.is_modal_shown = false;
-        },
-        showDeleteItemModal() {
-            this.show_confirm_deletion_modal = true;
-        },
-        hideDeleteItemModal() {
-            this.show_confirm_deletion_modal = false;
         },
         showUpdateMetadataModal() {
             this.show_update_metadata_modal = true;
