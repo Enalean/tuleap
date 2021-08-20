@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: GitPHP 0.2.0\n"
 "Report-Msgid-Bugs-To: xiphux@gmail.com\n"
 "POT-Creation-Date: 2010-10-02 23:01-0500\n"
-"PO-Revision-Date: 2020-09-24 17:50+0200\n"
+"PO-Revision-Date: 2021-08-16 15:11+0200\n"
 "Last-Translator: Nicolas Terray <nicolas.terray@enalean.com>\n"
 "Language-Team: French <zaran.krleza@gmail.com>\n"
 "Language: fr_FR\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 2.0.6\n"
+"X-Generator: Poedit 3.0\n"
 
 # Used to represent an age in days
 # %1$d: the number of days
@@ -295,11 +295,11 @@ msgstr "Termes"
 msgid "The requested resource cannot be found."
 msgstr "La ressource demandée n'existe pas."
 
-msgid "This file is a binary file."
-msgstr "Ce fichier est un fichier binaire."
+msgid "This file is a binary file"
+msgstr "Ce fichier est un fichier binaire"
 
-msgid "This file is handled by Git LFS."
-msgstr "Ce fichier est un fichier géré par Git LFS."
+msgid "This file is handled by Git LFS"
+msgstr "Ce fichier est un fichier géré par Git LFS"
 
 msgid "Tree"
 msgstr "Arborescence"

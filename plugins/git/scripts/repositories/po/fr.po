@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 2.2.4\n"
+"X-Generator: Poedit 3.0\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 msgid "%{ countJenkinsServers } Jenkins server setup"
@@ -176,6 +176,9 @@ msgid ""
 msgstr ""
 "Un nouveau webhook pour le dépot GitLab %{ label } a été regénéré avec "
 "succès."
+
+msgid "No matching repository"
+msgstr "Aucun dépôt correspondant"
 
 msgid "No repository is available with your GitLab account"
 msgstr "Aucun dépôt n'est disponible avec votre compte GitLab"

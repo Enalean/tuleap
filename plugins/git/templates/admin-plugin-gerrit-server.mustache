@@ -1,14 +1,14 @@
 {{# list_of_servers_is_empty }}
-    <div class="empty-state-page">
-        <span class="empty-state-text">{{{ list_of_servers_empty_message }}}</span>
+    <section class="empty-state-page">
+        <h1 class="empty-state-title">{{ list_of_servers_empty_message }}</h1>
         <button id="button-modal-add-gerrit-server"
                 type="button"
-                class="tlp-button-primary tlp-button-large"
+                class="empty-state-action tlp-button-primary"
                 data-target-modal-id="modal-add-gerrit-server"
         >
             <i class="fa fa-plus tlp-button-icon"></i> {{ gerrit_add_server }}
         </button>
-    </div>
+    </section>
 {{/ list_of_servers_is_empty }}
 
 {{^ list_of_servers_is_empty }}

@@ -25,8 +25,7 @@ class Git_AdminMirrorListPresenter extends Git_AdminMirrorPresenter
 
     public $see_all = true;
     public $list_of_mirrors;
-    public $list_of_mirrors_empty_message_part_one;
-    public $list_of_mirrors_empty_message_part_two;
+    public string $list_of_mirrors_empty_message;
     public $empty_content;
     public $no_repositories;
     public $btn_submit;
@@ -38,15 +37,14 @@ class Git_AdminMirrorListPresenter extends Git_AdminMirrorPresenter
     {
         parent::__construct($title, $csrf);
 
-        $this->list_of_mirrors                        = $list_of_mirrors;
-        $this->list_of_mirrors_empty_message_part_one = dgettext('tuleap-git', 'There is nothing here,');
-        $this->list_of_mirrors_empty_message_part_two = dgettext('tuleap-git', 'start by adding a mirror.');
-        $this->empty_content                          = dgettext('tuleap-git', 'Empty');
-        $this->no_repositories                        = dgettext('tuleap-git', 'None');
-        $this->btn_submit                             = $GLOBALS['Language']->getText('global', 'btn_submit');
-        $this->btn_close                              = $GLOBALS['Language']->getText('global', 'btn_close');
-        $this->mirror_repo                            = dgettext('tuleap-git', 'Repository');
-        $this->base_url                               = GIT_BASE_URL;
+        $this->list_of_mirrors               = $list_of_mirrors;
+        $this->list_of_mirrors_empty_message = dgettext('tuleap-git', 'No mirror');
+        $this->empty_content                 = dgettext('tuleap-git', 'Empty');
+        $this->no_repositories               = dgettext('tuleap-git', 'None');
+        $this->btn_submit                    = $GLOBALS['Language']->getText('global', 'btn_submit');
+        $this->btn_close                     = $GLOBALS['Language']->getText('global', 'btn_close');
+        $this->mirror_repo                   = dgettext('tuleap-git', 'Repository');
+        $this->base_url                      = GIT_BASE_URL;
     }
 
     public function getTemplate()
