@@ -18,26 +18,26 @@
   -->
 
 <template>
-    <div
+    <section
         class="empty-state-page document-empty-folder-for-writers"
         data-test="document-empty-state"
     >
         <div class="empty-state-illustration">
             <empty-folder-for-writers-svg />
         </div>
-        <p class="empty-state-text" v-translate>It's time to add new documents!</p>
-        <div class="tlp-dropdown">
+        <h1 class="empty-state-title" v-translate>It's time to add new documents!</h1>
+        <div class="empty-state-action tlp-dropdown">
             <div class="tlp-dropdown-split-button">
                 <new-item-button
-                    class="tlp-button-primary tlp-button-large tlp-dropdown-split-button-main"
+                    class="tlp-button-primary tlp-dropdown-split-button-main"
                     v-bind:item="current_folder"
                 />
-                <drop-down-button v-bind:is-in-large-mode="true">
+                <drop-down-button v-bind:is-in-large-mode="false">
                     <drop-down-current-folder v-bind:is-in-folder-empty-state="true" />
                 </drop-down-button>
             </div>
         </div>
-    </div>
+    </section>
 </template>
 
 <script lang="ts">

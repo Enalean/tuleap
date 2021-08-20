@@ -55,15 +55,15 @@
         </table>
     {{/ has_references }}
     {{^ has_references }}
-    <div class="empty-state-page">
-        <div class="empty-state-text">{{{ purified_no_bugzilla_reference }}}</div>
-        <button type="button"
-                id="bugzilla-add-reference"
-                class="tlp-button-primary tlp-button-large"
-        >
-            <i class="fa fa-plus tlp-button-icon"></i> {{ bugzilla_add }}
-        </button>
-        {{> add-reference }}
+        <section class="empty-state-page">
+            <p class="empty-state-text">{{{ purified_no_bugzilla_reference }}}</p>
+            <button type="button"
+                    id="bugzilla-add-reference"
+                    class="empty-state-action tlp-button-primary"
+            >
+                <i class="fa fa-plus tlp-button-icon"></i> {{ bugzilla_add }}
+            </button>
+            {{> add-reference }}
+        </section>
     {{/ has_references }}
-</div>
 </div>

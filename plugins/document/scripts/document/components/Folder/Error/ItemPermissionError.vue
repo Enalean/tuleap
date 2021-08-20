@@ -18,51 +18,58 @@
   -->
 
 <template>
-    <div class="empty-state-page document-folder-with-error">
+    <section class="empty-state-page document-folder-with-error">
         <div class="empty-state-illustration">
             <item-permission-error-svg />
         </div>
-        <div class="empty-state-text-with-small-text">
-            <translate>You don't have read permission for this item.</translate>
-            <div class="empty-state-text-small" v-translate>
-                You may only access documents you are granted read permission on.
-            </div>
-        </div>
+        <h1 class="empty-state-title">
+            <translate>You don't have read permission for this item</translate>
+        </h1>
+        <p class="empty-state-text" v-translate>
+            You may only access documents you are granted read permission on.
+        </p>
         <form
             v-bind:action="`/plugins/document/PermissionDeniedRequestMessage/${project_id}`"
             method="post"
             name="display_form"
             ref="form"
+            class="tlp-pane document-request-permission-pane"
         >
-            <input type="hidden" v-bind:name="csrf_token_name" v-bind:value="csrf_token" />
-            <div class="tlp-form-element">
-                <label class="tlp-label" for="msg_private_project">
-                    <translate>
-                        Write your message below and click on the button to send your request to the
-                        project administrators
-                    </translate>
-                    <i class="fa fa-asterisk"></i>
-                </label>
-                <textarea
-                    rows="5"
-                    cols="70"
-                    id="msg_private_project"
-                    name="msg_private_project"
-                    v-bind:placeholder="placeholder"
-                    v-model="mail_content"
-                    required
-                ></textarea>
-                <input type="hidden" name="groupId" v-bind:value="project_id" />
-                <p v-if="error !== ''" v-translate class="tlp-text-danger">
-                    Please enter a reason for why you need to access this document.
-                </p>
+            <div class="tlp-pane-container">
+                <section class="tlp-pane-section">
+                    <input type="hidden" v-bind:name="csrf_token_name" v-bind:value="csrf_token" />
+                    <div class="tlp-form-element">
+                        <label class="tlp-label" for="msg_private_project">
+                            <translate>
+                                Write your message below and click on the button to send your
+                                request to the project administrators
+                            </translate>
+                            <i class="fa fa-asterisk"></i>
+                        </label>
+                        <textarea
+                            class="tlp-textarea"
+                            rows="5"
+                            id="msg_private_project"
+                            name="msg_private_project"
+                            v-bind:placeholder="placeholder"
+                            v-model="mail_content"
+                            required
+                        ></textarea>
+                        <input type="hidden" name="groupId" v-bind:value="project_id" />
+                        <p v-if="error !== ''" v-translate class="tlp-text-danger">
+                            Please enter a reason for why you need to access this document.
+                        </p>
+                    </div>
+                </section>
+                <section class="tlp-pane-section tlp-pane-section-submit">
+                    <button type="button" class="tlp-button-primary" v-on:click="submit">
+                        <i class="far fa-envelope tlp-button-icon"></i>
+                        <translate>Send mail</translate>
+                    </button>
+                </section>
             </div>
-            <button type="button" class="tlp-button-primary" v-on:click="submit">
-                <i class="far fa-envelope tlp-button-icon"></i>
-                <translate>Send mail</translate>
-            </button>
         </form>
-    </div>
+    </section>
 </template>
 
 <script>

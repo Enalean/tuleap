@@ -18,13 +18,13 @@
   -->
 
 <template>
-    <div class="empty-state-page document-folder-with-error">
+    <section class="empty-state-page document-folder-with-error">
         <div class="empty-state-illustration">
             <loading-error-svg />
         </div>
         <show-error-details />
         <go-back-to-root-button />
-    </div>
+    </section>
 </template>
 
 <script>

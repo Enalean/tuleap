@@ -19,12 +19,12 @@
 
 <template>
     <router-link
-        class="tlp-button-primary tlp-button-large"
+        class="empty-state-action tlp-button-primary"
         v-bind:to="{ name: 'root_folder' }"
         v-if="can_go_to_root"
         data-test="item-can-go-to-root-button"
     >
-        <i class="fa fa-reply tlp-button-icon"></i>
+        <i class="fa fa-long-arrow-right tlp-button-icon"></i>
         <translate>Go to Document manager home page</translate>
     </router-link>
 </template>
