@@ -111,6 +111,7 @@ function ArtifactModalController(
         submit,
         setFieldValue,
         setFieldValueForCustomElement,
+        setFieldValueForRadioButtonsCustomElement,
         addToFilesAddedByTextField,
         setFollowupComment,
         toggleFieldset,
@@ -382,6 +383,11 @@ function ArtifactModalController(
     function setFieldValueForCustomElement(event) {
         const { field_id, value } = event.detail;
         self.values[field_id].value = value;
+    }
+
+    function setFieldValueForRadioButtonsCustomElement(event) {
+        const { field_id, value } = event.detail;
+        self.values[field_id].bind_value_ids[0] = value;
     }
 
     function addToFilesAddedByTextField(field_id, uploaded_file) {
