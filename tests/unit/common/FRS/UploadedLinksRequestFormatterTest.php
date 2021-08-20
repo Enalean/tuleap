@@ -23,11 +23,11 @@ namespace Tuleap\FRS;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
-class UploadedLinksRequestFormatterTest extends \Tuleap\Test\PHPUnit\TestCase
+final class UploadedLinksRequestFormatterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 
-    public function testItExtractsOneArrayFromLinksProvidedInRequest()
+    public function testItExtractsOneArrayFromLinksProvidedInRequest(): void
     {
         $request = \Mockery::spy(\HTTPRequest::class);
         $request->shouldReceive('get')->with('uploaded-link-name')->andReturns(['test', '']);
@@ -43,7 +43,7 @@ class UploadedLinksRequestFormatterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertSame($expected_links, $formatter->formatFromRequest($request));
     }
 
-    public function testItThrowsAnExceptionWhenRequestDoesNotProvideCorrectInput()
+    public function testItThrowsAnExceptionWhenRequestDoesNotProvideCorrectInput(): void
     {
         $request = \Mockery::spy(\HTTPRequest::class);
         $request->shouldReceive('get')->with('uploaded-link-name')->andReturns(['test']);
@@ -55,7 +55,7 @@ class UploadedLinksRequestFormatterTest extends \Tuleap\Test\PHPUnit\TestCase
         $formatter->formatFromRequest($request);
     }
 
-    public function testItDoesNotAcceptInvalidLinks()
+    public function testItDoesNotAcceptInvalidLinks(): void
     {
         $request = \Mockery::spy(\HTTPRequest::class);
         $request->shouldReceive('get')->with('uploaded-link-name')->andReturns(['invalid']);
@@ -68,11 +68,11 @@ class UploadedLinksRequestFormatterTest extends \Tuleap\Test\PHPUnit\TestCase
         $formatter->formatFromRequest($request);
     }
 
-    public function testItDoesNotEmptyLinks()
+    public function testItDoesNotEmptyLinks(): void
     {
         $request = \Mockery::spy(\HTTPRequest::class);
-        $request->shouldReceive('get')->with('uploaded-link-name')->andReturns([]);
-        $request->shouldReceive('get')->with('uploaded-link')->andReturns([]);
+        $request->shouldReceive('get')->with('uploaded-link-name')->andReturns([""]);
+        $request->shouldReceive('get')->with('uploaded-link')->andReturns([""]);
         $request->shouldReceive('validArray')->andReturns(true);
 
         $formatter      = new UploadedLinksRequestFormatter();

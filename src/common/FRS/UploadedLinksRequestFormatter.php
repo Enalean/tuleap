@@ -42,6 +42,10 @@ class UploadedLinksRequestFormatter
 
         if ($request->get('uploaded-link')) {
             foreach ($request->get('uploaded-link') as $key => $link) {
+                if ($link === "" && $release_links_name[$key] === "") {
+                    continue;
+                }
+
                 if (! $valid_ftp->isValid($link) && ! $valid_http->isValid($link)) {
                     throw new UploadedLinksInvalidFormException();
                 }
