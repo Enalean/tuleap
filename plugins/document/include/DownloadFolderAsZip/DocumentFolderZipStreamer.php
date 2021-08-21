@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Document\DownloadFolderAsZip;
 
+use Docman_Folder;
 use Docman_PermissionsManager;
 use Laminas\HttpHandlerRunner\Emitter\EmitterInterface;
 use Project;
@@ -114,6 +115,7 @@ final class DocumentFolderZipStreamer extends DispatchablePSR15Compatible implem
     /**
      * @throws NotFoundException
      * @throws ForbiddenException
+     * @throws ItemIsNotAFolderException
      */
     private function getFolder(
         \PFUser $user,
@@ -132,7 +134,9 @@ final class DocumentFolderZipStreamer extends DispatchablePSR15Compatible implem
             throw new ForbiddenException('You are not allowed to download this folder');
         }
 
-        assert($folder instanceof \Docman_Folder);
+        if (! $folder instanceof Docman_Folder) {
+            throw new ItemIsNotAFolderException("The selected item with id #$folder_id is not a folder.");
+        }
 
         return $folder;
     }
