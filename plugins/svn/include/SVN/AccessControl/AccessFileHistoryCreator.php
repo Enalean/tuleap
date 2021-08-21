@@ -27,7 +27,6 @@ use Tuleap\SVN\Repository\Repository;
 
 class AccessFileHistoryCreator
 {
-
     /**
      * @var AccessFileHistoryFactory
      */
@@ -160,9 +159,10 @@ class AccessFileHistoryCreator
      */
     public function storeInDBWithoutCleaningContent(Repository $repository, $content, $timestamp)
     {
-        $version_number = $this->access_file_factory->getLastVersion($repository)->getVersionNumber();
+        $last_version_number = $this->access_file_factory->getLastVersion($repository)->getVersionNumber();
+        $new_version_number  = $last_version_number + 1;
 
-        $file_history_id = $this->dao->create($version_number, $repository->getId(), $content, $timestamp);
+        $file_history_id = $this->dao->create($new_version_number, $repository->getId(), $content, $timestamp);
         if ($file_history_id === false) {
             throw new CannotCreateAccessFileHistoryException(
                 dgettext('tuleap-svn', 'Unable to update Access Control File.')
@@ -172,7 +172,7 @@ class AccessFileHistoryCreator
         return new AccessFileHistory(
             $repository,
             $file_history_id,
-            $version_number + 1,
+            $new_version_number,
             $content,
             $timestamp
         );
