@@ -69,4 +69,12 @@ class ProjectMembers extends Widget
             new ProjectMembersPresenter($project, $administrators)
         );
     }
+
+    public function exportAsXML(): \SimpleXMLElement
+    {
+        $widget = new \SimpleXMLElement('<widget />');
+        $widget->addAttribute('name', $this->id);
+
+        return $widget;
+    }
 }

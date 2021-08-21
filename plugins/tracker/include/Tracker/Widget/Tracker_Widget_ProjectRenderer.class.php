@@ -99,4 +99,27 @@ class Tracker_Widget_ProjectRenderer extends Tracker_Widget_Renderer
     {
         return false;
     }
+
+    public function exportAsXML(): \SimpleXMLElement
+    {
+        $widget = new \SimpleXMLElement('<widget />');
+        $widget->addAttribute('name', $this->id);
+
+        $preference = $widget->addChild('preference');
+        $preference->addAttribute('name', 'renderer');
+
+        $cdata_factory = new \XML_SimpleXMLCDATAFactory();
+        $cdata_factory->insertWithAttributes(
+            $preference,
+            'value',
+            (string) $this->renderer_title,
+            ['name' => 'title']
+        );
+
+        $reference = $preference->addChild('reference');
+        $reference->addAttribute('name', 'id');
+        $reference->addAttribute('REF', \Tracker_Report_Renderer::XML_ID_PREFIX . $this->renderer_id);
+
+        return $widget;
+    }
 }

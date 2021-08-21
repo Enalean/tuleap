@@ -23,7 +23,7 @@
 * Widget_ProjectDescription
 *
 */
-class Widget_ProjectDescription extends Widget
+class Widget_ProjectDescription extends Widget // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 {
 
     public function __construct()
@@ -61,5 +61,13 @@ class Widget_ProjectDescription extends Widget
     public function getDescription()
     {
         return $GLOBALS['Language']->getText('widget_description_project_description', 'description');
+    }
+
+    public function exportAsXML(): \SimpleXMLElement
+    {
+        $widget = new \SimpleXMLElement('<widget />');
+        $widget->addAttribute('name', $this->id);
+
+        return $widget;
     }
 }

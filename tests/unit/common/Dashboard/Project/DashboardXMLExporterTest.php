@@ -25,8 +25,14 @@ namespace Tuleap\Dashboard\Project;
 use Project;
 use Psr\Log\NullLogger;
 use Tuleap\Dashboard\Dashboard;
+use Tuleap\Dashboard\Widget\DashboardWidget;
+use Tuleap\Dashboard\Widget\DashboardWidgetColumn;
+use Tuleap\Dashboard\Widget\DashboardWidgetLine;
+use Tuleap\Dashboard\Widget\IRetrieveDashboardWidgets;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Widget\IBuildInstanceOfWidgets;
+use Tuleap\Widget\ProjectMembers\ProjectMembers;
 
 class DashboardXMLExporterTest extends TestCase
 {
@@ -42,6 +48,8 @@ class DashboardXMLExporterTest extends TestCase
                     return [];
                 }
             },
+            $this->createMock(IRetrieveDashboardWidgets::class),
+            $this->createMock(IBuildInstanceOfWidgets::class),
             new NullLogger()
         );
 
@@ -67,6 +75,16 @@ class DashboardXMLExporterTest extends TestCase
                     ];
                 }
             },
+            new class implements IRetrieveDashboardWidgets {
+                /**
+                 * @return DashboardWidgetLine[]
+                 */
+                public function getAllWidgets(int $dashboard_id, string $dashboard_type): array
+                {
+                    return [];
+                }
+            },
+            $this->createMock(IBuildInstanceOfWidgets::class),
             new NullLogger()
         );
 
@@ -76,5 +94,91 @@ class DashboardXMLExporterTest extends TestCase
 
         self::assertEquals('Dashboard 1', (string) $xml->dashboards->dashboard[0]['name']);
         self::assertEquals('Dashboard 2', (string) $xml->dashboards->dashboard[1]['name']);
+    }
+
+    public function testItExportsExportableWidgetsOfADashboard(): void
+    {
+        $exporter = new DashboardXMLExporter(
+            new class implements IRetrieveDashboards {
+                /**
+                 * @return ProjectDashboard[]
+                 */
+                public function getAllProjectDashboards(Project $project): array
+                {
+                    return [
+                        new Dashboard(1, "Dashboard 1"),
+                    ];
+                }
+            },
+            new class implements IRetrieveDashboardWidgets {
+                /**
+                 * @return DashboardWidgetLine[]
+                 */
+                public function getAllWidgets(int $dashboard_id, string $dashboard_type): array
+                {
+                    return [
+                        new DashboardWidgetLine(
+                            2,
+                            'two-columns-big-small',
+                            [
+                                new DashboardWidgetColumn(
+                                    3,
+                                    1,
+                                    [
+                                        new DashboardWidget(10, 'projectmembers', 0, 3, 0, false),
+                                    ]
+                                ),
+                                new DashboardWidgetColumn(
+                                    4,
+                                    1,
+                                    [
+                                        new DashboardWidget(11, 'projectdescription', 0, 4, 0, false),
+                                        new DashboardWidget(12, 'unknownwidget', 0, 4, 0, false),
+                                    ]
+                                )
+                            ]
+                        ),
+                        new DashboardWidgetLine(
+                            3,
+                            'one-column',
+                            [
+                                new DashboardWidgetColumn(
+                                    5,
+                                    3,
+                                    [
+                                        new DashboardWidget(13, 'unknownwidget', 0, 5, 0, false),
+                                    ]
+                                )
+                            ]
+                        ),
+                    ];
+                }
+            },
+            new class implements IBuildInstanceOfWidgets {
+                public function getInstanceByWidgetName(string $widget_name): ?\Widget
+                {
+                    if ($widget_name === 'projectmembers') {
+                        return new ProjectMembers();
+                    }
+
+                    if ($widget_name === 'projectdescription') {
+                        return new \Widget_ProjectDescription();
+                    }
+
+                    return null;
+                }
+            },
+            new NullLogger()
+        );
+
+        $xml = new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><project />');
+
+        $exporter->exportDashboards(ProjectTestBuilder::aProject()->build(), $xml);
+
+        self::assertCount(1, $xml->dashboards->dashboard[0]->line);
+        self::assertEquals('two-columns-big-small', (string) $xml->dashboards->dashboard[0]->line['layout']);
+        self::assertCount(2, $xml->dashboards->dashboard[0]->line->column);
+        self::assertEquals('projectmembers', (string) $xml->dashboards->dashboard[0]->line->column[0]->widget['name']);
+        self::assertEquals('projectdescription', (string) $xml->dashboards->dashboard[0]->line->column[1]->widget['name']);
     }
 }

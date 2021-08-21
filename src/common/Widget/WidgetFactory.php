@@ -50,7 +50,7 @@ use Widget_ProjectPublicAreas;
 use Widget_ProjectRss;
 use Widget_ProjectSvnStats;
 
-class WidgetFactory
+class WidgetFactory implements IBuildInstanceOfWidgets
 {
     /**
      * @var UserManager
@@ -77,10 +77,7 @@ class WidgetFactory
         $this->event_manager                    = $event_manager;
     }
 
-    /**
-     * @return Widget|null
-     */
-    public function getInstanceByWidgetName($widget_name)
+    public function getInstanceByWidgetName(string $widget_name): ?\Widget
     {
         $widget             = null;
         $user               = $this->user_manager->getCurrentUser();
