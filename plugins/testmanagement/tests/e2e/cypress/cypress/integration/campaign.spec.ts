@@ -158,7 +158,13 @@ describe("TTM campaign", () => {
 
                     cy.get("[data-test=mark-test-as-failed]").click();
                     cy.get("[data-test=current-test").should("have.class", "failed");
+                    // For the moment, there are 2 buttons to open a modal
                     cy.get("[data-test=view-details-button]").click();
+                    cy.get("[data-test=view-details-modal]").within(() => {
+                        cy.contains("This does not work! Fix ASAP!");
+                        cy.get("[data-dismiss=modal]").first().click();
+                    });
+                    cy.get("[data-test=expand-details-button]").click();
                     cy.get("[data-test=view-details-modal]").within(() => {
                         cy.contains("This does not work! Fix ASAP!");
                         cy.get("[data-dismiss=modal]").first().click();
