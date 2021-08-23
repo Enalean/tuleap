@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-import uuid from "uuid/v4";
+import { v4 as uuid } from "uuid";
 import dragula from "dragula";
 
 export function initStepField(
