@@ -19,14 +19,6 @@
 
 @use 'dragula/dist/dragula';
 
-#add-dashboard-button {
-    margin: 10px 0 10px var(--tlp-medium-spacing);
-
-    &:first-child {
-        margin: 10px 0;
-    }
-}
-
 .dashboard-tabs-dropdown {
     margin: 0 0 0 var(--tlp-small-spacing);
 }

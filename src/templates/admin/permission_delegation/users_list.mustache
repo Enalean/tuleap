@@ -53,7 +53,9 @@
                 </table>
             {{/ has_users }}
             {{^ has_users }}
-                <p id="siteadmin-permission-delegation-group-details-users-empty">{{ no_user }}</p>
+                <section class="empty-state-pane">
+                    <p class="empty-state-text empty-state-text-smaller">{{ no_user }}</p>
+                </section>
             {{/ has_users }}
         </section>
     </form>

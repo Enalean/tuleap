@@ -25,7 +25,7 @@
         viewBox="0 0 58 65"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
-        class="switch-to-empty-illustration"
+        class="empty-state-illustration switch-to-empty-illustration"
     >
         <path
             fill-rule="evenodd"

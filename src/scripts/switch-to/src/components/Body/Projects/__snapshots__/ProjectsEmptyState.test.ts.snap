@@ -1,13 +1,13 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`ProjectsEmptyState Display an empty state 1`] = `
-<div
-  class="switch-to-projects-empty"
+<section
+  class="empty-state-pane switch-to-projects-empty"
 >
   <projects-empty-state-svg-stub />
    
-  <span
-    class="switch-to-projects-empty-text"
+  <p
+    class="empty-state-text empty-state-text-smaller switch-to-projects-empty-text"
     data-current-language="en_US"
     data-msgid="
         You don't belong to any projects
@@ -16,14 +16,18 @@ exports[`ProjectsEmptyState Display an empty state 1`] = `
     
         You don't belong to any projects
     
-  </span>
+  </p>
    
   <trove-cat-link-stub
-    class="tlp-button-secondary switch-to-projects-softwaremap-empty-state"
+    class="
+            tlp-button-secondary
+            switch-to-projects-softwaremap-empty-state
+            empty-state-action
+        "
   >
     
         Browse all projects
     
   </trove-cat-link-stub>
-</div>
+</section>
 `;

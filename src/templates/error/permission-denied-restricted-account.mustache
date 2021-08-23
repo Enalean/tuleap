@@ -1,16 +1,16 @@
-<div class="empty-state-page">
+<section class="empty-state-page">
     <div class="empty-state-illustration">
         {{> svg-permission-denied }}
     </div>
 
-    <div class="empty-state-text-with-small-text">
-        {{# gettext }}You have a restricted user account.{{/ gettext }}
-        <div class="empty-state-text-small">
-            {{# gettext }}You cannot access to this page.{{/ gettext }}
-        </div>
-    </div>
+    <h1 class="empty-state-title">
+        {{# gettext }}You have a restricted user account{{/ gettext }}
+    </h1>
+    <p class="empty-state-text">
+        {{# gettext }}You cannot access to this page.{{/ gettext }}
+    </p>
 
-    <a class="tlp-button-primary tlp-button-large" href="/my/">
+    <a class="empty-state-action tlp-button-primary" href="/my/">
         <i class="fa fa-reply tlp-button-icon"></i> {{# gettext }}Go to my home page{{/ gettext }}
     </a>
-</div>
+</section>

@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 2.4.3\n"
+"X-Generator: Poedit 3.0\n"
 
 msgid ""
 "       Sorry - Expiration Date entry could not be parsed. It must be in YYYY-"
@@ -2369,9 +2369,6 @@ msgstr "Ouvrir/fermer la barre latérale"
 msgid "Optional message…"
 msgstr "Message optionnel…"
 
-msgid "Or you don't have permissions to see them."
-msgstr "Ou alors vous n'avez pas la permission pour les voir."
-
 msgid "Orange"
 msgstr "Orange"
 
@@ -3641,14 +3638,14 @@ msgstr "L'équipe de {{tuleap_server_name}}."
 msgid "Theme color"
 msgstr "Couleur du thème"
 
-msgid "There are no items <br> you can see"
-msgstr "Il n'y a aucun élément <br> visible"
+msgid "There are no items you can see"
+msgstr "Il n'y a aucun élément visible"
 
 msgid "There are no projects in this category"
 msgstr "Aucun projet dans cette catégorie"
 
-msgid "There are no widgets here."
-msgstr "Il n’y a aucun widget."
+msgid "There are no widgets here"
+msgstr "Il n’y a aucun widget"
 
 msgid ""
 "There is already an event scheduled to rename this project. Please check <a "
@@ -3660,14 +3657,20 @@ msgstr ""
 msgid "There is no users group bound to this one."
 msgstr "Il n'y a pas de groupe lié à celui-ci."
 
-msgid "There isn't <br> any activity yet"
-msgstr "Il n'y a pas <br> encore d'activité"
+msgid "There isn't any activity yet"
+msgstr "Il n'y a pas encore d'activité"
 
 msgid "There isn't any mailing list yet"
 msgstr "Il n'y a aucune liste de diffusion pour l'instant"
 
-msgid "There isn't any mailing lists yet."
-msgstr "Il n'y a aucune liste de diffusion pour l'instant."
+msgid "There isn't any mailing lists yet"
+msgstr "Il n'y a aucune liste de diffusion pour l'instant"
+
+msgid ""
+"There isn't any mailing lists yet or you don't have permissions to see them."
+msgstr ""
+"Il n’y a aucune liste de diffusion pour l’instant ou vous n'avez pas la "
+"permission pour les voir."
 
 msgid "There isn't any matching members"
 msgstr "Il n'y a aucun membre correspondant"
@@ -3728,8 +3731,8 @@ msgstr "Ce groupe n'a pas encore de membres."
 msgid "This is a preview"
 msgstr "Ceci est un aperçu"
 
-msgid "This is a private project."
-msgstr "Ce projet est privé."
+msgid "This is a private project"
+msgstr "Ce projet est privé"
 
 msgid "This is a system group, you cannot delete it."
 msgstr "Ceci est un groupe système, vous ne pouvez pas le supprimer."
@@ -3810,8 +3813,8 @@ msgstr ""
 msgid "This project doesn't allow short name edition."
 msgstr "Ce projet n'autorise pas l'édition du nom court."
 
-msgid "This project doesn't use any services with permissions."
-msgstr "Ce project n'utilise pas de service avec des permissions."
+msgid "This project doesn't use any services with permissions"
+msgstr "Ce project n'utilise pas de service avec des permissions"
 
 msgid "This project has no CVS history."
 msgstr "Ce projet n'a pas d'historique CVS."
@@ -4298,11 +4301,10 @@ msgstr ""
 "Lorsque cette option est activée, dès lors que vous ajoutez un utilisateur "
 "dans un groupe, il sera automatiquement ajouté en tant que membre de projet."
 
-msgid ""
-"Why don't you start by editing your dashboard <br> and adding some widgets?"
+msgid "Why don't you start by editing your dashboard by adding some widgets?"
 msgstr ""
-"Pourquoi ne pas commencer par éditer votre tableau de bord <br> et ajouter "
-"des widgets?"
+"Pourquoi ne pas commencer par éditer votre tableau de bord en y ajoutant des "
+"widgets ?"
 
 msgid "Widget has been successfully deleted."
 msgstr "Le widget a correctement été supprimé."
@@ -4653,8 +4655,8 @@ msgstr "Vous n'avez pas de jetons SVN."
 msgid "You don't have any access keys yet."
 msgstr "Vous n'avez pas de clef d'accès."
 
-msgid "You don't have any dashboards."
-msgstr "Vous n'avez aucun tableau de bord."
+msgid "You don't have any dashboards"
+msgstr "Vous n'avez aucun tableau de bord"
 
 msgid "You don't have permission to access administration of this project."
 msgstr ""
@@ -4666,8 +4668,8 @@ msgstr "Vous n'avez pas la permission de voir les groupes d'utilisateurs."
 msgid "You enjoy Tuleap? Make a review"
 msgstr "Vous aimez Tuleap ? Partagez votre avis"
 
-msgid "You have a restricted user account."
-msgstr "Vous avez un compte utilisateur restreint."
+msgid "You have a restricted user account"
+msgstr "Vous avez un compte utilisateur restreint"
 
 #, php-format
 msgid "You have not rights to update dashboards of the project \"%s\"."

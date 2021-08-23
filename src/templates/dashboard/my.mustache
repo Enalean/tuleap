@@ -10,10 +10,10 @@
                 {{> widgets }}
             {{/ has_widget }}
             {{^ has_widget }}
-                <div class="empty-state-page">
-                    <p class="empty-state-text">{{ no_widget_label }}</p>
-                    <p class="empty-state-text">{{{ purified_no_widget_action_label }}}</p>
-                    <button class="tlp-button-primary tlp-button-large add-widget-button"
+                <section class="empty-state-page">
+                    <h1 class="empty-state-title">{{ no_widget_label }}</h1>
+                    <p class="empty-state-text">{{ no_widget_action_label }}</p>
+                    <button class="empty-state-action tlp-button-primary add-widget-button"
                             data-target-modal-id="add-widget-modal"
                             data-href="{{ url_add_widget_content }}"
                             data-test="dashboard-add-widget-empty-state-button"
@@ -21,26 +21,26 @@
                         <i class="fa fa-plus tlp-button-icon"></i>
                         {{ add_widget_title }}
                     </button>
-                </div>
+                </section>
             {{/ has_widget }}
         {{/ is_active }}
     {{/ dashboards }}
 {{/ has_dashboard }}
 
 {{^ has_dashboard }}
-    <div class="empty-state-page">
-        <p class="empty-state-text">{{ no_dashboard_label }}</p>
+    <section class="empty-state-page">
+        <h1 class="empty-state-title">{{ no_dashboard_label }}</h1>
         <button
             type="button"
             id="add-dashboard-button"
-            class="tlp-button-primary tlp-button-large"
+            class="empty-state-action tlp-button-primary"
             data-target-modal-id="add-dashboard"
             data-test="dashboard-add-button"
         >
             <i class="fa fa-plus tlp-button-icon"></i>
             {{ add_dashboard_label }}
         </button>
-    </div>
+    </section>
 {{/ has_dashboard }}
 
 {{> add-dashboard-modal }}

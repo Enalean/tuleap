@@ -38,12 +38,8 @@ class ProjectPendingPresenter
     public function __construct(array $pending_projects, CSRFSynchronizerToken $csrf_token)
     {
         $this->no_content               = $GLOBALS['Language']->getText('admin_approve_pending', 'no_pending');
-        $this->no_content_next          = $GLOBALS['Language']->getText('admin_approve_pending', 'no_pending_next');
         $this->title                    = $GLOBALS['Language']->getText('admin_approve_pending', 'title');
         $this->go_back                  = $GLOBALS['Language']->getText('admin_approve_pending', 'go_back');
-        $this->no_content               = $GLOBALS['Language']->getText('admin_approve_pending', 'no_pending');
-        $this->no_content_next          = $GLOBALS['Language']->getText('admin_approve_pending', 'no_pending_next');
-        $this->title                    = $GLOBALS['Language']->getText('admin_approve_pending', 'title');
         $this->description              = $GLOBALS['Language']->getText('admin_approve_pending', 'description');
         $this->see_project_details      = $GLOBALS['Language']->getText('admin_approve_pending', 'see_project_details');
         $this->description_title_label  = $GLOBALS['Language']->getText('admin_approve_pending', 'description_label');

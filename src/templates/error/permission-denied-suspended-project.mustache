@@ -1,16 +1,16 @@
-<div class="empty-state-page">
+<section class="empty-state-page">
     <div class="empty-state-illustration">
         {{> svg-suspended-project }}
     </div>
 
-    <div class="empty-state-text-with-small-text">
+    <h1 class="empty-state-title">
         {{ error_message }}
-        <div class="empty-state-text-small">
-            {{ custom_message }}
-        </div>
-    </div>
+    </h1>
+    <p class="empty-state-text">
+        {{ custom_message }}
+    </p>
 
-    <a class="tlp-button-primary tlp-button-outline tlp-button-large" href="/my/">
+    <a class="empty-state-action tlp-button-primary tlp-button-outline" href="/my/">
         <i class="fa fa-reply tlp-button-icon"></i> {{# gettext }}Go to my home page{{/ gettext }}
     </a>
-</div>
+</section>

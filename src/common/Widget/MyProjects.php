@@ -74,7 +74,7 @@ class MyProjects extends \Widget
         $rows   = db_numrows($result);
         if (! $result || $rows < 1) {
             $html .= '<div class="empty-state-pane">';
-            $html .= '<svg class="empty-state-icon" xmlns="http://www.w3.org/2000/svg" width="239" height="287" viewBox="0 0 239 287">';
+            $html .= '<svg class="empty-state-illustration" xmlns="http://www.w3.org/2000/svg" width="239" height="287" viewBox="0 0 239 287">';
             $html .= '    <defs>';
             $html .= '        <filter id="my-projects-empty-a" width="112.6%" height="900%" x="-6.3%" y="-400%" filterUnits="objectBoundingBox">';
             $html .= '            <feGaussianBlur in="SourceGraphic" stdDeviation="4"/>';

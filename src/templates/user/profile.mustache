@@ -69,13 +69,13 @@
     </div>
 {{/ nb_projects }}
 {{^ nb_projects }}
-    <div class="empty-state-page">
+    <section class="empty-state-page">
         <div class="empty-state-illustration">
             {{> svg-profile-tumbleweed }}
         </div>
 
-        <p class="empty-state-text user-profile-no-project">
+        <h1 class="empty-state-title user-profile-no-project">
             {{# gettext }}{{ real_name }} doesn't seem to be member of any projects you can see.{{/gettext}}
-        </p>
-    </div>
+        </h1>
+    </section>
 {{/ nb_projects }}

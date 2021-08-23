@@ -1,6 +1,6 @@
 <h1>{{ title }}</h1>
-<div class="empty-state-page">
-    <svg class="empty-state-icon" width="127px" height="102px" viewBox="0 0 127 102" version="1.1"
+<section class="empty-state-page">
+    <svg class="empty-state-illustration" width="127px" height="102px" viewBox="0 0 127 102" version="1.1"
         xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
         <g stroke="none" stroke-width="1" fill-rule="evenodd" opacity="0.2">
             <g transform="translate(-779.000000, -253.000000)">
@@ -10,10 +10,9 @@
             </g>
         </g>
     </svg>
-    <div class="empty-state-text">
-        {{ take_break }}
-        <br>
-        {{ msg }}
-    </div>
-    <a href="/admin/" class="tlp-button-primary tlp-button-large">{{ go_back }}</a>
-</div>
+    <h1 class="empty-state-title">{{ msg }}</h1>
+    <a href="/admin/" class="empty-state-action tlp-button-primary">
+        {{ go_back }}
+        <i class="fas fa-long-arrow-alt-right tlp-button-icon-right" aria-hidden="true"></i>
+    </a>
+</section>

@@ -1,8 +1,8 @@
 <h1>{{ title }}</h1>
 
 {{^ has_project }}
-    <div class="empty-state-page">
-        <div class="empty-state-icon">
+    <section class="empty-state-page">
+        <div class="empty-state-illustration">
             <svg width="121px" height="75px" viewBox="0 0 121 75" version="1.1" xmlns="http://www.w3.org/2000/svg"
                  xmlns:xlink="http://www.w3.org/1999/xlink">
                 <g fill-rule="evenodd">
@@ -12,12 +12,12 @@
                 </g>
             </svg>
         </div>
-
-        <span class="empty-state-text">{{ no_content }}<br>{{ no_content_next }}</span>
-        <a href="/admin/" class="tlp-button-primary tlp-button-large">
+        <h1 class="empty-state-title">{{ no_content }}</h1>
+        <a href="/admin/" class="empty-state-action tlp-button-primary">
             {{ go_back }}
+            <i class="fas fa-long-arrow-alt-right tlp-button-icon-right" aria-hidden="true"></i>
         </a>
-    </div>
+    </section>
 {{/ has_project }}
 
 {{# has_project }}

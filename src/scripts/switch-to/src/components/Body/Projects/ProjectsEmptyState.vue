@@ -19,17 +19,26 @@
   -->
 
 <template>
-    <div class="switch-to-projects-empty">
+    <section class="empty-state-pane switch-to-projects-empty">
         <projects-empty-state-svg />
 
-        <span class="switch-to-projects-empty-text" v-translate>
+        <p
+            class="empty-state-text empty-state-text-smaller switch-to-projects-empty-text"
+            v-translate
+        >
             You don't belong to any projects
-        </span>
+        </p>
 
-        <trove-cat-link class="tlp-button-secondary switch-to-projects-softwaremap-empty-state">
+        <trove-cat-link
+            class="
+                tlp-button-secondary
+                switch-to-projects-softwaremap-empty-state
+                empty-state-action
+            "
+        >
             {{ trove_cat_label }}
         </trove-cat-link>
-    </div>
+    </section>
 </template>
 
 <script lang="ts">

@@ -19,12 +19,15 @@
   -->
 
 <template>
-    <div class="switch-to-recent-items-empty">
+    <section class="empty-state-pane switch-to-recent-items-empty">
         <recent-items-empty-state-svg />
-        <div class="switch-to-recent-items-empty-text" v-translate>
+        <p
+            class="empty-state-text empty-state-text-smaller switch-to-recent-items-empty-text"
+            v-translate
+        >
             Your Tuleap history will appear here
-        </div>
-    </div>
+        </p>
+    </section>
 </template>
 
 <script lang="ts">

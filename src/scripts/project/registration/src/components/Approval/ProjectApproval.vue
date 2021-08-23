@@ -24,19 +24,15 @@
             <project-approval-svg />
         </div>
 
-        <div class="empty-state-text-with-small-text">
-            <span v-translate>
-                Your project has been submitted to the administrators for validation
-            </span>
-            <div class="empty-state-text-small" v-dompurify-html="message_admin_validation"></div>
-        </div>
+        <h1 class="empty-state-title" v-translate>
+            Your project has been submitted to the administrators for validation
+        </h1>
+        <p class="empty-state-text" v-dompurify-html="message_admin_validation"></p>
 
-        <div>
-            <a class="tlp-button-primary tlp-button-large" href="/my/">
-                <i class="fa fa-reply tlp-button-icon"></i>
-                <span v-translate>Go to my home page</span>
-            </a>
-        </div>
+        <a class="tlp-button-primary tlp-button-large empty-state-action" href="/my/">
+            <i class="fa fa-reply tlp-button-icon"></i>
+            <span v-translate>Go to my home page</span>
+        </a>
     </div>
 </template>
 

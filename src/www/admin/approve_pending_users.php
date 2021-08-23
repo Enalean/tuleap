@@ -248,10 +248,9 @@ if (count($users) === 0) {
         ForgeConfig::get('codendi_dir') . '/src/templates/admin/users/',
         'no-pending',
         [
-            'title'      => $title,
-            'msg'        => $msg,
-            'go_back'    => $GLOBALS['Language']->getText('admin_approve_pending_users', 'go_back'),
-            'take_break' => $GLOBALS['Language']->getText('admin_approve_pending_users', 'take_break')
+            'title'   => $title,
+            'msg'     => $msg,
+            'go_back' => $GLOBALS['Language']->getText('admin_approve_pending_users', 'go_back')
         ]
     );
 } else {

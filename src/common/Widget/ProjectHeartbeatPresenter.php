@@ -20,15 +20,14 @@
 
 namespace Tuleap\Widget;
 
-use Codendi_HTMLPurifier;
 use PFUser;
 use Project;
 
 class ProjectHeartbeatPresenter
 {
     public $project_id;
-    public $purified_empty_state_no_perms;
-    public $purified_empty_state_no_activity;
+    public string $empty_state_no_perms;
+    public string $empty_state_no_activity;
     public $error_message;
     public $locale;
     public $today;
@@ -50,14 +49,8 @@ class ProjectHeartbeatPresenter
         $this->yesterday     = _('Yesterday');
         $this->recently      = _('Recently');
 
-        $this->purified_empty_state_no_perms = Codendi_HTMLPurifier::instance()->purify(
-            _('There are no items <br> you can see'),
-            CODENDI_PURIFIER_LIGHT
-        );
+        $this->empty_state_no_perms = _('There are no items you can see');
 
-        $this->purified_empty_state_no_activity = Codendi_HTMLPurifier::instance()->purify(
-            _("There isn't <br> any activity yet"),
-            CODENDI_PURIFIER_LIGHT
-        );
+        $this->empty_state_no_activity = _("There isn't any activity yet");
     }
 }
