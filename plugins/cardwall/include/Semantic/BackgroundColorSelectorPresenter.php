@@ -22,26 +22,27 @@ namespace Tuleap\Cardwall\Semantic;
 
 use Tracker_FormElement;
 
-class BackgroundColorSelectorPresenter
+/**
+ * @psalm-immutable
+ */
+final class BackgroundColorSelectorPresenter
 {
-    /**
-     * @var bool
-     */
-    public $has_at_least_one_field_selectable_for_color;
-
     /**
      * @var Tracker_FormElement[]
      */
-    public $form_elements;
-    /**
-     * @var bool
-     */
-    public $has_background_field_defined;
+    public array $form_elements;
+    public bool $has_background_field_defined;
+    public bool $has_at_least_one_field_selectable_for_color;
+    public string $field_admin_link;
 
-    public function __construct(array $form_elements, $has_background_field_defined)
-    {
+    public function __construct(
+        array $form_elements,
+        bool $has_background_field_defined,
+        string $field_admin_link
+    ) {
         $this->has_at_least_one_field_selectable_for_color = count($form_elements) > 0;
         $this->form_elements                               = $form_elements;
         $this->has_background_field_defined                = $has_background_field_defined;
+        $this->field_admin_link                            = $field_admin_link;
     }
 }

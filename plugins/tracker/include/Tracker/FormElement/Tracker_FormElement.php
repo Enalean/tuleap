@@ -894,14 +894,16 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
      */
     abstract protected function fetchAdminFormElement();
 
-    /**
-     * Compute the url to edit the element
-     *
-     * @return string url to display in html (&amp; instead of &)
-     */
-    public function getAdminEditUrl()
+    public function getAdminEditUrl(): string
     {
-        return TRACKER_BASE_URL . '/?tracker=' . (int) $this->getTracker()->getId() . '&amp;func=admin-formElement-update&amp;formElement=' . $this->id;
+        return TRACKER_BASE_URL . '/?' .
+            http_build_query(
+                [
+                    'tracker'     => $this->getTracker()->getId(),
+                    'func'        => 'admin-formElement-update',
+                    'formElement' => $this->id,
+                ]
+            );
     }
 
     protected function getXMLInternalRepresentation(): XMLFormElement

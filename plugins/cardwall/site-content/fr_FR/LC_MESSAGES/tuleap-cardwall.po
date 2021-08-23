@@ -115,6 +115,9 @@ msgstr "Champs"
 msgid "Fullscreen"
 msgstr "Plein écran"
 
+msgid "Go to field administration"
+msgstr "Aller à l'administration du champ"
+
 msgid ""
 "If a color corresponds to multiple values, the preview will display only one "
 "card with this background color."

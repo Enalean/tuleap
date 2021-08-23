@@ -25,6 +25,17 @@
                         <option value="{{ id }}" {{# is_selected }}selected="selected"{{/ is_selected }}>{{ name }}</option>
                     {{/ form_elements }}
                 </select>
+
+                {{# background_color_presenter }}
+                    {{# has_background_field_defined }}
+                        <a href="{{ field_admin_link }}">
+                            {{# dgettext }}
+                                tuleap-cardwall |
+                                Go to field administration
+                            {{/ dgettext }}
+                        </a>
+                    {{/ has_background_field_defined }}
+                {{/ background_color_presenter }}
             </p>
 
             <input type="submit"
