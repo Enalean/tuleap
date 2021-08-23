@@ -247,6 +247,39 @@ execution-with-steps.current-test-content {
     border-top: 1px solid var(--tlp-neutral-light-color);
 }
 
+.current-comment-header-section {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 0 0 var(--tlp-small-spacing) 0;
+
+    > label {
+        margin: 0;
+    }
+
+    > .tlp-button-secondary.tlp-button-outline {
+        border: 0;
+        border-radius: 50%;
+        background: inherit;
+        box-shadow: none;
+        color: inherit;
+
+        &:hover {
+            background: var(--tlp-white-color-transparent-80);
+            box-shadow: var(--tlp-button-shadow-hover);
+        }
+        &:focus {
+            background: var(--tlp-white-color-transparent-80);
+            box-shadow: var(--tlp-shadow-focus);
+        }
+
+        > .tlp-button-icon {
+            margin: 0;
+            color: var(--tlp-dimmed-color);
+        }
+    }
+}
+
 .current-test-footer-section-closed-campaign {
     display: flex;
     align-items: center;

@@ -169,7 +169,22 @@
 
         <section ng-if="execution.is_automated === false && campaign.is_open" class="tlp-pane-section current-test-footer-section">
             <div class="tlp-form-element">
-                <label class="tlp-label" for="execution_{{execution.id}}" translate>Comment</label>
+                <div class="current-comment-header-section">
+                    <label class="tlp-label" for="execution_{{execution.id}}" translate>Comment</label>
+                    <button
+                        type="button"
+                        ng-if="execution.previous_result.result"
+                        class="tlp-button-secondary tlp-button-mini tlp-button-outline"
+                        data-test="expand-details-button"
+                        ng-click="showExecutionDetailsModal()"
+                        title="{{ 'View details' | translate }}"
+                    >
+                        <i
+                            class="fas fa-expand-alt tlp-button-icon"
+                            aria-hidden="true"
+                        ></i>
+                    </button>
+                </div>
                 <div class="current-test-results-container">
                     <div class="current-test-comment"
                          id="execution_{{execution.id}}"
