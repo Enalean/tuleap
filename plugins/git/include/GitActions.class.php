@@ -334,7 +334,7 @@ class GitActions extends PluginActions
             $this->checkRepoValidity($git_repo, $project);
             $this->checkUserIsAdmin($project, $user);
         } catch (Exception $e) {
-            $GLOBALS['Response']->addFeedback(Feedback::ERROR, get_class($e) . $e->getTraceAsString());
+            $GLOBALS['Response']->addFeedback(Feedback::ERROR, $e::class . $e->getTraceAsString());
             $GLOBALS['Response']->sendStatusCode($e->getCode());
             return;
         }
@@ -424,7 +424,7 @@ class GitActions extends PluginActions
             $template = $this->template_factory->getTemplate($template_id);
             $this->checkTemplateIsAccessible($template, $project, $user);
         } catch (Exception $e) {
-            $GLOBALS['Response']->addFeedback(Feedback::ERROR, get_class($e) . $e->getTraceAsString());
+            $GLOBALS['Response']->addFeedback(Feedback::ERROR, $e::class . $e->getTraceAsString());
             $GLOBALS['Response']->sendStatusCode($e->getCode());
             return;
         }

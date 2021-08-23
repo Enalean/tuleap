@@ -225,7 +225,7 @@ class PEAR
     public function isError($data, $code = null)
     {
         if (
-            is_object($data) && (strtolower(get_class($data)) == 'pear_error' ||
+            is_object($data) && (strtolower($data::class) == 'pear_error' ||
                                  is_subclass_of($data, 'pear_error'))
         ) {
             if (is_null($code)) {
@@ -630,7 +630,7 @@ function _PEAR_call_destructors()
         sizeof($_PEAR_destructor_object_list)
     ) {
         foreach ($_PEAR_destructor_object_list as $objref) {
-            $classname = get_class($objref);
+            $classname = $objref::class;
             while ($classname) {
                 $destructor = "_$classname";
                 if (method_exists($objref, $destructor)) {

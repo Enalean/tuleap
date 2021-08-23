@@ -49,13 +49,9 @@ Packager: Manuel VACELET <manuel.vacelet@enalean.com>
 AutoReqProv: no
 
 # Php and web related stuff
-Requires: php74-php-common >= 7.4.15
 Requires: php80-php-common >= 8.0.7
-Requires: php74-php, php74-php-mysql, php74-php-xml, php74-php-json, php74-php-mbstring, php74-php-gd, php74-php-soap
 Requires: php80-php, php80-php-mysql, php80-php-xml, php80-php-mbstring, php80-php-gd, php80-php-soap
-Requires: php74-php-intl, php74-php-process, php74-php-opcache, php74-php-fpm, php74-php-pecl-redis5, php74-php-sodium
 Requires: php80-php-intl, php80-php-process, php80-php-opcache, php80-php-fpm, php80-php-pecl-redis5, php80-php-sodium
-Requires: php74-php-pecl-zip
 Requires: php80-php-pecl-zip
 Requires: rh-mysql57-mysql
 
@@ -120,7 +116,7 @@ Manage dependencies for Tuleap Subversion integration
 %package plugin-forumml
 Summary: ForumML plugin for Tuleap
 Group: Development/Tools
-Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, php74-php-pecl-mailparse, php80-php-pecl-mailparse
+Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, php80-php-pecl-mailparse
 Requires: tuleap-core-mailman
 %description plugin-forumml
 ForumML brings to Tuleap a very nice mail archive viewer and the possibility
@@ -163,7 +159,7 @@ Group: Development/Tools
 %package plugin-ldap
 Summary: Tuleap plugin to manage LDAP integration
 Group: Development/Tools
-Requires: php74-php-ldap, php80-php-ldap, perl-LDAP
+Requires: php80-php-ldap, perl-LDAP
 %description plugin-ldap
 LDAP Plugin for Tuleap. Provides LDAP information, LDAP
 authentication, user and group management.
@@ -200,7 +196,7 @@ Plugin to access to file releases & docman though WebDAV
 AutoReqProv: no
 Summary: Tracker v5 for Tuleap
 Group: Development/Tools
-Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, libxslt, php74-php-pecl-mailparse, php80-php-pecl-mailparse
+Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, libxslt, php80-php-pecl-mailparse
 %description plugin-tracker
 New tracker generation for Tuleap.
 
@@ -974,7 +970,6 @@ if [ $1 -eq 1 ]; then
         tuleap.service \
         tuleap-workers.service \
         tuleap-php-fpm.service &>/dev/null || :
-    /usr/bin/systemctl mask php74-php-fpm || :
     /usr/bin/systemctl mask php80-php-fpm || :
 fi
 
@@ -1018,7 +1013,6 @@ if [ $1 -eq 0 ]; then
 fi
 
 %postun
-/usr/bin/systemctl unmask php74-php-fpm || :
 /usr/bin/systemctl unmask php80-php-fpm || :
 /usr/bin/systemctl daemon-reload &>/dev/null || :
 

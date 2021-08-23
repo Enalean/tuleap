@@ -45,7 +45,7 @@ class XmlContent
 
     public function _pushContent($item)
     {
-        if (is_object($item) && strtolower(get_class($item)) == 'xmlcontent') {
+        if (is_object($item) && strtolower($item::class) == 'xmlcontent') {
             array_splice(
                 $this->_content,
                 count($this->_content),
@@ -81,7 +81,7 @@ class XmlContent
 
     public function _unshiftContent($item)
     {
-        if (is_object($item) && strtolower(get_class($item)) == 'xmlcontent') {
+        if (is_object($item) && strtolower($item::class) == 'xmlcontent') {
             array_splice($this->_content, 0, 0, $item->_content);
         } else {
             array_unshift($this->_content, $item);
@@ -110,7 +110,7 @@ class XmlContent
                 } elseif (method_exists($item, 'asString')) {
                     echo self::_quote($item->asString());
                 } else {
-                    printf("==Object(%s)==", get_class($item));
+                    printf("==Object(%s)==", $item::class);
                 }
             } else {
                 echo self::_quote((string) $item);
@@ -128,7 +128,7 @@ class XmlContent
                 } elseif (method_exists($item, 'asString')) {
                     $xml .= self::_quote($item->asString());
                 } else {
-                    $xml .= sprintf("==Object(%s)==", get_class($item));
+                    $xml .= sprintf("==Object(%s)==", $item::class);
                 }
             } else {
                 $xml .= self::_quote((string) $item);
@@ -145,7 +145,7 @@ class XmlContent
                 if (method_exists($item, 'asString')) {
                     $val .= $item->asString();
                 } else {
-                    $val .= sprintf("==Object(%s)==", get_class($item));
+                    $val .= sprintf("==Object(%s)==", $item::class);
                 }
             } else {
                 $val .= (string) $item;
@@ -588,7 +588,7 @@ function PrintXML($val /* , ... */)
         } elseif (method_exists($val, 'asString')) {
             echo XmlContent_quote($val->asString());
         } else {
-            printf("==Object(%s)==", get_class($val));
+            printf("==Object(%s)==", $val::class);
         }
     } elseif (is_array($val)) {
         // DEPRECATED:
@@ -621,7 +621,7 @@ function AsXML($val /* , ... */)
         } elseif (method_exists($val, 'asString')) {
             return XmlContent_quote($val->asString());
         } else {
-            return sprintf("==Object(%s)==", get_class($val));
+            return sprintf("==Object(%s)==", $val::class);
         }
     } elseif (is_array($val)) {
         // DEPRECATED:
@@ -656,7 +656,7 @@ function AsString($val)
         if (method_exists($val, 'asString')) {
             return $val->asString();
         } else {
-            return sprintf("==Object(%s)==", get_class($val));
+            return sprintf("==Object(%s)==", $val::class);
         }
     } elseif (is_array($val)) {
         // DEPRECATED:

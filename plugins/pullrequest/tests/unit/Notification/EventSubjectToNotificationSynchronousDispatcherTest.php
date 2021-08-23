@@ -49,7 +49,7 @@ final class EventSubjectToNotificationSynchronousDispatcherTest extends \Tuleap\
 
         $dispatcher = new EventSubjectToNotificationSynchronousDispatcher(
             new EventSubjectToNotificationListenerProvider([
-                get_class($event) => [
+                $event::class => [
                     static function () use ($listener_1): EventSubjectToNotificationListener {
                         return $listener_1;
                     },

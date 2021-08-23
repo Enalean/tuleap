@@ -1,8 +1,0 @@
-# Please see https://docs.tuleap.org/installation-guide/docker-image.html
-#
-# This docker-compose file is meant to be used by developers working on the Tuleap codebase
-version: "2"
-
-services:
-  web:
-    image: ghcr.io/enalean/tuleap-aio-dev:c7-php74-nginx-v2

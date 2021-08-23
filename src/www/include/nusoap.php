@@ -367,7 +367,7 @@ class nusoap_base
         $this->appendDebug('value=' . $this->varDump($val));
         $this->appendDebug('attributes=' . $this->varDump($attributes));
 
-        if (is_object($val) && get_class($val) == 'soapval') {
+        if (is_object($val) && $val::class === soapval::class) {
             return $val->serialize($use);
         }
      // force valid name if necessary
@@ -469,10 +469,10 @@ class nusoap_base
                 break;
             case is_object($val):
                 if (! $name) {
-                    $name = get_class($val);
+                    $name = $val::class;
                     $this->debug("In serialize_val, used class name $name as element name");
                 } else {
-                    $this->debug("In serialize_val, do not override name $name for element name for class " . get_class($val));
+                    $this->debug("In serialize_val, do not override name $name for element name for class " . $val::class);
                 }
                 foreach (get_object_vars($val) as $k => $v) {
                     $pXml = isset($pXml) ? $pXml . $this->serialize_val($v, $k, false, false, false, false, $use) : $this->serialize_val($v, $k, false, false, false, false, $use);
@@ -486,7 +486,7 @@ class nusoap_base
                     $i = 0;
                     if (is_array($val) && count($val) > 0) {
                         foreach ($val as $v) {
-                            if (is_object($v) && get_class($v) ==  'soapval') {
+                            if (is_object($v) && $v::class === soapval::class) {
                                 $tt_ns = $v->type_ns;
                                 $tt    = $v->type;
                             } elseif (is_array($v)) {
@@ -3238,7 +3238,7 @@ class soap_server extends nusoap_base
             foreach ($qs as $v) {
                 if (substr($v, 0, 6) == 'debug=') {
                     $this->debug("In soap_server, set debug_flag=" . substr($v, 6) . " based on query string #1");
-                    $this->debug_flag = substr($v, 6);
+                    $this->debug_flag = (bool) substr($v, 6);
                 }
             }
         }
@@ -3246,7 +3246,7 @@ class soap_server extends nusoap_base
      // wsdl
         if ($wsdl) {
             $this->debug("In soap_server, WSDL is specified");
-            if (is_object($wsdl) && (get_class($wsdl) == 'wsdl')) {
+            if (is_object($wsdl) && ($wsdl::class === wsdl::class)) {
                 $this->wsdl            = $wsdl;
                 $this->externalWSDLURL = $this->wsdl->wsdl;
                 $this->debug('Use existing wsdl instance from ' . $this->externalWSDLURL);
@@ -5139,7 +5139,7 @@ class wsdl extends nusoap_base
         }
 
      // if a soapval has been supplied, let its type override the WSDL
-        if (is_object($value) && get_class($value) == 'soapval') {
+        if (is_object($value) && $value::class === soapval::class) {
             if ($value->type_ns) {
                 $type      = $value->type_ns . ':' . $value->type;
                 $forceType = true;
@@ -6456,7 +6456,7 @@ class soap_client extends nusoap_base
 
      // make values
         if ($wsdl) {
-            if (is_object($endpoint) && (get_class($endpoint) == 'wsdl')) {
+            if (is_object($endpoint) && ($endpoint::class === wsdl::class )) {
                 $this->wsdl     = $endpoint;
                 $this->endpoint = $this->wsdl->wsdl;
                 $this->wsdlFile = $this->endpoint;

@@ -76,7 +76,7 @@ final class Tracker_FormElement_Field_CheckboxTest extends \Tuleap\Test\PHPUnit\
         $bind->shouldReceive('formatChangesetValueWithoutLink')->once();
         $field->setBind($bind);
 
-        $reflection = new \ReflectionClass(get_class($field));
+        $reflection = new \ReflectionClass($field::class);
         $method     = $reflection->getMethod('fetchFieldValue');
         $method->setAccessible(true);
 

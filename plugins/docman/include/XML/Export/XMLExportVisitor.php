@@ -89,7 +89,7 @@ class XMLExportVisitor implements ItemVisitor
 
     public function visitItem(Docman_Item $item, array $params = []): SimpleXMLElement
     {
-        $type = str_replace('docman_', '', strtolower(get_class($item)));
+        $type = str_replace('docman_', '', strtolower($item::class));
         $this->log($item, $type);
 
         $xml = $params['xml'];

@@ -26,7 +26,7 @@ class Docman_SqlReportColumnFactory
     public static function &getFromColumn($c)
     {
         $obj = \null;
-        switch (\strtolower(\get_class($c))) {
+        switch (\strtolower($c::class)) {
             case 'docman_reportcolumnlocation':
                 // No sort on this column
                 break;

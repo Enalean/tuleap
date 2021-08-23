@@ -208,7 +208,7 @@ final class SOAP_WSDLMethodGeneratorTest extends \Tuleap\Test\PHPUnit\TestCase
             }
         };
 
-        $class = new ReflectionClass(get_class($object));
+        $class = new ReflectionClass($object::class);
         return new SOAP_WSDLMethodGenerator($class->getMethod($methodName));
     }
 }

@@ -160,7 +160,7 @@ class PluginsAdministrationViews extends Views
 
         $name = $descriptor->getFullName();
         if (strlen(trim($name)) === 0) {
-            $name = get_class($plugin);
+            $name = $plugin::class;
         }
 
         $readme          = $this->getFormattedReadme($plugin->getName());
@@ -194,7 +194,7 @@ class PluginsAdministrationViews extends Views
         $are_there_additional_options = ! empty($additional_options);
 
         $is_enabled             = (bool) $this->plugin_manager->isPluginAvailable($plugin);
-        $is_there_enable_switch = (strcasecmp(get_class($plugin), 'PluginsAdministrationPlugin') !== 0);
+        $is_there_enable_switch = (strcasecmp($plugin::class, 'PluginsAdministrationPlugin') !== 0);
 
         $csrf_token = new CSRFSynchronizerToken('/plugins/pluginsadministration/');
 
@@ -265,7 +265,7 @@ class PluginsAdministrationViews extends Views
                 $available  = $this->plugin_manager->isPluginAvailable($plugin);
                 $name       = $descriptor->getFullName();
                 if (strlen(trim($name)) === 0) {
-                    $name = get_class($plugin);
+                    $name = $plugin::class;
                 }
                 $dont_touch    = ! $this->plugin_disabler_verifier->canPluginBeDisabled($plugin);
                 $dont_restrict = $plugin->getScope() !== Plugin::SCOPE_PROJECT;

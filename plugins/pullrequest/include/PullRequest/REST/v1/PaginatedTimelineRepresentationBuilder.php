@@ -33,18 +33,12 @@ use UserManager;
 
 class PaginatedTimelineRepresentationBuilder
 {
-
-    /** @var Tuleap\PullRequest\Timeline\Factory */
-    private $timeline_factory;
-
     /** @var UserManager */
     private $user_manager;
 
-
-    public function __construct(Factory $timeline_factory)
+    public function __construct(private Factory $timeline_factory)
     {
-        $this->timeline_factory = $timeline_factory;
-        $this->user_manager     = UserManager::instance();
+        $this->user_manager = UserManager::instance();
     }
 
     public function getPaginatedTimelineRepresentation(PullRequest $pull_request, $project_id, $limit, $offset)
@@ -64,8 +58,9 @@ class PaginatedTimelineRepresentationBuilder
 
     private function buildEventRepresentation(TimelineEvent $event, $project_id)
     {
-        switch (get_class($event)) {
+        switch ($event::class) {
             case Comment::class:
+                assert($event instanceof Comment);
                 return new CommentRepresentation(
                     $event->getId(),
                     $project_id,
@@ -74,6 +69,7 @@ class PaginatedTimelineRepresentationBuilder
                     $event->getContent()
                 );
             case InlineComment::class:
+                assert($event instanceof InlineComment);
                 return new TimelineInlineCommentRepresentation(
                     $event->getFilePath(),
                     $event->getUnidiffOffset(),
@@ -84,16 +80,18 @@ class PaginatedTimelineRepresentationBuilder
                     $project_id
                 );
             case TimelineGlobalEvent::class:
+                assert($event instanceof TimelineGlobalEvent);
                 return new TimelineEventRepresentation(
                     $this->buildMinimalUserRepresentation($event->getUserId()),
                     $event->getPostDate(),
                     $event->getType()
                 );
             case ReviewerChange::class:
+                assert($event instanceof ReviewerChange);
                 return ReviewerChangeTimelineEventRepresentation::fromReviewerChange($event);
         }
 
-        throw new \LogicException('Do not know how to build a timeline event representation from ' . get_class($event));
+        throw new \LogicException('Do not know how to build a timeline event representation from ' . $event::class);
     }
 
     private function buildMinimalUserRepresentation(int $user_id): MinimalUserRepresentation

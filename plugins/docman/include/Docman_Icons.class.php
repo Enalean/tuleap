@@ -57,7 +57,7 @@ class Docman_Icons
         if (isset($params['icon_width'])) {
                 $icon .= $params['icon_width'] . '/';
         }
-        switch (strtolower(get_class($item))) {
+        switch (strtolower($item::class)) {
             case 'docman_folder':
                 $icon .= 'folder';
                 if (isset($params['expanded']) && $params['expanded']) {

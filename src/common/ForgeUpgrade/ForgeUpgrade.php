@@ -170,7 +170,7 @@ class ForgeUpgrade
     private function doRecordOnly(array $buckets): void
     {
         foreach ($buckets as $bucket) {
-            $this->logger->info("[doRecordOnly] " . get_class($bucket));
+            $this->logger->info("[doRecordOnly] " . $bucket::class);
             $this->db->logStart($bucket);
             $this->db->logEnd($bucket, ForgeUpgradeDb::STATUS_SKIP);
         }
@@ -212,7 +212,7 @@ class ForgeUpgrade
         $this->logger->info("Process all pre up checks");
         $result = true;
         foreach ($buckets as $bucket) {
-            $className = get_class($bucket);
+            $className = $bucket::class;
             try {
                 if (! $bucket->dependsOn()) {
                     $bucket->preUp();
@@ -242,7 +242,7 @@ class ForgeUpgrade
     {
         $this->db->logStart($bucket);
 
-        $log->info("Processing " . get_class($bucket));
+        $log->info("Processing " . $bucket::class);
 
         $bucket->preUp();
         $log->info("PreUp OK");

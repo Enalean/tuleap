@@ -431,13 +431,13 @@ class ParsedBlock extends Block_HtmlElement
         for ($m = $re_set->match($line); $m; $m = $re_set->nextMatch($line, $m)) {
             $block = clone $this->_block_types[$m->regexp_ind];
             if (DEBUG & _DEBUG_PARSER) {
-                $input->_debug('>', get_class($block));
+                $input->_debug('>', $block::class);
             }
 
             if ($block->_match($input, $m)) {
                 //$block->_text = $line;
                 if (DEBUG & _DEBUG_PARSER) {
-                    $input->_debug('<', get_class($block));
+                    $input->_debug('<', $block::class);
                 }
                 $tight_bottom = ! $input->skipSpace();
                 $block->_setTightness($tight_top, $tight_bottom);
@@ -551,7 +551,7 @@ class Block_blockquote extends BlockMarkup
 
     public function merge($nextBlock)
     {
-        if (get_class($nextBlock) == static::class) {
+        if ($nextBlock::class == static::class) {
             assert($nextBlock->_depth < $this->_depth);
             $nextBlock->_element->unshiftContent($this->_element);
             $nextBlock->_tight_top = $this->_tight_top;
@@ -1126,7 +1126,7 @@ class Block_p extends BlockMarkup
 
     public function merge($nextBlock)
     {
-        $class = get_class($nextBlock);
+        $class = $nextBlock::class;
         if (strtolower($class) == 'block_p' and $this->_tight_bot) {
             $this->_text     .= "\n" . $nextBlock->_text;
             $this->_tight_bot = $nextBlock->_tight_bot;

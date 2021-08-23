@@ -122,7 +122,7 @@ class OceanTheme extends Theme
 
     public function ApplyPlot($plot)
     {
-        switch (get_class($plot)) {
+        switch ($plot::class) {
             case 'GroupBarPlot':
                 foreach ($plot->plots as $_plot) {
                     $this->ApplyPlot($_plot);

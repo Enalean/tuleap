@@ -117,13 +117,13 @@ class WikiPlugin__AuthInfo extends WikiPlugin
                                        'cellspacing' => 0]);
             //$table->pushContent(HTML::tr(HTML::td(array('colspan' => 2))));
             $userdata = obj2hash($user, ['_dbi', '_request', 'password', 'passwd']);
-            $table->pushContent($this->_showhash("User: Object of " . get_class($user), $userdata));
+            $table->pushContent($this->_showhash("User: Object of " . $user::class, $userdata));
             if (ENABLE_USER_NEW) {
                 $group     = $request->getGroup();
                 $groups    = $group->getAllGroupsIn();
                 $groupdata = obj2hash($group, ['_dbi', '_request', 'password', 'passwd']);
                 unset($groupdata['request']);
-                $table->pushContent($this->_showhash("Group: Object of " . get_class($group), $groupdata));
+                $table->pushContent($this->_showhash("Group: Object of " . $group::class, $groupdata));
                 $groups    = $group->getAllGroupsIn();
                 $groupdata = ['getAllGroupsIn' => $groups];
                 foreach ($groups as $g) {
@@ -165,7 +165,7 @@ class WikiPlugin__AuthInfo extends WikiPlugin
             ksort($hash);
             foreach ($hash as $key => $val) {
                 if (is_object($val)) {
-                    $heading = "Object of " . get_class($val);
+                    $heading = "Object of " . $val::class;
                     if ($depth > 3) {
                         $val = $heading;
                     } elseif ($heading == "Object of wikidb_sql") {

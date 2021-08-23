@@ -65,7 +65,7 @@ final class BackendTest extends \Tuleap\Test\PHPUnit\TestCase
             }
         };
         //Plugin backends. Give the base classname to build the backend
-        $this->assertInstanceOf(get_class($fake_backend), Backend::instance('plugin_fake', get_class($fake_backend))); //like plugins !
+        $this->assertInstanceOf($fake_backend::class, Backend::instance('plugin_fake', $fake_backend::class)); //like plugins !
     }
 
     public function testFactoryPluginBad(): void
@@ -93,7 +93,7 @@ final class BackendTest extends \Tuleap\Test\PHPUnit\TestCase
             'getBackend',
             false
         );
-        $this->assertInstanceOf(get_class($backend_overridden_by_plugin), Backend::instance(Backend::SVN));
+        $this->assertInstanceOf($backend_overridden_by_plugin::class, Backend::instance(Backend::SVN));
     }
 
     public function testFactoryOverrideWithoutParameters(): void

@@ -64,7 +64,7 @@ class Docman_XMLExportVisitor implements ItemVisitor
 
     public function visitItem(Docman_Item $item, array $params = [])
     {
-        $type = str_replace('docman_', '', strtolower(get_class($item)));
+        $type = str_replace('docman_', '', strtolower($item::class));
         $node = $this->doc->createElement('item');
 
         $node->setAttribute('type', $type);

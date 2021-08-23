@@ -44,7 +44,7 @@ final class EnhancedCodeBlockRenderer implements NodeRendererInterface
     public function render(Node $node, ChildNodeRendererInterface $childRenderer)
     {
         if (! ($node instanceof FencedCode)) {
-            throw new \InvalidArgumentException('Incompatible block type: ' . \get_class($node));
+            throw new \InvalidArgumentException('Incompatible block type: ' . $node::class);
         }
 
         $code_block = $this->fenced_code_renderer->render($node, $childRenderer);

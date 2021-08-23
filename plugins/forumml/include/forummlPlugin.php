@@ -324,7 +324,7 @@ class ForumMLPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
             $tmp_watch = new \Tuleap\TmpWatch((string) $this->getPluginInfo()->getPropertyValueForName('forumml_tmp'), 24);
             $tmp_watch->run();
         } catch (Exception $exception) {
-            $event->getLogger()->error('ForumML root_daily_start ' . get_class($exception) . ': ' . $exception->getMessage(), ['exception' => $exception]);
+            $event->getLogger()->error('ForumML root_daily_start ' . $exception::class . ': ' . $exception->getMessage(), ['exception' => $exception]);
             $event->addWarning($exception->getMessage());
         }
     }

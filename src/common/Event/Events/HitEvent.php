@@ -30,20 +30,8 @@ final class HitEvent implements Dispatchable
 {
     public const NAME = 'hitEvent';
 
-    /**
-     * @var HTTPRequest
-     */
-    private $request;
-
-    /**
-     * @var bool
-     */
-    private $is_script;
-
-    public function __construct(HTTPRequest $request, bool $is_script)
+    public function __construct(private HTTPRequest $request, private bool $is_script)
     {
-        $this->request   = $request;
-        $this->is_script = $is_script;
     }
 
     public function getRequest(): HTTPRequest

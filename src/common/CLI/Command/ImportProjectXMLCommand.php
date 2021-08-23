@@ -219,7 +219,7 @@ class ImportProjectXMLCommand extends Command
                 $broker_log->error("There are some errors in the XML content that prevent the project to be created.");
             }
         } catch (\Exception $exception) {
-            $broker_log->error(get_class($exception) . ': ' . $exception->getMessage() . ' in ' . $exception->getFile() . ' L' . $exception->getLine());
+            $broker_log->error($exception::class . ': ' . $exception->getMessage() . ' in ' . $exception->getFile() . ' L' . $exception->getLine());
         } finally {
             if (isset($archive) && $archive) {
                 $archive->cleanUp();

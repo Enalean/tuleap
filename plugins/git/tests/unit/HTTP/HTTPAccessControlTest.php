@@ -200,7 +200,7 @@ final class HTTPAccessControlTest extends \Tuleap\Test\PHPUnit\TestCase
         {
         };
         $ask_basic_authentication_challenge->shouldReceive('askBasicAuthenticationChallenge')->once()->andThrow($not_supposed_to_return);
-        $this->expectException(get_class($not_supposed_to_return));
+        $this->expectException($not_supposed_to_return::class);
 
         $http_access_control->getUser($git_repository, $git_operation);
     }

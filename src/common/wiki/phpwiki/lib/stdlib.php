@@ -826,7 +826,7 @@ class WikiPageName
                     "Non-string pagename '%s' (%s)(%s)",
                     $page,
                     gettype($page),
-                    get_class($page)
+                    $page::class
                 ),
                 E_USER_NOTICE
             );
@@ -1759,7 +1759,7 @@ function explodePageList(
 function isa($object, $class)
 {
     return is_object($object)
-        && ( strtolower(get_class($object)) == strtolower($class)
+        && ( strtolower($object::class) == strtolower($class)
              || is_subclass_of($object, $class) );
 }
 

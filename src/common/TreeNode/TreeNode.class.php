@@ -113,7 +113,7 @@ class TreeNode /*implements Visitable*/
         if (is_object($node) && is_a($node, 'TreeNode')) {
             $this->parentNode =& $node;
         } else {
-            trigger_error(static::class . '::setParentNode => require: TreeNode given: "' .  get_class($node) . '"', E_USER_ERROR);
+            trigger_error(static::class . '::setParentNode => require: TreeNode given: "' .  $node::class . '"', E_USER_ERROR);
         }
     }
 
@@ -143,7 +143,7 @@ class TreeNode /*implements Visitable*/
             $c->_setParentNode($this);
             $this->children[] = $c;
         } else {
-            trigger_error(static::class . '::addChild => require: TreeNode given: "' . get_class($c) . '"', E_USER_ERROR);
+            trigger_error(static::class . '::addChild => require: TreeNode given: "' . $c::class . '"', E_USER_ERROR);
         }
     }
 
