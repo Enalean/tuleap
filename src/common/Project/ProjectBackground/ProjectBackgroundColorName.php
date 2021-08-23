@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2020 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2021 - Present. All Rights Reserved.
  *
  *  This file is a part of Tuleap.
  *
@@ -24,37 +24,36 @@ namespace Tuleap\Project\ProjectBackground;
 
 /**
  * @psalm-immutable
- * @psalm-type ValidProjectBackgroundName = key-of<ProjectBackgroundSelection::ALLOWED>
+ * @psalm-type ValidProjectBackgroundColorName = key-of<\Tuleap\Color\AllowedColorsCollection::COLORS>
  */
-final class ProjectBackgroundName
+final class ProjectBackgroundColorName
 {
     /**
-     * @var string
-     * @psalm-var ValidProjectBackgroundName
+     * @psalm-var ValidProjectBackgroundColorName
      */
-    private $identifier;
+    private string $color_name;
 
     /**
-     * @psalm-param ValidProjectBackgroundName $name
+     * @psalm-param ValidProjectBackgroundColorName $color_name
      */
-    private function __construct(string $name)
+    private function __construct(string $color_name)
     {
-        $this->identifier = $name;
+        $this->color_name = $color_name;
     }
 
     /**
-     * @psalm-param ValidProjectBackgroundName $name
+     * @psalm-param ValidProjectBackgroundColorName $color_name
      */
-    public static function fromIdentifier(string $name): self
+    public static function fromColorName(string $color_name): self
     {
-        return new self($name);
+        return new self($color_name);
     }
 
     /**
-     * @psalm-return ValidProjectBackgroundName
+     * @psalm-return ValidProjectBackgroundColorName
      */
-    public function getIdentifier(): string
+    public function getColorName(): string
     {
-        return $this->identifier;
+        return $this->color_name;
     }
 }
