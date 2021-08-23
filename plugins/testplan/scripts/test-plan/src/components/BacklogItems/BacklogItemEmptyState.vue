@@ -19,14 +19,14 @@
   -->
 
 <template>
-    <div class="empty-state-pane">
+    <section class="empty-state-page">
         <div class="empty-state-illustration">
             <backlog-item-empty-state-svg />
         </div>
-        <div class="empty-state-text">
-            <translate>There is no backlog item yet.</translate>
-        </div>
-    </div>
+        <p class="empty-state-text">
+            <translate>There is no backlog item yet</translate>
+        </p>
+    </section>
 </template>
 
 <script lang="ts">

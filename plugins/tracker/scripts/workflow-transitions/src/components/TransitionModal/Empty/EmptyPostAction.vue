@@ -18,13 +18,12 @@
   -->
 
 <template>
-    <div class="empty-state-pane">
-        <div class="tracker-workflow-transition-modal-empty-action">
-            <div v-translate>No action is currently defined.</div>
-            <div v-translate>Start by adding one.</div>
-        </div>
+    <section class="empty-state-page">
+        <p class="empty-state-text" v-translate>
+            No action is currently defined. Start by adding one.
+        </p>
         <button
-            class="tlp-button-primary tlp-button-outline"
+            class="empty-state-action tlp-button-primary tlp-button-outline"
             type="button"
             v-on:click="addNewPostAction()"
             data-test="add-post-action"
@@ -32,7 +31,7 @@
             <i class="fa fa-plus tlp-button-icon"></i>
             <translate>Add action</translate>
         </button>
-    </div>
+    </section>
 </template>
 <script>
 import { mapMutations } from "vuex";

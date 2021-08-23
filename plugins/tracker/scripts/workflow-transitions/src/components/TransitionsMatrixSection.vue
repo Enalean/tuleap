@@ -44,18 +44,15 @@
                 </tr>
             </tbody>
         </table>
-        <div v-else class="empty-state-page tracker-workflow-transition-matrix-empty-state">
-            <p
-                class="empty-state-text tracker-workflow-transition-matrix-empty-state-field-empty"
-                v-translate
-            >
+        <section v-else class="empty-state-pane">
+            <p class="empty-state-text" v-translate>
                 The field on which the transitions are based has no selectable value
             </p>
-            <a class="tlp-button-primary" v-bind:href="configure_field_url">
-                <i class="fa fa-cog"></i>
+            <a class="empty-state-action tlp-button-primary" v-bind:href="configure_field_url">
+                <i class="fa fa-cog tlp-button-icon"></i>
                 <span v-translate>Configure it</span>
             </a>
-        </div>
+        </section>
     </section>
 </template>
 <script>

@@ -1,37 +1,39 @@
 <div class="tlp-framed-vertically">
     <div class="tlp-framed-horizontally">
-        <div class="empty-state-page">
+        <section class="empty-state-page">
             {{^ is_user_admin }}
-                <span class="empty-state-text">
+                <h1 class="empty-state-title">
                     {{ config_is_not_fully_set_up }}
-                    <br>
+                </h1>
+                <p class="empty-state-text">
                     {{ come_back_later }}
-                </span>
+                </p>
             {{/ is_user_admin}}
 
             {{# is_user_admin }}
-            <span class="empty-state-text">
-                  {{ config_is_not_fully_set_up }}
-              <br>
-              {{ help_message_config_not_fully_set_up }}
-              </span>
-            <div class="first-testmanagament-administration">
-              <a type="button" class="tlp-button-primary tlp-button-outline" href="{{ ttm_admin_url }}">
-                <i class="fas fa-long-arrow-alt-right tlp-button-icon"></i>
-                {{# dgettext }} tuleap-testmanagement | Go to administration {{/ dgettext }}
-              </a>
-              <form action="" method="POST">
-                {{# csrf_token }}
-                  {{> csrf_token_input }}
-                {{/ csrf_token }}
-                <button type="submit" class="tlp-button-primary tlp-button-primary-large">
-                  <input type="hidden" name="action" value="create-config"/>
-                  <i class="fa fa-play tlp-button-icon"></i>
-                  {{ start_testmanagement }}
-                </button>
-              </form>
-            </div>
+                <h1 class="empty-state-title">
+                    {{ config_is_not_fully_set_up }}
+                </h1>
+                <p class="empty-state-text">
+                    {{ help_message_config_not_fully_set_up }}
+                </p>
+                <div class="empty-state-action first-testmanagament-administration">
+                    <a type="button" class="tlp-button-primary tlp-button-outline" href="{{ ttm_admin_url }}">
+                        <i class="fas fa-long-arrow-alt-right tlp-button-icon"></i>
+                        {{# dgettext }} tuleap-testmanagement | Go to administration {{/ dgettext }}
+                    </a>
+                    <form action="" method="POST">
+                        {{# csrf_token }}
+                            {{> csrf_token_input }}
+                        {{/ csrf_token }}
+                        <button type="submit" class="tlp-button-primary tlp-button-primary-large">
+                            <input type="hidden" name="action" value="create-config"/>
+                            <i class="fa fa-play tlp-button-icon"></i>
+                            {{ start_testmanagement }}
+                        </button>
+                    </form>
+                </div>
             {{/is_user_admin}}
-        </div>
+        </section>
     </div>
 </div>

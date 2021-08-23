@@ -152,8 +152,8 @@ class Tracker_Widget_MyArtifacts extends Widget
         if (count($my_artifacts) > 0) {
             $html_my_artifacts .= $this->_display_artifacts($my_artifacts);
         } else {
-            $html_my_artifacts .= '<div class="empty-state-pane">
-                <div class="empty-state-icon">
+            $html_my_artifacts .= '<section class="empty-state-pane">
+                <div class="empty-state-illustration">
                     <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="140" height="192" viewBox="0 0 140 192">
                         <g fill="none" fill-rule="evenodd">
                             <g transform="rotate(1 67.375 106.312)">
@@ -179,9 +179,9 @@ class Tracker_Widget_MyArtifacts extends Widget
                     </svg>
                 </div>
                 <p class="empty-state-text">' .
-                dgettext('tuleap-tracker', 'You don\'t have any </br> artifacts yet')
+                dgettext('tuleap-tracker', 'You don\'t have any artifacts yet')
                 . '</p>
-                </div>';
+                </section>';
         }
 
         return $html_my_artifacts;

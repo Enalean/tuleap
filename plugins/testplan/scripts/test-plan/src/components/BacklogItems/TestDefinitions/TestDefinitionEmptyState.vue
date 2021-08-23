@@ -19,11 +19,11 @@
   -->
 
 <template>
-    <div class="empty-state-pane">
-        <div class="empty-state-text test-plan-list-of-test-definitions-empty-text" v-translate>
-            This item isn't covered yet.
-        </div>
-    </div>
+    <section class="empty-state-pane">
+        <p class="empty-state-text empty-state-text-smaller" v-translate>
+            This item isn't covered yet
+        </p>
+    </section>
 </template>
 
 <script lang="ts">
