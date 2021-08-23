@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values;
 
-use Tuleap\ProgramManagement\Tests\Builder\ReplicationDataBuilder;
 use Tuleap\ProgramManagement\Tests\Builder\SynchronizedFieldsBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveStatusValuesStub;
 
@@ -31,11 +30,10 @@ final class StatusValueTest extends \Tuleap\Test\PHPUnit\TestCase
     private const FIRST_LABEL  = 'diaster';
     private const SECOND_LABEL = 'tolter';
 
-    public function testItBuildsFromReplicationAndSynchronizedFields(): void
+    public function testItBuildsFromSynchronizedFields(): void
     {
-        $value  = StatusValue::fromReplicationAndSynchronizedFields(
+        $value  = StatusValue::fromSynchronizedFields(
             RetrieveStatusValuesStub::withValues(self::FIRST_LABEL, self::SECOND_LABEL),
-            ReplicationDataBuilder::build(),
             SynchronizedFieldsBuilder::build()
         );
         $labels = array_map(static fn(BindValueLabel $label): string => $label->getLabel(), $value->getListValues());

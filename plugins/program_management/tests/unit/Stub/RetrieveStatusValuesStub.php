@@ -25,7 +25,6 @@ namespace Tuleap\ProgramManagement\Tests\Stub;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\BindValueLabel;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\RetrieveStatusValues;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFields;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\ReplicationData;
 
 final class RetrieveStatusValuesStub implements RetrieveStatusValues
 {
@@ -44,7 +43,7 @@ final class RetrieveStatusValuesStub implements RetrieveStatusValues
         return new self(...$labels);
     }
 
-    public function getStatusValues(ReplicationData $replication, SynchronizedFields $fields): array
+    public function getStatusValues(SynchronizedFields $fields): array
     {
         return array_map(
             static fn(string $label): BindValueLabel => BindValueLabelStub::withLabel($label),

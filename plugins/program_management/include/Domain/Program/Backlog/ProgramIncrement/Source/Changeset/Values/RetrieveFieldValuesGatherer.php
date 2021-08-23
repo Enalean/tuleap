@@ -22,13 +22,15 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values;
 
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFields;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\PendingArtifactChangesetNotFoundException;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\PendingArtifactNotFoundException;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\ReplicationData;
 
-interface RetrieveTitleValue
+interface RetrieveFieldValuesGatherer
 {
     /**
-     * @throws ChangesetValueNotFoundException
-     * @throws UnsupportedTitleFieldException
+     * @throws PendingArtifactNotFoundException
+     * @throws PendingArtifactChangesetNotFoundException
      */
-    public function getTitleValue(SynchronizedFields $fields): string;
+    public function getFieldValuesGatherer(ReplicationData $replication): GatherFieldValues;
 }

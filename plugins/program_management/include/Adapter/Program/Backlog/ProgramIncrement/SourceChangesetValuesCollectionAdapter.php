@@ -27,7 +27,7 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Chan
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\BuildFieldValues;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\DescriptionValue;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\EndPeriodValue;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\GatherFieldValues;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\RetrieveFieldValuesGatherer;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\SourceChangesetValuesCollection;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\StartDateValue;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\StatusValue;
@@ -40,14 +40,14 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Subm
 final class SourceChangesetValuesCollectionAdapter implements BuildFieldValues
 {
     private BuildSynchronizedFields $fields_gatherer;
-    private GatherFieldValues $field_values_gatherer;
+    private RetrieveFieldValuesGatherer $field_values_retriever;
 
     public function __construct(
         BuildSynchronizedFields $fields_gatherer,
-        GatherFieldValues $field_values_gatherer
+        RetrieveFieldValuesGatherer $field_values_retriever
     ) {
-        $this->fields_gatherer       = $fields_gatherer;
-        $this->field_values_gatherer = $field_values_gatherer;
+        $this->fields_gatherer        = $fields_gatherer;
+        $this->field_values_retriever = $field_values_retriever;
     }
 
     /**
@@ -56,33 +56,14 @@ final class SourceChangesetValuesCollectionAdapter implements BuildFieldValues
      */
     public function buildCollection(ReplicationData $replication_data): SourceChangesetValuesCollection
     {
-        $fields              = $this->fields_gatherer->build($replication_data->getTracker());
-        $title_value         = TitleValue::fromReplicationDataAndSynchronizedFields(
-            $this->field_values_gatherer,
-            $replication_data,
-            $fields
-        );
-        $description_value   = DescriptionValue::fromReplicationDataAndSynchronizedFields(
-            $this->field_values_gatherer,
-            $replication_data,
-            $fields
-        );
-        $status_value        = StatusValue::fromReplicationAndSynchronizedFields(
-            $this->field_values_gatherer,
-            $replication_data,
-            $fields
-        );
-        $start_date_value    = StartDateValue::fromReplicationAndSynchronizedFields(
-            $this->field_values_gatherer,
-            $replication_data,
-            $fields
-        );
-        $end_period_value    = EndPeriodValue::fromReplicationAndSynchronizedFields(
-            $this->field_values_gatherer,
-            $replication_data,
-            $fields
-        );
-        $artifact_link_value = ArtifactLinkValue::fromReplicationData($replication_data);
+        $fields                = $this->fields_gatherer->build($replication_data->getTracker());
+        $field_values_gatherer = $this->field_values_retriever->getFieldValuesGatherer($replication_data);
+        $title_value           = TitleValue::fromSynchronizedFields($field_values_gatherer, $fields);
+        $description_value     = DescriptionValue::fromSynchronizedFields($field_values_gatherer, $fields);
+        $status_value          = StatusValue::fromSynchronizedFields($field_values_gatherer, $fields);
+        $start_date_value      = StartDateValue::fromSynchronizedFields($field_values_gatherer, $fields);
+        $end_period_value      = EndPeriodValue::fromSynchronizedFields($field_values_gatherer, $fields);
+        $artifact_link_value   = ArtifactLinkValue::fromReplicationData($replication_data);
 
         return new SourceChangesetValuesCollection(
             $replication_data->getArtifact()->getId(),

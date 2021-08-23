@@ -20,27 +20,33 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Tests\Stub;
+namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation;
 
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\RetrieveStartDateValue;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFields;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\ChangesetIdentifier;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\DomainChangeset;
 
-final class RetrieveStartDateValueStub implements RetrieveStartDateValue
+/**
+ * I am a Changeset identifier that can be built from Tracker changeset objects directly without breaking the
+ * hexagonal architecture.
+ * @see DomainChangeset
+ * @psalm-immutable
+ */
+final class ChangesetProxy implements ChangesetIdentifier
 {
-    private string $value;
+    private int $id;
 
-    private function __construct(string $value)
+    private function __construct(int $id)
     {
-        $this->value = $value;
+        $this->id = $id;
     }
 
-    public static function withValue(string $value): self
+    public static function fromChangeset(\Tracker_Artifact_Changeset $changeset): self
     {
-        return new self($value);
+        return new self((int) $changeset->getId());
     }
 
-    public function getStartDateValue(SynchronizedFields $fields): string
+    public function getId(): int
     {
-        return $this->value;
+        return $this->id;
     }
 }

@@ -70,7 +70,7 @@ final class IterationCreation
     ): array {
         $creations = [];
         foreach ($iterations->ids as $iteration_identifier) {
-            $last_changeset_id = ChangesetIdentifier::fromIterationLastChangeset(
+            $last_changeset_id = DomainChangeset::fromIterationLastChangeset(
                 $changeset_retriever,
                 $iteration_identifier
             );
@@ -132,7 +132,7 @@ final class IterationCreation
         } catch (ProgramIncrementNotFoundException $e) {
             throw new StoredProgramIncrementNoLongerValidException($program_increment_id);
         }
-        $changeset = ChangesetIdentifier::fromId($changeset_verifier, $stored_creation['iteration_changeset_id']);
+        $changeset = DomainChangeset::fromId($changeset_verifier, $stored_creation['iteration_changeset_id']);
         if (! $changeset) {
             return null;
         }

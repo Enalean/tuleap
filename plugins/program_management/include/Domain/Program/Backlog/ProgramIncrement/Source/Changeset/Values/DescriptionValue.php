@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values;
 
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFields;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\ReplicationData;
 
 /**
  * I hold the value of the Description semantic field of the source Timebox.
@@ -44,12 +43,11 @@ final class DescriptionValue
     /**
      * @throws ChangesetValueNotFoundException
      */
-    public static function fromReplicationDataAndSynchronizedFields(
+    public static function fromSynchronizedFields(
         RetrieveDescriptionValue $description_retriever,
-        ReplicationData $replication,
         SynchronizedFields $fields
     ): self {
-        $text_value = $description_retriever->getDescriptionValue($replication, $fields);
+        $text_value = $description_retriever->getDescriptionValue($fields);
         return new self($text_value->getValue(), $text_value->getFormat());
     }
 

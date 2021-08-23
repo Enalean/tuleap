@@ -23,12 +23,11 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values;
 
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFields;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\ReplicationData;
 
 interface RetrieveDescriptionValue
 {
     /**
      * @throws ChangesetValueNotFoundException
      */
-    public function getDescriptionValue(ReplicationData $replication, SynchronizedFields $fields): TextFieldValue;
+    public function getDescriptionValue(SynchronizedFields $fields): TextFieldValue;
 }

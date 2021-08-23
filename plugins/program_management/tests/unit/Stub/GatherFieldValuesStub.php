@@ -25,7 +25,6 @@ namespace Tuleap\ProgramManagement\Tests\Stub;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\GatherFieldValues;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\TextFieldValue;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFields;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\ReplicationData;
 
 final class GatherFieldValuesStub implements GatherFieldValues
 {
@@ -69,30 +68,29 @@ final class GatherFieldValuesStub implements GatherFieldValues
         );
     }
 
-    public function getTitleValue(ReplicationData $replication, SynchronizedFields $fields): string
+    public function getTitleValue(SynchronizedFields $fields): string
     {
-        return $this->title_stub->getTitleValue($replication, $fields);
+        return $this->title_stub->getTitleValue($fields);
     }
 
     public function getDescriptionValue(
-        ReplicationData $replication,
         SynchronizedFields $fields
     ): TextFieldValue {
-        return $this->description_stub->getDescriptionValue($replication, $fields);
+        return $this->description_stub->getDescriptionValue($fields);
     }
 
-    public function getStartDateValue(ReplicationData $replication, SynchronizedFields $fields): string
+    public function getStartDateValue(SynchronizedFields $fields): string
     {
-        return $this->start_date_stub->getStartDateValue($replication, $fields);
+        return $this->start_date_stub->getStartDateValue($fields);
     }
 
-    public function getEndPeriodValue(ReplicationData $replication, SynchronizedFields $fields): string
+    public function getEndPeriodValue(SynchronizedFields $fields): string
     {
-        return $this->end_period_stub->getEndPeriodValue($replication, $fields);
+        return $this->end_period_stub->getEndPeriodValue($fields);
     }
 
-    public function getStatusValues(ReplicationData $replication, SynchronizedFields $fields): array
+    public function getStatusValues(SynchronizedFields $fields): array
     {
-        return $this->status_stub->getStatusValues($replication, $fields);
+        return $this->status_stub->getStatusValues($fields);
     }
 }

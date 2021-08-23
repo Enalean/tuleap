@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values;
 
-use Tuleap\ProgramManagement\Tests\Builder\ReplicationDataBuilder;
 use Tuleap\ProgramManagement\Tests\Builder\SynchronizedFieldsBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveDescriptionValueStub;
 
@@ -31,11 +30,10 @@ final class DescriptionValueTest extends \Tuleap\Test\PHPUnit\TestCase
     private const DESCRIPTION_VALUE  = 'unrosed adhamant';
     private const DESCRIPTION_FORMAT = 'text';
 
-    public function testItBuildsFromReplicationAndSynchronizedFields(): void
+    public function testItBuildsFromSynchronizedFields(): void
     {
-        $value = DescriptionValue::fromReplicationDataAndSynchronizedFields(
+        $value = DescriptionValue::fromSynchronizedFields(
             RetrieveDescriptionValueStub::withValue(self::DESCRIPTION_VALUE, self::DESCRIPTION_FORMAT),
-            ReplicationDataBuilder::build(),
             SynchronizedFieldsBuilder::build()
         );
         self::assertEquals(

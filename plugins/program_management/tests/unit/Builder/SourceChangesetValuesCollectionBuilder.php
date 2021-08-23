@@ -79,29 +79,24 @@ final class SourceChangesetValuesCollectionBuilder
         $replication_data    = ReplicationDataBuilder::buildWithArtifactId($source_program_increment_id);
         $synchronized_fields = SynchronizedFieldsBuilder::build();
 
-        $title_value         = TitleValue::fromReplicationDataAndSynchronizedFields(
+        $title_value         = TitleValue::fromSynchronizedFields(
             RetrieveTitleValueStub::withValue($title),
-            $replication_data,
             $synchronized_fields
         );
-        $description_value   = DescriptionValue::fromReplicationDataAndSynchronizedFields(
+        $description_value   = DescriptionValue::fromSynchronizedFields(
             RetrieveDescriptionValueStub::withValue($description_content, $description_format),
-            $replication_data,
             $synchronized_fields
         );
-        $status_values       = StatusValue::fromReplicationAndSynchronizedFields(
+        $status_values       = StatusValue::fromSynchronizedFields(
             RetrieveStatusValuesStub::withValues(...$status),
-            $replication_data,
             $synchronized_fields
         );
-        $start_date_value    = StartDateValue::fromReplicationAndSynchronizedFields(
+        $start_date_value    = StartDateValue::fromSynchronizedFields(
             RetrieveStartDateValueStub::withValue($start_date),
-            $replication_data,
             $synchronized_fields
         );
-        $end_period_value    = EndPeriodValue::fromReplicationAndSynchronizedFields(
+        $end_period_value    = EndPeriodValue::fromSynchronizedFields(
             RetrieveEndPeriodValueStub::withValue($end_date),
-            $replication_data,
             $synchronized_fields
         );
         $artifact_link_value = ArtifactLinkValue::fromReplicationData($replication_data);

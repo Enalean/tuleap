@@ -24,7 +24,7 @@ namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement;
 
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\ProgramIncrementCreationException;
 
-class PendingArtifactNotFoundException extends \RuntimeException implements ProgramIncrementCreationException
+final class PendingArtifactNotFoundException extends \RuntimeException implements ProgramIncrementCreationException
 {
     public function __construct(int $artifact_id, int $user_id)
     {

@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values;
 
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFields;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\ReplicationData;
 
 /**
  * I hold the original (unmapped) list value labels of the Status semantic field of the source Timebox.
@@ -47,12 +46,11 @@ final class StatusValue
     /**
      * @throws ChangesetValueNotFoundException
      */
-    public static function fromReplicationAndSynchronizedFields(
+    public static function fromSynchronizedFields(
         RetrieveStatusValues $status_retriever,
-        ReplicationData $replication,
         SynchronizedFields $fields
     ): self {
-        $labels = $status_retriever->getStatusValues($replication, $fields);
+        $labels = $status_retriever->getStatusValues($fields);
         return new self(...$labels);
     }
 
