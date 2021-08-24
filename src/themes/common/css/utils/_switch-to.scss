@@ -148,6 +148,10 @@ $white-space-above-and-after-a-project-link: var(--tlp-small-spacing);
     border-radius: var(--tlp-large-radius);
     color: var(--tlp-typo-default-text-color-on-dark-background);
 
+    &:visited {
+        color: var(--tlp-typo-default-text-color-on-dark-background);
+    }
+
     &:hover,
     &:focus {
         background: rgba(0, 0, 0, 0.2);
@@ -198,6 +202,7 @@ $white-space-above-and-after-a-project-link: var(--tlp-small-spacing);
     font-weight: 500;
     line-height: 1rem;
 
+    &:visited,
     &:hover,
     &:focus {
         color: var(--tlp-dimmed-color-on-dark-background);
@@ -333,6 +338,10 @@ $white-space-above-and-after-a-project-link: var(--tlp-small-spacing);
     text-overflow: ellipsis;
     white-space: nowrap;
 
+    &:visited {
+        color: var(--tlp-typo-default-text-color-on-dark-background);
+    }
+
     &:focus,
     &:hover {
         background: rgba(0, 0, 0, 0.2);
@@ -369,6 +378,10 @@ $white-space-above-and-after-a-project-link: var(--tlp-small-spacing);
     border-radius: var(--tlp-large-radius);
     color: var(--tlp-typo-default-text-color-on-dark-background);
     font-size: 0.8125rem;
+
+    &:visited {
+        color: var(--tlp-typo-default-text-color-on-dark-background);
+    }
 
     &:focus,
     &:hover {
