@@ -24,6 +24,7 @@ use AgileDashboard_KanbanFactory;
 use AgileDashboard_PermissionsManager;
 use HTTPRequest;
 use TrackerFactory;
+use Tuleap\AgileDashboard\Kanban\KanbanXMLExporter;
 use Tuleap\Dashboard\Project\ProjectDashboardController;
 
 class ProjectKanban extends Kanban
@@ -55,5 +56,28 @@ class ProjectKanban extends Kanban
             $widget_kanban_config_updater,
             $tracker_report_factory
         );
+    }
+
+    public function exportAsXML(): \SimpleXMLElement
+    {
+        $widget = new \SimpleXMLElement('<widget />');
+        $widget->addAttribute('name', $this->id);
+
+        $preference = $widget->addChild('preference');
+        $preference->addAttribute('name', 'kanban');
+
+        $cdata_factory = new \XML_SimpleXMLCDATAFactory();
+        $cdata_factory->insertWithAttributes(
+            $preference,
+            'value',
+            (string) $this->kanban_title,
+            ['name' => 'title']
+        );
+
+        $reference = $preference->addChild('reference');
+        $reference->addAttribute('name', 'id');
+        $reference->addAttribute('REF', KanbanXMLExporter::KANBAN_ID_PREFIX . $this->kanban_id);
+
+        return $widget;
     }
 }
