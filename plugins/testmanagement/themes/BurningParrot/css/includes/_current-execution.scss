@@ -298,8 +298,7 @@ execution-with-steps.current-test-content {
 }
 
 .current-test-comment {
-    // 240px = width of 4 buttons and their margin)
-    width: calc(100% - 240px);
+    width: 100%;
     min-height: 50px;
     max-height: 200px;
     padding: 8px 12px;
@@ -330,7 +329,7 @@ execution-with-steps.current-test-content {
 
 .current-test-results {
     display: flex;
-    justify-content: space-around;
+    justify-content: flex-end;
     margin: 0 0 0 var(--tlp-small-spacing);
 }
 
