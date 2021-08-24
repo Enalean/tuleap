@@ -24,7 +24,7 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement;
 
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ArtifactCreationException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\CreateArtifact;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\ProgramIncrementFields;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\MirroredProgramIncrementChangeset;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\SubmissionDate;
 use Tuleap\ProgramManagement\Domain\ProgramTracker;
 use Tuleap\Tracker\Artifact\Creation\TrackerArtifactCreator;
@@ -33,10 +33,7 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\Validation\SystemActionContext
 
 final class ArtifactCreatorAdapter implements CreateArtifact
 {
-    /**
-     * @var TrackerArtifactCreator
-     */
-    private $artifact_creator;
+    private TrackerArtifactCreator $artifact_creator;
 
     public function __construct(TrackerArtifactCreator $artifact_creator)
     {
@@ -48,13 +45,13 @@ final class ArtifactCreatorAdapter implements CreateArtifact
      */
     public function create(
         ProgramTracker $tracker,
-        ProgramIncrementFields $fields_and_values,
+        MirroredProgramIncrementChangeset $mirrored_program_increment_changeset,
         \PFUser $user,
         SubmissionDate $submission_date
     ): void {
         $artifact = $this->artifact_creator->create(
             $tracker->getFullTracker(),
-            $fields_and_values->toFieldsDataArray(),
+            $mirrored_program_increment_changeset->toFieldsDataArray(),
             $user,
             $submission_date->getValue(),
             false,

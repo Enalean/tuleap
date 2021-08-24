@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement;
 
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\ProgramIncrementFields;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\MirroredProgramIncrementChangeset;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\SubmissionDate;
 use Tuleap\ProgramManagement\Domain\ProgramTracker;
 
@@ -30,7 +30,7 @@ interface CreateArtifact
 {
     public function create(
         ProgramTracker $tracker,
-        ProgramIncrementFields $fields_and_values,
+        MirroredProgramIncrementChangeset $mirrored_program_increment_changeset,
         \PFUser $user,
         SubmissionDate $submission_date
     ): void;

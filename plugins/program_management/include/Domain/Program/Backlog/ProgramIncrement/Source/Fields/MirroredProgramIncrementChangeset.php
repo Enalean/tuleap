@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields;
 
+use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\MapStatusByValue;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\ArtifactLinkValue;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\DescriptionValue;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\EndPeriodValue;
@@ -31,60 +32,26 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Chan
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\TitleValue;
 
 /**
+ * I hold all the field identifiers and all the corresponding field values necessary to create a new
+ * changeset in a Mirrored Program Increment.
  * @psalm-immutable
  */
-final class ProgramIncrementFields
+final class MirroredProgramIncrementChangeset
 {
-    /**
-     * @var int
-     */
-    private $artifact_link_field_id;
-    /**
-     * @var int
-     */
-    private $title_field_id;
-    /**
-     * @var TitleValue
-     */
-    private $title_value;
-    /**
-     * @var int
-     */
-    private $description_field_id;
-    /**
-     * @var DescriptionValue
-     */
-    private $description_value;
-    /**
-     * @var int
-     */
-    private $status_field_id;
-    /**
-     * @var MappedStatusValue
-     */
-    private $mapped_status_value;
-    /**
-     * @var StartDateValue
-     */
-    private $start_date_value;
-    /**
-     * @var EndPeriodValue
-     */
-    private $end_period_value;
-    /**
-     * @var int
-     */
-    private $start_date_field_id;
-    /**
-     * @var int
-     */
-    private $end_period_field_id;
-    /**
-     * @var ArtifactLinkValue
-     */
-    private $artifact_link_value;
+    private int $artifact_link_field_id;
+    private int $title_field_id;
+    private TitleValue $title_value;
+    private int $description_field_id;
+    private DescriptionValue $description_value;
+    private int $status_field_id;
+    private MappedStatusValue $mapped_status_value;
+    private int $start_date_field_id;
+    private StartDateValue $start_date_value;
+    private int $end_period_field_id;
+    private EndPeriodValue $end_period_value;
+    private ArtifactLinkValue $artifact_link_value;
 
-    public function __construct(
+    private function __construct(
         int $artifact_link_field_id,
         ArtifactLinkValue $artifact_link_value,
         int $title_field_id,
@@ -113,23 +80,28 @@ final class ProgramIncrementFields
     }
 
     public static function fromSourceChangesetValuesAndSynchronizedFields(
-        SourceChangesetValuesCollection $changeset_values_collection,
-        MappedStatusValue $mapped_status_value,
+        MapStatusByValue $status_mapper,
+        SourceChangesetValuesCollection $field_values,
         SynchronizedFields $target_fields
     ): self {
+        $mapped_status = MappedStatusValue::fromStatusValueAndListField(
+            $status_mapper,
+            $field_values->getStatusValue(),
+            $target_fields->getStatusField()
+        );
         return new self(
             $target_fields->getArtifactLinkField()->getId(),
-            $changeset_values_collection->getArtifactLinkValue(),
+            $field_values->getArtifactLinkValue(),
             $target_fields->getTitleField()->getId(),
-            $changeset_values_collection->getTitleValue(),
+            $field_values->getTitleValue(),
             $target_fields->getDescriptionField()->getId(),
-            $changeset_values_collection->getDescriptionValue(),
+            $field_values->getDescriptionValue(),
             $target_fields->getStatusField()->getId(),
-            $mapped_status_value,
+            $mapped_status,
             $target_fields->getStartDateField()->getId(),
-            $changeset_values_collection->getStartDateValue(),
+            $field_values->getStartDateValue(),
             $target_fields->getEndPeriodField()->getId(),
-            $changeset_values_collection->getEndPeriodValue()
+            $field_values->getEndPeriodValue()
         );
     }
 

@@ -25,32 +25,19 @@ namespace Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation;
 use Tuleap\DB\DBTransactionExecutor;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ArtifactCreationException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\CreateArtifact;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\MappedStatusValue;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\SourceChangesetValuesCollection;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\BuildSynchronizedFields;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\FieldRetrievalException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\FieldSynchronizationException;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\ProgramIncrementFields;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\MirroredProgramIncrementChangeset;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TrackerCollection;
 
 class ProgramIncrementsCreator
 {
-    /**
-     * @var DBTransactionExecutor
-     */
-    private $transaction_executor;
-    /**
-     * @var BuildSynchronizedFields
-     */
-    private $synchronized_fields_adapter;
-    /**
-     * @var MapStatusByValue
-     */
-    private $status_mapper;
-    /**
-     * @var CreateArtifact
-     */
-    private $artifact_creator;
+    private DBTransactionExecutor $transaction_executor;
+    private BuildSynchronizedFields $synchronized_fields_adapter;
+    private MapStatusByValue $status_mapper;
+    private CreateArtifact $artifact_creator;
 
     public function __construct(
         DBTransactionExecutor $transaction_executor,
@@ -79,21 +66,15 @@ class ProgramIncrementsCreator
                 foreach ($program_increments_tracker_collection->getTrackers() as $program_increment_tracker) {
                     $synchronized_fields = $this->synchronized_fields_adapter->build($program_increment_tracker);
 
-                    $mapped_status = MappedStatusValue::fromStatusValueAndListField(
+                    $mirrored_program_increment_changeset = MirroredProgramIncrementChangeset::fromSourceChangesetValuesAndSynchronizedFields(
                         $this->status_mapper,
-                        $copied_values->getStatusValue(),
-                        $synchronized_fields->getStatusField()
-                    );
-
-                    $fields_data = ProgramIncrementFields::fromSourceChangesetValuesAndSynchronizedFields(
                         $copied_values,
-                        $mapped_status,
                         $synchronized_fields
                     );
                     try {
                         $this->artifact_creator->create(
                             $program_increment_tracker,
-                            $fields_data,
+                            $mirrored_program_increment_changeset,
                             $current_user,
                             $copied_values->getSubmittedOn(),
                         );
