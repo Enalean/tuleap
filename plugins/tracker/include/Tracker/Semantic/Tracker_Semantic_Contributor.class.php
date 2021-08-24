@@ -101,20 +101,17 @@ class Tracker_Semantic_Contributor extends Tracker_Semantic
         return $this->list_field;
     }
 
-    /**
-     * Display the basic info about this semantic
-     *
-     * @return void
-     */
-    public function display()
+    public function fetchForSemanticsHomepage(): string
     {
-        echo dgettext('tuleap-tracker', '<p>The <strong>contributor(s)/assignee(s)</strong> are the person(s) who are responsible for the work needed to complete the artifact.</p>');
+        $html = dgettext('tuleap-tracker', '<p>The <strong>contributor(s)/assignee(s)</strong> are the person(s) who are responsible for the work needed to complete the artifact.</p>');
         if ($field = Tracker_FormElementFactory::instance()->getUsedFormElementById($this->getFieldId())) {
             $purifier = Codendi_HTMLPurifier::instance();
-            echo sprintf(dgettext('tuleap-tracker', '<p>One will be considered as a contributor/assignee of this artifact if her name appears in the field <strong>%1$s</strong>.</p>'), $purifier->purify($field->getLabel()));
+            $html    .= sprintf(dgettext('tuleap-tracker', '<p>One will be considered as a contributor/assignee of this artifact if her name appears in the field <strong>%1$s</strong>.</p>'), $purifier->purify($field->getLabel()));
         } else {
-            echo dgettext('tuleap-tracker', '<p>The artifacts of this tracker does not have any <em>contributor/assignee</em> yet.</p>');
+            $html .= dgettext('tuleap-tracker', '<p>The artifacts of this tracker does not have any <em>contributor/assignee</em> yet.</p>');
         }
+
+        return $html;
     }
 
     /**

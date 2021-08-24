@@ -110,12 +110,7 @@ class SemanticDone extends Tracker_Semantic
         return dgettext('tuleap-tracker', 'Define the closed status that are considered Done');
     }
 
-    /**
-     * Display the basic info about this semantic
-     *
-     * @return void
-     */
-    public function display()
+    public function fetchForSemanticsHomepage(): string
     {
         $renderer = TemplateRendererFactory::build()->getRenderer(TRACKER_TEMPLATE_DIR . '/done-semantic');
 
@@ -136,7 +131,7 @@ class SemanticDone extends Tracker_Semantic
             $event->getExternalServicesDescriptions()
         );
 
-        $renderer->renderToPage('done-intro', $presenter);
+        return $renderer->renderToString('done-intro', $presenter);
     }
 
     /**

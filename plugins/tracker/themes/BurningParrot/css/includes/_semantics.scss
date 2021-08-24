@@ -17,16 +17,25 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@use 'semantics';
-
-.tracker-administration-title {
-    margin: var(--tlp-medium-spacing) 0 var(--tlp-title-spacing);
+.tracker-admin-semantics {
+    display: flex;
+    align-items: flex-start;
 }
 
-.tracker-administration-tabs {
-    padding: var(--tlp-medium-spacing) 0 0;
+.tracker-admin-semantics-toc {
+    position: sticky;
+    top: var(--tlp-medium-spacing);
 }
 
-.trackers-admin-tracker-name {
-    width: 100%;
+.tracker-admin-semantics-list {
+    max-width: 960px;
+    margin: 0 0 0 var(--tlp-large-spacing);
+}
+
+.tracker-admin-semantics-edit-button-section {
+    justify-content: flex-end;
+}
+
+.tracker-admin-semantic {
+    scroll-margin-top: var(--tlp-medium-spacing);
 }

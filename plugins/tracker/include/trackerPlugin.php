@@ -439,10 +439,26 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
         if (
             strpos($_SERVER['REQUEST_URI'], $this->getPluginPath() . '/config.php') === 0 ||
             $this->isInTrackersHomepage() ||
-            $this->isInDashboard()
+            $this->isInDashboard() ||
+            $this->isInAdminSemanticsHomepage()
         ) {
             $event->setIsInBurningParrotCompatiblePage();
         }
+    }
+
+    private function isInAdminSemanticsHomepage(): bool
+    {
+        if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) !== 0) {
+            return false;
+        }
+
+        parse_str($_SERVER['QUERY_STRING'], $query_string);
+
+        if (array_keys($query_string) !== ['tracker', 'func']) {
+            return false;
+        }
+
+        return $query_string['func'] === 'admin-semantic';
     }
 
     private function isInTrackersHomepage(): bool

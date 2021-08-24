@@ -89,12 +89,7 @@ abstract class Tracker_Semantic
      */
     abstract public function getDescription();
 
-    /**
-     * Display the basic info about this semantic
-     *
-     * @return void
-     */
-    abstract public function display();
+    abstract public function fetchForSemanticsHomepage(): string;
 
     /**
      * Display the form to let the admin change the semantic
