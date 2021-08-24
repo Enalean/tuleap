@@ -177,7 +177,7 @@ final class TrackerCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
         $collection           = TrackerCollection::buildSecondPlanningMilestoneTracker($retriever, $teams, $user);
         $configuration_errors = new ConfigurationErrorsCollector(true);
         self::assertFalse($collection->canUserSubmitAnArtifactInAllTrackers($user, $configuration_errors));
-        self::assertCount(2, $configuration_errors->getErrorMessages());
+        self::assertCount(2, $configuration_errors->getTeamTrackerIdErrors());
     }
 
     public function testCollectsTheFirstError(): void
@@ -199,6 +199,6 @@ final class TrackerCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
         $collection           = TrackerCollection::buildSecondPlanningMilestoneTracker($retriever, $teams, $user);
         $configuration_errors = new ConfigurationErrorsCollector(false);
         self::assertFalse($collection->canUserSubmitAnArtifactInAllTrackers($user, $configuration_errors));
-        self::assertCount(1, $configuration_errors->getErrorMessages());
+        self::assertCount(1, $configuration_errors->getTeamTrackerIdErrors());
     }
 }

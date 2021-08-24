@@ -34,9 +34,8 @@ class FieldRetrievalException extends \RuntimeException implements FieldSynchron
         $this->i18n_message = sprintf(
             dgettext(
                 'tuleap-program_management',
-                'Expected tracker with id <a href="%s">%d</a> to have a field associated to its %s semantic, but this field was not found'
+                'Expected tracker with id %d to have a field associated to its %s semantic, but this field was not found'
             ),
-            "/plugins/tracker/?tracker=" . urlencode((string) $tracker_id) . "&func=admin-semantic",
             $tracker_id,
             $semantic_type
         );

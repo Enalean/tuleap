@@ -23,9 +23,13 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement;
 
 use Project;
+use Tuleap\ProgramManagement\Adapter\Program\Admin\Configuration\ConfigurationErrorPresenterBuilder;
 use Tuleap\ProgramManagement\Domain\BuildProject;
 use Tuleap\ProgramManagement\Domain\Program\Admin\PlannableTrackersConfiguration\PotentialPlannableTrackersConfigurationPresentersBuilder;
 use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramAdminPresenter;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck\ConfigurationErrorsGatherer;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck\IterationCreatorChecker;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck\ProgramIncrementCreatorChecker;
 use Tuleap\ProgramManagement\Domain\TrackerReference;
 use Tuleap\ProgramManagement\Domain\Workspace\RetrieveProject;
 use Tuleap\ProgramManagement\Tests\Stub\AllProgramSearcherStub;
@@ -37,6 +41,7 @@ use Tuleap\ProgramManagement\Tests\Stub\RetrievePlannableTrackersStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveProgramIncrementLabelsStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveProjectStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveTrackerFromProgramStub;
+use Tuleap\ProgramManagement\Tests\Stub\RetrieveUserStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveVisibleIterationTrackerStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveVisibleProgramIncrementTrackerStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchTeamsOfProgramStub;
@@ -67,30 +72,41 @@ final class DisplayAdminProgramManagementControllerTest extends \Tuleap\Test\PHP
     private array $variables;
     private SearchTeamsOfProgramStub $team_searcher;
     private BuildProject $build_project;
-    /**
-     * @var \EventManager|\PHPUnit\Framework\MockObject\MockObject
-     */
-    private $event_manager;
     private VerifyIsTeamStub $team_verifier;
     private VerifyProjectPermissionStub $permission_verifier;
     private PotentialPlannableTrackersConfigurationPresentersBuilder $plannable_tracker_builder;
     private \HTTPRequest $request;
+    /**
+     * @var mixed|\PHPUnit\Framework\MockObject\Stub|\TrackerFactory
+     */
+    private $tracker_factory;
+    private \PFUser $user;
+    /**
+     * @var mixed|\PHPUnit\Framework\MockObject\Stub|ProgramIncrementCreatorChecker
+     */
+    private $program_increment_checker;
+    /**
+     * @var mixed|\PHPUnit\Framework\MockObject\Stub|IterationCreatorChecker
+     */
+    private $iteration_checker;
 
     protected function setUp(): void
     {
         $this->variables = ['project_name' => 'not_found'];
 
-        $user                            = UserTestBuilder::aUser()->withRealName('Test User')->build();
-        $this->request                   = HTTPRequestBuilder::get()->withUser($user)->build();
+        $this->user                      = UserTestBuilder::aUser()->withRealName('Test User')->build();
+        $this->request                   = HTTPRequestBuilder::get()->withUser($this->user)->build();
         $this->template_renderer         = $this->createMock(\TemplateRenderer::class);
         $this->breadcrumbs_builder       = $this->createStub(ProgramManagementBreadCrumbsBuilder::class);
         $this->team_searcher             = SearchTeamsOfProgramStub::buildTeams(150);
         $this->build_project             = new BuildProjectStub();
-        $this->event_manager             = $this->createMock(\EventManager::class);
         $this->plannable_tracker_builder = new PotentialPlannableTrackersConfigurationPresentersBuilder(RetrievePlannableTrackersStub::buildIds());
         $this->build_program             = BuildProgramStub::stubValidProgram();
         $this->team_verifier             = VerifyIsTeamStub::withNotValidTeam();
         $this->permission_verifier       = VerifyProjectPermissionStub::withAdministrator();
+        $this->tracker_factory           = $this->createStub(\TrackerFactory::class);
+        $this->program_increment_checker = $this->createStub(ProgramIncrementCreatorChecker::class);
+        $this->iteration_checker         = $this->createStub(IterationCreatorChecker::class);
     }
 
     public function testItReturnsNotFoundWhenProjectIsNotFoundFromVariables(): void
@@ -132,7 +148,7 @@ final class DisplayAdminProgramManagementControllerTest extends \Tuleap\Test\PHP
     {
         $this->build_program = BuildProgramStub::stubInvalidProgramAccess();
 
-        $this->expectException(\LogicException::class);
+        $this->expectException(ForbiddenException::class);
 
         $this->getController(RetrieveProjectStub::withValidProjects($this->mockProject()))
             ->process($this->request, LayoutBuilder::build(), $this->variables);
@@ -145,7 +161,10 @@ final class DisplayAdminProgramManagementControllerTest extends \Tuleap\Test\PHP
             ->with('admin', self::isInstanceOf(ProgramAdminPresenter::class));
 
         $this->breadcrumbs_builder->expects(self::once())->method('build');
-        $this->event_manager->expects(self::atLeast(2))->method('dispatch');
+
+        $this->tracker_factory->method('getTrackerById')->willReturn(TrackerTestBuilder::aTracker()->build());
+        $this->program_increment_checker->method('canCreateAProgramIncrement');
+        $this->iteration_checker->method('canCreateAnIteration');
 
         $this->getController(RetrieveProjectStub::withValidProjects($this->mockProject()))
             ->process($this->request, LayoutBuilder::build(), $this->variables);
@@ -162,7 +181,6 @@ final class DisplayAdminProgramManagementControllerTest extends \Tuleap\Test\PHP
             $this->team_verifier,
             $this->build_program,
             RetrieveVisibleProgramIncrementTrackerStub::withValidTracker(TrackerTestBuilder::aTracker()->build()),
-            $this->event_manager,
             RetrieveVisibleIterationTrackerStub::withValidTracker(TrackerTestBuilder::aTracker()->build()),
             $this->plannable_tracker_builder,
             BuildProjectUGroupCanPrioritizeItemsPresentersStub::buildWithIds('102_3'),
@@ -174,6 +192,16 @@ final class DisplayAdminProgramManagementControllerTest extends \Tuleap\Test\PHP
             RetrieveIterationLabelsStub::buildLabels(null, null),
             AllProgramSearcherStub::buildPrograms(),
             VerifyIterationsFeatureActiveStub::withActiveFeature(),
+            new ConfigurationErrorPresenterBuilder(
+                new ConfigurationErrorsGatherer(
+                    BuildProgramStub::stubValidProgram(),
+                    $this->program_increment_checker,
+                    $this->iteration_checker,
+                    SearchTeamsOfProgramStub::buildTeams(),
+                    new BuildProjectStub(),
+                    RetrieveUserStub::withUser($this->user)
+                )
+            )
         );
     }
 

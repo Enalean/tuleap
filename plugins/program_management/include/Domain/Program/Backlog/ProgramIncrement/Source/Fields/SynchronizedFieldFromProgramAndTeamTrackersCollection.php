@@ -50,22 +50,7 @@ final class SynchronizedFieldFromProgramAndTeamTrackersCollection
         $can_submit = true;
         foreach ($this->synchronized_fields as $synchronized_field) {
             if (! $synchronized_field->userCanSubmit($user)) {
-                $url = '/plugins/tracker/permissions/fields-by-field/' .
-                    urlencode((string) $synchronized_field->getFullField()->getTrackerId()) . '?' . http_build_query(
-                        ['selected_id' => $synchronized_field->getId()]
-                    );
-                $errors_collector->addError(
-                    sprintf(
-                        dgettext(
-                            'tuleap-program_management',
-                            "User can not submit the field <a href='%s'>#%d</a> (%s) of tracker #%d"
-                        ),
-                        $url,
-                        $synchronized_field->getId(),
-                        $synchronized_field->getFullField()->getLabel(),
-                        $synchronized_field->getFullField()->getTrackerId()
-                    )
-                );
+                $errors_collector->addSubmitFieldPermissionError($synchronized_field->getId(), $synchronized_field->getFullField()->getLabel(), $synchronized_field->getFullField()->getTrackerId());
                 $can_submit = false;
                 if (! $errors_collector->shouldCollectAllIssues()) {
                     $this->logger->debug(
@@ -80,22 +65,7 @@ final class SynchronizedFieldFromProgramAndTeamTrackersCollection
                 }
             }
             if (! $synchronized_field->userCanUpdate($user)) {
-                $url = '/plugins/tracker/permissions/fields-by-field/' .
-                    urlencode((string) $synchronized_field->getFullField()->getTrackerId()) . '?' . http_build_query(
-                        ['selected_id' => $synchronized_field->getId()]
-                    );
-                $errors_collector->addError(
-                    sprintf(
-                        dgettext(
-                            'tuleap-program_management',
-                            "User can not update the field <a href='%s'>#%d</a> (%s) of tracker #%d"
-                        ),
-                        $url,
-                        $synchronized_field->getId(),
-                        $synchronized_field->getFullField()->getLabel(),
-                        $synchronized_field->getFullField()->getTrackerId()
-                    )
-                );
+                $errors_collector->addUpdateFieldPermissionError($synchronized_field->getId(), $synchronized_field->getFullField()->getLabel(), $synchronized_field->getFullField()->getTrackerId());
                 $can_submit = false;
                 if (! $errors_collector->shouldCollectAllIssues()) {
                     $this->logger->debug(

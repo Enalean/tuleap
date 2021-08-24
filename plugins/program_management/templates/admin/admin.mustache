@@ -1,12 +1,37 @@
-<h1 class="program-management-title-header" id="program-management-administration" data-program-id="{{ program_id }}" data-use-iteration="{{ display_iteration_section }}">{{# dgettext }}tuleap-program_management | Program administration{{/ dgettext }}</h1>
+<h1 class="program-management-title-header" id="program-management-administration" data-program-id="{{ program_id }}"
+    data-use-iteration="{{ display_iteration_section }}">{{# dgettext }}
+    tuleap-program_management | Program administration{{/ dgettext }}</h1>
 
 {{# has_errors }}
     <div class="tlp-alert-warning program-management-configuration-incorrect">
-        {{# dgettext }}tuleap-program_management | Configuration is incorrect, you won't be able to create new program increments.{{/ dgettext }}
-        {{# dgettext }}tuleap-program_management | The following points are incorrect:{{/ dgettext }}
-        <ul>
-            {{# errors }}<li>{{{ purified_error_message }}}</li>{{/ errors }}
-        </ul>
+        {{# dgettext }}
+            tuleap-program_management |
+            Configuration is incorrect, you won't be able to create new program increments.
+        {{/ dgettext }}
+        {{# program_increment_error_presenter }}
+            <ul>
+                {{# dgettext }}tuleap-program_management | Program increment configuration is incorrect:{{/ dgettext }}
+
+                {{> configuration-errors/semantic-errors }}
+                {{> configuration-errors/required-errors }}
+                {{> configuration-errors/worflow-errors }}
+                {{> configuration-errors/field-permission-errors }}
+                {{> configuration-errors/team-permission-errors }}
+                {{> configuration-errors/semantic-status-value-errors }}
+            </ul>
+        {{/ program_increment_error_presenter }}
+        {{# iteration_error_presenter }}
+            <ul>
+                {{# dgettext }}tuleap-program_management | Iteration configuration is incorrect:{{/ dgettext }}
+
+                {{> configuration-errors/semantic-errors }}
+                {{> configuration-errors/required-errors }}
+                {{> configuration-errors/worflow-errors }}
+                {{> configuration-errors/field-permission-errors }}
+                {{> configuration-errors/team-permission-errors }}
+                {{> configuration-errors/semantic-status-value-errors }}
+            </ul>
+        {{/ iteration_error_presenter }}
     </div>
 {{/ has_errors }}
 

@@ -107,14 +107,7 @@ final class TrackerCollection
         $can_submit = true;
         foreach ($this->mirrored_timebox_trackers as $milestone_tracker) {
             if (! $milestone_tracker->userCanSubmitArtifact($user)) {
-                $error = sprintf(
-                    dgettext(
-                        'tuleap-program_management',
-                        "User can not submit artifact in Team tracker #%d"
-                    ),
-                    $milestone_tracker->getTrackerId()
-                );
-                $configuration_errors->addError($error);
+                $configuration_errors->userCanNotSubmitInTeam($milestone_tracker->getTrackerId());
                 $can_submit = false;
                 if (! $configuration_errors->shouldCollectAllIssues()) {
                     return $can_submit;

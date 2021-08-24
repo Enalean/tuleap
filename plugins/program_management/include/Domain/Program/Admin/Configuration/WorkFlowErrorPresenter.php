@@ -1,8 +1,8 @@
 <?php
 /**
- * Copyright (c) Enalean, 2020 - Present. All Rights Reserved.
+ * Copyright (c) Enalean 2021 -  Present. All Rights Reserved.
  *
- * This file is a part of Tuleap.
+ *  This file is a part of Tuleap.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,30 +16,22 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields;
+namespace Tuleap\ProgramManagement\Domain\Program\Admin\Configuration;
 
-final class NoArtifactLinkFieldException extends \RuntimeException implements FieldSynchronizationException
+/**
+ * @psalm-immutable
+ */
+final class WorkFlowErrorPresenter
 {
-    private string $i18n_message;
+    public int $tracker_id;
 
     public function __construct(int $tracker_id)
     {
-        parent::__construct("Tracker with id $tracker_id has no artifact link field");
-        $this->i18n_message = sprintf(
-            dgettext(
-                'tuleap-program_management',
-                "Tracker with id #%d has no artifact link field"
-            ),
-            $tracker_id
-        );
-    }
-
-    public function getI18NExceptionMessage(): string
-    {
-        return $this->i18n_message;
+        $this->tracker_id = $tracker_id;
     }
 }

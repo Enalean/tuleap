@@ -86,23 +86,9 @@ final class WorkflowChecker implements CheckWorkflow
 
         $is_valid = true;
         if (count($workflow_transition_rules) > 0) {
-            $tracker_ids = [];
-            foreach ($workflow_transition_rules as $workflow_transition_rule) {
-                $url = '/plugins/tracker/workflow/' .
-                    urlencode((string) $workflow_transition_rule['tracker_id']) . '/transitions';
-
-                $tracker_ids[] = sprintf(
-                    "<a href='%s'>#%d</a>",
-                    $url,
-                    $workflow_transition_rule['tracker_id']
-                );
+            foreach ($workflow_transition_rules as $rule) {
+                $errors_collector->addWorkflowTransitionRulesError($rule['tracker_id']);
             }
-            $errors_collector->addError(
-                sprintf(
-                    dgettext('tuleap-program_management', "Following trackers %s are using a synchronized field in a workflow transition rule"),
-                    implode(', ', $tracker_ids)
-                )
-            );
             $is_valid = false;
             if (! $errors_collector->shouldCollectAllIssues()) {
                 return $is_valid;
@@ -124,26 +110,9 @@ final class WorkflowChecker implements CheckWorkflow
 
         $is_valid = true;
         if (count($tracker_ids_with_date_rules) > 0) {
-            $tracker_ids = [];
-            foreach ($tracker_ids_with_date_rules as $workflow_transition_rule) {
-                $url = '/plugins/tracker/?' . http_build_query(
-                    [
-                            'tracker' => $workflow_transition_rule,
-                            'func'    => 'admin-workflow'
-                        ]
-                );
-
-                $tracker_ids[] = sprintf("<a href='%s'>#%d</a>", $url, $workflow_transition_rule);
+            foreach ($tracker_ids_with_date_rules as $tracker_id) {
+                $errors_collector->addWorkflowTransitionDateRulesError($tracker_id);
             }
-            $errors_collector->addError(
-                sprintf(
-                    dgettext('tuleap-program_management', "Following trackers %s are using a synchronized field in a workflow date rule (global rules)"),
-                    implode(
-                        ', ',
-                        $tracker_ids
-                    )
-                )
-            );
             $is_valid = false;
             if (! $errors_collector->shouldCollectAllIssues()) {
                 return $is_valid;
@@ -165,23 +134,9 @@ final class WorkflowChecker implements CheckWorkflow
 
         $is_valid = true;
         if (count($tracker_ids_with_list_rules) > 0) {
-            $tracker_ids = [];
-            foreach ($tracker_ids_with_list_rules as $workflow_transition_rule) {
-                $url = '/plugins/tracker/?' . http_build_query(
-                    [
-                            'tracker' => $workflow_transition_rule,
-                            'func'    => 'admin-dependencies'
-                        ]
-                );
-
-                $tracker_ids[] = sprintf("<a href='%s'>#%d</a>", $url, $workflow_transition_rule);
+            foreach ($tracker_ids_with_list_rules as $tracker_id) {
+                $errors_collector->addWorkflowDependencyError($tracker_id);
             }
-            $errors_collector->addError(
-                sprintf(
-                    dgettext('tuleap-program_management', "Following trackers %s are using a synchronized field in a workflow list rule (field dependencies)"),
-                    implode(', ', $tracker_ids)
-                )
-            );
             $is_valid = false;
             if (! $errors_collector->shouldCollectAllIssues()) {
                 return $is_valid;

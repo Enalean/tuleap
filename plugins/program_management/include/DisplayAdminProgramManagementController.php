@@ -28,11 +28,12 @@ use Project;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
 use Tuleap\Layout\IncludeAssets;
-use Tuleap\ProgramManagement\Adapter\Program\Admin\Configuration\ConfigurationChecker;
+use Tuleap\ProgramManagement\Adapter\Program\Admin\Configuration\ConfigurationErrorPresenterBuilder;
 use Tuleap\ProgramManagement\Adapter\Workspace\UserProxy;
 use Tuleap\ProgramManagement\Domain\BuildProject;
 use Tuleap\ProgramManagement\Domain\FeatureFlag\VerifyIterationsFeatureActive;
 use Tuleap\ProgramManagement\Domain\Program\Admin\CanPrioritizeItems\BuildProjectUGroupCanPrioritizeItemsPresenters;
+use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ConfigurationErrorsCollector;
 use Tuleap\ProgramManagement\Domain\Program\Admin\PlannableTrackersConfiguration\PotentialPlannableTrackersConfigurationPresentersBuilder;
 use Tuleap\ProgramManagement\Domain\Program\Admin\PotentialTeam\PotentialTeamsCollection;
 use Tuleap\ProgramManagement\Domain\Program\Admin\PotentialTeam\PotentialTeamsPresenterBuilder;
@@ -78,7 +79,6 @@ final class DisplayAdminProgramManagementController implements DispatchableWithR
     private VerifyIsTeam $verify_is_team;
     private BuildProgram $build_program;
     private RetrieveVisibleProgramIncrementTracker $program_increment_tracker_retriever;
-    private \EventManager $event_manager;
     private RetrieveVisibleIterationTracker $iteration_tracker_retriever;
     private PotentialPlannableTrackersConfigurationPresentersBuilder $plannable_tracker_presenters_builder;
     private BuildProjectUGroupCanPrioritizeItemsPresenters $ugroups_can_prioritize_builder;
@@ -88,6 +88,7 @@ final class DisplayAdminProgramManagementController implements DispatchableWithR
     private RetrieveIterationLabels $iteration_labels_retriever;
     private AllProgramSearcher $all_program_searcher;
     private VerifyIterationsFeatureActive $feature_flag_verifier;
+    private ConfigurationErrorPresenterBuilder $error_presenter_builder;
 
     public function __construct(
         RetrieveProject $project_manager,
@@ -98,7 +99,6 @@ final class DisplayAdminProgramManagementController implements DispatchableWithR
         VerifyIsTeam $verify_is_team,
         BuildProgram $build_program,
         RetrieveVisibleProgramIncrementTracker $program_increment_tracker_retriever,
-        \EventManager $event_manager,
         RetrieveVisibleIterationTracker $iteration_tracker_retriever,
         PotentialPlannableTrackersConfigurationPresentersBuilder $plannable_tracker_presenters_builder,
         BuildProjectUGroupCanPrioritizeItemsPresenters $ugroups_can_prioritize_builder,
@@ -107,7 +107,8 @@ final class DisplayAdminProgramManagementController implements DispatchableWithR
         RetrieveTrackerFromProgram $retrieve_tracker_from_program,
         RetrieveIterationLabels $iteration_labels_retriever,
         AllProgramSearcher $all_program_searcher,
-        VerifyIterationsFeatureActive $feature_flag_verifier
+        VerifyIterationsFeatureActive $feature_flag_verifier,
+        ConfigurationErrorPresenterBuilder $error_presenter_builder
     ) {
         $this->project_manager                      = $project_manager;
         $this->template_renderer                    = $template_renderer;
@@ -117,7 +118,6 @@ final class DisplayAdminProgramManagementController implements DispatchableWithR
         $this->verify_is_team                       = $verify_is_team;
         $this->build_program                        = $build_program;
         $this->program_increment_tracker_retriever  = $program_increment_tracker_retriever;
-        $this->event_manager                        = $event_manager;
         $this->iteration_tracker_retriever          = $iteration_tracker_retriever;
         $this->plannable_tracker_presenters_builder = $plannable_tracker_presenters_builder;
         $this->ugroups_can_prioritize_builder       = $ugroups_can_prioritize_builder;
@@ -127,6 +127,7 @@ final class DisplayAdminProgramManagementController implements DispatchableWithR
         $this->iteration_labels_retriever           = $iteration_labels_retriever;
         $this->all_program_searcher                 = $all_program_searcher;
         $this->feature_flag_verifier                = $feature_flag_verifier;
+        $this->error_presenter_builder              = $error_presenter_builder;
     }
 
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
@@ -139,9 +140,15 @@ final class DisplayAdminProgramManagementController implements DispatchableWithR
             );
         }
 
-        $user = $request->getCurrentUser();
+        $user                      = $request->getCurrentUser();
+        $user_identifier           = UserProxy::buildFromPFUser($user);
+        $increment_error_presenter = null;
+        $iteration_error_presenter = null;
+        $program_increment_tracker = null;
+        $iteration_tracker         = null;
+
         try {
-            $program = ProgramForAdministrationIdentifier::fromProject(
+            $admin_program = ProgramForAdministrationIdentifier::fromProject(
                 $this->verify_is_team,
                 $this->permission_verifier,
                 $user,
@@ -159,18 +166,48 @@ final class DisplayAdminProgramManagementController implements DispatchableWithR
         }
 
         try {
-            $error_presenters = ConfigurationChecker::buildErrorsPresenter(
+            $program = ProgramIdentifier::fromId(
                 $this->build_program,
+                (int) $project->getID(),
+                $user_identifier,
+                null
+            );
+
+            $program_increment_error_collector = new ConfigurationErrorsCollector(true);
+            $iteration_error_collector         = new ConfigurationErrorsCollector(true);
+
+            $program_increment_tracker = ProgramTracker::buildProgramIncrementTrackerFromProgram(
                 $this->program_increment_tracker_retriever,
-                $this->iteration_tracker_retriever,
-                $this->event_manager,
                 $program,
                 $user
             );
-        } catch (Domain\Program\Plan\ProgramAccessException $e) {
-            throw new \LogicException(
-                'You need to be project administrator to access to program administration.'
+
+            $iteration_tracker = ProgramTracker::buildIterationTrackerFromProgram(
+                $this->iteration_tracker_retriever,
+                $program,
+                $user
             );
+
+            $increment_error_presenter = $this->error_presenter_builder->buildProgramIncrementErrorPresenter(
+                $program_increment_tracker,
+                $program,
+                $user,
+                $program_increment_error_collector
+            );
+            $iteration_error_presenter = $this->error_presenter_builder->buildIterationErrorPresenter(
+                $iteration_tracker,
+                $user,
+                $iteration_error_collector
+            );
+        } catch (ProgramAccessException $e) {
+            throw new ForbiddenException(
+                dgettext(
+                    'tuleap-program_management',
+                    'You need to be project administrator to access to program administration.'
+                )
+            );
+        } catch (ProjectIsNotAProgramException | ProgramHasNoProgramIncrementTrackerException | ProgramTrackerNotFoundException $e) {
+            // ignore for not configured program
         }
 
         \Tuleap\Project\ServiceInstrumentation::increment('program_management');
@@ -185,27 +222,6 @@ final class DisplayAdminProgramManagementController implements DispatchableWithR
         $this->includeHeaderAndNavigationBar($layout, $project);
         $layout->includeFooterJavascriptFile($assets->getFileURL('program_management_admin.js'));
 
-        $user_identifier   = UserProxy::buildFromPFUser($user);
-        $iteration_tracker = null;
-        try {
-            $program_identifier        = ProgramIdentifier::fromId($this->build_program, $program->id, $user_identifier, null);
-            $program_increment_tracker = ProgramTracker::buildProgramIncrementTrackerFromProgram(
-                $this->program_increment_tracker_retriever,
-                $program_identifier,
-                $user
-            );
-
-            if ($program_increment_tracker) {
-                $iteration_tracker = ProgramTracker::buildIterationTrackerFromProgram(
-                    $this->iteration_tracker_retriever,
-                    $program_identifier,
-                    $user
-                );
-            }
-        } catch (ProgramAccessException | ProgramHasNoProgramIncrementTrackerException | ProjectIsNotAProgramException | ProgramTrackerNotFoundException $e) {
-            $program_increment_tracker = null;
-        }
-
         $program_increment_labels = ProgramIncrementLabels::fromProgramIncrementTracker(
             $this->program_increment_labels_retriever,
             $program_increment_tracker
@@ -216,18 +232,21 @@ final class DisplayAdminProgramManagementController implements DispatchableWithR
             $iteration_tracker
         );
 
-        $all_potential_trackers = PotentialTrackerCollection::fromProgram($this->retrieve_tracker_from_program, $program);
+        $all_potential_trackers = PotentialTrackerCollection::fromProgram(
+            $this->retrieve_tracker_from_program,
+            $admin_program
+        );
 
         $this->template_renderer->renderToPage(
             'admin',
             new ProgramAdminPresenter(
-                $program,
+                $admin_program,
                 PotentialTeamsPresenterBuilder::buildPotentialTeamsPresenter(
                     PotentialTeamsCollection::buildPotentialTeams(
                         $this->project_manager,
                         $this->teams_searcher,
                         $this->all_program_searcher,
-                        $program,
+                        $admin_program,
                         $user
                     )->getPotentialTeams()
                 ),
@@ -235,16 +254,18 @@ final class DisplayAdminProgramManagementController implements DispatchableWithR
                     TeamProjectsCollection::fromProgramForAdministration(
                         $this->teams_searcher,
                         $this->project_data_adapter,
-                        $program
+                        $admin_program
                     )
                 ),
-                $error_presenters,
                 PotentialTimeboxTrackerConfigurationPresenterCollection::fromTimeboxTracker(
                     $all_potential_trackers,
                     $program_increment_tracker
                 )->presenters,
-                $this->plannable_tracker_presenters_builder->buildPotentialPlannableTrackerPresenters($program, $all_potential_trackers),
-                $this->ugroups_can_prioritize_builder->buildProjectUgroupCanPrioritizeItemsPresenters($program),
+                $this->plannable_tracker_presenters_builder->buildPotentialPlannableTrackerPresenters(
+                    $admin_program,
+                    $all_potential_trackers
+                ),
+                $this->ugroups_can_prioritize_builder->buildProjectUgroupCanPrioritizeItemsPresenters($admin_program),
                 $program_increment_labels->label,
                 $program_increment_labels->sub_label,
                 PotentialTimeboxTrackerConfigurationPresenterCollection::fromTimeboxTracker(
@@ -253,7 +274,9 @@ final class DisplayAdminProgramManagementController implements DispatchableWithR
                 )->presenters,
                 $this->feature_flag_verifier->isIterationsFeatureActive(),
                 $iteration_labels->label,
-                $iteration_labels->sub_label
+                $iteration_labels->sub_label,
+                $increment_error_presenter,
+                $iteration_error_presenter
             )
         );
 

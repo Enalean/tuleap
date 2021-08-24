@@ -149,7 +149,9 @@ final class StatusSemanticCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
             )
         );
 
-        self::assertCount(0, $configuration_errors->getErrorMessages());
+        self::assertCount(0, $configuration_errors->getSemanticStatusMissingValues());
+        self::assertCount(0, $configuration_errors->getSemanticStatusNoField());
+        self::assertCount(0, $configuration_errors->getStatusMissingInTeams());
     }
 
     public function testItReturnsFalseIfProgramTrackerDoesNotHaveStatusSemantic(): void
@@ -170,7 +172,7 @@ final class StatusSemanticCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
                 $configuration_errors
             )
         );
-        self::assertStringContainsString("Semantic 'status' is not linked to a field in program tracker", $configuration_errors->getErrorMessages()[0]);
+        self::assertSame(104, $configuration_errors->getSemanticStatusNoField()[0]->tracker_id);
     }
 
     public function testItReturnsFalseIfSomeTeamTrackersDoNotHaveSemanticStatusDefined(): void
@@ -196,7 +198,7 @@ final class StatusSemanticCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
                 $configuration_errors
             )
         );
-        self::assertStringContainsString("Some tracker does not have status semantic defined", $configuration_errors->getErrorMessages()[0]);
+        self::assertSame(1, $configuration_errors->getStatusMissingInTeams()[0]);
     }
 
     public function testItReturnsFalseIfSomeTeamStatusSemanticDoesNotContainTheProgramOpenValue(): void
@@ -232,6 +234,6 @@ final class StatusSemanticCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
                 $configuration_errors
             )
         );
-        self::assertStringContainsString('Values "review" are not found in every tracker', $configuration_errors->getErrorMessages()[0]);
+        self::assertSame('review', $configuration_errors->getSemanticStatusMissingValues()[0]->missing_values);
     }
 }

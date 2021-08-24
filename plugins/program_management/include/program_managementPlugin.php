@@ -38,6 +38,7 @@ use Tuleap\ProgramManagement\Adapter\Events\ArtifactUpdatedProxy;
 use Tuleap\ProgramManagement\Adapter\Events\IterationCreationEventProxy;
 use Tuleap\ProgramManagement\Adapter\FeatureFlag\ForgeConfigAdapter;
 use Tuleap\ProgramManagement\Adapter\Program\Admin\CanPrioritizeItems\UGroupRepresentationBuilder;
+use Tuleap\ProgramManagement\Adapter\Program\Admin\Configuration\ConfigurationErrorPresenterBuilder;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation\ChangesetDAO;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation\CreateProgramIncrementsRunner;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation\IterationCreationsRunner;
@@ -114,6 +115,7 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ArtifactUpdatedHandler;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\IterationCreationEventHandler;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\IterationReplicationScheduler;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck\CanSubmitNewArtifactHandler;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck\ConfigurationErrorsGatherer;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck\IterationCreatorChecker;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck\ProgramIncrementCreatorChecker;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck\TimeboxCreatorChecker;
@@ -353,6 +355,55 @@ final class program_managementPlugin extends Plugin
         $program_dao     = new ProgramDao();
         $event_manager   = \EventManager::instance();
 
+        $tracker_factory = TrackerFactory::instance();
+
+        $user_manager_adapter = new UserManagerAdapter(UserManager::instance());
+
+        $form_element_factory    = \Tracker_FormElementFactory::instance();
+        $timeframe_dao           = new \Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao();
+        $semantic_status_factory = new Tracker_Semantic_StatusFactory();
+        $logger                  = $this->getLogger();
+        $planning_adapter        = new PlanningAdapter(\PlanningFactory::build());
+        $program_increments_dao  = new ProgramIncrementsDAO();
+        $iteration_dao           = new IterationsDAO();
+
+        $synchronized_fields_builder = new SynchronizedFieldFromProgramAndTeamTrackersCollectionBuilder(
+            new SynchronizedFieldsAdapter(
+                new ArtifactLinkFieldAdapter($form_element_factory),
+                new TitleFieldAdapter(new Tracker_Semantic_TitleFactory()),
+                new DescriptionFieldAdapter(new Tracker_Semantic_DescriptionFactory()),
+                new StatusFieldAdapter($semantic_status_factory),
+                new TimeFrameFieldsAdapter(
+                    new SemanticTimeframeBuilder(
+                        $timeframe_dao,
+                        $form_element_factory,
+                        $tracker_factory,
+                        new LinksRetriever(
+                            new ArtifactLinkFieldValueDao(),
+                            \Tracker_ArtifactFactory::instance()
+                        )
+                    )
+                )
+            ),
+            $logger
+        );
+
+        $checker = new TimeboxCreatorChecker(
+            $synchronized_fields_builder,
+            new SemanticChecker(
+                new \Tracker_Semantic_TitleDao(),
+                new \Tracker_Semantic_DescriptionDao(),
+                $timeframe_dao,
+                new StatusSemanticChecker(new Tracker_Semantic_StatusDao(), $semantic_status_factory),
+            ),
+            new RequiredFieldChecker(),
+            new WorkflowChecker(
+                new Workflow_Dao(),
+                new Tracker_Rule_Date_Dao(),
+                new Tracker_Rule_List_Dao()
+            )
+        );
+
         return new DisplayAdminProgramManagementController(
             new ProjectManagerAdapter($project_manager),
             TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../templates/admin'),
@@ -367,10 +418,9 @@ final class program_managementPlugin extends Plugin
                     $event_manager
                 ),
                 $program_dao,
-                new UserManagerAdapter(UserManager::instance())
+                $user_manager_adapter
             ),
             $this->getVisibleProgramIncrementTrackerRetriever(),
-            $event_manager,
             $this->getVisibleIterationTrackerRetriever(),
             new PotentialPlannableTrackersConfigurationPresentersBuilder(new PlanDao()),
             new ProjectUGroupCanPrioritizeItemsPresentersBuilder(
@@ -380,10 +430,32 @@ final class program_managementPlugin extends Plugin
             ),
             new ProjectPermissionVerifier(),
             new ProgramIncrementsDAO(),
-            new TrackerFactoryAdapter(TrackerFactory::instance()),
+            new TrackerFactoryAdapter($tracker_factory),
             new IterationsDAO(),
             $program_dao,
-            new ForgeConfigAdapter()
+            new ForgeConfigAdapter(),
+            new ConfigurationErrorPresenterBuilder(
+                new ConfigurationErrorsGatherer(
+                    $this->getProgramAdapter(),
+                    new ProgramIncrementCreatorChecker(
+                        $checker,
+                        $program_increments_dao,
+                        $planning_adapter,
+                        $this->getVisibleProgramIncrementTrackerRetriever(),
+                        $logger
+                    ),
+                    new IterationCreatorChecker(
+                        $planning_adapter,
+                        $iteration_dao,
+                        $this->getVisibleIterationTrackerRetriever(),
+                        $checker,
+                        $logger
+                    ),
+                    new ProgramDao(),
+                    $this->getProgramManagementProjectAdapter(),
+                    $user_manager_adapter
+                )
+            )
         );
     }
 
@@ -422,12 +494,9 @@ final class program_managementPlugin extends Plugin
     public function canSubmitNewArtifact(CanSubmitNewArtifact $can_submit_new_artifact): void
     {
         $handler          = $this->getCanSubmitNewArtifactHandler();
-        $errors_collector = new ConfigurationErrorsCollector($can_submit_new_artifact->shouldCollectAllIssues());
+        $errors_collector = new ConfigurationErrorsCollector(false);
         $user_identifier  = UserProxy::buildFromPFUser($can_submit_new_artifact->getUser());
         $handler->handle($can_submit_new_artifact, $errors_collector, $user_identifier);
-        if ($errors_collector->hasError()) {
-            $can_submit_new_artifact->addErrorMessage($errors_collector->getErrorMessages());
-        }
     }
 
     public function workerEvent(WorkerEvent $event): void
@@ -1010,23 +1079,26 @@ final class program_managementPlugin extends Plugin
         );
 
         return new CanSubmitNewArtifactHandler(
-            $this->getProgramAdapter(),
-            new ProgramIncrementCreatorChecker(
-                $checker,
-                $program_increments_dao,
-                $planning_adapter,
-                $this->getVisibleProgramIncrementTrackerRetriever(),
-                $logger
-            ),
-            new IterationCreatorChecker(
-                $planning_adapter,
-                $iteration_dao,
-                $this->getVisibleIterationTrackerRetriever(),
-                $checker,
-                $logger
-            ),
-            new ProgramDao(),
-            $this->getProgramManagementProjectAdapter()
+            new ConfigurationErrorsGatherer(
+                $this->getProgramAdapter(),
+                new ProgramIncrementCreatorChecker(
+                    $checker,
+                    $program_increments_dao,
+                    $planning_adapter,
+                    $this->getVisibleProgramIncrementTrackerRetriever(),
+                    $logger
+                ),
+                new IterationCreatorChecker(
+                    $planning_adapter,
+                    $iteration_dao,
+                    $this->getVisibleIterationTrackerRetriever(),
+                    $checker,
+                    $logger
+                ),
+                new ProgramDao(),
+                $this->getProgramManagementProjectAdapter(),
+                new UserManagerAdapter(UserManager::instance())
+            )
         );
     }
 

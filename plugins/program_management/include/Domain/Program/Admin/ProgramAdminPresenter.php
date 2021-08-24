@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Admin;
 
-use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ErrorPresenter;
+use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\TrackerErrorPresenter;
 use Tuleap\ProgramManagement\Domain\Program\Admin\PotentialTeam\PotentialTeamPresenter;
 use Tuleap\ProgramManagement\Domain\Program\Admin\Team\TeamPresenter;
 
@@ -40,10 +40,6 @@ final class ProgramAdminPresenter
      * @var TeamPresenter[]
      */
     public array $aggregated_teams;
-    /**
-     * @var ErrorPresenter[]
-     */
-    public array $errors;
     public bool $has_aggregated_teams;
     public bool $has_errors;
     /**
@@ -67,11 +63,13 @@ final class ProgramAdminPresenter
     public bool $display_iteration_section;
     public ?string $iteration_label;
     public ?string $iteration_sub_label;
+    public ?TrackerErrorPresenter $program_increment_error_presenter;
+    public ?TrackerErrorPresenter $iteration_error_presenter;
+
 
     /**
      * @param PotentialTeamPresenter[]                    $potential_teams
      * @param TeamPresenter[]                             $aggregated_teams
-     * @param ErrorPresenter[]                            $errors
      * @param ProgramSelectOptionConfigurationPresenter[] $potential_program_increments
      * @param ProgramSelectOptionConfigurationPresenter[] $potential_plannable_trackers
      * @param ProgramSelectOptionConfigurationPresenter[] $ugroups_can_prioritize
@@ -81,7 +79,6 @@ final class ProgramAdminPresenter
         ProgramForAdministrationIdentifier $program,
         array $potential_teams,
         array $aggregated_teams,
-        array $errors,
         array $potential_program_increments,
         array $potential_plannable_trackers,
         array $ugroups_can_prioritize,
@@ -90,14 +87,14 @@ final class ProgramAdminPresenter
         array $potential_iterations,
         bool $display_iteration_section,
         ?string $iteration_label,
-        ?string $iteration_sub_label
+        ?string $iteration_sub_label,
+        ?TrackerErrorPresenter $program_increment_error_presenter,
+        ?TrackerErrorPresenter $iteration_error_presenter
     ) {
         $this->program_id                   = $program->id;
         $this->potential_teams              = $potential_teams;
         $this->aggregated_teams             = $aggregated_teams;
         $this->has_aggregated_teams         = count($aggregated_teams) > 0;
-        $this->errors                       = $errors;
-        $this->has_errors                   = count($errors) > 0;
         $this->potential_program_increments = $potential_program_increments;
         $this->potential_plannable_trackers = $potential_plannable_trackers;
         $this->ugroups_can_prioritize       = $ugroups_can_prioritize;
@@ -107,5 +104,9 @@ final class ProgramAdminPresenter
         $this->display_iteration_section    = $display_iteration_section;
         $this->iteration_label              = $iteration_label;
         $this->iteration_sub_label          = $iteration_sub_label;
+
+        $this->has_errors                        = ($program_increment_error_presenter && $program_increment_error_presenter->has_presenter_errors) || ($iteration_error_presenter && $iteration_error_presenter->has_presenter_errors);
+        $this->program_increment_error_presenter = $program_increment_error_presenter;
+        $this->iteration_error_presenter         = $iteration_error_presenter;
     }
 }

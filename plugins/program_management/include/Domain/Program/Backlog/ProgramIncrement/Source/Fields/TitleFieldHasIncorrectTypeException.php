@@ -35,10 +35,7 @@ final class TitleFieldHasIncorrectTypeException extends \RuntimeException implem
         $this->i18n_message = sprintf(
             dgettext(
                 'tuleap-program_management',
-                "The title field with id <a href='%s'>#%d</a> in tracker #%d has an incorrect type, it must be a string type"
-            ),
-            "/plugins/tracker/?" . http_build_query(
-                ['tracker' => $tracker_id, "func" => "admin-semantic", "semantic" => \Tracker_Semantic_Title::NAME]
+                "The title field with id #%d in tracker #%d has an incorrect type, it must be a string type"
             ),
             $field_id,
             $tracker_id

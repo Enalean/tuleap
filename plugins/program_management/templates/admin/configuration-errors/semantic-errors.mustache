@@ -1,0 +1,12 @@
+{{# semantic_errors }}
+    <li>
+        {{# dgettext }}
+            tuleap-program_management |
+            Semantic '%s' is not well configured. Please check semantic of following trackers: |
+            {{ semantic_name }}
+        {{/ dgettext }}
+        {{# potential_trackers_in_error }}
+            <a href='/plugins/tracker/?tracker={{ . }}&func=admin-semantic&semantic={{ semantic_short_name }}'>#{{ . }}</a>
+        {{/ potential_trackers_in_error }}
+    </li>
+{{/ semantic_errors }}

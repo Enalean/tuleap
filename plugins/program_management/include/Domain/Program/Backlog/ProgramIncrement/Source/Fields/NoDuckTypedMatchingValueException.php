@@ -40,12 +40,9 @@ final class NoDuckTypedMatchingValueException extends \RuntimeException implemen
         $this->i18n_message = sprintf(
             dgettext(
                 'tuleap-program_management',
-                'No matching value found for value %s in field <a href="%s">#%d</a> of tracker #%d by duck typing.'
+                'No matching value found for value %s in field #%d of tracker #%d by duck typing.'
             ),
             $source_value_label,
-            "/plugins/tracker/" . http_build_query(
-                ['tracker' => $tracker_id, "func" => "admin-formElement-update", "formElement" => $team_status_field_id]
-            ),
             $team_status_field_id,
             $tracker_id
         );

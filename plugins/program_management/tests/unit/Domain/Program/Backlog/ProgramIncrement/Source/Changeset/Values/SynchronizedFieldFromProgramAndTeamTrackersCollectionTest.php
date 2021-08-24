@@ -59,8 +59,8 @@ final class SynchronizedFieldFromProgramAndTeamTrackersCollectionTest extends \T
         $collection->add($synchronized_field_data);
         $errors_collector = new ConfigurationErrorsCollector(true);
         $this->assertFalse($collection->canUserSubmitAndUpdateAllFields($user, $errors_collector));
-        self::assertCount(1, $errors_collector->getErrorMessages());
-        self::assertStringContainsString("User can not submit the field", $errors_collector->getErrorMessages()[0]);
+        self::assertCount(1, $errors_collector->getNonSubmittableFields());
+        self::assertSame(1, $errors_collector->getNonSubmittableFields()[0]->field_id);
         self::assertFalse($logger->hasDebugRecords());
     }
 
@@ -75,8 +75,8 @@ final class SynchronizedFieldFromProgramAndTeamTrackersCollectionTest extends \T
         $collection->add($synchronized_field_data);
         $errors_collector = new ConfigurationErrorsCollector(true);
         $this->assertFalse($collection->canUserSubmitAndUpdateAllFields($user, $errors_collector));
-        self::assertCount(1, $errors_collector->getErrorMessages());
-        self::assertStringContainsString("User can not update the field", $errors_collector->getErrorMessages()[0]);
+        self::assertCount(1, $errors_collector->getNonUpdatableFields());
+        self::assertSame(1, $errors_collector->getNonUpdatableFields()[0]->field_id);
         self::assertFalse($logger->hasDebugRecords());
     }
 
@@ -91,7 +91,7 @@ final class SynchronizedFieldFromProgramAndTeamTrackersCollectionTest extends \T
         $collection->add($synchronized_field_data);
         $errors_collector = new ConfigurationErrorsCollector(false);
         $this->assertFalse($collection->canUserSubmitAndUpdateAllFields($user, $errors_collector));
-        self::assertCount(1, $errors_collector->getErrorMessages());
+        self::assertCount(1, $errors_collector->getNonSubmittableFields());
         self::assertTrue($logger->hasDebugRecords());
     }
 
@@ -106,7 +106,7 @@ final class SynchronizedFieldFromProgramAndTeamTrackersCollectionTest extends \T
         $collection->add($synchronized_field_data);
         $errors_collector = new ConfigurationErrorsCollector(false);
         $this->assertFalse($collection->canUserSubmitAndUpdateAllFields($user, $errors_collector));
-        self::assertCount(1, $errors_collector->getErrorMessages());
+        self::assertCount(1, $errors_collector->getNonUpdatableFields());
         self::assertTrue($logger->hasDebugRecords());
     }
 
@@ -139,7 +139,7 @@ final class SynchronizedFieldFromProgramAndTeamTrackersCollectionTest extends \T
     {
         $artifact_link = M::mock(Tracker_FormElement_Field_ArtifactLink::class);
         $artifact_link->shouldReceive('getLabel')->andReturn('Link');
-        $artifact_link->shouldReceive('getTrackerId')->andReturn('49');
+        $artifact_link->shouldReceive('getTrackerId')->andReturn(49);
         $this->mockField($artifact_link, 1, $submitable, $updatable);
         $artifact_link_field_data = new Field($artifact_link);
 

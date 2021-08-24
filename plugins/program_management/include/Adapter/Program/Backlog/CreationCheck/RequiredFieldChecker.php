@@ -38,18 +38,10 @@ final class RequiredFieldChecker implements CheckRequiredField
         foreach ($trackers->getTrackers() as $program_increment_tracker) {
             foreach ($program_increment_tracker->getFullTracker()->getFormElementFields() as $field) {
                 if ($field->isRequired() && ! $field_collection->isFieldSynchronized($field)) {
-                    $url = '/plugins/tracker/?' .
-                        http_build_query(
-                            ['tracker' => $field->getTrackerId(), 'func' => 'admin-formElement-update', 'formElement' => $field->getId()]
-                        );
-                    $errors_collector->addError(
-                        sprintf(
-                            dgettext('tuleap-program_management', "Field <a href='%s'>#%d</a> (%s) of tracker #%d is required but cannot be synchronized"),
-                            $url,
-                            $field->getId(),
-                            $field->getLabel(),
-                            $program_increment_tracker->getTrackerId()
-                        )
+                    $errors_collector->addRequiredFieldError(
+                        $field->getTrackerId(),
+                        $field->getId(),
+                        $field->getLabel()
                     );
                     $are_fields_ok = false;
                     if (! $errors_collector->shouldCollectAllIssues()) {

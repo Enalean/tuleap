@@ -131,22 +131,6 @@ final class SemanticChecker implements CheckSemantic
         string $semantic_name,
         string $semantic_shortname
     ): void {
-        $tracker_urls = [];
-        foreach ($tracker_ids as $id) {
-            $url            = '/plugins/tracker/?' . http_build_query(
-                ['tracker' => $id, 'func' => 'admin-semantic', 'semantic' => $semantic_shortname]
-            );
-            $tracker_urls[] = sprintf("<a href='%s'>#%d</a>", $url, $id);
-        }
-        $error = sprintf(
-            dgettext(
-                'tuleap-program_management',
-                "Semantic '%s' is not well configured. Please check semantic of trackers %s."
-            ),
-            $semantic_name,
-            implode(", ", $tracker_urls)
-        );
-
-        $configuration_errors->addError($error);
+        $configuration_errors->addSemanticError($semantic_name, $semantic_shortname, $tracker_ids);
     }
 }

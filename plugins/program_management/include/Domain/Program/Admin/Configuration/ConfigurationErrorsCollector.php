@@ -21,14 +21,58 @@
 
 namespace Tuleap\ProgramManagement\Domain\Program\Admin\Configuration;
 
-
 final class ConfigurationErrorsCollector
 {
     private bool $should_collect_all_issues;
     /**
+     * @var WorkFlowErrorPresenter[]
+     */
+    private array $transition_rule_error = [];
+    /**
+     * @var WorkFlowErrorPresenter[]
+     */
+    private array $transition_rule_date_error = [];
+    /**
+     * @var WorkFlowErrorPresenter[]
+     */
+    private array $field_dependency_error = [];
+    /**
+     * @var SemanticErrorPresenter[]
+     */
+    private array $semantic_errors = [];
+    /**
+     * @var RequiredErrorPresenter[]
+     */
+    private array $required_fields_errors = [];
+    /**
+     * @var FieldsPermissionErrorPresenter[]
+     */
+    private array $non_submittable_fields = [];
+    /**
+     * @var FieldsPermissionErrorPresenter[]
+     */
+    private array $non_updatable_fields = [];
+    /**
      * @var string[]
      */
-    private array $error_list = [];
+    private array $field_synchronisation_error = [];
+    /**
+     * @var int[]
+     */
+    private array $team_tracker_id_errors = [];
+    /**
+     * @var SemanticStatusNoFieldPresenter[]
+     */
+    private array $semantic_status_no_field = [];
+    /**
+     * @var int[]
+     */
+    private array $status_missing_in_teams = [];
+    /**
+     * @var SemanticStatusMissingValuesPresenter[]
+     */
+    private array $semantic_status_missing_values = [];
+
 
     public function __construct(bool $should_collect_all_issues)
     {
@@ -40,18 +84,185 @@ final class ConfigurationErrorsCollector
         return $this->should_collect_all_issues;
     }
 
-    public function addError(string $ui_error): void
+    /**
+     * @param int[] $potential_trackers_in_error
+     */
+    public function addSemanticError(
+        string $semantic_name,
+        string $semantic_short_name,
+        array $potential_trackers_in_error
+    ): void {
+        $this->semantic_errors[] = new SemanticErrorPresenter(
+            $semantic_name,
+            $semantic_short_name,
+            $potential_trackers_in_error
+        );
+    }
+
+    public function addRequiredFieldError(int $tracker_id, int $field_id, string $field_label): void
     {
-        $this->error_list[] = $ui_error;
+        $this->required_fields_errors[] = new RequiredErrorPresenter($tracker_id, $field_id, $field_label);
+    }
+
+    public function addWorkflowTransitionRulesError(int $tracker_id): void
+    {
+        $this->transition_rule_error[] = new WorkFlowErrorPresenter($tracker_id);
+    }
+
+    public function addWorkflowTransitionDateRulesError(int $tracker_id): void
+    {
+        $this->transition_rule_date_error[] = new WorkFlowErrorPresenter($tracker_id);
+    }
+
+    public function addWorkflowDependencyError(int $tracker_id): void
+    {
+        $this->field_dependency_error[] = new WorkFlowErrorPresenter($tracker_id);
+    }
+
+    public function addSubmitFieldPermissionError(int $field_id, string $label, int $tracker_id): void
+    {
+        $this->non_submittable_fields[] = new FieldsPermissionErrorPresenter($field_id, $label, $tracker_id);
+    }
+
+    public function addUpdateFieldPermissionError(int $field_id, string $label, int $tracker_id): void
+    {
+        $this->non_updatable_fields[] = new FieldsPermissionErrorPresenter($field_id, $label, $tracker_id);
+    }
+
+    public function userCanNotSubmitInTeam(int $team_tracker_id): void
+    {
+        $this->team_tracker_id_errors[] = $team_tracker_id;
+    }
+
+    public function addSemanticNoStatusFieldError(int $tracker_id): void
+    {
+        $this->semantic_status_no_field[] = new SemanticStatusNoFieldPresenter($tracker_id);
+    }
+
+    public function addMissingSemanticInTeamErrors(array $tracker_ids): void
+    {
+        $this->status_missing_in_teams = $tracker_ids;
+    }
+
+    public function addMissingValueInSemantic(array $missing_values, array $tracker_ids): void
+    {
+        $this->semantic_status_missing_values[] = new SemanticStatusMissingValuesPresenter($missing_values, $tracker_ids);
+    }
+
+    public function addFieldSynchronisationError(string $message): void
+    {
+        $this->field_synchronisation_error[] = $message;
     }
 
     public function hasError(): bool
     {
-        return count($this->error_list) > 0;
+        return count($this->semantic_errors) > 0 ||
+            count($this->required_fields_errors) > 0 ||
+            count($this->transition_rule_error) > 0 ||
+            count($this->transition_rule_date_error) > 0 ||
+            count($this->field_dependency_error) > 0 ||
+            count($this->non_submittable_fields) > 0 ||
+            count($this->non_updatable_fields) > 0 ||
+            count($this->team_tracker_id_errors) > 0 ||
+            count($this->status_missing_in_teams) > 0 ||
+            count($this->semantic_status_no_field) > 0 ||
+            count($this->field_synchronisation_error) > 0 ||
+            count($this->semantic_status_missing_values) > 0;
     }
 
-    public function getErrorMessages(): array
+    /**
+     * @return WorkFlowErrorPresenter[]
+     */
+    public function getTransitionRuleError(): array
     {
-        return $this->error_list;
+        return $this->transition_rule_error;
+    }
+
+    /**
+     * @return WorkFlowErrorPresenter[]
+     */
+    public function getTransitionRuleDateError(): array
+    {
+        return $this->transition_rule_date_error;
+    }
+
+    /**
+     * @return WorkFlowErrorPresenter[]
+     */
+    public function getFieldDependencyError(): array
+    {
+        return $this->field_dependency_error;
+    }
+
+    /**
+     * @return SemanticErrorPresenter[]
+     */
+    public function getSemanticErrors(): array
+    {
+        return $this->semantic_errors;
+    }
+
+    /**
+     * @return RequiredErrorPresenter[]
+     */
+    public function getRequiredFieldsErrors(): array
+    {
+        return $this->required_fields_errors;
+    }
+
+    /**
+     * @return FieldsPermissionErrorPresenter[]
+     */
+    public function getNonSubmittableFields(): array
+    {
+        return $this->non_submittable_fields;
+    }
+
+    /**
+     * @return FieldsPermissionErrorPresenter[]
+     */
+    public function getNonUpdatableFields(): array
+    {
+        return $this->non_updatable_fields;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getFieldSynchronisationError(): array
+    {
+        return $this->field_synchronisation_error;
+    }
+
+    /**
+     * @return int[]
+     */
+    public function getTeamTrackerIdErrors(): array
+    {
+        return $this->team_tracker_id_errors;
+    }
+
+    /**
+     * @return SemanticStatusNoFieldPresenter[]
+     */
+    public function getSemanticStatusNoField(): array
+    {
+        return $this->semantic_status_no_field;
+    }
+
+    /**
+     * @return int[]
+     */
+    public function getStatusMissingInTeams(): array
+    {
+        return $this->status_missing_in_teams;
+    }
+
+    /**
+     * @return SemanticStatusMissingValuesPresenter[]
+     */
+    public function getSemanticStatusMissingValues(): array
+    {
+        return $this->semantic_status_missing_values;
     }
 }

@@ -23,23 +23,28 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Artifact;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class CanSubmitNewArtifactTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
+    private CanSubmitNewArtifact $can_submit_artifact;
+    private \PFUser $user;
+    private \Tracker $tracker;
+
+    protected function setUp(): void
+    {
+        $this->user                = UserTestBuilder::aUser()->build();
+        $this->tracker             = TrackerTestBuilder::aTracker()->build();
+        $this->can_submit_artifact = new CanSubmitNewArtifact($this->user, $this->tracker);
+    }
 
     public function testAllowArtifactSubmissionByDefault(): void
     {
-        $user                = UserTestBuilder::aUser()->build();
-        $tracker             = \Mockery::mock(\Tracker::class);
-        $can_submit_artifact = new CanSubmitNewArtifact($user, $tracker, false);
-
-        $this->assertSame($user, $can_submit_artifact->getUser());
-        $this->assertSame($tracker, $can_submit_artifact->getTracker());
-        $this->assertTrue($can_submit_artifact->canSubmitNewArtifact());
-        $can_submit_artifact->disableArtifactSubmission();
-        $this->assertFalse($can_submit_artifact->canSubmitNewArtifact());
+        $this->assertSame($this->user, $this->can_submit_artifact->getUser());
+        $this->assertSame($this->tracker, $this->can_submit_artifact->getTracker());
+        $this->assertTrue($this->can_submit_artifact->canSubmitNewArtifact());
+        $this->can_submit_artifact->disableArtifactSubmission();
+        $this->assertFalse($this->can_submit_artifact->canSubmitNewArtifact());
     }
 }

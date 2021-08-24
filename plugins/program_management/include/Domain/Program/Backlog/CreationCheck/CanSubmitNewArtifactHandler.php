@@ -22,38 +22,18 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck;
 
-use Tuleap\ProgramManagement\Domain\BuildProject;
 use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ConfigurationErrorsCollector;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Team\TeamProjectsCollection;
-use Tuleap\ProgramManagement\Domain\Program\Plan\BuildProgram;
-use Tuleap\ProgramManagement\Domain\Program\Plan\ProgramAccessException;
-use Tuleap\ProgramManagement\Domain\Program\Plan\ProjectIsNotAProgramException;
-use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
-use Tuleap\ProgramManagement\Domain\Program\SearchTeamsOfProgram;
 use Tuleap\ProgramManagement\Domain\ProgramTracker;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\Tracker\Artifact\CanSubmitNewArtifact;
 
 final class CanSubmitNewArtifactHandler
 {
-    private BuildProgram $program_builder;
-    private ProgramIncrementCreatorChecker $program_increment_creator_checker;
-    private IterationCreatorChecker $iteration_creator_checker;
-    private SearchTeamsOfProgram $teams_searcher;
-    private BuildProject $project_builder;
+    private ConfigurationErrorsGatherer $configuration_errors_gatherer;
 
-    public function __construct(
-        BuildProgram $program_builder,
-        ProgramIncrementCreatorChecker $program_increment_creator_checker,
-        IterationCreatorChecker $iteration_creator_checker,
-        SearchTeamsOfProgram $teams_searcher,
-        BuildProject $project_builder
-    ) {
-        $this->program_builder                   = $program_builder;
-        $this->program_increment_creator_checker = $program_increment_creator_checker;
-        $this->iteration_creator_checker         = $iteration_creator_checker;
-        $this->teams_searcher                    = $teams_searcher;
-        $this->project_builder                   = $project_builder;
+    public function __construct(ConfigurationErrorsGatherer $configuration_errors_gatherer)
+    {
+        $this->configuration_errors_gatherer = $configuration_errors_gatherer;
     }
 
     public function handle(
@@ -61,39 +41,15 @@ final class CanSubmitNewArtifactHandler
         ConfigurationErrorsCollector $errors_collector,
         UserIdentifier $user_identifier
     ): void {
-        $tracker      = $event->getTracker();
-        $user         = $event->getUser();
-        $tracker_data = new ProgramTracker($tracker);
+        $tracker = new ProgramTracker($event->getTracker());
 
-        try {
-            $program = ProgramIdentifier::fromId($this->program_builder, (int) $tracker->getGroupId(), $user_identifier, null);
-        } catch (ProgramAccessException | ProjectIsNotAProgramException $e) {
-            // Do not disable artifact submission. Keep it enabled
-            return;
-        }
-
-        $team_projects_collection = TeamProjectsCollection::fromProgramIdentifier(
-            $this->teams_searcher,
-            $this->project_builder,
-            $program
+        $this->configuration_errors_gatherer->gatherConfigurationErrors(
+            $tracker,
+            $user_identifier,
+            $errors_collector
         );
 
-        if (
-            ! $this->program_increment_creator_checker->canCreateAProgramIncrement(
-                $user,
-                $tracker_data,
-                $program,
-                $team_projects_collection,
-                $errors_collector
-            )
-        ) {
-            $event->disableArtifactSubmission();
-            if (! $errors_collector->shouldCollectAllIssues()) {
-                return;
-            }
-        }
-
-        if (! $this->iteration_creator_checker->canCreateAnIteration($user, $tracker_data, $program, $team_projects_collection, $errors_collector)) {
+        if ($errors_collector->hasError()) {
             $event->disableArtifactSubmission();
         }
     }
