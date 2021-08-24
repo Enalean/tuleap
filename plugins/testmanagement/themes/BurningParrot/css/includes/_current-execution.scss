@@ -245,6 +245,7 @@ execution-with-steps.current-test-content {
 
 .current-test-footer-section {
     border-top: 1px solid var(--tlp-neutral-light-color);
+    background: var(--tlp-fade-background-color);
 }
 
 .current-comment-header-section {
@@ -295,6 +296,7 @@ execution-with-steps.current-test-content {
     display: flex;
     flex: 0 0 auto;
     align-items: center;
+    background: var(--tlp-white-color);
 }
 
 .current-test-comment {
