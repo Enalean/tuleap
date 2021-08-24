@@ -125,7 +125,13 @@ try {
     $rng_validator    = new XML_RNGValidator();
     $users_collection = new UserXMLExportedCollection($rng_validator, new XML_SimpleXMLCDATAFactory());
 
-    $xml_exporter = new ProjectXMLExporter(
+    $widget_factory = new WidgetFactory(
+        UserManager::instance(),
+        new User_ForgeUserGroupPermissionsManager(new User_ForgeUserGroupPermissionsDao()),
+        EventManager::instance(),
+    );
+    $widget_dao     = new DashboardWidgetDao($widget_factory);
+    $xml_exporter   = new ProjectXMLExporter(
         EventManager::instance(),
         new UGroupManager(),
         $rng_validator,
@@ -133,15 +139,11 @@ try {
         new DashboardXMLExporter(
             new ProjectDashboardRetriever(
                 new ProjectDashboardDao(
-                    new DashboardWidgetDao(
-                        new WidgetFactory(
-                            UserManager::instance(),
-                            new User_ForgeUserGroupPermissionsManager(new User_ForgeUserGroupPermissionsDao()),
-                            EventManager::instance(),
-                        )
-                    )
+                    $widget_dao
                 )
             ),
+            new \Tuleap\Dashboard\Widget\DashboardWidgetRetriever($widget_dao),
+            $widget_factory,
             ProjectXMLExporter::getLogger()
         ),
         new SynchronizedProjectMembershipDetector(new SynchronizedProjectMembershipDao()),

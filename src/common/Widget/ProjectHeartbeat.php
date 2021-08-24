@@ -76,4 +76,12 @@ class ProjectHeartbeat extends Widget
             ['file' => RelativeDatesAssetsRetriever::retrieveAssetsUrl(), 'unique-name' => 'tlp-relative-dates']
         ];
     }
+
+    public function exportAsXML(): \SimpleXMLElement
+    {
+        $widget = new \SimpleXMLElement('<widget />');
+        $widget->addAttribute('name', $this->id);
+
+        return $widget;
+    }
 }

@@ -82,4 +82,12 @@ class ProjectContacts extends \Widget
             ['file' => $assets->getFileURL('dashboards/widget-contact-modal.js')],
         ];
     }
+
+    public function exportAsXML(): \SimpleXMLElement
+    {
+        $widget = new \SimpleXMLElement('<widget />');
+        $widget->addAttribute('name', $this->id);
+
+        return $widget;
+    }
 }

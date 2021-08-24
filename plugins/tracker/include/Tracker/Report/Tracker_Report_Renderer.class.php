@@ -31,6 +31,7 @@ use Tuleap\Widget\WidgetFactory;
 
 abstract class Tracker_Report_Renderer implements WidgetWithAssetDependencies
 {
+    public const XML_ID_PREFIX = 'R';
 
     /**
      * @var mixed
@@ -298,7 +299,7 @@ abstract class Tracker_Report_Renderer implements WidgetWithAssetDependencies
      */
     public function exportToXml(SimpleXMLElement $root, array $xmlMapping)
     {
-        $root->addAttribute('ID', 'R' . $this->id);
+        $root->addAttribute('ID', self::XML_ID_PREFIX . $this->id);
         $root->addAttribute('type', $this->getType());
         $root->addAttribute('rank', $this->rank);
         $cdata = new XML_SimpleXMLCDATAFactory();

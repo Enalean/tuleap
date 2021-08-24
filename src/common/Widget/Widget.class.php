@@ -276,4 +276,9 @@ use Tuleap\Project\MappingRegistry;
     {
         return $this->dashboard_id;
     }
+
+    public function exportAsXML(): ?\SimpleXMLElement
+    {
+        return null;
+    }
 }

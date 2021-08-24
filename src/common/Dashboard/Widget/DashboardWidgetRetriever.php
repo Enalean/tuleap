@@ -20,7 +20,7 @@
 
 namespace Tuleap\Dashboard\Widget;
 
-class DashboardWidgetRetriever
+class DashboardWidgetRetriever implements IRetrieveDashboardWidgets
 {
     /**
      * @var DashboardWidgetDao
@@ -33,11 +33,9 @@ class DashboardWidgetRetriever
     }
 
     /**
-     * @param $dashboard_id
-     * @param $dashboard_type
      * @return DashboardWidgetLine[]
      */
-    public function getAllWidgets($dashboard_id, $dashboard_type)
+    public function getAllWidgets(int $dashboard_id, string $dashboard_type): array
     {
         $widgets_by_line = [];
 

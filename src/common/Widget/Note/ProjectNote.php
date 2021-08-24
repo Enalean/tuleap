@@ -217,4 +217,29 @@ class ProjectNote extends \Widget
     {
         return new \Tuleap\Layout\IncludeCoreAssets();
     }
+
+    public function exportAsXML(): \SimpleXMLElement
+    {
+        $widget = new \SimpleXMLElement('<widget />');
+        $widget->addAttribute('name', $this->id);
+
+        $preference = $widget->addChild('preference');
+        $preference->addAttribute('name', 'note');
+
+        $cdata_factory = new \XML_SimpleXMLCDATAFactory();
+        $cdata_factory->insertWithAttributes(
+            $preference,
+            'value',
+            (string) $this->title,
+            ['name' => 'title']
+        );
+        $cdata_factory->insertWithAttributes(
+            $preference,
+            'value',
+            (string) $this->content,
+            ['name' => 'content']
+        );
+
+        return $widget;
+    }
 }
