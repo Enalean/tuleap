@@ -36,7 +36,7 @@ describe("Test plan", function () {
         it("Displays no campaign nor backlog items if release does not have one", () => {
             goToTestPlanOfMilestone("Release without campaigns");
 
-            cy.contains("There is no test campaign yet.");
+            cy.contains("There is no test campaign yet");
             cy.contains("There is no backlog item yet");
         });
 
