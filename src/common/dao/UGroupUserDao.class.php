@@ -47,7 +47,7 @@ class UGroupUserDao extends DataAccessObject
         $sql_order = UserHelper::instance()->getDisplayNameSQLOrder();
 
         $sql = "SELECT *
-                FROM ugroup_user INNER JOIN user USING(user_id) 
+                FROM ugroup_user INNER JOIN user USING(user_id)
                 WHERE ugroup_id = $ugroup_id
                 AND user.status IN ('A', 'R')
                 ORDER BY $sql_order";
@@ -127,14 +127,14 @@ class UGroupUserDao extends DataAccessObject
     public function returnProjectAdminsByStaticUGroupId($groupId, $ugroups)
     {
         $sql = 'SELECT u.email as email FROM user u
-                    JOIN ugroup_user uu 
+                    JOIN ugroup_user uu
                     USING(user_id)
-                    JOIN user_group ug 
-                    USING(user_id) 
-                    WHERE ug.admin_flags="A" 
-                    AND u.status IN ("A", "R") 
-                    AND ug.group_id =' . $this->da->escapeInt($groupId) . ' 
-                    AND u.status IN ("A", "R") 
+                    JOIN user_group ug
+                    USING(user_id)
+                    WHERE ug.admin_flags="A"
+                    AND u.status IN ("A", "R")
+                    AND ug.group_id =' . $this->da->escapeInt($groupId) . '
+                    AND u.status IN ("A", "R")
                     AND uu.ugroup_id IN (' . implode(",", $ugroups) . ')';
         return $this->retrieve($sql);
     }
@@ -154,6 +154,20 @@ class UGroupUserDao extends DataAccessObject
             return new DataAccessResultEmpty();
         }
         return $this->retrieve($sql);
+    }
+
+    public function searchUserByDynamicUGroupIdIncludingSuspended(int $ugroupId, int $groupId): IProvideDataAccessResult
+    {
+        $sql = ugroup_db_get_dynamic_members($ugroupId, false, $groupId, false, null, true);
+        if (! $sql) {
+            return new DataAccessResultEmpty();
+        }
+        $dar = $this->retrieve($sql);
+        if ($dar === false) {
+            return new DataAccessResultEmpty();
+        }
+
+        return $dar;
     }
 
     public function searchUserByDynamicUGroupIdIncludingSuspendedAndDeleted($ugroupId, $groupId)
