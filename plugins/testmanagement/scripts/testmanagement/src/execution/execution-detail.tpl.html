@@ -167,80 +167,85 @@
                               tabindex="-1"
         ></execution-with-steps>
 
-        <section ng-if="execution.is_automated === false && campaign.is_open" class="tlp-pane-section current-test-footer-section">
-            <div class="tlp-form-element">
-                <div class="current-comment-header-section">
-                    <label class="tlp-label" for="execution_{{execution.id}}" translate>Comment</label>
-                    <button
-                        type="button"
-                        ng-if="execution.previous_result.result"
-                        class="tlp-button-secondary tlp-button-mini tlp-button-outline"
-                        data-test="expand-details-button"
-                        ng-click="showExecutionDetailsModal()"
-                        title="{{ 'View details' | translate }}"
-                    >
-                        <i
-                            class="fas fa-expand-alt tlp-button-icon"
-                            aria-hidden="true"
-                        ></i>
+        <div ng-if="execution.is_automated === false && campaign.is_open">
+            <section class="tlp-pane-section current-test-footer-section">
+                <div class="tlp-form-element">
+                    <div class="current-comment-header-section">
+                        <label class="tlp-label" for="execution_{{execution.id}}" translate>Comment</label>
+                        <button
+                            type="button"
+                            ng-if="execution.previous_result.result"
+                            class="tlp-button-secondary tlp-button-mini tlp-button-outline"
+                            data-test="expand-details-button"
+                            ng-click="showExecutionDetailsModal()"
+                            title="{{ 'View details' | translate }}"
+                        >
+                            <i
+                                class="fas fa-expand-alt tlp-button-icon"
+                                aria-hidden="true"
+                            ></i>
+                        </button>
+                    </div>
+                    <div class="current-test-results-container">
+                        <div class="current-test-comment"
+                             id="execution_{{execution.id}}"
+                             data-test="current-test-comment"
+                             data-shortcut-current-test-comment
+                        >
+                        </div>
+                    </div>
+                </div>
+                <div class="tlp-alert-warning current-test-should-be-reloaded-warning"
+                     ng-if="execution.userCanReloadTestBecauseDefinitionIsUpdated">
+                    <span translate>The test has been changed by someone else. You should reload the test before executing it.</span>
+                    <button type="button"
+                            class="tlp-button-warning tlp-button-outline current-test-should-be-reloaded-button"
+                            ng-click="execution.userCanReloadTestBecauseDefinitionIsUpdated()">
+                        <i class="fas fa-fw fa-sync tlp-button-icon"></i> <span translate>Reload the test</span>
                     </button>
                 </div>
-                <div class="current-test-results-container">
-                    <div class="current-test-comment"
-                         id="execution_{{execution.id}}"
-                         data-test="current-test-comment"
-                         data-shortcut-current-test-comment
-                    >
-                    </div>
-                    <div class="current-test-results" ng-if="! execution.userCanReloadTestBecauseDefinitionIsUpdated">
-                        <button id="test-result-passed" type="button"
-                                data-test="mark-test-as-passed"
-                                class="current-test-result tlp-button-large tlp-button-success"
-                                title="{{ 'Passed' | translate }}"
-                                ng-click="pass($event, execution)"
-                                data-shortcut-passed
-                                ng-disabled="execution.saving">
-                            <i class="fa fa-fw fa-check-circle"></i>
-                        </button>
-                        <button id="test-result-failed" type="button"
-                                data-test="mark-test-as-failed"
-                                class="current-test-result tlp-button-large tlp-button-danger"
-                                title="{{ 'Failed' | translate }}"
-                                ng-click="fail($event, execution)"
-                                ng-disabled="execution.saving">
-                            <i class="fa fa-fw fa-times-circle"></i>
-                        </button>
-                        <button id="test-result-blocked" type="button"
-                                data-test="mark-test-as-blocked"
-                                class="current-test-result tlp-button-large tlp-button-info"
-                                title="{{ 'Blocked' | translate }}"
-                                ng-click="block($event, execution)"
-                                data-shortcut-blocked
-                                ng-disabled="execution.saving">
-                            <i class="fa fa-fw fa-exclamation-circle"></i>
-                        </button>
-                        <button id="test-result-notrun" type="button"
-                                data-test="mark-test-as-notrun"
-                                class="current-test-result tlp-button-large tlp-button-secondary"
-                                title="{{ 'Not run' | translate }}"
-                                ng-click="notrun($event, execution)"
-                                data-shortcut-not-run
-                                ng-disabled="execution.saving">
-                            <i class="fa fa-fw fa-question-circle"></i>
-                        </button>
-                    </div>
+            </section>
+            <section class="tlp-pane-section current-test-footer-section">
+                <div class="current-test-results" ng-if="! execution.userCanReloadTestBecauseDefinitionIsUpdated">
+                    <button id="test-result-passed" type="button"
+                            data-test="mark-test-as-passed"
+                            class="current-test-result tlp-button-large tlp-button-success"
+                            title="{{ 'Passed' | translate }}"
+                            ng-click="pass($event, execution)"
+                            data-shortcut-passed
+                            ng-disabled="execution.saving">
+                        <i class="fa fa-fw fa-check-circle"></i>
+                    </button>
+                    <button id="test-result-failed" type="button"
+                            data-test="mark-test-as-failed"
+                            class="current-test-result tlp-button-large tlp-button-danger"
+                            title="{{ 'Failed' | translate }}"
+                            ng-click="fail($event, execution)"
+                            ng-disabled="execution.saving">
+                        <i class="fa fa-fw fa-times-circle"></i>
+                    </button>
+                    <button id="test-result-blocked" type="button"
+                            data-test="mark-test-as-blocked"
+                            class="current-test-result tlp-button-large tlp-button-info"
+                            title="{{ 'Blocked' | translate }}"
+                            ng-click="block($event, execution)"
+                            data-shortcut-blocked
+                            ng-disabled="execution.saving">
+                        <i class="fa fa-fw fa-exclamation-circle"></i>
+                    </button>
+                    <button id="test-result-notrun" type="button"
+                            data-test="mark-test-as-notrun"
+                            class="current-test-result tlp-button-large tlp-button-secondary"
+                            title="{{ 'Not run' | translate }}"
+                            ng-click="notrun($event, execution)"
+                            data-shortcut-not-run
+                            ng-disabled="execution.saving">
+                        <i class="fa fa-fw fa-question-circle"></i>
+                    </button>
                 </div>
-            </div>
-            <div class="tlp-alert-warning current-test-should-be-reloaded-warning"
-                 ng-if="execution.userCanReloadTestBecauseDefinitionIsUpdated">
-                <span translate>The test has been changed by someone else. You should reload the test before executing it.</span>
-                <button type="button"
-                        class="tlp-button-warning tlp-button-outline current-test-should-be-reloaded-button"
-                        ng-click="execution.userCanReloadTestBecauseDefinitionIsUpdated()">
-                    <i class="fas fa-fw fa-sync tlp-button-icon"></i> <span translate>Reload the test</span>
-                </button>
-            </div>
-        </section>
+            </section>
+        </div>
+
         <section ng-if="execution.is_automated === false && ! campaign.is_open" class="tlp-pane-section current-test-footer-section current-test-footer-section-closed-campaign">
             <span translate>The campaign is closed.</span>
             <span translate>You cannot execute the tests anymore.</span>
