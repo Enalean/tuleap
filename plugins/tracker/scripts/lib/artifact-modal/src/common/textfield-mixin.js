@@ -18,7 +18,7 @@
  *
  */
 
-import { getCommonMarkPreviewErrorIntroduction } from "../gettext-catalog.js";
+import { getCommonMarkPreviewErrorIntroduction } from "../gettext-catalog";
 import { postInterpretCommonMark } from "../api/tuleap-api";
 
 export const textfield_mixin = {

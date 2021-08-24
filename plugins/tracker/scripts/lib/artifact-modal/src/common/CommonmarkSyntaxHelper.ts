@@ -1,52 +1,97 @@
-<!--
-  - Copyright (c) Enalean, 2021 - present. All Rights Reserved.
-  -
-  - This file is a part of Tuleap.
-  -
-  - Tuleap is free software; you can redistribute it and/or modify
-  - it under the terms of the GNU General Public License as published by
-  - the Free Software Foundation; either version 2 of the License, or
-  - (at your option) any later version.
-  -
-  - Tuleap is distributed in the hope that it will be useful,
-  - but WITHOUT ANY WARRANTY; without even the implied warranty of
-  - MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  - GNU General Public License for more details.
-  -
-  - You should have received a copy of the GNU General Public License
-  - along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
-  -
-  -->
-<template>
-    <div>
+/*
+ * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+import type { TaggedHybrids } from "hybrids";
+import { html } from "hybrids";
+import { createPopover } from "tlp";
+import example_image from "../assets/image_example_commonmark.png";
+import {
+    getCommonMarkSyntaxHelperPopoverTitle as for_your_information,
+    getSyntaxHelperTitle as help,
+    getSyntaxHelperToGet as to_get,
+    getSyntaxHelperType as type,
+} from "../gettext-catalog";
+
+export interface CommonmarkSyntaxHelper {
+    disabled: boolean;
+    section: HTMLElement | null;
+    button: HTMLButtonElement | null;
+    content: () => HTMLElement;
+}
+
+type DisconnectFunction = () => void;
+
+export const connect = (host: CommonmarkSyntaxHelper): DisconnectFunction | void => {
+    if (!host.section || !host.button) {
+        return;
+    }
+    const popover = createPopover(host.button, host.section);
+    return (): void => {
+        popover.destroy();
+    };
+};
+
+export const CommonmarkSyntaxHelper: TaggedHybrids<CommonmarkSyntaxHelper> = {
+    tag: "tuleap-artifact-modal-commonmark-syntax-helper",
+    button: (host) => {
+        const target = host.content();
+        const button = target.querySelector("[data-popover-button]");
+        if (!(button instanceof HTMLButtonElement)) {
+            return null;
+        }
+        return button;
+    },
+    section: (host) => {
+        const target = host.content();
+        const section = target.querySelector("[data-popover-content]");
+        if (!(section instanceof HTMLElement)) {
+            return null;
+        }
+        return section;
+    },
+    disabled: {
+        connect,
+    },
+    content: (host) => html`
         <button
             type="button"
             class="tlp-button-secondary tlp-button-small artifact-modal-helper-popover-button"
             data-placement="left"
             data-trigger="click"
-            ref="button_helper"
-            v-bind:disabled="disabled"
+            data-popover-button
+            disabled="${host.disabled}"
             data-test="artifact-modal-helper-popover-button"
         >
             <i class="fas fa-question-circle tlp-button-icon" aria-hidden="true"></i>
-            {{ help }}
+            ${help()}
         </button>
-
-        <section class="tlp-popover" ref="popover_helper">
+        <section class="tlp-popover" data-popover-content>
             <div class="tlp-popover-arrow"></div>
             <div class="tlp-popover-header">
-                <h1 class="tlp-popover-title">{{ for_your_information }}</h1>
+                <h1 class="tlp-popover-title">${for_your_information()}</h1>
             </div>
             <div class="tlp-popover-body">
                 <table class="tlp-table">
                     <thead>
                         <tr>
-                            <th>
-                                {{ type }}
-                            </th>
-                            <th>
-                                {{ to_get }}
-                            </th>
+                            <th>${type()}</th>
+                            <th>${to_get()}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -73,10 +118,7 @@
                         <tr>
                             <td>![Image](/path/image.png)</td>
                             <td>
-                                <img
-                                    class="popover-image-indentation"
-                                    src="../assets/image_example_commonmark.png"
-                                />
+                                <img class="popover-image-indentation" src="${example_image}" />
                             </td>
                         </tr>
                         <tr>
@@ -116,12 +158,12 @@
                             </td>
                         </tr>
                         <tr>
-                            <td>`Inline code`</td>
+                            <td>\`Inline code\`</td>
                             <td><code>Inline code</code></td>
                         </tr>
                         <tr>
                             <td>
-                                ```
+                                \`\`\`
                                 <br />
                                 a = 'Hello ';
                                 <br />
@@ -131,7 +173,7 @@
                                 <br />
                                 # display Hello World
                                 <br />
-                                ```
+                                \`\`\`
                             </td>
                             <td>
                                 <pre class="popover-code-block-indentation">
@@ -148,63 +190,5 @@
                 </table>
             </div>
         </section>
-    </div>
-</template>
-
-<script>
-import { createPopover } from "tlp";
-import {
-    getCommonMarkSyntaxHelperPopoverTitle,
-    getSyntaxHelperTitle,
-    getSyntaxHelperToGet,
-    getSyntaxHelperType,
-} from "../gettext-catalog";
-
-export default {
-    name: "CommonmarkSyntaxHelper",
-    props: {
-        disabled: Boolean,
-    },
-    data() {
-        return {
-            escapeHandler: this.handleKeyUp.bind(this),
-            popover: undefined,
-        };
-    },
-    computed: {
-        // Translate attribute does not work with ng-vue out of the box.
-        help() {
-            return getSyntaxHelperTitle();
-        },
-        type() {
-            return getSyntaxHelperType();
-        },
-        to_get() {
-            return getSyntaxHelperToGet();
-        },
-        for_your_information() {
-            return getCommonMarkSyntaxHelperPopoverTitle();
-        },
-    },
-    mounted() {
-        this.popover = createPopover(this.$refs.button_helper, this.$refs.popover_helper);
-        document.addEventListener("keyup", this.escapeHandler);
-    },
-    destroyed() {
-        document.removeEventListener("keyup", this.escapeHandler);
-        if (this.popover) {
-            this.popover.destroy();
-        }
-    },
-    methods: {
-        handleKeyUp(event) {
-            if (event.key !== "Escape") {
-                return;
-            }
-            if (this.popover) {
-                this.popover.hide();
-            }
-        },
-    },
+    `,
 };
-</script>

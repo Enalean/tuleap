@@ -1,5 +1,5 @@
 import { transform, addFieldValuesToTracker } from "./tracker-transformer.js";
-import { setCatalog } from "../gettext-catalog.js";
+import { setCatalog } from "../gettext-catalog";
 
 describe("TuleapArtifactModalTrackerTransformerService", () => {
     describe("transform() -", () => {

@@ -19,7 +19,7 @@
 
 import AwkwardCreationFields from "./awkward-creation-fields-constant.js";
 import { STRUCTURAL_FIELDS } from "../../../../constants/fields-constants.js";
-import { getNone } from "../gettext-catalog.js";
+import { getNone } from "../gettext-catalog";
 
 export function transform(tracker, creation_mode) {
     const transformed_tracker = { ...tracker };

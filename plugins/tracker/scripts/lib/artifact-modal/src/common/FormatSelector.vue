@@ -41,10 +41,11 @@
                 v-bind:is_preview_loading="is_preview_loading"
                 v-on:commonmark-preview-event="$emit('interpret-content-event')"
             />
-            <commonmark-syntax-helper
+            <!-- eslint-disable-next-line vue/html-self-closing -->
+            <tuleap-artifact-modal-commonmark-syntax-helper
                 v-if="is_commonmark_format"
-                v-bind:disabled="is_syntax_helper_button_disabled"
-            />
+                v-bind:disabled.prop="is_syntax_helper_button_disabled"
+            ></tuleap-artifact-modal-commonmark-syntax-helper>
         </div>
     </div>
 </template>
@@ -55,13 +56,12 @@ import {
     TEXT_FORMAT_HTML,
     TEXT_FORMAT_TEXT,
 } from "../../../../constants/fields-constants.js";
-import CommonmarkSyntaxHelper from "./CommonmarkSyntaxHelper.vue";
 import { getCommonMarkLabel, getHTMLLabel, getTextLabel } from "../gettext-catalog";
 import CommonmarkPreviewButton from "./CommonmarkPreviewButton.vue";
 
 export default {
     name: "FormatSelector",
-    components: { CommonmarkPreviewButton, CommonmarkSyntaxHelper },
+    components: { CommonmarkPreviewButton },
     props: {
         id: String,
         label: String,

@@ -23,7 +23,7 @@ import TextField from "./TextField.vue";
 import FormatSelector from "../../common/FormatSelector.vue";
 import RichTextEditor from "../../common/RichTextEditor.vue";
 import * as disabled_field_detector from "../disabled-field-detector.js";
-import { setCatalog } from "../../gettext-catalog.js";
+import { setCatalog } from "../../gettext-catalog";
 
 let isDisabled;
 
