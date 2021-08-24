@@ -1701,7 +1701,8 @@ CREATE TABLE invitations(
 DROP TABLE IF EXISTS project_background;
 CREATE TABLE project_background(
     project_id INT(11) NOT NULL PRIMARY KEY,
-    background VARCHAR(255) NOT NULL
+    background VARCHAR(255) NULL,
+    background_color VARCHAR(255) NULL
 ) ENGINE=InnoDB;
 
 #

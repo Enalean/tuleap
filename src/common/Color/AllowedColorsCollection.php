@@ -23,7 +23,7 @@ namespace Tuleap\Color;
 class AllowedColorsCollection
 {
     /** @var array<array{secondary: string, text: string}> */
-    private $colors = [
+    public const COLORS = [
         'inca-silver'      => ['secondary' => '#cacaca', 'text' => '#525252'],
         'chrome-silver'    => ['secondary' => '#dcdcdc', 'text' => '#5f5f5f'],
         'firemist-silver'  => ['secondary' => '#f3f3f3', 'text' => '#6f6f6f'],
@@ -56,16 +56,19 @@ class AllowedColorsCollection
      */
     public function getColorNames()
     {
-        return array_keys($this->colors);
+        return array_keys(self::COLORS);
     }
 
+    /**
+     * @psalm-return array<array{secondary: string, text: string}>
+     */
     public function getColors(): array
     {
-        return $this->colors;
+        return self::COLORS;
     }
 
-    public function isColorAllowed($color)
+    public function isColorAllowed($color): bool
     {
-        return isset($this->colors[$color]);
+        return isset(self::COLORS[$color]);
     }
 }

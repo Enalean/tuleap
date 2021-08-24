@@ -43,13 +43,23 @@ final class ProjectBackgroundUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->project_background_updater = new ProjectBackgroundUpdater($this->project_background_dao);
     }
 
-    public function testUpdatesAProjectBackground(): void
+    public function testUpdatesAProjectBackgroundImage(): void
     {
-        $this->project_background_dao->shouldReceive('setBackgroundByProjectID')->once();
+        $this->project_background_dao->shouldReceive('setBackgroundImageByProjectID')->once();
 
-        $this->project_background_updater->updateProjectBackground(
+        $this->project_background_updater->updateProjectBackgroundImage(
             $this->buildPermission(),
             ProjectBackgroundName::fromIdentifier('beach-daytime')
+        );
+    }
+
+    public function testUpdatesAProjectBackgroundColor(): void
+    {
+        $this->project_background_dao->shouldReceive('setBackgroundColorByProjectID')->once();
+
+        $this->project_background_updater->updateProjectBackgroundColor(
+            $this->buildPermission(),
+            ProjectBackgroundColorName::fromColorName('inca-silver')
         );
     }
 

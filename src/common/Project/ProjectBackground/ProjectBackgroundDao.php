@@ -34,10 +34,22 @@ class ProjectBackgroundDao extends DataAccessObject
         ) ?: null;
     }
 
-    public function setBackgroundByProjectID(int $project_id, string $background_identifier): void
+    public function setBackgroundImageByProjectID(int $project_id, string $background_identifier): void
     {
-        $sql = 'INSERT INTO project_background(project_id, background) VALUES (?, ?) ON DUPLICATE KEY UPDATE background = ?';
+        $sql = 'INSERT INTO project_background(project_id, background, background_color)
+                VALUES (?, ?, NULL)
+                ON DUPLICATE KEY UPDATE background = ?, background_color = NULL';
+
         $this->getDB()->run($sql, $project_id, $background_identifier, $background_identifier);
+    }
+
+    public function setBackgroundColorByProjectID(int $project_id, string $color_name): void
+    {
+        $sql = 'INSERT INTO project_background(project_id, background, background_color)
+                VALUES (?, NULL, ?)
+                ON DUPLICATE KEY UPDATE background_color = ?, background = NULL';
+
+        $this->getDB()->run($sql, $project_id, $color_name, $color_name);
     }
 
     public function deleteBackgroundByProjectID(int $project_id): void

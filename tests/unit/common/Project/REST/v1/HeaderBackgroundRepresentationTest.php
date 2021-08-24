@@ -22,13 +22,28 @@ declare(strict_types=1);
 
 namespace Tuleap\Project\REST\v1;
 
+use Tuleap\Project\ProjectBackground\ProjectBackgroundColorName;
 use Tuleap\Project\ProjectBackground\ProjectBackgroundName;
 
 final class HeaderBackgroundRepresentationTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testBuildHeaderBackgroundRepresentationFromIdentifier(): void
     {
-        $representation = HeaderBackgroundRepresentation::fromBackgroundName(ProjectBackgroundName::fromIdentifier('brown-alpaca'));
+        $representation = HeaderBackgroundRepresentation::fromBackgroundName(
+            ProjectBackgroundName::fromIdentifier('brown-alpaca')
+        );
+
         self::assertSame('brown-alpaca', $representation->identifier);
+        self::assertNull($representation->color);
+    }
+
+    public function testBuildHeaderBackgroundRepresentationFromColorName(): void
+    {
+        $representation = HeaderBackgroundRepresentation::fromColorName(
+            ProjectBackgroundColorName::fromColorName('inca-silver')
+        );
+
+        self::assertSame('inca-silver', $representation->color);
+        self::assertNull($representation->identifier);
     }
 }
