@@ -7,6 +7,7 @@
     autoloader="tests/lib/bootstrap.php"
     resolveFromConfigFile="false"
     errorBaseline="./tests/psalm/tuleap-baseline.xml"
+    allowNamedArgumentCalls="false"
 >
     <projectFiles>
         <directory name="src/common/" />
