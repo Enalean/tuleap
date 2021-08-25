@@ -166,11 +166,13 @@ describe("ExecutionDetailController -", () => {
         beforeEach(() => {
             jest.spyOn(SharedPropertiesService, "getCurrentUser").mockReturnValue(user);
             jest.spyOn(ExecutionService, "updateTestExecution").mockImplementation(() => {});
-            jest.spyOn(ExecutionService, "clearEditor").mockImplementation(() => {});
+            jest.spyOn(ExecutionService, "removeViewTestExecution").mockImplementation(() => {});
+            jest.spyOn(ExecutionService, "viewTestExecution").mockImplementation(() => {});
             jest.spyOn(ExecutionRestService, "putTestExecution").mockReturnValue(
                 $q.when(execution)
             );
             ExecutionService.editor = ckeditorGetData;
+            execution.results = "psychoanalyzer rupture solidish";
             $scope.execution = execution;
         });
 
@@ -188,7 +190,11 @@ describe("ExecutionDetailController -", () => {
                     []
                 );
                 expect(ExecutionService.updateTestExecution).toHaveBeenCalledWith(execution, user);
-                expect(ExecutionService.clearEditor).toHaveBeenCalledWith(execution);
+                expect(ExecutionService.removeViewTestExecution).toHaveBeenCalledWith(
+                    execution.id,
+                    user
+                );
+                expect($scope.displayTestCommentContainer).toBeFalsy();
             });
 
             it("When there is a problem with the update, then the error will be shown on the execution", () => {
@@ -208,6 +214,25 @@ describe("ExecutionDetailController -", () => {
                     "error"
                 );
             });
+
+            it("When there is no comment, Then the comment box is created and displayed", () => {
+                execution.results = "";
+                execution.uploaded_files = [];
+
+                $scope.pass(event, execution);
+                $scope.$apply();
+
+                expect(ExecutionRestService.putTestExecution).toHaveBeenCalledWith(
+                    execution.id,
+                    "passed",
+                    execution.results,
+                    []
+                );
+                expect(ExecutionService.updateTestExecution).toHaveBeenCalledWith(execution, user);
+                expect(ExecutionService.removeViewTestExecution).not.toHaveBeenCalled();
+                expect(ExecutionService.viewTestExecution).toHaveBeenCalledWith(execution.id, user);
+                expect($scope.displayTestCommentContainer).toBeTruthy();
+            });
         });
 
         describe("fail()", () => {
@@ -222,6 +247,11 @@ describe("ExecutionDetailController -", () => {
                     []
                 );
                 expect(ExecutionService.updateTestExecution).toHaveBeenCalledWith(execution, user);
+                expect(ExecutionService.removeViewTestExecution).toHaveBeenCalledWith(
+                    execution.id,
+                    user
+                );
+                expect($scope.displayTestCommentContainer).toBeFalsy();
             });
         });
 
@@ -237,6 +267,11 @@ describe("ExecutionDetailController -", () => {
                     []
                 );
                 expect(ExecutionService.updateTestExecution).toHaveBeenCalledWith(execution, user);
+                expect(ExecutionService.removeViewTestExecution).toHaveBeenCalledWith(
+                    execution.id,
+                    user
+                );
+                expect($scope.displayTestCommentContainer).toBeFalsy();
             });
         });
 
@@ -260,6 +295,11 @@ describe("ExecutionDetailController -", () => {
                     [13]
                 );
                 expect(ExecutionService.updateTestExecution).toHaveBeenCalledWith(execution, user);
+                expect(ExecutionService.removeViewTestExecution).toHaveBeenCalledWith(
+                    execution.id,
+                    user
+                );
+                expect($scope.displayTestCommentContainer).toBeFalsy();
             });
 
             it("Then the status will be saved to 'notrun' and only the file in ckeditor will be send", () => {
@@ -285,6 +325,11 @@ describe("ExecutionDetailController -", () => {
                     [13]
                 );
                 expect(ExecutionService.updateTestExecution).toHaveBeenCalledWith(execution, user);
+                expect(ExecutionService.removeViewTestExecution).toHaveBeenCalledWith(
+                    execution.id,
+                    user
+                );
+                expect($scope.displayTestCommentContainer).toBeFalsy();
             });
         });
     });

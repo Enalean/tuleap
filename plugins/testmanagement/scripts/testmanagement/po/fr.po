@@ -122,6 +122,9 @@ msgstr "Graphe de dépendances de &#34;{{ modal.title }}&#34;"
 msgid "Edit campaign"
 msgstr "Éditer la campagne"
 
+msgid "Edit comment"
+msgstr "Éditer le commentaire"
+
 msgid "Edit test"
 msgstr "Éditer le test"
 
