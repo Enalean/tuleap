@@ -93,20 +93,14 @@ export async function downloadDocx(
                         children: [new TextRun(artifact.title)],
                     }),
                 ],
-                numbering: {
-                    reference: MAIN_TITLES_NUMBERING_ID,
-                    level: 1,
-                },
             })
         );
 
         if (artifact.fields.length > 0) {
-            artifacts_content.push(buildFieldValuesDisplayZone(artifact.fields, gettext_provider));
+            artifacts_content.push(buildFieldValuesDisplayZone(artifact.fields));
         }
 
-        artifacts_content.push(
-            ...buildContainersDisplayZone(artifact.containers, 2, gettext_provider)
-        );
+        artifacts_content.push(...buildContainersDisplayZone(artifact.containers));
     }
 
     const table_of_contents = [
@@ -323,21 +317,13 @@ function buildParagraphOfAnUnorderedList(content: ParagraphChild): Paragraph {
 }
 
 function buildContainersDisplayZone(
-    containers: ReadonlyArray<ArtifactContainer>,
-    depth_level: number,
-    gettext_provider: GetText
+    containers: ReadonlyArray<ArtifactContainer>
 ): ReadonlyArray<XmlComponent> {
     return containers.flatMap((container) => {
-        const sub_containers_display_zones = buildContainersDisplayZone(
-            container.containers,
-            depth_level + 1,
-            gettext_provider
-        );
+        const sub_containers_display_zones = buildContainersDisplayZone(container.containers);
         const field_values_display_zone = [];
         if (container.fields.length > 0) {
-            field_values_display_zone.push(
-                buildFieldValuesDisplayZone(container.fields, gettext_provider)
-            );
+            field_values_display_zone.push(buildFieldValuesDisplayZone(container.fields));
         }
 
         if (sub_containers_display_zones.length === 0 && field_values_display_zone.length === 0) {
@@ -348,7 +334,6 @@ function buildContainersDisplayZone(
             new Paragraph({
                 text: container.name,
                 heading: HeadingLevel.HEADING_3,
-                numbering: { reference: MAIN_TITLES_NUMBERING_ID, level: depth_level },
             }),
             ...field_values_display_zone,
             ...sub_containers_display_zones,
@@ -490,19 +475,8 @@ function buildDateReportCriterionValue(
     });
 }
 
-function buildFieldValuesDisplayZone(
-    artifact_values: ReadonlyArray<ArtifactFieldValue>,
-    gettext_provider: GetText
-): Table {
-    const fields_rows = [
-        new TableRow({
-            children: [
-                buildTableCellHeader(gettext_provider.gettext("Field name")),
-                buildTableCellHeader(gettext_provider.gettext("Value")),
-            ],
-            tableHeader: true,
-        }),
-    ];
+function buildFieldValuesDisplayZone(artifact_values: ReadonlyArray<ArtifactFieldValue>): Table {
+    const fields_rows: TableRow[] = [];
 
     for (const artifact_value of artifact_values) {
         const table_row = new TableRow({

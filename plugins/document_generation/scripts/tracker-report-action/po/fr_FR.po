@@ -26,9 +26,6 @@ msgstr "Date de l'export : %s"
 msgid "Exported by: %s"
 msgstr "Exporté par : %s"
 
-msgid "Field name"
-msgstr "Nom du champ"
-
 msgid ""
 "No filter has been applied to this report because no TQL query has been set"
 msgstr ""
