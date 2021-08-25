@@ -41,9 +41,10 @@ setup_database() {
     MYSQL_USER=tuleapadm
     MYSQL_PASSWORD=welcome0
     MYSQL_DBNAME=tuleap
-    MYSQL="mysql -h$DB_HOST -u$MYSQL_USER -p$MYSQL_PASSWORD"
+    MYSQL_CLI="/opt/rh/rh-mysql57/root/usr/bin/mysql"
+    MYSQL="$MYSQL_CLI -h$DB_HOST -u$MYSQL_USER -p$MYSQL_PASSWORD"
 
-    MYSQLROOT="mysql -h$DB_HOST -uroot -pwelcome0"
+    MYSQLROOT="$MYSQL_CLI -h$DB_HOST -uroot -pwelcome0"
     echo "Use remote db $DB_HOST"
 
     # runner should have access to Tuleap conf, esp. database.inc because some tests pre-cond changes values directly
