@@ -126,16 +126,6 @@
                         <span translate>by</span> {{ execution.previous_result.submitted_by.real_name }}
                     </span>
                 </div>
-                <div class="current-test-header-comment" ng-if="execution.previous_result.result">
-                    <div ng-bind-html="truncateExecutionResult(execution, 200)" data-test="current-test-preview-latest-result"></div>
-                    <button type="button"
-                            data-test="view-details-button"
-                            class="tlp-button-outline tlp-button-small"
-                            ng-class="{'tlp-button-danger': execution.status === 'failed', 'tlp-button-success': execution.status === 'passed', 'tlp-button-info': execution.status === 'blocked', 'tlp-button-secondary': execution.status === 'notrun'}"
-                            ng-click="showExecutionDetailsModal()"
-                            translate
-                    >View details</button>
-                </div>
             </div>
         </section>
 
@@ -186,11 +176,20 @@
                             ></i>
                         </button>
                     </div>
-                    <div class="current-test-results-container" ng-if="displayTestCommentContainer">
-                        <div class="current-test-comment"
-                             id="execution_{{execution.id}}"
-                             data-test="current-test-comment"
-                             data-shortcut-current-test-comment
+                    <div class="current-test-results-container">
+                        <div
+                            ng-if="displayTestCommentContainer"
+                            class="current-test-comment"
+                            id="execution_{{execution.id}}"
+                            data-test="current-test-comment"
+                            data-shortcut-current-test-comment
+                        >
+                        </div>
+                        <div
+                            ng-if="! displayTestCommentContainer"
+                            class="current-test-comment current-test-comment-displayer"
+                            data-test="current-test-comment-preview"
+                            ng-bind-html="truncateExecutionResult(execution, 200)"
                         >
                         </div>
                     </div>

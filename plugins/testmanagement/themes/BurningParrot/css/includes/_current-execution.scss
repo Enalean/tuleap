@@ -148,25 +148,6 @@
     line-height: 28px;
 }
 
-.current-test-header-comment {
-    display: flex;
-    align-items: baseline;
-    justify-content: space-between;
-    margin: 10px 0 0;
-    font-size: 14px;
-    line-height: 22px;
-    word-break: break-word;
-
-    > button {
-        flex: 0 0 auto;
-        margin: 0 0 0 20px;
-    }
-
-    p {
-        font-size: inherit;
-    }
-}
-
 .current-test-header-actions {
     display: flex;
     flex: 0 0 auto;
@@ -334,6 +315,22 @@ execution-with-steps.current-test-content {
 
     img {
         height: auto !important;
+    }
+}
+
+.current-test-comment-displayer {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    border: 0;
+    background: var(--tlp-fade-background-color);
+    font-size: 14px;
+    line-height: 22px;
+    word-break: normal;
+    overflow-wrap: anywhere;
+
+    p {
+        font-size: inherit;
     }
 }
 

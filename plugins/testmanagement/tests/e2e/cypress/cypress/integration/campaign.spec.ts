@@ -158,12 +158,6 @@ describe("TTM campaign", () => {
 
                     cy.get("[data-test=mark-test-as-failed]").click();
                     cy.get("[data-test=current-test").should("have.class", "failed");
-                    // For the moment, there are 2 buttons to open a modal
-                    cy.get("[data-test=view-details-button]").click();
-                    cy.get("[data-test=view-details-modal]").within(() => {
-                        cy.contains("This does not work! Fix ASAP!");
-                        cy.get("[data-dismiss=modal]").first().click();
-                    });
                     cy.get("[data-test=expand-details-button]").click();
                     cy.get("[data-test=view-details-modal]").within(() => {
                         cy.contains("This does not work! Fix ASAP!");
@@ -184,12 +178,6 @@ describe("TTM campaign", () => {
                     });
                     cy.get("[data-test=mark-test-as-passed]").click();
                     cy.get("[data-test=current-test").should("have.class", "passed");
-                    // For the moment, there are 2 buttons to open a modal
-                    cy.get("[data-test=view-details-button]").click();
-                    cy.get("[data-test=view-details-modal]").within(() => {
-                        cy.contains("It's ok. Fix works!");
-                        cy.get("[data-dismiss=modal]").first().click();
-                    });
                     cy.get("[data-test=expand-details-button]").click();
                     cy.get("[data-test=view-details-modal]").within(() => {
                         cy.contains("It's ok. Fix works!");
@@ -254,10 +242,10 @@ describe("TTM campaign", () => {
 
                     cy.get("[data-test=mark-test-as-failed]").click();
                     cy.get("[data-test=current-test").should("have.class", "failed");
-                    cy.get("[data-test=current-test-preview-latest-result]").contains(
+                    cy.get("[data-test=current-test-comment-preview]").contains(
                         "A screenshot has been attached"
                     );
-                    cy.get("[data-test=view-details-button]").click();
+                    cy.get("[data-test=expand-details-button]").click();
                     cy.get("[data-test=view-details-modal]").within(() => {
                         // ignore rule for image stored in ckeditor
                         // eslint-disable-next-line cypress/require-data-selectors
