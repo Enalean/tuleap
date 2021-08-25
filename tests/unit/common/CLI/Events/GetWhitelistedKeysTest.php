@@ -28,7 +28,7 @@ final class GetWhitelistedKeysTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testGetKeysWithAnnotationsOnClasses(): void
     {
-        $get_whitelisted_keys = GetWhitelistedKeys::build();
+        $get_whitelisted_keys = new GetWhitelistedKeys();
 
         $all_keys = [];
         foreach ($get_whitelisted_keys->getSortedKeysWithMetadata() as $key => $summary) {
@@ -40,14 +40,14 @@ final class GetWhitelistedKeysTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testIsKeyAllowed(): void
     {
-        $get_whitelisted_keys = GetWhitelistedKeys::build();
+        $get_whitelisted_keys = new GetWhitelistedKeys();
 
         $this->assertTrue($get_whitelisted_keys->isKeyWhiteListed('sys_use_project_registration'));
     }
 
     public function testGetKeysAsArray(): void
     {
-        $get_whitelisted_keys = GetWhitelistedKeys::build();
+        $get_whitelisted_keys = new GetWhitelistedKeys();
 
         $this->assertContains('sys_use_project_registration', $get_whitelisted_keys->getWhiteListedKeys());
     }

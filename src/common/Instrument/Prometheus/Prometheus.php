@@ -32,21 +32,15 @@ use Enalean\Prometheus\Value\HistogramLabelNames;
 use Enalean\Prometheus\Value\MetricLabelNames;
 use Enalean\Prometheus\Value\MetricName;
 use ForgeConfig;
+use Tuleap\Config\ConfigKey;
 use Tuleap\Redis\ClientFactory;
 
 class Prometheus
 {
-    /**
-     * Platform name to be reported to Prometheus
-     *
-     * @tlp-config-key
-     */
+    #[ConfigKey("Platform name to be reported to Prometheus")]
     public const CONFIG_PROMETHEUS_PLATFORM = 'prometheus_platform';
-    /**
-     * URL of `node_exporter` Prometheus exporter to be scrapped and included in Tuleap metrics
-     *
-     * @tlp-config-key
-     */
+
+    #[ConfigKey("URL of `node_exporter` Prometheus exporter to be scrapped and included in Tuleap metrics")]
     public const CONFIG_PROMETHEUS_NODE_EXPORTER = 'prometheus_node_exporter';
 
     /**

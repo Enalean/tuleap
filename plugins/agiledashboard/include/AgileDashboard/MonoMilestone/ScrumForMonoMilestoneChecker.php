@@ -22,16 +22,13 @@ namespace Tuleap\AgileDashboard\MonoMilestone;
 
 use PFUser;
 use PlanningFactory;
+use Tuleap\Config\FeatureFlagConfigKey;
 
 class ScrumForMonoMilestoneChecker
 {
     public const NUMBER_MAXIMUM_OF_PLANNING = 1;
 
-    /**
-     * Feature flag to allow users to configure scrum v2 (mono milestone) in their projects
-     *
-     * @tlp-config-feature-flag-key
-     */
+    #[FeatureFlagConfigKey("Feature flag to allow users to configure scrum v2 (mono milestone) in their projects")]
     public const FEATURE_FLAG_KEY = 'allow_scrum_mono_milestone_usage';
 
     /**

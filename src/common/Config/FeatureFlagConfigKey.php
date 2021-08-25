@@ -1,5 +1,5 @@
 <?php
-/**
+/*
  * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -16,18 +16,17 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Domain\FeatureFlag;
+namespace Tuleap\Config;
 
-use Tuleap\Config\FeatureFlagConfigKey;
-
-interface VerifyIterationsFeatureActive
+#[\Attribute(\Attribute::TARGET_CLASS_CONSTANT)]
+final class FeatureFlagConfigKey
 {
-    #[FeatureFlagConfigKey("Display iteration section in program administration")]
-    public const FEATURE_FLAG_KEY = 'program_management_display_iteration';
-
-    public function isIterationsFeatureActive(): bool;
+    public function __construct(public string $summary)
+    {
+    }
 }

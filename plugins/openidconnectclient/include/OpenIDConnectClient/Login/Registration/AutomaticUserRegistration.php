@@ -22,16 +22,13 @@ namespace Tuleap\OpenIDConnectClient\Login\Registration;
 
 use ForgeConfig;
 use PFUser;
+use Tuleap\Config\ConfigKey;
 use User_UserStatusManager;
 use UserManager;
 
 class AutomaticUserRegistration
 {
-    /**
-     * OpenID Connect `userinfo` attribute to be used as `ldap_id` (for instance `preferred_username` for `sAMAccountName`)
-     *
-     * @tlp-config-key
-     */
+    #[ConfigKey("OpenID Connect `userinfo` attribute to be used as `ldap_id` (for instance `preferred_username` for `sAMAccountName`)")]
     public const CONFIG_LDAP_ATTRIBUTE = 'openidconnectclient_ldap_attribute';
 
     /**

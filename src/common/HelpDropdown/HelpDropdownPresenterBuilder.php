@@ -24,15 +24,12 @@ namespace Tuleap\HelpDropdown;
 use ForgeConfig;
 use PFUser;
 use Psr\EventDispatcher\EventDispatcherInterface;
+use Tuleap\Config\ConfigKey;
 use Tuleap\Sanitizer\URISanitizer;
 
 class HelpDropdownPresenterBuilder
 {
-    /**
-     * Set to 0 to hide Tuleap review link
-     *
-     * @tlp-config-key
-     */
+    #[ConfigKey("Set to 0 to hide Tuleap review link")]
     public const  DISPLAY_TULEAP_REVIEW_LINK = 'display_tuleap_review_link';
     private const REVIEW_LINK                = 'https://www.tuleap.org/write-a-review';
 

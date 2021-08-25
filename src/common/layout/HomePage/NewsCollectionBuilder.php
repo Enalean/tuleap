@@ -22,15 +22,12 @@
 namespace Tuleap\layout\HomePage;
 
 use ForgeConfig;
+use Tuleap\Config\ConfigKey;
 use Tuleap\News\NewsDao;
 
 class NewsCollectionBuilder
 {
-    /**
-     * Toggle display of news on the site home page
-     *
-     * @tlp-config-key
-     */
+    #[ConfigKey("Toggle display of news on the site home page")]
     public const CONFIG_DISPLAY_NEWS = 'display_homepage_news';
 
     /**

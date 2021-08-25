@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace Tuleap\Gitlab\Artifact\Action;
 
 use PFUser;
+use Tuleap\Config\FeatureFlagConfigKey;
 use Tuleap\Gitlab\Artifact\BranchNameCreatorFromArtifact;
 use Tuleap\Gitlab\Plugin\GitlabIntegrationAvailabilityChecker;
 use Tuleap\Gitlab\REST\v1\GitlabRepositoryRepresentationFactory;
@@ -34,11 +35,7 @@ use Tuleap\Tracker\Artifact\Artifact;
 
 class CreateBranchButtonFetcher
 {
-    /**
-     * Feature flag to allow users to create GitLab branches from artifacts
-     *
-     * @tlp-config-feature-flag-key
-     */
+    #[FeatureFlagConfigKey("Feature flag to allow users to create GitLab branches from artifacts")]
     public const FEATURE_FLAG_KEY = 'artifact-create-gitlab-branches';
 
     private GitlabIntegrationAvailabilityChecker $availability_checker;

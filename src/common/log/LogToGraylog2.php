@@ -36,33 +36,22 @@ use Monolog\Processor\IntrospectionProcessor;
 use Psr\Log\LoggerInterface;
 use Tuleap\BuildVersion\FlavorFinderFromFilePresence;
 use Tuleap\BuildVersion\VersionPresenter;
+use Tuleap\Config\ConfigKey;
 
 final class LogToGraylog2
 {
     public const CONFIG_LOGGER_GRAYLOG2 = 'graylog2';
-    /**
-     * Graylog2 server fully qualified domain name
-     *
-     * @tlp-config-key
-     */
+
+    #[ConfigKey("Graylog2 server fully qualified domain name")]
     public const CONFIG_GRAYLOG2_SERVER = 'graylog2_server';
-    /**
-     * Graylog2 port
-     *
-     * @tlp-config-key
-     */
+
+    #[ConfigKey("Graylog2 port")]
     public const CONFIG_GRAYLOG2_PORT = 'graylog2_port';
-    /**
-     * Toggle usage of TLS to communicate with Graylog2 server
-     *
-     * @tlp-config-key
-     */
+
+    #[ConfigKey("Toggle usage of TLS to communicate with Graylog2 server")]
     public const CONFIG_GRAYLOG2_SSL = 'graylog2_ssl';
-    /**
-     * Toggle debug mode of communication between Tuleap and Graylog2 server
-     *
-     * @tlp-config-key
-     */
+
+    #[ConfigKey("Toggle debug mode of communication between Tuleap and Graylog2 server")]
     public const CONFIG_GRAYLOG2_DEBUG = 'graylog2_debug';
 
     public function configure(Logger $logger, int $level): LoggerInterface

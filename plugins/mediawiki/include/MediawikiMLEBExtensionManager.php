@@ -18,14 +18,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
+use Tuleap\Config\FeatureFlagConfigKey;
+
 class MediawikiMLEBExtensionManager
 {
-
-    /**
-     * Activate MLEB mediawiki extension. Please contact Tuleap Dev Team if you ever need to do that
-     *
-     * @tlp-config-feature-flag-key
-     */
+    #[FeatureFlagConfigKey("Activate MLEB mediawiki extension. Please contact Tuleap Dev Team if you ever need to do that")]
     public const FEATURE_FLAG_KEY = 'mediawiki_mleb';
 
     private const FEATURE_FLAG_MAGIC_VALUE = 'I_understand_it_will_not_work_with_future_versions';

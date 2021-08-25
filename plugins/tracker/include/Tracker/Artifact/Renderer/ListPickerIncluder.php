@@ -22,14 +22,11 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Artifact\Renderer;
 
+use Tuleap\Config\FeatureFlagConfigKey;
 
 final class ListPickerIncluder
 {
-    /**
-     * Feature flag to have list pickers in lieu of <select> in artifact views
-     *
-     * @tlp-config-feature-flag-key
-     */
+    #[FeatureFlagConfigKey("Feature flag to have list pickers in lieu of <select> in artifact views")]
     public const FORGE_CONFIG_KEY = 'use_list_pickers_in_trackers_and_modals';
 
     public static function includeListPickerAssets(int $tracker_id): void

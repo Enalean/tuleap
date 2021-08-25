@@ -23,10 +23,11 @@ namespace Tuleap\CLI\Events;
 
 use BackendLogger;
 use ForgeAccess;
-use phpDocumentor\Reflection\DocBlockFactory;
 use ProjectManager;
 use Tuleap\admin\ProjectCreation\ProjectVisibility\ProjectVisibilityConfigManager;
 use Tuleap\BrowserDetection\BrowserDeprecationMessage;
+use Tuleap\Config\ConfigKey;
+use Tuleap\Config\FeatureFlagConfigKey;
 use Tuleap\Event\Dispatchable;
 use Tuleap\HelpDropdown\HelpDropdownPresenterBuilder;
 use Tuleap\Instrument\Prometheus\Prometheus;
@@ -44,13 +45,10 @@ final class GetWhitelistedKeys implements Dispatchable
 {
     public const NAME = 'getWhitelistedKeys';
 
-    private const TLP_CONFIG_ATTRIBUTE              = 'tlp-config-key';
-    private const TLP_CONFIG_FEATURE_FLAG_ATTRIBUTE = 'tlp-config-feature-flag-key';
-
     /**
      * @var class-string[]
      */
-    private $annotated_classes = [
+    private array $annotated_classes = [
         ProjectManager::class,
         User_UserStatusManager::class,
         ForgeAccess::class,
@@ -72,25 +70,10 @@ final class GetWhitelistedKeys implements Dispatchable
     /**
      * @var array<string, string>
      */
-    private $white_listed_keys = [];
+    private array $white_listed_keys = [];
 
     /**
-     * @var DocBlockFactory
-     */
-    private $doc_block_factory;
-
-    public function __construct(DocBlockFactory $doc_block_factory)
-    {
-        $this->doc_block_factory = $doc_block_factory;
-    }
-
-    public static function build(): self
-    {
-        return new self(DocBlockFactory::createInstance());
-    }
-
-    /**
-     * Declare a class that holds constants with `@tlp-config-key` annotation
+     * Declare a class that holds constants with Tuleap\Config\ConfigKey or Tuleap\Config\FeatureFlagConfigKey attributes
      *
      * @param class-string $class_name
      */
@@ -141,15 +124,20 @@ final class GetWhitelistedKeys implements Dispatchable
     {
         $reflected_class = new \ReflectionClass($class_name);
         foreach ($reflected_class->getReflectionConstants() as $const) {
-            $const_comment = $const->getDocComment();
-            if ($const_comment) {
-                $doc         = $this->doc_block_factory->create($const_comment);
-                $const_value = $const->getValue();
-                if ($doc->hasTag(self::TLP_CONFIG_ATTRIBUTE) && is_string($const_value)) {
-                    $this->white_listed_keys[$const_value] = $doc->getSummary();
+            foreach ($const->getAttributes() as $attribute) {
+                if ($attribute->getName() === ConfigKey::class) {
+                    $config_key  = $attribute->newInstance();
+                    $const_value = $const->getValue();
+                    if (is_string($const_value) && is_string($config_key->summary)) {
+                        $this->white_listed_keys[$const_value] = $config_key->summary;
+                    }
                 }
-                if ($doc->hasTag(self::TLP_CONFIG_FEATURE_FLAG_ATTRIBUTE) && is_string($const_value)) {
-                    $this->white_listed_keys[\ForgeConfig::FEATURE_FLAG_PREFIX . $const_value] = $doc->getSummary();
+                if ($attribute->getName() === FeatureFlagConfigKey::class) {
+                    $config_key  = $attribute->newInstance();
+                    $const_value = $const->getValue();
+                    if (is_string($const_value) && is_string($config_key->summary)) {
+                        $this->white_listed_keys[\ForgeConfig::FEATURE_FLAG_PREFIX . $const_value] = $config_key->summary;
+                    }
                 }
             }
         }
