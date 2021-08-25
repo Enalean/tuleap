@@ -186,7 +186,7 @@
                             ></i>
                         </button>
                     </div>
-                    <div class="current-test-results-container">
+                    <div class="current-test-results-container" ng-if="displayTestCommentContainer">
                         <div class="current-test-comment"
                              id="execution_{{execution.id}}"
                              data-test="current-test-comment"
@@ -205,7 +205,17 @@
                     </button>
                 </div>
             </section>
-            <section class="tlp-pane-section current-test-footer-section">
+            <section class="tlp-pane-section current-test-footer-section current-test-footer-section-buttons-container">
+                <button
+                    type="button"
+                    ng-if="! displayTestCommentContainer"
+                    class="tlp-button-secondary tlp-button-outline"
+                    data-test="edit-comment-button"
+                    ng-click="showTestCommentContainer(execution)"
+                    data-shortcut-edit-comment-button
+                >
+                    {{ 'Edit comment' | translate }}
+                </button>
                 <div class="current-test-results" ng-if="! execution.userCanReloadTestBecauseDefinitionIsUpdated">
                     <button id="test-result-passed" type="button"
                             data-test="mark-test-as-passed"

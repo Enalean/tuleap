@@ -248,6 +248,12 @@ execution-with-steps.current-test-content {
     background: var(--tlp-fade-background-color);
 }
 
+.current-test-footer-section-buttons-container {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+}
+
 .current-comment-header-section {
     display: flex;
     align-items: center;
@@ -333,7 +339,6 @@ execution-with-steps.current-test-content {
 
 .current-test-results {
     display: flex;
-    justify-content: flex-end;
     margin: 0 0 0 var(--tlp-small-spacing);
 }
 

@@ -84,6 +84,8 @@ function ExecutionDetailCtrl(
     $scope.truncateExecutionResult = truncateExecutionResult;
     $scope.linkedIssueId = null;
     $scope.linkedIssueAlertVisible = false;
+    $scope.displayTestCommentContainer = false;
+    $scope.showTestCommentContainer = showTestCommentContainer;
 
     Object.assign($scope, {
         showLinkToExistingBugModal,
@@ -295,6 +297,8 @@ function ExecutionDetailCtrl(
         $scope.execution.is_automated =
             Boolean($scope.execution.definition.automated_tests) &&
             $scope.execution.definition.automated_tests !== "";
+        $scope.execution.uploaded_files = [];
+        $scope.displayTestCommentContainer = !$scope.execution.previous_result.result;
     }
 
     function isCurrentExecutionLoaded() {
@@ -319,6 +323,7 @@ function ExecutionDetailCtrl(
 
     function setNewStatus(event, execution, new_status) {
         execution.saving = true;
+        const has_test_comment = execution.results !== "";
         if (event.target instanceof HTMLElement) {
             // Firefox does not blur disabled buttons, which triggers a bug that disables keydowns and thus keyboard shortcuts (https://bugzilla.mozilla.org/show_bug.cgi?id=706773)
             event.target.blur();
@@ -338,7 +343,7 @@ function ExecutionDetailCtrl(
                         data,
                         SharedPropertiesService.getCurrentUser()
                     );
-                    ExecutionService.clearEditor(execution);
+                    handleCommentBox(has_test_comment, execution);
                 },
                 (error) => {
                     ExecutionService.displayErrorMessage(execution, error.message);
@@ -347,6 +352,14 @@ function ExecutionDetailCtrl(
             .finally(function () {
                 execution.saving = false;
             });
+    }
+
+    function handleCommentBox(has_test_comment, execution) {
+        if (!has_test_comment) {
+            showTestCommentContainer(execution);
+            return;
+        }
+        hideTestCommentContainer(execution);
     }
 
     function getStatusLabel(status) {
@@ -406,5 +419,18 @@ function ExecutionDetailCtrl(
         remove(executions, function (execution) {
             return execution.id === scopeExecution.id;
         });
+    }
+
+    function showTestCommentContainer(execution) {
+        $scope.displayTestCommentContainer = true;
+        ExecutionService.viewTestExecution(execution.id, SharedPropertiesService.getCurrentUser());
+    }
+
+    function hideTestCommentContainer(execution) {
+        $scope.displayTestCommentContainer = false;
+        ExecutionService.removeViewTestExecution(
+            execution.id,
+            SharedPropertiesService.getCurrentUser()
+        );
     }
 }

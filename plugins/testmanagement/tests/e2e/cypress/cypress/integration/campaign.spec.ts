@@ -171,6 +171,32 @@ describe("TTM campaign", () => {
                     });
                 });
 
+                it("Add another comment when one is already set", () => {
+                    cy.get("[data-test=edit-comment-button]").click();
+                    cy.get("[data-test=current-test-comment]").then(($container) => {
+                        cy.window().then((win) => {
+                            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                            // @ts-ignore
+                            win.CKEDITOR.instances[$container.attr("id")].setData(
+                                "<p>It's ok. Fix works!</p>"
+                            );
+                        });
+                    });
+                    cy.get("[data-test=mark-test-as-passed]").click();
+                    cy.get("[data-test=current-test").should("have.class", "passed");
+                    // For the moment, there are 2 buttons to open a modal
+                    cy.get("[data-test=view-details-button]").click();
+                    cy.get("[data-test=view-details-modal]").within(() => {
+                        cy.contains("It's ok. Fix works!");
+                        cy.get("[data-dismiss=modal]").first().click();
+                    });
+                    cy.get("[data-test=expand-details-button]").click();
+                    cy.get("[data-test=view-details-modal]").within(() => {
+                        cy.contains("It's ok. Fix works!");
+                        cy.get("[data-dismiss=modal]").first().click();
+                    });
+                });
+
                 it("Edits the test", () => {
                     cy.get("[data-test=current-test-edit]").click();
                     getStringFieldWithLabel("Summary").type("{selectall}My first test edited");
