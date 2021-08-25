@@ -95,12 +95,7 @@ class Tracker_Semantic_Description extends Tracker_Semantic
         return $this->text_field;
     }
 
-    /**
-     * Display the basic info about this semantic
-     *
-     * @return void
-     */
-    public function display()
+    public function fetchForSemanticsHomepage(): string
     {
         $warning = '';
         $field   = Tracker_FormElementFactory::instance()->getUsedFormElementById($this->getFieldId());
@@ -118,9 +113,9 @@ class Tracker_Semantic_Description extends Tracker_Semantic
             $content = dgettext('tuleap-tracker', '<p>The artifacts of this tracker does not have any <em>description</em> yet.</p>');
         }
 
-        echo $warning;
-        echo dgettext('tuleap-tracker', '<p>The <strong>description</strong> is a free-text account of the content.</p>');
-        echo $content;
+        return $warning .
+            dgettext('tuleap-tracker', '<p>The <strong>description</strong> is a free-text account of the content.</p>') .
+            $content;
     }
 
     /**

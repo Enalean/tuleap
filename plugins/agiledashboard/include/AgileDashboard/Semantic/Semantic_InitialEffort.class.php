@@ -99,21 +99,18 @@ class AgileDashBoard_Semantic_InitialEffort extends Tracker_Semantic
         return $this->initial_effort_field;
     }
 
-    /**
-     * Display the basic info about this semantic
-     *
-     * @return void
-     */
-    public function display()
+    public function fetchForSemanticsHomepage(): string
     {
-        echo dgettext('tuleap-agiledashboard', 'This is used in the <b>Agile Dashboard</b> if enabled.');
+        $html = dgettext('tuleap-agiledashboard', 'This is used in the <b>Agile Dashboard</b> if enabled.');
 
         if ($field = Tracker_FormElementFactory::instance()->getUsedFormElementById($this->getFieldId())) {
             $purifier = Codendi_HTMLPurifier::instance();
-            echo sprintf(dgettext('tuleap-agiledashboard', '<p>The initial effort of this tracker will be represented in the Agile Dashboard by the field <strong>%1$s</strong>.</p>'), $purifier->purify($field->getLabel()));
+            $html    .= sprintf(dgettext('tuleap-agiledashboard', '<p>The initial effort of this tracker will be represented in the Agile Dashboard by the field <strong>%1$s</strong>.</p>'), $purifier->purify($field->getLabel()));
         } else {
-            echo dgettext('tuleap-agiledashboard', '<p>This tracker does not have an <em>initial effort</em> field yet.</p>');
+            $html .= dgettext('tuleap-agiledashboard', '<p>This tracker does not have an <em>initial effort</em> field yet.</p>');
         }
+
+        return $html;
     }
 
     /**

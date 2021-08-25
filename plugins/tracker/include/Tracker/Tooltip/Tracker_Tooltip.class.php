@@ -189,12 +189,7 @@ class Tracker_Tooltip extends Tracker_Semantic
         $semantic_manager->displaySemanticFooter($this, $tracker_manager);
     }
 
-    /**
-     * Display the basic info about this semantic
-     *
-     * @return void
-     */
-    public function display()
+    public function fetchForSemanticsHomepage(): string
     {
         $html   = '';
         $hp     = Codendi_HTMLPurifier::instance();
@@ -211,7 +206,8 @@ class Tracker_Tooltip extends Tracker_Semantic
             $html .= '</ul>';
         }
         $html .= '</p>';
-        echo $html;
+
+        return $html;
     }
 
     /**

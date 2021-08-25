@@ -204,31 +204,28 @@ class Tracker_Semantic_Status extends Tracker_Semantic
         return $labels;
     }
 
-    /**
-     * Display the basic info about this semantic
-     *
-     * @return void
-     */
-    public function display()
+    public function fetchForSemanticsHomepage(): string
     {
         if ($this->list_field) {
             $purifier = Codendi_HTMLPurifier::instance();
-            echo sprintf(dgettext('tuleap-tracker', '<p>An artifact is considered to be <strong>open</strong> when its field <strong>%1$s</strong> will have one of the following values:</p>'), $purifier->purify($this->list_field->getLabel()));
+            $html     = sprintf(dgettext('tuleap-tracker', '<p>An artifact is considered to be <strong>open</strong> when its field <strong>%1$s</strong> will have one of the following values:</p>'), $purifier->purify($this->list_field->getLabel()));
             if ($this->open_values) {
-                echo '<ul>';
+                $html        .= '<ul>';
                 $field_values = $this->list_field->getAllValues();
                 foreach ($this->open_values as $v) {
                     if (isset($field_values[$v])) {
-                        echo '<li><strong>' . $purifier->purify($field_values[$v]->getLabel()) . '</strong></li>';
+                        $html .= '<li><strong>' . $purifier->purify($field_values[$v]->getLabel()) . '</strong></li>';
                     }
                 }
-                echo '</ul>';
+                $html .= '</ul>';
             } else {
-                echo '<blockquote><em>' . dgettext('tuleap-tracker', 'No value has been set') . '</em></blockquote>';
+                $html .= '<blockquote><em>' . dgettext('tuleap-tracker', 'No value has been set') . '</em></blockquote>';
             }
-        } else {
-            echo dgettext('tuleap-tracker', '<p>The artifacts of this tracker does not have any <em>status</em> yet.</p>');
+
+            return $html;
         }
+
+        return dgettext('tuleap-tracker', '<p>The artifacts of this tracker does not have any <em>status</em> yet.</p>');
     }
 
     /**

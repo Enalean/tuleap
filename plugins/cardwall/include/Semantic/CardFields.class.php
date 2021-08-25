@@ -114,7 +114,7 @@ class Cardwall_Semantic_CardFields extends Tracker_Semantic
         $this->cards_preview_builder              = $cards_preview_builder;
     }
 
-    public function display()
+    public function fetchForSemanticsHomepage(): string
     {
         $html   = '';
         $fields = $this->getFields();
@@ -146,7 +146,7 @@ class Cardwall_Semantic_CardFields extends Tracker_Semantic
 
         $html .= '</p>';
 
-        echo $html;
+        return $html;
     }
 
     /**

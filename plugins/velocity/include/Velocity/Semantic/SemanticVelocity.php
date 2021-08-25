@@ -93,7 +93,7 @@ class SemanticVelocity extends Tracker_Semantic
         );
     }
 
-    public function display()
+    public function fetchForSemanticsHomepage(): string
     {
         $renderer           = TemplateRendererFactory::build()->getRenderer(VELOCITY_BASE_DIR . '/templates');
         $builder            = new SemanticVelocityPresenterBuilder(
@@ -103,7 +103,7 @@ class SemanticVelocity extends Tracker_Semantic
         );
         $velocity_presenter = $builder->build($this->getTracker(), $this->semantic_done, $this->velocity_field);
 
-        $renderer->renderToPage('velocity-intro', $velocity_presenter);
+        return $renderer->renderToString('velocity-intro', $velocity_presenter);
     }
 
     public function displayAdmin(

@@ -71,7 +71,7 @@ class SemanticProgress extends \Tracker_Semantic
         );
     }
 
-    public function display(): void
+    public function fetchForSemanticsHomepage(): string
     {
         $is_semantic_defined = $this->isDefined();
         $renderer            = $this->getTemplateRenderer();
@@ -81,7 +81,7 @@ class SemanticProgress extends \Tracker_Semantic
             $this->method->getCurrentConfigurationDescription()
         );
 
-        $renderer->renderToPage(
+        return $renderer->renderToString(
             'semantic-progress-introduction',
             $presenter
         );

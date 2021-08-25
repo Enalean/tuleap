@@ -58,23 +58,50 @@ class Tracker_SemanticManager
     {
         $title = dgettext('tuleap-tracker', 'Manage Semantic');
         $this->tracker->displayWarningArtifactByEmailSemantic();
-        $this->tracker->displayAdminItemHeader($tracker_manager, 'editsemantic', $title);
+        $this->tracker->displayAdminItemHeaderBurningParrot($tracker_manager, 'editsemantic', $title);
 
+        echo '<div class="tlp-framed">';
         echo '<h2 class="almost-tlp-title">' . $title . '</h2>';
         echo '<p>';
         echo dgettext('tuleap-tracker', 'As trackers can be fully customized, you may want to define what is the title of your artifacts, or when you consider an artifact to be open or close. This information is used in the application to display artifact summary, and tooltip for instance.');
         echo '</p>';
+        echo '<div class="tracker-admin-semantics">';
+
+        $purifier = Codendi_HTMLPurifier::instance();
+        echo '<nav class="tlp-tabs tlp-tabs-vertical tracker-admin-semantics-toc">';
+        foreach ($this->getSemantics() as $semantic) {
+            echo '<a href="#' . $purifier->purify('tracker-admin-semantic-' . $semantic->getShortName()) . '" class="tlp-tab">
+                ' . $purifier->purify($semantic->getLabel()) . '
+            </a>';
+        }
+        echo '</nav>';
+
+        echo '<div class="tracker-admin-semantics-list">';
 
         foreach ($this->getSemantics() as $semantic) {
-            echo '<h3>' . $semantic->getLabel() . ' <a href="' . TRACKER_BASE_URL . '/?' . http_build_query([
+            $url = TRACKER_BASE_URL . '/?' . http_build_query([
                 'tracker'  => $this->tracker->getId(),
                 'func'     => 'admin-semantic',
                 'semantic' => $semantic->getShortName(),
-            ]) . '">';
-            echo $GLOBALS['HTML']->getImage('ic/edit.png', ['alt' => 'edit']);
-            echo '</a></h3>';
-            $semantic->display();
+            ]);
+
+            echo '<section class="tlp-pane tracker-admin-semantic" id="' . $purifier->purify('tracker-admin-semantic-' . $semantic->getShortName()) . '">
+                    <div class="tlp-pane-container">
+                        <div class="tlp-pane-header">
+                            <h1 class="tlp-pane-title">' . $purifier->purify($semantic->getLabel()) . '</h1>
+                        </div>
+                        <section class="tlp-pane-section">' . $semantic->fetchForSemanticsHomepage() . '</section>
+                         <section class="tlp-pane-section tlp-pane-section-submit tracker-admin-semantics-edit-button-section">
+                            <a href="' . $url . '" class="tlp-button-primary tlp-button-outline">
+                                <i class="fas fa-pencil-alt tlp-button-icon" aria-hidden="true"></i> Configure semantic
+                            </a>
+                        </section>
+                    </div>
+                </section>';
         }
+        echo '</div>';
+        echo '</div>';
+        echo '</div>';
 
         $this->tracker->displayFooter($tracker_manager);
     }

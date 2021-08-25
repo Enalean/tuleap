@@ -71,10 +71,10 @@ class SemanticTimeframe extends Tracker_Semantic
         return dgettext('tuleap-tracker', 'Define the field to use to compute artifacts timeframes.');
     }
 
-    public function display(): void
+    public function fetchForSemanticsHomepage(): string
     {
         $presenter = $this->getCurrentConfigurationPresenter();
-        $this->getRenderer()->renderToPage('semantic-timeframe-current-configuration', $presenter);
+        return $this->getRenderer()->renderToString('semantic-timeframe-current-configuration', $presenter);
     }
 
     public function displayAdmin(
